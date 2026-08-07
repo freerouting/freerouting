@@ -22,10 +22,9 @@ public final class SortedOrthogonalRoomNeighbours {
   private final IntBox room_shape;
   private final boolean[] edge_interior_touches_obstacle;
 
-  /**
-   * Creates a new instance of SortedOrthogonalRoomNeighbours
-   */
-  private SortedOrthogonalRoomNeighbours(ExpansionRoom p_from_room, CompleteExpansionRoom p_completed_room) {
+  /** Creates a new instance of SortedOrthogonalRoomNeighbours */
+  private SortedOrthogonalRoomNeighbours(
+      ExpansionRoom p_from_room, CompleteExpansionRoom p_completed_room) {
     from_room = p_from_room;
     completed_room = p_completed_room;
     is_obstacle_expansion_room = p_from_room instanceof ObstacleExpansionRoom;
@@ -37,17 +36,23 @@ public final class SortedOrthogonalRoomNeighbours {
     }
   }
 
-  public static CompleteExpansionRoom calculate(ExpansionRoom p_room, AutorouteEngine p_autoroute_engine) {
+  public static CompleteExpansionRoom calculate(
+      ExpansionRoom p_room, AutorouteEngine p_autoroute_engine) {
     int net_no = p_autoroute_engine.get_net_no();
-    SortedOrthogonalRoomNeighbours room_neighbours = SortedOrthogonalRoomNeighbours.calculate_neighbours(p_room, net_no, p_autoroute_engine.autoroute_search_tree,
-        p_autoroute_engine.generate_room_id_no());
+    SortedOrthogonalRoomNeighbours room_neighbours =
+        SortedOrthogonalRoomNeighbours.calculate_neighbours(
+            p_room,
+            net_no,
+            p_autoroute_engine.autoroute_search_tree,
+            p_autoroute_engine.generate_room_id_no());
     if (room_neighbours == null) {
       return null;
     }
 
     // Check, that each side of the room shape has at least one touching neighbour.
     // Otherwise, improve the room shape by enlarging.
-    boolean edge_removed = room_neighbours.try_remove_edge(net_no, p_autoroute_engine.autoroute_search_tree);
+    boolean edge_removed =
+        room_neighbours.try_remove_edge(net_no, p_autoroute_engine.autoroute_search_tree);
     CompleteExpansionRoom result = room_neighbours.completed_room;
     if (edge_removed) {
       p_autoroute_engine.remove_all_doors(result);
@@ -59,7 +64,8 @@ public final class SortedOrthogonalRoomNeighbours {
 
     if (room_neighbours.sorted_neighbours.isEmpty()) {
       if (result instanceof ObstacleExpansionRoom) {
-        calculate_incomplete_rooms_with_empty_neighbours((ObstacleExpansionRoom) p_room, p_autoroute_engine);
+        calculate_incomplete_rooms_with_empty_neighbours(
+            (ObstacleExpansionRoom) p_room, p_autoroute_engine);
       }
     } else {
       room_neighbours.calculate_new_incomplete_rooms(p_autoroute_engine);
@@ -67,23 +73,31 @@ public final class SortedOrthogonalRoomNeighbours {
     return result;
   }
 
-  private static void calculate_incomplete_rooms_with_empty_neighbours(ObstacleExpansionRoom p_room, AutorouteEngine p_autoroute_engine) {
+  private static void calculate_incomplete_rooms_with_empty_neighbours(
+      ObstacleExpansionRoom p_room, AutorouteEngine p_autoroute_engine) {
     TileShape room_shape = p_room.get_shape();
     if (!(room_shape instanceof IntBox room_box)) {
-      FRLogger.warn("SortedOrthoganelRoomNeighbours.calculate_incomplete_rooms_with_empty_neighbours: IntBox expected for room_shape");
+      FRLogger.warn(
+          "SortedOrthoganelRoomNeighbours.calculate_incomplete_rooms_with_empty_neighbours: IntBox expected for room_shape");
       return;
     }
     IntBox bounding_box = p_autoroute_engine.board.get_bounding_box();
     for (int i = 0; i < 4; i++) {
-      IntBox new_room_box = switch (i) {
-        case 0 -> new IntBox(bounding_box.ll.x, bounding_box.ll.y, bounding_box.ur.x, room_box.ll.y);
-        case 1 -> new IntBox(room_box.ur.x, bounding_box.ll.y, bounding_box.ur.x, bounding_box.ur.y);
-        case 2 -> new IntBox(bounding_box.ll.x, room_box.ur.y, bounding_box.ur.x, bounding_box.ur.y);
-        default -> // i == 3
-            new IntBox(bounding_box.ll.x, bounding_box.ll.y, room_box.ll.x, bounding_box.ur.y);
-      };
+      IntBox new_room_box =
+          switch (i) {
+            case 0 ->
+                new IntBox(bounding_box.ll.x, bounding_box.ll.y, bounding_box.ur.x, room_box.ll.y);
+            case 1 ->
+                new IntBox(room_box.ur.x, bounding_box.ll.y, bounding_box.ur.x, bounding_box.ur.y);
+            case 2 ->
+                new IntBox(bounding_box.ll.x, room_box.ur.y, bounding_box.ur.x, bounding_box.ur.y);
+            default -> // i == 3
+                new IntBox(bounding_box.ll.x, bounding_box.ll.y, room_box.ll.x, bounding_box.ur.y);
+          };
       IntBox new_contained_box = room_box.intersection(new_room_box);
-      FreeSpaceExpansionRoom new_room = p_autoroute_engine.add_incomplete_expansion_room(new_room_box, p_room.get_layer(), new_contained_box);
+      FreeSpaceExpansionRoom new_room =
+          p_autoroute_engine.add_incomplete_expansion_room(
+              new_room_box, p_room.get_layer(), new_contained_box);
       ExpansionDoor new_door = new ExpansionDoor(p_room, new_room, 1);
       p_room.add_door(new_door);
       new_room.add_door(new_door);
@@ -91,9 +105,14 @@ public final class SortedOrthogonalRoomNeighbours {
   }
 
   /**
-   * Calculates all touching neighbours of p_room and sorts them in counterclock sense around the boundary of the room shape.
+   * Calculates all touching neighbours of p_room and sorts them in counterclock sense around the
+   * boundary of the room shape.
    */
-  private static SortedOrthogonalRoomNeighbours calculate_neighbours(ExpansionRoom p_room, int p_net_no, ShapeSearchTree p_autoroute_search_tree, int p_room_id_no) {
+  private static SortedOrthogonalRoomNeighbours calculate_neighbours(
+      ExpansionRoom p_room,
+      int p_net_no,
+      ShapeSearchTree p_autoroute_search_tree,
+      int p_room_id_no) {
     TileShape room_shape = p_room.get_shape();
     if (!(room_shape instanceof IntBox room_box)) {
       FRLogger.warn("SortedOrthogonalRoomNeighbours.calculate: IntBox expected for room_shape");
@@ -101,25 +120,32 @@ public final class SortedOrthogonalRoomNeighbours {
     }
     CompleteExpansionRoom completed_room;
     if (p_room instanceof IncompleteFreeSpaceExpansionRoom) {
-      completed_room = new CompleteFreeSpaceExpansionRoom(room_shape, p_room.get_layer(), p_room_id_no);
+      completed_room =
+          new CompleteFreeSpaceExpansionRoom(room_shape, p_room.get_layer(), p_room_id_no);
     } else if (p_room instanceof ObstacleExpansionRoom room) {
       completed_room = room;
     } else {
       FRLogger.warn("SortedOrthogonalRoomNeighbours.calculate: unexpected expansion room type");
       return null;
     }
-    SortedOrthogonalRoomNeighbours result = new SortedOrthogonalRoomNeighbours(p_room, completed_room);
+    SortedOrthogonalRoomNeighbours result =
+        new SortedOrthogonalRoomNeighbours(p_room, completed_room);
     Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<>();
-    p_autoroute_search_tree.overlapping_tree_entries(room_shape, p_room.get_layer(), overlapping_objects);
+    p_autoroute_search_tree.overlapping_tree_entries(
+        room_shape, p_room.get_layer(), overlapping_objects);
 
     // Sort the overlapping objects deterministically to ensure parity with v1.9.
-    ((LinkedList<ShapeTree.TreeEntry>) overlapping_objects).sort((e1, e2) -> {
-      int id_diff = ((SearchTreeObject) e1.object).get_id_no() - ((SearchTreeObject) e2.object).get_id_no();
-      if (id_diff != 0) {
-        return id_diff;
-      }
-      return e1.shape_index_in_object - e2.shape_index_in_object;
-    });
+    ((LinkedList<ShapeTree.TreeEntry>) overlapping_objects)
+        .sort(
+            (e1, e2) -> {
+              int id_diff =
+                  ((SearchTreeObject) e1.object).get_id_no()
+                      - ((SearchTreeObject) e2.object).get_id_no();
+              if (id_diff != 0) {
+                return id_diff;
+              }
+              return e1.shape_index_in_object - e2.shape_index_in_object;
+            });
 
     // Calculate the touching neighbour objects and sort them in counterclock sense
     // around the border of the room shape.
@@ -128,13 +154,16 @@ public final class SortedOrthogonalRoomNeighbours {
       if (curr_object == p_room) {
         continue;
       }
-      if ((completed_room instanceof CompleteFreeSpaceExpansionRoom fs_room) && !curr_object.is_trace_obstacle(p_net_no)) {
+      if ((completed_room instanceof CompleteFreeSpaceExpansionRoom fs_room)
+          && !curr_object.is_trace_obstacle(p_net_no)) {
         fs_room.calculate_target_doors(curr_entry, p_net_no, p_autoroute_search_tree);
         continue;
       }
-      TileShape curr_shape = curr_object.get_tree_shape(p_autoroute_search_tree, curr_entry.shape_index_in_object);
+      TileShape curr_shape =
+          curr_object.get_tree_shape(p_autoroute_search_tree, curr_entry.shape_index_in_object);
       if (!(curr_shape instanceof IntBox curr_box)) {
-        FRLogger.warn("OrthogonalAutorouteEngine:calculate_sorted_neighbours: IntBox expected for curr_shape");
+        FRLogger.warn(
+            "OrthogonalAutorouteEngine:calculate_sorted_neighbours: IntBox expected for curr_shape");
         return null;
       }
       IntBox intersection = room_box.intersection(curr_box);
@@ -144,7 +173,9 @@ public final class SortedOrthogonalRoomNeighbours {
           // only Obstacle expansion room may have a 2-dim overlap
           if (curr_item.is_routable()) {
             ItemAutorouteInfo item_info = curr_item.get_autoroute_info();
-            ObstacleExpansionRoom curr_overlap_room = item_info.get_expansion_room(curr_entry.shape_index_in_object, p_autoroute_search_tree);
+            ObstacleExpansionRoom curr_overlap_room =
+                item_info.get_expansion_room(
+                    curr_entry.shape_index_in_object, p_autoroute_search_tree);
             obs_room.create_overlap_door(curr_overlap_room);
           }
         }
@@ -165,7 +196,9 @@ public final class SortedOrthogonalRoomNeighbours {
           if (curr_item.is_routable()) {
             // expand the item for ripup and pushing purposes
             ItemAutorouteInfo item_info = curr_item.get_autoroute_info();
-            neighbour_room = item_info.get_expansion_room(curr_entry.shape_index_in_object, p_autoroute_search_tree);
+            neighbour_room =
+                item_info.get_expansion_room(
+                    curr_entry.shape_index_in_object, p_autoroute_search_tree);
           }
         }
         if (neighbour_room != null) {
@@ -187,7 +220,8 @@ public final class SortedOrthogonalRoomNeighbours {
       case 2 -> new IntBox(p_room_box.ll.x, p_room_box.ll.y, p_room_box.ur.x, Limits.CRIT_INT);
       case 3 -> new IntBox(-Limits.CRIT_INT, p_room_box.ll.y, p_room_box.ur.x, p_room_box.ur.y);
       default -> {
-        FRLogger.warn("SortedOrthogonalRoomNeighbours.remove_border_line: illegal p_remove_edge_no");
+        FRLogger.warn(
+            "SortedOrthogonalRoomNeighbours.remove_border_line: illegal p_remove_edge_no");
         yield null;
       }
     };
@@ -206,18 +240,39 @@ public final class SortedOrthogonalRoomNeighbours {
           case 0 -> {
             if (prev_neighbour.last_touching_side == 0) {
               if (prev_neighbour.intersection.ur.x < next_neighbour.intersection.ll.x) {
-                insert_incomplete_room(p_autoroute_engine, prev_neighbour.intersection.ur.x, board_bounds.ll.y, next_neighbour.intersection.ll.x, this.room_shape.ll.y);
+                insert_incomplete_room(
+                    p_autoroute_engine,
+                    prev_neighbour.intersection.ur.x,
+                    board_bounds.ll.y,
+                    next_neighbour.intersection.ll.x,
+                    this.room_shape.ll.y);
               }
             } else {
-              if (prev_neighbour.intersection.ll.y > this.room_shape.ll.y || next_neighbour.intersection.ll.x > this.room_shape.ll.x) {
+              if (prev_neighbour.intersection.ll.y > this.room_shape.ll.y
+                  || next_neighbour.intersection.ll.x > this.room_shape.ll.x) {
                 if (is_obstacle_expansion_room) {
                   // no 2-dim doors between obstacle_expansion_rooms and free space rooms allowed.
                   if (prev_neighbour.last_touching_side == 3) {
-                    insert_incomplete_room(p_autoroute_engine, board_bounds.ll.x, room_shape.ll.y, room_shape.ll.x, prev_neighbour.intersection.ll.y);
+                    insert_incomplete_room(
+                        p_autoroute_engine,
+                        board_bounds.ll.x,
+                        room_shape.ll.y,
+                        room_shape.ll.x,
+                        prev_neighbour.intersection.ll.y);
                   }
-                  insert_incomplete_room(p_autoroute_engine, room_shape.ll.x, board_bounds.ll.y, next_neighbour.intersection.ll.x, room_shape.ll.y);
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      room_shape.ll.x,
+                      board_bounds.ll.y,
+                      next_neighbour.intersection.ll.x,
+                      room_shape.ll.y);
                 } else {
-                  insert_incomplete_room(p_autoroute_engine, board_bounds.ll.x, board_bounds.ll.y, next_neighbour.intersection.ll.x, prev_neighbour.intersection.ll.y);
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      board_bounds.ll.x,
+                      board_bounds.ll.y,
+                      next_neighbour.intersection.ll.x,
+                      prev_neighbour.intersection.ll.y);
                 }
               }
             }
@@ -225,18 +280,39 @@ public final class SortedOrthogonalRoomNeighbours {
           case 1 -> {
             if (prev_neighbour.last_touching_side == 1) {
               if (prev_neighbour.intersection.ur.y < next_neighbour.intersection.ll.y) {
-                insert_incomplete_room(p_autoroute_engine, this.room_shape.ur.x, prev_neighbour.intersection.ur.y, board_bounds.ur.x, next_neighbour.intersection.ll.y);
+                insert_incomplete_room(
+                    p_autoroute_engine,
+                    this.room_shape.ur.x,
+                    prev_neighbour.intersection.ur.y,
+                    board_bounds.ur.x,
+                    next_neighbour.intersection.ll.y);
               }
             } else {
-              if (prev_neighbour.intersection.ur.x < this.room_shape.ur.x || next_neighbour.intersection.ll.y > this.room_shape.ll.y) {
+              if (prev_neighbour.intersection.ur.x < this.room_shape.ur.x
+                  || next_neighbour.intersection.ll.y > this.room_shape.ll.y) {
                 if (is_obstacle_expansion_room) {
                   // no 2-dim doors between obstacle_expansion_rooms and free space rooms allowed.
                   if (prev_neighbour.last_touching_side == 0) {
-                    insert_incomplete_room(p_autoroute_engine, prev_neighbour.intersection.ur.x, board_bounds.ll.y, room_shape.ur.x, room_shape.ll.y);
+                    insert_incomplete_room(
+                        p_autoroute_engine,
+                        prev_neighbour.intersection.ur.x,
+                        board_bounds.ll.y,
+                        room_shape.ur.x,
+                        room_shape.ll.y);
                   }
-                  insert_incomplete_room(p_autoroute_engine, room_shape.ur.x, room_shape.ll.y, room_shape.ur.x, next_neighbour.intersection.ll.y);
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      room_shape.ur.x,
+                      room_shape.ll.y,
+                      room_shape.ur.x,
+                      next_neighbour.intersection.ll.y);
                 } else {
-                  insert_incomplete_room(p_autoroute_engine, prev_neighbour.intersection.ur.x, board_bounds.ll.y, board_bounds.ur.x, next_neighbour.intersection.ll.y);
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      prev_neighbour.intersection.ur.x,
+                      board_bounds.ll.y,
+                      board_bounds.ur.x,
+                      next_neighbour.intersection.ll.y);
                 }
               }
             }
@@ -244,18 +320,39 @@ public final class SortedOrthogonalRoomNeighbours {
           case 2 -> {
             if (prev_neighbour.last_touching_side == 2) {
               if (prev_neighbour.intersection.ll.x > next_neighbour.intersection.ur.x) {
-                insert_incomplete_room(p_autoroute_engine, next_neighbour.intersection.ur.x, this.room_shape.ur.y, prev_neighbour.intersection.ll.x, board_bounds.ur.y);
+                insert_incomplete_room(
+                    p_autoroute_engine,
+                    next_neighbour.intersection.ur.x,
+                    this.room_shape.ur.y,
+                    prev_neighbour.intersection.ll.x,
+                    board_bounds.ur.y);
               }
             } else {
-              if (prev_neighbour.intersection.ur.y < this.room_shape.ur.y || next_neighbour.intersection.ur.x < this.room_shape.ur.x) {
+              if (prev_neighbour.intersection.ur.y < this.room_shape.ur.y
+                  || next_neighbour.intersection.ur.x < this.room_shape.ur.x) {
                 if (is_obstacle_expansion_room) {
                   // no 2-dim doors between obstacle_expansion_rooms and free space rooms allowed.
                   if (prev_neighbour.last_touching_side == 1) {
-                    insert_incomplete_room(p_autoroute_engine, room_shape.ur.x, prev_neighbour.intersection.ur.y, board_bounds.ur.x, room_shape.ur.y);
+                    insert_incomplete_room(
+                        p_autoroute_engine,
+                        room_shape.ur.x,
+                        prev_neighbour.intersection.ur.y,
+                        board_bounds.ur.x,
+                        room_shape.ur.y);
                   }
-                  insert_incomplete_room(p_autoroute_engine, next_neighbour.intersection.ur.x, room_shape.ur.y, room_shape.ur.x, board_bounds.ur.y);
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      next_neighbour.intersection.ur.x,
+                      room_shape.ur.y,
+                      room_shape.ur.x,
+                      board_bounds.ur.y);
                 } else {
-                  insert_incomplete_room(p_autoroute_engine, next_neighbour.intersection.ur.x, prev_neighbour.intersection.ur.y, board_bounds.ur.x, board_bounds.ur.y);
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      next_neighbour.intersection.ur.x,
+                      prev_neighbour.intersection.ur.y,
+                      board_bounds.ur.x,
+                      board_bounds.ur.y);
                 }
               }
             }
@@ -263,37 +360,63 @@ public final class SortedOrthogonalRoomNeighbours {
           case 3 -> {
             if (prev_neighbour.last_touching_side == 3) {
               if (prev_neighbour.intersection.ll.y > next_neighbour.intersection.ur.y) {
-                insert_incomplete_room(p_autoroute_engine, board_bounds.ll.x, next_neighbour.intersection.ur.y, this.room_shape.ll.x, prev_neighbour.intersection.ll.y);
+                insert_incomplete_room(
+                    p_autoroute_engine,
+                    board_bounds.ll.x,
+                    next_neighbour.intersection.ur.y,
+                    this.room_shape.ll.x,
+                    prev_neighbour.intersection.ll.y);
               }
             } else {
-              if (next_neighbour.intersection.ur.y < this.room_shape.ur.y || prev_neighbour.intersection.ll.x > this.room_shape.ll.x) {
+              if (next_neighbour.intersection.ur.y < this.room_shape.ur.y
+                  || prev_neighbour.intersection.ll.x > this.room_shape.ll.x) {
                 if (is_obstacle_expansion_room) {
                   // no 2-dim doors between obstacle_expansion_rooms and free space rooms allowed.
                   if (prev_neighbour.last_touching_side == 2) {
-                    insert_incomplete_room(p_autoroute_engine, room_shape.ll.x, room_shape.ur.y, prev_neighbour.intersection.ll.x, board_bounds.ur.y);
+                    insert_incomplete_room(
+                        p_autoroute_engine,
+                        room_shape.ll.x,
+                        room_shape.ur.y,
+                        prev_neighbour.intersection.ll.x,
+                        board_bounds.ur.y);
                   }
-                  insert_incomplete_room(p_autoroute_engine, board_bounds.ll.x, next_neighbour.intersection.ur.y, room_shape.ll.x, room_shape.ur.y);
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      board_bounds.ll.x,
+                      next_neighbour.intersection.ur.y,
+                      room_shape.ll.x,
+                      room_shape.ur.y);
                 } else {
-                  insert_incomplete_room(p_autoroute_engine, board_bounds.ll.x, next_neighbour.intersection.ur.y, prev_neighbour.intersection.ll.x, board_bounds.ur.y);
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      board_bounds.ll.x,
+                      next_neighbour.intersection.ur.y,
+                      prev_neighbour.intersection.ll.x,
+                      board_bounds.ur.y);
                 }
               }
             }
           }
-          default -> FRLogger.warn("SortedOrthogonalRoomNeighbour.calculate_new_incomplete: illegal touching side");
+          default ->
+              FRLogger.warn(
+                  "SortedOrthogonalRoomNeighbour.calculate_new_incomplete: illegal touching side");
         }
       }
       prev_neighbour = next_neighbour;
     }
   }
 
-  private void insert_incomplete_room(AutorouteEngine p_autoroute_engine, int p_ll_x, int p_ll_y, int p_ur_x, int p_ur_y) {
+  private void insert_incomplete_room(
+      AutorouteEngine p_autoroute_engine, int p_ll_x, int p_ll_y, int p_ur_x, int p_ur_y) {
     IntBox new_incomplete_room_shape = new IntBox(p_ll_x, p_ll_y, p_ur_x, p_ur_y);
     if (new_incomplete_room_shape.dimension() == 2) {
       IntBox new_contained_shape = this.room_shape.intersection(new_incomplete_room_shape);
       if (!new_contained_shape.is_empty()) {
         int door_dimension = new_incomplete_room_shape.intersection(this.room_shape).dimension();
         if (door_dimension > 0) {
-          FreeSpaceExpansionRoom new_room = p_autoroute_engine.add_incomplete_expansion_room(new_incomplete_room_shape, this.from_room.get_layer(), new_contained_shape);
+          FreeSpaceExpansionRoom new_room =
+              p_autoroute_engine.add_incomplete_expansion_room(
+                  new_incomplete_room_shape, this.from_room.get_layer(), new_contained_shape);
           ExpansionDoor new_door = new ExpansionDoor(this.completed_room, new_room, door_dimension);
           this.completed_room.add_door(new_door);
           new_room.add_door(new_door);
@@ -303,14 +426,16 @@ public final class SortedOrthogonalRoomNeighbours {
   }
 
   /**
-   * Check, that each side of the room shape has at least one touching neighbour. Otherwise, the room shape will be improved the by enlarging. Returns true, if the room shape was changed.
+   * Check, that each side of the room shape has at least one touching neighbour. Otherwise, the
+   * room shape will be improved the by enlarging. Returns true, if the room shape was changed.
    */
   private boolean try_remove_edge(int p_net_no, ShapeSearchTree p_autoroute_search_tree) {
     if (!(this.from_room instanceof IncompleteFreeSpaceExpansionRoom curr_incomplete_room)) {
       return false;
     }
     if (!(curr_incomplete_room.get_shape() instanceof IntBox room_box)) {
-      FRLogger.warn("SortedOrthogonalRoomNeighbours.try_remove_edge: IntBox expected for room_shape type");
+      FRLogger.warn(
+          "SortedOrthogonalRoomNeighbours.try_remove_edge: IntBox expected for room_shape type");
       return false;
     }
     double room_area = room_box.area();
@@ -326,11 +451,16 @@ public final class SortedOrthogonalRoomNeighbours {
     if (remove_edge_no >= 0) {
       // Touching neighbour missing at the edge side with index remove_edge_no
       // Remove the edge line and restart the algorithm.
-      FRLogger.trace("ROOM_EDGE_REMOVE start"
-          + ", net=" + p_net_no
-          + ", layer=" + curr_incomplete_room.get_layer()
-          + ", remove_edge=" + remove_edge_no
-          + ", room_bounds=" + room_box);
+      FRLogger.trace(
+          "ROOM_EDGE_REMOVE start"
+              + ", net="
+              + p_net_no
+              + ", layer="
+              + curr_incomplete_room.get_layer()
+              + ", remove_edge="
+              + remove_edge_no
+              + ", room_bounds="
+              + room_box);
       IntBox enlarged_box = remove_border_line(room_box, remove_edge_no);
       Collection<ExpansionDoor> door_list = this.completed_room.get_doors();
       TileShape ignore_shape = null;
@@ -348,64 +478,110 @@ public final class SortedOrthogonalRoomNeighbours {
               TileShape curr_door_shape = curr_door.get_shape();
               double curr_door_area = curr_door_shape.area();
               ++ignore_candidate_count;
-              FRLogger.trace("ROOM_EDGE_REMOVE ignore_candidate"
-                  + ", net=" + p_net_no
-                  + ", layer=" + curr_incomplete_room.get_layer()
-                  + ", remove_edge=" + remove_edge_no
-                  + ", candidate_no=" + ignore_candidate_count
-                  + ", candidate_bounds=" + curr_door_shape.bounding_box()
-                  + ", candidate_area=" + curr_door_area);
+              FRLogger.trace(
+                  "ROOM_EDGE_REMOVE ignore_candidate"
+                      + ", net="
+                      + p_net_no
+                      + ", layer="
+                      + curr_incomplete_room.get_layer()
+                      + ", remove_edge="
+                      + remove_edge_no
+                      + ", candidate_no="
+                      + ignore_candidate_count
+                      + ", candidate_bounds="
+                      + curr_door_shape.bounding_box()
+                      + ", candidate_area="
+                      + curr_door_area);
               if (curr_door_area > max_door_area) {
                 max_door_area = curr_door_area;
                 ignore_shape = curr_door_shape;
                 ignore_object = room;
-                FRLogger.trace("ROOM_EDGE_REMOVE ignore_selected"
-                    + ", net=" + p_net_no
-                    + ", layer=" + curr_incomplete_room.get_layer()
-                    + ", remove_edge=" + remove_edge_no
-                    + ", reason=larger_area"
-                    + ", selected_bounds=" + curr_door_shape.bounding_box()
-                    + ", selected_area=" + curr_door_area);
+                FRLogger.trace(
+                    "ROOM_EDGE_REMOVE ignore_selected"
+                        + ", net="
+                        + p_net_no
+                        + ", layer="
+                        + curr_incomplete_room.get_layer()
+                        + ", remove_edge="
+                        + remove_edge_no
+                        + ", reason=larger_area"
+                        + ", selected_bounds="
+                        + curr_door_shape.bounding_box()
+                        + ", selected_area="
+                        + curr_door_area);
               } else if (Double.compare(curr_door_area, max_door_area) == 0) {
                 ++equal_area_tie_count;
-                FRLogger.trace("ROOM_EDGE_REMOVE ignore_tie"
-                    + ", net=" + p_net_no
-                    + ", layer=" + curr_incomplete_room.get_layer()
-                    + ", remove_edge=" + remove_edge_no
-                    + ", tie_no=" + equal_area_tie_count
-                    + ", tie_bounds=" + curr_door_shape.bounding_box()
-                    + ", tie_area=" + curr_door_area);
+                FRLogger.trace(
+                    "ROOM_EDGE_REMOVE ignore_tie"
+                        + ", net="
+                        + p_net_no
+                        + ", layer="
+                        + curr_incomplete_room.get_layer()
+                        + ", remove_edge="
+                        + remove_edge_no
+                        + ", tie_no="
+                        + equal_area_tie_count
+                        + ", tie_bounds="
+                        + curr_door_shape.bounding_box()
+                        + ", tie_area="
+                        + curr_door_area);
               }
             }
           }
         }
       }
-      FRLogger.trace("ROOM_EDGE_REMOVE ignore_summary"
-          + ", net=" + p_net_no
-          + ", layer=" + curr_incomplete_room.get_layer()
-          + ", remove_edge=" + remove_edge_no
-          + ", candidate_count=" + ignore_candidate_count
-          + ", tie_count=" + equal_area_tie_count
-          + ", selected_bounds=" + (ignore_shape == null ? "null" : ignore_shape.bounding_box())
-          + ", selected_area=" + max_door_area);
-      IncompleteFreeSpaceExpansionRoom enlarged_room = new IncompleteFreeSpaceExpansionRoom(enlarged_box, curr_incomplete_room.get_layer(), curr_incomplete_room.get_contained_shape());
-      Collection<IncompleteFreeSpaceExpansionRoom> new_rooms = p_autoroute_search_tree.complete_shape(enlarged_room, p_net_no, ignore_object, ignore_shape);
-      FRLogger.trace("ROOM_EDGE_REMOVE complete_shape"
-          + ", net=" + p_net_no
-          + ", layer=" + curr_incomplete_room.get_layer()
-          + ", remove_edge=" + remove_edge_no
-          + ", enlarged_bounds=" + enlarged_box
-          + ", candidate_count=" + new_rooms.size());
+      FRLogger.trace(
+          "ROOM_EDGE_REMOVE ignore_summary"
+              + ", net="
+              + p_net_no
+              + ", layer="
+              + curr_incomplete_room.get_layer()
+              + ", remove_edge="
+              + remove_edge_no
+              + ", candidate_count="
+              + ignore_candidate_count
+              + ", tie_count="
+              + equal_area_tie_count
+              + ", selected_bounds="
+              + (ignore_shape == null ? "null" : ignore_shape.bounding_box())
+              + ", selected_area="
+              + max_door_area);
+      IncompleteFreeSpaceExpansionRoom enlarged_room =
+          new IncompleteFreeSpaceExpansionRoom(
+              enlarged_box,
+              curr_incomplete_room.get_layer(),
+              curr_incomplete_room.get_contained_shape());
+      Collection<IncompleteFreeSpaceExpansionRoom> new_rooms =
+          p_autoroute_search_tree.complete_shape(
+              enlarged_room, p_net_no, ignore_object, ignore_shape);
+      FRLogger.trace(
+          "ROOM_EDGE_REMOVE complete_shape"
+              + ", net="
+              + p_net_no
+              + ", layer="
+              + curr_incomplete_room.get_layer()
+              + ", remove_edge="
+              + remove_edge_no
+              + ", enlarged_bounds="
+              + enlarged_box
+              + ", candidate_count="
+              + new_rooms.size());
       if (new_rooms.size() == 1) {
         // Check, that the area increases to prevent endless loop.
         IncompleteFreeSpaceExpansionRoom new_room = new_rooms.iterator().next();
         if (new_room.get_shape().area() > room_area) {
-          FRLogger.trace("ROOM_EDGE_REMOVE applied"
-              + ", net=" + p_net_no
-              + ", layer=" + curr_incomplete_room.get_layer()
-              + ", remove_edge=" + remove_edge_no
-              + ", old_bounds=" + room_box
-              + ", new_bounds=" + new_room.get_shape().bounding_box());
+          FRLogger.trace(
+              "ROOM_EDGE_REMOVE applied"
+                  + ", net="
+                  + p_net_no
+                  + ", layer="
+                  + curr_incomplete_room.get_layer()
+                  + ", remove_edge="
+                  + remove_edge_no
+                  + ", old_bounds="
+                  + room_box
+                  + ", new_bounds="
+                  + new_room.get_shape().bounding_box());
           curr_incomplete_room.set_shape(new_room.get_shape());
           curr_incomplete_room.set_contained_shape(new_room.get_contained_shape());
           return true;
@@ -415,52 +591,58 @@ public final class SortedOrthogonalRoomNeighbours {
     return false;
   }
 
-  private void add_sorted_neighbour(SearchTreeObject p_search_tree_object, IntBox p_neighbour_shape, IntBox p_intersection) {
-    SortedRoomNeighbour new_neighbour = new SortedRoomNeighbour(p_search_tree_object, p_neighbour_shape, p_intersection);
+  private void add_sorted_neighbour(
+      SearchTreeObject p_search_tree_object, IntBox p_neighbour_shape, IntBox p_intersection) {
+    SortedRoomNeighbour new_neighbour =
+        new SortedRoomNeighbour(p_search_tree_object, p_neighbour_shape, p_intersection);
     sorted_neighbours.add(new_neighbour);
   }
 
   /**
-   * Helper class to sort the doors of an expansion room counterclockwise around the border of the room shape.
+   * Helper class to sort the doors of an expansion room counterclockwise around the border of the
+   * room shape.
    */
   private class SortedRoomNeighbour implements Comparable<SortedRoomNeighbour> {
 
-    /**
-     * The search tree object of the neighbour room
-     */
+    /** The search tree object of the neighbour room */
     public final SearchTreeObject search_tree_object;
-    /**
-     * The shape of the neighbour room
-     */
+
+    /** The shape of the neighbour room */
     public final IntBox shape;
-    /**
-     * The intersection of this ExpansionRoom shape with the neighbour_shape
-     */
+
+    /** The intersection of this ExpansionRoom shape with the neighbour_shape */
     public final IntBox intersection;
-    /**
-     * The first side of the room shape, where the neighbour_shape touches
-     */
+
+    /** The first side of the room shape, where the neighbour_shape touches */
     public final int first_touching_side;
-    /**
-     * The last side of the room shape, where the neighbour_shape touches
-     */
+
+    /** The last side of the room shape, where the neighbour_shape touches */
     public final int last_touching_side;
 
-    public SortedRoomNeighbour(SearchTreeObject p_search_tree_object, IntBox p_neighbour_shape, IntBox p_intersection) {
+    public SortedRoomNeighbour(
+        SearchTreeObject p_search_tree_object, IntBox p_neighbour_shape, IntBox p_intersection) {
       search_tree_object = p_search_tree_object;
       shape = p_neighbour_shape;
       intersection = p_intersection;
 
-      if (p_intersection.ll.y == room_shape.ll.y && p_intersection.ur.x > room_shape.ll.x && p_intersection.ll.x < room_shape.ur.x) {
+      if (p_intersection.ll.y == room_shape.ll.y
+          && p_intersection.ur.x > room_shape.ll.x
+          && p_intersection.ll.x < room_shape.ur.x) {
         edge_interior_touches_obstacle[0] = true;
       }
-      if (p_intersection.ur.x == room_shape.ur.x && p_intersection.ur.y > room_shape.ll.y && p_intersection.ll.y < room_shape.ur.y) {
+      if (p_intersection.ur.x == room_shape.ur.x
+          && p_intersection.ur.y > room_shape.ll.y
+          && p_intersection.ll.y < room_shape.ur.y) {
         edge_interior_touches_obstacle[1] = true;
       }
-      if (p_intersection.ur.y == room_shape.ur.y && p_intersection.ur.x > room_shape.ll.x && p_intersection.ll.x < room_shape.ur.x) {
+      if (p_intersection.ur.y == room_shape.ur.y
+          && p_intersection.ur.x > room_shape.ll.x
+          && p_intersection.ll.x < room_shape.ur.x) {
         edge_interior_touches_obstacle[2] = true;
       }
-      if (p_intersection.ll.x == room_shape.ll.x && p_intersection.ur.y > room_shape.ll.y && p_intersection.ll.y < room_shape.ur.y) {
+      if (p_intersection.ll.x == room_shape.ll.x
+          && p_intersection.ur.y > room_shape.ll.y
+          && p_intersection.ll.y < room_shape.ur.y) {
         edge_interior_touches_obstacle[3] = true;
       }
 
@@ -492,7 +674,8 @@ public final class SortedOrthogonalRoomNeighbours {
     }
 
     /**
-     * Compare function for or sorting the neighbours in counterclock sense around the border of the room shape in ascending order.
+     * Compare function for or sorting the neighbours in counterclock sense around the border of the
+     * room shape in ascending order.
      */
     @Override
     public int compareTo(SortedRoomNeighbour p_other) {
@@ -522,7 +705,8 @@ public final class SortedOrthogonalRoomNeighbours {
         // The first touching points of this neighbour and p_other with the room shape are equal.
         // Compare the last touching points.
         int this_touching_side_diff = (this.last_touching_side - this.first_touching_side + 4) % 4;
-        int other_touching_side_diff = (p_other.last_touching_side - p_other.first_touching_side + 4) % 4;
+        int other_touching_side_diff =
+            (p_other.last_touching_side - p_other.first_touching_side + 4) % 4;
         if (this_touching_side_diff > other_touching_side_diff) {
           return 1;
         }

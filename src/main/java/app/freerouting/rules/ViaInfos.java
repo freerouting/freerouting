@@ -8,14 +8,16 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Contains the lists of different ViaInfo's, which can be used in interactive and automatic routing.
+ * Contains the lists of different ViaInfo's, which can be used in interactive and automatic
+ * routing.
  */
 public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
 
   private final List<ViaInfo> list = new LinkedList<>();
 
   /**
-   * Adds a via info consisting of padstack, clearance class and drill_to_smd_allowed. Return false, if the insertion failed, for example if the name existed already.
+   * Adds a via info consisting of padstack, clearance class and drill_to_smd_allowed. Return false,
+   * if the insertion failed, for example if the name existed already.
    */
   public boolean add(ViaInfo p_via_info) {
     if (name_exists(p_via_info.get_name())) {
@@ -25,24 +27,18 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
     return true;
   }
 
-  /**
-   * Returns the number of different vias, which can be used for routing.
-   */
+  /** Returns the number of different vias, which can be used for routing. */
   public int count() {
     return this.list.size();
   }
 
-  /**
-   * Returns the p_no-th via af the via types, which can be used for routing.
-   */
+  /** Returns the p_no-th via af the via types, which can be used for routing. */
   public ViaInfo get(int p_no) {
     assert p_no >= 0 && p_no < this.list.size();
     return this.list.get(p_no);
   }
 
-  /**
-   * Returns the via info with name p_name, or null, if no such via exists.
-   */
+  /** Returns the via info with name p_name, or null, if no such via exists. */
   public ViaInfo get(String p_name) {
     for (ViaInfo curr_via : this.list) {
       if (curr_via.get_name().equals(p_name)) {
@@ -52,9 +48,7 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
     return null;
   }
 
-  /**
-   * Returns true, if a via info with name p_name is already wyisting in the list.
-   */
+  /** Returns true, if a via info with name p_name is already wyisting in the list. */
   public boolean name_exists(String p_name) {
     for (ViaInfo curr_via : this.list) {
       if (curr_via.get_name().equals(p_name)) {

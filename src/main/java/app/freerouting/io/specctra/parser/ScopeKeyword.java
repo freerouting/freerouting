@@ -3,9 +3,7 @@ package app.freerouting.io.specctra.parser;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 
-/**
- * Keywords defining a scope object
- */
+/** Keywords defining a scope object */
 public class ScopeKeyword extends Keyword {
 
   public ScopeKeyword(String p_name) {
@@ -38,9 +36,7 @@ public class ScopeKeyword extends Keyword {
     return true;
   }
 
-  /**
-   * Reads the next scope of this keyword from dsn file.
-   */
+  /** Reads the next scope of this keyword from dsn file. */
   public boolean read_scope(ReadScopeParameter p_par) {
     Object next_token = null;
     for (; ; ) {

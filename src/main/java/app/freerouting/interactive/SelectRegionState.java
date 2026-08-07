@@ -40,7 +40,7 @@ public class SelectRegionState extends InteractiveState {
 
     var previous_corner2 = corner2;
     corner2 = p_point;
-    
+
     if (hdlg != null) {
       var dirtyRect = rubber_band_dirty_rect(previous_corner2, corner2);
       // Fall back to full repaint if dirty rect calculation fails
@@ -54,10 +54,12 @@ public class SelectRegionState extends InteractiveState {
   }
 
   private Rectangle rubber_band_dirty_rect(FloatPoint p_old_corner2, FloatPoint p_new_corner2) {
-    if (hdlg == null || hdlg.graphics_context == null || hdlg.graphics_context.coordinate_transform == null) {
+    if (hdlg == null
+        || hdlg.graphics_context == null
+        || hdlg.graphics_context.coordinate_transform == null) {
       return null;
     }
-    
+
     var transform = hdlg.graphics_context.coordinate_transform;
     var sc_corner1 = transform.board_to_screen(corner1);
     var sc_new_corner2 = transform.board_to_screen(p_new_corner2);
@@ -66,9 +68,9 @@ public class SelectRegionState extends InteractiveState {
     if (sc_corner1 == null || sc_new_corner2 == null) {
       return null;
     }
-    
+
     var dirty_rect = screen_rect(sc_corner1, sc_new_corner2);
-    
+
     if (p_old_corner2 != null) {
       var sc_old_corner2 = transform.board_to_screen(p_old_corner2);
       if (sc_old_corner2 != null) {
@@ -76,7 +78,7 @@ public class SelectRegionState extends InteractiveState {
         dirty_rect.add(screen_rect(sc_corner1, sc_old_corner2));
       }
     }
-    
+
     dirty_rect.grow(3, 3); // stroke margin
     return dirty_rect;
   }
@@ -98,12 +100,12 @@ public class SelectRegionState extends InteractiveState {
     if (hdlg == null || hdlg.graphics_context == null) {
       return;
     }
-    
+
     var current_mouse = hdlg.get_current_mouse_position();
     if (corner1 == null || current_mouse == null) {
       return;
     }
-    
+
     corner2 = current_mouse;
     hdlg.graphics_context.draw_rectangle(corner1, corner2, 1, Color.white, p_graphics, 1);
   }

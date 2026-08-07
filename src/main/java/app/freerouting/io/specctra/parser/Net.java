@@ -10,25 +10,24 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Class for reading and writing net scopes from dsn-files.
- */
+/** Class for reading and writing net scopes from dsn-files. */
 public class Net {
 
   public final Id id;
-  /**
-   * List of elements of type Pin.
-   */
+
+  /** List of elements of type Pin. */
   private Set<Pin> pin_list;
 
-  /**
-   * Creates a new instance of Net
-   */
+  /** Creates a new instance of Net */
   public Net(Id p_net_id) {
     id = p_net_id;
   }
 
-  public static void write_scope(WriteScopeParameter p_par, app.freerouting.rules.Net p_net, Collection<app.freerouting.board.Pin> p_pin_list) throws IOException {
+  public static void write_scope(
+      WriteScopeParameter p_par,
+      app.freerouting.rules.Net p_net,
+      Collection<app.freerouting.board.Pin> p_pin_list)
+      throws IOException {
     p_par.file.start_scope();
     write_net_id(p_net, p_par.file, p_par.identifier_type);
     // write the pins scope
@@ -43,7 +42,9 @@ public class Net {
     p_par.file.end_scope();
   }
 
-  public static void write_net_id(app.freerouting.rules.Net p_net, IndentFileWriter p_file, IdentifierType p_identifier_type) throws IOException {
+  public static void write_net_id(
+      app.freerouting.rules.Net p_net, IndentFileWriter p_file, IdentifierType p_identifier_type)
+      throws IOException {
     p_file.write("net ");
     p_identifier_type.write(p_net.name, p_file);
     p_file.write(" ");
@@ -51,7 +52,8 @@ public class Net {
     p_file.write(String.valueOf(subnet_number));
   }
 
-  public static void write_pin(WriteScopeParameter p_par, app.freerouting.board.Pin p_pin) throws IOException {
+  public static void write_pin(WriteScopeParameter p_par, app.freerouting.board.Pin p_pin)
+      throws IOException {
     Component curr_component = p_par.board.components.get(p_pin.get_component_no());
     if (curr_component == null) {
       FRLogger.warn("Net.write_scope: component not found at '" + curr_component.name + "'");
@@ -96,9 +98,7 @@ public class Net {
     }
   }
 
-  /**
-   * Sorted tuple of component name and pin name.
-   */
+  /** Sorted tuple of component name and pin name. */
   public static class Pin implements Comparable<Pin> {
 
     public final String component_name;

@@ -9,13 +9,14 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 /**
- * VersionChecker retrieves the latest release information from GitHub in the background
- * and logs a message if a newer version of the application is available.
+ * VersionChecker retrieves the latest release information from GitHub in the background and logs a
+ * message if a newer version of the application is available.
  */
 public class VersionChecker implements Runnable {
 
-  private static final String GITHUB_RELEASES_URL = "https://api.github.com/repos/freerouting/freerouting/releases/latest";
-  
+  private static final String GITHUB_RELEASES_URL =
+      "https://api.github.com/repos/freerouting/freerouting/releases/latest";
+
   private final String currentVersion;
   private final HttpClient httpClient;
 
@@ -57,18 +58,21 @@ public class VersionChecker implements Runnable {
   @Override
   public void run() {
     try {
-      HttpRequest request = HttpRequest.newBuilder()
-          .uri(URI.create(GITHUB_RELEASES_URL))
-          .header("User-Agent", "Freerouting-Version-Checker")
-          .build();
+      HttpRequest request =
+          HttpRequest.newBuilder()
+              .uri(URI.create(GITHUB_RELEASES_URL))
+              .header("User-Agent", "Freerouting-Version-Checker")
+              .build();
 
-      httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+      httpClient
+          .sendAsync(request, HttpResponse.BodyHandlers.ofString())
           .thenApply(HttpResponse::body)
           .thenAccept(this::processResponse)
-          .exceptionally(e -> {
-            FRLogger.warn("Failed to check for new version: " + e.getMessage());
-            return null;
-          });
+          .exceptionally(
+              e -> {
+                FRLogger.warn("Failed to check for new version: " + e.getMessage());
+                return null;
+              });
     } catch (Exception e) {
       FRLogger.warn("Failed to initiate version check: " + e.getMessage());
     }
@@ -88,16 +92,18 @@ public class VersionChecker implements Runnable {
       JsonObject json = JsonParser.parseString(responseBody).getAsJsonObject();
       if (json.has("tag_name")) {
         String latestVersion = json.get("tag_name").getAsString();
-        
+
         String cleanCurrent = currentVersion.substring(1); // currentVersion always starts with 'v'
-        String cleanLatest = latestVersion.startsWith("v") || latestVersion.startsWith("V")
-            ? latestVersion.substring(1)
-            : latestVersion;
+        String cleanLatest =
+            latestVersion.startsWith("v") || latestVersion.startsWith("V")
+                ? latestVersion.substring(1)
+                : latestVersion;
 
         if (!cleanCurrent.equalsIgnoreCase(cleanLatest)) {
           FRLogger.info("New version available: " + latestVersion);
         } else {
-          FRLogger.debug("No new version available. Current version is up to date: " + currentVersion);
+          FRLogger.debug(
+              "No new version available. Current version is up to date: " + currentVersion);
         }
       } else {
         FRLogger.warn("GitHub release response does not contain 'tag_name': " + responseBody);

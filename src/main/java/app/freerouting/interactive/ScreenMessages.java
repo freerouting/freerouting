@@ -9,10 +9,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import javax.swing.JLabel;
 
-/**
- * Generate language-specific texts for fields at the bottom of the screen,
- * below the PCB frame.
- */
+/** Generate language-specific texts for fields at the bottom of the screen, below the PCB frame. */
 public class ScreenMessages {
 
   private static final String empty_string = "            ";
@@ -20,10 +17,10 @@ public class ScreenMessages {
   final JLabel warningLabel;
   private final String active_layer_string;
   private final String target_layer_string;
-  /**
-   * The number format for displaying the trace length
-   */
+
+  /** The number format for displaying the trace length */
   private final NumberFormat number_format;
+
   private final JLabel add_field;
   private final JLabel status_field;
   private final JLabel layer_field;
@@ -34,11 +31,16 @@ public class ScreenMessages {
   private String prev_target_layer_name = empty_string;
   private boolean write_protected;
 
-  /**
-   * Creates a new instance of ScreenMessages
-   */
-  public ScreenMessages(JLabel errorLabel, JLabel warningLabel, JLabel p_status_field, JLabel p_add_field,
-      JLabel p_layer_field, JLabel p_score_field, JLabel p_mouse_position, JLabel p_unit_label,
+  /** Creates a new instance of ScreenMessages */
+  public ScreenMessages(
+      JLabel errorLabel,
+      JLabel warningLabel,
+      JLabel p_status_field,
+      JLabel p_add_field,
+      JLabel p_layer_field,
+      JLabel p_score_field,
+      JLabel p_mouse_position,
+      JLabel p_unit_label,
       Locale p_locale) {
 
     tm = new TextManager(this.getClass(), p_locale);
@@ -64,31 +66,27 @@ public class ScreenMessages {
     warningLabel.setText(Integer.toString(warningCount));
   }
 
-  /**
-   * Sets the message in the status field.
-   */
+  /** Sets the message in the status field. */
   public void set_status_message(String p_message) {
     if (!this.write_protected) {
       status_field.setText(p_message);
     }
   }
 
-  /**
-   * Displays the latest traced operation in the footer.
-   */
+  /** Displays the latest traced operation in the footer. */
   public void set_trace_message(String operation, String message, String impactedItems) {
     if (this.write_protected) {
       return;
     }
-    String statusText = operation == null || operation.isEmpty() ? message : operation + ": " + message;
+    String statusText =
+        operation == null || operation.isEmpty() ? message : operation + ": " + message;
     status_field.setText(statusText == null ? empty_string : statusText);
-    String impactedText = impactedItems == null || impactedItems.isEmpty() ? empty_string : impactedItems;
+    String impactedText =
+        impactedItems == null || impactedItems.isEmpty() ? empty_string : impactedItems;
     add_field.setText(impactedText);
   }
 
-  /**
-   * Sets the displayed layer number on the screen.
-   */
+  /** Sets the displayed layer number on the screen. */
   public void set_layer(String p_layer_name) {
     if (!this.write_protected) {
       layer_field.setText(active_layer_string + p_layer_name);
@@ -101,7 +99,8 @@ public class ScreenMessages {
     int items_to_go = p_items_to_go;
 
     add_field.setText(tm.getText("interactive_autoroute_add", String.valueOf(items_to_go)));
-    layer_field.setText(tm.getText("interactive_autoroute_layer", String.valueOf(found), String.valueOf(failed)));
+    layer_field.setText(
+        tm.getText("interactive_autoroute_layer", String.valueOf(found), String.valueOf(failed)));
   }
 
   public void set_batch_autoroute_info(RouterCounters routerCounters) {
@@ -109,25 +108,29 @@ public class ScreenMessages {
     int routed = routerCounters.routedCount;
     int failed = routerCounters.failedToBeRoutedCount;
     if ("fanout".equals(routerCounters.phase)) {
-      int extraVias = routerCounters.fanoutExtraViasCount == null ? 0 : routerCounters.fanoutExtraViasCount;
-      add_field.setText(tm.getText("batch_autoroute_add", String.valueOf(items_to_go), String.valueOf(routed)));
-      layer_field.setText(tm.getText("batch_fanout_layer", String.valueOf(failed), String.valueOf(extraVias)));
+      int extraVias =
+          routerCounters.fanoutExtraViasCount == null ? 0 : routerCounters.fanoutExtraViasCount;
+      add_field.setText(
+          tm.getText("batch_autoroute_add", String.valueOf(items_to_go), String.valueOf(routed)));
+      layer_field.setText(
+          tm.getText("batch_fanout_layer", String.valueOf(failed), String.valueOf(extraVias)));
       return;
     }
     int ripped = routerCounters.rippedCount;
-    add_field.setText(tm.getText("batch_autoroute_add", String.valueOf(items_to_go), String.valueOf(routed)));
-    layer_field.setText(tm.getText("batch_autoroute_layer", String.valueOf(ripped), String.valueOf(failed)));
+    add_field.setText(
+        tm.getText("batch_autoroute_add", String.valueOf(items_to_go), String.valueOf(routed)));
+    layer_field.setText(
+        tm.getText("batch_autoroute_layer", String.valueOf(ripped), String.valueOf(failed)));
   }
 
   public void set_post_route_info(int p_via_count, double p_trace_length, Unit unit) {
     int via_count = p_via_count;
     add_field.setText(tm.getText("post_route_add", String.valueOf(via_count)));
-    layer_field.setText(tm.getText("post_route_layer", this.number_format.format(p_trace_length), unit.toString()));
+    layer_field.setText(
+        tm.getText("post_route_layer", this.number_format.format(p_trace_length), unit.toString()));
   }
 
-  /**
-   * Sets the displayed layer of the nearest target item in interactive routing.
-   */
+  /** Sets the displayed layer of the nearest target item in interactive routing. */
   public void set_target_layer(String p_layer_name) {
     if (!(p_layer_name.equals(prev_target_layer_name) || this.write_protected)) {
       add_field.setText(target_layer_string + p_layer_name);
@@ -147,8 +150,8 @@ public class ScreenMessages {
   }
 
   /**
-   * Clears the additional field, which is among others used to display the layer
-   * of the nearest target item.
+   * Clears the additional field, which is among others used to display the layer of the nearest
+   * target item.
    */
   public void clear_add_field() {
     if (!this.write_protected) {
@@ -157,9 +160,7 @@ public class ScreenMessages {
     }
   }
 
-  /**
-   * Clears the status field and the additional field.
-   */
+  /** Clears the status field and the additional field. */
   public void clear() {
     if (!this.write_protected) {
       status_field.setText(empty_string);
@@ -169,16 +170,17 @@ public class ScreenMessages {
     }
   }
 
-  /**
-   * As long as write_protected is set to true, the set functions in this class
-   * will do nothing.
-   */
+  /** As long as write_protected is set to true, the set functions in this class will do nothing. */
   public void set_write_protected(boolean p_value) {
     write_protected = p_value;
   }
 
   public void set_board_score(float score, int unrouted_count, int violation_count) {
-    score_field.setText(tm.getText("score", FRLogger.defaultFloatFormat.format(score), String.valueOf(unrouted_count),
-        String.valueOf(violation_count)));
+    score_field.setText(
+        tm.getText(
+            "score",
+            FRLogger.defaultFloatFormat.format(score),
+            String.valueOf(unrouted_count),
+            String.valueOf(violation_count)));
   }
 }

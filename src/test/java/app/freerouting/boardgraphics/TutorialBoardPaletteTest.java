@@ -23,22 +23,27 @@ class TutorialBoardPaletteTest {
 
   @Test
   void applyUsesPrimaryBackgroundAndSecondaryOutline() {
-    LayerStructure layerStructure = new LayerStructure(new Layer[] {
-        new Layer("F.Cu", true),
-        new Layer("B.Cu", true)
-    });
-    GraphicsContext graphicsContext = new GraphicsContext(
-        new IntBox(new IntPoint(0, 0), new IntPoint(1000, 1000)),
-        new Dimension(800, 600),
-        layerStructure,
-        Locale.ENGLISH);
+    LayerStructure layerStructure =
+        new LayerStructure(new Layer[] {new Layer("F.Cu", true), new Layer("B.Cu", true)});
+    GraphicsContext graphicsContext =
+        new GraphicsContext(
+            new IntBox(new IntPoint(0, 0), new IntPoint(1000, 1000)),
+            new Dimension(800, 600),
+            layerStructure,
+            Locale.ENGLISH);
 
     TutorialBoardPalette.apply(graphicsContext);
 
-    assertEquals(TutorialBoardPalette.PRIMARY, graphicsContext.other_color_table.get_background_color());
-    assertEquals(TutorialBoardPalette.SECONDARY, graphicsContext.other_color_table.get_outline_color());
-    assertEquals(TutorialBoardPalette.SECONDARY, graphicsContext.item_color_table.get_trace_colors(false)[0]);
-    assertEquals(TutorialBoardPalette.SECONDARY_HOVER, graphicsContext.item_color_table.get_trace_colors(false)[1]);
+    assertEquals(
+        TutorialBoardPalette.PRIMARY, graphicsContext.other_color_table.get_background_color());
+    assertEquals(
+        TutorialBoardPalette.SECONDARY, graphicsContext.other_color_table.get_outline_color());
+    assertEquals(
+        TutorialBoardPalette.SECONDARY,
+        graphicsContext.item_color_table.get_trace_colors(false)[0]);
+    assertEquals(
+        TutorialBoardPalette.SECONDARY_HOVER,
+        graphicsContext.item_color_table.get_trace_colors(false)[1]);
   }
 
   @Test

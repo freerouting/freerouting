@@ -52,7 +52,7 @@ class DsnWriterTest {
     RoutingBoard board = DsnTestFixtures.loadBoard("Issue143-rpi_splitter.dsn");
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     DsnWriter.write(board, out, "flush-test", false);
-    assertTrue(out.size() > 0, "Output stream must contain data after write (flush must have occurred)");
+    assertTrue(
+        out.size() > 0, "Output stream must contain data after write (flush must have occurred)");
   }
 }
-

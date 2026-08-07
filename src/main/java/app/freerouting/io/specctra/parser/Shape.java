@@ -12,9 +12,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-/**
- * Describes a shape in a Specctra dsn file.
- */
+/** Describes a shape in a Specctra dsn file. */
 public abstract class Shape {
 
   public final Layer layer;
@@ -24,7 +22,8 @@ public abstract class Shape {
   }
 
   /**
-   * Reads shape scope from a Specctra dsn file. If p_layer_structure == null, only Layer.PCB and Layer.Signal are expected, no individual layers.
+   * Reads shape scope from a Specctra dsn file. If p_layer_structure == null, only Layer.PCB and
+   * Layer.Signal are expected, no individual layers.
    */
   public static Shape read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
     try {
@@ -43,7 +42,8 @@ public abstract class Shape {
   /**
    * Reads a shape scope when the shape keyword (for example {@code path}) has already been scanned.
    */
-  static Shape read_scope_from_keyword(IJFlexScanner p_scanner, Object keyword, LayerStructure p_layer_structure) {
+  static Shape read_scope_from_keyword(
+      IJFlexScanner p_scanner, Object keyword, LayerStructure p_layer_structure) {
     if (keyword == Keyword.RECTANGLE) {
       return Shape.read_rectangle_scope(p_scanner, p_layer_structure);
     }
@@ -67,7 +67,7 @@ public abstract class Shape {
    * Gets the layer with a certain name from the layer structure
    *
    * @param p_layer_structure Layer structure to scan
-   * @param layer_name        Name of the layer to scan for
+   * @param layer_name Name of the layer to scan for
    * @return Layer object with the defined name
    */
   private static Layer get_layer(LayerStructure p_layer_structure, String layer_name) {
@@ -85,7 +85,10 @@ public abstract class Shape {
 
       int layer_no = p_layer_structure.get_no(layer_name);
       if (layer_no < 0 || layer_no >= p_layer_structure.arr.length) {
-        FRLogger.warn("Shape.read_circle_scope: layer with name '" + layer_name + "' not found in layer structure.");
+        FRLogger.warn(
+            "Shape.read_circle_scope: layer with name '"
+                + layer_name
+                + "' not found in layer structure.");
         return null;
       } else {
         layer = p_layer_structure.arr[layer_no];
@@ -95,10 +98,9 @@ public abstract class Shape {
     return layer;
   }
 
-  /**
-   * Reads an object of type PolylinePath from the dsn-file.
-   */
-  public static PolylinePath read_polyline_path_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
+  /** Reads an object of type PolylinePath from the dsn-file. */
+  public static PolylinePath read_polyline_path_scope(
+      IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
     try {
       String layer_name = p_scanner.next_string();
       Layer layer = get_layer(p_layer_structure, layer_name);
@@ -114,8 +116,10 @@ public abstract class Shape {
         corner_list.add(next_token);
       }
       if (corner_list.size() < 5) {
-        FRLogger
-            .warn("PolylinePath.read_scope: too few numbers in scope at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PolylinePath.read_scope: too few numbers in scope at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       Iterator<Object> it = corner_list.iterator();
@@ -126,7 +130,10 @@ public abstract class Shape {
       } else if (next_object instanceof Integer integer) {
         width = integer;
       } else {
-        FRLogger.warn("PolylinePath.read_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PolylinePath.read_scope: number expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       double[] corner_arr = new double[corner_list.size() - 1];
@@ -137,7 +144,10 @@ public abstract class Shape {
         } else if (next_object instanceof Integer integer) {
           corner_arr[i] = integer;
         } else {
-          FRLogger.warn("Shape.read_polygon_path_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Shape.read_polygon_path_scope: number expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
       }
@@ -149,11 +159,12 @@ public abstract class Shape {
   }
 
   /**
-   * Reads a shape , which may contain holes from a specctra dsn-file. The first shape in the shape_list of the result is the border of the area. The other shapes in the shape_list are holes
-   * (windows).
+   * Reads a shape , which may contain holes from a specctra dsn-file. The first shape in the
+   * shape_list of the result is the border of the area. The other shapes in the shape_list are
+   * holes (windows).
    */
-  public static ReadAreaScopeResult read_area_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure,
-      boolean p_skip_window_scopes) {
+  public static ReadAreaScopeResult read_area_scope(
+      IJFlexScanner p_scanner, LayerStructure p_layer_structure, boolean p_skip_window_scopes) {
     Collection<Shape> shape_list = new LinkedList<>();
     String clearance_class_name = null;
     String area_name = null;
@@ -162,7 +173,10 @@ public abstract class Shape {
     try {
       next_token = p_scanner.next_token();
     } catch (IOException _) {
-      FRLogger.warn("Shape.read_area_scope: IO error scanning file at '" + p_scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "Shape.read_area_scope: IO error scanning file at '"
+              + p_scanner.get_scope_identifier()
+              + "'");
       return null;
     }
     if (next_token instanceof String curr_name) {
@@ -173,7 +187,10 @@ public abstract class Shape {
     }
     Shape curr_shape = Shape.read_scope(p_scanner, p_layer_structure);
     if (curr_shape == null) {
-      FRLogger.warn("Shape.read_area_scope: could not read shape at '" + p_scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "Shape.read_area_scope: could not read shape at '"
+              + p_scanner.get_scope_identifier()
+              + "'");
       result_ok = false;
     }
     shape_list.add(curr_shape);
@@ -187,7 +204,10 @@ public abstract class Shape {
         return null;
       }
       if (next_token == null) {
-        FRLogger.warn("Shape.read_area_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Shape.read_area_scope: unexpected end of file at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -208,8 +228,10 @@ public abstract class Shape {
             return null;
           }
           if (next_token != Keyword.CLOSED_BRACKET) {
-            FRLogger
-                .warn("Shape.read_area_scope: closed bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+            FRLogger.warn(
+                "Shape.read_area_scope: closed bracket expected at '"
+                    + p_scanner.get_scope_identifier()
+                    + "'");
             return null;
           }
 
@@ -228,9 +250,11 @@ public abstract class Shape {
   }
 
   /**
-   * Reads a rectangle scope from a Specctra dsn file. If p_layer_structure == null, only Layer.PCB and Layer.Signal are expected, no individual layers.
+   * Reads a rectangle scope from a Specctra dsn file. If p_layer_structure == null, only Layer.PCB
+   * and Layer.Signal are expected, no individual layers.
    */
-  public static Rectangle read_rectangle_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
+  public static Rectangle read_rectangle_scope(
+      IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
     try {
       String layer_name = p_scanner.next_string();
       Layer rect_layer = get_layer(p_layer_structure, layer_name);
@@ -248,7 +272,10 @@ public abstract class Shape {
         } else if (next_token instanceof Integer integer) {
           rect_coor[i] = integer;
         } else {
-          FRLogger.warn("Shape.read_rectangle_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Shape.read_rectangle_scope: number expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
       }
@@ -256,7 +283,8 @@ public abstract class Shape {
 
       next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("Shape.read_rectangle_scope ) expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Shape.read_rectangle_scope ) expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       if (rect_layer == null) {
@@ -270,9 +298,11 @@ public abstract class Shape {
   }
 
   /**
-   * Reads a closed polygon scope from a Specctra dsn file. If p_layer_structure == null, only Layer.PCB and Layer.Signal are expected, no individual layers.
+   * Reads a closed polygon scope from a Specctra dsn file. If p_layer_structure == null, only
+   * Layer.PCB and Layer.Signal are expected, no individual layers.
    */
-  public static Polygon read_polygon_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
+  public static Polygon read_polygon_scope(
+      IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
     try {
       Layer polygon_layer = null;
       boolean layer_ok = true;
@@ -283,19 +313,27 @@ public abstract class Shape {
         polygon_layer = Layer.SIGNAL;
       } else {
         if (p_layer_structure == null) {
-          FRLogger.warn("Shape.read_polygon_scope: only layer types pcb or signal expected at '"
-              + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Shape.read_polygon_scope: only layer types pcb or signal expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
         if (!(next_token instanceof String)) {
           FRLogger.warn(
-              "Shape.read_polygon_scope: layer name string expected at '" + p_scanner.get_scope_identifier() + "'");
+              "Shape.read_polygon_scope: layer name string expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
         int layer_no = p_layer_structure.get_no((String) next_token);
         if (layer_no < 0 || layer_no >= p_layer_structure.arr.length) {
-          FRLogger.warn("Shape.read_polygon_scope: layer name '" + next_token + "' not found in layer structure  at '"
-              + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Shape.read_polygon_scope: layer name '"
+                  + next_token
+                  + "' not found in layer structure  at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           layer_ok = false;
         } else {
           polygon_layer = p_layer_structure.arr[layer_no];
@@ -311,8 +349,10 @@ public abstract class Shape {
       for (; ; ) {
         next_token = p_scanner.next_token();
         if (next_token == null) {
-          FRLogger
-              .warn("Shape.read_polygon_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Shape.read_polygon_scope: unexpected end of file at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
         if (next_token == Keyword.OPEN_BRACKET) {
@@ -337,7 +377,10 @@ public abstract class Shape {
         } else if (next_object instanceof Integer integer) {
           coor_arr[i] = integer;
         } else {
-          FRLogger.warn("Shape.read_polygon_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Shape.read_polygon_scope: number expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
       }
@@ -348,17 +391,20 @@ public abstract class Shape {
     }
   }
 
-  /**
-   * Reads a circle scope from a Specctra dsn file.
-   */
-  public static Circle read_circle_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
+  /** Reads a circle scope from a Specctra dsn file. */
+  public static Circle read_circle_scope(
+      IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
     try {
       String layer_name = p_scanner.next_string();
       Layer circle_layer = get_layer(p_layer_structure, layer_name);
 
       if (circle_layer == null) {
-        FRLogger.warn("Circle.read_circle_scope: layer with name '" + layer_name + "' not found in layer structure at '"
-            + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Circle.read_circle_scope: layer with name '"
+                + layer_name
+                + "' not found in layer structure at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
       }
 
       // fill the coordinates
@@ -371,8 +417,10 @@ public abstract class Shape {
           break;
         }
         if (curr_index > 2) {
-          FRLogger
-              .warn("Shape.read_circle_scope: closed bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Shape.read_circle_scope: closed bracket expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
         if (next_token instanceof Double double1) {
@@ -380,7 +428,10 @@ public abstract class Shape {
         } else if (next_token instanceof Integer integer) {
           circle_coor[curr_index] = integer;
         } else {
-          FRLogger.warn("Shape.read_circle_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Shape.read_circle_scope: number expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
         ++curr_index;
@@ -396,10 +447,9 @@ public abstract class Shape {
     }
   }
 
-  /**
-   * Reads an object of type Path from the dsn-file.
-   */
-  public static PolygonPath read_polygon_path_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
+  /** Reads an object of type Path from the dsn-file. */
+  public static PolygonPath read_polygon_path_scope(
+      IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
     try {
       String layer_name = p_scanner.next_string();
       Layer layer = get_layer(p_layer_structure, layer_name);
@@ -423,9 +473,10 @@ public abstract class Shape {
       // corner_list contains width + coordinate pairs
       if (corner_list.size() < 5) {
         // Single-point paths are not valid traces, skip them
-        FRLogger
-            .debug("Shape.read_polygon_path_scope: skipping path with too few coordinates (need at least 2 points) at '"
-                + p_scanner.get_scope_identifier() + "'");
+        FRLogger.debug(
+            "Shape.read_polygon_path_scope: skipping path with too few coordinates (need at least 2 points) at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       if (layer == null) {
@@ -439,7 +490,10 @@ public abstract class Shape {
       } else if (next_object instanceof Integer integer) {
         width = integer;
       } else {
-        FRLogger.warn("Shape.read_polygon_path_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Shape.read_polygon_path_scope: number expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       double[] coordinate_arr = new double[corner_list.size() - 1];
@@ -450,7 +504,10 @@ public abstract class Shape {
         } else if (next_object instanceof Integer integer) {
           coordinate_arr[i] = integer;
         } else {
-          FRLogger.warn("Shape.read_polygon_path_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Shape.read_polygon_path_scope: number expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
       }
@@ -462,9 +519,11 @@ public abstract class Shape {
   }
 
   /**
-   * Transforms a shape with holes to the board coordinate system. The first shape in the Collection p_area is the border, the other shapes are holes of the area.
+   * Transforms a shape with holes to the board coordinate system. The first shape in the Collection
+   * p_area is the border, the other shapes are holes of the area.
    */
-  public static Area transform_area_to_board(Collection<Shape> p_area, CoordinateTransform p_coordinate_transform) {
+  public static Area transform_area_to_board(
+      Collection<Shape> p_area, CoordinateTransform p_coordinate_transform) {
     int hole_count = p_area.size() - 1;
     if (hole_count <= -1) {
       FRLogger.warn("Shape.transform_area_to_board: p_area.size() > 0 expected");
@@ -472,7 +531,8 @@ public abstract class Shape {
     }
     Iterator<Shape> it = p_area.iterator();
     Shape boundary = it.next();
-    app.freerouting.geometry.planar.Shape boundary_shape = boundary.transform_to_board(p_coordinate_transform);
+    app.freerouting.geometry.planar.Shape boundary_shape =
+        boundary.transform_to_board(p_coordinate_transform);
     Area result;
     if (hole_count == 0) {
       result = boundary_shape;
@@ -484,7 +544,8 @@ public abstract class Shape {
       }
       PolylineShape[] holes = new PolylineShape[hole_count];
       for (int i = 0; i < holes.length; i++) {
-        app.freerouting.geometry.planar.Shape hole_shape = it.next().transform_to_board(p_coordinate_transform);
+        app.freerouting.geometry.planar.Shape hole_shape =
+            it.next().transform_to_board(p_coordinate_transform);
         if (!(hole_shape instanceof PolylineShape)) {
           FRLogger.warn("Shape.transform_area_to_board: PolylineShape expected");
           return null;
@@ -497,9 +558,11 @@ public abstract class Shape {
   }
 
   /**
-   * Transforms the relative coordinates of a shape with holes to the board coordinate system. The first shape in the Collection p_area is the border, the other shapes are holes of the area.
+   * Transforms the relative coordinates of a shape with holes to the board coordinate system. The
+   * first shape in the Collection p_area is the border, the other shapes are holes of the area.
    */
-  public static Area transform_area_to_board_rel(Collection<Shape> p_area, CoordinateTransform p_coordinate_transform) {
+  public static Area transform_area_to_board_rel(
+      Collection<Shape> p_area, CoordinateTransform p_coordinate_transform) {
     int hole_count = p_area.size() - 1;
     if (hole_count <= -1) {
       FRLogger.warn("Shape.transform_area_to_board_rel: p_area.size() > 0 expected");
@@ -507,7 +570,8 @@ public abstract class Shape {
     }
     Iterator<Shape> it = p_area.iterator();
     Shape boundary = it.next();
-    app.freerouting.geometry.planar.Shape boundary_shape = boundary.transform_to_board_rel(p_coordinate_transform);
+    app.freerouting.geometry.planar.Shape boundary_shape =
+        boundary.transform_to_board_rel(p_coordinate_transform);
     Area result;
     if (hole_count == 0) {
       result = boundary_shape;
@@ -519,7 +583,8 @@ public abstract class Shape {
       }
       PolylineShape[] holes = new PolylineShape[hole_count];
       for (int i = 0; i < holes.length; i++) {
-        app.freerouting.geometry.planar.Shape hole_shape = it.next().transform_to_board_rel(p_coordinate_transform);
+        app.freerouting.geometry.planar.Shape hole_shape =
+            it.next().transform_to_board_rel(p_coordinate_transform);
         if (!(hole_shape instanceof PolylineShape)) {
           FRLogger.warn("Shape.transform_area_to_board: PolylineShape expected");
           return null;
@@ -531,41 +596,42 @@ public abstract class Shape {
     return result;
   }
 
-  /**
-   * Writes a shape scope to a Specctra dsn file.
-   */
-  public abstract void write_scope(IndentFileWriter p_file, IdentifierType p_identifier) throws IOException;
+  /** Writes a shape scope to a Specctra dsn file. */
+  public abstract void write_scope(IndentFileWriter p_file, IdentifierType p_identifier)
+      throws IOException;
 
   /**
-   * Writes a shape scope to a Specctra session file. In a session file all coordinates must be integer.
+   * Writes a shape scope to a Specctra session file. In a session file all coordinates must be
+   * integer.
    */
-  public abstract void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier) throws IOException;
+  public abstract void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier)
+      throws IOException;
 
-  public void write_hole_scope(IndentFileWriter p_file, IdentifierType p_identifier_type) throws IOException {
+  public void write_hole_scope(IndentFileWriter p_file, IdentifierType p_identifier_type)
+      throws IOException {
     p_file.start_scope();
     p_file.write("window");
     this.write_scope(p_file, p_identifier_type);
     p_file.end_scope();
   }
 
-  /**
-   * Transforms a specctra dsn shape to a geometry.planar.Shape.
-   */
-  public abstract app.freerouting.geometry.planar.Shape transform_to_board(CoordinateTransform p_coordinate_transform);
+  /** Transforms a specctra dsn shape to a geometry.planar.Shape. */
+  public abstract app.freerouting.geometry.planar.Shape transform_to_board(
+      CoordinateTransform p_coordinate_transform);
 
-  /**
-   * Returns the smallest axis parallel rectangle containing this shape.
-   */
+  /** Returns the smallest axis parallel rectangle containing this shape. */
   public abstract Rectangle bounding_box();
 
   /**
-   * Transforms the relative (vector) coordinates of a specctra dsn shape to a geometry.planar.Shape.
+   * Transforms the relative (vector) coordinates of a specctra dsn shape to a
+   * geometry.planar.Shape.
    */
   public abstract app.freerouting.geometry.planar.Shape transform_to_board_rel(
       CoordinateTransform p_coordinate_transform);
 
   /**
-   * Contains the result of the function read_area_scope. area_name or clearance_class_name may be null, which means they are not provided.
+   * Contains the result of the function read_area_scope. area_name or clearance_class_name may be
+   * null, which means they are not provided.
    */
   static final class ReadAreaScopeResult {
 
@@ -573,7 +639,8 @@ public abstract class Shape {
     final String clearance_class_name;
     String area_name; // may be generated later on, if area_name is null.
 
-    private ReadAreaScopeResult(String p_area_name, Collection<Shape> p_shape_list, String p_clearance_class_name) {
+    private ReadAreaScopeResult(
+        String p_area_name, Collection<Shape> p_shape_list, String p_clearance_class_name) {
       area_name = p_area_name;
       shape_list = p_shape_list;
       clearance_class_name = p_clearance_class_name;

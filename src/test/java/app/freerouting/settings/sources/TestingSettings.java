@@ -6,137 +6,137 @@ import app.freerouting.settings.ScoringSettings;
 import app.freerouting.settings.SettingsSource;
 
 /**
- * Settings source for unit tests.
- * Allows injecting specific settings needed for testing with high priority.
+ * Settings source for unit tests. Allows injecting specific settings needed for testing with high
+ * priority.
  */
 public class TestingSettings implements SettingsSource {
 
-    private final RouterSettings settings;
+  private final RouterSettings settings;
 
-    public TestingSettings() {
-        this.settings = new RouterSettings();
-        // Set complex objects to null to avoid overwriting them with defaults during
-        // merge
-        // (RouterSettings constructor initializes them)
-        this.settings.optimizer = null;
-        this.settings.scoring = null;
-        // Keep legacy fixture expectations stable unless a test explicitly opts in.
-        this.settings.copperToEdgeClearanceUm = 0.0;
-    }
+  public TestingSettings() {
+    this.settings = new RouterSettings();
+    // Set complex objects to null to avoid overwriting them with defaults during
+    // merge
+    // (RouterSettings constructor initializes them)
+    this.settings.optimizer = null;
+    this.settings.scoring = null;
+    // Keep legacy fixture expectations stable unless a test explicitly opts in.
+    this.settings.copperToEdgeClearanceUm = 0.0;
+  }
 
-    public void setBendCost(int layer, double bendCost) {
-        if (this.settings.layers == null) {
-            this.settings.setLayerCount(layer + 1);
-        } else if (layer >= this.settings.layers.length) {
-            this.settings.setLayerCount(layer + 1);
-        }
-        this.settings.set_bend_cost(layer, bendCost);
+  public void setBendCost(int layer, double bendCost) {
+    if (this.settings.layers == null) {
+      this.settings.setLayerCount(layer + 1);
+    } else if (layer >= this.settings.layers.length) {
+      this.settings.setLayerCount(layer + 1);
     }
+    this.settings.set_bend_cost(layer, bendCost);
+  }
 
-    public void setDefaultBendCost(double defaultBendCost) {
-        if (this.settings.scoring == null) {
-            this.settings.scoring = new ScoringSettings();
-        }
-        this.settings.scoring.defaultBendCost = defaultBendCost;
+  public void setDefaultBendCost(double defaultBendCost) {
+    if (this.settings.scoring == null) {
+      this.settings.scoring = new ScoringSettings();
     }
+    this.settings.scoring.defaultBendCost = defaultBendCost;
+  }
 
-    public void setMaxItems(int maxItems) {
-        this.settings.maxItems = maxItems;
-    }
+  public void setMaxItems(int maxItems) {
+    this.settings.maxItems = maxItems;
+  }
 
-    public void setMaxPasses(int maxPasses) {
-        if (this.settings.maxPasses == null) {
-            this.settings.maxPasses = maxPasses;
-        }
+  public void setMaxPasses(int maxPasses) {
+    if (this.settings.maxPasses == null) {
+      this.settings.maxPasses = maxPasses;
     }
+  }
 
-    public void setJobTimeoutString(String jobTimeoutString) {
-        if (this.settings.jobTimeoutString == null) {
-            this.settings.jobTimeoutString = jobTimeoutString;
-        }
+  public void setJobTimeoutString(String jobTimeoutString) {
+    if (this.settings.jobTimeoutString == null) {
+      this.settings.jobTimeoutString = jobTimeoutString;
     }
+  }
 
-    public void setFanoutEnabled(boolean enabled) {
-        if (this.settings.fanout == null) {
-            this.settings.fanout = new app.freerouting.settings.FanoutSettings();
-        }
-        this.settings.fanout.enabled = enabled;
+  public void setFanoutEnabled(boolean enabled) {
+    if (this.settings.fanout == null) {
+      this.settings.fanout = new app.freerouting.settings.FanoutSettings();
     }
+    this.settings.fanout.enabled = enabled;
+  }
 
-    public void setRouterEnabled(boolean enabled) {
-        this.settings.enabled = enabled;
-    }
+  public void setRouterEnabled(boolean enabled) {
+    this.settings.enabled = enabled;
+  }
 
-    public void setCopperToEdgeClearanceUm(double copperToEdgeClearanceUm) {
-        this.settings.copperToEdgeClearanceUm = copperToEdgeClearanceUm;
-    }
+  public void setCopperToEdgeClearanceUm(double copperToEdgeClearanceUm) {
+    this.settings.copperToEdgeClearanceUm = copperToEdgeClearanceUm;
+  }
 
-    public void setHoleClearanceUm(double holeClearanceUm) {
-        this.settings.holeClearanceUm = holeClearanceUm;
-    }
+  public void setHoleClearanceUm(double holeClearanceUm) {
+    this.settings.holeClearanceUm = holeClearanceUm;
+  }
 
-    public void setNeckWidthUm(double neckWidthUm) {
-        this.settings.neckWidthUm = neckWidthUm;
-    }
+  public void setNeckWidthUm(double neckWidthUm) {
+    this.settings.neckWidthUm = neckWidthUm;
+  }
 
-    public void setStrictDrc(boolean strictDrc) {
-        this.settings.strictDrc = strictDrc;
-    }
+  public void setStrictDrc(boolean strictDrc) {
+    this.settings.strictDrc = strictDrc;
+  }
 
-    @Override
-    public RouterSettings getSettings() {
-        return settings;
-    }
+  @Override
+  public RouterSettings getSettings() {
+    return settings;
+  }
 
-    @Override
-    public String getSourceName() {
-        return "Testing Settings";
-    }
+  @Override
+  public String getSourceName() {
+    return "Testing Settings";
+  }
 
-    @Override
-    public int getPriority() {
-        // High priority to override other sources (API is 70)
-        return 80;
-    }
+  @Override
+  public int getPriority() {
+    // High priority to override other sources (API is 70)
+    return 80;
+  }
 
-    public void setEnabled(boolean enabled) {
-        if (this.settings.enabled == null) {
-            this.settings.enabled = enabled;
-        }
+  public void setEnabled(boolean enabled) {
+    if (this.settings.enabled == null) {
+      this.settings.enabled = enabled;
     }
+  }
 
-    public void setOptimizerEnabled(boolean enabled) {
-        if (this.settings.optimizer == null) {
-            this.settings.optimizer = new OptimizerSettings();
-        }
-        this.settings.optimizer.enabled = enabled;
+  public void setOptimizerEnabled(boolean enabled) {
+    if (this.settings.optimizer == null) {
+      this.settings.optimizer = new OptimizerSettings();
     }
+    this.settings.optimizer.enabled = enabled;
+  }
 
-    public void setFanoutMaxPasses(int maxPasses) {
-        if (this.settings.fanout == null) {
-            this.settings.fanout = new app.freerouting.settings.FanoutSettings();
-        }
-        this.settings.fanout.maxPasses = maxPasses;
+  public void setFanoutMaxPasses(int maxPasses) {
+    if (this.settings.fanout == null) {
+      this.settings.fanout = new app.freerouting.settings.FanoutSettings();
     }
+    this.settings.fanout.maxPasses = maxPasses;
+  }
 
-    public void setFanoutMaxItems(int maxItems) {
-        if (this.settings.fanout == null) {
-            this.settings.fanout = new app.freerouting.settings.FanoutSettings();
-        }
-        this.settings.fanout.maxItems = maxItems;
+  public void setFanoutMaxItems(int maxItems) {
+    if (this.settings.fanout == null) {
+      this.settings.fanout = new app.freerouting.settings.FanoutSettings();
     }
+    this.settings.fanout.maxItems = maxItems;
+  }
 
-    public void setOptimizerMaxPasses(int maxPasses) {
-        if (this.settings.optimizer == null) {
-            this.settings.optimizer = new OptimizerSettings();
-        }
-        this.settings.optimizer.maxPasses = maxPasses;
+  public void setOptimizerMaxPasses(int maxPasses) {
+    if (this.settings.optimizer == null) {
+      this.settings.optimizer = new OptimizerSettings();
     }
+    this.settings.optimizer.maxPasses = maxPasses;
+  }
 
-    public void setOptimizerMaxItems(int maxItems) {
-        if (this.settings.optimizer == null) {
-            this.settings.optimizer = new OptimizerSettings();
-        }
-        this.settings.optimizer.maxItems = maxItems;
+  public void setOptimizerMaxItems(int maxItems) {
+    if (this.settings.optimizer == null) {
+      this.settings.optimizer = new OptimizerSettings();
     }
+    this.settings.optimizer.maxItems = maxItems;
+  }
 }

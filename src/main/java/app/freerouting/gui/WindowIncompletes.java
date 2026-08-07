@@ -10,9 +10,7 @@ import java.util.TreeSet;
 
 public class WindowIncompletes extends WindowObjectListWithFilter {
 
-  /**
-   * Creates a new instance of IncompletesWindow
-   */
+  /** Creates a new instance of IncompletesWindow */
   public WindowIncompletes(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
@@ -21,9 +19,7 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
     this.list_empty_message.setText(tm.getText("route_completed"));
   }
 
-  /**
-   * Fills the list with the board incompletes.
-   */
+  /** Fills the list with the board incompletes. */
   @Override
   protected void fill_list() {
     RatsNest ratsnest = board_frame.board_panel.board_handling.get_ratsnest();

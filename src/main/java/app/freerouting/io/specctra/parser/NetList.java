@@ -6,25 +6,20 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-/**
- * Describes a list of nets sorted by its names. The net number is generated internally.
- */
+/** Describes a list of nets sorted by its names. The net number is generated internally. */
 public class NetList {
 
-  /**
-   * The entries of this map are of type Net, the keys are the net_ids.
-   */
+  /** The entries of this map are of type Net, the keys are the net_ids. */
   private final Map<Net.Id, Net> nets = new TreeMap<>();
 
-  /**
-   * Returns true, if the netlist contains a net with the input name.
-   */
+  /** Returns true, if the netlist contains a net with the input name. */
   public boolean contains(Net.Id p_net_id) {
     return nets.containsKey(p_net_id);
   }
 
   /**
-   * Adds a new net mit the input name to the net list. Returns null, if a net with p_name already exists in the net list. In this case no new net is added.
+   * Adds a new net mit the input name to the net list. Returns null, if a net with p_name already
+   * exists in the net list. In this case no new net is added.
    */
   public Net add_net(Net.Id p_net_id) {
     Net result;
@@ -38,15 +33,14 @@ public class NetList {
   }
 
   /**
-   * Returns the net with the input name, or null, if the netlist does not contain a net with the input name.
+   * Returns the net with the input name, or null, if the netlist does not contain a net with the
+   * input name.
    */
   public Net get_net(Net.Id p_net_id) {
     return nets.get(p_net_id);
   }
 
-  /**
-   * Returns all nets in this net list containing the input pin.
-   */
+  /** Returns all nets in this net list containing the input pin. */
   public Collection<Net> get_nets(String p_component_name, String p_pin_name) {
     Collection<Net> result = new LinkedList<>();
     Net.Pin search_pin = new Net.Pin(p_component_name, p_pin_name);

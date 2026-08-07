@@ -5,21 +5,18 @@ import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-/**
- * Used as submenu in a popup menu for change layer actions.
- */
+/** Used as submenu in a popup menu for change layer actions. */
 class PopupMenuChangeLayer extends JMenu {
 
   private final BoardFrame board_frame;
   private final LayermenuItem[] item_arr;
 
-  /**
-   * Creates a new instance of ChangeLayerMenu
-   */
+  /** Creates a new instance of ChangeLayerMenu */
   PopupMenuChangeLayer(BoardFrame p_board_frame) {
     this.board_frame = p_board_frame;
 
-    LayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
+    LayerStructure layer_structure =
+        board_frame.board_panel.board_handling.get_routing_board().layer_structure;
     this.item_arr = new LayermenuItem[layer_structure.signal_layer_count()];
     TextManager tm = new TextManager(this.getClass(), board_frame.get_locale());
 
@@ -36,9 +33,7 @@ class PopupMenuChangeLayer extends JMenu {
     }
   }
 
-  /**
-   * Disables the item with index p_no and enables all other items.
-   */
+  /** Disables the item with index p_no and enables all other items. */
   void disable_item(int p_no) {
     for (int i = 0; i < item_arr.length; i++) {
       this.item_arr[i].setEnabled(i != p_no);
@@ -51,18 +46,21 @@ class PopupMenuChangeLayer extends JMenu {
 
     LayermenuItem(int p_layer_no) {
       layer_no = p_layer_no;
-      addActionListener(_ ->
-      {
-        final BoardPanel board_panel = board_frame.board_panel;
-        if (board_panel.board_handling.change_layer_action(layer_no)) {
-          TextManager tm = new TextManager(PopupMenuChangeLayer.class, board_frame.get_locale());
-          String layer_name = board_panel.board_handling.get_routing_board().layer_structure.arr[layer_no].name;
-          board_panel.screen_messages.set_status_message(tm.getText("layer_changed_to_message", layer_name));
-        }
-        // If change_layer failed the status message is set inside change_layer_action
-        // because the information of the cause of the failing is missing here.
-        board_panel.move_mouse(board_panel.right_button_click_location);
-      });
+      addActionListener(
+          _ -> {
+            final BoardPanel board_panel = board_frame.board_panel;
+            if (board_panel.board_handling.change_layer_action(layer_no)) {
+              TextManager tm =
+                  new TextManager(PopupMenuChangeLayer.class, board_frame.get_locale());
+              String layer_name =
+                  board_panel.board_handling.get_routing_board().layer_structure.arr[layer_no].name;
+              board_panel.screen_messages.set_status_message(
+                  tm.getText("layer_changed_to_message", layer_name));
+            }
+            // If change_layer failed the status message is set inside change_layer_action
+            // because the information of the cause of the failing is missing here.
+            board_panel.move_mouse(board_panel.right_button_click_location);
+          });
     }
   }
 }

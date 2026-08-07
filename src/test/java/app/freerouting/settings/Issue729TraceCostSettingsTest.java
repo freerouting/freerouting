@@ -17,8 +17,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Regression tests for GitHub Issue #729 — autorouter trace costs must survive repeated
- * {@link RouterSettings#applyBoardSpecificOptimizations} calls (e.g. on every GUI autoroute start).
+ * Regression tests for GitHub Issue #729 — autorouter trace costs must survive repeated {@link
+ * RouterSettings#applyBoardSpecificOptimizations} calls (e.g. on every GUI autoroute start).
  */
 class Issue729TraceCostSettingsTest {
 
@@ -33,13 +33,14 @@ class Issue729TraceCostSettingsTest {
     ClearanceMatrix clearanceMatrix = ClearanceMatrix.get_default_instance(layerStructure, 10);
     BoardRules boardRules = new BoardRules(layerStructure, clearanceMatrix);
     boardRules.create_default_net_class();
-    board = new RoutingBoard(
-        new IntBox(0, 0, 2_000_000, 1_000_000),
-        layerStructure,
-        new PolylineShape[] {TileShape.get_instance(0, 0, 2_000_000, 1_000_000)},
-        0,
-        boardRules,
-        new Communication());
+    board =
+        new RoutingBoard(
+            new IntBox(0, 0, 2_000_000, 1_000_000),
+            layerStructure,
+            new PolylineShape[] {TileShape.get_instance(0, 0, 2_000_000, 1_000_000)},
+            0,
+            boardRules,
+            new Communication());
 
     settings = new RouterSettings();
     settings.setLayerCount(2);
@@ -52,7 +53,8 @@ class Issue729TraceCostSettingsTest {
     assertTrue(settings.areBoardSpecificTraceCostsApplied());
     double firstPrefLayer0 = settings.get_preferred_direction_trace_costs(0);
     double firstAgainstLayer0 = settings.get_against_preferred_direction_trace_costs(0);
-    assertTrue(firstAgainstLayer0 > settings.scoring.defaultUndesiredDirectionTraceCost,
+    assertTrue(
+        firstAgainstLayer0 > settings.scoring.defaultUndesiredDirectionTraceCost,
         "Board-tuned against-preferred cost should include aspect-ratio penalty on a 2:1 board");
 
     settings.applyBoardSpecificOptimizations(board);

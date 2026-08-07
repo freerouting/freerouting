@@ -27,7 +27,8 @@ public class SegmentedButtons extends JPanel {
   private final ButtonGroup buttonGroup;
   private final Map<JToggleButton, String> buttonValues;
   private final Color textColor = new Color(0, 0, 0); // Text color
-  private final Color selectedTextColor = new Color(225, 225, 225); // Text color for selected button
+  private final Color selectedTextColor =
+      new Color(225, 225, 225); // Text color for selected button
   private final Color selectedColor = new Color(30, 30, 30); // Background color for selected button
   private final Color hoverColor = new Color(220, 220, 220); // Hover color
   private final Color selectedAndHoverColor = new Color(50, 50, 50); // Selected and hover color
@@ -43,7 +44,8 @@ public class SegmentedButtons extends JPanel {
     setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
     // Put the heading above the buttons, centered horizontally
-    JLabel headingLabel = new JLabel(heading, SwingConstants.CENTER); // Center the text in the label
+    JLabel headingLabel =
+        new JLabel(heading, SwingConstants.CENTER); // Center the text in the label
     headingLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
     headingLabel.setForeground(textColor);
     add(headingLabel, BorderLayout.NORTH); // Add the label to the NORTH
@@ -91,7 +93,8 @@ public class SegmentedButtons extends JPanel {
       boolean isLast = buttonIndex == buttonCount - 1;
 
       // Set the width for all buttons to the maximum width
-      button.setPreferredSize(new Dimension((int) (maximumWidth * 1.1), button.getPreferredSize().height));
+      button.setPreferredSize(
+          new Dimension((int) (maximumWidth * 1.1), button.getPreferredSize().height));
 
       // Set the selected button
       if (isFirst) {
@@ -103,22 +106,23 @@ public class SegmentedButtons extends JPanel {
   }
 
   private JToggleButton createSegmentButton(String text, String value) {
-    JToggleButton button = new JToggleButton(text) {
-      @Override
-      public void setSelected(boolean selected) {
-        super.setSelected(selected);
-        if (selected) {
-          this.setFont(new Font("Dialog", Font.BOLD, 12));
-          this.setForeground(selectedTextColor);
-          this.setBackground(selectedColor);
-          this.setOpaque(true);
-        } else {
-          this.setFont(new Font("Dialog", Font.PLAIN, 12));
-          this.setForeground(textColor);
-          this.setOpaque(false);
-        }
-      }
-    };
+    JToggleButton button =
+        new JToggleButton(text) {
+          @Override
+          public void setSelected(boolean selected) {
+            super.setSelected(selected);
+            if (selected) {
+              this.setFont(new Font("Dialog", Font.BOLD, 12));
+              this.setForeground(selectedTextColor);
+              this.setBackground(selectedColor);
+              this.setOpaque(true);
+            } else {
+              this.setFont(new Font("Dialog", Font.PLAIN, 12));
+              this.setForeground(textColor);
+              this.setOpaque(false);
+            }
+          }
+        };
 
     button.setFocusPainted(false);
     button.setContentAreaFilled(true);
@@ -130,53 +134,54 @@ public class SegmentedButtons extends JPanel {
     button.setBorderPainted(false);
 
     // Hover effect
-    button.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseEntered(MouseEvent e) {
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        if (button.isSelected()) {
-          button.setForeground(selectedTextColor);
-          button.setBackground(selectedAndHoverColor);
-          button.setOpaque(true);
-        } else {
-          button.setForeground(textColor);
-          button.setBackground(hoverColor);
-          button.setOpaque(true);
-        }
-      }
+    button.addMouseListener(
+        new MouseAdapter() {
+          @Override
+          public void mouseEntered(MouseEvent e) {
+            button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            if (button.isSelected()) {
+              button.setForeground(selectedTextColor);
+              button.setBackground(selectedAndHoverColor);
+              button.setOpaque(true);
+            } else {
+              button.setForeground(textColor);
+              button.setBackground(hoverColor);
+              button.setOpaque(true);
+            }
+          }
 
-      @Override
-      public void mouseExited(MouseEvent e) {
-        button.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        if (button.isSelected()) {
+          @Override
+          public void mouseExited(MouseEvent e) {
+            button.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            if (button.isSelected()) {
+              button.setForeground(selectedTextColor);
+              button.setBackground(selectedColor);
+              button.setOpaque(true);
+            } else {
+              button.setForeground(textColor);
+              button.setOpaque(false);
+            }
+          }
+        });
+
+    // Action listener for selection changes
+    button.addActionListener(
+        _ -> {
+          for (Map.Entry<JToggleButton, String> entry : buttonValues.entrySet()) {
+            JToggleButton btn = entry.getKey();
+            btn.setFont(new Font("Dialog", Font.PLAIN, 12)); // reset font for all
+            btn.setForeground(textColor);
+            btn.setOpaque(false);
+          }
+
+          selectedValue = buttonValues.get(button);
+          button.setFont(new Font("Dialog", Font.BOLD, 12)); // Set bold font for selected
           button.setForeground(selectedTextColor);
           button.setBackground(selectedColor);
           button.setOpaque(true);
-        } else {
-          button.setForeground(textColor);
-          button.setOpaque(false);
-        }
-      }
-    });
 
-    // Action listener for selection changes
-    button.addActionListener(_ ->
-    {
-      for (Map.Entry<JToggleButton, String> entry : buttonValues.entrySet()) {
-        JToggleButton btn = entry.getKey();
-        btn.setFont(new Font("Dialog", Font.PLAIN, 12)); // reset font for all
-        btn.setForeground(textColor);
-        btn.setOpaque(false);
-      }
-
-      selectedValue = buttonValues.get(button);
-      button.setFont(new Font("Dialog", Font.BOLD, 12)); // Set bold font for selected
-      button.setForeground(selectedTextColor);
-      button.setBackground(selectedColor);
-      button.setOpaque(true);
-
-      this.valueChangedEventListeners.forEach(listener -> listener.accept(selectedValue));
-    });
+          this.valueChangedEventListeners.forEach(listener -> listener.accept(selectedValue));
+        });
 
     return button;
   }
@@ -200,9 +205,7 @@ public class SegmentedButtons extends JPanel {
   public void setSelectedValue(String value) {
     for (Map.Entry<JToggleButton, String> entry : buttonValues.entrySet()) {
       JToggleButton button = entry.getKey();
-      button.setSelected(entry
-          .getValue()
-          .equals(value));
+      button.setSelected(entry.getValue().equals(value));
     }
 
     // Call the event listeners

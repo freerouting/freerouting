@@ -4,23 +4,16 @@ import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-/**
- * Implementation of the abstract class Point as a tuple of integers.
- */
+/** Implementation of the abstract class Point as a tuple of integers. */
 public class IntPoint extends Point implements Serializable {
 
-  /**
-   * the x coordinate of this point
-   */
+  /** the x coordinate of this point */
   public final int x;
-  /**
-   * the y coordinate of this point
-   */
+
+  /** the y coordinate of this point */
   public final int y;
 
-  /**
-   * create an IntPoint from two integer coordinates
-   */
+  /** create an IntPoint from two integer coordinates */
   public IntPoint(int p_x, int p_y) {
     if (Math.abs(p_x) > Limits.CRIT_INT) {
       FRLogger.debug("IntPoint: p_x is out of range");
@@ -33,9 +26,7 @@ public class IntPoint extends Point implements Serializable {
     y = p_y;
   }
 
-  /**
-   * Returns true, if this IntPoint is equal to p_ob
-   */
+  /** Returns true, if this IntPoint is equal to p_ob */
   @Override
   public final boolean equals(Object p_ob) {
     if (this == p_ob) {
@@ -74,9 +65,7 @@ public class IntPoint extends Point implements Serializable {
     return x >= p_box.ll.x && y >= p_box.ll.y && x <= p_box.ur.x && y <= p_box.ur.y;
   }
 
-  /**
-   * returns the translation of this point by p_vector
-   */
+  /** returns the translation of this point by p_vector */
   @Override
   public final Point translate_by(Vector p_vector) {
     if (p_vector.equals(Vector.ZERO)) {
@@ -95,9 +84,7 @@ public class IntPoint extends Point implements Serializable {
     return p_vector.add_to(this);
   }
 
-  /**
-   * returns the difference vector of this point and p_other
-   */
+  /** returns the difference vector of this point and p_other */
   @Override
   public Vector difference_by(Point p_other) {
     Vector tmp = p_other.difference_by(this);
@@ -122,9 +109,7 @@ public class IntPoint extends Point implements Serializable {
     return v1.side_of(v2);
   }
 
-  /**
-   * converts this point to a FloatPoint.
-   */
+  /** converts this point to a FloatPoint. */
   @Override
   public FloatPoint to_float() {
     return new FloatPoint(x, y);
@@ -134,9 +119,7 @@ public class IntPoint extends Point implements Serializable {
     return 31 * x + y;
   }
 
-  /**
-   * returns the determinant of the vectors (x, y) and (p_other.x, p_other.y)
-   */
+  /** returns the determinant of the vectors (x, y) and (p_other.x, p_other.y) */
   public final long determinant(IntPoint p_other) {
     return (long) x * p_other.y - (long) y * p_other.x;
   }
@@ -192,24 +175,21 @@ public class IntPoint extends Point implements Serializable {
     return d21.determinant(d01);
   }
 
-  /**
-   * calculates the square of the distance between this point and p_to_point
-   */
+  /** calculates the square of the distance between this point and p_to_point */
   public double distance_square(IntPoint p_to_point) {
     double dx = p_to_point.x - this.x;
     double dy = p_to_point.y - this.y;
     return dx * dx + dy * dy;
   }
 
-  /**
-   * calculates the distance between this point and p_to_point
-   */
+  /** calculates the distance between this point and p_to_point */
   public double distance(IntPoint p_to_point) {
     return Math.sqrt(distance_square(p_to_point));
   }
 
   /**
-   * Calculates the nearest point to this point on the horizontal or vertical line through p_other (Snaps this point to on orthogonal line through p_other).
+   * Calculates the nearest point to this point on the horizontal or vertical line through p_other
+   * (Snaps this point to on orthogonal line through p_other).
    */
   public IntPoint orthogonal_projection(IntPoint p_other) {
     IntPoint result;
@@ -226,7 +206,8 @@ public class IntPoint extends Point implements Serializable {
   }
 
   /**
-   * Calculates the nearest point to this point on an orthogonal or diagonal line through p_other (Snaps this point to on 45 degree line through p_other).
+   * Calculates the nearest point to this point on an orthogonal or diagonal line through p_other
+   * (Snaps this point to on 45 degree line through p_other).
    */
   public IntPoint fortyfive_degree_projection(IntPoint p_other) {
     int dx = this.x - p_other.x;
@@ -264,8 +245,10 @@ public class IntPoint extends Point implements Serializable {
   }
 
   /**
-   * Calculates a corner point p so that the lines through this point and p and from p to p_to_point are multiples of 45 degree, and that the angle at p will be 45 degree. If p_left_turn, p_to_point
-   * will be on the left of the line from this point to p, else on the right. Returns null, if the line from this point to p_to_point is already a multiple of 45 degree.
+   * Calculates a corner point p so that the lines through this point and p and from p to p_to_point
+   * are multiples of 45 degree, and that the angle at p will be 45 degree. If p_left_turn,
+   * p_to_point will be on the left of the line from this point to p, else on the right. Returns
+   * null, if the line from this point to p_to_point is already a multiple of 45 degree.
    */
   public IntPoint fortyfive_degree_corner(IntPoint p_to_point, boolean p_left_turn) {
     int dx = p_to_point.x - this.x;
@@ -330,8 +313,10 @@ public class IntPoint extends Point implements Serializable {
   }
 
   /**
-   * Calculates a corner point p so that the lines through this point and p and from p to p_to_point are horizontal or vertical, and that the angle at p will be 90 degree. If p_left_turn, p_to_point
-   * will be on the left of the line from this point to p, else on the right. Returns null, if the line from this point to p_to_point is already orthogonal.
+   * Calculates a corner point p so that the lines through this point and p and from p to p_to_point
+   * are horizontal or vertical, and that the angle at p will be 90 degree. If p_left_turn,
+   * p_to_point will be on the left of the line from this point to p, else on the right. Returns
+   * null, if the line from this point to p_to_point is already orthogonal.
    */
   public IntPoint ninety_degree_corner(IntPoint p_to_point, boolean p_left_turn) {
     int dx = p_to_point.x - this.x;

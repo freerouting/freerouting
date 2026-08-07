@@ -6,16 +6,12 @@ import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import javax.swing.JMenuItem;
 
-/**
- * Popup menu used in the interactive route state.
- */
+/** Popup menu used in the interactive route state. */
 public class PopupMenuDynamicRoute extends PopupMenuDisplay {
 
   private final PopupMenuChangeLayer change_layer_menu;
 
-  /**
-   * Creates a new instance of RoutePopupMenu
-   */
+  /** Creates a new instance of RoutePopupMenu */
   PopupMenuDynamicRoute(BoardFrame p_board_frame) {
     super(p_board_frame);
 
@@ -27,15 +23,17 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
     popup_end_route_menuitem.setText(tm.getText("end_route"));
     popup_end_route_menuitem.addActionListener(_ -> board_panel.board_handling.return_from_state());
     popup_end_route_menuitem.addActionListener(
-        _ -> FRAnalytics.buttonClicked("popup_end_route_menuitem", popup_end_route_menuitem.getText()));
+        _ ->
+            FRAnalytics.buttonClicked(
+                "popup_end_route_menuitem", popup_end_route_menuitem.getText()));
 
     this.add(popup_end_route_menuitem, 0);
 
     JMenuItem popup_cancel_menuitem = new JMenuItem();
     popup_cancel_menuitem.setText(tm.getText("cancel_route"));
     popup_cancel_menuitem.addActionListener(_ -> board_panel.board_handling.cancel_state());
-    popup_cancel_menuitem
-        .addActionListener(_ -> FRAnalytics.buttonClicked("popup_cancel_menuitem", popup_cancel_menuitem.getText()));
+    popup_cancel_menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popup_cancel_menuitem", popup_cancel_menuitem.getText()));
 
     this.add(popup_cancel_menuitem, 1);
 
@@ -46,13 +44,12 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
       this.change_layer_menu = null;
     }
 
-    Layer curr_layer = layer_structure.arr[board_panel.board_handling.getInteractiveSettings().get_layer()];
+    Layer curr_layer =
+        layer_structure.arr[board_panel.board_handling.getInteractiveSettings().get_layer()];
     disable_layer_item(layer_structure.get_signal_layer_no(curr_layer));
   }
 
-  /**
-   * Disables the p_no-th item in the change_layer_menu.
-   */
+  /** Disables the p_no-th item in the change_layer_menu. */
   void disable_layer_item(int p_no) {
     if (this.change_layer_menu != null) {
       this.change_layer_menu.disable_item(p_no);

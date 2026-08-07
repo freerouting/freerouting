@@ -33,77 +33,108 @@ class EnglishPropertiesParityTest {
 
   private static final Path JAVA_SOURCE_ROOT = Paths.get("src/main/java");
   private static final Path RESOURCE_ROOT = Paths.get("src/main/resources/app/freerouting");
-  private static final Pattern TEXT_MANAGER_OWNER_PATTERN = Pattern.compile("new\\s+TextManager\\s*\\(\\s*([A-Za-z_][A-Za-z0-9_$.]*)\\.class");
-  private static final Pattern TEXT_MANAGER_VARIABLE_PATTERN = Pattern.compile("(?:TextManager\\s+)?([A-Za-z_][A-Za-z0-9_\\.]*)\\s*=\\s*new\\s+TextManager\\s*\\(");
-  private static final Pattern THIS_CLASS_PATTERN = Pattern.compile("new\\s+TextManager\\s*\\(\\s*(?:this\\.)?getClass\\s*\\(");
+  private static final Pattern TEXT_MANAGER_OWNER_PATTERN =
+      Pattern.compile("new\\s+TextManager\\s*\\(\\s*([A-Za-z_][A-Za-z0-9_$.]*)\\.class");
+  private static final Pattern TEXT_MANAGER_VARIABLE_PATTERN =
+      Pattern.compile(
+          "(?:TextManager\\s+)?([A-Za-z_][A-Za-z0-9_\\.]*)\\s*=\\s*new\\s+TextManager\\s*\\(");
+  private static final Pattern THIS_CLASS_PATTERN =
+      Pattern.compile("new\\s+TextManager\\s*\\(\\s*(?:this\\.)?getClass\\s*\\(");
   private static final Pattern GET_TEXT_PATTERN = Pattern.compile("\\bgetText\\(\\s*\"([^\"]+)\"");
-    private static final Pattern DYNAMIC_GET_TEXT_PATTERN = Pattern.compile(
-      "\\bgetText\\(\\s*(.+?)\\.toString\\(\\)\\s*\\)");
-    private static final Pattern FIELD_DECLARATION_PATTERN = Pattern.compile(
-      "(?m)^\\s*(?:private|protected|public)?\\s*(?:static\\s+)?(?:final\\s+)?([A-Z][A-Za-z0-9_$.<>]*)\\s+([a-z_][A-Za-z0-9_]*)\\s*(?:[=;])");
-      private static final Pattern ENUM_ARRAY_DECLARATION_PATTERN = Pattern.compile(
-        "(?m)^\\s*(?:final\\s+)?([A-Z][A-Za-z0-9_$.<>]*)\\[\\]\\s+([a-z_][A-Za-z0-9_]*)\\s*=\\s*[^;]*\\.values\\(\\)\\s*;");
+  private static final Pattern DYNAMIC_GET_TEXT_PATTERN =
+      Pattern.compile("\\bgetText\\(\\s*(.+?)\\.toString\\(\\)\\s*\\)");
+  private static final Pattern FIELD_DECLARATION_PATTERN =
+      Pattern.compile(
+          "(?m)^\\s*(?:private|protected|public)?\\s*(?:static\\s+)?(?:final\\s+)?([A-Z][A-Za-z0-9_$.<>]*)\\s+([a-z_][A-Za-z0-9_]*)\\s*(?:[=;])");
+  private static final Pattern ENUM_ARRAY_DECLARATION_PATTERN =
+      Pattern.compile(
+          "(?m)^\\s*(?:final\\s+)?([A-Z][A-Za-z0-9_$.<>]*)\\[\\]\\s+([a-z_][A-Za-z0-9_]*)\\s*=\\s*[^;]*\\.values\\(\\)\\s*;");
   private static final Pattern SET_LANGUAGE_PATTERN = Pattern.compile("\\bsetLanguage\\s*\\(");
-  private static final Pattern INHERITED_TM_USAGE_PATTERN = Pattern.compile("\\btm\\.(?:getText|setText)\\s*\\(");
-  private static final Pattern EXTENDS_INTERACTIVE_STATE_PATTERN = Pattern.compile(
-      "\\bextends\\s+(?:InteractiveState|\\w+State)\\b");
-  private static final Pattern LOCAL_ENUM_ARRAY_PATTERN = Pattern.compile(
-      "(?:final\\s+)?([A-Za-z_][A-Za-z0-9_.]*)\\[\\]\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*\\1\\.values\\(\\)\\s*;");
-  private static final Pattern TEXT_MANAGER_SUFFIX_USAGE_PATTERN = Pattern.compile(
-      "\\b([A-Za-z_][A-Za-z0-9_]*)tm\\.(?:getText|setText)\\s*\\(");
-  private static final Pattern CREATE_WORD_WRAP_LABEL_PATTERN = Pattern.compile(
-      "\\bcreateWordWrapLabel\\s*\\(\\s*\"([^\"]+)\"");
-  private static final Pattern TEXT_MANAGER_DECL_PATTERN = Pattern.compile(
-      "(?:TextManager\\s+)?([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*new\\s+TextManager\\s*\\(\\s*([A-Za-z_][A-Za-z0-9_$.]*)\\.class");
-  private static final Pattern THIS_TM_ASSIGN_PATTERN = Pattern.compile(
-      "this\\.tm\\s*=\\s*new\\s+TextManager\\s*\\(\\s*([A-Za-z_][A-Za-z0-9_$.]*)\\.class");
-  private static final Pattern THIS_TM_GET_CLASS_ASSIGN_PATTERN = Pattern.compile(
-      "this\\.tm\\s*=\\s*new\\s+TextManager\\s*\\(\\s*(?:this\\.)?getClass\\s*\\(");
-  private static final Pattern IMPORT_PATTERN = Pattern.compile("^import\\s+(?:static\\s+)?([\\w.]+);\\s*$", Pattern.MULTILINE);
-  private static final Pattern STATIC_STRING_ARRAY_PATTERN = Pattern.compile(
-      "private\\s+static\\s+final\\s+String\\[\\]\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*\\{([^}]+)\\}");
-  private static final Pattern SEGMENTED_BUTTONS_PATTERN = Pattern.compile("new\\s+SegmentedButtons\\s*\\((.*?)\\)", Pattern.DOTALL);
+  private static final Pattern INHERITED_TM_USAGE_PATTERN =
+      Pattern.compile("\\btm\\.(?:getText|setText)\\s*\\(");
+  private static final Pattern EXTENDS_INTERACTIVE_STATE_PATTERN =
+      Pattern.compile("\\bextends\\s+(?:InteractiveState|\\w+State)\\b");
+  private static final Pattern LOCAL_ENUM_ARRAY_PATTERN =
+      Pattern.compile(
+          "(?:final\\s+)?([A-Za-z_][A-Za-z0-9_.]*)\\[\\]\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*\\1\\.values\\(\\)\\s*;");
+  private static final Pattern TEXT_MANAGER_SUFFIX_USAGE_PATTERN =
+      Pattern.compile("\\b([A-Za-z_][A-Za-z0-9_]*)tm\\.(?:getText|setText)\\s*\\(");
+  private static final Pattern CREATE_WORD_WRAP_LABEL_PATTERN =
+      Pattern.compile("\\bcreateWordWrapLabel\\s*\\(\\s*\"([^\"]+)\"");
+  private static final Pattern TEXT_MANAGER_DECL_PATTERN =
+      Pattern.compile(
+          "(?:TextManager\\s+)?([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*new\\s+TextManager\\s*\\(\\s*([A-Za-z_][A-Za-z0-9_$.]*)\\.class");
+  private static final Pattern THIS_TM_ASSIGN_PATTERN =
+      Pattern.compile(
+          "this\\.tm\\s*=\\s*new\\s+TextManager\\s*\\(\\s*([A-Za-z_][A-Za-z0-9_$.]*)\\.class");
+  private static final Pattern THIS_TM_GET_CLASS_ASSIGN_PATTERN =
+      Pattern.compile("this\\.tm\\s*=\\s*new\\s+TextManager\\s*\\(\\s*(?:this\\.)?getClass\\s*\\(");
+  private static final Pattern IMPORT_PATTERN =
+      Pattern.compile("^import\\s+(?:static\\s+)?([\\w.]+);\\s*$", Pattern.MULTILINE);
+  private static final Pattern STATIC_STRING_ARRAY_PATTERN =
+      Pattern.compile(
+          "private\\s+static\\s+final\\s+String\\[\\]\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*\\{([^}]+)\\}");
+  private static final Pattern SEGMENTED_BUTTONS_PATTERN =
+      Pattern.compile("new\\s+SegmentedButtons\\s*\\((.*?)\\)", Pattern.DOTALL);
   private static final Pattern QUOTED_STRING_PATTERN = Pattern.compile("\"([^\"]+)\"");
-  private static final Set<String> INTERACTIVE_STATE_BUNDLE_EXCEPTIONS = Set.of(
-      "app.freerouting.interactive.InteractiveState",
-      "app.freerouting.interactive.GuiBoardManager",
-      "app.freerouting.interactive.ScreenMessages",
-      "app.freerouting.interactive.RatsNest");
-  private static final Map<String, String> BUNDLE_ALIASES = Map.ofEntries(
-      Map.entry("app.freerouting.rules.NetClasses", "app.freerouting.gui.WindowNetClasses"),
-      Map.entry("app.freerouting.boardgraphics.ItemColorTableModel", "app.freerouting.boardgraphics.ColorTableModel"),
-      Map.entry("app.freerouting.boardgraphics.OtherColorTableModel", "app.freerouting.boardgraphics.ColorTableModel"),
-      Map.entry("app.freerouting.interactive.AutorouterAndRouteOptimizerThread", "app.freerouting.interactive.InteractiveState"),
-      Map.entry("app.freerouting.gui.AirLineInfo", "app.freerouting.drc.AirLine"),
-      Map.entry("app.freerouting.gui.AirLine", "app.freerouting.drc.AirLine"),
-      Map.entry("app.freerouting.gui.WindowRouteStubs", "app.freerouting.gui.CleanupWindows"),
-      Map.entry("app.freerouting.gui.WindowUnconnectedRoute", "app.freerouting.gui.CleanupWindows"),
-      Map.entry("app.freerouting.gui.WindowObjectListWithFilter", "app.freerouting.gui.WindowObjectList"),
-      Map.entry("app.freerouting.gui.WindowIncompletes", "app.freerouting.gui.WindowObjectList"),
-      Map.entry("app.freerouting.gui.WindowComponents", "app.freerouting.gui.WindowObjectList"),
-      Map.entry("app.freerouting.gui.WindowPackages", "app.freerouting.gui.WindowObjectList"),
-      Map.entry("app.freerouting.gui.WindowPadstacks", "app.freerouting.gui.WindowObjectList"));
-  /** Subclasses with own bundles that override selected keys from {@link app.freerouting.gui.WindowObjectList}. */
-  private static final Map<String, String> SUBCLASS_BUNDLE_PARENTS = Map.of(
-      "app.freerouting.gui.WindowNets", "app.freerouting.gui.WindowObjectList",
-      "app.freerouting.gui.WindowClearanceViolations", "app.freerouting.gui.WindowObjectList",
-      "app.freerouting.gui.WindowLengthViolations", "app.freerouting.gui.WindowObjectList");
-  private static final Path REPORT_PATH_1 = Paths.get(
-      "build/reports/i18n/CodeKeysExistInEnglishBundlesReport.txt");
-  private static final Path REPORT_JSON_1 = Paths.get(
-      "build/reports/i18n/CodeKeysExistInEnglishBundlesReport.json");
-  private static final Path REPORT_PATH_2 = Paths.get(
-      "build/reports/i18n/LocaleBundlesCoverEnglishBundlesReport.txt");
-  private static final Path REPORT_JSON_2 = Paths.get(
-      "build/reports/i18n/LocaleBundlesCoverEnglishBundlesReport.json");
-  private static final Path REPORT_PATH_3 = Paths.get(
-      "build/reports/i18n/EnglishBundlesContainKeysPresentInLocalesReport.txt");
-  private static final Path REPORT_JSON_3 = Paths.get(
-      "build/reports/i18n/EnglishBundlesContainKeysPresentInLocalesReport.json");
-  private static final Path REPORT_PATH_4 = Paths.get(
-      "build/reports/i18n/EnglishBundlesContainUnusedKeysReport.txt");
-  private static final Path REPORT_JSON_4 = Paths.get(
-      "build/reports/i18n/EnglishBundlesContainUnusedKeysReport.json");
+  private static final Set<String> INTERACTIVE_STATE_BUNDLE_EXCEPTIONS =
+      Set.of(
+          "app.freerouting.interactive.InteractiveState",
+          "app.freerouting.interactive.GuiBoardManager",
+          "app.freerouting.interactive.ScreenMessages",
+          "app.freerouting.interactive.RatsNest");
+  private static final Map<String, String> BUNDLE_ALIASES =
+      Map.ofEntries(
+          Map.entry("app.freerouting.rules.NetClasses", "app.freerouting.gui.WindowNetClasses"),
+          Map.entry(
+              "app.freerouting.boardgraphics.ItemColorTableModel",
+              "app.freerouting.boardgraphics.ColorTableModel"),
+          Map.entry(
+              "app.freerouting.boardgraphics.OtherColorTableModel",
+              "app.freerouting.boardgraphics.ColorTableModel"),
+          Map.entry(
+              "app.freerouting.interactive.AutorouterAndRouteOptimizerThread",
+              "app.freerouting.interactive.InteractiveState"),
+          Map.entry("app.freerouting.gui.AirLineInfo", "app.freerouting.drc.AirLine"),
+          Map.entry("app.freerouting.gui.AirLine", "app.freerouting.drc.AirLine"),
+          Map.entry("app.freerouting.gui.WindowRouteStubs", "app.freerouting.gui.CleanupWindows"),
+          Map.entry(
+              "app.freerouting.gui.WindowUnconnectedRoute", "app.freerouting.gui.CleanupWindows"),
+          Map.entry(
+              "app.freerouting.gui.WindowObjectListWithFilter",
+              "app.freerouting.gui.WindowObjectList"),
+          Map.entry(
+              "app.freerouting.gui.WindowIncompletes", "app.freerouting.gui.WindowObjectList"),
+          Map.entry("app.freerouting.gui.WindowComponents", "app.freerouting.gui.WindowObjectList"),
+          Map.entry("app.freerouting.gui.WindowPackages", "app.freerouting.gui.WindowObjectList"),
+          Map.entry("app.freerouting.gui.WindowPadstacks", "app.freerouting.gui.WindowObjectList"));
+
+  /**
+   * Subclasses with own bundles that override selected keys from {@link
+   * app.freerouting.gui.WindowObjectList}.
+   */
+  private static final Map<String, String> SUBCLASS_BUNDLE_PARENTS =
+      Map.of(
+          "app.freerouting.gui.WindowNets", "app.freerouting.gui.WindowObjectList",
+          "app.freerouting.gui.WindowClearanceViolations", "app.freerouting.gui.WindowObjectList",
+          "app.freerouting.gui.WindowLengthViolations", "app.freerouting.gui.WindowObjectList");
+
+  private static final Path REPORT_PATH_1 =
+      Paths.get("build/reports/i18n/CodeKeysExistInEnglishBundlesReport.txt");
+  private static final Path REPORT_JSON_1 =
+      Paths.get("build/reports/i18n/CodeKeysExistInEnglishBundlesReport.json");
+  private static final Path REPORT_PATH_2 =
+      Paths.get("build/reports/i18n/LocaleBundlesCoverEnglishBundlesReport.txt");
+  private static final Path REPORT_JSON_2 =
+      Paths.get("build/reports/i18n/LocaleBundlesCoverEnglishBundlesReport.json");
+  private static final Path REPORT_PATH_3 =
+      Paths.get("build/reports/i18n/EnglishBundlesContainKeysPresentInLocalesReport.txt");
+  private static final Path REPORT_JSON_3 =
+      Paths.get("build/reports/i18n/EnglishBundlesContainKeysPresentInLocalesReport.json");
+  private static final Path REPORT_PATH_4 =
+      Paths.get("build/reports/i18n/EnglishBundlesContainUnusedKeysReport.txt");
+  private static final Path REPORT_JSON_4 =
+      Paths.get("build/reports/i18n/EnglishBundlesContainUnusedKeysReport.json");
   private static Map<String, Path> sourceFilesCache;
 
   @Test
@@ -111,7 +142,8 @@ class EnglishPropertiesParityTest {
   void codeKeysExistInEnglishBundles() throws IOException {
     Map<String, Set<String>> sourceKeysByBundle = collectSourceKeysByBundle();
     Map<String, Set<String>> englishKeysByBundle = loadEnglishKeysByBundle();
-    Set<String> commonEnglishKeys = loadPropertiesKeys(RESOURCE_ROOT.resolve("Common_en.properties"));
+    Set<String> commonEnglishKeys =
+        loadPropertiesKeys(RESOURCE_ROOT.resolve("Common_en.properties"));
 
     List<String> missingReports = new ArrayList<>();
     for (Map.Entry<String, Set<String>> entry : sourceKeysByBundle.entrySet()) {
@@ -126,12 +158,13 @@ class EnglishPropertiesParityTest {
       Set<String> missingKeys = new TreeSet<>(usedKeys);
       missingKeys.removeAll(availableKeys);
       if (!missingKeys.isEmpty()) {
-        missingReports.add(formatBundleSection(bundle, "missing from English bundles", missingKeys));
+        missingReports.add(
+            formatBundleSection(bundle, "missing from English bundles", missingKeys));
       }
     }
 
-    writeReport("Source keys missing from English bundles", missingReports,
-        REPORT_PATH_1, REPORT_JSON_1);
+    writeReport(
+        "Source keys missing from English bundles", missingReports, REPORT_PATH_1, REPORT_JSON_1);
   }
 
   @Test
@@ -145,12 +178,17 @@ class EnglishPropertiesParityTest {
       Set<String> englishKeys = entry.getValue();
       Path englishFile = bundleToPropertiesPath(bundle, "en");
       Path parentDirectory = englishFile.getParent();
-      String baseFileName = englishFile.getFileName().toString().substring(0,
-          englishFile.getFileName().toString().length() - "_en.properties".length());
+      String baseFileName =
+          englishFile
+              .getFileName()
+              .toString()
+              .substring(
+                  0, englishFile.getFileName().toString().length() - "_en.properties".length());
 
       Map<String, Set<String>> missingByLocaleFile = new TreeMap<>();
 
-      try (DirectoryStream<Path> stream = Files.newDirectoryStream(parentDirectory, baseFileName + "_*.properties")) {
+      try (DirectoryStream<Path> stream =
+          Files.newDirectoryStream(parentDirectory, baseFileName + "_*.properties")) {
         for (Path localeFile : stream) {
           if (localeFile.getFileName().toString().equals(englishFile.getFileName().toString())) {
             continue;
@@ -167,12 +205,14 @@ class EnglishPropertiesParityTest {
       }
 
       if (!missingByLocaleFile.isEmpty()) {
-        missingReports.add(formatLocaleSection(bundle, "locale bundles missing English keys", missingByLocaleFile));
+        missingReports.add(
+            formatLocaleSection(
+                bundle, "locale bundles missing English keys", missingByLocaleFile));
       }
     }
 
-    writeReport("Locale bundles missing English keys", missingReports,
-        REPORT_PATH_2, REPORT_JSON_2);
+    writeReport(
+        "Locale bundles missing English keys", missingReports, REPORT_PATH_2, REPORT_JSON_2);
   }
 
   @Test
@@ -186,12 +226,17 @@ class EnglishPropertiesParityTest {
       Set<String> englishKeys = entry.getValue();
       Path englishFile = bundleToPropertiesPath(bundle, "en");
       Path parentDirectory = englishFile.getParent();
-      String baseFileName = englishFile.getFileName().toString().substring(0,
-          englishFile.getFileName().toString().length() - "_en.properties".length());
+      String baseFileName =
+          englishFile
+              .getFileName()
+              .toString()
+              .substring(
+                  0, englishFile.getFileName().toString().length() - "_en.properties".length());
 
       Map<String, Set<String>> missingByKey = new TreeMap<>();
 
-      try (DirectoryStream<Path> stream = Files.newDirectoryStream(parentDirectory, baseFileName + "_*.properties")) {
+      try (DirectoryStream<Path> stream =
+          Files.newDirectoryStream(parentDirectory, baseFileName + "_*.properties")) {
         for (Path localeFile : stream) {
           if (localeFile.getFileName().toString().equals(englishFile.getFileName().toString())) {
             continue;
@@ -202,20 +247,25 @@ class EnglishPropertiesParityTest {
           missingEnglishKeys.removeAll(englishKeys);
 
           for (String missingKey : missingEnglishKeys) {
-            missingByKey.computeIfAbsent(missingKey, ignored -> new TreeSet<>())
+            missingByKey
+                .computeIfAbsent(missingKey, ignored -> new TreeSet<>())
                 .add(localeFile.getFileName().toString());
           }
         }
       }
 
       if (!missingByKey.isEmpty()) {
-        missingReports.add(formatReverseLocaleSection(bundle,
-            "keys present in locales but missing from English", missingByKey));
+        missingReports.add(
+            formatReverseLocaleSection(
+                bundle, "keys present in locales but missing from English", missingByKey));
       }
     }
 
-    writeReport("English bundles missing keys present in locales", missingReports,
-        REPORT_PATH_3, REPORT_JSON_3);
+    writeReport(
+        "English bundles missing keys present in locales",
+        missingReports,
+        REPORT_PATH_3,
+        REPORT_JSON_3);
   }
 
   @Test
@@ -223,7 +273,8 @@ class EnglishPropertiesParityTest {
   void englishBundlesDoNotContainUnusedKeys() throws IOException {
     Map<String, Set<String>> sourceKeysByBundle = collectSourceKeysByBundle();
     Map<String, Set<String>> englishKeysByBundle = loadEnglishKeysByBundle();
-    Set<String> commonEnglishKeys = loadPropertiesKeys(RESOURCE_ROOT.resolve("Common_en.properties"));
+    Set<String> commonEnglishKeys =
+        loadPropertiesKeys(RESOURCE_ROOT.resolve("Common_en.properties"));
 
     Set<String> allUsedKeys = new LinkedHashSet<>();
     for (Set<String> keys : sourceKeysByBundle.values()) {
@@ -238,9 +289,10 @@ class EnglishPropertiesParityTest {
     for (Map.Entry<String, Set<String>> entry : englishKeysByBundle.entrySet()) {
       String bundle = entry.getKey();
       Set<String> englishKeys = entry.getValue();
-      Set<String> usedKeys = bundle.endsWith(".Common")
-          ? allUsedKeys
-          : new LinkedHashSet<>(sourceKeysByBundle.getOrDefault(bundle, Set.of()));
+      Set<String> usedKeys =
+          bundle.endsWith(".Common")
+              ? allUsedKeys
+              : new LinkedHashSet<>(sourceKeysByBundle.getOrDefault(bundle, Set.of()));
 
       expandUsedKeysFromSubclassParentOverrides(bundle, englishKeys, sourceKeysByBundle, usedKeys);
 
@@ -252,7 +304,9 @@ class EnglishPropertiesParityTest {
       unusedKeys.removeIf(EnglishPropertiesParityTest::isIconKey);
 
       if (!unusedKeys.isEmpty()) {
-        unusedReports.add(formatBundleSection(bundle, "unused in English bundle (not referenced in Java)", unusedKeys));
+        unusedReports.add(
+            formatBundleSection(
+                bundle, "unused in English bundle (not referenced in Java)", unusedKeys));
       }
     }
 
@@ -269,8 +323,8 @@ class EnglishPropertiesParityTest {
   }
 
   /**
-   * Keys derived at runtime from a base key (e.g. {@code save_tooltip} when {@code save} is passed to
-   * {@link app.freerouting.util.TextManager#setText}).
+   * Keys derived at runtime from a base key (e.g. {@code save_tooltip} when {@code save} is passed
+   * to {@link app.freerouting.util.TextManager#setText}).
    */
   private static void expandUsedKeysFromSubclassParentOverrides(
       String bundle,
@@ -289,7 +343,8 @@ class EnglishPropertiesParityTest {
     }
   }
 
-  private static void expandWithImplicitCompanionKeys(Set<String> usedKeys, Set<String> availableKeys) {
+  private static void expandWithImplicitCompanionKeys(
+      Set<String> usedKeys, Set<String> availableKeys) {
     Set<String> companions = new LinkedHashSet<>();
     for (String key : usedKeys) {
       addCompanionIfPresent(companions, availableKeys, key + "_tooltip");
@@ -298,7 +353,8 @@ class EnglishPropertiesParityTest {
     usedKeys.addAll(companions);
   }
 
-  private static void addCompanionIfPresent(Set<String> companions, Set<String> availableKeys, String candidate) {
+  private static void addCompanionIfPresent(
+      Set<String> companions, Set<String> availableKeys, String candidate) {
     if (availableKeys.contains(candidate)) {
       companions.add(candidate);
     }
@@ -308,27 +364,30 @@ class EnglishPropertiesParityTest {
     Map<String, Set<String>> keysByBundle = new TreeMap<>();
 
     try (var paths = Files.walk(JAVA_SOURCE_ROOT)) {
-      paths.filter(path -> path.toString().endsWith(".java"))
+      paths
+          .filter(path -> path.toString().endsWith(".java"))
           .filter(path -> !"TextManager.java".equals(path.getFileName().toString()))
-          .forEach(path -> {
-            try {
-              collectSourceKeysFromFile(path, keysByBundle);
-            } catch (IOException e) {
-              throw new IllegalStateException("Failed to scan source file: " + path, e);
-            }
-          });
+          .forEach(
+              path -> {
+                try {
+                  collectSourceKeysFromFile(path, keysByBundle);
+                } catch (IOException e) {
+                  throw new IllegalStateException("Failed to scan source file: " + path, e);
+                }
+              });
     }
 
     return keysByBundle;
   }
 
-  private static void collectSourceKeysFromFile(Path javaFile, Map<String, Set<String>> keysByBundle)
-      throws IOException {
+  private static void collectSourceKeysFromFile(
+      Path javaFile, Map<String, Set<String>> keysByBundle) throws IOException {
     String source = Files.readString(javaFile);
     String currentClassName = toClassName(javaFile);
     String currentPackageName = currentClassName.substring(0, currentClassName.lastIndexOf('.'));
     Map<String, String> imports = resolveImports(source);
-    Map<String, String> textManagerBundles = resolveTextManagerBundles(source, currentClassName, currentPackageName, imports);
+    Map<String, String> textManagerBundles =
+        resolveTextManagerBundles(source, currentClassName, currentPackageName, imports);
 
     if (textManagerBundles.isEmpty()) {
       Set<String> bundleOwners = resolveBundleOwners(javaFile, source, imports);
@@ -355,7 +414,8 @@ class EnglishPropertiesParityTest {
     }
 
     Set<String> sharedKeys = collectSharedFileKeys(source);
-    String primaryBundle = textManagerBundles.getOrDefault("tm", textManagerBundles.values().iterator().next());
+    String primaryBundle =
+        textManagerBundles.getOrDefault("tm", textManagerBundles.values().iterator().next());
     addKeysToBundle(keysByBundle, primaryBundle, sharedKeys);
   }
 
@@ -398,15 +458,21 @@ class EnglishPropertiesParityTest {
     return keys;
   }
 
-  private static void addKeysToBundle(Map<String, Set<String>> keysByBundle, String bundle, Set<String> keys) {
+  private static void addKeysToBundle(
+      Map<String, Set<String>> keysByBundle, String bundle, Set<String> keys) {
     if (keys.isEmpty()) {
       return;
     }
-    keysByBundle.computeIfAbsent(canonicalizeBundle(bundle), ignored -> new LinkedHashSet<>()).addAll(keys);
+    keysByBundle
+        .computeIfAbsent(canonicalizeBundle(bundle), ignored -> new LinkedHashSet<>())
+        .addAll(keys);
   }
 
   private static Map<String, String> resolveTextManagerBundles(
-      String source, String currentClassName, String currentPackageName, Map<String, String> imports) {
+      String source,
+      String currentClassName,
+      String currentPackageName,
+      Map<String, String> imports) {
     Map<String, String> variableToBundle = new TreeMap<>();
 
     if (SET_LANGUAGE_PATTERN.matcher(source).find() || THIS_CLASS_PATTERN.matcher(source).find()) {
@@ -422,7 +488,8 @@ class EnglishPropertiesParityTest {
 
     Matcher thisTmMatcher = THIS_TM_ASSIGN_PATTERN.matcher(source);
     while (thisTmMatcher.find()) {
-      variableToBundle.put("tm", resolveClassName(currentPackageName, thisTmMatcher.group(1), imports));
+      variableToBundle.put(
+          "tm", resolveClassName(currentPackageName, thisTmMatcher.group(1), imports));
     }
 
     if (THIS_TM_GET_CLASS_ASSIGN_PATTERN.matcher(source).find()) {
@@ -461,7 +528,8 @@ class EnglishPropertiesParityTest {
     return resolved;
   }
 
-  private static Set<String> resolveBundleOwners(Path javaFile, String source, Map<String, String> imports) {
+  private static Set<String> resolveBundleOwners(
+      Path javaFile, String source, Map<String, String> imports) {
     Set<String> bundleOwners = new LinkedHashSet<>();
     String currentClassName = toClassName(javaFile);
     String currentPackageName = currentClassName.substring(0, currentClassName.lastIndexOf('.'));
@@ -475,7 +543,8 @@ class EnglishPropertiesParityTest {
       bundleOwners.add(currentClassName);
     }
 
-    if (SET_LANGUAGE_PATTERN.matcher(source).find() && INHERITED_TM_USAGE_PATTERN.matcher(source).find()) {
+    if (SET_LANGUAGE_PATTERN.matcher(source).find()
+        && INHERITED_TM_USAGE_PATTERN.matcher(source).find()) {
       bundleOwners.add(currentClassName);
     }
 
@@ -524,10 +593,14 @@ class EnglishPropertiesParityTest {
     return textManagerVariables;
   }
 
-  private static void collectKeysForTextManagerVariable(String source, String textManagerVariable, Set<String> keys) {
-    Matcher getTextMatcher = Pattern.compile(
-            "\\b(?:[A-Za-z_][A-Za-z0-9_]*\\.)*" + Pattern.quote(textManagerVariable) + "\\.getText\\(\\s*\"([^\"]+)\"")
-        .matcher(source);
+  private static void collectKeysForTextManagerVariable(
+      String source, String textManagerVariable, Set<String> keys) {
+    Matcher getTextMatcher =
+        Pattern.compile(
+                "\\b(?:[A-Za-z_][A-Za-z0-9_]*\\.)*"
+                    + Pattern.quote(textManagerVariable)
+                    + "\\.getText\\(\\s*\"([^\"]+)\"")
+            .matcher(source);
     while (getTextMatcher.find()) {
       String key = getTextMatcher.group(1);
       if (!isIconKey(key)) {
@@ -535,9 +608,12 @@ class EnglishPropertiesParityTest {
       }
     }
 
-    Matcher setTextMatcher = Pattern.compile(
-            "\\b(?:[A-Za-z_][A-Za-z0-9_]*\\.)*" + Pattern.quote(textManagerVariable) + "\\.setText\\(\\s*[^,]+,\\s*\"([^\"]+)\"")
-        .matcher(source);
+    Matcher setTextMatcher =
+        Pattern.compile(
+                "\\b(?:[A-Za-z_][A-Za-z0-9_]*\\.)*"
+                    + Pattern.quote(textManagerVariable)
+                    + "\\.setText\\(\\s*[^,]+,\\s*\"([^\"]+)\"")
+            .matcher(source);
     while (setTextMatcher.find()) {
       String key = setTextMatcher.group(1);
       if (!isIconKey(key)) {
@@ -545,10 +621,12 @@ class EnglishPropertiesParityTest {
       }
     }
 
-    Matcher inlineGetTextMatcher = Pattern.compile(
-            "(?:setText|setToolTipText)\\s*\\(\\s*(?:[A-Za-z_][A-Za-z0-9_]*\\.)*"
-                + Pattern.quote(textManagerVariable) + "\\.getText\\(\\s*\"([^\"]+)\"")
-        .matcher(source);
+    Matcher inlineGetTextMatcher =
+        Pattern.compile(
+                "(?:setText|setToolTipText)\\s*\\(\\s*(?:[A-Za-z_][A-Za-z0-9_]*\\.)*"
+                    + Pattern.quote(textManagerVariable)
+                    + "\\.getText\\(\\s*\"([^\"]+)\"")
+            .matcher(source);
     while (inlineGetTextMatcher.find()) {
       String key = inlineGetTextMatcher.group(1);
       if (!isIconKey(key)) {
@@ -654,7 +732,8 @@ class EnglishPropertiesParityTest {
     return enumArrayTypes;
   }
 
-  private static Set<String> resolveEnumConstants(String source, String enumType) throws IOException {
+  private static Set<String> resolveEnumConstants(String source, String enumType)
+      throws IOException {
     Set<String> constants = new LinkedHashSet<>();
     String enumBody = findEnumBody(source, enumType);
 
@@ -699,7 +778,8 @@ class EnglishPropertiesParityTest {
   }
 
   private static String findEnumBody(String source, String enumType) {
-    Pattern enumPattern = Pattern.compile(String.format("(?s)\\benum\\s+%s\\s*\\{", Pattern.quote(enumType)));
+    Pattern enumPattern =
+        Pattern.compile(String.format("(?s)\\benum\\s+%s\\s*\\{", Pattern.quote(enumType)));
     Matcher matcher = enumPattern.matcher(source);
     if (matcher.find()) {
       int start = matcher.end();
@@ -724,13 +804,15 @@ class EnglishPropertiesParityTest {
       if (sourceFilesCache == null) {
         sourceFilesCache = new java.util.HashMap<>();
         try (var paths = Files.walk(JAVA_SOURCE_ROOT)) {
-          paths.filter(path -> path.toString().endsWith(".java"))
-               .forEach(path -> sourceFilesCache.put(path.getFileName().toString(), path));
+          paths
+              .filter(path -> path.toString().endsWith(".java"))
+              .forEach(path -> sourceFilesCache.put(path.getFileName().toString(), path));
         }
       }
     }
 
-    Pattern enumPattern = Pattern.compile(String.format("(?s)\\benum\\s+%s\\s*\\{", Pattern.quote(enumType)));
+    Pattern enumPattern =
+        Pattern.compile(String.format("(?s)\\benum\\s+%s\\s*\\{", Pattern.quote(enumType)));
     for (Path sourceFile : sourceFilesCache.values()) {
       String enumSource = Files.readString(sourceFile);
       if (!enumPattern.matcher(enumSource).find()) {
@@ -749,8 +831,9 @@ class EnglishPropertiesParityTest {
       if (sourceFilesCache == null) {
         sourceFilesCache = new java.util.HashMap<>();
         try (var paths = Files.walk(JAVA_SOURCE_ROOT)) {
-          paths.filter(path -> path.toString().endsWith(".java"))
-               .forEach(path -> sourceFilesCache.put(path.getFileName().toString(), path));
+          paths
+              .filter(path -> path.toString().endsWith(".java"))
+              .forEach(path -> sourceFilesCache.put(path.getFileName().toString(), path));
         }
       }
     }
@@ -765,14 +848,16 @@ class EnglishPropertiesParityTest {
     Map<String, Set<String>> englishKeysByBundle = new TreeMap<>();
 
     try (var paths = Files.walk(RESOURCE_ROOT)) {
-      paths.filter(path -> path.getFileName().toString().endsWith("_en.properties"))
-          .forEach(path -> {
-            try {
-              englishKeysByBundle.put(toBundleName(path), loadPropertiesKeys(path));
-            } catch (IOException e) {
-              throw new IllegalStateException("Failed to load English bundle: " + path, e);
-            }
-          });
+      paths
+          .filter(path -> path.getFileName().toString().endsWith("_en.properties"))
+          .forEach(
+              path -> {
+                try {
+                  englishKeysByBundle.put(toBundleName(path), loadPropertiesKeys(path));
+                } catch (IOException e) {
+                  throw new IllegalStateException("Failed to load English bundle: " + path, e);
+                }
+              });
     }
 
     return englishKeysByBundle;
@@ -796,7 +881,8 @@ class EnglishPropertiesParityTest {
     return resolveClassName(currentPackageName, classToken, Map.of());
   }
 
-  private static String resolveClassName(String currentPackageName, String classToken, Map<String, String> imports) {
+  private static String resolveClassName(
+      String currentPackageName, String classToken, Map<String, String> imports) {
     if (classToken.contains(".")) {
       return classToken;
     }
@@ -808,7 +894,8 @@ class EnglishPropertiesParityTest {
 
   private static String toBundleName(Path propertiesFile) {
     String relativePath = RESOURCE_ROOT.relativize(propertiesFile).toString().replace('\\', '/');
-    String withoutExtension = relativePath.substring(0, relativePath.length() - ".properties".length());
+    String withoutExtension =
+        relativePath.substring(0, relativePath.length() - ".properties".length());
     if (withoutExtension.endsWith("_en")) {
       withoutExtension = withoutExtension.substring(0, withoutExtension.length() - "_en".length());
     }
@@ -831,36 +918,56 @@ class EnglishPropertiesParityTest {
   private static String formatBundleSection(String bundle, String label, Set<String> keys) {
     StringBuilder builder = new StringBuilder();
     builder.append(bundle).append(System.lineSeparator());
-    builder.append("  ").append(label).append(" (").append(keys.size()).append(")").append(System.lineSeparator());
+    builder
+        .append("  ")
+        .append(label)
+        .append(" (")
+        .append(keys.size())
+        .append(")")
+        .append(System.lineSeparator());
     for (String key : keys) {
       builder.append("    - ").append(key).append(System.lineSeparator());
     }
     return builder.toString().trim();
   }
 
-  private static String formatLocaleSection(String bundle, String label, Map<String, Set<String>> missingByLocaleFile) {
+  private static String formatLocaleSection(
+      String bundle, String label, Map<String, Set<String>> missingByLocaleFile) {
     StringBuilder builder = new StringBuilder();
     builder.append(bundle).append(System.lineSeparator());
     builder.append("  ").append(label).append(System.lineSeparator());
     for (Map.Entry<String, Set<String>> entry : missingByLocaleFile.entrySet()) {
-      builder.append("    - ").append(entry.getKey()).append(" (").append(entry.getValue().size())
-          .append("): ").append(String.join(", ", entry.getValue())).append(System.lineSeparator());
+      builder
+          .append("    - ")
+          .append(entry.getKey())
+          .append(" (")
+          .append(entry.getValue().size())
+          .append("): ")
+          .append(String.join(", ", entry.getValue()))
+          .append(System.lineSeparator());
     }
     return builder.toString().trim();
   }
 
-  private static String formatReverseLocaleSection(String bundle, String label, Map<String, Set<String>> missingByKey) {
+  private static String formatReverseLocaleSection(
+      String bundle, String label, Map<String, Set<String>> missingByKey) {
     StringBuilder builder = new StringBuilder();
     builder.append(bundle).append(System.lineSeparator());
     builder.append("  ").append(label).append(System.lineSeparator());
     for (Map.Entry<String, Set<String>> entry : missingByKey.entrySet()) {
-      builder.append("    - ").append(entry.getKey()).append(" (present in: ")
-          .append(String.join(", ", entry.getValue())).append(")").append(System.lineSeparator());
+      builder
+          .append("    - ")
+          .append(entry.getKey())
+          .append(" (present in: ")
+          .append(String.join(", ", entry.getValue()))
+          .append(")")
+          .append(System.lineSeparator());
     }
     return builder.toString().trim();
   }
 
-  private static synchronized void writeReport(String heading, List<String> reports, Path reportPath, Path reportJsonPath)
+  private static synchronized void writeReport(
+      String heading, List<String> reports, Path reportPath, Path reportJsonPath)
       throws IOException {
     Files.createDirectories(reportPath.getParent());
     Files.deleteIfExists(reportPath);
@@ -879,7 +986,10 @@ class EnglishPropertiesParityTest {
     }
     builder.append(System.lineSeparator());
 
-    Files.writeString(reportPath, builder.toString(), java.nio.file.StandardOpenOption.CREATE,
+    Files.writeString(
+        reportPath,
+        builder.toString(),
+        java.nio.file.StandardOpenOption.CREATE,
         java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
 
     // Also write machine-readable JSON summary
@@ -889,7 +999,10 @@ class EnglishPropertiesParityTest {
     summary.put("items", reports);
 
     String jsonOut = new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(summary);
-    Files.writeString(reportJsonPath, jsonOut, java.nio.file.StandardOpenOption.CREATE,
+    Files.writeString(
+        reportJsonPath,
+        jsonOut,
+        java.nio.file.StandardOpenOption.CREATE,
         java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
 
     FRLogger.info("Wrote i18n parity report to " + reportPath.toAbsolutePath());

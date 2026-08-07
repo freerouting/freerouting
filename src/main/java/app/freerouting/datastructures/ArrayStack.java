@@ -1,8 +1,6 @@
 package app.freerouting.datastructures;
 
-/**
- * Implementation of a stack as an array
- */
+/** Implementation of a stack as an array */
 @SuppressWarnings("unchecked")
 public class ArrayStack<p_element_type> {
 
@@ -10,22 +8,19 @@ public class ArrayStack<p_element_type> {
   private p_element_type[] node_arr;
 
   /**
-   * Creates a new instance of ArrayStack with an initial maximal capacity for p_max_stack_depth elements.
+   * Creates a new instance of ArrayStack with an initial maximal capacity for p_max_stack_depth
+   * elements.
    */
   public ArrayStack(int p_max_stack_depth) {
     node_arr = (p_element_type[]) new Object[p_max_stack_depth];
   }
 
-  /**
-   * Sets the stack to empty.
-   */
+  /** Sets the stack to empty. */
   public void reset() {
     level = -1;
   }
 
-  /**
-   * Pushed p_element onto the stack.
-   */
+  /** Pushed p_element onto the stack. */
   public void push(p_element_type p_element) {
 
     ++level;
@@ -37,9 +32,7 @@ public class ArrayStack<p_element_type> {
     node_arr[level] = p_element;
   }
 
-  /**
-   * Pops the next element from the top of the stack. Returns null, if the stack is exhausted.
-   */
+  /** Pops the next element from the top of the stack. Returns null, if the stack is exhausted. */
   public p_element_type pop() {
     if (level < 0) {
       return null;

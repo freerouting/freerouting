@@ -36,14 +36,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Class for reading and writing structure scopes from dsn-files.
- */
+/** Class for reading and writing structure scopes from dsn-files. */
 public class Structure extends ScopeKeyword {
 
-  /**
-   * Creates a new instance of Structure
-   */
+  /** Creates a new instance of Structure */
   public Structure() {
     super("structure");
   }
@@ -72,8 +68,8 @@ public class Structure extends ScopeKeyword {
 
     if (p_par.autoroute_settings != null) {
       // write the auto-route settings
-      AutorouteSettings.write_scope(p_par.file, p_par.autoroute_settings, p_par.board.layer_structure,
-          p_par.identifier_type);
+      AutorouteSettings.write_scope(
+          p_par.file, p_par.autoroute_settings, p_par.board.layer_structure, p_par.identifier_type);
     }
 
     // write the conduction areas
@@ -88,7 +84,7 @@ public class Structure extends ScopeKeyword {
   private static void write_conduction_areas(WriteScopeParameter p_par) throws IOException {
     Storable curr_ob;
     Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
-    for (;;) {
+    for (; ; ) {
       curr_ob = p_par.board.item_list.read_object(it);
       if (curr_ob == null) {
         break;
@@ -107,7 +103,7 @@ public class Structure extends ScopeKeyword {
   private static void write_keepouts(WriteScopeParameter p_par) throws IOException {
     Storable curr_ob;
     Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
-    for (;;) {
+    for (; ; ) {
       curr_ob = p_par.board.item_list.read_object(it);
       if (curr_ob == null) {
         break;
@@ -139,7 +135,7 @@ public class Structure extends ScopeKeyword {
     // lookup the outline in the board
     Storable curr_ob;
     Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
-    for (;;) {
+    for (; ; ) {
       curr_ob = p_par.board.item_list.read_object(it);
       if (curr_ob == null) {
         break;
@@ -156,7 +152,8 @@ public class Structure extends ScopeKeyword {
 
     // write the outline
     for (int i = 0; i < outline.shape_count(); i++) {
-      Shape outline_shape = p_par.coordinate_transform.board_to_dsn(outline.get_shape(i), Layer.SIGNAL);
+      Shape outline_shape =
+          p_par.coordinate_transform.board_to_dsn(outline.get_shape(i), Layer.SIGNAL);
       p_par.file.start_scope();
       p_par.file.write("boundary");
       outline_shape.write_scope(p_par.file, p_par.identifier_type);
@@ -166,12 +163,10 @@ public class Structure extends ScopeKeyword {
 
   static void write_layers(WriteScopeParameter p_par) throws IOException {
     for (int i = 0; i < p_par.board.layer_structure.arr.length; i++) {
-      boolean write_layer_rule = p_par.board.rules
-          .get_default_net_class()
-          .get_trace_half_width(i) != p_par.board.rules
-              .get_default_net_class()
-              .get_trace_half_width(0)
-          || !clearance_equals(p_par.board.rules.clearance_matrix, i, 0);
+      boolean write_layer_rule =
+          p_par.board.rules.get_default_net_class().get_trace_half_width(i)
+                  != p_par.board.rules.get_default_net_class().get_trace_half_width(0)
+              || !clearance_equals(p_par.board.rules.clearance_matrix, i, 0);
       Layer.write_scope(p_par, i, write_layer_rule);
     }
   }
@@ -181,8 +176,9 @@ public class Structure extends ScopeKeyword {
     Rule.write_default_rule(p_par, 0);
   }
 
-  private static void write_via_padstacks(BoardLibrary p_library, IndentFileWriter p_file,
-      IdentifierType p_identifier_type) throws IOException {
+  private static void write_via_padstacks(
+      BoardLibrary p_library, IndentFileWriter p_file, IdentifierType p_identifier_type)
+      throws IOException {
     p_file.new_line();
     p_file.write("(via");
     for (int i = 0; i < p_library.via_padstack_count(); i++) {
@@ -197,16 +193,15 @@ public class Structure extends ScopeKeyword {
     p_file.write(")");
   }
 
-  private static void write_control_scope(BoardRules p_rules, IndentFileWriter p_file) throws IOException {
+  private static void write_control_scope(BoardRules p_rules, IndentFileWriter p_file)
+      throws IOException {
     p_file.start_scope();
     p_file.write("control");
     p_file.new_line();
     p_file.write("(via_at_smd ");
     boolean via_at_smd_allowed = false;
     for (int i = 0; i < p_rules.via_infos.count(); i++) {
-      if (p_rules.via_infos
-          .get(i)
-          .attach_smd_allowed()) {
+      if (p_rules.via_infos.get(i).attach_smd_allowed()) {
         via_at_smd_allowed = true;
         break;
       }
@@ -219,7 +214,8 @@ public class Structure extends ScopeKeyword {
     p_file.end_scope();
   }
 
-  private static void write_keepout_scope(WriteScopeParameter p_par, ObstacleArea p_keepout) throws IOException {
+  private static void write_keepout_scope(WriteScopeParameter p_par, ObstacleArea p_keepout)
+      throws IOException {
     Area keepout_area = p_keepout.get_area();
     int layer_no = p_keepout.get_layer();
     app.freerouting.board.Layer board_layer = p_par.board.layer_structure.arr[layer_no];
@@ -250,7 +246,8 @@ public class Structure extends ScopeKeyword {
     // write clearance class if it's defined for this keepout area.
     if (p_keepout.clearance_class_no() > 0) {
       // skip it if it's the default clearance class.
-      String clearance_name = p_par.board.rules.clearance_matrix.get_name(p_keepout.clearance_class_no());
+      String clearance_name =
+          p_par.board.rules.clearance_matrix.get_name(p_keepout.clearance_class_no());
 
       if (!"default".equals(clearance_name)) {
         Rule.write_item_clearance_class(clearance_name, p_par.file, p_par.identifier_type);
@@ -259,18 +256,20 @@ public class Structure extends ScopeKeyword {
     p_par.file.end_scope();
   }
 
-  private static boolean read_boundary_scope(IJFlexScanner p_scanner, BoardConstructionInfo p_board_construction_info) {
+  private static boolean read_boundary_scope(
+      IJFlexScanner p_scanner, BoardConstructionInfo p_board_construction_info) {
     Shape curr_shape = Shape.read_scope(p_scanner, null);
     try {
       Object prev_token = null;
-      for (;;) {
+      for (; ; ) {
         Object next_token = p_scanner.next_token();
         if (next_token == Keyword.CLOSED_BRACKET) {
           break;
         }
         if (prev_token == Keyword.OPEN_BRACKET) {
           if (next_token == Keyword.CLEARANCE_CLASS) {
-            p_board_construction_info.outline_clearance_class_name = DsnFile.read_string_scope(p_scanner);
+            p_board_construction_info.outline_clearance_class_name =
+                DsnFile.read_string_scope(p_scanner);
           } else {
             Shape additional_shape = Shape.read_scope_from_keyword(p_scanner, next_token, null);
             add_boundary_shape(p_board_construction_info, additional_shape);
@@ -283,14 +282,18 @@ public class Structure extends ScopeKeyword {
       return false;
     }
     if (curr_shape == null) {
-      FRLogger.warn("Structure.read_boundary_scope: shape is null at '" + p_scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "Structure.read_boundary_scope: shape is null at '"
+              + p_scanner.get_scope_identifier()
+              + "'");
       return true;
     }
     add_boundary_shape(p_board_construction_info, curr_shape);
     return true;
   }
 
-  private static void add_boundary_shape(BoardConstructionInfo p_board_construction_info, Shape shape) {
+  private static void add_boundary_shape(
+      BoardConstructionInfo p_board_construction_info, Shape shape) {
     if (shape == null) {
       return;
     }
@@ -311,7 +314,9 @@ public class Structure extends ScopeKeyword {
     }
   }
 
-  static boolean read_layer_scope(IJFlexScanner p_scanner, BoardConstructionInfo p_board_construction_info,
+  static boolean read_layer_scope(
+      IJFlexScanner p_scanner,
+      BoardConstructionInfo p_board_construction_info,
       String p_string_quote) {
     try {
       boolean layer_ok = true;
@@ -323,7 +328,10 @@ public class Structure extends ScopeKeyword {
       Object next_token = p_scanner.next_token();
       while (next_token != Keyword.CLOSED_BRACKET) {
         if (next_token != Keyword.OPEN_BRACKET) {
-          FRLogger.warn("Structure.read_layer_scope: ( expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Structure.read_layer_scope: ( expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return false;
         }
         next_token = p_scanner.next_token();
@@ -334,24 +342,37 @@ public class Structure extends ScopeKeyword {
           } else if ((next_token != Keyword.SIGNAL)
               && (!Objects.equals(next_token.toString(), Keyword.JUMPER.get_name()))) {
             if (next_token instanceof String) {
-              FRLogger.error("Structure.read_layer_scope: the layer '" + layer_string + "' has an unknown layer type '"
-                  + next_token + "'", null);
+              FRLogger.error(
+                  "Structure.read_layer_scope: the layer '"
+                      + layer_string
+                      + "' has an unknown layer type '"
+                      + next_token
+                      + "'",
+                  null);
             } else {
-              FRLogger.warn("Structure.read_layer_scope: the layer '" + layer_string
-                  + "' has an unknown layer type at '" + p_scanner.get_scope_identifier() + "'");
+              FRLogger.warn(
+                  "Structure.read_layer_scope: the layer '"
+                      + layer_string
+                      + "' has an unknown layer type at '"
+                      + p_scanner.get_scope_identifier()
+                      + "'");
             }
             layer_ok = false;
           }
           next_token = p_scanner.next_token();
           if (next_token != Keyword.CLOSED_BRACKET) {
-            FRLogger.warn("Structure.read_layer_scope: ) expected at '" + p_scanner.get_scope_identifier() + "'");
+            FRLogger.warn(
+                "Structure.read_layer_scope: ) expected at '"
+                    + p_scanner.get_scope_identifier()
+                    + "'");
             return false;
           }
         } else if (next_token == Keyword.RULE) {
           Collection<Rule> curr_rules = Rule.read_scope(p_scanner);
-          p_board_construction_info.layer_dependent_rules.add(new LayerRule(layer_string, curr_rules));
+          p_board_construction_info.layer_dependent_rules.add(
+              new LayerRule(layer_string, curr_rules));
         } else if (next_token == Keyword.USE_NET) {
-          for (;;) {
+          for (; ; ) {
             p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
             next_token = p_scanner.next_token();
             if (next_token == Keyword.CLOSED_BRACKET) {
@@ -360,8 +381,10 @@ public class Structure extends ScopeKeyword {
             if (next_token instanceof String string) {
               net_names.add(string);
             } else {
-              FRLogger
-                  .warn("Structure.read_layer_scope: string expected at '" + p_scanner.get_scope_identifier() + "'");
+              FRLogger.warn(
+                  "Structure.read_layer_scope: string expected at '"
+                      + p_scanner.get_scope_identifier()
+                      + "'");
             }
           }
         } else {
@@ -370,7 +393,9 @@ public class Structure extends ScopeKeyword {
         next_token = p_scanner.next_token();
       }
       if (layer_ok) {
-        Layer curr_layer = new Layer(layer_string, p_board_construction_info.found_layer_count, is_signal, net_names);
+        Layer curr_layer =
+            new Layer(
+                layer_string, p_board_construction_info.found_layer_count, is_signal, net_names);
         p_board_construction_info.layer_info.add(curr_layer);
         ++p_board_construction_info.found_layer_count;
       }
@@ -385,7 +410,7 @@ public class Structure extends ScopeKeyword {
     try {
       Collection<String> normal_vias = new LinkedList<>();
       Collection<String> spare_vias = new LinkedList<>();
-      for (;;) {
+      for (; ; ) {
         Object next_token = p_scanner.next_token();
         if (next_token == Keyword.CLOSED_BRACKET) {
           break;
@@ -400,7 +425,10 @@ public class Structure extends ScopeKeyword {
         } else if (next_token instanceof String string) {
           normal_vias.add(string);
         } else {
-          FRLogger.warn("Structure.read_via_padstack: String expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Structure.read_via_padstack: String expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
       }
@@ -415,7 +443,7 @@ public class Structure extends ScopeKeyword {
 
   private static boolean read_control_scope(ReadScopeParameter p_par) {
     Object next_token = null;
-    for (;;) {
+    for (; ; ) {
       Object prev_token = next_token;
       try {
         next_token = p_par.scanner.next_token();
@@ -425,7 +453,9 @@ public class Structure extends ScopeKeyword {
       }
       if (next_token == null) {
         FRLogger.warn(
-            "Structure.read_control_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
+            "Structure.read_control_scope: unexpected end of file at '"
+                + p_par.scanner.get_scope_identifier()
+                + "'");
         return false;
       }
       if (next_token == CLOSED_BRACKET) {
@@ -454,14 +484,18 @@ public class Structure extends ScopeKeyword {
       } else if (next_token == Keyword.NONE) {
         snap_angle = AngleRestriction.NONE;
       } else {
-        FRLogger
-            .warn("Structure.read_snap_angle_scope: unexpected token at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Structure.read_snap_angle_scope: unexpected token at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("Structure.read_selection_layer_scop: closing bracket expected at '"
-            + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Structure.read_selection_layer_scop: closing bracket expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       return snap_angle;
@@ -471,7 +505,8 @@ public class Structure extends ScopeKeyword {
     }
   }
 
-  public static void write_snap_angle(IndentFileWriter p_file, AngleRestriction p_angle_restriction) throws IOException {
+  public static void write_snap_angle(IndentFileWriter p_file, AngleRestriction p_angle_restriction)
+      throws IOException {
     p_file.start_scope();
     p_file.write("snap_angle ");
     p_file.new_line();
@@ -486,8 +521,8 @@ public class Structure extends ScopeKeyword {
     p_file.end_scope();
   }
 
-  private static void insert_missing_power_planes(Collection<Layer> p_layer_info, NetList p_netlist,
-      BasicBoard p_board) {
+  private static void insert_missing_power_planes(
+      Collection<Layer> p_layer_info, NetList p_netlist, BasicBoard p_board) {
     Collection<ConductionArea> conduction_areas = p_board.get_conduction_areas();
     for (Layer curr_layer : p_layer_info) {
       if (curr_layer.is_signal) {
@@ -501,9 +536,7 @@ public class Structure extends ScopeKeyword {
         }
       }
       if (!conduction_area_found && !curr_layer.net_names.isEmpty()) {
-        String curr_net_name = curr_layer.net_names
-            .iterator()
-            .next();
+        String curr_net_name = curr_layer.net_names.iterator().next();
         Net.Id curr_net_id = new Net.Id(curr_net_name, 1);
         if (!p_netlist.contains(curr_net_id)) {
           Net new_net = p_netlist.add_net(curr_net_id);
@@ -511,26 +544,36 @@ public class Structure extends ScopeKeyword {
             p_board.rules.nets.add(new_net.id.name, new_net.id.subnet_number, true);
           }
         }
-        app.freerouting.rules.Net curr_net = p_board.rules.nets.get(curr_net_id.name, curr_net_id.subnet_number);
+        app.freerouting.rules.Net curr_net =
+            p_board.rules.nets.get(curr_net_id.name, curr_net_id.subnet_number);
         {
           if (curr_net == null) {
-            FRLogger.warn("Structure.insert_missing_power_planes: net not found at '" + curr_net_id.name + "'");
+            FRLogger.warn(
+                "Structure.insert_missing_power_planes: net not found at '"
+                    + curr_net_id.name
+                    + "'");
             continue;
           }
         }
         int[] net_numbers = new int[1];
         net_numbers[0] = curr_net.net_number;
-        p_board.insert_conduction_area(p_board.bounding_box, curr_layer.no, net_numbers,
-            BoardRules.clearance_class_none(), false, FixedState.SYSTEM_FIXED);
+        p_board.insert_conduction_area(
+            p_board.bounding_box,
+            curr_layer.no,
+            net_numbers,
+            BoardRules.clearance_class_none(),
+            false,
+            FixedState.SYSTEM_FIXED);
       }
     }
   }
 
   /**
-   * Calculates shapes in p_outline_shapes, which are holes in the outline and
-   * returns them in the result list.
+   * Calculates shapes in p_outline_shapes, which are holes in the outline and returns them in the
+   * result list.
    */
-  private static Collection<PolylineShape> separate_holes(Collection<PolylineShape> p_outline_shapes) {
+  private static Collection<PolylineShape> separate_holes(
+      Collection<PolylineShape> p_outline_shapes) {
     OutlineShape[] shape_arr = new OutlineShape[p_outline_shapes.size()];
     Iterator<PolylineShape> it = p_outline_shapes.iterator();
     for (int i = 0; i < shape_arr.length; i++) {
@@ -559,19 +602,21 @@ public class Structure extends ScopeKeyword {
     }
     return hole_list;
   }
+
   // Check, if a conduction area is inserted on each plane,
   // and insert evtl. a conduction area
 
-  /**
-   * Updates the board rules from the rules read from the dsn file.
-   */
-  private static void update_board_rules(ReadScopeParameter p_par, BoardConstructionInfo p_board_construction_info,
+  /** Updates the board rules from the rules read from the dsn file. */
+  private static void update_board_rules(
+      ReadScopeParameter p_par,
+      BoardConstructionInfo p_board_construction_info,
       BoardRules p_board_rules) {
     boolean smd_to_turn_gap_found = false;
     // update the clearance matrix
     for (Rule curr_ob : p_board_construction_info.default_rules) {
       if (curr_ob instanceof Rule.ClearanceRule curr_rule) {
-        if (set_clearance_rule(curr_rule, -1, p_par.coordinate_transform, p_board_rules, p_par.string_quote)) {
+        if (set_clearance_rule(
+            curr_rule, -1, p_par.coordinate_transform, p_board_rules, p_par.string_quote)) {
           smd_to_turn_gap_found = true;
         }
       }
@@ -580,9 +625,16 @@ public class Structure extends ScopeKeyword {
     for (Object curr_ob : p_board_construction_info.default_rules) {
       if (curr_ob instanceof Rule.WidthRule rule) {
         double wire_width = rule.value;
-        int trace_halfwidth = (int) Math.round(p_par.coordinate_transform.dsn_to_board(wire_width) / 2);
-        FRLogger.debug("Set default trace width (all layers): DSN=" + wire_width +
-            " → board=" + (trace_halfwidth * 2) + " (" + (trace_halfwidth * 2 / 40000.0) + " mm)");
+        int trace_halfwidth =
+            (int) Math.round(p_par.coordinate_transform.dsn_to_board(wire_width) / 2);
+        FRLogger.debug(
+            "Set default trace width (all layers): DSN="
+                + wire_width
+                + " → board="
+                + (trace_halfwidth * 2)
+                + " ("
+                + (trace_halfwidth * 2 / 40000.0)
+                + " mm)");
         p_board_rules.set_default_trace_half_widths(trace_halfwidth);
       }
     }
@@ -594,10 +646,12 @@ public class Structure extends ScopeKeyword {
       for (Rule curr_ob : layer_rule.rule) {
         if (curr_ob instanceof Rule.WidthRule rule) {
           double wire_width = rule.value;
-          int trace_halfwidth = (int) Math.round(p_par.coordinate_transform.dsn_to_board(wire_width) / 2);
+          int trace_halfwidth =
+              (int) Math.round(p_par.coordinate_transform.dsn_to_board(wire_width) / 2);
           p_board_rules.set_default_trace_half_width(layer_no, trace_halfwidth);
         } else if (curr_ob instanceof Rule.ClearanceRule curr_rule) {
-          set_clearance_rule(curr_rule, layer_no, p_par.coordinate_transform, p_board_rules, p_par.string_quote);
+          set_clearance_rule(
+              curr_rule, layer_no, p_par.coordinate_transform, p_board_rules, p_par.string_quote);
         }
       }
     }
@@ -607,23 +661,38 @@ public class Structure extends ScopeKeyword {
   }
 
   /**
-   * Converts a dsn clearance rule into a board clearance rule. If p_layer_no is negative,
-   * the rule is set on all layers. Returns true, if the string smd_to_turn_gap
-   * was found.
+   * Converts a dsn clearance rule into a board clearance rule. If p_layer_no is negative, the rule
+   * is set on all layers. Returns true, if the string smd_to_turn_gap was found.
    */
-  public static boolean set_clearance_rule(Rule.ClearanceRule p_rule, int p_layer_no,
-      CoordinateTransform p_coordinate_transform, BoardRules p_board_rules, String p_string_quote) {
+  public static boolean set_clearance_rule(
+      Rule.ClearanceRule p_rule,
+      int p_layer_no,
+      CoordinateTransform p_coordinate_transform,
+      BoardRules p_board_rules,
+      String p_string_quote) {
     boolean result = false;
     int curr_clearance = (int) Math.round(p_coordinate_transform.dsn_to_board(p_rule.value));
     if (p_rule.clearance_class_pairs.isEmpty()) {
       if (p_layer_no < 0) {
         p_board_rules.clearance_matrix.set_default_value(curr_clearance);
-        FRLogger.debug("Set DEFAULT clearance (all layers): " + curr_clearance +
-            " (" + (curr_clearance / 40000.0) + " mm) from DSN value " + p_rule.value);
+        FRLogger.debug(
+            "Set DEFAULT clearance (all layers): "
+                + curr_clearance
+                + " ("
+                + (curr_clearance / 40000.0)
+                + " mm) from DSN value "
+                + p_rule.value);
       } else {
         p_board_rules.clearance_matrix.set_default_value(p_layer_no, curr_clearance);
-        FRLogger.debug("Set DEFAULT clearance (layer " + p_layer_no + "): " + curr_clearance +
-            " (" + (curr_clearance / 40000.0) + " mm) from DSN value " + p_rule.value);
+        FRLogger.debug(
+            "Set DEFAULT clearance (layer "
+                + p_layer_no
+                + "): "
+                + curr_clearance
+                + " ("
+                + (curr_clearance / 40000.0)
+                + " mm) from DSN value "
+                + p_rule.value);
       }
       return result;
     }
@@ -665,7 +734,6 @@ public class Structure extends ScopeKeyword {
           // pairs with more than 1 underline like smd_via_same_net are not implemented
           continue;
         }
-
       }
 
       int first_class_no;
@@ -689,15 +757,41 @@ public class Structure extends ScopeKeyword {
       if (p_layer_no < 0) {
         p_board_rules.clearance_matrix.set_value(first_class_no, second_class_no, curr_clearance);
         p_board_rules.clearance_matrix.set_value(second_class_no, first_class_no, curr_clearance);
-        FRLogger.debug("Set clearance (all layers): " + curr_pair[0] + "_" + curr_pair[1] +
-            " = " + curr_clearance + " (" + (curr_clearance / 40000.0) + " mm), classes [" +
-            first_class_no + "," + second_class_no + "]");
+        FRLogger.debug(
+            "Set clearance (all layers): "
+                + curr_pair[0]
+                + "_"
+                + curr_pair[1]
+                + " = "
+                + curr_clearance
+                + " ("
+                + (curr_clearance / 40000.0)
+                + " mm), classes ["
+                + first_class_no
+                + ","
+                + second_class_no
+                + "]");
       } else {
-        p_board_rules.clearance_matrix.set_value(first_class_no, second_class_no, p_layer_no, curr_clearance);
-        p_board_rules.clearance_matrix.set_value(second_class_no, first_class_no, p_layer_no, curr_clearance);
-        FRLogger.debug("Set clearance (layer " + p_layer_no + "): " + curr_pair[0] + "_" + curr_pair[1] +
-            " = " + curr_clearance + " (" + (curr_clearance / 40000.0) + " mm), classes [" +
-            first_class_no + "," + second_class_no + "]");
+        p_board_rules.clearance_matrix.set_value(
+            first_class_no, second_class_no, p_layer_no, curr_clearance);
+        p_board_rules.clearance_matrix.set_value(
+            second_class_no, first_class_no, p_layer_no, curr_clearance);
+        FRLogger.debug(
+            "Set clearance (layer "
+                + p_layer_no
+                + "): "
+                + curr_pair[0]
+                + "_"
+                + curr_pair[1]
+                + " = "
+                + curr_clearance
+                + " ("
+                + (curr_clearance / 40000.0)
+                + " mm), classes ["
+                + first_class_no
+                + ","
+                + second_class_no
+                + "]");
       }
     }
     return result;
@@ -732,16 +826,16 @@ public class Structure extends ScopeKeyword {
     return result;
   }
 
-  /**
-   * Returns true, if all clearance values on the 2 input layers are equal.
-   */
-  private static boolean clearance_equals(ClearanceMatrix p_cl_matrix, int p_layer_1, int p_layer_2) {
+  /** Returns true, if all clearance values on the 2 input layers are equal. */
+  private static boolean clearance_equals(
+      ClearanceMatrix p_cl_matrix, int p_layer_1, int p_layer_2) {
     if (p_layer_1 == p_layer_2) {
       return true;
     }
     for (int i = 1; i < p_cl_matrix.get_class_count(); i++) {
       for (int j = i; j < p_cl_matrix.get_class_count(); j++) {
-        if (p_cl_matrix.get_value(i, j, p_layer_1, false) != p_cl_matrix.get_value(i, j, p_layer_2, false)) {
+        if (p_cl_matrix.get_value(i, j, p_layer_1, false)
+            != p_cl_matrix.get_value(i, j, p_layer_2, false)) {
           return false;
         }
       }
@@ -749,17 +843,24 @@ public class Structure extends ScopeKeyword {
     return true;
   }
 
-  private static boolean insert_keepout(Shape.ReadAreaScopeResult p_area, ReadScopeParameter p_par,
-      KeepoutType p_keepout_type, FixedState p_fixed_state) {
-    Area keepout_area = Shape.transform_area_to_board(p_area.shape_list, p_par.coordinate_transform);
+  private static boolean insert_keepout(
+      Shape.ReadAreaScopeResult p_area,
+      ReadScopeParameter p_par,
+      KeepoutType p_keepout_type,
+      FixedState p_fixed_state) {
+    Area keepout_area =
+        Shape.transform_area_to_board(p_area.shape_list, p_par.coordinate_transform);
     if (keepout_area.dimension() < 2) {
       // A degenerate keepout (e.g. all polygon vertices identical, exported incorrectly by the EDA
       // tool) cannot be enforced as a routing constraint. The board remains valid — the keepout
       // restriction is simply not applied, making routing more permissive in that area.
       // This is a known export defect in some EDA tools (e.g. KiCad 4.0.7).
-      FRLogger.warn("Keepout zone '" + p_area.area_name + "' was skipped because its geometry is degenerate "
-          + "(e.g. zero-area polygon). This is likely a DSN export issue in your EDA tool. "
-          + "The board will be routed without this keepout constraint.");
+      FRLogger.warn(
+          "Keepout zone '"
+              + p_area.area_name
+              + "' was skipped because its geometry is degenerate "
+              + "(e.g. zero-area polygon). This is likely a DSN export issue in your EDA tool. "
+              + "The board will be routed without this keepout constraint.");
       return true;
     }
     BasicBoard board = p_par.board_handling.get_routing_board();
@@ -767,35 +868,55 @@ public class Structure extends ScopeKeyword {
       FRLogger.warn("Structure.insert_keepout: board not initialized");
       return false;
     }
-    Layer curr_layer = (p_area.shape_list
-        .iterator()
-        .next()).layer;
+    Layer curr_layer = (p_area.shape_list.iterator().next()).layer;
     if (curr_layer == Layer.SIGNAL) {
       for (int i = 0; i < board.get_layer_count(); i++) {
         if (p_par.layer_structure.arr[i].is_signal) {
-          insert_keepout(board, keepout_area, i, p_area.clearance_class_name, p_keepout_type, p_fixed_state);
+          insert_keepout(
+              board, keepout_area, i, p_area.clearance_class_name, p_keepout_type, p_fixed_state);
         }
       }
     } else if (curr_layer.no >= 0) {
-      insert_keepout(board, keepout_area, curr_layer.no, p_area.clearance_class_name, p_keepout_type, p_fixed_state);
+      insert_keepout(
+          board,
+          keepout_area,
+          curr_layer.no,
+          p_area.clearance_class_name,
+          p_keepout_type,
+          p_fixed_state);
     } else {
-      FRLogger.warn("Structure.insert_keepout: unknown layer name at '" + p_par.scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "Structure.insert_keepout: unknown layer name at '"
+              + p_par.scanner.get_scope_identifier()
+              + "'");
       return false;
     }
 
     return true;
   }
 
-  private static void insert_keepout(BasicBoard p_board, Area p_area, int p_layer, String p_clearance_class_name,
-      KeepoutType p_keepout_type, FixedState p_fixed_state) {
+  private static void insert_keepout(
+      BasicBoard p_board,
+      Area p_area,
+      int p_layer,
+      String p_clearance_class_name,
+      KeepoutType p_keepout_type,
+      FixedState p_fixed_state) {
     int clearance_class_no;
     if (p_clearance_class_name == null) {
-      clearance_class_no = p_board.rules.get_default_net_class().default_item_clearance_classes
-          .get(DefaultItemClearanceClasses.ItemClass.AREA);
+      clearance_class_no =
+          p_board
+              .rules
+              .get_default_net_class()
+              .default_item_clearance_classes
+              .get(DefaultItemClearanceClasses.ItemClass.AREA);
     } else {
       clearance_class_no = p_board.rules.clearance_matrix.get_no(p_clearance_class_name);
       if (clearance_class_no < 0) {
-        FRLogger.warn("Keepout.insert_keepout: clearance class not found at '" + p_clearance_class_name + "'");
+        FRLogger.warn(
+            "Keepout.insert_keepout: clearance class not found at '"
+                + p_clearance_class_name
+                + "'");
         clearance_class_no = BoardRules.clearance_class_none();
       }
     }
@@ -821,7 +942,7 @@ public class Structure extends ScopeKeyword {
     Collection<Shape.ReadAreaScopeResult> place_keepout_list = new LinkedList<>();
 
     Object next_token = null;
-    for (;;) {
+    for (; ; ) {
       Object prev_token = next_token;
       try {
         next_token = p_par.scanner.next_token();
@@ -830,7 +951,10 @@ public class Structure extends ScopeKeyword {
         return false;
       }
       if (next_token == null) {
-        FRLogger.warn("Structure.read_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Structure.read_scope: unexpected end of file at '"
+                + p_par.scanner.get_scope_identifier()
+                + "'");
         return false;
       }
       if (next_token == CLOSED_BRACKET) {
@@ -865,7 +989,8 @@ public class Structure extends ScopeKeyword {
           if (p_par.layer_structure == null) {
             p_par.layer_structure = new LayerStructure(board_construction_info.layer_info);
           }
-          place_keepout_list.add(Shape.read_area_scope(p_par.scanner, p_par.layer_structure, false));
+          place_keepout_list.add(
+              Shape.read_area_scope(p_par.scanner, p_par.layer_structure, false));
         } else if (next_token == Keyword.PLANE_SCOPE) {
           if (p_par.layer_structure == null) {
             p_par.layer_structure = new LayerStructure(board_construction_info.layer_info);
@@ -874,7 +999,8 @@ public class Structure extends ScopeKeyword {
         } else if (next_token == Keyword.AUTOROUTE_SETTINGS) {
           if (p_par.layer_structure == null) {
             p_par.layer_structure = new LayerStructure(board_construction_info.layer_info);
-            p_par.autoroute_settings = AutorouteSettings.read_scope(p_par.scanner, p_par.layer_structure);
+            p_par.autoroute_settings =
+                AutorouteSettings.read_scope(p_par.scanner, p_par.layer_structure);
           }
         } else if (next_token == Keyword.CONTROL) {
           read_ok = read_control_scope(p_par);
@@ -939,32 +1065,46 @@ public class Structure extends ScopeKeyword {
       }
       app.freerouting.rules.Net curr_net = board.rules.nets.get(plane_info.net_name, 1);
       if (curr_net == null) {
-        FRLogger.warn("Plane.read_scope: net not found at '" + p_par.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Plane.read_scope: net not found at '" + p_par.scanner.get_scope_identifier() + "'");
         continue;
       }
-      Area plane_area = Shape.transform_area_to_board(plane_info.area.shape_list, p_par.coordinate_transform);
-      Layer curr_layer = (plane_info.area.shape_list
-          .iterator()
-          .next()).layer;
+      Area plane_area =
+          Shape.transform_area_to_board(plane_info.area.shape_list, p_par.coordinate_transform);
+      Layer curr_layer = (plane_info.area.shape_list.iterator().next()).layer;
       if (curr_layer.no >= 0) {
         int clearance_class_no;
         if (plane_info.area.clearance_class_name != null) {
-          clearance_class_no = board.rules.clearance_matrix.get_no(plane_info.area.clearance_class_name);
+          clearance_class_no =
+              board.rules.clearance_matrix.get_no(plane_info.area.clearance_class_name);
           if (clearance_class_no < 0) {
             FRLogger.warn(
-                "Structure.read_scope: clearance class not found at '" + p_par.scanner.get_scope_identifier() + "'");
+                "Structure.read_scope: clearance class not found at '"
+                    + p_par.scanner.get_scope_identifier()
+                    + "'");
             clearance_class_no = BoardRules.clearance_class_none();
           }
         } else {
-          clearance_class_no = curr_net.get_class().default_item_clearance_classes
-              .get(DefaultItemClearanceClasses.ItemClass.AREA);
+          clearance_class_no =
+              curr_net
+                  .get_class()
+                  .default_item_clearance_classes
+                  .get(DefaultItemClearanceClasses.ItemClass.AREA);
         }
         int[] net_numbers = new int[1];
         net_numbers[0] = curr_net.net_number;
-        board.insert_conduction_area(plane_area, curr_layer.no, net_numbers, clearance_class_no, false,
+        board.insert_conduction_area(
+            plane_area,
+            curr_layer.no,
+            net_numbers,
+            clearance_class_no,
+            false,
             FixedState.SYSTEM_FIXED);
       } else {
-        FRLogger.warn("Plane.read_scope: unexpected layer name at '" + p_par.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Plane.read_scope: unexpected layer name at '"
+                + p_par.scanner.get_scope_identifier()
+                + "'");
         return false;
       }
     }
@@ -986,29 +1126,31 @@ public class Structure extends ScopeKeyword {
     return result;
   }
 
-  private boolean create_board(ReadScopeParameter p_par, BoardConstructionInfo p_board_construction_info) {
+  private boolean create_board(
+      ReadScopeParameter p_par, BoardConstructionInfo p_board_construction_info) {
     int layer_count = p_board_construction_info.layer_info.size();
     if (layer_count == 0) {
-      FRLogger.warn("Structure.create_board: layers missing in structure scope at '"
-          + p_par.scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "Structure.create_board: layers missing in structure scope at '"
+              + p_par.scanner.get_scope_identifier()
+              + "'");
       return false;
     }
     if (p_board_construction_info.bounding_shape == null) {
       // happens if the boundary shape with layer pcb is missing
       if (p_board_construction_info.outline_shapes.isEmpty()) {
-        FRLogger.warn("Structure.create_board: outline missing at '" + p_par.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Structure.create_board: outline missing at '"
+                + p_par.scanner.get_scope_identifier()
+                + "'");
         p_par.board_outline_ok = false;
         return false;
       }
       Iterator<Shape> it = p_board_construction_info.outline_shapes.iterator();
 
-      Rectangle bounding_box = it
-          .next()
-          .bounding_box();
+      Rectangle bounding_box = it.next().bounding_box();
       while (it.hasNext()) {
-        bounding_box = bounding_box.union(it
-            .next()
-            .bounding_box());
+        bounding_box = bounding_box.union(it.next().bounding_box());
       }
       p_board_construction_info.bounding_shape = bounding_box;
     }
@@ -1018,13 +1160,16 @@ public class Structure extends ScopeKeyword {
     for (int i = 0; i < layer_count; i++) {
       Layer curr_layer = it.next();
       if (curr_layer.no < 0 || curr_layer.no >= layer_count) {
-        FRLogger.warn("Structure.create_board: illegal layer number at '" + p_par.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Structure.create_board: illegal layer number at '"
+                + p_par.scanner.get_scope_identifier()
+                + "'");
         return false;
       }
       board_layer_arr[i] = new app.freerouting.board.Layer(curr_layer.name, curr_layer.is_signal);
     }
-    app.freerouting.board.LayerStructure board_layer_structure = new app.freerouting.board.LayerStructure(
-        board_layer_arr);
+    app.freerouting.board.LayerStructure board_layer_structure =
+        new app.freerouting.board.LayerStructure(board_layer_arr);
     p_par.layer_structure = new LayerStructure(p_board_construction_info.layer_info);
 
     // Calculate an approximate scaling between dsn coordinates and board
@@ -1061,25 +1206,40 @@ public class Structure extends ScopeKeyword {
           curr_shape = new PolygonPath(curr_path.layer, 0, curr_path.coordinate_arr);
         }
       }
-      PolylineShape curr_board_shape = (PolylineShape) curr_shape.transform_to_board(p_par.coordinate_transform);
+      PolylineShape curr_board_shape =
+          (PolylineShape) curr_shape.transform_to_board(p_par.coordinate_transform);
       if (curr_board_shape.dimension() > 0) {
         board_outline_shapes.add(curr_board_shape);
       }
     }
     if (board_outline_shapes.isEmpty()) {
       // construct an outline from the bounding_shape, if the outline is missing.
-      PolylineShape curr_board_shape = (PolylineShape) p_board_construction_info.bounding_shape
-          .transform_to_board(p_par.coordinate_transform);
+      PolylineShape curr_board_shape =
+          (PolylineShape)
+              p_board_construction_info.bounding_shape.transform_to_board(
+                  p_par.coordinate_transform);
       board_outline_shapes.add(curr_board_shape);
     }
     Collection<PolylineShape> hole_shapes = separate_holes(board_outline_shapes);
-    ClearanceMatrix clearance_matrix = ClearanceMatrix.get_default_instance(board_layer_structure, 0);
+    ClearanceMatrix clearance_matrix =
+        ClearanceMatrix.get_default_instance(board_layer_structure, 0);
     BoardRules board_rules = new BoardRules(board_layer_structure, clearance_matrix);
-    Communication.SpecctraParserInfo specctra_parser_info = new Communication.SpecctraParserInfo(p_par.string_quote,
-        p_par.host_cad, p_par.host_version, p_par.constants, p_par.write_resolution,
-        p_par.dsn_file_generated_by_host);
-    Communication board_communication = new Communication(p_par.unit, p_par.resolution, specctra_parser_info,
-        p_par.coordinate_transform, p_par.item_id_no_generator, p_par.observers);
+    Communication.SpecctraParserInfo specctra_parser_info =
+        new Communication.SpecctraParserInfo(
+            p_par.string_quote,
+            p_par.host_cad,
+            p_par.host_version,
+            p_par.constants,
+            p_par.write_resolution,
+            p_par.dsn_file_generated_by_host);
+    Communication board_communication =
+        new Communication(
+            p_par.unit,
+            p_par.resolution,
+            specctra_parser_info,
+            p_par.coordinate_transform,
+            p_par.item_id_no_generator,
+            p_par.observers);
 
     if (board_communication.host_is_old_kicad()) {
       FRLogger.warn(
@@ -1093,8 +1253,13 @@ public class Structure extends ScopeKeyword {
     }
     update_board_rules(p_par, p_board_construction_info, board_rules);
     board_rules.set_trace_angle_restriction(p_par.snap_angle);
-    p_par.board_handling.create_board(bounds, board_layer_structure, outline_shape_arr,
-        p_board_construction_info.outline_clearance_class_name, board_rules, board_communication);
+    p_par.board_handling.create_board(
+        bounds,
+        board_layer_structure,
+        outline_shape_arr,
+        p_board_construction_info.outline_clearance_class_name,
+        board_rules,
+        board_communication);
 
     BasicBoard board = p_par.board_handling.get_routing_board();
 
@@ -1109,7 +1274,9 @@ public class Structure extends ScopeKeyword {
   }
 
   enum KeepoutType {
-    keepout, via_keepout, place_keepout
+    keepout,
+    via_keepout,
+    place_keepout
   }
 
   private static class BoardConstructionInfo {
@@ -1134,9 +1301,7 @@ public class Structure extends ScopeKeyword {
     }
   }
 
-  /**
-   * Used to separate the holes in the outline.
-   */
+  /** Used to separate the holes in the outline. */
   private static class OutlineShape {
 
     final PolylineShape shape;
@@ -1151,9 +1316,7 @@ public class Structure extends ScopeKeyword {
       is_hole = false;
     }
 
-    /**
-     * Returns true, if this shape contains all corners of p_other_shape.
-     */
+    /** Returns true, if this shape contains all corners of p_other_shape. */
     private boolean contains_all_corners(OutlineShape p_other_shape) {
       if (this.convex_shapes == null) {
         // calculation of the convex shapes failed

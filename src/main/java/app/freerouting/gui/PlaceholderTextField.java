@@ -14,23 +14,24 @@ public class PlaceholderTextField extends JTextField {
     setForeground(Color.GRAY);
     setText(placeholder);
 
-    addFocusListener(new FocusAdapter() {
-      @Override
-      public void focusGained(FocusEvent e) {
-        if (getText().equals(placeholder) || getText().isEmpty()) {
-          setForeground(Color.BLACK);
-          selectAll();
-        }
-      }
+    addFocusListener(
+        new FocusAdapter() {
+          @Override
+          public void focusGained(FocusEvent e) {
+            if (getText().equals(placeholder) || getText().isEmpty()) {
+              setForeground(Color.BLACK);
+              selectAll();
+            }
+          }
 
-      @Override
-      public void focusLost(FocusEvent e) {
-        if (getText().isEmpty() || getText().equals(placeholder)) {
-          setForeground(Color.GRAY);
-          setText(placeholder);
-        }
-      }
-    });
+          @Override
+          public void focusLost(FocusEvent e) {
+            if (getText().isEmpty() || getText().equals(placeholder)) {
+              setForeground(Color.GRAY);
+              setText(placeholder);
+            }
+          }
+        });
   }
 
   @Override

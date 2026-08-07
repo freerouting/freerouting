@@ -15,47 +15,42 @@ import app.freerouting.geometry.planar.Shape;
 import java.util.Collection;
 import java.util.Iterator;
 
-/**
- * Interactive cutting a hole into an obstacle shape
- */
+/** Interactive cutting a hole into an obstacle shape */
 public final class HoleConstructionState extends CornerItemConstructionState {
 
   private ObstacleArea item_to_modify;
 
-  /**
-   * Creates a new instance of HoleConstructionState
-   */
+  /** Creates a new instance of HoleConstructionState */
   private HoleConstructionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
   }
 
   /**
-   * Returns a new instance of this class or null, if that was not possible with
-   * the input parameters. If p_logfile != null, the construction of this hole is
-   * stored in a logfile.
+   * Returns a new instance of this class or null, if that was not possible with the input
+   * parameters. If p_logfile != null, the construction of this hole is stored in a logfile.
    */
-  public static HoleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
-    HoleConstructionState new_instance = new HoleConstructionState(p_parent_state, p_board_handling);
+  public static HoleConstructionState get_instance(
+      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+    HoleConstructionState new_instance =
+        new HoleConstructionState(p_parent_state, p_board_handling);
     if (!new_instance.start_ok(p_location)) {
       new_instance = null;
     }
     return new_instance;
   }
 
-  /**
-   * Looks for an obstacle area to modify Returns false, if it cannot find one.
-   */
+  /** Looks for an obstacle area to modify Returns false, if it cannot find one. */
   private boolean start_ok(FloatPoint p_location) {
     IntPoint pick_location = p_location.round();
     ItemSelectionFilter.SelectableChoices[] selectable_choices = {
-        ItemSelectionFilter.SelectableChoices.KEEPOUT,
-        ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT,
-        ItemSelectionFilter.SelectableChoices.CONDUCTION
+      ItemSelectionFilter.SelectableChoices.KEEPOUT,
+      ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT,
+      ItemSelectionFilter.SelectableChoices.CONDUCTION
     };
     ItemSelectionFilter selection_filter = new ItemSelectionFilter(selectable_choices);
-    Collection<Item> found_items = hdlg.get_routing_board().pick_items(pick_location, hdlg.getInteractiveSettings().get_layer(),
-        selection_filter);
+    Collection<Item> found_items =
+        hdlg.get_routing_board()
+            .pick_items(pick_location, hdlg.getInteractiveSettings().get_layer(), selection_filter);
     if (found_items.size() != 1) {
       hdlg.screen_messages.set_status_message(tm.getText("no_item_found_for_adding_hole"));
       return false;
@@ -67,20 +62,20 @@ public final class HoleConstructionState extends CornerItemConstructionState {
     }
     this.item_to_modify = (ObstacleArea) found_item;
     if (item_to_modify.get_area() instanceof Circle) {
-      hdlg.screen_messages.set_status_message(tm.getText("adding_hole_to_circle_not_yet_implemented"));
+      hdlg.screen_messages.set_status_message(
+          tm.getText("adding_hole_to_circle_not_yet_implemented"));
       return false;
     }
     if (item_to_modify.get_area() instanceof Circle) {
-      hdlg.screen_messages.set_status_message(tm.getText("adding_hole_to_circle_not_yet_implemented"));
+      hdlg.screen_messages.set_status_message(
+          tm.getText("adding_hole_to_circle_not_yet_implemented"));
       return false;
     }
     this.add_corner(p_location);
     return true;
   }
 
-  /**
-   * Adds a corner to the polygon of the hole under construction.
-   */
+  /** Adds a corner to the polygon of the hole under construction. */
   @Override
   public InteractiveState left_button_clicked(FloatPoint p_next_corner) {
     if (item_to_modify == null) {
@@ -94,8 +89,8 @@ public final class HoleConstructionState extends CornerItemConstructionState {
   }
 
   /**
-   * adds the just constructed hole to the item under modification, if that is
-   * possible without clearance violations
+   * adds the just constructed hole to the item under modification, if that is possible without
+   * clearance violations
    */
   @Override
   public InteractiveState complete() {
@@ -143,8 +138,12 @@ public final class HoleConstructionState extends CornerItemConstructionState {
         }
         hdlg.get_routing_board().generate_snapshot();
         hdlg.get_routing_board().remove_item(item_to_modify);
-        hdlg.get_routing_board().insert_obstacle(new_obs_area, item_to_modify.get_layer(),
-            item_to_modify.clearance_class_no(), FixedState.UNFIXED);
+        hdlg.get_routing_board()
+            .insert_obstacle(
+                new_obs_area,
+                item_to_modify.get_layer(),
+                item_to_modify.clearance_class_no(),
+                FixedState.UNFIXED);
         if (this.observers_activated) {
           hdlg.get_routing_board().end_notify_observers();
           this.observers_activated = false;

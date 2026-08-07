@@ -1,8 +1,6 @@
 package app.freerouting.gui;
 
-/**
- * Subwindows of the board frame.
- */
+/** Subwindows of the board frame. */
 public class BoardSubWindow extends WindowBase {
 
   private boolean visible_before_iconifying;

@@ -15,8 +15,10 @@ public abstract class Cursor {
   private static final double MAX_COOR = 1000;
   private static final Line2D VERTICAL_LINE = new Line2D.Double(0, -MAX_COOR, 0, MAX_COOR);
   private static final Line2D HORIZONTAL_LINE = new Line2D.Double(-MAX_COOR, 0, MAX_COOR, 0);
-  private static final Line2D RIGHT_DIAGONAL_LINE = new Line2D.Double(-MAX_COOR, -MAX_COOR, MAX_COOR, MAX_COOR);
-  private static final Line2D LEFT_DIAGONAL_LINE = new Line2D.Double(-MAX_COOR, MAX_COOR, MAX_COOR, -MAX_COOR);
+  private static final Line2D RIGHT_DIAGONAL_LINE =
+      new Line2D.Double(-MAX_COOR, -MAX_COOR, MAX_COOR, MAX_COOR);
+  private static final Line2D LEFT_DIAGONAL_LINE =
+      new Line2D.Double(-MAX_COOR, MAX_COOR, MAX_COOR, -MAX_COOR);
   double x_coor;
   double y_coor;
   boolean location_initialized;

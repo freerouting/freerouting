@@ -17,9 +17,9 @@ import org.glassfish.jersey.media.sse.SseFeature;
 /**
  * Dedicated JAX-RS application for MCP endpoints.
  *
- * <p>This class is the single source of truth for all providers registered in the MCP server.
- * It is wired into server startup via the {@code jakarta.ws.rs.Application} init parameter in
- * {@link app.freerouting.Freerouting#InitializeMCP}.</p>
+ * <p>This class is the single source of truth for all providers registered in the MCP server. It is
+ * wired into server startup via the {@code jakarta.ws.rs.Application} init parameter in {@link
+ * app.freerouting.Freerouting#InitializeMCP}.
  */
 @ApplicationPath("/")
 public class McpApplication extends Application {

@@ -7,9 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Locale;
 
-/**
- * Stores the colors used for the background and highlighting.
- */
+/** Stores the colors used for the background and highlighting. */
 public class OtherColorTableModel extends ColorTableModel implements Serializable {
 
   public OtherColorTableModel(Locale p_locale) {
@@ -33,13 +31,12 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
     curr_row[ColumnNames.FAB_BACK.ordinal()] = new Color(88, 93, 132);
   }
 
-  public OtherColorTableModel(ObjectInputStream p_stream) throws IOException, ClassNotFoundException {
+  public OtherColorTableModel(ObjectInputStream p_stream)
+      throws IOException, ClassNotFoundException {
     super(p_stream);
   }
 
-  /**
-   * Copy constructor.
-   */
+  /** Copy constructor. */
   public OtherColorTableModel(OtherColorTableModel p_item_color_model) {
     super(p_item_color_model.data.length, p_item_color_model.locale);
     for (int i = 0; i < this.data.length; i++) {
@@ -203,7 +200,20 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
   }
 
   public enum ColumnNames {
-    BACKGROUND, HIGHLIGHT, INCOMPLETES, VIOLATIONS, OUTLINE, COMPONENT_FRONT, COMPONENT_BACK, LENGTH_MATCHING_AREA,
-    DRILL_HOLE, SILKSCREEN_FRONT, SILKSCREEN_BACK, COURTYARD_FRONT, COURTYARD_BACK, FAB_FRONT, FAB_BACK
+    BACKGROUND,
+    HIGHLIGHT,
+    INCOMPLETES,
+    VIOLATIONS,
+    OUTLINE,
+    COMPONENT_FRONT,
+    COMPONENT_BACK,
+    LENGTH_MATCHING_AREA,
+    DRILL_HOLE,
+    SILKSCREEN_FRONT,
+    SILKSCREEN_BACK,
+    COURTYARD_FRONT,
+    COURTYARD_BACK,
+    FAB_FRONT,
+    FAB_BACK
   }
 }

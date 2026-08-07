@@ -18,24 +18,17 @@ import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.util.gson.GsonProvider;
 
-/**
- * Serializes a {@link RoutingBoard} back to KiCad JSON representation.
- */
+/** Serializes a {@link RoutingBoard} back to KiCad JSON representation. */
 public final class KiCadJsonWriter {
 
-  private KiCadJsonWriter() {
-  }
+  private KiCadJsonWriter() {}
 
-  /**
-   * Serializes the board and returns it as a JSON string.
-   */
+  /** Serializes the board and returns it as a JSON string. */
   public static String write(RoutingBoard board) {
     return write(board, "KiCad_Design");
   }
 
-  /**
-   * Serializes the board and returns it as a JSON string with a specific design name.
-   */
+  /** Serializes the board and returns it as a JSON string with a specific design name. */
   public static String write(RoutingBoard board, String designName) {
     double scaleFactor = 10000.0; // default mapping factor for millimeters
     if (board.communication != null) {
@@ -97,7 +90,9 @@ public final class KiCadJsonWriter {
       KiCadBoardJson.NetClassJson ncJson = new KiCadBoardJson.NetClassJson();
       ncJson.name = netClass.get_name();
       int clearanceClassNo = netClass.get_trace_clearance_class();
-      ncJson.clearance = board.rules.clearance_matrix.get_value(clearanceClassNo, clearanceClassNo, 0, false) / scaleFactor;
+      ncJson.clearance =
+          board.rules.clearance_matrix.get_value(clearanceClassNo, clearanceClassNo, 0, false)
+              / scaleFactor;
       ncJson.traceWidth = (2 * netClass.get_trace_half_width(0)) / scaleFactor;
 
       ncJson.viaDiameter = 0.8; // default fallback
@@ -129,12 +124,16 @@ public final class KiCadJsonWriter {
     if (outline != null) {
       boardJson.outline = new KiCadBoardJson.OutlineJson();
       int clearanceClassNo = outline.clearance_class_no();
-      boardJson.outline.clearance = board.rules.clearance_matrix.get_value(clearanceClassNo, clearanceClassNo, 0, false) / scaleFactor;
+      boardJson.outline.clearance =
+          board.rules.clearance_matrix.get_value(clearanceClassNo, clearanceClassNo, 0, false)
+              / scaleFactor;
       for (int i = 0; i < outline.shape_count(); i++) {
         PolylineShape polyShape = outline.get_shape(i);
         if (polyShape != null) {
           for (Point pt : polyShape.bounded_corners()) {
-            boardJson.outline.corners.add(new KiCadBoardJson.Point2D(pt.to_float().x / scaleFactor, -pt.to_float().y / scaleFactor));
+            boardJson.outline.corners.add(
+                new KiCadBoardJson.Point2D(
+                    pt.to_float().x / scaleFactor, -pt.to_float().y / scaleFactor));
           }
         }
       }
@@ -156,7 +155,9 @@ public final class KiCadJsonWriter {
           }
         }
         for (Point pt : polyTrace.polyline().corner_arr()) {
-          tJson.points.add(new KiCadBoardJson.Point2D(pt.to_float().x / scaleFactor, -pt.to_float().y / scaleFactor));
+          tJson.points.add(
+              new KiCadBoardJson.Point2D(
+                  pt.to_float().x / scaleFactor, -pt.to_float().y / scaleFactor));
         }
         boardJson.traces.add(tJson);
       }
@@ -175,7 +176,9 @@ public final class KiCadJsonWriter {
         }
       }
       Point center = via.get_center();
-      vJson.position = new KiCadBoardJson.Point2D(center.to_float().x / scaleFactor, -center.to_float().y / scaleFactor);
+      vJson.position =
+          new KiCadBoardJson.Point2D(
+              center.to_float().x / scaleFactor, -center.to_float().y / scaleFactor);
 
       Padstack padstack = via.get_padstack();
       int firstLayer = 0;

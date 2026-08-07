@@ -16,8 +16,11 @@ public class J2ReferenceRoutingTest extends RoutingFixtureTest {
 
     // The drill item count is a board-specific guard unrelated to routing quality;
     // keep as a standalone check since assertRoutingResult does not cover it.
-    assertTrue(statsAfter.items.drillItemCount < 60,
-        "The drill item count should be less than 60, but was " + statsAfter.items.drillItemCount + ".");
+    assertTrue(
+        statsAfter.items.drillItemCount < 60,
+        "The drill item count should be less than 60, but was "
+            + statsAfter.items.drillItemCount
+            + ".");
 
     // The board has 3 items that are genuinely hard to route due to tight geometry;
     // the router should stop promptly (stagnation detection) rather than loop endlessly.

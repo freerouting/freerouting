@@ -5,9 +5,9 @@ import java.io.Serializable;
 
 public class GoogleSheetsProviderSettings implements Serializable {
 
-    @SerializedName("google_api_key")
-    public String googleApiKey;
+  @SerializedName("google_api_key")
+  public String googleApiKey;
 
-    @SerializedName("sheet_url")
-    public String sheetUrl;
+  @SerializedName("sheet_url")
+  public String sheetUrl;
 }

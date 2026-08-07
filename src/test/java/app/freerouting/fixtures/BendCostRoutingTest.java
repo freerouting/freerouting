@@ -28,7 +28,6 @@ public class BendCostRoutingTest extends RoutingFixtureTest {
 
     RunRoutingJob(job);
 
-    assertRoutingResult(job, "Issue026-J2_reference.dsn")
-        .check();
+    assertRoutingResult(job, "Issue026-J2_reference.dsn").check();
   }
 }

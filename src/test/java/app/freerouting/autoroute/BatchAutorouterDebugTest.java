@@ -10,31 +10,25 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * Unit tests for the DebugControl debugger functionality.
- */
-public class BatchAutorouterDebugTest
-{
+/** Unit tests for the DebugControl debugger functionality. */
+public class BatchAutorouterDebugTest {
 
   @BeforeEach
-  void setUp()
-  {
+  void setUp() {
     Freerouting.globalSettings = new GlobalSettings();
     DebugControl.getInstance().resetDebugState();
     DebugControl.getInstance().resume();
   }
 
   @AfterEach
-  void tearDown()
-  {
+  void tearDown() {
     DebugControl.getInstance().resume(); // Ensure we don't leave it paused
     DebugControl.getInstance().resetDebugState();
     Freerouting.globalSettings = null;
   }
 
   @Test
-  void testDebugControlPauseAndResume() throws InterruptedException
-  {
+  void testDebugControlPauseAndResume() throws InterruptedException {
     // Enable single step execution
     Freerouting.globalSettings.debugSettings.singleStepExecution = true;
 
@@ -42,11 +36,12 @@ public class BatchAutorouterDebugTest
 
     // Simulate a separate thread running the check loop
     AtomicBoolean checkCompleted = new AtomicBoolean(false);
-    Thread runner = new Thread(() ->
-    {
-      control.check("insert_trace_segment", 1, "Net1");
-      checkCompleted.set(true);
-    });
+    Thread runner =
+        new Thread(
+            () -> {
+              control.check("insert_trace_segment", 1, "Net1");
+              checkCompleted.set(true);
+            });
 
     // Pause the control
     control.pause();
@@ -72,8 +67,7 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testFilterByNet()
-  {
+  void testFilterByNet() {
     Freerouting.globalSettings.debugSettings.singleStepExecution = true;
     Freerouting.globalSettings.debugSettings.filterByNet.add("Net #1");
 
@@ -90,30 +84,27 @@ public class BatchAutorouterDebugTest
 
     // Net1 should pause. We test this by using a thread
     AtomicBoolean checkCompleted = new AtomicBoolean(false);
-    Thread runner = new Thread(() ->
-    {
-      control.check("insert_trace_segment", 1, "Net1");
-      checkCompleted.set(true);
-    });
+    Thread runner =
+        new Thread(
+            () -> {
+              control.check("insert_trace_segment", 1, "Net1");
+              checkCompleted.set(true);
+            });
 
     runner.start();
-    try
-    {
+    try {
       Thread.sleep(100);
       Assertions.assertFalse(checkCompleted.get(), "Net1 should be paused");
       control.resume();
       runner.join(1000);
       Assertions.assertTrue(checkCompleted.get(), "Net1 should complete after resume");
-    }
-    catch (InterruptedException e)
-    {
+    } catch (InterruptedException e) {
       FRLogger.error("Test interrupted", e);
     }
   }
 
   @Test
-  void testGranularSteppingWithTraceMessage()
-  {
+  void testGranularSteppingWithTraceMessage() {
     // Enable single step execution
     Freerouting.globalSettings.debugSettings.singleStepExecution = true;
     Freerouting.globalSettings.debugSettings.filterByNet.add("Net #1");
@@ -129,32 +120,28 @@ public class BatchAutorouterDebugTest
 
     // Net #1 should pause
     AtomicBoolean checkCompleted = new AtomicBoolean(false);
-    Thread runner = new Thread(() ->
-    {
-      // This should match filter
-      control.check("insert_trace_segment", "Net #1, Trace #456");
-      checkCompleted.set(true);
-    });
+    Thread runner =
+        new Thread(
+            () -> {
+              // This should match filter
+              control.check("insert_trace_segment", "Net #1, Trace #456");
+              checkCompleted.set(true);
+            });
 
     runner.start();
-    try
-    {
+    try {
       Thread.sleep(100);
-      Assertions.assertFalse(checkCompleted.get(),
-          "Net #1 should be paused due to string match");
+      Assertions.assertFalse(checkCompleted.get(), "Net #1 should be paused due to string match");
       control.resume();
       runner.join(1000);
       Assertions.assertTrue(checkCompleted.get(), "Net #1 should complete after resume");
-    }
-    catch (InterruptedException e)
-    {
+    } catch (InterruptedException e) {
       FRLogger.error("Test interrupted", e);
     }
   }
 
   @Test
-  void testSingleStepNext() throws InterruptedException
-  {
+  void testSingleStepNext() throws InterruptedException {
     // Enable single step execution
     Freerouting.globalSettings.debugSettings.singleStepExecution = true;
 
@@ -163,11 +150,12 @@ public class BatchAutorouterDebugTest
     Assertions.assertTrue(control.isPaused());
 
     AtomicBoolean checkCompleted = new AtomicBoolean(false);
-    Thread runner = new Thread(() ->
-    {
-      control.check("insert_trace_segment", 1, "Net1");
-      checkCompleted.set(true);
-    });
+    Thread runner =
+        new Thread(
+            () -> {
+              control.check("insert_trace_segment", 1, "Net1");
+              checkCompleted.set(true);
+            });
 
     runner.start();
     Thread.sleep(100);
@@ -182,8 +170,7 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testMultipleStepsWithNext() throws InterruptedException
-  {
+  void testMultipleStepsWithNext() throws InterruptedException {
     Freerouting.globalSettings.debugSettings.singleStepExecution = true;
 
     DebugControl control = DebugControl.getInstance();
@@ -192,13 +179,14 @@ public class BatchAutorouterDebugTest
     AtomicBoolean step1Completed = new AtomicBoolean(false);
     AtomicBoolean step2Completed = new AtomicBoolean(false);
 
-    Thread runner = new Thread(() ->
-    {
-      control.check("insert_trace_segment", 1, "Net1");
-      step1Completed.set(true);
-      control.check("insert_trace_segment", 2, "Net2");
-      step2Completed.set(true);
-    });
+    Thread runner =
+        new Thread(
+            () -> {
+              control.check("insert_trace_segment", 1, "Net1");
+              step1Completed.set(true);
+              control.check("insert_trace_segment", 2, "Net2");
+              step2Completed.set(true);
+            });
 
     runner.start();
     Thread.sleep(100);
@@ -217,8 +205,7 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testTraceInsertionDelay()
-  {
+  void testTraceInsertionDelay() {
     Freerouting.globalSettings.debugSettings.traceInsertionDelay = 100;
 
     DebugControl control = DebugControl.getInstance();
@@ -232,8 +219,7 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testOperationFiltering()
-  {
+  void testOperationFiltering() {
     Freerouting.globalSettings.debugSettings.singleStepExecution = true;
 
     DebugControl control = DebugControl.getInstance();
@@ -249,8 +235,7 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testIsInterestedMethod()
-  {
+  void testIsInterestedMethod() {
     Freerouting.globalSettings.debugSettings.filterByNet.add("Net #5");
 
     DebugControl control = DebugControl.getInstance();
@@ -261,28 +246,28 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testFastForward() throws InterruptedException
-  {
+  void testFastForward() throws InterruptedException {
     Freerouting.globalSettings.debugSettings.singleStepExecution = true;
 
     DebugControl control = DebugControl.getInstance();
     control.pause();
     control.convertToFastForward();
 
-    Assertions.assertFalse(control.isPaused(),
-        "Should be resumed after converting to fast forward");
+    Assertions.assertFalse(
+        control.isPaused(), "Should be resumed after converting to fast forward");
 
     AtomicBoolean allCompleted = new AtomicBoolean(false);
-    Thread runner = new Thread(() ->
-    {
-      // Same net multiple times - should continue
-      control.check("insert_trace_segment", 1, "Net1");
-      control.check("insert_trace_segment", 1, "Net1");
-      control.check("insert_trace_segment", 1, "Net1");
-      // Different net - should pause
-      control.check("insert_trace_segment", 2, "Net2");
-      allCompleted.set(true);
-    });
+    Thread runner =
+        new Thread(
+            () -> {
+              // Same net multiple times - should continue
+              control.check("insert_trace_segment", 1, "Net1");
+              control.check("insert_trace_segment", 1, "Net1");
+              control.check("insert_trace_segment", 1, "Net1");
+              // Different net - should pause
+              control.check("insert_trace_segment", 2, "Net2");
+              allCompleted.set(true);
+            });
 
     runner.start();
     Thread.sleep(200);
@@ -298,36 +283,33 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testResetMethod()
-  {
+  void testResetMethod() {
     Freerouting.globalSettings.debugSettings.singleStepExecution = true;
 
     DebugControl control = DebugControl.getInstance();
     control.resume();
 
     control.reset();
-    Assertions.assertTrue(control.isPaused(),
-        "Should be paused after reset when single step is enabled");
+    Assertions.assertTrue(
+        control.isPaused(), "Should be paused after reset when single step is enabled");
 
     Freerouting.globalSettings.debugSettings.singleStepExecution = false;
     control.reset();
-    Assertions.assertFalse(control.isPaused(),
-        "Should not be paused when single step is disabled");
+    Assertions.assertFalse(control.isPaused(), "Should not be paused when single step is disabled");
   }
 
   @Test
-  void testDebugStateListener() throws InterruptedException
-  {
+  void testDebugStateListener() throws InterruptedException {
     DebugControl control = DebugControl.getInstance();
 
     AtomicBoolean listenerCalled = new AtomicBoolean(false);
     AtomicBoolean pauseState = new AtomicBoolean(false);
 
-    control.addDebugStateListener(isPaused ->
-    {
-      listenerCalled.set(true);
-      pauseState.set(isPaused);
-    });
+    control.addDebugStateListener(
+        isPaused -> {
+          listenerCalled.set(true);
+          pauseState.set(isPaused);
+        });
 
     control.pause();
     Thread.sleep(50);
@@ -342,8 +324,7 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testNetHistoryOperations()
-  {
+  void testNetHistoryOperations() {
     DebugControl control = DebugControl.getInstance();
     control.resetDebugState();
 
@@ -356,8 +337,7 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testDisabledDebugControl()
-  {
+  void testDisabledDebugControl() {
     // When both single step and delay are disabled, check should return false immediately
     Freerouting.globalSettings.debugSettings.singleStepExecution = false;
     Freerouting.globalSettings.debugSettings.traceInsertionDelay = 0;
@@ -373,8 +353,7 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testNetFilteringByNumber()
-  {
+  void testNetFilteringByNumber() {
     Freerouting.globalSettings.debugSettings.singleStepExecution = true;
     Freerouting.globalSettings.debugSettings.filterByNet.add("1");
 
@@ -383,30 +362,27 @@ public class BatchAutorouterDebugTest
 
     // Net 1 should match the filter
     AtomicBoolean net1Completed = new AtomicBoolean(false);
-    Thread runner1 = new Thread(() ->
-    {
-      control.check("insert_trace_segment", 1, "Net1");
-      net1Completed.set(true);
-    });
+    Thread runner1 =
+        new Thread(
+            () -> {
+              control.check("insert_trace_segment", 1, "Net1");
+              net1Completed.set(true);
+            });
 
     runner1.start();
-    try
-    {
+    try {
       Thread.sleep(100);
       Assertions.assertFalse(net1Completed.get(), "Net 1 should be paused");
       control.resume();
       runner1.join(1000);
       Assertions.assertTrue(net1Completed.get(), "Net 1 should complete after resume");
-    }
-    catch (InterruptedException e)
-    {
+    } catch (InterruptedException e) {
       FRLogger.error("Test interrupted", e);
     }
   }
 
   @Test
-  void testNetFilteringByName()
-  {
+  void testNetFilteringByName() {
     Freerouting.globalSettings.debugSettings.singleStepExecution = true;
     Freerouting.globalSettings.debugSettings.filterByNet.add("importantnet");
 
@@ -415,44 +391,39 @@ public class BatchAutorouterDebugTest
 
     // Net with matching name should be filtered
     AtomicBoolean netCompleted = new AtomicBoolean(false);
-    Thread runner = new Thread(() ->
-    {
-      control.check("insert_trace_segment", 1, "importantnet");
-      netCompleted.set(true);
-    });
+    Thread runner =
+        new Thread(
+            () -> {
+              control.check("insert_trace_segment", 1, "importantnet");
+              netCompleted.set(true);
+            });
 
     runner.start();
-    try
-    {
+    try {
       Thread.sleep(100);
       Assertions.assertFalse(netCompleted.get(), "Net with matching name should be paused");
       control.resume();
       runner.join(1000);
       Assertions.assertTrue(netCompleted.get(), "Net should complete after resume");
-    }
-    catch (InterruptedException e)
-    {
+    } catch (InterruptedException e) {
       FRLogger.error("Test interrupted", e);
     }
   }
 
   @Test
-  void testShouldContinueRewindWithHistory()
-  {
+  void testShouldContinueRewindWithHistory() {
     DebugControl control = DebugControl.getInstance();
     control.resetDebugState();
 
     // With empty stack, should not continue
-    Assertions.assertFalse(control.shouldContinueRewind(5),
-        "Should not continue with empty stack");
+    Assertions.assertFalse(control.shouldContinueRewind(5), "Should not continue with empty stack");
 
     // The history building is tested indirectly through the testFastForward test
     // which exercises the functionality that actually builds and uses history
   }
 
   @Test
-  void testMultipleListeners() throws InterruptedException
-  {
+  void testMultipleListeners() throws InterruptedException {
     DebugControl control = DebugControl.getInstance();
 
     AtomicBoolean listener1Called = new AtomicBoolean(false);
@@ -469,30 +440,28 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testOperationFilterWithMultipleOperations()
-  {
+  void testOperationFilterWithMultipleOperations() {
     Freerouting.globalSettings.debugSettings.singleStepExecution = true;
 
     DebugControl control = DebugControl.getInstance();
 
     // Test valid operations from the default filter
-    Assertions.assertTrue(control.check("insert_trace_segment", 1, "Net1"),
+    Assertions.assertTrue(
+        control.check("insert_trace_segment", 1, "Net1"),
         "insert_trace_segment should be filtered");
-    Assertions.assertTrue(control.check("remove_trace_segment", 1, "Net1"),
+    Assertions.assertTrue(
+        control.check("remove_trace_segment", 1, "Net1"),
         "remove_trace_segment should be filtered");
-    Assertions.assertTrue(control.check("insert_via", 1, "Net1"),
-        "insert_via should be filtered");
-    Assertions.assertTrue(control.check("remove_via", 1, "Net1"),
-        "remove_via should be filtered");
+    Assertions.assertTrue(control.check("insert_via", 1, "Net1"), "insert_via should be filtered");
+    Assertions.assertTrue(control.check("remove_via", 1, "Net1"), "remove_via should be filtered");
 
     // Test invalid operation
-    Assertions.assertFalse(control.check("invalid_operation", 1, "Net1"),
-        "invalid_operation should not be filtered");
+    Assertions.assertFalse(
+        control.check("invalid_operation", 1, "Net1"), "invalid_operation should not be filtered");
   }
 
   @Test
-  void testEmptyNetFilter()
-  {
+  void testEmptyNetFilter() {
     Freerouting.globalSettings.debugSettings.singleStepExecution = true;
     // Don't add any filters - empty filter means all nets are permitted
     Freerouting.globalSettings.debugSettings.filterByNet.clear();
@@ -506,8 +475,7 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testGetInstanceIsSingleton()
-  {
+  void testGetInstanceIsSingleton() {
     DebugControl instance1 = DebugControl.getInstance();
     DebugControl instance2 = DebugControl.getInstance();
 
@@ -515,8 +483,7 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testPauseDoesNotAffectDisabledDebug()
-  {
+  void testPauseDoesNotAffectDisabledDebug() {
     // Disable debugging
     Freerouting.globalSettings.debugSettings.singleStepExecution = false;
     Freerouting.globalSettings.debugSettings.traceInsertionDelay = 0;
@@ -534,8 +501,7 @@ public class BatchAutorouterDebugTest
   }
 
   @Test
-  void testNetFilterVariations()
-  {
+  void testNetFilterVariations() {
     Freerouting.globalSettings.debugSettings.filterByNet.add("Net #10");
 
     DebugControl control = DebugControl.getInstance();

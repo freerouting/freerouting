@@ -28,10 +28,19 @@ public class ComponentOutline extends Item implements Serializable {
   private final boolean is_fabrication;
   private final boolean is_closed;
 
-  /**
-   * Creates a new instance of ComponentOutline
-   */
-  public ComponentOutline(Area p_area, boolean p_is_front, Vector p_translation, double p_rotation_in_degree, int p_id_no, int p_component_no, boolean p_is_courtyard, boolean p_is_fabrication, boolean p_is_closed, FixedState p_fixed_state, BasicBoard p_board) {
+  /** Creates a new instance of ComponentOutline */
+  public ComponentOutline(
+      Area p_area,
+      boolean p_is_front,
+      Vector p_translation,
+      double p_rotation_in_degree,
+      int p_id_no,
+      int p_component_no,
+      boolean p_is_courtyard,
+      boolean p_is_fabrication,
+      boolean p_is_closed,
+      FixedState p_fixed_state,
+      BasicBoard p_board) {
     super(new int[0], 0, p_id_no, p_component_no, p_fixed_state, p_board);
     this.relative_area = p_area;
     this.is_front = p_is_front;
@@ -44,7 +53,18 @@ public class ComponentOutline extends Item implements Serializable {
 
   @Override
   public Item copy(int p_id_no) {
-    return new ComponentOutline(this.relative_area, this.is_front, this.translation, this.rotation_in_degree, p_id_no, this.get_component_no(), this.is_courtyard, this.is_fabrication, this.is_closed, this.get_fixed_state(), this.board);
+    return new ComponentOutline(
+        this.relative_area,
+        this.is_front,
+        this.translation,
+        this.rotation_in_degree,
+        p_id_no,
+        this.get_component_no(),
+        this.is_courtyard,
+        this.is_fabrication,
+        this.is_closed,
+        this.get_fixed_state(),
+        this.board);
   }
 
   public boolean is_front() {
@@ -148,7 +168,8 @@ public class ComponentOutline extends Item implements Serializable {
   }
 
   @Override
-  public void draw(Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
+  public void draw(
+      Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
     }
@@ -208,7 +229,8 @@ public class ComponentOutline extends Item implements Serializable {
     while (this.rotation_in_degree < 0) {
       this.rotation_in_degree += 360;
     }
-    FloatPoint new_translation = this.translation.to_float().rotate(Math.toRadians(p_angle_in_degree), p_pole);
+    FloatPoint new_translation =
+        this.translation.to_float().rotate(Math.toRadians(p_angle_in_degree), p_pole);
     this.translation = new_translation.round().difference_by(Point.ZERO);
     clear_derived_data();
   }
@@ -259,8 +281,7 @@ public class ComponentOutline extends Item implements Serializable {
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-  }
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {}
 
   @Override
   public boolean write(ObjectOutputStream p_stream) {

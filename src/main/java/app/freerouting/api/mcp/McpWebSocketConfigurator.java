@@ -16,9 +16,7 @@ public class McpWebSocketConfigurator extends ServerEndpointConfig.Configurator 
 
   @Override
   public void modifyHandshake(
-      ServerEndpointConfig sec,
-      HandshakeRequest request,
-      HandshakeResponse response) {
+      ServerEndpointConfig sec, HandshakeRequest request, HandshakeResponse response) {
     sec.getUserProperties().put(HEADERS_PROPERTY, request.getHeaders());
   }
 

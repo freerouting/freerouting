@@ -5,28 +5,28 @@ import java.io.Serializable;
 
 public class LoggingSettings implements Serializable {
 
-    @SerializedName("console")
-    public final ConsoleLoggingSettings console = new ConsoleLoggingSettings();
+  @SerializedName("console")
+  public final ConsoleLoggingSettings console = new ConsoleLoggingSettings();
 
-    @SerializedName("file")
-    public final FileLoggingSettings file = new FileLoggingSettings();
+  @SerializedName("file")
+  public final FileLoggingSettings file = new FileLoggingSettings();
 
-    public static class ConsoleLoggingSettings implements Serializable {
-        @SerializedName("enabled")
-        public boolean enabled = true;
+  public static class ConsoleLoggingSettings implements Serializable {
+    @SerializedName("enabled")
+    public boolean enabled = true;
 
-        @SerializedName("level")
-        public String level = "INFO";
-    }
+    @SerializedName("level")
+    public String level = "INFO";
+  }
 
-    public static class FileLoggingSettings implements Serializable {
-        @SerializedName("enabled")
-        public boolean enabled = true;
+  public static class FileLoggingSettings implements Serializable {
+    @SerializedName("enabled")
+    public boolean enabled = true;
 
-        @SerializedName("level")
-        public String level = "INFO";
+    @SerializedName("level")
+    public String level = "INFO";
 
-        @SerializedName("location")
-        public String location;
-    }
+    @SerializedName("location")
+    public String location;
+  }
 }

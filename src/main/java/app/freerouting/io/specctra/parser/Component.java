@@ -12,25 +12,22 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * Handles the placement data of a library component.
- */
+/** Handles the placement data of a library component. */
 public class Component extends ScopeKeyword {
 
-  /**
-   * Creates a new instance of Component
-   */
+  /** Creates a new instance of Component */
   public Component() {
     super("component");
   }
 
-  /**
-   * Used also when reading a session file.
-   */
+  /** Used also when reading a session file. */
   public static ComponentPlacement read_scope(IJFlexScanner p_scanner) throws IOException {
     Object next_token = p_scanner.next_token();
     if (!(next_token instanceof String name)) {
-      FRLogger.warn("Component.read_scope: component name expected at '" + p_scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "Component.read_scope: component name expected at '"
+              + p_scanner.get_scope_identifier()
+              + "'");
       return null;
     }
     ComponentPlacement component_placement = new ComponentPlacement(name);
@@ -49,13 +46,15 @@ public class Component extends ScopeKeyword {
     return component_placement;
   }
 
-  public static void write_scope(WriteScopeParameter p_par, app.freerouting.board.Component p_component) throws IOException {
+  public static void write_scope(
+      WriteScopeParameter p_par, app.freerouting.board.Component p_component) throws IOException {
     p_par.file.start_scope();
     p_par.file.write("place ");
     p_par.file.new_line();
     p_par.identifier_type.write(p_component.name, p_par.file);
     if (p_component.is_placed()) {
-      double[] coor = p_par.coordinate_transform.board_to_dsn(p_component.get_location().to_float());
+      double[] coor =
+          p_par.coordinate_transform.board_to_dsn(p_component.get_location().to_float());
       for (int i = 0; i < coor.length; i++) {
         p_par.file.write(" ");
         p_par.file.write(String.valueOf(coor[i]));
@@ -80,23 +79,31 @@ public class Component extends ScopeKeyword {
     p_par.file.end_scope();
   }
 
-  private static void write_pin_info(WriteScopeParameter p_par, app.freerouting.board.Component p_component, int p_pin_no) throws IOException {
+  private static void write_pin_info(
+      WriteScopeParameter p_par, app.freerouting.board.Component p_component, int p_pin_no)
+      throws IOException {
     if (!p_component.is_placed()) {
       return;
     }
     Package.Pin package_pin = p_component.get_package().get_pin(p_pin_no);
     if (package_pin == null) {
-      FRLogger.warn("Component.write_pin_info: package pin not found at '" + p_component.name + "'");
+      FRLogger.warn(
+          "Component.write_pin_info: package pin not found at '" + p_component.name + "'");
       return;
     }
     Pin component_pin = p_par.board.get_pin(p_component.no, p_pin_no);
     if (component_pin == null) {
-      FRLogger.warn("Component.write_pin_info: component pin not found at '" + p_component.name + "'");
+      FRLogger.warn(
+          "Component.write_pin_info: component pin not found at '" + p_component.name + "'");
       return;
     }
-    String cl_class_name = p_par.board.rules.clearance_matrix.get_name(component_pin.clearance_class_no());
+    String cl_class_name =
+        p_par.board.rules.clearance_matrix.get_name(component_pin.clearance_class_no());
     if (cl_class_name == null) {
-      FRLogger.warn("Component.write_pin_info: clearance class  name not found at '" + p_component.name + "'");
+      FRLogger.warn(
+          "Component.write_pin_info: clearance class  name not found at '"
+              + p_component.name
+              + "'");
       return;
     }
     p_par.file.new_line();
@@ -107,7 +114,8 @@ public class Component extends ScopeKeyword {
     p_par.file.write("))");
   }
 
-  private static void write_keepout_infos(WriteScopeParameter p_par, app.freerouting.board.Component p_component) throws IOException {
+  private static void write_keepout_infos(
+      WriteScopeParameter p_par, app.freerouting.board.Component p_component) throws IOException {
     if (!p_component.is_placed()) {
       return;
     }
@@ -126,13 +134,18 @@ public class Component extends ScopeKeyword {
       }
       for (int i = 0; i < curr_keepout_arr.length; i++) {
         Package.Keepout curr_keepout = curr_keepout_arr[i];
-        ObstacleArea curr_obstacle_area = get_keepout(p_par.board, p_component.no, curr_keepout.name);
+        ObstacleArea curr_obstacle_area =
+            get_keepout(p_par.board, p_component.no, curr_keepout.name);
         if (curr_obstacle_area == null || curr_obstacle_area.clearance_class_no() == 0) {
           continue;
         }
-        String cl_class_name = p_par.board.rules.clearance_matrix.get_name(curr_obstacle_area.clearance_class_no());
+        String cl_class_name =
+            p_par.board.rules.clearance_matrix.get_name(curr_obstacle_area.clearance_class_no());
         if (cl_class_name == null) {
-          FRLogger.warn("Component.write_keepout_infos: clearance class name not found at '" + p_component.name + "'");
+          FRLogger.warn(
+              "Component.write_keepout_infos: clearance class name not found at '"
+                  + p_component.name
+                  + "'");
           return;
         }
         p_par.file.new_line();
@@ -152,7 +165,8 @@ public class Component extends ScopeKeyword {
       if (curr_item == null) {
         break;
       }
-      if (curr_item.get_component_no() == p_component_no && curr_item instanceof ObstacleArea curr_area) {
+      if (curr_item.get_component_no() == p_component_no
+          && curr_item instanceof ObstacleArea curr_area) {
         if (curr_area.name != null && curr_area.name.equals(p_name)) {
           return curr_area;
         }
@@ -180,9 +194,22 @@ public class Component extends ScopeKeyword {
           location[i] = integer;
         } else if (next_token == CLOSED_BRACKET) {
           // component is not yet placed
-          return new ComponentPlacement.ComponentLocation(name, null, true, 0, false, pin_infos, keepout_infos, via_keepout_infos, place_keepout_infos, null);
+          return new ComponentPlacement.ComponentLocation(
+              name,
+              null,
+              true,
+              0,
+              false,
+              pin_infos,
+              keepout_infos,
+              via_keepout_infos,
+              place_keepout_infos,
+              null);
         } else {
-          FRLogger.warn("Component.read_place_scope: Double was expected as the second and third parameter of the component/place command at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Component.read_place_scope: Double was expected as the second and third parameter of the component/place command at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
       }
@@ -192,7 +219,10 @@ public class Component extends ScopeKeyword {
       if (next_token == BACK) {
         is_front = false;
       } else if (next_token != FRONT) {
-        FRLogger.warn("Component.read_place_scope: Keyword.FRONT expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Component.read_place_scope: Keyword.FRONT expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
       }
       double rotation;
       next_token = p_scanner.next_token();
@@ -201,7 +231,10 @@ public class Component extends ScopeKeyword {
       } else if (next_token instanceof Integer integer) {
         rotation = integer;
       } else {
-        FRLogger.warn("Component.read_place_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Component.read_place_scope: number expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       boolean position_fixed = false;
@@ -218,24 +251,28 @@ public class Component extends ScopeKeyword {
           }
           pin_infos.put(curr_pin_info.name, curr_pin_info);
         } else if (next_token == KEEPOUT) {
-          ComponentPlacement.ItemClearanceInfo curr_keepout_info = read_item_clearance_info(p_scanner);
+          ComponentPlacement.ItemClearanceInfo curr_keepout_info =
+              read_item_clearance_info(p_scanner);
           if (curr_keepout_info == null) {
             return null;
           }
           keepout_infos.put(curr_keepout_info.name, curr_keepout_info);
         } else if (next_token == VIA_KEEPOUT) {
-          ComponentPlacement.ItemClearanceInfo curr_keepout_info = read_item_clearance_info(p_scanner);
+          ComponentPlacement.ItemClearanceInfo curr_keepout_info =
+              read_item_clearance_info(p_scanner);
           if (curr_keepout_info == null) {
             return null;
           }
           via_keepout_infos.put(curr_keepout_info.name, curr_keepout_info);
         } else if (next_token == PLACE_KEEPOUT) {
-          ComponentPlacement.ItemClearanceInfo curr_keepout_info = read_item_clearance_info(p_scanner);
+          ComponentPlacement.ItemClearanceInfo curr_keepout_info =
+              read_item_clearance_info(p_scanner);
           if (curr_keepout_info == null) {
             return null;
           }
           place_keepout_infos.put(curr_keepout_info.name, curr_keepout_info);
-        } else if (next_token == Keyword.PN || (next_token instanceof String && "PN".equalsIgnoreCase((String) next_token))) {
+        } else if (next_token == Keyword.PN
+            || (next_token instanceof String && "PN".equalsIgnoreCase((String) next_token))) {
           part_number = DsnFile.read_string_scope(p_scanner);
         } else {
           skip_scope(p_scanner);
@@ -243,21 +280,36 @@ public class Component extends ScopeKeyword {
         next_token = p_scanner.next_token();
       }
       if (next_token != CLOSED_BRACKET) {
-        FRLogger.warn("Component.read_place_scope: ) expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Component.read_place_scope: ) expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
-      return new ComponentPlacement.ComponentLocation(name, location, is_front, rotation, position_fixed, pin_infos, keepout_infos, via_keepout_infos, place_keepout_infos, part_number);
+      return new ComponentPlacement.ComponentLocation(
+          name,
+          location,
+          is_front,
+          rotation,
+          position_fixed,
+          pin_infos,
+          keepout_infos,
+          via_keepout_infos,
+          place_keepout_infos,
+          part_number);
     } catch (IOException e) {
       FRLogger.error("Component.read_scope: IO error scanning file", e);
       return null;
     }
   }
 
-  private static ComponentPlacement.ItemClearanceInfo read_item_clearance_info(IJFlexScanner p_scanner) throws IOException {
+  private static ComponentPlacement.ItemClearanceInfo read_item_clearance_info(
+      IJFlexScanner p_scanner) throws IOException {
     p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
     Object next_token = p_scanner.next_token();
     if (!(next_token instanceof String name)) {
-      FRLogger.warn("Component.read_item_clearance_info: String expected at '" + p_scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "Component.read_item_clearance_info: String expected at '"
+              + p_scanner.get_scope_identifier()
+              + "'");
       return null;
     }
     String cl_class_name = null;
@@ -272,11 +324,17 @@ public class Component extends ScopeKeyword {
       next_token = p_scanner.next_token();
     }
     if (next_token != CLOSED_BRACKET) {
-      FRLogger.warn("Component.read_item_clearance_info: ) expected at '" + p_scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "Component.read_item_clearance_info: ) expected at '"
+              + p_scanner.get_scope_identifier()
+              + "'");
       return null;
     }
     if (cl_class_name == null) {
-      FRLogger.warn("Component.read_item_clearance_info: clearance class name not found at '" + p_scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "Component.read_item_clearance_info: clearance class name not found at '"
+              + p_scanner.get_scope_identifier()
+              + "'");
       return null;
     }
     return new ComponentPlacement.ItemClearanceInfo(name, cl_class_name);
@@ -296,9 +354,7 @@ public class Component extends ScopeKeyword {
     return result;
   }
 
-  /**
-   * Overwrites the function read_scope in ScopeKeyword
-   */
+  /** Overwrites the function read_scope in ScopeKeyword */
   @Override
   public boolean read_scope(ReadScopeParameter p_par) {
     try {

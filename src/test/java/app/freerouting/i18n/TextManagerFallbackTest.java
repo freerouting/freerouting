@@ -24,7 +24,8 @@ class TextManagerFallbackTest {
 
   @Test
   void fallsBackToParentClassLocaleBundleWhenSubclassKeyMissing() {
-    TextManager arabic = new TextManager(WindowClearanceViolations.class, Locale.forLanguageTag("ar"));
+    TextManager arabic =
+        new TextManager(WindowClearanceViolations.class, Locale.forLanguageTag("ar"));
 
     assertEquals("تصفية:", arabic.getText("filter"));
   }
@@ -61,9 +62,7 @@ class TextManagerFallbackTest {
     TextManager english = new TextManager(InteractiveState.class, Locale.forLanguageTag("en"));
     TextManager arabic = new TextManager(InteractiveState.class, Locale.forLanguageTag("ar"));
 
-    assertNotEquals(
-        english.getText("autorouter_started"),
-        arabic.getText("autorouter_started"));
+    assertNotEquals(english.getText("autorouter_started"), arabic.getText("autorouter_started"));
   }
 
   @Test
@@ -71,8 +70,6 @@ class TextManagerFallbackTest {
     TextManager english = new TextManager(BoardFrame.class, Locale.forLanguageTag("en"));
     TextManager arabic = new TextManager(BoardFrame.class, Locale.forLanguageTag("ar"));
 
-    assertNotEquals(
-        english.getText("net_hover_info"),
-        arabic.getText("net_hover_info"));
+    assertNotEquals(english.getText("net_hover_info"), arabic.getText("net_hover_info"));
   }
 }

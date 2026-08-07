@@ -20,30 +20,30 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Locale;
 
-/**
- * Class describing a board outline.
- */
+/** Class describing a board outline. */
 public class BoardOutline extends Item implements Serializable {
 
   private static final int HALF_WIDTH = 100;
-  /**
-   * The board shapes inside the outline curves.
-   */
+
+  /** The board shapes inside the outline curves. */
   private final PolylineShape[] shapes;
+
   /**
-   * The board shape outside the outline curves, where a keepout will be generated The outline curves are holes of the keepout_area.
+   * The board shape outside the outline curves, where a keepout will be generated The outline
+   * curves are holes of the keepout_area.
    */
   private Area keepout_area;
+
   /**
    * Used instead of keepout_area if only the line shapes of the outlines are inserted as keepout.
    */
   private TileShape[] keepout_lines;
+
   private boolean keepout_outside_outline;
 
-  /**
-   * Creates a new instance of BoardOutline
-   */
-  public BoardOutline(PolylineShape[] p_shapes, int p_clearance_class_no, int p_id_no, BasicBoard p_board) {
+  /** Creates a new instance of BoardOutline */
+  public BoardOutline(
+      PolylineShape[] p_shapes, int p_clearance_class_no, int p_id_no, BasicBoard p_board) {
     super(new int[0], p_clearance_class_no, p_id_no, 0, FixedState.SYSTEM_FIXED, p_board);
     shapes = p_shapes;
   }
@@ -193,7 +193,8 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   /**
-   * The board shape outside the outline curves, where a keepout will be generated The outline curves are holes of the keepout_area.
+   * The board shape outside the outline curves, where a keepout will be generated The outline
+   * curves are holes of the keepout_area.
    */
   Area get_keepout_area() {
     if (this.keepout_area == null) {
@@ -211,7 +212,8 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   @Override
-  public void draw(Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
+  public void draw(
+      Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
     }
@@ -248,14 +250,16 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   /**
-   * Returns, if keepout is generated outside the board outline. Otherwise, only the line shapes of the outlines are inserted as keepout.
+   * Returns, if keepout is generated outside the board outline. Otherwise, only the line shapes of
+   * the outlines are inserted as keepout.
    */
   public boolean keepout_outside_outline_generated() {
     return keepout_outside_outline;
   }
 
   /**
-   * Makes the area outside this Outline to Keepout, if p_value = true. Reinserts this Outline into the search trees, if the value changes.
+   * Makes the area outside this Outline to Keepout, if p_value = true. Reinserts this Outline into
+   * the search trees, if the value changes.
    */
   public void generate_keepout_outside(boolean p_value) {
     if (p_value == keepout_outside_outline) {
@@ -269,9 +273,7 @@ public class BoardOutline extends Item implements Serializable {
     this.board.search_tree_manager.insert(this);
   }
 
-  /**
-   * Returns the sum of the lines of all outline polygons.
-   */
+  /** Returns the sum of the lines of all outline polygons. */
   public int line_count() {
     int result = 0;
     for (PolylineShape curr_shape : this.shapes) {
@@ -280,9 +282,7 @@ public class BoardOutline extends Item implements Serializable {
     return result;
   }
 
-  /**
-   * Returns the half width of the lines of this outline.
-   */
+  /** Returns the half width of the lines of this outline. */
   public int get_half_width() {
     return HALF_WIDTH;
   }

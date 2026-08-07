@@ -36,51 +36,56 @@ import javax.swing.event.TableModelListener;
  * Primary Swing panel component for displaying and interacting with the PCB routing board.
  *
  * <p>This panel serves as the main visual interface for the routing application, providing:
+ *
  * <ul>
- *   <li><strong>Visual Display:</strong> Renders the routing board with all its components,
- *       traces, vias, and design elements</li>
- *   <li><strong>User Interaction:</strong> Captures and processes mouse and keyboard events
- *       for interactive routing and editing</li>
- *   <li><strong>Viewport Management:</strong> Handles zooming, panning, and scrolling of
- *       the board view</li>
+ *   <li><strong>Visual Display:</strong> Renders the routing board with all its components, traces,
+ *       vias, and design elements
+ *   <li><strong>User Interaction:</strong> Captures and processes mouse and keyboard events for
+ *       interactive routing and editing
+ *   <li><strong>Viewport Management:</strong> Handles zooming, panning, and scrolling of the board
+ *       view
  *   <li><strong>Context Menus:</strong> Provides context-sensitive popup menus for various
- *       operations</li>
+ *       operations
  * </ul>
  *
  * <p><strong>Key Components:</strong>
+ *
  * <ul>
- *   <li><strong>{@link GuiBoardManager}:</strong> Manages board state and interactive operations</li>
- *   <li><strong>{@link ScreenMessages}:</strong> Displays status messages and coordinate info</li>
- *   <li><strong>Custom Cursor:</strong> Optional crosshair cursor for precise positioning</li>
- *   <li><strong>Popup Menus:</strong> Context-sensitive menus for different interactive states</li>
+ *   <li><strong>{@link GuiBoardManager}:</strong> Manages board state and interactive operations
+ *   <li><strong>{@link ScreenMessages}:</strong> Displays status messages and coordinate info
+ *   <li><strong>Custom Cursor:</strong> Optional crosshair cursor for precise positioning
+ *   <li><strong>Popup Menus:</strong> Context-sensitive menus for different interactive states
  * </ul>
  *
  * <p><strong>Mouse Interaction:</strong>
+ *
  * <ul>
- *   <li><strong>Left Button:</strong> Primary selection and action (place, route, select)</li>
- *   <li><strong>Middle Button:</strong> Pan/scroll the board view by dragging</li>
- *   <li><strong>Right Button:</strong> Open context-sensitive popup menus</li>
- *   <li><strong>Mouse Wheel:</strong> Zoom in/out centered at mouse position</li>
+ *   <li><strong>Left Button:</strong> Primary selection and action (place, route, select)
+ *   <li><strong>Middle Button:</strong> Pan/scroll the board view by dragging
+ *   <li><strong>Right Button:</strong> Open context-sensitive popup menus
+ *   <li><strong>Mouse Wheel:</strong> Zoom in/out centered at mouse position
  * </ul>
  *
- * <p><strong>Keyboard Interaction:</strong>
- * Keyboard events are forwarded to the board handling instance, which interprets them
- * based on the current interactive state (ESC to cancel, numeric keys for layers, etc.).
+ * <p><strong>Keyboard Interaction:</strong> Keyboard events are forwarded to the board handling
+ * instance, which interprets them based on the current interactive state (ESC to cancel, numeric
+ * keys for layers, etc.).
  *
- * <p><strong>Rendering Pipeline:</strong>
- * The panel delegates rendering to {@link GuiBoardManager#draw(Graphics)}, which handles:
+ * <p><strong>Rendering Pipeline:</strong> The panel delegates rendering to {@link
+ * GuiBoardManager#draw(Graphics)}, which handles:
+ *
  * <ul>
- *   <li>Board items (traces, vias, pads, components)</li>
- *   <li>Rats nest (incomplete connections)</li>
- *   <li>Interactive state graphics (rubber bands, temporary items)</li>
- *   <li>Clearance violations and design rule indicators</li>
+ *   <li>Board items (traces, vias, pads, components)
+ *   <li>Rats nest (incomplete connections)
+ *   <li>Interactive state graphics (rubber bands, temporary items)
+ *   <li>Clearance violations and design rule indicators
  * </ul>
  *
  * <p><strong>Performance Considerations:</strong>
+ *
  * <ul>
- *   <li>Custom crosshair cursor may impact display performance significantly</li>
- *   <li>Panel size is limited to prevent Java rendering exceptions</li>
- *   <li>Viewport scrolling is optimized for responsive panning</li>
+ *   <li>Custom crosshair cursor may impact display performance significantly
+ *   <li>Panel size is limited to prevent Java rendering exceptions
+ *   <li>Viewport scrolling is optimized for responsive panning
  * </ul>
  *
  * @see GuiBoardManager
@@ -92,16 +97,16 @@ public class BoardPanel extends JPanel {
   /**
    * Default zoom factor for zoom in/out operations (2.0x).
    *
-   * <p>When zooming in, the view is scaled by this factor. When zooming out,
-   * the view is scaled by 1/c_zoom_factor (0.5x).
+   * <p>When zooming in, the view is scaled by this factor. When zooming out, the view is scaled by
+   * 1/c_zoom_factor (0.5x).
    */
   private static final double c_zoom_factor = 2.0;
 
   /**
-   * Minimum interval (in milliseconds) between repaints triggered by mouse movement
-   * when the custom crosshair cursor is enabled. This throttles the repaint rate to
-   * prevent flooding the AWT event queue with full board redraws during rapid mouse
-   * motion (e.g. high-DPI mice generating 100+ events/second).
+   * Minimum interval (in milliseconds) between repaints triggered by mouse movement when the custom
+   * crosshair cursor is enabled. This throttles the repaint rate to prevent flooding the AWT event
+   * queue with full board redraws during rapid mouse motion (e.g. high-DPI mice generating 100+
+   * events/second).
    */
   private static final long CURSOR_REPAINT_THROTTLE_MS = 16; // ~60 fps max
 
@@ -109,11 +114,12 @@ public class BoardPanel extends JPanel {
    * Message display component showing status information and coordinates.
    *
    * <p>Displays:
+   *
    * <ul>
-   *   <li>Current mouse position in board coordinates</li>
-   *   <li>Status messages about current operations</li>
-   *   <li>Active layer name</li>
-   *   <li>Unit of measurement</li>
+   *   <li>Current mouse position in board coordinates
+   *   <li>Status messages about current operations
+   *   <li>Active layer name
+   *   <li>Unit of measurement
    * </ul>
    *
    * @see ScreenMessages
@@ -124,11 +130,12 @@ public class BoardPanel extends JPanel {
    * Parent frame containing this panel and other UI components.
    *
    * <p>Provides access to:
+   *
    * <ul>
-   *   <li>Menu bar and toolbar</li>
-   *   <li>Parameter selection windows</li>
-   *   <li>Other dialog windows</li>
-   *   <li>Frame-level operations</li>
+   *   <li>Menu bar and toolbar
+   *   <li>Parameter selection windows
+   *   <li>Other dialog windows
+   *   <li>Frame-level operations
    * </ul>
    *
    * @see BoardFrame
@@ -139,10 +146,11 @@ public class BoardPanel extends JPanel {
    * Scroll pane that contains this panel for viewport management.
    *
    * <p>Used for:
+   *
    * <ul>
-   *   <li>Getting viewport position and bounds</li>
-   *   <li>Programmatic scrolling during panning</li>
-   *   <li>Auto-scrolling near edges during drag operations</li>
+   *   <li>Getting viewport position and bounds
+   *   <li>Programmatic scrolling during panning
+   *   <li>Auto-scrolling near edges during drag operations
    * </ul>
    */
   private final JScrollPane scroll_pane;
@@ -196,39 +204,40 @@ public class BoardPanel extends JPanel {
    */
   public PopupMenuDynamicRoute popup_menu_dynamic_route;
 
-   /**
-    * Popup menu for stitch routing operations.
-    *
-    * @see PopupMenuStitchRoute
-    */
-   public PopupMenuStitchRoute popup_menu_stitch_route;
+  /**
+   * Popup menu for stitch routing operations.
+   *
+   * @see PopupMenuStitchRoute
+   */
+  public PopupMenuStitchRoute popup_menu_stitch_route;
 
-   /**
-    * Popup menu for item selection and inspection operations.
-    *
-    * @see PopupMenuInspectedItems
-    */
-   public JPopupMenu popup_menu_select;
+  /**
+   * Popup menu for item selection and inspection operations.
+   *
+   * @see PopupMenuInspectedItems
+   */
+  public JPopupMenu popup_menu_select;
 
-   /**
-    * Drop target listener for handling drag-and-drop file operations.
-    *
-    * @see BoardPanelDropTargetListener
-    */
-   private BoardPanelDropTargetListener drop_target_listener;
+  /**
+   * Drop target listener for handling drag-and-drop file operations.
+   *
+   * @see BoardPanelDropTargetListener
+   */
+  private BoardPanelDropTargetListener drop_target_listener;
 
-   /** Non-null while the first board paint after load is in progress. */
-   private String renderingOverlayMessage;
+  /** Non-null while the first board paint after load is in progress. */
+  private String renderingOverlayMessage;
 
   /**
    * Board handling instance managing interactive board operations.
    *
    * <p>Handles:
+   *
    * <ul>
-   *   <li>Mouse and keyboard event processing</li>
-   *   <li>Interactive state management</li>
-   *   <li>Board rendering coordination</li>
-   *   <li>Autorouting and optimization</li>
+   *   <li>Mouse and keyboard event processing
+   *   <li>Interactive state management
+   *   <li>Board rendering coordination
+   *   <li>Autorouting and optimization
    * </ul>
    *
    * @see GuiBoardManager
@@ -245,16 +254,16 @@ public class BoardPanel extends JPanel {
   /**
    * AWT Robot for programmatically moving the mouse cursor.
    *
-   * <p>Used to reposition the mouse pointer during certain interactive operations
-   * (e.g., centering on a point). May be null if Robot creation failed.
+   * <p>Used to reposition the mouse pointer during certain interactive operations (e.g., centering
+   * on a point). May be null if Robot creation failed.
    */
   private Robot robot;
 
   /**
    * Starting position for middle mouse button drag operation.
    *
-   * <p>Non-null while middle button panning is in progress. Used to calculate
-   * scroll delta during drag.
+   * <p>Non-null while middle button panning is in progress. Used to calculate scroll delta during
+   * drag.
    */
   private Point middle_drag_position;
 
@@ -262,8 +271,8 @@ public class BoardPanel extends JPanel {
    * Custom crosshair cursor for precise positioning, or null for standard cursor.
    *
    * <p>When enabled, displays a 45-degree crosshair at the mouse position.
-   * <strong>Warning:</strong> Using the custom cursor can significantly impact
-   * display performance as it requires manual rendering on every mouse move.
+   * <strong>Warning:</strong> Using the custom cursor can significantly impact display performance
+   * as it requires manual rendering on every mouse move.
    *
    * @see Cursor
    * @see #set_custom_crosshair_cursor(boolean)
@@ -273,11 +282,10 @@ public class BoardPanel extends JPanel {
   /**
    * Timestamp (in milliseconds) of the last repaint triggered by cursor movement.
    *
-   * <p>Used to throttle cursor-driven repaints. Only one repaint is issued per
-   * {@link #CURSOR_REPAINT_THROTTLE_MS} window; mouse-move events that arrive
-   * within the throttle window update the cursor position but do not immediately
-   * trigger a repaint. The final position will be painted on the next scheduled
-   * repaint.
+   * <p>Used to throttle cursor-driven repaints. Only one repaint is issued per {@link
+   * #CURSOR_REPAINT_THROTTLE_MS} window; mouse-move events that arrive within the throttle window
+   * update the cursor position but do not immediately trigger a repaint. The final position will be
+   * painted on the next scheduled repaint.
    */
   private long lastCursorRepaintTime;
 
@@ -285,27 +293,31 @@ public class BoardPanel extends JPanel {
    * Creates a new BoardPanel within a GUI application context.
    *
    * <p>Initialization includes:
+   *
    * <ul>
-   *   <li>Setting up the Robot for programmatic mouse control (if available)</li>
-   *   <li>Storing references to parent components</li>
-   *   <li>Configuring panel appearance and event listeners</li>
-   *   <li>Creating the GuiBoardManager for board operations</li>
+   *   <li>Setting up the Robot for programmatic mouse control (if available)
+   *   <li>Storing references to parent components
+   *   <li>Configuring panel appearance and event listeners
+   *   <li>Creating the GuiBoardManager for board operations
    * </ul>
    *
-   * <p>The Robot may fail to initialize on some systems (e.g., headless environments),
-   * in which case programmatic mouse movement will not be available.
+   * <p>The Robot may fail to initialize on some systems (e.g., headless environments), in which
+   * case programmatic mouse movement will not be available.
    *
    * @param p_screen_messages the message display component for status information
    * @param p_board_frame the parent frame containing this panel
    * @param globalSettings global application settings
    * @param routingJob the routing job context for this session
    * @param settingsMerger merger for combining different settings sources
-   *
    * @see GuiBoardManager
    * @see Robot
    */
-  public BoardPanel(ScreenMessages p_screen_messages, BoardFrame p_board_frame, GlobalSettings globalSettings,
-      RoutingJob routingJob, SettingsMerger settingsMerger) {
+  public BoardPanel(
+      ScreenMessages p_screen_messages,
+      BoardFrame p_board_frame,
+      GlobalSettings globalSettings,
+      RoutingJob routingJob,
+      SettingsMerger settingsMerger) {
     this.screen_messages = p_screen_messages;
     try {
       // used to be able to change the location of the mouse pointer
@@ -319,55 +331,60 @@ public class BoardPanel extends JPanel {
     default_init(globalSettings, routingJob, settingsMerger);
   }
 
-  private void default_init(GlobalSettings globalSettings, RoutingJob routingJob, SettingsMerger settingMerger) {
+  private void default_init(
+      GlobalSettings globalSettings, RoutingJob routingJob, SettingsMerger settingMerger) {
     setLayout(new BorderLayout());
 
     setBackground(new Color(0, 0, 0));
     setMaximumSize(new Dimension(30000, 20000));
     setMinimumSize(new Dimension(90, 60));
     setPreferredSize(new Dimension(1200, 900));
-    addMouseMotionListener(new MouseMotionAdapter() {
-      @Override
-      public void mouseDragged(MouseEvent evt) {
-        mouse_dragged_action(evt);
-      }
-
-      @Override
-      public void mouseMoved(MouseEvent evt) {
-        mouse_moved_action(evt);
-      }
-    });
-    addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyTyped(KeyEvent evt) {
-        board_handling.key_typed_action(evt.getKeyChar());
-      }
-    });
-    addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent evt) {
-        mouse_clicked_action(evt);
-      }
-
-      @Override
-      public void mousePressed(MouseEvent evt) {
-        mouse_pressed_action(evt);
-      }
-
-      @Override
-      public void mouseReleased(MouseEvent evt) {
-        board_handling.button_released();
-        if (middle_drag_position != null) {
-          // Restore the detailed copper-pour rendering now that panning has ended.
-          if (board_handling != null && board_handling.graphics_context != null) {
-            board_handling.graphics_context.setSimplifiedPlaneRendering(false);
+    addMouseMotionListener(
+        new MouseMotionAdapter() {
+          @Override
+          public void mouseDragged(MouseEvent evt) {
+            mouse_dragged_action(evt);
           }
-          repaint();
-        }
-        middle_drag_position = null;
-      }
-    });
-    addMouseWheelListener(evt -> board_handling.mouse_wheel_moved(evt.getPoint(), evt.getWheelRotation()));
+
+          @Override
+          public void mouseMoved(MouseEvent evt) {
+            mouse_moved_action(evt);
+          }
+        });
+    addKeyListener(
+        new KeyAdapter() {
+          @Override
+          public void keyTyped(KeyEvent evt) {
+            board_handling.key_typed_action(evt.getKeyChar());
+          }
+        });
+    addMouseListener(
+        new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent evt) {
+            mouse_clicked_action(evt);
+          }
+
+          @Override
+          public void mousePressed(MouseEvent evt) {
+            mouse_pressed_action(evt);
+          }
+
+          @Override
+          public void mouseReleased(MouseEvent evt) {
+            board_handling.button_released();
+            if (middle_drag_position != null) {
+              // Restore the detailed copper-pour rendering now that panning has ended.
+              if (board_handling != null && board_handling.graphics_context != null) {
+                board_handling.graphics_context.setSimplifiedPlaneRendering(false);
+              }
+              repaint();
+            }
+            middle_drag_position = null;
+          }
+        });
+    addMouseWheelListener(
+        evt -> board_handling.mouse_wheel_moved(evt.getPoint(), evt.getWheelRotation()));
 
     board_handling = new GuiBoardManager(this, globalSettings, routingJob, settingMerger);
     board_handling.setBoardFrame(this.board_frame);
@@ -383,21 +400,22 @@ public class BoardPanel extends JPanel {
    * Resets the board handling instance for a new routing job.
    *
    * <p>This method safely transitions to a new routing job by:
+   *
    * <ol>
-   *   <li>Preserving the settings merger reference</li>
-   *   <li>Disposing the old board handling instance (cleanup)</li>
-   *   <li>Creating a new GuiBoardManager with the new job</li>
+   *   <li>Preserving the settings merger reference
+   *   <li>Disposing the old board handling instance (cleanup)
+   *   <li>Creating a new GuiBoardManager with the new job
    * </ol>
    *
    * <p>Used when:
+   *
    * <ul>
-   *   <li>Loading a different board design</li>
-   *   <li>Restarting the routing session</li>
-   *   <li>Switching between multiple boards</li>
+   *   <li>Loading a different board design
+   *   <li>Restarting the routing session
+   *   <li>Switching between multiple boards
    * </ul>
    *
    * @param routingJob the new routing job to initialize
-   *
    * @see GuiBoardManager#dispose()
    */
   public void reset_board_handling(RoutingJob routingJob) {
@@ -417,16 +435,17 @@ public class BoardPanel extends JPanel {
    * Initializes all popup menus used throughout the interactive session.
    *
    * <p>Creates popup menu instances for different contexts:
+   *
    * <ul>
-   *   <li><strong>Main menu:</strong> General board operations</li>
-   *   <li><strong>Routing menus:</strong> Dynamic route and stitch route options</li>
-   *   <li><strong>Construction menus:</strong> Corner item and insert/cancel operations</li>
-   *   <li><strong>Selection menus:</strong> Operations on selected items</li>
-   *   <li><strong>Edit menus:</strong> Copy and move operations</li>
+   *   <li><strong>Main menu:</strong> General board operations
+   *   <li><strong>Routing menus:</strong> Dynamic route and stitch route options
+   *   <li><strong>Construction menus:</strong> Corner item and insert/cancel operations
+   *   <li><strong>Selection menus:</strong> Operations on selected items
+   *   <li><strong>Edit menus:</strong> Copy and move operations
    * </ul>
    *
-   * <p>Should be called after the board frame is fully initialized and before
-   * interactive operations begin.
+   * <p>Should be called after the board frame is fully initialized and before interactive
+   * operations begin.
    *
    * @see PopupMenuMain
    * @see PopupMenuDynamicRoute
@@ -447,20 +466,20 @@ public class BoardPanel extends JPanel {
    * Handles mouse wheel zoom events at the specified screen position.
    *
    * <p>Zoom behavior:
+   *
    * <ul>
-   *   <li><strong>Scroll down:</strong> Zoom out (decrease magnification)</li>
-   *   <li><strong>Scroll up:</strong> Zoom in (increase magnification)</li>
-   *   <li><strong>Zoom center:</strong> Mouse position (stays fixed relative to board)</li>
+   *   <li><strong>Scroll down:</strong> Zoom out (decrease magnification)
+   *   <li><strong>Scroll up:</strong> Zoom in (increase magnification)
+   *   <li><strong>Zoom center:</strong> Mouse position (stays fixed relative to board)
    * </ul>
    *
-   * <p>The method applies a zoom factor of 10% per wheel notch, with a minimum
-   * zoom factor of 0.5 to prevent excessive zoom out.
+   * <p>The method applies a zoom factor of 10% per wheel notch, with a minimum zoom factor of 0.5
+   * to prevent excessive zoom out.
    *
    * <p>Ignored if middle mouse button panning is in progress or wheel rotation is zero.
    *
    * @param p_point the screen position to center the zoom operation on
    * @param p_wheel_rotation the wheel rotation amount (negative for zoom in, positive for zoom out)
-   *
    * @see #zoom(double, Point2D)
    */
   public void zoom_with_mouse_wheel(Point2D p_point, int p_wheel_rotation) {
@@ -541,22 +560,23 @@ public class BoardPanel extends JPanel {
    * Renders the board panel including all visual elements.
    *
    * <p>Rendering pipeline:
+   *
    * <ol>
-   *   <li>Call super to paint the panel background</li>
-   *   <li>Delegate board drawing to {@link GuiBoardManager#draw(Graphics)}</li>
-   *   <li>Draw drag-and-drop ghosting overlay if active</li>
-   *   <li>Draw custom cursor overlay if enabled</li>
+   *   <li>Call super to paint the panel background
+   *   <li>Delegate board drawing to {@link GuiBoardManager#draw(Graphics)}
+   *   <li>Draw drag-and-drop ghosting overlay if active
+   *   <li>Draw custom cursor overlay if enabled
    * </ol>
    *
    * <p>The board manager handles rendering of:
+   *
    * <ul>
-   *   <li>Board geometry and items</li>
-   *   <li>Rats nest and violations</li>
-   *   <li>Interactive state graphics</li>
+   *   <li>Board geometry and items
+   *   <li>Rats nest and violations
+   *   <li>Interactive state graphics
    * </ul>
    *
    * @param p_g the graphics context for rendering
-   *
    * @see GuiBoardManager#draw(Graphics)
    */
   @Override
@@ -632,11 +652,10 @@ public class BoardPanel extends JPanel {
   /**
    * Returns the current viewport position in panel coordinates.
    *
-   * <p>The viewport position represents the top-left corner of the visible
-   * area within the scrollable panel.
+   * <p>The viewport position represents the top-left corner of the visible area within the
+   * scrollable panel.
    *
    * @return the viewport position as a Point
-   *
    * @see #set_viewport_position(Point)
    */
   public Point get_viewport_position() {
@@ -647,11 +666,10 @@ public class BoardPanel extends JPanel {
   /**
    * Sets the viewport position to the specified point.
    *
-   * <p>Scrolls the panel so that the specified point becomes the top-left
-   * corner of the visible viewport area.
+   * <p>Scrolls the panel so that the specified point becomes the top-left corner of the visible
+   * viewport area.
    *
    * @param p_position the new viewport position
-   *
    * @see #get_viewport_position()
    */
   void set_viewport_position(Point p_position) {
@@ -662,11 +680,10 @@ public class BoardPanel extends JPanel {
   /**
    * Zooms in at the specified screen position by the default zoom factor.
    *
-   * <p>Increases the board magnification by {@link #c_zoom_factor} (2x),
-   * keeping the specified point fixed in screen coordinates.
+   * <p>Increases the board magnification by {@link #c_zoom_factor} (2x), keeping the specified
+   * point fixed in screen coordinates.
    *
    * @param p_position the screen position to center zoom on
-   *
    * @see #zoom_out(Point2D)
    * @see #zoom(double, Point2D)
    */
@@ -677,11 +694,10 @@ public class BoardPanel extends JPanel {
   /**
    * Zooms out at the specified screen position by the inverse zoom factor.
    *
-   * <p>Decreases the board magnification by 1/{@link #c_zoom_factor} (0.5x),
-   * keeping the specified point fixed in screen coordinates.
+   * <p>Decreases the board magnification by 1/{@link #c_zoom_factor} (0.5x), keeping the specified
+   * point fixed in screen coordinates.
    *
    * @param p_position the screen position to center zoom on
-   *
    * @see #zoom_in(Point2D)
    * @see #zoom(double, Point2D)
    */
@@ -693,15 +709,14 @@ public class BoardPanel extends JPanel {
   /**
    * Zooms to fit a rectangular frame defined by two corner points.
    *
-   * <p>Calculates the appropriate zoom factor to display the entire rectangle
-   * within the viewport, then centers the view on the rectangle's midpoint.
+   * <p>Calculates the appropriate zoom factor to display the entire rectangle within the viewport,
+   * then centers the view on the rectangle's midpoint.
    *
-   * <p>Used for "zoom to selection" and "zoom to frame" operations where the
-   * user defines a region of interest.
+   * <p>Used for "zoom to selection" and "zoom to frame" operations where the user defines a region
+   * of interest.
    *
    * @param p_position1 first corner of the rectangle to zoom to
    * @param p_position2 opposite corner of the rectangle
-   *
    * @see #zoom(double, Point2D)
    */
   public void zoom_frame(Point2D p_position1, Point2D p_position2) {
@@ -726,73 +741,72 @@ public class BoardPanel extends JPanel {
    * Centers the display on the specified board position.
    *
    * <p>This method:
+   *
    * <ol>
-   *   <li>Adjusts the viewport to center on the specified point</li>
-   *   <li>Calculates the mouse cursor offset from the new center</li>
-   *   <li>Moves the mouse cursor to maintain visual continuity</li>
-   *   <li>Triggers a repaint to update the display</li>
+   *   <li>Adjusts the viewport to center on the specified point
+   *   <li>Calculates the mouse cursor offset from the new center
+   *   <li>Moves the mouse cursor to maintain visual continuity
+   *   <li>Triggers a repaint to update the display
    * </ol>
    *
    * <p>Useful for "go to" operations and centering on specific board features.
    *
    * @param p_new_center the board position to center the view on
-   *
    * @see #set_viewport_center(Point2D)
    * @see #move_mouse(Point2D)
    */
   public void center_display(Point2D p_new_center) {
     Point delta = set_viewport_center(p_new_center);
     Point2D new_center = get_viewport_center();
-    Point new_mouse_location = new Point((int) (new_center.getX() - delta.getX()),
-        (int) (new_center.getY() - delta.getY()));
+    Point new_mouse_location =
+        new Point(
+            (int) (new_center.getX() - delta.getX()), (int) (new_center.getY() - delta.getY()));
     move_mouse(new_mouse_location);
     repaint();
-
   }
 
   /**
    * Returns the center point of the current viewport in panel coordinates.
    *
-   * <p>Calculates the center by adding half the viewport dimensions to the
-   * viewport position.
+   * <p>Calculates the center by adding half the viewport dimensions to the viewport position.
    *
    * @return the viewport center as a Point2D
-   *
    * @see #get_viewport_position()
    * @see #get_viewport_bounds()
    */
   public Point2D get_viewport_center() {
     Point pos = get_viewport_position();
     Rectangle display_rect = get_viewport_bounds();
-    return new Point2D.Double(pos.getX() + display_rect.getCenterX(), pos.getY() + display_rect.getCenterY());
+    return new Point2D.Double(
+        pos.getX() + display_rect.getCenterX(), pos.getY() + display_rect.getCenterY());
   }
 
   /**
    * Zooms the board view by the specified factor centered at the given location.
    *
    * <p>This method:
+   *
    * <ol>
-   *   <li>Scales the panel size by the zoom factor</li>
-   *   <li>Adjusts the coordinate transform in the graphics context</li>
-   *   <li>Repositions the viewport to keep p_location fixed on screen</li>
-   *   <li>Returns the adjusted cursor position after zoom</li>
+   *   <li>Scales the panel size by the zoom factor
+   *   <li>Adjusts the coordinate transform in the graphics context
+   *   <li>Repositions the viewport to keep p_location fixed on screen
+   *   <li>Returns the adjusted cursor position after zoom
    * </ol>
    *
    * <p><strong>Zoom Factor Examples:</strong>
+   *
    * <ul>
-   *   <li>{@code 2.0}: Zoom in 2x (200%)</li>
-   *   <li>{@code 0.5}: Zoom out 2x (50%)</li>
-   *   <li>{@code 1.0}: No change</li>
+   *   <li>{@code 2.0}: Zoom in 2x (200%)
+   *   <li>{@code 0.5}: Zoom out 2x (50%)
+   *   <li>{@code 1.0}: No change
    * </ul>
    *
-   * <p><strong>Size Limit:</strong>
-   * Panel size is capped at 10,000,000 pixels to prevent Java rendering exceptions
-   * on large zooms.
+   * <p><strong>Size Limit:</strong> Panel size is capped at 10,000,000 pixels to prevent Java
+   * rendering exceptions on large zooms.
    *
    * @param p_factor the zoom multiplication factor (greater than 1 zooms in, less than 1 zooms out)
    * @param p_location the screen position that should remain fixed during zoom
    * @return the adjusted cursor location after zoom and viewport adjustment
-   *
    * @see #zoom_in(Point2D)
    * @see #zoom_out(Point2D)
    */
@@ -813,30 +827,33 @@ public class BoardPanel extends JPanel {
     setSize(new_size);
     revalidate();
 
-    Point2D new_cursor = new Point2D.Double(p_location.getX() * p_factor, p_location.getY() * p_factor);
+    Point2D new_cursor =
+        new Point2D.Double(p_location.getX() * p_factor, p_location.getY() * p_factor);
     double dx = new_cursor.getX() - p_location.getX();
     double dy = new_cursor.getY() - p_location.getY();
     Point2D new_center = new Point2D.Double(old_center.getX() + dx, old_center.getY() + dy);
     Point2D adjustment_vector = set_viewport_center(new_center);
     // Update the custom cursor position to match the new zoom level
     if (this.custom_cursor != null) {
-      Point2D adjusted_new_cursor = new Point2D.Double(new_cursor.getX() + adjustment_vector.getX() + 0.5,
-          new_cursor.getY() + adjustment_vector.getY() + 0.5);
+      Point2D adjusted_new_cursor =
+          new Point2D.Double(
+              new_cursor.getX() + adjustment_vector.getX() + 0.5,
+              new_cursor.getY() + adjustment_vector.getY() + 0.5);
       this.custom_cursor.set_location(adjusted_new_cursor);
     }
     repaint();
-    return new Point2D.Double(new_cursor.getX() + adjustment_vector.getX() + 0.5,
+    return new Point2D.Double(
+        new_cursor.getX() + adjustment_vector.getX() + 0.5,
         new_cursor.getY() + adjustment_vector.getY() + 0.5);
   }
 
   /**
    * Returns the rectangular bounds of the current viewport.
    *
-   * <p>The viewport bounds represent the visible area of the panel within
-   * the scroll pane, in panel coordinates.
+   * <p>The viewport bounds represent the visible area of the panel within the scroll pane, in panel
+   * coordinates.
    *
    * @return the viewport bounds rectangle
-   *
    * @see JScrollPane#getViewportBorderBounds()
    */
   Rectangle get_viewport_bounds() {
@@ -846,20 +863,20 @@ public class BoardPanel extends JPanel {
   /**
    * Sets the viewport center to the specified point with boundary adjustments.
    *
-   * <p>Attempts to center the viewport on p_point, but adjusts if the point is
-   * near the panel edges to keep the viewport within valid bounds. Returns the
-   * adjustment vector representing how much the requested center had to be shifted.
+   * <p>Attempts to center the viewport on p_point, but adjusts if the point is near the panel edges
+   * to keep the viewport within valid bounds. Returns the adjustment vector representing how much
+   * the requested center had to be shifted.
    *
    * <p>The adjustment ensures:
+   *
    * <ul>
-   *   <li>Viewport stays within panel boundaries</li>
-   *   <li>No part of the viewport extends beyond the panel</li>
-   *   <li>Smooth scrolling behavior near edges</li>
+   *   <li>Viewport stays within panel boundaries
+   *   <li>No part of the viewport extends beyond the panel
+   *   <li>Smooth scrolling behavior near edges
    * </ul>
    *
    * @param p_point the desired center point in panel coordinates
    * @return the adjustment vector (delta from requested to actual position)
-   *
    * @see #get_viewport_center()
    * @see #set_viewport_position(Point)
    */
@@ -881,14 +898,14 @@ public class BoardPanel extends JPanel {
    * Selects the specified signal layer in the parameter selection window and updates menus.
    *
    * <p>This method:
+   *
    * <ul>
-   *   <li>Updates the layer selection in the parameter window</li>
-   *   <li>Disables the selected layer in routing popup menus (can't route to current layer)</li>
-   *   <li>Synchronizes UI state across all layer-dependent controls</li>
+   *   <li>Updates the layer selection in the parameter window
+   *   <li>Disables the selected layer in routing popup menus (can't route to current layer)
+   *   <li>Synchronizes UI state across all layer-dependent controls
    * </ul>
    *
    * @param p_signal_layer_no the signal layer number to select (0-based index)
-   *
    * @see BoardFrame#select_parameter_window
    */
   public void set_selected_signal_layer(int p_signal_layer_no) {
@@ -904,10 +921,11 @@ public class BoardPanel extends JPanel {
    * Initializes color table listeners to respond to color changes.
    *
    * <p>Sets up listeners on both item and other color tables that will:
+   *
    * <ul>
-   *   <li>Update the panel background when colors change</li>
-   *   <li>Trigger repaints to reflect new color schemes</li>
-   *   <li>Maintain visual consistency with color preferences</li>
+   *   <li>Update the panel background when colors change
+   *   <li>Trigger repaints to reflect new color schemes
+   *   <li>Maintain visual consistency with color preferences
    * </ul>
    *
    * <p>Should be called after the graphics context is fully initialized.
@@ -915,15 +933,21 @@ public class BoardPanel extends JPanel {
    * @see ColorTableListener
    */
   void init_colors() {
-    board_handling.graphics_context.item_color_table.addTableModelListener(new ColorTableListener());
-    board_handling.graphics_context.other_color_table.addTableModelListener(new ColorTableListener());
+    board_handling.graphics_context.item_color_table.addTableModelListener(
+        new ColorTableListener());
+    board_handling.graphics_context.other_color_table.addTableModelListener(
+        new ColorTableListener());
     setBackground(board_handling.graphics_context.get_background_color());
   }
 
   private void scroll_near_border(MouseEvent p_evt) {
     final int border_dist = 50;
-    Rectangle r = new Rectangle(p_evt.getX() - border_dist, p_evt.getY() - border_dist, 2 * border_dist,
-        2 * border_dist);
+    Rectangle r =
+        new Rectangle(
+            p_evt.getX() - border_dist,
+            p_evt.getY() - border_dist,
+            2 * border_dist,
+            2 * border_dist);
     ((JPanel) p_evt.getSource()).scrollRectToVisible(r);
   }
 
@@ -950,14 +974,12 @@ public class BoardPanel extends JPanel {
   /**
    * Programmatically moves the mouse cursor to the specified panel location.
    *
-   * <p>Converts the panel coordinates to absolute screen coordinates, accounting
-   * for frame position and viewport scrolling, then uses the Robot to move the
-   * system mouse cursor.
+   * <p>Converts the panel coordinates to absolute screen coordinates, accounting for frame position
+   * and viewport scrolling, then uses the Robot to move the system mouse cursor.
    *
    * <p>Does nothing if Robot initialization failed during construction.
    *
    * @param p_location the target position in panel coordinates
-   *
    * @see Robot#mouseMove(int, int)
    * @see #center_display(Point2D)
    */
@@ -967,23 +989,27 @@ public class BoardPanel extends JPanel {
     }
     Point absolute_panel_location = board_frame.absolute_panel_location();
     Point view_position = get_viewport_position();
-    int x = (int) Math.round(absolute_panel_location.getX() - view_position.getX() + p_location.getX()) + 1;
-    int y = (int) Math.round(absolute_panel_location.getY() - view_position.getY() + p_location.getY() + 1);
+    int x =
+        (int) Math.round(absolute_panel_location.getX() - view_position.getX() + p_location.getX())
+            + 1;
+    int y =
+        (int)
+            Math.round(
+                absolute_panel_location.getY() - view_position.getY() + p_location.getY() + 1);
     robot.mouseMove(x, y);
   }
 
   /**
    * Enables or disables the custom crosshair cursor.
    *
-   * <p>When enabled, displays a 45-degree crosshair cursor for precise positioning.
-   * The custom cursor is drawn as an overlay on the board panel.
+   * <p>When enabled, displays a 45-degree crosshair cursor for precise positioning. The custom
+   * cursor is drawn as an overlay on the board panel.
    *
-   * <p><strong>Performance Warning:</strong> Using the custom cursor can significantly
-   * slow down display performance because it requires manual rendering and repaint
-   * on every mouse movement. Use only when precise cursor positioning is critical.
+   * <p><strong>Performance Warning:</strong> Using the custom cursor can significantly slow down
+   * display performance because it requires manual rendering and repaint on every mouse movement.
+   * Use only when precise cursor positioning is critical.
    *
    * @param p_value true to enable custom crosshair, false for standard cursor
-   *
    * @see Cursor#get_45_degree_cross_hair_cursor()
    * @see #is_custom_cross_hair_cursor()
    */
@@ -1000,11 +1026,10 @@ public class BoardPanel extends JPanel {
   /**
    * Checks if the custom crosshair cursor is currently enabled.
    *
-   * <p>Returns true if the custom 45-degree crosshair cursor is being used,
-   * false if the standard system cursor is active.
+   * <p>Returns true if the custom 45-degree crosshair cursor is being used, false if the standard
+   * system cursor is active.
    *
    * @return true if custom crosshair cursor is enabled, false otherwise
-   *
    * @see #set_custom_crosshair_cursor(boolean)
    */
   public boolean is_custom_cross_hair_cursor() {

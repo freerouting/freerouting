@@ -14,9 +14,7 @@ import java.util.TreeSet;
 
 public class WindowLengthViolations extends WindowObjectListWithFilter {
 
-  /**
-   * Creates a new instance of WindowLengthViolations
-   */
+  /** Creates a new instance of WindowLengthViolations */
   public WindowLengthViolations(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
@@ -33,7 +31,8 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     for (int net_index = 1; net_index <= net_list.max_net_no(); net_index++) {
       double curr_violation_length = ratsnest.get_length_violation(net_index);
       if (curr_violation_length != 0) {
-        LengthViolation curr_length_violation = new LengthViolation(net_list.get(net_index), curr_violation_length);
+        LengthViolation curr_length_violation =
+            new LengthViolation(net_list.get(net_index), curr_violation_length);
         length_violations.add(curr_length_violation);
       }
     }
@@ -77,15 +76,24 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
 
     @Override
     public String toString() {
-      CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+      CoordinateTransform coordinate_transform =
+          board_frame.board_panel.board_handling.coordinate_transform;
       NetClass net_class = this.net.get_class();
       float length = (float) coordinate_transform.board_to_user(this.net.get_trace_length());
       if (violation_length > 0) {
-        return tm.getText("length_violation_max_message", this.net.name, String.valueOf(length),
-            String.valueOf((float) coordinate_transform.board_to_user(net_class.get_maximum_trace_length())));
+        return tm.getText(
+            "length_violation_max_message",
+            this.net.name,
+            String.valueOf(length),
+            String.valueOf(
+                (float) coordinate_transform.board_to_user(net_class.get_maximum_trace_length())));
       }
-      return tm.getText("length_violation_min_message", this.net.name, String.valueOf(length),
-          String.valueOf((float) coordinate_transform.board_to_user(net_class.get_minimum_trace_length())));
+      return tm.getText(
+          "length_violation_min_message",
+          this.net.name,
+          String.valueOf(length),
+          String.valueOf(
+              (float) coordinate_transform.board_to_user(net_class.get_minimum_trace_length())));
     }
   }
 }

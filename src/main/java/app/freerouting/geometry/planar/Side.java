@@ -15,7 +15,8 @@ public final class Side {
   }
 
   /**
-   * returns ON_THE_LEFT, if p_value < 0, ON_THE_RIGHT, if p_value > 0 and COLLINEAR, if p_value == 0
+   * returns ON_THE_LEFT, if p_value < 0, ON_THE_RIGHT, if p_value > 0 and COLLINEAR, if p_value ==
+   * 0
    */
   static Side of(double p_value) {
     Side result;
@@ -29,16 +30,12 @@ public final class Side {
     return result;
   }
 
-  /**
-   * returns the string of this instance
-   */
+  /** returns the string of this instance */
   public String to_string() {
     return name;
   }
 
-  /**
-   * returns the opposite side of this side
-   */
+  /** returns the opposite side of this side */
   public final Side negate() {
     Side result;
     if (this == ON_THE_LEFT) {

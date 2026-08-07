@@ -3,35 +3,26 @@ package app.freerouting.geometry.planar;
 import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 
-/**
- * Implements functionality of orthogonal rectangles in the plane with integer coordinates.
- */
+/** Implements functionality of orthogonal rectangles in the plane with integer coordinates. */
 public class IntBox extends RegularTileShape implements Serializable {
 
-  /**
-   * Standard implementation of an empty box.
-   */
-  public static final IntBox EMPTY = new IntBox(Limits.CRIT_INT, Limits.CRIT_INT, -Limits.CRIT_INT, -Limits.CRIT_INT);
-  /**
-   * coordinates of the lower left corner
-   */
+  /** Standard implementation of an empty box. */
+  public static final IntBox EMPTY =
+      new IntBox(Limits.CRIT_INT, Limits.CRIT_INT, -Limits.CRIT_INT, -Limits.CRIT_INT);
+
+  /** coordinates of the lower left corner */
   public final IntPoint ll;
-  /**
-   * coordinates of the upper right corner
-   */
+
+  /** coordinates of the upper right corner */
   public final IntPoint ur;
 
-  /**
-   * Creates an IntBox from its lower left and upper right corners.
-   */
+  /** Creates an IntBox from its lower left and upper right corners. */
   public IntBox(IntPoint p_ll, IntPoint p_ur) {
     ll = p_ll;
     ur = p_ur;
   }
 
-  /**
-   * creates an IntBox from the coordinates of its lower left and upper right corners.
-   */
+  /** creates an IntBox from the coordinates of its lower left and upper right corners. */
   public IntBox(int p_ll_x, int p_ll_y, int p_ur_x, int p_ur_y) {
     ll = new IntPoint(p_ll_x, p_ll_y);
     ur = new IntPoint(p_ur_x, p_ur_y);
@@ -42,9 +33,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     return true;
   }
 
-  /**
-   * Returns true, if the box is empty
-   */
+  /** Returns true, if the box is empty */
   @Override
   public boolean is_empty() {
     return ll.x > ur.x || ll.y > ur.y;
@@ -55,16 +44,12 @@ public class IntBox extends RegularTileShape implements Serializable {
     return 4;
   }
 
-  /**
-   * returns the horizontal extension of the box.
-   */
+  /** returns the horizontal extension of the box. */
   public int width() {
     return ur.x - ll.x;
   }
 
-  /**
-   * Returns the vertical extension of the box.
-   */
+  /** Returns the vertical extension of the box. */
   public int height() {
     return ur.y - ll.y;
   }
@@ -120,11 +105,12 @@ public class IntBox extends RegularTileShape implements Serializable {
     return 2;
   }
 
-  /**
-   * Checks, if p_point is located in the interior of this box.
-   */
+  /** Checks, if p_point is located in the interior of this box. */
   public boolean contains_inside(IntPoint p_point) {
-    return p_point.x > this.ll.x && p_point.x < this.ur.x && p_point.y > this.ll.y && p_point.y < this.ur.y;
+    return p_point.x > this.ll.x
+        && p_point.x < this.ur.x
+        && p_point.y > this.ll.y
+        && p_point.y < this.ur.y;
   }
 
   @Override
@@ -137,9 +123,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     return this;
   }
 
-  /**
-   * Calculates the nearest point of this box to p_from_point.
-   */
+  /** Calculates the nearest point of this box to p_from_point. */
   public FloatPoint nearest_point(FloatPoint p_from_point) {
     double x;
     if (p_from_point.x <= ll.x) {
@@ -163,7 +147,8 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Calculates the sorted p_max_result_points nearest points on the border of this box. p_point is assumed to be located in the interior of this nox. The function is only implemented for
+   * Calculates the sorted p_max_result_points nearest points on the border of this box. p_point is
+   * assumed to be located in the interior of this nox. The function is only implemented for
    * p_max_result_points {@literal <}= 2;
    */
   public IntPoint[] nearest_border_projections(IntPoint p_point, int p_max_result_points) {
@@ -228,18 +213,15 @@ public class IntBox extends RegularTileShape implements Serializable {
     return result;
   }
 
-  /**
-   * Calculates distance of this box to p_from_point.
-   */
+  /** Calculates distance of this box to p_from_point. */
   @Override
   public double distance(FloatPoint p_from_point) {
     return p_from_point.distance(nearest_point(p_from_point));
   }
 
-  /**
-   * Computes the weighted distance to the box p_other.
-   */
-  public double weighted_distance(IntBox p_other, double p_horizontal_weight, double p_vertical_weight) {
+  /** Computes the weighted distance to the box p_other. */
+  public double weighted_distance(
+      IntBox p_other, double p_horizontal_weight, double p_vertical_weight) {
     double result;
 
     double max_ll_x = Math.max(this.ll.x, p_other.ll.x);
@@ -304,9 +286,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     return new IntBox(llx, lly, urx, ury);
   }
 
-  /**
-   * Returns the intersection of this box with an IntBox.
-   */
+  /** Returns the intersection of this box with an IntBox. */
   @Override
   public IntBox intersection(IntBox p_other) {
     if (p_other.ll.x > ur.x) {
@@ -328,9 +308,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     return new IntBox(llx, lly, urx, ury);
   }
 
-  /**
-   * returns the intersection of this box with a ConvexShape
-   */
+  /** returns the intersection of this box with a ConvexShape */
   @Override
   public TileShape intersection(TileShape p_other) {
     return p_other.intersection(this);
@@ -365,9 +343,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     return this.ll.y <= p_other.ur.y;
   }
 
-  /**
-   * Returns true, if this box intersects with p_other and the intersection is 2-dimensional.
-   */
+  /** Returns true, if this box intersects with p_other and the intersection is 2-dimensional. */
   public boolean overlaps(IntBox p_other) {
     if (p_other.ll.x >= this.ur.x) {
       return false;
@@ -392,7 +368,8 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Enlarges the box by p_offset. Contrary to the offset() method the result is an IntOctagon, not an IntBox.
+   * Enlarges the box by p_offset. Contrary to the offset() method the result is an IntOctagon, not
+   * an IntBox.
    */
   @Override
   public IntOctagon enlarge(double p_offset) {
@@ -472,7 +449,8 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Returns the box offsetted by p_dist. If p_dist {@literal >} 0, the offset is to the outside, else to the inside.
+   * Returns the box offsetted by p_dist. If p_dist {@literal >} 0, the offset is to the outside,
+   * else to the inside.
    */
   @Override
   public IntBox offset(double p_dist) {
@@ -486,7 +464,8 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Returns the box, where the horizontal boundary is offsetted by p_dist. If p_dist {@literal >} 0, the offset is to the outside, else to the inside.
+   * Returns the box, where the horizontal boundary is offsetted by p_dist. If p_dist {@literal >}
+   * 0, the offset is to the outside, else to the inside.
    */
   public IntBox horizontal_offset(double p_dist) {
     if (p_dist == 0 || is_empty()) {
@@ -499,7 +478,8 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Returns the box, where the vertical boundary is offsetted by p_dist. If p_dist {@literal >} 0, the offset is to the outside, else to the inside.
+   * Returns the box, where the vertical boundary is offsetted by p_dist. If p_dist {@literal >} 0,
+   * the offset is to the outside, else to the inside.
    */
   public IntBox vertical_offset(double p_dist) {
     if (p_dist == 0 || is_empty()) {
@@ -591,16 +571,13 @@ public class IntBox extends RegularTileShape implements Serializable {
     return result;
   }
 
-  /**
-   * Returns an object of class IntOctagon defining the same shape
-   */
+  /** Returns an object of class IntOctagon defining the same shape */
   public IntOctagon to_IntOctagon() {
-    return new IntOctagon(ll.x, ll.y, ur.x, ur.y, ll.x - ur.y, ur.x - ll.y, ll.x + ll.y, ur.x + ur.y);
+    return new IntOctagon(
+        ll.x, ll.y, ur.x, ur.y, ll.x - ur.y, ur.x - ll.y, ll.x + ll.y, ur.x + ur.y);
   }
 
-  /**
-   * Returns an object of class Simplex defining the same shape
-   */
+  /** Returns an object of class Simplex defining the same shape */
   @Override
   public Simplex to_Simplex() {
     Line[] line_arr;
@@ -621,12 +598,13 @@ public class IntBox extends RegularTileShape implements Serializable {
     if (is_empty() || this == p_other) {
       return true;
     }
-    return ll.x >= p_other.ll.x && ll.y >= p_other.ll.y && ur.x <= p_other.ur.x && ur.y <= p_other.ur.y;
+    return ll.x >= p_other.ll.x
+        && ll.y >= p_other.ll.y
+        && ur.x <= p_other.ur.x
+        && ur.y <= p_other.ur.y;
   }
 
-  /**
-   * Return true, if p_other is contained in the interior of this box.
-   */
+  /** Return true, if p_other is contained in the interior of this box. */
   public boolean contains_in_interior(IntBox p_other) {
     if (p_other.is_empty()) {
       return true;
@@ -634,9 +612,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     return p_other.ll.x > ll.x && p_other.ll.y > ll.y && p_other.ur.x < ur.x && p_other.ur.y < ur.y;
   }
 
-  /**
-   * Calculates the part of p_from_box, which has minimal distance to this box.
-   */
+  /** Calculates the part of p_from_box, which has minimal distance to this box. */
   public IntBox nearest_part(IntBox p_from_box) {
     int ll_x;
 
@@ -703,7 +679,8 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Divides this box into sections with width and height at most p_max_section_width of about equal size.
+   * Divides this box into sections with width and height at most p_max_section_width of about equal
+   * size.
    */
   @Override
   public IntBox[] divide_into_sections(double p_max_section_width) {

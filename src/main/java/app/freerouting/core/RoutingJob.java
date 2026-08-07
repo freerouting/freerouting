@@ -29,9 +29,7 @@ import java.util.UUID;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-/**
- * Represents a job that needs to be processed by the router.
- */
+/** Represents a job that needs to be processed by the router. */
 public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
   public static final String DSN_FILE_EXTENSION = "dsn";
@@ -43,41 +41,57 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   @SerializedName("id")
   @Schema(name = "id", description = "Unique identifier for the routing job")
   public final UUID id = UUID.randomUUID();
+
   @SerializedName("created_at")
   @Schema(name = "created_at", description = "Job creation timestamp")
   public final Instant createdAt = Instant.now();
+
   // events to signal input and output updates
-  protected final transient List<RoutingJobUpdatedEventListener> settingsUpdatedEventListeners = new ArrayList<>();
-  protected final transient List<RoutingJobUpdatedEventListener> inputUpdatedEventListeners = new ArrayList<>();
-  protected final transient List<RoutingJobUpdatedEventListener> outputUpdatedEventListeners = new ArrayList<>();
-  protected final transient List<RoutingJobLogEntryAddedEventListener> logEntryAddedEventListeners = new ArrayList<>();
+  protected final transient List<RoutingJobUpdatedEventListener> settingsUpdatedEventListeners =
+      new ArrayList<>();
+  protected final transient List<RoutingJobUpdatedEventListener> inputUpdatedEventListeners =
+      new ArrayList<>();
+  protected final transient List<RoutingJobUpdatedEventListener> outputUpdatedEventListeners =
+      new ArrayList<>();
+  protected final transient List<RoutingJobLogEntryAddedEventListener> logEntryAddedEventListeners =
+      new ArrayList<>();
+
   @SerializedName("short_name")
   @Schema(name = "short_name", description = "A short name for the job")
   public String shortName = "N/A";
+
   @SerializedName("name")
   @Schema(description = "The name of the job")
   public String name;
+
   @SerializedName("started_at")
   @Schema(name = "started_at", description = "Job start timestamp")
   public Instant startedAt;
+
   @SerializedName("finished_at")
   @Schema(name = "finished_at", description = "Job completion timestamp")
   public Instant finishedAt;
+
   @SerializedName("state")
   @Schema(description = "The current state of the job")
   public RoutingJobState state = RoutingJobState.INVALID;
+
   @SerializedName("stage")
   @Schema(description = "The current stage of the job")
   public RoutingStage stage = RoutingStage.IDLE;
+
   @SerializedName("priority")
   @Schema(description = "The priority of the job")
   public RoutingJobPriority priority = RoutingJobPriority.NORMAL;
+
   @SerializedName("session_id")
   @Schema(name = "session_id", description = "The session ID the job belongs to")
   public UUID sessionId;
+
   @SerializedName("input")
   @Schema(description = "Details of the uploaded input design file")
   public BoardFileDetails input;
+
   @SerializedName("output")
   @Schema(description = "Details of the routed output design file")
   public BoardFileDetails output;
@@ -85,15 +99,19 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   @SerializedName("drc")
   @Schema(description = "Details of the design rules check output")
   public BoardFileDetails drc;
+
   @SerializedName("router_settings")
   @Schema(name = "router_settings", description = "Router configuration settings")
   public RouterSettings routerSettings = new RouterSettings();
+
   @SerializedName("drc_settings")
   @Schema(name = "drc_settings", description = "DRC configuration settings")
   public DesignRulesCheckerSettings drcSettings = new DesignRulesCheckerSettings();
+
   @SerializedName("resource_usage")
   @Schema(name = "resource_usage", description = "Resource usage stats")
   public RouterJobResourceUsage resourceUsage = new RouterJobResourceUsage();
+
   public transient StoppableThread thread;
   public transient RoutingBoard board;
   public transient Instant timeoutAt;
@@ -111,55 +129,40 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   @Schema(name = "current_pass", description = "Current routing pass")
   private int currentPass;
 
-  /**
-   * We need a parameterless constructor for the serialization.
-   */
+  /** We need a parameterless constructor for the serialization. */
   public RoutingJob() {
-    this.name = "J-" + this.id
-        .toString()
-        .substring(0, 6)
-        .toUpperCase();
-    this.shortName = this.id
-        .toString()
-        .substring(0, 6)
-        .toUpperCase();
+    this.name = "J-" + this.id.toString().substring(0, 6).toUpperCase();
+    this.shortName = this.id.toString().substring(0, 6).toUpperCase();
   }
 
-  /**
-   * Creates a new instance of DesignFile and prepares the intermediate file
-   * handling.
-   */
+  /** Creates a new instance of DesignFile and prepares the intermediate file handling. */
   public RoutingJob(UUID sessionId) {
     this();
     this.sessionId = sessionId;
-    this.shortName = this.sessionId
-        .toString()
-        .substring(0, 6)
-        .toUpperCase() + "\\"
-        + this.id
-            .toString()
-            .substring(0, 6)
-            .toUpperCase();
-
+    this.shortName =
+        this.sessionId.toString().substring(0, 6).toUpperCase()
+            + "\\"
+            + this.id.toString().substring(0, 6).toUpperCase();
   }
 
-  /**
-   * Shows a file chooser for opening a design file.
-   */
+  /** Shows a file chooser for opening a design file. */
   public static File showOpenDialog(String p_default_directory, Component p_parent) {
     JFileChooser fileChooser = new JFileChooser(p_default_directory);
     fileChooser.setMinimumSize(new Dimension(500, 250));
 
     // Add the file filter for SPECCTRA Design .DSN files
-    FileNameExtensionFilter dsnFilter = new FileNameExtensionFilter("SPECCTRA Design file (*.dsn)", "dsn");
+    FileNameExtensionFilter dsnFilter =
+        new FileNameExtensionFilter("SPECCTRA Design file (*.dsn)", "dsn");
     fileChooser.addChoosableFileFilter(dsnFilter);
 
     // Add the file filter for Freerouting binary .FRB files
-    FileNameExtensionFilter frbFilter = new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
+    FileNameExtensionFilter frbFilter =
+        new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
     fileChooser.addChoosableFileFilter(frbFilter);
 
     // Add the file filter for KiCad JSON .JSON files
-    FileNameExtensionFilter jsonFilter = new FileNameExtensionFilter("KiCad Design JSON file (*.json)", "json");
+    FileNameExtensionFilter jsonFilter =
+        new FileNameExtensionFilter("KiCad Design JSON file (*.json)", "json");
     fileChooser.addChoosableFileFilter(jsonFilter);
 
     // Set a file filter as the default one
@@ -168,8 +171,6 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     fileChooser.showOpenDialog(p_parent);
     return fileChooser.getSelectedFile();
   }
-
-
 
   public static FileFormat getFileFormat(byte[] content) {
     if (content == null) {
@@ -193,7 +194,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
       int bytesRead = fileInputStream.read(buffer, 0, 6);
       if (bytesRead == 6) {
         // Check if the file is a binary file
-        if (buffer[0] == (byte) 0xAC && buffer[1] == (byte) 0xED && buffer[2] == (byte) 0x00
+        if (buffer[0] == (byte) 0xAC
+            && buffer[1] == (byte) 0xED
+            && buffer[2] == (byte) 0x00
             && buffer[3] == (byte) 0x05) {
           return FileFormat.FRB;
         }
@@ -208,18 +211,26 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         }
 
         // Check if the file is a DSN file (it starts with "(pcb" or "(PCB")
-        if ((buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x70 && buffer[2] == (byte) 0x63
-            && buffer[3] == (byte) 0x62)
-            || (buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x50
-                && buffer[2] == (byte) 0x43 && buffer[3] == (byte) 0x42)) {
+        if ((buffer[0] == (byte) 0x28
+                && buffer[1] == (byte) 0x70
+                && buffer[2] == (byte) 0x63
+                && buffer[3] == (byte) 0x62)
+            || (buffer[0] == (byte) 0x28
+                && buffer[1] == (byte) 0x50
+                && buffer[2] == (byte) 0x43
+                && buffer[3] == (byte) 0x42)) {
           return FileFormat.DSN;
         }
 
         // Check if the file is a SES file (it starts with "(ses" or "(SES")
-        if ((buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x73 && buffer[2] == (byte) 0x65
-            && buffer[3] == (byte) 0x73)
-            || (buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x53
-                && buffer[2] == (byte) 0x45 && buffer[3] == (byte) 0x53)) {
+        if ((buffer[0] == (byte) 0x28
+                && buffer[1] == (byte) 0x73
+                && buffer[2] == (byte) 0x65
+                && buffer[3] == (byte) 0x73)
+            || (buffer[0] == (byte) 0x28
+                && buffer[1] == (byte) 0x53
+                && buffer[2] == (byte) 0x45
+                && buffer[3] == (byte) 0x53)) {
           return FileFormat.SES;
         }
       }
@@ -232,9 +243,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   public static FileFormat getFileFormat(Path path) {
-    String filename = path
-        .toString()
-        .toLowerCase();
+    String filename = path.toString().toLowerCase();
     String[] parts = filename.split("\\.");
     if (parts.length > 1) {
       String extension = parts[parts.length - 1].toLowerCase();
@@ -280,7 +289,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   public File getEagleScriptFile() {
-    return new File(changeFileExtension(this.output.getAbsolutePath(), EAGLE_SCRIPT_FILE_EXTENSION));
+    return new File(
+        changeFileExtension(this.output.getAbsolutePath(), EAGLE_SCRIPT_FILE_EXTENSION));
   }
 
   public void setDummyInputFile(String filename) {
@@ -288,12 +298,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
     this.output = new BoardFileDetails();
 
-    if ((filename != null) && (filename
-        .toLowerCase()
-        .endsWith(DSN_FILE_EXTENSION))) {
+    if ((filename != null) && (filename.toLowerCase().endsWith(DSN_FILE_EXTENSION))) {
       this.input.format = FileFormat.DSN;
       this.input.setFilename(filename);
-
     }
   }
 
@@ -318,29 +325,23 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     Path filePath = Path.of(filename);
 
     // Get the filename and split it into parts
-    String originalFullPathWithoutFilename = filePath
-        .getParent()
-        .toAbsolutePath()
-        .toString();
-    String originalFilename = filePath
-        .getFileName()
-        .toString();
+    String originalFullPathWithoutFilename = filePath.getParent().toAbsolutePath().toString();
+    String originalFilename = filePath.getFileName().toString();
     String[] nameParts = originalFilename.split("\\.");
     if (nameParts.length > 1) {
       String extension = nameParts[nameParts.length - 1].toLowerCase();
       if (extension.equals(newFileExtension)) {
         return filePath.toString();
       }
-      String newFilename = originalFilename.substring(0, originalFilename.length() - extension.length() - 1) + "."
-          + newFileExtension;
+      String newFilename =
+          originalFilename.substring(0, originalFilename.length() - extension.length() - 1)
+              + "."
+              + newFileExtension;
 
-      return Path
-          .of(originalFullPathWithoutFilename, newFilename)
-          .toString();
+      return Path.of(originalFullPathWithoutFilename, newFilename).toString();
     }
 
-    return Path
-        .of(originalFullPathWithoutFilename, originalFilename + "." + newFileExtension)
+    return Path.of(originalFullPathWithoutFilename, originalFilename + "." + newFileExtension)
         .toString();
   }
 
@@ -351,7 +352,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
     FileFormat ff = getFileFormat(outputFile.toPath());
 
-    if ((ff == FileFormat.DSN) || (ff == FileFormat.FRB) || (ff == FileFormat.SES) || (ff == FileFormat.SCR) || (ff == FileFormat.KICAD_DESIGN_JSON)) {
+    if ((ff == FileFormat.DSN)
+        || (ff == FileFormat.FRB)
+        || (ff == FileFormat.SES)
+        || (ff == FileFormat.SCR)
+        || (ff == FileFormat.KICAD_DESIGN_JSON)) {
       this.output = new BoardFileDetails(outputFile);
       this.output.addUpdatedEventListener(_ -> this.fireInputUpdatedEvent());
       this.output.format = ff == FileFormat.KICAD_DESIGN_JSON ? FileFormat.KICAD_SESSION_JSON : ff;

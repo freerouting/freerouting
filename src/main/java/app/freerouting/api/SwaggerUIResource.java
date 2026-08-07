@@ -11,28 +11,36 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Resource for serving Swagger UI.
- * Provides an interactive web interface for exploring and testing the API.
+ * Resource for serving Swagger UI. Provides an interactive web interface for exploring and testing
+ * the API.
  */
 @Path("/swagger-ui")
 @Tag(name = "API Documentation", description = "Interactive API documentation interface")
 public class SwaggerUIResource {
 
-    /**
-     * Serves the Swagger UI at {@code /swagger-ui} (bare path).
-     * Browsers that navigate to the root of the Swagger UI will see the interactive page.
-     *
-     * @return HTTP 200 with the Swagger UI HTML page
-     */
-    @Operation(summary = "Swagger UI interface", description = "Serves the interactive Swagger UI interface for exploring and testing the Freerouting API. Provides a user-friendly way to view all endpoints, their parameters, and try out API calls directly from the browser.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Swagger UI page loaded successfully", content = @Content(mediaType = "text/html"))
-    })
-    @GET
-    @Produces("text/html")
-    public Response getSwaggerUi() {
-        // Serve Swagger UI using CDN resources
-        String html = """
+  /**
+   * Serves the Swagger UI at {@code /swagger-ui} (bare path). Browsers that navigate to the root of
+   * the Swagger UI will see the interactive page.
+   *
+   * @return HTTP 200 with the Swagger UI HTML page
+   */
+  @Operation(
+      summary = "Swagger UI interface",
+      description =
+          "Serves the interactive Swagger UI interface for exploring and testing the Freerouting API. Provides a user-friendly way to view all endpoints, their parameters, and try out API calls directly from the browser.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Swagger UI page loaded successfully",
+            content = @Content(mediaType = "text/html"))
+      })
+  @GET
+  @Produces("text/html")
+  public Response getSwaggerUi() {
+    // Serve Swagger UI using CDN resources
+    String html =
+        """
                 <!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -71,24 +79,31 @@ public class SwaggerUIResource {
                 </html>
                 """;
 
-        return Response.ok(html).type("text/html").build();
-    }
+    return Response.ok(html).type("text/html").build();
+  }
 
-    /**
-     * Serves the Swagger UI at the conventional {@code /swagger-ui/index.html} path.
-     * Many tool integrations and bookmarks point to this explicit URL, so both the
-     * bare {@code /swagger-ui} path and this one return identical content.
-     *
-     * @return HTTP 200 with the Swagger UI HTML page
-     */
-    @Operation(summary = "Swagger UI interface (index.html)", description = "Alias of GET /swagger-ui — serves the same Swagger UI page at the conventional /swagger-ui/index.html URL.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Swagger UI page loaded successfully", content = @Content(mediaType = "text/html"))
-    })
-    @GET
-    @Path("index.html")
-    @Produces("text/html")
-    public Response getSwaggerUiIndex() {
-        return getSwaggerUi();
-    }
+  /**
+   * Serves the Swagger UI at the conventional {@code /swagger-ui/index.html} path. Many tool
+   * integrations and bookmarks point to this explicit URL, so both the bare {@code /swagger-ui}
+   * path and this one return identical content.
+   *
+   * @return HTTP 200 with the Swagger UI HTML page
+   */
+  @Operation(
+      summary = "Swagger UI interface (index.html)",
+      description =
+          "Alias of GET /swagger-ui — serves the same Swagger UI page at the conventional /swagger-ui/index.html URL.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Swagger UI page loaded successfully",
+            content = @Content(mediaType = "text/html"))
+      })
+  @GET
+  @Path("index.html")
+  @Produces("text/html")
+  public Response getSwaggerUiIndex() {
+    return getSwaggerUi();
+  }
 }

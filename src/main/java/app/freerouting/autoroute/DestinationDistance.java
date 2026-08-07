@@ -5,7 +5,8 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 
 /**
- * Calculation of a good lower bound for the distance between a new MazeExpansionElement and the destination set of the expansion.
+ * Calculation of a good lower bound for the distance between a new MazeExpansionElement and the
+ * destination set of the expansion.
  */
 public class DestinationDistance {
 
@@ -38,9 +39,14 @@ public class DestinationDistance {
   private boolean inner_side_box_is_empty = true;
 
   /**
-   * Creates a new instance of DestinationDistance. p_trace_costs and p_layer_active are arrays of dimension layer_count.
+   * Creates a new instance of DestinationDistance. p_trace_costs and p_layer_active are arrays of
+   * dimension layer_count.
    */
-  public DestinationDistance(ExpansionCostFactor[] p_trace_costs, boolean[] p_layer_active, double p_min_normal_via_cost, double p_min_cheap_via_cost) {
+  public DestinationDistance(
+      ExpansionCostFactor[] p_trace_costs,
+      boolean[] p_layer_active,
+      double p_min_normal_via_cost,
+      double p_min_cheap_via_cost) {
     trace_costs = p_trace_costs;
     layer_active = p_layer_active;
     layer_count = p_layer_active.length;
@@ -86,9 +92,11 @@ public class DestinationDistance {
 
       max_inner_side_trace_cost = Math.min(max_inner_side_trace_cost, curr_max_cost);
     }
-    min_component_inner_trace_cost = Math.min(min_component_side_trace_cost, max_inner_side_trace_cost);
+    min_component_inner_trace_cost =
+        Math.min(min_component_side_trace_cost, max_inner_side_trace_cost);
     min_solder_inner_trace_cost = Math.min(min_solder_side_trace_cost, max_inner_side_trace_cost);
-    min_component_solder_inner_trace_cost = Math.min(min_component_inner_trace_cost, min_solder_inner_trace_cost);
+    min_component_solder_inner_trace_cost =
+        Math.min(min_component_inner_trace_cost, min_solder_inner_trace_cost);
   }
 
   public void join(IntBox p_box, int p_layer) {
@@ -212,7 +220,9 @@ public class DestinationDistance {
       // calculate one layer distance
 
       if (!component_side_box_is_empty) {
-        result = p_box.weighted_distance(component_side_box, trace_costs[0].horizontal, trace_costs[0].vertical);
+        result =
+            p_box.weighted_distance(
+                component_side_box, trace_costs[0].horizontal, trace_costs[0].vertical);
       }
 
       if (active_layer_count <= 1) {
@@ -223,9 +233,15 @@ public class DestinationDistance {
 
       double tmp_distance;
       if (min_solder_side_trace_cost < min_component_side_trace_cost) {
-        tmp_distance = min_solder_side_trace_cost * solder_side_max_delta + min_component_side_trace_cost * solder_side_min_delta + min_normal_via_cost;
+        tmp_distance =
+            min_solder_side_trace_cost * solder_side_max_delta
+                + min_component_side_trace_cost * solder_side_min_delta
+                + min_normal_via_cost;
       } else {
-        tmp_distance = min_component_side_trace_cost * solder_side_max_delta + min_solder_side_trace_cost * solder_side_min_delta + min_normal_via_cost;
+        tmp_distance =
+            min_component_side_trace_cost * solder_side_max_delta
+                + min_solder_side_trace_cost * solder_side_min_delta
+                + min_normal_via_cost;
       }
 
       result = Math.min(result, tmp_distance);
@@ -233,7 +249,10 @@ public class DestinationDistance {
       // calculate two layer distance on component and solde side
       // with two vias
 
-      tmp_distance = component_side_max_delta + component_side_min_delta * min_component_inner_trace_cost + 2 * min_normal_via_cost;
+      tmp_distance =
+          component_side_max_delta
+              + component_side_min_delta * min_component_inner_trace_cost
+              + 2 * min_normal_via_cost;
 
       result = Math.min(result, tmp_distance);
 
@@ -243,13 +262,19 @@ public class DestinationDistance {
 
       // calculate two layer distance on component side and an inner side
 
-      tmp_distance = inner_side_max_delta + inner_side_min_delta * min_component_inner_trace_cost + min_normal_via_cost;
+      tmp_distance =
+          inner_side_max_delta
+              + inner_side_min_delta * min_component_inner_trace_cost
+              + min_normal_via_cost;
 
       result = Math.min(result, tmp_distance);
 
       // calculate three layer distance
 
-      tmp_distance = solder_side_max_delta + +min_component_solder_inner_trace_cost * solder_side_min_delta + 2 * min_normal_via_cost;
+      tmp_distance =
+          solder_side_max_delta
+              + +min_component_solder_inner_trace_cost * solder_side_min_delta
+              + 2 * min_normal_via_cost;
       result = Math.min(result, tmp_distance);
 
       tmp_distance = component_side_max_delta + component_side_min_delta + 2 * min_normal_via_cost;
@@ -275,28 +300,45 @@ public class DestinationDistance {
       // calculate one layer distance
 
       if (!solder_side_box_is_empty) {
-        result = p_box.weighted_distance(solder_side_box, trace_costs[p_layer].horizontal, trace_costs[p_layer].vertical);
+        result =
+            p_box.weighted_distance(
+                solder_side_box, trace_costs[p_layer].horizontal, trace_costs[p_layer].vertical);
       }
 
       // calculate two layer distance
       double tmp_distance;
       if (min_component_side_trace_cost < min_solder_side_trace_cost) {
-        tmp_distance = min_component_side_trace_cost * component_side_max_delta + min_solder_side_trace_cost * component_side_min_delta + min_normal_via_cost;
+        tmp_distance =
+            min_component_side_trace_cost * component_side_max_delta
+                + min_solder_side_trace_cost * component_side_min_delta
+                + min_normal_via_cost;
       } else {
-        tmp_distance = min_solder_side_trace_cost * component_side_max_delta + min_component_side_trace_cost * component_side_min_delta + min_normal_via_cost;
+        tmp_distance =
+            min_solder_side_trace_cost * component_side_max_delta
+                + min_component_side_trace_cost * component_side_min_delta
+                + min_normal_via_cost;
       }
       result = Math.min(result, tmp_distance);
-      tmp_distance = solder_side_max_delta + solder_side_min_delta * min_solder_inner_trace_cost + 2 * min_normal_via_cost;
+      tmp_distance =
+          solder_side_max_delta
+              + solder_side_min_delta * min_solder_inner_trace_cost
+              + 2 * min_normal_via_cost;
       result = Math.min(result, tmp_distance);
       if (active_layer_count <= 2) {
         return result;
       }
-      tmp_distance = inner_side_min_delta * min_solder_inner_trace_cost + inner_side_max_delta + min_normal_via_cost;
+      tmp_distance =
+          inner_side_min_delta * min_solder_inner_trace_cost
+              + inner_side_max_delta
+              + min_normal_via_cost;
       result = Math.min(result, tmp_distance);
 
       // calculate three layer distance
 
-      tmp_distance = component_side_max_delta + min_component_solder_inner_trace_cost * component_side_min_delta + 2 * min_normal_via_cost;
+      tmp_distance =
+          component_side_max_delta
+              + min_component_solder_inner_trace_cost * component_side_min_delta
+              + 2 * min_normal_via_cost;
       result = Math.min(result, tmp_distance);
       tmp_distance = solder_side_max_delta + solder_side_min_delta + 2 * min_normal_via_cost;
       result = Math.min(result, tmp_distance);
@@ -317,7 +359,9 @@ public class DestinationDistance {
     // calculate one layer distance
 
     if (!inner_side_box_is_empty) {
-      result = p_box.weighted_distance(inner_side_box, trace_costs[p_layer].horizontal, trace_costs[p_layer].vertical);
+      result =
+          p_box.weighted_distance(
+              inner_side_box, trace_costs[p_layer].horizontal, trace_costs[p_layer].vertical);
     }
 
     // calculate two layer distance
@@ -325,9 +369,15 @@ public class DestinationDistance {
     double tmp_distance = inner_side_max_delta + inner_side_min_delta + min_normal_via_cost;
 
     result = Math.min(result, tmp_distance);
-    tmp_distance = component_side_max_delta + component_side_min_delta * min_component_inner_trace_cost + min_normal_via_cost;
+    tmp_distance =
+        component_side_max_delta
+            + component_side_min_delta * min_component_inner_trace_cost
+            + min_normal_via_cost;
     result = Math.min(result, tmp_distance);
-    tmp_distance = solder_side_max_delta + solder_side_min_delta * min_solder_inner_trace_cost + min_normal_via_cost;
+    tmp_distance =
+        solder_side_max_delta
+            + solder_side_min_delta * min_solder_inner_trace_cost
+            + min_normal_via_cost;
     result = Math.min(result, tmp_distance);
 
     // calculate three layer distance

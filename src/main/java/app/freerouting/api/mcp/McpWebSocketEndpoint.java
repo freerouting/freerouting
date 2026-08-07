@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * Lightweight WebSocket endpoint that mirrors MCP activity as push events.
- */
+/** Lightweight WebSocket endpoint that mirrors MCP activity as push events. */
 @ServerEndpoint(value = "/v1/mcp/ws", configurator = McpWebSocketConfigurator.class)
 public class McpWebSocketEndpoint {
 
@@ -41,7 +39,8 @@ public class McpWebSocketEndpoint {
 
     String environmentHost = firstHeader(headers, ENVIRONMENT_HOST_HEADER);
     if (!isValidEnvironmentHost(environmentHost)) {
-      close(session, CloseReason.CloseCodes.VIOLATED_POLICY, "Invalid Freerouting-Environment-Host");
+      close(
+          session, CloseReason.CloseCodes.VIOLATED_POLICY, "Invalid Freerouting-Environment-Host");
       return;
     }
 
@@ -93,7 +92,8 @@ public class McpWebSocketEndpoint {
   private boolean hasProfile(Map<String, List<String>> headers) {
     String profileId = firstHeader(headers, PROFILE_ID_HEADER);
     String profileEmail = firstHeader(headers, PROFILE_EMAIL_HEADER);
-    return (profileId != null && !profileId.isBlank()) || (profileEmail != null && !profileEmail.isBlank());
+    return (profileId != null && !profileId.isBlank())
+        || (profileEmail != null && !profileEmail.isBlank());
   }
 
   private boolean isValidEnvironmentHost(String host) {

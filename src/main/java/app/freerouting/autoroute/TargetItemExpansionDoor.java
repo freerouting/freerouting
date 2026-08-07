@@ -5,9 +5,7 @@ import app.freerouting.board.ShapeSearchTree;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 
-/**
- * An expansion door leading to a start or destination item of the autoroute algorithm.
- */
+/** An expansion door leading to a start or destination item of the autoroute algorithm. */
 public class TargetItemExpansionDoor implements ExpandableObject {
 
   public final Item item;
@@ -16,10 +14,12 @@ public class TargetItemExpansionDoor implements ExpandableObject {
   private final TileShape shape;
   private final MazeSearchElement maze_search_info;
 
-  /**
-   * Creates a new instance of ItemExpansionInfo
-   */
-  public TargetItemExpansionDoor(Item p_item, int p_tree_entry_no, CompleteExpansionRoom p_room, ShapeSearchTree p_search_tree) {
+  /** Creates a new instance of ItemExpansionInfo */
+  public TargetItemExpansionDoor(
+      Item p_item,
+      int p_tree_entry_no,
+      CompleteExpansionRoom p_room,
+      ShapeSearchTree p_search_tree) {
     item = p_item;
     tree_entry_no = p_tree_entry_no;
     room = p_room;
@@ -73,4 +73,3 @@ public class TargetItemExpansionDoor implements ExpandableObject {
     return 31 * item.get_id_no() + (room != null ? room.get_id_no() : 0);
   }
 }
-

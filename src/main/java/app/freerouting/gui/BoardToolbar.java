@@ -38,9 +38,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 
-/**
- * Implements the toolbar panel of the board frame.
- */
+/** Implements the toolbar panel of the board frame. */
 class BoardToolbar extends JPanel {
 
   private final float ICON_FONT_SIZE = 26.0F;
@@ -66,37 +64,39 @@ class BoardToolbar extends JPanel {
 
   private boolean isShiftDown;
 
-  /**
-   * Creates a new instance of BoardToolbarPanel
-   */
+  /** Creates a new instance of BoardToolbarPanel */
   BoardToolbar(BoardFrame p_board_frame, boolean p_disable_select_mode) {
     this.board_frame = p_board_frame;
 
     // Listen for Shift key globally to update icons
-    KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-      @Override
-      public boolean dispatchKeyEvent(KeyEvent e) {
-        if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_SHIFT) {
-          if (!isShiftDown) {
-            isShiftDown = true;
-            updateDebugIcons();
-          }
-        } else if (e.getID() == KeyEvent.KEY_RELEASED && e.getKeyCode() == KeyEvent.VK_SHIFT) {
-          if (isShiftDown) {
-            isShiftDown = false;
-            updateDebugIcons();
-          }
-        }
-        return false;
-      }
-    });
+    KeyboardFocusManager.getCurrentKeyboardFocusManager()
+        .addKeyEventDispatcher(
+            new KeyEventDispatcher() {
+              @Override
+              public boolean dispatchKeyEvent(KeyEvent e) {
+                if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_SHIFT) {
+                  if (!isShiftDown) {
+                    isShiftDown = true;
+                    updateDebugIcons();
+                  }
+                } else if (e.getID() == KeyEvent.KEY_RELEASED
+                    && e.getKeyCode() == KeyEvent.VK_SHIFT) {
+                  if (isShiftDown) {
+                    isShiftDown = false;
+                    updateDebugIcons();
+                  }
+                }
+                return false;
+              }
+            });
 
     // Setup Global Keyboard Shortcuts for Arrows
     setupKeyboardShortcuts();
 
     // Register listener for debug state changes
-    app.freerouting.debug.DebugControl.getInstance().addDebugStateListener(isPaused ->
-      SwingUtilities.invokeLater(this::updateDebugButtonsState));
+    app.freerouting.debug.DebugControl.getInstance()
+        .addDebugStateListener(
+            isPaused -> SwingUtilities.invokeLater(this::updateDebugButtonsState));
 
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
 
@@ -109,25 +109,29 @@ class BoardToolbar extends JPanel {
     left_toolbar.setMaximumSize(new Dimension(1200, 30));
 
     if (!p_disable_select_mode) {
-      modeSelectionPanel = new SegmentedButtons(tm, tm.getText("mode_heading"), "inspect_button", "route_button", "drag_button");
+      modeSelectionPanel =
+          new SegmentedButtons(
+              tm, tm.getText("mode_heading"), "inspect_button", "route_button", "drag_button");
     } else {
-      modeSelectionPanel = new SegmentedButtons(tm, tm.getText("mode_heading"), "route_button", "drag_button");
+      modeSelectionPanel =
+          new SegmentedButtons(tm, tm.getText("mode_heading"), "route_button", "drag_button");
     }
-    modeSelectionPanel.addValueChangedEventListener((String value) -> {
-      switch (value) {
-        case "inspect_button":
-          board_frame.board_panel.board_handling.set_inspect_menu_state();
-          break;
-        case "route_button":
-          board_frame.board_panel.board_handling.set_route_menu_state();
-          break;
-        case "drag_button":
-          board_frame.board_panel.board_handling.set_drag_menu_state();
-          break;
-      }
-    });
-    modeSelectionPanel
-        .addValueChangedEventListener((String value) -> FRAnalytics.buttonClicked("modeSelectionPanel", value));
+    modeSelectionPanel.addValueChangedEventListener(
+        (String value) -> {
+          switch (value) {
+            case "inspect_button":
+              board_frame.board_panel.board_handling.set_inspect_menu_state();
+              break;
+            case "route_button":
+              board_frame.board_panel.board_handling.set_route_menu_state();
+              break;
+            case "drag_button":
+              board_frame.board_panel.board_handling.set_drag_menu_state();
+              break;
+          }
+        });
+    modeSelectionPanel.addValueChangedEventListener(
+        (String value) -> FRAnalytics.buttonClicked("modeSelectionPanel", value));
     left_toolbar.add(modeSelectionPanel, BorderLayout.CENTER);
 
     this.add(left_toolbar, BorderLayout.WEST);
@@ -139,9 +143,9 @@ class BoardToolbar extends JPanel {
     // Add "Settings" button to the toolbar
     settings_button = new JButton();
     tm.setText(settings_button, "settings_button");
-    settings_button.addActionListener(_ ->
-      board_frame.autoroute_parameter_window.setVisible(true));
-    settings_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_button", settings_button.getText()));
+    settings_button.addActionListener(_ -> board_frame.autoroute_parameter_window.setVisible(true));
+    settings_button.addActionListener(
+        _ -> FRAnalytics.buttonClicked("settings_button", settings_button.getText()));
     middle_toolbar.add(settings_button);
 
     // Add "Autoroute" button to the toolbar
@@ -153,119 +157,123 @@ class BoardToolbar extends JPanel {
     toolbar_autoroute_button.setFont(boldFont);
     toolbar_autoroute_button.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
     // Set padding (top, left, bottom, right)
-    toolbar_autoroute_button.setBorder(BorderFactory.createCompoundBorder(toolbar_autoroute_button.getBorder(),
-        BorderFactory.createEmptyBorder(2, 5, 2, 5)));
+    toolbar_autoroute_button.setBorder(
+        BorderFactory.createCompoundBorder(
+            toolbar_autoroute_button.getBorder(), BorderFactory.createEmptyBorder(2, 5, 2, 5)));
     toolbar_autoroute_button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    toolbar_autoroute_button.addActionListener(_ -> {
-      var routingJobs = RoutingJobScheduler
-          .getInstance()
-          .listJobs(SessionManager
-              .getInstance()
-              .getGuiSession().id.toString());
-      if (routingJobs.length == 0) {
-        FRLogger.warn("No routing job found for the current session");
-        return;
-      }
-
-      var guiRoutingJob = Arrays
-          .stream(routingJobs)
-          .findFirst()
-          .get();
-      if (guiRoutingJob.input == null) {
-        FRLogger.warn(tm.getText("warn_no_input_file"));
-        return;
-      }
-      var merger = board_frame.board_panel.board_handling.settingsMerger;
-      if (merger != null) {
-        var mergedSettings = merger.merge();
-        guiRoutingJob.setSettings(mergedSettings);
-        var interactiveSettings = board_frame.board_panel.board_handling.getInteractiveSettings();
-        if (interactiveSettings != null) {
-          interactiveSettings.setSettings(guiRoutingJob.routerSettings);
-        }
-      }
-      // The GUI-path settingsMerger does not include DsnFileSettings, so the merged
-      // RouterSettings has layers == null (layer count 0).  Re-apply board-
-      // specific optimisations so the layer arrays are populated from the actual board
-      // before the autorouter reads them (fixes Issue #676 / "get_layer_active out of
-      // range [0..-1]" warnings and MazeSearchAlgo exceptions on LibrePCB DSN files).
-      app.freerouting.board.RoutingBoard routingBoard =
-          board_frame.board_panel.board_handling.get_routing_board();
-      if (routingBoard != null) {
-        guiRoutingJob.routerSettings.applyBoardSpecificOptimizationsIfNeeded(routingBoard);
-      }
-      InteractiveActionThread thread = board_frame.board_panel.board_handling
-          .start_autorouter_and_route_optimizer(guiRoutingJob);
-
-      if ((thread != null) && (board_frame.board_panel.board_handling.autorouter_listener != null)) {
-        // Add the auto-router listener to save the design file when the auto-router is
-        // running
-        thread.addListener(board_frame.board_panel.board_handling.autorouter_listener);
-      }
-
-      if (Freerouting.globalSettings.debugSettings.singleStepExecution) {
-        app.freerouting.debug.DebugControl.getInstance().reset();
-        app.freerouting.debug.DebugControl.getInstance().resetDebugState();
-
-        // Since we reset(), it defaults to PAUSED if singleStep enabled.
-        // So Enable Play/Next/Prev, Disable Pause
-        if (vars_play_button != null) {
-          vars_play_button.setEnabled(true);
-        }
-        if (vars_next_button != null) {
-          vars_next_button.setEnabled(true);
-        }
-        if (vars_previous_button != null) {
-          vars_previous_button.setEnabled(true);
-        }
-        if (vars_pause_button != null) {
-          vars_pause_button.setEnabled(false);
-        }
-      }
-    });
     toolbar_autoroute_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("toolbar_autoroute_button", GsonProvider.GSON.toJson(globalSettings)));
+        _ -> {
+          var routingJobs =
+              RoutingJobScheduler.getInstance()
+                  .listJobs(SessionManager.getInstance().getGuiSession().id.toString());
+          if (routingJobs.length == 0) {
+            FRLogger.warn("No routing job found for the current session");
+            return;
+          }
+
+          var guiRoutingJob = Arrays.stream(routingJobs).findFirst().get();
+          if (guiRoutingJob.input == null) {
+            FRLogger.warn(tm.getText("warn_no_input_file"));
+            return;
+          }
+          var merger = board_frame.board_panel.board_handling.settingsMerger;
+          if (merger != null) {
+            var mergedSettings = merger.merge();
+            guiRoutingJob.setSettings(mergedSettings);
+            var interactiveSettings =
+                board_frame.board_panel.board_handling.getInteractiveSettings();
+            if (interactiveSettings != null) {
+              interactiveSettings.setSettings(guiRoutingJob.routerSettings);
+            }
+          }
+          // The GUI-path settingsMerger does not include DsnFileSettings, so the merged
+          // RouterSettings has layers == null (layer count 0).  Re-apply board-
+          // specific optimisations so the layer arrays are populated from the actual board
+          // before the autorouter reads them (fixes Issue #676 / "get_layer_active out of
+          // range [0..-1]" warnings and MazeSearchAlgo exceptions on LibrePCB DSN files).
+          app.freerouting.board.RoutingBoard routingBoard =
+              board_frame.board_panel.board_handling.get_routing_board();
+          if (routingBoard != null) {
+            guiRoutingJob.routerSettings.applyBoardSpecificOptimizationsIfNeeded(routingBoard);
+          }
+          InteractiveActionThread thread =
+              board_frame.board_panel.board_handling.start_autorouter_and_route_optimizer(
+                  guiRoutingJob);
+
+          if ((thread != null)
+              && (board_frame.board_panel.board_handling.autorouter_listener != null)) {
+            // Add the auto-router listener to save the design file when the auto-router is
+            // running
+            thread.addListener(board_frame.board_panel.board_handling.autorouter_listener);
+          }
+
+          if (Freerouting.globalSettings.debugSettings.singleStepExecution) {
+            app.freerouting.debug.DebugControl.getInstance().reset();
+            app.freerouting.debug.DebugControl.getInstance().resetDebugState();
+
+            // Since we reset(), it defaults to PAUSED if singleStep enabled.
+            // So Enable Play/Next/Prev, Disable Pause
+            if (vars_play_button != null) {
+              vars_play_button.setEnabled(true);
+            }
+            if (vars_next_button != null) {
+              vars_next_button.setEnabled(true);
+            }
+            if (vars_previous_button != null) {
+              vars_previous_button.setEnabled(true);
+            }
+            if (vars_pause_button != null) {
+              vars_pause_button.setEnabled(false);
+            }
+          }
+        });
+    toolbar_autoroute_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "toolbar_autoroute_button", GsonProvider.GSON.toJson(globalSettings)));
     middle_toolbar.add(toolbar_autoroute_button);
 
     // Add "Cancel" button to the toolbar
     cancel_button = new JButton();
     tm.setText(cancel_button, "cancel_button");
-    cancel_button.addActionListener(_ ->
-      board_frame.board_panel.board_handling.stop_autorouter_and_route_optimizer());
-    cancel_button.addActionListener(_ -> FRAnalytics.buttonClicked("cancel_button", cancel_button.getText()));
+    cancel_button.addActionListener(
+        _ -> board_frame.board_panel.board_handling.stop_autorouter_and_route_optimizer());
+    cancel_button.addActionListener(
+        _ -> FRAnalytics.buttonClicked("cancel_button", cancel_button.getText()));
     cancel_button.setEnabled(false);
     middle_toolbar.add(cancel_button);
 
     // Add "Delete All Tracks and Vias" button to the toolbar
     delete_all_tracks_button = new JButton();
     tm.setText(delete_all_tracks_button, "delete_all_tracks_button");
-    delete_all_tracks_button.addActionListener(_ -> {
-      RoutingBoard board = board_frame.board_panel.board_handling.get_routing_board();
-      // delete all tracks and vias
-      board.delete_all_tracks_and_vias();
-      // unfill conduction areas
-      board.unfill_conduction_areas();
-      // update the board
-      board_frame.board_panel.board_handling.replaceRoutingBoard(board);
-      // create a deep copy of the routing board
-      board = board_frame.board_panel.board_handling
-          .get_routing_board()
-          .deepCopy();
-      // update the board again
-      board_frame.board_panel.board_handling.replaceRoutingBoard(board);
-      // create ratsnest
-      board_frame.board_panel.board_handling.create_ratsnest();
-      // redraw the board
-      board_frame.board_panel.board_handling.repaint();
-      // update the board frame
-      BoardStatistics boardStatistics = board.get_statistics();
-      board_frame.screen_messages.set_board_score(
-          boardStatistics.getNormalizedScore(board_frame.routingJob.routerSettings.scoring),
-          boardStatistics.connections.incompleteCount,
-          boardStatistics.clearanceViolations.totalCount);
-    });
     delete_all_tracks_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("delete_all_tracks_button", delete_all_tracks_button.getText()));
+        _ -> {
+          RoutingBoard board = board_frame.board_panel.board_handling.get_routing_board();
+          // delete all tracks and vias
+          board.delete_all_tracks_and_vias();
+          // unfill conduction areas
+          board.unfill_conduction_areas();
+          // update the board
+          board_frame.board_panel.board_handling.replaceRoutingBoard(board);
+          // create a deep copy of the routing board
+          board = board_frame.board_panel.board_handling.get_routing_board().deepCopy();
+          // update the board again
+          board_frame.board_panel.board_handling.replaceRoutingBoard(board);
+          // create ratsnest
+          board_frame.board_panel.board_handling.create_ratsnest();
+          // redraw the board
+          board_frame.board_panel.board_handling.repaint();
+          // update the board frame
+          BoardStatistics boardStatistics = board.get_statistics();
+          board_frame.screen_messages.set_board_score(
+              boardStatistics.getNormalizedScore(board_frame.routingJob.routerSettings.scoring),
+              boardStatistics.connections.incompleteCount,
+              boardStatistics.clearanceViolations.totalCount);
+        });
+    delete_all_tracks_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "delete_all_tracks_button", delete_all_tracks_button.getText()));
     middle_toolbar.add(delete_all_tracks_button);
 
     final JLabel separator_2 = new JLabel();
@@ -276,21 +284,22 @@ class BoardToolbar extends JPanel {
 
     toolbar_undo_button = new JButton();
     tm.setText(toolbar_undo_button, "undo_button");
-    toolbar_undo_button.addActionListener(_ -> {
-      board_frame.board_panel.board_handling.cancel_state();
-      board_frame.board_panel.board_handling.undo();
-      board_frame.refresh_windows();
-    });
-    toolbar_undo_button
-        .addActionListener(_ -> FRAnalytics.buttonClicked("toolbar_undo_button", toolbar_undo_button.getText()));
+    toolbar_undo_button.addActionListener(
+        _ -> {
+          board_frame.board_panel.board_handling.cancel_state();
+          board_frame.board_panel.board_handling.undo();
+          board_frame.refresh_windows();
+        });
+    toolbar_undo_button.addActionListener(
+        _ -> FRAnalytics.buttonClicked("toolbar_undo_button", toolbar_undo_button.getText()));
 
     middle_toolbar.add(toolbar_undo_button);
 
     toolbar_redo_button = new JButton();
     tm.setText(toolbar_redo_button, "redo_button");
     toolbar_redo_button.addActionListener(_ -> board_frame.board_panel.board_handling.redo());
-    toolbar_redo_button
-        .addActionListener(_ -> FRAnalytics.buttonClicked("toolbar_redo_button", toolbar_redo_button.getText()));
+    toolbar_redo_button.addActionListener(
+        _ -> FRAnalytics.buttonClicked("toolbar_redo_button", toolbar_redo_button.getText()));
 
     middle_toolbar.add(toolbar_redo_button);
 
@@ -301,18 +310,23 @@ class BoardToolbar extends JPanel {
 
     toolbar_incompletes_button = new JButton();
     tm.setText(toolbar_incompletes_button, "incompletes_button");
-    toolbar_incompletes_button.addActionListener(_ -> board_frame.board_panel.board_handling.toggle_ratsnest());
     toolbar_incompletes_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("toolbar_incompletes_button", toolbar_incompletes_button.getText()));
+        _ -> board_frame.board_panel.board_handling.toggle_ratsnest());
+    toolbar_incompletes_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "toolbar_incompletes_button", toolbar_incompletes_button.getText()));
 
     middle_toolbar.add(toolbar_incompletes_button);
 
     toolbar_violation_button = new JButton();
     tm.setText(toolbar_violation_button, "violations_button");
-    toolbar_violation_button
-        .addActionListener(_ -> board_frame.board_panel.board_handling.toggle_clearance_violations());
     toolbar_violation_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("toolbar_violation_button", toolbar_violation_button.getText()));
+        _ -> board_frame.board_panel.board_handling.toggle_clearance_violations());
+    toolbar_violation_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "toolbar_violation_button", toolbar_violation_button.getText()));
 
     middle_toolbar.add(toolbar_violation_button);
 
@@ -324,16 +338,21 @@ class BoardToolbar extends JPanel {
 
     toolbar_display_region_button = new JButton();
     tm.setText(toolbar_display_region_button, "display_region_button");
-    toolbar_display_region_button.addActionListener(_ -> board_frame.board_panel.board_handling.zoom_region());
     toolbar_display_region_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("toolbar_display_region_button", toolbar_display_region_button.getText()));
+        _ -> board_frame.board_panel.board_handling.zoom_region());
+    toolbar_display_region_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "toolbar_display_region_button", toolbar_display_region_button.getText()));
     middle_toolbar.add(toolbar_display_region_button);
 
     toolbar_display_all_button = new JButton();
     tm.setText(toolbar_display_all_button, "display_all_button");
     toolbar_display_all_button.addActionListener(_ -> board_frame.zoom_all());
     toolbar_display_all_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("toolbar_display_all_button", toolbar_display_all_button.getText()));
+        _ ->
+            FRAnalytics.buttonClicked(
+                "toolbar_display_all_button", toolbar_display_all_button.getText()));
     middle_toolbar.add(toolbar_display_all_button);
 
     this.add(middle_toolbar, BorderLayout.CENTER);
@@ -352,8 +371,7 @@ class BoardToolbar extends JPanel {
       if (vars_previous_button.getText().startsWith("!")) {
         vars_previous_button.setText("previous"); // Fallback
       }
-      vars_previous_button.addActionListener(_ ->
-          handlePreviousStep());
+      vars_previous_button.addActionListener(_ -> handlePreviousStep());
       vars_previous_button.setEnabled(false); // Initially disabled
       middle_toolbar.add(vars_previous_button);
 
@@ -362,13 +380,14 @@ class BoardToolbar extends JPanel {
       if (vars_play_button.getText().startsWith("!")) {
         vars_play_button.setText("Play"); // Fallback
       }
-      vars_play_button.addActionListener(_ -> {
-        app.freerouting.debug.DebugControl.getInstance().resume();
-        vars_pause_button.setEnabled(true);
-        vars_play_button.setEnabled(false);
-        vars_next_button.setEnabled(false);
-        vars_previous_button.setEnabled(false);
-      });
+      vars_play_button.addActionListener(
+          _ -> {
+            app.freerouting.debug.DebugControl.getInstance().resume();
+            vars_pause_button.setEnabled(true);
+            vars_play_button.setEnabled(false);
+            vars_next_button.setEnabled(false);
+            vars_previous_button.setEnabled(false);
+          });
       vars_play_button.setEnabled(false); // Initially disabled
       middle_toolbar.add(vars_play_button);
 
@@ -377,10 +396,11 @@ class BoardToolbar extends JPanel {
       if (vars_pause_button.getText().startsWith("!")) {
         vars_pause_button.setText("Pause"); // Fallback
       }
-      vars_pause_button.addActionListener(_ -> {
-        app.freerouting.debug.DebugControl.getInstance().pause();
-        updateDebugButtonsState();
-      });
+      vars_pause_button.addActionListener(
+          _ -> {
+            app.freerouting.debug.DebugControl.getInstance().pause();
+            updateDebugButtonsState();
+          });
       vars_pause_button.setEnabled(false); // Initially disabled
       middle_toolbar.add(vars_pause_button);
 
@@ -389,8 +409,7 @@ class BoardToolbar extends JPanel {
       if (vars_next_button.getText().startsWith("!")) {
         vars_next_button.setText("Next"); // Fallback
       }
-      vars_next_button.addActionListener(_ ->
-          handleNextStep());
+      vars_next_button.addActionListener(_ -> handleNextStep());
       vars_next_button.setEnabled(false); // Initially disabled
       middle_toolbar.add(vars_next_button);
 
@@ -406,26 +425,29 @@ class BoardToolbar extends JPanel {
     final JToolBar right_toolbar = new JToolBar();
     right_toolbar.setAutoscrolls(true);
 
-    unitSelectionPanel = new SegmentedButtons(tm, tm.getText("unit_heading"), "unit_mil", "unit_inch", "unit_mm", "unit_um");
-    unitSelectionPanel.addValueChangedEventListener((String value) -> {
-      switch (value) {
-        case "unit_mil":
-          board_frame.board_panel.board_handling.change_user_unit(Unit.MIL);
-          break;
-        case "unit_inch":
-          board_frame.board_panel.board_handling.change_user_unit(Unit.INCH);
-          break;
-        case "unit_mm":
-          board_frame.board_panel.board_handling.change_user_unit(Unit.MM);
-          break;
-        case "unit_um":
-          board_frame.board_panel.board_handling.change_user_unit(Unit.UM);
-          break;
-      }
-      board_frame.refresh_windows();
-    });
-    unitSelectionPanel
-        .addValueChangedEventListener((String value) -> FRAnalytics.buttonClicked("unitSelectionPanel", value));
+    unitSelectionPanel =
+        new SegmentedButtons(
+            tm, tm.getText("unit_heading"), "unit_mil", "unit_inch", "unit_mm", "unit_um");
+    unitSelectionPanel.addValueChangedEventListener(
+        (String value) -> {
+          switch (value) {
+            case "unit_mil":
+              board_frame.board_panel.board_handling.change_user_unit(Unit.MIL);
+              break;
+            case "unit_inch":
+              board_frame.board_panel.board_handling.change_user_unit(Unit.INCH);
+              break;
+            case "unit_mm":
+              board_frame.board_panel.board_handling.change_user_unit(Unit.MM);
+              break;
+            case "unit_um":
+              board_frame.board_panel.board_handling.change_user_unit(Unit.UM);
+              break;
+          }
+          board_frame.refresh_windows();
+        });
+    unitSelectionPanel.addValueChangedEventListener(
+        (String value) -> FRAnalytics.buttonClicked("unitSelectionPanel", value));
     right_toolbar.add(unitSelectionPanel);
 
     this.add(right_toolbar, BorderLayout.EAST);
@@ -434,17 +456,19 @@ class BoardToolbar extends JPanel {
     changeToolbarFontSize(middle_toolbar, ICON_FONT_SIZE);
 
     // Add listeners to enable/disable buttons based on the board read-only state
-    board_frame.addBoardLoadedEventListener((RoutingBoard board) -> {
-      if ((board == null) || (board.components.count() == 0)) {
-        // disable all buttons if the board is empty
-        setEnabled(false);
-      }
+    board_frame.addBoardLoadedEventListener(
+        (RoutingBoard board) -> {
+          if ((board == null) || (board.components.count() == 0)) {
+            // disable all buttons if the board is empty
+            setEnabled(false);
+          }
 
-      board_frame.board_panel.board_handling.addReadOnlyEventListener((Boolean isBoardReadOnly) -> {
-        setEnabled(!isBoardReadOnly);
-        cancel_button.setEnabled(isBoardReadOnly);
-      });
-    });
+          board_frame.board_panel.board_handling.addReadOnlyEventListener(
+              (Boolean isBoardReadOnly) -> {
+                setEnabled(!isBoardReadOnly);
+                cancel_button.setEnabled(isBoardReadOnly);
+              });
+        });
   }
 
   private static void changeToolbarFontSize(JToolBar toolBar, float newSize) {
@@ -485,9 +509,7 @@ class BoardToolbar extends JPanel {
     delete_all_tracks_button.setEnabled(enabled);
   }
 
-  /**
-   * Sets the selected button in the menu button group
-   */
+  /** Sets the selected button in the menu button group */
   void setModeSelectionPanelValue(InteractiveState interactive_state) {
     if (interactive_state instanceof RouteMenuState) {
       this.modeSelectionPanel.setSelectedValue("route_button");
@@ -516,61 +538,76 @@ class BoardToolbar extends JPanel {
   }
 
   private void setupKeyboardShortcuts() {
-    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "debugNext");
-    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0),
-        "debugPrevious");
     this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-        .put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK), "debugFastForward");
+        .put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "debugNext");
+    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+        .put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "debugPrevious");
+    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+        .put(
+            KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK),
+            "debugFastForward");
     this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
         .put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_DOWN_MASK), "debugRewind");
 
-    this.getActionMap().put("debugNext", new AbstractAction() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (vars_next_button != null && vars_next_button.isEnabled()) {
-          handleNextStep();
-        }
-      }
-    });
-    this.getActionMap().put("debugPrevious", new AbstractAction() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (vars_previous_button != null && vars_previous_button.isEnabled()) {
-          handlePreviousStep();
-        }
-      }
-    });
+    this.getActionMap()
+        .put(
+            "debugNext",
+            new AbstractAction() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                if (vars_next_button != null && vars_next_button.isEnabled()) {
+                  handleNextStep();
+                }
+              }
+            });
+    this.getActionMap()
+        .put(
+            "debugPrevious",
+            new AbstractAction() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                if (vars_previous_button != null && vars_previous_button.isEnabled()) {
+                  handlePreviousStep();
+                }
+              }
+            });
     // Map Shift+Arrow to same handlers, the handlers check the Shift state or we
     // can pass a flag.
     // Actually the handler checks isShiftDown global flag or we can just call the
     // shifted logic directly.
-    this.getActionMap().put("debugFastForward", new AbstractAction() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (vars_next_button != null && vars_next_button.isEnabled()) {
-          // Ensure we force "shift" behavior even if key dispatcher missed something
-          // (redundancy)
-          isShiftDown = true;
-          try {
-            handleNextStep();
-          } finally {
-            // We don't want to permanently set it true if the user actually held it,
-            // but if this action triggered, Shift IS down.
-            // The KeyDispatcher handles synchronization, but for the action context let's
-            // be safe.
-          }
-        }
-      }
-    });
-    this.getActionMap().put("debugRewind", new AbstractAction() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (vars_previous_button != null && vars_previous_button.isEnabled()) {
-          isShiftDown = true;
-          handlePreviousStep();
-        }
-      }
-    });
+    this.getActionMap()
+        .put(
+            "debugFastForward",
+            new AbstractAction() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                if (vars_next_button != null && vars_next_button.isEnabled()) {
+                  // Ensure we force "shift" behavior even if key dispatcher missed something
+                  // (redundancy)
+                  isShiftDown = true;
+                  try {
+                    handleNextStep();
+                  } finally {
+                    // We don't want to permanently set it true if the user actually held it,
+                    // but if this action triggered, Shift IS down.
+                    // The KeyDispatcher handles synchronization, but for the action context let's
+                    // be safe.
+                  }
+                }
+              }
+            });
+    this.getActionMap()
+        .put(
+            "debugRewind",
+            new AbstractAction() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                if (vars_previous_button != null && vars_previous_button.isEnabled()) {
+                  isShiftDown = true;
+                  handlePreviousStep();
+                }
+              }
+            });
   }
 
   private void handleNextStep() {

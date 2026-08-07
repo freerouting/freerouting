@@ -16,8 +16,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * A dialog window that displays general information about the Freerouting application,
- * including its description, version, warranty information, and hyperlinks to its homepage and issue tracker.
+ * A dialog window that displays general information about the Freerouting application, including
+ * its description, version, warranty information, and hyperlinks to its homepage and issue tracker.
  */
 public class WindowAbout extends BoardSavableSubWindow {
 
@@ -39,7 +39,7 @@ public class WindowAbout extends BoardSavableSubWindow {
     gridbag_constraints.insets = new Insets(5, 10, 5, 10);
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
 
-    // Inlining the JLabels reduces variable clutter. 
+    // Inlining the JLabels reduces variable clutter.
     // Passing constraints directly into add() handles the GridBag setup automatically.
     window_panel.add(new JLabel(tm.getText("description")), gridbag_constraints);
 
@@ -65,7 +65,7 @@ public class WindowAbout extends BoardSavableSubWindow {
    */
   private JPanel createMixedTextPanel(String fullText) {
     JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-    panel.setOpaque(false); 
+    panel.setOpaque(false);
 
     // Null safety check
     if (fullText == null || fullText.isEmpty()) {
@@ -96,24 +96,25 @@ public class WindowAbout extends BoardSavableSubWindow {
   private JLabel createHyperlinkLabel(String url) {
     final String urlText = url.trim();
     JLabel label = new JLabel("<html><a href=''>" + urlText + "</a></html>");
-    label.setToolTipText("Open " + urlText + " in your browser"); 
-    
+    label.setToolTipText("Open " + urlText + " in your browser");
+
     // Only format as a clickable link if the OS supports it
     if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
       label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      
-      label.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-          try {
-            Desktop.getDesktop().browse(new URI(urlText));
-          } catch (Exception ex) {
-            FRLogger.error("Could not open link: " + urlText, ex);
-          }
-        }
-      });
+
+      label.addMouseListener(
+          new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+              try {
+                Desktop.getDesktop().browse(new URI(urlText));
+              } catch (Exception ex) {
+                FRLogger.error("Could not open link: " + urlText, ex);
+              }
+            }
+          });
     }
-    
+
     return label;
   }
 }

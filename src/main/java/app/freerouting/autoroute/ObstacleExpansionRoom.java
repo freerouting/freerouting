@@ -12,24 +12,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Expansion Room used for pushing and ripping obstacles in the autoroute
- * algorithm.
- */
+/** Expansion Room used for pushing and ripping obstacles in the autoroute algorithm. */
 public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
   private final Item item;
   private final int index_in_item;
   private final TileShape shape;
-  /**
-   * The list of doors to neighbour expansion rooms
-   */
+
+  /** The list of doors to neighbour expansion rooms */
   private List<ExpansionDoor> doors;
+
   private boolean doors_calculated;
 
-  /**
-   * Creates a new instance of ObstacleExpansionRoom
-   */
+  /** Creates a new instance of ObstacleExpansionRoom */
   ObstacleExpansionRoom(Item p_item, int p_index_in_item, ShapeSearchTree p_shape_tree) {
     this.item = p_item;
     this.index_in_item = p_index_in_item;
@@ -56,10 +51,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
     return (this.item.get_id_no() << 10) | this.index_in_item;
   }
 
-
-  /**
-   * Checks, if this room has already a 1-dimensional door to p_other
-   */
+  /** Checks, if this room has already a 1-dimensional door to p_other */
   @Override
   public boolean door_exists(ExpansionRoom p_other) {
     if (doors != null) {
@@ -72,19 +64,16 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
     return false;
   }
 
-  /**
-   * Adds a door to the door list of this room.
-   */
+  /** Adds a door to the door list of this room. */
   @Override
   public void add_door(ExpansionDoor p_door) {
     this.doors.add(p_door);
   }
 
   /**
-   * Creates a 2-dim door with the other obstacle room, if that is useful for the
-   * autoroute algorithm. It is assumed that this room and p_other have a
-   * 2-dimensional overlap. Returns false, if no door
-   * was created.
+   * Creates a 2-dim door with the other obstacle room, if that is useful for the autoroute
+   * algorithm. It is assumed that this room and p_other have a 2-dimensional overlap. Returns
+   * false, if no door was created.
    */
   public boolean create_overlap_door(ObstacleExpansionRoom p_other) {
     if (this.door_exists(p_other)) {
@@ -101,7 +90,8 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
         return false;
       }
       // create only doors between consecutive trace segments
-      if (this.index_in_item != p_other.index_in_item + 1 && this.index_in_item != p_other.index_in_item - 1) {
+      if (this.index_in_item != p_other.index_in_item + 1
+          && this.index_in_item != p_other.index_in_item - 1) {
         return false;
       }
     }
@@ -111,17 +101,13 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
     return true;
   }
 
-  /**
-   * Returns the list of doors of this room to neighbour expansion rooms
-   */
+  /** Returns the list of doors of this room to neighbour expansion rooms */
   @Override
   public List<ExpansionDoor> get_doors() {
     return this.doors;
   }
 
-  /**
-   * Removes all doors from this room.
-   */
+  /** Removes all doors from this room. */
   @Override
   public void clear_doors() {
     this.doors = new ArrayList<>();
@@ -153,9 +139,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
     return this.doors.remove(p_door);
   }
 
-  /**
-   * Returns, if all doors to the neighbour rooms are calculated.
-   */
+  /** Returns, if all doors to the neighbour rooms are calculated. */
   boolean all_doors_calculated() {
     return this.doors_calculated;
   }
@@ -164,14 +148,13 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
     this.doors_calculated = p_value;
   }
 
-  /**
-   * Draws the shape of this room.
-   */
+  /** Draws the shape of this room. */
   @Override
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity) {
     Color draw_color = Color.WHITE;
     double layer_visibility = p_graphics_context.get_layer_visibility(this.get_layer());
-    p_graphics_context.fill_area(this.get_shape(), p_graphics, draw_color, p_intensity * layer_visibility);
+    p_graphics_context.fill_area(
+        this.get_shape(), p_graphics, draw_color, p_intensity * layer_visibility);
     p_graphics_context.draw_boundary(this.get_shape(), 0, draw_color, p_graphics, layer_visibility);
   }
 }

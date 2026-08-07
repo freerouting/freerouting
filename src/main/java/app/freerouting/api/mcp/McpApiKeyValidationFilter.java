@@ -9,9 +9,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 
-/**
- * API key filter for MCP endpoints.
- */
+/** API key filter for MCP endpoints. */
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class McpApiKeyValidationFilter implements ContainerRequestFilter {
@@ -47,7 +45,8 @@ public class McpApiKeyValidationFilter implements ContainerRequestFilter {
     }
 
     String requestBridgeToken = requestContext.getHeaderString("X-Internal-Bridge-Token");
-    if (app.freerouting.Freerouting.bridgeToken != null && app.freerouting.Freerouting.bridgeToken.equals(requestBridgeToken)) {
+    if (app.freerouting.Freerouting.bridgeToken != null
+        && app.freerouting.Freerouting.bridgeToken.equals(requestBridgeToken)) {
       return;
     }
 
@@ -63,12 +62,14 @@ public class McpApiKeyValidationFilter implements ContainerRequestFilter {
     }
 
     if (apiKey == null || apiKey.isEmpty() || !validationService.validateApiKey(apiKey)) {
-      FRLogger.warn("MCP API key validation failed for path " + requestContext.getUriInfo().getPath());
+      FRLogger.warn(
+          "MCP API key validation failed for path " + requestContext.getUriInfo().getPath());
       String jsonBody = "{\"error\":\"Invalid or missing API key.\"}";
-      requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-          .entity(jsonBody)
-          .type("application/json")
-          .build());
+      requestContext.abortWith(
+          Response.status(Response.Status.UNAUTHORIZED)
+              .entity(jsonBody)
+              .type("application/json")
+              .build());
     }
   }
 }

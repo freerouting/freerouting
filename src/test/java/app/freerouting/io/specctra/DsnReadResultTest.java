@@ -18,12 +18,13 @@ class DsnReadResultTest {
     BoardReadResult result = new BoardReadResult.ParseError("(pcb", "unexpected EOF");
 
     // Must compile — verifies sealed hierarchy is exhaustive
-    String msg = switch (result) {
-      case BoardReadResult.Success _        -> "ok";
-      case BoardReadResult.OutlineMissing _ -> "outline";
-      case BoardReadResult.ParseError e     -> e.detail();
-      case BoardReadResult.IoError _        -> "io";
-    };
+    String msg =
+        switch (result) {
+          case BoardReadResult.Success _ -> "ok";
+          case BoardReadResult.OutlineMissing _ -> "outline";
+          case BoardReadResult.ParseError e -> e.detail();
+          case BoardReadResult.IoError _ -> "io";
+        };
     assertEquals("unexpected EOF", msg);
   }
 
@@ -57,7 +58,8 @@ class DsnReadResultTest {
 
   @Test
   void warningsAreExposed() {
-    var warnings = List.of("Wiring: degenerate wire skipped", "Wiring: duplicate via skipped at (100, 200)");
+    var warnings =
+        List.of("Wiring: degenerate wire skipped", "Wiring: duplicate via skipped at (100, 200)");
     var success = new BoardReadResult.Success(null, null, warnings);
     assertEquals(2, success.warnings().size());
     assertTrue(success.warnings().get(0).contains("degenerate wire"));
@@ -73,14 +75,14 @@ class DsnReadResultTest {
 
   @Test
   void instanceOfChecks() {
-    BoardReadResult success      = new BoardReadResult.Success(null, null, List.of());
-    BoardReadResult outlineMiss  = new BoardReadResult.OutlineMissing(null, null, List.of());
-    BoardReadResult parseErr     = new BoardReadResult.ParseError("x", "y");
-    BoardReadResult ioErr        = new BoardReadResult.IoError(new IOException());
+    BoardReadResult success = new BoardReadResult.Success(null, null, List.of());
+    BoardReadResult outlineMiss = new BoardReadResult.OutlineMissing(null, null, List.of());
+    BoardReadResult parseErr = new BoardReadResult.ParseError("x", "y");
+    BoardReadResult ioErr = new BoardReadResult.IoError(new IOException());
 
-    assertInstanceOf(BoardReadResult.Success.class,        success);
+    assertInstanceOf(BoardReadResult.Success.class, success);
     assertInstanceOf(BoardReadResult.OutlineMissing.class, outlineMiss);
-    assertInstanceOf(BoardReadResult.ParseError.class,     parseErr);
-    assertInstanceOf(BoardReadResult.IoError.class,        ioErr);
+    assertInstanceOf(BoardReadResult.ParseError.class, parseErr);
+    assertInstanceOf(BoardReadResult.IoError.class, ioErr);
   }
 }

@@ -3,15 +3,10 @@ package app.freerouting.interactive;
 import app.freerouting.geometry.planar.FloatPoint;
 import javax.swing.JPopupMenu;
 
-/**
- * State for dynamic interactive routing, which is routing while moving the
- * mouse pointer.
- */
+/** State for dynamic interactive routing, which is routing while moving the mouse pointer. */
 public class DynamicRouteState extends RouteState {
 
-  /**
-   * Creates a new instance of DynamicRouteState
-   */
+  /** Creates a new instance of DynamicRouteState */
   protected DynamicRouteState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
   }
@@ -22,9 +17,7 @@ public class DynamicRouteState extends RouteState {
     return add_corner(hdlg.get_current_mouse_position());
   }
 
-  /**
-   * ends routing
-   */
+  /** ends routing */
   @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
     if (this.observers_activated) {
@@ -37,9 +30,7 @@ public class DynamicRouteState extends RouteState {
     return this.return_state;
   }
 
-  /**
-   * Action to be taken when a key is pressed (Shortcut).
-   */
+  /** Action to be taken when a key is pressed (Shortcut). */
   @Override
   public InteractiveState key_typed(char p_key_char) {
     InteractiveState curr_return_state = this;

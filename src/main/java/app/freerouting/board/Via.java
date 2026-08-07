@@ -20,37 +20,45 @@ import java.util.Iterator;
 import java.util.Locale;
 
 /**
- * Class describing the functionality of an electrical Item on the board, which may have a shape on several layer, whose geometry is described by a padstack.
+ * Class describing the functionality of an electrical Item on the board, which may have a shape on
+ * several layer, whose geometry is described by a padstack.
  */
 public class Via extends DrillItem implements Serializable {
 
-  /**
-   * True, if coppersharing of this via with smd pins of the same net is allowed.
-   */
+  /** True, if coppersharing of this via with smd pins of the same net is allowed. */
   public final boolean attach_allowed;
-  /**
-   * True if this is an escape via inserted by the escalation fanout phase to provide
-   * a layer transition point from an SMD pin that could not be escaped on its primary layer.
-   * Escape vias use SMD-to-SMD clearance rules on their SMD layer rather than normal
-   * conductor-to-conductor clearance, because they sit inside the SMD pad copper footprint.
-   */
-  public boolean isEscapeVia;
-  /**
-   * The SMD layer (primary layer) on which this escape via connects to an SMD pin.
-   * Only relevant when isEscapeVia is true. -1 if not an escape via.
-   */
-  public int escapeViaSmdLayer = -1;
-  private Padstack padstack;
-  private transient Shape[] precalculated_shapes;
-  /**
-   * Temporary data used in the autoroute algorithm.
-   */
-  private transient ExpansionDrill autoroute_drill_info;
 
   /**
-   * Creates a new instance of Via with the input parameters
+   * True if this is an escape via inserted by the escalation fanout phase to provide a layer
+   * transition point from an SMD pin that could not be escaped on its primary layer. Escape vias
+   * use SMD-to-SMD clearance rules on their SMD layer rather than normal conductor-to-conductor
+   * clearance, because they sit inside the SMD pad copper footprint.
    */
-  public Via(Padstack p_padstack, Point p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, FixedState p_fixed_state, boolean p_attach_allowed, BasicBoard p_board) {
+  public boolean isEscapeVia;
+
+  /**
+   * The SMD layer (primary layer) on which this escape via connects to an SMD pin. Only relevant
+   * when isEscapeVia is true. -1 if not an escape via.
+   */
+  public int escapeViaSmdLayer = -1;
+
+  private Padstack padstack;
+  private transient Shape[] precalculated_shapes;
+
+  /** Temporary data used in the autoroute algorithm. */
+  private transient ExpansionDrill autoroute_drill_info;
+
+  /** Creates a new instance of Via with the input parameters */
+  public Via(
+      Padstack p_padstack,
+      Point p_center,
+      int[] p_net_no_arr,
+      int p_clearance_type,
+      int p_id_no,
+      int p_group_no,
+      FixedState p_fixed_state,
+      boolean p_attach_allowed,
+      BasicBoard p_board) {
     super(p_center, p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
     this.padstack = p_padstack;
     this.attach_allowed = p_attach_allowed;
@@ -58,7 +66,17 @@ public class Via extends DrillItem implements Serializable {
 
   @Override
   public Item copy(int p_id_no) {
-    Via copy = new Via(padstack, get_center(), net_no_arr, clearance_class_no(), p_id_no, get_component_no(), get_fixed_state(), attach_allowed, board);
+    Via copy =
+        new Via(
+            padstack,
+            get_center(),
+            net_no_arr,
+            clearance_class_no(),
+            p_id_no,
+            get_component_no(),
+            get_fixed_state(),
+            attach_allowed,
+            board);
     copy.isEscapeVia = this.isEscapeVia;
     copy.escapeViaSmdLayer = this.escapeViaSmdLayer;
     return copy;
@@ -66,11 +84,13 @@ public class Via extends DrillItem implements Serializable {
 
   @Override
   public java.util.Collection<app.freerouting.drc.ClearanceViolation> clearance_violations() {
-    java.util.Collection<app.freerouting.drc.ClearanceViolation> rawViolations = super.clearance_violations();
+    java.util.Collection<app.freerouting.drc.ClearanceViolation> rawViolations =
+        super.clearance_violations();
     if (!this.isEscapeVia || this.escapeViaSmdLayer < 0) {
       return rawViolations;
     }
-    java.util.Collection<app.freerouting.drc.ClearanceViolation> filteredViolations = new java.util.LinkedList<>();
+    java.util.Collection<app.freerouting.drc.ClearanceViolation> filteredViolations =
+        new java.util.LinkedList<>();
     for (app.freerouting.drc.ClearanceViolation violation : rawViolations) {
       if (violation.layer == this.escapeViaSmdLayer) {
         Item other = null;
@@ -142,9 +162,7 @@ public class Via extends DrillItem implements Serializable {
     return !this.attach_allowed || !(p_other instanceof Pin) || !((Pin) p_other).drill_allowed();
   }
 
-  /**
-   * Checks, if the Via has contacts on at most 1 layer.
-   */
+  /** Checks, if the Via has contacts on at most 1 layer. */
   @Override
   public boolean is_tail() {
     Collection<Item> contact_list = this.get_normal_contacts();
@@ -157,7 +175,8 @@ public class Via extends DrillItem implements Serializable {
     int first_contact_last_layer = curr_contact_item.last_layer();
     while (it.hasNext()) {
       curr_contact_item = it.next();
-      if (curr_contact_item.first_layer() != first_contact_first_layer || curr_contact_item.last_layer() != first_contact_last_layer) {
+      if (curr_contact_item.first_layer() != first_contact_first_layer
+          || curr_contact_item.last_layer() != first_contact_last_layer) {
         return false;
       }
     }
@@ -182,10 +201,13 @@ public class Via extends DrillItem implements Serializable {
     if (this.autoroute_drill_info == null) {
       ItemAutorouteInfo via_autoroute_info = this.get_autoroute_info();
       TileShape curr_drill_shape = TileShape.get_instance(this.get_center());
-      this.autoroute_drill_info = new ExpansionDrill(curr_drill_shape, this.get_center(), this.first_layer(), this.last_layer());
+      this.autoroute_drill_info =
+          new ExpansionDrill(
+              curr_drill_shape, this.get_center(), this.first_layer(), this.last_layer());
       int via_layer_count = this.last_layer() - this.first_layer() + 1;
       for (int i = 0; i < via_layer_count; i++) {
-        this.autoroute_drill_info.room_arr[i] = via_autoroute_info.get_expansion_room(i, p_autoroute_tree);
+        this.autoroute_drill_info.room_arr[i] =
+            via_autoroute_info.get_expansion_room(i, p_autoroute_tree);
       }
     }
     return this.autoroute_drill_info;

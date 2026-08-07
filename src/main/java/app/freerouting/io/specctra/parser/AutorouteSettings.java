@@ -9,8 +9,7 @@ import java.io.IOException;
 
 public final class AutorouteSettings {
 
-  private AutorouteSettings() {
-  }
+  private AutorouteSettings() {}
 
   static RouterSettings read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
     RouterSettings result = new RouterSettings();
@@ -18,7 +17,7 @@ public final class AutorouteSettings {
     boolean with_autoroute = true;
     boolean with_postroute = true;
     Object next_token = null;
-    for (;;) {
+    for (; ; ) {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
@@ -27,8 +26,10 @@ public final class AutorouteSettings {
         return null;
       }
       if (next_token == null) {
-        FRLogger
-            .warn("AutorouteSettings.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "AutorouteSettings.read_scope: unexpected end of file at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -65,8 +66,8 @@ public final class AutorouteSettings {
     return result;
   }
 
-  static RouterSettings read_layer_rule(IJFlexScanner p_scanner, LayerStructure p_layer_structure,
-      RouterSettings p_settings) {
+  static RouterSettings read_layer_rule(
+      IJFlexScanner p_scanner, LayerStructure p_layer_structure, RouterSettings p_settings) {
     p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
     Object next_token;
     try {
@@ -76,15 +77,21 @@ public final class AutorouteSettings {
       return null;
     }
     if (!(next_token instanceof String)) {
-      FRLogger.warn("AutorouteSettings.read_layer_rule: String expected at '" + p_scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "AutorouteSettings.read_layer_rule: String expected at '"
+              + p_scanner.get_scope_identifier()
+              + "'");
       return null;
     }
     int layer_no = p_layer_structure.get_no((String) next_token);
     if (layer_no < 0) {
-      FRLogger.warn("AutorouteSettings.read_layer_rule: layer not found at '" + p_scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "AutorouteSettings.read_layer_rule: layer not found at '"
+              + p_scanner.get_scope_identifier()
+              + "'");
       return null;
     }
-    for (;;) {
+    for (; ; ) {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
@@ -94,7 +101,9 @@ public final class AutorouteSettings {
       }
       if (next_token == null) {
         FRLogger.warn(
-            "AutorouteSettings.read_layer_rule: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+            "AutorouteSettings.read_layer_rule: unexpected end of file at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -111,15 +120,19 @@ public final class AutorouteSettings {
             if (next_token == Keyword.VERTICAL) {
               pref_dir_is_horizontal = false;
             } else if (next_token != Keyword.HORIZONTAL) {
-              FRLogger.warn("AutorouteSettings.read_layer_rule: unexpected key word at '"
-                  + p_scanner.get_scope_identifier() + "'");
+              FRLogger.warn(
+                  "AutorouteSettings.read_layer_rule: unexpected key word at '"
+                      + p_scanner.get_scope_identifier()
+                      + "'");
               return null;
             }
             p_settings.set_preferred_direction_is_horizontal(layer_no, pref_dir_is_horizontal);
             next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET) {
-              FRLogger.warn("AutorouteSettings.read_layer_rule: closing bracket expected at '"
-                  + p_scanner.get_scope_identifier() + "'");
+              FRLogger.warn(
+                  "AutorouteSettings.read_layer_rule: closing bracket expected at '"
+                      + p_scanner.get_scope_identifier()
+                      + "'");
               return null;
             }
           } catch (IOException e) {
@@ -127,9 +140,11 @@ public final class AutorouteSettings {
             return null;
           }
         } else if (next_token == Keyword.PREFERRED_DIRECTION_TRACE_COSTS) {
-          p_settings.set_preferred_direction_trace_costs(layer_no, DsnFile.read_float_scope(p_scanner));
+          p_settings.set_preferred_direction_trace_costs(
+              layer_no, DsnFile.read_float_scope(p_scanner));
         } else if (next_token == Keyword.AGAINST_PREFERRED_DIRECTION_TRACE_COSTS) {
-          p_settings.set_against_preferred_direction_trace_costs(layer_no, DsnFile.read_float_scope(p_scanner));
+          p_settings.set_against_preferred_direction_trace_costs(
+              layer_no, DsnFile.read_float_scope(p_scanner));
         } else {
           ScopeKeyword.skip_scope(p_scanner);
         }
@@ -138,8 +153,12 @@ public final class AutorouteSettings {
     return p_settings;
   }
 
-  public static void write_scope(IndentFileWriter p_file, RouterSettings p_settings,
-      app.freerouting.board.LayerStructure p_layer_structure, IdentifierType p_identifier_type) throws IOException {
+  public static void write_scope(
+      IndentFileWriter p_file,
+      RouterSettings p_settings,
+      app.freerouting.board.LayerStructure p_layer_structure,
+      IdentifierType p_identifier_type)
+      throws IOException {
     p_file.start_scope();
     p_file.write("autoroute_settings");
     p_file.new_line();

@@ -10,7 +10,9 @@ public class BoardMenuHelp extends JMenu {
   protected final BoardFrame board_frame;
 
   /**
-   * Creates a new instance of BoardMenuHelpReduced Separated from BoardMenuHelp to avoid ClassNotFound exception when the library jh.jar is not found, which is only used in the extended help menu.
+   * Creates a new instance of BoardMenuHelpReduced Separated from BoardMenuHelp to avoid
+   * ClassNotFound exception when the library jh.jar is not found, which is only used in the
+   * extended help menu.
    */
   public BoardMenuHelp(BoardFrame p_board_frame) {
     this.board_frame = p_board_frame;
@@ -20,7 +22,8 @@ public class BoardMenuHelp extends JMenu {
     JMenuItem help_about_menuitem = new JMenuItem();
     help_about_menuitem.setText(tm.getText("about"));
     help_about_menuitem.addActionListener(_ -> board_frame.about_window.setVisible(true));
-    help_about_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("help_about_menuitem", help_about_menuitem.getText()));
+    help_about_menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("help_about_menuitem", help_about_menuitem.getText()));
     this.add(help_about_menuitem);
   }
 }

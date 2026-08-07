@@ -32,7 +32,8 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
     org.junit.jupiter.api.Assertions.assertNotNull(job.board);
     org.junit.jupiter.api.Assertions.assertEquals(0, job.getCurrentPass());
 
-    app.freerouting.core.scoring.BoardStatistics stats = new app.freerouting.core.scoring.BoardStatistics(job.board);
+    app.freerouting.core.scoring.BoardStatistics stats =
+        new app.freerouting.core.scoring.BoardStatistics(job.board);
     org.junit.jupiter.api.Assertions.assertTrue(stats.items.viaCount > 0);
   }
 
@@ -73,6 +74,8 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
     // The synthetic demo is still a useful smoke test for fanout progress, but full completion
     // remains an open algorithmic issue. Allow a small bound so the default test suite stays green
     // while still catching regressions back toward the old 6-unrouted behavior.
-    assertRoutingResult(job, "Issue508-SMD-routing-issue-demo.dsn").maxIncompleteConnections(2).check();
+    assertRoutingResult(job, "Issue508-SMD-routing-issue-demo.dsn")
+        .maxIncompleteConnections(2)
+        .check();
   }
 }

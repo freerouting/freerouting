@@ -4,9 +4,7 @@ import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-/**
- * Implements the abstract class Direction as a tuple of infinite precision integers.
- */
+/** Implements the abstract class Direction as a tuple of infinite precision integers. */
 public class BigIntDirection extends Direction implements Serializable {
 
   final BigInteger x;
@@ -17,9 +15,7 @@ public class BigIntDirection extends Direction implements Serializable {
     y = p_y;
   }
 
-  /**
-   * creates a BigIntDirection from an IntDirection
-   */
+  /** creates a BigIntDirection from an IntDirection */
   BigIntDirection(IntDirection p_dir) {
     x = BigInteger.valueOf(p_dir.x);
     y = BigInteger.valueOf(p_dir.y);
@@ -52,8 +48,10 @@ public class BigIntDirection extends Direction implements Serializable {
   }
 
   /**
-   * Implements the Comparable interface. Returns 1, if this direction has a strict bigger angle with the positive x-axis than p_other_direction, 0, if this direction is equal to p_other_direction,
-   * and -1 otherwise. Throws an exception, if p_other_direction is not a Direction.
+   * Implements the Comparable interface. Returns 1, if this direction has a strict bigger angle
+   * with the positive x-axis than p_other_direction, 0, if this direction is equal to
+   * p_other_direction, and -1 otherwise. Throws an exception, if p_other_direction is not a
+   * Direction.
    */
   @Override
   public int compareTo(Direction p_other_direction) {

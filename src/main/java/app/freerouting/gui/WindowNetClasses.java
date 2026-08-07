@@ -47,9 +47,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 
-/**
- * Edit window for the table of net rules.
- */
+/** Edit window for the table of net rules. */
 public class WindowNetClasses extends BoardSavableSubWindow {
 
   private static final int TEXTFIELD_HEIGHT = 16;
@@ -57,19 +55,17 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private static final int WINDOW_OFFSET = 30;
   private final BoardFrame board_frame;
   private final JPanel main_panel;
-  /**
-   * The subwindows created inside this window
-   */
+
+  /** The subwindows created inside this window */
   private final Collection<JFrame> subwindows = new LinkedList<>();
+
   private final JComboBox<String> cl_class_combo_box;
   private final JComboBox<String> via_rule_combo_box;
   private JPanel center_panel;
   private NetClassTable table;
   private NetClassTableModel table_model;
 
-  /**
-   * Creates a new instance of NetClassesWindow
-   */
+  /** Creates a new instance of NetClassesWindow */
   public WindowNetClasses(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
 
@@ -95,38 +91,61 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     final JButton rules_netclasses_add_class_button = new JButton(tm.getText("add"));
     rules_netclasses_add_class_button.setToolTipText(tm.getText("add_tooltip"));
     rules_netclasses_add_class_button.addActionListener(new AddNetClassListener());
-    rules_netclasses_add_class_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_add_class_button", rules_netclasses_add_class_button.getText()));
+    rules_netclasses_add_class_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rules_netclasses_add_class_button", rules_netclasses_add_class_button.getText()));
     net_class_button_panel.add(rules_netclasses_add_class_button);
 
     final JButton rules_netclasses_remove_class_button = new JButton(tm.getText("remove"));
     rules_netclasses_remove_class_button.setToolTipText(tm.getText("remove_tooltip"));
     rules_netclasses_remove_class_button.addActionListener(new RemoveNetClassListener());
-    rules_netclasses_remove_class_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_remove_class_button", rules_netclasses_remove_class_button.getText()));
+    rules_netclasses_remove_class_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rules_netclasses_remove_class_button",
+                rules_netclasses_remove_class_button.getText()));
     net_class_button_panel.add(rules_netclasses_remove_class_button);
 
     final JButton rules_netclasses_assign_button = new JButton(tm.getText("assign"));
     rules_netclasses_assign_button.setToolTipText(tm.getText("assign_tooltip"));
     rules_netclasses_assign_button.addActionListener(new AssignClassesListener());
-    rules_netclasses_assign_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_assign_button", rules_netclasses_assign_button.getText()));
+    rules_netclasses_assign_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rules_netclasses_assign_button", rules_netclasses_assign_button.getText()));
     net_class_button_panel.add(rules_netclasses_assign_button);
 
     final JButton rules_netclasses_select_button = new JButton(tm.getText("select"));
     rules_netclasses_select_button.setToolTipText(tm.getText("select_tooltip"));
     rules_netclasses_select_button.addActionListener(new SelectClassesListener());
-    rules_netclasses_select_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_select_button", rules_netclasses_select_button.getText()));
+    rules_netclasses_select_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rules_netclasses_select_button", rules_netclasses_select_button.getText()));
     net_class_button_panel.add(rules_netclasses_select_button);
 
     final JButton rules_netclasses_contained_nets_button = new JButton(tm.getText("show_nets"));
     net_class_button_panel.add(rules_netclasses_contained_nets_button);
     rules_netclasses_contained_nets_button.setToolTipText(tm.getText("show_nets_tooltip"));
     rules_netclasses_contained_nets_button.addActionListener(new ContainedNetsListener());
-    rules_netclasses_contained_nets_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_contained_nets_button", rules_netclasses_contained_nets_button.getText()));
+    rules_netclasses_contained_nets_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rules_netclasses_contained_nets_button",
+                rules_netclasses_contained_nets_button.getText()));
 
-    final JButton rules_netclasses_filter_incompletes_button = new JButton(tm.getText("filter_incompletes"));
+    final JButton rules_netclasses_filter_incompletes_button =
+        new JButton(tm.getText("filter_incompletes"));
     net_class_button_panel.add(rules_netclasses_filter_incompletes_button);
-    rules_netclasses_filter_incompletes_button.setToolTipText(tm.getText("filter_incompletes_tooltip"));
+    rules_netclasses_filter_incompletes_button.setToolTipText(
+        tm.getText("filter_incompletes_tooltip"));
     rules_netclasses_filter_incompletes_button.addActionListener(new FilterIncompletesListener());
-    rules_netclasses_filter_incompletes_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_filter_incompletes_button", rules_netclasses_filter_incompletes_button.getText()));
+    rules_netclasses_filter_incompletes_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rules_netclasses_filter_incompletes_button",
+                rules_netclasses_filter_incompletes_button.getText()));
 
     this.add(main_panel);
     this.pack();
@@ -195,12 +214,11 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     this.center_panel.add(scroll_pane, BorderLayout.CENTER);
 
     // add message for german localisation bug
-    if ("de"
-        .equalsIgnoreCase(board_frame
-            .get_locale()
-            .getLanguage())) {
+    if ("de".equalsIgnoreCase(board_frame.get_locale().getLanguage())) {
       // Due to a Java system bug, the decimal comma in this table must be entered as a dot.
-      JLabel bug_label = new JLabel("Wegen eines Java-System-Bugs muss das Dezimalkomma in dieser Tabelle zur Zeit als Punkt eingegeben werden!");
+      JLabel bug_label =
+          new JLabel(
+              "Wegen eines Java-System-Bugs muss das Dezimalkomma in dieser Tabelle zur Zeit als Punkt eingegeben werden!");
       this.center_panel.add(bug_label, BorderLayout.SOUTH);
     }
     this.main_panel.add(center_panel, BorderLayout.CENTER);
@@ -230,7 +248,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   }
 
   /**
-   * Adjusts the displayed window with the net class table after the size of the table has been changed.
+   * Adjusts the displayed window with the net class table after the size of the table has been
+   * changed.
    */
   private void adjust_table() {
     this.table_model = new NetClassTableModel();
@@ -265,15 +284,15 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       return tm.getText("layers_all");
     }
 
-    if (activeSignalLayers.size() == 2 &&
-        activeSignalLayers.get(0).equals(allSignalLayers.get(0)) &&
-        activeSignalLayers.get(1).equals(allSignalLayers.get(allSignalLayers.size() - 1))) {
+    if (activeSignalLayers.size() == 2
+        && activeSignalLayers.get(0).equals(allSignalLayers.get(0))
+        && activeSignalLayers.get(1).equals(allSignalLayers.get(allSignalLayers.size() - 1))) {
       return tm.getText("layers_outer");
     }
 
-    if (activeSignalLayers.size() == allSignalLayers.size() - 2 &&
-        !activeSignalLayers.contains(allSignalLayers.get(0)) &&
-        !activeSignalLayers.contains(allSignalLayers.get(allSignalLayers.size() - 1))) {
+    if (activeSignalLayers.size() == allSignalLayers.size() - 2
+        && !activeSignalLayers.contains(allSignalLayers.get(0))
+        && !activeSignalLayers.contains(allSignalLayers.get(allSignalLayers.size() - 1))) {
       return tm.getText("layers_inner");
     }
 
@@ -313,7 +332,16 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   }
 
   private enum ColumnName {
-    NAME, VIA_RULE, CLEARANCE_CLASS, TRACE_WIDTH, ON_LAYER, SHOVE_FIXED, CYCLES_WITH_AREAS, MIN_TRACE_LENGTH, MAX_TRACE_LENGTH, IGNORED_BY_AUTOROUTER
+    NAME,
+    VIA_RULE,
+    CLEARANCE_CLASS,
+    TRACE_WIDTH,
+    ON_LAYER,
+    SHOVE_FIXED,
+    CYCLES_WITH_AREAS,
+    MIN_TRACE_LENGTH,
+    MAX_TRACE_LENGTH,
+    IGNORED_BY_AUTOROUTER
   }
 
   private class AddNetClassListener implements ActionListener {
@@ -332,7 +360,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       int selected_row = table.getSelectedRow();
       if (!canRemoveNetClass(table_model.getRowCount(), selected_row)) {
         if (table_model.getRowCount() <= 1) {
-          board_frame.screen_messages.set_status_message(tm.getText("default_net_class_not_removed"));
+          board_frame.screen_messages.set_status_message(
+              tm.getText("default_net_class_not_removed"));
         }
         return;
       }
@@ -378,7 +407,9 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
       NetClass[] selected_class_arr = new NetClass[selected_rows.length];
       for (int i = 0; i < selected_class_arr.length; i++) {
-        selected_class_arr[i] = routing_board.rules.net_classes.get((String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
+        selected_class_arr[i] =
+            routing_board.rules.net_classes.get(
+                (String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
       }
       Nets nets = routing_board.rules.nets;
       Set<Item> selected_items = new TreeSet<>();
@@ -386,9 +417,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       for (Item curr_item : board_items) {
         boolean item_matches = false;
         for (int i = 0; i < curr_item.net_count(); i++) {
-          NetClass curr_net_class = nets
-              .get(curr_item.get_net_no(i))
-              .get_class();
+          NetClass curr_net_class = nets.get(curr_item.get_net_no(i)).get_class();
           if (curr_net_class == null) {
             continue;
           }
@@ -423,14 +452,14 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       BoardRules board_rules = board_handling.get_routing_board().rules;
       NetClass[] selected_class_arr = new NetClass[selected_rows.length];
       for (int i = 0; i < selected_class_arr.length; i++) {
-        selected_class_arr[i] = board_rules.net_classes.get((String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
+        selected_class_arr[i] =
+            board_rules.net_classes.get(
+                (String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
       }
       int max_net_no = board_rules.nets.max_net_no();
       for (int i = 1; i <= max_net_no; i++) {
         board_handling.set_incompletes_filter(i, true);
-        NetClass curr_net_class = board_rules.nets
-            .get(i)
-            .get_class();
+        NetClass curr_net_class = board_rules.nets.get(i).get_class();
         for (int j = 0; j < selected_class_arr.length; j++) {
           if (curr_net_class == selected_class_arr[j]) {
             board_handling.set_incompletes_filter(i, false);
@@ -454,7 +483,9 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       BoardRules board_rules = board_handling.get_routing_board().rules;
       NetClass[] selected_class_arr = new NetClass[selected_rows.length];
       for (int i = 0; i < selected_class_arr.length; i++) {
-        selected_class_arr[i] = board_rules.net_classes.get((String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
+        selected_class_arr[i] =
+            board_rules.net_classes.get(
+                (String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
       }
       Collection<Printable> contained_nets = new LinkedList<>();
       int max_net_no = board_rules.nets.max_net_no();
@@ -468,10 +499,14 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           }
         }
       }
-      CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
-      WindowObjectInfo new_window = WindowObjectInfo.display(tm.getText("contained_nets"), contained_nets, board_frame, coordinate_transform);
+      CoordinateTransform coordinate_transform =
+          board_frame.board_panel.board_handling.coordinate_transform;
+      WindowObjectInfo new_window =
+          WindowObjectInfo.display(
+              tm.getText("contained_nets"), contained_nets, board_frame, coordinate_transform);
       Point loc = getLocation();
-      Point new_window_location = new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
+      Point new_window_location =
+          new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
       new_window.setLocation(new_window_location);
       subwindows.add(new_window);
     }
@@ -504,18 +539,14 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         public String getToolTipText(MouseEvent e) {
           Point p = e.getPoint();
           int index = columnModel.getColumnIndexAtX(p.x);
-          int realIndex = columnModel
-              .getColumn(index)
-              .getModelIndex();
+          int realIndex = columnModel.getColumn(index).getModelIndex();
           return column_tool_tips[realIndex];
         }
       };
     }
   }
 
-  /**
-   * Table model of the net rule table.
-   */
+  /** Table model of the net rule table. */
   private class NetClassTableModel extends AbstractTableModel {
 
     private final String[] column_names;
@@ -530,9 +561,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       set_values();
     }
 
-    /**
-     * Calculates the values in this table
-     */
+    /** Calculates the values in this table */
     public void set_values() {
       BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
       this.data = new Object[board_rules.net_classes.count()][];
@@ -545,20 +574,28 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         if (curr_net_class.get_via_rule() != null) {
           this.data[i][ColumnName.VIA_RULE.ordinal()] = curr_net_class.get_via_rule().name;
         }
-        this.data[i][ColumnName.SHOVE_FIXED.ordinal()] = curr_net_class.is_shove_fixed() || !curr_net_class.get_pull_tight();
-        this.data[i][ColumnName.CYCLES_WITH_AREAS.ordinal()] = curr_net_class.get_ignore_cycles_with_areas();
-        double min_trace_length = board_frame.board_panel.board_handling.coordinate_transform.board_to_user(curr_net_class.get_minimum_trace_length());
+        this.data[i][ColumnName.SHOVE_FIXED.ordinal()] =
+            curr_net_class.is_shove_fixed() || !curr_net_class.get_pull_tight();
+        this.data[i][ColumnName.CYCLES_WITH_AREAS.ordinal()] =
+            curr_net_class.get_ignore_cycles_with_areas();
+        double min_trace_length =
+            board_frame.board_panel.board_handling.coordinate_transform.board_to_user(
+                curr_net_class.get_minimum_trace_length());
         if (min_trace_length <= 0) {
           min_trace_length = 0;
         }
         this.data[i][ColumnName.MIN_TRACE_LENGTH.ordinal()] = (float) min_trace_length;
-        double max_trace_length = board_frame.board_panel.board_handling.coordinate_transform.board_to_user(curr_net_class.get_maximum_trace_length());
+        double max_trace_length =
+            board_frame.board_panel.board_handling.coordinate_transform.board_to_user(
+                curr_net_class.get_maximum_trace_length());
         if (max_trace_length <= 0) {
           max_trace_length = -1;
         }
         this.data[i][ColumnName.MAX_TRACE_LENGTH.ordinal()] = (float) max_trace_length;
-        this.data[i][ColumnName.IGNORED_BY_AUTOROUTER.ordinal()] = curr_net_class.is_ignored_by_autorouter;
-        this.data[i][ColumnName.CLEARANCE_CLASS.ordinal()] = board_rules.clearance_matrix.get_name(curr_net_class.get_trace_clearance_class());
+        this.data[i][ColumnName.IGNORED_BY_AUTOROUTER.ordinal()] =
+            curr_net_class.is_ignored_by_autorouter;
+        this.data[i][ColumnName.CLEARANCE_CLASS.ordinal()] =
+            board_rules.clearance_matrix.get_name(curr_net_class.get_trace_clearance_class());
       }
     }
 
@@ -579,7 +616,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
     @Override
     public Object getValueAt(int p_row, int p_col) {
-      NetClass curr_net_class = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes.get(p_row);
+      NetClass curr_net_class =
+          board_frame.board_panel.board_handling.get_routing_board().rules.net_classes.get(p_row);
       if (p_col == ColumnName.ON_LAYER.ordinal()) {
         return getLayerSummary(curr_net_class);
       }
@@ -657,7 +695,10 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           curr_value = (float) 0;
           p_value = curr_value;
         }
-        double min_trace_length = Math.round(board_frame.board_panel.board_handling.coordinate_transform.user_to_board(curr_value));
+        double min_trace_length =
+            Math.round(
+                board_frame.board_panel.board_handling.coordinate_transform.user_to_board(
+                    curr_value));
         net_rule.set_minimum_trace_length(min_trace_length);
         board_frame.board_panel.board_handling.recalculate_length_violations();
       } else if (p_col == ColumnName.MAX_TRACE_LENGTH.ordinal()) {
@@ -680,7 +721,10 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           p_value = curr_value - 1;
         }
 
-        double max_trace_length = Math.round(board_frame.board_panel.board_handling.coordinate_transform.user_to_board(curr_value));
+        double max_trace_length =
+            Math.round(
+                board_frame.board_panel.board_handling.coordinate_transform.user_to_board(
+                    curr_value));
         net_rule.set_maximum_trace_length(max_trace_length);
         board_frame.board_panel.board_handling.recalculate_length_violations();
       } else if (p_col == ColumnName.IGNORED_BY_AUTOROUTER.ordinal()) {
@@ -738,21 +782,29 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     private final GuiBoardManager boardHandling;
     private final List<Integer> allSignalLayers = new ArrayList<>();
 
-    public LayerRulesDialog(JFrame owner, NetClass p_netClass, GuiBoardManager p_boardHandling, app.freerouting.util.TextManager p_tm) {
+    public LayerRulesDialog(
+        JFrame owner,
+        NetClass p_netClass,
+        GuiBoardManager p_boardHandling,
+        app.freerouting.util.TextManager p_tm) {
       super(owner, p_tm.getText("dialog_layer_rules_title"), true);
       this.netClass = p_netClass;
       this.boardHandling = p_boardHandling;
       LayerStructure ls = boardHandling.get_routing_board().layer_structure;
 
       setLayout(new BorderLayout(10, 10));
-      ((javax.swing.JComponent) getContentPane()).setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
+      ((javax.swing.JComponent) getContentPane())
+          .setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
       JPanel macro_panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 5));
       JButton btnAll = new JButton(p_tm.getText("btn_all"));
       JButton btnOuter = new JButton(p_tm.getText("btn_outer"));
       JButton btnInner = new JButton(p_tm.getText("btn_inner"));
       JButton btnClear = new JButton(p_tm.getText("btn_clear"));
-      macro_panel.add(btnAll); macro_panel.add(btnOuter); macro_panel.add(btnInner); macro_panel.add(btnClear);
+      macro_panel.add(btnAll);
+      macro_panel.add(btnOuter);
+      macro_panel.add(btnInner);
+      macro_panel.add(btnClear);
 
       JPanel check_grid_panel = new JPanel(new GridLayout(0, 2, 15, 8));
       check_grid_panel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -772,34 +824,38 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       int rows = (int) Math.ceil(allSignalLayers.size() / 2.0);
       int dynamicHeight = Math.min(300, Math.max(80, rows * 35 + 20));
 
-      btnAll.addActionListener(_ -> {
-        for (int idx : allSignalLayers) {
-          checkboxes[idx].setSelected(true);
-        }
-      });
-      btnOuter.addActionListener(_ -> {
-        for (int idx : allSignalLayers) {
-          checkboxes[idx].setSelected(false);
-        }
-        if (!allSignalLayers.isEmpty()) {
-          checkboxes[allSignalLayers.get(0)].setSelected(true);
-          checkboxes[allSignalLayers.get(allSignalLayers.size() - 1)].setSelected(true);
-        }
-      });
-      btnInner.addActionListener(_ -> {
-        for (int idx : allSignalLayers) {
-          checkboxes[idx].setSelected(true);
-        }
-        if (allSignalLayers.size() >= 2) {
-          checkboxes[allSignalLayers.get(0)].setSelected(false);
-          checkboxes[allSignalLayers.get(allSignalLayers.size() - 1)].setSelected(false);
-        }
-      });
-      btnClear.addActionListener(_ -> {
-        for (int idx : allSignalLayers) {
-          checkboxes[idx].setSelected(false);
-        }
-      });
+      btnAll.addActionListener(
+          _ -> {
+            for (int idx : allSignalLayers) {
+              checkboxes[idx].setSelected(true);
+            }
+          });
+      btnOuter.addActionListener(
+          _ -> {
+            for (int idx : allSignalLayers) {
+              checkboxes[idx].setSelected(false);
+            }
+            if (!allSignalLayers.isEmpty()) {
+              checkboxes[allSignalLayers.get(0)].setSelected(true);
+              checkboxes[allSignalLayers.get(allSignalLayers.size() - 1)].setSelected(true);
+            }
+          });
+      btnInner.addActionListener(
+          _ -> {
+            for (int idx : allSignalLayers) {
+              checkboxes[idx].setSelected(true);
+            }
+            if (allSignalLayers.size() >= 2) {
+              checkboxes[allSignalLayers.get(0)].setSelected(false);
+              checkboxes[allSignalLayers.get(allSignalLayers.size() - 1)].setSelected(false);
+            }
+          });
+      btnClear.addActionListener(
+          _ -> {
+            for (int idx : allSignalLayers) {
+              checkboxes[idx].setSelected(false);
+            }
+          });
 
       JPanel bottom_panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
       JButton btn_ok = new JButton(p_tm.getText("button_ok"));
@@ -834,13 +890,19 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     }
   }
 
-  private class LayerRulesCellEditor extends javax.swing.AbstractCellEditor implements javax.swing.table.TableCellEditor, ActionListener {
+  private class LayerRulesCellEditor extends javax.swing.AbstractCellEditor
+      implements javax.swing.table.TableCellEditor, ActionListener {
     private final JButton button = new JButton();
+
     public LayerRulesCellEditor() {
-      button.setBorderPainted(false); button.setContentAreaFilled(false);
-      button.setHorizontalAlignment(SwingConstants.LEFT); button.addActionListener(this);
+      button.setBorderPainted(false);
+      button.setContentAreaFilled(false);
+      button.setHorizontalAlignment(SwingConstants.LEFT);
+      button.addActionListener(this);
     }
-    @Override public void actionPerformed(ActionEvent e) {
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
       int row = table.getEditingRow();
       if (row < 0) {
         row = table.getSelectedRow();
@@ -849,8 +911,16 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         return;
       }
       int modelRow = table.convertRowIndexToModel(row);
-      NetClass nc = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes.get(modelRow);
-      LayerRulesDialog dialog = new LayerRulesDialog(board_frame, nc, board_frame.board_panel.board_handling, tm);
+      NetClass nc =
+          board_frame
+              .board_panel
+              .board_handling
+              .get_routing_board()
+              .rules
+              .net_classes
+              .get(modelRow);
+      LayerRulesDialog dialog =
+          new LayerRulesDialog(board_frame, nc, board_frame.board_panel.board_handling, tm);
       dialog.pack();
       dialog.setLocationRelativeTo(board_frame);
       dialog.setResizable(false);
@@ -859,7 +929,16 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       table_model.fireTableRowsUpdated(modelRow, modelRow);
       board_frame.board_panel.repaint();
     }
-    @Override public Component getTableCellEditorComponent(JTable t, Object v, boolean s, int r, int c) { button.setText(Objects.toString(v, "")); return button; }
-    @Override public Object getCellEditorValue() { return button.getText(); }
+
+    @Override
+    public Component getTableCellEditorComponent(JTable t, Object v, boolean s, int r, int c) {
+      button.setText(Objects.toString(v, ""));
+      return button;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+      return button.getText();
+    }
   }
 }

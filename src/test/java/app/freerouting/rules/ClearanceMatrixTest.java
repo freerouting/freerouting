@@ -10,9 +10,9 @@ public class ClearanceMatrixTest {
 
   @Test
   public void testSetValue() {
-    Layer[] layers = new Layer[]{new Layer("Top", true), new Layer("Bottom", true)};
+    Layer[] layers = new Layer[] {new Layer("Top", true), new Layer("Bottom", true)};
     LayerStructure layerStructure = new LayerStructure(layers);
-    String[] name_arr = new String[]{"default"};
+    String[] name_arr = new String[] {"default"};
     ClearanceMatrix matrix = new ClearanceMatrix(1, layerStructure, name_arr);
 
     // Test with an odd value
@@ -24,7 +24,7 @@ public class ClearanceMatrixTest {
     // Test with a negative value
     matrix.set_value(0, 0, 0, -10);
     assertEquals(0, matrix.get_value(0, 0, 0, false));
-    //The max_value should be 6, as it was set in the previous step and -10 is not greater than 6
+    // The max_value should be 6, as it was set in the previous step and -10 is not greater than 6
     assertEquals(6, matrix.max_value(0, 0));
     assertEquals(6, matrix.max_value(0));
 

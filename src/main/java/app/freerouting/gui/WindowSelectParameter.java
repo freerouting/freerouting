@@ -22,31 +22,30 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
-/**
- * Window for the handling of the interactive selection parameters.
- */
+/** Window for the handling of the interactive selection parameters. */
 public class WindowSelectParameter extends BoardSavableSubWindow {
 
   private final BoardFrame board_frame;
   private final GuiBoardManager board_handling;
   private final JToggleButton[] settings_select_layer_name_arr;
   private final JCheckBox[] settings_select_layer_eye_arr;
-  
+
   private final JToggleButton[] settings_virtual_layer_name_arr;
   private final JCheckBox[] settings_virtual_layer_eye_arr;
-  
+
   private final JCheckBox[] settings_select_item_selection_choices;
   private final JToggleButton settings_select_all_visible_button;
   private final JToggleButton settings_select_current_only_button;
 
-  /** Resource-bundle keys for the six virtual layers, in order: F.Silk, B.Silk, F.CY, B.CY, F.Fab, B.Fab */
+  /**
+   * Resource-bundle keys for the six virtual layers, in order: F.Silk, B.Silk, F.CY, B.CY, F.Fab,
+   * B.Fab
+   */
   private static final String[] VIRTUAL_LAYER_KEYS = {
     "F_Silkscreen", "B_Silkscreen", "F_Courtyard", "B_Courtyard", "F_Fab", "B_Fab"
   };
 
-  /**
-   * Creates a new instance of SelectWindow
-   */
+  /** Creates a new instance of SelectWindow */
   public WindowSelectParameter(BoardFrame p_board_frame) {
     this.board_frame = p_board_frame;
     this.board_handling = p_board_frame.board_panel.board_handling;
@@ -77,9 +76,17 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     settings_select_current_only_button.setToolTipText(tm.getText("current_only_tooltip"));
 
     settings_select_all_visible_button.addActionListener(new AllVisibleListener());
-    settings_select_all_visible_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_select_all_visible_button", settings_select_all_visible_button.getText()));
+    settings_select_all_visible_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_select_all_visible_button",
+                settings_select_all_visible_button.getText()));
     settings_select_current_only_button.addActionListener(new CurrentOnlyListener());
-    settings_select_current_only_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_select_current_only_button", settings_select_current_only_button.getText()));
+    settings_select_current_only_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_select_current_only_button",
+                settings_select_current_only_button.getText()));
 
     ButtonGroup selection_layer_button_group = new ButtonGroup();
     selection_layer_button_group.add(settings_select_all_visible_button);
@@ -99,15 +106,18 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(selectable_items_label, gridbag_constraints);
     main_panel.add(selectable_items_label);
 
-    final ItemSelectionFilter.SelectableChoices[] filter_values = ItemSelectionFilter.SelectableChoices.values();
+    final ItemSelectionFilter.SelectableChoices[] filter_values =
+        ItemSelectionFilter.SelectableChoices.values();
     this.settings_select_item_selection_choices = new JCheckBox[filter_values.length];
 
     for (int i = 0; i < filter_values.length; i++) {
-      this.settings_select_item_selection_choices[i] = new JCheckBox(tm.getText(filter_values[i].toString()));
+      this.settings_select_item_selection_choices[i] =
+          new JCheckBox(tm.getText(filter_values[i].toString()));
       gridbag.setConstraints(this.settings_select_item_selection_choices[i], gridbag_constraints);
       main_panel.add(this.settings_select_item_selection_choices[i], gridbag_constraints);
       settings_select_item_selection_choices[i].addActionListener(new ItemSelectionListener(i));
-      settings_select_item_selection_choices[i].addActionListener(_ -> FRAnalytics.buttonClicked("settings_select_item_selection_choices", null));
+      settings_select_item_selection_choices[i].addActionListener(
+          _ -> FRAnalytics.buttonClicked("settings_select_item_selection_choices", null));
     }
 
     JLabel separator2 = new JLabel("   –––––––––––––––––––––––––––––  ");
@@ -128,10 +138,10 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
     LayerStructure layer_structure = this.board_handling.get_routing_board().layer_structure;
     int layer_count = layer_structure.arr.length;
-    
+
     this.settings_select_layer_name_arr = new JToggleButton[layer_count];
     this.settings_select_layer_eye_arr = new JCheckBox[layer_count];
-    
+
     ButtonGroup layer_selection_group = new ButtonGroup();
 
     // 1. Signal Layers
@@ -247,21 +257,20 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   }
 
   private JLabel createSwatch(Color c) {
-    JLabel swatch = new JLabel() {
-      @Override
-      public Dimension getPreferredSize() {
-        return new Dimension(12, 12);
-      }
-    };
+    JLabel swatch =
+        new JLabel() {
+          @Override
+          public Dimension getPreferredSize() {
+            return new Dimension(12, 12);
+          }
+        };
     swatch.setOpaque(true);
     swatch.setBackground(c);
     swatch.setBorder(BorderFactory.createLineBorder(Color.GRAY));
     return swatch;
   }
 
-  /**
-   * Refreshes the displayed values in this window.
-   */
+  /** Refreshes the displayed values in this window. */
   @Override
   public void refresh() {
     InteractiveSettings is = this.board_handling.getInteractiveSettings();
@@ -270,19 +279,21 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     } else {
       settings_select_current_only_button.setSelected(true);
     }
-    
+
     ItemSelectionFilter item_selection_filter = is.get_item_selection_filter();
     if (item_selection_filter == null) {
       FRLogger.warn("SelectParameterWindow.refresh: item_selection_filter is null");
     } else {
-      final ItemSelectionFilter.SelectableChoices[] filter_values = ItemSelectionFilter.SelectableChoices.values();
+      final ItemSelectionFilter.SelectableChoices[] filter_values =
+          ItemSelectionFilter.SelectableChoices.values();
       for (int i = 0; i < filter_values.length; i++) {
-        this.settings_select_item_selection_choices[i].setSelected(item_selection_filter.is_selected(filter_values[i]));
+        this.settings_select_item_selection_choices[i].setSelected(
+            item_selection_filter.is_selected(filter_values[i]));
       }
     }
 
     GraphicsContext gc = this.board_handling.graphics_context;
-    
+
     // Sync physical layers
     int active_layer = is.get_layer();
     int active_virtual = gc.get_fully_visible_virtual_layer();
@@ -299,9 +310,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     }
   }
 
-  /**
-   * Selects the layer with the input signal number.
-   */
+  /** Selects the layer with the input signal number. */
   public void select(int p_signal_layer_no) {
     if (p_signal_layer_no >= 0 && p_signal_layer_no < settings_select_layer_name_arr.length) {
       settings_select_layer_name_arr[p_signal_layer_no].setSelected(true);
@@ -406,7 +415,8 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       boolean is_selected = settings_select_item_selection_choices[item_no].isSelected();
-      ItemSelectionFilter.SelectableChoices item_type = ItemSelectionFilter.SelectableChoices.values()[item_no];
+      ItemSelectionFilter.SelectableChoices item_type =
+          ItemSelectionFilter.SelectableChoices.values()[item_no];
       board_handling.set_selectable(item_type, is_selected);
 
       // make sure that from fixed and unfixed items at least one type is selected.

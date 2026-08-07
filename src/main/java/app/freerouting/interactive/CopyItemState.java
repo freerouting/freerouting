@@ -20,9 +20,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import javax.swing.JPopupMenu;
 
-/**
- * Interactive copying of items.
- */
+/** Interactive copying of items. */
 public final class CopyItemState extends InteractiveState {
 
   private final Collection<Item> item_list;
@@ -32,10 +30,11 @@ public final class CopyItemState extends InteractiveState {
   private boolean layer_changed;
   private Point previous_position;
 
-  /**
-   * Creates a new instance of CopyItemState
-   */
-  private CopyItemState(FloatPoint p_location, Collection<Item> p_item_list, InteractiveState p_parent_state,
+  /** Creates a new instance of CopyItemState */
+  private CopyItemState(
+      FloatPoint p_location,
+      Collection<Item> p_item_list,
+      InteractiveState p_parent_state,
       GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
     item_list = new LinkedList<>();
@@ -53,11 +52,12 @@ public final class CopyItemState extends InteractiveState {
     }
   }
 
-  /**
-   * Returns a new instance of CopyItemState or null, if p_item_list is empty.
-   */
-  public static CopyItemState get_instance(FloatPoint p_location, Collection<Item> p_item_list,
-      InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+  /** Returns a new instance of CopyItemState or null, if p_item_list is empty. */
+  public static CopyItemState get_instance(
+      FloatPoint p_location,
+      Collection<Item> p_item_list,
+      InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling) {
     if (p_item_list.isEmpty()) {
       return null;
     }
@@ -65,11 +65,11 @@ public final class CopyItemState extends InteractiveState {
     return new CopyItemState(p_location, p_item_list, p_parent_state, p_board_handling);
   }
 
-  /**
-   * Creates a new padstack from p_old_padstack with a layer range starting at
-   * p_new_layer.
-   */
-  private static Padstack change_padstack_layers(Padstack p_old_padstack, int p_new_layer, RoutingBoard p_board,
+  /** Creates a new padstack from p_old_padstack with a layer range starting at p_new_layer. */
+  private static Padstack change_padstack_layers(
+      Padstack p_old_padstack,
+      int p_new_layer,
+      RoutingBoard p_board,
       Map<Padstack, Padstack> p_padstack_pairs) {
     Padstack new_padstack;
     int old_layer = p_old_padstack.from_layer();
@@ -101,9 +101,7 @@ public final class CopyItemState extends InteractiveState {
     return this;
   }
 
-  /**
-   * Changes the position for inserting the copied items to p_new_location.
-   */
+  /** Changes the position for inserting the copied items to p_new_location. */
   private void change_position(FloatPoint p_new_position) {
     current_position = p_new_position.round();
     if (!current_position.equals(previous_position)) {
@@ -116,9 +114,7 @@ public final class CopyItemState extends InteractiveState {
     }
   }
 
-  /**
-   * Changes the first layer of the items in the copy list to p_new_layer.
-   */
+  /** Changes the first layer of the items in the copy list to p_new_layer. */
   @Override
   public boolean change_layer_action(int p_new_layer) {
     current_layer = p_new_layer;
@@ -128,21 +124,23 @@ public final class CopyItemState extends InteractiveState {
   }
 
   /**
-   * Inserts the items in the copy list into the board. Items, which would produce
-   * a clearance violation, are not inserted.
+   * Inserts the items in the copy list into the board. Items, which would produce a clearance
+   * violation, are not inserted.
    */
   public void insert() {
     if (item_list == null) {
       return;
     }
-    Map<Padstack, Padstack> padstack_pairs = new TreeMap<>(); // Contains old and new padstacks after layer change.
+    Map<Padstack, Padstack> padstack_pairs =
+        new TreeMap<>(); // Contains old and new padstacks after layer change.
 
     RoutingBoard board = hdlg.get_routing_board();
     if (layer_changed) {
       // create new via padstacks
       for (Item curr_ob : item_list) {
         if (curr_ob instanceof Via curr_via) {
-          Padstack new_padstack = change_padstack_layers(curr_via.get_padstack(), current_layer, board, padstack_pairs);
+          Padstack new_padstack =
+              change_padstack_layers(curr_via.get_padstack(), current_layer, board, padstack_pairs);
           curr_via.set_padstack(new_padstack);
         }
       }
@@ -185,16 +183,25 @@ public final class CopyItemState extends InteractiveState {
                 FRLogger.warn("CopyItemState.insert: package padstack not found");
                 return;
               }
-              Padstack new_padstack = change_padstack_layers(old_padstack, current_layer, board, padstack_pairs);
-              new_pin_arr[i] = new Package.Pin(old_pin.name, new_padstack.no, old_pin.relative_location,
-                  old_pin.rotation_in_degree);
+              Padstack new_padstack =
+                  change_padstack_layers(old_padstack, current_layer, board, padstack_pairs);
+              new_pin_arr[i] =
+                  new Package.Pin(
+                      old_pin.name,
+                      new_padstack.no,
+                      old_pin.relative_location,
+                      old_pin.rotation_in_degree);
             }
             new_package = board.library.packages.add(new_pin_arr);
           } else {
             new_package = old_component.get_package();
           }
-          Component new_component = board.components.add(new_location, old_component.get_rotation_in_degree(),
-              old_component.placed_on_front(), new_package);
+          Component new_component =
+              board.components.add(
+                  new_location,
+                  old_component.get_rotation_in_degree(),
+                  old_component.placed_on_front(),
+                  new_package);
           copied_components.add(new_component);
           new_cmp_no = new_component.no;
           cmp_no_pairs.put(curr_cmp_no, new_cmp_no);
@@ -219,7 +226,8 @@ public final class CopyItemState extends InteractiveState {
     if (all_items_inserted) {
       hdlg.screen_messages.set_status_message(tm.getText("all_items_inserted"));
     } else {
-      hdlg.screen_messages.set_status_message(tm.getText("some_items_not_inserted_because_of_obstacles"));
+      hdlg.screen_messages.set_status_message(
+          tm.getText("some_items_not_inserted_because_of_obstacles"));
     }
     start_position = current_position;
     layer_changed = false;
@@ -238,7 +246,10 @@ public final class CopyItemState extends InteractiveState {
       return;
     }
     for (Item curr_item : item_list) {
-      curr_item.draw(p_graphics, hdlg.graphics_context, hdlg.graphics_context.get_hilight_color(),
+      curr_item.draw(
+          p_graphics,
+          hdlg.graphics_context,
+          hdlg.graphics_context.get_hilight_color(),
           hdlg.graphics_context.get_hilight_color_intensity());
     }
   }

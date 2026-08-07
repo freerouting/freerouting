@@ -25,7 +25,8 @@ public class SessionManagerTest {
   void testCreateAndGetSession() {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
-    Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    Session session =
+        sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
     assertNotNull(session, "Created session should not be null.");
     assertNotNull(session.id, "Session ID should be generated.");
@@ -39,7 +40,8 @@ public class SessionManagerTest {
   void testRemoveSession() {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
-    Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    Session session =
+        sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
     sessionManager.removeSession(session.id.toString());
     Session retrievedSession = sessionManager.getSession(session.id.toString());
@@ -51,9 +53,14 @@ public class SessionManagerTest {
     SessionManager sessionManager = SessionManager.getInstance();
     int initialCount = sessionManager.getActiveSessionsCount();
 
-    sessionManager.createSession(UUID.randomUUID(), "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
-    sessionManager.createSession(UUID.randomUUID(), "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
-    assertEquals(initialCount + 2, sessionManager.getActiveSessionsCount(), "Active session count should be incremented.");
+    sessionManager.createSession(
+        UUID.randomUUID(), "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    sessionManager.createSession(
+        UUID.randomUUID(), "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    assertEquals(
+        initialCount + 2,
+        sessionManager.getActiveSessionsCount(),
+        "Active session count should be incremented.");
   }
 
   @Test
@@ -72,9 +79,13 @@ public class SessionManagerTest {
   void testGetAndSetGuiSession() {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
-    Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    Session session =
+        sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
-    assertThrows(IllegalArgumentException.class, sessionManager::getGuiSession, "Getting GUI session without setting it should throw an exception.");
+    assertThrows(
+        IllegalArgumentException.class,
+        sessionManager::getGuiSession,
+        "Getting GUI session without setting it should throw an exception.");
 
     sessionManager.setGuiSession(session.id);
     Session guiSession = sessionManager.getGuiSession();

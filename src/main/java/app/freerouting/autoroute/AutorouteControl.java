@@ -14,139 +14,125 @@ import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.RouterSettings;
 import java.util.Collection;
 
-/**
- * Structure for controlling the autoroute algorithm.
- */
+/** Structure for controlling the autoroute algorithm. */
 public class AutorouteControl {
 
   public final RouterSettings settings;
-  /**
-   * The horizontal and vertical trace costs on each layer
-   */
+
+  /** The horizontal and vertical trace costs on each layer */
   public final ExpansionCostFactor[] trace_costs;
+
   public final double[] bendCosts;
   public final boolean with_neckdown;
-  /**
-   * Defines for each layer, if it may be used for routing.
-   */
+
+  /** Defines for each layer, if it may be used for routing. */
   public final boolean[] layer_active;
+
   final int layer_count;
-  /**
-   * The currently used trace half widths in the autoroute algorithm on each layer
-   */
+
+  /** The currently used trace half widths in the autoroute algorithm on each layer */
   final int[] trace_half_width;
+
   /**
-   * The currently used compensated trace half widths in the autoroute algorithm on each layer. Equal to trace_half_width if no clearance compensation is used.
+   * The currently used compensated trace half widths in the autoroute algorithm on each layer.
+   * Equal to trace_half_width if no clearance compensation is used.
    */
   final int[] compensated_trace_half_width;
+
   final double[] via_radius_arr;
-  /**
-   * the additional costs to min_normal via_cost for inserting a via between 2 layers
-   */
+
+  /** the additional costs to min_normal via_cost for inserting a via between 2 layers */
   final ViaCost[] add_via_costs;
-  /**
-   * The currently used clearance class for traces in the autoroute algorithm
-   */
+
+  /** The currently used clearance class for traces in the autoroute algorithm */
   public int trace_clearance_class_no;
-  /**
-   * True, if layer change by inserting of vias is allowed
-   */
+
+  /** True, if layer change by inserting of vias is allowed */
   public boolean vias_allowed;
-  /**
-   * True, if vias may drill to the pad of SMD pins
-   */
+
+  /** True, if vias may drill to the pad of SMD pins */
   public boolean attach_smd_allowed;
-  /**
-   * The minimum cost value of all normal vias
-   */
+
+  /** The minimum cost value of all normal vias */
   public double min_normal_via_cost;
+
   public boolean ripup_allowed;
   public int ripup_costs;
   public int ripup_pass_no;
-  /**
-   * If true, the autoroute algorithm completes after the first drill
-   */
+
+  /** If true, the autoroute algorithm completes after the first drill */
   public boolean is_fanout;
+
   /** Source pin name for targeted fanout diagnostics. */
   public String fanout_start_pin_name;
+
   /** Source pin center for targeted fanout diagnostics. */
   public Point fanout_start_pin_center;
+
   /** Source pin layer for targeted fanout diagnostics and limits. */
   public int fanout_start_pin_layer = -1;
-  /**
-   * Normally true, if the autorouter contains no fanout pass
-   */
+
+  /** Normally true, if the autorouter contains no fanout pass */
   public boolean remove_unconnected_vias;
-  /**
-   * The currently used net number in the autoroute algorithm
-   */
+
+  /** The currently used net number in the autoroute algorithm */
   int net_no;
-  /**
-   * The currently used clearance class for vias in the autoroute algorithm
-   */
+
+  /** The currently used clearance class for vias in the autoroute algorithm */
   int via_clearance_class;
-  /**
-   * The possible (partial) vias, which can be used by the autorouter
-   */
+
+  /** The possible (partial) vias, which can be used by the autorouter */
   public ViaRule via_rule;
-  /**
-   * The array of possible via ranges used bei the autorouter
-   */
+
+  /** The array of possible via ranges used bei the autorouter */
   ViaMask[] via_info_arr;
-  /**
-   * The lower bound for the first layer of vias
-   */
+
+  /** The lower bound for the first layer of vias */
   int via_lower_bound;
-  /**
-   * The upper bound for the last layer of vias
-   */
+
+  /** The upper bound for the last layer of vias */
   int via_upper_bound;
+
   double max_via_radius;
-  /**
-   * The width of the region around changed traces, where traces are pulled tight
-   */
+
+  /** The width of the region around changed traces, where traces are pulled tight */
   int tidy_region_width;
-  /**
-   * The pull tight accuracy of traces
-   */
+
+  /** The pull tight accuracy of traces */
   int pull_tight_accuracy;
-  /**
-   * The maximum recursion depth for shoving traces
-   */
+
+  /** The maximum recursion depth for shoving traces */
   int max_shove_trace_recursion_depth;
-  /**
-   * The maximum recursion depth for shoving obstacles
-   */
+
+  /** The maximum recursion depth for shoving obstacles */
   int max_shove_via_recursion_depth;
-  /**
-   * The maximum recursion depth for traces springing over obstacles
-   */
+
+  /** The maximum recursion depth for traces springing over obstacles */
   int max_spring_over_recursion_depth;
-  /**
-   * The minimal cost value of all cheap vias
-   */
+
+  /** The minimal cost value of all cheap vias */
   double min_cheap_via_cost;
- 
-  /**
-   * Creates a new instance of AutorouteControl for the input net
-   */
+
+  /** Creates a new instance of AutorouteControl for the input net */
   public AutorouteControl(RoutingBoard p_board, int p_net_no, RouterSettings p_settings) {
     this(p_board, p_settings, p_settings.get_trace_cost_arr());
     init_net(p_net_no, p_board, p_settings.get_via_costs());
   }
- 
-  /**
-   * Creates a new instance of AutorouteControl for the input net
-   */
-  public AutorouteControl(RoutingBoard p_board, int p_net_no, RouterSettings p_settings, int p_via_costs, ExpansionCostFactor[] p_trace_cost_arr) {
+
+  /** Creates a new instance of AutorouteControl for the input net */
+  public AutorouteControl(
+      RoutingBoard p_board,
+      int p_net_no,
+      RouterSettings p_settings,
+      int p_via_costs,
+      ExpansionCostFactor[] p_trace_cost_arr) {
     this(p_board, p_settings, p_trace_cost_arr);
     init_net(p_net_no, p_board, p_via_costs);
   }
- 
-  /**
-   * Creates a new instance of AutorouteControl
-   */
-  private AutorouteControl(RoutingBoard p_board, RouterSettings p_settings, ExpansionCostFactor[] p_trace_costs_arr) {
+
+  /** Creates a new instance of AutorouteControl */
+  private AutorouteControl(
+      RoutingBoard p_board, RouterSettings p_settings, ExpansionCostFactor[] p_trace_costs_arr) {
     this.settings = p_settings;
     layer_count = p_board.get_layer_count();
     trace_half_width = new int[layer_count];
@@ -159,13 +145,15 @@ public class AutorouteControl {
     for (int i = 0; i < layer_count; i++) {
       this.bendCosts[i] = p_settings.get_bend_cost(i);
     }
- 
+
     for (int i = 0; i < layer_count; i++) {
       add_via_costs[i] = new ViaCost(layer_count);
       boolean activeSetting = p_settings.get_layer_active(i);
       if (!p_board.layer_structure.arr[i].is_signal && activeSetting) {
-        FRLogger.warn("Layer '" + p_board.layer_structure.arr[i].name 
-            + "' is a dedicated power plane and cannot be routed. Forcing active state to false.");
+        FRLogger.warn(
+            "Layer '"
+                + p_board.layer_structure.arr[i].name
+                + "' is a dedicated power plane and cannot be routed. Forcing active state to false.");
         layer_active[i] = false;
       } else {
         layer_active[i] = activeSetting;
@@ -191,7 +179,7 @@ public class AutorouteControl {
     attach_smd_allowed = false;
     via_lower_bound = 0;
     via_upper_bound = layer_count;
- 
+
     ripup_allowed = false;
     ripup_costs = 1000;
     ripup_pass_no = 1;
@@ -216,7 +204,10 @@ public class AutorouteControl {
       } else {
         trace_half_width[i] = p_board.rules.get_trace_half_width(1, i);
       }
-      compensated_trace_half_width[i] = trace_half_width[i] + p_board.rules.clearance_matrix.clearance_compensation_value(trace_clearance_class_no, i);
+      compensated_trace_half_width[i] =
+          trace_half_width[i]
+              + p_board.rules.clearance_matrix.clearance_compensation_value(
+                  trace_clearance_class_no, i);
       if (curr_net_class != null && !curr_net_class.is_active_routing_layer(i)) {
         layer_active[i] = false;
       }
@@ -291,18 +282,13 @@ public class AutorouteControl {
     return true;
   }
 
-  /**
-   * horizontal and vertical costs for traces on a board layer
-   */
+  /** horizontal and vertical costs for traces on a board layer */
   public static class ExpansionCostFactor {
 
-    /**
-     * The horizontal expansion cost factor on a layer of the board
-     */
+    /** The horizontal expansion cost factor on a layer of the board */
     public final double horizontal;
-    /**
-     * The vertical expansion cost factor on a layer of the board
-     */
+
+    /** The vertical expansion cost factor on a layer of the board */
     public final double vertical;
 
     public ExpansionCostFactor(double p_horizontal, double p_vertical) {
@@ -311,9 +297,7 @@ public class AutorouteControl {
     }
   }
 
-  /**
-   * Array of via costs from one layer to the other layers
-   */
+  /** Array of via costs from one layer to the other layers */
   static final class ViaCost {
 
     public int[] to_layer;

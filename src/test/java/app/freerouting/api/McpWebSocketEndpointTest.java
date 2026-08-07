@@ -38,12 +38,14 @@ class McpWebSocketEndpointTest {
     URI wsUri = startMcpServer(false);
 
     TestWebSocketListener listener = new TestWebSocketListener();
-    WebSocket webSocket = HttpClient.newHttpClient().newWebSocketBuilder()
-        .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000001")
-        .header("Freerouting-Environment-Host", "TestClient/1.0")
-        .connectTimeout(HTTP_TIMEOUT)
-        .buildAsync(wsUri, listener)
-        .join();
+    WebSocket webSocket =
+        HttpClient.newHttpClient()
+            .newWebSocketBuilder()
+            .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000001")
+            .header("Freerouting-Environment-Host", "TestClient/1.0")
+            .connectTimeout(HTTP_TIMEOUT)
+            .buildAsync(wsUri, listener)
+            .join();
 
     webSocket.sendText("hello", true).join();
 
@@ -58,7 +60,8 @@ class McpWebSocketEndpointTest {
     URI wsUri = startMcpServer(false);
 
     TestWebSocketListener listener = new TestWebSocketListener();
-    HttpClient.newHttpClient().newWebSocketBuilder()
+    HttpClient.newHttpClient()
+        .newWebSocketBuilder()
         .header("Freerouting-Environment-Host", "TestClient/1.0")
         .connectTimeout(HTTP_TIMEOUT)
         .buildAsync(wsUri, listener)
@@ -73,7 +76,8 @@ class McpWebSocketEndpointTest {
     URI wsUri = startMcpServer(false);
 
     TestWebSocketListener listener = new TestWebSocketListener();
-    HttpClient.newHttpClient().newWebSocketBuilder()
+    HttpClient.newHttpClient()
+        .newWebSocketBuilder()
         .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000001")
         .connectTimeout(HTTP_TIMEOUT)
         .buildAsync(wsUri, listener)
@@ -88,7 +92,8 @@ class McpWebSocketEndpointTest {
     URI wsUri = startMcpServer(true);
 
     TestWebSocketListener listener = new TestWebSocketListener();
-    HttpClient.newHttpClient().newWebSocketBuilder()
+    HttpClient.newHttpClient()
+        .newWebSocketBuilder()
         .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000001")
         .header("Freerouting-Environment-Host", "TestClient/1.0")
         .connectTimeout(HTTP_TIMEOUT)
@@ -119,9 +124,8 @@ class McpWebSocketEndpointTest {
   }
 
   private static String waitForMessageContaining(
-      BlockingQueue<String> messages,
-      String expectedText,
-      int timeoutSeconds) throws InterruptedException {
+      BlockingQueue<String> messages, String expectedText, int timeoutSeconds)
+      throws InterruptedException {
     long deadline = System.currentTimeMillis() + timeoutSeconds * 1000L;
     while (System.currentTimeMillis() < deadline) {
       String message = messages.poll(250, TimeUnit.MILLISECONDS);
@@ -144,9 +148,7 @@ class McpWebSocketEndpointTest {
 
     @Override
     public java.util.concurrent.CompletionStage<?> onText(
-        WebSocket webSocket,
-        CharSequence data,
-        boolean last) {
+        WebSocket webSocket, CharSequence data, boolean last) {
       messages.offer(data.toString());
       webSocket.request(1);
       return null;
@@ -154,9 +156,7 @@ class McpWebSocketEndpointTest {
 
     @Override
     public java.util.concurrent.CompletionStage<?> onClose(
-        WebSocket webSocket,
-        int statusCode,
-        String reason) {
+        WebSocket webSocket, int statusCode, String reason) {
       closeStatus.complete(statusCode);
       return null;
     }

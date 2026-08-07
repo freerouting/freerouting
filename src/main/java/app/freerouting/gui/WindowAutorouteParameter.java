@@ -34,9 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-/**
- * Window handling parameters of the automatic routing.
- */
+/** Window handling parameters of the automatic routing. */
 public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
   private static final long DEFAULT_TIMEOUT_SECONDS = 0L;
@@ -79,9 +77,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   // Flag to prevent circular updates between GUI and settings
   private boolean isUpdatingFromSettings;
 
-  /**
-   * Creates a new instance of WindowAutorouteParameter
-   */
+  /** Creates a new instance of WindowAutorouteParameter */
   public WindowAutorouteParameter(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
 
@@ -144,8 +140,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       // set the active checkbox
       settings_autorouter_layer_active_arr[i] = new JCheckBox();
       settings_autorouter_layer_active_arr[i].addActionListener(new LayerActiveListener(i));
-      settings_autorouter_layer_active_arr[i]
-          .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_layer_active_arr", null));
+      settings_autorouter_layer_active_arr[i].addActionListener(
+          _ -> FRAnalytics.buttonClicked("settings_autorouter_layer_active_arr", null));
       settings_autorouter_layer_active_arr[i].setEnabled(curr_layer.is_signal);
       if (!curr_layer.is_signal) {
         settings_autorouter_layer_active_arr[i].setToolTipText(tm.getText("power_layer_tooltip"));
@@ -155,22 +151,17 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
       // set the preferred direction combobox
       settings_autorouter_combo_box_arr.add(new JComboBox<>());
-      settings_autorouter_combo_box_arr
-          .get(i)
-          .addItem(this.horizontal);
-      settings_autorouter_combo_box_arr
-          .get(i)
-          .addItem(this.vertical);
-      settings_autorouter_combo_box_arr
-          .get(i)
-          .addActionListener(new PreferredDirectionListener(i));
+      settings_autorouter_combo_box_arr.get(i).addItem(this.horizontal);
+      settings_autorouter_combo_box_arr.get(i).addItem(this.vertical);
+      settings_autorouter_combo_box_arr.get(i).addActionListener(new PreferredDirectionListener(i));
       settings_autorouter_combo_box_arr.get(i).setEnabled(curr_layer.is_signal);
       gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
       gridbag.setConstraints(settings_autorouter_combo_box_arr.get(i), gridbag_constraints);
       main_panel.add(settings_autorouter_combo_box_arr.get(i));
     }
 
-    JLabel separator = new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
+    JLabel separator =
+        new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.fill = GridBagConstraints.HORIZONTAL;
     gridbag.setConstraints(separator, gridbag_constraints);
@@ -186,7 +177,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     settings_autorouter_vias_allowed = new JCheckBox();
     settings_autorouter_vias_allowed.addActionListener(new ViasAllowedListener());
     settings_autorouter_vias_allowed.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_autorouter_vias_allowed", settings_autorouter_vias_allowed.getText()));
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_autorouter_vias_allowed", settings_autorouter_vias_allowed.getText()));
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(settings_autorouter_vias_allowed, gridbag_constraints);
@@ -216,17 +209,22 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     tm.setText(this.settings_autorouter_optimization_button, "optimization");
 
     settings_autorouter_fanout_button.addActionListener(new FanoutListener());
-    settings_autorouter_fanout_button
-        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_fanout_button",
-            settings_autorouter_fanout_button.getText()));
+    settings_autorouter_fanout_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_autorouter_fanout_button", settings_autorouter_fanout_button.getText()));
     settings_autorouter_autoroute_pass_button.addActionListener(new AutorouteListener());
-    settings_autorouter_autoroute_pass_button
-        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_autoroute_pass_button",
-            settings_autorouter_autoroute_pass_button.getText()));
+    settings_autorouter_autoroute_pass_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_autorouter_autoroute_pass_button",
+                settings_autorouter_autoroute_pass_button.getText()));
     settings_autorouter_optimization_button.addActionListener(new OptimizationListener());
-    settings_autorouter_optimization_button
-        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_optimization_button",
-            settings_autorouter_optimization_button.getText()));
+    settings_autorouter_optimization_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_autorouter_optimization_button",
+                settings_autorouter_optimization_button.getText()));
 
     settings_autorouter_fanout_button.setSelected(true);
     settings_autorouter_autoroute_pass_button.setSelected(true);
@@ -272,8 +270,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.plane_via_cost_field = new JFormattedTextField(number_format);
     this.plane_via_cost_field.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
     this.plane_via_cost_field.setColumns(3);
-    this.plane_via_cost_field.addKeyListener(new WindowAutorouteParameter.PlaneViaCostFieldKeyListener());
-    this.plane_via_cost_field.addFocusListener(new WindowAutorouteParameter.PlaneViaCostFieldFocusListener());
+    this.plane_via_cost_field.addKeyListener(
+        new WindowAutorouteParameter.PlaneViaCostFieldKeyListener());
+    this.plane_via_cost_field.addFocusListener(
+        new WindowAutorouteParameter.PlaneViaCostFieldFocusListener());
 
     gridbag_constraints.gridwidth = 2;
     JLabel plane_via_cost_label = new JLabel();
@@ -297,8 +297,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     start_ripup_costs.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
     start_ripup_costs.setColumns(3);
     start_ripup_costs.setToolTipText(tm.getText("start_ripup_costs_tooltip"));
-    this.start_ripup_costs.addKeyListener(new WindowAutorouteParameter.StartRipupCostFieldKeyListener());
-    this.start_ripup_costs.addFocusListener(new WindowAutorouteParameter.StartRipupCostFieldFocusListener());
+    this.start_ripup_costs.addKeyListener(
+        new WindowAutorouteParameter.StartRipupCostFieldKeyListener());
+    this.start_ripup_costs.addFocusListener(
+        new WindowAutorouteParameter.StartRipupCostFieldFocusListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(start_ripup_costs, gridbag_constraints);
     main_panel.add(start_ripup_costs);
@@ -316,7 +318,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     max_passes_field.setColumns(5);
     max_passes_field.setToolTipText(tm.getText("max_passes_tooltip"));
     this.max_passes_field.addKeyListener(new WindowAutorouteParameter.MaxPassesFieldKeyListener());
-    this.max_passes_field.addFocusListener(new WindowAutorouteParameter.MaxPassesFieldFocusListener());
+    this.max_passes_field.addFocusListener(
+        new WindowAutorouteParameter.MaxPassesFieldFocusListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(max_passes_field, gridbag_constraints);
     main_panel.add(max_passes_field);
@@ -335,9 +338,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.job_timeout_panel.setOpaque(false);
     this.job_timeout_panel.setToolTipText(tm.getText("job_timeout_tooltip"));
 
-    this.job_timeout_hours_field = createTimeoutField(timeout_number_format, 2, tm.getText("job_timeout_tooltip"));
-    this.job_timeout_minutes_field = createTimeoutField(timeout_number_format, 2, tm.getText("job_timeout_tooltip"));
-    this.job_timeout_seconds_field = createTimeoutField(timeout_number_format, 2, tm.getText("job_timeout_tooltip"));
+    this.job_timeout_hours_field =
+        createTimeoutField(timeout_number_format, 2, tm.getText("job_timeout_tooltip"));
+    this.job_timeout_minutes_field =
+        createTimeoutField(timeout_number_format, 2, tm.getText("job_timeout_tooltip"));
+    this.job_timeout_seconds_field =
+        createTimeoutField(timeout_number_format, 2, tm.getText("job_timeout_tooltip"));
 
     Dimension timeoutFieldSize = this.job_timeout_hours_field.getPreferredSize();
     this.job_timeout_hours_field.setPreferredSize(timeoutFieldSize);
@@ -378,8 +384,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     max_threads_field.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
     max_threads_field.setColumns(3);
     max_threads_field.setToolTipText(tm.getText("max_threads_tooltip"));
-    this.max_threads_field.addKeyListener(new WindowAutorouteParameter.MaxThreadsFieldKeyListener());
-    this.max_threads_field.addFocusListener(new WindowAutorouteParameter.MaxThreadsFieldFocusListener());
+    this.max_threads_field.addKeyListener(
+        new WindowAutorouteParameter.MaxThreadsFieldKeyListener());
+    this.max_threads_field.addFocusListener(
+        new WindowAutorouteParameter.MaxThreadsFieldFocusListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(max_threads_field, gridbag_constraints);
     main_panel.add(max_threads_field);
@@ -391,12 +399,13 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     settings_autorouter_algorithm_combo_box.addItem(this.algorithm_current);
     settings_autorouter_algorithm_combo_box.addItem(this.algorithm_v19);
     settings_autorouter_algorithm_combo_box.setToolTipText(tm.getText("algorithm_tooltip"));
-    settings_autorouter_algorithm_combo_box.addActionListener(new WindowAutorouteParameter.AlgorithmListener());
-    settings_autorouter_algorithm_combo_box
-        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_algorithm_combo_box",
-            settings_autorouter_algorithm_combo_box
-                .getSelectedItem()
-                .toString()));
+    settings_autorouter_algorithm_combo_box.addActionListener(
+        new WindowAutorouteParameter.AlgorithmListener());
+    settings_autorouter_algorithm_combo_box.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_autorouter_algorithm_combo_box",
+                settings_autorouter_algorithm_combo_box.getSelectedItem().toString()));
 
     gridbag_constraints.gridwidth = 2;
     JLabel algorithm_label = new JLabel();
@@ -408,7 +417,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(settings_autorouter_algorithm_combo_box, gridbag_constraints);
     main_panel.add(settings_autorouter_algorithm_combo_box);
 
-    JLabel separator2 = new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
+    JLabel separator2 =
+        new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.fill = GridBagConstraints.HORIZONTAL;
     gridbag.setConstraints(separator2, gridbag_constraints);
@@ -429,7 +439,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     main_panel.add(pref_dir_label);
 
     gridbag_constraints.gridwidth = 3;
-    javax.swing.JComponent against_pref_dir_label = createWordWrapLabel("against_preferred_direction", 80, 45);
+    javax.swing.JComponent against_pref_dir_label =
+        createWordWrapLabel("against_preferred_direction", 80, 45);
     gridbag.setConstraints(against_pref_dir_label, gridbag_constraints);
     main_panel.add(against_pref_dir_label);
 
@@ -460,31 +471,34 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       preferred_direction_trace_cost_arr[i] = new JFormattedTextField(float_number_format);
       preferred_direction_trace_cost_arr[i].setHorizontalAlignment(javax.swing.JTextField.RIGHT);
       preferred_direction_trace_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
-      preferred_direction_trace_cost_arr[i].setPreferredSize(new Dimension(150, preferred_direction_trace_cost_arr[i].getPreferredSize().height));
-      preferred_direction_trace_cost_arr[i]
-          .addKeyListener(new WindowAutorouteParameter.PreferredDirectionTraceCostKeyListener(i));
-      preferred_direction_trace_cost_arr[i]
-          .addFocusListener(new WindowAutorouteParameter.PreferredDirectionTraceCostFocusListener(i));
+      preferred_direction_trace_cost_arr[i].setPreferredSize(
+          new Dimension(150, preferred_direction_trace_cost_arr[i].getPreferredSize().height));
+      preferred_direction_trace_cost_arr[i].addKeyListener(
+          new WindowAutorouteParameter.PreferredDirectionTraceCostKeyListener(i));
+      preferred_direction_trace_cost_arr[i].addFocusListener(
+          new WindowAutorouteParameter.PreferredDirectionTraceCostFocusListener(i));
       gridbag.setConstraints(preferred_direction_trace_cost_arr[i], gridbag_constraints);
       main_panel.add(preferred_direction_trace_cost_arr[i]);
       against_preferred_direction_trace_cost_arr[i] = new JFormattedTextField(float_number_format);
-      against_preferred_direction_trace_cost_arr[i].setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+      against_preferred_direction_trace_cost_arr[i].setHorizontalAlignment(
+          javax.swing.JTextField.RIGHT);
       against_preferred_direction_trace_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
-      against_preferred_direction_trace_cost_arr[i].setPreferredSize(new Dimension(150, against_preferred_direction_trace_cost_arr[i].getPreferredSize().height));
-      against_preferred_direction_trace_cost_arr[i]
-          .addKeyListener(new WindowAutorouteParameter.AgainstPreferredDirectionTraceCostKeyListener(i));
-      against_preferred_direction_trace_cost_arr[i]
-          .addFocusListener(new WindowAutorouteParameter.AgainstPreferredDirectionTraceCostFocusListener(i));
+      against_preferred_direction_trace_cost_arr[i].setPreferredSize(
+          new Dimension(
+              150, against_preferred_direction_trace_cost_arr[i].getPreferredSize().height));
+      against_preferred_direction_trace_cost_arr[i].addKeyListener(
+          new WindowAutorouteParameter.AgainstPreferredDirectionTraceCostKeyListener(i));
+      against_preferred_direction_trace_cost_arr[i].addFocusListener(
+          new WindowAutorouteParameter.AgainstPreferredDirectionTraceCostFocusListener(i));
       gridbag.setConstraints(against_preferred_direction_trace_cost_arr[i], gridbag_constraints);
       main_panel.add(against_preferred_direction_trace_cost_arr[i]);
       bend_cost_arr[i] = new JFormattedTextField(float_number_format);
       bend_cost_arr[i].setHorizontalAlignment(javax.swing.JTextField.RIGHT);
       bend_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
-      bend_cost_arr[i].setPreferredSize(new Dimension(150, bend_cost_arr[i].getPreferredSize().height));
-      bend_cost_arr[i]
-          .addKeyListener(new WindowAutorouteParameter.BendCostKeyListener(i));
-      bend_cost_arr[i]
-          .addFocusListener(new WindowAutorouteParameter.BendCostFocusListener(i));
+      bend_cost_arr[i].setPreferredSize(
+          new Dimension(150, bend_cost_arr[i].getPreferredSize().height));
+      bend_cost_arr[i].addKeyListener(new WindowAutorouteParameter.BendCostKeyListener(i));
+      bend_cost_arr[i].addFocusListener(new WindowAutorouteParameter.BendCostFocusListener(i));
       gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
       gridbag.setConstraints(bend_cost_arr[i], gridbag_constraints);
       main_panel.add(bend_cost_arr[i]);
@@ -498,7 +512,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.setResizable(false);
 
     // Register as listener for settings changes (bidirectional binding)
-    this.board_handling.getCurrentRoutingJob().routerSettings.addPropertyChangeListener(this::onSettingsChanged);
+    this.board_handling
+        .getCurrentRoutingJob()
+        .routerSettings
+        .addPropertyChangeListener(this::onSettingsChanged);
   }
 
   static int normalizeIntInput(Object input, int oldValue, int minValue, int maxValue) {
@@ -550,9 +567,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     settings.setAlgorithm(useV19 ? RouterSettings.ALGORITHM_V19 : RouterSettings.ALGORITHM_CURRENT);
   }
 
-  /**
-   * Handle property change events from RouterSettings to update GUI controls
-   */
+  /** Handle property change events from RouterSettings to update GUI controls */
   private void onSettingsChanged(java.beans.PropertyChangeEvent evt) {
     if (isUpdatingFromSettings) {
       return; // Prevent circular updates
@@ -616,9 +631,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
   }
 
-  /**
-   * Recalculates all displayed values
-   */
+  /** Recalculates all displayed values */
   @Override
   public void refresh() {
     RouterSettings settings = this.board_handling.getCurrentRoutingJob().routerSettings;
@@ -635,33 +648,31 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     for (int i = 0; i < settings_autorouter_combo_box_arr.size(); i++) {
       if (settings.get_preferred_direction_is_horizontal(layer_structure.get_layer_no(i))) {
-        this.settings_autorouter_combo_box_arr
-            .get(i)
-            .setSelectedItem(this.horizontal);
+        this.settings_autorouter_combo_box_arr.get(i).setSelectedItem(this.horizontal);
       } else {
-        this.settings_autorouter_combo_box_arr
-            .get(i)
-            .setSelectedItem(this.vertical);
+        this.settings_autorouter_combo_box_arr.get(i).setSelectedItem(this.vertical);
       }
     }
 
     this.via_cost_field.setValue(settings.get_via_costs());
     this.plane_via_cost_field.setValue(settings.get_plane_via_costs());
     this.start_ripup_costs.setValue(settings.get_start_ripup_costs());
-    this.max_passes_field.setValue(settings.maxPasses != null && settings.maxPasses == Integer.MAX_VALUE ? 0 : settings.maxPasses);
+    this.max_passes_field.setValue(
+        settings.maxPasses != null && settings.maxPasses == Integer.MAX_VALUE
+            ? 0
+            : settings.maxPasses);
     setJobTimeoutFields(settings.jobTimeoutString);
     this.max_threads_field.setValue(settings.maxThreads);
     for (int i = 0; i < preferred_direction_trace_cost_arr.length; i++) {
-      this.preferred_direction_trace_cost_arr[i]
-          .setValue(settings.get_preferred_direction_trace_costs(layer_structure.get_layer_no(i)));
+      this.preferred_direction_trace_cost_arr[i].setValue(
+          settings.get_preferred_direction_trace_costs(layer_structure.get_layer_no(i)));
     }
     for (int i = 0; i < against_preferred_direction_trace_cost_arr.length; i++) {
-      this.against_preferred_direction_trace_cost_arr[i]
-          .setValue(settings.get_against_preferred_direction_trace_costs(layer_structure.get_layer_no(i)));
+      this.against_preferred_direction_trace_cost_arr[i].setValue(
+          settings.get_against_preferred_direction_trace_costs(layer_structure.get_layer_no(i)));
     }
     for (int i = 0; i < bend_cost_arr.length; i++) {
-      this.bend_cost_arr[i]
-          .setValue(settings.get_bend_cost(layer_structure.get_layer_no(i)));
+      this.bend_cost_arr[i].setValue(settings.get_bend_cost(layer_structure.get_layer_no(i)));
     }
 
     // Set algorithm selection
@@ -687,38 +698,42 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     super.parent_deiconified();
   }
 
-  private JFormattedTextField createTimeoutField(NumberFormat numberFormat, int columns, String tooltipText) {
+  private JFormattedTextField createTimeoutField(
+      NumberFormat numberFormat, int columns, String tooltipText) {
     JFormattedTextField field = new JFormattedTextField(numberFormat);
     field.setColumns(columns);
     field.setHorizontalAlignment(JFormattedTextField.RIGHT);
     field.setToolTipText(tooltipText);
-    field.addFocusListener(new FocusAdapter() {
-      @Override
-      public void focusGained(FocusEvent event) {
-        field.selectAll();
-      }
+    field.addFocusListener(
+        new FocusAdapter() {
+          @Override
+          public void focusGained(FocusEvent event) {
+            field.selectAll();
+          }
 
-      @Override
-      public void focusLost(FocusEvent event) {
-        if (!isTimeoutEditorFocused()) {
-          commitJobTimeoutEdit();
-        }
-      }
-    });
-    field.addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyTyped(KeyEvent event) {
-        if (event.getKeyChar() == '\n') {
-          commitJobTimeoutEdit();
-        }
-      }
-    });
+          @Override
+          public void focusLost(FocusEvent event) {
+            if (!isTimeoutEditorFocused()) {
+              commitJobTimeoutEdit();
+            }
+          }
+        });
+    field.addKeyListener(
+        new KeyAdapter() {
+          @Override
+          public void keyTyped(KeyEvent event) {
+            if (event.getKeyChar() == '\n') {
+              commitJobTimeoutEdit();
+            }
+          }
+        });
     return field;
   }
 
   // Set timeout fields based on the provided timeout string (in format "HH:MM:SS" or seconds)
   private void setJobTimeoutFields(String timeoutString) {
-    Long parsedSeconds = timeoutString == null ? null : TextManager.parseTimespanString(timeoutString);
+    Long parsedSeconds =
+        timeoutString == null ? null : TextManager.parseTimespanString(timeoutString);
     long totalSeconds = parsedSeconds == null ? DEFAULT_TIMEOUT_SECONDS : parsedSeconds;
 
     if (totalSeconds < 0) {
@@ -768,7 +783,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       long formattedMinutes = remainder / 60L;
       long formattedSeconds = remainder % 60L;
 
-      return String.format(Locale.ROOT, "%02d:%02d:%02d", formattedHours, formattedMinutes, formattedSeconds);
+      return String.format(
+          Locale.ROOT, "%02d:%02d:%02d", formattedHours, formattedMinutes, formattedSeconds);
     } catch (NumberFormatException ex) {
       return null;
     }
@@ -843,8 +859,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       int curr_layer_no = this.signal_layer_no;
-      board_handling.getCurrentRoutingJob().routerSettings.set_layer_active(curr_layer_no,
-          settings_autorouter_layer_active_arr[this.signal_layer_no].isSelected());
+      board_handling
+          .getCurrentRoutingJob()
+          .routerSettings
+          .set_layer_active(
+              curr_layer_no,
+              settings_autorouter_layer_active_arr[this.signal_layer_no].isSelected());
     }
   }
 
@@ -858,11 +878,15 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
-      board_handling.getCurrentRoutingJob().routerSettings.set_preferred_direction_is_horizontal(curr_layer_no,
-          settings_autorouter_combo_box_arr
-              .get(signal_layer_no)
-              .getSelectedItem() == horizontal);
+      int curr_layer_no =
+          board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
+      board_handling
+          .getCurrentRoutingJob()
+          .routerSettings
+          .set_preferred_direction_is_horizontal(
+              curr_layer_no,
+              settings_autorouter_combo_box_arr.get(signal_layer_no).getSelectedItem()
+                  == horizontal);
     }
   }
 
@@ -872,7 +896,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       isUpdatingFromSettings = true;
       try {
-        applyViasAllowedSelection(board_handling.getCurrentRoutingJob().routerSettings,
+        applyViasAllowedSelection(
+            board_handling.getCurrentRoutingJob().routerSettings,
             settings_autorouter_vias_allowed.isSelected());
       } finally {
         isUpdatingFromSettings = false;
@@ -887,7 +912,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       RouterSettings autoroute_settings = board_handling.getCurrentRoutingJob().routerSettings;
       isUpdatingFromSettings = true;
       try {
-        applyFanoutEnabledSelection(autoroute_settings, settings_autorouter_fanout_button.isSelected());
+        applyFanoutEnabledSelection(
+            autoroute_settings, settings_autorouter_fanout_button.isSelected());
       } finally {
         isUpdatingFromSettings = false;
       }
@@ -901,7 +927,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       RouterSettings autoroute_settings = board_handling.getCurrentRoutingJob().routerSettings;
       isUpdatingFromSettings = true;
       try {
-        applyAutorouteEnabledSelection(autoroute_settings, settings_autorouter_autoroute_pass_button.isSelected());
+        applyAutorouteEnabledSelection(
+            autoroute_settings, settings_autorouter_autoroute_pass_button.isSelected());
       } finally {
         isUpdatingFromSettings = false;
       }
@@ -915,7 +942,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       RouterSettings autoroute_settings = board_handling.getCurrentRoutingJob().routerSettings;
       isUpdatingFromSettings = true;
       try {
-        applyOptimizerEnabledSelection(autoroute_settings, settings_autorouter_optimization_button.isSelected());
+        applyOptimizerEnabledSelection(
+            autoroute_settings, settings_autorouter_optimization_button.isSelected());
       } finally {
         isUpdatingFromSettings = false;
       }
@@ -975,8 +1003,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {
-    }
+    public void focusGained(FocusEvent p_evt) {}
   }
 
   private class PlaneViaCostFieldKeyListener extends KeyAdapter {
@@ -1032,8 +1059,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {
-    }
+    public void focusGained(FocusEvent p_evt) {}
   }
 
   private class StartRipupCostFieldKeyListener extends KeyAdapter {
@@ -1041,7 +1067,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        int old_value = board_handling.getCurrentRoutingJob().routerSettings.get_start_ripup_costs();
+        int old_value =
+            board_handling.getCurrentRoutingJob().routerSettings.get_start_ripup_costs();
         Object input = start_ripup_costs.getValue();
         int input_value = normalizeIntInput(input, old_value, 1, Integer.MAX_VALUE);
         board_handling.getCurrentRoutingJob().routerSettings.set_start_ripup_costs(input_value);
@@ -1059,7 +1086,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!start_ripup_cost_input_completed) {
         // Save the value when focus is lost
-        int old_value = board_handling.getCurrentRoutingJob().routerSettings.get_start_ripup_costs();
+        int old_value =
+            board_handling.getCurrentRoutingJob().routerSettings.get_start_ripup_costs();
 
         // Commit the edit to ensure getValue() returns the typed value
         try {
@@ -1086,8 +1114,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {
-    }
+    public void focusGained(FocusEvent p_evt) {}
   }
 
   private class MaxPassesFieldKeyListener extends KeyAdapter {
@@ -1154,8 +1181,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {
-    }
+    public void focusGained(FocusEvent p_evt) {}
   }
 
   private class MaxThreadsFieldKeyListener extends KeyAdapter {
@@ -1225,8 +1251,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {
-    }
+    public void focusGained(FocusEvent p_evt) {}
   }
 
   private class AlgorithmListener implements ActionListener {
@@ -1235,7 +1260,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       String oldAlgorithm = board_handling.getCurrentRoutingJob().routerSettings.algorithm;
       boolean useV19 = settings_autorouter_algorithm_combo_box.getSelectedItem() == algorithm_v19;
-      String newAlgorithm = useV19 ? RouterSettings.ALGORITHM_V19 : RouterSettings.ALGORITHM_CURRENT;
+      String newAlgorithm =
+          useV19 ? RouterSettings.ALGORITHM_V19 : RouterSettings.ALGORITHM_CURRENT;
       if (!oldAlgorithm.equals(newAlgorithm)) {
         isUpdatingFromSettings = true;
         try {
@@ -1272,9 +1298,13 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent p_evt) {
       if (!preferred_direction_trace_costs_input_completed[this.signal_layer_no]) {
-        int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
-        double old_value = board_handling.getCurrentRoutingJob().routerSettings
-            .get_preferred_direction_trace_costs(curr_layer_no);
+        int curr_layer_no =
+            board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
+        double old_value =
+            board_handling
+                .getCurrentRoutingJob()
+                .routerSettings
+                .get_preferred_direction_trace_costs(curr_layer_no);
 
         try {
           preferred_direction_trace_cost_arr[this.signal_layer_no].commitEdit();
@@ -1296,15 +1326,17 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           input_value = old_value;
         }
 
-        board_handling.getCurrentRoutingJob().routerSettings.set_preferred_direction_trace_costs(curr_layer_no, input_value);
+        board_handling
+            .getCurrentRoutingJob()
+            .routerSettings
+            .set_preferred_direction_trace_costs(curr_layer_no, input_value);
         preferred_direction_trace_cost_arr[this.signal_layer_no].setValue(input_value);
         preferred_direction_trace_costs_input_completed[this.signal_layer_no] = true;
       }
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {
-    }
+    public void focusGained(FocusEvent p_evt) {}
   }
 
   private class AgainstPreferredDirectionTraceCostKeyListener extends KeyAdapter {
@@ -1332,9 +1364,13 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent p_evt) {
       if (!against_preferred_direction_trace_costs_input_completed[this.signal_layer_no]) {
-        int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
-        double old_value = board_handling.getCurrentRoutingJob().routerSettings
-            .get_against_preferred_direction_trace_costs(curr_layer_no);
+        int curr_layer_no =
+            board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
+        double old_value =
+            board_handling
+                .getCurrentRoutingJob()
+                .routerSettings
+                .get_against_preferred_direction_trace_costs(curr_layer_no);
 
         try {
           against_preferred_direction_trace_cost_arr[this.signal_layer_no].commitEdit();
@@ -1356,15 +1392,17 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           input_value = old_value;
         }
 
-        board_handling.getCurrentRoutingJob().routerSettings.set_against_preferred_direction_trace_costs(curr_layer_no, input_value);
+        board_handling
+            .getCurrentRoutingJob()
+            .routerSettings
+            .set_against_preferred_direction_trace_costs(curr_layer_no, input_value);
         against_preferred_direction_trace_cost_arr[this.signal_layer_no].setValue(input_value);
         against_preferred_direction_trace_costs_input_completed[this.signal_layer_no] = true;
       }
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {
-    }
+    public void focusGained(FocusEvent p_evt) {}
   }
 
   private class BendCostKeyListener extends KeyAdapter {
@@ -1393,9 +1431,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!bend_costs_input_completed[this.signal_layer_no]) {
         // Save the value when focus is lost
-        int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
-        double old_value = board_handling.getCurrentRoutingJob().routerSettings
-            .get_bend_cost(curr_layer_no);
+        int curr_layer_no =
+            board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
+        double old_value =
+            board_handling.getCurrentRoutingJob().routerSettings.get_bend_cost(curr_layer_no);
 
         // Commit the edit to ensure getValue() returns the typed value
         try {
@@ -1417,14 +1456,16 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         } else {
           input_value = old_value;
         }
-        board_handling.getCurrentRoutingJob().routerSettings.set_bend_cost(curr_layer_no, input_value);
+        board_handling
+            .getCurrentRoutingJob()
+            .routerSettings
+            .set_bend_cost(curr_layer_no, input_value);
         bend_cost_arr[this.signal_layer_no].setValue(input_value);
         bend_costs_input_completed[this.signal_layer_no] = true;
       }
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {
-    }
+    public void focusGained(FocusEvent p_evt) {}
   }
 }

@@ -12,18 +12,22 @@ import app.freerouting.geometry.planar.Vector;
 import java.util.Collection;
 import java.util.LinkedList;
 
-/**
- * Contains internal auxiliary functions of class RoutingBoard for shoving vias and pins
- */
+/** Contains internal auxiliary functions of class RoutingBoard for shoving vias and pins */
 public final class MoveDrillItemAlgo {
 
-  private MoveDrillItemAlgo() {
-  }
+  private MoveDrillItemAlgo() {}
 
   /**
-   * Checks, if p_drill_item can be translated by p_vector by shoving obstacle traces and vias aside, so that no clearance violations occur.
+   * Checks, if p_drill_item can be translated by p_vector by shoving obstacle traces and vias
+   * aside, so that no clearance violations occur.
    */
-  public static boolean check(DrillItem p_drill_item, Vector p_vector, int p_max_recursion_depth, int p_max_via_recursion_depth, Collection<Item> p_ignore_items, RoutingBoard p_board,
+  public static boolean check(
+      DrillItem p_drill_item,
+      Vector p_vector,
+      int p_max_recursion_depth,
+      int p_max_via_recursion_depth,
+      Collection<Item> p_ignore_items,
+      RoutingBoard p_board,
       TimeLimit p_time_limit) {
 
     if (p_time_limit != null && p_time_limit.limit_exceeded()) {
@@ -53,7 +57,9 @@ public final class MoveDrillItemAlgo {
       attach_allowed = via.attach_allowed;
     }
     ShapeSearchTree search_tree = p_board.search_tree_manager.get_default_tree();
-    for (int curr_layer = p_drill_item.first_layer(); curr_layer <= p_drill_item.last_layer(); curr_layer++) {
+    for (int curr_layer = p_drill_item.first_layer();
+        curr_layer <= p_drill_item.last_layer();
+        curr_layer++) {
       int curr_ind = curr_layer - p_drill_item.first_layer();
       TileShape curr_shape = p_drill_item.get_tree_shape(search_tree, curr_ind);
       if (curr_shape == null) {
@@ -67,8 +73,19 @@ public final class MoveDrillItemAlgo {
         curr_tile_shape = new_shape.bounding_octagon();
       }
       CalcFromSide from_side = new CalcFromSide(p_drill_item.get_center(), curr_tile_shape);
-      if (forced_pad_algo.check_forced_pad(curr_tile_shape, from_side, curr_layer, p_drill_item.net_no_arr, p_drill_item.clearance_class_no(), attach_allowed, ignore_items, p_max_recursion_depth,
-          p_max_via_recursion_depth, true, p_time_limit) == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+      if (forced_pad_algo.check_forced_pad(
+              curr_tile_shape,
+              from_side,
+              curr_layer,
+              p_drill_item.net_no_arr,
+              p_drill_item.clearance_class_no(),
+              attach_allowed,
+              ignore_items,
+              p_max_recursion_depth,
+              p_max_via_recursion_depth,
+              true,
+              p_time_limit)
+          == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
         return false;
       }
     }
@@ -76,10 +93,17 @@ public final class MoveDrillItemAlgo {
   }
 
   /**
-   * Translates p_drill_item by p_vector by shoving obstacle traces and vias aside, so that no clearance violations occur. If p_tidy_region != null, it will be joined by the bounding octagons of the
-   * translated shapes.
+   * Translates p_drill_item by p_vector by shoving obstacle traces and vias aside, so that no
+   * clearance violations occur. If p_tidy_region != null, it will be joined by the bounding
+   * octagons of the translated shapes.
    */
-  static boolean insert(DrillItem p_drill_item, Vector p_vector, int p_max_recursion_depth, int p_max_via_recursion_depth, IntOctagon p_tidy_region, RoutingBoard p_board) {
+  static boolean insert(
+      DrillItem p_drill_item,
+      Vector p_vector,
+      int p_max_recursion_depth,
+      int p_max_via_recursion_depth,
+      IntOctagon p_tidy_region,
+      RoutingBoard p_board) {
     if (p_drill_item.is_shove_fixed()) {
       return false;
     }
@@ -92,7 +116,9 @@ public final class MoveDrillItemAlgo {
     Collection<Item> ignore_items = new LinkedList<>();
     ignore_items.add(p_drill_item);
     ShapeSearchTree search_tree = p_board.search_tree_manager.get_default_tree();
-    for (int curr_layer = p_drill_item.first_layer(); curr_layer <= p_drill_item.last_layer(); curr_layer++) {
+    for (int curr_layer = p_drill_item.first_layer();
+        curr_layer <= p_drill_item.last_layer();
+        curr_layer++) {
       int curr_ind = curr_layer - p_drill_item.first_layer();
       TileShape curr_shape = p_drill_item.get_tree_shape(search_tree, curr_ind);
       if (curr_shape == null) {
@@ -109,7 +135,15 @@ public final class MoveDrillItemAlgo {
         p_tidy_region = p_tidy_region.union(curr_tile_shape.bounding_octagon());
       }
       CalcFromSide from_side = new CalcFromSide(p_drill_item.get_center(), curr_tile_shape);
-      if (!forced_pad_algo.forced_pad(curr_tile_shape, from_side, curr_layer, p_drill_item.net_no_arr, p_drill_item.clearance_class_no(), attach_allowed, ignore_items, p_max_recursion_depth,
+      if (!forced_pad_algo.forced_pad(
+          curr_tile_shape,
+          from_side,
+          curr_layer,
+          p_drill_item.net_no_arr,
+          p_drill_item.clearance_class_no(),
+          attach_allowed,
+          ignore_items,
+          p_max_recursion_depth,
           p_max_via_recursion_depth)) {
         return false;
       }
@@ -123,13 +157,27 @@ public final class MoveDrillItemAlgo {
   }
 
   /**
-   * Shoves vias out of p_obstacle_shape. Returns false, if the database is damaged, so that an undo is necessary afterwards.
+   * Shoves vias out of p_obstacle_shape. Returns false, if the database is damaged, so that an undo
+   * is necessary afterwards.
    */
-  static boolean shove_vias(TileShape p_obstacle_shape, CalcFromSide p_from_side, int p_layer, int[] p_net_no_arr, int p_cl_type, Collection<Item> p_ignore_items, int p_max_recursion_depth,
-      int p_max_via_recursion_depth, boolean p_copper_sharing_allowed, RoutingBoard p_board) {
+  static boolean shove_vias(
+      TileShape p_obstacle_shape,
+      CalcFromSide p_from_side,
+      int p_layer,
+      int[] p_net_no_arr,
+      int p_cl_type,
+      Collection<Item> p_ignore_items,
+      int p_max_recursion_depth,
+      int p_max_via_recursion_depth,
+      boolean p_copper_sharing_allowed,
+      RoutingBoard p_board) {
     ShapeSearchTree search_tree = p_board.search_tree_manager.get_default_tree();
-    ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_obstacle_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, p_board);
-    Collection<Item> obstacles = search_tree.overlapping_items_with_clearance(p_obstacle_shape, p_layer, new int[0], p_cl_type);
+    ShapeTraceEntries shape_entries =
+        new ShapeTraceEntries(
+            p_obstacle_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, p_board);
+    Collection<Item> obstacles =
+        search_tree.overlapping_items_with_clearance(
+            p_obstacle_shape, p_layer, new int[0], p_cl_type);
 
     if (!shape_entries.store_items(obstacles, false, p_copper_sharing_allowed)) {
       return true;
@@ -148,22 +196,33 @@ public final class MoveDrillItemAlgo {
       if (p_max_via_recursion_depth <= 0) {
         return true;
       }
-      IntPoint[] try_via_centers = try_shove_via_points(p_obstacle_shape, p_layer, curr_via, p_cl_type, true, p_board);
+      IntPoint[] try_via_centers =
+          try_shove_via_points(p_obstacle_shape, p_layer, curr_via, p_cl_type, true, p_board);
       IntPoint new_via_center = null;
-      double max_dist = 0.5 * curr_via.get_shape_on_layer(p_layer).bounding_box().max_width() + shape_radius;
+      double max_dist =
+          0.5 * curr_via.get_shape_on_layer(p_layer).bounding_box().max_width() + shape_radius;
       double max_dist_square = max_dist * max_dist;
       IntPoint curr_via_center = (IntPoint) curr_via.get_center();
       FloatPoint check_via_center = curr_via_center.to_float();
       Vector rel_coor = null;
       for (int i = 0; i < try_via_centers.length; i++) {
-        if (i == 0 || check_via_center.distance_square(try_via_centers[i].to_float()) <= max_dist_square) {
+        if (i == 0
+            || check_via_center.distance_square(try_via_centers[i].to_float()) <= max_dist_square) {
           Collection<Item> ignore_items = new LinkedList<>();
           if (p_ignore_items != null) {
             ignore_items.addAll(p_ignore_items);
           }
           rel_coor = try_via_centers[i].difference_by(curr_via_center);
           // No time limit here because the item database is already changed.
-          boolean shove_ok = check(curr_via, rel_coor, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items, p_board, null);
+          boolean shove_ok =
+              check(
+                  curr_via,
+                  rel_coor,
+                  p_max_recursion_depth,
+                  p_max_via_recursion_depth - 1,
+                  ignore_items,
+                  p_board,
+                  null);
           if (shove_ok) {
             new_via_center = try_via_centers[i];
             break;
@@ -173,7 +232,13 @@ public final class MoveDrillItemAlgo {
       if (new_via_center == null) {
         continue;
       }
-      if (!insert(curr_via, rel_coor, p_max_recursion_depth, p_max_via_recursion_depth - 1, null, p_board)) {
+      if (!insert(
+          curr_via,
+          rel_coor,
+          p_max_recursion_depth,
+          p_max_via_recursion_depth - 1,
+          null,
+          p_board)) {
         return false;
       }
     }
@@ -181,19 +246,28 @@ public final class MoveDrillItemAlgo {
   }
 
   /**
-   * Calculates possible new location for a via to shove outside p_obstacle_shape. if p_extended_check is true, more than 1 possible new locations are calculated. The function is used here and in
-   * ShoveTraceAlgo.check.
+   * Calculates possible new location for a via to shove outside p_obstacle_shape. if
+   * p_extended_check is true, more than 1 possible new locations are calculated. The function is
+   * used here and in ShoveTraceAlgo.check.
    */
-  static IntPoint[] try_shove_via_points(TileShape p_obstacle_shape, int p_layer, Via p_via, int p_cl_class_no, boolean p_extended_check, RoutingBoard p_board) {
+  static IntPoint[] try_shove_via_points(
+      TileShape p_obstacle_shape,
+      int p_layer,
+      Via p_via,
+      int p_cl_class_no,
+      boolean p_extended_check,
+      RoutingBoard p_board) {
     ShapeSearchTree search_tree = p_board.search_tree_manager.get_default_tree();
     TileShape curr_via_shape = p_via.get_tree_shape_on_layer(search_tree, p_layer);
     if (curr_via_shape == null) {
       return new IntPoint[0];
     }
     boolean is_int_octagon = p_obstacle_shape.is_IntOctagon();
-    double clearance_value = p_board.clearance_value(p_cl_class_no, p_via.clearance_class_no(), p_layer);
+    double clearance_value =
+        p_board.clearance_value(p_cl_class_no, p_via.clearance_class_no(), p_layer);
     double shove_distance;
-    if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE || is_int_octagon) {
+    if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE
+        || is_int_octagon) {
       shove_distance = 0.5 * curr_via_shape.bounding_box().max_width();
       if (!search_tree.is_clearance_compensation_used()) {
         shove_distance += clearance_value;
@@ -236,7 +310,8 @@ public final class MoveDrillItemAlgo {
       if (p_extended_check) {
         try_count = 4;
       }
-      FloatPoint[] shove_deltas = curr_offset_shape.nearest_relative_outside_locations(curr_via_shape, try_count);
+      FloatPoint[] shove_deltas =
+          curr_offset_shape.nearest_relative_outside_locations(curr_via_shape, try_count);
       try_via_centers = new IntPoint[shove_deltas.length];
       for (int i = 0; i < try_via_centers.length; i++) {
         Vector curr_delta = shove_deltas[i].round().difference_by(Point.ZERO);

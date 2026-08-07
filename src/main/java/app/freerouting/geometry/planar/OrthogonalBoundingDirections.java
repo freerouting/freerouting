@@ -1,20 +1,16 @@
 package app.freerouting.geometry.planar;
 
 /**
- * Implements the abstract class ShapeDirections as the 4 orthogonal directions. The class is a singleton with the only instantiation INSTANCE.
+ * Implements the abstract class ShapeDirections as the 4 orthogonal directions. The class is a
+ * singleton with the only instantiation INSTANCE.
  */
 public final class OrthogonalBoundingDirections implements ShapeBoundingDirections {
 
-  /**
-   * the one and only instantiation
-   */
+  /** the one and only instantiation */
   public static final OrthogonalBoundingDirections INSTANCE = new OrthogonalBoundingDirections();
 
-  /**
-   * prevent instantiation
-   */
-  private OrthogonalBoundingDirections() {
-  }
+  /** prevent instantiation */
+  private OrthogonalBoundingDirections() {}
 
   @Override
   public int count() {

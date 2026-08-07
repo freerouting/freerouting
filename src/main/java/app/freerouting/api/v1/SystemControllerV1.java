@@ -25,16 +25,17 @@ import java.lang.management.OperatingSystemMXBean;
  * JAX-RS controller for system-level monitoring and environment information endpoints.
  *
  * <p>This controller exposes two unauthenticated, publicly accessible endpoints:
+ *
  * <ul>
- *   <li>{@code GET /v1/system/status} — returns current CPU, RAM, storage and session-count
- *       metrics as a {@link app.freerouting.api.dto.SystemStatus} JSON object.</li>
- *   <li>{@code GET /v1/system/environment} — returns the deserialized
- *       {@code Freerouting.globalSettings.runtimeEnvironment} for diagnostics.</li>
+ *   <li>{@code GET /v1/system/status} — returns current CPU, RAM, storage and session-count metrics
+ *       as a {@link app.freerouting.api.dto.SystemStatus} JSON object.
+ *   <li>{@code GET /v1/system/environment} — returns the deserialized {@code
+ *       Freerouting.globalSettings.runtimeEnvironment} for diagnostics.
  * </ul>
  *
- * <p>Neither endpoint requires an {@code Authorization} header or a
- * {@code Freerouting-Environment-Host} header; both are excluded from API-key validation
- * and environment-host validation filters.</p>
+ * <p>Neither endpoint requires an {@code Authorization} header or a {@code
+ * Freerouting-Environment-Host} header; both are excluded from API-key validation and
+ * environment-host validation filters.
  */
 @Path("/v1/system")
 @Tag(name = "System", description = "System monitoring and environment information endpoints")
@@ -49,12 +50,12 @@ public class SystemControllerV1 {
   /**
    * Returns the current system-wide CPU load as a percentage in the range {@code [0, 100]}.
    *
-   * <p>Uses {@link com.sun.management.OperatingSystemMXBean#getCpuLoad()} when the
-   * {@code jdk.management} module is available. Falls back to {@code -1} on minimal JRE
-   * builds where the module is absent, or if the JVM cannot determine CPU load.</p>
+   * <p>Uses {@link com.sun.management.OperatingSystemMXBean#getCpuLoad()} when the {@code
+   * jdk.management} module is available. Falls back to {@code -1} on minimal JRE builds where the
+   * module is absent, or if the JVM cannot determine CPU load.
    *
-   * @return a {@code double} in the range {@code [0, 100]} representing CPU utilisation,
-   *         or {@code -1} if the value cannot be determined.
+   * @return a {@code double} in the range {@code [0, 100]} representing CPU utilisation, or {@code
+   *     -1} if the value cannot be determined.
    */
   public static double getCpuLoad() {
     try {
@@ -72,9 +73,24 @@ public class SystemControllerV1 {
     return -1;
   }
 
-  @Operation(summary = "Get system status", description = "Retrieves comprehensive system status including CPU load, memory usage, storage availability, and active session count.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "System status retrieved successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SystemStatus.class), examples = @ExampleObject(name = "System Status Example", value = """
+  @Operation(
+      summary = "Get system status",
+      description =
+          "Retrieves comprehensive system status including CPU load, memory usage, storage availability, and active session count.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "System status retrieved successfully",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = SystemStatus.class),
+                    examples =
+                        @ExampleObject(
+                            name = "System Status Example",
+                            value =
+                                """
           {
             "status": "OK",
             "cpu_load": 45.5,
@@ -84,7 +100,7 @@ public class SystemControllerV1 {
             "session_count": 3
           }
           """)))
-  })
+      })
   @GET
   @Path("/status")
   @Produces(MediaType.APPLICATION_JSON)
@@ -96,7 +112,8 @@ public class SystemControllerV1 {
     status.cpuLoad = getCpuLoad();
     status.ramUsed = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024);
     status.ramAvailable = (int) (runtime.freeMemory() / 1024 / 1024);
-    status.storageAvailable = (int) (GlobalSettings.getUserDataPath().toFile().getFreeSpace() / 1024 / 1024);
+    status.storageAvailable =
+        (int) (GlobalSettings.getUserDataPath().toFile().getFreeSpace() / 1024 / 1024);
     status.sessionCount = SessionManager.getInstance().getActiveSessionsCount();
 
     var response = GsonProvider.GSON.toJson(status);
@@ -104,10 +121,17 @@ public class SystemControllerV1 {
     return Response.ok(response).build();
   }
 
-  @Operation(summary = "Get environment information", description = "Returns environment configuration and settings for the Freerouting application.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Environment information retrieved successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON))
-  })
+  @Operation(
+      summary = "Get environment information",
+      description =
+          "Returns environment configuration and settings for the Freerouting application.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Environment information retrieved successfully",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON))
+      })
   @GET
   @Path("/environment")
   @Produces(MediaType.APPLICATION_JSON)
@@ -117,6 +141,4 @@ public class SystemControllerV1 {
     FRAnalytics.apiEndpointCalled("GET v1/system/environment", "", response);
     return Response.ok(response).build();
   }
-
 }
-

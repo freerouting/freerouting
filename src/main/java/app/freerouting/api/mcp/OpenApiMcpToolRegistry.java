@@ -24,9 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Builds MCP tools from the OpenAPI model so REST and MCP contracts stay synchronized.
- */
+/** Builds MCP tools from the OpenAPI model so REST and MCP contracts stay synchronized. */
 public final class OpenApiMcpToolRegistry {
 
   public record ToolOperation(
@@ -37,8 +35,7 @@ public final class OpenApiMcpToolRegistry {
       JsonObject inputSchema,
       JsonObject successSchema,
       List<Parameter> parameters,
-      RequestBody requestBody) {
-  }
+      RequestBody requestBody) {}
 
   private final Map<String, ToolOperation> toolsByName;
 
@@ -48,17 +45,20 @@ public final class OpenApiMcpToolRegistry {
 
   public static OpenApiMcpToolRegistry fromApplication(Application application)
       throws OpenApiConfigurationException {
-    SwaggerConfiguration config = new SwaggerConfiguration()
-        .resourcePackages(Set.of("app.freerouting.api"))
-        .prettyPrint(true);
+    SwaggerConfiguration config =
+        new SwaggerConfiguration()
+            .resourcePackages(Set.of("app.freerouting.api"))
+            .prettyPrint(true);
 
-    OpenAPI openAPI = new JaxrsOpenApiContextBuilder()
-        .application(application)
-        .openApiConfiguration(config)
-        .buildContext(true)
-        .read();
+    OpenAPI openAPI =
+        new JaxrsOpenApiContextBuilder()
+            .application(application)
+            .openApiConfiguration(config)
+            .buildContext(true)
+            .read();
 
-    Map<String, Schema> componentsSchemas = openAPI.getComponents() != null ? openAPI.getComponents().getSchemas() : null;
+    Map<String, Schema> componentsSchemas =
+        openAPI.getComponents() != null ? openAPI.getComponents().getSchemas() : null;
 
     Map<String, ToolOperation> tools = new LinkedHashMap<>();
     if (openAPI == null || openAPI.getPaths() == null) {
@@ -76,7 +76,8 @@ public final class OpenApiMcpToolRegistry {
         continue;
       }
 
-      for (Map.Entry<PathItem.HttpMethod, Operation> opEntry : pathItem.readOperationsMap().entrySet()) {
+      for (Map.Entry<PathItem.HttpMethod, Operation> opEntry :
+          pathItem.readOperationsMap().entrySet()) {
         PathItem.HttpMethod httpMethod = opEntry.getKey();
         Operation operation = opEntry.getValue();
         if (operation == null) {
@@ -85,21 +86,26 @@ public final class OpenApiMcpToolRegistry {
 
         String method = httpMethod.name();
         String toolName = buildToolName(method, path);
-        List<Parameter> mergedParams = mergeParameters(pathItem.getParameters(), operation.getParameters());
+        List<Parameter> mergedParams =
+            mergeParameters(pathItem.getParameters(), operation.getParameters());
 
-        JsonObject inputSchema = buildInputSchema(mergedParams, operation.getRequestBody(), componentsSchemas);
+        JsonObject inputSchema =
+            buildInputSchema(mergedParams, operation.getRequestBody(), componentsSchemas);
         JsonObject successSchema = buildSuccessSchema(operation);
-        String summary = operation.getSummary() != null ? operation.getSummary() : (method + " " + path);
+        String summary =
+            operation.getSummary() != null ? operation.getSummary() : (method + " " + path);
 
-        tools.put(toolName, new ToolOperation(
+        tools.put(
             toolName,
-            method,
-            path,
-            summary,
-            inputSchema,
-            successSchema,
-            mergedParams,
-            operation.getRequestBody()));
+            new ToolOperation(
+                toolName,
+                method,
+                path,
+                summary,
+                inputSchema,
+                successSchema,
+                mergedParams,
+                operation.getRequestBody()));
       }
     }
     // Register custom encode_base64 tool
@@ -129,16 +135,17 @@ public final class OpenApiMcpToolRegistry {
     encodeOutput.add("required", encodeOutRequired);
     encodeOutput.addProperty("additionalProperties", false);
 
-    tools.put("encode_base64", new ToolOperation(
+    tools.put(
         "encode_base64",
-        "custom",
-        "custom",
-        "Encodes a UTF-8 text string (like a DSN, JSON, or RULES file content) into a Base64 string. IMPORTANT: You MUST use this tool to perform base64 encoding; do NOT call external terminal shell commands (like powershell or base64) to perform this conversion.",
-        encodeInput,
-        encodeOutput,
-        new ArrayList<>(),
-        null
-    ));
+        new ToolOperation(
+            "encode_base64",
+            "custom",
+            "custom",
+            "Encodes a UTF-8 text string (like a DSN, JSON, or RULES file content) into a Base64 string. IMPORTANT: You MUST use this tool to perform base64 encoding; do NOT call external terminal shell commands (like powershell or base64) to perform this conversion.",
+            encodeInput,
+            encodeOutput,
+            new ArrayList<>(),
+            null));
 
     // Register custom decode_base64 tool
     JsonObject decodeInput = new JsonObject();
@@ -167,16 +174,17 @@ public final class OpenApiMcpToolRegistry {
     decodeOutput.add("required", decodeOutRequired);
     decodeOutput.addProperty("additionalProperties", false);
 
-    tools.put("decode_base64", new ToolOperation(
+    tools.put(
         "decode_base64",
-        "custom",
-        "custom",
-        "Decodes a Base64 string (like routed SES or JSON output files) back into a UTF-8 text string. IMPORTANT: You MUST use this tool to perform base64 decoding; do NOT call external terminal shell commands (like powershell or base64) to perform this conversion.",
-        decodeInput,
-        decodeOutput,
-        new ArrayList<>(),
-        null
-    ));
+        new ToolOperation(
+            "decode_base64",
+            "custom",
+            "custom",
+            "Decodes a Base64 string (like routed SES or JSON output files) back into a UTF-8 text string. IMPORTANT: You MUST use this tool to perform base64 decoding; do NOT call external terminal shell commands (like powershell or base64) to perform this conversion.",
+            decodeInput,
+            decodeOutput,
+            new ArrayList<>(),
+            null));
 
     // Register custom upload_job_input_from_local_file tool
     JsonObject uploadInput = new JsonObject();
@@ -187,7 +195,9 @@ public final class OpenApiMcpToolRegistry {
     jobIdUploadInput.addProperty("description", "Unique identifier of the job");
     JsonObject filePathUploadInput = new JsonObject();
     filePathUploadInput.addProperty("type", "string");
-    filePathUploadInput.addProperty("description", "The absolute or relative path to the local PCB design file (typically Specctra DSN format) to upload.");
+    filePathUploadInput.addProperty(
+        "description",
+        "The absolute or relative path to the local PCB design file (typically Specctra DSN format) to upload.");
     uploadInputProps.add("jobId", jobIdUploadInput);
     uploadInputProps.add("filePath", filePathUploadInput);
     uploadInput.add("properties", uploadInputProps);
@@ -210,16 +220,17 @@ public final class OpenApiMcpToolRegistry {
     uploadOutput.add("required", uploadOutRequired);
     uploadOutput.addProperty("additionalProperties", false);
 
-    tools.put("upload_job_input_from_local_file", new ToolOperation(
+    tools.put(
         "upload_job_input_from_local_file",
-        "custom",
-        "custom",
-        "Reads a local PCB design file, encodes it to Base64 in-memory, and uploads it to the routing engine. Works in both local (offline) and cloud (online) MCP configurations. Use this tool instead of reading and transmitting file contents to conserve context window.",
-        uploadInput,
-        uploadOutput,
-        new ArrayList<>(),
-        null
-    ));
+        new ToolOperation(
+            "upload_job_input_from_local_file",
+            "custom",
+            "custom",
+            "Reads a local PCB design file, encodes it to Base64 in-memory, and uploads it to the routing engine. Works in both local (offline) and cloud (online) MCP configurations. Use this tool instead of reading and transmitting file contents to conserve context window.",
+            uploadInput,
+            uploadOutput,
+            new ArrayList<>(),
+            null));
 
     // Register custom download_job_output_to_local_file tool
     JsonObject downloadInput = new JsonObject();
@@ -230,7 +241,9 @@ public final class OpenApiMcpToolRegistry {
     jobIdDownloadInput.addProperty("description", "Unique identifier of the job");
     JsonObject filePathDownloadInput = new JsonObject();
     filePathDownloadInput.addProperty("type", "string");
-    filePathDownloadInput.addProperty("description", "The path on the local disk where the routed output layout (Specctra SES format) should be saved.");
+    filePathDownloadInput.addProperty(
+        "description",
+        "The path on the local disk where the routed output layout (Specctra SES format) should be saved.");
     downloadInputProps.add("jobId", jobIdDownloadInput);
     downloadInputProps.add("filePath", filePathDownloadInput);
     downloadInput.add("properties", downloadInputProps);
@@ -253,16 +266,17 @@ public final class OpenApiMcpToolRegistry {
     downloadOutput.add("required", downloadOutRequired);
     downloadOutput.addProperty("additionalProperties", false);
 
-    tools.put("download_job_output_to_local_file", new ToolOperation(
+    tools.put(
         "download_job_output_to_local_file",
-        "custom",
-        "custom",
-        "Downloads the completed routing output, decodes it from Base64 in-memory, and saves it directly to a local file. Works in both local (offline) and cloud (online) MCP configurations. Use this tool instead of retrieving file contents to conserve context window.",
-        downloadInput,
-        downloadOutput,
-        new ArrayList<>(),
-        null
-    ));
+        new ToolOperation(
+            "download_job_output_to_local_file",
+            "custom",
+            "custom",
+            "Downloads the completed routing output, decodes it from Base64 in-memory, and saves it directly to a local file. Works in both local (offline) and cloud (online) MCP configurations. Use this tool instead of retrieving file contents to conserve context window.",
+            downloadInput,
+            downloadOutput,
+            new ArrayList<>(),
+            null));
 
     return new OpenApiMcpToolRegistry(tools);
   }
@@ -276,22 +290,21 @@ public final class OpenApiMcpToolRegistry {
 
     toolsByName.values().stream()
         .sorted(Comparator.comparing(ToolOperation::toolName))
-        .forEach(tool -> {
-          JsonObject item = new JsonObject();
-          item.addProperty("name", tool.toolName());
-          item.addProperty("description", tool.summary());
-          item.add("inputSchema", tool.inputSchema());
-          item.add("outputSchema", tool.successSchema());
-          tools.add(item);
-        });
+        .forEach(
+            tool -> {
+              JsonObject item = new JsonObject();
+              item.addProperty("name", tool.toolName());
+              item.addProperty("description", tool.summary());
+              item.add("inputSchema", tool.inputSchema());
+              item.add("outputSchema", tool.successSchema());
+              tools.add(item);
+            });
 
     return tools;
   }
 
   private static boolean isMcpEligiblePath(String path) {
-    return path != null
-        && path.startsWith("/v1/")
-        && !path.startsWith("/v1/mcp");
+    return path != null && path.startsWith("/v1/") && !path.startsWith("/v1/mcp");
   }
 
   private static String buildToolName(String method, String path) {
@@ -313,10 +326,14 @@ public final class OpenApiMcpToolRegistry {
     if ("/v1/sessions".equals(cleanPath) && "GET".equalsIgnoreCase(method)) {
       return "list_sessions";
     }
-    if (cleanPath.startsWith("/v1/sessions/") && cleanPath.endsWith("/logs") && "GET".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/sessions/")
+        && cleanPath.endsWith("/logs")
+        && "GET".equalsIgnoreCase(method)) {
       return "get_session_logs";
     }
-    if (cleanPath.startsWith("/v1/sessions/") && cleanPath.endsWith("/monitor") && "PUT".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/sessions/")
+        && cleanPath.endsWith("/monitor")
+        && "PUT".equalsIgnoreCase(method)) {
       return "monitor_session";
     }
     if (cleanPath.startsWith("/v1/sessions/") && "GET".equalsIgnoreCase(method)) {
@@ -330,43 +347,67 @@ public final class OpenApiMcpToolRegistry {
       return "list_jobs";
     }
 
-    if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/drc") && "GET".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/drc")
+        && "GET".equalsIgnoreCase(method)) {
       return "get_job_drc_report";
     }
-    if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/logs/stream") && "GET".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/logs/stream")
+        && "GET".equalsIgnoreCase(method)) {
       return "stream_job_logs";
     }
-    if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/logs") && "GET".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/logs")
+        && "GET".equalsIgnoreCase(method)) {
       return "get_job_logs";
     }
 
-    if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/output/json/stream") && "GET".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/output/json/stream")
+        && "GET".equalsIgnoreCase(method)) {
       return "stream_job_output_json";
     }
-    if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/output/json") && "GET".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/output/json")
+        && "GET".equalsIgnoreCase(method)) {
       return "download_job_output_json";
     }
-    if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/output/stream") && "GET".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/output/stream")
+        && "GET".equalsIgnoreCase(method)) {
       return "stream_job_output_file";
     }
-    if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/output") && "GET".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/output")
+        && "GET".equalsIgnoreCase(method)) {
       return "download_job_output_file";
     }
 
-    if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/input/json") && "POST".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/input/json")
+        && "POST".equalsIgnoreCase(method)) {
       return "upload_job_input_json";
     }
-    if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/input") && "POST".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/input")
+        && "POST".equalsIgnoreCase(method)) {
       return "upload_job_input_file";
     }
-    if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/settings") && "POST".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/settings")
+        && "POST".equalsIgnoreCase(method)) {
       return "update_job_settings";
     }
 
-    if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/cancel") && "put".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/cancel")
+        && "put".equalsIgnoreCase(method)) {
       return "cancel_job";
     }
-    if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/start") && "put".equalsIgnoreCase(method)) {
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/start")
+        && "put".equalsIgnoreCase(method)) {
       return "start_job";
     }
     if (cleanPath.startsWith("/v1/jobs/") && "GET".equalsIgnoreCase(method)) {
@@ -385,7 +426,8 @@ public final class OpenApiMcpToolRegistry {
     return (method + "_" + normalizedPath).toLowerCase(Locale.ROOT);
   }
 
-  private static List<Parameter> mergeParameters(List<Parameter> pathParams, List<Parameter> operationParams) {
+  private static List<Parameter> mergeParameters(
+      List<Parameter> pathParams, List<Parameter> operationParams) {
     List<Parameter> merged = new ArrayList<>();
     if (pathParams != null) {
       merged.addAll(pathParams);
@@ -396,7 +438,8 @@ public final class OpenApiMcpToolRegistry {
     return merged;
   }
 
-  private static JsonObject buildInputSchema(List<Parameter> parameters, RequestBody requestBody, Map<String, Schema> componentsSchemas) {
+  private static JsonObject buildInputSchema(
+      List<Parameter> parameters, RequestBody requestBody, Map<String, Schema> componentsSchemas) {
     JsonObject root = new JsonObject();
     root.addProperty("type", "object");
     JsonObject properties = new JsonObject();
@@ -539,7 +582,8 @@ public final class OpenApiMcpToolRegistry {
     return JsonParser.parseString(json);
   }
 
-  private static JsonElement resolveRefs(JsonElement element, Map<String, Schema> componentsSchemas, Set<String> visited) {
+  private static JsonElement resolveRefs(
+      JsonElement element, Map<String, Schema> componentsSchemas, Set<String> visited) {
     if (element == null) {
       return null;
     }
@@ -550,17 +594,20 @@ public final class OpenApiMcpToolRegistry {
         String prefix = "#/components/schemas/";
         if (ref.startsWith(prefix)) {
           String schemaName = ref.substring(prefix.length());
-          if (!visited.contains(schemaName) && componentsSchemas != null && componentsSchemas.containsKey(schemaName)) {
+          if (!visited.contains(schemaName)
+              && componentsSchemas != null
+              && componentsSchemas.containsKey(schemaName)) {
             visited.add(schemaName);
             Schema<?> referencedSchema = componentsSchemas.get(schemaName);
             JsonElement referencedJson = toJsonSchema(referencedSchema);
-            JsonElement resolvedReferenced = resolveRefs(referencedJson, componentsSchemas, visited);
+            JsonElement resolvedReferenced =
+                resolveRefs(referencedJson, componentsSchemas, visited);
             visited.remove(schemaName);
             return resolvedReferenced;
           }
         }
       }
-      
+
       JsonObject newObj = new JsonObject();
       for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
         newObj.add(entry.getKey(), resolveRefs(entry.getValue(), componentsSchemas, visited));

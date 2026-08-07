@@ -16,7 +16,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 /**
- * The `BoardPanelStatus` class represents a status bar at the lower border of the board frame. It contains components such as message lines, current layer indicator, and cursor position.
+ * The `BoardPanelStatus` class represents a status bar at the lower border of the board frame. It
+ * contains components such as message lines, current layer indicator, and cursor position.
  */
 class BoardPanelStatus extends JPanel {
 
@@ -33,7 +34,8 @@ class BoardPanelStatus extends JPanel {
   private final JLabel errorIcon;
   private final JLabel warningIcon;
   // List to hold the listeners for error or warning label clicks
-  private final List<ErrorOrWarningLabelClickedListener> errorOrWarningLabelClickedListeners = new ArrayList<>();
+  private final List<ErrorOrWarningLabelClickedListener> errorOrWarningLabelClickedListeners =
+      new ArrayList<>();
 
   /**
    * Creates a new instance of the `BoardPanelStatus` class.
@@ -134,25 +136,22 @@ class BoardPanelStatus extends JPanel {
     add(rightMessagePanel, BorderLayout.EAST);
   }
 
-  /**
-   * Adds mouse listeners for error and warning labels to handle click events.
-   */
+  /** Adds mouse listeners for error and warning labels to handle click events. */
   private void addErrorOrWarningLabelClickedListener() {
     // Raise an event if the user clicks on the error or warning label
-    errorsWarningsPanel.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        raiseErrorOrWarningLabelClickedEvent();
-      }
-    });
+    errorsWarningsPanel.addMouseListener(
+        new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            raiseErrorOrWarningLabelClickedEvent();
+          }
+        });
 
     // Change the mouse cursor to a hand when hovering over these labels
     errorsWarningsPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
   }
 
-  /**
-   * Raises the `ErrorOrWarningLabelClicked` event for all registered listeners.
-   */
+  /** Raises the `ErrorOrWarningLabelClicked` event for all registered listeners. */
   private void raiseErrorOrWarningLabelClickedEvent() {
     for (ErrorOrWarningLabelClickedListener listener : errorOrWarningLabelClickedListeners) {
       listener.errorOrWarningLabelClicked();
@@ -169,14 +168,13 @@ class BoardPanelStatus extends JPanel {
   }
 
   /**
-   * The `ErrorOrWarningLabelClickedListener` interface defines a method to handle the click event on the error or warning labels.
+   * The `ErrorOrWarningLabelClickedListener` interface defines a method to handle the click event
+   * on the error or warning labels.
    */
   @FunctionalInterface
   public interface ErrorOrWarningLabelClickedListener {
 
-    /**
-     * Invoked when the error or warning label is clicked.
-     */
+    /** Invoked when the error or warning label is clicked. */
     void errorOrWarningLabelClicked();
   }
 }

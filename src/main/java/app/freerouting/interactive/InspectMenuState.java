@@ -12,9 +12,8 @@ import java.awt.Color;
 import java.util.Set;
 
 /**
- * Class implementing the different functionality in the inspect menu,
- * especially
- * the different behaviour of the mouse button 1.
+ * Class implementing the different functionality in the inspect menu, especially the different
+ * behaviour of the mouse button 1.
  */
 public final class InspectMenuState extends MenuState {
 
@@ -22,16 +21,12 @@ public final class InspectMenuState extends MenuState {
   private ClearanceViolation last_hovered_violation;
   private String backup_message;
 
-  /**
-   * Creates a new instance of InspectMenuState
-   */
+  /** Creates a new instance of InspectMenuState */
   private InspectMenuState(GuiBoardManager p_board_handling) {
     super(p_board_handling);
   }
 
-  /**
-   * Returns a new instance of InspectMenuState
-   */
+  /** Returns a new instance of InspectMenuState */
   public static InspectMenuState get_instance(GuiBoardManager p_board_handling) {
     return new InspectMenuState(p_board_handling);
   }
@@ -156,7 +151,8 @@ public final class InspectMenuState extends MenuState {
       PolylineTrace trace = (PolylineTrace) item;
       info.append("Trace: ");
       info.append("ID ").append(trace.get_id_no());
-      info.append(", Layer: ").append(hdlg.get_routing_board().layer_structure.arr[trace.get_layer()].name);
+      info.append(", Layer: ")
+          .append(hdlg.get_routing_board().layer_structure.arr[trace.get_layer()].name);
       info.append(", Width: ").append(2 * trace.get_half_width());
 
       // Add segment count
@@ -192,8 +188,16 @@ public final class InspectMenuState extends MenuState {
     info.append(String.format(", Violation: %.4f mm", violation_mm));
 
     // Add clearance class information
-    String clearanceClass1 = hdlg.get_routing_board().rules.clearance_matrix.get_name(violation.first_item.clearance_class_no());
-    String clearanceClass2 = hdlg.get_routing_board().rules.clearance_matrix.get_name(violation.second_item.clearance_class_no());
+    String clearanceClass1 =
+        hdlg.get_routing_board()
+            .rules
+            .clearance_matrix
+            .get_name(violation.first_item.clearance_class_no());
+    String clearanceClass2 =
+        hdlg.get_routing_board()
+            .rules
+            .clearance_matrix
+            .get_name(violation.second_item.clearance_class_no());
 
     info.append(" | Classes: ").append(clearanceClass1).append(" <-> ").append(clearanceClass2);
 
@@ -243,16 +247,18 @@ public final class InspectMenuState extends MenuState {
       double intensity = hdlg.graphics_context.get_layer_visibility(last_hovered_violation.layer);
 
       // Draw the violation area with increased brightness
-      hdlg.graphics_context.fill_area(last_hovered_violation.shape, p_graphics, violationColor, Math.min(1.0, intensity * 1.8));
+      hdlg.graphics_context.fill_area(
+          last_hovered_violation.shape, p_graphics, violationColor, Math.min(1.0, intensity * 1.8));
 
       // Draw a prominent circle around the violation
       double draw_radius = hdlg.get_routing_board().rules.get_min_trace_half_width() * 8;
-      hdlg.graphics_context.draw_circle(last_hovered_violation.shape.centre_of_gravity(),
-                                        draw_radius,
-                                        0.15 * draw_radius,
-                                        violationColor,
-                                        p_graphics,
-                                        Math.min(1.0, intensity * 1.5));
+      hdlg.graphics_context.draw_circle(
+          last_hovered_violation.shape.centre_of_gravity(),
+          draw_radius,
+          0.15 * draw_radius,
+          violationColor,
+          p_graphics,
+          Math.min(1.0, intensity * 1.5));
     }
 
     // Draw the hovered item with highlight
@@ -264,7 +270,8 @@ public final class InspectMenuState extends MenuState {
       double highlight_intensity = Math.min(1.0, base_intensity * 1.5);
 
       // Draw with increased brightness
-      last_hovered_item.draw(p_graphics, hdlg.graphics_context, highlight_colors, highlight_intensity);
+      last_hovered_item.draw(
+          p_graphics, hdlg.graphics_context, highlight_colors, highlight_intensity);
     }
   }
 

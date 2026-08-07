@@ -7,14 +7,14 @@ public class DesignRulesCheckerSettings implements Serializable {
 
   @SerializedName("enabled")
   public transient boolean enabled;
+
   @SerializedName("include_warnings")
   public boolean includeWarnings = true;
+
   @SerializedName("include_errors")
   public boolean includeErrors = true;
 
-  /**
-   * Copy constructor
-   */
+  /** Copy constructor */
   @Override
   public DesignRulesCheckerSettings clone() {
     DesignRulesCheckerSettings clone = new DesignRulesCheckerSettings();

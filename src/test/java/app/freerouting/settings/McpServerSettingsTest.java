@@ -30,14 +30,14 @@ class McpServerSettingsTest {
     GlobalSettings settings = new GlobalSettings();
 
     String[] args = {
-        "--mcp_server.enabled=true",
-        "--mcp_server.endpoints=http://127.0.0.1:47000,http://127.0.0.1:47001",
-        "--mcp_server.authentication.enabled=false",
-        "--mcp_server.rate_limit.enabled=true",
-        "--mcp_server.rate_limit.requests_per_window=7",
-        "--mcp_server.rate_limit.window_seconds=15",
-        "--mcp_server.target_api_base_url=http://127.0.0.1:48000",
-        "--mcp_server.cors_origins=http://example.com"
+      "--mcp_server.enabled=true",
+      "--mcp_server.endpoints=http://127.0.0.1:47000,http://127.0.0.1:47001",
+      "--mcp_server.authentication.enabled=false",
+      "--mcp_server.rate_limit.enabled=true",
+      "--mcp_server.rate_limit.requests_per_window=7",
+      "--mcp_server.rate_limit.window_seconds=15",
+      "--mcp_server.target_api_base_url=http://127.0.0.1:48000",
+      "--mcp_server.cors_origins=http://example.com"
     };
 
     settings.applyCommandLineArguments(args);

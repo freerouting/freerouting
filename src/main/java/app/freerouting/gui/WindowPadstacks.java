@@ -14,14 +14,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Window displaying the library padstacks.
- */
+/** Window displaying the library padstacks. */
 public class WindowPadstacks extends WindowObjectListWithFilter {
 
-  /**
-   * Creates a new instance of PadstacksWindow
-   */
+  /** Creates a new instance of PadstacksWindow */
   public WindowPadstacks(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
@@ -29,12 +25,11 @@ public class WindowPadstacks extends WindowObjectListWithFilter {
     this.setTitle(tm.getText("padstacks"));
   }
 
-  /**
-   * Fills the list with the library padstacks.
-   */
+  /** Fills the list with the library padstacks. */
   @Override
   protected void fill_list() {
-    Padstacks padstacks = this.board_frame.board_panel.board_handling.get_routing_board().library.padstacks;
+    Padstacks padstacks =
+        this.board_frame.board_panel.board_handling.get_routing_board().library.padstacks;
     Padstack[] sorted_arr = new Padstack[padstacks.count()];
     for (int i = 0; i < sorted_arr.length; i++) {
       sorted_arr[i] = padstacks.get(i + 1);

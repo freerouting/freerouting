@@ -28,8 +28,7 @@ public final class SessionManager {
     this.monitoredSessionId = sessionId;
   }
 
-  private SessionManager() {
-  }
+  private SessionManager() {}
 
   public static SessionManager getInstance() {
     return instance;
@@ -69,7 +68,9 @@ public final class SessionManager {
   }
 
   public String[] listSessionIds(UUID userId) {
-    return Arrays.stream(getSessions(null, userId)).map(s -> s.id.toString()).toArray(String[]::new);
+    return Arrays.stream(getSessions(null, userId))
+        .map(s -> s.id.toString())
+        .toArray(String[]::new);
   }
 
   public Session getGuiSession() throws IllegalArgumentException {
@@ -89,7 +90,8 @@ public final class SessionManager {
    * @throws IllegalArgumentException
    */
   public void setGuiSession(UUID sessionId) throws IllegalArgumentException {
-    // Check if there are any other GUI sessions and if so, throw an exception because only one GUI session is allowed
+    // Check if there are any other GUI sessions and if so, throw an exception because only one GUI
+    // session is allowed
     for (Session session : sessions.values()) {
       if (session.isGuiSession) {
         throw new IllegalArgumentException("There is already a GUI session.");
@@ -105,15 +107,21 @@ public final class SessionManager {
 
     if (!session.host.startsWith("Freerouting/")) {
       throw new IllegalArgumentException(
-          "Session with id " + sessionId + " and host " + session.host + " is not a valid GUI session. GUI sessions must have the prefix 'Freerouting/' for their host value.");
+          "Session with id "
+              + sessionId
+              + " and host "
+              + session.host
+              + " is not a valid GUI session. GUI sessions must have the prefix 'Freerouting/' for their host value.");
     }
   }
 
   public Session[] getSessions(String sessionId, UUID userId) {
     if (sessionId == null) {
-      return sessions.values().stream().filter(s -> s.userId.equals(userId)).toArray(Session[]::new);
+      return sessions.values().stream()
+          .filter(s -> s.userId.equals(userId))
+          .toArray(Session[]::new);
     } else {
-      return new Session[]{sessions.get(sessionId)};
+      return new Session[] {sessions.get(sessionId)};
     }
   }
 }

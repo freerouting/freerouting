@@ -19,20 +19,19 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * Reads a Specctra DSN file and returns a fully constructed
- * {@link app.freerouting.board.BasicBoard} wrapped in a typed {@link BoardReadResult}.
+ * Reads a Specctra DSN file and returns a fully constructed {@link
+ * app.freerouting.board.BasicBoard} wrapped in a typed {@link BoardReadResult}.
  *
  * <p>This class has <em>no</em> dependency on {@link app.freerouting.management.BoardManager},
- * {@link app.freerouting.core.RoutingJob}, or any GUI class. Board construction happens
- * internally via an anonymous minimal shim embedded in {@link ReadScopeParameter}.
+ * {@link app.freerouting.core.RoutingJob}, or any GUI class. Board construction happens internally
+ * via an anonymous minimal shim embedded in {@link ReadScopeParameter}.
  *
- * <p>Replaces the read path previously found in
- * {@link app.freerouting.io.specctra.parser.DsnFile} (now an empty shell).
+ * <p>Replaces the read path previously found in {@link app.freerouting.io.specctra.parser.DsnFile}
+ * (now an empty shell).
  */
 public final class DsnReader {
 
-  private DsnReader() {
-  }
+  private DsnReader() {}
 
   /**
    * Reads a DSN stream and returns a fully constructed board or a typed failure.
@@ -40,10 +39,10 @@ public final class DsnReader {
    * <p>The stream is <em>closed</em> by this method once reading completes (successfully or not).
    *
    * @param inputStream source — closed by this method on completion
-   * @param observers   nullable; passed through to board items for host-system embedding
+   * @param observers nullable; passed through to board items for host-system embedding
    * @param idGenerator nullable; for consistent item identification in host-system embedding
-   * @return one of {@link BoardReadResult.Success}, {@link BoardReadResult.OutlineMissing},
-   *         {@link BoardReadResult.ParseError}, or {@link BoardReadResult.IoError}
+   * @return one of {@link BoardReadResult.Success}, {@link BoardReadResult.OutlineMissing}, {@link
+   *     BoardReadResult.ParseError}, or {@link BoardReadResult.IoError}
    */
   /**
    * Convenience overload — equivalent to {@link #readBoard(InputStream, BoardObservers,
@@ -61,13 +60,13 @@ public final class DsnReader {
    *
    * <p>The stream is <em>closed</em> by this method once reading completes (successfully or not).
    *
-   * @param inputStream  source — closed by this method on completion
-   * @param observers    nullable; passed through to board items for host-system embedding
-   * @param idGenerator  nullable; for consistent item identification in host-system embedding
-   * @param designName   optional caller-supplied filename (without path) to use in log messages;
-   *                     when {@code null} or blank the pcb-name token from the DSN header is used
-   * @return one of {@link BoardReadResult.Success}, {@link BoardReadResult.OutlineMissing},
-   *         {@link BoardReadResult.ParseError}, or {@link BoardReadResult.IoError}
+   * @param inputStream source — closed by this method on completion
+   * @param observers nullable; passed through to board items for host-system embedding
+   * @param idGenerator nullable; for consistent item identification in host-system embedding
+   * @param designName optional caller-supplied filename (without path) to use in log messages; when
+   *     {@code null} or blank the pcb-name token from the DSN header is used
+   * @return one of {@link BoardReadResult.Success}, {@link BoardReadResult.OutlineMissing}, {@link
+   *     BoardReadResult.ParseError}, or {@link BoardReadResult.IoError}
    */
   public static BoardReadResult readBoard(
       InputStream inputStream,
@@ -118,8 +117,7 @@ public final class DsnReader {
       if (!ok) {
         closeQuietly(inputStream);
         return new BoardReadResult.ParseError(
-            "(pcb",
-            "Not a Specctra DSN file: expected '(pcb <name>' header");
+            "(pcb", "Not a Specctra DSN file: expected '(pcb <name>' header");
       }
     }
 
@@ -151,13 +149,23 @@ public final class DsnReader {
       }
       List<String> warnings = par.getWarnings();
       if (!warnings.isEmpty()) {
-        FRLogger.warn("DSN file '" + effectiveDesignName + "' was loaded with " + warnings.size() + " warning(s).");
+        FRLogger.warn(
+            "DSN file '"
+                + effectiveDesignName
+                + "' was loaded with "
+                + warnings.size()
+                + " warning(s).");
       }
       return new BoardReadResult.Success(board, null, warnings);
     } else if (!par.board_outline_ok) {
       List<String> warnings = par.getWarnings();
       if (!warnings.isEmpty()) {
-        FRLogger.warn("DSN file '" + effectiveDesignName + "' was loaded with " + warnings.size() + " warning(s).");
+        FRLogger.warn(
+            "DSN file '"
+                + effectiveDesignName
+                + "' was loaded with "
+                + warnings.size()
+                + " warning(s).");
       }
       return new BoardReadResult.OutlineMissing(board, null, warnings);
     } else {
@@ -166,23 +174,23 @@ public final class DsnReader {
   }
 
   /**
-   * Parses only the {@code (parser ...)}, {@code (resolution ...)}, and
-   * {@code (structure (layer ...))} / {@code (structure (rule ...))} /
-   * {@code (structure (autoroute_settings ...))} scopes. Does <em>not</em> construct full
-   * board geometry, component placements, netlist items, or route traces.
+   * Parses only the {@code (parser ...)}, {@code (resolution ...)}, and {@code (structure (layer
+   * ...))} / {@code (structure (rule ...))} / {@code (structure (autoroute_settings ...))} scopes.
+   * Does <em>not</em> construct full board geometry, component placements, netlist items, or route
+   * traces.
    *
    * <p>This is significantly faster than {@link #readBoard} on large DSN files because the heavy
-   * {@code (library ...)}, {@code (placement ...)}, {@code (network ...)}, and
-   * {@code (wiring ...)} scopes are never parsed — the stream is closed immediately after the
-   * {@code (structure ...)} scope ends.
+   * {@code (library ...)}, {@code (placement ...)}, {@code (network ...)}, and {@code (wiring ...)}
+   * scopes are never parsed — the stream is closed immediately after the {@code (structure ...)}
+   * scope ends.
    *
    * <p>The stream is <em>closed</em> by this method on return (success or failure).
    *
    * @param inputStream source — closed by this method on completion
-   * @return {@link BoardReadResult.Success} with a populated {@link BoardMetadata} (board field may be
-   *         {@code null} if the DSN had no valid outline), {@link BoardReadResult.ParseError} for
-   *         malformed headers, or {@link BoardReadResult.IoError} for I/O failures during header
-   *         scanning.
+   * @return {@link BoardReadResult.Success} with a populated {@link BoardMetadata} (board field may
+   *     be {@code null} if the DSN had no valid outline), {@link BoardReadResult.ParseError} for
+   *     malformed headers, or {@link BoardReadResult.IoError} for I/O failures during header
+   *     scanning.
    */
   public static BoardReadResult readMetadata(InputStream inputStream) {
     if (inputStream == null) {
@@ -214,8 +222,7 @@ public final class DsnReader {
       if (!ok) {
         closeQuietly(inputStream);
         return new BoardReadResult.ParseError(
-            "(pcb",
-            "Not a Specctra DSN file: expected '(pcb <name>' header");
+            "(pcb", "Not a Specctra DSN file: expected '(pcb <name>' header");
       }
     }
 
@@ -227,7 +234,7 @@ public final class DsnReader {
     ReadScopeParameter par = new ReadScopeParameter(scanner, observers, idGenerator);
     Object nextToken = null;
     outer:
-    for (;;) {
+    for (; ; ) {
       Object prevToken = nextToken;
       try {
         nextToken = scanner.next_token();
@@ -269,15 +276,15 @@ public final class DsnReader {
       layerCount = par.getBoard().get_layer_count();
     }
 
-    BoardMetadata metadata = new BoardMetadata(
-        par.host_cad,
-        par.host_version,
-        layerCount,
-        par.unit,
-        par.resolution,
-        par.snap_angle,
-        par.autoroute_settings
-    );
+    BoardMetadata metadata =
+        new BoardMetadata(
+            par.host_cad,
+            par.host_version,
+            layerCount,
+            par.unit,
+            par.resolution,
+            par.snap_angle,
+            par.autoroute_settings);
 
     return new BoardReadResult.Success(par.getBoard(), metadata, par.getWarnings());
   }

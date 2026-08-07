@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 
 /**
  * With {@code strict_drc} enabled the router must never ADD clearance violations. The CNH
- * functional tester fixture ships with 16 pre-existing violations in its design (present at
- * DSN load, before any routing) — strict mode cannot remove those, but the routed result
- * must not exceed them, and completion must stay reasonable.
+ * functional tester fixture ships with 16 pre-existing violations in its design (present at DSN
+ * load, before any routing) — strict mode cannot remove those, but the routed result must not
+ * exceed them, and completion must stay reasonable.
  */
 public class StrictDrcRoutingTest extends RoutingFixtureTest {
 

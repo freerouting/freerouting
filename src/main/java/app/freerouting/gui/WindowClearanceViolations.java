@@ -25,9 +25,7 @@ import java.util.TreeSet;
 
 public class WindowClearanceViolations extends WindowObjectListWithFilter {
 
-  /**
-   * Creates a new instance of clearance violations window
-   */
+  /** Creates a new instance of clearance violations window */
   public WindowClearanceViolations(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
@@ -40,9 +38,8 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
   protected void fill_list() {
     GuiBoardManager board_handling = this.board_frame.board_panel.board_handling;
 
-    ClearanceViolations clearance_violations = new ClearanceViolations(board_handling
-        .get_routing_board()
-        .get_items());
+    ClearanceViolations clearance_violations =
+        new ClearanceViolations(board_handling.get_routing_board().get_items());
     SortedSet<ViolationInfo> sorted_set = new TreeSet<>();
     for (ClearanceViolation curr_violation : clearance_violations.list) {
       sorted_set.add(new ViolationInfo(curr_violation));
@@ -53,7 +50,9 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     this.list.setVisibleRowCount(Math.min(sorted_set.size(), DEFAULT_TABLE_SIZE));
 
     if (clearance_violations.global_smallest_clearance != Double.MAX_VALUE) {
-      FRLogger.info("The smallest clearance on the board is %.4f mm.".formatted(clearance_violations.global_smallest_clearance / 10000.0));
+      FRLogger.info(
+          "The smallest clearance on the board is %.4f mm."
+              .formatted(clearance_violations.global_smallest_clearance / 10000.0));
     }
   }
 
@@ -110,13 +109,15 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     public ViolationInfo(ClearanceViolation p_violation) {
       this.violation = p_violation;
       FloatPoint board_location = p_violation.shape.centre_of_gravity();
-      this.location = board_frame.board_panel.board_handling.coordinate_transform.board_to_user(board_location);
+      this.location =
+          board_frame.board_panel.board_handling.coordinate_transform.board_to_user(board_location);
       this.delta = (p_violation.expected_clearance - p_violation.actual_clearance) / 10000.0;
     }
 
     @Override
     public String toString() {
-      LayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
+      LayerStructure layer_structure =
+          board_frame.board_panel.board_handling.get_routing_board().layer_structure;
 
       return tm.getText(
           "clearance_violation_message_template",

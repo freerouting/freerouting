@@ -49,18 +49,25 @@ class RouterSettingsMergeTest {
     // Create a mock/real board with 2 signal layers
     app.freerouting.board.Layer layer1 = new app.freerouting.board.Layer("Top", true);
     app.freerouting.board.Layer layer2 = new app.freerouting.board.Layer("Bottom", true);
-    app.freerouting.board.LayerStructure layerStructure = new app.freerouting.board.LayerStructure(new app.freerouting.board.Layer[] { layer1, layer2 });
-    app.freerouting.rules.ClearanceMatrix clearanceMatrix = app.freerouting.rules.ClearanceMatrix.get_default_instance(layerStructure, 10);
-    app.freerouting.rules.BoardRules boardRules = new app.freerouting.rules.BoardRules(layerStructure, clearanceMatrix);
+    app.freerouting.board.LayerStructure layerStructure =
+        new app.freerouting.board.LayerStructure(
+            new app.freerouting.board.Layer[] {layer1, layer2});
+    app.freerouting.rules.ClearanceMatrix clearanceMatrix =
+        app.freerouting.rules.ClearanceMatrix.get_default_instance(layerStructure, 10);
+    app.freerouting.rules.BoardRules boardRules =
+        new app.freerouting.rules.BoardRules(layerStructure, clearanceMatrix);
     boardRules.create_default_net_class();
     app.freerouting.board.Communication communication = new app.freerouting.board.Communication();
-    app.freerouting.board.RoutingBoard board = new app.freerouting.board.RoutingBoard(
-        new app.freerouting.geometry.planar.IntBox(0, 0, 2000000, 2000000),
-        layerStructure,
-        new app.freerouting.geometry.planar.PolylineShape[] { app.freerouting.geometry.planar.TileShape.get_instance(0, 0, 2000000, 2000000) },
-        0,
-        boardRules,
-        communication);
+    app.freerouting.board.RoutingBoard board =
+        new app.freerouting.board.RoutingBoard(
+            new app.freerouting.geometry.planar.IntBox(0, 0, 2000000, 2000000),
+            layerStructure,
+            new app.freerouting.geometry.planar.PolylineShape[] {
+              app.freerouting.geometry.planar.TileShape.get_instance(0, 0, 2000000, 2000000)
+            },
+            0,
+            boardRules,
+            communication);
 
     // Run optimizations
     settings.applyBoardSpecificOptimizations(board);
@@ -72,4 +79,3 @@ class RouterSettingsMergeTest {
     assertFalse(settings.layers[1].preferredDirectionHorizontal);
   }
 }
-

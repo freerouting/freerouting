@@ -26,9 +26,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-/**
- * Combined visibility frame for board layers and board objects.
- */
+/** Combined visibility frame for board layers and board objects. */
 public class WindowVisibility extends BoardSavableSubWindow {
 
   protected static final int MAX_SLIDER_VALUE = 100;
@@ -43,7 +41,8 @@ public class WindowVisibility extends BoardSavableSubWindow {
   private final VisibilitySection object_section;
   protected boolean bulk_update_in_progress;
 
-  private static final java.util.Map<Locale, TextManager> text_manager_cache = new ConcurrentHashMap<>();
+  private static final java.util.Map<Locale, TextManager> text_manager_cache =
+      new ConcurrentHashMap<>();
 
   public WindowVisibility(BoardFrame board_frame) {
     this.board_panel = board_frame.board_panel;
@@ -63,18 +62,22 @@ public class WindowVisibility extends BoardSavableSubWindow {
       object_messages[i] = tm.getText(ObjectNames.values()[i].toString());
     }
 
-    this.layer_section = new VisibilitySection(
-        tm.getText("layer_section_title"),
-        layer_messages,
-        index -> get_board_handling().graphics_context.get_raw_layer_visibility(index),
-        (index, value) -> get_board_handling().set_layer_visibility(index, value)
-    );
-    this.object_section = new VisibilitySection(
-        tm.getText("object_section_title"),
-        object_messages,
-        index -> get_board_handling().graphics_context.color_intensity_table.get_value(index),
-        (index, value) -> get_board_handling().graphics_context.color_intensity_table.set_value(index, value)
-    );
+    this.layer_section =
+        new VisibilitySection(
+            tm.getText("layer_section_title"),
+            layer_messages,
+            index -> get_board_handling().graphics_context.get_raw_layer_visibility(index),
+            (index, value) -> get_board_handling().set_layer_visibility(index, value));
+    this.object_section =
+        new VisibilitySection(
+            tm.getText("object_section_title"),
+            object_messages,
+            index -> get_board_handling().graphics_context.color_intensity_table.get_value(index),
+            (index, value) ->
+                get_board_handling()
+                    .graphics_context
+                    .color_intensity_table
+                    .set_value(index, value));
 
     JPanel main_panel = new JPanel(new BorderLayout());
     getContentPane().add(main_panel);
@@ -86,10 +89,11 @@ public class WindowVisibility extends BoardSavableSubWindow {
     main_panel.add(header_panel, BorderLayout.NORTH);
 
     JPanel content_panel = new JPanel(new GridBagLayout());
-    JScrollPane scroll_pane = new JScrollPane(
-        content_panel,
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    JScrollPane scroll_pane =
+        new JScrollPane(
+            content_panel,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     scroll_pane.setPreferredSize(CONTENT_SIZE);
     scroll_pane.getVerticalScrollBar().setUnitIncrement(24);
     scroll_pane.getVerticalScrollBar().setBlockIncrement(72);
@@ -119,17 +123,19 @@ public class WindowVisibility extends BoardSavableSubWindow {
     }
 
     JPanel button_row_panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
-    TextManager visibility_tm = text_manager_cache.computeIfAbsent(
-        board_frame.get_locale(),
-        locale -> new TextManager(WindowVisibility.class, locale));
+    TextManager visibility_tm =
+        text_manager_cache.computeIfAbsent(
+            board_frame.get_locale(), locale -> new TextManager(WindowVisibility.class, locale));
 
     JButton reset_button = new JButton(visibility_tm.getText("reset_to_defaults"));
     reset_button.setToolTipText(visibility_tm.getText("reset_to_defaults_tooltip"));
-    reset_button.addActionListener(_ -> {
-      reset_to_defaults();
-      board_panel.repaint();
-    });
-    reset_button.addActionListener(_ -> FRAnalytics.buttonClicked("visibility_reset_button", reset_button.getText()));
+    reset_button.addActionListener(
+        _ -> {
+          reset_to_defaults();
+          board_panel.repaint();
+        });
+    reset_button.addActionListener(
+        _ -> FRAnalytics.buttonClicked("visibility_reset_button", reset_button.getText()));
     button_row_panel.add(reset_button);
 
     JPanel footer_panel = new JPanel(new BorderLayout());
@@ -215,7 +221,10 @@ public class WindowVisibility extends BoardSavableSubWindow {
     private final IntToDoubleFunction current_value_supplier;
     private final BiConsumer<Integer, Double> changed_value_consumer;
 
-    private VisibilitySection(String title, String[] message_arr, IntToDoubleFunction current_value_supplier,
+    private VisibilitySection(
+        String title,
+        String[] message_arr,
+        IntToDoubleFunction current_value_supplier,
         BiConsumer<Integer, Double> changed_value_consumer) {
       this.title = title;
       this.message_arr = message_arr;
@@ -260,7 +269,8 @@ public class WindowVisibility extends BoardSavableSubWindow {
       slider_arr[index].setMinorTickSpacing(SLIDER_STEP);
       slider_arr[index].setPaintTicks(true);
       slider_arr[index].setSnapToTicks(true);
-      Dimension slider_size = new Dimension(SLIDER_WIDTH, slider_arr[index].getPreferredSize().height);
+      Dimension slider_size =
+          new Dimension(SLIDER_WIDTH, slider_arr[index].getPreferredSize().height);
       slider_arr[index].setPreferredSize(slider_size);
       slider_arr[index].addChangeListener(new SliderChangeListener(this, index));
       row_panel.add(slider_arr[index], BorderLayout.CENTER);
@@ -268,7 +278,8 @@ public class WindowVisibility extends BoardSavableSubWindow {
       value_arr[index] = new JTextField(5);
       value_arr[index].setEditable(false);
       value_arr[index].setHorizontalAlignment(JTextField.RIGHT);
-      Dimension value_size = new Dimension(VALUE_FIELD_WIDTH, value_arr[index].getPreferredSize().height);
+      Dimension value_size =
+          new Dimension(VALUE_FIELD_WIDTH, value_arr[index].getPreferredSize().height);
       value_arr[index].setPreferredSize(value_size);
       row_panel.add(value_arr[index], BorderLayout.EAST);
 

@@ -16,28 +16,29 @@ public final class CutoutRouteState extends SelectRegionState {
 
   private final Collection<PolylineTrace> trace_list;
 
-  /**
-   * Creates a new instance of CutoutRouteState
-   */
-  private CutoutRouteState(Collection<PolylineTrace> p_item_list, InteractiveState p_parent_state,
+  /** Creates a new instance of CutoutRouteState */
+  private CutoutRouteState(
+      Collection<PolylineTrace> p_item_list,
+      InteractiveState p_parent_state,
       GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
     this.trace_list = p_item_list;
   }
 
-  /**
-   * Returns a new instance of this class.
-   */
-  public static CutoutRouteState get_instance(Collection<Item> p_item_list, InteractiveState p_parent_state,
+  /** Returns a new instance of this class. */
+  public static CutoutRouteState get_instance(
+      Collection<Item> p_item_list,
+      InteractiveState p_parent_state,
       GuiBoardManager p_board_handling) {
     return get_instance(p_item_list, null, p_parent_state, p_board_handling);
   }
 
-  /**
-   * Returns a new instance of this class.
-   */
-  public static CutoutRouteState get_instance(Collection<Item> p_item_list, FloatPoint p_location,
-      InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+  /** Returns a new instance of this class. */
+  public static CutoutRouteState get_instance(
+      Collection<Item> p_item_list,
+      FloatPoint p_location,
+      InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling) {
     p_board_handling.display_layer_message();
     // filter items, which cannot be cutout
     Collection<PolylineTrace> item_list = new LinkedList<>();
@@ -48,10 +49,11 @@ public final class CutoutRouteState extends SelectRegionState {
       }
     }
 
-    CutoutRouteState new_instance = new CutoutRouteState(item_list, p_parent_state, p_board_handling);
+    CutoutRouteState new_instance =
+        new CutoutRouteState(item_list, p_parent_state, p_board_handling);
     new_instance.corner1 = p_location;
-    new_instance.hdlg.screen_messages
-        .set_status_message(new_instance.tm.getText("drag_left_mouse_button_to_select_cutout_rectangle"));
+    new_instance.hdlg.screen_messages.set_status_message(
+        new_instance.tm.getText("drag_left_mouse_button_to_select_cutout_rectangle"));
     return new_instance;
   }
 
@@ -64,9 +66,7 @@ public final class CutoutRouteState extends SelectRegionState {
     return this.return_state;
   }
 
-  /**
-   * Selects all items in the rectangle defined by corner1 and corner2.
-   */
+  /** Selects all items in the rectangle defined by corner1 and corner2. */
   private void cutout_route() {
     if (this.corner1 == null || this.corner2 == null) {
       return;
@@ -77,7 +77,9 @@ public final class CutoutRouteState extends SelectRegionState {
     IntPoint p1 = this.corner1.round();
     IntPoint p2 = this.corner2.round();
 
-    IntBox cut_box = new IntBox(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.max(p1.x, p2.x), Math.max(p1.y, p2.y));
+    IntBox cut_box =
+        new IntBox(
+            Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.max(p1.x, p2.x), Math.max(p1.y, p2.y));
 
     Set<Integer> changed_nets = new TreeSet<>();
 
@@ -101,7 +103,10 @@ public final class CutoutRouteState extends SelectRegionState {
 
     for (PolylineTrace curr_trace : this.trace_list) {
 
-      curr_trace.draw(p_graphics, hdlg.graphics_context, hdlg.graphics_context.get_hilight_color(),
+      curr_trace.draw(
+          p_graphics,
+          hdlg.graphics_context,
+          hdlg.graphics_context.get_hilight_color(),
           hdlg.graphics_context.get_hilight_color_intensity());
     }
     super.draw(p_graphics);

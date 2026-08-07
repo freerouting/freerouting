@@ -11,12 +11,14 @@ import org.junit.jupiter.api.Test;
 
 public class DrcViolationRoutingTest extends RoutingFixtureTest {
 
-  private void assertDrcOnLoadedBoard(String filename, int expectedUnconnected, int expectedViolations) throws Exception {
+  private void assertDrcOnLoadedBoard(
+      String filename, int expectedUnconnected, int expectedViolations) throws Exception {
     RoutingJob job = GetRoutingJob(filename, null);
 
     // Read the board without routing it
     ByteArrayInputStream inputStream = new ByteArrayInputStream(job.input.getData().readAllBytes());
-    app.freerouting.io.BoardReadResult result = DsnReader.readBoard(inputStream, null, null, "test");
+    app.freerouting.io.BoardReadResult result =
+        DsnReader.readBoard(inputStream, null, null, "test");
     BasicBoard board = null;
     if (result instanceof app.freerouting.io.BoardReadResult.Success s) {
       board = s.board();
@@ -28,9 +30,13 @@ public class DrcViolationRoutingTest extends RoutingFixtureTest {
 
     BoardStatistics stats = new BoardStatistics(board);
 
-    assertEquals(expectedUnconnected, stats.connections.incompleteCount,
+    assertEquals(
+        expectedUnconnected,
+        stats.connections.incompleteCount,
         "Mismatch in unconnected items for " + filename);
-    assertEquals(expectedViolations, stats.clearanceViolations.totalCount,
+    assertEquals(
+        expectedViolations,
+        stats.clearanceViolations.totalCount,
         "Mismatch in clearance violations for " + filename);
   }
 
@@ -46,7 +52,8 @@ public class DrcViolationRoutingTest extends RoutingFixtureTest {
 
   @Test
   public void test_Issue_575_6_track_and_1_hole_clearance_violations() throws Exception {
-    assertDrcOnLoadedBoard("Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn", 3, 76);
+    assertDrcOnLoadedBoard(
+        "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn", 3, 76);
   }
 
   @Test

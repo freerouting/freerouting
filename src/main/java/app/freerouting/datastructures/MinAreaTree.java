@@ -7,22 +7,21 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Binary search tree for shapes in the plane. The shapes are stored in the leaves of the tree. The algorithm for storing a new shape is as following. Starting from the root go to the child, so that
- * the increase of the bounding shape of that child is minimal after adding the new shape, until you reach a leaf. The use of ShapeDirections to calculate the bounding shape is for historical reasons
- * (coming from a Kd-Tree). Instead, any algorithm to calculate a bounding shape of two input shapes can be used. The algorithm would of course also work for higher dimensions.
+ * Binary search tree for shapes in the plane. The shapes are stored in the leaves of the tree. The
+ * algorithm for storing a new shape is as following. Starting from the root go to the child, so
+ * that the increase of the bounding shape of that child is minimal after adding the new shape,
+ * until you reach a leaf. The use of ShapeDirections to calculate the bounding shape is for
+ * historical reasons (coming from a Kd-Tree). Instead, any algorithm to calculate a bounding shape
+ * of two input shapes can be used. The algorithm would of course also work for higher dimensions.
  */
 public class MinAreaTree extends ShapeTree {
 
-  /**
-   * Constructor with a fixed set of directions defining the keys and the surrounding shapes
-   */
+  /** Constructor with a fixed set of directions defining the keys and the surrounding shapes */
   public MinAreaTree(ShapeBoundingDirections p_directions) {
     super(p_directions);
   }
 
-  /**
-   * Calculates the objects in this tree, which overlap with p_shape
-   */
+  /** Calculates the objects in this tree, which overlap with p_shape */
   public Set<Leaf> overlaps(RegularTileShape p_shape) {
     Set<Leaf> found_overlaps = new TreeSet<>();
     if (this.root == null) {
@@ -92,18 +91,22 @@ public class MinAreaTree extends ShapeTree {
 
     while (!(curr_node instanceof Leaf)) {
       InnerNode curr_inner_node = (InnerNode) curr_node;
-      curr_inner_node.bounding_shape = p_leaf_to_insert.bounding_shape.union(curr_inner_node.bounding_shape);
+      curr_inner_node.bounding_shape =
+          p_leaf_to_insert.bounding_shape.union(curr_inner_node.bounding_shape);
 
       // Choose the child, so that the area increase of that child after taking the union
       // with the shape of p_leaf_to_insert is minimal.
 
       RegularTileShape first_child_shape = curr_inner_node.first_child.bounding_shape;
-      RegularTileShape union_with_first_child_shape = p_leaf_to_insert.bounding_shape.union(first_child_shape);
+      RegularTileShape union_with_first_child_shape =
+          p_leaf_to_insert.bounding_shape.union(first_child_shape);
       double first_area_increase = union_with_first_child_shape.area() - first_child_shape.area();
 
       RegularTileShape second_child_shape = curr_inner_node.second_child.bounding_shape;
-      RegularTileShape union_with_second_child_shape = p_leaf_to_insert.bounding_shape.union(second_child_shape);
-      double second_area_increase = union_with_second_child_shape.area() - second_child_shape.area();
+      RegularTileShape union_with_second_child_shape =
+          p_leaf_to_insert.bounding_shape.union(second_child_shape);
+      double second_area_increase =
+          union_with_second_child_shape.area() - second_child_shape.area();
 
       if (first_area_increase <= second_area_increase) {
         curr_node = curr_inner_node.first_child;
@@ -114,9 +117,7 @@ public class MinAreaTree extends ShapeTree {
     return (Leaf) curr_node;
   }
 
-  /**
-   * removes an entry from this tree
-   */
+  /** removes an entry from this tree */
   @Override
   public void remove_leaf(Leaf p_leaf) {
     if (p_leaf == null) {
@@ -167,7 +168,9 @@ public class MinAreaTree extends ShapeTree {
     // as long as it gets smaller after removing p_leaf
     InnerNode node_to_recalculate = grand_parent;
     while (node_to_recalculate != null) {
-      RegularTileShape new_bounds = node_to_recalculate.second_child.bounding_shape.union(node_to_recalculate.first_child.bounding_shape);
+      RegularTileShape new_bounds =
+          node_to_recalculate.second_child.bounding_shape.union(
+              node_to_recalculate.first_child.bounding_shape);
       if (new_bounds.contains(node_to_recalculate.bounding_shape)) {
         // the new bounds are not smaller, no further recalculate necessary
         break;

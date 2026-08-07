@@ -22,40 +22,43 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Common superclass for Pins and Vias
- */
+/** Common superclass for Pins and Vias */
 public abstract class DrillItem extends Item implements Connectable, Serializable {
 
-  /**
-   * The center point of the drillitem
-   */
+  /** The center point of the drillitem */
   private Point center;
+
   /**
-   * Contains the precalculated minimal width of the shapes of this DrillItem on
-   * all layers. If {@literal <} 0, the value is not yet calculated
+   * Contains the precalculated minimal width of the shapes of this DrillItem on all layers. If
+   * {@literal <} 0, the value is not yet calculated
    */
   private double precalculated_min_width = -1;
+
   /**
-   * Contains the precalculated first layer, where this DrillItem contains a pad
-   * shape. If {@literal <} 0, the value is not yet calculated
+   * Contains the precalculated first layer, where this DrillItem contains a pad shape. If {@literal
+   * <} 0, the value is not yet calculated
    */
   private int precalculated_first_layer = -1;
+
   /**
-   * Contains the precalculated last layer, where this DrillItem contains a pad
-   * shape. If {@literal <} 0, the value is not yet calculated
+   * Contains the precalculated last layer, where this DrillItem contains a pad shape. If {@literal
+   * <} 0, the value is not yet calculated
    */
   private int precalculated_last_layer = -1;
 
-  protected DrillItem(Point p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no,
-      FixedState p_fixed_state, BasicBoard p_board) {
+  protected DrillItem(
+      Point p_center,
+      int[] p_net_no_arr,
+      int p_clearance_type,
+      int p_id_no,
+      int p_group_no,
+      FixedState p_fixed_state,
+      BasicBoard p_board) {
     super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
     this.center = p_center;
   }
 
-  /**
-   * Works only for symmetric DrillItems
-   */
+  /** Works only for symmetric DrillItems */
   @Override
   public void translate_by(Vector p_vector) {
     if (center != null) {
@@ -97,8 +100,11 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     Collection<Item> contacts = this.get_normal_contacts();
     for (Item curr_contact : contacts) {
       if (curr_contact instanceof Trace curr_trace) {
-        TraceInfo curr_trace_info = new TraceInfo(curr_trace.get_layer(), curr_trace.get_half_width(),
-            curr_trace.clearance_class_no());
+        TraceInfo curr_trace_info =
+            new TraceInfo(
+                curr_trace.get_layer(),
+                curr_trace.get_half_width(),
+                curr_trace.clearance_class_no());
         contact_trace_info.add(curr_trace_info);
       }
     }
@@ -128,8 +134,13 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       connect_points[i] = it3.next();
     }
     for (TraceInfo curr_trace_info : contact_trace_info) {
-      board.insert_trace(connect_points, curr_trace_info.layer, curr_trace_info.half_width, this.net_no_arr,
-          curr_trace_info.clearance_type, FixedState.UNFIXED);
+      board.insert_trace(
+          connect_points,
+          curr_trace_info.layer,
+          curr_trace_info.half_width,
+          this.net_no_arr,
+          curr_trace_info.clearance_type,
+          FixedState.UNFIXED);
     }
   }
 
@@ -200,10 +211,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     return p_search_tree.calculate_tree_shapes(this);
   }
 
-  /**
-   * Returns the smallest distance from the center to the border of the shape on
-   * any layer.
-   */
+  /** Returns the smallest distance from the center to the border of the shape on any layer. */
   public double smallest_radius() {
     double result = Double.MAX_VALUE;
     FloatPoint c = get_center().to_float();
@@ -216,9 +224,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     return result;
   }
 
-  /**
-   * Returns the center point of this DrillItem.
-   */
+  /** Returns the center point of this DrillItem. */
   public Point get_center() {
     return center;
   }
@@ -227,9 +233,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     center = p_center;
   }
 
-  /**
-   * Returns the padstack of this drillitem.
-   */
+  /** Returns the padstack of this drillitem. */
   public abstract Padstack get_padstack();
 
   public TileShape get_tree_shape_on_layer(ShapeSearchTree p_tree, int p_layer) {
@@ -276,9 +280,10 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
         if (curr_item instanceof Trace curr_trace) {
           // Use exact matching to match trace endpoints to pin/via center.
           // Tolerance-based matching causes false cycle detection during trace normalization
-          // when nearby trace endpoints (but not at pin center) are incorrectly treated as contacts.
-          if (drill_center.equals(curr_trace.first_corner()) ||
-              drill_center.equals(curr_trace.last_corner())) {
+          // when nearby trace endpoints (but not at pin center) are incorrectly treated as
+          // contacts.
+          if (drill_center.equals(curr_trace.first_corner())
+              || drill_center.equals(curr_trace.last_corner())) {
             result.add(curr_item);
           }
         } else if (curr_item instanceof DrillItem curr_drill_item) {
@@ -296,8 +301,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   /**
-   * Checks if two points are within the specified tolerance distance.
-   * Uses Manhattan distance for efficiency.
+   * Checks if two points are within the specified tolerance distance. Uses Manhattan distance for
+   * efficiency.
    */
   private boolean isWithinTolerance(Point p1, Point p2, int tolerance) {
     if (p1 == null || p2 == null) {
@@ -351,17 +356,12 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     return TileShape.get_instance(this.get_center());
   }
 
-  /**
-   * False, if this drillitem is places on the back side of the board
-   */
+  /** False, if this drillitem is places on the back side of the board */
   public boolean is_placed_on_front() {
     return true;
   }
 
-  /**
-   * Return the minimal width of the shapes of this DrillItem on all signal
-   * layers.
-   */
+  /** Return the minimal width of the shapes of this DrillItem on all signal layers. */
   public double min_width() {
     if (this.precalculated_min_width < 0) {
       double min_width = Integer.MAX_VALUE;
@@ -396,7 +396,12 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   @Override
-  public void draw_layer(Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity, int p_layer_no) {
+  public void draw_layer(
+      Graphics p_g,
+      GraphicsContext p_graphics_context,
+      Color[] p_color_arr,
+      double p_intensity,
+      int p_layer_no) {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
     }
@@ -406,7 +411,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       return;
     }
 
-    // Determine if this is the last physical layer step drawn (for through-hole drill hole rendering)
+    // Determine if this is the last physical layer step drawn (for through-hole drill hole
+    // rendering)
     boolean isLastPhysicalLayer = false;
     if (this instanceof Pin && from_layer != to_layer) {
       int lastPhysicalLayer;
@@ -417,7 +423,9 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
         int activeVirtual = p_graphics_context.get_fully_visible_virtual_layer();
         boolean isBack = false;
         if (activeVirtual != -1) {
-          isBack = activeVirtual % 2 != 0; // odd indices are Back (B.Silkscreen=1, B.Courtyard=3, B.Fab=5)
+          isBack =
+              activeVirtual % 2
+                  != 0; // odd indices are Back (B.Silkscreen=1, B.Courtyard=3, B.Fab=5)
         }
         int layerCount = board.get_layer_count();
         lastPhysicalLayer = isBack ? (layerCount - 1) : 0;
@@ -455,8 +463,9 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
         double drillRadius = padstack.get_drill_radius();
         if (drillRadius > 0) {
           Color drillColor = p_graphics_context.other_color_table.get_drill_hole_color();
-          double drillIntensity = p_graphics_context.color_intensity_table.get_value(
-              ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
+          double drillIntensity =
+              p_graphics_context.color_intensity_table.get_value(
+                  ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
           IntPoint centerPoint = get_center().to_float().round();
           Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
           p_graphics_context.fill_circle(drillCircle, p_g, drillColor, drillIntensity);
@@ -466,7 +475,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   @Override
-  public void draw(Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
+  public void draw(
+      Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
     }
@@ -505,8 +515,9 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
         double drillRadius = padstack.get_drill_radius();
         if (drillRadius > 0) {
           Color drillColor = p_graphics_context.other_color_table.get_drill_hole_color();
-          double drillIntensity = p_graphics_context.color_intensity_table.get_value(
-              ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
+          double drillIntensity =
+              p_graphics_context.color_intensity_table.get_value(
+                  ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
           IntPoint centerPoint = get_center().to_float().round();
           Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
           p_graphics_context.fill_circle(drillCircle, p_g, drillColor, drillIntensity);
@@ -515,9 +526,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     }
   }
 
-  /**
-   * Auxiliary class used in the method move_by
-   */
+  /** Auxiliary class used in the method move_by */
   private static class TraceInfo implements Comparable<TraceInfo> {
 
     int layer;
@@ -530,9 +539,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       clearance_type = p_clearance_type;
     }
 
-    /**
-     * Implements the comparable interface.
-     */
+    /** Implements the comparable interface. */
     @Override
     public int compareTo(TraceInfo p_other) {
       return p_other.layer - this.layer;

@@ -32,25 +32,29 @@ class MinAreaTreeConcurrencyTest {
     ExecutorService pool = Executors.newFixedThreadPool(8);
     List<Future<?>> futures = new ArrayList<>();
     for (int thread = 0; thread < 8; thread++) {
-      futures.add(pool.submit(() -> {
-        for (int i = 0; i < 200; i++) {
-          tree.overlaps(queryShape);
-        }
-      }));
+      futures.add(
+          pool.submit(
+              () -> {
+                for (int i = 0; i < 200; i++) {
+                  tree.overlaps(queryShape);
+                }
+              }));
     }
     futures.add(pool.submit(() -> new BoardStatistics(board, null, false, false)));
 
-    assertDoesNotThrow(() -> {
-      for (Future<?> future : futures) {
-        future.get(2, TimeUnit.MINUTES);
-      }
-    });
+    assertDoesNotThrow(
+        () -> {
+          for (Future<?> future : futures) {
+            future.get(2, TimeUnit.MINUTES);
+          }
+        });
 
     pool.shutdown();
-    assertDoesNotThrow(() -> {
-      if (!pool.awaitTermination(1, TimeUnit.MINUTES)) {
-        pool.shutdownNow();
-      }
-    });
+    assertDoesNotThrow(
+        () -> {
+          if (!pool.awaitTermination(1, TimeUnit.MINUTES)) {
+            pool.shutdownNow();
+          }
+        });
   }
 }

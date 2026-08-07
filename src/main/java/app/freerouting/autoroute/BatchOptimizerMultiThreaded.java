@@ -14,9 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Optimizes routes using multiple threads on a board that has completed auto-routing.
- */
+/** Optimizes routes using multiple threads on a board that has completed auto-routing. */
 public class BatchOptimizerMultiThreaded extends BatchOptimizer {
 
   private final BoardUpdateStrategy board_update_strategy;
@@ -39,7 +37,9 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     this.thread_pool_size = job.routerSettings.optimizer.maxThreads;
     this.board_update_strategy = job.routerSettings.optimizer.boardUpdateStrategy;
     this.item_selection_strategy =
-        job.routerSettings.optimizer.boardUpdateStrategy == BoardUpdateStrategy.GLOBAL_OPTIMAL ? ItemSelectionStrategy.SEQUENTIAL : job.routerSettings.optimizer.itemSelectionStrategy;
+        job.routerSettings.optimizer.boardUpdateStrategy == BoardUpdateStrategy.GLOBAL_OPTIMAL
+            ? ItemSelectionStrategy.SEQUENTIAL
+            : job.routerSettings.optimizer.itemSelectionStrategy;
 
     best_route_result = new ItemRouteResult(-1);
     winning_candidate = null;
@@ -48,7 +48,8 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
       int num_optimal = 1;
       int num_prioritized = 1;
 
-      if (job.routerSettings.optimizer.hybridRatio != null && job.routerSettings.optimizer.hybridRatio.indexOf(":") >= 1) {
+      if (job.routerSettings.optimizer.hybridRatio != null
+          && job.routerSettings.optimizer.hybridRatio.indexOf(":") >= 1) {
         String[] ratio = job.routerSettings.optimizer.hybridRatio.split(":");
 
         try {
@@ -88,7 +89,9 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
   }
 
   private ItemSelectionStrategy current_item_selection_strategy() {
-    return current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL ? ItemSelectionStrategy.SEQUENTIAL : this.item_selection_strategy;
+    return current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL
+        ? ItemSelectionStrategy.SEQUENTIAL
+        : this.item_selection_strategy;
   }
 
   synchronized void prepare_task_completion_signal() {
@@ -154,7 +157,8 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
 
     this.sorted_route_items = new ReadSortedRouteItems();
 
-    if (current_item_selection_strategy() == ItemSelectionStrategy.PRIORITIZED && !result_map.isEmpty()) {
+    if (current_item_selection_strategy() == ItemSelectionStrategy.PRIORITIZED
+        && !result_map.isEmpty()) {
       ArrayList<Integer> new_item_ids = new ArrayList<>();
       PriorityQueue<ItemRouteResult> pq = new PriorityQueue<>();
 
@@ -204,8 +208,18 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
 
     this.min_cumulative_trace_length = boardStatisticsBefore.traces.totalWeightedLength;
 
-    String optimizationPassId = "BatchOptRouteMT.opt_route_pass #" + p_pass_no + " with " + item_ids.size() + " items, " + boardStatisticsBefore.items.viaCount + " vias and " + "%(,.2f".formatted(
-        boardStatisticsBefore.traces.totalLength) + " trace length running on " + thread_pool_size + " threads.";
+    String optimizationPassId =
+        "BatchOptRouteMT.opt_route_pass #"
+            + p_pass_no
+            + " with "
+            + item_ids.size()
+            + " items, "
+            + boardStatisticsBefore.items.viaCount
+            + " vias and "
+            + "%(,.2f".formatted(boardStatisticsBefore.traces.totalLength)
+            + " trace length running on "
+            + thread_pool_size
+            + " threads.";
     FRLogger.traceEntry(optimizationPassId);
 
     prepare_next_round_of_route_items();
@@ -213,20 +227,28 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     best_route_result = new ItemRouteResult(-1);
     winning_candidate = null;
 
-    pool = (ThreadPoolExecutor) Executors.newFixedThreadPool(thread_pool_size, r ->
-    {
-      Thread t = new Thread(r);
-      t.setUncaughtExceptionHandler((t1, e) -> job.logError("Exception in thread pool worker thread: " + t1, e));
-      return t;
-    });
+    pool =
+        (ThreadPoolExecutor)
+            Executors.newFixedThreadPool(
+                thread_pool_size,
+                r -> {
+                  Thread t = new Thread(r);
+                  t.setUncaughtExceptionHandler(
+                      (t1, e) -> job.logError("Exception in thread pool worker thread: " + t1, e));
+                  return t;
+                });
 
-    // One new optimizer task is initialized for each item to be re-rerouted, and we keep the best result in the end
+    // One new optimizer task is initialized for each item to be re-rerouted, and we keep the best
+    // result in the end
     for (int t = 0; t < item_ids.size(); t++) {
       int item_id = item_ids.get(t);
-      job.logDebug("Scheduling task #" + (t + 1) + " of " + item_ids.size() + " for item #" + item_id + ".");
+      job.logDebug(
+          "Scheduling task #" + (t + 1) + " of " + item_ids.size() + " for item #" + item_id + ".");
 
-      // We schedule just enough tasks to keep workers busy in order not to exhaust JVM memory so that it can run on systems without huge amount of RAM using the pool
-      OptimizeRouteTask newTask = new OptimizeRouteTask(this, this.job, item_id, p_pass_no, p_with_preferred_directions);
+      // We schedule just enough tasks to keep workers busy in order not to exhaust JVM memory so
+      // that it can run on systems without huge amount of RAM using the pool
+      OptimizeRouteTask newTask =
+          new OptimizeRouteTask(this, this.job, item_id, p_pass_no, p_with_preferred_directions);
       pool.execute(newTask);
     }
 
@@ -238,7 +260,14 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     try {
       int i = 0;
       while (!pool.awaitTermination(1, TimeUnit.SECONDS)) {
-        job.logDebug("Running route optimizer on " + pool.getActiveCount() + " thread(s). Completed " + pool.getCompletedTaskCount() + " of " + pool.getTaskCount() + " tasks.");
+        job.logDebug(
+            "Running route optimizer on "
+                + pool.getActiveCount()
+                + " thread(s). Completed "
+                + pool.getCompletedTaskCount()
+                + " of "
+                + pool.getTaskCount()
+                + " tasks.");
 
         if (this.thread.isStopRequested()) {
           pool.shutdownNow();
@@ -256,7 +285,9 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
 
     pool = null;
 
-    if (!interrupted && best_route_result.improved() && current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL) {
+    if (!interrupted
+        && best_route_result.improved()
+        && current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL) {
       replaceMasterRoutingBoardWithTheWinningCandidate();
     }
 
@@ -271,18 +302,50 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     long minutes = duration / 60000;
     float sec = (duration % 60000) / 1000.0F;
 
-    String us = current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL ? "Global Optimal" : "Greedy";
-    String is = current_item_selection_strategy() == ItemSelectionStrategy.SEQUENTIAL ? "Sequential" : (current_item_selection_strategy() == ItemSelectionStrategy.RANDOM ? "Random" : "Prioritized");
+    String us =
+        current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL
+            ? "Global Optimal"
+            : "Greedy";
+    String is =
+        current_item_selection_strategy() == ItemSelectionStrategy.SEQUENTIAL
+            ? "Sequential"
+            : (current_item_selection_strategy() == ItemSelectionStrategy.RANDOM
+                ? "Random"
+                : "Prioritized");
 
     BoardStatistics boardStatisticsAfter = board.get_statistics();
     this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, this.board);
 
     job.logDebug(
-        "Finished optimizer pass #" + p_pass_no + " in " + minutes + " minutes " + sec + " seconds with " + update_count + " board updates using " + thread_pool_size + " thread(s) with '" + us
-            + "' strategy and '" + is + "' item selection strategy.");
-    job.logDebug("Route optimizer pass summary - Improved: " + best_route_result.improved() + ", interrupted: " + interrupted + ", via count: " + best_route_result.via_count() + ", trace length: "
-        + boardStatisticsAfter.traces.totalLength + ", via count delta: " + (boardStatisticsBefore.items.viaCount - best_route_result.via_count()) + ", trace length delta: " + (
-        boardStatisticsBefore.traces.totalLength - boardStatisticsAfter.traces.totalLength) + ".");
+        "Finished optimizer pass #"
+            + p_pass_no
+            + " in "
+            + minutes
+            + " minutes "
+            + sec
+            + " seconds with "
+            + update_count
+            + " board updates using "
+            + thread_pool_size
+            + " thread(s) with '"
+            + us
+            + "' strategy and '"
+            + is
+            + "' item selection strategy.");
+    job.logDebug(
+        "Route optimizer pass summary - Improved: "
+            + best_route_result.improved()
+            + ", interrupted: "
+            + interrupted
+            + ", via count: "
+            + best_route_result.via_count()
+            + ", trace length: "
+            + boardStatisticsAfter.traces.totalLength
+            + ", via count delta: "
+            + (boardStatisticsBefore.items.viaCount - best_route_result.via_count())
+            + ", trace length delta: "
+            + (boardStatisticsBefore.traces.totalLength - boardStatisticsAfter.traces.totalLength)
+            + ".");
 
     FRLogger.traceExit(optimizationPassId);
 

@@ -42,7 +42,8 @@ class DsnReaderMetadataTest {
 
   @Test
   void readMetadataCompletesWithinReasonableTimeOnLargeDsn() {
-    assertTimeoutPreemptively(Duration.ofSeconds(5),
+    assertTimeoutPreemptively(
+        Duration.ofSeconds(5),
         () -> DsnReader.readMetadata(DsnTestFixtures.openResource("Issue187-processor.Z80.dsn")));
   }
 

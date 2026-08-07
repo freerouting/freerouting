@@ -8,7 +8,9 @@ public class Payload {
   @Schema(description = "Unique identifier for the authenticated user", example = "user_12345")
   public String userId;
 
-  @Schema(description = "Anonymous identifier for tracking users without authentication", example = "anon_67890")
+  @Schema(
+      description = "Anonymous identifier for tracking users without authentication",
+      example = "anon_67890")
   public String anonymousId;
 
   @Schema(description = "Context information about the tracking event")

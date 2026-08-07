@@ -49,13 +49,13 @@ class McpEndpointsTest {
     ApiServerSettings apiSettings = new ApiServerSettings();
     apiSettings.isEnabled = true;
     apiSettings.isHttpAllowed = true;
-    apiSettings.endpoints = new String[]{"http://127.0.0.1:0"};
+    apiSettings.endpoints = new String[] {"http://127.0.0.1:0"};
     apiSettings.authentication.isEnabled = true;
 
     McpServerSettings mcpSettings = new McpServerSettings();
     mcpSettings.isEnabled = true;
     mcpSettings.isHttpAllowed = true;
-    mcpSettings.endpoints = new String[]{"http://127.0.0.1:0"};
+    mcpSettings.endpoints = new String[] {"http://127.0.0.1:0"};
     mcpSettings.authentication.isEnabled = false;
 
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = true;
@@ -97,30 +97,37 @@ class McpEndpointsTest {
     request.addProperty("id", 1);
     request.addProperty("method", "initialize");
 
-    HttpResponse<String> response = httpClient.send(authenticatedMcpRequest(request), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> response =
+        httpClient.send(authenticatedMcpRequest(request), HttpResponse.BodyHandlers.ofString());
 
     assertEquals(200, response.statusCode());
     JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
     assertEquals("2.0", payload.get("jsonrpc").getAsString());
     assertTrue(payload.has("result"));
-    assertEquals("Freerouting MCP", payload.getAsJsonObject("result").get("serverName").getAsString());
-    assertEquals("Freerouting MCP", payload.getAsJsonObject("result").getAsJsonObject("serverInfo").get("name").getAsString());
+    assertEquals(
+        "Freerouting MCP", payload.getAsJsonObject("result").get("serverName").getAsString());
+    assertEquals(
+        "Freerouting MCP",
+        payload.getAsJsonObject("result").getAsJsonObject("serverInfo").get("name").getAsString());
   }
 
   @Test
-  @AllowErrorLogs("Jetty shutdown may interrupt in-flight MCP bridge HTTP calls under parallel test load")
+  @AllowErrorLogs(
+      "Jetty shutdown may interrupt in-flight MCP bridge HTTP calls under parallel test load")
   void toolsList_andToolsCall_bridgeToApiRoutes() throws Exception {
     JsonObject listRequest = new JsonObject();
     listRequest.addProperty("jsonrpc", "2.0");
     listRequest.addProperty("id", 2);
     listRequest.addProperty("method", "tools/list");
 
-    HttpResponse<String> listResponse = httpClient.send(authenticatedMcpRequest(listRequest), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> listResponse =
+        httpClient.send(authenticatedMcpRequest(listRequest), HttpResponse.BodyHandlers.ofString());
     assertEquals(200, listResponse.statusCode());
 
     JsonObject listPayload = JsonParser.parseString(listResponse.body()).getAsJsonObject();
     JsonArray tools = listPayload.getAsJsonObject("result").getAsJsonArray("tools");
-    assertTrue(containsTool(tools, "get_system_status"), "tools/list should expose get_system_status");
+    assertTrue(
+        containsTool(tools, "get_system_status"), "tools/list should expose get_system_status");
 
     JsonObject callRequest = new JsonObject();
     callRequest.addProperty("jsonrpc", "2.0");
@@ -132,19 +139,22 @@ class McpEndpointsTest {
     params.add("arguments", new JsonObject());
     callRequest.add("params", params);
 
-    HttpResponse<String> callResponse = httpClient.send(authenticatedMcpRequest(callRequest), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> callResponse =
+        httpClient.send(authenticatedMcpRequest(callRequest), HttpResponse.BodyHandlers.ofString());
     assertEquals(200, callResponse.statusCode());
 
     JsonObject callPayload = JsonParser.parseString(callResponse.body()).getAsJsonObject();
     assertTrue(callPayload.has("result"));
     assertFalse(callPayload.getAsJsonObject("result").get("isError").getAsBoolean());
 
-    String textPayload = callPayload.getAsJsonObject("result")
-        .getAsJsonArray("content")
-        .get(0)
-        .getAsJsonObject()
-        .get("text")
-        .getAsString();
+    String textPayload =
+        callPayload
+            .getAsJsonObject("result")
+            .getAsJsonArray("content")
+            .get(0)
+            .getAsJsonObject()
+            .get("text")
+            .getAsString();
     JsonObject forwarded = JsonParser.parseString(textPayload).getAsJsonObject();
     assertEquals(200, forwarded.get("status").getAsInt());
     assertNotNull(forwarded.get("body"));
@@ -158,7 +168,8 @@ class McpEndpointsTest {
     listRequest.addProperty("id", 10);
     listRequest.addProperty("method", "tools/list");
 
-    HttpResponse<String> listResponse = httpClient.send(authenticatedMcpRequest(listRequest), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> listResponse =
+        httpClient.send(authenticatedMcpRequest(listRequest), HttpResponse.BodyHandlers.ofString());
     assertEquals(200, listResponse.statusCode());
 
     JsonObject listPayload = JsonParser.parseString(listResponse.body()).getAsJsonObject();
@@ -179,19 +190,23 @@ class McpEndpointsTest {
     encodeParams.add("arguments", encodeArgs);
     encodeRequest.add("params", encodeParams);
 
-    HttpResponse<String> encodeResponse = httpClient.send(authenticatedMcpRequest(encodeRequest), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> encodeResponse =
+        httpClient.send(
+            authenticatedMcpRequest(encodeRequest), HttpResponse.BodyHandlers.ofString());
     assertEquals(200, encodeResponse.statusCode());
 
     JsonObject encodePayload = JsonParser.parseString(encodeResponse.body()).getAsJsonObject();
     assertTrue(encodePayload.has("result"));
     assertFalse(encodePayload.getAsJsonObject("result").get("isError").getAsBoolean());
 
-    String encodeText = encodePayload.getAsJsonObject("result")
-        .getAsJsonArray("content")
-        .get(0)
-        .getAsJsonObject()
-        .get("text")
-        .getAsString();
+    String encodeText =
+        encodePayload
+            .getAsJsonObject("result")
+            .getAsJsonArray("content")
+            .get(0)
+            .getAsJsonObject()
+            .get("text")
+            .getAsString();
     JsonObject encodeResultBody = JsonParser.parseString(encodeText).getAsJsonObject();
     assertEquals(200, encodeResultBody.get("status").getAsInt());
     String base64Value = encodeResultBody.getAsJsonObject("body").get("base64").getAsString();
@@ -210,19 +225,23 @@ class McpEndpointsTest {
     decodeParams.add("arguments", decodeArgs);
     decodeRequest.add("params", decodeParams);
 
-    HttpResponse<String> decodeResponse = httpClient.send(authenticatedMcpRequest(decodeRequest), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> decodeResponse =
+        httpClient.send(
+            authenticatedMcpRequest(decodeRequest), HttpResponse.BodyHandlers.ofString());
     assertEquals(200, decodeResponse.statusCode());
 
     JsonObject decodePayload = JsonParser.parseString(decodeResponse.body()).getAsJsonObject();
     assertTrue(decodePayload.has("result"));
     assertFalse(decodePayload.getAsJsonObject("result").get("isError").getAsBoolean());
 
-    String decodeText = decodePayload.getAsJsonObject("result")
-        .getAsJsonArray("content")
-        .get(0)
-        .getAsJsonObject()
-        .get("text")
-        .getAsString();
+    String decodeText =
+        decodePayload
+            .getAsJsonObject("result")
+            .getAsJsonArray("content")
+            .get(0)
+            .getAsJsonObject()
+            .get("text")
+            .getAsString();
     JsonObject decodeResultBody = JsonParser.parseString(decodeText).getAsJsonObject();
     assertEquals(200, decodeResultBody.get("status").getAsInt());
     String textValue = decodeResultBody.getAsJsonObject("body").get("text").getAsString();
@@ -231,10 +250,11 @@ class McpEndpointsTest {
 
   @Test
   void agentCard_isPublicOnMcpServer() throws Exception {
-    HttpRequest request = HttpRequest.newBuilder(mcpBaseUri.resolve("/.well-known/agent.json"))
-        .GET()
-        .timeout(HTTP_TIMEOUT)
-        .build();
+    HttpRequest request =
+        HttpRequest.newBuilder(mcpBaseUri.resolve("/.well-known/agent.json"))
+            .GET()
+            .timeout(HTTP_TIMEOUT)
+            .build();
 
     HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     assertEquals(200, response.statusCode());
@@ -253,7 +273,8 @@ class McpEndpointsTest {
   }
 
   @Test
-  @AllowErrorLogs("Misconfigured target URL is rejected; MCP may log RPC interruption under parallel load")
+  @AllowErrorLogs(
+      "Misconfigured target URL is rejected; MCP may log RPC interruption under parallel load")
   void toolsCall_rejectsMcpTargetApiBaseUrlMisconfiguration() throws Exception {
     Freerouting.globalSettings.mcpServerSettings.targetApiBaseUrl = mcpBaseUri + "/v1/mcp";
 
@@ -267,15 +288,19 @@ class McpEndpointsTest {
     params.add("arguments", new JsonObject());
     callRequest.add("params", params);
 
-    HttpResponse<String> response = httpClient.send(
-        authenticatedMcpRequest(callRequest),
-        HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> response =
+        httpClient.send(authenticatedMcpRequest(callRequest), HttpResponse.BodyHandlers.ofString());
     assertEquals(200, response.statusCode());
 
     JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
     assertTrue(payload.has("error"));
     assertEquals(-32602, payload.getAsJsonObject("error").get("code").getAsInt());
-    assertTrue(payload.getAsJsonObject("error").get("message").getAsString().contains("target_api_base_url"));
+    assertTrue(
+        payload
+            .getAsJsonObject("error")
+            .get("message")
+            .getAsString()
+            .contains("target_api_base_url"));
   }
 
   @Test
@@ -292,10 +317,13 @@ class McpEndpointsTest {
     params.add("clientInfo", clientInfo);
     initializeRequest.add("params", params);
 
-    HttpResponse<String> response = httpClient.send(authenticatedMcpRequest(initializeRequest), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> response =
+        httpClient.send(
+            authenticatedMcpRequest(initializeRequest), HttpResponse.BodyHandlers.ofString());
     assertEquals(200, response.statusCode());
 
-    java.lang.reflect.Field field = app.freerouting.api.v1.McpControllerV1.class.getDeclaredField("detectedClientInfo");
+    java.lang.reflect.Field field =
+        app.freerouting.api.v1.McpControllerV1.class.getDeclaredField("detectedClientInfo");
     field.setAccessible(true);
     String detected = (String) field.get(null);
     assertEquals("ClaudeDesktop/4.6.1", detected);
@@ -303,7 +331,8 @@ class McpEndpointsTest {
 
   @Test
   void customTools_fileUploadAndDownload_runLocally() throws Exception {
-    boolean originalAuthEnabled = Freerouting.globalSettings.apiServerSettings.authentication.isEnabled;
+    boolean originalAuthEnabled =
+        Freerouting.globalSettings.apiServerSettings.authentication.isEnabled;
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
     app.freerouting.api.security.ApiKeyValidationService.resetForTesting();
 
@@ -321,7 +350,8 @@ class McpEndpointsTest {
       }
 
       tempInput = java.nio.file.Files.createTempFile("freerouting-test-input", ".dsn");
-      java.nio.file.Files.copy(sourceDsn, tempInput, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+      java.nio.file.Files.copy(
+          sourceDsn, tempInput, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
       // We need a session and job first to upload input to
       String sessionId = createTestSession();
@@ -341,14 +371,18 @@ class McpEndpointsTest {
       uploadParams.add("arguments", uploadArgs);
       uploadRequest.add("params", uploadParams);
 
-      HttpResponse<String> uploadResponse = httpClient.send(authenticatedMcpRequest(uploadRequest), HttpResponse.BodyHandlers.ofString());
+      HttpResponse<String> uploadResponse =
+          httpClient.send(
+              authenticatedMcpRequest(uploadRequest), HttpResponse.BodyHandlers.ofString());
       assertEquals(200, uploadResponse.statusCode());
 
       JsonObject uploadPayload = JsonParser.parseString(uploadResponse.body()).getAsJsonObject();
       assertFalse(uploadPayload.getAsJsonObject("result").get("isError").getAsBoolean());
 
       // 2. Call download_job_output_to_local_file (expecting 400 because job has not completed/run)
-      tempOutput = java.nio.file.Path.of(System.getProperty("java.io.tmpdir")).resolve("freerouting-test-output-" + System.currentTimeMillis() + ".ses");
+      tempOutput =
+          java.nio.file.Path.of(System.getProperty("java.io.tmpdir"))
+              .resolve("freerouting-test-output-" + System.currentTimeMillis() + ".ses");
 
       JsonObject downloadRequest = new JsonObject();
       downloadRequest.addProperty("jsonrpc", "2.0");
@@ -363,16 +397,21 @@ class McpEndpointsTest {
       downloadParams.add("arguments", downloadArgs);
       downloadRequest.add("params", downloadParams);
 
-      HttpResponse<String> downloadResponse = httpClient.send(authenticatedMcpRequest(downloadRequest), HttpResponse.BodyHandlers.ofString());
+      HttpResponse<String> downloadResponse =
+          httpClient.send(
+              authenticatedMcpRequest(downloadRequest), HttpResponse.BodyHandlers.ofString());
       assertEquals(200, downloadResponse.statusCode());
 
-      JsonObject downloadPayload = JsonParser.parseString(downloadResponse.body()).getAsJsonObject();
-      String downloadText = downloadPayload.getAsJsonObject("result")
-          .getAsJsonArray("content")
-          .get(0)
-          .getAsJsonObject()
-          .get("text")
-          .getAsString();
+      JsonObject downloadPayload =
+          JsonParser.parseString(downloadResponse.body()).getAsJsonObject();
+      String downloadText =
+          downloadPayload
+              .getAsJsonObject("result")
+              .getAsJsonArray("content")
+              .get(0)
+              .getAsJsonObject()
+              .get("text")
+              .getAsString();
       JsonObject downloadResultBody = JsonParser.parseString(downloadText).getAsJsonObject();
       assertEquals(400, downloadResultBody.get("status").getAsInt());
     } finally {
@@ -398,9 +437,17 @@ class McpEndpointsTest {
     params.add("arguments", new JsonObject());
     request.add("params", params);
 
-    HttpResponse<String> response = httpClient.send(authenticatedMcpRequest(request), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> response =
+        httpClient.send(authenticatedMcpRequest(request), HttpResponse.BodyHandlers.ofString());
     JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
-    String text = payload.getAsJsonObject("result").getAsJsonArray("content").get(0).getAsJsonObject().get("text").getAsString();
+    String text =
+        payload
+            .getAsJsonObject("result")
+            .getAsJsonArray("content")
+            .get(0)
+            .getAsJsonObject()
+            .get("text")
+            .getAsString();
     JsonObject body = JsonParser.parseString(text).getAsJsonObject().getAsJsonObject("body");
     return body.get("id").getAsString();
   }
@@ -420,9 +467,17 @@ class McpEndpointsTest {
     params.add("arguments", args);
     request.add("params", params);
 
-    HttpResponse<String> response = httpClient.send(authenticatedMcpRequest(request), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> response =
+        httpClient.send(authenticatedMcpRequest(request), HttpResponse.BodyHandlers.ofString());
     JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
-    String text = payload.getAsJsonObject("result").getAsJsonArray("content").get(0).getAsJsonObject().get("text").getAsString();
+    String text =
+        payload
+            .getAsJsonObject("result")
+            .getAsJsonArray("content")
+            .get(0)
+            .getAsJsonObject()
+            .get("text")
+            .getAsString();
     JsonObject body = JsonParser.parseString(text).getAsJsonObject().getAsJsonObject("body");
     return body.get("id").getAsString();
   }

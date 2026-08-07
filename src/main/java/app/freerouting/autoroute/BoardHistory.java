@@ -12,19 +12,19 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Records, manages and ranks the boards that were generated during the routing process. This implementation is thread-safe.
- * <p>
- * The history is bounded to {@link #MAX_HISTORY_SIZE} entries. When the cap is reached,
- * the lowest-scoring entry is evicted before adding the new one. This prevents unbounded
- * memory growth during long routing sessions (see Issue #684).
- * </p>
+ * Records, manages and ranks the boards that were generated during the routing process. This
+ * implementation is thread-safe.
+ *
+ * <p>The history is bounded to {@link #MAX_HISTORY_SIZE} entries. When the cap is reached, the
+ * lowest-scoring entry is evicted before adding the new one. This prevents unbounded memory growth
+ * during long routing sessions (see Issue #684).
  */
 public class BoardHistory {
 
   /**
-   * Maximum number of board snapshots retained in memory at any time.
-   * Each snapshot stores the fully serialised board as a {@code byte[]}, which can be several
-   * megabytes for complex designs. Keeping the cap low is critical for long routing sessions.
+   * Maximum number of board snapshots retained in memory at any time. Each snapshot stores the
+   * fully serialised board as a {@code byte[]}, which can be several megabytes for complex designs.
+   * Keeping the cap low is critical for long routing sessions.
    */
   public static final int MAX_HISTORY_SIZE = 30;
 
@@ -37,9 +37,7 @@ public class BoardHistory {
     this(scoringSettings, MAX_HISTORY_SIZE);
   }
 
-  /**
-   * Package-private constructor that allows a custom cap. Intended for unit tests only.
-   */
+  /** Package-private constructor that allows a custom cap. Intended for unit tests only. */
   BoardHistory(ScoringSettings scoringSettings, int maxHistorySize) {
     this.scoringSettings = scoringSettings;
     this.maxHistorySize = maxHistorySize;
@@ -85,9 +83,7 @@ public class BoardHistory {
 
   public boolean contains(RoutingBoard board) {
     String hash = board.get_hash();
-    rwLock
-        .readLock()
-        .lock();
+    rwLock.readLock().lock();
     try {
       for (BoardHistoryEntry entry : boards) {
         if (entry.hash.equals(hash)) {
@@ -96,9 +92,7 @@ public class BoardHistory {
       }
       return false;
     } finally {
-      rwLock
-          .readLock()
-          .unlock();
+      rwLock.readLock().unlock();
     }
   }
 
@@ -113,9 +107,7 @@ public class BoardHistory {
   }
 
   public float getMaxScore() {
-    rwLock
-        .readLock()
-        .lock();
+    rwLock.readLock().lock();
     try {
       float maxScore = 0;
       for (BoardHistoryEntry entry : boards) {
@@ -125,23 +117,20 @@ public class BoardHistory {
       }
       return maxScore;
     } finally {
-      rwLock
-          .readLock()
-          .unlock();
+      rwLock.readLock().unlock();
     }
   }
 
   /**
-   * Returns the best board in the history that has a restore count less than or equal to maxAllowedRestoreCount. Returns null if no such board exists.
+   * Returns the best board in the history that has a restore count less than or equal to
+   * maxAllowedRestoreCount. Returns null if no such board exists.
    */
   public synchronized RoutingBoard restoreBoard(int maxAllowedRestoreCount) {
     if (maxAllowedRestoreCount <= 0) {
       maxAllowedRestoreCount = Integer.MAX_VALUE;
     }
 
-    rwLock
-        .readLock()
-        .lock();
+    rwLock.readLock().lock();
 
     try {
       // Sort the boards by score
@@ -155,9 +144,7 @@ public class BoardHistory {
       }
       return null;
     } finally {
-      rwLock
-          .readLock()
-          .unlock();
+      rwLock.readLock().unlock();
     }
   }
 
@@ -166,23 +153,17 @@ public class BoardHistory {
   }
 
   public int size() {
-    rwLock
-        .readLock()
-        .lock();
+    rwLock.readLock().lock();
     try {
       return boards.size();
     } finally {
-      rwLock
-          .readLock()
-          .unlock();
+      rwLock.readLock().unlock();
     }
   }
 
   public int getRank(RoutingBoard board) {
     String hash = board.get_hash();
-    rwLock
-        .readLock()
-        .lock();
+    rwLock.readLock().lock();
     try {
       for (int i = 0; i < boards.size(); i++) {
         if (boards.get(i).hash.equals(hash)) {
@@ -191,9 +172,7 @@ public class BoardHistory {
       }
       return -1;
     } finally {
-      rwLock
-          .readLock()
-          .unlock();
+      rwLock.readLock().unlock();
     }
   }
 

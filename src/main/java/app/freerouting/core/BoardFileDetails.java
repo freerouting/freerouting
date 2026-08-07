@@ -24,33 +24,37 @@ import java.util.zip.CRC32;
 
 public class BoardFileDetails implements Serializable {
 
-  protected final transient List<BoardFileDetailsUpdatedEventListener> updatedEventListeners = new ArrayList<>();
+  protected final transient List<BoardFileDetailsUpdatedEventListener> updatedEventListeners =
+      new ArrayList<>();
+
   // The size of the file in bytes
   @SerializedName("size")
   public long size;
+
   // The CRC32 checksum of the data
   @SerializedName("crc32")
   public long crc32;
+
   // The format of the file
   @SerializedName("format")
   public FileFormat format = FileFormat.UNKNOWN;
+
   @SerializedName("statistics")
   public BoardStatistics statistics = new BoardStatistics();
+
   // The filename only without the path
   @SerializedName("filename")
   protected String filename = "";
+
   // The absolute path to the directory of the file
   @SerializedName("path")
   protected String directoryPath = "";
+
   protected transient byte[] dataBytes = new byte[0];
 
+  public BoardFileDetails() {}
 
-  public BoardFileDetails() {
-  }
-
-  /**
-   * Creates a new BoardDetails object from a file.
-   */
+  /** Creates a new BoardDetails object from a file. */
   public BoardFileDetails(File file) {
     this.setFilename(file.getAbsolutePath());
 
@@ -61,9 +65,7 @@ public class BoardFileDetails implements Serializable {
     }
   }
 
-  /**
-   * Creates a new BoardDetails object from a RoutingBoard object.
-   */
+  /** Creates a new BoardDetails object from a RoutingBoard object. */
   public BoardFileDetails(BasicBoard board) {
     this.statistics = new BoardStatistics(board);
   }
@@ -82,9 +84,7 @@ public class BoardFileDetails implements Serializable {
     return crc;
   }
 
-  /**
-   * Saves this object to a UTF-8 JSON file.
-   */
+  /** Saves this object to a UTF-8 JSON file. */
   public void saveAs(String filename) throws IOException {
     try (Writer writer = Files.newBufferedWriter(Path.of(filename), StandardCharsets.UTF_8)) {
       writer.write(this.toString());
@@ -92,9 +92,7 @@ public class BoardFileDetails implements Serializable {
   }
 
   public String getAbsolutePath() {
-    return Path
-        .of(this.directoryPath, this.filename)
-        .toString();
+    return Path.of(this.directoryPath, this.filename).toString();
   }
 
   public ByteArrayInputStream getData() {
@@ -117,18 +115,14 @@ public class BoardFileDetails implements Serializable {
     fireUpdatedEvent();
   }
 
-  /**
-   * Returns a JSON representation of this object.
-   */
+  /** Returns a JSON representation of this object. */
   public String toString() {
     return GsonProvider.GSON.toJson(this);
   }
 
   public File getFile() {
     if (!this.filename.isEmpty()) {
-      return new File(Path
-          .of(this.directoryPath, this.filename)
-          .toString());
+      return new File(Path.of(this.directoryPath, this.filename).toString());
     }
     return null;
   }
@@ -153,15 +147,11 @@ public class BoardFileDetails implements Serializable {
       return;
     }
 
-    var path = Path
-        .of(filename)
-        .toAbsolutePath();
+    var path = Path.of(filename).toAbsolutePath();
 
     if (filename.contains(File.separator)) {
       // separate the filename into its absolute path and its filename only
-      this.directoryPath = path
-          .getParent()
-          .toString();
+      this.directoryPath = path.getParent().toString();
       // replace the redundant "\.\" with a simple "\"
       this.directoryPath = this.directoryPath.replace("\\.\\", "\\");
       // remove the "/", "\" from the end of the directory path
@@ -173,9 +163,7 @@ public class BoardFileDetails implements Serializable {
     }
 
     // set the filename only
-    this.filename = path
-        .getFileName()
-        .toString();
+    this.filename = path.getFileName().toString();
 
     if (this.format == FileFormat.UNKNOWN) {
       // try to read the file contents to determine the file format
@@ -230,6 +218,4 @@ public class BoardFileDetails implements Serializable {
       listener.onBoardFileDetailsUpdated(event);
     }
   }
-
 }
-

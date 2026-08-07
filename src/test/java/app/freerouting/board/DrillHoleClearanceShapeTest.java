@@ -31,8 +31,10 @@ class DrillHoleClearanceShapeTest {
       }
     }
     for (Pin pin : board.get_pins()) {
-      if (pin.get_padstack() != null && pin.get_padstack().get_drill_radius() > 0
-          && pin.tile_shape_count() > 0 && pin.get_shape(0) != null) {
+      if (pin.get_padstack() != null
+          && pin.get_padstack().get_drill_radius() > 0
+          && pin.tile_shape_count() > 0
+          && pin.get_shape(0) != null) {
         result.add(pin);
         break;
       }
@@ -56,14 +58,16 @@ class DrillHoleClearanceShapeTest {
 
     for (DrillItem item : items) {
       board.rules.set_hole_clearance(0);
-      TileShape[] base0 = new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE,
-          board, 0).calculate_tree_shapes(item);
+      TileShape[] base0 =
+          new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE, board, 0)
+              .calculate_tree_shapes(item);
       TileShape[] tree45_0 = new ShapeSearchTree45Degree(board, 0).calculate_tree_shapes(item);
       TileShape[] tree90_0 = new ShapeSearchTree90Degree(board, 0).calculate_tree_shapes(item);
 
       board.rules.set_hole_clearance(HOLE_CLEARANCE_BOARD_UNITS);
-      TileShape[] base1 = new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE,
-          board, 0).calculate_tree_shapes(item);
+      TileShape[] base1 =
+          new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE, board, 0)
+              .calculate_tree_shapes(item);
       TileShape[] tree45_1 = new ShapeSearchTree45Degree(board, 0).calculate_tree_shapes(item);
       TileShape[] tree90_1 = new ShapeSearchTree90Degree(board, 0).calculate_tree_shapes(item);
 
@@ -73,11 +77,14 @@ class DrillHoleClearanceShapeTest {
         if (base0[i] == null) {
           continue;
         }
-        assertTrue(boxArea(base1[i]) > boxArea(base0[i]),
+        assertTrue(
+            boxArea(base1[i]) > boxArea(base0[i]),
             label + " shape " + i + " must grow in the base tree");
-        assertTrue(boxArea(tree45_1[i]) > boxArea(tree45_0[i]),
+        assertTrue(
+            boxArea(tree45_1[i]) > boxArea(tree45_0[i]),
             label + " shape " + i + " must grow in the 45-degree tree");
-        assertTrue(boxArea(tree90_1[i]) > boxArea(tree90_0[i]),
+        assertTrue(
+            boxArea(tree90_1[i]) > boxArea(tree90_0[i]),
             label + " shape " + i + " must grow in the 90-degree tree");
       }
     }
@@ -112,8 +119,8 @@ class DrillHoleClearanceShapeTest {
 
     board.rules.set_hole_clearance(2500);
     TileShape[] holeAware = new ShapeSearchTree45Degree(board, 0).calculate_tree_shapes(via);
-    assertTrue(holeAware[nullIdx] != null,
-        "the drill hole must become an obstacle on copper-less layers");
+    assertTrue(
+        holeAware[nullIdx] != null, "the drill hole must become an obstacle on copper-less layers");
     board.rules.set_hole_clearance(0);
   }
 

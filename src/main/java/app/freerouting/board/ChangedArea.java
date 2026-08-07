@@ -5,9 +5,7 @@ import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.TileShape;
 
-/**
- * Used internally for marking changed areas on the board after shoving and optimizing items.
- */
+/** Used internally for marking changed areas on the board after shoving and optimizing items. */
 class ChangedArea {
 
   final int layer_count;
@@ -23,9 +21,7 @@ class ChangedArea {
     }
   }
 
-  /**
-   * enlarges the octagon on p_layer, so that it contains p_point
-   */
+  /** enlarges the octagon on p_layer, so that it contains p_point */
   public void join(FloatPoint p_point, int p_layer) {
     MutableOctagon curr = arr[p_layer];
     curr.lx = Math.min(p_point.x, curr.lx);
@@ -42,9 +38,7 @@ class ChangedArea {
     curr.urx = Math.max(curr.urx, tmp);
   }
 
-  /**
-   * enlarges the octagon on p_layer, so that it contains p_shape
-   */
+  /** enlarges the octagon on p_layer, so that it contains p_shape */
   public void join(TileShape p_shape, int p_layer) {
     if (p_shape == null) {
       return;
@@ -55,9 +49,7 @@ class ChangedArea {
     }
   }
 
-  /**
-   * get the marking octagon on layer p_layer
-   */
+  /** get the marking octagon on layer p_layer */
   public IntOctagon get_area(int p_layer) {
 
     return arr[p_layer].to_int();
@@ -81,16 +73,12 @@ class ChangedArea {
     return new IntBox(llx, lly, urx, ury);
   }
 
-  /**
-   * initializes the marking octagon on p_layer to empty
-   */
+  /** initializes the marking octagon on p_layer to empty */
   void set_empty(int p_layer) {
     arr[p_layer].set_empty();
   }
 
-  /**
-   * mutable octagon with double coordinates (see geometry.planar.IntOctagon)
-   */
+  /** mutable octagon with double coordinates (see geometry.planar.IntOctagon) */
   private static class MutableOctagon {
 
     double lx;
@@ -113,14 +101,19 @@ class ChangedArea {
       urx = Integer.MIN_VALUE;
     }
 
-    /**
-     * calculates the smallest IntOctagon containing this octagon.
-     */
+    /** calculates the smallest IntOctagon containing this octagon. */
     IntOctagon to_int() {
       if (rx < lx || uy < ly || lrx < ulx || urx < llx) {
         return IntOctagon.EMPTY;
       }
-      return new IntOctagon((int) Math.floor(lx), (int) Math.floor(ly), (int) Math.ceil(rx), (int) Math.ceil(uy), (int) Math.floor(ulx), (int) Math.ceil(lrx), (int) Math.floor(llx),
+      return new IntOctagon(
+          (int) Math.floor(lx),
+          (int) Math.floor(ly),
+          (int) Math.ceil(rx),
+          (int) Math.ceil(uy),
+          (int) Math.floor(ulx),
+          (int) Math.ceil(lrx),
+          (int) Math.floor(llx),
           (int) Math.ceil(urx));
     }
   }

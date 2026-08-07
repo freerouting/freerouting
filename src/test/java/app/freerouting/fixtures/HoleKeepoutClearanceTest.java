@@ -12,9 +12,9 @@ import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.Test;
 
 /**
- * KiCad exports NPTH holes as circular per-copper-layer package keepouts. With the
- * hole-clearance override active they must be assigned to the dedicated "hole_edge"
- * clearance class so copper keeps hole clearance from the hole boundary.
+ * KiCad exports NPTH holes as circular per-copper-layer package keepouts. With the hole-clearance
+ * override active they must be assigned to the dedicated "hole_edge" clearance class so copper
+ * keeps hole clearance from the hole boundary.
  */
 public class HoleKeepoutClearanceTest extends RoutingFixtureTest {
 
@@ -37,21 +37,28 @@ public class HoleKeepoutClearanceTest extends RoutingFixtureTest {
 
     int reclassified = 0;
     for (Item item : job.board.get_items()) {
-      if (item.getClass() == ObstacleArea.class && item.get_component_no() > 0
+      if (item.getClass() == ObstacleArea.class
+          && item.get_component_no() > 0
           && ((ObstacleArea) item).get_area() instanceof Circle) {
-        assertEquals(holeEdgeClassNo, item.clearance_class_no(),
+        assertEquals(
+            holeEdgeClassNo,
+            item.clearance_class_no(),
             "circular package keepout (NPTH hole) must use the hole_edge class");
         reclassified++;
       }
     }
     assertTrue(reclassified > 0, "fixture must contain NPTH keepout circles");
 
-    int expectedBoardUnits = (int) Math.round(Unit.scale(
-        250.0 * Math.max(1, job.board.communication.resolution),
-        Unit.UM,
-        job.board.communication.unit));
+    int expectedBoardUnits =
+        (int)
+            Math.round(
+                Unit.scale(
+                    250.0 * Math.max(1, job.board.communication.resolution),
+                    Unit.UM,
+                    job.board.communication.unit));
     for (int layer = 0; layer < matrix.get_layer_count(); layer++) {
-      assertTrue(matrix.get_value(holeEdgeClassNo, 1, layer, false) >= expectedBoardUnits,
+      assertTrue(
+          matrix.get_value(holeEdgeClassNo, 1, layer, false) >= expectedBoardUnits,
           "hole_edge clearance must be at least the configured hole clearance");
     }
   }

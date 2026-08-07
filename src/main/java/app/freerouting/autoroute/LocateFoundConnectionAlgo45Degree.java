@@ -17,12 +17,21 @@ import java.util.SortedSet;
 
 public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo {
 
-  /**
-   * Creates a new instance of LocateFoundConnectionAlgo45Degree
-   */
-  public LocateFoundConnectionAlgo45Degree(MazeSearchAlgo.Result p_maze_search_result, AutorouteControl p_ctrl, ShapeSearchTree p_search_tree, AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs) {
-    super(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list, p_ripup_costs);
+  /** Creates a new instance of LocateFoundConnectionAlgo45Degree */
+  public LocateFoundConnectionAlgo45Degree(
+      MazeSearchAlgo.Result p_maze_search_result,
+      AutorouteControl p_ctrl,
+      ShapeSearchTree p_search_tree,
+      AngleRestriction p_angle_restriction,
+      SortedSet<Item> p_ripped_item_list,
+      Map<Item, Integer> p_ripup_costs) {
+    super(
+        p_maze_search_result,
+        p_ctrl,
+        p_search_tree,
+        p_angle_restriction,
+        p_ripped_item_list,
+        p_ripup_costs);
   }
 
   private static FloatPoint round_to_integer(FloatPoint p_point) {
@@ -30,9 +39,11 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
   }
 
   /**
-   * Calculates, if the next 45-degree angle should be horizontal first when coming from p_from_point on p_from_door.
+   * Calculates, if the next 45-degree angle should be horizontal first when coming from
+   * p_from_point on p_from_door.
    */
-  private static boolean calc_horizontal_first_from_door(ExpandableObject p_from_door, FloatPoint p_from_point, FloatPoint p_to_point) {
+  private static boolean calc_horizontal_first_from_door(
+      ExpandableObject p_from_door, FloatPoint p_from_point, FloatPoint p_to_point) {
     TileShape door_shape = p_from_door.get_shape();
     IntBox from_door_box = door_shape.bounding_box();
     if (p_from_door.get_dimension() != 1) {
@@ -42,7 +53,9 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
     FloatLine door_line_segment = door_shape.diagonal_corner_segment();
     FloatPoint left_corner;
     FloatPoint right_corner;
-    if (door_line_segment.a.x < door_line_segment.b.x || door_line_segment.a.x == door_line_segment.b.x && door_line_segment.a.y <= door_line_segment.b.y) {
+    if (door_line_segment.a.x < door_line_segment.b.x
+        || door_line_segment.a.x == door_line_segment.b.x
+            && door_line_segment.a.y <= door_line_segment.b.y) {
       left_corner = door_line_segment.a;
       right_corner = door_line_segment.b;
     } else {
@@ -90,13 +103,20 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
 
     if (this.current_to_door_index > this.current_target_door_index) {
       if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
-        FRLogger.trace("compare_trace_next_corners_raw net=" + this.ctrl.net_no
-            + ", mode=45, branch=NO_MORE_DOORS"
-            + ", layer=" + this.current_trace_layer
-            + ", from_door=" + this.current_from_door_index
-            + ", to_door=" + this.current_to_door_index
-            + ", target_door=" + this.current_target_door_index
-            + ", result_size=" + result.size());
+        FRLogger.trace(
+            "compare_trace_next_corners_raw net="
+                + this.ctrl.net_no
+                + ", mode=45, branch=NO_MORE_DOORS"
+                + ", layer="
+                + this.current_trace_layer
+                + ", from_door="
+                + this.current_from_door_index
+                + ", to_door="
+                + this.current_to_door_index
+                + ", target_door="
+                + this.current_target_door_index
+                + ", result_size="
+                + result.size());
       }
       return result;
     }
@@ -104,14 +124,18 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
     BacktrackElement curr_from_info = this.backtrack_array[this.current_to_door_index - 1];
 
     if (curr_from_info.next_room == null) {
-      FRLogger.warn("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: next_room is null");
+      FRLogger.warn(
+          "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: next_room is null");
       return result;
     }
 
     TileShape room_shape = curr_from_info.next_room.get_shape();
 
     int trace_halfwidth = this.ctrl.compensated_trace_half_width[this.current_trace_layer];
-    int trace_halfwidth_add = trace_halfwidth + AutorouteEngine.TRACE_WIDTH_TOLERANCE; // add some tolerance for free space expansion rooms.
+    int trace_halfwidth_add =
+        trace_halfwidth
+            + AutorouteEngine
+                .TRACE_WIDTH_TOLERANCE; // add some tolerance for free space expansion rooms.
     int shrink_offset;
     if (curr_from_info.next_room instanceof ObstacleExpansionRoom) {
 
@@ -122,24 +146,43 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
 
     TileShape shrinked_room_shape = (TileShape) room_shape.offset(-shrink_offset);
     if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
-      FRLogger.trace("compare_trace_room_shrink_raw net=" + this.ctrl.net_no
-          + ", mode=45"
-          + ", layer=" + this.current_trace_layer
-          + ", from_door=" + this.current_from_door_index
-          + ", to_door=" + this.current_to_door_index
-          + ", target_door=" + this.current_target_door_index
-          + ", next_room_type=" + curr_from_info.next_room.getClass().getSimpleName()
-          + ", shrink_offset=" + shrink_offset
-          + ", room_empty=" + room_shape.is_empty()
-          + ", shrinked_empty=" + shrinked_room_shape.is_empty()
-          + ", current_from=" + this.current_from_point);
+      FRLogger.trace(
+          "compare_trace_room_shrink_raw net="
+              + this.ctrl.net_no
+              + ", mode=45"
+              + ", layer="
+              + this.current_trace_layer
+              + ", from_door="
+              + this.current_from_door_index
+              + ", to_door="
+              + this.current_to_door_index
+              + ", target_door="
+              + this.current_target_door_index
+              + ", next_room_type="
+              + curr_from_info.next_room.getClass().getSimpleName()
+              + ", shrink_offset="
+              + shrink_offset
+              + ", room_empty="
+              + room_shape.is_empty()
+              + ", shrinked_empty="
+              + shrinked_room_shape.is_empty()
+              + ", current_from="
+              + this.current_from_point);
     }
     if (!shrinked_room_shape.is_empty()) {
       // enter the shrunk room shape by a 45-degree angle first
-      FloatPoint nearest_room_point = shrinked_room_shape.nearest_point_approx(this.current_from_point);
-      boolean horizontal_first = calc_horizontal_first_from_door(curr_from_info.door, this.current_from_point, nearest_room_point);
+      FloatPoint nearest_room_point =
+          shrinked_room_shape.nearest_point_approx(this.current_from_point);
+      boolean horizontal_first =
+          calc_horizontal_first_from_door(
+              curr_from_info.door, this.current_from_point, nearest_room_point);
       nearest_room_point = round_to_integer(nearest_room_point);
-      result.add(calculate_additional_corner(this.current_from_point, nearest_room_point, horizontal_first, this.angle_restriction));
+      result.add(
+          calculate_additional_corner(
+              this.current_from_point,
+              nearest_room_point,
+              horizontal_first,
+              this.angle_restriction));
       result.add(nearest_room_point);
       this.current_from_point = nearest_room_point;
     } else {
@@ -147,32 +190,47 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
     }
 
     if (this.current_to_door_index == this.current_target_door_index) {
-      FloatPoint nearest_point = this.current_target_shape.nearest_point_approx(this.current_from_point);
+      FloatPoint nearest_point =
+          this.current_target_shape.nearest_point_approx(this.current_from_point);
       nearest_point = round_to_integer(nearest_point);
-      FloatPoint add_corner = calculate_additional_corner(this.current_from_point, nearest_point, true, this.angle_restriction);
+      FloatPoint add_corner =
+          calculate_additional_corner(
+              this.current_from_point, nearest_point, true, this.angle_restriction);
       if (!shrinked_room_shape.contains(add_corner)) {
-        add_corner = calculate_additional_corner(this.current_from_point, nearest_point, false, this.angle_restriction);
+        add_corner =
+            calculate_additional_corner(
+                this.current_from_point, nearest_point, false, this.angle_restriction);
       }
       result.add(add_corner);
       result.add(nearest_point);
       ++this.current_to_door_index;
       if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
-        FRLogger.trace("compare_trace_next_corners_raw net=" + this.ctrl.net_no
-            + ", mode=45, branch=TARGET_DOOR"
-            + ", layer=" + this.current_trace_layer
-            + ", from_door=" + this.current_from_door_index
-            + ", to_door=" + this.current_to_door_index
-            + ", target_door=" + this.current_target_door_index
-            + ", result_size=" + result.size()
-            + ", nearest_point=" + nearest_point
-            + ", add_corner=" + add_corner);
+        FRLogger.trace(
+            "compare_trace_next_corners_raw net="
+                + this.ctrl.net_no
+                + ", mode=45, branch=TARGET_DOOR"
+                + ", layer="
+                + this.current_trace_layer
+                + ", from_door="
+                + this.current_from_door_index
+                + ", to_door="
+                + this.current_to_door_index
+                + ", target_door="
+                + this.current_target_door_index
+                + ", result_size="
+                + result.size()
+                + ", nearest_point="
+                + nearest_point
+                + ", add_corner="
+                + add_corner);
       }
       return result;
     }
 
     BacktrackElement curr_to_info = this.backtrack_array[this.current_to_door_index];
     if (!(curr_to_info.door instanceof ExpansionDoor curr_to_door)) {
-      FRLogger.warn("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: ExpansionDoor expected");
+      FRLogger.warn(
+          "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: ExpansionDoor expected");
       return result;
     }
 
@@ -187,7 +245,8 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
     } else {
       FloatLine[] line_sections = curr_to_door.get_section_segments(trace_halfwidth);
       if (curr_to_info.section_no_of_door >= line_sections.length) {
-        FRLogger.warn("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: line_sections inconsistent");
+        FRLogger.warn(
+            "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: line_sections inconsistent");
         return result;
       }
       FloatLine curr_line_section = line_sections[curr_to_info.section_no_of_door];
@@ -198,9 +257,11 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
         Simplex next_room_shape = curr_to_info.next_room.get_shape().to_Simplex();
         // with IntBox or IntOctagon the next calculation will not work, because they have
         // border lines of length 0.
-        FloatPoint[] nearest_points = next_room_shape.nearest_border_points_approx(nearest_to_door_point, 2);
+        FloatPoint[] nearest_points =
+            next_room_shape.nearest_border_points_approx(nearest_to_door_point, 2);
         if (nearest_points.length >= 2) {
-          nearest_to_door_point_ok = nearest_points[1].distance(nearest_to_door_point) >= trace_halfwidth_add;
+          nearest_to_door_point_ok =
+              nearest_points[1].distance(nearest_to_door_point) >= trace_halfwidth_add;
         }
       }
       if (!nearest_to_door_point_ok) {
@@ -209,28 +270,46 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       }
     }
     nearest_to_door_point = round_to_integer(nearest_to_door_point);
-    boolean horizontal_first = calc_horizontal_first_to_door(curr_to_info.door, this.current_from_point, nearest_to_door_point);
-    result.add(calculate_additional_corner(this.current_from_point, nearest_to_door_point, horizontal_first, this.angle_restriction));
+    boolean horizontal_first =
+        calc_horizontal_first_to_door(
+            curr_to_info.door, this.current_from_point, nearest_to_door_point);
+    result.add(
+        calculate_additional_corner(
+            this.current_from_point,
+            nearest_to_door_point,
+            horizontal_first,
+            this.angle_restriction));
     result.add(nearest_to_door_point);
     ++this.current_to_door_index;
     if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
-      FRLogger.trace("compare_trace_next_corners_raw net=" + this.ctrl.net_no
-          + ", mode=45, branch=EXPANSION_DOOR"
-          + ", layer=" + this.current_trace_layer
-          + ", from_door=" + this.current_from_door_index
-          + ", to_door=" + this.current_to_door_index
-          + ", target_door=" + this.current_target_door_index
-          + ", result_size=" + result.size()
-          + ", nearest_to_door_point=" + nearest_to_door_point
-          + ", horizontal_first=" + horizontal_first);
+      FRLogger.trace(
+          "compare_trace_next_corners_raw net="
+              + this.ctrl.net_no
+              + ", mode=45, branch=EXPANSION_DOOR"
+              + ", layer="
+              + this.current_trace_layer
+              + ", from_door="
+              + this.current_from_door_index
+              + ", to_door="
+              + this.current_to_door_index
+              + ", target_door="
+              + this.current_target_door_index
+              + ", result_size="
+              + result.size()
+              + ", nearest_to_door_point="
+              + nearest_to_door_point
+              + ", horizontal_first="
+              + horizontal_first);
     }
     return result;
   }
 
   /**
-   * Calculates, if the 45-degree angle to the next door shape should be horizontal first when coming from p_from_point.
+   * Calculates, if the 45-degree angle to the next door shape should be horizontal first when
+   * coming from p_from_point.
    */
-  private boolean calc_horizontal_first_to_door(ExpandableObject p_to_door, FloatPoint p_from_point, FloatPoint p_to_point) {
+  private boolean calc_horizontal_first_to_door(
+      ExpandableObject p_to_door, FloatPoint p_from_point, FloatPoint p_to_point) {
     TileShape door_shape = p_to_door.get_shape();
     IntBox from_door_box = door_shape.bounding_box();
     if (p_to_door.get_dimension() != 1) {
@@ -239,7 +318,9 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
     FloatLine door_line_segment = door_shape.diagonal_corner_segment();
     FloatPoint left_corner;
     FloatPoint right_corner;
-    if (door_line_segment.a.x < door_line_segment.b.x || door_line_segment.a.x == door_line_segment.b.x && door_line_segment.a.y <= door_line_segment.b.y) {
+    if (door_line_segment.a.x < door_line_segment.b.x
+        || door_line_segment.a.x == door_line_segment.b.x
+            && door_line_segment.a.y <= door_line_segment.b.y) {
       left_corner = door_line_segment.a;
       right_corner = door_line_segment.b;
     } else {

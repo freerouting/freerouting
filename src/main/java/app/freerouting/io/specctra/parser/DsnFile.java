@@ -13,24 +13,20 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 
-/**
- * Class for reading and writing dsn-files.
- */
+/** Class for reading and writing dsn-files. */
 public final class DsnFile {
 
   static final char CLASS_CLEARANCE_SEPARATOR = '-';
 
-  private DsnFile() {
-  }
+  private DsnFile() {}
 
   /**
-   * Sets contains_plane to true for nets with a conduction_area covering a large
-   * part of a signal layer, if that layer does not contain any traces. This is
-   * useful in case the layer type was not set correctly to plane in the dsn-file.
-   * Returns true, if something was changed.
+   * Sets contains_plane to true for nets with a conduction_area covering a large part of a signal
+   * layer, if that layer does not contain any traces. This is useful in case the layer type was not
+   * set correctly to plane in the dsn-file. Returns true, if something was changed.
    *
-   * <p>Called from {@link app.freerouting.io.specctra.DsnReader#readBoard} when the
-   * DSN file contains no {@code (autoroute ...)} scope.
+   * <p>Called from {@link app.freerouting.io.specctra.DsnReader#readBoard} when the DSN file
+   * contains no {@code (autoroute ...)} scope.
    */
   public static boolean adjustPlaneAutorouteSettings(BasicBoard routing_board) {
     if (routing_board == null) {
@@ -79,7 +75,8 @@ public final class DsnFile {
         continue;
       }
       app.freerouting.board.Layer curr_layer = routing_board.layer_structure.arr[layer_no];
-      if (!curr_layer.is_signal || layer_no == 0
+      if (!curr_layer.is_signal
+          || layer_no == 0
           || layer_no == board_layer_structure.arr.length - 1) {
         continue;
       }
@@ -103,8 +100,10 @@ public final class DsnFile {
     }
     for (int i = 0; i < changed_layer_arr.length; i++) {
       if (changed_layer_arr[i]) {
-        FRLogger.info("Layer '" + routing_board.layer_structure.arr[i].name 
-            + "' has been automatically configured as a dedicated power plane because it contains a large conduction area covering >50% of the board.");
+        FRLogger.info(
+            "Layer '"
+                + routing_board.layer_structure.arr[i].name
+                + "' has been automatically configured as a dedicated power plane because it contains a large conduction area covering >50% of the board.");
       }
     }
     return !nothing_changed;
@@ -117,8 +116,10 @@ public final class DsnFile {
       if (next_token == Keyword.ON) {
         result = true;
       } else if (next_token != Keyword.OFF) {
-        FRLogger.warn("DsnFile.read_boolean: Keyword.OFF expected at '"
-            + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "DsnFile.read_boolean: Keyword.OFF expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
       }
       ScopeKeyword.skip_scope(p_scanner);
       return result;
@@ -135,14 +136,18 @@ public final class DsnFile {
       if (next_token instanceof Integer integer) {
         value = integer;
       } else {
-        FRLogger.warn("DsnFile.read_integer_scope: number expected at '"
-            + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "DsnFile.read_integer_scope: number expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return 0;
       }
       next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("DsnFile.read_integer_scope: closing bracket expected at '"
-            + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "DsnFile.read_integer_scope: closing bracket expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return 0;
       }
       return value;
@@ -161,14 +166,18 @@ public final class DsnFile {
       } else if (next_token instanceof Integer integer) {
         value = integer;
       } else {
-        FRLogger.warn("DsnFile.read_float_scope: number expected at '"
-            + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "DsnFile.read_float_scope: number expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return 0;
       }
       next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("DsnFile.read_float_scope: closing bracket expected at '"
-            + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "DsnFile.read_float_scope: closing bracket expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return 0;
       }
       return value;
@@ -184,8 +193,10 @@ public final class DsnFile {
       String result = p_scanner.next_string();
       Object next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("DsnFile.read_string_scope: closing bracket expected at '"
-            + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "DsnFile.read_string_scope: closing bracket expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
       }
       return result;
     } catch (IOException e) {
@@ -203,6 +214,8 @@ public final class DsnFile {
   }
 
   public enum ReadResult {
-    OK, OUTLINE_MISSING, ERROR
+    OK,
+    OUTLINE_MISSING,
+    ERROR
   }
 }

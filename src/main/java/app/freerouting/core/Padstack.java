@@ -12,41 +12,50 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Locale;
 
-/**
- * Describes padstack masks for pins or vias located at the origin.
- */
+/** Describes padstack masks for pins or vias located at the origin. */
 public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable, Serializable {
 
   public final String name;
   public final int no;
-  /**
-   * true, if vias of the own net are allowed to overlap with this padstack
-   */
+
+  /** true, if vias of the own net are allowed to overlap with this padstack */
   public final boolean attach_allowed;
+
   /**
-   * If false, the layers of the padstack are mirrored, if it is placed on the back side. The default is false.
+   * If false, the layers of the padstack are mirrored, if it is placed on the back side. The
+   * default is false.
    */
   public final boolean placed_absolute;
+
   private final ConvexShape[] shapes;
+
   /**
-   * True for padstacks whose copper-layer shapes were synthesized from the drill radius because
-   * the source padstack had no copper at all (non-plated holes). Such shapes exist only so the
-   * hole becomes an obstacle for routing and DRC; they must not be treated as real copper (e.g.
-   * not re-exported).
+   * True for padstacks whose copper-layer shapes were synthesized from the drill radius because the
+   * source padstack had no copper at all (non-plated holes). Such shapes exist only so the hole
+   * becomes an obstacle for routing and DRC; they must not be treated as real copper (e.g. not
+   * re-exported).
    */
   public boolean hole_only;
-  /**
-   * Pointer to the pacdstack list containing this padstack
-   */
+
+  /** Pointer to the pacdstack list containing this padstack */
   private final Padstacks padstack_list;
+
   /** Cached drill radius to avoid repeated regex parsing on every render call. */
   private Double cachedDrillRadius;
 
   /**
-   * Creates a new Padstack with shape p_shapes[i] on layer i (0 <= i < p_shapes.length). p_is_drilllable indicates, if vias of the own net are allowed to overlap with this padstack If
-   * p_placed_absolute is false, the layers of the padstack are mirrored, if it is placed on the back side. p_padstack_list is the list, where this padstack belongs to.
+   * Creates a new Padstack with shape p_shapes[i] on layer i (0 <= i < p_shapes.length).
+   * p_is_drilllable indicates, if vias of the own net are allowed to overlap with this padstack If
+   * p_placed_absolute is false, the layers of the padstack are mirrored, if it is placed on the
+   * back side. p_padstack_list is the list, where this padstack belongs to.
    */
-  Padstack(String p_name, int p_no, ConvexShape[] p_shapes, boolean p_is_drilllable, boolean p_placed_absolute, Padstacks p_padstack_list) {
+  Padstack(
+      String p_name,
+      int p_no,
+      ConvexShape[] p_shapes,
+      boolean p_is_drilllable,
+      boolean p_placed_absolute,
+      Padstacks p_padstack_list) {
     shapes = p_shapes;
     name = p_name;
     no = p_no;
@@ -55,17 +64,15 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
     padstack_list = p_padstack_list;
   }
 
-  /**
-   * Compares 2 padstacks by name. Useful for example to display padstacks in alphabetic order.
-   */
+  /** Compares 2 padstacks by name. Useful for example to display padstacks in alphabetic order. */
   @Override
   public int compareTo(Padstack p_other) {
     return this.name.compareToIgnoreCase(p_other.name);
   }
 
   /**
-   * Returns the drill radius of this padstack in board units.
-   * The result is cached after the first computation to avoid repeated regex parsing.
+   * Returns the drill radius of this padstack in board units. The result is cached after the first
+   * computation to avoid repeated regex parsing.
    */
   public double get_drill_radius() {
     if (cachedDrillRadius != null) {
@@ -87,7 +94,8 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
           double drillDia = Double.parseDouble(drillStr);
           int lastUnderscore = name.lastIndexOf('_', colonIndex);
           if (lastUnderscore >= 0) {
-            String outerStr = name.substring(lastUnderscore + 1, colonIndex).replaceAll("[^0-9.]", "");
+            String outerStr =
+                name.substring(lastUnderscore + 1, colonIndex).replaceAll("[^0-9.]", "");
             double outerDia = Double.parseDouble(outerStr);
             if (outerDia > 0) {
               double actualOuterRadius = get_smallest_radius();
@@ -121,9 +129,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
     return minRadius == Double.MAX_VALUE ? 0.0 : minRadius;
   }
 
-  /**
-   * Gets the shape of this padstack on layer p_layer
-   */
+  /** Gets the shape of this padstack on layer p_layer */
   public ConvexShape get_shape(int p_layer) {
     if (p_layer < 0 || p_layer >= shapes.length) {
       FRLogger.warn("Padstack.get_layer p_layer out of range");
@@ -132,9 +138,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
     return shapes[p_layer];
   }
 
-  /**
-   * Returns the first layer of this padstack with a shape != null.
-   */
+  /** Returns the first layer of this padstack with a shape != null. */
   public int from_layer() {
     int result = 0;
     while (result < shapes.length && shapes[result] == null) {
@@ -143,9 +147,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
     return result;
   }
 
-  /**
-   * Returns the last layer of this padstack with a shape != null.
-   */
+  /** Returns the last layer of this padstack with a shape != null. */
   public int to_layer() {
     int result = shapes.length - 1;
     while (result >= 0 && shapes[result] == null) {
@@ -154,9 +156,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
     return result;
   }
 
-  /**
-   * Returns the layer count of the board of this padstack.
-   */
+  /** Returns the layer count of the board of this padstack. */
   public int board_layer_count() {
     return shapes.length;
   }
@@ -167,8 +167,9 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   }
 
   /**
-   * Calculates the allowed trace exit directions of the shape of this padstack on layer p_layer. If the length of the pad is smaller than p_factor times the height of the pad, connection also to the
-   * long side is allowed.
+   * Calculates the allowed trace exit directions of the shape of this padstack on layer p_layer. If
+   * the length of the pad is smaller than p_factor times the height of the pad, connection also to
+   * the long side is allowed.
    */
   public Collection<Direction> get_trace_exit_directions(int p_layer, double p_factor) {
     Collection<Direction> result = new LinkedList<>();
@@ -184,7 +185,9 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
     }
     IntBox curr_box = curr_shape.bounding_box();
 
-    boolean all_dirs = Math.max(curr_box.width(), curr_box.height()) < p_factor * Math.min(curr_box.width(), curr_box.height());
+    boolean all_dirs =
+        Math.max(curr_box.width(), curr_box.height())
+            < p_factor * Math.min(curr_box.width(), curr_box.height());
 
     if (all_dirs || curr_box.width() >= curr_box.height()) {
       result.add(Direction.RIGHT);

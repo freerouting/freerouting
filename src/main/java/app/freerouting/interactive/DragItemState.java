@@ -10,17 +10,16 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Class for interactive dragging items with the mouse on a routing board
- */
+/** Class for interactive dragging items with the mouse on a routing board */
 public class DragItemState extends DragState {
 
   private final Item item_to_move;
 
-  /**
-   * Creates a new instance of MoveItemState
-   */
-  protected DragItemState(Item p_item_to_move, FloatPoint p_location, InteractiveState p_parent_state,
+  /** Creates a new instance of MoveItemState */
+  protected DragItemState(
+      Item p_item_to_move,
+      FloatPoint p_location,
+      InteractiveState p_parent_state,
       GuiBoardManager p_board_handling) {
     super(p_location, p_parent_state, p_board_handling);
     item_to_move = p_item_to_move;
@@ -32,16 +31,18 @@ public class DragItemState extends DragState {
   }
 
   /**
-   * Moves the items of the group to p_to_location. Return this.return_state, if
-   * an error occurred while moving, so that an undo may be necessary.
+   * Moves the items of the group to p_to_location. Return this.return_state, if an error occurred
+   * while moving, so that an undo may be necessary.
    */
   @Override
   public InteractiveState move_to(FloatPoint p_to_location) {
     IntPoint to_location = p_to_location.round();
     IntPoint from_location = this.previous_location.round();
-    if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
+    if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
+        == AngleRestriction.NINETY_DEGREE) {
       to_location = to_location.orthogonal_projection(from_location);
-    } else if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE) {
+    } else if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
+        == AngleRestriction.FORTYFIVE_DEGREE) {
       to_location = to_location.fortyfive_degree_projection(from_location);
     }
     if (to_location.equals(from_location)) {
@@ -82,7 +83,8 @@ public class DragItemState extends DragState {
         hdlg.get_routing_board().generate_snapshot();
         this.something_dragged = true;
       }
-      if (!move_component.insert(hdlg.getInteractiveSettings().get_trace_pull_tight_region_width(),
+      if (!move_component.insert(
+          hdlg.getInteractiveSettings().get_trace_pull_tight_region_width(),
           hdlg.getInteractiveSettings().get_trace_pull_tight_accuracy())) {
         // an insert error occurred, end the drag state
         return this.return_state;
@@ -106,7 +108,8 @@ public class DragItemState extends DragState {
           hdlg.update_ratsnest(item_to_move.get_net_no(i));
         }
       } else {
-        Collection<Item> moved_items = hdlg.get_routing_board().get_component_items(item_to_move.get_component_no());
+        Collection<Item> moved_items =
+            hdlg.get_routing_board().get_component_items(item_to_move.get_component_no());
         Set<Integer> changed_nets = new TreeSet<>();
         for (Item curr_moved_item : moved_items) {
           for (int i = 0; i < curr_moved_item.net_count(); i++) {

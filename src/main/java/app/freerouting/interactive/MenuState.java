@@ -10,14 +10,10 @@ import java.util.Collection;
 import java.util.Set;
 import javax.swing.JPopupMenu;
 
-/**
- * Common base class for the main menus, which can be selected in the toolbar.
- */
+/** Common base class for the main menus, which can be selected in the toolbar. */
 public class MenuState extends InteractiveState {
 
-  /**
-   * Creates a new instance of MenuState
-   */
+  /** Creates a new instance of MenuState */
   MenuState(GuiBoardManager p_board_handle) {
     super(null, p_board_handle);
     this.return_state = this;
@@ -29,8 +25,8 @@ public class MenuState extends InteractiveState {
   }
 
   /**
-   * Selects items at p_location. Returns a new instance of SelectedItemState with
-   * the selected items, if something was selected.
+   * Selects items at p_location. Returns a new instance of SelectedItemState with the selected
+   * items, if something was selected.
    */
   public InteractiveState select_items(FloatPoint p_location) {
     this.hdlg.display_layer_message();
@@ -48,7 +44,8 @@ public class MenuState extends InteractiveState {
   }
 
   public InteractiveState swap_pin(FloatPoint p_location) {
-    ItemSelectionFilter selection_filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
+    ItemSelectionFilter selection_filter =
+        new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
     Collection<Item> picked_items = hdlg.pick_items(p_location, selection_filter);
     InteractiveState result = this;
     if (!picked_items.isEmpty()) {
@@ -65,25 +62,28 @@ public class MenuState extends InteractiveState {
     return result;
   }
 
-  /**
-   * Action to be taken when a key shortcut is pressed.
-   */
+  /** Action to be taken when a key shortcut is pressed. */
   @Override
   public InteractiveState key_typed(char p_key_char) {
     InteractiveState curr_return_state = this;
     switch (p_key_char) {
       case 'b' -> hdlg.redo();
       case 'd' -> curr_return_state = DragMenuState.get_instance(hdlg);
-      case 'e' -> curr_return_state = ExpandTestState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
+      case 'e' ->
+          curr_return_state =
+              ExpandTestState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
       case 'g' -> hdlg.toggle_ratsnest();
       case 'i' -> curr_return_state = this.select_items(hdlg.get_current_mouse_position());
       case 'p' -> {
-        hdlg.getInteractiveSettings().set_push_enabled(!hdlg.getInteractiveSettings().get_push_enabled());
+        hdlg.getInteractiveSettings()
+            .set_push_enabled(!hdlg.getInteractiveSettings().get_push_enabled());
         hdlg.get_panel().board_frame.refresh_windows();
       }
       case 'r' -> curr_return_state = RouteMenuState.get_instance(hdlg);
       case 's' -> curr_return_state = InspectMenuState.get_instance(hdlg);
-      case 't' -> curr_return_state = RouteState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
+      case 't' ->
+          curr_return_state =
+              RouteState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
       case 'u' -> hdlg.undo();
       case 'v' -> hdlg.toggle_clearance_violations();
       case 'w' -> curr_return_state = swap_pin(hdlg.get_current_mouse_position());
@@ -93,7 +93,8 @@ public class MenuState extends InteractiveState {
         int current_layer_no = hdlg.getInteractiveSettings().get_layer();
         do {
           ++current_layer_no;
-        } while (current_layer_no < layer_structure.arr.length && !layer_structure.arr[current_layer_no].is_signal);
+        } while (current_layer_no < layer_structure.arr.length
+            && !layer_structure.arr[current_layer_no].is_signal);
 
         if (current_layer_no < layer_structure.arr.length) {
           hdlg.set_current_layer(current_layer_no);
@@ -110,24 +111,19 @@ public class MenuState extends InteractiveState {
         if (current_layer_no >= 0) {
           hdlg.set_current_layer(current_layer_no);
         }
-
       }
       default -> curr_return_state = super.key_typed(p_key_char);
     }
     return curr_return_state;
   }
 
-  /**
-   * Do nothing on complete.
-   */
+  /** Do nothing on complete. */
   @Override
   public InteractiveState complete() {
     return this;
   }
 
-  /**
-   * Do nothing on cancel.
-   */
+  /** Do nothing on cancel. */
   @Override
   public InteractiveState cancel() {
     return this;

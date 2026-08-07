@@ -18,16 +18,21 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Class describing functionality required for traces in the plane.
- */
+/** Class describing functionality required for traces in the plane. */
 public abstract class Trace extends Item implements Connectable, Serializable {
 
   private final int half_width; // half width of the trace pen
   private int layer; // board layer of the trace
 
-  Trace(int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no,
-      FixedState p_fixed_state, BasicBoard p_board) {
+  Trace(
+      int p_layer,
+      int p_half_width,
+      int[] p_net_no_arr,
+      int p_clearance_type,
+      int p_id_no,
+      int p_group_no,
+      FixedState p_fixed_state,
+      BasicBoard p_board) {
     super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
     half_width = p_half_width;
     p_layer = Math.max(p_layer, 0);
@@ -37,14 +42,10 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     layer = p_layer;
   }
 
-  /**
-   * returns the first corner of the trace
-   */
+  /** returns the first corner of the trace */
   public abstract Point first_corner();
 
-  /**
-   * returns the last corner of the trace
-   */
+  /** returns the last corner of the trace */
   public abstract Point last_corner();
 
   @Override
@@ -69,23 +70,23 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return half_width;
   }
 
-  /**
-   * Returns the length of this trace.
-   */
+  /** Returns the length of this trace. */
   public abstract double get_length();
 
   /**
-   * Returns the half with enlarged by the clearance compensation value for the
-   * tree with id number p_tree_id_no Equals get_half_width(), if no clearance
-   * compensation is used in this tree.
+   * Returns the half with enlarged by the clearance compensation value for the tree with id number
+   * p_tree_id_no Equals get_half_width(), if no clearance compensation is used in this tree.
    */
   public int get_compensated_half_width(ShapeSearchTree p_search_tree) {
-    return this.half_width + p_search_tree.clearance_compensation_value(clearance_class_no(), this.layer);
+    return this.half_width
+        + p_search_tree.clearance_compensation_value(clearance_class_no(), this.layer);
   }
 
   @Override
   public boolean is_obstacle(Item p_other) {
-    if (p_other == this || p_other instanceof ViaObstacleArea || p_other instanceof ComponentObstacleArea) {
+    if (p_other == this
+        || p_other instanceof ViaObstacleArea
+        || p_other instanceof ComponentObstacleArea) {
       return false;
     }
     if (p_other instanceof ConductionArea area && !area.get_is_obstacle()) {
@@ -95,16 +96,16 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * Get a list of all items with a connection point on the layer of this trace
-   * equal to its first corner.
+   * Get a list of all items with a connection point on the layer of this trace equal to its first
+   * corner.
    */
   public Set<Item> get_start_contacts() {
     return get_normal_contacts(first_corner(), false);
   }
 
   /**
-   * Get a list of all items with a connection point on the layer of this trace
-   * equal to its last corner.
+   * Get a list of all items with a connection point on the layer of this trace equal to its last
+   * corner.
    */
   public Set<Item> get_end_contacts() {
     return get_normal_contacts(last_corner(), false);
@@ -134,10 +135,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return !is_user_fixed() && (this.net_count() > 0);
   }
 
-  /**
-   * Returns true, if this trace is not contacted at its first or at its last
-   * point.
-   */
+  /** Returns true, if this trace is not contacted at its first or at its last point. */
   @Override
   public boolean is_tail() {
     Collection<Item> contact_list = this.get_start_contacts();
@@ -164,13 +162,13 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * Get a list of all items having a connection point at p_point on the layer of
-   * this trace. If p_ignore_net is false, only contacts to items sharing a net
-   * with this trace are calculated. This is the
-   * normal case.
+   * Get a list of all items having a connection point at p_point on the layer of this trace. If
+   * p_ignore_net is false, only contacts to items sharing a net with this trace are calculated.
+   * This is the normal case.
    */
   public Set<Item> get_normal_contacts(Point p_point, boolean p_ignore_net) {
-    if (p_point == null || !(p_point.equals(this.first_corner()) || p_point.equals(this.last_corner()))) {
+    if (p_point == null
+        || !(p_point.equals(this.first_corner()) || p_point.equals(this.last_corner()))) {
       return new TreeSet<>();
     }
     TileShape search_shape = TileShape.get_instance(p_point);
@@ -180,10 +178,12 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       if (!(curr_ob instanceof Item curr_item)) {
         continue;
       }
-      if (curr_item != this && curr_item.shares_layer(this) && (p_ignore_net || curr_item.shares_net(this))) {
+      if (curr_item != this
+          && curr_item.shares_layer(this)
+          && (p_ignore_net || curr_item.shares_net(this))) {
         if (curr_item instanceof Trace curr_trace) {
-          if (p_point.equals(curr_trace.first_corner()) ||
-              p_point.equals(curr_trace.last_corner())) {
+          if (p_point.equals(curr_trace.first_corner())
+              || p_point.equals(curr_trace.last_corner())) {
             result.add(curr_item);
           }
         } else if (curr_item instanceof DrillItem curr_drill_item) {
@@ -210,12 +210,15 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     if (this.layer != p_other.layer) {
       return null;
     }
-    boolean contact_at_first_corner = this.first_corner().equals(p_other.first_corner())
-        || this.first_corner().equals(p_other.last_corner());
-    boolean contact_at_last_corner = this.last_corner().equals(p_other.first_corner())
-        || this.last_corner().equals(p_other.last_corner());
+    boolean contact_at_first_corner =
+        this.first_corner().equals(p_other.first_corner())
+            || this.first_corner().equals(p_other.last_corner());
+    boolean contact_at_last_corner =
+        this.last_corner().equals(p_other.first_corner())
+            || this.last_corner().equals(p_other.last_corner());
     Point result;
-    if (!(contact_at_first_corner || contact_at_last_corner) || contact_at_first_corner && contact_at_last_corner) {
+    if (!(contact_at_first_corner || contact_at_last_corner)
+        || contact_at_first_corner && contact_at_last_corner) {
       // no contact point or more than 1 contact point
       result = null;
     } else if (contact_at_first_corner) {
@@ -232,10 +235,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return this.contains_net(p_net_no);
   }
 
-  /**
-   * looks, if this trace is connected to the same object at its start and its end
-   * point
-   */
+  /** looks, if this trace is connected to the same object at its start and its end point */
   @Override
   public boolean is_overlap() {
     Set<Item> start_contacts = this.get_start_contacts();
@@ -244,8 +244,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * Returns true, if it is not allowed to change the location of this item by the
-   * push algorithm.
+   * Returns true, if it is not allowed to change the location of this item by the push algorithm.
    */
   @Override
   public boolean is_shove_fixed() {
@@ -265,9 +264,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return false;
   }
 
-  /**
-   * returns the endpoint of this trace with the shortest distance to p_from_point
-   */
+  /** returns the endpoint of this trace with the shortest distance to p_from_point */
   public Point nearest_end_point(Point p_from_point) {
     Point p1 = first_corner();
     Point p2 = last_corner();
@@ -283,17 +280,27 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return result;
   }
 
-  /**
-   * Checks, if this trace can be reached by other items via more than one path
-   */
+  /** Checks, if this trace can be reached by other items via more than one path */
   public boolean is_cycle() {
-    boolean debugNet49 = this.net_no_arr != null && this.net_no_arr.length > 0 && this.net_no_arr[0] == 49;
+    boolean debugNet49 =
+        this.net_no_arr != null && this.net_no_arr.length > 0 && this.net_no_arr[0] == 49;
     if (this.is_overlap()) {
       if (debugNet49) {
-        FRLogger.trace("compare_trace_is_cycle_overlap net=49, id=" + this.get_id_no()
-            + ", first=" + this.first_corner() + ", last=" + this.last_corner()
-            + ", start_contacts=" + this.get_start_contacts().stream().map(i->i.get_id_no()+"").collect(java.util.stream.Collectors.joining(","))
-            + ", end_contacts=" + this.get_end_contacts().stream().map(i->i.get_id_no()+"").collect(java.util.stream.Collectors.joining(",")));
+        FRLogger.trace(
+            "compare_trace_is_cycle_overlap net=49, id="
+                + this.get_id_no()
+                + ", first="
+                + this.first_corner()
+                + ", last="
+                + this.last_corner()
+                + ", start_contacts="
+                + this.get_start_contacts().stream()
+                    .map(i -> i.get_id_no() + "")
+                    .collect(java.util.stream.Collectors.joining(","))
+                + ", end_contacts="
+                + this.get_end_contacts().stream()
+                    .map(i -> i.get_id_no() + "")
+                    .collect(java.util.stream.Collectors.joining(",")));
       }
       return true;
     }
@@ -314,10 +321,19 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     for (Item curr_contact : start_contacts) {
       if (curr_contact.is_cycle_recu(visited_items, this, this, ignore_areas)) {
         if (debugNet49) {
-          FRLogger.trace("compare_trace_is_cycle_dfs net=49, id=" + this.get_id_no()
-              + ", first=" + this.first_corner() + ", last=" + this.last_corner()
-              + ", start_contacts=" + start_contacts.stream().map(i->i.get_id_no()+"").collect(java.util.stream.Collectors.joining(","))
-              + ", found_via=" + curr_contact.get_id_no());
+          FRLogger.trace(
+              "compare_trace_is_cycle_dfs net=49, id="
+                  + this.get_id_no()
+                  + ", first="
+                  + this.first_corner()
+                  + ", last="
+                  + this.last_corner()
+                  + ", start_contacts="
+                  + start_contacts.stream()
+                      .map(i -> i.get_id_no() + "")
+                      .collect(java.util.stream.Collectors.joining(","))
+                  + ", found_via="
+                  + curr_contact.get_id_no());
         }
         return true;
       }
@@ -364,9 +380,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * checks, that the connection restrictions to the contact pins are satisfied.
-   * If p_at_start, the start of this trace is checked, else the end. Returns
-   * false, if a pin is at that end, where the
+   * checks, that the connection restrictions to the contact pins are satisfied. If p_at_start, the
+   * start of this trace is checked, else the end. Returns false, if a pin is at that end, where the
    * connection is checked and the connection is not ok.
    */
   public abstract boolean check_connection_to_pin(boolean p_at_start);
@@ -380,8 +395,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * Looks up touching pins at the first corner and the last corner of the trace.
-   * Used to avoid acid traps.
+   * Looks up touching pins at the first corner and the last corner of the trace. Used to avoid acid
+   * traps.
    */
   Set<Pin> touching_pins_at_end_corners() {
     Set<Pin> result = new TreeSet<>();
@@ -392,8 +407,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     for (int i = 0; i < 2; i++) {
       IntOctagon curr_oct = curr_end_point.surrounding_octagon();
       curr_oct = curr_oct.enlarge(this.half_width);
-      Set<Item> curr_overlaps = this.board.overlapping_items_with_clearance(curr_oct, this.layer, new int[0],
-          this.clearance_class_no());
+      Set<Item> curr_overlaps =
+          this.board.overlapping_items_with_clearance(
+              curr_oct, this.layer, new int[0], this.clearance_class_no());
       for (Item curr_item : curr_overlaps) {
         if ((curr_item instanceof Pin pin) && curr_item.shares_net(this)) {
           result.add(pin);
@@ -451,31 +467,28 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * looks, if this trace can be combined with other traces . Returns true, if
-   * something has been combined.
+   * looks, if this trace can be combined with other traces . Returns true, if something has been
+   * combined.
    */
   abstract boolean combine();
 
   /**
-   * Looks up traces intersecting with this trace and splits them at the
-   * intersection points. In case of an overlaps, the traces are split at their
-   * first and their last common point. Returns the
-   * pieces resulting from splitting. If nothing is split, the result will contain
-   * just this Trace. If p_clip_shape != null, the split may be restricted to
-   * p_clip_shape.
+   * Looks up traces intersecting with this trace and splits them at the intersection points. In
+   * case of an overlaps, the traces are split at their first and their last common point. Returns
+   * the pieces resulting from splitting. If nothing is split, the result will contain just this
+   * Trace. If p_clip_shape != null, the split may be restricted to p_clip_shape.
    */
   public abstract Collection<PolylineTrace> split(IntOctagon p_clip_shape);
 
   /**
-   * Splits this trace into two at p_point. Returns the 2 pieces of the split
-   * trace, or null if nothing was split because for example p_point is not
-   * located on this trace.
+   * Splits this trace into two at p_point. Returns the 2 pieces of the split trace, or null if
+   * nothing was split because for example p_point is not located on this trace.
    */
   public abstract Trace[] split(Point p_point);
 
   /**
-   * Tries to make this trace shorter according to its rules. Returns true if the
-   * geometry of the trace was changed.
+   * Tries to make this trace shorter according to its rules. Returns true if the geometry of the
+   * trace was changed.
    */
   public abstract boolean pull_tight(PullTightAlgo p_pull_tight_algo);
 }

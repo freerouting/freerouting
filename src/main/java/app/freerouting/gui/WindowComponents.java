@@ -10,14 +10,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Window displaying the components on the board.
- */
+/** Window displaying the components on the board. */
 public class WindowComponents extends WindowObjectListWithFilter {
 
-  /**
-   * Creates a new instance of ComponentsWindow
-   */
+  /** Creates a new instance of ComponentsWindow */
   public WindowComponents(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
@@ -25,12 +21,11 @@ public class WindowComponents extends WindowObjectListWithFilter {
     this.setTitle(tm.getText("components"));
   }
 
-  /**
-   * Fills the list with the board components.
-   */
+  /** Fills the list with the board components. */
   @Override
   protected void fill_list() {
-    Components components = this.board_frame.board_panel.board_handling.get_routing_board().components;
+    Components components =
+        this.board_frame.board_panel.board_handling.get_routing_board().components;
     Component[] sorted_arr = new Component[components.count()];
     for (int i = 0; i < sorted_arr.length; i++) {
       sorted_arr[i] = components.get(i + 1);

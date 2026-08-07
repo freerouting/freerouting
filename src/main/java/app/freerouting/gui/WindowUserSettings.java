@@ -32,9 +32,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /**
- * A dialog window that allows users to configure their settings, including telemetry
- * sharing and contact preferences, as well as view usage statistics and access the project's
- * sponsorship options.
+ * A dialog window that allows users to configure their settings, including telemetry sharing and
+ * contact preferences, as well as view usage statistics and access the project's sponsorship
+ * options.
  */
 public final class WindowUserSettings extends WindowBase {
 
@@ -92,35 +92,45 @@ public final class WindowUserSettings extends WindowBase {
     gbc.ipadx = 0;
 
     // Ghost placeholder text field (disappears on click without needing deletion)
-final String placeholder = tm.getText("email_placeholder");
+    final String placeholder = tm.getText("email_placeholder");
 
-JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEmail) {
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    JTextField emailField =
+        new JTextField(globalSettings.userProfileSettings.userEmail) {
+          @Override
+          protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
 
-        if (getText().isEmpty() && !isFocusOwner()) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setColor(Color.GRAY);
+            if (getText().isEmpty() && !isFocusOwner()) {
+              Graphics2D g2 = (Graphics2D) g.create();
+              g2.setColor(Color.GRAY);
 
-            // Cache the FontMetrics calculation locally
-            var fm = g2.getFontMetrics();
+              // Cache the FontMetrics calculation locally
+              var fm = g2.getFontMetrics();
 
-            int x = getInsets().left;
-            int y = fm.getAscent() + getInsets().top + ((getHeight() - getInsets().top - getInsets().bottom - fm.getHeight()) / 2);
+              int x = getInsets().left;
+              int y =
+                  fm.getAscent()
+                      + getInsets().top
+                      + ((getHeight() - getInsets().top - getInsets().bottom - fm.getHeight()) / 2);
 
-            // Draw the pre-loaded string
-            g2.drawString(placeholder, x, y);
-            g2.dispose();
-        }
-    }
-};
-    emailField.addFocusListener(new FocusAdapter() {
-      @Override
-      public void focusGained(FocusEvent e) { emailField.repaint(); }
-      @Override
-      public void focusLost(FocusEvent e) { emailField.repaint(); }
-    });
+              // Draw the pre-loaded string
+              g2.drawString(placeholder, x, y);
+              g2.dispose();
+            }
+          }
+        };
+    emailField.addFocusListener(
+        new FocusAdapter() {
+          @Override
+          public void focusGained(FocusEvent e) {
+            emailField.repaint();
+          }
+
+          @Override
+          public void focusLost(FocusEvent e) {
+            emailField.repaint();
+          }
+        });
     profileDialog.add(emailField, gbc);
 
     // Email hint
@@ -138,7 +148,9 @@ JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEm
     gbc.gridwidth = 4;
     JCheckBox telemetryCheckbox = new JCheckBox(tm.getText("allow_telemetry"));
     telemetryCheckbox.setSelected(globalSettings.userProfileSettings.isTelemetryAllowed);
-    telemetryCheckbox.addItemListener(_ -> globalSettings.userProfileSettings.isTelemetryAllowed = telemetryCheckbox.isSelected());
+    telemetryCheckbox.addItemListener(
+        _ ->
+            globalSettings.userProfileSettings.isTelemetryAllowed = telemetryCheckbox.isSelected());
     profileDialog.add(telemetryCheckbox, gbc);
 
     // Contacting
@@ -147,7 +159,10 @@ JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEm
     gbc.gridwidth = 4;
     JCheckBox allowContactCheckbox = new JCheckBox(tm.getText("allow_contact"));
     allowContactCheckbox.setSelected(globalSettings.userProfileSettings.isContactAllowed);
-    allowContactCheckbox.addItemListener(_ -> globalSettings.userProfileSettings.isContactAllowed = allowContactCheckbox.isSelected());
+    allowContactCheckbox.addItemListener(
+        _ ->
+            globalSettings.userProfileSettings.isContactAllowed =
+                allowContactCheckbox.isSelected());
     profileDialog.add(allowContactCheckbox, gbc);
 
     // Update button
@@ -160,35 +175,48 @@ JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEm
     updateButton.setPreferredSize(buttonSize);
     updateButton.setMaximumSize(buttonSize);
     updateButton.setEnabled(false);
-    updateButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        globalSettings.userProfileSettings.userEmail = emailField.getText();
-        FRAnalytics.setUserId(
-            globalSettings.userProfileSettings.userId,
-            globalSettings.userProfileSettings.userEmail);
-        FRAnalytics.refreshIdentity();
-        FRAnalytics.profileUpdated();
-        try {
-          GlobalSettings.saveAsJson(globalSettings);
-        } catch (IOException ex) {
-          FRLogger.error("Failed to save user profile settings", ex);
-        }
-        profileDialog.dispose();
-      }
-    });
-    updateButton.addActionListener(_ -> { /* profile analytics emitted in save handler */ });
+    updateButton.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            globalSettings.userProfileSettings.userEmail = emailField.getText();
+            FRAnalytics.setUserId(
+                globalSettings.userProfileSettings.userId,
+                globalSettings.userProfileSettings.userEmail);
+            FRAnalytics.refreshIdentity();
+            FRAnalytics.profileUpdated();
+            try {
+              GlobalSettings.saveAsJson(globalSettings);
+            } catch (IOException ex) {
+              FRLogger.error("Failed to save user profile settings", ex);
+            }
+            profileDialog.dispose();
+          }
+        });
+    updateButton.addActionListener(
+        _ -> {
+          /* profile analytics emitted in save handler */
+        });
     profileDialog.add(updateButton, gbc);
 
     // Enable the Update button if email or checkboxes change
-    DocumentListener documentListener = new DocumentListener() {
-      @Override
-      public void insertUpdate(DocumentEvent e) { validateEmail(emailField, updateButton); }
-      @Override
-      public void removeUpdate(DocumentEvent e) { validateEmail(emailField, updateButton); }
-      @Override
-      public void changedUpdate(DocumentEvent e) { validateEmail(emailField, updateButton); }
-    };
+    DocumentListener documentListener =
+        new DocumentListener() {
+          @Override
+          public void insertUpdate(DocumentEvent e) {
+            validateEmail(emailField, updateButton);
+          }
+
+          @Override
+          public void removeUpdate(DocumentEvent e) {
+            validateEmail(emailField, updateButton);
+          }
+
+          @Override
+          public void changedUpdate(DocumentEvent e) {
+            validateEmail(emailField, updateButton);
+          }
+        };
     emailField.getDocument().addDocumentListener(documentListener);
 
     ItemListener itemListener = _ -> validateEmail(emailField, updateButton);
@@ -217,7 +245,9 @@ JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEm
     gbc.gridy = 7;
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
-    JLabel statisticsHeader = new JLabel(tm.getText("stats_header", globalSettings.statistics.startTime.substring(0, 10)));
+    JLabel statisticsHeader =
+        new JLabel(
+            tm.getText("stats_header", globalSettings.statistics.startTime.substring(0, 10)));
     profileDialog.add(statisticsHeader, gbc);
 
     // Statistics
@@ -292,14 +322,14 @@ JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEm
     var sponsorButtonSize = new Dimension(220, sponsorButton.getPreferredSize().height + 4);
     sponsorButton.setPreferredSize(sponsorButtonSize);
     sponsorButton.setMaximumSize(sponsorButtonSize);
-    sponsorButton.addActionListener(_ ->
-    {
-      try {
-        Desktop.getDesktop().browse(new URI("https://github.com/sponsors/andrasfuchs"));
-      } catch (Exception ex) {
-        FRLogger.error("Failed to open sponsor link", ex);
-      }
-    });
+    sponsorButton.addActionListener(
+        _ -> {
+          try {
+            Desktop.getDesktop().browse(new URI("https://github.com/sponsors/andrasfuchs"));
+          } catch (Exception ex) {
+            FRLogger.error("Failed to open sponsor link", ex);
+          }
+        });
     profileDialog.add(sponsorButton, gbc);
 
     profileDialog.setLocationRelativeTo(null);
@@ -325,7 +355,10 @@ JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEm
   private void validateEmail(JTextField emailField, JButton updateButton) {
     String email = emailField.getText();
     boolean isValid = email.isEmpty() || email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
-    emailField.setBorder(isValid ? BorderFactory.createLineBorder(Color.GRAY) : BorderFactory.createLineBorder(Color.RED));
+    emailField.setBorder(
+        isValid
+            ? BorderFactory.createLineBorder(Color.GRAY)
+            : BorderFactory.createLineBorder(Color.RED));
     updateButton.setEnabled(isValid);
   }
 }

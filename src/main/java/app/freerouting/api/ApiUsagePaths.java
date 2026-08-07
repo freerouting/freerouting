@@ -2,16 +2,14 @@ package app.freerouting.api;
 
 import java.util.regex.Pattern;
 
-/**
- * Shared path helpers for {@link ApiUsageFilter}.
- */
+/** Shared path helpers for {@link ApiUsageFilter}. */
 public final class ApiUsagePaths {
 
-  private static final Pattern UUID_SEGMENT = Pattern.compile(
-      "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
+  private static final Pattern UUID_SEGMENT =
+      Pattern.compile(
+          "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
 
-  private ApiUsagePaths() {
-  }
+  private ApiUsagePaths() {}
 
   /**
    * Returns {@code true} for paths that must not emit {@code API Usage} rows (docs, telemetry
@@ -34,7 +32,7 @@ public final class ApiUsagePaths {
    * Builds a stable route key for aggregation, replacing UUID path segments with {@code {id}}.
    *
    * @param httpMethod e.g. {@code GET}
-   * @param path       decoded JAX-RS path, with or without a leading {@code /}
+   * @param path decoded JAX-RS path, with or without a leading {@code /}
    * @return e.g. {@code GET v1/jobs/{id}/output}
    */
   public static String normalizeRoute(String httpMethod, String path) {

@@ -18,9 +18,7 @@ public abstract class PrintableShape {
     this.locale = p_locale;
   }
 
-  /**
-   * Returns text information about the PrintableShape.
-   */
+  /** Returns text information about the PrintableShape. */
   @Override
   public abstract String toString();
 
@@ -29,9 +27,7 @@ public abstract class PrintableShape {
     public final FloatPoint center;
     public final double radius;
 
-    /**
-     * Creates a Circle from the input coordinates.
-     */
+    /** Creates a Circle from the input coordinates. */
     public Circle(FloatPoint p_center, double p_radius, Locale p_locale) {
       super(p_locale);
       center = p_center;
@@ -55,9 +51,7 @@ public abstract class PrintableShape {
     }
   }
 
-  /**
-   * Creates a Polygon from the input coordinates.
-   */
+  /** Creates a Polygon from the input coordinates. */
   static class Rectangle extends PrintableShape {
 
     public final FloatPoint lower_left;
@@ -73,7 +67,15 @@ public abstract class PrintableShape {
     public String toString() {
       TextManager tm = new TextManager(this.getClass(), this.locale);
 
-      return tm.getText("rectangle") + ": " + tm.getText("lower_left") + " = " + lower_left.to_string(this.locale) + ", " + tm.getText("upper_right") + " = " + upper_right.to_string(this.locale);
+      return tm.getText("rectangle")
+          + ": "
+          + tm.getText("lower_left")
+          + " = "
+          + lower_left.to_string(this.locale)
+          + ", "
+          + tm.getText("upper_right")
+          + " = "
+          + upper_right.to_string(this.locale);
     }
   }
 
@@ -90,7 +92,11 @@ public abstract class PrintableShape {
     public String toString() {
       TextManager tm = new TextManager(this.getClass(), this.locale);
 
-      return tm.getText("polygon") + ": " + Arrays.stream(corner_arr).map(c -> c.to_string(this.locale)).collect(Collectors.joining(", "));
+      return tm.getText("polygon")
+          + ": "
+          + Arrays.stream(corner_arr)
+              .map(c -> c.to_string(this.locale))
+              .collect(Collectors.joining(", "));
     }
   }
 }

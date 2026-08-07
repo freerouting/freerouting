@@ -6,24 +6,18 @@ import java.util.Locale;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
-/**
- * A Combo Box with items for individual board layers plus an additional item for all layers.
- */
+/** A Combo Box with items for individual board layers plus an additional item for all layers. */
 public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
 
-  /**
-   * The custom layer index in the combobox, when all layers are selected.
-   */
+  /** The custom layer index in the combobox, when all layers are selected. */
   public static final int ALL_LAYER_INDEX = -1;
-  /**
-   * The custom layer index in the combobox, when all inner layers are selected.
-   */
+
+  /** The custom layer index in the combobox, when all inner layers are selected. */
   public static final int INNER_LAYER_INDEX = -2;
+
   private final Layer[] layer_arr;
 
-  /**
-   * Creates a new instance of LayerComboBox
-   */
+  /** Creates a new instance of LayerComboBox */
   public ComboBoxLayer(LayerStructure p_layer_structure, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
@@ -45,7 +39,8 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
     for (int i = 0; i < signal_layer_count; i++) {
       ++curr_layer_no;
       app.freerouting.board.Layer curr_signal_layer = p_layer_structure.get_signal_layer(i);
-      layer_arr[curr_layer_no] = new Layer(curr_signal_layer.name, p_layer_structure.get_no(curr_signal_layer));
+      layer_arr[curr_layer_no] =
+          new Layer(curr_signal_layer.name, p_layer_structure.get_no(curr_signal_layer));
     }
     this.setModel(new DefaultComboBoxModel<>(layer_arr));
     this.setSelectedIndex(0);
@@ -56,14 +51,14 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
   }
 
   /**
-   * Layers of the board layer structure plus layer "all". Index is the layer number in the board layer structure or -1 for layer "all".
+   * Layers of the board layer structure plus layer "all". Index is the layer number in the board
+   * layer structure or -1 for layer "all".
    */
   public static class Layer {
 
     final String name;
-    /**
-     * The index in the board layer_structure, -1 for the layers with name "all" or "inner"
-     */
+
+    /** The index in the board layer_structure, -1 for the layers with name "all" or "inner" */
     final int index;
 
     Layer(String p_name, int p_index) {

@@ -3,16 +3,12 @@ package app.freerouting.io.specctra.parser;
 import java.util.Collection;
 import java.util.Iterator;
 
-/**
- * Describes a layer structure read from a dsn file.
- */
+/** Describes a layer structure read from a dsn file. */
 public class LayerStructure {
 
   public final Layer[] arr;
 
-  /**
-   * Creates a new instance of LayerStructure from a list of layers
-   */
+  /** Creates a new instance of LayerStructure from a list of layers */
   public LayerStructure(Collection<Layer> p_layer_list) {
     arr = new Layer[p_layer_list.size()];
     Iterator<Layer> it = p_layer_list.iterator();
@@ -21,9 +17,7 @@ public class LayerStructure {
     }
   }
 
-  /**
-   * Creates a dsn-LayerStructure from a board LayerStructure.
-   */
+  /** Creates a dsn-LayerStructure from a board LayerStructure. */
   public LayerStructure(app.freerouting.board.LayerStructure p_board_layer_structure) {
     arr = new Layer[p_board_layer_structure.arr.length];
     for (int i = 0; i < arr.length; i++) {
@@ -61,9 +55,7 @@ public class LayerStructure {
     return result;
   }
 
-  /**
-   * Returns, if the net with name p_net_name contains a power plane.
-   */
+  /** Returns, if the net with name p_net_name contains a power plane. */
   public boolean contains_plane(String p_net_name) {
 
     for (Layer curr_layer : arr) {

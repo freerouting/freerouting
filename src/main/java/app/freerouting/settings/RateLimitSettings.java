@@ -3,9 +3,7 @@ package app.freerouting.settings;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
-/**
- * Generic fixed-window rate-limit settings.
- */
+/** Generic fixed-window rate-limit settings. */
 public class RateLimitSettings implements Serializable {
 
   @SerializedName("enabled")

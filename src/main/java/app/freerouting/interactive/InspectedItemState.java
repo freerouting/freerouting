@@ -10,37 +10,32 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.JPopupMenu;
 
-/**
- * Class implementing actions on the currently selected items.
- */
+/** Class implementing actions on the currently selected items. */
 public final class InspectedItemState extends InteractiveState {
 
   private Set<Item> item_list;
   private ClearanceViolations clearance_violations;
 
-  /**
-   * Creates a new instance of InspectedItemState
-   */
-  private InspectedItemState(Set<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+  /** Creates a new instance of InspectedItemState */
+  private InspectedItemState(
+      Set<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
     item_list = p_item_list;
   }
 
   /**
-   * Creates a new InspectedItemState with the items in p_item_list selected.
-   * Returns null, if p_item_list is empty.
+   * Creates a new InspectedItemState with the items in p_item_list selected. Returns null, if
+   * p_item_list is empty.
    */
-  public static InspectedItemState get_instance(Set<Item> p_item_list, InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
+  public static InspectedItemState get_instance(
+      Set<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     if (p_item_list.isEmpty()) {
       return null;
     }
     return new InspectedItemState(p_item_list, p_parent_state, p_board_handling);
   }
 
-  /**
-   * Gets the list of the currently selected items.
-   */
+  /** Gets the list of the currently selected items. */
   public Collection<Item> get_item_list() {
     return item_list;
   }
@@ -55,9 +50,7 @@ public final class InspectedItemState extends InteractiveState {
     return InspectItemsInRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
   }
 
-  /**
-   * Action to be taken when a key is pressed (Shortcut).
-   */
+  /** Action to be taken when a key is pressed (Shortcut). */
   @Override
   public InteractiveState key_typed(char p_key_char) {
     InteractiveState result = this;
@@ -67,7 +60,7 @@ public final class InspectedItemState extends InteractiveState {
       case 'i' -> result = this.info();
       case 'n' -> this.extent_to_whole_nets();
       case 'r' ->
-        result = ZoomRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
+          result = ZoomRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
       case 's' -> result = this.extent_to_whole_connected_sets();
       case 'v' -> this.toggle_clearance_violations();
       case 'w' -> this.hdlg.zoom_selection();
@@ -76,9 +69,7 @@ public final class InspectedItemState extends InteractiveState {
     return result;
   }
 
-  /**
-   * Select also all items belonging to any net of the current selected items.
-   */
+  /** Select also all items belonging to any net of the current selected items. */
   public InteractiveState extent_to_whole_nets() {
 
     // collect all net numbers of the selected items
@@ -92,9 +83,7 @@ public final class InspectedItemState extends InteractiveState {
     }
     Set<Item> new_selected_items = new TreeSet<>();
     for (int curr_net_no : curr_net_no_set) {
-      new_selected_items.addAll(hdlg
-          .get_routing_board()
-          .get_connectable_items(curr_net_no));
+      new_selected_items.addAll(hdlg.get_routing_board().get_connectable_items(curr_net_no));
     }
     this.item_list = new_selected_items;
     if (new_selected_items.isEmpty()) {
@@ -105,9 +94,7 @@ public final class InspectedItemState extends InteractiveState {
     return this;
   }
 
-  /**
-   * Select also all items belonging to any group of the current selected items.
-   */
+  /** Select also all items belonging to any group of the current selected items. */
   public InteractiveState extent_to_whole_components() {
 
     // collect all group numbers of the selected items
@@ -119,9 +106,7 @@ public final class InspectedItemState extends InteractiveState {
     }
     Set<Item> new_selected_items = new TreeSet<>(item_list);
     for (int curr_group_no : curr_group_no_set) {
-      new_selected_items.addAll(hdlg
-          .get_routing_board()
-          .get_component_items(curr_group_no));
+      new_selected_items.addAll(hdlg.get_routing_board().get_component_items(curr_group_no));
     }
     if (new_selected_items.isEmpty()) {
       return this.return_state;
@@ -131,10 +116,7 @@ public final class InspectedItemState extends InteractiveState {
     return this;
   }
 
-  /**
-   * Select also all items belonging to any connected set of the current selected
-   * items.
-   */
+  /** Select also all items belonging to any connected set of the current selected items. */
   public InteractiveState extent_to_whole_connected_sets() {
     Set<Item> new_selected_items = new TreeSet<>();
     for (Item curr_item : this.item_list) {
@@ -151,10 +133,7 @@ public final class InspectedItemState extends InteractiveState {
     return this;
   }
 
-  /**
-   * Select also all items belonging to any connection of the current selected
-   * items.
-   */
+  /** Select also all items belonging to any connection of the current selected items. */
   public InteractiveState extent_to_whole_connections() {
     Set<Item> new_selected_items = new TreeSet<>();
     for (Item curr_item : this.item_list) {
@@ -172,17 +151,15 @@ public final class InspectedItemState extends InteractiveState {
   }
 
   /**
-   * Picks item at p_point. Removes it from the selected_items list, if it is
-   * already in there, otherwise adds it to the list. Returns true (to change to
-   * the return_state) if nothing was picked.
+   * Picks item at p_point. Removes it from the selected_items list, if it is already in there,
+   * otherwise adds it to the list. Returns true (to change to the return_state) if nothing was
+   * picked.
    */
   public InteractiveState toggle_select(FloatPoint p_point) {
     Collection<Item> picked_items = hdlg.pick_items(p_point);
     boolean state_ended = picked_items.isEmpty();
     if (picked_items.size() == 1) {
-      Item picked_item = picked_items
-          .iterator()
-          .next();
+      Item picked_item = picked_items.iterator().next();
       if (this.item_list.contains(picked_item)) {
         this.item_list.remove(picked_item);
         if (this.item_list.isEmpty()) {
@@ -202,9 +179,7 @@ public final class InspectedItemState extends InteractiveState {
     return result;
   }
 
-  /**
-   * Shows or hides the clearance violations of the selected items.
-   */
+  /** Shows or hides the clearance violations of the selected items. */
   public void toggle_clearance_violations() {
     if (clearance_violations == null) {
       clearance_violations = new ClearanceViolations(this.item_list);
@@ -218,10 +193,7 @@ public final class InspectedItemState extends InteractiveState {
     hdlg.repaint();
   }
 
-  /**
-   * Removes items not selected by the current interactive filter from the
-   * selected item list.
-   */
+  /** Removes items not selected by the current interactive filter from the selected item list. */
   public InteractiveState filter() {
     item_list = hdlg.getInteractiveSettings().get_item_selection_filter().filter(item_list);
     InteractiveState result = this;
@@ -232,11 +204,12 @@ public final class InspectedItemState extends InteractiveState {
     return result;
   }
 
-  /**
-   * Prints information about the selected item into a graphical text window.
-   */
+  /** Prints information about the selected item into a graphical text window. */
   public InspectedItemState info() {
-    WindowObjectInfo.display(this.item_list, hdlg.get_panel().board_frame, hdlg.coordinate_transform,
+    WindowObjectInfo.display(
+        this.item_list,
+        hdlg.get_panel().board_frame,
+        hdlg.coordinate_transform,
         new java.awt.Point(100, 100));
     return this;
   }
@@ -253,7 +226,10 @@ public final class InspectedItemState extends InteractiveState {
     }
 
     for (Item curr_item : item_list) {
-      curr_item.draw(p_graphics, hdlg.graphics_context, hdlg.graphics_context.get_hilight_color(),
+      curr_item.draw(
+          p_graphics,
+          hdlg.graphics_context,
+          hdlg.graphics_context.get_hilight_color(),
           hdlg.graphics_context.get_hilight_color_intensity());
     }
     if (clearance_violations != null) {

@@ -36,9 +36,7 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-/**
- * Window handling parameters of the interactive routing.
- */
+/** Window handling parameters of the interactive routing. */
 public class WindowRouteParameter extends BoardSavableSubWindow {
 
   private static final int c_region_max_slider_value = 999;
@@ -77,9 +75,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private boolean updating_controls;
   private boolean key_input_completed = true;
 
-  /**
-   * Creates a new instance of RouteParameterWindow
-   */
+  /** Creates a new instance of RouteParameterWindow */
   public WindowRouteParameter(BoardFrame p_board_frame) {
     this.guiBoardManager = p_board_frame.board_panel.board_handling;
     this.manual_rule_window = new WindowManualRules(p_board_frame);
@@ -112,16 +108,25 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     settings_routing_snap_angle_90_button = new JRadioButton(tm.getText("90_degree"));
     settings_routing_snap_angle_45_button = new JRadioButton(tm.getText("45_degree"));
     settings_routing_snap_angle_none_button = new JRadioButton(tm.getText("none"));
-    
+
     settings_routing_snap_angle_90_button.addActionListener(new SnapAngle90Listener());
-    settings_routing_snap_angle_90_button.addActionListener(_ -> FRAnalytics
-      .buttonClicked("settings_routing_snap_angle_90_button", settings_routing_snap_angle_90_button.getText()));
+    settings_routing_snap_angle_90_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_snap_angle_90_button",
+                settings_routing_snap_angle_90_button.getText()));
     settings_routing_snap_angle_45_button.addActionListener(new SnapAngle45Listener());
-    settings_routing_snap_angle_45_button.addActionListener(_ -> FRAnalytics
-      .buttonClicked("settings_routing_snap_angle_45_button", settings_routing_snap_angle_45_button.getText()));
+    settings_routing_snap_angle_45_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_snap_angle_45_button",
+                settings_routing_snap_angle_45_button.getText()));
     settings_routing_snap_angle_none_button.addActionListener(new SnapAngleNoneListener());
-    settings_routing_snap_angle_none_button.addActionListener(_ -> FRAnalytics
-      .buttonClicked("settings_routing_snap_angle_none_button", settings_routing_snap_angle_none_button.getText()));
+    settings_routing_snap_angle_none_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_snap_angle_none_button",
+                settings_routing_snap_angle_none_button.getText()));
 
     ButtonGroup snap_angle_button_group = new ButtonGroup();
     snap_angle_button_group.add(settings_routing_snap_angle_90_button);
@@ -137,7 +142,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     main_panel.add(settings_routing_snap_angle_45_button);
     gridbag.setConstraints(settings_routing_snap_angle_none_button, gridbag_constraints);
     main_panel.add(settings_routing_snap_angle_none_button);
-    
+
     addSeparator(main_panel, gridbag, gridbag_constraints);
 
     // add label and radio buttons for the route mode.
@@ -155,10 +160,14 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     settings_routing_dynamic_button.addActionListener(new DynamicRouteListener());
     settings_routing_dynamic_button.addActionListener(
-      _ -> FRAnalytics.buttonClicked("settings_routing_dynamic_button", settings_routing_dynamic_button.getText()));
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_dynamic_button", settings_routing_dynamic_button.getText()));
     settings_routing_stitch_button.addActionListener(new StitchRouteListener());
     settings_routing_stitch_button.addActionListener(
-      _ -> FRAnalytics.buttonClicked("settings_routing_stitch_button", settings_routing_stitch_button.getText()));
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_stitch_button", settings_routing_stitch_button.getText()));
 
     ButtonGroup route_mode_button_group = new ButtonGroup();
     route_mode_button_group.add(settings_routing_dynamic_button);
@@ -171,7 +180,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     main_panel.add(settings_routing_dynamic_button);
     gridbag.setConstraints(settings_routing_stitch_button, gridbag_constraints);
     main_panel.add(settings_routing_stitch_button);
-    
+
     addSeparator(main_panel, gridbag, gridbag_constraints);
 
     // add label and radio buttons for automatic or manual trace width selection.
@@ -188,12 +197,16 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     settings_routing_manual_button.setToolTipText(tm.getText("manual_tooltip"));
 
     settings_routing_automatic_button.addActionListener(new AutomaticTraceWidthListener());
-    settings_routing_automatic_button.addActionListener(_ -> FRAnalytics
-        .buttonClicked("settings_routing_automatic_button", settings_routing_automatic_button.getText()));
+    settings_routing_automatic_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_automatic_button", settings_routing_automatic_button.getText()));
     manual_trace_width_listener = new ManualTraceWidthListener();
     settings_routing_manual_button.addActionListener(manual_trace_width_listener);
     settings_routing_manual_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_manual_button", settings_routing_manual_button.getText()));
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_manual_button", settings_routing_manual_button.getText()));
 
     ButtonGroup trace_widths_button_group = new ButtonGroup();
     trace_widths_button_group.add(settings_routing_automatic_button);
@@ -206,60 +219,84 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     main_panel.add(settings_routing_automatic_button);
     gridbag.setConstraints(settings_routing_manual_button, gridbag_constraints);
     main_panel.add(settings_routing_manual_button);
-    
+
     addSeparator(main_panel, gridbag, gridbag_constraints);
 
     // add check boxes
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    
+
     settings_routing_shove_check_box = new JCheckBox(tm.getText("push&shove_enabled"));
     settings_routing_shove_check_box.addActionListener(new ShoveListener());
     settings_routing_shove_check_box.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_shove_check_box", settings_routing_shove_check_box.getText()));
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_shove_check_box", settings_routing_shove_check_box.getText()));
     gridbag.setConstraints(settings_routing_shove_check_box, gridbag_constraints);
     settings_routing_shove_check_box.setToolTipText(tm.getText("push&shove_enabled_tooltip"));
     main_panel.add(settings_routing_shove_check_box, gridbag_constraints);
 
-    settings_routing_drag_component_check_box = new JCheckBox(tm.getText("drag_components_enabled"));
+    settings_routing_drag_component_check_box =
+        new JCheckBox(tm.getText("drag_components_enabled"));
     settings_routing_drag_component_check_box.addActionListener(new DragComponentListener());
-    settings_routing_drag_component_check_box
-        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_drag_component_check_box",
-            settings_routing_drag_component_check_box.getText()));
+    settings_routing_drag_component_check_box.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_drag_component_check_box",
+                settings_routing_drag_component_check_box.getText()));
     gridbag.setConstraints(settings_routing_drag_component_check_box, gridbag_constraints);
-    settings_routing_drag_component_check_box.setToolTipText(tm.getText("drag_components_enabled_tooltip"));
+    settings_routing_drag_component_check_box.setToolTipText(
+        tm.getText("drag_components_enabled_tooltip"));
     main_panel.add(settings_routing_drag_component_check_box, gridbag_constraints);
 
-    settings_routing_via_snap_to_smd_center_check_box = new JCheckBox(tm.getText("via_snap_to_smd_center"));
-    settings_routing_via_snap_to_smd_center_check_box.addActionListener(new ViaSnapToSMDCenterListener());
+    settings_routing_via_snap_to_smd_center_check_box =
+        new JCheckBox(tm.getText("via_snap_to_smd_center"));
     settings_routing_via_snap_to_smd_center_check_box.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_via_snap_to_smd_center_check_box",
-            settings_routing_via_snap_to_smd_center_check_box.getText()));
+        new ViaSnapToSMDCenterListener());
+    settings_routing_via_snap_to_smd_center_check_box.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_via_snap_to_smd_center_check_box",
+                settings_routing_via_snap_to_smd_center_check_box.getText()));
     gridbag.setConstraints(settings_routing_via_snap_to_smd_center_check_box, gridbag_constraints);
-    settings_routing_via_snap_to_smd_center_check_box.setToolTipText(tm.getText("via_snap_to_smd_center_tooltip"));
+    settings_routing_via_snap_to_smd_center_check_box.setToolTipText(
+        tm.getText("via_snap_to_smd_center_tooltip"));
     main_panel.add(settings_routing_via_snap_to_smd_center_check_box, gridbag_constraints);
 
-    settings_routing_hilight_routing_obstacle_check_box = new JCheckBox(tm.getText("hilight_routing_obstacle"));
-    settings_routing_hilight_routing_obstacle_check_box.addActionListener(new HilightObstacleListener());
+    settings_routing_hilight_routing_obstacle_check_box =
+        new JCheckBox(tm.getText("hilight_routing_obstacle"));
     settings_routing_hilight_routing_obstacle_check_box.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_hilight_routing_obstacle_check_box",
-            settings_routing_hilight_routing_obstacle_check_box.getText()));
-    gridbag.setConstraints(settings_routing_hilight_routing_obstacle_check_box, gridbag_constraints);
-    settings_routing_hilight_routing_obstacle_check_box.setToolTipText(tm.getText("hilight_routing_obstacle_tooltip"));
+        new HilightObstacleListener());
+    settings_routing_hilight_routing_obstacle_check_box.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_hilight_routing_obstacle_check_box",
+                settings_routing_hilight_routing_obstacle_check_box.getText()));
+    gridbag.setConstraints(
+        settings_routing_hilight_routing_obstacle_check_box, gridbag_constraints);
+    settings_routing_hilight_routing_obstacle_check_box.setToolTipText(
+        tm.getText("hilight_routing_obstacle_tooltip"));
     main_panel.add(settings_routing_hilight_routing_obstacle_check_box, gridbag_constraints);
 
-    settings_routing_ignore_conduction_check_box = new JCheckBox(tm.getText("ignore_conduction_areas"));
+    settings_routing_ignore_conduction_check_box =
+        new JCheckBox(tm.getText("ignore_conduction_areas"));
     settings_routing_ignore_conduction_check_box.addActionListener(new IgnoreConductionListener());
     settings_routing_ignore_conduction_check_box.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_ignore_conduction_check_box",
-            settings_routing_ignore_conduction_check_box.getText()));
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_ignore_conduction_check_box",
+                settings_routing_ignore_conduction_check_box.getText()));
     gridbag.setConstraints(settings_routing_ignore_conduction_check_box, gridbag_constraints);
-    settings_routing_ignore_conduction_check_box.setToolTipText(tm.getText("ignore_conduction_areas_tooltip"));
+    settings_routing_ignore_conduction_check_box.setToolTipText(
+        tm.getText("ignore_conduction_areas_tooltip"));
     main_panel.add(settings_routing_ignore_conduction_check_box, gridbag_constraints);
 
     settings_routing_neckdown_check_box = new JCheckBox(tm.getText("automatic_neckdown"));
     settings_routing_neckdown_check_box.addActionListener(new NeckDownListener());
-    settings_routing_neckdown_check_box.addActionListener(_ -> FRAnalytics
-        .buttonClicked("settings_routing_neckdown_check_box", settings_routing_neckdown_check_box.getText()));
+    settings_routing_neckdown_check_box.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_neckdown_check_box",
+                settings_routing_neckdown_check_box.getText()));
     gridbag.setConstraints(settings_routing_neckdown_check_box, gridbag_constraints);
     settings_routing_neckdown_check_box.setToolTipText(tm.getText("automatic_neckdown_tooltip"));
     main_panel.add(settings_routing_neckdown_check_box, gridbag_constraints);
@@ -267,14 +304,19 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     addSeparator(main_panel, gridbag, gridbag_constraints);
 
     // Restrict pin exit direction and Pad to Turn Gap
-    settings_routing_restrict_pin_exit_directions_check_box = new JCheckBox(tm.getText("restrict_pin_exit_directions"));
-    settings_routing_restrict_pin_exit_directions_check_box.addActionListener(new RestrictPinExitDirectionsListener());
+    settings_routing_restrict_pin_exit_directions_check_box =
+        new JCheckBox(tm.getText("restrict_pin_exit_directions"));
     settings_routing_restrict_pin_exit_directions_check_box.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_restrict_pin_exit_directions_check_box",
-            settings_routing_restrict_pin_exit_directions_check_box.getText()));
-    gridbag.setConstraints(settings_routing_restrict_pin_exit_directions_check_box, gridbag_constraints);
-    settings_routing_restrict_pin_exit_directions_check_box
-        .setToolTipText(tm.getText("restrict_pin_exit_directions_tooltip"));
+        new RestrictPinExitDirectionsListener());
+    settings_routing_restrict_pin_exit_directions_check_box.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_routing_restrict_pin_exit_directions_check_box",
+                settings_routing_restrict_pin_exit_directions_check_box.getText()));
+    gridbag.setConstraints(
+        settings_routing_restrict_pin_exit_directions_check_box, gridbag_constraints);
+    settings_routing_restrict_pin_exit_directions_check_box.setToolTipText(
+        tm.getText("restrict_pin_exit_directions_tooltip"));
     main_panel.add(settings_routing_restrict_pin_exit_directions_check_box, gridbag_constraints);
 
     JLabel pin_exit_edge_to_turn_label = new JLabel(tm.getText("pin_pad_to_turn_gap"));
@@ -283,18 +325,21 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     gridbag_constraints.fill = GridBagConstraints.HORIZONTAL;
     gridbag.setConstraints(pin_exit_edge_to_turn_label, gridbag_constraints);
     main_panel.add(pin_exit_edge_to_turn_label);
-    
+
     NumberFormat number_format = NumberFormat.getNumberInstance(p_board_frame.get_locale());
     number_format.setMaximumFractionDigits(3);
     number_format.setGroupingUsed(false);
     this.edge_to_turn_dist_field = new JFormattedTextField(number_format);
     this.edge_to_turn_dist_field.setColumns(6);
     this.edge_to_turn_dist_field.setToolTipText(tm.getText("pin_pad_to_turn_gap_tooltip"));
-    
+
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.fill = GridBagConstraints.NONE;
-    this.edge_to_turn_suffix_label = new JLabel(this.guiBoardManager.coordinate_transform.user_unit.toString());
-    main_panel.add(createFieldWithSuffix(edge_to_turn_dist_field, edge_to_turn_suffix_label, 4, 6), gridbag_constraints);
+    this.edge_to_turn_suffix_label =
+        new JLabel(this.guiBoardManager.coordinate_transform.user_unit.toString());
+    main_panel.add(
+        createFieldWithSuffix(edge_to_turn_dist_field, edge_to_turn_suffix_label, 4, 6),
+        gridbag_constraints);
     edge_to_turn_dist_field.addKeyListener(new EdgeToTurnDistFieldKeyListener());
     edge_to_turn_dist_field.addFocusListener(new EdgeToTurnDistFieldFocusListener());
 
@@ -328,9 +373,11 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.region_width_field.setToolTipText(tm.getText("pull_tight_region_tooltip"));
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.fill = GridBagConstraints.NONE;
-    
-    this.region_suffix_label = new JLabel(this.guiBoardManager.coordinate_transform.user_unit.toString());
-    main_panel.add(createFieldWithSuffix(region_width_field, region_suffix_label, 4, 6), gridbag_constraints);
+
+    this.region_suffix_label =
+        new JLabel(this.guiBoardManager.coordinate_transform.user_unit.toString());
+    main_panel.add(
+        createFieldWithSuffix(region_width_field, region_suffix_label, 4, 6), gridbag_constraints);
     region_width_field.addKeyListener(new RegionWidthFieldKeyListener());
     region_width_field.addFocusListener(new RegionWidthFieldFocusListener());
 
@@ -339,29 +386,37 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     // Clearance compensation
     clearance_compensation_check_box = new JCheckBox(tm.getText("clearance_compensation_checkbox"));
     clearance_compensation_check_box.setSelected(false);
-    clearance_compensation_check_box.setToolTipText(tm.getText("clearance_compensation_checkbox_tooltip"));
-    clearance_compensation_check_box.addActionListener(new WindowRouteParameter.CompensationCheckboxListener());
-    clearance_compensation_check_box.addActionListener(_ -> FRAnalytics.buttonClicked("clearance_compensation_check_box",
-      clearance_compensation_check_box.getText()));
+    clearance_compensation_check_box.setToolTipText(
+        tm.getText("clearance_compensation_checkbox_tooltip"));
+    clearance_compensation_check_box.addActionListener(
+        new WindowRouteParameter.CompensationCheckboxListener());
+    clearance_compensation_check_box.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "clearance_compensation_check_box", clearance_compensation_check_box.getText()));
 
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.fill = GridBagConstraints.HORIZONTAL;
     gridbag.setConstraints(clearance_compensation_check_box, gridbag_constraints);
     main_panel.add(clearance_compensation_check_box, gridbag_constraints);
-    
+
     NumberFormat compFormat = NumberFormat.getNumberInstance(p_board_frame.get_locale());
     compFormat.setMaximumFractionDigits(3);
     compFormat.setGroupingUsed(false);
-    
+
     this.clearance_value_field = new JFormattedTextField(compFormat);
     this.clearance_value_field.setColumns(6);
     this.clearance_value_field.setEditable(false);
-    this.clearance_value_field.setToolTipText(tm.getText("clearance_compensation_checkbox_tooltip"));
-    
-    this.clearance_suffix_label = new JLabel(this.guiBoardManager.coordinate_transform.user_unit.toString());
+    this.clearance_value_field.setToolTipText(
+        tm.getText("clearance_compensation_checkbox_tooltip"));
+
+    this.clearance_suffix_label =
+        new JLabel(this.guiBoardManager.coordinate_transform.user_unit.toString());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.fill = GridBagConstraints.NONE;
-    main_panel.add(createFieldWithSuffix(clearance_value_field, clearance_suffix_label, 4, 6), gridbag_constraints);
+    main_panel.add(
+        createFieldWithSuffix(clearance_value_field, clearance_suffix_label, 4, 6),
+        gridbag_constraints);
 
     addSeparator(main_panel, gridbag, gridbag_constraints);
 
@@ -389,9 +444,12 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     accuracy_value_field.setToolTipText(tm.getText("pull_tight_accuracy_tooltip"));
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.fill = GridBagConstraints.NONE;
-    
-    this.accuracy_suffix_label = new JLabel(this.guiBoardManager.coordinate_transform.user_unit.toString());
-    main_panel.add(createFieldWithSuffix(accuracy_value_field, accuracy_suffix_label, 4, 6), gridbag_constraints);
+
+    this.accuracy_suffix_label =
+        new JLabel(this.guiBoardManager.coordinate_transform.user_unit.toString());
+    main_panel.add(
+        createFieldWithSuffix(accuracy_value_field, accuracy_suffix_label, 4, 6),
+        gridbag_constraints);
     accuracy_value_field.addKeyListener(new AccuracyFieldKeyListener());
     accuracy_value_field.addFocusListener(new AccuracyFieldFocusListener());
 
@@ -400,11 +458,16 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     // Outline Keepout
     route_detail_outline_keepout_check_box = new JCheckBox(tm.getText("keepout_outside_outline"));
     route_detail_outline_keepout_check_box.setSelected(false);
-    route_detail_outline_keepout_check_box.addActionListener(new WindowRouteParameter.OutLineKeepoutListener());
-    route_detail_outline_keepout_check_box.addActionListener(_ -> FRAnalytics
-        .buttonClicked("route_detail_outline_keepout_check_box", route_detail_outline_keepout_check_box.getText()));
+    route_detail_outline_keepout_check_box.addActionListener(
+        new WindowRouteParameter.OutLineKeepoutListener());
+    route_detail_outline_keepout_check_box.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "route_detail_outline_keepout_check_box",
+                route_detail_outline_keepout_check_box.getText()));
     gridbag.setConstraints(route_detail_outline_keepout_check_box, gridbag_constraints);
-    route_detail_outline_keepout_check_box.setToolTipText(tm.getText("keepout_outside_outline_tooltip"));
+    route_detail_outline_keepout_check_box.setToolTipText(
+        tm.getText("keepout_outside_outline_tooltip"));
     main_panel.add(route_detail_outline_keepout_check_box, gridbag_constraints);
 
     this.refresh();
@@ -424,17 +487,17 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     double oldWeightX = constraints.weightx;
     int oldFill = constraints.fill;
     Insets oldInsets = constraints.insets;
-    
+
     constraints.gridwidth = GridBagConstraints.REMAINDER;
     constraints.gridheight = 1;
     constraints.weightx = 0.0;
     constraints.fill = GridBagConstraints.HORIZONTAL;
     constraints.insets = new Insets(6, 10, 6, 10);
-    
+
     JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
     gridbag.setConstraints(separator, constraints);
     panel.add(separator);
-    
+
     constraints.gridwidth = oldGridWidth;
     constraints.gridheight = oldGridHeight;
     constraints.weightx = oldWeightX;
@@ -473,83 +536,114 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   public void refresh() {
     updating_controls = true;
     try {
-      AngleRestriction snap_angle = this.guiBoardManager.get_routing_board().rules.get_trace_angle_restriction();
+      AngleRestriction snap_angle =
+          this.guiBoardManager.get_routing_board().rules.get_trace_angle_restriction();
 
       if (snap_angle == AngleRestriction.NINETY_DEGREE) {
-          settings_routing_snap_angle_90_button.setSelected(true);
-        } else if (snap_angle == AngleRestriction.FORTYFIVE_DEGREE) {
-          settings_routing_snap_angle_45_button.setSelected(true);
-        } else {
-          settings_routing_snap_angle_none_button.setSelected(true);
+        settings_routing_snap_angle_90_button.setSelected(true);
+      } else if (snap_angle == AngleRestriction.FORTYFIVE_DEGREE) {
+        settings_routing_snap_angle_45_button.setSelected(true);
+      } else {
+        settings_routing_snap_angle_none_button.setSelected(true);
       }
 
       if (this.guiBoardManager.getInteractiveSettings().get_is_stitch_route()) {
-          settings_routing_stitch_button.setSelected(true);
+        settings_routing_stitch_button.setSelected(true);
       } else {
-          settings_routing_dynamic_button.setSelected(true);
+        settings_routing_dynamic_button.setSelected(true);
       }
 
       if (this.guiBoardManager.getInteractiveSettings().get_manual_rule_selection()) {
-          settings_routing_manual_button.setSelected(true);
+        settings_routing_manual_button.setSelected(true);
         if (this.manual_rule_window != null) {
           this.manual_rule_window.setVisible(true);
         }
       } else {
-          settings_routing_automatic_button.setSelected(true);
+        settings_routing_automatic_button.setSelected(true);
       }
 
-      this.settings_routing_shove_check_box.setSelected(this.guiBoardManager.getInteractiveSettings().get_push_enabled());
-      this.settings_routing_drag_component_check_box
-          .setSelected(this.guiBoardManager.getInteractiveSettings().get_drag_components_enabled());
-      this.settings_routing_via_snap_to_smd_center_check_box
-          .setSelected(this.guiBoardManager.getInteractiveSettings().get_via_snap_to_smd_center());
-      this.settings_routing_ignore_conduction_check_box
-          .setSelected(this.guiBoardManager.get_routing_board().rules.get_ignore_conduction());
-      this.settings_routing_hilight_routing_obstacle_check_box
-          .setSelected(this.guiBoardManager.getInteractiveSettings().get_hilight_routing_obstacle());
-      this.settings_routing_neckdown_check_box.setSelected(this.guiBoardManager.getInteractiveSettings().get_automatic_neckdown());
+      this.settings_routing_shove_check_box.setSelected(
+          this.guiBoardManager.getInteractiveSettings().get_push_enabled());
+      this.settings_routing_drag_component_check_box.setSelected(
+          this.guiBoardManager.getInteractiveSettings().get_drag_components_enabled());
+      this.settings_routing_via_snap_to_smd_center_check_box.setSelected(
+          this.guiBoardManager.getInteractiveSettings().get_via_snap_to_smd_center());
+      this.settings_routing_ignore_conduction_check_box.setSelected(
+          this.guiBoardManager.get_routing_board().rules.get_ignore_conduction());
+      this.settings_routing_hilight_routing_obstacle_check_box.setSelected(
+          this.guiBoardManager.getInteractiveSettings().get_hilight_routing_obstacle());
+      this.settings_routing_neckdown_check_box.setSelected(
+          this.guiBoardManager.getInteractiveSettings().get_automatic_neckdown());
 
-      double edge_to_turn_dist = this.guiBoardManager.get_routing_board().rules.get_pin_edge_to_turn_dist();
-      this.edge_to_turn_dist_field.setValue(this.guiBoardManager.coordinate_transform.board_to_user(edge_to_turn_dist));
-      this.settings_routing_restrict_pin_exit_directions_check_box.setSelected(edge_to_turn_dist > 0);
+      double edge_to_turn_dist =
+          this.guiBoardManager.get_routing_board().rules.get_pin_edge_to_turn_dist();
+      this.edge_to_turn_dist_field.setValue(
+          this.guiBoardManager.coordinate_transform.board_to_user(edge_to_turn_dist));
+      this.settings_routing_restrict_pin_exit_directions_check_box.setSelected(
+          edge_to_turn_dist > 0);
 
-      int region_slider_value = this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_region_width() / c_region_scale_factor;
+      int region_slider_value =
+          this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_region_width()
+              / c_region_scale_factor;
       region_slider_value = Math.min(region_slider_value, c_region_max_slider_value);
       region_slider.setValue(region_slider_value);
-      region_width_field.setValue(this.guiBoardManager.coordinate_transform.board_to_user(region_slider_value * c_region_scale_factor));
+      region_width_field.setValue(
+          this.guiBoardManager.coordinate_transform.board_to_user(
+              region_slider_value * c_region_scale_factor));
 
       if (this.manual_rule_window != null) {
         this.manual_rule_window.refresh();
       }
 
-      this.edge_to_turn_suffix_label.setText(this.guiBoardManager.coordinate_transform.user_unit.toString());
-      this.region_suffix_label.setText(this.guiBoardManager.coordinate_transform.user_unit.toString());
+      this.edge_to_turn_suffix_label.setText(
+          this.guiBoardManager.coordinate_transform.user_unit.toString());
+      this.region_suffix_label.setText(
+          this.guiBoardManager.coordinate_transform.user_unit.toString());
 
-      boolean compUsed = this.guiBoardManager.get_routing_board().search_tree_manager.is_clearance_compensation_used();
+      boolean compUsed =
+          this.guiBoardManager
+              .get_routing_board()
+              .search_tree_manager
+              .is_clearance_compensation_used();
       this.clearance_compensation_check_box.setSelected(compUsed);
-      int clearanceClass = Math.min(1, this.guiBoardManager.get_routing_board().rules.clearance_matrix.get_class_count() - 1);
+      int clearanceClass =
+          Math.min(
+              1,
+              this.guiBoardManager.get_routing_board().rules.clearance_matrix.get_class_count()
+                  - 1);
       double compensation = 0;
       if (clearanceClass >= 1) {
         int layer = this.guiBoardManager.getInteractiveSettings().get_layer();
-        compensation = this.guiBoardManager.get_routing_board().rules.clearance_matrix.clearance_compensation_value(clearanceClass, layer);
+        compensation =
+            this.guiBoardManager
+                .get_routing_board()
+                .rules
+                .clearance_matrix
+                .clearance_compensation_value(clearanceClass, layer);
       }
-      BoardOutline outline = this.guiBoardManager
-          .get_routing_board()
-          .get_outline();
+      BoardOutline outline = this.guiBoardManager.get_routing_board().get_outline();
       if (outline != null) {
-        this.route_detail_outline_keepout_check_box.setSelected(outline.keepout_outside_outline_generated());
+        this.route_detail_outline_keepout_check_box.setSelected(
+            outline.keepout_outside_outline_generated());
       }
-      int accuracy_slider_value = c_accuracy_max_slider_value
-          - this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_accuracy() / c_accuracy_scale_factor + 1;
+      int accuracy_slider_value =
+          c_accuracy_max_slider_value
+              - this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_accuracy()
+                  / c_accuracy_scale_factor
+              + 1;
       accuracy_slider.setValue(accuracy_slider_value);
-      int accuracy_board_value = (c_accuracy_max_slider_value - accuracy_slider_value + 1) * c_accuracy_scale_factor;
-      accuracy_value_field.setValue(this.guiBoardManager.coordinate_transform.board_to_user(accuracy_board_value));
+      int accuracy_board_value =
+          (c_accuracy_max_slider_value - accuracy_slider_value + 1) * c_accuracy_scale_factor;
+      accuracy_value_field.setValue(
+          this.guiBoardManager.coordinate_transform.board_to_user(accuracy_board_value));
       updateUserUnitSuffixLabels();
 
       double applied_compensation = compUsed ? compensation : 0;
       this.clearance_compensation_check_box.setText(tm.getText("clearance_compensation_checkbox"));
-      this.clearance_value_field.setValue(this.guiBoardManager.coordinate_transform.board_to_user(applied_compensation));
-      this.clearance_suffix_label.setText(this.guiBoardManager.coordinate_transform.user_unit.toString());
+      this.clearance_value_field.setValue(
+          this.guiBoardManager.coordinate_transform.board_to_user(applied_compensation));
+      this.clearance_suffix_label.setText(
+          this.guiBoardManager.coordinate_transform.user_unit.toString());
 
       updateDynamicTooltips();
     } finally {
@@ -580,48 +674,63 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       new_tidy_width = slider_value * c_region_scale_factor;
     }
     region_slider.setValue(slider_value);
-    region_width_field.setValue(this.guiBoardManager.coordinate_transform.board_to_user(new_tidy_width));
+    region_width_field.setValue(
+        this.guiBoardManager.coordinate_transform.board_to_user(new_tidy_width));
     guiBoardManager.getInteractiveSettings().set_current_pull_tight_region_width(new_tidy_width);
   }
 
   private void updateDynamicTooltips() {
-    double edge_to_turn_dist = this.guiBoardManager.get_routing_board().rules.get_pin_edge_to_turn_dist();
-    this.edge_to_turn_dist_field.setToolTipText(tm.getText("pin_pad_to_turn_gap_tooltip_current",
-        formatUserDistance(edge_to_turn_dist)));
+    double edge_to_turn_dist =
+        this.guiBoardManager.get_routing_board().rules.get_pin_edge_to_turn_dist();
+    this.edge_to_turn_dist_field.setToolTipText(
+        tm.getText("pin_pad_to_turn_gap_tooltip_current", formatUserDistance(edge_to_turn_dist)));
 
-    int region_width = this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_region_width();
+    int region_width =
+        this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_region_width();
     String regionTooltip;
     if (region_width >= Integer.MAX_VALUE) {
       regionTooltip = tm.getText("pull_tight_region_tooltip_whole_board");
     } else {
-      regionTooltip = tm.getText("pull_tight_region_tooltip_radius", formatUserDistance(region_width));
+      regionTooltip =
+          tm.getText("pull_tight_region_tooltip_radius", formatUserDistance(region_width));
     }
     this.region_slider.setToolTipText(regionTooltip);
     this.region_width_field.setToolTipText(regionTooltip);
     this.region_suffix_label.setToolTipText(regionTooltip);
 
     int acc_slider_val = accuracy_slider.getValue();
-    int acc_board_value = (c_accuracy_max_slider_value - acc_slider_val + 1) * c_accuracy_scale_factor;
+    int acc_board_value =
+        (c_accuracy_max_slider_value - acc_slider_val + 1) * c_accuracy_scale_factor;
     String accUser = formatUserDistance(acc_board_value);
     String accuracyTooltip = tm.getText("pull_tight_accuracy_tooltip_current", accUser);
     this.accuracy_slider.setToolTipText(accuracyTooltip);
     this.accuracy_value_field.setToolTipText(accuracyTooltip);
     this.accuracy_suffix_label.setToolTipText(accuracyTooltip);
 
-    int clearanceClass = Math.min(1, this.guiBoardManager.get_routing_board().rules.clearance_matrix.get_class_count() - 1);
+    int clearanceClass =
+        Math.min(
+            1,
+            this.guiBoardManager.get_routing_board().rules.clearance_matrix.get_class_count() - 1);
     double compensation = 0;
     if (clearanceClass >= 1) {
       int layer = this.guiBoardManager.getInteractiveSettings().get_layer();
-      compensation = this.guiBoardManager.get_routing_board().rules.clearance_matrix.clearance_compensation_value(clearanceClass, layer);
+      compensation =
+          this.guiBoardManager
+              .get_routing_board()
+              .rules
+              .clearance_matrix
+              .clearance_compensation_value(clearanceClass, layer);
     }
     this.clearance_compensation_check_box.setToolTipText(
-        tm.getText("clearance_compensation_checkbox_tooltip_current", formatUserDistance(compensation)));
+        tm.getText(
+            "clearance_compensation_checkbox_tooltip_current", formatUserDistance(compensation)));
   }
 
   private String formatUserDistance(double boardValue) {
     NumberFormat format = NumberFormat.getNumberInstance(this.getLocale());
     format.setMaximumFractionDigits(3);
-    return format.format(this.guiBoardManager.coordinate_transform.board_to_user(boardValue)) + " "
+    return format.format(this.guiBoardManager.coordinate_transform.board_to_user(boardValue))
+        + " "
         + this.guiBoardManager.coordinate_transform.user_unit;
   }
 
@@ -633,11 +742,12 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.clearance_suffix_label.setText(unit);
   }
 
-  private JPanel createFieldWithSuffix(JFormattedTextField field, JLabel suffixLabel, int suffixPadLeft,
-      int suffixPadRight) {
+  private JPanel createFieldWithSuffix(
+      JFormattedTextField field, JLabel suffixLabel, int suffixPadLeft, int suffixPadRight) {
     Border border = field.getBorder();
-    field.setBorder(BorderFactory.createCompoundBorder(border,
-        BorderFactory.createEmptyBorder(0, 0, 0, suffixPadLeft + suffixPadRight)));
+    field.setBorder(
+        BorderFactory.createCompoundBorder(
+            border, BorderFactory.createEmptyBorder(0, 0, 0, suffixPadLeft + suffixPadRight)));
 
     suffixLabel.setOpaque(true);
     suffixLabel.setBackground(field.getBackground());
@@ -660,42 +770,47 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   /**
-   * Applies the stitch route selection to the given interactive settings.
-   * Used by unit tests to verify the stitch route behavior.
+   * Applies the stitch route selection to the given interactive settings. Used by unit tests to
+   * verify the stitch route behavior.
    */
-  public static void applyStitchRouteSelection(InteractiveSettings p_interactive_settings, boolean p_value) {
+  public static void applyStitchRouteSelection(
+      InteractiveSettings p_interactive_settings, boolean p_value) {
     p_interactive_settings.set_stitch_route(p_value);
   }
 
   /**
-   * Applies the push and shove selection to the given interactive settings.
-   * Used by unit tests to verify the push and shove behavior.
+   * Applies the push and shove selection to the given interactive settings. Used by unit tests to
+   * verify the push and shove behavior.
    */
-  public static void applyPushAndShoveSelection(InteractiveSettings p_interactive_settings, boolean p_value) {
+  public static void applyPushAndShoveSelection(
+      InteractiveSettings p_interactive_settings, boolean p_value) {
     p_interactive_settings.set_push_enabled(p_value);
   }
 
   /**
-   * Applies the ignore conduction selection to the given board manager.
-   * Used by unit tests to verify the ignore conduction behavior.
+   * Applies the ignore conduction selection to the given board manager. Used by unit tests to
+   * verify the ignore conduction behavior.
    */
-  public static void applyIgnoreConductionSelection(GuiBoardManager p_board_manager, boolean p_value) {
+  public static void applyIgnoreConductionSelection(
+      GuiBoardManager p_board_manager, boolean p_value) {
     p_board_manager.set_ignore_conduction(p_value);
   }
 
   /**
-   * Applies the clearance compensation selection to the given board manager.
-   * Used by unit tests to verify the clearance compensation behavior.
+   * Applies the clearance compensation selection to the given board manager. Used by unit tests to
+   * verify the clearance compensation behavior.
    */
-  public static void applyClearanceCompensationSelection(GuiBoardManager p_board_manager, boolean p_value) {
+  public static void applyClearanceCompensationSelection(
+      GuiBoardManager p_board_manager, boolean p_value) {
     p_board_manager.set_clearance_compensation(p_value);
   }
 
   /**
-   * Applies the pin exit edge to turn distance to the given board manager.
-   * Used by unit tests to verify the pin exit edge to turn distance behavior.
+   * Applies the pin exit edge to turn distance to the given board manager. Used by unit tests to
+   * verify the pin exit edge to turn distance behavior.
    */
-  public static void applyPinExitEdgeToTurnDistance(GuiBoardManager p_board_manager, float p_value) {
+  public static void applyPinExitEdgeToTurnDistance(
+      GuiBoardManager p_board_manager, float p_value) {
     p_board_manager.set_pin_edge_to_turn_dist(p_value);
   }
 
@@ -703,18 +818,15 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      if (guiBoardManager.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
+      if (guiBoardManager.get_routing_board().rules.get_trace_angle_restriction()
+          == AngleRestriction.NINETY_DEGREE) {
         return;
       }
-      Collection<Trace> trace_list = guiBoardManager
-          .get_routing_board()
-          .get_traces();
+      Collection<Trace> trace_list = guiBoardManager.get_routing_board().get_traces();
       boolean free_angle_traces_found = false;
       for (Trace curr_trace : trace_list) {
         if (curr_trace instanceof PolylineTrace trace) {
-          if (!trace
-              .polyline()
-              .is_orthogonal()) {
+          if (!trace.polyline().is_orthogonal()) {
             free_angle_traces_found = true;
             break;
           }
@@ -735,18 +847,15 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      if (guiBoardManager.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE) {
+      if (guiBoardManager.get_routing_board().rules.get_trace_angle_restriction()
+          == AngleRestriction.FORTYFIVE_DEGREE) {
         return;
       }
-      Collection<Trace> trace_list = guiBoardManager
-          .get_routing_board()
-          .get_traces();
+      Collection<Trace> trace_list = guiBoardManager.get_routing_board().get_traces();
       boolean free_angle_traces_found = false;
       for (Trace curr_trace : trace_list) {
         if (curr_trace instanceof PolylineTrace trace) {
-          if (!trace
-              .polyline()
-              .is_multiple_of_45_degree()) {
+          if (!trace.polyline().is_multiple_of_45_degree()) {
             free_angle_traces_found = true;
             break;
           }
@@ -825,7 +934,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (updating_controls) {
         return;
       }
-      guiBoardManager.getInteractiveSettings().set_push_enabled(settings_routing_shove_check_box.isSelected());
+      guiBoardManager
+          .getInteractiveSettings()
+          .set_push_enabled(settings_routing_shove_check_box.isSelected());
       refresh();
     }
   }
@@ -837,8 +948,10 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (updating_controls) {
         return;
       }
-      guiBoardManager.getInteractiveSettings()
-          .set_via_snap_to_smd_center(settings_routing_via_snap_to_smd_center_check_box.isSelected());
+      guiBoardManager
+          .getInteractiveSettings()
+          .set_via_snap_to_smd_center(
+              settings_routing_via_snap_to_smd_center_check_box.isSelected());
     }
   }
 
@@ -849,7 +962,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (updating_controls) {
         return;
       }
-      guiBoardManager.set_ignore_conduction(settings_routing_ignore_conduction_check_box.isSelected());
+      guiBoardManager.set_ignore_conduction(
+          settings_routing_ignore_conduction_check_box.isSelected());
     }
   }
 
@@ -860,8 +974,10 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (updating_controls) {
         return;
       }
-      guiBoardManager.getInteractiveSettings()
-          .set_hilight_routing_obstacle(settings_routing_hilight_routing_obstacle_check_box.isSelected());
+      guiBoardManager
+          .getInteractiveSettings()
+          .set_hilight_routing_obstacle(
+              settings_routing_hilight_routing_obstacle_check_box.isSelected());
     }
   }
 
@@ -872,7 +988,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (updating_controls) {
         return;
       }
-      guiBoardManager.getInteractiveSettings().set_drag_components_enabled(settings_routing_drag_component_check_box.isSelected());
+      guiBoardManager
+          .getInteractiveSettings()
+          .set_drag_components_enabled(settings_routing_drag_component_check_box.isSelected());
       refresh();
     }
   }
@@ -884,7 +1002,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (updating_controls) {
         return;
       }
-      guiBoardManager.getInteractiveSettings().set_automatic_neckdown(settings_routing_neckdown_check_box.isSelected());
+      guiBoardManager
+          .getInteractiveSettings()
+          .set_automatic_neckdown(settings_routing_neckdown_check_box.isSelected());
     }
   }
 
@@ -897,8 +1017,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       if (settings_routing_restrict_pin_exit_directions_check_box.isSelected()) {
         BoardRules board_rules = guiBoardManager.get_routing_board().rules;
-        double edge_to_turn_dist = guiBoardManager.coordinate_transform
-            .board_to_user(board_rules.get_min_trace_half_width());
+        double edge_to_turn_dist =
+            guiBoardManager.coordinate_transform.board_to_user(
+                board_rules.get_min_trace_half_width());
         guiBoardManager.set_pin_edge_to_turn_dist(edge_to_turn_dist);
       } else {
         guiBoardManager.set_pin_edge_to_turn_dist(0);
@@ -932,7 +1053,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent p_evt) {
       if (!key_input_completed) {
-        double edge_to_turn_dist = guiBoardManager.get_routing_board().rules.get_pin_edge_to_turn_dist();
+        double edge_to_turn_dist =
+            guiBoardManager.get_routing_board().rules.get_pin_edge_to_turn_dist();
         edge_to_turn_dist = guiBoardManager.coordinate_transform.board_to_user(edge_to_turn_dist);
         edge_to_turn_dist_field.setValue(edge_to_turn_dist);
         key_input_completed = true;
@@ -940,8 +1062,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {
-    }
+    public void focusGained(FocusEvent p_evt) {}
   }
 
   private class RegionWidthFieldKeyListener extends KeyAdapter {
@@ -969,14 +1090,15 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent p_evt) {
       if (!key_input_completed) {
-        region_width_field.setValue(WindowRouteParameter.this.guiBoardManager.coordinate_transform.board_to_user(region_slider.getValue() * c_region_scale_factor));
+        region_width_field.setValue(
+            WindowRouteParameter.this.guiBoardManager.coordinate_transform.board_to_user(
+                region_slider.getValue() * c_region_scale_factor));
         key_input_completed = true;
       }
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {
-    }
+    public void focusGained(FocusEvent p_evt) {}
   }
 
   private class AccuracyFieldKeyListener extends KeyAdapter {
@@ -991,7 +1113,10 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         }
         double user_value = Math.max(0.0, ((Number) input).doubleValue());
         double board_value = guiBoardManager.coordinate_transform.user_to_board(user_value);
-        int slider_value = c_accuracy_max_slider_value - (int) Math.round(board_value / c_accuracy_scale_factor) + 1;
+        int slider_value =
+            c_accuracy_max_slider_value
+                - (int) Math.round(board_value / c_accuracy_scale_factor)
+                + 1;
         slider_value = Math.max(0, Math.min(c_accuracy_max_slider_value, slider_value));
         accuracy_slider.setValue(slider_value);
       } else {
@@ -1005,15 +1130,17 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent p_evt) {
       if (!key_input_completed) {
-        int accuracy_board_value = (c_accuracy_max_slider_value - accuracy_slider.getValue() + 1) * c_accuracy_scale_factor;
-        accuracy_value_field.setValue(guiBoardManager.coordinate_transform.board_to_user(accuracy_board_value));
+        int accuracy_board_value =
+            (c_accuracy_max_slider_value - accuracy_slider.getValue() + 1)
+                * c_accuracy_scale_factor;
+        accuracy_value_field.setValue(
+            guiBoardManager.coordinate_transform.board_to_user(accuracy_board_value));
         key_input_completed = true;
       }
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {
-    }
+    public void focusGained(FocusEvent p_evt) {}
   }
 
   private class SliderChangeListener implements ChangeListener {
@@ -1024,7 +1151,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         return;
       }
       int sliderValue = region_slider.getValue();
-      region_width_field.setValue(guiBoardManager.coordinate_transform.board_to_user(sliderValue * c_region_scale_factor));
+      region_width_field.setValue(
+          guiBoardManager.coordinate_transform.board_to_user(sliderValue * c_region_scale_factor));
       set_pull_tight_region_width(sliderValue);
     }
   }
@@ -1037,7 +1165,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         return;
       }
       guiBoardManager.set_clearance_compensation(clearance_compensation_check_box.isSelected());
-      refresh(); 
+      refresh();
     }
   }
 
@@ -1050,7 +1178,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       int sliderValue = accuracy_slider.getValue();
       int new_accuracy = (c_accuracy_max_slider_value - sliderValue + 1) * c_accuracy_scale_factor;
-      accuracy_value_field.setValue(guiBoardManager.coordinate_transform.board_to_user(new_accuracy));
+      accuracy_value_field.setValue(
+          guiBoardManager.coordinate_transform.board_to_user(new_accuracy));
       guiBoardManager.getInteractiveSettings().set_trace_pull_tight_accuracy(new_accuracy);
     }
   }
@@ -1062,9 +1191,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (guiBoardManager.is_board_read_only()) {
         return;
       }
-      BoardOutline outline = guiBoardManager
-          .get_routing_board()
-          .get_outline();
+      BoardOutline outline = guiBoardManager.get_routing_board().get_outline();
       if (outline != null) {
         outline.generate_keepout_outside(route_detail_outline_keepout_check_box.isSelected());
       }

@@ -46,7 +46,7 @@ public class Issue733DsnJsonParityTest {
 
   private RoutingBoard loadJson(File file) throws Exception {
     try (InputStream is = new FileInputStream(file);
-         Reader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+        Reader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
       BoardReadResult result = KiCadJsonReader.readBoard(r, null, null);
       if (result instanceof BoardReadResult.Success success) {
         return (RoutingBoard) success.board();
@@ -111,14 +111,18 @@ public class Issue733DsnJsonParityTest {
 
     // Load board from DSN for JSON comparison
     RoutingBoard boardWithJson = loadDsn(dsnFile);
-    try (InputStreamReader jsonReader = new InputStreamReader(new FileInputStream(jsonSessionFile), StandardCharsets.UTF_8)) {
+    try (InputStreamReader jsonReader =
+        new InputStreamReader(new FileInputStream(jsonSessionFile), StandardCharsets.UTF_8)) {
       KiCadJsonReader.importSession(jsonReader, boardWithJson);
     }
 
     // Compare boards (SES is ground truth)
-    BoardComparator.ComparisonResult result = BoardComparator.compare(boardWithSes, boardWithJson, 1e-3);
+    BoardComparator.ComparisonResult result =
+        BoardComparator.compare(boardWithSes, boardWithJson, 1e-3);
     System.out.println(result.report);
 
-    assertTrue(result.areEqual, "SES and JSON routed outputs must be identical in representation:\n" + result.report);
+    assertTrue(
+        result.areEqual,
+        "SES and JSON routed outputs must be identical in representation:\n" + result.report);
   }
 }

@@ -12,8 +12,8 @@ class ApiUsageFilterTest {
 
   @Test
   void normalizeRoute_replacesUuidSegments() {
-    String route = ApiUsagePaths.normalizeRoute("GET",
-        "/v1/jobs/550e8400-e29b-41d4-a716-446655440000/output");
+    String route =
+        ApiUsagePaths.normalizeRoute("GET", "/v1/jobs/550e8400-e29b-41d4-a716-446655440000/output");
     assertEquals("GET v1/jobs/{id}/output", route);
   }
 
@@ -31,7 +31,8 @@ class ApiUsageFilterTest {
     String hash = ApiUsageFilter.hashBearerToken("Bearer 550e8400-e29b-41d4-a716-446655440000");
     assertNotNull(hash);
     assertEquals(64, hash.length());
-    assertEquals(hash, ApiUsageFilter.hashBearerToken("Bearer 550e8400-e29b-41d4-a716-446655440000"));
+    assertEquals(
+        hash, ApiUsageFilter.hashBearerToken("Bearer 550e8400-e29b-41d4-a716-446655440000"));
   }
 
   @Test

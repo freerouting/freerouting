@@ -24,29 +24,42 @@ import java.util.Locale;
  */
 public class ObstacleArea extends Item implements Serializable {
 
-  /**
-   * For debugging the division into tree shapes
-   */
+  /** For debugging the division into tree shapes */
   private static final boolean display_tree_shapes = false;
+
   /**
-   * The name of this ObstacleArea, which is null, if the ObstacleArea does not belong to a component.
+   * The name of this ObstacleArea, which is null, if the ObstacleArea does not belong to a
+   * component.
    */
   public final String name;
+
   private final Area relative_area;
-  /**
-   * the layer of this relative_area
-   */
+
+  /** the layer of this relative_area */
   private int layer;
+
   private transient Area precalculated_absolute_area;
   private Vector translation;
   private double rotation_in_degree;
   private boolean side_changed;
 
   /**
-   * Creates a new relative_area item which may belong to several nets. p_name is null, if the ObstacleArea does not belong to a component.
+   * Creates a new relative_area item which may belong to several nets. p_name is null, if the
+   * ObstacleArea does not belong to a component.
    */
-  ObstacleArea(Area p_area, int p_layer, Vector p_translation, double p_rotation_in_degree, boolean p_side_changed, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_cmp_no, String p_name,
-      FixedState p_fixed_state, BasicBoard p_board) {
+  ObstacleArea(
+      Area p_area,
+      int p_layer,
+      Vector p_translation,
+      double p_rotation_in_degree,
+      boolean p_side_changed,
+      int[] p_net_no_arr,
+      int p_clearance_type,
+      int p_id_no,
+      int p_cmp_no,
+      String p_name,
+      FixedState p_fixed_state,
+      BasicBoard p_board) {
     super(p_net_no_arr, p_clearance_type, p_id_no, p_cmp_no, p_fixed_state, p_board);
     this.relative_area = p_area;
     this.layer = p_layer;
@@ -57,18 +70,53 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   /**
-   * Creates a new relative_area item without net. p_name is null, if the ObstacleArea does not belong to a component.
+   * Creates a new relative_area item without net. p_name is null, if the ObstacleArea does not
+   * belong to a component.
    */
-  ObstacleArea(Area p_area, int p_layer, Vector p_translation, double p_rotation_in_degree, boolean p_side_changed, int p_clearance_type, int p_id_no, int p_group_no, String p_name,
-      FixedState p_fixed_state, BasicBoard p_board) {
-    this(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, new int[0], p_clearance_type, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
+  ObstacleArea(
+      Area p_area,
+      int p_layer,
+      Vector p_translation,
+      double p_rotation_in_degree,
+      boolean p_side_changed,
+      int p_clearance_type,
+      int p_id_no,
+      int p_group_no,
+      String p_name,
+      FixedState p_fixed_state,
+      BasicBoard p_board) {
+    this(
+        p_area,
+        p_layer,
+        p_translation,
+        p_rotation_in_degree,
+        p_side_changed,
+        new int[0],
+        p_clearance_type,
+        p_id_no,
+        p_group_no,
+        p_name,
+        p_fixed_state,
+        p_board);
   }
 
   @Override
   public Item copy(int p_id_no) {
     int[] copied_net_nos = new int[net_no_arr.length];
     System.arraycopy(net_no_arr, 0, copied_net_nos, 0, net_no_arr.length);
-    return new ObstacleArea(relative_area, layer, translation, rotation_in_degree, side_changed, copied_net_nos, clearance_class_no(), p_id_no, get_component_no(), name, get_fixed_state(), board);
+    return new ObstacleArea(
+        relative_area,
+        layer,
+        translation,
+        rotation_in_degree,
+        side_changed,
+        copied_net_nos,
+        clearance_class_no(),
+        p_id_no,
+        get_component_no(),
+        name,
+        get_fixed_state(),
+        board);
   }
 
   public Area get_area() {
@@ -191,7 +239,8 @@ public class ObstacleArea extends Item implements Serializable {
     while (this.rotation_in_degree < 0) {
       this.rotation_in_degree += 360;
     }
-    FloatPoint new_translation = this.translation.to_float().rotate(Math.toRadians(p_angle_in_degree), p_pole);
+    FloatPoint new_translation =
+        this.translation.to_float().rotate(Math.toRadians(p_angle_in_degree), p_pole);
     this.translation = new_translation.round().difference_by(Point.ZERO);
     this.clear_derived_data();
   }
@@ -231,7 +280,8 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   @Override
-  public void draw(Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
+  public void draw(
+      Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
     }
@@ -241,7 +291,8 @@ public class ObstacleArea extends Item implements Serializable {
     if (intensity > 0 && display_tree_shapes) {
       ShapeSearchTree default_tree = this.board.search_tree_manager.get_default_tree();
       for (int i = 0; i < this.tree_shape_count(default_tree); i++) {
-        p_graphics_context.draw_boundary(this.get_tree_shape(default_tree, i), 1, Color.white, p_g, 1);
+        p_graphics_context.draw_boundary(
+            this.get_tree_shape(default_tree, i), 1, Color.white, p_g, 1);
       }
     }
   }
@@ -279,9 +330,7 @@ public class ObstacleArea extends Item implements Serializable {
     p_window.newline();
   }
 
-  /**
-   * Used in the implementation of print_info for this class and derived classes.
-   */
+  /** Used in the implementation of print_info for this class and derived classes. */
   protected final void print_shape_info(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 

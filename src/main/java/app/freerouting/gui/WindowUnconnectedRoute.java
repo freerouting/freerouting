@@ -18,9 +18,7 @@ public class WindowUnconnectedRoute extends CleanupWindows {
 
   private int max_unconnected_route_info_id_no;
 
-  /**
-   * Creates a new instance of WindowUnconnectedRoute
-   */
+  /** Creates a new instance of WindowUnconnectedRoute */
   public WindowUnconnectedRoute(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
@@ -60,7 +58,8 @@ public class WindowUnconnectedRoute extends CleanupWindows {
         if (curr_item.net_count() == 1) {
           Net curr_net = routing_board.rules.nets.get(curr_item.get_net_no(0));
           if (curr_net != null) {
-            UnconnectedRouteInfo curr_unconnected_route_info = new UnconnectedRouteInfo(curr_net, curr_connected_set);
+            UnconnectedRouteInfo curr_unconnected_route_info =
+                new UnconnectedRouteInfo(curr_net, curr_connected_set);
             unconnected_route_info_set.add(curr_unconnected_route_info);
           }
         } else {
@@ -90,9 +89,7 @@ public class WindowUnconnectedRoute extends CleanupWindows {
     board_handling.zoom_selection();
   }
 
-  /**
-   * Describes information of a connected set of unconnected traces and vias.
-   */
+  /** Describes information of a connected set of unconnected traces and vias. */
   private class UnconnectedRouteInfo implements Comparable<UnconnectedRouteInfo> {
 
     private final Net net;
@@ -121,7 +118,10 @@ public class WindowUnconnectedRoute extends CleanupWindows {
 
     @Override
     public String toString() {
-      return tm.getText("unconnected_route_row_message", this.net.name, String.valueOf(this.trace_count),
+      return tm.getText(
+          "unconnected_route_row_message",
+          this.net.name,
+          String.valueOf(this.trace_count),
           String.valueOf(this.via_count));
     }
 

@@ -18,9 +18,9 @@ import org.junit.jupiter.api.Test;
 /**
  * Contract tests for the {@link BoardManager} interface (sub-issue 03).
  *
- * <p>Verifies the invariant: if {@link BoardManager#isInteractiveModeSupported()} then
- * {@link BoardManager#getInteractiveSettings()} must return a non-null value after board
- * initialisation; otherwise it must return {@code null}.
+ * <p>Verifies the invariant: if {@link BoardManager#isInteractiveModeSupported()} then {@link
+ * BoardManager#getInteractiveSettings()} must return a non-null value after board initialisation;
+ * otherwise it must return {@code null}.
  */
 class BoardManagerContractTest {
 
@@ -39,7 +39,8 @@ class BoardManagerContractTest {
   @Test
   void headlessManager_isInteractiveModeSupported_returnsFalse() {
     BoardManager manager = new HeadlessBoardManager(new RoutingJob());
-    assertFalse(manager.isInteractiveModeSupported(),
+    assertFalse(
+        manager.isInteractiveModeSupported(),
         "HeadlessBoardManager must report isInteractiveModeSupported() == false");
   }
 
@@ -51,7 +52,8 @@ class BoardManagerContractTest {
         new BoardObserverAdaptor(),
         new ItemIdentificationNumberGenerator());
 
-    assertNull(manager.getInteractiveSettings(),
+    assertNull(
+        manager.getInteractiveSettings(),
         "HeadlessBoardManager.getInteractiveSettings() must return null");
   }
 
@@ -65,7 +67,8 @@ class BoardManagerContractTest {
 
     @SuppressWarnings("deprecation")
     app.freerouting.settings.sources.GuiSettings settings = manager.get_settings();
-    assertNull(settings,
+    assertNull(
+        settings,
         "Deprecated get_settings() must delegate to getInteractiveSettings() and return null in headless mode");
   }
 
@@ -76,16 +79,16 @@ class BoardManagerContractTest {
     // Verify at the method level without instantiating Swing.
     var method = GuiBoardManager.class.getMethod("isInteractiveModeSupported");
     // The method must be declared on GuiBoardManager itself, not inherited from the default.
-    assertTrue(method.getDeclaringClass().equals(GuiBoardManager.class),
+    assertTrue(
+        method.getDeclaringClass().equals(GuiBoardManager.class),
         "GuiBoardManager must override isInteractiveModeSupported()");
   }
 
   @Test
   void guiBoardManager_overrides_getInteractiveSettings() throws Exception {
     var method = GuiBoardManager.class.getMethod("getInteractiveSettings");
-    assertTrue(method.getDeclaringClass().equals(GuiBoardManager.class),
+    assertTrue(
+        method.getDeclaringClass().equals(GuiBoardManager.class),
         "GuiBoardManager must override getInteractiveSettings()");
   }
 }
-
-

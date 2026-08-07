@@ -1,8 +1,6 @@
 package app.freerouting.core;
 
-/**
- * Utility to throttle progress updates and notifications.
- */
+/** Utility to throttle progress updates and notifications. */
 public class ProgressThrottler {
   private final long intervalMs;
   private long lastUpdateMs;
@@ -12,9 +10,7 @@ public class ProgressThrottler {
     this.lastUpdateMs = 0;
   }
 
-  /**
-   * Returns true if the throttled action should run.
-   */
+  /** Returns true if the throttled action should run. */
   public boolean shouldUpdate() {
     long now = System.currentTimeMillis();
     if (lastUpdateMs == 0) {
@@ -28,9 +24,7 @@ public class ProgressThrottler {
     return false;
   }
 
-  /**
-   * Resets the throttler timer.
-   */
+  /** Resets the throttler timer. */
   public void reset() {
     this.lastUpdateMs = 0;
   }

@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Design Rules Checker that centralizes DRC functionality. This class is
- * responsible for detecting clearance violations and other design rule issues.
+ * Design Rules Checker that centralizes DRC functionality. This class is responsible for detecting
+ * clearance violations and other design rule issues.
  */
 public class DesignRulesChecker {
 
@@ -57,9 +57,10 @@ public class DesignRulesChecker {
           int id2 = violation.second_item.get_id_no();
 
           // Create a unique key using sorted IDs to avoid duplicates
-          String key = id1 < id2
-              ? id1 + "-" + id2 + "-" + violation.layer
-              : id2 + "-" + id1 + "-" + violation.layer;
+          String key =
+              id1 < id2
+                  ? id1 + "-" + id2 + "-" + violation.layer
+                  : id2 + "-" + id1 + "-" + violation.layer;
 
           if (!seenViolations.contains(key)) {
             seenViolations.add(key);
@@ -167,8 +168,7 @@ public class DesignRulesChecker {
   }
 
   /**
-   * Finds a representative item from a connected set, preferring Pins over other
-   * items.
+   * Finds a representative item from a connected set, preferring Pins over other items.
    *
    * @param connectedSet The set of connected items
    * @return A representative item, or null if the set is empty
@@ -193,20 +193,26 @@ public class DesignRulesChecker {
   /**
    * Generates a DRC report in KiCad JSON format.
    *
-   * @param sourceFile     Name of the source file
+   * @param sourceFile Name of the source file
    * @param coordinateUnit Unit for coordinates (e.g., "mm", "mil")
    * @return DRC report in KiCad JSON format
    */
   public DrcReport generateReport(String sourceFile, String coordinateUnit) {
-    DrcReport report = new DrcReport(coordinateUnit, sourceFile, "Freerouting " + Constants.FREEROUTING_VERSION);
+    DrcReport report =
+        new DrcReport(coordinateUnit, sourceFile, "Freerouting " + Constants.FREEROUTING_VERSION);
 
     // Get all clearance violations
     Collection<ClearanceViolation> violations = getAllClearanceViolations();
 
-    FRLogger.trace("DesignRulesChecker.generateReport", "drc_check_started",
-        "DRC check started: total_clearance_violations=" + violations.size()
-            + ", coordinate_unit=" + coordinateUnit
-            + ", source_file=" + sourceFile,
+    FRLogger.trace(
+        "DesignRulesChecker.generateReport",
+        "drc_check_started",
+        "DRC check started: total_clearance_violations="
+            + violations.size()
+            + ", coordinate_unit="
+            + coordinateUnit
+            + ", source_file="
+            + sourceFile,
         "DRC Check",
         new Point[0]);
 
@@ -215,22 +221,35 @@ public class DesignRulesChecker {
       DrcViolation drcViolation = convertToDrcViolation(violation, coordinateUnit);
       report.addViolation(drcViolation);
 
-      FRLogger.trace("DesignRulesChecker.generateReport", "drc_violation",
+      FRLogger.trace(
+          "DesignRulesChecker.generateReport",
+          "drc_violation",
           "DRC violation: type=clearance"
-              + ", item1=" + violation.first_item.toString()
-              + ", item2=" + violation.second_item.toString()
-              + ", layer=" + violation.layer
-              + ", expected=" + (violation.expected_clearance / 10000.0) + "mm"
-              + ", actual=" + (violation.actual_clearance / 10000.0) + "mm"
-              + ", delta=" + ((violation.expected_clearance - violation.actual_clearance) / 10000.0) + "mm",
+              + ", item1="
+              + violation.first_item.toString()
+              + ", item2="
+              + violation.second_item.toString()
+              + ", layer="
+              + violation.layer
+              + ", expected="
+              + (violation.expected_clearance / 10000.0)
+              + "mm"
+              + ", actual="
+              + (violation.actual_clearance / 10000.0)
+              + "mm"
+              + ", delta="
+              + ((violation.expected_clearance - violation.actual_clearance) / 10000.0)
+              + "mm",
           "DRC Check",
-          new Point[] { violation.shape.centre_of_gravity().round() });
+          new Point[] {violation.shape.centre_of_gravity().round()});
     }
 
     // Get all unconnected items
     Collection<UnconnectedItems> unconnectedItems = getAllUnconnectedItems();
 
-    FRLogger.trace("DesignRulesChecker.generateReport", "unconnected_items",
+    FRLogger.trace(
+        "DesignRulesChecker.generateReport",
+        "unconnected_items",
         "Unconnected items found: count=" + unconnectedItems.size(),
         "DRC Check",
         new Point[0]);
@@ -238,16 +257,21 @@ public class DesignRulesChecker {
     // Convert unconnected items to DRC report format
     for (UnconnectedItems unconnectedItem : unconnectedItems) {
       DrcViolation drcViolation = convertToDrcViolation(unconnectedItem, coordinateUnit);
-      if ("track_dangling".equals(unconnectedItem.type) || "via_dangling".equals(unconnectedItem.type)) {
+      if ("track_dangling".equals(unconnectedItem.type)
+          || "via_dangling".equals(unconnectedItem.type)) {
         report.addViolation(drcViolation);
       } else {
         report.addUnconnectedItem(drcViolation);
       }
     }
 
-    FRLogger.trace("DesignRulesChecker.generateReport", "drc_check_completed",
-        "DRC check completed: total_violations=" + report.violations.size()
-            + ", total_unconnected=" + report.unconnected_items.size(),
+    FRLogger.trace(
+        "DesignRulesChecker.generateReport",
+        "drc_check_completed",
+        "DRC check completed: total_violations="
+            + report.violations.size()
+            + ", total_unconnected="
+            + report.unconnected_items.size(),
         "DRC Check",
         new Point[0]);
 
@@ -257,7 +281,7 @@ public class DesignRulesChecker {
   /**
    * Converts an internal ClearanceViolation to a DrcViolation for the report.
    *
-   * @param violation      Internal clearance violation
+   * @param violation Internal clearance violation
    * @param coordinateUnit Unit for coordinates
    * @return DRC violation in report format
    */
@@ -269,18 +293,16 @@ public class DesignRulesChecker {
     String secondItemDesc = getItemDescription(violation.second_item);
 
     // Position is the center of gravity of the violation shape
-    var firstItemCenterOfGravity = violation.first_item
-        .bounding_box()
-        .centre_of_gravity();
-    DrcPosition firstItemPos = new DrcPosition(
-        convertCoordinate(firstItemCenterOfGravity.x, coordinateUnit),
-        convertCoordinate(firstItemCenterOfGravity.y, coordinateUnit));
-    var secondItemCenterOfGravity = violation.second_item
-        .bounding_box()
-        .centre_of_gravity();
-    DrcPosition secondItemPos = new DrcPosition(
-        convertCoordinate(secondItemCenterOfGravity.x, coordinateUnit),
-        convertCoordinate(secondItemCenterOfGravity.y, coordinateUnit));
+    var firstItemCenterOfGravity = violation.first_item.bounding_box().centre_of_gravity();
+    DrcPosition firstItemPos =
+        new DrcPosition(
+            convertCoordinate(firstItemCenterOfGravity.x, coordinateUnit),
+            convertCoordinate(firstItemCenterOfGravity.y, coordinateUnit));
+    var secondItemCenterOfGravity = violation.second_item.bounding_box().centre_of_gravity();
+    DrcPosition secondItemPos =
+        new DrcPosition(
+            convertCoordinate(secondItemCenterOfGravity.x, coordinateUnit),
+            convertCoordinate(secondItemCenterOfGravity.y, coordinateUnit));
 
     // Use item IDs as UUIDs (they are unique within the board)
     String firstUuid = String.valueOf(violation.first_item.get_id_no());
@@ -298,15 +320,25 @@ public class DesignRulesChecker {
     // Create violation description
     String description;
     if ("hole_clearance".equals(type)) {
-      description = "Hole clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)".formatted(
-          firstItemDesc, secondItemDesc,
-          convertCoordinate(violation.expected_clearance, coordinateUnit), coordinateUnit,
-          convertCoordinate(violation.actual_clearance, coordinateUnit), coordinateUnit);
+      description =
+          "Hole clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)"
+              .formatted(
+                  firstItemDesc,
+                  secondItemDesc,
+                  convertCoordinate(violation.expected_clearance, coordinateUnit),
+                  coordinateUnit,
+                  convertCoordinate(violation.actual_clearance, coordinateUnit),
+                  coordinateUnit);
     } else {
-      description = "Clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)".formatted(
-          firstItemDesc, secondItemDesc,
-          convertCoordinate(violation.expected_clearance, coordinateUnit), coordinateUnit,
-          convertCoordinate(violation.actual_clearance, coordinateUnit), coordinateUnit);
+      description =
+          "Clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)"
+              .formatted(
+                  firstItemDesc,
+                  secondItemDesc,
+                  convertCoordinate(violation.expected_clearance, coordinateUnit),
+                  coordinateUnit,
+                  convertCoordinate(violation.actual_clearance, coordinateUnit),
+                  coordinateUnit);
     }
 
     return new DrcViolation(type, description, "error", items);
@@ -321,12 +353,14 @@ public class DesignRulesChecker {
     return item instanceof Pin;
   }
 
-  private DrcViolation convertToDrcViolation(UnconnectedItems unconnectedItems, String coordinateUnit) {
+  private DrcViolation convertToDrcViolation(
+      UnconnectedItems unconnectedItems, String coordinateUnit) {
     List<DrcViolationItem> items = new ArrayList<>();
 
     String description;
 
-    if ("track_dangling".equals(unconnectedItems.type) || "via_dangling".equals(unconnectedItems.type)) {
+    if ("track_dangling".equals(unconnectedItems.type)
+        || "via_dangling".equals(unconnectedItems.type)) {
       // For dangling items, show only the single item
       Item item = unconnectedItems.first_item;
 
@@ -339,18 +373,20 @@ public class DesignRulesChecker {
       }
 
       var itemCenterOfGravity = item.bounding_box().centre_of_gravity();
-      DrcPosition itemPos = new DrcPosition(
-          convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
-          convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
+      DrcPosition itemPos =
+          new DrcPosition(
+              convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
+              convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
 
       String uuid = String.valueOf(item.get_id_no());
       items.add(new DrcViolationItem(itemDesc, itemPos, uuid));
 
-      description = switch (unconnectedItems.type) {
-        case "via_dangling" -> "Via is not connected or connected on only one layer";
-        case "track_dangling" -> "Track has unconnected end";
-        default -> "Unconnected item: " + itemDesc;
-      };
+      description =
+          switch (unconnectedItems.type) {
+            case "via_dangling" -> "Via is not connected or connected on only one layer";
+            case "track_dangling" -> "Track has unconnected end";
+            default -> "Unconnected item: " + itemDesc;
+          };
 
       return new DrcViolation(unconnectedItems.type, description, "warning", items);
     }
@@ -360,9 +396,10 @@ public class DesignRulesChecker {
     for (Item item : unconnectedItems.all_items) {
       String itemDesc = getItemDescription(item);
       var itemCenterOfGravity = item.bounding_box().centre_of_gravity();
-      DrcPosition itemPos = new DrcPosition(
-          convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
-          convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
+      DrcPosition itemPos =
+          new DrcPosition(
+              convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
+              convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
       String uuid = String.valueOf(item.get_id_no());
       items.add(new DrcViolationItem(itemDesc, itemPos, uuid));
     }
@@ -371,8 +408,9 @@ public class DesignRulesChecker {
     String fromItemDesc = getItemDescription(unconnectedItems.first_item);
     if (unconnectedItems.second_item != null) {
       String toItemDesc = getItemDescription(unconnectedItems.second_item);
-      description = "Unconnected items: %s and %s (%d total items in net)".formatted(
-          fromItemDesc, toItemDesc, unconnectedItems.all_items.size());
+      description =
+          "Unconnected items: %s and %s (%d total items in net)"
+              .formatted(fromItemDesc, toItemDesc, unconnectedItems.all_items.size());
     } else {
       description = "Unconnected item: %s".formatted(fromItemDesc);
     }
@@ -398,18 +436,13 @@ public class DesignRulesChecker {
     } else if (item instanceof ConductionArea) {
       desc.append("Conduction Area");
     } else {
-      desc.append(item
-          .getClass()
-          .getSimpleName());
+      desc.append(item.getClass().getSimpleName());
     }
 
     // Add net information
     if (item.net_count() > 0) {
       String netName = board.rules.nets.get(item.get_net_no(0)).name;
-      desc
-          .append(" [")
-          .append(netName)
-          .append("]");
+      desc.append(" [").append(netName).append("]");
     }
 
     return desc.toString();
@@ -418,7 +451,7 @@ public class DesignRulesChecker {
   /**
    * Gets a detailed description of a trace including net, layer, and length.
    *
-   * @param item           The trace item to describe
+   * @param item The trace item to describe
    * @param coordinateUnit Unit for coordinates
    * @return Detailed description string
    */
@@ -428,10 +461,7 @@ public class DesignRulesChecker {
     // Add net information
     if (item.net_count() > 0) {
       String netName = board.rules.nets.get(item.get_net_no(0)).name;
-      desc
-          .append(" [")
-          .append(netName)
-          .append("]");
+      desc.append(" [").append(netName).append("]");
     }
 
     // Add layer information
@@ -443,18 +473,20 @@ public class DesignRulesChecker {
       // Add length information
       double lengthInBoardUnits = trace.get_length();
       double lengthInTargetUnits = convertCoordinate(lengthInBoardUnits, coordinateUnit);
-      desc.append(", length ").append(String.format("%.4f", lengthInTargetUnits)).append(" ").append(coordinateUnit);
+      desc.append(", length ")
+          .append(String.format("%.4f", lengthInTargetUnits))
+          .append(" ")
+          .append(coordinateUnit);
     }
 
     return desc.toString();
   }
 
   /**
-   * Converts a coordinate value from board's internal coordinate system to the
-   * specified unit.
+   * Converts a coordinate value from board's internal coordinate system to the specified unit.
    *
    * @param boardCoordinate Coordinate in board's internal system
-   * @param coordinateUnit  Target unit ("mm", "mil", etc.)
+   * @param coordinateUnit Target unit ("mm", "mil", etc.)
    * @return Coordinate value in the target unit
    */
   private double convertCoordinate(double boardCoordinate, String coordinateUnit) {
@@ -489,14 +521,11 @@ public class DesignRulesChecker {
   }
 
   /**
-   * Initializes the incomplete connection calculations for all nets on the board.
-   * Incomplete connections (airlines) are determined based on the items associated
-   * with each net.
-   * This is not equivalent to the total number of connections, as some nets
-   * may have multiple items already connected together.
-   * This is also not equivalent to the number of not-completed nets, as a net may
-   * have multiple connections with some connections completed while others remain
-   * incomplete.
+   * Initializes the incomplete connection calculations for all nets on the board. Incomplete
+   * connections (airlines) are determined based on the items associated with each net. This is not
+   * equivalent to the total number of connections, as some nets may have multiple items already
+   * connected together. This is also not equivalent to the number of not-completed nets, as a net
+   * may have multiple connections with some connections completed while others remain incomplete.
    */
   public void calculateAllIncompletes() {
     int max_net_no = board.rules.nets.max_net_no();
@@ -505,18 +534,16 @@ public class DesignRulesChecker {
     for (int i = 0; i < max_net_no; i++) {
       net_item_lists.add(new java.util.LinkedList<>());
     }
-    java.util.Iterator<app.freerouting.datastructures.UndoableObjects.UndoableObjectNode> it = board.item_list
-        .start_read_object();
-    for (;;) {
+    java.util.Iterator<app.freerouting.datastructures.UndoableObjects.UndoableObjectNode> it =
+        board.item_list.start_read_object();
+    for (; ; ) {
       Item curr_item = (Item) board.item_list.read_object(it);
       if (curr_item == null) {
         break;
       }
       if (curr_item instanceof app.freerouting.board.Connectable) {
         for (int i = 0; i < curr_item.net_count(); i++) {
-          net_item_lists
-              .get(curr_item.get_net_no(i) - 1)
-              .add(curr_item);
+          net_item_lists.get(curr_item.get_net_no(i) - 1).add(curr_item);
         }
       }
     }
@@ -525,25 +552,29 @@ public class DesignRulesChecker {
     // The old formula (total_items - net_count) incorrectly included empty nets in the
     // denominator, producing a max_connections value that was too small and could even be
     // negative or zero, which caused getNormalizedScore() to always return 0.
-    this.max_connections = net_item_lists
-        .stream()
-        .filter(list -> !list.isEmpty())
-        .mapToInt(list -> {
-          long endpointCount = list.stream()
-              .filter(item -> item instanceof Pin || item instanceof ConductionArea)
-              .count();
-          return (int) Math.max(0, endpointCount - 1);
-        })
-        .sum();
+    this.max_connections =
+        net_item_lists.stream()
+            .filter(list -> !list.isEmpty())
+            .mapToInt(
+                list -> {
+                  long endpointCount =
+                      list.stream()
+                          .filter(item -> item instanceof Pin || item instanceof ConductionArea)
+                          .count();
+                  return (int) Math.max(0, endpointCount - 1);
+                })
+            .sum();
 
-    int totalItems = net_item_lists
-        .stream()
-        .mapToInt(Collection::size)
-        .sum();
-    FRLogger.trace("DesignRulesChecker.calculateAllIncompletes", "max_connections",
-        "Calculated max_connections=" + this.max_connections
-            + ", total_items=" + totalItems
-            + ", net_count=" + net_item_lists.size()
+    int totalItems = net_item_lists.stream().mapToInt(Collection::size).sum();
+    FRLogger.trace(
+        "DesignRulesChecker.calculateAllIncompletes",
+        "max_connections",
+        "Calculated max_connections="
+            + this.max_connections
+            + ", total_items="
+            + totalItems
+            + ", net_count="
+            + net_item_lists.size()
             + " (formula: total_items - net_count)",
         "Incomplete Count",
         new Point[0]);
@@ -554,7 +585,9 @@ public class DesignRulesChecker {
         int netItems = net_item_lists.get(netNo - 1).size();
         Net net = board.rules.nets.get(netNo);
         String netName = net != null ? net.name : "unknown";
-        FRLogger.trace("DesignRulesChecker.calculateAllIncompletes", "net_item_count",
+        FRLogger.trace(
+            "DesignRulesChecker.calculateAllIncompletes",
+            "net_item_count",
             "Net item count: net=" + netNo + ", name=" + netName + ", items=" + netItems,
             "Net #" + netNo + " (" + netName + ")",
             new Point[0]);
@@ -563,7 +596,7 @@ public class DesignRulesChecker {
         var net_items = net_item_lists.get(netNo - 1);
         for (Item item : net_items) {
           if (item instanceof PolylineTrace trace) {
-            //trace.validateAndLogPolylineIntegrity();
+            // trace.validateAndLogPolylineIntegrity();
           }
         }
       }
@@ -594,16 +627,16 @@ public class DesignRulesChecker {
   }
 
   /**
-   * Recalculates the incomplete connections for the specified net using a
-   * provided list of items.
+   * Recalculates the incomplete connections for the specified net using a provided list of items.
    *
-   * @param netNo    The number of the net to recalculate.
+   * @param netNo The number of the net to recalculate.
    * @param itemList The collection of items belonging to the net.
    */
   public void recalculateNetIncompletes(int netNo, Collection<Item> itemList) {
     if (net_incompletes == null) {
-      calculateAllIncompletes(); // Initialize if not already done, though this might be expensive if we only
-                                 // want one net. catch-22.
+      calculateAllIncompletes(); // Initialize if not already done, though this might be expensive
+      // if we only
+      // want one net. catch-22.
       // But effectively we need the array initialized.
     }
     if (netNo >= 1 && netNo <= net_incompletes.length) {
@@ -614,10 +647,7 @@ public class DesignRulesChecker {
     }
   }
 
-  /**
-   * Returns the total number of incomplete connections (airlines) across all
-   * nets.
-   */
+  /** Returns the total number of incomplete connections (airlines) across all nets. */
   public int getIncompleteCount() {
     if (net_incompletes == null) {
       calculateAllIncompletes();
@@ -635,25 +665,34 @@ public class DesignRulesChecker {
         if (netsWithIncompletes <= 10) { // Log first 10 nets with incompletes
           Net net = board.rules.nets.get(i + 1);
           String netName = net != null ? net.name : "unknown";
-          detailsBuilder.append("Net #").append(i + 1).append(" (").append(netName).append("): ")
-              .append(netIncompletes).append(" incomplete(s); ");
+          detailsBuilder
+              .append("Net #")
+              .append(i + 1)
+              .append(" (")
+              .append(netName)
+              .append("): ")
+              .append(netIncompletes)
+              .append(" incomplete(s); ");
         }
       }
     }
 
-    FRLogger.trace("DesignRulesChecker.getIncompleteCount", "total_incompletes_calculated",
-        "Total incomplete count: " + result
-            + ", nets_with_incompletes=" + netsWithIncompletes
-            + ", first_few_nets=" + detailsBuilder.toString(),
+    FRLogger.trace(
+        "DesignRulesChecker.getIncompleteCount",
+        "total_incompletes_calculated",
+        "Total incomplete count: "
+            + result
+            + ", nets_with_incompletes="
+            + netsWithIncompletes
+            + ", first_few_nets="
+            + detailsBuilder.toString(),
         "Incomplete Count",
         new Point[0]);
 
     return result;
   }
 
-  /**
-   * Returns the number of incomplete connections for a specific net.
-   */
+  /** Returns the number of incomplete connections for a specific net. */
   public int getIncompleteCount(int netNo) {
     if (net_incompletes == null) {
       calculateAllIncompletes();
@@ -666,19 +705,17 @@ public class DesignRulesChecker {
     Net net = board.rules.nets.get(netNo);
     String netName = net != null ? net.name : "unknown";
 
-    FRLogger.trace("DesignRulesChecker.getIncompleteCount", "net_incomplete_count",
-        "Net incomplete count: net=" + netNo
-            + ", name=" + netName
-            + ", incomplete_count=" + result,
+    FRLogger.trace(
+        "DesignRulesChecker.getIncompleteCount",
+        "net_incomplete_count",
+        "Net incomplete count: net=" + netNo + ", name=" + netName + ", incomplete_count=" + result,
         "Net #" + netNo + " (" + netName + ")",
         new Point[0]);
 
     return result;
   }
 
-  /**
-   * Returns the total number of nets that violate length restrictions.
-   */
+  /** Returns the total number of nets that violate length restrictions. */
   public int getLengthViolationCount() {
     if (net_incompletes == null) {
       calculateAllIncompletes();
@@ -692,9 +729,7 @@ public class DesignRulesChecker {
     return result;
   }
 
-  /**
-   * Returns the magnitude of the length violation for the specified net.
-   */
+  /** Returns the magnitude of the length violation for the specified net. */
   public double getLengthViolation(int netNo) {
     if (net_incompletes == null) {
       calculateAllIncompletes();
@@ -724,9 +759,7 @@ public class DesignRulesChecker {
     return result;
   }
 
-  /**
-   * Retrieves all airlines (incomplete connections) for the entire board.
-   */
+  /** Retrieves all airlines (incomplete connections) for the entire board. */
   public AirLine[] getAllAirlines() {
     if (net_incompletes == null) {
       calculateAllIncompletes();
@@ -745,8 +778,7 @@ public class DesignRulesChecker {
   }
 
   /**
-   * Gets the NetIncompletes object for a specific net.
-   * Useful for drawing or detailed inspection.
+   * Gets the NetIncompletes object for a specific net. Useful for drawing or detailed inspection.
    */
   public NetIncompletes getNetIncompletes(int netNo) {
     if (net_incompletes == null) {
@@ -761,7 +793,7 @@ public class DesignRulesChecker {
   /**
    * Generates a JSON string of the DRC report.
    *
-   * @param sourceFile     Name of the source file
+   * @param sourceFile Name of the source file
    * @param coordinateUnit Unit for coordinates
    * @return JSON string of the DRC report
    */

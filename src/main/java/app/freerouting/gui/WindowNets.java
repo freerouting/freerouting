@@ -47,9 +47,7 @@ public class WindowNets extends WindowObjectListWithFilter {
   private final JCheckBox filter_incompletes_checkbox;
   private final NetInfoTextPane info_pane;
 
-  /**
-   * Creates a new instance of NetsWindow
-   */
+  /** Creates a new instance of NetsWindow */
   public WindowNets(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
@@ -91,7 +89,10 @@ public class WindowNets extends WindowObjectListWithFilter {
     curr_button_panel.add(rules_nets_assign_class_button);
     rules_nets_assign_class_button.setToolTipText(tm.getText("assign_class_tooltip"));
     rules_nets_assign_class_button.addActionListener(new AssignClassListener());
-    rules_nets_assign_class_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_nets_assign_class_button", rules_nets_assign_class_button.getText()));
+    rules_nets_assign_class_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rules_nets_assign_class_button", rules_nets_assign_class_button.getText()));
   }
 
   @Override
@@ -133,27 +134,41 @@ public class WindowNets extends WindowObjectListWithFilter {
 
     if (this.list != null) {
       // Set custom cell renderer to show Net ID, name, and currently assigned class
-      this.list.setCellRenderer(new javax.swing.DefaultListCellRenderer() {
-        @Override
-        public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-          java.awt.Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-          if (value instanceof Net net) {
-            setText("Net #" + net.net_number + " (" + net.name + ") - Class: " + net.get_class().get_name());
-          }
-          return c;
-        }
-      });
+      this.list.setCellRenderer(
+          new javax.swing.DefaultListCellRenderer() {
+            @Override
+            public java.awt.Component getListCellRendererComponent(
+                javax.swing.JList<?> list,
+                Object value,
+                int index,
+                boolean isSelected,
+                boolean cellHasFocus) {
+              java.awt.Component c =
+                  super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+              if (value instanceof Net net) {
+                setText(
+                    "Net #"
+                        + net.net_number
+                        + " ("
+                        + net.name
+                        + ") - Class: "
+                        + net.get_class().get_name());
+              }
+              return c;
+            }
+          });
 
       // Clear/remove old listeners to avoid multiple registrations
       for (java.awt.event.ContainerListener cl : this.list.getContainerListeners()) {
         this.list.removeContainerListener(cl);
       }
 
-      this.list.addListSelectionListener(e -> {
-        if (!e.getValueIsAdjusting()) {
-          update_selected_net_info();
-        }
-      });
+      this.list.addListSelectionListener(
+          e -> {
+            if (!e.getValueIsAdjusting()) {
+              update_selected_net_info();
+            }
+          });
 
       update_selected_net_info();
     }
@@ -176,9 +191,7 @@ public class WindowNets extends WindowObjectListWithFilter {
     this.info_pane.setCaretPosition(0);
   }
 
-  /**
-   * Fills the list with the nets in the net list.
-   */
+  /** Fills the list with the nets in the net list. */
   @Override
   protected void fill_list() {
     Nets nets = this.board_frame.board_panel.board_handling.get_routing_board().rules.nets;
@@ -198,7 +211,8 @@ public class WindowNets extends WindowObjectListWithFilter {
     if (this.net_count_label != null) {
       String explanation = tm.getText("net_explanation");
       String countSentence = tm.getText("net_count", String.valueOf(net_list.size()));
-      this.net_count_label.setText("<html>" + explanation.replace("\n", "<br>") + "<b>" + countSentence + "</b></html>");
+      this.net_count_label.setText(
+          "<html>" + explanation.replace("\n", "<br>") + "<b>" + countSentence + "</b></html>");
     }
   }
 
@@ -239,12 +253,21 @@ public class WindowNets extends WindowObjectListWithFilter {
       if (selected_nets.isEmpty()) {
         return;
       }
-      NetClasses net_classes = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
+      NetClasses net_classes =
+          board_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
       NetClass[] class_arr = new NetClass[net_classes.count()];
       for (int i = 0; i < class_arr.length; i++) {
         class_arr[i] = net_classes.get(i);
       }
-      Object selected_value = JOptionPane.showInputDialog(null, tm.getText("assign_net_class_prompt"), tm.getText("assign_net_class_dialog_title"), JOptionPane.INFORMATION_MESSAGE, null, class_arr, class_arr[0]);
+      Object selected_value =
+          JOptionPane.showInputDialog(
+              null,
+              tm.getText("assign_net_class_prompt"),
+              tm.getText("assign_net_class_dialog_title"),
+              JOptionPane.INFORMATION_MESSAGE,
+              null,
+              class_arr,
+              class_arr[0]);
       if (!(selected_value instanceof NetClass selected_class)) {
         return;
       }
@@ -264,7 +287,8 @@ public class WindowNets extends WindowObjectListWithFilter {
       this.number_format.setMaximumFractionDigits(4);
 
       StyledDocument document = this.getStyledDocument();
-      Style default_style = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+      Style default_style =
+          StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
       document.addStyle("normal", default_style);
       Style bold_style = document.addStyle("bold", default_style);
       StyleConstants.setBold(bold_style, true);
@@ -292,7 +316,8 @@ public class WindowNets extends WindowObjectListWithFilter {
 
     @Override
     public boolean append(double p_value) {
-      CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+      CoordinateTransform coordinate_transform =
+          board_frame.board_panel.board_handling.coordinate_transform;
       Float value = (float) coordinate_transform.board_to_user(p_value);
       return append(number_format.format(value));
     }
@@ -305,14 +330,16 @@ public class WindowNets extends WindowObjectListWithFilter {
 
     @Override
     public boolean append(FloatPoint p_point) {
-      CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+      CoordinateTransform coordinate_transform =
+          board_frame.board_panel.board_handling.coordinate_transform;
       FloatPoint transformed_point = coordinate_transform.board_to_user(p_point);
       return append(transformed_point.to_string(board_frame.get_locale()));
     }
 
     @Override
     public boolean append(Shape p_shape, Locale p_locale) {
-      CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+      CoordinateTransform coordinate_transform =
+          board_frame.board_panel.board_handling.coordinate_transform;
       PrintableShape transformed_shape = coordinate_transform.board_to_user(p_shape, p_locale);
       if (transformed_shape == null) {
         return false;
@@ -331,20 +358,25 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
 
     @Override
-    public boolean append(String p_button_name, String p_window_title, ObjectInfoPanel.Printable p_object) {
+    public boolean append(
+        String p_button_name, String p_window_title, ObjectInfoPanel.Printable p_object) {
       Collection<ObjectInfoPanel.Printable> object_list = new LinkedList<>();
       object_list.add(p_object);
       return append_objects(p_button_name, p_window_title, object_list);
     }
 
     @Override
-    public boolean append_items(String p_button_name, String p_window_title, Collection<Item> p_items) {
+    public boolean append_items(
+        String p_button_name, String p_window_title, Collection<Item> p_items) {
       Collection<ObjectInfoPanel.Printable> object_list = new LinkedList<>(p_items);
       return append_objects(p_button_name, p_window_title, object_list);
     }
 
     @Override
-    public boolean append_objects(String p_button_name, String p_window_title, Collection<ObjectInfoPanel.Printable> p_objects) {
+    public boolean append_objects(
+        String p_button_name,
+        String p_window_title,
+        Collection<ObjectInfoPanel.Printable> p_objects) {
       JButton object_info_button = new JButton();
       object_info_button.setText(p_button_name);
       object_info_button.setBorderPainted(false);
@@ -353,24 +385,30 @@ public class WindowNets extends WindowObjectListWithFilter {
       object_info_button.setAlignmentY(0.75f);
       object_info_button.setForeground(Color.blue);
 
-      object_info_button.addActionListener(e -> {
-        Collection<WindowObjectInfo.Printable> info_objects = new LinkedList<>();
-        for (ObjectInfoPanel.Printable p : p_objects) {
-          if (p instanceof WindowObjectInfo.Printable wp) {
-            info_objects.add(wp);
-          }
-        }
-        CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
-        WindowObjectInfo new_window = WindowObjectInfo.display(p_window_title, info_objects, board_frame, coordinate_transform);
-        Point loc = getLocation();
-        Point new_window_location = new Point((int) (loc.getX() + 30), (int) (loc.getY() + 30));
-        new_window.setLocation(new_window_location);
-        subwindows.add(new_window);
-      });
-      object_info_button.addActionListener(_ -> FRAnalytics.buttonClicked("object_info_button", object_info_button.getText()));
+      object_info_button.addActionListener(
+          e -> {
+            Collection<WindowObjectInfo.Printable> info_objects = new LinkedList<>();
+            for (ObjectInfoPanel.Printable p : p_objects) {
+              if (p instanceof WindowObjectInfo.Printable wp) {
+                info_objects.add(wp);
+              }
+            }
+            CoordinateTransform coordinate_transform =
+                board_frame.board_panel.board_handling.coordinate_transform;
+            WindowObjectInfo new_window =
+                WindowObjectInfo.display(
+                    p_window_title, info_objects, board_frame, coordinate_transform);
+            Point loc = getLocation();
+            Point new_window_location = new Point((int) (loc.getX() + 30), (int) (loc.getY() + 30));
+            new_window.setLocation(new_window_location);
+            subwindows.add(new_window);
+          });
+      object_info_button.addActionListener(
+          _ -> FRAnalytics.buttonClicked("object_info_button", object_info_button.getText()));
 
       StyledDocument document = this.getStyledDocument();
-      Style default_style = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+      Style default_style =
+          StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
       Style button_style = document.addStyle(p_button_name, default_style);
       StyleConstants.setAlignment(button_style, StyleConstants.ALIGN_CENTER);
       StyleConstants.setComponent(button_style, object_info_button);

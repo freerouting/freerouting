@@ -30,9 +30,7 @@ public class MaxPassesSettingRoutingTest extends RoutingFixtureTest {
   @AfterEach
   public void tearDown() {
     if (job != null) {
-      RoutingJobScheduler
-          .getInstance()
-          .clearJobs(job.sessionId.toString());
+      RoutingJobScheduler.getInstance().clearJobs(job.sessionId.toString());
     }
   }
 }

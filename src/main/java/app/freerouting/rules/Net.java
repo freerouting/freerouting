@@ -16,40 +16,33 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 
-/**
- * Describes properties for an individual electrical net.
- */
+/** Describes properties for an individual electrical net. */
 public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializable {
 
-  /**
-   * The name of the net
-   */
+  /** The name of the net */
   public final String name;
-  /**
-   * Used only if a net is divided internally because of fromto rules for example For normal nets it is always 1.
-   */
-  public final int subnet_number;
-  /**
-   * The unique strict positive number of the net
-   */
-  public final int net_number;
-  /**
-   * The net list, where this net belongs to.
-   */
-  public final Nets net_list;
-  /**
-   * Indicates, if this net contains a power plane
-   */
-  private boolean contains_plane;
-  /**
-   * The routing rule of this net
-   */
-  private NetClass net_class;
 
   /**
-   * Creates a new instance of Net. p_net_list is the net list, where this net belongs to.
+   * Used only if a net is divided internally because of fromto rules for example For normal nets it
+   * is always 1.
    */
-  public Net(String p_name, int p_subnet_number, int p_no, Nets p_net_list, boolean p_contains_plane) {
+  public final int subnet_number;
+
+  /** The unique strict positive number of the net */
+  public final int net_number;
+
+  /** The net list, where this net belongs to. */
+  public final Nets net_list;
+
+  /** Indicates, if this net contains a power plane */
+  private boolean contains_plane;
+
+  /** The routing rule of this net */
+  private NetClass net_class;
+
+  /** Creates a new instance of Net. p_net_list is the net list, where this net belongs to. */
+  public Net(
+      String p_name, int p_subnet_number, int p_no, Nets p_net_list, boolean p_contains_plane) {
     name = p_name;
     subnet_number = p_subnet_number;
     net_number = p_no;
@@ -63,31 +56,23 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     return "Net #" + this.net_number + " (" + this.name + ")";
   }
 
-  /**
-   * Compares 2 nets by name. Useful for example to display nets in alphabetic order.
-   */
+  /** Compares 2 nets by name. Useful for example to display nets in alphabetic order. */
   @Override
   public int compareTo(Net p_other) {
     return this.name.compareToIgnoreCase(p_other.name);
   }
 
-  /**
-   * Returns the class of this net.
-   */
+  /** Returns the class of this net. */
   public NetClass get_class() {
     return this.net_class;
   }
 
-  /**
-   * Sets the class of this net
-   */
+  /** Sets the class of this net */
   public void set_class(NetClass p_rule) {
     this.net_class = p_rule;
   }
 
-  /**
-   * Returns the pins and conduction areas of this net.
-   */
+  /** Returns the pins and conduction areas of this net. */
   public Collection<Item> get_terminal_items() {
     Collection<Item> result = new LinkedList<>();
     BasicBoard board = this.net_list.get_board();
@@ -106,9 +91,7 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     return result;
   }
 
-  /**
-   * Returns the pins of this net.
-   */
+  /** Returns the pins of this net. */
   public Collection<Pin> get_pins() {
     Collection<Pin> result = new LinkedList<>();
     BasicBoard board = this.net_list.get_board();
@@ -127,9 +110,7 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     return result;
   }
 
-  /**
-   * Returns all items of this net.
-   */
+  /** Returns all items of this net. */
   public Collection<Item> get_items() {
     Collection<Item> result = new LinkedList<>();
     BasicBoard board = this.net_list.get_board();
@@ -146,9 +127,7 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     return result;
   }
 
-  /**
-   * Returns the cumulative trace length of all traces on the board belonging to this net.
-   */
+  /** Returns the cumulative trace length of all traces on the board belonging to this net. */
   public double get_trace_length() {
     double cumulative_trace_length = 0;
     Collection<Item> net_items = net_list.get_board().get_connectable_items(this.net_number);
@@ -161,9 +140,7 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     return cumulative_trace_length;
   }
 
-  /**
-   * Returns the count of vias on the board belonging to this net.
-   */
+  /** Returns the count of vias on the board belonging to this net. */
   public int get_via_count() {
     int result = 0;
     Collection<Item> net_items = net_list.get_board().get_connectable_items(this.net_number);
@@ -180,8 +157,9 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   }
 
   /**
-   * Indicates, if this net contains a power plane. Used by the autorouter for setting the via costs to the cheap plane via costs. May also be true, if a layer covered with a conduction_area of this
-   * net is a signal layer.
+   * Indicates, if this net contains a power plane. Used by the autorouter for setting the via costs
+   * to the cheap plane via costs. May also be true, if a layer covered with a conduction_area of
+   * this net is a signal layer.
    */
   public boolean contains_plane() {
     return contains_plane;
@@ -203,7 +181,8 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     p_window.append(tm.getText("class") + " ");
     p_window.append(net_class.get_name(), tm.getText("net_class"), net_class);
     p_window.append(", ");
-    p_window.append_objects(String.valueOf(terminal_item_count), tm.getText("terminal_items_2"), terminals);
+    p_window.append_objects(
+        String.valueOf(terminal_item_count), tm.getText("terminal_items_2"), terminals);
     p_window.append(" " + tm.getText("terminal_items"));
     p_window.append(", " + tm.getText("via_count") + " ");
     p_window.append(String.valueOf(via_count));

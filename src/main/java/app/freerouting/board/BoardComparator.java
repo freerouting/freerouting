@@ -30,12 +30,16 @@ public class BoardComparator {
     }
   }
 
-  public static ComparisonResult compare(RoutingBoard board1, RoutingBoard board2, double epsilonMm) {
+  public static ComparisonResult compare(
+      RoutingBoard board1, RoutingBoard board2, double epsilonMm) {
     StringBuilder report = new StringBuilder();
     boolean equal = true;
 
     report.append("=== Freerouting Board Parity Report ===\n");
-    report.append(String.format("Comparing Board 1 (from DSN/JSON) and Board 2 (from JSON/DSN) with epsilon = %.6f mm\n\n", epsilonMm));
+    report.append(
+        String.format(
+            "Comparing Board 1 (from DSN/JSON) and Board 2 (from JSON/DSN) with epsilon = %.6f mm\n\n",
+            epsilonMm));
 
     // 1. Check units and scaling factors
     double scale1 = getMmFactor(board1);
@@ -54,14 +58,18 @@ public class BoardComparator {
     double box2_ur_x = box2.ur.x * scale2;
     double box2_ur_y = box2.ur.y * scale2;
 
-    if (Math.abs(box1_ll_x - box2_ll_x) > epsilonMm || Math.abs(box1_ll_y - box2_ll_y) > epsilonMm ||
-        Math.abs(box1_ur_x - box2_ur_x) > epsilonMm || Math.abs(box1_ur_y - box2_ur_y) > epsilonMm) {
+    if (Math.abs(box1_ll_x - box2_ll_x) > epsilonMm
+        || Math.abs(box1_ll_y - box2_ll_y) > epsilonMm
+        || Math.abs(box1_ur_x - box2_ur_x) > epsilonMm
+        || Math.abs(box1_ur_y - box2_ur_y) > epsilonMm) {
       equal = false;
-      report.append(String.format("[-] Bounding Box mismatch:\n" +
-          "    Board 1: LL(%.4f, %.4f) UR(%.4f, %.4f) mm\n" +
-          "    Board 2: LL(%.4f, %.4f) UR(%.4f, %.4f) mm\n\n",
-          box1_ll_x, box1_ll_y, box1_ur_x, box1_ur_y,
-          box2_ll_x, box2_ll_y, box2_ur_x, box2_ur_y));
+      report.append(
+          String.format(
+              "[-] Bounding Box mismatch:\n"
+                  + "    Board 1: LL(%.4f, %.4f) UR(%.4f, %.4f) mm\n"
+                  + "    Board 2: LL(%.4f, %.4f) UR(%.4f, %.4f) mm\n\n",
+              box1_ll_x, box1_ll_y, box1_ur_x, box1_ur_y, box2_ll_x, box2_ll_y, box2_ur_x,
+              box2_ur_y));
     } else {
       report.append("[+] Bounding Boxes match.\n");
     }
@@ -71,7 +79,10 @@ public class BoardComparator {
     int layersCount2 = board2.get_layer_count();
     if (layersCount1 != layersCount2) {
       equal = false;
-      report.append(String.format("[-] Layer count mismatch: Board 1 = %d, Board 2 = %d\n", layersCount1, layersCount2));
+      report.append(
+          String.format(
+              "[-] Layer count mismatch: Board 1 = %d, Board 2 = %d\n",
+              layersCount1, layersCount2));
     } else {
       report.append(String.format("[+] Layer counts match: %d\n", layersCount1));
       for (int i = 0; i < layersCount1; i++) {
@@ -79,14 +90,18 @@ public class BoardComparator {
         String name2 = board2.layer_structure.arr[i].name;
         if (!name1.equalsIgnoreCase(name2)) {
           equal = false;
-          report.append(String.format("[-] Layer %d name mismatch: Board 1 = '%s', Board 2 = '%s'\n", i, name1, name2));
+          report.append(
+              String.format(
+                  "[-] Layer %d name mismatch: Board 1 = '%s', Board 2 = '%s'\n", i, name1, name2));
         }
         boolean isSignal1 = board1.layer_structure.arr[i].is_signal;
         boolean isSignal2 = board2.layer_structure.arr[i].is_signal;
         if (isSignal1 != isSignal2) {
           equal = false;
-          report.append(String.format("[-] Layer %d type mismatch: Board 1 = %s, Board 2 = %s\n",
-              i, isSignal1 ? "signal" : "plane/other", isSignal2 ? "signal" : "plane/other"));
+          report.append(
+              String.format(
+                  "[-] Layer %d type mismatch: Board 1 = %s, Board 2 = %s\n",
+                  i, isSignal1 ? "signal" : "plane/other", isSignal2 ? "signal" : "plane/other"));
         }
       }
     }
@@ -96,7 +111,10 @@ public class BoardComparator {
     int compCount2 = board2.components.count();
     if (compCount1 != compCount2) {
       equal = false;
-      report.append(String.format("[-] Component count mismatch: Board 1 = %d, Board 2 = %d\n", compCount1, compCount2));
+      report.append(
+          String.format(
+              "[-] Component count mismatch: Board 1 = %d, Board 2 = %d\n",
+              compCount1, compCount2));
     } else {
       report.append(String.format("[+] Component counts match: %d\n", compCount1));
     }
@@ -115,7 +133,9 @@ public class BoardComparator {
       Component c2 = compMap2.get(compName);
       if (c2 == null) {
         equal = false;
-        report.append(String.format("[-] Component '%s' is present in Board 1 but missing in Board 2\n", compName));
+        report.append(
+            String.format(
+                "[-] Component '%s' is present in Board 1 but missing in Board 2\n", compName));
         continue;
       }
       // Compare details
@@ -124,7 +144,9 @@ public class BoardComparator {
       if (p1 == null || p2 == null) {
         if (p1 != p2) {
           equal = false;
-          report.append(String.format("[-] Component '%s' placement mismatch (one is placed, one is not)\n", compName));
+          report.append(
+              String.format(
+                  "[-] Component '%s' placement mismatch (one is placed, one is not)\n", compName));
         }
       } else {
         double x1 = p1.to_float().x * scale1;
@@ -133,21 +155,27 @@ public class BoardComparator {
         double y2 = p2.to_float().y * scale2;
         if (Math.abs(x1 - x2) > epsilonMm || Math.abs(y1 - y2) > epsilonMm) {
           equal = false;
-          report.append(String.format("[-] Component '%s' position mismatch: Board 1 = (%.4f, %.4f), Board 2 = (%.4f, %.4f) mm\n",
-              compName, x1, y1, x2, y2));
+          report.append(
+              String.format(
+                  "[-] Component '%s' position mismatch: Board 1 = (%.4f, %.4f), Board 2 = (%.4f, %.4f) mm\n",
+                  compName, x1, y1, x2, y2));
         }
       }
       double rot1 = c1.get_rotation_in_degree();
       double rot2 = c2.get_rotation_in_degree();
       if (Math.abs(rot1 - rot2) > 0.01) {
         equal = false;
-        report.append(String.format("[-] Component '%s' rotation mismatch: Board 1 = %.2f, Board 2 = %.2f\n",
-            compName, rot1, rot2));
+        report.append(
+            String.format(
+                "[-] Component '%s' rotation mismatch: Board 1 = %.2f, Board 2 = %.2f\n",
+                compName, rot1, rot2));
       }
       if (c1.placed_on_front() != c2.placed_on_front()) {
         equal = false;
-        report.append(String.format("[-] Component '%s' layer side mismatch: Board 1 Front = %b, Board 2 Front = %b\n",
-            compName, c1.placed_on_front(), c2.placed_on_front()));
+        report.append(
+            String.format(
+                "[-] Component '%s' layer side mismatch: Board 1 Front = %b, Board 2 Front = %b\n",
+                compName, c1.placed_on_front(), c2.placed_on_front()));
       }
     }
 
@@ -156,7 +184,9 @@ public class BoardComparator {
     Collection<Pin> pins2 = board2.get_pins();
     if (pins1.size() != pins2.size()) {
       equal = false;
-      report.append(String.format("[-] Pin count mismatch: Board 1 = %d, Board 2 = %d\n", pins1.size(), pins2.size()));
+      report.append(
+          String.format(
+              "[-] Pin count mismatch: Board 1 = %d, Board 2 = %d\n", pins1.size(), pins2.size()));
     }
 
     Map<String, Pin> pinMap1 = new HashMap<>();
@@ -179,7 +209,8 @@ public class BoardComparator {
       Pin p2 = pinMap2.get(pinKey);
       if (p2 == null) {
         equal = false;
-        report.append(String.format("[-] Pin '%s' is present in Board 1 but missing in Board 2\n", pinKey));
+        report.append(
+            String.format("[-] Pin '%s' is present in Board 1 but missing in Board 2\n", pinKey));
         continue;
       }
       Point c1 = p1.get_center();
@@ -190,8 +221,10 @@ public class BoardComparator {
       double y2 = c2.to_float().y * scale2;
       if (Math.abs(x1 - x2) > epsilonMm || Math.abs(y1 - y2) > epsilonMm) {
         equal = false;
-        report.append(String.format("[-] Pin '%s' center mismatch: Board 1 = (%.4f, %.4f), Board 2 = (%.4f, %.4f) mm\n",
-            pinKey, x1, y1, x2, y2));
+        report.append(
+            String.format(
+                "[-] Pin '%s' center mismatch: Board 1 = (%.4f, %.4f), Board 2 = (%.4f, %.4f) mm\n",
+                pinKey, x1, y1, x2, y2));
       }
     }
 
@@ -200,8 +233,10 @@ public class BoardComparator {
     Map<String, NetClass> netClassMap2 = buildNetClassMap(board2);
     if (netClassMap1.size() != netClassMap2.size()) {
       equal = false;
-      report.append(String.format("[-] Net class count mismatch: Board 1 = %d, Board 2 = %d\n",
-          netClassMap1.size(), netClassMap2.size()));
+      report.append(
+          String.format(
+              "[-] Net class count mismatch: Board 1 = %d, Board 2 = %d\n",
+              netClassMap1.size(), netClassMap2.size()));
     } else {
       report.append(String.format("[+] Net class counts match: %d\n", netClassMap1.size()));
     }
@@ -212,8 +247,10 @@ public class BoardComparator {
     Map<String, Net> netsMap2 = buildNetMap(board2);
     if (netsMap1.size() != netsMap2.size()) {
       equal = false;
-      report.append(String.format("[-] Net count mismatch: Board 1 = %d, Board 2 = %d\n",
-          netsMap1.size(), netsMap2.size()));
+      report.append(
+          String.format(
+              "[-] Net count mismatch: Board 1 = %d, Board 2 = %d\n",
+              netsMap1.size(), netsMap2.size()));
     } else {
       report.append(String.format("[+] Net counts match: %d\n", netsMap1.size()));
     }
@@ -227,15 +264,19 @@ public class BoardComparator {
       }
       if (n1.get_pins().size() != n2.get_pins().size()) {
         equal = false;
-        report.append(String.format("[-] Net '%s' pin count mismatch: Board 1 = %d, Board 2 = %d\n",
-            netName, n1.get_pins().size(), n2.get_pins().size()));
+        report.append(
+            String.format(
+                "[-] Net '%s' pin count mismatch: Board 1 = %d, Board 2 = %d\n",
+                netName, n1.get_pins().size(), n2.get_pins().size()));
       }
       String class1 = n1.get_class().get_name();
       String class2 = n2.get_class().get_name();
       if (!Objects.equals(class1, class2)) {
         equal = false;
-        report.append(String.format("[-] Net class mismatch for net '%s': Board 1 = '%s', Board 2 = '%s'\n",
-            netName, class1, class2));
+        report.append(
+            String.format(
+                "[-] Net class mismatch for net '%s': Board 1 = '%s', Board 2 = '%s'\n",
+                netName, class1, class2));
       }
     }
 
@@ -244,7 +285,9 @@ public class BoardComparator {
     List<Trace> tr2 = new ArrayList<>(board2.get_traces());
     if (tr1.size() != tr2.size()) {
       equal = false;
-      report.append(String.format("[-] Trace count mismatch: Board 1 = %d, Board 2 = %d\n", tr1.size(), tr2.size()));
+      report.append(
+          String.format(
+              "[-] Trace count mismatch: Board 1 = %d, Board 2 = %d\n", tr1.size(), tr2.size()));
     }
 
     // Detailed Trace Matching
@@ -300,8 +343,10 @@ public class BoardComparator {
         Point startPt = pt1.polyline().first_corner();
         double sx = startPt.to_float().x * scale1;
         double sy = startPt.to_float().y * scale1;
-        report.append(String.format("[-] Trace in Board 1 on layer %d of net '%s' starting at (%.4f, %.4f) mm has no matching trace in Board 2.\n",
-            pt1.get_layer(), netName1, sx, sy));
+        report.append(
+            String.format(
+                "[-] Trace in Board 1 on layer %d of net '%s' starting at (%.4f, %.4f) mm has no matching trace in Board 2.\n",
+                pt1.get_layer(), netName1, sx, sy));
       }
     }
     for (int i = 0; i < tr2.size(); i++) {
@@ -319,8 +364,10 @@ public class BoardComparator {
           Point startPt = pt2.polyline().first_corner();
           double sx = startPt.to_float().x * scale2;
           double sy = startPt.to_float().y * scale2;
-          report.append(String.format("[-] Trace in Board 2 on layer %d of net '%s' starting at (%.4f, %.4f) mm has no matching trace in Board 1.\n",
-              pt2.get_layer(), netName2, sx, sy));
+          report.append(
+              String.format(
+                  "[-] Trace in Board 2 on layer %d of net '%s' starting at (%.4f, %.4f) mm has no matching trace in Board 1.\n",
+                  pt2.get_layer(), netName2, sx, sy));
         }
       }
     }
@@ -332,7 +379,9 @@ public class BoardComparator {
     List<Via> vias2 = new ArrayList<>(board2.get_vias());
     if (vias1.size() != vias2.size()) {
       equal = false;
-      report.append(String.format("[-] Via count mismatch: Board 1 = %d, Board 2 = %d\n", vias1.size(), vias2.size()));
+      report.append(
+          String.format(
+              "[-] Via count mismatch: Board 1 = %d, Board 2 = %d\n", vias1.size(), vias2.size()));
     }
 
     // Detailed Via Matching
@@ -412,8 +461,10 @@ public class BoardComparator {
       }
       if (!foundMatch) {
         viasAllMatched = false;
-        report.append(String.format("[-] Via in Board 1 at (%.4f, %.4f) mm on net '%s' has no matching via in Board 2.\n",
-            cx1, cy1, netName1));
+        report.append(
+            String.format(
+                "[-] Via in Board 1 at (%.4f, %.4f) mm on net '%s' has no matching via in Board 2.\n",
+                cx1, cy1, netName1));
       }
     }
     for (int i = 0; i < vias2.size(); i++) {
@@ -429,8 +480,10 @@ public class BoardComparator {
         }
         double cx2 = v2.get_center().to_float().x * scale2;
         double cy2 = v2.get_center().to_float().y * scale2;
-        report.append(String.format("[-] Via in Board 2 at (%.4f, %.4f) mm on net '%s' has no matching via in Board 1.\n",
-            cx2, cy2, netName2));
+        report.append(
+            String.format(
+                "[-] Via in Board 2 at (%.4f, %.4f) mm on net '%s' has no matching via in Board 1.\n",
+                cx2, cy2, netName2));
       }
     }
     if (!viasAllMatched) {
@@ -443,37 +496,49 @@ public class BoardComparator {
     int obstCount1 = 0;
     int obstCount2 = 0;
     Iterator<UndoableObjects.UndoableObjectNode> it1 = board1.item_list.start_read_object();
-    for (;;) {
+    for (; ; ) {
       Item item = (Item) board1.item_list.read_object(it1);
       if (item == null) {
         break;
       }
       if (item instanceof ConductionArea) {
         condCount1++;
-      } else if (item instanceof ObstacleArea && !(item instanceof ConductionArea) && !(item instanceof Pin) && !(item instanceof ComponentOutline)) {
+      } else if (item instanceof ObstacleArea
+          && !(item instanceof ConductionArea)
+          && !(item instanceof Pin)
+          && !(item instanceof ComponentOutline)) {
         obstCount1++;
       }
     }
     Iterator<UndoableObjects.UndoableObjectNode> it2 = board2.item_list.start_read_object();
-    for (;;) {
+    for (; ; ) {
       Item item = (Item) board2.item_list.read_object(it2);
       if (item == null) {
         break;
       }
       if (item instanceof ConductionArea) {
         condCount2++;
-      } else if (item instanceof ObstacleArea && !(item instanceof ConductionArea) && !(item instanceof Pin) && !(item instanceof ComponentOutline)) {
+      } else if (item instanceof ObstacleArea
+          && !(item instanceof ConductionArea)
+          && !(item instanceof Pin)
+          && !(item instanceof ComponentOutline)) {
         obstCount2++;
       }
     }
 
     if (condCount1 != condCount2) {
       equal = false;
-      report.append(String.format("[-] Conduction Area count mismatch: Board 1 = %d, Board 2 = %d\n", condCount1, condCount2));
+      report.append(
+          String.format(
+              "[-] Conduction Area count mismatch: Board 1 = %d, Board 2 = %d\n",
+              condCount1, condCount2));
     }
     if (obstCount1 != obstCount2) {
       equal = false;
-      report.append(String.format("[-] Keepout/Obstacle Area count mismatch: Board 1 = %d, Board 2 = %d\n", obstCount1, obstCount2));
+      report.append(
+          String.format(
+              "[-] Keepout/Obstacle Area count mismatch: Board 1 = %d, Board 2 = %d\n",
+              obstCount1, obstCount2));
     }
 
     // Compare Padstack names (order-independent)
@@ -481,8 +546,10 @@ public class BoardComparator {
     Set<String> padstackNames2 = collectPadstackNames(board2);
     if (padstackNames1.size() != padstackNames2.size()) {
       equal = false;
-      report.append(String.format("[-] Padstack count mismatch: Board 1 = %d, Board 2 = %d\n",
-          padstackNames1.size(), padstackNames2.size()));
+      report.append(
+          String.format(
+              "[-] Padstack count mismatch: Board 1 = %d, Board 2 = %d\n",
+              padstackNames1.size(), padstackNames2.size()));
     } else {
       report.append(String.format("[+] Padstack counts match: %d\n", padstackNames1.size()));
     }
@@ -493,8 +560,10 @@ public class BoardComparator {
     Set<String> packageKeys2 = collectPackageKeys(board2);
     if (packageKeys1.size() != packageKeys2.size()) {
       equal = false;
-      report.append(String.format("[-] Package count mismatch: Board 1 = %d, Board 2 = %d\n",
-          packageKeys1.size(), packageKeys2.size()));
+      report.append(
+          String.format(
+              "[-] Package count mismatch: Board 1 = %d, Board 2 = %d\n",
+              packageKeys1.size(), packageKeys2.size()));
     } else {
       report.append(String.format("[+] Package counts match: %d\n", packageKeys1.size()));
     }
@@ -515,7 +584,10 @@ public class BoardComparator {
     }
     if (Math.abs(traceLength1 - traceLength2) > epsilonMm) {
       equal = false;
-      report.append(String.format("[-] Trace length sum mismatch: Board 1 = %.4f mm, Board 2 = %.4f mm\n", traceLength1, traceLength2));
+      report.append(
+          String.format(
+              "[-] Trace length sum mismatch: Board 1 = %.4f mm, Board 2 = %.4f mm\n",
+              traceLength1, traceLength2));
     } else {
       report.append("[+] Trace length sums match.\n");
     }
@@ -526,28 +598,35 @@ public class BoardComparator {
     for (ConductionArea area1 : conds1) {
       ConductionArea matchArea2 = null;
       for (ConductionArea area2 : conds2) {
-        if (area2.get_layer() == area1.get_layer() &&
-            Math.abs(area2.bounding_box().ll.x * scale2 - area1.bounding_box().ll.x * scale1) < epsilonMm &&
-            Math.abs(area2.bounding_box().ll.y * scale2 - area1.bounding_box().ll.y * scale1) < epsilonMm) {
+        if (area2.get_layer() == area1.get_layer()
+            && Math.abs(area2.bounding_box().ll.x * scale2 - area1.bounding_box().ll.x * scale1)
+                < epsilonMm
+            && Math.abs(area2.bounding_box().ll.y * scale2 - area1.bounding_box().ll.y * scale1)
+                < epsilonMm) {
           matchArea2 = area2;
           break;
         }
       }
       if (matchArea2 == null) {
         equal = false;
-        report.append(String.format("[-] Conduction Area on layer %d at (%d,%d) in Board 1 has no match in Board 2.\n",
-            area1.get_layer(), area1.bounding_box().ll.x, area1.bounding_box().ll.y));
+        report.append(
+            String.format(
+                "[-] Conduction Area on layer %d at (%d,%d) in Board 1 has no match in Board 2.\n",
+                area1.get_layer(), area1.bounding_box().ll.x, area1.bounding_box().ll.y));
       } else {
         if (area1.get_is_filled() != matchArea2.get_is_filled()) {
           equal = false;
-          report.append(String.format("[-] Conduction Area fill status mismatch on layer %d: Board 1 = %b, Board 2 = %b\n",
-              area1.get_layer(), area1.get_is_filled(), matchArea2.get_is_filled()));
+          report.append(
+              String.format(
+                  "[-] Conduction Area fill status mismatch on layer %d: Board 1 = %b, Board 2 = %b\n",
+                  area1.get_layer(), area1.get_is_filled(), matchArea2.get_is_filled()));
         }
       }
     }
 
     if (equal) {
-      report.append("\n[+] Success: Boards are identical within the coordinate tolerance threshold.\n");
+      report.append(
+          "\n[+] Success: Boards are identical within the coordinate tolerance threshold.\n");
     } else {
       report.append("\n[-] Failure: Differences were detected between the two boards.\n");
     }
@@ -556,7 +635,8 @@ public class BoardComparator {
   }
 
   private static double getMmFactor(RoutingBoard board) {
-    return app.freerouting.board.Unit.scale(1.0, board.communication.unit, app.freerouting.board.Unit.MM)
+    return app.freerouting.board.Unit.scale(
+            1.0, board.communication.unit, app.freerouting.board.Unit.MM)
         / (board.communication.resolution > 0 ? board.communication.resolution : 1);
   }
 
@@ -608,24 +688,30 @@ public class BoardComparator {
     return pkg.name + (pkg.is_front ? ":front" : ":back");
   }
 
-  private static boolean reportMissingKeys(String itemLabel, Set<String> keys1, Set<String> keys2, StringBuilder report) {
+  private static boolean reportMissingKeys(
+      String itemLabel, Set<String> keys1, Set<String> keys2, StringBuilder report) {
     boolean matched = true;
     for (String key : keys1) {
       if (!keys2.contains(key)) {
         matched = false;
-        report.append(String.format("[-] %s '%s' is present in Board 1 but missing in Board 2\n", itemLabel, key));
+        report.append(
+            String.format(
+                "[-] %s '%s' is present in Board 1 but missing in Board 2\n", itemLabel, key));
       }
     }
     for (String key : keys2) {
       if (!keys1.contains(key)) {
         matched = false;
-        report.append(String.format("[-] %s '%s' is present in Board 2 but missing in Board 1\n", itemLabel, key));
+        report.append(
+            String.format(
+                "[-] %s '%s' is present in Board 2 but missing in Board 1\n", itemLabel, key));
       }
     }
     return matched;
   }
 
-  private static boolean polylinesMatch(Polyline poly1, double scale1, Polyline poly2, double scale2, double epsilonMm) {
+  private static boolean polylinesMatch(
+      Polyline poly1, double scale1, Polyline poly2, double scale2, double epsilonMm) {
     if (poly1.corner_count() != poly2.corner_count()) {
       return false;
     }
@@ -636,14 +722,14 @@ public class BoardComparator {
       Point pt1 = poly1.corner_arr()[i];
       // Check forward
       Point pt2F = poly2.corner_arr()[i];
-      if (Math.abs(pt1.to_float().x * scale1 - pt2F.to_float().x * scale2) > epsilonMm ||
-          Math.abs(pt1.to_float().y * scale1 - pt2F.to_float().y * scale2) > epsilonMm) {
+      if (Math.abs(pt1.to_float().x * scale1 - pt2F.to_float().x * scale2) > epsilonMm
+          || Math.abs(pt1.to_float().y * scale1 - pt2F.to_float().y * scale2) > epsilonMm) {
         forwardMatch = false;
       }
       // Check reverse
       Point pt2R = poly2.corner_arr()[count - 1 - i];
-      if (Math.abs(pt1.to_float().x * scale1 - pt2R.to_float().x * scale2) > epsilonMm ||
-          Math.abs(pt1.to_float().y * scale1 - pt2R.to_float().y * scale2) > epsilonMm) {
+      if (Math.abs(pt1.to_float().x * scale1 - pt2R.to_float().x * scale2) > epsilonMm
+          || Math.abs(pt1.to_float().y * scale1 - pt2R.to_float().y * scale2) > epsilonMm) {
         reverseMatch = false;
       }
     }

@@ -11,18 +11,18 @@ class MazeListElementTest {
 
   @Test
   void compareToReturnsZeroForSameInstance() {
-    MazeListElement element = new MazeListElement(new TestDoor(1), 0, null, 0, 0.0, 1.0,
-        null, null, false, null, false);
+    MazeListElement element =
+        new MazeListElement(new TestDoor(1), 0, null, 0, 0.0, 1.0, null, null, false, null, false);
 
     assertEquals(0, compare(element, element));
   }
 
   @Test
   void compareToSortsBySortingValue() {
-    MazeListElement lowerCost = new MazeListElement(new TestDoor(1), 0, null, 0, 0.0, 1.0,
-        null, null, false, null, false);
-    MazeListElement higherCost = new MazeListElement(new TestDoor(2), 0, null, 0, 0.0, 2.0,
-        null, null, false, null, false);
+    MazeListElement lowerCost =
+        new MazeListElement(new TestDoor(1), 0, null, 0, 0.0, 1.0, null, null, false, null, false);
+    MazeListElement higherCost =
+        new MazeListElement(new TestDoor(2), 0, null, 0, 0.0, 2.0, null, null, false, null, false);
 
     SortedSet<MazeListElement> queue = new TreeSet<>();
     queue.add(higherCost);
@@ -79,4 +79,3 @@ class MazeListElementTest {
     return left.compareTo(right);
   }
 }
-

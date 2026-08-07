@@ -12,8 +12,8 @@ import org.eclipse.jetty.server.Server;
 /**
  * Shared helpers for tests that start embedded Jetty API/MCP servers.
  *
- * <p>Under {@code maxParallelForks > 1}, cold-start and HTTP calls can be slow enough that
- * short timeouts and {@code server.isStarted()} alone are flaky.
+ * <p>Under {@code maxParallelForks > 1}, cold-start and HTTP calls can be slow enough that short
+ * timeouts and {@code server.isStarted()} alone are flaky.
  */
 public final class EmbeddedServerTestSupport {
 
@@ -22,8 +22,7 @@ public final class EmbeddedServerTestSupport {
   private static final long STARTUP_TIMEOUT_MS = 30_000;
   private static final long STOP_TIMEOUT_MS = 15_000;
 
-  private EmbeddedServerTestSupport() {
-  }
+  private EmbeddedServerTestSupport() {}
 
   public static void waitForServerStarted(Server server) throws InterruptedException {
     long deadline = System.currentTimeMillis() + STARTUP_TIMEOUT_MS;
@@ -60,10 +59,8 @@ public final class EmbeddedServerTestSupport {
 
   private static void waitForHttpOk(URI baseUri, String path) throws Exception {
     HttpClient client = HttpClient.newHttpClient();
-    HttpRequest request = HttpRequest.newBuilder(baseUri.resolve(path))
-        .GET()
-        .timeout(Duration.ofSeconds(5))
-        .build();
+    HttpRequest request =
+        HttpRequest.newBuilder(baseUri.resolve(path)).GET().timeout(Duration.ofSeconds(5)).build();
 
     long deadline = System.currentTimeMillis() + STARTUP_TIMEOUT_MS;
     Exception lastFailure = null;

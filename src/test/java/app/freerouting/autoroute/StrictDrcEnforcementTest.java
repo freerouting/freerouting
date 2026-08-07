@@ -14,17 +14,19 @@ import app.freerouting.io.specctra.DsnTestFixtures;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit-level checks of the strict-DRC rip logic against a fixture that ships with real
- * clearance violations in its wiring (Issue575 BBD Mars-64 snapshot, 76 violations).
+ * Unit-level checks of the strict-DRC rip logic against a fixture that ships with real clearance
+ * violations in its wiring (Issue575 BBD Mars-64 snapshot, 76 violations).
  */
 class StrictDrcEnforcementTest {
 
-  private static final String FIXTURE = "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn";
+  private static final String FIXTURE =
+      "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn";
 
   /** Finds a net whose traces/vias include at least one clearance violation. */
   private static int violatingNet(RoutingBoard board) {
     for (Item item : board.get_items()) {
-      if ((item instanceof Trace || item instanceof Via) && item.net_count() > 0
+      if ((item instanceof Trace || item instanceof Via)
+          && item.net_count() > 0
           && !item.clearance_violations().isEmpty()) {
         return item.get_net_no(0);
       }
@@ -44,8 +46,10 @@ class StrictDrcEnforcementTest {
         item.set_fixed_state(app.freerouting.board.FixedState.UNFIXED);
       }
     }
-    long tracesBefore = board.get_items().stream()
-        .filter(it -> it instanceof Trace && it.contains_net(netNo)).count();
+    long tracesBefore =
+        board.get_items().stream()
+            .filter(it -> it instanceof Trace && it.contains_net(netNo))
+            .count();
     assumeTrue(tracesBefore > 0);
 
     // Treat the whole net's wiring as "newly inserted" (max id 0): the rip must fire.
@@ -53,8 +57,10 @@ class StrictDrcEnforcementTest {
 
     assertTrue(result != null, "violating connection must be rejected");
     assertEquals(AutorouteAttemptState.FAILED, result.state);
-    long tracesAfter = board.get_items().stream()
-        .filter(it -> it instanceof Trace && it.contains_net(netNo)).count();
+    long tracesAfter =
+        board.get_items().stream()
+            .filter(it -> it instanceof Trace && it.contains_net(netNo))
+            .count();
     assertTrue(tracesAfter < tracesBefore, "violating wiring must have been removed");
   }
 

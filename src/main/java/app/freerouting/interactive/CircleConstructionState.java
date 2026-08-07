@@ -12,30 +12,26 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPopupMenu;
 
-/**
- * Interactive creation of a circle obstacle
- */
+/** Interactive creation of a circle obstacle */
 public final class CircleConstructionState extends InteractiveState {
 
   private final FloatPoint circle_center;
   private double circle_radius = 0;
   private boolean observers_activated;
 
-  /**
-   * Creates a new instance of CircleConstructionState
-   */
-  private CircleConstructionState(FloatPoint p_location, InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
+  /** Creates a new instance of CircleConstructionState */
+  private CircleConstructionState(
+      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
     circle_center = p_location;
   }
 
   /**
-   * Returns a new instance of this class. If p_logfile != null; the creation of
-   * this item is stored in a logfile
+   * Returns a new instance of this class. If p_logfile != null; the creation of this item is stored
+   * in a logfile
    */
-  public static CircleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
+  public static CircleConstructionState get_instance(
+      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     p_board_handling.remove_ratsnest(); // inserting a circle may change the connectivity.
     return new CircleConstructionState(p_location, p_parent_state, p_board_handling);
   }
@@ -52,9 +48,7 @@ public final class CircleConstructionState extends InteractiveState {
     return this;
   }
 
-  /**
-   * completes the circle construction state
-   */
+  /** completes the circle construction state */
   @Override
   public InteractiveState complete() {
     IntPoint center = this.circle_center.round();
@@ -68,9 +62,11 @@ public final class CircleConstructionState extends InteractiveState {
     if (construction_succeeded) {
 
       obstacle_shape = new Circle(center, radius);
-      if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
+      if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
+          == AngleRestriction.NINETY_DEGREE) {
         obstacle_shape = obstacle_shape.bounding_box();
-      } else if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE) {
+      } else if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
+          == AngleRestriction.FORTYFIVE_DEGREE) {
         obstacle_shape = obstacle_shape.bounding_octagon();
       }
       construction_succeeded = board.check_shape(obstacle_shape, layer, new int[0], cl_class);
@@ -97,13 +93,11 @@ public final class CircleConstructionState extends InteractiveState {
   }
 
   /**
-   * Used when reading the next point from a logfile. Calls complete, because only
-   * 1 additional point is stored in the logfile.
+   * Used when reading the next point from a logfile. Calls complete, because only 1 additional
+   * point is stored in the logfile.
    */
 
-  /**
-   * draws the graphic construction aid for the circle
-   */
+  /** draws the graphic construction aid for the circle */
   @Override
   public void draw(Graphics p_graphics) {
     FloatPoint current_mouse_position = hdlg.get_current_mouse_position();
@@ -111,7 +105,8 @@ public final class CircleConstructionState extends InteractiveState {
       return;
     }
     this.circle_radius = circle_center.distance(current_mouse_position);
-    hdlg.graphics_context.draw_circle(circle_center, circle_radius, 300, Color.white, p_graphics, 1);
+    hdlg.graphics_context.draw_circle(
+        circle_center, circle_radius, 300, Color.white, p_graphics, 1);
   }
 
   @Override

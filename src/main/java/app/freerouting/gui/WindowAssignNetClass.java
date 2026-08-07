@@ -31,9 +31,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
 
   private JComboBox<NetClass> net_rule_combo_box;
 
-  /**
-   * Creates a new instance of AssignNetRulesWindow
-   */
+  /** Creates a new instance of AssignNetRulesWindow */
   public WindowAssignNetClass(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
 
@@ -84,8 +82,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
   private class AssignRuleTable extends JTable {
 
     private final String[] column_tool_tips = {
-        tm.getText("net_name_tooltip"),
-        tm.getText("class_name_tooltip")
+      tm.getText("net_name_tooltip"), tm.getText("class_name_tooltip")
     };
 
     public AssignRuleTable(AssignRuleTableModel p_table_model) {
@@ -100,18 +97,14 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
         public String getToolTipText(MouseEvent e) {
           Point p = e.getPoint();
           int index = columnModel.getColumnIndexAtX(p.x);
-          int realIndex = columnModel
-              .getColumn(index)
-              .getModelIndex();
+          int realIndex = columnModel.getColumn(index).getModelIndex();
           return column_tool_tips[realIndex];
         }
       };
     }
   }
 
-  /**
-   * Table model of the net rule table.
-   */
+  /** Table model of the net rule table. */
   private class AssignRuleTableModel extends AbstractTableModel {
 
     private final Object[][] data;
@@ -131,9 +124,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
       set_values();
     }
 
-    /**
-     * Calculates the values in this table
-     */
+    /** Calculates the values in this table */
     public void set_values() {
       BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
       Net[] sorted_arr = new Net[this.getRowCount()];

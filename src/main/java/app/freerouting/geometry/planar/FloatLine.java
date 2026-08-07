@@ -3,17 +3,16 @@ package app.freerouting.geometry.planar;
 import app.freerouting.logger.FRLogger;
 
 /**
- * Defines a line in the plane by to FloatPoints. Calculations with FloatLines are generally not exact. For that reason collinear for example is not defined for FloatLines. If exactness is needed, use
- * the class Line instead.
+ * Defines a line in the plane by to FloatPoints. Calculations with FloatLines are generally not
+ * exact. For that reason collinear for example is not defined for FloatLines. If exactness is
+ * needed, use the class Line instead.
  */
 public class FloatLine {
 
   public final FloatPoint a;
   public final FloatPoint b;
 
-  /**
-   * Creates a line from two FloatPoints.
-   */
+  /** Creates a line from two FloatPoints. */
   public FloatLine(FloatPoint p_a, FloatPoint p_b) {
     if (p_a == null || p_b == null) {
       FRLogger.debug("FloatLine: one or both endpoints are null (degenerate line segment)");
@@ -22,9 +21,7 @@ public class FloatLine {
     b = p_b;
   }
 
-  /**
-   * Returns the FloatLine with swapped end points.
-   */
+  /** Returns the FloatLine with swapped end points. */
   public FloatLine opposite() {
     return new FloatLine(this.b, this.a);
   }
@@ -58,7 +55,8 @@ public class FloatLine {
   }
 
   /**
-   * translates the line perpendicular at about p_dist. If p_dist {@literal >} 0, the line will be translated to the left, else to the right
+   * translates the line perpendicular at about p_dist. If p_dist {@literal >} 0, the line will be
+   * translated to the left, else to the right
    */
   public FloatLine translate(double p_dist) {
     double dx = b.x - a.x;
@@ -81,7 +79,8 @@ public class FloatLine {
   }
 
   /**
-   * Returns the signed distance of this line from p_point. The result will be positive, if the line is on the left of p_point, else negative.
+   * Returns the signed distance of this line from p_point. The result will be positive, if the line
+   * is on the left of p_point, else negative.
    */
   public double signed_distance(FloatPoint p_point) {
     double dx = this.b.x - this.a.x;
@@ -92,9 +91,7 @@ public class FloatLine {
     return det / length;
   }
 
-  /**
-   * Returns an approximation of the perpensicular projection of p_point onto this line.
-   */
+  /** Returns an approximation of the perpensicular projection of p_point onto this line. */
   public FloatPoint perpendicular_projection(FloatPoint p_point) {
 
     double dx = b.x - a.x;
@@ -130,7 +127,8 @@ public class FloatLine {
   }
 
   /**
-   * Returns the perpendicular projection of p_line_segment onto this oriented line segment, Returns null, if the projection is empty.
+   * Returns the perpendicular projection of p_line_segment onto this oriented line segment, Returns
+   * null, if the projection is empty.
    */
   public FloatLine segment_projection(FloatLine p_line_segment) {
     if (this.b.scalar_product(this.a, p_line_segment.a) < 0) {
@@ -144,7 +142,8 @@ public class FloatLine {
       projected_a = this.a;
     } else {
       projected_a = this.perpendicular_projection(p_line_segment.a);
-      if (Math.abs(projected_a.x) >= Limits.CRIT_INT || Math.abs(projected_a.y) >= Limits.CRIT_INT) {
+      if (Math.abs(projected_a.x) >= Limits.CRIT_INT
+          || Math.abs(projected_a.y) >= Limits.CRIT_INT) {
         return null;
       }
     }
@@ -161,8 +160,9 @@ public class FloatLine {
   }
 
   /**
-   * Returns the projection of p_line_segment onto this oriented line segment by moving p_line_segment perpendicular into the direction of this line segment Returns null, if the projection is empty or
-   * p_line_segment.a == p_line_segment.b
+   * Returns the projection of p_line_segment onto this oriented line segment by moving
+   * p_line_segment perpendicular into the direction of this line segment Returns null, if the
+   * projection is empty or p_line_segment.a == p_line_segment.b
    */
   public FloatLine segment_projection_2(FloatLine p_line_segment) {
     if (p_line_segment.a.scalar_product(p_line_segment.b, this.b) <= 0) {
@@ -173,9 +173,12 @@ public class FloatLine {
     }
     FloatPoint projected_a;
     if (p_line_segment.a.scalar_product(p_line_segment.b, this.a) < 0) {
-      FloatLine curr_perpendicular_line = new FloatLine(p_line_segment.a, p_line_segment.b.turn_90_degree(1, p_line_segment.a));
+      FloatLine curr_perpendicular_line =
+          new FloatLine(p_line_segment.a, p_line_segment.b.turn_90_degree(1, p_line_segment.a));
       projected_a = curr_perpendicular_line.intersection(this);
-      if (projected_a == null || Math.abs(projected_a.x) >= Limits.CRIT_INT || Math.abs(projected_a.y) >= Limits.CRIT_INT) {
+      if (projected_a == null
+          || Math.abs(projected_a.x) >= Limits.CRIT_INT
+          || Math.abs(projected_a.y) >= Limits.CRIT_INT) {
         return null;
       }
     } else {
@@ -185,9 +188,12 @@ public class FloatLine {
     FloatPoint projected_b;
 
     if (p_line_segment.b.scalar_product(p_line_segment.a, this.b) < 0) {
-      FloatLine curr_perpendicular_line = new FloatLine(p_line_segment.b, p_line_segment.a.turn_90_degree(1, p_line_segment.b));
+      FloatLine curr_perpendicular_line =
+          new FloatLine(p_line_segment.b, p_line_segment.a.turn_90_degree(1, p_line_segment.b));
       projected_b = curr_perpendicular_line.intersection(this);
-      if (projected_b == null || Math.abs(projected_b.x) >= Limits.CRIT_INT || Math.abs(projected_b.y) >= Limits.CRIT_INT) {
+      if (projected_b == null
+          || Math.abs(projected_b.x) >= Limits.CRIT_INT
+          || Math.abs(projected_b.y) >= Limits.CRIT_INT) {
         return null;
       }
     } else {
@@ -197,7 +203,8 @@ public class FloatLine {
   }
 
   /**
-   * Shrinks this line on both sides by p_value. The result will contain at least the gravity point of the line.
+   * Shrinks this line on both sides by p_value. The result will contain at least the gravity point
+   * of the line.
    */
   public FloatLine shrink_segment(double p_offset) {
     double dx = b.x - a.x;
@@ -209,13 +216,12 @@ public class FloatLine {
     double offset = Math.min(p_offset, length / 2);
     FloatPoint new_a = new FloatPoint(a.x + (dx * offset) / length, a.y + (dy * offset) / length);
     double new_length = length - offset;
-    FloatPoint new_b = new FloatPoint(a.x + (dx * new_length) / length, a.y + (dy * new_length) / length);
+    FloatPoint new_b =
+        new FloatPoint(a.x + (dx * new_length) / length, a.y + (dy * new_length) / length);
     return new FloatLine(new_a, new_b);
   }
 
-  /**
-   * Calculates the nearest point on this line to p_from_point between this.a and this.b.
-   */
+  /** Calculates the nearest point on this line to p_from_point between this.a and this.b. */
   public FloatPoint nearest_segment_point(FloatPoint p_from_point) {
     FloatPoint projection = this.perpendicular_projection(p_from_point);
     if (projection.is_contained_in_box(this.a, this.b, 0.01)) {
@@ -232,7 +238,8 @@ public class FloatLine {
   }
 
   /**
-   * Divides this line segment into p_count line segments of nearly equal length. and at most p_max_section_length.
+   * Divides this line segment into p_count line segments of nearly equal length. and at most
+   * p_max_section_length.
    */
   public FloatLine[] divide_segment_into_sections(int p_count) {
     if (p_count == 0) {

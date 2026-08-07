@@ -22,17 +22,18 @@ class InteractiveCommandTest {
 
   @Test
   void canExecuteCanBeOverriddenByTests() {
-    InteractiveCommand command = new InteractiveCommand() {
-      @Override
-      public InteractiveState execute() {
-        return null;
-      }
+    InteractiveCommand command =
+        new InteractiveCommand() {
+          @Override
+          public InteractiveState execute() {
+            return null;
+          }
 
-      @Override
-      public boolean canExecute() {
-        return false;
-      }
-    };
+          @Override
+          public boolean canExecute() {
+            return false;
+          }
+        };
 
     assertFalse(command.canExecute());
   }

@@ -8,15 +8,14 @@ import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.io.CoordinateTransform;
 import java.io.IOException;
 
-/**
- * Describes a polygon in a Specctra dsn file.
- */
+/** Describes a polygon in a Specctra dsn file. */
 public class Polygon extends Shape {
 
   public final double[] coor;
 
   /**
-   * Creates a new instance of Polygon p_coor is an array of dimension 2 * point_count and contains x0, y0, x1, y1, ... If the polygon is used as rectangle,
+   * Creates a new instance of Polygon p_coor is an array of dimension 2 * point_count and contains
+   * x0, y0, x1, y1, ... If the polygon is used as rectangle,
    */
   public Polygon(Layer p_layer, double[] p_coor) {
     super(p_layer);
@@ -24,7 +23,8 @@ public class Polygon extends Shape {
   }
 
   @Override
-  public app.freerouting.geometry.planar.Shape transform_to_board(CoordinateTransform p_coordinate_transform) {
+  public app.freerouting.geometry.planar.Shape transform_to_board(
+      CoordinateTransform p_coordinate_transform) {
     IntPoint[] corner_arr = new IntPoint[coor.length / 2];
     double[] curr_point = new double[2];
     for (int i = 0; i < corner_arr.length; i++) {
@@ -36,7 +36,8 @@ public class Polygon extends Shape {
   }
 
   @Override
-  public app.freerouting.geometry.planar.Shape transform_to_board_rel(CoordinateTransform p_coordinate_transform) {
+  public app.freerouting.geometry.planar.Shape transform_to_board_rel(
+      CoordinateTransform p_coordinate_transform) {
     if (coor.length < 2) {
       return Simplex.EMPTY;
     }
@@ -70,11 +71,10 @@ public class Polygon extends Shape {
     return new Rectangle(layer, bounds);
   }
 
-  /**
-   * Writes this polygon as a scope to an output dsn-file.
-   */
+  /** Writes this polygon as a scope to an output dsn-file. */
   @Override
-  public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier_type) throws IOException {
+  public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier_type)
+      throws IOException {
     p_file.start_scope();
     p_file.write("polygon ");
     p_identifier_type.write(this.layer.name, p_file);
@@ -91,7 +91,8 @@ public class Polygon extends Shape {
   }
 
   @Override
-  public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type) throws IOException {
+  public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type)
+      throws IOException {
     p_file.start_scope();
     p_file.write("polygon ");
     p_identifier_type.write(this.layer.name, p_file);

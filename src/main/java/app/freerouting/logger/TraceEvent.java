@@ -13,7 +13,13 @@ public class TraceEvent {
   private final Point[] impactedPoints;
   private final Instant timestamp;
 
-  public TraceEvent(String method, String operation, String message, String impactedItems, Point[] impactedPoints, Instant timestamp) {
+  public TraceEvent(
+      String method,
+      String operation,
+      String message,
+      String impactedItems,
+      Point[] impactedPoints,
+      Instant timestamp) {
     this.method = method;
     this.operation = operation;
     this.message = message;
@@ -38,7 +44,9 @@ public class TraceEvent {
     return impactedItems;
   }
 
-  public Point[] getImpactedPoints() { return impactedPoints; }
+  public Point[] getImpactedPoints() {
+    return impactedPoints;
+  }
 
   public Instant getTimestamp() {
     return timestamp;

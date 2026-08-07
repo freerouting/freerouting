@@ -8,11 +8,11 @@ import java.util.LinkedList;
 
 public final class Circuit {
 
-  private Circuit() {
-  }
+  private Circuit() {}
 
   /**
-   * Currently only the length matching rule is read from a circuit scope. If the scope does not contain a length matching rule, null is returned.
+   * Currently only the length matching rule is read from a circuit scope. If the scope does not
+   * contain a length matching rule, null is returned.
    */
   public static ReadScopeResult read_scope(IJFlexScanner p_scanner) {
     Object next_token = null;
@@ -29,7 +29,10 @@ public final class Circuit {
         return null;
       }
       if (next_token == null) {
-        FRLogger.warn("Circuit.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Circuit.read_scope: unexpected end of file at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -71,7 +74,10 @@ public final class Circuit {
       } else if (next_token instanceof Integer integer) {
         length_arr[i] = integer;
       } else {
-        FRLogger.warn("Circuit.read_length_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Circuit.read_length_scope: number expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
     }
@@ -85,7 +91,10 @@ public final class Circuit {
         return null;
       }
       if (next_token == null) {
-        FRLogger.warn("Circuit.read_length_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Circuit.read_length_scope: unexpected end of file at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -99,9 +108,7 @@ public final class Circuit {
     return result;
   }
 
-  /**
-   * A max_length of -1 indicates that no maximum length is defined.
-   */
+  /** A max_length of -1 indicates that no maximum length is defined. */
   public static class ReadScopeResult {
 
     public final double max_length;
@@ -109,7 +116,11 @@ public final class Circuit {
     public final Collection<String> use_via;
     public final Collection<String> use_layer;
 
-    public ReadScopeResult(double p_max_length, double p_min_length, Collection<String> p_use_via, Collection<String> p_use_layer) {
+    public ReadScopeResult(
+        double p_max_length,
+        double p_min_length,
+        Collection<String> p_use_via,
+        Collection<String> p_use_layer) {
       max_length = p_max_length;
       min_length = p_min_length;
       use_via = p_use_via;
@@ -117,9 +128,7 @@ public final class Circuit {
     }
   }
 
-  /**
-   * A max_length of -1 indicates that no maximum length is defined.
-   */
+  /** A max_length of -1 indicates that no maximum length is defined. */
   private static class LengthMatchingRule {
 
     public final double max_length;

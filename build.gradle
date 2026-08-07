@@ -65,7 +65,18 @@ testing {
 }
 
 tasks.named('check') {
-    dependsOn(testing.suites.integrationTest)
+    dependsOn(testing.suites.integrationTest, tasks.named('spotlessCheck'))
+}
+
+spotless {
+    java {
+        // Explicit targets: main + test only. Excludes src_v19 (reference baseline) and
+        // build/generated-src (VersionInfo.java regenerated on every build).
+        target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
+        removeUnusedImports()
+        // 1.28.0+ required for Java 25 (see diffplug/spotless#2468).
+        googleJavaFormat('1.28.0').reorderImports(true)
+    }
 }
 
 tasks.named("dependencyUpdates").configure {
@@ -564,7 +575,7 @@ rewrite {
     // Curated composite in rewrite.yml: CommonStaticAnalysis minus MethodNameCasing
     // (inconsistent renames across widened-access overrides) and WriteOctalValuesAsDecimal.
     // activeRecipe("app.freerouting.Phase1Hygiene")
-    // activeRecipe("org.openrewrite.java.format.AutoFormat") // skipped: reformats 78 files
+    // Formatting guardrail: ./gradlew spotlessApply (enforced by spotlessCheck in check)
 
     // --- PHASE 2: Naming Convention (snake_case -> camelCase) ---
     // WARNING: renaming private fields breaks Java-serialization compatibility of saved

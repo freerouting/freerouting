@@ -35,7 +35,8 @@ public class RoutingFixtureTest {
     FRLogger.granularTraceEnabled = false;
     Freerouting.globalSettings = new GlobalSettings();
     scheduler = RoutingJobScheduler.getInstance();
-    // Clear any leftover jobs from previous tests to avoid singleton state leaking between test runs.
+    // Clear any leftover jobs from previous tests to avoid singleton state leaking between test
+    // runs.
     synchronized (scheduler.jobs) {
       scheduler.jobs.clear();
     }
@@ -48,9 +49,9 @@ public class RoutingFixtureTest {
   protected RoutingJob GetRoutingJob(String filename, TestingSettings testingSettings) {
     // Create a new session
     UUID sessionId = UUID.randomUUID();
-    Session session = SessionManager
-        .getInstance()
-        .createSession(sessionId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    Session session =
+        SessionManager.getInstance()
+            .createSession(sessionId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
     // Create a new job
     RoutingJob job = new RoutingJob(session.id);
@@ -61,12 +62,12 @@ public class RoutingFixtureTest {
       testFile = TestFixtures.resolveFile(filename);
       job.setInput(testFile);
 
-      var statsBefore = new BoardStatistics(job.input
-          .getData()
-          .readAllBytes(), job.input.format);
+      var statsBefore = new BoardStatistics(job.input.getData().readAllBytes(), job.input.format);
 
-      SettingsMerger merger = new SettingsMerger(new DefaultSettings(),
-          new DsnFileSettings(job.input.getData(), job.input.getFilename()));
+      SettingsMerger merger =
+          new SettingsMerger(
+              new DefaultSettings(),
+              new DsnFileSettings(job.input.getData(), job.input.getFilename()));
 
       if (testingSettings == null) {
         testingSettings = new TestingSettings();
@@ -98,10 +99,13 @@ public class RoutingFixtureTest {
     job.state = RoutingJobState.READY_TO_START;
 
     long startTime = System.currentTimeMillis();
-    long timeoutInMillis = TextManager.parseTimespanString(job.routerSettings.jobTimeoutString) * 1000;
+    long timeoutInMillis =
+        TextManager.parseTimespanString(job.routerSettings.jobTimeoutString) * 1000;
 
-    while ((job.state != RoutingJobState.COMPLETED) && (job.state != RoutingJobState.CANCELLED)
-        && (job.state != RoutingJobState.TERMINATED) && (job.state != RoutingJobState.TIMED_OUT)) {
+    while ((job.state != RoutingJobState.COMPLETED)
+        && (job.state != RoutingJobState.CANCELLED)
+        && (job.state != RoutingJobState.TERMINATED)
+        && (job.state != RoutingJobState.TIMED_OUT)) {
       try {
         Thread.sleep(100);
       } catch (InterruptedException e) {
@@ -138,6 +142,7 @@ public class RoutingFixtureTest {
    * Creates a fluent assertion builder for checking routing result properties.
    *
    * <p>Usage:
+   *
    * <pre>{@code
    * assertRoutingResult(job, "MyBoard.dsn")
    *     .maxDuration(Duration.ofMinutes(5))
@@ -147,10 +152,10 @@ public class RoutingFixtureTest {
    *     .check();
    * }</pre>
    *
-   * <p>Pass {@code null} (or simply omit a setter call) for any property you do not want to
-   * check. A missing check is silently skipped.
+   * <p>Pass {@code null} (or simply omit a setter call) for any property you do not want to check.
+   * A missing check is silently skipped.
    *
-   * @param job       the completed routing job to inspect
+   * @param job the completed routing job to inspect
    * @param boardName human-readable board file name for use in failure messages
    * @return a new {@link RoutingResultAssertions} builder bound to {@code job}
    */
@@ -161,10 +166,10 @@ public class RoutingFixtureTest {
   /**
    * Fluent builder for asserting routing result properties.
    *
-   * <p>All setter methods return {@code this} so calls can be chained. Call {@link #check()} at
-   * the end to execute every configured assertion. Assertions where the expected value was never
-   * set (i.e. remains {@code null}) are silently skipped, making it easy to add new checks
-   * without breaking tests that do not need them.
+   * <p>All setter methods return {@code this} so calls can be chained. Call {@link #check()} at the
+   * end to execute every configured assertion. Assertions where the expected value was never set
+   * (i.e. remains {@code null}) are silently skipped, making it easy to add new checks without
+   * breaking tests that do not need them.
    *
    * <p>Failure messages always include both the expected constraint and the actual value measured
    * from the job, so a CI failure immediately indicates what went wrong and by how much.
@@ -188,9 +193,9 @@ public class RoutingFixtureTest {
     }
 
     /**
-     * Asserts that the routing job completed within the given wall-clock duration.
-     * Uses {@link RoutingJob#getDuration()} which returns the interval between
-     * {@code startedAt} and {@code finishedAt}.
+     * Asserts that the routing job completed within the given wall-clock duration. Uses {@link
+     * RoutingJob#getDuration()} which returns the interval between {@code startedAt} and {@code
+     * finishedAt}.
      */
     public RoutingResultAssertions maxDuration(Duration max) {
       this.maxDuration = max;
@@ -198,8 +203,8 @@ public class RoutingFixtureTest {
     }
 
     /**
-     * Convenience setter that configures both {@link #minPasses} and {@link #maxPasses}
-     * in one call.
+     * Convenience setter that configures both {@link #minPasses} and {@link #maxPasses} in one
+     * call.
      */
     public RoutingResultAssertions passCount(int min, int max) {
       this.minPasses = min;
@@ -220,8 +225,8 @@ public class RoutingFixtureTest {
     }
 
     /**
-     * Asserts that the number of unrouted connections is at most {@code max}.
-     * Mutually exclusive with {@link #exactIncompleteConnections(int)}; set only one.
+     * Asserts that the number of unrouted connections is at most {@code max}. Mutually exclusive
+     * with {@link #exactIncompleteConnections(int)}; set only one.
      */
     public RoutingResultAssertions maxIncompleteConnections(int max) {
       this.maxIncompleteConnections = max;
@@ -229,9 +234,9 @@ public class RoutingFixtureTest {
     }
 
     /**
-     * Asserts that the number of unrouted connections is exactly {@code expected}.
-     * Uses {@code assertEquals} internally, producing a clear diff in test output.
-     * Mutually exclusive with {@link #maxIncompleteConnections(int)}; set only one.
+     * Asserts that the number of unrouted connections is exactly {@code expected}. Uses {@code
+     * assertEquals} internally, producing a clear diff in test output. Mutually exclusive with
+     * {@link #maxIncompleteConnections(int)}; set only one.
      */
     public RoutingResultAssertions exactIncompleteConnections(int expected) {
       this.exactIncompleteConnections = expected;
@@ -239,8 +244,8 @@ public class RoutingFixtureTest {
     }
 
     /**
-     * Asserts that the number of clearance violations is at most {@code max}.
-     * Mutually exclusive with {@link #exactClearanceViolations(int)}; set only one.
+     * Asserts that the number of clearance violations is at most {@code max}. Mutually exclusive
+     * with {@link #exactClearanceViolations(int)}; set only one.
      */
     public RoutingResultAssertions maxClearanceViolations(int max) {
       this.maxClearanceViolations = max;
@@ -248,9 +253,9 @@ public class RoutingFixtureTest {
     }
 
     /**
-     * Asserts that the number of clearance violations is exactly {@code expected}.
-     * Uses {@code assertEquals} internally, producing a clear diff in test output.
-     * Mutually exclusive with {@link #maxClearanceViolations(int)}; set only one.
+     * Asserts that the number of clearance violations is exactly {@code expected}. Uses {@code
+     * assertEquals} internally, producing a clear diff in test output. Mutually exclusive with
+     * {@link #maxClearanceViolations(int)}; set only one.
      */
     public RoutingResultAssertions exactClearanceViolations(int expected) {
       this.exactClearanceViolations = expected;
@@ -261,16 +266,17 @@ public class RoutingFixtureTest {
      * Executes all configured assertions against the job supplied at construction time.
      *
      * <p>Assertions are evaluated in the following order:
+     *
      * <ol>
-     *   <li>Maximum wall-clock duration</li>
-     *   <li>Minimum routing-pass count</li>
-     *   <li>Maximum routing-pass count</li>
-     *   <li>Maximum incomplete-connection count (or exact equality)</li>
-     *   <li>Maximum clearance-violation count (or exact equality)</li>
+     *   <li>Maximum wall-clock duration
+     *   <li>Minimum routing-pass count
+     *   <li>Maximum routing-pass count
+     *   <li>Maximum incomplete-connection count (or exact equality)
+     *   <li>Maximum clearance-violation count (or exact equality)
      * </ol>
      *
-     * <p>If both an exact and a maximum value are configured for the same property, both
-     * checks run independently. In practice, set only one per property.
+     * <p>If both an exact and a maximum value are configured for the same property, both checks run
+     * independently. In practice, set only one per property.
      */
     public void check() {
       Duration actualDuration = job.getDuration();
@@ -286,7 +292,9 @@ public class RoutingFixtureTest {
                 "'%s' should complete within %s, but took %s.",
                 boardName,
                 FRLogger.formatDuration(maxDuration.toSeconds()),
-                actualDuration != null ? FRLogger.formatDuration(actualDuration.toSeconds()) : "N/A"));
+                actualDuration != null
+                    ? FRLogger.formatDuration(actualDuration.toSeconds())
+                    : "N/A"));
       }
 
       if (minPasses != null) {

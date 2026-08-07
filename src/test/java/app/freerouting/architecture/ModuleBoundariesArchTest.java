@@ -11,9 +11,10 @@ import org.junit.jupiter.api.Test;
  * Architectural boundaries for major Freerouting modules.
  *
  * <p>The rules are grouped in two buckets:
+ *
  * <ul>
- *   <li>Strict boundaries already expected to hold.</li>
- *   <li>Frozen boundaries that document current debt and prevent further drift.</li>
+ *   <li>Strict boundaries already expected to hold.
+ *   <li>Frozen boundaries that document current debt and prevent further drift.
  * </ul>
  */
 class ModuleBoundariesArchTest {
@@ -38,9 +39,7 @@ class ModuleBoundariesArchTest {
         .should()
         .dependOnClassesThat()
         .resideInAnyPackage(
-            "app.freerouting.gui..",
-            "app.freerouting.interactive..",
-            "app.freerouting.api..")
+            "app.freerouting.gui..", "app.freerouting.interactive..", "app.freerouting.api..")
         .check(classes);
   }
 
@@ -51,9 +50,7 @@ class ModuleBoundariesArchTest {
     noClasses()
         .that()
         .resideInAnyPackage(
-            "app.freerouting.settings..",
-            "app.freerouting.logger..",
-            "app.freerouting.debug..")
+            "app.freerouting.settings..", "app.freerouting.logger..", "app.freerouting.debug..")
         .should()
         .dependOnClassesThat()
         .resideInAnyPackage(
@@ -63,7 +60,6 @@ class ModuleBoundariesArchTest {
             "app.freerouting.management..")
         .check(classes);
   }
-
 
   @Test
   void apiAndManagementMustNotDependOnGuiBoardManagerOrInteractiveStateMachine() {
@@ -87,7 +83,8 @@ class ModuleBoundariesArchTest {
 
     noClasses()
         .that()
-        .resideInAnyPackage("app.freerouting.core..", "app.freerouting.board..", "app.freerouting.autoroute..")
+        .resideInAnyPackage(
+            "app.freerouting.core..", "app.freerouting.board..", "app.freerouting.autoroute..")
         .should()
         .dependOnClassesThat()
         .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.interactive..")
@@ -134,7 +131,8 @@ class ModuleBoundariesArchTest {
         .should()
         .dependOnClassesThat()
         .resideInAPackage("app.freerouting.interactive..")
-        .because("interactive is a GUI-session state machine and should not leak to headless/service modules")
+        .because(
+            "interactive is a GUI-session state machine and should not leak to headless/service modules")
         .check(classes);
   }
 
@@ -148,7 +146,8 @@ class ModuleBoundariesArchTest {
         .should()
         .dependOnClassesThat()
         .resideInAPackage("app.freerouting.io.specctra.parser..")
-        .because("specctra parser internals are implementation details; only io packages (specctra, kicad) may access them")
+        .because(
+            "specctra parser internals are implementation details; only io packages (specctra, kicad) may access them")
         .check(classes);
   }
 }

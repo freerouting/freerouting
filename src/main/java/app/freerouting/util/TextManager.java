@@ -29,14 +29,13 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JToggleButton;
 
-/**
- * Singleton class to manage the text resources for the application
- */
+/** Singleton class to manage the text resources for the application */
 public class TextManager {
 
   // A key-value pair for Material Design icon names and their corresponding
   // Unicode characters
   private final Map<String, Integer> iconMap;
+
   {
     iconMap = new HashMap<>();
     iconMap.put("cog", 0xF0493);
@@ -58,6 +57,7 @@ public class TextManager {
     iconMap.put("fast-forward", 0xF0211);
     iconMap.put("rewind", 0xF045F);
   }
+
   private static final Locale ENGLISH_LOCALE = Locale.forLanguageTag("en");
   private Locale currentLocale;
   private String currentBaseName;
@@ -73,8 +73,10 @@ public class TextManager {
 
     try {
       // Load the font
-      materialDesignIcons = Font.createFont(Font.TRUETYPE_FONT,
-          GlobalSettings.class.getResourceAsStream("/materialdesignicons-webfont.ttf"));
+      materialDesignIcons =
+          Font.createFont(
+              Font.TRUETYPE_FONT,
+              GlobalSettings.class.getResourceAsStream("/materialdesignicons-webfont.ttf"));
 
       // Register the font
       GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -130,38 +132,31 @@ public class TextManager {
           .append(parts[2])
           .append("S");
     } else if (parts.length == 2) {
-      durationString
-          .append(parts[0])
-          .append("M")
-          .append(parts[1])
-          .append("S");
+      durationString.append(parts[0]).append("M").append(parts[1]).append("S");
     } else if (parts.length == 1) {
-      durationString
-          .append(parts[0])
-          .append("S");
+      durationString.append(parts[0]).append("S");
     }
 
     return durationString.toString();
   }
 
   /**
-   * Shortens a string to a specified number of characters by replacing the middle
-   * part with dots
+   * Shortens a string to a specified number of characters by replacing the middle part with dots
    *
-   * @param text               The text to shorten
-   * @param peakCharacterCount The number of characters to keep at the beginning
-   *                           and end of the text Example: shortenString("Not a
-   *                           a small text", 3) -> "Not...ext" shortenString("This
-   *                           is a long
-   *                           text", 5) -> "This ... text" shortenString("This is
-   *                           a long text", 10) -> "This is a long text"
+   * @param text The text to shorten
+   * @param peakCharacterCount The number of characters to keep at the beginning and end of the text
+   *     Example: shortenString("Not a a small text", 3) -> "Not...ext" shortenString("This is a
+   *     long text", 5) -> "This ... text" shortenString("This is a long text", 10) -> "This is a
+   *     long text"
    * @return The shortened text
    */
   public static String shortenString(String text, int peakCharacterCount) {
     String shortenedText = text;
     if (text.length() > peakCharacterCount * 2) {
-      shortenedText = shortenedText.substring(0, peakCharacterCount) + "..."
-          + text.substring(text.length() - peakCharacterCount);
+      shortenedText =
+          shortenedText.substring(0, peakCharacterCount)
+              + "..."
+              + text.substring(text.length() - peakCharacterCount);
     }
     return shortenedText;
   }
@@ -188,13 +183,14 @@ public class TextManager {
    * Decrypts a string using AES-256-CBC with a passphrase
    *
    * @param encodedText The text to encrypt
-   * @param passphrase  The passphrase to use for encryption
+   * @param passphrase The passphrase to use for encryption
    * @return The encrypted text
    */
   public static byte[] decryptAes256Cbc(byte[] encodedText, String passphrase) {
     try {
       IvParameterSpec iv = new IvParameterSpec("freeroutingivpar".getBytes(StandardCharsets.UTF_8));
-      SecretKeySpec skeySpec = new SecretKeySpec(passphrase.getBytes(StandardCharsets.UTF_8), "AES");
+      SecretKeySpec skeySpec =
+          new SecretKeySpec(passphrase.getBytes(StandardCharsets.UTF_8), "AES");
 
       Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
       cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
@@ -211,8 +207,8 @@ public class TextManager {
   /**
    * Unescapes unicode characters in a string
    *
-   * @param text The text to unescape Example: unescapeUnicode("This is a
-   *             \\u0063haracter") -> "This is a character"
+   * @param text The text to unescape Example: unescapeUnicode("This is a \\u0063haracter") -> "This
+   *     is a character"
    */
   public static String unescapeUnicode(String text) {
     Pattern pattern = Pattern.compile("\\\\u(\\p{XDigit}{4})");
@@ -252,7 +248,9 @@ public class TextManager {
 
     if (defaultMessages == null && !isEnglishLocale()) {
       FRLogger.warn(
-          "There was a problem loading the resource bundle 'app.freerouting.Common' of locale '" + currentLocale + "'");
+          "There was a problem loading the resource bundle 'app.freerouting.Common' of locale '"
+              + currentLocale
+              + "'");
       defaultMessages = englishDefaultMessages;
     }
     if (classMessages == null && !isEnglishLocale()) {
@@ -272,7 +270,8 @@ public class TextManager {
     if (ENGLISH_LOCALE.equals(currentLocale)) {
       return true;
     }
-    return "en".equalsIgnoreCase(currentLocale.getLanguage()) && currentLocale.getCountry().isEmpty();
+    return "en".equalsIgnoreCase(currentLocale.getLanguage())
+        && currentLocale.getCountry().isEmpty();
   }
 
   private String getBundleString(ResourceBundle bundle, String key) {
@@ -386,7 +385,8 @@ public class TextManager {
         text = text.replace(placeholder, new String(Character.toChars(codePoint)));
 
         Font originalFont = component.getFont();
-        component.setFont(materialDesignIcons.deriveFont(Font.PLAIN, originalFont.getSize() * 1.5f));
+        component.setFont(
+            materialDesignIcons.deriveFont(Font.PLAIN, originalFont.getSize() * 1.5f));
       } catch (Exception e) {
         FRLogger.error("There was a problem setting the icon for the component", e);
       }
@@ -435,9 +435,7 @@ public class TextManager {
       }
     } else {
       // Handle other components like JLabel, JTextArea, etc.
-      String componentType = component
-          .getClass()
-          .getName();
+      String componentType = component.getClass().getName();
       FRLogger.warn("The component type '" + componentType + "' is not supported");
     }
 
@@ -452,5 +450,4 @@ public class TextManager {
     this.currentLocale = locale;
     loadResourceBundle(currentBaseName);
   }
-
 }

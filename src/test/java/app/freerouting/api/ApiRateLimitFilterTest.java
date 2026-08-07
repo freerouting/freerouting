@@ -57,10 +57,11 @@ class ApiRateLimitFilterTest {
 
   @Test
   void apiRateLimit_blocksAfterConfiguredThreshold() throws Exception {
-    HttpRequest req = HttpRequest.newBuilder(baseUri.resolve("/v1/system/status"))
-        .GET()
-        .timeout(HTTP_TIMEOUT)
-        .build();
+    HttpRequest req =
+        HttpRequest.newBuilder(baseUri.resolve("/v1/system/status"))
+            .GET()
+            .timeout(HTTP_TIMEOUT)
+            .build();
 
     HttpResponse<String> r1 = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
     HttpResponse<String> r2 = httpClient.send(req, HttpResponse.BodyHandlers.ofString());

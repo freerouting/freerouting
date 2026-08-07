@@ -15,9 +15,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
-/**
- * Creates the file menu of a board frame.
- */
+/** Creates the file menu of a board frame. */
 public class BoardMenuFile extends JMenu {
 
   public final JMenuItem file_save_as_menuitem;
@@ -25,9 +23,7 @@ public class BoardMenuFile extends JMenu {
   private final List<Consumer<File>> openEventListeners = new ArrayList<>();
   private final List<Consumer<File>> saveAsEventListeners = new ArrayList<>();
 
-  /**
-   * Creates a new instance of BoardFileMenu
-   */
+  /** Creates a new instance of BoardFileMenu */
   public BoardMenuFile(BoardFrame board_frame) {
     tm = new TextManager(this.getClass(), board_frame.get_locale());
 
@@ -37,29 +33,35 @@ public class BoardMenuFile extends JMenu {
     JMenuItem file_open_menuitem = new JMenuItem();
     file_open_menuitem.setText(tm.getText("open"));
     file_open_menuitem.setToolTipText(tm.getText("open_tooltip"));
-    file_open_menuitem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
-    file_open_menuitem.addActionListener(_ -> {
-      File selected_file = RoutingJob.showOpenDialog(globalSettings.guiSettings.inputDirectory, board_frame);
+    file_open_menuitem.setAccelerator(
+        KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
+    file_open_menuitem.addActionListener(
+        _ -> {
+          File selected_file =
+              RoutingJob.showOpenDialog(globalSettings.guiSettings.inputDirectory, board_frame);
 
-      openEventListeners.forEach(listener -> listener.accept(selected_file));
-    });
-    file_open_menuitem
-        .addActionListener(_ -> FRAnalytics.buttonClicked("file_open_menuitem", file_open_menuitem.getText()));
+          openEventListeners.forEach(listener -> listener.accept(selected_file));
+        });
+    file_open_menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("file_open_menuitem", file_open_menuitem.getText()));
     add(file_open_menuitem);
 
     // File / Save as...
     file_save_as_menuitem = new JMenuItem();
     file_save_as_menuitem.setText(tm.getText("save_as"));
     file_save_as_menuitem.setToolTipText(tm.getText("save_as_tooltip"));
-    file_save_as_menuitem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
-    file_save_as_menuitem.addActionListener(_ -> {
-      File selected_file = board_frame.showSaveAsDialog(globalSettings.guiSettings.inputDirectory,
-          board_frame.routingJob.output);
+    file_save_as_menuitem.setAccelerator(
+        KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
+    file_save_as_menuitem.addActionListener(
+        _ -> {
+          File selected_file =
+              board_frame.showSaveAsDialog(
+                  globalSettings.guiSettings.inputDirectory, board_frame.routingJob.output);
 
-      saveAsEventListeners.forEach(listener -> listener.accept(selected_file));
-    });
-    file_save_as_menuitem
-        .addActionListener(_ -> FRAnalytics.buttonClicked("file_save_as_menuitem", file_save_as_menuitem.getText()));
+          saveAsEventListeners.forEach(listener -> listener.accept(selected_file));
+        });
+    file_save_as_menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("file_save_as_menuitem", file_save_as_menuitem.getText()));
 
     add(file_save_as_menuitem);
 
@@ -67,10 +69,11 @@ public class BoardMenuFile extends JMenu {
     JMenuItem file_exit_menuitem = new JMenuItem();
     file_exit_menuitem.setText(tm.getText("exit"));
     file_exit_menuitem.setToolTipText(tm.getText("exit_tooltip"));
-    file_exit_menuitem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
+    file_exit_menuitem.setAccelerator(
+        KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
     file_exit_menuitem.addActionListener(_ -> board_frame.dispose());
-    file_exit_menuitem
-        .addActionListener(_ -> FRAnalytics.buttonClicked("file_exit_menuitem", file_exit_menuitem.getText()));
+    file_exit_menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("file_exit_menuitem", file_exit_menuitem.getText()));
 
     add(file_exit_menuitem);
   }
@@ -82,5 +85,4 @@ public class BoardMenuFile extends JMenu {
   public void addSaveAsEventListener(Consumer<File> listener) {
     saveAsEventListeners.add(listener);
   }
-
 }

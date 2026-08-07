@@ -7,7 +7,8 @@ import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * Information about a combination of via_padstack, via clearance class and drill_to_smd_allowed used in interactive and automatic routing.
+ * Information about a combination of via_padstack, via clearance class and drill_to_smd_allowed
+ * used in interactive and automatic routing.
  */
 public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, Serializable {
 
@@ -17,10 +18,13 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
   private int clearance_class;
   private boolean attach_smd_allowed;
 
-  /**
-   * Creates a new instance of ViaRule
-   */
-  public ViaInfo(String p_name, Padstack p_padstack, int p_clearance_class, boolean p_drill_to_smd_allowed, BoardRules p_board_rules) {
+  /** Creates a new instance of ViaRule */
+  public ViaInfo(
+      String p_name,
+      Padstack p_padstack,
+      int p_clearance_class,
+      boolean p_drill_to_smd_allowed,
+      BoardRules p_board_rules) {
     name = p_name;
     padstack = p_padstack;
     clearance_class = p_clearance_class;
@@ -81,7 +85,10 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
     p_window.append(this.padstack.name, tm.getText("padstack_info"), this.padstack);
     p_window.append(", " + tm.getText("clearance_class") + " ");
     String curr_name = board_rules.clearance_matrix.get_name(this.clearance_class);
-    p_window.append(curr_name, tm.getText("clearance_class_2"), board_rules.clearance_matrix.get_row(this.clearance_class));
+    p_window.append(
+        curr_name,
+        tm.getText("clearance_class_2"),
+        board_rules.clearance_matrix.get_row(this.clearance_class));
     p_window.append(", " + tm.getText("attach_smd") + " ");
     if (attach_smd_allowed) {
       p_window.append(" " + tm.getText("on"));

@@ -17,13 +17,13 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
- * Handles drag-and-drop file operations on the board panel.
- * Allows users to drop DSN or JSON files onto the panel to open them.
+ * Handles drag-and-drop file operations on the board panel. Allows users to drop DSN or JSON files
+ * onto the panel to open them.
  *
- * <p>Provides visual feedback using a semi-transparent overlay during drag operations.</p>
+ * <p>Provides visual feedback using a semi-transparent overlay during drag operations.
  *
- * <p>Note: SessionManager enforces single GUI session per process. Multi-session
- * support may require architectural changes to allow parallel boards.</p>
+ * <p>Note: SessionManager enforces single GUI session per process. Multi-session support may
+ * require architectural changes to allow parallel boards.
  */
 public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetListener {
 
@@ -110,20 +110,22 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
     } catch (Exception e) {
       FRLogger.error("Error processing dropped files", e);
       if (board_panel != null) {
-        JOptionPane.showMessageDialog(board_panel, "Error processing dropped file: " + e.getMessage(),
-            "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(
+            board_panel,
+            "Error processing dropped file: " + e.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
       }
     }
   }
 
   /**
-    * Processes the list of dropped files.
-    * Only the first valid DSN or JSON file is loaded.
-    * Additional valid files are logged for future multi-board support.
-    *
-    * @param p_files The list of dropped files
-    */
-   private void processDroppedFiles(List<File> p_files) {
+   * Processes the list of dropped files. Only the first valid DSN or JSON file is loaded.
+   * Additional valid files are logged for future multi-board support.
+   *
+   * @param p_files The list of dropped files
+   */
+  private void processDroppedFiles(List<File> p_files) {
     boolean file_loaded = false;
 
     if (board_panel == null || board_panel.board_frame == null) {
@@ -162,34 +164,39 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
         }
       }
 
-       if (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON) {
-           if (!file_loaded) {
-           // Load the first valid file
-           board_panel.board_frame.loadDroppedFile(file, format);
-           file_loaded = true;
-           } else {
+      if (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON) {
+        if (!file_loaded) {
+          // Load the first valid file
+          board_panel.board_frame.loadDroppedFile(file, format);
+          file_loaded = true;
+        } else {
           // Log additional valid files for future multi-board support
           FRLogger.warn(
-              "Additional dropped file ignored: '" + file.getName() + 
-              "'. Multi-board support is planned for future versions.");
+              "Additional dropped file ignored: '"
+                  + file.getName()
+                  + "'. Multi-board support is planned for future versions.");
         }
       } else {
         // Unknown format
         FRLogger.warn(
-            "Dropped file format not supported: '" + file.getName() + 
-            "'. Supported formats: DSN, KiCad design JSON.");
+            "Dropped file format not supported: '"
+                + file.getName()
+                + "'. Supported formats: DSN, KiCad design JSON.");
       }
     }
 
     if (!file_loaded) {
-      JOptionPane.showMessageDialog(board_panel, "No valid DSN or JSON files found in drop",
-          "Info", JOptionPane.INFORMATION_MESSAGE);
+      JOptionPane.showMessageDialog(
+          board_panel,
+          "No valid DSN or JSON files found in drop",
+          "Info",
+          JOptionPane.INFORMATION_MESSAGE);
     }
   }
 
   /**
-   * Sets the visual feedback state of the board panel.
-   * Changes the background to grayish to indicate drop target.
+   * Sets the visual feedback state of the board panel. Changes the background to grayish to
+   * indicate drop target.
    *
    * @param p_active Whether the drag is active
    */

@@ -1,8 +1,6 @@
 package app.freerouting.datastructures;
 
-/**
- * Implements the mathematical signum function.
- */
+/** Implements the mathematical signum function. */
 public final class Signum {
 
   public static final Signum POSITIVE = new Signum("positive");
@@ -14,9 +12,7 @@ public final class Signum {
     name = p_name;
   }
 
-  /**
-   * Returns the signum of p_value. Values are Signum.POSITIVE, Signum.NEGATIVE and Signum.ZERO
-   */
+  /** Returns the signum of p_value. Values are Signum.POSITIVE, Signum.NEGATIVE and Signum.ZERO */
   public static Signum of(double p_value) {
     Signum result;
 
@@ -30,9 +26,7 @@ public final class Signum {
     return result;
   }
 
-  /**
-   * Returns the signum of p_value as an int. Values are +1, 0 and -1
-   */
+  /** Returns the signum of p_value as an int. Values are +1, 0 and -1 */
   public static int as_int(double p_value) {
     int result;
 
@@ -46,16 +40,12 @@ public final class Signum {
     return result;
   }
 
-  /**
-   * Returns the string of this instance
-   */
+  /** Returns the string of this instance */
   public String to_string() {
     return name;
   }
 
-  /**
-   * Returns the opposite Signum of this Signum
-   */
+  /** Returns the opposite Signum of this Signum */
   public final Signum negate() {
     Signum result;
     if (this == POSITIVE) {

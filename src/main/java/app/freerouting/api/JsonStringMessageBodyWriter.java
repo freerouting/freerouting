@@ -18,8 +18,8 @@ import java.nio.charset.StandardCharsets;
  * MessageBodyWriter that writes raw JSON strings directly to the response output stream.
  *
  * <p>This prevents default JSON binders (like Eclipse Yasson / JSON-B) from intercepting
- * pre-serialized JSON strings and attempting to serialize the String object itself, which
- * can cause reflection errors on internal JVM fields in modern Java versions.</p>
+ * pre-serialized JSON strings and attempting to serialize the String object itself, which can cause
+ * reflection errors on internal JVM fields in modern Java versions.
  */
 @Provider
 @Priority(Priorities.USER - 1000)
@@ -27,14 +27,21 @@ import java.nio.charset.StandardCharsets;
 public class JsonStringMessageBodyWriter implements MessageBodyWriter<String> {
 
   @Override
-  public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+  public boolean isWriteable(
+      Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
     return String.class.isAssignableFrom(type);
   }
 
   @Override
-  public void writeTo(String t, Class<?> type, Type genericType, Annotation[] annotations,
-                      MediaType mediaType, MultivaluedMap<String, Object> httpHeaders,
-                      OutputStream entityStream) throws IOException, WebApplicationException {
+  public void writeTo(
+      String t,
+      Class<?> type,
+      Type genericType,
+      Annotation[] annotations,
+      MediaType mediaType,
+      MultivaluedMap<String, Object> httpHeaders,
+      OutputStream entityStream)
+      throws IOException, WebApplicationException {
     entityStream.write(t.getBytes(StandardCharsets.UTF_8));
   }
 }

@@ -11,17 +11,13 @@ public final class BoardMenuOther extends JMenu {
   private final BoardFrame board_frame;
   private final TextManager tm;
 
-  /**
-   * Creates a new instance of BoardMenuOther
-   */
+  /** Creates a new instance of BoardMenuOther */
   private BoardMenuOther(BoardFrame p_board_frame) {
     board_frame = p_board_frame;
     tm = new TextManager(this.getClass(), p_board_frame.get_locale());
   }
 
-  /**
-   * Returns a new other menu for the board frame.
-   */
+  /** Returns a new other menu for the board frame. */
   public static BoardMenuOther get_instance(BoardFrame p_board_frame) {
     final BoardMenuOther other_menu = new BoardMenuOther(p_board_frame);
 
@@ -30,28 +26,31 @@ public final class BoardMenuOther extends JMenu {
     // Add Delete All Tracks and Vias menu item
     JMenuItem other_delete_all_tracks_menuitem = new JMenuItem();
     other_delete_all_tracks_menuitem.setText(other_menu.tm.getText("delete_all_tracks_and_vias"));
-    other_delete_all_tracks_menuitem.setToolTipText(other_menu.tm.getText("delete_all_tracks_and_vias_tooltip"));
-    other_delete_all_tracks_menuitem.addActionListener(_ -> {
-      RoutingBoard board = other_menu.board_frame.board_panel.board_handling.get_routing_board();
-      // delete all tracks and vias
-      board.delete_all_tracks_and_vias();
-      // unfill conduction areas
-      board.unfill_conduction_areas();
-      // update the board
-      other_menu.board_frame.board_panel.board_handling.replaceRoutingBoard(board);
-      // create a deep copy of the routing board
-      board = other_menu.board_frame.board_panel.board_handling
-          .get_routing_board()
-          .deepCopy();
-      // update the board again
-      other_menu.board_frame.board_panel.board_handling.replaceRoutingBoard(board);
-      // create ratsnest
-      other_menu.board_frame.board_panel.board_handling.create_ratsnest();
-      // redraw the board
-      other_menu.board_frame.board_panel.board_handling.repaint();
-    });
+    other_delete_all_tracks_menuitem.setToolTipText(
+        other_menu.tm.getText("delete_all_tracks_and_vias_tooltip"));
     other_delete_all_tracks_menuitem.addActionListener(
-        _ -> FRAnalytics.buttonClicked("other_delete_all_tracks_menuitem", other_delete_all_tracks_menuitem.getText()));
+        _ -> {
+          RoutingBoard board =
+              other_menu.board_frame.board_panel.board_handling.get_routing_board();
+          // delete all tracks and vias
+          board.delete_all_tracks_and_vias();
+          // unfill conduction areas
+          board.unfill_conduction_areas();
+          // update the board
+          other_menu.board_frame.board_panel.board_handling.replaceRoutingBoard(board);
+          // create a deep copy of the routing board
+          board = other_menu.board_frame.board_panel.board_handling.get_routing_board().deepCopy();
+          // update the board again
+          other_menu.board_frame.board_panel.board_handling.replaceRoutingBoard(board);
+          // create ratsnest
+          other_menu.board_frame.board_panel.board_handling.create_ratsnest();
+          // redraw the board
+          other_menu.board_frame.board_panel.board_handling.repaint();
+        });
+    other_delete_all_tracks_menuitem.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "other_delete_all_tracks_menuitem", other_delete_all_tracks_menuitem.getText()));
     other_menu.add(other_delete_all_tracks_menuitem);
 
     return other_menu;

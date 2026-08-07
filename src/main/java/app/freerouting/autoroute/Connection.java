@@ -7,26 +7,27 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Describes a routing connection ending at the next fork or terminal item.
- */
+/** Describes a routing connection ending at the next fork or terminal item. */
 public final class Connection {
 
   private static final double DETOUR_ADD = 100;
   private static final double DETOUR_ITEM_COST = 0.1;
-  /**
-   * If the connection ens in empty space, start_point or end_point may be null.
-   */
+
+  /** If the connection ens in empty space, start_point or end_point may be null. */
   public final Point start_point;
+
   public final int start_layer;
   public final Point end_point;
   public final int end_layer;
   public final Set<Item> item_list;
 
-  /**
-   * Creates a new instance of Connection
-   */
-  private Connection(Point p_start_point, int p_start_layer, Point p_end_point, int p_end_layer, Set<Item> p_item_list) {
+  /** Creates a new instance of Connection */
+  private Connection(
+      Point p_start_point,
+      int p_start_layer,
+      Point p_end_point,
+      int p_end_layer,
+      Set<Item> p_item_list) {
     start_point = p_start_point;
     start_layer = p_start_layer;
     end_point = p_end_point;
@@ -35,13 +36,16 @@ public final class Connection {
   }
 
   /**
-   * Gets the connection this item belongs to. A connection ends at the next fork or terminal item. Returns null, if p_item is not a route item, or if it is a via belonging to more than 1 connection.
+   * Gets the connection this item belongs to. A connection ends at the next fork or terminal item.
+   * Returns null, if p_item is not a route item, or if it is a via belonging to more than 1
+   * connection.
    */
   public static Connection get(Item p_item) {
     if (!p_item.is_routable()) {
       return null;
     }
-    Connection precalculated_connection = p_item.get_autoroute_info().get_precalculated_connection();
+    Connection precalculated_connection =
+        p_item.get_autoroute_info().get_precalculated_connection();
     if (precalculated_connection != null) {
       return precalculated_connection;
     }
@@ -66,7 +70,8 @@ public final class Connection {
         // Check, that there is only 1 contact at this location.
         // Only for pins and vias items of more than 1 connection
         // are collected
-        Collection<Item> check_contacts = start_trace.get_normal_contacts(prev_contact_point, false);
+        Collection<Item> check_contacts =
+            start_trace.get_normal_contacts(prev_contact_point, false);
         if (check_contacts.size() != 1) {
           fork_found = true;
         }
@@ -103,7 +108,8 @@ public final class Connection {
               fork_found = true;
               break;
             }
-            if (prev_contact_layer != tmp_contact_layer || !prev_contact_point.equals(tmp_contact_point)) {
+            if (prev_contact_layer != tmp_contact_layer
+                || !prev_contact_point.equals(tmp_contact_point)) {
               next_contact_point = tmp_contact_point;
               next_contact_layer = tmp_contact_layer;
               if (next_contact != null) {
@@ -123,16 +129,15 @@ public final class Connection {
         prev_contact_layer = next_contact_layer;
       }
     }
-    Connection result = new Connection(start_point, start_layer, end_point, end_layer, connection_items);
+    Connection result =
+        new Connection(start_point, start_layer, end_point, end_layer, connection_items);
     for (Item curr_item : connection_items) {
       curr_item.get_autoroute_info().set_precalculated_connection(result);
     }
     return result;
   }
 
-  /**
-   * Returns the cumulative length of the traces in this connection.
-   */
+  /** Returns the cumulative length of the traces in this connection. */
   public double trace_length() {
     double result = 0;
     for (Item curr_item : item_list) {
@@ -144,13 +149,15 @@ public final class Connection {
   }
 
   /**
-   * Returns an estimation of the actual length of the connection divided by the minimal possible length.
+   * Returns an estimation of the actual length of the connection divided by the minimal possible
+   * length.
    */
   public double get_detour() {
     if (start_point == null || end_point == null) {
       return Integer.MAX_VALUE;
     }
     double min_trace_length = start_point.to_float().distance(end_point.to_float());
-    return (this.trace_length() + DETOUR_ADD) / (min_trace_length + DETOUR_ADD) + DETOUR_ITEM_COST * (item_list.size() - 1);
+    return (this.trace_length() + DETOUR_ADD) / (min_trace_length + DETOUR_ADD)
+        + DETOUR_ITEM_COST * (item_list.size() - 1);
   }
 }

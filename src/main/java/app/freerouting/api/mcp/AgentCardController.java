@@ -16,32 +16,35 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
-/**
- * Public A2A agent-card endpoint for MCP discovery.
- */
+/** Public A2A agent-card endpoint for MCP discovery. */
 @Path("/.well-known")
 @Tag(name = "MCP", description = "Model Context Protocol endpoints for LLM tool integration")
 public class AgentCardController {
 
-  /**
-   * Returns the A2A agent card for Freerouting MCP.
-   */
+  /** Returns the A2A agent card for Freerouting MCP. */
   @GET
   @Path("/agent.json")
   @Produces(MediaType.APPLICATION_JSON)
-  @Operation(summary = "Get A2A agent card", description = "Returns the MCP agent metadata at /.well-known/agent.json.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Agent card returned", content = @Content(mediaType = MediaType.APPLICATION_JSON))
-  })
+  @Operation(
+      summary = "Get A2A agent card",
+      description = "Returns the MCP agent metadata at /.well-known/agent.json.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Agent card returned",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON))
+      })
   public Response getAgentCard(@Context UriInfo uriInfo) {
     String base = uriInfo.getBaseUri().toString();
     if (base.endsWith("/")) {
       base = base.substring(0, base.length() - 1);
     }
 
-    String wsBase = base.startsWith("https://")
-        ? "wss://" + base.substring("https://".length())
-        : (base.startsWith("http://") ? "ws://" + base.substring("http://".length()) : base);
+    String wsBase =
+        base.startsWith("https://")
+            ? "wss://" + base.substring("https://".length())
+            : (base.startsWith("http://") ? "ws://" + base.substring("http://".length()) : base);
 
     JsonObject card = new JsonObject();
     card.addProperty("name", "Freerouting MCP");
@@ -79,9 +82,11 @@ public class AgentCardController {
     JsonObject primaryScheme = new JsonObject();
     primaryScheme.addProperty("type", authEnabled ? "bearer" : "none");
     primaryScheme.addProperty("header", authEnabled ? "Authorization" : "n/a");
-    primaryScheme.addProperty("description", authEnabled
-        ? "Bearer API key sent in Authorization header"
-        : "Authentication disabled for MCP server");
+    primaryScheme.addProperty(
+        "description",
+        authEnabled
+            ? "Bearer API key sent in Authorization header"
+            : "Authentication disabled for MCP server");
     schemes.add(primaryScheme);
     auth.add("schemes", schemes);
     JsonArray requiredHeaders = new JsonArray();
@@ -97,10 +102,10 @@ public class AgentCardController {
     card.add("contact", contact);
 
     JsonObject documentation = new JsonObject();
-    documentation.addProperty("mcpSetup",
-        "https://github.com/freerouting/freerouting/blob/master/docs/API/MCP.md");
-    documentation.addProperty("apiV1",
-        "https://github.com/freerouting/freerouting/blob/master/docs/API/API_v1.md");
+    documentation.addProperty(
+        "mcpSetup", "https://github.com/freerouting/freerouting/blob/master/docs/API/MCP.md");
+    documentation.addProperty(
+        "apiV1", "https://github.com/freerouting/freerouting/blob/master/docs/API/API_v1.md");
     documentation.addProperty("openApi", base + "/openapi/openapi.json");
     card.add("documentation", documentation);
 

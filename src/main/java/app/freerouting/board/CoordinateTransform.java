@@ -9,36 +9,30 @@ import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 import java.util.Locale;
 
-/**
- * Class for transforming objects between user coordinate space and board coordinate space.
- */
+/** Class for transforming objects between user coordinate space and board coordinate space. */
 public class CoordinateTransform implements Serializable {
 
-  /**
-   * The unit used for user coordinates
-   */
+  /** The unit used for user coordinates */
   public final Unit user_unit;
-  /**
-   * The factor of the user unit
-   */
+
+  /** The factor of the user unit */
   public final double user_unit_factor;
-  /**
-   * The unit used for board coordinates
-   */
+
+  /** The unit used for board coordinates */
   public final Unit board_unit;
-  /**
-   * The factor of the board unit
-   */
+
+  /** The factor of the board unit */
   public final double board_unit_factor;
+
   /**
-   * The factor used for transforming coordinates between user coordinate space and board coordinate space
+   * The factor used for transforming coordinates between user coordinate space and board coordinate
+   * space
    */
   private final double scale_factor;
 
-  /**
-   * Creates a new instance of CoordinateTransform
-   */
-  public CoordinateTransform(double p_user_unit_factor, Unit p_user_unit, double p_board_unit_factor, Unit p_board_unit) {
+  /** Creates a new instance of CoordinateTransform */
+  public CoordinateTransform(
+      double p_user_unit_factor, Unit p_user_unit, double p_board_unit_factor, Unit p_board_unit) {
     user_unit = p_user_unit;
     board_unit = p_board_unit;
     user_unit_factor = p_user_unit_factor;
@@ -50,29 +44,27 @@ public class CoordinateTransform implements Serializable {
     }
   }
 
-  /**
-   * Scale a value from the board to the user coordinate system.
-   */
+  /** Scale a value from the board to the user coordinate system. */
   public double board_to_user(double p_value) {
     return Unit.scale(p_value * scale_factor, board_unit, user_unit);
   }
 
-  /**
-   * Scale a value from the user to the board coordinate system.
-   */
+  /** Scale a value from the user to the board coordinate system. */
   public double user_to_board(double p_value) {
     return Unit.scale(p_value / scale_factor, user_unit, board_unit);
   }
 
   /**
-   * Transforms a geometry.planar.FloatPoint from the board coordinate space to the user coordinate space.
+   * Transforms a geometry.planar.FloatPoint from the board coordinate space to the user coordinate
+   * space.
    */
   public FloatPoint board_to_user(FloatPoint p_point) {
     return new FloatPoint(board_to_user(p_point.x), board_to_user(p_point.y));
   }
 
   /**
-   * Transforms a geometry.planar.FloatPoint from the user coordinate space. to the board coordinate space.
+   * Transforms a geometry.planar.FloatPoint from the user coordinate space. to the board coordinate
+   * space.
    */
   public FloatPoint user_to_board(FloatPoint p_point) {
     return new FloatPoint(user_to_board(p_point.x), user_to_board(p_point.y));
@@ -94,11 +86,13 @@ public class CoordinateTransform implements Serializable {
   }
 
   public PrintableShape.Circle board_to_user(Circle p_circle, Locale p_locale) {
-    return new PrintableShape.Circle(board_to_user(p_circle.center.to_float()), board_to_user(p_circle.radius), p_locale);
+    return new PrintableShape.Circle(
+        board_to_user(p_circle.center.to_float()), board_to_user(p_circle.radius), p_locale);
   }
 
   public PrintableShape.Rectangle board_to_user(IntBox p_box, Locale p_locale) {
-    return new PrintableShape.Rectangle(board_to_user(p_box.ll.to_float()), board_to_user(p_box.ur.to_float()), p_locale);
+    return new PrintableShape.Rectangle(
+        board_to_user(p_box.ll.to_float()), board_to_user(p_box.ur.to_float()), p_locale);
   }
 
   public PrintableShape.Polygon board_to_user(PolylineShape p_shape, Locale p_locale) {

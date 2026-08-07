@@ -13,14 +13,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Class for reading and writing rule scopes from dsn-files.
- */
+/** Class for reading and writing rule scopes from dsn-files. */
 public abstract class Rule {
 
-  /**
-   * Returns a collection of objects of class Rule.
-   */
+  /** Returns a collection of objects of class Rule. */
   public static Collection<Rule> read_scope(IJFlexScanner p_scanner) {
     Collection<Rule> result = new LinkedList<>();
     Object current_token = null;
@@ -33,7 +29,10 @@ public abstract class Rule {
         return null;
       }
       if (current_token == null) {
-        FRLogger.warn("Rule.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Rule.read_scope: unexpected end of file at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       if (current_token == Keyword.CLOSED_BRACKET) {
@@ -62,9 +61,7 @@ public abstract class Rule {
     return result;
   }
 
-  /**
-   * Reads a LayerRule from dsn-file.
-   */
+  /** Reads a LayerRule from dsn-file. */
   public static LayerRule read_layer_rule_scope(IJFlexScanner p_scanner) {
     try {
       Collection<String> layer_names = new LinkedList<>();
@@ -77,7 +74,10 @@ public abstract class Rule {
         }
         if (!(next_token instanceof String)) {
 
-          FRLogger.warn("Rule.read_layer_rule_scope: string expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Rule.read_layer_rule_scope: string expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
         layer_names.add((String) next_token);
@@ -89,7 +89,10 @@ public abstract class Rule {
         }
         if (next_token != Keyword.RULE) {
 
-          FRLogger.warn("Rule.read_layer_rule_scope: rule expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Rule.read_layer_rule_scope: rule expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
         rule_list.addAll(read_scope(p_scanner));
@@ -111,7 +114,8 @@ public abstract class Rule {
     return new WidthRule(value);
   }
 
-  public static void write_scope(NetClass p_net_class, WriteScopeParameter p_par) throws IOException {
+  public static void write_scope(NetClass p_net_class, WriteScopeParameter p_par)
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("rule");
 
@@ -130,7 +134,8 @@ public abstract class Rule {
     }
   }
 
-  private static void write_layer_rule(NetClass p_net_class, int p_layer_no, WriteScopeParameter p_par) throws IOException {
+  private static void write_layer_rule(
+      NetClass p_net_class, int p_layer_no, WriteScopeParameter p_par) throws IOException {
     p_par.file.start_scope();
     p_par.file.write("layer_rule ");
 
@@ -152,21 +157,23 @@ public abstract class Rule {
     p_par.file.end_scope();
   }
 
-  /**
-   * Writes the default rule as a scope to an output dsn-file.
-   */
+  /** Writes the default rule as a scope to an output dsn-file. */
   public static void write_default_rule(WriteScopeParameter p_par, int p_layer) throws IOException {
     p_par.file.start_scope();
     p_par.file.write("rule");
     // write the trace width
-    double trace_width = 2 * p_par.coordinate_transform.board_to_dsn(p_par.board.rules.get_default_net_class().get_trace_half_width(0));
+    double trace_width =
+        2
+            * p_par.coordinate_transform.board_to_dsn(
+                p_par.board.rules.get_default_net_class().get_trace_half_width(0));
     p_par.file.new_line();
     p_par.file.write("(width ");
     p_par.file.write(String.valueOf(trace_width));
     p_par.file.write(")");
     // write the default clearance rule
     int default_cl_no = BoardRules.default_clearance_class();
-    int default_board_clearance = p_par.board.rules.clearance_matrix.get_value(default_cl_no, default_cl_no, p_layer, false);
+    int default_board_clearance =
+        p_par.board.rules.clearance_matrix.get_value(default_cl_no, default_cl_no, p_layer, false);
     double default_clearance = p_par.coordinate_transform.board_to_dsn(default_board_clearance);
     p_par.file.new_line();
     // write the default clearance
@@ -174,7 +181,8 @@ public abstract class Rule {
     p_par.file.write(String.valueOf(default_clearance));
     p_par.file.write(")");
     // write the smd_to_turn_gap
-    double smd_to_turn_dist = p_par.coordinate_transform.board_to_dsn(p_par.board.rules.get_pin_edge_to_turn_dist());
+    double smd_to_turn_dist =
+        p_par.coordinate_transform.board_to_dsn(p_par.board.rules.get_pin_edge_to_turn_dist());
     p_par.file.new_line();
     p_par.file.write("(clearance ");
     p_par.file.write(String.valueOf(smd_to_turn_dist));
@@ -182,15 +190,14 @@ public abstract class Rule {
 
     // write the named clearance rules from the clearance matrix
     write_named_clearance_rules(p_par, p_layer);
-    //write_non_default_clearance_rules(p_par, p_layer, default_board_clearance);
+    // write_non_default_clearance_rules(p_par, p_layer, default_board_clearance);
 
     p_par.file.end_scope();
   }
 
-  /**
-   * Write the clearance rules, which are different from the default clearance.
-   */
-  private static void write_non_default_clearance_rules(WriteScopeParameter p_par, int p_layer, int p_default_clearance) throws IOException {
+  /** Write the clearance rules, which are different from the default clearance. */
+  private static void write_non_default_clearance_rules(
+      WriteScopeParameter p_par, int p_layer, int p_default_clearance) throws IOException {
 
     ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
     int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
@@ -216,10 +223,9 @@ public abstract class Rule {
     }
   }
 
-  /**
-   * Write the clearance rules for the named classes in the clearance matrix.
-   */
-  private static void write_named_clearance_rules(WriteScopeParameter p_par, int p_layer) throws IOException {
+  /** Write the clearance rules for the named classes in the clearance matrix. */
+  private static void write_named_clearance_rules(WriteScopeParameter p_par, int p_layer)
+      throws IOException {
 
     ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
     int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
@@ -250,12 +256,16 @@ public abstract class Rule {
       if (next_token != Keyword.CLOSED_BRACKET) {
         // look for "(type"
         if (next_token != Keyword.OPEN_BRACKET) {
-          FRLogger.warn("Rule.read_clearance_rule: ( expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Rule.read_clearance_rule: ( expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         next_token = p_scanner.next_token();
         if (next_token != Keyword.TYPE) {
-          FRLogger.warn("Rule.read_clearance_rule: type expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Rule.read_clearance_rule: type expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
 
@@ -263,13 +273,19 @@ public abstract class Rule {
 
         // check the closing ")" of "(type"
         if (!p_scanner.next_closing_bracket()) {
-          FRLogger.warn("Rule.read_clearance_rule: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Rule.read_clearance_rule: closing bracket expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
 
         // check the closing ")" of "(clear"
         if (!p_scanner.next_closing_bracket()) {
-          FRLogger.warn("Rule.read_clearance_rule: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Rule.read_clearance_rule: closing bracket expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
       }
@@ -281,7 +297,8 @@ public abstract class Rule {
     }
   }
 
-  public static void write_item_clearance_class(String p_name, IndentFileWriter p_file, IdentifierType p_identifier_type) throws IOException {
+  public static void write_item_clearance_class(
+      String p_name, IndentFileWriter p_file, IdentifierType p_identifier_type) throws IOException {
     p_file.new_line();
     p_file.write("(clearance_class ");
     p_identifier_type.write(p_name, p_file);

@@ -5,7 +5,8 @@ import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 
 /**
- * Implements functionality for line segments. The difference between a LineSegment and a Line is, that a Line is infinite and a LineSegment has a start and an endpoint.
+ * Implements functionality for line segments. The difference between a LineSegment and a Line is,
+ * that a Line is infinite and a LineSegment has a start and an endpoint.
  */
 public class LineSegment implements Serializable {
 
@@ -16,8 +17,9 @@ public class LineSegment implements Serializable {
   private transient Point precalculated_end_point;
 
   /**
-   * Creates a line segment from the 3 input lines. It starts at the intersection of p_start_line and p_middle_line and ends at the intersection of p_middle_line and p_end_line. p_start_line and
-   * p_end_line must not be parallel to p_middle_line.
+   * Creates a line segment from the 3 input lines. It starts at the intersection of p_start_line
+   * and p_middle_line and ends at the intersection of p_middle_line and p_end_line. p_start_line
+   * and p_end_line must not be parallel to p_middle_line.
    */
   public LineSegment(Line p_start_line, Line p_middle_line, Line p_end_line) {
     start = p_start_line;
@@ -26,7 +28,8 @@ public class LineSegment implements Serializable {
   }
 
   /**
-   * creates the p_no-th line segment of p_polyline for p_no between 1 and p_polyline.line_count - 2.
+   * creates the p_no-th line segment of p_polyline for p_no between 1 and p_polyline.line_count -
+   * 2.
    */
   public LineSegment(Polyline p_polyline, int p_no) {
     if (p_no <= 0 || p_no >= p_polyline.arr.length - 1) {
@@ -41,9 +44,7 @@ public class LineSegment implements Serializable {
     end = p_polyline.arr[p_no + 1];
   }
 
-  /**
-   * Creates the p_no-th line segment of p_shape for p_no between 0 and p_shape.line_count - 1.
-   */
+  /** Creates the p_no-th line segment of p_shape for p_no between 0 and p_shape.line_count - 1. */
   public LineSegment(PolylineShape p_shape, int p_no) {
     int line_count = p_shape.border_line_count();
     if (p_no < 0 || p_no >= line_count) {
@@ -66,9 +67,7 @@ public class LineSegment implements Serializable {
     }
   }
 
-  /**
-   * Returns the intersection of the first 2 lines of this segment
-   */
+  /** Returns the intersection of the first 2 lines of this segment */
   public Point start_point() {
     if (precalculated_start_point == null) {
       precalculated_start_point = middle.intersection(start);
@@ -76,9 +75,7 @@ public class LineSegment implements Serializable {
     return precalculated_start_point;
   }
 
-  /**
-   * Returns the intersection of the last 2 lines of this segment
-   */
+  /** Returns the intersection of the last 2 lines of this segment */
   public Point end_point() {
     if (precalculated_end_point == null) {
       precalculated_end_point = middle.intersection(end);
@@ -86,9 +83,7 @@ public class LineSegment implements Serializable {
     return precalculated_end_point;
   }
 
-  /**
-   * Returns an approximation of the intersection of the first 2 lines of this segment
-   */
+  /** Returns an approximation of the intersection of the first 2 lines of this segment */
   public FloatPoint start_point_approx() {
     FloatPoint result;
     if (precalculated_start_point != null) {
@@ -99,9 +94,7 @@ public class LineSegment implements Serializable {
     return result;
   }
 
-  /**
-   * Returns an approximation of the intersection of the last 2 lines of this segment
-   */
+  /** Returns an approximation of the intersection of the last 2 lines of this segment */
   public FloatPoint end_point_approx() {
     FloatPoint result;
     if (precalculated_end_point != null) {
@@ -112,37 +105,27 @@ public class LineSegment implements Serializable {
     return result;
   }
 
-  /**
-   * Returns the (infinite) line of this segment.
-   */
+  /** Returns the (infinite) line of this segment. */
   public Line get_line() {
     return middle;
   }
 
-  /**
-   * Returns the start closing line of this segment.
-   */
+  /** Returns the start closing line of this segment. */
   public Line get_start_closing_line() {
     return start;
   }
 
-  /**
-   * Returns the end closing line of this segment.
-   */
+  /** Returns the end closing line of this segment. */
   public Line get_end_closing_line() {
     return end;
   }
 
-  /**
-   * Returns the line segment with the opposite direction.
-   */
+  /** Returns the line segment with the opposite direction. */
   public LineSegment opposite() {
     return new LineSegment(end.opposite(), middle.opposite(), start.opposite());
   }
 
-  /**
-   * Transforms this LineSegment into a polyline of length 3.
-   */
+  /** Transforms this LineSegment into a polyline of length 3. */
   public Polyline to_polyline() {
     Line[] lines = new Line[3];
     lines[0] = start;
@@ -152,7 +135,8 @@ public class LineSegment implements Serializable {
   }
 
   /**
-   * Creates a 1 dimensional simplex rom this line segment, which has the same shape as the line segment.
+   * Creates a 1 dimensional simplex rom this line segment, which has the same shape as the line
+   * segment.
    */
   public Simplex to_simplex() {
     Line[] line_arr = new Line[4];
@@ -171,9 +155,7 @@ public class LineSegment implements Serializable {
     return Simplex.get_instance(line_arr);
   }
 
-  /**
-   * Checks if p_point is contained in this line segment
-   */
+  /** Checks if p_point is contained in this line segment */
   public boolean contains(Point p_point) {
     if (!(p_point instanceof IntPoint)) {
       FRLogger.warn("LineSegments.contains currently only implemented for IntPoints");
@@ -191,9 +173,7 @@ public class LineSegment implements Serializable {
     return start_point_side != end_point_side || start_point_side == Side.COLLINEAR;
   }
 
-  /**
-   * calculates the smallest surrounding box of this line segment
-   */
+  /** calculates the smallest surrounding box of this line segment */
   public IntBox bounding_box() {
     FloatPoint start_corner = middle.intersection_approx(start);
     FloatPoint end_corner = middle.intersection_approx(end);
@@ -206,9 +186,7 @@ public class LineSegment implements Serializable {
     return new IntBox(lower_left, upper_right);
   }
 
-  /**
-   * calculates the smallest surrounding octagon of this line segment
-   */
+  /** calculates the smallest surrounding octagon of this line segment */
   public IntOctagon bounding_octagon() {
     FloatPoint start_corner = middle.intersection_approx(start);
     FloatPoint end_corner = middle.intersection_approx(end);
@@ -224,12 +202,15 @@ public class LineSegment implements Serializable {
     double end_x_plus_y = end_corner.x + end_corner.y;
     double llx = Math.floor(Math.min(start_x_plus_y, end_x_plus_y));
     double urx = Math.ceil(Math.max(start_x_plus_y, end_x_plus_y));
-    IntOctagon result = new IntOctagon((int) lx, (int) ly, (int) rx, (int) uy, (int) ulx, (int) lrx, (int) llx, (int) urx);
+    IntOctagon result =
+        new IntOctagon(
+            (int) lx, (int) ly, (int) rx, (int) uy, (int) ulx, (int) lrx, (int) llx, (int) urx);
     return result.normalize();
   }
 
   /**
-   * Creates a new line segment with the same start and middle line and an end line, so that the length of the new line segment is about p_new_length.
+   * Creates a new line segment with the same start and middle line and an end line, so that the
+   * length of the new line segment is about p_new_length.
    */
   public LineSegment change_length_approx(double p_new_length) {
     FloatPoint new_end_point = start_point_approx().change_length(end_point_approx(), p_new_length);
@@ -239,10 +220,14 @@ public class LineSegment implements Serializable {
   }
 
   /**
-   * Looks up the intersections of this line segment with p_other. The result array may have length 0, 1 or 2. If the segments do not intersect the result array will have length 0. The result lines
-   * are so that the intersections of the result lines with this line segment will deliver the intersection points. If the segments overlap, the result array has length 2 and the intersection points
-   * are the first and the last overlap point. Otherwise, the result array has length 1 and the intersection point is the unique intersection or touching point. The result is not symmetric in this and
-   * p_other, because intersecting lines and not the intersection points are returned.
+   * Looks up the intersections of this line segment with p_other. The result array may have length
+   * 0, 1 or 2. If the segments do not intersect the result array will have length 0. The result
+   * lines are so that the intersections of the result lines with this line segment will deliver the
+   * intersection points. If the segments overlap, the result array has length 2 and the
+   * intersection points are the first and the last overlap point. Otherwise, the result array has
+   * length 1 and the intersection point is the unique intersection or touching point. The result is
+   * not symmetric in this and p_other, because intersecting lines and not the intersection points
+   * are returned.
    */
   public Line[] intersection(LineSegment p_other) {
     if (!this.bounding_box().intersects(p_other.bounding_box())) {
@@ -284,7 +269,8 @@ public class LineSegment implements Serializable {
       }
       return result;
     }
-    if (start_point_side == end_point_side || p_other.start_point().side_of(this.middle) == p_other.end_point().side_of(this.middle)) {
+    if (start_point_side == end_point_side
+        || p_other.start_point().side_of(this.middle) == p_other.end_point().side_of(this.middle)) {
       return new Line[0]; // no intersection possible
     }
     // now both start points and both end points are on different sides of the middle
@@ -294,16 +280,15 @@ public class LineSegment implements Serializable {
     return result;
   }
 
-  /**
-   * Checks if this LineSegment and p_other contain a common point
-   */
+  /** Checks if this LineSegment and p_other contain a common point */
   public boolean intersects(LineSegment p_other) {
     Line[] intersections = this.intersection(p_other);
     return intersections.length > 0;
   }
 
   /**
-   * Checks if this LineSegment and p_other contain a common LineSegment, which is not reduced to a point.
+   * Checks if this LineSegment and p_other contain a common LineSegment, which is not reduced to a
+   * point.
    */
   public boolean overlaps(LineSegment p_other) {
     Line[] intersections = this.intersection(p_other);
@@ -311,8 +296,9 @@ public class LineSegment implements Serializable {
   }
 
   /**
-   * Constructs an approximation of this line segment by orthogonal stairs with integer coordinates. The length of the stairs will be at most p_stair_width. If p_to_the_right, the stairs will be to
-   * the right of this line segment, else to the left.
+   * Constructs an approximation of this line segment by orthogonal stairs with integer coordinates.
+   * The length of the stairs will be at most p_stair_width. If p_to_the_right, the stairs will be
+   * to the right of this line segment, else to the left.
    */
   public IntPoint[] stair_approximation(double p_width, boolean p_to_the_right) {
     IntPoint start_point = this.start_point().to_float().round();
@@ -365,10 +351,12 @@ public class LineSegment implements Serializable {
       int curr_line_point_y;
       if (function_of_x) {
         curr_line_point_x = start_point.x + i * stair_width;
-        curr_line_point_y = (int) Math.round(this.get_line().function_value_approx(curr_line_point_x));
+        curr_line_point_y =
+            (int) Math.round(this.get_line().function_value_approx(curr_line_point_x));
       } else {
         curr_line_point_y = start_point.y + i * stair_width;
-        curr_line_point_x = (int) Math.round(this.get_line().function_in_y_value_approx(curr_line_point_y));
+        curr_line_point_x =
+            (int) Math.round(this.get_line().function_in_y_value_approx(curr_line_point_y));
       }
       ++curr_index;
       if (change_x_first) {
@@ -393,8 +381,9 @@ public class LineSegment implements Serializable {
   }
 
   /**
-   * Constructs an approximation of this line segment by 45 degree stairs with integer coordinates. The length of the stairs will be at most p_stair_width. If p_to_the_right, the stairs will be to the
-   * right of this line segment, else to the left.
+   * Constructs an approximation of this line segment by 45 degree stairs with integer coordinates.
+   * The length of the stairs will be at most p_stair_width. If p_to_the_right, the stairs will be
+   * to the right of this line segment, else to the left.
    */
   public IntPoint[] stair_approximation_45(double p_width, boolean p_to_the_right) {
     IntPoint start_point = this.start_point().to_float().round();
@@ -452,12 +441,16 @@ public class LineSegment implements Serializable {
         boolean diagonal_first = p_to_the_right && det < 0 || !p_to_the_right && det > 0;
 
         if (diagonal_first) {
-          curr_x = prev_line_point.x + Signum.as_int(stair_width) * Math.abs(curr_line_point.y - prev_line_point.y);
+          curr_x =
+              prev_line_point.x
+                  + Signum.as_int(stair_width) * Math.abs(curr_line_point.y - prev_line_point.y);
           curr_y = curr_line_point.y;
         } else
         // horizontal first
         {
-          curr_x = curr_line_point.x - Signum.as_int(stair_width) * Math.abs(curr_line_point.y - prev_line_point.y);
+          curr_x =
+              curr_line_point.x
+                  - Signum.as_int(stair_width) * Math.abs(curr_line_point.y - prev_line_point.y);
           curr_y = prev_line_point.y;
         }
       } else
@@ -467,10 +460,14 @@ public class LineSegment implements Serializable {
 
         if (diagonal_first) {
           curr_x = curr_line_point.x;
-          curr_y = prev_line_point.y + Signum.as_int(stair_width) * Math.abs(curr_line_point.x - prev_line_point.x);
+          curr_y =
+              prev_line_point.y
+                  + Signum.as_int(stair_width) * Math.abs(curr_line_point.x - prev_line_point.x);
         } else {
           curr_x = prev_line_point.x;
-          curr_y = curr_line_point.y - Signum.as_int(stair_width) * Math.abs(curr_line_point.x - prev_line_point.x);
+          curr_y =
+              curr_line_point.y
+                  - Signum.as_int(stair_width) * Math.abs(curr_line_point.x - prev_line_point.x);
         }
       }
       ++curr_index;
@@ -483,8 +480,11 @@ public class LineSegment implements Serializable {
   }
 
   /**
-   * Returns an array with the borderline numbers of p_shape, which are intersected by this line segment. Intersections at an endpoint of this line segment are only counted, if the line segment
-   * intersects with the interior of p_shape. The result array may have length 0, 1 or 2. With 2 intersections the intersection which is nearest to the start point of the line segment comes first.
+   * Returns an array with the borderline numbers of p_shape, which are intersected by this line
+   * segment. Intersections at an endpoint of this line segment are only counted, if the line
+   * segment intersects with the interior of p_shape. The result array may have length 0, 1 or 2.
+   * With 2 intersections the intersection which is nearest to the start point of the line segment
+   * comes first.
    */
   public int[] border_intersections(TileShape p_shape) {
     int[] empty_result = new int[0];
@@ -565,7 +565,9 @@ public class LineSegment implements Serializable {
             // are on different sides of this line segment.
             Side prev_prev_corner_side = this.middle.side_of(prev_prev_corner);
             Side next_corner_side = this.middle.side_of(next_corner);
-            if (prev_prev_corner_side == Side.COLLINEAR || next_corner_side == Side.COLLINEAR || prev_prev_corner_side == next_corner_side) {
+            if (prev_prev_corner_side == Side.COLLINEAR
+                || next_corner_side == Side.COLLINEAR
+                || prev_prev_corner_side == next_corner_side) {
               return empty_result;
             }
           }
@@ -587,7 +589,9 @@ public class LineSegment implements Serializable {
             // are on different sides of this line segment.
             Side prev_corner_side = this.middle.side_of(prev_corner);
             Side next_next_corner_side = this.middle.side_of(next_next_corner);
-            if (prev_corner_side == Side.COLLINEAR || next_next_corner_side == Side.COLLINEAR || prev_corner_side == next_next_corner_side) {
+            if (prev_corner_side == Side.COLLINEAR
+                || next_next_corner_side == Side.COLLINEAR
+                || prev_corner_side == next_next_corner_side) {
               return empty_result;
             }
           }
@@ -605,7 +609,10 @@ public class LineSegment implements Serializable {
               intersection[intersection_count] = is;
               ++intersection_count;
             } else {
-              FRLogger.warn("border_intersections: intersection_count (" + intersection_count + ") is too big!");
+              FRLogger.warn(
+                  "border_intersections: intersection_count ("
+                      + intersection_count
+                      + ") is too big!");
             }
           }
         }
@@ -645,7 +652,8 @@ public class LineSegment implements Serializable {
   }
 
   /**
-   * Inverts the direction of this.middle, if start_point() has a bigger x coordinate than end_point(), or an equal x coordinate and a bigger y coordinate.
+   * Inverts the direction of this.middle, if start_point() has a bigger x coordinate than
+   * end_point(), or an equal x coordinate and a bigger y coordinate.
    */
   public LineSegment sort_endpoints_in_x_y() {
     boolean swap_endlines = start_point().compare_x_y(end_point()) > 0;

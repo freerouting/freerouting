@@ -16,9 +16,7 @@ import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.Set;
 
-/**
- * Class with functionality for optimising traces and vias.
- */
+/** Class with functionality for optimising traces and vias. */
 public abstract class PullTightAlgo {
 
   protected static final double c_max_cos_angle = 0.999;
@@ -26,19 +24,21 @@ public abstract class PullTightAlgo {
   // unstable
   protected static final double c_min_corner_dist_square = 0.9;
   protected final RoutingBoard board;
-  /**
-   * If only_net_no {@literal >} 0, only nets with this net numbers are optimized.
-   */
+
+  /** If only_net_no {@literal >} 0, only nets with this net numbers are optimized. */
   protected final int[] only_net_no_arr;
-  /**
-   * If stoppable_thread != null, the algorithm can be requested to be stopped.
-   */
+
+  /** If stoppable_thread != null, the algorithm can be requested to be stopped. */
   private final Stoppable stoppable_thread;
+
   private final TimeLimit time_limit;
+
   /**
-   * If keep_point != null, traces containing the keep_point must also contain the keep_point after optimizing.
+   * If keep_point != null, traces containing the keep_point must also contain the keep_point after
+   * optimizing.
    */
   private final Point keep_point;
+
   private final int keep_point_layer;
   protected int curr_layer;
   protected int curr_half_width;
@@ -48,10 +48,14 @@ public abstract class PullTightAlgo {
   protected Set<Pin> contact_pins;
   protected int min_translate_dist;
 
-  /**
-   * Creates a new instance of PullTightAlgo
-   */
-  PullTightAlgo(RoutingBoard p_board, int[] p_only_net_no_arr, Stoppable p_stoppable_thread, int p_time_limit, Point p_keep_point, int p_keep_point_layer) {
+  /** Creates a new instance of PullTightAlgo */
+  PullTightAlgo(
+      RoutingBoard p_board,
+      int[] p_only_net_no_arr,
+      Stoppable p_stoppable_thread,
+      int p_time_limit,
+      Point p_keep_point,
+      int p_keep_point_layer) {
     board = p_board;
     only_net_no_arr = p_only_net_no_arr;
     stoppable_thread = p_stoppable_thread;
@@ -65,19 +69,48 @@ public abstract class PullTightAlgo {
   }
 
   /**
-   * Returns a new instance of PullTightAlgo. If p_only_net_no > 0, only traces with net number p_not_no are optimized. If p_stoppable_thread != null, the algorithm can be requested to be stopped. If
-   * p_time_limit > 0; the algorithm will be stopped after p_time_limit Milliseconds.
+   * Returns a new instance of PullTightAlgo. If p_only_net_no > 0, only traces with net number
+   * p_not_no are optimized. If p_stoppable_thread != null, the algorithm can be requested to be
+   * stopped. If p_time_limit > 0; the algorithm will be stopped after p_time_limit Milliseconds.
    */
-  static PullTightAlgo get_instance(RoutingBoard p_board, int[] p_only_net_no_arr, IntOctagon p_clip_shape, int p_min_translate_dist, Stoppable p_stoppable_thread, int p_time_limit,
-      Point p_keep_point, int p_keep_point_layer) {
+  static PullTightAlgo get_instance(
+      RoutingBoard p_board,
+      int[] p_only_net_no_arr,
+      IntOctagon p_clip_shape,
+      int p_min_translate_dist,
+      Stoppable p_stoppable_thread,
+      int p_time_limit,
+      Point p_keep_point,
+      int p_keep_point_layer) {
     PullTightAlgo result;
     AngleRestriction angle_restriction = p_board.rules.get_trace_angle_restriction();
     if (angle_restriction == AngleRestriction.NINETY_DEGREE) {
-      result = new PullTightAlgo90(p_board, p_only_net_no_arr, p_stoppable_thread, p_time_limit, p_keep_point, p_keep_point_layer);
+      result =
+          new PullTightAlgo90(
+              p_board,
+              p_only_net_no_arr,
+              p_stoppable_thread,
+              p_time_limit,
+              p_keep_point,
+              p_keep_point_layer);
     } else if (angle_restriction == AngleRestriction.FORTYFIVE_DEGREE) {
-      result = new PullTightAlgo45(p_board, p_only_net_no_arr, p_stoppable_thread, p_time_limit, p_keep_point, p_keep_point_layer);
+      result =
+          new PullTightAlgo45(
+              p_board,
+              p_only_net_no_arr,
+              p_stoppable_thread,
+              p_time_limit,
+              p_keep_point,
+              p_keep_point_layer);
     } else {
-      result = new PullTightAlgoAnyAngle(p_board, p_only_net_no_arr, p_stoppable_thread, p_time_limit, p_keep_point, p_keep_point_layer);
+      result =
+          new PullTightAlgoAnyAngle(
+              p_board,
+              p_only_net_no_arr,
+              p_stoppable_thread,
+              p_time_limit,
+              p_keep_point,
+              p_keep_point_layer);
     }
     result.curr_clip_shape = p_clip_shape;
     result.min_translate_dist = Math.max(p_min_translate_dist, 100);
@@ -85,8 +118,9 @@ public abstract class PullTightAlgo {
   }
 
   /**
-   * Function for optimizing the route in an internal marked area. If p_clip_shape != null, the optimizing area is restricted to p_clip_shape. p_trace_cost_arr is used for optimizing vias and may be
-   * null.
+   * Function for optimizing the route in an internal marked area. If p_clip_shape != null, the
+   * optimizing area is restricted to p_clip_shape. p_trace_cost_arr is used for optimizing vias and
+   * may be null.
    */
   void opt_changed_area(ExpansionCostFactor[] p_trace_cost_arr) {
     if (board.changed_area == null) {
@@ -105,7 +139,10 @@ public abstract class PullTightAlgo {
         }
         board.changed_area.set_empty(i);
         board.join_graphics_update_box(changed_region.bounding_box());
-        double changed_area_offset = 1.5 * (board.rules.clearance_matrix.max_value(i) + 2 * board.rules.get_max_trace_half_width());
+        double changed_area_offset =
+            1.5
+                * (board.rules.clearance_matrix.max_value(i)
+                    + 2 * board.rules.get_max_trace_half_width());
         changed_region = changed_region.enlarge(changed_area_offset);
         // search in the ShapeSearchTree for all overlapping traces
         // with clip_shape on layer i
@@ -125,7 +162,8 @@ public abstract class PullTightAlgo {
               break; // because items may be removed
             }
           } else if (curr_ob instanceof Via via && p_trace_cost_arr != null) {
-            if (OptViaAlgo.opt_via_location(this.board, via, p_trace_cost_arr, this.min_translate_dist, 10)) {
+            if (OptViaAlgo.opt_via_location(
+                this.board, via, p_trace_cost_arr, this.min_translate_dist, 10)) {
               something_changed = true;
             }
           }
@@ -135,9 +173,16 @@ public abstract class PullTightAlgo {
   }
 
   /**
-   * Function for optimizing a single trace polygon p_contact_pins are the pins at the end corners of p_polyline. Other pins are regarded as obstacles, even if they are of the own net.
+   * Function for optimizing a single trace polygon p_contact_pins are the pins at the end corners
+   * of p_polyline. Other pins are regarded as obstacles, even if they are of the own net.
    */
-  Polyline pull_tight(Polyline p_polyline, int p_layer, int p_half_width, int[] p_net_no_arr, int p_cl_type, Set<Pin> p_contact_pins) {
+  Polyline pull_tight(
+      Polyline p_polyline,
+      int p_layer,
+      int p_half_width,
+      int[] p_net_no_arr,
+      int p_cl_type,
+      Set<Pin> p_contact_pins) {
     curr_layer = p_layer;
     ShapeSearchTree search_tree = this.board.search_tree_manager.get_default_tree();
     curr_half_width = p_half_width + search_tree.clearance_compensation_value(p_cl_type, p_layer);
@@ -147,9 +192,7 @@ public abstract class PullTightAlgo {
     return pull_tight(p_polyline);
   }
 
-  /**
-   * Terminates the pull tight algorithm, if the user has made a stop request.
-   */
+  /** Terminates the pull tight algorithm, if the user has made a stop request. */
   protected boolean is_stop_requested() {
     if (this.stoppable_thread != null && this.stoppable_thread.isStopRequested()) {
       return true;
@@ -169,9 +212,7 @@ public abstract class PullTightAlgo {
     return time_limit_exceeded;
   }
 
-  /**
-   * tries to shorten p_polyline by relocating its lines
-   */
+  /** tries to shorten p_polyline by relocating its lines */
   Polyline reposition_lines(Polyline p_polyline) {
     if (p_polyline.arr.length < 5) {
       return p_polyline;
@@ -190,7 +231,8 @@ public abstract class PullTightAlgo {
   }
 
   /**
-   * Tries to reposition the line with index p_no to make the polyline consisting of p_line_arr shorter.
+   * Tries to reposition the line with index p_no to make the polyline consisting of p_line_arr
+   * shorter.
    */
   protected Line reposition_line(Line[] p_line_arr, int p_no) {
     if (p_line_arr.length - p_no < 3) {
@@ -247,7 +289,8 @@ public abstract class PullTightAlgo {
         return null;
       }
       Side new_line_side_of_nearest_point = check_lines[1].side_of(nearest_point);
-      if (new_line_side_of_nearest_point != side_of_nearest_point && new_line_side_of_nearest_point != Side.COLLINEAR) {
+      if (new_line_side_of_nearest_point != side_of_nearest_point
+          && new_line_side_of_nearest_point != Side.COLLINEAR) {
         // moved a little bit to far at the first time
         // because of numerical inaccuracy;
         // may happen if nearest_point is not an IntPoint
@@ -261,7 +304,9 @@ public abstract class PullTightAlgo {
 
       if (tmp.arr.length == 3) {
         TileShape shape_to_check = tmp.offset_shape(curr_half_width, 0);
-        check_ok = board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
+        check_ok =
+            board.check_trace_shape(
+                shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
       }
       delta_dist /= 2;
       if (check_ok) {
@@ -280,14 +325,17 @@ public abstract class PullTightAlgo {
       // mark the changed area
       board.changed_area.join(check_lines[0].intersection_approx(new_line), curr_layer);
       board.changed_area.join(check_lines[2].intersection_approx(new_line), curr_layer);
-      board.changed_area.join(p_line_arr[p_no - 1].intersection_approx(p_line_arr[p_no]), curr_layer);
-      board.changed_area.join(p_line_arr[p_no].intersection_approx(p_line_arr[p_no + 1]), curr_layer);
+      board.changed_area.join(
+          p_line_arr[p_no - 1].intersection_approx(p_line_arr[p_no]), curr_layer);
+      board.changed_area.join(
+          p_line_arr[p_no].intersection_approx(p_line_arr[p_no + 1]), curr_layer);
     }
     return new_line;
   }
 
   /**
-   * tries to skip linesegments of length 0. A check is necessary before skipping because new dog ears may occur.
+   * tries to skip linesegments of length 0. A check is necessary before skipping because new dog
+   * ears may occur.
    */
   Polyline skip_segments_of_length_0(Polyline p_polyline) {
     boolean polyline_changed = false;
@@ -321,11 +369,15 @@ public abstract class PullTightAlgo {
           // are intersected with the bounding octagon anyway.
           if (i > 1) {
             TileShape shape_to_check = tmp.offset_shape(curr_half_width, i - 2);
-            check_ok = board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
+            check_ok =
+                board.check_trace_shape(
+                    shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
           }
           if (check_ok && (i < curr_polyline.arr.length - 2)) {
             TileShape shape_to_check = tmp.offset_shape(curr_half_width, i - 1);
-            check_ok = board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
+            check_ok =
+                board.check_trace_shape(
+                    shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
           }
         }
         if (check_ok) {
@@ -341,9 +393,7 @@ public abstract class PullTightAlgo {
     return curr_polyline;
   }
 
-  /**
-   * Smoothens acute angles with contact traces. Returns true, if something was changed.
-   */
+  /** Smoothens acute angles with contact traces. Returns true, if something was changed. */
   boolean smoothen_end_corners_at_trace(PolylineTrace p_trace) {
     if (this.only_net_no_arr.length > 0 && !p_trace.nets_equal(this.only_net_no_arr)) {
       return false;
@@ -355,9 +405,7 @@ public abstract class PullTightAlgo {
     return smoothen_end_corners_at_trace_1(p_trace);
   }
 
-  /**
-   * Smoothens acute angles with contact traces. Returns true, if something was changed.
-   */
+  /** Smoothens acute angles with contact traces. Returns true, if something was changed. */
   private boolean smoothen_end_corners_at_trace_1(PolylineTrace p_trace) {
     // try to improve the connection to other traces
     if (p_trace.is_shove_fixed()) {
@@ -378,7 +426,14 @@ public abstract class PullTightAlgo {
         int curr_cl_class = curr_trace.clearance_class_no();
         FixedState curr_fixed_state = curr_trace.get_fixed_state();
         board.remove_item(curr_trace);
-        PolylineTrace adj_ins_trace = board.insert_trace_without_cleaning(adjusted_polyline, trace_layer, curr_half_width, curr_trace.net_no_arr, curr_cl_class, curr_fixed_state);
+        PolylineTrace adj_ins_trace =
+            board.insert_trace_without_cleaning(
+                adjusted_polyline,
+                trace_layer,
+                curr_half_width,
+                curr_trace.net_no_arr,
+                curr_cl_class,
+                curr_fixed_state);
         if (adj_ins_trace != null) {
           result = true;
           connection_to_trace_improved = true;
@@ -391,7 +446,11 @@ public abstract class PullTightAlgo {
             try {
               board.normalize_traces(curr_net_no);
             } catch (Exception e) {
-              FRLogger.error("The normalization of net '" + board.rules.nets.get(curr_net_no).name + "' failed.", e);
+              FRLogger.error(
+                  "The normalization of net '"
+                      + board.rules.nets.get(curr_net_no).name
+                      + "' failed.",
+                  e);
             }
 
             if (split_traces_at_keep_point()) {
@@ -406,14 +465,17 @@ public abstract class PullTightAlgo {
   }
 
   /**
-   * Splits the traces containing this.keep_point if this.keep_point != null. Returns true, if something was split.
+   * Splits the traces containing this.keep_point if this.keep_point != null. Returns true, if
+   * something was split.
    */
   boolean split_traces_at_keep_point() {
     if (this.keep_point == null) {
       return false;
     }
-    ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
-    Collection<Item> picked_items = this.board.pick_items(this.keep_point, this.keep_point_layer, filter);
+    ItemSelectionFilter filter =
+        new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
+    Collection<Item> picked_items =
+        this.board.pick_items(this.keep_point, this.keep_point_layer, filter);
     for (Item curr_item : picked_items) {
       Trace[] split_pieces = ((Trace) curr_item).split(this.keep_point);
       if (split_pieces != null) {
@@ -423,9 +485,7 @@ public abstract class PullTightAlgo {
     return false;
   }
 
-  /**
-   * Smoothens acute angles with contact traces. Returns null, if something was changed.
-   */
+  /** Smoothens acute angles with contact traces. Returns null, if something was changed. */
   private Polyline smoothen_end_corners_at_trace_2(PolylineTrace p_trace) {
     if (p_trace == null || !p_trace.is_on_the_board()) {
       return null;
@@ -448,18 +508,19 @@ public abstract class PullTightAlgo {
     return result;
   }
 
-  /**
-   * Wraps around pins of the own net to avoid acid traps.
-   */
+  /** Wraps around pins of the own net to avoid acid traps. */
   protected Polyline avoid_acid_traps(Polyline p_polyline) {
     if (true) {
       return p_polyline;
     }
     Polyline result = p_polyline;
     ShoveTraceAlgo shove_trace_algo = new ShoveTraceAlgo(this.board);
-    Polyline new_polyline = shove_trace_algo.spring_over_obstacles(p_polyline, curr_half_width, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+    Polyline new_polyline =
+        shove_trace_algo.spring_over_obstacles(
+            p_polyline, curr_half_width, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
     if (new_polyline != null && new_polyline != p_polyline) {
-      if (this.board.check_polyline_trace(new_polyline, curr_layer, curr_half_width, curr_net_no_arr, curr_cl_type)) {
+      if (this.board.check_polyline_trace(
+          new_polyline, curr_layer, curr_half_width, curr_net_no_arr, curr_cl_type)) {
         result = new_polyline;
       }
     }

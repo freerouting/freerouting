@@ -19,9 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-/**
- * Window with the parameters for moving components.
- */
+/** Window with the parameters for moving components. */
 public class WindowMoveParameter extends BoardSavableSubWindow {
 
   private final GuiBoardManager board_handling;
@@ -31,9 +29,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
   private final JRadioButton settings_controls_rotate_radiobutton;
   private boolean key_input_completed = true;
 
-  /**
-   * Creates a new instance of WindowMoveParameter
-   */
+  /** Creates a new instance of WindowMoveParameter */
   public WindowMoveParameter(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
     this.board_handling = p_board_frame.board_panel.board_handling;
@@ -64,7 +60,8 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(horizontal_grid_field, gridbag_constraints);
     main_panel.add(horizontal_grid_field);
-    set_horizontal_grid_field(this.board_handling.getInteractiveSettings().get_horizontal_component_grid());
+    set_horizontal_grid_field(
+        this.board_handling.getInteractiveSettings().get_horizontal_component_grid());
     horizontal_grid_field.addKeyListener(new HorizontalGridFieldKeyListener());
     horizontal_grid_field.addFocusListener(new HorizontalGridFieldFocusListener());
 
@@ -78,7 +75,8 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(vertical_grid_field, gridbag_constraints);
     main_panel.add(vertical_grid_field);
-    set_vertical_grid_field(this.board_handling.getInteractiveSettings().get_vertical_component_grid());
+    set_vertical_grid_field(
+        this.board_handling.getInteractiveSettings().get_vertical_component_grid());
     vertical_grid_field.addKeyListener(new VerticalGridFieldKeyListener());
     vertical_grid_field.addFocusListener(new VerticalGridFieldFocusListener());
 
@@ -99,9 +97,17 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     settings_controls_rotate_radiobutton = new JRadioButton(tm.getText("rotate"));
 
     settings_controls_zoom_radiobutton.addActionListener(new ZoomButtonListener());
-    settings_controls_zoom_radiobutton.addActionListener(_ -> FRAnalytics.buttonClicked("settings_controls_zoom_radiobutton", settings_controls_zoom_radiobutton.getText()));
+    settings_controls_zoom_radiobutton.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_controls_zoom_radiobutton",
+                settings_controls_zoom_radiobutton.getText()));
     settings_controls_rotate_radiobutton.addActionListener(new RotateButtonListener());
-    settings_controls_rotate_radiobutton.addActionListener(_ -> FRAnalytics.buttonClicked("settings_controls_rotate_radiobutton", settings_controls_rotate_radiobutton.getText()));
+    settings_controls_rotate_radiobutton.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settings_controls_rotate_radiobutton",
+                settings_controls_rotate_radiobutton.getText()));
 
     ButtonGroup button_group = new ButtonGroup();
     button_group.add(settings_controls_zoom_radiobutton);
@@ -163,8 +169,12 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
         if (input_value < 0) {
           input_value = 0;
         }
-        board_handling.getInteractiveSettings().set_horizontal_component_grid((int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
-        set_horizontal_grid_field(board_handling.getInteractiveSettings().get_horizontal_component_grid());
+        board_handling
+            .getInteractiveSettings()
+            .set_horizontal_component_grid(
+                (int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
+        set_horizontal_grid_field(
+            board_handling.getInteractiveSettings().get_horizontal_component_grid());
       } else {
         key_input_completed = false;
       }
@@ -177,14 +187,14 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!key_input_completed) {
         // restore the text field.
-        set_horizontal_grid_field(board_handling.getInteractiveSettings().get_horizontal_component_grid());
+        set_horizontal_grid_field(
+            board_handling.getInteractiveSettings().get_horizontal_component_grid());
         key_input_completed = true;
       }
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {
-    }
+    public void focusGained(FocusEvent p_evt) {}
   }
 
   private class VerticalGridFieldKeyListener extends KeyAdapter {
@@ -202,8 +212,12 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
         if (input_value < 0) {
           input_value = 0;
         }
-        board_handling.getInteractiveSettings().set_vertical_component_grid((int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
-        set_vertical_grid_field(board_handling.getInteractiveSettings().get_vertical_component_grid());
+        board_handling
+            .getInteractiveSettings()
+            .set_vertical_component_grid(
+                (int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
+        set_vertical_grid_field(
+            board_handling.getInteractiveSettings().get_vertical_component_grid());
       } else {
         key_input_completed = false;
       }
@@ -216,14 +230,14 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!key_input_completed) {
         // restore the text field.
-        set_vertical_grid_field(board_handling.getInteractiveSettings().get_vertical_component_grid());
+        set_vertical_grid_field(
+            board_handling.getInteractiveSettings().get_vertical_component_grid());
         key_input_completed = true;
       }
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {
-    }
+    public void focusGained(FocusEvent p_evt) {}
   }
 
   private class ZoomButtonListener implements ActionListener {

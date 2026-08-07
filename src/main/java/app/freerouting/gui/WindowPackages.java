@@ -11,14 +11,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Window displaying the library packages.
- */
+/** Window displaying the library packages. */
 public class WindowPackages extends WindowObjectListWithFilter {
 
-  /**
-   * Creates a new instance of PackagesWindow
-   */
+  /** Creates a new instance of PackagesWindow */
   public WindowPackages(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
@@ -26,12 +22,11 @@ public class WindowPackages extends WindowObjectListWithFilter {
     this.setTitle(tm.getText("packages"));
   }
 
-  /**
-   * Fills the list with the library packages.
-   */
+  /** Fills the list with the library packages. */
   @Override
   protected void fill_list() {
-    Packages packages = this.board_frame.board_panel.board_handling.get_routing_board().library.packages;
+    Packages packages =
+        this.board_frame.board_panel.board_handling.get_routing_board().library.packages;
     Package[] sorted_arr = new Package[packages.count()];
     for (int i = 0; i < sorted_arr.length; i++) {
       sorted_arr[i] = packages.get(i + 1);

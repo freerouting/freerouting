@@ -10,9 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
-/**
- * Creates the menu bar of a board frame together with its menu items.
- */
+/** Creates the menu bar of a board frame together with its menu items. */
 public class BoardMenuBar extends JMenuBar {
 
   private final BoardFrame boardFrame;
@@ -22,9 +20,7 @@ public class BoardMenuBar extends JMenuBar {
   public BoardMenuRules rulesMenu;
   public BoardMenuInfo infoMenu;
 
-  /**
-   * Creates a new BoardMenuBar together with its menus
-   */
+  /** Creates a new BoardMenuBar together with its menus */
   public BoardMenuBar(BoardFrame boardFrame, FeatureFlagsSettings featureFlags) {
     this.boardFrame = boardFrame;
     fileMenu = new BoardMenuFile(boardFrame);
@@ -48,22 +44,22 @@ public class BoardMenuBar extends JMenuBar {
     TextManager tm = new TextManager(BoardFrame.class, boardFrame.get_locale());
     JButton profileButton = new JButton(tm.getText("user_settings_button"));
     profileButton.setBorderPainted(false);
-    profileButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        showProfileDialog();
-      }
-    });
-    profileButton.addActionListener(_ -> FRAnalytics.buttonClicked("profile_button", profileButton.getText()));
+    profileButton.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            showProfileDialog();
+          }
+        });
+    profileButton.addActionListener(
+        _ -> FRAnalytics.buttonClicked("profile_button", profileButton.getText()));
 
     // Add the Profile button to the right
     add(Box.createHorizontalGlue());
     add(profileButton);
   }
 
-  /**
-   * Displays a modal dialog with user information.
-   */
+  /** Displays a modal dialog with user information. */
   public void showProfileDialog() {
     WindowUserSettings.show(this.boardFrame);
   }

@@ -4,32 +4,23 @@ import app.freerouting.datastructures.BigIntAux;
 import app.freerouting.datastructures.Signum;
 import java.io.Serializable;
 
-/**
- * Implementation of the interface Vector via a tuple of integers
- */
+/** Implementation of the interface Vector via a tuple of integers */
 public class IntVector extends Vector implements Serializable {
 
-  /**
-   * the x coordinate of this vector
-   */
+  /** the x coordinate of this vector */
   public final int x;
-  /**
-   * the y coordinate of this vector
-   */
+
+  /** the y coordinate of this vector */
   public final int y;
 
-  /**
-   * creates an IntVector from two integer coordinates
-   */
+  /** creates an IntVector from two integer coordinates */
   public IntVector(int p_x, int p_y) {
     // range check omitted for performance reasons
     x = p_x;
     y = p_y;
   }
 
-  /**
-   * returns true, if this IntVector is equal to p_ob
-   */
+  /** returns true, if this IntVector is equal to p_ob */
   @Override
   public final boolean equals(Object p_ob) {
     if (this == p_ob) {
@@ -45,17 +36,13 @@ public class IntVector extends Vector implements Serializable {
     return x == other.x && y == other.y;
   }
 
-  /**
-   * returns true, if both coordinates of this vector are 0
-   */
+  /** returns true, if both coordinates of this vector are 0 */
   @Override
   public final boolean is_zero() {
     return x == 0 && y == 0;
   }
 
-  /**
-   * returns the Vector such that this plus this.minus() is zero
-   */
+  /** returns the Vector such that this plus this.minus() is zero */
   @Override
   public Vector negate() {
     return new IntVector(-x, -y);
@@ -71,9 +58,7 @@ public class IntVector extends Vector implements Serializable {
     return Math.abs(x) == Math.abs(y);
   }
 
-  /**
-   * Calculates the determinant of the matrix consisting of this Vector and p_other.
-   */
+  /** Calculates the determinant of the matrix consisting of this Vector and p_other. */
   public final long determinant(IntVector p_other) {
     return (long) x * p_other.y - (long) y * p_other.x;
   }
@@ -124,9 +109,7 @@ public class IntVector extends Vector implements Serializable {
     return new IntVector(this.x, -this.y);
   }
 
-  /**
-   * adds p_other to this vector
-   */
+  /** adds p_other to this vector */
   @Override
   public final Vector add(Vector p_other) {
     return p_other.add(this);
@@ -142,9 +125,7 @@ public class IntVector extends Vector implements Serializable {
     return p_other.add(this);
   }
 
-  /**
-   * returns the Point, which results from adding this vector to p_point
-   */
+  /** returns the Point, which results from adding this vector to p_point */
   @Override
   final Point add_to(IntPoint p_point) {
     return new IntPoint(p_point.x + x, p_point.y + y);
@@ -156,7 +137,8 @@ public class IntVector extends Vector implements Serializable {
   }
 
   /**
-   * Let L be the line from the Zero Vector to p_other. The function returns Side.ON_THE_LEFT, if this Vector is on the left of L Side.ON_THE_RIGHT, if this Vector is on the right of L and
+   * Let L be the line from the Zero Vector to p_other. The function returns Side.ON_THE_LEFT, if
+   * this Vector is on the left of L Side.ON_THE_RIGHT, if this Vector is on the right of L and
    * Side.COLLINEAR, if this Vector is collinear with L.
    */
   @Override
@@ -178,8 +160,9 @@ public class IntVector extends Vector implements Serializable {
   }
 
   /**
-   * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other {@literal >} 0, Signum.NEGATIVE, if the scalar product Vector is {@literal <} 0, and Signum.ZERO, if the
-   * scalar product is equal 0.
+   * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other
+   * {@literal >} 0, Signum.NEGATIVE, if the scalar product Vector is {@literal <} 0, and
+   * Signum.ZERO, if the scalar product is equal 0.
    */
   @Override
   public Signum projection(Vector p_other) {
@@ -191,9 +174,7 @@ public class IntVector extends Vector implements Serializable {
     return p_other.scalar_product(this);
   }
 
-  /**
-   * converts this vector to a PointFloat.
-   */
+  /** converts this vector to a PointFloat. */
   @Override
   public FloatPoint to_float() {
     return new FloatPoint(x, y);
@@ -219,8 +200,9 @@ public class IntVector extends Vector implements Serializable {
   }
 
   /**
-   * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other > 0, Signum.NEGATIVE, if the scalar product Vector is < 0, and Signum.ZERO, if the scalar product is equal
-   * 0.
+   * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other > 0,
+   * Signum.NEGATIVE, if the scalar product Vector is < 0, and Signum.ZERO, if the scalar product is
+   * equal 0.
    */
   @Override
   Signum projection(IntVector p_other) {

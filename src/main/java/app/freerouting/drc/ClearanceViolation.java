@@ -6,34 +6,32 @@ import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.util.TextManager;
 import java.util.Locale;
 
-/**
- * Information of a clearance violation between 2 items.
- */
+/** Information of a clearance violation between 2 items. */
 public class ClearanceViolation implements ObjectInfoPanel.Printable {
 
-  /**
-   * The first item of the clearance violation
-   */
+  /** The first item of the clearance violation */
   public final Item first_item;
-  /**
-   * The second item of the clearance violation
-   */
+
+  /** The second item of the clearance violation */
   public final Item second_item;
-  /**
-   * The shape of the clearance violation
-   */
+
+  /** The shape of the clearance violation */
   public final ConvexShape shape;
-  /**
-   * The layer of the clearance violation
-   */
+
+  /** The layer of the clearance violation */
   public final int layer;
+
   public final double expected_clearance;
   public final double actual_clearance;
 
-  /**
-   * Creates a new instance of ClearanceViolation
-   */
-  public ClearanceViolation(Item p_first_item, Item p_second_item, ConvexShape p_shape, int p_layer, double p_expected_clearance, double p_actual_clearance) {
+  /** Creates a new instance of ClearanceViolation */
+  public ClearanceViolation(
+      Item p_first_item,
+      Item p_second_item,
+      ConvexShape p_shape,
+      int p_layer,
+      double p_expected_clearance,
+      double p_actual_clearance) {
     first_item = p_first_item;
     second_item = p_second_item;
     shape = p_shape;
@@ -61,10 +59,11 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
     second_item.print_info(p_window, p_locale);
     p_window.newline();
     p_window.indent();
-    String clearance_violation_info_expected_clearance = tm.getText(
-        "clearance_violation_info_expected_clearance",
-        "%.4f".formatted(this.expected_clearance / 10000.0),
-        "%.4f".formatted(this.actual_clearance / 10000.0));
+    String clearance_violation_info_expected_clearance =
+        tm.getText(
+            "clearance_violation_info_expected_clearance",
+            "%.4f".formatted(this.expected_clearance / 10000.0),
+            "%.4f".formatted(this.actual_clearance / 10000.0));
     p_window.append(clearance_violation_info_expected_clearance);
   }
 }

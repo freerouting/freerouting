@@ -25,17 +25,14 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-/**
- * Abstract class for windows displaying a list of objects
- */
+/** Abstract class for windows displaying a list of objects */
 public abstract class WindowObjectList extends BoardSavableSubWindow {
 
   protected static final int DEFAULT_TABLE_SIZE = 20;
   protected final BoardFrame board_frame;
   protected final JPanel south_panel;
-  /**
-   * The subwindows with information about selected object
-   */
+
+  /** The subwindows with information about selected object */
   protected final Collection<WindowObjectInfo> subwindows = new LinkedList<>();
 
   protected final JPanel main_panel;
@@ -45,9 +42,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   private JScrollPane list_scroll_pane;
   private DefaultListModel<Object> list_model;
 
-  /**
-   * Creates a new instance of ObjectListWindow
-   */
+  /** Creates a new instance of ObjectListWindow */
   protected WindowObjectList(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
     this.board_frame = p_board_frame;
@@ -78,7 +73,10 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
       info_components_show_button.setToolTipText(tm.getText("info_tooltip"));
       ShowListener show_listener = new ShowListener();
       info_components_show_button.addActionListener(show_listener);
-      info_components_show_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_show_button", info_components_show_button.getText()));
+      info_components_show_button.addActionListener(
+          _ ->
+              FRAnalytics.buttonClicked(
+                  "info_components_show_button", info_components_show_button.getText()));
       north_button_panel.add(info_components_show_button);
     }
 
@@ -87,7 +85,10 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
       info_components_instance_button.setToolTipText(tm.getText("select_tooltip"));
       SelectListener instance_listener = new SelectListener();
       info_components_instance_button.addActionListener(instance_listener);
-      info_components_instance_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_instance_button", info_components_instance_button.getText()));
+      info_components_instance_button.addActionListener(
+          _ ->
+              FRAnalytics.buttonClicked(
+                  "info_components_instance_button", info_components_instance_button.getText()));
       north_button_panel.add(info_components_instance_button);
     }
 
@@ -98,7 +99,10 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
       JButton info_components_invert_button = new JButton(tm.getText("invert"));
       info_components_invert_button.setToolTipText(tm.getText("invert_tooltip"));
       info_components_invert_button.addActionListener(new InvertListener());
-      info_components_invert_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_invert_button", info_components_invert_button.getText()));
+      info_components_invert_button.addActionListener(
+          _ ->
+              FRAnalytics.buttonClicked(
+                  "info_components_invert_button", info_components_invert_button.getText()));
       south_button_panel.add(info_components_invert_button);
     }
 
@@ -107,7 +111,11 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
       info_components_recalculate_button.setToolTipText(tm.getText("recalculate_tooltip"));
       RecalculateListener recalculate_listener = new RecalculateListener();
       info_components_recalculate_button.addActionListener(recalculate_listener);
-      info_components_recalculate_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_recalculate_button", info_components_recalculate_button.getText()));
+      info_components_recalculate_button.addActionListener(
+          _ ->
+              FRAnalytics.buttonClicked(
+                  "info_components_recalculate_button",
+                  info_components_recalculate_button.getText()));
       south_button_panel.add(info_components_recalculate_button);
     }
 
@@ -115,12 +123,13 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     this.list_empty_message.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
     // Dispose this window and all subwindows when closing the window.
-    this.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent evt) {
-        dispose();
-      }
-    });
+    this.addWindowListener(
+        new WindowAdapter() {
+          @Override
+          public void windowClosing(WindowEvent evt) {
+            dispose();
+          }
+        });
   }
 
   protected boolean showInfoButton() {
@@ -168,14 +177,15 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
       }
       this.pack();
 
-      this.list.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent evt) {
-          if (evt.getClickCount() > 1) {
-            select_instances();
-          }
-        }
-      });
+      this.list.addMouseListener(
+          new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+              if (evt.getClickCount() > 1) {
+                select_instances();
+              }
+            }
+          });
     } else {
       if (this.list_model.isEmpty()) {
         if (list_scroll_pane != null) {
@@ -208,16 +218,12 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     this.list_model.addElement(p_object);
   }
 
-  /**
-   * Fills the list with the objects to display.
-   */
+  /** Fills the list with the objects to display. */
   protected abstract void fill_list();
 
   protected abstract void select_instances();
 
-  /**
-   * Saves also the filter string to disk.
-   */
+  /** Saves also the filter string to disk. */
   @Override
   public void save(ObjectOutputStream p_object_stream) {
     int[] selected_indices;
@@ -250,9 +256,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     return result;
   }
 
-  /**
-   * Listens to the button for showing the selected padstacks
-   */
+  /** Listens to the button for showing the selected padstacks */
   private class ShowListener implements ActionListener {
 
     private static final int WINDOW_OFFSET = 30;
@@ -267,18 +271,20 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
       for (int i = 0; i < selected_objects.size(); i++) {
         object_list.add((WindowObjectInfo.Printable) (selected_objects.get(i)));
       }
-      CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
-      WindowObjectInfo new_window = WindowObjectInfo.display(tm.getText("window_title"), object_list, board_frame, coordinate_transform);
+      CoordinateTransform coordinate_transform =
+          board_frame.board_panel.board_handling.coordinate_transform;
+      WindowObjectInfo new_window =
+          WindowObjectInfo.display(
+              tm.getText("window_title"), object_list, board_frame, coordinate_transform);
       Point loc = getLocation();
-      Point new_window_location = new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
+      Point new_window_location =
+          new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
       new_window.setLocation(new_window_location);
       subwindows.add(new_window);
     }
   }
 
-  /**
-   * Listens to the button for showing the selected incompletes
-   */
+  /** Listens to the button for showing the selected incompletes */
   private class SelectListener implements ActionListener {
 
     @Override
@@ -287,9 +293,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     }
   }
 
-  /**
-   * Listens to the button for inverting the selection
-   */
+  /** Listens to the button for inverting the selection */
   private class InvertListener implements ActionListener {
 
     @Override
@@ -309,9 +313,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     }
   }
 
-  /**
-   * Listens to the button for recalculating the content of the window
-   */
+  /** Listens to the button for recalculating the content of the window */
   private class RecalculateListener implements ActionListener {
 
     @Override

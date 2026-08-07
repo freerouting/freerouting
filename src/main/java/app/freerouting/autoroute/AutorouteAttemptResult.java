@@ -17,8 +17,6 @@ public class AutorouteAttemptResult {
 
   @Override
   public String toString() {
-    return this.state
-        .toString()
-        .toUpperCase() + ": " + this.details;
+    return this.state.toString().toUpperCase() + ": " + this.details;
   }
 }

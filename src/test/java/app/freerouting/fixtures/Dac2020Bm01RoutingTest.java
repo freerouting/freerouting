@@ -33,8 +33,6 @@ public class Dac2020Bm01RoutingTest extends RoutingFixtureTest {
     // There are 195 connections in total on the board
     // If both net (99 and 98) are routed, there should be 193 incomplete connections left
     // If only net 99 is routed, there should be 194 incomplete connections left
-    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
-        .maxIncompleteConnections(194)
-        .check();
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(194).check();
   }
 }

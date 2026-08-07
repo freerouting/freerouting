@@ -3,9 +3,7 @@ package app.freerouting.settings;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
-/**
- * Configuration for the dedicated MCP server.
- */
+/** Configuration for the dedicated MCP server. */
 public class McpServerSettings implements Serializable {
 
   @SerializedName("enabled")

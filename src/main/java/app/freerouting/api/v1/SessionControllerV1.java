@@ -33,34 +33,49 @@ import java.util.UUID;
  * JAX-RS controller for routing session lifecycle management.
  *
  * <p>A <em>session</em> groups one or more routing jobs under a single caller identity. Sessions
- * are created per EDA-tool invocation and are associated with the authenticated user's UUID.</p>
+ * are created per EDA-tool invocation and are associated with the authenticated user's UUID.
  *
  * <h2>Endpoints</h2>
+ *
  * <ul>
- *   <li>{@code POST /v1/sessions/create} — create a new session; requires the
- *       {@code Freerouting-Environment-Host} header.</li>
- *   <li>{@code GET  /v1/sessions/list} — list all sessions owned by the caller.</li>
- *   <li>{@code GET  /v1/sessions/{sessionId}} — retrieve details of a specific session.</li>
- *   <li>{@code GET  /v1/sessions/{sessionId}/logs} — retrieve all log entries for a session.</li>
+ *   <li>{@code POST /v1/sessions/create} — create a new session; requires the {@code
+ *       Freerouting-Environment-Host} header.
+ *   <li>{@code GET /v1/sessions/list} — list all sessions owned by the caller.
+ *   <li>{@code GET /v1/sessions/{sessionId}} — retrieve details of a specific session.
+ *   <li>{@code GET /v1/sessions/{sessionId}/logs} — retrieve all log entries for a session.
  * </ul>
  *
- * <p>All endpoints authenticate the caller via {@link app.freerouting.api.BaseController#AuthenticateUser()}
- * using the {@code Freerouting-Profile-ID} request header.</p>
+ * <p>All endpoints authenticate the caller via {@link
+ * app.freerouting.api.BaseController#AuthenticateUser()} using the {@code Freerouting-Profile-ID}
+ * request header.
  */
 @Path("/v1/sessions")
-@Tag(name = "Sessions", description = "Session management endpoints for creating and managing routing sessions")
+@Tag(
+    name = "Sessions",
+    description = "Session management endpoints for creating and managing routing sessions")
 public class SessionControllerV1 extends BaseController {
 
-  @Context
-  private HttpHeaders httpHeaders;
+  @Context private HttpHeaders httpHeaders;
 
-  public SessionControllerV1() {
-  }
+  public SessionControllerV1() {}
 
-  @Operation(summary = "List all sessions", description = "Retrieves a list of all routing sessions accessible to the authenticated user.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "List of session IDs retrieved successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, examples = @ExampleObject(value = "[\"550e8400-e29b-41d4-a716-446655440000\", \"660e8400-e29b-41d4-a716-446655440001\"]")))
-  })
+  @Operation(
+      summary = "List all sessions",
+      description =
+          "Retrieves a list of all routing sessions accessible to the authenticated user.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "List of session IDs retrieved successfully",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    examples =
+                        @ExampleObject(
+                            value =
+                                "[\"550e8400-e29b-41d4-a716-446655440000\", \"660e8400-e29b-41d4-a716-446655440001\"]")))
+      })
   @GET
   @Path("/list")
   @Produces(MediaType.APPLICATION_JSON)
@@ -77,21 +92,45 @@ public class SessionControllerV1 extends BaseController {
 
   @Operation(
       summary = "Create new session",
-      description = "Creates a new routing session for the authenticated user. This is Step 1 of the routing pipeline. Next, call enqueue_job using the returned sessionId.",
+      description =
+          "Creates a new routing session for the authenticated user. This is Step 1 of the routing pipeline. Next, call enqueue_job using the returned sessionId.",
       parameters = {
-          @Parameter(
-              name = "Freerouting-Environment-Host",
-              in = ParameterIn.HEADER,
-              description = "Identifies the calling EDA tool and its version in the format '<name>/<version>' (e.g. 'KiCad/10.0', 'EasyEDA/1.0'). Required on all protected endpoints.",
-              required = true,
-              example = "KiCad/10.0",
-              schema = @Schema(type = "string", pattern = "^[^/]+/[^/]+$"))
+        @Parameter(
+            name = "Freerouting-Environment-Host",
+            in = ParameterIn.HEADER,
+            description =
+                "Identifies the calling EDA tool and its version in the format '<name>/<version>' (e.g. 'KiCad/10.0', 'EasyEDA/1.0'). Required on all protected endpoints.",
+            required = true,
+            example = "KiCad/10.0",
+            schema = @Schema(type = "string", pattern = "^[^/]+/[^/]+$"))
       })
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Session created successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Session.class))),
-      @ApiResponse(responseCode = "400", description = "Missing or invalid Freerouting-Environment-Host header", content = @Content(mediaType = MediaType.APPLICATION_JSON, examples = @ExampleObject(value = "{\"error\":\"The 'Freerouting-Environment-Host' request header is required...\"}"))),
-      @ApiResponse(responseCode = "500", description = "Failed to create session", content = @Content(mediaType = MediaType.APPLICATION_JSON, examples = @ExampleObject(value = "{}")))
-  })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Session created successfully",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = Session.class))),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Missing or invalid Freerouting-Environment-Host header",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    examples =
+                        @ExampleObject(
+                            value =
+                                "{\"error\":\"The 'Freerouting-Environment-Host' request header is required...\"}"))),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Failed to create session",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    examples = @ExampleObject(value = "{}")))
+      })
   @POST
   @Path("/create")
   @Produces(MediaType.APPLICATION_JSON)
@@ -114,16 +153,35 @@ public class SessionControllerV1 extends BaseController {
     }
   }
 
-  @Operation(summary = "Get session details", description = "Retrieves detailed information about a specific routing session by its ID.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Session details retrieved successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Session.class))),
-      @ApiResponse(responseCode = "404", description = "Session not found", content = @Content(mediaType = MediaType.APPLICATION_JSON, examples = @ExampleObject(value = "{}")))
-  })
+  @Operation(
+      summary = "Get session details",
+      description = "Retrieves detailed information about a specific routing session by its ID.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Session details retrieved successfully",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = Session.class))),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Session not found",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    examples = @ExampleObject(value = "{}")))
+      })
   @GET
   @Path("/{sessionId}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getSession(
-      @Parameter(description = "Unique identifier of the session", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("sessionId") String sessionId) {
+      @Parameter(
+              description = "Unique identifier of the session",
+              example = "550e8400-e29b-41d4-a716-446655440000")
+          @PathParam("sessionId")
+          String sessionId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -138,16 +196,32 @@ public class SessionControllerV1 extends BaseController {
     }
   }
 
-  @Operation(summary = "Get session logs", description = "Retrieves all log entries associated with a specific routing session.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Session logs retrieved successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON)),
-      @ApiResponse(responseCode = "404", description = "Session not found", content = @Content(mediaType = MediaType.APPLICATION_JSON, examples = @ExampleObject(value = "{}")))
-  })
+  @Operation(
+      summary = "Get session logs",
+      description = "Retrieves all log entries associated with a specific routing session.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Session logs retrieved successfully",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Session not found",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    examples = @ExampleObject(value = "{}")))
+      })
   @GET
   @Path("/{sessionId}/logs")
   @Produces(MediaType.APPLICATION_JSON)
   public Response logs(
-      @Parameter(description = "Unique identifier of the session", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("sessionId") String sessionId) {
+      @Parameter(
+              description = "Unique identifier of the session",
+              example = "550e8400-e29b-41d4-a716-446655440000")
+          @PathParam("sessionId")
+          String sessionId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -165,27 +239,39 @@ public class SessionControllerV1 extends BaseController {
     return Response.ok(response).build();
   }
 
-  @Operation(summary = "Set session as currently monitored", description = "Binds the specified active API session and its board to the visible GUI visualizer for real-time routing display.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Session monitor status set successfully"),
-      @ApiResponse(responseCode = "404", description = "Session or active job board not found")
-  })
+  @Operation(
+      summary = "Set session as currently monitored",
+      description =
+          "Binds the specified active API session and its board to the visible GUI visualizer for real-time routing display.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Session monitor status set successfully"),
+        @ApiResponse(responseCode = "404", description = "Session or active job board not found")
+      })
   @jakarta.ws.rs.PUT
   @Path("/{sessionId}/monitor")
   @Produces(MediaType.APPLICATION_JSON)
   public Response monitorSession(
-      @Parameter(description = "Unique identifier of the session", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("sessionId") String sessionId) {
+      @Parameter(
+              description = "Unique identifier of the session",
+              example = "550e8400-e29b-41d4-a716-446655440000")
+          @PathParam("sessionId")
+          String sessionId) {
     UUID userId = AuthenticateUser();
 
     var guiSettings = app.freerouting.Freerouting.globalSettings.guiSettings;
     if (!guiSettings.isEnabled || !guiSettings.isRunning) {
       return Response.status(Response.Status.BAD_REQUEST)
-          .entity(GSON.toJson(java.util.Map.of("error", "GUI is not running, cannot monitor session visually")))
+          .entity(
+              GSON.toJson(
+                  java.util.Map.of("error", "GUI is not running, cannot monitor session visually")))
           .build();
     }
     Session session = SessionManager.getInstance().getSession(sessionId, userId);
     if (session == null) {
-      return Response.status(Response.Status.NOT_FOUND).entity(GSON.toJson(java.util.Map.of("error", "Session not found"))).build();
+      return Response.status(Response.Status.NOT_FOUND)
+          .entity(GSON.toJson(java.util.Map.of("error", "Session not found")))
+          .build();
     }
 
     RoutingJob targetJob = null;
@@ -200,12 +286,18 @@ public class SessionControllerV1 extends BaseController {
 
     if (targetJob == null || targetJob.board == null) {
       return Response.status(Response.Status.NOT_FOUND)
-          .entity(GSON.toJson(java.util.Map.of("error", "Active routing job or board not found for this session")))
+          .entity(
+              GSON.toJson(
+                  java.util.Map.of(
+                      "error", "Active routing job or board not found for this session")))
           .build();
     }
 
     SessionManager.getInstance().setMonitoredSessionId(session.getId());
-    FRAnalytics.apiEndpointCalled("PUT v1/sessions/" + sessionId + "/monitor", "", "{\"monitored\":true}", userId);
-    return Response.ok("{\"success\":true,\"message\":\"Session is now actively monitored in GUI\"}").build();
+    FRAnalytics.apiEndpointCalled(
+        "PUT v1/sessions/" + sessionId + "/monitor", "", "{\"monitored\":true}", userId);
+    return Response.ok(
+            "{\"success\":true,\"message\":\"Session is now actively monitored in GUI\"}")
+        .build();
   }
 }

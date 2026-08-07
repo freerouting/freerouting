@@ -60,8 +60,7 @@ class DialogInteractionHandlersTest {
     assertEquals(9, WindowAutorouteParameter.normalizeIntInput("bad", 9, 1, 9999));
 
     assertEquals(
-        "12:00:00",
-        WindowAutorouteParameter.normalizeTimeoutInput("12:00:00", "00:30:00"));
+        "12:00:00", WindowAutorouteParameter.normalizeTimeoutInput("12:00:00", "00:30:00"));
     assertEquals("00:30:00", WindowAutorouteParameter.normalizeTimeoutInput("bad", "00:30:00"));
 
     assertEquals(2.5, WindowAutorouteParameter.normalizePositiveDoubleInput(2.5, 1.0));
@@ -85,11 +84,7 @@ class DialogInteractionHandlersTest {
 
     ClearanceMatrix innerMatrix = mock(ClearanceMatrix.class);
     WindowClearanceMatrix.applyClearanceValue(
-        innerMatrix,
-        2,
-        1,
-        ComboBoxLayer.INNER_LAYER_INDEX,
-        220);
+        innerMatrix, 2, 1, ComboBoxLayer.INNER_LAYER_INDEX, 220);
     verify(innerMatrix).set_inner_value(2, 1, 220);
     verify(innerMatrix).set_inner_value(1, 2, 220);
 

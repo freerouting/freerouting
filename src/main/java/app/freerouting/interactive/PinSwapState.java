@@ -16,30 +16,31 @@ public final class PinSwapState extends InteractiveState {
   private final Set<Pin> swappable_pins;
   private Pin to_pin;
 
-  /**
-   * Creates a new instance of PinSwapState
-   */
-  private PinSwapState(Pin p_pin_to_swap, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
+  /** Creates a new instance of PinSwapState */
+  private PinSwapState(
+      Pin p_pin_to_swap, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
     super(p_return_state, p_board_handling);
     this.from_pin = p_pin_to_swap;
     this.swappable_pins = p_pin_to_swap.get_swappable_pins();
   }
 
-  public static InteractiveState get_instance(Pin p_pin_to_swap, InteractiveState p_return_state,
-      GuiBoardManager p_board_handling) {
+  public static InteractiveState get_instance(
+      Pin p_pin_to_swap, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
     PinSwapState new_state = new PinSwapState(p_pin_to_swap, p_return_state, p_board_handling);
     if (new_state.swappable_pins.isEmpty()) {
-      new_state.hdlg.screen_messages.set_status_message(new_state.tm.getText("no_swappable_pin_found"));
+      new_state.hdlg.screen_messages.set_status_message(
+          new_state.tm.getText("no_swappable_pin_found"));
       return p_return_state;
     }
-    new_state.hdlg.screen_messages
-        .set_status_message(new_state.tm.getText("please_click_second_pin_with_the_left_mouse_button"));
+    new_state.hdlg.screen_messages.set_status_message(
+        new_state.tm.getText("please_click_second_pin_with_the_left_mouse_button"));
     return new_state;
   }
 
   @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
-    ItemSelectionFilter selection_filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
+    ItemSelectionFilter selection_filter =
+        new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
     Collection<Item> picked_items = hdlg.pick_items(p_location, selection_filter);
     if (picked_items.isEmpty()) {
       this.hdlg.screen_messages.set_status_message(tm.getText("no_pin_selected"));
@@ -65,7 +66,8 @@ public final class PinSwapState extends InteractiveState {
       return this.cancel();
     }
     if (this.from_pin.net_count() > 1 || this.to_pin.net_count() > 1) {
-      FRLogger.warn("PinSwapState.complete: pin swap not yet implemented for pins belonging to more than 1 net ");
+      FRLogger.warn(
+          "PinSwapState.complete: pin swap not yet implemented for pins belonging to more than 1 net ");
       return this.cancel();
     }
     int from_net_no;
@@ -81,11 +83,13 @@ public final class PinSwapState extends InteractiveState {
       to_net_no = -1;
     }
     if (!hdlg.get_routing_board().check_change_net(this.from_pin, to_net_no)) {
-      hdlg.screen_messages.set_status_message(tm.getText("pin_not_swapped_because_it_is_already_connected"));
+      hdlg.screen_messages.set_status_message(
+          tm.getText("pin_not_swapped_because_it_is_already_connected"));
       return this.cancel();
     }
     if (!hdlg.get_routing_board().check_change_net(this.to_pin, from_net_no)) {
-      hdlg.screen_messages.set_status_message(tm.getText("pin_not_swapped_because_second_pin_is_already_connected"));
+      hdlg.screen_messages.set_status_message(
+          tm.getText("pin_not_swapped_because_second_pin_is_already_connected"));
       return this.cancel();
     }
     hdlg.get_routing_board().generate_snapshot();
@@ -104,7 +108,8 @@ public final class PinSwapState extends InteractiveState {
   public void draw(Graphics p_graphics) {
     Color highlight_color = hdlg.graphics_context.get_hilight_color();
     double highligt_color_intensity = hdlg.graphics_context.get_hilight_color_intensity();
-    from_pin.draw(p_graphics, hdlg.graphics_context, highlight_color, 0.5 * highligt_color_intensity);
+    from_pin.draw(
+        p_graphics, hdlg.graphics_context, highlight_color, 0.5 * highligt_color_intensity);
     for (Pin curr_pin : swappable_pins) {
       curr_pin.draw(p_graphics, hdlg.graphics_context, highlight_color, highligt_color_intensity);
     }

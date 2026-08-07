@@ -17,8 +17,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for the {@link InteractiveSettings} singleton contract introduced in sub-issue 02,
- * and the {@code reset}/{@code setInstance} methods introduced for per-load reinitialisation
+ * Unit tests for the {@link InteractiveSettings} singleton contract introduced in sub-issue 02, and
+ * the {@code reset}/{@code setInstance} methods introduced for per-load reinitialisation
  * (design-load reset requirement).
  */
 class InteractiveSettingsSingletonTest {
@@ -80,7 +80,9 @@ class InteractiveSettingsSingletonTest {
     assertNotNull(second, "reset must return non-null");
     assertNotSame(first, second, "reset must produce a new instance");
     // getOrCreate must now return the new instance
-    assertSame(second, InteractiveSettings.getOrCreate(board),
+    assertSame(
+        second,
+        InteractiveSettings.getOrCreate(board),
         "getOrCreate after reset must return the reset instance");
   }
 
@@ -110,7 +112,9 @@ class InteractiveSettingsSingletonTest {
     var deserialized = new InteractiveSettings(original); // copy ctor simulates deserialization
     InteractiveSettings.setInstance(deserialized);
 
-    assertSame(deserialized, InteractiveSettings.getOrCreate(board),
+    assertSame(
+        deserialized,
+        InteractiveSettings.getOrCreate(board),
         "After setInstance the provided instance must be returned by getOrCreate");
   }
 
@@ -118,13 +122,13 @@ class InteractiveSettingsSingletonTest {
   void headlessBoardManager_getSettings_returnsNull() {
     @SuppressWarnings("deprecation")
     app.freerouting.settings.sources.GuiSettings settings = headlessManager.get_settings();
-    assertNull(settings,
-        "HeadlessBoardManager.get_settings() must return null in headless mode");
+    assertNull(settings, "HeadlessBoardManager.get_settings() must return null in headless mode");
   }
 
   @Test
   void headlessBoardManager_getInteractiveSettings_returnsNull() {
-    assertNull(headlessManager.getInteractiveSettings(),
+    assertNull(
+        headlessManager.getInteractiveSettings(),
         "HeadlessBoardManager.getInteractiveSettings() must return null in headless mode");
   }
 
@@ -143,12 +147,15 @@ class InteractiveSettingsSingletonTest {
     // "Second load" — reset again (same board object here; in real GUI it may differ).
     var secondSettings = InteractiveSettings.reset(board);
 
-    assertNotSame(firstSettings, secondSettings,
+    assertNotSame(
+        firstSettings,
+        secondSettings,
         "Second reset must produce a new InteractiveSettings instance");
-    assertEquals(0, secondSettings.get_layer(),
-        "Layer must be reset to 0 after a new design load");
+    assertEquals(0, secondSettings.get_layer(), "Layer must be reset to 0 after a new design load");
     // The singleton must now point at the second instance.
-    assertSame(secondSettings, InteractiveSettings.getOrCreate(board),
+    assertSame(
+        secondSettings,
+        InteractiveSettings.getOrCreate(board),
         "getOrCreate must return the most recent reset instance");
   }
 }

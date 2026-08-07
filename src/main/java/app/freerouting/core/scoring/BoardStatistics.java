@@ -30,61 +30,70 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Statistics of a board.
- */
+/** Statistics of a board. */
 public class BoardStatistics implements Serializable {
 
   @SerializedName("host")
   public String host;
+
   @SerializedName("unit")
   public String unit;
+
   @SerializedName("board")
   public BoardStatisticsBoard board = new BoardStatisticsBoard();
+
   @SerializedName("layers")
   public BoardStatisticsLayers layers = new BoardStatisticsLayers();
+
   @SerializedName("items")
   public BoardStatisticsItems items = new BoardStatisticsItems();
+
   @SerializedName("components")
   public BoardStatisticsComponents components = new BoardStatisticsComponents();
+
   @SerializedName("pads")
   public BoardStatisticsPads pads = new BoardStatisticsPads();
+
   @SerializedName("nets")
   public BoardStatisticsNets nets = new BoardStatisticsNets();
+
   @SerializedName("connections")
   public BoardStatisticsConnections connections = new BoardStatisticsConnections();
+
   @SerializedName("traces")
   public BoardStatisticsTraces traces = new BoardStatisticsTraces();
+
   @SerializedName("bends")
   public BoardStatisticsBends bends = new BoardStatisticsBends();
+
   @SerializedName("vias")
   public BoardStatisticsVias vias = new BoardStatisticsVias();
+
   @SerializedName("clearance_violations")
-  public BoardStatisticsClearanceViolations clearanceViolations = new BoardStatisticsClearanceViolations();
+  public BoardStatisticsClearanceViolations clearanceViolations =
+      new BoardStatisticsClearanceViolations();
+
   @SerializedName("fanout")
   public BoardStatisticsFanout fanout = new BoardStatisticsFanout();
 
-  public BoardStatistics() {
-  }
+  public BoardStatistics() {}
 
-  /**
-   * Creates a new BoardFileStatistics object from a RoutingBoard object.
-   */
+  /** Creates a new BoardFileStatistics object from a RoutingBoard object. */
   public BoardStatistics(BasicBoard board) {
     this(board, null, true);
   }
 
   /**
-   * Creates a new BoardFileStatistics object from a RoutingBoard object and
-   * defines the preferred unit for the statistics.
+   * Creates a new BoardFileStatistics object from a RoutingBoard object and defines the preferred
+   * unit for the statistics.
    */
   public BoardStatistics(BasicBoard board, Unit unit) {
     this(board, unit, true);
   }
 
   /**
-   * Creates a new BoardFileStatistics object from a RoutingBoard object,
-   * defines the preferred unit, and allows skipping the clearance checks.
+   * Creates a new BoardFileStatistics object from a RoutingBoard object, defines the preferred
+   * unit, and allows skipping the clearance checks.
    */
   public BoardStatistics(BasicBoard board, Unit unit, boolean includeClearanceViolations) {
     this(board, unit, includeClearanceViolations, true);
@@ -93,15 +102,17 @@ public class BoardStatistics implements Serializable {
   /**
    * Creates board statistics with optional clearance and connection (incomplete) analysis.
    *
-   * @param includeConnections when {@code false}, skips {@code calculateAllIncompletes()} —
-   *     use when a {@link app.freerouting.interactive.RatsNest} will be created immediately after load
+   * @param includeConnections when {@code false}, skips {@code calculateAllIncompletes()} — use
+   *     when a {@link app.freerouting.interactive.RatsNest} will be created immediately after load
    */
-  public BoardStatistics(BasicBoard board, Unit unit, boolean includeClearanceViolations,
-      boolean includeConnections) {
+  public BoardStatistics(
+      BasicBoard board, Unit unit, boolean includeClearanceViolations, boolean includeConnections) {
     var bb = board.get_bounding_box();
 
-    this.host = board.communication.specctra_parser_info.host_cad + ","
-        + board.communication.specctra_parser_info.host_version;
+    this.host =
+        board.communication.specctra_parser_info.host_cad
+            + ","
+            + board.communication.specctra_parser_info.host_version;
     if ((host == null) || host.isEmpty()) {
       this.host = "Freerouting," + Constants.FREEROUTING_VERSION;
     }
@@ -110,11 +121,19 @@ public class BoardStatistics implements Serializable {
     this.unit = board.communication.unit.toString();
 
     // Board
-    this.board.boundingBox = new Rectangle2D.Float((float) bb.ur.x, (float) board.get_bounding_box().ur.y,
-        (float) board.get_bounding_box().ll.x, (float) board.get_bounding_box().ll.y);
-    this.board.size = new Rectangle2D.Float(0, 0,
-        Math.abs((float) board.get_bounding_box().ll.x - (float) board.get_bounding_box().ur.x),
-        Math.abs((float) board.get_bounding_box().ll.y - (float) board.get_bounding_box().ur.y));
+    this.board.boundingBox =
+        new Rectangle2D.Float(
+            (float) bb.ur.x,
+            (float) board.get_bounding_box().ur.y,
+            (float) board.get_bounding_box().ll.x,
+            (float) board.get_bounding_box().ll.y);
+    this.board.size =
+        new Rectangle2D.Float(
+            0,
+            0,
+            Math.abs((float) board.get_bounding_box().ll.x - (float) board.get_bounding_box().ur.x),
+            Math.abs(
+                (float) board.get_bounding_box().ll.y - (float) board.get_bounding_box().ur.y));
 
     // Layers
     this.layers.totalCount = board.get_layer_count();
@@ -130,7 +149,7 @@ public class BoardStatistics implements Serializable {
     this.items.componentOutlineCount = 0;
     this.items.otherCount = 0;
     Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
-    for (;;) {
+    for (; ; ) {
       Item curr_item = (Item) board.item_list.read_object(it);
       if (curr_item == null) {
         break;
@@ -157,23 +176,16 @@ public class BoardStatistics implements Serializable {
     this.components.totalCount = board.components.count();
 
     // Pads
-    this.pads.totalCount = board
-        .get_pins()
-        .size();
+    this.pads.totalCount = board.get_pins().size();
 
     // Nets
     this.nets.totalCount = board.rules.nets.max_net_no();
     this.nets.classCount = board.rules.net_classes.count();
 
     // Traces
-    this.traces.totalCount = board
-        .get_traces()
-        .size();
-    this.traces.totalLength = (float) board
-        .get_traces()
-        .stream()
-        .mapToDouble(Trace::get_length)
-        .sum();
+    this.traces.totalCount = board.get_traces().size();
+    this.traces.totalLength =
+        (float) board.get_traces().stream().mapToDouble(Trace::get_length).sum();
     // Normalise trace length to millimetres so that calculateScore() uses a
     // physically meaningful cost regardless of DSN coordinate resolution.
     // Raw board units vary wildly: KiCad exports at 1e-6 mm/unit (1 nm), while
@@ -181,8 +193,9 @@ public class BoardStatistics implements Serializable {
     // term in getNormalizedScore() is thousands of times larger than
     // max_connections * unroutedNetPenalty for high-resolution boards, forcing the
     // score to 0 even for a perfectly-routed, zero-violation layout.
-    double boardUnitToMmFactor = Unit.scale(1.0, board.communication.unit, Unit.MM)
-        / (board.communication.resolution > 0 ? board.communication.resolution : 1);
+    double boardUnitToMmFactor =
+        Unit.scale(1.0, board.communication.unit, Unit.MM)
+            / (board.communication.resolution > 0 ? board.communication.resolution : 1);
     this.traces.totalLengthMm = (float) (this.traces.totalLength * boardUnitToMmFactor);
     if (this.traces.totalCount > 0) {
       this.traces.averageLength = this.traces.totalLength / this.traces.totalCount;
@@ -222,7 +235,7 @@ public class BoardStatistics implements Serializable {
     this.traces.totalWeightedLength = 0.0f;
     int default_clearance_class = BoardRules.default_clearance_class();
     Iterator<UndoableObjects.UndoableObjectNode> it2 = board.item_list.start_read_object();
-    for (;;) {
+    for (; ; ) {
       UndoableObjects.Storable curr_item = board.item_list.read_object(it2);
       if (curr_item == null) {
         break;
@@ -230,8 +243,13 @@ public class BoardStatistics implements Serializable {
       if (curr_item instanceof Trace curr_trace) {
         FixedState fixed_state = curr_trace.get_fixed_state();
         if (fixed_state == FixedState.UNFIXED || fixed_state == FixedState.SHOVE_FIXED) {
-          double weighted_trace_length = curr_trace.get_length() * (curr_trace.get_half_width() + board
-              .clearance_value(curr_trace.clearance_class_no(), default_clearance_class, curr_trace.get_layer()));
+          double weighted_trace_length =
+              curr_trace.get_length()
+                  * (curr_trace.get_half_width()
+                      + board.clearance_value(
+                          curr_trace.clearance_class_no(),
+                          default_clearance_class,
+                          curr_trace.get_layer()));
           if (fixed_state == FixedState.SHOVE_FIXED) {
             // to produce less violations with pin exit directions.
             weighted_trace_length /= 2;
@@ -269,15 +287,9 @@ public class BoardStatistics implements Serializable {
 
           // Now classify each bend by angle
           for (int i = 1; i < cornerCount - 1; i++) {
-            FloatPoint prev = polyline
-                .corner(i - 1)
-                .to_float();
-            FloatPoint curr = polyline
-                .corner(i)
-                .to_float();
-            FloatPoint next = polyline
-                .corner(i + 1)
-                .to_float();
+            FloatPoint prev = polyline.corner(i - 1).to_float();
+            FloatPoint curr = polyline.corner(i).to_float();
+            FloatPoint next = polyline.corner(i + 1).to_float();
 
             // Calculate vectors for the two segments
             double dx1 = curr.x - prev.x;
@@ -305,9 +317,7 @@ public class BoardStatistics implements Serializable {
     }
 
     // Vias
-    this.vias.totalCount = board
-        .get_vias()
-        .size();
+    this.vias.totalCount = board.get_vias().size();
     this.vias.throughHoleCount = 0;
     this.vias.blindCount = 0;
     this.vias.buriedCount = 0;
@@ -340,20 +350,30 @@ public class BoardStatistics implements Serializable {
       this.unit = unit.toString();
 
       // Board
-      this.board.boundingBox = new Rectangle2D.Float((float) Unit.scale(this.board.boundingBox.x, fromUnit, toUnit),
-          (float) Unit.scale(this.board.boundingBox.y, fromUnit, toUnit),
-          (float) Unit.scale(this.board.boundingBox.width, fromUnit, toUnit),
-          (float) Unit.scale(this.board.boundingBox.height, fromUnit, toUnit));
-      this.board.size = new Rectangle2D.Float(0, 0, (float) Unit.scale(this.board.size.width, fromUnit, toUnit),
-          (float) Unit.scale(this.board.size.height, fromUnit, toUnit));
+      this.board.boundingBox =
+          new Rectangle2D.Float(
+              (float) Unit.scale(this.board.boundingBox.x, fromUnit, toUnit),
+              (float) Unit.scale(this.board.boundingBox.y, fromUnit, toUnit),
+              (float) Unit.scale(this.board.boundingBox.width, fromUnit, toUnit),
+              (float) Unit.scale(this.board.boundingBox.height, fromUnit, toUnit));
+      this.board.size =
+          new Rectangle2D.Float(
+              0,
+              0,
+              (float) Unit.scale(this.board.size.width, fromUnit, toUnit),
+              (float) Unit.scale(this.board.size.height, fromUnit, toUnit));
 
       // Traces
       this.traces.totalLength = (float) Unit.scale(this.traces.totalLength, fromUnit, toUnit);
-      this.traces.totalWeightedLength = (float) Unit.scale(this.traces.totalWeightedLength, fromUnit, toUnit);
+      this.traces.totalWeightedLength =
+          (float) Unit.scale(this.traces.totalWeightedLength, fromUnit, toUnit);
       this.traces.averageLength = (float) Unit.scale(this.traces.averageLength, fromUnit, toUnit);
-      this.traces.totalHorizontalLength = (float) Unit.scale(this.traces.totalHorizontalLength, fromUnit, toUnit);
-      this.traces.totalVerticalLength = (float) Unit.scale(this.traces.totalVerticalLength, fromUnit, toUnit);
-      this.traces.totalAngledLength = (float) Unit.scale(this.traces.totalAngledLength, fromUnit, toUnit);
+      this.traces.totalHorizontalLength =
+          (float) Unit.scale(this.traces.totalHorizontalLength, fromUnit, toUnit);
+      this.traces.totalVerticalLength =
+          (float) Unit.scale(this.traces.totalVerticalLength, fromUnit, toUnit);
+      this.traces.totalAngledLength =
+          (float) Unit.scale(this.traces.totalAngledLength, fromUnit, toUnit);
     }
 
     // Calculate fanout statistics
@@ -379,13 +399,11 @@ public class BoardStatistics implements Serializable {
   }
 
   /**
-   * Creates a new BoardFileStatistics object from a file. This method should be
-   * used only if the board object is not available, because the board object
-   * based method is more detailed.
+   * Creates a new BoardFileStatistics object from a file. This method should be used only if the
+   * board object is not available, because the board object based method is more detailed.
    *
-   * @param data   Binary data of the file.
-   * @param format Format of the file. Only SES and DSN formats are supported at
-   *               the moment.
+   * @param data Binary data of the file.
+   * @param format Format of the file. Only SES and DSN formats are supported at the moment.
    */
   public BoardStatistics(byte[] data, FileFormat format) {
     if (data == null || format == null) {
@@ -416,7 +434,6 @@ public class BoardStatistics implements Serializable {
           if (!layers.contains(layer)) {
             layers.add(layer);
           }
-
         }
       }
 
@@ -475,7 +492,8 @@ public class BoardStatistics implements Serializable {
     } else if (format == FileFormat.KICAD_DESIGN_JSON) {
       try {
         String content = new String(data, StandardCharsets.UTF_8);
-        com.google.gson.JsonObject json = GsonProvider.GSON.fromJson(content, com.google.gson.JsonObject.class);
+        com.google.gson.JsonObject json =
+            GsonProvider.GSON.fromJson(content, com.google.gson.JsonObject.class);
         if (json != null) {
           if (json.has("layers")) {
             this.layers.totalCount = json.getAsJsonArray("layers").size();
@@ -538,32 +556,32 @@ public class BoardStatistics implements Serializable {
     return count;
   }
 
-  /**
-   * Returns a JSON representation of this object.
-   */
+  /** Returns a JSON representation of this object. */
   public String toString() {
     return GsonProvider.GSON.toJson(this);
   }
 
   /**
-   * Calculates the score/cost of the board based on the given scoring settings.
-   * Higher score means better board.
+   * Calculates the score/cost of the board based on the given scoring settings. Higher score means
+   * better board.
    */
   public float calculateScore(ScoringSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
-    float penalties = this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
-        + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
-        + this.bends.totalCount * scoringSettings.bendPenalty;
+    float penalties =
+        this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
+            + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
+            + this.bends.totalCount * scoringSettings.bendPenalty;
     // Use the mm-normalised trace length so that the trace-cost term is comparable
     // to the unroutedNetPenalty regardless of the DSN internal coordinate resolution.
     // totalLength is in raw board units which vary wildly between DSN files
     // (e.g. 1 nm for KiCad at resolution 1e6, vs 0.1 µm for EAGLE/benchmark boards),
     // and would make the score collapse to 0 for high-resolution KiCad exports.
-    float traceLengthForCost = this.traces.totalLengthMm != null
-        ? this.traces.totalLengthMm
-        : this.traces.totalLength;
-    float costs = (float) (traceLengthForCost * scoringSettings.defaultPreferredDirectionTraceCost
-        + this.vias.totalCount * scoringSettings.viaCosts);
+    float traceLengthForCost =
+        this.traces.totalLengthMm != null ? this.traces.totalLengthMm : this.traces.totalLength;
+    float costs =
+        (float)
+            (traceLengthForCost * scoringSettings.defaultPreferredDirectionTraceCost
+                + this.vias.totalCount * scoringSettings.viaCosts);
 
     return maximumScore - penalties - costs;
   }
@@ -588,8 +606,10 @@ public class BoardStatistics implements Serializable {
   public static class BoardStatisticsFanout implements Serializable {
     @SerializedName("total_smd_pins")
     public int totalSmdPins;
+
     @SerializedName("pins_to_escape")
     public int pinsToEscape;
+
     @SerializedName("escaped_count")
     public int escapedCount;
   }

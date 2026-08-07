@@ -12,21 +12,30 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/dev/system")
-@Tag(name = "Dev - System", description = "Mock system endpoints for testing and development. Returns static test data.")
+@Tag(
+    name = "Dev - System",
+    description = "Mock system endpoints for testing and development. Returns static test data.")
 public class SystemControllerMocked {
 
-  public SystemControllerMocked() {
-  }
+  public SystemControllerMocked() {}
 
-  @Operation(summary = "Get system status (mock)", description = "Returns mock system status data for testing purposes. This endpoint always returns the same static data.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Mock system status retrieved successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON))
-  })
+  @Operation(
+      summary = "Get system status (mock)",
+      description =
+          "Returns mock system status data for testing purposes. This endpoint always returns the same static data.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Mock system status retrieved successfully",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON))
+      })
   @GET
   @Path("/status")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getStatus() {
-    return Response.ok("""
+    return Response.ok(
+            """
         {
             "status": "OK",
             "cpu_load": 3.954818264180926,
@@ -35,18 +44,27 @@ public class SystemControllerMocked {
             "storage_available": 481,
             "session_count": 1
         }
-        """).build();
+        """)
+        .build();
   }
 
-  @Operation(summary = "Get environment information (mock)", description = "Returns mock environment information for testing purposes. This endpoint always returns the same static data.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Mock environment information retrieved successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON))
-  })
+  @Operation(
+      summary = "Get environment information (mock)",
+      description =
+          "Returns mock environment information for testing purposes. This endpoint always returns the same static data.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Mock environment information retrieved successfully",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON))
+      })
   @GET
   @Path("/environment")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getEnvironment() {
-    return Response.ok("""
+    return Response.ok(
+            """
         {
             "freerouting_version": "2.0.0,2024-10-14",
             "app_started_at": "2024-10-14T10:56:26.730145900Z",
@@ -57,7 +75,7 @@ public class SystemControllerMocked {
             "cpu_cores": 12,
             "ram": 8176
         }
-        """).build();
-
+        """)
+        .build();
   }
 }

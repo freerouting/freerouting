@@ -31,14 +31,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
-/**
- * Class for reading and writing wiring scopes from dsn-files.
- */
+/** Class for reading and writing wiring scopes from dsn-files. */
 public class Wiring extends ScopeKeyword {
 
-  /**
-   * Creates a new instance of Wiring
-   */
+  /** Creates a new instance of Wiring */
   public Wiring() {
     super("wiring");
   }
@@ -97,7 +93,10 @@ public class Wiring extends ScopeKeyword {
     if (via_net != null) {
       write_net(via_net, p_par.file, p_par.identifier_type);
     }
-    Rule.write_item_clearance_class(p_par.board.rules.clearance_matrix.get_name(p_via.clearance_class_no()), p_par.file, p_par.identifier_type);
+    Rule.write_item_clearance_class(
+        p_par.board.rules.clearance_matrix.get_name(p_via.clearance_class_no()),
+        p_par.file,
+        p_par.identifier_type);
     write_fixed_state(p_par.file, p_via.get_fixed_state());
     p_par.file.end_scope();
   }
@@ -137,18 +136,23 @@ public class Wiring extends ScopeKeyword {
       curr_path.write_scope(p_par.file, p_par.identifier_type);
     }
     write_net(wire_net, p_par.file, p_par.identifier_type);
-    Rule.write_item_clearance_class(p_par.board.rules.clearance_matrix.get_name(p_wire.clearance_class_no()), p_par.file, p_par.identifier_type);
+    Rule.write_item_clearance_class(
+        p_par.board.rules.clearance_matrix.get_name(p_wire.clearance_class_no()),
+        p_par.file,
+        p_par.identifier_type);
     write_fixed_state(p_par.file, curr_wire.get_fixed_state());
     p_par.file.end_scope();
   }
 
-  private static void write_conduction_area_scope(WriteScopeParameter p_par, ConductionArea p_conduction_area) throws IOException {
+  private static void write_conduction_area_scope(
+      WriteScopeParameter p_par, ConductionArea p_conduction_area) throws IOException {
     int net_count = p_conduction_area.net_count();
     if (net_count != 1) {
       FRLogger.warn("Plane.write_scope: unexpected net count");
       return;
     }
-    app.freerouting.rules.Net curr_net = p_par.board.rules.nets.get(p_conduction_area.get_net_no(0));
+    app.freerouting.rules.Net curr_net =
+        p_par.board.rules.nets.get(p_conduction_area.get_net_no(0));
     Area curr_area = p_conduction_area.get_area();
     int layer_no = p_conduction_area.get_layer();
     app.freerouting.board.Layer board_layer = p_par.board.layer_structure.arr[layer_no];
@@ -173,18 +177,24 @@ public class Wiring extends ScopeKeyword {
       dsn_hole.write_hole_scope(p_par.file, p_par.identifier_type);
     }
     write_net(curr_net, p_par.file, p_par.identifier_type);
-    Rule.write_item_clearance_class(p_par.board.rules.clearance_matrix.get_name(p_conduction_area.clearance_class_no()), p_par.file, p_par.identifier_type);
+    Rule.write_item_clearance_class(
+        p_par.board.rules.clearance_matrix.get_name(p_conduction_area.clearance_class_no()),
+        p_par.file,
+        p_par.identifier_type);
     p_par.file.end_scope();
   }
 
-  private static void write_net(app.freerouting.rules.Net p_net, IndentFileWriter p_file, IdentifierType p_identifier_type) throws IOException {
+  private static void write_net(
+      app.freerouting.rules.Net p_net, IndentFileWriter p_file, IdentifierType p_identifier_type)
+      throws IOException {
     p_file.new_line();
     p_file.write("(");
     Net.write_net_id(p_net, p_file, p_identifier_type);
     p_file.write(")");
   }
 
-  private static void write_fixed_state(IndentFileWriter p_file, FixedState p_fixed_state) throws IOException {
+  private static void write_fixed_state(IndentFileWriter p_file, FixedState p_fixed_state)
+      throws IOException {
     if (p_fixed_state == FixedState.UNFIXED) {
       return;
     }
@@ -199,11 +209,13 @@ public class Wiring extends ScopeKeyword {
     }
   }
 
-  private static Collection<app.freerouting.rules.Net> get_subnets(Net.Id p_net_id, BoardRules p_rules) {
+  private static Collection<app.freerouting.rules.Net> get_subnets(
+      Net.Id p_net_id, BoardRules p_rules) {
     Collection<app.freerouting.rules.Net> found_nets = new LinkedList<>();
     if (p_net_id != null) {
       if (p_net_id.subnet_number > 0) {
-        app.freerouting.rules.Net found_net = p_rules.nets.get(p_net_id.name, p_net_id.subnet_number);
+        app.freerouting.rules.Net found_net =
+            p_rules.nets.get(p_net_id.name, p_net_id.subnet_number);
         if (found_net != null) {
           found_nets.add(found_net);
         }
@@ -214,14 +226,19 @@ public class Wiring extends ScopeKeyword {
     return found_nets;
   }
 
-  private static boolean via_exists(IntPoint p_location, Padstack p_padstack, int[] p_net_no_arr, BasicBoard p_board) {
-    ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.VIAS);
+  private static boolean via_exists(
+      IntPoint p_location, Padstack p_padstack, int[] p_net_no_arr, BasicBoard p_board) {
+    ItemSelectionFilter filter =
+        new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.VIAS);
     int from_layer = p_padstack.from_layer();
     int to_layer = p_padstack.to_layer();
     Collection<Item> picked_items = p_board.pick_items(p_location, p_padstack.from_layer(), filter);
     for (Item curr_item : picked_items) {
       Via curr_via = (Via) curr_item;
-      if (curr_via.nets_equal(p_net_no_arr) && curr_via.get_center().equals(p_location) && curr_via.first_layer() == from_layer && curr_via.last_layer() == to_layer) {
+      if (curr_via.nets_equal(p_net_no_arr)
+          && curr_via.get_center().equals(p_location)
+          && curr_via.first_layer() == from_layer
+          && curr_via.last_layer() == to_layer) {
         return true;
       }
     }
@@ -251,9 +268,7 @@ public class Wiring extends ScopeKeyword {
     }
   }
 
-  /**
-   * Reads a net_id. The subnet_number of the net_id will be 0, if no subnet_number was found.
-   */
+  /** Reads a net_id. The subnet_number of the net_id will be 0, if no subnet_number was found. */
   private static Net.Id read_net_id(IJFlexScanner p_scanner) {
     try {
       int subnet_number = 0;
@@ -267,7 +282,10 @@ public class Wiring extends ScopeKeyword {
         next_token = p_scanner.next_token();
       }
       if (next_token != CLOSED_BRACKET) {
-        FRLogger.warn("Wiring.read_net_id: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Wiring.read_net_id: closing bracket expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
       }
       return new Net.Id(net_name, subnet_number);
     } catch (IOException e) {
@@ -284,11 +302,17 @@ public class Wiring extends ScopeKeyword {
       try {
         next_token = p_par.scanner.next_token();
       } catch (IOException _) {
-        FRLogger.warn("Wiring.read_scope: IO error scanning file at '" + p_par.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Wiring.read_scope: IO error scanning file at '"
+                + p_par.scanner.get_scope_identifier()
+                + "'");
         return false;
       }
       if (next_token == null) {
-        FRLogger.warn("Wiring.read_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Wiring.read_scope: unexpected end of file at '"
+                + p_par.scanner.get_scope_identifier()
+                + "'");
         return false;
       }
       if (next_token == CLOSED_BRACKET) {
@@ -337,7 +361,10 @@ public class Wiring extends ScopeKeyword {
         return null;
       }
       if (next_token == null) {
-        FRLogger.warn("Wiring.read_wire_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Wiring.read_wire_scope: unexpected end of file at '"
+                + p_par.scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       if (next_token == CLOSED_BRACKET) {
@@ -369,7 +396,10 @@ public class Wiring extends ScopeKeyword {
             return null;
           }
           if (next_token != CLOSED_BRACKET) {
-            FRLogger.warn("Wiring.read_wire_scope: closing bracket expected at '" + p_par.scanner.get_scope_identifier() + "'");
+            FRLogger.warn(
+                "Wiring.read_wire_scope: closing bracket expected at '"
+                    + p_par.scanner.get_scope_identifier()
+                    + "'");
             return null;
           }
         } else if (next_token == NET) {
@@ -415,7 +445,12 @@ public class Wiring extends ScopeKeyword {
     }
     if (layer_no < 0 || layer_no >= board.get_layer_count()) {
       String layerName = path != null ? path.layer.name : border_shape.layer.name;
-      String msg = "Wiring: wire ignored — unknown layer '" + layerName + "' at '" + p_par.scanner.get_scope_identifier() + "'";
+      String msg =
+          "Wiring: wire ignored — unknown layer '"
+              + layerName
+              + "' at '"
+              + p_par.scanner.get_scope_identifier()
+              + "'";
       FRLogger.warn(msg);
       p_par.warnings.add(msg);
       return null;
@@ -426,16 +461,22 @@ public class Wiring extends ScopeKeyword {
     Item result = null;
     if (border_shape != null) {
       if (clearance_class_no < 0) {
-        clearance_class_no = net_class.default_item_clearance_classes.get(DefaultItemClearanceClasses.ItemClass.AREA);
+        clearance_class_no =
+            net_class.default_item_clearance_classes.get(
+                DefaultItemClearanceClasses.ItemClass.AREA);
       }
       Collection<Shape> area = new LinkedList<>();
       area.add(border_shape);
       area.addAll(hole_list);
       Area conduction_area = Shape.transform_area_to_board(area, p_par.coordinate_transform);
-      result = board.insert_conduction_area(conduction_area, layer_no, net_no_arr, clearance_class_no, false, fixed);
+      result =
+          board.insert_conduction_area(
+              conduction_area, layer_no, net_no_arr, clearance_class_no, false, fixed);
     } else if (path instanceof PolygonPath) {
       if (clearance_class_no < 0) {
-        clearance_class_no = net_class.default_item_clearance_classes.get(DefaultItemClearanceClasses.ItemClass.TRACE);
+        clearance_class_no =
+            net_class.default_item_clearance_classes.get(
+                DefaultItemClearanceClasses.ItemClass.TRACE);
       }
       IntPoint[] corner_arr = new IntPoint[path.coordinate_arr.length / 2];
       double[] curr_point = new double[2];
@@ -444,8 +485,14 @@ public class Wiring extends ScopeKeyword {
         curr_point[1] = path.coordinate_arr[2 * i + 1];
         FloatPoint curr_corner = p_par.coordinate_transform.dsn_to_board(curr_point);
         if (!bounding_box.contains(curr_corner)) {
-          String msg = "Wiring: wire corner (" + (int)curr_point[0] + "," + (int)curr_point[1]
-              + ") is outside board bounds at '" + p_par.scanner.get_scope_identifier() + "'";
+          String msg =
+              "Wiring: wire corner ("
+                  + (int) curr_point[0]
+                  + ","
+                  + (int) curr_point[1]
+                  + ") is outside board bounds at '"
+                  + p_par.scanner.get_scope_identifier()
+                  + "'";
           FRLogger.warn(msg);
           p_par.warnings.add(msg);
           return null;
@@ -472,17 +519,24 @@ public class Wiring extends ScopeKeyword {
       if (!isDegenerate) {
         Polyline trace_polyline = new Polyline(polygon);
         // Traces are not yet normalized here because cycles may be removed premature.
-        result = board.insert_trace_without_cleaning(trace_polyline, layer_no, half_width, net_no_arr, clearance_class_no, fixed);
+        result =
+            board.insert_trace_without_cleaning(
+                trace_polyline, layer_no, half_width, net_no_arr, clearance_class_no, fixed);
       } else {
-        String msg = "Wiring: degenerate wire trace skipped (all " + polygonCorners.length
-            + " corners are identical — zero-length trace) on layer '" + path.layer.name
-            + "'. This is likely a DSN export issue in your EDA tool.";
+        String msg =
+            "Wiring: degenerate wire trace skipped (all "
+                + polygonCorners.length
+                + " corners are identical — zero-length trace) on layer '"
+                + path.layer.name
+                + "'. This is likely a DSN export issue in your EDA tool.";
         FRLogger.debug(msg);
         p_par.warnings.add(msg);
       }
     } else if (path instanceof PolylinePath) {
       if (clearance_class_no < 0) {
-        clearance_class_no = net_class.default_item_clearance_classes.get(DefaultItemClearanceClasses.ItemClass.TRACE);
+        clearance_class_no =
+            net_class.default_item_clearance_classes.get(
+                DefaultItemClearanceClasses.ItemClass.TRACE);
       }
       Line[] line_arr = new Line[path.coordinate_arr.length / 4];
       double[] curr_point = new double[2];
@@ -496,9 +550,14 @@ public class Wiring extends ScopeKeyword {
         line_arr[i] = new Line(curr_a.round(), curr_b.round());
       }
       Polyline trace_polyline = new Polyline(line_arr);
-      result = board.insert_trace_without_cleaning(trace_polyline, layer_no, half_width, net_no_arr, clearance_class_no, fixed);
+      result =
+          board.insert_trace_without_cleaning(
+              trace_polyline, layer_no, half_width, net_no_arr, clearance_class_no, fixed);
     } else {
-      FRLogger.warn("Wiring.read_wire_scope: unexpected Path subclass at '" + p_par.scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "Wiring.read_wire_scope: unexpected Path subclass at '"
+              + p_par.scanner.get_scope_identifier()
+              + "'");
       return null;
     }
     if (result != null && result.net_count() == 0) {
@@ -508,7 +567,8 @@ public class Wiring extends ScopeKeyword {
   }
 
   /**
-   * Maybe trace of type turret without net in Mentor design. Try to assign the net by calculating the overlaps.
+   * Maybe trace of type turret without net in Mentor design. Try to assign the net by calculating
+   * the overlaps.
    */
   private void try_correct_net(Item p_item) {
     if (!(p_item instanceof Trace curr_trace)) {
@@ -534,7 +594,10 @@ public class Wiring extends ScopeKeyword {
       // read the padstack name
       Object next_token = p_par.scanner.next_token();
       if (!(next_token instanceof String padstack_name)) {
-        FRLogger.warn("Wiring.read_via_scope: padstack name expected at '" + p_par.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Wiring.read_via_scope: padstack name expected at '"
+                + p_par.scanner.get_scope_identifier()
+                + "'");
         return false;
       }
       p_par.scanner.set_scope_identifier(padstack_name);
@@ -547,7 +610,10 @@ public class Wiring extends ScopeKeyword {
         } else if (next_token instanceof Integer integer) {
           location[i] = integer;
         } else {
-          FRLogger.warn("Wiring.read_via_scope: number expected at '" + p_par.scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Wiring.read_via_scope: number expected at '"
+                  + p_par.scanner.get_scope_identifier()
+                  + "'");
           return false;
         }
       }
@@ -557,7 +623,10 @@ public class Wiring extends ScopeKeyword {
         Object prev_token = next_token;
         next_token = p_par.scanner.next_token();
         if (next_token == null) {
-          FRLogger.warn("Wiring.read_via_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "Wiring.read_via_scope: unexpected end of file at '"
+                  + p_par.scanner.get_scope_identifier()
+                  + "'");
           return false;
         }
         if (next_token == CLOSED_BRACKET) {
@@ -580,7 +649,12 @@ public class Wiring extends ScopeKeyword {
       String cleanedName = padstack_name != null ? padstack_name.replaceAll("\\.\\d+", "") : null;
       Padstack curr_padstack = board.library.padstacks.get(cleanedName);
       if (curr_padstack == null) {
-        String msg = "Wiring: via padstack '" + padstack_name + "' not found at '" + p_par.scanner.get_scope_identifier() + "'";
+        String msg =
+            "Wiring: via padstack '"
+                + padstack_name
+                + "' not found at '"
+                + p_par.scanner.get_scope_identifier()
+                + "'";
         FRLogger.warn(msg);
         p_par.warnings.add(msg);
         return false;
@@ -588,7 +662,12 @@ public class Wiring extends ScopeKeyword {
       NetClass net_class = board.rules.get_default_net_class();
       Collection<app.freerouting.rules.Net> found_nets = get_subnets(net_id, board.rules);
       if (net_id != null && found_nets.isEmpty()) {
-        String msg = "Wiring: via net '" + net_id.name + "' not found at '" + p_par.scanner.get_scope_identifier() + "'";
+        String msg =
+            "Wiring: via net '"
+                + net_id.name
+                + "' not found at '"
+                + p_par.scanner.get_scope_identifier()
+                + "'";
         FRLogger.warn(msg);
         p_par.warnings.add(msg);
       }
@@ -603,16 +682,19 @@ public class Wiring extends ScopeKeyword {
         clearance_class_no = board.rules.clearance_matrix.get_no(clearance_class_name);
       }
       if (clearance_class_no < 0) {
-        clearance_class_no = net_class.default_item_clearance_classes.get(DefaultItemClearanceClasses.ItemClass.VIA);
+        clearance_class_no =
+            net_class.default_item_clearance_classes.get(DefaultItemClearanceClasses.ItemClass.VIA);
       }
       IntPoint board_location = p_par.coordinate_transform.dsn_to_board(location).round();
       if (via_exists(board_location, curr_padstack, net_no_arr, board)) {
-        String msg = "Wiring: duplicate via skipped at (" + board_location.x + ", " + board_location.y + ")";
+        String msg =
+            "Wiring: duplicate via skipped at (" + board_location.x + ", " + board_location.y + ")";
         FRLogger.warn(msg);
         p_par.warnings.add(msg);
       } else {
         boolean attach_allowed = p_par.via_at_smd_allowed && curr_padstack.attach_allowed;
-        board.insert_via(curr_padstack, board_location, net_no_arr, clearance_class_no, fixed, attach_allowed);
+        board.insert_via(
+            curr_padstack, board_location, net_no_arr, clearance_class_no, fixed, attach_allowed);
       }
       return true;
     } catch (IOException e) {

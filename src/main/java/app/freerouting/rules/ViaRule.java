@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Contains an array of vias used for routing. Vias at the beginning of the array are preferred to later vias.
+ * Contains an array of vias used for routing. Vias at the beginning of the array are preferred to
+ * later vias.
  */
 public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
 
-  /**
-   * Empty via rule. Must not be changed.
-   */
+  /** Empty via rule. Must not be changed. */
   public static final ViaRule EMPTY = new ViaRule("empty");
+
   public final String name;
   private final List<ViaInfo> list = new LinkedList<>();
 
@@ -28,9 +28,7 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
     list.add(p_via);
   }
 
-  /**
-   * Removes p_via from the rule. Returns false, if p_via was not contained in the rule.
-   */
+  /** Removes p_via from the rule. Returns false, if p_via was not contained in the rule. */
   public boolean remove_via(ViaInfo p_via) {
     return list.remove(p_via);
   }
@@ -49,9 +47,7 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
     return this.name;
   }
 
-  /**
-   * Returns true, if p_via_info is contained in the via list of this rule.
-   */
+  /** Returns true, if p_via_info is contained in the via list of this rule. */
   public boolean contains(ViaInfo p_via_info) {
     for (ViaInfo curr_info : this.list) {
       if (p_via_info == curr_info) {
@@ -61,9 +57,7 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
     return false;
   }
 
-  /**
-   * Returns true, if this rule contains a via with padstack p_padstack
-   */
+  /** Returns true, if this rule contains a via with padstack p_padstack */
   public boolean contains_padstack(Padstack p_padstack) {
     for (ViaInfo curr_info : this.list) {
       if (curr_info.get_padstack() == p_padstack) {
@@ -74,11 +68,13 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /**
-   * Searches a via in this rule with first layer = p_from_layer and last layer = p_to_layer. Returns null, if no such via exists.
+   * Searches a via in this rule with first layer = p_from_layer and last layer = p_to_layer.
+   * Returns null, if no such via exists.
    */
   public ViaInfo get_layer_range(int p_from_layer, int p_to_layer) {
     for (ViaInfo curr_info : this.list) {
-      if (curr_info.get_padstack().from_layer() == p_from_layer && curr_info.get_padstack().to_layer() == p_to_layer) {
+      if (curr_info.get_padstack().from_layer() == p_from_layer
+          && curr_info.get_padstack().to_layer() == p_to_layer) {
         return curr_info;
       }
     }
@@ -86,7 +82,8 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /**
-   * Swaps the locations of p_1 and p_2 in the rule. Returns false, if p_1 or p_2 were not found in the list.
+   * Swaps the locations of p_1 and p_2 in the rule. Returns false, if p_1 or p_2 were not found in
+   * the list.
    */
   public boolean swap(ViaInfo p_1, ViaInfo p_2) {
     int index_1 = this.list.indexOf(p_1);

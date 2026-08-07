@@ -11,9 +11,7 @@ import java.util.TreeSet;
 
 public class PartLibrary extends ScopeKeyword {
 
-  /**
-   * Creates a new instance of PartLibrary
-   */
+  /** Creates a new instance of PartLibrary */
   public PartLibrary() {
     super("part_library");
   }
@@ -89,7 +87,10 @@ public class PartLibrary extends ScopeKeyword {
         return false;
       }
       if (next_token == null) {
-        FRLogger.warn("PartLibrary.read_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PartLibrary.read_scope: unexpected end of file at '"
+                + p_par.scanner.get_scope_identifier()
+                + "'");
         return false;
       }
       if (next_token == CLOSED_BRACKET) {
@@ -117,24 +118,31 @@ public class PartLibrary extends ScopeKeyword {
     return true;
   }
 
-  /**
-   * Reads the component list of a logical part mapping. Returns null, if an error occurred.
-   */
+  /** Reads the component list of a logical part mapping. Returns null, if an error occurred. */
   private LogicalPartMapping read_logical_part_mapping(IJFlexScanner p_scanner) {
     try {
       Object next_token = p_scanner.next_token();
       if (!(next_token instanceof String name)) {
-        FRLogger.warn("PartLibrary.read_logical_part_mapping: string expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PartLibrary.read_logical_part_mapping: string expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       next_token = p_scanner.next_token();
       if (next_token != OPEN_BRACKET) {
-        FRLogger.warn("PartLibrary.read_logical_part_mapping: open bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PartLibrary.read_logical_part_mapping: open bracket expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       next_token = p_scanner.next_token();
       if (next_token != COMPONENT_SCOPE) {
-        FRLogger.warn("PartLibrary.read_logical_part_mapping: Keyword.COMPONENT_SCOPE expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PartLibrary.read_logical_part_mapping: Keyword.COMPONENT_SCOPE expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       SortedSet<String> result = new TreeSet<>();
@@ -145,14 +153,20 @@ public class PartLibrary extends ScopeKeyword {
           break;
         }
         if (!(next_token instanceof String)) {
-          FRLogger.warn("PartLibrary.read_logical_part_mapping: string expected at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "PartLibrary.read_logical_part_mapping: string expected at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
         result.add((String) next_token);
       }
       next_token = p_scanner.next_token();
       if (next_token != CLOSED_BRACKET) {
-        FRLogger.warn("PartLibrary.read_logical_part_mapping: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PartLibrary.read_logical_part_mapping: closing bracket expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       return new LogicalPartMapping(name, result);
@@ -172,7 +186,10 @@ public class PartLibrary extends ScopeKeyword {
       return null;
     }
     if (!(next_token instanceof String part_name)) {
-      FRLogger.warn("PartLibrary.read_logical_part: string expected at '" + p_scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "PartLibrary.read_logical_part: string expected at '"
+              + p_scanner.get_scope_identifier()
+              + "'");
       return null;
     }
     p_scanner.set_scope_identifier(part_name);
@@ -185,7 +202,10 @@ public class PartLibrary extends ScopeKeyword {
         return null;
       }
       if (next_token == null) {
-        FRLogger.warn("PartLibrary.read_logical_part: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PartLibrary.read_logical_part: unexpected end of file at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       if (next_token == CLOSED_BRACKET) {
@@ -216,38 +236,56 @@ public class PartLibrary extends ScopeKeyword {
       p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       Object next_token = p_scanner.next_token();
       if (!(next_token instanceof String pin_name)) {
-        FRLogger.warn("PartLibrary.read_part_pin: string expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PartLibrary.read_part_pin: string expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       p_scanner.set_scope_identifier(pin_name);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof Integer)) {
-        FRLogger.warn("PartLibrary.read_part_pin: integer expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PartLibrary.read_part_pin: integer expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof String gate_name)) {
-        FRLogger.warn("PartLibrary.read_part_pin: string expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PartLibrary.read_part_pin: string expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       p_scanner.set_scope_identifier(gate_name);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof Integer)) {
-        FRLogger.warn("PartLibrary.read_part_pin: integer expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PartLibrary.read_part_pin: integer expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       int gate_swap_code = (Integer) next_token;
       p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof String gate_pin_name)) {
-        FRLogger.warn("PartLibrary.read_part_pin: string expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PartLibrary.read_part_pin: string expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       p_scanner.set_scope_identifier(gate_pin_name);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof Integer)) {
-        FRLogger.warn("PartLibrary.read_part_pin: integer expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PartLibrary.read_part_pin: integer expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return null;
       }
       int gate_pin_swap_code = (Integer) next_token;
@@ -264,13 +302,10 @@ public class PartLibrary extends ScopeKeyword {
 
   public static final class LogicalPartMapping {
 
-    /**
-     * The name of the mapping.
-     */
+    /** The name of the mapping. */
     public final String name;
-    /**
-     * The components belonging to the mapping.
-     */
+
+    /** The components belonging to the mapping. */
     public final SortedSet<String> components;
 
     private LogicalPartMapping(String p_name, SortedSet<String> p_components) {
@@ -287,7 +322,12 @@ public class PartLibrary extends ScopeKeyword {
     public final String gate_pin_name;
     public final int gate_pin_swap_code;
 
-    private PartPin(String p_pin_name, String p_gate_name, int p_gate_swap_code, String p_gate_pin_name, int p_gate_pin_swap_code) {
+    private PartPin(
+        String p_pin_name,
+        String p_gate_name,
+        int p_gate_swap_code,
+        String p_gate_pin_name,
+        int p_gate_pin_swap_code) {
       pin_name = p_pin_name;
       gate_name = p_gate_name;
       gate_swap_code = p_gate_swap_code;
@@ -298,13 +338,10 @@ public class PartLibrary extends ScopeKeyword {
 
   public static final class LogicalPart {
 
-    /**
-     * The name of the mapping.
-     */
+    /** The name of the mapping. */
     public final String name;
-    /**
-     * The pins of this logical part
-     */
+
+    /** The pins of this logical part */
     public final Collection<PartPin> part_pins;
 
     private LogicalPart(String p_name, Collection<PartPin> p_part_pins) {

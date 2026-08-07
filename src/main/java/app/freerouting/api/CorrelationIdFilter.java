@@ -11,9 +11,7 @@ import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.util.UUID;
 
-/**
- * Assigns and propagates correlation IDs for cross-service tracing.
- */
+/** Assigns and propagates correlation IDs for cross-service tracing. */
 @Provider
 @Priority(Priorities.AUTHENTICATION - 100)
 public class CorrelationIdFilter implements ContainerRequestFilter, ContainerResponseFilter {
@@ -26,15 +24,19 @@ public class CorrelationIdFilter implements ContainerRequestFilter, ContainerRes
     String correlationId = resolveOrCreate(requestContext.getHeaderString(HEADER_NAME));
     requestContext.setProperty(PROPERTY_NAME, correlationId);
 
-    FRLogger.debug("[cid=" + correlationId + "] "
-        + requestContext.getMethod() + " "
-        + requestContext.getUriInfo().getPath());
+    FRLogger.debug(
+        "[cid="
+            + correlationId
+            + "] "
+            + requestContext.getMethod()
+            + " "
+            + requestContext.getUriInfo().getPath());
   }
 
   @Override
   public void filter(
-      ContainerRequestContext requestContext,
-      ContainerResponseContext responseContext) throws IOException {
+      ContainerRequestContext requestContext, ContainerResponseContext responseContext)
+      throws IOException {
     Object value = requestContext.getProperty(PROPERTY_NAME);
     String correlationId = value instanceof String ? (String) value : resolveOrCreate(null);
 

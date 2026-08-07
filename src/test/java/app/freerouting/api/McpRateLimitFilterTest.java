@@ -67,9 +67,12 @@ class McpRateLimitFilterTest {
     request.addProperty("id", 1);
     request.addProperty("method", "initialize");
 
-    HttpResponse<String> r1 = httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
-    HttpResponse<String> r2 = httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
-    HttpResponse<String> r3 = httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> r1 =
+        httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> r2 =
+        httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> r3 =
+        httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
 
     assertEquals(200, r1.statusCode());
     assertEquals(200, r2.statusCode());

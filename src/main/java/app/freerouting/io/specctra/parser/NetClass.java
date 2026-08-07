@@ -7,9 +7,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Contains the information of a Specctra Class scope.
- */
+/** Contains the information of a Specctra Class scope. */
 public class NetClass {
 
   public final String name;
@@ -25,11 +23,20 @@ public class NetClass {
   public final double min_trace_length;
   public final double max_trace_length;
 
-  /**
-   * Creates a new instance of NetClass
-   */
-  public NetClass(String p_name, String p_trace_clearance_class, Collection<String> p_net_list, Collection<Rule> p_rules, Collection<Rule.LayerRule> p_layer_rules, Collection<String> p_use_via,
-      Collection<String> p_use_layer, String p_via_rule, boolean p_shove_fixed, boolean p_pull_tight, double p_min_trace_length, double p_max_trace_length) {
+  /** Creates a new instance of NetClass */
+  public NetClass(
+      String p_name,
+      String p_trace_clearance_class,
+      Collection<String> p_net_list,
+      Collection<Rule> p_rules,
+      Collection<Rule.LayerRule> p_layer_rules,
+      Collection<String> p_use_via,
+      Collection<String> p_use_layer,
+      String p_via_rule,
+      boolean p_shove_fixed,
+      boolean p_pull_tight,
+      double p_min_trace_length,
+      double p_max_trace_length) {
     name = p_name;
     trace_clearance_class = p_trace_clearance_class;
     net_list = p_net_list;
@@ -74,7 +81,10 @@ public class NetClass {
         for (; ; ) {
           next_token = p_scanner.next_token();
           if (next_token == null) {
-            FRLogger.warn("NetClass.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+            FRLogger.warn(
+                "NetClass.read_scope: unexpected end of file at '"
+                    + p_scanner.get_scope_identifier()
+                    + "'");
             return null;
           }
           if (next_token == Keyword.CLOSED_BRACKET) {
@@ -112,7 +122,19 @@ public class NetClass {
           prev_token = next_token;
         }
       }
-      return new NetClass(class_name, trace_clearance_class, net_list, rules, layer_rules, use_via, use_layer, via_rule, shove_fixed, pull_tight, min_trace_length, max_trace_length);
+      return new NetClass(
+          class_name,
+          trace_clearance_class,
+          net_list,
+          rules,
+          layer_rules,
+          use_via,
+          use_layer,
+          via_rule,
+          shove_fixed,
+          pull_tight,
+          min_trace_length,
+          max_trace_length);
     } catch (IOException e) {
       FRLogger.error("NetClass.read_scope: IO error while scanning file", e);
       return null;
@@ -128,7 +150,10 @@ public class NetClass {
       for (; ; ) {
         Object next_token = p_scanner.next_token();
         if (next_token == null) {
-          FRLogger.warn("ClassClass.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "ClassClass.read_scope: unexpected end of file at '"
+                  + p_scanner.get_scope_identifier()
+                  + "'");
           return null;
         }
         if (next_token == Keyword.CLOSED_BRACKET) {
@@ -159,7 +184,10 @@ public class NetClass {
     public final Collection<Rule> rules;
     public final Collection<Rule.LayerRule> layer_rules;
 
-    public ClassClass(Collection<String> p_class_names, Collection<Rule> p_rules, Collection<Rule.LayerRule> p_layer_rules) {
+    public ClassClass(
+        Collection<String> p_class_names,
+        Collection<Rule> p_rules,
+        Collection<Rule.LayerRule> p_layer_rules) {
       class_names = p_class_names;
       rules = p_rules;
       layer_rules = p_layer_rules;

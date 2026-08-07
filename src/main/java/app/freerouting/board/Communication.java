@@ -9,31 +9,32 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Communication information to host systems or host design formats.
- */
+/** Communication information to host systems or host design formats. */
 public class Communication implements Serializable {
 
-  /**
-   * For coordinate transforms to a Specctra dsn file for example.
-   */
+  /** For coordinate transforms to a Specctra dsn file for example. */
   public final CoordinateTransform coordinate_transform;
-  /**
-   * mil, inch or mm
-   */
+
+  /** mil, inch or mm */
   public final Unit unit;
+
   /**
-   * The resolution (1 / unit_factor) of the coordinate system, which is imported from the host system.
+   * The resolution (1 / unit_factor) of the coordinate system, which is imported from the host
+   * system.
    */
   public final int resolution;
+
   public final SpecctraParserInfo specctra_parser_info;
   public final IdentificationNumberGenerator id_no_generator;
   public transient BoardObservers observers;
 
-  /**
-   * Creates a new instance of BoardCommunication
-   */
-  public Communication(Unit p_unit, int p_resolution, SpecctraParserInfo p_specctra_parser_info, CoordinateTransform p_coordinate_transform, IdentificationNumberGenerator p_id_no_generator,
+  /** Creates a new instance of BoardCommunication */
+  public Communication(
+      Unit p_unit,
+      int p_resolution,
+      SpecctraParserInfo p_specctra_parser_info,
+      CoordinateTransform p_coordinate_transform,
+      IdentificationNumberGenerator p_id_no_generator,
       BoardObservers p_observers) {
     coordinate_transform = p_coordinate_transform;
     unit = p_unit;
@@ -43,19 +44,27 @@ public class Communication implements Serializable {
     observers = p_observers;
   }
 
-  /**
-   * Creates a new instance of BoardCommunication
-   */
+  /** Creates a new instance of BoardCommunication */
   public Communication() {
-    this(Unit.MIL, 1, new SpecctraParserInfo("\"", null, null, null, null, false), new CoordinateTransform(1, 0, 0), new ItemIdentificationNumberGenerator(), new BoardObserverAdaptor());
+    this(
+        Unit.MIL,
+        1,
+        new SpecctraParserInfo("\"", null, null, null, null, false),
+        new CoordinateTransform(1, 0, 0),
+        new ItemIdentificationNumberGenerator(),
+        new BoardObserverAdaptor());
   }
 
   public boolean host_cad_is_eagle() {
-    return specctra_parser_info != null && specctra_parser_info.host_cad != null && "CadSoft".equalsIgnoreCase(specctra_parser_info.host_cad);
+    return specctra_parser_info != null
+        && specctra_parser_info.host_cad != null
+        && "CadSoft".equalsIgnoreCase(specctra_parser_info.host_cad);
   }
 
   public boolean host_is_old_kicad() {
-    if ((specctra_parser_info == null) || (specctra_parser_info.host_cad == null) || (specctra_parser_info.host_version == null)) {
+    if ((specctra_parser_info == null)
+        || (specctra_parser_info.host_cad == null)
+        || (specctra_parser_info.host_version == null)) {
       return false;
     }
 
@@ -75,9 +84,7 @@ public class Communication implements Serializable {
     return specctra_parser_info != null && specctra_parser_info.host_cad != null;
   }
 
-  /**
-   * Returns the resolution scaled to the input unit
-   */
+  /** Returns the resolution scaled to the input unit */
   public double get_resolution(Unit p_unit) {
     return Unit.scale(this.resolution, p_unit, this.unit);
   }
@@ -88,21 +95,26 @@ public class Communication implements Serializable {
   }
 
   /**
-   * Information from the parser scope in a Specctra-dsn-file. The fields are optional and may be null.
+   * Information from the parser scope in a Specctra-dsn-file. The fields are optional and may be
+   * null.
    */
   public static class SpecctraParserInfo implements Serializable {
 
-    /**
-     * Character for quoting strings in a dsn-File.
-     */
+    /** Character for quoting strings in a dsn-File. */
     public final String string_quote;
+
     public final String host_cad;
     public final String host_version;
     public final Collection<String[]> constants;
     public final WriteResolution write_resolution;
     public final boolean dsn_file_generated_by_host;
 
-    public SpecctraParserInfo(String p_string_quote, String p_host_cad, String p_host_version, Collection<String[]> p_constants, WriteResolution p_write_resolution,
+    public SpecctraParserInfo(
+        String p_string_quote,
+        String p_host_cad,
+        String p_host_version,
+        Collection<String[]> p_constants,
+        WriteResolution p_write_resolution,
         boolean p_dsn_file_generated_by_host) {
       string_quote = p_string_quote;
       host_cad = p_host_cad;

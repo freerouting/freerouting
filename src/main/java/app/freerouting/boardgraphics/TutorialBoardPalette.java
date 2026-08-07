@@ -5,7 +5,8 @@ import java.awt.Color;
 /**
  * Freerouting website brand colors for the bundled {@code tutorial_board.dsn} design.
  *
- * <p>Values match {@code website/style.css}: primary dark green background and secondary gold accent.
+ * <p>Values match {@code website/style.css}: primary dark green background and secondary gold
+ * accent.
  */
 public final class TutorialBoardPalette {
 
@@ -20,16 +21,13 @@ public final class TutorialBoardPalette {
 
   private static final String TUTORIAL_BOARD_FILENAME = "tutorial_board.dsn";
 
-  private TutorialBoardPalette() {
-  }
+  private TutorialBoardPalette() {}
 
   public static boolean isTutorialBoard(String filename) {
     return TUTORIAL_BOARD_FILENAME.equals(filename);
   }
 
-  /**
-   * Applies the website brand palette to the given graphics context.
-   */
+  /** Applies the website brand palette to the given graphics context. */
   public static void apply(GraphicsContext graphicsContext) {
     if (graphicsContext == null) {
       return;
@@ -56,21 +54,29 @@ public final class TutorialBoardPalette {
     graphicsContext.item_color_table.set_via_colors(mutedLayerColors, true);
     graphicsContext.item_color_table.set_pin_colors(primaryLayerColors);
     graphicsContext.item_color_table.set_conduction_colors(primaryLayerColors);
-    graphicsContext.item_color_table.set_keepout_colors(repeatedColor(layerCount, new Color(0, 40, 22)));
-    graphicsContext.item_color_table.set_via_keepout_colors(repeatedColor(layerCount, new Color(0, 40, 22)));
-    graphicsContext.item_color_table.set_place_keepout_colors(repeatedColor(layerCount, new Color(0, 40, 22)));
+    graphicsContext.item_color_table.set_keepout_colors(
+        repeatedColor(layerCount, new Color(0, 40, 22)));
+    graphicsContext.item_color_table.set_via_keepout_colors(
+        repeatedColor(layerCount, new Color(0, 40, 22)));
+    graphicsContext.item_color_table.set_place_keepout_colors(
+        repeatedColor(layerCount, new Color(0, 40, 22)));
 
-    graphicsContext.color_intensity_table.set_value(ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(), 0.85);
-    graphicsContext.color_intensity_table.set_value(ColorIntensityTable.ObjectNames.KEEPOUTS.ordinal(), 0.35);
-    graphicsContext.color_intensity_table.set_value(ColorIntensityTable.ObjectNames.HILIGHT.ordinal(), 1.0);
-    graphicsContext.color_intensity_table.set_value(ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal(), 1.0);
+    graphicsContext.color_intensity_table.set_value(
+        ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(), 0.85);
+    graphicsContext.color_intensity_table.set_value(
+        ColorIntensityTable.ObjectNames.KEEPOUTS.ordinal(), 0.35);
+    graphicsContext.color_intensity_table.set_value(
+        ColorIntensityTable.ObjectNames.HILIGHT.ordinal(), 1.0);
+    graphicsContext.color_intensity_table.set_value(
+        ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal(), 1.0);
   }
 
   public static Color backgroundColor() {
     return PRIMARY;
   }
 
-  private static Color[] alternatingLayerColors(int layerCount, Color evenLayerColor, Color oddLayerColor) {
+  private static Color[] alternatingLayerColors(
+      int layerCount, Color evenLayerColor, Color oddLayerColor) {
     Color[] colors = new Color[layerCount];
     for (int i = 0; i < layerCount; i++) {
       colors[i] = i % 2 == 0 ? evenLayerColor : oddLayerColor;

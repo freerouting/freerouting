@@ -28,9 +28,7 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
 
     RunRoutingJob(job);
 
-    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
-        .maxIncompleteConnections(194)
-        .check();
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(194).check();
   }
 
   @Test
@@ -46,9 +44,7 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
 
     RunRoutingJob(job);
 
-    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
-        .maxIncompleteConnections(161)
-        .check();
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(161).check();
   }
 
   @Test
@@ -64,9 +60,7 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
 
     RunRoutingJob(job);
 
-    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
-        .maxIncompleteConnections(147)
-        .check();
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(147).check();
   }
 
   @Test
@@ -82,9 +76,7 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
 
     RunRoutingJob(job);
 
-    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
-        .maxIncompleteConnections(134)
-        .check();
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(134).check();
   }
 
   @Test
@@ -100,9 +92,7 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
 
     RunRoutingJob(job);
 
-    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
-        .maxIncompleteConnections(126)
-        .check();
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(126).check();
   }
 
   @Test
@@ -117,9 +107,7 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
     // Run the job
     RunRoutingJob(job);
 
-    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
-        .maxIncompleteConnections(56)
-        .check();
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(56).check();
   }
 
   @Test
@@ -134,9 +122,7 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
     // Run the job
     RunRoutingJob(job);
 
-    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
-        .maxIncompleteConnections(28)
-        .check();
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(28).check();
   }
 
   @Test
@@ -178,9 +164,7 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
   @AfterEach
   public void tearDown() {
     if (job != null) {
-      RoutingJobScheduler
-          .getInstance()
-          .clearJobs(job.sessionId.toString());
+      RoutingJobScheduler.getInstance().clearJobs(job.sessionId.toString());
     }
   }
 }

@@ -9,7 +9,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * A PolylineArea is an Area, where the outside border curve and the hole borders consist of straight lines.
+ * A PolylineArea is an Area, where the outside border curve and the hole borders consist of
+ * straight lines.
  */
 public class PolylineArea implements Area, Serializable {
 
@@ -17,15 +18,14 @@ public class PolylineArea implements Area, Serializable {
   final PolylineShape[] hole_arr;
   private transient TileShape[] precalculated_convex_pieces;
 
-  /**
-   * Creates a new instance of PolylineShapeWithHoles
-   */
+  /** Creates a new instance of PolylineShapeWithHoles */
   public PolylineArea(PolylineShape p_border_shape, PolylineShape[] p_hole_arr) {
     border_shape = p_border_shape;
     hole_arr = p_hole_arr;
   }
 
-  private static void cutout_hole_piece(TileShape p_divide_piece, TileShape p_hole_piece, Collection<TileShape> p_result_pieces) {
+  private static void cutout_hole_piece(
+      TileShape p_divide_piece, TileShape p_hole_piece, Collection<TileShape> p_result_pieces) {
     TileShape[] result_pieces = p_divide_piece.cutout(p_hole_piece);
     for (int i = 0; i < result_pieces.length; i++) {
       TileShape curr_piece = result_pieces[i];
@@ -149,8 +149,10 @@ public class PolylineArea implements Area, Serializable {
   }
 
   /**
-   * Splits this polygon shape with holes into convex pieces. The result is not exact, because rounded intersections of lines are used in the result pieces. It can be made exact, if Polylines are
-   * returned instead of Polygons, so that no intersection points are needed in the result.
+   * Splits this polygon shape with holes into convex pieces. The result is not exact, because
+   * rounded intersections of lines are used in the result pieces. It can be made exact, if
+   * Polylines are returned instead of Polygons, so that no intersection points are needed in the
+   * result.
    */
   @Override
   public TileShape[] split_to_convex() {
@@ -158,8 +160,10 @@ public class PolylineArea implements Area, Serializable {
   }
 
   /**
-   * Splits this polygon shape with holes into convex pieces. The result is not exact, because rounded intersections of lines are used in the result pieces. It can be made exact, if Polylines are
-   * returned instead of Polygons, so that no intersection points are needed in the result. If p_stoppable_thread != null, this function can be interrupted.
+   * Splits this polygon shape with holes into convex pieces. The result is not exact, because
+   * rounded intersections of lines are used in the result pieces. It can be made exact, if
+   * Polylines are returned instead of Polygons, so that no intersection points are needed in the
+   * result. If p_stoppable_thread != null, this function can be interrupted.
    */
   public TileShape[] split_to_convex(Stoppable p_stoppable_thread) {
     if (precalculated_convex_pieces == null) {

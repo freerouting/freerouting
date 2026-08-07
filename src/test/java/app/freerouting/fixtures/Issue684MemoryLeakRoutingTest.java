@@ -20,24 +20,25 @@ import org.junit.jupiter.api.Test;
  * many unrouted nets, running the auto-router for 4–6 days produced thousands of board snapshots,
  * each several megabytes, exhausting the 2 GB heap the user configured ({@code -Xmx2G}).
  *
- * <p>A secondary symptom was the log being flooded with the message
- * <em>"IdNoGenerator: danger of overflow, please regenerate id numbers from scratch!"</em>
- * — the ID generator emitted this on every single item insertion after the counter passed
- * {@code Integer.MAX_VALUE / 2}.
+ * <p>A secondary symptom was the log being flooded with the message <em>"IdNoGenerator: danger of
+ * overflow, please regenerate id numbers from scratch!"</em> — the ID generator emitted this on
+ * every single item insertion after the counter passed {@code Integer.MAX_VALUE / 2}.
  *
  * <p><b>Fix applied:</b>
+ *
  * <ul>
- *   <li>{@code BoardHistory} is now capped at {@link BoardHistory#MAX_HISTORY_SIZE} entries.
- *       When the cap is reached the lowest-scoring entry is evicted before adding a new one.</li>
- *   <li>{@code ItemIdentificationNumberGenerator} wraps the counter back to 1 when it reaches
- *       the threshold and emits a single WARN per wrap instead of one per item.</li>
+ *   <li>{@code BoardHistory} is now capped at {@link BoardHistory#MAX_HISTORY_SIZE} entries. When
+ *       the cap is reached the lowest-scoring entry is evicted before adding a new one.
+ *   <li>{@code ItemIdentificationNumberGenerator} wraps the counter back to 1 when it reaches the
+ *       threshold and emits a single WARN per wrap instead of one per item.
  * </ul>
  *
  * <p><b>Acceptance Criteria:</b>
+ *
  * <ul>
- *   <li>The routing job must reach a terminal state without {@link OutOfMemoryError}.</li>
- *   <li>The resulting board must be non-null.</li>
- *   <li>{@code BoardHistory.MAX_HISTORY_SIZE} must be a positive, bounded constant.</li>
+ *   <li>The routing job must reach a terminal state without {@link OutOfMemoryError}.
+ *   <li>The resulting board must be non-null.
+ *   <li>{@code BoardHistory.MAX_HISTORY_SIZE} must be a positive, bounded constant.
  * </ul>
  *
  * @see <a href="https://github.com/freerouting/freerouting/issues/684">GitHub Issue #684</a>
@@ -52,18 +53,18 @@ public class Issue684MemoryLeakRoutingTest extends RoutingFixtureTest {
    */
   @Test
   void boardHistorySizeCapIsPositiveAndBounded() {
-    assertTrue(BoardHistory.MAX_HISTORY_SIZE > 0,
-        "BoardHistory.MAX_HISTORY_SIZE must be positive");
-    assertTrue(BoardHistory.MAX_HISTORY_SIZE <= 100,
+    assertTrue(BoardHistory.MAX_HISTORY_SIZE > 0, "BoardHistory.MAX_HISTORY_SIZE must be positive");
+    assertTrue(
+        BoardHistory.MAX_HISTORY_SIZE <= 100,
         "BoardHistory.MAX_HISTORY_SIZE should be a reasonable limit (≤ 100)");
   }
 
   /**
-   * Smoke-test: verifies that the reported board can be loaded and routed for a small number
-   * of items without throwing an {@link OutOfMemoryError} or any other unexpected exception.
+   * Smoke-test: verifies that the reported board can be loaded and routed for a small number of
+   * items without throwing an {@link OutOfMemoryError} or any other unexpected exception.
    *
-   * <p>Uses {@code maxItems=50} so the test finishes within ~30 seconds on CI hardware while
-   * still exercising the routing code paths that led to the memory leak.
+   * <p>Uses {@code maxItems=50} so the test finishes within ~30 seconds on CI hardware while still
+   * exercising the routing code paths that led to the memory leak.
    */
   @Test
   void routing_completesWithoutOutOfMemoryError() {
@@ -83,13 +84,16 @@ public class Issue684MemoryLeakRoutingTest extends RoutingFixtureTest {
             || completed.state == RoutingJobState.TERMINATED,
         "Routing job must reach a terminal state; actual state: " + completed.state);
 
-    assertNotNull(completed.board,
-        "RoutingJob.board must be non-null after a completed routing run");
+    assertNotNull(
+        completed.board, "RoutingJob.board must be non-null after a completed routing run");
 
     Duration duration = completed.getDuration();
     var statsAfter = GetBoardStatistics(completed);
-    IO.println("Issue684 routing test completed in "
-        + FRLogger.formatDuration(duration.toSeconds())
-        + " with " + statsAfter.connections.incompleteCount + " incomplete connections.");
+    IO.println(
+        "Issue684 routing test completed in "
+            + FRLogger.formatDuration(duration.toSeconds())
+            + " with "
+            + statsAfter.connections.incompleteCount
+            + " incomplete connections.");
   }
 }

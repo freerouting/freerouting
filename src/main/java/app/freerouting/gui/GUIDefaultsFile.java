@@ -15,24 +15,22 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import javax.swing.JFrame;
 
-/**
- * Description of a text file, where the board independent interactive settings
- * are stored.
- */
+/** Description of a text file, where the board independent interactive settings are stored. */
 public final class GUIDefaultsFile {
 
   private final BoardFrame board_frame;
   private final GuiBoardManager board_handling;
-  /**
-   * Used, when reading a defaults file, null otherwise.
-   */
+
+  /** Used, when reading a defaults file, null otherwise. */
   private final GUIDefaultsScanner scanner;
-  /**
-   * Used, when writing a defaults file; null otherwise.
-   */
+
+  /** Used, when writing a defaults file; null otherwise. */
   private final IndentFileWriter out_file;
 
-  private GUIDefaultsFile(BoardFrame p_board_frame, GuiBoardManager p_board_handling, GUIDefaultsScanner p_scanner,
+  private GUIDefaultsFile(
+      BoardFrame p_board_frame,
+      GuiBoardManager p_board_handling,
+      GUIDefaultsScanner p_scanner,
       IndentFileWriter p_output_file) {
     board_frame = p_board_frame;
     board_handling = p_board_handling;
@@ -41,18 +39,19 @@ public final class GUIDefaultsFile {
   }
 
   /**
-   * Writes the GUI setting of p_board_frame as default to p_file. Returns false,
-   * if an error occurred.
+   * Writes the GUI setting of p_board_frame as default to p_file. Returns false, if an error
+   * occurred.
    */
-  public static boolean write(BoardFrame p_board_frame, GuiBoardManager p_board_handling,
-      OutputStream p_output_stream) {
+  public static boolean write(
+      BoardFrame p_board_frame, GuiBoardManager p_board_handling, OutputStream p_output_stream) {
     if (p_output_stream == null) {
       return false;
     }
 
     IndentFileWriter output_file = new IndentFileWriter(p_output_stream);
 
-    GUIDefaultsFile result = new GUIDefaultsFile(p_board_frame, p_board_handling, null, output_file);
+    GUIDefaultsFile result =
+        new GUIDefaultsFile(p_board_frame, p_board_handling, null, output_file);
     try {
       result.write_defaults_scope();
     } catch (IOException _) {
@@ -70,15 +69,17 @@ public final class GUIDefaultsFile {
   }
 
   /**
-   * Reads the GUI setting of p_board_frame from file. Returns false, if an error
-   * occurred while reading the file.
+   * Reads the GUI setting of p_board_frame from file. Returns false, if an error occurred while
+   * reading the file.
    */
-  public static boolean read(BoardFrame p_board_frame, GuiBoardManager p_board_handling, InputStream p_input_stream) {
+  public static boolean read(
+      BoardFrame p_board_frame, GuiBoardManager p_board_handling, InputStream p_input_stream) {
     if (p_input_stream == null) {
       return false;
     }
     GUIDefaultsScanner scanner = new GUIDefaultsScanner(p_input_stream);
-    GUIDefaultsFile new_instance = new GUIDefaultsFile(p_board_frame, p_board_handling, scanner, null);
+    GUIDefaultsFile new_instance =
+        new GUIDefaultsFile(p_board_frame, p_board_handling, scanner, null);
     boolean result;
     try {
       result = new_instance.read_defaults_scope();
@@ -89,9 +90,7 @@ public final class GUIDefaultsFile {
     return result;
   }
 
-  /**
-   * Skips the current scope. Returns false, if no legal scope was found.
-   */
+  /** Skips the current scope. Returns false, if no legal scope was found. */
   private static boolean skip_scope(GUIDefaultsScanner p_scanner) {
     int open_bracked_count = 1;
     while (open_bracked_count > 0) {
@@ -136,7 +135,7 @@ public final class GUIDefaultsFile {
     }
 
     // read the direct subscopes of the gui_defaults scope
-    for (;;) {
+    for (; ; ) {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
@@ -174,7 +173,7 @@ public final class GUIDefaultsFile {
   private boolean read_windows_scope() throws IOException {
     // read the direct subscopes of the windows scope
     Object next_token = null;
-    for (;;) {
+    for (; ; ) {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
@@ -348,7 +347,7 @@ public final class GUIDefaultsFile {
   private boolean read_colors_scope() throws IOException {
     // read the direct subscopes of the colors scope
     Object next_token = null;
-    for (;;) {
+    for (; ; ) {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
@@ -582,7 +581,8 @@ public final class GUIDefaultsFile {
     if (curr_color == null) {
       return false;
     }
-    this.board_handling.graphics_context.other_color_table.set_length_matching_area_color(curr_color);
+    this.board_handling.graphics_context.other_color_table.set_length_matching_area_color(
+        curr_color);
     Object next_token = this.scanner.next_token();
     if (next_token != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_length_matching_color: closing bracket expected");
@@ -647,10 +647,7 @@ public final class GUIDefaultsFile {
     return result;
   }
 
-  /**
-   * reads a java.awt.Color from the defaults file. Returns null, if no valid
-   * color was found.
-   */
+  /** reads a java.awt.Color from the defaults file. Returns null, if no valid color was found. */
   private Color read_color() throws IOException {
     int[] rgb_color_arr = new int[3];
     for (int i = 0; i < 3; i++) {
@@ -667,12 +664,12 @@ public final class GUIDefaultsFile {
   }
 
   /**
-   * reads an array java.awt.Color from the defaults file. Returns null, if no
-   * valid colors were found.
+   * reads an array java.awt.Color from the defaults file. Returns null, if no valid colors were
+   * found.
    */
   private Color[] read_color_array() throws IOException {
     Collection<Color> color_list = new LinkedList<>();
-    for (;;) {
+    for (; ; ) {
       Color curr_color = read_color();
       if (curr_color == null) {
         break;
@@ -796,7 +793,7 @@ public final class GUIDefaultsFile {
   private boolean read_parameter_scope() throws IOException {
     // read the subscopes of the parameter scope
     Object next_token = null;
-    for (;;) {
+    for (; ; ) {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
@@ -903,7 +900,9 @@ public final class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_selection_layer_scop: closing bracket expected");
       return false;
     }
-    this.board_handling.getInteractiveSettings().set_select_on_all_visible_layers(select_on_all_layers);
+    this.board_handling
+        .getInteractiveSettings()
+        .set_select_on_all_visible_layers(select_on_all_layers);
     return true;
   }
 
@@ -943,7 +942,9 @@ public final class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_drag_components_enabled_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.getInteractiveSettings().set_drag_components_enabled(drag_components_enabled);
+    this.board_handling
+        .getInteractiveSettings()
+        .set_drag_components_enabled(drag_components_enabled);
     return true;
   }
 
@@ -1059,7 +1060,9 @@ public final class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_pull_tight_region_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.getInteractiveSettings().set_current_pull_tight_region_width(pull_tight_region);
+    this.board_handling
+        .getInteractiveSettings()
+        .set_current_pull_tight_region_width(pull_tight_region);
     return true;
   }
 
@@ -1067,7 +1070,8 @@ public final class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("pull_tight_region ");
     out_file.new_line();
-    int pull_tight_region = this.board_handling.getInteractiveSettings().get_trace_pull_tight_region_width();
+    int pull_tight_region =
+        this.board_handling.getInteractiveSettings().get_trace_pull_tight_region_width();
     out_file.write(String.valueOf(pull_tight_region));
     out_file.end_scope();
   }
@@ -1092,7 +1096,8 @@ public final class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("pull_tight_accuracy ");
     out_file.new_line();
-    int pull_tight_accuracy = this.board_handling.getInteractiveSettings().get_trace_pull_tight_accuracy();
+    int pull_tight_accuracy =
+        this.board_handling.getInteractiveSettings().get_trace_pull_tight_accuracy();
     out_file.write(String.valueOf(pull_tight_accuracy));
     out_file.end_scope();
   }
@@ -1139,7 +1144,8 @@ public final class GUIDefaultsFile {
     }
     next_token = this.scanner.next_token();
     if (next_token != Keyword.CLOSED_BRACKET) {
-      FRLogger.warn("GUIDefaultsFile.read_hilight_routing_obstacle_scope: closing bracket expected");
+      FRLogger.warn(
+          "GUIDefaultsFile.read_hilight_routing_obstacle_scope: closing bracket expected");
       return false;
     }
     this.board_handling.getInteractiveSettings().set_hilight_routing_obstacle(hilight_obstacle);
@@ -1182,7 +1188,10 @@ public final class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("clearance_compensation ");
     out_file.new_line();
-    if (this.board_handling.get_routing_board().search_tree_manager.is_clearance_compensation_used()) {
+    if (this.board_handling
+        .get_routing_board()
+        .search_tree_manager
+        .is_clearance_compensation_used()) {
       out_file.write("on");
     } else {
       out_file.write("off");
@@ -1223,9 +1232,10 @@ public final class GUIDefaultsFile {
   }
 
   private boolean read_selectable_item_scope() throws IOException {
-    ItemSelectionFilter item_selection_filter = this.board_handling.getInteractiveSettings().get_item_selection_filter();
+    ItemSelectionFilter item_selection_filter =
+        this.board_handling.getInteractiveSettings().get_item_selection_filter();
     item_selection_filter.deselect_all();
-    for (;;) {
+    for (; ; ) {
       Object next_token = this.scanner.next_token();
       if (next_token == Keyword.CLOSED_BRACKET) {
         break;
@@ -1258,8 +1268,10 @@ public final class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("selectable_items ");
     out_file.new_line();
-    ItemSelectionFilter item_selection_filter = this.board_handling.getInteractiveSettings().get_item_selection_filter();
-    ItemSelectionFilter.SelectableChoices[] selectable_choices = ItemSelectionFilter.SelectableChoices.values();
+    ItemSelectionFilter item_selection_filter =
+        this.board_handling.getInteractiveSettings().get_item_selection_filter();
+    ItemSelectionFilter.SelectableChoices[] selectable_choices =
+        ItemSelectionFilter.SelectableChoices.values();
     for (int i = 0; i < selectable_choices.length; i++) {
       if (item_selection_filter.is_selected(selectable_choices[i])) {
         out_file.write(selectable_choices[i].toString());
@@ -1269,20 +1281,84 @@ public final class GUIDefaultsFile {
     out_file.end_scope();
   }
 
-  /**
-   * Keywords in the gui defaults file.
-   */
+  /** Keywords in the gui defaults file. */
   enum Keyword {
-    ALL_VISIBLE, ASSIGN_NET_RULES, AUTOMATIC_LAYER_DIMMING, BACKGROUND, BOARD_FRAME, BOUNDS, CLEARANCE_COMPENSATION,
-    CLEARANCE_MATRIX, CLOSED_BRACKET, COLOR_MANAGER, COLORS, COMPONENT_BACK, COMPONENT_FRONT, COMPONENT_GRID,
-    COMPONENT_INFO, CONDUCTION, CURRENT_LAYER, CURRENT_ONLY, DISPLAY_MISCELLANEOUS,
-    DISPLAY_REGION, DRAG_COMPONENTS_ENABLED, DYNAMIC, EDIT_VIAS, EDIT_NET_RULES, FIXED, FIXED_TRACES, FIXED_VIAS,
-    FORTYFIVE_DEGREE, GUI_DEFAULTS, HILIGHT, HILIGHT_ROUTING_OBSTACLE, IGNORE_CONDUCTION_AREAS, INCOMPLETES,
-    INCOMPLETES_INFO, INTERACTIVE_STATE, KEEPOUT, LAYER_VISIBILITY, LENGTH_MATCHING, MANUAL_RULES, MANUAL_RULE_SETTINGS,
-    MOVE_PARAMETER, NET_INFO, NINETY_DEGREE, NONE, NOT_VISIBLE, OBJECT_COLORS, OBJECT_VISIBILITY, OPEN_BRACKET, OFF, ON,
-    OUTLINE, PARAMETER, PACKAGE_INFO, PADSTACK_INFO, PINS, PULL_TIGHT_ACCURACY, PULL_TIGHT_REGION,
-    PUSH_AND_SHOVE_ENABLED, ROUTE_DETAILS, ROUTE_MODE, ROUTE_PARAMETER, RULE_SELECTION, SELECT_PARAMETER,
-    SELECTABLE_ITEMS, SELECTION_LAYERS, SHOVE_ENABLED, STITCHING, TRACES, UNFIXED, VIA_KEEPOUT, VISIBLE,
-    VIA_RULES, VIA_SNAP_TO_SMD_CENTER, VIAS, VIOLATIONS, VIOLATIONS_INFO, WINDOWS
+    ALL_VISIBLE,
+    ASSIGN_NET_RULES,
+    AUTOMATIC_LAYER_DIMMING,
+    BACKGROUND,
+    BOARD_FRAME,
+    BOUNDS,
+    CLEARANCE_COMPENSATION,
+    CLEARANCE_MATRIX,
+    CLOSED_BRACKET,
+    COLOR_MANAGER,
+    COLORS,
+    COMPONENT_BACK,
+    COMPONENT_FRONT,
+    COMPONENT_GRID,
+    COMPONENT_INFO,
+    CONDUCTION,
+    CURRENT_LAYER,
+    CURRENT_ONLY,
+    DISPLAY_MISCELLANEOUS,
+    DISPLAY_REGION,
+    DRAG_COMPONENTS_ENABLED,
+    DYNAMIC,
+    EDIT_VIAS,
+    EDIT_NET_RULES,
+    FIXED,
+    FIXED_TRACES,
+    FIXED_VIAS,
+    FORTYFIVE_DEGREE,
+    GUI_DEFAULTS,
+    HILIGHT,
+    HILIGHT_ROUTING_OBSTACLE,
+    IGNORE_CONDUCTION_AREAS,
+    INCOMPLETES,
+    INCOMPLETES_INFO,
+    INTERACTIVE_STATE,
+    KEEPOUT,
+    LAYER_VISIBILITY,
+    LENGTH_MATCHING,
+    MANUAL_RULES,
+    MANUAL_RULE_SETTINGS,
+    MOVE_PARAMETER,
+    NET_INFO,
+    NINETY_DEGREE,
+    NONE,
+    NOT_VISIBLE,
+    OBJECT_COLORS,
+    OBJECT_VISIBILITY,
+    OPEN_BRACKET,
+    OFF,
+    ON,
+    OUTLINE,
+    PARAMETER,
+    PACKAGE_INFO,
+    PADSTACK_INFO,
+    PINS,
+    PULL_TIGHT_ACCURACY,
+    PULL_TIGHT_REGION,
+    PUSH_AND_SHOVE_ENABLED,
+    ROUTE_DETAILS,
+    ROUTE_MODE,
+    ROUTE_PARAMETER,
+    RULE_SELECTION,
+    SELECT_PARAMETER,
+    SELECTABLE_ITEMS,
+    SELECTION_LAYERS,
+    SHOVE_ENABLED,
+    STITCHING,
+    TRACES,
+    UNFIXED,
+    VIA_KEEPOUT,
+    VISIBLE,
+    VIA_RULES,
+    VIA_SNAP_TO_SMD_CENTER,
+    VIAS,
+    VIOLATIONS,
+    VIOLATIONS_INFO,
+    WINDOWS
   }
 }

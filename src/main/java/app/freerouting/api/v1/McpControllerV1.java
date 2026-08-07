@@ -52,23 +52,29 @@ public class McpControllerV1 extends BaseController {
   private static final String JSONRPC_VERSION = "2.0";
   private static volatile String detectedClientInfo = "MCP-Client/1.0";
 
-  @Context
-  private Application application;
+  @Context private Application application;
 
-  @Context
-  private HttpHeaders headers;
+  @Context private HttpHeaders headers;
 
-  @Operation(summary = "MCP JSON-RPC endpoint", description = "Accepts MCP-compatible JSON-RPC requests including initialize, tools/list and tools/call.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "MCP request processed", content = @Content(mediaType = MediaType.APPLICATION_JSON)),
-      @ApiResponse(responseCode = "500", description = "MCP execution failed")
-  })
+  @Operation(
+      summary = "MCP JSON-RPC endpoint",
+      description =
+          "Accepts MCP-compatible JSON-RPC requests including initialize, tools/list and tools/call.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "MCP request processed",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+        @ApiResponse(responseCode = "500", description = "MCP execution failed")
+      })
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response rpc(String requestBody) {
-    String correlationId = CorrelationIdFilter.resolveOrCreate(
-        headers.getHeaderString(CorrelationIdFilter.HEADER_NAME));
+    String correlationId =
+        CorrelationIdFilter.resolveOrCreate(
+            headers.getHeaderString(CorrelationIdFilter.HEADER_NAME));
 
     FRLogger.info("[mcp][cid=" + correlationId + "] request=" + requestBody);
 
@@ -76,7 +82,8 @@ public class McpControllerV1 extends BaseController {
     try {
       request = JsonParser.parseString(requestBody).getAsJsonObject();
     } catch (Exception e) {
-      FRLogger.warn("[mcp][cid=" + correlationId + "] Failed to parse JSON-RPC request: " + e.getMessage());
+      FRLogger.warn(
+          "[mcp][cid=" + correlationId + "] Failed to parse JSON-RPC request: " + e.getMessage());
       return Response.ok(error(null, -32700, "Invalid JSON: " + e.getMessage()))
           .header(CorrelationIdFilter.HEADER_NAME, correlationId)
           .build();
@@ -85,19 +92,24 @@ public class McpControllerV1 extends BaseController {
     JsonElement id = request.get("id");
     boolean isNotification = id == null || id.isJsonNull();
     String method = request.has("method") ? request.get("method").getAsString() : null;
-    JsonObject params = request.has("params") && request.get("params").isJsonObject()
-        ? request.getAsJsonObject("params")
-        : new JsonObject();
+    JsonObject params =
+        request.has("params") && request.get("params").isJsonObject()
+            ? request.getAsJsonObject("params")
+            : new JsonObject();
 
     UUID userId;
     try {
       userId = AuthenticateUser();
     } catch (Exception e) {
-      FRLogger.warn("[mcp][cid=" + correlationId + "] Authentication failed for method '" + method + "': " + e.getMessage());
+      FRLogger.warn(
+          "[mcp][cid="
+              + correlationId
+              + "] Authentication failed for method '"
+              + method
+              + "': "
+              + e.getMessage());
       if (isNotification) {
-        return Response.noContent()
-            .header(CorrelationIdFilter.HEADER_NAME, correlationId)
-            .build();
+        return Response.noContent().header(CorrelationIdFilter.HEADER_NAME, correlationId).build();
       }
       JsonObject errResponse = error(id, -32602, "Authentication failed: " + e.getMessage());
       return Response.ok(errResponse.toString())
@@ -108,16 +120,17 @@ public class McpControllerV1 extends BaseController {
     JsonObject response;
     try {
       FRLogger.info("[mcp][cid=" + correlationId + "] method=" + method);
-      response = switch (method == null ? "" : method) {
-        case "initialize" -> handleInitialize(id, params);
-        case "notifications/initialized" -> {
-          // MCP lifecycle notification: connection fully established.
-          yield success(id, new JsonObject());
-        }
-        case "tools/list" -> handleToolsList(id);
-        case "tools/call" -> handleToolsCall(id, params, correlationId);
-        default -> error(id, -32601, "Unknown method: " + method);
-      };
+      response =
+          switch (method == null ? "" : method) {
+            case "initialize" -> handleInitialize(id, params);
+            case "notifications/initialized" -> {
+              // MCP lifecycle notification: connection fully established.
+              yield success(id, new JsonObject());
+            }
+            case "tools/list" -> handleToolsList(id);
+            case "tools/call" -> handleToolsCall(id, params, correlationId);
+            default -> error(id, -32601, "Unknown method: " + method);
+          };
       FRLogger.info("[mcp][cid=" + correlationId + "] response=" + response.toString());
     } catch (Exception e) {
       FRLogger.error("MCP RPC execution failed", e);
@@ -126,11 +139,9 @@ public class McpControllerV1 extends BaseController {
     }
 
     FRAnalytics.apiEndpointCalled("POST v1/mcp", requestBody, response.toString(), userId);
-    
+
     if (isNotification) {
-      return Response.noContent()
-          .header(CorrelationIdFilter.HEADER_NAME, correlationId)
-          .build();
+      return Response.noContent().header(CorrelationIdFilter.HEADER_NAME, correlationId).build();
     }
 
     return Response.ok(response.toString())
@@ -138,10 +149,16 @@ public class McpControllerV1 extends BaseController {
         .build();
   }
 
-  @Operation(summary = "MCP event stream (SSE)", description = "Streams MCP activity notifications to clients.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "SSE stream established", content = @Content(mediaType = MediaType.SERVER_SENT_EVENTS))
-  })
+  @Operation(
+      summary = "MCP event stream (SSE)",
+      description = "Streams MCP activity notifications to clients.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "SSE stream established",
+            content = @Content(mediaType = MediaType.SERVER_SENT_EVENTS))
+      })
   @GET
   @Path("/events")
   @Produces(MediaType.SERVER_SENT_EVENTS)
@@ -159,7 +176,8 @@ public class McpControllerV1 extends BaseController {
       try {
         JsonObject clientInfo = params.getAsJsonObject("clientInfo");
         String name = clientInfo.has("name") ? clientInfo.get("name").getAsString() : "Unknown";
-        String version = clientInfo.has("version") ? clientInfo.get("version").getAsString() : "1.0";
+        String version =
+            clientInfo.has("version") ? clientInfo.get("version").getAsString() : "1.0";
         detectedClientInfo = name + "/" + version;
       } catch (Exception e) {
         FRLogger.warn("Failed to parse clientInfo from initialize params: " + e.getMessage());
@@ -199,9 +217,10 @@ public class McpControllerV1 extends BaseController {
     }
 
     String toolName = params.get("name").getAsString();
-    JsonObject arguments = params.has("arguments") && params.get("arguments").isJsonObject()
-        ? params.getAsJsonObject("arguments")
-        : new JsonObject();
+    JsonObject arguments =
+        params.has("arguments") && params.get("arguments").isJsonObject()
+            ? params.getAsJsonObject("arguments")
+            : new JsonObject();
 
     OpenApiMcpToolRegistry registry = OpenApiMcpToolRegistry.fromApplication(application);
     OpenApiMcpToolRegistry.ToolOperation tool = registry.get(toolName);
@@ -223,7 +242,8 @@ public class McpControllerV1 extends BaseController {
 
     JsonObject payload = new JsonObject();
     payload.addProperty("status", response.statusCode());
-    payload.addProperty("contentType", response.headers().firstValue("Content-Type").orElse("application/json"));
+    payload.addProperty(
+        "contentType", response.headers().firstValue("Content-Type").orElse("application/json"));
 
     String body = response.body() == null ? "" : response.body();
     payload.add("body", tryParseJson(body));
@@ -246,9 +266,7 @@ public class McpControllerV1 extends BaseController {
   }
 
   private HttpResponse<String> invokeTool(
-      OpenApiMcpToolRegistry.ToolOperation tool,
-      JsonObject arguments,
-      String correlationId)
+      OpenApiMcpToolRegistry.ToolOperation tool, JsonObject arguments, String correlationId)
       throws IOException, InterruptedException {
     String resolvedPath = resolvePath(tool.path(), getObject(arguments, "path"));
     URI uri = buildUriWithQuery(resolvedPath, getObject(arguments, "query"));
@@ -259,7 +277,10 @@ public class McpControllerV1 extends BaseController {
     JsonElement bodyElement = arguments.get("body");
     String method = tool.method();
     if (requiresBody(method)) {
-      String body = bodyElement == null || bodyElement.isJsonNull() ? "{}" : GsonProvider.GSON.toJson(bodyElement);
+      String body =
+          bodyElement == null || bodyElement.isJsonNull()
+              ? "{}"
+              : GsonProvider.GSON.toJson(bodyElement);
       builder.header("Content-Type", MediaType.APPLICATION_JSON);
       builder.method(method, HttpRequest.BodyPublishers.ofString(body));
     } else {
@@ -272,8 +293,13 @@ public class McpControllerV1 extends BaseController {
   private void forwardHeaders(HttpRequest.Builder builder, String correlationId) {
     // Forward only identity/auth headers required by the REST API contract.
     copyHeader("Authorization", builder);
-    copyHeaderOrEnvFallback("Freerouting-Profile-ID", "FREEROUTING_PROFILE_ID", "FREEROUTING__PROFILE__ID", builder);
-    copyHeaderOrEnvFallback("Freerouting-Profile-Email", "FREEROUTING_PROFILE_EMAIL", "FREEROUTING__PROFILE__EMAIL", builder);
+    copyHeaderOrEnvFallback(
+        "Freerouting-Profile-ID", "FREEROUTING_PROFILE_ID", "FREEROUTING__PROFILE__ID", builder);
+    copyHeaderOrEnvFallback(
+        "Freerouting-Profile-Email",
+        "FREEROUTING_PROFILE_EMAIL",
+        "FREEROUTING__PROFILE__EMAIL",
+        builder);
 
     // Resolve Freerouting-Environment-Host dynamically
     String envHost = headers.getHeaderString("Freerouting-Environment-Host");
@@ -301,7 +327,11 @@ public class McpControllerV1 extends BaseController {
     }
   }
 
-  private void copyHeaderOrEnvFallback(String headerName, String envVarNameSingle, String envVarNameDouble, HttpRequest.Builder builder) {
+  private void copyHeaderOrEnvFallback(
+      String headerName,
+      String envVarNameSingle,
+      String envVarNameDouble,
+      HttpRequest.Builder builder) {
     String value = headers.getHeaderString(headerName);
     if (value == null || value.isBlank()) {
       value = System.getenv(envVarNameSingle);
@@ -315,12 +345,13 @@ public class McpControllerV1 extends BaseController {
   }
 
   private URI buildUriWithQuery(String path, JsonObject query) {
-    String baseUrl = Freerouting.globalSettings != null
-        && Freerouting.globalSettings.mcpServerSettings != null
-        && Freerouting.globalSettings.mcpServerSettings.targetApiBaseUrl != null
-        && !Freerouting.globalSettings.mcpServerSettings.targetApiBaseUrl.isBlank()
-        ? Freerouting.globalSettings.mcpServerSettings.targetApiBaseUrl
-        : "http://127.0.0.1:37864";
+    String baseUrl =
+        Freerouting.globalSettings != null
+                && Freerouting.globalSettings.mcpServerSettings != null
+                && Freerouting.globalSettings.mcpServerSettings.targetApiBaseUrl != null
+                && !Freerouting.globalSettings.mcpServerSettings.targetApiBaseUrl.isBlank()
+            ? Freerouting.globalSettings.mcpServerSettings.targetApiBaseUrl
+            : "http://127.0.0.1:37864";
 
     URI targetBaseUri;
     try {
@@ -329,7 +360,8 @@ public class McpControllerV1 extends BaseController {
       throw new IllegalArgumentException("Invalid mcp_server.target_api_base_url: " + baseUrl);
     }
 
-    String scheme = targetBaseUri.getScheme() == null ? "" : targetBaseUri.getScheme().toLowerCase(Locale.ROOT);
+    String scheme =
+        targetBaseUri.getScheme() == null ? "" : targetBaseUri.getScheme().toLowerCase(Locale.ROOT);
     if (!"http".equals(scheme) && !"https".equals(scheme)) {
       throw new IllegalArgumentException("mcp_server.target_api_base_url must use http or https.");
     }
@@ -340,7 +372,8 @@ public class McpControllerV1 extends BaseController {
           "mcp_server.target_api_base_url points to MCP endpoints; it must point to the REST API base URL.");
     }
 
-    UriBuilder builder = UriBuilder.fromUri(targetBaseUri).path(path.startsWith("/") ? path.substring(1) : path);
+    UriBuilder builder =
+        UriBuilder.fromUri(targetBaseUri).path(path.startsWith("/") ? path.substring(1) : path);
     for (Map.Entry<String, JsonElement> entry : query.entrySet()) {
       if (entry.getValue() == null || entry.getValue().isJsonNull()) {
         continue;
@@ -363,8 +396,9 @@ public class McpControllerV1 extends BaseController {
     String resolved = rawPath;
     for (Map.Entry<String, JsonElement> entry : pathArgs.entrySet()) {
       String placeholder = "{" + entry.getKey() + "}";
-      String encoded = URLEncoder.encode(entry.getValue().getAsString(), StandardCharsets.UTF_8)
-          .replace("+", "%20");
+      String encoded =
+          URLEncoder.encode(entry.getValue().getAsString(), StandardCharsets.UTF_8)
+              .replace("+", "%20");
       resolved = resolved.replace(placeholder, encoded);
     }
     return resolved;
@@ -414,7 +448,8 @@ public class McpControllerV1 extends BaseController {
     return response;
   }
 
-  private JsonObject handleCustomToolCall(JsonElement id, String toolName, JsonObject arguments, String correlationId) {
+  private JsonObject handleCustomToolCall(
+      JsonElement id, String toolName, JsonObject arguments, String correlationId) {
     JsonObject result = new JsonObject();
     JsonArray content = new JsonArray();
     JsonObject textObj = new JsonObject();
@@ -429,7 +464,8 @@ public class McpControllerV1 extends BaseController {
         return error(id, -32602, "Missing required parameter: text");
       }
       String text = arguments.get("text").getAsString();
-      String base64 = java.util.Base64.getEncoder().encodeToString(text.getBytes(StandardCharsets.UTF_8));
+      String base64 =
+          java.util.Base64.getEncoder().encodeToString(text.getBytes(StandardCharsets.UTF_8));
       body.addProperty("base64", base64);
       payload.addProperty("status", 200);
       payload.addProperty("contentType", "application/json");
@@ -471,9 +507,11 @@ public class McpControllerV1 extends BaseController {
         HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
         forwardHeaders(builder, correlationId);
         builder.header("Content-Type", MediaType.APPLICATION_JSON);
-        builder.POST(HttpRequest.BodyPublishers.ofString(requestBodyObj.toString(), StandardCharsets.UTF_8));
+        builder.POST(
+            HttpRequest.BodyPublishers.ofString(requestBodyObj.toString(), StandardCharsets.UTF_8));
 
-        HttpResponse<String> response = HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response =
+            HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
         payload.addProperty("status", response.statusCode());
         payload.addProperty("contentType", "application/json");
         isError = response.statusCode() >= 400;
@@ -502,7 +540,8 @@ public class McpControllerV1 extends BaseController {
         forwardHeaders(builder, correlationId);
         builder.GET();
 
-        HttpResponse<String> response = HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response =
+            HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
         payload.addProperty("status", response.statusCode());
         payload.addProperty("contentType", "application/json");
         isError = response.statusCode() >= 400;

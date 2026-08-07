@@ -7,21 +7,15 @@ import app.freerouting.io.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 
-/**
- * Describes a path defined by a sequence of lines instead of a sequence of corners.
- */
+/** Describes a path defined by a sequence of lines instead of a sequence of corners. */
 public class PolylinePath extends Path {
 
-  /**
-   * Creates a new instance of PolylinePath
-   */
+  /** Creates a new instance of PolylinePath */
   public PolylinePath(Layer p_layer, double p_width, double[] p_corner_arr) {
     super(p_layer, p_width, p_corner_arr);
   }
 
-  /**
-   * Writes this path as a scope to an output dsn-file.
-   */
+  /** Writes this path as a scope to an output dsn-file. */
   @Override
   public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier) throws IOException {
     p_file.start_scope();
@@ -41,7 +35,8 @@ public class PolylinePath extends Path {
   }
 
   @Override
-  public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier) throws IOException {
+  public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier)
+      throws IOException {
     p_file.start_scope();
     p_file.write("polyline_path ");
     p_identifier.write(this.layer.name, p_file);

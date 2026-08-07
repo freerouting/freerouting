@@ -3,21 +3,15 @@ package app.freerouting.io.specctra.parser;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 
-/**
- * Class for reading place_control scopes from dsn-files.
- */
+/** Class for reading place_control scopes from dsn-files. */
 public class PlaceControl extends ScopeKeyword {
 
-  /**
-   * Creates a new instance of PlaceControl
-   */
+  /** Creates a new instance of PlaceControl */
   public PlaceControl() {
     super("place_control");
   }
 
-  /**
-   * Returns true, if rotate_first is read, else false.
-   */
+  /** Returns true, if rotate_first is read, else false. */
   static boolean read_flip_style_rotate_first(IJFlexScanner p_scanner) {
     try {
       boolean result = false;
@@ -27,7 +21,10 @@ public class PlaceControl extends ScopeKeyword {
       }
       next_token = p_scanner.next_token();
       if (next_token != CLOSED_BRACKET) {
-        FRLogger.warn("Structure.read_flip_style: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Structure.read_flip_style: closing bracket expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
         return false;
       }
       return result;
@@ -37,9 +34,7 @@ public class PlaceControl extends ScopeKeyword {
     }
   }
 
-  /**
-   * Reads the flip_style
-   */
+  /** Reads the flip_style */
   @Override
   public boolean read_scope(ReadScopeParameter p_par) {
     boolean flip_style_rotate_first = false;
@@ -53,7 +48,10 @@ public class PlaceControl extends ScopeKeyword {
         return false;
       }
       if (next_token == null) {
-        FRLogger.warn("PlaceControl.read_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "PlaceControl.read_scope: unexpected end of file at '"
+                + p_par.scanner.get_scope_identifier()
+                + "'");
         return false;
       }
       if (next_token == CLOSED_BRACKET) {

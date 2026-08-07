@@ -17,7 +17,13 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
     this.improved = false;
   }
 
-  public ItemRouteResult(int p_item_id, int p_via_count_before, int p_via_count_after, double p_trace_length_before, double p_trace_length_after, int p_incomplete_count_before,
+  public ItemRouteResult(
+      int p_item_id,
+      int p_via_count_before,
+      int p_via_count_after,
+      double p_trace_length_before,
+      double p_trace_length_after,
+      int p_incomplete_count_before,
       int p_incomplete_count_after) {
     item_id = p_item_id;
     via_count_before = p_via_count_before;
@@ -47,7 +53,14 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
       }
     }
 
-    improvement_percentage = (float) (via_count_before != 0 && trace_length_before != 0 ? 1.0 - (((via_count_after / via_count_before) + (trace_length_after / trace_length_before)) / 2) : 0);
+    improvement_percentage =
+        (float)
+            (via_count_before != 0 && trace_length_before != 0
+                ? 1.0
+                    - (((via_count_after / via_count_before)
+                            + (trace_length_after / trace_length_before))
+                        / 2)
+                : 0);
   }
 
   @Override

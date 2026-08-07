@@ -5,17 +5,13 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-/**
- * Describes functionality of a circle shape in the plane.
- */
+/** Describes functionality of a circle shape in the plane. */
 public class Circle implements ConvexShape, Serializable {
 
   public final IntPoint center;
   public final int radius;
 
-  /**
-   * Creates a new instance of Circle
-   */
+  /** Creates a new instance of Circle */
   public Circle(IntPoint p_center, int p_radius) {
     center = p_center;
     if (p_radius < 0) {
@@ -138,7 +134,8 @@ public class Circle implements ConvexShape, Serializable {
   }
 
   /**
-   * Creates a bounding tile shape around this circle, so that the length of the line segments of the tile is at most p_max_segment_length.
+   * Creates a bounding tile shape around this circle, so that the length of the line segments of
+   * the tile is at most p_max_segment_length.
    */
   public TileShape bounding_tile(int p_max_segment_length) {
     int quadrant_division_count = this.radius / p_max_segment_length + 1;
@@ -162,8 +159,10 @@ public class Circle implements ConvexShape, Serializable {
       Direction curr_dir = Direction.get_instance(curr_b.difference_by(this.center));
       Line curr_tangent = new Line(curr_a, curr_dir);
       tangent_line_arr[quadrant_division_count + i] = curr_tangent;
-      tangent_line_arr[2 * quadrant_division_count + i] = curr_tangent.turn_90_degree(1, this.center);
-      tangent_line_arr[3 * quadrant_division_count + i] = curr_tangent.turn_90_degree(2, this.center);
+      tangent_line_arr[2 * quadrant_division_count + i] =
+          curr_tangent.turn_90_degree(1, this.center);
+      tangent_line_arr[3 * quadrant_division_count + i] =
+          curr_tangent.turn_90_degree(2, this.center);
       tangent_line_arr[i] = curr_tangent.turn_90_degree(3, this.center);
     }
     return TileShape.get_instance(tangent_line_arr);

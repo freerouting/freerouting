@@ -9,7 +9,8 @@ public class TaskStateChangedEvent extends EventObject {
   private final int passNumber;
   private final String boardHash;
 
-  public TaskStateChangedEvent(Object source, TaskState taskState, int passNumber, String boardHash) {
+  public TaskStateChangedEvent(
+      Object source, TaskState taskState, int passNumber, String boardHash) {
     super(source);
     this.tastState = taskState;
     this.passNumber = passNumber;

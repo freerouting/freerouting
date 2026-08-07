@@ -22,14 +22,12 @@ public class Dac2020Bm11FanoutTraceTest extends RoutingFixtureTest {
 
   private static void assertFanoutOnlyJobSettings(RoutingJob job) {
     Assertions.assertFalse(
-        job.routerSettings.getRunRouter(),
-        "Fanout-only fixture must not run the autorouter");
+        job.routerSettings.getRunRouter(), "Fanout-only fixture must not run the autorouter");
     Assertions.assertFalse(
         job.routerSettings.getRunOptimizer(),
         "Fanout-only fixture must not run the route optimizer");
     Assertions.assertTrue(
-        job.routerSettings.isFanoutEnabled(),
-        "Fanout-only fixture must run the fanout pre-pass");
+        job.routerSettings.isFanoutEnabled(), "Fanout-only fixture must run the fanout pre-pass");
   }
 
   @Test
@@ -55,7 +53,10 @@ public class Dac2020Bm11FanoutTraceTest extends RoutingFixtureTest {
     BoardStatistics stats = new BoardStatistics(job.board);
 
     System.out.println(
-        "Fanout Escape Statistics: escaped=" + stats.fanout.escapedCount + ", total=" + stats.fanout.totalSmdPins);
+        "Fanout Escape Statistics: escaped="
+            + stats.fanout.escapedCount
+            + ", total="
+            + stats.fanout.totalSmdPins);
 
     Assertions.assertTrue(
         stats.fanout.escapedCount >= 154,

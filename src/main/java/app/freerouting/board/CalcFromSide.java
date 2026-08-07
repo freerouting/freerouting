@@ -17,8 +17,9 @@ public class CalcFromSide {
   FloatPoint border_intersection;
 
   /**
-   * calculates the number of the edge line of p_shape where p_polyline enters. Used in the push trace algorithm to determine the shove direction. p_no is expected between 1 and p_polyline.line_count
-   * - 2 inclusive.
+   * calculates the number of the edge line of p_shape where p_polyline enters. Used in the push
+   * trace algorithm to determine the shove direction. p_no is expected between 1 and
+   * p_polyline.line_count - 2 inclusive.
    */
   CalcFromSide(Polyline p_polyline, int p_no, TileShape p_shape) {
     int fromside_no = -1;
@@ -30,9 +31,7 @@ public class CalcFromSide {
       int[] intersections = curr_seg.border_intersections(p_shape);
       if (intersections.length > 0) {
         fromside_no = intersections[0];
-        intersection = curr_seg
-            .get_line()
-            .intersection_approx(p_shape.border_line(fromside_no));
+        intersection = curr_seg.get_line().intersection_approx(p_shape.border_line(fromside_no));
         border_intersection_found = true;
         break;
       }
@@ -61,7 +60,8 @@ public class CalcFromSide {
   }
 
   /**
-   * Calculates the nearest border side of p_shape to p_from_point. Used in the shove_drill_item algorithm to determine the shove direction.
+   * Calculates the nearest border side of p_shape to p_from_point. Used in the shove_drill_item
+   * algorithm to determine the shove direction.
    */
   CalcFromSide(Point p_from_point, TileShape p_shape) {
     Point border_projection = p_shape.nearest_border_point(p_from_point);
@@ -73,7 +73,8 @@ public class CalcFromSide {
   }
 
   /**
-   * Calculates the Side of p_shape at the start of p_line_segment. If p_shove_to_the_left, the from_side_no is decremented by 2, else it is increased by 2.
+   * Calculates the Side of p_shape at the start of p_line_segment. If p_shove_to_the_left, the
+   * from_side_no is decremented by 2, else it is increased by 2.
    */
   CalcFromSide(LineSegment p_line_segment, TileShape p_shape, boolean p_shove_to_the_left) {
     FloatPoint start_corner = p_line_segment.start_point_approx();
@@ -93,10 +94,9 @@ public class CalcFromSide {
       }
       Side next_side = check_line.side_of(next_corner);
       if (prev_side != next_side) {
-        FloatPoint curr_intersection = p_shape
-            .border_line(i - 1)
-            .intersection_approx(check_line);
-        if (curr_intersection.distance_square(start_corner) < curr_intersection.distance_square(end_corner)) {
+        FloatPoint curr_intersection = p_shape.border_line(i - 1).intersection_approx(check_line);
+        if (curr_intersection.distance_square(start_corner)
+            < curr_intersection.distance_square(end_corner)) {
           front_side_no = i - 1;
           break;
         }
@@ -111,7 +111,8 @@ public class CalcFromSide {
 
       // Check each side of the shape
       for (int i = 0; i < border_line_count; i++) {
-        FloatLine border_line = new FloatLine(p_shape.border_line(i).a.to_float(), p_shape.border_line(i).b.to_float());
+        FloatLine border_line =
+            new FloatLine(p_shape.border_line(i).a.to_float(), p_shape.border_line(i).b.to_float());
         FloatPoint projection = border_line.perpendicular_projection(start_corner);
 
         // Only consider if projection is on the line segment
@@ -150,9 +151,7 @@ public class CalcFromSide {
     this.border_intersection = prev_corner.middle_point(next_corner);
   }
 
-  /**
-   * Values already calculated. Just create an instance from them.
-   */
+  /** Values already calculated. Just create an instance from them. */
   CalcFromSide(int p_no, FloatPoint p_border_intersection) {
     no = p_no;
     border_intersection = p_border_intersection;

@@ -5,19 +5,16 @@ import app.freerouting.geometry.planar.Area;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 
-/**
- * Class for reading and writing plane scopes from dsn-files.
- */
+/** Class for reading and writing plane scopes from dsn-files. */
 public class Plane extends ScopeKeyword {
 
-  /**
-   * Creates a new instance of Plane
-   */
+  /** Creates a new instance of Plane */
   public Plane() {
     super("plane");
   }
 
-  public static void write_scope(WriteScopeParameter p_par, ConductionArea p_conduction) throws IOException {
+  public static void write_scope(WriteScopeParameter p_par, ConductionArea p_conduction)
+      throws IOException {
     int net_count = p_conduction.net_count();
     if (net_count != 1) {
       FRLogger.warn("Plane.write_scope: unexpected net count at '" + p_conduction.name + "'");
@@ -62,17 +59,20 @@ public class Plane extends ScopeKeyword {
     try {
       Object next_token = p_par.scanner.next_token();
       if (!(next_token instanceof String)) {
-        FRLogger.warn("Plane.read_scope: String expected at '" + p_par.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Plane.read_scope: String expected at '" + p_par.scanner.get_scope_identifier() + "'");
         return false;
       }
       net_name = (String) next_token;
       p_par.scanner.set_scope_identifier(net_name);
-      conduction_area = Shape.read_area_scope(p_par.scanner, p_par.layer_structure, skip_window_scopes);
+      conduction_area =
+          Shape.read_area_scope(p_par.scanner, p_par.layer_structure, skip_window_scopes);
     } catch (IOException e) {
       FRLogger.error("Plane.read_scope: IO error scanning file", e);
       return false;
     }
-    ReadScopeParameter.PlaneInfo plane_info = new ReadScopeParameter.PlaneInfo(conduction_area, net_name);
+    ReadScopeParameter.PlaneInfo plane_info =
+        new ReadScopeParameter.PlaneInfo(conduction_area, net_name);
     p_par.plane_list.add(plane_info);
     return true;
   }

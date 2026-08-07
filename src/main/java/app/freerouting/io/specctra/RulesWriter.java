@@ -13,37 +13,37 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Writes board design rules to a Specctra {@code .rules} file without any
- * dependency on {@link app.freerouting.interactive.GuiBoardManager}.
+ * Writes board design rules to a Specctra {@code .rules} file without any dependency on {@link
+ * app.freerouting.interactive.GuiBoardManager}.
  *
- * <p>Replaces the write path previously found in
- * {@link app.freerouting.io.specctra.parser.RulesFile} (now an empty shell).
+ * <p>Replaces the write path previously found in {@link
+ * app.freerouting.io.specctra.parser.RulesFile} (now an empty shell).
  */
 public final class RulesWriter {
 
-  private RulesWriter() {
-  }
+  private RulesWriter() {}
 
   /**
    * Writes the design rules of {@code board} to {@code out} in Specctra rules format.
    *
    * <p>The stream is <em>not</em> closed by this method — the caller is responsible.
    *
-   * @param board      the board whose rules are written
-   * @param out        destination stream
+   * @param board the board whose rules are written
+   * @param out destination stream
    * @param designName the PCB design name written into the {@code (rules PCB ...)} header
    * @throws IOException if writing fails
    */
-  public static void write(BasicBoard board, OutputStream out, String designName) throws IOException {
+  public static void write(BasicBoard board, OutputStream out, String designName)
+      throws IOException {
     IndentFileWriter outputFile = new IndentFileWriter(out);
-    WriteScopeParameter par = new WriteScopeParameter(
-        board,
-        null,
-        outputFile,
-        board.communication.specctra_parser_info.string_quote,
-        board.communication.coordinate_transform,
-        false
-    );
+    WriteScopeParameter par =
+        new WriteScopeParameter(
+            board,
+            null,
+            outputFile,
+            board.communication.specctra_parser_info.string_quote,
+            board.communication.coordinate_transform,
+            false);
     writeRules(par, designName);
     outputFile.flush();
   }
@@ -52,14 +52,15 @@ public final class RulesWriter {
   // Private helpers (migrated from RulesFile)
   // -------------------------------------------------------------------------
 
-  private static void writeRules(WriteScopeParameter p_par, String p_design_name) throws IOException {
+  private static void writeRules(WriteScopeParameter p_par, String p_design_name)
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("rules PCB ");
     p_par.file.write(p_design_name);
     Structure.write_snap_angle(p_par.file, p_par.board.rules.get_trace_angle_restriction());
     if (p_par.autoroute_settings != null) {
-      AutorouteSettings.write_scope(p_par.file, p_par.autoroute_settings,
-          p_par.board.layer_structure, p_par.identifier_type);
+      AutorouteSettings.write_scope(
+          p_par.file, p_par.autoroute_settings, p_par.board.layer_structure, p_par.identifier_type);
     }
     // write the default rule using 0 as default layer
     Rule.write_default_rule(p_par, 0);

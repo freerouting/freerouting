@@ -29,114 +29,106 @@ public class GlobalSettings implements Serializable {
   private static Path configurationFilePath = userDataPath.resolve("freerouting.json");
   private static Boolean isUserDataPathLocked = false;
   public final transient RuntimeEnvironment runtimeEnvironment = new RuntimeEnvironment();
+
   @SerializedName("profile")
   public final UserProfileSettings userProfileSettings = new UserProfileSettings();
+
   @SerializedName("gui")
   public final GuiSettings guiSettings = new GuiSettings();
+
   /**
-   * @deprecated Use {@link #settingsMergerProtype} to obtain merged {@link RouterSettings}.
-   *             This field is retained as a serialisation bridge for {@code freerouting.json}
-   *             (written on save, read back on load) and as a target for legacy code paths such
-   *             as {@code applyCommandLineArguments} and {@code setValue}.
-   *             The {@code @SerializedName} is also required so that
-   *             {@code ReflectionUtil.setFieldValue} can resolve the {@code "router.*"} property
-   *             path. Do not use this field to drive routing decisions — obtain a merged
-   *             {@link RouterSettings} via {@link #settingsMergerProtype} instead.
+   * @deprecated Use {@link #settingsMergerProtype} to obtain merged {@link RouterSettings}. This
+   *     field is retained as a serialisation bridge for {@code freerouting.json} (written on save,
+   *     read back on load) and as a target for legacy code paths such as {@code
+   *     applyCommandLineArguments} and {@code setValue}. The {@code @SerializedName} is also
+   *     required so that {@code ReflectionUtil.setFieldValue} can resolve the {@code "router.*"}
+   *     property path. Do not use this field to drive routing decisions — obtain a merged {@link
+   *     RouterSettings} via {@link #settingsMergerProtype} instead.
    */
   @Deprecated
   @SerializedName("router")
   public final RouterSettings routerSettings = new RouterSettings();
+
   @SerializedName("drc")
   public final DesignRulesCheckerSettings drcSettings = new DesignRulesCheckerSettings();
+
   @SerializedName("usage_and_diagnostic_data")
-  public final UsageAndDiagnosticDataSettings usageAndDiagnosticData = new UsageAndDiagnosticDataSettings();
+  public final UsageAndDiagnosticDataSettings usageAndDiagnosticData =
+      new UsageAndDiagnosticDataSettings();
+
   @SerializedName("feature_flags")
   public final FeatureFlagsSettings featureFlags = new FeatureFlagsSettings();
+
   @SerializedName("api_server")
   public final ApiServerSettings apiServerSettings = new ApiServerSettings();
+
   @SerializedName("mcp_server")
   public final McpServerSettings mcpServerSettings = new McpServerSettings();
+
   @SerializedName("statistics")
   public final StatisticsSettings statistics = new StatisticsSettings();
+
   @SerializedName("logging")
   public final LoggingSettings logging = new LoggingSettings();
+
   @SerializedName("debug")
   public final transient DebugSettings debugSettings = new DebugSettings();
+
   private final transient String[] supportedLanguages = {
-      "en",
-      "de",
-      "zh",
-      "zh_TW",
-      "hi",
-      "es",
-      "it",
-      "fr",
-      "ar",
-      "bn",
-      "ru",
-      "pt",
-      "ja",
-      "ko",
-      "pl",
-      "nl",
-      "tr",
-      "vi",
-      "id",
-      "uk",
-      "cs",
-      "hu",
-      "th",
-      "sv",
-      "ro"
+    "en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "ja", "ko", "pl",
+    "nl", "tr", "vi", "id", "uk", "cs", "hu", "th", "sv", "ro"
   };
+
   @SerializedName("version")
   public String version;
+
   public transient boolean show_help_option;
   public transient String compareFile1;
   public transient String compareFile2;
   // DRC report file details that we got from the command line arguments.
   public transient BoardFileDetails drc_report_file;
+
   /**
-   * The initial input file path provided via command line arguments.
-   * This is used for initialization and then transferred to RoutingJob.
+   * The initial input file path provided via command line arguments. This is used for
+   * initialization and then transferred to RoutingJob.
    */
   public transient String initialInputFile;
+
   /**
-   * The initial output file path provided via command line arguments.
-   * This is used for initialization and then transferred to RoutingJob.
+   * The initial output file path provided via command line arguments. This is used for
+   * initialization and then transferred to RoutingJob.
    */
   public transient String initialOutputFile;
+
   /**
-   * The initial rules file path provided via command line arguments.
-   * This is used for initialization.
+   * The initial rules file path provided via command line arguments. This is used for
+   * initialization.
    */
   public transient String initialRulesFile;
+
   /**
-   * The design_session_filename field stores the optional Specctra session file
-   * (.ses) path provided via the -de command line argument.
+   * The design_session_filename field stores the optional Specctra session file (.ses) path
+   * provided via the -de command line argument.
    */
   public transient String design_session_filename;
+
   /**
-   * The current locale for the application.
-   * It is initialized based on the system default locale, but can be overridden
-   * via command line arguments.
+   * The current locale for the application. It is initialized based on the system default locale,
+   * but can be overridden via command line arguments.
    */
   public transient Locale currentLocale = Locale.getDefault();
+
   /**
-   * Prototype instance of SettingsMerger for merging settings from various
-   * sources. These sources are loaded at startup, and they are not going
-   * to change during runtime.
-   * The other settings sources (like settings from DNS, SES or RULES files,
-   * or set by the user on the GUI or via the API) are handled separately
-   * in combination with this.
+   * Prototype instance of SettingsMerger for merging settings from various sources. These sources
+   * are loaded at startup, and they are not going to change during runtime. The other settings
+   * sources (like settings from DNS, SES or RULES files, or set by the user on the GUI or via the
+   * API) are handled separately in combination with this.
    */
   public transient SettingsMerger settingsMergerProtype;
 
   public GlobalSettings() {
     // validate and set the current locale
-    if (Arrays
-        .stream(supportedLanguages)
-        .noneMatch(currentLocale.getLanguage()::equals)) {
+    if (Arrays.stream(supportedLanguages).noneMatch(currentLocale.getLanguage()::equals)) {
       // the fallback language is English
       currentLocale = Locale.ENGLISH;
     }
@@ -154,10 +146,10 @@ public class GlobalSettings implements Serializable {
 
   /**
    * Returns the resolved absolute path of the {@code freerouting.json} configuration file.
-   * <p>This path is derived from {@link #getUserDataPath()} and is updated atomically
-   * whenever {@link #setUserDataPath(Path)} is called (before the lock is engaged).
-   * Use this accessor for logging, diagnostics, or tests that need to verify where the
-   * configuration file is written.
+   *
+   * <p>This path is derived from {@link #getUserDataPath()} and is updated atomically whenever
+   * {@link #setUserDataPath(Path)} is called (before the lock is engaged). Use this accessor for
+   * logging, diagnostics, or tests that need to verify where the configuration file is written.
    */
   public static Path getConfigurationFilePath() {
     return configurationFilePath;
@@ -172,9 +164,10 @@ public class GlobalSettings implements Serializable {
 
   /**
    * Resets the user-data-path lock and path to their initial defaults.
-   * <p><strong>For testing only.</strong> Must never be called from production code.
-   * Resets both static path fields and the lock flag so that
-   * {@link #setUserDataPath(Path)} can be exercised in isolated unit tests.
+   *
+   * <p><strong>For testing only.</strong> Must never be called from production code. Resets both
+   * static path fields and the lock flag so that {@link #setUserDataPath(Path)} can be exercised in
+   * isolated unit tests.
    */
   static void resetForTesting() {
     isUserDataPathLocked = false;
@@ -184,11 +177,13 @@ public class GlobalSettings implements Serializable {
 
   /**
    * Returns the "release-safe" version string to be written to {@code freerouting.json}.
+   *
    * <p>The {@code -SNAPSHOT} suffix (appended by the build system to development builds) is
    * stripped so that only real release versions are recorded in the config file.
-   * <p>This matters for migration: we only want to trigger per-version migration steps when
-   * the user updates from one <em>release</em> to another, not on every SNAPSHOT rebuild.
-   * Concretely, both {@code "2.2.1-SNAPSHOT"} and {@code "2.2.1"} produce {@code "2.2.1"}.
+   *
+   * <p>This matters for migration: we only want to trigger per-version migration steps when the
+   * user updates from one <em>release</em> to another, not on every SNAPSHOT rebuild. Concretely,
+   * both {@code "2.2.1-SNAPSHOT"} and {@code "2.2.1"} produce {@code "2.2.1"}.
    *
    * @return the normalized version string, with any {@code -SNAPSHOT} suffix removed
    */
@@ -201,9 +196,9 @@ public class GlobalSettings implements Serializable {
   /**
    * Compares two release-style version strings (e.g. {@code "2.2.0"} vs {@code "2.3.1"}).
    *
-   * @return negative if {@code v1 < v2}, zero if equal, positive if {@code v1 > v2}.
-   *         Returns {@code -1}/{@code +1} without further detail when either string cannot
-   *         be parsed as a dot-separated numeric version.
+   * @return negative if {@code v1 < v2}, zero if equal, positive if {@code v1 > v2}. Returns {@code
+   *     -1}/{@code +1} without further detail when either string cannot be parsed as a
+   *     dot-separated numeric version.
    */
   static int compareVersionStrings(String v1, String v2) {
     if (v1 == null && v2 == null) {
@@ -259,10 +254,13 @@ public class GlobalSettings implements Serializable {
     } catch (com.google.gson.JsonSyntaxException | com.google.gson.JsonIOException e) {
       // The file exists but is corrupt or cannot be parsed — log an actionable WARN
       // and fall through with loadedSettings == null so the caller starts fresh.
-      FRLogger.warn("freerouting.json at '" + configurationFilePath
-          + "' is corrupt or cannot be parsed — starting with default settings. "
-          + "Delete the file or fix its JSON content manually to suppress this message. "
-          + "Parse error: " + e.getMessage());
+      FRLogger.warn(
+          "freerouting.json at '"
+              + configurationFilePath
+              + "' is corrupt or cannot be parsed — starting with default settings. "
+              + "Delete the file or fix its JSON content manually to suppress this message. "
+              + "Parse error: "
+              + e.getMessage());
       return null;
     }
     // NoSuchFileException and AccessDeniedException (both extend IOException) propagate
@@ -282,28 +280,42 @@ public class GlobalSettings implements Serializable {
       // config file was written by a different version of Freerouting.
       // -----------------------------------------------------------------------
       if (fileVersion == null) {
-        FRLogger.warn("freerouting.json at '" + configurationFilePath
-            + "' has no version field (very old config file). "
-            + "Some settings may not be available and have been reset to their defaults. "
-            + "The file will be re-saved with the current version (" + currentVersion + ").");
+        FRLogger.warn(
+            "freerouting.json at '"
+                + configurationFilePath
+                + "' has no version field (very old config file). "
+                + "Some settings may not be available and have been reset to their defaults. "
+                + "The file will be re-saved with the current version ("
+                + currentVersion
+                + ").");
       } else {
         int cmp = compareVersionStrings(fileVersion, currentVersion);
         if (cmp < 0) {
           // File was written by an older version — the most common case after an
           // upgrade.  Migration logic is not yet implemented, so warn the user.
-          FRLogger.warn("freerouting.json at '" + configurationFilePath
-              + "' was written by an older version of Freerouting (file: " + fileVersion
-              + ", current: " + currentVersion + "). "
-              + "No migration logic is implemented for this version transition, so some settings "
-              + "may have been reset to their defaults. "
-              + "The file will be re-saved with the updated version string.");
+          FRLogger.warn(
+              "freerouting.json at '"
+                  + configurationFilePath
+                  + "' was written by an older version of Freerouting (file: "
+                  + fileVersion
+                  + ", current: "
+                  + currentVersion
+                  + "). "
+                  + "No migration logic is implemented for this version transition, so some settings "
+                  + "may have been reset to their defaults. "
+                  + "The file will be re-saved with the updated version string.");
         } else if (cmp > 0) {
           // File was written by a newer version — downgrade scenario.
-          FRLogger.warn("freerouting.json at '" + configurationFilePath
-              + "' was written by a newer version of Freerouting (file: " + fileVersion
-              + ", current: " + currentVersion + "). "
-              + "Some settings from the newer version may not be understood or may be ignored. "
-              + "Consider upgrading Freerouting to the version that originally wrote this file.");
+          FRLogger.warn(
+              "freerouting.json at '"
+                  + configurationFilePath
+                  + "' was written by a newer version of Freerouting (file: "
+                  + fileVersion
+                  + ", current: "
+                  + currentVersion
+                  + "). "
+                  + "Some settings from the newer version may not be understood or may be ignored. "
+                  + "Consider upgrading Freerouting to the version that originally wrote this file.");
         }
       }
 
@@ -319,8 +331,12 @@ public class GlobalSettings implements Serializable {
       if (isSaveNeeded) {
         // TODO: insert per-version migration steps here when needed, e.g.:
         //   migrateSettings(fileVersion, currentVersion, defaultSettings);
-        FRLogger.info("freerouting.json config version changed from '"
-            + fileVersion + "' to '" + currentVersion + "' – re-saving configuration.");
+        FRLogger.info(
+            "freerouting.json config version changed from '"
+                + fileVersion
+                + "' to '"
+                + currentVersion
+                + "' – re-saving configuration.");
         saveAsJson(defaultSettings);
       }
       loadedSettings = defaultSettings;
@@ -348,16 +364,21 @@ public class GlobalSettings implements Serializable {
       Files.createDirectories(configurationFilePath.getParent());
     } catch (AccessDeniedException e) {
       throw new AccessDeniedException(
-          configurationFilePath.getParent().toString(), null,
-          "Cannot create the user-data directory '" + configurationFilePath.getParent()
+          configurationFilePath.getParent().toString(),
+          null,
+          "Cannot create the user-data directory '"
+              + configurationFilePath.getParent()
               + "' — permission denied. freerouting.json cannot be saved. "
               + "Check that the process has write permission on the parent directory. "
               + "In Docker deployments, verify that the volume is mounted with write access.");
     } catch (IOException e) {
       throw new IOException(
-          "Failed to create the user-data directory '" + configurationFilePath.getParent()
-              + "': " + e.getMessage()
-              + ". freerouting.json cannot be saved.", e);
+          "Failed to create the user-data directory '"
+              + configurationFilePath.getParent()
+              + "': "
+              + e.getMessage()
+              + ". freerouting.json cannot be saved.",
+          e);
     }
 
     // Always stamp the file with the release-safe version, regardless of what the
@@ -369,16 +390,21 @@ public class GlobalSettings implements Serializable {
       GsonProvider.GSON.toJson(globalSettings, writer);
     } catch (AccessDeniedException e) {
       throw new AccessDeniedException(
-          configurationFilePath.toString(), null,
-          "Cannot write freerouting.json to '" + configurationFilePath
+          configurationFilePath.toString(),
+          null,
+          "Cannot write freerouting.json to '"
+              + configurationFilePath
               + "' — permission denied. Settings won't be persisted. "
               + "Check that the process has write permission on the file and its parent directory. "
               + "In Docker deployments, verify that the volume is mounted with write access.");
     } catch (IOException e) {
       throw new IOException(
-          "Failed to write freerouting.json to '" + configurationFilePath
-              + "': " + e.getMessage()
-              + ". Settings won't be persisted.", e);
+          "Failed to write freerouting.json to '"
+              + configurationFilePath
+              + "': "
+              + e.getMessage()
+              + ". Settings won't be persisted.",
+          e);
     }
   }
 
@@ -402,17 +428,10 @@ public class GlobalSettings implements Serializable {
 
   public void applyNonRouterEnvironmentVariables() {
     // Read all the environment variables that begins with "FREEROUTING__"
-    for (var entry : System
-        .getenv()
-        .entrySet()) {
-      if (entry
-          .getKey()
-          .startsWith("FREEROUTING__")) {
-        String propertyName = entry
-            .getKey()
-            .substring("FREEROUTING__".length())
-            .toLowerCase()
-            .replace("__", ".");
+    for (var entry : System.getenv().entrySet()) {
+      if (entry.getKey().startsWith("FREEROUTING__")) {
+        String propertyName =
+            entry.getKey().substring("FREEROUTING__".length()).toLowerCase().replace("__", ".");
 
         // Skip router settings - they're handled by EnvironmentVariablesSource
         // to prevent conflicts with the SettingsMerger
@@ -453,7 +472,9 @@ public class GlobalSettings implements Serializable {
   public void applyCommandLineArguments(String[] p_args) {
     for (int i = 0; i < p_args.length; i++) {
       try {
-        if ("-help".equalsIgnoreCase(p_args[i]) || "--help".equalsIgnoreCase(p_args[i]) || "-h".equalsIgnoreCase(p_args[i])) {
+        if ("-help".equalsIgnoreCase(p_args[i])
+            || "--help".equalsIgnoreCase(p_args[i])
+            || "-h".equalsIgnoreCase(p_args[i])) {
           show_help_option = true;
           continue;
         }
@@ -469,9 +490,7 @@ public class GlobalSettings implements Serializable {
           // it's a general settings value setter
           // Use split limit=2 so that values containing '=' (e.g. URLs with query strings)
           // are captured correctly as a single token.
-          String[] parts = p_args[i]
-              .substring(2)
-              .split("=", 2);
+          String[] parts = p_args[i].substring(2).split("=", 2);
           if ((parts.length == 2) && (!Objects.equals(parts[0], "user_data_path"))) {
             if (parts[0].startsWith("debug.")) {
               // handle debug settings
@@ -499,7 +518,8 @@ public class GlobalSettings implements Serializable {
             java.util.List<String> files = new java.util.ArrayList<>();
             int j = i + 1;
             while (j < p_args.length && !p_args[j].startsWith("-")) {
-              // Split each argument by '+' to support legacy concatenation (e.g. file1.dsn+file2.rules)
+              // Split each argument by '+' to support legacy concatenation (e.g.
+              // file1.dsn+file2.rules)
               String[] parts = p_args[j].split("\\+");
               for (String part : parts) {
                 files.add(part.trim());
@@ -522,7 +542,8 @@ public class GlobalSettings implements Serializable {
               String lowerFile = file.toLowerCase();
               if (lowerFile.endsWith(".dsn")) {
                 if (hasDsn) {
-                  FRLogger.warn("Multiple DSN files provided in -de argument. Only the last one will be used.");
+                  FRLogger.warn(
+                      "Multiple DSN files provided in -de argument. Only the last one will be used.");
                 }
                 initialInputFile = file;
                 hasDsn = true;
@@ -532,25 +553,31 @@ public class GlobalSettings implements Serializable {
                   hasDsn = true;
                 } else {
                   if (hasSes) {
-                    FRLogger.warn("Multiple session files (SES/JSON) provided in -de argument. Only the last one will be used.");
+                    FRLogger.warn(
+                        "Multiple session files (SES/JSON) provided in -de argument. Only the last one will be used.");
                   }
                   design_session_filename = file;
                   hasSes = true;
                 }
               } else if (lowerFile.endsWith(".ses")) {
                 if (hasSes) {
-                  FRLogger.warn("Multiple SES files provided in -de argument. Only the last one will be used.");
+                  FRLogger.warn(
+                      "Multiple SES files provided in -de argument. Only the last one will be used.");
                 }
                 design_session_filename = file;
                 hasSes = true;
               } else if (lowerFile.endsWith(".rules")) {
                 if (hasRules) {
-                  FRLogger.warn("Multiple RULES files provided in -de argument. Only the last one will be used.");
+                  FRLogger.warn(
+                      "Multiple RULES files provided in -de argument. Only the last one will be used.");
                 }
                 initialRulesFile = file;
                 hasRules = true;
               } else {
-                FRLogger.warn("Unknown file type in -de argument: " + file + ". Expected .dsn, .json, .ses, or .rules");
+                FRLogger.warn(
+                    "Unknown file type in -de argument: "
+                        + file
+                        + ". Expected .dsn, .json, .ses, or .rules");
               }
             }
 
@@ -610,7 +637,8 @@ public class GlobalSettings implements Serializable {
           }
         } else if (p_args[i].startsWith("-oit")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            routerSettings.optimizer.optimizationImprovementThreshold = Float.parseFloat(p_args[i + 1]) / 100;
+            routerSettings.optimizer.optimizationImprovementThreshold =
+                Float.parseFloat(p_args[i + 1]) / 100;
 
             if (routerSettings.optimizer.optimizationImprovementThreshold <= 0) {
               routerSettings.optimizer.optimizationImprovementThreshold = 0.0f;
@@ -619,20 +647,24 @@ public class GlobalSettings implements Serializable {
           }
         } else if (p_args[i].startsWith("-us")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            String op = p_args[i + 1]
-                .toLowerCase()
-                .trim();
-            routerSettings.optimizer.boardUpdateStrategy = "global".equals(op) ? BoardUpdateStrategy.GLOBAL_OPTIMAL
-                : ("hybrid".equals(op) ? BoardUpdateStrategy.HYBRID : BoardUpdateStrategy.GREEDY);
+            String op = p_args[i + 1].toLowerCase().trim();
+            routerSettings.optimizer.boardUpdateStrategy =
+                "global".equals(op)
+                    ? BoardUpdateStrategy.GLOBAL_OPTIMAL
+                    : ("hybrid".equals(op)
+                        ? BoardUpdateStrategy.HYBRID
+                        : BoardUpdateStrategy.GREEDY);
             i++;
           }
         } else if (p_args[i].startsWith("-is")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            String op = p_args[i + 1]
-                .toLowerCase()
-                .trim();
-            routerSettings.optimizer.itemSelectionStrategy = op.indexOf("seq") == 0 ? ItemSelectionStrategy.SEQUENTIAL
-                : (op.indexOf("rand") == 0 ? ItemSelectionStrategy.RANDOM : ItemSelectionStrategy.PRIORITIZED);
+            String op = p_args[i + 1].toLowerCase().trim();
+            routerSettings.optimizer.itemSelectionStrategy =
+                op.indexOf("seq") == 0
+                    ? ItemSelectionStrategy.SEQUENTIAL
+                    : (op.indexOf("rand") == 0
+                        ? ItemSelectionStrategy.RANDOM
+                        : ItemSelectionStrategy.PRIORITIZED);
             i++;
           }
         } else if (p_args[i].startsWith("-hr")) { // hybrid ratio
@@ -643,9 +675,7 @@ public class GlobalSettings implements Serializable {
         } else if ("-l".equals(p_args[i])) {
           String localeString = "";
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            localeString = p_args[i + 1]
-                .toLowerCase()
-                .replace("-", "_");
+            localeString = p_args[i + 1].toLowerCase().replace("-", "_");
             i++;
           }
 
@@ -744,7 +774,6 @@ public class GlobalSettings implements Serializable {
         FRLogger.error("There was a problem parsing the '" + p_args[i] + "' parameter", e);
       }
     }
-
   }
 
   public String getDesignDir() {
@@ -771,4 +800,3 @@ public class GlobalSettings implements Serializable {
     return routerSettings.optimizer.itemSelectionStrategy;
   }
 }
-

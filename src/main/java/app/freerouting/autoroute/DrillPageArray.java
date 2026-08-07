@@ -9,33 +9,29 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * Describes the 2 dimensional array of pages of ExpansionDrill`s used in the maze search algorithm. The pages are rectangles of about equal width and height covering the bounding box of the board
+ * Describes the 2 dimensional array of pages of ExpansionDrill`s used in the maze search algorithm.
+ * The pages are rectangles of about equal width and height covering the bounding box of the board
  * area.
  */
 public class DrillPageArray {
 
   private final IntBox bounds;
-  /**
-   * The number of columns in the array.
-   */
+
+  /** The number of columns in the array. */
   private final int COLUMN_COUNT;
-  /**
-   * The number of rows in the array.
-   */
+
+  /** The number of rows in the array. */
   private final int ROW_COUNT;
-  /**
-   * The width of a single page in this array.
-   */
+
+  /** The width of a single page in this array. */
   private final int PAGE_WIDTH;
-  /**
-   * The height of a single page in this array.
-   */
+
+  /** The height of a single page in this array. */
   private final int PAGE_HEIGHT;
+
   private final DrillPage[][] page_arr;
 
-  /**
-   * Creates a new instance of DrillPageArray
-   */
+  /** Creates a new instance of DrillPageArray */
   public DrillPageArray(RoutingBoard p_board, int p_max_page_width) {
     this.bounds = p_board.bounding_box;
     double length = bounds.ur.x - bounds.ll.x;
@@ -67,7 +63,8 @@ public class DrillPageArray {
   }
 
   /**
-   * Invalidates all drill pages intersecting with p_shape, so they must be recalculated at the next call of get_ddrills()
+   * Invalidates all drill pages intersecting with p_shape, so they must be recalculated at the next
+   * call of get_ddrills()
    */
   public void invalidate(TileShape p_shape) {
     Collection<DrillPage> overlaps = overlapping_pages(p_shape);
@@ -76,9 +73,7 @@ public class DrillPageArray {
     }
   }
 
-  /**
-   * Collects all drill pages with a 2-dimensional overlap with p_shape.
-   */
+  /** Collects all drill pages with a 2-dimensional overlap with p_shape. */
   public Collection<DrillPage> overlapping_pages(TileShape p_shape) {
     Collection<DrillPage> result = new LinkedList<>();
 
@@ -102,9 +97,7 @@ public class DrillPageArray {
     return result;
   }
 
-  /**
-   * Resets all drill pages for autorouting the next connection.
-   */
+  /** Resets all drill pages for autorouting the next connection. */
   public void reset() {
     for (int j = 0; j < page_arr.length; j++) {
       DrillPage[] curr_row = page_arr[j];

@@ -8,16 +8,13 @@ import jakarta.ws.rs.sse.SseEventSink;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Broadcasts MCP activity events to both SSE and WebSocket subscribers.
- */
+/** Broadcasts MCP activity events to both SSE and WebSocket subscribers. */
 public final class McpRealtimeBridge {
 
   private static final Map<SseEventSink, Sse> SSE_CLIENTS = new ConcurrentHashMap<>();
   private static final Map<Session, Boolean> WS_CLIENTS = new ConcurrentHashMap<>();
 
-  private McpRealtimeBridge() {
-  }
+  private McpRealtimeBridge() {}
 
   public static void registerSseClient(SseEventSink sink, Sse sse) {
     SSE_CLIENTS.put(sink, sse);
@@ -41,26 +38,29 @@ public final class McpRealtimeBridge {
     envelope.add("payload", payload);
     String json = envelope.toString();
 
-    SSE_CLIENTS.forEach((sink, sse) -> {
-      if (sink.isClosed()) {
-        SSE_CLIENTS.remove(sink);
-        return;
-      }
+    SSE_CLIENTS.forEach(
+        (sink, sse) -> {
+          if (sink.isClosed()) {
+            SSE_CLIENTS.remove(sink);
+            return;
+          }
 
-      OutboundSseEvent event = sse.newEventBuilder()
-          .name(eventName)
-          .mediaType(jakarta.ws.rs.core.MediaType.APPLICATION_JSON_TYPE)
-          .data(json)
-          .build();
-      sink.send(event);
-    });
+          OutboundSseEvent event =
+              sse.newEventBuilder()
+                  .name(eventName)
+                  .mediaType(jakarta.ws.rs.core.MediaType.APPLICATION_JSON_TYPE)
+                  .data(json)
+                  .build();
+          sink.send(event);
+        });
 
-    WS_CLIENTS.forEach((session, present) -> {
-      if (!session.isOpen()) {
-        WS_CLIENTS.remove(session);
-        return;
-      }
-      session.getAsyncRemote().sendText(json);
-    });
+    WS_CLIENTS.forEach(
+        (session, present) -> {
+          if (!session.isOpen()) {
+            WS_CLIENTS.remove(session);
+            return;
+          }
+          session.getAsyncRemote().sendText(json);
+        });
   }
 }

@@ -5,19 +5,17 @@ import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 import java.util.Vector;
 
-/**
- * Describes a library of component packages.
- */
+/** Describes a library of component packages. */
 public class Packages implements Serializable {
 
   final Padstacks padstack_list;
-  /**
-   * The array of packages in this object
-   */
+
+  /** The array of packages in this object */
   private final Vector<Package> package_arr = new Vector<>();
 
   /**
-   * Creates a new instance of Packages. p_padstack_list is the list of padstacks used for the pins of the packages in this data structure.
+   * Creates a new instance of Packages. p_padstack_list is the list of padstacks used for the pins
+   * of the packages in this data structure.
    */
   public Packages(Padstacks p_padstack_list) {
     this.padstack_list = p_padstack_list;
@@ -53,9 +51,7 @@ public class Packages implements Serializable {
     return other_side_package;
   }
 
-  /**
-   * Returns the package with index p_package_no. Packages numbers are from 1 to package count.
-   */
+  /** Returns the package with index p_package_no. Packages numbers are from 1 to package count. */
   public Package get(int p_package_no) {
     Package result = package_arr.elementAt(p_package_no - 1);
     if (result != null && result.no != p_package_no) {
@@ -64,29 +60,55 @@ public class Packages implements Serializable {
     return result;
   }
 
-  /**
-   * Returns the count of packages in this object.
-   */
+  /** Returns the count of packages in this object. */
   public int count() {
     return package_arr.size();
   }
 
-  /**
-   * Appends a new package with the input data to this object.
-   */
-  public Package add(String p_name, Package.Pin[] p_pin_arr, Shape[] p_outline, double[] p_outline_widths, boolean[] p_outline_is_closed, Package.Keepout[] p_keepout_arr, Package.Keepout[] p_via_keepout_arr, Package.Keepout[] p_place_keepout_arr,
+  /** Appends a new package with the input data to this object. */
+  public Package add(
+      String p_name,
+      Package.Pin[] p_pin_arr,
+      Shape[] p_outline,
+      double[] p_outline_widths,
+      boolean[] p_outline_is_closed,
+      Package.Keepout[] p_keepout_arr,
+      Package.Keepout[] p_via_keepout_arr,
+      Package.Keepout[] p_place_keepout_arr,
       boolean p_is_front) {
-    Package new_package = new Package(p_name, package_arr.size() + 1, p_pin_arr, p_outline, p_outline_widths, p_outline_is_closed, p_keepout_arr, p_via_keepout_arr, p_place_keepout_arr, p_is_front, this);
+    Package new_package =
+        new Package(
+            p_name,
+            package_arr.size() + 1,
+            p_pin_arr,
+            p_outline,
+            p_outline_widths,
+            p_outline_is_closed,
+            p_keepout_arr,
+            p_via_keepout_arr,
+            p_place_keepout_arr,
+            p_is_front,
+            this);
     package_arr.add(new_package);
     return new_package;
   }
 
   /**
-   * Appends a new package with pins p_pin_arr to this object. The package name is generated internally.
+   * Appends a new package with pins p_pin_arr to this object. The package name is generated
+   * internally.
    */
   public Package add(Package.Pin[] p_pin_arr) {
     String package_name = "Package#" + (package_arr.size() + 1);
 
-    return add(package_name, p_pin_arr, null, null, null, new Package.Keepout[0], new Package.Keepout[0], new Package.Keepout[0], true);
+    return add(
+        package_name,
+        p_pin_arr,
+        null,
+        null,
+        null,
+        new Package.Keepout[0],
+        new Package.Keepout[0],
+        new Package.Keepout[0],
+        true);
   }
 }

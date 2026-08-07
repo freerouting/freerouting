@@ -8,9 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Locale;
 
-/**
- * Stores the layer dependent colors used for drawing for the items on the board.
- */
+/** Stores the layer dependent colors used for drawing for the items on the board. */
 public class ItemColorTableModel extends ColorTableModel implements Serializable {
 
   private transient boolean item_colors_precalculated;
@@ -48,14 +46,15 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
           // currently 6 different default colors for traces on the inner layers
           final int different_inner_colors = 6;
           int remainder = signal_layer_no % different_inner_colors;
-          curr_row[ColumnNames.TRACES.ordinal()] = switch (remainder % different_inner_colors) {
-            case 1 -> new Color(127, 200, 127);
-            case 2 -> new Color(206, 125, 44);
-            case 3 -> new Color(79, 203, 203);
-            case 4 -> new Color(219, 98, 139);
-            case 5 -> new Color(167, 165, 198);
-            default -> new Color(40, 204, 217);
-          };
+          curr_row[ColumnNames.TRACES.ordinal()] =
+              switch (remainder % different_inner_colors) {
+                case 1 -> new Color(127, 200, 127);
+                case 2 -> new Color(206, 125, 44);
+                case 3 -> new Color(79, 203, 203);
+                case 4 -> new Color(219, 98, 139);
+                case 5 -> new Color(167, 165, 198);
+                default -> new Color(40, 204, 217);
+              };
         } else // power layer
         {
           curr_row[ColumnNames.TRACES.ordinal()] = Color.BLACK;
@@ -75,13 +74,12 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     }
   }
 
-  public ItemColorTableModel(ObjectInputStream p_stream) throws IOException, ClassNotFoundException {
+  public ItemColorTableModel(ObjectInputStream p_stream)
+      throws IOException, ClassNotFoundException {
     super(p_stream);
   }
 
-  /**
-   * Copy constructor.
-   */
+  /** Copy constructor. */
   public ItemColorTableModel(ItemColorTableModel p_item_color_model) {
     super(p_item_color_model.data.length, p_item_color_model.locale);
     for (int i = 0; i < this.data.length; i++) {
@@ -112,9 +110,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     this.item_colors_precalculated = false;
   }
 
-  /**
-   * Don't need to implement this method unless your table's editable.
-   */
+  /** Don't need to implement this method unless your table's editable. */
   @Override
   public boolean isCellEditable(int p_row, int p_col) {
     // Note that the data/cell address is constant,
@@ -241,6 +237,15 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
   }
 
   private enum ColumnNames {
-    LAYER, TRACES, FIXED_TRACES, VIAS, FIXED_VIAS, PINS, CONDUCTION_AREAS, KEEPOUTS, VIA_KEEPOUTS, PLACE_KEEPOUTS
+    LAYER,
+    TRACES,
+    FIXED_TRACES,
+    VIAS,
+    FIXED_VIAS,
+    PINS,
+    CONDUCTION_AREAS,
+    KEEPOUTS,
+    VIA_KEEPOUTS,
+    PLACE_KEEPOUTS
   }
 }

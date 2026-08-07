@@ -2,14 +2,10 @@ package app.freerouting.io.specctra.parser;
 
 import java.io.IOException;
 
-/**
- * Class for writing placement scopes from dsn-files.
- */
+/** Class for writing placement scopes from dsn-files. */
 public class Placement extends ScopeKeyword {
 
-  /**
-   * Creates a new instance of Placement
-   */
+  /** Creates a new instance of Placement */
   public Placement() {
     super("placement");
   }

@@ -30,12 +30,12 @@ class DsnReaderTest {
     InputStream in = DsnTestFixtures.openResource("Issue143-rpi_splitter.dsn");
     BoardReadResult result = DsnReader.readBoard(in, null, null);
 
-    assertInstanceOf(BoardReadResult.Success.class, result,
-        "Expected Success for a well-formed DSN file");
+    assertInstanceOf(
+        BoardReadResult.Success.class, result, "Expected Success for a well-formed DSN file");
     BoardReadResult.Success success = (BoardReadResult.Success) result;
     assertNotNull(success.board(), "Board must not be null on success");
-    assertEquals(2, success.board().get_layer_count(),
-        "Issue143-rpi_splitter.dsn is a 2-layer board");
+    assertEquals(
+        2, success.board().get_layer_count(), "Issue143-rpi_splitter.dsn is a 2-layer board");
   }
 
   @Test
@@ -45,8 +45,7 @@ class DsnReaderTest {
 
     assertInstanceOf(BoardReadResult.Success.class, result);
     RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
-    assertNotNull(board.communication.specctra_parser_info,
-        "SpecctraParserInfo must be populated");
+    assertNotNull(board.communication.specctra_parser_info, "SpecctraParserInfo must be populated");
   }
 
   // Parse-error path
@@ -56,8 +55,8 @@ class DsnReaderTest {
     InputStream in = new ByteArrayInputStream("not a dsn file".getBytes(StandardCharsets.UTF_8));
     BoardReadResult result = DsnReader.readBoard(in, null, null);
 
-    assertInstanceOf(BoardReadResult.ParseError.class, result,
-        "Garbage input must produce ParseError");
+    assertInstanceOf(
+        BoardReadResult.ParseError.class, result, "Garbage input must produce ParseError");
   }
 
   @Test
@@ -84,7 +83,9 @@ class DsnReaderTest {
     InputStream in = new ByteArrayInputStream(DSN_NO_BOUNDARY.getBytes(StandardCharsets.UTF_8));
     BoardReadResult result = DsnReader.readBoard(in, null, null);
 
-    assertInstanceOf(BoardReadResult.OutlineMissing.class, result,
+    assertInstanceOf(
+        BoardReadResult.OutlineMissing.class,
+        result,
         "A DSN file with no (boundary ...) scope must produce OutlineMissing");
   }
 
@@ -95,7 +96,9 @@ class DsnReaderTest {
     InputStream in = DsnTestFixtures.openResource("empty_board.dsn");
     BoardReadResult result = DsnReader.readBoard(in, null, null);
 
-    assertInstanceOf(BoardReadResult.Success.class, result,
+    assertInstanceOf(
+        BoardReadResult.Success.class,
+        result,
         "empty_board.dsn has a valid boundary and must succeed");
   }
 
@@ -117,7 +120,9 @@ class DsnReaderTest {
     InputStream in = DsnTestFixtures.openResource("Issue034-Green14SegLED.dsn");
     BoardReadResult result = DsnReader.readBoard(in, null, null, "Issue034-Green14SegLED.dsn");
 
-    assertInstanceOf(BoardReadResult.Success.class, result,
+    assertInstanceOf(
+        BoardReadResult.Success.class,
+        result,
         "KiCad DSN files with multiple (path pcb ...) boundary shapes must load");
     RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
     assertNotNull(board.get_outline());
@@ -131,12 +136,13 @@ class DsnReaderTest {
     InputStream in = new ByteArrayInputStream("not dsn".getBytes(StandardCharsets.UTF_8));
     BoardReadResult result = DsnReader.readBoard(in, null, null);
 
-    String label = switch (result) {
-      case BoardReadResult.Success _        -> "success";
-      case BoardReadResult.OutlineMissing _ -> "outline";
-      case BoardReadResult.ParseError _     -> "parse";
-      case BoardReadResult.IoError _        -> "io";
-    };
+    String label =
+        switch (result) {
+          case BoardReadResult.Success _ -> "success";
+          case BoardReadResult.OutlineMissing _ -> "outline";
+          case BoardReadResult.ParseError _ -> "parse";
+          case BoardReadResult.IoError _ -> "io";
+        };
     assertNotNull(label);
   }
 }

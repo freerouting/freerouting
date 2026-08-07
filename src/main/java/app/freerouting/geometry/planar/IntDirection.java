@@ -3,9 +3,7 @@ package app.freerouting.geometry.planar;
 import app.freerouting.datastructures.Signum;
 import java.io.Serializable;
 
-/**
- * Implements an abstract class Direction as an equivalence class of IntVector's.
- */
+/** Implements an abstract class Direction as an equivalence class of IntVector's. */
 public class IntDirection extends Direction implements Serializable {
 
   public final int x;
@@ -129,8 +127,10 @@ public class IntDirection extends Direction implements Serializable {
   }
 
   /**
-   * Implements the Comparable interface. Returns 1, if this direction has a strict bigger angle with the positive x-axis than p_other_direction, 0, if this direction is equal to p_other_direction,
-   * and -1 otherwise. Throws an exception, if p_other_direction is not a Direction.
+   * Implements the Comparable interface. Returns 1, if this direction has a strict bigger angle
+   * with the positive x-axis than p_other_direction, 0, if this direction is equal to
+   * p_other_direction, and -1 otherwise. Throws an exception, if p_other_direction is not a
+   * Direction.
    */
   @Override
   public int compareTo(Direction p_other_direction) {

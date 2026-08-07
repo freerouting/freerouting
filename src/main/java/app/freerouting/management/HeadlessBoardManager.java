@@ -33,35 +33,36 @@ import java.io.OutputStream;
 /**
  * Manages routing board operations in headless (non-GUI) mode for automated processing.
  *
- * <p>This class provides the core board management functionality without requiring a graphical
- * user interface, making it suitable for:
+ * <p>This class provides the core board management functionality without requiring a graphical user
+ * interface, making it suitable for:
+ *
  * <ul>
- *   <li><strong>Batch Processing:</strong> Automated routing of multiple boards</li>
- *   <li><strong>Command-Line Tools:</strong> Server-side or CLI-based routing operations</li>
- *   <li><strong>Testing:</strong> Automated testing of routing algorithms</li>
- *   <li><strong>Integration:</strong> Embedding in other applications or services</li>
+ *   <li><strong>Batch Processing:</strong> Automated routing of multiple boards
+ *   <li><strong>Command-Line Tools:</strong> Server-side or CLI-based routing operations
+ *   <li><strong>Testing:</strong> Automated testing of routing algorithms
+ *   <li><strong>Integration:</strong> Embedding in other applications or services
  * </ul>
  *
  * <p><strong>Key Responsibilities:</strong>
+ *
  * <ul>
- *   <li><strong>Board Creation:</strong> Initialize routing boards from design files</li>
- *   <li><strong>File I/O:</strong> Load DSN files and save SES session files</li>
- *   <li><strong>Board State:</strong> Manage board data and detect changes via checksums</li>
- *   <li><strong>Routing Coordination:</strong> Coordinate with routing algorithms and jobs</li>
- *   <li><strong>Settings Management:</strong> Handle interactive settings in headless context</li>
+ *   <li><strong>Board Creation:</strong> Initialize routing boards from design files
+ *   <li><strong>File I/O:</strong> Load DSN files and save SES session files
+ *   <li><strong>Board State:</strong> Manage board data and detect changes via checksums
+ *   <li><strong>Routing Coordination:</strong> Coordinate with routing algorithms and jobs
+ *   <li><strong>Settings Management:</strong> Handle interactive settings in headless context
  * </ul>
  *
- * <p><strong>Design Pattern:</strong>
- * This class implements the {@link BoardManager} interface, providing headless-specific
- * implementations while maintaining compatibility with the broader board management
- * architecture. It can be used as a drop-in replacement for
- * {@link app.freerouting.interactive.GuiBoardManager} when GUI is not needed.
+ * <p><strong>Design Pattern:</strong> This class implements the {@link BoardManager} interface,
+ * providing headless-specific implementations while maintaining compatibility with the broader
+ * board management architecture. It can be used as a drop-in replacement for {@link
+ * app.freerouting.interactive.GuiBoardManager} when GUI is not needed.
  *
- * <p><strong>Thread Safety:</strong>
- * The {@link #replaceRoutingBoard(RoutingBoard)} method is synchronized to allow
- * thread-safe board replacement during multi-threaded routing operations.
+ * <p><strong>Thread Safety:</strong> The {@link #replaceRoutingBoard(RoutingBoard)} method is
+ * synchronized to allow thread-safe board replacement during multi-threaded routing operations.
  *
  * <p><strong>Usage Example:</strong>
+ *
  * <pre>{@code
  * HeadlessBoardManager manager = new HeadlessBoardManager(routingJob);
  * BoardReadResult result = manager.loadFromSpecctraDsn(inputStream, observers, idGenerator);
@@ -81,15 +82,15 @@ public class HeadlessBoardManager implements BoardManager {
   private static final String BOARD_EDGE_CLEARANCE_CLASS_NAME = "board_edge";
   private static final String HOLE_EDGE_CLEARANCE_CLASS_NAME = "hole_edge";
 
-
   /**
    * Listener for autorouter thread events during automated routing operations.
    *
    * <p>Receives notifications about:
+   *
    * <ul>
-   *   <li>Routing progress updates</li>
-   *   <li>Thread completion or failure</li>
-   *   <li>Routing statistics and metrics</li>
+   *   <li>Routing progress updates
+   *   <li>Thread completion or failure
+   *   <li>Routing statistics and metrics
    * </ul>
    *
    * <p>Typically used for logging, progress reporting, or coordinating with external systems.
@@ -103,10 +104,11 @@ public class HeadlessBoardManager implements BoardManager {
    * The routing board containing all PCB design data and routing state.
    *
    * <p><strong>Design Issue:</strong> Board management architecture has redundancy issues:
+   *
    * <ul>
-   *   <li>{@link BoardManager} holds a board reference</li>
-   *   <li>{@link app.freerouting.autoroute.NamedAlgorithm} may hold a board reference</li>
-   *   <li>{@link RoutingJob} holds a board reference</li>
+   *   <li>{@link BoardManager} holds a board reference
+   *   <li>{@link app.freerouting.autoroute.NamedAlgorithm} may hold a board reference
+   *   <li>{@link RoutingJob} holds a board reference
    * </ul>
    *
    * <p>These references must be kept synchronized to avoid inconsistencies. This is a known
@@ -120,11 +122,12 @@ public class HeadlessBoardManager implements BoardManager {
    * The routing job context that orchestrates the routing process.
    *
    * <p>Contains:
+   *
    * <ul>
-   *   <li>Router settings and algorithm configuration</li>
-   *   <li>Logging and error handling</li>
-   *   <li>Global settings and feature flags</li>
-   *   <li>Analytics and metrics collection</li>
+   *   <li>Router settings and algorithm configuration
+   *   <li>Logging and error handling
+   *   <li>Global settings and feature flags
+   *   <li>Analytics and metrics collection
    * </ul>
    *
    * @see RoutingJob
@@ -134,16 +137,16 @@ public class HeadlessBoardManager implements BoardManager {
   /**
    * CRC32 checksum of the board in its original/saved state.
    *
-   * <p>Used for change detection by comparing against the current board checksum.
-   * This allows:
+   * <p>Used for change detection by comparing against the current board checksum. This allows:
+   *
    * <ul>
-   *   <li>Detecting unsaved changes before closing</li>
-   *   <li>Validating board integrity after operations</li>
-   *   <li>Determining if a save operation is needed</li>
+   *   <li>Detecting unsaved changes before closing
+   *   <li>Validating board integrity after operations
+   *   <li>Determining if a save operation is needed
    * </ul>
    *
-   * <p>The checksum is calculated from the DSN representation of the board,
-   * updated after successful load or save operations.
+   * <p>The checksum is calculated from the DSN representation of the board, updated after
+   * successful load or save operations.
    *
    * @see #calculateCrc32()
    */
@@ -152,12 +155,11 @@ public class HeadlessBoardManager implements BoardManager {
   /**
    * Creates a new headless board manager for the specified routing job.
    *
-   * <p>The manager is created in an uninitialized state with no board loaded.
-   * Call {@link #loadFromSpecctraDsn} or {@link #create_board} to initialize
-   * the board before performing routing operations.
+   * <p>The manager is created in an uninitialized state with no board loaded. Call {@link
+   * #loadFromSpecctraDsn} or {@link #create_board} to initialize the board before performing
+   * routing operations.
    *
    * @param routingJob the routing job context that will orchestrate routing operations
-   *
    * @see #loadFromSpecctraDsn(InputStream, BoardObservers, IdentificationNumberGenerator)
    * @see #create_board
    */
@@ -169,15 +171,15 @@ public class HeadlessBoardManager implements BoardManager {
    * Returns the routing board managed by this instance.
    *
    * <p>The routing board contains all PCB design data including:
+   *
    * <ul>
-   *   <li>Board outline and layers</li>
-   *   <li>Components and their pads</li>
-   *   <li>Traces, vias, and routing results</li>
-   *   <li>Design rules and net definitions</li>
+   *   <li>Board outline and layers
+   *   <li>Components and their pads
+   *   <li>Traces, vias, and routing results
+   *   <li>Design rules and net definitions
    * </ul>
    *
    * @return the routing board, or null if no board has been loaded or created
-   *
    * @see RoutingBoard
    */
   @Override
@@ -188,16 +190,17 @@ public class HeadlessBoardManager implements BoardManager {
   /**
    * Replaces the current routing board with a new instance in a thread-safe manner.
    *
-   * <p>This method is synchronized to prevent race conditions when multiple threads
-   * might access or modify the board reference. Typical use cases include:
+   * <p>This method is synchronized to prevent race conditions when multiple threads might access or
+   * modify the board reference. Typical use cases include:
+   *
    * <ul>
-   *   <li>Swapping boards during multi-board batch processing</li>
-   *   <li>Replacing the board after major structural changes</li>
-   *   <li>Testing scenarios requiring board substitution</li>
+   *   <li>Swapping boards during multi-board batch processing
+   *   <li>Replacing the board after major structural changes
+   *   <li>Testing scenarios requiring board substitution
    * </ul>
    *
-   * <p><strong>Warning:</strong> Ensure the new board is compatible with the current
-   * routing job settings to avoid inconsistencies.
+   * <p><strong>Warning:</strong> Ensure the new board is compatible with the current routing job
+   * settings to avoid inconsistencies.
    *
    * @param newRoutingBoard the new routing board to use (must not be null)
    */
@@ -207,9 +210,9 @@ public class HeadlessBoardManager implements BoardManager {
 
   /**
    * Returns {@code null} in headless mode. GUI-specific interactive settings are not applicable
-   * outside of a GUI session. Use
-   * {@link app.freerouting.interactive.GuiBoardManager#getInteractiveSettings()} to obtain
-   * settings in GUI mode.
+   * outside of a GUI session. Use {@link
+   * app.freerouting.interactive.GuiBoardManager#getInteractiveSettings()} to obtain settings in GUI
+   * mode.
    *
    * @return {@code null} always in headless mode
    */
@@ -219,9 +222,9 @@ public class HeadlessBoardManager implements BoardManager {
   }
 
   /**
-   * No-op in headless mode. Manual trace half-widths are managed by the GUI layer via
-   * {@link app.freerouting.interactive.InteractiveSettings}; this method has no effect when
-   * running without a GUI.
+   * No-op in headless mode. Manual trace half-widths are managed by the GUI layer via {@link
+   * app.freerouting.interactive.InteractiveSettings}; this method has no effect when running
+   * without a GUI.
    */
   @Override
   public void initialize_manual_trace_half_widths() {
@@ -232,20 +235,21 @@ public class HeadlessBoardManager implements BoardManager {
    * Creates and initializes a new routing board with the specified parameters.
    *
    * <p>This method constructs a new {@link RoutingBoard} from scratch with:
+   *
    * <ul>
-   *   <li><strong>Geometry:</strong> Bounding box, layer structure, and board outline</li>
-   *   <li><strong>Rules:</strong> Design rules including clearances and net definitions</li>
-   *   <li><strong>Communication:</strong> Integration with external systems (DSN format)</li>
+   *   <li><strong>Geometry:</strong> Bounding box, layer structure, and board outline
+   *   <li><strong>Rules:</strong> Design rules including clearances and net definitions
+   *   <li><strong>Communication:</strong> Integration with external systems (DSN format)
    * </ul>
    *
-   * <p>The outline clearance class is determined from the provided class name or defaults
-   * to the area clearance class from the default net class.
+   * <p>The outline clearance class is determined from the provided class name or defaults to the
+   * area clearance class from the default net class.
    *
-   * <p>After board creation, interactive settings are initialized to default values
-   * based on the board configuration.
+   * <p>After board creation, interactive settings are initialized to default values based on the
+   * board configuration.
    *
-   * <p><strong>Note:</strong> If a board already exists, a warning is logged but the
-   * operation proceeds, replacing the existing board.
+   * <p><strong>Note:</strong> If a board already exists, a warning is logged but the operation
+   * proceeds, replacing the existing board.
    *
    * @param p_bounding_box the rectangular boundary of the board
    * @param p_layer_structure the layer stack-up definition
@@ -253,7 +257,6 @@ public class HeadlessBoardManager implements BoardManager {
    * @param p_outline_clearance_class_name name of the clearance class for the outline
    * @param p_rules the board design rules and constraints
    * @param p_board_communication communication interface for external integration
-   *
    * @see RoutingBoard#RoutingBoard
    * @see app.freerouting.interactive.InteractiveSettings
    */
@@ -275,25 +278,37 @@ public class HeadlessBoardManager implements BoardManager {
         outline_cl_class_no = p_rules.clearance_matrix.get_no(p_outline_clearance_class_name);
         outline_cl_class_no = Math.max(outline_cl_class_no, 0);
       } else {
-        outline_cl_class_no = p_rules.get_default_net_class().default_item_clearance_classes
-            .get(DefaultItemClearanceClasses.ItemClass.AREA);
+        outline_cl_class_no =
+            p_rules
+                .get_default_net_class()
+                .default_item_clearance_classes
+                .get(DefaultItemClearanceClasses.ItemClass.AREA);
       }
     }
-    this.board = new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no, p_rules,
-        p_board_communication);
+    this.board =
+        new RoutingBoard(
+            p_bounding_box,
+            p_layer_structure,
+            p_outline_shapes,
+            outline_cl_class_no,
+            p_rules,
+            p_board_communication);
     applyCopperToEdgeClearanceOverride();
     applyHoleClearanceOverride();
   }
 
   private void applyHoleClearanceOverride() {
-    if (this.board == null || this.routingJob == null || this.routingJob.routerSettings == null
+    if (this.board == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null
         || this.routingJob.routerSettings.holeClearanceUm == null) {
       return;
     }
 
     double configuredClearanceUm = this.routingJob.routerSettings.holeClearanceUm;
     if (configuredClearanceUm < 0) {
-      FRLogger.warn("Ignoring router.hole_clearance_um because it is negative: " + configuredClearanceUm);
+      FRLogger.warn(
+          "Ignoring router.hole_clearance_um because it is negative: " + configuredClearanceUm);
       return;
     }
     if (this.board.rules == null) {
@@ -302,8 +317,13 @@ public class HeadlessBoardManager implements BoardManager {
     }
 
     int boardResolution = Math.max(1, this.board.communication.resolution);
-    int configuredClearanceBoardUnits = (int) Math.round(
-        Unit.scale(configuredClearanceUm * boardResolution, Unit.UM, this.board.communication.unit));
+    int configuredClearanceBoardUnits =
+        (int)
+            Math.round(
+                Unit.scale(
+                    configuredClearanceUm * boardResolution,
+                    Unit.UM,
+                    this.board.communication.unit));
     boolean changed = configuredClearanceBoardUnits != this.board.rules.get_hole_clearance();
     this.board.rules.set_hole_clearance(configuredClearanceBoardUnits);
     int holeKeepouts = 0;
@@ -319,18 +339,21 @@ public class HeadlessBoardManager implements BoardManager {
     }
 
     if (configuredClearanceBoardUnits > 0) {
-      FRLogger.info("Applied drill-hole clearance override: " + configuredClearanceUm + " um ("
-          + configuredClearanceBoardUnits + " board units)"
-          + (holeKeepouts > 0 ? ", " + holeKeepouts + " hole keepouts reclassified." : "."));
+      FRLogger.info(
+          "Applied drill-hole clearance override: "
+              + configuredClearanceUm
+              + " um ("
+              + configuredClearanceBoardUnits
+              + " board units)"
+              + (holeKeepouts > 0 ? ", " + holeKeepouts + " hole keepouts reclassified." : "."));
     }
   }
 
   /**
-   * KiCad's DSN export represents non-plated holes as circular per-copper-layer package
-   * keepouts, which by default only get the generic AREA copper clearance. Assign those
-   * circle keepouts to a dedicated "hole_edge" clearance class so other-net copper keeps
-   * hole clearance (not just copper clearance) from the hole boundary. Returns the number
-   * of keepouts reclassified.
+   * KiCad's DSN export represents non-plated holes as circular per-copper-layer package keepouts,
+   * which by default only get the generic AREA copper clearance. Assign those circle keepouts to a
+   * dedicated "hole_edge" clearance class so other-net copper keeps hole clearance (not just copper
+   * clearance) from the hole boundary. Returns the number of keepouts reclassified.
    */
   private int assignHoleKeepoutClearanceClass(int holeClearanceBoardUnits) {
     var matrix = this.board.rules.clearance_matrix;
@@ -359,17 +382,24 @@ public class HeadlessBoardManager implements BoardManager {
       holeEdgeClassNo = matrix.get_no(HOLE_EDGE_CLEARANCE_CLASS_NAME);
     }
     if (holeEdgeClassNo < 0) {
-      FRLogger.warn("Unable to create/find the hole_edge clearance class for the hole clearance override.");
+      FRLogger.warn(
+          "Unable to create/find the hole_edge clearance class for the hole clearance override.");
       return 0;
     }
-    int defaultAreaClassNo = this.board.rules.get_default_net_class().default_item_clearance_classes
-        .get(DefaultItemClearanceClasses.ItemClass.AREA);
+    int defaultAreaClassNo =
+        this.board
+            .rules
+            .get_default_net_class()
+            .default_item_clearance_classes
+            .get(DefaultItemClearanceClasses.ItemClass.AREA);
     for (int layer = 0; layer < matrix.get_layer_count(); layer++) {
       for (int classNo = 1; classNo < matrix.get_class_count(); classNo++) {
         // Never reduce an existing requirement: hole clearance is a floor on top of the
         // normal copper clearance the keepout would otherwise get.
-        int value = Math.max(holeClearanceBoardUnits,
-            matrix.get_value(defaultAreaClassNo, classNo, layer, false));
+        int value =
+            Math.max(
+                holeClearanceBoardUnits,
+                matrix.get_value(defaultAreaClassNo, classNo, layer, false));
         matrix.set_value(holeEdgeClassNo, classNo, layer, value);
         matrix.set_value(classNo, holeEdgeClassNo, layer, value);
       }
@@ -386,40 +416,56 @@ public class HeadlessBoardManager implements BoardManager {
   }
 
   private void applyCopperToEdgeClearanceOverride() {
-    if (this.board == null || this.routingJob == null || this.routingJob.routerSettings == null
+    if (this.board == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null
         || this.routingJob.routerSettings.copperToEdgeClearanceUm == null) {
       return;
     }
 
     double configuredClearanceUm = this.routingJob.routerSettings.copperToEdgeClearanceUm;
     if (configuredClearanceUm < 0) {
-      FRLogger.warn("Ignoring router.copper_to_edge_clearance_um because it is negative: " + configuredClearanceUm);
+      FRLogger.warn(
+          "Ignoring router.copper_to_edge_clearance_um because it is negative: "
+              + configuredClearanceUm);
       return;
     }
     if (this.board.rules == null || this.board.rules.clearance_matrix == null) {
-      FRLogger.warn("Ignoring router.copper_to_edge_clearance_um because board rules are unavailable.");
+      FRLogger.warn(
+          "Ignoring router.copper_to_edge_clearance_um because board rules are unavailable.");
       return;
     }
 
     var outline = this.board.get_outline();
     if (outline == null) {
-      FRLogger.warn("Ignoring router.copper_to_edge_clearance_um because the board outline is unavailable.");
+      FRLogger.warn(
+          "Ignoring router.copper_to_edge_clearance_um because the board outline is unavailable.");
       return;
     }
 
-    int defaultAreaClassNo = this.board.rules.get_default_net_class().default_item_clearance_classes
-        .get(DefaultItemClearanceClasses.ItemClass.AREA);
+    int defaultAreaClassNo =
+        this.board
+            .rules
+            .get_default_net_class()
+            .default_item_clearance_classes
+            .get(DefaultItemClearanceClasses.ItemClass.AREA);
     boolean usesFallbackOutlineClass = outline.clearance_class_no() == defaultAreaClassNo;
-    boolean usesDefaultEdgeClearanceValue = Math.abs(configuredClearanceUm
-        - DefaultSettings.DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM) < 1e-9;
+    boolean usesDefaultEdgeClearanceValue =
+        Math.abs(configuredClearanceUm - DefaultSettings.DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM)
+            < 1e-9;
     // Keep explicit DSN outline-clearance classes untouched when only the global default is active.
     if (usesDefaultEdgeClearanceValue && !usesFallbackOutlineClass) {
       return;
     }
 
     int boardResolution = Math.max(1, this.board.communication.resolution);
-    int configuredClearanceBoardUnits = (int) Math.round(
-        Unit.scale(configuredClearanceUm * boardResolution, Unit.UM, this.board.communication.unit));
+    int configuredClearanceBoardUnits =
+        (int)
+            Math.round(
+                Unit.scale(
+                    configuredClearanceUm * boardResolution,
+                    Unit.UM,
+                    this.board.communication.unit));
 
     var matrix = this.board.rules.clearance_matrix;
     int boardEdgeClassNo = matrix.get_no(BOARD_EDGE_CLEARANCE_CLASS_NAME);
@@ -428,7 +474,8 @@ public class HeadlessBoardManager implements BoardManager {
       boardEdgeClassNo = matrix.get_no(BOARD_EDGE_CLEARANCE_CLASS_NAME);
     }
     if (boardEdgeClassNo < 0) {
-      FRLogger.warn("Unable to create/find the board_edge clearance class for copper-to-edge override.");
+      FRLogger.warn(
+          "Unable to create/find the board_edge clearance class for copper-to-edge override.");
       return;
     }
 
@@ -439,7 +486,6 @@ public class HeadlessBoardManager implements BoardManager {
       }
     }
 
-
     if (this.board.search_tree_manager != null) {
       this.board.search_tree_manager.remove(outline);
     }
@@ -449,23 +495,27 @@ public class HeadlessBoardManager implements BoardManager {
       this.board.search_tree_manager.insert(outline);
     }
 
-    FRLogger.debug("Applied copper-to-edge clearance override: " + configuredClearanceUm + " um ("
-        + configuredClearanceBoardUnits + " board units).");
+    FRLogger.debug(
+        "Applied copper-to-edge clearance override: "
+            + configuredClearanceUm
+            + " um ("
+            + configuredClearanceBoardUnits
+            + " board units).");
   }
 
   /**
    * Returns the current routing job context associated with this board manager.
    *
    * <p>The routing job orchestrates the routing process and provides:
+   *
    * <ul>
-   *   <li>Router algorithm settings and configuration</li>
-   *   <li>Logging and error handling facilities</li>
-   *   <li>Global settings and feature flags</li>
-   *   <li>Analytics and metrics collection</li>
+   *   <li>Router algorithm settings and configuration
+   *   <li>Logging and error handling facilities
+   *   <li>Global settings and feature flags
+   *   <li>Analytics and metrics collection
    * </ul>
    *
    * @return the current routing job, or null if no job is set
-   *
    * @see RoutingJob
    */
   @Override
@@ -476,28 +526,29 @@ public class HeadlessBoardManager implements BoardManager {
   /**
    * Calculates a CRC32 checksum of the current board state.
    *
-   * <p>The checksum is computed from the DSN (Specctra Design) representation of the board,
-   * which includes:
+   * <p>The checksum is computed from the DSN (Specctra Design) representation of the board, which
+   * includes:
+   *
    * <ul>
-   *   <li>Board geometry and layer structure</li>
-   *   <li>All placed components and their positions</li>
-   *   <li>All routed traces and vias</li>
-   *   <li>Design rules and net definitions</li>
+   *   <li>Board geometry and layer structure
+   *   <li>All placed components and their positions
+   *   <li>All routed traces and vias
+   *   <li>Design rules and net definitions
    * </ul>
    *
    * <p><strong>Use Cases:</strong>
+   *
    * <ul>
-   *   <li><strong>Change Detection:</strong> Compare against {@link #originalBoardChecksum}
-   *       to detect if the board has been modified</li>
-   *   <li><strong>Integrity Verification:</strong> Ensure board data hasn't been corrupted</li>
-   *   <li><strong>Version Control:</strong> Track board modifications over time</li>
+   *   <li><strong>Change Detection:</strong> Compare against {@link #originalBoardChecksum} to
+   *       detect if the board has been modified
+   *   <li><strong>Integrity Verification:</strong> Ensure board data hasn't been corrupted
+   *   <li><strong>Version Control:</strong> Track board modifications over time
    * </ul>
    *
-   * <p><strong>Performance Note:</strong> This operation serializes the entire board to
-   * DSN format in memory, which can be expensive for large boards. Use sparingly.
+   * <p><strong>Performance Note:</strong> This operation serializes the entire board to DSN format
+   * in memory, which can be expensive for large boards. Use sparingly.
    *
    * @return the CRC32 checksum value of the board's DSN representation
-   *
    * @see #originalBoardChecksum
    * @see BoardFileDetails#calculateCrc32(InputStream)
    */
@@ -510,7 +561,8 @@ public class HeadlessBoardManager implements BoardManager {
     try {
       DsnWriter.write(board, memoryStream, "N/A", false);
     } catch (IOException e) {
-      FRLogger.error("HeadlessBoardManager.calculateCrc32ForBoard: unable to serialise board to DSN", e);
+      FRLogger.error(
+          "HeadlessBoardManager.calculateCrc32ForBoard: unable to serialise board to DSN", e);
       throw new IllegalStateException("Unable to serialize board to DSN for CRC32 calculation", e);
     }
     InputStream inputStream = new ByteArrayInputStream(memoryStream.toByteArray());
@@ -521,68 +573,83 @@ public class HeadlessBoardManager implements BoardManager {
    * Loads a board design from a Specctra DSN (Design) format file.
    *
    * <p>The DSN format is an industry-standard PCB interchange format that describes:
+   *
    * <ul>
-   *   <li>Board physical structure (layers, outline, stackup)</li>
-   *   <li>Component placement and footprints</li>
-   *   <li>Net definitions and connectivity</li>
-   *   <li>Design rules and constraints</li>
-   *   <li>Existing routing (if any)</li>
+   *   <li>Board physical structure (layers, outline, stackup)
+   *   <li>Component placement and footprints
+   *   <li>Net definitions and connectivity
+   *   <li>Design rules and constraints
+   *   <li>Existing routing (if any)
    * </ul>
    *
    * <p><strong>Loading Process:</strong>
+   *
    * <ol>
-   *   <li>Parse the DSN file and create board structure</li>
-   *   <li>Apply board-specific optimizations to router settings</li>
-   *   <li>Reduce/optimize net data structures</li>
-   *   <li>Calculate and store initial board checksum</li>
-   *   <li>Send analytics about the loaded board</li>
+   *   <li>Parse the DSN file and create board structure
+   *   <li>Apply board-specific optimizations to router settings
+   *   <li>Reduce/optimize net data structures
+   *   <li>Calculate and store initial board checksum
+   *   <li>Send analytics about the loaded board
    * </ol>
    *
-   * <p><strong>Integration Parameters:</strong>
-   * The {@code boardObservers} and {@code identificationNumberGenerator} parameters
-   * support embedding Freerouting into host CAD systems, allowing:
+   * <p><strong>Integration Parameters:</strong> The {@code boardObservers} and {@code
+   * identificationNumberGenerator} parameters support embedding Freerouting into host CAD systems,
+   * allowing:
+   *
    * <ul>
-   *   <li>Real-time synchronization of board changes with the host</li>
-   *   <li>Consistent item identification across systems</li>
+   *   <li>Real-time synchronization of board changes with the host
+   *   <li>Consistent item identification across systems
    * </ul>
    *
-   * <p><strong>Error Handling:</strong>
-   * Returns subclass of {@link BoardReadResult} (like {@link app.freerouting.io.BoardReadResult.ParseError} or {@link app.freerouting.io.BoardReadResult.IoError}) if:
+   * <p><strong>Error Handling:</strong> Returns subclass of {@link BoardReadResult} (like {@link
+   * app.freerouting.io.BoardReadResult.ParseError} or {@link
+   * app.freerouting.io.BoardReadResult.IoError}) if:
+   *
    * <ul>
-   *   <li>Input stream is null or invalid</li>
-   *   <li>DSN file is corrupted or malformed</li>
-   *   <li>File format version is not supported</li>
-   *   <li>I/O errors occur during reading</li>
+   *   <li>Input stream is null or invalid
+   *   <li>DSN file is corrupted or malformed
+   *   <li>File format version is not supported
+   *   <li>I/O errors occur during reading
    * </ul>
    *
-   * <p><strong>Side Effects:</strong>
-   * On success, replaces any existing board and updates router settings to match
-   * the new board's characteristics (layer count, optimizations).
+   * <p><strong>Side Effects:</strong> On success, replaces any existing board and updates router
+   * settings to match the new board's characteristics (layer count, optimizations).
    *
    * @param inputStream the input stream containing DSN file data (will be closed after reading)
-   * @param boardObservers optional observers for board item changes (can be null for standalone use)
+   * @param boardObservers optional observers for board item changes (can be null for standalone
+   *     use)
    * @param identificationNumberGenerator optional ID generator for board items (can be null)
    * @return the read result indicating success, warnings, or errors
-   *
    * @see app.freerouting.io.specctra.DsnReader#readBoard
    * @see BoardObservers
    */
-  public BoardReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
+  public BoardReadResult loadFromSpecctraDsn(
+      InputStream inputStream,
+      BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     if (inputStream == null) {
       return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));
     }
 
     try {
-      String inputFilename = this.routingJob != null && this.routingJob.input != null
-          ? this.routingJob.input.getFilename()
-          : null;
+      String inputFilename =
+          this.routingJob != null && this.routingJob.input != null
+              ? this.routingJob.input.getFilename()
+              : null;
       if (this.routingJob != null) {
-        this.routingJob.logInfo("Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
+        this.routingJob.logInfo(
+            "Loading board file"
+                + (inputFilename != null ? " '" + inputFilename + "'" : "")
+                + "...");
       } else {
-        FRLogger.info("Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
+        FRLogger.info(
+            "Loading board file"
+                + (inputFilename != null ? " '" + inputFilename + "'" : "")
+                + "...");
       }
-      BoardReadResult dsnResult = DsnReader.readBoard(inputStream, boardObservers, identificationNumberGenerator, inputFilename);
+      BoardReadResult dsnResult =
+          DsnReader.readBoard(
+              inputStream, boardObservers, identificationNumberGenerator, inputFilename);
 
       applyParsedBoardResult(dsnResult, inputFilename, "DSN");
       return dsnResult;
@@ -594,11 +661,11 @@ public class HeadlessBoardManager implements BoardManager {
   }
 
   /**
-   * Applies a previously parsed board read result to this manager without performing I/O.
-   * Used by the GUI to finish loading on the EDT after background parsing.
+   * Applies a previously parsed board read result to this manager without performing I/O. Used by
+   * the GUI to finish loading on the EDT after background parsing.
    */
-  public BoardReadResult applyParsedBoardResult(BoardReadResult dsnResult, String inputFilename,
-      String analyticsFormat) {
+  public BoardReadResult applyParsedBoardResult(
+      BoardReadResult dsnResult, String inputFilename, String analyticsFormat) {
     if (dsnResult instanceof BoardReadResult.Success success) {
       this.board = (RoutingBoard) success.board();
     } else if (dsnResult instanceof BoardReadResult.OutlineMissing outlineMissing) {
@@ -608,8 +675,12 @@ public class HeadlessBoardManager implements BoardManager {
         if (dsnResult instanceof BoardReadResult.IoError ioError) {
           routingJob.logError("There was an IO error while reading board file.", ioError.cause());
         } else if (dsnResult instanceof BoardReadResult.ParseError parseError) {
-          routingJob.logError("There was a parse error while reading board file at '"
-              + parseError.location() + "': " + parseError.detail(), null);
+          routingJob.logError(
+              "There was a parse error while reading board file at '"
+                  + parseError.location()
+                  + "': "
+                  + parseError.detail(),
+              null);
         }
       }
       return dsnResult;
@@ -647,22 +718,25 @@ public class HeadlessBoardManager implements BoardManager {
     }
     RoutingBoard loadedBoard = this.board;
     HeadlessBoardManager manager = this;
-    Thread.ofVirtual().name("board-post-load").start(() -> {
-      try {
-        var boardStats = new BoardStatistics(loadedBoard, null, false, false);
-        FRAnalytics.fileLoaded(analyticsFormat, GSON.toJson(boardStats));
-        FRAnalytics.boardLoaded(
-            loadedBoard.communication.specctra_parser_info.host_cad,
-            loadedBoard.communication.specctra_parser_info.host_version,
-            loadedBoard.get_layer_count(),
-            loadedBoard.components.count(),
-            loadedBoard.rules.nets.max_net_no());
-        manager.originalBoardChecksum = manager.calculateCrc32ForBoard(loadedBoard);
-        compareCounterpartBoardIfPresent(loadedBoard, inputFilename);
-      } catch (Exception e) {
-        FRLogger.error("Deferred post-load processing failed", e);
-      }
-    });
+    Thread.ofVirtual()
+        .name("board-post-load")
+        .start(
+            () -> {
+              try {
+                var boardStats = new BoardStatistics(loadedBoard, null, false, false);
+                FRAnalytics.fileLoaded(analyticsFormat, GSON.toJson(boardStats));
+                FRAnalytics.boardLoaded(
+                    loadedBoard.communication.specctra_parser_info.host_cad,
+                    loadedBoard.communication.specctra_parser_info.host_version,
+                    loadedBoard.get_layer_count(),
+                    loadedBoard.components.count(),
+                    loadedBoard.rules.nets.max_net_no());
+                manager.originalBoardChecksum = manager.calculateCrc32ForBoard(loadedBoard);
+                compareCounterpartBoardIfPresent(loadedBoard, inputFilename);
+              } catch (Exception e) {
+                FRLogger.error("Deferred post-load processing failed", e);
+              }
+            });
   }
 
   private static void compareCounterpartBoardIfPresent(RoutingBoard board, String inputFilename) {
@@ -689,9 +763,15 @@ public class HeadlessBoardManager implements BoardManager {
     app.freerouting.board.BoardComparator.ComparisonResult comparison =
         app.freerouting.board.BoardComparator.compare(board, counterpartBoard, 1e-3);
     if (comparison.areEqual) {
-      FRLogger.debug("Counterpart comparison: The loaded board and its counterpart '" + counterpartFile.getName() + "' are identical in representation.");
+      FRLogger.debug(
+          "Counterpart comparison: The loaded board and its counterpart '"
+              + counterpartFile.getName()
+              + "' are identical in representation.");
     } else {
-      FRLogger.warn("Counterpart comparison: Differences detected between loaded board and counterpart '" + counterpartFile.getName() + "'.");
+      FRLogger.warn(
+          "Counterpart comparison: Differences detected between loaded board and counterpart '"
+              + counterpartFile.getName()
+              + "'.");
       FRLogger.debug(comparison.report);
     }
   }
@@ -704,29 +784,37 @@ public class HeadlessBoardManager implements BoardManager {
    * @param identificationNumberGenerator optional ID generator for board items (can be null)
    * @return the read result indicating success, warnings, or errors
    */
-  public BoardReadResult loadFromKiCadJson(InputStream inputStream, BoardObservers boardObservers,
+  public BoardReadResult loadFromKiCadJson(
+      InputStream inputStream,
+      BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     if (inputStream == null) {
       return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));
     }
 
-    String inputFilename = this.routingJob != null && this.routingJob.input != null
-        ? this.routingJob.input.getFilename()
-        : null;
+    String inputFilename =
+        this.routingJob != null && this.routingJob.input != null
+            ? this.routingJob.input.getFilename()
+            : null;
     if (this.routingJob != null) {
-      this.routingJob.logInfo("Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
+      this.routingJob.logInfo(
+          "Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
     } else {
-      FRLogger.info("Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
+      FRLogger.info(
+          "Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
     }
 
-    try (java.io.Reader reader = new java.io.InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)) {
-      BoardReadResult dsnResult = KiCadJsonReader.readBoard(reader, boardObservers, identificationNumberGenerator);
+    try (java.io.Reader reader =
+        new java.io.InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)) {
+      BoardReadResult dsnResult =
+          KiCadJsonReader.readBoard(reader, boardObservers, identificationNumberGenerator);
       applyParsedBoardResult(dsnResult, inputFilename, "KICAD_JSON");
       return dsnResult;
 
     } catch (Exception e) {
       routingJob.logError("There was an error while reading KiCad JSON file.", e);
-      return new BoardReadResult.IoError(new java.io.IOException("Error reading KiCad JSON file", e));
+      return new BoardReadResult.IoError(
+          new java.io.IOException("Error reading KiCad JSON file", e));
     }
   }
 
@@ -734,35 +822,36 @@ public class HeadlessBoardManager implements BoardManager {
    * Writes the routing results to a Specctra SES (Session) format file.
    *
    * <p>The SES format is the companion output format to DSN, containing:
+   *
    * <ul>
-   *   <li>All routed traces and their exact paths</li>
-   *   <li>Via placements and layer transitions</li>
-   *   <li>Routing modifications to original design</li>
-   *   <li>Completion status and statistics</li>
+   *   <li>All routed traces and their exact paths
+   *   <li>Via placements and layer transitions
+   *   <li>Routing modifications to original design
+   *   <li>Completion status and statistics
    * </ul>
    *
    * <p><strong>Typical Workflow:</strong>
+   *
    * <ol>
-   *   <li>CAD tool exports design as DSN file</li>
-   *   <li>Freerouting loads DSN and performs autorouting</li>
-   *   <li>Freerouting exports results as SES file</li>
-   *   <li>CAD tool imports SES to update design with routing</li>
+   *   <li>CAD tool exports design as DSN file
+   *   <li>Freerouting loads DSN and performs autorouting
+   *   <li>Freerouting exports results as SES file
+   *   <li>CAD tool imports SES to update design with routing
    * </ol>
    *
-   * <p><strong>Post-Save Operations:</strong>
-   * On successful save:
+   * <p><strong>Post-Save Operations:</strong> On successful save:
+   *
    * <ul>
-   *   <li>Updates {@link #originalBoardChecksum} to reflect the saved state</li>
-   *   <li>Marks the board as having no unsaved changes</li>
+   *   <li>Updates {@link #originalBoardChecksum} to reflect the saved state
+   *   <li>Marks the board as having no unsaved changes
    * </ul>
    *
-   * <p><strong>Note:</strong> The output stream is NOT closed by this method.
-   * The caller is responsible for closing it.
+   * <p><strong>Note:</strong> The output stream is NOT closed by this method. The caller is
+   * responsible for closing it.
    *
    * @param outputStream the stream to write SES data to (caller must close)
    * @param designName the design name to include in the SES file header
    * @return true if save was successful, false if an error occurred
-   *
    * @see SesWriter#write
    * @see #loadFromSpecctraDsn
    */
@@ -786,19 +875,24 @@ public class HeadlessBoardManager implements BoardManager {
   private static RoutingBoard loadBoardFromFileForComparison(java.io.File file) {
     try (java.io.InputStream is = new java.io.FileInputStream(file)) {
       if (file.getName().toLowerCase().endsWith(".json")) {
-        try (java.io.Reader r = new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
-          app.freerouting.io.BoardReadResult readResult = app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
+        try (java.io.Reader r =
+            new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
+          app.freerouting.io.BoardReadResult readResult =
+              app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
           if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
             return (RoutingBoard) success.board();
-          } else if (readResult instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+          } else if (readResult
+              instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
             return (RoutingBoard) outlineMissing.board();
           }
         }
       } else {
-        app.freerouting.io.BoardReadResult readResult = app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
+        app.freerouting.io.BoardReadResult readResult =
+            app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
         if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
           return (RoutingBoard) success.board();
-        } else if (readResult instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+        } else if (readResult
+            instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
           return (RoutingBoard) outlineMissing.board();
         }
       }
@@ -808,7 +902,8 @@ public class HeadlessBoardManager implements BoardManager {
     return null;
   }
 
-  boolean conductionAreasOverlap(app.freerouting.board.ConductionArea ca1, app.freerouting.board.ConductionArea ca2) {
+  boolean conductionAreasOverlap(
+      app.freerouting.board.ConductionArea ca1, app.freerouting.board.ConductionArea ca2) {
     app.freerouting.geometry.planar.TileShape[] pieces1 = ca1.get_area().split_to_convex();
     app.freerouting.geometry.planar.TileShape[] pieces2 = ca2.get_area().split_to_convex();
     if (pieces1 == null || pieces2 == null) {
@@ -855,21 +950,27 @@ public class HeadlessBoardManager implements BoardManager {
         final int layerNo = i;
 
         // 1. Check for signal wires/traces
-        long traceCount = this.board.get_traces().stream()
-            .filter(trace -> trace.get_layer() == layerNo)
-            .count();
+        long traceCount =
+            this.board.get_traces().stream().filter(trace -> trace.get_layer() == layerNo).count();
         if (traceCount > 0) {
           validationFailed = true;
-          violations.add("- Dedicated power layer '" + layer.name + "' contains " + traceCount + " signal wire(s)/trace(s).");
+          violations.add(
+              "- Dedicated power layer '"
+                  + layer.name
+                  + "' contains "
+                  + traceCount
+                  + " signal wire(s)/trace(s).");
         }
 
         // 2. Check for at least one conduction area
-        java.util.List<app.freerouting.board.ConductionArea> layerAreas = this.board.get_conduction_areas().stream()
-            .filter(ca -> ca.get_layer() == layerNo)
-            .toList();
+        java.util.List<app.freerouting.board.ConductionArea> layerAreas =
+            this.board.get_conduction_areas().stream()
+                .filter(ca -> ca.get_layer() == layerNo)
+                .toList();
         if (layerAreas.isEmpty()) {
           validationFailed = true;
-          violations.add("- Dedicated power layer '" + layer.name + "' has no conduction areas defined.");
+          violations.add(
+              "- Dedicated power layer '" + layer.name + "' has no conduction areas defined.");
         }
 
         // 3. Check for overlapping conduction areas
@@ -879,9 +980,20 @@ public class HeadlessBoardManager implements BoardManager {
               validationFailed = true;
               String nets1 = getConductionAreaNetNames(layerAreas.get(j));
               String nets2 = getConductionAreaNetNames(layerAreas.get(k));
-              violations.add("- Dedicated power layer '" + layer.name + "' has overlapping conduction areas: "
-                  + "Area (ID " + layerAreas.get(j).get_id_no() + ", Net(s): [" + nets1 + "]) and "
-                  + "Area (ID " + layerAreas.get(k).get_id_no() + ", Net(s): [" + nets2 + "]) overlap.");
+              violations.add(
+                  "- Dedicated power layer '"
+                      + layer.name
+                      + "' has overlapping conduction areas: "
+                      + "Area (ID "
+                      + layerAreas.get(j).get_id_no()
+                      + ", Net(s): ["
+                      + nets1
+                      + "]) and "
+                      + "Area (ID "
+                      + layerAreas.get(k).get_id_no()
+                      + ", Net(s): ["
+                      + nets2
+                      + "]) overlap.");
             }
           }
         }
@@ -895,17 +1007,22 @@ public class HeadlessBoardManager implements BoardManager {
         sb.append(violation).append("\n");
       }
       sb.append("\nProper Definition and Best Practices for Power Planes:\n")
-        .append("1. What Belongs on a Power Plane:\n")
-        .append("   - Solid Copper Pours: A single, uninterrupted sheet of copper assigned to one voltage (e.g., +3.3V).\n")
-        .append("   - Split Planes: Multiple distinct voltage zones divided by thin isolation gaps (puzzle pieces).\n")
-        .append("   - Vias and Anti-Pads: Plated holes passing through the board, surrounded by circular voids (anti-pads) to prevent shorting.\n")
-        .append("   - Thermal Reliefs: Spoked connections for vias or pins that connect to the plane, facilitating soldering.\n")
-        .append("2. Why Signal Wires/Traces are Banned:\n")
-        .append("   - Destroyed Return Paths: High-speed signals on adjacent layers couple to the solid plane below/above as return paths. Crossing a trace gap detours return currents, causing severe EMI and signal integrity issues.\n")
-        .append("   - Compromised Power Delivery: Power planes should provide the lowest impedance path. Routing traces chops up the copper, creating bottleneck restrictions and voltage drops.\n");
+          .append("1. What Belongs on a Power Plane:\n")
+          .append(
+              "   - Solid Copper Pours: A single, uninterrupted sheet of copper assigned to one voltage (e.g., +3.3V).\n")
+          .append(
+              "   - Split Planes: Multiple distinct voltage zones divided by thin isolation gaps (puzzle pieces).\n")
+          .append(
+              "   - Vias and Anti-Pads: Plated holes passing through the board, surrounded by circular voids (anti-pads) to prevent shorting.\n")
+          .append(
+              "   - Thermal Reliefs: Spoked connections for vias or pins that connect to the plane, facilitating soldering.\n")
+          .append("2. Why Signal Wires/Traces are Banned:\n")
+          .append(
+              "   - Destroyed Return Paths: High-speed signals on adjacent layers couple to the solid plane below/above as return paths. Crossing a trace gap detours return currents, causing severe EMI and signal integrity issues.\n")
+          .append(
+              "   - Compromised Power Delivery: Power planes should provide the lowest impedance path. Routing traces chops up the copper, creating bottleneck restrictions and voltage drops.\n");
 
       FRLogger.warn(sb.toString());
     }
   }
-
 }

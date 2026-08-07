@@ -27,34 +27,33 @@ public final class MoveItemState extends InteractiveState {
 
   private final Set<Item> item_list;
   private final Set<Component> component_list;
-  /**
-   * In case of a component grid the first component is aligned to this grid.
-   */
+
+  /** In case of a component grid the first component is aligned to this grid. */
   private final Component grid_snap_component;
+
   private final Collection<NetItems> net_items_list;
   private final boolean observers_activated;
   private IntPoint current_position;
   private IntPoint previous_position;
   private Collection<ClearanceViolation> clearance_violations;
 
-  /**
-   * Creates a new instance of MoveComponentState
-   */
-  private MoveItemState(FloatPoint p_location, Set<Item> p_item_list, Set<Component> p_component_list,
-      Component p_first_component, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+  /** Creates a new instance of MoveComponentState */
+  private MoveItemState(
+      FloatPoint p_location,
+      Set<Item> p_item_list,
+      Set<Component> p_component_list,
+      Component p_first_component,
+      InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
     this.component_list = p_component_list;
     this.grid_snap_component = p_first_component;
     this.current_position = p_location.round();
     this.previous_position = current_position;
     BasicBoard routing_board = hdlg.get_routing_board();
-    this.observers_activated = !hdlg
-        .get_routing_board()
-        .observers_active();
+    this.observers_activated = !hdlg.get_routing_board().observers_active();
     if (this.observers_activated) {
-      hdlg
-          .get_routing_board()
-          .start_notify_observers();
+      hdlg.get_routing_board().start_notify_observers();
     }
     // make the situation restorable by undo
     routing_board.generate_snapshot();
@@ -77,16 +76,20 @@ public final class MoveItemState extends InteractiveState {
   }
 
   /**
-   * Returns a new instance of MoveComponentState, or null, if the items of
-   * p_itemlist do not belong to a single component.
+   * Returns a new instance of MoveComponentState, or null, if the items of p_itemlist do not belong
+   * to a single component.
    */
-  public static MoveItemState get_instance(FloatPoint p_location, Collection<Item> p_item_list,
-      InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+  public static MoveItemState get_instance(
+      FloatPoint p_location,
+      Collection<Item> p_item_list,
+      InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling) {
 
     TextManager tm = new TextManager(InteractiveState.class, p_board_handling.get_locale());
 
     if (p_item_list.isEmpty()) {
-      p_board_handling.screen_messages.set_status_message(tm.getText("move_component_failed_because_no_item_selected"));
+      p_board_handling.screen_messages.set_status_message(
+          tm.getText("move_component_failed_because_no_item_selected"));
       return null;
     }
     // extend p_item_list to full components
@@ -101,8 +104,9 @@ public final class MoveItemState extends InteractiveState {
           FRLogger.warn("MoveComponentState.get_instance inconsistent component number");
           return null;
         }
-        if (grid_snap_component == null && (p_board_handling.getInteractiveSettings().get_horizontal_component_grid() > 0
-            || p_board_handling.getInteractiveSettings().get_vertical_component_grid() > 0)) {
+        if (grid_snap_component == null
+            && (p_board_handling.getInteractiveSettings().get_horizontal_component_grid() > 0
+                || p_board_handling.getInteractiveSettings().get_vertical_component_grid() > 0)) {
           grid_snap_component = curr_component;
         }
         if (!component_list.contains(curr_component)) {
@@ -122,8 +126,8 @@ public final class MoveItemState extends InteractiveState {
     boolean move_ok = true;
     for (Item curr_item : item_list) {
       if (curr_item.is_user_fixed()) {
-        p_board_handling.screen_messages
-            .set_status_message(tm.getText("some_items_cannot_be_moved_because_they_are_fixed"));
+        p_board_handling.screen_messages.set_status_message(
+            tm.getText("some_items_cannot_be_moved_because_they_are_fixed"));
         move_ok = false;
         obstacle_items.add(curr_item);
         fixed_items.add(curr_item);
@@ -144,7 +148,8 @@ public final class MoveItemState extends InteractiveState {
               item_movable = false;
               fixed_items.add(curr_contact);
             } else if (curr_contact.get_component_no() != 0) {
-              Component curr_component = routing_board.components.get(curr_contact.get_component_no());
+              Component curr_component =
+                  routing_board.components.get(curr_contact.get_component_no());
               if (!component_list.contains(curr_component)) {
                 item_movable = false;
               }
@@ -164,22 +169,24 @@ public final class MoveItemState extends InteractiveState {
     if (!move_ok) {
       if (p_parent_state instanceof InspectedItemState state) {
         if (!fixed_items.isEmpty()) {
-          state
-              .get_item_list()
-              .addAll(fixed_items);
-          p_board_handling.screen_messages.set_status_message(tm.getText("please_unfix_selected_items_before_moving"));
+          state.get_item_list().addAll(fixed_items);
+          p_board_handling.screen_messages.set_status_message(
+              tm.getText("please_unfix_selected_items_before_moving"));
         } else {
-          state
-              .get_item_list()
-              .addAll(obstacle_items);
-          p_board_handling.screen_messages
-              .set_status_message(tm.getText("please_unroute_or_extend_selection_before_moving"));
+          state.get_item_list().addAll(obstacle_items);
+          p_board_handling.screen_messages.set_status_message(
+              tm.getText("please_unroute_or_extend_selection_before_moving"));
         }
       }
       return null;
     }
     item_list.addAll(add_items);
-    return new MoveItemState(p_location, item_list, component_list, grid_snap_component, p_parent_state.return_state,
+    return new MoveItemState(
+        p_location,
+        item_list,
+        component_list,
+        grid_snap_component,
+        p_parent_state.return_state,
         p_board_handling);
   }
 
@@ -191,9 +198,7 @@ public final class MoveItemState extends InteractiveState {
         return;
       }
     }
-    Collection<Item> new_item_list = hdlg
-        .get_routing_board()
-        .get_connectable_items(p_net_no);
+    Collection<Item> new_item_list = hdlg.get_routing_board().get_connectable_items(p_net_no);
     new_item_list.add(p_item);
     NetItems new_net_items = new NetItems(p_net_no, new_item_list);
     this.net_items_list.add(new_net_items);
@@ -215,7 +220,8 @@ public final class MoveItemState extends InteractiveState {
   public InteractiveState complete() {
     for (Item curr_item : this.item_list) {
       if (curr_item.clearance_violation_count() > 0) {
-        hdlg.screen_messages.set_status_message(tm.getText("insertion_failed_because_of_obstacles"));
+        hdlg.screen_messages.set_status_message(
+            tm.getText("insertion_failed_because_of_obstacles"));
         return this;
       }
     }
@@ -239,9 +245,7 @@ public final class MoveItemState extends InteractiveState {
 
   @Override
   public InteractiveState cancel() {
-    hdlg
-        .get_routing_board()
-        .undo(null);
+    hdlg.get_routing_board().undo(null);
     for (NetItems curr_net_items : this.net_items_list) {
       this.hdlg.update_ratsnest(curr_net_items.net_no);
     }
@@ -258,9 +262,7 @@ public final class MoveItemState extends InteractiveState {
     return this;
   }
 
-  /**
-   * Changes the position of the items in the list to p_new_location.
-   */
+  /** Changes the position of the items in the list to p_new_location. */
   private void move(FloatPoint p_new_position) {
     current_position = p_new_position.round();
     if (!current_position.equals(previous_position)) {
@@ -286,25 +288,20 @@ public final class MoveItemState extends InteractiveState {
   }
 
   private Vector adjust_to_placement_grid(Vector p_vector) {
-    Point new_component_location = this.grid_snap_component
-        .get_location()
-        .translate_by(p_vector);
-    IntPoint rounded_component_location = new_component_location
-        .to_float()
-        .round_to_grid(hdlg.getInteractiveSettings().get_horizontal_component_grid(), hdlg.getInteractiveSettings().get_vertical_component_grid());
+    Point new_component_location = this.grid_snap_component.get_location().translate_by(p_vector);
+    IntPoint rounded_component_location =
+        new_component_location
+            .to_float()
+            .round_to_grid(
+                hdlg.getInteractiveSettings().get_horizontal_component_grid(),
+                hdlg.getInteractiveSettings().get_vertical_component_grid());
     Vector adjustment = rounded_component_location.difference_by(new_component_location);
     Vector result = p_vector.add(adjustment);
-    this.current_position = this.previous_position
-        .translate_by(result)
-        .to_float()
-        .round();
+    this.current_position = this.previous_position.translate_by(result).to_float().round();
     return p_vector.add(adjustment);
   }
 
-  /**
-   * Turns the items in the list by p_factor times 90 degree around the current
-   * position.
-   */
+  /** Turns the items in the list by p_factor times 90 degree around the current position. */
   public void turn_90_degree(int p_factor) {
     if (p_factor == 0) {
       return;
@@ -344,10 +341,7 @@ public final class MoveItemState extends InteractiveState {
     hdlg.repaint();
   }
 
-  /**
-   * Turns the items in the list by p_factor times 90 degree around the current
-   * position.
-   */
+  /** Turns the items in the list by p_factor times 90 degree around the current position. */
   public void turn_45_degree(int p_factor) {
     if (p_factor % 2 == 0) {
       turn_90_degree(p_factor / 2);
@@ -356,9 +350,7 @@ public final class MoveItemState extends InteractiveState {
     }
   }
 
-  /**
-   * Changes the placement side of the items in the list.
-   */
+  /** Changes the placement side of the items in the list. */
   public void change_placement_side() {
     // Check, that all items can be mirrored
     LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
@@ -403,8 +395,10 @@ public final class MoveItemState extends InteractiveState {
     for (Component curr_component : this.component_list) {
       if (component_to_reset == null) {
         component_to_reset = curr_component;
-      } else if (component_to_reset.get_rotation_in_degree() != curr_component.get_rotation_in_degree()) {
-        hdlg.screen_messages.set_status_message(tm.getText("unable_to_reset_components_with_different_rotations"));
+      } else if (component_to_reset.get_rotation_in_degree()
+          != curr_component.get_rotation_in_degree()) {
+        hdlg.screen_messages.set_status_message(
+            tm.getText("unable_to_reset_components_with_different_rotations"));
         return;
       }
     }
@@ -412,15 +406,14 @@ public final class MoveItemState extends InteractiveState {
       return;
     }
     double rotation = component_to_reset.get_rotation_in_degree();
-    if (!hdlg.get_routing_board().components.get_flip_style_rotate_first() || component_to_reset.placed_on_front()) {
+    if (!hdlg.get_routing_board().components.get_flip_style_rotate_first()
+        || component_to_reset.placed_on_front()) {
       rotation = 360 - rotation;
     }
     rotate(rotation);
   }
 
-  /**
-   * Action to be taken when a key is pressed (Shortcut).
-   */
+  /** Action to be taken when a key is pressed (Shortcut). */
   @Override
   public InteractiveState key_typed(char p_key_char) {
     InteractiveState curr_return_state = this;
@@ -473,4 +466,3 @@ public final class MoveItemState extends InteractiveState {
     }
   }
 }
-

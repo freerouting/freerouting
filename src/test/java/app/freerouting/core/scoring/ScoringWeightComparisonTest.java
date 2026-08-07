@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link BoardScoreBreakdown} and {@link ScoringWeightComparison}.
  *
- * <p>These tests do not load any DSN file; they construct {@link BoardStatistics} through
- * the public fields directly so that every assertion is fully deterministic.
+ * <p>These tests do not load any DSN file; they construct {@link BoardStatistics} through the
+ * public fields directly so that every assertion is fully deterministic.
  */
 class ScoringWeightComparisonTest {
 
@@ -65,8 +65,10 @@ class ScoringWeightComparisonTest {
     defaultWeights.unroutedNetPenalty = DefaultSettings.DEFAULT_UNROUTED_NET_PENALTY;
     defaultWeights.clearanceViolationPenalty = DefaultSettings.DEFAULT_CLEARANCE_VIOLATION_PENALTY;
     defaultWeights.bendPenalty = DefaultSettings.DEFAULT_BEND_PENALTY;
-    defaultWeights.defaultPreferredDirectionTraceCost = DefaultSettings.DEFAULT_PREFERRED_DIRECTION_TRACE_COST;
-    defaultWeights.defaultUndesiredDirectionTraceCost = DefaultSettings.DEFAULT_UNDESIRED_DIRECTION_TRACE_COST;
+    defaultWeights.defaultPreferredDirectionTraceCost =
+        DefaultSettings.DEFAULT_PREFERRED_DIRECTION_TRACE_COST;
+    defaultWeights.defaultUndesiredDirectionTraceCost =
+        DefaultSettings.DEFAULT_UNDESIRED_DIRECTION_TRACE_COST;
     defaultWeights.viaCosts = DefaultSettings.DEFAULT_VIA_COSTS;
     defaultWeights.planeViaCosts = DefaultSettings.DEFAULT_PLANE_VIA_COSTS;
     defaultWeights.startRipupCosts = DefaultSettings.DEFAULT_START_RIPUP_COSTS;
@@ -80,7 +82,10 @@ class ScoringWeightComparisonTest {
   void breakdownComputesMaximumScoreCorrectly() {
     BoardScoreBreakdown bd = BoardScoreBreakdown.of(stats, defaultWeights);
     float expected = MAX_CONNECTIONS * DefaultSettings.DEFAULT_UNROUTED_NET_PENALTY;
-    assertEquals(expected, bd.maximumScore, 0.01f,
+    assertEquals(
+        expected,
+        bd.maximumScore,
+        0.01f,
         "maximumScore must equal maxConnections × unroutedNetPenalty");
   }
 
@@ -91,7 +96,8 @@ class ScoringWeightComparisonTest {
     float expectedUnrouted = INCOMPLETE_CONNECTIONS * DefaultSettings.DEFAULT_UNROUTED_NET_PENALTY;
     assertEquals(expectedUnrouted, bd.unroutedConnectionsPenalty, 0.01f);
 
-    float expectedViolations = CLEARANCE_VIOLATIONS * DefaultSettings.DEFAULT_CLEARANCE_VIOLATION_PENALTY;
+    float expectedViolations =
+        CLEARANCE_VIOLATIONS * DefaultSettings.DEFAULT_CLEARANCE_VIOLATION_PENALTY;
     assertEquals(expectedViolations, bd.clearanceViolationsPenalty, 0.01f);
 
     float expectedBends = BEND_COUNT * DefaultSettings.DEFAULT_BEND_PENALTY;
@@ -102,7 +108,8 @@ class ScoringWeightComparisonTest {
   void breakdownComputesCostsCorrectly() {
     BoardScoreBreakdown bd = BoardScoreBreakdown.of(stats, defaultWeights);
 
-    float expectedTraceCost = (float) (TOTAL_TRACE_MM * DefaultSettings.DEFAULT_PREFERRED_DIRECTION_TRACE_COST);
+    float expectedTraceCost =
+        (float) (TOTAL_TRACE_MM * DefaultSettings.DEFAULT_PREFERRED_DIRECTION_TRACE_COST);
     assertEquals(expectedTraceCost, bd.traceLengthCost, 0.01f);
 
     float expectedViaCost = VIA_COUNT * DefaultSettings.DEFAULT_VIA_COSTS;
@@ -135,28 +142,28 @@ class ScoringWeightComparisonTest {
     stats.vias.totalCount = 0;
 
     BoardScoreBreakdown bd = BoardScoreBreakdown.of(stats, defaultWeights);
-    assertEquals(1000f, bd.normalizedScore, 0.01f,
+    assertEquals(
+        1000f,
+        bd.normalizedScore,
+        0.01f,
         "A board with no penalties and no costs must score 1000/1000");
   }
 
   @Test
   void breakdownThrowsOnNullStats() {
-    assertThrows(NullPointerException.class,
-        () -> BoardScoreBreakdown.of(null, defaultWeights));
+    assertThrows(NullPointerException.class, () -> BoardScoreBreakdown.of(null, defaultWeights));
   }
 
   @Test
   void breakdownThrowsOnNullWeights() {
-    assertThrows(NullPointerException.class,
-        () -> BoardScoreBreakdown.of(stats, null));
+    assertThrows(NullPointerException.class, () -> BoardScoreBreakdown.of(stats, null));
   }
 
   @Test
   void breakdownThrowsWhenRequiredWeightIsNull() {
     ScoringSettings incomplete = defaultWeights.clone();
     incomplete.unroutedNetPenalty = null;
-    assertThrows(IllegalArgumentException.class,
-        () -> BoardScoreBreakdown.of(stats, incomplete));
+    assertThrows(IllegalArgumentException.class, () -> BoardScoreBreakdown.of(stats, incomplete));
   }
 
   @Test
@@ -178,12 +185,15 @@ class ScoringWeightComparisonTest {
     ScoringWeightComparison.Result result =
         ScoringWeightComparison.compare(stats, defaultWeights, defaultWeights);
 
-    assertEquals(0f, result.rawScoreDelta, 0.01f,
-        "Identical weights must produce zero raw-score delta");
-    assertEquals(0f, result.normalizedScoreDelta, 0.01f,
+    assertEquals(
+        0f, result.rawScoreDelta, 0.01f, "Identical weights must produce zero raw-score delta");
+    assertEquals(
+        0f,
+        result.normalizedScoreDelta,
+        0.01f,
         "Identical weights must produce zero normalised-score delta");
-    assertFalse(result.isCandidateBetter(),
-        "Neither configuration should be 'better' when they are equal");
+    assertFalse(
+        result.isCandidateBetter(), "Neither configuration should be 'better' when they are equal");
   }
 
   @Test
@@ -199,10 +209,12 @@ class ScoringWeightComparisonTest {
     // What must hold: candidate's raw unrouted-penalty contribution is exactly double.
     assertEquals(
         defaultWeights.unroutedNetPenalty * INCOMPLETE_CONNECTIONS,
-        result.scoreA.unroutedConnectionsPenalty, 0.01f);
+        result.scoreA.unroutedConnectionsPenalty,
+        0.01f);
     assertEquals(
         candidate.unroutedNetPenalty * INCOMPLETE_CONNECTIONS,
-        result.scoreB.unroutedConnectionsPenalty, 0.01f);
+        result.scoreB.unroutedConnectionsPenalty,
+        0.01f);
   }
 
   @Test
@@ -213,11 +225,13 @@ class ScoringWeightComparisonTest {
     ScoringWeightComparison.Result result =
         ScoringWeightComparison.compare(stats, defaultWeights, candidate);
 
-    assertTrue(result.viasCostDelta < 0,
+    assertTrue(
+        result.viasCostDelta < 0,
         "Halving viaCosts must reduce the via-cost contribution (negative delta)");
     assertEquals(
         -(float) (VIA_COUNT * (defaultWeights.viaCosts - candidate.viaCosts)),
-        result.viasCostDelta, 0.01f);
+        result.viasCostDelta,
+        0.01f);
   }
 
   @Test
@@ -229,7 +243,8 @@ class ScoringWeightComparisonTest {
     ScoringWeightComparison.Result result =
         ScoringWeightComparison.compare(stats, defaultWeights, candidate);
 
-    assertTrue(result.isCandidateBetter(),
+    assertTrue(
+        result.isCandidateBetter(),
         "Near-zero via cost should produce a higher normalised score for this board");
   }
 
@@ -243,19 +258,23 @@ class ScoringWeightComparisonTest {
     statsAfterRouting.clearanceViolations = new BoardStatisticsClearanceViolations();
     statsAfterRouting.clearanceViolations.totalCount = 0;
     statsAfterRouting.bends = new BoardStatisticsBends();
-    statsAfterRouting.bends.totalCount = BEND_COUNT + 5;         // new wire adds bends
+    statsAfterRouting.bends.totalCount = BEND_COUNT + 5; // new wire adds bends
     statsAfterRouting.traces = new BoardStatisticsTraces();
     statsAfterRouting.traces.totalLength = TOTAL_TRACE_MM + 80f; // new wire is 80 mm
     statsAfterRouting.vias = new BoardStatisticsVias();
-    statsAfterRouting.vias.totalCount = VIA_COUNT + 2;           // two more vias
+    statsAfterRouting.vias.totalCount = VIA_COUNT + 2; // two more vias
 
     BoardScoreBreakdown before = BoardScoreBreakdown.of(stats, defaultWeights);
-    BoardScoreBreakdown after  = BoardScoreBreakdown.of(statsAfterRouting, defaultWeights);
+    BoardScoreBreakdown after = BoardScoreBreakdown.of(statsAfterRouting, defaultWeights);
 
     // Connecting a net should always improve the normalised score when the penalty is dominant.
-    assertTrue(after.normalizedScore > before.normalizedScore,
+    assertTrue(
+        after.normalizedScore > before.normalizedScore,
         "Successfully routing one more connection must improve the normalised score. "
-            + "before=" + before.normalizedScore + " after=" + after.normalizedScore);
+            + "before="
+            + before.normalizedScore
+            + " after="
+            + after.normalizedScore);
   }
 
   @Test

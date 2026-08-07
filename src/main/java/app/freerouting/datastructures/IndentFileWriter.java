@@ -6,9 +6,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
-/**
- * Handles the indenting of scopes while writing to an output text file.
- */
+/** Handles the indenting of scopes while writing to an output text file. */
 public class IndentFileWriter extends OutputStreamWriter {
 
   private static final String INDENT_STRING = "  ";
@@ -16,16 +14,12 @@ public class IndentFileWriter extends OutputStreamWriter {
   private static final String END_SCOPE = ")";
   private int current_indent_level;
 
-  /**
-   * Creates a new instance of IndentFileWriter
-   */
+  /** Creates a new instance of IndentFileWriter */
   public IndentFileWriter(OutputStream p_stream) {
     super(p_stream, StandardCharsets.UTF_8);
   }
 
-  /**
-   * Begins a new scope.
-   */
+  /** Begins a new scope. */
   public void start_scope(boolean newLine) {
     if (newLine) {
       new_line();
@@ -43,9 +37,7 @@ public class IndentFileWriter extends OutputStreamWriter {
     start_scope(true);
   }
 
-  /**
-   * Closes the latest open scope.
-   */
+  /** Closes the latest open scope. */
   public void end_scope() {
     --current_indent_level;
     new_line();
@@ -56,9 +48,7 @@ public class IndentFileWriter extends OutputStreamWriter {
     }
   }
 
-  /**
-   * Starts a new line inside a scope.
-   */
+  /** Starts a new line inside a scope. */
   public void new_line() {
     try {
       write("\n");

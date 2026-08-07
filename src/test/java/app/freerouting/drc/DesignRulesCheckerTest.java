@@ -37,20 +37,25 @@ public class DesignRulesCheckerTest extends RoutingFixtureTest {
     assertNotNull(job.board, "Board should be loaded");
 
     // Create DRC checker
-    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board, Freerouting.globalSettings.drcSettings);
+    DesignRulesChecker drcChecker =
+        new DesignRulesChecker(job.board, Freerouting.globalSettings.drcSettings);
 
     // Generate report
     DrcReport report = drcChecker.generateReport("test.dsn", "mm");
 
     // Verify report structure
     assertNotNull(report, "Report should not be null");
-    assertEquals("https://schemas.kicad.org/drc.v1.json", report.$schema, "Schema should match KiCad format");
+    assertEquals(
+        "https://schemas.kicad.org/drc.v1.json",
+        report.$schema,
+        "Schema should match KiCad format");
     assertEquals("mm", report.coordinate_units, "Coordinate units should be mm");
     assertEquals("test.dsn", report.source, "Source should match");
     assertNotNull(report.violations, "Violations list should not be null");
     assertNotNull(report.unconnected_items, "Unconnected items list should not be null");
     assertNotNull(report.schematic_parity, "Schematic parity list should not be null");
-    assertTrue(report.freerouting_version.contains("Freerouting"), "Version should contain Freerouting");
+    assertTrue(
+        report.freerouting_version.contains("Freerouting"), "Version should contain Freerouting");
   }
 
   @Test
@@ -65,7 +70,8 @@ public class DesignRulesCheckerTest extends RoutingFixtureTest {
     assertNotNull(job.board, "Board should be loaded");
 
     // Create DRC checker
-    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board, Freerouting.globalSettings.drcSettings);
+    DesignRulesChecker drcChecker =
+        new DesignRulesChecker(job.board, Freerouting.globalSettings.drcSettings);
 
     // Generate JSON report
     String jsonReport = drcChecker.generateReportJson("test.dsn", "mm");
@@ -75,9 +81,7 @@ public class DesignRulesCheckerTest extends RoutingFixtureTest {
     assertFalse(jsonReport.isEmpty(), "JSON report should not be empty");
 
     // Parse JSON to verify structure
-    JsonObject json = JsonParser
-        .parseString(jsonReport)
-        .getAsJsonObject();
+    JsonObject json = JsonParser.parseString(jsonReport).getAsJsonObject();
     assertTrue(json.has("$schema"), "JSON should have $schema field");
     assertTrue(json.has("coordinate_units"), "JSON should have coordinate_units field");
     assertTrue(json.has("date"), "JSON should have date field");

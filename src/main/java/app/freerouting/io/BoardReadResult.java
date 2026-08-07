@@ -21,31 +21,33 @@ import java.util.List;
  */
 public sealed interface BoardReadResult
     permits BoardReadResult.Success,
-            BoardReadResult.OutlineMissing,
-            BoardReadResult.ParseError,
-            BoardReadResult.IoError {
+        BoardReadResult.OutlineMissing,
+        BoardReadResult.ParseError,
+        BoardReadResult.IoError {
 
   /**
    * Full board + metadata are available. The board is fully constructed and routable.
    *
    * @param warnings non-fatal issues encountered during loading (e.g. degenerate wires, duplicate
-   *                 vias, missing nets). Never {@code null}; may be empty.
+   *     vias, missing nets). Never {@code null}; may be empty.
    */
-  record Success(BasicBoard board, BoardMetadata metadata, List<String> warnings) implements BoardReadResult {}
+  record Success(BasicBoard board, BoardMetadata metadata, List<String> warnings)
+      implements BoardReadResult {}
 
   /**
-   * The board was constructed but the outline (boundary) scope was
-   * absent from the input file. The board reference is still valid and may be used with caution.
+   * The board was constructed but the outline (boundary) scope was absent from the input file. The
+   * board reference is still valid and may be used with caution.
    *
    * @param warnings non-fatal issues encountered during loading. Never {@code null}; may be empty.
    */
-  record OutlineMissing(BasicBoard board, BoardMetadata metadata, List<String> warnings) implements BoardReadResult {}
+  record OutlineMissing(BasicBoard board, BoardMetadata metadata, List<String> warnings)
+      implements BoardReadResult {}
 
   /**
    * The input did not conform to the expected grammar/format.
    *
    * @param location a human-readable description of where in the input the error was detected
-   * @param detail   a short description of the specific problem
+   * @param detail a short description of the specific problem
    */
   record ParseError(String location, String detail) implements BoardReadResult {}
 

@@ -32,38 +32,37 @@ import java.util.Set;
 /**
  * Writes a Specctra session (.ses) file from a {@link BasicBoard}.
  *
- * <p>This class has no dependency on {@code BoardManager}, {@code RoutingJob}, or any GUI class.
- * It operates purely on the board's data model.
+ * <p>This class has no dependency on {@code BoardManager}, {@code RoutingJob}, or any GUI class. It
+ * operates purely on the board's data model.
  *
- * <p>Replaces the write path previously found in
- * {@link app.freerouting.io.specctra.parser.SpecctraSesFileWriter}
- * (now {@link Deprecated}).
+ * <p>Replaces the write path previously found in {@link
+ * app.freerouting.io.specctra.parser.SpecctraSesFileWriter} (now {@link Deprecated}).
  */
 public final class SesWriter {
 
-  private SesWriter() {
-  }
+  private SesWriter() {}
 
   /**
    * Serialises the routing result from {@code board} to Specctra SES format on the given stream.
    *
-   * <p>The stream is <em>flushed</em> after writing but is <strong>not closed</strong> — the
-   * caller retains ownership of the stream lifecycle.
+   * <p>The stream is <em>flushed</em> after writing but is <strong>not closed</strong> — the caller
+   * retains ownership of the stream lifecycle.
    *
-   * @param board      the board whose routing data is serialised (must not be {@code null})
-   * @param out        target stream (caller owns lifecycle; must not be {@code null})
+   * @param board the board whose routing data is serialised (must not be {@code null})
+   * @param out target stream (caller owns lifecycle; must not be {@code null})
    * @param designName the PCB name written into the {@code (session ...)} scope header
    * @throws IOException if an I/O error occurs during writing
    */
-  public static void write(BasicBoard board, OutputStream out, String designName) throws IOException {
+  public static void write(BasicBoard board, OutputStream out, String designName)
+      throws IOException {
     if (out == null) {
       throw new IOException("SesWriter: output stream must not be null");
     }
     IndentFileWriter outputFile = new IndentFileWriter(out);
     String sessionName = designName.replace(".dsn", ".ses");
     String[] reservedChars = {"(", ")", " ", ";", "-", "_", "/", "~", "{", "}"};
-    IdentifierType identifierType = new IdentifierType(reservedChars,
-        board.communication.specctra_parser_info.string_quote);
+    IdentifierType identifierType =
+        new IdentifierType(reservedChars, board.communication.specctra_parser_info.string_quote);
     writeSessionScope(board, identifierType, outputFile, sessionName, designName);
     outputFile.flush();
   }
@@ -72,8 +71,13 @@ public final class SesWriter {
   // Private helpers (migrated from SpecctraSesFileWriter)
   // ---------------------------------------------------------------------------
 
-  private static void writeSessionScope(BasicBoard board, IdentifierType identifierType,
-      IndentFileWriter file, String sessionName, String designName) throws IOException {
+  private static void writeSessionScope(
+      BasicBoard board,
+      IdentifierType identifierType,
+      IndentFileWriter file,
+      String sessionName,
+      String designName)
+      throws IOException {
     double scaleFactor =
         board.communication.coordinate_transform.dsn_to_board(1) / board.communication.resolution;
     CoordinateTransform coordinateTransform = new CoordinateTransform(scaleFactor, 0, 0);
@@ -90,16 +94,20 @@ public final class SesWriter {
     file.end_scope();
   }
 
-  private static void writePlacement(BasicBoard board, IdentifierType identifierType,
-      CoordinateTransform coordinateTransform, IndentFileWriter file) throws IOException {
+  private static void writePlacement(
+      BasicBoard board,
+      IdentifierType identifierType,
+      CoordinateTransform coordinateTransform,
+      IndentFileWriter file)
+      throws IOException {
     file.start_scope();
     file.write("placement");
     Resolution.write_scope(file, board.communication);
 
     if (board.library.packages != null) {
       for (int i = 1; i <= board.library.packages.count(); i++) {
-        writeComponents(board, identifierType, coordinateTransform, file,
-            board.library.packages.get(i));
+        writeComponents(
+            board, identifierType, coordinateTransform, file, board.library.packages.get(i));
       }
     }
 
@@ -107,8 +115,12 @@ public final class SesWriter {
   }
 
   /** Writes all components with the given package to the session file. */
-  private static void writeComponents(BasicBoard board, IdentifierType identifierType,
-      CoordinateTransform coordinateTransform, IndentFileWriter file, Package pkg)
+  private static void writeComponents(
+      BasicBoard board,
+      IdentifierType identifierType,
+      CoordinateTransform coordinateTransform,
+      IndentFileWriter file,
+      Package pkg)
       throws IOException {
     Collection<Item> boardItems = board.get_items();
     boolean componentFound = false;
@@ -139,9 +151,13 @@ public final class SesWriter {
     }
   }
 
-  private static void writeComponent(BasicBoard board, IdentifierType identifierType,
-      CoordinateTransform coordinateTransform, IndentFileWriter file,
-      app.freerouting.board.Component component) throws IOException {
+  private static void writeComponent(
+      BasicBoard board,
+      IdentifierType identifierType,
+      CoordinateTransform coordinateTransform,
+      IndentFileWriter file,
+      app.freerouting.board.Component component)
+      throws IOException {
     file.new_line();
     file.write("(place ");
     identifierType.write(component.name, file);
@@ -165,8 +181,8 @@ public final class SesWriter {
     file.write(")");
   }
 
-  private static void writeWasIs(BasicBoard board, IdentifierType identifierType,
-      IndentFileWriter file) throws IOException {
+  private static void writeWasIs(
+      BasicBoard board, IdentifierType identifierType, IndentFileWriter file) throws IOException {
     file.start_scope();
     file.write("was_is");
     Collection<Pin> boardPins = board.get_pins();
@@ -175,13 +191,11 @@ public final class SesWriter {
       if (currPin.get_changed_to() != currPin) {
         file.new_line();
         file.write("(pins ");
-        app.freerouting.board.Component currCmp =
-            board.components.get(currPin.get_component_no());
+        app.freerouting.board.Component currCmp = board.components.get(currPin.get_component_no());
         if (currCmp != null) {
           identifierType.write(currCmp.name, file);
           file.write("-");
-          Package.Pin packagePin =
-              currCmp.get_package().get_pin(currPin.get_index_in_package());
+          Package.Pin packagePin = currCmp.get_package().get_pin(currPin.get_index_in_package());
           identifierType.write(packagePin.name, file);
         } else {
           FRLogger.warn("SesWriter.writeWasIs: component not found");
@@ -204,8 +218,12 @@ public final class SesWriter {
     file.end_scope();
   }
 
-  private static void writeRoutes(BasicBoard board, IdentifierType identifierType,
-      CoordinateTransform coordinateTransform, IndentFileWriter file) throws IOException {
+  private static void writeRoutes(
+      BasicBoard board,
+      IdentifierType identifierType,
+      CoordinateTransform coordinateTransform,
+      IndentFileWriter file)
+      throws IOException {
     file.start_scope();
     file.write("routes ");
     Resolution.write_scope(file, board.communication);
@@ -215,8 +233,12 @@ public final class SesWriter {
     file.end_scope();
   }
 
-  private static void writeLibrary(BasicBoard board, IdentifierType identifierType,
-      CoordinateTransform coordinateTransform, IndentFileWriter file) throws IOException {
+  private static void writeLibrary(
+      BasicBoard board,
+      IdentifierType identifierType,
+      CoordinateTransform coordinateTransform,
+      IndentFileWriter file)
+      throws IOException {
     file.start_scope();
     file.write("library_out ");
     Set<String> writtenPadstackNames = new LinkedHashSet<>();
@@ -231,9 +253,9 @@ public final class SesWriter {
   }
 
   /**
-   * Formats component rotation for Specctra placement records in the style KiCad exports:
-   * whole degrees as integers ({@code 0}, {@code 339}) and fractional degrees with minimal
-   * decimal precision ({@code 338.5}), never unnecessary trailing zeros ({@code 338.500}).
+   * Formats component rotation for Specctra placement records in the style KiCad exports: whole
+   * degrees as integers ({@code 0}, {@code 339}) and fractional degrees with minimal decimal
+   * precision ({@code 338.5}), never unnecessary trailing zeros ({@code 338.500}).
    */
   static String formatPlacementRotation(double degrees) {
     double rounded = Math.rint(degrees * 1000.0) / 1000.0;
@@ -247,8 +269,12 @@ public final class SesWriter {
     return formatted;
   }
 
-  private static void writePadstack(Padstack padstack, BasicBoard board,
-      IdentifierType identifierType, CoordinateTransform coordinateTransform, IndentFileWriter file)
+  private static void writePadstack(
+      Padstack padstack,
+      BasicBoard board,
+      IdentifierType identifierType,
+      CoordinateTransform coordinateTransform,
+      IndentFileWriter file)
       throws IOException {
     // determine the layer range covered by this padstack
     int firstLayerNo = 0;
@@ -287,8 +313,12 @@ public final class SesWriter {
     file.end_scope();
   }
 
-  private static void writeNetwork(BasicBoard board, IdentifierType identifierType,
-      CoordinateTransform coordinateTransform, IndentFileWriter file) throws IOException {
+  private static void writeNetwork(
+      BasicBoard board,
+      IdentifierType identifierType,
+      CoordinateTransform coordinateTransform,
+      IndentFileWriter file)
+      throws IOException {
     file.start_scope();
     file.write("network_out ");
     for (int i = 1; i <= board.rules.nets.max_net_no(); i++) {
@@ -297,8 +327,13 @@ public final class SesWriter {
     file.end_scope();
   }
 
-  private static void writeNet(int netNo, BasicBoard board, IdentifierType identifierType,
-      CoordinateTransform coordinateTransform, IndentFileWriter file) throws IOException {
+  private static void writeNet(
+      int netNo,
+      BasicBoard board,
+      IdentifierType identifierType,
+      CoordinateTransform coordinateTransform,
+      IndentFileWriter file)
+      throws IOException {
     Collection<Item> netItems = board.get_connectable_items(netNo);
     boolean headerWritten = false;
     for (Item currItem : netItems) {
@@ -307,8 +342,9 @@ public final class SesWriter {
       }
       boolean isWire = currItem instanceof PolylineTrace;
       boolean isVia = currItem instanceof Via;
-      boolean isConductionArea = currItem instanceof ConductionArea
-          && board.layer_structure.arr[currItem.first_layer()].is_signal;
+      boolean isConductionArea =
+          currItem instanceof ConductionArea
+              && board.layer_structure.arr[currItem.first_layer()].is_signal;
       if (!headerWritten && (isWire || isVia || isConductionArea)) {
         file.start_scope();
         file.write("net ");
@@ -325,8 +361,8 @@ public final class SesWriter {
       } else if (isVia) {
         writeVia((Via) currItem, board, identifierType, coordinateTransform, file);
       } else if (isConductionArea) {
-        writeConductionArea((ConductionArea) currItem, board, identifierType, coordinateTransform,
-            file);
+        writeConductionArea(
+            (ConductionArea) currItem, board, identifierType, coordinateTransform, file);
       }
     }
     if (headerWritten) {
@@ -334,12 +370,16 @@ public final class SesWriter {
     }
   }
 
-  private static void writeWire(PolylineTrace wire, BasicBoard board, IdentifierType identifierType,
-      CoordinateTransform coordinateTransform, IndentFileWriter file) throws IOException {
+  private static void writeWire(
+      PolylineTrace wire,
+      BasicBoard board,
+      IdentifierType identifierType,
+      CoordinateTransform coordinateTransform,
+      IndentFileWriter file)
+      throws IOException {
     int layerNo = wire.get_layer();
     app.freerouting.board.Layer boardLayer = board.layer_structure.arr[layerNo];
-    int wireWidth =
-        (int) Math.round(coordinateTransform.board_to_dsn(2 * wire.get_half_width()));
+    int wireWidth = (int) Math.round(coordinateTransform.board_to_dsn(2 * wire.get_half_width()));
     file.start_scope();
     file.write("wire");
     Point[] cornerArr = wire.polyline().corner_arr();
@@ -375,13 +415,13 @@ public final class SesWriter {
   }
 
   /**
-   * Returns the exact pad/via center to use for a wire endpoint, or null to keep the corner
-   * as-is. Trace endpoints can sit on the border of freerouting's octagon approximation of a
-   * pad — a point that is inside the approximation but outside the importing tool's real pad
-   * polygon, which then reports the net as unconnected. Snapping the endpoint to the contacted
-   * drill item's center (the same coordinate {@code writeVia} emits) removes those sub-pad
-   * gaps. Only snaps when the endpoint already lies within the pad inradius of the center, so
-   * the last segment cannot leave the pad or fold across a neighbor.
+   * Returns the exact pad/via center to use for a wire endpoint, or null to keep the corner as-is.
+   * Trace endpoints can sit on the border of freerouting's octagon approximation of a pad — a point
+   * that is inside the approximation but outside the importing tool's real pad polygon, which then
+   * reports the net as unconnected. Snapping the endpoint to the contacted drill item's center (the
+   * same coordinate {@code writeVia} emits) removes those sub-pad gaps. Only snaps when the
+   * endpoint already lies within the pad inradius of the center, so the last segment cannot leave
+   * the pad or fold across a neighbor.
    */
   static FloatPoint snappedEndpoint(PolylineTrace wire, boolean startSide) {
     Point corner = startSide ? wire.first_corner() : wire.last_corner();
@@ -412,8 +452,13 @@ public final class SesWriter {
     return null;
   }
 
-  private static void writeVia(Via via, BasicBoard board, IdentifierType identifierType,
-      CoordinateTransform coordinateTransform, IndentFileWriter file) throws IOException {
+  private static void writeVia(
+      Via via,
+      BasicBoard board,
+      IdentifierType identifierType,
+      CoordinateTransform coordinateTransform,
+      IndentFileWriter file)
+      throws IOException {
     Padstack viaPadstack = via.get_padstack();
     FloatPoint viaLocation = via.get_center().to_float();
     file.start_scope();
@@ -444,8 +489,13 @@ public final class SesWriter {
     }
   }
 
-  private static void writePath(String layerName, int width, int[] coors,
-      IdentifierType identifierType, IndentFileWriter file) throws IOException {
+  private static void writePath(
+      String layerName,
+      int width,
+      int[] coors,
+      IdentifierType identifierType,
+      IndentFileWriter file)
+      throws IOException {
     file.start_scope();
     file.write("path ");
     identifierType.write(layerName, file);
@@ -461,8 +511,12 @@ public final class SesWriter {
     file.end_scope();
   }
 
-  private static void writeConductionArea(ConductionArea conductionArea, BasicBoard board,
-      IdentifierType identifierType, CoordinateTransform coordinateTransform, IndentFileWriter file)
+  private static void writeConductionArea(
+      ConductionArea conductionArea,
+      BasicBoard board,
+      IdentifierType identifierType,
+      CoordinateTransform coordinateTransform,
+      IndentFileWriter file)
       throws IOException {
     int netCount = conductionArea.net_count();
     if (netCount != 1) {

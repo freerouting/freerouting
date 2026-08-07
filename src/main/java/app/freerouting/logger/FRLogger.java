@@ -15,24 +15,24 @@ import org.apache.logging.log4j.Logger;
 
 /// <summary> Provides logging functionality. </summary>
 /**
- * Provides centralized logging functionality for the application.
- * Wraps Log4j2 and maintains an internal list of log entries for UI display.
+ * Provides centralized logging functionality for the application. Wraps Log4j2 and maintains an
+ * internal list of log entries for UI display.
  */
 public final class FRLogger {
 
-  public static final DecimalFormat defaultFloatFormat = new DecimalFormat("0.00",
-      new java.text.DecimalFormatSymbols(java.util.Locale.US));
-  public static final DecimalFormat defaultSignedFloatFormat = new DecimalFormat("+0.00;-0.00",
-      new java.text.DecimalFormatSymbols(java.util.Locale.US));
+  public static final DecimalFormat defaultFloatFormat =
+      new DecimalFormat("0.00", new java.text.DecimalFormatSymbols(java.util.Locale.US));
+  public static final DecimalFormat defaultSignedFloatFormat =
+      new DecimalFormat("+0.00;-0.00", new java.text.DecimalFormatSymbols(java.util.Locale.US));
   private static final HashMap<Integer, Instant> perfData = new HashMap<>();
   private static final LogEntries logEntries = new LogEntries();
-  private static final CopyOnWriteArrayList<TraceEventListener> traceEventListeners = new CopyOnWriteArrayList<>();
+  private static final CopyOnWriteArrayList<TraceEventListener> traceEventListeners =
+      new CopyOnWriteArrayList<>();
   public static boolean granularTraceEnabled;
   private static Logger logger;
   private static boolean enabled = true;
 
-  private FRLogger() {
-  }
+  private FRLogger() {}
 
   /**
    * Enables or disables logging globally.
@@ -44,8 +44,7 @@ public final class FRLogger {
   }
 
   /**
-   * Formats a duration in seconds into a human-readable string (hours, minutes,
-   * seconds).
+   * Formats a duration in seconds into a human-readable string (hours, minutes, seconds).
    *
    * @param totalSeconds The total duration in seconds.
    * @return A formatted string representing the duration.
@@ -61,7 +60,8 @@ public final class FRLogger {
 
     String hoursText = hours > 0 ? (int) hours + (hours == 1 ? " hour " : " hours ") : "";
 
-    String minutesText = minutes > 0 ? (int) minutes + (minutes == 1 ? " minute " : " minutes ") : "";
+    String minutesText =
+        minutes > 0 ? (int) minutes + (minutes == 1 ? " minute " : " minutes ") : "";
 
     return hoursText + minutesText + defaultFloatFormat.format(seconds) + " seconds";
   }
@@ -69,7 +69,7 @@ public final class FRLogger {
   /**
    * Formats a score with details about incomplete items and violations.
    *
-   * @param score      The routing score.
+   * @param score The routing score.
    * @param incomplete The number of unrouted items.
    * @param violations The number of design rule violations.
    * @return A formatted string representing the score and any issues.
@@ -87,7 +87,8 @@ public final class FRLogger {
     return sb.toString();
   }
 
-  public static String buildTracePayload(String event, String phase, String action, String kvPairs) {
+  public static String buildTracePayload(
+      String event, String phase, String action, String kvPairs) {
     StringBuilder sb = new StringBuilder();
     sb.append("event=").append(event);
     if (phase != null && !phase.isEmpty()) {
@@ -129,8 +130,7 @@ public final class FRLogger {
   /**
    * Records the start time for a performance trace.
    *
-   * @param perfId A unique identifier for the operation being traced (often the
-   *               method name).
+   * @param perfId A unique identifier for the operation being traced (often the method name).
    */
   public static void traceEntry(String perfId) {
     if (!enabled) {
@@ -161,8 +161,7 @@ public final class FRLogger {
   }
 
   /**
-   * Records the end of a performance trace with an optional result object and
-   * logs the duration.
+   * Records the end of a performance trace with an optional result object and logs the duration.
    *
    * @param perfId A unique identifier for the operation being traced.
    * @param result An optional result object to include in the log message.
@@ -178,9 +177,7 @@ public final class FRLogger {
 
     long timeElapsed = 0;
     try {
-      timeElapsed = Duration
-          .between(perfData.get(perfId.hashCode()), Instant.now())
-          .toMillis();
+      timeElapsed = Duration.between(perfData.get(perfId.hashCode()), Instant.now()).toMillis();
     } catch (Exception _) {
       // we can ignore this exception
     }
@@ -190,8 +187,12 @@ public final class FRLogger {
       timeElapsed = 0;
     }
 
-    String logMessage = "Method '" + perfId.replace("{}", result != null ? result.toString() : "(null)")
-        + "' was performed in " + FRLogger.formatDuration(timeElapsed / 1000.0) + ".";
+    String logMessage =
+        "Method '"
+            + perfId.replace("{}", result != null ? result.toString() : "(null)")
+            + "' was performed in "
+            + FRLogger.formatDuration(timeElapsed / 1000.0)
+            + ".";
 
     FRLogger.trace(logMessage);
 
@@ -201,7 +202,7 @@ public final class FRLogger {
   /**
    * Logs an INFO message.
    *
-   * @param msg   The message to log.
+   * @param msg The message to log.
    * @param topic An optional topic UUID associated with the message.
    * @return The created LogEntry.
    */
@@ -233,7 +234,7 @@ public final class FRLogger {
   /**
    * Logs a WARNING message.
    *
-   * @param msg   The message to log.
+   * @param msg The message to log.
    * @param topic An optional topic UUID associated with the message.
    * @return The created LogEntry.
    */
@@ -265,7 +266,7 @@ public final class FRLogger {
   /**
    * Logs a DEBUG message.
    *
-   * @param msg   The message to log.
+   * @param msg The message to log.
    * @param topic An optional topic UUID associated with the message.
    * @return The created LogEntry.
    */
@@ -295,8 +296,8 @@ public final class FRLogger {
   /**
    * Logs an ERROR message with an exception.
    *
-   * @param msg       The message to log.
-   * @param topic     An optional topic UUID associated with the message.
+   * @param msg The message to log.
+   * @param topic An optional topic UUID associated with the message.
    * @param exception The exception to log.
    * @return The created LogEntry.
    */
@@ -322,7 +323,7 @@ public final class FRLogger {
   /**
    * Logs an ERROR message with an exception, but without a topic.
    *
-   * @param msg       The message to log.
+   * @param msg The message to log.
    * @param exception The exception to log.
    * @return The created LogEntry.
    */
@@ -364,45 +365,50 @@ public final class FRLogger {
     return null;
   }
 
-  public static boolean trace(String method, String operation, String message, String impactedItems) {
+  public static boolean trace(
+      String method, String operation, String message, String impactedItems) {
     return trace(method, operation, message, impactedItems, null);
   }
 
   /**
    * Logs a granular TRACE message and triggers a debug check.
    *
-   * @param method        The method name where the log originates (e.g.
-   *                      "InsertFoundConnectionAlgo").
-   * @param operation     The operation type (e.g. "insertion", "removal").
-   * @param message       The details of the log message.
-   * @param impactedItems A string describing the impacted items, separated by comma
-   *                      (e.g. "Net #1,Trace #123").
-   *                      This string is used by DebugControl to filter execution.
+   * @param method The method name where the log originates (e.g. "InsertFoundConnectionAlgo").
+   * @param operation The operation type (e.g. "insertion", "removal").
+   * @param message The details of the log message.
+   * @param impactedItems A string describing the impacted items, separated by comma (e.g. "Net
+   *     #1,Trace #123"). This string is used by DebugControl to filter execution.
    * @param impactedPoints List of points that the operation focused on
    */
-  public static boolean trace(String method, String operation, String message, String impactedItems, Point[] impactedPoints) {
+  public static boolean trace(
+      String method,
+      String operation,
+      String message,
+      String impactedItems,
+      Point[] impactedPoints) {
     if (enabled) {
       if (logger == null) {
         logger = LogManager.getLogger(Freerouting.class);
       }
 
-      if (granularTraceEnabled && (impactedItems.isEmpty() || DebugControl.getInstance().isInterested(impactedItems))) {
-        String formattedMessage = String.format("[%s] [%s] %s: %s", method, operation, message, impactedItems);
+      if (granularTraceEnabled
+          && (impactedItems.isEmpty() || DebugControl.getInstance().isInterested(impactedItems))) {
+        String formattedMessage =
+            String.format("[%s] [%s] %s: %s", method, operation, message, impactedItems);
         logger.trace(formattedMessage);
       }
     }
 
     boolean wasInterestingTraceEvent = DebugControl.getInstance().check(operation, impactedItems);
     if (wasInterestingTraceEvent) {
-      publishTraceEvent(new TraceEvent(method, operation, message, impactedItems, impactedPoints, Instant.now()));
+      publishTraceEvent(
+          new TraceEvent(method, operation, message, impactedItems, impactedPoints, Instant.now()));
     }
 
     return wasInterestingTraceEvent;
   }
 
-  /**
-   * Disables logging.
-   */
+  /** Disables logging. */
   public static void disableLogging() {
     enabled = false;
   }

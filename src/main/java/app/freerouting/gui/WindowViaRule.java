@@ -20,23 +20,19 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-/**
- * Window for editing a single via rule.
- */
+/** Window for editing a single via rule. */
 public class WindowViaRule extends WindowBase {
 
   private final ViaRule via_rule;
-  /**
-   * the list of possible vias in a rule
-   */
+
+  /** the list of possible vias in a rule */
   private final ViaInfos via_list;
+
   private final JPanel main_panel;
   private final JList<ViaInfo> rule_list;
   private final DefaultListModel<ViaInfo> rule_list_model;
 
-  /**
-   * Creates a new instance of ViaRuleWindow
-   */
+  /** Creates a new instance of ViaRuleWindow */
   public WindowViaRule(ViaRule p_via_rule, ViaInfos p_via_list, BoardFrame p_board_frame) {
     super(300, 150);
 
@@ -78,7 +74,11 @@ public class WindowViaRule extends WindowBase {
     gridbag.setConstraints(rules_vias_rules_edit_append_button, gridbag_constraints);
     rules_vias_rules_edit_append_button.setToolTipText(tm.getText("append_tooltip"));
     rules_vias_rules_edit_append_button.addActionListener(new AppendListener());
-    rules_vias_rules_edit_append_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_vias_rules_edit_append_button", rules_vias_rules_edit_append_button.getText()));
+    rules_vias_rules_edit_append_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rules_vias_rules_edit_append_button",
+                rules_vias_rules_edit_append_button.getText()));
     button_panel.add(rules_vias_rules_edit_append_button);
 
     final JButton rules_vias_rules_edit_remove_button = new JButton(tm.getText("remove"));
@@ -86,7 +86,11 @@ public class WindowViaRule extends WindowBase {
     gridbag.setConstraints(rules_vias_rules_edit_remove_button, gridbag_constraints);
     rules_vias_rules_edit_remove_button.setToolTipText(tm.getText("remove_tooltip"));
     rules_vias_rules_edit_remove_button.addActionListener(new DeleteListener());
-    rules_vias_rules_edit_remove_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_vias_rules_edit_remove_button", rules_vias_rules_edit_remove_button.getText()));
+    rules_vias_rules_edit_remove_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rules_vias_rules_edit_remove_button",
+                rules_vias_rules_edit_remove_button.getText()));
     button_panel.add(rules_vias_rules_edit_remove_button);
 
     final JButton rules_vias_rules_edit_move_up_button = new JButton(tm.getText("move_up"));
@@ -94,7 +98,11 @@ public class WindowViaRule extends WindowBase {
     gridbag.setConstraints(rules_vias_rules_edit_move_up_button, gridbag_constraints);
     rules_vias_rules_edit_move_up_button.setToolTipText(tm.getText("move_up_tooltip"));
     rules_vias_rules_edit_move_up_button.addActionListener(new MoveUpListener());
-    rules_vias_rules_edit_move_up_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_vias_rules_edit_move_up_button", rules_vias_rules_edit_move_up_button.getText()));
+    rules_vias_rules_edit_move_up_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rules_vias_rules_edit_move_up_button",
+                rules_vias_rules_edit_move_up_button.getText()));
     button_panel.add(rules_vias_rules_edit_move_up_button);
 
     final JButton rules_vias_rules_edit_move_down_button = new JButton(tm.getText("move_down"));
@@ -102,7 +110,11 @@ public class WindowViaRule extends WindowBase {
     gridbag.setConstraints(rules_vias_rules_edit_move_down_button, gridbag_constraints);
     rules_vias_rules_edit_move_down_button.setToolTipText(tm.getText("move_down_tooltip"));
     rules_vias_rules_edit_move_down_button.addActionListener(new MoveDownListener());
-    rules_vias_rules_edit_move_down_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_vias_rules_edit_move_down_button", rules_vias_rules_edit_move_down_button.getText()));
+    rules_vias_rules_edit_move_down_button.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rules_vias_rules_edit_move_down_button",
+                rules_vias_rules_edit_move_down_button.getText()));
     button_panel.add(rules_vias_rules_edit_move_down_button);
 
     this.add(main_panel);
@@ -111,9 +123,7 @@ public class WindowViaRule extends WindowBase {
     this.setVisible(true);
   }
 
-  /**
-   * Swaps the position of the vias with index p_1 and p_2.
-   */
+  /** Swaps the position of the vias with index p_1 and p_2. */
   private void swap_position(int p_1, int p_2) {
     ViaInfo via_1 = this.rule_list_model.get(p_1);
     ViaInfo via_2 = this.rule_list_model.get(p_2);
@@ -146,8 +156,15 @@ public class WindowViaRule extends WindowBase {
         }
       }
       assert (curr_index == possible_values.length);
-      Object selected_value = JOptionPane.showInputDialog(null, tm.getText("choose_via_to_append"), tm.getText("append_via_to_rule"), JOptionPane.INFORMATION_MESSAGE, null, possible_values,
-          possible_values[0]);
+      Object selected_value =
+          JOptionPane.showInputDialog(
+              null,
+              tm.getText("choose_via_to_append"),
+              tm.getText("append_via_to_rule"),
+              JOptionPane.INFORMATION_MESSAGE,
+              null,
+              possible_values,
+              possible_values[0]);
       if (selected_value != null) {
         ViaInfo selected_via = (ViaInfo) selected_value;
         via_rule.append_via(selected_via);
@@ -162,7 +179,8 @@ public class WindowViaRule extends WindowBase {
     public void actionPerformed(ActionEvent p_evt) {
       ViaInfo selected_via = rule_list.getSelectedValue();
       if (selected_via != null) {
-        if (WindowMessage.confirm(tm.getText("remove_via_from_rule_confirm", selected_via.get_name(), via_rule.name))) {
+        if (WindowMessage.confirm(
+            tm.getText("remove_via_from_rule_confirm", selected_via.get_name(), via_rule.name))) {
           rule_list_model.removeElement(selected_via);
           via_rule.remove_via(selected_via);
         }

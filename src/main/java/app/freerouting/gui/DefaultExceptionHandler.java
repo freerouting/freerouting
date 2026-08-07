@@ -17,7 +17,8 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
     FRLogger.error(e.getLocalizedMessage(), e);
     FRAnalytics.exceptionThrown(e.getLocalizedMessage(), e);
     if (shouldShowDialog()) {
-      JOptionPane.showMessageDialog(findActiveFrame(), e.toString(), "Exception Occurred", OK_OPTION);
+      JOptionPane.showMessageDialog(
+          findActiveFrame(), e.toString(), "Exception Occurred", OK_OPTION);
     }
   }
 

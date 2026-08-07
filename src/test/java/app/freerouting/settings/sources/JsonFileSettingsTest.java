@@ -14,8 +14,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 class JsonFileSettingsTest {
 
-  @TempDir
-  Path tempDir;
+  @TempDir Path tempDir;
 
   /** Helper: create a temp JSON file with the given content. */
   private Path write(String filename, String content) throws IOException {
@@ -30,7 +29,10 @@ class JsonFileSettingsTest {
 
   @Test
   void loadsMaxPassesFromValidRouterSection() throws IOException {
-    Path file = write("valid.json", """
+    Path file =
+        write(
+            "valid.json",
+            """
         {
           "router": {
             "max_passes": 42
@@ -48,7 +50,10 @@ class JsonFileSettingsTest {
 
   @Test
   void returnsEmptySettingsWhenRouterSectionIsMissing() throws IOException {
-    Path file = write("no_router.json", """
+    Path file =
+        write(
+            "no_router.json",
+            """
         {
           "gui": {
             "enabled": true
@@ -59,13 +64,17 @@ class JsonFileSettingsTest {
     JsonFileSettings sut = new JsonFileSettings(file);
     RouterSettings settings = sut.getSettings();
 
-    assertNotNull(settings, "getSettings() must not return null even when router section is absent");
+    assertNotNull(
+        settings, "getSettings() must not return null even when router section is absent");
     assertNull(settings.maxPasses, "maxPasses should be null (no router section in JSON)");
   }
 
   @Test
   void returnsEmptySettingsWhenRouterSectionIsNotAnObject() throws IOException {
-    Path file = write("router_not_object.json", """
+    Path file =
+        write(
+            "router_not_object.json",
+            """
         {
           "router": "not-an-object"
         }
@@ -74,7 +83,8 @@ class JsonFileSettingsTest {
     JsonFileSettings sut = new JsonFileSettings(file);
     RouterSettings settings = sut.getSettings();
 
-    assertNotNull(settings, "getSettings() must not return null when router value is not an object");
+    assertNotNull(
+        settings, "getSettings() must not return null when router value is not an object");
     assertNull(settings.maxPasses, "maxPasses should be null when router is not a JSON object");
   }
 
@@ -124,4 +134,3 @@ class JsonFileSettingsTest {
     assertEquals("freerouting.json", sut.getSourceName());
   }
 }
-

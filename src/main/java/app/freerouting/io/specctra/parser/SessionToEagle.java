@@ -16,38 +16,39 @@ import java.io.OutputStreamWriter;
 import java.util.Collection;
 import javax.swing.JFrame;
 
-/**
- * Transforms a Specctra session file into an Eagle script file.
- */
+/** Transforms a Specctra session file into an Eagle script file. */
 public class SessionToEagle extends JFrame {
 
-  /**
-   * The function for scanning the session file
-   */
+  /** The function for scanning the session file */
   private final IJFlexScanner scanner;
-  /**
-   * The generated Eagle script file.
-   */
+
+  /** The generated Eagle script file. */
   private final OutputStreamWriter out_file;
+
   /**
-   * Some information is read from the board, because it is not contained in the specctra session file.
+   * Some information is read from the board, because it is not contained in the specctra session
+   * file.
    */
   private final BasicBoard board;
-  /**
-   * The layer structure in specctra format
-   */
+
+  /** The layer structure in specctra format */
   private final LayerStructure specctra_layer_structure;
+
   private final Unit unit;
-  /**
-   * The scale factor for transforming coordinates from the session file to Eagle
-   */
+
+  /** The scale factor for transforming coordinates from the session file to Eagle */
   private final double session_file_scale_denominator;
-  /**
-   * The scale factor for transforming coordinates from the board to Eagle
-   */
+
+  /** The scale factor for transforming coordinates from the board to Eagle */
   private final double board_scale_factor;
 
-  SessionToEagle(IJFlexScanner p_scanner, OutputStreamWriter p_out_file, BasicBoard p_board, Unit p_unit, double p_session_file_scale_dominator, double p_board_scale_factor) {
+  SessionToEagle(
+      IJFlexScanner p_scanner,
+      OutputStreamWriter p_out_file,
+      BasicBoard p_board,
+      Unit p_unit,
+      double p_session_file_scale_dominator,
+      double p_board_scale_factor) {
     scanner = p_scanner;
     out_file = p_out_file;
     board = p_board;
@@ -57,7 +58,8 @@ public class SessionToEagle extends JFrame {
     board_scale_factor = p_board_scale_factor;
   }
 
-  public static boolean get_instance(InputStream p_session, OutputStream p_output_stream, BasicBoard p_board) {
+  public static boolean get_instance(
+      InputStream p_session, OutputStream p_output_stream, BasicBoard p_board) {
     if (p_output_stream == null) {
       return false;
     }
@@ -70,7 +72,14 @@ public class SessionToEagle extends JFrame {
     OutputStreamWriter file_writer = new OutputStreamWriter(p_output_stream);
 
     double board_scale_factor = p_board.communication.coordinate_transform.board_to_dsn(1);
-    SessionToEagle new_instance = new SessionToEagle(scanner, file_writer, p_board, p_board.communication.unit, p_board.communication.resolution, board_scale_factor);
+    SessionToEagle new_instance =
+        new SessionToEagle(
+            scanner,
+            file_writer,
+            p_board,
+            p_board.communication.unit,
+            p_board.communication.resolution,
+            board_scale_factor);
 
     boolean result;
     try {
@@ -90,9 +99,7 @@ public class SessionToEagle extends JFrame {
     return result;
   }
 
-  /**
-   * Processes the outmost scope of the session file. Returns false, if an error occurred.
-   */
+  /** Processes the outmost scope of the session file. Returns false, if an error occurred. */
   private boolean process_session_scope() throws IOException {
 
     // read the first line of the session file
@@ -104,7 +111,8 @@ public class SessionToEagle extends JFrame {
         keyword_ok = next_token == Keyword.OPEN_BRACKET;
       } else if (i == 1) {
         keyword_ok = next_token == Keyword.SESSION;
-        this.scanner.yybegin(SpecctraDsnStreamReader.NAME); // to overread the name of the pcb for i = 2
+        this.scanner.yybegin(
+            SpecctraDsnStreamReader.NAME); // to overread the name of the pcb for i = 2
       }
       if (!keyword_ok) {
         FRLogger.warn("SessionToEagle.process_session_scope specctra session file format expected");
@@ -311,11 +319,14 @@ public class SessionToEagle extends JFrame {
     // read the net name
     Object next_token = this.scanner.next_token();
     if (!(next_token instanceof String net_name)) {
-      FRLogger.warn("SessionToEagle.process_net_scope: String expected at '" + this.scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "SessionToEagle.process_net_scope: String expected at '"
+              + this.scanner.get_scope_identifier()
+              + "'");
       return false;
     }
     this.scanner.set_scope_identifier(net_name);
- 
+
     // Delete all unfixed traces and vias for net net_name in Eagle's database.
 
     // read the wires and vias of this net
@@ -355,7 +366,10 @@ public class SessionToEagle extends JFrame {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
-        FRLogger.warn("SessionToEagle.process_wire_scope: unexpected end of file at '" + this.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "SessionToEagle.process_wire_scope: unexpected end of file at '"
+                + this.scanner.get_scope_identifier()
+                + "'");
         return false;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -411,7 +425,10 @@ public class SessionToEagle extends JFrame {
     // read the padstack name
     Object next_token = this.scanner.next_token();
     if (!(next_token instanceof String padstack_name)) {
-      FRLogger.warn("SessionToEagle.process_via_scope: padstack name expected at '" + this.scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "SessionToEagle.process_via_scope: padstack name expected at '"
+              + this.scanner.get_scope_identifier()
+              + "'");
       return false;
     }
     this.scanner.set_scope_identifier(padstack_name);
@@ -424,7 +441,10 @@ public class SessionToEagle extends JFrame {
       } else if (next_token instanceof Integer integer) {
         location[i] = integer;
       } else {
-        FRLogger.warn("SessionToEagle.process_via_scope: number expected at '" + this.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "SessionToEagle.process_via_scope: number expected at '"
+                + this.scanner.get_scope_identifier()
+                + "'");
         return false;
       }
     }
@@ -435,14 +455,20 @@ public class SessionToEagle extends JFrame {
       next_token = this.scanner.next_token();
     }
     if (next_token != Keyword.CLOSED_BRACKET) {
-      FRLogger.warn("SessionToEagle.process_via_scope: closing bracket expected at '" + this.scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "SessionToEagle.process_via_scope: closing bracket expected at '"
+              + this.scanner.get_scope_identifier()
+              + "'");
       return false;
     }
 
     Padstack via_padstack = this.board.library.padstacks.get(padstack_name);
 
     if (via_padstack == null) {
-      FRLogger.warn("SessionToEagle.process_via_scope: via padstack not found at '" + this.scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "SessionToEagle.process_via_scope: via padstack not found at '"
+              + this.scanner.get_scope_identifier()
+              + "'");
       return false;
     }
 
@@ -542,7 +568,10 @@ public class SessionToEagle extends JFrame {
           }
         }
         if (other_pin_info == null) {
-          FRLogger.warn("SessuinToEagle.process_swapped_pins: other_pin_info not found at '" + this.scanner.get_scope_identifier() + "'");
+          FRLogger.warn(
+              "SessuinToEagle.process_swapped_pins: other_pin_info not found at '"
+                  + this.scanner.get_scope_identifier()
+                  + "'");
           return false;
         }
         write_pin_swap(curr_pin_info.pin, other_pin_info.pin);
@@ -561,8 +590,10 @@ public class SessionToEagle extends JFrame {
     this.out_file.write(layer_name);
     this.out_file.write(";\n");
 
-    double[] location_1 = this.board.communication.coordinate_transform.board_to_dsn(p_pin_1.get_center().to_float());
-    double[] location_2 = this.board.communication.coordinate_transform.board_to_dsn(p_pin_2.get_center().to_float());
+    double[] location_1 =
+        this.board.communication.coordinate_transform.board_to_dsn(p_pin_1.get_center().to_float());
+    double[] location_2 =
+        this.board.communication.coordinate_transform.board_to_dsn(p_pin_2.get_center().to_float());
 
     this.out_file.write("PINSWAP ");
     this.out_file.write(" (");

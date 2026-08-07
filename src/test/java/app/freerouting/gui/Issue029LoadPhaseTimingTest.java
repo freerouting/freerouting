@@ -73,7 +73,8 @@ class Issue029LoadPhaseTimingTest {
       long t15 = System.nanoTime();
       System.out.printf("8 BoardStatistics with DRC+connections: %.2f ms%n", ms(t14, t15));
 
-      System.out.printf("Board: components=%d traces=%d items=%d%n",
+      System.out.printf(
+          "Board: components=%d traces=%d items=%d%n",
           board.components.count(), board.get_traces().size(), board.get_items().size());
     }
   }

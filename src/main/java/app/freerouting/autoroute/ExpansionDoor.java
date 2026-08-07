@@ -5,49 +5,36 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 
-/**
- * An ExpansionDoor is a common edge between two ExpansionRooms
- */
+/** An ExpansionDoor is a common edge between two ExpansionRooms */
 public class ExpansionDoor implements ExpandableObject {
 
-  /**
-   * The first room of this door.
-   */
+  /** The first room of this door. */
   public final ExpansionRoom first_room;
-  /**
-   * The second room of this door.
-   */
+
+  /** The second room of this door. */
   public final ExpansionRoom second_room;
-  /**
-   * The dimension of a door may be 1 or 2.
-   */
+
+  /** The dimension of a door may be 1 or 2. */
   public final int dimension;
-  /**
-   * each section of the following array can be expanded separately by the maze search algorithm
-   */
+
+  /** each section of the following array can be expanded separately by the maze search algorithm */
   MazeSearchElement[] section_arr;
 
-  /**
-   * Creates a new instance of ExpansionDoor
-   */
+  /** Creates a new instance of ExpansionDoor */
   public ExpansionDoor(ExpansionRoom p_first_room, ExpansionRoom p_second_room, int p_dimension) {
     first_room = p_first_room;
     second_room = p_second_room;
     dimension = p_dimension;
   }
 
-  /**
-   * Creates a new instance of ExpansionDoor
-   */
+  /** Creates a new instance of ExpansionDoor */
   public ExpansionDoor(ExpansionRoom p_first_room, ExpansionRoom p_second_room) {
     first_room = p_first_room;
     second_room = p_second_room;
     dimension = first_room.get_shape().intersection(second_room.get_shape()).dimension();
   }
 
-  /**
-   * Calculates the intersection of the shapes of the 2 rooms belonging to this door.
-   */
+  /** Calculates the intersection of the shapes of the 2 rooms belonging to this door. */
   @Override
   public TileShape get_shape() {
     TileShape first_shape = first_room.get_shape();
@@ -56,7 +43,8 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * The dimension of a door may be 1 or 2. 2-dimensional doors can only exist between ObstacleExpansionRooms
+   * The dimension of a door may be 1 or 2. 2-dimensional doors can only exist between
+   * ObstacleExpansionRooms
    */
   @Override
   public int get_dimension() {
@@ -64,7 +52,8 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * Returns the other room of this door, or null, if p_room is neither equal to this.first_room nor to this.second_room.
+   * Returns the other room of this door, or null, if p_room is neither equal to this.first_room nor
+   * to this.second_room.
    */
   public ExpansionRoom other_room(ExpansionRoom p_room) {
     ExpansionRoom result;
@@ -79,7 +68,8 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * Returns the other room of this door, or null, if p_room is neither equal to this.first_room nor to this.second_room, or if the other room is not a CompleteExpansionRoom.
+   * Returns the other room of this door, or null, if p_room is neither equal to this.first_room nor
+   * to this.second_room, or if the other room is not a CompleteExpansionRoom.
    */
   @Override
   public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
@@ -107,9 +97,7 @@ public class ExpansionDoor implements ExpandableObject {
     return this.section_arr[p_no];
   }
 
-  /**
-   * Calculates the Line segments of the sections of this door.
-   */
+  /** Calculates the Line segments of the sections of this door. */
   public FloatLine[] get_section_segments(double p_offset) {
     double offset = p_offset + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
     TileShape door_shape = this.get_shape();
@@ -123,7 +111,9 @@ public class ExpansionDoor implements ExpandableObject {
     if (this.dimension == 1) {
       door_line_segment = door_shape.diagonal_corner_segment();
       shrinked_line_segment = door_line_segment.shrink_segment(offset);
-    } else if (this.dimension == 2 && this.first_room instanceof CompleteFreeSpaceExpansionRoom && this.second_room instanceof CompleteFreeSpaceExpansionRoom) {
+    } else if (this.dimension == 2
+        && this.first_room instanceof CompleteFreeSpaceExpansionRoom
+        && this.second_room instanceof CompleteFreeSpaceExpansionRoom) {
       // Overlapping doors at a corner possible in case of 90- or 45-degree routing.
       // In case of freeangle routing the corners are cut off.
       door_line_segment = calc_door_line_segment(door_shape);
@@ -142,13 +132,15 @@ public class ExpansionDoor implements ExpandableObject {
       shrinked_line_segment = door_line_segment;
     }
     final double c_max_door_section_width = 10 * offset;
-    int section_count = (int) (door_line_segment.b.distance(door_line_segment.a) / c_max_door_section_width) + 1;
+    int section_count =
+        (int) (door_line_segment.b.distance(door_line_segment.a) / c_max_door_section_width) + 1;
     this.allocate_sections(section_count);
     return shrinked_line_segment.divide_segment_into_sections(section_count);
   }
 
   /**
-   * Calculates a diagonal line of the 2-dimensional p_door_shape which represents the restraint line between the shapes of this.first_room and this.second_room.
+   * Calculates a diagonal line of the 2-dimensional p_door_shape which represents the restraint
+   * line between the shapes of this.first_room and this.second_room.
    */
   private FloatLine calc_door_line_segment(TileShape p_door_shape) {
     TileShape first_room_shape = this.first_room.get_shape();
@@ -158,7 +150,8 @@ public class ExpansionDoor implements ExpandableObject {
     int corner_count = p_door_shape.border_line_count();
     for (int i = 0; i < corner_count; i++) {
       Point curr_corner = p_door_shape.corner(i);
-      if (!first_room_shape.contains_inside(curr_corner) && !second_room_shape.contains_inside(curr_corner)) {
+      if (!first_room_shape.contains_inside(curr_corner)
+          && !second_room_shape.contains_inside(curr_corner)) {
         // curr_corner is on the border of both room shapes.
         if (first_corner == null) {
           first_corner = curr_corner;
@@ -174,9 +167,7 @@ public class ExpansionDoor implements ExpandableObject {
     return new FloatLine(first_corner.to_float(), second_corner.to_float());
   }
 
-  /**
-   * Resets this ExpandableObject for autorouting the next connection.
-   */
+  /** Resets this ExpandableObject for autorouting the next connection. */
   @Override
   public void reset() {
     if (section_arr != null) {
@@ -194,10 +185,7 @@ public class ExpansionDoor implements ExpandableObject {
     return Math.min(id1, id2) * 31 + Math.max(id1, id2);
   }
 
-
-  /**
-   * allocates and initialises p_section_count sections
-   */
+  /** allocates and initialises p_section_count sections */
   void allocate_sections(int p_section_count) {
     if (section_arr != null && section_arr.length == p_section_count) {
       return; // already allocated

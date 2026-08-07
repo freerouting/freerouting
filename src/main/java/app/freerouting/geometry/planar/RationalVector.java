@@ -7,7 +7,8 @@ import java.io.Serializable;
 import java.math.BigInteger;
 
 /**
- * Analog RationalPoint, but implementing the functionality of a Vector instead of the functionality of a Point.
+ * Analog RationalPoint, but implementing the functionality of a Vector instead of the functionality
+ * of a Point.
  */
 public class RationalVector extends Vector implements Serializable {
 
@@ -16,7 +17,8 @@ public class RationalVector extends Vector implements Serializable {
   public final BigInteger z;
 
   /**
-   * creates a RationalVector from 3 BigIntegers p_x, p_y and p_z. They represent the 2-dimensional Vector with the rational number Tuple ( p_x / p_z , p_y / p_z).
+   * creates a RationalVector from 3 BigIntegers p_x, p_y and p_z. They represent the 2-dimensional
+   * Vector with the rational number Tuple ( p_x / p_z , p_y / p_z).
    */
   public RationalVector(BigInteger p_x, BigInteger p_y, BigInteger p_z) {
     if (p_z.signum() >= 0) {
@@ -31,26 +33,20 @@ public class RationalVector extends Vector implements Serializable {
     }
   }
 
-  /**
-   * creates a RationalVector from an IntVector
-   */
+  /** creates a RationalVector from an IntVector */
   RationalVector(IntVector p_vector) {
     x = BigInteger.valueOf(p_vector.x);
     y = BigInteger.valueOf(p_vector.y);
     z = BigInteger.ONE;
   }
 
-  /**
-   * returns true, if the x and y coordinates of this vector are 0
-   */
+  /** returns true, if the x and y coordinates of this vector are 0 */
   @Override
   public final boolean is_zero() {
     return x.signum() == 0 && y.signum() == 0;
   }
 
-  /**
-   * returns true, if this RationalVector is equal to p_ob
-   */
+  /** returns true, if this RationalVector is equal to p_ob */
   @Override
   public final boolean equals(Object p_ob) {
     if (this == p_ob) {
@@ -72,24 +68,21 @@ public class RationalVector extends Vector implements Serializable {
     return det.signum() == 0;
   }
 
-  /**
-   * returns the Vector such that this plus this.minus() is zero
-   */
+  /** returns the Vector such that this plus this.minus() is zero */
   @Override
   public Vector negate() {
     return new RationalVector(x.negate(), y.negate(), z);
   }
 
-  /**
-   * adds p_other to this vector
-   */
+  /** adds p_other to this vector */
   @Override
   public final Vector add(Vector p_other) {
     return p_other.add(this);
   }
 
   /**
-   * Let L be the line from the Zero Vector to p_other. The function returns Side.ON_THE_LEFT, if this Vector is on the left of L Side.ON_THE_RIGHT, if this Vector is on the right of L and
+   * Let L be the line from the Zero Vector to p_other. The function returns Side.ON_THE_LEFT, if
+   * this Vector is on the left of L Side.ON_THE_RIGHT, if this Vector is on the right of L and
    * Side.COLLINEAR, if this Vector is collinear with L.
    */
   @Override
@@ -109,25 +102,22 @@ public class RationalVector extends Vector implements Serializable {
   }
 
   /**
-   * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other {@literal >} 0, Signum.NEGATIVE, if the scalar product is {@literal <} 0, and Signum.ZERO, if the scalar
-   * product is equal 0.
+   * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other
+   * {@literal >} 0, Signum.NEGATIVE, if the scalar product is {@literal <} 0, and Signum.ZERO, if
+   * the scalar product is equal 0.
    */
   @Override
   public Signum projection(Vector p_other) {
     return p_other.projection(this);
   }
 
-  /**
-   * calculates the scalar product of this vector and p_other
-   */
+  /** calculates the scalar product of this vector and p_other */
   @Override
   public double scalar_product(Vector p_other) {
     return p_other.scalar_product(this);
   }
 
-  /**
-   * approximates the coordinates of this vector by float coordinates
-   */
+  /** approximates the coordinates of this vector by float coordinates */
   @Override
   public FloatPoint to_float() {
     double xd = x.doubleValue();
@@ -194,7 +184,8 @@ public class RationalVector extends Vector implements Serializable {
     BigInteger gcd = dx.gcd(y);
     dx = dx.divide(gcd);
     dy = dy.divide(gcd);
-    if (dx.abs().compareTo(Limits.CRIT_INT_BIG) <= 0 && dy.abs().compareTo(Limits.CRIT_INT_BIG) <= 0) {
+    if (dx.abs().compareTo(Limits.CRIT_INT_BIG) <= 0
+        && dy.abs().compareTo(Limits.CRIT_INT_BIG) <= 0) {
       return new IntDirection(dx.intValue(), dy.intValue());
     }
     return new BigIntDirection(dx, dy);

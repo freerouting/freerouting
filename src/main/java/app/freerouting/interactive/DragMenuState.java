@@ -2,21 +2,15 @@ package app.freerouting.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
 
-/**
- * Class implementing the different functionality in the drag menu
- */
+/** Class implementing the different functionality in the drag menu */
 public class DragMenuState extends MenuState {
 
-  /**
-   * Creates a new instance of DragMenuState
-   */
+  /** Creates a new instance of DragMenuState */
   public DragMenuState(GuiBoardManager p_board_handling) {
     super(p_board_handling);
   }
 
-  /**
-   * Returns a new instance of DragMenuState
-   */
+  /** Returns a new instance of DragMenuState */
   public static DragMenuState get_instance(GuiBoardManager p_board_handling) {
     return new DragMenuState(p_board_handling);
   }

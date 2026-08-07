@@ -6,31 +6,22 @@ import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 import java.util.Vector;
 
-/**
- * Describes a library of padstacks for pins or vias.
- */
+/** Describes a library of padstacks for pins or vias. */
 public class Padstacks implements Serializable {
 
-  /**
-   * The layer structure of each padstack.
-   */
+  /** The layer structure of each padstack. */
   public final LayerStructure board_layer_structure;
-  /**
-   * The array of Padstacks in this object
-   */
+
+  /** The array of Padstacks in this object */
   private final Vector<Padstack> padstack_arr;
 
-  /**
-   * Creates a new instance of Padstacks
-   */
+  /** Creates a new instance of Padstacks */
   public Padstacks(LayerStructure p_layer_structure) {
     board_layer_structure = p_layer_structure;
     padstack_arr = new Vector<>();
   }
 
-  /**
-   * Returns the padstack with the input name or null, if no such padstack exists.
-   */
+  /** Returns the padstack with the input name or null, if no such padstack exists. */
   public Padstack get(String p_name) {
     for (Padstack curr_padstack : padstack_arr) {
       if (curr_padstack != null && curr_padstack.name.equalsIgnoreCase(p_name)) {
@@ -40,15 +31,14 @@ public class Padstacks implements Serializable {
     return null;
   }
 
-  /**
-   * Returns the count of Padstacks in this object.
-   */
+  /** Returns the count of Padstacks in this object. */
   public int count() {
     return padstack_arr.size();
   }
 
   /**
-   * Returns the padstack with index p_padstack_no for 1 {@literal <}= p_padstack_no {@literal <}= padstack_count
+   * Returns the padstack with index p_padstack_no for 1 {@literal <}= p_padstack_no {@literal <}=
+   * padstack_count
    */
   public Padstack get(int p_padstack_no) {
     if (p_padstack_no <= 0 || p_padstack_no > padstack_arr.size()) {
@@ -64,17 +54,23 @@ public class Padstacks implements Serializable {
   }
 
   /**
-   * Appends a new padstack with the input shapes to this padstacks. p_shapes is an array of dimension board layer_count. p_drill_allowed indicates, if vias of the own net are allowed to overlap with
-   * this padstack If p_placed_absolute is false, the layers of the padstack are mirrored, if it is placed on the back side.
+   * Appends a new padstack with the input shapes to this padstacks. p_shapes is an array of
+   * dimension board layer_count. p_drill_allowed indicates, if vias of the own net are allowed to
+   * overlap with this padstack If p_placed_absolute is false, the layers of the padstack are
+   * mirrored, if it is placed on the back side.
    */
-  public Padstack add(String p_name, ConvexShape[] p_shapes, boolean p_drill_allowed, boolean p_placed_absolute) {
-    Padstack new_padstack = new Padstack(p_name, padstack_arr.size() + 1, p_shapes, p_drill_allowed, p_placed_absolute, this);
+  public Padstack add(
+      String p_name, ConvexShape[] p_shapes, boolean p_drill_allowed, boolean p_placed_absolute) {
+    Padstack new_padstack =
+        new Padstack(
+            p_name, padstack_arr.size() + 1, p_shapes, p_drill_allowed, p_placed_absolute, this);
     padstack_arr.add(new_padstack);
     return new_padstack;
   }
 
   /**
-   * Appends a new padstack with the input shapes to this padstacks. p_shapes is an array of dimension board layer_count. The padstack name is generated internally.
+   * Appends a new padstack with the input shapes to this padstacks. p_shapes is an array of
+   * dimension board layer_count. The padstack name is generated internally.
    */
   public Padstack add(ConvexShape[] p_shapes) {
     String new_name = "padstack#" + (padstack_arr.size() + 1);
@@ -82,7 +78,8 @@ public class Padstacks implements Serializable {
   }
 
   /**
-   * Appends a new padstack with the input shape from p_from_layer to p_to_layer and null on the other layers. The padstack name is generated internally.
+   * Appends a new padstack with the input shape from p_from_layer to p_to_layer and null on the
+   * other layers. The padstack name is generated internally.
    */
   public Padstack add(ConvexShape p_shape, int p_from_layer, int p_to_layer) {
     ConvexShape[] shape_arr = new ConvexShape[board_layer_structure.arr.length];

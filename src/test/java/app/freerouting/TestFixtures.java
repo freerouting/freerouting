@@ -17,8 +17,7 @@ public final class TestFixtures {
 
   private static final String FIXTURES_DIR_PROPERTY = "freerouting.test.fixtures.dir";
 
-  private TestFixtures() {
-  }
+  private TestFixtures() {}
 
   public static Path resolvePath(String filename) throws IOException {
     Path fromProperty = resolveFromSystemProperty(filename);
@@ -35,8 +34,12 @@ public final class TestFixtures {
       dir = dir.getParent();
     }
 
-    throw new IOException("Cannot find fixture: " + filename
-        + " (user.dir=" + Path.of(".").toAbsolutePath().normalize() + ")");
+    throw new IOException(
+        "Cannot find fixture: "
+            + filename
+            + " (user.dir="
+            + Path.of(".").toAbsolutePath().normalize()
+            + ")");
   }
 
   public static File resolveFile(String filename) throws IOException {

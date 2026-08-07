@@ -9,23 +9,18 @@ import app.freerouting.geometry.planar.PolygonShape;
 import app.freerouting.io.CoordinateTransform;
 import java.io.IOException;
 
-/**
- * Class for reading and writing path scopes consisting of a polygon from dsn-files.
- */
+/** Class for reading and writing path scopes consisting of a polygon from dsn-files. */
 public class PolygonPath extends Path {
 
-  /**
-   * Creates a new instance of PolygonPath
-   */
+  /** Creates a new instance of PolygonPath */
   public PolygonPath(Layer p_layer, double p_width, double[] p_coordinate_arr) {
     super(p_layer, p_width, p_coordinate_arr);
   }
 
-  /**
-   * Writes this path as a scope to an output dsn-file.
-   */
+  /** Writes this path as a scope to an output dsn-file. */
   @Override
-  public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier_type) throws IOException {
+  public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier_type)
+      throws IOException {
     p_file.start_scope();
     p_file.write("path ");
     p_identifier_type.write(this.layer.name, p_file);
@@ -42,7 +37,8 @@ public class PolygonPath extends Path {
   }
 
   @Override
-  public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type) throws IOException {
+  public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type)
+      throws IOException {
     p_file.start_scope();
     p_file.write("path ");
     p_identifier_type.write(this.layer.name, p_file);
@@ -61,7 +57,8 @@ public class PolygonPath extends Path {
   }
 
   @Override
-  public app.freerouting.geometry.planar.Shape transform_to_board(CoordinateTransform p_coordinate_transform) {
+  public app.freerouting.geometry.planar.Shape transform_to_board(
+      CoordinateTransform p_coordinate_transform) {
     FloatPoint[] corner_arr = new FloatPoint[this.coordinate_arr.length / 2];
     double[] curr_point = new double[2];
     for (int i = 0; i < corner_arr.length; i++) {
@@ -86,7 +83,8 @@ public class PolygonPath extends Path {
   }
 
   @Override
-  public app.freerouting.geometry.planar.Shape transform_to_board_rel(CoordinateTransform p_coordinate_transform) {
+  public app.freerouting.geometry.planar.Shape transform_to_board_rel(
+      CoordinateTransform p_coordinate_transform) {
     FloatPoint[] corner_arr = new FloatPoint[this.coordinate_arr.length / 2];
     double[] curr_point = new double[2];
     for (int i = 0; i < corner_arr.length; i++) {

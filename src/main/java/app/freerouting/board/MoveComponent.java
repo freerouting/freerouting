@@ -11,9 +11,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-/**
- * Class for moving a group of items on the board
- */
+/** Class for moving a group of items on the board */
 public class MoveComponent {
 
   private static final int PULL_TIGHT_TIME_LIMIT = 1000;
@@ -26,10 +24,12 @@ public class MoveComponent {
   private boolean all_items_movable = true;
   private Component component;
 
-  /**
-   * Creates a new instance of MoveItemGroup
-   */
-  public MoveComponent(Item p_item, Vector p_translate_vector, int p_max_recursion_depth, int p_max_via_recursion_depth) {
+  /** Creates a new instance of MoveItemGroup */
+  public MoveComponent(
+      Item p_item,
+      Vector p_translate_vector,
+      int p_max_recursion_depth,
+      int p_max_via_recursion_depth) {
     translate_vector = p_translate_vector;
     max_recursion_depth = p_max_recursion_depth;
     max_via_recursion_depth = p_max_via_recursion_depth;
@@ -51,7 +51,11 @@ public class MoveComponent {
     }
     Collection<FloatPoint> item_centers = new LinkedList<>();
     for (Item curr_item : item_group_list) {
-      boolean curr_item_movable = !curr_item.is_user_fixed() && ((curr_item instanceof DrillItem) || (curr_item instanceof ObstacleArea) || (curr_item instanceof ComponentOutline));
+      boolean curr_item_movable =
+          !curr_item.is_user_fixed()
+              && ((curr_item instanceof DrillItem)
+                  || (curr_item instanceof ObstacleArea)
+                  || (curr_item instanceof ComponentOutline));
       if (!curr_item_movable) {
         // MoveItemGroup currently only implemented for DrillItems
         all_items_movable = false;
@@ -92,7 +96,8 @@ public class MoveComponent {
   }
 
   /**
-   * Checks, if all items in the group can be moved by shoving obstacle trace aside without creating clearance violations.
+   * Checks, if all items in the group can be moved by shoving obstacle trace aside without creating
+   * clearance violations.
    */
   public boolean check() {
     if (!all_items_movable) {
@@ -107,10 +112,19 @@ public class MoveComponent {
           // a clearance violation with a connecting trace may occur
           move_ok = false;
         } else {
-          move_ok = MoveDrillItemAlgo.check(curr_drill_item, this.translate_vector, this.max_recursion_depth, this.max_via_recursion_depth, ignore_items, board, time_limit);
+          move_ok =
+              MoveDrillItemAlgo.check(
+                  curr_drill_item,
+                  this.translate_vector,
+                  this.max_recursion_depth,
+                  this.max_via_recursion_depth,
+                  ignore_items,
+                  board,
+                  time_limit);
         }
       } else {
-        move_ok = board.check_move_item(item_group_arr[i].item, this.translate_vector, ignore_items);
+        move_ok =
+            board.check_move_item(item_group_arr[i].item, this.translate_vector, ignore_items);
       }
       if (!move_ok) {
         return false;
@@ -120,8 +134,9 @@ public class MoveComponent {
   }
 
   /**
-   * Moves all items in the group by this.translate_vector and shoves aside obstacle traces. Returns false, if that was not possible without creating clearance violations. In this case an undo may be
-   * necessary.
+   * Moves all items in the group by this.translate_vector and shoves aside obstacle traces. Returns
+   * false, if that was not possible without creating clearance violations. In this case an undo may
+   * be necessary.
    */
   public boolean insert(int p_tidy_width, int p_pull_tight_accuracy) {
     if (!all_items_movable) {
@@ -135,8 +150,15 @@ public class MoveComponent {
     }
     for (int i = 0; i < item_group_arr.length; i++) {
       if (item_group_arr[i].item instanceof DrillItem curr_drill_item) {
-        boolean move_ok = board.move_drill_item(curr_drill_item, this.translate_vector, this.max_recursion_depth, this.max_via_recursion_depth, p_tidy_width, p_pull_tight_accuracy,
-            PULL_TIGHT_TIME_LIMIT);
+        boolean move_ok =
+            board.move_drill_item(
+                curr_drill_item,
+                this.translate_vector,
+                this.max_recursion_depth,
+                this.max_via_recursion_depth,
+                p_tidy_width,
+                p_pull_tight_accuracy,
+                PULL_TIGHT_TIME_LIMIT);
         if (!move_ok) {
           if (this.component != null) {
             this.component.translate_by(translate_vector.negate());
@@ -152,7 +174,8 @@ public class MoveComponent {
   }
 
   /**
-   * used to sort the group items in the direction of translate_vector, so that the front items can be moved first.
+   * used to sort the group items in the direction of translate_vector, so that the front items can
+   * be moved first.
    */
   private record SortedItem(Item item, double projection) implements Comparable<SortedItem> {
 

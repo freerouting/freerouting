@@ -9,36 +9,27 @@ import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 
-/**
- * Layer change expansion object in the maze search algorithm.
- */
+/** Layer change expansion object in the maze search algorithm. */
 public class ExpansionDrill implements ExpandableObject {
 
-  /**
-   * The location, where the drill is checked.
-   */
+  /** The location, where the drill is checked. */
   public final Point location;
-  /**
-   * The first layer of the drill
-   */
+
+  /** The first layer of the drill */
   public final int first_layer;
-  /**
-   * The last layer of the drill
-   */
+
+  /** The last layer of the drill */
   public final int last_layer;
-  /**
-   * Array of dimension last_layer - first_layer + 1.
-   */
+
+  /** Array of dimension last_layer - first_layer + 1. */
   public final CompleteExpansionRoom[] room_arr;
+
   private final MazeSearchElement[] maze_search_info_arr;
-  /**
-   * The shape of the drill.
-   */
+
+  /** The shape of the drill. */
   private final TileShape shape;
 
-  /**
-   * Creates a new instance of Drill
-   */
+  /** Creates a new instance of Drill */
   public ExpansionDrill(TileShape p_shape, Point p_location, int p_first_layer, int p_last_layer) {
     shape = p_shape;
     location = p_location;
@@ -53,12 +44,14 @@ public class ExpansionDrill implements ExpandableObject {
   }
 
   /**
-   * Looks for the expansion room of this drill on each layer. Creates a CompleteFreeSpaceExpansionRoom, if no expansion room is found. Returns false, if that was not possible because of an obstacle
-   * at this.location on some layer in the compensated search tree.
+   * Looks for the expansion room of this drill on each layer. Creates a
+   * CompleteFreeSpaceExpansionRoom, if no expansion room is found. Returns false, if that was not
+   * possible because of an obstacle at this.location on some layer in the compensated search tree.
    */
   public boolean calculate_expansion_rooms(AutorouteEngine p_autoroute_engine) {
     TileShape search_shape = TileShape.get_instance(location);
-    Collection<SearchTreeObject> overlaps = p_autoroute_engine.autoroute_search_tree.overlapping_objects(search_shape, -1);
+    Collection<SearchTreeObject> overlaps =
+        p_autoroute_engine.autoroute_search_tree.overlapping_objects(search_shape, -1);
     for (int i = this.first_layer; i <= this.last_layer; i++) {
       CompleteExpansionRoom found_room = null;
       Iterator<SearchTreeObject> it = overlaps.iterator();
@@ -76,8 +69,10 @@ public class ExpansionDrill implements ExpandableObject {
       }
       if (found_room == null) {
         // create a new expansion room on this layer
-        IncompleteFreeSpaceExpansionRoom new_incomplete_room = new IncompleteFreeSpaceExpansionRoom(null, i, search_shape);
-        Collection<CompleteFreeSpaceExpansionRoom> new_rooms = p_autoroute_engine.complete_expansion_room(new_incomplete_room);
+        IncompleteFreeSpaceExpansionRoom new_incomplete_room =
+            new IncompleteFreeSpaceExpansionRoom(null, i, search_shape);
+        Collection<CompleteFreeSpaceExpansionRoom> new_rooms =
+            p_autoroute_engine.complete_expansion_room(new_incomplete_room);
         if (new_rooms.size() != 1) {
           // the size may be 0 because of an obstacle in the compensated tree at this.location
           return false;
@@ -131,9 +126,9 @@ public class ExpansionDrill implements ExpandableObject {
   }
 
   /*
-   * Test draw of the shape of this drill.
+  * Test draw of the shape of this drill.
 
-   */
+  */
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity) {
     Color draw_color = p_graphics_context.get_hilight_color();
     p_graphics_context.fill_area(this.shape, p_graphics, draw_color, p_intensity);

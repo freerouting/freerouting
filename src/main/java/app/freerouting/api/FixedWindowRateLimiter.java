@@ -4,13 +4,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Lightweight in-memory fixed-window limiter for per-key request throttling.
- */
+/** Lightweight in-memory fixed-window limiter for per-key request throttling. */
 public class FixedWindowRateLimiter {
 
-  public record Decision(boolean allowed, long retryAfterSeconds) {
-  }
+  public record Decision(boolean allowed, long retryAfterSeconds) {}
 
   private static final int MAX_TRACKED_KEYS = 10_000;
 
@@ -25,12 +22,15 @@ public class FixedWindowRateLimiter {
     long now = System.currentTimeMillis();
     long windowMs = Math.max(1L, windowSeconds) * 1000L;
 
-    WindowCounter counter = counters.computeIfAbsent(key, k -> {
-      WindowCounter c = new WindowCounter();
-      c.windowStartMs = now;
-      c.count = 0;
-      return c;
-    });
+    WindowCounter counter =
+        counters.computeIfAbsent(
+            key,
+            k -> {
+              WindowCounter c = new WindowCounter();
+              c.windowStartMs = now;
+              c.count = 0;
+              return c;
+            });
 
     if (now - counter.windowStartMs >= windowMs) {
       counter.windowStartMs = now;

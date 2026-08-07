@@ -18,9 +18,7 @@ import java.util.TreeSet;
 
 public class WindowRouteStubs extends CleanupWindows {
 
-  /**
-   * Creates a new instance of WindowRouteStubs
-   */
+  /** Creates a new instance of WindowRouteStubs */
   public WindowRouteStubs(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
@@ -60,7 +58,8 @@ public class WindowRouteStubs extends CleanupWindows {
           boolean all_contacts_on_one_layer = true;
           while (it.hasNext()) {
             curr_contact_item = it.next();
-            if (curr_contact_item.first_layer() != first_contact_first_layer || curr_contact_item.last_layer() != first_contact_last_layer) {
+            if (curr_contact_item.first_layer() != first_contact_first_layer
+                || curr_contact_item.last_layer() != first_contact_last_layer) {
               all_contacts_on_one_layer = false;
               break;
             }
@@ -68,29 +67,20 @@ public class WindowRouteStubs extends CleanupWindows {
           if (!all_contacts_on_one_layer) {
             continue;
           }
-          if (curr_item.first_layer() >= first_contact_first_layer && curr_item.last_layer() <= first_contact_first_layer) {
+          if (curr_item.first_layer() >= first_contact_first_layer
+              && curr_item.last_layer() <= first_contact_first_layer) {
             stub_layer = first_contact_first_layer;
           } else {
             stub_layer = first_contact_last_layer;
           }
         }
-        stub_location = via
-            .get_center()
-            .to_float();
+        stub_location = via.get_center().to_float();
       } else {
         Trace curr_trace = (Trace) curr_item;
-        if (curr_trace
-            .get_start_contacts()
-            .isEmpty()) {
-          stub_location = curr_trace
-              .first_corner()
-              .to_float();
-        } else if (curr_trace
-            .get_end_contacts()
-            .isEmpty()) {
-          stub_location = curr_trace
-              .last_corner()
-              .to_float();
+        if (curr_trace.get_start_contacts().isEmpty()) {
+          stub_location = curr_trace.first_corner().to_float();
+        } else if (curr_trace.get_end_contacts().isEmpty()) {
+          stub_location = curr_trace.last_corner().to_float();
         } else {
           continue;
         }
@@ -121,9 +111,7 @@ public class WindowRouteStubs extends CleanupWindows {
     board_handling.zoom_selection();
   }
 
-  /**
-   * Describes information of a route stub in the list.
-   */
+  /** Describes information of a route stub in the list. */
   private class RouteStubInfo implements Comparable<RouteStubInfo> {
 
     private final Item stub_item;
@@ -148,9 +136,17 @@ public class WindowRouteStubs extends CleanupWindows {
       } else {
         item_string = tm.getText("via");
       }
-      String layer_name = board_frame.board_panel.board_handling.get_routing_board().layer_structure.arr[layer_no].name;
-      return tm.getText("route_stub_row_message", item_string, this.net.name,
-          this.location.to_string(board_frame.get_locale()), layer_name);
+      String layer_name =
+          board_frame.board_panel.board_handling.get_routing_board()
+              .layer_structure
+              .arr[layer_no]
+              .name;
+      return tm.getText(
+          "route_stub_row_message",
+          item_string,
+          this.net.name,
+          this.location.to_string(board_frame.get_locale()),
+          layer_name);
     }
 
     @Override

@@ -19,13 +19,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Reads a Specctra session (.ses) file and imports the routing data (wires and vias) into a
- * {@link BasicBoard}.
+ * Reads a Specctra session (.ses) file and imports the routing data (wires and vias) into a {@link
+ * BasicBoard}.
  *
  * <p>This class has no dependency on {@code BoardManager}, {@code RoutingJob}, or any GUI class.
  *
- * <p>Replaces the read path previously found in
- * {@link app.freerouting.io.specctra.parser.SesFileReader} (now {@link Deprecated}).
+ * <p>Replaces the read path previously found in {@link
+ * app.freerouting.io.specctra.parser.SesFileReader} (now {@link Deprecated}).
  */
 public final class SesReader {
 
@@ -49,14 +49,14 @@ public final class SesReader {
    *
    * <p>The stream is always closed by this method on return (success or failure).
    *
-   * @param in    the SES input stream — closed by this method on completion
+   * @param in the SES input stream — closed by this method on completion
    * @param board the board to which wires and vias are added
-   * @return a summary describing how many wires and vias were imported and how many errors
-   *         were encountered; a non-zero {@link SesImportSummary#errorsEncountered()} value
-   *         means some items were skipped but the board is otherwise intact
+   * @return a summary describing how many wires and vias were imported and how many errors were
+   *     encountered; a non-zero {@link SesImportSummary#errorsEncountered()} value means some items
+   *     were skipped but the board is otherwise intact
    * @throws IOException if {@code in} is {@code null} or {@code board} is {@code null}, or if the
-   *                     stream does not start with a valid Specctra session header, or if an I/O
-   *                     error occurs while reading the stream
+   *     stream does not start with a valid Specctra session header, or if an I/O error occurs while
+   *     reading the stream
    */
   public static SesImportSummary read(InputStream in, BasicBoard board) throws IOException {
     if (in == null) {
@@ -69,18 +69,22 @@ public final class SesReader {
     IJFlexScanner scanner = new SpecctraDsnStreamReader(in);
 
     // SES files use the same scale factor as SpecctraSesFileWriter: dsn_to_board(1) / resolution
-    double scaleFactor = board.communication.coordinate_transform.dsn_to_board(1)
-        / board.communication.resolution;
+    double scaleFactor =
+        board.communication.coordinate_transform.dsn_to_board(1) / board.communication.resolution;
 
     SesReader reader = new SesReader(scanner, board, scaleFactor);
 
     try {
       reader.processSessionScope();
-      FRLogger.info("SES file import complete: " + reader.wiresImported + " wires, "
-          + reader.viasImported + " vias imported"
-          + (reader.errorsEncountered > 0 ? " (" + reader.errorsEncountered + " errors)" : ""));
-      return new SesImportSummary(reader.wiresImported, reader.viasImported,
-          reader.errorsEncountered);
+      FRLogger.info(
+          "SES file import complete: "
+              + reader.wiresImported
+              + " wires, "
+              + reader.viasImported
+              + " vias imported"
+              + (reader.errorsEncountered > 0 ? " (" + reader.errorsEncountered + " errors)" : ""));
+      return new SesImportSummary(
+          reader.wiresImported, reader.viasImported, reader.errorsEncountered);
     } finally {
       closeQuietly(in);
     }
@@ -115,7 +119,7 @@ public final class SesReader {
     }
 
     // Read the direct subscopes of the session scope
-    for (;;) {
+    for (; ; ) {
       Object prevToken = nextToken;
       nextToken = this.scanner.next_token();
       if (nextToken == null) {
@@ -141,12 +145,14 @@ public final class SesReader {
   /** Processes the {@code (routes ...)} scope containing network data. */
   private void processRoutesScope() throws IOException {
     Object nextToken = null;
-    for (;;) {
+    for (; ; ) {
       Object prevToken = nextToken;
       nextToken = this.scanner.next_token();
       if (nextToken == null) {
-        FRLogger.warn("SesReader.processRoutesScope: unexpected end of file at '"
-            + this.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "SesReader.processRoutesScope: unexpected end of file at '"
+                + this.scanner.get_scope_identifier()
+                + "'");
         return;
       }
       if (nextToken == Keyword.CLOSED_BRACKET) {
@@ -166,12 +172,14 @@ public final class SesReader {
   /** Processes the {@code (network_out ...)} scope containing individual nets. */
   private void processNetworkScope() throws IOException {
     Object nextToken = null;
-    for (;;) {
+    for (; ; ) {
       Object prevToken = nextToken;
       nextToken = this.scanner.next_token();
       if (nextToken == null) {
-        FRLogger.warn("SesReader.processNetworkScope: unexpected end of file at '"
-            + this.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "SesReader.processNetworkScope: unexpected end of file at '"
+                + this.scanner.get_scope_identifier()
+                + "'");
         return;
       }
       if (nextToken == Keyword.CLOSED_BRACKET) {
@@ -192,8 +200,10 @@ public final class SesReader {
   private void processNetScope() throws IOException {
     Object nextToken = this.scanner.next_token();
     if (!(nextToken instanceof String netName)) {
-      FRLogger.warn("SesReader.processNetScope: String expected at '"
-          + this.scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "SesReader.processNetScope: String expected at '"
+              + this.scanner.get_scope_identifier()
+              + "'");
       errorsEncountered++;
       return;
     }
@@ -207,9 +217,9 @@ public final class SesReader {
       return;
     }
     int netNo = net.net_number;
-    int[] netNoArr = new int[]{netNo};
+    int[] netNoArr = new int[] {netNo};
 
-    for (;;) {
+    for (; ; ) {
       Object prevToken = nextToken;
       nextToken = this.scanner.next_token();
       if (nextToken == null) {
@@ -239,17 +249,19 @@ public final class SesReader {
    * Processes a {@code (wire ...)} scope and inserts the trace into the board.
    *
    * @return {@code true} if the wire was successfully imported; {@code false} on a parse or
-   *         geometry error (the caller increments {@link #errorsEncountered})
+   *     geometry error (the caller increments {@link #errorsEncountered})
    */
   private boolean processWireScope(int[] netNoArr) throws IOException {
     PolygonPath wirePath = null;
     Object nextToken = null;
-    for (;;) {
+    for (; ; ) {
       Object prevToken = nextToken;
       nextToken = this.scanner.next_token();
       if (nextToken == null) {
-        FRLogger.warn("SesReader.processWireScope: unexpected end of file at '"
-            + this.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "SesReader.processWireScope: unexpected end of file at '"
+                + this.scanner.get_scope_identifier()
+                + "'");
         return false;
       }
       if (nextToken == Keyword.CLOSED_BRACKET) {
@@ -283,14 +295,17 @@ public final class SesReader {
       }
 
       Polyline polyline = new Polyline(points);
-      int halfWidth =
-          (int) Math.round(wirePath.width / (2.0 * sessionFileScaleDenominator));
+      int halfWidth = (int) Math.round(wirePath.width / (2.0 * sessionFileScaleDenominator));
 
-      int clearanceClass = board.rules.get_default_net_class().default_item_clearance_classes
-          .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
+      int clearanceClass =
+          board
+              .rules
+              .get_default_net_class()
+              .default_item_clearance_classes
+              .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
 
-      board.insert_trace(polyline, layerNo, halfWidth, netNoArr, clearanceClass,
-          FixedState.USER_FIXED);
+      board.insert_trace(
+          polyline, layerNo, halfWidth, netNoArr, clearanceClass, FixedState.USER_FIXED);
 
       wiresImported++;
       return true;
@@ -304,14 +319,16 @@ public final class SesReader {
   /**
    * Processes a {@code (via ...)} scope and inserts the via into the board.
    *
-   * @return {@code true} if the via was successfully imported; {@code false} on a parse or
-   *         geometry error (the caller increments {@link #errorsEncountered})
+   * @return {@code true} if the via was successfully imported; {@code false} on a parse or geometry
+   *     error (the caller increments {@link #errorsEncountered})
    */
   private boolean processViaScope(int[] netNoArr) throws IOException {
     Object nextToken = this.scanner.next_token();
     if (!(nextToken instanceof String padstackName)) {
-      FRLogger.warn("SesReader.processViaScope: padstack name expected at '"
-          + this.scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "SesReader.processViaScope: padstack name expected at '"
+              + this.scanner.get_scope_identifier()
+              + "'");
       return false;
     }
     this.scanner.set_scope_identifier(padstackName);
@@ -324,8 +341,10 @@ public final class SesReader {
       } else if (nextToken instanceof Integer integer) {
         location[i] = integer;
       } else {
-        FRLogger.warn("SesReader.processViaScope: number expected at '"
-            + this.scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "SesReader.processViaScope: number expected at '"
+                + this.scanner.get_scope_identifier()
+                + "'");
         return false;
       }
     }
@@ -338,8 +357,10 @@ public final class SesReader {
     }
 
     if (nextToken != Keyword.CLOSED_BRACKET) {
-      FRLogger.warn("SesReader.processViaScope: closing bracket expected at '"
-          + this.scanner.get_scope_identifier() + "'");
+      FRLogger.warn(
+          "SesReader.processViaScope: closing bracket expected at '"
+              + this.scanner.get_scope_identifier()
+              + "'");
       return false;
     }
 
@@ -355,11 +376,15 @@ public final class SesReader {
       int y = (int) Math.round(location[1] / sessionFileScaleDenominator);
       Point viaLocation = Point.get_instance(x, y);
 
-      int clearanceClass = board.rules.get_default_net_class().default_item_clearance_classes
-          .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA);
+      int clearanceClass =
+          board
+              .rules
+              .get_default_net_class()
+              .default_item_clearance_classes
+              .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA);
 
-      board.insert_via(viaPadstack, viaLocation, netNoArr, clearanceClass, FixedState.USER_FIXED,
-          true);
+      board.insert_via(
+          viaPadstack, viaLocation, netNoArr, clearanceClass, FixedState.USER_FIXED, true);
 
       viasImported++;
       return true;
@@ -380,13 +405,10 @@ public final class SesReader {
     }
   }
 
-  /**
-   * Transforms a Specctra session file into an Eagle script file.
-   */
+  /** Transforms a Specctra session file into an Eagle script file. */
   public static boolean saveSpecctraSessionSesAsEagleScriptScr(
       InputStream inputStream, OutputStream outputStream, BasicBoard board) {
     return app.freerouting.io.specctra.parser.SessionToEagle.get_instance(
         inputStream, outputStream, board);
   }
 }
-

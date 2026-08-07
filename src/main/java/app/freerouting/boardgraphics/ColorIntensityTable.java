@@ -4,7 +4,8 @@ import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 
 /**
- * The color intensities for each item type. The values are between 0 (invisible) and 1 (full intensity).
+ * The color intensities for each item type. The values are between 0 (invisible) and 1 (full
+ * intensity).
  */
 public class ColorIntensityTable implements Serializable {
 
@@ -12,7 +13,8 @@ public class ColorIntensityTable implements Serializable {
   private transient boolean missing_serialized_data_logged;
 
   /**
-   * Creates a new instance of ColorIntensityTable. The elements of p_intensities are expected between 0 and 1.
+   * Creates a new instance of ColorIntensityTable. The elements of p_intensities are expected
+   * between 0 and 1.
    */
   public ColorIntensityTable() {
     arr = new double[ObjectNames.values().length];
@@ -30,9 +32,7 @@ public class ColorIntensityTable implements Serializable {
     arr[ObjectNames.DRILL_HOLES.ordinal()] = 1.0;
   }
 
-  /**
-   * Copy constructor.
-   */
+  /** Copy constructor. */
   public ColorIntensityTable(ColorIntensityTable p_color_intensity_table) {
     this.arr = p_color_intensity_table.arr.clone();
   }
@@ -63,7 +63,8 @@ public class ColorIntensityTable implements Serializable {
 
   private void log_missing_serialized_data_once(String methodName, int p_no) {
     if (!missing_serialized_data_logged) {
-      FRLogger.warn("ColorIntensityTable." + methodName + ": p_no " + p_no + " missing in serialized data");
+      FRLogger.warn(
+          "ColorIntensityTable." + methodName + ": p_no " + p_no + " missing in serialized data");
       missing_serialized_data_logged = true;
     }
   }
@@ -76,6 +77,17 @@ public class ColorIntensityTable implements Serializable {
   }
 
   public enum ObjectNames {
-    TRACES, VIAS, PINS, CONDUCTION_AREAS, KEEPOUTS, VIA_KEEPOUTS, PLACE_KEEPOUTS, COMPONENT_OUTLINES, HILIGHT, INCOMPLETES, LENGTH_MATCHING_AREAS, DRILL_HOLES
+    TRACES,
+    VIAS,
+    PINS,
+    CONDUCTION_AREAS,
+    KEEPOUTS,
+    VIA_KEEPOUTS,
+    PLACE_KEEPOUTS,
+    COMPONENT_OUTLINES,
+    HILIGHT,
+    INCOMPLETES,
+    LENGTH_MATCHING_AREAS,
+    DRILL_HOLES
   }
 }

@@ -15,7 +15,12 @@ public class OptimizeRouteTask implements Runnable {
   private Item itemToOptimize;
   private ItemRouteResult optimizationResult;
 
-  public OptimizeRouteTask(BatchOptimizerMultiThreaded p_optimizer, RoutingJob job, int item_id, int p_pass_no, boolean p_with_preferred_directions) {
+  public OptimizeRouteTask(
+      BatchOptimizerMultiThreaded p_optimizer,
+      RoutingJob job,
+      int item_id,
+      int p_pass_no,
+      boolean p_with_preferred_directions) {
     optimizer = p_optimizer;
 
     this.job = job;
@@ -34,7 +39,9 @@ public class OptimizeRouteTask implements Runnable {
       return;
     }
 
-    optimizationResult = new BatchOptimizer(this.job).opt_route_item(itemToOptimize, with_preferred_directions, true);
+    optimizationResult =
+        new BatchOptimizer(this.job)
+            .opt_route_item(itemToOptimize, with_preferred_directions, true);
 
     boolean winning_candidate = optimizer.is_winning_candidate(this);
 
@@ -43,10 +50,31 @@ public class OptimizeRouteTask implements Runnable {
     float sec = (duration % 60000) / 1000.0F;
 
     FRLogger.debug(
-        "Finished   task #" + optimizer.get_num_tasks_finished() + " of " + optimizer.get_num_tasks() + " for item #" + itemToOptimize.get_id_no() + " on pass " + pass_no + " in " + minutes + " m "
-            + sec + "s." + " Best so far: " + winning_candidate + ", improved: " + optimizationResult.improved() + ", via reduction: " + optimizationResult.via_count_reduced() + (winning_candidate ? (
-            ", length reduction: " + (int) optimizationResult.length_reduced()) : "") + ", incomplete trace reduction: " + (optimizationResult.incomplete_count_before()
-            - optimizationResult.incomplete_count()));
+        "Finished   task #"
+            + optimizer.get_num_tasks_finished()
+            + " of "
+            + optimizer.get_num_tasks()
+            + " for item #"
+            + itemToOptimize.get_id_no()
+            + " on pass "
+            + pass_no
+            + " in "
+            + minutes
+            + " m "
+            + sec
+            + "s."
+            + " Best so far: "
+            + winning_candidate
+            + ", improved: "
+            + optimizationResult.improved()
+            + ", via reduction: "
+            + optimizationResult.via_count_reduced()
+            + (winning_candidate
+                ? (", length reduction: " + (int) optimizationResult.length_reduced())
+                : "")
+            + ", incomplete trace reduction: "
+            + (optimizationResult.incomplete_count_before()
+                - optimizationResult.incomplete_count()));
 
     if (!winning_candidate) {
       clean();

@@ -8,14 +8,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * A Polygon is a list of points in the plane, where no 2 consecutive points may be equal and no 3 consecutive points collinear.
+ * A Polygon is a list of points in the plane, where no 2 consecutive points may be equal and no 3
+ * consecutive points collinear.
  */
 public class Polygon implements Serializable {
 
   private final Collection<Point> corners;
 
   /**
-   * Creates a polygon from p_point_arr. Multiple points and points, which are collinear with its previous and next point will be removed.
+   * Creates a polygon from p_point_arr. Multiple points and points, which are collinear with its
+   * previous and next point will be removed.
    */
   public Polygon(Point[] p_point_arr) {
     corners = new LinkedList<>();
@@ -69,9 +71,7 @@ public class Polygon implements Serializable {
     }
   }
 
-  /**
-   * returns the array of corners of this polygon
-   */
+  /** returns the array of corners of this polygon */
   public Point[] corner_array() {
     int corner_count = corners.size();
     Point[] result = new Point[corner_count];
@@ -82,9 +82,7 @@ public class Polygon implements Serializable {
     return result;
   }
 
-  /**
-   * Reverts the order of the corners of this polygon.
-   */
+  /** Reverts the order of the corners of this polygon. */
   public Polygon revert_corners() {
     Point[] corner_arr = corner_array();
     Point[] reverse_corner_arr = new Point[corner_arr.length];
@@ -95,7 +93,9 @@ public class Polygon implements Serializable {
   }
 
   /**
-   * Returns the winding number of this polygon, treated as closed. It will be {@literal >} 0, if the corners are in counterclock sense, and {@literal <} 0, if the corners are in clockwise sense.
+   * Returns the winding number of this polygon, treated as closed. It will be {@literal >} 0, if
+   * the corners are in counterclock sense, and {@literal <} 0, if the corners are in clockwise
+   * sense.
    */
   public int winding_number_after_closing() {
     Point[] corner_arr = corner_array();

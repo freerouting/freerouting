@@ -7,14 +7,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-/**
- * Subwindow of the board frame, whose location and visibility can be saved and read from disc.
- */
+/** Subwindow of the board frame, whose location and visibility can be saved and read from disc. */
 public abstract class BoardSavableSubWindow extends BoardSubWindow {
 
-  /**
-   * Reads the data of this frame from disc. Returns false, if the reading failed.
-   */
+  /** Reads the data of this frame from disc. Returns false, if the reading failed. */
   public boolean read(ObjectInputStream p_object_stream) {
     try {
       SavedAttributes saved_attributes = (SavedAttributes) p_object_stream.readObject();
@@ -27,9 +23,7 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
     }
   }
 
-  /**
-   * Saves this frame to disk.
-   */
+  /** Saves this frame to disk. */
   public void save(ObjectOutputStream p_object_stream) {
     SavedAttributes saved_attributes = new SavedAttributes(this.getBounds(), this.isVisible());
 
@@ -40,17 +34,13 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
     }
   }
 
-  /**
-   * Refresh the displayed values in this window. To be overwritten in derived classes.
-   */
-  public void refresh() {
-  }
+  /** Refresh the displayed values in this window. To be overwritten in derived classes. */
+  public void refresh() {}
 
   /**
    * Called when the window has been moved to a different display with a different
-   * GraphicsConfiguration (e.g. different DPI scaling). Re-packs the window and
-   * refreshes displayed values so that component sizes and font metrics are
-   * recomputed for the new display.
+   * GraphicsConfiguration (e.g. different DPI scaling). Re-packs the window and refreshes displayed
+   * values so that component sizes and font metrics are recomputed for the new display.
    */
   @Override
   protected void onGraphicsConfigurationChanged() {
@@ -60,9 +50,7 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
     repaint();
   }
 
-  /**
-   * Type for attributes of this class, which are saved to an Objectstream.
-   */
+  /** Type for attributes of this class, which are saved to an Objectstream. */
   private static class SavedAttributes implements Serializable {
 
     public final Rectangle bounds;

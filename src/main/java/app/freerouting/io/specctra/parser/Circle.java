@@ -6,15 +6,14 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.io.CoordinateTransform;
 import java.io.IOException;
 
-/**
- * Class for reading and writing circle scopes from dsn-files.
- */
+/** Class for reading and writing circle scopes from dsn-files. */
 public class Circle extends Shape {
 
   public final double[] coor;
 
   /**
-   * Creates a new circle from the input parameters. p_coor is an array of dimension 3. p_coor[0] is the radius of the circle, p_coor[1] is the x coordinate of the circle, p_coor[2] is the y
+   * Creates a new circle from the input parameters. p_coor is an array of dimension 3. p_coor[0] is
+   * the radius of the circle, p_coor[1] is the x coordinate of the circle, p_coor[2] is the y
    * coordinate of the circle.
    */
   public Circle(Layer p_layer, double[] p_coor) {
@@ -31,7 +30,8 @@ public class Circle extends Shape {
   }
 
   @Override
-  public app.freerouting.geometry.planar.Shape transform_to_board(CoordinateTransform p_coordinate_transform) {
+  public app.freerouting.geometry.planar.Shape transform_to_board(
+      CoordinateTransform p_coordinate_transform) {
     double[] location = new double[2];
     location[0] = coor[1];
     location[1] = coor[2];
@@ -41,13 +41,15 @@ public class Circle extends Shape {
   }
 
   @Override
-  public app.freerouting.geometry.planar.Shape transform_to_board_rel(CoordinateTransform p_coordinate_transform) {
+  public app.freerouting.geometry.planar.Shape transform_to_board_rel(
+      CoordinateTransform p_coordinate_transform) {
     int[] new_coor = new int[3];
     new_coor[0] = (int) Math.round(p_coordinate_transform.dsn_to_board(coor[0]) / 2);
     for (int i = 1; i < 3; i++) {
       new_coor[i] = (int) Math.round(p_coordinate_transform.dsn_to_board(coor[i]));
     }
-    return new app.freerouting.geometry.planar.Circle(new IntPoint(new_coor[1], new_coor[2]), new_coor[0]);
+    return new app.freerouting.geometry.planar.Circle(
+        new IntPoint(new_coor[1], new_coor[2]), new_coor[0]);
   }
 
   @Override
@@ -61,7 +63,8 @@ public class Circle extends Shape {
   }
 
   @Override
-  public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier_type) throws IOException {
+  public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier_type)
+      throws IOException {
     p_file.new_line();
     p_file.write("(circle ");
     p_identifier_type.write(this.layer.name, p_file);
@@ -73,7 +76,8 @@ public class Circle extends Shape {
   }
 
   @Override
-  public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type) throws IOException {
+  public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type)
+      throws IOException {
     p_file.new_line();
     p_file.write("(circle ");
     p_identifier_type.write(this.layer.name, p_file);

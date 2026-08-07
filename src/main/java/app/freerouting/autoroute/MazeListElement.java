@@ -8,47 +8,43 @@ import app.freerouting.geometry.planar.FloatLine;
  */
 public class MazeListElement implements Comparable<MazeListElement> {
 
-  /**
-   * The door or drill belonging to this MazeListElement
-   */
+  /** The door or drill belonging to this MazeListElement */
   final ExpandableObject door;
-  /**
-   * The section number of the door (or the layer of the drill)
-   */
+
+  /** The section number of the door (or the layer of the drill) */
   final int section_no_of_door;
-  /**
-   * The door, from which this door was expanded
-   */
+
+  /** The door, from which this door was expanded */
   final ExpandableObject backtrack_door;
-  /**
-   * The section number of the backtrack door
-   */
+
+  /** The section number of the backtrack door */
   final int section_no_of_backtrack_door;
-  /**
-   * The weighted distance to the start of the expansion
-   */
+
+  /** The weighted distance to the start of the expansion */
   final double expansion_value;
+
   /**
-   * The expansion value plus the shortest distance to a destination. The list is
-   * sorted in ascending order by this value.
+   * The expansion value plus the shortest distance to a destination. The list is sorted in
+   * ascending order by this value.
    */
   final double sorting_value;
-  /**
-   * The next room, which will be expanded from this maze search element
-   */
+
+  /** The next room, which will be expanded from this maze search element */
   final CompleteExpansionRoom next_room;
+
   /**
-   * Point of the region of the expansion door, which has the shortest distance to
-   * the backtrack door.
+   * Point of the region of the expansion door, which has the shortest distance to the backtrack
+   * door.
    */
   final FloatLine shape_entry;
+
   final boolean room_ripped;
   final MazeSearchElement.Adjustment adjustment;
   final boolean already_checked;
+
   /**
-   * The ripup cost paid to enter the next_room through this door.
-   * Non-zero only when room_ripped is true and this element was directly created
-   * by expand_to_door_section with a positive add_costs.
+   * The ripup cost paid to enter the next_room through this door. Non-zero only when room_ripped is
+   * true and this element was directly created by expand_to_door_section with a positive add_costs.
    */
   int ripup_cost;
 
@@ -109,7 +105,8 @@ public class MazeListElement implements Comparable<MazeListElement> {
     if (this.section_no_of_door > p_other.section_no_of_door) {
       return 1;
     }
-    // If truly equal (same door, same section, same values), return 0 to avoid duplicates in the set.
+    // If truly equal (same door, same section, same values), return 0 to avoid duplicates in the
+    // set.
     return 0;
   }
 }
