@@ -76,7 +76,7 @@ public final class KiCadJsonWriter {
       KiCadBoardJson.NetJson netJson = new KiCadBoardJson.NetJson();
       netJson.id = net.netNumber;
       netJson.name = net.name;
-      netJson.className = net.get_class() != null ? net.get_class().get_name() : "default";
+      netJson.className = net.getNetClass() != null ? net.getNetClass().get_name() : "default";
       netJson.containsPlane = net.contains_plane();
       boardJson.nets.add(netJson);
     }
@@ -112,7 +112,7 @@ public final class KiCadJsonWriter {
 
       for (int n = 1; n <= board.rules.nets.max_net_no(); n++) {
         Net net = board.rules.nets.get(n);
-        if (net != null && net.get_class() == netClass) {
+        if (net != null && net.getNetClass() == netClass) {
           ncJson.netNames.add(net.name);
         }
       }

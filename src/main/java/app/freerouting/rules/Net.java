@@ -63,7 +63,7 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   }
 
   /** Returns the class of this net. */
-  public NetClass get_class() {
+  public NetClass getNetClass() {
     return this.netClass;
   }
 

@@ -111,7 +111,7 @@ class DsnReaderTest {
 
     assertNull(board.rules.netClasses.get("kicad_default"));
     assertNotNull(board.rules.netClasses.get("default"));
-    assertEquals("default", board.rules.nets.get("/SCL", 1).get_class().get_name());
+    assertEquals("default", board.rules.nets.get("/SCL", 1).getNetClass().get_name());
   }
 
   @Test

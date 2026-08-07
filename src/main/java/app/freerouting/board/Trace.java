@@ -255,7 +255,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     Nets nets = this.board.rules.nets;
     for (int currNetNo : this.netNoArr) {
       if (Nets.is_normal_net_no(currNetNo)) {
-        if (nets.get(currNetNo).get_class().is_shove_fixed()) {
+        if (nets.get(currNetNo).getNetClass().is_shove_fixed()) {
           return true;
         }
       }
@@ -313,8 +313,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     boolean ignoreAreas = false;
     if (this.netNoArr.length > 0) {
       Net currNet = this.board.rules.nets.get(this.netNoArr[0]);
-      if (currNet != null && currNet.get_class() != null) {
-        ignoreAreas = currNet.get_class().get_ignore_cycles_with_areas();
+      if (currNet != null && currNet.getNetClass() != null) {
+        ignoreAreas = currNet.getNetClass().get_ignore_cycles_with_areas();
       }
     }
     for (Item currContact : startContacts) {

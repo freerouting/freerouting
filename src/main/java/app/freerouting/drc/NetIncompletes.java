@@ -255,8 +255,8 @@ public class NetIncompletes {
   /** Recalculates the length violations. Return false, if the length violation has not changed. */
   boolean calc_length_violation() {
     double oldViolation = this.lengthViolation;
-    double maxLength = this.net.get_class().get_maximum_trace_length();
-    double minLength = this.net.get_class().get_minimum_trace_length();
+    double maxLength = this.net.getNetClass().get_maximum_trace_length();
+    double minLength = this.net.getNetClass().get_minimum_trace_length();
     if (maxLength <= 0 && minLength <= 0) {
       this.lengthViolation = 0;
       return false;

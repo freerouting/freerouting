@@ -78,7 +78,7 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     public String toString() {
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
-      NetClass netClass = this.net.get_class();
+      NetClass netClass = this.net.getNetClass();
       float length = (float) coordinateTransform.board_to_user(this.net.get_trace_length());
       if (violationLength > 0) {
         return tm.getText(

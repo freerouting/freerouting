@@ -101,7 +101,7 @@ public class Network extends ScopeKeyword {
     final int netsPerRow = 8;
     int netCounter = 0;
     for (int i = 1; i <= p_par.board.rules.nets.max_net_no(); i++) {
-      if (p_par.board.rules.nets.get(i).get_class() == p_net_class) {
+      if (p_par.board.rules.nets.get(i).getNetClass() == p_net_class) {
         if (netCounter % netsPerRow == 0) {
           p_par.file.new_line();
         } else {
@@ -1012,7 +1012,7 @@ public class Network extends ScopeKeyword {
         boardNet = null;
       }
       if (boardNet != null) {
-        netClass = boardNet.get_class();
+        netClass = boardNet.getNetClass();
       } else {
         netClass = routingBoard.rules.get_default_net_class();
       }

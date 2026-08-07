@@ -21,7 +21,7 @@ public class RenameObjectCollidingMethods extends Recipe {
 
   @Override
   public String getDescription() {
-    return "Renames Net.get_class() to getNetClass() to avoid clashing with Object.getClass().";
+    return "Renames Net.getNetClass() to getNetClass() to avoid clashing with Object.getClass().";
   }
 
   @Override
@@ -37,7 +37,8 @@ public class RenameObjectCollidingMethods extends Recipe {
   @Override
   public TreeVisitor<?, ExecutionContext> getVisitor() {
     return new ChangeMethodName(
-            "app.freerouting.rules.Net get_class()", "getNetClass", false, false)
+            "app.freerouting.rules.Net getNetClass()", "getNetClass", false, false)
         .getVisitor();
   }
 }
+

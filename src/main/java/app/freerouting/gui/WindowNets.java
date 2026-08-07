@@ -152,7 +152,7 @@ public class WindowNets extends WindowObjectListWithFilter {
                         + " ("
                         + net.name
                         + ") - Class: "
-                        + net.get_class().get_name());
+                        + net.getNetClass().get_name());
               }
               return c;
             }

@@ -679,8 +679,8 @@ public class PolylineTrace extends Trace implements Serializable {
           boolean ignoreAreas = false;
           if (this.netNoArr.length > 0) {
             Net currNet = this.board.rules.nets.get(this.netNoArr[0]);
-            if (currNet != null && currNet.get_class() != null) {
-              ignoreAreas = currNet.get_class().get_ignore_cycles_with_areas();
+            if (currNet != null && currNet.getNetClass() != null) {
+              ignoreAreas = currNet.getNetClass().get_ignore_cycles_with_areas();
             }
           }
           if (!ignoreAreas
@@ -959,7 +959,7 @@ public class PolylineTrace extends Trace implements Serializable {
       return false;
     }
     if (this.netNoArr.length > 0) {
-      if (!this.board.rules.nets.get(this.netNoArr[0]).get_class().get_pull_tight()) {
+      if (!this.board.rules.nets.get(this.netNoArr[0]).getNetClass().get_pull_tight()) {
         return false;
       }
     }

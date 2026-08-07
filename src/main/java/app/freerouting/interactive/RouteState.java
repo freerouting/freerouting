@@ -129,8 +129,8 @@ public class RouteState extends InteractiveState {
     // Switch to stitch mode for nets, which are shove fixed.
     boolean isStitchRoute =
         p_board_handling.getInteractiveSettings().get_is_stitch_route()
-            || currNet.get_class().is_shove_fixed()
-            || !currNet.get_class().get_pull_tight();
+            || currNet.getNetClass().is_shove_fixed()
+            || !currNet.getNetClass().get_pull_tight();
     routingBoard.generate_snapshot();
     RouteState newInstance;
     if (isStitchRoute) {

@@ -190,7 +190,7 @@ public class AutorouteControl {
     Net currNet = p_board.rules.nets.get(p_net_no);
     NetClass currNetClass;
     if (currNet != null) {
-      currNetClass = currNet.get_class();
+      currNetClass = currNet.getNetClass();
       traceClearanceClassNo = currNetClass.get_trace_clearance_class();
       viaRule = currNetClass.get_via_rule();
     } else {

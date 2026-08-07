@@ -299,8 +299,8 @@ class KiCadJsonReaderTest {
     assertEquals(200, defaultClass.get_trace_half_width(0));
     assertEquals(1, defaultClass.get_trace_clearance_class());
     assertEquals(254, board.rules.clearanceMatrix.get_value(1, 1, 0, false));
-    assertEquals("default", board.rules.nets.get("SIG1", 1).get_class().get_name());
-    assertEquals("Power", board.rules.nets.get("VCC", 1).get_class().get_name());
+    assertEquals("default", board.rules.nets.get("SIG1", 1).getNetClass().get_name());
+    assertEquals("Power", board.rules.nets.get("VCC", 1).getNetClass().get_name());
     assertEquals(2, board.library.via_padstack_count());
   }
 

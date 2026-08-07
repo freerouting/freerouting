@@ -1242,7 +1242,7 @@ public abstract class Item
   public boolean has_ignored_nets() {
     for (int netNo : this.netNoArr) {
       Net net = this.board.rules.nets.get(netNo);
-      if (net.get_class().isIgnoredByAutorouter) {
+      if (net.getNetClass().isIgnoredByAutorouter) {
         return true;
       }
     }

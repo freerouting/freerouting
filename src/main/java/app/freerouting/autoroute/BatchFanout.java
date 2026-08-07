@@ -230,7 +230,7 @@ public final class BatchFanout {
 
         app.freerouting.rules.Net net = this.routingBoard.rules.nets.get(netNo);
         if (net != null) {
-          app.freerouting.rules.NetClass netClass = net.get_class();
+          app.freerouting.rules.NetClass netClass = net.getNetClass();
           app.freerouting.rules.ViaRule viaRule = netClass != null ? netClass.get_via_rule() : null;
           boolean hasBoardVias =
               !this.routingBoard.rules.viaRules.isEmpty()

@@ -499,8 +499,8 @@ public class Route {
     FloatPoint fromCorner = this.prevCorner.to_float();
     if (nearestTargetPoint != null && prevCorner != null) {
       boolean currLengthMatchingOk = true; // used for drawing the incomplete as violation
-      double maxTraceLength = currNet.get_class().get_maximum_trace_length();
-      double minTraceLength = currNet.get_class().get_minimum_trace_length();
+      double maxTraceLength = currNet.getNetClass().get_maximum_trace_length();
+      double minTraceLength = currNet.getNetClass().get_minimum_trace_length();
       double lengthMatchingColorIntensity =
           p_graphics_context.get_length_matching_area_color_intensity();
       if (maxTraceLength > 0 || minTraceLength > 0 && lengthMatchingColorIntensity > 0) {

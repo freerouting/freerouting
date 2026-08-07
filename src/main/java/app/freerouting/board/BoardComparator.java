@@ -268,8 +268,8 @@ public class BoardComparator {
                 "[-] Net '%s' pin count mismatch: Board 1 = %d, Board 2 = %d\n",
                 netName, n1.get_pins().size(), n2.get_pins().size()));
       }
-      String class1 = n1.get_class().get_name();
-      String class2 = n2.get_class().get_name();
+      String class1 = n1.getNetClass().get_name();
+      String class2 = n2.getNetClass().get_name();
       if (!Objects.equals(class1, class2)) {
         equal = false;
         report.append(

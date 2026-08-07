@@ -846,7 +846,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (currNet == null) {
       return true;
     }
-    NetClass currNetClass = currNet.get_class();
+    NetClass currNetClass = currNet.getNetClass();
     if (currNetClass == null) {
       return true;
     }
@@ -877,7 +877,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (interactiveSettings.get_manual_rule_selection()) {
       result = interactiveSettings.get_manual_trace_clearance_class();
     } else {
-      result = board.rules.nets.get(p_net_no).get_class().get_trace_clearance_class();
+      result = board.rules.nets.get(p_net_no).getNetClass().get_trace_clearance_class();
     }
     return result;
   }
@@ -907,7 +907,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
       result = board.rules.viaRules.get(this.interactiveSettings.get_manual_via_rule_index());
     }
     if (result == null) {
-      result = board.rules.nets.get(p_net_no).get_class().get_via_rule();
+      result = board.rules.nets.get(p_net_no).getNetClass().get_via_rule();
     }
     return result;
   }

@@ -69,7 +69,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
   public void refresh() {
     // Reinsert the net class column.
     for (int i = 0; i < tableModel.getRowCount(); i++) {
-      tableModel.setValueAt(((Net) tableModel.getValueAt(i, 0)).get_class(), i, 1);
+      tableModel.setValueAt(((Net) tableModel.getValueAt(i, 0)).getNetClass(), i, 1);
     }
 
     // Reinsert the net rule combobox because a rule may have  been added or deleted.
@@ -131,7 +131,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
       Arrays.sort(sortedArr);
       for (int i = 0; i < data.length; i++) {
         this.data[i][0] = sortedArr[i];
-        this.data[i][1] = sortedArr[i].get_class();
+        this.data[i][1] = sortedArr[i].getNetClass();
       }
     }
 

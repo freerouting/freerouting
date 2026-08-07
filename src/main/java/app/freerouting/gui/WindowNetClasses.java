@@ -371,7 +371,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       // Check, if netRule is used in a net of the net list
       for (int i = 1; i < boardRules.nets.max_net_no(); i++) {
         Net currNet = boardRules.nets.get(i);
-        if (currNet.get_class() == netRule) {
+        if (currNet.getNetClass() == netRule) {
           boardFrame.screenMessages.set_status_message(
               tm.getText("net_class_not_removed_in_use_message", currNet.name));
           return;
@@ -414,7 +414,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       for (Item currItem : boardItems) {
         boolean itemMatches = false;
         for (int i = 0; i < currItem.net_count(); i++) {
-          NetClass currNetClass = nets.get(currItem.get_net_no(i)).get_class();
+          NetClass currNetClass = nets.get(currItem.get_net_no(i)).getNetClass();
           if (currNetClass == null) {
             continue;
           }
@@ -456,7 +456,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       int maxNetNo = boardRules.nets.max_net_no();
       for (int i = 1; i <= maxNetNo; i++) {
         boardHandling.set_incompletes_filter(i, true);
-        NetClass currNetClass = boardRules.nets.get(i).get_class();
+        NetClass currNetClass = boardRules.nets.get(i).getNetClass();
         for (int j = 0; j < selectedClassArr.length; j++) {
           if (currNetClass == selectedClassArr[j]) {
             boardHandling.set_incompletes_filter(i, false);
@@ -488,7 +488,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       int maxNetNo = boardRules.nets.max_net_no();
       for (int i = 1; i <= maxNetNo; i++) {
         Net currNet = boardRules.nets.get(i);
-        NetClass currNetClass = currNet.get_class();
+        NetClass currNetClass = currNet.getNetClass();
         for (int j = 0; j < selectedClassArr.length; j++) {
           if (currNetClass == selectedClassArr[j]) {
             containedNets.add(currNet);

@@ -425,7 +425,7 @@ public class Wiring extends ScopeKeyword {
     int currIndex = 0;
     for (app.freerouting.rules.Net currNet : foundNets) {
       netNoArr[currIndex] = currNet.netNumber;
-      netClass = currNet.get_class();
+      netClass = currNet.getNetClass();
       ++currIndex;
     }
     int clearanceClassNo = -1;
@@ -670,7 +670,7 @@ public class Wiring extends ScopeKeyword {
       int currIndex = 0;
       for (app.freerouting.rules.Net currNet : foundNets) {
         netNoArr[currIndex] = currNet.netNumber;
-        netClass = currNet.get_class();
+        netClass = currNet.getNetClass();
       }
       int clearanceClassNo = -1;
       if (clearanceClassName != null) {

@@ -1080,7 +1080,7 @@ public class Structure extends ScopeKeyword {
         } else {
           clearanceClassNo =
               currNet
-                  .get_class()
+                  .getNetClass()
                   .defaultItemClearanceClasses
                   .get(DefaultItemClearanceClasses.ItemClass.AREA);
         }
