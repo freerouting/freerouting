@@ -1,0 +1,11 @@
+extends: default
+
+rules:
+  line-length: disable
+  comments:
+    min-spaces-from-content: 1
+  document-start: disable
+  truthy: disable
+
+ignore: |
+  src_v19/

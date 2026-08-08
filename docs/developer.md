@@ -73,6 +73,44 @@ Supported locales: **source** `en`; **targets** `ar`, `bn`, `cs`, `de`, `es`, `f
 
 CI runs `python scripts/i18n/extract-context.py --check` on pull requests to ensure committed context metadata matches the English sources (no API key required).
 
+## Code Quality & Pre-commit Automation
+
+Freerouting uses **Spotless** (Google Java Style), **Checkstyle 13.9.0**, and **pre-commit** hooks to ensure code consistency across all assets (Java sources, shell scripts, Markdown, YAML, JSON).
+
+### Installing & Setting Up Pre-commit Hooks
+
+1. Install [pre-commit](https://pre-commit.com/):
+   ```bash
+   pip install pre-commit
+   ```
+
+2. Install the git hooks in your local workspace:
+   ```bash
+   pre-commit install
+   ```
+
+3. Run pre-commit checks manually across all files:
+   ```bash
+   pre-commit run --all-files
+   ```
+
+### Gradle Code Quality Commands
+
+- **Run all verification checks (Spotless + Checkstyle 13.9.0 + Unit Tests)**:
+  ```bash
+  ./gradlew check
+  ```
+
+- **Automatically format Java sources with Spotless (Google Java Style)**:
+  ```bash
+  ./gradlew spotlessApply
+  ```
+
+- **Run Checkstyle independently**:
+  ```bash
+  ./gradlew checkstyleMain
+  ```
+
 ## How to create a new release
 
 Creating a release takes about half an hour if everything goes according to the plan. Usually it doesn't, so free up ~3 hours for this.
