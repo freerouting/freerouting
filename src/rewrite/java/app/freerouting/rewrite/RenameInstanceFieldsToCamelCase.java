@@ -63,8 +63,9 @@ public class RenameInstanceFieldsToCamelCase extends ScanningRecipe<RenameInstan
 
   @Override
   public String getDescription() {
-    return "Reformat instance field names to lowerCamelCase at any access level. "
-        + "Skips static final constants and Lombok-annotated types.";
+    return """
+        Reformat instance field names to lowerCamelCase at any access level. \
+        Skips static final constants and Lombok-annotated types.""";
   }
 
   @Override

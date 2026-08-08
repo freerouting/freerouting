@@ -288,63 +288,57 @@ public class RoutingFixtureTest {
       if (maxDuration != null) {
         assertTrue(
             actualDuration != null && actualDuration.compareTo(maxDuration) < 0,
-            String.format(
-                "'%s' should complete within %s, but took %s.",
-                boardName,
-                FRLogger.formatDuration(maxDuration.toSeconds()),
-                actualDuration != null
-                    ? FRLogger.formatDuration(actualDuration.toSeconds())
-                    : "N/A"));
+            "'%s' should complete within %s, but took %s."
+                .formatted(
+                    boardName,
+                    FRLogger.formatDuration(maxDuration.toSeconds()),
+                    actualDuration != null
+                        ? FRLogger.formatDuration(actualDuration.toSeconds())
+                        : "N/A"));
       }
 
       if (minPasses != null) {
         assertTrue(
             actualPasses >= minPasses,
-            String.format(
-                "'%s' should have performed at least %d routing pass(es), but only had %d.",
-                boardName, minPasses, actualPasses));
+            "'%s' should have performed at least %d routing pass(es), but only had %d."
+                .formatted(boardName, minPasses, actualPasses));
       }
 
       if (maxPasses != null) {
         assertTrue(
             actualPasses <= maxPasses,
-            String.format(
-                "'%s' should complete within at most %d routing pass(es), but required %d.",
-                boardName, maxPasses, actualPasses));
+            "'%s' should complete within at most %d routing pass(es), but required %d."
+                .formatted(boardName, maxPasses, actualPasses));
       }
 
       if (maxIncompleteConnections != null) {
         assertTrue(
             actualIncomplete <= maxIncompleteConnections,
-            String.format(
-                "'%s' should have at most %d unrouted connection(s), but had %d.",
-                boardName, maxIncompleteConnections, actualIncomplete));
+            "'%s' should have at most %d unrouted connection(s), but had %d."
+                .formatted(boardName, maxIncompleteConnections, actualIncomplete));
       }
 
       if (exactIncompleteConnections != null) {
         assertEquals(
             exactIncompleteConnections,
             actualIncomplete,
-            String.format(
-                "'%s' should have exactly %d unrouted connection(s).",
-                boardName, exactIncompleteConnections));
+            "'%s' should have exactly %d unrouted connection(s)."
+                .formatted(boardName, exactIncompleteConnections));
       }
 
       if (maxClearanceViolations != null) {
         assertTrue(
             actualViolations <= maxClearanceViolations,
-            String.format(
-                "'%s' should have at most %d clearance violation(s), but had %d.",
-                boardName, maxClearanceViolations, actualViolations));
+            "'%s' should have at most %d clearance violation(s), but had %d."
+                .formatted(boardName, maxClearanceViolations, actualViolations));
       }
 
       if (exactClearanceViolations != null) {
         assertEquals(
             exactClearanceViolations,
             actualViolations,
-            String.format(
-                "'%s' should have exactly %d clearance violation(s).",
-                boardName, exactClearanceViolations));
+            "'%s' should have exactly %d clearance violation(s)."
+                .formatted(boardName, exactClearanceViolations));
       }
     }
   }

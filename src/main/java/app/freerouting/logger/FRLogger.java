@@ -394,7 +394,7 @@ public final class FRLogger {
       if (granularTraceEnabled
           && (impactedItems.isEmpty() || DebugControl.getInstance().isInterested(impactedItems))) {
         String formattedMessage =
-            String.format("[%s] [%s] %s: %s", method, operation, message, impactedItems);
+            "[%s] [%s] %s: %s".formatted(method, operation, message, impactedItems);
         logger.trace(formattedMessage);
       }
     }

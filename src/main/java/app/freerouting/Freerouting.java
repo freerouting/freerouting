@@ -959,11 +959,12 @@ public class Freerouting {
         && globalSettings.mcpServerSettings != null
         && Boolean.TRUE.equals(globalSettings.mcpServerSettings.isStdioMode)) {
       FRLogger.warn(
-          "[startup] 'mcp_server.stdio=true' was found in freerouting.json but is being ignored. "
-              + "The stdio redirect must be requested before logging is initialised and therefore "
-              + "can only be set via the '--mcp_server.stdio=true' CLI argument or the "
-              + "'FREEROUTING__MCP_SERVER__STDIO=true' environment variable. "
-              + "The JSON setting has no effect and the MCP stdio transport will NOT work correctly.");
+          """
+          [startup] 'mcp_server.stdio=true' was found in freerouting.json but is being ignored. \
+          The stdio redirect must be requested before logging is initialised and therefore \
+          can only be set via the '--mcp_server.stdio=true' CLI argument or the \
+          'FREEROUTING__MCP_SERVER__STDIO=true' environment variable. \
+          The JSON setting has no effect and the MCP stdio transport will NOT work correctly.""");
     }
 
     if ((globalSettings == null)

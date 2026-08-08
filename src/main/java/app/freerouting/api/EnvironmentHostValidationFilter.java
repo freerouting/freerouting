@@ -104,7 +104,7 @@ public class EnvironmentHostValidationFilter implements ContainerRequestFilter {
     if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) {
       FRLogger.warn(
           "Request to '" + path + "' rejected: invalid " + HEADER_NAME + " value: '" + host + "'.");
-      abortWithBadRequest(requestContext, String.format(INVALID_FORMAT_MESSAGE, host));
+      abortWithBadRequest(requestContext, INVALID_FORMAT_MESSAGE.formatted(host));
     }
   }
 

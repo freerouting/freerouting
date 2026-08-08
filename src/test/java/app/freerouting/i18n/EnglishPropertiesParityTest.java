@@ -778,7 +778,7 @@ class EnglishPropertiesParityTest {
 
   private static String findEnumBody(String source, String enumType) {
     Pattern enumPattern =
-        Pattern.compile(String.format("(?s)\\benum\\s+%s\\s*\\{", Pattern.quote(enumType)));
+        Pattern.compile("(?s)\\benum\\s+%s\\s*\\{".formatted(Pattern.quote(enumType)));
     Matcher matcher = enumPattern.matcher(source);
     if (matcher.find()) {
       int start = matcher.end();
@@ -811,7 +811,7 @@ class EnglishPropertiesParityTest {
     }
 
     Pattern enumPattern =
-        Pattern.compile(String.format("(?s)\\benum\\s+%s\\s*\\{", Pattern.quote(enumType)));
+        Pattern.compile("(?s)\\benum\\s+%s\\s*\\{".formatted(Pattern.quote(enumType)));
     for (Path sourceFile : sourceFilesCache.values()) {
       String enumSource = Files.readString(sourceFile);
       if (!enumPattern.matcher(enumSource).find()) {

@@ -164,27 +164,28 @@ public final class BoardScoreBreakdown {
    * Returns a concise human-readable summary of this breakdown, useful for logging and test output.
    */
   public String toSummaryString() {
-    return String.format(
-        "score=%.1f/1000 (raw=%.0f/%.0f) | "
-            + "unrouted=%d×%.0f=%.0f | violations=%d×%.0f=%.0f | bends=%d×%.1f=%.0f | "
-            + "length=%.1fmm×%.2f=%.0f | vias=%d×%.0f=%.0f",
-        normalizedScore,
-        rawScore,
-        maximumScore,
-        incompleteConnections,
-        weights.unroutedNetPenalty,
-        unroutedConnectionsPenalty,
-        clearanceViolations,
-        weights.clearanceViolationPenalty,
-        clearanceViolationsPenalty,
-        bendCount,
-        weights.bendPenalty,
-        bendsPenalty,
-        totalTraceLengthMm,
-        weights.defaultPreferredDirectionTraceCost,
-        traceLengthCost,
-        viaCount,
-        (double) weights.viaCosts,
-        viasCost);
+    return """
+        score=%.1f/1000 (raw=%.0f/%.0f) | \
+        unrouted=%d×%.0f=%.0f | violations=%d×%.0f=%.0f | bends=%d×%.1f=%.0f | \
+        length=%.1fmm×%.2f=%.0f | vias=%d×%.0f=%.0f"""
+        .formatted(
+            normalizedScore,
+            rawScore,
+            maximumScore,
+            incompleteConnections,
+            weights.unroutedNetPenalty,
+            unroutedConnectionsPenalty,
+            clearanceViolations,
+            weights.clearanceViolationPenalty,
+            clearanceViolationsPenalty,
+            bendCount,
+            weights.bendPenalty,
+            bendsPenalty,
+            totalTraceLengthMm,
+            weights.defaultPreferredDirectionTraceCost,
+            traceLengthCost,
+            viaCount,
+            (double) weights.viaCosts,
+            viasCost);
   }
 }

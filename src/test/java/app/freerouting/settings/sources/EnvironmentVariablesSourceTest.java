@@ -77,10 +77,12 @@ class EnvironmentVariablesSourceTest {
 
   @Test
   void multipleSettings() {
-    Map<String, String> env = new HashMap<>();
-    env.put("FREEROUTING__ROUTER__MAX_PASSES", "50");
-    env.put("FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS", "4");
-    env.put("FREEROUTING__ROUTER__VIAS_ALLOWED", "true");
+    Map<String, String> env =
+        new HashMap<>(
+            Map.of(
+                "FREEROUTING__ROUTER__MAX_PASSES", "50",
+                "FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS", "4",
+                "FREEROUTING__ROUTER__VIAS_ALLOWED", "true"));
 
     EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
     RouterSettings settings = source.getSettings();
@@ -94,11 +96,13 @@ class EnvironmentVariablesSourceTest {
 
   @Test
   void ignoresNonRouterVariables() {
-    Map<String, String> env = new HashMap<>();
-    env.put("FREEROUTING__GUI__INPUT_DIRECTORY", "/some/path");
-    env.put("FREEROUTING__ROUTER__MAX_PASSES", "100");
-    env.put("PATH", "/usr/bin");
-    env.put("HOME", "/home/user");
+    Map<String, String> env =
+        new HashMap<>(
+            Map.of(
+                "FREEROUTING__GUI__INPUT_DIRECTORY", "/some/path",
+                "FREEROUTING__ROUTER__MAX_PASSES", "100",
+                "PATH", "/usr/bin",
+                "HOME", "/home/user"));
 
     EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
     RouterSettings settings = source.getSettings();
@@ -111,9 +115,11 @@ class EnvironmentVariablesSourceTest {
 
   @Test
   void ignoresVariablesWithoutPrefix() {
-    Map<String, String> env = new HashMap<>();
-    env.put("MAX_PASSES", "100");
-    env.put("ROUTER__MAX_PASSES", "200");
+    Map<String, String> env =
+        new HashMap<>(
+            Map.of(
+                "MAX_PASSES", "100",
+                "ROUTER__MAX_PASSES", "200"));
 
     EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
     RouterSettings settings = source.getSettings();
@@ -126,9 +132,11 @@ class EnvironmentVariablesSourceTest {
 
   @Test
   void invalidPropertyName() {
-    Map<String, String> env = new HashMap<>();
-    env.put("FREEROUTING__ROUTER__INVALID_PROPERTY", "value");
-    env.put("FREEROUTING__ROUTER__MAX_PASSES", "100");
+    Map<String, String> env =
+        new HashMap<>(
+            Map.of(
+                "FREEROUTING__ROUTER__INVALID_PROPERTY", "value",
+                "FREEROUTING__ROUTER__MAX_PASSES", "100"));
 
     EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
     RouterSettings settings = source.getSettings();
@@ -155,9 +163,11 @@ class EnvironmentVariablesSourceTest {
 
   @Test
   void getParsedVariables() {
-    Map<String, String> env = new HashMap<>();
-    env.put("FREEROUTING__ROUTER__MAX_PASSES", "100");
-    env.put("FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS", "4");
+    Map<String, String> env =
+        new HashMap<>(
+            Map.of(
+                "FREEROUTING__ROUTER__MAX_PASSES", "100",
+                "FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS", "4"));
 
     EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
     source.getSettings(); // Trigger parsing

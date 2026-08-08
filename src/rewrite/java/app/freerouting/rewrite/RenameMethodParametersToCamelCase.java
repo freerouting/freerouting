@@ -46,8 +46,9 @@ public class RenameMethodParametersToCamelCase extends Recipe {
 
   @Override
   public String getDescription() {
-    return "Rename snake_case method and constructor parameters to lowerCamelCase. "
-        + "RenameLocalVariablesToCamelCase deliberately skips parameters.";
+    return """
+        Rename snake_case method and constructor parameters to lowerCamelCase. \
+        RenameLocalVariablesToCamelCase deliberately skips parameters.""";
   }
 
   @Override

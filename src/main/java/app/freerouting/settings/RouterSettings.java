@@ -373,26 +373,24 @@ public class RouterSettings implements Serializable, Cloneable {
 
       if (!java.util.Objects.equals(originalRoutable[i], layers[i].routable)) {
         layerChanges.append(
-            String.format(" routable: %s -> %s;", originalRoutable[i], layers[i].routable));
+            " routable: %s -> %s;".formatted(originalRoutable[i], layers[i].routable));
       }
       if (!java.util.Objects.equals(originalBendCost[i], layers[i].bendCost)) {
         layerChanges.append(
-            String.format(" bendCost: %s -> %s;", originalBendCost[i], layers[i].bendCost));
+            " bendCost: %s -> %s;".formatted(originalBendCost[i], layers[i].bendCost));
       }
       if (!java.util.Objects.equals(originalPrefHoriz[i], layers[i].preferredDirectionHorizontal)) {
         layerChanges.append(
-            String.format(
-                " preferredDirectionHorizontal: %s -> %s;",
-                originalPrefHoriz[i], layers[i].preferredDirectionHorizontal));
+            " preferredDirectionHorizontal: %s -> %s;"
+                .formatted(originalPrefHoriz[i], layers[i].preferredDirectionHorizontal));
       }
 
       double oldPrefCost =
           originalPrefCost != null && i < originalPrefCost.length ? originalPrefCost[i] : 0.0;
       if (oldPrefCost != scoring.preferredDirectionTraceCost[i]) {
         layerChanges.append(
-            String.format(
-                " preferredDirectionTraceCost: %s -> %s;",
-                oldPrefCost, scoring.preferredDirectionTraceCost[i]));
+            " preferredDirectionTraceCost: %s -> %s;"
+                .formatted(oldPrefCost, scoring.preferredDirectionTraceCost[i]));
       }
 
       double oldUndesiredCost =
@@ -401,9 +399,8 @@ public class RouterSettings implements Serializable, Cloneable {
               : 0.0;
       if (oldUndesiredCost != scoring.undesiredDirectionTraceCost[i]) {
         layerChanges.append(
-            String.format(
-                " undesiredDirectionTraceCost: %s -> %s;",
-                oldUndesiredCost, scoring.undesiredDirectionTraceCost[i]));
+            " undesiredDirectionTraceCost: %s -> %s;"
+                .formatted(oldUndesiredCost, scoring.undesiredDirectionTraceCost[i]));
       }
 
       if (layerChanges.length() > 0) {

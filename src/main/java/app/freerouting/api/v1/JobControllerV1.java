@@ -592,8 +592,9 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "Upload job input in KiCad JSON format",
       description =
-          "Uploads the input PCB design file in KiCad JSON format. The JSON is sent as the raw request body (not Base64-encoded). "
-              + "This endpoint is optimized for the KiCad IPC bridge workflow.")
+          """
+          Uploads the input PCB design file in KiCad JSON format. The JSON is sent as the raw request body (not Base64-encoded). \
+          This endpoint is optimized for the KiCad IPC bridge workflow.""")
   @RequestBody(
       description = "KiCad JSON board data (raw JSON, not Base64-encoded)",
       required = true,
@@ -689,10 +690,11 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "Download job output file",
       description =
-          "Downloads the output file of a routing job in Specctra SES format. "
-              + "If the job is completed, returns the final output. "
-              + "If the job is still running or paused, returns the partial output generated so far (202 Accepted). "
-              + "The file is returned as Base64-encoded data. For MCP/LLM clients, it is recommended to use the local 'decode_base64' tool to decode this output into a text/SES file rather than running external terminal shell commands (like powershell or base64) to perform base64 decoding.")
+          """
+          Downloads the output file of a routing job in Specctra SES format. \
+          If the job is completed, returns the final output. \
+          If the job is still running or paused, returns the partial output generated so far (202 Accepted). \
+          The file is returned as Base64-encoded data. For MCP/LLM clients, it is recommended to use the local 'decode_base64' tool to decode this output into a text/SES file rather than running external terminal shell commands (like powershell or base64) to perform base64 decoding.""")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -817,9 +819,10 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "Download job output in KiCad JSON format",
       description =
-          "Downloads the output of a routing job in KiCad JSON format. "
-              + "The JSON is returned as raw JSON (not Base64-encoded), optimized for the KiCad IPC bridge. "
-              + "If the job was submitted with JSON input, the output will also be in JSON format.")
+          """
+          Downloads the output of a routing job in KiCad JSON format. \
+          The JSON is returned as raw JSON (not Base64-encoded), optimized for the KiCad IPC bridge. \
+          If the job was submitted with JSON input, the output will also be in JSON format.""")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -1062,9 +1065,10 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "Stream job JSON output in real-time",
       description =
-          "Streams the KiCad JSON output of a routing job in real-time using Server-Sent Events (SSE). "
-              + "Each event contains raw JSON (not Base64-encoded), optimized for the KiCad IPC bridge. "
-              + "Updates are sent every 500ms when the board state changes.")
+          """
+          Streams the KiCad JSON output of a routing job in real-time using Server-Sent Events (SSE). \
+          Each event contains raw JSON (not Base64-encoded), optimized for the KiCad IPC bridge. \
+          Updates are sent every 500ms when the board state changes.""")
   @ApiResponses(
       value = {
         @ApiResponse(

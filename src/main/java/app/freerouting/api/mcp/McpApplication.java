@@ -26,19 +26,21 @@ public class McpApplication extends Application {
 
   @Override
   public Set<Class<?>> getClasses() {
-    Set<Class<?>> classes = new HashSet<>();
-    classes.add(McpControllerV1.class);
-    classes.add(AgentCardController.class);
-    classes.add(McpApiKeyValidationFilter.class);
-    classes.add(McpRateLimitFilter.class);
-    classes.add(CorrelationIdFilter.class);
-    classes.add(EnvironmentHostValidationFilter.class);
-    classes.add(ApiUsageFilter.class);
-    classes.add(ApiExceptionMapper.class);
-    classes.add(NotFoundExceptionMapper.class);
-    classes.add(JsonStringMessageBodyWriter.class);
-    classes.add(GsonMessageBodyHandler.class);
-    classes.add(SseFeature.class);
+    Set<Class<?>> classes =
+        new HashSet<>(
+            Set.of(
+                McpControllerV1.class,
+                AgentCardController.class,
+                McpApiKeyValidationFilter.class,
+                McpRateLimitFilter.class,
+                CorrelationIdFilter.class,
+                EnvironmentHostValidationFilter.class,
+                ApiUsageFilter.class,
+                ApiExceptionMapper.class,
+                NotFoundExceptionMapper.class,
+                JsonStringMessageBodyWriter.class,
+                GsonMessageBodyHandler.class,
+                SseFeature.class));
     return classes;
   }
 }

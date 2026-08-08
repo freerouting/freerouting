@@ -32,23 +32,26 @@ public class FreeroutingApplication extends Application {
 
   @Override
   public Set<Class<?>> getClasses() {
-    Set<Class<?>> classes = new HashSet<>();
-    classes.add(AnalyticsControllerV1.class);
-    classes.add(JobControllerV1.class);
-    classes.add(SessionControllerV1.class);
-    classes.add(SystemControllerV1.class);
-    classes.add(ApiExceptionMapper.class);
-    classes.add(NotFoundExceptionMapper.class);
-    classes.add(CorrelationIdFilter.class);
-    classes.add(ApiRateLimitFilter.class);
-    classes.add(app.freerouting.api.security.ApiKeyValidationFilter.class);
-    // Enforces the mandatory Freerouting-Environment-Host header on every protected endpoint.
-    classes.add(EnvironmentHostValidationFilter.class);
-    // Tracks all error (4xx/5xx) responses centrally; 2xx paths remain tracked
-    // individually by the controller methods with full request/response payloads.
-    classes.add(ApiAnalyticsFilter.class);
-    classes.add(ApiUsageFilter.class);
-    classes.add(SseFeature.class);
+    Set<Class<?>> classes =
+        new HashSet<>(
+            Set.of(
+                AnalyticsControllerV1.class,
+                JobControllerV1.class,
+                SessionControllerV1.class,
+                SystemControllerV1.class,
+                ApiExceptionMapper.class,
+                NotFoundExceptionMapper.class,
+                CorrelationIdFilter.class,
+                ApiRateLimitFilter.class,
+                app.freerouting.api.security.ApiKeyValidationFilter.class,
+                // Enforces the mandatory Freerouting-Environment-Host header on every protected
+                // endpoint.
+                EnvironmentHostValidationFilter.class,
+                // Tracks all error (4xx/5xx) responses centrally; 2xx paths remain tracked
+                // individually by the controller methods with full request/response payloads.
+                ApiAnalyticsFilter.class,
+                ApiUsageFilter.class,
+                SseFeature.class));
     return classes;
   }
 }

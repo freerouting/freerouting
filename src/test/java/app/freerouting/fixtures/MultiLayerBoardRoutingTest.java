@@ -84,9 +84,10 @@ class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
     assertEquals(
         4,
         job.routerSettings.getLayerCount(),
-        "Before routing, routerSettings.getLayerCount() should be 4 for"
-            + " 'Issue066-Project_GP8B.dsn' (F.Cu / In1.Cu / In2.Cu / B.Cu)."
-            + " If it returns 2 the DefaultSettings hard-coded layer count is still active.");
+        """
+        Before routing, routerSettings.getLayerCount() should be 4 for\
+         'Issue066-Project_GP8B.dsn' (F.Cu / In1.Cu / In2.Cu / B.Cu).\
+         If it returns 2 the DefaultSettings hard-coded layer count is still active.""");
 
     runRoutingJob(job);
 
@@ -94,8 +95,9 @@ class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
     assertEquals(
         4,
         job.routerSettings.getLayerCount(),
-        "After routing, routerSettings.getLayerCount() should be 4 for"
-            + " 'Issue066-Project_GP8B.dsn'.");
+        """
+        After routing, routerSettings.getLayerCount() should be 4 for\
+         'Issue066-Project_GP8B.dsn'.""");
 
     // --- Post-routing: at least one trace must exist on an inner layer ---
     // For a 4-layer board the inner signal layers are indices 1 (In1.Cu) and 2 (In2.Cu).
@@ -140,9 +142,10 @@ class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
     assertEquals(
         6,
         job.routerSettings.getLayerCount(),
-        "Before routing, routerSettings.getLayerCount() should be 6 for"
-            + " 'Issue289-Autorouter_PCB_FHT-8086_2024-03-08.dsn' (layers 1/2/21/22/23/24)."
-            + " If it returns 2 the DefaultSettings hard-coded layer count is still active.");
+        """
+        Before routing, routerSettings.getLayerCount() should be 6 for\
+         'Issue289-Autorouter_PCB_FHT-8086_2024-03-08.dsn' (layers 1/2/21/22/23/24).\
+         If it returns 2 the DefaultSettings hard-coded layer count is still active.""");
 
     runRoutingJob(job);
 
@@ -150,8 +153,9 @@ class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
     assertEquals(
         6,
         job.routerSettings.getLayerCount(),
-        "After routing, routerSettings.getLayerCount() should be 6 for"
-            + " 'Issue289-Autorouter_PCB_FHT-8086_2024-03-08.dsn'.");
+        """
+        After routing, routerSettings.getLayerCount() should be 6 for\
+         'Issue289-Autorouter_PCB_FHT-8086_2024-03-08.dsn'.""");
 
     // --- Post-routing: at least one trace must exist on an inner layer ---
     // For this 6-layer board the inner signal layers are indices 1 through 4.

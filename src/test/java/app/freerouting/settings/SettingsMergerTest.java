@@ -71,9 +71,11 @@ class SettingsMergerTest {
   @Test
   void priorityOrdering() {
     // Test that higher priority sources override lower priority ones
-    Map<String, String> env = new HashMap<>();
-    env.put("FREEROUTING__ROUTER__MAX_PASSES", "100");
-    env.put("FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS", "8");
+    Map<String, String> env =
+        new HashMap<>(
+            Map.of(
+                "FREEROUTING__ROUTER__MAX_PASSES", "100",
+                "FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS", "8"));
 
     DefaultSettings defaults = new DefaultSettings();
     JsonFileSettings jsonSettings = new JsonFileSettings();
@@ -150,11 +152,13 @@ class SettingsMergerTest {
   @Test
   void complexMerging() {
     // Test merging with multiple nested properties
-    Map<String, String> env = new HashMap<>();
-    env.put("FREEROUTING__ROUTER__MAX_PASSES", "150");
-    env.put("FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS", "6");
-    env.put("FREEROUTING__ROUTER__VIAS_ALLOWED", "false");
-    env.put("FREEROUTING__ROUTER__ALGORITHM", "freerouting-router-v19");
+    Map<String, String> env =
+        new HashMap<>(
+            Map.of(
+                "FREEROUTING__ROUTER__MAX_PASSES", "150",
+                "FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS", "6",
+                "FREEROUTING__ROUTER__VIAS_ALLOWED", "false",
+                "FREEROUTING__ROUTER__ALGORITHM", "freerouting-router-v19"));
 
     DefaultSettings defaults = new DefaultSettings();
     EnvironmentVariablesSource envSource = new EnvironmentVariablesSource(env);

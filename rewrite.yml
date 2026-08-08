@@ -102,3 +102,21 @@ description: Rename snake_case local variables to lowerCamelCase.
 recipeList:
   - org.openrewrite.staticanalysis.RenameLocalVariablesToCamelCase
 
+---
+# Phase 6: Language Polish. Run with: ./gradlew rewriteRun "-Drewrite.activeRecipes=app.freerouting.Phase6LanguagePolish"
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase6LanguagePolish
+displayName: Freerouting phase 6 — Language Polish
+description: Apply modern Java language idioms, pattern matching, collection factories, and API updates.
+recipeList:
+  - org.openrewrite.java.migrate.lang.UseStringIsEmptyRecipe
+  - org.openrewrite.java.migrate.lang.StringFormatted
+  - org.openrewrite.staticanalysis.InstanceOfPatternMatch
+  - org.openrewrite.java.migrate.lang.UseTextBlocks
+  - org.openrewrite.java.migrate.SwitchPatternMatching
+  - org.openrewrite.java.migrate.util.UseListOf
+  - org.openrewrite.java.migrate.util.UseSetOf
+  - org.openrewrite.java.migrate.util.UseMapOf
+  - org.openrewrite.java.migrate.net.JavaNetAPIs
+  - org.openrewrite.staticanalysis.UnnecessaryParentheses
+
