@@ -259,7 +259,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     settingsRoutingHighlightRoutingObstacleCheckBox =
         new JCheckBox(tm.getText("highlightRoutingObstacle"));
-    settingsRoutingHighlightRoutingObstacleCheckBox.addActionListener(new HighlightObstacleListener());
+    settingsRoutingHighlightRoutingObstacleCheckBox.addActionListener(
+        new HighlightObstacleListener());
     settingsRoutingHighlightRoutingObstacleCheckBox.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -944,7 +945,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       guiBoardManager
           .getInteractiveSettings()
-          .setHighlightRoutingObstacle(settingsRoutingHighlightRoutingObstacleCheckBox.isSelected());
+          .setHighlightRoutingObstacle(
+              settingsRoutingHighlightRoutingObstacleCheckBox.isSelected());
     }
   }
 

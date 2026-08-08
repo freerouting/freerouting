@@ -63,24 +63,31 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
 
   /** The single GUI-session instance; {@code null} when running headless. */
   private static volatile InteractiveSettings instance;
+
   /**
    * The array of manual trace half widths, initially equal to the automatic trace half widths. This
    * is a {@code final} array reference; individual entries are mutated via {@link
    * #setManualTraceHalfWidth(int, int)}.
    */
   final int[] manualTraceHalfWidthArr;
+
   // -------------------------------------------------------------------------
   // PropertyChangeSupport — transient so it is not serialised; re-created in readObject.
   // -------------------------------------------------------------------------
   private transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+
   /** Router parameter: accuracy for trace pull tight operations in interactive routing. */
   private int tracePullTightAccuracy = 500;
+
   /** Router parameter: enables automatic neckdown in interactive routing. */
   private boolean automaticNeckdown = true;
+
   /** The current layer index. */
   private int layer;
+
   /** Allows pushing obstacles aside. */
   private boolean pushEnabled;
+
   /** Allows dragging components with the route. */
   private boolean dragComponentsEnabled;
 
@@ -92,33 +99,45 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
    * layer.
    */
   private boolean selectOnAllVisibleLayers;
+
   /** Route mode: stitching or dynamic. */
   private boolean isStitchRoute;
+
   /** The width of the pull tight region of traces around the cursor. */
   private int tracePullTightRegionWidth;
+
   /** Via snaps to smd center, if attach smd is allowed. */
   private boolean viaSnapToSmdCenter;
+
   /** The horizontal placement grid when moving components, if positive. */
   private int horizontalComponentGrid;
+
   /** The vertical placement grid when moving components, if positive. */
   private int verticalComponentGrid;
+
   /**
    * Indicates if the routing rule selection is manual by the user or automatic by the net rules.
    */
   private boolean manualRuleSelection;
+
   /** If true, the current routing obstacle is highlighted in dynamic routing. */
   private boolean highlightRoutingObstacle;
+
   /** The index of the clearance class used for traces in interactive routing. */
   private int manualTraceClearanceClass;
+
   /**
    * The index of the via rule used in routing in the board via rules if manual_route_selection is
    * on.
    */
   private int manualViaRuleIndex;
+
   /** If true, the mouse wheel is used for zooming. */
   private boolean zoomWithWheel;
+
   /** The filter used in interactive selection of board items. */
   private ItemSelectionFilter itemSelectionFilter;
+
   /**
    * Indicates, if the data of this class are not allowed to be changed in interactive board
    * editing.

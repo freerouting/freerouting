@@ -62,6 +62,7 @@ public class GraphicsContext implements Serializable {
 
   /** When true, copper pours use fast solid fills (used during the first paint after load). */
   private transient boolean simplifiedPlaneRendering;
+
   private transient java.awt.TexturePaint cachedHatchPaint;
   private transient double cachedHatchPitchPx = -1.0;
   private transient Color cachedHatchColor;

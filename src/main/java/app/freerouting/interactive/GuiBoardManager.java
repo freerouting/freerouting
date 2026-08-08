@@ -130,6 +130,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * operations, maintaining a maximum effective frame rate of 1 FPS (1000ms interval).
    */
   private static final long background_repaint_interval = 1000;
+
   /**
    * The minimum interval in milliseconds between consecutive board panel repaints during
    * interactive operations (dragging, moving).
@@ -138,6 +139,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * approximately 30 FPS.
    */
   private static final long interactive_repaint_interval = 33;
+
   /**
    * The timestamp of the most recent board panel repaint operation.
    *
@@ -145,6 +147,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * milliseconds since epoch.
    */
   private static long last_repainted_time;
+
   /**
    * Manager for on-screen status and information messages.
    *
@@ -160,6 +163,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see ScreenMessages
    */
   public final ScreenMessages screenMessages;
+
   /**
    * Merger that consolidates router settings from multiple sources.
    *
@@ -174,6 +178,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see SettingsMerger
    */
   public final SettingsMerger settingsMerger;
+
   /**
    * The graphical panel component that displays and renders the routing board.
    *
@@ -189,12 +194,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see BoardPanel
    */
   private final BoardPanel panel;
+
   /**
    * Text manager for internationalized message strings.
    *
    * <p>Provides localized text for UI elements and messages based on the current locale setting.
    */
   private final TextManager tm;
+
   /**
    * Collection of listeners notified when the board's read-only state changes.
    *
@@ -202,6 +209,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * becomes read-only (e.g., during autorouting or logfile playback).
    */
   private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
+
   /**
    * Global application settings container.
    *
@@ -209,6 +217,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * and other global preferences.
    */
   private final GlobalSettings globalSettings;
+
   /**
    * Listener that responds to new log entries being added.
    *
@@ -216,6 +225,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * operations.
    */
   private final LogEntries.LogEntryAddedListener logEntryAddedListener;
+
   /**
    * Listener that responds to trace events during routing operations.
    *
@@ -223,12 +233,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * diagnostic purposes.
    */
   private final TraceEventListener traceEventListener;
+
   /**
    * The current locale for internationalized UI text and messages.
    *
    * <p>Determines the language used for all user-facing text elements.
    */
   private final Locale locale;
+
   /**
    * Graphics context managing visual display settings for the board.
    *
@@ -244,6 +256,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see GraphicsContext
    */
   public GraphicsContext graphicsContext;
+
   /**
    * Coordinate transformer for converting between different coordinate systems.
    *
@@ -260,6 +273,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see CoordinateTransform
    */
   public CoordinateTransform coordinateTransform;
+
   /**
    * Manager for detecting and displaying clearance violations between board items.
    *
@@ -276,6 +290,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see ClearanceViolations
    */
   public ClearanceViolations clearanceViolations;
+
   /**
    * The currently active interactive state controlling user interaction behavior.
    *
@@ -295,6 +310,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InteractiveState
    */
   InteractiveState interactiveState;
+
   /**
    * Flag to force immediate board panel repaint, bypassing the throttle mechanism.
    *
@@ -307,6 +323,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * </ul>
    */
   boolean paintImmediately;
+
   /**
    * The GUI-session singleton for interactive settings.
    *
@@ -321,6 +338,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InteractiveSettings#getOrCreate(app.freerouting.board.RoutingBoard)
    */
   private InteractiveSettings interactiveSettings;
+
   /**
    * Direct reference to the {@link app.freerouting.gui.BoardFrame} that owns this manager.
    *
@@ -329,6 +347,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * avoids walking the AWT component hierarchy to locate the frame.
    */
   private app.freerouting.gui.BoardFrame boardFrame;
+
   /**
    * Number of threads to use for parallel routing operations.
    *
