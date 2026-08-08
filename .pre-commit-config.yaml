@@ -34,9 +34,9 @@ repos:
     rev: v4.6.0
     hooks:
       - id: trailing-whitespace
-        types_or: [java, markdown, yaml, python, shell, powershell, properties]
+        files: \.(java|md|yml|yaml|properties|py|sh|ps1)$
       - id: end-of-file-fixer
-        types_or: [java, markdown, yaml, python, shell, powershell, properties]
+        files: \.(java|md|yml|yaml|properties|py|sh|ps1)$
       - id: check-json
       - id: check-yaml
         args: ['--allow-multiple-documents']
