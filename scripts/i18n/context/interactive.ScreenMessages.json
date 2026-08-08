@@ -65,9 +65,7 @@
   },
   "current_layer": {
     "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.ScreenMessages"
-    ],
+    "code_references": [],
     "english_hash": "7bb2049548c769da8fb2049f9964ca3998cd79e89298f0521b04e604fb979883",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -183,9 +181,7 @@
   },
   "target_layer": {
     "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.ScreenMessages"
-    ],
+    "code_references": [],
     "english_hash": "c17844aebe190286734ab1f8ff4a387dbdf2e7435d7086f9f7e62b54cd41fce7",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

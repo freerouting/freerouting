@@ -17,9 +17,7 @@
   },
   "clearance_violations": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardMenuInfo"
-    ],
+    "code_references": [],
     "english_hash": "be7d93bf6c6637e40ad42a57aae04ca6352d393b75323b90eedb8cfec257b741",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -65,9 +63,7 @@
   },
   "length_violations": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardMenuInfo"
-    ],
+    "code_references": [],
     "english_hash": "7220f459018febe04732f76d1de1d0f1bae13b5bc42a750e29e1e0cd6163cb01",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

@@ -229,9 +229,7 @@
   },
   "btn_all": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowNetClasses"
-    ],
+    "code_references": [],
     "english_hash": "d1ec69e64b9609d089aae09f7adc5c566d2cd222f8d8325f0ab3b523f0ac2690",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -249,9 +247,7 @@
   },
   "btn_clear": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowNetClasses"
-    ],
+    "code_references": [],
     "english_hash": "ddceb7adfdb8816e4747bc48a2221702e830340e5596a701dc0993766eba5e60",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -269,9 +265,7 @@
   },
   "btn_inner": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowNetClasses"
-    ],
+    "code_references": [],
     "english_hash": "fa338a5ea2014716bd663325667163585de0cf9830c5a2b280c5873745cd3f8e",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -289,9 +283,7 @@
   },
   "btn_outer": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowNetClasses"
-    ],
+    "code_references": [],
     "english_hash": "5e426f92df907e540b88b5927654cd66944e7357f05a5997c454f3cf3ab0bbbb",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -309,9 +301,7 @@
   },
   "button_ok": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowNetClasses"
-    ],
+    "code_references": [],
     "english_hash": "565339bc4d33d72817b583024112eb7f5cdf3e5eef0252d6ec1b9c9a94e12bb3",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -550,9 +540,7 @@
   },
   "contained_nets": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowNetClasses"
-    ],
+    "code_references": [],
     "english_hash": "3268ab83f93776dd20ae76324f6afa66309dde178f867d97fc4cbde2c9b76e1c",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -582,9 +570,7 @@
   },
   "dialog_layer_rules_title": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowNetClasses"
-    ],
+    "code_references": [],
     "english_hash": "cd8ef29c9a795b5d186480ee85a7929daa460c598d53ca58edec5ec357dad9b9",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

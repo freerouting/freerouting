@@ -85,10 +85,7 @@
   },
   "list_empty": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowLengthViolations",
-      "app.freerouting.gui.WindowObjectList"
-    ],
+    "code_references": [],
     "english_hash": "949da6a3278e2d66078bda0e06f569110d872e46548e354c508af456e3c18715",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

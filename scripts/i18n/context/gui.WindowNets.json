@@ -126,9 +126,7 @@
   },
   "net_count": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowNets"
-    ],
+    "code_references": [],
     "english_hash": "30ea4bb97bdb04d7f8dc04eda301fdfe3074c264fa6634f62b605053b2d044f6",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,

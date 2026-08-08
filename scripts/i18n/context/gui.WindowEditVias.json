@@ -115,9 +115,7 @@
   },
   "new_via": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowEditVias"
-    ],
+    "code_references": [],
     "english_hash": "8208857a8dada4970f8d3a7034742be50c5ce2041a85d3395f5458840cd0911b",
     "grammatical_role": "fragment",
     "has_placeholders": false,

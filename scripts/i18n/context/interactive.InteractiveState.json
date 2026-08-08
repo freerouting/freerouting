@@ -93,9 +93,7 @@
   },
   "all_items_inserted": {
     "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.CopyItemState"
-    ],
+    "code_references": [],
     "english_hash": "e3e3ea0876833d9b20f4715310f950da58a67f65dc2b46b299a3919198e8bc2d",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
