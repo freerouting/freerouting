@@ -139,7 +139,7 @@ class EnglishPropertiesParityTest {
 
   @Test
   @Order(1)
-  void codeKeysExistInEnglishBundles() throws IOException {
+  void codeKeysExistInEnglishBundles() throws Exception {
     Map<String, Set<String>> sourceKeysByBundle = collectSourceKeysByBundle();
     Map<String, Set<String>> englishKeysByBundle = loadEnglishKeysByBundle();
     Set<String> commonEnglishKeys =
@@ -169,7 +169,7 @@ class EnglishPropertiesParityTest {
 
   @Test
   @Order(2)
-  void localeBundlesCoverEnglishBundles() throws IOException {
+  void localeBundlesCoverEnglishBundles() throws Exception {
     Map<String, Set<String>> englishKeysByBundle = loadEnglishKeysByBundle();
     List<String> missingReports = new ArrayList<>();
 
@@ -217,7 +217,7 @@ class EnglishPropertiesParityTest {
 
   @Test
   @Order(3)
-  void englishBundlesContainKeysPresentInLocales() throws IOException {
+  void englishBundlesContainKeysPresentInLocales() throws Exception {
     Map<String, Set<String>> englishKeysByBundle = loadEnglishKeysByBundle();
     List<String> missingReports = new ArrayList<>();
 
@@ -270,7 +270,7 @@ class EnglishPropertiesParityTest {
 
   @Test
   @Order(4)
-  void englishBundlesDoNotContainUnusedKeys() throws IOException {
+  void englishBundlesDoNotContainUnusedKeys() throws Exception {
     Map<String, Set<String>> sourceKeysByBundle = collectSourceKeysByBundle();
     Map<String, Set<String>> englishKeysByBundle = loadEnglishKeysByBundle();
     Set<String> commonEnglishKeys =

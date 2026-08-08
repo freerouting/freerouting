@@ -1,14 +1,18 @@
 package app.freerouting.fixtures;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import app.freerouting.core.RoutingJob;
 import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
+class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
 
   @Test
-  public void testIssue558DevBoard() {
+  void issue558DevBoard() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(10);
     testSettingsSource.setJobTimeoutString("00:02:00");
@@ -19,7 +23,7 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  public void testFanoutOnlyMode() {
+  void fanoutOnlyMode() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setEnabled(false);
     testSettingsSource.setOptimizerEnabled(false);
@@ -29,16 +33,16 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
     RoutingJob job = getRoutingJob("Issue558-dev-board.dsn", testSettingsSource);
     runRoutingJob(job);
 
-    org.junit.jupiter.api.Assertions.assertNotNull(job.board);
-    org.junit.jupiter.api.Assertions.assertEquals(0, job.getCurrentPass());
+    assertNotNull(job.board);
+    assertEquals(0, job.getCurrentPass());
 
     app.freerouting.core.scoring.BoardStatistics stats =
         new app.freerouting.core.scoring.BoardStatistics(job.board);
-    org.junit.jupiter.api.Assertions.assertTrue(stats.items.viaCount > 0);
+    assertTrue(stats.items.viaCount > 0);
   }
 
   @Test
-  public void testIssue508BM06() {
+  void issue508BM06() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(10);
     testSettingsSource.setJobTimeoutString("00:02:00");
@@ -53,7 +57,7 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
 
   @Test
   @Tag("slow")
-  public void testIssue508BM10() {
+  void issue508BM10() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(10);
     testSettingsSource.setJobTimeoutString("00:02:00");
@@ -64,7 +68,7 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  public void testSMDRoutingIssueDemo() {
+  void smdRoutingIssueDemo() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(10);
     testSettingsSource.setJobTimeoutString("00:01:00");

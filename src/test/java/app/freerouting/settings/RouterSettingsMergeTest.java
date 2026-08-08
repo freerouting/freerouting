@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 class RouterSettingsMergeTest {
 
   @Test
-  void testMergeLayersArray() {
+  void mergeLayersArray() {
     RouterSettings source = new RouterSettings();
     source.setLayerCount(2);
     source.layers[0].routable = false;
@@ -38,7 +38,7 @@ class RouterSettingsMergeTest {
   }
 
   @Test
-  void testApplyBoardSpecificOptimizationsPreservesSettings() {
+  void applyBoardSpecificOptimizationsPreservesSettings() {
     RouterSettings settings = new RouterSettings();
     settings.setLayerCount(2);
     settings.layers[0].routable = false;

@@ -7,10 +7,10 @@ import app.freerouting.settings.sources.DefaultSettings;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 
-public class BendCostSettingsTest {
+class BendCostSettingsTest {
 
   @Test
-  public void testDefaultBendCost() {
+  void defaultBendCost() {
     DefaultSettings defaultSettings = new DefaultSettings();
     RouterSettings settings = defaultSettings.getSettings();
     assertNotNull(settings.scoring);
@@ -18,7 +18,7 @@ public class BendCostSettingsTest {
   }
 
   @Test
-  public void testSetGetBendCost() {
+  void setGetBendCost() {
     RouterSettings settings = new RouterSettings();
     settings.setLayerCount(2);
 
@@ -43,7 +43,7 @@ public class BendCostSettingsTest {
   }
 
   @Test
-  public void testSerialization() {
+  void serialization() {
     RouterSettings settings = new RouterSettings();
     settings.setLayerCount(2);
     settings.setBendCost(0, 1.5);
@@ -59,7 +59,7 @@ public class BendCostSettingsTest {
   }
 
   @Test
-  public void testNullScoringSafety() {
+  void nullScoringSafety() {
     RouterSettings settings = new RouterSettings();
     settings.setLayerCount(2);
     settings.scoring = null;

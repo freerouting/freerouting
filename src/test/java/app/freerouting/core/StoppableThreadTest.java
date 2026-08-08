@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class StoppableThreadTest {
 
   @Test
-  void testStopRequest() {
+  void stopRequest() {
     TestStoppableThread thread = new TestStoppableThread();
     assertFalse(thread.isStopRequested());
     assertFalse(thread.isStopAutoRouterRequested());
@@ -19,7 +19,7 @@ class StoppableThreadTest {
   }
 
   @Test
-  void testStopAutoRouterRequest() {
+  void stopAutoRouterRequest() {
     TestStoppableThread thread = new TestStoppableThread();
     assertFalse(thread.isStopRequested());
     assertFalse(thread.isStopAutoRouterRequested());
@@ -30,7 +30,7 @@ class StoppableThreadTest {
   }
 
   @Test
-  void testStopRequestOverridesAutoRouterRequest() {
+  void stopRequestOverridesAutoRouterRequest() {
     TestStoppableThread thread = new TestStoppableThread();
     thread.requestStopAutoRouter();
     thread.requestStop();

@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://github.com/freerouting/freerouting/issues/420">GitHub Issue #420</a>
  */
-public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
+class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
 
   private static final String FIXTURE_FILE = "Issue420-contribution-board.dsn";
 

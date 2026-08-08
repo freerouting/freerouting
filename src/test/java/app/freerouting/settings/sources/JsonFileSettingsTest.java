@@ -28,7 +28,7 @@ class JsonFileSettingsTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void loadsMaxPassesFromValidRouterSection() throws IOException {
+  void loadsMaxPassesFromValidRouterSection() throws Exception {
     Path file =
         write(
             "valid.json",
@@ -49,7 +49,7 @@ class JsonFileSettingsTest {
   }
 
   @Test
-  void returnsEmptySettingsWhenRouterSectionIsMissing() throws IOException {
+  void returnsEmptySettingsWhenRouterSectionIsMissing() throws Exception {
     Path file =
         write(
             "no_router.json",
@@ -70,7 +70,7 @@ class JsonFileSettingsTest {
   }
 
   @Test
-  void returnsEmptySettingsWhenRouterSectionIsNotAnObject() throws IOException {
+  void returnsEmptySettingsWhenRouterSectionIsNotAnObject() throws Exception {
     Path file =
         write(
             "router_not_object.json",
@@ -108,7 +108,7 @@ class JsonFileSettingsTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void returnsEmptySettingsForMalformedJson() throws IOException {
+  void returnsEmptySettingsForMalformedJson() throws Exception {
     Path file = write("malformed.json", "{ this is not valid json !! }");
 
     JsonFileSettings sut = new JsonFileSettings(file);

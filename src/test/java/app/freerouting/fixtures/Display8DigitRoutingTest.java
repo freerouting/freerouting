@@ -32,10 +32,10 @@ import org.junit.jupiter.api.Test;
  * <p>Platform: Windows 8.1 x64, KiCad 4.0.7, freerouting v1.8. Attached files: DSN file
  * (Issue229-display-8-digit-hc595.dsn) and KiCad PCB file. Command line arguments: none.
  */
-public class Display8DigitRoutingTest extends RoutingFixtureTest {
+class Display8DigitRoutingTest extends RoutingFixtureTest {
 
   @Test
-  void testIssue229KeepoutZoneWasNotExportedCorrectly() {
+  void issue229KeepoutZoneWasNotExportedCorrectly() {
     var job = getRoutingJob("Issue229-display-8-digit-hc595.dsn");
 
     // The DSN file contains a degenerate keepout polygon at line 27 (all 3 vertices identical,

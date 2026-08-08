@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class BoardStatisticsTest {
 
   @Test
-  void testBoardStatisticsWithValidJson() {
+  void boardStatisticsWithValidJson() {
     String jsonContent =
         "{\n"
             + "  \"designName\": \"test-board\",\n"

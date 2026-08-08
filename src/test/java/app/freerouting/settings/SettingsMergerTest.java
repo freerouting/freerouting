@@ -3,6 +3,7 @@ package app.freerouting.settings;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.settings.sources.CliSettings;
@@ -17,7 +18,7 @@ import org.junit.jupiter.api.Test;
 class SettingsMergerTest {
 
   @Test
-  void testDefaultSettingsOnly() {
+  void defaultSettingsOnly() {
     // Test that default settings work correctly
     RouterSettings merged = new SettingsMerger(new DefaultSettings()).merge();
 
@@ -30,17 +31,17 @@ class SettingsMergerTest {
   }
 
   @Test
-  void testEmptySourcesList() {
+  void emptySourcesList() {
     // Test that empty sources list returns default settings
     RouterSettings merged = new SettingsMerger().merge();
 
     assertNotNull(merged);
     // Should have null values
-    assertEquals(null, merged.maxPasses);
+    assertNull(merged.maxPasses);
   }
 
   @Test
-  void testSourcePriorities() {
+  void sourcePriorities() {
     // Test that priorities are correctly ordered
     DefaultSettings defaultSettings = new DefaultSettings();
 
@@ -50,7 +51,7 @@ class SettingsMergerTest {
   }
 
   @Test
-  void testMultipleSourcesMerging() {
+  void multipleSourcesMerging() {
     // Create environment with custom settings
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__ROUTER__MAX_PASSES", "50");
@@ -68,7 +69,7 @@ class SettingsMergerTest {
   }
 
   @Test
-  void testPriorityOrdering() {
+  void priorityOrdering() {
     // Test that higher priority sources override lower priority ones
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__ROUTER__MAX_PASSES", "100");
@@ -87,7 +88,7 @@ class SettingsMergerTest {
   }
 
   @Test
-  void testNullValueHandling() {
+  void nullValueHandling() {
     // Test that null values in sources are handled correctly
     DefaultSettings defaults = new DefaultSettings();
 
@@ -118,7 +119,7 @@ class SettingsMergerTest {
   }
 
   @Test
-  void testPartialOverrides() {
+  void partialOverrides() {
     // Test that sources can partially override settings
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__ROUTER__MAX_PASSES", "200");
@@ -136,7 +137,7 @@ class SettingsMergerTest {
   }
 
   @Test
-  void testEnvironmentVariablesPriority() {
+  void environmentVariablesPriority() {
     // Verify environment variables have priority 55
     EnvironmentVariablesSource envSource = new EnvironmentVariablesSource(new HashMap<>());
     assertEquals(55, envSource.getPriority());
@@ -147,7 +148,7 @@ class SettingsMergerTest {
   }
 
   @Test
-  void testComplexMerging() {
+  void complexMerging() {
     // Test merging with multiple nested properties
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__ROUTER__MAX_PASSES", "150");
@@ -170,7 +171,7 @@ class SettingsMergerTest {
   }
 
   @Test
-  void testCliCanDisableRouterAndOptimizer() {
+  void cliCanDisableRouterAndOptimizer() {
     DefaultSettings defaults = new DefaultSettings();
     CliSettings cli =
         new CliSettings(
@@ -184,7 +185,7 @@ class SettingsMergerTest {
   }
 
   @Test
-  void testLegacyBatchModeEnablesRouterWhenJsonDisablesIt() {
+  void legacyBatchModeEnablesRouterWhenJsonDisablesIt() {
     DefaultSettings defaults = new DefaultSettings();
     RouterSettings jsonSettings = new RouterSettings();
     jsonSettings.enabled = false;
@@ -219,7 +220,7 @@ class SettingsMergerTest {
   }
 
   @Test
-  void testExplicitRouterEnabledFalseOverridesLegacyBatchMode() {
+  void explicitRouterEnabledFalseOverridesLegacyBatchMode() {
     DefaultSettings defaults = new DefaultSettings();
     CliSettings cli =
         new CliSettings(
@@ -236,7 +237,7 @@ class SettingsMergerTest {
   }
 
   @Test
-  void testCliRoutableLayersDoesNotDisableRouter() {
+  void cliRoutableLayersDoesNotDisableRouter() {
     DefaultSettings defaults = new DefaultSettings();
     CliSettings cli =
         new CliSettings(
@@ -251,7 +252,7 @@ class SettingsMergerTest {
   }
 
   @Test
-  void testLayersArrayNotShrunkOnMerge() {
+  void layersArrayNotShrunkOnMerge() {
     RouterSettings target = new RouterSettings();
     target.setLayerCount(6);
     target.layers[0].routable = true;

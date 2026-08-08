@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
  * override active they must be assigned to the dedicated "hole_edge" clearance class so copper
  * keeps hole clearance from the hole boundary.
  */
-public class HoleKeepoutClearanceTest extends RoutingFixtureTest {
+class HoleKeepoutClearanceTest extends RoutingFixtureTest {
 
   @Test
   void npthKeepoutsGetHoleEdgeClearanceClass() {

@@ -43,7 +43,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://github.com/freerouting/freerouting/issues/684">GitHub Issue #684</a>
  */
-public class Issue684MemoryLeakRoutingTest extends RoutingFixtureTest {
+class Issue684MemoryLeakRoutingTest extends RoutingFixtureTest {
 
   private static final String FIXTURE_FILE = "Issue684-Autorouter_PCB1_2026-5-8.dsn";
 

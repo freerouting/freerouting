@@ -23,7 +23,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testSingleDsnFile() {
+  void singleDsnFile() {
     String[] args = {"-de", "myboard.dsn"};
     settings.applyCommandLineArguments(args);
 
@@ -33,7 +33,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testDsnAndSesWithPlusSeparator() {
+  void dsnAndSesWithPlusSeparator() {
     String[] args = {"-de", "myboard.dsn+myboard.ses"};
     settings.applyCommandLineArguments(args);
 
@@ -43,7 +43,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testDsnAndRulesWithPlusSeparator() {
+  void dsnAndRulesWithPlusSeparator() {
     String[] args = {"-de", "myboard.dsn+myboard.rules"};
     settings.applyCommandLineArguments(args);
 
@@ -53,7 +53,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testAllThreeFilesWithPlusSeparator() {
+  void allThreeFilesWithPlusSeparator() {
     String[] args = {"-de", "myboard.dsn+myboard.ses+myboard.rules"};
     settings.applyCommandLineArguments(args);
 
@@ -63,7 +63,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testFilesInDifferentOrder() {
+  void filesInDifferentOrder() {
     String[] args = {"-de", "myboard.rules+myboard.dsn+myboard.ses"};
     settings.applyCommandLineArguments(args);
 
@@ -73,7 +73,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testSpaceSeparatedFiles() {
+  void spaceSeparatedFiles() {
     String[] args = {"-de", "myboard.dsn", "myboard.ses", "myboard.rules"};
     settings.applyCommandLineArguments(args);
 
@@ -83,7 +83,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testFilenameWithSpaces() {
+  void filenameWithSpaces() {
     String[] args = {"-de", "sonde xilinx.dsn"};
     settings.applyCommandLineArguments(args);
 
@@ -93,7 +93,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testMixedSeparators() {
+  void mixedSeparators() {
     String[] args = {"-de", "myboard.dsn+myboard.ses", "myboard.rules"};
     settings.applyCommandLineArguments(args);
 
@@ -103,7 +103,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testFilesWithPaths() {
+  void filesWithPaths() {
     String[] args = {"-de", "/path/to/myboard.dsn+/path/to/myboard.ses"};
     settings.applyCommandLineArguments(args);
 
@@ -112,7 +112,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testCaseInsensitiveExtensions() {
+  void caseInsensitiveExtensions() {
     String[] args = {"-de", "myboard.DSN+myboard.SES+myboard.RULES"};
     settings.applyCommandLineArguments(args);
 
@@ -122,7 +122,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testMultipleDsnFilesUsesLast() {
+  void multipleDsnFilesUsesLast() {
     String[] args = {"-de", "board1.dsn+board2.dsn"};
     settings.applyCommandLineArguments(args);
 
@@ -131,7 +131,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testOnlySesFile() {
+  void onlySesFile() {
     String[] args = {"-de", "myboard.ses"};
     settings.applyCommandLineArguments(args);
 
@@ -140,7 +140,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testOnlyRulesFile() {
+  void onlyRulesFile() {
     String[] args = {"-de", "myboard.rules"};
     settings.applyCommandLineArguments(args);
 
@@ -150,7 +150,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testEmptyArgument() {
+  void emptyArgument() {
     String[] args = {"-de"};
     settings.applyCommandLineArguments(args);
 
@@ -160,7 +160,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testWithOtherArguments() {
+  void withOtherArguments() {
     String[] args = {"-de", "myboard.dsn+myboard.ses", "-do", "output.ses", "-mp", "10"};
     settings.applyCommandLineArguments(args);
 
@@ -175,7 +175,7 @@ class GlobalSettingsCommandLineTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void testApiServerEndpointsSingleValue() {
+  void apiServerEndpointsSingleValue() {
     // Reproduces the Docker bug: --api_server-endpoints=http://0.0.0.0:37864
     // must be accepted and stored as a single-element String[] array.
     String[] args = {"--api_server-endpoints=http://0.0.0.0:37864"};
@@ -188,7 +188,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testApiServerEndpointsMultipleValues() {
+  void apiServerEndpointsMultipleValues() {
     // Multiple endpoints expressed as a comma-separated list.
     String[] args = {"--api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37865"};
     settings.applyCommandLineArguments(args);
@@ -201,7 +201,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testApiServerEndpointsDotNotation() {
+  void apiServerEndpointsDotNotation() {
     // Verify that the dot notation also works alongside the dash notation.
     String[] args = {"--api_server.endpoints=http://0.0.0.0:37864"};
     settings.applyCommandLineArguments(args);
@@ -213,7 +213,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testApiServerEndpointsWithSpacesAroundCommas() {
+  void apiServerEndpointsWithSpacesAroundCommas() {
     // Leading/trailing whitespace around comma-separated tokens must be stripped.
     String[] args = {"--api_server-endpoints=http://0.0.0.0:37864 , http://127.0.0.1:37865"};
     settings.applyCommandLineArguments(args);
@@ -226,7 +226,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testValueContainingEqualSignIsNotTruncated() {
+  void valueContainingEqualSignIsNotTruncated() {
     // If a value contained a '=' (e.g. a URL query param), split("=", 2) must
     // preserve everything after the first '=' as the value.  Use a setting
     // whose value is a String to keep the assertion simple.
@@ -237,7 +237,7 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
-  void testApiAndMcpRateLimitSettingsViaCli() {
+  void apiAndMcpRateLimitSettingsViaCli() {
     String[] args = {
       "--api_server.rate_limit.enabled=true",
       "--api_server.rate_limit.requests_per_window=15",

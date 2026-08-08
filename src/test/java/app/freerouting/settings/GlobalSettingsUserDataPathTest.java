@@ -170,7 +170,7 @@ class GlobalSettingsUserDataPathTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void saveAsJsonWritesToRegisteredPath() throws IOException {
+  void saveAsJsonWritesToRegisteredPath() throws Exception {
     Path customDir = tempDir.resolve("save-test");
     Files.createDirectories(customDir); // this directory exists
 
@@ -206,7 +206,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void saveAsJsonDoesNotWriteToDefaultPathWhenCustomPathIsSet() throws IOException {
+  void saveAsJsonDoesNotWriteToDefaultPathWhenCustomPathIsSet() throws Exception {
     Path customDir = tempDir.resolve("custom-save");
     Files.createDirectories(customDir);
 
@@ -242,7 +242,7 @@ class GlobalSettingsUserDataPathTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void loadReadsFromRegisteredPath() throws IOException {
+  void loadReadsFromRegisteredPath() throws Exception {
     Path customDir = tempDir.resolve("load-test");
     Files.createDirectories(customDir);
     GlobalSettings.setUserDataPath(customDir);
@@ -291,7 +291,7 @@ class GlobalSettingsUserDataPathTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void fullChainNonExistentDirectoryIsCreatedOnSave() throws IOException {
+  void fullChainNonExistentDirectoryIsCreatedOnSave() throws Exception {
     // Simulate the Docker scenario where --user_data_path points to a
     // directory that does not exist yet when the process starts (e.g. a bind
     // mount that hasn't been created yet or a path that mkdirs() failed to
@@ -348,7 +348,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void saveAsJsonAlwaysWritesReleaseSafeVersion() throws IOException {
+  void saveAsJsonAlwaysWritesReleaseSafeVersion() throws Exception {
     Path customDir = tempDir.resolve("version-save");
     Files.createDirectories(customDir);
     GlobalSettings.setUserDataPath(customDir);
@@ -371,7 +371,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void loadNormalizesVersionToReleaseSafe() throws IOException {
+  void loadNormalizesVersionToReleaseSafe() throws Exception {
     Path customDir = tempDir.resolve("version-load");
     Files.createDirectories(customDir);
     GlobalSettings.setUserDataPath(customDir);
@@ -392,7 +392,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void loadTreatsNullFileVersionAsVersionChange() throws IOException {
+  void loadTreatsNullFileVersionAsVersionChange() throws Exception {
     // Simulate a very old config file that has no version field at all.
     Path customDir = tempDir.resolve("version-null");
     Files.createDirectories(customDir);
@@ -453,7 +453,7 @@ class GlobalSettingsUserDataPathTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void loadEmitsWarnOnOlderFileVersion() throws IOException {
+  void loadEmitsWarnOnOlderFileVersion() throws Exception {
     Path customDir = tempDir.resolve("warn-older");
     Files.createDirectories(customDir);
     GlobalSettings.setUserDataPath(customDir);
@@ -475,7 +475,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void loadEmitsWarnOnNewerFileVersion() throws IOException {
+  void loadEmitsWarnOnNewerFileVersion() throws Exception {
     Path customDir = tempDir.resolve("warn-newer");
     Files.createDirectories(customDir);
     GlobalSettings.setUserDataPath(customDir);
@@ -497,7 +497,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void loadEmitsWarnOnNullFileVersion() throws IOException {
+  void loadEmitsWarnOnNullFileVersion() throws Exception {
     Path customDir = tempDir.resolve("warn-null-ver");
     Files.createDirectories(customDir);
     GlobalSettings.setUserDataPath(customDir);
@@ -518,7 +518,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void loadReturnsNullAndEmitsWarnOnCorruptJson() throws IOException {
+  void loadReturnsNullAndEmitsWarnOnCorruptJson() throws Exception {
     Path customDir = tempDir.resolve("corrupt-json");
     Files.createDirectories(customDir);
     GlobalSettings.setUserDataPath(customDir);
@@ -543,7 +543,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void loadNoWarnOnMatchingVersion() throws IOException {
+  void loadNoWarnOnMatchingVersion() throws Exception {
     // When the file version matches the current release-safe version, no
     // version-change warning should be emitted.
     Path customDir = tempDir.resolve("no-warn");

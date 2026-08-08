@@ -3,14 +3,13 @@ package app.freerouting.datastructures;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import org.junit.jupiter.api.Test;
 
 class IdentifierTypeTest {
 
   @Test
-  void testWrite() throws IOException {
+  void write() throws Exception {
     String[] reservedChars = {"(", ")", " ", "-"};
     String stringQuote = "\"";
     IdentifierType identifierType = new IdentifierType(reservedChars, stringQuote);

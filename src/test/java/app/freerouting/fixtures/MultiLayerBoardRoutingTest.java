@@ -48,7 +48,7 @@ import org.junit.jupiter.api.Test;
  *       22, 23, 24), 142 connections, no {@code (autorouteSettings)} block.
  * </ul>
  */
-public class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
+class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
 
   /**
    * Verifies that a 4-layer board is correctly handled by the settings merger.

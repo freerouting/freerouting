@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class ReflectionUtilArrayTest {
 
   @Test
-  void testSetSimpleProperty() throws Exception {
+  void setSimpleProperty() throws Exception {
     RouterSettings settings = new RouterSettings();
     ReflectionUtil.setFieldValue(settings, "enabled", "false");
     assertFalse(settings.enabled);
@@ -22,7 +22,7 @@ class ReflectionUtilArrayTest {
   }
 
   @Test
-  void testSetNestedArrayPropertiesWhenNull() throws Exception {
+  void setNestedArrayPropertiesWhenNull() throws Exception {
     RouterSettings settings = new RouterSettings();
     // settings.layers is initially null
     ReflectionUtil.setFieldValue(settings, "layers.routable", "false,true");
@@ -34,7 +34,7 @@ class ReflectionUtilArrayTest {
   }
 
   @Test
-  void testSetNestedArrayPropertiesWhenInitialized() throws Exception {
+  void setNestedArrayPropertiesWhenInitialized() throws Exception {
     RouterSettings settings = new RouterSettings();
     settings.setLayerCount(2);
 
@@ -49,7 +49,7 @@ class ReflectionUtilArrayTest {
   }
 
   @Test
-  void testSerializedNameOnlyMatching() {
+  void serializedNameOnlyMatching() {
     RouterSettings settings = new RouterSettings();
     settings.setLayerCount(2);
 

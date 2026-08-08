@@ -37,7 +37,7 @@ class Log4j2ConfigurationFactoryTest {
   }
 
   @Test
-  void testDefaultConfiguration() {
+  void defaultConfiguration() {
     Configuration config = factory.getConfiguration(null, "TestConfig", URI.create("test"));
 
     assertNotNull(config);
@@ -66,7 +66,7 @@ class Log4j2ConfigurationFactoryTest {
   }
 
   @Test
-  void testCustomConfiguration() {
+  void customConfiguration() {
     // Use a simple path that definitely exists or can be created
     String tempDir = System.getProperty("java.io.tmpdir");
     String logFile = tempDir + "/freerouting_test_" + System.currentTimeMillis() + ".log";
@@ -107,7 +107,7 @@ class Log4j2ConfigurationFactoryTest {
   }
 
   @Test
-  void testConsoleOnlyConfiguration() {
+  void consoleOnlyConfiguration() {
     System.setProperty("freerouting.logging.console.enabled", "true");
     System.setProperty("freerouting.logging.console.level", "WARN");
     System.setProperty("freerouting.logging.file.enabled", "false");

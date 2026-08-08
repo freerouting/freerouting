@@ -14,14 +14,14 @@ import org.junit.jupiter.api.Test;
 class RouterSettingsSerializationTest {
 
   @Test
-  void testLayersFieldRemainsTransient() throws NoSuchFieldException {
+  void layersFieldRemainsTransient() throws Exception {
     var field = RouterSettings.class.getField("layers");
     assertTrue(
         Modifier.isTransient(field.getModifiers()), "The layers field MUST remain transient");
   }
 
   @Test
-  void testRouterSettingsSerializationAndDeserialization() {
+  void routerSettingsSerializationAndDeserialization() {
     // 1. Setup a RouterSettings object with non-null layers
     RouterSettings original = new RouterSettings();
     original.setLayerCount(2);

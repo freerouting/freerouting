@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
  * fixture, independent of the host JVM's default {@code -Xss}. The fixed O(1)-stack loop reads the
  * same board without overflowing.
  */
-public class CombineStackOverflowTest {
+class CombineStackOverflowTest {
 
   /**
    * Small, fixed stack so the recursion depth needed to overflow is a few hundred, not tens of
@@ -39,7 +39,7 @@ public class CombineStackOverflowTest {
   private static final String FIXTURE = "Issue723-CombineStackOverflow.dsn";
 
   @Test
-  public void combineDoesNotOverflowOnLongCollinearTrace() throws Exception {
+  void combineDoesNotOverflowOnLongCollinearTrace() throws Exception {
     byte[] dsnBytes = Files.readAllBytes(fixturePath(FIXTURE));
 
     final BoardReadResult[] result = new BoardReadResult[1];

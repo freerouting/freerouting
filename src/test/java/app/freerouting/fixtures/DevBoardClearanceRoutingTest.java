@@ -7,10 +7,10 @@ import app.freerouting.board.Unit;
 import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.Test;
 
-public class DevBoardClearanceRoutingTest extends RoutingFixtureTest {
+class DevBoardClearanceRoutingTest extends RoutingFixtureTest {
 
   @Test
-  void testIssue558ClearanceViolationAtBoardEdge() {
+  void issue558ClearanceViolationAtBoardEdge() {
     final double testCopperToEdgeClearanceUm = 650.0;
     var testingSettings = new TestingSettings();
     testingSettings.setCopperToEdgeClearanceUm(testCopperToEdgeClearanceUm);

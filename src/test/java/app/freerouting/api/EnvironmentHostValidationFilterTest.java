@@ -13,7 +13,6 @@ import static org.mockito.Mockito.when;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,7 +76,7 @@ class EnvironmentHostValidationFilterTest {
   // ------------------------------------------------------------------ valid header values
 
   @Test
-  void validHeaderToolAndVersionIsAccepted() throws IOException {
+  void validHeaderToolAndVersionIsAccepted() throws Exception {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", "KiCad/10.0");
 
     filter.filter(ctx);
@@ -88,7 +87,7 @@ class EnvironmentHostValidationFilterTest {
   @ParameterizedTest(name = "header ''{0}'' is accepted")
   @ValueSource(
       strings = {"KiCad/10.0", "EasyEDA/1.0", "Postman/11.14", "MyScript/1.0", "Target3001!/22"})
-  void validHeaderVariousToolsAreAccepted(String headerValue) throws IOException {
+  void validHeaderVariousToolsAreAccepted(String headerValue) throws Exception {
     ContainerRequestContext ctx = mockRequest("v1/jobs/enqueue", headerValue);
 
     filter.filter(ctx);
@@ -99,7 +98,7 @@ class EnvironmentHostValidationFilterTest {
   // ------------------------------------------------------------------ missing header
 
   @Test
-  void missingHeaderOnProtectedPathReturns400() throws IOException {
+  void missingHeaderOnProtectedPathReturns400() throws Exception {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", null);
 
     filter.filter(ctx);
@@ -109,7 +108,7 @@ class EnvironmentHostValidationFilterTest {
   }
 
   @Test
-  void missingHeaderErrorBodyMentionsHeaderName() throws IOException {
+  void missingHeaderErrorBodyMentionsHeaderName() throws Exception {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", null);
 
     filter.filter(ctx);
@@ -121,7 +120,7 @@ class EnvironmentHostValidationFilterTest {
   }
 
   @Test
-  void missingHeaderErrorBodyContainsExamples() throws IOException {
+  void missingHeaderErrorBodyContainsExamples() throws Exception {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", null);
 
     filter.filter(ctx);
@@ -134,7 +133,7 @@ class EnvironmentHostValidationFilterTest {
   }
 
   @Test
-  void blankHeaderTreatedAsMissingReturns400() throws IOException {
+  void blankHeaderTreatedAsMissingReturns400() throws Exception {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", "   ");
 
     filter.filter(ctx);
@@ -154,7 +153,7 @@ class EnvironmentHostValidationFilterTest {
         "/", // both parts empty
         "KiCad/10.0/extra" // too many slashes
       })
-  void malformedHeaderReturns400(String headerValue) throws IOException {
+  void malformedHeaderReturns400(String headerValue) throws Exception {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", headerValue);
 
     filter.filter(ctx);
@@ -164,7 +163,7 @@ class EnvironmentHostValidationFilterTest {
   }
 
   @Test
-  void malformedHeaderErrorBodyMentionsActualValue() throws IOException {
+  void malformedHeaderErrorBodyMentionsActualValue() throws Exception {
     String badHeader = "BadHeaderNoSlash";
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", badHeader);
 
@@ -178,7 +177,7 @@ class EnvironmentHostValidationFilterTest {
   }
 
   @Test
-  void malformedHeaderErrorBodyContainsFormatGuidance() throws IOException {
+  void malformedHeaderErrorBodyContainsFormatGuidance() throws Exception {
     ContainerRequestContext ctx = mockRequest("v1/jobs/enqueue", "NoSlashHere");
 
     filter.filter(ctx);
@@ -203,7 +202,7 @@ class EnvironmentHostValidationFilterTest {
         "swagger-ui",
         "swagger-ui/index.html"
       })
-  void excludedPathsArePublicHeaderNotRequired(String path) throws IOException {
+  void excludedPathsArePublicHeaderNotRequired(String path) throws Exception {
     // No header stub needed because the filter returns before reading it.
     ContainerRequestContext ctx = mock(ContainerRequestContext.class);
     UriInfo uriInfo = mock(UriInfo.class);
@@ -218,7 +217,7 @@ class EnvironmentHostValidationFilterTest {
   // ------------------------------------------------------------------ response format
 
   @Test
-  void errorResponseContentTypeIsJson() throws IOException {
+  void errorResponseContentTypeIsJson() throws Exception {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", null);
 
     filter.filter(ctx);
@@ -234,7 +233,7 @@ class EnvironmentHostValidationFilterTest {
   }
 
   @Test
-  void errorResponseBodyIsValidJsonObject() throws IOException {
+  void errorResponseBodyIsValidJsonObject() throws Exception {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", null);
 
     filter.filter(ctx);

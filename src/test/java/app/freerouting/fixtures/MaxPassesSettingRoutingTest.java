@@ -8,12 +8,12 @@ import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-public class MaxPassesSettingRoutingTest extends RoutingFixtureTest {
+class MaxPassesSettingRoutingTest extends RoutingFixtureTest {
 
   private RoutingJob job;
 
   @Test
-  public void testIssue522MaxPassesSettingIsRespected() {
+  void issue522MaxPassesSettingIsRespected() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setMaxPasses(2);
 
@@ -28,7 +28,7 @@ public class MaxPassesSettingRoutingTest extends RoutingFixtureTest {
   }
 
   @AfterEach
-  public void tearDown() {
+  void tearDown() {
     if (job != null) {
       RoutingJobScheduler.getInstance().clearJobs(job.sessionId.toString());
     }

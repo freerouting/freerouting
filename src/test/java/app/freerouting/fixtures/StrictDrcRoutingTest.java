@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
  * load, before any routing) — strict mode cannot remove those, but the routed result must not
  * exceed them, and completion must stay reasonable.
  */
-public class StrictDrcRoutingTest extends RoutingFixtureTest {
+class StrictDrcRoutingTest extends RoutingFixtureTest {
 
   @Test
   @Tag("slow")

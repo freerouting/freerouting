@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class J2ReferenceRoutingTest extends RoutingFixtureTest {
+class J2ReferenceRoutingTest extends RoutingFixtureTest {
 
   @Test
-  void testIssue026AutorouterInterruptedAndConnectionsNotFound() {
+  void issue026AutorouterInterruptedAndConnectionsNotFound() {
     var job = getRoutingJob("Issue026-J2_reference.dsn");
 
     job = runRoutingJob(job);

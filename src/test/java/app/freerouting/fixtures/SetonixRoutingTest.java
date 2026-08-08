@@ -36,10 +36,10 @@ import org.junit.jupiter.api.Test;
  * <p>Platform: Windows 10, KiCad 6.99 (nightly), Java JRE 8 Update 351, freerouting 1.6.5. Attached
  * files: DSN file (Issue159-setonix_2hp-pcb.dsn). Command line arguments: none.
  */
-public class SetonixRoutingTest extends RoutingFixtureTest {
+class SetonixRoutingTest extends RoutingFixtureTest {
 
   @Test
-  void testIssue159OutOfMemoryError() {
+  void issue159OutOfMemoryError() {
     // The original issue was an out-of-memory error during routing.
     // This test verifies that routing completes without crashing and produces no clearance
     // violations.

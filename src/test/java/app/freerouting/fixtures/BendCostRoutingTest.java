@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 @Tag("slow")
-public class BendCostRoutingTest extends RoutingFixtureTest {
+class BendCostRoutingTest extends RoutingFixtureTest {
 
   @Test
-  public void testRoutingWithBendCosts() {
+  void routingWithBendCosts() {
     System.setProperty("freerouting.logging.console.level", "INFO");
     FRLogger.granularTraceEnabled = false;
     Freerouting.globalSettings.debugSettings.enableDetailedLogging = false;

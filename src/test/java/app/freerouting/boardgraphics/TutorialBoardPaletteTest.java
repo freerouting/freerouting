@@ -16,9 +16,9 @@ class TutorialBoardPaletteTest {
 
   @Test
   void brandColorsMatchWebsiteStylesheet() {
-    assertEquals(new Color(1, 58, 32), TutorialBoardPalette.PRIMARY);
-    assertEquals(new Color(232, 204, 135), TutorialBoardPalette.SECONDARY);
-    assertEquals(new Color(200, 176, 116), TutorialBoardPalette.SECONDARY_HOVER);
+    assertEquals(TutorialBoardPalette.PRIMARY, new Color(1, 58, 32));
+    assertEquals(TutorialBoardPalette.SECONDARY, new Color(232, 204, 135));
+    assertEquals(TutorialBoardPalette.SECONDARY_HOVER, new Color(200, 176, 116));
   }
 
   @Test

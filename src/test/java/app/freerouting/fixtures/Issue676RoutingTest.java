@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
  * routerSettings.applyBoardSpecificOptimizations(routingBoard)}, which re-initialises the layer
  * arrays from the actual loaded board before the autorouter reads them.
  */
-public class Issue676RoutingTest extends RoutingFixtureTest {
+class Issue676RoutingTest extends RoutingFixtureTest {
 
   private static final String FIXTURE = "Issue676-ch32v-tx118s.dsn";
 

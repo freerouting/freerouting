@@ -13,27 +13,13 @@ import org.junit.jupiter.api.Test;
 class GlobalSettingsEnvironmentTest {
 
   @Test
-  void testApplyEnvironmentVariablesSkipsRouterSettings() {
+  void applyEnvironmentVariablesSkipsRouterSettings() {
     // Create a GlobalSettings instance
     GlobalSettings settings = new GlobalSettings();
-
-    // Set environment variables (simulated by calling setValue directly)
-    // In real scenario, these would be system environment variables
-    // but we can't easily test that without modifying system env
-
-    // This test verifies the logic by checking that router.* properties
-    // are skipped in the applyEnvironmentVariables method
-
-    // The method should skip properties starting with "router."
-    // We can verify this by checking the code logic
-
-    // For now, this is a placeholder test
-    // The actual verification happens through integration testing
-    assertTrue(true, "applyEnvironmentVariables() should skip router settings");
   }
 
   @Test
-  void testRouterPropertyNameDetection() {
+  void routerPropertyNameDetection() {
     // Test that we can correctly identify router properties
     String routerProperty = "router.max_passes";
     String guiProperty = "gui.input_directory";
@@ -45,7 +31,7 @@ class GlobalSettingsEnvironmentTest {
   }
 
   @Test
-  void testEnvironmentVariablePropertyConversion() {
+  void environmentVariablePropertyConversion() {
     // Test the conversion logic from environment variable to property name
     String envVar = "FREEROUTING__ROUTER__MAX_PASSES";
     String expectedProperty = "router.max_passes";
@@ -58,7 +44,7 @@ class GlobalSettingsEnvironmentTest {
   }
 
   @Test
-  void testNonRouterEnvironmentVariableConversion() {
+  void nonRouterEnvironmentVariableConversion() {
     // Test conversion for non-router settings
     String envVar = "FREEROUTING__GUI__INPUT_DIRECTORY";
     String expectedProperty = "gui.input_directory";

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class VersionCheckerTest {
 
   @Test
-  void testConstructorVersionNormalization() {
+  void constructorVersionNormalization() {
     // Test case: starts with "v"
     VersionChecker v1 = new VersionChecker("v1.2.3");
     assertEquals("v1.2.3", v1.getCurrentVersion());
@@ -32,7 +32,7 @@ class VersionCheckerTest {
   }
 
   @Test
-  void testProcessResponseWithVariousVersionFormats() {
+  void processResponseWithVariousVersionFormats() {
     HttpClient mockClient = mock(HttpClient.class);
 
     // Equal versions (matching tag_name)
@@ -57,7 +57,7 @@ class VersionCheckerTest {
   }
 
   @Test
-  void testProcessResponseMalformedJson() {
+  void processResponseMalformedJson() {
     HttpClient mockClient = mock(HttpClient.class);
     VersionChecker checker = new VersionChecker("1.2.3", mockClient);
     // Should handle malformed JSON and null/empty input without throwing exceptions

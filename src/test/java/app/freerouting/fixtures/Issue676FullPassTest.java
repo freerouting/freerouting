@@ -4,7 +4,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.Test;
 
-public class Issue676FullPassTest extends RoutingFixtureTest {
+class Issue676FullPassTest extends RoutingFixtureTest {
   private static final String FIXTURE = "Issue676-ch32v-tx118s.dsn";
 
   @Test

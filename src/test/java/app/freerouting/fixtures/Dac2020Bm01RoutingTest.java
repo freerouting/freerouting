@@ -6,12 +6,12 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.Test;
 
-public class Dac2020Bm01RoutingTest extends RoutingFixtureTest {
+class Dac2020Bm01RoutingTest extends RoutingFixtureTest {
 
   private RoutingJob job;
 
   @Test
-  public void testIssue508BM01First2NetsOnly() {
+  void issue508BM01First2NetsOnly() {
     // Set console logging level to INFO for quick test
     System.setProperty("freerouting.logging.console.level", "INFO");
     FRLogger.granularTraceEnabled = false;

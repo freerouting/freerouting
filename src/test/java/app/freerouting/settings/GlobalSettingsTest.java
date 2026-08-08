@@ -17,7 +17,7 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void testApplyCommandLineArgumentsValidArguments() {
+  void applyCommandLineArgumentsValidArguments() {
     GlobalSettings settings = new GlobalSettings();
     String[] args =
         new String[] {
@@ -39,7 +39,7 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void testApplyCommandLineArgumentsLogLevel() {
+  void applyCommandLineArgumentsLogLevel() {
     GlobalSettings settings = new GlobalSettings();
     String[] args = new String[] {"-ll", "DEBUG"};
 
@@ -49,7 +49,7 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void testApplyCommandLineArgumentsUnknownFlag() {
+  void applyCommandLineArgumentsUnknownFlag() {
     GlobalSettings settings = new GlobalSettings();
     String[] args = new String[] {"-unknownFlag"};
 
@@ -64,7 +64,7 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void testApplyCommandLineArgumentsUnknownValue() {
+  void applyCommandLineArgumentsUnknownValue() {
     GlobalSettings settings = new GlobalSettings();
     // "-mp 10" consumes 2 args. "extraValue" is loose.
     String[] args = new String[] {"-mp", "10", "extraValue"};
@@ -80,7 +80,7 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void testApplyCommandLineArgumentsValidDoubleHyphen() {
+  void applyCommandLineArgumentsValidDoubleHyphen() {
     GlobalSettings settings = new GlobalSettings();
     String[] args = new String[] {"--router.max_passes=20"};
 
@@ -91,7 +91,7 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void testSetUnknownProperty() {
+  void setUnknownProperty() {
     GlobalSettings settings = new GlobalSettings();
     // This should log a warning instead of incorrect stack trace
     settings.setValue("unknown_settings.unknown_field", "true");
@@ -107,7 +107,7 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void testApplyCommandLineArgumentsMalformedDoubleHyphen() {
+  void applyCommandLineArgumentsMalformedDoubleHyphen() {
     GlobalSettings settings = new GlobalSettings();
     String[] args = new String[] {"--someflag"};
 

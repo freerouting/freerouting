@@ -6,10 +6,10 @@ import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import org.junit.jupiter.api.Test;
 
-public class ClearanceMatrixTest {
+class ClearanceMatrixTest {
 
   @Test
-  public void testSetValue() {
+  void setValue() {
     Layer[] layers = new Layer[] {new Layer("Top", true), new Layer("Bottom", true)};
     LayerStructure layerStructure = new LayerStructure(layers);
     String[] nameArr = new String[] {"default"};

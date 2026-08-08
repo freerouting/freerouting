@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class Issue733DsnJsonParityTest {
+class Issue733DsnJsonParityTest {
 
   private File findFixtureFile(String filename) {
     Path testDirectory = Path.of(".").toAbsolutePath();
@@ -59,7 +59,7 @@ public class Issue733DsnJsonParityTest {
 
   @Test
   @Disabled("Disabled due to known issue with DSN and JSON parity.")
-  void testDsnJsonInputParityKiCadInterf() throws Exception {
+  void dsnJsonInputParityKiCadInterf() throws Exception {
     File dsnFile = findFixtureFile("Issue733-kicad_interf_u_input_design.dsn");
     File jsonFile = findFixtureFile("Issue733-kicad_interf_u_input_design.json");
 
@@ -77,7 +77,7 @@ public class Issue733DsnJsonParityTest {
 
   @Test
   @Disabled("Disabled due to known issue with DSN and JSON parity.")
-  void testDsnJsonInputParityKiCadComplexHierarchy() throws Exception {
+  void dsnJsonInputParityKiCadComplexHierarchy() throws Exception {
     File dsnFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_design.dsn");
     File jsonFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_design.json");
 
@@ -94,7 +94,7 @@ public class Issue733DsnJsonParityTest {
   }
 
   @Test
-  void testSesJsonOutputParityKiCadComplexHierarchy() throws Exception {
+  void sesJsonOutputParityKiCadComplexHierarchy() throws Exception {
     File dsnFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_design.dsn");
     File sesFile = findFixtureFile("Issue733-kicad_complex_hierarchy_output_session.ses");
     File jsonSessionFile = findFixtureFile("Issue733-kicad_complex_hierarchy_output_session.json");

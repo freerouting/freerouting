@@ -9,7 +9,7 @@ import app.freerouting.io.specctra.DsnReader;
 import java.io.ByteArrayInputStream;
 import org.junit.jupiter.api.Test;
 
-public class DrcViolationRoutingTest extends RoutingFixtureTest {
+class DrcViolationRoutingTest extends RoutingFixtureTest {
 
   private void assertDrcOnLoadedBoard(
       String filename, int expectedUnconnected, int expectedViolations) throws Exception {
@@ -51,18 +51,18 @@ public class DrcViolationRoutingTest extends RoutingFixtureTest {
   // actual geometric reality for these specific .dsn files.
 
   @Test
-  public void testIssue5756TrackAnd1HoleClearanceViolations() throws Exception {
+  void issue5756TrackAnd1HoleClearanceViolations() throws Exception {
     assertDrcOnLoadedBoard(
         "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn", 3, 76);
   }
 
   @Test
-  public void testIssue5754HoleClearanceViolations() throws Exception {
+  void issue5754HoleClearanceViolations() throws Exception {
     assertDrcOnLoadedBoard("Issue575-drc_dev-board_4_hole_clearance_violations.dsn", 9, 2);
   }
 
   @Test
-  public void testIssue5757UnconnectedItems() throws Exception {
+  void issue5757UnconnectedItems() throws Exception {
     assertDrcOnLoadedBoard("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn", 145, 0);
   }
 }

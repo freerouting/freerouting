@@ -128,13 +128,13 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://github.com/freerouting/freerouting/issues/230">GitHub Issue #230</a>
  */
-public class InactiveLayerRoutingTest extends RoutingFixtureTest {
+class InactiveLayerRoutingTest extends RoutingFixtureTest {
 
   private RoutingJob job;
 
   @Test
   @Tag("slow")
-  void testIssue230WiresOnInactiveLayers() {
+  void issue230WiresOnInactiveLayers() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:05:00");
 

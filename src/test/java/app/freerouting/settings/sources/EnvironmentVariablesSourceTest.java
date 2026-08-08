@@ -3,6 +3,7 @@ package app.freerouting.settings.sources;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.settings.RouterSettings;
@@ -14,19 +15,19 @@ import org.junit.jupiter.api.Test;
 class EnvironmentVariablesSourceTest {
 
   @Test
-  void testPriority() {
+  void priority() {
     EnvironmentVariablesSource source = new EnvironmentVariablesSource(new HashMap<>());
     assertEquals(55, source.getPriority());
   }
 
   @Test
-  void testSourceName() {
+  void sourceName() {
     EnvironmentVariablesSource source = new EnvironmentVariablesSource(new HashMap<>());
     assertEquals("Environment Variables", source.getSourceName());
   }
 
   @Test
-  void testEmptyEnvironment() {
+  void emptyEnvironment() {
     Map<String, String> env = new HashMap<>();
     EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
 
@@ -36,7 +37,7 @@ class EnvironmentVariablesSourceTest {
   }
 
   @Test
-  void testSimpleRouterSetting() {
+  void simpleRouterSetting() {
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__ROUTER__MAX_PASSES", "100");
 
@@ -49,7 +50,7 @@ class EnvironmentVariablesSourceTest {
   }
 
   @Test
-  void testNestedRouterSetting() {
+  void nestedRouterSetting() {
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS", "8");
 
@@ -62,7 +63,7 @@ class EnvironmentVariablesSourceTest {
   }
 
   @Test
-  void testBooleanSetting() {
+  void booleanSetting() {
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__ROUTER__VIAS_ALLOWED", "false");
 
@@ -75,7 +76,7 @@ class EnvironmentVariablesSourceTest {
   }
 
   @Test
-  void testMultipleSettings() {
+  void multipleSettings() {
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__ROUTER__MAX_PASSES", "50");
     env.put("FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS", "4");
@@ -92,7 +93,7 @@ class EnvironmentVariablesSourceTest {
   }
 
   @Test
-  void testIgnoresNonRouterVariables() {
+  void ignoresNonRouterVariables() {
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__GUI__INPUT_DIRECTORY", "/some/path");
     env.put("FREEROUTING__ROUTER__MAX_PASSES", "100");
@@ -109,7 +110,7 @@ class EnvironmentVariablesSourceTest {
   }
 
   @Test
-  void testIgnoresVariablesWithoutPrefix() {
+  void ignoresVariablesWithoutPrefix() {
     Map<String, String> env = new HashMap<>();
     env.put("MAX_PASSES", "100");
     env.put("ROUTER__MAX_PASSES", "200");
@@ -119,12 +120,12 @@ class EnvironmentVariablesSourceTest {
 
     assertNotNull(settings);
     // Null value should remain since no valid env vars were found
-    assertEquals(null, settings.maxPasses);
+    assertNull(settings.maxPasses);
     assertEquals(0, source.getParsedCount());
   }
 
   @Test
-  void testInvalidPropertyName() {
+  void invalidPropertyName() {
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__ROUTER__INVALID_PROPERTY", "value");
     env.put("FREEROUTING__ROUTER__MAX_PASSES", "100");
@@ -139,7 +140,7 @@ class EnvironmentVariablesSourceTest {
   }
 
   @Test
-  void testInvalidValue() {
+  void invalidValue() {
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__ROUTER__MAX_PASSES", "not_a_number");
 
@@ -148,12 +149,12 @@ class EnvironmentVariablesSourceTest {
 
     assertNotNull(settings);
     // Should keep null value since parsing failed
-    assertEquals(null, settings.maxPasses);
+    assertNull(settings.maxPasses);
     assertEquals(0, source.getParsedCount());
   }
 
   @Test
-  void testGetParsedVariables() {
+  void getParsedVariables() {
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__ROUTER__MAX_PASSES", "100");
     env.put("FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS", "4");
@@ -168,7 +169,7 @@ class EnvironmentVariablesSourceTest {
   }
 
   @Test
-  void testCaseInsensitivePropertyNames() {
+  void caseInsensitivePropertyNames() {
     Map<String, String> env = new HashMap<>();
     // Environment variables are case-sensitive, but property names are converted to
     // lowercase
@@ -182,7 +183,7 @@ class EnvironmentVariablesSourceTest {
   }
 
   @Test
-  void testStringSettings() {
+  void stringSettings() {
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__ROUTER__ALGORITHM", "freerouting-router-v19");
 

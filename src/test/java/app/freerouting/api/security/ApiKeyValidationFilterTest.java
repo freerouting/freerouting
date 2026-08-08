@@ -15,7 +15,6 @@ import app.freerouting.settings.GlobalSettings;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import java.io.IOException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +33,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * self-attach warning.
  */
 @ExtendWith(MockitoExtension.class)
-public class ApiKeyValidationFilterTest {
+class ApiKeyValidationFilterTest {
 
   private ApiKeyValidationFilter filter;
 
@@ -72,7 +71,7 @@ public class ApiKeyValidationFilterTest {
    * Authorization header must be allowed through (no abort, no 401).
    */
   @Test
-  void whenAuthDisabledRequestWithoutAuthHeaderIsAllowed() throws IOException {
+  void whenAuthDisabledRequestWithoutAuthHeaderIsAllowed() throws Exception {
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled =
         false; // explicit opt-out
 
@@ -89,7 +88,7 @@ public class ApiKeyValidationFilterTest {
    * must be allowed through.
    */
   @Test
-  void whenAuthDisabledRequestWithEmptyBearerTokenIsAllowed() throws IOException {
+  void whenAuthDisabledRequestWithEmptyBearerTokenIsAllowed() throws Exception {
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
 
     ContainerRequestContext ctx = mockRequest("v1/jobs", "Bearer ");
@@ -104,7 +103,7 @@ public class ApiKeyValidationFilterTest {
    * rejected with 401.
    */
   @Test
-  void whenAuthEnabledRequestWithoutAuthHeaderIsRejected() throws IOException {
+  void whenAuthEnabledRequestWithoutAuthHeaderIsRejected() throws Exception {
     // authentication.isEnabled defaults to true — no explicit set needed.
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", null);
 
@@ -120,7 +119,7 @@ public class ApiKeyValidationFilterTest {
    * NOT stubbed here: the filter returns before reaching that read for excluded paths.
    */
   @Test
-  void systemStatusPathIsAlwaysPublic() throws IOException {
+  void systemStatusPathIsAlwaysPublic() throws Exception {
     // authentication.isEnabled defaults to true
     ContainerRequestContext ctx = mock(ContainerRequestContext.class);
     UriInfo uriInfo = mock(UriInfo.class);

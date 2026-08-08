@@ -1,5 +1,7 @@
 package app.freerouting.logger;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Instant;
@@ -84,7 +86,7 @@ public class ErrorLogFailExtension implements BeforeEachCallback, AfterEachCallb
             .map(ErrorLogFailExtension::formatEntry)
             .collect(Collectors.joining("\n\n"));
 
-    org.junit.jupiter.api.Assertions.fail(
+    fail(
         errorEntries.length
             + " error-level log entry(ies) were produced during this test — "
             + "tests must not produce ERROR logs. "

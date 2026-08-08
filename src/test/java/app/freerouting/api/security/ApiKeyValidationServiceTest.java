@@ -10,7 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ApiKeyValidationServiceTest {
+class ApiKeyValidationServiceTest {
 
   @BeforeEach
   void setUp() {
@@ -25,7 +25,7 @@ public class ApiKeyValidationServiceTest {
   }
 
   @Test
-  void testAuthenticationDisabledReturnsTrue() {
+  void authenticationDisabledReturnsTrue() {
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
     ApiKeyValidationService service = ApiKeyValidationService.getInstance();
 
@@ -33,7 +33,7 @@ public class ApiKeyValidationServiceTest {
   }
 
   @Test
-  void testAuthenticationEnabledButNoProvidersReturnsFalse() {
+  void authenticationEnabledButNoProvidersReturnsFalse() {
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = true;
     Freerouting.globalSettings.apiServerSettings.authentication.providers = ""; // No providers
     ApiKeyValidationService service = ApiKeyValidationService.getInstance();
@@ -42,7 +42,7 @@ public class ApiKeyValidationServiceTest {
   }
 
   @Test
-  void testFallbackFirstProviderUndecidedSecondGrants() {
+  void fallbackFirstProviderUndecidedSecondGrants() {
     ApiKeyValidationService service =
         configureMockProviders(
             ApiKeyValidationResult.UNDECIDED, ApiKeyValidationResult.ACCESS_GRANTED);
@@ -50,7 +50,7 @@ public class ApiKeyValidationServiceTest {
   }
 
   @Test
-  void testFallbackFirstProviderDeniesReturnsFalseImmediately() {
+  void fallbackFirstProviderDeniesReturnsFalseImmediately() {
     ApiKeyValidationService service =
         configureMockProviders(
             ApiKeyValidationResult.ACCESS_DENIED,
@@ -60,7 +60,7 @@ public class ApiKeyValidationServiceTest {
   }
 
   @Test
-  void testFallbackAllProvidersUndecidedReturnsFalse() {
+  void fallbackAllProvidersUndecidedReturnsFalse() {
     ApiKeyValidationService service =
         configureMockProviders(
             ApiKeyValidationResult.UNDECIDED, ApiKeyValidationResult.PROVIDER_FAILED);
@@ -68,7 +68,7 @@ public class ApiKeyValidationServiceTest {
   }
 
   @Test
-  void testFallbackFirstProviderGrantsStopsEarly() {
+  void fallbackFirstProviderGrantsStopsEarly() {
     ApiKeyValidationService service =
         configureMockProviders(
             ApiKeyValidationResult.ACCESS_GRANTED,

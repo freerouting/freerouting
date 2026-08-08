@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class SystemControllerV1Test {
+class SystemControllerV1Test {
 
   @Test
-  public void testGetCpuLoad() {
+  void getCpuLoad() {
     double cpuLoad = SystemControllerV1.getCpuLoad();
     // It should either be a valid percentage [0.0, 100.0] or -1 if unsupported/undetected.
     assertTrue(

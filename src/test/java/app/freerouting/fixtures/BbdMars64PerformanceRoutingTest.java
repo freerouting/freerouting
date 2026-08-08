@@ -59,10 +59,10 @@ import org.junit.jupiter.api.Test;
  * @see <a href="https://github.com/freerouting/freerouting/issues/555">GitHub Issue #555</a>
  */
 @Tag("slow")
-public class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
+class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
 
   @Test
-  void testIssue555RoutingPerformanceWithCNHFunctionalTester1() {
+  void issue555RoutingPerformanceWithCNHFunctionalTester1() {
     IO.println(
         "Testing performance by routing reference board 'Issue555-CNH_Functional_Tester_1.dsn' with default settings.");
     IO.println(
@@ -107,7 +107,7 @@ public class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  void testIssue555RoutingPerformanceWithBBDMars64() {
+  void issue555RoutingPerformanceWithBBDMars64() {
     IO.println(
         "Testing performance by routing reference board 'Issue555-BBD_Mars-64.dsn' with default settings.");
     IO.println(

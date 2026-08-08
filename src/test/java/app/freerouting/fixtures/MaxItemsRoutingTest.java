@@ -1,14 +1,15 @@
 package app.freerouting.fixtures;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import app.freerouting.core.RoutingJob;
 import app.freerouting.settings.sources.TestingSettings;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class MaxItemsRoutingTest extends RoutingFixtureTest {
+class MaxItemsRoutingTest extends RoutingFixtureTest {
 
   @Test
-  public void testMaxItemsLimit() {
+  void maxItemsLimit() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setMaxItems(20);
     testingSettings.setMaxPasses(100);
@@ -38,7 +39,7 @@ public class MaxItemsRoutingTest extends RoutingFixtureTest {
 
     // We can just verify it runs without exception. This test mainly exercises the
     // code path.
-    Assertions.assertNotNull(job);
+    assertNotNull(job);
     System.out.println("Job State: " + job.state);
   }
 }
