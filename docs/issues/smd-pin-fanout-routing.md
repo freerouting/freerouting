@@ -12,8 +12,8 @@ The board is **theoretically 100 % routable** (confirmed by the v1.9 baseline an
 
 Without a fanout pass, the maze-search algorithm must solve both "escape from the SMD pad onto a via" and "reach the destination pin" in a single expansion. On dense boards this frequently fails: the occupied regions around SMD pads block all via-placement sites, and the router marks the connection as unroutable even though a short stub-trace + via solution exists.
 
-**Affected file:** `fixtures/Issue508-DAC2020_bm05.dsn`  
-**Regression:** This board should complete with 0 unrouted connections. Currently it does not.  
+**Affected file:** `fixtures/Issue508-DAC2020_bm05.dsn`
+**Regression:** This board should complete with 0 unrouted connections. Currently it does not.
 **Priority:** High — DAC 2020 bm05 is one of the standard benchmark boards; failure here undermines benchmark credibility.
 
 ---
@@ -392,8 +392,8 @@ Twelve solutions are catalogued below, grouped by approach. **Solution 3 (BatchF
 
 Override the `(attach off)` flag globally by adding a `viaAtSmdAllowed` boolean to `RouterSettings` (default `false`) that, when `true`, forces `AutorouteControl.attach_smd_allowed = true` regardless of padstack definitions.
 
-**Pros:** Trivial to implement; bm05 may route immediately.  
-**Cons:** Violates the Specctra DSN specification; produces vias stacked on SMD pads, which is a manufacturing defect; introduces clearance violations; does not solve the underlying architectural gap.  
+**Pros:** Trivial to implement; bm05 may route immediately.
+**Cons:** Violates the Specctra DSN specification; produces vias stacked on SMD pads, which is a manufacturing defect; introduces clearance violations; does not solve the underlying architectural gap.
 **Status:** ❌ Rejected.
 
 ---
@@ -402,8 +402,8 @@ Override the `(attach off)` flag globally by adding a `viaAtSmdAllowed` boolean 
 
 Many SMD boards route well if the autorouter strongly prefers the component layer (Top) for signal traces and uses the opposite layer (Bottom) only when unavoidable. Adjusting the `ExpansionCostFactor` for inner vs. outer layers when all components are SMD would reduce the number of unnecessary layer changes.
 
-**Pros:** No architectural change needed; may improve routing quality on simple SMD boards.  
-**Cons:** Does not address the fundamental escape-via problem; dense boards still block via sites; does not implement the fanout algorithm.  
+**Pros:** No architectural change needed; may improve routing quality on simple SMD boards.
+**Cons:** Does not address the fundamental escape-via problem; dense boards still block via sites; does not implement the fanout algorithm.
 **Status:** ⚠️ Viable as a complementary improvement after Solution 3, but not sufficient alone.
 
 ---
@@ -473,7 +473,7 @@ return !this.drill_allowed() || !(p_other instanceof Via);
 
 By removing the `!via.attach_allowed` clause, same-net vias can be placed at the pad location. The Specctra `(attach off)` constraint is preserved for **cross-net** clearance checks (which are enforced separately via clearance matrices), not for same-net routing decisions.
 
-**Pros:** Single-line change, zero new data structures, zero performance impact.  
+**Pros:** Single-line change, zero new data structures, zero performance impact.
 **Cons:** Removes the ability to represent a board constraint that says "even same-net vias should not overlap this pad." In practice this constraint is never issued on real boards (it would prevent any routing to that pin), but the Specctra spec technically allows it. A safe alternative is to keep the check but also AND it with `!p_other.shares_net(this)`, making it: _"only block foreign-net via attach"_.
 
 **Safer variant:**
@@ -507,8 +507,8 @@ if (!this.attach_smd_allowed && p_board.get_layer_count() > 1) {
 }
 ```
 
-**Pros:** Only activates for nets that provably cannot route without layer change; does not affect single-layer boards or through-hole nets.  
-**Cons:** Slightly more expensive at init time (iterates net items once per routing attempt); edge cases if net also contains non-Pin items.  
+**Pros:** Only activates for nets that provably cannot route without layer change; does not affect single-layer boards or through-hole nets.
+**Cons:** Slightly more expensive at init time (iterates net items once per routing attempt); edge cases if net also contains non-Pin items.
 **Interaction with Solution 4:** If Solution 4 is implemented, this becomes unnecessary for the same-net via case. Solutions 4 and 5 address the same root cause from different levels.
 
 **Status:** 🔲 Open — good fallback if Solution 4 is considered too invasive.
@@ -521,7 +521,7 @@ if (!this.attach_smd_allowed && p_board.get_layer_count() > 1) {
 
 For nets where all source items are on a single layer (SMD-only nets), multiply `min_normal_via_cost` by a reduced factor (e.g. `0.3`) so that the maze search eagerly tries layer changes near the pad, before congestion fills the board.
 
-**Pros:** No semantic change, pure heuristic; easy to expose as a `RouterSettings` parameter.  
+**Pros:** No semantic change, pure heuristic; easy to expose as a `RouterSettings` parameter.
 **Cons:** Lower via cost can increase unnecessary vias on non-SMD nets if the threshold is too aggressive. Requires careful tuning. May interact with `BatchFanout` (Solutions 3+6 together might over-reduce via counts).
 
 **Status:** 🔲 Open — best applied as a complement to Solutions 3 or 4 for dense boards.
@@ -542,7 +542,7 @@ autoroute_item_list.sort((a, b) -> {
 });
 ```
 
-**Pros:** Zero algorithmic change; purely organizational. Addresses the secondary symptom that SMD pins arrive in routing order after through-hole pins have already congested the via escape zones.  
+**Pros:** Zero algorithmic change; purely organizational. Addresses the secondary symptom that SMD pins arrive in routing order after through-hole pins have already congested the via escape zones.
 **Cons:** Changes routing order may shift which nets fail in the rare case that the board is not fully routable. Some deterministic test comparisons (v1.9 vs. current) may need re-baselining.
 
 **Status:** 🔲 Open — low-risk complement to Solutions 3/4.
@@ -559,7 +559,7 @@ autoroute_item_list.sort((a, b) -> {
 
 This avoids the expensive maze search of `BatchFanout` while still addressing the via-placement bottleneck for all SMD pins simultaneously.
 
-**Pros:** Faster than BatchFanout (O(n × local_grid) vs O(n × maze_search)); no ripup needed.  
+**Pros:** Faster than BatchFanout (O(n × local_grid) vs O(n × maze_search)); no ripup needed.
 **Cons:** Does not actually place vias — only suggests locations. The maze search must still succeed. Requires a new "reservation" data structure in `RoutingBoard` or `AutorouteEngine`. Medium implementation complexity.
 
 **Status:** 🔲 Open — worth exploring if BatchFanout proves too slow for large boards.
@@ -585,7 +585,7 @@ ViaInfo found_via_info = new ViaInfo(via_name, curr_padstack, cl_class,
 
 This requires extending `ViaInfo` and `Via` with two separate flags: one for routing (always `true` for same-net), one for DRC (honors `attach off`).
 
-**Pros:** Correct per spec; fixes the root cause cleanly without heuristics.  
+**Pros:** Correct per spec; fixes the root cause cleanly without heuristics.
 **Cons:** Requires adding a second flag to `ViaInfo` and `Via`, updating serialization, and propagating through the DRC checker. Higher implementation complexity than Solution 4.
 
 **Status:** 🔲 Open — architecturally correct but medium complexity; consider after Solution 4 is validated.
@@ -598,7 +598,7 @@ This requires extending `ViaInfo` and `Via` with two separate flags: one for rou
 
 A bidirectional search simultaneously expands from *both* ends. The two expansion fronts meet in the middle (typically on an inner or bottom layer), cutting the search space roughly in half. This is especially effective for 2-layer SMD boards where the optimal route passes straight through the board center.
 
-**Pros:** Significant reduction in search space for point-to-point SMD connections; better use of available routing channels.  
+**Pros:** Significant reduction in search space for point-to-point SMD connections; better use of available routing channels.
 **Cons:** Major algorithmic change to `MazeSearchAlgo`; requires careful handling of the multi-destination expansion policy; risk of regression. High implementation effort.
 
 **Status:** 🔲 Open — long-term improvement; not suitable as a quick fix for bm05 but worthwhile for the roadmap.
@@ -613,7 +613,7 @@ A bidirectional search simultaneously expands from *both* ends. The two expansio
 
 When the board is SMD-only (all items on outer layers), skip the outer-layer penalty, or invert it (reduce inner-layer cost instead, to attract routing to inner layers and reserve outer-layer space for SMD connections).
 
-**Pros:** Small change in `RouterSettings`.  
+**Pros:** Small change in `RouterSettings`.
 **Cons:** Only affects boards with more than 2 signal layers; has no effect on bm05 (2-layer board). Secondary benefit at best.
 
 **Status:** ⚠️ Partial mitigation; implement after solving the primary `attach_smd_allowed` issue.
@@ -630,7 +630,7 @@ When the board is SMD-only (all items on outer layers), skip the outer-layer pen
 
 This pass runs only once (after pass N) and targets the specific failure mode of SMD pads that are electrically isolated despite the net being partially routed on other layers.
 
-**Pros:** Complementary to any other solution; handles residual failures after the primary fix; uses existing `ForcedViaAlgo` infrastructure.  
+**Pros:** Complementary to any other solution; handles residual failures after the primary fix; uses existing `ForcedViaAlgo` infrastructure.
 **Cons:** Does not address the root cause; may fail on the same crowded boards where the maze search failed; post-processing adds routing time.
 
 **Status:** 🔲 Open — good safety net to pair with Solutions 3/4.
@@ -740,8 +740,8 @@ The removed clause `|| !via.attach_allowed` was blocking same-net vias from bein
 
 **Status:** ✅ Done (implemented on `BasicBoard` and used by `BatchAutorouter`/`BatchFanout`)
 
-Port `get_smd_pins()` from v1.9 `BasicBoard` to the current `RoutingBoard` (or `BasicBoard` if applicable).  
-Definition: returns all `Pin` items where `first_layer() == last_layer()`.  
+Port `get_smd_pins()` from v1.9 `BasicBoard` to the current `RoutingBoard` (or `BasicBoard` if applicable).
+Definition: returns all `Pin` items where `first_layer() == last_layer()`.
 **Acceptance criteria:** Method exists, is covered by a unit test in `src/test/java/app/freerouting/board/`.
 
 ---

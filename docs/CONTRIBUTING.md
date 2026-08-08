@@ -59,5 +59,5 @@ As a rule of thumb, changes are obvious fixes if they do not introduce any new f
  3. What did you do?
  4. What did you expect to see?
  5. What did you see instead?
- 
+
 If you find yourself wishing for a feature that doesn't exist in Freerouting, you are probably not alone. There are bound to be others out there with similar needs. Many of the features that Freerouting has today have been added because our users saw the need. Open an issue on our issues list on GitHub which describes the feature you would like to see, why you need it, and how it should work.

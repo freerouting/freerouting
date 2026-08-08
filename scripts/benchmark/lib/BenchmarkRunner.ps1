@@ -73,7 +73,7 @@ function Invoke-BenchmarkRun {
     if ($Settings.optimizer_timeout) {
         $jvmArgs += "--router.optimizer.timeout=`"$($Settings.optimizer_timeout)`""
     }
-    
+
     # Logging flags
     $jvmArgs += "--logging.file.level=$($Settings.log_level)"
     $jvmArgs += ('--logging.file.location="{0}"' -f $logFile)
@@ -160,7 +160,7 @@ function Invoke-BenchmarkRun {
     }
 
     $endTime = Get-Date
-    
+
     # Stop memory sampler
     Stop-Job $memJob -ErrorAction SilentlyContinue
     Remove-Job $memJob -ErrorAction SilentlyContinue

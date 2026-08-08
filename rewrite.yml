@@ -119,4 +119,3 @@ recipeList:
   - org.openrewrite.java.migrate.util.UseMapOf
   - org.openrewrite.java.migrate.net.JavaNetAPIs
   - org.openrewrite.staticanalysis.UnnecessaryParentheses
-

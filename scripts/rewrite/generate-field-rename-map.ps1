@@ -38,7 +38,7 @@ $seen = [System.Collections.Generic.HashSet[string]]::new()
 
 foreach ($file in $javaFiles) {
     $content = [IO.File]::ReadAllText($file.FullName)
-    
+
     $pkg = if ($content -match 'package\s+([\w.]+);') { $Matches[1] } else { "" }
     $className = if ($content -match '(?:public\s+|protected\s+|private\s+)?(?:final\s+)?class\s+(\w+)') { $Matches[1] } else { "" }
     if (-not $pkg -or -not $className) { continue }

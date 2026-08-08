@@ -28,15 +28,15 @@ function Invoke-DrcCheck {
     )
 
     $runAt = (Get-Date -UFormat "%Y-%m-%dT%H:%M:%SZ")
-    
+
     try {
         $process = Start-Process -FilePath "java" -ArgumentList $jvmArgs -NoNewWindow -PassThru
         $process.WaitForExit()
-        
+
         if (Test-Path $drcReportFile) {
             $raw = Get-Content $drcReportFile -Raw
             $report = ConvertFrom-Json $raw
-            
+
             $unrouted = 0
             if ($report.unconnectedItems) {
                 $unrouted = $report.unconnectedItems.Count

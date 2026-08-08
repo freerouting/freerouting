@@ -44,7 +44,7 @@ Integrations are available with:
 
 3) **Start Autorouting**: Click the `Magic Wand` icon to begin the autorouting process.
    ![image](https://github.com/user-attachments/assets/e104cd3a-00b9-49a5-8f28-3b803e79d973)
-   
+
 4) **Monitor Progress**: Watch the routing progress visually in the board editor and numerically in the footer.
    ![image](https://github.com/user-attachments/assets/e553f98c-143d-46ea-8cc1-90348c9cc379)
 

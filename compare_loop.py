@@ -43,4 +43,3 @@ for i in range(12, 100):
         break
     if len(c_lines) != len(v_lines):
         print(f'Length mismatch at {i}: Curr={len(c_lines)} V19={len(v_lines)}. Continuing...')
-

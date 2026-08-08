@@ -103,4 +103,3 @@ public class ApplyAllFieldRenames extends JavaIsoVisitor<ExecutionContext> {
     return true;
   }
 }
-

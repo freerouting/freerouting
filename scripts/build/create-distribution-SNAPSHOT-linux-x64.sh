@@ -43,4 +43,3 @@ mv freerouting "freerouting-$APP_VERSION-linux-x64"
 cp ../../LICENSE "freerouting-$APP_VERSION-linux-x64/LICENSE"
 
 zip -r "freerouting-$APP_VERSION-linux-x64.zip" "freerouting-$APP_VERSION-linux-x64"
-

@@ -758,13 +758,13 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       if (getRowCount() == 0) {
         return Object.class;
       }
-      Object currEntry = getValueAt(0, pCol);
-      if (currEntry == null) {
+      Object currentEntry = getValueAt(0, pCol);
+      if (currentEntry == null) {
         return Object.class;
       }
-      Class<?> currClass = currEntry.getClass();
+      Class<?> currClass = currentEntry.getClass();
       // changed because of a localisation bug in Java
-      if (currEntry instanceof Float) {
+      if (currentEntry instanceof Float) {
         currClass = String.class;
       }
       return currClass;

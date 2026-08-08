@@ -343,8 +343,8 @@ public abstract class Item
       Collection<TreeEntry> currOverlappingItems =
           defaultTree.overlappingTreeEntriesWithClearance(
               currTileShape, shapeLayer(i), new int[0], clearanceClass);
-      for (TreeEntry currEntry : currOverlappingItems) {
-        if (!(currEntry.object instanceof Item currItem) || currEntry.object == this) {
+      for (TreeEntry currentEntry : currOverlappingItems) {
+        if (!(currentEntry.object instanceof Item currItem) || currentEntry.object == this) {
           continue;
         }
         boolean isObstacle = currItem.isObstacle(this);
@@ -383,7 +383,7 @@ public abstract class Item
         if (isObstacle) {
           // Get the two shapes the clearance is calculated between
           TileShape shape1 = currTileShape;
-          TileShape shape2 = currItem.getTreeShape(defaultTree, currEntry.shapeIndexInObject);
+          TileShape shape2 = currItem.getTreeShape(defaultTree, currentEntry.shapeIndexInObject);
           if (shape1 == null || shape2 == null) {
             FRLogger.warn("Item.clearanceViolations: unexpected null shape");
             continue;

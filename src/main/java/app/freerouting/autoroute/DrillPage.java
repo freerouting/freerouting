@@ -69,8 +69,8 @@ class DrillPage implements ExpandableObject {
       Collection<TileShape> cutoutShapes = new LinkedList<>();
       // drills on top of existing vias are used in the ripup algorithm
       TileShape prevObstacleShape = IntBox.EMPTY;
-      for (TreeEntry currEntry : overlaps) {
-        if (!(currEntry.object instanceof Item currItem)) {
+      for (TreeEntry currentEntry : overlaps) {
+        if (!(currentEntry.object instanceof Item currItem)) {
           continue;
         }
         if (currItem.isDrillable(this.netNo)) {
@@ -82,7 +82,7 @@ class DrillPage implements ExpandableObject {
           }
         }
         TileShape currObstacleShape =
-            currItem.getTreeShape(searchTree, currEntry.shapeIndexInObject);
+            currItem.getTreeShape(searchTree, currentEntry.shapeIndexInObject);
         if (!prevObstacleShape.contains(currObstacleShape)) {
           // Checked to avoid multiple cutout for example for vias with the same shape on all
           // layers.

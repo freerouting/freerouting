@@ -39,4 +39,3 @@ if ($m -ge 0) {
 $out.Add("CURRENT_RAW_COUNT=$($curr.Count) V19_RAW_COUNT=$($v19.Count)")
 $out | Set-Content "logs\raw-mismatch-latest.txt"
 Write-Output "WROTE logs/raw-mismatch-latest.txt"
-

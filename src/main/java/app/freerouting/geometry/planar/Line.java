@@ -240,15 +240,15 @@ public class Line implements Comparable<Line>, Serializable {
       }
       if (delta2.x == delta2.y) // other line is right diagonal
       {
-        int thisY = ((IntPoint) this.a).y;
+        int thisYCoord = ((IntPoint) this.a).y;
         IntPoint otherA = (IntPoint) pOther.a;
-        return new IntPoint(otherA.x + thisY - otherA.y, thisY);
+        return new IntPoint(otherA.x + thisYCoord - otherA.y, thisYCoord);
       }
       if (delta2.x == -delta2.y) // other line is left diagonal
       {
-        int thisY = ((IntPoint) this.a).y;
+        int thisYCoord = ((IntPoint) this.a).y;
         IntPoint otherA = (IntPoint) pOther.a;
-        return new IntPoint(otherA.x + otherA.y - thisY, thisY);
+        return new IntPoint(otherA.x + otherA.y - thisYCoord, thisYCoord);
       }
     } else if (delta1.x == delta1.y) // this line is right diagonal
     {

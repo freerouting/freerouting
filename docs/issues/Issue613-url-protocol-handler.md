@@ -1,9 +1,9 @@
 # Issue 613: Register a Custom URL Protocol to Launch Freerouting
 
-**GitHub Issue:** https://github.com/freerouting/freerouting/issues/613  
-**Related PR:** https://github.com/freerouting/freerouting/pull/651  
-**Requested by:** EasyEDA / LCEDA Pro team (`@L1uTongweiNewAccount`)  
-**Status:** Declined in current form. Idle timeout sub-feature accepted in principle.  
+**GitHub Issue:** https://github.com/freerouting/freerouting/issues/613
+**Related PR:** https://github.com/freerouting/freerouting/pull/651
+**Requested by:** EasyEDA / LCEDA Pro team (`@L1uTongweiNewAccount`)
+**Status:** Declined in current form. Idle timeout sub-feature accepted in principle.
 **Decision date:** 2026-04-30
 
 ---
@@ -193,4 +193,3 @@ A revised PR would be accepted if it satisfies all of the following:
 - [ ] `IdleTimeoutFilter` only resets on meaningful requests, not health/status pings.
 - [ ] macOS build scripts preserve code signing.
 - [ ] All checklist items in §5 of the PR #651 analysis are addressed.
-

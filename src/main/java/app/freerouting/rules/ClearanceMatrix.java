@@ -108,7 +108,7 @@ public class ClearanceMatrix implements Serializable {
   /** Sets the value of an entry in the clearance matrix to p_value. */
   public void setValue(int pI, int pJ, int pLayer, int pValue) {
     Row currRow = row[pJ];
-    MatrixEntry currEntry = currRow.column[pI];
+    MatrixEntry currentEntry = currRow.column[pI];
 
     // assure, that the clearance value is positive and even, and round it up, if it is odd
     // NOTE: why does it need to be even?
@@ -121,7 +121,7 @@ public class ClearanceMatrix implements Serializable {
       }
     }
 
-    currEntry.layer[pLayer] = value;
+    currentEntry.layer[pLayer] = value;
     currRow.maxValue[pLayer] = Math.max(currRow.maxValue[pLayer], value);
     this.maxValueOnLayer[pLayer] = Math.max(this.maxValueOnLayer[pLayer], value);
   }

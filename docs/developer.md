@@ -150,9 +150,9 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 * Check if Windows, Linux and macOS installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions) and if the Docker image was updated on [GHCR.io](https://github.com/freerouting/freerouting/pkgs/container/freerouting)
 * Publish the library to Maven Central
     * Use the [Gradle Maven plugin]([url](https://github.com/vanniktech/gradle-maven-publish-plugin)) and set the properties in `/.gradle/gradle.properties`
-      <img width="896" height="293" alt="image" src="https://github.com/user-attachments/assets/fa85332d-91d8-4715-924d-aa8b6f86c64c" />      
+      <img width="896" height="293" alt="image" src="https://github.com/user-attachments/assets/fa85332d-91d8-4715-924d-aa8b6f86c64c" />
     * Run the `./gradlew publishToMavenCentral --no-configuration-cache` command in the root folder to publish it to Maven Central
-    * Publish the deployment [on Maven Central Repository](https://central.sonatype.com/publishing) 
+    * Publish the deployment [on Maven Central Repository](https://central.sonatype.com/publishing)
 
 * Update the Docker image on Azure
     1. build docker image locally for Linux x64 (~2 mins)

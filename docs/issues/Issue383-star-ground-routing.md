@@ -1,7 +1,7 @@
 # Issue 383 — Star Ground Autorouting Support
 
-**GitHub Issue:** https://github.com/freerouting/freerouting/issues/383  
-**Label:** enhancement  
+**GitHub Issue:** https://github.com/freerouting/freerouting/issues/383
+**Label:** enhancement
 **Status:** Open — analysis complete, implementation not started
 
 ---
@@ -83,17 +83,17 @@ Star ground is a special case of sub-net decomposition: every pin-to-star-center
 
 ### Option A — Pure Post-Processing (No Router Changes)
 
-**How it works:**  
+**How it works:**
 After the autorouter finishes, post-process the routed GND net by introducing a virtual star-center junction and rerouting only the GND traces.
 
-**Pros:** Minimal change to the core engine; no risk of routing regression.  
+**Pros:** Minimal change to the core engine; no risk of routing regression.
 **Cons:** Does not guide the router toward a good star topology while routing other nets; the position of the star center is still chosen heuristically after the fact.
 
 ---
 
 ### Option B — Pre-Processing: DSN Sub-net Expansion (Recommended Starting Point)
 
-**How it works:**  
+**How it works:**
 When a net is flagged for star-ground routing (e.g., via a custom DSN attribute or a Freerouting router setting), the loader decomposes it into N sub-nets before routing begins, introducing a virtual star center node (a synthetic `Pin`-like object at a user-specified or automatically computed location). Each sub-net has exactly 2 terminals: the real GND pin and the virtual center.
 
 The existing `fromto` / subnet mechanism in `rules.Net` (the `subnet_number` field and the `Nets.add(name, subnet_number, ...)` path) is already designed for this — each radial arm is just a 2-terminal sub-net of the same logical net.
@@ -117,22 +117,22 @@ The existing `fromto` / subnet mechanism in `rules.Net` (the `subnet_number` fie
 
 ### Option C — Topology Constraint in the Maze Router
 
-**How it works:**  
+**How it works:**
 Extend `MazeSearchAlgo` with a topology policy that, for nets flagged as star-ground, forces the destination set to always include the star center as a mandatory waypoint before reaching other terminals.
 
 This is the most algorithmic approach but requires significant changes to the maze search state machine.
 
-**Pros:** The router actively optimizes the star topology jointly with all other nets; can find globally better solutions.  
+**Pros:** The router actively optimizes the star topology jointly with all other nets; can find globally better solutions.
 **Cons:** High implementation risk; likely to cause routing regressions until thoroughly validated.
 
 ---
 
 ### Option D — Routing Order Constraint (Simpler Heuristic)
 
-**How it works:**  
+**How it works:**
 Sort items to route such that, for a designated star-ground net, all items are grouped and routed sequentially from a common source (the designated star center pad). In `BatchAutorouter.getAutorouteItems()`, insert the star-center item first for the designated net; the maze search will naturally attach each subsequent terminal to the already-routed star.
 
-**Pros:** Minimal code change; no new data model concepts.  
+**Pros:** Minimal code change; no new data model concepts.
 **Cons:** Does not guarantee a true star topology — the optimizer may later consolidate branches; works only if the star center is an existing physical pad.
 
 ---

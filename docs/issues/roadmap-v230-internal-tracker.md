@@ -1,7 +1,7 @@
 # Freerouting v2.3 Release Plan
 
-> **Public tracker:** [GitHub Issue #649](https://github.com/freerouting/freerouting/issues/649)  
-> **Revised:** 2026-08-06 (PM) — IPC improvement sprint; clearance gap documented; i18n + TODO complete  
+> **Public tracker:** [GitHub Issue #649](https://github.com/freerouting/freerouting/issues/649)
+> **Revised:** 2026-08-06 (PM) — IPC improvement sprint; clearance gap documented; i18n + TODO complete
 > **Version in tree:** `2.2.5-SNAPSHOT` (GA target: `2.3.0`)
 
 ---

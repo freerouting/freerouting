@@ -201,7 +201,7 @@ Below are several example prompts you can use to instruct an LLM connected via t
 ### Example 1: Basic Routing
 > **Prompt**: "Could you route the board `fixtures/Issue313-FastTest.dsn` using Freerouting MCP and save the output as `fixtures/Issue313-FastTest.ses`?"
 >
-> *How the LLM executes this:* 
+> *How the LLM executes this:*
 > 1. Call `create_session` and `enqueue_job`.
 > 2. Call `upload_job_input_from_local_file` pointing to the absolute path of `fixtures/Issue313-FastTest.dsn`.
 > 3. Call `start_job`.
@@ -248,4 +248,3 @@ Below are several example prompts you can use to instruct an LLM connected via t
 >    ```
 > 4. Start and poll the job.
 > 5. Download output via `download_job_output_to_local_file` to `C:/Work/my_board.ses`.
-

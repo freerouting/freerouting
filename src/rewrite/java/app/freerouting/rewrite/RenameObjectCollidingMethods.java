@@ -41,4 +41,3 @@ public class RenameObjectCollidingMethods extends Recipe {
         .getVisitor();
   }
 }
-

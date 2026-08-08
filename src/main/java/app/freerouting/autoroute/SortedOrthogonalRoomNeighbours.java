@@ -143,18 +143,18 @@ public final class SortedOrthogonalRoomNeighbours {
 
     // Calculate the touching neighbour objects and sort them in counterclock sense
     // around the border of the room shape.
-    for (ShapeTree.TreeEntry currEntry : overlappingObjects) {
-      SearchTreeObject currObject = (SearchTreeObject) currEntry.object;
+    for (ShapeTree.TreeEntry currentEntry : overlappingObjects) {
+      SearchTreeObject currObject = (SearchTreeObject) currentEntry.object;
       if (currObject == pRoom) {
         continue;
       }
       if ((completedRoom instanceof CompleteFreeSpaceExpansionRoom fs_room)
           && !currObject.isTraceObstacle(pNetNo)) {
-        fs_room.calculateTargetDoors(currEntry, pNetNo, pAutorouteSearchTree);
+        fs_room.calculateTargetDoors(currentEntry, pNetNo, pAutorouteSearchTree);
         continue;
       }
       TileShape currShape =
-          currObject.getTreeShape(pAutorouteSearchTree, currEntry.shapeIndexInObject);
+          currObject.getTreeShape(pAutorouteSearchTree, currentEntry.shapeIndexInObject);
       if (!(currShape instanceof IntBox currBox)) {
         FRLogger.warn(
             "OrthogonalAutorouteEngine:calculate_sorted_neighbours: IntBox expected for currShape");
@@ -168,7 +168,7 @@ public final class SortedOrthogonalRoomNeighbours {
           if (currItem.isRoutable()) {
             ItemAutorouteInfo itemInfo = currItem.getAutorouteInfo();
             ObstacleExpansionRoom currOverlapRoom =
-                itemInfo.getExpansionRoom(currEntry.shapeIndexInObject, pAutorouteSearchTree);
+                itemInfo.getExpansionRoom(currentEntry.shapeIndexInObject, pAutorouteSearchTree);
             obs_room.createOverlapDoor(currOverlapRoom);
           }
         }
@@ -190,7 +190,7 @@ public final class SortedOrthogonalRoomNeighbours {
             // expand the item for ripup and pushing purposes
             ItemAutorouteInfo itemInfo = currItem.getAutorouteInfo();
             neighbourRoom =
-                itemInfo.getExpansionRoom(currEntry.shapeIndexInObject, pAutorouteSearchTree);
+                itemInfo.getExpansionRoom(currentEntry.shapeIndexInObject, pAutorouteSearchTree);
           }
         }
         if (neighbourRoom != null) {

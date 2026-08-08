@@ -269,7 +269,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
   }
 
   /**
-   * tries to reduce te number of lines of p_polyline by moving lines parallel beyond the
+   * tries to reduce the number of lines of p_polyline by moving lines parallel beyond the
    * intersection of the next or previous lines.
    */
   private Polyline reduceLines(Polyline pPolyline) {

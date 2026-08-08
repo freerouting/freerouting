@@ -225,4 +225,3 @@ if (Test-Path $MemLog) {
 
 Write-Host "`n  Route log : $RouteLog"
 Write-Host "  Memory log: $MemLog`n"
-

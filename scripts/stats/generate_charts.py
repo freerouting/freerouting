@@ -117,19 +117,19 @@ explode = [0.1 if label == 'Other' else 0.0 for label in labels_pie]
 with plt.style.context('ggplot'):
 
     fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(19.2, 10.8), gridspec_kw={'width_ratios': [2, 1]})
-    
+
     # Set the background color
     fig.patch.set_facecolor('#013a20')
     ax1.patch.set_facecolor('#013a20')
     ax2.patch.set_facecolor('#013a20')
-    
+
     # Pie chart
 pie_wedges, pie_texts, pie_autotexts = ax1.pie(
-    sizes_pie, 
-    labels=labels_pie, 
-    startangle=90, 
-    colors=colors, 
-    explode=explode, 
+    sizes_pie,
+    labels=labels_pie,
+    startangle=90,
+    colors=colors,
+    explode=explode,
     autopct='%1.1f%%'
 )
 
@@ -155,14 +155,14 @@ for pie_wedge, pie_text in zip(pie_wedges, pie_autotexts):
     # Get a readable text color based on the background
     readable_text_color = get_readable_text_color(background_color)
     pie_text.set_color(readable_text_color)
-            
+
     # Draw a table beside the pie chart
     table_data = [[label, f"{count}"] for label, count in top_data_table_data]
     table = ax2.table(cellText=table_data, colLabels=['Category', 'Count'], loc='center', cellLoc='center')
     table.auto_set_font_size(False)
     table.set_fontsize(10)
     table.scale(1, 1.5)
-    
+
     # Format the header of the table
     for key, cell in table._cells.items():
         row, col = key
@@ -173,7 +173,7 @@ for pie_wedge, pie_text in zip(pie_wedges, pie_autotexts):
             cell.set_facecolor('#013a20')
         else:  # For other cells in the table
             cell.set_text_props(color='#e8cc87')  # Set the text color
-    
+
     # Formatting the axes
     ax1.axis('equal')
     ax2.axis('off')

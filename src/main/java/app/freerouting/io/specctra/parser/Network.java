@@ -219,8 +219,8 @@ public class Network extends ScopeKeyword {
       }
 
       pinName = pScanner.nextString(true);
-      Net.Pin currEntry = new Net.Pin(componentName, pinName);
-      pPinList.add(currEntry);
+      Net.Pin currentEntry = new Net.Pin(componentName, pinName);
+      pPinList.add(currentEntry);
     }
 
     try {

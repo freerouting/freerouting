@@ -293,7 +293,7 @@ environment:
   FREEROUTING__API_SERVER__ENDPOINTS: "http://0.0.0.0:37864"
 ```
 
-For the full list of all available settings, see [settings.md](settings.md).  
+For the full list of all available settings, see [settings.md](settings.md).
 For all CLI arguments (including legacy short-form flags), see [command_line_arguments.md](command_line_arguments.md).
 
 ---

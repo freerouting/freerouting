@@ -166,11 +166,11 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
         return;
       }
       Object firstRowObject = getValueAt(pRow, 0);
-      if (!(firstRowObject instanceof Net currNet)) {
+      if (!(firstRowObject instanceof Net currentNet)) {
         FRLogger.warn("AssignNetRuLesVindow.setValueAt: Net expected");
         return;
       }
-      currNet.setClass(curr_net_rule);
+      currentNet.setClass(curr_net_rule);
 
       this.data[pRow][pCol] = pValue;
       fireTableCellUpdated(pRow, pCol);

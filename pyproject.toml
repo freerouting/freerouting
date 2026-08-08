@@ -1,3 +1,3 @@
 [tool.codespell]
-skip = "*.dsn,*.ses,*.frb,*.png,*.jpg,*.svg,*.pdf,build,logs,.git,src_v19,fixtures,integrations,docs/reference,.*"
-ignore-words-list = "autoroute,autorouter,autorouting,padstack,padstacks,netlist,netlists,freerouting"
+skip = "*.dsn,*.ses,*.frb,*.png,*.jpg,*.svg,*.pdf,build,logs,.git,src_v19,fixtures,integrations,docs/reference,scripts/i18n,scripts/benchmark/fixtures,src/main/resources/app/freerouting/*_*.properties,.*"
+ignore-words-list = "autoroute,autorouter,autorouting,padstack,padstacks,netlist,netlists,freerouting,hilight,curr,ois,swapPin,pEvent,assertIn,Sie,als,onText"
