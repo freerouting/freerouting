@@ -407,36 +407,42 @@ public class TextManager {
     text = insertIcons(component, text);
 
     // Set the text for the component
-    if (component instanceof JButton button1) {
-      // Set the text for the button
-      button1.setText(text);
-      if (tooltip != null && !tooltip.isEmpty()) {
-        // Set the tooltip text for the component
-        component.setToolTipText(tooltip);
+    switch (component) {
+      case JButton button1 -> {
+        // Set the text for the button
+        button1.setText(text);
+        if (tooltip != null && !tooltip.isEmpty()) {
+          // Set the tooltip text for the component
+          component.setToolTipText(tooltip);
+        }
       }
-    } else if (component instanceof JToggleButton button) {
-      // Set the text for the toggle button
-      button.setText(text);
-      if (tooltip != null && !tooltip.isEmpty()) {
-        // Set the tooltip text for the component
-        component.setToolTipText(tooltip);
+      case JToggleButton button -> {
+        // Set the text for the toggle button
+        button.setText(text);
+        if (tooltip != null && !tooltip.isEmpty()) {
+          // Set the tooltip text for the component
+          component.setToolTipText(tooltip);
+        }
       }
-    } else if (component instanceof JLabel label) {
-      // Set the text for the toggle button
-      label.setText(text);
-      if (tooltip != null && !tooltip.isEmpty()) {
-        // Set the tooltip text for the component
-        component.setToolTipText(tooltip);
+      case JLabel label -> {
+        // Set the text for the toggle button
+        label.setText(text);
+        if (tooltip != null && !tooltip.isEmpty()) {
+          // Set the tooltip text for the component
+          component.setToolTipText(tooltip);
+        }
       }
-    } else if (component instanceof javax.swing.text.JTextComponent textComponent) {
-      textComponent.setText(text);
-      if (tooltip != null && !tooltip.isEmpty()) {
-        component.setToolTipText(tooltip);
+      case javax.swing.text.JTextComponent textComponent -> {
+        textComponent.setText(text);
+        if (tooltip != null && !tooltip.isEmpty()) {
+          component.setToolTipText(tooltip);
+        }
       }
-    } else {
-      // Handle other components like JLabel, JTextArea, etc.
-      String componentType = component.getClass().getName();
-      FRLogger.warn("The component type '" + componentType + "' is not supported");
+      case null, default -> {
+        // Handle other components like JLabel, JTextArea, etc.
+        String componentType = component.getClass().getName();
+        FRLogger.warn("The component type '" + componentType + "' is not supported");
+      }
     }
 
     // Handle other components like JLabel, JTextArea, etc.

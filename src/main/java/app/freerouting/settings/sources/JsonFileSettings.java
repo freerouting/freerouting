@@ -10,7 +10,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -45,7 +44,7 @@ public class JsonFileSettings implements SettingsSource {
       return new RouterSettings();
     }
 
-    try (Reader reader = Files.newBufferedReader(jsonFilePath, StandardCharsets.UTF_8)) {
+    try (Reader reader = Files.newBufferedReader(jsonFilePath)) {
       JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
       JsonElement routerElement = root.get("router");
       if (routerElement != null && routerElement.isJsonObject()) {

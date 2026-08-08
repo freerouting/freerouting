@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -249,7 +248,7 @@ public class GlobalSettings implements Serializable {
    */
   public static GlobalSettings load() throws IOException {
     GlobalSettings loadedSettings = null;
-    try (Reader reader = Files.newBufferedReader(configurationFilePath, StandardCharsets.UTF_8)) {
+    try (Reader reader = Files.newBufferedReader(configurationFilePath)) {
       loadedSettings = GsonProvider.GSON.fromJson(reader, GlobalSettings.class);
     } catch (com.google.gson.JsonSyntaxException | com.google.gson.JsonIOException e) {
       // The file exists but is corrupt or cannot be parsed — log an actionable WARN
@@ -386,7 +385,7 @@ public class GlobalSettings implements Serializable {
     globalSettings.version = getReleaseSafeVersion();
 
     // Write the settings to the file
-    try (Writer writer = Files.newBufferedWriter(configurationFilePath, StandardCharsets.UTF_8)) {
+    try (Writer writer = Files.newBufferedWriter(configurationFilePath)) {
       GsonProvider.GSON.toJson(globalSettings, writer);
     } catch (AccessDeniedException e) {
       throw new AccessDeniedException(

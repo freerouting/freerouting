@@ -20,12 +20,10 @@ class DrcViolationRoutingTest extends RoutingFixtureTest {
     app.freerouting.io.BoardReadResult result =
         DsnReader.readBoard(inputStream, null, null, "test");
     BasicBoard board = null;
-    if (result instanceof app.freerouting.io.BoardReadResult.Success s) {
-      board = s.board();
-    } else if (result instanceof app.freerouting.io.BoardReadResult.OutlineMissing o) {
-      board = o.board();
-    } else {
-      throw new RuntimeException("Failed to read board: " + result);
+    switch (result) {
+      case app.freerouting.io.BoardReadResult.Success s -> board = s.board();
+      case app.freerouting.io.BoardReadResult.OutlineMissing o -> board = o.board();
+      case null, default -> throw new RuntimeException("Failed to read board: " + result);
     }
 
     BoardStatistics stats = new BoardStatistics(board);

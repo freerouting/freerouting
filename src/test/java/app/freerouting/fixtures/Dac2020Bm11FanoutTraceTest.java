@@ -55,7 +55,7 @@ class Dac2020Bm11FanoutTraceTest extends RoutingFixtureTest {
 
     BoardStatistics stats = new BoardStatistics(job.board);
 
-    System.out.println(
+    IO.println(
         "Fanout Escape Statistics: escaped="
             + stats.fanout.escapedCount
             + ", total="

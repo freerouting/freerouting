@@ -70,7 +70,7 @@ class Issue733DsnJsonParityTest {
     RoutingBoard jsonBoard = loadJson(jsonFile);
 
     BoardComparator.ComparisonResult result = BoardComparator.compare(dsnBoard, jsonBoard, 1e-3);
-    System.out.println(result.report);
+    IO.println(result.report);
 
     assertTrue(result.areEqual, "Boards must be identical in representation:\n" + result.report);
   }
@@ -88,7 +88,7 @@ class Issue733DsnJsonParityTest {
     RoutingBoard jsonBoard = loadJson(jsonFile);
 
     BoardComparator.ComparisonResult result = BoardComparator.compare(dsnBoard, jsonBoard, 1e-3);
-    System.out.println(result.report);
+    IO.println(result.report);
 
     assertTrue(result.areEqual, "Boards must be identical in representation:\n" + result.report);
   }
@@ -119,7 +119,7 @@ class Issue733DsnJsonParityTest {
     // Compare boards (SES is ground truth)
     BoardComparator.ComparisonResult result =
         BoardComparator.compare(boardWithSes, boardWithJson, 1e-3);
-    System.out.println(result.report);
+    IO.println(result.report);
 
     assertTrue(
         result.areEqual,

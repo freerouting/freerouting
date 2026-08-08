@@ -49,13 +49,15 @@ class RouterSettingsSerializationTest {
 
     // 4. Deserialize from a JSON payload that contains the layers array (simulating API call)
     String apiJson =
-        "{\n"
-            + "  \"max_passes\": 42,\n"
-            + "  \"layers\": [\n"
-            + "    {\"routable\": false, \"preferred_direction_horizontal\": true},\n"
-            + "    {\"routable\": true, \"preferred_direction_horizontal\": false}\n"
-            + "  ]\n"
-            + "}";
+        """
+        {
+          "max_passes": 42,
+          "layers": [
+            {"routable": false, "preferred_direction_horizontal": true},
+            {"routable": true, "preferred_direction_horizontal": false}
+          ]
+        }\
+        """;
     RouterSettings deserializedFromApi = GsonProvider.GSON.fromJson(apiJson, RouterSettings.class);
     assertNotNull(deserializedFromApi);
     assertEquals(42, deserializedFromApi.maxPasses);

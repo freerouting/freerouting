@@ -40,6 +40,6 @@ class MaxItemsRoutingTest extends RoutingFixtureTest {
     // We can just verify it runs without exception. This test mainly exercises the
     // code path.
     assertNotNull(job);
-    System.out.println("Job State: " + job.state);
+    IO.println("Job State: " + job.state);
   }
 }

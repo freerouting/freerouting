@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -86,7 +85,7 @@ public class BoardFileDetails implements Serializable {
 
   /** Saves this object to a UTF-8 JSON file. */
   public void saveAs(String filename) throws IOException {
-    try (Writer writer = Files.newBufferedWriter(Path.of(filename), StandardCharsets.UTF_8)) {
+    try (Writer writer = Files.newBufferedWriter(Path.of(filename))) {
       writer.write(this.toString());
     }
   }

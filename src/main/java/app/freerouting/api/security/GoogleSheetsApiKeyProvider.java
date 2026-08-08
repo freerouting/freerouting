@@ -216,7 +216,7 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
       }
 
       // Find column indices for "API Key" and "Access granted?"
-      List<Object> headers = values.get(0);
+      List<Object> headers = values.getFirst();
       int apiKeyColumnIndex = findColumnIndex(headers, "API Key");
       int accessGrantedColumnIndex = findColumnIndex(headers, "Access granted?");
 
@@ -317,7 +317,7 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
       throw new IOException("No sheets found in spreadsheet");
     }
 
-    String sheetName = spreadsheet.getSheets().get(0).getProperties().getTitle();
+    String sheetName = spreadsheet.getSheets().getFirst().getProperties().getTitle();
     if (sheetName == null || sheetName.isEmpty()) {
       throw new IOException("First sheet has no title");
     }

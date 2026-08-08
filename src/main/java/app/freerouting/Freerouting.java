@@ -152,7 +152,7 @@ public class Freerouting {
       if ((globalSettings.statistics.jobsCompleted >= 5)
           && globalSettings.userProfileSettings.userEmail.isEmpty()) {
         String nl = System.lineSeparator();
-        System.out.println(
+        IO.println(
             nl
                 + "╔══════════════════════════════════════════════════════════════════╗"
                 + nl
@@ -1267,7 +1267,7 @@ public class Freerouting {
       app.freerouting.board.BoardComparator.ComparisonResult result =
           app.freerouting.board.BoardComparator.compare(board1, board2, 1e-3);
 
-      System.out.println(result.report);
+      IO.println(result.report);
 
       if (result.areEqual) {
         FRLogger.info("SUCCESS: Boards are identical.");

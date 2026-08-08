@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import app.freerouting.settings.RouterSettings;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,7 @@ class JsonFileSettingsTest {
   /** Helper: create a temp JSON file with the given content. */
   private Path write(String filename, String content) throws IOException {
     Path file = tempDir.resolve(filename);
-    Files.writeString(file, content, StandardCharsets.UTF_8);
+    Files.writeString(file, content);
     return file;
   }
 

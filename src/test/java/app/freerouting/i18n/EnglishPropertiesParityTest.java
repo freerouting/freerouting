@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -31,8 +30,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class EnglishPropertiesParityTest {
 
-  private static final Path JAVA_SOURCE_ROOT = Paths.get("src/main/java");
-  private static final Path RESOURCE_ROOT = Paths.get("src/main/resources/app/freerouting");
+  private static final Path JAVA_SOURCE_ROOT = Path.of("src/main/java");
+  private static final Path RESOURCE_ROOT = Path.of("src/main/resources/app/freerouting");
   private static final Pattern TEXT_MANAGER_OWNER_PATTERN =
       Pattern.compile("new\\s+TextManager\\s*\\(\\s*([A-Za-z_][A-Za-z0-9_$.]*)\\.class");
   private static final Pattern TEXT_MANAGER_VARIABLE_PATTERN =
@@ -120,21 +119,21 @@ class EnglishPropertiesParityTest {
           "app.freerouting.gui.WindowLengthViolations", "app.freerouting.gui.WindowObjectList");
 
   private static final Path REPORT_PATH_1 =
-      Paths.get("build/reports/i18n/CodeKeysExistInEnglishBundlesReport.txt");
+      Path.of("build/reports/i18n/CodeKeysExistInEnglishBundlesReport.txt");
   private static final Path REPORT_JSON_1 =
-      Paths.get("build/reports/i18n/CodeKeysExistInEnglishBundlesReport.json");
+      Path.of("build/reports/i18n/CodeKeysExistInEnglishBundlesReport.json");
   private static final Path REPORT_PATH_2 =
-      Paths.get("build/reports/i18n/LocaleBundlesCoverEnglishBundlesReport.txt");
+      Path.of("build/reports/i18n/LocaleBundlesCoverEnglishBundlesReport.txt");
   private static final Path REPORT_JSON_2 =
-      Paths.get("build/reports/i18n/LocaleBundlesCoverEnglishBundlesReport.json");
+      Path.of("build/reports/i18n/LocaleBundlesCoverEnglishBundlesReport.json");
   private static final Path REPORT_PATH_3 =
-      Paths.get("build/reports/i18n/EnglishBundlesContainKeysPresentInLocalesReport.txt");
+      Path.of("build/reports/i18n/EnglishBundlesContainKeysPresentInLocalesReport.txt");
   private static final Path REPORT_JSON_3 =
-      Paths.get("build/reports/i18n/EnglishBundlesContainKeysPresentInLocalesReport.json");
+      Path.of("build/reports/i18n/EnglishBundlesContainKeysPresentInLocalesReport.json");
   private static final Path REPORT_PATH_4 =
-      Paths.get("build/reports/i18n/EnglishBundlesContainUnusedKeysReport.txt");
+      Path.of("build/reports/i18n/EnglishBundlesContainUnusedKeysReport.txt");
   private static final Path REPORT_JSON_4 =
-      Paths.get("build/reports/i18n/EnglishBundlesContainUnusedKeysReport.json");
+      Path.of("build/reports/i18n/EnglishBundlesContainUnusedKeysReport.json");
   private static Map<String, Path> sourceFilesCache;
 
   @Test

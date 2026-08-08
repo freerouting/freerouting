@@ -109,7 +109,7 @@ public class McpWebSocketEndpoint {
       if (entry.getKey() != null && entry.getKey().equalsIgnoreCase(name)) {
         List<String> values = entry.getValue();
         if (values != null && !values.isEmpty()) {
-          return values.get(0);
+          return values.getFirst();
         }
       }
     }

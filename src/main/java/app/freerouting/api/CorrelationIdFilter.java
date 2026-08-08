@@ -38,7 +38,7 @@ public class CorrelationIdFilter implements ContainerRequestFilter, ContainerRes
       ContainerRequestContext requestContext, ContainerResponseContext responseContext)
       throws IOException {
     Object value = requestContext.getProperty(PROPERTY_NAME);
-    String correlationId = value instanceof String ? (String) value : resolveOrCreate(null);
+    String correlationId = value instanceof String s ? s : resolveOrCreate(null);
 
     responseContext.getHeaders().putSingle(HEADER_NAME, correlationId);
   }
