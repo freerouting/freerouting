@@ -319,7 +319,7 @@
     ],
     "ui_role": "tooltip"
   },
-  "hilight_routing_obstacle": {
+  "highlight_routing_obstacle": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
     "english_hash": "023efecf9da6d1f40c1031d7e3c685c387f0e23f2e616bfd542eaaab41316263",
@@ -331,13 +331,15 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "hilight_routing_obstacle_tooltip"
+      "highlight_routing_obstacle_tooltip"
     ],
     "ui_role": "label"
   },
-  "hilight_routing_obstacle_tooltip": {
+  "highlight_routing_obstacle_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [],
+    "code_references": [
+      "app.freerouting.gui.WindowRouteParameter"
+    ],
     "english_hash": "df78aaea4a0702b975eb5cb8e826f36ef150a3bc464bbff953dfbac08c8e687d",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
@@ -347,7 +349,7 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "hilight_routing_obstacle"
+      "highlight_routing_obstacle"
     ],
     "ui_role": "tooltip"
   },
