@@ -1,7 +1,25 @@
 default_language_version:
   python: python3
 
-exclude: ^src_v19/
+exclude: |
+  (?x)^(
+    src_v19/|
+    fixtures/|
+    integrations/|
+    examples/|
+    src/main/resources/app/freerouting/helpset/|
+    build/|
+    logs/|
+    \.gradle/|
+    assets/|
+    .*\.step$|
+    .*\.stp$|
+    .*\.dsn$|
+    .*\.ses$|
+    .*\.rules$|
+    .*\.par$|
+    .*\.PLD$
+  )
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
