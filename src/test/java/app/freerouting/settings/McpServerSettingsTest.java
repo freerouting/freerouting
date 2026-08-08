@@ -37,7 +37,7 @@ class McpServerSettingsTest {
       "--mcp_server.rate_limit.requests_per_window=7",
       "--mcp_server.rate_limit.window_seconds=15",
       "--mcp_server.target_api_base_url=http://127.0.0.1:48000",
-      "--mcp_server.corsOrigins=http://example.com"
+      "--mcp_server.cors_origins=http://example.com"
     };
 
     settings.applyCommandLineArguments(args);

@@ -77,8 +77,15 @@ public final class ReflectionUtil {
     String camelName = snakeToLowerCamel(name);
     for (Field field : clazz.getDeclaredFields()) {
       SerializedName annotation = field.getAnnotation(SerializedName.class);
-      if (annotation != null && annotation.value().equals(name)) {
-        return field;
+      if (annotation != null) {
+        if (annotation.value().equals(name)) {
+          return field;
+        }
+        for (String alt : annotation.alternate()) {
+          if (alt.equals(name)) {
+            return field;
+          }
+        }
       }
       if (field.getName().equals(name) || field.getName().equals(camelName)) {
         // Enforce that fields with a SerializedName must not be queried by their camelCase Java

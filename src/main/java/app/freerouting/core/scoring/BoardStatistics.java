@@ -69,7 +69,7 @@ public class BoardStatistics implements Serializable {
   @SerializedName("vias")
   public BoardStatisticsVias vias = new BoardStatisticsVias();
 
-  @SerializedName("clearanceViolations")
+  @SerializedName("clearance_violations")
   public BoardStatisticsClearanceViolations clearanceViolations =
       new BoardStatisticsClearanceViolations();
 

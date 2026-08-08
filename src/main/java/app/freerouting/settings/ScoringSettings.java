@@ -42,7 +42,7 @@ public class ScoringSettings implements Serializable, Cloneable {
   public Double defaultUndesiredDirectionTraceCost;
 
   // The cost of a via on a regular (non-plane) net.
-  @SerializedName("viaCosts")
+  @SerializedName(value = "via_costs", alternate = {"viaCosts"})
   public Integer viaCosts;
 
   // The cost of a via if the via is placed on a plane.
@@ -54,7 +54,7 @@ public class ScoringSettings implements Serializable, Cloneable {
    * multiplied by the pass number inside {@code BatchAutorouter}; it does NOT appear in the
    * board-score formula.
    */
-  @SerializedName("startRipupCosts")
+  @SerializedName(value = "start_ripup_costs", alternate = {"startRipupCosts"})
   public Integer startRipupCosts;
 
   // The penalty for an unrouted net.

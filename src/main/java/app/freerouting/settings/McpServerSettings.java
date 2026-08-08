@@ -24,7 +24,7 @@ public class McpServerSettings implements Serializable {
   @SerializedName("authentication")
   public ApiAuthenticationSettings authentication = new ApiAuthenticationSettings();
 
-  @SerializedName("corsOrigins")
+  @SerializedName(value = "cors_origins", alternate = {"corsOrigins"})
   public String corsOrigins = "";
 
   @SerializedName("rate_limit")

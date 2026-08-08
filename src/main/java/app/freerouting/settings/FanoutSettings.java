@@ -53,7 +53,7 @@ public class FanoutSettings implements Serializable, Cloneable {
    * room for a new escape via. When {@code false} fanout runs without any ripup, which is faster
    * but may leave more pins un-escaped on congested boards.
    */
-  @SerializedName("ripupAllowed")
+  @SerializedName(value = "ripup_allowed", alternate = {"ripupAllowed"})
   public Boolean ripupAllowed;
 
   /**

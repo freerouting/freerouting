@@ -68,7 +68,7 @@ public class RouterSettings implements Serializable, Cloneable {
   public transient String[] ignoreNetClasses;
 
   /** The accuracy of the pull tight algorithm. */
-  @SerializedName("tracePullTightAccuracy")
+  @SerializedName(value = "trace_pull_tight_accuracy", alternate = {"tracePullTightAccuracy"})
   public Integer tracePullTightAccuracy;
 
   @SerializedName("allowed_via_types")
@@ -78,7 +78,7 @@ public class RouterSettings implements Serializable, Cloneable {
    * If true, the trace width at static pins smaller the trace width will be lowered automatically
    * to the pin with, if necessary.
    */
-  @SerializedName("automaticNeckdown")
+  @SerializedName(value = "automatic_neckdown", alternate = {"automaticNeckdown"})
   public Boolean automaticNeckdown;
 
   @SerializedName("optimizer")
