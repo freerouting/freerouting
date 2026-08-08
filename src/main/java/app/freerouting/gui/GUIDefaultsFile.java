@@ -368,7 +368,7 @@ public final class GUIDefaultsFile {
             return false;
           }
         } else if (nextToken == Keyword.HIGHLIGHT) {
-          if (!readHilightColor()) {
+          if (!readHighlightColor()) {
             return false;
           }
         } else if (nextToken == Keyword.INCOMPLETES) {
@@ -531,17 +531,17 @@ public final class GUIDefaultsFile {
     return true;
   }
 
-  private boolean readHilightColor() throws IOException {
+  private boolean readHighlightColor() throws IOException {
     double intensity = readColorIntensity();
     if (intensity < 0) {
       return false;
     }
-    this.boardHandling.graphicsContext.setHilightColorIntensity(intensity);
+    this.boardHandling.graphicsContext.setHighlightColorIntensity(intensity);
     Color currColor = readColor();
     if (currColor == null) {
       return false;
     }
-    this.boardHandling.graphicsContext.otherColorTable.setHilightColor(currColor);
+    this.boardHandling.graphicsContext.otherColorTable.setHighlightColor(currColor);
     Object nextToken = this.scanner.nextToken();
     if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_higlight_color: closing bracket expected");
@@ -691,7 +691,7 @@ public final class GUIDefaultsFile {
     outFile.endScope();
     outFile.startScope();
     outFile.write("highlight");
-    writeColorIntensity(graphicsContext.getHilightColorIntensity());
+    writeColorIntensity(graphicsContext.getHighlightColorIntensity());
     writeColorScope(graphicsContext.getHighlightColor());
     outFile.endScope();
     outFile.startScope();
@@ -845,7 +845,7 @@ public final class GUIDefaultsFile {
             return false;
           }
         } else if (nextToken == Keyword.HIGHLIGHT_ROUTING_OBSTACLE) {
-          if (!readHilightRoutingObstacleScope()) {
+          if (!readHighlightRoutingObstacleScope()) {
             return false;
           }
         } else if (nextToken == Keyword.SELECTABLE_ITEMS) {
@@ -871,7 +871,7 @@ public final class GUIDefaultsFile {
     writeRouteModeScope();
     writeShoveEnabledScope();
     writeDragComponentsEnabledScope();
-    writeHilightRoutingObstacleScope();
+    writeHighlightRoutingObstacleScope();
     writePullTightRegionScope();
     writePullTightAccuracyScope();
     writeClearanceCompensationScope();
@@ -1121,32 +1121,32 @@ public final class GUIDefaultsFile {
     outFile.endScope();
   }
 
-  private boolean readHilightRoutingObstacleScope() throws IOException {
+  private boolean readHighlightRoutingObstacleScope() throws IOException {
     Object nextToken = this.scanner.nextToken();
-    boolean hilightObstacle;
+    boolean highlightObstacle;
     if (nextToken == Keyword.ON) {
-      hilightObstacle = true;
+      highlightObstacle = true;
     } else if (nextToken == Keyword.OFF) {
-      hilightObstacle = false;
+      highlightObstacle = false;
     } else {
-      FRLogger.warn("GUIDefaultsFile.read_hilight_routing_obstacle_scope: unexpected token");
+      FRLogger.warn("GUIDefaultsFile.read_highlight_routing_obstacle_scope: unexpected token");
       return false;
     }
     nextToken = this.scanner.nextToken();
     if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn(
-          "GUIDefaultsFile.read_hilight_routing_obstacle_scope: closing bracket expected");
+          "GUIDefaultsFile.read_highlight_routing_obstacle_scope: closing bracket expected");
       return false;
     }
-    this.boardHandling.getInteractiveSettings().setHilightRoutingObstacle(hilightObstacle);
+    this.boardHandling.getInteractiveSettings().setHighlightRoutingObstacle(highlightObstacle);
     return true;
   }
 
-  private void writeHilightRoutingObstacleScope() throws IOException {
+  private void writeHighlightRoutingObstacleScope() throws IOException {
     outFile.startScope();
-    outFile.write("hilightRoutingObstacle ");
+    outFile.write("highlightRoutingObstacle ");
     outFile.newLine();
-    if (this.boardHandling.getInteractiveSettings().getHilightRoutingObstacle()) {
+    if (this.boardHandling.getInteractiveSettings().getHighlightRoutingObstacle()) {
       outFile.write("on");
     } else {
       outFile.write("off");

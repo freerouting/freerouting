@@ -807,16 +807,6 @@ public class GraphicsContext implements Serializable {
     colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.HIGHLIGHT.ordinal(), pValue);
   }
 
-  @Deprecated
-  public double getHilightColorIntensity() {
-    return getHighlightColorIntensity();
-  }
-
-  @Deprecated
-  public void setHilightColorIntensity(double pValue) {
-    setHighlightColorIntensity(pValue);
-  }
-
   public double getIncompleteColorIntensity() {
     return colorIntensityTable.getValue(ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal());
   }

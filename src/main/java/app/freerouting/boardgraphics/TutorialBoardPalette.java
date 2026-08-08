@@ -39,7 +39,7 @@ public final class TutorialBoardPalette {
 
     graphicsContext.otherColorTable.setBackgroundColor(PRIMARY);
     graphicsContext.otherColorTable.setOutlineColor(SECONDARY);
-    graphicsContext.otherColorTable.setHilightColor(SECONDARY);
+    graphicsContext.otherColorTable.setHighlightColor(SECONDARY);
     graphicsContext.otherColorTable.setIncompleteColor(SECONDARY_HOVER);
     graphicsContext.otherColorTable.setViolationsColor(SECONDARY);
     graphicsContext.otherColorTable.setComponentColor(SECONDARY, true);

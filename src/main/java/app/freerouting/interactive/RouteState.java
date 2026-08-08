@@ -154,7 +154,7 @@ public class RouteState extends InteractiveState {
             isStitchRoute,
             pBoardHandling.getInteractiveSettings().getAutomaticNeckdown(),
             pBoardHandling.getInteractiveSettings().getViaSnapToSmdCenter(),
-            pBoardHandling.getInteractiveSettings().getHilightRoutingObstacle());
+            pBoardHandling.getInteractiveSettings().getHighlightRoutingObstacle());
     newInstance.observersActivated = !routingBoard.observersActive();
     if (newInstance.observersActivated) {
       routingBoard.startNotifyObservers();

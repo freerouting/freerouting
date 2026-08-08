@@ -64,7 +64,7 @@ public class Settings implements Serializable {
   boolean manualRuleSelection;
 
   /** If true, the current routing obstacle is highlighted in dynamic routing. */
-  boolean hilightRoutingObstacle;
+  boolean highlightRoutingObstacle;
 
   /**
    * The index of the clearance class used for traces in interactive routing in the clearance
@@ -103,7 +103,7 @@ public class Settings implements Serializable {
     horizontalComponentGrid = 0;
     verticalComponentGrid = 0;
     manualRuleSelection = false;
-    hilightRoutingObstacle = false;
+    highlightRoutingObstacle = false;
     manualTraceClearanceClass = 1;
     manualViaRuleIndex = 0;
     zoomWithWheel = true;
@@ -126,7 +126,7 @@ public class Settings implements Serializable {
     this.horizontalComponentGrid = pSettings.horizontalComponentGrid;
     this.verticalComponentGrid = pSettings.verticalComponentGrid;
     this.manualRuleSelection = pSettings.manualRuleSelection;
-    this.hilightRoutingObstacle = pSettings.hilightRoutingObstacle;
+    this.highlightRoutingObstacle = pSettings.highlightRoutingObstacle;
     this.zoomWithWheel = pSettings.zoomWithWheel;
     this.manualTraceClearanceClass = pSettings.manualTraceClearanceClass;
     this.manualViaRuleIndex = pSettings.manualViaRuleIndex;
@@ -212,17 +212,17 @@ public class Settings implements Serializable {
     viaSnapToSmdCenter = pValue;
   }
 
-  /** If true, the current routing obstacle is hilightet in dynamic routing. */
-  public boolean getHilightRoutingObstacle() {
-    return this.hilightRoutingObstacle;
+  /** If true, the current routing obstacle is highlighted in dynamic routing. */
+  public boolean getHighlightRoutingObstacle() {
+    return this.highlightRoutingObstacle;
   }
 
-  /** If true, the current routing obstacle is hilightet in dynamic routing. */
-  public void setHilightRoutingObstacle(boolean pValue) {
+  /** If true, the current routing obstacle is highlighted in dynamic routing. */
+  public void setHighlightRoutingObstacle(boolean pValue) {
     if (readOnly) {
       return;
     }
-    this.hilightRoutingObstacle = pValue;
+    this.highlightRoutingObstacle = pValue;
   }
 
   /** If true, the mouse wheel is used for zooming. */

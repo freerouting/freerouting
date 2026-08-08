@@ -67,7 +67,7 @@ public class Route {
   private final boolean isStitchMode;
   private final boolean withNeckdown;
   private final boolean viaSnapToSmdCenter;
-  private final boolean hilightShoveFailingObstacle;
+  private final boolean highlightShoveFailingObstacle;
   private final int pullTightTimeLimit;
   private Point prevCorner;
   private int layer;
@@ -98,7 +98,7 @@ public class Route {
       boolean pIsStitchMode,
       boolean pWithNeckdown,
       boolean pViaSnapToSmdCenter,
-      boolean pHilightShoveFailingObstacle) {
+      boolean pHighlightShoveFailingObstacle) {
     board = pBoard;
     layer = pLayer;
     if (pPushEnabled) {
@@ -123,7 +123,7 @@ public class Route {
     isStitchMode = pIsStitchMode;
     withNeckdown = pWithNeckdown;
     viaSnapToSmdCenter = pViaSnapToSmdCenter;
-    hilightShoveFailingObstacle = pHilightShoveFailingObstacle;
+    highlightShoveFailingObstacle = pHighlightShoveFailingObstacle;
     pullTightTimeLimit = PULL_TIGHT_TIME_LIMIT;
 
     calculateTargetPointsAndAreas();
@@ -462,7 +462,7 @@ public class Route {
 
   /** Highlights the targets and draws the incomplete. */
   public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext) {
-    if (this.hilightShoveFailingObstacle && this.shoveFailingObstacle != null) {
+    if (this.highlightShoveFailingObstacle && this.shoveFailingObstacle != null) {
       this.shoveFailingObstacle.draw(
           pGraphics, pGraphicsContext, pGraphicsContext.getViolationsColor(), 1);
     }
@@ -474,7 +474,7 @@ public class Route {
       return;
     }
     Color highlightColor = pGraphicsContext.getHighlightColor();
-    double highligtColorIntensity = pGraphicsContext.getHilightColorIntensity();
+    double highligtColorIntensity = pGraphicsContext.getHighlightColorIntensity();
 
     // highlight the swappable pins and their incompletes
     for (SwapPinInfo currInfo : this.swapPinInfos) {

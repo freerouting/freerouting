@@ -63,11 +63,128 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
 
   /** The single GUI-session instance; {@code null} when running headless. */
   private static volatile InteractiveSettings instance;
-
+  /**
+   * The array of manual trace half widths, initially equal to the automatic trace half widths. This
+   * is a {@code final} array reference; individual entries are mutated via {@link
+   * #setManualTraceHalfWidth(int, int)}.
+   */
+  final int[] manualTraceHalfWidthArr;
   // -------------------------------------------------------------------------
   // PropertyChangeSupport — transient so it is not serialised; re-created in readObject.
   // -------------------------------------------------------------------------
   private transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+  /** Router parameter: accuracy for trace pull tight operations in interactive routing. */
+  private int tracePullTightAccuracy = 500;
+  /** Router parameter: enables automatic neckdown in interactive routing. */
+  private boolean automaticNeckdown = true;
+  /** The current layer index. */
+  private int layer;
+  /** Allows pushing obstacles aside. */
+  private boolean pushEnabled;
+  /** Allows dragging components with the route. */
+  private boolean dragComponentsEnabled;
+
+  // -------------------------------------------------------------------------
+  // PropertyChangeListener API
+  // -------------------------------------------------------------------------
+  /**
+   * Indicates if interactive selections are made on all visible layers or only on the current
+   * layer.
+   */
+  private boolean selectOnAllVisibleLayers;
+  /** Route mode: stitching or dynamic. */
+  private boolean isStitchRoute;
+  /** The width of the pull tight region of traces around the cursor. */
+  private int tracePullTightRegionWidth;
+  /** Via snaps to smd center, if attach smd is allowed. */
+  private boolean viaSnapToSmdCenter;
+  /** The horizontal placement grid when moving components, if positive. */
+  private int horizontalComponentGrid;
+  /** The vertical placement grid when moving components, if positive. */
+  private int verticalComponentGrid;
+  /**
+   * Indicates if the routing rule selection is manual by the user or automatic by the net rules.
+   */
+  private boolean manualRuleSelection;
+  /** If true, the current routing obstacle is highlighted in dynamic routing. */
+  private boolean highlightRoutingObstacle;
+  /** The index of the clearance class used for traces in interactive routing. */
+  private int manualTraceClearanceClass;
+  /**
+   * The index of the via rule used in routing in the board via rules if manual_route_selection is
+   * on.
+   */
+  private int manualViaRuleIndex;
+  /** If true, the mouse wheel is used for zooming. */
+  private boolean zoomWithWheel;
+  /** The filter used in interactive selection of board items. */
+  private ItemSelectionFilter itemSelectionFilter;
+  /**
+   * Indicates, if the data of this class are not allowed to be changed in interactive board
+   * editing.
+   */
+  private transient boolean readOnly;
+
+  /** Creates a new interactive settings variable. */
+  public InteractiveSettings(RoutingBoard pBoard) {
+    super(null);
+    // Initialise with default values.
+    layer = 0;
+    pushEnabled = true;
+    dragComponentsEnabled = true;
+    selectOnAllVisibleLayers = true; // else selection is only on the current layer
+    isStitchRoute = false; // else interactive routing is dynamic
+    tracePullTightRegionWidth = Integer.MAX_VALUE;
+    viaSnapToSmdCenter = true;
+    horizontalComponentGrid = 0;
+    verticalComponentGrid = 0;
+    manualRuleSelection = false;
+    highlightRoutingObstacle = false;
+    manualTraceClearanceClass = 1;
+    manualViaRuleIndex = 0;
+    zoomWithWheel = true;
+    tracePullTightAccuracy = 500;
+    automaticNeckdown = true;
+    manualTraceHalfWidthArr = new int[pBoard.getLayerCount()];
+    Arrays.fill(manualTraceHalfWidthArr, 1000);
+    itemSelectionFilter = new ItemSelectionFilter();
+  }
+
+  /** Creates a new interactive settings variable bound to the active job settings. */
+  public InteractiveSettings(RoutingBoard pBoard, RouterSettings pSettings) {
+    this(pBoard);
+    setSettings(pSettings);
+  }
+
+  /** Copy constructor */
+  public InteractiveSettings(InteractiveSettings pSettings) {
+    super(null);
+    this.readOnly = pSettings.readOnly;
+    this.layer = pSettings.layer;
+    this.pushEnabled = pSettings.pushEnabled;
+    this.dragComponentsEnabled = pSettings.dragComponentsEnabled;
+    this.selectOnAllVisibleLayers = pSettings.selectOnAllVisibleLayers;
+    this.isStitchRoute = pSettings.isStitchRoute;
+    this.tracePullTightRegionWidth = pSettings.tracePullTightRegionWidth;
+    this.viaSnapToSmdCenter = pSettings.viaSnapToSmdCenter;
+    this.horizontalComponentGrid = pSettings.horizontalComponentGrid;
+    this.verticalComponentGrid = pSettings.verticalComponentGrid;
+    this.manualRuleSelection = pSettings.manualRuleSelection;
+    this.highlightRoutingObstacle = pSettings.highlightRoutingObstacle;
+    this.zoomWithWheel = pSettings.zoomWithWheel;
+    this.manualTraceClearanceClass = pSettings.manualTraceClearanceClass;
+    this.manualViaRuleIndex = pSettings.manualViaRuleIndex;
+    this.tracePullTightAccuracy = pSettings.tracePullTightAccuracy;
+    this.automaticNeckdown = pSettings.automaticNeckdown;
+    this.manualTraceHalfWidthArr = new int[pSettings.manualTraceHalfWidthArr.length];
+    System.arraycopy(
+        pSettings.manualTraceHalfWidthArr,
+        0,
+        this.manualTraceHalfWidthArr,
+        0,
+        this.manualTraceHalfWidthArr.length);
+    this.itemSelectionFilter = new ItemSelectionFilter(pSettings.itemSelectionFilter);
+  }
 
   /**
    * Returns the singleton, creating it (bound to {@code board}) if not yet initialised.
@@ -147,10 +264,6 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
     instance = null;
   }
 
-  // -------------------------------------------------------------------------
-  // PropertyChangeListener API
-  // -------------------------------------------------------------------------
-
   /**
    * Registers a {@link PropertyChangeListener} that will be notified whenever a field on this
    * instance is mutated. GUI panels should register here and call {@code refresh()} (or update
@@ -197,139 +310,6 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
     if (listener != null) {
       pcs.removePropertyChangeListener(propertyName, listener);
     }
-  }
-
-  /**
-   * The array of manual trace half widths, initially equal to the automatic trace half widths. This
-   * is a {@code final} array reference; individual entries are mutated via {@link
-   * #setManualTraceHalfWidth(int, int)}.
-   */
-  final int[] manualTraceHalfWidthArr;
-
-  /** Router parameter: accuracy for trace pull tight operations in interactive routing. */
-  private int tracePullTightAccuracy = 500;
-
-  /** Router parameter: enables automatic neckdown in interactive routing. */
-  private boolean automaticNeckdown = true;
-
-  /** The current layer index. */
-  private int layer;
-
-  /** Allows pushing obstacles aside. */
-  private boolean pushEnabled;
-
-  /** Allows dragging components with the route. */
-  private boolean dragComponentsEnabled;
-
-  /**
-   * Indicates if interactive selections are made on all visible layers or only on the current
-   * layer.
-   */
-  private boolean selectOnAllVisibleLayers;
-
-  /** Route mode: stitching or dynamic. */
-  private boolean isStitchRoute;
-
-  /** The width of the pull tight region of traces around the cursor. */
-  private int tracePullTightRegionWidth;
-
-  /** Via snaps to smd center, if attach smd is allowed. */
-  private boolean viaSnapToSmdCenter;
-
-  /** The horizontal placement grid when moving components, if positive. */
-  private int horizontalComponentGrid;
-
-  /** The vertical placement grid when moving components, if positive. */
-  private int verticalComponentGrid;
-
-  /**
-   * Indicates if the routing rule selection is manual by the user or automatic by the net rules.
-   */
-  private boolean manualRuleSelection;
-
-  /** If true, the current routing obstacle is highlighted in dynamic routing. */
-  private boolean hilightRoutingObstacle;
-
-  /** The index of the clearance class used for traces in interactive routing. */
-  private int manualTraceClearanceClass;
-
-  /**
-   * The index of the via rule used in routing in the board via rules if manual_route_selection is
-   * on.
-   */
-  private int manualViaRuleIndex;
-
-  /** If true, the mouse wheel is used for zooming. */
-  private boolean zoomWithWheel;
-
-  /** The filter used in interactive selection of board items. */
-  private ItemSelectionFilter itemSelectionFilter;
-
-  /**
-   * Indicates, if the data of this class are not allowed to be changed in interactive board
-   * editing.
-   */
-  private transient boolean readOnly;
-
-  /** Creates a new interactive settings variable. */
-  public InteractiveSettings(RoutingBoard pBoard) {
-    super(null);
-    // Initialise with default values.
-    layer = 0;
-    pushEnabled = true;
-    dragComponentsEnabled = true;
-    selectOnAllVisibleLayers = true; // else selection is only on the current layer
-    isStitchRoute = false; // else interactive routing is dynamic
-    tracePullTightRegionWidth = Integer.MAX_VALUE;
-    viaSnapToSmdCenter = true;
-    horizontalComponentGrid = 0;
-    verticalComponentGrid = 0;
-    manualRuleSelection = false;
-    hilightRoutingObstacle = false;
-    manualTraceClearanceClass = 1;
-    manualViaRuleIndex = 0;
-    zoomWithWheel = true;
-    tracePullTightAccuracy = 500;
-    automaticNeckdown = true;
-    manualTraceHalfWidthArr = new int[pBoard.getLayerCount()];
-    Arrays.fill(manualTraceHalfWidthArr, 1000);
-    itemSelectionFilter = new ItemSelectionFilter();
-  }
-
-  /** Creates a new interactive settings variable bound to the active job settings. */
-  public InteractiveSettings(RoutingBoard pBoard, RouterSettings pSettings) {
-    this(pBoard);
-    setSettings(pSettings);
-  }
-
-  /** Copy constructor */
-  public InteractiveSettings(InteractiveSettings pSettings) {
-    super(null);
-    this.readOnly = pSettings.readOnly;
-    this.layer = pSettings.layer;
-    this.pushEnabled = pSettings.pushEnabled;
-    this.dragComponentsEnabled = pSettings.dragComponentsEnabled;
-    this.selectOnAllVisibleLayers = pSettings.selectOnAllVisibleLayers;
-    this.isStitchRoute = pSettings.isStitchRoute;
-    this.tracePullTightRegionWidth = pSettings.tracePullTightRegionWidth;
-    this.viaSnapToSmdCenter = pSettings.viaSnapToSmdCenter;
-    this.horizontalComponentGrid = pSettings.horizontalComponentGrid;
-    this.verticalComponentGrid = pSettings.verticalComponentGrid;
-    this.manualRuleSelection = pSettings.manualRuleSelection;
-    this.hilightRoutingObstacle = pSettings.hilightRoutingObstacle;
-    this.zoomWithWheel = pSettings.zoomWithWheel;
-    this.manualTraceClearanceClass = pSettings.manualTraceClearanceClass;
-    this.manualViaRuleIndex = pSettings.manualViaRuleIndex;
-    this.tracePullTightAccuracy = pSettings.tracePullTightAccuracy;
-    this.automaticNeckdown = pSettings.automaticNeckdown;
-    this.manualTraceHalfWidthArr = new int[pSettings.manualTraceHalfWidthArr.length];
-    System.arraycopy(
-        pSettings.manualTraceHalfWidthArr,
-        0,
-        this.manualTraceHalfWidthArr,
-        0,
-        this.manualTraceHalfWidthArr.length);
-    this.itemSelectionFilter = new ItemSelectionFilter(pSettings.itemSelectionFilter);
   }
 
   // -------------------------------------------------------------------------
@@ -494,17 +474,17 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** If true, the current routing obstacle is highlighted in dynamic routing. */
-  public boolean getHilightRoutingObstacle() {
-    return this.hilightRoutingObstacle;
+  public boolean getHighlightRoutingObstacle() {
+    return this.highlightRoutingObstacle;
   }
 
   /** Sets highlight routing obstacle and fires {@link #PROP_HIGHLIGHT_ROUTING_OBSTACLE}. */
-  public void setHilightRoutingObstacle(boolean pValue) {
+  public void setHighlightRoutingObstacle(boolean pValue) {
     if (readOnly) {
       return;
     }
-    boolean old = this.hilightRoutingObstacle;
-    this.hilightRoutingObstacle = pValue;
+    boolean old = this.highlightRoutingObstacle;
+    this.highlightRoutingObstacle = pValue;
     pcs.firePropertyChange(PROP_HIGHLIGHT_ROUTING_OBSTACLE, old, pValue);
   }
 

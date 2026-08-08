@@ -123,30 +123,6 @@ import javax.swing.SwingUtilities;
 public class GuiBoardManager extends HeadlessBoardManager {
 
   /**
-   * The GUI-session singleton for interactive settings.
-   *
-   * <p>This field holds the {@link InteractiveSettings} singleton that acts as the live {@link
-   * app.freerouting.settings.sources.GuiSettings} source (priority 50) for the {@link
-   * SettingsMerger} pipeline. It is initialised in {@link #createBoard} and in {@link
-   * #loadFromSpecctraDsn} (when DSN reading bypasses {@code create_board}).
-   *
-   * <p>This field intentionally shadows the removed {@code interactiveSettings} field that
-   * previously lived on {@link HeadlessBoardManager}; it is not accessible from headless code.
-   *
-   * @see InteractiveSettings#getOrCreate(app.freerouting.board.RoutingBoard)
-   */
-  private InteractiveSettings interactiveSettings;
-
-  /**
-   * Direct reference to the {@link app.freerouting.gui.BoardFrame} that owns this manager.
-   *
-   * <p>Set by {@link #setBoardFrame(app.freerouting.gui.BoardFrame)} immediately after construction
-   * (and after every {@link BoardPanel#resetBoardHandling} call). Having a direct back-reference
-   * avoids walking the AWT component hierarchy to locate the frame.
-   */
-  private app.freerouting.gui.BoardFrame boardFrame;
-
-  /**
    * The minimum interval in milliseconds between consecutive board panel repaints during background
    * operations (autorouting, optimization).
    *
@@ -154,7 +130,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * operations, maintaining a maximum effective frame rate of 1 FPS (1000ms interval).
    */
   private static final long background_repaint_interval = 1000;
-
   /**
    * The minimum interval in milliseconds between consecutive board panel repaints during
    * interactive operations (dragging, moving).
@@ -163,7 +138,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * approximately 30 FPS.
    */
   private static final long interactive_repaint_interval = 33;
-
   /**
    * The timestamp of the most recent board panel repaint operation.
    *
@@ -171,7 +145,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * milliseconds since epoch.
    */
   private static long last_repainted_time;
-
   /**
    * Manager for on-screen status and information messages.
    *
@@ -187,7 +160,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see ScreenMessages
    */
   public final ScreenMessages screenMessages;
-
   /**
    * Merger that consolidates router settings from multiple sources.
    *
@@ -202,7 +174,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see SettingsMerger
    */
   public final SettingsMerger settingsMerger;
-
   /**
    * The graphical panel component that displays and renders the routing board.
    *
@@ -218,14 +189,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see BoardPanel
    */
   private final BoardPanel panel;
-
   /**
    * Text manager for internationalized message strings.
    *
    * <p>Provides localized text for UI elements and messages based on the current locale setting.
    */
   private final TextManager tm;
-
   /**
    * Collection of listeners notified when the board's read-only state changes.
    *
@@ -233,7 +202,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * becomes read-only (e.g., during autorouting or logfile playback).
    */
   private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
-
   /**
    * Global application settings container.
    *
@@ -241,7 +209,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * and other global preferences.
    */
   private final GlobalSettings globalSettings;
-
   /**
    * Listener that responds to new log entries being added.
    *
@@ -249,7 +216,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * operations.
    */
   private final LogEntries.LogEntryAddedListener logEntryAddedListener;
-
   /**
    * Listener that responds to trace events during routing operations.
    *
@@ -257,7 +223,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * diagnostic purposes.
    */
   private final TraceEventListener traceEventListener;
-
+  /**
+   * The current locale for internationalized UI text and messages.
+   *
+   * <p>Determines the language used for all user-facing text elements.
+   */
+  private final Locale locale;
   /**
    * Graphics context managing visual display settings for the board.
    *
@@ -273,7 +244,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see GraphicsContext
    */
   public GraphicsContext graphicsContext;
-
   /**
    * Coordinate transformer for converting between different coordinate systems.
    *
@@ -290,7 +260,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see CoordinateTransform
    */
   public CoordinateTransform coordinateTransform;
-
   /**
    * Manager for detecting and displaying clearance violations between board items.
    *
@@ -307,7 +276,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see ClearanceViolations
    */
   public ClearanceViolations clearanceViolations;
-
   /**
    * The currently active interactive state controlling user interaction behavior.
    *
@@ -327,7 +295,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InteractiveState
    */
   InteractiveState interactiveState;
-
   /**
    * Flag to force immediate board panel repaint, bypassing the throttle mechanism.
    *
@@ -340,14 +307,28 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * </ul>
    */
   boolean paintImmediately;
-
   /**
-   * The current locale for internationalized UI text and messages.
+   * The GUI-session singleton for interactive settings.
    *
-   * <p>Determines the language used for all user-facing text elements.
+   * <p>This field holds the {@link InteractiveSettings} singleton that acts as the live {@link
+   * app.freerouting.settings.sources.GuiSettings} source (priority 50) for the {@link
+   * SettingsMerger} pipeline. It is initialised in {@link #createBoard} and in {@link
+   * #loadFromSpecctraDsn} (when DSN reading bypasses {@code create_board}).
+   *
+   * <p>This field intentionally shadows the removed {@code interactiveSettings} field that
+   * previously lived on {@link HeadlessBoardManager}; it is not accessible from headless code.
+   *
+   * @see InteractiveSettings#getOrCreate(app.freerouting.board.RoutingBoard)
    */
-  private final Locale locale;
-
+  private InteractiveSettings interactiveSettings;
+  /**
+   * Direct reference to the {@link app.freerouting.gui.BoardFrame} that owns this manager.
+   *
+   * <p>Set by {@link #setBoardFrame(app.freerouting.gui.BoardFrame)} immediately after construction
+   * (and after every {@link BoardPanel#resetBoardHandling} call). Having a direct back-reference
+   * avoids walking the AWT component hierarchy to locate the frame.
+   */
+  private app.freerouting.gui.BoardFrame boardFrame;
   /**
    * Number of threads to use for parallel routing operations.
    *
@@ -458,19 +439,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
   private Point[] impactedPoints;
 
   /**
-   * Sets the owning {@link app.freerouting.gui.BoardFrame} for this manager.
-   *
-   * <p>Must be called by {@link app.freerouting.gui.BoardPanel} immediately after constructing or
-   * resetting the {@code GuiBoardManager} instance so that {@link #refreshGuiFromSettings()} can
-   * reach the frame's permanent subwindows without walking the AWT component hierarchy.
-   *
-   * @param boardFrame the frame that owns this manager; {@code null} clears the reference
-   */
-  public void setBoardFrame(app.freerouting.gui.BoardFrame boardFrame) {
-    this.boardFrame = boardFrame;
-  }
-
-  /**
    * Creates a new GUI board manager for interactive routing operations.
    *
    * <p>Initializes all subsystems required for interactive board manipulation including:
@@ -512,6 +480,19 @@ public class GuiBoardManager extends HeadlessBoardManager {
 
     this.traceEventListener = this::handleTraceEvent;
     FRLogger.addTraceEventListener(this.traceEventListener);
+  }
+
+  /**
+   * Sets the owning {@link app.freerouting.gui.BoardFrame} for this manager.
+   *
+   * <p>Must be called by {@link app.freerouting.gui.BoardPanel} immediately after constructing or
+   * resetting the {@code GuiBoardManager} instance so that {@link #refreshGuiFromSettings()} can
+   * reach the frame's permanent subwindows without walking the AWT component hierarchy.
+   *
+   * @param boardFrame the frame that owns this manager; {@code null} clears the reference
+   */
+  public void setBoardFrame(app.freerouting.gui.BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
   }
 
   /**
@@ -1750,7 +1731,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   private void drawImpactedPointsIndicators(Graphics pGraphics) {
     Color drawColor = graphicsContext.getHighlightColor();
-    double drawIntensity = graphicsContext.getHilightColorIntensity();
+    double drawIntensity = graphicsContext.getHighlightColorIntensity();
     int defaultTraceHalfWidth = board.rules.getDefaultTraceHalfWidth(0);
     double radius = Math.max(5 * defaultTraceHalfWidth / 10, 500); // Minimum radius of 500
     final double drawWidth = 50.0;
@@ -3118,6 +3099,26 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
+   * Sets the current interactive state and updates the toolbar accordingly.
+   *
+   * <p>Transitions to a new interactive mode if the provided state is different from the current
+   * one. The toolbar is updated to reflect the new mode's available operations.
+   *
+   * <p>Toolbar update is skipped when the board is in read-only mode.
+   *
+   * @param pState the new interactive state to activate
+   * @see InteractiveState#setToolbar()
+   */
+  public void setInteractiveState(InteractiveState pState) {
+    if (pState != null && pState != interactiveState) {
+      this.interactiveState = pState;
+      if (!this.boardIsReadOnly) {
+        pState.setToolbar();
+      }
+    }
+  }
+
+  /**
    * Executes a command produced by an interactive state.
    *
    * <p>When the command is null, cannot execute, or returns null, the current state is kept.
@@ -3148,26 +3149,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
   private void updateToolbarSelectionPanel() {
     if (panel != null && panel.boardFrame != null) {
       panel.boardFrame.setToolbarModeSelectionPanelValue(getInteractiveState());
-    }
-  }
-
-  /**
-   * Sets the current interactive state and updates the toolbar accordingly.
-   *
-   * <p>Transitions to a new interactive mode if the provided state is different from the current
-   * one. The toolbar is updated to reflect the new mode's available operations.
-   *
-   * <p>Toolbar update is skipped when the board is in read-only mode.
-   *
-   * @param pState the new interactive state to activate
-   * @see InteractiveState#setToolbar()
-   */
-  public void setInteractiveState(InteractiveState pState) {
-    if (pState != null && pState != interactiveState) {
-      this.interactiveState = pState;
-      if (!this.boardIsReadOnly) {
-        pState.setToolbar();
-      }
     }
   }
 

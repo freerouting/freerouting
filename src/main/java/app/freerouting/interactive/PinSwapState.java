@@ -106,7 +106,7 @@ public final class PinSwapState extends InteractiveState {
   @Override
   public void draw(Graphics pGraphics) {
     Color highlightColor = hdlg.graphicsContext.getHighlightColor();
-    double highligtColorIntensity = hdlg.graphicsContext.getHilightColorIntensity();
+    double highligtColorIntensity = hdlg.graphicsContext.getHighlightColorIntensity();
     fromPin.draw(pGraphics, hdlg.graphicsContext, highlightColor, 0.5 * highligtColorIntensity);
     for (Pin currPin : swappablePins) {
       currPin.draw(pGraphics, hdlg.graphicsContext, highlightColor, highligtColorIntensity);

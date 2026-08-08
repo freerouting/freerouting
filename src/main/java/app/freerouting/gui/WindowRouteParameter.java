@@ -62,7 +62,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private final JCheckBox settingsRoutingDragComponentCheckBox;
   private final JCheckBox settingsRoutingIgnoreConductionCheckBox;
   private final JCheckBox settingsRoutingViaSnapToSmdCenterCheckBox;
-  private final JCheckBox settingsRoutingHilightRoutingObstacleCheckBox;
+  private final JCheckBox settingsRoutingHighlightRoutingObstacleCheckBox;
   private final JCheckBox settingsRoutingNeckdownCheckBox;
   private final JCheckBox settingsRoutingRestrictPinExitDirectionsCheckBox;
   private final ManualTraceWidthListener manualTraceWidthListener;
@@ -257,18 +257,18 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         tm.getText("via_snap_to_smd_center_tooltip"));
     mainPanel.add(settingsRoutingViaSnapToSmdCenterCheckBox, gridbagConstraints);
 
-    settingsRoutingHilightRoutingObstacleCheckBox =
-        new JCheckBox(tm.getText("hilightRoutingObstacle"));
-    settingsRoutingHilightRoutingObstacleCheckBox.addActionListener(new HilightObstacleListener());
-    settingsRoutingHilightRoutingObstacleCheckBox.addActionListener(
+    settingsRoutingHighlightRoutingObstacleCheckBox =
+        new JCheckBox(tm.getText("highlightRoutingObstacle"));
+    settingsRoutingHighlightRoutingObstacleCheckBox.addActionListener(new HighlightObstacleListener());
+    settingsRoutingHighlightRoutingObstacleCheckBox.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "settingsRoutingHilightRoutingObstacleCheckBox",
-                settingsRoutingHilightRoutingObstacleCheckBox.getText()));
-    gridbag.setConstraints(settingsRoutingHilightRoutingObstacleCheckBox, gridbagConstraints);
-    settingsRoutingHilightRoutingObstacleCheckBox.setToolTipText(
-        tm.getText("hilight_routing_obstacle_tooltip"));
-    mainPanel.add(settingsRoutingHilightRoutingObstacleCheckBox, gridbagConstraints);
+                "settingsRoutingHighlightRoutingObstacleCheckBox",
+                settingsRoutingHighlightRoutingObstacleCheckBox.getText()));
+    gridbag.setConstraints(settingsRoutingHighlightRoutingObstacleCheckBox, gridbagConstraints);
+    settingsRoutingHighlightRoutingObstacleCheckBox.setToolTipText(
+        tm.getText("highlight_routing_obstacle_tooltip"));
+    mainPanel.add(settingsRoutingHighlightRoutingObstacleCheckBox, gridbagConstraints);
 
     settingsRoutingIgnoreConductionCheckBox = new JCheckBox(tm.getText("ignore_conduction_areas"));
     settingsRoutingIgnoreConductionCheckBox.addActionListener(new IgnoreConductionListener());
@@ -465,6 +465,49 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
   }
 
+  /**
+   * Applies the stitch route selection to the given interactive settings. Used by unit tests to
+   * verify the stitch route behavior.
+   */
+  public static void applyStitchRouteSelection(
+      InteractiveSettings pInteractiveSettings, boolean pValue) {
+    pInteractiveSettings.setStitchRoute(pValue);
+  }
+
+  /**
+   * Applies the push and shove selection to the given interactive settings. Used by unit tests to
+   * verify the push and shove behavior.
+   */
+  public static void applyPushAndShoveSelection(
+      InteractiveSettings pInteractiveSettings, boolean pValue) {
+    pInteractiveSettings.setPushEnabled(pValue);
+  }
+
+  /**
+   * Applies the ignore conduction selection to the given board manager. Used by unit tests to
+   * verify the ignore conduction behavior.
+   */
+  public static void applyIgnoreConductionSelection(GuiBoardManager pBoardManager, boolean pValue) {
+    pBoardManager.setIgnoreConduction(pValue);
+  }
+
+  /**
+   * Applies the clearance compensation selection to the given board manager. Used by unit tests to
+   * verify the clearance compensation behavior.
+   */
+  public static void applyClearanceCompensationSelection(
+      GuiBoardManager pBoardManager, boolean pValue) {
+    pBoardManager.setClearanceCompensation(pValue);
+  }
+
+  /**
+   * Applies the pin exit edge to turn distance to the given board manager. Used by unit tests to
+   * verify the pin exit edge to turn distance behavior.
+   */
+  public static void applyPinExitEdgeToTurnDistance(GuiBoardManager pBoardManager, float pValue) {
+    pBoardManager.setPinEdgeToTurnDist(pValue);
+  }
+
   // Inject standard JSeparators keeping sizing under control
   private void addSeparator(JPanel panel, GridBagLayout gridbag, GridBagConstraints constraints) {
     int oldGridWidth = constraints.gridwidth;
@@ -555,8 +598,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
           this.guiBoardManager.getInteractiveSettings().getViaSnapToSmdCenter());
       this.settingsRoutingIgnoreConductionCheckBox.setSelected(
           this.guiBoardManager.getRoutingBoard().rules.getIgnoreConduction());
-      this.settingsRoutingHilightRoutingObstacleCheckBox.setSelected(
-          this.guiBoardManager.getInteractiveSettings().getHilightRoutingObstacle());
+      this.settingsRoutingHighlightRoutingObstacleCheckBox.setSelected(
+          this.guiBoardManager.getInteractiveSettings().getHighlightRoutingObstacle());
       this.settingsRoutingNeckdownCheckBox.setSelected(
           this.guiBoardManager.getInteractiveSettings().getAutomaticNeckdown());
 
@@ -741,49 +784,6 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     return wrapper;
   }
 
-  /**
-   * Applies the stitch route selection to the given interactive settings. Used by unit tests to
-   * verify the stitch route behavior.
-   */
-  public static void applyStitchRouteSelection(
-      InteractiveSettings pInteractiveSettings, boolean pValue) {
-    pInteractiveSettings.setStitchRoute(pValue);
-  }
-
-  /**
-   * Applies the push and shove selection to the given interactive settings. Used by unit tests to
-   * verify the push and shove behavior.
-   */
-  public static void applyPushAndShoveSelection(
-      InteractiveSettings pInteractiveSettings, boolean pValue) {
-    pInteractiveSettings.setPushEnabled(pValue);
-  }
-
-  /**
-   * Applies the ignore conduction selection to the given board manager. Used by unit tests to
-   * verify the ignore conduction behavior.
-   */
-  public static void applyIgnoreConductionSelection(GuiBoardManager pBoardManager, boolean pValue) {
-    pBoardManager.setIgnoreConduction(pValue);
-  }
-
-  /**
-   * Applies the clearance compensation selection to the given board manager. Used by unit tests to
-   * verify the clearance compensation behavior.
-   */
-  public static void applyClearanceCompensationSelection(
-      GuiBoardManager pBoardManager, boolean pValue) {
-    pBoardManager.setClearanceCompensation(pValue);
-  }
-
-  /**
-   * Applies the pin exit edge to turn distance to the given board manager. Used by unit tests to
-   * verify the pin exit edge to turn distance behavior.
-   */
-  public static void applyPinExitEdgeToTurnDistance(GuiBoardManager pBoardManager, float pValue) {
-    pBoardManager.setPinEdgeToTurnDist(pValue);
-  }
-
   private class SnapAngle90Listener implements ActionListener {
 
     @Override
@@ -935,7 +935,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class HilightObstacleListener implements ActionListener {
+  private class HighlightObstacleListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent pEvt) {
@@ -944,7 +944,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       guiBoardManager
           .getInteractiveSettings()
-          .setHilightRoutingObstacle(settingsRoutingHilightRoutingObstacleCheckBox.isSelected());
+          .setHighlightRoutingObstacle(settingsRoutingHighlightRoutingObstacleCheckBox.isSelected());
     }
   }
 

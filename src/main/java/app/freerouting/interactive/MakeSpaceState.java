@@ -48,7 +48,7 @@ public class MakeSpaceState extends DragState {
             false,
             false,
             false,
-            hdlg.getInteractiveSettings().getHilightRoutingObstacle());
+            hdlg.getInteractiveSettings().getHighlightRoutingObstacle());
   }
 
   @Override
