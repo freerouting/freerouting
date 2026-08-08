@@ -19,6 +19,8 @@ exclude: |
     scripts/benchmark/logs/|
     scripts/benchmark/outputs/|
     scripts/benchmark/results/|
+    scripts/benchmark/fixtures/|
+    scripts/i18n/glossary/|
     scripts/i18n/__pycache__/|
     .*\.step$|
     .*\.stp$|
