@@ -6,10 +6,17 @@ plugins {
     id 'jvm-test-suite'
     id 'signing'
     id 'maven-publish'
+    id 'checkstyle'
     id "com.vanniktech.maven.publish" version "0.37.0"
     id 'io.github.ben-manes.versions' version '0.59.0'
     id 'org.openrewrite.rewrite' version '7.38.0'
     id "com.diffplug.spotless" version "8.9.0"
+}
+
+checkstyle {
+    toolVersion = '13.9.0'
+    configFile = file('config/checkstyle/google_checks.xml')
+    ignoreFailures = true
 }
 
 
