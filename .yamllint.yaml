@@ -13,3 +13,7 @@ ignore: |
   fixtures/
   integrations/
   examples/
+  build/
+  logs/
+  tmp/
+  out/

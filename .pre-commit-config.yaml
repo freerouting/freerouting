@@ -3,15 +3,23 @@ default_language_version:
 
 exclude: |
   (?x)^(
+    \..*/|
     src_v19/|
     fixtures/|
     integrations/|
     examples/|
+    docs/reference/|
     src/main/resources/app/freerouting/helpset/|
     build/|
+    out/|
+    bin/|
+    tmp/|
     logs/|
-    \.gradle/|
     assets/|
+    scripts/benchmark/logs/|
+    scripts/benchmark/outputs/|
+    scripts/benchmark/results/|
+    scripts/i18n/__pycache__/|
     .*\.step$|
     .*\.stp$|
     .*\.dsn$|
@@ -26,7 +34,9 @@ repos:
     rev: v4.6.0
     hooks:
       - id: trailing-whitespace
+        types_or: [java, markdown, yaml, python, shell, powershell, properties]
       - id: end-of-file-fixer
+        types_or: [java, markdown, yaml, python, shell, powershell, properties]
       - id: check-json
       - id: check-yaml
         args: ['--allow-multiple-documents']
