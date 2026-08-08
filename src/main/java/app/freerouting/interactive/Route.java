@@ -469,8 +469,8 @@ public class Route {
     if (targetSet == null || netNoArr.length < 1) {
       return;
     }
-    Net currNet = board.rules.nets.get(netNoArr[0]);
-    if (currNet == null) {
+    Net currentNet = board.rules.nets.get(netNoArr[0]);
+    if (currentNet == null) {
       return;
     }
     Color highlightColor = pGraphicsContext.getHilightColor();
@@ -498,8 +498,8 @@ public class Route {
     FloatPoint fromCorner = this.prevCorner.toFloat();
     if (nearestTargetPoint != null && prevCorner != null) {
       boolean currLengthMatchingOk = true; // used for drawing the incomplete as violation
-      double maxTraceLength = currNet.getNetClass().getMaximumTraceLength();
-      double minTraceLength = currNet.getNetClass().getMinimumTraceLength();
+      double maxTraceLength = currentNet.getNetClass().getMaximumTraceLength();
+      double minTraceLength = currentNet.getNetClass().getMinimumTraceLength();
       double lengthMatchingColorIntensity = pGraphicsContext.getLengthMatchingAreaColorIntensity();
       if (maxTraceLength > 0 || minTraceLength > 0 && lengthMatchingColorIntensity > 0) {
 
@@ -510,8 +510,8 @@ public class Route {
           // maxTraceLength not provided. Create an ellipse containing the whole board.
           maxTraceLength = 0.3 * Limits.CRIT_INT;
         }
-        double currMaxTraceLength = maxTraceLength - (currNet.getTraceLength() + traceLengthAdd);
-        double currMinTraceLength = minTraceLength - (currNet.getTraceLength() + traceLengthAdd);
+        double currMaxTraceLength = maxTraceLength - (currentNet.getTraceLength() + traceLengthAdd);
+        double currMinTraceLength = minTraceLength - (currentNet.getTraceLength() + traceLengthAdd);
         double incompleteLength = nearestTargetPoint.distance(fromCorner);
         if (incompleteLength < currMaxTraceLength && minTraceLength <= maxTraceLength) {
           Vector delta = nearestTargetPoint.round().differenceBy(prevCorner);
