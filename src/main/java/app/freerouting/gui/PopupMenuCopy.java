@@ -14,7 +14,7 @@ public class PopupMenuCopy extends PopupMenuDisplay {
   /** Creates a new instance of CopyPopupMenu */
   PopupMenuCopy(BoardFrame p_board_frame) {
     super(p_board_frame);
-    LayerStructure layerStructure = boardPanel.boardHandling.get_routing_board().layerStructure;
+    LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
 
     if (layerStructure.arr.length > 0) {
       changeLayerMenu = new PopupMenuChangeLayer(p_board_frame);
@@ -28,7 +28,7 @@ public class PopupMenuCopy extends PopupMenuDisplay {
     JMenuItem popupCopyInsertMenuitem = new JMenuItem();
     popupCopyInsertMenuitem.setText(tm.getText("insert"));
     popupCopyInsertMenuitem.addActionListener(
-        _ -> boardPanel.boardHandling.left_button_clicked(boardPanel.rightButtonClickLocation));
+        _ -> boardPanel.boardHandling.leftButtonClicked(boardPanel.rightButtonClickLocation));
     popupCopyInsertMenuitem.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -38,21 +38,21 @@ public class PopupMenuCopy extends PopupMenuDisplay {
 
     JMenuItem popupCopyDoneMenuitem = new JMenuItem();
     popupCopyDoneMenuitem.setText(tm.getText("done"));
-    popupCopyDoneMenuitem.addActionListener(_ -> boardPanel.boardHandling.return_from_state());
+    popupCopyDoneMenuitem.addActionListener(_ -> boardPanel.boardHandling.returnFromState());
     popupCopyDoneMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupCopyDoneMenuitem", popupCopyDoneMenuitem.getText()));
 
     this.add(popupCopyDoneMenuitem, 1);
 
     Layer currLayer =
-        layerStructure.arr[boardPanel.boardHandling.getInteractiveSettings().get_layer()];
-    disable_layer_item(layerStructure.get_signal_layer_no(currLayer));
+        layerStructure.arr[boardPanel.boardHandling.getInteractiveSettings().getLayer()];
+    disableLayerItem(layerStructure.getSignalLayerNo(currLayer));
   }
 
   /** Disables the p_no-th item in the changeLayerMenu. */
-  void disable_layer_item(int p_no) {
+  void disableLayerItem(int p_no) {
     if (this.changeLayerMenu != null) {
-      this.changeLayerMenu.disable_item(p_no);
+      this.changeLayerMenu.disableItem(p_no);
     }
   }
 }

@@ -23,31 +23,31 @@ public class WindowComponents extends WindowObjectListWithFilter {
 
   /** Fills the list with the board components. */
   @Override
-  protected void fill_list() {
-    Components components = this.boardFrame.boardPanel.boardHandling.get_routing_board().components;
+  protected void fillList() {
+    Components components = this.boardFrame.boardPanel.boardHandling.getRoutingBoard().components;
     Component[] sortedArr = new Component[components.count()];
     for (int i = 0; i < sortedArr.length; i++) {
       sortedArr[i] = components.get(i + 1);
     }
     Arrays.sort(sortedArr);
     for (int i = 0; i < sortedArr.length; i++) {
-      this.add_to_list(sortedArr[i]);
+      this.addToList(sortedArr[i]);
     }
     this.list.setVisibleRowCount(Math.min(components.count(), DEFAULT_TABLE_SIZE));
   }
 
   @Override
-  protected void select_instances() {
+  protected void selectInstances() {
     List<Object> selectedComponents = list.getSelectedValuesList();
     if (selectedComponents.isEmpty()) {
       return;
     }
-    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.get_routing_board();
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
     Set<Item> selectedItems = new TreeSet<>();
-    Collection<Item> boardItems = routingBoard.get_items();
+    Collection<Item> boardItems = routingBoard.getItems();
     for (Item currItem : boardItems) {
-      if (currItem.get_component_no() > 0) {
-        Component currComponent = routingBoard.components.get(currItem.get_component_no());
+      if (currItem.getComponentNo() > 0) {
+        Component currComponent = routingBoard.components.get(currItem.getComponentNo());
         boolean componentMatches = false;
         for (int i = 0; i < selectedComponents.size(); i++) {
           if (currComponent == selectedComponents.get(i)) {
@@ -60,7 +60,7 @@ public class WindowComponents extends WindowObjectListWithFilter {
         }
       }
     }
-    boardFrame.boardPanel.boardHandling.select_items(selectedItems);
-    boardFrame.boardPanel.boardHandling.zoom_selection();
+    boardFrame.boardPanel.boardHandling.selectItems(selectedItems);
+    boardFrame.boardPanel.boardHandling.zoomSelection();
   }
 }

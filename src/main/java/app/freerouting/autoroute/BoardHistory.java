@@ -82,7 +82,7 @@ public class BoardHistory {
   }
 
   public boolean contains(RoutingBoard board) {
-    String hash = board.get_hash();
+    String hash = board.getHash();
     rwLock.readLock().lock();
     try {
       for (BoardHistoryEntry entry : boards) {
@@ -97,7 +97,7 @@ public class BoardHistory {
   }
 
   public synchronized void remove(RoutingBoard board) {
-    String hash = board.get_hash();
+    String hash = board.getHash();
     for (int i = 0; i < boards.size(); i++) {
       if (boards.get(i).hash.equals(hash)) {
         boards.remove(i);
@@ -162,7 +162,7 @@ public class BoardHistory {
   }
 
   public int getRank(RoutingBoard board) {
-    String hash = board.get_hash();
+    String hash = board.getHash();
     rwLock.readLock().lock();
     try {
       for (int i = 0; i < boards.size(); i++) {
@@ -185,7 +185,7 @@ public class BoardHistory {
 
     public BoardHistoryEntry(RoutingBoard board, ScoringSettings scoringSettings) {
       this.board = board.serialize(false);
-      this.hash = board.get_hash();
+      this.hash = board.getHash();
       this.score = new BoardStatistics(board).getNormalizedScore(scoringSettings);
       this.restoreCount = 0;
     }

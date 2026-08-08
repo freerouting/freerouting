@@ -45,7 +45,7 @@ class McpRateLimitFilterTest {
     Freerouting.globalSettings.mcpServerSettings.rateLimit.requestsPerWindow = 2;
     Freerouting.globalSettings.mcpServerSettings.rateLimit.windowSeconds = 60;
 
-    mcpServer = Freerouting.InitializeMCP(mcpSettings);
+    mcpServer = Freerouting.initializeMCP(mcpSettings);
     waitForServerStarted(mcpServer);
 
     int mcpPort = ((ServerConnector) mcpServer.getConnectors()[0]).getLocalPort();
@@ -61,7 +61,7 @@ class McpRateLimitFilterTest {
   }
 
   @Test
-  void mcpRateLimit_blocksAfterConfiguredThreshold() throws Exception {
+  void mcpRateLimitBlocksAfterConfiguredThreshold() throws Exception {
     JsonObject request = new JsonObject();
     request.addProperty("jsonrpc", "2.0");
     request.addProperty("id", 1);

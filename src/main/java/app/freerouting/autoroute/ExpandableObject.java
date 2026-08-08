@@ -6,29 +6,29 @@ import app.freerouting.geometry.planar.TileShape;
 public interface ExpandableObject {
 
   /** Calculates the intersection of the shapes of the 2 objects belonging to this door. */
-  TileShape get_shape();
+  TileShape getShape();
 
   /**
    * Returns the dimension of the intersection of the shapes of the 2 objects belonging to this
    * door.
    */
-  int get_dimension();
+  int getDimension();
 
   /**
    * Returns the other room to p_room if this is a door and the other room is a
    * CompleteExpansionRoom. Else null is returned.
    */
-  CompleteExpansionRoom other_room(CompleteExpansionRoom p_room);
+  CompleteExpansionRoom otherRoom(CompleteExpansionRoom p_room);
 
   /** Returns the count of MazeSearchElements in this expandable object */
-  int maze_search_element_count();
+  int mazeSearchElementCount();
 
   /** Returns the p_no-th MazeSearchElements in this expandable object */
-  MazeSearchElement get_maze_search_element(int p_no);
+  MazeSearchElement getMazeSearchElement(int p_no);
 
   /** Resets this ExpandableObject for autorouting the next connection. */
   void reset();
 
   /** Returns a unique identification number for this object to allow deterministic sorting. */
-  int get_id_no();
+  int getIdNo();
 }

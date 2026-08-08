@@ -67,16 +67,16 @@ public class Issue684MemoryLeakRoutingTest extends RoutingFixtureTest {
    * exercising the routing code paths that led to the memory leak.
    */
   @Test
-  void routing_completesWithoutOutOfMemoryError() {
+  void routingCompletesWithoutOutOfMemoryError() {
     TestingSettings testSettings = new TestingSettings();
     testSettings.setMaxPasses(3);
     testSettings.setMaxItems(50);
     testSettings.setJobTimeoutString("00:02:00");
 
-    RoutingJob job = GetRoutingJob(FIXTURE_FILE, testSettings);
+    RoutingJob job = getRoutingJob(FIXTURE_FILE, testSettings);
     assertNotNull(job, "RoutingJob must not be null");
 
-    RoutingJob completed = RunRoutingJob(job);
+    RoutingJob completed = runRoutingJob(job);
 
     assertTrue(
         completed.state == RoutingJobState.COMPLETED
@@ -88,7 +88,7 @@ public class Issue684MemoryLeakRoutingTest extends RoutingFixtureTest {
         completed.board, "RoutingJob.board must be non-null after a completed routing run");
 
     Duration duration = completed.getDuration();
-    var statsAfter = GetBoardStatistics(completed);
+    var statsAfter = getBoardStatistics(completed);
     IO.println(
         "Issue684 routing test completed in "
             + FRLogger.formatDuration(duration.toSeconds())

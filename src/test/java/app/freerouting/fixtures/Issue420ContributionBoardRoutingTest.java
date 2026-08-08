@@ -53,19 +53,19 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
    */
   @Test
   @Tag("slow")
-  void routing_completesWithoutOutOfMemoryError() {
+  void routingCompletesWithoutOutOfMemoryError() {
     TestingSettings testSettings = new TestingSettings();
     testSettings.setMaxPasses(1);
     testSettings.setMaxItems(100);
     testSettings.setJobTimeoutString("00:02:00");
 
-    RoutingJob job = GetRoutingJob(FIXTURE_FILE, testSettings);
+    RoutingJob job = getRoutingJob(FIXTURE_FILE, testSettings);
     assertNotNull(job, "RoutingJob must not be null");
 
     // Disable the fanout phase to speed up the test
     job.routerSettings.fanout.enabled = false;
 
-    RoutingJob completed = RunRoutingJob(job);
+    RoutingJob completed = runRoutingJob(job);
 
     assertTrue(
         completed.state == RoutingJobState.COMPLETED
@@ -87,7 +87,7 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
    */
   @Test
   @Tag("slow")
-  void optimizer_completesWithoutOutOfMemoryError() {
+  void optimizerCompletesWithoutOutOfMemoryError() {
     // Route a limited number of items first so the optimizer has something to work with,
     // but the initial routing phase stays well under 1 minute.
     TestingSettings testSettings = new TestingSettings();
@@ -95,7 +95,7 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
     testSettings.setMaxItems(150);
     testSettings.setJobTimeoutString("00:05:00");
 
-    RoutingJob job = GetRoutingJob(FIXTURE_FILE, testSettings);
+    RoutingJob job = getRoutingJob(FIXTURE_FILE, testSettings);
     assertNotNull(job, "RoutingJob must not be null");
 
     // Disable the fanout phase to speed up the test
@@ -108,7 +108,7 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
     job.routerSettings.optimizer.maxPasses = 1;
     job.routerSettings.optimizer.maxThreads = 1;
 
-    RoutingJob completed = RunRoutingJob(job);
+    RoutingJob completed = runRoutingJob(job);
 
     assertTrue(
         completed.state == RoutingJobState.COMPLETED
@@ -123,7 +123,7 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
     assertRoutingResult(completed, FIXTURE_FILE).exactClearanceViolations(0).check();
 
     Duration duration = completed.getDuration();
-    var statsAfter = GetBoardStatistics(completed);
+    var statsAfter = getBoardStatistics(completed);
     IO.println(
         "Issue420 optimizer test completed in "
             + FRLogger.formatDuration(duration.toSeconds())

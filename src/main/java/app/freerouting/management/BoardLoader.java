@@ -42,13 +42,13 @@ public final class BoardLoader {
         HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
         boardManager.loadFromKiCadJson(
             job.input.getData(), null, new ItemIdentificationNumberGenerator());
-        job.board = boardManager.get_routing_board();
+        job.board = boardManager.getRoutingBoard();
         return job.board != null;
       } else {
         HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
         boardManager.loadFromSpecctraDsn(
             job.input.getData(), null, new ItemIdentificationNumberGenerator());
-        job.board = boardManager.get_routing_board();
+        job.board = boardManager.getRoutingBoard();
         return job.board != null;
       }
     } catch (Exception e) {

@@ -49,29 +49,29 @@ public class Package {
     isFront = p_is_front;
   }
 
-  public static Package read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
+  public static Package readScope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
     try {
       boolean isFront = true;
       Collection<Shape> outline = new LinkedList<>();
       Collection<Shape.ReadAreaScopeResult> keepouts = new LinkedList<>();
       Collection<Shape.ReadAreaScopeResult> viaKeepouts = new LinkedList<>();
       Collection<Shape.ReadAreaScopeResult> placeKeepouts = new LinkedList<>();
-      Object nextToken = p_scanner.next_token();
+      Object nextToken = p_scanner.nextToken();
       if (!(nextToken instanceof String packageName)) {
         FRLogger.warn(
-            "Package.read_scope: String expected at '" + p_scanner.get_scope_identifier() + "'");
+            "Package.read_scope: String expected at '" + p_scanner.getScopeIdentifier() + "'");
         return null;
       }
-      p_scanner.set_scope_identifier(packageName);
+      p_scanner.setScopeIdentifier(packageName);
       Collection<PinInfo> pinInfoList = new LinkedList<>();
       for (; ; ) {
         Object prevToken = nextToken;
-        nextToken = p_scanner.next_token();
+        nextToken = p_scanner.nextToken();
 
         if (nextToken == null) {
           FRLogger.warn(
               "Package.read_scope: unexpected end of file at '"
-                  + p_scanner.get_scope_identifier()
+                  + p_scanner.getScopeIdentifier()
                   + "'");
           return null;
         }
@@ -81,30 +81,30 @@ public class Package {
         }
         if (prevToken == Keyword.OPEN_BRACKET) {
           if (nextToken == Keyword.PIN) {
-            PinInfo nextPin = read_pin_info(p_scanner);
+            PinInfo nextPin = readPinInfo(p_scanner);
             if (nextPin == null) {
               return null;
             }
             pinInfoList.add(nextPin);
           } else if (nextToken == Keyword.SIDE) {
-            isFront = read_placement_side(p_scanner);
+            isFront = readPlacementSide(p_scanner);
           } else if (nextToken == Keyword.OUTLINE) {
-            Shape currShape = Shape.read_scope(p_scanner, p_layer_structure);
+            Shape currShape = Shape.readScope(p_scanner, p_layer_structure);
             if (currShape != null) {
               outline.add(currShape);
             }
             // overread closing bracket
-            nextToken = p_scanner.next_token();
+            nextToken = p_scanner.nextToken();
             if (nextToken != Keyword.CLOSED_BRACKET) {
               FRLogger.warn(
                   "Package.read_scope: closed bracket expected at '"
-                      + p_scanner.get_scope_identifier()
+                      + p_scanner.getScopeIdentifier()
                       + "'");
               return null;
             }
           } else if (nextToken == Keyword.KEEPOUT) {
             Shape.ReadAreaScopeResult keepoutArea =
-                Shape.read_area_scope(p_scanner, p_layer_structure, false);
+                Shape.readAreaScope(p_scanner, p_layer_structure, false);
             if (keepoutArea != null) {
               keepouts.add(keepoutArea);
             } else {
@@ -116,18 +116,18 @@ public class Package {
             }
           } else if (nextToken == Keyword.VIA_KEEPOUT) {
             Shape.ReadAreaScopeResult keepoutArea =
-                Shape.read_area_scope(p_scanner, p_layer_structure, false);
+                Shape.readAreaScope(p_scanner, p_layer_structure, false);
             if (keepoutArea != null) {
               viaKeepouts.add(keepoutArea);
             }
           } else if (nextToken == Keyword.PLACE_KEEPOUT) {
             Shape.ReadAreaScopeResult keepoutArea =
-                Shape.read_area_scope(p_scanner, p_layer_structure, false);
+                Shape.readAreaScope(p_scanner, p_layer_structure, false);
             if (keepoutArea != null) {
               placeKeepouts.add(keepoutArea);
             }
           } else {
-            ScopeKeyword.skip_scope(p_scanner);
+            ScopeKeyword.skipScope(p_scanner);
           }
         }
       }
@@ -144,13 +144,13 @@ public class Package {
     }
   }
 
-  public static void write_scope(WriteScopeParameter p_par, app.freerouting.core.Package p_package)
+  public static void writeScope(WriteScopeParameter p_par, app.freerouting.core.Package p_package)
       throws IOException {
-    p_par.file.start_scope();
+    p_par.file.startScope();
     p_par.file.write("image ");
     p_par.identifierType.write(p_package.name, p_par.file);
     // write the placement side of the package
-    p_par.file.new_line();
+    p_par.file.newLine();
     p_par.file.write("(side ");
     if (p_package.isFront) {
       p_par.file.write("front)");
@@ -158,15 +158,15 @@ public class Package {
       p_par.file.write("back)");
     }
     // write the pins of the package
-    for (int i = 0; i < p_package.pin_count(); i++) {
-      app.freerouting.core.Package.Pin currPin = p_package.get_pin(i);
-      p_par.file.new_line();
+    for (int i = 0; i < p_package.pinCount(); i++) {
+      app.freerouting.core.Package.Pin currPin = p_package.getPin(i);
+      p_par.file.newLine();
       p_par.file.write("(pin ");
       Padstack currPadstack = p_par.board.library.padstacks.get(currPin.padstackNo);
       p_par.identifierType.write(currPadstack.name, p_par.file);
       p_par.file.write(" ");
       p_par.identifierType.write(currPin.name, p_par.file);
-      double[] relCoor = p_par.coordinateTransform.board_to_dsn(currPin.relativeLocation);
+      double[] relCoor = p_par.coordinateTransform.boardToDsn(currPin.relativeLocation);
       for (int j = 0; j < relCoor.length; j++) {
         p_par.file.write(" ");
         p_par.file.write(String.valueOf(relCoor[j]));
@@ -181,26 +181,26 @@ public class Package {
     }
     // write the keepouts belonging to  the package.
     for (int i = 0; i < p_package.keepoutArr.length; i++) {
-      write_package_keepout(p_package.keepoutArr[i], p_par, false);
+      writePackageKeepout(p_package.keepoutArr[i], p_par, false);
     }
     for (int i = 0; i < p_package.viaKeepoutArr.length; i++) {
-      write_package_keepout(p_package.viaKeepoutArr[i], p_par, true);
+      writePackageKeepout(p_package.viaKeepoutArr[i], p_par, true);
     }
     // write the package outline.
     if (p_package.outline != null) {
       for (int i = 0; i < p_package.outline.length; i++) {
-        p_par.file.start_scope();
+        p_par.file.startScope();
         p_par.file.write("outline");
         Shape currOutline =
-            p_par.coordinateTransform.board_to_dsn_rel(p_package.outline[i], Layer.SIGNAL);
-        currOutline.write_scope(p_par.file, p_par.identifierType);
-        p_par.file.end_scope();
+            p_par.coordinateTransform.boardToDsnRel(p_package.outline[i], Layer.SIGNAL);
+        currOutline.writeScope(p_par.file, p_par.identifierType);
+        p_par.file.endScope();
       }
     }
-    p_par.file.end_scope();
+    p_par.file.endScope();
   }
 
-  private static void write_package_keepout(
+  private static void writePackageKeepout(
       app.freerouting.core.Package.Keepout p_keepout,
       WriteScopeParameter p_par,
       boolean p_is_via_keepout)
@@ -218,36 +218,36 @@ public class Package {
       boundaryShape = shape;
       holes = new app.freerouting.geometry.planar.Shape[0];
     } else {
-      boundaryShape = p_keepout.area.get_border();
-      holes = p_keepout.area.get_holes();
+      boundaryShape = p_keepout.area.getBorder();
+      holes = p_keepout.area.getHoles();
     }
-    p_par.file.start_scope();
+    p_par.file.startScope();
     if (p_is_via_keepout) {
       p_par.file.write("via_keepout");
     } else {
       p_par.file.write("keepout");
     }
-    Shape dsnShape = p_par.coordinateTransform.board_to_dsn(boundaryShape, keepoutLayer);
+    Shape dsnShape = p_par.coordinateTransform.boardToDsn(boundaryShape, keepoutLayer);
     if (dsnShape != null) {
-      dsnShape.write_scope(p_par.file, p_par.identifierType);
+      dsnShape.writeScope(p_par.file, p_par.identifierType);
     }
     for (int j = 0; j < holes.length; j++) {
-      Shape dsnHole = p_par.coordinateTransform.board_to_dsn(holes[j], keepoutLayer);
-      dsnHole.write_hole_scope(p_par.file, p_par.identifierType);
+      Shape dsnHole = p_par.coordinateTransform.boardToDsn(holes[j], keepoutLayer);
+      dsnHole.writeHoleScope(p_par.file, p_par.identifierType);
     }
-    p_par.file.end_scope();
+    p_par.file.endScope();
   }
 
   /** Reads the information of a single pin in a package. */
-  private static PinInfo read_pin_info(IJFlexScanner p_scanner) {
+  private static PinInfo readPinInfo(IJFlexScanner p_scanner) {
     try {
       // Read the padstack name.
       p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      Object nextToken = p_scanner.next_token();
+      Object nextToken = p_scanner.nextToken();
       if (!(nextToken instanceof String) && !(nextToken instanceof Integer)) {
         FRLogger.warn(
             "Package.read_pin_info: String or Integer expected at '"
-                + p_scanner.get_scope_identifier()
+                + p_scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -256,23 +256,23 @@ public class Package {
 
       p_scanner.yybegin(
           SpecctraDsnStreamReader.NAME); // to be able to handle pin names starting with a digit.
-      nextToken = p_scanner.next_token();
+      nextToken = p_scanner.nextToken();
       if (nextToken == Keyword.OPEN_BRACKET) {
         // read the padstack rotation
-        nextToken = p_scanner.next_token();
+        nextToken = p_scanner.nextToken();
         if (nextToken == Keyword.ROTATE) {
-          rotation = read_rotation(p_scanner);
+          rotation = readRotation(p_scanner);
         } else {
-          ScopeKeyword.skip_scope(p_scanner);
+          ScopeKeyword.skipScope(p_scanner);
         }
         p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
-        nextToken = p_scanner.next_token();
+        nextToken = p_scanner.nextToken();
       }
       // Read the pin name.
       if (!(nextToken instanceof String) && !(nextToken instanceof Integer)) {
         FRLogger.warn(
             "Package.read_pin_info: String or Integer expected at '"
-                + p_scanner.get_scope_identifier()
+                + p_scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -280,7 +280,7 @@ public class Package {
 
       double[] pinCoor = new double[2];
       for (int i = 0; i < 2; i++) {
-        nextToken = p_scanner.next_token();
+        nextToken = p_scanner.nextToken();
         if (nextToken instanceof Double double1) {
           pinCoor[i] = double1;
         } else if (nextToken instanceof Integer integer) {
@@ -288,7 +288,7 @@ public class Package {
         } else {
           FRLogger.warn(
               "Package.read_pin_info: number expected at '"
-                  + p_scanner.get_scope_identifier()
+                  + p_scanner.getScopeIdentifier()
                   + "'");
           return null;
         }
@@ -296,12 +296,12 @@ public class Package {
       // Handle scopes at the end of the pin scope.
       for (; ; ) {
         Object prevToken = nextToken;
-        nextToken = p_scanner.next_token();
+        nextToken = p_scanner.nextToken();
 
         if (nextToken == null) {
           FRLogger.warn(
               "Package.read_pin_info: unexpected end of file at '"
-                  + p_scanner.get_scope_identifier()
+                  + p_scanner.getScopeIdentifier()
                   + "'");
           return null;
         }
@@ -311,9 +311,9 @@ public class Package {
         }
         if (prevToken == Keyword.OPEN_BRACKET) {
           if (nextToken == Keyword.ROTATE) {
-            rotation = read_rotation(p_scanner);
+            rotation = readRotation(p_scanner);
           } else {
-            ScopeKeyword.skip_scope(p_scanner);
+            ScopeKeyword.skipScope(p_scanner);
           }
         }
       }
@@ -324,19 +324,19 @@ public class Package {
     }
   }
 
-  private static double read_rotation(IJFlexScanner p_scanner) {
+  private static double readRotation(IJFlexScanner p_scanner) {
     double result = 0;
 
     try {
-      String nextString = p_scanner.next_string();
+      String nextString = p_scanner.nextString();
       result = Double.parseDouble(nextString);
 
       // Overread The closing bracket.
-      Object nextToken = p_scanner.next_token();
+      Object nextToken = p_scanner.nextToken();
       if (nextToken != Keyword.CLOSED_BRACKET) {
         FRLogger.warn(
             "Package.read_rotation: closing bracket expected at '"
-                + p_scanner.get_scope_identifier()
+                + p_scanner.getScopeIdentifier()
                 + "'");
       }
     } catch (IOException e) {
@@ -347,47 +347,47 @@ public class Package {
   }
 
   /** Writes the placements of p_package to a Specctra dsn-file. */
-  public static void write_placement_scope(
+  public static void writePlacementScope(
       WriteScopeParameter p_par, app.freerouting.core.Package p_package) throws IOException {
-    Collection<Item> boardItems = p_par.board.get_items();
+    Collection<Item> boardItems = p_par.board.getItems();
     boolean componentFound = false;
     for (int i = 1; i <= p_par.board.components.count(); i++) {
       app.freerouting.board.Component currComponent = p_par.board.components.get(i);
-      if (currComponent.get_package() == p_package) {
+      if (currComponent.getPackage() == p_package) {
         // check, if not all items of the component are deleted
         boolean undeletedItemFound = false;
         for (Item currItem : boardItems) {
-          if (currItem.get_component_no() == currComponent.no) {
+          if (currItem.getComponentNo() == currComponent.no) {
             undeletedItemFound = true;
             break;
           }
         }
-        if (undeletedItemFound || !currComponent.is_placed()) {
+        if (undeletedItemFound || !currComponent.isPlaced()) {
           if (!componentFound) {
             // write the scope header
-            p_par.file.start_scope();
+            p_par.file.startScope();
             p_par.file.write("component ");
             p_par.identifierType.write(p_package.name, p_par.file);
             componentFound = true;
           }
-          Component.write_scope(p_par, currComponent);
+          Component.writeScope(p_par, currComponent);
         }
       }
     }
     if (componentFound) {
-      p_par.file.end_scope();
+      p_par.file.endScope();
     }
   }
 
-  private static boolean read_placement_side(IJFlexScanner p_scanner) throws IOException {
-    Object nextToken = p_scanner.next_token();
+  private static boolean readPlacementSide(IJFlexScanner p_scanner) throws IOException {
+    Object nextToken = p_scanner.nextToken();
     boolean result = nextToken != Keyword.BACK;
 
-    nextToken = p_scanner.next_token();
+    nextToken = p_scanner.nextToken();
     if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn(
           "Package.read_placement_side: closing bracket expected at '"
-              + p_scanner.get_scope_identifier()
+              + p_scanner.getScopeIdentifier()
               + "'");
     }
     return result;

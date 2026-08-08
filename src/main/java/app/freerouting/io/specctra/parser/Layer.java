@@ -45,13 +45,13 @@ public class Layer {
   }
 
   /** Writes a layer scope in the structure scope. */
-  public static void write_scope(WriteScopeParameter p_par, int p_layer_no, boolean p_write_rule)
+  public static void writeScope(WriteScopeParameter p_par, int p_layer_no, boolean p_write_rule)
       throws IOException {
-    p_par.file.start_scope();
+    p_par.file.startScope();
     p_par.file.write("layer ");
     app.freerouting.board.Layer boardLayer = p_par.board.layerStructure.arr[p_layer_no];
     p_par.identifierType.write(boardLayer.name, p_par.file);
-    p_par.file.new_line();
+    p_par.file.newLine();
     p_par.file.write("(type ");
     if (boardLayer.isSignal) {
       p_par.file.write("signal)");
@@ -59,8 +59,8 @@ public class Layer {
       p_par.file.write("power)");
     }
     if (p_write_rule) {
-      Rule.write_default_rule(p_par, p_layer_no);
+      Rule.writeDefaultRule(p_par, p_layer_no);
     }
-    p_par.file.end_scope();
+    p_par.file.endScope();
   }
 }

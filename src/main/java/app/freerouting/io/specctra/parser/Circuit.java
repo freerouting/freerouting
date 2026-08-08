@@ -14,7 +14,7 @@ public final class Circuit {
    * Currently only the length matching rule is read from a circuit scope. If the scope does not
    * contain a length matching rule, null is returned.
    */
-  public static ReadScopeResult read_scope(IJFlexScanner p_scanner) {
+  public static ReadScopeResult readScope(IJFlexScanner p_scanner) {
     Object nextToken = null;
     double minTraceLength = 0;
     double maxTraceLength = 0;
@@ -23,7 +23,7 @@ public final class Circuit {
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = p_scanner.next_token();
+        nextToken = p_scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("Circuit.read_scope: IO error scanning file", e);
         return null;
@@ -31,7 +31,7 @@ public final class Circuit {
       if (nextToken == null) {
         FRLogger.warn(
             "Circuit.read_scope: unexpected end of file at '"
-                + p_scanner.get_scope_identifier()
+                + p_scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -41,30 +41,30 @@ public final class Circuit {
       }
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.LENGTH) {
-          LengthMatchingRule lengthRule = read_length_scope(p_scanner);
+          LengthMatchingRule lengthRule = readLengthScope(p_scanner);
           if (lengthRule != null) {
             minTraceLength = lengthRule.minLength;
             maxTraceLength = lengthRule.maxLength;
           }
         } else if (nextToken == Keyword.USE_VIA) {
-          useVia.addAll(Structure.read_via_padstacks(p_scanner));
+          useVia.addAll(Structure.readViaPadstacks(p_scanner));
         } else if (nextToken == Keyword.USE_LAYER) {
-          useLayer.addAll(Arrays.stream(DsnFile.read_string_list_scope(p_scanner)).toList());
+          useLayer.addAll(Arrays.stream(DsnFile.readStringListScope(p_scanner)).toList());
         } else {
-          ScopeKeyword.skip_scope(p_scanner);
+          ScopeKeyword.skipScope(p_scanner);
         }
       }
     }
     return new ReadScopeResult(maxTraceLength, minTraceLength, useVia, useLayer);
   }
 
-  static LengthMatchingRule read_length_scope(IJFlexScanner p_scanner) {
+  static LengthMatchingRule readLengthScope(IJFlexScanner p_scanner) {
     LengthMatchingRule result;
     double[] lengthArr = new double[2];
     Object nextToken = null;
     for (int i = 0; i < 2; i++) {
       try {
-        nextToken = p_scanner.next_token();
+        nextToken = p_scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("Circuit.read_length_scope: IO error scanning file", e);
         return null;
@@ -76,7 +76,7 @@ public final class Circuit {
       } else {
         FRLogger.warn(
             "Circuit.read_length_scope: number expected at '"
-                + p_scanner.get_scope_identifier()
+                + p_scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -85,7 +85,7 @@ public final class Circuit {
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = p_scanner.next_token();
+        nextToken = p_scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("Circuit.read_length_scope: IO error scanning file", e);
         return null;
@@ -93,7 +93,7 @@ public final class Circuit {
       if (nextToken == null) {
         FRLogger.warn(
             "Circuit.read_length_scope: unexpected end of file at '"
-                + p_scanner.get_scope_identifier()
+                + p_scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -102,7 +102,7 @@ public final class Circuit {
         break;
       }
       if (prevToken == Keyword.OPEN_BRACKET) {
-        ScopeKeyword.skip_scope(p_scanner);
+        ScopeKeyword.skipScope(p_scanner);
       }
     }
     return result;

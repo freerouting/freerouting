@@ -428,7 +428,7 @@ public class BoardFrame extends WindowBase {
       return;
     }
     this.routingJob = job;
-    boardPanel.reset_board_handling(job);
+    boardPanel.resetBoardHandling(job);
     boardPanel.boardHandling.replaceRoutingBoard(board);
 
     // Close other child windows
@@ -440,7 +440,7 @@ public class BoardFrame extends WindowBase {
     }
 
     // Initialize standard state
-    int boardLayerCount = board.get_layer_count();
+    int boardLayerCount = board.getLayerCount();
     this.routingJob.routerSettings.setLayerCount(boardLayerCount);
     this.routingJob.routerSettings.applyBoardSpecificOptimizations(board);
 
@@ -453,9 +453,9 @@ public class BoardFrame extends WindowBase {
       }
     }
 
-    initialize_windows();
+    initializeWindows();
     this.boardLoadedEventListeners.forEach(listener -> listener.accept(board));
-    this.refresh_windows();
+    this.refreshWindows();
     this.updateTexts();
     this.repaint();
   }
@@ -605,9 +605,9 @@ public class BoardFrame extends WindowBase {
       }
 
       if (readResult instanceof BoardReadResult.Success) {
-        initialize_windows(true);
+        initializeWindows(true);
         boardPanel.boardHandling.refreshGuiFromSettings();
-        update_gui(format, readResult, new Point(0, 0), null, true);
+        updateGui(format, readResult, new Point(0, 0), null, true);
         scheduleBackgroundRatsNestBuild();
         scheduleInitialPaint = true;
       }
@@ -639,7 +639,7 @@ public class BoardFrame extends WindowBase {
     var graphicsContext = boardPanel.boardHandling.graphicsContext;
     String renderingStatus = tm.getText("rendering_board");
     boardPanel.showRenderingOverlay(renderingStatus);
-    screenMessages.set_status_message(renderingStatus);
+    screenMessages.setStatusMessage(renderingStatus);
     graphicsContext.setSimplifiedPlaneRendering(true);
 
     javax.swing.SwingUtilities.invokeLater(
@@ -653,7 +653,7 @@ public class BoardFrame extends WindowBase {
                   if (loadingWindow != null) {
                     loadingWindow.dispose();
                   }
-                  this.zoom_all();
+                  this.zoomAll();
                   boardPanel.repaint();
                 } finally {
                   long paintMs = (System.nanoTime() - paintStart) / 1_000_000L;
@@ -670,11 +670,11 @@ public class BoardFrame extends WindowBase {
   }
 
   private void schedulePlaneFillCacheWarm() {
-    RoutingBoard board = boardPanel.boardHandling.get_routing_board();
+    RoutingBoard board = boardPanel.boardHandling.getRoutingBoard();
     if (board == null) {
       return;
     }
-    var conductionAreas = board.get_conduction_areas();
+    var conductionAreas = board.getConductionAreas();
     if (conductionAreas.isEmpty()) {
       return;
     }
@@ -690,7 +690,7 @@ public class BoardFrame extends WindowBase {
               FRLogger.debug("Board load: plane fill cache warmed in " + warmMs + " ms");
               javax.swing.SwingUtilities.invokeLater(
                   () -> {
-                    if (boardPanel.boardHandling.get_routing_board() == board) {
+                    if (boardPanel.boardHandling.getRoutingBoard() == board) {
                       boardPanel.repaint();
                     }
                   });
@@ -705,7 +705,7 @@ public class BoardFrame extends WindowBase {
     }
 
     this.routingJob = routingJob;
-    boardPanel.reset_board_handling(routingJob);
+    boardPanel.resetBoardHandling(routingJob);
     disposePermanentSubwindows();
 
     String inputFilename = routingJob.input != null ? routingJob.input.getFilename() : null;
@@ -713,14 +713,14 @@ public class BoardFrame extends WindowBase {
     boardPanel.boardHandling.applyParsedBoardResult(readResult, inputFilename, analyticsFormat);
 
     if (readResult instanceof BoardReadResult.Success) {
-      RoutingBoard board = boardPanel.boardHandling.get_routing_board();
+      RoutingBoard board = boardPanel.boardHandling.getRoutingBoard();
       if (this.settingsMerger != null) {
         if (format == FileFormat.DSN && inputFilename != null) {
           this.settingsMerger.addOrReplaceSources(
               new DsnFileSettings(new ByteArrayInputStream(fileContent), inputFilename));
         }
         var mergedSettings = this.settingsMerger.merge();
-        int boardLayerCount = board.get_layer_count();
+        int boardLayerCount = board.getLayerCount();
         if (mergedSettings.getLayerCount() == 0
             || mergedSettings.getLayerCount() != boardLayerCount) {
           mergedSettings.setLayerCount(boardLayerCount);
@@ -734,7 +734,7 @@ public class BoardFrame extends WindowBase {
       }
 
       this.boardLoadedEventListeners.forEach(
-          listener -> listener.accept(boardPanel.boardHandling.get_routing_board()));
+          listener -> listener.accept(boardPanel.boardHandling.getRoutingBoard()));
       return true;
     }
 
@@ -753,12 +753,12 @@ public class BoardFrame extends WindowBase {
 
   private void showBoardLoadError(BoardReadResult readResult) {
     if (readResult instanceof BoardReadResult.OutlineMissing) {
-      screenMessages.set_status_message(tm.getText("error_dsn_outline_missing"));
+      screenMessages.setStatusMessage(tm.getText("error_dsn_outline_missing"));
     } else if (readResult instanceof BoardReadResult.IoError
         || readResult instanceof BoardReadResult.ParseError) {
-      screenMessages.set_status_message(tm.getText("error_dsn_read_failed"));
+      screenMessages.setStatusMessage(tm.getText("error_dsn_read_failed"));
     } else {
-      screenMessages.set_status_message(tm.getText("error_design_file_read_failed"));
+      screenMessages.setStatusMessage(tm.getText("error_design_file_read_failed"));
     }
     refreshLogCountsInToolbar();
   }
@@ -808,10 +808,10 @@ public class BoardFrame extends WindowBase {
       }
 
       FRLogger.info("Restored " + TUTORIAL_BOARD_FILENAME + " after a failed board load");
-      initialize_windows(true);
+      initializeWindows(true);
       boardPanel.boardHandling.refreshGuiFromSettings();
       applyTutorialBoardPalette();
-      update_gui(FileFormat.DSN, tutorialResult, new Point(0, 0), null, true);
+      updateGui(FileFormat.DSN, tutorialResult, new Point(0, 0), null, true);
       scheduleBackgroundRatsNestBuild();
       scheduleInitialBoardPaint(loadingWindow, FileFormat.DSN, tutorialResult);
       refreshLogCountsInToolbar();
@@ -833,11 +833,11 @@ public class BoardFrame extends WindowBase {
 
   private void refreshLogCountsInToolbar() {
     LogEntries entries = FRLogger.getLogEntries();
-    screenMessages.set_error_and_warning_count(entries.getErrorCount(), entries.getWarningCount());
+    screenMessages.setErrorAndWarningCount(entries.getErrorCount(), entries.getWarningCount());
   }
 
   private void scheduleBackgroundRatsNestBuild() {
-    RoutingBoard board = boardPanel.boardHandling.get_routing_board();
+    RoutingBoard board = boardPanel.boardHandling.getRoutingBoard();
     if (board == null) {
       return;
     }
@@ -851,7 +851,7 @@ public class BoardFrame extends WindowBase {
               FRLogger.debug("Board load: rats nest built in " + ratsNestMs + " ms");
               javax.swing.SwingUtilities.invokeLater(
                   () -> {
-                    if (boardPanel.boardHandling.get_routing_board() == board) {
+                    if (boardPanel.boardHandling.getRoutingBoard() == board) {
                       boardPanel.boardHandling.attachPreparedRatsNest(prepared);
                     }
                   });
@@ -862,7 +862,7 @@ public class BoardFrame extends WindowBase {
     if (!(readResult instanceof BoardReadResult.Success)) {
       return;
     }
-    boardPanel.create_popup_menus();
+    boardPanel.createPopupMenus();
     if (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON) {
       InputStream inputStream = null;
       boolean defaultsFileFound;
@@ -876,7 +876,7 @@ public class BoardFrame extends WindowBase {
       if (defaultsFileFound) {
         boolean readOk = GUIDefaultsFile.read(this, boardPanel.boardHandling, inputStream);
         if (!readOk) {
-          screenMessages.set_status_message(tm.getText("error_gui_defaults_read_failed"));
+          screenMessages.setStatusMessage(tm.getText("error_gui_defaults_read_failed"));
         }
         try {
           if (inputStream != null) {
@@ -885,7 +885,7 @@ public class BoardFrame extends WindowBase {
         } catch (IOException _) {
           return;
         }
-        this.zoom_all();
+        this.zoomAll();
         boardPanel.repaint();
       }
     }
@@ -907,7 +907,7 @@ public class BoardFrame extends WindowBase {
     Point viewportPosition = null;
     BoardReadResult readResult = null;
 
-    boardPanel.reset_board_handling(routingJob);
+    boardPanel.resetBoardHandling(routingJob);
     disposePermanentSubwindows();
 
     if (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON) {
@@ -926,8 +926,8 @@ public class BoardFrame extends WindowBase {
         viewportPosition = new Point(0, 0);
 
         // Initialize the RouterSettings layer count to match the loaded board
-        RoutingBoard board = boardPanel.boardHandling.get_routing_board();
-        int boardLayerCount = board.get_layer_count();
+        RoutingBoard board = boardPanel.boardHandling.getRoutingBoard();
+        int boardLayerCount = board.getLayerCount();
 
         if (this.routingJob.routerSettings.getLayerCount() == 0
             || this.routingJob.routerSettings.getLayerCount() != boardLayerCount) {
@@ -949,11 +949,11 @@ public class BoardFrame extends WindowBase {
           }
         }
 
-        initialize_windows();
+        initializeWindows();
 
         // Raise an event to notify the observers that a new board has been loaded
         this.boardLoadedEventListeners.forEach(
-            listener -> listener.accept(boardPanel.boardHandling.get_routing_board()));
+            listener -> listener.accept(boardPanel.boardHandling.getRoutingBoard()));
       }
     } else {
       ObjectInputStream objectStream;
@@ -971,7 +971,7 @@ public class BoardFrame extends WindowBase {
 
       // Raise an event to notify the observers that a new board has been loaded
       this.boardLoadedEventListeners.forEach(
-          listener -> listener.accept(boardPanel.boardHandling.get_routing_board()));
+          listener -> listener.accept(boardPanel.boardHandling.getRoutingBoard()));
 
       // Read and set the GUI settings from the binary file
       Point frameLocation;
@@ -987,7 +987,7 @@ public class BoardFrame extends WindowBase {
       this.setLocation(frameLocation);
       this.setBounds(frameBounds);
 
-      allocate_permanent_subwindows();
+      allocatePermanentSubwindows();
 
       for (int i = 0; i < this.permanentSubwindows.length; i++) {
         if (this.permanentSubwindows[i] != null) {
@@ -1003,14 +1003,14 @@ public class BoardFrame extends WindowBase {
       return restoreTutorialBoardAfterFailedLoad(null);
     }
 
-    boolean guiUpdated = update_gui(format, readResult, viewportPosition, p_message_field, false);
+    boolean guiUpdated = updateGui(format, readResult, viewportPosition, p_message_field, false);
     if (!guiUpdated) {
       return restoreTutorialBoardAfterFailedLoad(null);
     }
     return true;
   }
 
-  private boolean update_gui(
+  private boolean updateGui(
       FileFormat format,
       BoardReadResult readResult,
       Point viewportPosition,
@@ -1031,20 +1031,20 @@ public class BoardFrame extends WindowBase {
       }
     }
 
-    Dimension panelSize = boardPanel.boardHandling.graphicsContext.get_panel_size();
+    Dimension panelSize = boardPanel.boardHandling.graphicsContext.getPanelSize();
     boardPanel.setSize(panelSize);
     boardPanel.setPreferredSize(panelSize);
     if (viewportPosition != null) {
-      boardPanel.set_viewport_position(viewportPosition);
+      boardPanel.setViewportPosition(viewportPosition);
     }
     if (!deferHeavyWork) {
-      boardPanel.create_popup_menus();
+      boardPanel.createPopupMenus();
     }
-    boardPanel.init_colors();
+    boardPanel.initColors();
     if (!deferHeavyWork) {
-      boardPanel.boardHandling.create_ratsnestIfAbsent();
+      boardPanel.boardHandling.createRatsnestIfAbsent();
     }
-    this.setToolbarModeSelectionPanelValue(boardPanel.boardHandling.get_interactive_state());
+    this.setToolbarModeSelectionPanelValue(boardPanel.boardHandling.getInteractiveState());
     this.setToolbarUnitSelectionPanelValue(boardPanel.boardHandling.coordinateTransform.userUnit);
     this.setVisible(true);
     if (isTextDsnOrJson) {
@@ -1065,7 +1065,7 @@ public class BoardFrame extends WindowBase {
         if (defaultsFileFound) {
           boolean readOk = GUIDefaultsFile.read(this, boardPanel.boardHandling, inputStream);
           if (!readOk) {
-            screenMessages.set_status_message(tm.getText("error_gui_defaults_read_failed"));
+            screenMessages.setStatusMessage(tm.getText("error_gui_defaults_read_failed"));
           }
           try {
             inputStream.close();
@@ -1073,7 +1073,7 @@ public class BoardFrame extends WindowBase {
             return false;
           }
         }
-        this.zoom_all();
+        this.zoomAll();
         boardPanel.repaint();
       }
     }
@@ -1083,12 +1083,12 @@ public class BoardFrame extends WindowBase {
     return true;
   }
 
-  private boolean update_gui(
+  private boolean updateGui(
       FileFormat format,
       BoardReadResult readResult,
       Point viewportPosition,
       JTextField p_message_field) {
-    return update_gui(format, readResult, viewportPosition, p_message_field, false);
+    return updateGui(format, readResult, viewportPosition, p_message_field, false);
   }
 
   /**
@@ -1106,7 +1106,7 @@ public class BoardFrame extends WindowBase {
     }
 
     // (2) Save the GUI settings as binary file
-    objectStream.writeObject(boardPanel.get_viewport_position());
+    objectStream.writeObject(boardPanel.getViewportPosition());
     objectStream.writeObject(this.getLocation());
     objectStream.writeObject(this.getBounds());
 
@@ -1147,11 +1147,11 @@ public class BoardFrame extends WindowBase {
         fileOutputStream.write(data);
       }
 
-      screenMessages.set_status_message(
+      screenMessages.setStatusMessage(
           tm.getText("message_binary_file_saved", outputFile.getPath()));
       return true;
     } catch (Exception _) {
-      screenMessages.set_status_message(
+      screenMessages.setStatusMessage(
           tm.getText("message_binary_file_save_failed", outputFile.getPath()));
       return false;
     }
@@ -1170,18 +1170,18 @@ public class BoardFrame extends WindowBase {
     FRLogger.info("Saving '" + outputFile.getPath() + "'...");
     try (OutputStream outputStream = new FileOutputStream(outputFile)) {
       if (!boardPanel.boardHandling.saveAsSpecctraSessionSes(outputStream, designName)) {
-        this.screenMessages.set_status_message(
+        this.screenMessages.setStatusMessage(
             tm.getText("message_specctra_ses_save_failed", outputFile.getPath()));
         return false;
       }
     } catch (IOException e) {
       FRLogger.error("unable to save Specctra session file '" + outputFile.getPath() + "'", e);
-      this.screenMessages.set_status_message(
+      this.screenMessages.setStatusMessage(
           tm.getText("message_specctra_ses_save_failed", outputFile.getPath()));
       return false;
     }
 
-    this.screenMessages.set_status_message(
+    this.screenMessages.setStatusMessage(
         tm.getText("message_specctra_ses_saved", outputFile.getPath()));
 
     return true;
@@ -1197,16 +1197,16 @@ public class BoardFrame extends WindowBase {
     try (java.io.FileWriter writer = new java.io.FileWriter(outputFile)) {
       String json =
           app.freerouting.io.kicad.KiCadJsonWriter.write(
-              boardPanel.boardHandling.get_routing_board(), designName);
+              boardPanel.boardHandling.getRoutingBoard(), designName);
       writer.write(json);
     } catch (Exception e) {
       FRLogger.error("Unable to write KiCad JSON file", e);
-      this.screenMessages.set_status_message(
+      this.screenMessages.setStatusMessage(
           tm.getText("message_kicad_session_json_save_failed", outputFile.getPath()));
       return false;
     }
 
-    this.screenMessages.set_status_message(
+    this.screenMessages.setStatusMessage(
         tm.getText("message_kicad_session_json_saved", outputFile.getPath()));
     return true;
   }
@@ -1287,7 +1287,7 @@ public class BoardFrame extends WindowBase {
     FRLogger.info("Saving '" + rulesFile.getPath() + "'...");
 
     try (OutputStream outputStream = new FileOutputStream(rulesFile)) {
-      RulesWriter.write(p_board_handling.get_routing_board(), outputStream, designName);
+      RulesWriter.write(p_board_handling.getRoutingBoard(), outputStream, designName);
       return true;
     } catch (IOException e) {
       FRLogger.error("unable to save rules file for design '" + designName + "'", e);
@@ -1307,14 +1307,14 @@ public class BoardFrame extends WindowBase {
     try (OutputStream outputStream = new FileOutputStream(outputFile)) {
       if (boardPanel.boardHandling.saveSpecctraSessionSesAsEagleScriptScr(
           sesInputStream, outputStream)) {
-        screenMessages.set_status_message(tm.getText("message_eagle_saved", outputFile.getPath()));
+        screenMessages.setStatusMessage(tm.getText("message_eagle_saved", outputFile.getPath()));
       } else {
-        screenMessages.set_status_message(
+        screenMessages.setStatusMessage(
             tm.getText("message_eagle_save_failed", outputFile.getPath()));
       }
     } catch (IOException e) {
       FRLogger.error("unable to save Eagle script file '" + outputFile.getPath() + "'", e);
-      screenMessages.set_status_message(
+      screenMessages.setStatusMessage(
           tm.getText("message_eagle_save_failed", outputFile.getPath()));
     }
   }
@@ -1337,21 +1337,21 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Sets the toolbar to the buttons of the selected item state. */
-  public void set_inspect_toolbar() {
+  public void setInspectToolbar() {
     getContentPane().remove(toolbarPanel);
     getContentPane().add(inspectToolbar, BorderLayout.NORTH);
     repaint();
   }
 
   /** Sets the toolbar buttons to the select. route and drag menu buttons of the main menu. */
-  public void set_menu_toolbar() {
+  public void setMenuToolbar() {
     getContentPane().remove(inspectToolbar);
     getContentPane().add(toolbarPanel, BorderLayout.NORTH);
     repaint();
   }
 
   /** Calculates the absolute location of the board frame in his outmost parent frame. */
-  Point absolute_panel_location() {
+  Point absolutePanelLocation() {
     int x = this.scrollPane.getX();
     int y = this.scrollPane.getY();
     Container currParent = this.scrollPane.getParent();
@@ -1364,17 +1364,17 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Sets the displayed region to the whole board. */
-  public void zoom_all() {
-    boardPanel.boardHandling.adjust_design_bounds();
-    Rectangle displayRect = boardPanel.get_viewport_bounds();
-    Rectangle designBounds = boardPanel.boardHandling.graphicsContext.get_design_bounds();
+  public void zoomAll() {
+    boardPanel.boardHandling.adjustDesignBounds();
+    Rectangle displayRect = boardPanel.getViewportBounds();
+    Rectangle designBounds = boardPanel.boardHandling.graphicsContext.getDesignBounds();
     double widthFactor = displayRect.getWidth() / designBounds.getWidth();
     double heightFactor = displayRect.getHeight() / designBounds.getHeight();
     double zoomFactor = Math.min(widthFactor, heightFactor);
-    Point2D zoomCenter = boardPanel.boardHandling.graphicsContext.get_design_center();
+    Point2D zoomCenter = boardPanel.boardHandling.graphicsContext.getDesignCenter();
     boardPanel.zoom(zoomFactor, zoomCenter);
-    Point2D newVieportCenter = boardPanel.boardHandling.graphicsContext.get_design_center();
-    boardPanel.set_viewport_center(newVieportCenter);
+    Point2D newVieportCenter = boardPanel.boardHandling.graphicsContext.getDesignCenter();
+    boardPanel.setViewportCenter(newVieportCenter);
   }
 
   /** Actions to be taken when this frame vanishes. */
@@ -1391,7 +1391,7 @@ public class BoardFrame extends WindowBase {
     }
     for (BoardTemporarySubWindow currSubwindow : this.temporarySubwindows) {
       if (currSubwindow != null) {
-        currSubwindow.board_frame_disposed();
+        currSubwindow.boardFrameDisposed();
       }
     }
     if (boardPanel.boardHandling != null) {
@@ -1410,7 +1410,7 @@ public class BoardFrame extends WindowBase {
    * the lifetime of the BoardFrame. They are stored in the {@code permanentSubwindows} array for
    * easy management.
    */
-  private void allocate_permanent_subwindows() {
+  private void allocatePermanentSubwindows() {
     allocateEssentialSubwindows();
     allocateRemainingSubwindows();
   }
@@ -1478,7 +1478,7 @@ public class BoardFrame extends WindowBase {
    * @param showEssentialImmediately when {@code true}, General Settings is shown in this EDT pass;
    *     remaining tool windows are still created on a later cycle
    */
-  private void initialize_windows(boolean showEssentialImmediately) {
+  private void initializeWindows(boolean showEssentialImmediately) {
     allocateEssentialSubwindows();
 
     this.setLocation(120, 0);
@@ -1502,8 +1502,8 @@ public class BoardFrame extends WindowBase {
     }
   }
 
-  private void initialize_windows() {
-    initialize_windows(false);
+  private void initializeWindows() {
+    initializeWindows(false);
   }
 
   private void positionRemainingSubwindows() {
@@ -1537,12 +1537,12 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Sets the background of the board panel */
-  public void set_board_background(Color p_color) {
+  public void setBoardBackground(Color p_color) {
     this.boardPanel.setBackground(p_color);
   }
 
   /** Refreshes all displayed coordinates after the user unit has changed. */
-  public void refresh_windows() {
+  public void refreshWindows() {
     for (int i = 0; i < this.permanentSubwindows.length; i++) {
       if (permanentSubwindows[i] != null) {
         permanentSubwindows[i].refresh();
@@ -1560,7 +1560,7 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Repaints this board frame and all the subwindows of the board. */
-  public void repaint_all() {
+  public void repaintAll() {
     this.repaint();
     for (int i = 0; i < permanentSubwindows.length; i++) {
       if (permanentSubwindows[i] != null) {
@@ -1787,12 +1787,12 @@ public class BoardFrame extends WindowBase {
     public void windowIconified(WindowEvent evt) {
       for (int i = 0; i < permanentSubwindows.length; i++) {
         if (permanentSubwindows[i] != null) {
-          permanentSubwindows[i].parent_iconified();
+          permanentSubwindows[i].parentIconified();
         }
       }
       for (BoardSubWindow currSubwindow : temporarySubwindows) {
         if (currSubwindow != null) {
-          currSubwindow.parent_iconified();
+          currSubwindow.parentIconified();
         }
       }
     }
@@ -1801,12 +1801,12 @@ public class BoardFrame extends WindowBase {
     public void windowDeiconified(WindowEvent evt) {
       for (BoardSavableSubWindow permanentSubwindow : permanentSubwindows) {
         if (permanentSubwindow != null) {
-          permanentSubwindow.parent_deiconified();
+          permanentSubwindow.parentDeiconified();
         }
       }
       for (BoardSubWindow currSubwindow : temporarySubwindows) {
         if (currSubwindow != null) {
-          currSubwindow.parent_deiconified();
+          currSubwindow.parentDeiconified();
         }
       }
     }

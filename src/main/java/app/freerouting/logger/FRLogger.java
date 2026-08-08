@@ -121,7 +121,7 @@ public final class FRLogger {
     if (board == null || board.rules == null || board.rules.nets == null) {
       return "Net #" + netNo + " (Unknown)";
     }
-    if (netNo <= board.rules.nets.max_net_no()) {
+    if (netNo <= board.rules.nets.maxNetNo()) {
       return board.rules.nets.get(netNo).toString();
     }
     return "Net #" + netNo + " (Unknown)";

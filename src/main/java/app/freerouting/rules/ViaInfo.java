@@ -32,11 +32,11 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
     boardRules = p_board_rules;
   }
 
-  public String get_name() {
+  public String getName() {
     return name;
   }
 
-  public void set_name(String p_name) {
+  public void setName(String p_name) {
     name = p_name;
   }
 
@@ -45,27 +45,27 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
     return this.name;
   }
 
-  public Padstack get_padstack() {
+  public Padstack getPadstack() {
     return padstack;
   }
 
-  public void set_padstack(Padstack p_padstack) {
+  public void setPadstack(Padstack p_padstack) {
     padstack = p_padstack;
   }
 
-  public int get_clearance_class() {
+  public int getClearanceClass() {
     return clearanceClass;
   }
 
-  public void set_clearance_class(int p_clearance_class) {
+  public void setClearanceClass(int p_clearance_class) {
     clearanceClass = p_clearance_class;
   }
 
-  public boolean attach_smd_allowed() {
+  public boolean attachSmdAllowed() {
     return attachSmdAllowed;
   }
 
-  public void set_attach_smd_allowed(boolean p_attach_smd_allowed) {
+  public void setAttachSmdAllowed(boolean p_attach_smd_allowed) {
     attachSmdAllowed = p_attach_smd_allowed;
   }
 
@@ -75,20 +75,20 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("via") + " ");
-    p_window.append_bold(this.name);
-    p_window.append_bold(": ");
+    p_window.appendBold(tm.getText("via") + " ");
+    p_window.appendBold(this.name);
+    p_window.appendBold(": ");
     p_window.append(tm.getText("padstack") + " ");
     p_window.append(this.padstack.name, tm.getText("padstack_info"), this.padstack);
     p_window.append(", " + tm.getText("clearanceClass") + " ");
-    String currName = boardRules.clearanceMatrix.get_name(this.clearanceClass);
+    String currName = boardRules.clearanceMatrix.getName(this.clearanceClass);
     p_window.append(
         currName,
         tm.getText("clearance_class_2"),
-        boardRules.clearanceMatrix.get_row(this.clearanceClass));
+        boardRules.clearanceMatrix.getRow(this.clearanceClass));
     p_window.append(", " + tm.getText("attach_smd") + " ");
     if (attachSmdAllowed) {
       p_window.append(" " + tm.getText("on"));

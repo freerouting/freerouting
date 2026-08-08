@@ -106,8 +106,9 @@ public class RenameNonClassMethodsToCamelCase
           return method;
         }
 
-        plan.add(
-            new ChangeMethodName(MethodMatcher.methodPattern(method), toName, false, false));
+        String fqn = method.getMethodType().getDeclaringType().getFullyQualifiedName();
+        String pattern = fqn + "+ " + method.getSimpleName() + "(..)";
+        plan.add(new ChangeMethodName(pattern, toName, true, false));
         return method;
       }
 

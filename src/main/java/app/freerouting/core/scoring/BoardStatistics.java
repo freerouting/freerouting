@@ -107,7 +107,7 @@ public class BoardStatistics implements Serializable {
    */
   public BoardStatistics(
       BasicBoard board, Unit unit, boolean includeClearanceViolations, boolean includeConnections) {
-    var bb = board.get_bounding_box();
+    var bb = board.getBoundingBox();
 
     this.host =
         board.communication.specctraParserInfo.hostCad
@@ -124,20 +124,20 @@ public class BoardStatistics implements Serializable {
     this.board.boundingBox =
         new Rectangle2D.Float(
             (float) bb.ur.x,
-            (float) board.get_bounding_box().ur.y,
-            (float) board.get_bounding_box().ll.x,
-            (float) board.get_bounding_box().ll.y);
+            (float) board.getBoundingBox().ur.y,
+            (float) board.getBoundingBox().ll.x,
+            (float) board.getBoundingBox().ll.y);
     this.board.size =
         new Rectangle2D.Float(
             0,
             0,
-            Math.abs((float) board.get_bounding_box().ll.x - (float) board.get_bounding_box().ur.x),
+            Math.abs((float) board.getBoundingBox().ll.x - (float) board.getBoundingBox().ur.x),
             Math.abs(
-                (float) board.get_bounding_box().ll.y - (float) board.get_bounding_box().ur.y));
+                (float) board.getBoundingBox().ll.y - (float) board.getBoundingBox().ur.y));
 
     // Layers
-    this.layers.totalCount = board.get_layer_count();
-    this.layers.signalCount = board.layerStructure.signal_layer_count();
+    this.layers.totalCount = board.getLayerCount();
+    this.layers.signalCount = board.layerStructure.signalLayerCount();
 
     // Items
     this.items.totalCount = 0;
@@ -148,9 +148,9 @@ public class BoardStatistics implements Serializable {
     this.items.pinCount = 0;
     this.items.componentOutlineCount = 0;
     this.items.otherCount = 0;
-    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.start_read_object();
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.read_object(it);
+      Item currItem = (Item) board.itemList.readObject(it);
       if (currItem == null) {
         break;
       }
@@ -176,16 +176,16 @@ public class BoardStatistics implements Serializable {
     this.components.totalCount = board.components.count();
 
     // Pads
-    this.pads.totalCount = board.get_pins().size();
+    this.pads.totalCount = board.getPins().size();
 
     // Nets
-    this.nets.totalCount = board.rules.nets.max_net_no();
+    this.nets.totalCount = board.rules.nets.maxNetNo();
     this.nets.classCount = board.rules.netClasses.count();
 
     // Traces
-    this.traces.totalCount = board.get_traces().size();
+    this.traces.totalCount = board.getTraces().size();
     this.traces.totalLength =
-        (float) board.get_traces().stream().mapToDouble(Trace::get_length).sum();
+        (float) board.getTraces().stream().mapToDouble(Trace::getLength).sum();
     // Normalise trace length to millimetres so that calculateScore() uses a
     // physically meaningful cost regardless of DSN coordinate resolution.
     // Raw board units vary wildly: KiCad exports at 1e-6 mm/unit (1 nm), while
@@ -206,19 +206,19 @@ public class BoardStatistics implements Serializable {
     this.traces.totalHorizontalLength = 0.0f;
     this.traces.totalVerticalLength = 0.0f;
     this.traces.totalAngledLength = 0.0f;
-    for (Trace trace : board.get_traces()) {
+    for (Trace trace : board.getTraces()) {
       // Calculate segments for this trace
       if (trace instanceof PolylineTrace polylineTrace) {
         Polyline polyline = polylineTrace.polyline();
-        int cornerCount = polyline.corner_count();
+        int cornerCount = polyline.cornerCount();
         // Number of segments is cornerCount - 1
         if (cornerCount > 1) {
           this.traces.totalSegmentCount += cornerCount - 1;
         }
 
         for (Line line : polyline.arr) {
-          FloatPoint a = line.a.to_float();
-          FloatPoint b = line.b.to_float();
+          FloatPoint a = line.a.toFloat();
+          FloatPoint b = line.b.toFloat();
           float length = (float) Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 
           if (a.x == b.x) {
@@ -233,23 +233,23 @@ public class BoardStatistics implements Serializable {
     }
 
     this.traces.totalWeightedLength = 0.0f;
-    int defaultClearanceClass = BoardRules.default_clearance_class();
-    Iterator<UndoableObjects.UndoableObjectNode> it2 = board.itemList.start_read_object();
+    int defaultClearanceClass = BoardRules.defaultClearanceClass();
+    Iterator<UndoableObjects.UndoableObjectNode> it2 = board.itemList.startReadObject();
     for (; ; ) {
-      UndoableObjects.Storable currItem = board.itemList.read_object(it2);
+      UndoableObjects.Storable currItem = board.itemList.readObject(it2);
       if (currItem == null) {
         break;
       }
       if (currItem instanceof Trace currTrace) {
-        FixedState fixedState = currTrace.get_fixed_state();
+        FixedState fixedState = currTrace.getFixedState();
         if (fixedState == FixedState.UNFIXED || fixedState == FixedState.SHOVE_FIXED) {
           double weightedTraceLength =
-              currTrace.get_length()
-                  * (currTrace.get_half_width()
-                      + board.clearance_value(
-                          currTrace.clearance_class_no(),
+              currTrace.getLength()
+                  * (currTrace.getHalfWidth()
+                      + board.clearanceValue(
+                          currTrace.clearanceClassNo(),
                           defaultClearanceClass,
-                          currTrace.get_layer()));
+                          currTrace.getLayer()));
           if (fixedState == FixedState.SHOVE_FIXED) {
             // to produce less violations with pin exit directions.
             weightedTraceLength /= 2;
@@ -272,11 +272,11 @@ public class BoardStatistics implements Serializable {
     this.bends.ninetyDegreeCount = 0;
     this.bends.fortyFiveDegreeCount = 0;
     this.bends.otherAngleCount = 0;
-    for (Trace trace : board.get_traces()) {
+    for (Trace trace : board.getTraces()) {
       if (trace instanceof PolylineTrace polylineTrace) {
         // Polyline traces can have bends between consecutive line segments
         Polyline polyline = polylineTrace.polyline();
-        int cornerCount = polyline.corner_count();
+        int cornerCount = polyline.cornerCount();
 
         // We have (cornerCount - 2) internal corners, each representing a potential
         // bend
@@ -287,9 +287,9 @@ public class BoardStatistics implements Serializable {
 
           // Now classify each bend by angle
           for (int i = 1; i < cornerCount - 1; i++) {
-            FloatPoint prev = polyline.corner(i - 1).to_float();
-            FloatPoint curr = polyline.corner(i).to_float();
-            FloatPoint next = polyline.corner(i + 1).to_float();
+            FloatPoint prev = polyline.corner(i - 1).toFloat();
+            FloatPoint curr = polyline.corner(i).toFloat();
+            FloatPoint next = polyline.corner(i + 1).toFloat();
 
             // Calculate vectors for the two segments
             double dx1 = curr.x - prev.x;
@@ -317,14 +317,14 @@ public class BoardStatistics implements Serializable {
     }
 
     // Vias
-    this.vias.totalCount = board.get_vias().size();
+    this.vias.totalCount = board.getVias().size();
     this.vias.throughHoleCount = 0;
     this.vias.blindCount = 0;
     this.vias.buriedCount = 0;
-    for (Via via : board.get_vias()) {
-      if ((via.first_layer() == 0) && (via.last_layer() == this.layers.totalCount - 1)) {
+    for (Via via : board.getVias()) {
+      if ((via.firstLayer() == 0) && (via.lastLayer() == this.layers.totalCount - 1)) {
         this.vias.throughHoleCount++;
-      } else if ((via.first_layer() == 0) || (via.last_layer() == this.layers.totalCount - 1)) {
+      } else if ((via.firstLayer() == 0) || (via.lastLayer() == this.layers.totalCount - 1)) {
         this.vias.blindCount++;
       } else {
         this.vias.buriedCount++;
@@ -377,15 +377,15 @@ public class BoardStatistics implements Serializable {
     }
 
     // Calculate fanout statistics
-    java.util.Collection<Pin> smdPins = board.get_smd_pins();
+    java.util.Collection<Pin> smdPins = board.getSmdPins();
     int total = 0;
     int escaped = 0;
     int alreadyConnected = 0;
     for (Pin pin : smdPins) {
-      if (pin.net_count() > 0) {
+      if (pin.netCount() > 0) {
         total++;
-        int netNo = pin.get_net_no(0);
-        if (pin.get_unconnected_set(netNo).isEmpty()) {
+        int netNo = pin.getNetNo(0);
+        if (pin.getUnconnectedSet(netNo).isEmpty()) {
           alreadyConnected++;
         }
         if (isPinEscaped(pin)) {
@@ -524,15 +524,15 @@ public class BoardStatistics implements Serializable {
   }
 
   public static boolean isPinEscaped(Pin pin) {
-    java.util.Set<Item> contacts = pin.get_normal_contacts();
+    java.util.Set<Item> contacts = pin.getNormalContacts();
     for (Item contact : contacts) {
       if (contact instanceof Trace trace) {
-        if (trace.clearance_violations().isEmpty()) {
+        if (trace.clearanceViolations().isEmpty()) {
           return true;
         }
       } else if (contact instanceof Via via) {
-        if (via.clearance_violations().isEmpty()) {
-          java.util.Set<Item> viaContacts = via.get_normal_contacts();
+        if (via.clearanceViolations().isEmpty()) {
+          java.util.Set<Item> viaContacts = via.getNormalContacts();
           for (Item viaContact : viaContacts) {
             if (viaContact instanceof Trace || viaContact instanceof ConductionArea) {
               return true;

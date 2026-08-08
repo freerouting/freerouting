@@ -31,11 +31,11 @@ class DsnWriterTest {
   @Test
   void roundtripPreservesLayerCount() throws Exception {
     RoutingBoard original = DsnTestFixtures.loadBoard("Issue143-rpi_splitter.dsn");
-    int originalLayers = original.get_layer_count();
+    int originalLayers = original.getLayerCount();
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     DsnWriter.write(original, out, "roundtrip", false);
     RoutingBoard reloaded = DsnTestFixtures.loadBoard(out.toByteArray());
-    assertEquals(originalLayers, reloaded.get_layer_count());
+    assertEquals(originalLayers, reloaded.getLayerCount());
   }
 
   @Test

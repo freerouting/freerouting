@@ -17,7 +17,7 @@ public final class BoardMenuInfo extends JMenu {
   }
 
   /** Returns a new info menu for the board frame. */
-  public static BoardMenuInfo get_instance(BoardFrame p_board_frame) {
+  public static BoardMenuInfo getInstance(BoardFrame p_board_frame) {
     final BoardMenuInfo infoMenu = new BoardMenuInfo(p_board_frame);
 
     infoMenu.setText(infoMenu.tm.getText("info"));

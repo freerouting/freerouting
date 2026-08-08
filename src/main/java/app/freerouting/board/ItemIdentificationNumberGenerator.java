@@ -38,7 +38,7 @@ public class ItemIdentificationNumberGenerator
    * system for synchronisation.
    */
   @Override
-  public int new_no() {
+  public int newNo() {
     if (lastGeneratedIdNo >= c_max_id_no) {
       // Wrap around to 1 instead of overflowing into negative territory.
       // Emit a single warning per wrap so the log is not flooded.
@@ -60,7 +60,7 @@ public class ItemIdentificationNumberGenerator
 
   /** Return the maximum generated id number so far. */
   @Override
-  public int max_generated_no() {
+  public int maxGeneratedNo() {
     return lastGeneratedIdNo;
   }
 }

@@ -13,7 +13,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
   /** Creates a new instance of PopupMenuStitchRoute */
   public PopupMenuStitchRoute(BoardFrame p_board_frame) {
     super(p_board_frame);
-    LayerStructure layerStructure = boardPanel.boardHandling.get_routing_board().layerStructure;
+    LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
 
     if (layerStructure.arr.length > 0) {
       changeLayerMenu = new PopupMenuChangeLayer(p_board_frame);
@@ -27,7 +27,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
     JMenuItem popupInsertMenuitem = new JMenuItem();
     popupInsertMenuitem.setText(tm.getText("insert"));
     popupInsertMenuitem.addActionListener(
-        _ -> boardPanel.boardHandling.left_button_clicked(boardPanel.rightButtonClickLocation));
+        _ -> boardPanel.boardHandling.leftButtonClicked(boardPanel.rightButtonClickLocation));
     popupInsertMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupInsertMenuitem", popupInsertMenuitem.getText()));
 
@@ -35,7 +35,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
 
     JMenuItem popupDoneMenuitem = new JMenuItem();
     popupDoneMenuitem.setText(tm.getText("done"));
-    popupDoneMenuitem.addActionListener(_ -> boardPanel.boardHandling.return_from_state());
+    popupDoneMenuitem.addActionListener(_ -> boardPanel.boardHandling.returnFromState());
     popupDoneMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupDoneMenuitem", popupDoneMenuitem.getText()));
 
@@ -43,21 +43,21 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
 
     JMenuItem popupCancelMenuitem = new JMenuItem();
     popupCancelMenuitem.setText(tm.getText("cancel"));
-    popupCancelMenuitem.addActionListener(_ -> boardPanel.boardHandling.cancel_state());
+    popupCancelMenuitem.addActionListener(_ -> boardPanel.boardHandling.cancelState());
     popupCancelMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupCancelMenuitem", popupCancelMenuitem.getText()));
 
     this.add(popupCancelMenuitem, 2);
 
     Layer currLayer =
-        layerStructure.arr[boardPanel.boardHandling.getInteractiveSettings().get_layer()];
-    disable_layer_item(layerStructure.get_signal_layer_no(currLayer));
+        layerStructure.arr[boardPanel.boardHandling.getInteractiveSettings().getLayer()];
+    disableLayerItem(layerStructure.getSignalLayerNo(currLayer));
   }
 
   /** Disables the p_no-th item in the changeLayerMenu. */
-  void disable_layer_item(int p_no) {
+  void disableLayerItem(int p_no) {
     if (this.changeLayerMenu != null) {
-      this.changeLayerMenu.disable_item(p_no);
+      this.changeLayerMenu.disableItem(p_no);
     }
   }
 }

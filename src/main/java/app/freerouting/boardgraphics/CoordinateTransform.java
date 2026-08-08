@@ -30,7 +30,7 @@ public class CoordinateTransform implements Serializable {
   public CoordinateTransform(IntBox p_design_box, Dimension p_panel_bounds) {
     this.screenBounds = p_panel_bounds;
     this.designBox = p_design_box;
-    this.rotationPole = p_design_box.centre_of_gravity();
+    this.rotationPole = p_design_box.centreOfGravity();
 
     int minLl = Math.min(p_design_box.ll.x, p_design_box.ll.y);
     int maxUr = Math.max(p_design_box.ur.x, p_design_box.ur.y);
@@ -72,17 +72,17 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** scale a value from the board to the screen coordinate system */
-  public double board_to_screen(double p_val) {
+  public double boardToScreen(double p_val) {
     return p_val * scaleFactor;
   }
 
   /** scale a value the screen to the board coordinate system */
-  public double screen_to_board(double p_val) {
+  public double screenToBoard(double p_val) {
     return p_val / scaleFactor;
   }
 
   /** transform a geometry.planar.FloatPoint to a java.awt.geom.Point2D */
-  public Point2D board_to_screen(FloatPoint p_point) {
+  public Point2D boardToScreen(FloatPoint p_point) {
     if (p_point == null) {
       return null;
     }
@@ -105,7 +105,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** Transform a java.awt.geom.Point2D to a geometry.planar.FloatPoint */
-  public FloatPoint screen_to_board(Point2D p_point) {
+  public FloatPoint screenToBoard(Point2D p_point) {
     double x;
     double y;
     if (this.mirrorLeftRight) {
@@ -123,7 +123,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** Transforms an angle in radian on the board to an angle on the screen. */
-  public double board_to_screen_angle(double p_angle) {
+  public double boardToScreenAngle(double p_angle) {
     double result = p_angle + this.rotation;
     if (this.mirrorLeftRight) {
       result = Math.PI - result;
@@ -144,9 +144,9 @@ public class CoordinateTransform implements Serializable {
    * Transform a geometry.planar.IntBox to a java.awt.Rectangle If the internal rotation is not a
    * multiple of Pi/2, a bounding rectangle of the rotated rectangular shape is returned.
    */
-  public Rectangle board_to_screen(IntBox p_box) {
-    Point2D corner1 = board_to_screen(p_box.ll.to_float());
-    Point2D corner2 = board_to_screen(p_box.ur.to_float());
+  public Rectangle boardToScreen(IntBox p_box) {
+    Point2D corner1 = boardToScreen(p_box.ll.toFloat());
+    Point2D corner2 = boardToScreen(p_box.ur.toFloat());
     double llX = Math.min(corner1.getX(), corner2.getX());
     double llY = Math.min(corner1.getY(), corner2.getY());
     double dx = Math.abs(corner2.getX() - corner1.getX());
@@ -159,10 +159,10 @@ public class CoordinateTransform implements Serializable {
    * Transform a java.awt.Rectangle to a geometry.planar.IntBox If the internal rotation is not a
    * multiple of Pi/2, a bounding box of the rotated rectangular shape is returned.
    */
-  public IntBox screen_to_board(Rectangle p_rect) {
-    FloatPoint corner1 = screen_to_board(new Point2D.Double(p_rect.getX(), p_rect.getY()));
+  public IntBox screenToBoard(Rectangle p_rect) {
+    FloatPoint corner1 = screenToBoard(new Point2D.Double(p_rect.getX(), p_rect.getY()));
     FloatPoint corner2 =
-        screen_to_board(
+        screenToBoard(
             new Point2D.Double(
                 p_rect.getX() + p_rect.getWidth(), p_rect.getY() + p_rect.getHeight()));
     int llx = (int) Math.floor(Math.min(corner1.x, corner2.x));
@@ -173,36 +173,36 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** Returns, if the left side and the right side of the board are swapped. */
-  public boolean is_mirror_left_right() {
+  public boolean isMirrorLeftRight() {
     return mirrorLeftRight;
   }
 
   /** If p_value is true, the left side and the right side of the board will be swapped. */
-  public void set_mirror_left_right(boolean p_value) {
+  public void setMirrorLeftRight(boolean p_value) {
     mirrorLeftRight = p_value;
   }
 
   /** Returns, if the top side and the bottom side of the board are swapped. */
-  public boolean is_mirror_top_bottom() {
+  public boolean isMirrorTopBottom() {
     // Because the origin of display is the upper left corner, the internal value
     // is opposite to the result of this function.
     return !mirrorTopBottom;
   }
 
   /** If p_value is true, the top side and the bottom side of the board will be swapped. */
-  public void set_mirror_top_bottom(boolean p_value) {
+  public void setMirrorTopBottom(boolean p_value) {
     // Because the origin of display is the upper left corner, the internal value
     // will be opposite to the input value of this function.
     mirrorTopBottom = !p_value;
   }
 
   /** Returns the rotation of the displayed board. */
-  public double get_rotation() {
+  public double getRotation() {
     return rotation;
   }
 
   /** Sets the rotation of the displayed board to p_value. */
-  public void set_rotation(double p_value) {
+  public void setRotation(double p_value) {
     rotation = p_value;
   }
 
@@ -210,7 +210,7 @@ public class CoordinateTransform implements Serializable {
    * Returns the internal rotation snapped to the nearest multiple of 90 degree. The result will be
    * 0, 1, 2 or 3.
    */
-  public int get_90_degree_rotation() {
+  public int get90DegreeRotation() {
     int multiple = (int) Math.round(Math.toDegrees(rotation) / 90.0);
     while (multiple < 0) {
       multiple += 4;
@@ -221,7 +221,7 @@ public class CoordinateTransform implements Serializable {
     return multiple;
   }
 
-  public boolean is_zoom_invariant_state_equal(CoordinateTransform other) {
+  public boolean isZoomInvariantStateEqual(CoordinateTransform other) {
     if (other == null) {
       return false;
     }
@@ -231,7 +231,7 @@ public class CoordinateTransform implements Serializable {
         && this.mirrorTopBottom == other.mirrorTopBottom;
   }
 
-  public boolean is_same_transform_state(CoordinateTransform other) {
+  public boolean isSameTransformState(CoordinateTransform other) {
     if (other == null) {
       return false;
     }

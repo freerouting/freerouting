@@ -45,7 +45,7 @@ class InteractiveSettingsPropertyChangeTest {
         new BoardObserverAdaptor(),
         new ItemIdentificationNumberGenerator());
     // Reset so the GUI singleton is created against the real board.
-    settings = InteractiveSettings.reset(manager.get_routing_board());
+    settings = InteractiveSettings.reset(manager.getRoutingBoard());
   }
 
   @AfterEach
@@ -70,9 +70,9 @@ class InteractiveSettingsPropertyChangeTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void setLayer_firesPropertyChangeEvent() {
-    settings.set_layer(0);
-    var events = collectEvents(InteractiveSettings.PROP_LAYER, () -> settings.set_layer(1));
+  void setLayerFiresPropertyChangeEvent() {
+    settings.setLayer(0);
+    var events = collectEvents(InteractiveSettings.PROP_LAYER, () -> settings.setLayer(1));
 
     assertEquals(1, events.size());
     assertEquals(InteractiveSettings.PROP_LAYER, events.get(0).getPropertyName());
@@ -81,11 +81,11 @@ class InteractiveSettingsPropertyChangeTest {
   }
 
   @Test
-  void setPushEnabled_firesPropertyChangeEvent() {
-    settings.set_push_enabled(true);
+  void setPushEnabledFiresPropertyChangeEvent() {
+    settings.setPushEnabled(true);
     var events =
         collectEvents(
-            InteractiveSettings.PROP_PUSH_ENABLED, () -> settings.set_push_enabled(false));
+            InteractiveSettings.PROP_PUSH_ENABLED, () -> settings.setPushEnabled(false));
 
     assertEquals(1, events.size());
     assertEquals(true, events.get(0).getOldValue());
@@ -93,64 +93,64 @@ class InteractiveSettingsPropertyChangeTest {
   }
 
   @Test
-  void setStitchRoute_firesPropertyChangeEvent() {
-    settings.set_stitch_route(false);
+  void setStitchRouteFiresPropertyChangeEvent() {
+    settings.setStitchRoute(false);
     var events =
         collectEvents(
-            InteractiveSettings.PROP_IS_STITCH_ROUTE, () -> settings.set_stitch_route(true));
+            InteractiveSettings.PROP_IS_STITCH_ROUTE, () -> settings.setStitchRoute(true));
 
     assertEquals(1, events.size());
     assertEquals(true, events.get(0).getNewValue());
   }
 
   @Test
-  void setAutomaticNeckdown_firesPropertyChangeEvent() {
-    settings.set_automatic_neckdown(true);
+  void setAutomaticNeckdownFiresPropertyChangeEvent() {
+    settings.setAutomaticNeckdown(true);
     var events =
         collectEvents(
             InteractiveSettings.PROP_AUTOMATIC_NECKDOWN,
-            () -> settings.set_automatic_neckdown(false));
+            () -> settings.setAutomaticNeckdown(false));
 
     assertEquals(1, events.size());
     assertEquals(false, events.get(0).getNewValue());
   }
 
   @Test
-  void setManualTraceHalfWidth_firesPropertyChangeEvent() {
+  void setManualTraceHalfWidthFiresPropertyChangeEvent() {
     var events =
         collectEvents(
             InteractiveSettings.PROP_MANUAL_TRACE_HALF_WIDTH,
-            () -> settings.set_manual_trace_half_width(0, 500));
+            () -> settings.setManualTraceHalfWidth(0, 500));
 
     assertEquals(1, events.size());
     assertEquals(500, events.get(0).getNewValue());
   }
 
   @Test
-  void setHilightRoutingObstacle_firesPropertyChangeEvent() {
-    settings.set_hilight_routing_obstacle(false);
+  void setHilightRoutingObstacleFiresPropertyChangeEvent() {
+    settings.setHilightRoutingObstacle(false);
     var events =
         collectEvents(
             InteractiveSettings.PROP_HILIGHT_ROUTING_OBSTACLE,
-            () -> settings.set_hilight_routing_obstacle(true));
+            () -> settings.setHilightRoutingObstacle(true));
 
     assertEquals(1, events.size());
     assertEquals(true, events.get(0).getNewValue());
   }
 
   @Test
-  void setZoomWithWheel_firesEventOnlyWhenValueChanges() {
-    settings.set_zoom_with_wheel(true);
+  void setZoomWithWheelFiresEventOnlyWhenValueChanges() {
+    settings.setZoomWithWheel(true);
     // Same value → no event
     var sameValueEvents =
         collectEvents(
-            InteractiveSettings.PROP_ZOOM_WITH_WHEEL, () -> settings.set_zoom_with_wheel(true));
+            InteractiveSettings.PROP_ZOOM_WITH_WHEEL, () -> settings.setZoomWithWheel(true));
     assertEquals(0, sameValueEvents.size(), "No event expected when value does not change");
 
     // Different value → one event
     var changedEvents =
         collectEvents(
-            InteractiveSettings.PROP_ZOOM_WITH_WHEEL, () -> settings.set_zoom_with_wheel(false));
+            InteractiveSettings.PROP_ZOOM_WITH_WHEEL, () -> settings.setZoomWithWheel(false));
     assertEquals(1, changedEvents.size());
   }
 
@@ -159,20 +159,20 @@ class InteractiveSettingsPropertyChangeTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void removePropertyChangeListener_stopsReceivingEvents() {
+  void removePropertyChangeListenerStopsReceivingEvents() {
     List<PropertyChangeEvent> events = new ArrayList<>();
     PropertyChangeListener listener = events::add;
     settings.addPropertyChangeListener(InteractiveSettings.PROP_LAYER, listener);
-    settings.set_layer(1);
+    settings.setLayer(1);
     settings.removePropertyChangeListener(InteractiveSettings.PROP_LAYER, listener);
-    settings.set_layer(2); // removed listener must not receive this
+    settings.setLayer(2); // removed listener must not receive this
 
     assertEquals(1, events.size());
     assertEquals(1, events.get(0).getNewValue());
   }
 
   @Test
-  void addNullListener_doesNotThrow() {
+  void addNullListenerDoesNotThrow() {
     // Both variants should silently ignore null without NPE.
     assertDoesNotThrow(() -> settings.addPropertyChangeListener((PropertyChangeListener) null));
     assertDoesNotThrow(() -> settings.removePropertyChangeListener((PropertyChangeListener) null));
@@ -183,7 +183,7 @@ class InteractiveSettingsPropertyChangeTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void getSettings_returnsNonNullRouterSettings() {
+  void getSettingsReturnsNonNullRouterSettings() {
     RouterSettings rs = settings.getSettings();
     assertNotNull(rs, "getSettings() must never return null");
     assertInstanceOf(RouterSettings.class, rs);
@@ -194,10 +194,10 @@ class InteractiveSettingsPropertyChangeTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void setter_doesNotFireEvent_whenReadOnly() {
-    settings.set_read_only(true);
-    var events = collectEvents(InteractiveSettings.PROP_LAYER, () -> settings.set_layer(5));
+  void setterDoesNotFireEventWhenReadOnly() {
+    settings.setReadOnly(true);
+    var events = collectEvents(InteractiveSettings.PROP_LAYER, () -> settings.setLayer(5));
     assertEquals(0, events.size(), "No events expected when readOnly is true");
-    settings.set_read_only(false);
+    settings.setReadOnly(false);
   }
 }

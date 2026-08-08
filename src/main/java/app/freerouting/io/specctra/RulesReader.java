@@ -56,32 +56,32 @@ public final class RulesReader {
     IJFlexScanner scanner = new SpecctraDsnStreamReader(in);
     try {
       // Validate the "(rules PCB <name>" header
-      Object currToken = scanner.next_token();
+      Object currToken = scanner.nextToken();
       if (currToken != Keyword.OPEN_BRACKET) {
         FRLogger.warn(
-            "RulesReader.read: open bracket expected at '" + scanner.get_scope_identifier() + "'");
+            "RulesReader.read: open bracket expected at '" + scanner.getScopeIdentifier() + "'");
         return false;
       }
-      currToken = scanner.next_token();
+      currToken = scanner.nextToken();
       if (currToken != Keyword.RULES) {
         FRLogger.warn(
             "RulesReader.read: keyword 'rules' expected at '"
-                + scanner.get_scope_identifier()
+                + scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
-      currToken = scanner.next_token();
+      currToken = scanner.nextToken();
       if (currToken != Keyword.PCB_SCOPE) {
         FRLogger.warn(
-            "RulesReader.read: keyword 'pcb' expected at '" + scanner.get_scope_identifier() + "'");
+            "RulesReader.read: keyword 'pcb' expected at '" + scanner.getScopeIdentifier() + "'");
         return false;
       }
       scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      currToken = scanner.next_token();
+      currToken = scanner.nextToken();
       if (!(currToken instanceof String) || !currToken.equals(designName)) {
         FRLogger.warn(
             "RulesReader.read: designName not matching at '"
-                + scanner.get_scope_identifier()
+                + scanner.getScopeIdentifier()
                 + "' (expected '"
                 + designName
                 + "', got '"
@@ -98,7 +98,7 @@ public final class RulesReader {
       for (; ; ) {
         Object prevToken = nextToken;
         try {
-          nextToken = scanner.next_token();
+          nextToken = scanner.nextToken();
         } catch (IOException e) {
           FRLogger.error("RulesReader.read: IO error scanning rules body", e);
           return false;
@@ -106,7 +106,7 @@ public final class RulesReader {
         if (nextToken == null) {
           FRLogger.warn(
               "RulesReader.read: unexpected end of file at '"
-                  + scanner.get_scope_identifier()
+                  + scanner.getScopeIdentifier()
                   + "'");
           return false;
         }
@@ -116,11 +116,11 @@ public final class RulesReader {
         }
         if (prevToken == Keyword.OPEN_BRACKET) {
           if (nextToken == Keyword.RULE) {
-            applyRules(Rule.read_scope(scanner), board, null);
+            applyRules(Rule.readScope(scanner), board, null);
           } else if (nextToken == Keyword.LAYER) {
             applyLayerRules(scanner, board);
           } else if (nextToken == Keyword.PADSTACK) {
-            Library.read_padstack_scope(
+            Library.readPadstackScope(
                 scanner, layerStructure, coordinateTransform, board.library.padstacks);
           } else if (nextToken == Keyword.VIA) {
             applyViaInfo(scanner, board);
@@ -129,12 +129,12 @@ public final class RulesReader {
           } else if (nextToken == Keyword.CLASS) {
             applyNetClass(scanner, layerStructure, board);
           } else if (nextToken == Keyword.SNAP_ANGLE) {
-            AngleRestriction snapAngle = Structure.read_snap_angle(scanner);
+            AngleRestriction snapAngle = Structure.readSnapAngle(scanner);
             if (snapAngle != null) {
-              board.rules.set_trace_angle_restriction(snapAngle);
+              board.rules.setTraceAngleRestriction(snapAngle);
             }
           } else {
-            ScopeKeyword.skip_scope(scanner);
+            ScopeKeyword.skipScope(scanner);
           }
         }
       }
@@ -157,7 +157,7 @@ public final class RulesReader {
     }
     int layerNo = -1;
     if (layerName != null) {
-      layerNo = board.layerStructure.get_no(layerName);
+      layerNo = board.layerStructure.getNo(layerName);
       if (layerNo < 0) {
         FRLogger.warn("RulesReader.applyRules: layer not found: '" + layerName + "'");
       }
@@ -167,14 +167,14 @@ public final class RulesReader {
     for (Rule rule : rules) {
       if (rule instanceof Rule.WidthRule widthRule) {
         int traceHalfwidth =
-            (int) Math.round(coordinateTransform.dsn_to_board(widthRule.value) / 2);
+            (int) Math.round(coordinateTransform.dsnToBoard(widthRule.value) / 2);
         if (layerNo < 0) {
-          board.rules.set_default_trace_half_widths(traceHalfwidth);
+          board.rules.setDefaultTraceHalfWidths(traceHalfwidth);
         } else {
-          board.rules.set_default_trace_half_width(layerNo, traceHalfwidth);
+          board.rules.setDefaultTraceHalfWidth(layerNo, traceHalfwidth);
         }
       } else if (rule instanceof Rule.ClearanceRule clearanceRule) {
-        Structure.set_clearance_rule(
+        Structure.setClearanceRule(
             clearanceRule, layerNo, coordinateTransform, board.rules, stringQuote);
       }
     }
@@ -182,30 +182,30 @@ public final class RulesReader {
 
   private static void applyLayerRules(IJFlexScanner scanner, BasicBoard board) {
     try {
-      Object nextToken = scanner.next_token();
+      Object nextToken = scanner.nextToken();
       if (!(nextToken instanceof String layerString)) {
         FRLogger.warn(
             "RulesReader.applyLayerRules: String expected at '"
-                + scanner.get_scope_identifier()
+                + scanner.getScopeIdentifier()
                 + "'");
         return;
       }
-      nextToken = scanner.next_token();
+      nextToken = scanner.nextToken();
       while (nextToken != Keyword.CLOSED_BRACKET) {
         if (nextToken != Keyword.OPEN_BRACKET) {
           FRLogger.warn(
               "RulesReader.applyLayerRules: '(' expected at '"
-                  + scanner.get_scope_identifier()
+                  + scanner.getScopeIdentifier()
                   + "'");
           return;
         }
-        nextToken = scanner.next_token();
+        nextToken = scanner.nextToken();
         if (nextToken == Keyword.RULE) {
-          applyRules(Rule.read_scope(scanner), board, layerString);
+          applyRules(Rule.readScope(scanner), board, layerString);
         } else {
-          ScopeKeyword.skip_scope(scanner);
+          ScopeKeyword.skipScope(scanner);
         }
-        nextToken = scanner.next_token();
+        nextToken = scanner.nextToken();
       }
     } catch (IOException e) {
       FRLogger.error("RulesReader.applyLayerRules: IO error scanning file", e);
@@ -213,11 +213,11 @@ public final class RulesReader {
   }
 
   private static void applyViaInfo(IJFlexScanner scanner, BasicBoard board) {
-    ViaInfo viaInfo = Network.read_via_info(scanner, board);
+    ViaInfo viaInfo = Network.readViaInfo(scanner, board);
     if (viaInfo == null) {
       return;
     }
-    ViaInfo existing = board.rules.viaInfos.get(viaInfo.get_name());
+    ViaInfo existing = board.rules.viaInfos.get(viaInfo.getName());
     if (existing != null) {
       board.rules.viaInfos.remove(existing);
     }
@@ -225,19 +225,19 @@ public final class RulesReader {
   }
 
   private static void applyViaRule(IJFlexScanner scanner, BasicBoard board) {
-    Collection<String> viaRule = Network.read_via_rule(scanner, board);
+    Collection<String> viaRule = Network.readViaRule(scanner, board);
     if (viaRule != null) {
-      Network.add_via_rule(viaRule, board);
+      Network.addViaRule(viaRule, board);
     }
   }
 
   private static void applyNetClass(
       IJFlexScanner scanner, LayerStructure layerStructure, BasicBoard board) {
-    NetClass netClass = NetClass.read_scope(scanner);
+    NetClass netClass = NetClass.readScope(scanner);
     if (netClass == null) {
       return;
     }
-    Network.insert_net_class(
+    Network.insertNetClass(
         netClass, layerStructure, board, board.communication.coordinateTransform, false);
   }
 

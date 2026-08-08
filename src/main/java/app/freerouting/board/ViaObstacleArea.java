@@ -72,59 +72,59 @@ public class ViaObstacleArea extends ObstacleArea {
     int[] copiedNetNos = new int[netNoArr.length];
     System.arraycopy(netNoArr, 0, copiedNetNos, 0, netNoArr.length);
     return new ViaObstacleArea(
-        get_relative_area(),
-        get_layer(),
-        get_translation(),
-        get_rotation_in_degree(),
-        get_side_changed(),
+        getRelativeArea(),
+        getLayer(),
+        getTranslation(),
+        getRotationInDegree(),
+        getSideChanged(),
         copiedNetNos,
-        clearance_class_no(),
+        clearanceClassNo(),
         p_id_no,
-        get_component_no(),
+        getComponentNo(),
         this.name,
-        get_fixed_state(),
+        getFixedState(),
         board);
   }
 
   @Override
-  public boolean is_obstacle(Item p_other) {
-    if (p_other.shares_net(this)) {
+  public boolean isObstacle(Item p_other) {
+    if (p_other.sharesNet(this)) {
       return false;
     }
     return p_other instanceof Via;
   }
 
   @Override
-  public boolean is_trace_obstacle(int p_net_no) {
+  public boolean isTraceObstacle(int p_net_no) {
     return false;
   }
 
   @Override
-  public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
-    if (!this.is_selected_by_fixed_filter(p_filter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter p_filter) {
+    if (!this.isSelectedByFixedFilter(p_filter)) {
       return false;
     }
-    return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT);
+    return p_filter.isSelected(ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT);
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("via_keepout"));
-    this.print_shape_info(p_window, p_locale);
-    this.print_clearance_info(p_window, p_locale);
-    this.print_clearance_violation_info(p_window, p_locale);
+    p_window.appendBold(tm.getText("via_keepout"));
+    this.printShapeInfo(p_window, p_locale);
+    this.printClearanceInfo(p_window, p_locale);
+    this.printClearanceViolationInfo(p_window, p_locale);
     p_window.newline();
   }
 
   @Override
-  public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
-    return p_graphics_context.get_via_obstacle_colors();
+  public Color[] getDrawColors(GraphicsContext p_graphics_context) {
+    return p_graphics_context.getViaObstacleColors();
   }
 
   @Override
-  public double get_draw_intensity(GraphicsContext p_graphics_context) {
-    return p_graphics_context.get_via_obstacle_color_intensity();
+  public double getDrawIntensity(GraphicsContext p_graphics_context) {
+    return p_graphics_context.getViaObstacleColorIntensity();
   }
 }

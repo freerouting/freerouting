@@ -22,9 +22,9 @@ public class DrcCoordinateTest extends RoutingFixtureTest {
   }
 
   @Test
-  void test_DrcCoordinates_AreInCorrectRange() {
+  void testDrcCoordinatesAreInCorrectRange() {
     // Get the job with injected settings
-    RoutingJob job = GetRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+    RoutingJob job = getRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
 
     assertNotNull(job, "Job should not be null");
 

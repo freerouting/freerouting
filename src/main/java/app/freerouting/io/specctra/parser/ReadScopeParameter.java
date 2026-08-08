@@ -112,7 +112,7 @@ public class ReadScopeParameter {
    * reached the board-construction step.
    */
   public BasicBoard getBoard() {
-    return boardHandling.get_routing_board();
+    return boardHandling.getRoutingBoard();
   }
 
   /**
@@ -133,12 +133,12 @@ public class ReadScopeParameter {
     private RoutingBoard board;
 
     @Override
-    public RoutingBoard get_routing_board() {
+    public RoutingBoard getRoutingBoard() {
       return board;
     }
 
     @Override
-    public void create_board(
+    public void createBoard(
         IntBox p_bounding_box,
         app.freerouting.board.LayerStructure p_layer_structure,
         PolylineShape[] p_outline_shapes,
@@ -149,11 +149,11 @@ public class ReadScopeParameter {
       if (p_rules != null) {
         if (p_outline_clearance_class_name != null && p_rules.clearanceMatrix != null) {
           outlineClearanceNo =
-              Math.max(0, p_rules.clearanceMatrix.get_no(p_outline_clearance_class_name));
+              Math.max(0, p_rules.clearanceMatrix.getNo(p_outline_clearance_class_name));
         } else {
           outlineClearanceNo =
               p_rules
-                  .get_default_net_class()
+                  .getDefaultNetClass()
                   .defaultItemClearanceClasses
                   .get(DefaultItemClearanceClasses.ItemClass.AREA);
         }
@@ -169,7 +169,7 @@ public class ReadScopeParameter {
     }
 
     @Override
-    public void initialize_manual_trace_half_widths() {
+    public void initializeManualTraceHalfWidths() {
       // no-op: no InteractiveSettings in headless shim
     }
 

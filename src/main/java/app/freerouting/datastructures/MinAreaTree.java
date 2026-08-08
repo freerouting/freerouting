@@ -58,7 +58,7 @@ public class MinAreaTree extends ShapeTree {
     }
 
     // Non-empty tree - do a recursive location for leaf replacement
-    Leaf leafToReplace = position_locate(root, p_leaf);
+    Leaf leafToReplace = positionLocate(root, p_leaf);
 
     // Construct a new node - whenever a leaf is added so is a new node
     RegularTileShape newBounds = p_leaf.boundingShape.union(leafToReplace.boundingShape);
@@ -86,7 +86,7 @@ public class MinAreaTree extends ShapeTree {
     }
   }
 
-  private Leaf position_locate(TreeNode p_curr_node, Leaf p_leaf_to_insert) {
+  private Leaf positionLocate(TreeNode p_curr_node, Leaf p_leaf_to_insert) {
     TreeNode currNode = p_curr_node;
 
     while (!(currNode instanceof Leaf)) {
@@ -118,7 +118,7 @@ public class MinAreaTree extends ShapeTree {
 
   /** removes an entry from this tree */
   @Override
-  public void remove_leaf(Leaf p_leaf) {
+  public void removeLeaf(Leaf p_leaf) {
     if (p_leaf == null) {
       return;
     }

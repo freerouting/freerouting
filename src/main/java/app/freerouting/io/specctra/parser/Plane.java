@@ -13,16 +13,16 @@ public class Plane extends ScopeKeyword {
     super("plane");
   }
 
-  public static void write_scope(WriteScopeParameter p_par, ConductionArea p_conduction)
+  public static void writeScope(WriteScopeParameter p_par, ConductionArea p_conduction)
       throws IOException {
-    int netCount = p_conduction.net_count();
+    int netCount = p_conduction.netCount();
     if (netCount != 1) {
       FRLogger.warn("Plane.write_scope: unexpected net count at '" + p_conduction.name + "'");
       return;
     }
-    String netName = p_par.board.rules.nets.get(p_conduction.get_net_no(0)).name;
-    Area currArea = p_conduction.get_area();
-    int layerNo = p_conduction.get_layer();
+    String netName = p_par.board.rules.nets.get(p_conduction.getNetNo(0)).name;
+    Area currArea = p_conduction.getArea();
+    int layerNo = p_conduction.getLayer();
     app.freerouting.board.Layer boardLayer = p_par.board.layerStructure.arr[layerNo];
     Layer planeLayer = new Layer(boardLayer.name, layerNo, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
@@ -31,25 +31,25 @@ public class Plane extends ScopeKeyword {
       boundaryShape = shape;
       holes = new app.freerouting.geometry.planar.Shape[0];
     } else {
-      boundaryShape = currArea.get_border();
-      holes = currArea.get_holes();
+      boundaryShape = currArea.getBorder();
+      holes = currArea.getHoles();
     }
-    p_par.file.start_scope();
+    p_par.file.startScope();
     p_par.file.write("plane ");
     p_par.identifierType.write(netName, p_par.file);
-    Shape dsnShape = p_par.coordinateTransform.board_to_dsn(boundaryShape, planeLayer);
+    Shape dsnShape = p_par.coordinateTransform.boardToDsn(boundaryShape, planeLayer);
     if (dsnShape != null) {
-      dsnShape.write_scope(p_par.file, p_par.identifierType);
+      dsnShape.writeScope(p_par.file, p_par.identifierType);
     }
     for (int i = 0; i < holes.length; i++) {
-      Shape dsnHole = p_par.coordinateTransform.board_to_dsn(holes[i], planeLayer);
-      dsnHole.write_hole_scope(p_par.file, p_par.identifierType);
+      Shape dsnHole = p_par.coordinateTransform.boardToDsn(holes[i], planeLayer);
+      dsnHole.writeHoleScope(p_par.file, p_par.identifierType);
     }
-    p_par.file.end_scope();
+    p_par.file.endScope();
   }
 
   @Override
-  public boolean read_scope(ReadScopeParameter p_par) {
+  public boolean readScope(ReadScopeParameter p_par) {
     // read the net name
     String netName;
     boolean skipWindowScopes = "allegro".equalsIgnoreCase(p_par.hostCad);
@@ -57,15 +57,15 @@ public class Plane extends ScopeKeyword {
     // when dividing a conduction area into convex pieces.
     Shape.ReadAreaScopeResult conductionArea;
     try {
-      Object nextToken = p_par.scanner.next_token();
+      Object nextToken = p_par.scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
-            "Plane.read_scope: String expected at '" + p_par.scanner.get_scope_identifier() + "'");
+            "Plane.read_scope: String expected at '" + p_par.scanner.getScopeIdentifier() + "'");
         return false;
       }
       netName = (String) nextToken;
-      p_par.scanner.set_scope_identifier(netName);
-      conductionArea = Shape.read_area_scope(p_par.scanner, p_par.layerStructure, skipWindowScopes);
+      p_par.scanner.setScopeIdentifier(netName);
+      conductionArea = Shape.readAreaScope(p_par.scanner, p_par.layerStructure, skipWindowScopes);
     } catch (IOException e) {
       FRLogger.error("Plane.read_scope: IO error scanning file", e);
       return false;

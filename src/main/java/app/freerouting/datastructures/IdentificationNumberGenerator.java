@@ -4,8 +4,8 @@ package app.freerouting.datastructures;
 public interface IdentificationNumberGenerator {
 
   /** Create a new unique identification number. */
-  int new_no();
+  int newNo();
 
   /** Return the maximum generated id number so far. */
-  int max_generated_no();
+  int maxGeneratedNo();
 }

@@ -20,21 +20,21 @@ public class IncompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom {
     containedShape = p_contained_shape;
   }
 
-  public TileShape get_contained_shape() {
+  public TileShape getContainedShape() {
     return this.containedShape;
   }
 
-  public void set_contained_shape(TileShape p_shape) {
+  public void setContainedShape(TileShape p_shape) {
     this.containedShape = p_shape;
   }
 
-  public Collection<TargetItemExpansionDoor> get_target_doors() {
+  public Collection<TargetItemExpansionDoor> getTargetDoors() {
     return new ArrayList<>();
   }
 
   @Override
-  public int get_id_no() {
+  public int getIdNo() {
     // Stable hash of shape and layer
-    return 31 * get_shape().get_id_no() + get_layer();
+    return 31 * getShape().getIdNo() + getLayer();
   }
 }

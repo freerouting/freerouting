@@ -25,7 +25,7 @@ public class OptimizeRouteTask implements Runnable {
 
     this.job = job;
     this.board = job.board.deepCopy();
-    itemToOptimize = this.board.get_item(itemId);
+    itemToOptimize = this.board.getItem(itemId);
 
     passNo = p_pass_no;
     withPreferredDirections = p_with_preferred_directions;
@@ -40,9 +40,9 @@ public class OptimizeRouteTask implements Runnable {
     }
 
     optimizationResult =
-        new BatchOptimizer(this.job).opt_route_item(itemToOptimize, withPreferredDirections, true);
+        new BatchOptimizer(this.job).optRouteItem(itemToOptimize, withPreferredDirections, true);
 
-    boolean winningCandidate = optimizer.is_winning_candidate(this);
+    boolean winningCandidate = optimizer.isWinningCandidate(this);
 
     long duration = System.currentTimeMillis() - startTime;
     long minutes = duration / 60000;
@@ -50,11 +50,11 @@ public class OptimizeRouteTask implements Runnable {
 
     FRLogger.debug(
         "Finished   task #"
-            + optimizer.get_num_tasks_finished()
+            + optimizer.getNumTasksFinished()
             + " of "
-            + optimizer.get_num_tasks()
+            + optimizer.getNumTasks()
             + " for item #"
-            + itemToOptimize.get_id_no()
+            + itemToOptimize.getIdNo()
             + " on pass "
             + passNo
             + " in "
@@ -67,13 +67,13 @@ public class OptimizeRouteTask implements Runnable {
             + ", improved: "
             + optimizationResult.improved()
             + ", via reduction: "
-            + optimizationResult.via_count_reduced()
+            + optimizationResult.viaCountReduced()
             + (winningCandidate
-                ? (", length reduction: " + (int) optimizationResult.length_reduced())
+                ? (", length reduction: " + (int) optimizationResult.lengthReduced())
                 : "")
             + ", incomplete trace reduction: "
-            + (optimizationResult.incomplete_count_before()
-                - optimizationResult.incomplete_count()));
+            + (optimizationResult.incompleteCountBefore()
+                - optimizationResult.incompleteCount()));
 
     if (!winningCandidate) {
       clean();

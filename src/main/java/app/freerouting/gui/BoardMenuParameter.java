@@ -18,7 +18,7 @@ public final class BoardMenuParameter extends JMenu {
   }
 
   /** Returns a new windows menu for the board frame. */
-  public static BoardMenuParameter get_instance(BoardFrame p_board_frame) {
+  public static BoardMenuParameter getInstance(BoardFrame p_board_frame) {
     final BoardMenuParameter parameterMenu = new BoardMenuParameter(p_board_frame);
 
     parameterMenu.setText(parameterMenu.tm.getText("parameter"));

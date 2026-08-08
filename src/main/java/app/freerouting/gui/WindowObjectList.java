@@ -165,7 +165,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
       this.listModel.clear();
     }
 
-    this.fill_list();
+    this.fillList();
 
     if (firstTime) {
       if (this.list.getVisibleRowCount() > 0) {
@@ -181,7 +181,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
             @Override
             public void mouseClicked(MouseEvent evt) {
               if (evt.getClickCount() > 1) {
-                select_instances();
+                selectInstances();
               }
             }
           });
@@ -213,14 +213,14 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     super.dispose();
   }
 
-  protected void add_to_list(Object p_object) {
+  protected void addToList(Object p_object) {
     this.listModel.addElement(p_object);
   }
 
   /** Fills the list with the objects to display. */
-  protected abstract void fill_list();
+  protected abstract void fillList();
 
-  protected abstract void select_instances();
+  protected abstract void selectInstances();
 
   /** Saves also the filter string to disk. */
   @Override
@@ -288,7 +288,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      select_instances();
+      selectInstances();
     }
   }
 

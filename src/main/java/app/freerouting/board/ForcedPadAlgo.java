@@ -28,28 +28,28 @@ public class ForcedPadAlgo {
     board = p_board;
   }
 
-  private static TileShape calc_check_shape_for_from_side(
+  private static TileShape calcCheckShapeForFromSide(
       TileShape p_shape, Point p_shape_center, Line p_border_line) {
-    FloatPoint shapeCenter = p_shape_center.to_float();
-    FloatPoint offsetProjection = shapeCenter.projection_approx(p_border_line);
+    FloatPoint shapeCenter = p_shape_center.toFloat();
+    FloatPoint offsetProjection = shapeCenter.projectionApprox(p_border_line);
     // Make sure, that direction restrictions are retained.
     Line[] lineArr = new Line[3];
     Direction currDir = p_border_line.direction();
     lineArr[0] = new Line(p_shape_center, currDir);
-    lineArr[1] = new Line(p_shape_center, currDir.turn_45_degree(2));
+    lineArr[1] = new Line(p_shape_center, currDir.turn45Degree(2));
     lineArr[2] = new Line(offsetProjection.round(), currDir);
     Polyline checkLine = new Polyline(lineArr);
-    return checkLine.offset_shape(1, 0);
+    return checkLine.offsetShape(1, 0);
   }
 
   /** Checks, if p_line is in front of p_pad_shape when shoving from p_from_side */
-  private static boolean in_front_of_pad(
+  private static boolean inFrontOfPad(
       Line p_line, TileShape p_pad_shape, int p_from_side, int p_width, boolean p_with_sides) {
-    if (!p_pad_shape.is_IntOctagon()) {
+    if (!p_pad_shape.isIntOctagon()) {
       // only implemented for octagons
       return true;
     }
-    IntOctagon padOctagon = p_pad_shape.bounding_octagon();
+    IntOctagon padOctagon = p_pad_shape.boundingOctagon();
     if (!(p_line.a instanceof IntPoint lineA && p_line.b instanceof IntPoint line_b)) {
       // not implemented
       return true;
@@ -207,7 +207,7 @@ public class ForcedPadAlgo {
    * obstacles in the direction from p_from_side are checked for performance reasons. This is the
    * cave when moving drill_items
    */
-  public CheckDrillResult check_forced_pad(
+  public CheckDrillResult checkForcedPad(
       TileShape p_pad_shape,
       CalcFromSide p_from_side,
       int p_layer,
@@ -219,22 +219,22 @@ public class ForcedPadAlgo {
       int p_max_via_recursion_depth,
       boolean p_check_only_front,
       TimeLimit p_time_limit) {
-    if (!p_pad_shape.is_contained_in(board.get_bounding_box())) {
-      this.board.set_shove_failing_obstacle(board.get_outline());
+    if (!p_pad_shape.isContainedIn(board.getBoundingBox())) {
+      this.board.setShoveFailingObstacle(board.getOutline());
       return CheckDrillResult.NOT_DRILLABLE;
     }
-    ShapeSearchTree searchTree = this.board.searchTreeManager.get_default_tree();
+    ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     ShapeTraceEntries shapeEntries =
         new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, board);
     Collection<Item> obstacles =
-        searchTree.overlapping_items_with_clearance(p_pad_shape, p_layer, new int[0], p_cl_type);
+        searchTree.overlappingItemsWithClearance(p_pad_shape, p_layer, new int[0], p_cl_type);
 
     if (p_ignore_items != null) {
       obstacles.removeAll(p_ignore_items);
     }
-    boolean obstaclesShovable = shapeEntries.store_items(obstacles, true, p_copper_sharing_allowed);
+    boolean obstaclesShovable = shapeEntries.storeItems(obstacles, true, p_copper_sharing_allowed);
     if (!obstaclesShovable) {
-      this.board.set_shove_failing_obstacle(shapeEntries.get_found_obstacle());
+      this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
       return CheckDrillResult.NOT_DRILLABLE;
     }
 
@@ -242,18 +242,18 @@ public class ForcedPadAlgo {
 
     for (Via curr_shove_via : shapeEntries.shoveViaList) {
       if (p_max_via_recursion_depth <= 0) {
-        this.board.set_shove_failing_obstacle(curr_shove_via);
+        this.board.setShoveFailingObstacle(curr_shove_via);
         return CheckDrillResult.NOT_DRILLABLE;
       }
       IntPoint[] newViaCenter =
-          MoveDrillItemAlgo.try_shove_via_points(
+          MoveDrillItemAlgo.tryShoveViaPoints(
               p_pad_shape, p_layer, curr_shove_via, p_cl_type, false, board);
 
       if (newViaCenter.length == 0) {
-        this.board.set_shove_failing_obstacle(curr_shove_via);
+        this.board.setShoveFailingObstacle(curr_shove_via);
         return CheckDrillResult.NOT_DRILLABLE;
       }
-      Vector delta = newViaCenter[0].difference_by(curr_shove_via.get_center());
+      Vector delta = newViaCenter[0].differenceBy(curr_shove_via.getCenter());
       Collection<Item> ignoreItems = new LinkedList<>();
       if (!MoveDrillItemAlgo.check(
           curr_shove_via,
@@ -275,36 +275,36 @@ public class ForcedPadAlgo {
         }
       }
     }
-    int tracePieceCount = shapeEntries.substitute_trace_count();
+    int tracePieceCount = shapeEntries.substituteTraceCount();
     if (tracePieceCount == 0) {
       return result;
     }
     if (p_max_recursion_depth <= 0) {
-      this.board.set_shove_failing_obstacle(shapeEntries.get_found_obstacle());
+      this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
       return CheckDrillResult.NOT_DRILLABLE;
     }
-    if (shapeEntries.stack_depth() > 1) {
-      this.board.set_shove_failing_obstacle(shapeEntries.get_found_obstacle());
+    if (shapeEntries.stackDepth() > 1) {
+      this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
       return CheckDrillResult.NOT_DRILLABLE;
     }
     ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(board);
     boolean isOrthogonalMode = p_pad_shape instanceof IntBox;
     for (; ; ) {
-      PolylineTrace currSubstituteTrace = shapeEntries.next_substitute_trace_piece();
+      PolylineTrace currSubstituteTrace = shapeEntries.nextSubstituteTracePiece();
       if (currSubstituteTrace == null) {
         break;
       }
-      for (int i = 0; i < currSubstituteTrace.tile_shape_count(); i++) {
+      for (int i = 0; i < currSubstituteTrace.tileShapeCount(); i++) {
         Line currLine = currSubstituteTrace.polyline().arr[i + 1];
         Direction currDir = currLine.direction();
         boolean isInFront;
         if (p_check_only_front) {
           isInFront =
-              in_front_of_pad(
+              inFrontOfPad(
                   currLine,
                   p_pad_shape,
                   p_from_side.no,
-                  currSubstituteTrace.get_half_width(),
+                  currSubstituteTrace.getHalfWidth(),
                   true);
         } else {
           isInFront = true;
@@ -318,7 +318,7 @@ public class ForcedPadAlgo {
               currDir,
               p_layer,
               currSubstituteTrace.netNoArr,
-              currSubstituteTrace.clearance_class_no(),
+              currSubstituteTrace.clearanceClassNo(),
               p_max_recursion_depth - 1,
               p_max_via_recursion_depth,
               0,
@@ -336,7 +336,7 @@ public class ForcedPadAlgo {
    * violations. Returns false, if the shove failed. In this case the database may be damaged, so
    * that an undo becomes necessary.
    */
-  boolean forced_pad(
+  boolean forcedPad(
       TileShape p_pad_shape,
       CalcFromSide p_from_side,
       int p_layer,
@@ -346,15 +346,15 @@ public class ForcedPadAlgo {
       Collection<Item> p_ignore_items,
       int p_max_recursion_depth,
       int p_max_via_recursion_depth) {
-    if (p_pad_shape.is_empty()) {
+    if (p_pad_shape.isEmpty()) {
       FRLogger.warn("ShoveTraceAux.forced_pad: p_pad_shape is empty");
       return true;
     }
-    if (!p_pad_shape.is_contained_in(board.get_bounding_box())) {
-      this.board.set_shove_failing_obstacle(board.get_outline());
+    if (!p_pad_shape.isContainedIn(board.getBoundingBox())) {
+      this.board.setShoveFailingObstacle(board.getOutline());
       return false;
     }
-    if (!MoveDrillItemAlgo.shove_vias(
+    if (!MoveDrillItemAlgo.shoveVias(
         p_pad_shape,
         p_from_side,
         p_layer,
@@ -367,43 +367,43 @@ public class ForcedPadAlgo {
         this.board)) {
       return false;
     }
-    ShapeSearchTree searchTree = this.board.searchTreeManager.get_default_tree();
+    ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     ShapeTraceEntries shapeEntries =
         new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, board);
     Collection<Item> obstacles =
-        searchTree.overlapping_items_with_clearance(p_pad_shape, p_layer, new int[0], p_cl_type);
+        searchTree.overlappingItemsWithClearance(p_pad_shape, p_layer, new int[0], p_cl_type);
     if (p_ignore_items != null) {
       obstacles.removeAll(p_ignore_items);
     }
     boolean obstaclesShovable =
-        shapeEntries.store_items(obstacles, true, p_copper_sharing_allowed)
+        shapeEntries.storeItems(obstacles, true, p_copper_sharing_allowed)
             && shapeEntries.shoveViaList.isEmpty();
     if (!obstaclesShovable) {
-      this.board.set_shove_failing_obstacle(shapeEntries.get_found_obstacle());
+      this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
       return false;
     }
-    int tracePieceCount = shapeEntries.substitute_trace_count();
+    int tracePieceCount = shapeEntries.substituteTraceCount();
     if (tracePieceCount == 0) {
       return true;
     }
     if (p_max_recursion_depth <= 0) {
-      this.board.set_shove_failing_obstacle(shapeEntries.get_found_obstacle());
+      this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
       return false;
     }
-    boolean tailsExistBefore = board.contains_trace_tails(obstacles, p_net_no_arr);
-    shapeEntries.cutout_traces(obstacles);
+    boolean tailsExistBefore = board.containsTraceTails(obstacles, p_net_no_arr);
+    shapeEntries.cutoutTraces(obstacles);
     boolean isOrthogonalMode = p_pad_shape instanceof IntBox;
     ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(this.board);
     for (; ; ) {
-      PolylineTrace currSubstituteTrace = shapeEntries.next_substitute_trace_piece();
+      PolylineTrace currSubstituteTrace = shapeEntries.nextSubstituteTracePiece();
       if (currSubstituteTrace == null) {
         break;
       }
-      if (currSubstituteTrace.first_corner().equals(currSubstituteTrace.last_corner())) {
+      if (currSubstituteTrace.firstCorner().equals(currSubstituteTrace.lastCorner())) {
         continue;
       }
       int[] currNetNoArr = currSubstituteTrace.netNoArr;
-      for (int i = 0; i < currSubstituteTrace.tile_shape_count(); i++) {
+      for (int i = 0; i < currSubstituteTrace.tileShapeCount(); i++) {
         CalcShapeAndFromSide curr =
             new CalcShapeAndFromSide(currSubstituteTrace, i, isOrthogonalMode, false);
         if (!shoveTraceAlgo.insert(
@@ -411,7 +411,7 @@ public class ForcedPadAlgo {
             curr.fromSide,
             p_layer,
             currNetNoArr,
-            currSubstituteTrace.clearance_class_no(),
+            currSubstituteTrace.clearanceClassNo(),
             p_ignore_items,
             p_max_recursion_depth - 1,
             p_max_via_recursion_depth,
@@ -419,19 +419,19 @@ public class ForcedPadAlgo {
           return false;
         }
       }
-      for (int i = 0; i < currSubstituteTrace.corner_count(); i++) {
-        board.join_changed_area(currSubstituteTrace.polyline().corner_approx(i), p_layer);
+      for (int i = 0; i < currSubstituteTrace.cornerCount(); i++) {
+        board.joinChangedArea(currSubstituteTrace.polyline().cornerApprox(i), p_layer);
       }
       Point[] endCorners = null;
       if (!tailsExistBefore) {
         endCorners = new Point[2];
-        endCorners[0] = currSubstituteTrace.first_corner();
-        endCorners[1] = currSubstituteTrace.last_corner();
+        endCorners[0] = currSubstituteTrace.firstCorner();
+        endCorners[1] = currSubstituteTrace.lastCorner();
       }
-      board.insert_item(currSubstituteTrace);
+      board.insertItem(currSubstituteTrace);
       IntOctagon optArea;
       if (board.changedArea != null) {
-        optArea = board.changedArea.get_area(p_layer);
+        optArea = board.changedArea.getArea(p_layer);
       } else {
         optArea = null;
       }
@@ -444,11 +444,11 @@ public class ForcedPadAlgo {
 
       if (!tailsExistBefore) {
         for (int i = 0; i < 2; i++) {
-          Trace tail = board.get_trace_tail(endCorners[i], p_layer, currNetNoArr);
+          Trace tail = board.getTraceTail(endCorners[i], p_layer, currNetNoArr);
           if (tail != null) {
-            board.remove_items(tail.get_connection_items(Item.StopConnectionOption.VIA));
+            board.removeItems(tail.getConnectionItems(Item.StopConnectionOption.VIA));
             for (int currNetNo : currNetNoArr) {
-              board.combine_traces(currNetNo);
+              board.combineTraces(currNetNo);
             }
           }
         }
@@ -461,23 +461,23 @@ public class ForcedPadAlgo {
    * Looks for a side of p_shape, so that a trace line from the shape center to the nearest point on
    * this side does not conflict with any obstacles.
    */
-  CalcFromSide calc_from_side(
+  CalcFromSide calcFromSide(
       TileShape p_shape, Point p_shape_center, int p_layer, int p_offset, int p_cl_class) {
     int[] emptyArr = new int[0];
     TileShape offsetShape = (TileShape) p_shape.offset(p_offset);
-    for (int i = 0; i < offsetShape.border_line_count(); i++) {
+    for (int i = 0; i < offsetShape.borderLineCount(); i++) {
       TileShape checkShape =
-          calc_check_shape_for_from_side(p_shape, p_shape_center, offsetShape.border_line(i));
+          calcCheckShapeForFromSide(p_shape, p_shape_center, offsetShape.borderLine(i));
 
-      if (board.check_trace_shape(checkShape, p_layer, emptyArr, p_cl_class, null)) {
+      if (board.checkTraceShape(checkShape, p_layer, emptyArr, p_cl_class, null)) {
         return new CalcFromSide(i, null);
       }
     }
     // try second check without clearance
-    for (int i = 0; i < offsetShape.border_line_count(); i++) {
+    for (int i = 0; i < offsetShape.borderLineCount(); i++) {
       TileShape checkShape =
-          calc_check_shape_for_from_side(p_shape, p_shape_center, offsetShape.border_line(i));
-      if (board.check_trace_shape(checkShape, p_layer, emptyArr, 0, null)) {
+          calcCheckShapeForFromSide(p_shape, p_shape_center, offsetShape.borderLine(i));
+      if (board.checkTraceShape(checkShape, p_layer, emptyArr, 0, null)) {
         return new CalcFromSide(i, null);
       }
     }

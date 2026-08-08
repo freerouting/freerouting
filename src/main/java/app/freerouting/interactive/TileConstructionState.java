@@ -20,30 +20,30 @@ public final class TileConstructionState extends CornerItemConstructionState {
   private TileConstructionState(
       FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
-    this.add_corner(p_location);
+    this.addCorner(p_location);
   }
 
   /**
    * Returns a new instance of this class If p_logfile != null; the creation of this item is stored
    * in a logfile
    */
-  public static TileConstructionState get_instance(
+  public static TileConstructionState getInstance(
       FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     return new TileConstructionState(p_location, p_parent_state, p_board_handling);
   }
 
   /** adds a corner to the tile under construction */
   @Override
-  public InteractiveState left_button_clicked(FloatPoint p_location) {
-    super.left_button_clicked(p_location);
-    remove_concave_corners();
+  public InteractiveState leftButtonClicked(FloatPoint p_location) {
+    super.leftButtonClicked(p_location);
+    removeConcaveCorners();
     hdlg.repaint();
     return this;
   }
 
   @Override
   public InteractiveState complete() {
-    remove_concave_corners_at_close();
+    removeConcaveCornersAtClose();
     int cornerCount = cornerList.size();
     boolean constructionSucceeded = cornerCount > 2;
     if (constructionSucceeded) {
@@ -58,36 +58,36 @@ public final class TileConstructionState extends CornerItemConstructionState {
         prevCorner = nextCorner;
       }
       edgeLines[cornerCount - 1] = new Line(prevCorner, firstCorner);
-      TileShape obstacleShape = TileShape.get_instance(edgeLines);
-      RoutingBoard board = hdlg.get_routing_board();
-      int layer = hdlg.getInteractiveSettings().get_layer();
-      int clClass = BoardRules.clearance_class_none();
+      TileShape obstacleShape = TileShape.getInstance(edgeLines);
+      RoutingBoard board = hdlg.getRoutingBoard();
+      int layer = hdlg.getInteractiveSettings().getLayer();
+      int clClass = BoardRules.clearanceClassNone();
 
-      constructionSucceeded = board.check_shape(obstacleShape, layer, new int[0], clClass);
+      constructionSucceeded = board.checkShape(obstacleShape, layer, new int[0], clClass);
       if (constructionSucceeded) {
         // insert the new shape as keepout
-        this.observersActivated = !hdlg.get_routing_board().observers_active();
+        this.observersActivated = !hdlg.getRoutingBoard().observersActive();
         if (this.observersActivated) {
-          hdlg.get_routing_board().start_notify_observers();
+          hdlg.getRoutingBoard().startNotifyObservers();
         }
-        board.generate_snapshot();
-        board.insert_obstacle(obstacleShape, layer, clClass, FixedState.UNFIXED);
+        board.generateSnapshot();
+        board.insertObstacle(obstacleShape, layer, clClass, FixedState.UNFIXED);
         if (this.observersActivated) {
-          hdlg.get_routing_board().end_notify_observers();
+          hdlg.getRoutingBoard().endNotifyObservers();
           this.observersActivated = false;
         }
       }
     }
     if (constructionSucceeded) {
-      hdlg.screenMessages.set_status_message(tm.getText("keepout_successful_completed"));
+      hdlg.screenMessages.setStatusMessage(tm.getText("keepout_successful_completed"));
     } else {
-      hdlg.screenMessages.set_status_message(tm.getText("keepout_cancelled_because_of_overlaps"));
+      hdlg.screenMessages.setStatusMessage(tm.getText("keepout_cancelled_because_of_overlaps"));
     }
     return this.returnState;
   }
 
   /** skips concave corners at the end of the cornerList. */
-  private void remove_concave_corners() {
+  private void removeConcaveCorners() {
     IntPoint[] cornerArr = new IntPoint[cornerList.size()];
     Iterator<IntPoint> it = cornerList.iterator();
     for (int i = 0; i < cornerArr.length; i++) {
@@ -102,12 +102,12 @@ public final class TileConstructionState extends CornerItemConstructionState {
     IntPoint currCorner = cornerArr[newLength - 2];
     while (newLength > 2) {
       IntPoint prevCorner = cornerArr[newLength - 3];
-      Side lastCornerSide = lastCorner.side_of(prevCorner, currCorner);
+      Side lastCornerSide = lastCorner.sideOf(prevCorner, currCorner);
       if (lastCornerSide == Side.ON_THE_LEFT) {
         // side is ok, nothing to skip
         break;
       }
-      if (this.hdlg.get_routing_board().rules.get_trace_angle_restriction()
+      if (this.hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
           != AngleRestriction.FORTYFIVE_DEGREE) {
         // skip concave corner
         cornerArr[newLength - 2] = lastCorner;
@@ -116,7 +116,7 @@ public final class TileConstructionState extends CornerItemConstructionState {
       // In 45 degree case just skip last corner as nothing like the following
       // calculation for the 90 degree case to keep
       // the angle restrictions is implemented.
-      if (this.hdlg.get_routing_board().rules.get_trace_angle_restriction()
+      if (this.hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
           == AngleRestriction.NINETY_DEGREE) {
         // prevent generating a non orthogonal line by changing the previous corner
         IntPoint prevPrevCorner = null;
@@ -141,8 +141,8 @@ public final class TileConstructionState extends CornerItemConstructionState {
    * removes as many corners at the end of the corner list, so that closing the polygon will not
    * create a concave corner
    */
-  private void remove_concave_corners_at_close() {
-    add_corner_for_snap_angle();
+  private void removeConcaveCornersAtClose() {
+    addCornerForSnapAngle();
     if (cornerList.size() < 4) {
       return;
     }
@@ -157,7 +157,7 @@ public final class TileConstructionState extends CornerItemConstructionState {
     IntPoint secondCorner = cornerArr[1];
     while (newLength > 3) {
       IntPoint lastCorner = cornerArr[newLength - 1];
-      if (lastCorner.side_of(secondCorner, firstCorner) != Side.ON_THE_LEFT) {
+      if (lastCorner.sideOf(secondCorner, firstCorner) != Side.ON_THE_LEFT) {
         break;
       }
       --newLength;
@@ -166,12 +166,12 @@ public final class TileConstructionState extends CornerItemConstructionState {
     if (newLength != cornerArr.length) {
       // recalculate the cornerList
       cornerList = new LinkedList<>(Arrays.asList(cornerArr).subList(0, newLength));
-      add_corner_for_snap_angle();
+      addCornerForSnapAngle();
     }
   }
 
   @Override
-  public void display_default_message() {
-    hdlg.screenMessages.set_status_message(tm.getText("creating_tile"));
+  public void displayDefaultMessage() {
+    hdlg.screenMessages.setStatusMessage(tm.getText("creating_tile"));
   }
 }

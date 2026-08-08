@@ -8,53 +8,53 @@ import org.junit.jupiter.api.Test;
 public class Dac2020Bm05RoutingTest extends RoutingFixtureTest {
 
   @Test
-  public void test_Issue_508_BM05_first_2_items() {
+  public void testIssue508BM05First2Items() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
     testSettingsSource.setMaxItems(2);
     testSettingsSource.setJobTimeoutString("00:00:15");
 
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm05.dsn", testSettingsSource);
-    RunRoutingJob(job);
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm05.dsn", testSettingsSource);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue508-DAC2020_bm05.dsn").maxIncompleteConnections(106).check();
   }
 
   @Test
-  public void test_Issue_508_BM05_first_5_items() {
+  public void testIssue508BM05First5Items() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
     testSettingsSource.setMaxItems(5);
     testSettingsSource.setJobTimeoutString("00:00:30");
 
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm05.dsn", testSettingsSource);
-    RunRoutingJob(job);
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm05.dsn", testSettingsSource);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue508-DAC2020_bm05.dsn").maxIncompleteConnections(104).check();
   }
 
   @Test
   @Tag("slow")
-  public void test_Issue_508_BM05_first_pass() {
+  public void testIssue508BM05FirstPass() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
     testSettingsSource.setJobTimeoutString("00:02:00");
 
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm05.dsn", testSettingsSource);
-    RunRoutingJob(job);
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm05.dsn", testSettingsSource);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue508-DAC2020_bm05.dsn").maxIncompleteConnections(51).check();
   }
 
   @Test
   @Tag("slow")
-  public void test_Issue_508_BM05_full_routing() {
+  public void testIssue508BM05FullRouting() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(20);
     testSettingsSource.setJobTimeoutString("00:05:00");
 
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm05.dsn", testSettingsSource);
-    RunRoutingJob(job);
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm05.dsn", testSettingsSource);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue508-DAC2020_bm05.dsn").maxIncompleteConnections(44).check();
   }

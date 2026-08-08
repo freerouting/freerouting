@@ -24,7 +24,7 @@ public enum Unit implements Serializable {
    * Return the unit corresponding to the input string, or null, if the input string is different
    * from mil, inch and mm.
    */
-  public static Unit from_string(String p_string) {
+  public static Unit fromString(String p_string) {
     try {
       return Unit.valueOf(p_string.toUpperCase());
     } catch (IllegalArgumentException _) {

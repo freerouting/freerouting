@@ -50,15 +50,15 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
     int tableWidth = TEXTFIELD_WIDTH * this.tableModel.getColumnCount();
     this.table.setPreferredScrollableViewportSize(new Dimension(tableWidth, tableHeight));
     this.mainPanel.add(scrollPane, BorderLayout.CENTER);
-    add_net_class_combo_box();
+    addNetClassComboBox();
 
     this.add(mainPanel);
     this.pack();
   }
 
-  private void add_net_class_combo_box() {
+  private void addNetClassComboBox() {
     this.netRuleComboBox = new JComboBox<>();
-    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.get_routing_board();
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
     for (int i = 0; i < routingBoard.rules.netClasses.count(); i++) {
       netRuleComboBox.addItem(routingBoard.rules.netClasses.get(i));
     }
@@ -73,7 +73,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
     }
 
     // Reinsert the net rule combobox because a rule may have  been added or deleted.
-    add_net_class_combo_box();
+    addNetClassComboBox();
   }
 
   private class AssignRuleTable extends JTable {
@@ -113,17 +113,17 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
       columnNames[0] = tm.getText("netName");
       columnNames[1] = tm.getText("className");
 
-      BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
-      data = new Object[boardRules.nets.max_net_no()][];
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
+      data = new Object[boardRules.nets.maxNetNo()][];
       for (int i = 0; i < data.length; i++) {
         this.data[i] = new Object[columnNames.length];
       }
-      set_values();
+      setValues();
     }
 
     /** Calculates the values in this table */
-    public void set_values() {
-      BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+    public void setValues() {
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
       Net[] sortedArr = new Net[this.getRowCount()];
       for (int i = 0; i < sortedArr.length; i++) {
         sortedArr[i] = boardRules.nets.get(i + 1);
@@ -170,7 +170,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
         FRLogger.warn("AssignNetRuLesVindow.setValueAt: Net expected");
         return;
       }
-      currNet.set_class(curr_net_rule);
+      currNet.setClass(curr_net_rule);
 
       this.data[p_row][p_col] = p_value;
       fireTableCellUpdated(p_row, p_col);

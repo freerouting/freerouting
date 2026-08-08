@@ -24,9 +24,9 @@ public class BendCostRoutingTest extends RoutingFixtureTest {
     // Injects bend cost parameter for layer 0 (or default bend cost)
     testSettingsSource.setDefaultBendCost(5.0);
 
-    RoutingJob job = GetRoutingJob("Issue026-J2_reference.dsn", testSettingsSource);
+    RoutingJob job = getRoutingJob("Issue026-J2_reference.dsn", testSettingsSource);
 
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue026-J2_reference.dsn").check();
   }

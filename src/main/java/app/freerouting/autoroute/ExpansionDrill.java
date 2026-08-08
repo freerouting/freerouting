@@ -48,10 +48,10 @@ public class ExpansionDrill implements ExpandableObject {
    * CompleteFreeSpaceExpansionRoom, if no expansion room is found. Returns false, if that was not
    * possible because of an obstacle at this.location on some layer in the compensated search tree.
    */
-  public boolean calculate_expansion_rooms(AutorouteEngine p_autoroute_engine) {
-    TileShape searchShape = TileShape.get_instance(location);
+  public boolean calculateExpansionRooms(AutorouteEngine p_autoroute_engine) {
+    TileShape searchShape = TileShape.getInstance(location);
     Collection<SearchTreeObject> overlaps =
-        p_autoroute_engine.autorouteSearchTree.overlapping_objects(searchShape, -1);
+        p_autoroute_engine.autorouteSearchTree.overlappingObjects(searchShape, -1);
     for (int i = this.firstLayer; i <= this.lastLayer; i++) {
       CompleteExpansionRoom foundRoom = null;
       Iterator<SearchTreeObject> it = overlaps.iterator();
@@ -61,7 +61,7 @@ public class ExpansionDrill implements ExpandableObject {
           it.remove();
           continue;
         }
-        if (currRoom.get_layer() == i) {
+        if (currRoom.getLayer() == i) {
           foundRoom = currRoom;
           it.remove();
           break;
@@ -72,7 +72,7 @@ public class ExpansionDrill implements ExpandableObject {
         IncompleteFreeSpaceExpansionRoom newIncompleteRoom =
             new IncompleteFreeSpaceExpansionRoom(null, i, searchShape);
         Collection<CompleteFreeSpaceExpansionRoom> newRooms =
-            p_autoroute_engine.complete_expansion_room(newIncompleteRoom);
+            p_autoroute_engine.completeExpansionRoom(newIncompleteRoom);
         if (newRooms.size() != 1) {
           // the size may be 0 because of an obstacle in the compensated tree at this.location
           return false;
@@ -88,27 +88,27 @@ public class ExpansionDrill implements ExpandableObject {
   }
 
   @Override
-  public TileShape get_shape() {
+  public TileShape getShape() {
     return this.shape;
   }
 
   @Override
-  public int get_dimension() {
+  public int getDimension() {
     return 2;
   }
 
   @Override
-  public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
+  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom p_room) {
     return null;
   }
 
   @Override
-  public int maze_search_element_count() {
+  public int mazeSearchElementCount() {
     return this.mazeSearchInfoArr.length;
   }
 
   @Override
-  public MazeSearchElement get_maze_search_element(int p_no) {
+  public MazeSearchElement getMazeSearchElement(int p_no) {
     return this.mazeSearchInfoArr[p_no];
   }
 
@@ -120,9 +120,9 @@ public class ExpansionDrill implements ExpandableObject {
   }
 
   @Override
-  public int get_id_no() {
+  public int getIdNo() {
     // Stable hash of location and layers
-    return 31 * (31 * location.get_id_no() + firstLayer) + lastLayer;
+    return 31 * (31 * location.getIdNo() + firstLayer) + lastLayer;
   }
 
   /*
@@ -130,8 +130,8 @@ public class ExpansionDrill implements ExpandableObject {
 
   */
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity) {
-    Color drawColor = p_graphics_context.get_hilight_color();
-    p_graphics_context.fill_area(this.shape, p_graphics, drawColor, p_intensity);
-    p_graphics_context.draw_boundary(this.shape, 0, drawColor, p_graphics, 1);
+    Color drawColor = p_graphics_context.getHilightColor();
+    p_graphics_context.fillArea(this.shape, p_graphics, drawColor, p_intensity);
+    p_graphics_context.drawBoundary(this.shape, 0, drawColor, p_graphics, 1);
   }
 }

@@ -12,43 +12,43 @@ public class DynamicRouteState extends RouteState {
   }
 
   @Override
-  public InteractiveState mouse_moved() {
-    super.mouse_moved();
-    return add_corner(hdlg.get_current_mouse_position());
+  public InteractiveState mouseMoved() {
+    super.mouseMoved();
+    return addCorner(hdlg.getCurrentMousePosition());
   }
 
   /** ends routing */
   @Override
-  public InteractiveState left_button_clicked(FloatPoint p_location) {
+  public InteractiveState leftButtonClicked(FloatPoint p_location) {
     if (this.observersActivated) {
-      hdlg.get_routing_board().end_notify_observers();
+      hdlg.getRoutingBoard().endNotifyObservers();
       this.observersActivated = false;
     }
     for (int currNetNo : this.route.netNoArr) {
-      hdlg.update_ratsnest(currNetNo);
+      hdlg.updateRatsnest(currNetNo);
     }
     return this.returnState;
   }
 
   /** Action to be taken when a key is pressed (Shortcut). */
   @Override
-  public InteractiveState key_typed(char p_key_char) {
+  public InteractiveState keyTyped(char p_key_char) {
     InteractiveState currReturnState = this;
     if (p_key_char == 's') {
-      hdlg.generate_snapshot();
+      hdlg.generateSnapshot();
     } else {
-      currReturnState = super.key_typed(p_key_char);
+      currReturnState = super.keyTyped(p_key_char);
     }
     return currReturnState;
   }
 
   @Override
-  public JPopupMenu get_popup_menu() {
-    return hdlg.get_panel().popupMenuDynamicRoute;
+  public JPopupMenu getPopupMenu() {
+    return hdlg.getPanel().popupMenuDynamicRoute;
   }
 
   @Override
-  public String get_help_id() {
+  public String getHelpId() {
     return "RouteState_DynamicRouteState";
   }
 }

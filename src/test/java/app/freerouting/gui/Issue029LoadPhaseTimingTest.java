@@ -48,9 +48,9 @@ class Issue029LoadPhaseTimingTest {
       System.out.printf("4 RatsNest: %.2f ms%n", ms(t6, t7));
 
       long t8 = System.nanoTime();
-      app.freerouting.geometry.planar.IntBox bbox = board.get_bounding_box();
-      for (app.freerouting.board.Item currItem : board.get_items()) {
-        app.freerouting.geometry.planar.IntBox currBoundingBox = currItem.bounding_box();
+      app.freerouting.geometry.planar.IntBox bbox = board.getBoundingBox();
+      for (app.freerouting.board.Item currItem : board.getItems()) {
+        app.freerouting.geometry.planar.IntBox currBoundingBox = currItem.boundingBox();
         if (currBoundingBox.ur.x < Integer.MAX_VALUE) {
           bbox = bbox.union(currBoundingBox);
         }
@@ -75,7 +75,7 @@ class Issue029LoadPhaseTimingTest {
 
       System.out.printf(
           "Board: components=%d traces=%d items=%d%n",
-          board.components.count(), board.get_traces().size(), board.get_items().size());
+          board.components.count(), board.getTraces().size(), board.getItems().size());
     }
   }
 

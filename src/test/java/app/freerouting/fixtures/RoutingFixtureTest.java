@@ -42,11 +42,11 @@ public class RoutingFixtureTest {
     }
   }
 
-  protected RoutingJob GetRoutingJob(String filename) {
-    return GetRoutingJob(filename, null);
+  protected RoutingJob getRoutingJob(String filename) {
+    return getRoutingJob(filename, null);
   }
 
-  protected RoutingJob GetRoutingJob(String filename, TestingSettings testingSettings) {
+  protected RoutingJob getRoutingJob(String filename, TestingSettings testingSettings) {
     // Create a new session
     UUID sessionId = UUID.randomUUID();
     Session session =
@@ -90,7 +90,7 @@ public class RoutingFixtureTest {
     return job;
   }
 
-  protected RoutingJob RunRoutingJob(RoutingJob job) {
+  protected RoutingJob runRoutingJob(RoutingJob job) {
     if (job == null) {
       throw new IllegalArgumentException("The job cannot be null.");
     }
@@ -130,7 +130,7 @@ public class RoutingFixtureTest {
     return job;
   }
 
-  protected BoardStatistics GetBoardStatistics(RoutingJob job) {
+  protected BoardStatistics getBoardStatistics(RoutingJob job) {
     if ((job == null) || (job.board == null)) {
       throw new IllegalArgumentException("The job or its board cannot be null.");
     }

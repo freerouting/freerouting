@@ -27,25 +27,25 @@ public final class InspectMenuState extends MenuState {
   }
 
   /** Returns a new instance of InspectMenuState */
-  public static InspectMenuState get_instance(GuiBoardManager p_board_handling) {
+  public static InspectMenuState getInstance(GuiBoardManager p_board_handling) {
     return new InspectMenuState(p_board_handling);
   }
 
   @Override
-  public InteractiveState left_button_clicked(FloatPoint p_location) {
-    return select_items(p_location);
+  public InteractiveState leftButtonClicked(FloatPoint p_location) {
+    return selectItems(p_location);
   }
 
   @Override
-  public InteractiveState mouse_dragged(FloatPoint p_point) {
-    return InspectItemsInRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
+  public InteractiveState mouseDragged(FloatPoint p_point) {
+    return InspectItemsInRegionState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
   }
 
   @Override
-  public InteractiveState mouse_moved() {
-    super.mouse_moved();
+  public InteractiveState mouseMoved() {
+    super.mouseMoved();
 
-    FloatPoint currentPosition = hdlg.get_current_mouse_position();
+    FloatPoint currentPosition = hdlg.getCurrentMousePosition();
     if (currentPosition == null) {
       return this;
     }
@@ -72,7 +72,7 @@ public final class InspectMenuState extends MenuState {
         // Clear previous item/violation
         lastHoveredItem = null;
         lastHoveredViolation = currentViolation;
-        display_violation_info(currentViolation);
+        displayViolationInfo(currentViolation);
         hdlg.repaint();
       }
       return this;
@@ -80,14 +80,14 @@ public final class InspectMenuState extends MenuState {
       // We left a violation
       lastHoveredViolation = null;
       if (backupMessage != null) {
-        hdlg.screenMessages.set_status_message(backupMessage);
+        hdlg.screenMessages.setStatusMessage(backupMessage);
         backupMessage = null;
       }
       hdlg.repaint();
     }
 
     // If no violation, check for items
-    Set<Item> pickedItems = hdlg.pick_items(currentPosition);
+    Set<Item> pickedItems = hdlg.pickItems(currentPosition);
 
     // Find the first relevant item (DrillItem or Trace)
     Item currentItem = null;
@@ -102,7 +102,7 @@ public final class InspectMenuState extends MenuState {
     if (currentItem != lastHoveredItem) {
       // Restore backup message if we left the previous item
       if (lastHoveredItem != null && currentItem == null && backupMessage != null) {
-        hdlg.screenMessages.set_status_message(backupMessage);
+        hdlg.screenMessages.setStatusMessage(backupMessage);
         backupMessage = null;
       }
 
@@ -120,7 +120,7 @@ public final class InspectMenuState extends MenuState {
         }
 
         lastHoveredItem = currentItem;
-        display_item_info(currentItem);
+        displayItemInfo(currentItem);
         hdlg.repaint();
       }
     }
@@ -128,54 +128,54 @@ public final class InspectMenuState extends MenuState {
     return this;
   }
 
-  private void display_item_info(Item item) {
+  private void displayItemInfo(Item item) {
     StringBuilder info = new StringBuilder();
 
     if (item instanceof Pin) {
       Pin pin = (Pin) item;
       info.append("Pin: ");
-      if (pin.get_component_no() > 0) {
-        info.append(hdlg.get_routing_board().components.get(pin.get_component_no()).name);
+      if (pin.getComponentNo() > 0) {
+        info.append(hdlg.getRoutingBoard().components.get(pin.getComponentNo()).name);
         info.append(" - ");
       }
-      info.append("Padstack: ").append(pin.get_padstack().name);
+      info.append("Padstack: ").append(pin.getPadstack().name);
       appendNetInfo(info, item);
     } else if (item instanceof Via) {
       Via via = (Via) item;
       info.append("Via: ");
-      info.append("Padstack: ").append(via.get_padstack().name);
-      info.append(" (L").append(via.get_padstack().from_layer());
-      info.append("-L").append(via.get_padstack().to_layer()).append(")");
+      info.append("Padstack: ").append(via.getPadstack().name);
+      info.append(" (L").append(via.getPadstack().fromLayer());
+      info.append("-L").append(via.getPadstack().toLayer()).append(")");
       appendNetInfo(info, item);
     } else if (item instanceof PolylineTrace) {
       PolylineTrace trace = (PolylineTrace) item;
       info.append("Trace: ");
-      info.append("ID ").append(trace.get_id_no());
+      info.append("ID ").append(trace.getIdNo());
       info.append(", Layer: ")
-          .append(hdlg.get_routing_board().layerStructure.arr[trace.get_layer()].name);
-      info.append(", Width: ").append(2 * trace.get_half_width());
+          .append(hdlg.getRoutingBoard().layerStructure.arr[trace.getLayer()].name);
+      info.append(", Width: ").append(2 * trace.getHalfWidth());
 
       // Add segment count
-      int segmentCount = trace.corner_count() - 1;
+      int segmentCount = trace.cornerCount() - 1;
       info.append(", Segments: ").append(segmentCount);
 
       // Add total length
-      double length = trace.get_length();
+      double length = trace.getLength();
       info.append(", Length: ").append(String.format("%.2f", length));
 
       appendNetInfo(info, item);
     }
 
-    hdlg.screenMessages.set_status_message(info.toString());
+    hdlg.screenMessages.setStatusMessage(info.toString());
   }
 
-  private void display_violation_info(ClearanceViolation violation) {
+  private void displayViolationInfo(ClearanceViolation violation) {
     StringBuilder info = new StringBuilder();
 
     info.append("CLEARANCE VIOLATION");
 
     // Add layer information
-    String layerName = hdlg.get_routing_board().layerStructure.arr[violation.layer].name;
+    String layerName = hdlg.getRoutingBoard().layerStructure.arr[violation.layer].name;
     info.append(" | Layer: ").append(layerName);
 
     // Add clearance information - convert from board units to display units
@@ -189,15 +189,15 @@ public final class InspectMenuState extends MenuState {
 
     // Add clearance class information
     String clearanceClass1 =
-        hdlg.get_routing_board()
+        hdlg.getRoutingBoard()
             .rules
             .clearanceMatrix
-            .get_name(violation.firstItem.clearance_class_no());
+            .getName(violation.firstItem.clearanceClassNo());
     String clearanceClass2 =
-        hdlg.get_routing_board()
+        hdlg.getRoutingBoard()
             .rules
             .clearanceMatrix
-            .get_name(violation.secondItem.clearance_class_no());
+            .getName(violation.secondItem.clearanceClassNo());
 
     info.append(" | Classes: ").append(clearanceClass1).append(" <-> ").append(clearanceClass2);
 
@@ -207,33 +207,33 @@ public final class InspectMenuState extends MenuState {
     info.append(" and ");
     info.append(getItemDescription(violation.secondItem));
 
-    hdlg.screenMessages.set_status_message(info.toString());
+    hdlg.screenMessages.setStatusMessage(info.toString());
   }
 
   private String getItemDescription(Item item) {
     if (item instanceof Pin) {
       Pin pin = (Pin) item;
-      if (pin.get_component_no() > 0) {
-        return "Pin(" + hdlg.get_routing_board().components.get(pin.get_component_no()).name + ")";
+      if (pin.getComponentNo() > 0) {
+        return "Pin(" + hdlg.getRoutingBoard().components.get(pin.getComponentNo()).name + ")";
       }
       return "Pin";
     } else if (item instanceof Via) {
       return "Via";
     } else if (item instanceof PolylineTrace) {
-      return "Trace(ID:" + item.get_id_no() + ")";
+      return "Trace(ID:" + item.getIdNo() + ")";
     } else {
       return item.getClass().getSimpleName();
     }
   }
 
   private void appendNetInfo(StringBuilder info, Item item) {
-    if (item.net_count() > 0) {
+    if (item.netCount() > 0) {
       info.append(" | Net: ");
-      for (int i = 0; i < item.net_count(); i++) {
+      for (int i = 0; i < item.netCount(); i++) {
         if (i > 0) {
           info.append(", ");
         }
-        Net net = hdlg.get_routing_board().rules.nets.get(item.get_net_no(i));
+        Net net = hdlg.getRoutingBoard().rules.nets.get(item.getNetNo(i));
         info.append(net.name);
       }
     }
@@ -243,17 +243,17 @@ public final class InspectMenuState extends MenuState {
   public void draw(java.awt.Graphics p_graphics) {
     // Draw the hovered clearance violation with highlight
     if (lastHoveredViolation != null && hdlg.graphicsContext != null) {
-      Color violationColor = hdlg.graphicsContext.get_violations_color();
-      double intensity = hdlg.graphicsContext.get_layer_visibility(lastHoveredViolation.layer);
+      Color violationColor = hdlg.graphicsContext.getViolationsColor();
+      double intensity = hdlg.graphicsContext.getLayerVisibility(lastHoveredViolation.layer);
 
       // Draw the violation area with increased brightness
-      hdlg.graphicsContext.fill_area(
+      hdlg.graphicsContext.fillArea(
           lastHoveredViolation.shape, p_graphics, violationColor, Math.min(1.0, intensity * 1.8));
 
       // Draw a prominent circle around the violation
-      double drawRadius = hdlg.get_routing_board().rules.get_min_trace_half_width() * 8;
-      hdlg.graphicsContext.draw_circle(
-          lastHoveredViolation.shape.centre_of_gravity(),
+      double drawRadius = hdlg.getRoutingBoard().rules.getMinTraceHalfWidth() * 8;
+      hdlg.graphicsContext.drawCircle(
+          lastHoveredViolation.shape.centreOfGravity(),
           drawRadius,
           0.15 * drawRadius,
           violationColor,
@@ -263,10 +263,10 @@ public final class InspectMenuState extends MenuState {
 
     // Draw the hovered item with highlight
     if (lastHoveredItem != null && hdlg.graphicsContext != null) {
-      Color[] highlightColors = lastHoveredItem.get_draw_colors(hdlg.graphicsContext);
+      Color[] highlightColors = lastHoveredItem.getDrawColors(hdlg.graphicsContext);
 
       // Increase intensity for highlight effect
-      double baseIntensity = lastHoveredItem.get_draw_intensity(hdlg.graphicsContext);
+      double baseIntensity = lastHoveredItem.getDrawIntensity(hdlg.graphicsContext);
       double highlightIntensity = Math.min(1.0, baseIntensity * 1.5);
 
       // Draw with increased brightness
@@ -275,18 +275,18 @@ public final class InspectMenuState extends MenuState {
   }
 
   @Override
-  public void display_default_message() {
+  public void displayDefaultMessage() {
     if (lastHoveredItem == null && lastHoveredViolation == null) {
-      hdlg.screenMessages.set_status_message(tm.getText("in_inspect_menu"));
+      hdlg.screenMessages.setStatusMessage(tm.getText("in_inspect_menu"));
     }
   }
 
   @Override
-  public String get_help_id() {
+  public String getHelpId() {
     return "MenuState_InspectMenuState";
   }
 
-  public Item get_last_hovered_item() {
+  public Item getLastHoveredItem() {
     return lastHoveredItem;
   }
 }

@@ -27,11 +27,11 @@ public interface Drawable {
    * Returns the priority for drawing an item. Items with higher priority are drawn later than items
    * with lower priority.
    */
-  int get_draw_priority();
+  int getDrawPriority();
 
   /** Gets the drawing intensity in the alpha blending for this item. */
-  double get_draw_intensity(GraphicsContext p_graphics_context);
+  double getDrawIntensity(GraphicsContext p_graphics_context);
 
   /** gets the draw colors for this object from p_graphics_context */
-  Color[] get_draw_colors(GraphicsContext p_graphics_context);
+  Color[] getDrawColors(GraphicsContext p_graphics_context);
 }

@@ -118,9 +118,9 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     return p_col >= 1;
   }
 
-  Color[] get_trace_colors(boolean p_fixed) {
+  Color[] getTraceColors(boolean p_fixed) {
     if (!itemColorsPrecalculated) {
-      precalculate_item_colors();
+      precalculateItemColors();
     }
     Color[] result;
     if (p_fixed) {
@@ -131,9 +131,9 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     return result;
   }
 
-  Color[] get_via_colors(boolean p_fixed) {
+  Color[] getViaColors(boolean p_fixed) {
     if (!itemColorsPrecalculated) {
-      precalculate_item_colors();
+      precalculateItemColors();
     }
     Color[] result;
     if (p_fixed) {
@@ -144,78 +144,78 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     return result;
   }
 
-  Color[] get_pin_colors() {
+  Color[] getPinColors() {
     if (!itemColorsPrecalculated) {
-      precalculate_item_colors();
+      precalculateItemColors();
     }
     return precalculatedItemColors[ColumnNames.PINS.ordinal() - 1];
   }
 
-  public void set_pin_colors(Color[] p_color_arr) {
-    set_colors(ColumnNames.PINS.ordinal(), p_color_arr);
+  public void setPinColors(Color[] p_color_arr) {
+    setColors(ColumnNames.PINS.ordinal(), p_color_arr);
   }
 
-  Color[] get_conduction_colors() {
+  Color[] getConductionColors() {
     if (!itemColorsPrecalculated) {
-      precalculate_item_colors();
+      precalculateItemColors();
     }
     return precalculatedItemColors[ColumnNames.CONDUCTION_AREAS.ordinal() - 1];
   }
 
-  public void set_conduction_colors(Color[] p_color_arr) {
-    set_colors(ColumnNames.CONDUCTION_AREAS.ordinal(), p_color_arr);
+  public void setConductionColors(Color[] p_color_arr) {
+    setColors(ColumnNames.CONDUCTION_AREAS.ordinal(), p_color_arr);
   }
 
-  Color[] get_obstacle_colors() {
+  Color[] getObstacleColors() {
     if (!itemColorsPrecalculated) {
-      precalculate_item_colors();
+      precalculateItemColors();
     }
     return precalculatedItemColors[ColumnNames.KEEPOUTS.ordinal() - 1];
   }
 
-  Color[] get_via_obstacle_colors() {
+  Color[] getViaObstacleColors() {
     if (!itemColorsPrecalculated) {
-      precalculate_item_colors();
+      precalculateItemColors();
     }
     return precalculatedItemColors[ColumnNames.VIA_KEEPOUTS.ordinal() - 1];
   }
 
-  Color[] get_place_obstacle_colors() {
+  Color[] getPlaceObstacleColors() {
     if (!itemColorsPrecalculated) {
-      precalculate_item_colors();
+      precalculateItemColors();
     }
     return precalculatedItemColors[ColumnNames.PLACE_KEEPOUTS.ordinal() - 1];
   }
 
-  public void set_trace_colors(Color[] p_color_arr, boolean p_fixed) {
+  public void setTraceColors(Color[] p_color_arr, boolean p_fixed) {
     if (p_fixed) {
-      set_colors(ColumnNames.FIXED_TRACES.ordinal(), p_color_arr);
+      setColors(ColumnNames.FIXED_TRACES.ordinal(), p_color_arr);
     } else {
-      set_colors(ColumnNames.TRACES.ordinal(), p_color_arr);
+      setColors(ColumnNames.TRACES.ordinal(), p_color_arr);
     }
   }
 
-  public void set_via_colors(Color[] p_color_arr, boolean p_fixed) {
+  public void setViaColors(Color[] p_color_arr, boolean p_fixed) {
     if (p_fixed) {
-      set_colors(ColumnNames.FIXED_VIAS.ordinal(), p_color_arr);
+      setColors(ColumnNames.FIXED_VIAS.ordinal(), p_color_arr);
     } else {
-      set_colors(ColumnNames.VIAS.ordinal(), p_color_arr);
+      setColors(ColumnNames.VIAS.ordinal(), p_color_arr);
     }
   }
 
-  public void set_keepout_colors(Color[] p_color_arr) {
-    set_colors(ColumnNames.KEEPOUTS.ordinal(), p_color_arr);
+  public void setKeepoutColors(Color[] p_color_arr) {
+    setColors(ColumnNames.KEEPOUTS.ordinal(), p_color_arr);
   }
 
-  public void set_via_keepout_colors(Color[] p_color_arr) {
-    set_colors(ColumnNames.VIA_KEEPOUTS.ordinal(), p_color_arr);
+  public void setViaKeepoutColors(Color[] p_color_arr) {
+    setColors(ColumnNames.VIA_KEEPOUTS.ordinal(), p_color_arr);
   }
 
-  public void set_place_keepout_colors(Color[] p_color_arr) {
-    set_colors(ColumnNames.PLACE_KEEPOUTS.ordinal(), p_color_arr);
+  public void setPlaceKeepoutColors(Color[] p_color_arr) {
+    setColors(ColumnNames.PLACE_KEEPOUTS.ordinal(), p_color_arr);
   }
 
-  private void set_colors(int p_item_type, Color[] p_color_arr) {
+  private void setColors(int p_item_type, Color[] p_color_arr) {
     for (int layer = 0; layer < this.data.length - 1; layer++) {
       int colorIndex = layer % p_color_arr.length;
       this.data[layer][p_item_type] = p_color_arr[colorIndex];
@@ -224,7 +224,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     this.itemColorsPrecalculated = false;
   }
 
-  private void precalculate_item_colors() {
+  private void precalculateItemColors() {
     precalculatedItemColors = new Color[ColumnNames.values().length - 1][];
     for (int i = 0; i < precalculatedItemColors.length; i++) {
       precalculatedItemColors[i] = new Color[data.length];

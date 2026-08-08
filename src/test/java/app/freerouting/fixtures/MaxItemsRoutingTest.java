@@ -14,10 +14,10 @@ public class MaxItemsRoutingTest extends RoutingFixtureTest {
     testingSettings.setMaxPasses(100);
 
     // Load a small board (randomly selected from available tests)
-    RoutingJob job = GetRoutingJob("Issue026-J2_reference.dsn", testingSettings);
+    RoutingJob job = getRoutingJob("Issue026-J2_reference.dsn", testingSettings);
 
     // Run the job
-    job = RunRoutingJob(job);
+    job = runRoutingJob(job);
 
     // Assert that the job finished (or cancelled/stopped)
     // AND that the number of items routed (or we can assert state)

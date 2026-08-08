@@ -115,8 +115,8 @@ public class AutorouteControl {
 
   /** Creates a new instance of AutorouteControl for the input net */
   public AutorouteControl(RoutingBoard p_board, int p_net_no, RouterSettings p_settings) {
-    this(p_board, p_settings, p_settings.get_trace_cost_arr());
-    init_net(p_net_no, p_board, p_settings.get_via_costs());
+    this(p_board, p_settings, p_settings.getTraceCostArr());
+    initNet(p_net_no, p_board, p_settings.getViaCosts());
   }
 
   /** Creates a new instance of AutorouteControl for the input net */
@@ -127,28 +127,28 @@ public class AutorouteControl {
       int p_via_costs,
       ExpansionCostFactor[] p_trace_cost_arr) {
     this(p_board, p_settings, p_trace_cost_arr);
-    init_net(p_net_no, p_board, p_via_costs);
+    initNet(p_net_no, p_board, p_via_costs);
   }
 
   /** Creates a new instance of AutorouteControl */
   private AutorouteControl(
       RoutingBoard p_board, RouterSettings p_settings, ExpansionCostFactor[] p_trace_costs_arr) {
     this.settings = p_settings;
-    layerCount = p_board.get_layer_count();
+    layerCount = p_board.getLayerCount();
     traceHalfWidth = new int[layerCount];
     compensatedTraceHalfWidth = new int[layerCount];
     layerActive = new boolean[layerCount];
-    viasAllowed = p_settings.get_vias_allowed();
+    viasAllowed = p_settings.getViasAllowed();
     viaRadiusArr = new double[layerCount];
     addViaCosts = new ViaCost[layerCount];
     this.bendCosts = new double[layerCount];
     for (int i = 0; i < layerCount; i++) {
-      this.bendCosts[i] = p_settings.get_bend_cost(i);
+      this.bendCosts[i] = p_settings.getBendCost(i);
     }
 
     for (int i = 0; i < layerCount; i++) {
       addViaCosts[i] = new ViaCost(layerCount);
-      boolean activeSetting = p_settings.get_layer_active(i);
+      boolean activeSetting = p_settings.getLayerActive(i);
       if (!p_board.layerStructure.arr[i].isSignal && activeSetting) {
         FRLogger.warn(
             "Layer '"
@@ -164,7 +164,7 @@ public class AutorouteControl {
     fanoutStartPinCenter = null;
     fanoutStartPinLayer = -1;
     removeUnconnectedVias = true;
-    withNeckdown = p_settings.get_automatic_neckdown();
+    withNeckdown = p_settings.getAutomaticNeckdown();
     tidyRegionWidth = Integer.MAX_VALUE;
     pullTightAccuracy = 500;
     maxShoveTraceRecursionDepth = 20;
@@ -185,14 +185,14 @@ public class AutorouteControl {
     ripupPassNo = 1;
   }
 
-  private void init_net(int p_net_no, RoutingBoard p_board, int p_via_costs) {
+  private void initNet(int p_net_no, RoutingBoard p_board, int p_via_costs) {
     netNo = p_net_no;
     Net currNet = p_board.rules.nets.get(p_net_no);
     NetClass currNetClass;
     if (currNet != null) {
       currNetClass = currNet.getNetClass();
-      traceClearanceClassNo = currNetClass.get_trace_clearance_class();
-      viaRule = currNetClass.get_via_rule();
+      traceClearanceClassNo = currNetClass.getTraceClearanceClass();
+      viaRule = currNetClass.getViaRule();
     } else {
       traceClearanceClassNo = 1;
       viaRule = p_board.rules.viaRules.firstElement();
@@ -200,48 +200,48 @@ public class AutorouteControl {
     }
     for (int i = 0; i < layerCount; i++) {
       if (netNo > 0) {
-        traceHalfWidth[i] = p_board.rules.get_trace_half_width(netNo, i);
+        traceHalfWidth[i] = p_board.rules.getTraceHalfWidth(netNo, i);
       } else {
-        traceHalfWidth[i] = p_board.rules.get_trace_half_width(1, i);
+        traceHalfWidth[i] = p_board.rules.getTraceHalfWidth(1, i);
       }
       compensatedTraceHalfWidth[i] =
           traceHalfWidth[i]
-              + p_board.rules.clearanceMatrix.clearance_compensation_value(
+              + p_board.rules.clearanceMatrix.clearanceCompensationValue(
                   traceClearanceClassNo, i);
-      if (currNetClass != null && !currNetClass.is_active_routing_layer(i)) {
+      if (currNetClass != null && !currNetClass.isActiveRoutingLayer(i)) {
         layerActive[i] = false;
       }
     }
-    rebuild_via_info(p_board, p_via_costs, p_net_no);
+    rebuildViaInfo(p_board, p_via_costs, p_net_no);
   }
 
-  public void rebuild_via_info(RoutingBoard p_board, int p_via_costs, int p_net_no) {
-    if (viaRule.via_count() > 0) {
-      this.viaClearanceClass = viaRule.get_via(0).get_clearance_class();
+  public void rebuildViaInfo(RoutingBoard p_board, int p_via_costs, int p_net_no) {
+    if (viaRule.viaCount() > 0) {
+      this.viaClearanceClass = viaRule.getVia(0).getClearanceClass();
     } else {
       this.viaClearanceClass = 1;
     }
-    this.viaInfoArr = new ViaMask[viaRule.via_count()];
+    this.viaInfoArr = new ViaMask[viaRule.viaCount()];
     this.attachSmdAllowed = false;
-    for (int i = 0; i < viaRule.via_count(); i++) {
-      ViaInfo currVia = viaRule.get_via(i);
-      if (currVia.attach_smd_allowed()) {
+    for (int i = 0; i < viaRule.viaCount(); i++) {
+      ViaInfo currVia = viaRule.getVia(i);
+      if (currVia.attachSmdAllowed()) {
         this.attachSmdAllowed = true;
       }
-      Padstack currViaPadstack = currVia.get_padstack();
-      int fromLayer = currViaPadstack.from_layer();
-      int toLayer = currViaPadstack.to_layer();
+      Padstack currViaPadstack = currVia.getPadstack();
+      int fromLayer = currViaPadstack.fromLayer();
+      int toLayer = currViaPadstack.toLayer();
       for (int j = fromLayer; j <= toLayer; j++) {
-        ConvexShape currShape = currViaPadstack.get_shape(j);
+        ConvexShape currShape = currViaPadstack.getShape(j);
         double currRadius;
         if (currShape != null) {
-          currRadius = 0.5 * currShape.max_width();
+          currRadius = 0.5 * currShape.maxWidth();
         } else {
           currRadius = 0;
         }
         this.viaRadiusArr[j] = Math.max(this.viaRadiusArr[j], currRadius);
       }
-      viaInfoArr[i] = new ViaMask(fromLayer, toLayer, currVia.attach_smd_allowed());
+      viaInfoArr[i] = new ViaMask(fromLayer, toLayer, currVia.attachSmdAllowed());
     }
 
     boolean pureSmdNet = isPureSmdNet(p_board, p_net_no);
@@ -268,13 +268,13 @@ public class AutorouteControl {
   }
 
   private static boolean isPureSmdNet(RoutingBoard p_board, int p_net_no) {
-    Collection<Item> netItems = p_board.get_connectable_items(p_net_no);
+    Collection<Item> netItems = p_board.getConnectableItems(p_net_no);
     if (netItems.isEmpty()) {
       return false;
     }
 
     for (Item item : netItems) {
-      if (!(item instanceof Pin pin) || pin.first_layer() != pin.last_layer()) {
+      if (!(item instanceof Pin pin) || pin.firstLayer() != pin.lastLayer()) {
         return false;
       }
     }

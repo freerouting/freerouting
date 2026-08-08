@@ -58,7 +58,7 @@ class HeadlessRoutingTest {
    * callees accidentally initialises {@code interactiveSettings} on a headless manager.
    */
   @Test
-  void headlessManager_getInteractiveSettings_isNullAfterDsnLoad() {
+  void headlessManagerGetInteractiveSettingsIsNullAfterDsnLoad() {
     assertDoesNotThrow(
         () -> {
           var manager = new HeadlessBoardManager(new RoutingJob());
@@ -82,7 +82,7 @@ class HeadlessRoutingTest {
    * to keep test duration short while still exercising the complete routing pipeline.
    */
   @Test
-  void headlessRouting_completesWithoutNpeOrIllegalState() {
+  void headlessRoutingCompletesWithoutNpeOrIllegalState() {
     TestingSettings testSettings = new TestingSettings();
     testSettings.setMaxPasses(2);
     testSettings.setMaxItems(10);
@@ -112,7 +112,7 @@ class HeadlessRoutingTest {
    * the entire pipeline executed without errors.
    */
   @Test
-  void headlessRouting_boardIsNonNullAfterCompletion() {
+  void headlessRoutingBoardIsNonNullAfterCompletion() {
     TestingSettings testSettings = new TestingSettings();
     testSettings.setMaxPasses(1);
     testSettings.setMaxItems(5);

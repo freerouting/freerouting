@@ -23,7 +23,7 @@ public class BoardTemporarySubWindow extends BoardSubWindow {
   }
 
   /** Used, when the board frame with all the subwindows is disposed. */
-  public void board_frame_disposed() {
+  public void boardFrameDisposed() {
     super.dispose();
   }
 

@@ -14,14 +14,14 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
   private PolygonShapeConstructionState(
       FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
-    this.add_corner(p_location);
+    this.addCorner(p_location);
   }
 
   /**
    * Returns a new instance of this class If p_logfile != null; the creation of this item is stored
    * in a logfile
    */
-  public static PolygonShapeConstructionState get_instance(
+  public static PolygonShapeConstructionState getInstance(
       FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     return new PolygonShapeConstructionState(p_location, p_parent_state, p_board_handling);
   }
@@ -29,7 +29,7 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
   /** Inserts the polygon shape item into the board, if possible and returns to the main state */
   @Override
   public InteractiveState complete() {
-    add_corner_for_snap_angle();
+    addCornerForSnapAngle();
     int cornerCount = cornerList.size();
     boolean constructionSucceeded = cornerCount > 2;
     if (constructionSucceeded) {
@@ -39,45 +39,45 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
         cornerArr[i] = it.next();
       }
       PolygonShape obstacleShape = new PolygonShape(cornerArr);
-      int clClass = BoardRules.clearance_class_none();
-      if (obstacleShape.split_to_convex() == null) {
+      int clClass = BoardRules.clearanceClassNone();
+      if (obstacleShape.splitToConvex() == null) {
         // shape is invalid, maybe it has selfintersections
         constructionSucceeded = false;
       } else {
         constructionSucceeded =
-            hdlg.get_routing_board()
-                .check_shape(
-                    obstacleShape, hdlg.getInteractiveSettings().get_layer(), new int[0], clClass);
+            hdlg.getRoutingBoard()
+                .checkShape(
+                    obstacleShape, hdlg.getInteractiveSettings().getLayer(), new int[0], clClass);
       }
       if (constructionSucceeded) {
-        this.observersActivated = !hdlg.get_routing_board().observers_active();
+        this.observersActivated = !hdlg.getRoutingBoard().observersActive();
         if (this.observersActivated) {
-          hdlg.get_routing_board().start_notify_observers();
+          hdlg.getRoutingBoard().startNotifyObservers();
         }
-        hdlg.get_routing_board().generate_snapshot();
-        hdlg.get_routing_board()
-            .insert_obstacle(
+        hdlg.getRoutingBoard().generateSnapshot();
+        hdlg.getRoutingBoard()
+            .insertObstacle(
                 obstacleShape,
-                hdlg.getInteractiveSettings().get_layer(),
+                hdlg.getInteractiveSettings().getLayer(),
                 clClass,
                 FixedState.UNFIXED);
-        hdlg.get_routing_board().end_notify_observers();
+        hdlg.getRoutingBoard().endNotifyObservers();
         if (this.observersActivated) {
-          hdlg.get_routing_board().end_notify_observers();
+          hdlg.getRoutingBoard().endNotifyObservers();
           this.observersActivated = false;
         }
       }
     }
     if (constructionSucceeded) {
-      hdlg.screenMessages.set_status_message(tm.getText("keepout_successful_completed"));
+      hdlg.screenMessages.setStatusMessage(tm.getText("keepout_successful_completed"));
     } else {
-      hdlg.screenMessages.set_status_message(tm.getText("keepout_cancelled_because_of_overlaps"));
+      hdlg.screenMessages.setStatusMessage(tm.getText("keepout_cancelled_because_of_overlaps"));
     }
     return this.returnState;
   }
 
   @Override
-  public void display_default_message() {
-    hdlg.screenMessages.set_status_message(tm.getText("creating_polygonshape"));
+  public void displayDefaultMessage() {
+    hdlg.screenMessages.setStatusMessage(tm.getText("creating_polygonshape"));
   }
 }

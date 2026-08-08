@@ -16,7 +16,7 @@ public class LayerStructure implements Serializable {
    * Returns the index of the layer with the name p_name in the array arr, -1, if arr contains no
    * layer with name p_name.
    */
-  public int get_no(String p_name) {
+  public int getNo(String p_name) {
     for (int i = 0; i < arr.length; i++) {
       if (p_name.equals(arr[i].name)) {
         return i;
@@ -26,7 +26,7 @@ public class LayerStructure implements Serializable {
   }
 
   /** Returns the index of p_layer in the array arr, or -1, if arr does not contain p_layer. */
-  public int get_no(Layer p_layer) {
+  public int getNo(Layer p_layer) {
     for (int i = 0; i < arr.length; i++) {
       if (p_layer == arr[i]) {
         return i;
@@ -36,7 +36,7 @@ public class LayerStructure implements Serializable {
   }
 
   /** Returns the count of signal layers of this layerStructure. */
-  public int signal_layer_count() {
+  public int signalLayerCount() {
     int foundSignalLayers = 0;
     for (int i = 0; i < arr.length; i++) {
       if (arr[i].isSignal) {
@@ -47,7 +47,7 @@ public class LayerStructure implements Serializable {
   }
 
   /** Gets the p_no-th signal layer of this layer structure. */
-  public Layer get_signal_layer(int p_no) {
+  public Layer getSignalLayer(int p_no) {
     int foundSignalLayers = 0;
     for (int i = 0; i < arr.length; i++) {
       if (arr[i].isSignal) {
@@ -61,7 +61,7 @@ public class LayerStructure implements Serializable {
   }
 
   /** Returns the count of signal layers with a smaller number than p_layer */
-  public int get_signal_layer_no(Layer p_layer) {
+  public int getSignalLayerNo(Layer p_layer) {
     int foundSignalLayers = 0;
     for (int i = 0; i < arr.length; i++) {
       if (arr[i] == p_layer) {
@@ -75,8 +75,8 @@ public class LayerStructure implements Serializable {
   }
 
   /** Gets the layer number of the p_signal_layer_no-th signal layer in this layer structure */
-  public int get_layer_no(int p_signal_layer_no) {
-    Layer currSignalLayer = get_signal_layer(p_signal_layer_no);
-    return get_no(currSignalLayer);
+  public int getLayerNo(int p_signal_layer_no) {
+    Layer currSignalLayer = getSignalLayer(p_signal_layer_no);
+    return getNo(currSignalLayer);
   }
 }

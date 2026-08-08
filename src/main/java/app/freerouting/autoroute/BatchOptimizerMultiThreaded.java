@@ -72,15 +72,15 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     }
   }
 
-  public int get_num_tasks() {
+  public int getNumTasks() {
     return itemIds.size();
   }
 
-  public int get_num_tasks_finished() {
+  public int getNumTasksFinished() {
     return numTasksFinished;
   }
 
-  private BoardUpdateStrategy current_board_update_strategy() {
+  private BoardUpdateStrategy currentBoardUpdateStrategy() {
     if (this.boardUpdateStrategy == BoardUpdateStrategy.HYBRID) {
       return hybridList.get(hybridIndex);
     }
@@ -88,13 +88,13 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     return this.boardUpdateStrategy;
   }
 
-  private ItemSelectionStrategy current_item_selection_strategy() {
-    return current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL
+  private ItemSelectionStrategy currentItemSelectionStrategy() {
+    return currentBoardUpdateStrategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL
         ? ItemSelectionStrategy.SEQUENTIAL
         : this.itemSelectionStrategy;
   }
 
-  synchronized void prepare_task_completion_signal() {
+  synchronized void prepareTaskCompletionSignal() {
     if (taskCompletionSignal.getCount() <= 0) {
       taskCompletionSignal = new CountDownLatch(1);
       // no other way to increase the count for repeated use
@@ -102,12 +102,12 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     }
   }
 
-  public synchronized boolean is_winning_candidate(OptimizeRouteTask task) {
+  public synchronized boolean isWinningCandidate(OptimizeRouteTask task) {
     ++numTasksFinished;
 
     ItemRouteResult r = task.getRouteResult();
 
-    result_map.put(r.item_id(), r);
+    result_map.put(r.itemId(), r);
 
     boolean won = false;
 
@@ -118,7 +118,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
         bestRouteResult = r;
 
       } else {
-        if (r.improved_over(bestRouteResult)) {
+        if (r.improvedOver(bestRouteResult)) {
           won = true;
 
           winningCandidate.clean();
@@ -129,7 +129,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
       }
     }
 
-    if (won && current_board_update_strategy() == BoardUpdateStrategy.GREEDY) {
+    if (won && currentBoardUpdateStrategy() == BoardUpdateStrategy.GREEDY) {
       replaceMasterRoutingBoardWithTheWinningCandidate(); // new tasks will copy the updated board
     }
 
@@ -140,7 +140,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
   private void replaceMasterRoutingBoardWithTheWinningCandidate() {
     this.board = winningCandidate.board;
 
-    BoardStatistics boardStatistics = this.board.get_statistics();
+    BoardStatistics boardStatistics = this.board.getStatistics();
     this.fireBoardUpdatedEvent(boardStatistics, null, this.board);
 
     this.minCumulativeTraceLength = boardStatistics.traces.totalWeightedLength;
@@ -148,7 +148,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     ++updateCount;
   }
 
-  private void prepare_next_round_of_route_items() {
+  private void prepareNextRoundOfRouteItems() {
     if (this.boardUpdateStrategy == BoardUpdateStrategy.HYBRID) {
       hybridIndex = (hybridIndex + 1) % hybridList.size();
     }
@@ -157,31 +157,31 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
 
     this.sortedRouteItems = new ReadSortedRouteItems();
 
-    if (current_item_selection_strategy() == ItemSelectionStrategy.PRIORITIZED
+    if (currentItemSelectionStrategy() == ItemSelectionStrategy.PRIORITIZED
         && !result_map.isEmpty()) {
       ArrayList<Integer> newItemIds = new ArrayList<>();
       PriorityQueue<ItemRouteResult> pq = new PriorityQueue<>();
 
       for (Item item = sortedRouteItems.next(); item != null; item = sortedRouteItems.next()) {
-        ItemRouteResult r = result_map.get(item.get_id_no());
+        ItemRouteResult r = result_map.get(item.getIdNo());
         if (r != null) { // use PriorityQueue to sort item according to route result
           pq.add(r);
         } else {
-          newItemIds.add(item.get_id_no());
+          newItemIds.add(item.getIdNo());
         }
       }
 
       for (ItemRouteResult r = pq.poll(); r != null; r = pq.poll()) {
-        itemIds.add(r.item_id());
+        itemIds.add(r.itemId());
       }
 
       itemIds.addAll(newItemIds);
     } else {
       for (Item item = sortedRouteItems.next(); item != null; item = sortedRouteItems.next()) {
-        itemIds.add(item.get_id_no());
+        itemIds.add(item.getIdNo());
       }
 
-      if (current_item_selection_strategy() == ItemSelectionStrategy.RANDOM) {
+      if (currentItemSelectionStrategy() == ItemSelectionStrategy.RANDOM) {
         Collections.shuffle(itemIds);
       }
     }
@@ -191,7 +191,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
   }
 
   @Override
-  protected float opt_route_pass(int p_pass_no, boolean p_with_preferred_directions) {
+  protected float optRoutePass(int p_pass_no, boolean p_with_preferred_directions) {
     long startTime = System.currentTimeMillis();
     updateCount = 0;
     numTasksFinished = 0;
@@ -201,7 +201,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
       winningCandidate = null;
     }
 
-    BoardStatistics boardStatisticsBefore = board.get_statistics();
+    BoardStatistics boardStatisticsBefore = board.getStatistics();
     RouterCounters routerCounters = new RouterCounters();
     routerCounters.passCount = p_pass_no;
     this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCounters, this.board);
@@ -222,7 +222,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
             + " threads.";
     FRLogger.traceEntry(optimizationPassId);
 
-    prepare_next_round_of_route_items();
+    prepareNextRoundOfRouteItems();
 
     bestRouteResult = new ItemRouteResult(-1);
     winningCandidate = null;
@@ -271,7 +271,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
 
         if (this.thread.isStopRequested()) {
           pool.shutdownNow();
-          return bestRouteResult.improvement_percentage();
+          return bestRouteResult.improvementPercentage();
         }
       }
     } catch (InterruptedException ie) {
@@ -287,11 +287,11 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
 
     if (!interrupted
         && bestRouteResult.improved()
-        && current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL) {
+        && currentBoardUpdateStrategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL) {
       replaceMasterRoutingBoardWithTheWinningCandidate();
     }
 
-    float routeImproved = bestRouteResult.improvement_percentage();
+    float routeImproved = bestRouteResult.improvementPercentage();
 
     if (this.useIncreasedRipupCosts && !bestRouteResult.improved()) {
       this.useIncreasedRipupCosts = false;
@@ -303,17 +303,17 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     float sec = (duration % 60000) / 1000.0F;
 
     String us =
-        current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL
+        currentBoardUpdateStrategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL
             ? "Global Optimal"
             : "Greedy";
     String is =
-        current_item_selection_strategy() == ItemSelectionStrategy.SEQUENTIAL
+        currentItemSelectionStrategy() == ItemSelectionStrategy.SEQUENTIAL
             ? "Sequential"
-            : (current_item_selection_strategy() == ItemSelectionStrategy.RANDOM
+            : (currentItemSelectionStrategy() == ItemSelectionStrategy.RANDOM
                 ? "Random"
                 : "Prioritized");
 
-    BoardStatistics boardStatisticsAfter = board.get_statistics();
+    BoardStatistics boardStatisticsAfter = board.getStatistics();
     this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, this.board);
 
     job.logDebug(
@@ -338,11 +338,11 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
             + ", interrupted: "
             + interrupted
             + ", via count: "
-            + bestRouteResult.via_count()
+            + bestRouteResult.viaCount()
             + ", trace length: "
             + boardStatisticsAfter.traces.totalLength
             + ", via count delta: "
-            + (boardStatisticsBefore.items.viaCount - bestRouteResult.via_count())
+            + (boardStatisticsBefore.items.viaCount - bestRouteResult.viaCount())
             + ", trace length delta: "
             + (boardStatisticsBefore.traces.totalLength - boardStatisticsAfter.traces.totalLength)
             + ".");
@@ -353,6 +353,6 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
   }
 
   public double getWinningCandidateScore() {
-    return this.board.get_statistics().traces.totalLength;
+    return this.board.getStatistics().traces.totalLength;
   }
 }

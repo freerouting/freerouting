@@ -11,37 +11,37 @@ class StoppableThreadTest {
   void testStopRequest() {
     TestStoppableThread thread = new TestStoppableThread();
     assertFalse(thread.isStopRequested());
-    assertFalse(thread.is_stop_auto_router_requested());
+    assertFalse(thread.isStopAutoRouterRequested());
 
     thread.requestStop();
     assertTrue(thread.isStopRequested());
-    assertTrue(thread.is_stop_auto_router_requested());
+    assertTrue(thread.isStopAutoRouterRequested());
   }
 
   @Test
   void testStopAutoRouterRequest() {
     TestStoppableThread thread = new TestStoppableThread();
     assertFalse(thread.isStopRequested());
-    assertFalse(thread.is_stop_auto_router_requested());
+    assertFalse(thread.isStopAutoRouterRequested());
 
-    thread.request_stop_auto_router();
+    thread.requestStopAutoRouter();
     assertFalse(thread.isStopRequested());
-    assertTrue(thread.is_stop_auto_router_requested());
+    assertTrue(thread.isStopAutoRouterRequested());
   }
 
   @Test
   void testStopRequestOverridesAutoRouterRequest() {
     TestStoppableThread thread = new TestStoppableThread();
-    thread.request_stop_auto_router();
+    thread.requestStopAutoRouter();
     thread.requestStop();
     assertTrue(thread.isStopRequested());
-    assertTrue(thread.is_stop_auto_router_requested());
+    assertTrue(thread.isStopAutoRouterRequested());
   }
 
   private static class TestStoppableThread extends StoppableThread {
 
     @Override
-    protected void thread_action() {
+    protected void threadAction() {
       // Do nothing
     }
   }

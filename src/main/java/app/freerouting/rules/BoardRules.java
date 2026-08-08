@@ -61,29 +61,29 @@ public class BoardRules implements Serializable {
   }
 
   /** Gets the default item clearance class */
-  public static int default_clearance_class() {
+  public static int defaultClearanceClass() {
     return 1;
   }
 
   /** For items with no clearances */
-  public static int clearance_class_none() {
+  public static int clearanceClassNone() {
     return 0;
   }
 
   /** Returns the trace halfwidth used for routing with the input net on the input layer. */
-  public int get_trace_half_width(int p_net_no, int p_layer) {
+  public int getTraceHalfWidth(int p_net_no, int p_layer) {
     Net currNet = nets.get(p_net_no);
-    return currNet.getNetClass().get_trace_half_width(p_layer);
+    return currNet.getNetClass().getTraceHalfWidth(p_layer);
   }
 
   /**
    * Returns true, if the trace widths used for routing for the input net are equal on all layers.
    * If p_net_no {@literal <} 0, the default trace widths for all nets are checked.
    */
-  public boolean trace_widths_are_layer_dependent(int p_net_no) {
-    int compareWidth = get_trace_half_width(p_net_no, 0);
+  public boolean traceWidthsAreLayerDependent(int p_net_no) {
+    int compareWidth = getTraceHalfWidth(p_net_no, 0);
     for (int i = 1; i < this.layerStructure.arr.length; i++) {
-      if (get_trace_half_width(p_net_no, i) != compareWidth) {
+      if (getTraceHalfWidth(p_net_no, i) != compareWidth) {
         return true;
       }
     }
@@ -91,70 +91,70 @@ public class BoardRules implements Serializable {
   }
 
   /** Returns he smallest of all default trace half widths */
-  public int get_min_trace_half_width() {
+  public int getMinTraceHalfWidth() {
     return minTraceHalfWidth;
   }
 
   /** Returns he biggest of all default trace half widths */
-  public int get_max_trace_half_width() {
+  public int getMaxTraceHalfWidth() {
     return maxTraceHalfWidth;
   }
 
-  public int get_hole_clearance() {
+  public int getHoleClearance() {
     return holeClearance;
   }
 
-  public void set_hole_clearance(int p_value) {
+  public void setHoleClearance(int p_value) {
     this.holeClearance = Math.max(0, p_value);
   }
 
   /** Changes the default trace halfwidth used for routing on the input layer. */
-  public void set_default_trace_half_width(int p_layer, int p_value) {
-    this.get_default_net_class().set_trace_half_width(p_layer, p_value);
+  public void setDefaultTraceHalfWidth(int p_layer, int p_value) {
+    this.getDefaultNetClass().setTraceHalfWidth(p_layer, p_value);
     minTraceHalfWidth = Math.min(minTraceHalfWidth, p_value);
     maxTraceHalfWidth = Math.max(maxTraceHalfWidth, p_value);
   }
 
-  public int get_default_trace_half_width(int p_layer) {
-    return this.get_default_net_class().get_trace_half_width(p_layer);
+  public int getDefaultTraceHalfWidth(int p_layer) {
+    return this.getDefaultNetClass().getTraceHalfWidth(p_layer);
   }
 
   /** Changes the default trace halfwidth used for routing on all layers to the input value. */
-  public void set_default_trace_half_widths(int p_value) {
+  public void setDefaultTraceHalfWidths(int p_value) {
     if (p_value <= 0) {
       FRLogger.warn("BoardRules.set_trace_half_widths: p_value out of range");
       return;
     }
-    this.get_default_net_class().set_trace_half_width(p_value);
+    this.getDefaultNetClass().setTraceHalfWidth(p_value);
     minTraceHalfWidth = Math.min(minTraceHalfWidth, p_value);
     maxTraceHalfWidth = Math.max(maxTraceHalfWidth, p_value);
   }
 
   /** Returns the net rule used for all nets, for which no special rrule was set. */
-  public NetClass get_default_net_class() {
+  public NetClass getDefaultNetClass() {
     if (this.netClasses.count() <= 0) {
       // net rules not yet initialized
-      this.create_default_net_class();
+      this.createDefaultNetClass();
     }
     return this.netClasses.get(0);
   }
 
   /** Returns an empty new net rule with an internally created name. */
-  public NetClass get_new_net_class() {
+  public NetClass getNewNetClass() {
     NetClass result = this.netClasses.append(this.layerStructure, this.clearanceMatrix);
-    result.set_trace_clearance_class(this.get_default_net_class().get_trace_clearance_class());
-    result.set_via_rule(this.get_default_via_rule());
-    result.set_trace_half_width(this.get_default_net_class().get_trace_half_width(0));
+    result.setTraceClearanceClass(this.getDefaultNetClass().getTraceClearanceClass());
+    result.setViaRule(this.getDefaultViaRule());
+    result.setTraceHalfWidth(this.getDefaultNetClass().getTraceHalfWidth(0));
     return result;
   }
 
   /** Returns an empty new net rule with an internally created name. */
-  public NetClass get_new_net_class(String p_name) {
+  public NetClass getNewNetClass(String p_name) {
     NetClass result =
         this.netClasses.append(p_name, this.layerStructure, this.clearanceMatrix, false);
-    result.set_trace_clearance_class(this.get_default_net_class().get_trace_clearance_class());
-    result.set_via_rule(this.get_default_via_rule());
-    result.set_trace_half_width(this.get_default_net_class().get_trace_half_width(0));
+    result.setTraceClearanceClass(this.getDefaultNetClass().getTraceClearanceClass());
+    result.setViaRule(this.getDefaultViaRule());
+    result.setTraceHalfWidth(this.getDefaultNetClass().getTraceHalfWidth(0));
     return result;
   }
 
@@ -162,7 +162,7 @@ public class BoardRules implements Serializable {
    * Create a default via rule for p_net_class with name p_name. If more than one via infos with the
    * same layer range are found, only the via info with the smallest pad size is inserted.
    */
-  public void create_default_via_rule(NetClass p_net_class, String p_name) {
+  public void createDefaultViaRule(NetClass p_net_class, String p_name) {
     if (this.viaInfos.count() == 0) {
       return;
     }
@@ -172,44 +172,44 @@ public class BoardRules implements Serializable {
         p_net_class.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.VIA);
     for (int i = 0; i < this.viaInfos.count(); i++) {
       ViaInfo currViaInfo = this.viaInfos.get(i);
-      if (currViaInfo.get_clearance_class() == defaultViaClClass) {
-        Padstack currPadstack = currViaInfo.get_padstack();
-        int currFromLayer = currPadstack.from_layer();
-        int currToLayer = currPadstack.to_layer();
-        ViaInfo existingVia = defaultRule.get_layer_range(currFromLayer, currToLayer);
+      if (currViaInfo.getClearanceClass() == defaultViaClClass) {
+        Padstack currPadstack = currViaInfo.getPadstack();
+        int currFromLayer = currPadstack.fromLayer();
+        int currToLayer = currPadstack.toLayer();
+        ViaInfo existingVia = defaultRule.getLayerRange(currFromLayer, currToLayer);
         if (existingVia != null) {
-          ConvexShape newShape = currPadstack.get_shape(currFromLayer);
-          ConvexShape existingShape = existingVia.get_padstack().get_shape(currFromLayer);
-          if (newShape.max_width() < existingShape.max_width()) {
+          ConvexShape newShape = currPadstack.getShape(currFromLayer);
+          ConvexShape existingShape = existingVia.getPadstack().getShape(currFromLayer);
+          if (newShape.maxWidth() < existingShape.maxWidth()) {
             // The via with the smallest pad shape is preferred
-            defaultRule.remove_via(existingVia);
-            defaultRule.append_via(currViaInfo);
+            defaultRule.removeVia(existingVia);
+            defaultRule.appendVia(currViaInfo);
           }
         } else {
-          defaultRule.append_via(currViaInfo);
+          defaultRule.appendVia(currViaInfo);
         }
       }
     }
     this.viaRules.add(defaultRule);
-    p_net_class.set_via_rule(defaultRule);
+    p_net_class.setViaRule(defaultRule);
   }
 
-  public void create_default_net_class() {
+  public void createDefaultNetClass() {
     // add the default net rule
     NetClass defaultNetClass =
         this.netClasses.append("default", this.layerStructure, this.clearanceMatrix, false);
     int defaultTraceHalfWidth = 1500;
-    defaultNetClass.set_trace_half_width(defaultTraceHalfWidth);
-    defaultNetClass.set_trace_clearance_class(1);
+    defaultNetClass.setTraceHalfWidth(defaultTraceHalfWidth);
+    defaultNetClass.setTraceClearanceClass(1);
   }
 
   /** Appends a new net class initialized with default data and a default name. */
-  public NetClass append_net_class() {
+  public NetClass appendNetClass() {
     NetClass newClass = this.netClasses.append(this.layerStructure, this.clearanceMatrix);
     NetClass defaultClass = this.netClasses.get(0);
-    newClass.set_via_rule(defaultClass.get_via_rule());
-    newClass.set_trace_half_width(defaultClass.get_trace_half_width(0));
-    newClass.set_trace_clearance_class(defaultClass.get_trace_clearance_class());
+    newClass.setViaRule(defaultClass.getViaRule());
+    newClass.setTraceHalfWidth(defaultClass.getTraceHalfWidth(0));
+    newClass.setTraceClearanceClass(defaultClass.getTraceClearanceClass());
     return newClass;
   }
 
@@ -217,7 +217,7 @@ public class BoardRules implements Serializable {
    * Appends a new net class initialized with default data and returns that class. If a class with
    * p_name exists, this class is returned without appending a new class.
    */
-  public NetClass append_net_class(String p_name) {
+  public NetClass appendNetClass(String p_name) {
     NetClass foundClass = this.netClasses.get(p_name);
     if (foundClass != null) {
       return foundClass;
@@ -227,14 +227,14 @@ public class BoardRules implements Serializable {
     NetClass defaultClass = this.netClasses.get(0);
     newClass.defaultItemClearanceClasses =
         new DefaultItemClearanceClasses(defaultClass.defaultItemClearanceClasses);
-    newClass.set_via_rule(defaultClass.get_via_rule());
-    newClass.set_trace_half_width(defaultClass.get_trace_half_width(0));
-    newClass.set_trace_clearance_class(defaultClass.get_trace_clearance_class());
+    newClass.setViaRule(defaultClass.getViaRule());
+    newClass.setTraceHalfWidth(defaultClass.getTraceHalfWidth(0));
+    newClass.setTraceClearanceClass(defaultClass.getTraceClearanceClass());
     return newClass;
   }
 
   /** Returns the default via rule for routing or null, if no via rule exists. */
-  public ViaRule get_default_via_rule() {
+  public ViaRule getDefaultViaRule() {
     if (this.viaRules.isEmpty()) {
       return null;
     }
@@ -242,7 +242,7 @@ public class BoardRules implements Serializable {
   }
 
   /** Returns the via rule with name p_name, or null, if no such rule exists. */
-  public ViaRule get_via_rule(String p_name) {
+  public ViaRule getViaRule(String p_name) {
     for (ViaRule currRule : viaRules) {
       if (currRule.name.equals(p_name)) {
         return currRule;
@@ -254,18 +254,18 @@ public class BoardRules implements Serializable {
   /**
    * Changes the clearance class index of all objects on the board with index p_from_no to p_to_no.
    */
-  public void change_clearance_class_no(
+  public void changeClearanceClassNo(
       int p_from_no, int p_to_no, Collection<Item> p_board_items) {
     for (Item currItem : p_board_items) {
-      if (currItem.clearance_class_no() == p_from_no) {
-        currItem.set_clearance_class_no(p_to_no);
+      if (currItem.clearanceClassNo() == p_from_no) {
+        currItem.setClearanceClassNo(p_to_no);
       }
     }
 
     for (int i = 0; i < this.netClasses.count(); i++) {
       NetClass currNetClass = this.netClasses.get(i);
-      if (currNetClass.get_trace_clearance_class() == p_from_no) {
-        currNetClass.set_trace_clearance_class(p_to_no);
+      if (currNetClass.getTraceClearanceClass() == p_from_no) {
+        currNetClass.setTraceClearanceClass(p_to_no);
       }
       for (DefaultItemClearanceClasses.ItemClass curr_item_class :
           DefaultItemClearanceClasses.ItemClass.values()) {
@@ -277,8 +277,8 @@ public class BoardRules implements Serializable {
 
     for (int i = 0; i < this.viaInfos.count(); i++) {
       ViaInfo currVia = this.viaInfos.get(i);
-      if (currVia.get_clearance_class() == p_from_no) {
-        currVia.set_clearance_class(p_to_no);
+      if (currVia.getClearanceClass() == p_from_no) {
+        currVia.setClearanceClass(p_to_no);
       }
     }
   }
@@ -287,15 +287,15 @@ public class BoardRules implements Serializable {
    * Removes the clearance class with number p_index. Returns false, if that was not possible,
    * because there were still items assigned to this class.
    */
-  public boolean remove_clearance_class(int p_index, Collection<Item> p_board_items) {
+  public boolean removeClearanceClass(int p_index, Collection<Item> p_board_items) {
     for (Item currItem : p_board_items) {
-      if (currItem.clearance_class_no() == p_index) {
+      if (currItem.clearanceClassNo() == p_index) {
         return false;
       }
     }
     for (int i = 0; i < this.netClasses.count(); i++) {
       NetClass currNetClass = this.netClasses.get(i);
-      if (currNetClass.get_trace_clearance_class() == p_index) {
+      if (currNetClass.getTraceClearanceClass() == p_index) {
         return false;
       }
       for (DefaultItemClearanceClasses.ItemClass curr_item_class :
@@ -308,21 +308,21 @@ public class BoardRules implements Serializable {
 
     for (int i = 0; i < this.viaInfos.count(); i++) {
       ViaInfo currVia = this.viaInfos.get(i);
-      if (currVia.get_clearance_class() == p_index) {
+      if (currVia.getClearanceClass() == p_index) {
         return false;
       }
     }
 
     for (Item currItem : p_board_items) {
-      if (currItem.clearance_class_no() > p_index) {
-        currItem.set_clearance_class_no(currItem.clearance_class_no() - 1);
+      if (currItem.clearanceClassNo() > p_index) {
+        currItem.setClearanceClassNo(currItem.clearanceClassNo() - 1);
       }
     }
 
     for (int i = 0; i < this.netClasses.count(); i++) {
       NetClass currNetClass = this.netClasses.get(i);
-      if (currNetClass.get_trace_clearance_class() > p_index) {
-        currNetClass.set_trace_clearance_class(currNetClass.get_trace_clearance_class() - 1);
+      if (currNetClass.getTraceClearanceClass() > p_index) {
+        currNetClass.setTraceClearanceClass(currNetClass.getTraceClearanceClass() - 1);
       }
       for (DefaultItemClearanceClasses.ItemClass curr_item_class :
           DefaultItemClearanceClasses.ItemClass.values()) {
@@ -335,11 +335,11 @@ public class BoardRules implements Serializable {
 
     for (int i = 0; i < this.viaInfos.count(); i++) {
       ViaInfo currVia = this.viaInfos.get(i);
-      if (currVia.get_clearance_class() > p_index) {
-        currVia.set_clearance_class(currVia.get_clearance_class() - 1);
+      if (currVia.getClearanceClass() > p_index) {
+        currVia.setClearanceClass(currVia.getClearanceClass() - 1);
       }
     }
-    this.clearanceMatrix.remove_class(p_index);
+    this.clearanceMatrix.removeClass(p_index);
     return true;
   }
 
@@ -348,7 +348,7 @@ public class BoardRules implements Serializable {
    * por a pin with connection restrictions. If the result is {@literal <}= 0, there are no exit
    * restrictions.
    */
-  public double get_pin_edge_to_turn_dist() {
+  public double getPinEdgeToTurnDist() {
     return this.pinEdgeToTurnDist;
   }
 
@@ -357,27 +357,27 @@ public class BoardRules implements Serializable {
    * pin with connection restrictions. if p_value is {@literal <}= 0, there are no exit
    * restrictions.
    */
-  public void set_pin_edge_to_turn_dist(double p_value) {
+  public void setPinEdgeToTurnDist(double p_value) {
     this.pinEdgeToTurnDist = p_value;
   }
 
   /** If true, the router ignores conduction areas. */
-  public boolean get_ignore_conduction() {
+  public boolean getIgnoreConduction() {
     return this.ignoreConduction;
   }
 
   /** Tells the router, if conduction areas should be ignored. */
-  public void set_ignore_conduction(boolean p_value) {
+  public void setIgnoreConduction(boolean p_value) {
     this.ignoreConduction = p_value;
   }
 
   /** The angle restriction for traces: 90 degree, 45 degree or none. */
-  public AngleRestriction get_trace_angle_restriction() {
+  public AngleRestriction getTraceAngleRestriction() {
     return this.traceAngleRestriction;
   }
 
   /** Sets the angle restriction for traces: 90 degree, 45 degree or none. */
-  public void set_trace_angle_restriction(AngleRestriction p_angle_restriction) {
+  public void setTraceAngleRestriction(AngleRestriction p_angle_restriction) {
     this.traceAngleRestriction = p_angle_restriction;
   }
 
@@ -386,7 +386,7 @@ public class BoardRules implements Serializable {
    * of type IntBox are used in 90 degree autorouting and shapes of type IntOctagon are used in 45
    * degree autorouting.
    */
-  public boolean get_use_slow_autoroute_algorithm() {
+  public boolean getUseSlowAutorouteAlgorithm() {
     return useSlowAutorouteAlgorithm;
   }
 
@@ -395,24 +395,24 @@ public class BoardRules implements Serializable {
    * of type IntBox are used in 90 degree autorouting and shapes of type IntOctagon are used in 45
    * degree autorouting.
    */
-  public void set_use_slow_autoroute_algorithm(boolean p_value) {
+  public void setUseSlowAutorouteAlgorithm(boolean p_value) {
     useSlowAutorouteAlgorithm = p_value;
   }
 
   /** Returns the Maximum of the diameter of the default via on its first and last layer. */
-  public double get_default_via_diameter() {
-    ViaRule defaultViaRule = this.get_default_via_rule();
+  public double getDefaultViaDiameter() {
+    ViaRule defaultViaRule = this.getDefaultViaRule();
     if (defaultViaRule == null) {
       return 0;
     }
-    if (defaultViaRule.via_count() <= 0) {
+    if (defaultViaRule.viaCount() <= 0) {
       return 0;
     }
-    Padstack viaPadstack = defaultViaRule.get_via(0).get_padstack();
-    ConvexShape currShape = viaPadstack.get_shape(viaPadstack.from_layer());
-    double result = currShape.max_width();
-    currShape = viaPadstack.get_shape(viaPadstack.to_layer());
-    return Math.max(result, currShape.max_width());
+    Padstack viaPadstack = defaultViaRule.getVia(0).getPadstack();
+    ConvexShape currShape = viaPadstack.getShape(viaPadstack.fromLayer());
+    double result = currShape.maxWidth();
+    currShape = viaPadstack.getShape(viaPadstack.toLayer());
+    return Math.max(result, currShape.maxWidth());
   }
 
   /** Writes an instance of this class to a file */

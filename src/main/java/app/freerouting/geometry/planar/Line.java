@@ -32,7 +32,7 @@ public class Line implements Comparable<Line>, Serializable {
   /** creates a directed Line from a Point and a Direction */
   public Line(Point p_a, Direction p_dir) {
     a = p_a;
-    b = p_a.translate_by(p_dir.get_vector());
+    b = p_a.translateBy(p_dir.getVector());
     dir = p_dir;
     if (!(a instanceof IntPoint && b instanceof IntPoint)) {
       FRLogger.warn("Line(p_a, p_dir) only implemented for IntPoints till now");
@@ -40,14 +40,14 @@ public class Line implements Comparable<Line>, Serializable {
   }
 
   /** create a directed line from an IntPoint and an IntDirection */
-  public static Line get_instance(Point p_a, Direction p_dir) {
-    Point b = p_a.translate_by(p_dir.get_vector());
+  public static Line getInstance(Point p_a, Direction p_dir) {
+    Point b = p_a.translateBy(p_dir.getVector());
     return new Line(p_a, b);
   }
 
   /** returns true, if this and p_ob define the same line */
-  public int get_id_no() {
-    return 31 * a.get_id_no() + b.get_id_no();
+  public int getIdNo() {
+    return 31 * a.getIdNo() + b.getIdNo();
   }
 
   @Override
@@ -61,7 +61,7 @@ public class Line implements Comparable<Line>, Serializable {
     if (!(p_ob instanceof Line other)) {
       return false;
     }
-    if (side_of(other.a) != Side.COLLINEAR) {
+    if (sideOf(other.a) != Side.COLLINEAR) {
       return false;
     }
     return direction().equals(other.direction());
@@ -71,7 +71,7 @@ public class Line implements Comparable<Line>, Serializable {
    * Returns true, if this and p_other define the same line. Is designed for good performance, but
    * works only for lines consisting of IntPoints.
    */
-  public final boolean fast_equals(Line p_other) {
+  public final boolean fastEquals(Line p_other) {
     IntPoint thisA = (IntPoint) a;
     IntPoint thisB = (IntPoint) b;
     IntPoint otherA = (IntPoint) p_other.a;
@@ -89,8 +89,8 @@ public class Line implements Comparable<Line>, Serializable {
   /** get the direction of this directed line */
   public Direction direction() {
     if (dir == null) {
-      Vector d = b.difference_by(a);
-      dir = Direction.get_instance(d);
+      Vector d = b.differenceBy(a);
+      dir = Direction.getInstance(d);
     }
     return dir;
   }
@@ -100,8 +100,8 @@ public class Line implements Comparable<Line>, Serializable {
    * Side.ON_THE_RIGHT, if this Line is on the right of p_point and Side.COLLINEAR, if this Line
    * contains p_point.
    */
-  public Side side_of(Point p_point) {
-    Side result = p_point.side_of(this);
+  public Side sideOf(Point p_point) {
+    Side result = p_point.sideOf(this);
     return result.negate();
   }
 
@@ -110,7 +110,7 @@ public class Line implements Comparable<Line>, Serializable {
    * Side.ON_THE_LEFT, if this line is on the left of p_point, or Side.ON_THE_RIGHT, if this line is
    * on the right of p_point,
    */
-  public Side side_of(FloatPoint p_point, double p_tolerance) {
+  public Side sideOf(FloatPoint p_point, double p_tolerance) {
     // only implemented for IntPoint lines for performance reasons
     IntPoint thisA = (IntPoint) a;
     IntPoint thisB = (IntPoint) b;
@@ -132,8 +132,8 @@ public class Line implements Comparable<Line>, Serializable {
    * returns Side.ON_THE_LEFT, if this line is on the left of p_point, Side.ON_THE_RIGHT, if this
    * line is on the right of p_point, Side.COLLINEAR otherwise.
    */
-  public Side side_of(FloatPoint p_point) {
-    return side_of(p_point, 0);
+  public Side sideOf(FloatPoint p_point) {
+    return sideOf(p_point, 0);
   }
 
   /**
@@ -141,24 +141,24 @@ public class Line implements Comparable<Line>, Serializable {
    * Side.ON_THE_RIGHT, if this line is on the right of the intersection, and Side.COLLINEAR, if all
    * 3 lines intersect in exactly 1 point.
    */
-  public Side side_of_intersection(Line p_1, Line p_2) {
+  public Side sideOfIntersection(Line p_1, Line p_2) {
 
-    FloatPoint intersectionApprox = p_1.intersection_approx(p_2);
-    Side result = this.side_of(intersectionApprox, 1.0);
+    FloatPoint intersectionApprox = p_1.intersectionApprox(p_2);
+    Side result = this.sideOf(intersectionApprox, 1.0);
     if (result == Side.COLLINEAR) {
       // Previous calculation was with FloatPoints and a tolerance
       // for performance reasons. Make an exact check for
       // collinearity now with class Point instead of FloatPoint.
       Point intersection = p_1.intersection(p_2);
-      result = this.side_of(intersection);
+      result = this.sideOf(intersection);
     }
     return result;
   }
 
   /** Looks, if all interior points of p_tile are on the right side of this line. */
-  public boolean is_on_the_left(TileShape p_tile) {
-    for (int i = 0; i < p_tile.border_line_count(); i++) {
-      if (this.side_of(p_tile.corner(i)) == Side.ON_THE_RIGHT) {
+  public boolean isOnTheLeft(TileShape p_tile) {
+    for (int i = 0; i < p_tile.borderLineCount(); i++) {
+      if (this.sideOf(p_tile.corner(i)) == Side.ON_THE_RIGHT) {
         return false;
       }
     }
@@ -166,9 +166,9 @@ public class Line implements Comparable<Line>, Serializable {
   }
 
   /** Looks, if all interior points of p_tile are on the left side of this line. */
-  public boolean is_on_the_right(TileShape p_tile) {
-    for (int i = 0; i < p_tile.border_line_count(); i++) {
-      if (this.side_of(p_tile.corner(i)) == Side.ON_THE_LEFT) {
+  public boolean isOnTheRight(TileShape p_tile) {
+    for (int i = 0; i < p_tile.borderLineCount(); i++) {
+      if (this.sideOf(p_tile.corner(i)) == Side.ON_THE_LEFT) {
         return false;
       }
     }
@@ -179,7 +179,7 @@ public class Line implements Comparable<Line>, Serializable {
    * Returns the signed distance of this line from p_point. The result will be positive, if the line
    * is on the left of p_point, else negative.
    */
-  public double signed_distance(FloatPoint p_point) {
+  public double signedDistance(FloatPoint p_point) {
     // only implemented for IntPoint lines for performance reasons
     IntPoint thisA = (IntPoint) a;
     IntPoint thisB = (IntPoint) b;
@@ -195,7 +195,7 @@ public class Line implements Comparable<Line>, Serializable {
    * returns true, if the 2 lines define the same set of points, but may have opposite directions
    */
   public boolean overlaps(Line p_other) {
-    return side_of(p_other.a) == Side.COLLINEAR && side_of(p_other.b) == Side.COLLINEAR;
+    return sideOf(p_other.a) == Side.COLLINEAR && sideOf(p_other.b) == Side.COLLINEAR;
   }
 
   /** Returns the line defining the same set of points, but with opposite direction */
@@ -211,8 +211,8 @@ public class Line implements Comparable<Line>, Serializable {
     // this function is at the moment only implemented for lines
     // consisting of IntPoints.
     // The general implementation is still missing.
-    IntVector delta1 = (IntVector) b.difference_by(a);
-    IntVector delta2 = (IntVector) p_other.b.difference_by(p_other.a);
+    IntVector delta1 = (IntVector) b.differenceBy(a);
+    IntVector delta2 = (IntVector) p_other.b.differenceBy(p_other.a);
     // Separate handling for orthogonal and 45 degree lines for better performance
     if (delta1.x == 0) // this line is vertical
     {
@@ -314,7 +314,7 @@ public class Line implements Comparable<Line>, Serializable {
    * parallel the result coordinates will be Integer.MAX_VALUE. Useful in situations where
    * performance is more important than accuracy.
    */
-  public FloatPoint intersection_approx(Line p_other) {
+  public FloatPoint intersectionApprox(Line p_other) {
     // this function is at the moment only implemented for lines
     // consisting of IntPoints.
     // The general implementation is still missing.
@@ -342,8 +342,8 @@ public class Line implements Comparable<Line>, Serializable {
   }
 
   /** returns the perpendicular projection of p_point onto this line */
-  public Point perpendicular_projection(Point p_point) {
-    return p_point.perpendicular_projection(this);
+  public Point perpendicularProjection(Point p_point) {
+    return p_point.perpendicularProjection(this);
   }
 
   /**
@@ -355,7 +355,7 @@ public class Line implements Comparable<Line>, Serializable {
     // consisting of IntPoints.
     // The general implementation is still missing.
     IntPoint ai = (IntPoint) a;
-    IntVector v = (IntVector) direction().get_vector();
+    IntVector v = (IntVector) direction().getVector();
     double vxvx = (double) v.x * v.x;
     double vyvy = (double) v.y * v.y;
     double length = Math.sqrt(vxvx + vyvy);
@@ -369,57 +369,57 @@ public class Line implements Comparable<Line>, Serializable {
       int relY = (int) Math.round((p_dist * length) / v.x);
       newA = new IntPoint(ai.x, ai.y + relY);
     }
-    return Line.get_instance(newA, direction());
+    return Line.getInstance(newA, direction());
   }
 
   /** translates the line by p_vector */
-  public Line translate_by(Vector p_vector) {
+  public Line translateBy(Vector p_vector) {
     if (p_vector.equals(Vector.ZERO)) {
       return this;
     }
-    Point newA = a.translate_by(p_vector);
-    Point newB = b.translate_by(p_vector);
+    Point newA = a.translateBy(p_vector);
+    Point newB = b.translateBy(p_vector);
     return new Line(newA, newB);
   }
 
   /** returns true, if the line is axis_parallel */
-  public boolean is_orthogonal() {
-    return direction().is_orthogonal();
+  public boolean isOrthogonal() {
+    return direction().isOrthogonal();
   }
 
   /** returns true, if this line is diagonal */
-  public boolean is_diagonal() {
-    return direction().is_diagonal();
+  public boolean isDiagonal() {
+    return direction().isDiagonal();
   }
 
   /** returns true, if the direction of this line is a multiple of 45 degree */
-  public boolean is_multiple_of_45_degree() {
-    return direction().is_multiple_of_45_degree();
+  public boolean isMultipleOf45Degree() {
+    return direction().isMultipleOf45Degree();
   }
 
   /** checks, if this Line and p_other are parallel */
-  public boolean is_parallel(Line p_other) {
-    return this.direction().side_of(p_other.direction()) == Side.COLLINEAR;
+  public boolean isParallel(Line p_other) {
+    return this.direction().sideOf(p_other.direction()) == Side.COLLINEAR;
   }
 
   /** checks, if this Line and p_other are perpendicular */
-  public boolean is_perpendicular(Line p_other) {
-    Vector v1 = direction().get_vector();
-    Vector v2 = p_other.direction().get_vector();
+  public boolean isPerpendicular(Line p_other) {
+    Vector v1 = direction().getVector();
+    Vector v2 = p_other.direction().getVector();
     return v1.projection(v2) == Signum.ZERO;
   }
 
   /** returns true, if this and p_ob define the same line */
-  public boolean is_equal_or_opposite(Line p_other) {
+  public boolean isEqualOrOpposite(Line p_other) {
 
-    return side_of(p_other.a) == Side.COLLINEAR && side_of(p_other.b) == Side.COLLINEAR;
+    return sideOf(p_other.a) == Side.COLLINEAR && sideOf(p_other.b) == Side.COLLINEAR;
   }
 
   /** calculates the cosinus of the angle between this line and p_other */
-  public double cos_angle(Line p_other) {
-    Vector v1 = b.difference_by(a);
-    Vector v2 = p_other.b.difference_by(p_other.a);
-    return v1.cos_angle(v2);
+  public double cosAngle(Line p_other) {
+    Vector v1 = b.differenceBy(a);
+    Vector v2 = p_other.b.differenceBy(p_other.a);
+    return v1.cosAngle(v2);
   }
 
   /**
@@ -474,16 +474,16 @@ public class Line implements Comparable<Line>, Serializable {
     // open horizontal half plane
 
     double determinant = (double) dx2 * dy1 - (double) dy2 * dx1;
-    return Signum.as_int(determinant);
+    return Signum.asInt(determinant);
   }
 
   /**
    * Calculates an approximation of the function value of this line at p_x, if the line is not
    * vertical.
    */
-  public double function_value_approx(double p_x) {
-    FloatPoint p1 = a.to_float();
-    FloatPoint p2 = b.to_float();
+  public double functionValueApprox(double p_x) {
+    FloatPoint p1 = a.toFloat();
+    FloatPoint p2 = b.toFloat();
     double dx = p2.x - p1.x;
     if (dx == 0) {
       FRLogger.warn("function_value_approx: line is vertical");
@@ -498,9 +498,9 @@ public class Line implements Comparable<Line>, Serializable {
    * Calculates an approximation of the function value in y of this line at p_y, if the line is not
    * horizontal.
    */
-  public double function_in_y_value_approx(double p_y) {
-    FloatPoint p1 = a.to_float();
-    FloatPoint p2 = b.to_float();
+  public double functionInYValueApprox(double p_y) {
+    FloatPoint p1 = a.toFloat();
+    FloatPoint p2 = b.toFloat();
     double dy = p2.y - p1.y;
     if (dy == 0) {
       FRLogger.warn("function_in_y_value_approx: line is horizontal");
@@ -515,26 +515,26 @@ public class Line implements Comparable<Line>, Serializable {
    * Calculates the direction from p_from_point to the nearest point on this line to p_fro_point.
    * Returns null, if p_from_point is contained in this line.
    */
-  public Direction perpendicular_direction(Point p_from_point) {
-    Side lineSide = this.side_of(p_from_point);
+  public Direction perpendicularDirection(Point p_from_point) {
+    Side lineSide = this.sideOf(p_from_point);
     if (lineSide == Side.COLLINEAR) {
       return null;
     }
-    Direction dir1 = this.direction().turn_45_degree(2);
-    Direction dir2 = this.direction().turn_45_degree(6);
+    Direction dir1 = this.direction().turn45Degree(2);
+    Direction dir2 = this.direction().turn45Degree(6);
 
-    Point checkPoint1 = p_from_point.translate_by(dir1.get_vector());
-    if (this.side_of(checkPoint1) != lineSide) {
+    Point checkPoint1 = p_from_point.translateBy(dir1.getVector());
+    if (this.sideOf(checkPoint1) != lineSide) {
       return dir1;
     }
-    Point checkPoint2 = p_from_point.translate_by(dir2.get_vector());
-    if (this.side_of(checkPoint2) != lineSide) {
+    Point checkPoint2 = p_from_point.translateBy(dir2.getVector());
+    if (this.sideOf(checkPoint2) != lineSide) {
       return dir2;
     }
-    FloatPoint nearestLinePoint = p_from_point.to_float().projection_approx(this);
+    FloatPoint nearestLinePoint = p_from_point.toFloat().projectionApprox(this);
     Direction result;
-    if (nearestLinePoint.distance_square(checkPoint1.to_float())
-        <= nearestLinePoint.distance_square(checkPoint2.to_float())) {
+    if (nearestLinePoint.distanceSquare(checkPoint1.toFloat())
+        <= nearestLinePoint.distanceSquare(checkPoint2.toFloat())) {
       result = dir1;
     } else {
       result = dir2;
@@ -543,23 +543,23 @@ public class Line implements Comparable<Line>, Serializable {
   }
 
   /** Turns this line by p_factor times 90 degree around p_pole. */
-  public Line turn_90_degree(int p_factor, IntPoint p_pole) {
-    Point newA = a.turn_90_degree(p_factor, p_pole);
-    Point newB = b.turn_90_degree(p_factor, p_pole);
+  public Line turn90Degree(int p_factor, IntPoint p_pole) {
+    Point newA = a.turn90Degree(p_factor, p_pole);
+    Point newB = b.turn90Degree(p_factor, p_pole);
     return new Line(newA, newB);
   }
 
   /** Mirrors this line at the vertical line through p_pole */
-  public Line mirror_vertical(IntPoint p_pole) {
-    Point newA = b.mirror_vertical(p_pole);
-    Point newB = a.mirror_vertical(p_pole);
+  public Line mirrorVertical(IntPoint p_pole) {
+    Point newA = b.mirrorVertical(p_pole);
+    Point newB = a.mirrorVertical(p_pole);
     return new Line(newA, newB);
   }
 
   /** Mirrors this line at the horizontal line through p_pole */
-  public Line mirror_horizontal(IntPoint p_pole) {
-    Point newA = b.mirror_horizontal(p_pole);
-    Point newB = a.mirror_horizontal(p_pole);
+  public Line mirrorHorizontal(IntPoint p_pole) {
+    Point newA = b.mirrorHorizontal(p_pole);
+    Point newB = a.mirrorHorizontal(p_pole);
     return new Line(newA, newB);
   }
 

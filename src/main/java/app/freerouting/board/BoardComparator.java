@@ -46,8 +46,8 @@ public class BoardComparator {
     double scale2 = getMmFactor(board2);
 
     // 2. Bounding Box
-    IntBox box1 = board1.get_bounding_box();
-    IntBox box2 = board2.get_bounding_box();
+    IntBox box1 = board1.getBoundingBox();
+    IntBox box2 = board2.getBoundingBox();
     double box1LlX = box1.ll.x * scale1;
     double box1LlY = box1.ll.y * scale1;
     double box1UrX = box1.ur.x * scale1;
@@ -74,8 +74,8 @@ public class BoardComparator {
     }
 
     // 3. Layers
-    int layersCount1 = board1.get_layer_count();
-    int layersCount2 = board2.get_layer_count();
+    int layersCount1 = board1.getLayerCount();
+    int layersCount2 = board2.getLayerCount();
     if (layersCount1 != layersCount2) {
       equal = false;
       report.append(
@@ -120,10 +120,10 @@ public class BoardComparator {
 
     Map<String, Component> compMap1 = new HashMap<>();
     Map<String, Component> compMap2 = new HashMap<>();
-    for (Component c : board1.components.get_all()) {
+    for (Component c : board1.components.getAll()) {
       compMap1.put(c.name, c);
     }
-    for (Component c : board2.components.get_all()) {
+    for (Component c : board2.components.getAll()) {
       compMap2.put(c.name, c);
     }
 
@@ -138,8 +138,8 @@ public class BoardComparator {
         continue;
       }
       // Compare details
-      Point p1 = c1.get_location();
-      Point p2 = c2.get_location();
+      Point p1 = c1.getLocation();
+      Point p2 = c2.getLocation();
       if (p1 == null || p2 == null) {
         if (p1 != p2) {
           equal = false;
@@ -148,10 +148,10 @@ public class BoardComparator {
                   "[-] Component '%s' placement mismatch (one is placed, one is not)\n", compName));
         }
       } else {
-        double x1 = p1.to_float().x * scale1;
-        double y1 = p1.to_float().y * scale1;
-        double x2 = p2.to_float().x * scale2;
-        double y2 = p2.to_float().y * scale2;
+        double x1 = p1.toFloat().x * scale1;
+        double y1 = p1.toFloat().y * scale1;
+        double x2 = p2.toFloat().x * scale2;
+        double y2 = p2.toFloat().y * scale2;
         if (Math.abs(x1 - x2) > epsilonMm || Math.abs(y1 - y2) > epsilonMm) {
           equal = false;
           report.append(
@@ -160,8 +160,8 @@ public class BoardComparator {
                   compName, x1, y1, x2, y2));
         }
       }
-      double rot1 = c1.get_rotation_in_degree();
-      double rot2 = c2.get_rotation_in_degree();
+      double rot1 = c1.getRotationInDegree();
+      double rot2 = c2.getRotationInDegree();
       if (Math.abs(rot1 - rot2) > 0.01) {
         equal = false;
         report.append(
@@ -169,18 +169,18 @@ public class BoardComparator {
                 "[-] Component '%s' rotation mismatch: Board 1 = %.2f, Board 2 = %.2f\n",
                 compName, rot1, rot2));
       }
-      if (c1.placed_on_front() != c2.placed_on_front()) {
+      if (c1.placedOnFront() != c2.placedOnFront()) {
         equal = false;
         report.append(
             String.format(
                 "[-] Component '%s' layer side mismatch: Board 1 Front = %b, Board 2 Front = %b\n",
-                compName, c1.placed_on_front(), c2.placed_on_front()));
+                compName, c1.placedOnFront(), c2.placedOnFront()));
       }
     }
 
     // 5. Pins
-    Collection<Pin> pins1 = board1.get_pins();
-    Collection<Pin> pins2 = board2.get_pins();
+    Collection<Pin> pins1 = board1.getPins();
+    Collection<Pin> pins2 = board2.getPins();
     if (pins1.size() != pins2.size()) {
       equal = false;
       report.append(
@@ -191,13 +191,13 @@ public class BoardComparator {
     Map<String, Pin> pinMap1 = new HashMap<>();
     Map<String, Pin> pinMap2 = new HashMap<>();
     for (Pin p : pins1) {
-      Component comp = board1.components.get(p.get_component_no());
+      Component comp = board1.components.get(p.getComponentNo());
       if (comp != null) {
         pinMap1.put(comp.name + "." + p.name(), p);
       }
     }
     for (Pin p : pins2) {
-      Component comp = board2.components.get(p.get_component_no());
+      Component comp = board2.components.get(p.getComponentNo());
       if (comp != null) {
         pinMap2.put(comp.name + "." + p.name(), p);
       }
@@ -212,12 +212,12 @@ public class BoardComparator {
             String.format("[-] Pin '%s' is present in Board 1 but missing in Board 2\n", pinKey));
         continue;
       }
-      Point c1 = p1.get_center();
-      Point c2 = p2.get_center();
-      double x1 = c1.to_float().x * scale1;
-      double y1 = c1.to_float().y * scale1;
-      double x2 = c2.to_float().x * scale2;
-      double y2 = c2.to_float().y * scale2;
+      Point c1 = p1.getCenter();
+      Point c2 = p2.getCenter();
+      double x1 = c1.toFloat().x * scale1;
+      double y1 = c1.toFloat().y * scale1;
+      double x2 = c2.toFloat().x * scale2;
+      double y2 = c2.toFloat().y * scale2;
       if (Math.abs(x1 - x2) > epsilonMm || Math.abs(y1 - y2) > epsilonMm) {
         equal = false;
         report.append(
@@ -261,15 +261,15 @@ public class BoardComparator {
       if (n2 == null) {
         continue;
       }
-      if (n1.get_pins().size() != n2.get_pins().size()) {
+      if (n1.getPins().size() != n2.getPins().size()) {
         equal = false;
         report.append(
             String.format(
                 "[-] Net '%s' pin count mismatch: Board 1 = %d, Board 2 = %d\n",
-                netName, n1.get_pins().size(), n2.get_pins().size()));
+                netName, n1.getPins().size(), n2.getPins().size()));
       }
-      String class1 = n1.getNetClass().get_name();
-      String class2 = n2.getNetClass().get_name();
+      String class1 = n1.getNetClass().getName();
+      String class2 = n2.getNetClass().getName();
       if (!Objects.equals(class1, class2)) {
         equal = false;
         report.append(
@@ -280,8 +280,8 @@ public class BoardComparator {
     }
 
     // 8. Board Items (traces, vias, conduction areas, obstacles)
-    List<Trace> tr1 = new ArrayList<>(board1.get_traces());
-    List<Trace> tr2 = new ArrayList<>(board2.get_traces());
+    List<Trace> tr1 = new ArrayList<>(board1.getTraces());
+    List<Trace> tr2 = new ArrayList<>(board2.getTraces());
     if (tr1.size() != tr2.size()) {
       equal = false;
       report.append(
@@ -297,13 +297,13 @@ public class BoardComparator {
         continue;
       }
       String netName1 = "";
-      if (pt1.net_count() > 0) {
-        Net net = board1.rules.nets.get(pt1.get_net_no(0));
+      if (pt1.netCount() > 0) {
+        Net net = board1.rules.nets.get(pt1.getNetNo(0));
         if (net != null) {
           netName1 = net.name;
         }
       }
-      double width1 = 2 * pt1.get_half_width() * scale1;
+      double width1 = 2 * pt1.getHalfWidth() * scale1;
 
       boolean foundMatch = false;
       for (int i = 0; i < tr2.size(); i++) {
@@ -314,12 +314,12 @@ public class BoardComparator {
         if (!(t2 instanceof PolylineTrace pt2)) {
           continue;
         }
-        if (pt1.get_layer() != pt2.get_layer()) {
+        if (pt1.getLayer() != pt2.getLayer()) {
           continue;
         }
         String netName2 = "";
-        if (pt2.net_count() > 0) {
-          Net net = board2.rules.nets.get(pt2.get_net_no(0));
+        if (pt2.netCount() > 0) {
+          Net net = board2.rules.nets.get(pt2.getNetNo(0));
           if (net != null) {
             netName2 = net.name;
           }
@@ -327,7 +327,7 @@ public class BoardComparator {
         if (!netName1.equalsIgnoreCase(netName2)) {
           continue;
         }
-        double width2 = 2 * pt2.get_half_width() * scale2;
+        double width2 = 2 * pt2.getHalfWidth() * scale2;
         if (Math.abs(width1 - width2) > epsilonMm) {
           continue;
         }
@@ -339,13 +339,13 @@ public class BoardComparator {
       }
       if (!foundMatch) {
         tracesAllMatched = false;
-        Point startPt = pt1.polyline().first_corner();
-        double sx = startPt.to_float().x * scale1;
-        double sy = startPt.to_float().y * scale1;
+        Point startPt = pt1.polyline().firstCorner();
+        double sx = startPt.toFloat().x * scale1;
+        double sy = startPt.toFloat().y * scale1;
         report.append(
             String.format(
                 "[-] Trace in Board 1 on layer %d of net '%s' starting at (%.4f, %.4f) mm has no matching trace in Board 2.\n",
-                pt1.get_layer(), netName1, sx, sy));
+                pt1.getLayer(), netName1, sx, sy));
       }
     }
     for (int i = 0; i < tr2.size(); i++) {
@@ -354,19 +354,19 @@ public class BoardComparator {
         Trace t2 = tr2.get(i);
         if (t2 instanceof PolylineTrace pt2) {
           String netName2 = "";
-          if (pt2.net_count() > 0) {
-            Net net = board2.rules.nets.get(pt2.get_net_no(0));
+          if (pt2.netCount() > 0) {
+            Net net = board2.rules.nets.get(pt2.getNetNo(0));
             if (net != null) {
               netName2 = net.name;
             }
           }
-          Point startPt = pt2.polyline().first_corner();
-          double sx = startPt.to_float().x * scale2;
-          double sy = startPt.to_float().y * scale2;
+          Point startPt = pt2.polyline().firstCorner();
+          double sx = startPt.toFloat().x * scale2;
+          double sy = startPt.toFloat().y * scale2;
           report.append(
               String.format(
                   "[-] Trace in Board 2 on layer %d of net '%s' starting at (%.4f, %.4f) mm has no matching trace in Board 1.\n",
-                  pt2.get_layer(), netName2, sx, sy));
+                  pt2.getLayer(), netName2, sx, sy));
         }
       }
     }
@@ -374,8 +374,8 @@ public class BoardComparator {
       equal = false;
     }
 
-    List<Via> vias1 = new ArrayList<>(board1.get_vias());
-    List<Via> vias2 = new ArrayList<>(board2.get_vias());
+    List<Via> vias1 = new ArrayList<>(board1.getVias());
+    List<Via> vias2 = new ArrayList<>(board2.getVias());
     if (vias1.size() != vias2.size()) {
       equal = false;
       report.append(
@@ -388,29 +388,29 @@ public class BoardComparator {
     boolean[] matchedVias2 = new boolean[vias2.size()];
     for (Via v1 : vias1) {
       String netName1 = "";
-      if (v1.net_count() > 0) {
-        Net net = board1.rules.nets.get(v1.get_net_no(0));
+      if (v1.netCount() > 0) {
+        Net net = board1.rules.nets.get(v1.getNetNo(0));
         if (net != null) {
           netName1 = net.name;
         }
       }
-      double cx1 = v1.get_center().to_float().x * scale1;
-      double cy1 = v1.get_center().to_float().y * scale1;
+      double cx1 = v1.getCenter().toFloat().x * scale1;
+      double cy1 = v1.getCenter().toFloat().y * scale1;
 
-      app.freerouting.core.Padstack pad1 = v1.get_padstack();
+      app.freerouting.core.Padstack pad1 = v1.getPadstack();
       int firstLayer1 = 0;
-      while (firstLayer1 < board1.get_layer_count() && pad1.get_shape(firstLayer1) == null) {
+      while (firstLayer1 < board1.getLayerCount() && pad1.getShape(firstLayer1) == null) {
         firstLayer1++;
       }
-      int lastLayer1 = board1.get_layer_count() - 1;
-      while (lastLayer1 >= 0 && pad1.get_shape(lastLayer1) == null) {
+      int lastLayer1 = board1.getLayerCount() - 1;
+      while (lastLayer1 >= 0 && pad1.getShape(lastLayer1) == null) {
         lastLayer1--;
       }
 
       double diameter1 = 0.0;
-      Shape shape1 = pad1.get_shape(firstLayer1);
+      Shape shape1 = pad1.getShape(firstLayer1);
       if (shape1 != null) {
-        diameter1 = shape1.bounding_box().width() * scale1;
+        diameter1 = shape1.boundingBox().width() * scale1;
       }
 
       boolean foundMatch = false;
@@ -419,14 +419,14 @@ public class BoardComparator {
           continue;
         }
         Via v2 = vias2.get(i);
-        double cx2 = v2.get_center().to_float().x * scale2;
-        double cy2 = v2.get_center().to_float().y * scale2;
+        double cx2 = v2.getCenter().toFloat().x * scale2;
+        double cy2 = v2.getCenter().toFloat().y * scale2;
         if (Math.abs(cx1 - cx2) > epsilonMm || Math.abs(cy1 - cy2) > epsilonMm) {
           continue;
         }
         String netName2 = "";
-        if (v2.net_count() > 0) {
-          Net net = board2.rules.nets.get(v2.get_net_no(0));
+        if (v2.netCount() > 0) {
+          Net net = board2.rules.nets.get(v2.getNetNo(0));
           if (net != null) {
             netName2 = net.name;
           }
@@ -434,22 +434,22 @@ public class BoardComparator {
         if (!netName1.equalsIgnoreCase(netName2)) {
           continue;
         }
-        app.freerouting.core.Padstack pad2 = v2.get_padstack();
+        app.freerouting.core.Padstack pad2 = v2.getPadstack();
         int firstLayer2 = 0;
-        while (firstLayer2 < board2.get_layer_count() && pad2.get_shape(firstLayer2) == null) {
+        while (firstLayer2 < board2.getLayerCount() && pad2.getShape(firstLayer2) == null) {
           firstLayer2++;
         }
-        int lastLayer2 = board2.get_layer_count() - 1;
-        while (lastLayer2 >= 0 && pad2.get_shape(lastLayer2) == null) {
+        int lastLayer2 = board2.getLayerCount() - 1;
+        while (lastLayer2 >= 0 && pad2.getShape(lastLayer2) == null) {
           lastLayer2--;
         }
         if (firstLayer1 != firstLayer2 || lastLayer1 != lastLayer2) {
           continue;
         }
         double diameter2 = 0.0;
-        Shape shape2 = pad2.get_shape(firstLayer2);
+        Shape shape2 = pad2.getShape(firstLayer2);
         if (shape2 != null) {
-          diameter2 = shape2.bounding_box().width() * scale2;
+          diameter2 = shape2.boundingBox().width() * scale2;
         }
         if (Math.abs(diameter1 - diameter2) > epsilonMm) {
           continue;
@@ -471,14 +471,14 @@ public class BoardComparator {
         viasAllMatched = false;
         Via v2 = vias2.get(i);
         String netName2 = "";
-        if (v2.net_count() > 0) {
-          Net net = board2.rules.nets.get(v2.get_net_no(0));
+        if (v2.netCount() > 0) {
+          Net net = board2.rules.nets.get(v2.getNetNo(0));
           if (net != null) {
             netName2 = net.name;
           }
         }
-        double cx2 = v2.get_center().to_float().x * scale2;
-        double cy2 = v2.get_center().to_float().y * scale2;
+        double cx2 = v2.getCenter().toFloat().x * scale2;
+        double cy2 = v2.getCenter().toFloat().y * scale2;
         report.append(
             String.format(
                 "[-] Via in Board 2 at (%.4f, %.4f) mm on net '%s' has no matching via in Board 1.\n",
@@ -494,9 +494,9 @@ public class BoardComparator {
     int condCount2 = 0;
     int obstCount1 = 0;
     int obstCount2 = 0;
-    Iterator<UndoableObjects.UndoableObjectNode> it1 = board1.itemList.start_read_object();
+    Iterator<UndoableObjects.UndoableObjectNode> it1 = board1.itemList.startReadObject();
     for (; ; ) {
-      Item item = (Item) board1.itemList.read_object(it1);
+      Item item = (Item) board1.itemList.readObject(it1);
       if (item == null) {
         break;
       }
@@ -509,9 +509,9 @@ public class BoardComparator {
         obstCount1++;
       }
     }
-    Iterator<UndoableObjects.UndoableObjectNode> it2 = board2.itemList.start_read_object();
+    Iterator<UndoableObjects.UndoableObjectNode> it2 = board2.itemList.startReadObject();
     for (; ; ) {
-      Item item = (Item) board2.itemList.read_object(it2);
+      Item item = (Item) board2.itemList.readObject(it2);
       if (item == null) {
         break;
       }
@@ -570,15 +570,15 @@ public class BoardComparator {
 
     // 8. Trace lengths match
     double traceLength1 = 0.0;
-    for (app.freerouting.board.Item item : board1.get_items()) {
+    for (app.freerouting.board.Item item : board1.getItems()) {
       if (item instanceof app.freerouting.board.Trace trace) {
-        traceLength1 += trace.get_length() * scale1;
+        traceLength1 += trace.getLength() * scale1;
       }
     }
     double traceLength2 = 0.0;
-    for (app.freerouting.board.Item item : board2.get_items()) {
+    for (app.freerouting.board.Item item : board2.getItems()) {
       if (item instanceof app.freerouting.board.Trace trace) {
-        traceLength2 += trace.get_length() * scale2;
+        traceLength2 += trace.getLength() * scale2;
       }
     }
     if (Math.abs(traceLength1 - traceLength2) > epsilonMm) {
@@ -592,15 +592,15 @@ public class BoardComparator {
     }
 
     // Conduction zone shapes and fill status match
-    Collection<ConductionArea> conds1 = board1.get_conduction_areas();
-    Collection<ConductionArea> conds2 = board2.get_conduction_areas();
+    Collection<ConductionArea> conds1 = board1.getConductionAreas();
+    Collection<ConductionArea> conds2 = board2.getConductionAreas();
     for (ConductionArea area1 : conds1) {
       ConductionArea matchArea2 = null;
       for (ConductionArea area2 : conds2) {
-        if (area2.get_layer() == area1.get_layer()
-            && Math.abs(area2.bounding_box().ll.x * scale2 - area1.bounding_box().ll.x * scale1)
+        if (area2.getLayer() == area1.getLayer()
+            && Math.abs(area2.boundingBox().ll.x * scale2 - area1.boundingBox().ll.x * scale1)
                 < epsilonMm
-            && Math.abs(area2.bounding_box().ll.y * scale2 - area1.bounding_box().ll.y * scale1)
+            && Math.abs(area2.boundingBox().ll.y * scale2 - area1.boundingBox().ll.y * scale1)
                 < epsilonMm) {
           matchArea2 = area2;
           break;
@@ -611,14 +611,14 @@ public class BoardComparator {
         report.append(
             String.format(
                 "[-] Conduction Area on layer %d at (%d,%d) in Board 1 has no match in Board 2.\n",
-                area1.get_layer(), area1.bounding_box().ll.x, area1.bounding_box().ll.y));
+                area1.getLayer(), area1.boundingBox().ll.x, area1.boundingBox().ll.y));
       } else {
-        if (area1.get_is_filled() != matchArea2.get_is_filled()) {
+        if (area1.getIsFilled() != matchArea2.getIsFilled()) {
           equal = false;
           report.append(
               String.format(
                   "[-] Conduction Area fill status mismatch on layer %d: Board 1 = %b, Board 2 = %b\n",
-                  area1.get_layer(), area1.get_is_filled(), matchArea2.get_is_filled()));
+                  area1.getLayer(), area1.getIsFilled(), matchArea2.getIsFilled()));
         }
       }
     }
@@ -644,7 +644,7 @@ public class BoardComparator {
     for (int i = 0; i < board.rules.netClasses.count(); i++) {
       NetClass netClass = board.rules.netClasses.get(i);
       if (netClass != null) {
-        map.put(netClass.get_name(), netClass);
+        map.put(netClass.getName(), netClass);
       }
     }
     return map;
@@ -652,7 +652,7 @@ public class BoardComparator {
 
   private static Map<String, Net> buildNetMap(RoutingBoard board) {
     Map<String, Net> map = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    for (int i = 1; i <= board.rules.nets.max_net_no(); i++) {
+    for (int i = 1; i <= board.rules.nets.maxNetNo(); i++) {
       Net net = board.rules.nets.get(i);
       if (net != null) {
         map.put(net.name, net);
@@ -711,24 +711,24 @@ public class BoardComparator {
 
   private static boolean polylinesMatch(
       Polyline poly1, double scale1, Polyline poly2, double scale2, double epsilonMm) {
-    if (poly1.corner_count() != poly2.corner_count()) {
+    if (poly1.cornerCount() != poly2.cornerCount()) {
       return false;
     }
-    int count = poly1.corner_count();
+    int count = poly1.cornerCount();
     boolean forwardMatch = true;
     boolean reverseMatch = true;
     for (int i = 0; i < count; i++) {
-      Point pt1 = poly1.corner_arr()[i];
+      Point pt1 = poly1.cornerArr()[i];
       // Check forward
-      Point pt2F = poly2.corner_arr()[i];
-      if (Math.abs(pt1.to_float().x * scale1 - pt2F.to_float().x * scale2) > epsilonMm
-          || Math.abs(pt1.to_float().y * scale1 - pt2F.to_float().y * scale2) > epsilonMm) {
+      Point pt2F = poly2.cornerArr()[i];
+      if (Math.abs(pt1.toFloat().x * scale1 - pt2F.toFloat().x * scale2) > epsilonMm
+          || Math.abs(pt1.toFloat().y * scale1 - pt2F.toFloat().y * scale2) > epsilonMm) {
         forwardMatch = false;
       }
       // Check reverse
-      Point pt2R = poly2.corner_arr()[count - 1 - i];
-      if (Math.abs(pt1.to_float().x * scale1 - pt2R.to_float().x * scale2) > epsilonMm
-          || Math.abs(pt1.to_float().y * scale1 - pt2R.to_float().y * scale2) > epsilonMm) {
+      Point pt2R = poly2.cornerArr()[count - 1 - i];
+      if (Math.abs(pt1.toFloat().x * scale1 - pt2R.toFloat().x * scale2) > epsilonMm
+          || Math.abs(pt1.toFloat().y * scale1 - pt2R.toFloat().y * scale2) > epsilonMm) {
         reverseMatch = false;
       }
     }

@@ -118,7 +118,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.vertical = tm.getText("vertical");
 
     // create the layer list
-    LayerStructure layerStructure = boardHandling.get_routing_board().layerStructure;
+    LayerStructure layerStructure = boardHandling.getRoutingBoard().layerStructure;
     int layerCount = layerStructure.arr.length;
 
     // every layer is a row in the gridbag and has 3 columns: name, active,
@@ -448,7 +448,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(bendCostHeader, gridbagConstraints);
     mainPanel.add(bendCostHeader);
 
-    int signalLayerCount = layerStructure.signal_layer_count();
+    int signalLayerCount = layerStructure.signalLayerCount();
     signalLayerNameArr = new JLabel[signalLayerCount];
     preferredDirectionTraceCostArr = new JFormattedTextField[signalLayerCount];
     againstPreferredDirectionTraceCostArr = new JFormattedTextField[signalLayerCount];
@@ -462,7 +462,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     NumberFormat floatNumberFormat = new DecimalFormat("0.0");
     for (int i = 0; i < signalLayerCount; i++) {
       signalLayerNameArr[i] = new JLabel();
-      Layer currSignalLayer = layerStructure.get_signal_layer(i);
+      Layer currSignalLayer = layerStructure.getSignalLayer(i);
       signalLayerNameArr[i].setText(currSignalLayer.name);
       gridbagConstraints.gridwidth = 3;
       gridbag.setConstraints(signalLayerNameArr[i], gridbagConstraints);
@@ -631,28 +631,28 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   @Override
   public void refresh() {
     RouterSettings settings = this.boardHandling.getCurrentRoutingJob().routerSettings;
-    LayerStructure layerStructure = this.boardHandling.get_routing_board().layerStructure;
+    LayerStructure layerStructure = this.boardHandling.getRoutingBoard().layerStructure;
 
-    this.settingsAutorouterViasAllowed.setSelected(settings.get_vias_allowed());
+    this.settingsAutorouterViasAllowed.setSelected(settings.getViasAllowed());
     this.settingsAutorouterFanoutButton.setSelected(settings.getRunFanout());
     this.settingsAutorouterAutoroutePassButton.setSelected(settings.getRunRouter());
     this.settingsAutorouterOptimizationButton.setSelected(settings.getRunOptimizer());
 
     for (int i = 0; i < settingsAutorouterLayerActiveArr.length; i++) {
-      this.settingsAutorouterLayerActiveArr[i].setSelected(settings.get_layer_active(i));
+      this.settingsAutorouterLayerActiveArr[i].setSelected(settings.getLayerActive(i));
     }
 
     for (int i = 0; i < settingsAutorouterComboBoxArr.size(); i++) {
-      if (settings.get_preferred_direction_is_horizontal(layerStructure.get_layer_no(i))) {
+      if (settings.getPreferredDirectionIsHorizontal(layerStructure.getLayerNo(i))) {
         this.settingsAutorouterComboBoxArr.get(i).setSelectedItem(this.horizontal);
       } else {
         this.settingsAutorouterComboBoxArr.get(i).setSelectedItem(this.vertical);
       }
     }
 
-    this.viaCostField.setValue(settings.get_via_costs());
-    this.planeViaCostField.setValue(settings.get_plane_via_costs());
-    this.startRipupCosts.setValue(settings.get_start_ripup_costs());
+    this.viaCostField.setValue(settings.getViaCosts());
+    this.planeViaCostField.setValue(settings.getPlaneViaCosts());
+    this.startRipupCosts.setValue(settings.getStartRipupCosts());
     this.maxPassesField.setValue(
         settings.maxPasses != null && settings.maxPasses == Integer.MAX_VALUE
             ? 0
@@ -661,14 +661,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.maxThreadsField.setValue(settings.maxThreads);
     for (int i = 0; i < preferredDirectionTraceCostArr.length; i++) {
       this.preferredDirectionTraceCostArr[i].setValue(
-          settings.get_preferred_direction_trace_costs(layerStructure.get_layer_no(i)));
+          settings.getPreferredDirectionTraceCosts(layerStructure.getLayerNo(i)));
     }
     for (int i = 0; i < againstPreferredDirectionTraceCostArr.length; i++) {
       this.againstPreferredDirectionTraceCostArr[i].setValue(
-          settings.get_against_preferred_direction_trace_costs(layerStructure.get_layer_no(i)));
+          settings.getAgainstPreferredDirectionTraceCosts(layerStructure.getLayerNo(i)));
     }
     for (int i = 0; i < bendCostArr.length; i++) {
-      this.bendCostArr[i].setValue(settings.get_bend_cost(layerStructure.get_layer_no(i)));
+      this.bendCostArr[i].setValue(settings.getBendCost(layerStructure.getLayerNo(i)));
     }
 
     // Set algorithm selection
@@ -685,13 +685,13 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   }
 
   @Override
-  public void parent_iconified() {
-    super.parent_iconified();
+  public void parentIconified() {
+    super.parentIconified();
   }
 
   @Override
-  public void parent_deiconified() {
-    super.parent_deiconified();
+  public void parentDeiconified() {
+    super.parentDeiconified();
   }
 
   private JFormattedTextField createTimeoutField(
@@ -858,7 +858,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       boardHandling
           .getCurrentRoutingJob()
           .routerSettings
-          .set_layer_active(
+          .setLayerActive(
               currLayerNo, settingsAutorouterLayerActiveArr[this.signalLayerNo].isSelected());
     }
   }
@@ -874,11 +874,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       int currLayerNo =
-          boardHandling.get_routing_board().layerStructure.get_layer_no(this.signalLayerNo);
+          boardHandling.getRoutingBoard().layerStructure.getLayerNo(this.signalLayerNo);
       boardHandling
           .getCurrentRoutingJob()
           .routerSettings
-          .set_preferred_direction_is_horizontal(
+          .setPreferredDirectionIsHorizontal(
               currLayerNo,
               settingsAutorouterComboBoxArr.get(signalLayerNo).getSelectedItem() == horizontal);
     }
@@ -948,10 +948,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.get_via_costs();
+        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.getViaCosts();
         Object input = viaCostField.getValue();
         int inputValue = normalizeIntInput(input, oldValue, 1, Integer.MAX_VALUE);
-        boardHandling.getCurrentRoutingJob().routerSettings.set_via_costs(inputValue);
+        boardHandling.getCurrentRoutingJob().routerSettings.setViaCosts(inputValue);
         viaCostField.setValue(inputValue);
         viaCostInputCompleted = true;
 
@@ -967,7 +967,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!viaCostInputCompleted) {
         // Save the value when focus is lost
-        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.get_via_costs();
+        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.getViaCosts();
 
         // Commit the edit to ensure getValue() returns the typed value
         try {
@@ -989,7 +989,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           inputValue = oldValue;
           viaCostField.setValue(oldValue);
         }
-        boardHandling.getCurrentRoutingJob().routerSettings.set_via_costs(inputValue);
+        boardHandling.getCurrentRoutingJob().routerSettings.setViaCosts(inputValue);
         viaCostField.setValue(inputValue);
         viaCostInputCompleted = true;
       }
@@ -1004,10 +1004,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.get_plane_via_costs();
+        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.getPlaneViaCosts();
         Object input = planeViaCostField.getValue();
         int inputValue = normalizeIntInput(input, oldValue, 1, Integer.MAX_VALUE);
-        boardHandling.getCurrentRoutingJob().routerSettings.set_plane_via_costs(inputValue);
+        boardHandling.getCurrentRoutingJob().routerSettings.setPlaneViaCosts(inputValue);
         planeViaCostField.setValue(inputValue);
         planeViaCostInputCompleted = true;
 
@@ -1023,7 +1023,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!planeViaCostInputCompleted) {
         // Save the value when focus is lost
-        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.get_plane_via_costs();
+        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.getPlaneViaCosts();
 
         // Commit the edit to ensure getValue() returns the typed value
         try {
@@ -1045,7 +1045,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           inputValue = oldValue;
           planeViaCostField.setValue(oldValue);
         }
-        boardHandling.getCurrentRoutingJob().routerSettings.set_plane_via_costs(inputValue);
+        boardHandling.getCurrentRoutingJob().routerSettings.setPlaneViaCosts(inputValue);
         planeViaCostField.setValue(inputValue);
         planeViaCostInputCompleted = true;
       }
@@ -1060,10 +1060,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.get_start_ripup_costs();
+        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.getStartRipupCosts();
         Object input = startRipupCosts.getValue();
         int inputValue = normalizeIntInput(input, oldValue, 1, Integer.MAX_VALUE);
-        boardHandling.getCurrentRoutingJob().routerSettings.set_start_ripup_costs(inputValue);
+        boardHandling.getCurrentRoutingJob().routerSettings.setStartRipupCosts(inputValue);
         startRipupCosts.setValue(inputValue);
         startRipupCostInputCompleted = true;
       } else {
@@ -1078,7 +1078,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!startRipupCostInputCompleted) {
         // Save the value when focus is lost
-        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.get_start_ripup_costs();
+        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.getStartRipupCosts();
 
         // Commit the edit to ensure getValue() returns the typed value
         try {
@@ -1098,7 +1098,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         } else {
           inputValue = oldValue;
         }
-        boardHandling.getCurrentRoutingJob().routerSettings.set_start_ripup_costs(inputValue);
+        boardHandling.getCurrentRoutingJob().routerSettings.setStartRipupCosts(inputValue);
         startRipupCosts.setValue(inputValue);
         startRipupCostInputCompleted = true;
       }
@@ -1290,12 +1290,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!preferredDirectionTraceCostsInputCompleted[this.signalLayerNo]) {
         int currLayerNo =
-            boardHandling.get_routing_board().layerStructure.get_layer_no(this.signalLayerNo);
+            boardHandling.getRoutingBoard().layerStructure.getLayerNo(this.signalLayerNo);
         double oldValue =
             boardHandling
                 .getCurrentRoutingJob()
                 .routerSettings
-                .get_preferred_direction_trace_costs(currLayerNo);
+                .getPreferredDirectionTraceCosts(currLayerNo);
 
         try {
           preferredDirectionTraceCostArr[this.signalLayerNo].commitEdit();
@@ -1320,7 +1320,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         boardHandling
             .getCurrentRoutingJob()
             .routerSettings
-            .set_preferred_direction_trace_costs(currLayerNo, inputValue);
+            .setPreferredDirectionTraceCosts(currLayerNo, inputValue);
         preferredDirectionTraceCostArr[this.signalLayerNo].setValue(inputValue);
         preferredDirectionTraceCostsInputCompleted[this.signalLayerNo] = true;
       }
@@ -1356,12 +1356,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!againstPreferredDirectionTraceCostsInputCompleted[this.signalLayerNo]) {
         int currLayerNo =
-            boardHandling.get_routing_board().layerStructure.get_layer_no(this.signalLayerNo);
+            boardHandling.getRoutingBoard().layerStructure.getLayerNo(this.signalLayerNo);
         double oldValue =
             boardHandling
                 .getCurrentRoutingJob()
                 .routerSettings
-                .get_against_preferred_direction_trace_costs(currLayerNo);
+                .getAgainstPreferredDirectionTraceCosts(currLayerNo);
 
         try {
           againstPreferredDirectionTraceCostArr[this.signalLayerNo].commitEdit();
@@ -1386,7 +1386,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         boardHandling
             .getCurrentRoutingJob()
             .routerSettings
-            .set_against_preferred_direction_trace_costs(currLayerNo, inputValue);
+            .setAgainstPreferredDirectionTraceCosts(currLayerNo, inputValue);
         againstPreferredDirectionTraceCostArr[this.signalLayerNo].setValue(inputValue);
         againstPreferredDirectionTraceCostsInputCompleted[this.signalLayerNo] = true;
       }
@@ -1423,9 +1423,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       if (!bendCostsInputCompleted[this.signalLayerNo]) {
         // Save the value when focus is lost
         int currLayerNo =
-            boardHandling.get_routing_board().layerStructure.get_layer_no(this.signalLayerNo);
+            boardHandling.getRoutingBoard().layerStructure.getLayerNo(this.signalLayerNo);
         double oldValue =
-            boardHandling.getCurrentRoutingJob().routerSettings.get_bend_cost(currLayerNo);
+            boardHandling.getCurrentRoutingJob().routerSettings.getBendCost(currLayerNo);
 
         // Commit the edit to ensure getValue() returns the typed value
         try {
@@ -1447,7 +1447,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         } else {
           inputValue = oldValue;
         }
-        boardHandling.getCurrentRoutingJob().routerSettings.set_bend_cost(currLayerNo, inputValue);
+        boardHandling.getCurrentRoutingJob().routerSettings.setBendCost(currLayerNo, inputValue);
         bendCostArr[this.signalLayerNo].setValue(inputValue);
         bendCostsInputCompleted[this.signalLayerNo] = true;
       }

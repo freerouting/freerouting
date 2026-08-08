@@ -42,7 +42,7 @@ public class RationalVector extends Vector implements Serializable {
 
   /** returns true, if the x and y coordinates of this vector are 0 */
   @Override
-  public final boolean is_zero() {
+  public final boolean isZero() {
     return x.signum() == 0 && y.signum() == 0;
   }
 
@@ -86,18 +86,18 @@ public class RationalVector extends Vector implements Serializable {
    * Side.COLLINEAR, if this Vector is collinear with L.
    */
   @Override
-  public Side side_of(Vector p_other) {
-    Side tmp = p_other.side_of(this);
+  public Side sideOf(Vector p_other) {
+    Side tmp = p_other.sideOf(this);
     return tmp.negate();
   }
 
   @Override
-  public boolean is_orthogonal() {
+  public boolean isOrthogonal() {
     return x.signum() == 0 || y.signum() == 0;
   }
 
   @Override
-  public boolean is_diagonal() {
+  public boolean isDiagonal() {
     return x.abs().equals(y.abs());
   }
 
@@ -113,13 +113,13 @@ public class RationalVector extends Vector implements Serializable {
 
   /** calculates the scalar product of this vector and p_other */
   @Override
-  public double scalar_product(Vector p_other) {
-    return p_other.scalar_product(this);
+  public double scalarProduct(Vector p_other) {
+    return p_other.scalarProduct(this);
   }
 
   /** approximates the coordinates of this vector by float coordinates */
   @Override
-  public FloatPoint to_float() {
+  public FloatPoint toFloat() {
     double xd = x.doubleValue();
     double yd = y.doubleValue();
     double zd = z.doubleValue();
@@ -127,13 +127,13 @@ public class RationalVector extends Vector implements Serializable {
   }
 
   @Override
-  public Vector change_length_approx(double p_length) {
+  public Vector changeLengthApprox(double p_length) {
     FRLogger.warn("RationalVector: change_length_approx not yet implemented");
     return this;
   }
 
   @Override
-  public Vector turn_90_degree(int p_factor) {
+  public Vector turn90Degree(int p_factor) {
     int n = p_factor;
     while (n < 0) {
       n += 4;
@@ -168,17 +168,17 @@ public class RationalVector extends Vector implements Serializable {
   }
 
   @Override
-  public Vector mirror_at_y_axis() {
+  public Vector mirrorAtYAxis() {
     return new RationalVector(this.x.negate(), this.y, this.z);
   }
 
   @Override
-  public Vector mirror_at_x_axis() {
+  public Vector mirrorAtXAxis() {
     return new RationalVector(this.x, this.y.negate(), this.z);
   }
 
   @Override
-  Direction to_normalized_direction() {
+  Direction toNormalizedDirection() {
     BigInteger dx = x;
     BigInteger dy = y;
     BigInteger gcd = dx.gcd(y);
@@ -192,15 +192,15 @@ public class RationalVector extends Vector implements Serializable {
   }
 
   @Override
-  double scalar_product(IntVector p_other) {
+  double scalarProduct(IntVector p_other) {
     Vector other = new RationalVector(p_other);
-    return other.scalar_product(this);
+    return other.scalarProduct(this);
   }
 
   @Override
-  double scalar_product(RationalVector p_other) {
-    FloatPoint v1 = to_float();
-    FloatPoint v2 = p_other.to_float();
+  double scalarProduct(RationalVector p_other) {
+    FloatPoint v1 = toFloat();
+    FloatPoint v2 = p_other.toFloat();
     return v1.x * v2.x + v1.y * v2.y;
   }
 
@@ -236,12 +236,12 @@ public class RationalVector extends Vector implements Serializable {
     v2[0] = p_other.x;
     v2[1] = p_other.y;
     v2[2] = p_other.z;
-    BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
+    BigInteger[] result = BigIntAux.addRationalCoordinates(v1, v2);
     return new RationalVector(result[0], result[1], result[2]);
   }
 
   @Override
-  Point add_to(IntPoint p_point) {
+  Point addTo(IntPoint p_point) {
     BigInteger newX = z.multiply(BigInteger.valueOf(p_point.x));
     newX = newX.add(x);
     BigInteger newY = z.multiply(BigInteger.valueOf(p_point.y));
@@ -250,7 +250,7 @@ public class RationalVector extends Vector implements Serializable {
   }
 
   @Override
-  Point add_to(RationalPoint p_point) {
+  Point addTo(RationalPoint p_point) {
     BigInteger[] v1 = new BigInteger[3];
     v1[0] = x;
     v1[1] = y;
@@ -261,18 +261,18 @@ public class RationalVector extends Vector implements Serializable {
     v2[1] = p_point.y;
     v2[2] = p_point.z;
 
-    BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
+    BigInteger[] result = BigIntAux.addRationalCoordinates(v1, v2);
     return new RationalPoint(result[0], result[1], result[2]);
   }
 
   @Override
-  Side side_of(IntVector p_other) {
+  Side sideOf(IntVector p_other) {
     RationalVector other = new RationalVector(p_other);
-    return side_of(other);
+    return sideOf(other);
   }
 
   @Override
-  Side side_of(RationalVector p_other) {
+  Side sideOf(RationalVector p_other) {
     BigInteger tmp1 = y.multiply(p_other.x);
     BigInteger tmp2 = x.multiply(p_other.y);
     BigInteger determinant = tmp1.subtract(tmp2);

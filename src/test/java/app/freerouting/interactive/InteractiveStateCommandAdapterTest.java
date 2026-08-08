@@ -16,14 +16,14 @@ class InteractiveStateCommandAdapterTest {
   @Test
   void leftClickCommandDelegatesToStateMethod() {
     GuiBoardManager manager = mock(GuiBoardManager.class);
-    when(manager.get_locale()).thenReturn(Locale.ENGLISH);
+    when(manager.getLocale()).thenReturn(Locale.ENGLISH);
 
     RecordingState state = new RecordingState(manager);
     RecordingState nextState = new RecordingState(manager);
     FloatPoint location = new FloatPoint(12.5, 7.25);
     state.leftClickResult = nextState;
 
-    InteractiveCommand command = state.left_button_clicked_command(location);
+    InteractiveCommand command = state.leftButtonClickedCommand(location);
 
     InteractiveState result = command.execute();
 
@@ -35,13 +35,13 @@ class InteractiveStateCommandAdapterTest {
   @Test
   void cancelCommandDelegatesToStateMethod() {
     GuiBoardManager manager = mock(GuiBoardManager.class);
-    when(manager.get_locale()).thenReturn(Locale.ENGLISH);
+    when(manager.getLocale()).thenReturn(Locale.ENGLISH);
 
     RecordingState state = new RecordingState(manager);
     RecordingState nextState = new RecordingState(manager);
     state.cancelResult = nextState;
 
-    InteractiveState result = state.cancel_command().execute();
+    InteractiveState result = state.cancelCommand().execute();
 
     assertTrue(state.cancelCalled);
     assertSame(nextState, result);
@@ -61,7 +61,7 @@ class InteractiveStateCommandAdapterTest {
     }
 
     @Override
-    public InteractiveState left_button_clicked(FloatPoint p_location) {
+    public InteractiveState leftButtonClicked(FloatPoint p_location) {
       this.leftClickCalled = true;
       this.lastLeftClickLocation = p_location;
       return leftClickResult;

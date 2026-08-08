@@ -22,7 +22,7 @@ class BoardToolbarInspectedItem extends JToolBar {
     JButton toolbarCancelButton = new JButton();
     toolbarCancelButton.setText(tm.getText("cancel"));
     toolbarCancelButton.setToolTipText(tm.getText("cancel_tooltip"));
-    toolbarCancelButton.addActionListener(_ -> boardFrame.boardPanel.boardHandling.cancel_state());
+    toolbarCancelButton.addActionListener(_ -> boardFrame.boardPanel.boardHandling.cancelState());
     toolbarCancelButton.addActionListener(
         _ -> FRAnalytics.buttonClicked("toolbarCancelButton", toolbarCancelButton.getText()));
 
@@ -32,7 +32,7 @@ class BoardToolbarInspectedItem extends JToolBar {
     toolbarInfoButton.setText(tm.getText("info"));
     toolbarInfoButton.setToolTipText(tm.getText("info_tooltip"));
     toolbarInfoButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.display_selected_item_info());
+        _ -> boardFrame.boardPanel.boardHandling.displaySelectedItemInfo());
     toolbarInfoButton.addActionListener(
         _ -> FRAnalytics.buttonClicked("toolbarInfoButton", toolbarInfoButton.getText()));
 
@@ -47,7 +47,7 @@ class BoardToolbarInspectedItem extends JToolBar {
     toolbarWholeNetsButton.setText(tm.getText("nets"));
     toolbarWholeNetsButton.setToolTipText(tm.getText("nets_tooltip"));
     toolbarWholeNetsButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.extend_selection_to_whole_nets());
+        _ -> boardFrame.boardPanel.boardHandling.extendSelectionToWholeNets());
     toolbarWholeNetsButton.addActionListener(
         _ -> FRAnalytics.buttonClicked("toolbarWholeNetsButton", toolbarWholeNetsButton.getText()));
 
@@ -57,7 +57,7 @@ class BoardToolbarInspectedItem extends JToolBar {
     toolbarWholeConnectedSetsButton.setText(tm.getText("conn_sets"));
     toolbarWholeConnectedSetsButton.setToolTipText(tm.getText("conn_sets_tooltip"));
     toolbarWholeConnectedSetsButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.extend_selection_to_whole_connected_sets());
+        _ -> boardFrame.boardPanel.boardHandling.extendSelectionToWholeConnectedSets());
     toolbarWholeConnectedSetsButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -69,7 +69,7 @@ class BoardToolbarInspectedItem extends JToolBar {
     toolbarWholeConnectionsButton.setText(tm.getText("connections"));
     toolbarWholeConnectionsButton.setToolTipText(tm.getText("connections_tooltip"));
     toolbarWholeConnectionsButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.extend_selection_to_whole_connections());
+        _ -> boardFrame.boardPanel.boardHandling.extendSelectionToWholeConnections());
     toolbarWholeConnectionsButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -81,7 +81,7 @@ class BoardToolbarInspectedItem extends JToolBar {
     toolbarWholeGroupsButton.setText(tm.getText("components"));
     toolbarWholeGroupsButton.setToolTipText(tm.getText("components_tooltip"));
     toolbarWholeGroupsButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.extend_selection_to_whole_components());
+        _ -> boardFrame.boardPanel.boardHandling.extendSelectionToWholeComponents());
     toolbarWholeGroupsButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -98,7 +98,7 @@ class BoardToolbarInspectedItem extends JToolBar {
     toolbarViolationButton.setText(tm.getText("violations"));
     toolbarViolationButton.setToolTipText(tm.getText("violations_tooltip"));
     toolbarViolationButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.toggle_selected_item_violations());
+        _ -> boardFrame.boardPanel.boardHandling.toggleSelectedItemViolations());
     toolbarViolationButton.addActionListener(
         _ -> FRAnalytics.buttonClicked("toolbarViolationButton", toolbarViolationButton.getText()));
 
@@ -113,7 +113,7 @@ class BoardToolbarInspectedItem extends JToolBar {
     toolbarDisplaySelectionButton.setText(tm.getText("zoom_selection"));
     toolbarDisplaySelectionButton.setToolTipText(tm.getText("zoom_selection_tooltip"));
     toolbarDisplaySelectionButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.zoom_selection());
+        _ -> boardFrame.boardPanel.boardHandling.zoomSelection());
     toolbarDisplaySelectionButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -123,7 +123,7 @@ class BoardToolbarInspectedItem extends JToolBar {
     JButton toolbarDisplayAllButton = new JButton();
     toolbarDisplayAllButton.setText(tm.getText("zoom_all"));
     toolbarDisplayAllButton.setToolTipText(tm.getText("zoom_all_tooltip"));
-    toolbarDisplayAllButton.addActionListener(_ -> boardFrame.zoom_all());
+    toolbarDisplayAllButton.addActionListener(_ -> boardFrame.zoomAll());
     toolbarDisplayAllButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -134,7 +134,7 @@ class BoardToolbarInspectedItem extends JToolBar {
     toolbarDisplayRegionButton.setText(tm.getText("zoom_region"));
     toolbarDisplayRegionButton.setToolTipText(tm.getText("zoom_region_tooltip"));
     toolbarDisplayRegionButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.zoom_region());
+        _ -> boardFrame.boardPanel.boardHandling.zoomRegion());
     toolbarDisplayRegionButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(

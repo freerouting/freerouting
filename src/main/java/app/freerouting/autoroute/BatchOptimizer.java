@@ -48,9 +48,9 @@ public class BatchOptimizer extends NamedAlgorithm {
     return this.isTimedOut;
   }
 
-  static boolean contains_only_unfixed_traces(Collection<Item> p_item_list) {
+  static boolean containsOnlyUnfixedTraces(Collection<Item> p_item_list) {
     for (Item currItem : p_item_list) {
-      if (currItem.is_user_fixed() || !(currItem instanceof Trace)) {
+      if (currItem.isUserFixed() || !(currItem instanceof Trace)) {
         return false;
       }
     }
@@ -91,23 +91,23 @@ public class BatchOptimizer extends NamedAlgorithm {
   public void runBatchLoop() {
     job.logDebug(
         "Before optimization: Via count: "
-            + board.get_vias().size()
+            + board.getVias().size()
             + ", trace length: "
-            + Math.round(board.cumulative_trace_length()));
+            + Math.round(board.cumulativeTraceLength()));
 
     double scoreImprovement = -1;
     int currentPass = 0;
     useIncreasedRipupCosts = true;
 
     // Capture initial board state for session summary
-    BoardStatistics initialStats = board.get_statistics();
+    BoardStatistics initialStats = board.getStatistics();
     float initialScore = initialStats.getNormalizedScore(job.routerSettings.scoring);
     int initialIncomplete = initialStats.connections.incompleteCount;
     int initialViolations = initialStats.clearanceViolations.totalCount;
 
     job.logInfo(
         "Optimization stage started on board '"
-            + this.board.get_hash()
+            + this.board.getHash()
             + "' with score "
             + FRLogger.formatScore(initialScore, initialIncomplete, initialViolations)
             + ".");
@@ -128,7 +128,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     }
 
     this.fireTaskStateChangedEvent(
-        new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
+        new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.getHash()));
 
     while ((this.settings.optimizer.maxPasses == null
             || currentPass < this.settings.optimizer.maxPasses)
@@ -142,7 +142,7 @@ public class BatchOptimizer extends NamedAlgorithm {
       }
       ++currentPass;
 
-      float scoreBeforePass = board.get_statistics().getNormalizedScore(job.routerSettings.scoring);
+      float scoreBeforePass = board.getStatistics().getNormalizedScore(job.routerSettings.scoring);
 
       // Stop if potential improvement is less than threshold
       if (scoreBeforePass * (1 + this.settings.optimizer.optimizationImprovementThreshold)
@@ -156,20 +156,20 @@ public class BatchOptimizer extends NamedAlgorithm {
         break;
       }
 
-      String currentBoardHash = this.board.get_hash();
+      String currentBoardHash = this.board.getHash();
       job.setCurrentPass(currentPass);
       this.fireTaskStateChangedEvent(
           new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, currentBoardHash));
 
       boolean withPreferredDirections = currentPass % 2 != 0; // to create more variations
-      opt_route_pass(currentPass, withPreferredDirections);
+      optRoutePass(currentPass, withPreferredDirections);
       peakHeapMb = Math.max(peakHeapMb, sampleHeapUsageMb());
 
       if (this.isTimedOut) {
         break;
       }
 
-      float scoreAfterPass = board.get_statistics().getNormalizedScore(job.routerSettings.scoring);
+      float scoreAfterPass = board.getStatistics().getNormalizedScore(job.routerSettings.scoring);
       double passImprovement =
           scoreBeforePass > 0 ? (double) (scoreAfterPass - scoreBeforePass) / scoreBeforePass : 0;
 
@@ -194,7 +194,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     }
 
     this.fireTaskStateChangedEvent(
-        new TaskStateChangedEvent(this, TaskState.FINISHED, currentPass, this.board.get_hash()));
+        new TaskStateChangedEvent(this, TaskState.FINISHED, currentPass, this.board.getHash()));
 
     // Session summary
     double sessionDurationSeconds = (System.currentTimeMillis() - sessionStartMs) / 1000.0;
@@ -237,10 +237,10 @@ public class BatchOptimizer extends NamedAlgorithm {
    * the amount of improvements is made in percentage (expressed between 0.0 and 1.0). -1 if the
    * routing must go on no matter how much it improved.
    */
-  protected float opt_route_pass(int p_pass_no, boolean p_with_preferred_directions) {
+  protected float optRoutePass(int p_pass_no, boolean p_with_preferred_directions) {
     float routeImproved = 0.0F;
 
-    BoardStatistics boardStatisticsBefore = board.get_statistics();
+    BoardStatistics boardStatisticsBefore = board.getStatistics();
     RouterCounters routerCounters = new RouterCounters();
     routerCounters.passCount = p_pass_no;
     progressThrottler.reset();
@@ -289,12 +289,12 @@ public class BatchOptimizer extends NamedAlgorithm {
       if (currItem == null) {
         break;
       }
-      ItemRouteResult result = opt_route_item(currItem, p_with_preferred_directions, false);
+      ItemRouteResult result = optRouteItem(currItem, p_with_preferred_directions, false);
       this.totalItemsOptimized++;
       if (result.improved()) {
         consecutiveFailures = 0;
         if (progressThrottler.shouldUpdate()) {
-          BoardStatistics boardStatisticsAfter = board.get_statistics();
+          BoardStatistics boardStatisticsAfter = board.getStatistics();
           this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, board);
         }
 
@@ -303,8 +303,8 @@ public class BatchOptimizer extends NamedAlgorithm {
                 (boardStatisticsBefore.items.viaCount != 0
                         && boardStatisticsBefore.traces.totalLength != 0
                     ? 1.0
-                        - ((((float) result.via_count() / boardStatisticsBefore.items.viaCount)
-                                + (result.trace_length()
+                        - ((((float) result.viaCount() / boardStatisticsBefore.items.viaCount)
+                                + (result.traceLength()
                                     / boardStatisticsBefore.traces.totalLength))
                             / 2)
                     : 0);
@@ -336,7 +336,7 @@ public class BatchOptimizer extends NamedAlgorithm {
             java.util.Locale.US,
             "Optimizer pass #%d on board '%s' was completed in %.2f seconds with the score of %s.",
             p_pass_no,
-            this.board.get_hash(),
+            this.board.getHash(),
             routeoptimizerPassDuration,
             FRLogger.formatScore(
                 boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring),
@@ -353,12 +353,12 @@ public class BatchOptimizer extends NamedAlgorithm {
    * @param disableSnapshots if true, the snapshots are not used which means that the routing cannot
    *     be undone, but it's much more efficient
    */
-  protected ItemRouteResult opt_route_item(
+  protected ItemRouteResult optRouteItem(
       Item p_item, boolean p_with_preferred_directions, boolean disableSnapshots) {
     // check if item.board is a RoutingBoard
     if (!(p_item.board instanceof RoutingBoard routingBoard)) {
       job.logWarning("The item to be optimized is not on a RoutingBoard.");
-      return new ItemRouteResult(p_item.get_id_no());
+      return new ItemRouteResult(p_item.getIdNo());
     }
 
     // calculate the statistics for the board before the routing
@@ -377,42 +377,42 @@ public class BatchOptimizer extends NamedAlgorithm {
     if (p_item instanceof Trace currTrace) {
       // add also the fork items, especially because not all fork items may be
       // returned by ReadSortedRouteItems because of matching end points.
-      Set<Item> currContactList = currTrace.get_start_contacts();
+      Set<Item> currContactList = currTrace.getStartContacts();
       for (int i = 0; i < 2; i++) {
-        if (contains_only_unfixed_traces(currContactList)) {
+        if (containsOnlyUnfixedTraces(currContactList)) {
           rippedItems.addAll(currContactList);
         }
-        currContactList = currTrace.get_end_contacts();
+        currContactList = currTrace.getEndContacts();
       }
     }
 
     Set<Item> rippedConnections = new TreeSet<>();
     // add all the connections of the items to be re-routed
     for (Item currItem : rippedItems) {
-      rippedConnections.addAll(currItem.get_connection_items(Item.StopConnectionOption.NONE));
+      rippedConnections.addAll(currItem.getConnectionItems(Item.StopConnectionOption.NONE));
     }
 
     // check if the connections contain user fixed items, which should not be
     // re-routed
     for (Item currItem : rippedConnections) {
-      if (currItem.is_user_fixed()) {
-        return new ItemRouteResult(p_item.get_id_no());
+      if (currItem.isUserFixed()) {
+        return new ItemRouteResult(p_item.getIdNo());
       }
     }
 
     if (!disableSnapshots) {
       // make the current situation restorable by undo with the snapshot
-      routingBoard.generate_snapshot();
+      routingBoard.generateSnapshot();
     }
 
     // remove the items to be re-routed
-    routingBoard.remove_items(rippedConnections);
-    for (int i = 0; i < p_item.net_count(); i++) {
-      routingBoard.combine_traces(p_item.get_net_no(i));
+    routingBoard.removeItems(rippedConnections);
+    for (int i = 0; i < p_item.netCount(); i++) {
+      routingBoard.combineTraces(p_item.getNetNo(i));
     }
 
     // calculate the ripup costs
-    int ripupCosts = this.settings.get_start_ripup_costs();
+    int ripupCosts = this.settings.getStartRipupCosts();
     if (this.useIncreasedRipupCosts) {
       ripupCosts *= this.settings.optimizer.additionalRipupCostFactorAtStart;
     }
@@ -424,7 +424,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     }
 
     // route the connections
-    BatchAutorouter.autoroute_passes_for_optimizing_item(
+    BatchAutorouter.autoroutePassesForOptimizingItem(
         job,
         this.settings.optimizer.maxAutoroutePasses,
         ripupCosts,
@@ -445,7 +445,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // check if the board was improved
     ItemRouteResult result =
         new ItemRouteResult(
-            p_item.get_id_no(),
+            p_item.getIdNo(),
             boardStatisticsBefore.items.viaCount,
             boardStatisticsAfter.items.viaCount,
             this.minCumulativeTraceLength,
@@ -453,7 +453,7 @@ public class BatchOptimizer extends NamedAlgorithm {
             routerCountersBefore.incompleteCount,
             routerCountersAfter.incompleteCount);
     boolean routeImproved = !this.thread.isStopRequested() && result.improved();
-    result.update_improved(routeImproved);
+    result.updateImproved(routeImproved);
 
     if (routeImproved) {
       this.minCumulativeTraceLength =
@@ -461,7 +461,7 @@ public class BatchOptimizer extends NamedAlgorithm {
 
       if (!disableSnapshots) {
         // this was a successful routing, so the snapshot can be removed
-        routingBoard.pop_snapshot();
+        routingBoard.popSnapshot();
       }
     } else {
       if (!disableSnapshots) {
@@ -478,11 +478,11 @@ public class BatchOptimizer extends NamedAlgorithm {
    * Returns the current position of the item, which will be rerouted or null, if the optimizer is
    * not active.
    */
-  public FloatPoint get_current_position() {
+  public FloatPoint getCurrentPosition() {
     if (sortedRouteItems == null) {
       return null;
     }
-    return sortedRouteItems.get_current_position();
+    return sortedRouteItems.getCurrentPosition();
   }
 
   @Override
@@ -535,16 +535,16 @@ public class BatchOptimizer extends NamedAlgorithm {
       Item result = null;
       FloatPoint currMinCoor = new FloatPoint(Integer.MAX_VALUE, Integer.MAX_VALUE);
       int currMinLayer = Integer.MAX_VALUE;
-      Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.start_read_object();
+      Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
       for (; ; ) {
-        UndoableObjects.Storable currItem = board.itemList.read_object(it);
+        UndoableObjects.Storable currItem = board.itemList.readObject(it);
         if (currItem == null) {
           break;
         }
         if (currItem instanceof Via currVia) {
-          if (!currVia.is_user_fixed()) {
-            FloatPoint currViaCenter = currVia.get_center().to_float();
-            int currViaMinLayer = currVia.first_layer();
+          if (!currVia.isUserFixed()) {
+            FloatPoint currViaCenter = currVia.getCenter().toFloat();
+            int currViaMinLayer = currVia.firstLayer();
             if (currViaCenter.x > minItemCoor.x
                 || currViaCenter.x == minItemCoor.x
                     && (currViaCenter.y > minItemCoor.y
@@ -562,16 +562,16 @@ public class BatchOptimizer extends NamedAlgorithm {
         }
       }
       // Read traces last to prefer vias to traces at the same location
-      it = board.itemList.start_read_object();
+      it = board.itemList.startReadObject();
       for (; ; ) {
-        UndoableObjects.Storable currItem = board.itemList.read_object(it);
+        UndoableObjects.Storable currItem = board.itemList.readObject(it);
         if (currItem == null) {
           break;
         }
         if (currItem instanceof Trace currTrace) {
-          if (!currTrace.is_shove_fixed()) {
-            FloatPoint firstCorner = currTrace.first_corner().to_float();
-            FloatPoint lastCorner = currTrace.last_corner().to_float();
+          if (!currTrace.isShoveFixed()) {
+            FloatPoint firstCorner = currTrace.firstCorner().toFloat();
+            FloatPoint lastCorner = currTrace.lastCorner().toFloat();
             FloatPoint compareCorner;
             if (firstCorner.x < lastCorner.x
                 || firstCorner.x == lastCorner.x && firstCorner.y < lastCorner.y) {
@@ -579,7 +579,7 @@ public class BatchOptimizer extends NamedAlgorithm {
             } else {
               compareCorner = firstCorner;
             }
-            int currTraceLayer = currTrace.get_layer();
+            int currTraceLayer = currTrace.getLayer();
             if (compareCorner.x > minItemCoor.x
                 || compareCorner.x == minItemCoor.x
                     && (compareCorner.y > minItemCoor.y
@@ -589,9 +589,9 @@ public class BatchOptimizer extends NamedAlgorithm {
                       && (compareCorner.y < currMinCoor.y
                           || compareCorner.y == currMinCoor.y && currTraceLayer < currMinLayer)) {
                 boolean isConnectedToVia = false;
-                Set<Item> traceContacts = currTrace.get_normal_contacts();
+                Set<Item> traceContacts = currTrace.getNormalContacts();
                 for (Item currContact : traceContacts) {
-                  if (currContact instanceof Via && !currContact.is_user_fixed()) {
+                  if (currContact instanceof Via && !currContact.isUserFixed()) {
                     isConnectedToVia = true;
                     break;
                   }
@@ -611,7 +611,7 @@ public class BatchOptimizer extends NamedAlgorithm {
       return result;
     }
 
-    FloatPoint get_current_position() {
+    FloatPoint getCurrentPosition() {
       return minItemCoor;
     }
   }

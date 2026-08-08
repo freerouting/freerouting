@@ -40,7 +40,7 @@ public final class CopyItemState extends InteractiveState {
     itemList = new LinkedList<>();
 
     startPosition = p_location.round();
-    currentLayer = p_board_handling.getInteractiveSettings().get_layer();
+    currentLayer = p_board_handling.getInteractiveSettings().getLayer();
     layerChanged = false;
     currentPosition = startPosition;
     previousPosition = currentPosition;
@@ -53,7 +53,7 @@ public final class CopyItemState extends InteractiveState {
   }
 
   /** Returns a new instance of CopyItemState or null, if p_item_list is empty. */
-  public static CopyItemState get_instance(
+  public static CopyItemState getInstance(
       FloatPoint p_location,
       Collection<Item> p_item_list,
       InteractiveState p_parent_state,
@@ -61,18 +61,18 @@ public final class CopyItemState extends InteractiveState {
     if (p_item_list.isEmpty()) {
       return null;
     }
-    p_board_handling.remove_ratsnest(); // copying an item may change the connectivity.
+    p_board_handling.removeRatsnest(); // copying an item may change the connectivity.
     return new CopyItemState(p_location, p_item_list, p_parent_state, p_board_handling);
   }
 
   /** Creates a new padstack from p_old_padstack with a layer range starting at p_new_layer. */
-  private static Padstack change_padstack_layers(
+  private static Padstack changePadstackLayers(
       Padstack p_old_padstack,
       int p_new_layer,
       RoutingBoard p_board,
       Map<Padstack, Padstack> p_padstack_pairs) {
     Padstack newPadstack;
-    int oldLayer = p_old_padstack.from_layer();
+    int oldLayer = p_old_padstack.fromLayer();
     if (oldLayer == p_new_layer) {
       newPadstack = p_old_padstack;
     } else if (p_padstack_pairs.containsKey(p_old_padstack)) {
@@ -80,12 +80,12 @@ public final class CopyItemState extends InteractiveState {
       newPadstack = p_padstack_pairs.get(p_old_padstack);
     } else {
       // Create a new padstack.
-      ConvexShape[] newShapes = new ConvexShape[p_board.get_layer_count()];
+      ConvexShape[] newShapes = new ConvexShape[p_board.getLayerCount()];
       int layerDiff = oldLayer - p_new_layer;
       for (int i = 0; i < newShapes.length; i++) {
         int newLayerNo = i + layerDiff;
         if (newLayerNo >= 0 && newLayerNo < newShapes.length) {
-          newShapes[i] = p_old_padstack.get_shape(i + layerDiff);
+          newShapes[i] = p_old_padstack.getShape(i + layerDiff);
         }
       }
       newPadstack = p_board.library.padstacks.add(newShapes);
@@ -95,19 +95,19 @@ public final class CopyItemState extends InteractiveState {
   }
 
   @Override
-  public InteractiveState mouse_moved() {
-    super.mouse_moved();
-    change_position(hdlg.get_current_mouse_position());
+  public InteractiveState mouseMoved() {
+    super.mouseMoved();
+    changePosition(hdlg.getCurrentMousePosition());
     return this;
   }
 
   /** Changes the position for inserting the copied items to p_new_location. */
-  private void change_position(FloatPoint p_new_position) {
+  private void changePosition(FloatPoint p_new_position) {
     currentPosition = p_new_position.round();
     if (!currentPosition.equals(previousPosition)) {
-      Vector translateVector = currentPosition.difference_by(previousPosition);
+      Vector translateVector = currentPosition.differenceBy(previousPosition);
       for (Item currItem : itemList) {
-        currItem.translate_by(translateVector);
+        currItem.translateBy(translateVector);
       }
       previousPosition = currentPosition;
       hdlg.repaint();
@@ -116,10 +116,10 @@ public final class CopyItemState extends InteractiveState {
 
   /** Changes the first layer of the items in the copy list to p_new_layer. */
   @Override
-  public boolean change_layer_action(int p_new_layer) {
+  public boolean changeLayerAction(int p_new_layer) {
     currentLayer = p_new_layer;
     layerChanged = true;
-    hdlg.set_layer(p_new_layer);
+    hdlg.setLayer(p_new_layer);
     return true;
   }
 
@@ -134,14 +134,14 @@ public final class CopyItemState extends InteractiveState {
     Map<Padstack, Padstack> padstack_pairs =
         new TreeMap<>(); // Contains old and new padstacks after layer change.
 
-    RoutingBoard board = hdlg.get_routing_board();
+    RoutingBoard board = hdlg.getRoutingBoard();
     if (layerChanged) {
       // create new via padstacks
       for (Item currOb : itemList) {
         if (currOb instanceof Via currVia) {
           Padstack newPadstack =
-              change_padstack_layers(currVia.get_padstack(), currentLayer, board, padstack_pairs);
-          currVia.set_padstack(newPadstack);
+              changePadstackLayers(currVia.getPadstack(), currentLayer, board, padstack_pairs);
+          currVia.setPadstack(newPadstack);
         }
       }
     }
@@ -154,9 +154,9 @@ public final class CopyItemState extends InteractiveState {
     // Contains the new created components after copying.
     Collection<Component> copiedComponents = new LinkedList<>();
 
-    Vector translateVector = currentPosition.difference_by(startPosition);
+    Vector translateVector = currentPosition.differenceBy(startPosition);
     for (Item currItem : itemList) {
-      int currCmpNo = currItem.get_component_no();
+      int currCmpNo = currItem.getComponentNo();
       if (currCmpNo > 0) {
         // This item belongs to a component
         int newCmpNo;
@@ -171,20 +171,20 @@ public final class CopyItemState extends InteractiveState {
             FRLogger.warn("CopyItemState: component not found");
             continue;
           }
-          Point newLocation = oldComponent.get_location().translate_by(translateVector);
+          Point newLocation = oldComponent.getLocation().translateBy(translateVector);
           Package newPackage;
           if (layerChanged) {
             // create a new package with changed layers of the padstacks.
-            Package.Pin[] newPinArr = new Package.Pin[oldComponent.get_package().pin_count()];
+            Package.Pin[] newPinArr = new Package.Pin[oldComponent.getPackage().pinCount()];
             for (int i = 0; i < newPinArr.length; i++) {
-              Package.Pin oldPin = oldComponent.get_package().get_pin(i);
+              Package.Pin oldPin = oldComponent.getPackage().getPin(i);
               Padstack oldPadstack = board.library.padstacks.get(oldPin.padstackNo);
               if (oldPadstack == null) {
                 FRLogger.warn("CopyItemState.insert: package padstack not found");
                 return;
               }
               Padstack newPadstack =
-                  change_padstack_layers(oldPadstack, currentLayer, board, padstack_pairs);
+                  changePadstackLayers(oldPadstack, currentLayer, board, padstack_pairs);
               newPinArr[i] =
                   new Package.Pin(
                       oldPin.name,
@@ -194,39 +194,39 @@ public final class CopyItemState extends InteractiveState {
             }
             newPackage = board.library.packages.add(newPinArr);
           } else {
-            newPackage = oldComponent.get_package();
+            newPackage = oldComponent.getPackage();
           }
           Component newComponent =
               board.components.add(
                   newLocation,
-                  oldComponent.get_rotation_in_degree(),
-                  oldComponent.placed_on_front(),
+                  oldComponent.getRotationInDegree(),
+                  oldComponent.placedOnFront(),
                   newPackage);
           copiedComponents.add(newComponent);
           newCmpNo = newComponent.no;
           cmp_no_pairs.put(currCmpNo, newCmpNo);
         }
-        currItem.assign_component_no(newCmpNo);
+        currItem.assignComponentNo(newCmpNo);
       }
     }
     boolean allItemsInserted = true;
     boolean firstTime = true;
     for (Item currItem : itemList) {
-      if (currItem.board != null && currItem.clearance_violation_count() == 0) {
+      if (currItem.board != null && currItem.clearanceViolationCount() == 0) {
         if (firstTime) {
           // make the current situation restorable by undo
-          board.generate_snapshot();
+          board.generateSnapshot();
           firstTime = false;
         }
-        board.insert_item(currItem.copy(0));
+        board.insertItem(currItem.copy(0));
       } else {
         allItemsInserted = false;
       }
     }
     if (allItemsInserted) {
-      hdlg.screenMessages.set_status_message(tm.getText("allItemsInserted"));
+      hdlg.screenMessages.setStatusMessage(tm.getText("allItemsInserted"));
     } else {
-      hdlg.screenMessages.set_status_message(
+      hdlg.screenMessages.setStatusMessage(
           tm.getText("some_items_not_inserted_because_of_obstacles"));
     }
     startPosition = currentPosition;
@@ -235,7 +235,7 @@ public final class CopyItemState extends InteractiveState {
   }
 
   @Override
-  public InteractiveState left_button_clicked(FloatPoint p_location) {
+  public InteractiveState leftButtonClicked(FloatPoint p_location) {
     insert();
     return this;
   }
@@ -249,13 +249,13 @@ public final class CopyItemState extends InteractiveState {
       currItem.draw(
           p_graphics,
           hdlg.graphicsContext,
-          hdlg.graphicsContext.get_hilight_color(),
-          hdlg.graphicsContext.get_hilight_color_intensity());
+          hdlg.graphicsContext.getHilightColor(),
+          hdlg.graphicsContext.getHilightColorIntensity());
     }
   }
 
   @Override
-  public JPopupMenu get_popup_menu() {
-    return hdlg.get_panel().popupMenuCopy;
+  public JPopupMenu getPopupMenu() {
+    return hdlg.getPanel().popupMenuCopy;
   }
 }

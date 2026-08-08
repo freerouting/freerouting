@@ -105,7 +105,7 @@ public class RatsNest {
     this.drc = new DesignRulesChecker(p_board, null);
     this.drc.calculateAllIncompletes();
 
-    int maxNetNo = p_board.rules.nets.max_net_no();
+    int maxNetNo = p_board.rules.nets.maxNetNo();
     this.isFiltered = new boolean[maxNetNo];
     for (int i = 0; i < maxNetNo; i++) {
       isFiltered[i] = false;
@@ -175,10 +175,10 @@ public class RatsNest {
    * airline connecting the groups, even though 2 connections need to be routed.
    *
    * @return the total count of airlines across all nets
-   * @see #incomplete_count(int)
+   * @see #incompleteCount(int)
    * @see DesignRulesChecker#getIncompleteCount()
    */
-  public int incomplete_count() {
+  public int incompleteCount() {
     int result = drc.getIncompleteCount();
     StringBuilder perNet = new StringBuilder();
     for (int netNo = 1; netNo <= this.isFiltered.length; netNo++) {
@@ -221,10 +221,10 @@ public class RatsNest {
    *
    * @param p_net_no the net number to check
    * @return the count of airlines for this net, or 0 if fully connected
-   * @see #incomplete_count()
+   * @see #incompleteCount()
    * @see DesignRulesChecker#getIncompleteCount(int)
    */
-  public int incomplete_count(int p_net_no) {
+  public int incompleteCount(int p_net_no) {
     int result = drc.getIncompleteCount(p_net_no);
     FRLogger.trace(
         "RatsNest.incompleteCount",
@@ -257,10 +257,10 @@ public class RatsNest {
    * <p>A count of 0 indicates all length-constrained nets are within tolerance.
    *
    * @return the number of nets violating length restrictions
-   * @see #get_length_violation(int)
+   * @see #getLengthViolation(int)
    * @see DesignRulesChecker#getLengthViolationCount()
    */
-  public int length_violation_count() {
+  public int lengthViolationCount() {
     return drc.getLengthViolationCount();
   }
 
@@ -283,10 +283,10 @@ public class RatsNest {
    *
    * @param p_net_no the net number to check
    * @return positive if too long, negative if too short, 0 if valid or unrestricted
-   * @see #length_violation_count()
+   * @see #lengthViolationCount()
    * @see DesignRulesChecker#getLengthViolation(int)
    */
-  public double get_length_violation(int p_net_no) {
+  public double getLengthViolation(int p_net_no) {
     return drc.getLengthViolation(p_net_no);
   }
 
@@ -314,7 +314,7 @@ public class RatsNest {
    * @see AirLine
    * @see DesignRulesChecker#getAllAirlines()
    */
-  public AirLine[] get_airlines() {
+  public AirLine[] getAirlines() {
     return drc.getAllAirlines();
   }
 
@@ -328,7 +328,7 @@ public class RatsNest {
    * <p>Length violation indicators may still be displayed depending on implementation settings.
    *
    * @see #show()
-   * @see #is_hidden()
+   * @see #isHidden()
    */
   public void hide() {
     hidden = true;
@@ -341,7 +341,7 @@ public class RatsNest {
    * individually filtered. Airlines for filtered nets remain hidden.
    *
    * @see #hide()
-   * @see #set_filter(int, boolean)
+   * @see #setFilter(int, boolean)
    */
   public void show() {
     hidden = false;
@@ -362,11 +362,11 @@ public class RatsNest {
    * optimization, pull-tight, or manual trace adjustments.
    *
    * @return true if any net's violation status changed (new violations or fixes), false otherwise
-   * @see #length_violation_count()
-   * @see #get_length_violation(int)
+   * @see #lengthViolationCount()
+   * @see #getLengthViolation(int)
    * @see DesignRulesChecker#recalculateLengthViolations()
    */
-  public boolean recalculate_length_violations() {
+  public boolean recalculateLengthViolations() {
     return drc.recalculateLengthViolations();
   }
 
@@ -386,7 +386,7 @@ public class RatsNest {
    * @see #hide()
    * @see #show()
    */
-  public boolean is_hidden() {
+  public boolean isHidden() {
     return hidden;
   }
 
@@ -408,10 +408,10 @@ public class RatsNest {
    *
    * @param p_net_no the net number to filter (1-based indexing)
    * @param p_value true to hide the net's airlines, false to show them
-   * @see #is_hidden()
+   * @see #isHidden()
    * @see #draw(Graphics, GraphicsContext)
    */
-  public void set_filter(int p_net_no, boolean p_value) {
+  public void setFilter(int p_net_no, boolean p_value) {
     if (p_net_no < 1 || p_net_no > isFiltered.length) {
       return;
     }

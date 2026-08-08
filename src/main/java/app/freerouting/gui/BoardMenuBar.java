@@ -25,16 +25,16 @@ public class BoardMenuBar extends JMenuBar {
     this.boardFrame = boardFrame;
     fileMenu = new BoardMenuFile(boardFrame);
     add(fileMenu);
-    appereanceMenu = BoardMenuDisplay.get_instance(boardFrame);
+    appereanceMenu = BoardMenuDisplay.getInstance(boardFrame);
     add(appereanceMenu);
-    settingsMenu = BoardMenuParameter.get_instance(boardFrame);
+    settingsMenu = BoardMenuParameter.getInstance(boardFrame);
     add(settingsMenu);
-    rulesMenu = BoardMenuRules.get_instance(boardFrame);
+    rulesMenu = BoardMenuRules.getInstance(boardFrame);
     add(rulesMenu);
-    infoMenu = BoardMenuInfo.get_instance(boardFrame);
+    infoMenu = BoardMenuInfo.getInstance(boardFrame);
     add(infoMenu);
     if (featureFlags.otherMenu) {
-      JMenu otherMenu = BoardMenuOther.get_instance(boardFrame);
+      JMenu otherMenu = BoardMenuOther.getInstance(boardFrame);
       add(otherMenu);
     }
     JMenu helpMenu = new BoardMenuHelp(boardFrame);

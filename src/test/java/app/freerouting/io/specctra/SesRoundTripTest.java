@@ -190,18 +190,18 @@ class SesRoundTripTest {
     assertTrue(imported.wiresImported() > 0);
 
     int tracesWithDrillContacts = 0;
-    for (app.freerouting.board.Item item : board.get_items()) {
+    for (app.freerouting.board.Item item : board.getItems()) {
       if (!(item instanceof app.freerouting.board.PolylineTrace trace)) {
         continue;
       }
       for (boolean startSide : new boolean[] {true, false}) {
-        var contacts = startSide ? trace.get_start_contacts() : trace.get_end_contacts();
+        var contacts = startSide ? trace.getStartContacts() : trace.getEndContacts();
         boolean hasDrillContact = contacts.stream().anyMatch(DrillItem.class::isInstance);
         if (!hasDrillContact) {
           continue;
         }
         tracesWithDrillContacts++;
-        var corner = (startSide ? trace.first_corner() : trace.last_corner()).to_float();
+        var corner = (startSide ? trace.firstCorner() : trace.lastCorner()).toFloat();
         var snapped = SesWriter.snappedEndpoint(trace, startSide);
         if (snapped != null) {
           // A snap may only move the endpoint to the center of a contacted drill item,
@@ -209,7 +209,7 @@ class SesRoundTripTest {
           boolean isDrillCenter =
               contacts.stream()
                   .filter(DrillItem.class::isInstance)
-                  .map(c -> ((DrillItem) c).get_center().to_float())
+                  .map(c -> ((DrillItem) c).getCenter().toFloat())
                   .anyMatch(center -> center.distance(snapped) < 0.5);
           assertTrue(isDrillCenter, "snap target must be a contacted drill item center");
           assertTrue(

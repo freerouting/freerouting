@@ -139,11 +139,11 @@ public final class KiCadJsonReader {
           new ClearanceMatrix(clearanceClassCount, layerStructure, clearanceClassNames);
       int defaultClearance =
           (int) Math.round(Unit.scale(0.2, Unit.MM, userUnit) * scaleFactor); // fallback 0.2mm
-      clearanceMatrix.set_default_value(defaultClearance);
+      clearanceMatrix.setDefaultValue(defaultClearance);
 
       if (kiCadDefaultNetClass != null && kiCadDefaultNetClass.clearance > 0) {
         int defaultClVal = (int) Math.round(kiCadDefaultNetClass.clearance * scaleFactor);
-        clearanceMatrix.set_value(1, 1, defaultClVal);
+        clearanceMatrix.setValue(1, 1, defaultClVal);
       }
 
       // Populate clearance matrix from non-default NetClasses and Custom Clearance Rules
@@ -151,16 +151,16 @@ public final class KiCadJsonReader {
         KiCadBoardJson.NetClassJson nc = additionalNetClasses.get(i);
         int clNo = i + 2;
         int clVal = (int) Math.round(nc.clearance * scaleFactor);
-        clearanceMatrix.set_value(clNo, clNo, clVal);
-        clearanceMatrix.set_value(1, clNo, clVal); // spacing between default and class
+        clearanceMatrix.setValue(clNo, clNo, clVal);
+        clearanceMatrix.setValue(1, clNo, clVal); // spacing between default and class
       }
 
       for (KiCadBoardJson.CustomClearanceRuleJson rule : boardJson.clearanceRules) {
-        int idxA = clearanceMatrix.get_no(rule.classA);
-        int idxB = clearanceMatrix.get_no(rule.classB);
+        int idxA = clearanceMatrix.getNo(rule.classA);
+        int idxB = clearanceMatrix.getNo(rule.classB);
         if (idxA >= 0 && idxB >= 0) {
           int clearanceVal = (int) Math.round(rule.clearance * scaleFactor);
-          clearanceMatrix.set_value(idxA, idxB, clearanceVal);
+          clearanceMatrix.setValue(idxA, idxB, clearanceVal);
         }
       }
 
@@ -272,7 +272,7 @@ public final class KiCadJsonReader {
                 (int) Math.round(maxX * scaleFactor), (int) Math.round(-minY * scaleFactor));
 
         for (Point point : points) {
-          boundingBoxOutline.add_point(point.to_float());
+          boundingBoxOutline.addPoint(point.toFloat());
         }
         outlineShapes.add(new PolygonShape(points));
         outlineGenerated = true;
@@ -299,12 +299,12 @@ public final class KiCadJsonReader {
           points[i] =
               new IntPoint(
                   (int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
-          boundingBoxOutline.add_point(points[i].to_float());
+          boundingBoxOutline.addPoint(points[i].toFloat());
         }
         outlineShapes.add(new PolygonShape(points));
       }
 
-      IntBox boundingBox = boundingBoxOutline.bounding_box().offset(1000);
+      IntBox boundingBox = boundingBoxOutline.boundingBox().offset(1000);
       int outlineClearanceNo = 1; // Default clearance class
 
       // 6. Communication object setup
@@ -328,8 +328,8 @@ public final class KiCadJsonReader {
       board.library.packages = new Packages(board.library.padstacks);
 
       // 8. Populate Net Classes & Netlist in Rules (now that board is fully linked)
-      boardRules.create_default_net_class();
-      NetClass defaultNetClass = boardRules.get_default_net_class();
+      boardRules.createDefaultNetClass();
+      NetClass defaultNetClass = boardRules.getDefaultNetClass();
       Map<String, Integer> netClassIndexMap = new HashMap<>();
       if (kiCadDefaultNetClass != null) {
         applyKiCadNetClassParameters(
@@ -375,13 +375,13 @@ public final class KiCadJsonReader {
                   (int) Math.round(-defRadius),
                   (int) Math.round(defRadius),
                   (int) Math.round(defRadius))
-              .to_Simplex();
+              .toSimplex();
       for (int li = 0; li < layerCount; li++) {
         defViaShapeArr[li] = defViaShape;
       }
       Padstack defaultViaPadstack =
           board.library.padstacks.add("defaultVia", defViaShapeArr, true, false);
-      board.library.add_via_padstack(defaultViaPadstack);
+      board.library.addViaPadstack(defaultViaPadstack);
 
       int defaultViaClClass =
           defaultNetClass.defaultItemClearanceClasses.get(
@@ -391,9 +391,9 @@ public final class KiCadJsonReader {
       boardRules.viaInfos.add(defaultViaInfo);
 
       ViaRule defaultViaRule = new ViaRule("default");
-      defaultViaRule.append_via(defaultViaInfo);
+      defaultViaRule.appendVia(defaultViaInfo);
       boardRules.viaRules.add(defaultViaRule);
-      defaultNetClass.set_via_rule(defaultViaRule);
+      defaultNetClass.setViaRule(defaultViaRule);
 
       for (int i = 0; i < additionalNetClasses.size(); i++) {
         KiCadBoardJson.NetClassJson nc = additionalNetClasses.get(i);
@@ -411,14 +411,14 @@ public final class KiCadJsonReader {
                     (int) Math.round(-radius),
                     (int) Math.round(radius),
                     (int) Math.round(radius))
-                .to_Simplex();
+                .toSimplex();
         for (int li = 0; li < layerCount; li++) {
           viaShapeArr[li] = viaShape;
         }
 
         String viaName = "via_" + nc.name;
         Padstack viaPadstack = board.library.padstacks.add(viaName, viaShapeArr, true, false);
-        board.library.add_via_padstack(viaPadstack);
+        board.library.addViaPadstack(viaPadstack);
 
         int viaClClass =
             boardNetClass.defaultItemClearanceClasses.get(
@@ -427,9 +427,9 @@ public final class KiCadJsonReader {
         boardRules.viaInfos.add(viaInfo);
 
         ViaRule viaRule = new ViaRule(nc.name);
-        viaRule.append_via(viaInfo);
+        viaRule.appendVia(viaInfo);
         boardRules.viaRules.add(viaRule);
-        boardNetClass.set_via_rule(viaRule);
+        boardNetClass.setViaRule(viaRule);
       }
 
       // Add actual nets
@@ -437,7 +437,7 @@ public final class KiCadJsonReader {
       for (KiCadBoardJson.NetJson nj : boardJson.nets) {
         Net boardNet = boardRules.nets.add(nj.name, 1, nj.containsPlane);
         int clNo = resolveNetClassIndex(netClassIndexMap, nj.className);
-        boardNet.set_class(
+        boardNet.setClass(
             boardRules.netClasses.get(clNo - 1)); // NetClass array indices are 0-based
       }
 
@@ -481,7 +481,7 @@ public final class KiCadJsonReader {
         if (boardRules.nets.get(netName, 1) == null) {
           Net boardNet = boardRules.nets.add(netName, 1, false);
           // Fallback to default class (default net class is at index 0)
-          boardNet.set_class(boardRules.netClasses.get(0));
+          boardNet.setClass(boardRules.netClasses.get(0));
         }
       }
 
@@ -512,7 +512,7 @@ public final class KiCadJsonReader {
             IntOctagon oct =
                 new IntOctagon(
                     lx, ly, rx, uy, lx - uy + cut, rx - ly - cut, lx + ly + cut, rx + uy - cut);
-            padShape = oct.to_Simplex();
+            padShape = oct.toSimplex();
           } else {
             padShape =
                 new IntBox(
@@ -520,7 +520,7 @@ public final class KiCadJsonReader {
                         (int) Math.round(-dy),
                         (int) Math.round(dx),
                         (int) Math.round(dy))
-                    .to_Simplex();
+                    .toSimplex();
           }
 
           // Standardize pad's layer mappings
@@ -629,7 +629,7 @@ public final class KiCadJsonReader {
           Net targetNet = boardRules.nets.get(pad.netName, 1);
           int netNo = targetNet != null ? targetNet.netNumber : 0;
           int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
-          board.insert_pin(
+          board.insertPin(
               boardComp.no, pIdx, netNoArr, outlineClearanceNo, FixedState.SYSTEM_FIXED);
         }
       }
@@ -649,7 +649,7 @@ public final class KiCadJsonReader {
                   (int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
         }
         Area zoneArea = new PolygonShape(zonePoints);
-        board.insert_conduction_area(
+        board.insertConductionArea(
             zoneArea, zone.layerIndex, netNoArr, 1, zone.isObstacle, FixedState.USER_FIXED);
       }
 
@@ -667,7 +667,7 @@ public final class KiCadJsonReader {
               new IntPoint(
                   (int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
         }
-        board.insert_trace(
+        board.insertTrace(
             points, tr.layerIndex, traceHalfWidth, netNoArr, 1, FixedState.USER_FIXED);
       }
 
@@ -690,7 +690,7 @@ public final class KiCadJsonReader {
                     (int) Math.round(-radius),
                     (int) Math.round(radius),
                     (int) Math.round(radius))
-                .to_Simplex();
+                .toSimplex();
 
         for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
           shapeArr[li] = viaShape;
@@ -703,7 +703,7 @@ public final class KiCadJsonReader {
         if (viaPadstack == null) {
           viaPadstack = padstacks.add(viaPadstackName, shapeArr, true, false);
         }
-        board.insert_via(viaPadstack, center, netNoArr, 1, FixedState.USER_FIXED, true);
+        board.insertVia(viaPadstack, center, netNoArr, 1, FixedState.USER_FIXED, true);
       }
 
       long endTime = System.nanoTime();
@@ -776,7 +776,7 @@ public final class KiCadJsonReader {
                   (int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
         }
         Area zoneArea = new PolygonShape(zonePoints);
-        board.insert_conduction_area(
+        board.insertConductionArea(
             zoneArea, zone.layerIndex, netNoArr, 1, zone.isObstacle, FixedState.USER_FIXED);
       }
     }
@@ -796,14 +796,14 @@ public final class KiCadJsonReader {
               new IntPoint(
                   (int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
         }
-        board.insert_trace(
+        board.insertTrace(
             points, tr.layerIndex, traceHalfWidth, netNoArr, 1, FixedState.USER_FIXED);
       }
     }
 
     // 3. Vias
     if (boardJson.vias != null) {
-      int layerCount = board.get_layer_count();
+      int layerCount = board.getLayerCount();
       for (KiCadBoardJson.ViaJson vj : boardJson.vias) {
         Net targetNet = board.rules.nets.get(vj.netName, 1);
         int netNo = targetNet != null ? targetNet.netNumber : 0;
@@ -822,7 +822,7 @@ public final class KiCadJsonReader {
                     (int) Math.round(-radius),
                     (int) Math.round(radius),
                     (int) Math.round(radius))
-                .to_Simplex();
+                .toSimplex();
 
         for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
           if (li >= 0 && li < layerCount) {
@@ -837,7 +837,7 @@ public final class KiCadJsonReader {
         if (viaPadstack == null) {
           viaPadstack = board.library.padstacks.add(viaPadstackName, shapeArr, true, false);
         }
-        board.insert_via(viaPadstack, center, netNoArr, 1, FixedState.USER_FIXED, true);
+        board.insertVia(viaPadstack, center, netNoArr, 1, FixedState.USER_FIXED, true);
       }
     }
   }
@@ -846,11 +846,11 @@ public final class KiCadJsonReader {
   private static class PointOutline {
     private final List<FloatPoint> points = new ArrayList<>();
 
-    public void add_point(FloatPoint pt) {
+    public void addPoint(FloatPoint pt) {
       points.add(pt);
     }
 
-    public IntBox bounding_box() {
+    public IntBox boundingBox() {
       if (points.isEmpty()) {
         return IntBox.EMPTY;
       }
@@ -911,11 +911,11 @@ public final class KiCadJsonReader {
     if (pkg1 == null || p2 == null) {
       return (pkg1 == null) == (p2 == null);
     }
-    if (pkg1.pin_count() != p2.length) {
+    if (pkg1.pinCount() != p2.length) {
       return false;
     }
     for (int i = 0; i < p2.length; i++) {
-      Package.Pin pin1 = pkg1.get_pin(i);
+      Package.Pin pin1 = pkg1.getPin(i);
       Package.Pin pin2 = p2[i];
       if (pin1 == null || pin2 == null) {
         if (pin1 != pin2) {
@@ -929,8 +929,8 @@ public final class KiCadJsonReader {
       if (pin1.padstackNo != pin2.padstackNo) {
         return false;
       }
-      app.freerouting.geometry.planar.FloatPoint loc1 = pin1.relativeLocation.to_float();
-      app.freerouting.geometry.planar.FloatPoint loc2 = pin2.relativeLocation.to_float();
+      app.freerouting.geometry.planar.FloatPoint loc1 = pin1.relativeLocation.toFloat();
+      app.freerouting.geometry.planar.FloatPoint loc2 = pin2.relativeLocation.toFloat();
       if (Math.abs(loc1.x - loc2.x) > 0.001 || Math.abs(loc1.y - loc2.y) > 0.001) {
         return false;
       }
@@ -971,11 +971,11 @@ public final class KiCadJsonReader {
     if (source.traceWidth > 0) {
       int traceHalfWidth = (int) Math.round(source.traceWidth * scaleFactor / 2.0);
       for (int layer = 0; layer < layerCount; layer++) {
-        target.set_trace_half_width(layer, traceHalfWidth);
+        target.setTraceHalfWidth(layer, traceHalfWidth);
       }
     }
     if (source.clearance > 0) {
-      target.set_trace_clearance_class(clearanceClassNo);
+      target.setTraceClearanceClass(clearanceClassNo);
     }
   }
 

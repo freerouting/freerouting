@@ -37,31 +37,31 @@ public class ColorIntensityTable implements Serializable {
     this.arr = p_color_intensity_table.arr.clone();
   }
 
-  public double get_value(int p_no) {
+  public double getValue(int p_no) {
     if (p_no < 0 || p_no >= ObjectNames.values().length) {
       FRLogger.warn("ColorIntensityTable.get_value: p_no out of range");
       return 0;
     }
     if (p_no >= arr.length) {
-      log_missing_serialized_data_once("get_value", p_no);
-      return get_default_value(p_no);
+      logMissingSerializedDataOnce("get_value", p_no);
+      return getDefaultValue(p_no);
     }
     return arr[p_no];
   }
 
-  public void set_value(int p_no, double p_value) {
+  public void setValue(int p_no, double p_value) {
     if (p_no < 0 || p_no >= ObjectNames.values().length) {
       FRLogger.warn("ColorIntensityTable.set_value: p_no out of range");
       return;
     }
     if (p_no >= arr.length) {
-      log_missing_serialized_data_once("set_value", p_no);
+      logMissingSerializedDataOnce("set_value", p_no);
       return;
     }
     arr[p_no] = p_value;
   }
 
-  private void log_missing_serialized_data_once(String methodName, int p_no) {
+  private void logMissingSerializedDataOnce(String methodName, int p_no) {
     if (!missingSerializedDataLogged) {
       FRLogger.warn(
           "ColorIntensityTable." + methodName + ": p_no " + p_no + " missing in serialized data");
@@ -69,7 +69,7 @@ public class ColorIntensityTable implements Serializable {
     }
   }
 
-  private double get_default_value(int p_no) {
+  private double getDefaultValue(int p_no) {
     if (p_no == ObjectNames.DRILL_HOLES.ordinal()) {
       return 1.0;
     }

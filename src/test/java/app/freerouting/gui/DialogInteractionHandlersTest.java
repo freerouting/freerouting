@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 class DialogInteractionHandlersTest {
 
   @Test
-  void routingSettings_checkboxAndRadioInteractionsInvokeExpectedSetters() {
+  void routingSettingsCheckboxAndRadioInteractionsInvokeExpectedSetters() {
     InteractiveSettings interactiveSettings = mock(InteractiveSettings.class);
     GuiBoardManager boardManager = mock(GuiBoardManager.class);
 
@@ -28,15 +28,15 @@ class DialogInteractionHandlersTest {
     WindowRouteParameter.applyClearanceCompensationSelection(boardManager, false);
     WindowRouteParameter.applyPinExitEdgeToTurnDistance(boardManager, 125.5f);
 
-    verify(interactiveSettings).set_stitch_route(true);
-    verify(interactiveSettings).set_push_enabled(false);
-    verify(boardManager).set_ignore_conduction(true);
-    verify(boardManager).set_clearance_compensation(false);
-    verify(boardManager).set_pin_edge_to_turn_dist(125.5f);
+    verify(interactiveSettings).setStitchRoute(true);
+    verify(interactiveSettings).setPushEnabled(false);
+    verify(boardManager).setIgnoreConduction(true);
+    verify(boardManager).setClearanceCompensation(false);
+    verify(boardManager).setPinEdgeToTurnDist(125.5f);
   }
 
   @Test
-  void autoRouterSettings_checkboxAndAlgorithmInteractionsInvokeExpectedSetters() {
+  void autoRouterSettingsCheckboxAndAlgorithmInteractionsInvokeExpectedSetters() {
     RouterSettings settings = mock(RouterSettings.class);
 
     WindowAutorouteParameter.applyViasAllowedSelection(settings, true);
@@ -53,7 +53,7 @@ class DialogInteractionHandlersTest {
   }
 
   @Test
-  void autoRouterSettings_textFieldNormalizationHandlesBoundsAndInvalidInputs() {
+  void autoRouterSettingsTextFieldNormalizationHandlesBoundsAndInvalidInputs() {
     assertEquals(1, WindowAutorouteParameter.normalizeIntInput(0, 9, 1, 9999));
     assertEquals(9999, WindowAutorouteParameter.normalizeIntInput(12000, 9, 1, 9999));
     assertEquals(42, WindowAutorouteParameter.normalizeIntInput(42, 9, 1, 9999));
@@ -68,7 +68,7 @@ class DialogInteractionHandlersTest {
   }
 
   @Test
-  void clearanceMatrix_gridCellParsingAndLayeredApplyWorkAsExpected() {
+  void clearanceMatrixGridCellParsingAndLayeredApplyWorkAsExpected() {
     assertTrue(WindowClearanceMatrix.isLegalClassName("default2"));
     assertFalse(WindowClearanceMatrix.isLegalClassName("invalid_name"));
     assertFalse(WindowClearanceMatrix.isLegalClassName(""));
@@ -79,31 +79,31 @@ class DialogInteractionHandlersTest {
 
     ClearanceMatrix matrix = mock(ClearanceMatrix.class);
     WindowClearanceMatrix.applyClearanceValue(matrix, 2, 1, ComboBoxLayer.ALL_LAYER_INDEX, 300);
-    verify(matrix).set_value(2, 1, 300);
-    verify(matrix).set_value(1, 2, 300);
+    verify(matrix).setValue(2, 1, 300);
+    verify(matrix).setValue(1, 2, 300);
 
     ClearanceMatrix innerMatrix = mock(ClearanceMatrix.class);
     WindowClearanceMatrix.applyClearanceValue(
         innerMatrix, 2, 1, ComboBoxLayer.INNER_LAYER_INDEX, 220);
-    verify(innerMatrix).set_inner_value(2, 1, 220);
-    verify(innerMatrix).set_inner_value(1, 2, 220);
+    verify(innerMatrix).setInnerValue(2, 1, 220);
+    verify(innerMatrix).setInnerValue(1, 2, 220);
 
     ClearanceMatrix singleLayerMatrix = mock(ClearanceMatrix.class);
     WindowClearanceMatrix.applyClearanceValue(singleLayerMatrix, 2, 1, 3, 180);
-    verify(singleLayerMatrix).set_value(2, 1, 3, 180);
-    verify(singleLayerMatrix).set_value(1, 2, 3, 180);
+    verify(singleLayerMatrix).setValue(2, 1, 3, 180);
+    verify(singleLayerMatrix).setValue(1, 2, 3, 180);
   }
 
   @Test
-  void netClasses_buttonAndTableHelpersApplyExpectedChanges() {
+  void netClassesButtonAndTableHelpersApplyExpectedChanges() {
     assertFalse(WindowNetClasses.canRemoveNetClass(1, 0));
     assertFalse(WindowNetClasses.canRemoveNetClass(2, -1));
     assertTrue(WindowNetClasses.canRemoveNetClass(2, 0));
 
     NetClass netClass = mock(NetClass.class);
     WindowNetClasses.applyShoveFixedSelection(netClass, true);
-    verify(netClass).set_shove_fixed(true);
-    verify(netClass).set_pull_tight(false);
+    verify(netClass).setShoveFixed(true);
+    verify(netClass).setPullTight(false);
 
     NetClass fieldNetClass = mock(NetClass.class);
     assertFalse(fieldNetClass.isIgnoredByAutorouter);
@@ -114,7 +114,7 @@ class DialogInteractionHandlersTest {
   }
 
   @Test
-  void clearanceMatrix_parseReturnsNumberForNumericTypes() {
+  void clearanceMatrixParseReturnsNumberForNumericTypes() {
     Float parsedInteger = WindowClearanceMatrix.parseClearanceTableValue(7);
     Float parsedDouble = WindowClearanceMatrix.parseClearanceTableValue(3.75d);
 

@@ -72,7 +72,7 @@ public class ApiKeyValidationFilterTest {
    * Authorization header must be allowed through (no abort, no 401).
    */
   @Test
-  void whenAuthDisabled_requestWithoutAuthHeader_isAllowed() throws IOException {
+  void whenAuthDisabledRequestWithoutAuthHeaderIsAllowed() throws IOException {
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled =
         false; // explicit opt-out
 
@@ -89,7 +89,7 @@ public class ApiKeyValidationFilterTest {
    * must be allowed through.
    */
   @Test
-  void whenAuthDisabled_requestWithEmptyBearerToken_isAllowed() throws IOException {
+  void whenAuthDisabledRequestWithEmptyBearerTokenIsAllowed() throws IOException {
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
 
     ContainerRequestContext ctx = mockRequest("v1/jobs", "Bearer ");
@@ -104,7 +104,7 @@ public class ApiKeyValidationFilterTest {
    * rejected with 401.
    */
   @Test
-  void whenAuthEnabled_requestWithoutAuthHeader_isRejected() throws IOException {
+  void whenAuthEnabledRequestWithoutAuthHeaderIsRejected() throws IOException {
     // authentication.isEnabled defaults to true — no explicit set needed.
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", null);
 
@@ -120,7 +120,7 @@ public class ApiKeyValidationFilterTest {
    * NOT stubbed here: the filter returns before reaching that read for excluded paths.
    */
   @Test
-  void systemStatusPath_isAlwaysPublic() throws IOException {
+  void systemStatusPathIsAlwaysPublic() throws IOException {
     // authentication.isEnabled defaults to true
     ContainerRequestContext ctx = mock(ContainerRequestContext.class);
     UriInfo uriInfo = mock(UriInfo.class);
@@ -138,7 +138,7 @@ public class ApiKeyValidationFilterTest {
    * set to false for unauthenticated local deployments.
    */
   @Test
-  void isAuthenticationEnabled_reflectsConfiguration() {
+  void isAuthenticationEnabledReflectsConfiguration() {
     // Default is true — must return true without any explicit set
     assertTrue(ApiKeyValidationService.getInstance().isAuthenticationEnabled());
 

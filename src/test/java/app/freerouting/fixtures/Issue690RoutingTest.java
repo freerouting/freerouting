@@ -14,8 +14,8 @@ public class Issue690RoutingTest extends RoutingFixtureTest {
     ts.setMaxItems(50);
     ts.setFanoutEnabled(false);
     ts.setJobTimeoutString("00:01:00");
-    RoutingJob job = GetRoutingJob("Issue690-ecc83.dsn", ts);
-    RunRoutingJob(job);
+    RoutingJob job = getRoutingJob("Issue690-ecc83.dsn", ts);
+    runRoutingJob(job);
   }
 
   @Test
@@ -26,8 +26,8 @@ public class Issue690RoutingTest extends RoutingFixtureTest {
     ts.setMaxItems(50);
     ts.setFanoutEnabled(false);
     ts.setJobTimeoutString("00:02:00");
-    RoutingJob job = GetRoutingJob("Issue690-kit-dev-coldfire-xilinx_5213.dsn", ts);
-    RunRoutingJob(job);
+    RoutingJob job = getRoutingJob("Issue690-kit-dev-coldfire-xilinx_5213.dsn", ts);
+    runRoutingJob(job);
   }
 
   @Test
@@ -37,7 +37,7 @@ public class Issue690RoutingTest extends RoutingFixtureTest {
     ts.setMaxItems(50);
     ts.setFanoutEnabled(false);
     ts.setJobTimeoutString("00:01:00");
-    RoutingJob job = GetRoutingJob("Issue690-sonde_xilinx.dsn", ts);
-    RunRoutingJob(job);
+    RoutingJob job = getRoutingJob("Issue690-sonde_xilinx.dsn", ts);
+    runRoutingJob(job);
   }
 }

@@ -77,7 +77,7 @@ class EnvironmentHostValidationFilterTest {
   // ------------------------------------------------------------------ valid header values
 
   @Test
-  void validHeader_toolAndVersion_isAccepted() throws IOException {
+  void validHeaderToolAndVersionIsAccepted() throws IOException {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", "KiCad/10.0");
 
     filter.filter(ctx);
@@ -88,7 +88,7 @@ class EnvironmentHostValidationFilterTest {
   @ParameterizedTest(name = "header ''{0}'' is accepted")
   @ValueSource(
       strings = {"KiCad/10.0", "EasyEDA/1.0", "Postman/11.14", "MyScript/1.0", "Target3001!/22"})
-  void validHeader_variousTools_areAccepted(String headerValue) throws IOException {
+  void validHeaderVariousToolsAreAccepted(String headerValue) throws IOException {
     ContainerRequestContext ctx = mockRequest("v1/jobs/enqueue", headerValue);
 
     filter.filter(ctx);
@@ -99,7 +99,7 @@ class EnvironmentHostValidationFilterTest {
   // ------------------------------------------------------------------ missing header
 
   @Test
-  void missingHeader_onProtectedPath_returns400() throws IOException {
+  void missingHeaderOnProtectedPathReturns400() throws IOException {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", null);
 
     filter.filter(ctx);
@@ -109,7 +109,7 @@ class EnvironmentHostValidationFilterTest {
   }
 
   @Test
-  void missingHeader_errorBodyMentionsHeaderName() throws IOException {
+  void missingHeaderErrorBodyMentionsHeaderName() throws IOException {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", null);
 
     filter.filter(ctx);
@@ -121,7 +121,7 @@ class EnvironmentHostValidationFilterTest {
   }
 
   @Test
-  void missingHeader_errorBodyContainsExamples() throws IOException {
+  void missingHeaderErrorBodyContainsExamples() throws IOException {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", null);
 
     filter.filter(ctx);
@@ -134,7 +134,7 @@ class EnvironmentHostValidationFilterTest {
   }
 
   @Test
-  void blankHeader_treatedAsMissing_returns400() throws IOException {
+  void blankHeaderTreatedAsMissingReturns400() throws IOException {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", "   ");
 
     filter.filter(ctx);
@@ -154,7 +154,7 @@ class EnvironmentHostValidationFilterTest {
         "/", // both parts empty
         "KiCad/10.0/extra" // too many slashes
       })
-  void malformedHeader_returns400(String headerValue) throws IOException {
+  void malformedHeaderReturns400(String headerValue) throws IOException {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", headerValue);
 
     filter.filter(ctx);
@@ -164,7 +164,7 @@ class EnvironmentHostValidationFilterTest {
   }
 
   @Test
-  void malformedHeader_errorBodyMentionsActualValue() throws IOException {
+  void malformedHeaderErrorBodyMentionsActualValue() throws IOException {
     String badHeader = "BadHeaderNoSlash";
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", badHeader);
 
@@ -178,7 +178,7 @@ class EnvironmentHostValidationFilterTest {
   }
 
   @Test
-  void malformedHeader_errorBodyContainsFormatGuidance() throws IOException {
+  void malformedHeaderErrorBodyContainsFormatGuidance() throws IOException {
     ContainerRequestContext ctx = mockRequest("v1/jobs/enqueue", "NoSlashHere");
 
     filter.filter(ctx);
@@ -203,7 +203,7 @@ class EnvironmentHostValidationFilterTest {
         "swagger-ui",
         "swagger-ui/index.html"
       })
-  void excludedPaths_arePublic_headerNotRequired(String path) throws IOException {
+  void excludedPathsArePublicHeaderNotRequired(String path) throws IOException {
     // No header stub needed because the filter returns before reading it.
     ContainerRequestContext ctx = mock(ContainerRequestContext.class);
     UriInfo uriInfo = mock(UriInfo.class);
@@ -218,7 +218,7 @@ class EnvironmentHostValidationFilterTest {
   // ------------------------------------------------------------------ response format
 
   @Test
-  void errorResponse_contentTypeIsJson() throws IOException {
+  void errorResponseContentTypeIsJson() throws IOException {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", null);
 
     filter.filter(ctx);
@@ -234,7 +234,7 @@ class EnvironmentHostValidationFilterTest {
   }
 
   @Test
-  void errorResponse_bodyIsValidJsonObject() throws IOException {
+  void errorResponseBodyIsValidJsonObject() throws IOException {
     ContainerRequestContext ctx = mockRequest("v1/sessions/create", null);
 
     filter.filter(ctx);

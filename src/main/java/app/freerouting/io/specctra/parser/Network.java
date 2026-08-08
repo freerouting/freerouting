@@ -37,73 +37,73 @@ public class Network extends ScopeKeyword {
     super("network");
   }
 
-  public static void write_scope(WriteScopeParameter p_par) throws IOException {
-    p_par.file.start_scope();
+  public static void writeScope(WriteScopeParameter p_par) throws IOException {
+    p_par.file.startScope();
     p_par.file.write("network");
-    Collection<Pin> boardPins = p_par.board.get_pins();
-    for (int i = 1; i <= p_par.board.rules.nets.max_net_no(); i++) {
-      Net.write_scope(p_par, p_par.board.rules.nets.get(i), boardPins);
+    Collection<Pin> boardPins = p_par.board.getPins();
+    for (int i = 1; i <= p_par.board.rules.nets.maxNetNo(); i++) {
+      Net.writeScope(p_par, p_par.board.rules.nets.get(i), boardPins);
     }
-    write_via_infos(p_par.board.rules, p_par.file, p_par.identifierType);
-    write_via_rules(p_par.board.rules, p_par.file, p_par.identifierType);
-    write_net_classes(p_par);
-    p_par.file.end_scope();
+    writeViaInfos(p_par.board.rules, p_par.file, p_par.identifierType);
+    writeViaRules(p_par.board.rules, p_par.file, p_par.identifierType);
+    writeNetClasses(p_par);
+    p_par.file.endScope();
   }
 
-  public static void write_via_infos(
+  public static void writeViaInfos(
       BoardRules p_rules, IndentFileWriter p_file, IdentifierType p_identifier_type)
       throws IOException {
     for (int i = 0; i < p_rules.viaInfos.count(); i++) {
       ViaInfo currVia = p_rules.viaInfos.get(i);
-      p_file.start_scope();
+      p_file.startScope();
       p_file.write("via ");
-      p_file.new_line();
-      p_identifier_type.write(currVia.get_name(), p_file);
+      p_file.newLine();
+      p_identifier_type.write(currVia.getName(), p_file);
       p_file.write(" ");
-      p_identifier_type.write(currVia.get_padstack().name, p_file);
+      p_identifier_type.write(currVia.getPadstack().name, p_file);
       p_file.write(" ");
       p_identifier_type.write(
-          p_rules.clearanceMatrix.get_name(currVia.get_clearance_class()), p_file);
-      if (currVia.attach_smd_allowed()) {
+          p_rules.clearanceMatrix.getName(currVia.getClearanceClass()), p_file);
+      if (currVia.attachSmdAllowed()) {
         p_file.write(" attach");
       }
-      p_file.end_scope();
+      p_file.endScope();
     }
   }
 
-  public static void write_via_rules(
+  public static void writeViaRules(
       BoardRules p_rules, IndentFileWriter p_file, IdentifierType p_identifier_type)
       throws IOException {
     for (ViaRule currRule : p_rules.viaRules) {
-      p_file.start_scope();
+      p_file.startScope();
       p_file.write("viaRule");
-      p_file.new_line();
+      p_file.newLine();
       p_identifier_type.write(currRule.name, p_file);
-      for (int i = 0; i < currRule.via_count(); i++) {
+      for (int i = 0; i < currRule.viaCount(); i++) {
         p_file.write(" ");
-        p_identifier_type.write(currRule.get_via(i).get_name(), p_file);
+        p_identifier_type.write(currRule.getVia(i).getName(), p_file);
       }
-      p_file.end_scope();
+      p_file.endScope();
     }
   }
 
-  public static void write_net_classes(WriteScopeParameter p_par) throws IOException {
+  public static void writeNetClasses(WriteScopeParameter p_par) throws IOException {
     for (int i = 0; i < p_par.board.rules.netClasses.count(); i++) {
-      write_net_class(p_par.board.rules.netClasses.get(i), p_par);
+      writeNetClass(p_par.board.rules.netClasses.get(i), p_par);
     }
   }
 
-  public static void write_net_class(
+  public static void writeNetClass(
       app.freerouting.rules.NetClass p_net_class, WriteScopeParameter p_par) throws IOException {
-    p_par.file.start_scope();
+    p_par.file.startScope();
     p_par.file.write("class ");
-    p_par.identifierType.write(p_net_class.get_name(), p_par.file);
+    p_par.identifierType.write(p_net_class.getName(), p_par.file);
     final int netsPerRow = 8;
     int netCounter = 0;
-    for (int i = 1; i <= p_par.board.rules.nets.max_net_no(); i++) {
+    for (int i = 1; i <= p_par.board.rules.nets.maxNetNo(); i++) {
       if (p_par.board.rules.nets.get(i).getNetClass() == p_net_class) {
         if (netCounter % netsPerRow == 0) {
-          p_par.file.new_line();
+          p_par.file.newLine();
         } else {
           p_par.file.write(" ");
         }
@@ -113,61 +113,61 @@ public class Network extends ScopeKeyword {
     }
 
     // write the trace clearance class
-    Rule.write_item_clearance_class(
-        p_par.board.rules.clearanceMatrix.get_name(p_net_class.get_trace_clearance_class()),
+    Rule.writeItemClearanceClass(
+        p_par.board.rules.clearanceMatrix.getName(p_net_class.getTraceClearanceClass()),
         p_par.file,
         p_par.identifierType);
 
-    if (p_net_class.get_via_rule() != null) {
+    if (p_net_class.getViaRule() != null) {
       // write the via rule
-      p_par.file.new_line();
+      p_par.file.newLine();
       p_par.file.write("(viaRule ");
-      p_par.identifierType.write(p_net_class.get_via_rule().name, p_par.file);
+      p_par.identifierType.write(p_net_class.getViaRule().name, p_par.file);
       p_par.file.write(")");
     }
 
     // write the rules, if they are different from the default rule.
-    Rule.write_scope(p_net_class, p_par);
+    Rule.writeScope(p_net_class, p_par);
 
-    write_circuit(p_net_class, p_par);
+    writeCircuit(p_net_class, p_par);
 
-    if (!p_net_class.get_pull_tight()) {
-      p_par.file.new_line();
+    if (!p_net_class.getPullTight()) {
+      p_par.file.newLine();
       p_par.file.write("(pullTight off)");
     }
 
-    if (p_net_class.is_shove_fixed()) {
-      p_par.file.new_line();
+    if (p_net_class.isShoveFixed()) {
+      p_par.file.newLine();
       p_par.file.write("(shoveFixed on)");
     }
 
-    p_par.file.end_scope();
+    p_par.file.endScope();
   }
 
-  private static void write_circuit(
+  private static void writeCircuit(
       app.freerouting.rules.NetClass p_net_class, WriteScopeParameter p_par) throws IOException {
-    double minTraceLength = p_net_class.get_minimum_trace_length();
-    double maxTraceLength = p_net_class.get_maximum_trace_length();
-    p_par.file.start_scope();
+    double minTraceLength = p_net_class.getMinimumTraceLength();
+    double maxTraceLength = p_net_class.getMaximumTraceLength();
+    p_par.file.startScope();
     p_par.file.write("circuit ");
-    p_par.file.new_line();
+    p_par.file.newLine();
     p_par.file.write("(useLayer");
-    int layerCount = p_net_class.layer_count();
+    int layerCount = p_net_class.layerCount();
     for (int i = 0; i < layerCount; i++) {
-      if (p_net_class.is_active_routing_layer(i)) {
+      if (p_net_class.isActiveRoutingLayer(i)) {
         p_par.file.write(" ");
         p_par.file.write(p_par.board.layerStructure.arr[i].name);
       }
     }
     p_par.file.write(")");
     if (minTraceLength > 0 || maxTraceLength > 0) {
-      p_par.file.new_line();
+      p_par.file.newLine();
       p_par.file.write("(length ");
       double transformedMaxLength;
       if (maxTraceLength <= 0) {
         transformedMaxLength = -1;
       } else {
-        transformedMaxLength = p_par.coordinateTransform.board_to_dsn(maxTraceLength);
+        transformedMaxLength = p_par.coordinateTransform.boardToDsn(maxTraceLength);
       }
       p_par.file.write(String.valueOf(transformedMaxLength));
       p_par.file.write(" ");
@@ -175,16 +175,16 @@ public class Network extends ScopeKeyword {
       if (minTraceLength <= 0) {
         transformedMinLength = 0;
       } else {
-        transformedMinLength = p_par.coordinateTransform.board_to_dsn(minTraceLength);
+        transformedMinLength = p_par.coordinateTransform.boardToDsn(minTraceLength);
       }
       p_par.file.write(String.valueOf(transformedMinLength));
       p_par.file.write(")");
     }
-    p_par.file.end_scope();
+    p_par.file.endScope();
   }
 
   /** Creates a sequence of subnets with 2 pins from p_pin_list */
-  private static Collection<Collection<Net.Pin>> create_ordered_subnets(
+  private static Collection<Collection<Net.Pin>> createOrderedSubnets(
       Collection<Net.Pin> p_pin_list) {
     Collection<Collection<Net.Pin>> result = new LinkedList<>();
     if (p_pin_list.isEmpty()) {
@@ -204,28 +204,28 @@ public class Network extends ScopeKeyword {
     return result;
   }
 
-  private static boolean read_net_pins(IJFlexScanner p_scanner, Collection<Net.Pin> p_pin_list) {
+  private static boolean readNetPins(IJFlexScanner p_scanner, Collection<Net.Pin> p_pin_list) {
     Object nextToken;
     String componentName;
     String pinName;
-    while (!(componentName = ((SpecctraDsnStreamReader) p_scanner).next_string(true, '-'))
+    while (!(componentName = ((SpecctraDsnStreamReader) p_scanner).nextString(true, '-'))
         .isEmpty()) {
 
       try {
         p_scanner.yybegin(SpecctraDsnStreamReader.SPEC_CHAR);
-        nextToken = p_scanner.next_token(); // overread the hyphen
+        nextToken = p_scanner.nextToken(); // overread the hyphen
       } catch (IOException e) {
         FRLogger.error("Network.read_net_pins: IO error while scanning file", e);
         return false;
       }
 
-      pinName = p_scanner.next_string(true);
+      pinName = p_scanner.nextString(true);
       Net.Pin currEntry = new Net.Pin(componentName, pinName);
       p_pin_list.add(currEntry);
     }
 
     try {
-      nextToken = p_scanner.next_token();
+      nextToken = p_scanner.nextToken();
     } catch (IOException e) {
       FRLogger.error("Network.read_net_pins: IO error scanning file", e);
       return false;
@@ -233,7 +233,7 @@ public class Network extends ScopeKeyword {
     if (nextToken == null) {
       FRLogger.warn(
           "Network.read_net_pins: unexpected end of file at '"
-              + p_scanner.get_scope_identifier()
+              + p_scanner.getScopeIdentifier()
               + "'");
       return false;
     }
@@ -241,71 +241,71 @@ public class Network extends ScopeKeyword {
       // not end of scope
       FRLogger.warn(
           "Network.read_net_pins: expected closed bracket is missing at '"
-              + p_scanner.get_scope_identifier()
+              + p_scanner.getScopeIdentifier()
               + "'");
     }
 
     return true;
   }
 
-  public static ViaInfo read_via_info(IJFlexScanner p_scanner, BasicBoard p_board) {
+  public static ViaInfo readViaInfo(IJFlexScanner p_scanner, BasicBoard p_board) {
     try {
       p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      Object nextToken = p_scanner.next_token();
+      Object nextToken = p_scanner.nextToken();
       if (!(nextToken instanceof String name)) {
         FRLogger.warn(
-            "Network.read_via_info: string expected at '" + p_scanner.get_scope_identifier() + "'");
+            "Network.read_via_info: string expected at '" + p_scanner.getScopeIdentifier() + "'");
         return null;
       }
       p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      nextToken = p_scanner.next_token();
+      nextToken = p_scanner.nextToken();
       if (!(nextToken instanceof String padstackName)) {
         FRLogger.warn(
-            "Network.read_via_info: string expected at '" + p_scanner.get_scope_identifier() + "'");
+            "Network.read_via_info: string expected at '" + p_scanner.getScopeIdentifier() + "'");
         return null;
       }
-      p_scanner.set_scope_identifier(padstackName);
-      Padstack viaPadstack = p_board.library.get_via_padstack(padstackName);
+      p_scanner.setScopeIdentifier(padstackName);
+      Padstack viaPadstack = p_board.library.getViaPadstack(padstackName);
       if (viaPadstack == null) {
         // The padstack may not yet be inserted into the list of via padstacks
         viaPadstack = p_board.library.padstacks.get(padstackName);
         if (viaPadstack == null) {
           FRLogger.warn(
               "Network.read_via_info: padstack not found at '"
-                  + p_scanner.get_scope_identifier()
+                  + p_scanner.getScopeIdentifier()
                   + "'");
           return null;
         }
-        p_board.library.add_via_padstack(viaPadstack);
+        p_board.library.addViaPadstack(viaPadstack);
       }
       p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      nextToken = p_scanner.next_token();
+      nextToken = p_scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
-            "Network.read_via_info: string expected at '" + p_scanner.get_scope_identifier() + "'");
+            "Network.read_via_info: string expected at '" + p_scanner.getScopeIdentifier() + "'");
         return null;
       }
-      int clearanceClass = p_board.rules.clearanceMatrix.get_no((String) nextToken);
+      int clearanceClass = p_board.rules.clearanceMatrix.getNo((String) nextToken);
       if (clearanceClass < 0) {
         // Clearance class not stored, because it is identical to the default clearance class.
-        clearanceClass = BoardRules.default_clearance_class();
+        clearanceClass = BoardRules.defaultClearanceClass();
       }
       boolean attachAllowed = false;
-      nextToken = p_scanner.next_token();
+      nextToken = p_scanner.nextToken();
       if (nextToken != Keyword.CLOSED_BRACKET) {
         if (nextToken != Keyword.ATTACH) {
           FRLogger.warn(
               "Network.read_via_info: Keyword.ATTACH expected at '"
-                  + p_scanner.get_scope_identifier()
+                  + p_scanner.getScopeIdentifier()
                   + "'");
           return null;
         }
         attachAllowed = true;
-        nextToken = p_scanner.next_token();
+        nextToken = p_scanner.nextToken();
         if (nextToken != Keyword.CLOSED_BRACKET) {
           FRLogger.warn(
               "Network.read_via_info: closing bracket expected at '"
-                  + p_scanner.get_scope_identifier()
+                  + p_scanner.getScopeIdentifier()
                   + "'");
           return null;
         }
@@ -317,19 +317,19 @@ public class Network extends ScopeKeyword {
     }
   }
 
-  public static Collection<String> read_via_rule(IJFlexScanner p_scanner, BasicBoard p_board) {
+  public static Collection<String> readViaRule(IJFlexScanner p_scanner, BasicBoard p_board) {
     try {
       Collection<String> result = new LinkedList<>();
       for (; ; ) {
         p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
-        Object nextToken = p_scanner.next_token();
+        Object nextToken = p_scanner.nextToken();
         if (nextToken == Keyword.CLOSED_BRACKET) {
           break;
         }
         if (!(nextToken instanceof String)) {
           FRLogger.warn(
               "Network.read_via_rule: string expected at '"
-                  + p_scanner.get_scope_identifier()
+                  + p_scanner.getScopeIdentifier()
                   + "'");
           return null;
         }
@@ -342,7 +342,7 @@ public class Network extends ScopeKeyword {
     }
   }
 
-  private static void insert_via_infos(
+  private static void insertViaInfos(
       Collection<ViaInfo> p_via_infos, RoutingBoard p_board, boolean p_attach_allowed) {
     if (!p_via_infos.isEmpty()) {
       for (ViaInfo currInfo : p_via_infos) {
@@ -350,23 +350,23 @@ public class Network extends ScopeKeyword {
       }
     } else // no via infos found, create default via infos from the via padstacks.
     {
-      create_default_via_infos(p_board, p_board.rules.get_default_net_class(), p_attach_allowed);
+      createDefaultViaInfos(p_board, p_board.rules.getDefaultNetClass(), p_attach_allowed);
     }
   }
 
-  private static void create_default_via_infos(
+  private static void createDefaultViaInfos(
       BasicBoard p_board, app.freerouting.rules.NetClass p_net_class, boolean p_attach_allowed) {
     int clClass =
         p_net_class.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.VIA);
-    boolean isDefaultClass = p_net_class == p_board.rules.get_default_net_class();
-    for (int i = 0; i < p_board.library.via_padstack_count(); i++) {
-      Padstack currPadstack = p_board.library.get_via_padstack(i);
+    boolean isDefaultClass = p_net_class == p_board.rules.getDefaultNetClass();
+    for (int i = 0; i < p_board.library.viaPadstackCount(); i++) {
+      Padstack currPadstack = p_board.library.getViaPadstack(i);
       boolean attachAllowed = p_attach_allowed && currPadstack.attachAllowed;
       String viaName;
       if (isDefaultClass) {
         viaName = currPadstack.name;
       } else {
-        viaName = currPadstack.name + DsnFile.CLASS_CLEARANCE_SEPARATOR + p_net_class.get_name();
+        viaName = currPadstack.name + DsnFile.CLASS_CLEARANCE_SEPARATOR + p_net_class.getName();
       }
       ViaInfo foundViaInfo =
           new ViaInfo(viaName, currPadstack, clClass, attachAllowed, p_board.rules);
@@ -374,36 +374,36 @@ public class Network extends ScopeKeyword {
     }
   }
 
-  private static void insert_via_rules(
+  private static void insertViaRules(
       Collection<Collection<String>> p_via_rules, BasicBoard p_board) {
     boolean ruleFound = false;
     for (Collection<String> currList : p_via_rules) {
       if (currList.size() < 2) {
         continue;
       }
-      if (add_via_rule(currList, p_board)) {
+      if (addViaRule(currList, p_board)) {
         ruleFound = true;
       }
     }
     if (!ruleFound) {
-      p_board.rules.create_default_via_rule(p_board.rules.get_default_net_class(), "default");
+      p_board.rules.createDefaultViaRule(p_board.rules.getDefaultNetClass(), "default");
     }
     for (int i = 0; i < p_board.rules.netClasses.count(); i++) {
-      p_board.rules.netClasses.get(i).set_via_rule(p_board.rules.get_default_via_rule());
+      p_board.rules.netClasses.get(i).setViaRule(p_board.rules.getDefaultViaRule());
     }
   }
 
   /** Inserts a via rule into the board. Replaces an already existing via rule with the same */
-  public static boolean add_via_rule(Collection<String> p_name_list, BasicBoard p_board) {
+  public static boolean addViaRule(Collection<String> p_name_list, BasicBoard p_board) {
     Iterator<String> it = p_name_list.iterator();
     String ruleName = it.next();
-    ViaRule existingRule = p_board.rules.get_via_rule(ruleName);
+    ViaRule existingRule = p_board.rules.getViaRule(ruleName);
     ViaRule currRule = new ViaRule(ruleName);
     boolean ruleOk = true;
     while (it.hasNext()) {
       ViaInfo currVia = p_board.rules.viaInfos.get(it.next());
       if (currVia != null) {
-        currRule.append_via(currVia);
+        currRule.appendVia(currVia);
       } else {
         FRLogger.warn("Network.insert_via_rules: viaInfo not found");
         ruleOk = false;
@@ -419,11 +419,11 @@ public class Network extends ScopeKeyword {
     return ruleOk;
   }
 
-  private static void insert_net_classes(
+  private static void insertNetClasses(
       Collection<NetClass> p_net_classes, ReadScopeParameter p_par) {
-    BasicBoard routingBoard = p_par.boardHandling.get_routing_board();
+    BasicBoard routingBoard = p_par.boardHandling.getRoutingBoard();
     for (NetClass currClass : p_net_classes) {
-      insert_net_class(
+      insertNetClass(
           currClass,
           p_par.layerStructure,
           routingBoard,
@@ -432,7 +432,7 @@ public class Network extends ScopeKeyword {
     }
   }
 
-  public static void insert_net_class(
+  public static void insertNetClass(
       NetClass p_class,
       LayerStructure p_layer_structure,
       BasicBoard p_board,
@@ -440,40 +440,40 @@ public class Network extends ScopeKeyword {
       boolean p_via_at_smd_allowed) {
     app.freerouting.rules.NetClass boardNetClass =
         KiCadNetClassNames.isKiCadDefaultNetClassName(p_class.name)
-            ? p_board.rules.get_default_net_class()
-            : p_board.rules.append_net_class(p_class.name);
+            ? p_board.rules.getDefaultNetClass()
+            : p_board.rules.appendNetClass(p_class.name);
     if (p_class.traceClearanceClass != null) {
-      int traceClearanceClass = p_board.rules.clearanceMatrix.get_no(p_class.traceClearanceClass);
+      int traceClearanceClass = p_board.rules.clearanceMatrix.getNo(p_class.traceClearanceClass);
       if (traceClearanceClass >= 0) {
-        boardNetClass.set_trace_clearance_class(traceClearanceClass);
+        boardNetClass.setTraceClearanceClass(traceClearanceClass);
       } else {
         FRLogger.warn(
             "Network.insert_net_class: clearance class not found at '"
-                + boardNetClass.get_name()
+                + boardNetClass.getName()
                 + "'");
       }
     }
     if (p_class.viaRule != null) {
-      ViaRule viaRule = p_board.rules.get_via_rule(p_class.viaRule);
+      ViaRule viaRule = p_board.rules.getViaRule(p_class.viaRule);
       if (viaRule != null) {
-        boardNetClass.set_via_rule(viaRule);
+        boardNetClass.setViaRule(viaRule);
       } else {
         FRLogger.warn(
-            "Network.insert_net_class: via rule not found at '" + boardNetClass.get_name() + "'");
+            "Network.insert_net_class: via rule not found at '" + boardNetClass.getName() + "'");
       }
     }
     if (p_class.maxTraceLength > 0) {
-      boardNetClass.set_maximum_trace_length(
-          p_coordinate_transform.dsn_to_board(p_class.maxTraceLength));
+      boardNetClass.setMaximumTraceLength(
+          p_coordinate_transform.dsnToBoard(p_class.maxTraceLength));
     }
     if (p_class.minTraceLength > 0) {
-      boardNetClass.set_minimum_trace_length(
-          p_coordinate_transform.dsn_to_board(p_class.minTraceLength));
+      boardNetClass.setMinimumTraceLength(
+          p_coordinate_transform.dsnToBoard(p_class.minTraceLength));
     }
     for (String currNetName : p_class.netList) {
       Collection<app.freerouting.rules.Net> currNetList = p_board.rules.nets.get(currNetName);
       for (app.freerouting.rules.Net currNet : currNetList) {
-        currNet.set_class(boardNetClass);
+        currNet.setClass(boardNetClass);
       }
     }
 
@@ -483,16 +483,16 @@ public class Network extends ScopeKeyword {
 
     for (Rule currRule : p_class.rules) {
       if (currRule instanceof Rule.WidthRule rule1) {
-        int traceHalfwidth = (int) Math.round(p_coordinate_transform.dsn_to_board(rule1.value / 2));
-        boardNetClass.set_trace_half_width(traceHalfwidth);
+        int traceHalfwidth = (int) Math.round(p_coordinate_transform.dsnToBoard(rule1.value / 2));
+        boardNetClass.setTraceHalfWidth(traceHalfwidth);
       } else if (currRule instanceof Rule.ClearanceRule rule) {
-        add_clearance_rule(
+        addClearanceRule(
             p_board.rules.clearanceMatrix, boardNetClass, rule, -1, p_coordinate_transform);
         clearanceRuleFound = true;
       } else {
         FRLogger.warn(
             "Network.insert_net_class: rule type not yet implemented at '"
-                + boardNetClass.get_name()
+                + boardNetClass.getName()
                 + "'");
       }
     }
@@ -501,19 +501,19 @@ public class Network extends ScopeKeyword {
 
     for (Rule.LayerRule curr_layer_rule : p_class.layerRules) {
       for (String curr_layer_name : curr_layer_rule.layerNames) {
-        int layerNo = p_board.layerStructure.get_no(curr_layer_name);
+        int layerNo = p_board.layerStructure.getNo(curr_layer_name);
         if (layerNo < 0) {
           FRLogger.warn(
-              "Network.insert_net_class: layer not found at '" + boardNetClass.get_name() + "'");
+              "Network.insert_net_class: layer not found at '" + boardNetClass.getName() + "'");
           continue;
         }
         for (Rule currRule : curr_layer_rule.rules) {
           if (currRule instanceof Rule.WidthRule rule1) {
             int traceHalfwidth =
-                (int) Math.round(p_coordinate_transform.dsn_to_board(rule1.value / 2));
-            boardNetClass.set_trace_half_width(layerNo, traceHalfwidth);
+                (int) Math.round(p_coordinate_transform.dsnToBoard(rule1.value / 2));
+            boardNetClass.setTraceHalfWidth(layerNo, traceHalfwidth);
           } else if (currRule instanceof Rule.ClearanceRule rule) {
-            add_clearance_rule(
+            addClearanceRule(
                 p_board.rules.clearanceMatrix,
                 boardNetClass,
                 rule,
@@ -523,37 +523,37 @@ public class Network extends ScopeKeyword {
           } else {
             FRLogger.warn(
                 "Network.insert_net_class: layer rule type not yet implemented at '"
-                    + boardNetClass.get_name()
+                    + boardNetClass.getName()
                     + "'");
           }
         }
       }
     }
 
-    boardNetClass.set_pull_tight(p_class.pullTight);
-    boardNetClass.set_shove_fixed(p_class.shoveFixed);
+    boardNetClass.setPullTight(p_class.pullTight);
+    boardNetClass.setShoveFixed(p_class.shoveFixed);
     boolean viaInfosCreated = false;
 
-    if (clearanceRuleFound && boardNetClass != p_board.rules.get_default_net_class()) {
-      create_default_via_infos(p_board, boardNetClass, p_via_at_smd_allowed);
+    if (clearanceRuleFound && boardNetClass != p_board.rules.getDefaultNetClass()) {
+      createDefaultViaInfos(p_board, boardNetClass, p_via_at_smd_allowed);
       viaInfosCreated = true;
     }
 
     if (!p_class.useVia.isEmpty()) {
-      create_via_rule(p_class.useVia, boardNetClass, p_board, p_via_at_smd_allowed);
+      createViaRule(p_class.useVia, boardNetClass, p_board, p_via_at_smd_allowed);
     } else if (viaInfosCreated) {
-      p_board.rules.create_default_via_rule(boardNetClass, boardNetClass.get_name());
+      p_board.rules.createDefaultViaRule(boardNetClass, boardNetClass.getName());
     }
     if (!p_class.useLayer.isEmpty()) {
-      create_active_trace_layers(p_class.useLayer, p_layer_structure, boardNetClass);
+      createActiveTraceLayers(p_class.useLayer, p_layer_structure, boardNetClass);
     }
   }
 
-  private static void insert_class_pairs(
+  private static void insertClassPairs(
       Collection<NetClass.ClassClass> p_class_classes, ReadScopeParameter p_par) {
     for (NetClass.ClassClass currClassClass : p_class_classes) {
       Iterator<String> it1 = currClassClass.classNames.iterator();
-      BasicBoard routingBoard = p_par.boardHandling.get_routing_board();
+      BasicBoard routingBoard = p_par.boardHandling.getRoutingBoard();
       while (it1.hasNext()) {
         String firstName = it1.next();
         app.freerouting.rules.NetClass firstClass =
@@ -569,7 +569,7 @@ public class Network extends ScopeKeyword {
             if (secondClass == null) {
               FRLogger.warn("Network.insert_class_pairs: second class not found");
             } else {
-              insert_class_pair_info(
+              insertClassPairInfo(
                   currClassClass, firstClass, secondClass, routingBoard, p_par.coordinateTransform);
             }
           }
@@ -578,7 +578,7 @@ public class Network extends ScopeKeyword {
     }
   }
 
-  private static void insert_class_pair_info(
+  private static void insertClassPairInfo(
       NetClass.ClassClass p_class_class,
       app.freerouting.rules.NetClass p_first_class,
       app.freerouting.rules.NetClass p_second_class,
@@ -586,7 +586,7 @@ public class Network extends ScopeKeyword {
       CoordinateTransform p_coordinate_transform) {
     for (Rule currRule : p_class_class.rules) {
       if (currRule instanceof Rule.ClearanceRule curr_clearance_rule) {
-        add_mixed_clearance_rule(
+        addMixedClearanceRule(
             p_board.rules.clearanceMatrix,
             p_first_class,
             p_second_class,
@@ -599,7 +599,7 @@ public class Network extends ScopeKeyword {
     }
     for (Rule.LayerRule curr_layer_rule : p_class_class.layerRules) {
       for (String curr_layer_name : curr_layer_rule.layerNames) {
-        int layerNo = p_board.layerStructure.get_no(curr_layer_name);
+        int layerNo = p_board.layerStructure.getNo(curr_layer_name);
         if (layerNo < 0) {
           FRLogger.warn(
               "Network.insert_class_pair_info: layer not found at '" + curr_layer_name + "'");
@@ -607,7 +607,7 @@ public class Network extends ScopeKeyword {
         }
         for (Rule currRule : curr_layer_rule.rules) {
           if (currRule instanceof Rule.ClearanceRule rule) {
-            add_mixed_clearance_rule(
+            addMixedClearanceRule(
                 p_board.rules.clearanceMatrix,
                 p_first_class,
                 p_second_class,
@@ -622,7 +622,7 @@ public class Network extends ScopeKeyword {
     }
   }
 
-  private static void add_mixed_clearance_rule(
+  private static void addMixedClearanceRule(
       ClearanceMatrix p_clearance_matrix,
       app.freerouting.rules.NetClass p_first_class,
       app.freerouting.rules.NetClass p_second_class,
@@ -630,26 +630,26 @@ public class Network extends ScopeKeyword {
       int p_layer_no,
       CoordinateTransform p_coordinate_transform) {
     int currClearance =
-        (int) Math.round(p_coordinate_transform.dsn_to_board(p_clearance_rule.value));
-    final String firstClassName = p_first_class.get_name();
-    int firstClassNo = p_clearance_matrix.get_no(firstClassName);
+        (int) Math.round(p_coordinate_transform.dsnToBoard(p_clearance_rule.value));
+    final String firstClassName = p_first_class.getName();
+    int firstClassNo = p_clearance_matrix.getNo(firstClassName);
     if (firstClassNo < 0) {
-      p_clearance_matrix.append_class(firstClassName);
-      firstClassNo = p_clearance_matrix.get_no(firstClassName);
+      p_clearance_matrix.appendClass(firstClassName);
+      firstClassNo = p_clearance_matrix.getNo(firstClassName);
     }
-    final String secondClassName = p_second_class.get_name();
-    int secondClassNo = p_clearance_matrix.get_no(secondClassName);
+    final String secondClassName = p_second_class.getName();
+    int secondClassNo = p_clearance_matrix.getNo(secondClassName);
     if (secondClassNo < 0) {
-      p_clearance_matrix.append_class(secondClassName);
-      secondClassNo = p_clearance_matrix.get_no(secondClassName);
+      p_clearance_matrix.appendClass(secondClassName);
+      secondClassNo = p_clearance_matrix.getNo(secondClassName);
     }
     if (p_clearance_rule.clearanceClassPairs.isEmpty()) {
       if (p_layer_no < 0) {
-        p_clearance_matrix.set_value(firstClassNo, secondClassNo, currClearance);
-        p_clearance_matrix.set_value(secondClassNo, firstClassNo, currClearance);
+        p_clearance_matrix.setValue(firstClassNo, secondClassNo, currClearance);
+        p_clearance_matrix.setValue(secondClassNo, firstClassNo, currClearance);
       } else {
-        p_clearance_matrix.set_value(firstClassNo, secondClassNo, p_layer_no, currClearance);
-        p_clearance_matrix.set_value(secondClassNo, firstClassNo, p_layer_no, currClearance);
+        p_clearance_matrix.setValue(firstClassNo, secondClassNo, p_layer_no, currClearance);
+        p_clearance_matrix.setValue(secondClassNo, firstClassNo, p_layer_no, currClearance);
       }
     } else {
       for (String currString : p_clearance_rule.clearanceClassPairs) {
@@ -662,20 +662,20 @@ public class Network extends ScopeKeyword {
         int currSecondClassNo;
         for (int i = 0; i < 2; i++) {
           if (i == 0) {
-            currFirstClassNo = get_clearance_class(p_clearance_matrix, p_first_class, currPair[0]);
+            currFirstClassNo = getClearanceClass(p_clearance_matrix, p_first_class, currPair[0]);
             currSecondClassNo =
-                get_clearance_class(p_clearance_matrix, p_second_class, currPair[1]);
+                getClearanceClass(p_clearance_matrix, p_second_class, currPair[1]);
           } else {
-            currFirstClassNo = get_clearance_class(p_clearance_matrix, p_second_class, currPair[0]);
-            currSecondClassNo = get_clearance_class(p_clearance_matrix, p_first_class, currPair[1]);
+            currFirstClassNo = getClearanceClass(p_clearance_matrix, p_second_class, currPair[0]);
+            currSecondClassNo = getClearanceClass(p_clearance_matrix, p_first_class, currPair[1]);
           }
           if (p_layer_no < 0) {
-            p_clearance_matrix.set_value(currFirstClassNo, currSecondClassNo, currClearance);
-            p_clearance_matrix.set_value(currSecondClassNo, currFirstClassNo, currClearance);
+            p_clearance_matrix.setValue(currFirstClassNo, currSecondClassNo, currClearance);
+            p_clearance_matrix.setValue(currSecondClassNo, currFirstClassNo, currClearance);
           } else {
-            p_clearance_matrix.set_value(
+            p_clearance_matrix.setValue(
                 currFirstClassNo, currSecondClassNo, p_layer_no, currClearance);
-            p_clearance_matrix.set_value(
+            p_clearance_matrix.setValue(
                 currSecondClassNo, currFirstClassNo, p_layer_no, currClearance);
           }
         }
@@ -683,91 +683,91 @@ public class Network extends ScopeKeyword {
     }
   }
 
-  private static void create_default_clearance_classes(
+  private static void createDefaultClearanceClasses(
       app.freerouting.rules.NetClass p_net_class, ClearanceMatrix p_clearance_matrix) {
-    get_clearance_class(p_clearance_matrix, p_net_class, "via");
-    get_clearance_class(p_clearance_matrix, p_net_class, "smd");
-    get_clearance_class(p_clearance_matrix, p_net_class, "pin");
-    get_clearance_class(p_clearance_matrix, p_net_class, "area");
+    getClearanceClass(p_clearance_matrix, p_net_class, "via");
+    getClearanceClass(p_clearance_matrix, p_net_class, "smd");
+    getClearanceClass(p_clearance_matrix, p_net_class, "pin");
+    getClearanceClass(p_clearance_matrix, p_net_class, "area");
   }
 
-  private static void create_via_rule(
+  private static void createViaRule(
       Collection<String> p_use_via,
       app.freerouting.rules.NetClass p_net_class,
       BasicBoard p_board,
       boolean p_attach_allowed) {
-    ViaRule newViaRule = new ViaRule(p_net_class.get_name());
+    ViaRule newViaRule = new ViaRule(p_net_class.getName());
     int defaultViaClClass =
         p_net_class.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.VIA);
     for (String curr_via_name : p_use_via) {
       for (int i = 0; i < p_board.rules.viaInfos.count(); i++) {
         ViaInfo currViaInfo = p_board.rules.viaInfos.get(i);
-        if (currViaInfo.get_clearance_class() == defaultViaClClass) {
-          if (currViaInfo.get_padstack().name.equals(curr_via_name)) {
-            newViaRule.append_via(currViaInfo);
+        if (currViaInfo.getClearanceClass() == defaultViaClClass) {
+          if (currViaInfo.getPadstack().name.equals(curr_via_name)) {
+            newViaRule.appendVia(currViaInfo);
           }
         }
       }
     }
     p_board.rules.viaRules.add(newViaRule);
-    p_net_class.set_via_rule(newViaRule);
+    p_net_class.setViaRule(newViaRule);
   }
 
-  private static void create_active_trace_layers(
+  private static void createActiveTraceLayers(
       Collection<String> p_use_layer,
       LayerStructure p_layer_structure,
       app.freerouting.rules.NetClass p_net_class) {
     for (int i = 0; i < p_layer_structure.arr.length; i++) {
-      p_net_class.set_active_routing_layer(i, false);
+      p_net_class.setActiveRoutingLayer(i, false);
     }
     for (String cur_layer_name : p_use_layer) {
-      int currNo = p_layer_structure.get_no(cur_layer_name);
-      p_net_class.set_active_routing_layer(currNo, true);
+      int currNo = p_layer_structure.getNo(cur_layer_name);
+      p_net_class.setActiveRoutingLayer(currNo, true);
     }
     // currently all inactive layers have tracewidth 0.
     for (int i = 0; i < p_layer_structure.arr.length; i++) {
-      if (!p_net_class.is_active_routing_layer(i)) {
-        p_net_class.set_trace_half_width(i, 0);
+      if (!p_net_class.isActiveRoutingLayer(i)) {
+        p_net_class.setTraceHalfWidth(i, 0);
       }
     }
   }
 
-  private static void add_clearance_rule(
+  private static void addClearanceRule(
       ClearanceMatrix p_clearance_matrix,
       app.freerouting.rules.NetClass p_net_class,
       Rule.ClearanceRule p_rule,
       int p_layer_no,
       CoordinateTransform p_coordinate_transform) {
-    int currClearance = (int) Math.round(p_coordinate_transform.dsn_to_board(p_rule.value));
-    final String className = p_net_class.get_name();
-    int classNo = p_clearance_matrix.get_no(className);
+    int currClearance = (int) Math.round(p_coordinate_transform.dsnToBoard(p_rule.value));
+    final String className = p_net_class.getName();
+    int classNo = p_clearance_matrix.getNo(className);
     if (classNo < 0) {
       // class not yet existing, create a new class
-      p_clearance_matrix.append_class(className);
-      classNo = p_clearance_matrix.get_no(className);
+      p_clearance_matrix.appendClass(className);
+      classNo = p_clearance_matrix.getNo(className);
       // set the clearance values of the new class to the maximum of currClearance and
       // the existing values.
-      for (int i = 1; i < p_clearance_matrix.get_class_count(); i++) {
-        for (int j = 0; j < p_clearance_matrix.get_layer_count(); j++) {
+      for (int i = 1; i < p_clearance_matrix.getClassCount(); i++) {
+        for (int j = 0; j < p_clearance_matrix.getLayerCount(); j++) {
           int currValue =
-              Math.max(p_clearance_matrix.get_value(classNo, i, j, false), currClearance);
-          p_clearance_matrix.set_value(classNo, i, j, currValue);
-          p_clearance_matrix.set_value(i, classNo, j, currValue);
+              Math.max(p_clearance_matrix.getValue(classNo, i, j, false), currClearance);
+          p_clearance_matrix.setValue(classNo, i, j, currValue);
+          p_clearance_matrix.setValue(i, classNo, j, currValue);
         }
       }
-      p_net_class.defaultItemClearanceClasses.set_all(classNo);
+      p_net_class.defaultItemClearanceClasses.setAll(classNo);
     }
-    p_net_class.set_trace_clearance_class(classNo);
+    p_net_class.setTraceClearanceClass(classNo);
     if (p_rule.clearanceClassPairs.isEmpty()) {
       if (p_layer_no < 0) {
-        p_clearance_matrix.set_value(classNo, classNo, currClearance);
+        p_clearance_matrix.setValue(classNo, classNo, currClearance);
       } else {
-        p_clearance_matrix.set_value(classNo, classNo, p_layer_no, currClearance);
+        p_clearance_matrix.setValue(classNo, classNo, p_layer_no, currClearance);
       }
       return;
     }
-    if (Structure.contains_wire_clearance_pair(p_rule.clearanceClassPairs)) {
-      create_default_clearance_classes(p_net_class, p_clearance_matrix);
+    if (Structure.containsWireClearancePair(p_rule.clearanceClassPairs)) {
+      createDefaultClearanceClasses(p_net_class, p_clearance_matrix);
     }
     for (String currString : p_rule.clearanceClassPairs) {
       String[] currPair = currString.split("_");
@@ -775,15 +775,15 @@ public class Network extends ScopeKeyword {
         continue;
       }
 
-      int firstClassNo = get_clearance_class(p_clearance_matrix, p_net_class, currPair[0]);
-      int secondClassNo = get_clearance_class(p_clearance_matrix, p_net_class, currPair[1]);
+      int firstClassNo = getClearanceClass(p_clearance_matrix, p_net_class, currPair[0]);
+      int secondClassNo = getClearanceClass(p_clearance_matrix, p_net_class, currPair[1]);
 
       if (p_layer_no < 0) {
-        p_clearance_matrix.set_value(firstClassNo, secondClassNo, currClearance);
-        p_clearance_matrix.set_value(secondClassNo, firstClassNo, currClearance);
+        p_clearance_matrix.setValue(firstClassNo, secondClassNo, currClearance);
+        p_clearance_matrix.setValue(secondClassNo, firstClassNo, currClearance);
       } else {
-        p_clearance_matrix.set_value(firstClassNo, secondClassNo, p_layer_no, currClearance);
-        p_clearance_matrix.set_value(secondClassNo, firstClassNo, p_layer_no, currClearance);
+        p_clearance_matrix.setValue(firstClassNo, secondClassNo, p_layer_no, currClearance);
+        p_clearance_matrix.setValue(secondClassNo, firstClassNo, p_layer_no, currClearance);
       }
     }
   }
@@ -792,34 +792,34 @@ public class Network extends ScopeKeyword {
    * Gets the number of the clearance class with name combined of p_net_class_name and
    * p_item_class_name. Creates a new class, if that class is not yet existing.
    */
-  private static int get_clearance_class(
+  private static int getClearanceClass(
       ClearanceMatrix p_clearance_matrix,
       app.freerouting.rules.NetClass p_net_class,
       String p_item_class_name) {
-    String netClassName = p_net_class.get_name();
+    String netClassName = p_net_class.getName();
     String newClassName = netClassName;
     if (!"wire".equals(p_item_class_name)) {
       newClassName = newClassName + DsnFile.CLASS_CLEARANCE_SEPARATOR + p_item_class_name;
     }
-    int foundClassNo = p_clearance_matrix.get_no(newClassName);
+    int foundClassNo = p_clearance_matrix.getNo(newClassName);
     if (foundClassNo >= 0) {
       return foundClassNo;
     }
-    p_clearance_matrix.append_class(newClassName);
-    int result = p_clearance_matrix.get_no(newClassName);
-    int netClassNo = p_clearance_matrix.get_no(netClassName);
+    p_clearance_matrix.appendClass(newClassName);
+    int result = p_clearance_matrix.getNo(newClassName);
+    int netClassNo = p_clearance_matrix.getNo(netClassName);
     if (netClassNo < 0 || result < 0) {
       FRLogger.warn(
           "Network.get_clearance_class: clearance class not found at '" + netClassName + "'");
       return result;
     }
     // initialize the clearance values of p_new_class_name from p_net_class_name
-    for (int i = 1; i < p_clearance_matrix.get_class_count(); i++) {
+    for (int i = 1; i < p_clearance_matrix.getClassCount(); i++) {
 
-      for (int j = 0; j < p_clearance_matrix.get_layer_count(); j++) {
-        int currValue = p_clearance_matrix.get_value(netClassNo, i, j, false);
-        p_clearance_matrix.set_value(result, i, j, currValue);
-        p_clearance_matrix.set_value(i, result, j, currValue);
+      for (int j = 0; j < p_clearance_matrix.getLayerCount(); j++) {
+        int currValue = p_clearance_matrix.getValue(netClassNo, i, j, false);
+        p_clearance_matrix.setValue(result, i, j, currValue);
+        p_clearance_matrix.setValue(i, result, j, currValue);
       }
     }
     switch (p_item_class_name) {
@@ -831,10 +831,10 @@ public class Network extends ScopeKeyword {
     return result;
   }
 
-  private static void insert_components(ReadScopeParameter p_par) {
+  private static void insertComponents(ReadScopeParameter p_par) {
     for (ComponentPlacement next_lib_component : p_par.placementList) {
       for (ComponentPlacement.ComponentLocation next_component : next_lib_component.locations) {
-        insert_component(next_component, next_lib_component.libName, p_par);
+        insertComponent(next_component, next_lib_component.libName, p_par);
       }
     }
   }
@@ -843,18 +843,18 @@ public class Network extends ScopeKeyword {
    * Create the part library on the board. Can be called after the components are inserted. Returns
    * false, if an error occurred.
    */
-  private static boolean insert_logical_parts(ReadScopeParameter p_par) {
-    BasicBoard routingBoard = p_par.boardHandling.get_routing_board();
+  private static boolean insertLogicalParts(ReadScopeParameter p_par) {
+    BasicBoard routingBoard = p_par.boardHandling.getRoutingBoard();
     for (PartLibrary.LogicalPart nextPart : p_par.logicalParts) {
       Package libPackage =
-          search_lib_package(nextPart.name, p_par.logicalPartMappings, routingBoard);
+          searchLibPackage(nextPart.name, p_par.logicalPartMappings, routingBoard);
       if (libPackage == null) {
         return false;
       }
       LogicalPart.PartPin[] boardPartPins = new LogicalPart.PartPin[nextPart.partPins.size()];
       int currIndex = 0;
       for (PartLibrary.PartPin currPartPin : nextPart.partPins) {
-        int pinNo = libPackage.get_pin_no(currPartPin.pinName);
+        int pinNo = libPackage.getPinNo(currPartPin.pinName);
         if (pinNo < 0) {
           FRLogger.warn(
               "Network.insert_logical_parts: package pin not found at '"
@@ -886,7 +886,7 @@ public class Network extends ScopeKeyword {
       for (String curr_cmp_name : nextMapping.components) {
         app.freerouting.board.Component currComponent = routingBoard.components.get(curr_cmp_name);
         if (currComponent != null) {
-          currComponent.set_logical_part(currLogicalPart);
+          currComponent.setLogicalPart(currLogicalPart);
         } else {
           FRLogger.warn(
               "Network.insert_logical_parts: board component not found at '" + curr_cmp_name + "'");
@@ -900,7 +900,7 @@ public class Network extends ScopeKeyword {
    * Calculates the library package belonging to the logical part with name p_part_name. Returns
    * null, if the package was not found.
    */
-  private static Package search_lib_package(
+  private static Package searchLibPackage(
       String p_part_name,
       Collection<PartLibrary.LogicalPartMapping> p_logical_part_mappings,
       BasicBoard p_board) {
@@ -923,7 +923,7 @@ public class Network extends ScopeKeyword {
               "Network.search_lib_package: component not found at '" + componentName + "'");
           return null;
         }
-        return currComponent.get_package();
+        return currComponent.getPackage();
       }
     }
     FRLogger.warn("Network.search_lib_package: library package '" + p_part_name + "' not found");
@@ -931,22 +931,22 @@ public class Network extends ScopeKeyword {
   }
 
   /** Inserts all board components belonging to the input library component. */
-  private static void insert_component(
+  private static void insertComponent(
       ComponentPlacement.ComponentLocation p_location, String p_lib_key, ReadScopeParameter p_par) {
-    RoutingBoard routingBoard = p_par.boardHandling.get_routing_board();
+    RoutingBoard routingBoard = p_par.boardHandling.getRoutingBoard();
     Package currFrontPackage = routingBoard.library.packages.get(p_lib_key, true);
     Package currBackPackage = routingBoard.library.packages.get(p_lib_key, false);
     if (currFrontPackage == null || currBackPackage == null) {
       FRLogger.warn(
           "Network.insert_component: component package not found at '"
-              + p_par.scanner.get_scope_identifier()
+              + p_par.scanner.getScopeIdentifier()
               + "'");
       return;
     }
 
     IntPoint componentLocation;
     if (p_location.coor != null) {
-      componentLocation = p_par.coordinateTransform.dsn_to_board(p_location.coor).round();
+      componentLocation = p_par.coordinateTransform.dsnToBoard(p_location.coor).round();
     } else {
       componentLocation = null;
     }
@@ -966,25 +966,25 @@ public class Network extends ScopeKeyword {
     if (componentLocation == null) {
       return; // component is not yet placed.
     }
-    Vector componentTranslation = componentLocation.difference_by(Point.ZERO);
+    Vector componentTranslation = componentLocation.differenceBy(Point.ZERO);
     FixedState fixedState;
     if (p_location.positionFixed) {
       fixedState = FixedState.SYSTEM_FIXED;
     } else {
       fixedState = FixedState.UNFIXED;
     }
-    Package currPackage = newComponent.get_package();
-    for (int i = 0; i < currPackage.pin_count(); i++) {
-      Package.Pin currPin = currPackage.get_pin(i);
+    Package currPackage = newComponent.getPackage();
+    for (int i = 0; i < currPackage.pinCount(); i++) {
+      Package.Pin currPin = currPackage.getPin(i);
       Padstack currPadstack = routingBoard.library.padstacks.get(currPin.padstackNo);
       if (currPadstack == null) {
         FRLogger.warn(
             "Network.insert_component: pin padstack not found at '"
-                + p_par.scanner.get_scope_identifier()
+                + p_par.scanner.getScopeIdentifier()
                 + "'");
         return;
       }
-      Collection<Net> pinNets = p_par.netlist.get_nets(p_location.name, currPin.name);
+      Collection<Net> pinNets = p_par.netlist.getNets(p_location.name, currPin.name);
       Collection<Integer> netNumbers = new LinkedList<>();
       for (Net curr_pin_net : pinNets) {
         app.freerouting.rules.Net currBoardNet =
@@ -992,7 +992,7 @@ public class Network extends ScopeKeyword {
         if (currBoardNet == null) {
           FRLogger.warn(
               "Network.insert_component: board net not found at '"
-                  + p_par.scanner.get_scope_identifier()
+                  + p_par.scanner.getScopeIdentifier()
                   + "'");
         } else {
           netNumbers.add(currBoardNet.netNumber);
@@ -1014,15 +1014,15 @@ public class Network extends ScopeKeyword {
       if (boardNet != null) {
         netClass = boardNet.getNetClass();
       } else {
-        netClass = routingBoard.rules.get_default_net_class();
+        netClass = routingBoard.rules.getDefaultNetClass();
       }
       int clearanceClass = -1;
       ComponentPlacement.ItemClearanceInfo pinInfo = p_location.pin_infos.get(currPin.name);
       if (pinInfo != null) {
-        clearanceClass = routingBoard.rules.clearanceMatrix.get_no(pinInfo.clearanceClass);
+        clearanceClass = routingBoard.rules.clearanceMatrix.getNo(pinInfo.clearanceClass);
       }
       if (clearanceClass < 0) {
-        if (currPadstack.from_layer() == currPadstack.to_layer()) {
+        if (currPadstack.fromLayer() == currPadstack.toLayer()) {
           clearanceClass =
               netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.SMD);
         } else {
@@ -1030,7 +1030,7 @@ public class Network extends ScopeKeyword {
               netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.PIN);
         }
       }
-      routingBoard.insert_pin(newComponent.no, i, netNoArr, clearanceClass, fixedState);
+      routingBoard.insertPin(newComponent.no, i, netNoArr, clearanceClass, fixedState);
     }
 
     // insert the keepouts belonging to the package (k = 1 for via keepouts)
@@ -1050,33 +1050,33 @@ public class Network extends ScopeKeyword {
       for (int i = 0; i < keepoutArr.length; i++) {
         Package.Keepout currKeepout = keepoutArr[i];
         int layer = currKeepout.layer;
-        if (layer >= routingBoard.get_layer_count()) {
+        if (layer >= routingBoard.getLayerCount()) {
           FRLogger.warn(
               "Network.insert_component: keepout layer is to big at '"
-                  + p_par.scanner.get_scope_identifier()
+                  + p_par.scanner.getScopeIdentifier()
                   + "'");
           continue;
         }
         if (layer >= 0 && !p_location.isFront) {
-          layer = routingBoard.get_layer_count() - currKeepout.layer - 1;
+          layer = routingBoard.getLayerCount() - currKeepout.layer - 1;
         }
         int clearanceClass =
             routingBoard
                 .rules
-                .get_default_net_class()
+                .getDefaultNetClass()
                 .defaultItemClearanceClasses
                 .get(DefaultItemClearanceClasses.ItemClass.AREA);
         ComponentPlacement.ItemClearanceInfo keepoutInfo = curr_keepout_infos.get(currKeepout.name);
         if (keepoutInfo != null) {
           int currClearanceClass =
-              routingBoard.rules.clearanceMatrix.get_no(keepoutInfo.clearanceClass);
+              routingBoard.rules.clearanceMatrix.getNo(keepoutInfo.clearanceClass);
           if (currClearanceClass > 0) {
             clearanceClass = currClearanceClass;
           }
         }
         if (layer >= 0) {
           if (k == 0) {
-            routingBoard.insert_obstacle(
+            routingBoard.insertObstacle(
                 currKeepout.area,
                 layer,
                 componentTranslation,
@@ -1087,7 +1087,7 @@ public class Network extends ScopeKeyword {
                 currKeepout.name,
                 fixedState);
           } else if (k == 1) {
-            routingBoard.insert_via_obstacle(
+            routingBoard.insertViaObstacle(
                 currKeepout.area,
                 layer,
                 componentTranslation,
@@ -1098,7 +1098,7 @@ public class Network extends ScopeKeyword {
                 currKeepout.name,
                 fixedState);
           } else {
-            routingBoard.insert_component_obstacle(
+            routingBoard.insertComponentObstacle(
                 currKeepout.area,
                 layer,
                 componentTranslation,
@@ -1114,7 +1114,7 @@ public class Network extends ScopeKeyword {
           for (int j = 0; j < routingBoard.layerStructure.arr.length; j++) {
             if (routingBoard.layerStructure.arr[j].isSignal) {
               if (k == 0) {
-                routingBoard.insert_obstacle(
+                routingBoard.insertObstacle(
                     currKeepout.area,
                     j,
                     componentTranslation,
@@ -1125,7 +1125,7 @@ public class Network extends ScopeKeyword {
                     currKeepout.name,
                     fixedState);
               } else if (k == 1) {
-                routingBoard.insert_via_obstacle(
+                routingBoard.insertViaObstacle(
                     currKeepout.area,
                     j,
                     componentTranslation,
@@ -1136,7 +1136,7 @@ public class Network extends ScopeKeyword {
                     currKeepout.name,
                     fixedState);
               } else {
-                routingBoard.insert_component_obstacle(
+                routingBoard.insertComponentObstacle(
                     currKeepout.area,
                     j,
                     componentTranslation,
@@ -1157,8 +1157,8 @@ public class Network extends ScopeKeyword {
     if (currPackage.outline != null && currPackage.outline.length > 1) {
       double maxArea = -1;
       for (int i = 0; i < currPackage.outline.length; i++) {
-        if (currPackage.outline[i] != null && currPackage.outline[i].bounding_box() != null) {
-          double area = currPackage.outline[i].bounding_box().area();
+        if (currPackage.outline[i] != null && currPackage.outline[i].boundingBox() != null) {
+          double area = currPackage.outline[i].boundingBox().area();
           if (area > maxArea) {
             maxArea = area;
             courtyardIdx = i;
@@ -1186,7 +1186,7 @@ public class Network extends ScopeKeyword {
         if (currPackage.outlineIsClosed != null && i < currPackage.outlineIsClosed.length) {
           isClosed = currPackage.outlineIsClosed[i];
         }
-        routingBoard.insert_component_outline(
+        routingBoard.insertComponentOutline(
             currPackage.outline[i],
             p_location.isFront,
             componentTranslation,
@@ -1201,7 +1201,7 @@ public class Network extends ScopeKeyword {
   }
 
   @Override
-  public boolean read_scope(ReadScopeParameter p_par) {
+  public boolean readScope(ReadScopeParameter p_par) {
     Collection<NetClass> classes = new LinkedList<>();
     Collection<NetClass.ClassClass> classClassList = new LinkedList<>();
     Collection<ViaInfo> viaInfos = new LinkedList<>();
@@ -1210,7 +1210,7 @@ public class Network extends ScopeKeyword {
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = p_par.scanner.next_token();
+        nextToken = p_par.scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("Network.read_scope: IO error scanning file", e);
         return false;
@@ -1218,7 +1218,7 @@ public class Network extends ScopeKeyword {
       if (nextToken == null) {
         FRLogger.warn(
             "Network.read_scope: unexpected end of file at '"
-                + p_par.scanner.get_scope_identifier()
+                + p_par.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -1228,40 +1228,40 @@ public class Network extends ScopeKeyword {
       }
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == Keyword.NET) {
-          read_net_scope(
+          readNetScope(
               p_par.scanner,
               p_par.netlist,
-              p_par.boardHandling.get_routing_board(),
+              p_par.boardHandling.getRoutingBoard(),
               p_par.coordinateTransform,
               p_par.layerStructure);
         } else if (nextToken == Keyword.VIA) {
           ViaInfo currViaInfo =
-              read_via_info(p_par.scanner, p_par.boardHandling.get_routing_board());
+              readViaInfo(p_par.scanner, p_par.boardHandling.getRoutingBoard());
           if (currViaInfo == null) {
             return false;
           }
           viaInfos.add(currViaInfo);
         } else if (nextToken == Keyword.VIA_RULE) {
           Collection<String> currViaRule =
-              read_via_rule(p_par.scanner, p_par.boardHandling.get_routing_board());
+              readViaRule(p_par.scanner, p_par.boardHandling.getRoutingBoard());
           if (currViaRule == null) {
             return false;
           }
           viaRules.add(currViaRule);
         } else if (nextToken == Keyword.CLASS) {
-          NetClass currClass = NetClass.read_scope(p_par.scanner);
+          NetClass currClass = NetClass.readScope(p_par.scanner);
           if (currClass == null) {
             return false;
           }
           classes.add(currClass);
         } else if (nextToken == Keyword.CLASS_CLASS) {
-          NetClass.ClassClass currClassClass = NetClass.read_class_class_scope(p_par.scanner);
+          NetClass.ClassClass currClassClass = NetClass.readClassClassScope(p_par.scanner);
           if (currClassClass == null) {
             return false;
           }
           classClassList.add(currClassClass);
         } else {
-          skip_scope(p_par.scanner);
+          skipScope(p_par.scanner);
         }
       }
     }
@@ -1275,7 +1275,7 @@ public class Network extends ScopeKeyword {
       }
     }
 
-    RoutingBoard board = p_par.boardHandling.get_routing_board();
+    RoutingBoard board = p_par.boardHandling.getRoutingBoard();
 
     // Set the via padstacks after network parsing, so that named vias from both structure and
     // network DSN sections are properly instantiated .
@@ -1296,7 +1296,7 @@ public class Network extends ScopeKeyword {
               "Library.read_scope: via padstack with name '"
                   + currPadstackName
                   + " not found at '"
-                  + p_par.scanner.get_scope_identifier()
+                  + p_par.scanner.getScopeIdentifier()
                   + "'");
         }
       }
@@ -1306,31 +1306,31 @@ public class Network extends ScopeKeyword {
         System.arraycopy(viaPadstacks, 0, correctedPadstacks, 0, foundPadstackCount);
         viaPadstacks = correctedPadstacks;
       }
-      board.library.set_via_padstacks(viaPadstacks);
+      board.library.setViaPadstacks(viaPadstacks);
     }
 
-    insert_via_infos(viaInfos, p_par.boardHandling.get_routing_board(), p_par.viaAtSmdAllowed);
-    insert_via_rules(viaRules, p_par.boardHandling.get_routing_board());
-    insert_net_classes(classes, p_par);
-    insert_class_pairs(classClassList, p_par);
-    insert_components(p_par);
-    insert_logical_parts(p_par);
+    insertViaInfos(viaInfos, p_par.boardHandling.getRoutingBoard(), p_par.viaAtSmdAllowed);
+    insertViaRules(viaRules, p_par.boardHandling.getRoutingBoard());
+    insertNetClasses(classes, p_par);
+    insertClassPairs(classClassList, p_par);
+    insertComponents(p_par);
+    insertLogicalParts(p_par);
     return true;
   }
 
-  private boolean read_net_scope(
+  private boolean readNetScope(
       IJFlexScanner p_scanner,
       NetList p_net_list,
       RoutingBoard p_board,
       CoordinateTransform p_coordinate_transform,
       LayerStructure p_layer_structure) {
     // read the net name
-    String netName = p_scanner.next_string();
+    String netName = p_scanner.nextString();
 
     Object nextToken;
     int subnetNumber = 1;
     try {
-      nextToken = p_scanner.next_token();
+      nextToken = p_scanner.nextToken();
     } catch (IOException e) {
       FRLogger.error("Network.read_net_scope: IO error while scanning file", e);
       return false;
@@ -1347,7 +1347,7 @@ public class Network extends ScopeKeyword {
       for (; ; ) {
         Object prevToken = nextToken;
         try {
-          nextToken = p_scanner.next_token();
+          nextToken = p_scanner.nextToken();
         } catch (IOException e) {
           FRLogger.error("Network.read_net_scope: IO error scanning file", e);
           return false;
@@ -1355,7 +1355,7 @@ public class Network extends ScopeKeyword {
         if (nextToken == null) {
           FRLogger.warn(
               "Network.read_net_scope: unexpected end of file at '"
-                  + p_scanner.get_scope_identifier()
+                  + p_scanner.getScopeIdentifier()
                   + "'");
           return false;
         }
@@ -1365,37 +1365,37 @@ public class Network extends ScopeKeyword {
         }
         if (prevToken == OPEN_BRACKET) {
           if (nextToken == Keyword.PINS) {
-            if (!read_net_pins(p_scanner, pinList)) {
+            if (!readNetPins(p_scanner, pinList)) {
               return false;
             }
           } else if (nextToken == Keyword.ORDER) {
             pinOrderFound = true;
-            if (!read_net_pins(p_scanner, pinList)) {
+            if (!readNetPins(p_scanner, pinList)) {
               return false;
             }
           } else if (nextToken == Keyword.FROMTO) {
             Set<Net.Pin> currSubnetPinList = new TreeSet<>();
-            if (!read_net_pins(p_scanner, currSubnetPinList)) {
+            if (!readNetPins(p_scanner, currSubnetPinList)) {
               return false;
             }
             subnetPinLists.add(currSubnetPinList);
           } else if (nextToken == Keyword.RULE) {
-            netRules.addAll(Rule.read_scope(p_scanner));
+            netRules.addAll(Rule.readScope(p_scanner));
           } else if (nextToken == Keyword.LAYER_RULE) {
             FRLogger.warn(
                 "Network.read_net_scope: layer_rule not yet implemented at '"
-                    + p_scanner.get_scope_identifier()
+                    + p_scanner.getScopeIdentifier()
                     + "'");
-            skip_scope(p_scanner);
+            skipScope(p_scanner);
           } else {
-            skip_scope(p_scanner);
+            skipScope(p_scanner);
           }
         }
       }
     }
     if (subnetPinLists.isEmpty()) {
       if (pinOrderFound) {
-        subnetPinLists = create_ordered_subnets(pinList);
+        subnetPinLists = createOrderedSubnets(pinList);
       } else {
         subnetPinLists.add(pinList);
       }
@@ -1403,21 +1403,21 @@ public class Network extends ScopeKeyword {
     for (Collection<Net.Pin> currPinList : subnetPinLists) {
       Net.Id netId = new Net.Id(netName, subnetNumber);
       if (!p_net_list.contains(netId)) {
-        Net newNet = p_net_list.add_net(netId);
-        boolean containsPlane = p_layer_structure.contains_plane(netName);
+        Net newNet = p_net_list.addNet(netId);
+        boolean containsPlane = p_layer_structure.containsPlane(netName);
         if (newNet != null) {
           p_board.rules.nets.add(newNet.id.name, newNet.id.subnetNumber, containsPlane);
         }
       }
-      Net currSubnet = p_net_list.get_net(netId);
+      Net currSubnet = p_net_list.getNet(netId);
       if (currSubnet == null) {
         FRLogger.warn(
             "Network.read_net_scope: net not found in netlist at '"
-                + p_scanner.get_scope_identifier()
+                + p_scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
-      currSubnet.set_pins(currPinList);
+      currSubnet.setPins(currPinList);
       if (!netRules.isEmpty()) {
         // Evaluate the net rules.
         app.freerouting.rules.Net boardNet =
@@ -1425,31 +1425,31 @@ public class Network extends ScopeKeyword {
         if (boardNet == null) {
           FRLogger.warn(
               "Network.read_net_scope: board net not found at '"
-                  + p_scanner.get_scope_identifier()
+                  + p_scanner.getScopeIdentifier()
                   + "'");
           return false;
         }
         for (Rule currOb : netRules) {
           if (currOb instanceof Rule.WidthRule rule) {
-            app.freerouting.rules.NetClass defaultNetRule = p_board.rules.get_default_net_class();
+            app.freerouting.rules.NetClass defaultNetRule = p_board.rules.getDefaultNetClass();
             double wireWidth = rule.value;
             int traceHalfwidth =
-                (int) Math.round(p_coordinate_transform.dsn_to_board(wireWidth) / 2);
+                (int) Math.round(p_coordinate_transform.dsnToBoard(wireWidth) / 2);
             app.freerouting.rules.NetClass netRule =
                 p_board.rules.netClasses.find(
                     traceHalfwidth,
-                    defaultNetRule.get_trace_clearance_class(),
-                    defaultNetRule.get_via_rule());
+                    defaultNetRule.getTraceClearanceClass(),
+                    defaultNetRule.getViaRule());
             if (netRule == null) {
               // create a new net rule
-              netRule = p_board.rules.get_new_net_class();
+              netRule = p_board.rules.getNewNetClass();
             }
-            netRule.set_trace_half_width(traceHalfwidth);
-            boardNet.set_class(netRule);
+            netRule.setTraceHalfWidth(traceHalfwidth);
+            boardNet.setClass(netRule);
           } else {
             FRLogger.warn(
                 "Network.read_net_scope: Rule not yet implemented at '"
-                    + p_scanner.get_scope_identifier()
+                    + p_scanner.getScopeIdentifier()
                     + "'");
           }
         }

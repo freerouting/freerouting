@@ -20,17 +20,17 @@ public class IntDirection extends Direction implements Serializable {
   }
 
   @Override
-  public boolean is_orthogonal() {
+  public boolean isOrthogonal() {
     return x == 0 || y == 0;
   }
 
   @Override
-  public boolean is_diagonal() {
+  public boolean isDiagonal() {
     return Math.abs(x) == Math.abs(y);
   }
 
   @Override
-  public Vector get_vector() {
+  public Vector getVector() {
     return new IntVector(x, y);
   }
 
@@ -72,7 +72,7 @@ public class IntDirection extends Direction implements Serializable {
     // open horizontal half plane
 
     double determinant = (double) p_other.x * y - (double) p_other.y * x;
-    return Signum.as_int(determinant);
+    return Signum.asInt(determinant);
   }
 
   @Override
@@ -81,7 +81,7 @@ public class IntDirection extends Direction implements Serializable {
   }
 
   @Override
-  public Direction turn_45_degree(int p_factor) {
+  public Direction turn45Degree(int p_factor) {
     int n = p_factor % 8;
     int newX;
     int newY;

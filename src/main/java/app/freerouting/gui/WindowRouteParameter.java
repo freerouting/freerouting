@@ -522,7 +522,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     updatingControls = true;
     try {
       AngleRestriction snapAngle =
-          this.guiBoardManager.get_routing_board().rules.get_trace_angle_restriction();
+          this.guiBoardManager.getRoutingBoard().rules.getTraceAngleRestriction();
 
       if (snapAngle == AngleRestriction.NINETY_DEGREE) {
         settingsRoutingSnapAngle90Button.setSelected(true);
@@ -532,13 +532,13 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         settingsRoutingSnapAngleNoneButton.setSelected(true);
       }
 
-      if (this.guiBoardManager.getInteractiveSettings().get_is_stitch_route()) {
+      if (this.guiBoardManager.getInteractiveSettings().getIsStitchRoute()) {
         settingsRoutingStitchButton.setSelected(true);
       } else {
         settingsRoutingDynamicButton.setSelected(true);
       }
 
-      if (this.guiBoardManager.getInteractiveSettings().get_manual_rule_selection()) {
+      if (this.guiBoardManager.getInteractiveSettings().getManualRuleSelection()) {
         settingsRoutingManualButton.setSelected(true);
         if (this.manualRuleWindow != null) {
           this.manualRuleWindow.setVisible(true);
@@ -548,31 +548,31 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
 
       this.settingsRoutingShoveCheckBox.setSelected(
-          this.guiBoardManager.getInteractiveSettings().get_push_enabled());
+          this.guiBoardManager.getInteractiveSettings().getPushEnabled());
       this.settingsRoutingDragComponentCheckBox.setSelected(
-          this.guiBoardManager.getInteractiveSettings().get_drag_components_enabled());
+          this.guiBoardManager.getInteractiveSettings().getDragComponentsEnabled());
       this.settingsRoutingViaSnapToSmdCenterCheckBox.setSelected(
-          this.guiBoardManager.getInteractiveSettings().get_via_snap_to_smd_center());
+          this.guiBoardManager.getInteractiveSettings().getViaSnapToSmdCenter());
       this.settingsRoutingIgnoreConductionCheckBox.setSelected(
-          this.guiBoardManager.get_routing_board().rules.get_ignore_conduction());
+          this.guiBoardManager.getRoutingBoard().rules.getIgnoreConduction());
       this.settingsRoutingHilightRoutingObstacleCheckBox.setSelected(
-          this.guiBoardManager.getInteractiveSettings().get_hilight_routing_obstacle());
+          this.guiBoardManager.getInteractiveSettings().getHilightRoutingObstacle());
       this.settingsRoutingNeckdownCheckBox.setSelected(
-          this.guiBoardManager.getInteractiveSettings().get_automatic_neckdown());
+          this.guiBoardManager.getInteractiveSettings().getAutomaticNeckdown());
 
       double edgeToTurnDist =
-          this.guiBoardManager.get_routing_board().rules.get_pin_edge_to_turn_dist();
+          this.guiBoardManager.getRoutingBoard().rules.getPinEdgeToTurnDist();
       this.edgeToTurnDistField.setValue(
-          this.guiBoardManager.coordinateTransform.board_to_user(edgeToTurnDist));
+          this.guiBoardManager.coordinateTransform.boardToUser(edgeToTurnDist));
       this.settingsRoutingRestrictPinExitDirectionsCheckBox.setSelected(edgeToTurnDist > 0);
 
       int regionSliderValue =
-          this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_region_width()
+          this.guiBoardManager.getInteractiveSettings().getTracePullTightRegionWidth()
               / c_region_scale_factor;
       regionSliderValue = Math.min(regionSliderValue, c_region_max_slider_value);
       regionSlider.setValue(regionSliderValue);
       regionWidthField.setValue(
-          this.guiBoardManager.coordinateTransform.board_to_user(
+          this.guiBoardManager.coordinateTransform.boardToUser(
               regionSliderValue * c_region_scale_factor));
 
       if (this.manualRuleWindow != null) {
@@ -585,45 +585,45 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
       boolean compUsed =
           this.guiBoardManager
-              .get_routing_board()
+              .getRoutingBoard()
               .searchTreeManager
-              .is_clearance_compensation_used();
+              .isClearanceCompensationUsed();
       this.clearanceCompensationCheckBox.setSelected(compUsed);
       int clearanceClass =
           Math.min(
               1,
-              this.guiBoardManager.get_routing_board().rules.clearanceMatrix.get_class_count() - 1);
+              this.guiBoardManager.getRoutingBoard().rules.clearanceMatrix.getClassCount() - 1);
       double compensation = 0;
       if (clearanceClass >= 1) {
-        int layer = this.guiBoardManager.getInteractiveSettings().get_layer();
+        int layer = this.guiBoardManager.getInteractiveSettings().getLayer();
         compensation =
             this.guiBoardManager
-                .get_routing_board()
+                .getRoutingBoard()
                 .rules
                 .clearanceMatrix
-                .clearance_compensation_value(clearanceClass, layer);
+                .clearanceCompensationValue(clearanceClass, layer);
       }
-      BoardOutline outline = this.guiBoardManager.get_routing_board().get_outline();
+      BoardOutline outline = this.guiBoardManager.getRoutingBoard().getOutline();
       if (outline != null) {
         this.routeDetailOutlineKeepoutCheckBox.setSelected(
-            outline.keepout_outside_outline_generated());
+            outline.keepoutOutsideOutlineGenerated());
       }
       int accuracySliderValue =
           c_accuracy_max_slider_value
-              - this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_accuracy()
+              - this.guiBoardManager.getInteractiveSettings().getTracePullTightAccuracy()
                   / c_accuracy_scale_factor
               + 1;
       accuracySlider.setValue(accuracySliderValue);
       int accuracyBoardValue =
           (c_accuracy_max_slider_value - accuracySliderValue + 1) * c_accuracy_scale_factor;
       accuracyValueField.setValue(
-          this.guiBoardManager.coordinateTransform.board_to_user(accuracyBoardValue));
+          this.guiBoardManager.coordinateTransform.boardToUser(accuracyBoardValue));
       updateUserUnitSuffixLabels();
 
       double appliedCompensation = compUsed ? compensation : 0;
       this.clearanceCompensationCheckBox.setText(tm.getText("clearance_compensation_checkbox"));
       this.clearanceValueField.setValue(
-          this.guiBoardManager.coordinateTransform.board_to_user(appliedCompensation));
+          this.guiBoardManager.coordinateTransform.boardToUser(appliedCompensation));
       this.clearanceSuffixLabel.setText(
           this.guiBoardManager.coordinateTransform.userUnit.toString());
 
@@ -634,18 +634,18 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   @Override
-  public void parent_iconified() {
-    manualRuleWindow.parent_iconified();
-    super.parent_iconified();
+  public void parentIconified() {
+    manualRuleWindow.parentIconified();
+    super.parentIconified();
   }
 
   @Override
-  public void parent_deiconified() {
-    manualRuleWindow.parent_deiconified();
-    super.parent_deiconified();
+  public void parentDeiconified() {
+    manualRuleWindow.parentDeiconified();
+    super.parentDeiconified();
   }
 
-  private void set_pull_tight_region_width(int p_slider_value) {
+  private void setPullTightRegionWidth(int p_slider_value) {
     int sliderValue = Math.max(p_slider_value, 0);
     sliderValue = Math.min(sliderValue, c_region_max_slider_value);
     int newTidyWidth;
@@ -656,18 +656,18 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       newTidyWidth = sliderValue * c_region_scale_factor;
     }
     regionSlider.setValue(sliderValue);
-    regionWidthField.setValue(this.guiBoardManager.coordinateTransform.board_to_user(newTidyWidth));
-    guiBoardManager.getInteractiveSettings().set_current_pull_tight_region_width(newTidyWidth);
+    regionWidthField.setValue(this.guiBoardManager.coordinateTransform.boardToUser(newTidyWidth));
+    guiBoardManager.getInteractiveSettings().setCurrentPullTightRegionWidth(newTidyWidth);
   }
 
   private void updateDynamicTooltips() {
     double edgeToTurnDist =
-        this.guiBoardManager.get_routing_board().rules.get_pin_edge_to_turn_dist();
+        this.guiBoardManager.getRoutingBoard().rules.getPinEdgeToTurnDist();
     this.edgeToTurnDistField.setToolTipText(
         tm.getText("pin_pad_to_turn_gap_tooltip_current", formatUserDistance(edgeToTurnDist)));
 
     int regionWidth =
-        this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_region_width();
+        this.guiBoardManager.getInteractiveSettings().getTracePullTightRegionWidth();
     String regionTooltip;
     if (regionWidth >= Integer.MAX_VALUE) {
       regionTooltip = tm.getText("pull_tight_region_tooltip_whole_board");
@@ -690,16 +690,16 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     int clearanceClass =
         Math.min(
             1,
-            this.guiBoardManager.get_routing_board().rules.clearanceMatrix.get_class_count() - 1);
+            this.guiBoardManager.getRoutingBoard().rules.clearanceMatrix.getClassCount() - 1);
     double compensation = 0;
     if (clearanceClass >= 1) {
-      int layer = this.guiBoardManager.getInteractiveSettings().get_layer();
+      int layer = this.guiBoardManager.getInteractiveSettings().getLayer();
       compensation =
           this.guiBoardManager
-              .get_routing_board()
+              .getRoutingBoard()
               .rules
               .clearanceMatrix
-              .clearance_compensation_value(clearanceClass, layer);
+              .clearanceCompensationValue(clearanceClass, layer);
     }
     this.clearanceCompensationCheckBox.setToolTipText(
         tm.getText(
@@ -709,7 +709,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private String formatUserDistance(double boardValue) {
     NumberFormat format = NumberFormat.getNumberInstance(this.getLocale());
     format.setMaximumFractionDigits(3);
-    return format.format(this.guiBoardManager.coordinateTransform.board_to_user(boardValue))
+    return format.format(this.guiBoardManager.coordinateTransform.boardToUser(boardValue))
         + " "
         + this.guiBoardManager.coordinateTransform.userUnit;
   }
@@ -755,7 +755,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
    */
   public static void applyStitchRouteSelection(
       InteractiveSettings p_interactive_settings, boolean p_value) {
-    p_interactive_settings.set_stitch_route(p_value);
+    p_interactive_settings.setStitchRoute(p_value);
   }
 
   /**
@@ -764,7 +764,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
    */
   public static void applyPushAndShoveSelection(
       InteractiveSettings p_interactive_settings, boolean p_value) {
-    p_interactive_settings.set_push_enabled(p_value);
+    p_interactive_settings.setPushEnabled(p_value);
   }
 
   /**
@@ -773,7 +773,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
    */
   public static void applyIgnoreConductionSelection(
       GuiBoardManager p_board_manager, boolean p_value) {
-    p_board_manager.set_ignore_conduction(p_value);
+    p_board_manager.setIgnoreConduction(p_value);
   }
 
   /**
@@ -782,7 +782,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
    */
   public static void applyClearanceCompensationSelection(
       GuiBoardManager p_board_manager, boolean p_value) {
-    p_board_manager.set_clearance_compensation(p_value);
+    p_board_manager.setClearanceCompensation(p_value);
   }
 
   /**
@@ -791,22 +791,22 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
    */
   public static void applyPinExitEdgeToTurnDistance(
       GuiBoardManager p_board_manager, float p_value) {
-    p_board_manager.set_pin_edge_to_turn_dist(p_value);
+    p_board_manager.setPinEdgeToTurnDist(p_value);
   }
 
   private class SnapAngle90Listener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      if (guiBoardManager.get_routing_board().rules.get_trace_angle_restriction()
+      if (guiBoardManager.getRoutingBoard().rules.getTraceAngleRestriction()
           == AngleRestriction.NINETY_DEGREE) {
         return;
       }
-      Collection<Trace> traceList = guiBoardManager.get_routing_board().get_traces();
+      Collection<Trace> traceList = guiBoardManager.getRoutingBoard().getTraces();
       boolean freeAngleTracesFound = false;
       for (Trace currTrace : traceList) {
         if (currTrace instanceof PolylineTrace trace) {
-          if (!trace.polyline().is_orthogonal()) {
+          if (!trace.polyline().isOrthogonal()) {
             freeAngleTracesFound = true;
             break;
           }
@@ -819,7 +819,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
           return;
         }
       }
-      guiBoardManager.set_current_snap_angle(AngleRestriction.NINETY_DEGREE);
+      guiBoardManager.setCurrentSnapAngle(AngleRestriction.NINETY_DEGREE);
     }
   }
 
@@ -827,15 +827,15 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      if (guiBoardManager.get_routing_board().rules.get_trace_angle_restriction()
+      if (guiBoardManager.getRoutingBoard().rules.getTraceAngleRestriction()
           == AngleRestriction.FORTYFIVE_DEGREE) {
         return;
       }
-      Collection<Trace> traceList = guiBoardManager.get_routing_board().get_traces();
+      Collection<Trace> traceList = guiBoardManager.getRoutingBoard().getTraces();
       boolean freeAngleTracesFound = false;
       for (Trace currTrace : traceList) {
         if (currTrace instanceof PolylineTrace trace) {
-          if (!trace.polyline().is_multiple_of_45_degree()) {
+          if (!trace.polyline().isMultipleOf45Degree()) {
             freeAngleTracesFound = true;
             break;
           }
@@ -848,7 +848,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
           return;
         }
       }
-      guiBoardManager.set_current_snap_angle(AngleRestriction.FORTYFIVE_DEGREE);
+      guiBoardManager.setCurrentSnapAngle(AngleRestriction.FORTYFIVE_DEGREE);
     }
   }
 
@@ -856,7 +856,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.set_current_snap_angle(AngleRestriction.NONE);
+      guiBoardManager.setCurrentSnapAngle(AngleRestriction.NONE);
     }
   }
 
@@ -867,7 +867,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (updatingControls) {
         return;
       }
-      guiBoardManager.getInteractiveSettings().set_stitch_route(false);
+      guiBoardManager.getInteractiveSettings().setStitchRoute(false);
     }
   }
 
@@ -878,7 +878,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (updatingControls) {
         return;
       }
-      guiBoardManager.getInteractiveSettings().set_stitch_route(true);
+      guiBoardManager.getInteractiveSettings().setStitchRoute(true);
     }
   }
 
@@ -887,7 +887,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       manualRuleWindow.setVisible(false);
-      guiBoardManager.getInteractiveSettings().set_manual_tracewidth_selection(false);
+      guiBoardManager.getInteractiveSettings().setManualTracewidthSelection(false);
     }
   }
 
@@ -903,7 +903,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         firstTime = false;
       }
       manualRuleWindow.setVisible(true);
-      guiBoardManager.getInteractiveSettings().set_manual_tracewidth_selection(true);
+      guiBoardManager.getInteractiveSettings().setManualTracewidthSelection(true);
     }
   }
 
@@ -916,7 +916,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       guiBoardManager
           .getInteractiveSettings()
-          .set_push_enabled(settingsRoutingShoveCheckBox.isSelected());
+          .setPushEnabled(settingsRoutingShoveCheckBox.isSelected());
       refresh();
     }
   }
@@ -930,7 +930,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       guiBoardManager
           .getInteractiveSettings()
-          .set_via_snap_to_smd_center(settingsRoutingViaSnapToSmdCenterCheckBox.isSelected());
+          .setViaSnapToSmdCenter(settingsRoutingViaSnapToSmdCenterCheckBox.isSelected());
     }
   }
 
@@ -941,7 +941,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (updatingControls) {
         return;
       }
-      guiBoardManager.set_ignore_conduction(settingsRoutingIgnoreConductionCheckBox.isSelected());
+      guiBoardManager.setIgnoreConduction(settingsRoutingIgnoreConductionCheckBox.isSelected());
     }
   }
 
@@ -954,7 +954,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       guiBoardManager
           .getInteractiveSettings()
-          .set_hilight_routing_obstacle(settingsRoutingHilightRoutingObstacleCheckBox.isSelected());
+          .setHilightRoutingObstacle(settingsRoutingHilightRoutingObstacleCheckBox.isSelected());
     }
   }
 
@@ -967,7 +967,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       guiBoardManager
           .getInteractiveSettings()
-          .set_drag_components_enabled(settingsRoutingDragComponentCheckBox.isSelected());
+          .setDragComponentsEnabled(settingsRoutingDragComponentCheckBox.isSelected());
       refresh();
     }
   }
@@ -981,7 +981,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       guiBoardManager
           .getInteractiveSettings()
-          .set_automatic_neckdown(settingsRoutingNeckdownCheckBox.isSelected());
+          .setAutomaticNeckdown(settingsRoutingNeckdownCheckBox.isSelected());
     }
   }
 
@@ -993,13 +993,13 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         return;
       }
       if (settingsRoutingRestrictPinExitDirectionsCheckBox.isSelected()) {
-        BoardRules boardRules = guiBoardManager.get_routing_board().rules;
+        BoardRules boardRules = guiBoardManager.getRoutingBoard().rules;
         double edgeToTurnDist =
-            guiBoardManager.coordinateTransform.board_to_user(
-                boardRules.get_min_trace_half_width());
-        guiBoardManager.set_pin_edge_to_turn_dist(edgeToTurnDist);
+            guiBoardManager.coordinateTransform.boardToUser(
+                boardRules.getMinTraceHalfWidth());
+        guiBoardManager.setPinEdgeToTurnDist(edgeToTurnDist);
       } else {
-        guiBoardManager.set_pin_edge_to_turn_dist(0);
+        guiBoardManager.setPinEdgeToTurnDist(0);
       }
       refresh();
     }
@@ -1016,7 +1016,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
           return;
         }
         float inputValue = ((Number) input).floatValue();
-        guiBoardManager.set_pin_edge_to_turn_dist(inputValue);
+        guiBoardManager.setPinEdgeToTurnDist(inputValue);
         settingsRoutingRestrictPinExitDirectionsCheckBox.setSelected(inputValue > 0);
         refresh();
       } else {
@@ -1031,8 +1031,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!keyInputCompleted) {
         double edgeToTurnDist =
-            guiBoardManager.get_routing_board().rules.get_pin_edge_to_turn_dist();
-        edgeToTurnDist = guiBoardManager.coordinateTransform.board_to_user(edgeToTurnDist);
+            guiBoardManager.getRoutingBoard().rules.getPinEdgeToTurnDist();
+        edgeToTurnDist = guiBoardManager.coordinateTransform.boardToUser(edgeToTurnDist);
         edgeToTurnDistField.setValue(edgeToTurnDist);
         keyInputCompleted = true;
       }
@@ -1053,9 +1053,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
           return;
         }
         double userValue = Math.max(0.0, ((Number) input).doubleValue());
-        double boardValue = guiBoardManager.coordinateTransform.user_to_board(userValue);
+        double boardValue = guiBoardManager.coordinateTransform.userToBoard(userValue);
         int sliderValue = (int) Math.round(boardValue / c_region_scale_factor);
-        set_pull_tight_region_width(sliderValue);
+        setPullTightRegionWidth(sliderValue);
       } else {
         keyInputCompleted = false;
       }
@@ -1068,7 +1068,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!keyInputCompleted) {
         regionWidthField.setValue(
-            WindowRouteParameter.this.guiBoardManager.coordinateTransform.board_to_user(
+            WindowRouteParameter.this.guiBoardManager.coordinateTransform.boardToUser(
                 regionSlider.getValue() * c_region_scale_factor));
         keyInputCompleted = true;
       }
@@ -1089,7 +1089,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
           return;
         }
         double userValue = Math.max(0.0, ((Number) input).doubleValue());
-        double boardValue = guiBoardManager.coordinateTransform.user_to_board(userValue);
+        double boardValue = guiBoardManager.coordinateTransform.userToBoard(userValue);
         int sliderValue =
             c_accuracy_max_slider_value
                 - (int) Math.round(boardValue / c_accuracy_scale_factor)
@@ -1110,7 +1110,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         int accuracyBoardValue =
             (c_accuracy_max_slider_value - accuracySlider.getValue() + 1) * c_accuracy_scale_factor;
         accuracyValueField.setValue(
-            guiBoardManager.coordinateTransform.board_to_user(accuracyBoardValue));
+            guiBoardManager.coordinateTransform.boardToUser(accuracyBoardValue));
         keyInputCompleted = true;
       }
     }
@@ -1128,8 +1128,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       int sliderValue = regionSlider.getValue();
       regionWidthField.setValue(
-          guiBoardManager.coordinateTransform.board_to_user(sliderValue * c_region_scale_factor));
-      set_pull_tight_region_width(sliderValue);
+          guiBoardManager.coordinateTransform.boardToUser(sliderValue * c_region_scale_factor));
+      setPullTightRegionWidth(sliderValue);
     }
   }
 
@@ -1140,7 +1140,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (updatingControls) {
         return;
       }
-      guiBoardManager.set_clearance_compensation(clearanceCompensationCheckBox.isSelected());
+      guiBoardManager.setClearanceCompensation(clearanceCompensationCheckBox.isSelected());
       refresh();
     }
   }
@@ -1154,8 +1154,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       int sliderValue = accuracySlider.getValue();
       int newAccuracy = (c_accuracy_max_slider_value - sliderValue + 1) * c_accuracy_scale_factor;
-      accuracyValueField.setValue(guiBoardManager.coordinateTransform.board_to_user(newAccuracy));
-      guiBoardManager.getInteractiveSettings().set_trace_pull_tight_accuracy(newAccuracy);
+      accuracyValueField.setValue(guiBoardManager.coordinateTransform.boardToUser(newAccuracy));
+      guiBoardManager.getInteractiveSettings().setTracePullTightAccuracy(newAccuracy);
     }
   }
 
@@ -1163,12 +1163,12 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      if (guiBoardManager.is_board_read_only()) {
+      if (guiBoardManager.isBoardReadOnly()) {
         return;
       }
-      BoardOutline outline = guiBoardManager.get_routing_board().get_outline();
+      BoardOutline outline = guiBoardManager.getRoutingBoard().getOutline();
       if (outline != null) {
-        outline.generate_keepout_outside(routeDetailOutlineKeepoutCheckBox.isSelected());
+        outline.generateKeepoutOutside(routeDetailOutlineKeepoutCheckBox.isSelected());
       }
     }
   }

@@ -45,16 +45,16 @@ public class DesignRulesChecker {
     java.util.Set<String> seenViolations = new java.util.HashSet<>();
 
     // Iterate through all items on the board
-    Collection<Item> items = board.get_items();
+    Collection<Item> items = board.getItems();
     for (Item item : items) {
       if (item != null) {
         // Get clearance violations for this item
-        Collection<ClearanceViolation> itemViolations = item.clearance_violations();
+        Collection<ClearanceViolation> itemViolations = item.clearanceViolations();
 
         // Deduplicate violations - A-B and B-A are the same violation
         for (ClearanceViolation violation : itemViolations) {
-          int id1 = violation.firstItem.get_id_no();
-          int id2 = violation.secondItem.get_id_no();
+          int id1 = violation.firstItem.getIdNo();
+          int id2 = violation.secondItem.getIdNo();
 
           // Create a unique key using sorted IDs to avoid duplicates
           String key =
@@ -83,9 +83,9 @@ public class DesignRulesChecker {
 
     // Group items by net
     java.util.Map<Integer, List<Item>> itemsByNet = new java.util.HashMap<>();
-    for (Item item : board.get_items()) {
-      if (item instanceof app.freerouting.board.Connectable && item.net_count() > 0) {
-        int netNo = item.get_net_no(0);
+    for (Item item : board.getItems()) {
+      if (item instanceof app.freerouting.board.Connectable && item.netCount() > 0) {
+        int netNo = item.getNetNo(0);
         itemsByNet.computeIfAbsent(netNo, k -> new ArrayList<>()).add(item);
       }
     }
@@ -109,7 +109,7 @@ public class DesignRulesChecker {
         }
 
         // Get the connected set for this item
-        Collection<Item> connectedSet = item.get_connected_set(netNo);
+        Collection<Item> connectedSet = item.getConnectedSet(netNo);
         java.util.Set<Item> setItems = new java.util.HashSet<>(connectedSet);
 
         // Only add items that are actually in this net
@@ -139,10 +139,10 @@ public class DesignRulesChecker {
     }
 
     // Check for dangling traces - traces with unconnected ends
-    for (Item item : board.get_items()) {
+    for (Item item : board.getItems()) {
       if (item instanceof Trace trace) {
-        Collection<Item> startContacts = trace.get_start_contacts();
-        Collection<Item> endContacts = trace.get_end_contacts();
+        Collection<Item> startContacts = trace.getStartContacts();
+        Collection<Item> endContacts = trace.getEndContacts();
 
         // A trace is dangling if either its start or end has no contacts
         if (startContacts.isEmpty() || endContacts.isEmpty()) {
@@ -155,10 +155,10 @@ public class DesignRulesChecker {
     }
 
     // Check for dangling vias - vias not connected or connected on only one layer
-    for (Item item : board.get_items()) {
+    for (Item item : board.getItems()) {
       if (item instanceof Via via) {
         // Use the is_tail() method which checks if via has contacts on at most 1 layer
-        if (via.is_tail()) {
+        if (via.isTail()) {
           unconnectedItems.add(new UnconnectedItems(via, null, "via_dangling"));
         }
       }
@@ -241,7 +241,7 @@ public class DesignRulesChecker {
               + ((violation.expectedClearance - violation.actualClearance) / 10000.0)
               + "mm",
           "DRC Check",
-          new Point[] {violation.shape.centre_of_gravity().round()});
+          new Point[] {violation.shape.centreOfGravity().round()});
     }
 
     // Get all unconnected items
@@ -293,20 +293,20 @@ public class DesignRulesChecker {
     String secondItemDesc = getItemDescription(violation.secondItem);
 
     // Position is the center of gravity of the violation shape
-    var firstItemCenterOfGravity = violation.firstItem.bounding_box().centre_of_gravity();
+    var firstItemCenterOfGravity = violation.firstItem.boundingBox().centreOfGravity();
     DrcPosition firstItemPos =
         new DrcPosition(
             convertCoordinate(firstItemCenterOfGravity.x, coordinateUnit),
             convertCoordinate(firstItemCenterOfGravity.y, coordinateUnit));
-    var secondItemCenterOfGravity = violation.secondItem.bounding_box().centre_of_gravity();
+    var secondItemCenterOfGravity = violation.secondItem.boundingBox().centreOfGravity();
     DrcPosition secondItemPos =
         new DrcPosition(
             convertCoordinate(secondItemCenterOfGravity.x, coordinateUnit),
             convertCoordinate(secondItemCenterOfGravity.y, coordinateUnit));
 
     // Use item IDs as UUIDs (they are unique within the board)
-    String firstUuid = String.valueOf(violation.firstItem.get_id_no());
-    String secondUuid = String.valueOf(violation.secondItem.get_id_no());
+    String firstUuid = String.valueOf(violation.firstItem.getIdNo());
+    String secondUuid = String.valueOf(violation.secondItem.getIdNo());
 
     items.add(new DrcViolationItem(firstItemDesc, firstItemPos, firstUuid));
     items.add(new DrcViolationItem(secondItemDesc, secondItemPos, secondUuid));
@@ -372,13 +372,13 @@ public class DesignRulesChecker {
         itemDesc = getDetailedTraceDescription(item, coordinateUnit);
       }
 
-      var itemCenterOfGravity = item.bounding_box().centre_of_gravity();
+      var itemCenterOfGravity = item.boundingBox().centreOfGravity();
       DrcPosition itemPos =
           new DrcPosition(
               convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
               convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
 
-      String uuid = String.valueOf(item.get_id_no());
+      String uuid = String.valueOf(item.getIdNo());
       items.add(new DrcViolationItem(itemDesc, itemPos, uuid));
 
       description =
@@ -395,12 +395,12 @@ public class DesignRulesChecker {
     // This provides better visibility of all affected components/pins
     for (Item item : unconnectedItems.allItems) {
       String itemDesc = getItemDescription(item);
-      var itemCenterOfGravity = item.bounding_box().centre_of_gravity();
+      var itemCenterOfGravity = item.boundingBox().centreOfGravity();
       DrcPosition itemPos =
           new DrcPosition(
               convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
               convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
-      String uuid = String.valueOf(item.get_id_no());
+      String uuid = String.valueOf(item.getIdNo());
       items.add(new DrcViolationItem(itemDesc, itemPos, uuid));
     }
 
@@ -440,8 +440,8 @@ public class DesignRulesChecker {
     }
 
     // Add net information
-    if (item.net_count() > 0) {
-      String netName = board.rules.nets.get(item.get_net_no(0)).name;
+    if (item.netCount() > 0) {
+      String netName = board.rules.nets.get(item.getNetNo(0)).name;
       desc.append(" [").append(netName).append("]");
     }
 
@@ -459,19 +459,19 @@ public class DesignRulesChecker {
     StringBuilder desc = new StringBuilder("Track");
 
     // Add net information
-    if (item.net_count() > 0) {
-      String netName = board.rules.nets.get(item.get_net_no(0)).name;
+    if (item.netCount() > 0) {
+      String netName = board.rules.nets.get(item.getNetNo(0)).name;
       desc.append(" [").append(netName).append("]");
     }
 
     // Add layer information
     if (item instanceof Trace trace) {
-      int layer = trace.get_layer();
+      int layer = trace.getLayer();
       String layerName = board.layerStructure.arr[layer].name;
       desc.append(" on ").append(layerName);
 
       // Add length information
-      double lengthInBoardUnits = trace.get_length();
+      double lengthInBoardUnits = trace.getLength();
       double lengthInTargetUnits = convertCoordinate(lengthInBoardUnits, coordinateUnit);
       desc.append(", length ")
           .append(String.format("%.4f", lengthInTargetUnits))
@@ -492,7 +492,7 @@ public class DesignRulesChecker {
   private double convertCoordinate(double boardCoordinate, String coordinateUnit) {
     // First, convert from board's internal coordinate system to DSN coordinates (in
     // the board's unit)
-    double dsnCoordinate = board.communication.coordinateTransform.board_to_dsn(boardCoordinate);
+    double dsnCoordinate = board.communication.coordinateTransform.boardToDsn(boardCoordinate);
 
     // Get the board's native unit
     Unit boardUnit = board.communication.unit;
@@ -528,22 +528,22 @@ public class DesignRulesChecker {
    * may have multiple connections with some connections completed while others remain incomplete.
    */
   public void calculateAllIncompletes() {
-    int maxNetNo = board.rules.nets.max_net_no();
+    int maxNetNo = board.rules.nets.maxNetNo();
     // Create the net item lists at once for performance reasons.
     java.util.Vector<Collection<Item>> netItemLists = new java.util.Vector<>(maxNetNo);
     for (int i = 0; i < maxNetNo; i++) {
       netItemLists.add(new java.util.LinkedList<>());
     }
     java.util.Iterator<app.freerouting.datastructures.UndoableObjects.UndoableObjectNode> it =
-        board.itemList.start_read_object();
+        board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.read_object(it);
+      Item currItem = (Item) board.itemList.readObject(it);
       if (currItem == null) {
         break;
       }
       if (currItem instanceof app.freerouting.board.Connectable) {
-        for (int i = 0; i < currItem.net_count(); i++) {
-          netItemLists.get(currItem.get_net_no(i) - 1).add(currItem);
+        for (int i = 0; i < currItem.netCount(); i++) {
+          netItemLists.get(currItem.getNetNo(i) - 1).add(currItem);
         }
       }
     }
@@ -621,7 +621,7 @@ public class DesignRulesChecker {
       return;
     }
     if (netNo >= 1 && netNo <= netIncompletes.length) {
-      Collection<Item> itemList = board.get_connectable_items(netNo);
+      Collection<Item> itemList = board.getConnectableItems(netNo);
       netIncompletes[netNo - 1] = new NetIncompletes(netNo, itemList, board);
     }
   }
@@ -722,7 +722,7 @@ public class DesignRulesChecker {
     }
     int result = 0;
     for (int i = 0; i < netIncompletes.length; i++) {
-      if (netIncompletes[i].get_length_violation() != 0) {
+      if (netIncompletes[i].getLengthViolation() != 0) {
         ++result;
       }
     }
@@ -737,7 +737,7 @@ public class DesignRulesChecker {
     if (netNo <= 0 || netNo > netIncompletes.length) {
       return 0;
     }
-    return netIncompletes[netNo - 1].get_length_violation();
+    return netIncompletes[netNo - 1].getLengthViolation();
   }
 
   /**
@@ -752,7 +752,7 @@ public class DesignRulesChecker {
     }
     boolean result = false;
     for (int i = 0; i < netIncompletes.length; i++) {
-      if (netIncompletes[i].calc_length_violation()) {
+      if (netIncompletes[i].calcLengthViolation()) {
         result = true;
       }
     }

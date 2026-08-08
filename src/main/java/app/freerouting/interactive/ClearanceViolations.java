@@ -22,7 +22,7 @@ public class ClearanceViolations {
 
     this.list = new LinkedList<>();
     for (Item currItem : p_item_list) {
-      this.list.addAll(currItem.clearance_violations());
+      this.list.addAll(currItem.clearanceViolations());
       if ((currItem.smallestClearance > 0)
           && (currItem.smallestClearance < globalSmallestClearance)) {
         globalSmallestClearance = currItem.smallestClearance;
@@ -37,14 +37,14 @@ public class ClearanceViolations {
   }
 
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
-    Color drawColor = p_graphics_context.get_violations_color();
+    Color drawColor = p_graphics_context.getViolationsColor();
     for (ClearanceViolation currViolation : list) {
-      double intensity = p_graphics_context.get_layer_visibility(currViolation.layer);
-      p_graphics_context.fill_area(currViolation.shape, p_graphics, drawColor, intensity);
+      double intensity = p_graphics_context.getLayerVisibility(currViolation.layer);
+      p_graphics_context.fillArea(currViolation.shape, p_graphics, drawColor, intensity);
       // draw a circle around the violation.
-      double drawRadius = currViolation.firstItem.board.rules.get_min_trace_half_width() * 5;
-      p_graphics_context.draw_circle(
-          currViolation.shape.centre_of_gravity(),
+      double drawRadius = currViolation.firstItem.board.rules.getMinTraceHalfWidth() * 5;
+      p_graphics_context.drawCircle(
+          currViolation.shape.centreOfGravity(),
           drawRadius,
           0.1 * drawRadius,
           drawColor,

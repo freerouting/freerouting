@@ -22,22 +22,22 @@ public class BigIntDirection extends Direction implements Serializable {
   }
 
   @Override
-  public boolean is_orthogonal() {
+  public boolean isOrthogonal() {
     return x.signum() == 0 || y.signum() == 0;
   }
 
   @Override
-  public boolean is_diagonal() {
+  public boolean isDiagonal() {
     return x.abs().equals(y.abs());
   }
 
   @Override
-  public Vector get_vector() {
+  public Vector getVector() {
     return new RationalVector(x, y, BigInteger.ONE);
   }
 
   @Override
-  public Direction turn_45_degree(int p_factor) {
+  public Direction turn45Degree(int p_factor) {
     FRLogger.warn("BigIntDirection: turn_45_degree not yet implemented");
     return this;
   }

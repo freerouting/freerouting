@@ -102,17 +102,17 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
     Integer traceCount = 0;
     double cumulativeTraceLength = 0;
     for (WindowObjectInfo.Printable currObject : p_item_list) {
-      currObject.print_info(newInstance, p_board_frame.get_locale());
+      currObject.printInfo(newInstance, p_board_frame.get_locale());
       if (currObject instanceof Pin) {
         ++pinCount;
       } else if (currObject instanceof Via) {
         ++viaCount;
       } else if (currObject instanceof Trace trace) {
         ++traceCount;
-        cumulativeTraceLength += trace.get_length();
+        cumulativeTraceLength += trace.getLength();
       }
     }
-    newInstance.append_bold(newInstance.tm.getText("summary") + " ");
+    newInstance.appendBold(newInstance.tm.getText("summary") + " ");
     NumberFormat numberFormat = NumberFormat.getInstance(p_board_frame.get_locale());
     if (pinCount > 0) {
       newInstance.append(numberFormat.format(pinCount));
@@ -174,7 +174,7 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
       newWindow.append(newWindow.tm.getText("listEmpty"));
     }
     for (Printable currObject : p_object_list) {
-      currObject.print_info(newWindow, p_board_frame.get_locale());
+      currObject.printInfo(newWindow, p_board_frame.get_locale());
     }
     newWindow.pack();
     Dimension size = newWindow.getSize();
@@ -209,7 +209,7 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
 
   /** Appends p_string in bold styleto the text pane. Returns false, if that was not possible. */
   @Override
-  public boolean append_bold(String p_string) {
+  public boolean appendBold(String p_string) {
     return append(p_string, "bold");
   }
 
@@ -219,7 +219,7 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
    */
   @Override
   public boolean append(double p_value) {
-    Float value = (float) this.coordinateTransform.board_to_user(p_value);
+    Float value = (float) this.coordinateTransform.boardToUser(p_value);
     return append(numberFormat.format(value));
   }
 
@@ -228,7 +228,7 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
    * false, if that was not possible.
    */
   @Override
-  public boolean append_without_transforming(double p_value) {
+  public boolean appendWithoutTransforming(double p_value) {
     Float value = (float) p_value;
     return append(numberFormat.format(value));
   }
@@ -239,8 +239,8 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
    */
   @Override
   public boolean append(FloatPoint p_point) {
-    FloatPoint transformedPoint = this.coordinateTransform.board_to_user(p_point);
-    return append(transformedPoint.to_string(boardFrame.get_locale()));
+    FloatPoint transformedPoint = this.coordinateTransform.boardToUser(p_point);
+    return append(transformedPoint.toString(boardFrame.get_locale()));
   }
 
   /**
@@ -249,7 +249,7 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
    */
   @Override
   public boolean append(Shape p_shape, Locale p_locale) {
-    PrintableShape transformedShape = this.coordinateTransform.board_to_user(p_shape, p_locale);
+    PrintableShape transformedShape = this.coordinateTransform.boardToUser(p_shape, p_locale);
     if (transformedShape == null) {
       return false;
     }
@@ -277,7 +277,7 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
       String p_button_name, String p_window_title, WindowObjectInfo.Printable p_object) {
     Collection<WindowObjectInfo.Printable> objectList = new LinkedList<>();
     objectList.add(p_object);
-    return append_objects(p_button_name, p_window_title, objectList);
+    return appendObjects(p_button_name, p_window_title, objectList);
   }
 
   /**
@@ -285,10 +285,10 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
    * text pane. Returns false, if that was not possible.
    */
   @Override
-  public boolean append_items(
+  public boolean appendItems(
       String p_button_name, String p_window_title, Collection<Item> p_items) {
     Collection<WindowObjectInfo.Printable> objectList = new LinkedList<>(p_items);
-    return append_objects(p_button_name, p_window_title, objectList);
+    return appendObjects(p_button_name, p_window_title, objectList);
   }
 
   /**
@@ -296,7 +296,7 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
    * text pane. Returns false, if that was not possible.
    */
   @Override
-  public boolean append_objects(
+  public boolean appendObjects(
       String p_button_name,
       String p_window_title,
       Collection<WindowObjectInfo.Printable> p_objects) {

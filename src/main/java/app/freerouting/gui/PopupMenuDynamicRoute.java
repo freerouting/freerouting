@@ -17,11 +17,11 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
 
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
 
-    LayerStructure layerStructure = boardPanel.boardHandling.get_routing_board().layerStructure;
+    LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
 
     JMenuItem popupEndRouteMenuitem = new JMenuItem();
     popupEndRouteMenuitem.setText(tm.getText("end_route"));
-    popupEndRouteMenuitem.addActionListener(_ -> boardPanel.boardHandling.return_from_state());
+    popupEndRouteMenuitem.addActionListener(_ -> boardPanel.boardHandling.returnFromState());
     popupEndRouteMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupEndRouteMenuitem", popupEndRouteMenuitem.getText()));
 
@@ -29,7 +29,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
 
     JMenuItem popupCancelMenuitem = new JMenuItem();
     popupCancelMenuitem.setText(tm.getText("cancel_route"));
-    popupCancelMenuitem.addActionListener(_ -> boardPanel.boardHandling.cancel_state());
+    popupCancelMenuitem.addActionListener(_ -> boardPanel.boardHandling.cancelState());
     popupCancelMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupCancelMenuitem", popupCancelMenuitem.getText()));
 
@@ -43,14 +43,14 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
     }
 
     Layer currLayer =
-        layerStructure.arr[boardPanel.boardHandling.getInteractiveSettings().get_layer()];
-    disable_layer_item(layerStructure.get_signal_layer_no(currLayer));
+        layerStructure.arr[boardPanel.boardHandling.getInteractiveSettings().getLayer()];
+    disableLayerItem(layerStructure.getSignalLayerNo(currLayer));
   }
 
   /** Disables the p_no-th item in the changeLayerMenu. */
-  void disable_layer_item(int p_no) {
+  void disableLayerItem(int p_no) {
     if (this.changeLayerMenu != null) {
-      this.changeLayerMenu.disable_item(p_no);
+      this.changeLayerMenu.disableItem(p_no);
     }
   }
 }

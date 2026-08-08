@@ -30,7 +30,7 @@ public class TestingSettings implements SettingsSource {
     } else if (layer >= this.settings.layers.length) {
       this.settings.setLayerCount(layer + 1);
     }
-    this.settings.set_bend_cost(layer, bendCost);
+    this.settings.setBendCost(layer, bendCost);
   }
 
   public void setDefaultBendCost(double defaultBendCost) {

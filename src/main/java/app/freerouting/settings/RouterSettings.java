@@ -113,7 +113,7 @@ public class RouterSettings implements Serializable, Cloneable {
   /** Creates a new instance of AutorouteSettings */
   public RouterSettings(RoutingBoard p_board) {
     this();
-    setLayerCount(p_board.get_layer_count());
+    setLayerCount(p_board.getLayerCount());
     applyBoardSpecificOptimizations(p_board);
   }
 
@@ -223,7 +223,7 @@ public class RouterSettings implements Serializable, Cloneable {
     if (p_board == null) {
       return;
     }
-    int boardLayerCount = p_board.get_layer_count();
+    int boardLayerCount = p_board.getLayerCount();
     if (getLayerCount() != boardLayerCount
         || !Boolean.TRUE.equals(boardSpecificTraceCostsApplied)) {
       applyBoardSpecificOptimizations(p_board);
@@ -239,7 +239,7 @@ public class RouterSettings implements Serializable, Cloneable {
     double horizontalWidth = p_board.boundingBox.width();
     double verticalWidth = p_board.boundingBox.height();
 
-    int layerCount = p_board.get_layer_count();
+    int layerCount = p_board.getLayerCount();
 
     // Track original values to log changes later
     Boolean[] originalRoutable = new Boolean[layerCount];
@@ -348,7 +348,7 @@ public class RouterSettings implements Serializable, Cloneable {
       }
     }
     if (initializeTraceCosts) {
-      int signalLayerCount = p_board.layerStructure.signal_layer_count();
+      int signalLayerCount = p_board.layerStructure.signalLayerCount();
       if (signalLayerCount > 2) {
         double outerAddCosts = 0.2 * signalLayerCount;
         // increase costs on the outer layers.
@@ -427,8 +427,8 @@ public class RouterSettings implements Serializable, Cloneable {
 
   /**
    * Set the layer count and initialize the layer specific settings. Also initialises the per-layer
-   * trace-cost arrays so that {@link #set_preferred_direction_trace_costs} and {@link
-   * #set_against_preferred_direction_trace_costs} can be called immediately without a prior call to
+   * trace-cost arrays so that {@link #setPreferredDirectionTraceCosts} and {@link
+   * #setAgainstPreferredDirectionTraceCosts} can be called immediately without a prior call to
    * {@link #applyBoardSpecificOptimizations}.
    */
   public void setLayerCount(int layerCount) {
@@ -510,11 +510,11 @@ public class RouterSettings implements Serializable, Cloneable {
     return Boolean.TRUE.equals(strictDrc);
   }
 
-  public int get_start_ripup_costs() {
+  public int getStartRipupCosts() {
     return scoring != null && scoring.startRipupCosts != null ? scoring.startRipupCosts : 1;
   }
 
-  public void set_start_ripup_costs(int p_value) {
+  public void setStartRipupCosts(int p_value) {
     if (scoring == null) {
       scoring = new ScoringSettings();
     }
@@ -560,37 +560,37 @@ public class RouterSettings implements Serializable, Cloneable {
     }
   }
 
-  public boolean get_vias_allowed() {
+  public boolean getViasAllowed() {
     return viasAllowed != null ? viasAllowed : true;
   }
 
-  public void set_vias_allowed(boolean p_value) {
+  public void setViasAllowed(boolean p_value) {
     viasAllowed = p_value;
   }
 
-  public int get_via_costs() {
+  public int getViaCosts() {
     return scoring != null && scoring.viaCosts != null ? scoring.viaCosts : 1;
   }
 
-  public void set_via_costs(int p_value) {
+  public void setViaCosts(int p_value) {
     if (scoring == null) {
       scoring = new ScoringSettings();
     }
     scoring.viaCosts = Math.max(p_value, 1);
   }
 
-  public int get_plane_via_costs() {
+  public int getPlaneViaCosts() {
     return scoring != null && scoring.planeViaCosts != null ? scoring.planeViaCosts : 1;
   }
 
-  public void set_plane_via_costs(int p_value) {
+  public void setPlaneViaCosts(int p_value) {
     if (scoring == null) {
       scoring = new ScoringSettings();
     }
     scoring.planeViaCosts = Math.max(p_value, 1);
   }
 
-  public void set_layer_active(int p_layer, boolean p_value) {
+  public void setLayerActive(int p_layer, boolean p_value) {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.set_layer_active: p_layer="
@@ -606,7 +606,7 @@ public class RouterSettings implements Serializable, Cloneable {
     layers[p_layer].routable = p_value;
   }
 
-  public boolean get_layer_active(int p_layer) {
+  public boolean getLayerActive(int p_layer) {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.get_layer_active: p_layer="
@@ -622,7 +622,7 @@ public class RouterSettings implements Serializable, Cloneable {
     return layers[p_layer].routable != null ? layers[p_layer].routable : true;
   }
 
-  public void set_bend_cost(int p_layer, double p_value) {
+  public void setBendCost(int p_layer, double p_value) {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("RouterSettings.set_bend_cost: p_layer out of range");
       return;
@@ -633,7 +633,7 @@ public class RouterSettings implements Serializable, Cloneable {
     layers[p_layer].bendCost = Math.max(MIN_BEND_COST, Math.min(MAX_BEND_COST, p_value));
   }
 
-  public double get_bend_cost(int p_layer) {
+  public double getBendCost(int p_layer) {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("RouterSettings.get_bend_cost: p_layer out of range");
       return 0.0;
@@ -646,7 +646,7 @@ public class RouterSettings implements Serializable, Cloneable {
     return layers[p_layer].bendCost;
   }
 
-  public void set_preferred_direction_is_horizontal(int p_layer, boolean p_value) {
+  public void setPreferredDirectionIsHorizontal(int p_layer, boolean p_value) {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.set_preferred_direction_is_horizontal: p_layer="
@@ -662,7 +662,7 @@ public class RouterSettings implements Serializable, Cloneable {
     layers[p_layer].preferredDirectionHorizontal = p_value;
   }
 
-  public boolean get_preferred_direction_is_horizontal(int p_layer) {
+  public boolean getPreferredDirectionIsHorizontal(int p_layer) {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.get_preferred_direction_is_horizontal: p_layer="
@@ -680,7 +680,7 @@ public class RouterSettings implements Serializable, Cloneable {
         : (p_layer % 2 == 1);
   }
 
-  public void set_preferred_direction_trace_costs(int p_layer, double p_value) {
+  public void setPreferredDirectionTraceCosts(int p_layer, double p_value) {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.set_preferred_direction_trace_costs: p_layer out of range");
       return;
@@ -696,7 +696,7 @@ public class RouterSettings implements Serializable, Cloneable {
     boardSpecificTraceCostsApplied = true;
   }
 
-  public double get_preferred_direction_trace_costs(int p_layer) {
+  public double getPreferredDirectionTraceCosts(int p_layer) {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.get_preferred_direction_trace_costs: p_layer out of range");
       return 0;
@@ -709,7 +709,7 @@ public class RouterSettings implements Serializable, Cloneable {
     return scoring.preferredDirectionTraceCost[p_layer];
   }
 
-  public double get_against_preferred_direction_trace_costs(int p_layer) {
+  public double getAgainstPreferredDirectionTraceCosts(int p_layer) {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.get_against_preferred_direction_trace_costs: p_layer out of range");
@@ -723,13 +723,13 @@ public class RouterSettings implements Serializable, Cloneable {
     return scoring.undesiredDirectionTraceCost[p_layer];
   }
 
-  public double get_horizontal_trace_costs(int p_layer) {
+  public double getHorizontalTraceCosts(int p_layer) {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.get_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }
     double result;
-    if (get_preferred_direction_is_horizontal(p_layer)) {
+    if (getPreferredDirectionIsHorizontal(p_layer)) {
       result = scoring.preferredDirectionTraceCost[p_layer];
     } else {
       result = scoring.undesiredDirectionTraceCost[p_layer];
@@ -737,7 +737,7 @@ public class RouterSettings implements Serializable, Cloneable {
     return result;
   }
 
-  public void set_against_preferred_direction_trace_costs(int p_layer, double p_value) {
+  public void setAgainstPreferredDirectionTraceCosts(int p_layer, double p_value) {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.set_against_preferred_direction_trace_costs: p_layer out of range");
@@ -754,14 +754,14 @@ public class RouterSettings implements Serializable, Cloneable {
     boardSpecificTraceCostsApplied = true;
   }
 
-  public double get_vertical_trace_costs(int p_layer) {
+  public double getVerticalTraceCosts(int p_layer) {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.get_against_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }
     double result;
-    if (get_preferred_direction_is_horizontal(p_layer)) {
+    if (getPreferredDirectionIsHorizontal(p_layer)) {
       result = scoring.undesiredDirectionTraceCost[p_layer];
     } else {
       result = scoring.preferredDirectionTraceCost[p_layer];
@@ -769,7 +769,7 @@ public class RouterSettings implements Serializable, Cloneable {
     return result;
   }
 
-  public AutorouteControl.ExpansionCostFactor[] get_trace_cost_arr() {
+  public AutorouteControl.ExpansionCostFactor[] getTraceCostArr() {
     if (scoring == null || scoring.preferredDirectionTraceCost == null) {
       return new AutorouteControl.ExpansionCostFactor[0];
     }
@@ -778,7 +778,7 @@ public class RouterSettings implements Serializable, Cloneable {
     for (int i = 0; i < result.length; i++) {
       result[i] =
           new AutorouteControl.ExpansionCostFactor(
-              get_horizontal_trace_costs(i), get_vertical_trace_costs(i));
+              getHorizontalTraceCosts(i), getVerticalTraceCosts(i));
     }
     return result;
   }
@@ -787,7 +787,7 @@ public class RouterSettings implements Serializable, Cloneable {
    * If true, the trace width at static pins smaller the trace width will be lowered automatically
    * to the pin with, if necessary.
    */
-  public boolean get_automatic_neckdown() {
+  public boolean getAutomaticNeckdown() {
     return this.automaticNeckdown != null && this.automaticNeckdown;
   }
 
@@ -795,7 +795,7 @@ public class RouterSettings implements Serializable, Cloneable {
    * If true, the trace width at static pins smaller the trace width will be lowered automatically
    * to the pin with, if necessary.
    */
-  public void set_automatic_neckdown(boolean p_value) {
+  public void setAutomaticNeckdown(boolean p_value) {
     this.automaticNeckdown = p_value;
   }
 

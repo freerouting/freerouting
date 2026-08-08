@@ -60,7 +60,7 @@ public class Polygon implements Serializable {
         Point next = i.next();
         prevI.next();
 
-        if (curr.side_of(prev, next) == Side.COLLINEAR) {
+        if (curr.sideOf(prev, next) == Side.COLLINEAR) {
           prevI.remove();
           cornerRemoved = true;
           break;
@@ -72,7 +72,7 @@ public class Polygon implements Serializable {
   }
 
   /** returns the array of corners of this polygon */
-  public Point[] corner_array() {
+  public Point[] cornerArray() {
     int cornerCount = corners.size();
     Point[] result = new Point[cornerCount];
     Iterator<Point> it = corners.iterator();
@@ -83,8 +83,8 @@ public class Polygon implements Serializable {
   }
 
   /** Reverts the order of the corners of this polygon. */
-  public Polygon revert_corners() {
-    Point[] cornerArr = corner_array();
+  public Polygon revertCorners() {
+    Point[] cornerArr = cornerArray();
     Point[] reverseCornerArr = new Point[cornerArr.length];
     for (int i = 0; i < cornerArr.length; i++) {
       reverseCornerArr[i] = cornerArr[cornerArr.length - i - 1];
@@ -97,12 +97,12 @@ public class Polygon implements Serializable {
    * the corners are in counterclock sense, and {@literal <} 0, if the corners are in clockwise
    * sense.
    */
-  public int winding_number_after_closing() {
-    Point[] cornerArr = corner_array();
+  public int windingNumberAfterClosing() {
+    Point[] cornerArr = cornerArray();
     if (cornerArr.length < 2) {
       return 0;
     }
-    Vector firstSideVector = cornerArr[1].difference_by(cornerArr[0]);
+    Vector firstSideVector = cornerArr[1].differenceBy(cornerArr[0]);
     Vector prevSideVector = firstSideVector;
     int cornerCount = cornerArr.length;
     // Skip the last corner, if it is equal to the first corner.
@@ -113,13 +113,13 @@ public class Polygon implements Serializable {
     for (int i = 1; i <= cornerCount; i++) {
       Vector nextSideVector;
       if (i == cornerCount - 1) {
-        nextSideVector = cornerArr[0].difference_by(cornerArr[i]);
+        nextSideVector = cornerArr[0].differenceBy(cornerArr[i]);
       } else if (i == cornerCount) {
         nextSideVector = firstSideVector;
       } else {
-        nextSideVector = cornerArr[i + 1].difference_by(cornerArr[i]);
+        nextSideVector = cornerArr[i + 1].differenceBy(cornerArr[i]);
       }
-      angleSum += prevSideVector.angle_approx(nextSideVector);
+      angleSum += prevSideVector.angleApprox(nextSideVector);
       prevSideVector = nextSideVector;
     }
     angleSum /= 2.0 * Math.PI;

@@ -17,57 +17,57 @@ public class PolylinePath extends Path {
 
   /** Writes this path as a scope to an output dsn-file. */
   @Override
-  public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier) throws IOException {
-    p_file.start_scope();
+  public void writeScope(IndentFileWriter p_file, IdentifierType p_identifier) throws IOException {
+    p_file.startScope();
     p_file.write("polyline_path ");
     p_identifier.write(this.layer.name, p_file);
     p_file.write(" ");
     p_file.write(String.valueOf(this.width));
     int lineCount = coordinateArr.length / 4;
     for (int i = 0; i < lineCount; i++) {
-      p_file.new_line();
+      p_file.newLine();
       for (int j = 0; j < 4; j++) {
         p_file.write(String.valueOf(coordinateArr[4 * i + j]));
         p_file.write(" ");
       }
     }
-    p_file.end_scope();
+    p_file.endScope();
   }
 
   @Override
-  public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier)
+  public void writeScopeInt(IndentFileWriter p_file, IdentifierType p_identifier)
       throws IOException {
-    p_file.start_scope();
+    p_file.startScope();
     p_file.write("polyline_path ");
     p_identifier.write(this.layer.name, p_file);
     p_file.write(" ");
     p_file.write(String.valueOf(this.width));
     int lineCount = coordinateArr.length / 4;
     for (int i = 0; i < lineCount; i++) {
-      p_file.new_line();
+      p_file.newLine();
       for (int j = 0; j < 4; j++) {
         int currCoor = (int) Math.round(coordinateArr[4 * i + j]);
         p_file.write(String.valueOf(currCoor));
         p_file.write(" ");
       }
     }
-    p_file.end_scope();
+    p_file.endScope();
   }
 
   @Override
-  public Shape transform_to_board_rel(CoordinateTransform p_coordinate_transform) {
+  public Shape transformToBoardRel(CoordinateTransform p_coordinate_transform) {
     FRLogger.warn("PolylinePath.transform_to_board_rel not implemented");
     return null;
   }
 
   @Override
-  public Shape transform_to_board(CoordinateTransform p_coordinate_transform) {
+  public Shape transformToBoard(CoordinateTransform p_coordinate_transform) {
     FRLogger.warn("PolylinePath.transform_to_board not implemented");
     return null;
   }
 
   @Override
-  public Rectangle bounding_box() {
+  public Rectangle boundingBox() {
     FRLogger.warn("PolylinePath.boundingBox not implemented");
     return null;
   }

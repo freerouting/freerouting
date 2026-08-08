@@ -16,8 +16,8 @@ class PopupMenuChangeLayer extends JMenu {
     this.boardFrame = p_board_frame;
 
     LayerStructure layerStructure =
-        boardFrame.boardPanel.boardHandling.get_routing_board().layerStructure;
-    this.itemArr = new LayermenuItem[layerStructure.signal_layer_count()];
+        boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure;
+    this.itemArr = new LayermenuItem[layerStructure.signalLayerCount()];
     TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
     this.setText(tm.getText("change_layer"));
@@ -34,7 +34,7 @@ class PopupMenuChangeLayer extends JMenu {
   }
 
   /** Disables the item with index p_no and enables all other items. */
-  void disable_item(int p_no) {
+  void disableItem(int p_no) {
     for (int i = 0; i < itemArr.length; i++) {
       this.itemArr[i].setEnabled(i != p_no);
     }
@@ -49,16 +49,16 @@ class PopupMenuChangeLayer extends JMenu {
       addActionListener(
           _ -> {
             final BoardPanel boardPanel = boardFrame.boardPanel;
-            if (boardPanel.boardHandling.change_layer_action(layerNo)) {
+            if (boardPanel.boardHandling.changeLayerAction(layerNo)) {
               TextManager tm = new TextManager(PopupMenuChangeLayer.class, boardFrame.get_locale());
               String layerName =
-                  boardPanel.boardHandling.get_routing_board().layerStructure.arr[layerNo].name;
-              boardPanel.screenMessages.set_status_message(
+                  boardPanel.boardHandling.getRoutingBoard().layerStructure.arr[layerNo].name;
+              boardPanel.screenMessages.setStatusMessage(
                   tm.getText("layer_changed_to_message", layerName));
             }
             // If change_layer failed the status message is set inside change_layer_action
             // because the information of the cause of the failing is missing here.
-            boardPanel.move_mouse(boardPanel.rightButtonClickLocation);
+            boardPanel.moveMouse(boardPanel.rightButtonClickLocation);
           });
     }
   }

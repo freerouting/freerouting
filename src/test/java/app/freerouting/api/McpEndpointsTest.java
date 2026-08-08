@@ -61,14 +61,14 @@ class McpEndpointsTest {
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = true;
     Freerouting.globalSettings.mcpServerSettings.authentication.isEnabled = false;
 
-    apiServer = Freerouting.InitializeAPI(apiSettings);
+    apiServer = Freerouting.initializeAPI(apiSettings);
     waitForServerStarted(apiServer);
     int apiPort = ((ServerConnector) apiServer.getConnectors()[0]).getLocalPort();
 
     mcpSettings.targetApiBaseUrl = "http://127.0.0.1:" + apiPort;
     Freerouting.globalSettings.mcpServerSettings.targetApiBaseUrl = mcpSettings.targetApiBaseUrl;
 
-    mcpServer = Freerouting.InitializeMCP(mcpSettings);
+    mcpServer = Freerouting.initializeMCP(mcpSettings);
     waitForServerStarted(mcpServer);
     int mcpPort = ((ServerConnector) mcpServer.getConnectors()[0]).getLocalPort();
 
@@ -91,7 +91,7 @@ class McpEndpointsTest {
   }
 
   @Test
-  void initialize_returnsStrictMcpShape() throws Exception {
+  void initializeReturnsStrictMcpShape() throws Exception {
     JsonObject request = new JsonObject();
     request.addProperty("jsonrpc", "2.0");
     request.addProperty("id", 1);
@@ -114,7 +114,7 @@ class McpEndpointsTest {
   @Test
   @AllowErrorLogs(
       "Jetty shutdown may interrupt in-flight MCP bridge HTTP calls under parallel test load")
-  void toolsList_andToolsCall_bridgeToApiRoutes() throws Exception {
+  void toolsListAndToolsCallBridgeToApiRoutes() throws Exception {
     JsonObject listRequest = new JsonObject();
     listRequest.addProperty("jsonrpc", "2.0");
     listRequest.addProperty("id", 2);
@@ -161,7 +161,7 @@ class McpEndpointsTest {
   }
 
   @Test
-  void customTools_encodeAndDecodeBase64_runLocally() throws Exception {
+  void customToolsEncodeAndDecodeBase64RunLocally() throws Exception {
     // 1. Verify tools exist in tools/list
     JsonObject listRequest = new JsonObject();
     listRequest.addProperty("jsonrpc", "2.0");
@@ -249,7 +249,7 @@ class McpEndpointsTest {
   }
 
   @Test
-  void agentCard_isPublicOnMcpServer() throws Exception {
+  void agentCardIsPublicOnMcpServer() throws Exception {
     HttpRequest request =
         HttpRequest.newBuilder(mcpBaseUri.resolve("/.well-known/agent.json"))
             .GET()
@@ -275,7 +275,7 @@ class McpEndpointsTest {
   @Test
   @AllowErrorLogs(
       "Misconfigured target URL is rejected; MCP may log RPC interruption under parallel load")
-  void toolsCall_rejectsMcpTargetApiBaseUrlMisconfiguration() throws Exception {
+  void toolsCallRejectsMcpTargetApiBaseUrlMisconfiguration() throws Exception {
     Freerouting.globalSettings.mcpServerSettings.targetApiBaseUrl = mcpBaseUri + "/v1/mcp";
 
     JsonObject callRequest = new JsonObject();
@@ -304,7 +304,7 @@ class McpEndpointsTest {
   }
 
   @Test
-  void initialize_extractsClientInfo_andCachesIt() throws Exception {
+  void initializeExtractsClientInfoAndCachesIt() throws Exception {
     JsonObject initializeRequest = new JsonObject();
     initializeRequest.addProperty("jsonrpc", "2.0");
     initializeRequest.addProperty("id", 101);
@@ -330,7 +330,7 @@ class McpEndpointsTest {
   }
 
   @Test
-  void customTools_fileUploadAndDownload_runLocally() throws Exception {
+  void customToolsFileUploadAndDownloadRunLocally() throws Exception {
     boolean originalAuthEnabled =
         Freerouting.globalSettings.apiServerSettings.authentication.isEnabled;
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;

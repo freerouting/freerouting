@@ -23,7 +23,7 @@ public final class ForcedViaAlgo {
    * Checks, if a Via is possible at the input layer after evtl. shoving aside obstacle traces.
    * p_room_shape is used for calculating the fromSide.
    */
-  public static ForcedPadAlgo.CheckDrillResult check_layer(
+  public static ForcedPadAlgo.CheckDrillResult checkLayer(
       double p_via_radius,
       int p_cl_class,
       boolean p_attach_smd_allowed,
@@ -48,28 +48,28 @@ public final class ForcedViaAlgo {
 
     double checkRadius =
         p_via_radius
-            + 0.5 * p_board.clearance_value(p_cl_class, p_cl_class, p_layer)
-            + p_board.get_min_trace_half_width();
+            + 0.5 * p_board.clearanceValue(p_cl_class, p_cl_class, p_layer)
+            + p_board.getMinTraceHalfWidth();
 
     TileShape tileShape;
     boolean is90Degree;
-    if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-      tileShape = viaShape.bounding_box();
+    if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+      tileShape = viaShape.boundingBox();
       is90Degree = true;
     } else {
-      tileShape = viaShape.bounding_octagon();
+      tileShape = viaShape.boundingOctagon();
       is90Degree = false;
     }
 
     CalcFromSide fromSide =
-        calculate_from_side(
-            p_location.to_float(), tileShape, p_room_shape.to_Simplex(), checkRadius, is90Degree);
+        calculateFromSide(
+            p_location.toFloat(), tileShape, p_room_shape.toSimplex(), checkRadius, is90Degree);
     if (fromSide == null) {
       return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
     }
 
     ForcedPadAlgo.CheckDrillResult viaResult =
-        forcedPadAlgo.check_forced_pad(
+        forcedPadAlgo.checkForcedPad(
             tileShape,
             fromSide,
             p_layer,
@@ -91,14 +91,14 @@ public final class ForcedViaAlgo {
 
     Circle startTraceCircle = new Circle(intLocation, p_trace_half_width);
     TileShape startTraceShape;
-    if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-      startTraceShape = startTraceCircle.bounding_box();
+    if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+      startTraceShape = startTraceCircle.boundingBox();
     } else {
-      startTraceShape = startTraceCircle.bounding_octagon();
+      startTraceShape = startTraceCircle.boundingOctagon();
     }
 
     ForcedPadAlgo.CheckDrillResult traceResult =
-        forcedPadAlgo.check_forced_pad(
+        forcedPadAlgo.checkForcedPad(
             startTraceShape,
             fromSide,
             p_layer,
@@ -133,14 +133,14 @@ public final class ForcedViaAlgo {
       RoutingBoard p_board,
       int[] p_trace_pen_halfwidth_arr,
       int p_trace_clearance_class_no) {
-    Vector translateVector = p_location.difference_by(Point.ZERO);
-    int calcFromSideOffset = p_board.get_min_trace_half_width();
+    Vector translateVector = p_location.differenceBy(Point.ZERO);
+    int calcFromSideOffset = p_board.getMinTraceHalfWidth();
     ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(p_board);
-    Padstack viaPadstack = p_via_info.get_padstack();
-    Shape holeShape = hole_check_shape(viaPadstack, p_location, p_board);
-    for (int i = viaPadstack.from_layer(); i <= viaPadstack.to_layer(); i++) {
-      Shape currPadShape = viaPadstack.get_shape(i);
-      int currClearanceClass = p_via_info.get_clearance_class();
+    Padstack viaPadstack = p_via_info.getPadstack();
+    Shape holeShape = holeCheckShape(viaPadstack, p_location, p_board);
+    for (int i = viaPadstack.fromLayer(); i <= viaPadstack.toLayer(); i++) {
+      Shape currPadShape = viaPadstack.getShape(i);
+      int currClearanceClass = p_via_info.getClearanceClass();
       if (currPadShape == null) {
         if (holeShape == null) {
           continue;
@@ -149,56 +149,56 @@ public final class ForcedViaAlgo {
         currPadShape = holeShape;
         currClearanceClass = 0;
       } else {
-        currPadShape = (Shape) currPadShape.translate_by(translateVector);
+        currPadShape = (Shape) currPadShape.translateBy(translateVector);
       }
       TileShape tileShape;
-      if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-        tileShape = currPadShape.bounding_box();
+      if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+        tileShape = currPadShape.boundingBox();
       } else {
-        tileShape = currPadShape.bounding_octagon();
+        tileShape = currPadShape.boundingOctagon();
       }
       CalcFromSide fromSide =
-          forcedPadAlgo.calc_from_side(
+          forcedPadAlgo.calcFromSide(
               tileShape, p_location, i, calcFromSideOffset, currClearanceClass);
-      if (forcedPadAlgo.check_forced_pad(
+      if (forcedPadAlgo.checkForcedPad(
               tileShape,
               fromSide,
               i,
               p_net_no_arr,
               currClearanceClass,
-              p_via_info.attach_smd_allowed(),
+              p_via_info.attachSmdAllowed(),
               null,
               p_max_recursion_depth,
               p_max_via_recursion_depth,
               false,
               null)
           == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
-        p_board.set_shove_failing_layer(i);
+        p_board.setShoveFailingLayer(i);
         return false;
       }
       if (currClearanceClass != 0 && holeShape != null) {
         // The drill hole must ALSO keep hole clearance from other-net copper on layers where
         // the pad exists — the pad check above only enforces the (smaller) copper clearance.
         TileShape holeTile;
-        if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-          holeTile = holeShape.bounding_box();
+        if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+          holeTile = holeShape.boundingBox();
         } else {
-          holeTile = holeShape.bounding_octagon();
+          holeTile = holeShape.boundingOctagon();
         }
-        if (forcedPadAlgo.check_forced_pad(
+        if (forcedPadAlgo.checkForcedPad(
                 holeTile,
                 fromSide,
                 i,
                 p_net_no_arr,
                 0,
-                p_via_info.attach_smd_allowed(),
+                p_via_info.attachSmdAllowed(),
                 null,
                 p_max_recursion_depth,
                 p_max_via_recursion_depth,
                 false,
                 null)
             == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
-          p_board.set_shove_failing_layer(i);
+          p_board.setShoveFailingLayer(i);
           return false;
         }
       }
@@ -209,12 +209,12 @@ public final class ForcedViaAlgo {
           && p_location instanceof IntPoint tracePoint) {
         Circle startTraceCircle = new Circle(tracePoint, p_trace_pen_halfwidth_arr[i]);
         TileShape startTraceShape;
-        if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-          startTraceShape = startTraceCircle.bounding_box();
+        if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+          startTraceShape = startTraceCircle.boundingBox();
         } else {
-          startTraceShape = startTraceCircle.bounding_octagon();
+          startTraceShape = startTraceCircle.boundingOctagon();
         }
-        if (forcedPadAlgo.check_forced_pad(
+        if (forcedPadAlgo.checkForcedPad(
                 startTraceShape,
                 fromSide,
                 i,
@@ -227,7 +227,7 @@ public final class ForcedViaAlgo {
                 false,
                 null)
             == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
-          p_board.set_shove_failing_layer(i);
+          p_board.setShoveFailingLayer(i);
           return false;
         }
       }
@@ -251,14 +251,14 @@ public final class ForcedViaAlgo {
       int p_max_recursion_depth,
       int p_max_via_recursion_depth,
       RoutingBoard p_board) {
-    Vector translateVector = p_location.difference_by(Point.ZERO);
-    int calcFromSideOffset = p_board.get_min_trace_half_width();
+    Vector translateVector = p_location.differenceBy(Point.ZERO);
+    int calcFromSideOffset = p_board.getMinTraceHalfWidth();
     ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(p_board);
-    Padstack viaPadstack = p_via_info.get_padstack();
-    Shape holeShape = hole_check_shape(viaPadstack, p_location, p_board);
-    for (int i = viaPadstack.from_layer(); i <= viaPadstack.to_layer(); i++) {
-      Shape currPadShape = viaPadstack.get_shape(i);
-      int currClearanceClass = p_via_info.get_clearance_class();
+    Padstack viaPadstack = p_via_info.getPadstack();
+    Shape holeShape = holeCheckShape(viaPadstack, p_location, p_board);
+    for (int i = viaPadstack.fromLayer(); i <= viaPadstack.toLayer(); i++) {
+      Shape currPadShape = viaPadstack.getShape(i);
+      int currClearanceClass = p_via_info.getClearanceClass();
       if (currPadShape == null) {
         if (holeShape == null) {
           continue;
@@ -266,7 +266,7 @@ public final class ForcedViaAlgo {
         currPadShape = holeShape;
         currClearanceClass = 0;
       } else {
-        currPadShape = (Shape) currPadShape.translate_by(translateVector);
+        currPadShape = (Shape) currPadShape.translateBy(translateVector);
       }
       TileShape tileShape;
       Circle startTraceCircle;
@@ -276,57 +276,57 @@ public final class ForcedViaAlgo {
         startTraceCircle = null;
       }
       TileShape startTraceShape = null;
-      if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-        tileShape = currPadShape.bounding_box();
+      if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+        tileShape = currPadShape.boundingBox();
         if (startTraceCircle != null) {
-          startTraceShape = startTraceCircle.bounding_box();
+          startTraceShape = startTraceCircle.boundingBox();
         }
       } else {
-        tileShape = currPadShape.bounding_octagon();
+        tileShape = currPadShape.boundingOctagon();
         if (startTraceCircle != null) {
-          startTraceShape = startTraceCircle.bounding_octagon();
+          startTraceShape = startTraceCircle.boundingOctagon();
         }
       }
       CalcFromSide fromSide =
-          forcedPadAlgo.calc_from_side(
+          forcedPadAlgo.calcFromSide(
               tileShape, p_location, i, calcFromSideOffset, currClearanceClass);
-      if (!forcedPadAlgo.forced_pad(
+      if (!forcedPadAlgo.forcedPad(
           tileShape,
           fromSide,
           i,
           p_net_no_arr,
           currClearanceClass,
-          p_via_info.attach_smd_allowed(),
+          p_via_info.attachSmdAllowed(),
           null,
           p_max_recursion_depth,
           p_max_via_recursion_depth)) {
-        p_board.set_shove_failing_layer(i);
+        p_board.setShoveFailingLayer(i);
         return false;
       }
       if (currClearanceClass != 0 && holeShape != null) {
         TileShape holeTile;
-        if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-          holeTile = holeShape.bounding_box();
+        if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+          holeTile = holeShape.boundingBox();
         } else {
-          holeTile = holeShape.bounding_octagon();
+          holeTile = holeShape.boundingOctagon();
         }
-        if (!forcedPadAlgo.forced_pad(
+        if (!forcedPadAlgo.forcedPad(
             holeTile,
             fromSide,
             i,
             p_net_no_arr,
             0,
-            p_via_info.attach_smd_allowed(),
+            p_via_info.attachSmdAllowed(),
             null,
             p_max_recursion_depth,
             p_max_via_recursion_depth)) {
-          p_board.set_shove_failing_layer(i);
+          p_board.setShoveFailingLayer(i);
           return false;
         }
       }
       if (startTraceShape != null) {
         // necessary in case startTraceShape is bigger than tileShape
-        if (!forcedPadAlgo.forced_pad(
+        if (!forcedPadAlgo.forcedPad(
             startTraceShape,
             fromSide,
             i,
@@ -336,18 +336,18 @@ public final class ForcedViaAlgo {
             null,
             p_max_recursion_depth,
             p_max_via_recursion_depth)) {
-          p_board.set_shove_failing_layer(i);
+          p_board.setShoveFailingLayer(i);
           return false;
         }
       }
     }
-    p_board.insert_via(
+    p_board.insertVia(
         viaPadstack,
         p_location,
         p_net_no_arr,
-        p_via_info.get_clearance_class(),
+        p_via_info.getClearanceClass(),
         FixedState.UNFIXED,
-        p_via_info.attach_smd_allowed());
+        p_via_info.attachSmdAllowed());
     return true;
   }
 
@@ -356,13 +356,13 @@ public final class ForcedViaAlgo {
    * passes through, so other copper must stay holeClearance away from it. Returns null when the
    * rule is off or no drill radius is known.
    */
-  private static Shape hole_check_shape(
+  private static Shape holeCheckShape(
       Padstack p_padstack, Point p_location, RoutingBoard p_board) {
-    int holeClearance = p_board.rules.get_hole_clearance();
+    int holeClearance = p_board.rules.getHoleClearance();
     if (holeClearance <= 0 || !(p_location instanceof IntPoint center)) {
       return null;
     }
-    double drillRadius = p_padstack.get_drill_radius();
+    double drillRadius = p_padstack.getDrillRadius();
     if (drillRadius <= 0) {
       return null;
     }
@@ -371,13 +371,13 @@ public final class ForcedViaAlgo {
     return new Circle(center, (int) Math.ceil(drillRadius + holeClearance + 10));
   }
 
-  private static CalcFromSide calculate_from_side(
+  private static CalcFromSide calculateFromSide(
       FloatPoint p_via_location,
       TileShape p_via_shape,
       Simplex p_room_shape,
       double p_dist,
       boolean is90Degree) {
-    IntBox viaBox = p_via_shape.bounding_box();
+    IntBox viaBox = p_via_shape.boundingBox();
     for (int i = 0; i < 4; i++) {
       FloatPoint checkPoint;
       double borderX;
@@ -420,7 +420,7 @@ public final class ForcedViaAlgo {
     }
     // try the diagonal directions
     double dist = p_dist / Limits.sqrt2;
-    double borderDist = viaBox.max_width() / (2 * Limits.sqrt2);
+    double borderDist = viaBox.maxWidth() / (2 * Limits.sqrt2);
     for (int i = 0; i < 4; i++) {
       FloatPoint checkPoint;
       double borderX;

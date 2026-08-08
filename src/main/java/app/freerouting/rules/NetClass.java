@@ -59,38 +59,38 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Gets the name of this net class. */
-  public String get_name() {
+  public String getName() {
     return this.name;
   }
 
   /** Changes the name of this net class. */
-  public void set_name(String p_name) {
+  public void setName(String p_name) {
     this.name = p_name;
   }
 
   /** Sets the trace half width used for routing to p_value on all layers. */
-  public void set_trace_half_width(int p_value) {
+  public void setTraceHalfWidth(int p_value) {
     Arrays.fill(traceHalfWidthArr, p_value);
   }
 
   /** Sets the trace half width used for routing to p_value on all inner layers. */
-  public void set_trace_half_width_on_inner(int p_value) {
+  public void setTraceHalfWidthOnInner(int p_value) {
     for (int i = 1; i < traceHalfWidthArr.length - 1; i++) {
       traceHalfWidthArr[i] = p_value;
     }
   }
 
   /** Sets the trace half width used for routing to p_value on the input layer. */
-  public void set_trace_half_width(int p_layer, int p_value) {
+  public void setTraceHalfWidth(int p_layer, int p_value) {
     traceHalfWidthArr[p_layer] = p_value;
   }
 
-  public int layer_count() {
+  public int layerCount() {
     return traceHalfWidthArr.length;
   }
 
   /** Gets the trace half width used for routing on the input layer. */
-  public int get_trace_half_width(int p_layer) {
+  public int getTraceHalfWidth(int p_layer) {
     if (p_layer < 0 || p_layer >= traceHalfWidthArr.length) {
       FRLogger.warn(" NetClass.get_trace_half_width: p_layer out of range");
       return 0;
@@ -99,52 +99,52 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Gets the clearance class used for routing traces with this net class. */
-  public int get_trace_clearance_class() {
+  public int getTraceClearanceClass() {
     return this.traceClearanceClass;
   }
 
   /** Sets the clearance class used for routing traces with this net rclass. */
-  public void set_trace_clearance_class(int p_clearance_class_no) {
+  public void setTraceClearanceClass(int p_clearance_class_no) {
     this.traceClearanceClass = p_clearance_class_no;
   }
 
   /** Gets the via rule of this net rule. */
-  public ViaRule get_via_rule() {
+  public ViaRule getViaRule() {
     return this.viaRule;
   }
 
   /** Sets the via rule of this net class. */
-  public void set_via_rule(ViaRule p_via_rule) {
+  public void setViaRule(ViaRule p_via_rule) {
     this.viaRule = p_via_rule;
   }
 
   /** Returns, if traces and vias of this net class can be pushed. */
-  public boolean is_shove_fixed() {
+  public boolean isShoveFixed() {
     return this.shoveFixed;
   }
 
   /** Sets, if traces and vias of this net class can be pushed. */
-  public void set_shove_fixed(boolean p_value) {
+  public void setShoveFixed(boolean p_value) {
     this.shoveFixed = p_value;
   }
 
   /** Returns, if traces of this nets class are pulled tight. */
-  public boolean get_pull_tight() {
+  public boolean getPullTight() {
     return this.pullTight;
   }
 
   /** Sets, if traces of this nets class are pulled tight. */
-  public void set_pull_tight(boolean p_value) {
+  public void setPullTight(boolean p_value) {
     this.pullTight = p_value;
   }
 
   /** Returns, if the cycle remove algorithm ignores cycles, where conduction areas are involved */
-  public boolean get_ignore_cycles_with_areas() {
+  public boolean getIgnoreCyclesWithAreas() {
     return this.ignoreCyclesWithAreas;
   }
 
   /** Sets, if the cycle remove algorithm ignores cycles, where conduction areas are involved */
-  public void set_ignore_cycles_with_areas(boolean p_value) {
+  public void setIgnoreCyclesWithAreas(boolean p_value) {
     this.ignoreCyclesWithAreas = p_value;
   }
 
@@ -152,7 +152,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
    * Returns the minimum trace length of this net class. If the result is {@literal <}= 0, there is
    * no minimal trace length restriction.
    */
-  public double get_minimum_trace_length() {
+  public double getMinimumTraceLength() {
     return minimumTraceLength;
   }
 
@@ -160,7 +160,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
    * Sets the minimum trace length of this net class to p_value. If p_value is {@literal <}= 0,
    * there is no minimal trace length restriction.
    */
-  public void set_minimum_trace_length(double p_value) {
+  public void setMinimumTraceLength(double p_value) {
     minimumTraceLength = p_value;
   }
 
@@ -168,7 +168,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
    * Returns the maximum trace length of this net class. If the result is {@literal <}= 0, there is
    * no maximal trace length restriction.
    */
-  public double get_maximum_trace_length() {
+  public double getMaximumTraceLength() {
     return maximumTraceLength;
   }
 
@@ -176,12 +176,12 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
    * Sets the maximum trace length of this net class to p_value. If p_value is {@literal <}= 0,
    * there is no maximal trace length restriction.
    */
-  public void set_maximum_trace_length(double p_value) {
+  public void setMaximumTraceLength(double p_value) {
     maximumTraceLength = p_value;
   }
 
   /** Returns if the layer with index p_layer_no is active for routing */
-  public boolean is_active_routing_layer(int p_layer_no) {
+  public boolean isActiveRoutingLayer(int p_layer_no) {
     if (p_layer_no < 0 || p_layer_no >= this.activeRoutingLayerArr.length) {
       return false;
     }
@@ -189,7 +189,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Sets the layer with index p_layer_no to p_active. */
-  public void set_active_routing_layer(int p_layer_no, boolean p_active) {
+  public void setActiveRoutingLayer(int p_layer_no, boolean p_active) {
     if (p_layer_no < 0 || p_layer_no >= this.activeRoutingLayerArr.length) {
       return;
     }
@@ -197,36 +197,36 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Activates or deactivates all layers for routing */
-  public void set_all_layers_active(boolean p_value) {
+  public void setAllLayersActive(boolean p_value) {
     Arrays.fill(this.activeRoutingLayerArr, p_value);
   }
 
   /** Activates or deactivates all inner layers for routing */
-  public void set_all_inner_layers_active(boolean p_value) {
+  public void setAllInnerLayersActive(boolean p_value) {
     for (int i = 1; i < traceHalfWidthArr.length - 1; i++) {
       activeRoutingLayerArr[i] = p_value;
     }
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("net_class_2") + " ");
-    p_window.append_bold(this.name);
-    p_window.append_bold(":");
+    p_window.appendBold(tm.getText("net_class_2") + " ");
+    p_window.appendBold(this.name);
+    p_window.appendBold(":");
     p_window.append(" " + tm.getText("traceClearanceClass") + " ");
-    String clName = clearanceMatrix.get_name(this.traceClearanceClass);
+    String clName = clearanceMatrix.getName(this.traceClearanceClass);
     p_window.append(
         clName,
         tm.getText("trace_clearance_class_2"),
-        clearanceMatrix.get_row(this.traceClearanceClass));
+        clearanceMatrix.getRow(this.traceClearanceClass));
     if (this.shoveFixed) {
       p_window.append(", " + tm.getText("shoveFixed"));
     }
     p_window.append(", " + tm.getText("viaRule") + " ");
     p_window.append(viaRule.name, tm.getText("via_rule_2"), viaRule);
-    if (trace_width_is_layer_dependent()) {
+    if (traceWidthIsLayerDependent()) {
       for (int i = 0; i < traceHalfWidthArr.length; i++) {
         p_window.newline();
         p_window.indent();
@@ -243,7 +243,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Returns true, if the trace width of this class is not equal on all layers. */
-  public boolean trace_width_is_layer_dependent() {
+  public boolean traceWidthIsLayerDependent() {
     int compareValue = traceHalfWidthArr[0];
     for (int i = 1; i < traceHalfWidthArr.length; i++) {
       if (this.boardLayerStructure.arr[i].isSignal) {
@@ -256,7 +256,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Returns true, if the trace width of this class is not equal on all inner layers. */
-  public boolean trace_width_is_inner_layer_dependent() {
+  public boolean traceWidthIsInnerLayerDependent() {
 
     if (traceHalfWidthArr.length <= 3) {
       return false;

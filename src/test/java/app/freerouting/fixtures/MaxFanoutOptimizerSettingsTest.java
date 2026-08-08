@@ -17,8 +17,8 @@ public class MaxFanoutOptimizerSettingsTest extends RoutingFixtureTest {
     testSettingsSource.setFanoutMaxItems(2); // limit to 2 pins
     testSettingsSource.setJobTimeoutString("00:02:00");
 
-    RoutingJob job = GetRoutingJob("Issue558-dev-board.dsn", testSettingsSource);
-    RunRoutingJob(job);
+    RoutingJob job = getRoutingJob("Issue558-dev-board.dsn", testSettingsSource);
+    runRoutingJob(job);
 
     Assertions.assertNotNull(job.board);
     // The fanout process should run and stop early at maxItems limit.
@@ -39,8 +39,8 @@ public class MaxFanoutOptimizerSettingsTest extends RoutingFixtureTest {
     testSettingsSource.setOptimizerMaxItems(2); // limit to 2 items
     testSettingsSource.setJobTimeoutString("00:02:00");
 
-    RoutingJob job = GetRoutingJob("Issue026-J2_reference.dsn", testSettingsSource);
-    RunRoutingJob(job);
+    RoutingJob job = getRoutingJob("Issue026-J2_reference.dsn", testSettingsSource);
+    runRoutingJob(job);
 
     Assertions.assertNotNull(job.board);
     // Verifies the optimizer runs with the max_passes and max_items constraints and executes

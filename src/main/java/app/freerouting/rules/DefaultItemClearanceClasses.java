@@ -9,7 +9,7 @@ public class DefaultItemClearanceClasses implements Serializable {
   /** Creates a new instance of DefaultItemClearancesClasses */
   public DefaultItemClearanceClasses() {
     this.arr = new int[ItemClass.values().length];
-    this.set_all(1);
+    this.setAll(1);
   }
 
   public DefaultItemClearanceClasses(DefaultItemClearanceClasses p_classes) {
@@ -30,7 +30,7 @@ public class DefaultItemClearanceClasses implements Serializable {
   }
 
   /** Sets the indices of all default item clearance classes to p_index. */
-  public void set_all(int p_index) {
+  public void setAll(int p_index) {
     for (int i = 1; i < this.arr.length; i++) {
       arr[i] = p_index;
     }

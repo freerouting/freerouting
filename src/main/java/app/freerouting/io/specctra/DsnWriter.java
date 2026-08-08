@@ -68,25 +68,25 @@ public final class DsnWriter {
             board.communication.coordinateTransform,
             compatMode);
 
-    outputFile.start_scope(false);
+    outputFile.startScope(false);
     outputFile.write("pcb ");
     writeScopeParam.identifierType.write(designName, outputFile);
 
-    Parser.write_scope(
+    Parser.writeScope(
         writeScopeParam.file,
         writeScopeParam.board.communication.specctraParserInfo,
         writeScopeParam.identifierType,
         false);
 
-    Resolution.write_scope(outputFile, board.communication);
-    Unit.write_scope(outputFile, board.communication.unit);
-    Structure.write_scope(writeScopeParam);
-    Placement.write_scope(writeScopeParam);
-    Library.write_scope(writeScopeParam);
-    PartLibrary.write_scope(writeScopeParam);
-    Network.write_scope(writeScopeParam);
-    Wiring.write_scope(writeScopeParam);
+    Resolution.writeScope(outputFile, board.communication);
+    Unit.writeScope(outputFile, board.communication.unit);
+    Structure.writeScope(writeScopeParam);
+    Placement.writeScope(writeScopeParam);
+    Library.writeScope(writeScopeParam);
+    PartLibrary.writeScope(writeScopeParam);
+    Network.writeScope(writeScopeParam);
+    Wiring.writeScope(writeScopeParam);
 
-    outputFile.end_scope();
+    outputFile.endScope();
   }
 }

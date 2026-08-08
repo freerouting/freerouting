@@ -48,14 +48,14 @@ public class Issue676RoutingTest extends RoutingFixtureTest {
    * BoardToolbar}.
    */
   @Test
-  void issue676_layer_count_correct_after_merge_without_dsn_file_settings() throws Exception {
+  void issue676LayerCountCorrectAfterMergeWithoutDsnFileSettings() throws Exception {
     // Load the board once, just to get the RoutingBoard object for the assertions.
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setMaxPasses(1);
     testingSettings.setMaxItems(5);
     testingSettings.setJobTimeoutString("00:01:00");
 
-    RoutingJob job = GetRoutingJob(FIXTURE, testingSettings);
+    RoutingJob job = getRoutingJob(FIXTURE, testingSettings);
 
     // The test framework already includes DsnFileSettings, so after GetRoutingJob() the
     // layer count should be 2.
@@ -81,8 +81,8 @@ public class Issue676RoutingTest extends RoutingFixtureTest {
           2,
           buggySettings.getLayerCount(),
           "After applyBoardSpecificOptimizations() the layer count must be 2 (fix verified).");
-      assertTrue(buggySettings.get_layer_active(0), "Layer 0 (top_cu) must be active after fix.");
-      assertTrue(buggySettings.get_layer_active(1), "Layer 1 (bot_cu) must be active after fix.");
+      assertTrue(buggySettings.getLayerActive(0), "Layer 0 (top_cu) must be active after fix.");
+      assertTrue(buggySettings.getLayerActive(1), "Layer 1 (bot_cu) must be active after fix.");
     }
   }
 
@@ -92,13 +92,13 @@ public class Issue676RoutingTest extends RoutingFixtureTest {
    * initialised before the autorouter runs.
    */
   @Test
-  void issue676_routing_completes_without_exceptions() {
+  void issue676RoutingCompletesWithoutExceptions() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setMaxPasses(1);
     testingSettings.setMaxItems(20);
     testingSettings.setJobTimeoutString("00:01:00");
 
-    RoutingJob job = GetRoutingJob(FIXTURE, testingSettings);
+    RoutingJob job = getRoutingJob(FIXTURE, testingSettings);
 
     // Verify pre-routing layer count is correct.
     assertEquals(
@@ -110,7 +110,7 @@ public class Issue676RoutingTest extends RoutingFixtureTest {
             + "has not taken effect.");
 
     // Run the routing — should not throw or leave zero routed items due to all-false layerActive.
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     // Post-routing: layer count must still be 2.
     assertEquals(

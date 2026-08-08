@@ -23,11 +23,11 @@ public abstract class Cursor {
   double yCoor;
   boolean locationInitialized;
 
-  public static Cursor get_45_degree_cross_hair_cursor() {
+  public static Cursor get45DegreeCrossHairCursor() {
     return new FortyfiveDegreeCrossHairCursor();
   }
 
-  protected static void init_graphics(Graphics2D p_graphics) {
+  protected static void initGraphics(Graphics2D p_graphics) {
     BasicStroke bs = new BasicStroke(0, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     p_graphics.setStroke(bs);
     p_graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -37,7 +37,7 @@ public abstract class Cursor {
 
   public abstract void draw(Graphics p_graphics);
 
-  public void set_location(Point2D p_location) {
+  public void setLocation(Point2D p_location) {
     this.xCoor = p_location.getX();
     this.yCoor = p_location.getY();
     locationInitialized = true;
@@ -52,7 +52,7 @@ public abstract class Cursor {
         return;
       }
       Graphics2D g2 = (Graphics2D) p_graphics;
-      init_graphics(g2);
+      initGraphics(g2);
       GeneralPath drawPath = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
       drawPath.append(VERTICAL_LINE, false);
       drawPath.append(HORIZONTAL_LINE, false);

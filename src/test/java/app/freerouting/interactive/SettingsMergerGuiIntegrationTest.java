@@ -46,7 +46,7 @@ class SettingsMergerGuiIntegrationTest {
         new FileInputStream(TEST_DSN),
         new BoardObserverAdaptor(),
         new ItemIdentificationNumberGenerator());
-    board = manager.get_routing_board();
+    board = manager.getRoutingBoard();
   }
 
   @AfterEach
@@ -68,14 +68,14 @@ class SettingsMergerGuiIntegrationTest {
    * </blockquote>
    */
   @Test
-  void merge_usesLiveInteractiveSettingsValues() {
+  void mergeUsesLiveInteractiveSettingsValues() {
     InteractiveSettings interactiveSettings = InteractiveSettings.getOrCreate(board);
 
     // Build a merger with default + the live InteractiveSettings source at priority 50.
     SettingsMerger merger = new SettingsMerger(new DefaultSettings(), interactiveSettings);
 
     // Change tracePullTightAccuracy via the setter (fires PropertyChangeEvent).
-    interactiveSettings.set_trace_pull_tight_accuracy(123);
+    interactiveSettings.setTracePullTightAccuracy(123);
 
     RouterSettings merged = merger.merge();
 
@@ -90,14 +90,14 @@ class SettingsMergerGuiIntegrationTest {
    * every {@code merge()} and is not cached.
    */
   @Test
-  void merge_picksUpSubsequentMutations() {
+  void mergePicksUpSubsequentMutations() {
     InteractiveSettings interactiveSettings = InteractiveSettings.getOrCreate(board);
     SettingsMerger merger = new SettingsMerger(new DefaultSettings(), interactiveSettings);
 
-    interactiveSettings.set_trace_pull_tight_accuracy(300);
+    interactiveSettings.setTracePullTightAccuracy(300);
     assertEquals(300, merger.merge().tracePullTightAccuracy);
 
-    interactiveSettings.set_trace_pull_tight_accuracy(750);
+    interactiveSettings.setTracePullTightAccuracy(750);
     assertEquals(
         750,
         merger.merge().tracePullTightAccuracy,
@@ -110,7 +110,7 @@ class SettingsMergerGuiIntegrationTest {
    * GuiManager} (placeholder) → {@code GuiBoardManager.loadFromSpecctraDsn} (live singleton).
    */
   @Test
-  void addOrReplaceSources_interactiveSettingsReplacesGuiSettingsPlaceholder() {
+  void addOrReplaceSourcesInteractiveSettingsReplacesGuiSettingsPlaceholder() {
     SettingsMerger merger = new SettingsMerger(new DefaultSettings());
 
     // Add a plain (static-snapshot) GuiSettings placeholder, as GuiManager does at startup.
@@ -118,7 +118,7 @@ class SettingsMergerGuiIntegrationTest {
 
     // After board load, register the live singleton — it must replace the placeholder.
     InteractiveSettings interactiveSettings = InteractiveSettings.getOrCreate(board);
-    interactiveSettings.set_trace_pull_tight_accuracy(999);
+    interactiveSettings.setTracePullTightAccuracy(999);
     merger.addOrReplaceSources(interactiveSettings);
 
     RouterSettings merged = merger.merge();
@@ -143,7 +143,7 @@ class SettingsMergerGuiIntegrationTest {
    * </blockquote>
    */
   @Test
-  void merge_withNoGuiSource_usesDefaults() {
+  void mergeWithNoGuiSourceUsesDefaults() {
     // Merger with only defaults — no GuiSettings / InteractiveSettings registered.
     SettingsMerger merger = new SettingsMerger(new DefaultSettings());
     RouterSettings merged = merger.merge();
@@ -169,13 +169,13 @@ class SettingsMergerGuiIntegrationTest {
    * RouterSettings} fields.
    */
   @Test
-  void merge_automaticNeckdownFlowsThroughMerger() {
+  void mergeAutomaticNeckdownFlowsThroughMerger() {
     InteractiveSettings interactiveSettings = InteractiveSettings.getOrCreate(board);
     SettingsMerger merger = new SettingsMerger(new DefaultSettings(), interactiveSettings);
 
     // true is the non-default (Boolean.FALSE is the ReflectionUtil skip-sentinel),
     // so Boolean.TRUE propagates correctly through copyFields.
-    interactiveSettings.set_automatic_neckdown(true);
+    interactiveSettings.setAutomaticNeckdown(true);
 
     RouterSettings merged = merger.merge();
     assertTrue(
@@ -188,7 +188,7 @@ class SettingsMergerGuiIntegrationTest {
    * should be able to override them on the GUI.
    */
   @Test
-  void settingsMerge_cliOverridesGuiAtStartupButGuiShouldOverrideCliLater() {
+  void settingsMergeCliOverridesGuiAtStartupButGuiShouldOverrideCliLater() {
     // Prepare base settings where first layer is routable, second layer is routable
     RouterSettings baseSettings = new RouterSettings();
     baseSettings.setLayerCount(2);
@@ -237,7 +237,7 @@ class SettingsMergerGuiIntegrationTest {
    * behavior), user GUI edits correctly override startup CLI settings.
    */
   @Test
-  void settingsMerge_guiOverridesCliCorrectlyWithSharedReference() {
+  void settingsMergeGuiOverridesCliCorrectlyWithSharedReference() {
     // 1. Setup job settings (like routingJob.routerSettings at startup, layers is null)
     RouterSettings jobSettings = new RouterSettings();
 

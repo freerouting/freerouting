@@ -58,7 +58,7 @@ public class SessionToEagle extends JFrame {
     boardScaleFactor = p_board_scale_factor;
   }
 
-  public static boolean get_instance(
+  public static boolean getInstance(
       InputStream p_session, OutputStream p_output_stream, BasicBoard p_board) {
     if (p_output_stream == null) {
       return false;
@@ -71,7 +71,7 @@ public class SessionToEagle extends JFrame {
     // create a fileWriter for the eagle script file.
     OutputStreamWriter fileWriter = new OutputStreamWriter(p_output_stream);
 
-    double boardScaleFactor = p_board.communication.coordinateTransform.board_to_dsn(1);
+    double boardScaleFactor = p_board.communication.coordinateTransform.boardToDsn(1);
     SessionToEagle newInstance =
         new SessionToEagle(
             scanner,
@@ -83,7 +83,7 @@ public class SessionToEagle extends JFrame {
 
     boolean result;
     try {
-      result = newInstance.process_session_scope();
+      result = newInstance.processSessionScope();
     } catch (IOException e) {
       FRLogger.error("unable to process session scope", e);
       result = false;
@@ -100,12 +100,12 @@ public class SessionToEagle extends JFrame {
   }
 
   /** Processes the outmost scope of the session file. Returns false, if an error occurred. */
-  private boolean process_session_scope() throws IOException {
+  private boolean processSessionScope() throws IOException {
 
     // read the first line of the session file
     Object nextToken = null;
     for (int i = 0; i < 3; i++) {
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       boolean keywordOk = true;
       if (i == 0) {
         keywordOk = nextToken == Keyword.OPEN_BRACKET;
@@ -131,7 +131,7 @@ public class SessionToEagle extends JFrame {
     // Activate all layers in Eagle.
 
     for (int i = 0; i < this.board.layerStructure.arr.length; i++) {
-      this.outFile.write("LAYER " + this.get_eagle_layer_string(i) + ";\n");
+      this.outFile.write("LAYER " + this.getEagleLayerString(i) + ";\n");
     }
 
     this.outFile.write("LAYER 17;\n");
@@ -144,7 +144,7 @@ public class SessionToEagle extends JFrame {
     // Generate Code to remove the complete route.
     // Write a bounding rectangle with GROUP (Min_X-1 Min_Y-1) (Max_X+1 Max_Y+1);
 
-    IntBox boardBoundingBox = this.board.get_bounding_box();
+    IntBox boardBoundingBox = this.board.getBoundingBox();
 
     float minX = (float) this.boardScaleFactor * (boardBoundingBox.ll.x - 1);
     float minY = (float) this.boardScaleFactor * (boardBoundingBox.ll.y - 1);
@@ -165,7 +165,7 @@ public class SessionToEagle extends JFrame {
     // read the direct subscopes of the session scope
     for (; ; ) {
       Object prevToken = nextToken;
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         // end of file
         return true;
@@ -177,16 +177,16 @@ public class SessionToEagle extends JFrame {
 
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.ROUTES) {
-          if (!process_routes_scope()) {
+          if (!processRoutesScope()) {
             return false;
           }
         } else if (nextToken == Keyword.PLACEMENT_SCOPE) {
-          if (!process_placement_scope()) {
+          if (!processPlacementScope()) {
             return false;
           }
         } else {
           // overread all scopes except the routes scope for the time being
-          ScopeKeyword.skip_scope(this.scanner);
+          ScopeKeyword.skipScope(this.scanner);
         }
       }
     }
@@ -195,12 +195,12 @@ public class SessionToEagle extends JFrame {
     return true;
   }
 
-  private boolean process_placement_scope() throws IOException {
+  private boolean processPlacementScope() throws IOException {
     // read the component scopes
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         // unexpected end of file
         return false;
@@ -213,21 +213,21 @@ public class SessionToEagle extends JFrame {
       if (prevToken == Keyword.OPEN_BRACKET) {
 
         if (nextToken == Keyword.COMPONENT_SCOPE) {
-          if (!process_component_placement()) {
+          if (!processComponentPlacement()) {
             return false;
           }
         } else {
           // skip unknown scope
-          ScopeKeyword.skip_scope(this.scanner);
+          ScopeKeyword.skipScope(this.scanner);
         }
       }
     }
-    process_swapped_pins();
+    processSwappedPins();
     return true;
   }
 
-  private boolean process_component_placement() throws IOException {
-    ComponentPlacement componentPlacement = Component.read_scope(this.scanner);
+  private boolean processComponentPlacement() throws IOException {
+    ComponentPlacement componentPlacement = Component.readScope(this.scanner);
     if (componentPlacement == null) {
       return false;
     }
@@ -257,13 +257,13 @@ public class SessionToEagle extends JFrame {
     return true;
   }
 
-  private boolean process_routes_scope() throws IOException {
+  private boolean processRoutesScope() throws IOException {
     // read the direct subscopes of the routes scope
     boolean result = true;
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         // unexpected end of file
         return false;
@@ -276,23 +276,23 @@ public class SessionToEagle extends JFrame {
       if (prevToken == Keyword.OPEN_BRACKET) {
 
         if (nextToken == Keyword.NETWORK_OUT) {
-          result = process_network_scope();
+          result = processNetworkScope();
         } else {
           // skip unknown scope
-          ScopeKeyword.skip_scope(this.scanner);
+          ScopeKeyword.skipScope(this.scanner);
         }
       }
     }
     return result;
   }
 
-  private boolean process_network_scope() throws IOException {
+  private boolean processNetworkScope() throws IOException {
     boolean result = true;
     Object nextToken = null;
     // read the net scopes
     for (; ; ) {
       Object prevToken = nextToken;
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         // unexpected end of file
         return false;
@@ -305,34 +305,34 @@ public class SessionToEagle extends JFrame {
       if (prevToken == Keyword.OPEN_BRACKET) {
 
         if (nextToken == Keyword.NET) {
-          result = process_net_scope();
+          result = processNetScope();
         } else {
           // skip unknown scope
-          ScopeKeyword.skip_scope(this.scanner);
+          ScopeKeyword.skipScope(this.scanner);
         }
       }
     }
     return result;
   }
 
-  private boolean process_net_scope() throws IOException {
+  private boolean processNetScope() throws IOException {
     // read the net name
-    Object nextToken = this.scanner.next_token();
+    Object nextToken = this.scanner.nextToken();
     if (!(nextToken instanceof String netName)) {
       FRLogger.warn(
           "SessionToEagle.process_net_scope: String expected at '"
-              + this.scanner.get_scope_identifier()
+              + this.scanner.getScopeIdentifier()
               + "'");
       return false;
     }
-    this.scanner.set_scope_identifier(netName);
+    this.scanner.setScopeIdentifier(netName);
 
     // Delete all unfixed traces and vias for net netName in Eagle's database.
 
     // read the wires and vias of this net
     for (; ; ) {
       Object prevToken = nextToken;
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         // end of file
         return true;
@@ -344,31 +344,31 @@ public class SessionToEagle extends JFrame {
 
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.WIRE) {
-          if (!process_wire_scope(netName)) {
+          if (!processWireScope(netName)) {
             return false;
           }
         } else if (nextToken == Keyword.VIA) {
-          if (!process_via_scope(netName)) {
+          if (!processViaScope(netName)) {
             return false;
           }
         } else {
-          ScopeKeyword.skip_scope(this.scanner);
+          ScopeKeyword.skipScope(this.scanner);
         }
       }
     }
     return true;
   }
 
-  private boolean process_wire_scope(String p_net_name) throws IOException {
+  private boolean processWireScope(String p_net_name) throws IOException {
     PolygonPath wirePath = null;
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         FRLogger.warn(
             "SessionToEagle.process_wire_scope: unexpected end of file at '"
-                + this.scanner.get_scope_identifier()
+                + this.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -378,9 +378,9 @@ public class SessionToEagle extends JFrame {
       }
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.POLYGON_PATH) {
-          wirePath = Shape.read_polygon_path_scope(this.scanner, this.specctraLayerStructure);
+          wirePath = Shape.readPolygonPathScope(this.scanner, this.specctraLayerStructure);
         } else {
-          ScopeKeyword.skip_scope(this.scanner);
+          ScopeKeyword.skipScope(this.scanner);
         }
       }
     }
@@ -421,21 +421,21 @@ public class SessionToEagle extends JFrame {
     return true;
   }
 
-  private boolean process_via_scope(String p_net_name) throws IOException {
+  private boolean processViaScope(String p_net_name) throws IOException {
     // read the padstack name
-    Object nextToken = this.scanner.next_token();
+    Object nextToken = this.scanner.nextToken();
     if (!(nextToken instanceof String padstackName)) {
       FRLogger.warn(
           "SessionToEagle.process_via_scope: padstack name expected at '"
-              + this.scanner.get_scope_identifier()
+              + this.scanner.getScopeIdentifier()
               + "'");
       return false;
     }
-    this.scanner.set_scope_identifier(padstackName);
+    this.scanner.setScopeIdentifier(padstackName);
     // read the location
     double[] location = new double[2];
     for (int i = 0; i < 2; i++) {
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       if (nextToken instanceof Double double1) {
         location[i] = double1;
       } else if (nextToken instanceof Integer integer) {
@@ -443,21 +443,21 @@ public class SessionToEagle extends JFrame {
       } else {
         FRLogger.warn(
             "SessionToEagle.process_via_scope: number expected at '"
-                + this.scanner.get_scope_identifier()
+                + this.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
     }
-    nextToken = this.scanner.next_token();
+    nextToken = this.scanner.nextToken();
     while (nextToken == Keyword.OPEN_BRACKET) {
       // skip unknown scopes
-      ScopeKeyword.skip_scope(this.scanner);
-      nextToken = this.scanner.next_token();
+      ScopeKeyword.skipScope(this.scanner);
+      nextToken = this.scanner.nextToken();
     }
     if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn(
           "SessionToEagle.process_via_scope: closing bracket expected at '"
-              + this.scanner.get_scope_identifier()
+              + this.scanner.getScopeIdentifier()
               + "'");
       return false;
     }
@@ -467,14 +467,14 @@ public class SessionToEagle extends JFrame {
     if (viaPadstack == null) {
       FRLogger.warn(
           "SessionToEagle.process_via_scope: via padstack not found at '"
-              + this.scanner.get_scope_identifier()
+              + this.scanner.getScopeIdentifier()
               + "'");
       return false;
     }
 
-    ConvexShape viaShape = viaPadstack.get_shape(viaPadstack.from_layer());
+    ConvexShape viaShape = viaPadstack.getShape(viaPadstack.fromLayer());
 
-    double viaDiameter = viaShape.max_width() * this.boardScaleFactor;
+    double viaDiameter = viaShape.maxWidth() * this.boardScaleFactor;
 
     // The Padstack name is of the form Name$drill_diameter$fromLayer-toLayer
 
@@ -509,9 +509,9 @@ public class SessionToEagle extends JFrame {
     } else {
       this.outFile.write(" square ");
     }
-    this.outFile.write(get_eagle_layer_string(viaPadstack.from_layer()));
+    this.outFile.write(getEagleLayerString(viaPadstack.fromLayer()));
     this.outFile.write("-");
-    this.outFile.write(get_eagle_layer_string(viaPadstack.to_layer()));
+    this.outFile.write(getEagleLayerString(viaPadstack.toLayer()));
     this.outFile.write(" (");
     double xCoor = location[0] / this.sessionFileScaleDenominator;
     this.outFile.write(String.valueOf(xCoor));
@@ -523,7 +523,7 @@ public class SessionToEagle extends JFrame {
     return true;
   }
 
-  private String get_eagle_layer_string(int p_layer_no) {
+  private String getEagleLayerString(int p_layer_no) {
     if (p_layer_no < 0 || p_layer_no >= specctraLayerStructure.arr.length) {
       return "0";
     }
@@ -531,20 +531,20 @@ public class SessionToEagle extends JFrame {
     return namePieces[0];
   }
 
-  private boolean process_swapped_pins() throws IOException {
+  private boolean processSwappedPins() throws IOException {
     for (int i = 1; i <= this.board.components.count(); i++) {
-      if (!process_swapped_pins(i)) {
+      if (!processSwappedPins(i)) {
         return false;
       }
     }
     return true;
   }
 
-  private boolean process_swapped_pins(int p_component_no) throws IOException {
-    Collection<Pin> componentPins = this.board.get_component_pins(p_component_no);
+  private boolean processSwappedPins(int p_component_no) throws IOException {
+    Collection<Pin> componentPins = this.board.getComponentPins(p_component_no);
     boolean componentHasSwappedPins = false;
     for (Pin currPin : componentPins) {
-      if (currPin.get_changed_to() != currPin) {
+      if (currPin.getChangedTo() != currPin) {
         componentHasSwappedPins = true;
         break;
       }
@@ -560,21 +560,21 @@ public class SessionToEagle extends JFrame {
     }
     for (i = 0; i < pinInfoArr.length; i++) {
       PinInfo currPinInfo = pinInfoArr[i];
-      if (currPinInfo.currChangedTo != currPinInfo.pin.get_changed_to()) {
+      if (currPinInfo.currChangedTo != currPinInfo.pin.getChangedTo()) {
         PinInfo otherPinInfo = null;
         for (int j = i + 1; j < pinInfoArr.length; j++) {
-          if (pinInfoArr[j].pin.get_changed_to() == currPinInfo.pin) {
+          if (pinInfoArr[j].pin.getChangedTo() == currPinInfo.pin) {
             otherPinInfo = pinInfoArr[j];
           }
         }
         if (otherPinInfo == null) {
           FRLogger.warn(
               "SessuinToEagle.process_swapped_pins: otherPinInfo not found at '"
-                  + this.scanner.get_scope_identifier()
+                  + this.scanner.getScopeIdentifier()
                   + "'");
           return false;
         }
-        write_pin_swap(currPinInfo.pin, otherPinInfo.pin);
+        writePinSwap(currPinInfo.pin, otherPinInfo.pin);
         currPinInfo.currChangedTo = otherPinInfo.pin;
         otherPinInfo.currChangedTo = currPinInfo.pin;
       }
@@ -582,8 +582,8 @@ public class SessionToEagle extends JFrame {
     return true;
   }
 
-  private void write_pin_swap(Pin p_pin_1, Pin p_pin_2) throws IOException {
-    int layerNo = Math.max(p_pin_1.first_layer(), p_pin_2.first_layer());
+  private void writePinSwap(Pin p_pin_1, Pin p_pin_2) throws IOException {
+    int layerNo = Math.max(p_pin_1.firstLayer(), p_pin_2.firstLayer());
     String layerName = board.layerStructure.arr[layerNo].name;
 
     this.outFile.write("CHANGE LAYER ");
@@ -591,9 +591,9 @@ public class SessionToEagle extends JFrame {
     this.outFile.write(";\n");
 
     double[] location1 =
-        this.board.communication.coordinateTransform.board_to_dsn(p_pin_1.get_center().to_float());
+        this.board.communication.coordinateTransform.boardToDsn(p_pin_1.getCenter().toFloat());
     double[] location2 =
-        this.board.communication.coordinateTransform.board_to_dsn(p_pin_2.get_center().to_float());
+        this.board.communication.coordinateTransform.boardToDsn(p_pin_2.getCenter().toFloat());
 
     this.outFile.write("PINSWAP ");
     this.outFile.write(" (");

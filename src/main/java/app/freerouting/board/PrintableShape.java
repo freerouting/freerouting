@@ -40,7 +40,7 @@ public abstract class PrintableShape {
 
       String result = tm.getText("circle") + ": ";
       if (center.x != 0 || center.y != 0) {
-        String centerString = tm.getText("center") + " =" + center.to_string(this.locale);
+        String centerString = tm.getText("center") + " =" + center.toString(this.locale);
         result += centerString;
       }
       NumberFormat nf = NumberFormat.getInstance(this.locale);
@@ -71,11 +71,11 @@ public abstract class PrintableShape {
           + ": "
           + tm.getText("lowerLeft")
           + " = "
-          + lowerLeft.to_string(this.locale)
+          + lowerLeft.toString(this.locale)
           + ", "
           + tm.getText("upperRight")
           + " = "
-          + upperRight.to_string(this.locale);
+          + upperRight.toString(this.locale);
     }
   }
 
@@ -95,7 +95,7 @@ public abstract class PrintableShape {
       return tm.getText("polygon")
           + ": "
           + Arrays.stream(cornerArr)
-              .map(c -> c.to_string(this.locale))
+              .map(c -> c.toString(this.locale))
               .collect(Collectors.joining(", "));
     }
   }

@@ -46,17 +46,17 @@ public class ItemSelectionFilter implements Serializable {
   }
 
   /** Selects or deselects an item type */
-  public void set_selected(SelectableChoices p_choice, boolean p_value) {
+  public void setSelected(SelectableChoices p_choice, boolean p_value) {
     values[p_choice.ordinal()] = p_value;
   }
 
   /** Selects all item types. */
-  public void select_all() {
+  public void selectAll() {
     Arrays.fill(values, true);
   }
 
   /** Deselects all item types. */
-  public void deselect_all() {
+  public void deselectAll() {
     Arrays.fill(values, false);
   }
 
@@ -64,7 +64,7 @@ public class ItemSelectionFilter implements Serializable {
   public Set<Item> filter(Set<Item> p_items) {
     Set<Item> result = new TreeSet<>();
     for (Item currItem : p_items) {
-      if (currItem.is_selected_by_filter(this)) {
+      if (currItem.isSelectedByFilter(this)) {
         result.add(currItem);
       }
     }
@@ -72,7 +72,7 @@ public class ItemSelectionFilter implements Serializable {
   }
 
   /** Looks, if the input item type is selected. */
-  public boolean is_selected(SelectableChoices p_choice) {
+  public boolean isSelected(SelectableChoices p_choice) {
     return values[p_choice.ordinal()];
   }
 

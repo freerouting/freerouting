@@ -57,8 +57,8 @@ public class WindowViaRule extends WindowBase {
     this.mainPanel.add(listScrollPane, BorderLayout.CENTER);
 
     // fill the list
-    for (int i = 0; i < p_via_rule.via_count(); i++) {
-      this.ruleListModel.addElement(p_via_rule.get_via(i));
+    for (int i = 0; i < p_via_rule.viaCount(); i++) {
+      this.ruleListModel.addElement(p_via_rule.getVia(i));
     }
 
     // Add a panel with buttons for editing the via list.
@@ -120,7 +120,7 @@ public class WindowViaRule extends WindowBase {
   }
 
   /** Swaps the position of the vias with index p_1 and p_2. */
-  private void swap_position(int p_1, int p_2) {
+  private void swapPosition(int p_1, int p_2) {
     ViaInfo via1 = this.ruleListModel.get(p_1);
     ViaInfo via2 = this.ruleListModel.get(p_2);
     if (via1 == null || via2 == null) {
@@ -135,7 +135,7 @@ public class WindowViaRule extends WindowBase {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      Object[] possibleValues = new Object[viaList.count() - viaRule.via_count()];
+      Object[] possibleValues = new Object[viaList.count() - viaRule.viaCount()];
       if (possibleValues.length == 0) {
         return;
       }
@@ -163,7 +163,7 @@ public class WindowViaRule extends WindowBase {
               possibleValues[0]);
       if (selectedValue != null) {
         ViaInfo selectedVia = (ViaInfo) selectedValue;
-        viaRule.append_via(selectedVia);
+        viaRule.appendVia(selectedVia);
         ruleListModel.addElement(selectedVia);
       }
     }
@@ -176,9 +176,9 @@ public class WindowViaRule extends WindowBase {
       ViaInfo selectedVia = ruleList.getSelectedValue();
       if (selectedVia != null) {
         if (WindowMessage.confirm(
-            tm.getText("remove_via_from_rule_confirm", selectedVia.get_name(), viaRule.name))) {
+            tm.getText("remove_via_from_rule_confirm", selectedVia.getName(), viaRule.name))) {
           ruleListModel.removeElement(selectedVia);
-          viaRule.remove_via(selectedVia);
+          viaRule.removeVia(selectedVia);
         }
       }
     }
@@ -192,7 +192,7 @@ public class WindowViaRule extends WindowBase {
       if (selectedIndex <= 0) {
         return;
       }
-      swap_position(selectedIndex - 1, selectedIndex);
+      swapPosition(selectedIndex - 1, selectedIndex);
       ruleList.setSelectedIndex(selectedIndex - 1);
     }
   }
@@ -205,7 +205,7 @@ public class WindowViaRule extends WindowBase {
       if (selectedIndex < 0 || selectedIndex >= ruleListModel.getSize() - 1) {
         return;
       }
-      swap_position(selectedIndex, selectedIndex + 1);
+      swapPosition(selectedIndex, selectedIndex + 1);
       ruleList.setSelectedIndex(selectedIndex + 1);
     }
   }

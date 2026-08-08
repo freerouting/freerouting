@@ -35,20 +35,20 @@ public class PowerPlaneValidationTest {
     Layer[] layers = new Layer[] {layer1, layer2};
     LayerStructure layerStructure = new LayerStructure(layers);
 
-    ClearanceMatrix clearanceMatrix = ClearanceMatrix.get_default_instance(layerStructure, 10);
+    ClearanceMatrix clearanceMatrix = ClearanceMatrix.getDefaultInstance(layerStructure, 10);
     BoardRules boardRules = new BoardRules(layerStructure, clearanceMatrix);
-    boardRules.create_default_net_class();
+    boardRules.createDefaultNetClass();
     app.freerouting.rules.ViaRule dummyViaRule =
         new app.freerouting.rules.ViaRule("defaultViaRule");
     boardRules.viaRules.add(dummyViaRule);
-    boardRules.get_default_net_class().set_via_rule(dummyViaRule);
+    boardRules.getDefaultNetClass().setViaRule(dummyViaRule);
 
     Communication communication = new Communication();
 
     return new RoutingBoard(
         new IntBox(0, 0, 2000000, 2000000),
         layerStructure,
-        new PolylineShape[] {TileShape.get_instance(0, 0, 2000000, 2000000)},
+        new PolylineShape[] {TileShape.getInstance(0, 0, 2000000, 2000000)},
         0,
         boardRules,
         communication);
@@ -63,8 +63,8 @@ public class PowerPlaneValidationTest {
     int[] netNoArr = new int[] {gndNet.netNumber};
 
     // Add a conduction area to GND layer (layer index 1)
-    Area area = TileShape.get_instance(100, 100, 10000, 10000);
-    board.insert_conduction_area(area, 1, netNoArr, 0, false, FixedState.UNFIXED);
+    Area area = TileShape.getInstance(100, 100, 10000, 10000);
+    board.insertConductionArea(area, 1, netNoArr, 0, false, FixedState.UNFIXED);
 
     HeadlessBoardManager manager = new HeadlessBoardManager(null);
     manager.board = board;
@@ -86,14 +86,14 @@ public class PowerPlaneValidationTest {
     int[] netNoArr = new int[] {gndNet.netNumber};
 
     // Add conduction area so that "at least one conduction area" check passes
-    Area area = TileShape.get_instance(100, 100, 10000, 10000);
-    board.insert_conduction_area(area, 1, netNoArr, 0, false, FixedState.UNFIXED);
+    Area area = TileShape.getInstance(100, 100, 10000, 10000);
+    board.insertConductionArea(area, 1, netNoArr, 0, false, FixedState.UNFIXED);
 
     // Insert trace on GND layer (layer index 1) using direct PolylineTrace constructor
     Polyline polyline = new Polyline(new IntPoint(500, 500), new IntPoint(1000, 1000));
     PolylineTrace trace =
         new PolylineTrace(polyline, 1, 10, netNoArr, 0, 0, 0, FixedState.UNFIXED, board);
-    board.insert_item(trace);
+    board.insertItem(trace);
 
     HeadlessBoardManager manager = new HeadlessBoardManager(null);
     manager.board = board;
@@ -141,13 +141,13 @@ public class PowerPlaneValidationTest {
 
     // Add two overlapping conduction areas on GND layer (layer index 1)
     // Area 1: [100, 100] to [1000, 1000]
-    Area area1 = TileShape.get_instance(100, 100, 1000, 1000);
+    Area area1 = TileShape.getInstance(100, 100, 1000, 1000);
     // Area 2: [500, 500] to [1500, 1500] (overlaps with Area 1)
-    Area area2 = TileShape.get_instance(500, 500, 1500, 1500);
+    Area area2 = TileShape.getInstance(500, 500, 1500, 1500);
 
-    board.insert_conduction_area(
+    board.insertConductionArea(
         area1, 1, new int[] {vcc3v3.netNumber}, 0, false, FixedState.UNFIXED);
-    board.insert_conduction_area(
+    board.insertConductionArea(
         area2, 1, new int[] {vcc5v.netNumber}, 0, false, FixedState.UNFIXED);
 
     HeadlessBoardManager manager = new HeadlessBoardManager(null);
@@ -175,13 +175,13 @@ public class PowerPlaneValidationTest {
         new app.freerouting.settings.sources.DefaultSettings().getSettings();
     settings.setLayerCount(2);
     // Explicitly set the plane layer as routable/active
-    settings.set_layer_active(1, true);
+    settings.setLayerActive(1, true);
     // Add net
     Net gndNet = board.rules.nets.add("GND", 1, true);
 
     settings.applyBoardSpecificOptimizations(board);
     // Force plane layer to active in settings after optimizations to test override guard
-    settings.set_layer_active(1, true);
+    settings.setLayerActive(1, true);
 
     app.freerouting.autoroute.AutorouteControl control =
         new app.freerouting.autoroute.AutorouteControl(board, gndNet.netNumber, settings);

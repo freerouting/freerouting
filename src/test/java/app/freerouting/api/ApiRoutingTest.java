@@ -73,7 +73,7 @@ class ApiRoutingTest {
     settings.authentication.isEnabled = false;
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
 
-    server = Freerouting.InitializeAPI(settings);
+    server = Freerouting.initializeAPI(settings);
     waitForServerStarted(server);
 
     int port = ((ServerConnector) server.getConnectors()[0]).getLocalPort();
@@ -105,7 +105,7 @@ class ApiRoutingTest {
    * routing engine.
    */
   @Test
-  void apiRouting_completesWithoutInteractiveSettingsNpe() throws Exception {
+  void apiRoutingCompletesWithoutInteractiveSettingsNpe() throws Exception {
     // ── Step 1: Create a session ──────────────────────────────────────────────
     HttpRequest createSessionReq =
         authenticatedRequest(baseUri.resolve("/v1/sessions/create"))

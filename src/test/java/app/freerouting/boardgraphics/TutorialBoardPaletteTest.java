@@ -35,14 +35,14 @@ class TutorialBoardPaletteTest {
     TutorialBoardPalette.apply(graphicsContext);
 
     assertEquals(
-        TutorialBoardPalette.PRIMARY, graphicsContext.otherColorTable.get_background_color());
+        TutorialBoardPalette.PRIMARY, graphicsContext.otherColorTable.getBackgroundColor());
     assertEquals(
-        TutorialBoardPalette.SECONDARY, graphicsContext.otherColorTable.get_outline_color());
+        TutorialBoardPalette.SECONDARY, graphicsContext.otherColorTable.getOutlineColor());
     assertEquals(
-        TutorialBoardPalette.SECONDARY, graphicsContext.itemColorTable.get_trace_colors(false)[0]);
+        TutorialBoardPalette.SECONDARY, graphicsContext.itemColorTable.getTraceColors(false)[0]);
     assertEquals(
         TutorialBoardPalette.SECONDARY_HOVER,
-        graphicsContext.itemColorTable.get_trace_colors(false)[1]);
+        graphicsContext.itemColorTable.getTraceColors(false)[1]);
   }
 
   @Test

@@ -6,27 +6,27 @@ import java.io.IOException;
 public interface IJFlexScanner {
 
   /* Returns the current scope identifier. */
-  String get_scope_identifier();
+  String getScopeIdentifier();
 
   /* Sets the current scope identifier. */
-  void set_scope_identifier(String identifier);
+  void setScopeIdentifier(String identifier);
 
   /** Reads the next token from the input file. */
-  Object next_token() throws IOException;
+  Object nextToken() throws IOException;
 
   /** Reads the next token as a string from the input file. */
-  String next_string();
+  String nextString();
 
-  String next_string(boolean ignoreNewline);
+  String nextString(boolean ignoreNewline);
 
-  String[] next_string_list();
+  String[] nextStringList();
 
-  String[] next_string_list(char separator);
+  String[] nextStringList(char separator);
 
   /** Reads the next token as a double from the input file. */
-  Double next_double();
+  Double nextDouble();
 
-  Boolean next_closing_bracket();
+  Boolean nextClosingBracket();
 
   /** Starts a new state. */
   void yybegin(int p_new_state);

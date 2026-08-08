@@ -96,7 +96,7 @@ public final class DsnReader {
     for (int i = 0; i < 3; i++) {
       Object token;
       try {
-        token = scanner.next_token();
+        token = scanner.nextToken();
       } catch (IOException e) {
         closeQuietly(inputStream);
         return new BoardReadResult.IoError(e);
@@ -136,7 +136,7 @@ public final class DsnReader {
     // Parse the body — board is constructed inside ReadScopeParameter's shim
     // -----------------------------------------------------------------------
     ReadScopeParameter par = new ReadScopeParameter(scanner, observers, idGenerator);
-    boolean readOk = Keyword.PCB_SCOPE.read_scope(par);
+    boolean readOk = Keyword.PCB_SCOPE.readScope(par);
 
     BasicBoard board = par.getBoard();
 
@@ -207,7 +207,7 @@ public final class DsnReader {
     for (int i = 0; i < 3; i++) {
       Object token;
       try {
-        token = scanner.next_token();
+        token = scanner.nextToken();
       } catch (IOException e) {
         closeQuietly(inputStream);
         return new BoardReadResult.IoError(e);
@@ -237,7 +237,7 @@ public final class DsnReader {
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = scanner.next_token();
+        nextToken = scanner.nextToken();
       } catch (IOException e) {
         closeQuietly(inputStream);
         return new BoardReadResult.IoError(e);
@@ -248,18 +248,18 @@ public final class DsnReader {
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.PARSER_SCOPE) {
           // Populates par.hostCad, par.hostVersion, par.stringQuote
-          Keyword.PARSER_SCOPE.read_scope(par);
+          Keyword.PARSER_SCOPE.readScope(par);
         } else if (nextToken == Keyword.RESOLUTION_SCOPE) {
           // Populates par.unit, par.resolution
-          Keyword.RESOLUTION_SCOPE.read_scope(par);
+          Keyword.RESOLUTION_SCOPE.readScope(par);
         } else if (nextToken == Keyword.STRUCTURE_SCOPE) {
           // Populates par.layerStructure, par.snapAngle, par.autorouteSettings
           // and creates the board via MinimalBoardManager (if a valid boundary exists).
           // Return value is ignored — we extract whatever was populated.
-          Keyword.STRUCTURE_SCOPE.read_scope(par);
+          Keyword.STRUCTURE_SCOPE.readScope(par);
           break outer; // stop here — skip library, placement, network, wiring
         } else {
-          ScopeKeyword.skip_scope(scanner);
+          ScopeKeyword.skipScope(scanner);
         }
       }
     }
@@ -273,7 +273,7 @@ public final class DsnReader {
     if (par.layerStructure != null) {
       layerCount = par.layerStructure.arr.length;
     } else if (par.getBoard() != null) {
-      layerCount = par.getBoard().get_layer_count();
+      layerCount = par.getBoard().getLayerCount();
     }
 
     BoardMetadata metadata =

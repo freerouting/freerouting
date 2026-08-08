@@ -70,7 +70,7 @@ public final class SesReader {
 
     // SES files use the same scale factor as SpecctraSesFileWriter: dsn_to_board(1) / resolution
     double scaleFactor =
-        board.communication.coordinateTransform.dsn_to_board(1) / board.communication.resolution;
+        board.communication.coordinateTransform.dsnToBoard(1) / board.communication.resolution;
 
     SesReader reader = new SesReader(scanner, board, scaleFactor);
 
@@ -103,7 +103,7 @@ public final class SesReader {
     // Validate the "(session <name>" header
     Object nextToken = null;
     for (int i = 0; i < 3; i++) {
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       boolean keywordOk = true;
       if (i == 0) {
         keywordOk = nextToken == Keyword.OPEN_BRACKET;
@@ -121,7 +121,7 @@ public final class SesReader {
     // Read the direct subscopes of the session scope
     for (; ; ) {
       Object prevToken = nextToken;
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         // end of file
         return;
@@ -136,7 +136,7 @@ public final class SesReader {
           processRoutesScope();
         } else {
           // skip placement, was_is, and any other scopes we don't need
-          ScopeKeyword.skip_scope(this.scanner);
+          ScopeKeyword.skipScope(this.scanner);
         }
       }
     }
@@ -147,11 +147,11 @@ public final class SesReader {
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         FRLogger.warn(
             "SesReader.processRoutesScope: unexpected end of file at '"
-                + this.scanner.get_scope_identifier()
+                + this.scanner.getScopeIdentifier()
                 + "'");
         return;
       }
@@ -163,7 +163,7 @@ public final class SesReader {
         if (nextToken == Keyword.NETWORK_OUT) {
           processNetworkScope();
         } else {
-          ScopeKeyword.skip_scope(this.scanner);
+          ScopeKeyword.skipScope(this.scanner);
         }
       }
     }
@@ -174,11 +174,11 @@ public final class SesReader {
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         FRLogger.warn(
             "SesReader.processNetworkScope: unexpected end of file at '"
-                + this.scanner.get_scope_identifier()
+                + this.scanner.getScopeIdentifier()
                 + "'");
         return;
       }
@@ -190,7 +190,7 @@ public final class SesReader {
         if (nextToken == Keyword.NET) {
           processNetScope();
         } else {
-          ScopeKeyword.skip_scope(this.scanner);
+          ScopeKeyword.skipScope(this.scanner);
         }
       }
     }
@@ -198,22 +198,22 @@ public final class SesReader {
 
   /** Processes a single {@code (net ...)} scope containing wires and vias. */
   private void processNetScope() throws IOException {
-    Object nextToken = this.scanner.next_token();
+    Object nextToken = this.scanner.nextToken();
     if (!(nextToken instanceof String netName)) {
       FRLogger.warn(
           "SesReader.processNetScope: String expected at '"
-              + this.scanner.get_scope_identifier()
+              + this.scanner.getScopeIdentifier()
               + "'");
       errorsEncountered++;
       return;
     }
-    this.scanner.set_scope_identifier(netName);
+    this.scanner.setScopeIdentifier(netName);
 
     Net net = board.rules.nets.get(netName, 1);
     if (net == null) {
       FRLogger.warn("SesReader: net not found: '" + netName + "' — skipping");
       errorsEncountered++;
-      ScopeKeyword.skip_scope(this.scanner);
+      ScopeKeyword.skipScope(this.scanner);
       return;
     }
     int netNo = net.netNumber;
@@ -221,7 +221,7 @@ public final class SesReader {
 
     for (; ; ) {
       Object prevToken = nextToken;
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         return;
       }
@@ -239,7 +239,7 @@ public final class SesReader {
             errorsEncountered++;
           }
         } else {
-          ScopeKeyword.skip_scope(this.scanner);
+          ScopeKeyword.skipScope(this.scanner);
         }
       }
     }
@@ -256,11 +256,11 @@ public final class SesReader {
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         FRLogger.warn(
             "SesReader.processWireScope: unexpected end of file at '"
-                + this.scanner.get_scope_identifier()
+                + this.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -269,9 +269,9 @@ public final class SesReader {
       }
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.POLYGON_PATH) {
-          wirePath = Shape.read_polygon_path_scope(this.scanner, this.specctraLayerStructure);
+          wirePath = Shape.readPolygonPathScope(this.scanner, this.specctraLayerStructure);
         } else {
-          ScopeKeyword.skip_scope(this.scanner);
+          ScopeKeyword.skipScope(this.scanner);
         }
       }
     }
@@ -291,7 +291,7 @@ public final class SesReader {
 
       Point[] points = new Point[boardCoordinates.length / 2];
       for (int i = 0; i < points.length; i++) {
-        points[i] = Point.get_instance(boardCoordinates[2 * i], boardCoordinates[2 * i + 1]);
+        points[i] = Point.getInstance(boardCoordinates[2 * i], boardCoordinates[2 * i + 1]);
       }
 
       Polyline polyline = new Polyline(points);
@@ -300,11 +300,11 @@ public final class SesReader {
       int clearanceClass =
           board
               .rules
-              .get_default_net_class()
+              .getDefaultNetClass()
               .defaultItemClearanceClasses
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
 
-      board.insert_trace(
+      board.insertTrace(
           polyline, layerNo, halfWidth, netNoArr, clearanceClass, FixedState.USER_FIXED);
 
       wiresImported++;
@@ -323,19 +323,19 @@ public final class SesReader {
    *     error (the caller increments {@link #errorsEncountered})
    */
   private boolean processViaScope(int[] netNoArr) throws IOException {
-    Object nextToken = this.scanner.next_token();
+    Object nextToken = this.scanner.nextToken();
     if (!(nextToken instanceof String padstackName)) {
       FRLogger.warn(
           "SesReader.processViaScope: padstack name expected at '"
-              + this.scanner.get_scope_identifier()
+              + this.scanner.getScopeIdentifier()
               + "'");
       return false;
     }
-    this.scanner.set_scope_identifier(padstackName);
+    this.scanner.setScopeIdentifier(padstackName);
 
     double[] location = new double[2];
     for (int i = 0; i < 2; i++) {
-      nextToken = this.scanner.next_token();
+      nextToken = this.scanner.nextToken();
       if (nextToken instanceof Double d) {
         location[i] = d;
       } else if (nextToken instanceof Integer integer) {
@@ -343,23 +343,23 @@ public final class SesReader {
       } else {
         FRLogger.warn(
             "SesReader.processViaScope: number expected at '"
-                + this.scanner.get_scope_identifier()
+                + this.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
     }
 
     // Skip any additional sub-scopes (e.g. type, lock_type)
-    nextToken = this.scanner.next_token();
+    nextToken = this.scanner.nextToken();
     while (nextToken == Keyword.OPEN_BRACKET) {
-      ScopeKeyword.skip_scope(this.scanner);
-      nextToken = this.scanner.next_token();
+      ScopeKeyword.skipScope(this.scanner);
+      nextToken = this.scanner.nextToken();
     }
 
     if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn(
           "SesReader.processViaScope: closing bracket expected at '"
-              + this.scanner.get_scope_identifier()
+              + this.scanner.getScopeIdentifier()
               + "'");
       return false;
     }
@@ -374,16 +374,16 @@ public final class SesReader {
 
       int x = (int) Math.round(location[0] / sessionFileScaleDenominator);
       int y = (int) Math.round(location[1] / sessionFileScaleDenominator);
-      Point viaLocation = Point.get_instance(x, y);
+      Point viaLocation = Point.getInstance(x, y);
 
       int clearanceClass =
           board
               .rules
-              .get_default_net_class()
+              .getDefaultNetClass()
               .defaultItemClearanceClasses
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA);
 
-      board.insert_via(
+      board.insertVia(
           viaPadstack, viaLocation, netNoArr, clearanceClass, FixedState.USER_FIXED, true);
 
       viasImported++;
@@ -408,7 +408,7 @@ public final class SesReader {
   /** Transforms a Specctra session file into an Eagle script file. */
   public static boolean saveSpecctraSessionSesAsEagleScriptScr(
       InputStream inputStream, OutputStream outputStream, BasicBoard board) {
-    return app.freerouting.io.specctra.parser.SessionToEagle.get_instance(
+    return app.freerouting.io.specctra.parser.SessionToEagle.getInstance(
         inputStream, outputStream, board);
   }
 }

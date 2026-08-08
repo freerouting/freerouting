@@ -33,41 +33,41 @@ public final class TutorialBoardPalette {
       return;
     }
 
-    int layerCount = Math.max(graphicsContext.layer_count(), 1);
+    int layerCount = Math.max(graphicsContext.layerCount(), 1);
     Color[] primaryLayerColors = alternatingLayerColors(layerCount, SECONDARY, SECONDARY_HOVER);
     Color[] mutedLayerColors = alternatingLayerColors(layerCount, SECONDARY_HOVER, SECONDARY);
 
-    graphicsContext.otherColorTable.set_background_color(PRIMARY);
-    graphicsContext.otherColorTable.set_outline_color(SECONDARY);
-    graphicsContext.otherColorTable.set_hilight_color(SECONDARY);
-    graphicsContext.otherColorTable.set_incomplete_color(SECONDARY_HOVER);
-    graphicsContext.otherColorTable.set_violations_color(SECONDARY);
-    graphicsContext.otherColorTable.set_component_color(SECONDARY, true);
-    graphicsContext.otherColorTable.set_component_color(SECONDARY_HOVER, false);
-    graphicsContext.otherColorTable.set_silkscreen_color(SECONDARY, true);
-    graphicsContext.otherColorTable.set_silkscreen_color(SECONDARY_HOVER, false);
-    graphicsContext.otherColorTable.set_drill_hole_color(new Color(0, 28, 15));
+    graphicsContext.otherColorTable.setBackgroundColor(PRIMARY);
+    graphicsContext.otherColorTable.setOutlineColor(SECONDARY);
+    graphicsContext.otherColorTable.setHilightColor(SECONDARY);
+    graphicsContext.otherColorTable.setIncompleteColor(SECONDARY_HOVER);
+    graphicsContext.otherColorTable.setViolationsColor(SECONDARY);
+    graphicsContext.otherColorTable.setComponentColor(SECONDARY, true);
+    graphicsContext.otherColorTable.setComponentColor(SECONDARY_HOVER, false);
+    graphicsContext.otherColorTable.setSilkscreenColor(SECONDARY, true);
+    graphicsContext.otherColorTable.setSilkscreenColor(SECONDARY_HOVER, false);
+    graphicsContext.otherColorTable.setDrillHoleColor(new Color(0, 28, 15));
 
-    graphicsContext.itemColorTable.set_trace_colors(primaryLayerColors, false);
-    graphicsContext.itemColorTable.set_trace_colors(mutedLayerColors, true);
-    graphicsContext.itemColorTable.set_via_colors(primaryLayerColors, false);
-    graphicsContext.itemColorTable.set_via_colors(mutedLayerColors, true);
-    graphicsContext.itemColorTable.set_pin_colors(primaryLayerColors);
-    graphicsContext.itemColorTable.set_conduction_colors(primaryLayerColors);
-    graphicsContext.itemColorTable.set_keepout_colors(
+    graphicsContext.itemColorTable.setTraceColors(primaryLayerColors, false);
+    graphicsContext.itemColorTable.setTraceColors(mutedLayerColors, true);
+    graphicsContext.itemColorTable.setViaColors(primaryLayerColors, false);
+    graphicsContext.itemColorTable.setViaColors(mutedLayerColors, true);
+    graphicsContext.itemColorTable.setPinColors(primaryLayerColors);
+    graphicsContext.itemColorTable.setConductionColors(primaryLayerColors);
+    graphicsContext.itemColorTable.setKeepoutColors(
         repeatedColor(layerCount, new Color(0, 40, 22)));
-    graphicsContext.itemColorTable.set_via_keepout_colors(
+    graphicsContext.itemColorTable.setViaKeepoutColors(
         repeatedColor(layerCount, new Color(0, 40, 22)));
-    graphicsContext.itemColorTable.set_place_keepout_colors(
+    graphicsContext.itemColorTable.setPlaceKeepoutColors(
         repeatedColor(layerCount, new Color(0, 40, 22)));
 
-    graphicsContext.colorIntensityTable.set_value(
+    graphicsContext.colorIntensityTable.setValue(
         ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(), 0.85);
-    graphicsContext.colorIntensityTable.set_value(
+    graphicsContext.colorIntensityTable.setValue(
         ColorIntensityTable.ObjectNames.KEEPOUTS.ordinal(), 0.35);
-    graphicsContext.colorIntensityTable.set_value(
+    graphicsContext.colorIntensityTable.setValue(
         ColorIntensityTable.ObjectNames.HILIGHT.ordinal(), 1.0);
-    graphicsContext.colorIntensityTable.set_value(
+    graphicsContext.colorIntensityTable.setValue(
         ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal(), 1.0);
   }
 

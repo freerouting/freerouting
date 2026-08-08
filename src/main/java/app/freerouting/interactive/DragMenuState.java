@@ -11,17 +11,17 @@ public class DragMenuState extends MenuState {
   }
 
   /** Returns a new instance of DragMenuState */
-  public static DragMenuState get_instance(GuiBoardManager p_board_handling) {
+  public static DragMenuState getInstance(GuiBoardManager p_board_handling) {
     return new DragMenuState(p_board_handling);
   }
 
   @Override
-  public InteractiveState mouse_pressed(FloatPoint p_point) {
-    return DragState.get_instance(p_point, this, hdlg);
+  public InteractiveState mousePressed(FloatPoint p_point) {
+    return DragState.getInstance(p_point, this, hdlg);
   }
 
   @Override
-  public String get_help_id() {
+  public String getHelpId() {
     return "MenuState_DragMenuState";
   }
 }

@@ -16,32 +16,32 @@ public class StitchRouteState extends RouteState {
   }
 
   @Override
-  public InteractiveState left_button_clicked(FloatPoint p_location) {
-    return add_corner(p_location);
+  public InteractiveState leftButtonClicked(FloatPoint p_location) {
+    return addCorner(p_location);
   }
 
   @Override
-  public InteractiveState add_corner(FloatPoint p_location) {
+  public InteractiveState addCorner(FloatPoint p_location) {
     // make the current situation restorable by undo
-    hdlg.get_routing_board().generate_snapshot();
-    return super.add_corner(p_location);
+    hdlg.getRoutingBoard().generateSnapshot();
+    return super.addCorner(p_location);
   }
 
   @Override
-  public InteractiveState mouse_moved() {
-    super.mouse_moved();
-    this.route.calc_nearest_target_point(hdlg.get_current_mouse_position());
+  public InteractiveState mouseMoved() {
+    super.mouseMoved();
+    this.route.calcNearestTargetPoint(hdlg.getCurrentMousePosition());
     hdlg.repaint();
     return this;
   }
 
   @Override
-  public JPopupMenu get_popup_menu() {
-    return hdlg.get_panel().popupMenuStitchRoute;
+  public JPopupMenu getPopupMenu() {
+    return hdlg.getPanel().popupMenuStitchRoute;
   }
 
   @Override
-  public String get_help_id() {
+  public String getHelpId() {
     return "RouteState_StitchingRouteState";
   }
 
@@ -53,23 +53,23 @@ public class StitchRouteState extends RouteState {
     }
     // draw a line from the routing end point to the cursor
     FloatPoint[] drawPoints = new FloatPoint[2];
-    drawPoints[0] = route.get_last_corner().to_float();
-    drawPoints[1] = hdlg.get_current_mouse_position();
-    Color drawColor = hdlg.graphicsContext.get_hilight_color();
+    drawPoints[0] = route.getLastCorner().toFloat();
+    drawPoints[1] = hdlg.getCurrentMousePosition();
+    Color drawColor = hdlg.graphicsContext.getHilightColor();
     double displayWidth =
-        hdlg.get_trace_halfwidth(route.netNoArr[0], hdlg.getInteractiveSettings().get_layer());
+        hdlg.getTraceHalfwidth(route.netNoArr[0], hdlg.getInteractiveSettings().getLayer());
     int clearanceDrawWidth = 50;
     double radiusWithClearance = displayWidth;
-    NetClass defaultNetClass = hdlg.get_routing_board().rules.get_default_net_class();
+    NetClass defaultNetClass = hdlg.getRoutingBoard().rules.getDefaultNetClass();
     int clClass =
         defaultNetClass.defaultItemClearanceClasses.get(
             DefaultItemClearanceClasses.ItemClass.TRACE);
     radiusWithClearance +=
-        hdlg.get_routing_board()
-            .clearance_value(clClass, clClass, hdlg.getInteractiveSettings().get_layer());
+        hdlg.getRoutingBoard()
+            .clearanceValue(clClass, clClass, hdlg.getInteractiveSettings().getLayer());
     hdlg.graphicsContext.draw(drawPoints, displayWidth, drawColor, p_graphics, 0.5);
     // draw the clearance boundary around the end point
-    hdlg.graphicsContext.draw_circle(
+    hdlg.graphicsContext.drawCircle(
         drawPoints[1], radiusWithClearance, clearanceDrawWidth, drawColor, p_graphics, 0.5);
   }
 }

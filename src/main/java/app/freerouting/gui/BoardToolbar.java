@@ -120,13 +120,13 @@ class BoardToolbar extends JPanel {
         (String value) -> {
           switch (value) {
             case "inspect_button":
-              boardFrame.boardPanel.boardHandling.set_inspect_menu_state();
+              boardFrame.boardPanel.boardHandling.setInspectMenuState();
               break;
             case "route_button":
-              boardFrame.boardPanel.boardHandling.set_route_menu_state();
+              boardFrame.boardPanel.boardHandling.setRouteMenuState();
               break;
             case "drag_button":
-              boardFrame.boardPanel.boardHandling.set_drag_menu_state();
+              boardFrame.boardPanel.boardHandling.setDragMenuState();
               break;
           }
         });
@@ -191,12 +191,12 @@ class BoardToolbar extends JPanel {
           // before the autorouter reads them (fixes Issue #676 / "get_layer_active out of
           // range [0..-1]" warnings and MazeSearchAlgo exceptions on LibrePCB DSN files).
           app.freerouting.board.RoutingBoard routingBoard =
-              boardFrame.boardPanel.boardHandling.get_routing_board();
+              boardFrame.boardPanel.boardHandling.getRoutingBoard();
           if (routingBoard != null) {
             guiRoutingJob.routerSettings.applyBoardSpecificOptimizationsIfNeeded(routingBoard);
           }
           InteractiveActionThread thread =
-              boardFrame.boardPanel.boardHandling.start_autorouter_and_route_optimizer(
+              boardFrame.boardPanel.boardHandling.startAutorouterAndRouteOptimizer(
                   guiRoutingJob);
 
           if ((thread != null)
@@ -236,7 +236,7 @@ class BoardToolbar extends JPanel {
     cancelButton = new JButton();
     tm.setText(cancelButton, "cancelButton");
     cancelButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.stop_autorouter_and_route_optimizer());
+        _ -> boardFrame.boardPanel.boardHandling.stopAutorouterAndRouteOptimizer());
     cancelButton.addActionListener(
         _ -> FRAnalytics.buttonClicked("cancelButton", cancelButton.getText()));
     cancelButton.setEnabled(false);
@@ -247,24 +247,24 @@ class BoardToolbar extends JPanel {
     tm.setText(deleteAllTracksButton, "deleteAllTracksButton");
     deleteAllTracksButton.addActionListener(
         _ -> {
-          RoutingBoard board = boardFrame.boardPanel.boardHandling.get_routing_board();
+          RoutingBoard board = boardFrame.boardPanel.boardHandling.getRoutingBoard();
           // delete all tracks and vias
-          board.delete_all_tracks_and_vias();
+          board.deleteAllTracksAndVias();
           // unfill conduction areas
-          board.unfill_conduction_areas();
+          board.unfillConductionAreas();
           // update the board
           boardFrame.boardPanel.boardHandling.replaceRoutingBoard(board);
           // create a deep copy of the routing board
-          board = boardFrame.boardPanel.boardHandling.get_routing_board().deepCopy();
+          board = boardFrame.boardPanel.boardHandling.getRoutingBoard().deepCopy();
           // update the board again
           boardFrame.boardPanel.boardHandling.replaceRoutingBoard(board);
           // create ratsnest
-          boardFrame.boardPanel.boardHandling.create_ratsnest();
+          boardFrame.boardPanel.boardHandling.createRatsnest();
           // redraw the board
           boardFrame.boardPanel.boardHandling.repaint();
           // update the board frame
-          BoardStatistics boardStatistics = board.get_statistics();
-          boardFrame.screenMessages.set_board_score(
+          BoardStatistics boardStatistics = board.getStatistics();
+          boardFrame.screenMessages.setBoardScore(
               boardStatistics.getNormalizedScore(boardFrame.routingJob.routerSettings.scoring),
               boardStatistics.connections.incompleteCount,
               boardStatistics.clearanceViolations.totalCount);
@@ -283,9 +283,9 @@ class BoardToolbar extends JPanel {
     tm.setText(toolbarUndoButton, "undo_button");
     toolbarUndoButton.addActionListener(
         _ -> {
-          boardFrame.boardPanel.boardHandling.cancel_state();
+          boardFrame.boardPanel.boardHandling.cancelState();
           boardFrame.boardPanel.boardHandling.undo();
-          boardFrame.refresh_windows();
+          boardFrame.refreshWindows();
         });
     toolbarUndoButton.addActionListener(
         _ -> FRAnalytics.buttonClicked("toolbarUndoButton", toolbarUndoButton.getText()));
@@ -308,7 +308,7 @@ class BoardToolbar extends JPanel {
     toolbarIncompletesButton = new JButton();
     tm.setText(toolbarIncompletesButton, "incompletes_button");
     toolbarIncompletesButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.toggle_ratsnest());
+        _ -> boardFrame.boardPanel.boardHandling.toggleRatsnest());
     toolbarIncompletesButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -319,7 +319,7 @@ class BoardToolbar extends JPanel {
     toolbarViolationButton = new JButton();
     tm.setText(toolbarViolationButton, "violations_button");
     toolbarViolationButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.toggle_clearance_violations());
+        _ -> boardFrame.boardPanel.boardHandling.toggleClearanceViolations());
     toolbarViolationButton.addActionListener(
         _ -> FRAnalytics.buttonClicked("toolbarViolationButton", toolbarViolationButton.getText()));
 
@@ -334,7 +334,7 @@ class BoardToolbar extends JPanel {
     toolbarDisplayRegionButton = new JButton();
     tm.setText(toolbarDisplayRegionButton, "display_region_button");
     toolbarDisplayRegionButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.zoom_region());
+        _ -> boardFrame.boardPanel.boardHandling.zoomRegion());
     toolbarDisplayRegionButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -343,7 +343,7 @@ class BoardToolbar extends JPanel {
 
     toolbarDisplayAllButton = new JButton();
     tm.setText(toolbarDisplayAllButton, "display_all_button");
-    toolbarDisplayAllButton.addActionListener(_ -> boardFrame.zoom_all());
+    toolbarDisplayAllButton.addActionListener(_ -> boardFrame.zoomAll());
     toolbarDisplayAllButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -427,19 +427,19 @@ class BoardToolbar extends JPanel {
         (String value) -> {
           switch (value) {
             case "unit_mil":
-              boardFrame.boardPanel.boardHandling.change_user_unit(Unit.MIL);
+              boardFrame.boardPanel.boardHandling.changeUserUnit(Unit.MIL);
               break;
             case "unit_inch":
-              boardFrame.boardPanel.boardHandling.change_user_unit(Unit.INCH);
+              boardFrame.boardPanel.boardHandling.changeUserUnit(Unit.INCH);
               break;
             case "unit_mm":
-              boardFrame.boardPanel.boardHandling.change_user_unit(Unit.MM);
+              boardFrame.boardPanel.boardHandling.changeUserUnit(Unit.MM);
               break;
             case "unit_um":
-              boardFrame.boardPanel.boardHandling.change_user_unit(Unit.UM);
+              boardFrame.boardPanel.boardHandling.changeUserUnit(Unit.UM);
               break;
           }
-          boardFrame.refresh_windows();
+          boardFrame.refreshWindows();
         });
     unitSelectionPanel.addValueChangedEventListener(
         (String value) -> FRAnalytics.buttonClicked("unitSelectionPanel", value));
@@ -620,18 +620,18 @@ class BoardToolbar extends JPanel {
       int targetNet = debugControl.peekLastStepNet();
       // Rewind while the net is the same
       while (debugControl.shouldContinueRewind(targetNet)) {
-        boardFrame.boardPanel.boardHandling.cancel_state();
+        boardFrame.boardPanel.boardHandling.cancelState();
         boardFrame.boardPanel.boardHandling.undo();
         debugControl.popLastStepNet();
         // Update stats
       }
-      boardFrame.refresh_windows();
+      boardFrame.refreshWindows();
     } else {
       // Single Step Back
-      boardFrame.boardPanel.boardHandling.cancel_state();
+      boardFrame.boardPanel.boardHandling.cancelState();
       boardFrame.boardPanel.boardHandling.undo();
       debugControl.popLastStepNet();
-      boardFrame.refresh_windows();
+      boardFrame.refreshWindows();
     }
   }
 

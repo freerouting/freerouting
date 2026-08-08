@@ -99,7 +99,7 @@ public class McpControllerV1 extends BaseController {
 
     UUID userId;
     try {
-      userId = AuthenticateUser();
+      userId = authenticateUser();
     } catch (Exception e) {
       FRLogger.warn(
           "[mcp][cid="
@@ -163,7 +163,7 @@ public class McpControllerV1 extends BaseController {
   @Path("/events")
   @Produces(MediaType.SERVER_SENT_EVENTS)
   public void events(@Context SseEventSink sink, @Context Sse sse) {
-    AuthenticateUser();
+    authenticateUser();
 
     McpRealtimeBridge.registerSseClient(sink, sse);
     JsonObject hello = new JsonObject();

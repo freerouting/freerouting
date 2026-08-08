@@ -26,52 +26,52 @@ public final class CutoutRouteState extends SelectRegionState {
   }
 
   /** Returns a new instance of this class. */
-  public static CutoutRouteState get_instance(
+  public static CutoutRouteState getInstance(
       Collection<Item> p_item_list,
       InteractiveState p_parent_state,
       GuiBoardManager p_board_handling) {
-    return get_instance(p_item_list, null, p_parent_state, p_board_handling);
+    return getInstance(p_item_list, null, p_parent_state, p_board_handling);
   }
 
   /** Returns a new instance of this class. */
-  public static CutoutRouteState get_instance(
+  public static CutoutRouteState getInstance(
       Collection<Item> p_item_list,
       FloatPoint p_location,
       InteractiveState p_parent_state,
       GuiBoardManager p_board_handling) {
-    p_board_handling.display_layer_message();
+    p_board_handling.displayLayerMessage();
     // filter items, which cannot be cutout
     Collection<PolylineTrace> itemList = new LinkedList<>();
 
     for (Item currItem : p_item_list) {
-      if (!currItem.is_user_fixed() && currItem instanceof PolylineTrace trace) {
+      if (!currItem.isUserFixed() && currItem instanceof PolylineTrace trace) {
         itemList.add(trace);
       }
     }
 
     CutoutRouteState newInstance = new CutoutRouteState(itemList, p_parent_state, p_board_handling);
     newInstance.corner1 = p_location;
-    newInstance.hdlg.screenMessages.set_status_message(
+    newInstance.hdlg.screenMessages.setStatusMessage(
         newInstance.tm.getText("drag_left_mouse_button_to_select_cutout_rectangle"));
     return newInstance;
   }
 
   @Override
   public InteractiveState complete() {
-    hdlg.screenMessages.set_status_message("");
-    corner2 = hdlg.get_current_mouse_position();
-    corner2 = hdlg.get_current_mouse_position();
-    this.cutout_route();
+    hdlg.screenMessages.setStatusMessage("");
+    corner2 = hdlg.getCurrentMousePosition();
+    corner2 = hdlg.getCurrentMousePosition();
+    this.cutoutRoute();
     return this.returnState;
   }
 
   /** Selects all items in the rectangle defined by corner1 and corner2. */
-  private void cutout_route() {
+  private void cutoutRoute() {
     if (this.corner1 == null || this.corner2 == null) {
       return;
     }
 
-    hdlg.get_routing_board().generate_snapshot();
+    hdlg.getRoutingBoard().generateSnapshot();
 
     IntPoint p1 = this.corner1.round();
     IntPoint p2 = this.corner2.round();
@@ -83,14 +83,14 @@ public final class CutoutRouteState extends SelectRegionState {
     Set<Integer> changedNets = new TreeSet<>();
 
     for (PolylineTrace currTrace : this.traceList) {
-      ShapeTraceEntries.cutout_trace(currTrace, cutBox, 0);
-      for (int i = 0; i < currTrace.net_count(); i++) {
-        changedNets.add(currTrace.get_net_no(i));
+      ShapeTraceEntries.cutoutTrace(currTrace, cutBox, 0);
+      for (int i = 0; i < currTrace.netCount(); i++) {
+        changedNets.add(currTrace.getNetNo(i));
       }
     }
 
     for (Integer changed_net : changedNets) {
-      hdlg.update_ratsnest(changed_net);
+      hdlg.updateRatsnest(changed_net);
     }
   }
 
@@ -105,8 +105,8 @@ public final class CutoutRouteState extends SelectRegionState {
       currTrace.draw(
           p_graphics,
           hdlg.graphicsContext,
-          hdlg.graphicsContext.get_hilight_color(),
-          hdlg.graphicsContext.get_hilight_color_intensity());
+          hdlg.graphicsContext.getHilightColor(),
+          hdlg.graphicsContext.getHilightColorIntensity());
     }
     super.draw(p_graphics);
   }

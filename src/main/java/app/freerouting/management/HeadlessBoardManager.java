@@ -156,12 +156,12 @@ public class HeadlessBoardManager implements BoardManager {
    * Creates a new headless board manager for the specified routing job.
    *
    * <p>The manager is created in an uninitialized state with no board loaded. Call {@link
-   * #loadFromSpecctraDsn} or {@link #create_board} to initialize the board before performing
+   * #loadFromSpecctraDsn} or {@link #createBoard} to initialize the board before performing
    * routing operations.
    *
    * @param routingJob the routing job context that will orchestrate routing operations
    * @see #loadFromSpecctraDsn(InputStream, BoardObservers, IdentificationNumberGenerator)
-   * @see #create_board
+   * @see #createBoard
    */
   public HeadlessBoardManager(RoutingJob routingJob) {
     this.routingJob = routingJob;
@@ -183,7 +183,7 @@ public class HeadlessBoardManager implements BoardManager {
    * @see RoutingBoard
    */
   @Override
-  public RoutingBoard get_routing_board() {
+  public RoutingBoard getRoutingBoard() {
     return this.board;
   }
 
@@ -227,7 +227,7 @@ public class HeadlessBoardManager implements BoardManager {
    * without a GUI.
    */
   @Override
-  public void initialize_manual_trace_half_widths() {
+  public void initializeManualTraceHalfWidths() {
     // No-op: interactiveSettings is a GUI-only concern managed by GuiBoardManager.
   }
 
@@ -261,7 +261,7 @@ public class HeadlessBoardManager implements BoardManager {
    * @see app.freerouting.interactive.InteractiveSettings
    */
   @Override
-  public void create_board(
+  public void createBoard(
       IntBox p_bounding_box,
       LayerStructure p_layer_structure,
       PolylineShape[] p_outline_shapes,
@@ -275,12 +275,12 @@ public class HeadlessBoardManager implements BoardManager {
 
     if (p_rules != null) {
       if (p_outline_clearance_class_name != null && p_rules.clearanceMatrix != null) {
-        outlineClClassNo = p_rules.clearanceMatrix.get_no(p_outline_clearance_class_name);
+        outlineClClassNo = p_rules.clearanceMatrix.getNo(p_outline_clearance_class_name);
         outlineClClassNo = Math.max(outlineClClassNo, 0);
       } else {
         outlineClClassNo =
             p_rules
-                .get_default_net_class()
+                .getDefaultNetClass()
                 .defaultItemClearanceClasses
                 .get(DefaultItemClearanceClasses.ItemClass.AREA);
       }
@@ -324,8 +324,8 @@ public class HeadlessBoardManager implements BoardManager {
                     configuredClearanceUm * boardResolution,
                     Unit.UM,
                     this.board.communication.unit));
-    boolean changed = configuredClearanceBoardUnits != this.board.rules.get_hole_clearance();
-    this.board.rules.set_hole_clearance(configuredClearanceBoardUnits);
+    boolean changed = configuredClearanceBoardUnits != this.board.rules.getHoleClearance();
+    this.board.rules.setHoleClearance(configuredClearanceBoardUnits);
     int holeKeepouts = 0;
     if (configuredClearanceBoardUnits > 0) {
       holeKeepouts = assignHoleKeepoutClearanceClass(configuredClearanceBoardUnits);
@@ -335,7 +335,7 @@ public class HeadlessBoardManager implements BoardManager {
       // (all of them, on a DSN load) must be re-inserted so their obstacle shapes include
       // the drill-hole inflation. Otherwise DRC (default tree) under-reports and routing
       // trees created later disagree with it.
-      this.board.searchTreeManager.reinsert_tree_items();
+      this.board.searchTreeManager.reinsertTreeItems();
     }
 
     if (configuredClearanceBoardUnits > 0) {
@@ -361,25 +361,25 @@ public class HeadlessBoardManager implements BoardManager {
       return 0;
     }
     java.util.List<app.freerouting.board.ObstacleArea> holeKeepouts = new java.util.ArrayList<>();
-    for (app.freerouting.board.Item item : this.board.get_items()) {
+    for (app.freerouting.board.Item item : this.board.getItems()) {
       if (item.getClass() != app.freerouting.board.ObstacleArea.class) {
         continue;
       }
       app.freerouting.board.ObstacleArea keepout = (app.freerouting.board.ObstacleArea) item;
       // Package keepouts belong to a component; a circular one is a drilled hole in the
       // footprint (the only way KiCad expresses NPTH in DSN).
-      if (keepout.get_component_no() > 0
-          && keepout.get_area() instanceof app.freerouting.geometry.planar.Circle) {
+      if (keepout.getComponentNo() > 0
+          && keepout.getArea() instanceof app.freerouting.geometry.planar.Circle) {
         holeKeepouts.add(keepout);
       }
     }
     if (holeKeepouts.isEmpty()) {
       return 0;
     }
-    int holeEdgeClassNo = matrix.get_no(HOLE_EDGE_CLEARANCE_CLASS_NAME);
+    int holeEdgeClassNo = matrix.getNo(HOLE_EDGE_CLEARANCE_CLASS_NAME);
     if (holeEdgeClassNo < 0) {
-      matrix.append_class(HOLE_EDGE_CLEARANCE_CLASS_NAME);
-      holeEdgeClassNo = matrix.get_no(HOLE_EDGE_CLEARANCE_CLASS_NAME);
+      matrix.appendClass(HOLE_EDGE_CLEARANCE_CLASS_NAME);
+      holeEdgeClassNo = matrix.getNo(HOLE_EDGE_CLEARANCE_CLASS_NAME);
     }
     if (holeEdgeClassNo < 0) {
       FRLogger.warn(
@@ -389,26 +389,26 @@ public class HeadlessBoardManager implements BoardManager {
     int defaultAreaClassNo =
         this.board
             .rules
-            .get_default_net_class()
+            .getDefaultNetClass()
             .defaultItemClearanceClasses
             .get(DefaultItemClearanceClasses.ItemClass.AREA);
-    for (int layer = 0; layer < matrix.get_layer_count(); layer++) {
-      for (int classNo = 1; classNo < matrix.get_class_count(); classNo++) {
+    for (int layer = 0; layer < matrix.getLayerCount(); layer++) {
+      for (int classNo = 1; classNo < matrix.getClassCount(); classNo++) {
         // Never reduce an existing requirement: hole clearance is a floor on top of the
         // normal copper clearance the keepout would otherwise get.
         int value =
             Math.max(
                 holeClearanceBoardUnits,
-                matrix.get_value(defaultAreaClassNo, classNo, layer, false));
-        matrix.set_value(holeEdgeClassNo, classNo, layer, value);
-        matrix.set_value(classNo, holeEdgeClassNo, layer, value);
+                matrix.getValue(defaultAreaClassNo, classNo, layer, false));
+        matrix.setValue(holeEdgeClassNo, classNo, layer, value);
+        matrix.setValue(classNo, holeEdgeClassNo, layer, value);
       }
     }
     int reclassified = 0;
     for (app.freerouting.board.ObstacleArea keepout : holeKeepouts) {
-      if (keepout.clearance_class_no() != holeEdgeClassNo) {
-        keepout.set_clearance_class_no(holeEdgeClassNo);
-        keepout.clear_derived_data();
+      if (keepout.clearanceClassNo() != holeEdgeClassNo) {
+        keepout.setClearanceClassNo(holeEdgeClassNo);
+        keepout.clearDerivedData();
         reclassified++;
       }
     }
@@ -436,7 +436,7 @@ public class HeadlessBoardManager implements BoardManager {
       return;
     }
 
-    var outline = this.board.get_outline();
+    var outline = this.board.getOutline();
     if (outline == null) {
       FRLogger.warn(
           "Ignoring router.copper_to_edge_clearance_um because the board outline is unavailable.");
@@ -446,10 +446,10 @@ public class HeadlessBoardManager implements BoardManager {
     int defaultAreaClassNo =
         this.board
             .rules
-            .get_default_net_class()
+            .getDefaultNetClass()
             .defaultItemClearanceClasses
             .get(DefaultItemClearanceClasses.ItemClass.AREA);
-    boolean usesFallbackOutlineClass = outline.clearance_class_no() == defaultAreaClassNo;
+    boolean usesFallbackOutlineClass = outline.clearanceClassNo() == defaultAreaClassNo;
     boolean usesDefaultEdgeClearanceValue =
         Math.abs(configuredClearanceUm - DefaultSettings.DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM)
             < 1e-9;
@@ -468,10 +468,10 @@ public class HeadlessBoardManager implements BoardManager {
                     this.board.communication.unit));
 
     var matrix = this.board.rules.clearanceMatrix;
-    int boardEdgeClassNo = matrix.get_no(BOARD_EDGE_CLEARANCE_CLASS_NAME);
+    int boardEdgeClassNo = matrix.getNo(BOARD_EDGE_CLEARANCE_CLASS_NAME);
     if (boardEdgeClassNo < 0) {
-      matrix.append_class(BOARD_EDGE_CLEARANCE_CLASS_NAME);
-      boardEdgeClassNo = matrix.get_no(BOARD_EDGE_CLEARANCE_CLASS_NAME);
+      matrix.appendClass(BOARD_EDGE_CLEARANCE_CLASS_NAME);
+      boardEdgeClassNo = matrix.getNo(BOARD_EDGE_CLEARANCE_CLASS_NAME);
     }
     if (boardEdgeClassNo < 0) {
       FRLogger.warn(
@@ -479,18 +479,18 @@ public class HeadlessBoardManager implements BoardManager {
       return;
     }
 
-    for (int layer = 0; layer < matrix.get_layer_count(); layer++) {
-      for (int classNo = 1; classNo < matrix.get_class_count(); classNo++) {
-        matrix.set_value(boardEdgeClassNo, classNo, layer, configuredClearanceBoardUnits);
-        matrix.set_value(classNo, boardEdgeClassNo, layer, configuredClearanceBoardUnits);
+    for (int layer = 0; layer < matrix.getLayerCount(); layer++) {
+      for (int classNo = 1; classNo < matrix.getClassCount(); classNo++) {
+        matrix.setValue(boardEdgeClassNo, classNo, layer, configuredClearanceBoardUnits);
+        matrix.setValue(classNo, boardEdgeClassNo, layer, configuredClearanceBoardUnits);
       }
     }
 
     if (this.board.searchTreeManager != null) {
       this.board.searchTreeManager.remove(outline);
     }
-    outline.set_clearance_class_no(boardEdgeClassNo);
-    outline.clear_derived_data();
+    outline.setClearanceClassNo(boardEdgeClassNo);
+    outline.clearDerivedData();
     if (this.board.searchTreeManager != null) {
       this.board.searchTreeManager.insert(outline);
     }
@@ -553,7 +553,7 @@ public class HeadlessBoardManager implements BoardManager {
    * @see BoardFileDetails#calculateCrc32(InputStream)
    */
   public long calculateCrc32() {
-    return calculateCrc32ForBoard(this.get_routing_board());
+    return calculateCrc32ForBoard(this.getRoutingBoard());
   }
 
   private long calculateCrc32ForBoard(RoutingBoard board) {
@@ -694,7 +694,7 @@ public class HeadlessBoardManager implements BoardManager {
 
   private void applyRouterSettingsForLoadedBoard() {
     if (this.board != null && this.routingJob != null) {
-      int boardLayerCount = this.board.get_layer_count();
+      int boardLayerCount = this.board.getLayerCount();
       if (this.routingJob.routerSettings.getLayerCount() != boardLayerCount) {
         this.routingJob.routerSettings.setLayerCount(boardLayerCount);
       }
@@ -708,7 +708,7 @@ public class HeadlessBoardManager implements BoardManager {
     if (this.board == null) {
       return;
     }
-    this.board.reduce_nets_of_route_items();
+    this.board.reduceNetsOfRouteItems();
     validatePowerPlanes();
   }
 
@@ -728,9 +728,9 @@ public class HeadlessBoardManager implements BoardManager {
                 FRAnalytics.boardLoaded(
                     loadedBoard.communication.specctraParserInfo.hostCad,
                     loadedBoard.communication.specctraParserInfo.hostVersion,
-                    loadedBoard.get_layer_count(),
+                    loadedBoard.getLayerCount(),
                     loadedBoard.components.count(),
-                    loadedBoard.rules.nets.max_net_no());
+                    loadedBoard.rules.nets.maxNetNo());
                 manager.originalBoardChecksum = manager.calculateCrc32ForBoard(loadedBoard);
                 compareCounterpartBoardIfPresent(loadedBoard, inputFilename);
               } catch (Exception e) {
@@ -858,7 +858,7 @@ public class HeadlessBoardManager implements BoardManager {
   public boolean saveAsSpecctraSessionSes(OutputStream outputStream, String designName) {
     boolean wasSaveSuccessful;
     try {
-      SesWriter.write(this.get_routing_board(), outputStream, designName);
+      SesWriter.write(this.getRoutingBoard(), outputStream, designName);
       wasSaveSuccessful = true;
     } catch (IOException e) {
       FRLogger.error("unable to write session file", e);
@@ -904,8 +904,8 @@ public class HeadlessBoardManager implements BoardManager {
 
   boolean conductionAreasOverlap(
       app.freerouting.board.ConductionArea ca1, app.freerouting.board.ConductionArea ca2) {
-    app.freerouting.geometry.planar.TileShape[] pieces1 = ca1.get_area().split_to_convex();
-    app.freerouting.geometry.planar.TileShape[] pieces2 = ca2.get_area().split_to_convex();
+    app.freerouting.geometry.planar.TileShape[] pieces1 = ca1.getArea().splitToConvex();
+    app.freerouting.geometry.planar.TileShape[] pieces2 = ca2.getArea().splitToConvex();
     if (pieces1 == null || pieces2 == null) {
       return false;
     }
@@ -913,7 +913,7 @@ public class HeadlessBoardManager implements BoardManager {
       for (app.freerouting.geometry.planar.TileShape p2 : pieces2) {
         if (p1.intersects(p2)) {
           app.freerouting.geometry.planar.TileShape intersection = p1.intersection(p2);
-          if (intersection != null && !intersection.is_empty() && intersection.dimension() == 2) {
+          if (intersection != null && !intersection.isEmpty() && intersection.dimension() == 2) {
             return true;
           }
         }
@@ -924,8 +924,8 @@ public class HeadlessBoardManager implements BoardManager {
 
   String getConductionAreaNetNames(app.freerouting.board.ConductionArea ca) {
     java.util.List<String> names = new java.util.ArrayList<>();
-    for (int i = 0; i < ca.net_count(); i++) {
-      int netNo = ca.get_net_no(i);
+    for (int i = 0; i < ca.netCount(); i++) {
+      int netNo = ca.getNetNo(i);
       app.freerouting.rules.Net net = this.board.rules.nets.get(netNo);
       if (net != null) {
         names.add(net.name);
@@ -944,14 +944,14 @@ public class HeadlessBoardManager implements BoardManager {
     boolean validationFailed = false;
     java.util.List<String> violations = new java.util.ArrayList<>();
 
-    for (int i = 0; i < this.board.get_layer_count(); i++) {
+    for (int i = 0; i < this.board.getLayerCount(); i++) {
       app.freerouting.board.Layer layer = this.board.layerStructure.arr[i];
       if (!layer.isSignal) {
         final int layerNo = i;
 
         // 1. Check for signal wires/traces
         long traceCount =
-            this.board.get_traces().stream().filter(trace -> trace.get_layer() == layerNo).count();
+            this.board.getTraces().stream().filter(trace -> trace.getLayer() == layerNo).count();
         if (traceCount > 0) {
           validationFailed = true;
           violations.add(
@@ -964,8 +964,8 @@ public class HeadlessBoardManager implements BoardManager {
 
         // 2. Check for at least one conduction area
         java.util.List<app.freerouting.board.ConductionArea> layerAreas =
-            this.board.get_conduction_areas().stream()
-                .filter(ca -> ca.get_layer() == layerNo)
+            this.board.getConductionAreas().stream()
+                .filter(ca -> ca.getLayer() == layerNo)
                 .toList();
         if (layerAreas.isEmpty()) {
           validationFailed = true;
@@ -985,12 +985,12 @@ public class HeadlessBoardManager implements BoardManager {
                       + layer.name
                       + "' has overlapping conduction areas: "
                       + "Area (ID "
-                      + layerAreas.get(j).get_id_no()
+                      + layerAreas.get(j).getIdNo()
                       + ", Net(s): ["
                       + nets1
                       + "]) and "
                       + "Area (ID "
-                      + layerAreas.get(k).get_id_no()
+                      + layerAreas.get(k).getIdNo()
                       + ", Net(s): ["
                       + nets2
                       + "]) overlap.");

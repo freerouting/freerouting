@@ -16,15 +16,15 @@ public class SelectRegionState extends InteractiveState {
   }
 
   @Override
-  public InteractiveState button_released() {
+  public InteractiveState buttonReleased() {
     if (hdlg != null && hdlg.screenMessages != null) {
-      hdlg.screenMessages.set_status_message("");
+      hdlg.screenMessages.setStatusMessage("");
     }
     return complete();
   }
 
   @Override
-  public InteractiveState mouse_dragged(FloatPoint p_point) {
+  public InteractiveState mouseDragged(FloatPoint p_point) {
     // Early exit on null or redundant micro-movements
     if (p_point == null || (corner2 != null && p_point.equals(corner2))) {
       return this;
@@ -42,7 +42,7 @@ public class SelectRegionState extends InteractiveState {
     corner2 = p_point;
 
     if (hdlg != null) {
-      var dirtyRect = rubber_band_dirty_rect(previousCorner2, corner2);
+      var dirtyRect = rubberBandDirtyRect(previousCorner2, corner2);
       // Fall back to full repaint if dirty rect calculation fails
       if (dirtyRect != null) {
         hdlg.repaint(dirtyRect);
@@ -53,7 +53,7 @@ public class SelectRegionState extends InteractiveState {
     return this;
   }
 
-  private Rectangle rubber_band_dirty_rect(FloatPoint p_old_corner2, FloatPoint p_new_corner2) {
+  private Rectangle rubberBandDirtyRect(FloatPoint p_old_corner2, FloatPoint p_new_corner2) {
     if (hdlg == null
         || hdlg.graphicsContext == null
         || hdlg.graphicsContext.coordinateTransform == null) {
@@ -61,21 +61,21 @@ public class SelectRegionState extends InteractiveState {
     }
 
     var transform = hdlg.graphicsContext.coordinateTransform;
-    var scCorner1 = transform.board_to_screen(corner1);
-    var scNewCorner2 = transform.board_to_screen(p_new_corner2);
+    var scCorner1 = transform.boardToScreen(corner1);
+    var scNewCorner2 = transform.boardToScreen(p_new_corner2);
 
     // Fail gracefully if transforms fail
     if (scCorner1 == null || scNewCorner2 == null) {
       return null;
     }
 
-    var dirtyRect = screen_rect(scCorner1, scNewCorner2);
+    var dirtyRect = screenRect(scCorner1, scNewCorner2);
 
     if (p_old_corner2 != null) {
-      var scOldCorner2 = transform.board_to_screen(p_old_corner2);
+      var scOldCorner2 = transform.boardToScreen(p_old_corner2);
       if (scOldCorner2 != null) {
         // Mutate in-place to avoid GC allocation during rapid drags
-        dirtyRect.add(screen_rect(scCorner1, scOldCorner2));
+        dirtyRect.add(screenRect(scCorner1, scOldCorner2));
       }
     }
 
@@ -83,7 +83,7 @@ public class SelectRegionState extends InteractiveState {
     return dirtyRect;
   }
 
-  private static Rectangle screen_rect(Point2D p_a, Point2D p_b) {
+  private static Rectangle screenRect(Point2D p_a, Point2D p_b) {
     int x = (int) Math.min(p_a.getX(), p_b.getX());
     int y = (int) Math.min(p_a.getY(), p_b.getY());
     int w = (int) Math.abs(p_a.getX() - p_b.getX()) + 1;
@@ -101,12 +101,12 @@ public class SelectRegionState extends InteractiveState {
       return;
     }
 
-    var currentMouse = hdlg.get_current_mouse_position();
+    var currentMouse = hdlg.getCurrentMousePosition();
     if (corner1 == null || currentMouse == null) {
       return;
     }
 
     corner2 = currentMouse;
-    hdlg.graphicsContext.draw_rectangle(corner1, corner2, 1, Color.white, p_graphics, 1);
+    hdlg.graphicsContext.drawRectangle(corner1, corner2, 1, Color.white, p_graphics, 1);
   }
 }

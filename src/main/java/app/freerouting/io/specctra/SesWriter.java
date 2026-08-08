@@ -79,19 +79,19 @@ public final class SesWriter {
       String designName)
       throws IOException {
     double scaleFactor =
-        board.communication.coordinateTransform.dsn_to_board(1) / board.communication.resolution;
+        board.communication.coordinateTransform.dsnToBoard(1) / board.communication.resolution;
     CoordinateTransform coordinateTransform = new CoordinateTransform(scaleFactor, 0, 0);
-    file.start_scope(false);
+    file.startScope(false);
     file.write("session ");
     identifierType.write(sessionName, file);
-    file.new_line();
+    file.newLine();
     file.write("(base_design ");
     identifierType.write(designName, file);
     file.write(")");
     writePlacement(board, identifierType, coordinateTransform, file);
     writeWasIs(board, identifierType, file);
     writeRoutes(board, identifierType, coordinateTransform, file);
-    file.end_scope();
+    file.endScope();
   }
 
   private static void writePlacement(
@@ -100,9 +100,9 @@ public final class SesWriter {
       CoordinateTransform coordinateTransform,
       IndentFileWriter file)
       throws IOException {
-    file.start_scope();
+    file.startScope();
     file.write("placement");
-    Resolution.write_scope(file, board.communication);
+    Resolution.writeScope(file, board.communication);
 
     if (board.library.packages != null) {
       for (int i = 1; i <= board.library.packages.count(); i++) {
@@ -111,7 +111,7 @@ public final class SesWriter {
       }
     }
 
-    file.end_scope();
+    file.endScope();
   }
 
   /** Writes all components with the given package to the session file. */
@@ -122,22 +122,22 @@ public final class SesWriter {
       IndentFileWriter file,
       Package pkg)
       throws IOException {
-    Collection<Item> boardItems = board.get_items();
+    Collection<Item> boardItems = board.getItems();
     boolean componentFound = false;
     for (int i = 1; i <= board.components.count(); i++) {
       app.freerouting.board.Component currComponent = board.components.get(i);
-      if (currComponent.get_package() == pkg) {
+      if (currComponent.getPackage() == pkg) {
         // check that not all items of the component are deleted
         boolean undeletedItemFound = false;
         for (Item currItem : boardItems) {
-          if (currItem.get_component_no() == currComponent.no) {
+          if (currItem.getComponentNo() == currComponent.no) {
             undeletedItemFound = true;
             break;
           }
         }
         if (undeletedItemFound) {
           if (!componentFound) {
-            file.start_scope();
+            file.startScope();
             file.write("component ");
             identifierType.write(pkg.name, file);
             componentFound = true;
@@ -147,7 +147,7 @@ public final class SesWriter {
       }
     }
     if (componentFound) {
-      file.end_scope();
+      file.endScope();
     }
   }
 
@@ -158,24 +158,24 @@ public final class SesWriter {
       IndentFileWriter file,
       app.freerouting.board.Component component)
       throws IOException {
-    file.new_line();
+    file.newLine();
     file.write("(place ");
     identifierType.write(component.name, file);
-    double[] location = coordinateTransform.board_to_dsn(component.get_location().to_float());
+    double[] location = coordinateTransform.boardToDsn(component.getLocation().toFloat());
     int xCoor = (int) Math.round(location[0]);
     int yCoor = (int) Math.round(location[1]);
     file.write(" ");
     file.write(String.valueOf(xCoor));
     file.write(" ");
     file.write(String.valueOf(yCoor));
-    if (component.placed_on_front()) {
+    if (component.placedOnFront()) {
       file.write(" front ");
     } else {
       file.write(" back ");
     }
-    file.write(formatPlacementRotation(component.get_rotation_in_degree()));
+    file.write(formatPlacementRotation(component.getRotationInDegree()));
     if (component.positionFixed) {
-      file.new_line();
+      file.newLine();
       file.write(" (lock_type position)");
     }
     file.write(")");
@@ -183,31 +183,31 @@ public final class SesWriter {
 
   private static void writeWasIs(
       BasicBoard board, IdentifierType identifierType, IndentFileWriter file) throws IOException {
-    file.start_scope();
+    file.startScope();
     file.write("was_is");
-    Collection<Pin> boardPins = board.get_pins();
+    Collection<Pin> boardPins = board.getPins();
     for (Pin currPin : boardPins) {
-      Pin swappedWith = currPin.get_changed_to();
-      if (currPin.get_changed_to() != currPin) {
-        file.new_line();
+      Pin swappedWith = currPin.getChangedTo();
+      if (currPin.getChangedTo() != currPin) {
+        file.newLine();
         file.write("(pins ");
-        app.freerouting.board.Component currCmp = board.components.get(currPin.get_component_no());
+        app.freerouting.board.Component currCmp = board.components.get(currPin.getComponentNo());
         if (currCmp != null) {
           identifierType.write(currCmp.name, file);
           file.write("-");
-          Package.Pin packagePin = currCmp.get_package().get_pin(currPin.get_index_in_package());
+          Package.Pin packagePin = currCmp.getPackage().getPin(currPin.getIndexInPackage());
           identifierType.write(packagePin.name, file);
         } else {
           FRLogger.warn("SesWriter.writeWasIs: component not found");
         }
         file.write(" ");
         app.freerouting.board.Component swapCmp =
-            board.components.get(swappedWith.get_component_no());
+            board.components.get(swappedWith.getComponentNo());
         if (swapCmp != null) {
           identifierType.write(swapCmp.name, file);
           file.write("-");
           Package.Pin packagePin =
-              swapCmp.get_package().get_pin(swappedWith.get_index_in_package());
+              swapCmp.getPackage().getPin(swappedWith.getIndexInPackage());
           identifierType.write(packagePin.name, file);
         } else {
           FRLogger.warn("SesWriter.writeWasIs: component not found");
@@ -215,7 +215,7 @@ public final class SesWriter {
         file.write(")");
       }
     }
-    file.end_scope();
+    file.endScope();
   }
 
   private static void writeRoutes(
@@ -224,13 +224,13 @@ public final class SesWriter {
       CoordinateTransform coordinateTransform,
       IndentFileWriter file)
       throws IOException {
-    file.start_scope();
+    file.startScope();
     file.write("routes ");
-    Resolution.write_scope(file, board.communication);
-    Parser.write_scope(file, board.communication.specctraParserInfo, identifierType, true);
+    Resolution.writeScope(file, board.communication);
+    Parser.writeScope(file, board.communication.specctraParserInfo, identifierType, true);
     writeLibrary(board, identifierType, coordinateTransform, file);
     writeNetwork(board, identifierType, coordinateTransform, file);
-    file.end_scope();
+    file.endScope();
   }
 
   private static void writeLibrary(
@@ -239,17 +239,17 @@ public final class SesWriter {
       CoordinateTransform coordinateTransform,
       IndentFileWriter file)
       throws IOException {
-    file.start_scope();
+    file.startScope();
     file.write("library_out ");
     Set<String> writtenPadstackNames = new LinkedHashSet<>();
-    for (int i = 0; i < board.library.via_padstack_count(); i++) {
-      Padstack viaPadstack = board.library.get_via_padstack(i);
+    for (int i = 0; i < board.library.viaPadstackCount(); i++) {
+      Padstack viaPadstack = board.library.getViaPadstack(i);
       if (viaPadstack == null || !writtenPadstackNames.add(viaPadstack.name)) {
         continue;
       }
       writePadstack(viaPadstack, board, identifierType, coordinateTransform, file);
     }
-    file.end_scope();
+    file.endScope();
   }
 
   /**
@@ -278,39 +278,39 @@ public final class SesWriter {
       throws IOException {
     // determine the layer range covered by this padstack
     int firstLayerNo = 0;
-    while (firstLayerNo < board.get_layer_count() && padstack.get_shape(firstLayerNo) == null) {
+    while (firstLayerNo < board.getLayerCount() && padstack.getShape(firstLayerNo) == null) {
       ++firstLayerNo;
     }
-    int lastLayerNo = board.get_layer_count() - 1;
-    while (lastLayerNo >= 0 && padstack.get_shape(lastLayerNo) == null) {
+    int lastLayerNo = board.getLayerCount() - 1;
+    while (lastLayerNo >= 0 && padstack.getShape(lastLayerNo) == null) {
       --lastLayerNo;
     }
-    if (firstLayerNo >= board.get_layer_count() || lastLayerNo < 0) {
+    if (firstLayerNo >= board.getLayerCount() || lastLayerNo < 0) {
       FRLogger.warn("SesWriter.writePadstack: padstack shape not found");
       return;
     }
 
-    file.start_scope();
+    file.startScope();
     file.write("padstack ");
     identifierType.write(padstack.name, file);
     for (int i = firstLayerNo; i <= lastLayerNo; i++) {
-      app.freerouting.geometry.planar.Shape currBoardShape = padstack.get_shape(i);
+      app.freerouting.geometry.planar.Shape currBoardShape = padstack.getShape(i);
       if (currBoardShape == null) {
         continue;
       }
       app.freerouting.board.Layer boardLayer = board.layerStructure.arr[i];
       Layer currLayer = new Layer(boardLayer.name, i, boardLayer.isSignal);
-      Shape currShape = coordinateTransform.board_to_dsn_rel(currBoardShape, currLayer);
-      file.start_scope();
+      Shape currShape = coordinateTransform.boardToDsnRel(currBoardShape, currLayer);
+      file.startScope();
       file.write("shape");
-      currShape.write_scope_int(file, identifierType);
-      file.end_scope();
+      currShape.writeScopeInt(file, identifierType);
+      file.endScope();
     }
     if (!padstack.attachAllowed) {
-      file.new_line();
+      file.newLine();
       file.write("(attach off)");
     }
-    file.end_scope();
+    file.endScope();
   }
 
   private static void writeNetwork(
@@ -319,12 +319,12 @@ public final class SesWriter {
       CoordinateTransform coordinateTransform,
       IndentFileWriter file)
       throws IOException {
-    file.start_scope();
+    file.startScope();
     file.write("network_out ");
-    for (int i = 1; i <= board.rules.nets.max_net_no(); i++) {
+    for (int i = 1; i <= board.rules.nets.maxNetNo(); i++) {
       writeNet(i, board, identifierType, coordinateTransform, file);
     }
-    file.end_scope();
+    file.endScope();
   }
 
   private static void writeNet(
@@ -334,19 +334,19 @@ public final class SesWriter {
       CoordinateTransform coordinateTransform,
       IndentFileWriter file)
       throws IOException {
-    Collection<Item> netItems = board.get_connectable_items(netNo);
+    Collection<Item> netItems = board.getConnectableItems(netNo);
     boolean headerWritten = false;
     for (Item currItem : netItems) {
-      if (currItem.get_fixed_state() == FixedState.SYSTEM_FIXED) {
+      if (currItem.getFixedState() == FixedState.SYSTEM_FIXED) {
         continue;
       }
       boolean isWire = currItem instanceof PolylineTrace;
       boolean isVia = currItem instanceof Via;
       boolean isConductionArea =
           currItem instanceof ConductionArea
-              && board.layerStructure.arr[currItem.first_layer()].isSignal;
+              && board.layerStructure.arr[currItem.firstLayer()].isSignal;
       if (!headerWritten && (isWire || isVia || isConductionArea)) {
-        file.start_scope();
+        file.startScope();
         file.write("net ");
         Net currNet = board.rules.nets.get(netNo);
         if (currNet == null) {
@@ -366,7 +366,7 @@ public final class SesWriter {
       }
     }
     if (headerWritten) {
-      file.end_scope();
+      file.endScope();
     }
   }
 
@@ -377,24 +377,24 @@ public final class SesWriter {
       CoordinateTransform coordinateTransform,
       IndentFileWriter file)
       throws IOException {
-    int layerNo = wire.get_layer();
+    int layerNo = wire.getLayer();
     app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerNo];
-    int wireWidth = (int) Math.round(coordinateTransform.board_to_dsn(2 * wire.get_half_width()));
-    file.start_scope();
+    int wireWidth = (int) Math.round(coordinateTransform.boardToDsn(2 * wire.getHalfWidth()));
+    file.startScope();
     file.write("wire");
-    Point[] cornerArr = wire.polyline().corner_arr();
+    Point[] cornerArr = wire.polyline().cornerArr();
     int[] coors = new int[2 * cornerArr.length];
     int cornerIndex = 0;
     int[] prevCoors = null;
     for (int i = 0; i < cornerArr.length; i++) {
-      FloatPoint cornerPoint = cornerArr[i].to_float();
+      FloatPoint cornerPoint = cornerArr[i].toFloat();
       if (i == 0 || i == cornerArr.length - 1) {
         FloatPoint snapped = snappedEndpoint(wire, i == 0);
         if (snapped != null) {
           cornerPoint = snapped;
         }
       }
-      double[] currFloatCoors = coordinateTransform.board_to_dsn(cornerPoint);
+      double[] currFloatCoors = coordinateTransform.boardToDsn(cornerPoint);
       int[] currCoors = new int[2];
       currCoors[0] = (int) Math.round(currFloatCoors[0]);
       currCoors[1] = (int) Math.round(currFloatCoors[1]);
@@ -410,8 +410,8 @@ public final class SesWriter {
       coors = Arrays.copyOf(coors, cornerIndex);
     }
     writePath(boardLayer.name, wireWidth, coors, identifierType, file);
-    writeFixedState(file, wire.get_fixed_state());
-    file.end_scope();
+    writeFixedState(file, wire.getFixedState());
+    file.endScope();
   }
 
   /**
@@ -424,28 +424,28 @@ public final class SesWriter {
    * the pad or fold across a neighbor.
    */
   static FloatPoint snappedEndpoint(PolylineTrace wire, boolean startSide) {
-    Point corner = startSide ? wire.first_corner() : wire.last_corner();
-    FloatPoint cornerFloat = corner.to_float();
-    java.util.Set<Item> contacts = startSide ? wire.get_start_contacts() : wire.get_end_contacts();
-    int layer = wire.get_layer();
+    Point corner = startSide ? wire.firstCorner() : wire.lastCorner();
+    FloatPoint cornerFloat = corner.toFloat();
+    java.util.Set<Item> contacts = startSide ? wire.getStartContacts() : wire.getEndContacts();
+    int layer = wire.getLayer();
     for (Item contact : contacts) {
       if (!(contact instanceof app.freerouting.board.DrillItem drill)) {
         continue;
       }
-      if (layer < drill.first_layer() || layer > drill.last_layer()) {
+      if (layer < drill.firstLayer() || layer > drill.lastLayer()) {
         continue;
       }
-      app.freerouting.geometry.planar.Shape padShape = drill.get_shape(layer - drill.first_layer());
+      app.freerouting.geometry.planar.Shape padShape = drill.getShape(layer - drill.firstLayer());
       if (padShape == null) {
         continue;
       }
-      FloatPoint center = drill.get_center().to_float();
+      FloatPoint center = drill.getCenter().toFloat();
       double centerDistance = cornerFloat.distance(center);
       if (centerDistance <= 0.5) {
         // Already at the center (within rounding) — nothing to fix.
         return null;
       }
-      if (centerDistance <= padShape.border_distance(center)) {
+      if (centerDistance <= padShape.borderDistance(center)) {
         return center;
       }
     }
@@ -459,20 +459,20 @@ public final class SesWriter {
       CoordinateTransform coordinateTransform,
       IndentFileWriter file)
       throws IOException {
-    Padstack viaPadstack = via.get_padstack();
-    FloatPoint viaLocation = via.get_center().to_float();
-    file.start_scope();
+    Padstack viaPadstack = via.getPadstack();
+    FloatPoint viaLocation = via.getCenter().toFloat();
+    file.startScope();
     file.write("via ");
     identifierType.write(viaPadstack.name, file);
     file.write(" ");
-    double[] location = coordinateTransform.board_to_dsn(viaLocation);
+    double[] location = coordinateTransform.boardToDsn(viaLocation);
     int xCoor = (int) Math.round(location[0]);
     file.write(String.valueOf(xCoor));
     file.write(" ");
     int yCoor = (int) Math.round(location[1]);
     file.write(String.valueOf(yCoor));
-    writeFixedState(file, via.get_fixed_state());
-    file.end_scope();
+    writeFixedState(file, via.getFixedState());
+    file.endScope();
   }
 
   private static void writeFixedState(IndentFileWriter file, FixedState fixedState)
@@ -480,7 +480,7 @@ public final class SesWriter {
     if (fixedState.ordinal() <= FixedState.SHOVE_FIXED.ordinal()) {
       return;
     }
-    file.new_line();
+    file.newLine();
     file.write("(type ");
     if (fixedState == FixedState.SYSTEM_FIXED) {
       file.write("fix)");
@@ -496,19 +496,19 @@ public final class SesWriter {
       IdentifierType identifierType,
       IndentFileWriter file)
       throws IOException {
-    file.start_scope();
+    file.startScope();
     file.write("path ");
     identifierType.write(layerName, file);
     file.write(" ");
     file.write(String.valueOf(width));
     int cornerCount = coors.length / 2;
     for (int i = 0; i < cornerCount; i++) {
-      file.new_line();
+      file.newLine();
       file.write(String.valueOf(coors[2 * i]));
       file.write(" ");
       file.write(String.valueOf(coors[2 * i + 1]));
     }
-    file.end_scope();
+    file.endScope();
   }
 
   private static void writeConductionArea(
@@ -518,13 +518,13 @@ public final class SesWriter {
       CoordinateTransform coordinateTransform,
       IndentFileWriter file)
       throws IOException {
-    int netCount = conductionArea.net_count();
+    int netCount = conductionArea.netCount();
     if (netCount != 1) {
       FRLogger.warn("SesWriter.writeConductionArea: unexpected net count");
       return;
     }
-    Area currArea = conductionArea.get_area();
-    int layerNo = conductionArea.get_layer();
+    Area currArea = conductionArea.getArea();
+    int layerNo = conductionArea.getLayer();
     app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerNo];
     Layer conductionLayer = new Layer(boardLayer.name, layerNo, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
@@ -533,19 +533,19 @@ public final class SesWriter {
       boundaryShape = shape;
       holes = new app.freerouting.geometry.planar.Shape[0];
     } else {
-      boundaryShape = currArea.get_border();
-      holes = currArea.get_holes();
+      boundaryShape = currArea.getBorder();
+      holes = currArea.getHoles();
     }
-    file.start_scope();
+    file.startScope();
     file.write("wire ");
-    Shape dsnShape = coordinateTransform.board_to_dsn(boundaryShape, conductionLayer);
+    Shape dsnShape = coordinateTransform.boardToDsn(boundaryShape, conductionLayer);
     if (dsnShape != null) {
-      dsnShape.write_scope_int(file, identifierType);
+      dsnShape.writeScopeInt(file, identifierType);
     }
     for (int i = 0; i < holes.length; i++) {
-      Shape dsnHole = coordinateTransform.board_to_dsn(holes[i], conductionLayer);
-      dsnHole.write_hole_scope(file, identifierType);
+      Shape dsnHole = coordinateTransform.boardToDsn(holes[i], conductionLayer);
+      dsnHole.writeHoleScope(file, identifierType);
     }
-    file.end_scope();
+    file.endScope();
   }
 }

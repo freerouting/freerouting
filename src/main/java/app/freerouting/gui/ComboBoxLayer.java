@@ -21,7 +21,7 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
   public ComboBoxLayer(LayerStructure p_layer_structure, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    int signalLayerCount = p_layer_structure.signal_layer_count();
+    int signalLayerCount = p_layer_structure.signalLayerCount();
     int itemCount = signalLayerCount + 1;
 
     boolean addInnerLayerItem = signalLayerCount > 2;
@@ -38,15 +38,15 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
     }
     for (int i = 0; i < signalLayerCount; i++) {
       ++currLayerNo;
-      app.freerouting.board.Layer currSignalLayer = p_layer_structure.get_signal_layer(i);
+      app.freerouting.board.Layer currSignalLayer = p_layer_structure.getSignalLayer(i);
       layerArr[currLayerNo] =
-          new Layer(currSignalLayer.name, p_layer_structure.get_no(currSignalLayer));
+          new Layer(currSignalLayer.name, p_layer_structure.getNo(currSignalLayer));
     }
     this.setModel(new DefaultComboBoxModel<>(layerArr));
     this.setSelectedIndex(0);
   }
 
-  public Layer get_selected_layer() {
+  public Layer getSelectedLayer() {
     return (Layer) this.getSelectedItem();
   }
 

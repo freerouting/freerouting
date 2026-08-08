@@ -35,17 +35,17 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
   }
 
   @Override
-  protected void fill_list() {
+  protected void fillList() {
     GuiBoardManager boardHandling = this.boardFrame.boardPanel.boardHandling;
 
     ClearanceViolations clearanceViolations =
-        new ClearanceViolations(boardHandling.get_routing_board().get_items());
+        new ClearanceViolations(boardHandling.getRoutingBoard().getItems());
     SortedSet<ViolationInfo> sortedSet = new TreeSet<>();
     for (ClearanceViolation currViolation : clearanceViolations.list) {
       sortedSet.add(new ViolationInfo(currViolation));
     }
     for (ViolationInfo currViolation : sortedSet) {
-      this.add_to_list(currViolation);
+      this.addToList(currViolation);
     }
     this.list.setVisibleRowCount(Math.min(sortedSet.size(), DEFAULT_TABLE_SIZE));
 
@@ -57,7 +57,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
   }
 
   @Override
-  protected void select_instances() {
+  protected void selectInstances() {
     List<Object> selectedViolations = list.getSelectedValuesList();
     if (selectedViolations.isEmpty()) {
       return;
@@ -69,20 +69,20 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
       selectedItems.add(currViolation.secondItem);
     }
     GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
-    boardHandling.select_items(selectedItems);
-    boardHandling.toggle_selected_item_violations();
-    boardHandling.zoom_selection();
+    boardHandling.selectItems(selectedItems);
+    boardHandling.toggleSelectedItemViolations();
+    boardHandling.zoomSelection();
   }
 
-  private String item_info(Item p_item) {
+  private String itemInfo(Item p_item) {
     String result;
     if (p_item instanceof Pin) {
       result = tm.getText("pin");
     } else if (p_item instanceof Via via) {
-      Net currNet = p_item.board.rules.nets.get(via.get_net_no(0));
+      Net currNet = p_item.board.rules.nets.get(via.getNetNo(0));
       result = tm.getText("via_with_net_label", currNet.name);
     } else if (p_item instanceof Trace trace) {
-      Net currNet = p_item.board.rules.nets.get(trace.get_net_no(0));
+      Net currNet = p_item.board.rules.nets.get(trace.getNetNo(0));
       result = tm.getText("trace_with_net_label", currNet.name);
     } else if (p_item instanceof ConductionArea) {
       result = tm.getText("conductionArea");
@@ -108,29 +108,29 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
 
     public ViolationInfo(ClearanceViolation p_violation) {
       this.violation = p_violation;
-      FloatPoint boardLocation = p_violation.shape.centre_of_gravity();
+      FloatPoint boardLocation = p_violation.shape.centreOfGravity();
       this.location =
-          boardFrame.boardPanel.boardHandling.coordinateTransform.board_to_user(boardLocation);
+          boardFrame.boardPanel.boardHandling.coordinateTransform.boardToUser(boardLocation);
       this.delta = (p_violation.expectedClearance - p_violation.actualClearance) / 10000.0;
     }
 
     @Override
     public String toString() {
       LayerStructure layerStructure =
-          boardFrame.boardPanel.boardHandling.get_routing_board().layerStructure;
+          boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure;
 
       return tm.getText(
           "clearance_violation_message_template",
           "%.4f".formatted(delta),
-          item_info(violation.firstItem),
-          item_info(violation.secondItem),
-          location.to_string(boardFrame.get_locale()),
+          itemInfo(violation.firstItem),
+          itemInfo(violation.secondItem),
+          location.toString(boardFrame.get_locale()),
           layerStructure.arr[violation.layer].name);
     }
 
     @Override
-    public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-      this.violation.print_info(p_window, p_locale);
+    public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
+      this.violation.printInfo(p_window, p_locale);
     }
 
     @Override

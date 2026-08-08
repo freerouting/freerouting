@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class McpServerSettingsTest {
 
   @Test
-  void defaults_areInitializedForDedicatedMcpServer() {
+  void defaultsAreInitializedForDedicatedMcpServer() {
     GlobalSettings settings = new GlobalSettings();
 
     assertNotNull(settings.mcpServerSettings);
@@ -26,7 +26,7 @@ class McpServerSettingsTest {
   }
 
   @Test
-  void commandLine_overridesMcpSettings() {
+  void commandLineOverridesMcpSettings() {
     GlobalSettings settings = new GlobalSettings();
 
     String[] args = {

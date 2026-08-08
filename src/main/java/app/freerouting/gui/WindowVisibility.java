@@ -51,7 +51,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
     TextManager tm = new TextManager(WindowVisibility.class, boardFrame.get_locale());
     this.setTitle(tm.getText("title"));
 
-    LayerStructure layerStructure = boardPanel.boardHandling.get_routing_board().layerStructure;
+    LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
     String[] layerMessages = new String[layerStructure.arr.length];
     for (int i = 0; i < layerMessages.length; i++) {
       layerMessages[i] = layerStructure.arr[i].name;
@@ -66,15 +66,15 @@ public class WindowVisibility extends BoardSavableSubWindow {
         new VisibilitySection(
             tm.getText("layer_section_title"),
             layerMessages,
-            index -> get_board_handling().graphicsContext.get_raw_layer_visibility(index),
-            (index, value) -> get_board_handling().set_layer_visibility(index, value));
+            index -> getBoardHandling().graphicsContext.getRawLayerVisibility(index),
+            (index, value) -> getBoardHandling().setLayerVisibility(index, value));
     this.objectSection =
         new VisibilitySection(
             tm.getText("object_section_title"),
             objectMessages,
-            index -> get_board_handling().graphicsContext.colorIntensityTable.get_value(index),
+            index -> getBoardHandling().graphicsContext.colorIntensityTable.getValue(index),
             (index, value) ->
-                get_board_handling().graphicsContext.colorIntensityTable.set_value(index, value));
+                getBoardHandling().graphicsContext.colorIntensityTable.setValue(index, value));
 
     JPanel mainPanel = new JPanel(new BorderLayout());
     getContentPane().add(mainPanel);
@@ -105,7 +105,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
       constraints.fill = GridBagConstraints.HORIZONTAL;
       constraints.weightx = 1.0;
 
-      contentPanel.add(layerSection.create_panel(), constraints);
+      contentPanel.add(layerSection.createPanel(), constraints);
 
       constraints.fill = GridBagConstraints.BOTH;
       constraints.weighty = 0.0;
@@ -114,7 +114,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
 
       constraints.fill = GridBagConstraints.HORIZONTAL;
       constraints.insets = new Insets(4, 8, 4, 8);
-      contentPanel.add(objectSection.create_panel(), constraints);
+      contentPanel.add(objectSection.createPanel(), constraints);
     } finally {
       bulkUpdateInProgress = false;
     }
@@ -128,7 +128,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
     resetButton.setToolTipText(visibilityTm.getText("reset_to_defaults_tooltip"));
     resetButton.addActionListener(
         _ -> {
-          reset_to_defaults();
+          resetToDefaults();
           boardPanel.repaint();
         });
     resetButton.addActionListener(
@@ -155,26 +155,26 @@ public class WindowVisibility extends BoardSavableSubWindow {
     }
   }
 
-  protected GuiBoardManager get_board_handling() {
+  protected GuiBoardManager getBoardHandling() {
     return boardPanel.boardHandling;
   }
 
-  protected void reset_to_defaults() {
+  protected void resetToDefaults() {
     bulkUpdateInProgress = true;
     try {
-      layerSection.reset_to_defaults();
-      objectSection.reset_to_defaults();
+      layerSection.resetToDefaults();
+      objectSection.resetToDefaults();
     } finally {
       bulkUpdateInProgress = false;
     }
   }
 
-  private int snap_to_step(int value) {
+  private int snapToStep(int value) {
     int snappedValue = Math.round((float) value / (float) SLIDER_STEP) * SLIDER_STEP;
     return Math.max(0, Math.min(MAX_SLIDER_VALUE, snappedValue));
   }
 
-  private void set_slider_text_value(JTextField value_field, int value) {
+  private void setSliderTextValue(JTextField value_field, int value) {
     value_field.setText(value + "%");
   }
 
@@ -190,20 +190,20 @@ public class WindowVisibility extends BoardSavableSubWindow {
     @Override
     public void stateChanged(ChangeEvent evt) {
       int currentValue = section.sliderArr[sliderNo].getValue();
-      int snappedValue = snap_to_step(currentValue);
+      int snappedValue = snapToStep(currentValue);
 
       if (currentValue != snappedValue) {
         section.sliderArr[sliderNo].setValue(snappedValue);
         return;
       }
 
-      set_slider_text_value(section.valueArr[sliderNo], currentValue);
+      setSliderTextValue(section.valueArr[sliderNo], currentValue);
 
       if (bulkUpdateInProgress || section.sliderArr[sliderNo].getValueIsAdjusting()) {
         return;
       }
 
-      section.set_changed_value(sliderNo, ((double) snappedValue) / ((double) MAX_SLIDER_VALUE));
+      section.setChangedValue(sliderNo, ((double) snappedValue) / ((double) MAX_SLIDER_VALUE));
       boardPanel.repaint();
     }
   }
@@ -233,7 +233,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
       this.defaultsSet = new boolean[messageArr.length];
     }
 
-    private JPanel create_panel() {
+    private JPanel createPanel() {
       GridBagConstraints constraints = new GridBagConstraints();
       constraints.insets = new Insets(4, 8, 4, 8);
       constraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -247,13 +247,13 @@ public class WindowVisibility extends BoardSavableSubWindow {
       panel.add(sectionTitle, constraints);
 
       for (int i = 0; i < messageArr.length; i++) {
-        add_row(panel, constraints, i);
+        addRow(panel, constraints, i);
       }
 
       return panel;
     }
 
-    private void add_row(JPanel panel, GridBagConstraints constraints, int index) {
+    private void addRow(JPanel panel, GridBagConstraints constraints, int index) {
       JPanel rowPanel = new JPanel(new BorderLayout(2, 0));
 
       JLabel label = new JLabel(messageArr[index], JLabel.LEFT);
@@ -282,27 +282,27 @@ public class WindowVisibility extends BoardSavableSubWindow {
 
       panel.add(rowPanel, constraints);
 
-      set_slider_value(index, currentValueSupplier.applyAsDouble(index));
+      setSliderValue(index, currentValueSupplier.applyAsDouble(index));
     }
 
     private void refresh() {
       for (int i = 0; i < messageArr.length; i++) {
-        set_slider_value(i, currentValueSupplier.applyAsDouble(i));
+        setSliderValue(i, currentValueSupplier.applyAsDouble(i));
       }
     }
 
-    private void reset_to_defaults() {
+    private void resetToDefaults() {
       for (int i = 0; i < messageArr.length; i++) {
         if (defaultsSet[i]) {
           int originalVal = originalDefaults[i];
           sliderArr[i].setValue(originalVal);
-          set_slider_text_value(valueArr[i], originalVal);
+          setSliderTextValue(valueArr[i], originalVal);
           changed_value_consumer.accept(i, ((double) originalVal) / ((double) MAX_SLIDER_VALUE));
         }
       }
     }
 
-    private void set_slider_value(int index, double value) {
+    private void setSliderValue(int index, double value) {
       int visibility = (int) Math.round(value * MAX_SLIDER_VALUE);
       visibility = Math.max(0, Math.min(MAX_SLIDER_VALUE, visibility));
 
@@ -312,10 +312,10 @@ public class WindowVisibility extends BoardSavableSubWindow {
       }
 
       sliderArr[index].setValue(visibility);
-      set_slider_text_value(valueArr[index], visibility);
+      setSliderTextValue(valueArr[index], visibility);
     }
 
-    private void set_changed_value(int index, double value) {
+    private void setChangedValue(int index, double value) {
       changed_value_consumer.accept(index, value);
     }
   }

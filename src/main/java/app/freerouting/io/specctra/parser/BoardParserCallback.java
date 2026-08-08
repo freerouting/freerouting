@@ -21,13 +21,13 @@ interface BoardParserCallback {
   /**
    * Returns the board that was created, or {@code null} if the board has not been constructed yet.
    */
-  RoutingBoard get_routing_board();
+  RoutingBoard getRoutingBoard();
 
   /**
    * Called by the structure reader once it has parsed the board outline, layers, and rules.
    * Implementations should create and store a new {@link RoutingBoard} from the given parameters.
    */
-  void create_board(
+  void createBoard(
       IntBox p_bounding_box,
       LayerStructure p_layer_structure,
       PolylineShape[] p_outline_shapes,
@@ -39,7 +39,7 @@ interface BoardParserCallback {
    * Called after board creation to populate per-layer manual trace widths from the default net
    * class. Implementations that have no interactive settings may provide a no-op body.
    */
-  void initialize_manual_trace_half_widths();
+  void initializeManualTraceHalfWidths();
 
   /**
    * Returns the active {@link RoutingJob} associated with this parse context, or {@code null} when

@@ -35,7 +35,7 @@ class DsnReaderTest {
     BoardReadResult.Success success = (BoardReadResult.Success) result;
     assertNotNull(success.board(), "Board must not be null on success");
     assertEquals(
-        2, success.board().get_layer_count(), "Issue143-rpi_splitter.dsn is a 2-layer board");
+        2, success.board().getLayerCount(), "Issue143-rpi_splitter.dsn is a 2-layer board");
   }
 
   @Test
@@ -111,7 +111,7 @@ class DsnReaderTest {
 
     assertNull(board.rules.netClasses.get("kicad_default"));
     assertNotNull(board.rules.netClasses.get("default"));
-    assertEquals("default", board.rules.nets.get("/SCL", 1).getNetClass().get_name());
+    assertEquals("default", board.rules.nets.get("/SCL", 1).getNetClass().getName());
   }
 
   @Test
@@ -124,7 +124,7 @@ class DsnReaderTest {
         result,
         "KiCad DSN files with multiple (path pcb ...) boundary shapes must load");
     RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
-    assertNotNull(board.get_outline());
+    assertNotNull(board.getOutline());
     assertTrue(board.components.count() > 0, "board must contain placed components");
   }
 

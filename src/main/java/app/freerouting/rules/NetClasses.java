@@ -23,7 +23,7 @@ public class NetClasses implements Serializable {
   /** Returns the net class with name p_name, or null, if no such class exists. */
   public NetClass get(String p_name) {
     for (NetClass currClass : this.classArr) {
-      if (currClass.get_name().equals(p_name)) {
+      if (currClass.getName().equals(p_name)) {
         return currClass;
       }
     }
@@ -60,11 +60,11 @@ public class NetClasses implements Serializable {
    */
   public NetClass find(int p_trace_half_width, int p_trace_clearance_class, ViaRule p_via_rule) {
     for (NetClass currClass : this.classArr) {
-      if (currClass.get_trace_clearance_class() == p_trace_clearance_class
-          && currClass.get_via_rule() == p_via_rule) {
+      if (currClass.getTraceClearanceClass() == p_trace_clearance_class
+          && currClass.getViaRule() == p_via_rule) {
         boolean traceWidthsEqual = true;
-        for (int i = 0; i < currClass.layer_count(); i++) {
-          if (currClass.get_trace_half_width(i) != p_trace_half_width) {
+        for (int i = 0; i < currClass.layerCount(); i++) {
+          if (currClass.getTraceHalfWidth(i) != p_trace_half_width) {
             traceWidthsEqual = false;
             break;
           }
@@ -86,12 +86,12 @@ public class NetClasses implements Serializable {
   public NetClass find(
       int[] p_trace_half_width_arr, int p_trace_clearance_class, ViaRule p_via_rule) {
     for (NetClass currClass : this.classArr) {
-      if (currClass.get_trace_clearance_class() == p_trace_clearance_class
-          && currClass.get_via_rule() == p_via_rule
-          && p_trace_half_width_arr.length == currClass.layer_count()) {
+      if (currClass.getTraceClearanceClass() == p_trace_clearance_class
+          && currClass.getViaRule() == p_via_rule
+          && p_trace_half_width_arr.length == currClass.layerCount()) {
         boolean traceWidthsEqual = true;
-        for (int i = 0; i < currClass.layer_count(); i++) {
-          if (currClass.get_trace_half_width(i) != p_trace_half_width_arr[i]) {
+        for (int i = 0; i < currClass.layerCount(); i++) {
+          if (currClass.getTraceHalfWidth(i) != p_trace_half_width_arr[i]) {
             traceWidthsEqual = false;
             break;
           }

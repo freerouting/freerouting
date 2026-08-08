@@ -35,7 +35,7 @@ class CorsHandlerTest {
     settings.endpoints = new String[] {"http://127.0.0.1:0"};
     settings.corsOrigins = "http://example.com";
 
-    server = Freerouting.InitializeAPI(settings);
+    server = Freerouting.initializeAPI(settings);
     waitForServerStarted(server);
 
     int port = ((ServerConnector) server.getConnectors()[0]).getLocalPort();

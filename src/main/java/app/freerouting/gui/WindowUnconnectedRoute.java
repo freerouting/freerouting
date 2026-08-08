@@ -30,14 +30,14 @@ public class WindowUnconnectedRoute extends CleanupWindows {
   }
 
   @Override
-  protected void fill_list() {
-    BasicBoard routingBoard = this.boardFrame.boardPanel.boardHandling.get_routing_board();
+  protected void fillList() {
+    BasicBoard routingBoard = this.boardFrame.boardPanel.boardHandling.getRoutingBoard();
 
     Set<Item> handledItems = new TreeSet<>();
 
     SortedSet<UnconnectedRouteInfo> unconnectedRouteInfoSet = new TreeSet<>();
 
-    Collection<Item> boardItems = routingBoard.get_items();
+    Collection<Item> boardItems = routingBoard.getItems();
     for (Item currItem : boardItems) {
       if (!(currItem instanceof Trace || currItem instanceof Via)) {
         continue;
@@ -45,7 +45,7 @@ public class WindowUnconnectedRoute extends CleanupWindows {
       if (handledItems.contains(currItem)) {
         continue;
       }
-      Collection<Item> currConnectedSet = currItem.get_connected_set(-1);
+      Collection<Item> currConnectedSet = currItem.getConnectedSet(-1);
       boolean terminalItemFound = false;
       for (Item curr_connnected_item : currConnectedSet) {
         handledItems.add(curr_connnected_item);
@@ -55,8 +55,8 @@ public class WindowUnconnectedRoute extends CleanupWindows {
       }
       if (!terminalItemFound) {
         // We have found unconnected route
-        if (currItem.net_count() == 1) {
-          Net currNet = routingBoard.rules.nets.get(currItem.get_net_no(0));
+        if (currItem.netCount() == 1) {
+          Net currNet = routingBoard.rules.nets.get(currItem.getNetNo(0));
           if (currNet != null) {
             UnconnectedRouteInfo currUnconnectedRouteInfo =
                 new UnconnectedRouteInfo(currNet, currConnectedSet);
@@ -69,13 +69,13 @@ public class WindowUnconnectedRoute extends CleanupWindows {
     }
 
     for (UnconnectedRouteInfo currInfo : unconnectedRouteInfoSet) {
-      this.add_to_list(currInfo);
+      this.addToList(currInfo);
     }
     this.list.setVisibleRowCount(Math.min(unconnectedRouteInfoSet.size(), DEFAULT_TABLE_SIZE));
   }
 
   @Override
-  protected void select_instances() {
+  protected void selectInstances() {
     List<Object> selectedListValues = list.getSelectedValuesList();
     if (selectedListValues.isEmpty()) {
       return;
@@ -85,8 +85,8 @@ public class WindowUnconnectedRoute extends CleanupWindows {
       selectedItems.addAll(((UnconnectedRouteInfo) selectedListValues.get(i)).itemList);
     }
     GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
-    boardHandling.select_items(selectedItems);
-    boardHandling.zoom_selection();
+    boardHandling.selectItems(selectedItems);
+    boardHandling.zoomSelection();
   }
 
   /** Describes information of a connected set of unconnected traces and vias. */

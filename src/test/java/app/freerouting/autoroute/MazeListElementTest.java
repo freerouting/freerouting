@@ -40,27 +40,27 @@ class MazeListElementTest {
     }
 
     @Override
-    public app.freerouting.geometry.planar.TileShape get_shape() {
+    public app.freerouting.geometry.planar.TileShape getShape() {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public int get_dimension() {
+    public int getDimension() {
       return 1;
     }
 
     @Override
-    public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
+    public CompleteExpansionRoom otherRoom(CompleteExpansionRoom p_room) {
       return null;
     }
 
     @Override
-    public int maze_search_element_count() {
+    public int mazeSearchElementCount() {
       return 1;
     }
 
     @Override
-    public MazeSearchElement get_maze_search_element(int p_no) {
+    public MazeSearchElement getMazeSearchElement(int p_no) {
       throw new UnsupportedOperationException();
     }
 
@@ -70,7 +70,7 @@ class MazeListElementTest {
     }
 
     @Override
-    public int get_id_no() {
+    public int getIdNo() {
       return id;
     }
   }

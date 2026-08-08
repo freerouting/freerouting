@@ -116,16 +116,16 @@ public class WindowNets extends WindowObjectListWithFilter {
   }
 
   @Override
-  protected void add_to_list(Object p_object) {
+  protected void addToList(Object p_object) {
     if (p_object instanceof Net net) {
       if (this.filterIncompletesCheckbox.isSelected()) {
-        RatsNest ratsnest = boardFrame.boardPanel.boardHandling.get_ratsnest();
-        if (ratsnest.incomplete_count(net.netNumber) == 0) {
+        RatsNest ratsnest = boardFrame.boardPanel.boardHandling.getRatsnest();
+        if (ratsnest.incompleteCount(net.netNumber) == 0) {
           return;
         }
       }
     }
-    super.add_to_list(p_object);
+    super.addToList(p_object);
   }
 
   @Override
@@ -152,7 +152,7 @@ public class WindowNets extends WindowObjectListWithFilter {
                         + " ("
                         + net.name
                         + ") - Class: "
-                        + net.getNetClass().get_name());
+                        + net.getNetClass().getName());
               }
               return c;
             }
@@ -166,15 +166,15 @@ public class WindowNets extends WindowObjectListWithFilter {
       this.list.addListSelectionListener(
           e -> {
             if (!e.getValueIsAdjusting()) {
-              update_selected_net_info();
+              updateSelectedNetInfo();
             }
           });
 
-      update_selected_net_info();
+      updateSelectedNetInfo();
     }
   }
 
-  private void update_selected_net_info() {
+  private void updateSelectedNetInfo() {
     if (this.infoPane == null) {
       return;
     }
@@ -185,7 +185,7 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
     for (Object obj : selectedNets) {
       if (obj instanceof Net net) {
-        net.print_info(this.infoPane, boardFrame.get_locale());
+        net.printInfo(this.infoPane, boardFrame.get_locale());
       }
     }
     this.infoPane.setCaretPosition(0);
@@ -193,10 +193,10 @@ public class WindowNets extends WindowObjectListWithFilter {
 
   /** Fills the list with the nets in the net list. */
   @Override
-  protected void fill_list() {
-    Nets nets = this.boardFrame.boardPanel.boardHandling.get_routing_board().rules.nets;
+  protected void fillList() {
+    Nets nets = this.boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.nets;
     List<Net> netList = new java.util.ArrayList<>();
-    for (int i = 0; i < nets.max_net_no(); i++) {
+    for (int i = 0; i < nets.maxNetNo(); i++) {
       Net net = nets.get(i + 1);
       if (net != null) {
         netList.add(net);
@@ -204,7 +204,7 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
     netList.sort(java.util.Comparator.comparingInt(n -> n.netNumber));
     for (Net net : netList) {
-      this.add_to_list(net);
+      this.addToList(net);
     }
     this.list.setVisibleRowCount(Math.min(netList.size(), DEFAULT_TABLE_SIZE));
 
@@ -217,7 +217,7 @@ public class WindowNets extends WindowObjectListWithFilter {
   }
 
   @Override
-  protected void select_instances() {
+  protected void selectInstances() {
     List<Object> selectedNets = list.getSelectedValuesList();
     if (selectedNets.isEmpty()) {
       return;
@@ -226,13 +226,13 @@ public class WindowNets extends WindowObjectListWithFilter {
     for (int i = 0; i < selectedNets.size(); i++) {
       selectedNetNumbers[i] = ((Net) selectedNets.get(i)).netNumber;
     }
-    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.get_routing_board();
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
     Set<Item> selectedItems = new TreeSet<>();
-    Collection<Item> boardItems = routingBoard.get_items();
+    Collection<Item> boardItems = routingBoard.getItems();
     for (Item currItem : boardItems) {
       boolean itemMatches = false;
       for (int currNetNo : selectedNetNumbers) {
-        if (currItem.contains_net(currNetNo)) {
+        if (currItem.containsNet(currNetNo)) {
           itemMatches = true;
           break;
         }
@@ -241,8 +241,8 @@ public class WindowNets extends WindowObjectListWithFilter {
         selectedItems.add(currItem);
       }
     }
-    boardFrame.boardPanel.boardHandling.select_items(selectedItems);
-    boardFrame.boardPanel.boardHandling.zoom_selection();
+    boardFrame.boardPanel.boardHandling.selectItems(selectedItems);
+    boardFrame.boardPanel.boardHandling.zoomSelection();
   }
 
   private class AssignClassListener implements ActionListener {
@@ -254,7 +254,7 @@ public class WindowNets extends WindowObjectListWithFilter {
         return;
       }
       NetClasses netClasses =
-          boardFrame.boardPanel.boardHandling.get_routing_board().rules.netClasses;
+          boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.netClasses;
       NetClass[] classArr = new NetClass[netClasses.count()];
       for (int i = 0; i < classArr.length; i++) {
         classArr[i] = netClasses.get(i);
@@ -272,9 +272,9 @@ public class WindowNets extends WindowObjectListWithFilter {
         return;
       }
       for (int i = 0; i < selectedNets.size(); i++) {
-        ((Net) selectedNets.get(i)).set_class(selected_class);
+        ((Net) selectedNets.get(i)).setClass(selected_class);
       }
-      boardFrame.refresh_windows();
+      boardFrame.refreshWindows();
     }
   }
 
@@ -310,7 +310,7 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
 
     @Override
-    public boolean append_bold(String p_string) {
+    public boolean appendBold(String p_string) {
       return append(p_string, "bold");
     }
 
@@ -318,12 +318,12 @@ public class WindowNets extends WindowObjectListWithFilter {
     public boolean append(double p_value) {
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
-      Float value = (float) coordinateTransform.board_to_user(p_value);
+      Float value = (float) coordinateTransform.boardToUser(p_value);
       return append(numberFormat.format(value));
     }
 
     @Override
-    public boolean append_without_transforming(double p_value) {
+    public boolean appendWithoutTransforming(double p_value) {
       Float value = (float) p_value;
       return append(numberFormat.format(value));
     }
@@ -332,15 +332,15 @@ public class WindowNets extends WindowObjectListWithFilter {
     public boolean append(FloatPoint p_point) {
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
-      FloatPoint transformedPoint = coordinateTransform.board_to_user(p_point);
-      return append(transformedPoint.to_string(boardFrame.get_locale()));
+      FloatPoint transformedPoint = coordinateTransform.boardToUser(p_point);
+      return append(transformedPoint.toString(boardFrame.get_locale()));
     }
 
     @Override
     public boolean append(Shape p_shape, Locale p_locale) {
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
-      PrintableShape transformedShape = coordinateTransform.board_to_user(p_shape, p_locale);
+      PrintableShape transformedShape = coordinateTransform.boardToUser(p_shape, p_locale);
       if (transformedShape == null) {
         return false;
       }
@@ -362,18 +362,18 @@ public class WindowNets extends WindowObjectListWithFilter {
         String p_button_name, String p_window_title, ObjectInfoPanel.Printable p_object) {
       Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>();
       objectList.add(p_object);
-      return append_objects(p_button_name, p_window_title, objectList);
+      return appendObjects(p_button_name, p_window_title, objectList);
     }
 
     @Override
-    public boolean append_items(
+    public boolean appendItems(
         String p_button_name, String p_window_title, Collection<Item> p_items) {
       Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>(p_items);
-      return append_objects(p_button_name, p_window_title, objectList);
+      return appendObjects(p_button_name, p_window_title, objectList);
     }
 
     @Override
-    public boolean append_objects(
+    public boolean appendObjects(
         String p_button_name,
         String p_window_title,
         Collection<ObjectInfoPanel.Printable> p_objects) {

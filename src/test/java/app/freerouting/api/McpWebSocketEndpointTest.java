@@ -34,7 +34,7 @@ class McpWebSocketEndpointTest {
   }
 
   @Test
-  void websocket_withValidHeaders_acceptsAndResponds() throws Exception {
+  void websocketWithValidHeadersAcceptsAndResponds() throws Exception {
     URI wsUri = startMcpServer(false);
 
     TestWebSocketListener listener = new TestWebSocketListener();
@@ -56,7 +56,7 @@ class McpWebSocketEndpointTest {
   }
 
   @Test
-  void websocket_missingProfileHeader_isRejected() throws Exception {
+  void websocketMissingProfileHeaderIsRejected() throws Exception {
     URI wsUri = startMcpServer(false);
 
     TestWebSocketListener listener = new TestWebSocketListener();
@@ -72,7 +72,7 @@ class McpWebSocketEndpointTest {
   }
 
   @Test
-  void websocket_missingEnvironmentHost_isRejected() throws Exception {
+  void websocketMissingEnvironmentHostIsRejected() throws Exception {
     URI wsUri = startMcpServer(false);
 
     TestWebSocketListener listener = new TestWebSocketListener();
@@ -88,7 +88,7 @@ class McpWebSocketEndpointTest {
   }
 
   @Test
-  void websocket_authEnabled_missingAuthorization_isRejected() throws Exception {
+  void websocketAuthEnabledMissingAuthorizationIsRejected() throws Exception {
     URI wsUri = startMcpServer(true);
 
     TestWebSocketListener listener = new TestWebSocketListener();
@@ -116,7 +116,7 @@ class McpWebSocketEndpointTest {
     mcpSettings.endpoints = new String[] {"http://127.0.0.1:0"};
     mcpSettings.authentication.isEnabled = authenticationEnabled;
 
-    mcpServer = Freerouting.InitializeMCP(mcpSettings);
+    mcpServer = Freerouting.initializeMCP(mcpSettings);
     waitForServerStarted(mcpServer);
     int mcpPort = ((ServerConnector) mcpServer.getConnectors()[0]).getLocalPort();
     waitForMcpServerReady(URI.create("http://127.0.0.1:" + mcpPort));

@@ -291,7 +291,7 @@ class GlobalSettingsUserDataPathTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void fullChain_nonExistentDirectory_isCreatedOnSave() throws IOException {
+  void fullChainNonExistentDirectoryIsCreatedOnSave() throws IOException {
     // Simulate the Docker scenario where --user_data_path points to a
     // directory that does not exist yet when the process starts (e.g. a bind
     // mount that hasn't been created yet or a path that mkdirs() failed to
@@ -336,7 +336,7 @@ class GlobalSettingsUserDataPathTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void getReleaseSafeVersion_stripsSnapshotSuffix() {
+  void getReleaseSafeVersionStripsSnapshotSuffix() {
     // The contract: anything after and including "-SNAPSHOT" is removed.
     // We can only verify the invariant (no -SNAPSHOT in the result) without
     // knowing the actual build-time version string.
@@ -348,7 +348,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void saveAsJson_alwaysWritesReleaseSafeVersion() throws IOException {
+  void saveAsJsonAlwaysWritesReleaseSafeVersion() throws IOException {
     Path customDir = tempDir.resolve("version-save");
     Files.createDirectories(customDir);
     GlobalSettings.setUserDataPath(customDir);
@@ -371,7 +371,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void load_normalizesVersionToReleaseSafe() throws IOException {
+  void loadNormalizesVersionToReleaseSafe() throws IOException {
     Path customDir = tempDir.resolve("version-load");
     Files.createDirectories(customDir);
     GlobalSettings.setUserDataPath(customDir);
@@ -392,7 +392,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void load_treatsNullFileVersionAsVersionChange() throws IOException {
+  void loadTreatsNullFileVersionAsVersionChange() throws IOException {
     // Simulate a very old config file that has no version field at all.
     Path customDir = tempDir.resolve("version-null");
     Files.createDirectories(customDir);
@@ -418,27 +418,27 @@ class GlobalSettingsUserDataPathTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void compareVersionStrings_equalVersionsReturnZero() {
+  void compareVersionStringsEqualVersionsReturnZero() {
     assertEquals(0, GlobalSettings.compareVersionStrings("2.2.0", "2.2.0"));
     assertEquals(0, GlobalSettings.compareVersionStrings("1.0.0", "1.0.0"));
   }
 
   @Test
-  void compareVersionStrings_olderVersionIsNegative() {
+  void compareVersionStringsOlderVersionIsNegative() {
     assertTrue(GlobalSettings.compareVersionStrings("2.1.0", "2.2.0") < 0);
     assertTrue(GlobalSettings.compareVersionStrings("1.9.9", "2.0.0") < 0);
     assertTrue(GlobalSettings.compareVersionStrings("2.2.0", "2.2.1") < 0);
   }
 
   @Test
-  void compareVersionStrings_newerVersionIsPositive() {
+  void compareVersionStringsNewerVersionIsPositive() {
     assertTrue(GlobalSettings.compareVersionStrings("2.3.0", "2.2.0") > 0);
     assertTrue(GlobalSettings.compareVersionStrings("2.2.1", "2.2.0") > 0);
     assertTrue(GlobalSettings.compareVersionStrings("10.0.0", "9.99.99") > 0);
   }
 
   @Test
-  void compareVersionStrings_nullHandling() {
+  void compareVersionStringsNullHandling() {
     assertTrue(
         GlobalSettings.compareVersionStrings(null, "1.0.0") < 0,
         "null v1 should be treated as less-than any non-null v2");
@@ -453,7 +453,7 @@ class GlobalSettingsUserDataPathTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void load_emitsWarnOnOlderFileVersion() throws IOException {
+  void loadEmitsWarnOnOlderFileVersion() throws IOException {
     Path customDir = tempDir.resolve("warn-older");
     Files.createDirectories(customDir);
     GlobalSettings.setUserDataPath(customDir);
@@ -475,7 +475,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void load_emitsWarnOnNewerFileVersion() throws IOException {
+  void loadEmitsWarnOnNewerFileVersion() throws IOException {
     Path customDir = tempDir.resolve("warn-newer");
     Files.createDirectories(customDir);
     GlobalSettings.setUserDataPath(customDir);
@@ -497,7 +497,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void load_emitsWarnOnNullFileVersion() throws IOException {
+  void loadEmitsWarnOnNullFileVersion() throws IOException {
     Path customDir = tempDir.resolve("warn-null-ver");
     Files.createDirectories(customDir);
     GlobalSettings.setUserDataPath(customDir);
@@ -518,7 +518,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void load_returnsNullAndEmitsWarnOnCorruptJson() throws IOException {
+  void loadReturnsNullAndEmitsWarnOnCorruptJson() throws IOException {
     Path customDir = tempDir.resolve("corrupt-json");
     Files.createDirectories(customDir);
     GlobalSettings.setUserDataPath(customDir);
@@ -543,7 +543,7 @@ class GlobalSettingsUserDataPathTest {
   }
 
   @Test
-  void load_noWarnOnMatchingVersion() throws IOException {
+  void loadNoWarnOnMatchingVersion() throws IOException {
     // When the file version matches the current release-safe version, no
     // version-change warning should be emitted.
     Path customDir = tempDir.resolve("no-warn");

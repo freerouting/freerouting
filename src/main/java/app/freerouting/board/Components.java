@@ -89,13 +89,13 @@ public class Components implements Serializable {
     return componentArr.size();
   }
 
-  public Iterable<Component> get_all() {
+  public Iterable<Component> getAll() {
     return componentArr;
   }
 
   /** Generates a snapshot for the undo algorithm. */
-  public void generate_snapshot() {
-    this.undoList.generate_snapshot();
+  public void generateSnapshot() {
+    this.undoList.generateSnapshot();
   }
 
   /**
@@ -105,7 +105,7 @@ public class Components implements Serializable {
     if (!this.undoList.undo(null, null)) {
       return false;
     }
-    restore_component_arr_from_undo_list(p_observers);
+    restoreComponentArrFromUndoList(p_observers);
     return true;
   }
 
@@ -114,24 +114,24 @@ public class Components implements Serializable {
     if (!this.undoList.redo(null, null)) {
       return false;
     }
-    restore_component_arr_from_undo_list(p_observers);
+    restoreComponentArrFromUndoList(p_observers);
     return true;
   }
 
   /*
    * Restore the components in componentArr from the undo list.
    */
-  private void restore_component_arr_from_undo_list(BoardObservers p_observers) {
-    Iterator<UndoableObjects.UndoableObjectNode> it = this.undoList.start_read_object();
+  private void restoreComponentArrFromUndoList(BoardObservers p_observers) {
+    Iterator<UndoableObjects.UndoableObjectNode> it = this.undoList.startReadObject();
     for (; ; ) {
-      Component currComponent = (Component) this.undoList.read_object(it);
+      Component currComponent = (Component) this.undoList.readObject(it);
       if (currComponent == null) {
         break;
       }
       this.componentArr.setElementAt(currComponent, currComponent.no - 1);
 
       if (p_observers != null) {
-        p_observers.notify_moved(currComponent);
+        p_observers.notifyMoved(currComponent);
       }
     }
   }
@@ -142,18 +142,18 @@ public class Components implements Serializable {
    */
   public void move(int p_component_no, app.freerouting.geometry.planar.Vector p_vector) {
     Component currComponent = this.get(p_component_no);
-    this.undoList.save_for_undo(currComponent);
-    currComponent.translate_by(p_vector);
+    this.undoList.saveForUndo(currComponent);
+    currComponent.translateBy(p_vector);
   }
 
   /**
    * Turns the component with number p_component_no by p_factor times 90 degree around p_pole. Works
    * contrary to Component.turn_90_degree with the undo algorithm of the board.
    */
-  public void turn_90_degree(int p_component_no, int p_factor, IntPoint p_pole) {
+  public void turn90Degree(int p_component_no, int p_factor, IntPoint p_pole) {
     Component currComponent = this.get(p_component_no);
-    this.undoList.save_for_undo(currComponent);
-    currComponent.turn_90_degree(p_factor, p_pole);
+    this.undoList.saveForUndo(currComponent);
+    currComponent.turn90Degree(p_factor, p_pole);
   }
 
   /**
@@ -162,7 +162,7 @@ public class Components implements Serializable {
    */
   public void rotate(int p_component_no, double p_rotation_in_degree, IntPoint p_pole) {
     Component currComponent = this.get(p_component_no);
-    this.undoList.save_for_undo(currComponent);
+    this.undoList.saveForUndo(currComponent);
     currComponent.rotate(p_rotation_in_degree, p_pole, flipStyleRotateFirst);
   }
 
@@ -171,17 +171,17 @@ public class Components implements Serializable {
    * vertical line through p_pole. Works contrary to Component.change_side the undo algorithm of the
    * board.
    */
-  public void change_side(int p_component_no, IntPoint p_pole) {
+  public void changeSide(int p_component_no, IntPoint p_pole) {
     Component currComponent = this.get(p_component_no);
-    this.undoList.save_for_undo(currComponent);
-    currComponent.change_side(p_pole);
+    this.undoList.saveForUndo(currComponent);
+    currComponent.changeSide(p_pole);
   }
 
   /**
    * If true, components on the back side are rotated before mirroring, else they are mirrored
    * before rotating.
    */
-  public boolean get_flip_style_rotate_first() {
+  public boolean getFlipStyleRotateFirst() {
     return flipStyleRotateFirst;
   }
 
@@ -189,7 +189,7 @@ public class Components implements Serializable {
    * If true, components on the back side are rotated before mirroring, else they are mirrored
    * before rotating.
    */
-  public void set_flip_style_rotate_first(boolean p_value) {
+  public void setFlipStyleRotateFirst(boolean p_value) {
     flipStyleRotateFirst = p_value;
   }
 }

@@ -41,7 +41,7 @@ class ApiRateLimitFilterTest {
     Freerouting.globalSettings.apiServerSettings.rateLimit.requestsPerWindow = 2;
     Freerouting.globalSettings.apiServerSettings.rateLimit.windowSeconds = 60;
 
-    apiServer = Freerouting.InitializeAPI(settings);
+    apiServer = Freerouting.initializeAPI(settings);
     waitForServerStarted(apiServer);
 
     int port = ((ServerConnector) apiServer.getConnectors()[0]).getLocalPort();
@@ -56,7 +56,7 @@ class ApiRateLimitFilterTest {
   }
 
   @Test
-  void apiRateLimit_blocksAfterConfiguredThreshold() throws Exception {
+  void apiRateLimitBlocksAfterConfiguredThreshold() throws Exception {
     HttpRequest req =
         HttpRequest.newBuilder(baseUri.resolve("/v1/system/status"))
             .GET()

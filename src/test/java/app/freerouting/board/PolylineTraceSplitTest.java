@@ -25,16 +25,16 @@ public class PolylineTraceSplitTest {
     Layer[] layers = new Layer[] {layer1};
     LayerStructure layerStructure = new LayerStructure(layers);
 
-    ClearanceMatrix clearanceMatrix = ClearanceMatrix.get_default_instance(layerStructure, 10);
+    ClearanceMatrix clearanceMatrix = ClearanceMatrix.getDefaultInstance(layerStructure, 10);
     BoardRules boardRules = new BoardRules(layerStructure, clearanceMatrix);
-    boardRules.create_default_net_class();
+    boardRules.createDefaultNetClass();
 
     Communication communication = new Communication();
 
     return new RoutingBoard(
         new IntBox(0, 0, 2000000, 2000000),
         layerStructure,
-        new PolylineShape[] {TileShape.get_instance(0, 0, 2000000, 2000000)},
+        new PolylineShape[] {TileShape.getInstance(0, 0, 2000000, 2000000)},
         0,
         boardRules,
         communication);
@@ -76,7 +76,7 @@ public class PolylineTraceSplitTest {
             0,
             app.freerouting.board.FixedState.UNFIXED,
             board);
-    board.insert_item(trace1);
+    board.insertItem(trace1);
 
     // Step 2: Create second trace (corresponds to trace 361 before combining in
     // bug)
@@ -94,7 +94,7 @@ public class PolylineTraceSplitTest {
             0,
             app.freerouting.board.FixedState.UNFIXED,
             board);
-    board.insert_item(trace2);
+    board.insertItem(trace2);
 
     // Step 3: Combine the traces (simulates the router's combine operation)
     // After combination, we should have one trace from p1 to p5
@@ -103,9 +103,9 @@ public class PolylineTraceSplitTest {
 
     // Get the combined trace (trace2 should now contain the combined path)
     PolylineTrace combinedTrace = null;
-    for (Item item : board.get_items()) {
+    for (Item item : board.getItems()) {
       if (item instanceof PolylineTrace trace) {
-        if (trace.contains_net(netNo) && trace.is_on_the_board()) {
+        if (trace.containsNet(netNo) && trace.isOnTheBoard()) {
           combinedTrace = trace;
           break;
         }
@@ -114,8 +114,8 @@ public class PolylineTraceSplitTest {
     Assertions.assertNotNull(combinedTrace, "Combined trace should exist");
 
     // Verify the combined trace spans from p1 to p5
-    Point firstCorner = combinedTrace.first_corner();
-    Point lastCorner = combinedTrace.last_corner();
+    Point firstCorner = combinedTrace.firstCorner();
+    Point lastCorner = combinedTrace.lastCorner();
     boolean hasP1 = firstCorner.equals(p1) || lastCorner.equals(p1);
     boolean hasP5 = firstCorner.equals(p5) || lastCorner.equals(p5);
     Assertions.assertTrue(
@@ -147,7 +147,7 @@ public class PolylineTraceSplitTest {
             0,
             app.freerouting.board.FixedState.UNFIXED,
             board);
-    board.insert_item(trace3);
+    board.insertItem(trace3);
 
     // Step 5: Trigger split operation (this happens during normalization)
     // The bug occurs here - the combined trace should be split at overlap points,
@@ -159,9 +159,9 @@ public class PolylineTraceSplitTest {
       // After split, there should be traces that connect p1 to something
       boolean hasConnectionFromP1 = false;
       for (PolylineTrace piece : splitResult) {
-        if (piece.is_on_the_board()) {
-          Point pieceFirst = piece.first_corner();
-          Point pieceLast = piece.last_corner();
+        if (piece.isOnTheBoard()) {
+          Point pieceFirst = piece.firstCorner();
+          Point pieceLast = piece.lastCorner();
           if (pieceFirst.equals(p1) || pieceLast.equals(p1)) {
             hasConnectionFromP1 = true;
             break;
@@ -187,11 +187,11 @@ public class PolylineTraceSplitTest {
     // board
     // connecting near p1
     int tracesNearP1 = 0;
-    for (Item item : board.get_items()) {
+    for (Item item : board.getItems()) {
       if (item instanceof PolylineTrace trace) {
-        if (trace.contains_net(netNo) && trace.is_on_the_board()) {
-          double distToP1First = trace.first_corner().to_float().distance(p1.to_float());
-          double distToP1Last = trace.last_corner().to_float().distance(p1.to_float());
+        if (trace.containsNet(netNo) && trace.isOnTheBoard()) {
+          double distToP1First = trace.firstCorner().toFloat().distance(p1.toFloat());
+          double distToP1Last = trace.lastCorner().toFloat().distance(p1.toFloat());
           if (distToP1First < 100000 || distToP1Last < 100000) {
             tracesNearP1++;
           }
@@ -234,7 +234,7 @@ public class PolylineTraceSplitTest {
             0,
             app.freerouting.board.FixedState.UNFIXED,
             board);
-    board.insert_item(trace1);
+    board.insertItem(trace1);
 
     // Create a second trace that only overlaps with the middle segment
     Point p5 = new IntPoint(10000, 0);
@@ -252,7 +252,7 @@ public class PolylineTraceSplitTest {
             0,
             app.freerouting.board.FixedState.UNFIXED,
             board);
-    board.insert_item(trace2);
+    board.insertItem(trace2);
 
     // Split trace1
     Collection<PolylineTrace> splitResult = trace1.split((IntOctagon) null);
@@ -263,9 +263,9 @@ public class PolylineTraceSplitTest {
     boolean hasLastSegment = false;
 
     for (PolylineTrace piece : splitResult) {
-      if (piece.is_on_the_board()) {
-        Point first = piece.first_corner();
-        Point last = piece.last_corner();
+      if (piece.isOnTheBoard()) {
+        Point first = piece.firstCorner();
+        Point last = piece.lastCorner();
 
         // Check for segment containing p1
         if (first.equals(p1) || last.equals(p1)) {
@@ -313,7 +313,7 @@ public class PolylineTraceSplitTest {
             0,
             app.freerouting.board.FixedState.UNFIXED,
             board);
-    board.insert_item(traceABC);
+    board.insertItem(traceABC);
 
     // Insert overlapping trace from B to C
     Polyline polyline2 = new Polyline(pB, pC);
@@ -328,12 +328,12 @@ public class PolylineTraceSplitTest {
             0,
             app.freerouting.board.FixedState.UNFIXED,
             board);
-    board.insert_item(traceBC);
+    board.insertItem(traceBC);
 
     // Check that traceABC is NOT detected as a cycle
     // (even though after insertion of traceBC, if we were to split inappropriately,
     // both ends of a remaining piece might touch traceBC)
-    boolean isCycle = traceABC.is_cycle();
+    boolean isCycle = traceABC.isCycle();
 
     Assertions.assertFalse(
         isCycle,

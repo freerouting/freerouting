@@ -54,26 +54,26 @@ public final class RulesWriter {
 
   private static void writeRules(WriteScopeParameter p_par, String p_design_name)
       throws IOException {
-    p_par.file.start_scope();
+    p_par.file.startScope();
     p_par.file.write("rules PCB ");
     p_par.file.write(p_design_name);
-    Structure.write_snap_angle(p_par.file, p_par.board.rules.get_trace_angle_restriction());
+    Structure.writeSnapAngle(p_par.file, p_par.board.rules.getTraceAngleRestriction());
     if (p_par.autorouteSettings != null) {
-      AutorouteSettings.write_scope(
+      AutorouteSettings.writeScope(
           p_par.file, p_par.autorouteSettings, p_par.board.layerStructure, p_par.identifierType);
     }
     // write the default rule using 0 as default layer
-    Rule.write_default_rule(p_par, 0);
+    Rule.writeDefaultRule(p_par, 0);
     // write the via padstacks
     for (int i = 1; i <= p_par.board.library.padstacks.count(); i++) {
       Padstack currPadstack = p_par.board.library.padstacks.get(i);
-      if (p_par.board.library.get_via_padstack(currPadstack.name) != null) {
-        Library.write_padstack_scope(p_par, currPadstack);
+      if (p_par.board.library.getViaPadstack(currPadstack.name) != null) {
+        Library.writePadstackScope(p_par, currPadstack);
       }
     }
-    Network.write_via_infos(p_par.board.rules, p_par.file, p_par.identifierType);
-    Network.write_via_rules(p_par.board.rules, p_par.file, p_par.identifierType);
-    Network.write_net_classes(p_par);
-    p_par.file.end_scope();
+    Network.writeViaInfos(p_par.board.rules, p_par.file, p_par.identifierType);
+    Network.writeViaRules(p_par.board.rules, p_par.file, p_par.identifierType);
+    Network.writeNetClasses(p_par);
+    p_par.file.endScope();
   }
 }

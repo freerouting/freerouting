@@ -56,7 +56,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
 
   /** Adds p_object to the list only if its name matches the filter. */
   @Override
-  protected void add_to_list(Object p_object) {
+  protected void addToList(Object p_object) {
     String currFilterString = this.filterString.getText().trim();
     boolean objectMatches;
     if (currFilterString.isEmpty()) {
@@ -65,7 +65,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
       objectMatches = p_object.toString().toLowerCase().contains(currFilterString.toLowerCase());
     }
     if (objectMatches) {
-      super.add_to_list(p_object);
+      super.addToList(p_object);
     }
   }
 

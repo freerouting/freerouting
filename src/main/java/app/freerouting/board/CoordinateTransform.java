@@ -45,12 +45,12 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** Scale a value from the board to the user coordinate system. */
-  public double board_to_user(double p_value) {
+  public double boardToUser(double p_value) {
     return Unit.scale(p_value * scaleFactor, boardUnit, userUnit);
   }
 
   /** Scale a value from the user to the board coordinate system. */
-  public double user_to_board(double p_value) {
+  public double userToBoard(double p_value) {
     return Unit.scale(p_value / scaleFactor, userUnit, boardUnit);
   }
 
@@ -58,26 +58,26 @@ public class CoordinateTransform implements Serializable {
    * Transforms a geometry.planar.FloatPoint from the board coordinate space to the user coordinate
    * space.
    */
-  public FloatPoint board_to_user(FloatPoint p_point) {
-    return new FloatPoint(board_to_user(p_point.x), board_to_user(p_point.y));
+  public FloatPoint boardToUser(FloatPoint p_point) {
+    return new FloatPoint(boardToUser(p_point.x), boardToUser(p_point.y));
   }
 
   /**
    * Transforms a geometry.planar.FloatPoint from the user coordinate space. to the board coordinate
    * space.
    */
-  public FloatPoint user_to_board(FloatPoint p_point) {
-    return new FloatPoint(user_to_board(p_point.x), user_to_board(p_point.y));
+  public FloatPoint userToBoard(FloatPoint p_point) {
+    return new FloatPoint(userToBoard(p_point.x), userToBoard(p_point.y));
   }
 
-  public PrintableShape board_to_user(Shape p_shape, Locale p_locale) {
+  public PrintableShape boardToUser(Shape p_shape, Locale p_locale) {
     PrintableShape result;
     if (p_shape instanceof Circle circle) {
-      result = board_to_user(circle, p_locale);
+      result = boardToUser(circle, p_locale);
     } else if (p_shape instanceof IntBox box) {
-      result = board_to_user(box, p_locale);
+      result = boardToUser(box, p_locale);
     } else if (p_shape instanceof PolylineShape shape) {
-      result = board_to_user(shape, p_locale);
+      result = boardToUser(shape, p_locale);
     } else {
       FRLogger.warn("CoordinateTransform.board_to_user not yet implemented for p_shape");
       result = null;
@@ -85,21 +85,21 @@ public class CoordinateTransform implements Serializable {
     return result;
   }
 
-  public PrintableShape.Circle board_to_user(Circle p_circle, Locale p_locale) {
+  public PrintableShape.Circle boardToUser(Circle p_circle, Locale p_locale) {
     return new PrintableShape.Circle(
-        board_to_user(p_circle.center.to_float()), board_to_user(p_circle.radius), p_locale);
+        boardToUser(p_circle.center.toFloat()), boardToUser(p_circle.radius), p_locale);
   }
 
-  public PrintableShape.Rectangle board_to_user(IntBox p_box, Locale p_locale) {
+  public PrintableShape.Rectangle boardToUser(IntBox p_box, Locale p_locale) {
     return new PrintableShape.Rectangle(
-        board_to_user(p_box.ll.to_float()), board_to_user(p_box.ur.to_float()), p_locale);
+        boardToUser(p_box.ll.toFloat()), boardToUser(p_box.ur.toFloat()), p_locale);
   }
 
-  public PrintableShape.Polygon board_to_user(PolylineShape p_shape, Locale p_locale) {
-    FloatPoint[] corners = p_shape.corner_approx_arr();
+  public PrintableShape.Polygon boardToUser(PolylineShape p_shape, Locale p_locale) {
+    FloatPoint[] corners = p_shape.cornerApproxArr();
     FloatPoint[] transformedCorners = new FloatPoint[corners.length];
     for (int i = 0; i < corners.length; i++) {
-      transformedCorners[i] = board_to_user(corners[i]);
+      transformedCorners[i] = boardToUser(corners[i]);
     }
     return new PrintableShape.Polygon(transformedCorners, p_locale);
   }

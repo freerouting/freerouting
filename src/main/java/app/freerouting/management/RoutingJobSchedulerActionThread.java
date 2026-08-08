@@ -35,7 +35,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
   }
 
   @Override
-  protected void thread_action() {
+  protected void threadAction() {
     job.startedAt = Instant.now();
     boolean fanoutTimedOut = false;
     boolean optimizerTimedOut = false;
@@ -133,7 +133,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
                 + (java.time.Duration.between(sessionStartTime, sessionEndTime).getNano()
                     / 1000000000.0);
 
-        var finalStats = job.board.get_statistics();
+        var finalStats = job.board.getStatistics();
 
         String completionStatus = "completed:";
         // Check for timeout explicitly because job.state might not be updated to

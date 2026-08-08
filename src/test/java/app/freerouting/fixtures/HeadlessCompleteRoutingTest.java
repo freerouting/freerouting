@@ -49,16 +49,16 @@ class HeadlessCompleteRoutingTest extends RoutingFixtureTest {
    * full routing pipeline including net ordering, expansion, and via-insertion stages.
    */
   @Test
-  void headlessRouting_completesWithoutInteractiveSettingsAccess() {
+  void headlessRoutingCompletesWithoutInteractiveSettingsAccess() {
     TestingSettings testSettings = new TestingSettings();
     testSettings.setMaxPasses(3);
     testSettings.setMaxItems(50);
     testSettings.setJobTimeoutString("00:01:30");
 
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettings);
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm01.dsn", testSettings);
     assertNotNull(job, "RoutingJob must not be null");
 
-    RoutingJob completed = RunRoutingJob(job);
+    RoutingJob completed = runRoutingJob(job);
 
     assertTrue(
         completed.state == RoutingJobState.COMPLETED
@@ -72,14 +72,14 @@ class HeadlessCompleteRoutingTest extends RoutingFixtureTest {
    * complete pipeline executed and produced routing state.
    */
   @Test
-  void headlessRouting_boardIsNonNullAfterCompletion() {
+  void headlessRoutingBoardIsNonNullAfterCompletion() {
     TestingSettings testSettings = new TestingSettings();
     testSettings.setMaxPasses(2);
     testSettings.setMaxItems(20);
     testSettings.setJobTimeoutString("00:01:00");
 
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettings);
-    RunRoutingJob(job);
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm01.dsn", testSettings);
+    runRoutingJob(job);
 
     // job.boardManager may be null if the scheduler cleaned up – access via board field instead.
     // The invariant is that no GUI state leaked into the headless execution path.
@@ -94,15 +94,15 @@ class HeadlessCompleteRoutingTest extends RoutingFixtureTest {
    * fast-exit path.
    */
   @Test
-  void headlessRouting_emptyBoard_completesWithoutNpe() {
+  void headlessRoutingEmptyBoardCompletesWithoutNpe() {
     TestingSettings testSettings = new TestingSettings();
     testSettings.setMaxPasses(1);
     testSettings.setJobTimeoutString("00:00:30");
 
-    RoutingJob job = GetRoutingJob("empty_board.dsn", testSettings);
+    RoutingJob job = getRoutingJob("empty_board.dsn", testSettings);
     assertNotNull(job, "RoutingJob for empty_board.dsn must not be null");
 
-    RoutingJob completed = RunRoutingJob(job);
+    RoutingJob completed = runRoutingJob(job);
 
     assertTrue(
         completed.state == RoutingJobState.COMPLETED

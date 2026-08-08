@@ -38,7 +38,7 @@ public class IntVector extends Vector implements Serializable {
 
   /** returns true, if both coordinates of this vector are 0 */
   @Override
-  public final boolean is_zero() {
+  public final boolean isZero() {
     return x == 0 && y == 0;
   }
 
@@ -49,12 +49,12 @@ public class IntVector extends Vector implements Serializable {
   }
 
   @Override
-  public boolean is_orthogonal() {
+  public boolean isOrthogonal() {
     return x == 0 || y == 0;
   }
 
   @Override
-  public boolean is_diagonal() {
+  public boolean isDiagonal() {
     return Math.abs(x) == Math.abs(y);
   }
 
@@ -64,7 +64,7 @@ public class IntVector extends Vector implements Serializable {
   }
 
   @Override
-  public Vector turn_90_degree(int p_factor) {
+  public Vector turn90Degree(int p_factor) {
     int n = p_factor;
     while (n < 0) {
       n += 4;
@@ -100,12 +100,12 @@ public class IntVector extends Vector implements Serializable {
   }
 
   @Override
-  public Vector mirror_at_y_axis() {
+  public Vector mirrorAtYAxis() {
     return new IntVector(-this.x, this.y);
   }
 
   @Override
-  public Vector mirror_at_x_axis() {
+  public Vector mirrorAtXAxis() {
     return new IntVector(this.x, -this.y);
   }
 
@@ -127,13 +127,13 @@ public class IntVector extends Vector implements Serializable {
 
   /** returns the Point, which results from adding this vector to p_point */
   @Override
-  final Point add_to(IntPoint p_point) {
+  final Point addTo(IntPoint p_point) {
     return new IntPoint(p_point.x + x, p_point.y + y);
   }
 
   @Override
-  final Point add_to(RationalPoint p_point) {
-    return p_point.translate_by(this);
+  final Point addTo(RationalPoint p_point) {
+    return p_point.translateBy(this);
   }
 
   /**
@@ -142,20 +142,20 @@ public class IntVector extends Vector implements Serializable {
    * Side.COLLINEAR, if this Vector is collinear with L.
    */
   @Override
-  public Side side_of(Vector p_other) {
-    Side tmp = p_other.side_of(this);
+  public Side sideOf(Vector p_other) {
+    Side tmp = p_other.sideOf(this);
     return tmp.negate();
   }
 
   @Override
-  Side side_of(IntVector p_other) {
+  Side sideOf(IntVector p_other) {
     double determinant = (double) p_other.x * y - (double) p_other.y * x;
     return Side.of(determinant);
   }
 
   @Override
-  Side side_of(RationalVector p_other) {
-    Side tmp = p_other.side_of(this);
+  Side sideOf(RationalVector p_other) {
+    Side tmp = p_other.sideOf(this);
     return tmp.negate();
   }
 
@@ -170,24 +170,24 @@ public class IntVector extends Vector implements Serializable {
   }
 
   @Override
-  public double scalar_product(Vector p_other) {
-    return p_other.scalar_product(this);
+  public double scalarProduct(Vector p_other) {
+    return p_other.scalarProduct(this);
   }
 
   /** converts this vector to a PointFloat. */
   @Override
-  public FloatPoint to_float() {
+  public FloatPoint toFloat() {
     return new FloatPoint(x, y);
   }
 
   @Override
-  public Vector change_length_approx(double p_length) {
-    FloatPoint newPoint = this.to_float().change_size(p_length);
-    return newPoint.round().difference_by(Point.ZERO);
+  public Vector changeLengthApprox(double p_length) {
+    FloatPoint newPoint = this.toFloat().changeSize(p_length);
+    return newPoint.round().differenceBy(Point.ZERO);
   }
 
   @Override
-  Direction to_normalized_direction() {
+  Direction toNormalizedDirection() {
     int dx = x;
     int dy = y;
 
@@ -211,13 +211,13 @@ public class IntVector extends Vector implements Serializable {
   }
 
   @Override
-  double scalar_product(IntVector p_other) {
+  double scalarProduct(IntVector p_other) {
     return (double) x * p_other.x + (double) y * p_other.y;
   }
 
   @Override
-  double scalar_product(RationalVector p_other) {
-    return p_other.scalar_product(this);
+  double scalarProduct(RationalVector p_other) {
+    return p_other.scalarProduct(this);
   }
 
   @Override

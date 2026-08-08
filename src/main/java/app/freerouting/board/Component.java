@@ -78,21 +78,21 @@ public class Component
   }
 
   /** Returns the location of this component. */
-  public Point get_location() {
+  public Point getLocation() {
     return location;
   }
 
   /** Returns the rotation of this component in degree. */
-  public double get_rotation_in_degree() {
+  public double getRotationInDegree() {
     return rotationInDegree;
   }
 
-  public boolean is_placed() {
+  public boolean isPlaced() {
     return location != null;
   }
 
   /** If false, the component will be placed on the back side of the board. */
-  public boolean placed_on_front() {
+  public boolean placedOnFront() {
     return this.onFront;
   }
 
@@ -100,14 +100,14 @@ public class Component
    * Translates the location of this Component by p_p_vector. The Pins in the board must be moved
    * separately.
    */
-  public void translate_by(Vector p_vector) {
+  public void translateBy(Vector p_vector) {
     if (location != null) {
-      location = location.translate_by(p_vector);
+      location = location.translateBy(p_vector);
     }
   }
 
   /** Turns this component by p_factor times 90 degree around p_pole. */
-  public void turn_90_degree(int p_factor, IntPoint p_pole) {
+  public void turn90Degree(int p_factor, IntPoint p_pole) {
     if (p_factor == 0) {
       return;
     }
@@ -119,7 +119,7 @@ public class Component
       this.rotationInDegree += 360;
     }
     if (location != null) {
-      this.location = this.location.turn_90_degree(p_factor, p_pole);
+      this.location = this.location.turn90Degree(p_factor, p_pole);
     }
   }
 
@@ -129,7 +129,7 @@ public class Component
       return;
     }
     double turnAngle = p_angle_in_degree;
-    if (p_flip_style_rotate_first && !this.placed_on_front()) {
+    if (p_flip_style_rotate_first && !this.placedOnFront()) {
       // take care of the order of mirroring and rotating on the back side of the board
       turnAngle = 360 - p_angle_in_degree;
     }
@@ -143,8 +143,8 @@ public class Component
     if (location != null) {
       this.location =
           this.location
-              .to_float()
-              .rotate(Math.toRadians(p_angle_in_degree), p_pole.to_float())
+              .toFloat()
+              .rotate(Math.toRadians(p_angle_in_degree), p_pole.toFloat())
               .round();
     }
   }
@@ -153,9 +153,9 @@ public class Component
    * Changes the placement side of this component and mirrors it at the vertical line through
    * p_pole.
    */
-  public void change_side(IntPoint p_pole) {
+  public void changeSide(IntPoint p_pole) {
     this.onFront = !this.onFront;
-    this.location = this.location.mirror_vertical(p_pole);
+    this.location = this.location.mirrorVertical(p_pole);
   }
 
   /**
@@ -169,7 +169,7 @@ public class Component
     return 1;
   }
 
-  public String get_part_number() {
+  public String getPartNumber() {
     return this.partNumber;
   }
 
@@ -197,27 +197,27 @@ public class Component
   }
 
   /** Returns information for pin swap and gate swap, if != null. */
-  public LogicalPart get_logical_part() {
+  public LogicalPart getLogicalPart() {
     return this.logicalPart;
   }
 
   /** Sets the information for pin swap and gate swap. */
-  public void set_logical_part(LogicalPart p_logical_part) {
+  public void setLogicalPart(LogicalPart p_logical_part) {
     this.logicalPart = p_logical_part;
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("component") + " ");
-    p_window.append_bold(this.name);
+    p_window.appendBold(tm.getText("component") + " ");
+    p_window.appendBold(this.name);
     if (this.location != null) {
       p_window.append(" " + tm.getText("at") + " ");
-      p_window.append(this.location.to_float());
+      p_window.append(this.location.toFloat());
 
       p_window.append(", " + tm.getText("rotation") + " ");
-      p_window.append_without_transforming(rotationInDegree);
+      p_window.appendWithoutTransforming(rotationInDegree);
 
       if (this.onFront) {
         p_window.append(", " + tm.getText("front"));
@@ -228,7 +228,7 @@ public class Component
       p_window.append(" " + tm.getText("not_yet_placed"));
     }
     p_window.append(", " + tm.getText("package"));
-    Package libPackage = this.get_package();
+    Package libPackage = this.getPackage();
     p_window.append(libPackage.name, tm.getText("package_info"), libPackage);
     if (this.logicalPart != null) {
       p_window.append(", " + tm.getText("logicalPart") + " ");
@@ -238,7 +238,7 @@ public class Component
   }
 
   /** Returns the library package of this component. */
-  public Package get_package() {
+  public Package getPackage() {
     Package result;
     if (this.onFront) {
       result = libPackageFront;

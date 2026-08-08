@@ -41,9 +41,9 @@ public class MoveComponent {
     }
 
     Collection<Item> itemGroupList;
-    int componentNo = p_item.get_component_no();
+    int componentNo = p_item.getComponentNo();
     if (componentNo > 0) {
-      itemGroupList = board.get_component_items(componentNo);
+      itemGroupList = board.getComponentItems(componentNo);
       this.component = board.components.get(componentNo);
     } else {
       itemGroupList = new LinkedList<>();
@@ -52,7 +52,7 @@ public class MoveComponent {
     Collection<FloatPoint> itemCenters = new LinkedList<>();
     for (Item currItem : itemGroupList) {
       boolean currItemMovable =
-          !currItem.is_user_fixed()
+          !currItem.isUserFixed()
               && ((currItem instanceof DrillItem)
                   || (currItem instanceof ObstacleArea)
                   || (currItem instanceof ComponentOutline));
@@ -63,7 +63,7 @@ public class MoveComponent {
         return;
       }
       if (currItem instanceof DrillItem item) {
-        itemCenters.add(item.get_center().to_float());
+        itemCenters.add(item.getCenter().toFloat());
       }
     }
     // calculate the gravity point of all item centers
@@ -82,12 +82,12 @@ public class MoveComponent {
       Item currItem = it.next();
       Point itemCenter;
       if (currItem instanceof DrillItem item) {
-        itemCenter = item.get_center();
+        itemCenter = item.getCenter();
       } else {
-        itemCenter = currItem.bounding_box().centre_of_gravity().round();
+        itemCenter = currItem.boundingBox().centreOfGravity().round();
       }
-      Vector compareVector = gravityPoint.difference_by(itemCenter);
-      double currProjection = compareVector.scalar_product(translateVector);
+      Vector compareVector = gravityPoint.differenceBy(itemCenter);
+      double currProjection = compareVector.scalarProduct(translateVector);
       itemGroupArr[i] = new SortedItem(currItem, currProjection);
     }
     // sort the items, in the direction of p_translate_vector, so that
@@ -108,7 +108,7 @@ public class MoveComponent {
     for (int i = 0; i < itemGroupArr.length; i++) {
       boolean moveOk;
       if (itemGroupArr[i].item instanceof DrillItem curr_drill_item) {
-        if (this.translateVector.length_approx() >= curr_drill_item.min_width()) {
+        if (this.translateVector.lengthApprox() >= curr_drill_item.minWidth()) {
           // a clearance violation with a connecting trace may occur
           moveOk = false;
         } else {
@@ -123,7 +123,7 @@ public class MoveComponent {
                   timeLimit);
         }
       } else {
-        moveOk = board.check_move_item(itemGroupArr[i].item, this.translateVector, ignoreItems);
+        moveOk = board.checkMoveItem(itemGroupArr[i].item, this.translateVector, ignoreItems);
       }
       if (!moveOk) {
         return false;
@@ -145,12 +145,12 @@ public class MoveComponent {
       // component must be moved first, so that the new pin shapes are calculated correctly
       board.components.move(this.component.no, translateVector);
       // let the observers synchronize the moving
-      board.communication.observers.notify_moved(this.component);
+      board.communication.observers.notifyMoved(this.component);
     }
     for (int i = 0; i < itemGroupArr.length; i++) {
       if (itemGroupArr[i].item instanceof DrillItem curr_drill_item) {
         boolean moveOk =
-            board.move_drill_item(
+            board.moveDrillItem(
                 curr_drill_item,
                 this.translateVector,
                 this.maxRecursionDepth,
@@ -160,13 +160,13 @@ public class MoveComponent {
                 PULL_TIGHT_TIME_LIMIT);
         if (!moveOk) {
           if (this.component != null) {
-            this.component.translate_by(translateVector.negate());
+            this.component.translateBy(translateVector.negate());
             // Otherwise the component outline is not restored correctly by the undo algorithm.
           }
           return false;
         }
       } else {
-        itemGroupArr[i].item.move_by(this.translateVector);
+        itemGroupArr[i].item.moveBy(this.translateVector);
       }
     }
     return true;
@@ -180,7 +180,7 @@ public class MoveComponent {
 
     @Override
     public int compareTo(SortedItem p_other) {
-      return Signum.as_int(this.projection - p_other.projection);
+      return Signum.asInt(this.projection - p_other.projection);
     }
   }
 }

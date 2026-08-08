@@ -858,12 +858,12 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
   }
 
   @Override
-  public String get_scope_identifier() {
+  public String getScopeIdentifier() {
     return scopeIdentifier;
   }
 
   @Override
-  public void set_scope_identifier(String identifier) {
+  public void setScopeIdentifier(String identifier) {
     scopeIdentifier = identifier;
   }
 
@@ -874,7 +874,7 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
    * @return the next token
    * @throws java.io.IOException if any I/O-Error occurs
    */
-  public Object next_token() throws IOException {
+  public Object nextToken() throws IOException {
     int zzInput;
     int zzAction;
 
@@ -1728,15 +1728,15 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
     }
   }
 
-  public String next_string() {
-    return next_string(false, ' ');
+  public String nextString() {
+    return nextString(false, ' ');
   }
 
-  public String next_string(boolean ignoreNewline) {
-    return next_string(ignoreNewline, ' ');
+  public String nextString(boolean ignoreNewline) {
+    return nextString(ignoreNewline, ' ');
   }
 
-  public String next_string(boolean ignoreNewline, char leading) {
+  public String nextString(boolean ignoreNewline, char leading) {
     stringBuffer.setLength(0);
     int i = 0;
 
@@ -1795,24 +1795,24 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
     return stringBuffer.toString();
   }
 
-  public String[] next_string_list() {
-    return next_string_list(' ');
+  public String[] nextStringList() {
+    return nextStringList(' ');
   }
 
-  public String[] next_string_list(char separator) {
+  public String[] nextStringList(char separator) {
     Collection<String> result = new LinkedList<>();
 
     // Every string list must have at least one item, but the first item can be empty. In this case
     // we ignore that and continue reading the next item.
     // This is extra step is also needed to handle the bug KiCad 8 introduced in the netlist
     // definition, when it started the list of nets with a "" string.
-    String firstString = next_string(true, separator);
+    String firstString = nextString(true, separator);
     if (firstString.length() > 0) {
       result.add(firstString);
     }
 
     for (; ; ) {
-      String nextString = next_string(true, separator);
+      String nextString = nextString(true, separator);
       if (nextString.length() == 0) {
         break;
       }
@@ -1826,8 +1826,8 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
     return result.toArray(new String[result.size()]);
   }
 
-  public Double next_double() {
-    String s = next_string();
+  public Double nextDouble() {
+    String s = nextString();
 
     if (nf == null) {
       nf = NumberFormat.getInstance(Locale.US);
@@ -1839,10 +1839,10 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
     }
   }
 
-  public Boolean next_closing_bracket() {
+  public Boolean nextClosingBracket() {
     Object nextToken;
     try {
-      nextToken = next_token();
+      nextToken = nextToken();
     } catch (IOException e) {
       FRLogger.error("Network.read_net_pins: IO error scanning file", e);
       return false;

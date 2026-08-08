@@ -20,9 +20,9 @@ public class IndentFileWriter extends OutputStreamWriter {
   }
 
   /** Begins a new scope. */
-  public void start_scope(boolean newLine) {
+  public void startScope(boolean newLine) {
     if (newLine) {
-      new_line();
+      newLine();
     }
 
     try {
@@ -33,14 +33,14 @@ public class IndentFileWriter extends OutputStreamWriter {
     ++currentIndentLevel;
   }
 
-  public void start_scope() {
-    start_scope(true);
+  public void startScope() {
+    startScope(true);
   }
 
   /** Closes the latest open scope. */
-  public void end_scope() {
+  public void endScope() {
     --currentIndentLevel;
-    new_line();
+    newLine();
     try {
       write(END_SCOPE);
     } catch (IOException e) {
@@ -49,7 +49,7 @@ public class IndentFileWriter extends OutputStreamWriter {
   }
 
   /** Starts a new line inside a scope. */
-  public void new_line() {
+  public void newLine() {
     try {
       write("\n");
       for (int i = 0; i < currentIndentLevel; i++) {

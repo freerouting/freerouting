@@ -22,49 +22,49 @@ public class PopupMenuMove extends PopupMenuDisplay {
 
     JMenuItem popupTurn90Menuitem = new JMenuItem();
     popupTurn90Menuitem.setText(tm.getText("90_degree"));
-    popupTurn90Menuitem.addActionListener(_ -> turn_45_degree(2));
+    popupTurn90Menuitem.addActionListener(_ -> turn45Degree(2));
     popupTurn90Menuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupTurn90Menuitem", popupTurn90Menuitem.getText()));
     rotateMenu.add(popupTurn90Menuitem);
 
     JMenuItem popupTurn180Menuitem = new JMenuItem();
     popupTurn180Menuitem.setText(tm.getText("180_degree"));
-    popupTurn180Menuitem.addActionListener(_ -> turn_45_degree(4));
+    popupTurn180Menuitem.addActionListener(_ -> turn45Degree(4));
     popupTurn180Menuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupTurn180Menuitem", popupTurn180Menuitem.getText()));
     rotateMenu.add(popupTurn180Menuitem);
 
     JMenuItem popupTurn270Menuitem = new JMenuItem();
     popupTurn270Menuitem.setText(tm.getText("-90_degree"));
-    popupTurn270Menuitem.addActionListener(_ -> turn_45_degree(6));
+    popupTurn270Menuitem.addActionListener(_ -> turn45Degree(6));
     popupTurn270Menuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupTurn270Menuitem", popupTurn270Menuitem.getText()));
     rotateMenu.add(popupTurn270Menuitem);
 
     JMenuItem popupTurn45Menuitem = new JMenuItem();
     popupTurn45Menuitem.setText(tm.getText("45_degree"));
-    popupTurn45Menuitem.addActionListener(_ -> turn_45_degree(1));
+    popupTurn45Menuitem.addActionListener(_ -> turn45Degree(1));
     popupTurn45Menuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupTurn45Menuitem", popupTurn45Menuitem.getText()));
     rotateMenu.add(popupTurn45Menuitem);
 
     JMenuItem popupTurn135Menuitem = new JMenuItem();
     popupTurn135Menuitem.setText(tm.getText("135_degree"));
-    popupTurn135Menuitem.addActionListener(_ -> turn_45_degree(3));
+    popupTurn135Menuitem.addActionListener(_ -> turn45Degree(3));
     popupTurn135Menuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupTurn135Menuitem", popupTurn135Menuitem.getText()));
     rotateMenu.add(popupTurn135Menuitem);
 
     JMenuItem popupTurn225Menuitem = new JMenuItem();
     popupTurn225Menuitem.setText(tm.getText("-135_degree"));
-    popupTurn225Menuitem.addActionListener(_ -> turn_45_degree(5));
+    popupTurn225Menuitem.addActionListener(_ -> turn45Degree(5));
     popupTurn225Menuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupTurn225Menuitem", popupTurn225Menuitem.getText()));
     rotateMenu.add(popupTurn225Menuitem);
 
     JMenuItem popupTurn315Menuitem = new JMenuItem();
     popupTurn315Menuitem.setText(tm.getText("-45_degree"));
-    popupTurn315Menuitem.addActionListener(_ -> turn_45_degree(7));
+    popupTurn315Menuitem.addActionListener(_ -> turn45Degree(7));
     popupTurn315Menuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupTurn315Menuitem", popupTurn315Menuitem.getText()));
     rotateMenu.add(popupTurn315Menuitem);
@@ -72,7 +72,7 @@ public class PopupMenuMove extends PopupMenuDisplay {
     JMenuItem popupChangeSideMenuitem = new JMenuItem();
     popupChangeSideMenuitem.setText(tm.getText("change_side"));
     popupChangeSideMenuitem.addActionListener(
-        _ -> boardPanel.boardHandling.change_placement_side());
+        _ -> boardPanel.boardHandling.changePlacementSide());
     popupChangeSideMenuitem.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -84,9 +84,9 @@ public class PopupMenuMove extends PopupMenuDisplay {
     popupResetRotationMenuitem.setText(tm.getText("reset_rotation"));
     popupResetRotationMenuitem.addActionListener(
         _ -> {
-          InteractiveState interactiveState = boardPanel.boardHandling.get_interactive_state();
+          InteractiveState interactiveState = boardPanel.boardHandling.getInteractiveState();
           if (interactiveState instanceof MoveItemState state) {
-            state.reset_rotation();
+            state.resetRotation();
           }
         });
     popupResetRotationMenuitem.addActionListener(
@@ -98,7 +98,7 @@ public class PopupMenuMove extends PopupMenuDisplay {
 
     JMenuItem popupInsertMenuitem = new JMenuItem();
     popupInsertMenuitem.setText(tm.getText("insert"));
-    popupInsertMenuitem.addActionListener(_ -> boardPanel.boardHandling.return_from_state());
+    popupInsertMenuitem.addActionListener(_ -> boardPanel.boardHandling.returnFromState());
     popupInsertMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupInsertMenuitem", popupInsertMenuitem.getText()));
 
@@ -106,15 +106,15 @@ public class PopupMenuMove extends PopupMenuDisplay {
 
     JMenuItem popupCancelMenuitem = new JMenuItem();
     popupCancelMenuitem.setText(tm.getText("cancel"));
-    popupCancelMenuitem.addActionListener(_ -> boardPanel.boardHandling.cancel_state());
+    popupCancelMenuitem.addActionListener(_ -> boardPanel.boardHandling.cancelState());
     popupCancelMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupCancelMenuitem", popupCancelMenuitem.getText()));
 
     this.add(popupCancelMenuitem, 4);
   }
 
-  private void turn_45_degree(int p_factor) {
-    boardPanel.boardHandling.turn_45_degree(p_factor);
-    boardPanel.move_mouse(boardPanel.rightButtonClickLocation);
+  private void turn45Degree(int p_factor) {
+    boardPanel.boardHandling.turn45Degree(p_factor);
+    boardPanel.moveMouse(boardPanel.rightButtonClickLocation);
   }
 }

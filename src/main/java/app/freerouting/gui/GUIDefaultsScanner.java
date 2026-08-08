@@ -1216,7 +1216,7 @@ class GUIDefaultsScanner {
    * @return the next token
    * @throws java.io.IOException if any I/O-Error occurs
    */
-  public Object next_token() throws IOException {
+  public Object nextToken() throws IOException {
     int zzInput;
     int zzAction;
 

@@ -45,8 +45,8 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
   }
 
   @Test
-  void test_Issue575_Drc_Reproduction_SinglePass() {
-    RoutingJob job = GetRoutingJob(TEST_BOARD);
+  void testIssue575DrcReproductionSinglePass() {
+    RoutingJob job = getRoutingJob(TEST_BOARD);
     assertNotNull(job, "Job should not be null");
     BoardLoader.loadBoardIfNeeded(job);
     assertNotNull(job.board, "Board should be loaded");
@@ -56,9 +56,9 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
     Collection<UnconnectedItems> allIssues = drc.getAllUnconnectedItems();
 
     // Connectivity spot-check: overlapping GND traces and nearby pin.
-    Item item1 = board.get_item(2402); // GND trace, Top layer
-    Item item2 = board.get_item(2411); // GND trace, Bottom layer
-    Item item321 = board.get_item(321); // GND pin (component #26)
+    Item item1 = board.getItem(2402); // GND trace, Top layer
+    Item item2 = board.getItem(2411); // GND trace, Bottom layer
+    Item item321 = board.getItem(321); // GND pin (component #26)
 
     assertNotNull(item1, "Item 2402 not found");
     assertNotNull(item2, "Item 2411 not found");
@@ -68,29 +68,29 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
 
     // Both traces are on the same net
     assertEquals(
-        trace1.get_net_no(0),
-        trace2.get_net_no(0),
+        trace1.getNetNo(0),
+        trace2.getNetNo(0),
         "Traces 2402 and 2411 must belong to the same net");
 
     // Trace 2402 is genuinely dangling: the board-model connectivity check
     // confirms neither endpoint has a contact. The DRC must report this.
     assertTrue(
-        trace1.is_tail(),
+        trace1.isTail(),
         "Trace 2402 (GND) is expected to be a dangling trace (is_tail == true). "
             + "It has no connected endpoints in this partially-routed board.");
 
     // Confirm that pin 321 is indeed NOT in the normal contacts of trace 2402.
     // (This is the correct board state — not a false negative from the DRC.)
     if (item321 != null) {
-      Collection<Item> contacts1 = item1.get_normal_contacts();
+      Collection<Item> contacts1 = item1.getNormalContacts();
       assertFalse(
           contacts1.contains(item321),
           "Trace 2402 correctly has NO connection to pin 321 in this board state.");
     }
 
     Item via2522item =
-        board.get_items().stream()
-            .filter(item -> item.get_id_no() == 2522)
+        board.getItems().stream()
+            .filter(item -> item.getIdNo() == 2522)
             .findFirst()
             .orElse(null);
 
@@ -98,9 +98,9 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
     Via via2522 = assertInstanceOf(Via.class, via2522item, "Item 2522 should be a Via");
 
     System.out.println(
-        "Via 2522 layers  : " + via2522.first_layer() + " to " + via2522.last_layer());
-    System.out.println("Via 2522 is_tail : " + via2522.is_tail());
-    System.out.println("Via 2522 contacts: " + via2522.get_normal_contacts().size());
+        "Via 2522 layers  : " + via2522.firstLayer() + " to " + via2522.lastLayer());
+    System.out.println("Via 2522 is_tail : " + via2522.isTail());
+    System.out.println("Via 2522 contacts: " + via2522.getNormalContacts().size());
 
     // NOTE: via 2522 may or may not be is_tail() depending on normalization/contact state.
     // DRC results were captured above before these diagnostic reads.
@@ -155,16 +155,16 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
     Set<Integer> danglingTrackIds =
         allIssues.stream()
             .filter(ui -> "track_dangling".equals(ui.type))
-            .map(ui -> ui.firstItem.get_id_no())
+            .map(ui -> ui.firstItem.getIdNo())
             .collect(Collectors.toSet());
 
     int[] spotCheckIds = {2340, 1869, 2372, 1802};
     for (int trackId : spotCheckIds) {
-      Item trackItem = board.get_item(trackId);
+      Item trackItem = board.getItem(trackId);
       assertNotNull(trackItem, "Track with ID " + trackId + " should exist in the board");
       Trace track =
           assertInstanceOf(Trace.class, trackItem, "Item " + trackId + " should be a Trace");
-      assertTrue(track.is_tail(), "Track " + trackId + " should be dangling (is_tail == true)");
+      assertTrue(track.isTail(), "Track " + trackId + " should be dangling (is_tail == true)");
 
       assertTrue(
           danglingTrackIds.contains(trackId),

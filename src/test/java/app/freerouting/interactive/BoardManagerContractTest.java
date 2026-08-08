@@ -37,7 +37,7 @@ class BoardManagerContractTest {
   // ── Headless contract ─────────────────────────────────────────────────────
 
   @Test
-  void headlessManager_isInteractiveModeSupported_returnsFalse() {
+  void headlessManagerIsInteractiveModeSupportedReturnsFalse() {
     BoardManager manager = new HeadlessBoardManager(new RoutingJob());
     assertFalse(
         manager.isInteractiveModeSupported(),
@@ -45,7 +45,7 @@ class BoardManagerContractTest {
   }
 
   @Test
-  void headlessManager_getInteractiveSettings_returnsNull() throws FileNotFoundException {
+  void headlessManagerGetInteractiveSettingsReturnsNull() throws FileNotFoundException {
     var manager = new HeadlessBoardManager(new RoutingJob());
     manager.loadFromSpecctraDsn(
         new FileInputStream("fixtures/empty_board.dsn"),
@@ -58,7 +58,7 @@ class BoardManagerContractTest {
   }
 
   @Test
-  void headlessManager_deprecated_getSettings_alsoReturnsNull() throws FileNotFoundException {
+  void headlessManagerDeprecatedGetSettingsAlsoReturnsNull() throws FileNotFoundException {
     var manager = new HeadlessBoardManager(new RoutingJob());
     manager.loadFromSpecctraDsn(
         new FileInputStream("fixtures/empty_board.dsn"),
@@ -66,7 +66,7 @@ class BoardManagerContractTest {
         new ItemIdentificationNumberGenerator());
 
     @SuppressWarnings("deprecation")
-    app.freerouting.settings.sources.GuiSettings settings = manager.get_settings();
+    app.freerouting.settings.sources.GuiSettings settings = manager.getSettings();
     assertNull(
         settings,
         "Deprecated get_settings() must delegate to getInteractiveSettings() and return null in headless mode");
@@ -75,7 +75,7 @@ class BoardManagerContractTest {
   // ── GUI contract (static, no Swing needed) ────────────────────────────────
 
   @Test
-  void guiBoardManager_overrides_isInteractiveModeSupported() throws Exception {
+  void guiBoardManagerOverridesIsInteractiveModeSupported() throws Exception {
     // Verify at the method level without instantiating Swing.
     var method = GuiBoardManager.class.getMethod("isInteractiveModeSupported");
     // The method must be declared on GuiBoardManager itself, not inherited from the default.
@@ -85,7 +85,7 @@ class BoardManagerContractTest {
   }
 
   @Test
-  void guiBoardManager_overrides_getInteractiveSettings() throws Exception {
+  void guiBoardManagerOverridesGetInteractiveSettings() throws Exception {
     var method = GuiBoardManager.class.getMethod("getInteractiveSettings");
     assertTrue(
         method.getDeclaringClass().equals(GuiBoardManager.class),

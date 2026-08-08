@@ -33,7 +33,7 @@ class BoardHistoryTest {
       BoardReadResult result1 =
           boardManager1.loadFromSpecctraDsn(
               inputStream1, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
-      board1 = boardManager1.get_routing_board();
+      board1 = boardManager1.getRoutingBoard();
     }
 
     // Load a more complex board
@@ -42,7 +42,7 @@ class BoardHistoryTest {
         new FileInputStream("fixtures/Issue159-setonix_2hp-pcb.dsn")) {
       boardManager2.loadFromSpecctraDsn(
           inputStream2, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
-      board2 = boardManager2.get_routing_board();
+      board2 = boardManager2.getRoutingBoard();
     }
 
     SettingsMerger settingsMerger = new SettingsMerger();
@@ -60,8 +60,8 @@ class BoardHistoryTest {
     assertNotNull(restoredBoard);
     assertNotSame(board1, restoredBoard, "Restored board should be a new instance");
     assertEquals(
-        board1.get_hash(),
-        restoredBoard.get_hash(),
+        board1.getHash(),
+        restoredBoard.getHash(),
         "Restored board should be functionally identical to the original");
   }
 
@@ -78,7 +78,7 @@ class BoardHistoryTest {
     assertNotNull(bestBoard);
     // The empty board (board1) should have a better score
     assertEquals(
-        board1.get_hash(), bestBoard.get_hash(), "Should restore the board with the best score");
+        board1.getHash(), bestBoard.getHash(), "Should restore the board with the best score");
   }
 
   @Test
@@ -135,8 +135,8 @@ class BoardHistoryTest {
     RoutingBoard best = history.restoreBestBoard();
     assertNotNull(best, "History must still contain the best board");
     assertEquals(
-        board1.get_hash(),
-        best.get_hash(),
+        board1.getHash(),
+        best.getHash(),
         "The better-scoring board (board1) must be retained when a worse board is added at capacity");
   }
 }

@@ -40,7 +40,7 @@ class OpenApiMcpVisibilityTest {
 
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
 
-    apiServer = Freerouting.InitializeAPI(settings);
+    apiServer = Freerouting.initializeAPI(settings);
     waitForServerStarted(apiServer);
 
     int port = ((ServerConnector) apiServer.getConnectors()[0]).getLocalPort();
@@ -56,7 +56,7 @@ class OpenApiMcpVisibilityTest {
   }
 
   @Test
-  void openApiJson_includesMcpAndAgentCardPaths() throws Exception {
+  void openApiJsonIncludesMcpAndAgentCardPaths() throws Exception {
     HttpRequest request =
         HttpRequest.newBuilder(baseUri.resolve("/openapi/openapi.json"))
             .GET()

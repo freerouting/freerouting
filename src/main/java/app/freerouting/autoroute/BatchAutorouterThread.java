@@ -68,12 +68,12 @@ public class BatchAutorouterThread extends StoppableThread {
 
     this.removeUnconnectedVias = p_remove_unconnected_vias;
     if (p_with_preferred_directions) {
-      this.traceCostArr = this.settings.get_trace_cost_arr();
+      this.traceCostArr = this.settings.getTraceCostArr();
     } else {
       // remove preferred direction
-      this.traceCostArr = new AutorouteControl.ExpansionCostFactor[this.board.get_layer_count()];
+      this.traceCostArr = new AutorouteControl.ExpansionCostFactor[this.board.getLayerCount()];
       for (int i = 0; i < this.traceCostArr.length; i++) {
-        double currMinCost = this.settings.get_preferred_direction_trace_costs(i);
+        double currMinCost = this.settings.getPreferredDirectionTraceCosts(i);
         this.traceCostArr[i] = new AutorouteControl.ExpansionCostFactor(currMinCost, currMinCost);
       }
     }
@@ -85,7 +85,7 @@ public class BatchAutorouterThread extends StoppableThread {
 
   // Calculates the shortest distance between two sets of items, specifically
   // between Pin and Via items (pins and vias are connectable DrillItems)
-  private static FloatLine calc_airline(
+  private static FloatLine calcAirline(
       Collection<Item> p_from_items, Collection<Item> p_to_items) {
     FloatPoint fromCorner = null;
     FloatPoint toCorner = null;
@@ -93,7 +93,7 @@ public class BatchAutorouterThread extends StoppableThread {
     for (Item curr_from_item : p_from_items) {
       FloatPoint currFromCorner;
       if (curr_from_item instanceof DrillItem item) {
-        currFromCorner = item.get_center().to_float();
+        currFromCorner = item.getCenter().toFloat();
       } else if (curr_from_item instanceof PolylineTrace from_trace) {
         // Use trace endpoints as potential connection points
         continue; // We'll handle traces in the second loop for better efficiency
@@ -104,10 +104,10 @@ public class BatchAutorouterThread extends StoppableThread {
       for (Item curr_to_item : p_to_items) {
         FloatPoint currToCorner;
         if (curr_to_item instanceof DrillItem drillItem) {
-          currToCorner = drillItem.get_center().to_float();
+          currToCorner = drillItem.getCenter().toFloat();
         } else if (curr_to_item instanceof PolylineTrace to_trace) {
           // Find nearest point on trace to the from item point
-          currToCorner = nearest_point_on_trace(to_trace, currFromCorner);
+          currToCorner = nearestPointOnTrace(to_trace, currFromCorner);
         } else {
           continue;
         }
@@ -133,11 +133,11 @@ public class BatchAutorouterThread extends StoppableThread {
 
         if (curr_to_item instanceof DrillItem item) {
           // Trace to drill item
-          currToCorner = item.get_center().to_float();
-          currFromCorner = nearest_point_on_trace(from_trace, currToCorner);
+          currToCorner = item.getCenter().toFloat();
+          currFromCorner = nearestPointOnTrace(from_trace, currToCorner);
         } else if (curr_to_item instanceof PolylineTrace to_trace) {
           // Trace to trace - find the closest points between the two traces
-          FloatPoint[] closestPoints = find_closest_points_between_traces(from_trace, to_trace);
+          FloatPoint[] closestPoints = findClosestPointsBetweenTraces(from_trace, to_trace);
           currFromCorner = closestPoints[0];
           currToCorner = closestPoints[1];
         } else {
@@ -161,13 +161,13 @@ public class BatchAutorouterThread extends StoppableThread {
   }
 
   /** Finds the nearest point on a trace to the given point */
-  private static FloatPoint nearest_point_on_trace(PolylineTrace p_trace, FloatPoint p_point) {
+  private static FloatPoint nearestPointOnTrace(PolylineTrace p_trace, FloatPoint p_point) {
     double minDistance = Double.MAX_VALUE;
     FloatPoint nearestPoint = null;
 
     // Get endpoints
-    FloatPoint firstCorner = p_trace.first_corner().to_float();
-    FloatPoint lastCorner = p_trace.last_corner().to_float();
+    FloatPoint firstCorner = p_trace.firstCorner().toFloat();
+    FloatPoint lastCorner = p_trace.lastCorner().toFloat();
 
     // Check distance to endpoints first
     double distanceToFirst = p_point.distance(firstCorner);
@@ -184,13 +184,13 @@ public class BatchAutorouterThread extends StoppableThread {
     }
 
     // Check distances to line segments
-    for (int i = 0; i < p_trace.corner_count() - 1; i++) {
-      FloatPoint segmentStart = p_trace.polyline().corner_approx(i);
-      FloatPoint segmentEnd = p_trace.polyline().corner_approx(i + 1);
+    for (int i = 0; i < p_trace.cornerCount() - 1; i++) {
+      FloatPoint segmentStart = p_trace.polyline().cornerApprox(i);
+      FloatPoint segmentEnd = p_trace.polyline().cornerApprox(i + 1);
       FloatLine segment = new FloatLine(segmentStart, segmentEnd);
 
-      FloatPoint projection = segment.perpendicular_projection(p_point);
-      if (projection.is_contained_in_box(segmentStart, segmentEnd, 0.01)) {
+      FloatPoint projection = segment.perpendicularProjection(p_point);
+      if (projection.isContainedInBox(segmentStart, segmentEnd, 0.01)) {
         double distance = p_point.distance(projection);
         if (distance < minDistance) {
           minDistance = distance;
@@ -207,16 +207,16 @@ public class BatchAutorouterThread extends StoppableThread {
    *
    * @return an array with two FloatPoints: [point_on_first_trace, point_on_second_trace]
    */
-  private static FloatPoint[] find_closest_points_between_traces(
+  private static FloatPoint[] findClosestPointsBetweenTraces(
       PolylineTrace p_first_trace, PolylineTrace p_second_trace) {
     double minDistance = Double.MAX_VALUE;
     FloatPoint[] result = new FloatPoint[2];
 
     // Check endpoints to endpoints
-    FloatPoint firstTraceStart = p_first_trace.first_corner().to_float();
-    FloatPoint firstTraceEnd = p_first_trace.last_corner().to_float();
-    FloatPoint secondTraceStart = p_second_trace.first_corner().to_float();
-    FloatPoint secondTraceEnd = p_second_trace.last_corner().to_float();
+    FloatPoint firstTraceStart = p_first_trace.firstCorner().toFloat();
+    FloatPoint firstTraceEnd = p_first_trace.lastCorner().toFloat();
+    FloatPoint secondTraceStart = p_second_trace.firstCorner().toFloat();
+    FloatPoint secondTraceEnd = p_second_trace.lastCorner().toFloat();
 
     // Check all endpoint combinations
     double distance = firstTraceStart.distance(secondTraceStart);
@@ -248,22 +248,22 @@ public class BatchAutorouterThread extends StoppableThread {
     }
 
     // Check all segment combinations for closest points
-    for (int i = 0; i < p_first_trace.corner_count() - 1; i++) {
-      FloatPoint firstSegmentStart = p_first_trace.polyline().corner_approx(i);
-      FloatPoint firstSegmentEnd = p_first_trace.polyline().corner_approx(i + 1);
+    for (int i = 0; i < p_first_trace.cornerCount() - 1; i++) {
+      FloatPoint firstSegmentStart = p_first_trace.polyline().cornerApprox(i);
+      FloatPoint firstSegmentEnd = p_first_trace.polyline().cornerApprox(i + 1);
       FloatLine firstSegment = new FloatLine(firstSegmentStart, firstSegmentEnd);
 
-      for (int j = 0; j < p_second_trace.corner_count() - 1; j++) {
-        FloatPoint secondSegmentStart = p_second_trace.polyline().corner_approx(j);
-        FloatPoint secondSegmentEnd = p_second_trace.polyline().corner_approx(j + 1);
+      for (int j = 0; j < p_second_trace.cornerCount() - 1; j++) {
+        FloatPoint secondSegmentStart = p_second_trace.polyline().cornerApprox(j);
+        FloatPoint secondSegmentEnd = p_second_trace.polyline().cornerApprox(j + 1);
         FloatLine secondSegment = new FloatLine(secondSegmentStart, secondSegmentEnd);
 
         // Find closest points between these two line segments
-        FloatPoint pointOnFirst = firstSegment.nearest_segment_point(secondSegmentStart);
-        FloatPoint pointOnSecond = secondSegment.perpendicular_projection(pointOnFirst);
+        FloatPoint pointOnFirst = firstSegment.nearestSegmentPoint(secondSegmentStart);
+        FloatPoint pointOnSecond = secondSegment.perpendicularProjection(pointOnFirst);
 
         // Check if projection is on the segment
-        if (!pointOnSecond.is_contained_in_box(secondSegmentStart, secondSegmentEnd, 0.01)) {
+        if (!pointOnSecond.isContainedInBox(secondSegmentStart, secondSegmentEnd, 0.01)) {
           // If not, use the nearest endpoint
           double distToStart = pointOnFirst.distance(secondSegmentStart);
           double distToEnd = pointOnFirst.distance(secondSegmentEnd);
@@ -271,7 +271,7 @@ public class BatchAutorouterThread extends StoppableThread {
         }
 
         // Recalculate the point on first segment based on the point on second segment
-        pointOnFirst = firstSegment.nearest_segment_point(pointOnSecond);
+        pointOnFirst = firstSegment.nearestSegmentPoint(pointOnSecond);
 
         distance = pointOnFirst.distance(pointOnSecond);
         if (distance < minDistance) {
@@ -292,7 +292,7 @@ public class BatchAutorouterThread extends StoppableThread {
     int routed = 0;
     int skipped = 0;
 
-    BoardStatistics stats = board.get_statistics();
+    BoardStatistics stats = board.getStatistics();
     RouterCounters routerCounters = new RouterCounters();
     routerCounters.passCount = passNo;
     routerCounters.queuedToBeRoutedCount = itemsToGoCount;
@@ -310,14 +310,14 @@ public class BatchAutorouterThread extends StoppableThread {
     // Let's go through all items to route
     for (Item currItem : autorouteItemList) {
       // If the user requested to stop the auto-router, we stop it
-      if (this.is_stop_auto_router_requested()) {
+      if (this.isStopAutoRouterRequested()) {
         break;
       }
 
       // Check if this item should be skipped due to repeated failures
       if (this.board.failureLog.shouldSkip(currItem)) {
-        Net net = board.rules.nets.get(currItem.get_net_no(0));
-        String netName = net != null ? net.name : "net#" + currItem.get_net_no(0);
+        Net net = board.rules.nets.get(currItem.getNetNo(0));
+        String netName = net != null ? net.name : "net#" + currItem.getNetNo(0);
         FRLogger.debug(
             "Skipping "
                 + currItem.getClass().getSimpleName()
@@ -331,9 +331,9 @@ public class BatchAutorouterThread extends StoppableThread {
       }
 
       // Let's go through all nets of this item
-      for (int i = 0; i < currItem.net_count(); i++) {
+      for (int i = 0; i < currItem.netCount(); i++) {
         // If the user requested to stop the auto-router, we stop it
-        if (this.is_stop_auto_router_requested()) {
+        if (this.isStopAutoRouterRequested()) {
           break;
         }
 
@@ -342,18 +342,18 @@ public class BatchAutorouterThread extends StoppableThread {
             && (this.routedCount + this.failedCount) >= this.settings.maxItems) {
           FRLogger.info(
               "Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
-          this.request_stop_auto_router();
+          this.requestStopAutoRouter();
           break;
         }
 
         // We visually mark the area of the board, which is changed by the auto-router
-        board.start_marking_changed_area();
+        board.startMarkingChangedArea();
 
         // Do the auto-routing step for this item (typically PolylineTrace or Pin)
         SortedSet<Item> rippedItemList = new TreeSet<>();
 
         var autorouterResult =
-            autoroute_item(board, currItem, currItem.get_net_no(i), rippedItemList, passNo);
+            autorouteItem(board, currItem, currItem.getNetNo(i), rippedItemList, passNo);
         if (autorouterResult.state == AutorouteAttemptState.ROUTED) {
           // The item was successfully routed
           ++routed;
@@ -364,8 +364,8 @@ public class BatchAutorouterThread extends StoppableThread {
           // The item doesn't need to be routed
           ++skipped;
         } else {
-          Net net = board.rules.nets.get(currItem.get_net_no(i));
-          String netName = net != null ? net.name : "net#" + currItem.get_net_no(i);
+          Net net = board.rules.nets.get(currItem.getNetNo(i));
+          String netName = net != null ? net.name : "net#" + currItem.getNetNo(i);
 
           // Record the failure
           this.board.failureLog.recordFailure(
@@ -397,7 +397,7 @@ public class BatchAutorouterThread extends StoppableThread {
 
         if (progressThrottler.shouldUpdate()) {
           PerformanceProfiler.start("stats_update");
-          BoardStatistics boardStatistics = board.get_statistics();
+          BoardStatistics boardStatistics = board.getStatistics();
           routerCounters.passCount = passNo;
           routerCounters.queuedToBeRoutedCount = itemsToGoCount;
           routerCounters.skippedCount = skipped;
@@ -414,12 +414,12 @@ public class BatchAutorouterThread extends StoppableThread {
     }
 
     if (this.removeUnconnectedVias) {
-      remove_tails(Item.StopConnectionOption.NONE);
+      removeTails(Item.StopConnectionOption.NONE);
     } else {
-      remove_tails(Item.StopConnectionOption.FANOUT_VIA);
+      removeTails(Item.StopConnectionOption.FANOUT_VIA);
     }
 
-    BoardStatistics finalStats = board.get_statistics();
+    BoardStatistics finalStats = board.getStatistics();
     routerCounters.passCount = passNo;
     routerCounters.queuedToBeRoutedCount = itemsToGoCount;
     routerCounters.skippedCount = skipped;
@@ -436,7 +436,7 @@ public class BatchAutorouterThread extends StoppableThread {
 
   // Tries to route an item on a specific net. Returns true, if the item is
   // routed.
-  private AutorouteAttemptResult autoroute_item(
+  private AutorouteAttemptResult autorouteItem(
       RoutingBoard board,
       Item p_item,
       int p_route_net_no,
@@ -448,15 +448,15 @@ public class BatchAutorouterThread extends StoppableThread {
       // Get the net
       Net routeNet = board.rules.nets.get(p_route_net_no);
       if (routeNet != null) {
-        containsPlane = routeNet.contains_plane();
+        containsPlane = routeNet.containsPlane();
       }
 
       // Get the current via costs based on auto-router settings
       int currViaCosts;
       if (containsPlane) {
-        currViaCosts = settings.get_plane_via_costs();
+        currViaCosts = settings.getPlaneViaCosts();
       } else {
-        currViaCosts = settings.get_via_costs();
+        currViaCosts = settings.getViaCosts();
       }
 
       // Get and calculate the auto-router settings based on the board and net we are
@@ -468,12 +468,12 @@ public class BatchAutorouterThread extends StoppableThread {
       autorouteControl.removeUnconnectedVias = removeUnconnectedVias;
 
       // Check if the item is already routed
-      Set<Item> unconnectedSet = p_item.get_unconnected_set(p_route_net_no);
+      Set<Item> unconnectedSet = p_item.getUnconnectedSet(p_route_net_no);
       if (unconnectedSet.isEmpty()) {
         return new AutorouteAttemptResult(AutorouteAttemptState.NO_UNCONNECTED_NETS);
       }
 
-      Set<Item> connectedSet = p_item.get_connected_set(p_route_net_no);
+      Set<Item> connectedSet = p_item.getConnectedSet(p_route_net_no);
       Set<Item> routeStartSet;
       Set<Item> routeDestSet;
       if (containsPlane) {
@@ -492,7 +492,7 @@ public class BatchAutorouterThread extends StoppableThread {
       }
 
       // Calculate the shortest distance between the two sets of items
-      this.latestAirLine = calc_airline(routeStartSet, routeDestSet);
+      this.latestAirLine = calcAirline(routeStartSet, routeDestSet);
 
       // Calculate the maximum time for this autoroute pass
       double maxMilliseconds = 100000 * Math.pow(2, p_ripup_pass_no - 1);
@@ -501,7 +501,7 @@ public class BatchAutorouterThread extends StoppableThread {
 
       // Initialize the auto-router engine
       AutorouteEngine autorouteEngine =
-          board.init_autoroute(
+          board.initAutoroute(
               p_route_net_no,
               autorouteControl.traceClearanceClassNo,
               this,
@@ -510,7 +510,7 @@ public class BatchAutorouterThread extends StoppableThread {
 
       // Do the auto-routing between the two sets of items
       AutorouteAttemptResult autorouteResult =
-          autorouteEngine.autoroute_connection(
+          autorouteEngine.autorouteConnection(
               routeStartSet,
               routeDestSet,
               autorouteControl,
@@ -519,7 +519,7 @@ public class BatchAutorouterThread extends StoppableThread {
 
       // Update the changed area of the board
       if (autorouteResult.state == AutorouteAttemptState.ROUTED) {
-        board.opt_changed_area(
+        board.optChangedArea(
             new int[0],
             null,
             tracePullTightAccuracy,
@@ -535,7 +535,7 @@ public class BatchAutorouterThread extends StoppableThread {
     }
   }
 
-  private void remove_tails(Item.StopConnectionOption p_stop_connection_option) {
+  private void removeTails(Item.StopConnectionOption p_stop_connection_option) {
     FRLogger.trace(
         "BatchAutorouterThread.remove_tails",
         "starting_tail_removal",
@@ -543,8 +543,8 @@ public class BatchAutorouterThread extends StoppableThread {
             "autoroute", "cleanup", "start", "stop_option=" + p_stop_connection_option),
         "",
         null);
-    board.start_marking_changed_area();
-    boolean tailsRemoved = board.remove_trace_tails(-1, p_stop_connection_option);
+    board.startMarkingChangedArea();
+    boolean tailsRemoved = board.removeTraceTails(-1, p_stop_connection_option);
     FRLogger.trace(
         "BatchAutorouterThread.remove_tails",
         "tail_removal_complete",
@@ -555,7 +555,7 @@ public class BatchAutorouterThread extends StoppableThread {
             "tailsRemoved=" + tailsRemoved + " stop_option=" + p_stop_connection_option),
         "",
         null);
-    board.opt_changed_area(
+    board.optChangedArea(
         new int[0],
         null,
         this.tracePullTightAccuracy,
@@ -565,7 +565,7 @@ public class BatchAutorouterThread extends StoppableThread {
   }
 
   @Override
-  protected void thread_action() {
+  protected void threadAction() {
     autorouteItems();
     captureStats();
   }

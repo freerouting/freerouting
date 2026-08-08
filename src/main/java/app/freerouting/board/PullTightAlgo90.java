@@ -27,20 +27,20 @@ class PullTightAlgo90 extends PullTightAlgo {
   }
 
   @Override
-  Polyline pull_tight(Polyline p_polyline) {
-    Polyline newResult = avoid_acid_traps(p_polyline);
+  Polyline pullTight(Polyline p_polyline) {
+    Polyline newResult = avoidAcidTraps(p_polyline);
     Polyline prevResult = null;
-    while (newResult != prevResult && !this.is_stop_requested()) {
+    while (newResult != prevResult && !this.isStopRequested()) {
       prevResult = newResult;
-      Polyline tmp1 = try_skip_second_corner(prevResult);
-      Polyline tmp2 = try_skip_corners(tmp1);
-      newResult = reposition_lines(tmp2);
+      Polyline tmp1 = trySkipSecondCorner(prevResult);
+      Polyline tmp2 = trySkipCorners(tmp1);
+      newResult = repositionLines(tmp2);
     }
     return newResult;
   }
 
   /** Tries to skip the second corner of p_polyline. Return p_polyline, if nothing was changed. */
-  private Polyline try_skip_second_corner(Polyline p_polyline) {
+  private Polyline trySkipSecondCorner(Polyline p_polyline) {
     if (p_polyline.arr.length < 5) {
       return p_polyline;
     }
@@ -51,12 +51,12 @@ class PullTightAlgo90 extends PullTightAlgo {
     checkLines[3] = p_polyline.arr[4];
     Polyline checkPolyline = new Polyline(checkLines);
     if (checkPolyline.arr.length != 4
-        || currClipShape != null && !currClipShape.contains(checkPolyline.corner_approx(1))) {
+        || currClipShape != null && !currClipShape.contains(checkPolyline.cornerApprox(1))) {
       return p_polyline;
     }
     for (int i = 0; i < 2; i++) {
-      TileShape shapeToCheck = checkPolyline.offset_shape(currHalfWidth, i);
-      if (!board.check_trace_shape(
+      TileShape shapeToCheck = checkPolyline.offsetShape(currHalfWidth, i);
+      if (!board.checkTraceShape(
           shapeToCheck, currLayer, currNetNoArr, currClType, this.contactPins)) {
         return p_polyline;
       }
@@ -72,7 +72,7 @@ class PullTightAlgo90 extends PullTightAlgo {
   /**
    * Tries to reduce the amount of corners of p_polyline. Return p_polyline, if nothing was changed.
    */
-  private Polyline try_skip_corners(Polyline p_polyline) {
+  private Polyline trySkipCorners(Polyline p_polyline) {
     Line[] newLines = new Line[p_polyline.arr.length];
     newLines[0] = p_polyline.arr[0];
     newLines[1] = p_polyline.arr[1];
@@ -83,7 +83,7 @@ class PullTightAlgo90 extends PullTightAlgo {
     for (int i = 5; i <= p_polyline.arr.length; i++) {
       boolean skipLines = false;
       boolean inClipShape =
-          currClipShape == null || currClipShape.contains(p_polyline.corner_approx(i - 3));
+          currClipShape == null || currClipShape.contains(p_polyline.cornerApprox(i - 3));
       if (inClipShape) {
         checkLines[0] = newLines[newLineIndex - 1];
         checkLines[1] = newLines[newLineIndex];
@@ -98,17 +98,17 @@ class PullTightAlgo90 extends PullTightAlgo {
         skipLines =
             checkPolyline.arr.length == 4
                 && (currClipShape == null
-                    || currClipShape.contains(checkPolyline.corner_approx(1)));
+                    || currClipShape.contains(checkPolyline.cornerApprox(1)));
         if (skipLines) {
-          TileShape shapeToCheck = checkPolyline.offset_shape(currHalfWidth, 0);
+          TileShape shapeToCheck = checkPolyline.offsetShape(currHalfWidth, 0);
           skipLines =
-              board.check_trace_shape(
+              board.checkTraceShape(
                   shapeToCheck, currLayer, currNetNoArr, currClType, this.contactPins);
         }
         if (skipLines) {
-          TileShape shapeToCheck = checkPolyline.offset_shape(currHalfWidth, 1);
+          TileShape shapeToCheck = checkPolyline.offsetShape(currHalfWidth, 1);
           skipLines =
-              board.check_trace_shape(
+              board.checkTraceShape(
                   shapeToCheck, currLayer, currNetNoArr, currClType, this.contactPins);
         }
       }
@@ -117,10 +117,10 @@ class PullTightAlgo90 extends PullTightAlgo {
           secondLastCornerSkipped = true;
         }
         if (board.changedArea != null) {
-          FloatPoint newCorner = checkLines[1].intersection_approx(checkLines[2]);
+          FloatPoint newCorner = checkLines[1].intersectionApprox(checkLines[2]);
           board.changedArea.join(newCorner, currLayer);
           FloatPoint skippedCorner =
-              p_polyline.arr[i - 2].intersection_approx(p_polyline.arr[i - 3]);
+              p_polyline.arr[i - 2].intersectionApprox(p_polyline.arr[i - 3]);
           board.changedArea.join(skippedCorner, currLayer);
         }
         polylineChanged = true;
@@ -152,12 +152,12 @@ class PullTightAlgo90 extends PullTightAlgo {
   }
 
   @Override
-  Polyline smoothen_start_corner_at_trace(PolylineTrace p_trace) {
+  Polyline smoothenStartCornerAtTrace(PolylineTrace p_trace) {
     return null;
   }
 
   @Override
-  Polyline smoothen_end_corner_at_trace(PolylineTrace p_trace) {
+  Polyline smoothenEndCornerAtTrace(PolylineTrace p_trace) {
     return null;
   }
 }

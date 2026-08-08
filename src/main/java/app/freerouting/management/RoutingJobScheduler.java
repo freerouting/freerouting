@@ -96,7 +96,7 @@ public final class RoutingJobScheduler {
                                     null,
                                     new ItemIdentificationNumberGenerator());
                               }
-                              job.board = boardManager.get_routing_board();
+                              job.board = boardManager.getRoutingBoard();
 
                               var settingsMerger = globalSettings.settingsMergerProtype.clone();
 
@@ -223,7 +223,7 @@ public final class RoutingJobScheduler {
     return instance;
   }
 
-  private String UUIDtoShortCode(UUID uuid) {
+  private String uUIDtoShortCode(UUID uuid) {
     return uuid.toString().substring(0, 6).toUpperCase();
   }
 
@@ -279,7 +279,7 @@ public final class RoutingJobScheduler {
         sessionIdString = session.id.toString();
         userIdString = session.userId.toString();
 
-        saveJob("U-" + UUIDtoShortCode(session.userId), "S-" + UUIDtoShortCode(session.id), job);
+        saveJob("U-" + uUIDtoShortCode(session.userId), "S-" + uUIDtoShortCode(session.id), job);
       } catch (IOException e) {
         FRLogger.error(
             "Failed to save job for user '%s' in session '%s' to disk."
@@ -333,7 +333,7 @@ public final class RoutingJobScheduler {
         "FRJ_"
             + TextManager.convertInstantToString(job.createdAt)
             + "__J-"
-            + UUIDtoShortCode(job.id)
+            + uUIDtoShortCode(job.id)
             + ".json";
     Path jobFilePath = sessionFolderPath.resolve(jobFilename);
 

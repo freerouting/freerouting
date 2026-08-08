@@ -90,8 +90,8 @@ public class MazeListElement implements Comparable<MazeListElement> {
       return 1;
     }
     // Tie-break 2: door id
-    int id1 = this.door.get_id_no();
-    int id2 = p_other.door.get_id_no();
+    int id1 = this.door.getIdNo();
+    int id2 = p_other.door.getIdNo();
     if (id1 < id2) {
       return -1;
     }

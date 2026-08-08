@@ -23,12 +23,12 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
     partPinArr = p_part_pin_arr;
   }
 
-  public int pin_count() {
+  public int pinCount() {
     return partPinArr.length;
   }
 
   /** Returns the pim with index p_no. Pin numbers are from 0 to pinCount - 1 */
-  public PartPin get_pin(int p_no) {
+  public PartPin getPin(int p_no) {
     if (p_no < 0 || p_no >= partPinArr.length) {
       FRLogger.warn("LogicalPart.get_pin: p_no out of range");
       return null;
@@ -37,11 +37,11 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("logical_part_2") + " ");
-    p_window.append_bold(this.name);
+    p_window.appendBold(tm.getText("logical_part_2") + " ");
+    p_window.appendBold(this.name);
     for (int i = 0; i < this.partPinArr.length; i++) {
       PartPin currPin = this.partPinArr[i];
       p_window.newline();

@@ -43,7 +43,7 @@ public class UndoableObjects implements Serializable {
    *
    * @return an iterator for sequential reading of the object list
    */
-  public Iterator<UndoableObjectNode> start_read_object() {
+  public Iterator<UndoableObjectNode> startReadObject() {
     return objects.values().iterator();
   }
 
@@ -51,7 +51,7 @@ public class UndoableObjects implements Serializable {
    * Reads the next object in this list. Returns null, if the list is exhausted. p_it must be
    * created by start_read_object.
    */
-  public UndoableObjects.Storable read_object(Iterator<UndoableObjectNode> p_it) {
+  public UndoableObjects.Storable readObject(Iterator<UndoableObjectNode> p_it) {
     while (p_it.hasNext()) {
       UndoableObjectNode currNode = p_it.next();
       // skip objects getting alive only by redo
@@ -64,7 +64,7 @@ public class UndoableObjects implements Serializable {
 
   /** Adds p_object to the UndoableObjectsList. */
   public void insert(UndoableObjects.Storable p_object) {
-    disable_redo();
+    disableRedo();
     UndoableObjectNode currUndoableObject = new UndoableObjectNode(p_object, stackLevel);
     objects.put(p_object, currUndoableObject);
   }
@@ -74,7 +74,7 @@ public class UndoableObjects implements Serializable {
    * not found in the list.
    */
   public boolean delete(UndoableObjects.Storable p_object) {
-    disable_redo();
+    disableRedo();
     Collection<UndoableObjectNode> currDeleteList;
     if (deletedObjectsStack.isEmpty()) {
       // stackLevel 0
@@ -128,8 +128,8 @@ public class UndoableObjects implements Serializable {
   }
 
   /** Makes the current state of the list restorable by Undo. */
-  public void generate_snapshot() {
-    disable_redo();
+  public void generateSnapshot() {
+    disableRedo();
     Collection<UndoableObjectNode> currDeletedObjectsList = new LinkedList<>();
     deletedObjectsStack.add(currDeletedObjectsList);
     ++stackLevel;
@@ -227,8 +227,8 @@ public class UndoableObjects implements Serializable {
    * Removes the top snapshot from the undo stack, so that its situation cannot be restored anymore.
    * Returns false, if no more snapshot could be popped.
    */
-  public boolean pop_snapshot() {
-    disable_redo();
+  public boolean popSnapshot() {
+    disableRedo();
     if (stackLevel == 0) {
       return false;
     }
@@ -268,8 +268,8 @@ public class UndoableObjects implements Serializable {
    * Must be called before p_object will be modified after a snapshot for the first time, if it may
    * have existed before that snapshot.
    */
-  public void save_for_undo(UndoableObjects.Storable p_object) {
-    disable_redo();
+  public void saveForUndo(UndoableObjects.Storable p_object) {
+    disableRedo();
     // search p_object in the map
     UndoableObjectNode currNode = objects.get(p_object);
     if (currNode == null) {
@@ -288,7 +288,7 @@ public class UndoableObjects implements Serializable {
   }
 
   /** Must be called, if objects are changed for the first time after undo. */
-  private void disable_redo() {
+  private void disableRedo() {
     if (!redoPossible) {
       return;
     }

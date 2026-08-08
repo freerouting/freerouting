@@ -22,7 +22,7 @@ class ItemSearchTreesInfo {
    * Returns the tree entries for the tree with identification number p_tree_no, or null, if for
    * this tree no entries of this item are inserted.
    */
-  public ShapeTree.Leaf[] get_tree_entries(ShapeTree p_tree) {
+  public ShapeTree.Leaf[] getTreeEntries(ShapeTree p_tree) {
     for (SearchTreeInfo curr_tree_info : this.treeList) {
       if (curr_tree_info.tree == p_tree) {
         return curr_tree_info.entryArr;
@@ -32,7 +32,7 @@ class ItemSearchTreesInfo {
   }
 
   /** Sets the item tree entries for the tree with identification number p_tree_no. */
-  public void set_tree_entries(ShapeTree.Leaf[] p_tree_entries, ShapeTree p_tree) {
+  public void setTreeEntries(ShapeTree.Leaf[] p_tree_entries, ShapeTree p_tree) {
     for (SearchTreeInfo curr_tree_info : this.treeList) {
       if (curr_tree_info.tree == p_tree) {
         curr_tree_info.entryArr = p_tree_entries;
@@ -48,7 +48,7 @@ class ItemSearchTreesInfo {
    * Returns the precalculated tiles shapes for the tree with identification number p_tree_no, or
    * null, if the tile shapes of this tree are not yet precalculated.
    */
-  public TileShape[] get_precalculated_tree_shapes(ShapeTree p_tree) {
+  public TileShape[] getPrecalculatedTreeShapes(ShapeTree p_tree) {
     for (SearchTreeInfo curr_tree_info : this.treeList) {
       if (curr_tree_info.tree == p_tree) {
         return curr_tree_info.precalculatedTreeShapes;
@@ -58,7 +58,7 @@ class ItemSearchTreesInfo {
   }
 
   /** Sets the item tree entries for the tree with identification number p_tree_no. */
-  public void set_precalculated_tree_shapes(TileShape[] p_tile_shapes, ShapeTree p_tree) {
+  public void setPrecalculatedTreeShapes(TileShape[] p_tile_shapes, ShapeTree p_tree) {
     for (SearchTreeInfo curr_tree_info : this.treeList) {
       if (curr_tree_info.tree == p_tree) {
         curr_tree_info.precalculatedTreeShapes = p_tile_shapes;
@@ -71,7 +71,7 @@ class ItemSearchTreesInfo {
   }
 
   /** clears the stored information about the precalculated tree shapes for all search trees. */
-  public void clear_precalculated_tree_shapes() {
+  public void clearPrecalculatedTreeShapes() {
     for (SearchTreeInfo curr_tree_info : this.treeList) {
 
       curr_tree_info.precalculatedTreeShapes = null;

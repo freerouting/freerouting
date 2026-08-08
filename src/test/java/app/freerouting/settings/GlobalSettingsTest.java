@@ -17,7 +17,7 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void testApplyCommandLineArguments_ValidArguments() {
+  void testApplyCommandLineArgumentsValidArguments() {
     GlobalSettings settings = new GlobalSettings();
     String[] args =
         new String[] {
@@ -39,7 +39,7 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void testApplyCommandLineArguments_LogLevel() {
+  void testApplyCommandLineArgumentsLogLevel() {
     GlobalSettings settings = new GlobalSettings();
     String[] args = new String[] {"-ll", "DEBUG"};
 
@@ -49,7 +49,7 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void testApplyCommandLineArguments_UnknownFlag() {
+  void testApplyCommandLineArgumentsUnknownFlag() {
     GlobalSettings settings = new GlobalSettings();
     String[] args = new String[] {"-unknownFlag"};
 
@@ -64,7 +64,7 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void testApplyCommandLineArguments_UnknownValue() {
+  void testApplyCommandLineArgumentsUnknownValue() {
     GlobalSettings settings = new GlobalSettings();
     // "-mp 10" consumes 2 args. "extraValue" is loose.
     String[] args = new String[] {"-mp", "10", "extraValue"};
@@ -80,7 +80,7 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void testApplyCommandLineArguments_ValidDoubleHyphen() {
+  void testApplyCommandLineArgumentsValidDoubleHyphen() {
     GlobalSettings settings = new GlobalSettings();
     String[] args = new String[] {"--router.max_passes=20"};
 
@@ -107,7 +107,7 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void testApplyCommandLineArguments_MalformedDoubleHyphen() {
+  void testApplyCommandLineArgumentsMalformedDoubleHyphen() {
     GlobalSettings settings = new GlobalSettings();
     String[] args = new String[] {"--someflag"};
 

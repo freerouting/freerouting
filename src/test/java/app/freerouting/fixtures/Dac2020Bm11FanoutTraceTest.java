@@ -32,9 +32,9 @@ public class Dac2020Bm11FanoutTraceTest extends RoutingFixtureTest {
 
   @Test
   void testDAC2020Bm11FanoutTrace() {
-    RoutingJob job = GetRoutingJob("Issue730-DAC2020_bm11.dsn", fanoutOnlySettings());
+    RoutingJob job = getRoutingJob("Issue730-DAC2020_bm11.dsn", fanoutOnlySettings());
     assertFanoutOnlyJobSettings(job);
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     Assertions.assertEquals(RoutingJobState.COMPLETED, job.state);
 
@@ -46,9 +46,9 @@ public class Dac2020Bm11FanoutTraceTest extends RoutingFixtureTest {
 
   @Test
   void testDAC2020Bm11FanoutEscapeRate() {
-    RoutingJob job = GetRoutingJob("Issue730-DAC2020_bm11.dsn", fanoutOnlySettings());
+    RoutingJob job = getRoutingJob("Issue730-DAC2020_bm11.dsn", fanoutOnlySettings());
     assertFanoutOnlyJobSettings(job);
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     BoardStatistics stats = new BoardStatistics(job.board);
 

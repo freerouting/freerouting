@@ -24,20 +24,20 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
     name = p_name;
   }
 
-  public void append_via(ViaInfo p_via) {
+  public void appendVia(ViaInfo p_via) {
     list.add(p_via);
   }
 
   /** Removes p_via from the rule. Returns false, if p_via was not contained in the rule. */
-  public boolean remove_via(ViaInfo p_via) {
+  public boolean removeVia(ViaInfo p_via) {
     return list.remove(p_via);
   }
 
-  public int via_count() {
+  public int viaCount() {
     return list.size();
   }
 
-  public ViaInfo get_via(int p_index) {
+  public ViaInfo getVia(int p_index) {
     assert p_index >= 0 && p_index < list.size();
     return list.get(p_index);
   }
@@ -58,9 +58,9 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Returns true, if this rule contains a via with padstack p_padstack */
-  public boolean contains_padstack(Padstack p_padstack) {
+  public boolean containsPadstack(Padstack p_padstack) {
     for (ViaInfo currInfo : this.list) {
-      if (currInfo.get_padstack() == p_padstack) {
+      if (currInfo.getPadstack() == p_padstack) {
         return true;
       }
     }
@@ -71,10 +71,10 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
    * Searches a via in this rule with first layer = p_from_layer and last layer = p_to_layer.
    * Returns null, if no such via exists.
    */
-  public ViaInfo get_layer_range(int p_from_layer, int p_to_layer) {
+  public ViaInfo getLayerRange(int p_from_layer, int p_to_layer) {
     for (ViaInfo currInfo : this.list) {
-      if (currInfo.get_padstack().from_layer() == p_from_layer
-          && currInfo.get_padstack().to_layer() == p_to_layer) {
+      if (currInfo.getPadstack().fromLayer() == p_from_layer
+          && currInfo.getPadstack().toLayer() == p_to_layer) {
         return currInfo;
       }
     }
@@ -100,12 +100,12 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("via_rule_2") + " ");
-    p_window.append_bold(this.name);
-    p_window.append_bold(":");
+    p_window.appendBold(tm.getText("via_rule_2") + " ");
+    p_window.appendBold(this.name);
+    p_window.appendBold(":");
     int counter = 0;
     boolean firstTime = true;
     final int maxViasPerRow = 5;
@@ -119,7 +119,7 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
         p_window.newline();
         p_window.indent();
       }
-      p_window.append(currVia.get_name(), tm.getText("viaInfo"), currVia);
+      p_window.append(currVia.getName(), tm.getText("viaInfo"), currVia);
       counter = (counter + 1) % maxViasPerRow;
     }
   }

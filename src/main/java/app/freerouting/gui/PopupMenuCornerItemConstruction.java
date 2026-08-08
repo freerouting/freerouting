@@ -22,7 +22,7 @@ class PopupMenuCornerItemConstruction extends JPopupMenu {
         // Same action as if the left button is clicked with
         // the current mouse coordinates in this situation
         // because the left button is a shortcut for this action.
-        _ -> boardPanel.boardHandling.left_button_clicked(boardPanel.rightButtonClickLocation));
+        _ -> boardPanel.boardHandling.leftButtonClicked(boardPanel.rightButtonClickLocation));
     popupAddCornerMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupAddCornerMenuitem", popupAddCornerMenuitem.getText()));
 
@@ -30,7 +30,7 @@ class PopupMenuCornerItemConstruction extends JPopupMenu {
 
     JMenuItem popupCloseMenuitem = new JMenuItem();
     popupCloseMenuitem.setText(tm.getText("close"));
-    popupCloseMenuitem.addActionListener(_ -> boardPanel.boardHandling.return_from_state());
+    popupCloseMenuitem.addActionListener(_ -> boardPanel.boardHandling.returnFromState());
     popupCloseMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupCloseMenuitem", popupCloseMenuitem.getText()));
 
@@ -38,7 +38,7 @@ class PopupMenuCornerItemConstruction extends JPopupMenu {
 
     JMenuItem popupCancelMenuitem = new JMenuItem();
     popupCancelMenuitem.setText(tm.getText("cancel"));
-    popupCancelMenuitem.addActionListener(_ -> boardPanel.boardHandling.cancel_state());
+    popupCancelMenuitem.addActionListener(_ -> boardPanel.boardHandling.cancelState());
     popupCancelMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupCancelMenuitem", popupCancelMenuitem.getText()));
 

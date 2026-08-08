@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * Base class for all Freerouting API controllers.
  *
- * <p>Provides shared authentication logic via {@link #AuthenticateUser()}, which resolves the
+ * <p>Provides shared authentication logic via {@link #authenticateUser()}, which resolves the
  * caller's UUID from the standard HTTP request headers. All protected controller methods must call
  * this method before performing any business logic.
  *
@@ -16,7 +16,7 @@ import java.util.UUID;
  * <ul>
  *   <li>{@code Freerouting-Profile-ID} — preferred; must be a valid RFC 4122 UUID string.
  *   <li>{@code Freerouting-Profile-Email} — fallback; email-to-UUID resolution is not yet
- *       implemented (see TODO in {@link #AuthenticateUser()}).
+ *       implemented (see TODO in {@link #authenticateUser()}).
  * </ul>
  *
  * <p>Note: the method name intentionally uses PascalCase to match the original naming convention of
@@ -43,7 +43,7 @@ public class BaseController {
    * @throws IllegalArgumentException if both headers are missing/empty, or if neither yields a
    *     resolvable UUID.
    */
-  protected UUID AuthenticateUser() {
+  protected UUID authenticateUser() {
     String userIdString = httpHeaders.getHeaderString("Freerouting-Profile-ID");
     String userEmailString = httpHeaders.getHeaderString("Freerouting-Profile-Email");
 

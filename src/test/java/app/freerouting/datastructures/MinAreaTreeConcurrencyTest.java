@@ -23,11 +23,11 @@ import org.junit.jupiter.api.Test;
 class MinAreaTreeConcurrencyTest {
 
   @Test
-  void overlaps_concurrent_queries_do_not_corrupt_stack() throws Exception {
+  void overlapsConcurrentQueriesDoNotCorruptStack() throws Exception {
     RoutingBoard board = DsnTestFixtures.loadBoard("Issue508-DAC2020_bm01.dsn");
-    var tree = board.searchTreeManager.get_default_tree();
+    var tree = board.searchTreeManager.getDefaultTree();
     RegularTileShape queryShape =
-        board.get_bounding_box().bounding_shape(FortyfiveDegreeBoundingDirections.INSTANCE);
+        board.getBoundingBox().boundingShape(FortyfiveDegreeBoundingDirections.INSTANCE);
 
     ExecutorService pool = Executors.newFixedThreadPool(8);
     List<Future<?>> futures = new ArrayList<>();

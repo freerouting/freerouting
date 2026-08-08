@@ -10,11 +10,11 @@ public abstract class StoppableThread extends Thread implements Stoppable {
   /** Creates a new instance of InteractiveActionThread */
   protected StoppableThread() {}
 
-  protected abstract void thread_action();
+  protected abstract void threadAction();
 
   @Override
   public void run() {
-    thread_action();
+    threadAction();
   }
 
   // Request the thread to stop including the fanout, auto-router and optimizer tasks
@@ -29,14 +29,14 @@ public abstract class StoppableThread extends Thread implements Stoppable {
   }
 
   // Request the thread to stop the auto-router, but continue with the optimizer and other tasks
-  public synchronized void request_stop_auto_router() {
+  public synchronized void requestStopAutoRouter() {
     if (this.stopRequestState == StopRequestState.NONE) {
       this.stopRequestState = StopRequestState.AUTO_ROUTER_ONLY;
     }
   }
 
   // Check if the thread should stop the auto router
-  public synchronized boolean is_stop_auto_router_requested() {
+  public synchronized boolean isStopAutoRouterRequested() {
     return this.stopRequestState != StopRequestState.NONE;
   }
 }

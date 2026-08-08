@@ -65,7 +65,7 @@ public class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
    * </ol>
    */
   @Test
-  void test_4layer_board_issue066_layer_count_and_inner_layer_usage() {
+  void test4layerBoardIssue066LayerCountAndInnerLayerUsage() {
     TestingSettings testingSettings = new TestingSettings();
     // Keep CI-friendly: this test validates DSN-derived layer handling, not fanout quality.
     // Disable the expensive SMD fanout pre-pass so the bounded autorouter slice can still
@@ -75,7 +75,7 @@ public class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
     testingSettings.setMaxItems(60);
     testingSettings.setJobTimeoutString("00:02:00");
 
-    RoutingJob job = GetRoutingJob("Issue066-Project_GP8B.dsn", testingSettings);
+    RoutingJob job = getRoutingJob("Issue066-Project_GP8B.dsn", testingSettings);
 
     // --- Pre-routing: layer count must be read from the DSN, not defaulted to 2 ---
     // The merger has run but applyBoardSpecificOptimizations has NOT yet been called.
@@ -88,7 +88,7 @@ public class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
             + " 'Issue066-Project_GP8B.dsn' (F.Cu / In1.Cu / In2.Cu / B.Cu)."
             + " If it returns 2 the DefaultSettings hard-coded layer count is still active.");
 
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     // --- Post-routing: layer count must still be 4 ---
     assertEquals(
@@ -102,7 +102,7 @@ public class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
     // If the router was inadvertently restricted to size-2 layer arrays before the fix,
     // it would never place traces on these layers.
     Set<Integer> layersWithTraces =
-        job.board.get_traces().stream().map(Trace::get_layer).collect(Collectors.toSet());
+        job.board.getTraces().stream().map(Trace::getLayer).collect(Collectors.toSet());
 
     assertTrue(
         layersWithTraces.contains(1) || layersWithTraces.contains(2),
@@ -126,7 +126,7 @@ public class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
    * </ol>
    */
   @Test
-  void test_6layer_board_issue289_layer_count_and_inner_layer_usage() {
+  void test6layerBoardIssue289LayerCountAndInnerLayerUsage() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setFanoutEnabled(false);
     testingSettings.setMaxPasses(2);
@@ -134,7 +134,7 @@ public class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
     testingSettings.setJobTimeoutString("00:02:00");
 
     RoutingJob job =
-        GetRoutingJob("Issue289-Autorouter_PCB_FHT-8086_2024-03-08.dsn", testingSettings);
+        getRoutingJob("Issue289-Autorouter_PCB_FHT-8086_2024-03-08.dsn", testingSettings);
 
     // --- Pre-routing: layer count must be read from the DSN, not defaulted to 2 ---
     assertEquals(
@@ -144,7 +144,7 @@ public class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
             + " 'Issue289-Autorouter_PCB_FHT-8086_2024-03-08.dsn' (layers 1/2/21/22/23/24)."
             + " If it returns 2 the DefaultSettings hard-coded layer count is still active.");
 
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     // --- Post-routing: layer count must still be 6 ---
     assertEquals(
@@ -156,7 +156,7 @@ public class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
     // --- Post-routing: at least one trace must exist on an inner layer ---
     // For this 6-layer board the inner signal layers are indices 1 through 4.
     Set<Integer> layersWithTraces =
-        job.board.get_traces().stream().map(Trace::get_layer).collect(Collectors.toSet());
+        job.board.getTraces().stream().map(Trace::getLayer).collect(Collectors.toSet());
 
     boolean hasInnerLayerTrace = layersWithTraces.stream().anyMatch(l -> l >= 1 && l <= 4);
     assertTrue(

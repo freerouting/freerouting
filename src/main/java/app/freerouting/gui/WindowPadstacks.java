@@ -27,22 +27,22 @@ public class WindowPadstacks extends WindowObjectListWithFilter {
 
   /** Fills the list with the library padstacks. */
   @Override
-  protected void fill_list() {
+  protected void fillList() {
     Padstacks padstacks =
-        this.boardFrame.boardPanel.boardHandling.get_routing_board().library.padstacks;
+        this.boardFrame.boardPanel.boardHandling.getRoutingBoard().library.padstacks;
     Padstack[] sortedArr = new Padstack[padstacks.count()];
     for (int i = 0; i < sortedArr.length; i++) {
       sortedArr[i] = padstacks.get(i + 1);
     }
     Arrays.sort(sortedArr);
     for (int i = 0; i < sortedArr.length; i++) {
-      this.add_to_list(sortedArr[i]);
+      this.addToList(sortedArr[i]);
     }
     this.list.setVisibleRowCount(Math.min(padstacks.count(), DEFAULT_TABLE_SIZE));
   }
 
   @Override
-  protected void select_instances() {
+  protected void selectInstances() {
     List<Object> selectedPadstacks = list.getSelectedValuesList();
     if (selectedPadstacks.isEmpty()) {
       return;
@@ -51,16 +51,16 @@ public class WindowPadstacks extends WindowObjectListWithFilter {
     for (int i = 0; i < selectedPadstacks.size(); i++) {
       padstackList.add((Padstack) selectedPadstacks.get(i));
     }
-    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.get_routing_board();
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
     Set<Item> boardInstances = new TreeSet<>();
-    Iterator<UndoableObjects.UndoableObjectNode> it = routingBoard.itemList.start_read_object();
+    Iterator<UndoableObjects.UndoableObjectNode> it = routingBoard.itemList.startReadObject();
     for (; ; ) {
-      UndoableObjects.Storable currObject = routingBoard.itemList.read_object(it);
+      UndoableObjects.Storable currObject = routingBoard.itemList.readObject(it);
       if (currObject == null) {
         break;
       }
       if (currObject instanceof DrillItem item) {
-        Padstack currPadstack = item.get_padstack();
+        Padstack currPadstack = item.getPadstack();
         for (Padstack curr_selected_padstack : padstackList) {
           if (currPadstack == curr_selected_padstack) {
             boardInstances.add((Item) currObject);
@@ -69,7 +69,7 @@ public class WindowPadstacks extends WindowObjectListWithFilter {
         }
       }
     }
-    boardFrame.boardPanel.boardHandling.select_items(boardInstances);
-    boardFrame.boardPanel.boardHandling.zoom_selection();
+    boardFrame.boardPanel.boardHandling.selectItems(boardInstances);
+    boardFrame.boardPanel.boardHandling.zoomSelection();
   }
 }

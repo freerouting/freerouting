@@ -162,7 +162,7 @@ public class WindowVia extends BoardSavableSubWindow {
     this.mainPanel.add(listScrollPane, BorderLayout.CENTER);
 
     // fill the list
-    BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+    BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
     for (ViaRule currRule : boardRules.viaRules) {
       this.ruleListModel.addElement(currRule);
     }
@@ -217,7 +217,7 @@ public class WindowVia extends BoardSavableSubWindow {
   public void refresh() {
     // reinsert the elements in the rule list
     this.ruleListModel.removeAllElements();
-    BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+    BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
     for (ViaRule currRule : boardRules.viaRules) {
       this.ruleListModel.addElement(currRule);
     }
@@ -252,9 +252,9 @@ public class WindowVia extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       Collection<WindowObjectInfo.Printable> objectList = new LinkedList<>();
-      BoardLibrary boardLibrary = boardFrame.boardPanel.boardHandling.get_routing_board().library;
-      for (int i = 0; i < boardLibrary.via_padstack_count(); i++) {
-        objectList.add(boardLibrary.get_via_padstack(i));
+      BoardLibrary boardLibrary = boardFrame.boardPanel.boardHandling.getRoutingBoard().library;
+      for (int i = 0; i < boardLibrary.viaPadstackCount(); i++) {
+        objectList.add(boardLibrary.getViaPadstack(i));
       }
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
@@ -273,7 +273,7 @@ public class WindowVia extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      BasicBoard pcb = boardFrame.boardPanel.boardHandling.get_routing_board();
+      BasicBoard pcb = boardFrame.boardPanel.boardHandling.getRoutingBoard();
       if (pcb.layerStructure.arr.length <= 1) {
         return;
       }
@@ -314,7 +314,7 @@ public class WindowVia extends BoardSavableSubWindow {
         }
       }
       if (!layersSelected) {
-        int firstPossibleEndLayerNo = pcb.layerStructure.get_no(startLayer) + 1;
+        int firstPossibleEndLayerNo = pcb.layerStructure.getNo(startLayer) + 1;
         Layer[] possibleEndLayers =
             Arrays.copyOfRange(
                 pcb.layerStructure.arr, firstPossibleEndLayerNo, pcb.layerStructure.arr.length);
@@ -356,8 +356,8 @@ public class WindowVia extends BoardSavableSubWindow {
           new PadstackInputPanel(startLayer, endLayer, defaultRadius);
       JOptionPane.showMessageDialog(
           boardFrame, padstackInputPanel, tm.getText("adjust_circles"), JOptionPane.PLAIN_MESSAGE);
-      int fromLayerNo = pcb.layerStructure.get_no(startLayer);
-      int toLayerNo = pcb.layerStructure.get_no(endLayer);
+      int fromLayerNo = pcb.layerStructure.getNo(startLayer);
+      int toLayerNo = pcb.layerStructure.getNo(endLayer);
       ConvexShape[] padstackShapes = new ConvexShape[pcb.layerStructure.arr.length];
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
@@ -368,7 +368,7 @@ public class WindowVia extends BoardSavableSubWindow {
         if (input instanceof Number number) {
           radius = number.doubleValue();
         }
-        int circleRadius = (int) Math.round(coordinateTransform.user_to_board(radius));
+        int circleRadius = (int) Math.round(coordinateTransform.userToBoard(radius));
         if (circleRadius > 0) {
           padstackShapes[i] = new Circle(app.freerouting.geometry.planar.Point.ZERO, circleRadius);
           shapeExists = true;
@@ -378,7 +378,7 @@ public class WindowVia extends BoardSavableSubWindow {
         return;
       }
       Padstack newPadstack = pcb.library.padstacks.add(padstackName, padstackShapes, true, true);
-      pcb.library.add_via_padstack(newPadstack);
+      pcb.library.addViaPadstack(newPadstack);
     }
   }
 
@@ -394,9 +394,9 @@ public class WindowVia extends BoardSavableSubWindow {
       GridBagConstraints gridbagConstraints = new GridBagConstraints();
 
       LayerStructure layerStructure =
-          boardFrame.boardPanel.boardHandling.get_routing_board().layerStructure;
-      int fromLayerNo = layerStructure.get_no(p_from_layer);
-      int toLayerNo = layerStructure.get_no(p_to_layer);
+          boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure;
+      int fromLayerNo = layerStructure.getNo(p_from_layer);
+      int toLayerNo = layerStructure.getNo(p_to_layer);
       int layerCount = toLayerNo - fromLayerNo + 1;
       layerNames = new JLabel[layerCount];
       circleRadius = new JFormattedTextField[layerCount];
@@ -423,8 +423,8 @@ public class WindowVia extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      BasicBoard pcb = boardFrame.boardPanel.boardHandling.get_routing_board();
-      Padstack[] viaPadstacks = pcb.library.get_via_padstacks();
+      BasicBoard pcb = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+      Padstack[] viaPadstacks = pcb.library.getViaPadstacks();
       Object selectedValue =
           JOptionPane.showInputDialog(
               null,
@@ -440,17 +440,17 @@ public class WindowVia extends BoardSavableSubWindow {
       Padstack selectedPadstack = (Padstack) selectedValue;
       ViaInfo viaWithSelectedPadstack = null;
       for (int i = 0; i < pcb.rules.viaInfos.count(); i++) {
-        if (pcb.rules.viaInfos.get(i).get_padstack() == selectedPadstack) {
+        if (pcb.rules.viaInfos.get(i).getPadstack() == selectedPadstack) {
           viaWithSelectedPadstack = pcb.rules.viaInfos.get(i);
           break;
         }
       }
       if (viaWithSelectedPadstack != null) {
-        boardFrame.screenMessages.set_status_message(
-            tm.getText("padstack_not_removed_in_use_message", viaWithSelectedPadstack.get_name()));
+        boardFrame.screenMessages.setStatusMessage(
+            tm.getText("padstack_not_removed_in_use_message", viaWithSelectedPadstack.getName()));
         return;
       }
-      pcb.library.remove_via_padstack(selectedPadstack, pcb);
+      pcb.library.removeViaPadstack(selectedPadstack, pcb);
     }
   }
 
@@ -459,7 +459,7 @@ public class WindowVia extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       Collection<WindowObjectInfo.Printable> objectList = new LinkedList<>();
-      ViaInfos viaInfos = boardFrame.boardPanel.boardHandling.get_routing_board().rules.viaInfos;
+      ViaInfos viaInfos = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.viaInfos;
       for (int i = 0; i < viaInfos.count(); i++) {
         objectList.add(viaInfos.get(i));
       }
@@ -514,7 +514,7 @@ public class WindowVia extends BoardSavableSubWindow {
       if (selectedObject == null) {
         return;
       }
-      BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
       WindowViaRule newWindow = new WindowViaRule(selectedObject, boardRules.viaInfos, boardFrame);
       Point loc = getLocation();
       Point newWindowLocation =
@@ -537,10 +537,10 @@ public class WindowVia extends BoardSavableSubWindow {
         return;
       }
       ViaRule newViaRule = new ViaRule(newName);
-      BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
       boardRules.viaRules.add(newViaRule);
       ruleListModel.addElement(newViaRule);
-      boardFrame.refresh_windows();
+      boardFrame.refreshWindows();
     }
   }
 
@@ -554,7 +554,7 @@ public class WindowVia extends BoardSavableSubWindow {
       }
       ViaRule selectedRule = selectedObject;
       if (WindowMessage.confirm(tm.getText("remove_via_rule_confirm", selectedRule.name))) {
-        BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+        BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
         boardRules.viaRules.remove(selectedRule);
         ruleListModel.removeElement(selectedRule);
       }

@@ -85,11 +85,11 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
     }
   }
 
-  public boolean improved_over(ItemRouteResult r) {
+  public boolean improvedOver(ItemRouteResult r) {
     return this.compareTo(r) < 0;
   }
 
-  public int item_id() {
+  public int itemId() {
     return this.itemId;
   }
 
@@ -97,35 +97,35 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
     return this.improved;
   }
 
-  public float improvement_percentage() {
+  public float improvementPercentage() {
     return this.improvementPercentage;
   }
 
-  public int via_count() {
+  public int viaCount() {
     return viaCountAfter;
   }
 
-  public double trace_length() {
+  public double traceLength() {
     return traceLengthAfter;
   }
 
-  public int incomplete_count() {
+  public int incompleteCount() {
     return incompleteCountAfter;
   }
 
-  public int via_count_reduced() {
+  public int viaCountReduced() {
     return viaCountBefore - viaCountAfter;
   }
 
-  public double length_reduced() {
+  public double lengthReduced() {
     return traceLengthBefore - traceLengthAfter;
   }
 
-  public void update_improved(boolean p_improved) {
+  public void updateImproved(boolean p_improved) {
     improved = p_improved;
   }
 
-  public int incomplete_count_before() {
+  public int incompleteCountBefore() {
     return incompleteCountBefore;
   }
 }

@@ -109,84 +109,84 @@ public class ObstacleArea extends Item implements Serializable {
         rotationInDegree,
         sideChanged,
         copiedNetNos,
-        clearance_class_no(),
+        clearanceClassNo(),
         p_id_no,
-        get_component_no(),
+        getComponentNo(),
         name,
-        get_fixed_state(),
+        getFixedState(),
         board);
   }
 
-  public Area get_area() {
+  public Area getArea() {
     if (this.precalculatedAbsoluteArea == null) {
       if (this.relativeArea == null) {
         FRLogger.warn("ObstacleArea.get_area: area is null");
         return null;
       }
       Area turnedArea = this.relativeArea;
-      if (this.sideChanged && !this.board.components.get_flip_style_rotate_first()) {
-        turnedArea = turnedArea.mirror_vertical(Point.ZERO);
+      if (this.sideChanged && !this.board.components.getFlipStyleRotateFirst()) {
+        turnedArea = turnedArea.mirrorVertical(Point.ZERO);
       }
       if (this.rotationInDegree != 0) {
         double rotation = this.rotationInDegree;
         if (rotation % 90 == 0) {
-          turnedArea = turnedArea.turn_90_degree(((int) rotation) / 90, Point.ZERO);
+          turnedArea = turnedArea.turn90Degree(((int) rotation) / 90, Point.ZERO);
         } else {
-          turnedArea = turnedArea.rotate_approx(Math.toRadians(rotation), FloatPoint.ZERO);
+          turnedArea = turnedArea.rotateApprox(Math.toRadians(rotation), FloatPoint.ZERO);
         }
       }
-      if (this.sideChanged && this.board.components.get_flip_style_rotate_first()) {
-        turnedArea = turnedArea.mirror_vertical(Point.ZERO);
+      if (this.sideChanged && this.board.components.getFlipStyleRotateFirst()) {
+        turnedArea = turnedArea.mirrorVertical(Point.ZERO);
       }
-      this.precalculatedAbsoluteArea = turnedArea.translate_by(this.translation);
+      this.precalculatedAbsoluteArea = turnedArea.translateBy(this.translation);
     }
     return this.precalculatedAbsoluteArea;
   }
 
-  protected Area get_relative_area() {
+  protected Area getRelativeArea() {
     return this.relativeArea;
   }
 
   @Override
-  public boolean is_on_layer(int p_layer) {
+  public boolean isOnLayer(int p_layer) {
     return layer == p_layer;
   }
 
   @Override
-  public int first_layer() {
+  public int firstLayer() {
     return this.layer;
   }
 
   @Override
-  public int last_layer() {
+  public int lastLayer() {
     return this.layer;
   }
 
-  public int get_layer() {
+  public int getLayer() {
     return this.layer;
   }
 
   @Override
-  public IntBox bounding_box() {
-    return this.get_area().bounding_box();
+  public IntBox boundingBox() {
+    return this.getArea().boundingBox();
   }
 
   @Override
-  public boolean is_obstacle(Item p_other) {
-    if (p_other.shares_net(this)) {
+  public boolean isObstacle(Item p_other) {
+    if (p_other.sharesNet(this)) {
       return false;
     }
     return p_other instanceof Trace || p_other instanceof Via;
   }
 
   @Override
-  protected TileShape[] calculate_tree_shapes(ShapeSearchTree p_search_tree) {
-    return p_search_tree.calculate_tree_shapes(this);
+  protected TileShape[] calculateTreeShapes(ShapeSearchTree p_search_tree) {
+    return p_search_tree.calculateTreeShapes(this);
   }
 
   @Override
-  public int tile_shape_count() {
-    TileShape[] tileShapes = this.split_to_convex();
+  public int tileShapeCount() {
+    TileShape[] tileShapes = this.splitToConvex();
     if (tileShapes == null) {
       // an error occurred while dividing the relativeArea
       return 0;
@@ -195,8 +195,8 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   @Override
-  public TileShape get_tile_shape(int p_no) {
-    TileShape[] tileShapes = this.split_to_convex();
+  public TileShape getTileShape(int p_no) {
+    TileShape[] tileShapes = this.splitToConvex();
     if (tileShapes == null || p_no < 0 || p_no >= tileShapes.length) {
       FRLogger.warn("ConvexObstacle.get_tile_shape: p_no out of range");
       return null;
@@ -205,13 +205,13 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   @Override
-  public void translate_by(Vector p_vector) {
+  public void translateBy(Vector p_vector) {
     this.translation = this.translation.add(p_vector);
-    this.clear_derived_data();
+    this.clearDerivedData();
   }
 
   @Override
-  public void turn_90_degree(int p_factor, IntPoint p_pole) {
+  public void turn90Degree(int p_factor, IntPoint p_pole) {
     this.rotationInDegree += p_factor * 90;
     while (this.rotationInDegree >= 360) {
       this.rotationInDegree -= 360;
@@ -219,15 +219,15 @@ public class ObstacleArea extends Item implements Serializable {
     while (this.rotationInDegree < 0) {
       this.rotationInDegree += 360;
     }
-    Point relLocation = Point.ZERO.translate_by(this.translation);
-    this.translation = relLocation.turn_90_degree(p_factor, p_pole).difference_by(Point.ZERO);
-    this.clear_derived_data();
+    Point relLocation = Point.ZERO.translateBy(this.translation);
+    this.translation = relLocation.turn90Degree(p_factor, p_pole).differenceBy(Point.ZERO);
+    this.clearDerivedData();
   }
 
   @Override
-  public void rotate_approx(double p_angle_in_degree, FloatPoint p_pole) {
+  public void rotateApprox(double p_angle_in_degree, FloatPoint p_pole) {
     double turnAngle = p_angle_in_degree;
-    if (this.sideChanged && this.board.components.get_flip_style_rotate_first()) {
+    if (this.sideChanged && this.board.components.getFlipStyleRotateFirst()) {
       turnAngle = 360 - p_angle_in_degree;
     }
     this.rotationInDegree += turnAngle;
@@ -238,42 +238,42 @@ public class ObstacleArea extends Item implements Serializable {
       this.rotationInDegree += 360;
     }
     FloatPoint newTranslation =
-        this.translation.to_float().rotate(Math.toRadians(p_angle_in_degree), p_pole);
-    this.translation = newTranslation.round().difference_by(Point.ZERO);
-    this.clear_derived_data();
+        this.translation.toFloat().rotate(Math.toRadians(p_angle_in_degree), p_pole);
+    this.translation = newTranslation.round().differenceBy(Point.ZERO);
+    this.clearDerivedData();
   }
 
   @Override
-  public void change_placement_side(IntPoint p_pole) {
+  public void changePlacementSide(IntPoint p_pole) {
     this.sideChanged = !this.sideChanged;
     if (this.board != null) {
-      this.layer = board.get_layer_count() - this.layer - 1;
+      this.layer = board.getLayerCount() - this.layer - 1;
     }
-    Point relLocation = Point.ZERO.translate_by(this.translation);
-    this.translation = relLocation.mirror_vertical(p_pole).difference_by(Point.ZERO);
-    this.clear_derived_data();
+    Point relLocation = Point.ZERO.translateBy(this.translation);
+    this.translation = relLocation.mirrorVertical(p_pole).differenceBy(Point.ZERO);
+    this.clearDerivedData();
   }
 
   @Override
-  public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
-    if (!this.is_selected_by_fixed_filter(p_filter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter p_filter) {
+    if (!this.isSelectedByFixedFilter(p_filter)) {
       return false;
     }
-    return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.KEEPOUT);
+    return p_filter.isSelected(ItemSelectionFilter.SelectableChoices.KEEPOUT);
   }
 
   @Override
-  public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
-    return p_graphics_context.get_obstacle_colors();
+  public Color[] getDrawColors(GraphicsContext p_graphics_context) {
+    return p_graphics_context.getObstacleColors();
   }
 
   @Override
-  public double get_draw_intensity(GraphicsContext p_graphics_context) {
-    return p_graphics_context.get_obstacle_color_intensity();
+  public double getDrawIntensity(GraphicsContext p_graphics_context) {
+    return p_graphics_context.getObstacleColorIntensity();
   }
 
   @Override
-  public int get_draw_priority() {
+  public int getDrawPriority() {
     return Drawable.MIN_DRAW_PRIORITY;
   }
 
@@ -284,58 +284,58 @@ public class ObstacleArea extends Item implements Serializable {
       return;
     }
     Color color = p_color_arr[this.layer];
-    double intensity = p_graphics_context.get_layer_visibility(this.layer) * p_intensity;
-    p_graphics_context.fill_area(this.get_area(), p_g, color, intensity);
+    double intensity = p_graphics_context.getLayerVisibility(this.layer) * p_intensity;
+    p_graphics_context.fillArea(this.getArea(), p_g, color, intensity);
     if (intensity > 0 && display_tree_shapes) {
-      ShapeSearchTree defaultTree = this.board.searchTreeManager.get_default_tree();
-      for (int i = 0; i < this.tree_shape_count(defaultTree); i++) {
-        p_graphics_context.draw_boundary(
-            this.get_tree_shape(defaultTree, i), 1, Color.white, p_g, 1);
+      ShapeSearchTree defaultTree = this.board.searchTreeManager.getDefaultTree();
+      for (int i = 0; i < this.treeShapeCount(defaultTree); i++) {
+        p_graphics_context.drawBoundary(
+            this.getTreeShape(defaultTree, i), 1, Color.white, p_g, 1);
       }
     }
   }
 
   @Override
-  public int shape_layer(int p_index) {
+  public int shapeLayer(int p_index) {
     return layer;
   }
 
-  protected Vector get_translation() {
+  protected Vector getTranslation() {
     return translation;
   }
 
-  protected double get_rotation_in_degree() {
+  protected double getRotationInDegree() {
     return rotationInDegree;
   }
 
-  protected boolean get_side_changed() {
+  protected boolean getSideChanged() {
     return sideChanged;
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("keepout"));
-    int cmpNo = this.get_component_no();
+    p_window.appendBold(tm.getText("keepout"));
+    int cmpNo = this.getComponentNo();
     if (cmpNo > 0) {
       p_window.append(" " + tm.getText("of_component") + " ");
       Component component = board.components.get(cmpNo);
       p_window.append(component.name, tm.getText("component_info"), component);
     }
-    this.print_shape_info(p_window, p_locale);
-    this.print_item_info(p_window, p_locale);
+    this.printShapeInfo(p_window, p_locale);
+    this.printItemInfo(p_window, p_locale);
     p_window.newline();
   }
 
   /** Used in the implementation of print_info for this class and derived classes. */
-  protected final void print_shape_info(ObjectInfoPanel p_window, Locale p_locale) {
+  protected final void printShapeInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
     p_window.append(" " + tm.getText("at") + " ");
-    FloatPoint center = this.get_area().get_border().centre_of_gravity();
+    FloatPoint center = this.getArea().getBorder().centreOfGravity();
     p_window.append(center);
-    Integer holeCount = this.relativeArea.get_holes().length;
+    Integer holeCount = this.relativeArea.getHoles().length;
     if (holeCount > 0) {
       p_window.append(" " + tm.getText("with") + " ");
       NumberFormat nf = NumberFormat.getInstance(p_locale);
@@ -347,20 +347,20 @@ public class ObstacleArea extends Item implements Serializable {
       }
     }
     p_window.append(" " + tm.getText("on_layer") + " ");
-    p_window.append(this.board.layerStructure.arr[this.get_layer()].name);
+    p_window.append(this.board.layerStructure.arr[this.getLayer()].name);
   }
 
-  TileShape[] split_to_convex() {
+  TileShape[] splitToConvex() {
     if (this.relativeArea == null) {
       FRLogger.warn("ObstacleArea.split_to_convex: area is null");
       return null;
     }
-    return this.get_area().split_to_convex();
+    return this.getArea().splitToConvex();
   }
 
   @Override
-  public void clear_derived_data() {
-    super.clear_derived_data();
+  public void clearDerivedData() {
+    super.clearDerivedData();
     this.precalculatedAbsoluteArea = null;
   }
 

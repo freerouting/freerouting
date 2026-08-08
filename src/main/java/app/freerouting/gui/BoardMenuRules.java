@@ -18,7 +18,7 @@ public final class BoardMenuRules extends JMenu {
   }
 
   /** Returns a new windows menu for the board frame. */
-  public static BoardMenuRules get_instance(BoardFrame p_board_frame) {
+  public static BoardMenuRules getInstance(BoardFrame p_board_frame) {
     final BoardMenuRules rulesMenu = new BoardMenuRules(p_board_frame);
 
     rulesMenu.setText(rulesMenu.tm.getText("rules"));

@@ -33,7 +33,7 @@ public abstract class ShapeTree {
 
   /** Inserts all shapes of p_obj into the tree */
   public void insert(ShapeTree.Storable p_obj) {
-    int shapeCount = p_obj.tree_shape_count(this);
+    int shapeCount = p_obj.treeShapeCount(this);
     if (shapeCount <= 0) {
       return;
     }
@@ -41,17 +41,17 @@ public abstract class ShapeTree {
     for (int i = 0; i < shapeCount; i++) {
       leafArr[i] = insert(p_obj, i);
     }
-    p_obj.set_search_tree_entries(leafArr, this);
+    p_obj.setSearchTreeEntries(leafArr, this);
   }
 
   /** Insert a shape - creates a new node with a bounding shape */
   protected Leaf insert(ShapeTree.Storable p_object, int p_index) {
-    Shape objectShape = p_object.get_tree_shape(this, p_index);
+    Shape objectShape = p_object.getTreeShape(this, p_index);
     if (objectShape == null) {
       return null;
     }
 
-    RegularTileShape boundingShape = objectShape.bounding_shape(boundingDirections);
+    RegularTileShape boundingShape = objectShape.boundingShape(boundingDirections);
     if (boundingShape == null) {
       FRLogger.warn("ShapeTree.insert: bounding shape of TreeObject is null");
       return null;
@@ -63,7 +63,7 @@ public abstract class ShapeTree {
   }
 
   /** Inserts the leaves of this tree into an array. */
-  public Leaf[] to_array() {
+  public Leaf[] toArray() {
     Leaf[] result = new Leaf[this.leafCount];
     if (result.length == 0) {
       return result;
@@ -94,7 +94,7 @@ public abstract class ShapeTree {
 
   abstract void insert(Leaf p_leaf);
 
-  abstract void remove_leaf(Leaf p_leaf);
+  abstract void removeLeaf(Leaf p_leaf);
 
   /** removes all entries of p_obj in the tree. */
   public void remove(Leaf[] p_entries) {
@@ -102,7 +102,7 @@ public abstract class ShapeTree {
       return;
     }
     for (int i = 0; i < p_entries.length; i++) {
-      remove_leaf(p_entries[i]);
+      removeLeaf(p_entries[i]);
     }
   }
 
@@ -113,12 +113,12 @@ public abstract class ShapeTree {
 
   /** Outputs some statistic information about the tree. */
   public void statistics(String p_message) {
-    Leaf[] leafArr = this.to_array();
+    Leaf[] leafArr = this.toArray();
     double cumulativeDepth = 0;
     int maximumDepth = 0;
     for (int i = 0; i < leafArr.length; i++) {
       if (leafArr[i] != null) {
-        int distanceToRoot = leafArr[i].distance_to_root();
+        int distanceToRoot = leafArr[i].distanceToRoot();
         cumulativeDepth += distanceToRoot;
         maximumDepth = Math.max(maximumDepth, distanceToRoot);
       }
@@ -142,19 +142,19 @@ public abstract class ShapeTree {
   public interface Storable extends Comparable<Object> {
 
     /** Number of shapes of an object to store in p_shape_tree */
-    int tree_shape_count(ShapeTree p_shape_tree);
+    int treeShapeCount(ShapeTree p_shape_tree);
 
     /**
      * Get the Shape of this object with index p_index stored in the ShapeTree with index
      * identification number p_tree_id_no
      */
-    TileShape get_tree_shape(ShapeTree p_tree, int p_index);
+    TileShape getTreeShape(ShapeTree p_tree, int p_index);
 
     /**
      * Stores the entries in the ShapeTrees of this object for better performance while for example
      * deleting tree entries. Called only by insert methods of class ShapeTree.
      */
-    void set_search_tree_entries(Leaf[] p_entries, ShapeTree p_tree);
+    void setSearchTreeEntries(Leaf[] p_entries, ShapeTree p_tree);
   }
 
   /** Information of a single object stored in a tree */
@@ -226,7 +226,7 @@ public abstract class ShapeTree {
     }
 
     /** Returns the number of nodes between this leaf and the croot of the tree. */
-    public int distance_to_root() {
+    public int distanceToRoot() {
       int result = 1;
       InnerNode currParent = this.parent;
       while (currParent.parent != null) {

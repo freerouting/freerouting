@@ -55,7 +55,7 @@ public class NetIncompletes {
    * @param p_board The board context.
    */
   public NetIncompletes(int p_net_no, Collection<Item> p_net_items, BasicBoard p_board) {
-    this.drawMarkerRadius = p_board.rules.get_min_trace_half_width() * 2;
+    this.drawMarkerRadius = p_board.rules.getMinTraceHalfWidth() * 2;
     this.incompletes = new LinkedList<>();
     this.net = p_board.rules.nets.get(p_net_no);
 
@@ -90,7 +90,7 @@ public class NetIncompletes {
 
       // Skip dangling vias and traces - they're violations, not incomplete
       // connections
-      if (item.is_tail()) {
+      if (item.isTail()) {
         danglingCount++;
         continue;
       }
@@ -102,7 +102,7 @@ public class NetIncompletes {
       // EXCEPT for ConductionArea which acts as a connection medium
       if (!(item instanceof ConductionArea)
           && !(item instanceof DrillItem)
-          && item.get_normal_contacts().isEmpty()) {
+          && item.getNormalContacts().isEmpty()) {
         unconnectedCount++;
         continue;
       }
@@ -132,7 +132,7 @@ public class NetIncompletes {
         new Point[0]);
 
     // Create an array of Item-connectedSet pairs.
-    NetItem[] netItems = calculate_net_items(filteredItems);
+    NetItem[] netItems = calculateNetItems(filteredItems);
 
     Set<Collection<Item>> uniqueConnectedSets = new HashSet<>();
     for (NetItem net_item : netItems) {
@@ -170,16 +170,16 @@ public class NetIncompletes {
 
     // sort the result edges of the triangulation by length in ascending order.
     Collection<PlanarDelaunayTriangulation.ResultEdge> triangulationLines =
-        triangulation.get_edge_lines();
+        triangulation.getEdgeLines();
     SortedSet<Edge> sortedEdges = new TreeSet<>();
 
     for (PlanarDelaunayTriangulation.ResultEdge currLine : triangulationLines) {
       Edge newEdge =
           new Edge(
               (NetItem) currLine.startObject,
-              currLine.startPoint.to_float(),
+              currLine.startPoint.toFloat(),
               (NetItem) currLine.endObject,
-              currLine.endPoint.to_float());
+              currLine.endPoint.toFloat());
       sortedEdges.add(newEdge);
     }
 
@@ -200,7 +200,7 @@ public class NetIncompletes {
               currEdge.fromCorner,
               currEdge.toItem.item,
               currEdge.toCorner));
-      join_connected_sets(netItems, currEdge.fromItem.connectedSet, currEdge.toItem.connectedSet);
+      joinConnectedSets(netItems, currEdge.fromItem.connectedSet, currEdge.toItem.connectedSet);
     }
 
     FRLogger.trace(
@@ -221,7 +221,7 @@ public class NetIncompletes {
         netLabel,
         new Point[0]);
 
-    calc_length_violation();
+    calcLengthViolation();
   }
 
   /** Returns the collection of airlines (incomplete connections) for this net. */
@@ -248,21 +248,21 @@ public class NetIncompletes {
   }
 
   /** Returns the number of connected groups used to compute airlines. */
-  public int get_connected_group_count() {
+  public int getConnectedGroupCount() {
     return this.connectedGroupCount;
   }
 
   /** Recalculates the length violations. Return false, if the length violation has not changed. */
-  boolean calc_length_violation() {
+  boolean calcLengthViolation() {
     double oldViolation = this.lengthViolation;
-    double maxLength = this.net.getNetClass().get_maximum_trace_length();
-    double minLength = this.net.getNetClass().get_minimum_trace_length();
+    double maxLength = this.net.getNetClass().getMaximumTraceLength();
+    double minLength = this.net.getNetClass().getMinimumTraceLength();
     if (maxLength <= 0 && minLength <= 0) {
       this.lengthViolation = 0;
       return false;
     }
     double newViolation = 0;
-    double traceLength = this.net.get_trace_length();
+    double traceLength = this.net.getTraceLength();
     if (maxLength > 0 && traceLength > maxLength) {
       newViolation = traceLength - maxLength;
     }
@@ -278,7 +278,7 @@ public class NetIncompletes {
    *
    * @return positive if too long, negative if too short, 0 if valid.
    */
-  public double get_length_violation() {
+  public double getLengthViolation() {
     return this.lengthViolation;
   }
 
@@ -289,14 +289,14 @@ public class NetIncompletes {
    * @param p_item_list The list of items to group.
    * @return An array of NetItem objects representing the grouped items.
    */
-  private NetItem[] calculate_net_items(Collection<Item> p_item_list) {
+  private NetItem[] calculateNetItems(Collection<Item> p_item_list) {
     ArrayList<NetItem> result = new ArrayList<>();
     Set<Item> uniqueItems = new HashSet<>(p_item_list);
     int uniqueItemsCount = uniqueItems.size();
 
     while (!uniqueItems.isEmpty()) {
       Item startItem = uniqueItems.iterator().next();
-      Collection<Item> currConnectedSet = startItem.get_connected_set(this.net.netNumber);
+      Collection<Item> currConnectedSet = startItem.getConnectedSet(this.net.netNumber);
 
       // Prevent ConcurrentModificationException by creating a list of items to remove
       Collection<Item> itemsInComponent = new ArrayList<>();
@@ -324,7 +324,7 @@ public class NetIncompletes {
    * Joins p_from_connected_set to p_to_connected_set and updates the connected sets of the items in
    * p_net_items. Used during Kruskal's algorithm to merge sets.
    */
-  private void join_connected_sets(
+  private void joinConnectedSets(
       NetItem[] p_net_items,
       Collection<Item> p_from_connected_set,
       Collection<Item> p_to_connected_set) {
@@ -356,7 +356,7 @@ public class NetIncompletes {
       fromCorner = p_from_corner;
       toItem = p_to_item;
       toCorner = p_to_corner;
-      lengthSquare = p_to_corner.distance_square(p_from_corner);
+      lengthSquare = p_to_corner.distanceSquare(p_from_corner);
     }
 
     @Override
@@ -377,7 +377,7 @@ public class NetIncompletes {
           result = this.toCorner.y - p_other.toCorner.y;
         }
       }
-      return Signum.as_int(result);
+      return Signum.asInt(result);
     }
   }
 
@@ -393,8 +393,8 @@ public class NetIncompletes {
     }
 
     @Override
-    public Point[] get_triangulation_corners() {
-      return this.item.get_ratsnest_corners();
+    public Point[] getTriangulationCorners() {
+      return this.item.getRatsnestCorners();
     }
   }
 }

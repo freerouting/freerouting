@@ -35,14 +35,14 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
   }
 
   @Override
-  Polyline pull_tight(Polyline p_polyline) {
-    Polyline newResult = avoid_acid_traps(p_polyline);
+  Polyline pullTight(Polyline p_polyline) {
+    Polyline newResult = avoidAcidTraps(p_polyline);
     Polyline prevResult = null;
-    while (newResult != prevResult && !is_stop_requested()) {
+    while (newResult != prevResult && !isStopRequested()) {
       prevResult = newResult;
-      Polyline tmp = skip_segments_of_length_0(prevResult);
-      Polyline tmp0 = reduce_lines(tmp);
-      Polyline tmp1 = skip_lines(tmp0);
+      Polyline tmp = skipSegmentsOfLength0(prevResult);
+      Polyline tmp0 = reduceLines(tmp);
+      Polyline tmp1 = skipLines(tmp0);
 
       // I intended to replace reduce_corners by the previous 2
       // functions, because with consecutive corners closer than
@@ -51,9 +51,9 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
       // Unlike reduce_corners, the above 2 functions do not
       // introduce new directions
 
-      Polyline tmp2 = reduce_corners(tmp1);
-      Polyline tmp3 = reposition_lines(tmp2);
-      newResult = smoothen_corners(tmp3);
+      Polyline tmp2 = reduceCorners(tmp1);
+      Polyline tmp3 = repositionLines(tmp2);
+      newResult = smoothenCorners(tmp3);
     }
     return newResult;
   }
@@ -61,7 +61,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
   // tries to reduce the corner count of p_polyline by replacing two consecutive
   // lines by a line through IntPoints near the previous corner and the next
   // corner, if that is possible without clearance violation.
-  private Polyline reduce_corners(Polyline p_polyline) {
+  private Polyline reduceCorners(Polyline p_polyline) {
     if (p_polyline.arr.length < 4) {
       return p_polyline;
     }
@@ -79,36 +79,36 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
 
     for (int i = 0; i <= lastIndex; i++) {
       boolean skipLine = false;
-      FloatPoint newA = newLines[newLineIndex - 1].intersection_approx(newLines[newLineIndex]);
-      FloatPoint newB = p_polyline.corner_approx(i + 2);
+      FloatPoint newA = newLines[newLineIndex - 1].intersectionApprox(newLines[newLineIndex]);
+      FloatPoint newB = p_polyline.cornerApprox(i + 2);
       boolean inClipShape =
           currClipShape == null
               || currClipShape.contains(newA)
                   && currClipShape.contains(newB)
-                  && currClipShape.contains(p_polyline.corner_approx(newLineIndex));
+                  && currClipShape.contains(p_polyline.cornerApprox(newLineIndex));
 
       if (inClipShape) {
-        FloatPoint skipCorner = newLines[newLineIndex].intersection_approx(p_polyline.arr[i + 2]);
+        FloatPoint skipCorner = newLines[newLineIndex].intersectionApprox(p_polyline.arr[i + 2]);
         currLines[1] = new Line(newA.round(), newB.round());
         boolean ok = true;
         if (newLineIndex == 1) {
-          if (!(p_polyline.first_corner() instanceof IntPoint)) {
+          if (!(p_polyline.firstCorner() instanceof IntPoint)) {
             // first corner must not be changed
             ok = false;
           } else {
             Direction dir = currLines[1].direction();
-            currLines[0] = Line.get_instance(p_polyline.first_corner(), dir.turn_45_degree(2));
+            currLines[0] = Line.getInstance(p_polyline.firstCorner(), dir.turn45Degree(2));
           }
         } else {
           currLines[0] = newLines[newLineIndex - 1];
         }
         if (i == lastIndex) {
-          if (!(p_polyline.last_corner() instanceof IntPoint)) {
+          if (!(p_polyline.lastCorner() instanceof IntPoint)) {
             // last corner must not be changed
             ok = false;
           } else {
             Direction dir = currLines[1].direction();
-            currLines[2] = Line.get_instance(p_polyline.last_corner(), dir.turn_45_degree(2));
+            currLines[2] = Line.getInstance(p_polyline.lastCorner(), dir.turn45Degree(2));
           }
         } else {
           currLines[2] = p_polyline.arr[i + 3];
@@ -122,37 +122,37 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
 
         final double checkDist = 100;
         if (ok) {
-          FloatPoint checkIs = currLines[0].intersection_approx(currLines[1]);
-          double dist = checkIs.distance_square(newA);
+          FloatPoint checkIs = currLines[0].intersectionApprox(currLines[1]);
+          double dist = checkIs.distanceSquare(newA);
 
           if (dist > checkDist) {
             ok = false;
           }
         }
         if (ok) {
-          FloatPoint checkIs = currLines[1].intersection_approx(currLines[2]);
-          double dist = checkIs.distance_square(newB);
+          FloatPoint checkIs = currLines[1].intersectionApprox(currLines[2]);
+          double dist = checkIs.distanceSquare(newB);
           if (dist > checkDist) {
             ok = false;
           }
         }
-        if (ok && i == 1 && !(p_polyline.first_corner() instanceof IntPoint)) {
+        if (ok && i == 1 && !(p_polyline.firstCorner() instanceof IntPoint)) {
           // There may be a connection to a trace.
           // make sure that the second corner of the new polyline
           // is on the same side of the trace as the third corner. (There may be splitting problems)
           Point newCorner = currLines[0].intersection(currLines[1]);
-          if (newCorner.side_of(newLines[0]) != p_polyline.corner(1).side_of(newLines[0])) {
+          if (newCorner.sideOf(newLines[0]) != p_polyline.corner(1).sideOf(newLines[0])) {
             ok = false;
           }
         }
-        if (ok && i == lastIndex - 1 && !(p_polyline.last_corner() instanceof IntPoint)) {
+        if (ok && i == lastIndex - 1 && !(p_polyline.lastCorner() instanceof IntPoint)) {
           // There may be a connection to a trace.
           // make sure that the second last corner of the new polyline
           // is on the same side of the trace as the third last corner (There may be splitting
           // problems)
           Point newCorner = currLines[1].intersection(currLines[2]);
-          if (newCorner.side_of(newLines[0])
-              != p_polyline.corner(p_polyline.corner_count() - 2).side_of(newLines[0])) {
+          if (newCorner.sideOf(newLines[0])
+              != p_polyline.corner(p_polyline.cornerCount() - 2).sideOf(newLines[0])) {
             ok = false;
           }
         }
@@ -163,7 +163,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
             ok = false;
           }
           double lengthBefore = skipCorner.distance(newA) + skipCorner.distance(newB);
-          double lengthAfter = currPolyline.length_approx() + 1.5;
+          double lengthAfter = currPolyline.lengthApprox() + 1.5;
           // 1.5 added because of possible inaccuracy SQRT_2
           // by twice rounding.
           if (lengthAfter >= lengthBefore)
@@ -175,9 +175,9 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         }
 
         if (ok) {
-          TileShape shapeToCheck = currPolyline.offset_shape(currHalfWidth, 0);
+          TileShape shapeToCheck = currPolyline.offsetShape(currHalfWidth, 0);
           skipLine =
-              board.check_trace_shape(
+              board.checkTraceShape(
                   shapeToCheck, currLayer, currNetNoArr, currClType, this.contactPins);
         }
       }
@@ -205,7 +205,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
           newLines[newLineIndex] = p_polyline.arr[i + 3];
         }
       }
-      if (newLines[newLineIndex].is_parallel(newLines[newLineIndex - 1])) {
+      if (newLines[newLineIndex].isParallel(newLines[newLineIndex - 1])) {
         // skip line, if it is parallel to the previous one
         --newLineIndex;
       }
@@ -219,7 +219,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
   }
 
   /** tries to smoothen p_polyline by cutting of corners, if possible */
-  private Polyline smoothen_corners(Polyline p_polyline) {
+  private Polyline smoothenCorners(Polyline p_polyline) {
     if (p_polyline.arr.length < 4) {
       return p_polyline;
     }
@@ -228,7 +228,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     System.arraycopy(p_polyline.arr, 0, lineArr, 0, lineArr.length);
 
     for (int i = 0; i < lineArr.length - 3; i++) {
-      Line newLine = smoothen_corner(lineArr, i);
+      Line newLine = smoothenCorner(lineArr, i);
       if (newLine != null) {
         polylineChanged = true;
         // add the new line into the line array
@@ -248,7 +248,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
 
   /** tries to shorten p_polyline by relocating its lines */
   @Override
-  Polyline reposition_lines(Polyline p_polyline) {
+  Polyline repositionLines(Polyline p_polyline) {
     if (p_polyline.arr.length < 5) {
       return p_polyline;
     }
@@ -256,12 +256,12 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     Line[] lineArr = new Line[p_polyline.arr.length];
     System.arraycopy(p_polyline.arr, 0, lineArr, 0, lineArr.length);
     for (int i = 0; i < lineArr.length - 4; i++) {
-      Line newLine = reposition_line(lineArr, i);
+      Line newLine = repositionLine(lineArr, i);
       if (newLine != null) {
         polylineChanged = true;
         lineArr[i + 2] = newLine;
-        if (lineArr[i + 2].is_parallel(lineArr[i + 1])
-            || lineArr[i + 2].is_parallel(lineArr[i + 3])) {
+        if (lineArr[i + 2].isParallel(lineArr[i + 1])
+            || lineArr[i + 2].isParallel(lineArr[i + 3])) {
           // calculation of corners not possible before skipping
           // parallel lines
           break;
@@ -278,15 +278,15 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
    * tries to reduce te number of lines of p_polyline by moving lines parallel beyond the
    * intersection of the next or previous lines.
    */
-  private Polyline reduce_lines(Polyline p_polyline) {
+  private Polyline reduceLines(Polyline p_polyline) {
     if (p_polyline.arr.length < 6) {
       return p_polyline;
     }
     boolean polylineChanged = false;
     Line[] lineArr = p_polyline.arr;
     for (int i = 2; i < lineArr.length - 2; i++) {
-      FloatPoint prevCorner = lineArr[i - 2].intersection_approx(lineArr[i - 1]);
-      FloatPoint nextCorner = lineArr[i + 1].intersection_approx(lineArr[i + 2]);
+      FloatPoint prevCorner = lineArr[i - 2].intersectionApprox(lineArr[i - 1]);
+      FloatPoint nextCorner = lineArr[i + 1].intersectionApprox(lineArr[i + 2]);
       boolean inClipShape =
           currClipShape == null
               || currClipShape.contains(prevCorner) && currClipShape.contains(nextCorner);
@@ -294,8 +294,8 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         continue;
       }
       Line translateLine = lineArr[i];
-      double prevDist = translateLine.signed_distance(prevCorner);
-      double nextDist = translateLine.signed_distance(nextCorner);
+      double prevDist = translateLine.signedDistance(prevCorner);
+      double nextDist = translateLine.signedDistance(nextCorner);
       if (Signum.of(prevDist) != Signum.of(nextDist))
       // the 2 corners are on different sides of the translateLine
       {
@@ -312,17 +312,17 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         // line segment may have length 0
         continue;
       }
-      Side lineSide = translateLine.side_of(prevCorner);
+      Side lineSide = translateLine.sideOf(prevCorner);
       Line newLine = translateLine.translate(-translateDist);
       // make sure, we have crossed the nearestCorner;
-      int sign = Signum.as_int(translateDist);
-      Side newLineSideOfPrevCorner = newLine.side_of(prevCorner);
-      Side newLineSideOfNextCorner = newLine.side_of(nextCorner);
+      int sign = Signum.asInt(translateDist);
+      Side newLineSideOfPrevCorner = newLine.sideOf(prevCorner);
+      Side newLineSideOfNextCorner = newLine.sideOf(nextCorner);
       while (newLineSideOfPrevCorner == lineSide && newLineSideOfNextCorner == lineSide) {
         translateDist += sign * 0.5;
         newLine = translateLine.translate(-translateDist);
-        newLineSideOfPrevCorner = newLine.side_of(prevCorner);
-        newLineSideOfNextCorner = newLine.side_of(nextCorner);
+        newLineSideOfPrevCorner = newLine.sideOf(prevCorner);
+        newLineSideOfNextCorner = newLine.sideOf(nextCorner);
       }
       int crossedCornersBeforeCount = 0;
       int crossedCornersAfterCount = 0;
@@ -342,8 +342,8 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         if (i < 3) {
           continue;
         }
-        FloatPoint prevPrevCorner = lineArr[i - 3].intersection_approx(lineArr[i - 2]);
-        if (newLine.side_of(prevPrevCorner) != lineSide) {
+        FloatPoint prevPrevCorner = lineArr[i - 3].intersectionApprox(lineArr[i - 2]);
+        if (newLine.sideOf(prevPrevCorner) != lineSide) {
           continue;
         }
       }
@@ -351,8 +351,8 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         if (i >= lineArr.length - 3) {
           continue;
         }
-        FloatPoint nextNextCorner = lineArr[i + 2].intersection_approx(lineArr[i + 3]);
-        if (newLine.side_of(nextNextCorner) != lineSide) {
+        FloatPoint nextNextCorner = lineArr[i + 2].intersectionApprox(lineArr[i + 3]);
+        if (newLine.sideOf(nextNextCorner) != lineSide) {
           continue;
         }
       }
@@ -370,9 +370,9 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
       Polyline tmp = new Polyline(currLines);
       boolean checkOk = false;
       if (tmp.arr.length == currLines.length) {
-        TileShape shapeToCheck = tmp.offset_shape(currHalfWidth, keepBeforeInd - 1);
+        TileShape shapeToCheck = tmp.offsetShape(currHalfWidth, keepBeforeInd - 1);
         checkOk =
-            board.check_trace_shape(
+            board.checkTraceShape(
                 shapeToCheck, currLayer, currNetNoArr, currClType, this.contactPins);
       }
       if (checkOk) {
@@ -391,25 +391,25 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     return new Polyline(lineArr);
   }
 
-  private Line smoothen_corner(Line[] p_line_arr, int p_start_no) {
+  private Line smoothenCorner(Line[] p_line_arr, int p_start_no) {
     if (p_line_arr.length - p_start_no < 4) {
       return null;
     }
     FloatPoint currCorner =
-        p_line_arr[p_start_no + 1].intersection_approx(p_line_arr[p_start_no + 2]);
+        p_line_arr[p_start_no + 1].intersectionApprox(p_line_arr[p_start_no + 2]);
     if (currClipShape != null && !currClipShape.contains(currCorner)) {
       return null;
     }
-    double cosinusAngle = p_line_arr[p_start_no + 1].cos_angle(p_line_arr[p_start_no + 2]);
+    double cosinusAngle = p_line_arr[p_start_no + 1].cosAngle(p_line_arr[p_start_no + 2]);
     if (cosinusAngle > c_max_cos_angle)
     // lines are already nearly parallel, don't divide angle any further
     // because of problems with numerical stability
     {
       return null;
     }
-    FloatPoint prevCorner = p_line_arr[p_start_no].intersection_approx(p_line_arr[p_start_no + 1]);
+    FloatPoint prevCorner = p_line_arr[p_start_no].intersectionApprox(p_line_arr[p_start_no + 1]);
     FloatPoint nextCorner =
-        p_line_arr[p_start_no + 2].intersection_approx(p_line_arr[p_start_no + 3]);
+        p_line_arr[p_start_no + 2].intersectionApprox(p_line_arr[p_start_no + 3]);
 
     // create a line approximately through currCorner, whose
     // direction is about the middle of the directions of the
@@ -417,10 +417,10 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     // Translations of this line are used to cut off the corner.
     Direction prevDir = p_line_arr[p_start_no + 1].direction();
     Direction nextDir = p_line_arr[p_start_no + 2].direction();
-    Direction middleDir = prevDir.middle_approx(nextDir);
-    Line translateLine = Line.get_instance(currCorner.round(), middleDir);
-    double prevDist = translateLine.signed_distance(prevCorner);
-    double nextDist = translateLine.signed_distance(nextCorner);
+    Direction middleDir = prevDir.middleApprox(nextDir);
+    Line translateLine = Line.getInstance(currCorner.round(), middleDir);
+    double prevDist = translateLine.signedDistance(prevCorner);
+    double nextDist = translateLine.signedDistance(nextCorner);
     FloatPoint nearestPoint;
     double maxTranslateDist;
     if (Math.abs(prevDist) < Math.abs(nextDist)) {
@@ -439,22 +439,22 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         p_line_arr, p_start_no + 2, currLines, p_start_no + 3, currLines.length - p_start_no - 3);
     double translateDist = maxTranslateDist;
     double deltaDist = maxTranslateDist;
-    Side sideOfNearestPoint = translateLine.side_of(nearestPoint);
-    int sign = Signum.as_int(maxTranslateDist);
+    Side sideOfNearestPoint = translateLine.sideOf(nearestPoint);
+    int sign = Signum.asInt(maxTranslateDist);
     Line result = null;
     while (Math.abs(deltaDist) > this.minTranslateDist) {
       boolean checkOk = false;
       Line newLine = translateLine.translate(-translateDist);
-      Side newLineSideOfNearestPoint = newLine.side_of(nearestPoint);
+      Side newLineSideOfNearestPoint = newLine.sideOf(nearestPoint);
       if (newLineSideOfNearestPoint == sideOfNearestPoint
           || newLineSideOfNearestPoint == Side.COLLINEAR) {
         currLines[p_start_no + 2] = newLine;
         Polyline tmp = new Polyline(currLines);
 
         if (tmp.arr.length == currLines.length) {
-          TileShape shapeToCheck = tmp.offset_shape(currHalfWidth, p_start_no + 1);
+          TileShape shapeToCheck = tmp.offsetShape(currHalfWidth, p_start_no + 1);
           checkOk =
-              board.check_trace_shape(
+              board.checkTraceShape(
                   shapeToCheck, currLayer, currNetNoArr, currClType, this.contactPins);
         }
         deltaDist /= 2;
@@ -484,9 +484,9 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
 
     if (board.changedArea != null) {
       FloatPoint newPrevCorner =
-          currLines[p_start_no].intersection_approx(currLines[p_start_no + 1]);
+          currLines[p_start_no].intersectionApprox(currLines[p_start_no + 1]);
       FloatPoint newNextCorner =
-          currLines[p_start_no + 3].intersection_approx(currLines[p_start_no + 4]);
+          currLines[p_start_no + 3].intersectionApprox(currLines[p_start_no + 4]);
       board.changedArea.join(newPrevCorner, currLayer);
       board.changedArea.join(newNextCorner, currLayer);
     }
@@ -494,7 +494,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
   }
 
   @Override
-  protected Line reposition_line(Line[] p_line_arr, int p_start_no) {
+  protected Line repositionLine(Line[] p_line_arr, int p_start_no) {
     if (p_line_arr.length - p_start_no < 5) {
       return null;
     }
@@ -504,17 +504,17 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     {
       for (int i = 1; i < 3; i++) {
         FloatPoint currCorner =
-            p_line_arr[p_start_no + i].intersection_approx(p_line_arr[p_start_no + i + 1]);
+            p_line_arr[p_start_no + i].intersectionApprox(p_line_arr[p_start_no + i + 1]);
         if (!currClipShape.contains(currCorner)) {
           return null;
         }
       }
     }
     Line translateLine = p_line_arr[p_start_no + 2];
-    FloatPoint prevCorner = p_line_arr[p_start_no].intersection_approx(p_line_arr[p_start_no + 1]);
+    FloatPoint prevCorner = p_line_arr[p_start_no].intersectionApprox(p_line_arr[p_start_no + 1]);
     FloatPoint nextCorner =
-        p_line_arr[p_start_no + 3].intersection_approx(p_line_arr[p_start_no + 4]);
-    double prevDist = translateLine.signed_distance(prevCorner);
+        p_line_arr[p_start_no + 3].intersectionApprox(p_line_arr[p_start_no + 4]);
+    double prevDist = translateLine.signedDistance(prevCorner);
     int cornersSkippedBefore = 0;
     int cornersSkippedAfter = 0;
     final double cEpsilon = 0.001;
@@ -528,10 +528,10 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
       {
         return null;
       }
-      prevCorner = p_line_arr[currNo].intersection_approx(p_line_arr[currNo + 1]);
-      prevDist = translateLine.signed_distance(prevCorner);
+      prevCorner = p_line_arr[currNo].intersectionApprox(p_line_arr[currNo + 1]);
+      prevDist = translateLine.signedDistance(prevCorner);
     }
-    double nextDist = translateLine.signed_distance(nextCorner);
+    double nextDist = translateLine.signedDistance(nextCorner);
     while (Math.abs(nextDist) < cEpsilon)
     // move also all lines through the end corner of the line to translate
     {
@@ -542,8 +542,8 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
       {
         return null;
       }
-      nextCorner = p_line_arr[currNo].intersection_approx(p_line_arr[currNo + 1]);
-      nextDist = translateLine.signed_distance(nextCorner);
+      nextCorner = p_line_arr[currNo].intersectionApprox(p_line_arr[currNo + 1]);
+      nextDist = translateLine.signedDistance(nextCorner);
     }
     if (Signum.of(prevDist) != Signum.of(nextDist))
     // the 2 corners are at different sides of translateLine
@@ -565,8 +565,8 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         p_line_arr, p_start_no + 3, currLines, p_start_no + 3, currLines.length - p_start_no - 3);
     double translateDist = maxTranslateDist;
     double deltaDist = maxTranslateDist;
-    Side sideOfNearestPoint = translateLine.side_of(nearestPoint);
-    int sign = Signum.as_int(maxTranslateDist);
+    Side sideOfNearestPoint = translateLine.sideOf(nearestPoint);
+    int sign = Signum.asInt(maxTranslateDist);
     Line result = null;
     boolean firstTime = true;
     while (firstTime || Math.abs(deltaDist) > this.minTranslateDist) {
@@ -576,8 +576,8 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         if (newLine.equals(translateLine)) {
           // try the parallel line through the nearestPoint
           IntPoint roundedNearestPoint = nearestPoint.round();
-          if (nearestPoint.distance(roundedNearestPoint.to_float()) < Math.abs(translateDist)) {
-            newLine = Line.get_instance(roundedNearestPoint, translateLine.direction());
+          if (nearestPoint.distance(roundedNearestPoint.toFloat()) < Math.abs(translateDist)) {
+            newLine = Line.getInstance(roundedNearestPoint, translateLine.direction());
           }
           firstTime = false;
         }
@@ -585,7 +585,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
           return null;
         }
       }
-      Side newLineSideOfNearestPoint = newLine.side_of(nearestPoint);
+      Side newLineSideOfNearestPoint = newLine.sideOf(nearestPoint);
       if (newLineSideOfNearestPoint == sideOfNearestPoint
           || newLineSideOfNearestPoint == Side.COLLINEAR) {
         firstTime = false;
@@ -601,9 +601,9 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         // intersection of newLine with the first untranslated line.
         {
           int prevLineNo = p_start_no + 1 - cornersSkippedBefore;
-          FloatPoint currPrevCorner = prevTranslatedLine.intersection_approx(currLines[prevLineNo]);
+          FloatPoint currPrevCorner = prevTranslatedLine.intersectionApprox(currLines[prevLineNo]);
           Line currTranslateLine = p_line_arr[p_start_no + 1 - i];
-          double currTranslateDist = currTranslateLine.signed_distance(currPrevCorner);
+          double currTranslateDist = currTranslateLine.signedDistance(currPrevCorner);
           prevTranslatedLine = currTranslateLine.translate(-currTranslateDist);
           currLines[p_start_no + 1 - i] = prevTranslatedLine;
         }
@@ -613,18 +613,18 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         // intersection of newLine with the first untranslated line.
         {
           int nextLineNo = p_start_no + 3 + cornersSkippedAfter;
-          FloatPoint currNextCorner = prevTranslatedLine.intersection_approx(currLines[nextLineNo]);
+          FloatPoint currNextCorner = prevTranslatedLine.intersectionApprox(currLines[nextLineNo]);
           Line currTranslateLine = p_line_arr[p_start_no + 3 + i];
-          double currTranslateDist = currTranslateLine.signed_distance(currNextCorner);
+          double currTranslateDist = currTranslateLine.signedDistance(currNextCorner);
           prevTranslatedLine = currTranslateLine.translate(-currTranslateDist);
           currLines[p_start_no + 3 + i] = prevTranslatedLine;
         }
         Polyline tmp = new Polyline(currLines);
 
         if (tmp.arr.length == currLines.length) {
-          TileShape shapeToCheck = tmp.offset_shape(currHalfWidth, p_start_no + 1);
+          TileShape shapeToCheck = tmp.offsetShape(currHalfWidth, p_start_no + 1);
           checkOk =
-              board.check_trace_shape(
+              board.checkTraceShape(
                   shapeToCheck, currLayer, currNetNoArr, currClType, this.contactPins);
         }
         deltaDist /= 2;
@@ -654,16 +654,16 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
 
     if (board.changedArea != null) {
       FloatPoint newPrevCorner =
-          currLines[p_start_no].intersection_approx(currLines[p_start_no + 1]);
+          currLines[p_start_no].intersectionApprox(currLines[p_start_no + 1]);
       FloatPoint newNextCorner =
-          currLines[p_start_no + 3].intersection_approx(currLines[p_start_no + 4]);
+          currLines[p_start_no + 3].intersectionApprox(currLines[p_start_no + 4]);
       board.changedArea.join(newPrevCorner, currLayer);
       board.changedArea.join(newNextCorner, currLayer);
     }
     return result;
   }
 
-  private Polyline skip_lines(Polyline p_polyline) {
+  private Polyline skipLines(Polyline p_polyline) {
     for (int i = 1; i < p_polyline.arr.length - 3; i++) {
       for (int j = 0; j <= 1; j++) {
         FloatPoint corner1;
@@ -672,13 +672,13 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         if (j == 0) // try to skip the line before the i+2-th line
         {
           currLine = p_polyline.arr[i + 2];
-          corner1 = p_polyline.corner_approx(i);
-          corner2 = p_polyline.corner_approx(i - 1);
+          corner1 = p_polyline.cornerApprox(i);
+          corner2 = p_polyline.cornerApprox(i - 1);
         } else // try to skip the line after i-th line
         {
           currLine = p_polyline.arr[i];
-          corner1 = p_polyline.corner_approx(i + 1);
-          corner2 = p_polyline.corner_approx(i + 2);
+          corner1 = p_polyline.cornerApprox(i + 1);
+          corner2 = p_polyline.cornerApprox(i + 2);
         }
         boolean inClipShape =
             currClipShape == null
@@ -687,19 +687,19 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
           continue;
         }
 
-        Side side1 = currLine.side_of(corner1);
-        Side side2 = currLine.side_of(corner2);
+        Side side1 = currLine.sideOf(corner1);
+        Side side2 = currLine.sideOf(corner2);
         if (side1 != side2)
         // the two corners are on different sides of the line
         {
-          Polyline reducedPolyline = p_polyline.skip_lines(i + 1, i + 1);
+          Polyline reducedPolyline = p_polyline.skipLines(i + 1, i + 1);
           if (reducedPolyline.arr.length == p_polyline.arr.length - 1) {
             int shapeNo = i - 1;
             if (j == 0) {
               ++shapeNo;
             }
-            TileShape shapeToCheck = reducedPolyline.offset_shape(currHalfWidth, shapeNo);
-            if (board.check_trace_shape(
+            TileShape shapeToCheck = reducedPolyline.offsetShape(currHalfWidth, shapeNo);
+            if (board.checkTraceShape(
                 shapeToCheck, currLayer, currNetNoArr, currClType, this.contactPins)) {
               if (board.changedArea != null) {
                 board.changedArea.join(corner1, currLayer);
@@ -715,9 +715,9 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         }
         FloatPoint corner3;
         if (j == 1) {
-          corner3 = p_polyline.corner_approx(i + 3);
+          corner3 = p_polyline.cornerApprox(i + 3);
         } else {
-          corner3 = p_polyline.corner_approx(i + 1);
+          corner3 = p_polyline.cornerApprox(i + 1);
         }
         if (currClipShape != null && !currClipShape.contains(corner3)) {
           continue;
@@ -727,22 +727,22 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         // when coming from behind
         {
           currLine = p_polyline.arr[i + 3];
-          side1 = currLine.side_of(corner1);
-          side2 = currLine.side_of(corner2);
+          side1 = currLine.sideOf(corner1);
+          side2 = currLine.sideOf(corner2);
         } else {
-          side1 = currLine.side_of(corner3);
+          side1 = currLine.sideOf(corner3);
         }
         if (side1 != side2)
         // the two corners are on different sides of the line
         {
-          Polyline reducedPolyline = p_polyline.skip_lines(i + 1, i + 2);
+          Polyline reducedPolyline = p_polyline.skipLines(i + 1, i + 2);
           if (reducedPolyline.arr.length == p_polyline.arr.length - 2) {
             int shapeNo = i - 1;
             if (j == 0) {
               ++shapeNo;
             }
-            TileShape shapeToCheck = reducedPolyline.offset_shape(currHalfWidth, shapeNo);
-            if (board.check_trace_shape(
+            TileShape shapeToCheck = reducedPolyline.offsetShape(currHalfWidth, shapeNo);
+            if (board.checkTraceShape(
                 shapeToCheck, currLayer, currNetNoArr, currClType, this.contactPins)) {
               if (board.changedArea != null) {
                 board.changedArea.join(corner1, currLayer);
@@ -759,7 +759,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
   }
 
   @Override
-  Polyline smoothen_start_corner_at_trace(PolylineTrace p_trace) {
+  Polyline smoothenStartCornerAtTrace(PolylineTrace p_trace) {
     boolean acuteAngle = false;
     boolean bend = false;
     FloatPoint otherTraceCornerApprox = null;
@@ -768,17 +768,17 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     Polyline tracePolyline = p_trace.polyline();
     Point currEndCorner = tracePolyline.corner(0);
 
-    if (this.currClipShape != null && this.currClipShape.is_outside(currEndCorner)) {
+    if (this.currClipShape != null && this.currClipShape.isOutside(currEndCorner)) {
       return null;
     }
 
     Point currPrevEndCorner = tracePolyline.corner(1);
     boolean skipShortSegment =
         !(currEndCorner instanceof IntPoint)
-            && currEndCorner.to_float().distance_square(currPrevEndCorner.to_float()) < SKIP_LENGTH;
+            && currEndCorner.toFloat().distanceSquare(currPrevEndCorner.toFloat()) < SKIP_LENGTH;
     int startLineNo = 1;
     if (skipShortSegment) {
-      if (tracePolyline.corner_count() < 3) {
+      if (tracePolyline.cornerCount() < 3) {
         return null;
       }
       currPrevEndCorner = tracePolyline.corner(2);
@@ -788,31 +788,31 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     Direction lineDirection = tracePolyline.arr[startLineNo].direction();
     Direction prevLineDirection = tracePolyline.arr[startLineNo + 1].direction();
 
-    Collection<Item> contactList = p_trace.get_start_contacts();
+    Collection<Item> contactList = p_trace.getStartContacts();
     for (Item currContact : contactList) {
-      if (currContact instanceof PolylineTrace trace && !currContact.is_shove_fixed()) {
+      if (currContact instanceof PolylineTrace trace && !currContact.isShoveFixed()) {
         Polyline contactTracePolyline = trace.polyline();
         FloatPoint currOtherTraceCornerApprox;
         Line currOtherTraceLine;
         Line currOtherPrevTraceLine;
-        if (contactTracePolyline.first_corner().equals(currEndCorner)) {
-          currOtherTraceCornerApprox = contactTracePolyline.corner_approx(1);
+        if (contactTracePolyline.firstCorner().equals(currEndCorner)) {
+          currOtherTraceCornerApprox = contactTracePolyline.cornerApprox(1);
           currOtherTraceLine = contactTracePolyline.arr[1];
           currOtherPrevTraceLine = contactTracePolyline.arr[2];
         } else {
-          int currCornerNo = contactTracePolyline.corner_count() - 2;
-          currOtherTraceCornerApprox = contactTracePolyline.corner_approx(currCornerNo);
+          int currCornerNo = contactTracePolyline.cornerCount() - 2;
+          currOtherTraceCornerApprox = contactTracePolyline.cornerApprox(currCornerNo);
           currOtherTraceLine = contactTracePolyline.arr[currCornerNo + 1].opposite();
           currOtherPrevTraceLine = contactTracePolyline.arr[currCornerNo];
         }
-        Side currPrevCornerSide = currPrevEndCorner.side_of(currOtherTraceLine);
+        Side currPrevCornerSide = currPrevEndCorner.sideOf(currOtherTraceLine);
         Signum currProjection = lineDirection.projection(currOtherTraceLine.direction());
         boolean otherTraceFound = false;
         if (currProjection == Signum.POSITIVE && currPrevCornerSide != Side.COLLINEAR) {
           acuteAngle = true;
           otherTraceFound = true;
 
-        } else if (currProjection == Signum.ZERO && tracePolyline.corner_count() > 2) {
+        } else if (currProjection == Signum.ZERO && tracePolyline.cornerCount() > 2) {
           if (prevLineDirection.projection(currOtherTraceLine.direction()) == Signum.POSITIVE) {
             bend = true;
             otherTraceFound = true;
@@ -837,20 +837,20 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     if (acuteAngle) {
       Direction newLineDir;
       if (prevCornerSide == Side.ON_THE_LEFT) {
-        newLineDir = otherTraceLine.direction().turn_45_degree(2);
+        newLineDir = otherTraceLine.direction().turn45Degree(2);
       } else {
-        newLineDir = otherTraceLine.direction().turn_45_degree(6);
+        newLineDir = otherTraceLine.direction().turn45Degree(6);
       }
-      Line translateLine = Line.get_instance(currEndCorner.to_float().round(), newLineDir);
+      Line translateLine = Line.getInstance(currEndCorner.toFloat().round(), newLineDir);
       double translateDist = (Limits.sqrt2 - 1) * this.currHalfWidth;
-      double prevCornerDist = Math.abs(translateLine.signed_distance(currPrevEndCorner.to_float()));
-      double otherDist = Math.abs(translateLine.signed_distance(otherTraceCornerApprox));
+      double prevCornerDist = Math.abs(translateLine.signedDistance(currPrevEndCorner.toFloat()));
+      double otherDist = Math.abs(translateLine.signedDistance(otherTraceCornerApprox));
       translateDist = Math.min(translateDist, prevCornerDist);
       translateDist = Math.min(translateDist, otherDist);
       if (translateDist >= 0.99) {
 
         translateDist = Math.max(translateDist - 1, 1);
-        if (translateLine.side_of(currPrevEndCorner) == Side.ON_THE_LEFT) {
+        if (translateLine.sideOf(currPrevEndCorner) == Side.ON_THE_LEFT) {
           translateDist = -translateDist;
         }
         Line addLine = translateLine.translate(translateDist);
@@ -866,7 +866,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
       checkLineArr[0] = otherPrevTraceLine;
       checkLineArr[1] = otherTraceLine;
       System.arraycopy(tracePolyline.arr, 2 - diff, checkLineArr, 2, checkLineArr.length - 2);
-      Line newLine = reposition_line(checkLineArr, 0);
+      Line newLine = repositionLine(checkLineArr, 0);
       if (newLine != null) {
         Line[] newLines = new Line[tracePolyline.arr.length];
         newLines[0] = otherTraceLine;
@@ -879,60 +879,60 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
   }
 
   @Override
-  Polyline smoothen_end_corner_at_trace(PolylineTrace p_trace) {
+  Polyline smoothenEndCornerAtTrace(PolylineTrace p_trace) {
     boolean acuteAngle = false;
     boolean bend = false;
     FloatPoint otherTraceCornerApprox = null;
     Line otherTraceLine = null;
     Line otherPrevTraceLine = null;
     Polyline tracePolyline = p_trace.polyline();
-    Point currEndCorner = tracePolyline.last_corner();
+    Point currEndCorner = tracePolyline.lastCorner();
 
-    if (this.currClipShape != null && this.currClipShape.is_outside(currEndCorner)) {
+    if (this.currClipShape != null && this.currClipShape.isOutside(currEndCorner)) {
       return null;
     }
 
-    Point currPrevEndCorner = tracePolyline.corner(tracePolyline.corner_count() - 2);
+    Point currPrevEndCorner = tracePolyline.corner(tracePolyline.cornerCount() - 2);
     boolean skipShortSegment =
         !(currEndCorner instanceof IntPoint)
-            && currEndCorner.to_float().distance_square(currPrevEndCorner.to_float()) < SKIP_LENGTH;
+            && currEndCorner.toFloat().distanceSquare(currPrevEndCorner.toFloat()) < SKIP_LENGTH;
     int endLineNo = tracePolyline.arr.length - 2;
     if (skipShortSegment) {
-      if (tracePolyline.corner_count() < 3) {
+      if (tracePolyline.cornerCount() < 3) {
         return null;
       }
-      currPrevEndCorner = tracePolyline.corner(tracePolyline.corner_count() - 3);
+      currPrevEndCorner = tracePolyline.corner(tracePolyline.cornerCount() - 3);
       --endLineNo;
     }
     Side prevCornerSide = null;
     Direction lineDirection = tracePolyline.arr[endLineNo].direction().opposite();
     Direction prevLineDirection = tracePolyline.arr[endLineNo].direction().opposite();
 
-    Collection<Item> contactList = p_trace.get_end_contacts();
+    Collection<Item> contactList = p_trace.getEndContacts();
     for (Item currContact : contactList) {
-      if (currContact instanceof PolylineTrace trace && !currContact.is_shove_fixed()) {
+      if (currContact instanceof PolylineTrace trace && !currContact.isShoveFixed()) {
         Polyline contactTracePolyline = trace.polyline();
-        if (contactTracePolyline.corner_count() > 2) {
+        if (contactTracePolyline.cornerCount() > 2) {
           FloatPoint currOtherTraceCornerApprox;
           Line currOtherTraceLine;
           Line currOtherPrevTraceLine;
-          if (contactTracePolyline.first_corner().equals(currEndCorner)) {
-            currOtherTraceCornerApprox = contactTracePolyline.corner_approx(1);
+          if (contactTracePolyline.firstCorner().equals(currEndCorner)) {
+            currOtherTraceCornerApprox = contactTracePolyline.cornerApprox(1);
             currOtherTraceLine = contactTracePolyline.arr[1];
             currOtherPrevTraceLine = contactTracePolyline.arr[2];
           } else {
-            int currCornerNo = contactTracePolyline.corner_count() - 2;
-            currOtherTraceCornerApprox = contactTracePolyline.corner_approx(currCornerNo);
+            int currCornerNo = contactTracePolyline.cornerCount() - 2;
+            currOtherTraceCornerApprox = contactTracePolyline.cornerApprox(currCornerNo);
             currOtherTraceLine = contactTracePolyline.arr[currCornerNo + 1].opposite();
             currOtherPrevTraceLine = contactTracePolyline.arr[currCornerNo];
           }
-          Side currPrevCornerSide = currPrevEndCorner.side_of(currOtherTraceLine);
+          Side currPrevCornerSide = currPrevEndCorner.sideOf(currOtherTraceLine);
           Signum currProjection = lineDirection.projection(currOtherTraceLine.direction());
           boolean otherTraceFound = false;
           if (currProjection == Signum.POSITIVE && currPrevCornerSide != Side.COLLINEAR) {
             acuteAngle = true;
             otherTraceFound = true;
-          } else if (currProjection == Signum.ZERO && tracePolyline.corner_count() > 2) {
+          } else if (currProjection == Signum.ZERO && tracePolyline.cornerCount() > 2) {
             if (prevLineDirection.projection(currOtherTraceLine.direction()) == Signum.POSITIVE) {
               bend = true;
               otherTraceFound = true;
@@ -960,20 +960,20 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     if (acuteAngle) {
       Direction newLineDir;
       if (prevCornerSide == Side.ON_THE_LEFT) {
-        newLineDir = otherTraceLine.direction().turn_45_degree(6);
+        newLineDir = otherTraceLine.direction().turn45Degree(6);
       } else {
-        newLineDir = otherTraceLine.direction().turn_45_degree(2);
+        newLineDir = otherTraceLine.direction().turn45Degree(2);
       }
-      Line translateLine = Line.get_instance(currEndCorner.to_float().round(), newLineDir);
+      Line translateLine = Line.getInstance(currEndCorner.toFloat().round(), newLineDir);
       double translateDist = (Limits.sqrt2 - 1) * this.currHalfWidth;
-      double prevCornerDist = Math.abs(translateLine.signed_distance(currPrevEndCorner.to_float()));
-      double otherDist = Math.abs(translateLine.signed_distance(otherTraceCornerApprox));
+      double prevCornerDist = Math.abs(translateLine.signedDistance(currPrevEndCorner.toFloat()));
+      double otherDist = Math.abs(translateLine.signedDistance(otherTraceCornerApprox));
       translateDist = Math.min(translateDist, prevCornerDist);
       translateDist = Math.min(translateDist, otherDist);
       if (translateDist >= 0.99) {
 
         translateDist = Math.max(translateDist - 1, 1);
-        if (translateLine.side_of(currPrevEndCorner) == Side.ON_THE_LEFT) {
+        if (translateLine.sideOf(currPrevEndCorner) == Side.ON_THE_LEFT) {
           translateDist = -translateDist;
         }
         Line addLine = translateLine.translate(translateDist);
@@ -989,7 +989,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
       System.arraycopy(tracePolyline.arr, diff, checkLineArr, 0, checkLineArr.length - 2);
       checkLineArr[checkLineArr.length - 2] = otherTraceLine;
       checkLineArr[checkLineArr.length - 1] = otherPrevTraceLine;
-      Line newLine = reposition_line(checkLineArr, checkLineArr.length - 5);
+      Line newLine = repositionLine(checkLineArr, checkLineArr.length - 5);
       if (newLine != null) {
         Line[] newLines = new Line[tracePolyline.arr.length];
         System.arraycopy(tracePolyline.arr, 0, newLines, 0, newLines.length - 2);

@@ -69,12 +69,12 @@ public class Via extends DrillItem implements Serializable {
     Via copy =
         new Via(
             padstack,
-            get_center(),
+            getCenter(),
             netNoArr,
-            clearance_class_no(),
+            clearanceClassNo(),
             p_id_no,
-            get_component_no(),
-            get_fixed_state(),
+            getComponentNo(),
+            getFixedState(),
             attachAllowed,
             board);
     copy.isEscapeVia = this.isEscapeVia;
@@ -83,9 +83,9 @@ public class Via extends DrillItem implements Serializable {
   }
 
   @Override
-  public java.util.Collection<app.freerouting.drc.ClearanceViolation> clearance_violations() {
+  public java.util.Collection<app.freerouting.drc.ClearanceViolation> clearanceViolations() {
     java.util.Collection<app.freerouting.drc.ClearanceViolation> rawViolations =
-        super.clearance_violations();
+        super.clearanceViolations();
     if (!this.isEscapeVia || this.escapeViaSmdLayer < 0) {
       return rawViolations;
     }
@@ -99,7 +99,7 @@ public class Via extends DrillItem implements Serializable {
         } else if (violation.secondItem == this) {
           other = violation.firstItem;
         }
-        if (other != null && other.shares_net(this)) {
+        if (other != null && other.sharesNet(this)) {
           continue;
         }
       }
@@ -109,22 +109,22 @@ public class Via extends DrillItem implements Serializable {
   }
 
   @Override
-  public Shape get_shape(int p_index) {
+  public Shape getShape(int p_index) {
     if (padstack == null) {
       FRLogger.warn("Via.get_shape: padstack is null");
       return null;
     }
     if (this.precalculatedShapes == null) {
-      this.precalculatedShapes = new Shape[padstack.to_layer() - padstack.from_layer() + 1];
+      this.precalculatedShapes = new Shape[padstack.toLayer() - padstack.fromLayer() + 1];
       for (int i = 0; i < this.precalculatedShapes.length; i++) {
-        int padstackLayer = i + this.first_layer();
-        Vector translateVector = get_center().difference_by(Point.ZERO);
-        Shape currShape = padstack.get_shape(padstackLayer);
+        int padstackLayer = i + this.firstLayer();
+        Vector translateVector = getCenter().differenceBy(Point.ZERO);
+        Shape currShape = padstack.getShape(padstackLayer);
 
         if (currShape == null) {
           this.precalculatedShapes[i] = null;
         } else {
-          this.precalculatedShapes[i] = (Shape) currShape.translate_by(translateVector);
+          this.precalculatedShapes[i] = (Shape) currShape.translateBy(translateVector);
         }
       }
     }
@@ -132,51 +132,51 @@ public class Via extends DrillItem implements Serializable {
   }
 
   @Override
-  public Padstack get_padstack() {
+  public Padstack getPadstack() {
     return padstack;
   }
 
-  public void set_padstack(Padstack p_padstack) {
+  public void setPadstack(Padstack p_padstack) {
     padstack = p_padstack;
   }
 
   @Override
-  public boolean is_routable() {
-    return !is_user_fixed() && (this.net_count() > 0);
+  public boolean isRoutable() {
+    return !isUserFixed() && (this.netCount() > 0);
   }
 
   @Override
-  public boolean is_obstacle(Item p_other) {
+  public boolean isObstacle(Item p_other) {
     if (p_other == this || p_other instanceof ComponentObstacleArea) {
       return false;
     }
-    if ((p_other instanceof ConductionArea area) && !area.get_is_obstacle()) {
+    if ((p_other instanceof ConductionArea area) && !area.getIsObstacle()) {
       return false;
     }
-    if (!p_other.shares_net(this)) {
+    if (!p_other.sharesNet(this)) {
       return true;
     }
     if (p_other instanceof Trace) {
       return false;
     }
-    return !this.attachAllowed || !(p_other instanceof Pin) || !((Pin) p_other).drill_allowed();
+    return !this.attachAllowed || !(p_other instanceof Pin) || !((Pin) p_other).drillAllowed();
   }
 
   /** Checks, if the Via has contacts on at most 1 layer. */
   @Override
-  public boolean is_tail() {
-    Collection<Item> contactList = this.get_normal_contacts();
+  public boolean isTail() {
+    Collection<Item> contactList = this.getNormalContacts();
     if (contactList.size() <= 1) {
       return true;
     }
     Iterator<Item> it = contactList.iterator();
     Item currContactItem = it.next();
-    int firstContactFirstLayer = currContactItem.first_layer();
-    int firstContactLastLayer = currContactItem.last_layer();
+    int firstContactFirstLayer = currContactItem.firstLayer();
+    int firstContactLastLayer = currContactItem.lastLayer();
     while (it.hasNext()) {
       currContactItem = it.next();
-      if (currContactItem.first_layer() != firstContactFirstLayer
-          || currContactItem.last_layer() != firstContactLastLayer) {
+      if (currContactItem.firstLayer() != firstContactFirstLayer
+          || currContactItem.lastLayer() != firstContactLastLayer) {
         return false;
       }
     }
@@ -184,105 +184,105 @@ public class Via extends DrillItem implements Serializable {
   }
 
   @Override
-  public void change_placement_side(IntPoint p_pole) {
+  public void changePlacementSide(IntPoint p_pole) {
     if (this.board == null) {
       return;
     }
-    Padstack newPadstack = this.board.library.get_mirrored_via_padstack(this.padstack);
+    Padstack newPadstack = this.board.library.getMirroredViaPadstack(this.padstack);
     if (newPadstack == null) {
       return;
     }
     this.padstack = newPadstack;
-    super.change_placement_side(p_pole);
-    clear_derived_data();
+    super.changePlacementSide(p_pole);
+    clearDerivedData();
   }
 
-  public ExpansionDrill get_autoroute_drill_info(ShapeSearchTree p_autoroute_tree) {
+  public ExpansionDrill getAutorouteDrillInfo(ShapeSearchTree p_autoroute_tree) {
     if (this.autorouteDrillInfo == null) {
-      ItemAutorouteInfo viaAutorouteInfo = this.get_autoroute_info();
-      TileShape currDrillShape = TileShape.get_instance(this.get_center());
+      ItemAutorouteInfo viaAutorouteInfo = this.getAutorouteInfo();
+      TileShape currDrillShape = TileShape.getInstance(this.getCenter());
       this.autorouteDrillInfo =
           new ExpansionDrill(
-              currDrillShape, this.get_center(), this.first_layer(), this.last_layer());
-      int viaLayerCount = this.last_layer() - this.first_layer() + 1;
+              currDrillShape, this.getCenter(), this.firstLayer(), this.lastLayer());
+      int viaLayerCount = this.lastLayer() - this.firstLayer() + 1;
       for (int i = 0; i < viaLayerCount; i++) {
         this.autorouteDrillInfo.roomArr[i] =
-            viaAutorouteInfo.get_expansion_room(i, p_autoroute_tree);
+            viaAutorouteInfo.getExpansionRoom(i, p_autoroute_tree);
       }
     }
     return this.autorouteDrillInfo;
   }
 
   @Override
-  public void clear_derived_data() {
-    super.clear_derived_data();
+  public void clearDerivedData() {
+    super.clearDerivedData();
     this.precalculatedShapes = null;
     this.autorouteDrillInfo = null;
   }
 
   @Override
-  public void clear_autoroute_info() {
-    super.clear_autoroute_info();
+  public void clearAutorouteInfo() {
+    super.clearAutorouteInfo();
     this.autorouteDrillInfo = null;
   }
 
   @Override
-  public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
-    if (!this.is_selected_by_fixed_filter(p_filter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter p_filter) {
+    if (!this.isSelectedByFixedFilter(p_filter)) {
       return false;
     }
-    return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.VIAS);
+    return p_filter.isSelected(ItemSelectionFilter.SelectableChoices.VIAS);
   }
 
   @Override
-  public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
+  public Color[] getDrawColors(GraphicsContext p_graphics_context) {
     Color[] result;
-    if (this.net_count() == 0) {
+    if (this.netCount() == 0) {
       // display unconnected vias as obstacles
-      result = p_graphics_context.get_obstacle_colors();
+      result = p_graphics_context.getObstacleColors();
     } else {
-      result = p_graphics_context.get_trace_colors(this.is_user_fixed());
+      result = p_graphics_context.getTraceColors(this.isUserFixed());
     }
     return result;
   }
 
   @Override
-  public double get_draw_intensity(GraphicsContext p_graphics_context) {
+  public double getDrawIntensity(GraphicsContext p_graphics_context) {
     double result;
-    if (this.net_count() == 0) {
+    if (this.netCount() == 0) {
       // display unconnected vias as obstacles
-      result = p_graphics_context.get_obstacle_color_intensity();
+      result = p_graphics_context.getObstacleColorIntensity();
 
-    } else if (this.first_layer() >= this.last_layer()) {
+    } else if (this.firstLayer() >= this.lastLayer()) {
       // display vias with only one layer as pins
-      result = p_graphics_context.get_pin_color_intensity();
+      result = p_graphics_context.getPinColorIntensity();
     } else {
-      result = p_graphics_context.get_via_color_intensity();
+      result = p_graphics_context.getViaColorIntensity();
     }
     return result;
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("via"));
+    p_window.appendBold(tm.getText("via"));
     p_window.append(" " + tm.getText("at") + " ");
-    p_window.append(this.get_center().to_float());
+    p_window.append(this.getCenter().toFloat());
     p_window.append(", " + tm.getText("padstack"));
     p_window.append(padstack.name, tm.getText("padstack_info"), padstack);
-    this.print_connectable_item_info(p_window, p_locale);
+    this.printConnectableItemInfo(p_window, p_locale);
     p_window.newline();
   }
 
   @Override
-  public String get_hover_info(Locale p_locale) {
+  public String getHoverInfo(Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    String fromLayer = this.board.layerStructure.arr[this.first_layer()].name;
-    String toLayer = this.board.layerStructure.arr[this.last_layer()].name;
+    String fromLayer = this.board.layerStructure.arr[this.firstLayer()].name;
+    String toLayer = this.board.layerStructure.arr[this.lastLayer()].name;
     String padstackName = padstack.name;
-    String connInfo = this.get_connectable_item_hover_info(p_locale);
+    String connInfo = this.getConnectableItemHoverInfo(p_locale);
 
     return tm.getText("via_hover_info", padstackName, fromLayer, toLayer, connInfo);
   }

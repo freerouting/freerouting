@@ -67,17 +67,17 @@ public class DrillPageArray {
    * call of get_ddrills()
    */
   public void invalidate(TileShape p_shape) {
-    Collection<DrillPage> overlaps = overlapping_pages(p_shape);
+    Collection<DrillPage> overlaps = overlappingPages(p_shape);
     for (DrillPage currPage : overlaps) {
       currPage.invalidate();
     }
   }
 
   /** Collects all drill pages with a 2-dimensional overlap with p_shape. */
-  public Collection<DrillPage> overlapping_pages(TileShape p_shape) {
+  public Collection<DrillPage> overlappingPages(TileShape p_shape) {
     Collection<DrillPage> result = new LinkedList<>();
 
-    IntBox shapeBox = p_shape.bounding_box().intersection(this.bounds);
+    IntBox shapeBox = p_shape.boundingBox().intersection(this.bounds);
 
     int minJ = (int) Math.floor(((double) (shapeBox.ll.y - bounds.ll.y)) / (double) pageHeight);
     double maxJ = ((double) (shapeBox.ur.y - bounds.ll.y)) / (double) pageHeight;

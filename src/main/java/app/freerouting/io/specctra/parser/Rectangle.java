@@ -23,7 +23,7 @@ public class Rectangle extends Shape {
   }
 
   @Override
-  public Rectangle bounding_box() {
+  public Rectangle boundingBox() {
     return this;
   }
 
@@ -38,11 +38,11 @@ public class Rectangle extends Shape {
   }
 
   @Override
-  public app.freerouting.geometry.planar.Shape transform_to_board_rel(
+  public app.freerouting.geometry.planar.Shape transformToBoardRel(
       CoordinateTransform p_coordinate_transform) {
     int[] boxCoor = new int[4];
     for (int i = 0; i < 4; i++) {
-      boxCoor[i] = (int) Math.round(p_coordinate_transform.dsn_to_board(this.coor[i]));
+      boxCoor[i] = (int) Math.round(p_coordinate_transform.dsnToBoard(this.coor[i]));
     }
 
     IntBox result;
@@ -57,22 +57,22 @@ public class Rectangle extends Shape {
   }
 
   @Override
-  public app.freerouting.geometry.planar.Shape transform_to_board(
+  public app.freerouting.geometry.planar.Shape transformToBoard(
       CoordinateTransform p_coordinate_transform) {
     double[] currPoint = new double[2];
     currPoint[0] = Math.min(coor[0], coor[2]);
     currPoint[1] = Math.min(coor[1], coor[3]);
-    FloatPoint lowerLeft = p_coordinate_transform.dsn_to_board(currPoint);
+    FloatPoint lowerLeft = p_coordinate_transform.dsnToBoard(currPoint);
     currPoint[0] = Math.max(coor[0], coor[2]);
     currPoint[1] = Math.max(coor[1], coor[3]);
-    FloatPoint upperRight = p_coordinate_transform.dsn_to_board(currPoint);
+    FloatPoint upperRight = p_coordinate_transform.dsnToBoard(currPoint);
     return new IntBox(lowerLeft.round(), upperRight.round());
   }
 
   /** Writes this rectangle as a scope to an output dsn-file. */
   @Override
-  public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier) throws IOException {
-    p_file.new_line();
+  public void writeScope(IndentFileWriter p_file, IdentifierType p_identifier) throws IOException {
+    p_file.newLine();
     p_file.write("(rect ");
     p_identifier.write(this.layer.name, p_file);
     for (int i = 0; i < coor.length; i++) {
@@ -83,9 +83,9 @@ public class Rectangle extends Shape {
   }
 
   @Override
-  public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier)
+  public void writeScopeInt(IndentFileWriter p_file, IdentifierType p_identifier)
       throws IOException {
-    p_file.new_line();
+    p_file.newLine();
     p_file.write("(rect ");
     p_identifier.write(this.layer.name, p_file);
     for (int i = 0; i < coor.length; i++) {

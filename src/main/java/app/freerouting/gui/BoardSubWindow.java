@@ -9,12 +9,12 @@ public class BoardSubWindow extends WindowBase {
     super(300, 200);
   }
 
-  public void parent_iconified() {
+  public void parentIconified() {
     this.visibleBeforeIconifying = this.isVisible();
     this.setVisible(false);
   }
 
-  public void parent_deiconified() {
+  public void parentDeiconified() {
     this.setVisible(this.visibleBeforeIconifying);
   }
 }

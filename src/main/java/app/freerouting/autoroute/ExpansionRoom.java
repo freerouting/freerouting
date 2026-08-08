@@ -6,29 +6,29 @@ import java.util.List;
 public interface ExpansionRoom {
 
   /** Adds p_door to the list of doors of this room. */
-  void add_door(ExpansionDoor p_door);
+  void addDoor(ExpansionDoor p_door);
 
   /** Returns the list of doors of this room to neighbour expansion rooms */
-  List<ExpansionDoor> get_doors();
+  List<ExpansionDoor> getDoors();
 
   /** Removes all doors from this room. */
-  void clear_doors();
+  void clearDoors();
 
   /** Clears the autorouting info of all doors for routing the next connection. */
-  void reset_doors();
+  void resetDoors();
 
   /** Checks, if this room has already a door to p_other */
-  boolean door_exists(ExpansionRoom p_other);
+  boolean doorExists(ExpansionRoom p_other);
 
   /** Removes p_door from this room. Returns false, if p_room did not contain p_door. */
-  boolean remove_door(ExpandableObject p_door);
+  boolean removeDoor(ExpandableObject p_door);
 
   /** Gets the shape of this room. */
-  TileShape get_shape();
+  TileShape getShape();
 
   /** Returns the layer of this expansion room. */
-  int get_layer();
+  int getLayer();
 
   /** Returns a unique identification number for this expansion room. */
-  int get_id_no();
+  int getIdNo();
 }

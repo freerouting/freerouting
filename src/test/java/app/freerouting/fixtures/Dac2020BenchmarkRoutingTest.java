@@ -16,7 +16,7 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
   private RoutingJob job;
 
   @Test
-  public void testIssue508_BM01_first_2_nets_only() {
+  public void testIssue508BM01First2NetsOnly() {
     // Create testing settings
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
@@ -24,15 +24,15 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
     testSettingsSource.setJobTimeoutString("00:00:15");
 
     // Get the job with injected settings
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
 
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(194).check();
   }
 
   @Test
-  public void testIssue508_BM01_first_43_nets_only() {
+  public void testIssue508BM01First43NetsOnly() {
     // Create testing settings
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
@@ -40,15 +40,15 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
     testSettingsSource.setJobTimeoutString("00:01:00");
 
     // Get the job with injected settings
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
 
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(161).check();
   }
 
   @Test
-  public void testIssue508_BM01_first_61_nets_only() {
+  public void testIssue508BM01First61NetsOnly() {
     // Create testing settings
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
@@ -56,15 +56,15 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
     testSettingsSource.setJobTimeoutString("00:01:00");
 
     // Get the job with injected settings
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
 
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(147).check();
   }
 
   @Test
-  public void testIssue508_BM01_first_111_nets_only() {
+  public void testIssue508BM01First111NetsOnly() {
     // Create testing settings
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
@@ -72,15 +72,15 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
     testSettingsSource.setJobTimeoutString("00:01:30");
 
     // Get the job with injected settings
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
 
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(134).check();
   }
 
   @Test
-  public void testIssue508_BM01_first_151_nets_only() {
+  public void testIssue508BM01First151NetsOnly() {
     // Create testing settings
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
@@ -88,53 +88,53 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
     testSettingsSource.setJobTimeoutString("00:03:00");
 
     // Get the job with injected settings
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
 
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(126).check();
   }
 
   @Test
-  public void test_Issue_508_BM01_first_pass_only() {
+  public void testIssue508BM01FirstPassOnly() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:04:30");
     testingSettings.setMaxPasses(1);
 
     // Get a routing job
-    job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testingSettings);
+    job = getRoutingJob("Issue508-DAC2020_bm01.dsn", testingSettings);
 
     // Run the job
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(56).check();
   }
 
   @Test
-  public void test_Issue_508_BM01_first_2_passes_only() {
+  public void testIssue508BM01First2PassesOnly() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:05:00");
     testingSettings.setMaxPasses(2);
 
     // Get a routing job
-    job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testingSettings);
+    job = getRoutingJob("Issue508-DAC2020_bm01.dsn", testingSettings);
 
     // Run the job
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn").maxIncompleteConnections(28).check();
   }
 
   @Test
-  public void test_Issue_508_BM07() {
+  public void testIssue508BM07() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:00:30");
 
     // Get a routing job
-    job = GetRoutingJob("Issue508-DAC2020_bm07.dsn", testingSettings);
+    job = getRoutingJob("Issue508-DAC2020_bm07.dsn", testingSettings);
 
     // Run the job and measure elapsed time via the job's own timestamps
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue508-DAC2020_bm07.dsn")
         .maxDuration(Duration.ofSeconds(30))
@@ -144,15 +144,15 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  public void test_Issue_508_BM08() {
+  public void testIssue508BM08() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:00:20");
 
     // Get a routing job
-    job = GetRoutingJob("Issue508-DAC2020_bm08.dsn", testingSettings);
+    job = getRoutingJob("Issue508-DAC2020_bm08.dsn", testingSettings);
 
     // Run the job and measure elapsed time via the job's own timestamps
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     assertRoutingResult(job, "Issue508-DAC2020_bm08.dsn")
         .maxDuration(Duration.ofSeconds(20))

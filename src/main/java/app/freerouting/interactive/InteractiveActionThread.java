@@ -64,9 +64,9 @@ import java.util.List;
  * instances:
  *
  * <ul>
- *   <li>{@link #get_autoroute_instance}: Single item autorouting (currently disabled)
- *   <li>{@link #get_autorouter_and_route_optimizer_instance}: Full batch routing workflow
- *   <li>{@link #get_pull_tight_instance}: Pull-tight optimization (currently disabled)
+ *   <li>{@link #getAutorouteInstance}: Single item autorouting (currently disabled)
+ *   <li>{@link #getAutorouterAndRouteOptimizerInstance}: Full batch routing workflow
+ *   <li>{@link #getPullTightInstance}: Pull-tight optimization (currently disabled)
  * </ul>
  *
  * @see StoppableThread
@@ -127,9 +127,9 @@ public abstract class InteractiveActionThread extends StoppableThread {
    *
    * @param boardManager the GUI board manager this thread will operate on
    * @param job the routing job context for this operation
-   * @see #get_autoroute_instance(GuiBoardManager, RoutingJob)
-   * @see #get_autorouter_and_route_optimizer_instance(GuiBoardManager, RoutingJob)
-   * @see #get_pull_tight_instance(GuiBoardManager, RoutingJob)
+   * @see #getAutorouteInstance(GuiBoardManager, RoutingJob)
+   * @see #getAutorouterAndRouteOptimizerInstance(GuiBoardManager, RoutingJob)
+   * @see #getPullTightInstance(GuiBoardManager, RoutingJob)
    */
   protected InteractiveActionThread(GuiBoardManager boardManager, RoutingJob job) {
     this.boardManager = boardManager;
@@ -150,7 +150,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * @return a configured (but currently non-functional) autoroute thread
    * @see AutorouteThread
    */
-  public static InteractiveActionThread get_autoroute_instance(
+  public static InteractiveActionThread getAutorouteInstance(
       GuiBoardManager boardManager, RoutingJob job) {
     return new AutorouteThread(boardManager, job);
   }
@@ -193,7 +193,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * @see AutorouterAndRouteOptimizerThread
    * @see GlobalSettings#saveAsJson(GlobalSettings)
    */
-  public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(
+  public static InteractiveActionThread getAutorouterAndRouteOptimizerInstance(
       GuiBoardManager boardManager, RoutingJob job) {
     var routerThread = new AutorouterAndRouteOptimizerThread(boardManager, job);
     routerThread.addListener(
@@ -217,7 +217,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
             // address
             if ((globalSettings.statistics.jobsCompleted >= 5)
                 && globalSettings.userProfileSettings.userEmail.isEmpty()) {
-              boardManager.get_panel().boardFrame.menubar.showProfileDialog();
+              boardManager.getPanel().boardFrame.menubar.showProfileDialog();
             }
           }
         });
@@ -239,7 +239,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * @return a configured (but currently non-functional) pull-tight thread
    * @see PullTightThread
    */
-  public static InteractiveActionThread get_pull_tight_instance(
+  public static InteractiveActionThread getPullTightInstance(
       GuiBoardManager boardManager, RoutingJob job) {
     return new PullTightThread(boardManager, job);
   }
@@ -270,17 +270,17 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * Executes the thread's action and triggers a final repaint.
    *
    * <p>This method is called automatically when the thread is started via {@link #start()}. It
-   * delegates to {@link #thread_action()} for the actual work, then ensures the board is repainted
+   * delegates to {@link #threadAction()} for the actual work, then ensures the board is repainted
    * to reflect any changes.
    *
    * <p><strong>Note:</strong> Do not call this method directly; use {@link #start()} instead.
    *
    * @see Thread#run()
-   * @see #thread_action()
+   * @see #threadAction()
    */
   @Override
   public void run() {
-    thread_action();
+    threadAction();
     boardManager.repaint();
   }
 
@@ -317,7 +317,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * <p>The {@code thread_action()} method does nothing, making this thread effectively a no-op when
    * created and started.
    *
-   * @see #get_autoroute_instance(GuiBoardManager, RoutingJob)
+   * @see #getAutorouteInstance(GuiBoardManager, RoutingJob)
    */
   private static final class AutorouteThread extends InteractiveActionThread {
 
@@ -332,7 +332,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
      * inspection mode and superseded by batch autorouting.
      */
     @Override
-    protected void thread_action() {
+    protected void threadAction() {
       // Autorouting selected items is disabled in inspection mode
     }
   }
@@ -353,7 +353,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * <p>However, the implementation has been disabled in the current inspection mode. The {@code
    * thread_action()} method does nothing.
    *
-   * @see #get_pull_tight_instance(GuiBoardManager, RoutingJob)
+   * @see #getPullTightInstance(GuiBoardManager, RoutingJob)
    */
   private static final class PullTightThread extends InteractiveActionThread {
 
@@ -368,7 +368,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
      * inspection mode.
      */
     @Override
-    protected void thread_action() {
+    protected void threadAction() {
       // Pull tight selected items is disabled in inspection mode
     }
   }

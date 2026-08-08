@@ -24,33 +24,33 @@ public class WindowPackages extends WindowObjectListWithFilter {
 
   /** Fills the list with the library packages. */
   @Override
-  protected void fill_list() {
+  protected void fillList() {
     Packages packages =
-        this.boardFrame.boardPanel.boardHandling.get_routing_board().library.packages;
+        this.boardFrame.boardPanel.boardHandling.getRoutingBoard().library.packages;
     Package[] sortedArr = new Package[packages.count()];
     for (int i = 0; i < sortedArr.length; i++) {
       sortedArr[i] = packages.get(i + 1);
     }
     Arrays.sort(sortedArr);
     for (int i = 0; i < sortedArr.length; i++) {
-      this.add_to_list(sortedArr[i]);
+      this.addToList(sortedArr[i]);
     }
     this.list.setVisibleRowCount(Math.min(packages.count(), DEFAULT_TABLE_SIZE));
   }
 
   @Override
-  protected void select_instances() {
+  protected void selectInstances() {
     List<Object> selectedPackages = list.getSelectedValuesList();
     if (selectedPackages.isEmpty()) {
       return;
     }
-    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.get_routing_board();
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
     Set<Item> boardInstances = new TreeSet<>();
-    Collection<Item> boardItems = routingBoard.get_items();
+    Collection<Item> boardItems = routingBoard.getItems();
     for (Item currItem : boardItems) {
-      if (currItem.get_component_no() > 0) {
-        Component currComponent = routingBoard.components.get(currItem.get_component_no());
-        Package currPackage = currComponent.get_package();
+      if (currItem.getComponentNo() > 0) {
+        Component currComponent = routingBoard.components.get(currItem.getComponentNo());
+        Package currPackage = currComponent.getPackage();
         boolean packageMatches = false;
         for (int i = 0; i < selectedPackages.size(); i++) {
           if (currPackage == selectedPackages.get(i)) {
@@ -63,7 +63,7 @@ public class WindowPackages extends WindowObjectListWithFilter {
         }
       }
     }
-    boardFrame.boardPanel.boardHandling.select_items(boardInstances);
-    boardFrame.boardPanel.boardHandling.zoom_selection();
+    boardFrame.boardPanel.boardHandling.selectItems(boardInstances);
+    boardFrame.boardPanel.boardHandling.zoomSelection();
   }
 }

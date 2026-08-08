@@ -15,10 +15,10 @@ public class AirLineInfo implements ObjectInfoPanel.Printable {
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(AirLine.class, p_locale);
 
-    p_window.append_bold(tm.getText("incomplete"));
+    p_window.appendBold(tm.getText("incomplete"));
     p_window.append(" " + tm.getText("net") + " ");
     p_window.append(airline.net.name);
     p_window.append(" " + tm.getText("from") + " ", "Incomplete Start Item", airline.fromItem);

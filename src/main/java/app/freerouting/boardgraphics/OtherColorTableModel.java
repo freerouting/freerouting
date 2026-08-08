@@ -61,7 +61,7 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
     return true;
   }
 
-  private Color get_color_safe(ColumnNames col, Color defaultColor) {
+  private Color getColorSafe(ColumnNames col, Color defaultColor) {
     int idx = col.ordinal();
     if (data != null && data.length > 0 && data[0] != null && idx >= 0 && idx < data[0].length) {
       Color c = (Color) data[0][idx];
@@ -72,130 +72,130 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
     return defaultColor;
   }
 
-  private void set_color_safe(ColumnNames col, Color p_color) {
+  private void setColorSafe(ColumnNames col, Color p_color) {
     int idx = col.ordinal();
     if (data != null && data.length > 0 && data[0] != null && idx >= 0 && idx < data[0].length) {
       data[0][idx] = p_color;
     }
   }
 
-  public Color get_background_color() {
-    return get_color_safe(ColumnNames.BACKGROUND, new Color(0, 16, 35));
+  public Color getBackgroundColor() {
+    return getColorSafe(ColumnNames.BACKGROUND, new Color(0, 16, 35));
   }
 
-  public void set_background_color(Color p_color) {
-    set_color_safe(ColumnNames.BACKGROUND, p_color);
+  public void setBackgroundColor(Color p_color) {
+    setColorSafe(ColumnNames.BACKGROUND, p_color);
   }
 
-  public Color get_hilight_color() {
-    return get_color_safe(ColumnNames.HIGHLIGHT, Color.white);
+  public Color getHilightColor() {
+    return getColorSafe(ColumnNames.HIGHLIGHT, Color.white);
   }
 
-  public void set_hilight_color(Color p_color) {
-    set_color_safe(ColumnNames.HIGHLIGHT, p_color);
+  public void setHilightColor(Color p_color) {
+    setColorSafe(ColumnNames.HIGHLIGHT, p_color);
   }
 
-  public Color get_incomplete_color() {
-    return get_color_safe(ColumnNames.INCOMPLETES, Color.white);
+  public Color getIncompleteColor() {
+    return getColorSafe(ColumnNames.INCOMPLETES, Color.white);
   }
 
-  public void set_incomplete_color(Color p_color) {
-    set_color_safe(ColumnNames.INCOMPLETES, p_color);
+  public void setIncompleteColor(Color p_color) {
+    setColorSafe(ColumnNames.INCOMPLETES, p_color);
   }
 
-  public Color get_outline_color() {
-    return get_color_safe(ColumnNames.OUTLINE, new Color(100, 150, 255));
+  public Color getOutlineColor() {
+    return getColorSafe(ColumnNames.OUTLINE, new Color(100, 150, 255));
   }
 
-  public void set_outline_color(Color p_color) {
-    set_color_safe(ColumnNames.OUTLINE, p_color);
+  public void setOutlineColor(Color p_color) {
+    setColorSafe(ColumnNames.OUTLINE, p_color);
   }
 
-  public Color get_violations_color() {
-    return get_color_safe(ColumnNames.VIOLATIONS, Color.magenta);
+  public Color getViolationsColor() {
+    return getColorSafe(ColumnNames.VIOLATIONS, Color.magenta);
   }
 
-  public void set_violations_color(Color p_color) {
-    set_color_safe(ColumnNames.VIOLATIONS, p_color);
+  public void setViolationsColor(Color p_color) {
+    setColorSafe(ColumnNames.VIOLATIONS, p_color);
   }
 
-  public Color get_component_color(boolean p_front) {
+  public Color getComponentColor(boolean p_front) {
     if (p_front) {
-      return get_color_safe(ColumnNames.COMPONENT_FRONT, new Color(255, 38, 226));
+      return getColorSafe(ColumnNames.COMPONENT_FRONT, new Color(255, 38, 226));
     } else {
-      return get_color_safe(ColumnNames.COMPONENT_BACK, new Color(38, 233, 255));
+      return getColorSafe(ColumnNames.COMPONENT_BACK, new Color(38, 233, 255));
     }
   }
 
-  public Color get_length_matching_area_color() {
-    return get_color_safe(ColumnNames.LENGTH_MATCHING_AREA, Color.green);
+  public Color getLengthMatchingAreaColor() {
+    return getColorSafe(ColumnNames.LENGTH_MATCHING_AREA, Color.green);
   }
 
-  public void set_length_matching_area_color(Color p_color) {
-    set_color_safe(ColumnNames.LENGTH_MATCHING_AREA, p_color);
+  public void setLengthMatchingAreaColor(Color p_color) {
+    setColorSafe(ColumnNames.LENGTH_MATCHING_AREA, p_color);
   }
 
-  public void set_component_color(Color p_color, boolean p_front) {
+  public void setComponentColor(Color p_color, boolean p_front) {
     if (p_front) {
-      set_color_safe(ColumnNames.COMPONENT_FRONT, p_color);
+      setColorSafe(ColumnNames.COMPONENT_FRONT, p_color);
     } else {
-      set_color_safe(ColumnNames.COMPONENT_BACK, p_color);
+      setColorSafe(ColumnNames.COMPONENT_BACK, p_color);
     }
   }
 
-  public Color get_drill_hole_color() {
-    return get_color_safe(ColumnNames.DRILL_HOLE, Color.black);
+  public Color getDrillHoleColor() {
+    return getColorSafe(ColumnNames.DRILL_HOLE, Color.black);
   }
 
-  public void set_drill_hole_color(Color p_color) {
-    set_color_safe(ColumnNames.DRILL_HOLE, p_color);
+  public void setDrillHoleColor(Color p_color) {
+    setColorSafe(ColumnNames.DRILL_HOLE, p_color);
   }
 
-  public Color get_silkscreen_color(boolean p_front) {
+  public Color getSilkscreenColor(boolean p_front) {
     if (p_front) {
-      return get_color_safe(ColumnNames.SILKSCREEN_FRONT, new Color(242, 237, 161));
+      return getColorSafe(ColumnNames.SILKSCREEN_FRONT, new Color(242, 237, 161));
     } else {
-      return get_color_safe(ColumnNames.SILKSCREEN_BACK, new Color(232, 178, 167));
+      return getColorSafe(ColumnNames.SILKSCREEN_BACK, new Color(232, 178, 167));
     }
   }
 
-  public void set_silkscreen_color(Color p_color, boolean p_front) {
+  public void setSilkscreenColor(Color p_color, boolean p_front) {
     if (p_front) {
-      set_color_safe(ColumnNames.SILKSCREEN_FRONT, p_color);
+      setColorSafe(ColumnNames.SILKSCREEN_FRONT, p_color);
     } else {
-      set_color_safe(ColumnNames.SILKSCREEN_BACK, p_color);
+      setColorSafe(ColumnNames.SILKSCREEN_BACK, p_color);
     }
   }
 
-  public Color get_courtyard_color(boolean p_front) {
+  public Color getCourtyardColor(boolean p_front) {
     if (p_front) {
-      return get_color_safe(ColumnNames.COURTYARD_FRONT, new Color(255, 38, 226));
+      return getColorSafe(ColumnNames.COURTYARD_FRONT, new Color(255, 38, 226));
     } else {
-      return get_color_safe(ColumnNames.COURTYARD_BACK, new Color(38, 233, 255));
+      return getColorSafe(ColumnNames.COURTYARD_BACK, new Color(38, 233, 255));
     }
   }
 
-  public void set_courtyard_color(Color p_color, boolean p_front) {
+  public void setCourtyardColor(Color p_color, boolean p_front) {
     if (p_front) {
-      set_color_safe(ColumnNames.COURTYARD_FRONT, p_color);
+      setColorSafe(ColumnNames.COURTYARD_FRONT, p_color);
     } else {
-      set_color_safe(ColumnNames.COURTYARD_BACK, p_color);
+      setColorSafe(ColumnNames.COURTYARD_BACK, p_color);
     }
   }
 
-  public Color get_fab_color(boolean p_front) {
+  public Color getFabColor(boolean p_front) {
     if (p_front) {
-      return get_color_safe(ColumnNames.FAB_FRONT, new Color(175, 175, 175));
+      return getColorSafe(ColumnNames.FAB_FRONT, new Color(175, 175, 175));
     } else {
-      return get_color_safe(ColumnNames.FAB_BACK, new Color(88, 93, 132));
+      return getColorSafe(ColumnNames.FAB_BACK, new Color(88, 93, 132));
     }
   }
 
-  public void set_fab_color(Color p_color, boolean p_front) {
+  public void setFabColor(Color p_color, boolean p_front) {
     if (p_front) {
-      set_color_safe(ColumnNames.FAB_FRONT, p_color);
+      setColorSafe(ColumnNames.FAB_FRONT, p_color);
     } else {
-      set_color_safe(ColumnNames.FAB_BACK, p_color);
+      setColorSafe(ColumnNames.FAB_BACK, p_color);
     }
   }
 

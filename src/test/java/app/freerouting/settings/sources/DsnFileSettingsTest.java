@@ -34,7 +34,7 @@ class DsnFileSettingsTest {
    * the file, not from some coincidental hard-coded constant.
    */
   @Test
-  void dsnFileSettings_reads2LayerCount_from2LayerBoardWithoutAutorouteBlock() {
+  void dsnFileSettingsReads2LayerCountFrom2LayerBoardWithoutAutorouteBlock() {
     // Issue413-test.dsn: 2 signal layers (F.Cu, B.Cu), no (autorouteSettings ...) block.
     InputStream in = DsnTestFixtures.openResource("Issue413-test.dsn");
     DsnFileSettings settings = new DsnFileSettings(in, "Issue413-test.dsn");
@@ -56,7 +56,7 @@ class DsnFileSettingsTest {
    * must return 4.
    */
   @Test
-  void dsnFileSettings_reads4LayerCount_from4LayerBoardWithoutAutorouteBlock() {
+  void dsnFileSettingsReads4LayerCountFrom4LayerBoardWithoutAutorouteBlock() {
     // Issue066-Project_GP8B.dsn: 4 signal layers (F.Cu, In1.Cu, In2.Cu, B.Cu),
     // no (autorouteSettings ...) block.
     InputStream in = DsnTestFixtures.openResource("Issue066-Project_GP8B.dsn");

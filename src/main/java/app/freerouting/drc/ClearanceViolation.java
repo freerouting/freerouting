@@ -41,22 +41,22 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("clearance_violation_2"));
+    p_window.appendBold(tm.getText("clearance_violation_2"));
     p_window.append(" " + tm.getText("at") + " ");
-    p_window.append(shape.centre_of_gravity());
+    p_window.append(shape.centreOfGravity());
     p_window.append(", " + tm.getText("width") + " ");
-    p_window.append(2 * this.shape.smallest_radius());
+    p_window.append(2 * this.shape.smallestRadius());
     p_window.append(", " + tm.getText("layer") + " ");
     p_window.append(firstItem.board.layerStructure.arr[this.layer].name);
     p_window.append(", " + tm.getText("between"));
     p_window.newline();
     p_window.indent();
-    firstItem.print_info(p_window, p_locale);
+    firstItem.printInfo(p_window, p_locale);
     p_window.indent();
-    secondItem.print_info(p_window, p_locale);
+    secondItem.printInfo(p_window, p_locale);
     p_window.newline();
     p_window.indent();
     String clearanceViolationInfoExpectedClearance =

@@ -19,7 +19,7 @@ import org.glassfish.jersey.media.sse.SseFeature;
  *
  * <p>This class is the single source of truth for all providers registered in the MCP server. It is
  * wired into server startup via the {@code jakarta.ws.rs.Application} init parameter in {@link
- * app.freerouting.Freerouting#InitializeMCP}.
+ * app.freerouting.Freerouting#initializeMCP}.
  */
 @ApplicationPath("/")
 public class McpApplication extends Application {

@@ -4,13 +4,13 @@ package app.freerouting.datastructures;
 public interface Observers<ObjectType> {
 
   /** Tell the observers the deletion p_object. */
-  void notify_deleted(ObjectType p_object);
+  void notifyDeleted(ObjectType p_object);
 
   /** Notify the observers, that they can synchronize the changes on p_object. */
-  void notify_changed(ObjectType p_object);
+  void notifyChanged(ObjectType p_object);
 
   /** Enable the observers to synchronize the new created item. */
-  void notify_new(ObjectType p_object);
+  void notifyNew(ObjectType p_object);
 
   /** Starts notifying the observers */
   void activate();
@@ -19,5 +19,5 @@ public interface Observers<ObjectType> {
   void deactivate();
 
   /** Returns, if the observer is activated. */
-  boolean is_active();
+  boolean isActive();
 }

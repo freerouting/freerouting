@@ -73,7 +73,7 @@ public class Freerouting {
   private static Server mcpServer; // MCP server instance
   private static java.io.PrintStream originalSystemOut;
 
-  private static boolean InitializeCLI(GlobalSettings globalSettings) {
+  private static boolean initializeCLI(GlobalSettings globalSettings) {
     if ((globalSettings.initialInputFile == null) || (globalSettings.initialOutputFile == null)) {
       FRLogger.error(
           "Both an input file and an output file must be specified with command line arguments if you are running in CLI mode.",
@@ -173,7 +173,7 @@ public class Freerouting {
     return true;
   }
 
-  private static boolean InitializeDRC(GlobalSettings globalSettings) {
+  private static boolean initializeDRC(GlobalSettings globalSettings) {
     if (globalSettings.initialInputFile == null) {
       FRLogger.error("An input file must be specified with -de argument in DRC mode.", null);
       return false;
@@ -256,7 +256,7 @@ public class Freerouting {
       settingsMerger.addOrReplaceSources(
           new DsnFileSettings(drcJob.input.getData(), drcJob.input.getFilename()));
       var routerSettings = settingsMerger.merge();
-      var finalStats = drcJob.board.get_statistics();
+      var finalStats = drcJob.board.getStatistics();
       report.qualityScore = (double) finalStats.getNormalizedScore(routerSettings.scoring);
     } catch (Exception e) {
       FRLogger.warn("Failed to calculate quality score for DRC report: " + e.getMessage());
@@ -284,7 +284,7 @@ public class Freerouting {
     return true;
   }
 
-  private static void ShutdownApplication() {
+  private static void shutdownApplication() {
     // Stop the API server
     try {
       if (apiServer != null) {
@@ -300,7 +300,7 @@ public class Freerouting {
     FRAnalytics.appClosed();
   }
 
-  public static Server InitializeAPI(ApiServerSettings apiServerSettings) {
+  public static Server initializeAPI(ApiServerSettings apiServerSettings) {
     // Check if there are any endpoints defined
     if (apiServerSettings.endpoints.length == 0) {
       FRLogger.warn(
@@ -412,7 +412,7 @@ public class Freerouting {
     return apiServer;
   }
 
-  public static Server InitializeMCP(McpServerSettings mcpServerSettings) {
+  public static Server initializeMCP(McpServerSettings mcpServerSettings) {
     if (mcpServerSettings.endpoints.length == 0) {
       FRLogger.warn(
           "Can't start MCP server, because no endpoints are defined in McpServerSettings.");
@@ -1166,7 +1166,7 @@ public class Freerouting {
 
     // Initialize the API server
     if (globalSettings.apiServerSettings.isEnabled) {
-      apiServer = InitializeAPI(globalSettings.apiServerSettings);
+      apiServer = initializeAPI(globalSettings.apiServerSettings);
       globalSettings.apiServerSettings.isEnabled = apiServer != null;
       globalSettings.apiServerSettings.isRunning = apiServer != null;
 
@@ -1187,7 +1187,7 @@ public class Freerouting {
     }
 
     if (globalSettings.mcpServerSettings.isEnabled) {
-      mcpServer = InitializeMCP(globalSettings.mcpServerSettings);
+      mcpServer = initializeMCP(globalSettings.mcpServerSettings);
       globalSettings.mcpServerSettings.isEnabled = mcpServer != null;
       globalSettings.mcpServerSettings.isRunning = mcpServer != null;
 
@@ -1198,7 +1198,7 @@ public class Freerouting {
 
     // Initialize the GUI
     if (globalSettings.guiSettings.isEnabled) {
-      if (!GuiManager.InitializeGUI(globalSettings)) {
+      if (!GuiManager.initializeGUI(globalSettings)) {
         FRLogger.error("Couldn't initialize the GUI", null);
         globalSettings.guiSettings.isEnabled = false;
       } else {
@@ -1212,16 +1212,16 @@ public class Freerouting {
         && !globalSettings.apiServerSettings.isRunning
         && !globalSettings.mcpServerSettings.isRunning) {
       if (globalSettings.drcReportFile != null) {
-        cliResult = InitializeDRC(globalSettings);
+        cliResult = initializeDRC(globalSettings);
       } else {
-        cliResult = InitializeCLI(globalSettings);
+        cliResult = initializeCLI(globalSettings);
       }
     }
 
     if ((!cliResult)
         && !globalSettings.apiServerSettings.isEnabled
         && !globalSettings.mcpServerSettings.isEnabled) {
-      ShutdownApplication();
+      shutdownApplication();
       FRLogger.traceExit("MainApplication.main()");
       System.exit(1);
     }
@@ -1236,7 +1236,7 @@ public class Freerouting {
       }
     }
 
-    ShutdownApplication();
+    shutdownApplication();
 
     FRLogger.traceExit("MainApplication.main()");
     System.exit(0);

@@ -19,7 +19,7 @@ public class PopupMenuDisplay extends JPopupMenu {
     JMenuItem popupCenterDisplayMenuitem = new JMenuItem();
     popupCenterDisplayMenuitem.setText(tm.getText("center_display"));
     popupCenterDisplayMenuitem.addActionListener(
-        _ -> boardPanel.center_display(boardPanel.rightButtonClickLocation));
+        _ -> boardPanel.centerDisplay(boardPanel.rightButtonClickLocation));
     popupCenterDisplayMenuitem.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -33,7 +33,7 @@ public class PopupMenuDisplay extends JPopupMenu {
     JMenuItem popupZoomInMenuitem = new JMenuItem();
     popupZoomInMenuitem.setText(tm.getText("zoom_in"));
     popupZoomInMenuitem.addActionListener(
-        _ -> boardPanel.zoom_in(boardPanel.rightButtonClickLocation));
+        _ -> boardPanel.zoomIn(boardPanel.rightButtonClickLocation));
     popupZoomInMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupZoomInMenuitem", popupZoomInMenuitem.getText()));
 
@@ -42,7 +42,7 @@ public class PopupMenuDisplay extends JPopupMenu {
     JMenuItem popupZoomOutMenuitem = new JMenuItem();
     popupZoomOutMenuitem.setText(tm.getText("zoom_out"));
     popupZoomOutMenuitem.addActionListener(
-        _ -> boardPanel.zoom_out(boardPanel.rightButtonClickLocation));
+        _ -> boardPanel.zoomOut(boardPanel.rightButtonClickLocation));
     popupZoomOutMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupZoomOutMenuitem", popupZoomOutMenuitem.getText()));
 

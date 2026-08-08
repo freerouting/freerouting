@@ -23,26 +23,26 @@ public class Net {
     id = p_net_id;
   }
 
-  public static void write_scope(
+  public static void writeScope(
       WriteScopeParameter p_par,
       app.freerouting.rules.Net p_net,
       Collection<app.freerouting.board.Pin> p_pin_list)
       throws IOException {
-    p_par.file.start_scope();
-    write_net_id(p_net, p_par.file, p_par.identifierType);
+    p_par.file.startScope();
+    writeNetId(p_net, p_par.file, p_par.identifierType);
     // write the pins scope
-    p_par.file.start_scope();
+    p_par.file.startScope();
     p_par.file.write("pins");
     for (app.freerouting.board.Pin currPin : p_pin_list) {
-      if (currPin.contains_net(p_net.netNumber)) {
-        write_pin(p_par, currPin);
+      if (currPin.containsNet(p_net.netNumber)) {
+        writePin(p_par, currPin);
       }
     }
-    p_par.file.end_scope();
-    p_par.file.end_scope();
+    p_par.file.endScope();
+    p_par.file.endScope();
   }
 
-  public static void write_net_id(
+  public static void writeNetId(
       app.freerouting.rules.Net p_net, IndentFileWriter p_file, IdentifierType p_identifier_type)
       throws IOException {
     p_file.write("net ");
@@ -52,29 +52,29 @@ public class Net {
     p_file.write(String.valueOf(subnetNumber));
   }
 
-  public static void write_pin(WriteScopeParameter p_par, app.freerouting.board.Pin p_pin)
+  public static void writePin(WriteScopeParameter p_par, app.freerouting.board.Pin p_pin)
       throws IOException {
-    Component currComponent = p_par.board.components.get(p_pin.get_component_no());
+    Component currComponent = p_par.board.components.get(p_pin.getComponentNo());
     if (currComponent == null) {
       FRLogger.warn("Net.write_scope: component not found at '" + currComponent.name + "'");
       return;
     }
-    Package.Pin libPin = currComponent.get_package().get_pin(p_pin.get_index_in_package());
+    Package.Pin libPin = currComponent.getPackage().getPin(p_pin.getIndexInPackage());
     if (libPin == null) {
       FRLogger.warn("Net.write_scope:  pin number out of range at '" + currComponent.name + "'");
       return;
     }
-    p_par.file.new_line();
+    p_par.file.newLine();
     p_par.identifierType.write(currComponent.name, p_par.file);
     p_par.file.write("-");
     p_par.identifierType.write(libPin.name, p_par.file);
   }
 
-  public Set<Pin> get_pins() {
+  public Set<Pin> getPins() {
     return pinList;
   }
 
-  public void set_pins(Collection<Pin> p_pin_list) {
+  public void setPins(Collection<Pin> p_pin_list) {
     pinList = new TreeSet<>(p_pin_list);
   }
 

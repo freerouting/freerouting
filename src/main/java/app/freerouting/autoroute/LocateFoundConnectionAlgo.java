@@ -103,20 +103,20 @@ public abstract class LocateFoundConnectionAlgo {
     }
     this.startDoor = (TargetItemExpansionDoor) startInfo.door;
     this.startItem = startDoor.item;
-    this.startLayer = startDoor.room.get_layer();
+    this.startLayer = startDoor.room.getLayer();
 
     this.currentFromDoorIndex = 0;
     boolean atFanoutEnd = false;
     if (p_maze_search_result.destinationDoor
         instanceof TargetItemExpansionDoor curr_destination_door) {
       this.targetItem = curr_destination_door.item;
-      this.targetLayer = curr_destination_door.room.get_layer();
+      this.targetLayer = curr_destination_door.room.getLayer();
 
-      this.currentFromPoint = calculate_starting_point(curr_destination_door, p_search_tree);
+      this.currentFromPoint = calculateStartingPoint(curr_destination_door, p_search_tree);
     } else if (p_maze_search_result.destinationDoor instanceof ExpansionDrill currDrill) {
       // may happen only in case of fanout
       this.targetItem = null;
-      this.currentFromPoint = currDrill.location.to_float();
+      this.currentFromPoint = currDrill.location.toFloat();
       this.targetLayer = currDrill.firstLayer + p_maze_search_result.sectionNoOfDoor;
       atFanoutEnd = true;
     } else {
@@ -148,34 +148,34 @@ public abstract class LocateFoundConnectionAlgo {
         // the next trace leads to a via
         ExpansionDrill currentTargetDrill =
             (ExpansionDrill) this.backtrackArray[this.currentTargetDoorIndex].door;
-        this.currentTargetShape = TileShape.get_instance(currentTargetDrill.location);
+        this.currentTargetShape = TileShape.getInstance(currentTargetDrill.location);
       } else {
         // the next trace leads to the final target
         connectionDone = true;
         this.currentTargetDoorIndex = this.backtrackArray.length - 1;
         TileShape targetShape =
             ((Connectable) startItem)
-                .get_trace_connection_shape(p_search_tree, startDoor.treeEntryNo);
-        this.currentTargetShape = targetShape.intersection(startDoor.room.get_shape());
+                .getTraceConnectionShape(p_search_tree, startDoor.treeEntryNo);
+        this.currentTargetShape = targetShape.intersection(startDoor.room.getShape());
         if (this.currentTargetShape.dimension() >= 2) {
           // the target is a conduction area, make a save connection
           // by shrinking the shape by the trace halfwidth.
-          double traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[startDoor.room.get_layer()];
+          double traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[startDoor.room.getLayer()];
           TileShape shrinkedShape = (TileShape) this.currentTargetShape.offset(-traceHalfWidth);
-          if (!shrinkedShape.is_empty()) {
+          if (!shrinkedShape.isEmpty()) {
             this.currentTargetShape = shrinkedShape;
           }
         }
       }
       this.currentToDoorIndex = this.currentFromDoorIndex + 1;
-      ResultItem nextTrace = this.calculate_next_trace(layerChanged, atFanoutEnd);
+      ResultItem nextTrace = this.calculateNextTrace(layerChanged, atFanoutEnd);
       atFanoutEnd = false;
       this.connectionItems.add(nextTrace);
     }
   }
 
   /** Returns a new Instance of LocateFoundConnectionAlgo or null, if p_destination_door is null. */
-  public static LocateFoundConnectionAlgo get_instance(
+  public static LocateFoundConnectionAlgo getInstance(
       MazeSearchAlgo.Result p_maze_search_result,
       AutorouteControl p_ctrl,
       ShapeSearchTree p_search_tree,
@@ -213,13 +213,13 @@ public abstract class LocateFoundConnectionAlgo {
    * Calculates the starting point of the next trace on p_from_door.item. The implementation is not
    * yet optimal for starting points on traces or areas.
    */
-  private static FloatPoint calculate_starting_point(
+  private static FloatPoint calculateStartingPoint(
       TargetItemExpansionDoor p_from_door, ShapeSearchTree p_search_tree) {
     TileShape connectionShape =
         ((Connectable) p_from_door.item)
-            .get_trace_connection_shape(p_search_tree, p_from_door.treeEntryNo);
-    connectionShape = connectionShape.intersection(p_from_door.room.get_shape());
-    return connectionShape.centre_of_gravity().round().to_float();
+            .getTraceConnectionShape(p_search_tree, p_from_door.treeEntryNo);
+    connectionShape = connectionShape.intersection(p_from_door.room.getShape());
+    return connectionShape.centreOfGravity().round().toFloat();
   }
 
   /**
@@ -238,7 +238,7 @@ public abstract class LocateFoundConnectionAlgo {
     CompleteExpansionRoom currNextRoom = null;
     ExpandableObject currBacktrackDoor = p_maze_search_result.destinationDoor;
     MazeSearchElement currMazeSearchElement =
-        currBacktrackDoor.get_maze_search_element(p_maze_search_result.sectionNoOfDoor);
+        currBacktrackDoor.getMazeSearchElement(p_maze_search_result.sectionNoOfDoor);
     boolean debugBacktrack = p_net_no == 98;
     if (debugBacktrack) {
       String destType = currBacktrackDoor.getClass().getSimpleName();
@@ -259,9 +259,9 @@ public abstract class LocateFoundConnectionAlgo {
       if (currMazeSearchElement.roomRipped) {
         for (CompleteExpansionRoom tmp_room : currDrill.roomArr) {
           if (tmp_room instanceof ObstacleExpansionRoom room) {
-            p_ripped_item_list.add(room.get_item());
+            p_ripped_item_list.add(room.getItem());
             if (p_ripup_costs != null) {
-              p_ripup_costs.put(room.get_item(), currMazeSearchElement.ripupCost);
+              p_ripup_costs.put(room.getItem(), currMazeSearchElement.ripupCost);
             }
           }
         }
@@ -277,16 +277,16 @@ public abstract class LocateFoundConnectionAlgo {
         break;
       }
       int currSectionNo = currMazeSearchElement.sectionNoOfBacktrackDoor;
-      if (currSectionNo >= currBacktrackDoor.maze_search_element_count()) {
+      if (currSectionNo >= currBacktrackDoor.mazeSearchElementCount()) {
         FRLogger.warn("LocateFoundConnectionAlgo: currSectionNo to big");
-        currSectionNo = currBacktrackDoor.maze_search_element_count() - 1;
+        currSectionNo = currBacktrackDoor.mazeSearchElementCount() - 1;
       }
       if (currBacktrackDoor instanceof ExpansionDrill currDrill) {
         currNextRoom = currDrill.roomArr[currSectionNo];
       } else {
-        currNextRoom = currBacktrackDoor.other_room(currNextRoom);
+        currNextRoom = currBacktrackDoor.otherRoom(currNextRoom);
       }
-      currMazeSearchElement = currBacktrackDoor.get_maze_search_element(currSectionNo);
+      currMazeSearchElement = currBacktrackDoor.getMazeSearchElement(currSectionNo);
       currBacktrackElement = new BacktrackElement(currBacktrackDoor, currSectionNo, currNextRoom);
       if (debugBacktrack) {
         String doorType = currBacktrackDoor.getClass().getSimpleName();
@@ -294,7 +294,7 @@ public abstract class LocateFoundConnectionAlgo {
             currNextRoom != null ? currNextRoom.getClass().getSimpleName() : "null";
         int obstacleId = -1;
         if (currNextRoom instanceof ObstacleExpansionRoom obst) {
-          obstacleId = obst.get_item().get_id_no();
+          obstacleId = obst.getItem().getIdNo();
         }
         FRLogger.trace(
             "BACKTRACK_STEP net="
@@ -316,9 +316,9 @@ public abstract class LocateFoundConnectionAlgo {
       }
       if (currMazeSearchElement.roomRipped) {
         if (currNextRoom instanceof ObstacleExpansionRoom room) {
-          p_ripped_item_list.add(room.get_item());
+          p_ripped_item_list.add(room.getItem());
           if (p_ripup_costs != null) {
-            p_ripup_costs.put(room.get_item(), currMazeSearchElement.ripupCost);
+            p_ripup_costs.put(room.getItem(), currMazeSearchElement.ripupCost);
           }
         }
       }
@@ -327,7 +327,7 @@ public abstract class LocateFoundConnectionAlgo {
     return result;
   }
 
-  private static FloatPoint ninety_degree_corner(
+  private static FloatPoint ninetyDegreeCorner(
       FloatPoint p_from_point, FloatPoint p_to_point, boolean p_horizontal_first) {
     double x;
     double y;
@@ -341,7 +341,7 @@ public abstract class LocateFoundConnectionAlgo {
     return new FloatPoint(x, y);
   }
 
-  private static FloatPoint fortyfive_degree_corner(
+  private static FloatPoint fortyfiveDegreeCorner(
       FloatPoint p_from_point, FloatPoint p_to_point, boolean p_horizontal_first) {
     double absDx = Math.abs(p_to_point.x - p_from_point.x);
     double absDy = Math.abs(p_to_point.y - p_from_point.y);
@@ -388,16 +388,16 @@ public abstract class LocateFoundConnectionAlgo {
    * Calculates an additional corner, so that for the lines from p_from_point to the result corner
    * and from the result corner to p_to_point p_angle_restriction is fulfilled.
    */
-  static FloatPoint calculate_additional_corner(
+  static FloatPoint calculateAdditionalCorner(
       FloatPoint p_from_point,
       FloatPoint p_to_point,
       boolean p_horizontal_first,
       AngleRestriction p_angle_restriction) {
     FloatPoint result;
     if (p_angle_restriction == AngleRestriction.NINETY_DEGREE) {
-      result = ninety_degree_corner(p_from_point, p_to_point, p_horizontal_first);
+      result = ninetyDegreeCorner(p_from_point, p_to_point, p_horizontal_first);
     } else if (p_angle_restriction == AngleRestriction.FORTYFIVE_DEGREE) {
-      result = fortyfive_degree_corner(p_from_point, p_to_point, p_horizontal_first);
+      result = fortyfiveDegreeCorner(p_from_point, p_to_point, p_horizontal_first);
     } else {
       result = p_to_point;
     }
@@ -408,14 +408,14 @@ public abstract class LocateFoundConnectionAlgo {
    * Calculates the next trace of the connection under construction. Returns null, if all traces are
    * returned.
    */
-  private ResultItem calculate_next_trace(boolean p_layer_changed, boolean p_at_fanout_end) {
+  private ResultItem calculateNextTrace(boolean p_layer_changed, boolean p_at_fanout_end) {
     Collection<FloatPoint> cornerList = new LinkedList<>();
     cornerList.add(this.currentFromPoint);
     if (!p_at_fanout_end) {
-      FloatPoint adjustedStartCorner = this.adjust_start_corner();
+      FloatPoint adjustedStartCorner = this.adjustStartCorner();
       if (adjustedStartCorner != this.currentFromPoint) {
         FloatPoint addCorner =
-            calculate_additional_corner(
+            calculateAdditionalCorner(
                 this.currentFromPoint, adjustedStartCorner, true, this.angleRestriction);
         cornerList.add(addCorner);
         cornerList.add(adjustedStartCorner);
@@ -425,7 +425,7 @@ public abstract class LocateFoundConnectionAlgo {
     }
     FloatPoint prevCorner = this.currentFromPoint;
     for (; ; ) {
-      Collection<FloatPoint> nextCorners = calculate_next_trace_corners();
+      Collection<FloatPoint> nextCorners = calculateNextTraceCorners();
       if (nextCorners.isEmpty()) {
         break;
       }
@@ -444,7 +444,7 @@ public abstract class LocateFoundConnectionAlgo {
       this.currentFromDoorIndex = this.currentTargetDoorIndex + 1;
       CompleteExpansionRoom nextRoom = this.backtrackArray[this.currentFromDoorIndex].nextRoom;
       if (nextRoom != null) {
-        nextLayer = nextRoom.get_layer();
+        nextLayer = nextRoom.getLayer();
       }
     }
 
@@ -497,7 +497,7 @@ public abstract class LocateFoundConnectionAlgo {
    * Returns the next list of corners for the construction of the trace in calculate_next_trace. If
    * the result is empty, the trace is already completed.
    */
-  protected abstract Collection<FloatPoint> calculate_next_trace_corners();
+  protected abstract Collection<FloatPoint> calculateNextTraceCorners();
 
   /** Test display of the baktrack rooms. */
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
@@ -517,7 +517,7 @@ public abstract class LocateFoundConnectionAlgo {
    * Adjusts the start corner, so that a trace starting at this corner is completely contained in
    * the start room.
    */
-  private FloatPoint adjust_start_corner() {
+  private FloatPoint adjustStartCorner() {
     if (this.currentFromDoorIndex < 0) {
       return this.currentFromPoint;
     }
@@ -527,11 +527,11 @@ public abstract class LocateFoundConnectionAlgo {
     }
     double traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[this.currentTraceLayer];
     TileShape shrinkedRoomShape =
-        (TileShape) currFromInfo.nextRoom.get_shape().offset(-traceHalfWidth);
-    if (shrinkedRoomShape.is_empty() || shrinkedRoomShape.contains(this.currentFromPoint)) {
+        (TileShape) currFromInfo.nextRoom.getShape().offset(-traceHalfWidth);
+    if (shrinkedRoomShape.isEmpty() || shrinkedRoomShape.contains(this.currentFromPoint)) {
       return this.currentFromPoint;
     }
-    return shrinkedRoomShape.nearest_point_approx(this.currentFromPoint).round().to_float();
+    return shrinkedRoomShape.nearestPointApprox(this.currentFromPoint).round().toFloat();
   }
 
   /**

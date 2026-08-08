@@ -55,13 +55,13 @@ public class Communication implements Serializable {
         new BoardObserverAdaptor());
   }
 
-  public boolean host_cad_is_eagle() {
+  public boolean hostCadIsEagle() {
     return specctraParserInfo != null
         && specctraParserInfo.hostCad != null
         && "CadSoft".equalsIgnoreCase(specctraParserInfo.hostCad);
   }
 
-  public boolean host_is_old_kicad() {
+  public boolean hostIsOldKicad() {
     if ((specctraParserInfo == null)
         || (specctraParserInfo.hostCad == null)
         || (specctraParserInfo.hostVersion == null)) {
@@ -80,12 +80,12 @@ public class Communication implements Serializable {
     return false;
   }
 
-  public boolean host_cad_exists() {
+  public boolean hostCadExists() {
     return specctraParserInfo != null && specctraParserInfo.hostCad != null;
   }
 
   /** Returns the resolution scaled to the input unit */
-  public double get_resolution(Unit p_unit) {
+  public double getResolution(Unit p_unit) {
     return Unit.scale(this.resolution, p_unit, this.unit);
   }
 

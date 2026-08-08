@@ -12,7 +12,7 @@ public interface ObjectInfoPanel {
   boolean append(String p_string);
 
   /** Appends p_string in bold style to the window. Returns false, if that was not possible. */
-  boolean append_bold(String p_string);
+  boolean appendBold(String p_string);
 
   /**
    * Appends p_value to the window after transforming it to the user coordinate system. Returns
@@ -24,7 +24,7 @@ public interface ObjectInfoPanel {
    * Appends p_value to the window without transforming it to the user coordinate system. Returns
    * false, if that was not possible.
    */
-  boolean append_without_transforming(double p_value);
+  boolean appendWithoutTransforming(double p_value);
 
   /**
    * Appends p_point to the window after transforming to the user coordinate system. Returns false,
@@ -54,19 +54,19 @@ public interface ObjectInfoPanel {
    * Appends a link for creating a new PrintInfoWindow with the information of p_items to the
    * window. Returns false, if that was not possible.
    */
-  boolean append_items(String p_link_name, String p_window_title, Collection<Item> p_items);
+  boolean appendItems(String p_link_name, String p_window_title, Collection<Item> p_items);
 
   /**
    * Appends a link for creating a new PrintInfoWindow with the information of p_objects to the
    * window. Returns false, if that was not possible.
    */
-  boolean append_objects(
+  boolean appendObjects(
       String p_button_name, String p_window_title, Collection<Printable> p_objects);
 
   /** Functionality needed for objects to print information into an ObjectInfoWindow */
   interface Printable {
 
     /** Prints information about an ObjectInfoWindow.Printable object into the input window. */
-    void print_info(ObjectInfoPanel p_window, Locale p_locale);
+    void printInfo(ObjectInfoPanel p_window, Locale p_locale);
   }
 }

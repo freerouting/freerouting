@@ -22,17 +22,17 @@ public class CornerItemConstructionState extends InteractiveState {
   protected CornerItemConstructionState(
       InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
-    p_board_handling.remove_ratsnest(); // Constructing an item may change the connectivity.
+    p_board_handling.removeRatsnest(); // Constructing an item may change the connectivity.
   }
 
   /** adds a corner to the polygon of the item under construction */
   @Override
-  public InteractiveState left_button_clicked(FloatPoint p_location) {
-    return add_corner(p_location);
+  public InteractiveState leftButtonClicked(FloatPoint p_location) {
+    return addCorner(p_location);
   }
 
   /** adds a corner to the polygon of the item under construction */
-  public InteractiveState add_corner(FloatPoint p_location) {
+  public InteractiveState addCorner(FloatPoint p_location) {
     IntPoint location = this.snap(p_location.round());
     // make sure that the coordinates are integer
     this.cornerList.add(location);
@@ -42,17 +42,17 @@ public class CornerItemConstructionState extends InteractiveState {
 
   /** stores the location of the mouse pointer after snapping it to the snapAngle */
   @Override
-  public InteractiveState mouse_moved() {
-    super.mouse_moved();
-    IntPoint currMousePos = hdlg.get_current_mouse_position().round();
-    this.snappedMousePosition = this.snap(currMousePos).to_float();
+  public InteractiveState mouseMoved() {
+    super.mouseMoved();
+    IntPoint currMousePos = hdlg.getCurrentMousePosition().round();
+    this.snappedMousePosition = this.snap(currMousePos).toFloat();
     hdlg.repaint();
     return this;
   }
 
   @Override
-  public JPopupMenu get_popup_menu() {
-    return hdlg.get_panel().popupMenuCorneritemConstruction;
+  public JPopupMenu getPopupMenu() {
+    return hdlg.getPanel().popupMenuCorneritemConstruction;
   }
 
   /** draws the polygon constructed so far as a visual aid */
@@ -65,10 +65,10 @@ public class CornerItemConstructionState extends InteractiveState {
     FloatPoint[] corners = new FloatPoint[cornerCount];
     Iterator<IntPoint> it = cornerList.iterator();
     for (int i = 0; i < corners.length - 1; i++) {
-      corners[i] = it.next().to_float();
+      corners[i] = it.next().toFloat();
     }
     if (this.snappedMousePosition == null) {
-      corners[corners.length - 1] = it.next().to_float();
+      corners[corners.length - 1] = it.next().toFloat();
     } else {
       corners[corners.length - 1] = this.snappedMousePosition;
     }
@@ -76,19 +76,19 @@ public class CornerItemConstructionState extends InteractiveState {
   }
 
   /** add a corner to make the last lines fulfil the snap angle restrictions */
-  protected void add_corner_for_snap_angle() {
-    if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NONE) {
+  protected void addCornerForSnapAngle() {
+    if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction() == AngleRestriction.NONE) {
       return;
     }
     IntPoint firstCorner = cornerList.getFirst();
     IntPoint lastCorner = cornerList.getLast();
     IntPoint addCorner = null;
-    if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
+    if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
         == AngleRestriction.NINETY_DEGREE) {
-      addCorner = lastCorner.ninety_degree_corner(firstCorner, true);
-    } else if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
+      addCorner = lastCorner.ninetyDegreeCorner(firstCorner, true);
+    } else if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
         == AngleRestriction.FORTYFIVE_DEGREE) {
-      addCorner = lastCorner.fortyfive_degree_corner(firstCorner, true);
+      addCorner = lastCorner.fortyfiveDegreeCorner(firstCorner, true);
     }
     if (addCorner != null) {
       cornerList.add(addCorner);
@@ -102,16 +102,16 @@ public class CornerItemConstructionState extends InteractiveState {
   private IntPoint snap(IntPoint p_point) {
     IntPoint result;
     boolean listEmpty = cornerList.isEmpty();
-    if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
+    if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
             == AngleRestriction.NINETY_DEGREE
         && !listEmpty) {
       IntPoint lastCorner = cornerList.getLast();
-      result = p_point.orthogonal_projection(lastCorner);
-    } else if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
+      result = p_point.orthogonalProjection(lastCorner);
+    } else if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
             == AngleRestriction.FORTYFIVE_DEGREE
         && !listEmpty) {
       IntPoint lastCorner = cornerList.getLast();
-      result = p_point.fortyfive_degree_projection(lastCorner);
+      result = p_point.fortyfiveDegreeProjection(lastCorner);
     } else {
       result = p_point;
     }

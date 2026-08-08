@@ -25,7 +25,7 @@ public final class KiCadNetClassNames {
 
   public static NetClass resolveNetClass(BoardRules rules, String name) {
     if (isKiCadDefaultNetClassName(name)) {
-      return rules.get_default_net_class();
+      return rules.getDefaultNetClass();
     }
     return rules.netClasses.get(name);
   }

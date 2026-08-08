@@ -223,11 +223,11 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   /** Refreshes the displayed values in this window. */
   @Override
   public void refresh() {
-    appearanceMiscSmallCursorCheckbox.setSelected(!panel.is_custom_cross_hair_cursor());
-    appearanceMiscBigCursorCheckbox.setSelected(panel.is_custom_cross_hair_cursor());
+    appearanceMiscSmallCursorCheckbox.setSelected(!panel.isCustomCrossHairCursor());
+    appearanceMiscBigCursorCheckbox.setSelected(panel.isCustomCrossHairCursor());
 
     int ninetyDegreeRotation =
-        panel.boardHandling.graphicsContext.coordinateTransform.get_90_degree_rotation();
+        panel.boardHandling.graphicsContext.coordinateTransform.get90DegreeRotation();
 
     switch (ninetyDegreeRotation) {
       case 0 -> appearanceMiscRotationNoneCheckbox.setSelected(true);
@@ -241,21 +241,21 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     }
 
     boolean isMirrorLeftRight =
-        panel.boardHandling.graphicsContext.coordinateTransform.is_mirror_left_right();
+        panel.boardHandling.graphicsContext.coordinateTransform.isMirrorLeftRight();
     boolean isMirrorTopButton =
-        panel.boardHandling.graphicsContext.coordinateTransform.is_mirror_top_bottom();
+        panel.boardHandling.graphicsContext.coordinateTransform.isMirrorTopBottom();
     appearanceMiscMirrorNoneCheckbox.setSelected(!(isMirrorLeftRight || isMirrorTopButton));
 
     appearanceMiscVerticalMirrorCheckbox.setSelected(
-        panel.boardHandling.graphicsContext.coordinateTransform.is_mirror_left_right());
+        panel.boardHandling.graphicsContext.coordinateTransform.isMirrorLeftRight());
     appearanceMiscHorizontalMirrorCheckbox.setSelected(
-        panel.boardHandling.graphicsContext.coordinateTransform.is_mirror_top_bottom());
+        panel.boardHandling.graphicsContext.coordinateTransform.isMirrorTopBottom());
 
     int currSliderValue =
         (int)
             Math.round(
                 MAX_SLIDER_VALUE
-                    * (1 - panel.boardHandling.graphicsContext.get_auto_layer_dim_factor()));
+                    * (1 - panel.boardHandling.graphicsContext.getAutoLayerDimFactor()));
     autoLayerDimSlider.setValue(currSliderValue);
   }
 
@@ -263,7 +263,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      panel.set_custom_crosshair_cursor(false);
+      panel.setCustomCrosshairCursor(false);
     }
   }
 
@@ -271,7 +271,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      panel.set_custom_crosshair_cursor(true);
+      panel.setCustomCrosshairCursor(true);
     }
   }
 
@@ -281,7 +281,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
-      coordinateTransform.set_rotation(0);
+      coordinateTransform.setRotation(0);
       panel.repaint();
     }
   }
@@ -292,7 +292,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
-      coordinateTransform.set_rotation(0.5 * Math.PI);
+      coordinateTransform.setRotation(0.5 * Math.PI);
       panel.repaint();
     }
   }
@@ -303,7 +303,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
-      coordinateTransform.set_rotation(Math.PI);
+      coordinateTransform.setRotation(Math.PI);
       panel.repaint();
     }
   }
@@ -314,7 +314,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
-      coordinateTransform.set_rotation(1.5 * Math.PI);
+      coordinateTransform.setRotation(1.5 * Math.PI);
       panel.repaint();
     }
   }
@@ -325,16 +325,16 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
-      if (!(coordinateTransform.is_mirror_left_right()
-          || coordinateTransform.is_mirror_top_bottom())) {
+      if (!(coordinateTransform.isMirrorLeftRight()
+          || coordinateTransform.isMirrorTopBottom())) {
         return; // mirroring already switched off
       }
       // remember the old viewort center to retain the displayed section of the board.
       FloatPoint oldViewportCenter =
-          coordinateTransform.screen_to_board(panel.get_viewport_center());
-      coordinateTransform.set_mirror_left_right(false);
-      coordinateTransform.set_mirror_top_bottom(false);
-      panel.set_viewport_center(coordinateTransform.board_to_screen(oldViewportCenter));
+          coordinateTransform.screenToBoard(panel.getViewportCenter());
+      coordinateTransform.setMirrorLeftRight(false);
+      coordinateTransform.setMirrorTopBottom(false);
+      panel.setViewportCenter(coordinateTransform.boardToScreen(oldViewportCenter));
       panel.repaint();
     }
   }
@@ -345,15 +345,15 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
-      if (coordinateTransform.is_mirror_left_right()) {
+      if (coordinateTransform.isMirrorLeftRight()) {
         return; // already mirrored
       }
       // remember the old viewport center to retain the displayed section of the board.
       FloatPoint oldViewportCenter =
-          coordinateTransform.screen_to_board(panel.get_viewport_center());
-      coordinateTransform.set_mirror_left_right(true);
-      coordinateTransform.set_mirror_top_bottom(false);
-      panel.set_viewport_center(coordinateTransform.board_to_screen(oldViewportCenter));
+          coordinateTransform.screenToBoard(panel.getViewportCenter());
+      coordinateTransform.setMirrorLeftRight(true);
+      coordinateTransform.setMirrorTopBottom(false);
+      panel.setViewportCenter(coordinateTransform.boardToScreen(oldViewportCenter));
       panel.repaint();
     }
   }
@@ -364,15 +364,15 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
-      if (coordinateTransform.is_mirror_top_bottom()) {
+      if (coordinateTransform.isMirrorTopBottom()) {
         return; // already mirrored
       }
       // remember the old viewport center to retain the displayed section of the board.
       FloatPoint oldViewportCenter =
-          coordinateTransform.screen_to_board(panel.get_viewport_center());
-      coordinateTransform.set_mirror_top_bottom(true);
-      coordinateTransform.set_mirror_left_right(false);
-      panel.set_viewport_center(coordinateTransform.board_to_screen(oldViewportCenter));
+          coordinateTransform.screenToBoard(panel.getViewportCenter());
+      coordinateTransform.setMirrorTopBottom(true);
+      coordinateTransform.setMirrorLeftRight(false);
+      panel.setViewportCenter(coordinateTransform.boardToScreen(oldViewportCenter));
       panel.repaint();
     }
   }
@@ -382,7 +382,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     @Override
     public void stateChanged(ChangeEvent evt) {
       double newValue = 1 - (double) autoLayerDimSlider.getValue() / (double) MAX_SLIDER_VALUE;
-      panel.boardHandling.graphicsContext.set_auto_layer_dim_factor(newValue);
+      panel.boardHandling.graphicsContext.setAutoLayerDimFactor(newValue);
       panel.repaint();
     }
   }

@@ -26,39 +26,39 @@ public class TargetItemExpansionDoor implements ExpandableObject {
     if (room == null) {
       this.shape = Simplex.EMPTY;
     } else {
-      TileShape itemShape = item.get_tree_shape(p_search_tree, treeEntryNo);
-      this.shape = itemShape.intersection(room.get_shape());
+      TileShape itemShape = item.getTreeShape(p_search_tree, treeEntryNo);
+      this.shape = itemShape.intersection(room.getShape());
     }
     mazeSearchInfo = new MazeSearchElement();
   }
 
   @Override
-  public TileShape get_shape() {
+  public TileShape getShape() {
     return this.shape;
   }
 
   @Override
-  public int get_dimension() {
+  public int getDimension() {
     return 2;
   }
 
-  public boolean is_destination_door() {
-    ItemAutorouteInfo itemInfo = this.item.get_autoroute_info();
-    return !itemInfo.is_start_info();
+  public boolean isDestinationDoor() {
+    ItemAutorouteInfo itemInfo = this.item.getAutorouteInfo();
+    return !itemInfo.isStartInfo();
   }
 
   @Override
-  public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
+  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom p_room) {
     return null;
   }
 
   @Override
-  public MazeSearchElement get_maze_search_element(int p_no) {
+  public MazeSearchElement getMazeSearchElement(int p_no) {
     return mazeSearchInfo;
   }
 
   @Override
-  public int maze_search_element_count() {
+  public int mazeSearchElementCount() {
     return 1;
   }
 
@@ -68,8 +68,8 @@ public class TargetItemExpansionDoor implements ExpandableObject {
   }
 
   @Override
-  public int get_id_no() {
+  public int getIdNo() {
     // Unique ID for a target door: hash of target item ID and room ID.
-    return 31 * item.get_id_no() + (room != null ? room.get_id_no() : 0);
+    return 31 * item.getIdNo() + (room != null ? room.getIdNo() : 0);
   }
 }

@@ -21,19 +21,19 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
 
   /** Fills the list with the board incompletes. */
   @Override
-  protected void fill_list() {
-    RatsNest ratsnest = boardFrame.boardPanel.boardHandling.get_ratsnest();
-    AirLine[] sortedArr = ratsnest.get_airlines();
+  protected void fillList() {
+    RatsNest ratsnest = boardFrame.boardPanel.boardHandling.getRatsnest();
+    AirLine[] sortedArr = ratsnest.getAirlines();
 
     Arrays.sort(sortedArr);
     for (int i = 0; i < sortedArr.length; i++) {
-      this.add_to_list(new AirLineInfo(sortedArr[i]));
+      this.addToList(new AirLineInfo(sortedArr[i]));
     }
     this.list.setVisibleRowCount(Math.min(sortedArr.length, DEFAULT_TABLE_SIZE));
   }
 
   @Override
-  protected void select_instances() {
+  protected void selectInstances() {
     List<Object> selectedIncompletes = list.getSelectedValuesList();
     if (selectedIncompletes.isEmpty()) {
       return;
@@ -45,7 +45,7 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
       selectedItems.add(currAirline.fromItem);
       selectedItems.add(currAirline.toItem);
     }
-    boardFrame.boardPanel.boardHandling.select_items(selectedItems);
-    boardFrame.boardPanel.boardHandling.zoom_selection();
+    boardFrame.boardPanel.boardHandling.selectItems(selectedItems);
+    boardFrame.boardPanel.boardHandling.zoomSelection();
   }
 }

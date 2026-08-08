@@ -48,7 +48,7 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     netNumber = p_no;
     containsPlane = p_contains_plane;
     netList = p_net_list;
-    netClass = p_net_list.get_board().rules.get_default_net_class();
+    netClass = p_net_list.getBoard().rules.getDefaultNetClass();
   }
 
   @Override
@@ -68,22 +68,22 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   }
 
   /** Sets the class of this net */
-  public void set_class(NetClass p_rule) {
+  public void setClass(NetClass p_rule) {
     this.netClass = p_rule;
   }
 
   /** Returns the pins and conduction areas of this net. */
-  public Collection<Item> get_terminal_items() {
+  public Collection<Item> getTerminalItems() {
     Collection<Item> result = new LinkedList<>();
-    BasicBoard board = this.netList.get_board();
-    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.start_read_object();
+    BasicBoard board = this.netList.getBoard();
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.read_object(it);
+      Item currItem = (Item) board.itemList.readObject(it);
       if (currItem == null) {
         break;
       }
       if (currItem instanceof Connectable) {
-        if (currItem.contains_net(this.netNumber) && !currItem.is_routable()) {
+        if (currItem.containsNet(this.netNumber) && !currItem.isRoutable()) {
           result.add(currItem);
         }
       }
@@ -92,17 +92,17 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   }
 
   /** Returns the pins of this net. */
-  public Collection<Pin> get_pins() {
+  public Collection<Pin> getPins() {
     Collection<Pin> result = new LinkedList<>();
-    BasicBoard board = this.netList.get_board();
-    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.start_read_object();
+    BasicBoard board = this.netList.getBoard();
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.read_object(it);
+      Item currItem = (Item) board.itemList.readObject(it);
       if (currItem == null) {
         break;
       }
       if (currItem instanceof Pin pin) {
-        if (currItem.contains_net(this.netNumber)) {
+        if (currItem.containsNet(this.netNumber)) {
           result.add(pin);
         }
       }
@@ -111,16 +111,16 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   }
 
   /** Returns all items of this net. */
-  public Collection<Item> get_items() {
+  public Collection<Item> getItems() {
     Collection<Item> result = new LinkedList<>();
-    BasicBoard board = this.netList.get_board();
-    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.start_read_object();
+    BasicBoard board = this.netList.getBoard();
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.read_object(it);
+      Item currItem = (Item) board.itemList.readObject(it);
       if (currItem == null) {
         break;
       }
-      if (currItem.contains_net(this.netNumber)) {
+      if (currItem.containsNet(this.netNumber)) {
         result.add(currItem);
       }
     }
@@ -128,22 +128,22 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   }
 
   /** Returns the cumulative trace length of all traces on the board belonging to this net. */
-  public double get_trace_length() {
+  public double getTraceLength() {
     double cumulativeTraceLength = 0;
-    Collection<Item> netItems = netList.get_board().get_connectable_items(this.netNumber);
+    Collection<Item> netItems = netList.getBoard().getConnectableItems(this.netNumber);
     for (Item currItem : netItems) {
 
       if (currItem instanceof Trace trace) {
-        cumulativeTraceLength += trace.get_length();
+        cumulativeTraceLength += trace.getLength();
       }
     }
     return cumulativeTraceLength;
   }
 
   /** Returns the count of vias on the board belonging to this net. */
-  public int get_via_count() {
+  public int getViaCount() {
     int result = 0;
-    Collection<Item> netItems = netList.get_board().get_connectable_items(this.netNumber);
+    Collection<Item> netItems = netList.getBoard().getConnectableItems(this.netNumber);
     for (Item currItem : netItems) {
       if (currItem instanceof Via) {
         ++result;
@@ -152,7 +152,7 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     return result;
   }
 
-  public void set_contains_plane(boolean p_value) {
+  public void setContainsPlane(boolean p_value) {
     containsPlane = p_value;
   }
 
@@ -161,27 +161,27 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
    * to the cheap plane via costs. May also be true, if a layer covered with a conductionArea of
    * this net is a signal layer.
    */
-  public boolean contains_plane() {
+  public boolean containsPlane() {
     return containsPlane;
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    int viaCount = this.get_via_count();
-    double cumulativeTraceLength = this.get_trace_length();
-    Collection<Item> terminalItems = this.get_terminal_items();
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
+    int viaCount = this.getViaCount();
+    double cumulativeTraceLength = this.getTraceLength();
+    Collection<Item> terminalItems = this.getTerminalItems();
     Collection<Printable> terminals = new LinkedList<>(terminalItems);
     int terminalItemCount = terminals.size();
 
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("net") + " ");
-    p_window.append_bold(this.name);
-    p_window.append_bold(": ");
+    p_window.appendBold(tm.getText("net") + " ");
+    p_window.appendBold(this.name);
+    p_window.appendBold(": ");
     p_window.append(tm.getText("class") + " ");
-    p_window.append(netClass.get_name(), tm.getText("netClass"), netClass);
+    p_window.append(netClass.getName(), tm.getText("netClass"), netClass);
     p_window.append(", ");
-    p_window.append_objects(
+    p_window.appendObjects(
         String.valueOf(terminalItemCount), tm.getText("terminal_items_2"), terminals);
     p_window.append(" " + tm.getText("terminalItems"));
     p_window.append(", " + tm.getText("viaCount") + " ");

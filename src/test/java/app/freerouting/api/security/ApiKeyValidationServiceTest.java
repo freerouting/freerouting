@@ -25,7 +25,7 @@ public class ApiKeyValidationServiceTest {
   }
 
   @Test
-  void testAuthenticationDisabled_ReturnsTrue() {
+  void testAuthenticationDisabledReturnsTrue() {
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
     ApiKeyValidationService service = ApiKeyValidationService.getInstance();
 
@@ -33,7 +33,7 @@ public class ApiKeyValidationServiceTest {
   }
 
   @Test
-  void testAuthenticationEnabledButNoProviders_ReturnsFalse() {
+  void testAuthenticationEnabledButNoProvidersReturnsFalse() {
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = true;
     Freerouting.globalSettings.apiServerSettings.authentication.providers = ""; // No providers
     ApiKeyValidationService service = ApiKeyValidationService.getInstance();
@@ -42,7 +42,7 @@ public class ApiKeyValidationServiceTest {
   }
 
   @Test
-  void testFallback_FirstProviderUndecided_SecondGrants() {
+  void testFallbackFirstProviderUndecidedSecondGrants() {
     ApiKeyValidationService service =
         configureMockProviders(
             ApiKeyValidationResult.UNDECIDED, ApiKeyValidationResult.ACCESS_GRANTED);
@@ -50,7 +50,7 @@ public class ApiKeyValidationServiceTest {
   }
 
   @Test
-  void testFallback_FirstProviderDenies_ReturnsFalseImmediately() {
+  void testFallbackFirstProviderDeniesReturnsFalseImmediately() {
     ApiKeyValidationService service =
         configureMockProviders(
             ApiKeyValidationResult.ACCESS_DENIED,
@@ -60,7 +60,7 @@ public class ApiKeyValidationServiceTest {
   }
 
   @Test
-  void testFallback_AllProvidersUndecided_ReturnsFalse() {
+  void testFallbackAllProvidersUndecidedReturnsFalse() {
     ApiKeyValidationService service =
         configureMockProviders(
             ApiKeyValidationResult.UNDECIDED, ApiKeyValidationResult.PROVIDER_FAILED);
@@ -68,7 +68,7 @@ public class ApiKeyValidationServiceTest {
   }
 
   @Test
-  void testFallback_FirstProviderGrants_StopsEarly() {
+  void testFallbackFirstProviderGrantsStopsEarly() {
     ApiKeyValidationService service =
         configureMockProviders(
             ApiKeyValidationResult.ACCESS_GRANTED,

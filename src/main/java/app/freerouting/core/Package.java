@@ -74,7 +74,7 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
   }
 
   /** Returns the pin with the input number from this package. */
-  public Pin get_pin(int p_no) {
+  public Pin getPin(int p_no) {
     if (p_no < 0 || p_no >= pinArr.length) {
       FRLogger.warn("Package.get_pin: p_no out of range");
       return null;
@@ -86,7 +86,7 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
    * Returns the pin number of the pin with the input name from this package, or -1, if no such pin
    * exists Pin numbers are from 0 to pinCount - 1.
    */
-  public int get_pin_no(String p_name) {
+  public int getPinNo(String p_name) {
     for (int i = 0; i < pinArr.length; i++) {
       if (pinArr[i].name.equals(p_name)) {
         return i;
@@ -96,7 +96,7 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
   }
 
   /** Returns the pin count of this package. */
-  public int pin_count() {
+  public int pinCount() {
     return pinArr.length;
   }
 
@@ -106,11 +106,11 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("package") + " ");
-    p_window.append_bold(this.name);
+    p_window.appendBold(tm.getText("package") + " ");
+    p_window.appendBold(this.name);
     for (int i = 0; i < this.pinArr.length; i++) {
       Pin currPin = this.pinArr[i];
       p_window.newline();
@@ -121,9 +121,9 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
       Padstack currPadstack = this.packageList.padstackList.get(currPin.padstackNo);
       p_window.append(currPadstack.name, tm.getText("padstack_info"), currPadstack);
       p_window.append(" " + tm.getText("at") + " ");
-      p_window.append(currPin.relativeLocation.to_float());
+      p_window.append(currPin.relativeLocation.toFloat());
       p_window.append(", " + tm.getText("rotation") + " ");
-      p_window.append_without_transforming(currPin.rotationInDegree);
+      p_window.appendWithoutTransforming(currPin.rotationInDegree);
     }
     p_window.newline();
   }

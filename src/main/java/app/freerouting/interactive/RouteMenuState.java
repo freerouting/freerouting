@@ -14,22 +14,22 @@ public final class RouteMenuState extends MenuState {
   }
 
   /** Returns a new instance of RouteMenuState */
-  public static RouteMenuState get_instance(GuiBoardManager p_board_handling) {
+  public static RouteMenuState getInstance(GuiBoardManager p_board_handling) {
     return new RouteMenuState(p_board_handling);
   }
 
   @Override
-  public InteractiveState left_button_clicked(FloatPoint p_location) {
-    return RouteState.get_instance(p_location, this, hdlg);
+  public InteractiveState leftButtonClicked(FloatPoint p_location) {
+    return RouteState.getInstance(p_location, this, hdlg);
   }
 
   @Override
-  public void display_default_message() {
-    hdlg.screenMessages.set_status_message(" in route menu");
+  public void displayDefaultMessage() {
+    hdlg.screenMessages.setStatusMessage(" in route menu");
   }
 
   @Override
-  public String get_help_id() {
+  public String getHelpId() {
     return "MenuState_RouteMenuState";
   }
 }

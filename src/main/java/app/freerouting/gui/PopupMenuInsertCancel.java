@@ -18,7 +18,7 @@ class PopupMenuInsertCancel extends JPopupMenu {
 
     JMenuItem popupInsertMenuitem = new JMenuItem();
     popupInsertMenuitem.setText(tm.getText("insert"));
-    popupInsertMenuitem.addActionListener(_ -> boardPanel.boardHandling.return_from_state());
+    popupInsertMenuitem.addActionListener(_ -> boardPanel.boardHandling.returnFromState());
     popupInsertMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupInsertMenuitem", popupInsertMenuitem.getText()));
 
@@ -26,7 +26,7 @@ class PopupMenuInsertCancel extends JPopupMenu {
 
     JMenuItem popupCancelMenuitem = new JMenuItem();
     popupCancelMenuitem.setText(tm.getText("cancel"));
-    popupCancelMenuitem.addActionListener(_ -> boardPanel.boardHandling.cancel_state());
+    popupCancelMenuitem.addActionListener(_ -> boardPanel.boardHandling.cancelState());
     popupCancelMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupCancelMenuitem", popupCancelMenuitem.getText()));
 

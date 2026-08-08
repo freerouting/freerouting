@@ -125,7 +125,7 @@ public class Keyword {
   }
 
   /** Returns the name string of this Keyword. The name is used for debugging purposes. */
-  public String get_name() {
+  public String getName() {
     return name;
   }
 }

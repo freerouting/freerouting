@@ -8,11 +8,11 @@ public class Issue676FullPassTest extends RoutingFixtureTest {
   private static final String FIXTURE = "Issue676-ch32v-tx118s.dsn";
 
   @Test
-  void issue676_full_routing_3passes() {
+  void issue676FullRouting3passes() {
     TestingSettings ts = new TestingSettings();
     ts.setMaxPasses(3);
     ts.setJobTimeoutString("00:02:00");
-    RoutingJob job = GetRoutingJob(FIXTURE, ts);
-    RunRoutingJob(job);
+    RoutingJob job = getRoutingJob(FIXTURE, ts);
+    runRoutingJob(job);
   }
 }

@@ -61,7 +61,7 @@ class GuiStartupHeadlessTest {
         new BoardObserverAdaptor(),
         new ItemIdentificationNumberGenerator());
 
-    board = manager.get_routing_board();
+    board = manager.getRoutingBoard();
     assertNotNull(board, "Board must be non-null after DSN load");
 
     // Simulate GuiBoardManager.loadFromSpecctraDsn: reset singleton for the new board.
@@ -81,7 +81,7 @@ class GuiStartupHeadlessTest {
    * GuiBoardManager#getInteractiveSettings()} is never {@code null} post-load.
    */
   @Test
-  void getOrCreate_isNonNullAfterGuiLoadStep() {
+  void getOrCreateIsNonNullAfterGuiLoadStep() {
     assertNotNull(
         InteractiveSettings.getOrCreate(board),
         "InteractiveSettings.getOrCreate(board) must return non-null after GUI load-path reset");
@@ -92,17 +92,17 @@ class GuiStartupHeadlessTest {
    * {@link GuiBoardManager#loadFromSpecctraDsn} which calls {@code set_layer(0)}.
    */
   @Test
-  void getLayer_isZeroAfterGuiLoadStep() {
+  void getLayerIsZeroAfterGuiLoadStep() {
     assertEquals(
         0,
-        settings.get_layer(),
+        settings.getLayer(),
         "Active layer must be 0 immediately after design load (GUI load-path invariant)");
   }
 
   // ── Invariant 2: manual trace half widths populated from board rules ──────
 
   /**
-   * Simulates {@link GuiBoardManager#initialize_manual_trace_half_widths()} and verifies that every
+   * Simulates {@link GuiBoardManager#initializeManualTraceHalfWidths()} and verifies that every
    * layer's manual trace half-width is set to a positive value derived from the board's default net
    * class.
    *
@@ -111,14 +111,14 @@ class GuiStartupHeadlessTest {
    * the default trace rule for that layer.
    */
   @Test
-  void initializeManualTraceHalfWidths_populatesArrayFromBoardRules() {
+  void initializeManualTraceHalfWidthsPopulatesArrayFromBoardRules() {
     // Replicate GuiBoardManager.initialize_manual_trace_half_widths() logic.
-    for (int i = 0; i < settings.get_layer_count(); i++) {
-      int ruleWidth = board.rules.get_default_net_class().get_trace_half_width(i);
+    for (int i = 0; i < settings.getLayerCount(); i++) {
+      int ruleWidth = board.rules.getDefaultNetClass().getTraceHalfWidth(i);
       settings.manualTraceHalfWidthArr[i] = ruleWidth;
     }
 
-    for (int i = 0; i < settings.get_layer_count(); i++) {
+    for (int i = 0; i < settings.getLayerCount(); i++) {
       assertTrue(
           settings.manualTraceHalfWidthArr[i] > 0,
           "manualTraceHalfWidthArr[" + i + "] must be > 0 after initialisation from board rules");
@@ -136,7 +136,7 @@ class GuiStartupHeadlessTest {
    * InteractiveSettings} is always the authoritative priority-50 source.
    */
   @Test
-  void settingsMerger_reflectsInteractiveSettingsAfterRegistration() {
+  void settingsMergerReflectsInteractiveSettingsAfterRegistration() {
     // Build a merger with Default at priority 0 and the InteractiveSettings singleton at 50.
     SettingsMerger merger = new SettingsMerger(new DefaultSettings());
     merger.addOrReplaceSources(settings); // InteractiveSettings IS-A GuiSettings (priority 50)
@@ -153,12 +153,12 @@ class GuiStartupHeadlessTest {
    * <p>This verifies the live-snapshot contract: the merger does not cache stale values.
    */
   @Test
-  void settingsMerger_picksUpLiveMutationOfInteractiveSettings() {
+  void settingsMergerPicksUpLiveMutationOfInteractiveSettings() {
     SettingsMerger merger = new SettingsMerger(new DefaultSettings());
     merger.addOrReplaceSources(settings);
 
     // Mutate a field that InteractiveSettings.getSettings() exposes.
-    settings.set_automatic_neckdown(true);
+    settings.setAutomaticNeckdown(true);
 
     RouterSettings merged = merger.merge();
     assertNotNull(merged, "merge() must return non-null after mutation");
@@ -170,17 +170,17 @@ class GuiStartupHeadlessTest {
   // ── Invariant 4: layer count matches board ────────────────────────────────
 
   /**
-   * The layer count reported by {@link InteractiveSettings#get_layer_count()} must match the number
+   * The layer count reported by {@link InteractiveSettings#getLayerCount()} must match the number
    * of layers in the underlying {@link RoutingBoard}.
    *
    * <p>This confirms that {@link InteractiveSettings#reset(RoutingBoard)} correctly sizes the
    * internal arrays to the board's layer structure.
    */
   @Test
-  void layerCount_matchesBoardLayerCount() {
+  void layerCountMatchesBoardLayerCount() {
     assertEquals(
-        board.get_layer_count(),
-        settings.get_layer_count(),
+        board.getLayerCount(),
+        settings.getLayerCount(),
         "InteractiveSettings.get_layer_count() must match RoutingBoard.get_layer_count()");
   }
 }

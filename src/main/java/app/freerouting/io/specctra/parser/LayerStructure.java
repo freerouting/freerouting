@@ -29,7 +29,7 @@ public class LayerStructure {
   /**
    * returns the number of the layer with the name p_name, -1, if no layer with name p_name exists.
    */
-  public int get_no(String p_name) {
+  public int getNo(String p_name) {
     for (int i = 0; i < arr.length; i++) {
       if (p_name.equals(arr[i].name)) {
         return i;
@@ -45,7 +45,7 @@ public class LayerStructure {
     return -1;
   }
 
-  public int signal_layer_count() {
+  public int signalLayerCount() {
     int result = 0;
     for (Layer currLayer : arr) {
       if (currLayer.isSignal) {
@@ -56,7 +56,7 @@ public class LayerStructure {
   }
 
   /** Returns, if the net with name p_net_name contains a power plane. */
-  public boolean contains_plane(String p_net_name) {
+  public boolean containsPlane(String p_net_name) {
 
     for (Layer currLayer : arr) {
       if (!currLayer.isSignal) {

@@ -131,12 +131,12 @@ class KiCadJsonReaderTest {
     RoutingBoard board = (RoutingBoard) success.board();
 
     assertNotNull(board);
-    assertEquals(2, board.get_layer_count());
+    assertEquals(2, board.getLayerCount());
     assertEquals("F.Cu", board.layerStructure.arr[0].name);
-    assertEquals(2, board.rules.nets.max_net_no());
+    assertEquals(2, board.rules.nets.maxNetNo());
     assertEquals("VCC", board.rules.nets.get(1).name);
     assertEquals("GND", board.rules.nets.get(2).name);
-    assertTrue(board.rules.nets.get(2).contains_plane());
+    assertTrue(board.rules.nets.get(2).containsPlane());
   }
 
   @Test
@@ -189,7 +189,7 @@ class KiCadJsonReaderTest {
     RoutingBoard board = (RoutingBoard) success.board();
 
     assertNotNull(board);
-    assertEquals(1, board.rules.nets.max_net_no());
+    assertEquals(1, board.rules.nets.maxNetNo());
     assertEquals("Net-(R1-Pad1)", board.rules.nets.get(1).name);
   }
 
@@ -234,11 +234,11 @@ class KiCadJsonReaderTest {
 
     assertNotNull(board);
     // Verify default via rules are created
-    assertNotNull(board.rules.get_default_via_rule());
-    assertEquals(2, board.library.via_padstack_count());
+    assertNotNull(board.rules.getDefaultViaRule());
+    assertEquals(2, board.library.viaPadstackCount());
 
     // Verify NetClass via rule assignment
-    assertNotNull(board.rules.netClasses.get("Power").get_via_rule());
+    assertNotNull(board.rules.netClasses.get("Power").getViaRule());
   }
 
   @Test
@@ -294,14 +294,14 @@ class KiCadJsonReaderTest {
     assertNull(board.rules.netClasses.get("Default"));
     assertNull(board.rules.netClasses.get("kicad_default"));
 
-    NetClass defaultClass = board.rules.get_default_net_class();
-    assertEquals("default", defaultClass.get_name());
-    assertEquals(200, defaultClass.get_trace_half_width(0));
-    assertEquals(1, defaultClass.get_trace_clearance_class());
-    assertEquals(254, board.rules.clearanceMatrix.get_value(1, 1, 0, false));
-    assertEquals("default", board.rules.nets.get("SIG1", 1).getNetClass().get_name());
-    assertEquals("Power", board.rules.nets.get("VCC", 1).getNetClass().get_name());
-    assertEquals(2, board.library.via_padstack_count());
+    NetClass defaultClass = board.rules.getDefaultNetClass();
+    assertEquals("default", defaultClass.getName());
+    assertEquals(200, defaultClass.getTraceHalfWidth(0));
+    assertEquals(1, defaultClass.getTraceClearanceClass());
+    assertEquals(254, board.rules.clearanceMatrix.getValue(1, 1, 0, false));
+    assertEquals("default", board.rules.nets.get("SIG1", 1).getNetClass().getName());
+    assertEquals("Power", board.rules.nets.get("VCC", 1).getNetClass().getName());
+    assertEquals(2, board.library.viaPadstackCount());
   }
 
   @Test
@@ -346,8 +346,8 @@ class KiCadJsonReaderTest {
     assertTrue(baseResult instanceof BoardReadResult.Success);
     RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) baseResult).board();
 
-    assertEquals(0, board.get_traces().size());
-    assertEquals(0, board.get_vias().size());
+    assertEquals(0, board.getTraces().size());
+    assertEquals(0, board.getVias().size());
 
     String sessionJson =
         "{\n"
@@ -380,8 +380,8 @@ class KiCadJsonReaderTest {
 
     KiCadJsonReader.importSession(new StringReader(sessionJson), board);
 
-    assertEquals(1, board.get_traces().size());
-    assertEquals(1, board.get_vias().size());
+    assertEquals(1, board.getTraces().size());
+    assertEquals(1, board.getVias().size());
   }
 
   @Test
@@ -430,7 +430,7 @@ class KiCadJsonReaderTest {
     // Check outline bounding box (10.0 to 30.0 x, 20.0 to 40.0 y; with 5mm padding -> x: 5 to 35,
     // y: 15 to 45)
     // Board space scales by 1000, and y is negated
-    IntBox bounds = board.get_outline().bounding_box();
+    IntBox bounds = board.getOutline().boundingBox();
     // Padding of 5.0 mm = 5000 in board units
     // Min X: 10 * 1000 - 5000 = 5000
     // Max X: 30 * 1000 + 5000 = 35000

@@ -20,9 +20,9 @@ public class MakeSpaceState extends DragState {
   public MakeSpaceState(
       FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     super(p_location, p_parent_state, p_board_handling);
-    int[] shoveTraceWidthArr = new int[hdlg.get_routing_board().get_layer_count()];
+    int[] shoveTraceWidthArr = new int[hdlg.getRoutingBoard().getLayerCount()];
     boolean[] layerActiveArr = new boolean[shoveTraceWidthArr.length];
-    int shoveTraceWidth = Math.min(100, hdlg.get_routing_board().get_min_trace_half_width() / 10);
+    int shoveTraceWidth = Math.min(100, hdlg.getRoutingBoard().getMinTraceHalfWidth() / 10);
     shoveTraceWidth = Math.max(shoveTraceWidth, 5);
     for (int i = 0; i < shoveTraceWidthArr.length; i++) {
       shoveTraceWidthArr[i] = shoveTraceWidth;
@@ -33,58 +33,58 @@ public class MakeSpaceState extends DragState {
     route =
         new Route(
             p_location.round(),
-            hdlg.getInteractiveSettings().get_layer(),
+            hdlg.getInteractiveSettings().getLayer(),
             shoveTraceWidthArr,
             layerActiveArr,
             routeNetNoArr,
             0,
             ViaRule.EMPTY,
             true,
-            hdlg.getInteractiveSettings().get_trace_pull_tight_region_width(),
-            hdlg.getInteractiveSettings().get_trace_pull_tight_accuracy(),
+            hdlg.getInteractiveSettings().getTracePullTightRegionWidth(),
+            hdlg.getInteractiveSettings().getTracePullTightAccuracy(),
             null,
             null,
-            hdlg.get_routing_board(),
+            hdlg.getRoutingBoard(),
             false,
             false,
             false,
-            hdlg.getInteractiveSettings().get_hilight_routing_obstacle());
+            hdlg.getInteractiveSettings().getHilightRoutingObstacle());
   }
 
   @Override
-  public InteractiveState move_to(FloatPoint p_to_location) {
+  public InteractiveState moveTo(FloatPoint p_to_location) {
     if (!somethingDragged) {
       // initialisations for the first time dragging
-      this.observersActivated = !hdlg.get_routing_board().observers_active();
+      this.observersActivated = !hdlg.getRoutingBoard().observersActive();
       if (this.observersActivated) {
-        hdlg.get_routing_board().start_notify_observers();
+        hdlg.getRoutingBoard().startNotifyObservers();
       }
       // make the situation restorable by undo
-      hdlg.get_routing_board().generate_snapshot();
+      hdlg.getRoutingBoard().generateSnapshot();
       somethingDragged = true;
     }
-    route.next_corner(p_to_location);
+    route.nextCorner(p_to_location);
 
-    Point routeEnd = route.get_last_corner();
-    if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NONE
+    Point routeEnd = route.getLastCorner();
+    if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction() == AngleRestriction.NONE
         && !routeEnd.equals(p_to_location.round())) {
-      hdlg.move_mouse(routeEnd.to_float());
+      hdlg.moveMouse(routeEnd.toFloat());
     }
-    hdlg.recalculate_length_violations();
+    hdlg.recalculateLengthViolations();
     hdlg.repaint();
     return this;
   }
 
   @Override
-  public InteractiveState button_released() {
+  public InteractiveState buttonReleased() {
     int deleteNetNo = Nets.hidden_net_no;
-    BasicBoard board = hdlg.get_routing_board();
-    board.remove_items(board.get_connectable_items(deleteNetNo));
+    BasicBoard board = hdlg.getRoutingBoard();
+    board.removeItems(board.getConnectableItems(deleteNetNo));
     if (this.observersActivated) {
-      hdlg.get_routing_board().end_notify_observers();
+      hdlg.getRoutingBoard().endNotifyObservers();
       this.observersActivated = false;
     }
-    hdlg.show_ratsnest();
+    hdlg.showRatsnest();
     return this.returnState;
   }
 

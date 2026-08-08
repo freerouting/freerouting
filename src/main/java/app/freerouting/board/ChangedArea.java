@@ -17,7 +17,7 @@ class ChangedArea {
     // initialise all octagons to empty
     for (int i = 0; i < layerCount; i++) {
       arr[i] = new MutableOctagon();
-      arr[i].set_empty();
+      arr[i].setEmpty();
     }
   }
 
@@ -43,19 +43,19 @@ class ChangedArea {
     if (p_shape == null) {
       return;
     }
-    int cornerCount = p_shape.border_line_count();
+    int cornerCount = p_shape.borderLineCount();
     for (int i = 0; i < cornerCount; i++) {
-      join(p_shape.corner_approx(i), p_layer);
+      join(p_shape.cornerApprox(i), p_layer);
     }
   }
 
   /** get the marking octagon on layer p_layer */
-  public IntOctagon get_area(int p_layer) {
+  public IntOctagon getArea(int p_layer) {
 
-    return arr[p_layer].to_int();
+    return arr[p_layer].toInt();
   }
 
-  public IntBox surrounding_box() {
+  public IntBox surroundingBox() {
     int llx = Integer.MAX_VALUE;
     int lly = Integer.MAX_VALUE;
     int urx = Integer.MIN_VALUE;
@@ -74,8 +74,8 @@ class ChangedArea {
   }
 
   /** initializes the marking octagon on p_layer to empty */
-  void set_empty(int p_layer) {
-    arr[p_layer].set_empty();
+  void setEmpty(int p_layer) {
+    arr[p_layer].setEmpty();
   }
 
   /** mutable octagon with double coordinates (see geometry.planar.IntOctagon) */
@@ -90,7 +90,7 @@ class ChangedArea {
     double llx;
     double urx;
 
-    void set_empty() {
+    void setEmpty() {
       lx = Integer.MAX_VALUE;
       ly = Integer.MAX_VALUE;
       rx = Integer.MIN_VALUE;
@@ -102,7 +102,7 @@ class ChangedArea {
     }
 
     /** calculates the smallest IntOctagon containing this octagon. */
-    IntOctagon to_int() {
+    IntOctagon toInt() {
       if (rx < lx || uy < ly || lrx < ulx || urx < llx) {
         return IntOctagon.EMPTY;
       }

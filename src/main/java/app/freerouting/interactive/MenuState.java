@@ -20,22 +20,22 @@ public class MenuState extends InteractiveState {
   }
 
   @Override
-  public JPopupMenu get_popup_menu() {
-    return hdlg.get_panel().popupMenuMain;
+  public JPopupMenu getPopupMenu() {
+    return hdlg.getPanel().popupMenuMain;
   }
 
   /**
    * Selects items at p_location. Returns a new instance of SelectedItemState with the selected
    * items, if something was selected.
    */
-  public InteractiveState select_items(FloatPoint p_location) {
-    this.hdlg.display_layer_message();
-    Set<Item> pickedItems = hdlg.pick_items(p_location);
+  public InteractiveState selectItems(FloatPoint p_location) {
+    this.hdlg.displayLayerMessage();
+    Set<Item> pickedItems = hdlg.pickItems(p_location);
     boolean somethingFound = !pickedItems.isEmpty();
     InteractiveState result;
     if (somethingFound) {
-      result = InspectedItemState.get_instance(pickedItems, this, hdlg);
-      hdlg.screenMessages.set_status_message(tm.getText("in_inspect_mode"));
+      result = InspectedItemState.getInstance(pickedItems, this, hdlg);
+      hdlg.screenMessages.setStatusMessage(tm.getText("in_inspect_mode"));
     } else {
       result = this;
     }
@@ -43,10 +43,10 @@ public class MenuState extends InteractiveState {
     return result;
   }
 
-  public InteractiveState swap_pin(FloatPoint p_location) {
+  public InteractiveState swapPin(FloatPoint p_location) {
     ItemSelectionFilter selectionFilter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
-    Collection<Item> pickedItems = hdlg.pick_items(p_location, selectionFilter);
+    Collection<Item> pickedItems = hdlg.pickItems(p_location, selectionFilter);
     InteractiveState result = this;
     if (!pickedItems.isEmpty()) {
       Item firstItem = pickedItems.iterator().next();
@@ -54,9 +54,9 @@ public class MenuState extends InteractiveState {
         FRLogger.warn("MenuState.swap_pin: Pin expected");
         return this;
       }
-      result = PinSwapState.get_instance(selected_pin, this, hdlg);
+      result = PinSwapState.getInstance(selected_pin, this, hdlg);
     } else {
-      hdlg.screenMessages.set_status_message(tm.getText("no_pin_selected"));
+      hdlg.screenMessages.setStatusMessage(tm.getText("no_pin_selected"));
     }
     hdlg.repaint();
     return result;
@@ -64,54 +64,54 @@ public class MenuState extends InteractiveState {
 
   /** Action to be taken when a key shortcut is pressed. */
   @Override
-  public InteractiveState key_typed(char p_key_char) {
+  public InteractiveState keyTyped(char p_key_char) {
     InteractiveState currReturnState = this;
     switch (p_key_char) {
       case 'b' -> hdlg.redo();
-      case 'd' -> currReturnState = DragMenuState.get_instance(hdlg);
+      case 'd' -> currReturnState = DragMenuState.getInstance(hdlg);
       case 'e' ->
           currReturnState =
-              ExpandTestState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
-      case 'g' -> hdlg.toggle_ratsnest();
-      case 'i' -> currReturnState = this.select_items(hdlg.get_current_mouse_position());
+              ExpandTestState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
+      case 'g' -> hdlg.toggleRatsnest();
+      case 'i' -> currReturnState = this.selectItems(hdlg.getCurrentMousePosition());
       case 'p' -> {
         hdlg.getInteractiveSettings()
-            .set_push_enabled(!hdlg.getInteractiveSettings().get_push_enabled());
-        hdlg.get_panel().boardFrame.refresh_windows();
+            .setPushEnabled(!hdlg.getInteractiveSettings().getPushEnabled());
+        hdlg.getPanel().boardFrame.refreshWindows();
       }
-      case 'r' -> currReturnState = RouteMenuState.get_instance(hdlg);
-      case 's' -> currReturnState = InspectMenuState.get_instance(hdlg);
+      case 'r' -> currReturnState = RouteMenuState.getInstance(hdlg);
+      case 's' -> currReturnState = InspectMenuState.getInstance(hdlg);
       case 't' ->
-          currReturnState = RouteState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
+          currReturnState = RouteState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
       case 'u' -> hdlg.undo();
-      case 'v' -> hdlg.toggle_clearance_violations();
-      case 'w' -> currReturnState = swap_pin(hdlg.get_current_mouse_position());
+      case 'v' -> hdlg.toggleClearanceViolations();
+      case 'w' -> currReturnState = swapPin(hdlg.getCurrentMousePosition());
       case '+' -> {
         // increase the current layer to the next signal layer
-        LayerStructure layerStructure = hdlg.get_routing_board().layerStructure;
-        int currentLayerNo = hdlg.getInteractiveSettings().get_layer();
+        LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
+        int currentLayerNo = hdlg.getInteractiveSettings().getLayer();
         do {
           ++currentLayerNo;
         } while (currentLayerNo < layerStructure.arr.length
             && !layerStructure.arr[currentLayerNo].isSignal);
 
         if (currentLayerNo < layerStructure.arr.length) {
-          hdlg.set_current_layer(currentLayerNo);
+          hdlg.setCurrentLayer(currentLayerNo);
         }
       }
       case '-' -> {
         // decrease the current layer to the previous signal layer
-        LayerStructure layerStructure = hdlg.get_routing_board().layerStructure;
-        int currentLayerNo = hdlg.getInteractiveSettings().get_layer();
+        LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
+        int currentLayerNo = hdlg.getInteractiveSettings().getLayer();
         do {
           --currentLayerNo;
         } while (currentLayerNo >= 0 && !layerStructure.arr[currentLayerNo].isSignal);
 
         if (currentLayerNo >= 0) {
-          hdlg.set_current_layer(currentLayerNo);
+          hdlg.setCurrentLayer(currentLayerNo);
         }
       }
-      default -> currReturnState = super.key_typed(p_key_char);
+      default -> currReturnState = super.keyTyped(p_key_char);
     }
     return currReturnState;
   }
@@ -129,7 +129,7 @@ public class MenuState extends InteractiveState {
   }
 
   @Override
-  public void set_toolbar() {
-    hdlg.get_panel().boardFrame.set_menu_toolbar();
+  public void setToolbar() {
+    hdlg.getPanel().boardFrame.setMenuToolbar();
   }
 }

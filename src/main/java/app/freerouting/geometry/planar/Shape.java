@@ -19,16 +19,16 @@ public interface Shape extends Area {
   double area();
 
   /** Returns the gravity point of this shape */
-  FloatPoint centre_of_gravity();
+  FloatPoint centreOfGravity();
 
   /** Returns true, if p_point is not contained in the inside or the boundary of the shape */
-  boolean is_outside(Point p_point);
+  boolean isOutside(Point p_point);
 
   /** Returns true, if p_point is contained in this shape, but not on the border. */
-  boolean contains_inside(Point p_point);
+  boolean containsInside(Point p_point);
 
   /** Returns true, if p_point lies exact on the boundary of the shape */
-  boolean contains_on_border(Point p_point);
+  boolean containsOnBorder(Point p_point);
 
   /**
    * Returns the distance between p_point and its nearest point on the shape. 0, if p_point is
@@ -37,16 +37,16 @@ public interface Shape extends Area {
   double distance(FloatPoint p_point);
 
   /** Return a bounding TileShape of this shape. */
-  TileShape bounding_tile();
+  TileShape boundingTile();
 
   /** Returns the bounding RegularTileShape with the fixed directions p_dirs */
-  RegularTileShape bounding_shape(ShapeBoundingDirections p_dirs);
+  RegularTileShape boundingShape(ShapeBoundingDirections p_dirs);
 
   /** Returns the distance between p_point and its nearest point on the border of the shape. */
-  double border_distance(FloatPoint p_point);
+  double borderDistance(FloatPoint p_point);
 
   /** Returns the smallest distance from the centre of gravity to the border of the shape. */
-  double smallest_radius();
+  double smallestRadius();
 
   /**
    * Returns the offset shape of this shape by offsetting the boundary by p_distance to the outside.

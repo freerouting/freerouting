@@ -29,12 +29,12 @@ public class Nets implements Serializable {
   }
 
   /** Returns false, if p_net_no belongs to a net internally used for special purposes. */
-  public static boolean is_normal_net_no(int p_net_no) {
+  public static boolean isNormalNetNo(int p_net_no) {
     return p_net_no > 0 && p_net_no <= max_legal_net_no;
   }
 
   /** Returns the biggest net number on the board. */
-  public int max_net_no() {
+  public int maxNetNo() {
     return netArr.size();
   }
 
@@ -74,7 +74,7 @@ public class Nets implements Serializable {
   }
 
   /** Generates a new net number. */
-  public Net new_net(Locale p_locale) {
+  public Net newNet(Locale p_locale) {
     TextManager tm = new TextManager(NetClasses.class, p_locale);
 
     String netName = tm.getText("net#") + (netArr.size() + 1);
@@ -96,12 +96,12 @@ public class Nets implements Serializable {
   }
 
   /** Gets the Board of this net list. Used for example to get access to the Items of the net. */
-  public BasicBoard get_board() {
+  public BasicBoard getBoard() {
     return this.board;
   }
 
   /** Sets the Board of this net list. Used for example to get access to the Items of the net. */
-  public void set_board(BasicBoard p_board) {
+  public void setBoard(BasicBoard p_board) {
     this.board = p_board;
   }
 }

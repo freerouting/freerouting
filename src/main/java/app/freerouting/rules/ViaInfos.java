@@ -20,7 +20,7 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
    * if the insertion failed, for example if the name existed already.
    */
   public boolean add(ViaInfo p_via_info) {
-    if (name_exists(p_via_info.get_name())) {
+    if (nameExists(p_via_info.getName())) {
       return false;
     }
     this.list.add(p_via_info);
@@ -41,7 +41,7 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
   /** Returns the via info with name p_name, or null, if no such via exists. */
   public ViaInfo get(String p_name) {
     for (ViaInfo currVia : this.list) {
-      if (currVia.get_name().equals(p_name)) {
+      if (currVia.getName().equals(p_name)) {
         return currVia;
       }
     }
@@ -49,9 +49,9 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Returns true, if a via info with name p_name is already wyisting in the list. */
-  public boolean name_exists(String p_name) {
+  public boolean nameExists(String p_name) {
     for (ViaInfo currVia : this.list) {
-      if (currVia.get_name().equals(p_name)) {
+      if (currVia.getName().equals(p_name)) {
         return true;
       }
     }
@@ -66,10 +66,10 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("vias") + ": ");
+    p_window.appendBold(tm.getText("vias") + ": ");
     int counter = 0;
     boolean firstTime = true;
     final int maxViasPerRow = 5;
@@ -83,7 +83,7 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
         p_window.newline();
         p_window.indent();
       }
-      p_window.append(currVia.get_name(), tm.getText("viaInfo"), currVia);
+      p_window.append(currVia.getName(), tm.getText("viaInfo"), currVia);
       counter = (counter + 1) % maxViasPerRow;
     }
   }

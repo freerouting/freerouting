@@ -49,9 +49,9 @@ public class WindowEditVias extends BoardSavableSubWindow {
 
     this.clClassComboBox = new JComboBox<>();
     this.padstackComboBox = new JComboBox<>();
-    add_combobox_items();
+    addComboboxItems();
 
-    add_table();
+    addTable();
 
     JPanel viaInfoButtonPanel = new JPanel();
     viaInfoButtonPanel.setLayout(new FlowLayout());
@@ -82,11 +82,11 @@ public class WindowEditVias extends BoardSavableSubWindow {
   public void refresh() {
     this.padstackComboBox.removeAllItems();
     this.clClassComboBox.removeAllItems();
-    this.add_combobox_items();
-    this.tableModel.set_values();
+    this.addComboboxItems();
+    this.tableModel.setValues();
   }
 
-  private void add_table() {
+  private void addTable() {
     this.tableModel = new ViaTableModel();
     this.table = new JTable(this.tableModel);
     this.scrollPane = new JScrollPane(this.table);
@@ -107,26 +107,26 @@ public class WindowEditVias extends BoardSavableSubWindow {
         .setCellEditor(new DefaultCellEditor(padstackComboBox));
   }
 
-  private void add_combobox_items() {
-    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.get_routing_board();
-    for (int i = 0; i < routingBoard.rules.clearanceMatrix.get_class_count(); i++) {
-      clClassComboBox.addItem(routingBoard.rules.clearanceMatrix.get_name(i));
+  private void addComboboxItems() {
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+    for (int i = 0; i < routingBoard.rules.clearanceMatrix.getClassCount(); i++) {
+      clClassComboBox.addItem(routingBoard.rules.clearanceMatrix.getName(i));
     }
-    for (int i = 0; i < routingBoard.library.via_padstack_count(); i++) {
-      padstackComboBox.addItem(routingBoard.library.get_via_padstack(i).name);
+    for (int i = 0; i < routingBoard.library.viaPadstackCount(); i++) {
+      padstackComboBox.addItem(routingBoard.library.getViaPadstack(i).name);
     }
   }
 
   /**
    * Adjusts the displayed window with the via table after the size of the table has been changed.
    */
-  private void adjust_table() {
+  private void adjustTable() {
     this.tableModel = new ViaTableModel();
     this.table = new JTable(this.tableModel);
     this.mainPanel.remove(this.scrollPane);
-    this.add_table();
+    this.addTable();
     this.pack();
-    this.boardFrame.refresh_windows();
+    this.boardFrame.refreshWindows();
   }
 
   private enum ColumnName {
@@ -140,29 +140,29 @@ public class WindowEditVias extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.get_routing_board();
+      RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
       ViaInfos viaInfos = routingBoard.rules.viaInfos;
       int no = 1;
       String newName;
       final String nameStart = tm.getText("newVia");
       for (; ; ) {
         newName = nameStart + no;
-        if (!viaInfos.name_exists(newName)) {
+        if (!viaInfos.nameExists(newName)) {
           break;
         }
         ++no;
       }
-      NetClass defaultNetClass = routingBoard.rules.get_default_net_class();
+      NetClass defaultNetClass = routingBoard.rules.getDefaultNetClass();
       ViaInfo newVia =
           new ViaInfo(
               newName,
-              routingBoard.library.get_via_padstack(0),
+              routingBoard.library.getViaPadstack(0),
               defaultNetClass.defaultItemClearanceClasses.get(
                   DefaultItemClearanceClasses.ItemClass.VIA),
               false,
               routingBoard.rules);
       viaInfos.add(newVia);
-      adjust_table();
+      adjustTable();
     }
   }
 
@@ -171,7 +171,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       if (tableModel.getRowCount() <= 1) {
-        boardFrame.screenMessages.set_status_message(tm.getText("last_via_not_removed"));
+        boardFrame.screenMessages.setStatusMessage(tm.getText("last_via_not_removed"));
         return;
       }
       int selectedRow = table.getSelectedRow();
@@ -182,20 +182,20 @@ public class WindowEditVias extends BoardSavableSubWindow {
       if (!(viaName instanceof String)) {
         return;
       }
-      BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
       ViaInfo viaInfo = boardRules.viaInfos.get((String) viaName);
       // Check, if viaInfo is used in a via rule.
       for (ViaRule currRule : boardRules.viaRules) {
         if (currRule.contains(viaInfo)) {
-          boardFrame.screenMessages.set_status_message(
+          boardFrame.screenMessages.setStatusMessage(
               tm.getText("via_not_removed_in_rule_message", currRule.name));
           return;
         }
       }
       if (boardRules.viaInfos.remove(viaInfo)) {
-        adjust_table();
-        boardFrame.screenMessages.set_status_message(
-            tm.getText("via_removed_message", viaInfo.get_name()));
+        adjustTable();
+        boardFrame.screenMessages.setStatusMessage(
+            tm.getText("via_removed_message", viaInfo.getName()));
       }
     }
   }
@@ -212,24 +212,24 @@ public class WindowEditVias extends BoardSavableSubWindow {
       for (int i = 0; i < columnNames.length; i++) {
         columnNames[i] = tm.getText(ColumnName.values()[i].toString());
       }
-      BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
       data = new Object[boardRules.viaInfos.count()][];
       for (int i = 0; i < data.length; i++) {
         this.data[i] = new Object[ColumnName.values().length];
       }
-      set_values();
+      setValues();
     }
 
     /** Calculates the values in this table */
-    public void set_values() {
-      BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+    public void setValues() {
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
       for (int i = 0; i < data.length; i++) {
         ViaInfo currVia = boardRules.viaInfos.get(i);
-        this.data[i][ColumnName.NAME.ordinal()] = currVia.get_name();
-        this.data[i][ColumnName.PADSTACK.ordinal()] = currVia.get_padstack().name;
+        this.data[i][ColumnName.NAME.ordinal()] = currVia.getName();
+        this.data[i][ColumnName.PADSTACK.ordinal()] = currVia.getPadstack().name;
         this.data[i][ColumnName.CLEARANCE_CLASS.ordinal()] =
-            boardRules.clearanceMatrix.get_name(currVia.get_clearance_class());
-        this.data[i][ColumnName.ATTACH_SMD.ordinal()] = currVia.attach_smd_allowed();
+            boardRules.clearanceMatrix.getName(currVia.getClearanceClass());
+        this.data[i][ColumnName.ATTACH_SMD.ordinal()] = currVia.attachSmdAllowed();
       }
     }
 
@@ -255,7 +255,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
 
     @Override
     public void setValueAt(Object p_value, int p_row, int p_col) {
-      RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.get_routing_board();
+      RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
       BoardRules boardRules = routingBoard.rules;
       Object viaName = getValueAt(p_row, ColumnName.NAME.ordinal());
       if (!(viaName instanceof String)) {
@@ -272,39 +272,39 @@ public class WindowEditVias extends BoardSavableSubWindow {
         if (!(p_value instanceof String newName)) {
           return;
         }
-        if (boardRules.viaInfos.name_exists(newName)) {
+        if (boardRules.viaInfos.nameExists(newName)) {
           return;
         }
-        viaInfo.set_name(newName);
+        viaInfo.setName(newName);
         boardFrame.viaWindow.refresh();
       } else if (p_col == ColumnName.PADSTACK.ordinal()) {
         if (!(p_value instanceof String newName)) {
           return;
         }
-        Padstack newPadstack = routingBoard.library.get_via_padstack(newName);
+        Padstack newPadstack = routingBoard.library.getViaPadstack(newName);
         if (newPadstack == null) {
           FRLogger.warn("ViaVindow.setValueAt: via padstack not found");
           return;
         }
-        viaInfo.set_padstack(newPadstack);
+        viaInfo.setPadstack(newPadstack);
       } else if (p_col == ColumnName.CLEARANCE_CLASS.ordinal()) {
         if (!(p_value instanceof String newName)) {
           return;
         }
-        int newClClassIndex = boardRules.clearanceMatrix.get_no(newName);
+        int newClClassIndex = boardRules.clearanceMatrix.getNo(newName);
         {
           if (newClClassIndex < 0) {
             FRLogger.warn("ViaVindow.setValueAt: clearance class not found");
             return;
           }
         }
-        viaInfo.set_clearance_class(newClClassIndex);
+        viaInfo.setClearanceClass(newClClassIndex);
       } else if (p_col == ColumnName.ATTACH_SMD.ordinal()) {
         if (!(p_value instanceof Boolean attach_smd)) {
           FRLogger.warn("ViaVindow.setValueAt: Boolean expected");
           return;
         }
-        viaInfo.set_attach_smd_allowed(attach_smd);
+        viaInfo.setAttachSmdAllowed(attach_smd);
       }
       this.data[p_row][p_col] = p_value;
       fireTableCellUpdated(p_row, p_col);

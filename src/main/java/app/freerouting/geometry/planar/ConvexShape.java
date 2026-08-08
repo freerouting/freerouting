@@ -16,8 +16,8 @@ public interface ConvexShape extends Shape {
   ConvexShape shrink(double p_offset);
 
   /** Returns the maximum diameter of the shape. */
-  double max_width();
+  double maxWidth();
 
   /** Returns the minimum diameter of the shape. */
-  double min_width();
+  double minWidth();
 }

@@ -27,7 +27,7 @@ public class ItemAutorouteInfo {
    * Looks, if the corresponding item belongs to the start or destination set of the autoroute
    * algorithm. Only used, if the item belongs to the net, which will be currently routed.
    */
-  public boolean is_start_info() {
+  public boolean isStartInfo() {
     return startInfo;
   }
 
@@ -35,23 +35,23 @@ public class ItemAutorouteInfo {
    * Sets, if the corresponding item belongs to the start or destination set of the autoroute
    * algorithm. Only used, if the item belongs to the net, which will be currently routed.
    */
-  public void set_start_info(boolean p_value) {
+  public void setStartInfo(boolean p_value) {
     startInfo = p_value;
   }
 
   /** Returns the precalculated connection of this item or null, if it is not yet precalculated. */
-  public Connection get_precalculated_connection() {
+  public Connection getPrecalculatedConnection() {
     return this.precalculatedConnection;
   }
 
   /** Sets the precalculated connection of this item. */
-  public void set_precalculated_connection(Connection p_connection) {
+  public void setPrecalculatedConnection(Connection p_connection) {
     this.precalculatedConnection = p_connection;
   }
 
   /** Gets the ExpansionRoom of index p_index. Creates it, if it is not yet existing. */
-  public ObstacleExpansionRoom get_expansion_room(int p_index, ShapeSearchTree p_autoroute_tree) {
-    int currentShapeCount = this.item.tree_shape_count(p_autoroute_tree);
+  public ObstacleExpansionRoom getExpansionRoom(int p_index, ShapeSearchTree p_autoroute_tree) {
+    int currentShapeCount = this.item.treeShapeCount(p_autoroute_tree);
 
     if (expansionRoomArr == null) {
       expansionRoomArr = new ObstacleExpansionRoom[currentShapeCount];
@@ -80,11 +80,11 @@ public class ItemAutorouteInfo {
   }
 
   /** Resets the expansion rooms for autorouting the next connection. */
-  public void reset_doors() {
+  public void resetDoors() {
     if (expansionRoomArr != null) {
       for (ObstacleExpansionRoom currRoom : expansionRoomArr) {
         if (currRoom != null) {
-          currRoom.reset_doors();
+          currRoom.resetDoors();
         }
       }
     }

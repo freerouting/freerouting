@@ -13,13 +13,13 @@ public class ScopeKeyword extends Keyword {
   /**
    * Skips the current scope while reading a dsn file. Returns false, if no legal scope was found.
    */
-  public static boolean skip_scope(IJFlexScanner p_scanner) {
+  public static boolean skipScope(IJFlexScanner p_scanner) {
     int openBrackedCount = 1;
     while (openBrackedCount > 0) {
       p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       Object currToken;
       try {
-        currToken = p_scanner.next_token();
+        currToken = p_scanner.nextToken();
       } catch (Exception e) {
         FRLogger.error("ScopeKeyword.skip_scope: Error while scanning file", e);
         return false;
@@ -37,12 +37,12 @@ public class ScopeKeyword extends Keyword {
   }
 
   /** Reads the next scope of this keyword from dsn file. */
-  public boolean read_scope(ReadScopeParameter p_par) {
+  public boolean readScope(ReadScopeParameter p_par) {
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = p_par.scanner.next_token();
+        nextToken = p_par.scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("ScopeKeyword.read_scope: IO error scanning file", e);
         return false;
@@ -62,12 +62,12 @@ public class ScopeKeyword extends Keyword {
         if (nextToken instanceof ScopeKeyword keyword) {
           // read the next scope, which is the "structure" part of the DSN file
           nextScope = keyword;
-          if (!nextScope.read_scope(p_par)) {
+          if (!nextScope.readScope(p_par)) {
             return false;
           }
         } else {
           // skip unknown scope
-          skip_scope(p_par.scanner);
+          skipScope(p_par.scanner);
         }
       }
     }

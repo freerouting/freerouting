@@ -61,20 +61,20 @@ public class ScreenMessages {
     this.numberFormat.setMaximumFractionDigits(2);
   }
 
-  public void set_error_and_warning_count(int errorsCount, int warningCount) {
+  public void setErrorAndWarningCount(int errorsCount, int warningCount) {
     errorLabel.setText(Integer.toString(errorsCount));
     warningLabel.setText(Integer.toString(warningCount));
   }
 
   /** Sets the message in the status field. */
-  public void set_status_message(String p_message) {
+  public void setStatusMessage(String p_message) {
     if (!this.writeProtected) {
       statusField.setText(p_message);
     }
   }
 
   /** Displays the latest traced operation in the footer. */
-  public void set_trace_message(String operation, String message, String impactedItems) {
+  public void setTraceMessage(String operation, String message, String impactedItems) {
     if (this.writeProtected) {
       return;
     }
@@ -87,13 +87,13 @@ public class ScreenMessages {
   }
 
   /** Sets the displayed layer number on the screen. */
-  public void set_layer(String p_layer_name) {
+  public void setLayer(String p_layer_name) {
     if (!this.writeProtected) {
       layerField.setText(activeLayerString + p_layer_name);
     }
   }
 
-  public void set_interactive_autoroute_info(int p_found, int p_not_found, int p_items_to_go) {
+  public void setInteractiveAutorouteInfo(int p_found, int p_not_found, int p_items_to_go) {
     int found = p_found;
     int failed = p_not_found;
     int itemsToGo = p_items_to_go;
@@ -103,7 +103,7 @@ public class ScreenMessages {
         tm.getText("interactive_autoroute_layer", String.valueOf(found), String.valueOf(failed)));
   }
 
-  public void set_batch_autoroute_info(RouterCounters routerCounters) {
+  public void setBatchAutorouteInfo(RouterCounters routerCounters) {
     int itemsToGo = routerCounters.queuedToBeRoutedCount;
     int routed = routerCounters.routedCount;
     int failed = routerCounters.failedToBeRoutedCount;
@@ -123,7 +123,7 @@ public class ScreenMessages {
         tm.getText("batch_autoroute_layer", String.valueOf(ripped), String.valueOf(failed)));
   }
 
-  public void set_post_route_info(int p_via_count, double p_trace_length, Unit unit) {
+  public void setPostRouteInfo(int p_via_count, double p_trace_length, Unit unit) {
     int viaCount = p_via_count;
     addField.setText(tm.getText("post_route_add", String.valueOf(viaCount)));
     layerField.setText(
@@ -131,21 +131,21 @@ public class ScreenMessages {
   }
 
   /** Sets the displayed layer of the nearest target item in interactive routing. */
-  public void set_target_layer(String p_layer_name) {
+  public void setTargetLayer(String p_layer_name) {
     if (!(p_layer_name.equals(prevTargetLayerName) || this.writeProtected)) {
       addField.setText(targetLayerString + p_layer_name);
       prevTargetLayerName = p_layer_name;
     }
   }
 
-  public void set_mouse_position(FloatPoint p_pos) {
+  public void setMousePosition(FloatPoint p_pos) {
     if (p_pos == null || this.mousePosition == null || this.writeProtected) {
       return;
     }
-    this.mousePosition.setText(p_pos.to_string(this.tm.getLocale(), 2, 10));
+    this.mousePosition.setText(p_pos.toString(this.tm.getLocale(), 2, 10));
   }
 
-  public void set_unit_label(String p_unit) {
+  public void setUnitLabel(String p_unit) {
     this.unitLabel.setText(p_unit);
   }
 
@@ -153,7 +153,7 @@ public class ScreenMessages {
    * Clears the additional field, which is among others used to display the layer of the nearest
    * target item.
    */
-  public void clear_add_field() {
+  public void clearAddField() {
     if (!this.writeProtected) {
       addField.setText(empty_string);
       prevTargetLayerName = empty_string;
@@ -164,18 +164,18 @@ public class ScreenMessages {
   public void clear() {
     if (!this.writeProtected) {
       statusField.setText(empty_string);
-      clear_add_field();
+      clearAddField();
       layerField.setText(empty_string);
       scoreField.setText(empty_string);
     }
   }
 
   /** As long as writeProtected is set to true, the set functions in this class will do nothing. */
-  public void set_write_protected(boolean p_value) {
+  public void setWriteProtected(boolean p_value) {
     writeProtected = p_value;
   }
 
-  public void set_board_score(float score, int unrouted_count, int violationCount) {
+  public void setBoardScore(float score, int unrouted_count, int violationCount) {
     scoreField.setText(
         tm.getText(
             "score",

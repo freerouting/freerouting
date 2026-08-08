@@ -18,7 +18,7 @@ public final class BoardMenuDisplay extends JMenu {
   }
 
   /** Returns a new display menu for the board frame. */
-  public static BoardMenuDisplay get_instance(BoardFrame p_board_frame) {
+  public static BoardMenuDisplay getInstance(BoardFrame p_board_frame) {
     final BoardMenuDisplay displayMenu = new BoardMenuDisplay(p_board_frame);
     displayMenu.setText(displayMenu.tm.getText("display"));
 

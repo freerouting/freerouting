@@ -35,8 +35,8 @@ import org.junit.jupiter.api.Test;
 public class Display8DigitRoutingTest extends RoutingFixtureTest {
 
   @Test
-  void test_Issue_229_Keepout_zone_was_not_exported_correctly() {
-    var job = GetRoutingJob("Issue229-display-8-digit-hc595.dsn");
+  void testIssue229KeepoutZoneWasNotExportedCorrectly() {
+    var job = getRoutingJob("Issue229-display-8-digit-hc595.dsn");
 
     // The DSN file contains a degenerate keepout polygon at line 27 (all 3 vertices identical,
     // producing a zero-area shape). Freerouting must handle this gracefully — warn and skip —
@@ -44,7 +44,7 @@ public class Display8DigitRoutingTest extends RoutingFixtureTest {
     // The router is expected to complete without clearance violations.
     // Due to normalization failures caused by the degenerate geometry in the board design,
     // some connections may remain incomplete; we accept up to 50 incomplete connections.
-    job = RunRoutingJob(job);
+    job = runRoutingJob(job);
 
     assertRoutingResult(job, "Issue229-display-8-digit-hc595.dsn")
         .exactClearanceViolations(0)

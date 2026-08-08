@@ -62,7 +62,7 @@ import org.junit.jupiter.api.Test;
 public class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
 
   @Test
-  void test_Issue_555_Routing_performance_with_CNH_Functional_Tester_1() {
+  void testIssue555RoutingPerformanceWithCNHFunctionalTester1() {
     IO.println(
         "Testing performance by routing reference board 'Issue555-CNH_Functional_Tester_1.dsn' with default settings.");
     IO.println(
@@ -78,13 +78,13 @@ public class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
     testingSettings.setJobTimeoutString("00:03:00");
     testingSettings.setMaxPasses(40);
 
-    var job = GetRoutingJob("Issue555-CNH_Functional_Tester_1.dsn", testingSettings);
-    job = RunRoutingJob(job);
+    var job = getRoutingJob("Issue555-CNH_Functional_Tester_1.dsn", testingSettings);
+    job = runRoutingJob(job);
 
     if (job.output == null) {
       fail("Routing job failed.");
     } else {
-      var bs = job.board.get_statistics();
+      var bs = job.board.getStatistics();
       var scoreBeforeOptimization = bs.getNormalizedScore(job.routerSettings.scoring);
       Duration routingDuration = Duration.between(job.startedAt, job.finishedAt);
 
@@ -107,7 +107,7 @@ public class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  void test_Issue_555_Routing_performance_with_BBD_Mars_64() {
+  void testIssue555RoutingPerformanceWithBBDMars64() {
     IO.println(
         "Testing performance by routing reference board 'Issue555-BBD_Mars-64.dsn' with default settings.");
     IO.println(
@@ -123,13 +123,13 @@ public class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:10:00");
 
-    var job = GetRoutingJob("Issue555-BBD_Mars-64.dsn", testingSettings);
-    job = RunRoutingJob(job);
+    var job = getRoutingJob("Issue555-BBD_Mars-64.dsn", testingSettings);
+    job = runRoutingJob(job);
 
     if (job.output == null) {
       fail("Routing job failed.");
     } else {
-      var bs = job.board.get_statistics();
+      var bs = job.board.getStatistics();
       var scoreBeforeOptimization = bs.getNormalizedScore(job.routerSettings.scoring);
       Duration routingDuration = Duration.between(job.startedAt, job.finishedAt);
 

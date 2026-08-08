@@ -18,7 +18,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     JMenuItem popupSelectItemMenuitem = new JMenuItem();
     popupSelectItemMenuitem.setText(tm.getText("select_item"));
     popupSelectItemMenuitem.addActionListener(
-        _ -> boardPanel.boardHandling.select_items(boardPanel.rightButtonClickLocation));
+        _ -> boardPanel.boardHandling.selectItems(boardPanel.rightButtonClickLocation));
     popupSelectItemMenuitem.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -31,7 +31,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     JMenuItem popupStartRouteMenuitem = new JMenuItem();
     popupStartRouteMenuitem.setText(tm.getText("start_route"));
     popupStartRouteMenuitem.addActionListener(
-        _ -> boardPanel.boardHandling.start_route(boardPanel.rightButtonClickLocation));
+        _ -> boardPanel.boardHandling.startRoute(boardPanel.rightButtonClickLocation));
     popupStartRouteMenuitem.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -48,7 +48,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     JMenuItem popupCreateTileMenuitem = new JMenuItem();
     popupCreateTileMenuitem.setText(tm.getText("tile"));
     popupCreateTileMenuitem.addActionListener(
-        _ -> boardPanel.boardHandling.start_tile(boardPanel.rightButtonClickLocation));
+        _ -> boardPanel.boardHandling.startTile(boardPanel.rightButtonClickLocation));
     popupCreateTileMenuitem.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -59,7 +59,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     JMenuItem popupCreateCircleMenuitem = new JMenuItem();
     popupCreateCircleMenuitem.setText(tm.getText("circle"));
     popupCreateCircleMenuitem.addActionListener(
-        _ -> boardPanel.boardHandling.start_circle(boardPanel.rightButtonClickLocation));
+        _ -> boardPanel.boardHandling.startCircle(boardPanel.rightButtonClickLocation));
     popupCreateCircleMenuitem.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -70,7 +70,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     JMenuItem popupCreatePolygonMenuitem = new JMenuItem();
     popupCreatePolygonMenuitem.setText(tm.getText("polygon"));
     popupCreatePolygonMenuitem.addActionListener(
-        _ -> boardPanel.boardHandling.start_polygonshape_item(boardPanel.rightButtonClickLocation));
+        _ -> boardPanel.boardHandling.startPolygonshapeItem(boardPanel.rightButtonClickLocation));
     popupCreatePolygonMenuitem.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -81,7 +81,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     JMenuItem popupAddHoleMenuitem = new JMenuItem();
     popupAddHoleMenuitem.setText(tm.getText("hole"));
     popupAddHoleMenuitem.addActionListener(
-        _ -> boardPanel.boardHandling.start_adding_hole(boardPanel.rightButtonClickLocation));
+        _ -> boardPanel.boardHandling.startAddingHole(boardPanel.rightButtonClickLocation));
     popupAddHoleMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("popupAddHoleMenuitem", popupAddHoleMenuitem.getText()));
 
@@ -91,12 +91,12 @@ class PopupMenuMain extends PopupMenuDisplay {
 
     // Insert the pin swap item.
 
-    if (boardPanel.boardHandling.get_routing_board().library.logicalParts.count() > 0) {
+    if (boardPanel.boardHandling.getRoutingBoard().library.logicalParts.count() > 0) {
       // the board contains swappable gates or pins
       JMenuItem popupSwapPinMenuitem = new JMenuItem();
       popupSwapPinMenuitem.setText(tm.getText("swap_pin"));
       popupSwapPinMenuitem.addActionListener(
-          _ -> boardPanel.boardHandling.swap_pin(boardPanel.rightButtonClickLocation));
+          _ -> boardPanel.boardHandling.swapPin(boardPanel.rightButtonClickLocation));
       popupSwapPinMenuitem.addActionListener(
           _ -> FRAnalytics.buttonClicked("popupSwapPinMenuitem", popupSwapPinMenuitem.getText()));
 

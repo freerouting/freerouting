@@ -27,7 +27,7 @@ public final class Signum {
   }
 
   /** Returns the signum of p_value as an int. Values are +1, 0 and -1 */
-  public static int as_int(double p_value) {
+  public static int asInt(double p_value) {
     int result;
 
     if (p_value > 0) {

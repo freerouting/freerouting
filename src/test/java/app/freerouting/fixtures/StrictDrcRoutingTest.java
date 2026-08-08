@@ -19,9 +19,9 @@ public class StrictDrcRoutingTest extends RoutingFixtureTest {
     var testingSettings = new TestingSettings();
     testingSettings.setStrictDrc(true);
     testingSettings.setJobTimeoutString("00:05:00");
-    RoutingJob job = GetRoutingJob("Issue555-CNH_Functional_Tester_1.dsn", testingSettings);
+    RoutingJob job = getRoutingJob("Issue555-CNH_Functional_Tester_1.dsn", testingSettings);
 
-    job = RunRoutingJob(job);
+    job = runRoutingJob(job);
 
     assertRoutingResult(job, "Issue555-CNH_Functional_Tester_1.dsn")
         .exactClearanceViolations(16) // the fixture's pre-existing violations, none added

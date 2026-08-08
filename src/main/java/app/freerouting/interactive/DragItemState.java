@@ -26,8 +26,8 @@ public class DragItemState extends DragState {
   }
 
   @Override
-  public void display_default_message() {
-    hdlg.screenMessages.set_status_message(tm.getText("dragging_item"));
+  public void displayDefaultMessage() {
+    hdlg.screenMessages.setStatusMessage(tm.getText("dragging_item"));
   }
 
   /**
@@ -35,26 +35,26 @@ public class DragItemState extends DragState {
    * while moving, so that an undo may be necessary.
    */
   @Override
-  public InteractiveState move_to(FloatPoint p_to_location) {
+  public InteractiveState moveTo(FloatPoint p_to_location) {
     IntPoint toLocation = p_to_location.round();
     IntPoint fromLocation = this.previousLocation.round();
-    if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
+    if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
         == AngleRestriction.NINETY_DEGREE) {
-      toLocation = toLocation.orthogonal_projection(fromLocation);
-    } else if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
+      toLocation = toLocation.orthogonalProjection(fromLocation);
+    } else if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
         == AngleRestriction.FORTYFIVE_DEGREE) {
-      toLocation = toLocation.fortyfive_degree_projection(fromLocation);
+      toLocation = toLocation.fortyfiveDegreeProjection(fromLocation);
     }
     if (toLocation.equals(fromLocation)) {
       return this;
     }
-    if (itemToMove.is_user_fixed()) {
-      hdlg.screenMessages.set_status_message("Please unfix item before dragging");
+    if (itemToMove.isUserFixed()) {
+      hdlg.screenMessages.setStatusMessage("Please unfix item before dragging");
       return this;
     }
     MoveComponent moveComponent = null;
-    Vector relCoor = toLocation.difference_by(fromLocation);
-    double length = relCoor.length_approx();
+    Vector relCoor = toLocation.differenceBy(fromLocation);
+    double length = relCoor.lengthApprox();
     boolean shoveOk = false;
     for (int i = 0; i < 2; i++) {
       moveComponent = new MoveComponent(itemToMove, relCoor, 99, 5);
@@ -65,9 +65,9 @@ public class DragItemState extends DragState {
       if (i == 0) {
         // reduce evtl. the shove distance to make the check shove function
         // work properly, if more than 1 trace have to be shoved.
-        double sampleWidth = 2 * hdlg.get_routing_board().get_min_trace_half_width();
+        double sampleWidth = 2 * hdlg.getRoutingBoard().getMinTraceHalfWidth();
         if (length > sampleWidth) {
-          relCoor = relCoor.change_length_approx(sampleWidth);
+          relCoor = relCoor.changeLengthApprox(sampleWidth);
         }
       }
     }
@@ -75,17 +75,17 @@ public class DragItemState extends DragState {
     if (shoveOk) {
       if (!this.somethingDragged) {
         // initialisations for the first time dragging
-        this.observersActivated = !hdlg.get_routing_board().observers_active();
+        this.observersActivated = !hdlg.getRoutingBoard().observersActive();
         if (this.observersActivated) {
-          hdlg.get_routing_board().start_notify_observers();
+          hdlg.getRoutingBoard().startNotifyObservers();
         }
         // make the situation restorable by undo
-        hdlg.get_routing_board().generate_snapshot();
+        hdlg.getRoutingBoard().generateSnapshot();
         this.somethingDragged = true;
       }
       if (!moveComponent.insert(
-          hdlg.getInteractiveSettings().get_trace_pull_tight_region_width(),
-          hdlg.getInteractiveSettings().get_trace_pull_tight_accuracy())) {
+          hdlg.getInteractiveSettings().getTracePullTightRegionWidth(),
+          hdlg.getInteractiveSettings().getTracePullTightAccuracy())) {
         // an insert error occurred, end the drag state
         return this.returnState;
       }
@@ -96,34 +96,34 @@ public class DragItemState extends DragState {
   }
 
   @Override
-  public InteractiveState button_released() {
+  public InteractiveState buttonReleased() {
     if (this.observersActivated) {
-      hdlg.get_routing_board().end_notify_observers();
+      hdlg.getRoutingBoard().endNotifyObservers();
       this.observersActivated = false;
     }
     if (somethingDragged) {
       // Update the incompletes for the nets of the moved items.
-      if (itemToMove.get_component_no() == 0) {
-        for (int i = 0; i < itemToMove.net_count(); i++) {
-          hdlg.update_ratsnest(itemToMove.get_net_no(i));
+      if (itemToMove.getComponentNo() == 0) {
+        for (int i = 0; i < itemToMove.netCount(); i++) {
+          hdlg.updateRatsnest(itemToMove.getNetNo(i));
         }
       } else {
         Collection<Item> movedItems =
-            hdlg.get_routing_board().get_component_items(itemToMove.get_component_no());
+            hdlg.getRoutingBoard().getComponentItems(itemToMove.getComponentNo());
         Set<Integer> changedNets = new TreeSet<>();
         for (Item curr_moved_item : movedItems) {
-          for (int i = 0; i < curr_moved_item.net_count(); i++) {
-            changedNets.add(curr_moved_item.get_net_no(i));
+          for (int i = 0; i < curr_moved_item.netCount(); i++) {
+            changedNets.add(curr_moved_item.getNetNo(i));
           }
         }
         for (Integer currNetNo : changedNets) {
-          hdlg.update_ratsnest(currNetNo);
+          hdlg.updateRatsnest(currNetNo);
         }
       }
     } else {
-      hdlg.show_ratsnest();
+      hdlg.showRatsnest();
     }
-    hdlg.screenMessages.set_status_message("");
+    hdlg.screenMessages.setStatusMessage("");
     return this.returnState;
   }
 }

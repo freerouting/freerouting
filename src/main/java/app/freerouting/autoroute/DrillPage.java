@@ -33,7 +33,7 @@ class DrillPage implements ExpandableObject {
   public DrillPage(IntBox p_shape, RoutingBoard p_board) {
     shape = p_shape;
     board = p_board;
-    mazeSearchInfoArr = new MazeSearchElement[p_board.get_layer_count()];
+    mazeSearchInfoArr = new MazeSearchElement[p_board.getLayerCount()];
     for (int i = 0; i < mazeSearchInfoArr.length; i++) {
       mazeSearchInfoArr[i] = new MazeSearchElement();
     }
@@ -43,14 +43,14 @@ class DrillPage implements ExpandableObject {
    * Looks if p_drill_shape contains the center of a drillable Pin on p_layer. Returns null, if no
    * such Pin was found.
    */
-  private static Point calc_pin_center_in_drill(
+  private static Point calcPinCenterInDrill(
       TileShape p_drill_shape, int p_layer, RoutingBoard p_board) {
-    Collection<Item> overlappingItems = p_board.overlapping_items(p_drill_shape, p_layer);
+    Collection<Item> overlappingItems = p_board.overlappingItems(p_drill_shape, p_layer);
     Point result = null;
     for (Item currItem : overlappingItems) {
       if (currItem instanceof Pin currPin) {
-        if (currPin.drill_allowed() && p_drill_shape.contains_inside(currPin.get_center())) {
-          result = currPin.get_center();
+        if (currPin.drillAllowed() && p_drill_shape.containsInside(currPin.getCenter())) {
+          result = currPin.getCenter();
         }
       }
     }
@@ -58,14 +58,14 @@ class DrillPage implements ExpandableObject {
   }
 
   /** Returns the drills on this page. If p_attach_smd, drilling to smd pins is allowed. */
-  public Collection<ExpansionDrill> get_drills(
+  public Collection<ExpansionDrill> getDrills(
       AutorouteEngine p_autoroute_engine, boolean p_attach_smd) {
-    if (this.drills == null || p_autoroute_engine.get_net_no() != this.netNo) {
-      this.netNo = p_autoroute_engine.get_net_no();
+    if (this.drills == null || p_autoroute_engine.getNetNo() != this.netNo) {
+      this.netNo = p_autoroute_engine.getNetNo();
       this.drills = new LinkedList<>();
       ShapeSearchTree searchTree = p_autoroute_engine.autorouteSearchTree;
       Collection<TreeEntry> overlaps = new LinkedList<>();
-      searchTree.overlapping_tree_entries(this.shape, -1, overlaps);
+      searchTree.overlappingTreeEntries(this.shape, -1, overlaps);
       Collection<TileShape> cutoutShapes = new LinkedList<>();
       // drills on top of existing vias are used in the ripup algorithm
       TileShape prevObstacleShape = IntBox.EMPTY;
@@ -73,16 +73,16 @@ class DrillPage implements ExpandableObject {
         if (!(currEntry.object instanceof Item currItem)) {
           continue;
         }
-        if (currItem.is_drillable(this.netNo)) {
+        if (currItem.isDrillable(this.netNo)) {
           continue;
         }
         if (currItem instanceof Pin pin) {
-          if (p_attach_smd && pin.drill_allowed()) {
+          if (p_attach_smd && pin.drillAllowed()) {
             continue;
           }
         }
         TileShape currObstacleShape =
-            currItem.get_tree_shape(searchTree, currEntry.shapeIndexInObject);
+            currItem.getTreeShape(searchTree, currEntry.shapeIndexInObject);
         if (!prevObstacleShape.contains(currObstacleShape)) {
           // Checked to avoid multiple cutout for example for vias with the same shape on all
           // layers.
@@ -99,28 +99,28 @@ class DrillPage implements ExpandableObject {
         holes[i] = it.next();
       }
       PolylineArea shapeWithHoles = new PolylineArea(this.shape, holes);
-      TileShape[] drillShapes = shapeWithHoles.split_to_convex(p_autoroute_engine.stoppableThread);
+      TileShape[] drillShapes = shapeWithHoles.splitToConvex(p_autoroute_engine.stoppableThread);
 
       // Use the center points of these drill shapes to try making a via.
       int drillFirstLayer = 0;
-      int drillLastLayer = this.board.get_layer_count() - 1;
+      int drillLastLayer = this.board.getLayerCount() - 1;
       for (int i = 0; i < drillShapes.length; i++) {
         TileShape currDrillShape = drillShapes[i];
         Point currDrillLocation = null;
         if (p_attach_smd) {
           currDrillLocation =
-              calc_pin_center_in_drill(currDrillShape, drillFirstLayer, p_autoroute_engine.board);
+              calcPinCenterInDrill(currDrillShape, drillFirstLayer, p_autoroute_engine.board);
           if (currDrillLocation == null) {
             currDrillLocation =
-                calc_pin_center_in_drill(currDrillShape, drillLastLayer, p_autoroute_engine.board);
+                calcPinCenterInDrill(currDrillShape, drillLastLayer, p_autoroute_engine.board);
           }
         }
         if (currDrillLocation == null) {
-          currDrillLocation = currDrillShape.centre_of_gravity().round();
+          currDrillLocation = currDrillShape.centreOfGravity().round();
         }
         ExpansionDrill newDrill =
             new ExpansionDrill(currDrillShape, currDrillLocation, drillFirstLayer, drillLastLayer);
-        if (newDrill.calculate_expansion_rooms(p_autoroute_engine)) {
+        if (newDrill.calculateExpansionRooms(p_autoroute_engine)) {
           this.drills.add(newDrill);
         }
       }
@@ -129,22 +129,22 @@ class DrillPage implements ExpandableObject {
   }
 
   @Override
-  public TileShape get_shape() {
+  public TileShape getShape() {
     return this.shape;
   }
 
   @Override
-  public int get_dimension() {
+  public int getDimension() {
     return 2;
   }
 
   @Override
-  public int maze_search_element_count() {
+  public int mazeSearchElementCount() {
     return this.mazeSearchInfoArr.length;
   }
 
   @Override
-  public MazeSearchElement get_maze_search_element(int p_no) {
+  public MazeSearchElement getMazeSearchElement(int p_no) {
     return this.mazeSearchInfoArr[p_no];
   }
 
@@ -182,13 +182,13 @@ class DrillPage implements ExpandableObject {
   }
 
   @Override
-  public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
+  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom p_room) {
     return null;
   }
 
   @Override
-  public int get_id_no() {
+  public int getIdNo() {
     // Stable hash of shape and netNo
-    return 31 * shape.get_id_no() + netNo;
+    return 31 * shape.getIdNo() + netNo;
   }
 }

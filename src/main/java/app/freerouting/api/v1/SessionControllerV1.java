@@ -46,7 +46,7 @@ import java.util.UUID;
  * </ul>
  *
  * <p>All endpoints authenticate the caller via {@link
- * app.freerouting.api.BaseController#AuthenticateUser()} using the {@code Freerouting-Profile-ID}
+ * app.freerouting.api.BaseController#authenticateUser()} using the {@code Freerouting-Profile-ID}
  * request header.
  */
 @Path("/v1/sessions")
@@ -81,7 +81,7 @@ public class SessionControllerV1 extends BaseController {
   @Produces(MediaType.APPLICATION_JSON)
   public Response listSessions() {
     // Authenticate the user
-    UUID userId = AuthenticateUser();
+    UUID userId = authenticateUser();
 
     // filter the list of sessions to only include the ones that the user has access
     // to
@@ -136,7 +136,7 @@ public class SessionControllerV1 extends BaseController {
   @Produces(MediaType.APPLICATION_JSON)
   public Response createSession() {
     // Authenticate the user
-    UUID userId = AuthenticateUser();
+    UUID userId = authenticateUser();
 
     // The EnvironmentHostValidationFilter guarantees this header is present and
     // well-formed (<name>/<version>) before the controller is reached.
@@ -183,7 +183,7 @@ public class SessionControllerV1 extends BaseController {
           @PathParam("sessionId")
           String sessionId) {
     // Authenticate the user
-    UUID userId = AuthenticateUser();
+    UUID userId = authenticateUser();
 
     // Return one session with the id of sessionId
     Session session = SessionManager.getInstance().getSession(sessionId, userId);
@@ -223,7 +223,7 @@ public class SessionControllerV1 extends BaseController {
           @PathParam("sessionId")
           String sessionId) {
     // Authenticate the user
-    UUID userId = AuthenticateUser();
+    UUID userId = authenticateUser();
 
     // Return one session with the id of sessionId
     Session session = SessionManager.getInstance().getSession(sessionId, userId);
@@ -257,7 +257,7 @@ public class SessionControllerV1 extends BaseController {
               example = "550e8400-e29b-41d4-a716-446655440000")
           @PathParam("sessionId")
           String sessionId) {
-    UUID userId = AuthenticateUser();
+    UUID userId = authenticateUser();
 
     var guiSettings = app.freerouting.Freerouting.globalSettings.guiSettings;
     if (!guiSettings.isEnabled || !guiSettings.isRunning) {

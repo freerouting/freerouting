@@ -19,7 +19,7 @@ public final class OrthogonalBoundingDirections implements ShapeBoundingDirectio
 
   @Override
   public RegularTileShape bounds(ConvexShape p_shape) {
-    return p_shape.bounding_shape(this);
+    return p_shape.boundingShape(this);
   }
 
   @Override
@@ -29,21 +29,21 @@ public final class OrthogonalBoundingDirections implements ShapeBoundingDirectio
 
   @Override
   public RegularTileShape bounds(IntOctagon p_oct) {
-    return p_oct.bounding_box();
+    return p_oct.boundingBox();
   }
 
   @Override
   public RegularTileShape bounds(Simplex p_simplex) {
-    return p_simplex.bounding_box();
+    return p_simplex.boundingBox();
   }
 
   @Override
   public RegularTileShape bounds(Circle p_circle) {
-    return p_circle.bounding_box();
+    return p_circle.boundingBox();
   }
 
   @Override
   public RegularTileShape bounds(PolygonShape p_polygon) {
-    return p_polygon.bounding_box();
+    return p_polygon.boundingBox();
   }
 }

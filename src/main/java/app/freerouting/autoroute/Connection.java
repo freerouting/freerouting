@@ -41,14 +41,14 @@ public final class Connection {
    * connection.
    */
   public static Connection get(Item p_item) {
-    if (!p_item.is_routable()) {
+    if (!p_item.isRoutable()) {
       return null;
     }
-    Connection precalculatedConnection = p_item.get_autoroute_info().get_precalculated_connection();
+    Connection precalculatedConnection = p_item.getAutorouteInfo().getPrecalculatedConnection();
     if (precalculatedConnection != null) {
       return precalculatedConnection;
     }
-    Set<Item> contacts = p_item.get_normal_contacts();
+    Set<Item> contacts = p_item.getNormalContacts();
     Set<Item> connectionItems = new TreeSet<>();
     connectionItems.add(p_item);
 
@@ -58,18 +58,18 @@ public final class Connection {
     int endLayer = 0;
 
     for (Item currItem : contacts) {
-      Point prevContactPoint = p_item.normal_contact_point(currItem);
+      Point prevContactPoint = p_item.normalContactPoint(currItem);
       if (prevContactPoint == null) {
         // no unique contact point
         continue;
       }
-      int prevContactLayer = p_item.first_common_layer(currItem);
+      int prevContactLayer = p_item.firstCommonLayer(currItem);
       boolean forkFound = false;
       if (p_item instanceof Trace start_trace) {
         // Check, that there is only 1 contact at this location.
         // Only for pins and vias items of more than 1 connection
         // are collected
-        Collection<Item> checkContacts = start_trace.get_normal_contacts(prevContactPoint, false);
+        Collection<Item> checkContacts = start_trace.getNormalContacts(prevContactPoint, false);
         if (checkContacts.size() != 1) {
           forkFound = true;
         }
@@ -77,7 +77,7 @@ public final class Connection {
       // Search from currItem along the contacts
       // until the next fork or nonroute item.
       for (; ; ) {
-        if (!currItem.is_routable() || forkFound) {
+        if (!currItem.isRoutable() || forkFound) {
           // connection ends
           if (startPoint == null) {
             startPoint = prevContactPoint;
@@ -89,7 +89,7 @@ public final class Connection {
           break;
         }
         connectionItems.add(currItem);
-        Collection<Item> currItemContacts = currItem.get_normal_contacts();
+        Collection<Item> currItemContacts = currItem.getNormalContacts();
         // filter the contacts at the previous contact point,
         // because we were already there.
         // If then there is not exactly 1 new contact left, there is
@@ -98,9 +98,9 @@ public final class Connection {
         int nextContactLayer = -1;
         Item nextContact = null;
         for (Item tmp_contact : currItemContacts) {
-          int tmpContactLayer = currItem.first_common_layer(tmp_contact);
+          int tmpContactLayer = currItem.firstCommonLayer(tmp_contact);
           if (tmpContactLayer >= 0) {
-            Point tmpContactPoint = currItem.normal_contact_point(tmp_contact);
+            Point tmpContactPoint = currItem.normalContactPoint(tmp_contact);
             if (tmpContactPoint == null) {
               // no unique contact point
               forkFound = true;
@@ -128,17 +128,17 @@ public final class Connection {
     }
     Connection result = new Connection(startPoint, startLayer, endPoint, endLayer, connectionItems);
     for (Item currItem : connectionItems) {
-      currItem.get_autoroute_info().set_precalculated_connection(result);
+      currItem.getAutorouteInfo().setPrecalculatedConnection(result);
     }
     return result;
   }
 
   /** Returns the cumulative length of the traces in this connection. */
-  public double trace_length() {
+  public double traceLength() {
     double result = 0;
     for (Item currItem : itemList) {
       if (currItem instanceof Trace trace) {
-        result += trace.get_length();
+        result += trace.getLength();
       }
     }
     return result;
@@ -148,12 +148,12 @@ public final class Connection {
    * Returns an estimation of the actual length of the connection divided by the minimal possible
    * length.
    */
-  public double get_detour() {
+  public double getDetour() {
     if (startPoint == null || endPoint == null) {
       return Integer.MAX_VALUE;
     }
-    double minTraceLength = startPoint.to_float().distance(endPoint.to_float());
-    return (this.trace_length() + DETOUR_ADD) / (minTraceLength + DETOUR_ADD)
+    double minTraceLength = startPoint.toFloat().distance(endPoint.toFloat());
+    return (this.traceLength() + DETOUR_ADD) / (minTraceLength + DETOUR_ADD)
         + DETOUR_ITEM_COST * (itemList.size() - 1);
   }
 }

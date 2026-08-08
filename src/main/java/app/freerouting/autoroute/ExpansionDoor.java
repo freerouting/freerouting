@@ -31,14 +31,14 @@ public class ExpansionDoor implements ExpandableObject {
   public ExpansionDoor(ExpansionRoom p_first_room, ExpansionRoom p_second_room) {
     firstRoom = p_first_room;
     secondRoom = p_second_room;
-    dimension = firstRoom.get_shape().intersection(secondRoom.get_shape()).dimension();
+    dimension = firstRoom.getShape().intersection(secondRoom.getShape()).dimension();
   }
 
   /** Calculates the intersection of the shapes of the 2 rooms belonging to this door. */
   @Override
-  public TileShape get_shape() {
-    TileShape firstShape = firstRoom.get_shape();
-    TileShape secondShape = secondRoom.get_shape();
+  public TileShape getShape() {
+    TileShape firstShape = firstRoom.getShape();
+    TileShape secondShape = secondRoom.getShape();
     return firstShape.intersection(secondShape);
   }
 
@@ -47,7 +47,7 @@ public class ExpansionDoor implements ExpandableObject {
    * ObstacleExpansionRooms
    */
   @Override
-  public int get_dimension() {
+  public int getDimension() {
     return this.dimension;
   }
 
@@ -55,7 +55,7 @@ public class ExpansionDoor implements ExpandableObject {
    * Returns the other room of this door, or null, if p_room is neither equal to this.firstRoom nor
    * to this.secondRoom.
    */
-  public ExpansionRoom other_room(ExpansionRoom p_room) {
+  public ExpansionRoom otherRoom(ExpansionRoom p_room) {
     ExpansionRoom result;
     if (p_room == firstRoom) {
       result = secondRoom;
@@ -72,7 +72,7 @@ public class ExpansionDoor implements ExpandableObject {
    * to this.secondRoom, or if the other room is not a CompleteExpansionRoom.
    */
   @Override
-  public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
+  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom p_room) {
     ExpansionRoom result;
     if (p_room == firstRoom) {
       result = secondRoom;
@@ -88,70 +88,70 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   @Override
-  public int maze_search_element_count() {
+  public int mazeSearchElementCount() {
     return this.sectionArr.length;
   }
 
   @Override
-  public MazeSearchElement get_maze_search_element(int p_no) {
+  public MazeSearchElement getMazeSearchElement(int p_no) {
     return this.sectionArr[p_no];
   }
 
   /** Calculates the Line segments of the sections of this door. */
-  public FloatLine[] get_section_segments(double p_offset) {
+  public FloatLine[] getSectionSegments(double p_offset) {
     double offset = p_offset + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
-    TileShape doorShape = this.get_shape();
+    TileShape doorShape = this.getShape();
     {
-      if (doorShape.is_empty()) {
+      if (doorShape.isEmpty()) {
         return new FloatLine[0];
       }
     }
     FloatLine doorLineSegment;
     FloatLine shrinkedLineSegment;
     if (this.dimension == 1) {
-      doorLineSegment = doorShape.diagonal_corner_segment();
-      shrinkedLineSegment = doorLineSegment.shrink_segment(offset);
+      doorLineSegment = doorShape.diagonalCornerSegment();
+      shrinkedLineSegment = doorLineSegment.shrinkSegment(offset);
     } else if (this.dimension == 2
         && this.firstRoom instanceof CompleteFreeSpaceExpansionRoom
         && this.secondRoom instanceof CompleteFreeSpaceExpansionRoom) {
       // Overlapping doors at a corner possible in case of 90- or 45-degree routing.
       // In case of freeangle routing the corners are cut off.
-      doorLineSegment = calc_door_line_segment(doorShape);
+      doorLineSegment = calcDoorLineSegment(doorShape);
       if (doorLineSegment == null) {
         // CompleteFreeSpaceExpansionRoom inside other room
         return new FloatLine[0];
       }
-      if (doorLineSegment.b.distance_square(doorLineSegment.a) < 4 * offset * offset) {
+      if (doorLineSegment.b.distanceSquare(doorLineSegment.a) < 4 * offset * offset) {
         // door is small, 2 dimensional small doors are not yet expanded.
         return new FloatLine[0];
       }
-      shrinkedLineSegment = doorLineSegment.shrink_segment(offset);
+      shrinkedLineSegment = doorLineSegment.shrinkSegment(offset);
     } else {
-      FloatPoint gravityPoint = doorShape.centre_of_gravity();
+      FloatPoint gravityPoint = doorShape.centreOfGravity();
       doorLineSegment = new FloatLine(gravityPoint, gravityPoint);
       shrinkedLineSegment = doorLineSegment;
     }
     final double cMaxDoorSectionWidth = 10 * offset;
     int sectionCount =
         (int) (doorLineSegment.b.distance(doorLineSegment.a) / cMaxDoorSectionWidth) + 1;
-    this.allocate_sections(sectionCount);
-    return shrinkedLineSegment.divide_segment_into_sections(sectionCount);
+    this.allocateSections(sectionCount);
+    return shrinkedLineSegment.divideSegmentIntoSections(sectionCount);
   }
 
   /**
    * Calculates a diagonal line of the 2-dimensional p_door_shape which represents the restraint
    * line between the shapes of this.firstRoom and this.secondRoom.
    */
-  private FloatLine calc_door_line_segment(TileShape p_door_shape) {
-    TileShape firstRoomShape = this.firstRoom.get_shape();
-    TileShape secondRoomShape = this.secondRoom.get_shape();
+  private FloatLine calcDoorLineSegment(TileShape p_door_shape) {
+    TileShape firstRoomShape = this.firstRoom.getShape();
+    TileShape secondRoomShape = this.secondRoom.getShape();
     Point firstCorner = null;
     Point secondCorner = null;
-    int cornerCount = p_door_shape.border_line_count();
+    int cornerCount = p_door_shape.borderLineCount();
     for (int i = 0; i < cornerCount; i++) {
       Point currCorner = p_door_shape.corner(i);
-      if (!firstRoomShape.contains_inside(currCorner)
-          && !secondRoomShape.contains_inside(currCorner)) {
+      if (!firstRoomShape.containsInside(currCorner)
+          && !secondRoomShape.containsInside(currCorner)) {
         // currCorner is on the border of both room shapes.
         if (firstCorner == null) {
           firstCorner = currCorner;
@@ -164,7 +164,7 @@ public class ExpansionDoor implements ExpandableObject {
     if (firstCorner == null || secondCorner == null) {
       return null;
     }
-    return new FloatLine(firstCorner.to_float(), secondCorner.to_float());
+    return new FloatLine(firstCorner.toFloat(), secondCorner.toFloat());
   }
 
   /** Resets this ExpandableObject for autorouting the next connection. */
@@ -178,15 +178,15 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   @Override
-  public int get_id_no() {
-    int id1 = firstRoom.get_id_no();
-    int id2 = secondRoom.get_id_no();
+  public int getIdNo() {
+    int id1 = firstRoom.getIdNo();
+    int id2 = secondRoom.getIdNo();
     // Use a stable combination of room IDs. Note: min/max ensures order-independence.
     return Math.min(id1, id2) * 31 + Math.max(id1, id2);
   }
 
   /** allocates and initialises p_section_count sections */
-  void allocate_sections(int p_section_count) {
+  void allocateSections(int p_section_count) {
     if (sectionArr != null && sectionArr.length == p_section_count) {
       return; // already allocated
     }

@@ -134,7 +134,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     lc.insets = new Insets(1, 2, 1, 2);
     lc.gridy = 0;
 
-    LayerStructure layerStructure = this.boardHandling.get_routing_board().layerStructure;
+    LayerStructure layerStructure = this.boardHandling.getRoutingBoard().layerStructure;
     int layerCount = layerStructure.arr.length;
 
     this.settingsSelectLayerNameArr = new JToggleButton[layerCount];
@@ -145,17 +145,17 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     // 1. Signal Layers
     for (int i = 0; i < layerCount; i++) {
       Layer currLayer = layerStructure.arr[i];
-      int layerNo = layerStructure.get_no(currLayer);
+      int layerNo = layerStructure.getNo(currLayer);
 
       // Eye visibility toggle
       JCheckBox eyeCb = new JCheckBox();
       eyeCb.setToolTipText(tm.getText("layer_eye_tooltip", currLayer.name));
-      eyeCb.setSelected(gc.get_raw_layer_visibility(i) > 0.0);
+      eyeCb.setSelected(gc.getRawLayerVisibility(i) > 0.0);
       eyeCb.addActionListener(new LayerEyeListener(i));
       settingsSelectLayerEyeArr[i] = eyeCb;
 
       // Color swatch
-      Color traceColor = gc.get_trace_colors(false)[i];
+      Color traceColor = gc.getTraceColors(false)[i];
       JLabel swatch = createSwatch(traceColor);
 
       // Active layer selection button
@@ -197,18 +197,18 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       // Eye visibility toggle
       JCheckBox eyeCb = new JCheckBox();
       eyeCb.setToolTipText(tm.getText("virtual_layer_eye_tooltip", layerName));
-      eyeCb.setSelected(gc.get_virtual_layer_visible(i));
+      eyeCb.setSelected(gc.getVirtualLayerVisible(i));
       eyeCb.addActionListener(new VirtualLayerEyeListener(i));
       settingsVirtualLayerEyeArr[i] = eyeCb;
 
       // Color swatch
       Color layerColor;
       if (i == 0 || i == 1) {
-        layerColor = gc.otherColorTable.get_silkscreen_color(i == 0);
+        layerColor = gc.otherColorTable.getSilkscreenColor(i == 0);
       } else if (i == 2 || i == 3) {
-        layerColor = gc.otherColorTable.get_courtyard_color(i == 2);
+        layerColor = gc.otherColorTable.getCourtyardColor(i == 2);
       } else {
-        layerColor = gc.otherColorTable.get_fab_color(i == 4);
+        layerColor = gc.otherColorTable.getFabColor(i == 4);
       }
       JLabel swatch = createSwatch(layerColor);
 
@@ -272,13 +272,13 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   @Override
   public void refresh() {
     InteractiveSettings is = this.boardHandling.getInteractiveSettings();
-    if (is.get_select_on_all_visible_layers()) {
+    if (is.getSelectOnAllVisibleLayers()) {
       settingsSelectAllVisibleButton.setSelected(true);
     } else {
       settingsSelectCurrentOnlyButton.setSelected(true);
     }
 
-    ItemSelectionFilter itemSelectionFilter = is.get_item_selection_filter();
+    ItemSelectionFilter itemSelectionFilter = is.getItemSelectionFilter();
     if (itemSelectionFilter == null) {
       FRLogger.warn("SelectParameterWindow.refresh: itemSelectionFilter is null");
     } else {
@@ -286,25 +286,25 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
           ItemSelectionFilter.SelectableChoices.values();
       for (int i = 0; i < filterValues.length; i++) {
         this.settingsSelectItemSelectionChoices[i].setSelected(
-            itemSelectionFilter.is_selected(filterValues[i]));
+            itemSelectionFilter.isSelected(filterValues[i]));
       }
     }
 
     GraphicsContext gc = this.boardHandling.graphicsContext;
 
     // Sync physical layers
-    int activeLayer = is.get_layer();
-    int activeVirtual = gc.get_fully_visible_virtual_layer();
+    int activeLayer = is.getLayer();
+    int activeVirtual = gc.getFullyVisibleVirtualLayer();
 
     for (int i = 0; i < settingsSelectLayerNameArr.length; i++) {
       settingsSelectLayerNameArr[i].setSelected(activeLayer == i && activeVirtual == -1);
-      settingsSelectLayerEyeArr[i].setSelected(gc.get_raw_layer_visibility(i) > 0.0);
+      settingsSelectLayerEyeArr[i].setSelected(gc.getRawLayerVisibility(i) > 0.0);
     }
 
     // Sync virtual layers
     for (int i = 0; i < 6; i++) {
       settingsVirtualLayerNameArr[i].setSelected(activeVirtual == i);
-      settingsVirtualLayerEyeArr[i].setSelected(gc.get_virtual_layer_visible(i));
+      settingsVirtualLayerEyeArr[i].setSelected(gc.getVirtualLayerVisible(i));
     }
   }
 
@@ -313,7 +313,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     if (p_signal_layer_no >= 0 && p_signal_layer_no < settingsSelectLayerNameArr.length) {
       settingsSelectLayerNameArr[p_signal_layer_no].setSelected(true);
       if (boardHandling.graphicsContext != null) {
-        boardHandling.graphicsContext.set_fully_visible_layer(p_signal_layer_no);
+        boardHandling.graphicsContext.setFullyVisibleLayer(p_signal_layer_no);
       }
       boardFrame.boardPanel.repaint();
     }
@@ -331,9 +331,9 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       if (settingsSelectLayerNameArr[signalLayerNo].isSelected()) {
-        boardHandling.set_current_layer(layerNo);
+        boardHandling.setCurrentLayer(layerNo);
       } else {
-        boardHandling.graphicsContext.set_fully_visible_layer(-1);
+        boardHandling.graphicsContext.setFullyVisibleLayer(-1);
       }
       boardFrame.boardPanel.repaint();
       refresh();
@@ -350,7 +350,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       boolean visible = settingsSelectLayerEyeArr[layerIdx].isSelected();
-      boardHandling.set_layer_visibility(layerIdx, visible ? 1.0 : 0.0);
+      boardHandling.setLayerVisibility(layerIdx, visible ? 1.0 : 0.0);
       boardFrame.boardPanel.repaint();
     }
   }
@@ -365,7 +365,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       boolean visible = settingsVirtualLayerEyeArr[virtualIdx].isSelected();
-      boardHandling.graphicsContext.set_virtual_layer_visible(virtualIdx, visible);
+      boardHandling.graphicsContext.setVirtualLayerVisible(virtualIdx, visible);
       boardFrame.boardPanel.repaint();
     }
   }
@@ -380,9 +380,9 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       if (settingsVirtualLayerNameArr[virtualIdx].isSelected()) {
-        boardHandling.graphicsContext.set_fully_visible_virtual_layer(virtualIdx);
+        boardHandling.graphicsContext.setFullyVisibleVirtualLayer(virtualIdx);
       } else {
-        boardHandling.graphicsContext.set_fully_visible_virtual_layer(-1);
+        boardHandling.graphicsContext.setFullyVisibleVirtualLayer(-1);
       }
       boardFrame.boardPanel.repaint();
       refresh();
@@ -392,14 +392,14 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   private class AllVisibleListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      boardHandling.getInteractiveSettings().set_select_on_all_visible_layers(true);
+      boardHandling.getInteractiveSettings().setSelectOnAllVisibleLayers(true);
     }
   }
 
   private class CurrentOnlyListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      boardHandling.getInteractiveSettings().set_select_on_all_visible_layers(false);
+      boardHandling.getInteractiveSettings().setSelectOnAllVisibleLayers(false);
     }
   }
 
@@ -415,20 +415,20 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       boolean isSelected = settingsSelectItemSelectionChoices[itemNo].isSelected();
       ItemSelectionFilter.SelectableChoices itemType =
           ItemSelectionFilter.SelectableChoices.values()[itemNo];
-      boardHandling.set_selectable(itemType, isSelected);
+      boardHandling.setSelectable(itemType, isSelected);
 
       // make sure that from fixed and unfixed items at least one type is selected.
       if (itemType == ItemSelectionFilter.SelectableChoices.FIXED) {
         int unfixedNo = ItemSelectionFilter.SelectableChoices.UNFIXED.ordinal();
         if (!isSelected && !settingsSelectItemSelectionChoices[unfixedNo].isSelected()) {
           settingsSelectItemSelectionChoices[unfixedNo].setSelected(true);
-          boardHandling.set_selectable(ItemSelectionFilter.SelectableChoices.UNFIXED, true);
+          boardHandling.setSelectable(ItemSelectionFilter.SelectableChoices.UNFIXED, true);
         }
       } else if (itemType == ItemSelectionFilter.SelectableChoices.UNFIXED) {
         int fixedNo = ItemSelectionFilter.SelectableChoices.FIXED.ordinal();
         if (!isSelected && !settingsSelectItemSelectionChoices[fixedNo].isSelected()) {
           settingsSelectItemSelectionChoices[fixedNo].setSelected(true);
-          boardHandling.set_selectable(ItemSelectionFilter.SelectableChoices.FIXED, true);
+          boardHandling.setSelectable(ItemSelectionFilter.SelectableChoices.FIXED, true);
         }
       }
     }

@@ -45,13 +45,13 @@ public class ColorManager extends BoardSavableSubWindow {
     layersColorTable = new JTable(graphicsContext.itemColorTable);
     layersColorTable.setPreferredScrollableViewportSize(
         new Dimension(tableWidth, itemColorTableHeight));
-    JScrollPane itemScrollPane = init_color_table(layersColorTable, p_board_frame.get_locale());
+    JScrollPane itemScrollPane = initColorTable(layersColorTable, p_board_frame.get_locale());
     panel.add(itemScrollPane, BorderLayout.NORTH);
 
     generalColorTable = new JTable(graphicsContext.otherColorTable);
     generalColorTable.setPreferredScrollableViewportSize(
         new Dimension(tableWidth, textfieldHeight));
-    JScrollPane otherScrollPane = init_color_table(generalColorTable, p_board_frame.get_locale());
+    JScrollPane otherScrollPane = initColorTable(generalColorTable, p_board_frame.get_locale());
     panel.add(otherScrollPane, BorderLayout.SOUTH);
     getContentPane().add(panel, BorderLayout.CENTER);
     this.pack();
@@ -59,7 +59,7 @@ public class ColorManager extends BoardSavableSubWindow {
   }
 
   /** Initializes p_color_table and return the created scrollPane of the color table. */
-  private static JScrollPane init_color_table(JTable p_color_table, Locale p_locale) {
+  private static JScrollPane initColorTable(JTable p_color_table, Locale p_locale) {
     // Create the scroll pane and add the table to it.
     JScrollPane scrollPane = new JScrollPane(p_color_table);
     // Set up renderer and editor for the Color columns.
@@ -112,7 +112,7 @@ public class ColorManager extends BoardSavableSubWindow {
   }
 
   /** Reassigns the table model variables because they may have changed in p_graphics_context. */
-  public void set_table_models(GraphicsContext p_graphics_context) {
+  public void setTableModels(GraphicsContext p_graphics_context) {
     this.layersColorTable.setModel(p_graphics_context.itemColorTable);
     this.generalColorTable.setModel(p_graphics_context.otherColorTable);
   }

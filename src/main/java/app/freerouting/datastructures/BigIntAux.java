@@ -39,7 +39,7 @@ public final class BigIntAux {
    * auxiliary function to implement addition and translation in the classes RationalVector and
    * RationalPoint
    */
-  public static BigInteger[] add_rational_coordinates(BigInteger[] p_first, BigInteger[] p_second) {
+  public static BigInteger[] addRationalCoordinates(BigInteger[] p_first, BigInteger[] p_second) {
     BigInteger[] result = new BigInteger[3];
     if (p_first[2].equals(p_second[2]))
     // both rational numbers have the same denominator

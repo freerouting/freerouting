@@ -13,11 +13,11 @@ class PinObstacleTest {
   @Test
   void sameNetViaWithAttachDisallowedIsNotObstacleForSmdPin() {
     Pin pin = mock(Pin.class, Answers.CALLS_REAL_METHODS);
-    doReturn(true).when(pin).drill_allowed();
+    doReturn(true).when(pin).drillAllowed();
 
     Via via = mock(Via.class);
-    when(via.shares_net(pin)).thenReturn(true);
+    when(via.sharesNet(pin)).thenReturn(true);
 
-    assertFalse(pin.is_obstacle(via));
+    assertFalse(pin.isObstacle(via));
   }
 }

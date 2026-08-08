@@ -100,7 +100,7 @@ public interface BoardManager {
    * @return the routing board instance, or null if no board has been created/loaded
    * @see RoutingBoard
    */
-  RoutingBoard get_routing_board();
+  RoutingBoard getRoutingBoard();
 
   /**
    * Initializes manual trace half-widths from the board's default net class rules.
@@ -122,9 +122,9 @@ public interface BoardManager {
    * trace width settings array.
    *
    * @see app.freerouting.interactive.InteractiveSettings#manualTraceHalfWidthArr
-   * @see app.freerouting.rules.NetClass#get_trace_half_width(int)
+   * @see app.freerouting.rules.NetClass#getTraceHalfWidth(int)
    */
-  void initialize_manual_trace_half_widths();
+  void initializeManualTraceHalfWidths();
 
   /**
    * Creates and initializes a new routing board with the specified parameters.
@@ -167,7 +167,7 @@ public interface BoardManager {
    * @see BoardRules
    * @see Communication
    */
-  void create_board(
+  void createBoard(
       IntBox p_bounding_box,
       LayerStructure p_layer_structure,
       PolylineShape[] p_outline_shapes,
@@ -211,7 +211,7 @@ public interface BoardManager {
    * @deprecated Use {@link #getInteractiveSettings()} instead.
    */
   @Deprecated
-  default GuiSettings get_settings() {
+  default GuiSettings getSettings() {
     return getInteractiveSettings();
   }
 

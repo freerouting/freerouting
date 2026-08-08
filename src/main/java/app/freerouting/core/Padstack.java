@@ -74,7 +74,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
    * Returns the drill radius of this padstack in board units. The result is cached after the first
    * computation to avoid repeated regex parsing.
    */
-  public double get_drill_radius() {
+  public double getDrillRadius() {
     if (cachedDrillRadius != null) {
       return cachedDrillRadius;
     }
@@ -98,7 +98,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
                 name.substring(lastUnderscore + 1, colonIndex).replaceAll("[^0-9.]", "");
             double outerDia = Double.parseDouble(outerStr);
             if (outerDia > 0) {
-              double actualOuterRadius = get_smallest_radius();
+              double actualOuterRadius = getSmallestRadius();
               if (actualOuterRadius > 0) {
                 result = actualOuterRadius * (drillDia / outerDia);
                 cachedDrillRadius = result;
@@ -111,16 +111,16 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
         }
       }
     }
-    result = get_smallest_radius() * 0.45;
+    result = getSmallestRadius() * 0.45;
     cachedDrillRadius = result;
     return cachedDrillRadius;
   }
 
-  private double get_smallest_radius() {
+  private double getSmallestRadius() {
     double minRadius = Double.MAX_VALUE;
     for (ConvexShape shape : shapes) {
       if (shape != null) {
-        double radius = Math.min(shape.bounding_box().width(), shape.bounding_box().height()) / 2.0;
+        double radius = Math.min(shape.boundingBox().width(), shape.boundingBox().height()) / 2.0;
         if (radius < minRadius) {
           minRadius = radius;
         }
@@ -130,7 +130,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   }
 
   /** Gets the shape of this padstack on layer p_layer */
-  public ConvexShape get_shape(int p_layer) {
+  public ConvexShape getShape(int p_layer) {
     if (p_layer < 0 || p_layer >= shapes.length) {
       FRLogger.warn("Padstack.get_layer p_layer out of range");
       return null;
@@ -139,7 +139,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   }
 
   /** Returns the first layer of this padstack with a shape != null. */
-  public int from_layer() {
+  public int fromLayer() {
     int result = 0;
     while (result < shapes.length && shapes[result] == null) {
       ++result;
@@ -148,7 +148,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   }
 
   /** Returns the last layer of this padstack with a shape != null. */
-  public int to_layer() {
+  public int toLayer() {
     int result = shapes.length - 1;
     while (result >= 0 && shapes[result] == null) {
       --result;
@@ -157,7 +157,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   }
 
   /** Returns the layer count of the board of this padstack. */
-  public int board_layer_count() {
+  public int boardLayerCount() {
     return shapes.length;
   }
 
@@ -171,7 +171,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
    * the length of the pad is smaller than p_factor times the height of the pad, connection also to
    * the long side is allowed.
    */
-  public Collection<Direction> get_trace_exit_directions(int p_layer, double p_factor) {
+  public Collection<Direction> getTraceExitDirections(int p_layer, double p_factor) {
     Collection<Direction> result = new LinkedList<>();
     if (p_layer < 0 || p_layer >= shapes.length) {
       return result;
@@ -183,7 +183,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
     if (!(currShape instanceof IntBox || currShape instanceof IntOctagon)) {
       return result;
     }
-    IntBox currBox = currShape.bounding_box();
+    IntBox currBox = currShape.boundingBox();
 
     boolean allDirs =
         Math.max(currBox.width(), currBox.height())
@@ -201,11 +201,11 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("padstack") + " ");
-    p_window.append_bold(this.name);
+    p_window.appendBold(tm.getText("padstack") + " ");
+    p_window.appendBold(this.name);
     for (int i = 0; i < shapes.length; i++) {
       if (shapes[i] != null) {
         p_window.newline();

@@ -23,9 +23,9 @@ public class DesignRulesCheckerTest extends RoutingFixtureTest {
   }
 
   @Test
-  void test_DrcReport_Structure() {
+  void testDrcReportStructure() {
     // Create a simple routing job with a DSN file
-    RoutingJob job = GetRoutingJob("Issue555-BBD_Mars-64.dsn");
+    RoutingJob job = getRoutingJob("Issue555-BBD_Mars-64.dsn");
 
     assertNotNull(job, "Job should not be null");
 
@@ -59,9 +59,9 @@ public class DesignRulesCheckerTest extends RoutingFixtureTest {
   }
 
   @Test
-  void test_DrcReport_JsonFormat() {
+  void testDrcReportJsonFormat() {
     // Create a simple routing job with a DSN file
-    RoutingJob job = GetRoutingJob("Issue555-BBD_Mars-64.dsn");
+    RoutingJob job = getRoutingJob("Issue555-BBD_Mars-64.dsn");
 
     assertNotNull(job, "Job should not be null");
 

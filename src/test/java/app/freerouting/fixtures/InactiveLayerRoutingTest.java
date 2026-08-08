@@ -134,15 +134,15 @@ public class InactiveLayerRoutingTest extends RoutingFixtureTest {
 
   @Test
   @Tag("slow")
-  void test_Issue_230_Wires_on_inactive_layers() {
+  void testIssue230WiresOnInactiveLayers() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:05:00");
 
     // Get a routing job
-    job = GetRoutingJob("Issue230-CNH_Functional_Tester_1.dsn", testingSettings);
+    job = getRoutingJob("Issue230-CNH_Functional_Tester_1.dsn", testingSettings);
 
     // Run the job
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     // --- Timing, pass count, and routing quality ---
     assertRoutingResult(job, "Issue230-CNH_Functional_Tester_1.dsn")
@@ -157,8 +157,8 @@ public class InactiveLayerRoutingTest extends RoutingFixtureTest {
     // The router MUST NOT place any traces on the inactive power-plane layers In1.Cu or In2.Cu,
     // regardless of the configured via cost. This was the confirmed root cause of Issue #230.
     long tracesOnPowerLayers =
-        job.board.get_traces().stream()
-            .filter(t -> t.get_layer() == 1 || t.get_layer() == 2)
+        job.board.getTraces().stream()
+            .filter(t -> t.getLayer() == 1 || t.getLayer() == 2)
             .count();
     assertEquals(
         0L,

@@ -113,7 +113,7 @@ public class DestinationDistance {
   }
 
   public double calculate(FloatPoint p_point, int p_layer) {
-    return calculate(p_point.bounding_box(), p_layer);
+    return calculate(p_point.boundingBox(), p_layer);
   }
 
   public double calculate(IntBox p_box, int p_layer) {
@@ -220,7 +220,7 @@ public class DestinationDistance {
 
       if (!componentSideBoxIsEmpty) {
         result =
-            p_box.weighted_distance(
+            p_box.weightedDistance(
                 componentSideBox, traceCosts[0].horizontal, traceCosts[0].vertical);
       }
 
@@ -298,7 +298,7 @@ public class DestinationDistance {
 
       if (!solderSideBoxIsEmpty) {
         result =
-            p_box.weighted_distance(
+            p_box.weightedDistance(
                 solderSideBox, traceCosts[p_layer].horizontal, traceCosts[p_layer].vertical);
       }
 
@@ -353,7 +353,7 @@ public class DestinationDistance {
 
     if (!innerSideBoxIsEmpty) {
       result =
-          p_box.weighted_distance(
+          p_box.weightedDistance(
               innerSideBox, traceCosts[p_layer].horizontal, traceCosts[p_layer].vertical);
     }
 
@@ -379,7 +379,7 @@ public class DestinationDistance {
     return Math.min(result, tmpDistance);
   }
 
-  public double calculate_cheap_distance(IntBox p_box, int p_layer) {
+  public double calculateCheapDistance(IntBox p_box, int p_layer) {
     double minNormalViaCostSave = minNormalViaCost;
 
     minNormalViaCost = minCheapViaCost;

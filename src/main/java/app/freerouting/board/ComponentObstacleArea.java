@@ -45,60 +45,60 @@ public class ComponentObstacleArea extends ObstacleArea {
   @Override
   public Item copy(int p_id_no) {
     return new ComponentObstacleArea(
-        get_relative_area(),
-        get_layer(),
-        get_translation(),
-        get_rotation_in_degree(),
-        get_side_changed(),
-        clearance_class_no(),
+        getRelativeArea(),
+        getLayer(),
+        getTranslation(),
+        getRotationInDegree(),
+        getSideChanged(),
+        clearanceClassNo(),
         p_id_no,
-        get_component_no(),
+        getComponentNo(),
         this.name,
-        get_fixed_state(),
+        getFixedState(),
         board);
   }
 
   @Override
-  public boolean is_obstacle(Item p_other) {
+  public boolean isObstacle(Item p_other) {
     return p_other != this
         && p_other instanceof ComponentObstacleArea
-        && p_other.get_component_no() != this.get_component_no();
+        && p_other.getComponentNo() != this.getComponentNo();
   }
 
   @Override
-  public boolean is_trace_obstacle(int p_net_no) {
+  public boolean isTraceObstacle(int p_net_no) {
     return false;
   }
 
   @Override
-  public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
-    if (!this.is_selected_by_fixed_filter(p_filter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter p_filter) {
+    if (!this.isSelectedByFixedFilter(p_filter)) {
       return false;
     }
-    return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.COMPONENT_KEEPOUT);
+    return p_filter.isSelected(ItemSelectionFilter.SelectableChoices.COMPONENT_KEEPOUT);
   }
 
-  public boolean is_front() {
-    Component component = board.components.get(this.get_component_no());
-    return component == null || component.placed_on_front();
+  public boolean isFront() {
+    Component component = board.components.get(this.getComponentNo());
+    return component == null || component.placedOnFront();
   }
 
   @Override
-  public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
+  public Color[] getDrawColors(GraphicsContext p_graphics_context) {
     Color[] colorArr = new Color[this.board.layerStructure.arr.length];
-    Color frontDrawColor = p_graphics_context.otherColorTable.get_courtyard_color(true);
+    Color frontDrawColor = p_graphics_context.otherColorTable.getCourtyardColor(true);
     for (int i = 0; i < colorArr.length - 1; i++) {
       colorArr[i] = frontDrawColor;
     }
     if (colorArr.length > 1) {
-      colorArr[colorArr.length - 1] = p_graphics_context.otherColorTable.get_courtyard_color(false);
+      colorArr[colorArr.length - 1] = p_graphics_context.otherColorTable.getCourtyardColor(false);
     }
     return colorArr;
   }
 
   @Override
-  public double get_draw_intensity(GraphicsContext p_graphics_context) {
-    return p_graphics_context.get_component_outline_color_intensity();
+  public double getDrawIntensity(GraphicsContext p_graphics_context) {
+    return p_graphics_context.getComponentOutlineColorIntensity();
   }
 
   @Override
@@ -107,27 +107,27 @@ public class ComponentObstacleArea extends ObstacleArea {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
     }
-    int virtualLayerIdx = this.is_front() ? 2 : 3;
-    double virtualVisibility = p_graphics_context.get_virtual_layer_visibility(virtualLayerIdx);
+    int virtualLayerIdx = this.isFront() ? 2 : 3;
+    double virtualVisibility = p_graphics_context.getVirtualLayerVisibility(virtualLayerIdx);
     if (virtualVisibility <= 0) {
       return;
     }
 
-    Color color = p_color_arr[this.get_layer()];
+    Color color = p_color_arr[this.getLayer()];
     double intensity = virtualVisibility * p_intensity;
 
-    double drawWidth = Math.min(this.board.communication.get_resolution(Unit.MIL), 100);
-    p_graphics_context.draw_boundary(this.get_area(), drawWidth, color, p_g, intensity);
+    double drawWidth = Math.min(this.board.communication.getResolution(Unit.MIL), 100);
+    p_graphics_context.drawBoundary(this.getArea(), drawWidth, color, p_g, intensity);
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    p_window.append_bold(tm.getText("component_keepout"));
-    this.print_shape_info(p_window, p_locale);
-    this.print_clearance_info(p_window, p_locale);
-    this.print_clearance_violation_info(p_window, p_locale);
+    p_window.appendBold(tm.getText("component_keepout"));
+    this.printShapeInfo(p_window, p_locale);
+    this.printClearanceInfo(p_window, p_locale);
+    this.printClearanceViolationInfo(p_window, p_locale);
     p_window.newline();
   }
 }

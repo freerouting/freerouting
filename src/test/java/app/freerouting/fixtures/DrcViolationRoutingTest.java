@@ -13,7 +13,7 @@ public class DrcViolationRoutingTest extends RoutingFixtureTest {
 
   private void assertDrcOnLoadedBoard(
       String filename, int expectedUnconnected, int expectedViolations) throws Exception {
-    RoutingJob job = GetRoutingJob(filename, null);
+    RoutingJob job = getRoutingJob(filename, null);
 
     // Read the board without routing it
     ByteArrayInputStream inputStream = new ByteArrayInputStream(job.input.getData().readAllBytes());
@@ -51,18 +51,18 @@ public class DrcViolationRoutingTest extends RoutingFixtureTest {
   // actual geometric reality for these specific .dsn files.
 
   @Test
-  public void test_Issue_575_6_track_and_1_hole_clearance_violations() throws Exception {
+  public void testIssue5756TrackAnd1HoleClearanceViolations() throws Exception {
     assertDrcOnLoadedBoard(
         "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn", 3, 76);
   }
 
   @Test
-  public void test_Issue_575_4_hole_clearance_violations() throws Exception {
+  public void testIssue5754HoleClearanceViolations() throws Exception {
     assertDrcOnLoadedBoard("Issue575-drc_dev-board_4_hole_clearance_violations.dsn", 9, 2);
   }
 
   @Test
-  public void test_Issue_575_7_unconnected_items() throws Exception {
+  public void testIssue5757UnconnectedItems() throws Exception {
     assertDrcOnLoadedBoard("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn", 145, 0);
   }
 }

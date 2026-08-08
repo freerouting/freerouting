@@ -51,17 +51,17 @@ public class NetClass {
     maxTraceLength = p_max_trace_length;
   }
 
-  public static NetClass read_scope(IJFlexScanner p_scanner) {
+  public static NetClass readScope(IJFlexScanner p_scanner) {
 
     try {
       // read the class name
       p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      String className = p_scanner.next_string();
+      String className = p_scanner.nextString();
 
       Collection<String> netList = new LinkedList<>();
       boolean rulesMissing = false;
       // read the nets belonging to the class
-      String[] netsInTheClass = p_scanner.next_string_list();
+      String[] netsInTheClass = p_scanner.nextStringList();
       netList.addAll(List.of(netsInTheClass));
 
       Collection<Rule> rules = new LinkedList<>();
@@ -75,15 +75,15 @@ public class NetClass {
       double minTraceLength = 0;
       double maxTraceLength = 0;
 
-      Object nextToken = p_scanner.next_token();
+      Object nextToken = p_scanner.nextToken();
       if (!rulesMissing) {
         Object prevToken = nextToken;
         for (; ; ) {
-          nextToken = p_scanner.next_token();
+          nextToken = p_scanner.nextToken();
           if (nextToken == null) {
             FRLogger.warn(
                 "NetClass.read_scope: unexpected end of file at '"
-                    + p_scanner.get_scope_identifier()
+                    + p_scanner.getScopeIdentifier()
                     + "'");
             return null;
           }
@@ -93,13 +93,13 @@ public class NetClass {
           }
           if (prevToken == Keyword.OPEN_BRACKET) {
             if (nextToken == Keyword.RULE) {
-              rules.addAll(Rule.read_scope(p_scanner));
+              rules.addAll(Rule.readScope(p_scanner));
             } else if (nextToken == Keyword.LAYER_RULE) {
-              layerRules.add(Rule.read_layer_rule_scope(p_scanner));
+              layerRules.add(Rule.readLayerRuleScope(p_scanner));
             } else if (nextToken == Keyword.VIA_RULE) {
-              viaRule = DsnFile.read_string_scope(p_scanner);
+              viaRule = DsnFile.readStringScope(p_scanner);
             } else if (nextToken == Keyword.CIRCUIT) {
-              Circuit.ReadScopeResult currRule = Circuit.read_scope(p_scanner);
+              Circuit.ReadScopeResult currRule = Circuit.readScope(p_scanner);
               if (currRule != null) {
                 maxTraceLength = currRule.maxLength;
                 minTraceLength = currRule.minLength;
@@ -107,16 +107,16 @@ public class NetClass {
                 useLayer.addAll(currRule.useLayer);
               }
             } else if (nextToken == Keyword.CLEARANCE_CLASS) {
-              traceClearanceClass = DsnFile.read_string_scope(p_scanner);
+              traceClearanceClass = DsnFile.readStringScope(p_scanner);
               if (traceClearanceClass == null) {
                 return null;
               }
             } else if (nextToken == Keyword.SHOVE_FIXED) {
-              shoveFixed = DsnFile.read_on_off_scope(p_scanner);
+              shoveFixed = DsnFile.readOnOffScope(p_scanner);
             } else if (nextToken == Keyword.PULL_TIGHT) {
-              pullTight = DsnFile.read_on_off_scope(p_scanner);
+              pullTight = DsnFile.readOnOffScope(p_scanner);
             } else {
-              ScopeKeyword.skip_scope(p_scanner);
+              ScopeKeyword.skipScope(p_scanner);
             }
           }
           prevToken = nextToken;
@@ -141,18 +141,18 @@ public class NetClass {
     }
   }
 
-  public static ClassClass read_class_class_scope(IJFlexScanner p_scanner) {
+  public static ClassClass readClassClassScope(IJFlexScanner p_scanner) {
     try {
       Collection<String> classes = new LinkedList<>();
       Collection<Rule> rules = new LinkedList<>();
       Collection<Rule.LayerRule> layerRules = new LinkedList<>();
       Object prevToken = null;
       for (; ; ) {
-        Object nextToken = p_scanner.next_token();
+        Object nextToken = p_scanner.nextToken();
         if (nextToken == null) {
           FRLogger.warn(
               "ClassClass.read_scope: unexpected end of file at '"
-                  + p_scanner.get_scope_identifier()
+                  + p_scanner.getScopeIdentifier()
                   + "'");
           return null;
         }
@@ -162,11 +162,11 @@ public class NetClass {
         }
         if (prevToken == Keyword.OPEN_BRACKET) {
           if (nextToken == Keyword.CLASSES) {
-            classes.addAll(Arrays.stream(DsnFile.read_string_list_scope(p_scanner)).toList());
+            classes.addAll(Arrays.stream(DsnFile.readStringListScope(p_scanner)).toList());
           } else if (nextToken == Keyword.RULE) {
-            rules.addAll(Rule.read_scope(p_scanner));
+            rules.addAll(Rule.readScope(p_scanner));
           } else if (nextToken == Keyword.LAYER_RULE) {
-            layerRules.add(Rule.read_layer_rule_scope(p_scanner));
+            layerRules.add(Rule.readLayerRuleScope(p_scanner));
           }
         }
         prevToken = nextToken;

@@ -48,7 +48,7 @@ public abstract class ColorTableModel extends AbstractTableModel {
     return getValueAt(0, p_c).getClass();
   }
 
-  protected void write_object(ObjectOutputStream p_stream) throws IOException {
+  protected void writeObject(ObjectOutputStream p_stream) throws IOException {
     p_stream.writeObject(this.data);
     p_stream.writeObject(this.locale);
   }

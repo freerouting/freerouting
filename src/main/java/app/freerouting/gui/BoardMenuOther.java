@@ -18,7 +18,7 @@ public final class BoardMenuOther extends JMenu {
   }
 
   /** Returns a new other menu for the board frame. */
-  public static BoardMenuOther get_instance(BoardFrame p_board_frame) {
+  public static BoardMenuOther getInstance(BoardFrame p_board_frame) {
     final BoardMenuOther otherMenu = new BoardMenuOther(p_board_frame);
 
     otherMenu.setText(otherMenu.tm.getText("other"));
@@ -30,19 +30,19 @@ public final class BoardMenuOther extends JMenu {
         otherMenu.tm.getText("delete_all_tracks_and_vias_tooltip"));
     otherDeleteAllTracksMenuitem.addActionListener(
         _ -> {
-          RoutingBoard board = otherMenu.boardFrame.boardPanel.boardHandling.get_routing_board();
+          RoutingBoard board = otherMenu.boardFrame.boardPanel.boardHandling.getRoutingBoard();
           // delete all tracks and vias
-          board.delete_all_tracks_and_vias();
+          board.deleteAllTracksAndVias();
           // unfill conduction areas
-          board.unfill_conduction_areas();
+          board.unfillConductionAreas();
           // update the board
           otherMenu.boardFrame.boardPanel.boardHandling.replaceRoutingBoard(board);
           // create a deep copy of the routing board
-          board = otherMenu.boardFrame.boardPanel.boardHandling.get_routing_board().deepCopy();
+          board = otherMenu.boardFrame.boardPanel.boardHandling.getRoutingBoard().deepCopy();
           // update the board again
           otherMenu.boardFrame.boardPanel.boardHandling.replaceRoutingBoard(board);
           // create ratsnest
-          otherMenu.boardFrame.boardPanel.boardHandling.create_ratsnest();
+          otherMenu.boardFrame.boardPanel.boardHandling.createRatsnest();
           // redraw the board
           otherMenu.boardFrame.boardPanel.boardHandling.repaint();
         });
