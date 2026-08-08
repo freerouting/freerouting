@@ -1611,7 +1611,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    */
   public synchronized RoutingBoard deepCopy() {
     ObjectOutputStream oos = null;
-    ObjectInputStream ois = null;
+    ObjectInputStream objectInputStream = null;
 
     try {
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -1621,9 +1621,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       oos.flush();
 
       ByteArrayInputStream bin = new ByteArrayInputStream(bos.toByteArray());
-      ois = new ObjectInputStream(bin);
+      objectInputStream = new ObjectInputStream(bin);
 
-      RoutingBoard boardCopy = (RoutingBoard) ois.readObject();
+      RoutingBoard boardCopy = (RoutingBoard) objectInputStream.readObject();
 
       // boardCopy.clear_autoroute_database();
       boardCopy.clearAllItemTemporaryAutorouteData();
@@ -1638,8 +1638,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         if (oos != null) {
           oos.close();
         }
-        if (ois != null) {
-          ois.close();
+        if (objectInputStream != null) {
+          objectInputStream.close();
         }
       } catch (Exception _) {
       }

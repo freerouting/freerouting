@@ -87,8 +87,8 @@ public final class DsnFile {
         continue;
       }
       for (int i = 0; i < currConductionArea.netCount(); i++) {
-        Net currNet = routingBoard.rules.nets.get(currConductionArea.getNetNo(i));
-        currNet.setContainsPlane(true);
+        Net currentNet = routingBoard.rules.nets.get(currConductionArea.getNetNo(i));
+        currentNet.setContainsPlane(true);
         nothingChanged = false;
       }
       changedLayerArr[layerNo] = true;

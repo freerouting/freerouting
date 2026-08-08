@@ -118,15 +118,15 @@ public class RouteState extends InteractiveState {
       return null;
     }
 
-    Net currNet = routingBoard.rules.nets.get(routeNetNoArr[0]);
-    if (currNet == null) {
+    Net currentNet = routingBoard.rules.nets.get(routeNetNoArr[0]);
+    if (currentNet == null) {
       return null;
     }
     // Switch to stitch mode for nets, which are shove fixed.
     boolean isStitchRoute =
         pBoardHandling.getInteractiveSettings().getIsStitchRoute()
-            || currNet.getNetClass().isShoveFixed()
-            || !currNet.getNetClass().getPullTight();
+            || currentNet.getNetClass().isShoveFixed()
+            || !currentNet.getNetClass().getPullTight();
     routingBoard.generateSnapshot();
     RouteState newInstance;
     if (isStitchRoute) {
@@ -441,8 +441,8 @@ public class RouteState extends InteractiveState {
   @Override
   public void displayDefaultMessage() {
     if (route != null) {
-      Net currNet = hdlg.getRoutingBoard().rules.nets.get(route.netNoArr[0]);
-      hdlg.screenMessages.setStatusMessage(tm.getText("routing_net_message", currNet.name));
+      Net currentNet = hdlg.getRoutingBoard().rules.nets.get(route.netNoArr[0]);
+      hdlg.screenMessages.setStatusMessage(tm.getText("routing_net_message", currentNet.name));
     }
   }
 }

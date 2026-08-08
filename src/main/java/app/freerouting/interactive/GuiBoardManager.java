@@ -841,11 +841,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (interactiveSettings.getManualRuleSelection()) {
       return true;
     }
-    Net currNet = this.board.rules.nets.get(pNetNo);
-    if (currNet == null) {
+    Net currentNet = this.board.rules.nets.get(pNetNo);
+    if (currentNet == null) {
       return true;
     }
-    NetClass currNetClass = currNet.getNetClass();
+    NetClass currNetClass = currentNet.getNetClass();
     if (currNetClass == null) {
       return true;
     }
@@ -2546,14 +2546,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * is in read-only mode.
    *
    * @param pLocation the location in screen coordinates to search for a swappable pin
-   * @see MenuState#swapPin(FloatPoint)
+   * @see MenuState#swapPins(FloatPoint)
    */
-  public void swapPin(Point2D pLocation) {
+  public void swapPins(Point2D pLocation) {
     if (boardIsReadOnly || !(this.interactiveState instanceof MenuState)) {
       return;
     }
     FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(pLocation);
-    InteractiveState returnState = ((MenuState) interactiveState).swapPin(location);
+    InteractiveState returnState = ((MenuState) interactiveState).swapPins(location);
     setInteractiveState(returnState);
   }
 

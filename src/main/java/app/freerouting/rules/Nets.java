@@ -40,10 +40,10 @@ public class Nets implements Serializable {
 
   /** Returns the net with the input name and subnetNumber , or null, if no such net exists. */
   public Net get(String pName, int pSubnetNumber) {
-    for (Net currNet : netArr) {
-      if (currNet != null && currNet.name.equalsIgnoreCase(pName)) {
-        if (currNet.subnetNumber == pSubnetNumber) {
-          return currNet;
+    for (Net currentNet : netArr) {
+      if (currentNet != null && currentNet.name.equalsIgnoreCase(pName)) {
+        if (currentNet.subnetNumber == pSubnetNumber) {
+          return currentNet;
         }
       }
     }
@@ -53,9 +53,9 @@ public class Nets implements Serializable {
   /** Returns all subnets with the input name. */
   public Collection<Net> get(String pName) {
     Collection<Net> result = new LinkedList<>();
-    for (Net currNet : netArr) {
-      if (currNet != null && currNet.name.equalsIgnoreCase(pName)) {
-        result.add(currNet);
+    for (Net currentNet : netArr) {
+      if (currentNet != null && currentNet.name.equalsIgnoreCase(pName)) {
+        result.add(currentNet);
       }
     }
     return result;

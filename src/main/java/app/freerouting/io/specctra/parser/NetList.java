@@ -45,10 +45,10 @@ public class NetList {
     Collection<Net> result = new LinkedList<>();
     Net.Pin searchPin = new Net.Pin(pComponentName, pPinName);
     Collection<Net> netList = nets.values();
-    for (Net currNet : netList) {
-      Set<Net.Pin> netPins = currNet.getPins();
+    for (Net currentNet : netList) {
+      Set<Net.Pin> netPins = currentNet.getPins();
       if (netPins != null && netPins.contains(searchPin)) {
-        result.add(currNet);
+        result.add(currentNet);
       }
     }
     return result;

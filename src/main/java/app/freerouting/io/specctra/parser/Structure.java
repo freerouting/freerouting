@@ -534,17 +534,17 @@ public class Structure extends ScopeKeyword {
             pBoard.rules.nets.add(newNet.id.name, newNet.id.subnetNumber, true);
           }
         }
-        app.freerouting.rules.Net currNet =
+        app.freerouting.rules.Net currentNet =
             pBoard.rules.nets.get(currNetId.name, currNetId.subnetNumber);
         {
-          if (currNet == null) {
+          if (currentNet == null) {
             FRLogger.warn(
                 "Structure.insert_missing_power_planes: net not found at '" + currNetId.name + "'");
             continue;
           }
         }
         int[] netNumbers = new int[1];
-        netNumbers[0] = currNet.netNumber;
+        netNumbers[0] = currentNet.netNumber;
         pBoard.insertConductionArea(
             pBoard.boundingBox,
             currLayer.no,
@@ -1033,8 +1033,8 @@ public class Structure extends ScopeKeyword {
           board.rules.nets.add(newNet.id.name, newNet.id.subnetNumber, true);
         }
       }
-      app.freerouting.rules.Net currNet = board.rules.nets.get(planeInfo.netName, 1);
-      if (currNet == null) {
+      app.freerouting.rules.Net currentNet = board.rules.nets.get(planeInfo.netName, 1);
+      if (currentNet == null) {
         FRLogger.warn(
             "Plane.read_scope: net not found at '" + pPar.scanner.getScopeIdentifier() + "'");
         continue;
@@ -1055,13 +1055,13 @@ public class Structure extends ScopeKeyword {
           }
         } else {
           clearanceClassNo =
-              currNet
+              currentNet
                   .getNetClass()
                   .defaultItemClearanceClasses
                   .get(DefaultItemClearanceClasses.ItemClass.AREA);
         }
         int[] netNumbers = new int[1];
-        netNumbers[0] = currNet.netNumber;
+        netNumbers[0] = currentNet.netNumber;
         board.insertConductionArea(
             planeArea, currLayer.no, netNumbers, clearanceClassNo, false, FixedState.SYSTEM_FIXED);
       } else {

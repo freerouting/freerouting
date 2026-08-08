@@ -79,11 +79,11 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     if (pItem instanceof Pin) {
       result = tm.getText("pin");
     } else if (pItem instanceof Via via) {
-      Net currNet = pItem.board.rules.nets.get(via.getNetNo(0));
-      result = tm.getText("via_with_net_label", currNet.name);
+      Net currentNet = pItem.board.rules.nets.get(via.getNetNo(0));
+      result = tm.getText("via_with_net_label", currentNet.name);
     } else if (pItem instanceof Trace trace) {
-      Net currNet = pItem.board.rules.nets.get(trace.getNetNo(0));
-      result = tm.getText("trace_with_net_label", currNet.name);
+      Net currentNet = pItem.board.rules.nets.get(trace.getNetNo(0));
+      result = tm.getText("trace_with_net_label", currentNet.name);
     } else if (pItem instanceof ConductionArea) {
       result = tm.getText("conductionArea");
     } else if (pItem instanceof ObstacleArea) {

@@ -43,7 +43,7 @@ public class MenuState extends InteractiveState {
     return result;
   }
 
-  public InteractiveState swapPin(FloatPoint pLocation) {
+  public InteractiveState swapPins(FloatPoint pLocation) {
     ItemSelectionFilter selectionFilter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
     Collection<Item> pickedItems = hdlg.pickItems(pLocation, selectionFilter);
@@ -84,7 +84,7 @@ public class MenuState extends InteractiveState {
           currReturnState = RouteState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
       case 'u' -> hdlg.undo();
       case 'v' -> hdlg.toggleClearanceViolations();
-      case 'w' -> currReturnState = swapPin(hdlg.getCurrentMousePosition());
+      case 'w' -> currReturnState = swapPins(hdlg.getCurrentMousePosition());
       case '+' -> {
         // increase the current layer to the next signal layer
         LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;

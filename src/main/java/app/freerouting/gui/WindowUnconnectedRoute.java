@@ -56,10 +56,10 @@ public class WindowUnconnectedRoute extends CleanupWindows {
       if (!terminalItemFound) {
         // We have found unconnected route
         if (currItem.netCount() == 1) {
-          Net currNet = routingBoard.rules.nets.get(currItem.getNetNo(0));
-          if (currNet != null) {
+          Net currentNet = routingBoard.rules.nets.get(currItem.getNetNo(0));
+          if (currentNet != null) {
             UnconnectedRouteInfo currUnconnectedRouteInfo =
-                new UnconnectedRouteInfo(currNet, currConnectedSet);
+                new UnconnectedRouteInfo(currentNet, currConnectedSet);
             unconnectedRouteInfoSet.add(currUnconnectedRouteInfo);
           }
         } else {

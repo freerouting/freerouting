@@ -187,7 +187,7 @@ public class NetIncompletes {
     // the same
     // connected set
     // or whose connected sets have already an airline.
-    Net currNet = pBoard.rules.nets.get(pNetNo);
+    Net currentNet = pBoard.rules.nets.get(pNetNo);
     for (Edge currEdge : sortedEdges) {
       if (currEdge.fromItem.connectedSet == currEdge.toItem.connectedSet) {
         continue; // airline exists already
@@ -195,7 +195,7 @@ public class NetIncompletes {
 
       this.incompletes.add(
           new AirLine(
-              currNet,
+              currentNet,
               currEdge.fromItem.item,
               currEdge.fromCorner,
               currEdge.toItem.item,

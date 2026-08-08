@@ -1029,7 +1029,7 @@ public class BoardPanel extends JPanel {
   private class ColorTableListener implements TableModelListener {
 
     @Override
-    public void tableChanged(TableModelEvent pEvent) {
+    public void tableChanged(TableModelEvent pChangeEvent) {
       // redisplay board because some colors have changed.
       setBackground(boardHandling.graphicsContext.getBackgroundColor());
       repaint();

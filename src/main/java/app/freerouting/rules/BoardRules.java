@@ -72,8 +72,8 @@ public class BoardRules implements Serializable {
 
   /** Returns the trace halfwidth used for routing with the input net on the input layer. */
   public int getTraceHalfWidth(int pNetNo, int pLayer) {
-    Net currNet = nets.get(pNetNo);
-    return currNet.getNetClass().getTraceHalfWidth(pLayer);
+    Net currentNet = nets.get(pNetNo);
+    return currentNet.getNetClass().getTraceHalfWidth(pLayer);
   }
 
   /**

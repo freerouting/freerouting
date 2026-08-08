@@ -66,7 +66,7 @@ public final class TutorialBoardPalette {
     graphicsContext.colorIntensityTable.setValue(
         ColorIntensityTable.ObjectNames.KEEPOUTS.ordinal(), 0.35);
     graphicsContext.colorIntensityTable.setValue(
-        ColorIntensityTable.ObjectNames.HILIGHT.ordinal(), 1.0);
+        ColorIntensityTable.ObjectNames.HIGHLIGHT.ordinal(), 1.0);
     graphicsContext.colorIntensityTable.setValue(
         ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal(), 1.0);
   }

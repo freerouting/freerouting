@@ -311,9 +311,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     Set<Item> visitedItems = new TreeSet<>(startContacts);
     boolean ignoreAreas = false;
     if (this.netNoArr.length > 0) {
-      Net currNet = this.board.rules.nets.get(this.netNoArr[0]);
-      if (currNet != null && currNet.getNetClass() != null) {
-        ignoreAreas = currNet.getNetClass().getIgnoreCyclesWithAreas();
+      Net currentNet = this.board.rules.nets.get(this.netNoArr[0]);
+      if (currentNet != null && currentNet.getNetClass() != null) {
+        ignoreAreas = currentNet.getNetClass().getIgnoreCyclesWithAreas();
       }
     }
     for (Item currContact : startContacts) {

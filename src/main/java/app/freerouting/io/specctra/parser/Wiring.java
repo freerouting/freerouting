@@ -151,7 +151,7 @@ public class Wiring extends ScopeKeyword {
       FRLogger.warn("Plane.write_scope: unexpected net count");
       return;
     }
-    app.freerouting.rules.Net currNet = pPar.board.rules.nets.get(pConductionArea.getNetNo(0));
+    app.freerouting.rules.Net currentNet = pPar.board.rules.nets.get(pConductionArea.getNetNo(0));
     Area currArea = pConductionArea.getArea();
     int layerNo = pConductionArea.getLayer();
     app.freerouting.board.Layer boardLayer = pPar.board.layerStructure.arr[layerNo];
@@ -175,7 +175,7 @@ public class Wiring extends ScopeKeyword {
       Shape dsnHole = pPar.coordinateTransform.boardToDsn(holes[i], conductionLayer);
       dsnHole.writeHoleScope(pPar.file, pPar.identifierType);
     }
-    writeNet(currNet, pPar.file, pPar.identifierType);
+    writeNet(currentNet, pPar.file, pPar.identifierType);
     Rule.writeItemClearanceClass(
         pPar.board.rules.clearanceMatrix.getName(pConductionArea.clearanceClassNo()),
         pPar.file,
@@ -423,9 +423,9 @@ public class Wiring extends ScopeKeyword {
     Collection<app.freerouting.rules.Net> foundNets = getSubnets(netId, board.rules);
     int[] netNoArr = new int[foundNets.size()];
     int currIndex = 0;
-    for (app.freerouting.rules.Net currNet : foundNets) {
-      netNoArr[currIndex] = currNet.netNumber;
-      netClass = currNet.getNetClass();
+    for (app.freerouting.rules.Net currentNet : foundNets) {
+      netNoArr[currIndex] = currentNet.netNumber;
+      netClass = currentNet.getNetClass();
       ++currIndex;
     }
     int clearanceClassNo = -1;
@@ -668,9 +668,9 @@ public class Wiring extends ScopeKeyword {
       }
       int[] netNoArr = new int[foundNets.size()];
       int currIndex = 0;
-      for (app.freerouting.rules.Net currNet : foundNets) {
-        netNoArr[currIndex] = currNet.netNumber;
-        netClass = currNet.getNetClass();
+      for (app.freerouting.rules.Net currentNet : foundNets) {
+        netNoArr[currIndex] = currentNet.netNumber;
+        netClass = currentNet.getNetClass();
       }
       int clearanceClassNo = -1;
       if (clearanceClassName != null) {

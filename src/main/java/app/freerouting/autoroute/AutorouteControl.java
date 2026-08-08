@@ -187,10 +187,10 @@ public class AutorouteControl {
 
   private void initNet(int pNetNo, RoutingBoard pBoard, int pViaCosts) {
     netNo = pNetNo;
-    Net currNet = pBoard.rules.nets.get(pNetNo);
+    Net currentNet = pBoard.rules.nets.get(pNetNo);
     NetClass currNetClass;
-    if (currNet != null) {
-      currNetClass = currNet.getNetClass();
+    if (currentNet != null) {
+      currNetClass = currentNet.getNetClass();
       traceClearanceClassNo = currNetClass.getTraceClearanceClass();
       viaRule = currNetClass.getViaRule();
     } else {

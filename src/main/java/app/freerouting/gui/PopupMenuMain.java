@@ -96,7 +96,7 @@ class PopupMenuMain extends PopupMenuDisplay {
       JMenuItem popupSwapPinMenuitem = new JMenuItem();
       popupSwapPinMenuitem.setText(tm.getText("swap_pin"));
       popupSwapPinMenuitem.addActionListener(
-          _ -> boardPanel.boardHandling.swapPin(boardPanel.rightButtonClickLocation));
+          _ -> boardPanel.boardHandling.swapPins(boardPanel.rightButtonClickLocation));
       popupSwapPinMenuitem.addActionListener(
           _ -> FRAnalytics.buttonClicked("popupSwapPinMenuitem", popupSwapPinMenuitem.getText()));
 

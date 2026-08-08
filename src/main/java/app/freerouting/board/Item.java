@@ -1064,8 +1064,8 @@ public abstract class Item
       if (i > 0) {
         sb.append("<br>");
       }
-      Net currNet = board.rules.nets.get(this.getNetNo(i));
-      sb.append(tm.getText("net_hover_info", currNet.name));
+      Net currentNet = board.rules.nets.get(this.getNetNo(i));
+      sb.append(tm.getText("net_hover_info", currentNet.name));
     }
     return sb.toString();
   }
@@ -1076,8 +1076,8 @@ public abstract class Item
 
     for (int i = 0; i < this.netCount(); i++) {
       pWindow.append(", " + tm.getText("net") + " ");
-      Net currNet = board.rules.nets.get(this.getNetNo(i));
-      pWindow.append(currNet.name, tm.getText("net_info"), currNet);
+      Net currentNet = board.rules.nets.get(this.getNetNo(i));
+      pWindow.append(currentNet.name, tm.getText("net_info"), currentNet);
     }
   }
 

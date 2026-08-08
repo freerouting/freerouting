@@ -465,8 +465,8 @@ public class Network extends ScopeKeyword {
     }
     for (String currNetName : pClass.netList) {
       Collection<app.freerouting.rules.Net> currNetList = pBoard.rules.nets.get(currNetName);
-      for (app.freerouting.rules.Net currNet : currNetList) {
-        currNet.setClass(boardNetClass);
+      for (app.freerouting.rules.Net currentNet : currNetList) {
+        currentNet.setClass(boardNetClass);
       }
     }
 

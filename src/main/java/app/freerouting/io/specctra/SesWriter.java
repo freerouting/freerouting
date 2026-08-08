@@ -347,11 +347,11 @@ public final class SesWriter {
       if (!headerWritten && (isWire || isVia || isConductionArea)) {
         file.startScope();
         file.write("net ");
-        Net currNet = board.rules.nets.get(netNo);
-        if (currNet == null) {
+        Net currentNet = board.rules.nets.get(netNo);
+        if (currentNet == null) {
           FRLogger.warn("SesWriter.writeNet: net not found");
         } else {
-          identifierType.write(currNet.name, file);
+          identifierType.write(currentNet.name, file);
         }
         headerWritten = true;
       }

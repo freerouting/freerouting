@@ -170,7 +170,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
       // Due to a Java system bug, the decimal comma in this table must be entered as a dot.
       JLabel bugLabel =
           new JLabel(
-              "Wegen eines Java-System-Bugs muss das Dezimalkomma in dieser Tabelle als Punkt eingegeben werden!");
+              "Due to a Java system bug, the decimal comma in this table must be entered as a dot!");
       result.add(bugLabel, BorderLayout.SOUTH);
     }
     return result;

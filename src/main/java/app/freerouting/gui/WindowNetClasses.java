@@ -216,7 +216,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       // Due to a Java system bug, the decimal comma in this table must be entered as a dot.
       JLabel bugLabel =
           new JLabel(
-              "Wegen eines Java-System-Bugs muss das Dezimalkomma in dieser Tabelle zur Zeit als Punkt eingegeben werden!");
+              "Due to a Java system bug, the decimal comma in this table must currently be entered as a dot!");
       this.centerPanel.add(bugLabel, BorderLayout.SOUTH);
     }
     this.mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -487,11 +487,11 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       Collection<Printable> containedNets = new LinkedList<>();
       int maxNetNo = boardRules.nets.maxNetNo();
       for (int i = 1; i <= maxNetNo; i++) {
-        Net currNet = boardRules.nets.get(i);
-        NetClass currNetClass = currNet.getNetClass();
+        Net currentNet = boardRules.nets.get(i);
+        NetClass currNetClass = currentNet.getNetClass();
         for (int j = 0; j < selectedClassArr.length; j++) {
           if (currNetClass == selectedClassArr[j]) {
-            containedNets.add(currNet);
+            containedNets.add(currentNet);
             break;
           }
         }
