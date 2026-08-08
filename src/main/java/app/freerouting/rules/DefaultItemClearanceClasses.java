@@ -12,27 +12,27 @@ public class DefaultItemClearanceClasses implements Serializable {
     this.setAll(1);
   }
 
-  public DefaultItemClearanceClasses(DefaultItemClearanceClasses p_classes) {
-    this.arr = p_classes.arr.clone();
+  public DefaultItemClearanceClasses(DefaultItemClearanceClasses pClasses) {
+    this.arr = pClasses.arr.clone();
   }
 
   /** Returns the number of the default clearance class for the input item class. */
-  public int get(ItemClass p_item_class) {
-    return this.arr[p_item_class.ordinal()];
+  public int get(ItemClass pItemClass) {
+    return this.arr[pItemClass.ordinal()];
   }
 
   /**
    * Sets the index of the default clearance class of the input item class in the clearance matrix
    * to p_index.
    */
-  public void set(ItemClass p_item_class, int p_index) {
-    this.arr[p_item_class.ordinal()] = p_index;
+  public void set(ItemClass pItemClass, int pIndex) {
+    this.arr[pItemClass.ordinal()] = pIndex;
   }
 
   /** Sets the indices of all default item clearance classes to p_index. */
-  public void setAll(int p_index) {
+  public void setAll(int pIndex) {
     for (int i = 1; i < this.arr.length; i++) {
-      arr[i] = p_index;
+      arr[i] = pIndex;
     }
   }
 

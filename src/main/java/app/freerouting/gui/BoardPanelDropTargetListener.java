@@ -35,10 +35,10 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
   /**
    * Creates a new drop target listener for the board panel.
    *
-   * @param p_board_panel The board panel to attach the drop target to
+   * @param pBoardPanel The board panel to attach the drop target to
    */
-  public BoardPanelDropTargetListener(BoardPanel p_board_panel) {
-    this.boardPanel = p_board_panel;
+  public BoardPanelDropTargetListener(BoardPanel pBoardPanel) {
+    this.boardPanel = pBoardPanel;
   }
 
   @Override
@@ -123,9 +123,9 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
    * Processes the list of dropped files. Only the first valid DSN or JSON file is loaded.
    * Additional valid files are logged for future multi-board support.
    *
-   * @param p_files The list of dropped files
+   * @param pFiles The list of dropped files
    */
-  private void processDroppedFiles(List<File> p_files) {
+  private void processDroppedFiles(List<File> pFiles) {
     boolean fileLoaded = false;
 
     if (boardPanel == null || boardPanel.boardFrame == null) {
@@ -133,8 +133,8 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
       return;
     }
 
-    for (int i = 0; i < p_files.size(); i++) {
-      File file = p_files.get(i);
+    for (int i = 0; i < pFiles.size(); i++) {
+      File file = pFiles.get(i);
 
       if (file == null) {
         continue;
@@ -198,14 +198,14 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
    * Sets the visual feedback state of the board panel. Changes the background to grayish to
    * indicate drop target.
    *
-   * @param p_active Whether the drag is active
+   * @param pActive Whether the drag is active
    */
-  private void setDragFeedback(boolean p_active) {
+  private void setDragFeedback(boolean pActive) {
     if (boardPanel == null) {
       return;
     }
 
-    if (p_active) {
+    if (pActive) {
       // Show ghosting overlay effect
       isGhostingActive = true;
       boardPanel.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));

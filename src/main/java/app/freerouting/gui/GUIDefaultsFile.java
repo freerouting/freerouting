@@ -28,14 +28,14 @@ public final class GUIDefaultsFile {
   private final IndentFileWriter outFile;
 
   private GUIDefaultsFile(
-      BoardFrame p_board_frame,
-      GuiBoardManager p_board_handling,
-      GUIDefaultsScanner p_scanner,
-      IndentFileWriter p_output_file) {
-    boardFrame = p_board_frame;
-    boardHandling = p_board_handling;
-    scanner = p_scanner;
-    outFile = p_output_file;
+      BoardFrame pBoardFrame,
+      GuiBoardManager pBoardHandling,
+      GUIDefaultsScanner pScanner,
+      IndentFileWriter pOutputFile) {
+    boardFrame = pBoardFrame;
+    boardHandling = pBoardHandling;
+    scanner = pScanner;
+    outFile = pOutputFile;
   }
 
   /**
@@ -43,14 +43,14 @@ public final class GUIDefaultsFile {
    * occurred.
    */
   public static boolean write(
-      BoardFrame p_board_frame, GuiBoardManager p_board_handling, OutputStream p_output_stream) {
-    if (p_output_stream == null) {
+      BoardFrame pBoardFrame, GuiBoardManager pBoardHandling, OutputStream pOutputStream) {
+    if (pOutputStream == null) {
       return false;
     }
 
-    IndentFileWriter outputFile = new IndentFileWriter(p_output_stream);
+    IndentFileWriter outputFile = new IndentFileWriter(pOutputStream);
 
-    GUIDefaultsFile result = new GUIDefaultsFile(p_board_frame, p_board_handling, null, outputFile);
+    GUIDefaultsFile result = new GUIDefaultsFile(pBoardFrame, pBoardHandling, null, outputFile);
     try {
       result.writeDefaultsScope();
     } catch (IOException _) {
@@ -72,13 +72,12 @@ public final class GUIDefaultsFile {
    * reading the file.
    */
   public static boolean read(
-      BoardFrame p_board_frame, GuiBoardManager p_board_handling, InputStream p_input_stream) {
-    if (p_input_stream == null) {
+      BoardFrame pBoardFrame, GuiBoardManager pBoardHandling, InputStream pInputStream) {
+    if (pInputStream == null) {
       return false;
     }
-    GUIDefaultsScanner scanner = new GUIDefaultsScanner(p_input_stream);
-    GUIDefaultsFile newInstance =
-        new GUIDefaultsFile(p_board_frame, p_board_handling, scanner, null);
+    GUIDefaultsScanner scanner = new GUIDefaultsScanner(pInputStream);
+    GUIDefaultsFile newInstance = new GUIDefaultsFile(pBoardFrame, pBoardHandling, scanner, null);
     boolean result;
     try {
       result = newInstance.readDefaultsScope();
@@ -90,12 +89,12 @@ public final class GUIDefaultsFile {
   }
 
   /** Skips the current scope. Returns false, if no legal scope was found. */
-  private static boolean skipScope(GUIDefaultsScanner p_scanner) {
+  private static boolean skipScope(GUIDefaultsScanner pScanner) {
     int openBrackedCount = 1;
     while (openBrackedCount > 0) {
       Object currToken;
       try {
-        currToken = p_scanner.nextToken();
+        currToken = pScanner.nextToken();
       } catch (Exception e) {
         FRLogger.error("GUIDefaultsFile.skip_scope: Error while scanning file", e);
         return false;
@@ -224,7 +223,7 @@ public final class GUIDefaultsFile {
     outFile.endScope();
   }
 
-  private boolean readFrameScope(Keyword p_frame) throws IOException {
+  private boolean readFrameScope(Keyword pFrame) throws IOException {
     boolean isVisible;
     Object nextToken = this.scanner.nextToken();
     if (nextToken == Keyword.VISIBLE) {
@@ -257,7 +256,7 @@ public final class GUIDefaultsFile {
       }
     }
     JFrame currFrame;
-    switch (p_frame) {
+    switch (pFrame) {
       case BOARD_FRAME -> currFrame = this.boardFrame;
       case COLOR_MANAGER -> currFrame = this.boardFrame.colorManager;
       case OBJECT_VISIBILITY, LAYER_VISIBILITY -> currFrame = this.boardFrame.visibilityWindow;
@@ -285,7 +284,7 @@ public final class GUIDefaultsFile {
     }
     if (currFrame != null) {
       currFrame.setVisible(isVisible);
-      if (p_frame == Keyword.BOARD_FRAME) {
+      if (pFrame == Keyword.BOARD_FRAME) {
         currFrame.setBounds(bounds);
       } else {
         // Set only the location.
@@ -309,35 +308,35 @@ public final class GUIDefaultsFile {
     return new Rectangle(coor[0], coor[1], coor[2], coor[3]);
   }
 
-  private void writeFrameScope(JFrame p_frame, String p_frame_name) throws IOException {
-    if (p_frame == null) {
+  private void writeFrameScope(JFrame pFrame, String pFrameName) throws IOException {
+    if (pFrame == null) {
       return;
     }
     outFile.startScope();
-    outFile.write(p_frame_name);
+    outFile.write(pFrameName);
     outFile.newLine();
-    if (p_frame.isVisible()) {
+    if (pFrame.isVisible()) {
       outFile.write("visible");
     } else {
       outFile.write("not_visible");
     }
-    writeBounds(p_frame.getBounds());
+    writeBounds(pFrame.getBounds());
     outFile.endScope();
   }
 
-  private void writeBounds(Rectangle p_bounds) throws IOException {
+  private void writeBounds(Rectangle pBounds) throws IOException {
     outFile.startScope();
     outFile.write("bounds");
     outFile.newLine();
-    int x = (int) p_bounds.getX();
+    int x = (int) pBounds.getX();
     outFile.write(String.valueOf(x));
-    int y = (int) p_bounds.getY();
+    int y = (int) pBounds.getY();
     outFile.write(" ");
     outFile.write(String.valueOf(y));
-    int width = (int) p_bounds.getWidth();
+    int width = (int) pBounds.getWidth();
     outFile.write(" ");
     outFile.write(String.valueOf(width));
-    int height = (int) p_bounds.getHeight();
+    int height = (int) pBounds.getHeight();
     outFile.write(" ");
     outFile.write(String.valueOf(height));
     outFile.endScope();
@@ -433,7 +432,7 @@ public final class GUIDefaultsFile {
     return true;
   }
 
-  private boolean readTraceColors(boolean p_fixed) throws IOException {
+  private boolean readTraceColors(boolean pFixed) throws IOException {
     double intensity = readColorIntensity();
     if (intensity < 0) {
       return false;
@@ -443,11 +442,11 @@ public final class GUIDefaultsFile {
     if (currColors.length < 1) {
       return false;
     }
-    this.boardHandling.graphicsContext.itemColorTable.setTraceColors(currColors, p_fixed);
+    this.boardHandling.graphicsContext.itemColorTable.setTraceColors(currColors, pFixed);
     return true;
   }
 
-  private boolean readViaColors(boolean p_fixed) throws IOException {
+  private boolean readViaColors(boolean pFixed) throws IOException {
     double intensity = readColorIntensity();
     if (intensity < 0) {
       return false;
@@ -457,7 +456,7 @@ public final class GUIDefaultsFile {
     if (currColors.length < 1) {
       return false;
     }
-    this.boardHandling.graphicsContext.itemColorTable.setViaColors(currColors, p_fixed);
+    this.boardHandling.graphicsContext.itemColorTable.setViaColors(currColors, pFixed);
     return true;
   }
 
@@ -617,12 +616,12 @@ public final class GUIDefaultsFile {
     return true;
   }
 
-  private boolean readComponentColor(boolean p_front) throws IOException {
+  private boolean readComponentColor(boolean pFront) throws IOException {
     Color currColor = readColor();
     if (currColor == null) {
       return false;
     }
-    this.boardHandling.graphicsContext.otherColorTable.setComponentColor(currColor, p_front);
+    this.boardHandling.graphicsContext.otherColorTable.setComponentColor(currColor, pFront);
     Object nextToken = this.scanner.nextToken();
     if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_component_color: closing bracket expected");
@@ -764,27 +763,27 @@ public final class GUIDefaultsFile {
     outFile.endScope();
   }
 
-  private void writeColorIntensity(double p_value) throws IOException {
+  private void writeColorIntensity(double pValue) throws IOException {
     outFile.write(" ");
-    float value = (float) p_value;
+    float value = (float) pValue;
     outFile.write(String.valueOf(value));
   }
 
-  private void writeColorScope(Color p_color) throws IOException {
+  private void writeColorScope(Color pColor) throws IOException {
     outFile.newLine();
-    int red = p_color.getRed();
+    int red = pColor.getRed();
     outFile.write(String.valueOf(red));
     outFile.write(" ");
-    int green = p_color.getGreen();
+    int green = pColor.getGreen();
     outFile.write(String.valueOf(green));
     outFile.write(" ");
-    int blue = p_color.getBlue();
+    int blue = pColor.getBlue();
     outFile.write(String.valueOf(blue));
   }
 
-  private void writeColor(Color[] p_colors) throws IOException {
-    for (int i = 0; i < p_colors.length; i++) {
-      writeColorScope(p_colors[i]);
+  private void writeColor(Color[] pColors) throws IOException {
+    for (int i = 0; i < pColors.length; i++) {
+      writeColorScope(pColors[i]);
     }
   }
 
@@ -1054,9 +1053,7 @@ public final class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_pull_tight_region_scope: closing bracket expected");
       return false;
     }
-    this.boardHandling
-        .getInteractiveSettings()
-        .setCurrentPullTightRegionWidth(pullTightRegion);
+    this.boardHandling.getInteractiveSettings().setCurrentPullTightRegionWidth(pullTightRegion);
     return true;
   }
 
@@ -1090,8 +1087,7 @@ public final class GUIDefaultsFile {
     outFile.startScope();
     outFile.write("pullTightAccuracy ");
     outFile.newLine();
-    int pullTightAccuracy =
-        this.boardHandling.getInteractiveSettings().getTracePullTightAccuracy();
+    int pullTightAccuracy = this.boardHandling.getInteractiveSettings().getTracePullTightAccuracy();
     outFile.write(String.valueOf(pullTightAccuracy));
     outFile.endScope();
   }

@@ -304,8 +304,8 @@ public class BoardPanel extends JPanel {
    * <p>The Robot may fail to initialize on some systems (e.g., headless environments), in which
    * case programmatic mouse movement will not be available.
    *
-   * @param p_screen_messages the message display component for status information
-   * @param p_board_frame the parent frame containing this panel
+   * @param pScreenMessages the message display component for status information
+   * @param pBoardFrame the parent frame containing this panel
    * @param globalSettings global application settings
    * @param routingJob the routing job context for this session
    * @param settingsMerger merger for combining different settings sources
@@ -313,19 +313,19 @@ public class BoardPanel extends JPanel {
    * @see Robot
    */
   public BoardPanel(
-      ScreenMessages p_screen_messages,
-      BoardFrame p_board_frame,
+      ScreenMessages pScreenMessages,
+      BoardFrame pBoardFrame,
       GlobalSettings globalSettings,
       RoutingJob routingJob,
       SettingsMerger settingsMerger) {
-    this.screenMessages = p_screen_messages;
+    this.screenMessages = pScreenMessages;
     try {
       // used to be able to change the location of the mouse pointer
       robot = new Robot();
     } catch (AWTException _) {
       FRLogger.warn("unable to create robot");
     }
-    this.boardFrame = p_board_frame;
+    this.boardFrame = pBoardFrame;
     this.globalSettings = globalSettings;
     this.scrollPane = boardFrame.scrollPane;
     defaultInit(globalSettings, routingJob, settingsMerger);
@@ -478,17 +478,17 @@ public class BoardPanel extends JPanel {
    *
    * <p>Ignored if middle mouse button panning is in progress or wheel rotation is zero.
    *
-   * @param p_point the screen position to center the zoom operation on
-   * @param p_wheel_rotation the wheel rotation amount (negative for zoom in, positive for zoom out)
+   * @param pPoint the screen position to center the zoom operation on
+   * @param pWheelRotation the wheel rotation amount (negative for zoom in, positive for zoom out)
    * @see #zoom(double, Point2D)
    */
-  public void zoomWithMouseWheel(Point2D p_point, int p_wheel_rotation) {
-    if (this.middleDragPosition != null || p_wheel_rotation == 0) {
+  public void zoomWithMouseWheel(Point2D pPoint, int pWheelRotation) {
+    if (this.middleDragPosition != null || pWheelRotation == 0) {
       return; // scrolling with the middle mouse button in progress
     }
-    double zoomFactor = 1 - 0.1 * p_wheel_rotation;
+    double zoomFactor = 1 - 0.1 * pWheelRotation;
     zoomFactor = Math.max(zoomFactor, 0.5);
-    zoom(zoomFactor, p_point);
+    zoom(zoomFactor, pPoint);
   }
 
   private void mousePressedAction(MouseEvent evt) {
@@ -515,13 +515,13 @@ public class BoardPanel extends JPanel {
     }
   }
 
-  private void mouseMovedAction(MouseEvent p_evt) {
+  private void mouseMovedAction(MouseEvent pEvt) {
     this.requestFocusInWindow(); // to enable keyboard aliases
     if (boardHandling != null) {
-      boardHandling.mouseMoved(p_evt.getPoint());
+      boardHandling.mouseMoved(pEvt.getPoint());
     }
     if (this.customCursor != null) {
-      this.customCursor.setLocation(p_evt.getPoint());
+      this.customCursor.setLocation(pEvt.getPoint());
       // Throttle repaints to avoid flooding the AWT event queue with full board redraws
       // during rapid mouse motion. High-DPI mice can generate 100+ events/second, and
       // each repaint triggers a full board render + cursor overlay.
@@ -576,19 +576,19 @@ public class BoardPanel extends JPanel {
    *   <li>Interactive state graphics
    * </ul>
    *
-   * @param p_g the graphics context for rendering
+   * @param pG the graphics context for rendering
    * @see GuiBoardManager#draw(Graphics)
    */
   @Override
-  public void paintComponent(Graphics p_g) {
-    super.paintComponent(p_g);
+  public void paintComponent(Graphics pG) {
+    super.paintComponent(pG);
     if (boardHandling != null) {
-      boardHandling.draw(p_g);
+      boardHandling.draw(pG);
     }
 
     // Draw ghosting overlay for drag-and-drop file operations
     if (isGhostingActive()) {
-      Graphics2D g2d = (Graphics2D) p_g.create();
+      Graphics2D g2d = (Graphics2D) pG.create();
       try {
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
         g2d.setColor(new Color(128, 128, 128, 180));
@@ -599,11 +599,11 @@ public class BoardPanel extends JPanel {
     }
 
     if (renderingOverlayMessage != null) {
-      drawRenderingOverlay(p_g);
+      drawRenderingOverlay(pG);
     }
 
     if (this.customCursor != null) {
-      this.customCursor.draw(p_g);
+      this.customCursor.draw(pG);
     }
   }
 
@@ -628,8 +628,8 @@ public class BoardPanel extends JPanel {
     repaint();
   }
 
-  private void drawRenderingOverlay(Graphics p_g) {
-    Graphics2D g2d = (Graphics2D) p_g.create();
+  private void drawRenderingOverlay(Graphics pG) {
+    Graphics2D g2d = (Graphics2D) pG.create();
     try {
       g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.55f));
       g2d.setColor(new Color(240, 240, 240, 220));
@@ -669,12 +669,12 @@ public class BoardPanel extends JPanel {
    * <p>Scrolls the panel so that the specified point becomes the top-left corner of the visible
    * viewport area.
    *
-   * @param p_position the new viewport position
+   * @param pPosition the new viewport position
    * @see #getViewportPosition()
    */
-  void setViewportPosition(Point p_position) {
+  void setViewportPosition(Point pPosition) {
     JViewport viewport = scrollPane.getViewport();
-    viewport.setViewPosition(p_position);
+    viewport.setViewPosition(pPosition);
   }
 
   /**
@@ -683,12 +683,12 @@ public class BoardPanel extends JPanel {
    * <p>Increases the board magnification by {@link #c_zoom_factor} (2x), keeping the specified
    * point fixed in screen coordinates.
    *
-   * @param p_position the screen position to center zoom on
+   * @param pPosition the screen position to center zoom on
    * @see #zoomOut(Point2D)
    * @see #zoom(double, Point2D)
    */
-  public void zoomIn(Point2D p_position) {
-    zoom(c_zoom_factor, p_position);
+  public void zoomIn(Point2D pPosition) {
+    zoom(c_zoom_factor, pPosition);
   }
 
   /**
@@ -697,13 +697,13 @@ public class BoardPanel extends JPanel {
    * <p>Decreases the board magnification by 1/{@link #c_zoom_factor} (0.5x), keeping the specified
    * point fixed in screen coordinates.
    *
-   * @param p_position the screen position to center zoom on
+   * @param pPosition the screen position to center zoom on
    * @see #zoomIn(Point2D)
    * @see #zoom(double, Point2D)
    */
-  public void zoomOut(Point2D p_position) {
+  public void zoomOut(Point2D pPosition) {
     double zoomFactor = 1 / c_zoom_factor;
-    zoom(zoomFactor, p_position);
+    zoom(zoomFactor, pPosition);
   }
 
   /**
@@ -715,16 +715,16 @@ public class BoardPanel extends JPanel {
    * <p>Used for "zoom to selection" and "zoom to frame" operations where the user defines a region
    * of interest.
    *
-   * @param p_position1 first corner of the rectangle to zoom to
-   * @param p_position2 opposite corner of the rectangle
+   * @param pPosition1 first corner of the rectangle to zoom to
+   * @param pPosition2 opposite corner of the rectangle
    * @see #zoom(double, Point2D)
    */
-  public void zoomFrame(Point2D p_position1, Point2D p_position2) {
-    double widthOfZoomFrame = Math.abs(p_position1.getX() - p_position2.getX());
-    double heightOfZoomFrame = Math.abs(p_position1.getY() - p_position2.getY());
+  public void zoomFrame(Point2D pPosition1, Point2D pPosition2) {
+    double widthOfZoomFrame = Math.abs(pPosition1.getX() - pPosition2.getX());
+    double heightOfZoomFrame = Math.abs(pPosition1.getY() - pPosition2.getY());
 
-    double centerX = Math.min(p_position1.getX(), p_position2.getX()) + (widthOfZoomFrame / 2);
-    double centerY = Math.min(p_position1.getY(), p_position2.getY()) + (heightOfZoomFrame / 2);
+    double centerX = Math.min(pPosition1.getX(), pPosition2.getX()) + (widthOfZoomFrame / 2);
+    double centerY = Math.min(pPosition1.getY(), pPosition2.getY()) + (heightOfZoomFrame / 2);
 
     Point2D centerPoint = new Point2D.Double(centerX, centerY);
 
@@ -751,12 +751,12 @@ public class BoardPanel extends JPanel {
    *
    * <p>Useful for "go to" operations and centering on specific board features.
    *
-   * @param p_new_center the board position to center the view on
+   * @param pNewCenter the board position to center the view on
    * @see #setViewportCenter(Point2D)
    * @see #moveMouse(Point2D)
    */
-  public void centerDisplay(Point2D p_new_center) {
-    Point delta = setViewportCenter(p_new_center);
+  public void centerDisplay(Point2D pNewCenter) {
+    Point delta = setViewportCenter(pNewCenter);
     Point2D newCenter = getViewportCenter();
     Point newMouseLocation =
         new Point((int) (newCenter.getX() - delta.getX()), (int) (newCenter.getY() - delta.getY()));
@@ -803,33 +803,32 @@ public class BoardPanel extends JPanel {
    * <p><strong>Size Limit:</strong> Panel size is capped at 10,000,000 pixels to prevent Java
    * rendering exceptions on large zooms.
    *
-   * @param p_factor the zoom multiplication factor (greater than 1 zooms in, less than 1 zooms out)
-   * @param p_location the screen position that should remain fixed during zoom
+   * @param pFactor the zoom multiplication factor (greater than 1 zooms in, less than 1 zooms out)
+   * @param pLocation the screen position that should remain fixed during zoom
    * @return the adjusted cursor location after zoom and viewport adjustment
    * @see #zoomIn(Point2D)
    * @see #zoomOut(Point2D)
    */
-  public Point2D zoom(double p_factor, Point2D p_location) {
+  public Point2D zoom(double pFactor, Point2D pLocation) {
     final int maxPanelSize = 10000000;
     Dimension oldSize = this.getSize();
     Point2D oldCenter = getViewportCenter();
 
-    if (p_factor > 1 && Math.max(oldSize.getWidth(), oldSize.getHeight()) >= maxPanelSize) {
-      return p_location; // to prevent an sun.dc.pr.PRException, which I do not know, how to handle;
+    if (pFactor > 1 && Math.max(oldSize.getWidth(), oldSize.getHeight()) >= maxPanelSize) {
+      return pLocation; // to prevent an sun.dc.pr.PRException, which I do not know, how to handle;
       // maybe a bug in Java.
     }
-    int newWidth = (int) Math.round(p_factor * oldSize.getWidth());
-    int newHeight = (int) Math.round(p_factor * oldSize.getHeight());
+    int newWidth = (int) Math.round(pFactor * oldSize.getWidth());
+    int newHeight = (int) Math.round(pFactor * oldSize.getHeight());
     Dimension newSize = new Dimension(newWidth, newHeight);
     boardHandling.graphicsContext.changePanelSize(newSize);
     setPreferredSize(newSize);
     setSize(newSize);
     revalidate();
 
-    Point2D newCursor =
-        new Point2D.Double(p_location.getX() * p_factor, p_location.getY() * p_factor);
-    double dx = newCursor.getX() - p_location.getX();
-    double dy = newCursor.getY() - p_location.getY();
+    Point2D newCursor = new Point2D.Double(pLocation.getX() * pFactor, pLocation.getY() * pFactor);
+    double dx = newCursor.getX() - pLocation.getX();
+    double dy = newCursor.getY() - pLocation.getY();
     Point2D newCenter = new Point2D.Double(oldCenter.getX() + dx, oldCenter.getY() + dy);
     Point2D adjustmentVector = setViewportCenter(newCenter);
     // Update the custom cursor position to match the new zoom level
@@ -874,15 +873,15 @@ public class BoardPanel extends JPanel {
    *   <li>Smooth scrolling behavior near edges
    * </ul>
    *
-   * @param p_point the desired center point in panel coordinates
+   * @param pPoint the desired center point in panel coordinates
    * @return the adjustment vector (delta from requested to actual position)
    * @see #getViewportCenter()
    * @see #setViewportPosition(Point)
    */
-  Point setViewportCenter(Point2D p_point) {
+  Point setViewportCenter(Point2D pPoint) {
     Rectangle displayRect = getViewportBounds();
-    double xCorner = p_point.getX() - displayRect.getWidth() / 2;
-    double yCorner = p_point.getY() - displayRect.getHeight() / 2;
+    double xCorner = pPoint.getX() - displayRect.getWidth() / 2;
+    double yCorner = pPoint.getY() - displayRect.getHeight() / 2;
     Dimension panelSize = getSize();
     double adjustedXCorner = Math.min(xCorner, panelSize.getWidth());
     adjustedXCorner = Math.max(xCorner, 0);
@@ -904,15 +903,15 @@ public class BoardPanel extends JPanel {
    *   <li>Synchronizes UI state across all layer-dependent controls
    * </ul>
    *
-   * @param p_signal_layer_no the signal layer number to select (0-based index)
+   * @param pSignalLayerNo the signal layer number to select (0-based index)
    * @see BoardFrame#selectParameterWindow
    */
-  public void setSelectedSignalLayer(int p_signal_layer_no) {
+  public void setSelectedSignalLayer(int pSignalLayerNo) {
     if (this.boardFrame.selectParameterWindow != null) {
-      this.boardFrame.selectParameterWindow.select(p_signal_layer_no);
-      this.popupMenuDynamicRoute.disableLayerItem(p_signal_layer_no);
-      this.popupMenuStitchRoute.disableLayerItem(p_signal_layer_no);
-      this.popupMenuCopy.disableLayerItem(p_signal_layer_no);
+      this.boardFrame.selectParameterWindow.select(pSignalLayerNo);
+      this.popupMenuDynamicRoute.disableLayerItem(pSignalLayerNo);
+      this.popupMenuStitchRoute.disableLayerItem(pSignalLayerNo);
+      this.popupMenuCopy.disableLayerItem(pSignalLayerNo);
     }
   }
 
@@ -937,17 +936,17 @@ public class BoardPanel extends JPanel {
     setBackground(boardHandling.graphicsContext.getBackgroundColor());
   }
 
-  private void scrollNearBorder(MouseEvent p_evt) {
+  private void scrollNearBorder(MouseEvent pEvt) {
     final int borderDist = 50;
     Rectangle r =
         new Rectangle(
-            p_evt.getX() - borderDist, p_evt.getY() - borderDist, 2 * borderDist, 2 * borderDist);
-    ((JPanel) p_evt.getSource()).scrollRectToVisible(r);
+            pEvt.getX() - borderDist, pEvt.getY() - borderDist, 2 * borderDist, 2 * borderDist);
+    ((JPanel) pEvt.getSource()).scrollRectToVisible(r);
   }
 
-  private void scrollMiddleMouse(MouseEvent p_evt) {
-    double deltaX = middleDragPosition.x - p_evt.getX();
-    double deltaY = middleDragPosition.y - p_evt.getY();
+  private void scrollMiddleMouse(MouseEvent pEvt) {
+    double deltaX = middleDragPosition.x - pEvt.getX();
+    double deltaY = middleDragPosition.y - pEvt.getY();
 
     Point viewPosition = getViewportPosition();
 
@@ -973,22 +972,20 @@ public class BoardPanel extends JPanel {
    *
    * <p>Does nothing if Robot initialization failed during construction.
    *
-   * @param p_location the target position in panel coordinates
+   * @param pLocation the target position in panel coordinates
    * @see Robot#mouseMove(int, int)
    * @see #centerDisplay(Point2D)
    */
-  public void moveMouse(Point2D p_location) {
+  public void moveMouse(Point2D pLocation) {
     if (robot == null) {
       return;
     }
     Point absolutePanelLocation = boardFrame.absolutePanelLocation();
     Point viewPosition = getViewportPosition();
     int x =
-        (int) Math.round(absolutePanelLocation.getX() - viewPosition.getX() + p_location.getX())
-            + 1;
+        (int) Math.round(absolutePanelLocation.getX() - viewPosition.getX() + pLocation.getX()) + 1;
     int y =
-        (int)
-            Math.round(absolutePanelLocation.getY() - viewPosition.getY() + p_location.getY() + 1);
+        (int) Math.round(absolutePanelLocation.getY() - viewPosition.getY() + pLocation.getY() + 1);
     robot.mouseMove(x, y);
   }
 
@@ -1002,12 +999,12 @@ public class BoardPanel extends JPanel {
    * display performance because it requires manual rendering and repaint on every mouse movement.
    * Use only when precise cursor positioning is critical.
    *
-   * @param p_value true to enable custom crosshair, false for standard cursor
+   * @param pValue true to enable custom crosshair, false for standard cursor
    * @see Cursor#get45DegreeCrossHairCursor()
    * @see #isCustomCrossHairCursor()
    */
-  public void setCustomCrosshairCursor(boolean p_value) {
-    if (p_value) {
+  public void setCustomCrosshairCursor(boolean pValue) {
+    if (pValue) {
       this.customCursor = Cursor.get45DegreeCrossHairCursor();
     } else {
       this.customCursor = null;
@@ -1032,7 +1029,7 @@ public class BoardPanel extends JPanel {
   private class ColorTableListener implements TableModelListener {
 
     @Override
-    public void tableChanged(TableModelEvent p_event) {
+    public void tableChanged(TableModelEvent pEvent) {
       // redisplay board because some colors have changed.
       setBackground(boardHandling.graphicsContext.getBackgroundColor());
       repaint();

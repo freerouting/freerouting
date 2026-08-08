@@ -38,19 +38,19 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
 
   /** Creates a new instance of NetClass */
   public NetClass(
-      String p_name,
-      LayerStructure p_layer_structure,
-      ClearanceMatrix p_clearance_matrix,
-      boolean p_is_ignored_by_autorouter) {
-    this.name = p_name;
-    this.boardLayerStructure = p_layer_structure;
-    this.clearanceMatrix = p_clearance_matrix;
-    this.traceHalfWidthArr = new int[p_layer_structure.arr.length];
-    this.activeRoutingLayerArr = new boolean[p_layer_structure.arr.length];
-    for (int i = 0; i < p_layer_structure.arr.length; i++) {
-      this.activeRoutingLayerArr[i] = p_layer_structure.arr[i].isSignal;
+      String pName,
+      LayerStructure pLayerStructure,
+      ClearanceMatrix pClearanceMatrix,
+      boolean pIsIgnoredByAutorouter) {
+    this.name = pName;
+    this.boardLayerStructure = pLayerStructure;
+    this.clearanceMatrix = pClearanceMatrix;
+    this.traceHalfWidthArr = new int[pLayerStructure.arr.length];
+    this.activeRoutingLayerArr = new boolean[pLayerStructure.arr.length];
+    for (int i = 0; i < pLayerStructure.arr.length; i++) {
+      this.activeRoutingLayerArr[i] = pLayerStructure.arr[i].isSignal;
     }
-    this.isIgnoredByAutorouter = p_is_ignored_by_autorouter;
+    this.isIgnoredByAutorouter = pIsIgnoredByAutorouter;
   }
 
   @Override
@@ -64,25 +64,25 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Changes the name of this net class. */
-  public void setName(String p_name) {
-    this.name = p_name;
+  public void setName(String pName) {
+    this.name = pName;
   }
 
   /** Sets the trace half width used for routing to p_value on all layers. */
-  public void setTraceHalfWidth(int p_value) {
-    Arrays.fill(traceHalfWidthArr, p_value);
+  public void setTraceHalfWidth(int pValue) {
+    Arrays.fill(traceHalfWidthArr, pValue);
   }
 
   /** Sets the trace half width used for routing to p_value on all inner layers. */
-  public void setTraceHalfWidthOnInner(int p_value) {
+  public void setTraceHalfWidthOnInner(int pValue) {
     for (int i = 1; i < traceHalfWidthArr.length - 1; i++) {
-      traceHalfWidthArr[i] = p_value;
+      traceHalfWidthArr[i] = pValue;
     }
   }
 
   /** Sets the trace half width used for routing to p_value on the input layer. */
-  public void setTraceHalfWidth(int p_layer, int p_value) {
-    traceHalfWidthArr[p_layer] = p_value;
+  public void setTraceHalfWidth(int pLayer, int pValue) {
+    traceHalfWidthArr[pLayer] = pValue;
   }
 
   public int layerCount() {
@@ -90,12 +90,12 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Gets the trace half width used for routing on the input layer. */
-  public int getTraceHalfWidth(int p_layer) {
-    if (p_layer < 0 || p_layer >= traceHalfWidthArr.length) {
+  public int getTraceHalfWidth(int pLayer) {
+    if (pLayer < 0 || pLayer >= traceHalfWidthArr.length) {
       FRLogger.warn(" NetClass.get_trace_half_width: p_layer out of range");
       return 0;
     }
-    return traceHalfWidthArr[p_layer];
+    return traceHalfWidthArr[pLayer];
   }
 
   /** Gets the clearance class used for routing traces with this net class. */
@@ -104,8 +104,8 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Sets the clearance class used for routing traces with this net rclass. */
-  public void setTraceClearanceClass(int p_clearance_class_no) {
-    this.traceClearanceClass = p_clearance_class_no;
+  public void setTraceClearanceClass(int pClearanceClassNo) {
+    this.traceClearanceClass = pClearanceClassNo;
   }
 
   /** Gets the via rule of this net rule. */
@@ -114,8 +114,8 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Sets the via rule of this net class. */
-  public void setViaRule(ViaRule p_via_rule) {
-    this.viaRule = p_via_rule;
+  public void setViaRule(ViaRule pViaRule) {
+    this.viaRule = pViaRule;
   }
 
   /** Returns, if traces and vias of this net class can be pushed. */
@@ -124,8 +124,8 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Sets, if traces and vias of this net class can be pushed. */
-  public void setShoveFixed(boolean p_value) {
-    this.shoveFixed = p_value;
+  public void setShoveFixed(boolean pValue) {
+    this.shoveFixed = pValue;
   }
 
   /** Returns, if traces of this nets class are pulled tight. */
@@ -134,8 +134,8 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Sets, if traces of this nets class are pulled tight. */
-  public void setPullTight(boolean p_value) {
-    this.pullTight = p_value;
+  public void setPullTight(boolean pValue) {
+    this.pullTight = pValue;
   }
 
   /** Returns, if the cycle remove algorithm ignores cycles, where conduction areas are involved */
@@ -144,8 +144,8 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Sets, if the cycle remove algorithm ignores cycles, where conduction areas are involved */
-  public void setIgnoreCyclesWithAreas(boolean p_value) {
-    this.ignoreCyclesWithAreas = p_value;
+  public void setIgnoreCyclesWithAreas(boolean pValue) {
+    this.ignoreCyclesWithAreas = pValue;
   }
 
   /**
@@ -160,8 +160,8 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
    * Sets the minimum trace length of this net class to p_value. If p_value is {@literal <}= 0,
    * there is no minimal trace length restriction.
    */
-  public void setMinimumTraceLength(double p_value) {
-    minimumTraceLength = p_value;
+  public void setMinimumTraceLength(double pValue) {
+    minimumTraceLength = pValue;
   }
 
   /**
@@ -176,70 +176,70 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
    * Sets the maximum trace length of this net class to p_value. If p_value is {@literal <}= 0,
    * there is no maximal trace length restriction.
    */
-  public void setMaximumTraceLength(double p_value) {
-    maximumTraceLength = p_value;
+  public void setMaximumTraceLength(double pValue) {
+    maximumTraceLength = pValue;
   }
 
   /** Returns if the layer with index p_layer_no is active for routing */
-  public boolean isActiveRoutingLayer(int p_layer_no) {
-    if (p_layer_no < 0 || p_layer_no >= this.activeRoutingLayerArr.length) {
+  public boolean isActiveRoutingLayer(int pLayerNo) {
+    if (pLayerNo < 0 || pLayerNo >= this.activeRoutingLayerArr.length) {
       return false;
     }
-    return this.activeRoutingLayerArr[p_layer_no];
+    return this.activeRoutingLayerArr[pLayerNo];
   }
 
   /** Sets the layer with index p_layer_no to p_active. */
-  public void setActiveRoutingLayer(int p_layer_no, boolean p_active) {
-    if (p_layer_no < 0 || p_layer_no >= this.activeRoutingLayerArr.length) {
+  public void setActiveRoutingLayer(int pLayerNo, boolean pActive) {
+    if (pLayerNo < 0 || pLayerNo >= this.activeRoutingLayerArr.length) {
       return;
     }
-    this.activeRoutingLayerArr[p_layer_no] = p_active;
+    this.activeRoutingLayerArr[pLayerNo] = pActive;
   }
 
   /** Activates or deactivates all layers for routing */
-  public void setAllLayersActive(boolean p_value) {
-    Arrays.fill(this.activeRoutingLayerArr, p_value);
+  public void setAllLayersActive(boolean pValue) {
+    Arrays.fill(this.activeRoutingLayerArr, pValue);
   }
 
   /** Activates or deactivates all inner layers for routing */
-  public void setAllInnerLayersActive(boolean p_value) {
+  public void setAllInnerLayersActive(boolean pValue) {
     for (int i = 1; i < traceHalfWidthArr.length - 1; i++) {
-      activeRoutingLayerArr[i] = p_value;
+      activeRoutingLayerArr[i] = pValue;
     }
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
-    p_window.appendBold(tm.getText("net_class_2") + " ");
-    p_window.appendBold(this.name);
-    p_window.appendBold(":");
-    p_window.append(" " + tm.getText("traceClearanceClass") + " ");
+    pWindow.appendBold(tm.getText("net_class_2") + " ");
+    pWindow.appendBold(this.name);
+    pWindow.appendBold(":");
+    pWindow.append(" " + tm.getText("traceClearanceClass") + " ");
     String clName = clearanceMatrix.getName(this.traceClearanceClass);
-    p_window.append(
+    pWindow.append(
         clName,
         tm.getText("trace_clearance_class_2"),
         clearanceMatrix.getRow(this.traceClearanceClass));
     if (this.shoveFixed) {
-      p_window.append(", " + tm.getText("shoveFixed"));
+      pWindow.append(", " + tm.getText("shoveFixed"));
     }
-    p_window.append(", " + tm.getText("viaRule") + " ");
-    p_window.append(viaRule.name, tm.getText("via_rule_2"), viaRule);
+    pWindow.append(", " + tm.getText("viaRule") + " ");
+    pWindow.append(viaRule.name, tm.getText("via_rule_2"), viaRule);
     if (traceWidthIsLayerDependent()) {
       for (int i = 0; i < traceHalfWidthArr.length; i++) {
-        p_window.newline();
-        p_window.indent();
-        p_window.append(tm.getText("traceWidth") + " ");
-        p_window.append(2 * traceHalfWidthArr[i]);
-        p_window.append(" " + tm.getText("on_layer") + " ");
-        p_window.append(this.boardLayerStructure.arr[i].name);
+        pWindow.newline();
+        pWindow.indent();
+        pWindow.append(tm.getText("traceWidth") + " ");
+        pWindow.append(2 * traceHalfWidthArr[i]);
+        pWindow.append(" " + tm.getText("on_layer") + " ");
+        pWindow.append(this.boardLayerStructure.arr[i].name);
       }
     } else {
-      p_window.append(", " + tm.getText("traceWidth") + " ");
-      p_window.append(2 * traceHalfWidthArr[0]);
+      pWindow.append(", " + tm.getText("traceWidth") + " ");
+      pWindow.append(2 * traceHalfWidthArr[0]);
     }
-    p_window.newline();
+    pWindow.newline();
   }
 
   /** Returns true, if the trace width of this class is not equal on all layers. */

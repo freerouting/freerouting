@@ -93,18 +93,18 @@ public class ReadScopeParameter {
    * minimal shim is constructed to receive the parsed board. Use this constructor from {@link
    * app.freerouting.io.specctra.DsnReader#readBoard}.
    *
-   * @param p_scanner the token scanner over the DSN input stream
-   * @param p_observers nullable; for host-system embedding
-   * @param p_item_id_no_generator nullable; for host-system embedding
+   * @param pScanner the token scanner over the DSN input stream
+   * @param pObservers nullable; for host-system embedding
+   * @param pItemIdNoGenerator nullable; for host-system embedding
    */
   public ReadScopeParameter(
-      IJFlexScanner p_scanner,
-      BoardObservers p_observers,
-      IdentificationNumberGenerator p_item_id_no_generator) {
-    scanner = p_scanner;
+      IJFlexScanner pScanner,
+      BoardObservers pObservers,
+      IdentificationNumberGenerator pItemIdNoGenerator) {
+    scanner = pScanner;
     boardHandling = new MinimalBoardManager();
-    observers = p_observers;
-    itemIdNoGenerator = p_item_id_no_generator;
+    observers = pObservers;
+    itemIdNoGenerator = pItemIdNoGenerator;
   }
 
   /**
@@ -139,20 +139,20 @@ public class ReadScopeParameter {
 
     @Override
     public void createBoard(
-        IntBox p_bounding_box,
-        app.freerouting.board.LayerStructure p_layer_structure,
-        PolylineShape[] p_outline_shapes,
-        String p_outline_clearance_class_name,
-        BoardRules p_rules,
-        Communication p_board_communication) {
+        IntBox pBoundingBox,
+        app.freerouting.board.LayerStructure pLayerStructure,
+        PolylineShape[] pOutlineShapes,
+        String pOutlineClearanceClassName,
+        BoardRules pRules,
+        Communication pBoardCommunication) {
       int outlineClearanceNo = 0;
-      if (p_rules != null) {
-        if (p_outline_clearance_class_name != null && p_rules.clearanceMatrix != null) {
+      if (pRules != null) {
+        if (pOutlineClearanceClassName != null && pRules.clearanceMatrix != null) {
           outlineClearanceNo =
-              Math.max(0, p_rules.clearanceMatrix.getNo(p_outline_clearance_class_name));
+              Math.max(0, pRules.clearanceMatrix.getNo(pOutlineClearanceClassName));
         } else {
           outlineClearanceNo =
-              p_rules
+              pRules
                   .getDefaultNetClass()
                   .defaultItemClearanceClasses
                   .get(DefaultItemClearanceClasses.ItemClass.AREA);
@@ -160,12 +160,12 @@ public class ReadScopeParameter {
       }
       board =
           new RoutingBoard(
-              p_bounding_box,
-              p_layer_structure,
-              p_outline_shapes,
+              pBoundingBox,
+              pLayerStructure,
+              pOutlineShapes,
               outlineClearanceNo,
-              p_rules,
-              p_board_communication);
+              pRules,
+              pBoardCommunication);
     }
 
     @Override
@@ -187,9 +187,9 @@ public class ReadScopeParameter {
     final Shape.ReadAreaScopeResult area;
     final String netName;
 
-    PlaneInfo(Shape.ReadAreaScopeResult p_area, String p_net_name) {
-      area = p_area;
-      netName = p_net_name;
+    PlaneInfo(Shape.ReadAreaScopeResult pArea, String pNetName) {
+      area = pArea;
+      netName = pNetName;
     }
   }
 }

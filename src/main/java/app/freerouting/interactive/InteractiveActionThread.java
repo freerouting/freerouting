@@ -298,10 +298,10 @@ public abstract class InteractiveActionThread extends StoppableThread {
    *
    * <p>The default implementation does nothing. Drawing is synchronized to ensure thread safety.
    *
-   * @param p_graphics the graphics context for drawing overlays
+   * @param pGraphics the graphics context for drawing overlays
    * @see AutorouterAndRouteOptimizerThread#draw(Graphics)
    */
-  public synchronized void draw(Graphics p_graphics) {
+  public synchronized void draw(Graphics pGraphics) {
     // Can be overwritten in derived classes.
   }
 
@@ -321,8 +321,8 @@ public abstract class InteractiveActionThread extends StoppableThread {
    */
   private static final class AutorouteThread extends InteractiveActionThread {
 
-    private AutorouteThread(GuiBoardManager p_board_handling, RoutingJob job) {
-      super(p_board_handling, job);
+    private AutorouteThread(GuiBoardManager pBoardHandling, RoutingJob job) {
+      super(pBoardHandling, job);
     }
 
     /**
@@ -357,8 +357,8 @@ public abstract class InteractiveActionThread extends StoppableThread {
    */
   private static final class PullTightThread extends InteractiveActionThread {
 
-    private PullTightThread(GuiBoardManager p_board_handling, RoutingJob job) {
-      super(p_board_handling, job);
+    private PullTightThread(GuiBoardManager pBoardHandling, RoutingJob job) {
+      super(pBoardHandling, job);
     }
 
     /**

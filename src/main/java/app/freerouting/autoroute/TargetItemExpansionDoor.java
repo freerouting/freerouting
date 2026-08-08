@@ -16,17 +16,14 @@ public class TargetItemExpansionDoor implements ExpandableObject {
 
   /** Creates a new instance of ItemExpansionInfo */
   public TargetItemExpansionDoor(
-      Item p_item,
-      int p_tree_entry_no,
-      CompleteExpansionRoom p_room,
-      ShapeSearchTree p_search_tree) {
-    item = p_item;
-    treeEntryNo = p_tree_entry_no;
-    room = p_room;
+      Item pItem, int pTreeEntryNo, CompleteExpansionRoom pRoom, ShapeSearchTree pSearchTree) {
+    item = pItem;
+    treeEntryNo = pTreeEntryNo;
+    room = pRoom;
     if (room == null) {
       this.shape = Simplex.EMPTY;
     } else {
-      TileShape itemShape = item.getTreeShape(p_search_tree, treeEntryNo);
+      TileShape itemShape = item.getTreeShape(pSearchTree, treeEntryNo);
       this.shape = itemShape.intersection(room.getShape());
     }
     mazeSearchInfo = new MazeSearchElement();
@@ -48,12 +45,12 @@ public class TargetItemExpansionDoor implements ExpandableObject {
   }
 
   @Override
-  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom p_room) {
+  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom pRoom) {
     return null;
   }
 
   @Override
-  public MazeSearchElement getMazeSearchElement(int p_no) {
+  public MazeSearchElement getMazeSearchElement(int pNo) {
     return mazeSearchInfo;
   }
 

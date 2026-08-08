@@ -73,14 +73,14 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
   /** Internal constructor matching v1.9 signature. */
   public BatchAutorouterV19(
-      StoppableThread p_thread,
+      StoppableThread pThread,
       RoutingBoard board,
       RouterSettings settings,
-      boolean p_remove_unconnected_vias,
-      boolean p_with_preferred_directions,
-      int p_start_ripup_costs,
-      int p_pull_tight_accuracy) {
-    super(p_thread, board, settings);
+      boolean pRemoveUnconnectedVias,
+      boolean pWithPreferredDirections,
+      int pStartRipupCosts,
+      int pPullTightAccuracy) {
+    super(pThread, board, settings);
 
     // Validate that this is single-threaded (v1.9 doesn't support multi-threading)
     if (settings.maxThreads > 1) {
@@ -89,8 +89,8 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       settings.maxThreads = 1;
     }
 
-    this.removeUnconnectedVias = p_remove_unconnected_vias;
-    if (p_with_preferred_directions) {
+    this.removeUnconnectedVias = pRemoveUnconnectedVias;
+    if (pWithPreferredDirections) {
       this.traceCostArr = this.settings.getTraceCostArr();
     } else {
       // remove preferred direction
@@ -101,8 +101,8 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       }
     }
 
-    this.startRipupCosts = p_start_ripup_costs;
-    this.tracePullTightAccuracy = p_pull_tight_accuracy;
+    this.startRipupCosts = pStartRipupCosts;
+    this.tracePullTightAccuracy = pPullTightAccuracy;
     this.retainAutorouteDatabase = false;
   }
 
@@ -279,7 +279,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
    * history/backtracking - No failure tracking - Natural item order (no sorting by airline
    * distance) - Simpler progress tracking
    */
-  private boolean autoroutePass(int p_pass_no, boolean p_with_screen_message) {
+  private boolean autoroutePass(int pPassNo, boolean pWithScreenMessage) {
     try {
       Collection<Item> autorouteItemList = new LinkedList<>();
       Set<Item> handledItems = new TreeSet<>();
@@ -299,9 +299,9 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
               for (int i = 0; i < currItem.netCount(); ++i) {
                 int currNetNo = currItem.getNetNo(i);
                 Set<Item> connectedSet = currItem.getConnectedSet(currNetNo);
-                for (Item curr_connected_item : connectedSet) {
-                  if (curr_connected_item.netCount() <= 1) {
-                    handledItems.add(curr_connected_item);
+                for (Item currConnectedItem : connectedSet) {
+                  if (currConnectedItem.netCount() <= 1) {
+                    handledItems.add(currConnectedItem);
                   }
                 }
                 int netItemCount = board.connectableItemCount(currNetNo);
@@ -328,7 +328,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       int notFound = 0;
       int routed = 0;
 
-      job.logDebug("V1.9 Pass #" + p_pass_no + ": " + itemsToGoCount + " items to route");
+      job.logDebug("V1.9 Pass #" + pPassNo + ": " + itemsToGoCount + " items to route");
 
       // Let's go through all items to route (v1.9: natural order, no sorting)
       for (Item currItem : autorouteItemList) {
@@ -349,7 +349,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           SortedSet<Item> rippedItemList = new TreeSet<>();
-          if (autorouteItem(currItem, currItem.getNetNo(i), rippedItemList, p_pass_no)) {
+          if (autorouteItem(currItem, currItem.getNetNo(i), rippedItemList, pPassNo)) {
             ++routed;
           } else {
             ++notFound;
@@ -371,7 +371,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
       job.logDebug(
           "V1.9 Pass #"
-              + p_pass_no
+              + pPassNo
               + " completed: routed="
               + routed
               + ", notFound="
@@ -387,9 +387,9 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
     }
   }
 
-  private void removeTails(Item.StopConnectionOption p_stop_connection_option) {
+  private void removeTails(Item.StopConnectionOption pStopConnectionOption) {
     board.startMarkingChangedArea();
-    board.removeTraceTails(-1, p_stop_connection_option);
+    board.removeTraceTails(-1, pStopConnectionOption);
     board.optChangedArea(
         new int[0],
         null,
@@ -404,12 +404,12 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
    * implementation.
    */
   private boolean autorouteItem(
-      Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no) {
+      Item pItem, int pRouteNetNo, SortedSet<Item> pRippedItemList, int pRipupPassNo) {
     try {
       boolean containsPlane = false;
 
       // Get the net
-      Net routeNet = board.rules.nets.get(p_route_net_no);
+      Net routeNet = board.rules.nets.get(pRouteNetNo);
       if (routeNet != null) {
         containsPlane = routeNet.containsPlane();
       }
@@ -425,19 +425,18 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       // Get and calculate the auto-router settings based on the board and net we are
       // working on
       AutorouteControl autorouteControl =
-          new AutorouteControl(
-              this.board, p_route_net_no, settings, currViaCosts, this.traceCostArr);
+          new AutorouteControl(this.board, pRouteNetNo, settings, currViaCosts, this.traceCostArr);
       autorouteControl.ripupAllowed = true;
-      autorouteControl.ripupCosts = this.startRipupCosts * p_ripup_pass_no;
+      autorouteControl.ripupCosts = this.startRipupCosts * pRipupPassNo;
       autorouteControl.removeUnconnectedVias = this.removeUnconnectedVias;
 
       // Check if the item is already routed
-      Set<Item> unconnectedSet = p_item.getUnconnectedSet(p_route_net_no);
+      Set<Item> unconnectedSet = pItem.getUnconnectedSet(pRouteNetNo);
       if (unconnectedSet.isEmpty()) {
         return true; // p_item is already routed.
       }
 
-      Set<Item> connectedSet = p_item.getConnectedSet(p_route_net_no);
+      Set<Item> connectedSet = pItem.getConnectedSet(pRouteNetNo);
       Set<Item> routeStartSet;
       Set<Item> routeDestSet;
       if (containsPlane) {
@@ -459,14 +458,14 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       calcAirline(routeStartSet, routeDestSet);
 
       // Calculate the maximum time for this autoroute pass
-      double maxMilliseconds = 100000 * Math.pow(2, p_ripup_pass_no - 1);
+      double maxMilliseconds = 100000 * Math.pow(2, pRipupPassNo - 1);
       maxMilliseconds = Math.min(maxMilliseconds, Integer.MAX_VALUE);
       TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
 
       // Initialize the auto-router engine
       AutorouteEngine autorouteEngine =
           board.initAutoroute(
-              p_route_net_no,
+              pRouteNetNo,
               autorouteControl.traceClearanceClassNo,
               this.thread,
               timeLimit,
@@ -481,7 +480,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
               routeStartSet,
               routeDestSet,
               autorouteControl,
-              p_ripped_item_list,
+              pRippedItemList,
               null); // null: costs not needed here
 
       // Update the changed area of the board
@@ -518,20 +517,20 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
    * Calculates the shortest distance between two sets of items, specifically between Pin and Via
    * items (pins and vias are connectable DrillItems)
    */
-  private void calcAirline(Collection<Item> p_from_items, Collection<Item> p_to_items) {
+  private void calcAirline(Collection<Item> pFromItems, Collection<Item> pToItems) {
     FloatPoint fromCorner = null;
     FloatPoint toCorner = null;
     double minDistance = Double.MAX_VALUE;
-    for (Item curr_from_item : p_from_items) {
-      if (!(curr_from_item instanceof DrillItem)) {
+    for (Item currFromItem : pFromItems) {
+      if (!(currFromItem instanceof DrillItem)) {
         continue;
       }
-      FloatPoint currFromCorner = ((DrillItem) curr_from_item).getCenter().toFloat();
-      for (Item curr_to_item : p_to_items) {
-        if (!(curr_to_item instanceof DrillItem)) {
+      FloatPoint currFromCorner = ((DrillItem) currFromItem).getCenter().toFloat();
+      for (Item currToItem : pToItems) {
+        if (!(currToItem instanceof DrillItem)) {
           continue;
         }
-        FloatPoint currToCorner = ((DrillItem) curr_to_item).getCenter().toFloat();
+        FloatPoint currToCorner = ((DrillItem) currToItem).getCenter().toFloat();
         double currDistance = currFromCorner.distanceSquare(currToCorner);
         if (currDistance < minDistance) {
           minDistance = currDistance;

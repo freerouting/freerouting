@@ -9,8 +9,8 @@ public class TimeLimit {
   private int timeLimit;
 
   /** Creates a new instance with a time limit of p_milli_seconds milliseconds */
-  public TimeLimit(int p_milli_seconds) {
-    this.timeLimit = p_milli_seconds;
+  public TimeLimit(int pMilliSeconds) {
+    this.timeLimit = pMilliSeconds;
     this.timeStamp = new Date().getTime();
   }
 
@@ -21,11 +21,11 @@ public class TimeLimit {
   }
 
   /** Multiplies this TimeLimit by p_factor. */
-  public void multiply(double p_factor) {
-    if (p_factor <= 0) {
+  public void multiply(double pFactor) {
+    if (pFactor <= 0) {
       return;
     }
-    double newLimit = p_factor * this.timeLimit;
+    double newLimit = pFactor * this.timeLimit;
     newLimit = Math.min(newLimit, Integer.MAX_VALUE);
     this.timeLimit = (int) newLimit;
   }

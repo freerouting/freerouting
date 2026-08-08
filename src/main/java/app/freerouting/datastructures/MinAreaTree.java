@@ -17,12 +17,12 @@ import java.util.TreeSet;
 public class MinAreaTree extends ShapeTree {
 
   /** Constructor with a fixed set of directions defining the keys and the surrounding shapes */
-  public MinAreaTree(ShapeBoundingDirections p_directions) {
-    super(p_directions);
+  public MinAreaTree(ShapeBoundingDirections pDirections) {
+    super(pDirections);
   }
 
   /** Calculates the objects in this tree, which overlap with p_shape */
-  public Set<Leaf> overlaps(RegularTileShape p_shape) {
+  public Set<Leaf> overlaps(RegularTileShape pShape) {
     Set<Leaf> foundOverlaps = new TreeSet<>();
     if (this.root == null) {
       return foundOverlaps;
@@ -35,7 +35,7 @@ public class MinAreaTree extends ShapeTree {
       if (currNode == null) {
         break;
       }
-      if (currNode.boundingShape.intersects(p_shape)) {
+      if (currNode.boundingShape.intersects(pShape)) {
         if (currNode instanceof Leaf leaf) {
           foundOverlaps.add(leaf);
         } else {
@@ -48,20 +48,20 @@ public class MinAreaTree extends ShapeTree {
   }
 
   @Override
-  void insert(Leaf p_leaf) {
+  void insert(Leaf pLeaf) {
     ++this.leafCount;
 
     // Tree is empty - just insert the new leaf
     if (root == null) {
-      root = p_leaf;
+      root = pLeaf;
       return;
     }
 
     // Non-empty tree - do a recursive location for leaf replacement
-    Leaf leafToReplace = positionLocate(root, p_leaf);
+    Leaf leafToReplace = positionLocate(root, pLeaf);
 
     // Construct a new node - whenever a leaf is added so is a new node
-    RegularTileShape newBounds = p_leaf.boundingShape.union(leafToReplace.boundingShape);
+    RegularTileShape newBounds = pLeaf.boundingShape.union(leafToReplace.boundingShape);
     InnerNode currParent = leafToReplace.parent;
     InnerNode newNode = new InnerNode(newBounds, currParent);
 
@@ -75,36 +75,35 @@ public class MinAreaTree extends ShapeTree {
     }
     // Update the parent pointers of the old leaf and new leaf to point to new node
     leafToReplace.parent = newNode;
-    p_leaf.parent = newNode;
+    pLeaf.parent = newNode;
 
     // Insert the children in any order.
     newNode.firstChild = leafToReplace;
-    newNode.secondChild = p_leaf;
+    newNode.secondChild = pLeaf;
 
     if (root == leafToReplace) {
       root = newNode;
     }
   }
 
-  private Leaf positionLocate(TreeNode p_curr_node, Leaf p_leaf_to_insert) {
-    TreeNode currNode = p_curr_node;
+  private Leaf positionLocate(TreeNode pCurrNode, Leaf pLeafToInsert) {
+    TreeNode currNode = pCurrNode;
 
     while (!(currNode instanceof Leaf)) {
       InnerNode currInnerNode = (InnerNode) currNode;
-      currInnerNode.boundingShape =
-          p_leaf_to_insert.boundingShape.union(currInnerNode.boundingShape);
+      currInnerNode.boundingShape = pLeafToInsert.boundingShape.union(currInnerNode.boundingShape);
 
       // Choose the child, so that the area increase of that child after taking the union
       // with the shape of p_leaf_to_insert is minimal.
 
       RegularTileShape firstChildShape = currInnerNode.firstChild.boundingShape;
       RegularTileShape unionWithFirstChildShape =
-          p_leaf_to_insert.boundingShape.union(firstChildShape);
+          pLeafToInsert.boundingShape.union(firstChildShape);
       double firstAreaIncrease = unionWithFirstChildShape.area() - firstChildShape.area();
 
       RegularTileShape secondChildShape = currInnerNode.secondChild.boundingShape;
       RegularTileShape unionWithSecondChildShape =
-          p_leaf_to_insert.boundingShape.union(secondChildShape);
+          pLeafToInsert.boundingShape.union(secondChildShape);
       double secondAreaIncrease = unionWithSecondChildShape.area() - secondChildShape.area();
 
       if (firstAreaIncrease <= secondAreaIncrease) {
@@ -118,15 +117,15 @@ public class MinAreaTree extends ShapeTree {
 
   /** removes an entry from this tree */
   @Override
-  public void removeLeaf(Leaf p_leaf) {
-    if (p_leaf == null) {
+  public void removeLeaf(Leaf pLeaf) {
+    if (pLeaf == null) {
       return;
     }
     // remove the leaf node
-    InnerNode parent = p_leaf.parent;
-    p_leaf.boundingShape = null;
-    p_leaf.parent = null;
-    p_leaf.object = null;
+    InnerNode parent = pLeaf.parent;
+    pLeaf.boundingShape = null;
+    pLeaf.parent = null;
+    pLeaf.object = null;
     --this.leafCount;
     if (parent == null) {
       // tree gets empty
@@ -135,9 +134,9 @@ public class MinAreaTree extends ShapeTree {
     }
     // find the other leaf of the parent
     TreeNode otherLeaf;
-    if (parent.secondChild == p_leaf) {
+    if (parent.secondChild == pLeaf) {
       otherLeaf = parent.firstChild;
-    } else if (parent.firstChild == p_leaf) {
+    } else if (parent.firstChild == pLeaf) {
       otherLeaf = parent.secondChild;
     } else {
       FRLogger.warn("MinAreaTree.remove_leaf: parent inconsistent");

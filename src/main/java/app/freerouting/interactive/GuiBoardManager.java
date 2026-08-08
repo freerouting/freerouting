@@ -486,14 +486,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>The constructor establishes connections between the board manager and the GUI panel, sets up
    * event handling, and prepares the system for user interaction.
    *
-   * @param p_panel the board panel component for visual display
+   * @param pPanel the board panel component for visual display
    * @param globalSettings application-wide configuration settings
    * @param routingJob the routing job containing board and design data
    * @param settingsMerger merger for consolidating settings from multiple sources
    * @see HeadlessBoardManager#HeadlessBoardManager(RoutingJob)
    */
   public GuiBoardManager(
-      BoardPanel p_panel,
+      BoardPanel pPanel,
       GlobalSettings globalSettings,
       RoutingJob routingJob,
       SettingsMerger settingsMerger) {
@@ -501,8 +501,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
     this.globalSettings = globalSettings;
     this.settingsMerger = settingsMerger;
     this.locale = globalSettings.currentLocale;
-    this.panel = p_panel;
-    this.screenMessages = p_panel.screenMessages;
+    this.panel = pPanel;
+    this.screenMessages = pPanel.screenMessages;
     this.setInteractiveState(RouteMenuState.getInstance(this));
 
     this.tm = new TextManager(this.getClass(), globalSettings.currentLocale);
@@ -528,8 +528,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if ((logEntry.getType() == LogEntryType.Error)
         || (logEntry.getType() == LogEntryType.Warning)) {
       LogEntries entries = FRLogger.getLogEntries();
-      screenMessages.setErrorAndWarningCount(
-          entries.getErrorCount(), entries.getWarningCount());
+      screenMessages.setErrorAndWarningCount(entries.getErrorCount(), entries.getWarningCount());
     }
   }
 
@@ -614,16 +613,16 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>Listeners typically update UI elements (buttons, menus) to reflect the board's modifiable
    * state.
    *
-   * @param p_value true to make board read-only, false to allow modifications
+   * @param pValue true to make board read-only, false to allow modifications
    * @see #isBoardReadOnly()
    */
-  public void setBoardReadOnly(boolean p_value) {
-    this.boardIsReadOnly = p_value;
-    this.interactiveSettings.setReadOnly(p_value);
+  public void setBoardReadOnly(boolean pValue) {
+    this.boardIsReadOnly = pValue;
+    this.interactiveSettings.setReadOnly(pValue);
 
     // Raise an event to notify the observers that the board read only property
     // changed
-    this.readOnlyEventListeners.forEach(listener -> listener.accept(p_value));
+    this.readOnlyEventListeners.forEach(listener -> listener.accept(pValue));
   }
 
   /**
@@ -695,14 +694,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This setting is ignored if the board is read-only.
    *
-   * @param p_value true to ignore conduction areas, false to treat them as obstacles
+   * @param pValue true to ignore conduction areas, false to treat them as obstacles
    * @see RoutingBoard#changeConductionIsObstacle(boolean)
    */
-  public void setIgnoreConduction(boolean p_value) {
+  public void setIgnoreConduction(boolean pValue) {
     if (boardIsReadOnly) {
       return;
     }
-    board.changeConductionIsObstacle(!p_value);
+    board.changeConductionIsObstacle(!pValue);
   }
 
   /**
@@ -723,15 +722,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This setting is ignored if the board is read-only.
    *
-   * @param p_value the minimum edge-to-turn distance in user coordinate units
+   * @param pValue the minimum edge-to-turn distance in user coordinate units
    * @see BoardRules#setPinEdgeToTurnDist(double)
    * @see Pin#hasTraceExitRestrictions()
    */
-  public void setPinEdgeToTurnDist(double p_value) {
+  public void setPinEdgeToTurnDist(double pValue) {
     if (boardIsReadOnly) {
       return;
     }
-    double edgeToTurnDist = this.coordinateTransform.userToBoard(p_value);
+    double edgeToTurnDist = this.coordinateTransform.userToBoard(pValue);
     if (edgeToTurnDist != board.rules.getPinEdgeToTurnDist()) {
       // unfix the pin exit stubs
       Collection<Pin> pinList = board.getPins();
@@ -766,14 +765,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>If the currently active routing layer becomes invisible, the system automatically switches
    * to the most visible layer to maintain usability.
    *
-   * @param p_layer the layer index to modify (0-based)
-   * @param p_value the visibility value between 0.0 (invisible) and 1.0 (fully visible)
+   * @param pLayer the layer index to modify (0-based)
+   * @param pValue the visibility value between 0.0 (invisible) and 1.0 (fully visible)
    * @see GraphicsContext#setLayerVisibility(int, double)
    */
-  public void setLayerVisibility(int p_layer, double p_value) {
-    if (p_layer >= 0 && p_layer < graphicsContext.layerCount()) {
-      graphicsContext.setLayerVisibility(p_layer, p_value);
-      if (p_value == 0 && interactiveSettings.getLayer() == p_layer) {
+  public void setLayerVisibility(int pLayer, double pValue) {
+    if (pLayer >= 0 && pLayer < graphicsContext.layerCount()) {
+      graphicsContext.setLayerVisibility(pLayer, pValue);
+      if (pValue == 0 && interactiveSettings.getLayer() == pLayer) {
         // change the current layer to the best visible layer, if it becomes invisible;
         double bestVisibility = 0;
         int bestVisibleLayer = 0;
@@ -803,18 +802,18 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>Half-width is used because traces expand equally on both sides of their centerline. The
    * actual trace width is twice this value.
    *
-   * @param p_net_no the net number to get the trace width for
-   * @param p_layer the layer index where the trace will be placed
+   * @param pNetNo the net number to get the trace width for
+   * @param pLayer the layer index where the trace will be placed
    * @return the trace half-width in board units
    * @see InteractiveSettings#manualRuleSelection
    * @see BoardRules#getTraceHalfWidth(int, int)
    */
-  public int getTraceHalfwidth(int p_net_no, int p_layer) {
+  public int getTraceHalfwidth(int pNetNo, int pLayer) {
     int result;
     if (interactiveSettings.getManualRuleSelection()) {
-      result = interactiveSettings.manualTraceHalfWidthArr[p_layer];
+      result = interactiveSettings.manualTraceHalfWidthArr[pLayer];
     } else {
-      result = board.rules.getTraceHalfWidth(p_net_no, p_layer);
+      result = board.rules.getTraceHalfWidth(pNetNo, pLayer);
     }
     return result;
   }
@@ -833,16 +832,16 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>Returns true if the net or net class is not found (permissive default).
    *
-   * @param p_net_no the net number to check
-   * @param p_layer the layer index to check
+   * @param pNetNo the net number to check
+   * @param pLayer the layer index to check
    * @return true if the layer is active for routing this net, false otherwise
    * @see NetClass#isActiveRoutingLayer(int)
    */
-  public boolean isActiveRoutingLayer(int p_net_no, int p_layer) {
+  public boolean isActiveRoutingLayer(int pNetNo, int pLayer) {
     if (interactiveSettings.getManualRuleSelection()) {
       return true;
     }
-    Net currNet = this.board.rules.nets.get(p_net_no);
+    Net currNet = this.board.rules.nets.get(pNetNo);
     if (currNet == null) {
       return true;
     }
@@ -850,7 +849,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (currNetClass == null) {
       return true;
     }
-    return currNetClass.isActiveRoutingLayer(p_layer);
+    return currNetClass.isActiveRoutingLayer(pLayer);
   }
 
   /**
@@ -867,17 +866,17 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>The clearance class is an index into the board's clearance matrix.
    *
-   * @param p_net_no the net number to get the clearance class for
+   * @param pNetNo the net number to get the clearance class for
    * @return the clearance class index
    * @see app.freerouting.rules.ClearanceMatrix
    * @see NetClass#getTraceClearanceClass()
    */
-  public int getTraceClearanceClass(int p_net_no) {
+  public int getTraceClearanceClass(int pNetNo) {
     int result;
     if (interactiveSettings.getManualRuleSelection()) {
       result = interactiveSettings.getManualTraceClearanceClass();
     } else {
-      result = board.rules.nets.get(p_net_no).getNetClass().getTraceClearanceClass();
+      result = board.rules.nets.get(pNetNo).getNetClass().getTraceClearanceClass();
     }
     return result;
   }
@@ -896,18 +895,18 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>If manual selection is active but the index is invalid, falls back to the net class rule.
    *
-   * @param p_net_no the net number to get the via rule for
+   * @param pNetNo the net number to get the via rule for
    * @return the via rule defining allowed via types and priorities
    * @see ViaRule
    * @see NetClass#getViaRule()
    */
-  public ViaRule getViaRule(int p_net_no) {
+  public ViaRule getViaRule(int pNetNo) {
     ViaRule result = null;
     if (interactiveSettings.getManualRuleSelection()) {
       result = board.rules.viaRules.get(this.interactiveSettings.getManualViaRuleIndex());
     }
     if (result == null) {
-      result = board.rules.nets.get(p_net_no).getNetClass().getViaRule();
+      result = board.rules.nets.get(pNetNo).getNetClass().getViaRule();
     }
     return result;
   }
@@ -926,16 +925,16 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *   <li>The layer index is out of valid range
    * </ul>
    *
-   * @param p_layer the layer index to set the default width for
-   * @param p_value the new default trace half-width in board units
+   * @param pLayer the layer index to set the default width for
+   * @param pValue the new default trace half-width in board units
    * @see BoardRules#setDefaultTraceHalfWidth(int, int)
    */
-  public void setDefaultTraceHalfwidth(int p_layer, int p_value) {
+  public void setDefaultTraceHalfwidth(int pLayer, int pValue) {
     if (boardIsReadOnly) {
       return;
     }
-    if (p_layer >= 0 && p_layer <= board.getLayerCount()) {
-      board.rules.setDefaultTraceHalfWidth(p_layer, p_value);
+    if (pLayer >= 0 && pLayer <= board.getLayerCount()) {
+      board.rules.setDefaultTraceHalfWidth(pLayer, pValue);
     }
   }
 
@@ -952,14 +951,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This setting is ignored if the board is in read-only mode.
    *
-   * @param p_value true to enable clearance compensation, false to disable
+   * @param pValue true to enable clearance compensation, false to disable
    * @see SearchTreeManager#setClearanceCompensationUsed(boolean)
    */
-  public void setClearanceCompensation(boolean p_value) {
+  public void setClearanceCompensation(boolean pValue) {
     if (boardIsReadOnly) {
       return;
     }
-    board.searchTreeManager.setClearanceCompensationUsed(p_value);
+    board.searchTreeManager.setClearanceCompensationUsed(pValue);
   }
 
   /**
@@ -975,15 +974,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This setting is ignored if the board is in read-only mode.
    *
-   * @param p_snap_angle the angle restriction to apply
+   * @param pSnapAngle the angle restriction to apply
    * @see AngleRestriction
    * @see BoardRules#setTraceAngleRestriction(AngleRestriction)
    */
-  public void setCurrentSnapAngle(AngleRestriction p_snap_angle) {
+  public void setCurrentSnapAngle(AngleRestriction pSnapAngle) {
     if (boardIsReadOnly) {
       return;
     }
-    board.rules.setTraceAngleRestriction(p_snap_angle);
+    board.rules.setTraceAngleRestriction(pSnapAngle);
   }
 
   /**
@@ -1000,14 +999,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This setting is ignored if the board is in read-only mode.
    *
-   * @param p_layer the layer index to make active (will be clamped to valid range)
+   * @param pLayer the layer index to make active (will be clamped to valid range)
    * @see #setLayer(int)
    */
-  public void setCurrentLayer(int p_layer) {
+  public void setCurrentLayer(int pLayer) {
     if (boardIsReadOnly) {
       return;
     }
-    int layer = Math.max(p_layer, 0);
+    int layer = Math.max(pLayer, 0);
     layer = Math.min(layer, board.getLayerCount() - 1);
     setLayer(layer);
   }
@@ -1029,28 +1028,28 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p><strong>Note:</strong> This is for internal use. External code should use {@link
    * #setCurrentLayer(int)} which provides validation and logging.
    *
-   * @param p_layer_no the layer index to switch to (assumed to be valid)
+   * @param pLayerNo the layer index to switch to (assumed to be valid)
    * @see #setCurrentLayer(int)
    */
-  void setLayer(int p_layer_no) {
-    Layer currLayer = board.layerStructure.arr[p_layer_no];
+  void setLayer(int pLayerNo) {
+    Layer currLayer = board.layerStructure.arr[pLayerNo];
     screenMessages.setLayer(currLayer.name);
-    interactiveSettings.setLayer(p_layer_no);
+    interactiveSettings.setLayer(pLayerNo);
 
     // Change the selected layer in the select parameter window.
     if ((!this.boardIsReadOnly) && (currLayer.isSignal)) {
-      this.panel.setSelectedSignalLayer(p_layer_no);
+      this.panel.setSelectedSignalLayer(pLayerNo);
     }
 
     // make the layer visible, if it is invisible
     if (graphicsContext != null) {
-      if (graphicsContext.getLayerVisibility(p_layer_no) == 0) {
-        graphicsContext.setLayerVisibility(p_layer_no, 1);
+      if (graphicsContext.getLayerVisibility(pLayerNo) == 0) {
+        graphicsContext.setLayerVisibility(pLayerNo, 1);
         if (panel != null && panel.boardFrame != null) {
           panel.boardFrame.refreshWindows();
         }
       }
-      graphicsContext.setFullyVisibleLayer(p_layer_no);
+      graphicsContext.setFullyVisibleLayer(pLayerNo);
     }
     repaint();
   }
@@ -1089,22 +1088,22 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>The manual trace width is only used when manual rule selection is active.
    *
-   * @param p_layer_no the layer index, or special index for all/inner layers
-   * @param p_value the trace half-width to set in board units
+   * @param pLayerNo the layer index, or special index for all/inner layers
+   * @param pValue the trace half-width to set in board units
    * @see InteractiveSettings#setManualTraceHalfWidth(int, int)
    * @see ComboBoxLayer
    */
-  public void setManualTraceHalfWidth(int p_layer_no, int p_value) {
-    if (p_layer_no == ComboBoxLayer.ALL_LAYER_INDEX) {
+  public void setManualTraceHalfWidth(int pLayerNo, int pValue) {
+    if (pLayerNo == ComboBoxLayer.ALL_LAYER_INDEX) {
       for (int i = 0; i < interactiveSettings.getLayerCount(); i++) {
-        this.interactiveSettings.setManualTraceHalfWidth(i, p_value);
+        this.interactiveSettings.setManualTraceHalfWidth(i, pValue);
       }
-    } else if (p_layer_no == ComboBoxLayer.INNER_LAYER_INDEX) {
+    } else if (pLayerNo == ComboBoxLayer.INNER_LAYER_INDEX) {
       for (int i = 1; i < interactiveSettings.getLayerCount() - 1; i++) {
-        this.interactiveSettings.setManualTraceHalfWidth(i, p_value);
+        this.interactiveSettings.setManualTraceHalfWidth(i, pValue);
       }
     } else {
-      this.interactiveSettings.setManualTraceHalfWidth(p_layer_no, p_value);
+      this.interactiveSettings.setManualTraceHalfWidth(pLayerNo, pValue);
     }
   }
 
@@ -1120,14 +1119,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This is useful for focusing on specific types of objects during editing.
    *
-   * @param p_item_type the item type to make selectable or non-selectable
-   * @param p_value true to make the item type selectable, false to disable selection
+   * @param pItemType the item type to make selectable or non-selectable
+   * @param pValue true to make the item type selectable, false to disable selection
    * @see ItemSelectionFilter.SelectableChoices
    * @see InteractiveSettings#setSelectable(ItemSelectionFilter.SelectableChoices, boolean)
    */
-  public void setSelectable(ItemSelectionFilter.SelectableChoices p_item_type, boolean p_value) {
-    interactiveSettings.setSelectable(p_item_type, p_value);
-    if (!p_value && this.interactiveState instanceof InspectedItemState) {
+  public void setSelectable(ItemSelectionFilter.SelectableChoices pItemType, boolean pValue) {
+    interactiveSettings.setSelectable(pItemType, pValue);
+    if (!pValue && this.interactiveState instanceof InspectedItemState) {
       setInteractiveState(((InspectedItemState) interactiveState).filter());
     }
   }
@@ -1246,12 +1245,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>If the rats nest is currently displayed, this method recalculates the air wires for the
    * given net and updates the display. Ignored if rats nest is not active or net number is invalid.
    *
-   * @param p_net_no the net number to recalculate connections for (must be > 0)
+   * @param pNetNo the net number to recalculate connections for (must be > 0)
    * @see RatsNest#recalculate(int, BasicBoard)
    */
-  void updateRatsnest(int p_net_no) {
-    if (ratsnest != null && p_net_no > 0) {
-      ratsnest.recalculate(p_net_no, this.board);
+  void updateRatsnest(int pNetNo) {
+    if (ratsnest != null && pNetNo > 0) {
+      ratsnest.recalculate(pNetNo, this.board);
       ratsnest.show();
     }
   }
@@ -1262,13 +1261,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>This optimized version recalculates connections only for items in the provided collection,
    * which is more efficient when only a subset of items has changed.
    *
-   * @param p_net_no the net number to recalculate connections for (must be > 0)
-   * @param p_item_list the collection of items to consider in the recalculation
+   * @param pNetNo the net number to recalculate connections for (must be > 0)
+   * @param pItemList the collection of items to consider in the recalculation
    * @see RatsNest#recalculate(int, Collection, BasicBoard)
    */
-  void updateRatsnest(int p_net_no, Collection<Item> p_item_list) {
-    if (ratsnest != null && p_net_no > 0) {
-      ratsnest.recalculate(p_net_no, p_item_list, this.board);
+  void updateRatsnest(int pNetNo, Collection<Item> pItemList) {
+    if (ratsnest != null && pNetNo > 0) {
+      ratsnest.recalculate(pNetNo, pItemList, this.board);
       ratsnest.show();
     }
   }
@@ -1385,13 +1384,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>Useful for focusing on specific nets while hiding others for clarity.
    *
-   * @param p_net_no the net number to filter
-   * @param p_value true to show incompletes, false to hide them
+   * @param pNetNo the net number to filter
+   * @param pValue true to show incompletes, false to hide them
    * @see RatsNest#setFilter(int, boolean)
    */
-  public void setIncompletesFilter(int p_net_no, boolean p_value) {
+  public void setIncompletesFilter(int pNetNo, boolean pValue) {
     if (ratsnest != null) {
-      ratsnest.setFilter(p_net_no, p_value);
+      ratsnest.setFilter(pNetNo, pValue);
     }
   }
 
@@ -1414,31 +1413,31 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *   <li>DSN file units for import/export
    * </ul>
    *
-   * @param p_bounding_box the rectangular boundary of the board
-   * @param p_layer_structure the layer stack-up definition
-   * @param p_outline_shapes array of shapes defining the board outline
-   * @param p_outline_clearance_class_name clearance class name for the outline
-   * @param p_rules the board design rules and constraints
-   * @param p_board_communication communication interface for external integration
+   * @param pBoundingBox the rectangular boundary of the board
+   * @param pLayerStructure the layer stack-up definition
+   * @param pOutlineShapes array of shapes defining the board outline
+   * @param pOutlineClearanceClassName clearance class name for the outline
+   * @param pRules the board design rules and constraints
+   * @param pBoardCommunication communication interface for external integration
    * @see HeadlessBoardManager#createBoard
    * @see GraphicsContext
    * @see CoordinateTransform
    */
   @Override
   public void createBoard(
-      IntBox p_bounding_box,
-      LayerStructure p_layer_structure,
-      PolylineShape[] p_outline_shapes,
-      String p_outline_clearance_class_name,
-      BoardRules p_rules,
-      Communication p_board_communication) {
+      IntBox pBoundingBox,
+      LayerStructure pLayerStructure,
+      PolylineShape[] pOutlineShapes,
+      String pOutlineClearanceClassName,
+      BoardRules pRules,
+      Communication pBoardCommunication) {
     super.createBoard(
-        p_bounding_box,
-        p_layer_structure,
-        p_outline_shapes,
-        p_outline_clearance_class_name,
-        p_rules,
-        p_board_communication);
+        pBoundingBox,
+        pLayerStructure,
+        pOutlineShapes,
+        pOutlineClearanceClassName,
+        pRules,
+        pBoardCommunication);
 
     // Reset and rebind the GUI-session singleton for the newly created board.
     this.interactiveSettings =
@@ -1446,15 +1445,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
     this.initializeManualTraceHalfWidths();
 
     // create the interactive/GUI settings with default values
-    double unitFactor = p_board_communication.coordinateTransform.boardToDsn(1);
+    double unitFactor = pBoardCommunication.coordinateTransform.boardToDsn(1);
     this.coordinateTransform =
-        new CoordinateTransform(
-            1, p_board_communication.unit, unitFactor, p_board_communication.unit);
+        new CoordinateTransform(1, pBoardCommunication.unit, unitFactor, pBoardCommunication.unit);
 
     // create a graphics context for the board
     Dimension panelSize = panel.getPreferredSize();
-    graphicsContext =
-        new GraphicsContext(p_bounding_box, panelSize, p_layer_structure, this.locale);
+    graphicsContext = new GraphicsContext(pBoundingBox, panelSize, pLayerStructure, this.locale);
   }
 
   /**
@@ -1567,17 +1564,17 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>The coordinate transform is recreated to maintain correct scaling factors between user units
    * and board internal units.
    *
-   * @param p_unit the new unit for user display (mm, mil, inch, etc.)
+   * @param pUnit the new unit for user display (mm, mil, inch, etc.)
    * @see Unit
    * @see CoordinateTransform
    */
-  public void changeUserUnit(Unit p_unit) {
-    screenMessages.setUnitLabel(p_unit.toString());
+  public void changeUserUnit(Unit pUnit) {
+    screenMessages.setUnitLabel(pUnit.toString());
     CoordinateTransform oldTransform = this.coordinateTransform;
     this.coordinateTransform =
         new CoordinateTransform(
             oldTransform.userUnitFactor,
-            p_unit,
+            pUnit,
             oldTransform.boardUnitFactor,
             oldTransform.boardUnit);
   }
@@ -1603,8 +1600,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public void repaint() {
     if (this.paintImmediately) {
-      final Rectangle MAX_RECTANGLE = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
-      panel.paintImmediately(MAX_RECTANGLE);
+      final Rectangle maxRectangle = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+      panel.paintImmediately(maxRectangle);
     } else {
       // Use shorter interval for interactive dragging to ensure smooth visual feedback
       long effectiveInterval =
@@ -1646,14 +1643,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *   <li><strong>Normal mode:</strong> Asynchronous repaint request
    * </ul>
    *
-   * @param p_rect the rectangular region to repaint in screen coordinates
+   * @param pRect the rectangular region to repaint in screen coordinates
    * @see #repaint()
    */
-  public void repaint(Rectangle p_rect) {
+  public void repaint(Rectangle pRect) {
     if (this.paintImmediately) {
-      panel.paintImmediately(p_rect);
+      panel.paintImmediately(pRect);
     } else {
-      panel.repaint(p_rect);
+      panel.repaint(pRect);
     }
   }
 
@@ -1705,32 +1702,32 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>Called automatically by the panel during repaint operations.
    *
-   * @param p_graphics the Graphics context for rendering
+   * @param pGraphics the Graphics context for rendering
    * @see RoutingBoard#draw(Graphics, GraphicsContext)
    * @see InteractiveState#draw(Graphics)
    */
-  public void draw(Graphics p_graphics) {
+  public void draw(Graphics pGraphics) {
     if (board == null) {
       return;
     }
-    board.draw(p_graphics, graphicsContext);
+    board.draw(pGraphics, graphicsContext);
 
     if (ratsnest != null) {
-      ratsnest.draw(p_graphics, graphicsContext);
+      ratsnest.draw(pGraphics, graphicsContext);
     }
     if (clearanceViolations != null) {
-      clearanceViolations.draw(p_graphics, graphicsContext);
+      clearanceViolations.draw(pGraphics, graphicsContext);
     }
     if (interactiveState != null) {
-      interactiveState.draw(p_graphics);
+      interactiveState.draw(pGraphics);
     }
     if (interactiveActionThread != null) {
-      interactiveActionThread.draw(p_graphics);
+      interactiveActionThread.draw(pGraphics);
     }
 
     // Draw indicators for impacted points from trace events
     if (impactedPoints != null && impactedPoints.length > 0) {
-      drawImpactedPointsIndicators(p_graphics);
+      drawImpactedPointsIndicators(pGraphics);
     }
   }
 
@@ -1748,10 +1745,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>The indicator size is based on the default trace width, with a minimum size for visibility.
    * This provides visual feedback for debugging routing algorithms.
    *
-   * @param p_graphics the Graphics context for rendering
+   * @param pGraphics the Graphics context for rendering
    * @see #handleTraceEvent(TraceEvent)
    */
-  private void drawImpactedPointsIndicators(Graphics p_graphics) {
+  private void drawImpactedPointsIndicators(Graphics pGraphics) {
     Color drawColor = graphicsContext.getHilightColor();
     double drawIntensity = graphicsContext.getHilightColorIntensity();
     int defaultTraceHalfWidth = board.rules.getDefaultTraceHalfWidth(0);
@@ -1768,16 +1765,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
         // Draw first diagonal line (top-left to bottom-right)
         drawPoints[0] = new FloatPoint(center.x - radius, center.y - radius);
         drawPoints[1] = new FloatPoint(center.x + radius, center.y + radius);
-        graphicsContext.draw(drawPoints, drawWidth, drawColor, p_graphics, drawIntensity);
+        graphicsContext.draw(drawPoints, drawWidth, drawColor, pGraphics, drawIntensity);
 
         // Draw second diagonal line (top-right to bottom-left)
         drawPoints[0] = new FloatPoint(center.x + radius, center.y - radius);
         drawPoints[1] = new FloatPoint(center.x - radius, center.y + radius);
-        graphicsContext.draw(drawPoints, drawWidth, drawColor, p_graphics, drawIntensity);
+        graphicsContext.draw(drawPoints, drawWidth, drawColor, pGraphics, drawIntensity);
 
         // Draw a circle around the point
-        graphicsContext.drawCircle(
-            center, radius, drawWidth, drawColor, p_graphics, drawIntensity);
+        graphicsContext.drawCircle(center, radius, drawWidth, drawColor, pGraphics, drawIntensity);
       }
     }
   }
@@ -1827,8 +1823,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     Set<Integer> changedNets = new TreeSet<>();
     if (board.undo(changedNets)) {
-      for (Integer changed_net : changedNets) {
-        this.updateRatsnest(changed_net);
+      for (Integer changedNet : changedNets) {
+        this.updateRatsnest(changedNet);
       }
       if (!changedNets.isEmpty()) {
         // reset the start pass number in the autorouter in case
@@ -1871,8 +1867,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     Set<Integer> changedNets = new TreeSet<>();
     if (board.redo(changedNets)) {
-      for (Integer changed_net : changedNets) {
-        this.updateRatsnest(changed_net);
+      for (Integer changedNet : changedNets) {
+        this.updateRatsnest(changedNet);
       }
       screenMessages.setStatusMessage(tm.getText("redo"));
     } else {
@@ -1895,11 +1891,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>The screen point is converted to board coordinates before being passed to the interactive
    * state.
    *
-   * @param p_point the mouse click location in screen coordinates
+   * @param pPoint the mouse click location in screen coordinates
    * @see InteractiveState#leftButtonClicked(FloatPoint)
    * @see #stopAutorouterAndRouteOptimizer()
    */
-  public void leftButtonClicked(Point2D p_point) {
+  public void leftButtonClicked(Point2D pPoint) {
     if (boardIsReadOnly) {
       // We are currently busy working on the board and the user clicked on the canvas
       // with the left mouse button.
@@ -1907,7 +1903,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     if (interactiveState != null && graphicsContext != null) {
-      FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(p_point);
+      FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(pPoint);
       InteractiveState returnState =
           executeStateCommand(interactiveState.leftButtonClickedCommand(location));
       applyInteractiveStateChange(returnState, true, false);
@@ -1930,13 +1926,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p><strong>Note:</strong> Automatic repaint is avoided here to maintain performance during
    * interactive routing. States that need repainting should handle it explicitly.
    *
-   * @param p_point the mouse position in screen coordinates
+   * @param pPoint the mouse position in screen coordinates
    * @see InteractiveState#mouseMoved()
    * @see #pickItems(FloatPoint)
    */
-  public void mouseMoved(Point2D p_point) {
+  public void mouseMoved(Point2D pPoint) {
     if (interactiveState != null && graphicsContext != null) {
-      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(p_point);
+      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(pPoint);
 
       // Always update the mouse position display, even when board is read-only
       FloatPoint mousePosition = coordinateTransform.boardToUser(this.currentMousePosition);
@@ -1969,12 +1965,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>Updates the current mouse position and delegates the event to the interactive state for
    * state-specific handling (e.g., initiating drag operations, starting selection rectangles).
    *
-   * @param p_point the mouse position in screen coordinates where the button was pressed
+   * @param pPoint the mouse position in screen coordinates where the button was pressed
    * @see InteractiveState#mousePressed(FloatPoint)
    */
-  public void mousePressed(Point2D p_point) {
+  public void mousePressed(Point2D pPoint) {
     if (interactiveState != null && graphicsContext != null) {
-      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(p_point);
+      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(pPoint);
       InteractiveState returnState =
           executeStateCommand(interactiveState.mousePressedCommand(this.currentMousePosition));
       applyInteractiveStateChange(returnState, false, false);
@@ -1989,12 +1985,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>If the state changes during the drag, triggers a repaint.
    *
-   * @param p_point the current mouse position in screen coordinates during the drag
+   * @param pPoint the current mouse position in screen coordinates during the drag
    * @see InteractiveState#mouseDragged(FloatPoint)
    */
-  public void mouseDragged(Point2D p_point) {
+  public void mouseDragged(Point2D pPoint) {
     if (interactiveState != null && graphicsContext != null) {
-      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(p_point);
+      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(pPoint);
       InteractiveState returnState =
           executeStateCommand(interactiveState.mouseDraggedCommand(this.currentMousePosition));
       applyInteractiveStateChange(returnState, true, false);
@@ -2013,8 +2009,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public void buttonReleased() {
     if (interactiveState != null) {
-      InteractiveState returnState =
-          executeStateCommand(interactiveState.buttonReleasedCommand());
+      InteractiveState returnState = executeStateCommand(interactiveState.buttonReleasedCommand());
       applyInteractiveStateChange(returnState, true, false);
     }
   }
@@ -2031,15 +2026,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *   <li>State-specific scroll behaviors
    * </ul>
    *
-   * @param p_point the mouse position in screen coordinates during wheel movement
-   * @param p_rotation the wheel rotation amount (positive for up/away, negative for down/toward)
+   * @param pPoint the mouse position in screen coordinates during wheel movement
+   * @param pRotation the wheel rotation amount (positive for up/away, negative for down/toward)
    * @see InteractiveState#mouseWheelMoved(int)
    */
-  public void mouseWheelMoved(Point2D p_point, int p_rotation) {
+  public void mouseWheelMoved(Point2D pPoint, int pRotation) {
     if (interactiveState != null && graphicsContext != null) {
-      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(p_point);
+      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(pPoint);
       InteractiveState returnState =
-          executeStateCommand(interactiveState.mouseWheelMovedCommand(p_rotation));
+          executeStateCommand(interactiveState.mouseWheelMovedCommand(pRotation));
       applyInteractiveStateChange(returnState, true, false);
     }
   }
@@ -2054,16 +2049,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_key_char the character typed on the keyboard
+   * @param pKeyChar the character typed on the keyboard
    * @see InteractiveState#keyTyped(char)
    */
-  public void keyTypedAction(char p_key_char) {
+  public void keyTypedAction(char pKeyChar) {
     if (boardIsReadOnly || interactiveState == null || graphicsContext == null) {
       // no interactive action when logfile is running or board graphics are not ready
       return;
     }
-    InteractiveState returnState =
-        executeStateCommand(interactiveState.keyTypedCommand(p_key_char));
+    InteractiveState returnState = executeStateCommand(interactiveState.keyTypedCommand(pKeyChar));
     applyInteractiveStateChange(returnState, true, true);
   }
 
@@ -2118,14 +2112,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_new_layer the target layer index to change to
+   * @param pNewLayer the target layer index to change to
    * @return true if the layer change was successful, false if it failed
    * @see InteractiveState#changeLayerAction(int)
    */
-  public boolean changeLayerAction(int p_new_layer) {
+  public boolean changeLayerAction(int pNewLayer) {
     boolean result = true;
     if (interactiveState != null && !boardIsReadOnly) {
-      result = interactiveState.changeLayerAction(p_new_layer);
+      result = interactiveState.changeLayerAction(pNewLayer);
     }
     return result;
   }
@@ -2198,11 +2192,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>After successful loading, updates the layer display and stores a checksum for change
    * detection.
    *
-   * @param p_design the input stream containing serialized board data
+   * @param pDesign the input stream containing serialized board data
    * @return true if loading succeeded, false if an error occurred
    * @see #saveAsBinary(ObjectOutputStream)
    */
-  public boolean loadFromBinary(ObjectInputStream p_design) {
+  public boolean loadFromBinary(ObjectInputStream pDesign) {
     String inputFilename =
         this.routingJob != null && this.routingJob.input != null
             ? this.routingJob.input.getFilename()
@@ -2216,16 +2210,16 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
 
     try {
-      board = (RoutingBoard) p_design.readObject();
-      interactiveSettings = (InteractiveSettings) p_design.readObject();
+      board = (RoutingBoard) pDesign.readObject();
+      interactiveSettings = (InteractiveSettings) pDesign.readObject();
       // Adopt the deserialized instance as the authoritative singleton so that subsequent
       // getOrCreate / getInteractiveSettings calls return the same object.
       InteractiveSettings.setInstance(interactiveSettings);
       // Register the singleton as the live GuiSettings source (priority 50) in the merger so
       // that every subsequent merge() call reflects the current interactive GUI state.
       this.settingsMerger.addOrReplaceSources(interactiveSettings);
-      coordinateTransform = (CoordinateTransform) p_design.readObject();
-      graphicsContext = (GraphicsContext) p_design.readObject();
+      coordinateTransform = (CoordinateTransform) pDesign.readObject();
+      graphicsContext = (GraphicsContext) pDesign.readObject();
       originalBoardChecksum = calculateCrc32();
     } catch (Exception e) {
       routingJob.logError("Couldn't read design file", e);
@@ -2252,21 +2246,21 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>Updates the board checksum on successful save.
    *
-   * @param p_output_stream the stream to write the DSN data to
-   * @param p_design_name the name for the design
-   * @param p_compat_mode true for compatibility mode, false for full format
+   * @param pOutputStream the stream to write the DSN data to
+   * @param pDesignName the name for the design
+   * @param pCompatMode true for compatibility mode, false for full format
    * @return true if save succeeded, false otherwise
    * @see DsnWriter#write
    */
   public boolean saveAsSpecctraDesignDsn(
-      OutputStream p_output_stream, String p_design_name, boolean p_compat_mode) {
-    if (boardIsReadOnly || p_output_stream == null) {
+      OutputStream pOutputStream, String pDesignName, boolean pCompatMode) {
+    if (boardIsReadOnly || pOutputStream == null) {
       return false;
     }
 
     boolean wasSaveSuccessful;
     try {
-      DsnWriter.write(getRoutingBoard(), p_output_stream, p_design_name, p_compat_mode);
+      DsnWriter.write(getRoutingBoard(), pOutputStream, pDesignName, pCompatMode);
       wasSaveSuccessful = true;
     } catch (IOException e) {
       FRLogger.error("unable to write Specctra DSN file", e);
@@ -2305,18 +2299,18 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>This allows routing results to be imported into Autodesk Eagle PCB software by reading a
    * .SES file and converting it to Eagle script commands.
    *
-   * @param p_input_stream the stream containing the .SES session data
-   * @param p_output_stream the stream to write the Eagle script to
+   * @param pInputStream the stream containing the .SES session data
+   * @param pOutputStream the stream to write the Eagle script to
    * @return true if conversion succeeded, false otherwise
    * @see app.freerouting.io.specctra.parser.SessionToEagle
    */
   public boolean saveSpecctraSessionSesAsEagleScriptScr(
-      InputStream p_input_stream, OutputStream p_output_stream) {
+      InputStream pInputStream, OutputStream pOutputStream) {
     if (boardIsReadOnly) {
       return false;
     }
     return app.freerouting.io.specctra.SesReader.saveSpecctraSessionSesAsEagleScriptScr(
-        p_input_stream, p_output_stream, this.board);
+        pInputStream, pOutputStream, this.board);
   }
 
   /**
@@ -2424,17 +2418,17 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>Updates the board checksum on successful save for change tracking.
    *
-   * @param p_object_stream the stream to write serialized data to
+   * @param pObjectStream the stream to write serialized data to
    * @return true if save succeeded, false if an error occurred
    * @see #loadFromBinary(ObjectInputStream)
    */
-  public boolean saveAsBinary(ObjectOutputStream p_object_stream) {
+  public boolean saveAsBinary(ObjectOutputStream pObjectStream) {
     boolean result = true;
     try {
-      p_object_stream.writeObject(board);
-      p_object_stream.writeObject(interactiveSettings);
-      p_object_stream.writeObject(coordinateTransform);
-      p_object_stream.writeObject(graphicsContext);
+      pObjectStream.writeObject(board);
+      pObjectStream.writeObject(interactiveSettings);
+      pObjectStream.writeObject(coordinateTransform);
+      pObjectStream.writeObject(graphicsContext);
 
       originalBoardChecksum = calculateCrc32();
     } catch (Exception _) {
@@ -2460,15 +2454,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_point the starting position in screen coordinates
+   * @param pPoint the starting position in screen coordinates
    * @see RouteState
    */
-  public void startRoute(Point2D p_point) {
+  public void startRoute(Point2D pPoint) {
     if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(p_point);
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(pPoint);
     InteractiveState newState = RouteState.getInstance(location, this.interactiveState, this);
     setInteractiveState(newState);
   }
@@ -2482,14 +2476,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>This operation requires the interactive state to be a MenuState and is ignored if the board
    * is in read-only mode.
    *
-   * @param p_point the location in screen coordinates where items should be selected
+   * @param pPoint the location in screen coordinates where items should be selected
    * @see MenuState#selectItems(FloatPoint)
    */
-  public void selectItems(Point2D p_point) {
+  public void selectItems(Point2D pPoint) {
     if (boardIsReadOnly || !(this.interactiveState instanceof MenuState)) {
       return;
     }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(p_point);
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(pPoint);
     InteractiveState returnState = ((MenuState) interactiveState).selectItems(location);
     setInteractiveState(returnState);
   }
@@ -2524,20 +2518,20 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_items the collection of items to select
+   * @param pItems the collection of items to select
    * @see InspectedItemState
    */
-  public void selectItems(Set<Item> p_items) {
+  public void selectItems(Set<Item> pItems) {
     if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
     this.displayLayerMessage();
     if (interactiveState instanceof MenuState) {
-      setInteractiveState(InspectedItemState.getInstance(p_items, interactiveState, this));
+      setInteractiveState(InspectedItemState.getInstance(pItems, interactiveState, this));
     } else if (interactiveState instanceof InspectedItemState state) {
       state.getItemList().clear();
-      state.getItemList().addAll(p_items);
+      state.getItemList().addAll(pItems);
       repaint();
     }
   }
@@ -2551,14 +2545,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>This operation requires the interactive state to be a MenuState and is ignored if the board
    * is in read-only mode.
    *
-   * @param p_location the location in screen coordinates to search for a swappable pin
+   * @param pLocation the location in screen coordinates to search for a swappable pin
    * @see MenuState#swapPin(FloatPoint)
    */
-  public void swapPin(Point2D p_location) {
+  public void swapPin(Point2D pLocation) {
     if (boardIsReadOnly || !(this.interactiveState instanceof MenuState)) {
       return;
     }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(p_location);
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(pLocation);
     InteractiveState returnState = ((MenuState) interactiveState).swapPin(location);
     setInteractiveState(returnState);
   }
@@ -2601,14 +2595,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This operation requires InspectedItemState and is ignored if the board is in read-only mode.
    *
-   * @param p_point the location in screen coordinates to pick the item
+   * @param pPoint the location in screen coordinates to pick the item
    * @see InspectedItemState#toggleSelect(FloatPoint)
    */
-  public void toggleSelectAction(Point2D p_point) {
+  public void toggleSelectAction(Point2D pPoint) {
     if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(p_point);
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(pPoint);
     InteractiveState returnState = ((InspectedItemState) interactiveState).toggleSelect(location);
     if (returnState != this.interactiveState) {
       setInteractiveState(returnState);
@@ -2699,9 +2693,9 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
    * is a placeholder for future functionality.
    *
-   * @param p_cl_class_index the clearance class index to assign
+   * @param pClClassIndex the clearance class index to assign
    */
-  public void assignClearanceClasssToSelectedItems(int p_cl_class_index) {
+  public void assignClearanceClasssToSelectedItems(int pClClassIndex) {
     // Editing disabled in inspection mode
   }
 
@@ -2711,9 +2705,9 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
    * is a placeholder for future functionality.
    *
-   * @param p_from_location the starting location for the move/rotate operation
+   * @param pFromLocation the starting location for the move/rotate operation
    */
-  public void moveSelectedItems(Point2D p_from_location) {
+  public void moveSelectedItems(Point2D pFromLocation) {
     // Editing disabled in inspection mode
   }
 
@@ -2723,9 +2717,9 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
    * is a placeholder for future functionality.
    *
-   * @param p_from_location the starting location for the copy operation
+   * @param pFromLocation the starting location for the copy operation
    */
-  public void copySelectedItems(Point2D p_from_location) {
+  public void copySelectedItems(Point2D pFromLocation) {
     // Editing disabled in inspection mode
   }
 
@@ -2903,15 +2897,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This operation requires MoveItemState and is ignored if the board is in read-only mode.
    *
-   * @param p_factor the rotation direction and magnitude
+   * @param pFactor the rotation direction and magnitude
    * @see MoveItemState#turn45Degree(int)
    */
-  public void turn45Degree(int p_factor) {
+  public void turn45Degree(int pFactor) {
     if (boardIsReadOnly || !(interactiveState instanceof MoveItemState)) {
       // no interactive action when logfile is running
       return;
     }
-    ((MoveItemState) interactiveState).turn45Degree(p_factor);
+    ((MoveItemState) interactiveState).turn45Degree(pFactor);
   }
 
   /**
@@ -2953,17 +2947,16 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_point the starting position in screen coordinates for the circle center
+   * @param pPoint the starting position in screen coordinates for the circle center
    * @see CircleConstructionState
    */
-  public void startCircle(Point2D p_point) {
+  public void startCircle(Point2D pPoint) {
     if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(p_point);
-    setInteractiveState(
-        CircleConstructionState.getInstance(location, this.interactiveState, this));
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(pPoint);
+    setInteractiveState(CircleConstructionState.getInstance(location, this.interactiveState, this));
   }
 
   /**
@@ -2974,17 +2967,16 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_point the starting position in screen coordinates for the tile
+   * @param pPoint the starting position in screen coordinates for the tile
    * @see TileConstructionState
    */
-  public void startTile(Point2D p_point) {
+  public void startTile(Point2D pPoint) {
     if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(p_point);
-    setInteractiveState(
-        TileConstructionState.getInstance(location, this.interactiveState, this));
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(pPoint);
+    setInteractiveState(TileConstructionState.getInstance(location, this.interactiveState, this));
   }
 
   /**
@@ -2995,15 +2987,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_point the starting position in screen coordinates for the first corner
+   * @param pPoint the starting position in screen coordinates for the first corner
    * @see PolygonShapeConstructionState
    */
-  public void startPolygonshapeItem(Point2D p_point) {
+  public void startPolygonshapeItem(Point2D pPoint) {
     if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(p_point);
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(pPoint);
     setInteractiveState(
         PolygonShapeConstructionState.getInstance(location, this.interactiveState, this));
   }
@@ -3016,15 +3008,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_point the starting position in screen coordinates for the hole
+   * @param pPoint the starting position in screen coordinates for the hole
    * @see HoleConstructionState
    */
-  public void startAddingHole(Point2D p_point) {
+  public void startAddingHole(Point2D pPoint) {
     if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(p_point);
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(pPoint);
     InteractiveState newState =
         HoleConstructionState.getInstance(location, this.interactiveState, this);
     setInteractiveState(newState);
@@ -3058,13 +3050,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>Uses the current item selection filter from interactive settings. If nothing is found on the
    * active layer and selectOnAllVisibleLayers is enabled, searches all visible layers.
    *
-   * @param p_location the position in board coordinates to search
+   * @param pLocation the position in board coordinates to search
    * @return a set of items at that location (may be empty)
    * @see #pickItems(FloatPoint, ItemSelectionFilter)
    * @see InteractiveSettings#itemSelectionFilter
    */
-  Set<Item> pickItems(FloatPoint p_location) {
-    return pickItems(p_location, interactiveSettings.getItemSelectionFilter());
+  Set<Item> pickItems(FloatPoint pLocation) {
+    return pickItems(pLocation, interactiveSettings.getItemSelectionFilter());
   }
 
   /**
@@ -3074,21 +3066,21 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * enabled, expands the search to all visible layers (excluding the active layer). The item filter
    * determines which item types are considered.
    *
-   * @param p_location the position in board coordinates to search
-   * @param p_item_filter the filter defining which item types to include
+   * @param pLocation the position in board coordinates to search
+   * @param pItemFilter the filter defining which item types to include
    * @return a set of items matching the filter at that location (may be empty)
    * @see RoutingBoard#pickItems(Point, int, ItemSelectionFilter)
    * @see ItemSelectionFilter
    */
-  Set<Item> pickItems(FloatPoint p_location, ItemSelectionFilter p_item_filter) {
-    IntPoint location = p_location.round();
-    Set<Item> result = board.pickItems(location, interactiveSettings.getLayer(), p_item_filter);
+  Set<Item> pickItems(FloatPoint pLocation, ItemSelectionFilter pItemFilter) {
+    IntPoint location = pLocation.round();
+    Set<Item> result = board.pickItems(location, interactiveSettings.getLayer(), pItemFilter);
     if (result.isEmpty() && interactiveSettings.getSelectOnAllVisibleLayers()) {
       for (int i = 0; i < graphicsContext.layerCount(); i++) {
         if (i == interactiveSettings.getLayer() || graphicsContext.getLayerVisibility(i) <= 0) {
           continue;
         }
-        result.addAll(board.pickItems(location, i, p_item_filter));
+        result.addAll(board.pickItems(location, i, pItemFilter));
       }
     }
     return result;
@@ -3102,12 +3094,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_to_location the target position in board coordinates
+   * @param pToLocation the target position in board coordinates
    * @see BoardPanel#moveMouse(Point2D)
    */
-  void moveMouse(FloatPoint p_to_location) {
+  void moveMouse(FloatPoint pToLocation) {
     if (!boardIsReadOnly) {
-      panel.moveMouse(graphicsContext.coordinateTransform.boardToScreen(p_to_location));
+      panel.moveMouse(graphicsContext.coordinateTransform.boardToScreen(pToLocation));
     }
   }
 
@@ -3167,14 +3159,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>Toolbar update is skipped when the board is in read-only mode.
    *
-   * @param p_state the new interactive state to activate
+   * @param pState the new interactive state to activate
    * @see InteractiveState#setToolbar()
    */
-  public void setInteractiveState(InteractiveState p_state) {
-    if (p_state != null && p_state != interactiveState) {
-      this.interactiveState = p_state;
+  public void setInteractiveState(InteractiveState pState) {
+    if (pState != null && pState != interactiveState) {
+      this.interactiveState = pState;
       if (!this.boardIsReadOnly) {
-        p_state.setToolbar();
+        pState.setToolbar();
       }
     }
   }
@@ -3246,11 +3238,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Sets the board update strategy for batch operations.
    *
-   * @param p_board_update_strategy the new board update strategy
+   * @param pBoardUpdateStrategy the new board update strategy
    * @see BoardUpdateStrategy
    */
-  public void setBoardUpdateStrategy(BoardUpdateStrategy p_board_update_strategy) {
-    boardUpdateStrategy = p_board_update_strategy;
+  public void setBoardUpdateStrategy(BoardUpdateStrategy pBoardUpdateStrategy) {
+    boardUpdateStrategy = pBoardUpdateStrategy;
   }
 
   /**
@@ -3268,10 +3260,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Sets the hybrid routing ratio configuration.
    *
-   * @param p_hybrid_ratio the hybrid ratio configuration string
+   * @param pHybridRatio the hybrid ratio configuration string
    */
-  public void setHybridRatio(String p_hybrid_ratio) {
-    hybridRatio = p_hybrid_ratio;
+  public void setHybridRatio(String pHybridRatio) {
+    hybridRatio = pHybridRatio;
   }
 
   /**
@@ -3290,11 +3282,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Sets the item selection strategy for batch autorouting.
    *
-   * @param p_item_selection_strategy the new item selection strategy
+   * @param pItemSelectionStrategy the new item selection strategy
    * @see ItemSelectionStrategy
    */
-  public void setItemSelectionStrategy(ItemSelectionStrategy p_item_selection_strategy) {
-    itemSelectionStrategy = p_item_selection_strategy;
+  public void setItemSelectionStrategy(ItemSelectionStrategy pItemSelectionStrategy) {
+    itemSelectionStrategy = pItemSelectionStrategy;
   }
 
   /**
@@ -3319,11 +3311,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>The actual number used may be limited by global settings and system capabilities.
    *
-   * @param p_value the number of threads to use (should be >= 1)
+   * @param pValue the number of threads to use (should be >= 1)
    * @see #getNumThreads()
    */
-  public void setNumThreads(int p_value) {
-    numThreads = p_value;
+  public void setNumThreads(int pValue) {
+    numThreads = pValue;
   }
 
   /**

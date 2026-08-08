@@ -50,29 +50,29 @@ public class Via extends DrillItem implements Serializable {
 
   /** Creates a new instance of Via with the input parameters */
   public Via(
-      Padstack p_padstack,
-      Point p_center,
-      int[] p_net_no_arr,
-      int p_clearance_type,
-      int p_id_no,
-      int p_group_no,
-      FixedState p_fixed_state,
-      boolean p_attach_allowed,
-      BasicBoard p_board) {
-    super(p_center, p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
-    this.padstack = p_padstack;
-    this.attachAllowed = p_attach_allowed;
+      Padstack pPadstack,
+      Point pCenter,
+      int[] pNetNoArr,
+      int pClearanceType,
+      int pIdNo,
+      int pGroupNo,
+      FixedState pFixedState,
+      boolean pAttachAllowed,
+      BasicBoard pBoard) {
+    super(pCenter, pNetNoArr, pClearanceType, pIdNo, pGroupNo, pFixedState, pBoard);
+    this.padstack = pPadstack;
+    this.attachAllowed = pAttachAllowed;
   }
 
   @Override
-  public Item copy(int p_id_no) {
+  public Item copy(int pIdNo) {
     Via copy =
         new Via(
             padstack,
             getCenter(),
             netNoArr,
             clearanceClassNo(),
-            p_id_no,
+            pIdNo,
             getComponentNo(),
             getFixedState(),
             attachAllowed,
@@ -109,7 +109,7 @@ public class Via extends DrillItem implements Serializable {
   }
 
   @Override
-  public Shape getShape(int p_index) {
+  public Shape getShape(int pIndex) {
     if (padstack == null) {
       FRLogger.warn("Via.get_shape: padstack is null");
       return null;
@@ -128,7 +128,7 @@ public class Via extends DrillItem implements Serializable {
         }
       }
     }
-    return this.precalculatedShapes[p_index];
+    return this.precalculatedShapes[pIndex];
   }
 
   @Override
@@ -136,8 +136,8 @@ public class Via extends DrillItem implements Serializable {
     return padstack;
   }
 
-  public void setPadstack(Padstack p_padstack) {
-    padstack = p_padstack;
+  public void setPadstack(Padstack pPadstack) {
+    padstack = pPadstack;
   }
 
   @Override
@@ -146,20 +146,20 @@ public class Via extends DrillItem implements Serializable {
   }
 
   @Override
-  public boolean isObstacle(Item p_other) {
-    if (p_other == this || p_other instanceof ComponentObstacleArea) {
+  public boolean isObstacle(Item pOther) {
+    if (pOther == this || pOther instanceof ComponentObstacleArea) {
       return false;
     }
-    if ((p_other instanceof ConductionArea area) && !area.getIsObstacle()) {
+    if ((pOther instanceof ConductionArea area) && !area.getIsObstacle()) {
       return false;
     }
-    if (!p_other.sharesNet(this)) {
+    if (!pOther.sharesNet(this)) {
       return true;
     }
-    if (p_other instanceof Trace) {
+    if (pOther instanceof Trace) {
       return false;
     }
-    return !this.attachAllowed || !(p_other instanceof Pin) || !((Pin) p_other).drillAllowed();
+    return !this.attachAllowed || !(pOther instanceof Pin) || !((Pin) pOther).drillAllowed();
   }
 
   /** Checks, if the Via has contacts on at most 1 layer. */
@@ -184,7 +184,7 @@ public class Via extends DrillItem implements Serializable {
   }
 
   @Override
-  public void changePlacementSide(IntPoint p_pole) {
+  public void changePlacementSide(IntPoint pPole) {
     if (this.board == null) {
       return;
     }
@@ -193,21 +193,19 @@ public class Via extends DrillItem implements Serializable {
       return;
     }
     this.padstack = newPadstack;
-    super.changePlacementSide(p_pole);
+    super.changePlacementSide(pPole);
     clearDerivedData();
   }
 
-  public ExpansionDrill getAutorouteDrillInfo(ShapeSearchTree p_autoroute_tree) {
+  public ExpansionDrill getAutorouteDrillInfo(ShapeSearchTree pAutorouteTree) {
     if (this.autorouteDrillInfo == null) {
       ItemAutorouteInfo viaAutorouteInfo = this.getAutorouteInfo();
       TileShape currDrillShape = TileShape.getInstance(this.getCenter());
       this.autorouteDrillInfo =
-          new ExpansionDrill(
-              currDrillShape, this.getCenter(), this.firstLayer(), this.lastLayer());
+          new ExpansionDrill(currDrillShape, this.getCenter(), this.firstLayer(), this.lastLayer());
       int viaLayerCount = this.lastLayer() - this.firstLayer() + 1;
       for (int i = 0; i < viaLayerCount; i++) {
-        this.autorouteDrillInfo.roomArr[i] =
-            viaAutorouteInfo.getExpansionRoom(i, p_autoroute_tree);
+        this.autorouteDrillInfo.roomArr[i] = viaAutorouteInfo.getExpansionRoom(i, pAutorouteTree);
       }
     }
     return this.autorouteDrillInfo;
@@ -227,70 +225,70 @@ public class Via extends DrillItem implements Serializable {
   }
 
   @Override
-  public boolean isSelectedByFilter(ItemSelectionFilter p_filter) {
-    if (!this.isSelectedByFixedFilter(p_filter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter pFilter) {
+    if (!this.isSelectedByFixedFilter(pFilter)) {
       return false;
     }
-    return p_filter.isSelected(ItemSelectionFilter.SelectableChoices.VIAS);
+    return pFilter.isSelected(ItemSelectionFilter.SelectableChoices.VIAS);
   }
 
   @Override
-  public Color[] getDrawColors(GraphicsContext p_graphics_context) {
+  public Color[] getDrawColors(GraphicsContext pGraphicsContext) {
     Color[] result;
     if (this.netCount() == 0) {
       // display unconnected vias as obstacles
-      result = p_graphics_context.getObstacleColors();
+      result = pGraphicsContext.getObstacleColors();
     } else {
-      result = p_graphics_context.getTraceColors(this.isUserFixed());
+      result = pGraphicsContext.getTraceColors(this.isUserFixed());
     }
     return result;
   }
 
   @Override
-  public double getDrawIntensity(GraphicsContext p_graphics_context) {
+  public double getDrawIntensity(GraphicsContext pGraphicsContext) {
     double result;
     if (this.netCount() == 0) {
       // display unconnected vias as obstacles
-      result = p_graphics_context.getObstacleColorIntensity();
+      result = pGraphicsContext.getObstacleColorIntensity();
 
     } else if (this.firstLayer() >= this.lastLayer()) {
       // display vias with only one layer as pins
-      result = p_graphics_context.getPinColorIntensity();
+      result = pGraphicsContext.getPinColorIntensity();
     } else {
-      result = p_graphics_context.getViaColorIntensity();
+      result = pGraphicsContext.getViaColorIntensity();
     }
     return result;
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
-    p_window.appendBold(tm.getText("via"));
-    p_window.append(" " + tm.getText("at") + " ");
-    p_window.append(this.getCenter().toFloat());
-    p_window.append(", " + tm.getText("padstack"));
-    p_window.append(padstack.name, tm.getText("padstack_info"), padstack);
-    this.printConnectableItemInfo(p_window, p_locale);
-    p_window.newline();
+    pWindow.appendBold(tm.getText("via"));
+    pWindow.append(" " + tm.getText("at") + " ");
+    pWindow.append(this.getCenter().toFloat());
+    pWindow.append(", " + tm.getText("padstack"));
+    pWindow.append(padstack.name, tm.getText("padstack_info"), padstack);
+    this.printConnectableItemInfo(pWindow, pLocale);
+    pWindow.newline();
   }
 
   @Override
-  public String getHoverInfo(Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public String getHoverInfo(Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
     String fromLayer = this.board.layerStructure.arr[this.firstLayer()].name;
     String toLayer = this.board.layerStructure.arr[this.lastLayer()].name;
     String padstackName = padstack.name;
-    String connInfo = this.getConnectableItemHoverInfo(p_locale);
+    String connInfo = this.getConnectableItemHoverInfo(pLocale);
 
     return tm.getText("via_hover_info", padstackName, fromLayer, toLayer, connInfo);
   }
 
   @Override
-  public boolean write(ObjectOutputStream p_stream) {
+  public boolean write(ObjectOutputStream pStream) {
     try {
-      p_stream.writeObject(this);
+      pStream.writeObject(this);
     } catch (IOException _) {
       return false;
     }

@@ -12,18 +12,18 @@ public class PlaceControl extends ScopeKeyword {
   }
 
   /** Returns true, if rotate_first is read, else false. */
-  static boolean readFlipStyleRotateFirst(IJFlexScanner p_scanner) {
+  static boolean readFlipStyleRotateFirst(IJFlexScanner pScanner) {
     try {
       boolean result = false;
-      Object nextToken = p_scanner.nextToken();
+      Object nextToken = pScanner.nextToken();
       if (nextToken == ROTATE_FIRST) {
         result = true;
       }
-      nextToken = p_scanner.nextToken();
+      nextToken = pScanner.nextToken();
       if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Structure.read_flip_style: closing bracket expected at '"
-                + p_scanner.getScopeIdentifier()
+                + pScanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -36,13 +36,13 @@ public class PlaceControl extends ScopeKeyword {
 
   /** Reads the flip_style */
   @Override
-  public boolean readScope(ReadScopeParameter p_par) {
+  public boolean readScope(ReadScopeParameter pPar) {
     boolean flipStyleRotateFirst = false;
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = p_par.scanner.nextToken();
+        nextToken = pPar.scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("PlaceControl.read_scope: IO error scanning file", e);
         return false;
@@ -50,7 +50,7 @@ public class PlaceControl extends ScopeKeyword {
       if (nextToken == null) {
         FRLogger.warn(
             "PlaceControl.read_scope: unexpected end of file at '"
-                + p_par.scanner.getScopeIdentifier()
+                + pPar.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -60,12 +60,12 @@ public class PlaceControl extends ScopeKeyword {
       }
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == FLIP_STYLE) {
-          flipStyleRotateFirst = readFlipStyleRotateFirst(p_par.scanner);
+          flipStyleRotateFirst = readFlipStyleRotateFirst(pPar.scanner);
         }
       }
     }
     if (flipStyleRotateFirst) {
-      p_par.boardHandling.getRoutingBoard().components.setFlipStyleRotateFirst(true);
+      pPar.boardHandling.getRoutingBoard().components.setFlipStyleRotateFirst(true);
     }
     return true;
   }

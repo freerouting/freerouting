@@ -6,20 +6,20 @@ import java.io.IOException;
 /** Keywords defining a scope object */
 public class ScopeKeyword extends Keyword {
 
-  public ScopeKeyword(String p_name) {
-    super(p_name);
+  public ScopeKeyword(String pName) {
+    super(pName);
   }
 
   /**
    * Skips the current scope while reading a dsn file. Returns false, if no legal scope was found.
    */
-  public static boolean skipScope(IJFlexScanner p_scanner) {
+  public static boolean skipScope(IJFlexScanner pScanner) {
     int openBrackedCount = 1;
     while (openBrackedCount > 0) {
-      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
+      pScanner.yybegin(SpecctraDsnStreamReader.NAME);
       Object currToken;
       try {
-        currToken = p_scanner.nextToken();
+        currToken = pScanner.nextToken();
       } catch (Exception e) {
         FRLogger.error("ScopeKeyword.skip_scope: Error while scanning file", e);
         return false;
@@ -37,12 +37,12 @@ public class ScopeKeyword extends Keyword {
   }
 
   /** Reads the next scope of this keyword from dsn file. */
-  public boolean readScope(ReadScopeParameter p_par) {
+  public boolean readScope(ReadScopeParameter pPar) {
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = p_par.scanner.nextToken();
+        nextToken = pPar.scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("ScopeKeyword.read_scope: IO error scanning file", e);
         return false;
@@ -62,12 +62,12 @@ public class ScopeKeyword extends Keyword {
         if (nextToken instanceof ScopeKeyword keyword) {
           // read the next scope, which is the "structure" part of the DSN file
           nextScope = keyword;
-          if (!nextScope.readScope(p_par)) {
+          if (!nextScope.readScope(pPar)) {
             return false;
           }
         } else {
           // skip unknown scope
-          skipScope(p_par.scanner);
+          skipScope(pPar.scanner);
         }
       }
     }

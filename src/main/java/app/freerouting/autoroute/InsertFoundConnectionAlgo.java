@@ -27,9 +27,9 @@ public final class InsertFoundConnectionAlgo {
   private IntPoint firstCorner;
 
   /** Creates a new instance of InsertFoundConnectionAlgo */
-  private InsertFoundConnectionAlgo(RoutingBoard p_board, AutorouteControl p_ctrl) {
-    this.board = p_board;
-    this.ctrl = p_ctrl;
+  private InsertFoundConnectionAlgo(RoutingBoard pBoard, AutorouteControl pCtrl) {
+    this.board = pBoard;
+    this.ctrl = pCtrl;
   }
 
   /**
@@ -37,73 +37,72 @@ public final class InsertFoundConnectionAlgo {
    * succeed.
    */
   public static InsertFoundConnectionAlgo getInstance(
-      LocateFoundConnectionAlgo p_connection, RoutingBoard p_board, AutorouteControl p_ctrl) {
-    if (p_connection == null || p_connection.connectionItems == null) {
+      LocateFoundConnectionAlgo pConnection, RoutingBoard pBoard, AutorouteControl pCtrl) {
+    if (pConnection == null || pConnection.connectionItems == null) {
       return null;
     }
-    int currLayer = p_connection.targetLayer;
-    InsertFoundConnectionAlgo newInstance = new InsertFoundConnectionAlgo(p_board, p_ctrl);
-    for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item :
-        p_connection.connectionItems) {
+    int currLayer = pConnection.targetLayer;
+    InsertFoundConnectionAlgo newInstance = new InsertFoundConnectionAlgo(pBoard, pCtrl);
+    for (LocateFoundConnectionAlgoAnyAngle.ResultItem currNewItem : pConnection.connectionItems) {
       if (true) {
-        Point startCorner = curr_new_item.corners.length > 0 ? curr_new_item.corners[0] : null;
+        Point startCorner = currNewItem.corners.length > 0 ? currNewItem.corners[0] : null;
         Point endCorner =
-            curr_new_item.corners.length > 0
-                ? curr_new_item.corners[curr_new_item.corners.length - 1]
+            currNewItem.corners.length > 0
+                ? currNewItem.corners[currNewItem.corners.length - 1]
                 : null;
         FRLogger.trace(
             "compare_trace_connection_item_raw net="
-                + p_ctrl.netNo
+                + pCtrl.netNo
                 + ", item_layer="
-                + curr_new_item.layer
+                + currNewItem.layer
                 + ", cornerCount="
-                + curr_new_item.corners.length
+                + currNewItem.corners.length
                 + ", start="
                 + formatPoint(startCorner)
                 + ", end="
                 + formatPoint(endCorner));
       }
-      if (!newInstance.insertVia(curr_new_item.corners[0], currLayer, curr_new_item.layer)) {
+      if (!newInstance.insertVia(currNewItem.corners[0], currLayer, currNewItem.layer)) {
         return null;
       }
-      currLayer = curr_new_item.layer;
-      if (!newInstance.insertTrace(curr_new_item)) {
+      currLayer = currNewItem.layer;
+      if (!newInstance.insertTrace(currNewItem)) {
         return null;
       }
     }
-    if (!newInstance.insertVia(newInstance.lastCorner, currLayer, p_connection.startLayer)) {
+    if (!newInstance.insertVia(newInstance.lastCorner, currLayer, pConnection.startLayer)) {
       return null;
     }
-    if (p_connection.targetItem instanceof PolylineTrace to_trace) {
+    if (pConnection.targetItem instanceof PolylineTrace to_trace) {
       if (newInstance.firstCorner != null) {
-        p_board.connectToTrace(
+        pBoard.connectToTrace(
             newInstance.firstCorner,
             to_trace,
-            p_ctrl.traceHalfWidth[p_connection.startLayer],
-            p_ctrl.traceClearanceClassNo);
+            pCtrl.traceHalfWidth[pConnection.startLayer],
+            pCtrl.traceClearanceClassNo);
       } else {
         FRLogger.warn(
             "InsertFoundConnectionAlgo: firstCorner is null for net #"
-                + p_ctrl.netNo
+                + pCtrl.netNo
                 + ", skipping connect_to_trace for target item. This may indicate a degenerate route segment.");
       }
     }
-    if (p_connection.startItem instanceof PolylineTrace to_trace) {
+    if (pConnection.startItem instanceof PolylineTrace to_trace) {
       if (newInstance.lastCorner != null) {
-        p_board.connectToTrace(
+        pBoard.connectToTrace(
             newInstance.lastCorner,
             to_trace,
-            p_ctrl.traceHalfWidth[p_connection.targetLayer],
-            p_ctrl.traceClearanceClassNo);
+            pCtrl.traceHalfWidth[pConnection.targetLayer],
+            pCtrl.traceClearanceClassNo);
       } else {
         FRLogger.warn(
             "InsertFoundConnectionAlgo: lastCorner is null for net #"
-                + p_ctrl.netNo
+                + pCtrl.netNo
                 + ", skipping connect_to_trace for start item. This may indicate a degenerate route segment.");
       }
     }
 
-    p_board.normalizeTraces(p_ctrl.netNo);
+    pBoard.normalizeTraces(pCtrl.netNo);
 
     return newInstance;
   }
@@ -112,14 +111,14 @@ public final class InsertFoundConnectionAlgo {
    * Inserts the trace by shoving aside obstacle traces and vias. Returns false, that was not
    * possible for the whole trace.
    */
-  private boolean insertTrace(LocateFoundConnectionAlgoAnyAngle.ResultItem p_trace) {
-    if (p_trace.corners.length == 1) {
+  private boolean insertTrace(LocateFoundConnectionAlgoAnyAngle.ResultItem pTrace) {
+    if (pTrace.corners.length == 1) {
       // Single-point trace: the start and end are the same location (already at the target).
       // Set both firstCorner and lastCorner so that connect_to_trace is not called with null.
       if (this.firstCorner == null) {
-        this.firstCorner = p_trace.corners[0];
+        this.firstCorner = pTrace.corners[0];
       }
-      this.lastCorner = p_trace.corners[0];
+      this.lastCorner = pTrace.corners[0];
       return true;
     }
     boolean result = true;
@@ -135,9 +134,9 @@ public final class InsertFoundConnectionAlgo {
     if (ctrl.withNeckdown) {
       ItemSelectionFilter itemFilter =
           new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
-      Point currEndCorner = p_trace.corners[0];
+      Point currEndCorner = pTrace.corners[0];
       for (int i = 0; i < 2; i++) {
-        Set<Item> pickedItems = this.board.pickItems(currEndCorner, p_trace.layer, itemFilter);
+        Set<Item> pickedItems = this.board.pickItems(currEndCorner, pTrace.layer, itemFilter);
         for (Item currItem : pickedItems) {
           Pin currPin = (Pin) currItem;
           if (currPin.containsNet(ctrl.netNo) && currPin.getCenter().equals(currEndCorner)) {
@@ -148,22 +147,22 @@ public final class InsertFoundConnectionAlgo {
             }
           }
         }
-        currEndCorner = p_trace.corners[p_trace.corners.length - 1];
+        currEndCorner = pTrace.corners[pTrace.corners.length - 1];
       }
     }
     int[] netNoArr = new int[1];
     netNoArr[0] = ctrl.netNo;
 
     int fromCornerNo = 0;
-    for (int i = 1; i < p_trace.corners.length; i++) {
-      Point[] currCornerArr = Arrays.copyOfRange(p_trace.corners, fromCornerNo, i + 1);
+    for (int i = 1; i < pTrace.corners.length; i++) {
+      Point[] currCornerArr = Arrays.copyOfRange(pTrace.corners, fromCornerNo, i + 1);
       Polyline insertPolyline = new Polyline(currCornerArr);
       int maxItemIdBeforeSeg = board.communication.idNoGenerator.maxGeneratedNo();
       Point okPoint =
           board.insertForcedTracePolyline(
               insertPolyline,
-              ctrl.traceHalfWidth[p_trace.layer],
-              p_trace.layer,
+              ctrl.traceHalfWidth[pTrace.layer],
+              pTrace.layer,
               netNoArr,
               ctrl.traceClearanceClassNo,
               ctrl.maxShoveTraceRecursionDepth,
@@ -192,7 +191,7 @@ public final class InsertFoundConnectionAlgo {
           && ctrl.withNeckdown
           && currCornerArr.length == 2) {
         neckdownInserted =
-            insertNeckdown(okPoint, currCornerArr[1], p_trace.layer, startPin, endPin);
+            insertNeckdown(okPoint, currCornerArr[1], pTrace.layer, startPin, endPin);
       }
       if (!neckdownInserted
           && okPoint != insertPolyline.lastCorner()
@@ -200,7 +199,7 @@ public final class InsertFoundConnectionAlgo {
           && currCornerArr.length == 2) {
         microNeckdownInserted =
             insertFanoutMicroNeckdown(
-                okPoint, currCornerArr[1], p_trace.layer, netNoArr, startPin, endPin);
+                okPoint, currCornerArr[1], pTrace.layer, netNoArr, startPin, endPin);
       }
       if (okPoint == insertPolyline.lastCorner() || neckdownInserted || microNeckdownInserted) {
         fromCornerNo = i;
@@ -209,7 +208,7 @@ public final class InsertFoundConnectionAlgo {
               "compare_trace_insert_segment_raw net="
                   + ctrl.netNo
                   + ", layer="
-                  + p_trace.layer
+                  + pTrace.layer
                   + ", i="
                   + i
                   + ", fromCornerNo="
@@ -230,7 +229,7 @@ public final class InsertFoundConnectionAlgo {
               "net="
                   + ctrl.netNo
                   + ", layer="
-                  + p_trace.layer
+                  + pTrace.layer
                   + ", i="
                   + i
                   + ", fromCornerNo="
@@ -248,7 +247,7 @@ public final class InsertFoundConnectionAlgo {
               "Net #" + ctrl.netNo,
               new Point[0]);
         }
-      } else if (okPoint == insertPolyline.firstCorner() && i != p_trace.corners.length - 1) {
+      } else if (okPoint == insertPolyline.firstCorner() && i != pTrace.corners.length - 1) {
         // if okPoint == insertPolyline.first_corner() the spring over may have failed.
         // Spring over may correct the situation because an insertion, which is ok with clearance
         // compensation
@@ -269,7 +268,7 @@ public final class InsertFoundConnectionAlgo {
               "compare_trace_insert_segment_raw net="
                   + ctrl.netNo
                   + ", layer="
-                  + p_trace.layer
+                  + pTrace.layer
                   + ", i="
                   + i
                   + ", fromCornerNo="
@@ -288,7 +287,7 @@ public final class InsertFoundConnectionAlgo {
               "net="
                   + ctrl.netNo
                   + ", layer="
-                  + p_trace.layer
+                  + pTrace.layer
                   + ", i="
                   + i
                   + ", fromCornerNo="
@@ -311,11 +310,11 @@ public final class InsertFoundConnectionAlgo {
                 + " at corner "
                 + i
                 + "/"
-                + (p_trace.corners.length - 1)
+                + (pTrace.corners.length - 1)
                 + " on layer "
-                + p_trace.layer
+                + pTrace.layer
                 + ", trace width: "
-                + ctrl.traceHalfWidth[p_trace.layer]
+                + ctrl.traceHalfWidth[pTrace.layer]
                 + ", from corner: "
                 + fromCornerNo
                 + ", okPoint: "
@@ -325,13 +324,13 @@ public final class InsertFoundConnectionAlgo {
         traceFanoutDiagnostic(
             "trace_insert_failed",
             "layer="
-                + p_trace.layer
+                + pTrace.layer
                 + ", corner_index="
                 + i
                 + ", from_corner_index="
                 + fromCornerNo
                 + ", traceHalfWidth="
-                + ctrl.traceHalfWidth[p_trace.layer]
+                + ctrl.traceHalfWidth[pTrace.layer]
                 + ", traceClearanceClass="
                 + ctrl.traceClearanceClassNo
                 + ", start_pin_clearance_class="
@@ -347,7 +346,7 @@ public final class InsertFoundConnectionAlgo {
               "compare_trace_insert_segment_raw net="
                   + ctrl.netNo
                   + ", layer="
-                  + p_trace.layer
+                  + pTrace.layer
                   + ", i="
                   + i
                   + ", fromCornerNo="
@@ -368,7 +367,7 @@ public final class InsertFoundConnectionAlgo {
               "net="
                   + ctrl.netNo
                   + ", layer="
-                  + p_trace.layer
+                  + pTrace.layer
                   + ", i="
                   + i
                   + ", fromCornerNo="
@@ -392,8 +391,8 @@ public final class InsertFoundConnectionAlgo {
     }
 
     int removedTraceStubs = 0;
-    for (int i = 0; i < p_trace.corners.length - 1; i++) {
-      Trace traceStub = board.getTraceTail(p_trace.corners[i], p_trace.layer, netNoArr);
+    for (int i = 0; i < pTrace.corners.length - 1; i++) {
+      Trace traceStub = board.getTraceTail(pTrace.corners[i], pTrace.layer, netNoArr);
       if (traceStub != null) {
         FRLogger.trace(
             "compare_trace_stub_found net="
@@ -401,7 +400,7 @@ public final class InsertFoundConnectionAlgo {
                 + ", corner_idx="
                 + i
                 + ", corner="
-                + p_trace.corners[i]
+                + pTrace.corners[i]
                 + ", stub_id="
                 + traceStub.getIdNo()
                 + ", stub_first="
@@ -423,7 +422,7 @@ public final class InsertFoundConnectionAlgo {
         "net="
             + ctrl.netNo
             + ", layer="
-            + p_trace.layer
+            + pTrace.layer
             + ", removed_stubs="
             + removedTraceStubs
             + ", trace_enabled="
@@ -433,16 +432,16 @@ public final class InsertFoundConnectionAlgo {
 
     board.rules.setPinEdgeToTurnDist(savedEdgeToTurnDist);
     if (this.firstCorner == null) {
-      this.firstCorner = p_trace.corners[0];
+      this.firstCorner = pTrace.corners[0];
     }
-    this.lastCorner = p_trace.corners[p_trace.corners.length - 1];
+    this.lastCorner = pTrace.corners[pTrace.corners.length - 1];
     return result;
   }
 
   private boolean insertFanoutMicroNeckdown(
-      Point okPoint, Point target_point, int layer, int[] netNoArr, Pin startPin, Pin endPin) {
-    Point fromPoint = okPoint != null ? okPoint : target_point;
-    if (fromPoint == null || target_point == null || fromPoint.equals(target_point)) {
+      Point okPoint, Point targetPoint, int layer, int[] netNoArr, Pin startPin, Pin endPin) {
+    Point fromPoint = okPoint != null ? okPoint : targetPoint;
+    if (fromPoint == null || targetPoint == null || fromPoint.equals(targetPoint)) {
       return false;
     }
     int baseHalfWidth = ctrl.traceHalfWidth[layer];
@@ -457,15 +456,15 @@ public final class InsertFoundConnectionAlgo {
     candidateHalfWidths.add(Math.max(1, (baseHalfWidth * 3) / 5));
     candidateHalfWidths.add(Math.max(1, baseHalfWidth / 2));
 
-    for (int candidate_half_width : candidateHalfWidths) {
-      if (candidate_half_width <= 0 || candidate_half_width >= baseHalfWidth) {
+    for (int candidateHalfWidth : candidateHalfWidths) {
+      if (candidateHalfWidth <= 0 || candidateHalfWidth >= baseHalfWidth) {
         continue;
       }
       Point candidateOkPoint =
           board.insertForcedTraceSegment(
               fromPoint,
-              target_point,
-              candidate_half_width,
+              targetPoint,
+              candidateHalfWidth,
               layer,
               netNoArr,
               ctrl.traceClearanceClassNo,
@@ -476,13 +475,13 @@ public final class InsertFoundConnectionAlgo {
               ctrl.pullTightAccuracy,
               true,
               null);
-      if (candidateOkPoint == target_point) {
+      if (candidateOkPoint == targetPoint) {
         traceFanoutDiagnostic(
             "trace_insert_micro_neckdown_success",
             "layer="
                 + layer
                 + ", candidate_half_width="
-                + candidate_half_width
+                + candidateHalfWidth
                 + ", baseHalfWidth="
                 + baseHalfWidth
                 + ", traceClearanceClass="
@@ -490,7 +489,7 @@ public final class InsertFoundConnectionAlgo {
                 + ", from="
                 + formatPoint(fromPoint)
                 + ", to="
-                + formatPoint(target_point));
+                + formatPoint(targetPoint));
         return true;
       }
     }
@@ -505,68 +504,68 @@ public final class InsertFoundConnectionAlgo {
             + ", from="
             + formatPoint(fromPoint)
             + ", to="
-            + formatPoint(target_point));
+            + formatPoint(targetPoint));
     return false;
   }
 
   boolean insertNeckdown(
-      Point p_from_corner, Point p_to_corner, int p_layer, Pin p_start_pin, Pin p_end_pin) {
-    if (p_start_pin != null) {
-      Point okPoint = tryNeckDown(p_to_corner, p_from_corner, p_layer, p_start_pin, true);
-      if (okPoint == p_from_corner) {
+      Point pFromCorner, Point pToCorner, int pLayer, Pin pStartPin, Pin pEndPin) {
+    if (pStartPin != null) {
+      Point okPoint = tryNeckDown(pToCorner, pFromCorner, pLayer, pStartPin, true);
+      if (okPoint == pFromCorner) {
         return true;
       }
     }
-    if (p_end_pin != null) {
-      Point okPoint = tryNeckDown(p_from_corner, p_to_corner, p_layer, p_end_pin, false);
-      return okPoint == p_to_corner;
+    if (pEndPin != null) {
+      Point okPoint = tryNeckDown(pFromCorner, pToCorner, pLayer, pEndPin, false);
+      return okPoint == pToCorner;
     }
     return false;
   }
 
   private Point tryNeckDown(
-      Point p_from_corner, Point p_to_corner, int p_layer, Pin p_pin, boolean p_at_start) {
-    if (!p_pin.isOnLayer(p_layer)) {
+      Point pFromCorner, Point pToCorner, int pLayer, Pin pPin, boolean pAtStart) {
+    if (!pPin.isOnLayer(pLayer)) {
       return null;
     }
-    FloatPoint pinCenter = p_pin.getCenter().toFloat();
+    FloatPoint pinCenter = pPin.getCenter().toFloat();
     double currClearance =
         this.board.rules.clearanceMatrix.getValue(
-            ctrl.traceClearanceClassNo, p_pin.clearanceClassNo(), p_layer, true);
-    double pinNeckDownDistance = 2 * (0.5 * p_pin.getMaxWidth(p_layer) + currClearance);
-    if (pinCenter.distance(p_to_corner.toFloat()) >= pinNeckDownDistance) {
+            ctrl.traceClearanceClassNo, pPin.clearanceClassNo(), pLayer, true);
+    double pinNeckDownDistance = 2 * (0.5 * pPin.getMaxWidth(pLayer) + currClearance);
+    if (pinCenter.distance(pToCorner.toFloat()) >= pinNeckDownDistance) {
       return null;
     }
 
-    int neckDownHalfwidth = p_pin.getTraceNeckdownHalfwidth(p_layer);
-    if (neckDownHalfwidth >= ctrl.traceHalfWidth[p_layer]) {
+    int neckDownHalfwidth = pPin.getTraceNeckdownHalfwidth(pLayer);
+    if (neckDownHalfwidth >= ctrl.traceHalfWidth[pLayer]) {
       return null;
     }
 
-    FloatPoint floatFromCorner = p_from_corner.toFloat();
-    FloatPoint floatToCorner = p_to_corner.toFloat();
+    FloatPoint floatFromCorner = pFromCorner.toFloat();
+    FloatPoint floatToCorner = pToCorner.toFloat();
 
-    final int TOLERANCE = 2;
+    final int tolerance = 2;
 
     int[] netNoArr = new int[1];
     netNoArr[0] = ctrl.netNo;
 
     double okLength =
         board.checkTraceSegment(
-            p_from_corner,
-            p_to_corner,
-            p_layer,
+            pFromCorner,
+            pToCorner,
+            pLayer,
             netNoArr,
-            ctrl.traceHalfWidth[p_layer],
+            ctrl.traceHalfWidth[pLayer],
             ctrl.traceClearanceClassNo,
             true);
     if (okLength >= Integer.MAX_VALUE) {
-      return p_from_corner;
+      return pFromCorner;
     }
-    okLength -= TOLERANCE;
+    okLength -= tolerance;
     Point neckDownEndPoint;
-    if (okLength <= TOLERANCE) {
-      neckDownEndPoint = p_from_corner;
+    if (okLength <= tolerance) {
+      neckDownEndPoint = pFromCorner;
     } else {
       FloatPoint floatNeckDownEndPoint = floatFromCorner.changeLength(floatToCorner, okLength);
       neckDownEndPoint = floatNeckDownEndPoint.round();
@@ -584,10 +583,10 @@ public final class InsertFoundConnectionAlgo {
               .round();
       Point currOkPoint =
           board.insertForcedTraceSegment(
-              p_from_corner,
+              pFromCorner,
               addCorner,
-              ctrl.traceHalfWidth[p_layer],
-              p_layer,
+              ctrl.traceHalfWidth[pLayer],
+              pLayer,
               netNoArr,
               ctrl.traceClearanceClassNo,
               ctrl.maxShoveTraceRecursionDepth,
@@ -598,14 +597,14 @@ public final class InsertFoundConnectionAlgo {
               true,
               null);
       if (currOkPoint != addCorner) {
-        return p_from_corner;
+        return pFromCorner;
       }
       currOkPoint =
           board.insertForcedTraceSegment(
               addCorner,
               neckDownEndPoint,
-              ctrl.traceHalfWidth[p_layer],
-              p_layer,
+              ctrl.traceHalfWidth[pLayer],
+              pLayer,
               netNoArr,
               ctrl.traceClearanceClassNo,
               ctrl.maxShoveTraceRecursionDepth,
@@ -616,7 +615,7 @@ public final class InsertFoundConnectionAlgo {
               true,
               null);
       if (currOkPoint != neckDownEndPoint) {
-        return p_from_corner;
+        return pFromCorner;
       }
       addCorner =
           LocateFoundConnectionAlgo.calculateAdditionalCorner(
@@ -625,13 +624,13 @@ public final class InsertFoundConnectionAlgo {
                   !horizontalFirst,
                   board.rules.getTraceAngleRestriction())
               .round();
-      if (!addCorner.equals(p_to_corner)) {
+      if (!addCorner.equals(pToCorner)) {
         currOkPoint =
             board.insertForcedTraceSegment(
                 neckDownEndPoint,
                 addCorner,
-                ctrl.traceHalfWidth[p_layer],
-                p_layer,
+                ctrl.traceHalfWidth[pLayer],
+                pLayer,
                 netNoArr,
                 ctrl.traceClearanceClassNo,
                 ctrl.maxShoveTraceRecursionDepth,
@@ -642,7 +641,7 @@ public final class InsertFoundConnectionAlgo {
                 true,
                 null);
         if (currOkPoint != addCorner) {
-          return p_from_corner;
+          return pFromCorner;
         }
         neckDownEndPoint = addCorner;
       }
@@ -650,9 +649,9 @@ public final class InsertFoundConnectionAlgo {
 
     return board.insertForcedTraceSegment(
         neckDownEndPoint,
-        p_to_corner,
+        pToCorner,
         neckDownHalfwidth,
-        p_layer,
+        pLayer,
         netNoArr,
         ctrl.traceClearanceClassNo,
         ctrl.maxShoveTraceRecursionDepth,
@@ -669,19 +668,19 @@ public final class InsertFoundConnectionAlgo {
    * possible at p_location with this mask and inserts the via. Returns false, if no suitable via
    * mask was found or if the algorithm failed.
    */
-  private boolean insertVia(Point p_location, int p_from_layer, int p_to_layer) {
-    if (p_from_layer == p_to_layer) {
+  private boolean insertVia(Point pLocation, int pFromLayer, int pToLayer) {
+    if (pFromLayer == pToLayer) {
       return true; // no via necessary
     }
     int fromLayer;
     int toLayer;
     // sort the input layers
-    if (p_from_layer < p_to_layer) {
-      fromLayer = p_from_layer;
-      toLayer = p_to_layer;
+    if (pFromLayer < pToLayer) {
+      fromLayer = pFromLayer;
+      toLayer = pToLayer;
     } else {
-      fromLayer = p_to_layer;
-      toLayer = p_from_layer;
+      fromLayer = pToLayer;
+      toLayer = pFromLayer;
     }
     int[] netNoArr = new int[1];
     netNoArr[0] = ctrl.netNo;
@@ -696,7 +695,7 @@ public final class InsertFoundConnectionAlgo {
       foundSuitableSpan = true;
       if (ForcedViaAlgo.check(
           currViaInfo,
-          p_location,
+          pLocation,
           netNoArr,
           this.ctrl.maxShoveTraceRecursionDepth,
           this.ctrl.maxShoveViaRecursionDepth,
@@ -728,7 +727,7 @@ public final class InsertFoundConnectionAlgo {
               + ", toLayer="
               + toLayer
               + ", location="
-              + formatPoint(p_location)
+              + formatPoint(pLocation)
               + ", traceClearanceClass="
               + ctrl.traceClearanceClassNo
               + ", viaClearanceClass="
@@ -742,7 +741,7 @@ public final class InsertFoundConnectionAlgo {
     // insert the via
     if (!ForcedViaAlgo.insert(
         viaInfo,
-        p_location,
+        pLocation,
         netNoArr,
         this.ctrl.traceClearanceClassNo,
         this.ctrl.traceHalfWidth,
@@ -757,7 +756,7 @@ public final class InsertFoundConnectionAlgo {
               + ", toLayer="
               + toLayer
               + ", location="
-              + formatPoint(p_location)
+              + formatPoint(pLocation)
               + ", selected_via_clearance_class="
               + viaInfo.getClearanceClass()
               + ", selected_via_padstack="

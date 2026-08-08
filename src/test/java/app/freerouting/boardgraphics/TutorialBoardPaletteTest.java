@@ -36,8 +36,7 @@ class TutorialBoardPaletteTest {
 
     assertEquals(
         TutorialBoardPalette.PRIMARY, graphicsContext.otherColorTable.getBackgroundColor());
-    assertEquals(
-        TutorialBoardPalette.SECONDARY, graphicsContext.otherColorTable.getOutlineColor());
+    assertEquals(TutorialBoardPalette.SECONDARY, graphicsContext.otherColorTable.getOutlineColor());
     assertEquals(
         TutorialBoardPalette.SECONDARY, graphicsContext.itemColorTable.getTraceColors(false)[0]);
     assertEquals(

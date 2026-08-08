@@ -27,20 +27,20 @@ public class CoordinateTransform implements Serializable {
 
   private double rotation = 0;
 
-  public CoordinateTransform(IntBox p_design_box, Dimension p_panel_bounds) {
-    this.screenBounds = p_panel_bounds;
-    this.designBox = p_design_box;
-    this.rotationPole = p_design_box.centreOfGravity();
+  public CoordinateTransform(IntBox pDesignBox, Dimension pPanelBounds) {
+    this.screenBounds = pPanelBounds;
+    this.designBox = pDesignBox;
+    this.rotationPole = pDesignBox.centreOfGravity();
 
-    int minLl = Math.min(p_design_box.ll.x, p_design_box.ll.y);
-    int maxUr = Math.max(p_design_box.ur.x, p_design_box.ur.y);
+    int minLl = Math.min(pDesignBox.ll.x, pDesignBox.ll.y);
+    int maxUr = Math.max(pDesignBox.ur.x, pDesignBox.ur.y);
     if (Math.max(Math.abs(minLl), Math.abs(maxUr)) <= 0.3 * Limits.CRIT_INT) {
       // create an offset to p_design_box to enable deep zoom out
-      double designOffset = Math.max(p_design_box.width(), p_design_box.height());
-      designBoxWithOffset = p_design_box.offset(designOffset);
+      double designOffset = Math.max(pDesignBox.width(), pDesignBox.height());
+      designBoxWithOffset = pDesignBox.offset(designOffset);
     } else {
       // no offset because of danger of integer overflow
-      designBoxWithOffset = p_design_box;
+      designBoxWithOffset = pDesignBox;
     }
 
     double xScaleFactor = screenBounds.getWidth() / designBoxWithOffset.width();
@@ -52,42 +52,41 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** Copy constructor */
-  public CoordinateTransform(CoordinateTransform p_coordinate_transform) {
-    this.screenBounds = new Dimension(p_coordinate_transform.screenBounds);
+  public CoordinateTransform(CoordinateTransform pCoordinateTransform) {
+    this.screenBounds = new Dimension(pCoordinateTransform.screenBounds);
     this.designBox =
-        new IntBox(p_coordinate_transform.designBox.ll, p_coordinate_transform.designBox.ur);
+        new IntBox(pCoordinateTransform.designBox.ll, pCoordinateTransform.designBox.ur);
     this.rotationPole =
-        new FloatPoint(
-            p_coordinate_transform.rotationPole.x, p_coordinate_transform.rotationPole.y);
+        new FloatPoint(pCoordinateTransform.rotationPole.x, pCoordinateTransform.rotationPole.y);
     this.designBoxWithOffset =
         new IntBox(
-            p_coordinate_transform.designBoxWithOffset.ll,
-            p_coordinate_transform.designBoxWithOffset.ur);
-    this.scaleFactor = p_coordinate_transform.scaleFactor;
-    this.displayXOffset = p_coordinate_transform.displayXOffset;
-    this.displayYOffset = p_coordinate_transform.displayYOffset;
-    this.mirrorLeftRight = p_coordinate_transform.mirrorLeftRight;
-    this.mirrorTopBottom = p_coordinate_transform.mirrorTopBottom;
-    this.rotation = p_coordinate_transform.rotation;
+            pCoordinateTransform.designBoxWithOffset.ll,
+            pCoordinateTransform.designBoxWithOffset.ur);
+    this.scaleFactor = pCoordinateTransform.scaleFactor;
+    this.displayXOffset = pCoordinateTransform.displayXOffset;
+    this.displayYOffset = pCoordinateTransform.displayYOffset;
+    this.mirrorLeftRight = pCoordinateTransform.mirrorLeftRight;
+    this.mirrorTopBottom = pCoordinateTransform.mirrorTopBottom;
+    this.rotation = pCoordinateTransform.rotation;
   }
 
   /** scale a value from the board to the screen coordinate system */
-  public double boardToScreen(double p_val) {
-    return p_val * scaleFactor;
+  public double boardToScreen(double pVal) {
+    return pVal * scaleFactor;
   }
 
   /** scale a value the screen to the board coordinate system */
-  public double screenToBoard(double p_val) {
-    return p_val / scaleFactor;
+  public double screenToBoard(double pVal) {
+    return pVal / scaleFactor;
   }
 
   /** transform a geometry.planar.FloatPoint to a java.awt.geom.Point2D */
-  public Point2D boardToScreen(FloatPoint p_point) {
-    if (p_point == null) {
+  public Point2D boardToScreen(FloatPoint pPoint) {
+    if (pPoint == null) {
       return null;
     }
 
-    FloatPoint rotatedPoint = p_point.rotate(this.rotation, this.rotationPole);
+    FloatPoint rotatedPoint = pPoint.rotate(this.rotation, this.rotationPole);
 
     double x;
     double y;
@@ -105,26 +104,26 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** Transform a java.awt.geom.Point2D to a geometry.planar.FloatPoint */
-  public FloatPoint screenToBoard(Point2D p_point) {
+  public FloatPoint screenToBoard(Point2D pPoint) {
     double x;
     double y;
     if (this.mirrorLeftRight) {
-      x = designBoxWithOffset.width() - (p_point.getX() - displayXOffset) / scaleFactor - 1;
+      x = designBoxWithOffset.width() - (pPoint.getX() - displayXOffset) / scaleFactor - 1;
     } else {
-      x = (p_point.getX() + displayXOffset) / scaleFactor;
+      x = (pPoint.getX() + displayXOffset) / scaleFactor;
     }
     if (this.mirrorTopBottom) {
-      y = designBoxWithOffset.height() - (p_point.getY() - displayYOffset) / scaleFactor - 1;
+      y = designBoxWithOffset.height() - (pPoint.getY() - displayYOffset) / scaleFactor - 1;
     } else {
-      y = (p_point.getY() + displayYOffset) / scaleFactor;
+      y = (pPoint.getY() + displayYOffset) / scaleFactor;
     }
     FloatPoint result = new FloatPoint(x, y);
     return result.rotate(-this.rotation, this.rotationPole);
   }
 
   /** Transforms an angle in radian on the board to an angle on the screen. */
-  public double boardToScreenAngle(double p_angle) {
-    double result = p_angle + this.rotation;
+  public double boardToScreenAngle(double pAngle) {
+    double result = pAngle + this.rotation;
     if (this.mirrorLeftRight) {
       result = Math.PI - result;
     }
@@ -144,9 +143,9 @@ public class CoordinateTransform implements Serializable {
    * Transform a geometry.planar.IntBox to a java.awt.Rectangle If the internal rotation is not a
    * multiple of Pi/2, a bounding rectangle of the rotated rectangular shape is returned.
    */
-  public Rectangle boardToScreen(IntBox p_box) {
-    Point2D corner1 = boardToScreen(p_box.ll.toFloat());
-    Point2D corner2 = boardToScreen(p_box.ur.toFloat());
+  public Rectangle boardToScreen(IntBox pBox) {
+    Point2D corner1 = boardToScreen(pBox.ll.toFloat());
+    Point2D corner2 = boardToScreen(pBox.ur.toFloat());
     double llX = Math.min(corner1.getX(), corner2.getX());
     double llY = Math.min(corner1.getY(), corner2.getY());
     double dx = Math.abs(corner2.getX() - corner1.getX());
@@ -159,12 +158,11 @@ public class CoordinateTransform implements Serializable {
    * Transform a java.awt.Rectangle to a geometry.planar.IntBox If the internal rotation is not a
    * multiple of Pi/2, a bounding box of the rotated rectangular shape is returned.
    */
-  public IntBox screenToBoard(Rectangle p_rect) {
-    FloatPoint corner1 = screenToBoard(new Point2D.Double(p_rect.getX(), p_rect.getY()));
+  public IntBox screenToBoard(Rectangle pRect) {
+    FloatPoint corner1 = screenToBoard(new Point2D.Double(pRect.getX(), pRect.getY()));
     FloatPoint corner2 =
         screenToBoard(
-            new Point2D.Double(
-                p_rect.getX() + p_rect.getWidth(), p_rect.getY() + p_rect.getHeight()));
+            new Point2D.Double(pRect.getX() + pRect.getWidth(), pRect.getY() + pRect.getHeight()));
     int llx = (int) Math.floor(Math.min(corner1.x, corner2.x));
     int lly = (int) Math.floor(Math.min(corner1.y, corner2.y));
     int urx = (int) Math.ceil(Math.max(corner1.x, corner2.x));
@@ -178,8 +176,8 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** If p_value is true, the left side and the right side of the board will be swapped. */
-  public void setMirrorLeftRight(boolean p_value) {
-    mirrorLeftRight = p_value;
+  public void setMirrorLeftRight(boolean pValue) {
+    mirrorLeftRight = pValue;
   }
 
   /** Returns, if the top side and the bottom side of the board are swapped. */
@@ -190,10 +188,10 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** If p_value is true, the top side and the bottom side of the board will be swapped. */
-  public void setMirrorTopBottom(boolean p_value) {
+  public void setMirrorTopBottom(boolean pValue) {
     // Because the origin of display is the upper left corner, the internal value
     // will be opposite to the input value of this function.
-    mirrorTopBottom = !p_value;
+    mirrorTopBottom = !pValue;
   }
 
   /** Returns the rotation of the displayed board. */
@@ -202,8 +200,8 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** Sets the rotation of the displayed board to p_value. */
-  public void setRotation(double p_value) {
-    rotation = p_value;
+  public void setRotation(double pValue) {
+    rotation = pValue;
   }
 
   /**

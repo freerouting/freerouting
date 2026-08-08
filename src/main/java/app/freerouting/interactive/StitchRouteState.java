@@ -11,20 +11,20 @@ import javax.swing.JPopupMenu;
 public class StitchRouteState extends RouteState {
 
   /** Creates a new instance of StitchRouteState */
-  protected StitchRouteState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
+  protected StitchRouteState(InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    super(pParentState, pBoardHandling);
   }
 
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint p_location) {
-    return addCorner(p_location);
+  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
+    return addCorner(pLocation);
   }
 
   @Override
-  public InteractiveState addCorner(FloatPoint p_location) {
+  public InteractiveState addCorner(FloatPoint pLocation) {
     // make the current situation restorable by undo
     hdlg.getRoutingBoard().generateSnapshot();
-    return super.addCorner(p_location);
+    return super.addCorner(pLocation);
   }
 
   @Override
@@ -46,8 +46,8 @@ public class StitchRouteState extends RouteState {
   }
 
   @Override
-  public void draw(Graphics p_graphics) {
-    super.draw(p_graphics);
+  public void draw(Graphics pGraphics) {
+    super.draw(pGraphics);
     if (route == null) {
       return;
     }
@@ -67,9 +67,9 @@ public class StitchRouteState extends RouteState {
     radiusWithClearance +=
         hdlg.getRoutingBoard()
             .clearanceValue(clClass, clClass, hdlg.getInteractiveSettings().getLayer());
-    hdlg.graphicsContext.draw(drawPoints, displayWidth, drawColor, p_graphics, 0.5);
+    hdlg.graphicsContext.draw(drawPoints, displayWidth, drawColor, pGraphics, 0.5);
     // draw the clearance boundary around the end point
     hdlg.graphicsContext.drawCircle(
-        drawPoints[1], radiusWithClearance, clearanceDrawWidth, drawColor, p_graphics, 0.5);
+        drawPoints[1], radiusWithClearance, clearanceDrawWidth, drawColor, pGraphics, 0.5);
   }
 }

@@ -10,8 +10,8 @@ public class FileFilter extends javax.swing.filechooser.FileFilter {
   private final String[] extensions;
 
   /** Creates a new FileFilter for the input extension */
-  public FileFilter(String[] p_extensions) {
-    extensions = p_extensions;
+  public FileFilter(String[] pExtensions) {
+    extensions = pExtensions;
   }
 
   @Override
@@ -29,11 +29,11 @@ public class FileFilter extends javax.swing.filechooser.FileFilter {
   }
 
   @Override
-  public boolean accept(File p_file) {
-    if (p_file.isDirectory()) {
+  public boolean accept(File pFile) {
+    if (pFile.isDirectory()) {
       return true;
     }
-    String fileName = p_file.getName();
+    String fileName = pFile.getName();
     String[] nameParts = fileName.split("\\.");
     if (nameParts.length < 2) {
       return false;

@@ -15,8 +15,8 @@ public class IndentFileWriter extends OutputStreamWriter {
   private int currentIndentLevel;
 
   /** Creates a new instance of IndentFileWriter */
-  public IndentFileWriter(OutputStream p_stream) {
-    super(p_stream, StandardCharsets.UTF_8);
+  public IndentFileWriter(OutputStream pStream) {
+    super(pStream, StandardCharsets.UTF_8);
   }
 
   /** Begins a new scope. */

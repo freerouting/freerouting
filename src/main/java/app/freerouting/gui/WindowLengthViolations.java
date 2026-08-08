@@ -15,9 +15,9 @@ import java.util.TreeSet;
 public class WindowLengthViolations extends WindowObjectListWithFilter {
 
   /** Creates a new instance of WindowLengthViolations */
-  public WindowLengthViolations(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  public WindowLengthViolations(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
+    setLanguage(pBoardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
     this.listEmptyMessage.setText(tm.getText("listEmpty"));
@@ -64,14 +64,14 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     final Net net;
     final double violationLength;
 
-    LengthViolation(Net p_net, double p_violation_length) {
-      net = p_net;
-      violationLength = p_violation_length;
+    LengthViolation(Net pNet, double pViolationLength) {
+      net = pNet;
+      violationLength = pViolationLength;
     }
 
     @Override
-    public int compareTo(LengthViolation p_other) {
-      return this.net.name.compareToIgnoreCase(p_other.net.name);
+    public int compareTo(LengthViolation pOther) {
+      return this.net.name.compareToIgnoreCase(pOther.net.name);
     }
 
     @Override

@@ -27,33 +27,26 @@ public class UnconnectedItems {
   public final String type;
 
   /** Creates a new instance of UnconnectedItems with two representative items */
-  public UnconnectedItems(Item p_first_item, Item p_second_item) {
-    this(
-        p_first_item,
-        p_second_item,
-        Arrays.asList(p_first_item, p_second_item),
-        "unconnectedItems");
+  public UnconnectedItems(Item pFirstItem, Item pSecondItem) {
+    this(pFirstItem, pSecondItem, Arrays.asList(pFirstItem, pSecondItem), "unconnectedItems");
   }
 
   /** Creates a new instance of UnconnectedItems with all items from the net */
-  public UnconnectedItems(Item p_first_item, Item p_second_item, List<Item> p_all_items) {
-    this(p_first_item, p_second_item, p_all_items, "unconnectedItems");
+  public UnconnectedItems(Item pFirstItem, Item pSecondItem, List<Item> pAllItems) {
+    this(pFirstItem, pSecondItem, pAllItems, "unconnectedItems");
   }
 
   /** Creates a new instance of UnconnectedItems with a specific type */
-  public UnconnectedItems(Item p_first_item, Item p_second_item, String p_type) {
-    this(p_first_item, p_second_item, Arrays.asList(p_first_item, p_second_item), p_type);
+  public UnconnectedItems(Item pFirstItem, Item pSecondItem, String pType) {
+    this(pFirstItem, pSecondItem, Arrays.asList(pFirstItem, pSecondItem), pType);
   }
 
   /** Creates a new instance of UnconnectedItems with all items and a specific type */
-  public UnconnectedItems(
-      Item p_first_item, Item p_second_item, List<Item> p_all_items, String p_type) {
-    firstItem = p_first_item;
-    secondItem = p_second_item;
+  public UnconnectedItems(Item pFirstItem, Item pSecondItem, List<Item> pAllItems, String pType) {
+    firstItem = pFirstItem;
+    secondItem = pSecondItem;
     allItems =
-        p_all_items != null
-            ? new ArrayList<>(p_all_items)
-            : Arrays.asList(p_first_item, p_second_item);
-    type = p_type;
+        pAllItems != null ? new ArrayList<>(pAllItems) : Arrays.asList(pFirstItem, pSecondItem);
+    type = pType;
   }
 }

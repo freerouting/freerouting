@@ -18,10 +18,10 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
   private final Layer[] layerArr;
 
   /** Creates a new instance of LayerComboBox */
-  public ComboBoxLayer(LayerStructure p_layer_structure, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public ComboBoxLayer(LayerStructure pLayerStructure, Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
-    int signalLayerCount = p_layer_structure.signalLayerCount();
+    int signalLayerCount = pLayerStructure.signalLayerCount();
     int itemCount = signalLayerCount + 1;
 
     boolean addInnerLayerItem = signalLayerCount > 2;
@@ -38,9 +38,9 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
     }
     for (int i = 0; i < signalLayerCount; i++) {
       ++currLayerNo;
-      app.freerouting.board.Layer currSignalLayer = p_layer_structure.getSignalLayer(i);
+      app.freerouting.board.Layer currSignalLayer = pLayerStructure.getSignalLayer(i);
       layerArr[currLayerNo] =
-          new Layer(currSignalLayer.name, p_layer_structure.getNo(currSignalLayer));
+          new Layer(currSignalLayer.name, pLayerStructure.getNo(currSignalLayer));
     }
     this.setModel(new DefaultComboBoxModel<>(layerArr));
     this.setSelectedIndex(0);
@@ -61,9 +61,9 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
     /** The index in the board layerStructure, -1 for the layers with name "all" or "inner" */
     final int index;
 
-    Layer(String p_name, int p_index) {
-      name = p_name;
-      index = p_index;
+    Layer(String pName, int pIndex) {
+      name = pName;
+      index = pIndex;
     }
 
     @Override

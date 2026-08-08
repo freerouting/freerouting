@@ -147,8 +147,7 @@ public class PowerPlaneValidationTest {
 
     board.insertConductionArea(
         area1, 1, new int[] {vcc3v3.netNumber}, 0, false, FixedState.UNFIXED);
-    board.insertConductionArea(
-        area2, 1, new int[] {vcc5v.netNumber}, 0, false, FixedState.UNFIXED);
+    board.insertConductionArea(area2, 1, new int[] {vcc5v.netNumber}, 0, false, FixedState.UNFIXED);
 
     HeadlessBoardManager manager = new HeadlessBoardManager(null);
     manager.board = board;

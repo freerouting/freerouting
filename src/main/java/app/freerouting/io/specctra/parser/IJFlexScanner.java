@@ -29,5 +29,5 @@ public interface IJFlexScanner {
   Boolean nextClosingBracket();
 
   /** Starts a new state. */
-  void yybegin(int p_new_state);
+  void yybegin(int pNewState);
 }

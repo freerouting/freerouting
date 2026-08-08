@@ -26,9 +26,9 @@ import java.util.TreeSet;
 public class WindowClearanceViolations extends WindowObjectListWithFilter {
 
   /** Creates a new instance of clearance violations window */
-  public WindowClearanceViolations(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  public WindowClearanceViolations(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
+    setLanguage(pBoardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
     this.listEmptyMessage.setText(tm.getText("listEmptyMessage"));
@@ -74,25 +74,25 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     boardHandling.zoomSelection();
   }
 
-  private String itemInfo(Item p_item) {
+  private String itemInfo(Item pItem) {
     String result;
-    if (p_item instanceof Pin) {
+    if (pItem instanceof Pin) {
       result = tm.getText("pin");
-    } else if (p_item instanceof Via via) {
-      Net currNet = p_item.board.rules.nets.get(via.getNetNo(0));
+    } else if (pItem instanceof Via via) {
+      Net currNet = pItem.board.rules.nets.get(via.getNetNo(0));
       result = tm.getText("via_with_net_label", currNet.name);
-    } else if (p_item instanceof Trace trace) {
-      Net currNet = p_item.board.rules.nets.get(trace.getNetNo(0));
+    } else if (pItem instanceof Trace trace) {
+      Net currNet = pItem.board.rules.nets.get(trace.getNetNo(0));
       result = tm.getText("trace_with_net_label", currNet.name);
-    } else if (p_item instanceof ConductionArea) {
+    } else if (pItem instanceof ConductionArea) {
       result = tm.getText("conductionArea");
-    } else if (p_item instanceof ObstacleArea) {
+    } else if (pItem instanceof ObstacleArea) {
       result = tm.getText("keepout");
-    } else if (p_item instanceof ViaObstacleArea) {
+    } else if (pItem instanceof ViaObstacleArea) {
       result = tm.getText("via_keepout");
-    } else if (p_item instanceof ComponentObstacleArea) {
+    } else if (pItem instanceof ComponentObstacleArea) {
       result = tm.getText("component_keepout");
-    } else if (p_item instanceof BoardOutline) {
+    } else if (pItem instanceof BoardOutline) {
       result = tm.getText("boardOutline");
     } else {
       result = tm.getText("unknown");
@@ -106,12 +106,12 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     public final FloatPoint location;
     public final double delta;
 
-    public ViolationInfo(ClearanceViolation p_violation) {
-      this.violation = p_violation;
-      FloatPoint boardLocation = p_violation.shape.centreOfGravity();
+    public ViolationInfo(ClearanceViolation pViolation) {
+      this.violation = pViolation;
+      FloatPoint boardLocation = pViolation.shape.centreOfGravity();
       this.location =
           boardFrame.boardPanel.boardHandling.coordinateTransform.boardToUser(boardLocation);
-      this.delta = (p_violation.expectedClearance - p_violation.actualClearance) / 10000.0;
+      this.delta = (pViolation.expectedClearance - pViolation.actualClearance) / 10000.0;
     }
 
     @Override
@@ -129,21 +129,21 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     }
 
     @Override
-    public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-      this.violation.printInfo(p_window, p_locale);
+    public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+      this.violation.printInfo(pWindow, pLocale);
     }
 
     @Override
-    public int compareTo(ViolationInfo p_other) {
-      if (this.delta > p_other.delta) {
+    public int compareTo(ViolationInfo pOther) {
+      if (this.delta > pOther.delta) {
         return -1;
-      } else if (this.delta < p_other.delta) {
+      } else if (this.delta < pOther.delta) {
         return +1;
       }
 
-      if (this.violation.layer < p_other.violation.layer) {
+      if (this.violation.layer < pOther.violation.layer) {
         return -1;
-      } else if (this.violation.layer > p_other.violation.layer) {
+      } else if (this.violation.layer > pOther.violation.layer) {
         return +1;
       }
 

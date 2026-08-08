@@ -152,8 +152,8 @@ public class BoardFrame extends WindowBase {
    * Status bar.
    */
   public BoardFrame(
-      RoutingJob p_design, GlobalSettings globalSettings, SettingsMerger settingsMerger) {
-    this(p_design, new BoardObserverAdaptor(), globalSettings, settingsMerger);
+      RoutingJob pDesign, GlobalSettings globalSettings, SettingsMerger settingsMerger) {
+    this(pDesign, new BoardObserverAdaptor(), globalSettings, settingsMerger);
   }
 
   /** Creates new form BoardFrame. */
@@ -900,10 +900,7 @@ public class BoardFrame extends WindowBase {
    * specctra dsn / kicad json file. Returns false, if the file is invalid.
    */
   boolean load(
-      InputStream inputStream,
-      FileFormat format,
-      JTextField p_message_field,
-      RoutingJob routingJob) {
+      InputStream inputStream, FileFormat format, JTextField pMessageField, RoutingJob routingJob) {
     Point viewportPosition = null;
     BoardReadResult readResult = null;
 
@@ -1003,7 +1000,7 @@ public class BoardFrame extends WindowBase {
       return restoreTutorialBoardAfterFailedLoad(null);
     }
 
-    boolean guiUpdated = updateGui(format, readResult, viewportPosition, p_message_field, false);
+    boolean guiUpdated = updateGui(format, readResult, viewportPosition, pMessageField, false);
     if (!guiUpdated) {
       return restoreTutorialBoardAfterFailedLoad(null);
     }
@@ -1014,16 +1011,16 @@ public class BoardFrame extends WindowBase {
       FileFormat format,
       BoardReadResult readResult,
       Point viewportPosition,
-      JTextField p_message_field,
+      JTextField pMessageField,
       boolean deferHeavyWork) {
     boolean isTextDsnOrJson = format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON;
     if (isTextDsnOrJson) {
       if (!(readResult instanceof BoardReadResult.Success)) {
-        if (p_message_field != null) {
+        if (pMessageField != null) {
           if (readResult instanceof BoardReadResult.OutlineMissing) {
-            p_message_field.setText(tm.getText("error_dsn_outline_missing"));
+            pMessageField.setText(tm.getText("error_dsn_outline_missing"));
           } else {
-            p_message_field.setText(tm.getText("error_dsn_read_failed"));
+            pMessageField.setText(tm.getText("error_dsn_read_failed"));
           }
         }
         this.updateTexts();
@@ -1087,8 +1084,8 @@ public class BoardFrame extends WindowBase {
       FileFormat format,
       BoardReadResult readResult,
       Point viewportPosition,
-      JTextField p_message_field) {
-    return updateGui(format, readResult, viewportPosition, p_message_field, false);
+      JTextField pMessageField) {
+    return updateGui(format, readResult, viewportPosition, pMessageField, false);
   }
 
   /**
@@ -1211,13 +1208,13 @@ public class BoardFrame extends WindowBase {
     return true;
   }
 
-  public File showSaveAsDialog(String p_default_directory, BoardFileDetails output) {
+  public File showSaveAsDialog(String pDefaultDirectory, BoardFileDetails output) {
     var p_parent = this;
 
     String directoryName;
     var outputFile = output.getFile();
     if (outputFile == null) {
-      directoryName = p_default_directory;
+      directoryName = pDefaultDirectory;
     } else {
       directoryName = outputFile.getParent();
     }
@@ -1283,11 +1280,11 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Saves the board rule to file, so that they can be reused later on. */
-  private boolean saveRulesAs(File rulesFile, String designName, GuiBoardManager p_board_handling) {
+  private boolean saveRulesAs(File rulesFile, String designName, GuiBoardManager pBoardHandling) {
     FRLogger.info("Saving '" + rulesFile.getPath() + "'...");
 
     try (OutputStream outputStream = new FileOutputStream(rulesFile)) {
-      RulesWriter.write(p_board_handling.getRoutingBoard(), outputStream, designName);
+      RulesWriter.write(pBoardHandling.getRoutingBoard(), outputStream, designName);
       return true;
     } catch (IOException e) {
       FRLogger.error("unable to save rules file for design '" + designName + "'", e);
@@ -1537,8 +1534,8 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Sets the background of the board panel */
-  public void setBoardBackground(Color p_color) {
-    this.boardPanel.setBackground(p_color);
+  public void setBoardBackground(Color pColor) {
+    this.boardPanel.setBackground(pColor);
   }
 
   /** Refreshes all displayed coordinates after the user unit has changed. */
@@ -1589,15 +1586,15 @@ public class BoardFrame extends WindowBase {
    * Loads a file that was dropped onto the board panel. Follows the same pattern as the File menu
    * open operation. Shows a save confirmation dialog if the current board has unsaved changes.
    *
-   * @param p_file The file to load
-   * @param p_format The format of the file (DSN or KiCad design JSON)
+   * @param pFile The file to load
+   * @param pFormat The format of the file (DSN or KiCad design JSON)
    */
-  public void loadDroppedFile(File p_file, FileFormat p_format) {
-    if (p_file == null) {
+  public void loadDroppedFile(File pFile, FileFormat pFormat) {
+    if (pFile == null) {
       return;
     }
 
-    FileFormat format = p_format;
+    FileFormat format = pFormat;
 
     // Validate format is supported
     if (format != FileFormat.DSN && format != FileFormat.KICAD_DESIGN_JSON) {
@@ -1618,7 +1615,7 @@ public class BoardFrame extends WindowBase {
     RoutingJobScheduler.getInstance().clearJobs(sessionId);
 
     try {
-      routingJob.setInput(p_file);
+      routingJob.setInput(pFile);
     } catch (Exception e) {
       FRLogger.error("Error setting input for dropped file", e);
       return;
@@ -1647,7 +1644,7 @@ public class BoardFrame extends WindowBase {
       // Read file content
       byte[] fileContent;
       try {
-        fileContent = Files.readAllBytes(p_file.toPath());
+        fileContent = Files.readAllBytes(pFile.toPath());
       } catch (IOException e) {
         FRLogger.error("Could not read dropped file content", e);
         return;
@@ -1664,17 +1661,17 @@ public class BoardFrame extends WindowBase {
   /**
    * Convenience overload that auto-detects format.
    *
-   * @param p_file The file to load
+   * @param pFile The file to load
    */
-  public void loadDroppedFile(File p_file) {
-    if (p_file == null) {
+  public void loadDroppedFile(File pFile) {
+    if (pFile == null) {
       return;
     }
 
-    FileFormat format = RoutingJob.getFileFormat(p_file.toPath());
+    FileFormat format = RoutingJob.getFileFormat(pFile.toPath());
     if (format == FileFormat.UNKNOWN) {
       try {
-        byte[] content = Files.readAllBytes(p_file.toPath());
+        byte[] content = Files.readAllBytes(pFile.toPath());
         format = RoutingJob.getFileFormat(content);
       } catch (IOException e) {
         FRLogger.error("Could not read dropped file for format detection", e);
@@ -1682,16 +1679,16 @@ public class BoardFrame extends WindowBase {
       }
     }
 
-    loadDroppedFile(p_file, format);
+    loadDroppedFile(pFile, format);
   }
 
   /**
    * Shows a save confirmation dialog if the board has been modified.
    *
-   * @param p_parent The parent frame for the dialog
+   * @param pParent The parent frame for the dialog
    * @return true if loading should proceed, false if cancelled
    */
-  private boolean confirmSaveBeforeLoad(BoardFrame p_parent) {
+  private boolean confirmSaveBeforeLoad(BoardFrame pParent) {
     if (boardPanel == null || boardPanel.boardHandling == null) {
       return true;
     }
@@ -1713,7 +1710,7 @@ public class BoardFrame extends WindowBase {
                 options,
                 options[2] // Default to "Cancel"
                 );
-        JDialog dialog = optionPane.createDialog(p_parent, tm.getText("confirm_save_title"));
+        JDialog dialog = optionPane.createDialog(pParent, tm.getText("confirm_save_title"));
         dialog.setVisible(true);
 
         Object selectedValue = optionPane.getValue();

@@ -13,17 +13,17 @@ public class Plane extends ScopeKeyword {
     super("plane");
   }
 
-  public static void writeScope(WriteScopeParameter p_par, ConductionArea p_conduction)
+  public static void writeScope(WriteScopeParameter pPar, ConductionArea pConduction)
       throws IOException {
-    int netCount = p_conduction.netCount();
+    int netCount = pConduction.netCount();
     if (netCount != 1) {
-      FRLogger.warn("Plane.write_scope: unexpected net count at '" + p_conduction.name + "'");
+      FRLogger.warn("Plane.write_scope: unexpected net count at '" + pConduction.name + "'");
       return;
     }
-    String netName = p_par.board.rules.nets.get(p_conduction.getNetNo(0)).name;
-    Area currArea = p_conduction.getArea();
-    int layerNo = p_conduction.getLayer();
-    app.freerouting.board.Layer boardLayer = p_par.board.layerStructure.arr[layerNo];
+    String netName = pPar.board.rules.nets.get(pConduction.getNetNo(0)).name;
+    Area currArea = pConduction.getArea();
+    int layerNo = pConduction.getLayer();
+    app.freerouting.board.Layer boardLayer = pPar.board.layerStructure.arr[layerNo];
     Layer planeLayer = new Layer(boardLayer.name, layerNo, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
@@ -34,45 +34,45 @@ public class Plane extends ScopeKeyword {
       boundaryShape = currArea.getBorder();
       holes = currArea.getHoles();
     }
-    p_par.file.startScope();
-    p_par.file.write("plane ");
-    p_par.identifierType.write(netName, p_par.file);
-    Shape dsnShape = p_par.coordinateTransform.boardToDsn(boundaryShape, planeLayer);
+    pPar.file.startScope();
+    pPar.file.write("plane ");
+    pPar.identifierType.write(netName, pPar.file);
+    Shape dsnShape = pPar.coordinateTransform.boardToDsn(boundaryShape, planeLayer);
     if (dsnShape != null) {
-      dsnShape.writeScope(p_par.file, p_par.identifierType);
+      dsnShape.writeScope(pPar.file, pPar.identifierType);
     }
     for (int i = 0; i < holes.length; i++) {
-      Shape dsnHole = p_par.coordinateTransform.boardToDsn(holes[i], planeLayer);
-      dsnHole.writeHoleScope(p_par.file, p_par.identifierType);
+      Shape dsnHole = pPar.coordinateTransform.boardToDsn(holes[i], planeLayer);
+      dsnHole.writeHoleScope(pPar.file, pPar.identifierType);
     }
-    p_par.file.endScope();
+    pPar.file.endScope();
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter p_par) {
+  public boolean readScope(ReadScopeParameter pPar) {
     // read the net name
     String netName;
-    boolean skipWindowScopes = "allegro".equalsIgnoreCase(p_par.hostCad);
+    boolean skipWindowScopes = "allegro".equalsIgnoreCase(pPar.hostCad);
     // Cadence Allegro cutouts the pins on power planes, which leads to performance problems
     // when dividing a conduction area into convex pieces.
     Shape.ReadAreaScopeResult conductionArea;
     try {
-      Object nextToken = p_par.scanner.nextToken();
+      Object nextToken = pPar.scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
-            "Plane.read_scope: String expected at '" + p_par.scanner.getScopeIdentifier() + "'");
+            "Plane.read_scope: String expected at '" + pPar.scanner.getScopeIdentifier() + "'");
         return false;
       }
       netName = (String) nextToken;
-      p_par.scanner.setScopeIdentifier(netName);
-      conductionArea = Shape.readAreaScope(p_par.scanner, p_par.layerStructure, skipWindowScopes);
+      pPar.scanner.setScopeIdentifier(netName);
+      conductionArea = Shape.readAreaScope(pPar.scanner, pPar.layerStructure, skipWindowScopes);
     } catch (IOException e) {
       FRLogger.error("Plane.read_scope: IO error scanning file", e);
       return false;
     }
     ReadScopeParameter.PlaneInfo planeInfo =
         new ReadScopeParameter.PlaneInfo(conductionArea, netName);
-    p_par.planeList.add(planeInfo);
+    pPar.planeList.add(planeInfo);
     return true;
   }
 }

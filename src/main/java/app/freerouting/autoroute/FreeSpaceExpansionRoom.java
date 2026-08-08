@@ -25,16 +25,16 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
    * shape, which does not overlap with any obstacle, and is as big as possible. p_contained_points
    * will remain contained in the shape, after it is completed.
    */
-  protected FreeSpaceExpansionRoom(TileShape p_shape, int p_layer) {
-    shape = p_shape;
-    layer = p_layer;
+  protected FreeSpaceExpansionRoom(TileShape pShape, int pLayer) {
+    shape = pShape;
+    layer = pLayer;
     doors = new ArrayList<>(); // ArrayList for better performance
   }
 
   /** Adds p_door to the list of doors of this room. */
   @Override
-  public void addDoor(ExpansionDoor p_door) {
-    this.doors.add(p_door);
+  public void addDoor(ExpansionDoor pDoor) {
+    this.doors.add(pDoor);
   }
 
   /** Returns the list of doors of this room to neighbour expansion rooms */
@@ -57,8 +57,8 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
   }
 
   @Override
-  public boolean removeDoor(ExpandableObject p_door) {
-    return this.doors.remove(p_door);
+  public boolean removeDoor(ExpandableObject pDoor) {
+    return this.doors.remove(pDoor);
   }
 
   /** Gets the shape of this room */
@@ -68,8 +68,8 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
   }
 
   /** sets the shape of this room */
-  public void setShape(TileShape p_shape) {
-    this.shape = p_shape;
+  public void setShape(TileShape pShape) {
+    this.shape = pShape;
   }
 
   @Override
@@ -79,12 +79,12 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
 
   /** Checks, if this room has already a door to p_other */
   @Override
-  public boolean doorExists(ExpansionRoom p_other) {
+  public boolean doorExists(ExpansionRoom pOther) {
     if (doors == null) {
       return false;
     }
     for (ExpansionDoor currDoor : doors) {
-      if (currDoor.firstRoom == p_other || currDoor.secondRoom == p_other) {
+      if (currDoor.firstRoom == pOther || currDoor.secondRoom == pOther) {
         return true;
       }
     }

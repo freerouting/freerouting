@@ -11,10 +11,10 @@ public class PopupMenuDisplay extends JPopupMenu {
   protected final BoardPanel boardPanel;
 
   /** Creates a new instance of PopupMenuDisplay */
-  public PopupMenuDisplay(BoardFrame p_board_frame) {
-    this.boardPanel = p_board_frame.boardPanel;
+  public PopupMenuDisplay(BoardFrame pBoardFrame) {
+    this.boardPanel = pBoardFrame.boardPanel;
 
-    TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
 
     JMenuItem popupCenterDisplayMenuitem = new JMenuItem();
     popupCenterDisplayMenuitem.setText(tm.getText("center_display"));

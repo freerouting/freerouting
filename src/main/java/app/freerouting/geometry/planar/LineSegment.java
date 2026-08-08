@@ -21,48 +21,48 @@ public class LineSegment implements Serializable {
    * and p_middle_line and ends at the intersection of p_middle_line and p_end_line. p_start_line
    * and p_end_line must not be parallel to p_middle_line.
    */
-  public LineSegment(Line p_start_line, Line p_middle_line, Line p_end_line) {
-    start = p_start_line;
-    middle = p_middle_line;
-    end = p_end_line;
+  public LineSegment(Line pStartLine, Line pMiddleLine, Line pEndLine) {
+    start = pStartLine;
+    middle = pMiddleLine;
+    end = pEndLine;
   }
 
   /**
    * creates the p_no-th line segment of p_polyline for p_no between 1 and p_polyline.lineCount - 2.
    */
-  public LineSegment(Polyline p_polyline, int p_no) {
-    if (p_no <= 0 || p_no >= p_polyline.arr.length - 1) {
+  public LineSegment(Polyline pPolyline, int pNo) {
+    if (pNo <= 0 || pNo >= pPolyline.arr.length - 1) {
       FRLogger.warn("LineSegment from Polyline: p_no out of range");
       start = null;
       middle = null;
       end = null;
       return;
     }
-    start = p_polyline.arr[p_no - 1];
-    middle = p_polyline.arr[p_no];
-    end = p_polyline.arr[p_no + 1];
+    start = pPolyline.arr[pNo - 1];
+    middle = pPolyline.arr[pNo];
+    end = pPolyline.arr[pNo + 1];
   }
 
   /** Creates the p_no-th line segment of p_shape for p_no between 0 and p_shape.lineCount - 1. */
-  public LineSegment(PolylineShape p_shape, int p_no) {
-    int lineCount = p_shape.borderLineCount();
-    if (p_no < 0 || p_no >= lineCount) {
+  public LineSegment(PolylineShape pShape, int pNo) {
+    int lineCount = pShape.borderLineCount();
+    if (pNo < 0 || pNo >= lineCount) {
       FRLogger.warn("LineSegment from TileShape: p_no out of range");
       start = null;
       middle = null;
       end = null;
       return;
     }
-    if (p_no == 0) {
-      start = p_shape.borderLine(lineCount - 1);
+    if (pNo == 0) {
+      start = pShape.borderLine(lineCount - 1);
     } else {
-      start = p_shape.borderLine(p_no - 1);
+      start = pShape.borderLine(pNo - 1);
     }
-    middle = p_shape.borderLine(p_no);
-    if (p_no == lineCount - 1) {
-      end = p_shape.borderLine(0);
+    middle = pShape.borderLine(pNo);
+    if (pNo == lineCount - 1) {
+      end = pShape.borderLine(0);
     } else {
-      end = p_shape.borderLine(p_no + 1);
+      end = pShape.borderLine(pNo + 1);
     }
   }
 
@@ -155,18 +155,18 @@ public class LineSegment implements Serializable {
   }
 
   /** Checks if p_point is contained in this line segment */
-  public boolean contains(Point p_point) {
-    if (!(p_point instanceof IntPoint)) {
+  public boolean contains(Point pPoint) {
+    if (!(pPoint instanceof IntPoint)) {
       FRLogger.warn("LineSegments.contains currently only implemented for IntPoints");
       return false;
     }
-    if (middle.sideOf(p_point) != Side.COLLINEAR) {
+    if (middle.sideOf(pPoint) != Side.COLLINEAR) {
       return false;
     }
     // create a perpendicular line at p_point and check, that the two
     // endpoints of this segment are on different sides of that line.
     Direction perpendicularDirection = middle.direction().turn45Degree(2);
-    Line perpendicularLine = new Line(p_point, perpendicularDirection);
+    Line perpendicularLine = new Line(pPoint, perpendicularDirection);
     Side startPointSide = perpendicularLine.sideOf(this.startPoint());
     Side endPointSide = perpendicularLine.sideOf(this.endPoint());
     return startPointSide != endPointSide || startPointSide == Side.COLLINEAR;
@@ -211,8 +211,8 @@ public class LineSegment implements Serializable {
    * Creates a new line segment with the same start and middle line and an end line, so that the
    * length of the new line segment is about p_new_length.
    */
-  public LineSegment changeLengthApprox(double p_new_length) {
-    FloatPoint newEndPoint = startPointApprox().changeLength(endPointApprox(), p_new_length);
+  public LineSegment changeLengthApprox(double pNewLength) {
+    FloatPoint newEndPoint = startPointApprox().changeLength(endPointApprox(), pNewLength);
     Direction perpendicularDirection = this.middle.direction().turn45Degree(2);
     Line newEndLine = new Line(newEndPoint.round(), perpendicularDirection);
     return new LineSegment(this.start, this.middle, newEndLine);
@@ -228,16 +228,16 @@ public class LineSegment implements Serializable {
    * not symmetric in this and p_other, because intersecting lines and not the intersection points
    * are returned.
    */
-  public Line[] intersection(LineSegment p_other) {
-    if (!this.boundingBox().intersects(p_other.boundingBox())) {
+  public Line[] intersection(LineSegment pOther) {
+    if (!this.boundingBox().intersects(pOther.boundingBox())) {
       return new Line[0];
     }
-    Side startPointSide = startPoint().sideOf(p_other.middle);
-    Side endPointSide = endPoint().sideOf(p_other.middle);
+    Side startPointSide = startPoint().sideOf(pOther.middle);
+    Side endPointSide = endPoint().sideOf(pOther.middle);
     if (startPointSide == Side.COLLINEAR && endPointSide == Side.COLLINEAR) {
       // there may be an overlap
       LineSegment thisSorted = this.sortEndpointsInXY();
-      LineSegment otherSorted = p_other.sortEndpointsInXY();
+      LineSegment otherSorted = pOther.sortEndpointsInXY();
       LineSegment leftLine;
       LineSegment rightLine;
       if (thisSorted.startPoint().compareXY(otherSorted.startPoint()) <= 0) {
@@ -269,19 +269,19 @@ public class LineSegment implements Serializable {
       return result;
     }
     if (startPointSide == endPointSide
-        || p_other.startPoint().sideOf(this.middle) == p_other.endPoint().sideOf(this.middle)) {
+        || pOther.startPoint().sideOf(this.middle) == pOther.endPoint().sideOf(this.middle)) {
       return new Line[0]; // no intersection possible
     }
     // now both start points and both end points are on different sides of the middle
     // line of the other segment.
     Line[] result = new Line[1];
-    result[0] = p_other.middle;
+    result[0] = pOther.middle;
     return result;
   }
 
   /** Checks if this LineSegment and p_other contain a common point */
-  public boolean intersects(LineSegment p_other) {
-    Line[] intersections = this.intersection(p_other);
+  public boolean intersects(LineSegment pOther) {
+    Line[] intersections = this.intersection(pOther);
     return intersections.length > 0;
   }
 
@@ -289,8 +289,8 @@ public class LineSegment implements Serializable {
    * Checks if this LineSegment and p_other contain a common LineSegment, which is not reduced to a
    * point.
    */
-  public boolean overlaps(LineSegment p_other) {
-    Line[] intersections = this.intersection(p_other);
+  public boolean overlaps(LineSegment pOther) {
+    Line[] intersections = this.intersection(pOther);
     return intersections.length > 1;
   }
 
@@ -299,7 +299,7 @@ public class LineSegment implements Serializable {
    * The length of the stairs will be at most p_stair_width. If p_to_the_right, the stairs will be
    * to the right of this line segment, else to the left.
    */
-  public IntPoint[] stairApproximation(double p_width, boolean p_to_the_right) {
+  public IntPoint[] stairApproximation(double pWidth, boolean pToTheRight) {
     IntPoint startPoint = this.startPoint().toFloat().round();
     IntPoint endPoint = this.endPoint().toFloat().round();
     if (startPoint.equals(endPoint)) {
@@ -324,13 +324,13 @@ public class LineSegment implements Serializable {
     int stairCount;
 
     if (functionOfX) {
-      stairWidth = (int) Math.round((p_width * (double) absDx) / (double) absDy);
+      stairWidth = (int) Math.round((pWidth * (double) absDx) / (double) absDy);
       stairCount = (absDx - 1) / stairWidth + 1;
       if (endPoint.x < startPoint.x) {
         stairWidth = -stairWidth;
       }
     } else {
-      stairWidth = (int) Math.round((p_width * (double) absDy) / (double) absDx);
+      stairWidth = (int) Math.round((pWidth * (double) absDy) / (double) absDx);
       stairCount = (absDy - 1) / stairWidth + 1;
       if (endPoint.y < startPoint.y) {
         stairWidth = -stairWidth;
@@ -340,7 +340,7 @@ public class LineSegment implements Serializable {
 
     result[0] = startPoint;
     double det = (double) dx * (double) dy;
-    boolean changeXFirst = p_to_the_right && det > 0 || !p_to_the_right && det < 0;
+    boolean changeXFirst = pToTheRight && det > 0 || !pToTheRight && det < 0;
     int currIndex = 0;
 
     int prevLinePointX = startPoint.x;
@@ -353,8 +353,7 @@ public class LineSegment implements Serializable {
         currLinePointY = (int) Math.round(this.getLine().functionValueApprox(currLinePointX));
       } else {
         currLinePointY = startPoint.y + i * stairWidth;
-        currLinePointX =
-            (int) Math.round(this.getLine().functionInYValueApprox(currLinePointY));
+        currLinePointX = (int) Math.round(this.getLine().functionInYValueApprox(currLinePointY));
       }
       ++currIndex;
       if (changeXFirst) {
@@ -383,7 +382,7 @@ public class LineSegment implements Serializable {
    * The length of the stairs will be at most p_stair_width. If p_to_the_right, the stairs will be
    * to the right of this line segment, else to the left.
    */
-  public IntPoint[] stairApproximation45(double p_width, boolean p_to_the_right) {
+  public IntPoint[] stairApproximation45(double pWidth, boolean pToTheRight) {
     IntPoint startPoint = this.startPoint().toFloat().round();
     IntPoint endPoint = this.endPoint().toFloat().round();
     if (startPoint.equals(endPoint)) {
@@ -403,13 +402,13 @@ public class LineSegment implements Serializable {
     int stairWidth;
     int stairCount;
     if (functionOfX) {
-      stairWidth = (int) Math.round((p_width * (double) absDelta.x) / (double) absDelta.y);
+      stairWidth = (int) Math.round((pWidth * (double) absDelta.x) / (double) absDelta.y);
       stairCount = (absDelta.x - 1) / stairWidth + 1;
       if (endPoint.x < startPoint.x) {
         stairWidth = -stairWidth;
       }
     } else {
-      stairWidth = (int) Math.round((p_width * (double) absDelta.y) / (double) absDelta.x);
+      stairWidth = (int) Math.round((pWidth * (double) absDelta.y) / (double) absDelta.x);
       stairCount = (absDelta.y - 1) / stairWidth + 1;
       if (endPoint.y < startPoint.y) {
         stairWidth = -stairWidth;
@@ -436,7 +435,7 @@ public class LineSegment implements Serializable {
         currLinePoint = new IntPoint(currX, currY);
       }
       if (functionOfX) {
-        boolean diagonalFirst = p_to_the_right && det < 0 || !p_to_the_right && det > 0;
+        boolean diagonalFirst = pToTheRight && det < 0 || !pToTheRight && det > 0;
 
         if (diagonalFirst) {
           currX =
@@ -454,7 +453,7 @@ public class LineSegment implements Serializable {
       } else
       // function of y
       {
-        boolean diagonalFirst = p_to_the_right && det > 0 || !p_to_the_right && det < 0;
+        boolean diagonalFirst = pToTheRight && det > 0 || !pToTheRight && det < 0;
 
         if (diagonalFirst) {
           currX = currLinePoint.x;
@@ -484,15 +483,15 @@ public class LineSegment implements Serializable {
    * With 2 intersections the intersection which is nearest to the start point of the line segment
    * comes first.
    */
-  public int[] borderIntersections(TileShape p_shape) {
+  public int[] borderIntersections(TileShape pShape) {
     int[] emptyResult = new int[0];
-    if (!this.boundingBox().intersects(p_shape.boundingBox())) {
+    if (!this.boundingBox().intersects(pShape.boundingBox())) {
       return emptyResult;
     }
 
-    int edgeCount = p_shape.borderLineCount();
-    Line prevLine = p_shape.borderLine(edgeCount - 1);
-    Line currLine = p_shape.borderLine(0);
+    int edgeCount = pShape.borderLineCount();
+    Line prevLine = pShape.borderLine(edgeCount - 1);
+    Line currLine = pShape.borderLine(0);
     int[] result = new int[2];
     Point[] intersection = new Point[2];
     int intersectionCount = 0;
@@ -502,9 +501,9 @@ public class LineSegment implements Serializable {
     for (int edgeLineNo = 0; edgeLineNo < edgeCount; edgeLineNo++) {
       Line nextLine;
       if (edgeLineNo == edgeCount - 1) {
-        nextLine = p_shape.borderLine(0);
+        nextLine = pShape.borderLine(0);
       } else {
-        nextLine = p_shape.borderLine(edgeLineNo + 1);
+        nextLine = pShape.borderLine(edgeLineNo + 1);
       }
 
       Side startPointSide = currLine.sideOf(lineStart);
@@ -548,16 +547,16 @@ public class LineSegment implements Serializable {
             // isn't merely a touch.
             Point prevPrevCorner;
             if (edgeLineNo == 0) {
-              prevPrevCorner = p_shape.corner(edgeCount - 1);
+              prevPrevCorner = pShape.corner(edgeCount - 1);
             } else {
-              prevPrevCorner = p_shape.corner(edgeLineNo - 1);
+              prevPrevCorner = pShape.corner(edgeLineNo - 1);
             }
 
             Point nextCorner;
             if (edgeLineNo == edgeCount - 1) {
-              nextCorner = p_shape.corner(0);
+              nextCorner = pShape.corner(0);
             } else {
-              nextCorner = p_shape.corner(edgeLineNo + 1);
+              nextCorner = pShape.corner(edgeLineNo + 1);
             }
             // check, that prevPrevCorner and nextCorner
             // are on different sides of this line segment.
@@ -573,15 +572,15 @@ public class LineSegment implements Serializable {
             // this line segment goes through the next
             // corner of p_simplex. Check, that the intersection
             // isn't merely a touch.
-            Point prevCorner = p_shape.corner(edgeLineNo);
+            Point prevCorner = pShape.corner(edgeLineNo);
             Point nextNextCorner;
 
             if (edgeLineNo == edgeCount - 2) {
-              nextNextCorner = p_shape.corner(0);
+              nextNextCorner = pShape.corner(0);
             } else if (edgeLineNo == edgeCount - 1) {
-              nextNextCorner = p_shape.corner(1);
+              nextNextCorner = pShape.corner(1);
             } else {
-              nextNextCorner = p_shape.corner(edgeLineNo + 2);
+              nextNextCorner = pShape.corner(edgeLineNo + 2);
             }
             // check, that prevCorner and nextNextCorner
             // are on different sides of this line segment.

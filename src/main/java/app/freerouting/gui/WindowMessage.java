@@ -13,7 +13,7 @@ import javax.swing.UIManager;
 public final class WindowMessage extends WindowBase {
 
   /** Creates a new instance of WindowMessage */
-  private WindowMessage(String[] p_message_arr) {
+  private WindowMessage(String[] pMessageArr) {
     super(300, 100);
 
     final JPanel mainPanel = new JPanel();
@@ -22,9 +22,9 @@ public final class WindowMessage extends WindowBase {
     final GridBagConstraints gridbagConstraints = new GridBagConstraints();
     gridbagConstraints.insets = new Insets(40, 40, 40, 40);
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
-    for (int i = 0; i < p_message_arr.length; i++) {
+    for (int i = 0; i < pMessageArr.length; i++) {
       final JLabel messageLabel = new JLabel();
-      messageLabel.setText(p_message_arr[i]);
+      messageLabel.setText(pMessageArr[i]);
 
       gridbag.setConstraints(messageLabel, gridbagConstraints);
       mainPanel.add(messageLabel, gridbagConstraints);
@@ -36,15 +36,15 @@ public final class WindowMessage extends WindowBase {
   }
 
   /** Displays a window with the input message at the center of the screen. */
-  public static WindowMessage show(String p_message) {
+  public static WindowMessage show(String pMessage) {
     String[] messageArr = new String[1];
-    messageArr[0] = p_message;
+    messageArr[0] = pMessage;
     return new WindowMessage(messageArr);
   }
 
   /** Displays a window with the input messages at the center of the screen. */
-  public static WindowMessage show(String[] p_messages) {
-    return new WindowMessage(p_messages);
+  public static WindowMessage show(String[] pMessages) {
+    return new WindowMessage(pMessages);
   }
 
   /**
@@ -86,7 +86,7 @@ public final class WindowMessage extends WindowBase {
   }
 
   /** Calls a dialog with an ok-button. */
-  public static void ok(String p_message) {
-    JOptionPane.showMessageDialog(null, p_message);
+  public static void ok(String pMessage) {
+    JOptionPane.showMessageDialog(null, pMessage);
   }
 }

@@ -50,24 +50,24 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
    * back side. p_padstack_list is the list, where this padstack belongs to.
    */
   Padstack(
-      String p_name,
-      int p_no,
-      ConvexShape[] p_shapes,
-      boolean p_is_drilllable,
-      boolean p_placed_absolute,
-      Padstacks p_padstack_list) {
-    shapes = p_shapes;
-    name = p_name;
-    no = p_no;
-    attachAllowed = p_is_drilllable;
-    placedAbsolute = p_placed_absolute;
-    padstackList = p_padstack_list;
+      String pName,
+      int pNo,
+      ConvexShape[] pShapes,
+      boolean pIsDrilllable,
+      boolean pPlacedAbsolute,
+      Padstacks pPadstackList) {
+    shapes = pShapes;
+    name = pName;
+    no = pNo;
+    attachAllowed = pIsDrilllable;
+    placedAbsolute = pPlacedAbsolute;
+    padstackList = pPadstackList;
   }
 
   /** Compares 2 padstacks by name. Useful for example to display padstacks in alphabetic order. */
   @Override
-  public int compareTo(Padstack p_other) {
-    return this.name.compareToIgnoreCase(p_other.name);
+  public int compareTo(Padstack pOther) {
+    return this.name.compareToIgnoreCase(pOther.name);
   }
 
   /**
@@ -130,12 +130,12 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   }
 
   /** Gets the shape of this padstack on layer p_layer */
-  public ConvexShape getShape(int p_layer) {
-    if (p_layer < 0 || p_layer >= shapes.length) {
+  public ConvexShape getShape(int pLayer) {
+    if (pLayer < 0 || pLayer >= shapes.length) {
       FRLogger.warn("Padstack.get_layer p_layer out of range");
       return null;
     }
-    return shapes[p_layer];
+    return shapes[pLayer];
   }
 
   /** Returns the first layer of this padstack with a shape != null. */
@@ -171,12 +171,12 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
    * the length of the pad is smaller than p_factor times the height of the pad, connection also to
    * the long side is allowed.
    */
-  public Collection<Direction> getTraceExitDirections(int p_layer, double p_factor) {
+  public Collection<Direction> getTraceExitDirections(int pLayer, double pFactor) {
     Collection<Direction> result = new LinkedList<>();
-    if (p_layer < 0 || p_layer >= shapes.length) {
+    if (pLayer < 0 || pLayer >= shapes.length) {
       return result;
     }
-    ConvexShape currShape = shapes[p_layer];
+    ConvexShape currShape = shapes[pLayer];
     if (currShape == null) {
       return result;
     }
@@ -187,7 +187,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
 
     boolean allDirs =
         Math.max(currBox.width(), currBox.height())
-            < p_factor * Math.min(currBox.width(), currBox.height());
+            < pFactor * Math.min(currBox.width(), currBox.height());
 
     if (allDirs || currBox.width() >= currBox.height()) {
       result.add(Direction.RIGHT);
@@ -201,20 +201,20 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
-    p_window.appendBold(tm.getText("padstack") + " ");
-    p_window.appendBold(this.name);
+    pWindow.appendBold(tm.getText("padstack") + " ");
+    pWindow.appendBold(this.name);
     for (int i = 0; i < shapes.length; i++) {
       if (shapes[i] != null) {
-        p_window.newline();
-        p_window.indent();
-        p_window.append(shapes[i], p_locale);
-        p_window.append(" " + tm.getText("on_layer") + " ");
-        p_window.append(padstackList.boardLayerStructure.arr[i].name);
+        pWindow.newline();
+        pWindow.indent();
+        pWindow.append(shapes[i], pLocale);
+        pWindow.append(" " + tm.getText("on_layer") + " ");
+        pWindow.append(padstackList.boardLayerStructure.arr[i].name);
       }
     }
-    p_window.newline();
+    pWindow.newline();
   }
 }

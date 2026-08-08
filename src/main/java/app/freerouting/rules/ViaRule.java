@@ -20,26 +20,26 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
   public final String name;
   private final List<ViaInfo> list = new LinkedList<>();
 
-  public ViaRule(String p_name) {
-    name = p_name;
+  public ViaRule(String pName) {
+    name = pName;
   }
 
-  public void appendVia(ViaInfo p_via) {
-    list.add(p_via);
+  public void appendVia(ViaInfo pVia) {
+    list.add(pVia);
   }
 
   /** Removes p_via from the rule. Returns false, if p_via was not contained in the rule. */
-  public boolean removeVia(ViaInfo p_via) {
-    return list.remove(p_via);
+  public boolean removeVia(ViaInfo pVia) {
+    return list.remove(pVia);
   }
 
   public int viaCount() {
     return list.size();
   }
 
-  public ViaInfo getVia(int p_index) {
-    assert p_index >= 0 && p_index < list.size();
-    return list.get(p_index);
+  public ViaInfo getVia(int pIndex) {
+    assert pIndex >= 0 && pIndex < list.size();
+    return list.get(pIndex);
   }
 
   @Override
@@ -48,9 +48,9 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Returns true, if p_via_info is contained in the via list of this rule. */
-  public boolean contains(ViaInfo p_via_info) {
+  public boolean contains(ViaInfo pViaInfo) {
     for (ViaInfo currInfo : this.list) {
-      if (p_via_info == currInfo) {
+      if (pViaInfo == currInfo) {
         return true;
       }
     }
@@ -58,9 +58,9 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Returns true, if this rule contains a via with padstack p_padstack */
-  public boolean containsPadstack(Padstack p_padstack) {
+  public boolean containsPadstack(Padstack pPadstack) {
     for (ViaInfo currInfo : this.list) {
-      if (currInfo.getPadstack() == p_padstack) {
+      if (currInfo.getPadstack() == pPadstack) {
         return true;
       }
     }
@@ -71,10 +71,10 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
    * Searches a via in this rule with first layer = p_from_layer and last layer = p_to_layer.
    * Returns null, if no such via exists.
    */
-  public ViaInfo getLayerRange(int p_from_layer, int p_to_layer) {
+  public ViaInfo getLayerRange(int pFromLayer, int pToLayer) {
     for (ViaInfo currInfo : this.list) {
-      if (currInfo.getPadstack().fromLayer() == p_from_layer
-          && currInfo.getPadstack().toLayer() == p_to_layer) {
+      if (currInfo.getPadstack().fromLayer() == pFromLayer
+          && currInfo.getPadstack().toLayer() == pToLayer) {
         return currInfo;
       }
     }
@@ -85,27 +85,27 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
    * Swaps the locations of p_1 and p_2 in the rule. Returns false, if p_1 or p_2 were not found in
    * the list.
    */
-  public boolean swap(ViaInfo p_1, ViaInfo p_2) {
-    int index1 = this.list.indexOf(p_1);
-    int index2 = this.list.indexOf(p_2);
+  public boolean swap(ViaInfo p1, ViaInfo p2) {
+    int index1 = this.list.indexOf(p1);
+    int index2 = this.list.indexOf(p2);
     if (index1 < 0 || index2 < 0) {
       return false;
     }
     if (index1 == index2) {
       return true;
     }
-    this.list.set(index1, p_2);
-    this.list.set(index2, p_1);
+    this.list.set(index1, p2);
+    this.list.set(index2, p1);
     return true;
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
-    p_window.appendBold(tm.getText("via_rule_2") + " ");
-    p_window.appendBold(this.name);
-    p_window.appendBold(":");
+    pWindow.appendBold(tm.getText("via_rule_2") + " ");
+    pWindow.appendBold(this.name);
+    pWindow.appendBold(":");
     int counter = 0;
     boolean firstTime = true;
     final int maxViasPerRow = 5;
@@ -113,13 +113,13 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
       if (firstTime) {
         firstTime = false;
       } else {
-        p_window.append(", ");
+        pWindow.append(", ");
       }
       if (counter == 0) {
-        p_window.newline();
-        p_window.indent();
+        pWindow.newline();
+        pWindow.indent();
       }
-      p_window.append(currVia.getName(), tm.getText("viaInfo"), currVia);
+      pWindow.append(currVia.getName(), tm.getText("viaInfo"), currVia);
       counter = (counter + 1) % maxViasPerRow;
     }
   }

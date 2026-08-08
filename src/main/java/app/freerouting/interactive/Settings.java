@@ -91,7 +91,7 @@ public class Settings implements Serializable {
   private transient boolean readOnly;
 
   /** Creates a new interactive settings variable. */
-  public Settings(RoutingBoard p_board) {
+  public Settings(RoutingBoard pBoard) {
     // Initialise with default values.
     layer = 0;
     pushEnabled = true;
@@ -107,38 +107,38 @@ public class Settings implements Serializable {
     manualTraceClearanceClass = 1;
     manualViaRuleIndex = 0;
     zoomWithWheel = true;
-    manualTraceHalfWidthArr = new int[p_board.getLayerCount()];
+    manualTraceHalfWidthArr = new int[pBoard.getLayerCount()];
     Arrays.fill(manualTraceHalfWidthArr, 1000);
-    autorouteSettings = new RouterSettings(p_board);
+    autorouteSettings = new RouterSettings(pBoard);
     itemSelectionFilter = new ItemSelectionFilter();
   }
 
   /** Copy constructor */
-  public Settings(Settings p_settings) {
-    this.readOnly = p_settings.readOnly;
-    this.layer = p_settings.layer;
-    this.pushEnabled = p_settings.pushEnabled;
-    this.dragComponentsEnabled = p_settings.dragComponentsEnabled;
-    this.selectOnAllVisibleLayers = p_settings.selectOnAllVisibleLayers;
-    this.isStitchRoute = p_settings.isStitchRoute;
-    this.tracePullTightRegionWidth = p_settings.tracePullTightRegionWidth;
-    this.viaSnapToSmdCenter = p_settings.viaSnapToSmdCenter;
-    this.horizontalComponentGrid = p_settings.horizontalComponentGrid;
-    this.verticalComponentGrid = p_settings.verticalComponentGrid;
-    this.manualRuleSelection = p_settings.manualRuleSelection;
-    this.hilightRoutingObstacle = p_settings.hilightRoutingObstacle;
-    this.zoomWithWheel = p_settings.zoomWithWheel;
-    this.manualTraceClearanceClass = p_settings.manualTraceClearanceClass;
-    this.manualViaRuleIndex = p_settings.manualViaRuleIndex;
-    this.manualTraceHalfWidthArr = new int[p_settings.manualTraceHalfWidthArr.length];
+  public Settings(Settings pSettings) {
+    this.readOnly = pSettings.readOnly;
+    this.layer = pSettings.layer;
+    this.pushEnabled = pSettings.pushEnabled;
+    this.dragComponentsEnabled = pSettings.dragComponentsEnabled;
+    this.selectOnAllVisibleLayers = pSettings.selectOnAllVisibleLayers;
+    this.isStitchRoute = pSettings.isStitchRoute;
+    this.tracePullTightRegionWidth = pSettings.tracePullTightRegionWidth;
+    this.viaSnapToSmdCenter = pSettings.viaSnapToSmdCenter;
+    this.horizontalComponentGrid = pSettings.horizontalComponentGrid;
+    this.verticalComponentGrid = pSettings.verticalComponentGrid;
+    this.manualRuleSelection = pSettings.manualRuleSelection;
+    this.hilightRoutingObstacle = pSettings.hilightRoutingObstacle;
+    this.zoomWithWheel = pSettings.zoomWithWheel;
+    this.manualTraceClearanceClass = pSettings.manualTraceClearanceClass;
+    this.manualViaRuleIndex = pSettings.manualViaRuleIndex;
+    this.manualTraceHalfWidthArr = new int[pSettings.manualTraceHalfWidthArr.length];
     System.arraycopy(
-        p_settings.manualTraceHalfWidthArr,
+        pSettings.manualTraceHalfWidthArr,
         0,
         this.manualTraceHalfWidthArr,
         0,
         this.manualTraceHalfWidthArr.length);
-    this.autorouteSettings = p_settings.autorouteSettings.clone();
-    this.itemSelectionFilter = new ItemSelectionFilter(p_settings.itemSelectionFilter);
+    this.autorouteSettings = pSettings.autorouteSettings.clone();
+    this.itemSelectionFilter = new ItemSelectionFilter(pSettings.itemSelectionFilter);
   }
 
   public int getLayer() {
@@ -151,11 +151,11 @@ public class Settings implements Serializable {
   }
 
   /** Enables or disables pushing obstacles in interactive routing */
-  public void setPushEnabled(boolean p_value) {
+  public void setPushEnabled(boolean pValue) {
     if (readOnly) {
       return;
     }
-    pushEnabled = p_value;
+    pushEnabled = pValue;
   }
 
   /** Route mode: stitching or dynamic */
@@ -169,11 +169,11 @@ public class Settings implements Serializable {
   }
 
   /** Enables or disables dragging components */
-  public void setDragComponentsEnabled(boolean p_value) {
+  public void setDragComponentsEnabled(boolean pValue) {
     if (readOnly) {
       return;
     }
-    dragComponentsEnabled = p_value;
+    dragComponentsEnabled = pValue;
   }
 
   /**
@@ -185,11 +185,11 @@ public class Settings implements Serializable {
   }
 
   /** Sets, if item selection is on all board layers or only on the current layer. */
-  public void setSelectOnAllVisibleLayers(boolean p_value) {
+  public void setSelectOnAllVisibleLayers(boolean pValue) {
     if (readOnly) {
       return;
     }
-    selectOnAllVisibleLayers = p_value;
+    selectOnAllVisibleLayers = pValue;
   }
 
   /**
@@ -205,11 +205,11 @@ public class Settings implements Serializable {
   }
 
   /** Changes, if vias snap to smd center, if attach smd is allowed. */
-  public void setViaSnapToSmdCenter(boolean p_value) {
+  public void setViaSnapToSmdCenter(boolean pValue) {
     if (readOnly) {
       return;
     }
-    viaSnapToSmdCenter = p_value;
+    viaSnapToSmdCenter = pValue;
   }
 
   /** If true, the current routing obstacle is hilightet in dynamic routing. */
@@ -218,11 +218,11 @@ public class Settings implements Serializable {
   }
 
   /** If true, the current routing obstacle is hilightet in dynamic routing. */
-  public void setHilightRoutingObstacle(boolean p_value) {
+  public void setHilightRoutingObstacle(boolean pValue) {
     if (readOnly) {
       return;
     }
-    this.hilightRoutingObstacle = p_value;
+    this.hilightRoutingObstacle = pValue;
   }
 
   /** If true, the mouse wheel is used for zooming. */
@@ -231,12 +231,12 @@ public class Settings implements Serializable {
   }
 
   /** If true, the wheel is used for zooming. */
-  public void setZoomWithWheel(boolean p_value) {
+  public void setZoomWithWheel(boolean pValue) {
     if (readOnly) {
       return;
     }
-    if (zoomWithWheel != p_value) {
-      zoomWithWheel = p_value;
+    if (zoomWithWheel != pValue) {
+      zoomWithWheel = pValue;
     }
   }
 
@@ -246,11 +246,11 @@ public class Settings implements Serializable {
   }
 
   /** The filter used in interactive selection of board items. */
-  public void setItemSelectionFilter(ItemSelectionFilter p_value) {
+  public void setItemSelectionFilter(ItemSelectionFilter pValue) {
     if (readOnly) {
       return;
     }
-    this.itemSelectionFilter = p_value;
+    this.itemSelectionFilter = pValue;
   }
 
   /** The width of the pull tight region of traces around the cursor */
@@ -264,11 +264,11 @@ public class Settings implements Serializable {
   }
 
   /** The horizontal placement grid when moving components, if {@literal >} 0. */
-  public void setHorizontalComponentGrid(int p_value) {
+  public void setHorizontalComponentGrid(int pValue) {
     if (readOnly) {
       return;
     }
-    this.horizontalComponentGrid = p_value;
+    this.horizontalComponentGrid = pValue;
   }
 
   /** The vertical placement grid when moving components, if {@literal >} 0. */
@@ -277,11 +277,11 @@ public class Settings implements Serializable {
   }
 
   /** The vertical placement grid when moving components, if {@literal >} 0. */
-  public void setVerticalComponentGrid(int p_value) {
+  public void setVerticalComponentGrid(int pValue) {
     if (readOnly) {
       return;
     }
-    this.verticalComponentGrid = p_value;
+    this.verticalComponentGrid = pValue;
   }
 
   /**
@@ -296,11 +296,11 @@ public class Settings implements Serializable {
    * The index of the clearance class used for traces in interactive routing in the clearance
    * matrix, if manual_route_selection is on.
    */
-  public void setManualTraceClearanceClass(int p_index) {
+  public void setManualTraceClearanceClass(int pIndex) {
     if (readOnly) {
       return;
     }
-    manualTraceClearanceClass = p_index;
+    manualTraceClearanceClass = pIndex;
   }
 
   /**
@@ -315,70 +315,70 @@ public class Settings implements Serializable {
    * The index of the via rule used in routing in the board via rules if manual_route_selection is
    * on.
    */
-  public void setManualViaRuleIndex(int p_value) {
+  public void setManualViaRuleIndex(int pValue) {
     if (readOnly) {
       return;
     }
-    this.manualViaRuleIndex = p_value;
+    this.manualViaRuleIndex = pValue;
   }
 
   /** Get the trace half width in manual routing mode on layer p_layer_no */
-  public int getManualTraceHalfWidth(int p_layer_no) {
-    if (p_layer_no < 0 || p_layer_no >= this.manualTraceHalfWidthArr.length) {
+  public int getManualTraceHalfWidth(int pLayerNo) {
+    if (pLayerNo < 0 || pLayerNo >= this.manualTraceHalfWidthArr.length) {
       FRLogger.warn("Settings.get_manual_trace_half_width p_layer_no out of range");
       return 0;
     }
-    return this.manualTraceHalfWidthArr[p_layer_no];
+    return this.manualTraceHalfWidthArr[pLayerNo];
   }
 
   /** Route mode: stitching or dynamic */
-  public void setStitchRoute(boolean p_value) {
+  public void setStitchRoute(boolean pValue) {
     if (readOnly) {
       return;
     }
-    isStitchRoute = p_value;
+    isStitchRoute = pValue;
   }
 
   /** Changes the current width of the tidy region for traces. */
-  public void setCurrentPullTightRegionWidth(int p_value) {
+  public void setCurrentPullTightRegionWidth(int pValue) {
     if (readOnly) {
       return;
     }
-    tracePullTightRegionWidth = p_value;
+    tracePullTightRegionWidth = pValue;
   }
 
   /** Sets the current trace width selection to manual or automatic. */
-  public void setManualTracewidthSelection(boolean p_value) {
+  public void setManualTracewidthSelection(boolean pValue) {
     if (readOnly) {
       return;
     }
-    manualRuleSelection = p_value;
+    manualRuleSelection = pValue;
   }
 
   /** Sets the manual trace half width used in interactive routing. */
-  public void setManualTraceHalfWidth(int p_layer_no, int p_value) {
+  public void setManualTraceHalfWidth(int pLayerNo, int pValue) {
     if (readOnly) {
       return;
     }
-    manualTraceHalfWidthArr[p_layer_no] = p_value;
+    manualTraceHalfWidthArr[pLayerNo] = pValue;
   }
 
   /** Changes the interactive selectability of p_item_type. */
-  public void setSelectable(ItemSelectionFilter.SelectableChoices p_item_type, boolean p_value) {
+  public void setSelectable(ItemSelectionFilter.SelectableChoices pItemType, boolean pValue) {
     if (readOnly) {
       return;
     }
-    itemSelectionFilter.setSelected(p_item_type, p_value);
+    itemSelectionFilter.setSelected(pItemType, pValue);
   }
 
   /** Defines, if the setting attributes are allowed to be changed interactively or not. */
-  public void setReadOnly(Boolean p_value) {
-    this.readOnly = p_value;
+  public void setReadOnly(Boolean pValue) {
+    this.readOnly = pValue;
   }
 
   /** Reads an instance of this class from a file */
-  private void readObject(ObjectInputStream p_stream) throws IOException, ClassNotFoundException {
-    p_stream.defaultReadObject();
+  private void readObject(ObjectInputStream pStream) throws IOException, ClassNotFoundException {
+    pStream.defaultReadObject();
     if (this.itemSelectionFilter == null) {
       FRLogger.warn("Settings.readObject: itemSelectionFilter is null");
       this.itemSelectionFilter = new ItemSelectionFilter();

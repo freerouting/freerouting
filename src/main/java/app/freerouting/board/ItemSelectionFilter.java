@@ -23,31 +23,31 @@ public class ItemSelectionFilter implements Serializable {
   }
 
   /** Creates a new filter with only p_item_type selected. */
-  public ItemSelectionFilter(SelectableChoices p_item_type) {
+  public ItemSelectionFilter(SelectableChoices pItemType) {
     this.values = new boolean[SelectableChoices.values().length];
-    values[p_item_type.ordinal()] = true;
+    values[pItemType.ordinal()] = true;
     values[SelectableChoices.FIXED.ordinal()] = true;
     values[SelectableChoices.UNFIXED.ordinal()] = true;
   }
 
   /** Creates a new filter with only p_item_types selected. */
-  public ItemSelectionFilter(SelectableChoices[] p_item_types) {
+  public ItemSelectionFilter(SelectableChoices[] pItemTypes) {
     this.values = new boolean[SelectableChoices.values().length];
-    for (int i = 0; i < p_item_types.length; i++) {
-      values[p_item_types[i].ordinal()] = true;
+    for (int i = 0; i < pItemTypes.length; i++) {
+      values[pItemTypes[i].ordinal()] = true;
     }
     values[SelectableChoices.FIXED.ordinal()] = true;
     values[SelectableChoices.UNFIXED.ordinal()] = true;
   }
 
   /** Copy constructor */
-  public ItemSelectionFilter(ItemSelectionFilter p_item_selection_filter) {
-    this.values = p_item_selection_filter.values.clone();
+  public ItemSelectionFilter(ItemSelectionFilter pItemSelectionFilter) {
+    this.values = pItemSelectionFilter.values.clone();
   }
 
   /** Selects or deselects an item type */
-  public void setSelected(SelectableChoices p_choice, boolean p_value) {
-    values[p_choice.ordinal()] = p_value;
+  public void setSelected(SelectableChoices pChoice, boolean pValue) {
+    values[pChoice.ordinal()] = pValue;
   }
 
   /** Selects all item types. */
@@ -61,9 +61,9 @@ public class ItemSelectionFilter implements Serializable {
   }
 
   /** Filters a collection of items with this filter. */
-  public Set<Item> filter(Set<Item> p_items) {
+  public Set<Item> filter(Set<Item> pItems) {
     Set<Item> result = new TreeSet<>();
-    for (Item currItem : p_items) {
+    for (Item currItem : pItems) {
       if (currItem.isSelectedByFilter(this)) {
         result.add(currItem);
       }
@@ -72,8 +72,8 @@ public class ItemSelectionFilter implements Serializable {
   }
 
   /** Looks, if the input item type is selected. */
-  public boolean isSelected(SelectableChoices p_choice) {
-    return values[p_choice.ordinal()];
+  public boolean isSelected(SelectableChoices pChoice) {
+    return values[pChoice.ordinal()];
   }
 
   /** The possible choices in the filter. */

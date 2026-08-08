@@ -38,11 +38,11 @@ public class WindowEditVias extends BoardSavableSubWindow {
   private ViaTableModel tableModel;
 
   /** Creates a new instance of ViaTablePanel */
-  public WindowEditVias(BoardFrame p_board_frame) {
-    setLanguage(p_board_frame.get_locale());
+  public WindowEditVias(BoardFrame pBoardFrame) {
+    setLanguage(pBoardFrame.get_locale());
     this.setTitle(tm.getText("title"));
 
-    this.boardFrame = p_board_frame;
+    this.boardFrame = pBoardFrame;
 
     this.mainPanel = new JPanel();
     this.mainPanel.setLayout(new BorderLayout());
@@ -139,7 +139,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
   private class AddViaListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
       ViaInfos viaInfos = routingBoard.rules.viaInfos;
       int no = 1;
@@ -169,7 +169,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
   private class RemoveViaListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (tableModel.getRowCount() <= 1) {
         boardFrame.screenMessages.setStatusMessage(tm.getText("last_via_not_removed"));
         return;
@@ -234,8 +234,8 @@ public class WindowEditVias extends BoardSavableSubWindow {
     }
 
     @Override
-    public String getColumnName(int p_col) {
-      return columnNames[p_col];
+    public String getColumnName(int pCol) {
+      return columnNames[pCol];
     }
 
     @Override
@@ -249,15 +249,15 @@ public class WindowEditVias extends BoardSavableSubWindow {
     }
 
     @Override
-    public Object getValueAt(int p_row, int p_col) {
-      return data[p_row][p_col];
+    public Object getValueAt(int pRow, int pCol) {
+      return data[pRow][pCol];
     }
 
     @Override
-    public void setValueAt(Object p_value, int p_row, int p_col) {
+    public void setValueAt(Object pValue, int pRow, int pCol) {
       RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
       BoardRules boardRules = routingBoard.rules;
-      Object viaName = getValueAt(p_row, ColumnName.NAME.ordinal());
+      Object viaName = getValueAt(pRow, ColumnName.NAME.ordinal());
       if (!(viaName instanceof String)) {
         FRLogger.warn("ViaVindow.setValueAt: String expected");
         return;
@@ -268,8 +268,8 @@ public class WindowEditVias extends BoardSavableSubWindow {
         return;
       }
 
-      if (p_col == ColumnName.NAME.ordinal()) {
-        if (!(p_value instanceof String newName)) {
+      if (pCol == ColumnName.NAME.ordinal()) {
+        if (!(pValue instanceof String newName)) {
           return;
         }
         if (boardRules.viaInfos.nameExists(newName)) {
@@ -277,8 +277,8 @@ public class WindowEditVias extends BoardSavableSubWindow {
         }
         viaInfo.setName(newName);
         boardFrame.viaWindow.refresh();
-      } else if (p_col == ColumnName.PADSTACK.ordinal()) {
-        if (!(p_value instanceof String newName)) {
+      } else if (pCol == ColumnName.PADSTACK.ordinal()) {
+        if (!(pValue instanceof String newName)) {
           return;
         }
         Padstack newPadstack = routingBoard.library.getViaPadstack(newName);
@@ -287,8 +287,8 @@ public class WindowEditVias extends BoardSavableSubWindow {
           return;
         }
         viaInfo.setPadstack(newPadstack);
-      } else if (p_col == ColumnName.CLEARANCE_CLASS.ordinal()) {
-        if (!(p_value instanceof String newName)) {
+      } else if (pCol == ColumnName.CLEARANCE_CLASS.ordinal()) {
+        if (!(pValue instanceof String newName)) {
           return;
         }
         int newClClassIndex = boardRules.clearanceMatrix.getNo(newName);
@@ -299,25 +299,25 @@ public class WindowEditVias extends BoardSavableSubWindow {
           }
         }
         viaInfo.setClearanceClass(newClClassIndex);
-      } else if (p_col == ColumnName.ATTACH_SMD.ordinal()) {
-        if (!(p_value instanceof Boolean attach_smd)) {
+      } else if (pCol == ColumnName.ATTACH_SMD.ordinal()) {
+        if (!(pValue instanceof Boolean attach_smd)) {
           FRLogger.warn("ViaVindow.setValueAt: Boolean expected");
           return;
         }
         viaInfo.setAttachSmdAllowed(attach_smd);
       }
-      this.data[p_row][p_col] = p_value;
-      fireTableCellUpdated(p_row, p_col);
+      this.data[pRow][pCol] = pValue;
+      fireTableCellUpdated(pRow, pCol);
     }
 
     @Override
-    public boolean isCellEditable(int p_row, int p_col) {
+    public boolean isCellEditable(int pRow, int pCol) {
       return true;
     }
 
     @Override
-    public Class<?> getColumnClass(int p_col) {
-      return getValueAt(0, p_col).getClass();
+    public Class<?> getColumnClass(int pCol) {
+      return getValueAt(0, pCol).getClass();
     }
   }
 }

@@ -17,34 +17,34 @@ public class Polygon extends Shape {
    * Creates a new instance of Polygon p_coor is an array of dimension 2 * point_count and contains
    * x0, y0, x1, y1, ... If the polygon is used as rectangle,
    */
-  public Polygon(Layer p_layer, double[] p_coor) {
-    super(p_layer);
-    coor = p_coor;
+  public Polygon(Layer pLayer, double[] pCoor) {
+    super(pLayer);
+    coor = pCoor;
   }
 
   @Override
   public app.freerouting.geometry.planar.Shape transformToBoard(
-      CoordinateTransform p_coordinate_transform) {
+      CoordinateTransform pCoordinateTransform) {
     IntPoint[] cornerArr = new IntPoint[coor.length / 2];
     double[] currPoint = new double[2];
     for (int i = 0; i < cornerArr.length; i++) {
       currPoint[0] = coor[2 * i];
       currPoint[1] = coor[2 * i + 1];
-      cornerArr[i] = p_coordinate_transform.dsnToBoard(currPoint).round();
+      cornerArr[i] = pCoordinateTransform.dsnToBoard(currPoint).round();
     }
     return new PolygonShape(cornerArr);
   }
 
   @Override
   public app.freerouting.geometry.planar.Shape transformToBoardRel(
-      CoordinateTransform p_coordinate_transform) {
+      CoordinateTransform pCoordinateTransform) {
     if (coor.length < 2) {
       return Simplex.EMPTY;
     }
     IntPoint[] cornerArr = new IntPoint[coor.length / 2];
     for (int i = 0; i < cornerArr.length; i++) {
-      int currX = (int) Math.round(p_coordinate_transform.dsnToBoard(coor[2 * i]));
-      int currY = (int) Math.round(p_coordinate_transform.dsnToBoard(coor[2 * i + 1]));
+      int currX = (int) Math.round(pCoordinateTransform.dsnToBoard(coor[2 * i]));
+      int currY = (int) Math.round(pCoordinateTransform.dsnToBoard(coor[2 * i + 1]));
       cornerArr[i] = new IntPoint(currX, currY);
     }
     return new PolygonShape(cornerArr);
@@ -73,40 +73,40 @@ public class Polygon extends Shape {
 
   /** Writes this polygon as a scope to an output dsn-file. */
   @Override
-  public void writeScope(IndentFileWriter p_file, IdentifierType p_identifier_type)
+  public void writeScope(IndentFileWriter pFile, IdentifierType pIdentifierType)
       throws IOException {
-    p_file.startScope();
-    p_file.write("polygon ");
-    p_identifier_type.write(this.layer.name, p_file);
-    p_file.write(" ");
-    p_file.write(String.valueOf(0));
+    pFile.startScope();
+    pFile.write("polygon ");
+    pIdentifierType.write(this.layer.name, pFile);
+    pFile.write(" ");
+    pFile.write(String.valueOf(0));
     int cornerCount = coor.length / 2;
     for (int i = 0; i < cornerCount; i++) {
-      p_file.newLine();
-      p_file.write(String.valueOf(coor[2 * i]));
-      p_file.write(" ");
-      p_file.write(String.valueOf(coor[2 * i + 1]));
+      pFile.newLine();
+      pFile.write(String.valueOf(coor[2 * i]));
+      pFile.write(" ");
+      pFile.write(String.valueOf(coor[2 * i + 1]));
     }
-    p_file.endScope();
+    pFile.endScope();
   }
 
   @Override
-  public void writeScopeInt(IndentFileWriter p_file, IdentifierType p_identifier_type)
+  public void writeScopeInt(IndentFileWriter pFile, IdentifierType pIdentifierType)
       throws IOException {
-    p_file.startScope();
-    p_file.write("polygon ");
-    p_identifier_type.write(this.layer.name, p_file);
-    p_file.write(" ");
-    p_file.write(String.valueOf(0));
+    pFile.startScope();
+    pFile.write("polygon ");
+    pIdentifierType.write(this.layer.name, pFile);
+    pFile.write(" ");
+    pFile.write(String.valueOf(0));
     int cornerCount = coor.length / 2;
     for (int i = 0; i < cornerCount; i++) {
-      p_file.newLine();
+      pFile.newLine();
       int currCoor = (int) Math.round(coor[2 * i]);
-      p_file.write(String.valueOf(currCoor));
-      p_file.write(" ");
+      pFile.write(String.valueOf(currCoor));
+      pFile.write(" ");
       currCoor = (int) Math.round(coor[2 * i + 1]);
-      p_file.write(String.valueOf(currCoor));
+      pFile.write(String.valueOf(currCoor));
     }
-    p_file.endScope();
+    pFile.endScope();
   }
 }

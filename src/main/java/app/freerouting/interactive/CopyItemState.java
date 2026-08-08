@@ -32,19 +32,19 @@ public final class CopyItemState extends InteractiveState {
 
   /** Creates a new instance of CopyItemState */
   private CopyItemState(
-      FloatPoint p_location,
-      Collection<Item> p_item_list,
-      InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
+      FloatPoint pLocation,
+      Collection<Item> pItemList,
+      InteractiveState pParentState,
+      GuiBoardManager pBoardHandling) {
+    super(pParentState, pBoardHandling);
     itemList = new LinkedList<>();
 
-    startPosition = p_location.round();
-    currentLayer = p_board_handling.getInteractiveSettings().getLayer();
+    startPosition = pLocation.round();
+    currentLayer = pBoardHandling.getInteractiveSettings().getLayer();
     layerChanged = false;
     currentPosition = startPosition;
     previousPosition = currentPosition;
-    for (Item currItem : p_item_list) {
+    for (Item currItem : pItemList) {
       if (currItem instanceof DrillItem || currItem instanceof ObstacleArea) {
         Item newItem = currItem.copy(0);
         itemList.add(newItem);
@@ -54,42 +54,42 @@ public final class CopyItemState extends InteractiveState {
 
   /** Returns a new instance of CopyItemState or null, if p_item_list is empty. */
   public static CopyItemState getInstance(
-      FloatPoint p_location,
-      Collection<Item> p_item_list,
-      InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
-    if (p_item_list.isEmpty()) {
+      FloatPoint pLocation,
+      Collection<Item> pItemList,
+      InteractiveState pParentState,
+      GuiBoardManager pBoardHandling) {
+    if (pItemList.isEmpty()) {
       return null;
     }
-    p_board_handling.removeRatsnest(); // copying an item may change the connectivity.
-    return new CopyItemState(p_location, p_item_list, p_parent_state, p_board_handling);
+    pBoardHandling.removeRatsnest(); // copying an item may change the connectivity.
+    return new CopyItemState(pLocation, pItemList, pParentState, pBoardHandling);
   }
 
   /** Creates a new padstack from p_old_padstack with a layer range starting at p_new_layer. */
   private static Padstack changePadstackLayers(
-      Padstack p_old_padstack,
-      int p_new_layer,
-      RoutingBoard p_board,
-      Map<Padstack, Padstack> p_padstack_pairs) {
+      Padstack pOldPadstack,
+      int pNewLayer,
+      RoutingBoard pBoard,
+      Map<Padstack, Padstack> pPadstackPairs) {
     Padstack newPadstack;
-    int oldLayer = p_old_padstack.fromLayer();
-    if (oldLayer == p_new_layer) {
-      newPadstack = p_old_padstack;
-    } else if (p_padstack_pairs.containsKey(p_old_padstack)) {
+    int oldLayer = pOldPadstack.fromLayer();
+    if (oldLayer == pNewLayer) {
+      newPadstack = pOldPadstack;
+    } else if (pPadstackPairs.containsKey(pOldPadstack)) {
       // New padstack already created, assign it to the via.
-      newPadstack = p_padstack_pairs.get(p_old_padstack);
+      newPadstack = pPadstackPairs.get(pOldPadstack);
     } else {
       // Create a new padstack.
-      ConvexShape[] newShapes = new ConvexShape[p_board.getLayerCount()];
-      int layerDiff = oldLayer - p_new_layer;
+      ConvexShape[] newShapes = new ConvexShape[pBoard.getLayerCount()];
+      int layerDiff = oldLayer - pNewLayer;
       for (int i = 0; i < newShapes.length; i++) {
         int newLayerNo = i + layerDiff;
         if (newLayerNo >= 0 && newLayerNo < newShapes.length) {
-          newShapes[i] = p_old_padstack.getShape(i + layerDiff);
+          newShapes[i] = pOldPadstack.getShape(i + layerDiff);
         }
       }
-      newPadstack = p_board.library.padstacks.add(newShapes);
-      p_padstack_pairs.put(p_old_padstack, newPadstack);
+      newPadstack = pBoard.library.padstacks.add(newShapes);
+      pPadstackPairs.put(pOldPadstack, newPadstack);
     }
     return newPadstack;
   }
@@ -102,8 +102,8 @@ public final class CopyItemState extends InteractiveState {
   }
 
   /** Changes the position for inserting the copied items to p_new_location. */
-  private void changePosition(FloatPoint p_new_position) {
-    currentPosition = p_new_position.round();
+  private void changePosition(FloatPoint pNewPosition) {
+    currentPosition = pNewPosition.round();
     if (!currentPosition.equals(previousPosition)) {
       Vector translateVector = currentPosition.differenceBy(previousPosition);
       for (Item currItem : itemList) {
@@ -116,10 +116,10 @@ public final class CopyItemState extends InteractiveState {
 
   /** Changes the first layer of the items in the copy list to p_new_layer. */
   @Override
-  public boolean changeLayerAction(int p_new_layer) {
-    currentLayer = p_new_layer;
+  public boolean changeLayerAction(int pNewLayer) {
+    currentLayer = pNewLayer;
     layerChanged = true;
-    hdlg.setLayer(p_new_layer);
+    hdlg.setLayer(pNewLayer);
     return true;
   }
 
@@ -131,7 +131,7 @@ public final class CopyItemState extends InteractiveState {
     if (itemList == null) {
       return;
     }
-    Map<Padstack, Padstack> padstack_pairs =
+    Map<Padstack, Padstack> padstackPairs =
         new TreeMap<>(); // Contains old and new padstacks after layer change.
 
     RoutingBoard board = hdlg.getRoutingBoard();
@@ -140,7 +140,7 @@ public final class CopyItemState extends InteractiveState {
       for (Item currOb : itemList) {
         if (currOb instanceof Via currVia) {
           Padstack newPadstack =
-              changePadstackLayers(currVia.getPadstack(), currentLayer, board, padstack_pairs);
+              changePadstackLayers(currVia.getPadstack(), currentLayer, board, padstackPairs);
           currVia.setPadstack(newPadstack);
         }
       }
@@ -149,7 +149,7 @@ public final class CopyItemState extends InteractiveState {
     // components.
 
     // Contains the old and new id no of a copied component.
-    Map<Integer, Integer> cmp_no_pairs = new TreeMap<>();
+    Map<Integer, Integer> cmpNoPairs = new TreeMap<>();
 
     // Contains the new created components after copying.
     Collection<Component> copiedComponents = new LinkedList<>();
@@ -161,9 +161,9 @@ public final class CopyItemState extends InteractiveState {
         // This item belongs to a component
         int newCmpNo;
         Integer currKey = currCmpNo;
-        if (cmp_no_pairs.containsKey(currKey)) {
+        if (cmpNoPairs.containsKey(currKey)) {
           // the new component for this pin is already created
-          Integer currValue = cmp_no_pairs.get(currKey);
+          Integer currValue = cmpNoPairs.get(currKey);
           newCmpNo = currValue;
         } else {
           Component oldComponent = board.components.get(currCmpNo);
@@ -184,7 +184,7 @@ public final class CopyItemState extends InteractiveState {
                 return;
               }
               Padstack newPadstack =
-                  changePadstackLayers(oldPadstack, currentLayer, board, padstack_pairs);
+                  changePadstackLayers(oldPadstack, currentLayer, board, padstackPairs);
               newPinArr[i] =
                   new Package.Pin(
                       oldPin.name,
@@ -204,7 +204,7 @@ public final class CopyItemState extends InteractiveState {
                   newPackage);
           copiedComponents.add(newComponent);
           newCmpNo = newComponent.no;
-          cmp_no_pairs.put(currCmpNo, newCmpNo);
+          cmpNoPairs.put(currCmpNo, newCmpNo);
         }
         currItem.assignComponentNo(newCmpNo);
       }
@@ -235,19 +235,19 @@ public final class CopyItemState extends InteractiveState {
   }
 
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint p_location) {
+  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
     insert();
     return this;
   }
 
   @Override
-  public void draw(Graphics p_graphics) {
+  public void draw(Graphics pGraphics) {
     if (itemList == null) {
       return;
     }
     for (Item currItem : itemList) {
       currItem.draw(
-          p_graphics,
+          pGraphics,
           hdlg.graphicsContext,
           hdlg.graphicsContext.getHilightColor(),
           hdlg.graphicsContext.getHilightColorIntensity());

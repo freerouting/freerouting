@@ -7,10 +7,10 @@ import java.util.Set;
 public interface Connectable {
 
   /** Returns true if this item belongs to the net with number p_net_no. */
-  boolean containsNet(int p_net_no);
+  boolean containsNet(int pNetNo);
 
   /** Returns true if the net number array of this and p_net_no_arr have a common number. */
-  boolean sharesNetNo(int[] p_net_no_arr);
+  boolean sharesNetNo(int[] pNetNoArr);
 
   /** Returns a list of all connectable items overlapping and sharing a net with this item. */
   Set<Item> getAllContacts();
@@ -19,7 +19,7 @@ public interface Connectable {
    * Returns a list of all connectable items overlapping with this item on the input layer and
    * sharing a net with this item.
    */
-  Set<Item> getAllContacts(int p_layer);
+  Set<Item> getAllContacts(int pLayer);
 
   /**
    * Returns the list of all contacts of a connectable item located at defined connection points.
@@ -32,11 +32,11 @@ public interface Connectable {
    * Returns all connectable items of the net with number p_net_no, which can be reached recursively
    * from this item via normal contacts. if p_net_no {@literal <}= 0, the net number is ignored.
    */
-  Set<Item> getConnectedSet(int p_net_no);
+  Set<Item> getConnectedSet(int pNetNo);
 
   /**
    * Returns for each convex shape of a connectable item the subshape of points, where traces can be
    * connected to that item.
    */
-  TileShape getTraceConnectionShape(ShapeSearchTree p_tree, int p_index);
+  TileShape getTraceConnectionShape(ShapeSearchTree pTree, int pIndex);
 }

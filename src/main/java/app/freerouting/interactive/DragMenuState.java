@@ -6,18 +6,18 @@ import app.freerouting.geometry.planar.FloatPoint;
 public class DragMenuState extends MenuState {
 
   /** Creates a new instance of DragMenuState */
-  public DragMenuState(GuiBoardManager p_board_handling) {
-    super(p_board_handling);
+  public DragMenuState(GuiBoardManager pBoardHandling) {
+    super(pBoardHandling);
   }
 
   /** Returns a new instance of DragMenuState */
-  public static DragMenuState getInstance(GuiBoardManager p_board_handling) {
-    return new DragMenuState(p_board_handling);
+  public static DragMenuState getInstance(GuiBoardManager pBoardHandling) {
+    return new DragMenuState(pBoardHandling);
   }
 
   @Override
-  public InteractiveState mousePressed(FloatPoint p_point) {
-    return DragState.getInstance(p_point, this, hdlg);
+  public InteractiveState mousePressed(FloatPoint pPoint) {
+    return DragState.getInstance(pPoint, this, hdlg);
   }
 
   @Override

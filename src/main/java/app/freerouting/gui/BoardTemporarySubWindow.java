@@ -9,9 +9,9 @@ public class BoardTemporarySubWindow extends BoardSubWindow {
   protected final BoardFrame boardFrame;
 
   /** Creates a new instance of BoardTemporarySubWindow */
-  public BoardTemporarySubWindow(BoardFrame p_board_frame) {
-    this.boardFrame = p_board_frame;
-    p_board_frame.temporarySubwindows.add(this);
+  public BoardTemporarySubWindow(BoardFrame pBoardFrame) {
+    this.boardFrame = pBoardFrame;
+    pBoardFrame.temporarySubwindows.add(this);
 
     this.addWindowListener(
         new WindowAdapter() {

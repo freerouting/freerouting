@@ -6,7 +6,7 @@ import java.util.List;
 public interface ExpansionRoom {
 
   /** Adds p_door to the list of doors of this room. */
-  void addDoor(ExpansionDoor p_door);
+  void addDoor(ExpansionDoor pDoor);
 
   /** Returns the list of doors of this room to neighbour expansion rooms */
   List<ExpansionDoor> getDoors();
@@ -18,10 +18,10 @@ public interface ExpansionRoom {
   void resetDoors();
 
   /** Checks, if this room has already a door to p_other */
-  boolean doorExists(ExpansionRoom p_other);
+  boolean doorExists(ExpansionRoom pOther);
 
   /** Removes p_door from this room. Returns false, if p_room did not contain p_door. */
-  boolean removeDoor(ExpandableObject p_door);
+  boolean removeDoor(ExpandableObject pDoor);
 
   /** Gets the shape of this room. */
   TileShape getShape();

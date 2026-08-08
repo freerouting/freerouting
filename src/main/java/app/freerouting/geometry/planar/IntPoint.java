@@ -14,31 +14,31 @@ public class IntPoint extends Point implements Serializable {
   public final int y;
 
   /** create an IntPoint from two integer coordinates */
-  public IntPoint(int p_x, int p_y) {
-    if (Math.abs(p_x) > Limits.CRIT_INT) {
+  public IntPoint(int pX, int pY) {
+    if (Math.abs(pX) > Limits.CRIT_INT) {
       FRLogger.debug("IntPoint: p_x is out of range");
     }
-    if (Math.abs(p_y) > Limits.CRIT_INT) {
+    if (Math.abs(pY) > Limits.CRIT_INT) {
       FRLogger.debug("IntPoint: p_y is out of range");
     }
 
-    x = p_x;
-    y = p_y;
+    x = pX;
+    y = pY;
   }
 
   /** Returns true, if this IntPoint is equal to p_ob */
   @Override
-  public final boolean equals(Object p_ob) {
-    if (this == p_ob) {
+  public final boolean equals(Object pOb) {
+    if (this == pOb) {
       return true;
     }
-    if (p_ob == null) {
+    if (pOb == null) {
       return false;
     }
-    if (getClass() != p_ob.getClass()) {
+    if (getClass() != pOb.getClass()) {
       return false;
     }
-    IntPoint other = (IntPoint) p_ob;
+    IntPoint other = (IntPoint) pOb;
     return x == other.x && y == other.y;
   }
 
@@ -61,51 +61,51 @@ public class IntPoint extends Point implements Serializable {
   }
 
   @Override
-  public boolean isContainedIn(IntBox p_box) {
-    return x >= p_box.ll.x && y >= p_box.ll.y && x <= p_box.ur.x && y <= p_box.ur.y;
+  public boolean isContainedIn(IntBox pBox) {
+    return x >= pBox.ll.x && y >= pBox.ll.y && x <= pBox.ur.x && y <= pBox.ur.y;
   }
 
   /** returns the translation of this point by p_vector */
   @Override
-  public final Point translateBy(Vector p_vector) {
-    if (p_vector.equals(Vector.ZERO)) {
+  public final Point translateBy(Vector pVector) {
+    if (pVector.equals(Vector.ZERO)) {
       return this;
     }
-    return p_vector.addTo(this);
+    return pVector.addTo(this);
   }
 
   @Override
-  Point translateBy(IntVector p_vector) {
-    return new IntPoint(x + p_vector.x, y + p_vector.y);
+  Point translateBy(IntVector pVector) {
+    return new IntPoint(x + pVector.x, y + pVector.y);
   }
 
   @Override
-  Point translateBy(RationalVector p_vector) {
-    return p_vector.addTo(this);
+  Point translateBy(RationalVector pVector) {
+    return pVector.addTo(this);
   }
 
   /** returns the difference vector of this point and p_other */
   @Override
-  public Vector differenceBy(Point p_other) {
-    Vector tmp = p_other.differenceBy(this);
+  public Vector differenceBy(Point pOther) {
+    Vector tmp = pOther.differenceBy(this);
     return tmp.negate();
   }
 
   @Override
-  Vector differenceBy(RationalPoint p_other) {
-    Vector tmp = p_other.differenceBy(this);
+  Vector differenceBy(RationalPoint pOther) {
+    Vector tmp = pOther.differenceBy(this);
     return tmp.negate();
   }
 
   @Override
-  IntVector differenceBy(IntPoint p_other) {
-    return new IntVector(x - p_other.x, y - p_other.y);
+  IntVector differenceBy(IntPoint pOther) {
+    return new IntVector(x - pOther.x, y - pOther.y);
   }
 
   @Override
-  public Side sideOf(Line p_line) {
-    Vector v1 = differenceBy(p_line.a);
-    Vector v2 = p_line.b.differenceBy(p_line.a);
+  public Side sideOf(Line pLine) {
+    Vector v1 = differenceBy(pLine.a);
+    Vector v2 = pLine.b.differenceBy(pLine.a);
     return v1.sideOf(v2);
   }
 
@@ -120,21 +120,21 @@ public class IntPoint extends Point implements Serializable {
   }
 
   /** returns the determinant of the vectors (x, y) and (p_other.x, p_other.y) */
-  public final long determinant(IntPoint p_other) {
-    return (long) x * p_other.y - (long) y * p_other.x;
+  public final long determinant(IntPoint pOther) {
+    return (long) x * pOther.y - (long) y * pOther.x;
   }
 
   @Override
-  public Point perpendicularProjection(Line p_line) {
+  public Point perpendicularProjection(Line pLine) {
     // this function is at the moment only implemented for lines
     // consisting of IntPoints.
     // The general implementation is still missing.
-    IntVector v = (IntVector) p_line.b.differenceBy(p_line.a);
+    IntVector v = (IntVector) pLine.b.differenceBy(pLine.a);
     BigInteger vxvx = BigInteger.valueOf((long) v.x * v.x);
     BigInteger vyvy = BigInteger.valueOf((long) v.y * v.y);
     BigInteger vxvy = BigInteger.valueOf((long) v.x * v.y);
     BigInteger denominator = vxvx.add(vyvy);
-    BigInteger det = BigInteger.valueOf(((IntPoint) p_line.a).determinant((IntPoint) p_line.b));
+    BigInteger det = BigInteger.valueOf(((IntPoint) pLine.a).determinant((IntPoint) pLine.b));
     BigInteger pointX = BigInteger.valueOf(x);
     BigInteger pointY = BigInteger.valueOf(y);
 
@@ -169,38 +169,38 @@ public class IntPoint extends Point implements Serializable {
   /**
    * Returns the signed area of the parallelogramm spanned by the vectors p_2 - p_1 and this - p_1
    */
-  public double signedArea(IntPoint p_1, IntPoint p_2) {
-    IntVector d21 = p_2.differenceBy(p_1);
-    IntVector d01 = this.differenceBy(p_1);
+  public double signedArea(IntPoint p1, IntPoint p2) {
+    IntVector d21 = p2.differenceBy(p1);
+    IntVector d01 = this.differenceBy(p1);
     return d21.determinant(d01);
   }
 
   /** calculates the square of the distance between this point and p_to_point */
-  public double distanceSquare(IntPoint p_to_point) {
-    double dx = p_to_point.x - this.x;
-    double dy = p_to_point.y - this.y;
+  public double distanceSquare(IntPoint pToPoint) {
+    double dx = pToPoint.x - this.x;
+    double dy = pToPoint.y - this.y;
     return dx * dx + dy * dy;
   }
 
   /** calculates the distance between this point and p_to_point */
-  public double distance(IntPoint p_to_point) {
-    return Math.sqrt(distanceSquare(p_to_point));
+  public double distance(IntPoint pToPoint) {
+    return Math.sqrt(distanceSquare(pToPoint));
   }
 
   /**
    * Calculates the nearest point to this point on the horizontal or vertical line through p_other
    * (Snaps this point to on orthogonal line through p_other).
    */
-  public IntPoint orthogonalProjection(IntPoint p_other) {
+  public IntPoint orthogonalProjection(IntPoint pOther) {
     IntPoint result;
-    int horizontalDistance = Math.abs(this.x - p_other.x);
-    int verticalDistance = Math.abs(this.y - p_other.y);
+    int horizontalDistance = Math.abs(this.x - pOther.x);
+    int verticalDistance = Math.abs(this.y - pOther.y);
     if (horizontalDistance <= verticalDistance) {
       // projection onto the vertical line through p_other
-      result = new IntPoint(p_other.x, this.y);
+      result = new IntPoint(pOther.x, this.y);
     } else {
       // projection onto the horizontal line through p_other
-      result = new IntPoint(this.x, p_other.y);
+      result = new IntPoint(this.x, pOther.y);
     }
     return result;
   }
@@ -209,9 +209,9 @@ public class IntPoint extends Point implements Serializable {
    * Calculates the nearest point to this point on an orthogonal or diagonal line through p_other
    * (Snaps this point to on 45 degree line through p_other).
    */
-  public IntPoint fortyfiveDegreeProjection(IntPoint p_other) {
-    int dx = this.x - p_other.x;
-    int dy = this.y - p_other.y;
+  public IntPoint fortyfiveDegreeProjection(IntPoint pOther) {
+    int dx = this.x - pOther.x;
+    int dy = this.y - pOther.y;
     double[] distArr = new double[4];
     distArr[0] = Math.abs(dx);
     distArr[1] = Math.abs(dy);
@@ -228,18 +228,18 @@ public class IntPoint extends Point implements Serializable {
     IntPoint result;
     if (minDist == distArr[0]) {
       // projection onto the vertical line through p_other
-      result = new IntPoint(p_other.x, this.y);
+      result = new IntPoint(pOther.x, this.y);
     } else if (minDist == distArr[1]) {
       // projection onto the horizontal line through p_other
-      result = new IntPoint(this.x, p_other.y);
+      result = new IntPoint(this.x, pOther.y);
     } else if (minDist == distArr[2]) {
       // projection onto the right diagonal line through p_other
       int diagonalValue = (int) diagonal2;
-      result = new IntPoint(p_other.x + diagonalValue, p_other.y + diagonalValue);
+      result = new IntPoint(pOther.x + diagonalValue, pOther.y + diagonalValue);
     } else {
       // projection onto the left diagonal line through p_other
       int diagonalValue = (int) diagonal1;
-      result = new IntPoint(p_other.x - diagonalValue, p_other.y + diagonalValue);
+      result = new IntPoint(pOther.x - diagonalValue, pOther.y + diagonalValue);
     }
     return result;
   }
@@ -250,60 +250,60 @@ public class IntPoint extends Point implements Serializable {
    * p_to_point will be on the left of the line from this point to p, else on the right. Returns
    * null, if the line from this point to p_to_point is already a multiple of 45 degree.
    */
-  public IntPoint fortyfiveDegreeCorner(IntPoint p_to_point, boolean p_left_turn) {
-    int dx = p_to_point.x - this.x;
-    int dy = p_to_point.y - this.y;
+  public IntPoint fortyfiveDegreeCorner(IntPoint pToPoint, boolean pLeftTurn) {
+    int dx = pToPoint.x - this.x;
+    int dy = pToPoint.y - this.y;
     IntPoint result;
 
     // handle the 8 sections between the 45 degree lines
 
     if (dy > 0 && dy < dx) {
-      if (p_left_turn) {
-        result = new IntPoint(p_to_point.x - dy, this.y);
+      if (pLeftTurn) {
+        result = new IntPoint(pToPoint.x - dy, this.y);
       } else {
-        result = new IntPoint(this.x + dy, p_to_point.y);
+        result = new IntPoint(this.x + dy, pToPoint.y);
       }
     } else if (dx > 0 && dy > dx) {
-      if (p_left_turn) {
-        result = new IntPoint(p_to_point.x, this.y + dx);
+      if (pLeftTurn) {
+        result = new IntPoint(pToPoint.x, this.y + dx);
       } else {
-        result = new IntPoint(this.x, p_to_point.y - dx);
+        result = new IntPoint(this.x, pToPoint.y - dx);
       }
     } else if (dx < 0 && dy > -dx) {
-      if (p_left_turn) {
-        result = new IntPoint(this.x, p_to_point.y + dx);
+      if (pLeftTurn) {
+        result = new IntPoint(this.x, pToPoint.y + dx);
       } else {
-        result = new IntPoint(p_to_point.x, this.y - dx);
+        result = new IntPoint(pToPoint.x, this.y - dx);
       }
     } else if (dy > 0 && dy < -dx) {
-      if (p_left_turn) {
-        result = new IntPoint(this.x - dy, p_to_point.y);
+      if (pLeftTurn) {
+        result = new IntPoint(this.x - dy, pToPoint.y);
       } else {
-        result = new IntPoint(p_to_point.x + dy, this.y);
+        result = new IntPoint(pToPoint.x + dy, this.y);
       }
     } else if (dy < 0 && dy > dx) {
-      if (p_left_turn) {
-        result = new IntPoint(p_to_point.x - dy, this.y);
+      if (pLeftTurn) {
+        result = new IntPoint(pToPoint.x - dy, this.y);
       } else {
-        result = new IntPoint(this.x + dy, p_to_point.y);
+        result = new IntPoint(this.x + dy, pToPoint.y);
       }
     } else if (dx < 0 && dy < dx) {
-      if (p_left_turn) {
-        result = new IntPoint(p_to_point.x, this.y + dx);
+      if (pLeftTurn) {
+        result = new IntPoint(pToPoint.x, this.y + dx);
       } else {
-        result = new IntPoint(this.x, p_to_point.y - dx);
+        result = new IntPoint(this.x, pToPoint.y - dx);
       }
     } else if (dx > 0 && dy < -dx) {
-      if (p_left_turn) {
-        result = new IntPoint(this.x, p_to_point.y + dx);
+      if (pLeftTurn) {
+        result = new IntPoint(this.x, pToPoint.y + dx);
       } else {
-        result = new IntPoint(p_to_point.x, this.y - dx);
+        result = new IntPoint(pToPoint.x, this.y - dx);
       }
     } else if (dy < 0 && dy > -dx) {
-      if (p_left_turn) {
-        result = new IntPoint(this.x - dy, p_to_point.y);
+      if (pLeftTurn) {
+        result = new IntPoint(this.x - dy, pToPoint.y);
       } else {
-        result = new IntPoint(p_to_point.x + dy, this.y);
+        result = new IntPoint(pToPoint.x + dy, this.y);
       }
     } else {
       // the line from this point to p_to_point is already a multiple of 45 degree
@@ -318,24 +318,24 @@ public class IntPoint extends Point implements Serializable {
    * p_to_point will be on the left of the line from this point to p, else on the right. Returns
    * null, if the line from this point to p_to_point is already orthogonal.
    */
-  public IntPoint ninetyDegreeCorner(IntPoint p_to_point, boolean p_left_turn) {
-    int dx = p_to_point.x - this.x;
-    int dy = p_to_point.y - this.y;
+  public IntPoint ninetyDegreeCorner(IntPoint pToPoint, boolean pLeftTurn) {
+    int dx = pToPoint.x - this.x;
+    int dy = pToPoint.y - this.y;
     IntPoint result;
 
     // handle the 4 quadrants
 
     if (dx > 0 && dy > 0 || dx < 0 && dy < 0) {
-      if (p_left_turn) {
-        result = new IntPoint(p_to_point.x, this.y);
+      if (pLeftTurn) {
+        result = new IntPoint(pToPoint.x, this.y);
       } else {
-        result = new IntPoint(this.x, p_to_point.y);
+        result = new IntPoint(this.x, pToPoint.y);
       }
     } else if (dx < 0 && dy > 0 || dx > 0 && dy < 0) {
-      if (p_left_turn) {
-        result = new IntPoint(this.x, p_to_point.y);
+      if (pLeftTurn) {
+        result = new IntPoint(this.x, pToPoint.y);
       } else {
-        result = new IntPoint(p_to_point.x, this.y);
+        result = new IntPoint(pToPoint.x, this.y);
       }
     } else {
       // the line from this point to p_to_point is already orthogonal
@@ -345,21 +345,21 @@ public class IntPoint extends Point implements Serializable {
   }
 
   @Override
-  public int compareX(Point p_other) {
-    return -p_other.compareX(this);
+  public int compareX(Point pOther) {
+    return -pOther.compareX(this);
   }
 
   @Override
-  public int compareY(Point p_other) {
-    return -p_other.compareY(this);
+  public int compareY(Point pOther) {
+    return -pOther.compareY(this);
   }
 
   @Override
-  int compareX(IntPoint p_other) {
+  int compareX(IntPoint pOther) {
     int result;
-    if (this.x > p_other.x) {
+    if (this.x > pOther.x) {
       result = 1;
-    } else if (this.x == p_other.x) {
+    } else if (this.x == pOther.x) {
       result = 0;
     } else {
       result = -1;
@@ -368,11 +368,11 @@ public class IntPoint extends Point implements Serializable {
   }
 
   @Override
-  int compareY(IntPoint p_other) {
+  int compareY(IntPoint pOther) {
     int result;
-    if (this.y > p_other.y) {
+    if (this.y > pOther.y) {
       result = 1;
-    } else if (this.y == p_other.y) {
+    } else if (this.y == pOther.y) {
       result = 0;
     } else {
       result = -1;
@@ -381,13 +381,13 @@ public class IntPoint extends Point implements Serializable {
   }
 
   @Override
-  int compareX(RationalPoint p_other) {
-    return -p_other.compareX(this);
+  int compareX(RationalPoint pOther) {
+    return -pOther.compareX(this);
   }
 
   @Override
-  int compareY(RationalPoint p_other) {
-    return -p_other.compareY(this);
+  int compareY(RationalPoint pOther) {
+    return -pOther.compareY(this);
   }
 
   @Override

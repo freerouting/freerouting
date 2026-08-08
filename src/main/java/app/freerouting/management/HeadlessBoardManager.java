@@ -156,8 +156,8 @@ public class HeadlessBoardManager implements BoardManager {
    * Creates a new headless board manager for the specified routing job.
    *
    * <p>The manager is created in an uninitialized state with no board loaded. Call {@link
-   * #loadFromSpecctraDsn} or {@link #createBoard} to initialize the board before performing
-   * routing operations.
+   * #loadFromSpecctraDsn} or {@link #createBoard} to initialize the board before performing routing
+   * operations.
    *
    * @param routingJob the routing job context that will orchestrate routing operations
    * @see #loadFromSpecctraDsn(InputStream, BoardObservers, IdentificationNumberGenerator)
@@ -251,35 +251,35 @@ public class HeadlessBoardManager implements BoardManager {
    * <p><strong>Note:</strong> If a board already exists, a warning is logged but the operation
    * proceeds, replacing the existing board.
    *
-   * @param p_bounding_box the rectangular boundary of the board
-   * @param p_layer_structure the layer stack-up definition
-   * @param p_outline_shapes array of shapes defining the board outline
-   * @param p_outline_clearance_class_name name of the clearance class for the outline
-   * @param p_rules the board design rules and constraints
-   * @param p_board_communication communication interface for external integration
+   * @param pBoundingBox the rectangular boundary of the board
+   * @param pLayerStructure the layer stack-up definition
+   * @param pOutlineShapes array of shapes defining the board outline
+   * @param pOutlineClearanceClassName name of the clearance class for the outline
+   * @param pRules the board design rules and constraints
+   * @param pBoardCommunication communication interface for external integration
    * @see RoutingBoard#RoutingBoard
    * @see app.freerouting.interactive.InteractiveSettings
    */
   @Override
   public void createBoard(
-      IntBox p_bounding_box,
-      LayerStructure p_layer_structure,
-      PolylineShape[] p_outline_shapes,
-      String p_outline_clearance_class_name,
-      BoardRules p_rules,
-      Communication p_board_communication) {
+      IntBox pBoundingBox,
+      LayerStructure pLayerStructure,
+      PolylineShape[] pOutlineShapes,
+      String pOutlineClearanceClassName,
+      BoardRules pRules,
+      Communication pBoardCommunication) {
     if (this.board != null) {
       routingJob.logWarning(" BoardHandling.create_board: board already created");
     }
     int outlineClClassNo = 0;
 
-    if (p_rules != null) {
-      if (p_outline_clearance_class_name != null && p_rules.clearanceMatrix != null) {
-        outlineClClassNo = p_rules.clearanceMatrix.getNo(p_outline_clearance_class_name);
+    if (pRules != null) {
+      if (pOutlineClearanceClassName != null && pRules.clearanceMatrix != null) {
+        outlineClClassNo = pRules.clearanceMatrix.getNo(pOutlineClearanceClassName);
         outlineClClassNo = Math.max(outlineClClassNo, 0);
       } else {
         outlineClClassNo =
-            p_rules
+            pRules
                 .getDefaultNetClass()
                 .defaultItemClearanceClasses
                 .get(DefaultItemClearanceClasses.ItemClass.AREA);
@@ -287,12 +287,12 @@ public class HeadlessBoardManager implements BoardManager {
     }
     this.board =
         new RoutingBoard(
-            p_bounding_box,
-            p_layer_structure,
-            p_outline_shapes,
+            pBoundingBox,
+            pLayerStructure,
+            pOutlineShapes,
             outlineClClassNo,
-            p_rules,
-            p_board_communication);
+            pRules,
+            pBoardCommunication);
     applyCopperToEdgeClearanceOverride();
     applyHoleClearanceOverride();
   }

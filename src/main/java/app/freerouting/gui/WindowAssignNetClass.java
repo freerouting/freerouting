@@ -32,12 +32,12 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
   private JComboBox<NetClass> netRuleComboBox;
 
   /** Creates a new instance of AssignNetRulesWindow */
-  public WindowAssignNetClass(BoardFrame p_board_frame) {
-    setLanguage(p_board_frame.get_locale());
+  public WindowAssignNetClass(BoardFrame pBoardFrame) {
+    setLanguage(pBoardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
-    this.boardFrame = p_board_frame;
+    this.boardFrame = pBoardFrame;
 
     this.mainPanel = new JPanel();
     this.mainPanel.setLayout(new BorderLayout());
@@ -82,8 +82,8 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
       tm.getText("net_name_tooltip"), tm.getText("class_name_tooltip")
     };
 
-    public AssignRuleTable(AssignRuleTableModel p_table_model) {
-      super(p_table_model);
+    public AssignRuleTable(AssignRuleTableModel pTableModel) {
+      super(pTableModel);
     }
 
     // Implement table header tool tips.
@@ -136,8 +136,8 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
     }
 
     @Override
-    public String getColumnName(int p_col) {
-      return columnNames[p_col];
+    public String getColumnName(int pCol) {
+      return columnNames[pCol];
     }
 
     @Override
@@ -151,29 +151,29 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
     }
 
     @Override
-    public Object getValueAt(int p_row, int p_col) {
-      return data[p_row][p_col];
+    public Object getValueAt(int pRow, int pCol) {
+      return data[pRow][pCol];
     }
 
     @Override
-    public boolean isCellEditable(int p_row, int p_col) {
-      return p_col > 0;
+    public boolean isCellEditable(int pRow, int pCol) {
+      return pCol > 0;
     }
 
     @Override
-    public void setValueAt(Object p_value, int p_row, int p_col) {
-      if (p_col != 1 || !(p_value instanceof NetClass curr_net_rule)) {
+    public void setValueAt(Object pValue, int pRow, int pCol) {
+      if (pCol != 1 || !(pValue instanceof NetClass curr_net_rule)) {
         return;
       }
-      Object firstRowObject = getValueAt(p_row, 0);
+      Object firstRowObject = getValueAt(pRow, 0);
       if (!(firstRowObject instanceof Net currNet)) {
         FRLogger.warn("AssignNetRuLesVindow.setValueAt: Net expected");
         return;
       }
       currNet.setClass(curr_net_rule);
 
-      this.data[p_row][p_col] = p_value;
-      fireTableCellUpdated(p_row, p_col);
+      this.data[pRow][pCol] = pValue;
+      fireTableCellUpdated(pRow, pCol);
     }
   }
 }

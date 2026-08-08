@@ -7,8 +7,8 @@ import javax.swing.JPopupMenu;
 public class DynamicRouteState extends RouteState {
 
   /** Creates a new instance of DynamicRouteState */
-  protected DynamicRouteState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
+  protected DynamicRouteState(InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    super(pParentState, pBoardHandling);
   }
 
   @Override
@@ -19,7 +19,7 @@ public class DynamicRouteState extends RouteState {
 
   /** ends routing */
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint p_location) {
+  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
     if (this.observersActivated) {
       hdlg.getRoutingBoard().endNotifyObservers();
       this.observersActivated = false;
@@ -32,12 +32,12 @@ public class DynamicRouteState extends RouteState {
 
   /** Action to be taken when a key is pressed (Shortcut). */
   @Override
-  public InteractiveState keyTyped(char p_key_char) {
+  public InteractiveState keyTyped(char pKeyChar) {
     InteractiveState currReturnState = this;
-    if (p_key_char == 's') {
+    if (pKeyChar == 's') {
       hdlg.generateSnapshot();
     } else {
-      currReturnState = super.keyTyped(p_key_char);
+      currReturnState = super.keyTyped(pKeyChar);
     }
     return currReturnState;
   }

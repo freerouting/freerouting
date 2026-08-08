@@ -25,10 +25,10 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
   private boolean doorsCalculated;
 
   /** Creates a new instance of ObstacleExpansionRoom */
-  ObstacleExpansionRoom(Item p_item, int p_index_in_item, ShapeSearchTree p_shape_tree) {
-    this.item = p_item;
-    this.indexInItem = p_index_in_item;
-    this.shape = p_item.getTreeShape(p_shape_tree, p_index_in_item);
+  ObstacleExpansionRoom(Item pItem, int pIndexInItem, ShapeSearchTree pShapeTree) {
+    this.item = pItem;
+    this.indexInItem = pIndexInItem;
+    this.shape = pItem.getTreeShape(pShapeTree, pIndexInItem);
     this.doors = new ArrayList<>();
   }
 
@@ -53,10 +53,10 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
   /** Checks, if this room has already a 1-dimensional door to p_other */
   @Override
-  public boolean doorExists(ExpansionRoom p_other) {
+  public boolean doorExists(ExpansionRoom pOther) {
     if (doors != null) {
       for (ExpansionDoor currDoor : this.doors) {
-        if (currDoor.firstRoom == p_other || currDoor.secondRoom == p_other) {
+        if (currDoor.firstRoom == pOther || currDoor.secondRoom == pOther) {
           return true;
         }
       }
@@ -66,8 +66,8 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
   /** Adds a door to the door list of this room. */
   @Override
-  public void addDoor(ExpansionDoor p_door) {
-    this.doors.add(p_door);
+  public void addDoor(ExpansionDoor pDoor) {
+    this.doors.add(pDoor);
   }
 
   /**
@@ -75,29 +75,29 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
    * algorithm. It is assumed that this room and p_other have a 2-dimensional overlap. Returns
    * false, if no door was created.
    */
-  public boolean createOverlapDoor(ObstacleExpansionRoom p_other) {
-    if (this.doorExists(p_other)) {
+  public boolean createOverlapDoor(ObstacleExpansionRoom pOther) {
+    if (this.doorExists(pOther)) {
       return false;
     }
-    if (!(this.item.isRoutable() && p_other.item.isRoutable())) {
+    if (!(this.item.isRoutable() && pOther.item.isRoutable())) {
       return false;
     }
-    if (!this.item.sharesNet(p_other.item)) {
+    if (!this.item.sharesNet(pOther.item)) {
       return false;
     }
-    if (this.item == p_other.item) {
+    if (this.item == pOther.item) {
       if (!(this.item instanceof PolylineTrace)) {
         return false;
       }
       // create only doors between consecutive trace segments
-      if (this.indexInItem != p_other.indexInItem + 1
-          && this.indexInItem != p_other.indexInItem - 1) {
+      if (this.indexInItem != pOther.indexInItem + 1
+          && this.indexInItem != pOther.indexInItem - 1) {
         return false;
       }
     }
-    ExpansionDoor newDoor = new ExpansionDoor(this, p_other, 2);
+    ExpansionDoor newDoor = new ExpansionDoor(this, pOther, 2);
     this.addDoor(newDoor);
-    p_other.addDoor(newDoor);
+    pOther.addDoor(newDoor);
     return true;
   }
 
@@ -135,8 +135,8 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
   }
 
   @Override
-  public boolean removeDoor(ExpandableObject p_door) {
-    return this.doors.remove(p_door);
+  public boolean removeDoor(ExpandableObject pDoor) {
+    return this.doors.remove(pDoor);
   }
 
   /** Returns, if all doors to the neighbour rooms are calculated. */
@@ -144,17 +144,16 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
     return this.doorsCalculated;
   }
 
-  void setDoorsCalculated(boolean p_value) {
-    this.doorsCalculated = p_value;
+  void setDoorsCalculated(boolean pValue) {
+    this.doorsCalculated = pValue;
   }
 
   /** Draws the shape of this room. */
   @Override
-  public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity) {
+  public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext, double pIntensity) {
     Color drawColor = Color.WHITE;
-    double layerVisibility = p_graphics_context.getLayerVisibility(this.getLayer());
-    p_graphics_context.fillArea(
-        this.getShape(), p_graphics, drawColor, p_intensity * layerVisibility);
-    p_graphics_context.drawBoundary(this.getShape(), 0, drawColor, p_graphics, layerVisibility);
+    double layerVisibility = pGraphicsContext.getLayerVisibility(this.getLayer());
+    pGraphicsContext.fillArea(this.getShape(), pGraphics, drawColor, pIntensity * layerVisibility);
+    pGraphicsContext.drawBoundary(this.getShape(), 0, drawColor, pGraphics, layerVisibility);
   }
 }

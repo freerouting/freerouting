@@ -33,44 +33,44 @@ public class ColorIntensityTable implements Serializable {
   }
 
   /** Copy constructor. */
-  public ColorIntensityTable(ColorIntensityTable p_color_intensity_table) {
-    this.arr = p_color_intensity_table.arr.clone();
+  public ColorIntensityTable(ColorIntensityTable pColorIntensityTable) {
+    this.arr = pColorIntensityTable.arr.clone();
   }
 
-  public double getValue(int p_no) {
-    if (p_no < 0 || p_no >= ObjectNames.values().length) {
+  public double getValue(int pNo) {
+    if (pNo < 0 || pNo >= ObjectNames.values().length) {
       FRLogger.warn("ColorIntensityTable.get_value: p_no out of range");
       return 0;
     }
-    if (p_no >= arr.length) {
-      logMissingSerializedDataOnce("get_value", p_no);
-      return getDefaultValue(p_no);
+    if (pNo >= arr.length) {
+      logMissingSerializedDataOnce("get_value", pNo);
+      return getDefaultValue(pNo);
     }
-    return arr[p_no];
+    return arr[pNo];
   }
 
-  public void setValue(int p_no, double p_value) {
-    if (p_no < 0 || p_no >= ObjectNames.values().length) {
+  public void setValue(int pNo, double pValue) {
+    if (pNo < 0 || pNo >= ObjectNames.values().length) {
       FRLogger.warn("ColorIntensityTable.set_value: p_no out of range");
       return;
     }
-    if (p_no >= arr.length) {
-      logMissingSerializedDataOnce("set_value", p_no);
+    if (pNo >= arr.length) {
+      logMissingSerializedDataOnce("set_value", pNo);
       return;
     }
-    arr[p_no] = p_value;
+    arr[pNo] = pValue;
   }
 
-  private void logMissingSerializedDataOnce(String methodName, int p_no) {
+  private void logMissingSerializedDataOnce(String methodName, int pNo) {
     if (!missingSerializedDataLogged) {
       FRLogger.warn(
-          "ColorIntensityTable." + methodName + ": p_no " + p_no + " missing in serialized data");
+          "ColorIntensityTable." + methodName + ": p_no " + pNo + " missing in serialized data");
       missingSerializedDataLogged = true;
     }
   }
 
-  private double getDefaultValue(int p_no) {
-    if (p_no == ObjectNames.DRILL_HOLES.ordinal()) {
+  private double getDefaultValue(int pNo) {
+    if (pNo == ObjectNames.DRILL_HOLES.ordinal()) {
       return 1.0;
     }
     return 0;

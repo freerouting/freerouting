@@ -27,12 +27,12 @@ public class ClearanceMatrix implements Serializable {
    * Creates a new instance for p_class_count clearance classes on p_layer_count layers. p_names is
    * an array of dimension p_class_count;
    */
-  public ClearanceMatrix(int p_class_count, LayerStructure p_layer_structure, String[] p_name_arr) {
-    classCount = Math.max(p_class_count, 1);
-    layerStructure = p_layer_structure;
+  public ClearanceMatrix(int pClassCount, LayerStructure pLayerStructure, String[] pNameArr) {
+    classCount = Math.max(pClassCount, 1);
+    layerStructure = pLayerStructure;
     row = new Row[classCount];
     for (int i = 0; i < classCount; i++) {
-      row[i] = new Row(p_name_arr[i]);
+      row[i] = new Row(pNameArr[i]);
     }
     this.maxValueOnLayer = new int[layerStructure.arr.length];
   }
@@ -42,12 +42,12 @@ public class ClearanceMatrix implements Serializable {
    * with p_default_value.
    */
   public static ClearanceMatrix getDefaultInstance(
-      LayerStructure p_layer_structure, int p_default_value) {
+      LayerStructure pLayerStructure, int pDefaultValue) {
     String[] nameArr = new String[2];
     nameArr[0] = "null";
     nameArr[1] = "default";
-    ClearanceMatrix result = new ClearanceMatrix(2, p_layer_structure, nameArr);
-    result.setDefaultValue(p_default_value);
+    ClearanceMatrix result = new ClearanceMatrix(2, pLayerStructure, nameArr);
+    result.setDefaultValue(pDefaultValue);
     return result;
   }
 
@@ -55,9 +55,9 @@ public class ClearanceMatrix implements Serializable {
    * Returns the number of the clearance class with the input name, or -1, if no such clearance
    * class exists.
    */
-  public int getNo(String p_name) {
+  public int getNo(String pName) {
     for (int i = 0; i < classCount; i++) {
-      if (row[i].name.equalsIgnoreCase(p_name)) {
+      if (row[i].name.equalsIgnoreCase(pName)) {
         return i;
       }
     }
@@ -65,54 +65,54 @@ public class ClearanceMatrix implements Serializable {
   }
 
   /** Gets the name of the clearance class with the input number. */
-  public String getName(int p_cl_class) {
-    if (p_cl_class < 0 || p_cl_class >= row.length) {
+  public String getName(int pClClass) {
+    if (pClClass < 0 || pClClass >= row.length) {
       FRLogger.warn("ClearanceMatrix.get_name: p_cl_class out of range");
       return null;
     }
-    return row[p_cl_class].name;
+    return row[pClClass].name;
   }
 
   /**
    * Sets the value of all clearance classes with number {@literal >}= 1 to p_value on all layers.
    */
-  public void setDefaultValue(int p_value) {
+  public void setDefaultValue(int pValue) {
     for (int i = 0; i < layerStructure.arr.length; i++) {
-      setDefaultValue(i, p_value);
+      setDefaultValue(i, pValue);
     }
   }
 
   /** Sets the value of all clearance classes with number {@literal >}= 1 to p_value on p_layer. */
-  public void setDefaultValue(int p_layer, int p_value) {
+  public void setDefaultValue(int pLayer, int pValue) {
     for (int i = 1; i < classCount; i++) {
       for (int j = 1; j < classCount; j++) {
-        setValue(i, j, p_layer, p_value);
+        setValue(i, j, pLayer, pValue);
       }
     }
   }
 
   /** Sets the value of an entry in the clearance matrix to p_value on all layers. */
-  public void setValue(int p_i, int p_j, int p_value) {
+  public void setValue(int pI, int pJ, int pValue) {
     for (int layer = 0; layer < layerStructure.arr.length; layer++) {
-      setValue(p_i, p_j, layer, p_value);
+      setValue(pI, pJ, layer, pValue);
     }
   }
 
   /** Sets the value of an entry in the clearance matrix to p_value on all inner layers. */
-  public void setInnerValue(int p_i, int p_j, int p_value) {
+  public void setInnerValue(int pI, int pJ, int pValue) {
     for (int layer = 1; layer < layerStructure.arr.length - 1; layer++) {
-      setValue(p_i, p_j, layer, p_value);
+      setValue(pI, pJ, layer, pValue);
     }
   }
 
   /** Sets the value of an entry in the clearance matrix to p_value. */
-  public void setValue(int p_i, int p_j, int p_layer, int p_value) {
-    Row currRow = row[p_j];
-    MatrixEntry currEntry = currRow.column[p_i];
+  public void setValue(int pI, int pJ, int pLayer, int pValue) {
+    Row currRow = row[pJ];
+    MatrixEntry currEntry = currRow.column[pI];
 
     // assure, that the clearance value is positive and even, and round it up, if it is odd
     // NOTE: why does it need to be even?
-    int value = Math.max(p_value, 0);
+    int value = Math.max(pValue, 0);
     if (value % 2 != 0) {
       if (value == Integer.MAX_VALUE) {
         value--;
@@ -121,38 +121,38 @@ public class ClearanceMatrix implements Serializable {
       }
     }
 
-    currEntry.layer[p_layer] = value;
-    currRow.maxValue[p_layer] = Math.max(currRow.maxValue[p_layer], value);
-    this.maxValueOnLayer[p_layer] = Math.max(this.maxValueOnLayer[p_layer], value);
+    currEntry.layer[pLayer] = value;
+    currRow.maxValue[pLayer] = Math.max(currRow.maxValue[pLayer], value);
+    this.maxValueOnLayer[pLayer] = Math.max(this.maxValueOnLayer[pLayer], value);
   }
 
   /**
    * Gets the required spacing of clearance classes with index p_i and p_j on p_layer. This value
    * will be always an even integer.
    */
-  public int getValue(int p_i, int p_j, int p_layer, boolean p_add_safety_margin) {
+  public int getValue(int pI, int pJ, int pLayer, boolean pAddSafetyMargin) {
 
-    if (p_i < 0
-        || p_i >= classCount
-        || p_j < 0
-        || p_j >= classCount
-        || p_layer < 0
-        || p_layer >= layerStructure.arr.length) {
+    if (pI < 0
+        || pI >= classCount
+        || pJ < 0
+        || pJ >= classCount
+        || pLayer < 0
+        || pLayer >= layerStructure.arr.length) {
       FRLogger.trace(
           "ClearanceMatrix.get_value",
           "out_of_bounds",
           "Clearance request out of bounds: class_i="
-              + p_i
+              + pI
               + " (max="
               + (classCount - 1)
               + ")"
               + ", class_j="
-              + p_j
+              + pJ
               + " (max="
               + (classCount - 1)
               + ")"
               + ", layer="
-              + p_layer
+              + pLayer
               + " (max="
               + (layerStructure.arr.length - 1)
               + ")"
@@ -162,27 +162,27 @@ public class ClearanceMatrix implements Serializable {
       return 0;
     }
 
-    int valueFromTheMatrix = row[p_j].column[p_i].layer[p_layer];
+    int valueFromTheMatrix = row[pJ].column[pI].layer[pLayer];
     int finalValue =
-        p_add_safety_margin ? valueFromTheMatrix + clearance_safety_margin : valueFromTheMatrix;
+        pAddSafetyMargin ? valueFromTheMatrix + clearance_safety_margin : valueFromTheMatrix;
 
     FRLogger.trace(
         "ClearanceMatrix.get_value",
         "clearance_retrieved",
         "Clearance value: class_i="
-            + p_i
+            + pI
             + " ("
-            + (p_i < row.length ? row[p_i].name : "?")
+            + (pI < row.length ? row[pI].name : "?")
             + ")"
             + ", class_j="
-            + p_j
+            + pJ
             + " ("
-            + (p_j < row.length ? row[p_j].name : "?")
+            + (pJ < row.length ? row[pJ].name : "?")
             + ")"
             + ", layer="
-            + p_layer
+            + pLayer
             + " ("
-            + (p_layer < layerStructure.arr.length ? layerStructure.arr[p_layer].name : "?")
+            + (pLayer < layerStructure.arr.length ? layerStructure.arr[pLayer].name : "?")
             + ")"
             + ", base_value="
             + valueFromTheMatrix
@@ -190,7 +190,7 @@ public class ClearanceMatrix implements Serializable {
             + (valueFromTheMatrix / 10000.0)
             + "mm)"
             + ", safety_margin="
-            + (p_add_safety_margin ? clearance_safety_margin : 0)
+            + (pAddSafetyMargin ? clearance_safety_margin : 0)
             + ", finalValue="
             + finalValue
             + " ("
@@ -206,16 +206,16 @@ public class ClearanceMatrix implements Serializable {
    * Returns the maximal required spacing of clearance class with index p_i to all other clearance
    * classes on layer p_layer.
    */
-  public int maxValue(int p_i, int p_layer) {
-    int i = Math.max(p_i, 0);
+  public int maxValue(int pI, int pLayer) {
+    int i = Math.max(pI, 0);
     i = Math.min(i, classCount - 1);
-    int layer = Math.max(p_layer, 0);
+    int layer = Math.max(pLayer, 0);
     layer = Math.min(layer, layerStructure.arr.length - 1);
     return row[i].maxValue[layer];
   }
 
-  public int maxValue(int p_layer) {
-    int layer = Math.max(p_layer, 0);
+  public int maxValue(int pLayer) {
+    int layer = Math.max(pLayer, 0);
     layer = Math.min(layer, layerStructure.arr.length - 1);
     return this.maxValueOnLayer[layer];
   }
@@ -224,10 +224,10 @@ public class ClearanceMatrix implements Serializable {
    * Returns true, if the values of the clearance matrix in the p_i-th column and the p_j-th row are
    * not equal on all layers.
    */
-  public boolean isLayerDependent(int p_i, int p_j) {
-    int compareValue = row[p_j].column[p_i].layer[0];
+  public boolean isLayerDependent(int pI, int pJ) {
+    int compareValue = row[pJ].column[pI].layer[0];
     for (int l = 1; l < layerStructure.arr.length; l++) {
-      if (row[p_j].column[p_i].layer[l] != compareValue) {
+      if (row[pJ].column[pI].layer[l] != compareValue) {
         return true;
       }
     }
@@ -238,13 +238,13 @@ public class ClearanceMatrix implements Serializable {
    * Returns true, if the values of the clearance matrix in the p_i-th column and the p_j-th row are
    * not equal on all inner layers.
    */
-  public boolean isInnerLayerDependent(int p_i, int p_j) {
+  public boolean isInnerLayerDependent(int pI, int pJ) {
     if (layerStructure.arr.length <= 2) {
       return false; // no inner layers
     }
-    int compareValue = row[p_j].column[p_i].layer[1];
+    int compareValue = row[pJ].column[pI].layer[1];
     for (int l = 2; l < layerStructure.arr.length - 1; l++) {
-      if (row[p_j].column[p_i].layer[l] != compareValue) {
+      if (row[pJ].column[pI].layer[l] != compareValue) {
         return true;
       }
     }
@@ -252,12 +252,12 @@ public class ClearanceMatrix implements Serializable {
   }
 
   /** Returns the row with index p_no */
-  public Row getRow(int p_no) {
-    if (p_no < 0 || p_no >= this.row.length) {
+  public Row getRow(int pNo) {
+    if (pNo < 0 || pNo >= this.row.length) {
       FRLogger.warn("ClearanceMatrix.get_row: p_no out of range");
       return null;
     }
-    return this.row[p_no];
+    return this.row[pNo];
   }
 
   public int getClassCount() {
@@ -270,16 +270,16 @@ public class ClearanceMatrix implements Serializable {
   }
 
   /** Returns the clearance compensation value of p_clearance_class_no on layer p_layer. */
-  public int clearanceCompensationValue(int p_clearance_class_no, int p_layer) {
-    return (this.getValue(p_clearance_class_no, p_clearance_class_no, p_layer, false) + 1) / 2;
+  public int clearanceCompensationValue(int pClearanceClassNo, int pLayer) {
+    return (this.getValue(pClearanceClassNo, pClearanceClassNo, pLayer, false) + 1) / 2;
   }
 
   /**
    * Appends a new clearance class to the clearance matrix and initializes it with the values of the
    * default class. Returns false, oif a clearance class with name p_class_name is already existing.
    */
-  public boolean appendClass(String p_class_name) {
-    if (this.getNo(p_class_name) >= 0) {
+  public boolean appendClass(String pClassName) {
+    if (this.getNo(pClassName) >= 0) {
       return false;
     }
     int oldClassCount = this.classCount;
@@ -300,7 +300,7 @@ public class ClearanceMatrix implements Serializable {
 
     // append the new row
 
-    newRow[oldClassCount] = new Row(p_class_name);
+    newRow[oldClassCount] = new Row(pClassName);
 
     this.row = newRow;
 
@@ -322,7 +322,7 @@ public class ClearanceMatrix implements Serializable {
   }
 
   /** Removes the class with index p_index from the clearance matrix. */
-  void removeClass(int p_index) {
+  void removeClass(int pIndex) {
     int oldClassCount = this.classCount;
     --this.classCount;
 
@@ -331,7 +331,7 @@ public class ClearanceMatrix implements Serializable {
     // remove the  matrix entry with index p_index in to each old row
     int newRowIndex = 0;
     for (int i = 0; i < oldClassCount; i++) {
-      if (i == p_index) {
+      if (i == pIndex) {
         continue;
       }
       Row currOldRow = this.row[i];
@@ -340,7 +340,7 @@ public class ClearanceMatrix implements Serializable {
 
       int newColumnIndex = 0;
       for (int j = 0; j < oldClassCount; j++) {
-        if (j == p_index) {
+        if (j == pIndex) {
           continue;
         }
         currNewRow.column[newColumnIndex] = currOldRow.column[j];
@@ -355,15 +355,15 @@ public class ClearanceMatrix implements Serializable {
    * Returns true, if all clearance values of the class with index p_1 are equal to the clearance
    * values of index p_2.
    */
-  public boolean isEqual(int p_1, int p_2) {
-    if (p_1 == p_2) {
+  public boolean isEqual(int p1, int p2) {
+    if (p1 == p2) {
       return true;
     }
-    if (p_1 < 0 || p_2 < 0 || p_1 >= this.classCount || p_2 >= this.classCount) {
+    if (p1 < 0 || p2 < 0 || p1 >= this.classCount || p2 >= this.classCount) {
       return false;
     }
-    Row row1 = this.row[p_1];
-    Row row2 = this.row[p_2];
+    Row row1 = this.row[p1];
+    Row row2 = this.row[p2];
     for (int i = 1; i < classCount; i++) {
       if (!row1.column[i].equals(row2.column[i])) {
         return false;
@@ -379,8 +379,8 @@ public class ClearanceMatrix implements Serializable {
     final MatrixEntry[] column;
     int[] maxValue;
 
-    private Row(String p_name) {
-      name = p_name;
+    private Row(String pName) {
+      name = pName;
       column = new MatrixEntry[classCount];
       for (int i = 0; i < classCount; i++) {
         column[i] = new MatrixEntry();
@@ -389,30 +389,30 @@ public class ClearanceMatrix implements Serializable {
     }
 
     @Override
-    public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-      TextManager tm = new TextManager(this.getClass(), p_locale);
+    public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+      TextManager tm = new TextManager(this.getClass(), pLocale);
 
-      p_window.appendBold(tm.getText("spacing_from_clearance_class") + " ");
-      p_window.appendBold(this.name);
+      pWindow.appendBold(tm.getText("spacing_from_clearance_class") + " ");
+      pWindow.appendBold(this.name);
       for (int i = 1; i < this.column.length; i++) {
-        p_window.newline();
-        p_window.indent();
-        p_window.append(" " + tm.getText("to_class") + " ");
-        p_window.append(row[i].name);
+        pWindow.newline();
+        pWindow.indent();
+        pWindow.append(" " + tm.getText("to_class") + " ");
+        pWindow.append(row[i].name);
         MatrixEntry currColumn = this.column[i];
         if (currColumn.isLayerDependent()) {
-          p_window.append(" " + tm.getText("on_layer") + " ");
+          pWindow.append(" " + tm.getText("on_layer") + " ");
           for (int j = 0; j < layerStructure.arr.length; j++) {
-            p_window.newline();
-            p_window.indent();
-            p_window.indent();
-            p_window.append(layerStructure.arr[j].name);
-            p_window.append(" = ");
-            p_window.append(currColumn.layer[j]);
+            pWindow.newline();
+            pWindow.indent();
+            pWindow.indent();
+            pWindow.append(layerStructure.arr[j].name);
+            pWindow.append(" = ");
+            pWindow.append(currColumn.layer[j]);
           }
         } else {
-          p_window.append(" = ");
-          p_window.append(currColumn.layer[0]);
+          pWindow.append(" = ");
+          pWindow.append(currColumn.layer[0]);
         }
       }
     }
@@ -431,9 +431,9 @@ public class ClearanceMatrix implements Serializable {
     }
 
     /** Returns true of all clearances values of this and p_other are equal. */
-    boolean equals(MatrixEntry p_other) {
+    boolean equals(MatrixEntry pOther) {
       for (int i = 0; i < layerStructure.arr.length; i++) {
-        if (this.layer[i] != p_other.layer[i]) {
+        if (this.layer[i] != pOther.layer[i]) {
           return false;
         }
       }

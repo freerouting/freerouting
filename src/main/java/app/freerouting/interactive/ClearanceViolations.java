@@ -18,10 +18,10 @@ public class ClearanceViolations {
   public double globalSmallestClearance = Double.MAX_VALUE;
 
   /** Creates a new instance of ClearanceViolations */
-  public ClearanceViolations(Collection<Item> p_item_list) {
+  public ClearanceViolations(Collection<Item> pItemList) {
 
     this.list = new LinkedList<>();
-    for (Item currItem : p_item_list) {
+    for (Item currItem : pItemList) {
       this.list.addAll(currItem.clearanceViolations());
       if ((currItem.smallestClearance > 0)
           && (currItem.smallestClearance < globalSmallestClearance)) {
@@ -36,19 +36,19 @@ public class ClearanceViolations {
                 o2.expectedClearance - o2.actualClearance));
   }
 
-  public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
-    Color drawColor = p_graphics_context.getViolationsColor();
+  public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext) {
+    Color drawColor = pGraphicsContext.getViolationsColor();
     for (ClearanceViolation currViolation : list) {
-      double intensity = p_graphics_context.getLayerVisibility(currViolation.layer);
-      p_graphics_context.fillArea(currViolation.shape, p_graphics, drawColor, intensity);
+      double intensity = pGraphicsContext.getLayerVisibility(currViolation.layer);
+      pGraphicsContext.fillArea(currViolation.shape, pGraphics, drawColor, intensity);
       // draw a circle around the violation.
       double drawRadius = currViolation.firstItem.board.rules.getMinTraceHalfWidth() * 5;
-      p_graphics_context.drawCircle(
+      pGraphicsContext.drawCircle(
           currViolation.shape.centreOfGravity(),
           drawRadius,
           0.1 * drawRadius,
           drawColor,
-          p_graphics,
+          pGraphics,
           intensity);
     }
   }

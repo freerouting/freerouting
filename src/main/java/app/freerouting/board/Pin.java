@@ -46,16 +46,16 @@ public class Pin extends DrillItem implements Serializable {
    * must be provided. p_pin_no is the number of the pin in its component (starting with 0).
    */
   Pin(
-      int p_component_no,
-      int p_pin_no,
-      int[] p_net_no_arr,
-      int p_clearance_type,
-      int p_id_no,
-      FixedState p_fixed_state,
-      BasicBoard p_board) {
-    super(null, p_net_no_arr, p_clearance_type, p_id_no, p_component_no, p_fixed_state, p_board);
+      int pComponentNo,
+      int pPinNo,
+      int[] pNetNoArr,
+      int pClearanceType,
+      int pIdNo,
+      FixedState pFixedState,
+      BasicBoard pBoard) {
+    super(null, pNetNoArr, pClearanceType, pIdNo, pComponentNo, pFixedState, pBoard);
 
-    this.pinNo = p_pin_no;
+    this.pinNo = pPinNo;
   }
 
   /** Calculates the relative location of this pin to its component. */
@@ -128,7 +128,7 @@ public class Pin extends DrillItem implements Serializable {
   }
 
   @Override
-  public Item copy(int p_id_no) {
+  public Item copy(int pIdNo) {
     int[] currNetNoArr = new int[this.netCount()];
     for (int i = 0; i < currNetNoArr.length; i++) {
       currNetNoArr[i] = getNetNo(i);
@@ -138,7 +138,7 @@ public class Pin extends DrillItem implements Serializable {
         this.pinNo,
         currNetNoArr,
         clearanceClassNo(),
-        p_id_no,
+        pIdNo,
         getFixedState(),
         board);
   }
@@ -159,7 +159,7 @@ public class Pin extends DrillItem implements Serializable {
   }
 
   @Override
-  public Shape getShape(int p_index) {
+  public Shape getShape(int pIndex) {
     Padstack padstack = getPadstack();
     if (this.precalculatedShapes == null) {
       // all shapes have to be calculated  at once, because otherwise calculation
@@ -223,8 +223,7 @@ public class Pin extends DrillItem implements Serializable {
           int componentNinetyDegreeFactor = ((int) componentRotation) / 90;
           if (componentNinetyDegreeFactor != 0) {
             translatedShape =
-                (ConvexShape)
-                    translatedShape.turn90Degree(componentNinetyDegreeFactor, Point.ZERO);
+                (ConvexShape) translatedShape.turn90Degree(componentNinetyDegreeFactor, Point.ZERO);
           }
         } else {
           translatedShape =
@@ -238,18 +237,18 @@ public class Pin extends DrillItem implements Serializable {
             (ConvexShape) translatedShape.translateBy(componentTranslation);
       }
     }
-    return this.precalculatedShapes[p_index];
+    return this.precalculatedShapes[pIndex];
   }
 
   /** Returns the layer of the padstack shape corresponding to the shape with index p_index. */
-  int getPadstackLayer(int p_index) {
+  int getPadstackLayer(int pIndex) {
     Padstack padstack = getPadstack();
     Component component = board.components.get(this.getComponentNo());
     int padstackLayer;
     if (component.placedOnFront() || padstack.placedAbsolute) {
-      padstackLayer = p_index + this.firstLayer();
+      padstackLayer = pIndex + this.firstLayer();
     } else {
-      padstackLayer = padstack.boardLayerCount() - p_index - this.firstLayer() - 1;
+      padstackLayer = padstack.boardLayerCount() - pIndex - this.firstLayer() - 1;
     }
     return padstackLayer;
   }
@@ -259,9 +258,9 @@ public class Pin extends DrillItem implements Serializable {
    * together with the minimal trace line lengths into their directions. Currently implemented only
    * for box shapes, where traces are allowed to exit the pad only on the small sides.
    */
-  public Collection<TraceExitRestriction> getTraceExitRestrictions(int p_layer) {
+  public Collection<TraceExitRestriction> getTraceExitRestrictions(int pLayer) {
     Collection<TraceExitRestriction> result = new LinkedList<>();
-    int padstackLayer = this.getPadstackLayer(p_layer - this.firstLayer());
+    int padstackLayer = this.getPadstackLayer(pLayer - this.firstLayer());
     double padXyFactor = 1.5;
     // setting 1.5 to a higher factor may hinder the shove algorithm of the autorouter between
     // the pins of SMD components, because the channels can get blocked by the shoveFixed stubs.
@@ -282,7 +281,7 @@ public class Pin extends DrillItem implements Serializable {
     if (component == null) {
       return result;
     }
-    Shape currShape = this.getShape(p_layer - this.firstLayer());
+    Shape currShape = this.getShape(pLayer - this.firstLayer());
     if (!(currShape instanceof TileShape padShape)) {
       return result;
     }
@@ -290,7 +289,7 @@ public class Pin extends DrillItem implements Serializable {
     Point pinCenter = this.getCenter();
     FloatPoint centerApprox = pinCenter.toFloat();
 
-    for (Direction curr_padstack_exit_direction : padstackExitDirections) {
+    for (Direction currPadstackExitDirection : padstackExitDirections) {
 
       Package libPackage = component.getPackage();
       if (libPackage == null) {
@@ -304,10 +303,10 @@ public class Pin extends DrillItem implements Serializable {
       Direction currExitDirection;
       if (currRotationInDegree % 45 == 0) {
         int fortyfiveDegreeFactor = ((int) currRotationInDegree) / 45;
-        currExitDirection = curr_padstack_exit_direction.turn45Degree(fortyfiveDegreeFactor);
+        currExitDirection = currPadstackExitDirection.turn45Degree(fortyfiveDegreeFactor);
       } else {
         double currAngleInRadian =
-            Math.toRadians(currRotationInDegree) + curr_padstack_exit_direction.angleApprox();
+            Math.toRadians(currRotationInDegree) + currPadstackExitDirection.angleApprox();
         currExitDirection = Direction.getInstanceApprox(currAngleInRadian);
       }
       // calculate the minimum line length from the pin center into currExitDirection
@@ -347,34 +346,34 @@ public class Pin extends DrillItem implements Serializable {
   }
 
   @Override
-  public boolean isObstacle(Item p_other) {
-    if (p_other == this || p_other instanceof ObstacleArea) {
+  public boolean isObstacle(Item pOther) {
+    if (pOther == this || pOther instanceof ObstacleArea) {
       return false;
     }
-    if (!p_other.sharesNet(this)) {
+    if (!pOther.sharesNet(this)) {
       return true;
     }
-    if (p_other instanceof Trace) {
+    if (pOther instanceof Trace) {
       return false;
     }
     // Same-net vias must be allowed to contact SMD pins during fanout.
-    return !this.drillAllowed() || !(p_other instanceof Via);
+    return !this.drillAllowed() || !(pOther instanceof Via);
   }
 
   @Override
-  public void turn90Degree(int p_factor, IntPoint p_pole) {
+  public void turn90Degree(int pFactor, IntPoint pPole) {
     this.setCenter(null);
     clearDerivedData();
   }
 
   @Override
-  public void rotateApprox(double p_angle_in_degree, FloatPoint p_pole) {
+  public void rotateApprox(double pAngleInDegree, FloatPoint pPole) {
     this.setCenter(null);
     this.clearDerivedData();
   }
 
   @Override
-  public void changePlacementSide(IntPoint p_pole) {
+  public void changePlacementSide(IntPoint pPole) {
     this.setCenter(null);
     this.clearDerivedData();
   }
@@ -424,37 +423,37 @@ public class Pin extends DrillItem implements Serializable {
   }
 
   @Override
-  public boolean isSelectedByFilter(ItemSelectionFilter p_filter) {
-    if (!this.isSelectedByFixedFilter(p_filter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter pFilter) {
+    if (!this.isSelectedByFixedFilter(pFilter)) {
       return false;
     }
-    return p_filter.isSelected(ItemSelectionFilter.SelectableChoices.PINS);
+    return pFilter.isSelected(ItemSelectionFilter.SelectableChoices.PINS);
   }
 
   @Override
-  public Color[] getDrawColors(GraphicsContext p_graphics_context) {
+  public Color[] getDrawColors(GraphicsContext pGraphicsContext) {
     Color[] result;
     if (this.netCount() > 0) {
       if (firstLayer() != lastLayer()) {
-        result = p_graphics_context.getTraceColors(this.isUserFixed());
+        result = pGraphicsContext.getTraceColors(this.isUserFixed());
       } else {
-        result = p_graphics_context.getPinColors();
+        result = pGraphicsContext.getPinColors();
       }
     } else {
       // display unconnected pins as obstacles
-      result = p_graphics_context.getObstacleColors();
+      result = pGraphicsContext.getObstacleColors();
     }
     return result;
   }
 
   @Override
-  public double getDrawIntensity(GraphicsContext p_graphics_context) {
-    return p_graphics_context.getPinColorIntensity();
+  public double getDrawIntensity(GraphicsContext pGraphicsContext) {
+    return pGraphicsContext.getPinColorIntensity();
   }
 
   /** Swaps the nets of this pin and p_other. Returns false on error. */
-  public boolean swap(Pin p_other) {
-    if (this.netCount() > 1 || p_other.netCount() > 1) {
+  public boolean swap(Pin pOther) {
+    if (this.netCount() > 1 || pOther.netCount() > 1) {
       FRLogger.warn("Pin.swap not yet implemented for pins belonging to more than 1 net ");
       return false;
     }
@@ -465,16 +464,16 @@ public class Pin extends DrillItem implements Serializable {
       thisNetNo = 0;
     }
     int otherNetNo;
-    if (p_other.netCount() > 0) {
-      otherNetNo = p_other.getNetNo(0);
+    if (pOther.netCount() > 0) {
+      otherNetNo = pOther.getNetNo(0);
     } else {
       otherNetNo = 0;
     }
     this.assignNetNo(otherNetNo);
-    p_other.assignNetNo(thisNetNo);
+    pOther.assignNetNo(thisNetNo);
     Pin tmp = this.changedTo;
-    this.changedTo = p_other.changedTo;
-    p_other.changedTo = tmp;
+    this.changedTo = pOther.changedTo;
+    pOther.changedTo = tmp;
     return true;
   }
 
@@ -486,9 +485,9 @@ public class Pin extends DrillItem implements Serializable {
   }
 
   @Override
-  public boolean write(ObjectOutputStream p_stream) {
+  public boolean write(ObjectOutputStream pStream) {
     try {
-      p_stream.writeObject(this);
+      pStream.writeObject(this);
     } catch (IOException _) {
       return false;
     }
@@ -507,8 +506,8 @@ public class Pin extends DrillItem implements Serializable {
   }
 
   /** Returns the smallest width of the pin shape on layer p_layer. */
-  public double getMinWidth(int p_layer) {
-    int padstackLayer = getPadstackLayer(p_layer - this.firstLayer());
+  public double getMinWidth(int pLayer) {
+    int padstackLayer = getPadstackLayer(pLayer - this.firstLayer());
     Shape padstackShape = this.getPadstack().getShape(padstackLayer);
     if (padstackShape == null) {
       FRLogger.warn("Pin.get_min_width: padstackShape is null");
@@ -526,14 +525,14 @@ public class Pin extends DrillItem implements Serializable {
    * Returns the neckdown half width for traces on p_layer. The neckdown width is used, when the pin
    * width is smaller than the trace width to enter or leave the pin with a trace.
    */
-  public int getTraceNeckdownHalfwidth(int p_layer) {
-    double result = Math.max(0.5 * this.getMinWidth(p_layer) - 1, 1);
+  public int getTraceNeckdownHalfwidth(int pLayer) {
+    double result = Math.max(0.5 * this.getMinWidth(pLayer) - 1, 1);
     return (int) result;
   }
 
   /** Returns the largest width of the pin shape on layer p_layer. */
-  public double getMaxWidth(int p_layer) {
-    int padstackLayer = getPadstackLayer(p_layer - this.firstLayer());
+  public double getMaxWidth(int pLayer) {
+    int padstackLayer = getPadstackLayer(pLayer - this.firstLayer());
     Shape padstackShape = this.getPadstack().getShape(padstackLayer);
     if (padstackShape == null) {
       FRLogger.warn("Pin.get_max_width: padstackShape is null");
@@ -548,34 +547,34 @@ public class Pin extends DrillItem implements Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
-    p_window.appendBold(tm.getText("pin") + ": ");
-    p_window.append(tm.getText("component_2") + " ");
+    pWindow.appendBold(tm.getText("pin") + ": ");
+    pWindow.append(tm.getText("component_2") + " ");
     Component component = board.components.get(this.getComponentNo());
-    p_window.append(component.name, tm.getText("component_info"), component);
-    p_window.append(", " + tm.getText("pin_2") + " ");
-    p_window.append(component.getPackage().getPin(this.pinNo).name);
-    p_window.append(", " + tm.getText("padstack") + " ");
+    pWindow.append(component.name, tm.getText("component_info"), component);
+    pWindow.append(", " + tm.getText("pin_2") + " ");
+    pWindow.append(component.getPackage().getPin(this.pinNo).name);
+    pWindow.append(", " + tm.getText("padstack") + " ");
     Padstack padstack = this.getPadstack();
-    p_window.append(padstack.name, tm.getText("padstack_info"), padstack);
-    p_window.append(" " + tm.getText("at") + " ");
-    p_window.append(this.getCenter().toFloat());
-    this.printConnectableItemInfo(p_window, p_locale);
-    p_window.newline();
+    pWindow.append(padstack.name, tm.getText("padstack_info"), padstack);
+    pWindow.append(" " + tm.getText("at") + " ");
+    pWindow.append(this.getCenter().toFloat());
+    this.printConnectableItemInfo(pWindow, pLocale);
+    pWindow.newline();
   }
 
   @Override
-  public String getHoverInfo(Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public String getHoverInfo(Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
     Component component = board.components.get(this.getComponentNo());
     Padstack padstack = this.getPadstack();
     String componentName = component.name;
     String pinName = component.getPackage().getPin(this.pinNo).name;
     String padstackName = padstack.name;
-    String connInfo = this.getConnectableItemHoverInfo(p_locale);
+    String connInfo = this.getConnectableItemHoverInfo(pLocale);
 
     return tm.getText("pin_hover_info", componentName, pinName, padstackName, connInfo);
   }
@@ -586,13 +585,13 @@ public class Pin extends DrillItem implements Serializable {
    * exit restrictions.
    */
   Direction calcNearestExitRestrictionDirection(
-      Polyline p_trace_polyline, int p_trace_half_width, int p_layer) {
+      Polyline pTracePolyline, int pTraceHalfWidth, int pLayer) {
     Collection<Pin.TraceExitRestriction> traceExitRestrictions =
-        this.getTraceExitRestrictions(p_layer);
+        this.getTraceExitRestrictions(pLayer);
     if (traceExitRestrictions.isEmpty()) {
       return null;
     }
-    Shape pinShape = this.getShape(p_layer - this.firstLayer());
+    Shape pinShape = this.getShape(pLayer - this.firstLayer());
     Point pinCenter = this.getCenter();
     if (!(pinShape instanceof TileShape)) {
       return null;
@@ -602,20 +601,20 @@ public class Pin extends DrillItem implements Serializable {
       return null;
     }
     TileShape offsetPinShape =
-        (TileShape) ((TileShape) pinShape).offset(edgeToTurnDist + p_trace_half_width);
-    int[][] entries = offsetPinShape.entrancePoints(p_trace_polyline);
+        (TileShape) ((TileShape) pinShape).offset(edgeToTurnDist + pTraceHalfWidth);
+    int[][] entries = offsetPinShape.entrancePoints(pTracePolyline);
     if (entries.length == 0) {
       return null;
     }
     int[] latestEntryTuple = entries[entries.length - 1];
     FloatPoint traceEntryLocationApprox =
-        p_trace_polyline.arr[latestEntryTuple[0]].intersectionApprox(
+        pTracePolyline.arr[latestEntryTuple[0]].intersectionApprox(
             offsetPinShape.borderLine(latestEntryTuple[1]));
     // calculate the nearest legal pin exit point to traceEntryLocationApprox
     double minExitCornerDistance = Double.MAX_VALUE;
     FloatPoint nearestExitCorner = null;
     Direction pinExitDirection = null;
-    final double TOLERANCE = 1;
+    final double tolerance = 1;
     for (Pin.TraceExitRestriction currExitRestriction : traceExitRestrictions) {
       int currIntersectingBorderLineNo =
           offsetPinShape.intersectingBorderLineNo(pinCenter, currExitRestriction.direction);
@@ -625,18 +624,18 @@ public class Pin extends DrillItem implements Serializable {
               offsetPinShape.borderLine(currIntersectingBorderLineNo));
       double currExitCornerDistance = currExitCorner.distanceSquare(traceEntryLocationApprox);
       boolean newNearestCornerFound = false;
-      if (currExitCornerDistance + TOLERANCE < minExitCornerDistance) {
+      if (currExitCornerDistance + tolerance < minExitCornerDistance) {
         newNearestCornerFound = true;
-      } else if (currExitCornerDistance < minExitCornerDistance + TOLERANCE) {
+      } else if (currExitCornerDistance < minExitCornerDistance + tolerance) {
         // the distances are near equal, compare to the previous corners of p_trace_polyline
-        for (int i = 1; i < p_trace_polyline.cornerCount(); i++) {
-          FloatPoint currTraceCorner = p_trace_polyline.cornerApprox(i);
+        for (int i = 1; i < pTracePolyline.cornerCount(); i++) {
+          FloatPoint currTraceCorner = pTracePolyline.cornerApprox(i);
           double currTraceCornerDistance = currTraceCorner.distanceSquare(currExitCorner);
           double oldTraceCornerDistance = currTraceCorner.distanceSquare(nearestExitCorner);
-          if (currTraceCornerDistance + TOLERANCE < oldTraceCornerDistance) {
+          if (currTraceCornerDistance + tolerance < oldTraceCornerDistance) {
             newNearestCornerFound = true;
             break;
-          } else if (currTraceCornerDistance > oldTraceCornerDistance + TOLERANCE) {
+          } else if (currTraceCornerDistance > oldTraceCornerDistance + tolerance) {
             break;
           }
         }
@@ -654,14 +653,13 @@ public class Pin extends DrillItem implements Serializable {
    * Calculates the nearest trace exit point of the pin on p_layer. Returns null, if the pin has no
    * trace exit restrictions.
    */
-  public FloatPoint nearestTraceExitCorner(
-      FloatPoint p_from_point, int p_trace_half_width, int p_layer) {
+  public FloatPoint nearestTraceExitCorner(FloatPoint pFromPoint, int pTraceHalfWidth, int pLayer) {
     Collection<Pin.TraceExitRestriction> traceExitRestrictions =
-        this.getTraceExitRestrictions(p_layer);
+        this.getTraceExitRestrictions(pLayer);
     if (traceExitRestrictions.isEmpty()) {
       return null;
     }
-    Shape pinShape = this.getShape(p_layer - this.firstLayer());
+    Shape pinShape = this.getShape(pLayer - this.firstLayer());
     Point pinCenter = this.getCenter();
     if (!(pinShape instanceof TileShape)) {
       return null;
@@ -671,7 +669,7 @@ public class Pin extends DrillItem implements Serializable {
       return null;
     }
     TileShape offsetPinShape =
-        (TileShape) ((TileShape) pinShape).offset(edgeToTurnDist + p_trace_half_width);
+        (TileShape) ((TileShape) pinShape).offset(edgeToTurnDist + pTraceHalfWidth);
 
     // calculate the nearest legal pin exit point to traceEntryLocationApprox
     double minExitCornerDistance = Double.MAX_VALUE;
@@ -683,7 +681,7 @@ public class Pin extends DrillItem implements Serializable {
       FloatPoint currExitCorner =
           currPinExitRay.intersectionApprox(
               offsetPinShape.borderLine(currIntersectingBorderLineNo));
-      double currExitCornerDistance = currExitCorner.distanceSquare(p_from_point);
+      double currExitCornerDistance = currExitCorner.distanceSquare(pFromPoint);
       if (currExitCornerDistance < minExitCornerDistance) {
         minExitCornerDistance = currExitCornerDistance;
         nearestExitCorner = currExitCorner;
@@ -718,9 +716,9 @@ public class Pin extends DrillItem implements Serializable {
     public final double minLength;
 
     /** Creates a new instance of TraceExitRestriction */
-    public TraceExitRestriction(Direction p_direction, double p_min_length) {
-      direction = p_direction;
-      minLength = p_min_length;
+    public TraceExitRestriction(Direction pDirection, double pMinLength) {
+      direction = pDirection;
+      minLength = pMinLength;
     }
   }
 }

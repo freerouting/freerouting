@@ -11,24 +11,23 @@ import java.util.TreeSet;
 public final class InspectItemsInRegionState extends SelectRegionState {
 
   /** Creates a new instance of InspectItemsInRegionState */
-  private InspectItemsInRegionState(
-      InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
+  private InspectItemsInRegionState(InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    super(pParentState, pBoardHandling);
   }
 
   /** Returns a new instance of this class. */
   public static InspectItemsInRegionState getInstance(
-      InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    return getInstance(null, p_parent_state, p_board_handling);
+      InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    return getInstance(null, pParentState, pBoardHandling);
   }
 
   /** Returns a new instance of this class with first point p_location. */
   public static InspectItemsInRegionState getInstance(
-      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    p_board_handling.displayLayerMessage();
+      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    pBoardHandling.displayLayerMessage();
     InspectItemsInRegionState newInstance =
-        new InspectItemsInRegionState(p_parent_state, p_board_handling);
-    newInstance.corner1 = p_location;
+        new InspectItemsInRegionState(pParentState, pBoardHandling);
+    newInstance.corner1 = pLocation;
     newInstance.hdlg.screenMessages.setStatusMessage(
         newInstance.tm.getText("drag_left_mouse_button_to_select_items_in_region"));
     return newInstance;

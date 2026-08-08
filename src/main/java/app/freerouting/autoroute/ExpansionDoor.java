@@ -21,16 +21,16 @@ public class ExpansionDoor implements ExpandableObject {
   MazeSearchElement[] sectionArr;
 
   /** Creates a new instance of ExpansionDoor */
-  public ExpansionDoor(ExpansionRoom p_first_room, ExpansionRoom p_second_room, int p_dimension) {
-    firstRoom = p_first_room;
-    secondRoom = p_second_room;
-    dimension = p_dimension;
+  public ExpansionDoor(ExpansionRoom pFirstRoom, ExpansionRoom pSecondRoom, int pDimension) {
+    firstRoom = pFirstRoom;
+    secondRoom = pSecondRoom;
+    dimension = pDimension;
   }
 
   /** Creates a new instance of ExpansionDoor */
-  public ExpansionDoor(ExpansionRoom p_first_room, ExpansionRoom p_second_room) {
-    firstRoom = p_first_room;
-    secondRoom = p_second_room;
+  public ExpansionDoor(ExpansionRoom pFirstRoom, ExpansionRoom pSecondRoom) {
+    firstRoom = pFirstRoom;
+    secondRoom = pSecondRoom;
     dimension = firstRoom.getShape().intersection(secondRoom.getShape()).dimension();
   }
 
@@ -55,11 +55,11 @@ public class ExpansionDoor implements ExpandableObject {
    * Returns the other room of this door, or null, if p_room is neither equal to this.firstRoom nor
    * to this.secondRoom.
    */
-  public ExpansionRoom otherRoom(ExpansionRoom p_room) {
+  public ExpansionRoom otherRoom(ExpansionRoom pRoom) {
     ExpansionRoom result;
-    if (p_room == firstRoom) {
+    if (pRoom == firstRoom) {
       result = secondRoom;
-    } else if (p_room == secondRoom) {
+    } else if (pRoom == secondRoom) {
       result = firstRoom;
     } else {
       result = null;
@@ -72,11 +72,11 @@ public class ExpansionDoor implements ExpandableObject {
    * to this.secondRoom, or if the other room is not a CompleteExpansionRoom.
    */
   @Override
-  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom p_room) {
+  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom pRoom) {
     ExpansionRoom result;
-    if (p_room == firstRoom) {
+    if (pRoom == firstRoom) {
       result = secondRoom;
-    } else if (p_room == secondRoom) {
+    } else if (pRoom == secondRoom) {
       result = firstRoom;
     } else {
       result = null;
@@ -93,13 +93,13 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   @Override
-  public MazeSearchElement getMazeSearchElement(int p_no) {
-    return this.sectionArr[p_no];
+  public MazeSearchElement getMazeSearchElement(int pNo) {
+    return this.sectionArr[pNo];
   }
 
   /** Calculates the Line segments of the sections of this door. */
-  public FloatLine[] getSectionSegments(double p_offset) {
-    double offset = p_offset + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
+  public FloatLine[] getSectionSegments(double pOffset) {
+    double offset = pOffset + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
     TileShape doorShape = this.getShape();
     {
       if (doorShape.isEmpty()) {
@@ -142,14 +142,14 @@ public class ExpansionDoor implements ExpandableObject {
    * Calculates a diagonal line of the 2-dimensional p_door_shape which represents the restraint
    * line between the shapes of this.firstRoom and this.secondRoom.
    */
-  private FloatLine calcDoorLineSegment(TileShape p_door_shape) {
+  private FloatLine calcDoorLineSegment(TileShape pDoorShape) {
     TileShape firstRoomShape = this.firstRoom.getShape();
     TileShape secondRoomShape = this.secondRoom.getShape();
     Point firstCorner = null;
     Point secondCorner = null;
-    int cornerCount = p_door_shape.borderLineCount();
+    int cornerCount = pDoorShape.borderLineCount();
     for (int i = 0; i < cornerCount; i++) {
-      Point currCorner = p_door_shape.corner(i);
+      Point currCorner = pDoorShape.corner(i);
       if (!firstRoomShape.containsInside(currCorner)
           && !secondRoomShape.containsInside(currCorner)) {
         // currCorner is on the border of both room shapes.
@@ -186,11 +186,11 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /** allocates and initialises p_section_count sections */
-  void allocateSections(int p_section_count) {
-    if (sectionArr != null && sectionArr.length == p_section_count) {
+  void allocateSections(int pSectionCount) {
+    if (sectionArr != null && sectionArr.length == pSectionCount) {
       return; // already allocated
     }
-    sectionArr = new MazeSearchElement[p_section_count];
+    sectionArr = new MazeSearchElement[pSectionCount];
     for (int i = 0; i < sectionArr.length; i++) {
       sectionArr[i] = new MazeSearchElement();
     }

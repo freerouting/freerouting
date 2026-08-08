@@ -19,23 +19,17 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
 
   /** Creates a new instance of LocateFoundConnectionAlgo45Degree */
   public LocateFoundConnectionAlgo45Degree(
-      MazeSearchAlgo.Result p_maze_search_result,
-      AutorouteControl p_ctrl,
-      ShapeSearchTree p_search_tree,
-      AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list,
-      Map<Item, Integer> p_ripup_costs) {
-    super(
-        p_maze_search_result,
-        p_ctrl,
-        p_search_tree,
-        p_angle_restriction,
-        p_ripped_item_list,
-        p_ripup_costs);
+      MazeSearchAlgo.Result pMazeSearchResult,
+      AutorouteControl pCtrl,
+      ShapeSearchTree pSearchTree,
+      AngleRestriction pAngleRestriction,
+      SortedSet<Item> pRippedItemList,
+      Map<Item, Integer> pRipupCosts) {
+    super(pMazeSearchResult, pCtrl, pSearchTree, pAngleRestriction, pRippedItemList, pRipupCosts);
   }
 
-  private static FloatPoint roundToInteger(FloatPoint p_point) {
-    return p_point.round().toFloat();
+  private static FloatPoint roundToInteger(FloatPoint pPoint) {
+    return pPoint.round().toFloat();
   }
 
   /**
@@ -43,10 +37,10 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
    * p_from_point on p_from_door.
    */
   private static boolean calcHorizontalFirstFromDoor(
-      ExpandableObject p_from_door, FloatPoint p_from_point, FloatPoint p_to_point) {
-    TileShape doorShape = p_from_door.getShape();
+      ExpandableObject pFromDoor, FloatPoint pFromPoint, FloatPoint pToPoint) {
+    TileShape doorShape = pFromDoor.getShape();
     IntBox fromDoorBox = doorShape.boundingBox();
-    if (p_from_door.getDimension() != 1) {
+    if (pFromDoor.getDimension() != 1) {
       return fromDoorBox.height() >= fromDoorBox.width();
     }
 
@@ -75,8 +69,8 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       // door is about horizontal
       result = false;
     } else {
-      double dx = p_to_point.x - p_from_point.x;
-      double dy = p_to_point.y - p_from_point.y;
+      double dx = pToPoint.x - pFromPoint.x;
+      double dy = pToPoint.y - pFromPoint.y;
       if (leftCorner.y < rightCorner.y) {
         // door is about right diagonal
         if (Signum.of(dx) == Signum.of(dy)) {
@@ -173,8 +167,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       // enter the shrunk room shape by a 45-degree angle first
       FloatPoint nearestRoomPoint = shrinkedRoomShape.nearestPointApprox(this.currentFromPoint);
       boolean horizontalFirst =
-          calcHorizontalFirstFromDoor(
-              currFromInfo.door, this.currentFromPoint, nearestRoomPoint);
+          calcHorizontalFirstFromDoor(currFromInfo.door, this.currentFromPoint, nearestRoomPoint);
       nearestRoomPoint = roundToInteger(nearestRoomPoint);
       result.add(
           calculateAdditionalCorner(
@@ -252,8 +245,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
         Simplex nextRoomShape = currToInfo.nextRoom.getShape().toSimplex();
         // with IntBox or IntOctagon the next calculation will not work, because they have
         // border lines of length 0.
-        FloatPoint[] nearestPoints =
-            nextRoomShape.nearestBorderPointsApprox(nearestToDoorPoint, 2);
+        FloatPoint[] nearestPoints = nextRoomShape.nearestBorderPointsApprox(nearestToDoorPoint, 2);
         if (nearestPoints.length >= 2) {
           nearestToDoorPointOk = nearestPoints[1].distance(nearestToDoorPoint) >= traceHalfwidthAdd;
         }
@@ -299,10 +291,10 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
    * coming from p_from_point.
    */
   private boolean calcHorizontalFirstToDoor(
-      ExpandableObject p_to_door, FloatPoint p_from_point, FloatPoint p_to_point) {
-    TileShape doorShape = p_to_door.getShape();
+      ExpandableObject pToDoor, FloatPoint pFromPoint, FloatPoint pToPoint) {
+    TileShape doorShape = pToDoor.getShape();
     IntBox fromDoorBox = doorShape.boundingBox();
-    if (p_to_door.getDimension() != 1) {
+    if (pToDoor.getDimension() != 1) {
       return fromDoorBox.height() <= fromDoorBox.width();
     }
     FloatLine doorLineSegment = doorShape.diagonalCornerSegment();
@@ -330,8 +322,8 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       // door is about horizontal
       result = true;
     } else {
-      double dx = p_to_point.x - p_from_point.x;
-      double dy = p_to_point.y - p_from_point.y;
+      double dx = pToPoint.x - pFromPoint.x;
+      double dy = pToPoint.y - pFromPoint.y;
       if (leftCorner.y < rightCorner.y) {
         // door is about right diagonal
         if (Signum.of(dx) == Signum.of(dy)) {

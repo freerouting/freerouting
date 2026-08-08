@@ -43,15 +43,15 @@ public class DestinationDistance {
    * dimension layerCount.
    */
   public DestinationDistance(
-      ExpansionCostFactor[] p_trace_costs,
-      boolean[] p_layer_active,
-      double p_min_normal_via_cost,
-      double p_min_cheap_via_cost) {
-    traceCosts = p_trace_costs;
-    layerActive = p_layer_active;
-    layerCount = p_layer_active.length;
-    minNormalViaCost = p_min_normal_via_cost;
-    minCheapViaCost = p_min_cheap_via_cost;
+      ExpansionCostFactor[] pTraceCosts,
+      boolean[] pLayerActive,
+      double pMinNormalViaCost,
+      double pMinCheapViaCost) {
+    traceCosts = pTraceCosts;
+    layerActive = pLayerActive;
+    layerCount = pLayerActive.length;
+    minNormalViaCost = pMinNormalViaCost;
+    minCheapViaCost = pMinCheapViaCost;
     int currActiveLayerCount = 0;
     for (int ind = 0; ind < layerCount; ind++) {
       if (layerActive[ind]) {
@@ -98,25 +98,25 @@ public class DestinationDistance {
         Math.min(minComponentInnerTraceCost, minSolderInnerTraceCost);
   }
 
-  public void join(IntBox p_box, int p_layer) {
-    if (p_layer == 0) {
-      componentSideBox = componentSideBox.union(p_box);
+  public void join(IntBox pBox, int pLayer) {
+    if (pLayer == 0) {
+      componentSideBox = componentSideBox.union(pBox);
       componentSideBoxIsEmpty = false;
-    } else if (p_layer == layerCount - 1) {
-      solderSideBox = solderSideBox.union(p_box);
+    } else if (pLayer == layerCount - 1) {
+      solderSideBox = solderSideBox.union(pBox);
       solderSideBoxIsEmpty = false;
     } else {
-      innerSideBox = innerSideBox.union(p_box);
+      innerSideBox = innerSideBox.union(pBox);
       innerSideBoxIsEmpty = false;
     }
     boxIsEmpty = false;
   }
 
-  public double calculate(FloatPoint p_point, int p_layer) {
-    return calculate(p_point.boundingBox(), p_layer);
+  public double calculate(FloatPoint pPoint, int pLayer) {
+    return calculate(pPoint.boundingBox(), pLayer);
   }
 
-  public double calculate(IntBox p_box, int p_layer) {
+  public double calculate(IntBox pBox, int pLayer) {
     if (boxIsEmpty) {
       return Integer.MAX_VALUE;
     }
@@ -124,18 +124,18 @@ public class DestinationDistance {
     double componentSideDeltaX;
     double componentSideDeltaY;
 
-    if (p_box.ll.x > componentSideBox.ur.x) {
-      componentSideDeltaX = p_box.ll.x - componentSideBox.ur.x;
-    } else if (p_box.ur.x < componentSideBox.ll.x) {
-      componentSideDeltaX = componentSideBox.ll.x - p_box.ur.x;
+    if (pBox.ll.x > componentSideBox.ur.x) {
+      componentSideDeltaX = pBox.ll.x - componentSideBox.ur.x;
+    } else if (pBox.ur.x < componentSideBox.ll.x) {
+      componentSideDeltaX = componentSideBox.ll.x - pBox.ur.x;
     } else {
       componentSideDeltaX = 0;
     }
 
-    if (p_box.ll.y > componentSideBox.ur.y) {
-      componentSideDeltaY = p_box.ll.y - componentSideBox.ur.y;
-    } else if (p_box.ur.y < componentSideBox.ll.y) {
-      componentSideDeltaY = componentSideBox.ll.y - p_box.ur.y;
+    if (pBox.ll.y > componentSideBox.ur.y) {
+      componentSideDeltaY = pBox.ll.y - componentSideBox.ur.y;
+    } else if (pBox.ur.y < componentSideBox.ll.y) {
+      componentSideDeltaY = componentSideBox.ll.y - pBox.ur.y;
     } else {
       componentSideDeltaY = 0;
     }
@@ -143,18 +143,18 @@ public class DestinationDistance {
     double solderSideDeltaX;
     double solderSideDeltaY;
 
-    if (p_box.ll.x > solderSideBox.ur.x) {
-      solderSideDeltaX = p_box.ll.x - solderSideBox.ur.x;
-    } else if (p_box.ur.x < solderSideBox.ll.x) {
-      solderSideDeltaX = solderSideBox.ll.x - p_box.ur.x;
+    if (pBox.ll.x > solderSideBox.ur.x) {
+      solderSideDeltaX = pBox.ll.x - solderSideBox.ur.x;
+    } else if (pBox.ur.x < solderSideBox.ll.x) {
+      solderSideDeltaX = solderSideBox.ll.x - pBox.ur.x;
     } else {
       solderSideDeltaX = 0;
     }
 
-    if (p_box.ll.y > solderSideBox.ur.y) {
-      solderSideDeltaY = p_box.ll.y - solderSideBox.ur.y;
-    } else if (p_box.ur.y < solderSideBox.ll.y) {
-      solderSideDeltaY = solderSideBox.ll.y - p_box.ur.y;
+    if (pBox.ll.y > solderSideBox.ur.y) {
+      solderSideDeltaY = pBox.ll.y - solderSideBox.ur.y;
+    } else if (pBox.ur.y < solderSideBox.ll.y) {
+      solderSideDeltaY = solderSideBox.ll.y - pBox.ur.y;
     } else {
       solderSideDeltaY = 0;
     }
@@ -162,18 +162,18 @@ public class DestinationDistance {
     double innerSideDeltaX;
     double innerSideDeltaY;
 
-    if (p_box.ll.x > innerSideBox.ur.x) {
-      innerSideDeltaX = p_box.ll.x - innerSideBox.ur.x;
-    } else if (p_box.ur.x < innerSideBox.ll.x) {
-      innerSideDeltaX = innerSideBox.ll.x - p_box.ur.x;
+    if (pBox.ll.x > innerSideBox.ur.x) {
+      innerSideDeltaX = pBox.ll.x - innerSideBox.ur.x;
+    } else if (pBox.ur.x < innerSideBox.ll.x) {
+      innerSideDeltaX = innerSideBox.ll.x - pBox.ur.x;
     } else {
       innerSideDeltaX = 0;
     }
 
-    if (p_box.ll.y > innerSideBox.ur.y) {
-      innerSideDeltaY = p_box.ll.y - innerSideBox.ur.y;
-    } else if (p_box.ur.y < innerSideBox.ll.y) {
-      innerSideDeltaY = innerSideBox.ll.y - p_box.ur.y;
+    if (pBox.ll.y > innerSideBox.ur.y) {
+      innerSideDeltaY = pBox.ll.y - innerSideBox.ur.y;
+    } else if (pBox.ur.y < innerSideBox.ll.y) {
+      innerSideDeltaY = innerSideBox.ll.y - pBox.ur.y;
     } else {
       innerSideDeltaY = 0;
     }
@@ -213,14 +213,14 @@ public class DestinationDistance {
 
     double result = Integer.MAX_VALUE;
 
-    if (p_layer == 0)
+    if (pLayer == 0)
     // calculate shortest distance to component side box
     {
       // calculate one layer distance
 
       if (!componentSideBoxIsEmpty) {
         result =
-            p_box.weightedDistance(
+            pBox.weightedDistance(
                 componentSideBox, traceCosts[0].horizontal, traceCosts[0].vertical);
       }
 
@@ -291,15 +291,15 @@ public class DestinationDistance {
 
       return Math.min(result, tmpDistance);
     }
-    if (p_layer == layerCount - 1)
+    if (pLayer == layerCount - 1)
     // calculate the shortest distance to solder side box
     {
       // calculate one layer distance
 
       if (!solderSideBoxIsEmpty) {
         result =
-            p_box.weightedDistance(
-                solderSideBox, traceCosts[p_layer].horizontal, traceCosts[p_layer].vertical);
+            pBox.weightedDistance(
+                solderSideBox, traceCosts[pLayer].horizontal, traceCosts[pLayer].vertical);
       }
 
       // calculate two layer distance
@@ -353,8 +353,8 @@ public class DestinationDistance {
 
     if (!innerSideBoxIsEmpty) {
       result =
-          p_box.weightedDistance(
-              innerSideBox, traceCosts[p_layer].horizontal, traceCosts[p_layer].vertical);
+          pBox.weightedDistance(
+              innerSideBox, traceCosts[pLayer].horizontal, traceCosts[pLayer].vertical);
     }
 
     // calculate two layer distance
@@ -379,11 +379,11 @@ public class DestinationDistance {
     return Math.min(result, tmpDistance);
   }
 
-  public double calculateCheapDistance(IntBox p_box, int p_layer) {
+  public double calculateCheapDistance(IntBox pBox, int pLayer) {
     double minNormalViaCostSave = minNormalViaCost;
 
     minNormalViaCost = minCheapViaCost;
-    double result = calculate(p_box, p_layer);
+    double result = calculate(pBox, pLayer);
 
     minNormalViaCost = minNormalViaCostSave;
     return result;

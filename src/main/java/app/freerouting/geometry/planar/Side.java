@@ -10,19 +10,19 @@ public final class Side {
   public static final Side COLLINEAR = new Side("collinear");
   private final String name;
 
-  private Side(String p_name) {
-    name = p_name;
+  private Side(String pName) {
+    name = pName;
   }
 
   /**
    * returns ON_THE_LEFT, if p_value < 0, ON_THE_RIGHT, if p_value > 0 and COLLINEAR, if p_value ==
    * 0
    */
-  static Side of(double p_value) {
+  static Side of(double pValue) {
     Side result;
-    if (p_value > 0) {
+    if (pValue > 0) {
       result = Side.ON_THE_LEFT;
-    } else if (p_value < 0) {
+    } else if (pValue < 0) {
       result = Side.ON_THE_RIGHT;
     } else {
       result = Side.COLLINEAR;

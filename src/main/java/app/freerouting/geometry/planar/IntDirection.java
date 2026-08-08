@@ -9,14 +9,14 @@ public class IntDirection extends Direction implements Serializable {
   public final int x;
   public final int y;
 
-  IntDirection(int p_x, int p_y) {
-    x = p_x;
-    y = p_y;
+  IntDirection(int pX, int pY) {
+    x = pX;
+    y = pY;
   }
 
-  IntDirection(IntVector p_vector) {
-    x = p_vector.x;
-    y = p_vector.y;
+  IntDirection(IntVector pVector) {
+    x = pVector.x;
+    y = pVector.y;
   }
 
   @Override
@@ -35,34 +35,34 @@ public class IntDirection extends Direction implements Serializable {
   }
 
   @Override
-  int compareTo(IntDirection p_other) {
+  int compareTo(IntDirection pOther) {
     if (y > 0) {
-      if (p_other.y < 0) {
+      if (pOther.y < 0) {
         return -1;
       }
-      if (p_other.y == 0) {
-        if (p_other.x > 0) {
+      if (pOther.y == 0) {
+        if (pOther.x > 0) {
           return 1;
         }
         return -1;
       }
     } else if (y < 0) {
-      if (p_other.y >= 0) {
+      if (pOther.y >= 0) {
         return 1;
       }
     } else // y == 0
     {
       if (x > 0) {
-        if (p_other.y != 0 || p_other.x < 0) {
+        if (pOther.y != 0 || pOther.x < 0) {
           return -1;
         }
         return 0;
       }
       // x < 0
-      if (p_other.y > 0 || p_other.y == 0 && p_other.x > 0) {
+      if (pOther.y > 0 || pOther.y == 0 && pOther.x > 0) {
         return 1;
       }
-      if (p_other.y < 0) {
+      if (pOther.y < 0) {
         return -1;
       }
       return 0;
@@ -71,7 +71,7 @@ public class IntDirection extends Direction implements Serializable {
     // now this direction and p_other are located in the same
     // open horizontal half plane
 
-    double determinant = (double) p_other.x * y - (double) p_other.y * x;
+    double determinant = (double) pOther.x * y - (double) pOther.y * x;
     return Signum.asInt(determinant);
   }
 
@@ -81,8 +81,8 @@ public class IntDirection extends Direction implements Serializable {
   }
 
   @Override
-  public Direction turn45Degree(int p_factor) {
-    int n = p_factor % 8;
+  public Direction turn45Degree(int pFactor) {
+    int n = pFactor % 8;
     int newX;
     int newY;
     switch (n) {
@@ -133,16 +133,16 @@ public class IntDirection extends Direction implements Serializable {
    * Direction.
    */
   @Override
-  public int compareTo(Direction p_other_direction) {
-    return -p_other_direction.compareTo(this);
+  public int compareTo(Direction pOtherDirection) {
+    return -pOtherDirection.compareTo(this);
   }
 
   @Override
-  int compareTo(BigIntDirection p_other) {
-    return -p_other.compareTo(this);
+  int compareTo(BigIntDirection pOther) {
+    return -pOther.compareTo(this);
   }
 
-  final double determinant(IntDirection p_other) {
-    return (double) x * p_other.y - (double) y * p_other.x;
+  final double determinant(IntDirection pOther) {
+    return (double) x * pOther.y - (double) y * pOther.x;
   }
 }

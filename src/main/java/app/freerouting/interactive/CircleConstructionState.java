@@ -21,9 +21,9 @@ public final class CircleConstructionState extends InteractiveState {
 
   /** Creates a new instance of CircleConstructionState */
   private CircleConstructionState(
-      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
-    circleCenter = p_location;
+      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    super(pParentState, pBoardHandling);
+    circleCenter = pLocation;
   }
 
   /**
@@ -31,13 +31,13 @@ public final class CircleConstructionState extends InteractiveState {
    * in a logfile
    */
   public static CircleConstructionState getInstance(
-      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    p_board_handling.removeRatsnest(); // inserting a circle may change the connectivity.
-    return new CircleConstructionState(p_location, p_parent_state, p_board_handling);
+      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    pBoardHandling.removeRatsnest(); // inserting a circle may change the connectivity.
+    return new CircleConstructionState(pLocation, pParentState, pBoardHandling);
   }
 
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint p_location) {
+  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
     return this.complete();
   }
 
@@ -99,13 +99,13 @@ public final class CircleConstructionState extends InteractiveState {
 
   /** draws the graphic construction aid for the circle */
   @Override
-  public void draw(Graphics p_graphics) {
+  public void draw(Graphics pGraphics) {
     FloatPoint currentMousePosition = hdlg.getCurrentMousePosition();
     if (currentMousePosition == null) {
       return;
     }
     this.circleRadius = circleCenter.distance(currentMousePosition);
-    hdlg.graphicsContext.drawCircle(circleCenter, circleRadius, 300, Color.white, p_graphics, 1);
+    hdlg.graphicsContext.drawCircle(circleCenter, circleRadius, 300, Color.white, pGraphics, 1);
   }
 
   @Override

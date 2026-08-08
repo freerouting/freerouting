@@ -35,28 +35,28 @@ public class ScreenMessages {
   public ScreenMessages(
       JLabel errorLabel,
       JLabel warningLabel,
-      JLabel p_status_field,
-      JLabel p_add_field,
-      JLabel p_layer_field,
-      JLabel p_score_field,
-      JLabel p_mouse_position,
-      JLabel p_unit_label,
-      Locale p_locale) {
+      JLabel pStatusField,
+      JLabel pAddField,
+      JLabel pLayerField,
+      JLabel pScoreField,
+      JLabel pMousePosition,
+      JLabel pUnitLabel,
+      Locale pLocale) {
 
-    tm = new TextManager(this.getClass(), p_locale);
+    tm = new TextManager(this.getClass(), pLocale);
     activeLayerString = tm.getText("currentLayer") + " ";
     targetLayerString = tm.getText("targetLayer") + " ";
     this.errorLabel = errorLabel;
     this.warningLabel = warningLabel;
-    statusField = p_status_field;
-    addField = p_add_field;
-    layerField = p_layer_field;
-    scoreField = p_score_field;
-    mousePosition = p_mouse_position;
-    unitLabel = p_unit_label;
+    statusField = pStatusField;
+    addField = pAddField;
+    layerField = pLayerField;
+    scoreField = pScoreField;
+    mousePosition = pMousePosition;
+    unitLabel = pUnitLabel;
     addField.setText(empty_string);
 
-    this.numberFormat = NumberFormat.getInstance(p_locale);
+    this.numberFormat = NumberFormat.getInstance(pLocale);
     this.numberFormat.setMinimumFractionDigits(2);
     this.numberFormat.setMaximumFractionDigits(2);
   }
@@ -67,9 +67,9 @@ public class ScreenMessages {
   }
 
   /** Sets the message in the status field. */
-  public void setStatusMessage(String p_message) {
+  public void setStatusMessage(String pMessage) {
     if (!this.writeProtected) {
-      statusField.setText(p_message);
+      statusField.setText(pMessage);
     }
   }
 
@@ -87,16 +87,16 @@ public class ScreenMessages {
   }
 
   /** Sets the displayed layer number on the screen. */
-  public void setLayer(String p_layer_name) {
+  public void setLayer(String pLayerName) {
     if (!this.writeProtected) {
-      layerField.setText(activeLayerString + p_layer_name);
+      layerField.setText(activeLayerString + pLayerName);
     }
   }
 
-  public void setInteractiveAutorouteInfo(int p_found, int p_not_found, int p_items_to_go) {
-    int found = p_found;
-    int failed = p_not_found;
-    int itemsToGo = p_items_to_go;
+  public void setInteractiveAutorouteInfo(int pFound, int pNotFound, int pItemsToGo) {
+    int found = pFound;
+    int failed = pNotFound;
+    int itemsToGo = pItemsToGo;
 
     addField.setText(tm.getText("interactive_autoroute_add", String.valueOf(itemsToGo)));
     layerField.setText(
@@ -123,30 +123,30 @@ public class ScreenMessages {
         tm.getText("batch_autoroute_layer", String.valueOf(ripped), String.valueOf(failed)));
   }
 
-  public void setPostRouteInfo(int p_via_count, double p_trace_length, Unit unit) {
-    int viaCount = p_via_count;
+  public void setPostRouteInfo(int pViaCount, double pTraceLength, Unit unit) {
+    int viaCount = pViaCount;
     addField.setText(tm.getText("post_route_add", String.valueOf(viaCount)));
     layerField.setText(
-        tm.getText("post_route_layer", this.numberFormat.format(p_trace_length), unit.toString()));
+        tm.getText("post_route_layer", this.numberFormat.format(pTraceLength), unit.toString()));
   }
 
   /** Sets the displayed layer of the nearest target item in interactive routing. */
-  public void setTargetLayer(String p_layer_name) {
-    if (!(p_layer_name.equals(prevTargetLayerName) || this.writeProtected)) {
-      addField.setText(targetLayerString + p_layer_name);
-      prevTargetLayerName = p_layer_name;
+  public void setTargetLayer(String pLayerName) {
+    if (!(pLayerName.equals(prevTargetLayerName) || this.writeProtected)) {
+      addField.setText(targetLayerString + pLayerName);
+      prevTargetLayerName = pLayerName;
     }
   }
 
-  public void setMousePosition(FloatPoint p_pos) {
-    if (p_pos == null || this.mousePosition == null || this.writeProtected) {
+  public void setMousePosition(FloatPoint pPos) {
+    if (pPos == null || this.mousePosition == null || this.writeProtected) {
       return;
     }
-    this.mousePosition.setText(p_pos.toString(this.tm.getLocale(), 2, 10));
+    this.mousePosition.setText(pPos.toString(this.tm.getLocale(), 2, 10));
   }
 
-  public void setUnitLabel(String p_unit) {
-    this.unitLabel.setText(p_unit);
+  public void setUnitLabel(String pUnit) {
+    this.unitLabel.setText(pUnit);
   }
 
   /**
@@ -171,16 +171,16 @@ public class ScreenMessages {
   }
 
   /** As long as writeProtected is set to true, the set functions in this class will do nothing. */
-  public void setWriteProtected(boolean p_value) {
-    writeProtected = p_value;
+  public void setWriteProtected(boolean pValue) {
+    writeProtected = pValue;
   }
 
-  public void setBoardScore(float score, int unrouted_count, int violationCount) {
+  public void setBoardScore(float score, int unroutedCount, int violationCount) {
     scoreField.setText(
         tm.getText(
             "score",
             FRLogger.defaultFloatFormat.format(score),
-            String.valueOf(unrouted_count),
+            String.valueOf(unroutedCount),
             String.valueOf(violationCount)));
   }
 }

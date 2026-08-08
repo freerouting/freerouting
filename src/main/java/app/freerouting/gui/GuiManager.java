@@ -217,18 +217,18 @@ public class GuiManager {
       if ((globalSettings.initialInputFile != null) && (globalSettings.initialOutputFile != null)) {
         // Add a model dialog with timeout to confirm the autorouter start with the
         // default settings
-        final String START_NOW_TEXT = tm.getText("auto_start_routing_startnow_button");
+        final String startNowText = tm.getText("auto_start_routing_startnow_button");
         JButton startNowButton =
             new JButton(
-                START_NOW_TEXT + " (" + globalSettings.guiSettings.dialogConfirmationTimeout + ")");
+                startNowText + " (" + globalSettings.guiSettings.dialogConfirmationTimeout + ")");
 
-        final String CANCEL_TEXT = tm.getText("auto_start_routing_cancel_button");
-        Object[] options = {startNowButton, CANCEL_TEXT};
+        final String cancelText = tm.getText("auto_start_routing_cancel_button");
+        Object[] options = {startNowButton, cancelText};
 
-        final String AUTOSTART_MSG = tm.getText("auto_start_routing_message");
+        final String autostartMsg = tm.getText("auto_start_routing_message");
         JOptionPane autoStartRoutingDialog =
             new JOptionPane(
-                AUTOSTART_MSG,
+                autostartMsg,
                 JOptionPane.WARNING_MESSAGE,
                 JOptionPane.OK_CANCEL_OPTION,
                 null,
@@ -241,11 +241,11 @@ public class GuiManager {
                 FRAnalytics.buttonClicked(
                     "auto_start_routing_dialog_start", startNowButton.getText()));
 
-        final String AUTOSTART_TITLE = tm.getText("auto_start_routing_title");
+        final String autostartTitle = tm.getText("auto_start_routing_title");
 
         if (globalSettings.guiSettings.dialogConfirmationTimeout > 0) {
           // Add a timer to the dialog
-          JDialog autostartDialog = autoStartRoutingDialog.createDialog(AUTOSTART_TITLE);
+          JDialog autostartDialog = autoStartRoutingDialog.createDialog(autostartTitle);
 
           // Update startNowButton text every second
           Timer autostartTimer =
@@ -257,7 +257,7 @@ public class GuiManager {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                       if (--secondsLeft > 0) {
-                        startNowButton.setText(START_NOW_TEXT + " (" + secondsLeft + ")");
+                        startNowButton.setText(startNowText + " (" + secondsLeft + ")");
                       } else {
                         autoStartRoutingDialog.setValue(options[0]);
                         FRAnalytics.buttonClicked(
@@ -327,7 +327,7 @@ public class GuiManager {
    */
   private static BoardFrame createBoardFrame(
       RoutingJob routingJob,
-      JTextField p_message_field,
+      JTextField pMessageField,
       GlobalSettings globalSettings,
       SettingsMerger settingsMerger) {
     TextManager tm = new TextManager(GuiManager.class, globalSettings.currentLocale);
@@ -343,8 +343,8 @@ public class GuiManager {
     } else {
       inputStream = routingJob.input.getData();
       if (inputStream == null) {
-        if (p_message_field != null) {
-          p_message_field.setText(
+        if (pMessageField != null) {
+          pMessageField.setText(
               tm.getText(
                   "error_design_file_read_failed_with_file", routingJob.input.getFilename()));
         }
@@ -354,8 +354,7 @@ public class GuiManager {
 
     BoardFrame newFrame = new BoardFrame(routingJob, globalSettings, settingsMerger);
 
-    boolean readOk =
-        newFrame.load(inputStream, routingJob.input.format, p_message_field, routingJob);
+    boolean readOk = newFrame.load(inputStream, routingJob.input.format, pMessageField, routingJob);
     if (!readOk) {
       return null;
     }
@@ -463,24 +462,21 @@ public class GuiManager {
   }
 
   private static boolean readRulesFile(
-      String p_design_name,
-      String p_parent_name,
+      String pDesignName,
+      String pParentName,
       String rulesFileName,
-      GuiBoardManager p_board_handling,
-      String p_confirm_message) {
+      GuiBoardManager pBoardHandling,
+      String pConfirmMessage) {
 
     boolean dsnFileGeneratedByHost =
-        p_board_handling.getRoutingBoard()
-            .communication
-            .specctraParserInfo
-            .dsnFileGeneratedByHost;
+        pBoardHandling.getRoutingBoard().communication.specctraParserInfo.dsnFileGeneratedByHost;
 
     try {
-      File rulesFile = new File(p_parent_name, rulesFileName);
+      File rulesFile = new File(pParentName, rulesFileName);
       FRLogger.info("Opening '" + rulesFileName + "'...");
       try (InputStream inputStream = new FileInputStream(rulesFile)) {
-        if (dsnFileGeneratedByHost && WindowMessage.confirm(p_confirm_message)) {
-          return RulesReader.read(inputStream, p_design_name, p_board_handling.getRoutingBoard());
+        if (dsnFileGeneratedByHost && WindowMessage.confirm(pConfirmMessage)) {
+          return RulesReader.read(inputStream, pDesignName, pBoardHandling.getRoutingBoard());
         }
       }
     } catch (IOException e) {

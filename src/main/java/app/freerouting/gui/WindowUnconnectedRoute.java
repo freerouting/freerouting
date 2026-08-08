@@ -19,11 +19,11 @@ public class WindowUnconnectedRoute extends CleanupWindows {
   private int maxUnconnectedRouteInfoIdNo;
 
   /** Creates a new instance of WindowUnconnectedRoute */
-  public WindowUnconnectedRoute(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  public WindowUnconnectedRoute(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
+    setLanguage(pBoardFrame.get_locale());
 
-    this.tm = new TextManager(CleanupWindows.class, p_board_frame.get_locale());
+    this.tm = new TextManager(CleanupWindows.class, pBoardFrame.get_locale());
 
     this.setTitle(tm.getText("unconnected_route"));
     this.listEmptyMessage.setText(tm.getText("no_unconnected_route_found"));
@@ -47,9 +47,9 @@ public class WindowUnconnectedRoute extends CleanupWindows {
       }
       Collection<Item> currConnectedSet = currItem.getConnectedSet(-1);
       boolean terminalItemFound = false;
-      for (Item curr_connnected_item : currConnectedSet) {
-        handledItems.add(curr_connnected_item);
-        if (!(curr_connnected_item instanceof Trace || curr_connnected_item instanceof Via)) {
+      for (Item currConnnectedItem : currConnectedSet) {
+        handledItems.add(currConnnectedItem);
+        if (!(currConnnectedItem instanceof Trace || currConnnectedItem instanceof Via)) {
           terminalItemFound = true;
         }
       }
@@ -98,14 +98,14 @@ public class WindowUnconnectedRoute extends CleanupWindows {
     private final Integer traceCount;
     private final Integer viaCount;
 
-    public UnconnectedRouteInfo(Net p_net, Collection<Item> p_item_list) {
-      this.net = p_net;
-      this.itemList = p_item_list;
+    public UnconnectedRouteInfo(Net pNet, Collection<Item> pItemList) {
+      this.net = pNet;
+      this.itemList = pItemList;
       ++maxUnconnectedRouteInfoIdNo;
       this.idNo = maxUnconnectedRouteInfoIdNo;
       int currTraceCount = 0;
       int currViaCount = 0;
-      for (Item currItem : p_item_list) {
+      for (Item currItem : pItemList) {
         if (currItem instanceof Trace) {
           ++currTraceCount;
         } else if (currItem instanceof Via) {
@@ -126,10 +126,10 @@ public class WindowUnconnectedRoute extends CleanupWindows {
     }
 
     @Override
-    public int compareTo(UnconnectedRouteInfo p_other) {
-      int result = this.net.name.compareTo(p_other.net.name);
+    public int compareTo(UnconnectedRouteInfo pOther) {
+      int result = this.net.name.compareTo(pOther.net.name);
       if (result == 0) {
-        result = this.idNo - p_other.idNo;
+        result = this.idNo - pOther.idNo;
       }
       return result;
     }

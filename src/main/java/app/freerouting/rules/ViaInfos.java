@@ -19,11 +19,11 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
    * Adds a via info consisting of padstack, clearance class and drill_to_smd_allowed. Return false,
    * if the insertion failed, for example if the name existed already.
    */
-  public boolean add(ViaInfo p_via_info) {
-    if (nameExists(p_via_info.getName())) {
+  public boolean add(ViaInfo pViaInfo) {
+    if (nameExists(pViaInfo.getName())) {
       return false;
     }
-    this.list.add(p_via_info);
+    this.list.add(pViaInfo);
     return true;
   }
 
@@ -33,15 +33,15 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Returns the p_no-th via af the via types, which can be used for routing. */
-  public ViaInfo get(int p_no) {
-    assert p_no >= 0 && p_no < this.list.size();
-    return this.list.get(p_no);
+  public ViaInfo get(int pNo) {
+    assert pNo >= 0 && pNo < this.list.size();
+    return this.list.get(pNo);
   }
 
   /** Returns the via info with name p_name, or null, if no such via exists. */
-  public ViaInfo get(String p_name) {
+  public ViaInfo get(String pName) {
     for (ViaInfo currVia : this.list) {
-      if (currVia.getName().equals(p_name)) {
+      if (currVia.getName().equals(pName)) {
         return currVia;
       }
     }
@@ -49,9 +49,9 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Returns true, if a via info with name p_name is already wyisting in the list. */
-  public boolean nameExists(String p_name) {
+  public boolean nameExists(String pName) {
     for (ViaInfo currVia : this.list) {
-      if (currVia.getName().equals(p_name)) {
+      if (currVia.getName().equals(pName)) {
         return true;
       }
     }
@@ -61,15 +61,15 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
   /**
    * Removes p_via_info from this list. Returns false, if p_via_info was not contained in the list.
    */
-  public boolean remove(ViaInfo p_via_info) {
-    return this.list.remove(p_via_info);
+  public boolean remove(ViaInfo pViaInfo) {
+    return this.list.remove(pViaInfo);
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
-    p_window.appendBold(tm.getText("vias") + ": ");
+    pWindow.appendBold(tm.getText("vias") + ": ");
     int counter = 0;
     boolean firstTime = true;
     final int maxViasPerRow = 5;
@@ -77,13 +77,13 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
       if (firstTime) {
         firstTime = false;
       } else {
-        p_window.append(", ");
+        pWindow.append(", ");
       }
       if (counter == 0) {
-        p_window.newline();
-        p_window.indent();
+        pWindow.newline();
+        pWindow.indent();
       }
-      p_window.append(currVia.getName(), tm.getText("viaInfo"), currVia);
+      pWindow.append(currVia.getName(), tm.getText("viaInfo"), currVia);
       counter = (counter + 1) % maxViasPerRow;
     }
   }

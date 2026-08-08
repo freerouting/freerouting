@@ -120,8 +120,8 @@ public class Keyword {
   private final String name;
 
   /** prevents creating more instances */
-  protected Keyword(String p_name) {
-    name = p_name;
+  protected Keyword(String pName) {
+    name = pName;
   }
 
   /** Returns the name string of this Keyword. The name is used for debugging purposes. */

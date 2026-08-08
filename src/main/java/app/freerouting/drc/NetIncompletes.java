@@ -50,26 +50,26 @@ public class NetIncompletes {
    * Creates a new instance of NetIncompletes. Calculates the incomplete connections (ratsnest) for
    * the given net items.
    *
-   * @param p_net_no The net number.
-   * @param p_net_items The collection of items belonging to this net.
-   * @param p_board The board context.
+   * @param pNetNo The net number.
+   * @param pNetItems The collection of items belonging to this net.
+   * @param pBoard The board context.
    */
-  public NetIncompletes(int p_net_no, Collection<Item> p_net_items, BasicBoard p_board) {
-    this.drawMarkerRadius = p_board.rules.getMinTraceHalfWidth() * 2;
+  public NetIncompletes(int pNetNo, Collection<Item> pNetItems, BasicBoard pBoard) {
+    this.drawMarkerRadius = pBoard.rules.getMinTraceHalfWidth() * 2;
     this.incompletes = new LinkedList<>();
-    this.net = p_board.rules.nets.get(p_net_no);
+    this.net = pBoard.rules.nets.get(pNetNo);
 
-    String netLabel = "Net #" + p_net_no + (net != null ? " (" + net.name + ")" : "");
+    String netLabel = "Net #" + pNetNo + (net != null ? " (" + net.name + ")" : "");
 
     FRLogger.trace(
         "NetIncompletes.<init>",
         "start_calculation",
         "Starting incomplete calculation: net="
-            + p_net_no
+            + pNetNo
             + ", name="
             + (net != null ? net.name : "null")
             + ", total_items_in_collection="
-            + p_net_items.size(),
+            + pNetItems.size(),
         netLabel,
         new Point[0]);
 
@@ -82,7 +82,7 @@ public class NetIncompletes {
     int unconnectedCount = 0;
     int conductionAreaCount = 0;
     int conductionAreaFilteredCount = 0;
-    for (Item item : p_net_items) {
+    for (Item item : pNetItems) {
       // Track ConductionArea items
       if (item instanceof ConductionArea) {
         conductionAreaCount++;
@@ -135,8 +135,8 @@ public class NetIncompletes {
     NetItem[] netItems = calculateNetItems(filteredItems);
 
     Set<Collection<Item>> uniqueConnectedSets = new HashSet<>();
-    for (NetItem net_item : netItems) {
-      uniqueConnectedSets.add(net_item.connectedSet);
+    for (NetItem netItem : netItems) {
+      uniqueConnectedSets.add(netItem.connectedSet);
     }
     this.connectedGroupCount = uniqueConnectedSets.size();
 
@@ -187,7 +187,7 @@ public class NetIncompletes {
     // the same
     // connected set
     // or whose connected sets have already an airline.
-    Net currNet = p_board.rules.nets.get(p_net_no);
+    Net currNet = pBoard.rules.nets.get(pNetNo);
     for (Edge currEdge : sortedEdges) {
       if (currEdge.fromItem.connectedSet == currEdge.toItem.connectedSet) {
         continue; // airline exists already
@@ -209,7 +209,7 @@ public class NetIncompletes {
         "Airlines created: incompleteCount="
             + this.incompletes.size()
             + ", total_items="
-            + p_net_items.size()
+            + pNetItems.size()
             + ", filteredItems="
             + filteredItems.size()
             + ", netItems="
@@ -217,7 +217,7 @@ public class NetIncompletes {
             + ", connected_groups="
             + uniqueConnectedSets.size()
             + " => Formula: total_items - incompleteCount = "
-            + (p_net_items.size() - this.incompletes.size()),
+            + (pNetItems.size() - this.incompletes.size()),
         netLabel,
         new Point[0]);
 
@@ -286,12 +286,12 @@ public class NetIncompletes {
    * Calculates an array of Item-connectedSet pairs for the items of this net. Groups items that are
    * physically connected into the same connected set.
    *
-   * @param p_item_list The list of items to group.
+   * @param pItemList The list of items to group.
    * @return An array of NetItem objects representing the grouped items.
    */
-  private NetItem[] calculateNetItems(Collection<Item> p_item_list) {
+  private NetItem[] calculateNetItems(Collection<Item> pItemList) {
     ArrayList<NetItem> result = new ArrayList<>();
-    Set<Item> uniqueItems = new HashSet<>(p_item_list);
+    Set<Item> uniqueItems = new HashSet<>(pItemList);
     int uniqueItemsCount = uniqueItems.size();
 
     while (!uniqueItems.isEmpty()) {
@@ -300,9 +300,9 @@ public class NetIncompletes {
 
       // Prevent ConcurrentModificationException by creating a list of items to remove
       Collection<Item> itemsInComponent = new ArrayList<>();
-      for (Item item_in_set : currConnectedSet) {
-        if (uniqueItems.contains(item_in_set)) {
-          itemsInComponent.add(item_in_set);
+      for (Item itemInSet : currConnectedSet) {
+        if (uniqueItems.contains(itemInSet)) {
+          itemsInComponent.add(itemInSet);
         }
       }
 
@@ -325,14 +325,12 @@ public class NetIncompletes {
    * p_net_items. Used during Kruskal's algorithm to merge sets.
    */
   private void joinConnectedSets(
-      NetItem[] p_net_items,
-      Collection<Item> p_from_connected_set,
-      Collection<Item> p_to_connected_set) {
-    for (int i = 0; i < p_net_items.length; i++) {
-      NetItem currItem = p_net_items[i];
-      if (currItem.connectedSet == p_from_connected_set) {
-        p_to_connected_set.add(currItem.item);
-        currItem.connectedSet = p_to_connected_set;
+      NetItem[] pNetItems, Collection<Item> pFromConnectedSet, Collection<Item> pToConnectedSet) {
+    for (int i = 0; i < pNetItems.length; i++) {
+      NetItem currItem = pNetItems[i];
+      if (currItem.connectedSet == pFromConnectedSet) {
+        pToConnectedSet.add(currItem.item);
+        currItem.connectedSet = pToConnectedSet;
       }
     }
   }
@@ -350,31 +348,30 @@ public class NetIncompletes {
     public final FloatPoint toCorner;
     public final double lengthSquare;
 
-    private Edge(
-        NetItem p_from_item, FloatPoint p_from_corner, NetItem p_to_item, FloatPoint p_to_corner) {
-      fromItem = p_from_item;
-      fromCorner = p_from_corner;
-      toItem = p_to_item;
-      toCorner = p_to_corner;
-      lengthSquare = p_to_corner.distanceSquare(p_from_corner);
+    private Edge(NetItem pFromItem, FloatPoint pFromCorner, NetItem pToItem, FloatPoint pToCorner) {
+      fromItem = pFromItem;
+      fromCorner = pFromCorner;
+      toItem = pToItem;
+      toCorner = pToCorner;
+      lengthSquare = pToCorner.distanceSquare(pFromCorner);
     }
 
     @Override
-    public int compareTo(Edge p_other) {
-      double result = this.lengthSquare - p_other.lengthSquare;
+    public int compareTo(Edge pOther) {
+      double result = this.lengthSquare - pOther.lengthSquare;
       if (result == 0) {
         // prevent result 0, so that edges with the same length as another edge are not
         // skipped in
         // the set
-        result = this.fromCorner.x - p_other.fromCorner.x;
+        result = this.fromCorner.x - pOther.fromCorner.x;
         if (result == 0) {
-          result = this.fromCorner.y - p_other.fromCorner.y;
+          result = this.fromCorner.y - pOther.fromCorner.y;
         }
         if (result == 0) {
-          result = this.toCorner.x - p_other.toCorner.x;
+          result = this.toCorner.x - pOther.toCorner.x;
         }
         if (result == 0) {
-          result = this.toCorner.y - p_other.toCorner.y;
+          result = this.toCorner.y - pOther.toCorner.y;
         }
       }
       return Signum.asInt(result);
@@ -387,9 +384,9 @@ public class NetIncompletes {
     final Item item;
     Collection<Item> connectedSet;
 
-    NetItem(Item p_item, Collection<Item> p_connected_set) {
-      item = p_item;
-      connectedSet = p_connected_set;
+    NetItem(Item pItem, Collection<Item> pConnectedSet) {
+      item = pItem;
+      connectedSet = pConnectedSet;
     }
 
     @Override

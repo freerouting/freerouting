@@ -30,10 +30,10 @@ class DrillPage implements ExpandableObject {
   private int netNo = -1;
 
   /** Creates a new instance of DrillPage */
-  public DrillPage(IntBox p_shape, RoutingBoard p_board) {
-    shape = p_shape;
-    board = p_board;
-    mazeSearchInfoArr = new MazeSearchElement[p_board.getLayerCount()];
+  public DrillPage(IntBox pShape, RoutingBoard pBoard) {
+    shape = pShape;
+    board = pBoard;
+    mazeSearchInfoArr = new MazeSearchElement[pBoard.getLayerCount()];
     for (int i = 0; i < mazeSearchInfoArr.length; i++) {
       mazeSearchInfoArr[i] = new MazeSearchElement();
     }
@@ -44,12 +44,12 @@ class DrillPage implements ExpandableObject {
    * such Pin was found.
    */
   private static Point calcPinCenterInDrill(
-      TileShape p_drill_shape, int p_layer, RoutingBoard p_board) {
-    Collection<Item> overlappingItems = p_board.overlappingItems(p_drill_shape, p_layer);
+      TileShape pDrillShape, int pLayer, RoutingBoard pBoard) {
+    Collection<Item> overlappingItems = pBoard.overlappingItems(pDrillShape, pLayer);
     Point result = null;
     for (Item currItem : overlappingItems) {
       if (currItem instanceof Pin currPin) {
-        if (currPin.drillAllowed() && p_drill_shape.containsInside(currPin.getCenter())) {
+        if (currPin.drillAllowed() && pDrillShape.containsInside(currPin.getCenter())) {
           result = currPin.getCenter();
         }
       }
@@ -59,11 +59,11 @@ class DrillPage implements ExpandableObject {
 
   /** Returns the drills on this page. If p_attach_smd, drilling to smd pins is allowed. */
   public Collection<ExpansionDrill> getDrills(
-      AutorouteEngine p_autoroute_engine, boolean p_attach_smd) {
-    if (this.drills == null || p_autoroute_engine.getNetNo() != this.netNo) {
-      this.netNo = p_autoroute_engine.getNetNo();
+      AutorouteEngine pAutorouteEngine, boolean pAttachSmd) {
+    if (this.drills == null || pAutorouteEngine.getNetNo() != this.netNo) {
+      this.netNo = pAutorouteEngine.getNetNo();
       this.drills = new LinkedList<>();
-      ShapeSearchTree searchTree = p_autoroute_engine.autorouteSearchTree;
+      ShapeSearchTree searchTree = pAutorouteEngine.autorouteSearchTree;
       Collection<TreeEntry> overlaps = new LinkedList<>();
       searchTree.overlappingTreeEntries(this.shape, -1, overlaps);
       Collection<TileShape> cutoutShapes = new LinkedList<>();
@@ -77,7 +77,7 @@ class DrillPage implements ExpandableObject {
           continue;
         }
         if (currItem instanceof Pin pin) {
-          if (p_attach_smd && pin.drillAllowed()) {
+          if (pAttachSmd && pin.drillAllowed()) {
             continue;
           }
         }
@@ -99,7 +99,7 @@ class DrillPage implements ExpandableObject {
         holes[i] = it.next();
       }
       PolylineArea shapeWithHoles = new PolylineArea(this.shape, holes);
-      TileShape[] drillShapes = shapeWithHoles.splitToConvex(p_autoroute_engine.stoppableThread);
+      TileShape[] drillShapes = shapeWithHoles.splitToConvex(pAutorouteEngine.stoppableThread);
 
       // Use the center points of these drill shapes to try making a via.
       int drillFirstLayer = 0;
@@ -107,12 +107,12 @@ class DrillPage implements ExpandableObject {
       for (int i = 0; i < drillShapes.length; i++) {
         TileShape currDrillShape = drillShapes[i];
         Point currDrillLocation = null;
-        if (p_attach_smd) {
+        if (pAttachSmd) {
           currDrillLocation =
-              calcPinCenterInDrill(currDrillShape, drillFirstLayer, p_autoroute_engine.board);
+              calcPinCenterInDrill(currDrillShape, drillFirstLayer, pAutorouteEngine.board);
           if (currDrillLocation == null) {
             currDrillLocation =
-                calcPinCenterInDrill(currDrillShape, drillLastLayer, p_autoroute_engine.board);
+                calcPinCenterInDrill(currDrillShape, drillLastLayer, pAutorouteEngine.board);
           }
         }
         if (currDrillLocation == null) {
@@ -120,7 +120,7 @@ class DrillPage implements ExpandableObject {
         }
         ExpansionDrill newDrill =
             new ExpansionDrill(currDrillShape, currDrillLocation, drillFirstLayer, drillLastLayer);
-        if (newDrill.calculateExpansionRooms(p_autoroute_engine)) {
+        if (newDrill.calculateExpansionRooms(pAutorouteEngine)) {
           this.drills.add(newDrill);
         }
       }
@@ -144,8 +144,8 @@ class DrillPage implements ExpandableObject {
   }
 
   @Override
-  public MazeSearchElement getMazeSearchElement(int p_no) {
-    return this.mazeSearchInfoArr[p_no];
+  public MazeSearchElement getMazeSearchElement(int pNo) {
+    return this.mazeSearchInfoArr[pNo];
   }
 
   /** Resets all drills of this page for autorouting the next connection. */
@@ -172,17 +172,17 @@ class DrillPage implements ExpandableObject {
   /*
    * Test draw of the drills on this page.
    */
-  public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity) {
+  public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext, double pIntensity) {
     if (true) {
       return;
     }
     for (ExpansionDrill currDrill : drills) {
-      currDrill.draw(p_graphics, p_graphics_context, p_intensity);
+      currDrill.draw(pGraphics, pGraphicsContext, pIntensity);
     }
   }
 
   @Override
-  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom p_room) {
+  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom pRoom) {
     return null;
   }
 

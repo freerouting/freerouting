@@ -11,18 +11,18 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
   private final PopupMenuChangeLayer changeLayerMenu;
 
   /** Creates a new instance of PopupMenuStitchRoute */
-  public PopupMenuStitchRoute(BoardFrame p_board_frame) {
-    super(p_board_frame);
+  public PopupMenuStitchRoute(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
     LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
 
     if (layerStructure.arr.length > 0) {
-      changeLayerMenu = new PopupMenuChangeLayer(p_board_frame);
+      changeLayerMenu = new PopupMenuChangeLayer(pBoardFrame);
       this.add(changeLayerMenu, 0);
     } else {
       changeLayerMenu = null;
     }
 
-    TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
 
     JMenuItem popupInsertMenuitem = new JMenuItem();
     popupInsertMenuitem.setText(tm.getText("insert"));
@@ -55,9 +55,9 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
   }
 
   /** Disables the p_no-th item in the changeLayerMenu. */
-  void disableLayerItem(int p_no) {
+  void disableLayerItem(int pNo) {
     if (this.changeLayerMenu != null) {
-      this.changeLayerMenu.disableItem(p_no);
+      this.changeLayerMenu.disableItem(pNo);
     }
   }
 }

@@ -76,11 +76,11 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private boolean keyInputCompleted = true;
 
   /** Creates a new instance of RouteParameterWindow */
-  public WindowRouteParameter(BoardFrame p_board_frame) {
-    this.guiBoardManager = p_board_frame.boardPanel.boardHandling;
-    this.manualRuleWindow = new WindowManualRules(p_board_frame);
+  public WindowRouteParameter(BoardFrame pBoardFrame) {
+    this.guiBoardManager = pBoardFrame.boardPanel.boardHandling;
+    this.manualRuleWindow = new WindowManualRules(pBoardFrame);
 
-    setLanguage(p_board_frame.get_locale());
+    setLanguage(pBoardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
@@ -316,7 +316,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(pinExitEdgeToTurnLabel, gridbagConstraints);
     mainPanel.add(pinExitEdgeToTurnLabel);
 
-    NumberFormat numberFormat = NumberFormat.getNumberInstance(p_board_frame.get_locale());
+    NumberFormat numberFormat = NumberFormat.getNumberInstance(pBoardFrame.get_locale());
     numberFormat.setMaximumFractionDigits(3);
     numberFormat.setGroupingUsed(false);
     this.edgeToTurnDistField = new JFormattedTextField(numberFormat);
@@ -345,7 +345,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     mainPanel.add(pullTightRegionLabel);
     gridbagConstraints.insets = new Insets(1, 10, 1, 10);
 
-    NumberFormat userUnitFormat = NumberFormat.getNumberInstance(p_board_frame.get_locale());
+    NumberFormat userUnitFormat = NumberFormat.getNumberInstance(pBoardFrame.get_locale());
     userUnitFormat.setMaximumFractionDigits(3);
     userUnitFormat.setGroupingUsed(false);
 
@@ -390,7 +390,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(clearanceCompensationCheckBox, gridbagConstraints);
     mainPanel.add(clearanceCompensationCheckBox, gridbagConstraints);
 
-    NumberFormat compFormat = NumberFormat.getNumberInstance(p_board_frame.get_locale());
+    NumberFormat compFormat = NumberFormat.getNumberInstance(pBoardFrame.get_locale());
     compFormat.setMaximumFractionDigits(3);
     compFormat.setGroupingUsed(false);
 
@@ -497,12 +497,12 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   @Override
-  public boolean read(ObjectInputStream p_object_stream) {
-    boolean readOk = super.read(p_object_stream);
+  public boolean read(ObjectInputStream pObjectStream) {
+    boolean readOk = super.read(pObjectStream);
     if (!readOk) {
       return false;
     }
-    readOk = manualRuleWindow.read(p_object_stream);
+    readOk = manualRuleWindow.read(pObjectStream);
     if (!readOk) {
       return false;
     }
@@ -512,9 +512,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   @Override
-  public void save(ObjectOutputStream p_object_stream) {
-    super.save(p_object_stream);
-    manualRuleWindow.save(p_object_stream);
+  public void save(ObjectOutputStream pObjectStream) {
+    super.save(pObjectStream);
+    manualRuleWindow.save(pObjectStream);
   }
 
   @Override
@@ -560,8 +560,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       this.settingsRoutingNeckdownCheckBox.setSelected(
           this.guiBoardManager.getInteractiveSettings().getAutomaticNeckdown());
 
-      double edgeToTurnDist =
-          this.guiBoardManager.getRoutingBoard().rules.getPinEdgeToTurnDist();
+      double edgeToTurnDist = this.guiBoardManager.getRoutingBoard().rules.getPinEdgeToTurnDist();
       this.edgeToTurnDistField.setValue(
           this.guiBoardManager.coordinateTransform.boardToUser(edgeToTurnDist));
       this.settingsRoutingRestrictPinExitDirectionsCheckBox.setSelected(edgeToTurnDist > 0);
@@ -584,15 +583,11 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       this.regionSuffixLabel.setText(this.guiBoardManager.coordinateTransform.userUnit.toString());
 
       boolean compUsed =
-          this.guiBoardManager
-              .getRoutingBoard()
-              .searchTreeManager
-              .isClearanceCompensationUsed();
+          this.guiBoardManager.getRoutingBoard().searchTreeManager.isClearanceCompensationUsed();
       this.clearanceCompensationCheckBox.setSelected(compUsed);
       int clearanceClass =
           Math.min(
-              1,
-              this.guiBoardManager.getRoutingBoard().rules.clearanceMatrix.getClassCount() - 1);
+              1, this.guiBoardManager.getRoutingBoard().rules.clearanceMatrix.getClassCount() - 1);
       double compensation = 0;
       if (clearanceClass >= 1) {
         int layer = this.guiBoardManager.getInteractiveSettings().getLayer();
@@ -645,8 +640,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     super.parentDeiconified();
   }
 
-  private void setPullTightRegionWidth(int p_slider_value) {
-    int sliderValue = Math.max(p_slider_value, 0);
+  private void setPullTightRegionWidth(int pSliderValue) {
+    int sliderValue = Math.max(pSliderValue, 0);
     sliderValue = Math.min(sliderValue, c_region_max_slider_value);
     int newTidyWidth;
     if (sliderValue >= c_region_max_slider_value) {
@@ -661,13 +656,11 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   private void updateDynamicTooltips() {
-    double edgeToTurnDist =
-        this.guiBoardManager.getRoutingBoard().rules.getPinEdgeToTurnDist();
+    double edgeToTurnDist = this.guiBoardManager.getRoutingBoard().rules.getPinEdgeToTurnDist();
     this.edgeToTurnDistField.setToolTipText(
         tm.getText("pin_pad_to_turn_gap_tooltip_current", formatUserDistance(edgeToTurnDist)));
 
-    int regionWidth =
-        this.guiBoardManager.getInteractiveSettings().getTracePullTightRegionWidth();
+    int regionWidth = this.guiBoardManager.getInteractiveSettings().getTracePullTightRegionWidth();
     String regionTooltip;
     if (regionWidth >= Integer.MAX_VALUE) {
       regionTooltip = tm.getText("pull_tight_region_tooltip_whole_board");
@@ -689,8 +682,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     int clearanceClass =
         Math.min(
-            1,
-            this.guiBoardManager.getRoutingBoard().rules.clearanceMatrix.getClassCount() - 1);
+            1, this.guiBoardManager.getRoutingBoard().rules.clearanceMatrix.getClassCount() - 1);
     double compensation = 0;
     if (clearanceClass >= 1) {
       int layer = this.guiBoardManager.getInteractiveSettings().getLayer();
@@ -754,8 +746,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
    * verify the stitch route behavior.
    */
   public static void applyStitchRouteSelection(
-      InteractiveSettings p_interactive_settings, boolean p_value) {
-    p_interactive_settings.setStitchRoute(p_value);
+      InteractiveSettings pInteractiveSettings, boolean pValue) {
+    pInteractiveSettings.setStitchRoute(pValue);
   }
 
   /**
@@ -763,17 +755,16 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
    * verify the push and shove behavior.
    */
   public static void applyPushAndShoveSelection(
-      InteractiveSettings p_interactive_settings, boolean p_value) {
-    p_interactive_settings.setPushEnabled(p_value);
+      InteractiveSettings pInteractiveSettings, boolean pValue) {
+    pInteractiveSettings.setPushEnabled(pValue);
   }
 
   /**
    * Applies the ignore conduction selection to the given board manager. Used by unit tests to
    * verify the ignore conduction behavior.
    */
-  public static void applyIgnoreConductionSelection(
-      GuiBoardManager p_board_manager, boolean p_value) {
-    p_board_manager.setIgnoreConduction(p_value);
+  public static void applyIgnoreConductionSelection(GuiBoardManager pBoardManager, boolean pValue) {
+    pBoardManager.setIgnoreConduction(pValue);
   }
 
   /**
@@ -781,23 +772,22 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
    * verify the clearance compensation behavior.
    */
   public static void applyClearanceCompensationSelection(
-      GuiBoardManager p_board_manager, boolean p_value) {
-    p_board_manager.setClearanceCompensation(p_value);
+      GuiBoardManager pBoardManager, boolean pValue) {
+    pBoardManager.setClearanceCompensation(pValue);
   }
 
   /**
    * Applies the pin exit edge to turn distance to the given board manager. Used by unit tests to
    * verify the pin exit edge to turn distance behavior.
    */
-  public static void applyPinExitEdgeToTurnDistance(
-      GuiBoardManager p_board_manager, float p_value) {
-    p_board_manager.setPinEdgeToTurnDist(p_value);
+  public static void applyPinExitEdgeToTurnDistance(GuiBoardManager pBoardManager, float pValue) {
+    pBoardManager.setPinEdgeToTurnDist(pValue);
   }
 
   private class SnapAngle90Listener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (guiBoardManager.getRoutingBoard().rules.getTraceAngleRestriction()
           == AngleRestriction.NINETY_DEGREE) {
         return;
@@ -826,7 +816,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class SnapAngle45Listener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (guiBoardManager.getRoutingBoard().rules.getTraceAngleRestriction()
           == AngleRestriction.FORTYFIVE_DEGREE) {
         return;
@@ -855,7 +845,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class SnapAngleNoneListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       guiBoardManager.setCurrentSnapAngle(AngleRestriction.NONE);
     }
   }
@@ -863,7 +853,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class DynamicRouteListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (updatingControls) {
         return;
       }
@@ -874,7 +864,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class StitchRouteListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (updatingControls) {
         return;
       }
@@ -885,7 +875,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class AutomaticTraceWidthListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       manualRuleWindow.setVisible(false);
       guiBoardManager.getInteractiveSettings().setManualTracewidthSelection(false);
     }
@@ -896,7 +886,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     boolean firstTime = true;
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (firstTime) {
         Point location = getLocation();
         manualRuleWindow.setLocation((int) location.getX() + 200, (int) location.getY() + 200);
@@ -910,7 +900,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class ShoveListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (updatingControls) {
         return;
       }
@@ -924,7 +914,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class ViaSnapToSMDCenterListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (updatingControls) {
         return;
       }
@@ -937,7 +927,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class IgnoreConductionListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (updatingControls) {
         return;
       }
@@ -948,7 +938,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class HilightObstacleListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (updatingControls) {
         return;
       }
@@ -961,7 +951,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class DragComponentListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (updatingControls) {
         return;
       }
@@ -975,7 +965,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class NeckDownListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (updatingControls) {
         return;
       }
@@ -988,15 +978,14 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class RestrictPinExitDirectionsListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (updatingControls) {
         return;
       }
       if (settingsRoutingRestrictPinExitDirectionsCheckBox.isSelected()) {
         BoardRules boardRules = guiBoardManager.getRoutingBoard().rules;
         double edgeToTurnDist =
-            guiBoardManager.coordinateTransform.boardToUser(
-                boardRules.getMinTraceHalfWidth());
+            guiBoardManager.coordinateTransform.boardToUser(boardRules.getMinTraceHalfWidth());
         guiBoardManager.setPinEdgeToTurnDist(edgeToTurnDist);
       } else {
         guiBoardManager.setPinEdgeToTurnDist(0);
@@ -1008,8 +997,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class EdgeToTurnDistFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(KeyEvent p_evt) {
-      if (p_evt.getKeyChar() == '\n') {
+    public void keyTyped(KeyEvent pEvt) {
+      if (pEvt.getKeyChar() == '\n') {
         keyInputCompleted = true;
         Object input = edgeToTurnDistField.getValue();
         if (!(input instanceof Number)) {
@@ -1028,10 +1017,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class EdgeToTurnDistFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(FocusEvent p_evt) {
+    public void focusLost(FocusEvent pEvt) {
       if (!keyInputCompleted) {
-        double edgeToTurnDist =
-            guiBoardManager.getRoutingBoard().rules.getPinEdgeToTurnDist();
+        double edgeToTurnDist = guiBoardManager.getRoutingBoard().rules.getPinEdgeToTurnDist();
         edgeToTurnDist = guiBoardManager.coordinateTransform.boardToUser(edgeToTurnDist);
         edgeToTurnDistField.setValue(edgeToTurnDist);
         keyInputCompleted = true;
@@ -1039,14 +1027,14 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {}
+    public void focusGained(FocusEvent pEvt) {}
   }
 
   private class RegionWidthFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(KeyEvent p_evt) {
-      if (p_evt.getKeyChar() == '\n') {
+    public void keyTyped(KeyEvent pEvt) {
+      if (pEvt.getKeyChar() == '\n') {
         keyInputCompleted = true;
         Object input = regionWidthField.getValue();
         if (!(input instanceof Number)) {
@@ -1065,7 +1053,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class RegionWidthFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(FocusEvent p_evt) {
+    public void focusLost(FocusEvent pEvt) {
       if (!keyInputCompleted) {
         regionWidthField.setValue(
             WindowRouteParameter.this.guiBoardManager.coordinateTransform.boardToUser(
@@ -1075,14 +1063,14 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {}
+    public void focusGained(FocusEvent pEvt) {}
   }
 
   private class AccuracyFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(KeyEvent p_evt) {
-      if (p_evt.getKeyChar() == '\n') {
+    public void keyTyped(KeyEvent pEvt) {
+      if (pEvt.getKeyChar() == '\n') {
         keyInputCompleted = true;
         Object input = accuracyValueField.getValue();
         if (!(input instanceof Number)) {
@@ -1105,7 +1093,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class AccuracyFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(FocusEvent p_evt) {
+    public void focusLost(FocusEvent pEvt) {
       if (!keyInputCompleted) {
         int accuracyBoardValue =
             (c_accuracy_max_slider_value - accuracySlider.getValue() + 1) * c_accuracy_scale_factor;
@@ -1116,7 +1104,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {}
+    public void focusGained(FocusEvent pEvt) {}
   }
 
   private class SliderChangeListener implements ChangeListener {
@@ -1136,7 +1124,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class CompensationCheckboxListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (updatingControls) {
         return;
       }
@@ -1162,7 +1150,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class OutLineKeepoutListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (guiBoardManager.isBoardReadOnly()) {
         return;
       }

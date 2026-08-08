@@ -65,9 +65,7 @@ public final class RulesReader {
       currToken = scanner.nextToken();
       if (currToken != Keyword.RULES) {
         FRLogger.warn(
-            "RulesReader.read: keyword 'rules' expected at '"
-                + scanner.getScopeIdentifier()
-                + "'");
+            "RulesReader.read: keyword 'rules' expected at '" + scanner.getScopeIdentifier() + "'");
         return false;
       }
       currToken = scanner.nextToken();
@@ -105,9 +103,7 @@ public final class RulesReader {
         }
         if (nextToken == null) {
           FRLogger.warn(
-              "RulesReader.read: unexpected end of file at '"
-                  + scanner.getScopeIdentifier()
-                  + "'");
+              "RulesReader.read: unexpected end of file at '" + scanner.getScopeIdentifier() + "'");
           return false;
         }
         if (nextToken == Keyword.CLOSED_BRACKET) {
@@ -166,8 +162,7 @@ public final class RulesReader {
     String stringQuote = board.communication.specctraParserInfo.stringQuote;
     for (Rule rule : rules) {
       if (rule instanceof Rule.WidthRule widthRule) {
-        int traceHalfwidth =
-            (int) Math.round(coordinateTransform.dsnToBoard(widthRule.value) / 2);
+        int traceHalfwidth = (int) Math.round(coordinateTransform.dsnToBoard(widthRule.value) / 2);
         if (layerNo < 0) {
           board.rules.setDefaultTraceHalfWidths(traceHalfwidth);
         } else {

@@ -16,17 +16,17 @@ public enum Unit implements Serializable {
   }
 
   /** Scales p_value from p_from_unit to p_to_unit */
-  public static double scale(double p_value, Unit p_from_unit, Unit p_to_unit) {
-    return p_value * p_from_unit.micrometers / p_to_unit.micrometers;
+  public static double scale(double pValue, Unit pFromUnit, Unit pToUnit) {
+    return pValue * pFromUnit.micrometers / pToUnit.micrometers;
   }
 
   /**
    * Return the unit corresponding to the input string, or null, if the input string is different
    * from mil, inch and mm.
    */
-  public static Unit fromString(String p_string) {
+  public static Unit fromString(String pString) {
     try {
-      return Unit.valueOf(p_string.toUpperCase());
+      return Unit.valueOf(pString.toUpperCase());
     } catch (IllegalArgumentException _) {
       return null;
     }

@@ -12,8 +12,8 @@ public class ItemDrawInfo {
   public final double intensity;
 
   /** Creates a new instance of ItemDrawInfo */
-  public ItemDrawInfo(Color[] p_layer_color, double p_intensity) {
-    layerColor = p_layer_color;
-    intensity = p_intensity;
+  public ItemDrawInfo(Color[] pLayerColor, double pIntensity) {
+    layerColor = pLayerColor;
+    intensity = pIntensity;
   }
 }

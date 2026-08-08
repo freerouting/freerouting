@@ -27,31 +27,31 @@ public abstract class Cursor {
     return new FortyfiveDegreeCrossHairCursor();
   }
 
-  protected static void initGraphics(Graphics2D p_graphics) {
+  protected static void initGraphics(Graphics2D pGraphics) {
     BasicStroke bs = new BasicStroke(0, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-    p_graphics.setStroke(bs);
-    p_graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    p_graphics.setColor(Color.WHITE);
-    p_graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+    pGraphics.setStroke(bs);
+    pGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    pGraphics.setColor(Color.WHITE);
+    pGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
   }
 
-  public abstract void draw(Graphics p_graphics);
+  public abstract void draw(Graphics pGraphics);
 
-  public void setLocation(Point2D p_location) {
-    this.xCoor = p_location.getX();
-    this.yCoor = p_location.getY();
+  public void setLocation(Point2D pLocation) {
+    this.xCoor = pLocation.getX();
+    this.yCoor = pLocation.getY();
     locationInitialized = true;
   }
 
   private static class FortyfiveDegreeCrossHairCursor extends Cursor {
 
     @Override
-    public void draw(Graphics p_graphics) {
+    public void draw(Graphics pGraphics) {
 
       if (!locationInitialized) {
         return;
       }
-      Graphics2D g2 = (Graphics2D) p_graphics;
+      Graphics2D g2 = (Graphics2D) pGraphics;
       initGraphics(g2);
       GeneralPath drawPath = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
       drawPath.append(VERTICAL_LINE, false);

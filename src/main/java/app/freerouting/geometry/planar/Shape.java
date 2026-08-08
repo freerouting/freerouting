@@ -22,28 +22,28 @@ public interface Shape extends Area {
   FloatPoint centreOfGravity();
 
   /** Returns true, if p_point is not contained in the inside or the boundary of the shape */
-  boolean isOutside(Point p_point);
+  boolean isOutside(Point pPoint);
 
   /** Returns true, if p_point is contained in this shape, but not on the border. */
-  boolean containsInside(Point p_point);
+  boolean containsInside(Point pPoint);
 
   /** Returns true, if p_point lies exact on the boundary of the shape */
-  boolean containsOnBorder(Point p_point);
+  boolean containsOnBorder(Point pPoint);
 
   /**
    * Returns the distance between p_point and its nearest point on the shape. 0, if p_point is
    * contained in this shape
    */
-  double distance(FloatPoint p_point);
+  double distance(FloatPoint pPoint);
 
   /** Return a bounding TileShape of this shape. */
   TileShape boundingTile();
 
   /** Returns the bounding RegularTileShape with the fixed directions p_dirs */
-  RegularTileShape boundingShape(ShapeBoundingDirections p_dirs);
+  RegularTileShape boundingShape(ShapeBoundingDirections pDirs);
 
   /** Returns the distance between p_point and its nearest point on the border of the shape. */
-  double borderDistance(FloatPoint p_point);
+  double borderDistance(FloatPoint pPoint);
 
   /** Returns the smallest distance from the centre of gravity to the border of the shape. */
   double smallestRadius();
@@ -53,27 +53,27 @@ public interface Shape extends Area {
    * The result instance may be of a different class than this instance. (For example an enlarged
    * IntBox is an IntOctagon).
    */
-  Shape enlarge(double p_offset);
+  Shape enlarge(double pOffset);
 
   /** Checks, if this shape and p_other have a nonempty intersection. */
-  boolean intersects(Shape p_other);
+  boolean intersects(Shape pOther);
 
   /**
    * Cuts out the parts of p_polyline in the interior of this shape and returns a list of the
    * remaining pieces of p_polyline. Pieces completely contained in the border of this shape are not
    * returned.
    */
-  Polyline[] cutout(Polyline p_polyline);
+  Polyline[] cutout(Polyline pPolyline);
 
   /** Auxiliary function to implement the same function with parameter type Shape. */
-  boolean intersects(IntBox p_other);
+  boolean intersects(IntBox pOther);
 
   /** Auxiliary function to implement the same function with parameter type Shape. */
-  boolean intersects(IntOctagon p_other);
+  boolean intersects(IntOctagon pOther);
 
   /** Auxiliary function to implement the same function with parameter type Shape. */
-  boolean intersects(Simplex p_other);
+  boolean intersects(Simplex pOther);
 
   /** Auxiliary function to implement the same function with parameter type Shape. */
-  boolean intersects(Circle p_other);
+  boolean intersects(Circle pOther);
 }

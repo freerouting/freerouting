@@ -114,45 +114,45 @@ public class AutorouteControl {
   double minCheapViaCost;
 
   /** Creates a new instance of AutorouteControl for the input net */
-  public AutorouteControl(RoutingBoard p_board, int p_net_no, RouterSettings p_settings) {
-    this(p_board, p_settings, p_settings.getTraceCostArr());
-    initNet(p_net_no, p_board, p_settings.getViaCosts());
+  public AutorouteControl(RoutingBoard pBoard, int pNetNo, RouterSettings pSettings) {
+    this(pBoard, pSettings, pSettings.getTraceCostArr());
+    initNet(pNetNo, pBoard, pSettings.getViaCosts());
   }
 
   /** Creates a new instance of AutorouteControl for the input net */
   public AutorouteControl(
-      RoutingBoard p_board,
-      int p_net_no,
-      RouterSettings p_settings,
-      int p_via_costs,
-      ExpansionCostFactor[] p_trace_cost_arr) {
-    this(p_board, p_settings, p_trace_cost_arr);
-    initNet(p_net_no, p_board, p_via_costs);
+      RoutingBoard pBoard,
+      int pNetNo,
+      RouterSettings pSettings,
+      int pViaCosts,
+      ExpansionCostFactor[] pTraceCostArr) {
+    this(pBoard, pSettings, pTraceCostArr);
+    initNet(pNetNo, pBoard, pViaCosts);
   }
 
   /** Creates a new instance of AutorouteControl */
   private AutorouteControl(
-      RoutingBoard p_board, RouterSettings p_settings, ExpansionCostFactor[] p_trace_costs_arr) {
-    this.settings = p_settings;
-    layerCount = p_board.getLayerCount();
+      RoutingBoard pBoard, RouterSettings pSettings, ExpansionCostFactor[] pTraceCostsArr) {
+    this.settings = pSettings;
+    layerCount = pBoard.getLayerCount();
     traceHalfWidth = new int[layerCount];
     compensatedTraceHalfWidth = new int[layerCount];
     layerActive = new boolean[layerCount];
-    viasAllowed = p_settings.getViasAllowed();
+    viasAllowed = pSettings.getViasAllowed();
     viaRadiusArr = new double[layerCount];
     addViaCosts = new ViaCost[layerCount];
     this.bendCosts = new double[layerCount];
     for (int i = 0; i < layerCount; i++) {
-      this.bendCosts[i] = p_settings.getBendCost(i);
+      this.bendCosts[i] = pSettings.getBendCost(i);
     }
 
     for (int i = 0; i < layerCount; i++) {
       addViaCosts[i] = new ViaCost(layerCount);
-      boolean activeSetting = p_settings.getLayerActive(i);
-      if (!p_board.layerStructure.arr[i].isSignal && activeSetting) {
+      boolean activeSetting = pSettings.getLayerActive(i);
+      if (!pBoard.layerStructure.arr[i].isSignal && activeSetting) {
         FRLogger.warn(
             "Layer '"
-                + p_board.layerStructure.arr[i].name
+                + pBoard.layerStructure.arr[i].name
                 + "' is a dedicated power plane and cannot be routed. Forcing active state to false.");
         layerActive[i] = false;
       } else {
@@ -164,7 +164,7 @@ public class AutorouteControl {
     fanoutStartPinCenter = null;
     fanoutStartPinLayer = -1;
     removeUnconnectedVias = true;
-    withNeckdown = p_settings.getAutomaticNeckdown();
+    withNeckdown = pSettings.getAutomaticNeckdown();
     tidyRegionWidth = Integer.MAX_VALUE;
     pullTightAccuracy = 500;
     maxShoveTraceRecursionDepth = 20;
@@ -175,7 +175,7 @@ public class AutorouteControl {
         addViaCosts[i].toLayer[j] = 0;
       }
     }
-    traceCosts = p_trace_costs_arr;
+    traceCosts = pTraceCostsArr;
     attachSmdAllowed = false;
     viaLowerBound = 0;
     viaUpperBound = layerCount;
@@ -185,9 +185,9 @@ public class AutorouteControl {
     ripupPassNo = 1;
   }
 
-  private void initNet(int p_net_no, RoutingBoard p_board, int p_via_costs) {
-    netNo = p_net_no;
-    Net currNet = p_board.rules.nets.get(p_net_no);
+  private void initNet(int pNetNo, RoutingBoard pBoard, int pViaCosts) {
+    netNo = pNetNo;
+    Net currNet = pBoard.rules.nets.get(pNetNo);
     NetClass currNetClass;
     if (currNet != null) {
       currNetClass = currNet.getNetClass();
@@ -195,27 +195,26 @@ public class AutorouteControl {
       viaRule = currNetClass.getViaRule();
     } else {
       traceClearanceClassNo = 1;
-      viaRule = p_board.rules.viaRules.firstElement();
+      viaRule = pBoard.rules.viaRules.firstElement();
       currNetClass = null;
     }
     for (int i = 0; i < layerCount; i++) {
       if (netNo > 0) {
-        traceHalfWidth[i] = p_board.rules.getTraceHalfWidth(netNo, i);
+        traceHalfWidth[i] = pBoard.rules.getTraceHalfWidth(netNo, i);
       } else {
-        traceHalfWidth[i] = p_board.rules.getTraceHalfWidth(1, i);
+        traceHalfWidth[i] = pBoard.rules.getTraceHalfWidth(1, i);
       }
       compensatedTraceHalfWidth[i] =
           traceHalfWidth[i]
-              + p_board.rules.clearanceMatrix.clearanceCompensationValue(
-                  traceClearanceClassNo, i);
+              + pBoard.rules.clearanceMatrix.clearanceCompensationValue(traceClearanceClassNo, i);
       if (currNetClass != null && !currNetClass.isActiveRoutingLayer(i)) {
         layerActive[i] = false;
       }
     }
-    rebuildViaInfo(p_board, p_via_costs, p_net_no);
+    rebuildViaInfo(pBoard, pViaCosts, pNetNo);
   }
 
-  public void rebuildViaInfo(RoutingBoard p_board, int p_via_costs, int p_net_no) {
+  public void rebuildViaInfo(RoutingBoard pBoard, int pViaCosts, int pNetNo) {
     if (viaRule.viaCount() > 0) {
       this.viaClearanceClass = viaRule.getVia(0).getClearanceClass();
     } else {
@@ -244,7 +243,7 @@ public class AutorouteControl {
       viaInfoArr[i] = new ViaMask(fromLayer, toLayer, currVia.attachSmdAllowed());
     }
 
-    boolean pureSmdNet = isPureSmdNet(p_board, p_net_no);
+    boolean pureSmdNet = isPureSmdNet(pBoard, pNetNo);
     if (!this.attachSmdAllowed && layerCount > 1 && pureSmdNet) {
       // Pure SMD nets must still be able to escape their component layer, even if the DSN marks
       // every padstack as attach-off. This only relaxes the routing gate for same-net fanout;
@@ -263,12 +262,12 @@ public class AutorouteControl {
       // before the search commits to a layer change.
       viaCostFactor *= 0.1;
     }
-    minNormalViaCost = p_via_costs * viaCostFactor;
+    minNormalViaCost = pViaCosts * viaCostFactor;
     minCheapViaCost = 0.8 * minNormalViaCost;
   }
 
-  private static boolean isPureSmdNet(RoutingBoard p_board, int p_net_no) {
-    Collection<Item> netItems = p_board.getConnectableItems(p_net_no);
+  private static boolean isPureSmdNet(RoutingBoard pBoard, int pNetNo) {
+    Collection<Item> netItems = pBoard.getConnectableItems(pNetNo);
     if (netItems.isEmpty()) {
       return false;
     }
@@ -291,9 +290,9 @@ public class AutorouteControl {
     /** The vertical expansion cost factor on a layer of the board */
     public final double vertical;
 
-    public ExpansionCostFactor(double p_horizontal, double p_vertical) {
-      horizontal = p_horizontal;
-      vertical = p_vertical;
+    public ExpansionCostFactor(double pHorizontal, double pVertical) {
+      horizontal = pHorizontal;
+      vertical = pVertical;
     }
   }
 
@@ -302,8 +301,8 @@ public class AutorouteControl {
 
     public int[] toLayer;
 
-    private ViaCost(int p_layer_count) {
-      toLayer = new int[p_layer_count];
+    private ViaCost(int pLayerCount) {
+      toLayer = new int[pLayerCount];
     }
   }
 
@@ -313,10 +312,10 @@ public class AutorouteControl {
     final int toLayer;
     final boolean attachSmdAllowed;
 
-    ViaMask(int p_from_layer, int p_to_layer, boolean p_attach_smd_allowed) {
-      fromLayer = p_from_layer;
-      toLayer = p_to_layer;
-      attachSmdAllowed = p_attach_smd_allowed;
+    ViaMask(int pFromLayer, int pToLayer, boolean pAttachSmdAllowed) {
+      fromLayer = pFromLayer;
+      toLayer = pToLayer;
+      attachSmdAllowed = pAttachSmdAllowed;
     }
   }
 }

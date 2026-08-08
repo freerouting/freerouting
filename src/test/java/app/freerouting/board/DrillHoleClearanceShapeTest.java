@@ -61,15 +61,15 @@ class DrillHoleClearanceShapeTest {
       TileShape[] base0 =
           new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE, board, 0)
               .calculateTreeShapes(item);
-      TileShape[] tree45_0 = new ShapeSearchTree45Degree(board, 0).calculateTreeShapes(item);
-      TileShape[] tree90_0 = new ShapeSearchTree90Degree(board, 0).calculateTreeShapes(item);
+      TileShape[] tree450 = new ShapeSearchTree45Degree(board, 0).calculateTreeShapes(item);
+      TileShape[] tree900 = new ShapeSearchTree90Degree(board, 0).calculateTreeShapes(item);
 
       board.rules.setHoleClearance(HOLE_CLEARANCE_BOARD_UNITS);
       TileShape[] base1 =
           new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE, board, 0)
               .calculateTreeShapes(item);
-      TileShape[] tree45_1 = new ShapeSearchTree45Degree(board, 0).calculateTreeShapes(item);
-      TileShape[] tree90_1 = new ShapeSearchTree90Degree(board, 0).calculateTreeShapes(item);
+      TileShape[] tree451 = new ShapeSearchTree45Degree(board, 0).calculateTreeShapes(item);
+      TileShape[] tree901 = new ShapeSearchTree90Degree(board, 0).calculateTreeShapes(item);
 
       String label = item.getClass().getSimpleName();
       assertEquals(base0.length, base1.length, label);
@@ -81,10 +81,10 @@ class DrillHoleClearanceShapeTest {
             boxArea(base1[i]) > boxArea(base0[i]),
             label + " shape " + i + " must grow in the base tree");
         assertTrue(
-            boxArea(tree45_1[i]) > boxArea(tree45_0[i]),
+            boxArea(tree451[i]) > boxArea(tree450[i]),
             label + " shape " + i + " must grow in the 45-degree tree");
         assertTrue(
-            boxArea(tree90_1[i]) > boxArea(tree90_0[i]),
+            boxArea(tree901[i]) > boxArea(tree900[i]),
             label + " shape " + i + " must grow in the 90-degree tree");
       }
     }

@@ -7,19 +7,19 @@ public class BoardObserverAdaptor implements BoardObservers {
 
   /** Tell the observers the deletion p_object. */
   @Override
-  public void notifyDeleted(Item p_item) {}
+  public void notifyDeleted(Item pItem) {}
 
   /** Notify the observers, that they can synchronize the changes on p_object. */
   @Override
-  public void notifyChanged(Item p_item) {}
+  public void notifyChanged(Item pItem) {}
 
   /** Enable the observers to synchronize the new created item. */
   @Override
-  public void notifyNew(Item p_item) {}
+  public void notifyNew(Item pItem) {}
 
   /** Enable the observers to synchronize the moved component. */
   @Override
-  public void notifyMoved(Component p_component) {}
+  public void notifyMoved(Component pComponent) {}
 
   /** activate the observers */
   @Override

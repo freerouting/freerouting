@@ -69,8 +69,8 @@ public final class DsnFile {
         }
       }
     }
-    for (ConductionArea curr_conduction_area : conductionAreaList) {
-      int layerNo = curr_conduction_area.getLayer();
+    for (ConductionArea currConductionArea : conductionAreaList) {
+      int layerNo = currConductionArea.getLayer();
       if (layerContainsWiresArr[layerNo]) {
         continue;
       }
@@ -78,7 +78,7 @@ public final class DsnFile {
       if (!currLayer.isSignal || layerNo == 0 || layerNo == boardLayerStructure.arr.length - 1) {
         continue;
       }
-      TileShape[] convexPieces = curr_conduction_area.getArea().splitToConvex();
+      TileShape[] convexPieces = currConductionArea.getArea().splitToConvex();
       double currArea = 0;
       for (TileShape currPiece : convexPieces) {
         currArea += currPiece.area();
@@ -86,14 +86,14 @@ public final class DsnFile {
       if (currArea < 0.5 * boardArea) {
         continue;
       }
-      for (int i = 0; i < curr_conduction_area.netCount(); i++) {
-        Net currNet = routingBoard.rules.nets.get(curr_conduction_area.getNetNo(i));
+      for (int i = 0; i < currConductionArea.netCount(); i++) {
+        Net currNet = routingBoard.rules.nets.get(currConductionArea.getNetNo(i));
         currNet.setContainsPlane(true);
         nothingChanged = false;
       }
       changedLayerArr[layerNo] = true;
-      if (curr_conduction_area.getFixedState().ordinal() < FixedState.USER_FIXED.ordinal()) {
-        curr_conduction_area.setFixedState(FixedState.USER_FIXED);
+      if (currConductionArea.getFixedState().ordinal() < FixedState.USER_FIXED.ordinal()) {
+        currConductionArea.setFixedState(FixedState.USER_FIXED);
       }
     }
     for (int i = 0; i < changedLayerArr.length; i++) {
@@ -107,19 +107,19 @@ public final class DsnFile {
     return !nothingChanged;
   }
 
-  static boolean readOnOffScope(IJFlexScanner p_scanner) {
+  static boolean readOnOffScope(IJFlexScanner pScanner) {
     try {
-      Object nextToken = p_scanner.nextToken();
+      Object nextToken = pScanner.nextToken();
       boolean result = false;
       if (nextToken == Keyword.ON) {
         result = true;
       } else if (nextToken != Keyword.OFF) {
         FRLogger.warn(
             "DsnFile.read_boolean: Keyword.OFF expected at '"
-                + p_scanner.getScopeIdentifier()
+                + pScanner.getScopeIdentifier()
                 + "'");
       }
-      ScopeKeyword.skipScope(p_scanner);
+      ScopeKeyword.skipScope(pScanner);
       return result;
     } catch (IOException e) {
       FRLogger.error("DsnFile.read_boolean: IO error scanning file", e);
@@ -127,24 +127,24 @@ public final class DsnFile {
     }
   }
 
-  static int readIntegerScope(IJFlexScanner p_scanner) {
+  static int readIntegerScope(IJFlexScanner pScanner) {
     try {
       int value;
-      Object nextToken = p_scanner.nextToken();
+      Object nextToken = pScanner.nextToken();
       if (nextToken instanceof Integer integer) {
         value = integer;
       } else {
         FRLogger.warn(
             "DsnFile.read_integer_scope: number expected at '"
-                + p_scanner.getScopeIdentifier()
+                + pScanner.getScopeIdentifier()
                 + "'");
         return 0;
       }
-      nextToken = p_scanner.nextToken();
+      nextToken = pScanner.nextToken();
       if (nextToken != Keyword.CLOSED_BRACKET) {
         FRLogger.warn(
             "DsnFile.read_integer_scope: closing bracket expected at '"
-                + p_scanner.getScopeIdentifier()
+                + pScanner.getScopeIdentifier()
                 + "'");
         return 0;
       }
@@ -155,26 +155,24 @@ public final class DsnFile {
     }
   }
 
-  static double readFloatScope(IJFlexScanner p_scanner) {
+  static double readFloatScope(IJFlexScanner pScanner) {
     try {
       double value;
-      Object nextToken = p_scanner.nextToken();
+      Object nextToken = pScanner.nextToken();
       if (nextToken instanceof Double double1) {
         value = double1;
       } else if (nextToken instanceof Integer integer) {
         value = integer;
       } else {
         FRLogger.warn(
-            "DsnFile.read_float_scope: number expected at '"
-                + p_scanner.getScopeIdentifier()
-                + "'");
+            "DsnFile.read_float_scope: number expected at '" + pScanner.getScopeIdentifier() + "'");
         return 0;
       }
-      nextToken = p_scanner.nextToken();
+      nextToken = pScanner.nextToken();
       if (nextToken != Keyword.CLOSED_BRACKET) {
         FRLogger.warn(
             "DsnFile.read_float_scope: closing bracket expected at '"
-                + p_scanner.getScopeIdentifier()
+                + pScanner.getScopeIdentifier()
                 + "'");
         return 0;
       }
@@ -185,15 +183,15 @@ public final class DsnFile {
     }
   }
 
-  public static String readStringScope(IJFlexScanner p_scanner) {
+  public static String readStringScope(IJFlexScanner pScanner) {
     try {
-      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      String result = p_scanner.nextString();
-      Object nextToken = p_scanner.nextToken();
+      pScanner.yybegin(SpecctraDsnStreamReader.NAME);
+      String result = pScanner.nextString();
+      Object nextToken = pScanner.nextToken();
       if (nextToken != Keyword.CLOSED_BRACKET) {
         FRLogger.warn(
             "DsnFile.read_string_scope: closing bracket expected at '"
-                + p_scanner.getScopeIdentifier()
+                + pScanner.getScopeIdentifier()
                 + "'");
       }
       return result;
@@ -203,9 +201,9 @@ public final class DsnFile {
     }
   }
 
-  public static String[] readStringListScope(IJFlexScanner p_scanner) {
-    String[] result = p_scanner.nextStringList();
-    if (!p_scanner.nextClosingBracket()) {
+  public static String[] readStringListScope(IJFlexScanner pScanner) {
+    String[] result = pScanner.nextStringList();
+    if (!pScanner.nextClosingBracket()) {
       return null;
     }
     return result;

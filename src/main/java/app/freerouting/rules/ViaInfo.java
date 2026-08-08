@@ -20,24 +20,24 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
 
   /** Creates a new instance of ViaRule */
   public ViaInfo(
-      String p_name,
-      Padstack p_padstack,
-      int p_clearance_class,
-      boolean p_drill_to_smd_allowed,
-      BoardRules p_board_rules) {
-    name = p_name;
-    padstack = p_padstack;
-    clearanceClass = p_clearance_class;
-    attachSmdAllowed = p_drill_to_smd_allowed;
-    boardRules = p_board_rules;
+      String pName,
+      Padstack pPadstack,
+      int pClearanceClass,
+      boolean pDrillToSmdAllowed,
+      BoardRules pBoardRules) {
+    name = pName;
+    padstack = pPadstack;
+    clearanceClass = pClearanceClass;
+    attachSmdAllowed = pDrillToSmdAllowed;
+    boardRules = pBoardRules;
   }
 
   public String getName() {
     return name;
   }
 
-  public void setName(String p_name) {
-    name = p_name;
+  public void setName(String pName) {
+    name = pName;
   }
 
   @Override
@@ -49,52 +49,52 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
     return padstack;
   }
 
-  public void setPadstack(Padstack p_padstack) {
-    padstack = p_padstack;
+  public void setPadstack(Padstack pPadstack) {
+    padstack = pPadstack;
   }
 
   public int getClearanceClass() {
     return clearanceClass;
   }
 
-  public void setClearanceClass(int p_clearance_class) {
-    clearanceClass = p_clearance_class;
+  public void setClearanceClass(int pClearanceClass) {
+    clearanceClass = pClearanceClass;
   }
 
   public boolean attachSmdAllowed() {
     return attachSmdAllowed;
   }
 
-  public void setAttachSmdAllowed(boolean p_attach_smd_allowed) {
-    attachSmdAllowed = p_attach_smd_allowed;
+  public void setAttachSmdAllowed(boolean pAttachSmdAllowed) {
+    attachSmdAllowed = pAttachSmdAllowed;
   }
 
   @Override
-  public int compareTo(ViaInfo p_other) {
-    return this.name.compareTo(p_other.name);
+  public int compareTo(ViaInfo pOther) {
+    return this.name.compareTo(pOther.name);
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
-    p_window.appendBold(tm.getText("via") + " ");
-    p_window.appendBold(this.name);
-    p_window.appendBold(": ");
-    p_window.append(tm.getText("padstack") + " ");
-    p_window.append(this.padstack.name, tm.getText("padstack_info"), this.padstack);
-    p_window.append(", " + tm.getText("clearanceClass") + " ");
+    pWindow.appendBold(tm.getText("via") + " ");
+    pWindow.appendBold(this.name);
+    pWindow.appendBold(": ");
+    pWindow.append(tm.getText("padstack") + " ");
+    pWindow.append(this.padstack.name, tm.getText("padstack_info"), this.padstack);
+    pWindow.append(", " + tm.getText("clearanceClass") + " ");
     String currName = boardRules.clearanceMatrix.getName(this.clearanceClass);
-    p_window.append(
+    pWindow.append(
         currName,
         tm.getText("clearance_class_2"),
         boardRules.clearanceMatrix.getRow(this.clearanceClass));
-    p_window.append(", " + tm.getText("attach_smd") + " ");
+    pWindow.append(", " + tm.getText("attach_smd") + " ");
     if (attachSmdAllowed) {
-      p_window.append(" " + tm.getText("on"));
+      pWindow.append(" " + tm.getText("on"));
     } else {
-      p_window.append(" " + tm.getText("off"));
+      pWindow.append(" " + tm.getText("off"));
     }
-    p_window.newline();
+    pWindow.newline();
   }
 }

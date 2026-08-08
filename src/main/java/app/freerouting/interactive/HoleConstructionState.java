@@ -21,8 +21,8 @@ public final class HoleConstructionState extends CornerItemConstructionState {
   private ObstacleArea itemToModify;
 
   /** Creates a new instance of HoleConstructionState */
-  private HoleConstructionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
+  private HoleConstructionState(InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    super(pParentState, pBoardHandling);
   }
 
   /**
@@ -30,17 +30,17 @@ public final class HoleConstructionState extends CornerItemConstructionState {
    * parameters. If p_logfile != null, the construction of this hole is stored in a logfile.
    */
   public static HoleConstructionState getInstance(
-      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    HoleConstructionState newInstance = new HoleConstructionState(p_parent_state, p_board_handling);
-    if (!newInstance.startOk(p_location)) {
+      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    HoleConstructionState newInstance = new HoleConstructionState(pParentState, pBoardHandling);
+    if (!newInstance.startOk(pLocation)) {
       newInstance = null;
     }
     return newInstance;
   }
 
   /** Looks for an obstacle area to modify Returns false, if it cannot find one. */
-  private boolean startOk(FloatPoint p_location) {
-    IntPoint pickLocation = p_location.round();
+  private boolean startOk(FloatPoint pLocation) {
+    IntPoint pickLocation = pLocation.round();
     ItemSelectionFilter.SelectableChoices[] selectableChoices = {
       ItemSelectionFilter.SelectableChoices.KEEPOUT,
       ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT,
@@ -61,27 +61,25 @@ public final class HoleConstructionState extends CornerItemConstructionState {
     }
     this.itemToModify = (ObstacleArea) foundItem;
     if (itemToModify.getArea() instanceof Circle) {
-      hdlg.screenMessages.setStatusMessage(
-          tm.getText("adding_hole_to_circle_not_yet_implemented"));
+      hdlg.screenMessages.setStatusMessage(tm.getText("adding_hole_to_circle_not_yet_implemented"));
       return false;
     }
     if (itemToModify.getArea() instanceof Circle) {
-      hdlg.screenMessages.setStatusMessage(
-          tm.getText("adding_hole_to_circle_not_yet_implemented"));
+      hdlg.screenMessages.setStatusMessage(tm.getText("adding_hole_to_circle_not_yet_implemented"));
       return false;
     }
-    this.addCorner(p_location);
+    this.addCorner(pLocation);
     return true;
   }
 
   /** Adds a corner to the polygon of the hole under construction. */
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint p_next_corner) {
+  public InteractiveState leftButtonClicked(FloatPoint pNextCorner) {
     if (itemToModify == null) {
       return this.returnState;
     }
-    if (itemToModify.getArea().contains(p_next_corner)) {
-      super.addCorner(p_next_corner);
+    if (itemToModify.getArea().contains(pNextCorner)) {
+      super.addCorner(pNextCorner);
       hdlg.repaint();
     }
     return this;

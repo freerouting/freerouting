@@ -48,9 +48,9 @@ public class WindowNets extends WindowObjectListWithFilter {
   private final NetInfoTextPane infoPane;
 
   /** Creates a new instance of NetsWindow */
-  public WindowNets(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  public WindowNets(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
+    setLanguage(pBoardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
@@ -116,8 +116,8 @@ public class WindowNets extends WindowObjectListWithFilter {
   }
 
   @Override
-  protected void addToList(Object p_object) {
-    if (p_object instanceof Net net) {
+  protected void addToList(Object pObject) {
+    if (pObject instanceof Net net) {
       if (this.filterIncompletesCheckbox.isSelected()) {
         RatsNest ratsnest = boardFrame.boardPanel.boardHandling.getRatsnest();
         if (ratsnest.incompleteCount(net.netNumber) == 0) {
@@ -125,7 +125,7 @@ public class WindowNets extends WindowObjectListWithFilter {
         }
       }
     }
-    super.addToList(p_object);
+    super.addToList(pObject);
   }
 
   @Override
@@ -248,7 +248,7 @@ public class WindowNets extends WindowObjectListWithFilter {
   private class AssignClassListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       List<Object> selectedNets = list.getSelectedValuesList();
       if (selectedNets.isEmpty()) {
         return;
@@ -294,10 +294,10 @@ public class WindowNets extends WindowObjectListWithFilter {
       StyleConstants.setBold(boldStyle, true);
     }
 
-    private boolean append(String p_string, String p_style) {
+    private boolean append(String pString, String pStyle) {
       StyledDocument document = this.getStyledDocument();
       try {
-        document.insertString(document.getLength(), p_string, document.getStyle(p_style));
+        document.insertString(document.getLength(), pString, document.getStyle(pStyle));
       } catch (BadLocationException _) {
         return false;
       }
@@ -305,42 +305,42 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
 
     @Override
-    public boolean append(String p_string) {
-      return append(p_string, "normal");
+    public boolean append(String pString) {
+      return append(pString, "normal");
     }
 
     @Override
-    public boolean appendBold(String p_string) {
-      return append(p_string, "bold");
+    public boolean appendBold(String pString) {
+      return append(pString, "bold");
     }
 
     @Override
-    public boolean append(double p_value) {
+    public boolean append(double pValue) {
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
-      Float value = (float) coordinateTransform.boardToUser(p_value);
+      Float value = (float) coordinateTransform.boardToUser(pValue);
       return append(numberFormat.format(value));
     }
 
     @Override
-    public boolean appendWithoutTransforming(double p_value) {
-      Float value = (float) p_value;
+    public boolean appendWithoutTransforming(double pValue) {
+      Float value = (float) pValue;
       return append(numberFormat.format(value));
     }
 
     @Override
-    public boolean append(FloatPoint p_point) {
+    public boolean append(FloatPoint pPoint) {
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
-      FloatPoint transformedPoint = coordinateTransform.boardToUser(p_point);
+      FloatPoint transformedPoint = coordinateTransform.boardToUser(pPoint);
       return append(transformedPoint.toString(boardFrame.get_locale()));
     }
 
     @Override
-    public boolean append(Shape p_shape, Locale p_locale) {
+    public boolean append(Shape pShape, Locale pLocale) {
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
-      PrintableShape transformedShape = coordinateTransform.boardToUser(p_shape, p_locale);
+      PrintableShape transformedShape = coordinateTransform.boardToUser(pShape, pLocale);
       if (transformedShape == null) {
         return false;
       }
@@ -359,26 +359,23 @@ public class WindowNets extends WindowObjectListWithFilter {
 
     @Override
     public boolean append(
-        String p_button_name, String p_window_title, ObjectInfoPanel.Printable p_object) {
+        String pButtonName, String pWindowTitle, ObjectInfoPanel.Printable pObject) {
       Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>();
-      objectList.add(p_object);
-      return appendObjects(p_button_name, p_window_title, objectList);
+      objectList.add(pObject);
+      return appendObjects(pButtonName, pWindowTitle, objectList);
     }
 
     @Override
-    public boolean appendItems(
-        String p_button_name, String p_window_title, Collection<Item> p_items) {
-      Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>(p_items);
-      return appendObjects(p_button_name, p_window_title, objectList);
+    public boolean appendItems(String pButtonName, String pWindowTitle, Collection<Item> pItems) {
+      Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>(pItems);
+      return appendObjects(pButtonName, pWindowTitle, objectList);
     }
 
     @Override
     public boolean appendObjects(
-        String p_button_name,
-        String p_window_title,
-        Collection<ObjectInfoPanel.Printable> p_objects) {
+        String pButtonName, String pWindowTitle, Collection<ObjectInfoPanel.Printable> pObjects) {
       JButton objectInfoButton = new JButton();
-      objectInfoButton.setText(p_button_name);
+      objectInfoButton.setText(pButtonName);
       objectInfoButton.setBorderPainted(false);
       objectInfoButton.setContentAreaFilled(false);
       objectInfoButton.setMargin(new Insets(0, 0, 0, 0));
@@ -388,7 +385,7 @@ public class WindowNets extends WindowObjectListWithFilter {
       objectInfoButton.addActionListener(
           e -> {
             Collection<WindowObjectInfo.Printable> infoObjects = new LinkedList<>();
-            for (ObjectInfoPanel.Printable p : p_objects) {
+            for (ObjectInfoPanel.Printable p : pObjects) {
               if (p instanceof WindowObjectInfo.Printable wp) {
                 infoObjects.add(wp);
               }
@@ -397,7 +394,7 @@ public class WindowNets extends WindowObjectListWithFilter {
                 boardFrame.boardPanel.boardHandling.coordinateTransform;
             WindowObjectInfo newWindow =
                 WindowObjectInfo.display(
-                    p_window_title, infoObjects, boardFrame, coordinateTransform);
+                    pWindowTitle, infoObjects, boardFrame, coordinateTransform);
             Point loc = getLocation();
             Point newWindowLocation = new Point((int) (loc.getX() + 30), (int) (loc.getY() + 30));
             newWindow.setLocation(newWindowLocation);
@@ -409,12 +406,12 @@ public class WindowNets extends WindowObjectListWithFilter {
       StyledDocument document = this.getStyledDocument();
       Style defaultStyle =
           StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
-      Style buttonStyle = document.addStyle(p_button_name, defaultStyle);
+      Style buttonStyle = document.addStyle(pButtonName, defaultStyle);
       StyleConstants.setAlignment(buttonStyle, StyleConstants.ALIGN_CENTER);
       StyleConstants.setComponent(buttonStyle, objectInfoButton);
 
       try {
-        document.insertString(document.getLength(), p_button_name, buttonStyle);
+        document.insertString(document.getLength(), pButtonName, buttonStyle);
       } catch (BadLocationException _) {
         return false;
       }

@@ -65,8 +65,8 @@ class BoardToolbar extends JPanel {
   private boolean isShiftDown;
 
   /** Creates a new instance of BoardToolbarPanel */
-  BoardToolbar(BoardFrame p_board_frame, boolean p_disable_select_mode) {
-    this.boardFrame = p_board_frame;
+  BoardToolbar(BoardFrame pBoardFrame, boolean pDisableSelectMode) {
+    this.boardFrame = pBoardFrame;
 
     // Listen for Shift key globally to update icons
     KeyboardFocusManager.getCurrentKeyboardFocusManager()
@@ -98,7 +98,7 @@ class BoardToolbar extends JPanel {
         .addDebugStateListener(
             isPaused -> SwingUtilities.invokeLater(this::updateDebugButtonsState));
 
-    TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
 
     this.setLayout(new BorderLayout());
 
@@ -108,7 +108,7 @@ class BoardToolbar extends JPanel {
 
     leftToolbar.setMaximumSize(new Dimension(1200, 30));
 
-    if (!p_disable_select_mode) {
+    if (!pDisableSelectMode) {
       modeSelectionPanel =
           new SegmentedButtons(
               tm, tm.getText("mode_heading"), "inspect_button", "route_button", "drag_button");
@@ -196,8 +196,7 @@ class BoardToolbar extends JPanel {
             guiRoutingJob.routerSettings.applyBoardSpecificOptimizationsIfNeeded(routingBoard);
           }
           InteractiveActionThread thread =
-              boardFrame.boardPanel.boardHandling.startAutorouterAndRouteOptimizer(
-                  guiRoutingJob);
+              boardFrame.boardPanel.boardHandling.startAutorouterAndRouteOptimizer(guiRoutingJob);
 
           if ((thread != null)
               && (boardFrame.boardPanel.boardHandling.autorouterListener != null)) {

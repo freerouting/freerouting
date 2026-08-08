@@ -30,35 +30,35 @@ public class ComponentOutline extends Item implements Serializable {
 
   /** Creates a new instance of ComponentOutline */
   public ComponentOutline(
-      Area p_area,
-      boolean p_is_front,
-      Vector p_translation,
-      double p_rotation_in_degree,
-      int p_id_no,
-      int p_component_no,
-      boolean p_is_courtyard,
-      boolean p_is_fabrication,
-      boolean p_is_closed,
-      FixedState p_fixed_state,
-      BasicBoard p_board) {
-    super(new int[0], 0, p_id_no, p_component_no, p_fixed_state, p_board);
-    this.relativeArea = p_area;
-    this.isFront = p_is_front;
-    this.translation = p_translation;
-    this.rotationInDegree = p_rotation_in_degree;
-    this.isCourtyard = p_is_courtyard;
-    this.isFabrication = p_is_fabrication;
-    this.isClosed = p_is_closed;
+      Area pArea,
+      boolean pIsFront,
+      Vector pTranslation,
+      double pRotationInDegree,
+      int pIdNo,
+      int pComponentNo,
+      boolean pIsCourtyard,
+      boolean pIsFabrication,
+      boolean pIsClosed,
+      FixedState pFixedState,
+      BasicBoard pBoard) {
+    super(new int[0], 0, pIdNo, pComponentNo, pFixedState, pBoard);
+    this.relativeArea = pArea;
+    this.isFront = pIsFront;
+    this.translation = pTranslation;
+    this.rotationInDegree = pRotationInDegree;
+    this.isCourtyard = pIsCourtyard;
+    this.isFabrication = pIsFabrication;
+    this.isClosed = pIsClosed;
   }
 
   @Override
-  public Item copy(int p_id_no) {
+  public Item copy(int pIdNo) {
     return new ComponentOutline(
         this.relativeArea,
         this.isFront,
         this.translation,
         this.rotationInDegree,
-        p_id_no,
+        pIdNo,
         this.getComponentNo(),
         this.isCourtyard,
         this.isFabrication,
@@ -84,7 +84,7 @@ public class ComponentOutline extends Item implements Serializable {
   }
 
   @Override
-  public boolean isSelectedByFilter(ItemSelectionFilter p_filter) {
+  public boolean isSelectedByFilter(ItemSelectionFilter pFilter) {
     return false;
   }
 
@@ -109,17 +109,17 @@ public class ComponentOutline extends Item implements Serializable {
   }
 
   @Override
-  public boolean isOnLayer(int p_layer) {
-    return getLayer() == p_layer;
+  public boolean isOnLayer(int pLayer) {
+    return getLayer() == pLayer;
   }
 
   @Override
-  public boolean isObstacle(Item p_item) {
+  public boolean isObstacle(Item pItem) {
     return false;
   }
 
   @Override
-  public int shapeLayer(int p_index) {
+  public int shapeLayer(int pIndex) {
     return getLayer();
   }
 
@@ -129,29 +129,29 @@ public class ComponentOutline extends Item implements Serializable {
   }
 
   @Override
-  protected TileShape[] calculateTreeShapes(ShapeSearchTree p_search_tree) {
+  protected TileShape[] calculateTreeShapes(ShapeSearchTree pSearchTree) {
     return new TileShape[0];
   }
 
   @Override
-  public double getDrawIntensity(GraphicsContext p_graphics_context) {
-    return p_graphics_context.getComponentOutlineColorIntensity();
+  public double getDrawIntensity(GraphicsContext pGraphicsContext) {
+    return pGraphicsContext.getComponentOutlineColorIntensity();
   }
 
   @Override
-  public Color[] getDrawColors(GraphicsContext p_graphics_context) {
+  public Color[] getDrawColors(GraphicsContext pGraphicsContext) {
     Color[] colorArr = new Color[this.board.layerStructure.arr.length];
     Color frontDrawColor;
     Color backDrawColor;
     if (this.isCourtyard) {
-      frontDrawColor = p_graphics_context.otherColorTable.getCourtyardColor(true);
-      backDrawColor = p_graphics_context.otherColorTable.getCourtyardColor(false);
+      frontDrawColor = pGraphicsContext.otherColorTable.getCourtyardColor(true);
+      backDrawColor = pGraphicsContext.otherColorTable.getCourtyardColor(false);
     } else if (this.isFabrication) {
-      frontDrawColor = p_graphics_context.otherColorTable.getFabColor(true);
-      backDrawColor = p_graphics_context.otherColorTable.getFabColor(false);
+      frontDrawColor = pGraphicsContext.otherColorTable.getFabColor(true);
+      backDrawColor = pGraphicsContext.otherColorTable.getFabColor(false);
     } else {
-      frontDrawColor = p_graphics_context.otherColorTable.getSilkscreenColor(true);
-      backDrawColor = p_graphics_context.otherColorTable.getSilkscreenColor(false);
+      frontDrawColor = pGraphicsContext.otherColorTable.getSilkscreenColor(true);
+      backDrawColor = pGraphicsContext.otherColorTable.getSilkscreenColor(false);
     }
     for (int i = 0; i < colorArr.length - 1; i++) {
       colorArr[i] = frontDrawColor;
@@ -169,8 +169,8 @@ public class ComponentOutline extends Item implements Serializable {
 
   @Override
   public void draw(
-      Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
-    if (p_graphics_context == null || p_intensity <= 0) {
+      Graphics pG, GraphicsContext pGraphicsContext, Color[] pColorArr, double pIntensity) {
+    if (pGraphicsContext == null || pIntensity <= 0) {
       return;
     }
     int virtualLayerIdx;
@@ -181,19 +181,19 @@ public class ComponentOutline extends Item implements Serializable {
     } else {
       virtualLayerIdx = this.isFront ? 0 : 1;
     }
-    double virtualVisibility = p_graphics_context.getVirtualLayerVisibility(virtualLayerIdx);
+    double virtualVisibility = pGraphicsContext.getVirtualLayerVisibility(virtualLayerIdx);
     if (virtualVisibility <= 0) {
       return;
     }
 
-    Color color = p_color_arr[this.getLayer()];
-    double intensity = virtualVisibility * p_intensity;
+    Color color = pColorArr[this.getLayer()];
+    double intensity = virtualVisibility * pIntensity;
 
     if (this.isCourtyard || this.isClosed) {
       double drawWidth = Math.min(this.board.communication.getResolution(Unit.MIL), 100);
-      p_graphics_context.drawBoundary(this.getArea(), drawWidth, color, p_g, intensity);
+      pGraphicsContext.drawBoundary(this.getArea(), drawWidth, color, pG, intensity);
     } else {
-      p_graphics_context.fillArea(this.getArea(), p_g, color, intensity);
+      pGraphicsContext.fillArea(this.getArea(), pG, color, intensity);
     }
   }
 
@@ -203,24 +203,24 @@ public class ComponentOutline extends Item implements Serializable {
   }
 
   @Override
-  public void translateBy(Vector p_vector) {
-    this.translation = this.translation.add(p_vector);
+  public void translateBy(Vector pVector) {
+    this.translation = this.translation.add(pVector);
     clearDerivedData();
   }
 
   @Override
-  public void changePlacementSide(IntPoint p_pole) {
+  public void changePlacementSide(IntPoint pPole) {
     this.isFront = !this.isFront;
     Point relLocation = Point.ZERO.translateBy(this.translation);
-    this.translation = relLocation.mirrorVertical(p_pole).differenceBy(Point.ZERO);
+    this.translation = relLocation.mirrorVertical(pPole).differenceBy(Point.ZERO);
     clearDerivedData();
   }
 
   @Override
-  public void rotateApprox(double p_angle_in_degree, FloatPoint p_pole) {
-    double turnAngle = p_angle_in_degree;
+  public void rotateApprox(double pAngleInDegree, FloatPoint pPole) {
+    double turnAngle = pAngleInDegree;
     if (!this.isFront && this.board.components.getFlipStyleRotateFirst()) {
-      turnAngle = 360 - p_angle_in_degree;
+      turnAngle = 360 - pAngleInDegree;
     }
     this.rotationInDegree += turnAngle;
     while (this.rotationInDegree >= 360) {
@@ -230,14 +230,14 @@ public class ComponentOutline extends Item implements Serializable {
       this.rotationInDegree += 360;
     }
     FloatPoint newTranslation =
-        this.translation.toFloat().rotate(Math.toRadians(p_angle_in_degree), p_pole);
+        this.translation.toFloat().rotate(Math.toRadians(pAngleInDegree), pPole);
     this.translation = newTranslation.round().differenceBy(Point.ZERO);
     clearDerivedData();
   }
 
   @Override
-  public void turn90Degree(int p_factor, IntPoint p_pole) {
-    this.rotationInDegree += p_factor * 90;
+  public void turn90Degree(int pFactor, IntPoint pPole) {
+    this.rotationInDegree += pFactor * 90;
     while (this.rotationInDegree >= 360) {
       this.rotationInDegree -= 360;
     }
@@ -245,7 +245,7 @@ public class ComponentOutline extends Item implements Serializable {
       this.rotationInDegree += 360;
     }
     Point relLocation = Point.ZERO.translateBy(this.translation);
-    this.translation = relLocation.turn90Degree(p_factor, p_pole).differenceBy(Point.ZERO);
+    this.translation = relLocation.turn90Degree(pFactor, pPole).differenceBy(Point.ZERO);
     clearDerivedData();
   }
 
@@ -281,12 +281,12 @@ public class ComponentOutline extends Item implements Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {}
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {}
 
   @Override
-  public boolean write(ObjectOutputStream p_stream) {
+  public boolean write(ObjectOutputStream pStream) {
     try {
-      p_stream.writeObject(this);
+      pStream.writeObject(this);
     } catch (IOException _) {
       return false;
     }

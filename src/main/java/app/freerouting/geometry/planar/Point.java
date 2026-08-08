@@ -13,43 +13,43 @@ public abstract class Point implements Serializable {
    * creates an IntPoint from p_x and p_y. If p_x or p_y is too big for an IntPoint, a RationalPoint
    * is created.
    */
-  public static Point getInstance(int p_x, int p_y) {
-    IntPoint result = new IntPoint(p_x, p_y);
-    if (Math.abs(p_x) > Limits.CRIT_INT || Math.abs(p_y) > Limits.CRIT_INT) {
+  public static Point getInstance(int pX, int pY) {
+    IntPoint result = new IntPoint(pX, pY);
+    if (Math.abs(pX) > Limits.CRIT_INT || Math.abs(pY) > Limits.CRIT_INT) {
       return new RationalPoint(result);
     }
     return result;
   }
 
   /** factory method for creating a Point from 3 BigIntegers */
-  public static Point getInstance(BigInteger p_x, BigInteger p_y, BigInteger p_z) {
-    if (p_z.signum() < 0) {
+  public static Point getInstance(BigInteger pX, BigInteger pY, BigInteger pZ) {
+    if (pZ.signum() < 0) {
       // the dominator z of a RationalPoint is expected to be positive
-      p_x = p_x.negate();
-      p_y = p_y.negate();
-      p_z = p_z.negate();
+      pX = pX.negate();
+      pY = pY.negate();
+      pZ = pZ.negate();
     }
-    if (p_x.mod(p_z).signum() == 0) {
+    if (pX.mod(pZ).signum() == 0) {
       // p_x and p_y can be divided by p_z
-      p_x = p_x.divide(p_z);
-      p_y = p_y.divide(p_z);
-      p_z = BigInteger.ONE;
+      pX = pX.divide(pZ);
+      pY = pY.divide(pZ);
+      pZ = BigInteger.ONE;
     }
-    if (p_z.equals(BigInteger.ONE)) {
-      if (p_x.abs().compareTo(Limits.CRIT_INT_BIG) <= 0
-          && p_y.abs().compareTo(Limits.CRIT_INT_BIG) <= 0) {
+    if (pZ.equals(BigInteger.ONE)) {
+      if (pX.abs().compareTo(Limits.CRIT_INT_BIG) <= 0
+          && pY.abs().compareTo(Limits.CRIT_INT_BIG) <= 0) {
         // the Point fits into an IntPoint
-        return new IntPoint(p_x.intValue(), p_y.intValue());
+        return new IntPoint(pX.intValue(), pY.intValue());
       }
     }
-    return new RationalPoint(p_x, p_y, p_z);
+    return new RationalPoint(pX, pY, pZ);
   }
 
   /** returns the translation of this point by p_vector */
-  public abstract Point translateBy(Vector p_vector);
+  public abstract Point translateBy(Vector pVector);
 
   /** returns the difference vector of this point and p_other */
-  public abstract Vector differenceBy(Point p_other);
+  public abstract Vector differenceBy(Point pOther);
 
   /** approximates the coordinates of this point by float coordinates */
   public abstract FloatPoint toFloat();
@@ -67,21 +67,21 @@ public abstract class Point implements Serializable {
   public abstract IntOctagon surroundingOctagon();
 
   /** Returns true, if this point lies in the interior or on the border of p_box. */
-  public abstract boolean isContainedIn(IntBox p_box);
+  public abstract boolean isContainedIn(IntBox pBox);
 
-  public abstract Side sideOf(Line p_line);
+  public abstract Side sideOf(Line pLine);
 
   /** returns the nearest point to this point on p_line */
-  public abstract Point perpendicularProjection(Line p_line);
+  public abstract Point perpendicularProjection(Line pLine);
 
   /**
    * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to
    * p_2; Side.ON_THE_RIGHT, if this Point is on the right of the line from p_1 to p_2; and
    * Side.COLLINEAR, if this Point is collinear with p_1 and p_2.
    */
-  public Side sideOf(Point p_1, Point p_2) {
-    Vector v1 = differenceBy(p_1);
-    Vector v2 = p_2.differenceBy(p_1);
+  public Side sideOf(Point p1, Point p2) {
+    Vector v1 = differenceBy(p1);
+    Vector v2 = p2.differenceBy(p1);
     return v1.sideOf(v2);
   }
 
@@ -89,16 +89,16 @@ public abstract class Point implements Serializable {
    * Calculates the perpendicular direction from this point to p_line. Returns Direction. NULL, if
    * this point lies on p_line.
    */
-  public Direction perpendicularDirection(Line p_line) {
-    Side side = this.sideOf(p_line);
+  public Direction perpendicularDirection(Line pLine) {
+    Side side = this.sideOf(pLine);
     if (side == Side.COLLINEAR) {
       return Direction.NULL;
     }
     Direction result;
     if (side == Side.ON_THE_RIGHT) {
-      result = p_line.direction().turn45Degree(2);
+      result = pLine.direction().turn45Degree(2);
     } else {
-      result = p_line.direction().turn45Degree(6);
+      result = pLine.direction().turn45Degree(6);
     }
     return result;
   }
@@ -107,63 +107,63 @@ public abstract class Point implements Serializable {
    * Returns 1, if this Point has a strict bigger x coordinate than p_other, 0, if the x coordinates
    * are equal, and -1 otherwise.
    */
-  public abstract int compareX(Point p_other);
+  public abstract int compareX(Point pOther);
 
   /**
    * Returns 1, if this Point has a strict bigger y coordinate than p_other, 0, if the y coordinates
    * are equal, and -1 otherwise.
    */
-  public abstract int compareY(Point p_other);
+  public abstract int compareY(Point pOther);
 
   /**
    * The function returns compare_x (p_other), if the result is not 0. Otherwise, it returns
    * compare_y (p_other).
    */
-  public int compareXY(Point p_other) {
-    int result = compareX(p_other);
+  public int compareXY(Point pOther) {
+    int result = compareX(pOther);
     if (result == 0) {
-      result = compareY(p_other);
+      result = compareY(pOther);
     }
     return result;
   }
 
   /** Turns this point by p_factor times 90 degree around p_pole. */
-  public Point turn90Degree(int p_factor, Point p_pole) {
-    Vector v = this.differenceBy(p_pole);
-    v = v.turn90Degree(p_factor);
-    return p_pole.translateBy(v);
+  public Point turn90Degree(int pFactor, Point pPole) {
+    Vector v = this.differenceBy(pPole);
+    v = v.turn90Degree(pFactor);
+    return pPole.translateBy(v);
   }
 
   /** Mirrors this point at the vertical line through p_pole. */
-  public Point mirrorVertical(Point p_pole) {
-    Vector v = this.differenceBy(p_pole);
+  public Point mirrorVertical(Point pPole) {
+    Vector v = this.differenceBy(pPole);
     v = v.mirrorAtYAxis();
-    return p_pole.translateBy(v);
+    return pPole.translateBy(v);
   }
 
   /** Mirrors this point at the horizontal line through p_pole. */
-  public Point mirrorHorizontal(Point p_pole) {
-    Vector v = this.differenceBy(p_pole);
+  public Point mirrorHorizontal(Point pPole) {
+    Vector v = this.differenceBy(pPole);
     v = v.mirrorAtXAxis();
-    return p_pole.translateBy(v);
+    return pPole.translateBy(v);
   }
 
   // auxiliary functions needed because the virtual function mechanism
   // does not work in parameter position
 
-  abstract Point translateBy(IntVector p_vector);
+  abstract Point translateBy(IntVector pVector);
 
-  abstract Point translateBy(RationalVector p_vector);
+  abstract Point translateBy(RationalVector pVector);
 
-  abstract Vector differenceBy(IntPoint p_other);
+  abstract Vector differenceBy(IntPoint pOther);
 
-  abstract Vector differenceBy(RationalPoint p_other);
+  abstract Vector differenceBy(RationalPoint pOther);
 
-  abstract int compareX(IntPoint p_other);
+  abstract int compareX(IntPoint pOther);
 
-  abstract int compareX(RationalPoint p_other);
+  abstract int compareX(RationalPoint pOther);
 
-  abstract int compareY(IntPoint p_other);
+  abstract int compareY(IntPoint pOther);
 
-  abstract int compareY(RationalPoint p_other);
+  abstract int compareY(RationalPoint pOther);
 }

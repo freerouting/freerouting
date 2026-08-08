@@ -32,11 +32,11 @@ public class CoordinateTransform implements Serializable {
 
   /** Creates a new instance of CoordinateTransform */
   public CoordinateTransform(
-      double p_user_unit_factor, Unit p_user_unit, double p_board_unit_factor, Unit p_board_unit) {
-    userUnit = p_user_unit;
-    boardUnit = p_board_unit;
-    userUnitFactor = p_user_unit_factor;
-    boardUnitFactor = p_board_unit_factor;
+      double pUserUnitFactor, Unit pUserUnit, double pBoardUnitFactor, Unit pBoardUnit) {
+    userUnit = pUserUnit;
+    boardUnit = pBoardUnit;
+    userUnitFactor = pUserUnitFactor;
+    boardUnitFactor = pBoardUnitFactor;
     scaleFactor = boardUnitFactor / userUnitFactor;
 
     if (userUnitFactor != 1.0) {
@@ -45,39 +45,39 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** Scale a value from the board to the user coordinate system. */
-  public double boardToUser(double p_value) {
-    return Unit.scale(p_value * scaleFactor, boardUnit, userUnit);
+  public double boardToUser(double pValue) {
+    return Unit.scale(pValue * scaleFactor, boardUnit, userUnit);
   }
 
   /** Scale a value from the user to the board coordinate system. */
-  public double userToBoard(double p_value) {
-    return Unit.scale(p_value / scaleFactor, userUnit, boardUnit);
+  public double userToBoard(double pValue) {
+    return Unit.scale(pValue / scaleFactor, userUnit, boardUnit);
   }
 
   /**
    * Transforms a geometry.planar.FloatPoint from the board coordinate space to the user coordinate
    * space.
    */
-  public FloatPoint boardToUser(FloatPoint p_point) {
-    return new FloatPoint(boardToUser(p_point.x), boardToUser(p_point.y));
+  public FloatPoint boardToUser(FloatPoint pPoint) {
+    return new FloatPoint(boardToUser(pPoint.x), boardToUser(pPoint.y));
   }
 
   /**
    * Transforms a geometry.planar.FloatPoint from the user coordinate space. to the board coordinate
    * space.
    */
-  public FloatPoint userToBoard(FloatPoint p_point) {
-    return new FloatPoint(userToBoard(p_point.x), userToBoard(p_point.y));
+  public FloatPoint userToBoard(FloatPoint pPoint) {
+    return new FloatPoint(userToBoard(pPoint.x), userToBoard(pPoint.y));
   }
 
-  public PrintableShape boardToUser(Shape p_shape, Locale p_locale) {
+  public PrintableShape boardToUser(Shape pShape, Locale pLocale) {
     PrintableShape result;
-    if (p_shape instanceof Circle circle) {
-      result = boardToUser(circle, p_locale);
-    } else if (p_shape instanceof IntBox box) {
-      result = boardToUser(box, p_locale);
-    } else if (p_shape instanceof PolylineShape shape) {
-      result = boardToUser(shape, p_locale);
+    if (pShape instanceof Circle circle) {
+      result = boardToUser(circle, pLocale);
+    } else if (pShape instanceof IntBox box) {
+      result = boardToUser(box, pLocale);
+    } else if (pShape instanceof PolylineShape shape) {
+      result = boardToUser(shape, pLocale);
     } else {
       FRLogger.warn("CoordinateTransform.board_to_user not yet implemented for p_shape");
       result = null;
@@ -85,22 +85,22 @@ public class CoordinateTransform implements Serializable {
     return result;
   }
 
-  public PrintableShape.Circle boardToUser(Circle p_circle, Locale p_locale) {
+  public PrintableShape.Circle boardToUser(Circle pCircle, Locale pLocale) {
     return new PrintableShape.Circle(
-        boardToUser(p_circle.center.toFloat()), boardToUser(p_circle.radius), p_locale);
+        boardToUser(pCircle.center.toFloat()), boardToUser(pCircle.radius), pLocale);
   }
 
-  public PrintableShape.Rectangle boardToUser(IntBox p_box, Locale p_locale) {
+  public PrintableShape.Rectangle boardToUser(IntBox pBox, Locale pLocale) {
     return new PrintableShape.Rectangle(
-        boardToUser(p_box.ll.toFloat()), boardToUser(p_box.ur.toFloat()), p_locale);
+        boardToUser(pBox.ll.toFloat()), boardToUser(pBox.ur.toFloat()), pLocale);
   }
 
-  public PrintableShape.Polygon boardToUser(PolylineShape p_shape, Locale p_locale) {
-    FloatPoint[] corners = p_shape.cornerApproxArr();
+  public PrintableShape.Polygon boardToUser(PolylineShape pShape, Locale pLocale) {
+    FloatPoint[] corners = pShape.cornerApproxArr();
     FloatPoint[] transformedCorners = new FloatPoint[corners.length];
     for (int i = 0; i < corners.length; i++) {
       transformedCorners[i] = boardToUser(corners[i]);
     }
-    return new PrintableShape.Polygon(transformedCorners, p_locale);
+    return new PrintableShape.Polygon(transformedCorners, pLocale);
   }
 }

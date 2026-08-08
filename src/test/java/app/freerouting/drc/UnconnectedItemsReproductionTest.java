@@ -68,9 +68,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
 
     // Both traces are on the same net
     assertEquals(
-        trace1.getNetNo(0),
-        trace2.getNetNo(0),
-        "Traces 2402 and 2411 must belong to the same net");
+        trace1.getNetNo(0), trace2.getNetNo(0), "Traces 2402 and 2411 must belong to the same net");
 
     // Trace 2402 is genuinely dangling: the board-model connectivity check
     // confirms neither endpoint has a contact. The DRC must report this.
@@ -89,16 +87,12 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
     }
 
     Item via2522item =
-        board.getItems().stream()
-            .filter(item -> item.getIdNo() == 2522)
-            .findFirst()
-            .orElse(null);
+        board.getItems().stream().filter(item -> item.getIdNo() == 2522).findFirst().orElse(null);
 
     assertNotNull(via2522item, "Via 2522 should be found in the board");
     Via via2522 = assertInstanceOf(Via.class, via2522item, "Item 2522 should be a Via");
 
-    System.out.println(
-        "Via 2522 layers  : " + via2522.firstLayer() + " to " + via2522.lastLayer());
+    System.out.println("Via 2522 layers  : " + via2522.firstLayer() + " to " + via2522.lastLayer());
     System.out.println("Via 2522 is_tail : " + via2522.isTail());
     System.out.println("Via 2522 contacts: " + via2522.getNormalContacts().size());
 

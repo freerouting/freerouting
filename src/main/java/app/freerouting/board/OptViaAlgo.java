@@ -23,19 +23,19 @@ public final class OptViaAlgo {
    * trace costs will be set to 1. Returns false, if the via was not changed.
    */
   public static boolean optViaLocation(
-      RoutingBoard p_board,
-      Via p_via,
-      ExpansionCostFactor[] p_trace_cost_arr,
-      int p_trace_pull_tight_accuracy,
-      int p_max_recursion_depth) {
-    if (p_via.isShoveFixed()) {
+      RoutingBoard pBoard,
+      Via pVia,
+      ExpansionCostFactor[] pTraceCostArr,
+      int pTracePullTightAccuracy,
+      int pMaxRecursionDepth) {
+    if (pVia.isShoveFixed()) {
       return false;
     }
-    if (p_max_recursion_depth <= 0) {
+    if (pMaxRecursionDepth <= 0) {
       FRLogger.debug("OptViaAlgo.opt_via_location: probably endless loop");
       return false;
     }
-    Collection<Item> contacts = p_via.getNormalContacts();
+    Collection<Item> contacts = pVia.getNormalContacts();
     boolean isPlaneOrFanoutVia = contacts.size() == 1;
     PolylineTrace firstTrace = null;
     PolylineTrace secondTrace = null;
@@ -66,10 +66,9 @@ public final class OptViaAlgo {
       }
     }
     if (isPlaneOrFanoutVia) {
-      return optPlaneOrFanoutVia(
-          p_board, p_via, p_trace_pull_tight_accuracy, p_max_recursion_depth);
+      return optPlaneOrFanoutVia(pBoard, pVia, pTracePullTightAccuracy, pMaxRecursionDepth);
     }
-    Point viaCenter = p_via.getCenter();
+    Point viaCenter = pVia.getCenter();
     int firstLayer = firstTrace.getLayer();
     int secondLayer = secondTrace.getLayer();
     Point firstTraceFromCorner;
@@ -77,7 +76,7 @@ public final class OptViaAlgo {
 
     // calculate firstTraceFromCorner and secondTraceFromCorner
     // Use tolerance-based comparison to match connectivity detection logic
-    int tolerance = (int) (p_via.minWidth() / 2) + 1;
+    int tolerance = (int) (pVia.minWidth() / 2) + 1;
 
     if (isWithinTolerance(firstTrace.firstCorner(), viaCenter, tolerance)) {
       firstTraceFromCorner = firstTrace.polyline().corner(1);
@@ -100,9 +99,9 @@ public final class OptViaAlgo {
 
     ExpansionCostFactor firstLayerTraceCosts;
     ExpansionCostFactor secondLayerTraceCosts;
-    if (p_trace_cost_arr != null) {
-      firstLayerTraceCosts = p_trace_cost_arr[firstLayer];
-      secondLayerTraceCosts = p_trace_cost_arr[secondLayer];
+    if (pTraceCostArr != null) {
+      firstLayerTraceCosts = pTraceCostArr[firstLayer];
+      secondLayerTraceCosts = pTraceCostArr[secondLayer];
     } else {
       firstLayerTraceCosts = new ExpansionCostFactor(1, 1);
       secondLayerTraceCosts = firstLayerTraceCosts;
@@ -110,8 +109,8 @@ public final class OptViaAlgo {
 
     Point newLocation =
         repositionVia(
-            p_board,
-            p_via,
+            pBoard,
+            pVia,
             firstTrace.getHalfWidth(),
             firstTrace.clearanceClassNo(),
             firstTrace.getLayer(),
@@ -126,29 +125,25 @@ public final class OptViaAlgo {
       return false;
     }
     Vector delta = newLocation.differenceBy(viaCenter);
-    if (!MoveDrillItemAlgo.insert(p_via, delta, 9, 9, null, p_board)) {
+    if (!MoveDrillItemAlgo.insert(pVia, delta, 9, 9, null, pBoard)) {
       FRLogger.warn("OptViaAlgo.opt_via_location: move via failed");
       return false;
     }
     ItemSelectionFilter filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
-    Collection<Item> pickedItems = p_board.pickItems(newLocation, firstTrace.getLayer(), filter);
+    Collection<Item> pickedItems = pBoard.pickItems(newLocation, firstTrace.getLayer(), filter);
     for (Item currItem : pickedItems) {
-      ((PolylineTrace) currItem).pullTight(true, p_trace_pull_tight_accuracy, null);
+      ((PolylineTrace) currItem).pullTight(true, pTracePullTightAccuracy, null);
     }
-    pickedItems = p_board.pickItems(newLocation, secondTrace.getLayer(), filter);
+    pickedItems = pBoard.pickItems(newLocation, secondTrace.getLayer(), filter);
     for (Item currItem : pickedItems) {
-      ((PolylineTrace) currItem).pullTight(true, p_trace_pull_tight_accuracy, null);
+      ((PolylineTrace) currItem).pullTight(true, pTracePullTightAccuracy, null);
     }
     filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.VIAS);
-    pickedItems = p_board.pickItems(newLocation, firstTrace.getLayer(), filter);
+    pickedItems = pBoard.pickItems(newLocation, firstTrace.getLayer(), filter);
     for (Item currItem : pickedItems) {
       optViaLocation(
-          p_board,
-          (Via) currItem,
-          p_trace_cost_arr,
-          p_trace_pull_tight_accuracy,
-          p_max_recursion_depth - 1);
+          pBoard, (Via) currItem, pTraceCostArr, pTracePullTightAccuracy, pMaxRecursionDepth - 1);
       break;
     }
     return true;
@@ -156,12 +151,12 @@ public final class OptViaAlgo {
 
   /** Optimisations for vias with only 1 connected Trace (Plane or Fanout Vias). */
   private static boolean optPlaneOrFanoutVia(
-      RoutingBoard p_board, Via p_via, int p_trace_pull_tight_accuracy, int p_max_recursion_depth) {
-    if (p_max_recursion_depth <= 0) {
+      RoutingBoard pBoard, Via pVia, int pTracePullTightAccuracy, int pMaxRecursionDepth) {
+    if (pMaxRecursionDepth <= 0) {
       FRLogger.debug("OptViaAlgo.opt_plane_or_fanout_via: probably endless loop");
       return false;
     }
-    Collection<Item> contactList = p_via.getNormalContacts();
+    Collection<Item> contactList = pVia.getNormalContacts();
     if (contactList.isEmpty()) {
       return false;
     }
@@ -185,10 +180,10 @@ public final class OptViaAlgo {
     if (contactTrace == null) {
       return false;
     }
-    Point viaCenter = p_via.getCenter();
+    Point viaCenter = pVia.getCenter();
 
     // Use tolerance based on via size, matching the logic in opt_via_location
-    int tolerance = (int) (p_via.minWidth() / 2) + 1;
+    int tolerance = (int) (pVia.minWidth() / 2) + 1;
 
     boolean atFirstCorner;
     if (isWithinTolerance(contactTrace.firstCorner(), viaCenter, tolerance)) {
@@ -211,8 +206,7 @@ public final class OptViaAlgo {
     int traceLayer = contactTrace.getLayer();
     int traceClClassNo = contactTrace.clearanceClassNo();
     Point newViaLocation =
-        repositionVia(
-            p_board, p_via, roundedCheckCorner, traceHalfWidth, traceLayer, traceClClassNo);
+        repositionVia(pBoard, pVia, roundedCheckCorner, traceHalfWidth, traceLayer, traceClClassNo);
     if (newViaLocation == null && tracePolyline.cornerCount() >= 3) {
 
       // try to project the via to the previous line
@@ -231,7 +225,7 @@ public final class OptViaAlgo {
         Point projection = currLine.perpendicularProjection(floatViaCenter).round();
         Vector diffVector = projection.differenceBy(viaCenter);
         boolean projectionOk = true;
-        AngleRestriction angleRestriction = p_board.rules.getTraceAngleRestriction();
+        AngleRestriction angleRestriction = pBoard.rules.getTraceAngleRestriction();
         if (projection.equals(viaCenter)
             || angleRestriction == AngleRestriction.NINETY_DEGREE && !diffVector.isOrthogonal()
             || angleRestriction == AngleRestriction.FORTYFIVE_DEGREE
@@ -239,13 +233,13 @@ public final class OptViaAlgo {
           projectionOk = false;
         }
         if (projectionOk) {
-          if (MoveDrillItemAlgo.check(p_via, diffVector, 0, 0, null, p_board, null)) {
+          if (MoveDrillItemAlgo.check(pVia, diffVector, 0, 0, null, pBoard, null)) {
             double okLength =
-                p_board.checkTraceSegment(
+                pBoard.checkTraceSegment(
                     viaCenter,
                     projection,
                     traceLayer,
-                    p_via.netNoArr,
+                    pVia.netNoArr,
                     traceHalfWidth,
                     traceClClassNo,
                     false);
@@ -264,7 +258,7 @@ public final class OptViaAlgo {
       ItemSelectionFilter filter =
           new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.CONDUCTION);
       Collection<Item> pickedItems =
-          p_board.pickItems(newViaLocation, contactPlane.getLayer(), filter);
+          pBoard.pickItems(newViaLocation, contactPlane.getLayer(), filter);
       boolean contactOk = false;
       for (Item currItem : pickedItems) {
         if (currItem == contactPlane) {
@@ -277,20 +271,19 @@ public final class OptViaAlgo {
       }
     }
     Vector diffVector = newViaLocation.differenceBy(viaCenter);
-    if (!MoveDrillItemAlgo.insert(p_via, diffVector, 9, 9, null, p_board)) {
+    if (!MoveDrillItemAlgo.insert(pVia, diffVector, 9, 9, null, pBoard)) {
       FRLogger.warn("OptViaAlgo.opt_plane_or_fanout_via: move via failed");
       return false;
     }
     ItemSelectionFilter filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
     Collection<Item> pickedItems =
-        p_board.pickItems(newViaLocation, contactTrace.getLayer(), filter);
+        pBoard.pickItems(newViaLocation, contactTrace.getLayer(), filter);
     for (Item currItem : pickedItems) {
-      ((PolylineTrace) currItem).pullTight(true, p_trace_pull_tight_accuracy, null);
+      ((PolylineTrace) currItem).pullTight(true, pTracePullTightAccuracy, null);
     }
     if (newViaLocation.equals(checkCorner)) {
-      optPlaneOrFanoutVia(
-          p_board, p_via, p_trace_pull_tight_accuracy, p_max_recursion_depth - 1);
+      optPlaneOrFanoutVia(pBoard, pVia, pTracePullTightAccuracy, pMaxRecursionDepth - 1);
     }
     return true;
   }
@@ -300,33 +293,33 @@ public final class OptViaAlgo {
    * location of the via, or null, if no move was possible.
    */
   private static Point repositionVia(
-      RoutingBoard p_board,
-      Via p_via,
-      IntPoint p_to_location,
-      int p_trace_half_width,
-      int p_trace_layer,
-      int p_trace_cl_class) {
+      RoutingBoard pBoard,
+      Via pVia,
+      IntPoint pToLocation,
+      int pTraceHalfWidth,
+      int pTraceLayer,
+      int pTraceClClass) {
 
-    Point fromLocation = p_via.getCenter();
+    Point fromLocation = pVia.getCenter();
 
-    if (fromLocation.equals(p_to_location)) {
+    if (fromLocation.equals(pToLocation)) {
       return null;
     }
 
     double okLength =
-        p_board.checkTraceSegment(
+        pBoard.checkTraceSegment(
             fromLocation,
-            p_to_location,
-            p_trace_layer,
-            p_via.netNoArr,
-            p_trace_half_width,
-            p_trace_cl_class,
+            pToLocation,
+            pTraceLayer,
+            pVia.netNoArr,
+            pTraceHalfWidth,
+            pTraceClClass,
             false);
     if (okLength <= 0) {
       return null;
     }
     FloatPoint floatFromLocation = fromLocation.toFloat();
-    FloatPoint floatToLocation = p_to_location.toFloat();
+    FloatPoint floatToLocation = pToLocation.toFloat();
     FloatPoint newFloatToLocation;
     if (okLength >= Integer.MAX_VALUE) {
       newFloatToLocation = floatToLocation;
@@ -335,13 +328,13 @@ public final class OptViaAlgo {
     }
     Point newToLocation = newFloatToLocation.round();
     Vector delta = newToLocation.differenceBy(fromLocation);
-    boolean checkOk = MoveDrillItemAlgo.check(p_via, delta, 0, 0, null, p_board, null);
+    boolean checkOk = MoveDrillItemAlgo.check(pVia, delta, 0, 0, null, pBoard, null);
 
     if (checkOk) {
       return newToLocation;
     }
 
-    final double cMinLength = 0.3 * p_trace_half_width + 1;
+    final double cMinLength = 0.3 * pTraceHalfWidth + 1;
 
     okLength = Math.min(okLength, floatFromLocation.distance(floatToLocation));
 
@@ -355,7 +348,7 @@ public final class OptViaAlgo {
           floatFromLocation.changeLength(floatToLocation, okLength + currLength).round();
 
       delta = checkPoint.differenceBy(fromLocation);
-      if (MoveDrillItemAlgo.check(p_via, delta, 0, 0, null, p_board, null)) {
+      if (MoveDrillItemAlgo.check(pVia, delta, 0, 0, null, pBoard, null)) {
         okLength += currLength;
         result = checkPoint;
       }
@@ -365,27 +358,27 @@ public final class OptViaAlgo {
   }
 
   private static boolean repositionVia(
-      RoutingBoard p_board,
-      Via p_via,
-      IntPoint p_to_location,
-      int p_trace_half_width_1,
-      int p_trace_layer_1,
-      int p_trace_cl_class_1,
-      IntPoint p_connect_location,
-      int p_trace_half_width_2,
-      int p_trace_layer_2,
-      int p_trace_cl_class_2) {
+      RoutingBoard pBoard,
+      Via pVia,
+      IntPoint pToLocation,
+      int pTraceHalfWidth1,
+      int pTraceLayer1,
+      int pTraceClClass1,
+      IntPoint pConnectLocation,
+      int pTraceHalfWidth2,
+      int pTraceLayer2,
+      int pTraceClClass2) {
 
-    Point fromLocation = p_via.getCenter();
+    Point fromLocation = pVia.getCenter();
 
-    if (fromLocation.equals(p_to_location)) {
+    if (fromLocation.equals(pToLocation)) {
       FRLogger.trace("OptViaAlgo.reposition_via: fromLocation equal p_to_location");
       return false;
     }
 
-    Vector delta = p_to_location.differenceBy(fromLocation);
+    Vector delta = pToLocation.differenceBy(fromLocation);
 
-    if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NONE
+    if (pBoard.rules.getTraceAngleRestriction() == AngleRestriction.NONE
         && delta.lengthApprox() <= 1.5) {
       // PullTightAlgoAnyAngle.reduce_corners may not be able to remove the new
       // generated overlap
@@ -396,16 +389,16 @@ public final class OptViaAlgo {
       return false;
     }
 
-    int[] netNoArr = p_via.netNoArr;
+    int[] netNoArr = pVia.netNoArr;
 
     double okLength =
-        p_board.checkTraceSegment(
+        pBoard.checkTraceSegment(
             fromLocation,
-            p_to_location,
-            p_trace_layer_1,
+            pToLocation,
+            pTraceLayer1,
             netNoArr,
-            p_trace_half_width_1,
-            p_trace_cl_class_1,
+            pTraceHalfWidth1,
+            pTraceClClass1,
             false);
 
     if (okLength < Integer.MAX_VALUE) {
@@ -413,19 +406,19 @@ public final class OptViaAlgo {
     }
 
     okLength =
-        p_board.checkTraceSegment(
-            p_to_location,
-            p_connect_location,
-            p_trace_layer_2,
+        pBoard.checkTraceSegment(
+            pToLocation,
+            pConnectLocation,
+            pTraceLayer2,
             netNoArr,
-            p_trace_half_width_2,
-            p_trace_cl_class_2,
+            pTraceHalfWidth2,
+            pTraceClClass2,
             false);
 
     if (okLength < Integer.MAX_VALUE) {
       return false;
     }
-    return MoveDrillItemAlgo.check(p_via, delta, 0, 0, null, p_board, null);
+    return MoveDrillItemAlgo.check(pVia, delta, 0, 0, null, pBoard, null);
   }
 
   /**
@@ -433,27 +426,27 @@ public final class OptViaAlgo {
    * no better location was found.
    */
   private static Point repositionVia(
-      RoutingBoard p_board,
-      Via p_via,
-      int p_first_trace_half_width,
-      int p_first_trace_cl_class,
-      int p_first_trace_layer,
-      ExpansionCostFactor p_first_trace_costs,
-      Point p_first_trace_from_corner,
-      int p_second_trace_half_width,
-      int p_second_trace_cl_class,
-      int p_second_trace_layer,
-      ExpansionCostFactor p_second_trace_costs,
-      Point p_second_trace_from_corner) {
-    Point viaLocation = p_via.getCenter();
+      RoutingBoard pBoard,
+      Via pVia,
+      int pFirstTraceHalfWidth,
+      int pFirstTraceClClass,
+      int pFirstTraceLayer,
+      ExpansionCostFactor pFirstTraceCosts,
+      Point pFirstTraceFromCorner,
+      int pSecondTraceHalfWidth,
+      int pSecondTraceClClass,
+      int pSecondTraceLayer,
+      ExpansionCostFactor pSecondTraceCosts,
+      Point pSecondTraceFromCorner) {
+    Point viaLocation = pVia.getCenter();
 
-    Vector firstDelta = p_first_trace_from_corner.differenceBy(viaLocation);
-    Vector secondDelta = p_second_trace_from_corner.differenceBy(viaLocation);
+    Vector firstDelta = pFirstTraceFromCorner.differenceBy(viaLocation);
+    Vector secondDelta = pSecondTraceFromCorner.differenceBy(viaLocation);
     double scalarProduct = firstDelta.scalarProduct(secondDelta);
 
     FloatPoint floatViaLocation = viaLocation.toFloat();
-    FloatPoint floatFirstTraceFromCorner = p_first_trace_from_corner.toFloat();
-    FloatPoint floatSecondTraceFromCorner = p_second_trace_from_corner.toFloat();
+    FloatPoint floatFirstTraceFromCorner = pFirstTraceFromCorner.toFloat();
+    FloatPoint floatSecondTraceFromCorner = pSecondTraceFromCorner.toFloat();
     double firstTraceFromCornerDistance = floatViaLocation.distance(floatFirstTraceFromCorner);
     double secondTraceFromCornerDistance = floatViaLocation.distance(floatSecondTraceFromCorner);
     IntPoint roundedFirstTraceFromCorner = floatFirstTraceFromCorner.round();
@@ -461,48 +454,44 @@ public final class OptViaAlgo {
 
     // handle case of overlapping lines first
 
-    if (viaLocation.sideOf(p_first_trace_from_corner, p_second_trace_from_corner) == Side.COLLINEAR
+    if (viaLocation.sideOf(pFirstTraceFromCorner, pSecondTraceFromCorner) == Side.COLLINEAR
         && scalarProduct > 0) {
       if (secondTraceFromCornerDistance < firstTraceFromCornerDistance) {
         return repositionVia(
-            p_board,
-            p_via,
+            pBoard,
+            pVia,
             roundedSecondTraceFromCorner,
-            p_first_trace_half_width,
-            p_first_trace_layer,
-            p_first_trace_cl_class);
+            pFirstTraceHalfWidth,
+            pFirstTraceLayer,
+            pFirstTraceClClass);
       }
       return repositionVia(
-          p_board,
-          p_via,
+          pBoard,
+          pVia,
           roundedFirstTraceFromCorner,
-          p_second_trace_half_width,
-          p_second_trace_layer,
-          p_second_trace_cl_class);
+          pSecondTraceHalfWidth,
+          pSecondTraceLayer,
+          pSecondTraceClClass);
     }
     Point result;
 
     double currWeightedDistance1 =
         floatViaLocation.weightedDistance(
-            floatFirstTraceFromCorner,
-            p_first_trace_costs.horizontal,
-            p_first_trace_costs.vertical);
+            floatFirstTraceFromCorner, pFirstTraceCosts.horizontal, pFirstTraceCosts.vertical);
     double currWeightedDistance2 =
         floatViaLocation.weightedDistance(
-            floatFirstTraceFromCorner,
-            p_second_trace_costs.horizontal,
-            p_second_trace_costs.vertical);
+            floatFirstTraceFromCorner, pSecondTraceCosts.horizontal, pSecondTraceCosts.vertical);
 
     if (currWeightedDistance1 > currWeightedDistance2) {
       // try to move the via in direction of p_first_trace_from_corner
       result =
           repositionVia(
-              p_board,
-              p_via,
+              pBoard,
+              pVia,
               roundedFirstTraceFromCorner,
-              p_second_trace_half_width,
-              p_second_trace_layer,
-              p_second_trace_cl_class);
+              pSecondTraceHalfWidth,
+              pSecondTraceLayer,
+              pSecondTraceClClass);
       if (result != null) {
         return result;
       }
@@ -510,31 +499,27 @@ public final class OptViaAlgo {
 
     currWeightedDistance1 =
         floatViaLocation.weightedDistance(
-            floatSecondTraceFromCorner,
-            p_second_trace_costs.horizontal,
-            p_second_trace_costs.vertical);
+            floatSecondTraceFromCorner, pSecondTraceCosts.horizontal, pSecondTraceCosts.vertical);
     currWeightedDistance2 =
         floatViaLocation.weightedDistance(
-            floatSecondTraceFromCorner,
-            p_first_trace_costs.horizontal,
-            p_first_trace_costs.vertical);
+            floatSecondTraceFromCorner, pFirstTraceCosts.horizontal, pFirstTraceCosts.vertical);
 
     if (currWeightedDistance1 > currWeightedDistance2) {
       // try to move the via in direction of p_second_trace_from_corner
       result =
           repositionVia(
-              p_board,
-              p_via,
+              pBoard,
+              pVia,
               roundedSecondTraceFromCorner,
-              p_first_trace_half_width,
-              p_first_trace_layer,
-              p_first_trace_cl_class);
+              pFirstTraceHalfWidth,
+              pFirstTraceLayer,
+              pFirstTraceClClass);
       if (result != null) {
         return result;
       }
     }
     if (scalarProduct > 0
-        && p_board.rules.getTraceAngleRestriction() != AngleRestriction.NINETY_DEGREE) {
+        && pBoard.rules.getTraceAngleRestriction() != AngleRestriction.NINETY_DEGREE) {
       // acute angle
       IntPoint toPoint1;
       IntPoint toPoint2;
@@ -544,63 +529,56 @@ public final class OptViaAlgo {
         toPoint1 = roundedFirstTraceFromCorner;
         floatToPoint1 = floatFirstTraceFromCorner;
         floatToPoint2 =
-            floatViaLocation.changeLength(
-                floatSecondTraceFromCorner, firstTraceFromCornerDistance);
+            floatViaLocation.changeLength(floatSecondTraceFromCorner, firstTraceFromCornerDistance);
         toPoint2 = floatToPoint2.round();
       } else {
         floatToPoint1 =
-            floatViaLocation.changeLength(
-                floatFirstTraceFromCorner, secondTraceFromCornerDistance);
+            floatViaLocation.changeLength(floatFirstTraceFromCorner, secondTraceFromCornerDistance);
         toPoint1 = floatToPoint1.round();
         toPoint2 = roundedSecondTraceFromCorner;
         floatToPoint2 = floatSecondTraceFromCorner;
       }
       currWeightedDistance1 =
           floatToPoint1.weightedDistance(
-              floatToPoint2, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+              floatToPoint2, pFirstTraceCosts.horizontal, pFirstTraceCosts.vertical);
       currWeightedDistance2 =
           floatToPoint1.weightedDistance(
-              floatToPoint2, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+              floatToPoint2, pSecondTraceCosts.horizontal, pSecondTraceCosts.vertical);
 
       if (currWeightedDistance1 > currWeightedDistance2) {
         // try moving the via first into the direction of toPoint1
         result =
             repositionVia(
-                p_board,
-                p_via,
+                pBoard,
+                pVia,
                 toPoint1,
-                p_second_trace_half_width,
-                p_second_trace_layer,
-                p_second_trace_cl_class);
+                pSecondTraceHalfWidth,
+                pSecondTraceLayer,
+                pSecondTraceClClass);
         if (result == null) {
           result =
               repositionVia(
-                  p_board,
-                  p_via,
+                  pBoard,
+                  pVia,
                   toPoint2,
-                  p_first_trace_half_width,
-                  p_first_trace_layer,
-                  p_first_trace_cl_class);
+                  pFirstTraceHalfWidth,
+                  pFirstTraceLayer,
+                  pFirstTraceClClass);
         }
       } else {
         // try moving the via first into the direction of toPoint2
         result =
             repositionVia(
-                p_board,
-                p_via,
-                toPoint2,
-                p_first_trace_half_width,
-                p_first_trace_layer,
-                p_first_trace_cl_class);
+                pBoard, pVia, toPoint2, pFirstTraceHalfWidth, pFirstTraceLayer, pFirstTraceClClass);
         if (result == null) {
           result =
               repositionVia(
-                  p_board,
-                  p_via,
+                  pBoard,
+                  pVia,
                   toPoint1,
-                  p_second_trace_half_width,
-                  p_second_trace_layer,
-                  p_second_trace_cl_class);
+                  pSecondTraceHalfWidth,
+                  pSecondTraceLayer,
+                  pSecondTraceClClass);
         }
       }
       if (result != null) {
@@ -616,32 +594,28 @@ public final class OptViaAlgo {
 
       currWeightedDistance1 =
           floatViaLocation.weightedDistance(
-              floatFirstTraceFromCorner,
-              p_first_trace_costs.horizontal,
-              p_first_trace_costs.vertical);
+              floatFirstTraceFromCorner, pFirstTraceCosts.horizontal, pFirstTraceCosts.vertical);
       currWeightedDistance2 =
           floatViaLocation.weightedDistance(
-              floatCheckLocation, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+              floatCheckLocation, pSecondTraceCosts.horizontal, pSecondTraceCosts.vertical);
       double currWeightedDistance3 =
           floatCheckLocation.weightedDistance(
-              floatFirstTraceFromCorner,
-              p_first_trace_costs.horizontal,
-              p_first_trace_costs.vertical);
+              floatFirstTraceFromCorner, pFirstTraceCosts.horizontal, pFirstTraceCosts.vertical);
 
       if (currWeightedDistance1 > currWeightedDistance2 + currWeightedDistance3) {
         IntPoint checkLocation = floatCheckLocation.round();
         boolean checkOk =
             repositionVia(
-                p_board,
-                p_via,
+                pBoard,
+                pVia,
                 checkLocation,
-                p_second_trace_half_width,
-                p_second_trace_layer,
-                p_second_trace_cl_class,
+                pSecondTraceHalfWidth,
+                pSecondTraceLayer,
+                pSecondTraceClClass,
                 roundedFirstTraceFromCorner,
-                p_first_trace_half_width,
-                p_first_trace_layer,
-                p_first_trace_cl_class);
+                pFirstTraceHalfWidth,
+                pFirstTraceLayer,
+                pFirstTraceClClass);
         if (checkOk) {
           return checkLocation;
         }
@@ -651,27 +625,25 @@ public final class OptViaAlgo {
 
       currWeightedDistance2 =
           floatViaLocation.weightedDistance(
-              floatCheckLocation, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+              floatCheckLocation, pSecondTraceCosts.horizontal, pSecondTraceCosts.vertical);
       currWeightedDistance3 =
           floatCheckLocation.weightedDistance(
-              floatFirstTraceFromCorner,
-              p_first_trace_costs.horizontal,
-              p_first_trace_costs.vertical);
+              floatFirstTraceFromCorner, pFirstTraceCosts.horizontal, pFirstTraceCosts.vertical);
 
       if (currWeightedDistance1 > currWeightedDistance2 + currWeightedDistance3) {
         IntPoint checkLocation = floatCheckLocation.round();
         boolean checkOk =
             repositionVia(
-                p_board,
-                p_via,
+                pBoard,
+                pVia,
                 checkLocation,
-                p_second_trace_half_width,
-                p_second_trace_layer,
-                p_second_trace_cl_class,
+                pSecondTraceHalfWidth,
+                pSecondTraceLayer,
+                pSecondTraceClClass,
                 roundedFirstTraceFromCorner,
-                p_first_trace_half_width,
-                p_first_trace_layer,
-                p_first_trace_cl_class);
+                pFirstTraceHalfWidth,
+                pFirstTraceLayer,
+                pFirstTraceClClass);
         if (checkOk) {
           return checkLocation;
         }
@@ -684,32 +656,28 @@ public final class OptViaAlgo {
 
       currWeightedDistance1 =
           floatViaLocation.weightedDistance(
-              floatSecondTraceFromCorner,
-              p_second_trace_costs.horizontal,
-              p_second_trace_costs.vertical);
+              floatSecondTraceFromCorner, pSecondTraceCosts.horizontal, pSecondTraceCosts.vertical);
       currWeightedDistance2 =
           floatViaLocation.weightedDistance(
-              floatCheckLocation, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+              floatCheckLocation, pFirstTraceCosts.horizontal, pFirstTraceCosts.vertical);
       double currWeightedDistance3 =
           floatCheckLocation.weightedDistance(
-              floatSecondTraceFromCorner,
-              p_second_trace_costs.horizontal,
-              p_second_trace_costs.vertical);
+              floatSecondTraceFromCorner, pSecondTraceCosts.horizontal, pSecondTraceCosts.vertical);
 
       if (currWeightedDistance1 > currWeightedDistance2 + currWeightedDistance3) {
         IntPoint checkLocation = floatCheckLocation.round();
         boolean checkOk =
             repositionVia(
-                p_board,
-                p_via,
+                pBoard,
+                pVia,
                 checkLocation,
-                p_first_trace_half_width,
-                p_first_trace_layer,
-                p_first_trace_cl_class,
+                pFirstTraceHalfWidth,
+                pFirstTraceLayer,
+                pFirstTraceClClass,
                 roundedSecondTraceFromCorner,
-                p_second_trace_half_width,
-                p_second_trace_layer,
-                p_second_trace_cl_class);
+                pSecondTraceHalfWidth,
+                pSecondTraceLayer,
+                pSecondTraceClClass);
         if (checkOk) {
           return checkLocation;
         }
@@ -719,27 +687,25 @@ public final class OptViaAlgo {
 
       currWeightedDistance2 =
           floatViaLocation.weightedDistance(
-              floatCheckLocation, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+              floatCheckLocation, pFirstTraceCosts.horizontal, pFirstTraceCosts.vertical);
       currWeightedDistance3 =
           floatCheckLocation.weightedDistance(
-              floatSecondTraceFromCorner,
-              p_second_trace_costs.horizontal,
-              p_second_trace_costs.vertical);
+              floatSecondTraceFromCorner, pSecondTraceCosts.horizontal, pSecondTraceCosts.vertical);
 
       if (currWeightedDistance1 > currWeightedDistance2 + currWeightedDistance3) {
         IntPoint checkLocation = floatCheckLocation.round();
         boolean checkOk =
             repositionVia(
-                p_board,
-                p_via,
+                pBoard,
+                pVia,
                 checkLocation,
-                p_first_trace_half_width,
-                p_first_trace_layer,
-                p_first_trace_cl_class,
+                pFirstTraceHalfWidth,
+                pFirstTraceLayer,
+                pFirstTraceClClass,
                 roundedSecondTraceFromCorner,
-                p_second_trace_half_width,
-                p_second_trace_layer,
-                p_second_trace_cl_class);
+                pSecondTraceHalfWidth,
+                pSecondTraceLayer,
+                pSecondTraceClClass);
         if (checkOk) {
           return checkLocation;
         }

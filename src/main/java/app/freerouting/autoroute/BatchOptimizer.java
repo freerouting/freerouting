@@ -48,8 +48,8 @@ public class BatchOptimizer extends NamedAlgorithm {
     return this.isTimedOut;
   }
 
-  static boolean containsOnlyUnfixedTraces(Collection<Item> p_item_list) {
-    for (Item currItem : p_item_list) {
+  static boolean containsOnlyUnfixedTraces(Collection<Item> pItemList) {
+    for (Item currItem : pItemList) {
       if (currItem.isUserFixed() || !(currItem instanceof Trace)) {
         return false;
       }
@@ -237,12 +237,12 @@ public class BatchOptimizer extends NamedAlgorithm {
    * the amount of improvements is made in percentage (expressed between 0.0 and 1.0). -1 if the
    * routing must go on no matter how much it improved.
    */
-  protected float optRoutePass(int p_pass_no, boolean p_with_preferred_directions) {
+  protected float optRoutePass(int pPassNo, boolean pWithPreferredDirections) {
     float routeImproved = 0.0F;
 
     BoardStatistics boardStatisticsBefore = board.getStatistics();
     RouterCounters routerCounters = new RouterCounters();
-    routerCounters.passCount = p_pass_no;
+    routerCounters.passCount = pPassNo;
     progressThrottler.reset();
     this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCounters, this.board);
 
@@ -250,7 +250,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     this.minCumulativeTraceLength = boardStatisticsBefore.traces.totalWeightedLength;
     String optimizationPassId =
         "BatchOptRoute.opt_route_pass #"
-            + p_pass_no
+            + pPassNo
             + " with "
             + boardStatisticsBefore.items.viaCount
             + " vias and "
@@ -289,7 +289,7 @@ public class BatchOptimizer extends NamedAlgorithm {
       if (currItem == null) {
         break;
       }
-      ItemRouteResult result = optRouteItem(currItem, p_with_preferred_directions, false);
+      ItemRouteResult result = optRouteItem(currItem, pWithPreferredDirections, false);
       this.totalItemsOptimized++;
       if (result.improved()) {
         consecutiveFailures = 0;
@@ -304,8 +304,7 @@ public class BatchOptimizer extends NamedAlgorithm {
                         && boardStatisticsBefore.traces.totalLength != 0
                     ? 1.0
                         - ((((float) result.viaCount() / boardStatisticsBefore.items.viaCount)
-                                + (result.traceLength()
-                                    / boardStatisticsBefore.traces.totalLength))
+                                + (result.traceLength() / boardStatisticsBefore.traces.totalLength))
                             / 2)
                     : 0);
       } else {
@@ -315,7 +314,7 @@ public class BatchOptimizer extends NamedAlgorithm {
               String.format(
                   java.util.Locale.US,
                   "Stopping optimization pass #%d early after %d consecutive items could not be improved.",
-                  p_pass_no,
+                  pPassNo,
                   consecutiveFailures));
           break;
         }
@@ -335,7 +334,7 @@ public class BatchOptimizer extends NamedAlgorithm {
         String.format(
             java.util.Locale.US,
             "Optimizer pass #%d on board '%s' was completed in %.2f seconds with the score of %s.",
-            p_pass_no,
+            pPassNo,
             this.board.getHash(),
             routeoptimizerPassDuration,
             FRLogger.formatScore(
@@ -348,17 +347,17 @@ public class BatchOptimizer extends NamedAlgorithm {
   /**
    * Try to improve the route by re-routing the connections containing p_item.
    *
-   * @param p_item the item to be re-routed
-   * @param p_with_preferred_directions if true, the preferred directions are used for the traces
+   * @param pItem the item to be re-routed
+   * @param pWithPreferredDirections if true, the preferred directions are used for the traces
    * @param disableSnapshots if true, the snapshots are not used which means that the routing cannot
    *     be undone, but it's much more efficient
    */
   protected ItemRouteResult optRouteItem(
-      Item p_item, boolean p_with_preferred_directions, boolean disableSnapshots) {
+      Item pItem, boolean pWithPreferredDirections, boolean disableSnapshots) {
     // check if item.board is a RoutingBoard
-    if (!(p_item.board instanceof RoutingBoard routingBoard)) {
+    if (!(pItem.board instanceof RoutingBoard routingBoard)) {
       job.logWarning("The item to be optimized is not on a RoutingBoard.");
-      return new ItemRouteResult(p_item.getIdNo());
+      return new ItemRouteResult(pItem.getIdNo());
     }
 
     // calculate the statistics for the board before the routing
@@ -371,10 +370,10 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     // collect the items to be re-routed
     Set<Item> rippedItems = new TreeSet<>();
-    rippedItems.add(p_item);
+    rippedItems.add(pItem);
 
     // add the contacts of the traces to the ripped items if it's a trace
-    if (p_item instanceof Trace currTrace) {
+    if (pItem instanceof Trace currTrace) {
       // add also the fork items, especially because not all fork items may be
       // returned by ReadSortedRouteItems because of matching end points.
       Set<Item> currContactList = currTrace.getStartContacts();
@@ -396,7 +395,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // re-routed
     for (Item currItem : rippedConnections) {
       if (currItem.isUserFixed()) {
-        return new ItemRouteResult(p_item.getIdNo());
+        return new ItemRouteResult(pItem.getIdNo());
       }
     }
 
@@ -407,8 +406,8 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     // remove the items to be re-routed
     routingBoard.removeItems(rippedConnections);
-    for (int i = 0; i < p_item.netCount(); i++) {
-      routingBoard.combineTraces(p_item.getNetNo(i));
+    for (int i = 0; i < pItem.netCount(); i++) {
+      routingBoard.combineTraces(pItem.getNetNo(i));
     }
 
     // calculate the ripup costs
@@ -418,7 +417,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     }
 
     // reduce the ripup costs for traces
-    if (p_item instanceof Trace) {
+    if (pItem instanceof Trace) {
       ripupCosts =
           (int) Math.round(this.settings.optimizer.traceRipupCostFactor * (double) ripupCosts);
     }
@@ -429,7 +428,7 @@ public class BatchOptimizer extends NamedAlgorithm {
         this.settings.optimizer.maxAutoroutePasses,
         ripupCosts,
         settings.tracePullTightAccuracy,
-        p_with_preferred_directions,
+        pWithPreferredDirections,
         routingBoard,
         settings);
 
@@ -445,7 +444,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // check if the board was improved
     ItemRouteResult result =
         new ItemRouteResult(
-            p_item.getIdNo(),
+            pItem.getIdNo(),
             boardStatisticsBefore.items.viaCount,
             boardStatisticsAfter.items.viaCount,
             this.minCumulativeTraceLength,

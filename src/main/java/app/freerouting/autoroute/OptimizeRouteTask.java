@@ -16,19 +16,19 @@ public class OptimizeRouteTask implements Runnable {
   private ItemRouteResult optimizationResult;
 
   public OptimizeRouteTask(
-      BatchOptimizerMultiThreaded p_optimizer,
+      BatchOptimizerMultiThreaded pOptimizer,
       RoutingJob job,
       int itemId,
-      int p_pass_no,
-      boolean p_with_preferred_directions) {
-    optimizer = p_optimizer;
+      int pPassNo,
+      boolean pWithPreferredDirections) {
+    optimizer = pOptimizer;
 
     this.job = job;
     this.board = job.board.deepCopy();
     itemToOptimize = this.board.getItem(itemId);
 
-    passNo = p_pass_no;
-    withPreferredDirections = p_with_preferred_directions;
+    passNo = pPassNo;
+    withPreferredDirections = pWithPreferredDirections;
   }
 
   @Override
@@ -72,8 +72,7 @@ public class OptimizeRouteTask implements Runnable {
                 ? (", length reduction: " + (int) optimizationResult.lengthReduced())
                 : "")
             + ", incomplete trace reduction: "
-            + (optimizationResult.incompleteCountBefore()
-                - optimizationResult.incompleteCount()));
+            + (optimizationResult.incompleteCountBefore() - optimizationResult.incompleteCount()));
 
     if (!winningCandidate) {
       clean();

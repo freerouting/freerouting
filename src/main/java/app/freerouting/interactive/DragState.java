@@ -17,9 +17,9 @@ public abstract class DragState extends InteractiveState {
 
   /** Creates a new instance of DragState */
   protected DragState(
-      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
-    previousLocation = p_location;
+      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    super(pParentState, pBoardHandling);
+    previousLocation = pLocation;
   }
 
   /**
@@ -27,34 +27,34 @@ public abstract class DragState extends InteractiveState {
    * otherwise.
    */
   public static DragState getInstance(
-      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    p_board_handling.displayLayerMessage();
+      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    pBoardHandling.displayLayerMessage();
     Item itemToMove = null;
     int tryCount = 1;
-    if (p_board_handling.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
-      tryCount += p_board_handling.getLayerCount();
+    if (pBoardHandling.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
+      tryCount += pBoardHandling.getLayerCount();
     }
-    int currLayer = p_board_handling.getInteractiveSettings().getLayer();
+    int currLayer = pBoardHandling.getInteractiveSettings().getLayer();
     int pickLayer = currLayer;
     boolean itemFound = false;
 
     for (int i = 0; i < tryCount; i++) {
       if (i == 0
           || pickLayer != currLayer
-              && (p_board_handling.graphicsContext.getLayerVisibility(pickLayer)) > 0) {
+              && (pBoardHandling.graphicsContext.getLayerVisibility(pickLayer)) > 0) {
         Collection<Item> foundItems =
-            p_board_handling
+            pBoardHandling
                 .getRoutingBoard()
                 .pickItems(
-                    p_location.round(),
+                    pLocation.round(),
                     pickLayer,
-                    p_board_handling.getInteractiveSettings().getItemSelectionFilter());
+                    pBoardHandling.getInteractiveSettings().getItemSelectionFilter());
         for (Item currItem : foundItems) {
           itemFound = true;
           if (currItem instanceof Trace) {
             continue; // traces are not moved
           }
-          if (!p_board_handling.getInteractiveSettings().getDragComponentsEnabled()
+          if (!pBoardHandling.getInteractiveSettings().getDragComponentsEnabled()
               && currItem.getComponentNo() != 0) {
             continue;
           }
@@ -72,29 +72,29 @@ public abstract class DragState extends InteractiveState {
     }
     DragState result;
     if (itemToMove != null) {
-      result = new DragItemState(itemToMove, p_location, p_parent_state, p_board_handling);
+      result = new DragItemState(itemToMove, pLocation, pParentState, pBoardHandling);
     } else if (!itemFound) {
-      result = new MakeSpaceState(p_location, p_parent_state, p_board_handling);
+      result = new MakeSpaceState(pLocation, pParentState, pBoardHandling);
     } else {
       result = null;
     }
     if (result != null) {
-      p_board_handling.hideRatsnest();
+      pBoardHandling.hideRatsnest();
     }
     return result;
   }
 
-  public abstract InteractiveState moveTo(FloatPoint p_to_location);
+  public abstract InteractiveState moveTo(FloatPoint pToLocation);
 
   @Override
-  public InteractiveState mouseDragged(FloatPoint p_point) {
-    InteractiveState result = this.moveTo(p_point);
+  public InteractiveState mouseDragged(FloatPoint pPoint) {
+    InteractiveState result = this.moveTo(pPoint);
     if (result != this) {
       // an error occurred
       Set<Integer> changedNets = new TreeSet<>();
       hdlg.getRoutingBoard().undo(changedNets);
-      for (Integer changed_net : changedNets) {
-        hdlg.updateRatsnest(changed_net);
+      for (Integer changedNet : changedNets) {
+        hdlg.updateRatsnest(changedNet);
       }
     }
     if (this.somethingDragged) {}

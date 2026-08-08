@@ -14,9 +14,9 @@ import java.util.TreeSet;
 public class WindowComponents extends WindowObjectListWithFilter {
 
   /** Creates a new instance of ComponentsWindow */
-  public WindowComponents(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  public WindowComponents(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
+    setLanguage(pBoardFrame.get_locale());
 
     this.setTitle(tm.getText("components"));
   }

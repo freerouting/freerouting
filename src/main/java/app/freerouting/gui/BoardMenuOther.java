@@ -12,14 +12,14 @@ public final class BoardMenuOther extends JMenu {
   private final TextManager tm;
 
   /** Creates a new instance of BoardMenuOther */
-  private BoardMenuOther(BoardFrame p_board_frame) {
-    boardFrame = p_board_frame;
-    tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+  private BoardMenuOther(BoardFrame pBoardFrame) {
+    boardFrame = pBoardFrame;
+    tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
   }
 
   /** Returns a new other menu for the board frame. */
-  public static BoardMenuOther getInstance(BoardFrame p_board_frame) {
-    final BoardMenuOther otherMenu = new BoardMenuOther(p_board_frame);
+  public static BoardMenuOther getInstance(BoardFrame pBoardFrame) {
+    final BoardMenuOther otherMenu = new BoardMenuOther(pBoardFrame);
 
     otherMenu.setText(otherMenu.tm.getText("other"));
 

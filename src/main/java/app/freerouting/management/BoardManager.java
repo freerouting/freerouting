@@ -156,24 +156,24 @@ public interface BoardManager {
    * enables integration with host CAD systems, supporting coordinate transformations and unit
    * conversions between the internal board representation and external formats.
    *
-   * @param p_bounding_box the rectangular boundary containing all board geometry
-   * @param p_layer_structure the layer stack-up definition (names, types, thicknesses)
-   * @param p_outline_shapes array of polyline shapes defining the board outline perimeter
-   * @param p_outline_clearance_class_name name of clearance class for board outline
-   * @param p_rules the complete set of design rules (clearances, widths, via rules)
-   * @param p_board_communication communication interface for external system integration
+   * @param pBoundingBox the rectangular boundary containing all board geometry
+   * @param pLayerStructure the layer stack-up definition (names, types, thicknesses)
+   * @param pOutlineShapes array of polyline shapes defining the board outline perimeter
+   * @param pOutlineClearanceClassName name of clearance class for board outline
+   * @param pRules the complete set of design rules (clearances, widths, via rules)
+   * @param pBoardCommunication communication interface for external system integration
    * @see RoutingBoard#RoutingBoard
    * @see LayerStructure
    * @see BoardRules
    * @see Communication
    */
   void createBoard(
-      IntBox p_bounding_box,
-      LayerStructure p_layer_structure,
-      PolylineShape[] p_outline_shapes,
-      String p_outline_clearance_class_name,
-      BoardRules p_rules,
-      Communication p_board_communication);
+      IntBox pBoundingBox,
+      LayerStructure pLayerStructure,
+      PolylineShape[] pOutlineShapes,
+      String pOutlineClearanceClassName,
+      BoardRules pRules,
+      Communication pBoardCommunication);
 
   /**
    * Returns the interactive GUI settings singleton, or {@code null} when running headless.

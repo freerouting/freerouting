@@ -41,14 +41,13 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   private NetClass netClass;
 
   /** Creates a new instance of Net. p_net_list is the net list, where this net belongs to. */
-  public Net(
-      String p_name, int p_subnet_number, int p_no, Nets p_net_list, boolean p_contains_plane) {
-    name = p_name;
-    subnetNumber = p_subnet_number;
-    netNumber = p_no;
-    containsPlane = p_contains_plane;
-    netList = p_net_list;
-    netClass = p_net_list.getBoard().rules.getDefaultNetClass();
+  public Net(String pName, int pSubnetNumber, int pNo, Nets pNetList, boolean pContainsPlane) {
+    name = pName;
+    subnetNumber = pSubnetNumber;
+    netNumber = pNo;
+    containsPlane = pContainsPlane;
+    netList = pNetList;
+    netClass = pNetList.getBoard().rules.getDefaultNetClass();
   }
 
   @Override
@@ -58,8 +57,8 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
 
   /** Compares 2 nets by name. Useful for example to display nets in alphabetic order. */
   @Override
-  public int compareTo(Net p_other) {
-    return this.name.compareToIgnoreCase(p_other.name);
+  public int compareTo(Net pOther) {
+    return this.name.compareToIgnoreCase(pOther.name);
   }
 
   /** Returns the class of this net. */
@@ -68,8 +67,8 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   }
 
   /** Sets the class of this net */
-  public void setClass(NetClass p_rule) {
-    this.netClass = p_rule;
+  public void setClass(NetClass pRule) {
+    this.netClass = pRule;
   }
 
   /** Returns the pins and conduction areas of this net. */
@@ -152,8 +151,8 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     return result;
   }
 
-  public void setContainsPlane(boolean p_value) {
-    containsPlane = p_value;
+  public void setContainsPlane(boolean pValue) {
+    containsPlane = pValue;
   }
 
   /**
@@ -166,28 +165,28 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
     int viaCount = this.getViaCount();
     double cumulativeTraceLength = this.getTraceLength();
     Collection<Item> terminalItems = this.getTerminalItems();
     Collection<Printable> terminals = new LinkedList<>(terminalItems);
     int terminalItemCount = terminals.size();
 
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
-    p_window.appendBold(tm.getText("net") + " ");
-    p_window.appendBold(this.name);
-    p_window.appendBold(": ");
-    p_window.append(tm.getText("class") + " ");
-    p_window.append(netClass.getName(), tm.getText("netClass"), netClass);
-    p_window.append(", ");
-    p_window.appendObjects(
+    pWindow.appendBold(tm.getText("net") + " ");
+    pWindow.appendBold(this.name);
+    pWindow.appendBold(": ");
+    pWindow.append(tm.getText("class") + " ");
+    pWindow.append(netClass.getName(), tm.getText("netClass"), netClass);
+    pWindow.append(", ");
+    pWindow.appendObjects(
         String.valueOf(terminalItemCount), tm.getText("terminal_items_2"), terminals);
-    p_window.append(" " + tm.getText("terminalItems"));
-    p_window.append(", " + tm.getText("viaCount") + " ");
-    p_window.append(String.valueOf(viaCount));
-    p_window.append(", " + tm.getText("traceLength") + " ");
-    p_window.append(cumulativeTraceLength);
-    p_window.newline();
+    pWindow.append(" " + tm.getText("terminalItems"));
+    pWindow.append(", " + tm.getText("viaCount") + " ");
+    pWindow.append(String.valueOf(viaCount));
+    pWindow.append(", " + tm.getText("traceLength") + " ");
+    pWindow.append(cumulativeTraceLength);
+    pWindow.newline();
   }
 }

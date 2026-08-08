@@ -11,8 +11,8 @@ public class ArrayStack<p_element_type> {
    * Creates a new instance of ArrayStack with an initial maximal capacity for p_max_stack_depth
    * elements.
    */
-  public ArrayStack(int p_max_stack_depth) {
-    nodeArr = (p_element_type[]) new Object[p_max_stack_depth];
+  public ArrayStack(int pMaxStackDepth) {
+    nodeArr = (p_element_type[]) new Object[pMaxStackDepth];
   }
 
   /** Sets the stack to empty. */
@@ -21,7 +21,7 @@ public class ArrayStack<p_element_type> {
   }
 
   /** Pushed p_element onto the stack. */
-  public void push(p_element_type p_element) {
+  public void push(p_element_type pElement) {
 
     ++level;
 
@@ -29,7 +29,7 @@ public class ArrayStack<p_element_type> {
       reallocate();
     }
 
-    nodeArr[level] = p_element;
+    nodeArr[level] = pElement;
   }
 
   /** Pops the next element from the top of the stack. Returns null, if the stack is exhausted. */

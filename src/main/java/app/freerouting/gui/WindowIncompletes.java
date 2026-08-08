@@ -11,9 +11,9 @@ import java.util.TreeSet;
 public class WindowIncompletes extends WindowObjectListWithFilter {
 
   /** Creates a new instance of IncompletesWindow */
-  public WindowIncompletes(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  public WindowIncompletes(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
+    setLanguage(pBoardFrame.get_locale());
 
     this.setTitle(tm.getText("incompletes"));
     this.listEmptyMessage.setText(tm.getText("routeCompleted"));

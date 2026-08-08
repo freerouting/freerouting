@@ -14,8 +14,8 @@ public class ComponentPlacement {
   public final Collection<ComponentLocation> locations;
 
   /** Creates a new instance of ComponentPlacement */
-  public ComponentPlacement(String p_lib_name) {
-    libName = p_lib_name;
+  public ComponentPlacement(String pLibName) {
+    libName = pLibName;
     locations = new LinkedList<>();
   }
 
@@ -49,26 +49,26 @@ public class ComponentPlacement {
     public final String partNumber;
 
     ComponentLocation(
-        String p_name,
-        double[] p_coor,
-        boolean p_is_front,
-        double p_rotation,
-        boolean p_position_fixed,
-        Map<String, ItemClearanceInfo> p_pin_infos,
-        Map<String, ItemClearanceInfo> p_keepout_infos,
-        Map<String, ItemClearanceInfo> p_via_keepout_infos,
-        Map<String, ItemClearanceInfo> p_place_keepout_infos,
-        String p_part_number) {
-      name = p_name;
-      coor = p_coor;
-      isFront = p_is_front;
-      rotation = p_rotation;
-      positionFixed = p_position_fixed;
-      pin_infos = p_pin_infos;
-      keepout_infos = p_keepout_infos;
-      via_keepout_infos = p_via_keepout_infos;
-      place_keepout_infos = p_place_keepout_infos;
-      partNumber = p_part_number;
+        String pName,
+        double[] pCoor,
+        boolean pIsFront,
+        double pRotation,
+        boolean pPositionFixed,
+        Map<String, ItemClearanceInfo> pPinInfos,
+        Map<String, ItemClearanceInfo> pKeepoutInfos,
+        Map<String, ItemClearanceInfo> pViaKeepoutInfos,
+        Map<String, ItemClearanceInfo> pPlaceKeepoutInfos,
+        String pPartNumber) {
+      name = pName;
+      coor = pCoor;
+      isFront = pIsFront;
+      rotation = pRotation;
+      positionFixed = pPositionFixed;
+      pin_infos = pPinInfos;
+      keepout_infos = pKeepoutInfos;
+      via_keepout_infos = pViaKeepoutInfos;
+      place_keepout_infos = pPlaceKeepoutInfos;
+      partNumber = pPartNumber;
     }
   }
 
@@ -77,9 +77,9 @@ public class ComponentPlacement {
     public final String name;
     public final String clearanceClass;
 
-    ItemClearanceInfo(String p_name, String p_clearance_class) {
-      name = p_name;
-      clearanceClass = p_clearance_class;
+    ItemClearanceInfo(String pName, String pClearanceClass) {
+      name = pName;
+      clearanceClass = pClearanceClass;
     }
   }
 }

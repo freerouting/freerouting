@@ -12,9 +12,9 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
 
   /** Creates a new instance of PolygonShapeConstructionState */
   private PolygonShapeConstructionState(
-      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
-    this.addCorner(p_location);
+      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    super(pParentState, pBoardHandling);
+    this.addCorner(pLocation);
   }
 
   /**
@@ -22,8 +22,8 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
    * in a logfile
    */
   public static PolygonShapeConstructionState getInstance(
-      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    return new PolygonShapeConstructionState(p_location, p_parent_state, p_board_handling);
+      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    return new PolygonShapeConstructionState(pLocation, pParentState, pBoardHandling);
   }
 
   /** Inserts the polygon shape item into the board, if possible and returns to the main state */

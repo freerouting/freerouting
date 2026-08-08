@@ -14,25 +14,25 @@ public class IntVector extends Vector implements Serializable {
   public final int y;
 
   /** creates an IntVector from two integer coordinates */
-  public IntVector(int p_x, int p_y) {
+  public IntVector(int pX, int pY) {
     // range check omitted for performance reasons
-    x = p_x;
-    y = p_y;
+    x = pX;
+    y = pY;
   }
 
   /** returns true, if this IntVector is equal to p_ob */
   @Override
-  public final boolean equals(Object p_ob) {
-    if (this == p_ob) {
+  public final boolean equals(Object pOb) {
+    if (this == pOb) {
       return true;
     }
-    if (p_ob == null) {
+    if (pOb == null) {
       return false;
     }
-    if (getClass() != p_ob.getClass()) {
+    if (getClass() != pOb.getClass()) {
       return false;
     }
-    IntVector other = (IntVector) p_ob;
+    IntVector other = (IntVector) pOb;
     return x == other.x && y == other.y;
   }
 
@@ -59,13 +59,13 @@ public class IntVector extends Vector implements Serializable {
   }
 
   /** Calculates the determinant of the matrix consisting of this Vector and p_other. */
-  public final long determinant(IntVector p_other) {
-    return (long) x * p_other.y - (long) y * p_other.x;
+  public final long determinant(IntVector pOther) {
+    return (long) x * pOther.y - (long) y * pOther.x;
   }
 
   @Override
-  public Vector turn90Degree(int p_factor) {
-    int n = p_factor;
+  public Vector turn90Degree(int pFactor) {
+    int n = pFactor;
     while (n < 0) {
       n += 4;
     }
@@ -111,29 +111,29 @@ public class IntVector extends Vector implements Serializable {
 
   /** adds p_other to this vector */
   @Override
-  public final Vector add(Vector p_other) {
-    return p_other.add(this);
+  public final Vector add(Vector pOther) {
+    return pOther.add(this);
   }
 
   @Override
-  final Vector add(IntVector p_other) {
-    return new IntVector(x + p_other.x, y + p_other.y);
+  final Vector add(IntVector pOther) {
+    return new IntVector(x + pOther.x, y + pOther.y);
   }
 
   @Override
-  final Vector add(RationalVector p_other) {
-    return p_other.add(this);
+  final Vector add(RationalVector pOther) {
+    return pOther.add(this);
   }
 
   /** returns the Point, which results from adding this vector to p_point */
   @Override
-  final Point addTo(IntPoint p_point) {
-    return new IntPoint(p_point.x + x, p_point.y + y);
+  final Point addTo(IntPoint pPoint) {
+    return new IntPoint(pPoint.x + x, pPoint.y + y);
   }
 
   @Override
-  final Point addTo(RationalPoint p_point) {
-    return p_point.translateBy(this);
+  final Point addTo(RationalPoint pPoint) {
+    return pPoint.translateBy(this);
   }
 
   /**
@@ -142,20 +142,20 @@ public class IntVector extends Vector implements Serializable {
    * Side.COLLINEAR, if this Vector is collinear with L.
    */
   @Override
-  public Side sideOf(Vector p_other) {
-    Side tmp = p_other.sideOf(this);
+  public Side sideOf(Vector pOther) {
+    Side tmp = pOther.sideOf(this);
     return tmp.negate();
   }
 
   @Override
-  Side sideOf(IntVector p_other) {
-    double determinant = (double) p_other.x * y - (double) p_other.y * x;
+  Side sideOf(IntVector pOther) {
+    double determinant = (double) pOther.x * y - (double) pOther.y * x;
     return Side.of(determinant);
   }
 
   @Override
-  Side sideOf(RationalVector p_other) {
-    Side tmp = p_other.sideOf(this);
+  Side sideOf(RationalVector pOther) {
+    Side tmp = pOther.sideOf(this);
     return tmp.negate();
   }
 
@@ -165,13 +165,13 @@ public class IntVector extends Vector implements Serializable {
    * Signum.ZERO, if the scalar product is equal 0.
    */
   @Override
-  public Signum projection(Vector p_other) {
-    return p_other.projection(this);
+  public Signum projection(Vector pOther) {
+    return pOther.projection(this);
   }
 
   @Override
-  public double scalarProduct(Vector p_other) {
-    return p_other.scalarProduct(this);
+  public double scalarProduct(Vector pOther) {
+    return pOther.scalarProduct(this);
   }
 
   /** converts this vector to a PointFloat. */
@@ -181,8 +181,8 @@ public class IntVector extends Vector implements Serializable {
   }
 
   @Override
-  public Vector changeLengthApprox(double p_length) {
-    FloatPoint newPoint = this.toFloat().changeSize(p_length);
+  public Vector changeLengthApprox(double pLength) {
+    FloatPoint newPoint = this.toFloat().changeSize(pLength);
     return newPoint.round().differenceBy(Point.ZERO);
   }
 
@@ -205,23 +205,23 @@ public class IntVector extends Vector implements Serializable {
    * equal 0.
    */
   @Override
-  Signum projection(IntVector p_other) {
-    double tmp = (double) x * p_other.x + (double) y * p_other.y;
+  Signum projection(IntVector pOther) {
+    double tmp = (double) x * pOther.x + (double) y * pOther.y;
     return Signum.of(tmp);
   }
 
   @Override
-  double scalarProduct(IntVector p_other) {
-    return (double) x * p_other.x + (double) y * p_other.y;
+  double scalarProduct(IntVector pOther) {
+    return (double) x * pOther.x + (double) y * pOther.y;
   }
 
   @Override
-  double scalarProduct(RationalVector p_other) {
-    return p_other.scalarProduct(this);
+  double scalarProduct(RationalVector pOther) {
+    return pOther.scalarProduct(this);
   }
 
   @Override
-  Signum projection(RationalVector p_other) {
-    return p_other.projection(this);
+  Signum projection(RationalVector pOther) {
+    return pOther.projection(this);
   }
 }

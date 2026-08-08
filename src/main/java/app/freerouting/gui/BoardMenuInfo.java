@@ -11,14 +11,14 @@ public final class BoardMenuInfo extends JMenu {
   private final TextManager tm;
 
   /** Creates a new instance of BoardLibraryMenu */
-  private BoardMenuInfo(BoardFrame p_board_frame) {
-    boardFrame = p_board_frame;
-    tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+  private BoardMenuInfo(BoardFrame pBoardFrame) {
+    boardFrame = pBoardFrame;
+    tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
   }
 
   /** Returns a new info menu for the board frame. */
-  public static BoardMenuInfo getInstance(BoardFrame p_board_frame) {
-    final BoardMenuInfo infoMenu = new BoardMenuInfo(p_board_frame);
+  public static BoardMenuInfo getInstance(BoardFrame pBoardFrame) {
+    final BoardMenuInfo infoMenu = new BoardMenuInfo(pBoardFrame);
 
     infoMenu.setText(infoMenu.tm.getText("info"));
 

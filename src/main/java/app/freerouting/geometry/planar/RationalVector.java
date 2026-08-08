@@ -20,23 +20,23 @@ public class RationalVector extends Vector implements Serializable {
    * creates a RationalVector from 3 BigIntegers p_x, p_y and p_z. They represent the 2-dimensional
    * Vector with the rational number Tuple ( p_x / p_z , p_y / p_z).
    */
-  public RationalVector(BigInteger p_x, BigInteger p_y, BigInteger p_z) {
-    if (p_z.signum() >= 0) {
-      x = p_x;
-      y = p_y;
-      z = p_z;
+  public RationalVector(BigInteger pX, BigInteger pY, BigInteger pZ) {
+    if (pZ.signum() >= 0) {
+      x = pX;
+      y = pY;
+      z = pZ;
 
     } else {
-      x = p_x.negate();
-      y = p_y.negate();
-      z = p_z.negate();
+      x = pX.negate();
+      y = pY.negate();
+      z = pZ.negate();
     }
   }
 
   /** creates a RationalVector from an IntVector */
-  RationalVector(IntVector p_vector) {
-    x = BigInteger.valueOf(p_vector.x);
-    y = BigInteger.valueOf(p_vector.y);
+  RationalVector(IntVector pVector) {
+    x = BigInteger.valueOf(pVector.x);
+    y = BigInteger.valueOf(pVector.y);
     z = BigInteger.ONE;
   }
 
@@ -48,17 +48,17 @@ public class RationalVector extends Vector implements Serializable {
 
   /** returns true, if this RationalVector is equal to p_ob */
   @Override
-  public final boolean equals(Object p_ob) {
-    if (this == p_ob) {
+  public final boolean equals(Object pOb) {
+    if (this == pOb) {
       return true;
     }
-    if (p_ob == null) {
+    if (pOb == null) {
       return false;
     }
-    if (getClass() != p_ob.getClass()) {
+    if (getClass() != pOb.getClass()) {
       return false;
     }
-    RationalPoint other = (RationalPoint) p_ob;
+    RationalPoint other = (RationalPoint) pOb;
     BigInteger det = BigIntAux.determinant(x, other.x, z, other.z);
     if (det.signum() != 0) {
       return false;
@@ -76,8 +76,8 @@ public class RationalVector extends Vector implements Serializable {
 
   /** adds p_other to this vector */
   @Override
-  public final Vector add(Vector p_other) {
-    return p_other.add(this);
+  public final Vector add(Vector pOther) {
+    return pOther.add(this);
   }
 
   /**
@@ -86,8 +86,8 @@ public class RationalVector extends Vector implements Serializable {
    * Side.COLLINEAR, if this Vector is collinear with L.
    */
   @Override
-  public Side sideOf(Vector p_other) {
-    Side tmp = p_other.sideOf(this);
+  public Side sideOf(Vector pOther) {
+    Side tmp = pOther.sideOf(this);
     return tmp.negate();
   }
 
@@ -107,14 +107,14 @@ public class RationalVector extends Vector implements Serializable {
    * the scalar product is equal 0.
    */
   @Override
-  public Signum projection(Vector p_other) {
-    return p_other.projection(this);
+  public Signum projection(Vector pOther) {
+    return pOther.projection(this);
   }
 
   /** calculates the scalar product of this vector and p_other */
   @Override
-  public double scalarProduct(Vector p_other) {
-    return p_other.scalarProduct(this);
+  public double scalarProduct(Vector pOther) {
+    return pOther.scalarProduct(this);
   }
 
   /** approximates the coordinates of this vector by float coordinates */
@@ -127,14 +127,14 @@ public class RationalVector extends Vector implements Serializable {
   }
 
   @Override
-  public Vector changeLengthApprox(double p_length) {
+  public Vector changeLengthApprox(double pLength) {
     FRLogger.warn("RationalVector: change_length_approx not yet implemented");
     return this;
   }
 
   @Override
-  public Vector turn90Degree(int p_factor) {
-    int n = p_factor;
+  public Vector turn90Degree(int pFactor) {
+    int n = pFactor;
     while (n < 0) {
       n += 4;
     }
@@ -192,89 +192,89 @@ public class RationalVector extends Vector implements Serializable {
   }
 
   @Override
-  double scalarProduct(IntVector p_other) {
-    Vector other = new RationalVector(p_other);
+  double scalarProduct(IntVector pOther) {
+    Vector other = new RationalVector(pOther);
     return other.scalarProduct(this);
   }
 
   @Override
-  double scalarProduct(RationalVector p_other) {
+  double scalarProduct(RationalVector pOther) {
     FloatPoint v1 = toFloat();
-    FloatPoint v2 = p_other.toFloat();
+    FloatPoint v2 = pOther.toFloat();
     return v1.x * v2.x + v1.y * v2.y;
   }
 
   @Override
-  Signum projection(IntVector p_other) {
-    Vector other = new RationalVector(p_other);
+  Signum projection(IntVector pOther) {
+    Vector other = new RationalVector(pOther);
     return other.projection(this);
   }
 
   @Override
-  Signum projection(RationalVector p_other) {
-    BigInteger tmp1 = x.multiply(p_other.x);
-    BigInteger tmp2 = y.multiply(p_other.y);
+  Signum projection(RationalVector pOther) {
+    BigInteger tmp1 = x.multiply(pOther.x);
+    BigInteger tmp2 = y.multiply(pOther.y);
     BigInteger tmp3 = tmp1.add(tmp2);
     int result = tmp3.signum();
     return Signum.of(result);
   }
 
   @Override
-  final Vector add(IntVector p_other) {
-    RationalVector other = new RationalVector(p_other);
+  final Vector add(IntVector pOther) {
+    RationalVector other = new RationalVector(pOther);
     return add(other);
   }
 
   @Override
-  final Vector add(RationalVector p_other) {
+  final Vector add(RationalVector pOther) {
     BigInteger[] v1 = new BigInteger[3];
     v1[0] = x;
     v1[1] = y;
     v1[2] = z;
 
     BigInteger[] v2 = new BigInteger[3];
-    v2[0] = p_other.x;
-    v2[1] = p_other.y;
-    v2[2] = p_other.z;
+    v2[0] = pOther.x;
+    v2[1] = pOther.y;
+    v2[2] = pOther.z;
     BigInteger[] result = BigIntAux.addRationalCoordinates(v1, v2);
     return new RationalVector(result[0], result[1], result[2]);
   }
 
   @Override
-  Point addTo(IntPoint p_point) {
-    BigInteger newX = z.multiply(BigInteger.valueOf(p_point.x));
+  Point addTo(IntPoint pPoint) {
+    BigInteger newX = z.multiply(BigInteger.valueOf(pPoint.x));
     newX = newX.add(x);
-    BigInteger newY = z.multiply(BigInteger.valueOf(p_point.y));
+    BigInteger newY = z.multiply(BigInteger.valueOf(pPoint.y));
     newY = newY.add(y);
     return new RationalPoint(newX, newY, z);
   }
 
   @Override
-  Point addTo(RationalPoint p_point) {
+  Point addTo(RationalPoint pPoint) {
     BigInteger[] v1 = new BigInteger[3];
     v1[0] = x;
     v1[1] = y;
     v1[2] = z;
 
     BigInteger[] v2 = new BigInteger[3];
-    v2[0] = p_point.x;
-    v2[1] = p_point.y;
-    v2[2] = p_point.z;
+    v2[0] = pPoint.x;
+    v2[1] = pPoint.y;
+    v2[2] = pPoint.z;
 
     BigInteger[] result = BigIntAux.addRationalCoordinates(v1, v2);
     return new RationalPoint(result[0], result[1], result[2]);
   }
 
   @Override
-  Side sideOf(IntVector p_other) {
-    RationalVector other = new RationalVector(p_other);
+  Side sideOf(IntVector pOther) {
+    RationalVector other = new RationalVector(pOther);
     return sideOf(other);
   }
 
   @Override
-  Side sideOf(RationalVector p_other) {
-    BigInteger tmp1 = y.multiply(p_other.x);
-    BigInteger tmp2 = x.multiply(p_other.y);
+  Side sideOf(RationalVector pOther) {
+    BigInteger tmp1 = y.multiply(pOther.x);
+    BigInteger tmp2 = x.multiply(pOther.y);
     BigInteger determinant = tmp1.subtract(tmp2);
     int signum = determinant.signum();
     return Side.of(signum);

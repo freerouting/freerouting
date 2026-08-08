@@ -157,9 +157,7 @@ public class InactiveLayerRoutingTest extends RoutingFixtureTest {
     // The router MUST NOT place any traces on the inactive power-plane layers In1.Cu or In2.Cu,
     // regardless of the configured via cost. This was the confirmed root cause of Issue #230.
     long tracesOnPowerLayers =
-        job.board.getTraces().stream()
-            .filter(t -> t.getLayer() == 1 || t.getLayer() == 2)
-            .count();
+        job.board.getTraces().stream().filter(t -> t.getLayer() == 1 || t.getLayer() == 2).count();
     assertEquals(
         0L,
         tracesOnPowerLayers,

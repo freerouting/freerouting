@@ -10,22 +10,22 @@ public class AirLineInfo implements ObjectInfoPanel.Printable {
 
   public final AirLine airline;
 
-  public AirLineInfo(AirLine p_airline) {
-    this.airline = p_airline;
+  public AirLineInfo(AirLine pAirline) {
+    this.airline = pAirline;
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(AirLine.class, p_locale);
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+    TextManager tm = new TextManager(AirLine.class, pLocale);
 
-    p_window.appendBold(tm.getText("incomplete"));
-    p_window.append(" " + tm.getText("net") + " ");
-    p_window.append(airline.net.name);
-    p_window.append(" " + tm.getText("from") + " ", "Incomplete Start Item", airline.fromItem);
-    p_window.append(airline.fromCorner);
-    p_window.append(" " + tm.getText("to") + " ", "Incomplete End Item", airline.toItem);
-    p_window.append(airline.toCorner);
-    p_window.newline();
+    pWindow.appendBold(tm.getText("incomplete"));
+    pWindow.append(" " + tm.getText("net") + " ");
+    pWindow.append(airline.net.name);
+    pWindow.append(" " + tm.getText("from") + " ", "Incomplete Start Item", airline.fromItem);
+    pWindow.append(airline.fromCorner);
+    pWindow.append(" " + tm.getText("to") + " ", "Incomplete End Item", airline.toItem);
+    pWindow.append(airline.toCorner);
+    pWindow.newline();
   }
 
   @Override

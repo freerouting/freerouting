@@ -12,30 +12,30 @@ public abstract class RegularTileShape extends TileShape {
    * Side.COLLINEAR, if the edlines are equal, and Side.ON_THE_RIGHT, if this edgeline is to the
    * right of the edgeline of p_other.
    */
-  public abstract Side compare(RegularTileShape p_other, int p_edge_no);
+  public abstract Side compare(RegularTileShape pOther, int pEdgeNo);
 
   /** calculates the smallest RegularTileShape containing this shape and p_other. */
-  public abstract RegularTileShape union(RegularTileShape p_other);
+  public abstract RegularTileShape union(RegularTileShape pOther);
 
   /** returns true, if p_other is completely contained in this shape */
-  public abstract boolean contains(RegularTileShape p_other);
+  public abstract boolean contains(RegularTileShape pOther);
 
   /** Auxiliary function to implement the same function with parameter type RegularTileShape. */
-  abstract Side compare(IntBox p_other, int p_edge_no);
+  abstract Side compare(IntBox pOther, int pEdgeNo);
 
   /** Auxiliary function to implement the same function with parameter type RegularTileShape. */
-  abstract Side compare(IntOctagon p_other, int p_edge_no);
+  abstract Side compare(IntOctagon pOther, int pEdgeNo);
 
   /** Auxiliary function to implement the same function with parameter type RegularTileShape. */
-  abstract RegularTileShape union(IntBox p_other);
+  abstract RegularTileShape union(IntBox pOther);
 
   /** Auxiliary function to implement the same function with parameter type RegularTileShape. */
-  abstract RegularTileShape union(IntOctagon p_other);
+  abstract RegularTileShape union(IntOctagon pOther);
 
   /** Auxiliary function to implement the same function with parameter type RegularTileShape. */
   @Override
-  public abstract boolean isContainedIn(IntBox p_other);
+  public abstract boolean isContainedIn(IntBox pOther);
 
   /** Auxiliary function to implement the same function with parameter type RegularTileShape. */
-  abstract boolean isContainedIn(IntOctagon p_other);
+  abstract boolean isContainedIn(IntOctagon pOther);
 }

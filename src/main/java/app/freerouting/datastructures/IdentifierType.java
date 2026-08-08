@@ -15,37 +15,37 @@ public class IdentifierType {
    * Defines the reserved characters and the string for quoting identifiers containing reserved
    * characters for a new instance of Identifier.
    */
-  public IdentifierType(String[] p_reserved_chars, String p_string_quote) {
-    reservedChars = p_reserved_chars;
-    stringQuote = p_string_quote;
+  public IdentifierType(String[] pReservedChars, String pStringQuote) {
+    reservedChars = pReservedChars;
+    stringQuote = pStringQuote;
   }
 
   /** Writes p_name after putting it into quotes, if it contains reserved characters or blanks. */
-  public void write(String p_name, OutputStreamWriter p_file) {
+  public void write(String pName, OutputStreamWriter pFile) {
     // remove the double quotes from the identifiers
-    while ((p_name.length() > 2)
-        && (p_name.charAt(0) == '"')
-        && (p_name.charAt(p_name.length() - 1) == '"')) {
-      p_name = p_name.substring(1, p_name.length() - 2);
+    while ((pName.length() > 2)
+        && (pName.charAt(0) == '"')
+        && (pName.charAt(pName.length() - 1) == '"')) {
+      pName = pName.substring(1, pName.length() - 2);
     }
 
     try {
       // if the name contains our quote character, we must remove it
-      if (p_name.contains(stringQuote)) {
-        p_name = p_name.replace(stringQuote, "");
+      if (pName.contains(stringQuote)) {
+        pName = pName.replace(stringQuote, "");
       }
 
       boolean needQuotes = false;
       // if the name contains a reserved character, we must put it into quotes
-      for (String reserved_char : reservedChars) {
-        if (p_name.contains(reserved_char)) {
+      for (String reservedChar : reservedChars) {
+        if (pName.contains(reservedChar)) {
           needQuotes = true;
           break;
         }
       }
 
       // if the name contains a non-ASCII character, we must put it into quotes
-      for (byte ch : p_name.getBytes(StandardCharsets.UTF_8)) {
+      for (byte ch : pName.getBytes(StandardCharsets.UTF_8)) {
         if (ch <= 0) {
           needQuotes = true;
           break;
@@ -53,27 +53,27 @@ public class IdentifierType {
       }
 
       if (!needQuotes) {
-        if (p_name.matches("^-?\\d.*")) {
+        if (pName.matches("^-?\\d.*")) {
           needQuotes = true;
         }
       }
       if (needQuotes) {
-        p_name = quote(p_name);
+        pName = quote(pName);
       }
-      p_file.write(p_name);
+      pFile.write(pName);
     } catch (IOException _) {
       FRLogger.warn("IdentifierType.write: unable to write to file");
     }
   }
 
   /** Looks, if p_string does not contain reserved characters or blanks. */
-  private boolean isLegal(String p_string) {
-    if (p_string == null) {
+  private boolean isLegal(String pString) {
+    if (pString == null) {
       FRLogger.warn("IdentifierType.is_legal: p_string is null");
       return false;
     }
     for (int i = 0; i < reservedChars.length; i++) {
-      if (p_string.contains(reservedChars[i])) {
+      if (pString.contains(reservedChars[i])) {
         return false;
       }
     }
@@ -81,7 +81,7 @@ public class IdentifierType {
   }
 
   /** Puts p_sting into quotes. */
-  private String quote(String p_string) {
-    return stringQuote + p_string + stringQuote;
+  private String quote(String pString) {
+    return stringQuote + pString + stringQuote;
   }
 }

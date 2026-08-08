@@ -98,14 +98,14 @@ public class RatsNest {
    * <p>The initial calculation analyzes the entire board to determine which items need connections
    * but aren't physically connected yet. This can be time-consuming on large boards with many nets.
    *
-   * @param p_board the board containing nets and items to analyze for incomplete connections
+   * @param pBoard the board containing nets and items to analyze for incomplete connections
    * @see DesignRulesChecker#calculateAllIncompletes()
    */
-  public RatsNest(BasicBoard p_board) {
-    this.drc = new DesignRulesChecker(p_board, null);
+  public RatsNest(BasicBoard pBoard) {
+    this.drc = new DesignRulesChecker(pBoard, null);
     this.drc.calculateAllIncompletes();
 
-    int maxNetNo = p_board.rules.nets.maxNetNo();
+    int maxNetNo = pBoard.rules.nets.maxNetNo();
     this.isFiltered = new boolean[maxNetNo];
     for (int i = 0; i < maxNetNo; i++) {
       isFiltered[i] = false;
@@ -127,12 +127,12 @@ public class RatsNest {
    * <p>The recalculation determines which items on the net are electrically connected and which
    * require routing, updating the airline display accordingly.
    *
-   * @param p_net_no the net number to recalculate (must be valid)
-   * @param p_board the board containing the items (provided for context)
+   * @param pNetNo the net number to recalculate (must be valid)
+   * @param pBoard the board containing the items (provided for context)
    * @see DesignRulesChecker#recalculateNetIncompletes(int)
    */
-  public void recalculate(int p_net_no, BasicBoard p_board) {
-    drc.recalculateNetIncompletes(p_net_no);
+  public void recalculate(int pNetNo, BasicBoard pBoard) {
+    drc.recalculateNetIncompletes(pNetNo);
   }
 
   /**
@@ -150,13 +150,13 @@ public class RatsNest {
    * <p>The item collection should include all items on the net that may have changed connectivity
    * status.
    *
-   * @param p_net_no the net number to recalculate
-   * @param p_item_list the collection of items to analyze for this net
-   * @param p_board the board context (provided for completeness)
+   * @param pNetNo the net number to recalculate
+   * @param pItemList the collection of items to analyze for this net
+   * @param pBoard the board context (provided for completeness)
    * @see DesignRulesChecker#recalculateNetIncompletes(int, Collection)
    */
-  public void recalculate(int p_net_no, Collection<Item> p_item_list, BasicBoard p_board) {
-    drc.recalculateNetIncompletes(p_net_no, p_item_list);
+  public void recalculate(int pNetNo, Collection<Item> pItemList, BasicBoard pBoard) {
+    drc.recalculateNetIncompletes(pNetNo, pItemList);
   }
 
   /**
@@ -219,18 +219,18 @@ public class RatsNest {
    *   <li>Validating that critical nets are fully routed
    * </ul>
    *
-   * @param p_net_no the net number to check
+   * @param pNetNo the net number to check
    * @return the count of airlines for this net, or 0 if fully connected
    * @see #incompleteCount()
    * @see DesignRulesChecker#getIncompleteCount(int)
    */
-  public int incompleteCount(int p_net_no) {
-    int result = drc.getIncompleteCount(p_net_no);
+  public int incompleteCount(int pNetNo) {
+    int result = drc.getIncompleteCount(pNetNo);
     FRLogger.trace(
         "RatsNest.incompleteCount",
         "net_incomplete_count",
-        "RatsNest net=" + p_net_no + " incompleteCount=" + result,
-        "Net #" + p_net_no,
+        "RatsNest net=" + pNetNo + " incompleteCount=" + result,
+        "Net #" + pNetNo,
         new app.freerouting.geometry.planar.Point[0]);
     return result;
   }
@@ -281,13 +281,13 @@ public class RatsNest {
    * <p><strong>Example:</strong> A return value of +50 means the trace is 50 units longer than the
    * maximum allowed length.
    *
-   * @param p_net_no the net number to check
+   * @param pNetNo the net number to check
    * @return positive if too long, negative if too short, 0 if valid or unrestricted
    * @see #lengthViolationCount()
    * @see DesignRulesChecker#getLengthViolation(int)
    */
-  public double getLengthViolation(int p_net_no) {
-    return drc.getLengthViolation(p_net_no);
+  public double getLengthViolation(int pNetNo) {
+    return drc.getLengthViolation(pNetNo);
   }
 
   /**
@@ -406,16 +406,16 @@ public class RatsNest {
    * <p>If the net number is out of valid range (less than 1 or greater than the maximum net
    * number), the operation is silently ignored.
    *
-   * @param p_net_no the net number to filter (1-based indexing)
-   * @param p_value true to hide the net's airlines, false to show them
+   * @param pNetNo the net number to filter (1-based indexing)
+   * @param pValue true to hide the net's airlines, false to show them
    * @see #isHidden()
    * @see #draw(Graphics, GraphicsContext)
    */
-  public void setFilter(int p_net_no, boolean p_value) {
-    if (p_net_no < 1 || p_net_no > isFiltered.length) {
+  public void setFilter(int pNetNo, boolean pValue) {
+    if (pNetNo < 1 || pNetNo > isFiltered.length) {
       return;
     }
-    isFiltered[p_net_no - 1] = p_value;
+    isFiltered[pNetNo - 1] = pValue;
   }
 
   /**
@@ -435,12 +435,12 @@ public class RatsNest {
    * <p>Color and style are determined by the graphics context settings, typically using distinctive
    * colors for different net classes or violation types.
    *
-   * @param p_graphics the AWT Graphics object for rendering
-   * @param p_graphics_context the context managing board graphics (colors, transforms, layers)
+   * @param pGraphics the AWT Graphics object for rendering
+   * @param pGraphicsContext the context managing board graphics (colors, transforms, layers)
    * @see NetIncompletesGraphics#draw
    * @see GraphicsContext
    */
-  public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
+  public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext) {
     boolean drawLengthViolationsOnly = this.hidden;
 
     for (int i = 0; i < isFiltered.length; i++) {
@@ -448,7 +448,7 @@ public class RatsNest {
       if (!isFiltered[i]) {
         NetIncompletes ni = drc.getNetIncompletes(i + 1);
         if (ni != null) {
-          NetIncompletesGraphics.draw(ni, p_graphics, p_graphics_context, drawLengthViolationsOnly);
+          NetIncompletesGraphics.draw(ni, pGraphics, pGraphicsContext, drawLengthViolationsOnly);
         }
       }
     }

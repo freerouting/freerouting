@@ -18,9 +18,9 @@ import java.util.TreeSet;
 public class WindowPadstacks extends WindowObjectListWithFilter {
 
   /** Creates a new instance of PadstacksWindow */
-  public WindowPadstacks(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  public WindowPadstacks(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
+    setLanguage(pBoardFrame.get_locale());
 
     this.setTitle(tm.getText("padstacks"));
   }
@@ -61,8 +61,8 @@ public class WindowPadstacks extends WindowObjectListWithFilter {
       }
       if (currObject instanceof DrillItem item) {
         Padstack currPadstack = item.getPadstack();
-        for (Padstack curr_selected_padstack : padstackList) {
-          if (currPadstack == curr_selected_padstack) {
+        for (Padstack currSelectedPadstack : padstackList) {
+          if (currPadstack == currSelectedPadstack) {
             boardInstances.add((Item) currObject);
             break;
           }

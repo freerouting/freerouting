@@ -101,27 +101,27 @@ public class BasicBoard implements Serializable {
    * p_test_level.
    */
   public BasicBoard(
-      IntBox p_bounding_box,
-      LayerStructure p_layer_structure,
-      PolylineShape[] p_outline_shapes,
-      int p_outline_cl_class_no,
-      BoardRules p_rules,
-      Communication p_communication) {
-    layerStructure = p_layer_structure;
-    rules = p_rules;
+      IntBox pBoundingBox,
+      LayerStructure pLayerStructure,
+      PolylineShape[] pOutlineShapes,
+      int pOutlineClClassNo,
+      BoardRules pRules,
+      Communication pCommunication) {
+    layerStructure = pLayerStructure;
+    rules = pRules;
     library = new BoardLibrary();
     itemList = new UndoableObjects();
     components = new Components();
-    communication = p_communication;
-    boundingBox = p_bounding_box;
+    communication = pCommunication;
+    boundingBox = pBoundingBox;
     searchTreeManager = new SearchTreeManager(this);
-    p_rules.nets.setBoard(this);
-    insertOutline(p_outline_shapes, p_outline_cl_class_no);
+    pRules.nets.setBoard(this);
+    insertOutline(pOutlineShapes, pOutlineClClassNo);
   }
 
-  public static BasicBoard deserialize(byte[] object_byte_array) {
+  public static BasicBoard deserialize(byte[] objectByteArray) {
     try {
-      ByteArrayInputStream inputStream = new ByteArrayInputStream(object_byte_array);
+      ByteArrayInputStream inputStream = new ByteArrayInputStream(objectByteArray);
       ObjectInputStream objectStream = new ObjectInputStream(inputStream);
 
       return (BasicBoard) objectStream.readObject();
@@ -140,28 +140,28 @@ public class BasicBoard implements Serializable {
     return stringBuffer.toString();
   }
 
-  private static boolean isItemActivityDebugCandidate(Item p_item) {
-    IntBox bounds = p_item.boundingBox();
+  private static boolean isItemActivityDebugCandidate(Item pItem) {
+    IntBox bounds = pItem.boundingBox();
     IntBox debugWindow = new IntBox(1620000, -1105000, 1930000, -1003000);
     return bounds != null && bounds.intersects(debugWindow);
   }
 
-  private static String firstNetOrNone(Item p_item) {
-    return p_item.netCount() > 0 ? Integer.toString(p_item.getNetNo(0)) : "none";
+  private static String firstNetOrNone(Item pItem) {
+    return pItem.netCount() > 0 ? Integer.toString(pItem.getNetNo(0)) : "none";
   }
 
-  private static String describeBounds(IntBox p_bounds) {
-    if (p_bounds == null) {
+  private static String describeBounds(IntBox pBounds) {
+    if (pBounds == null) {
       return "null";
     }
     return "[("
-        + p_bounds.ll.x
+        + pBounds.ll.x
         + ","
-        + p_bounds.ll.y
+        + pBounds.ll.y
         + ")..("
-        + p_bounds.ur.x
+        + pBounds.ur.x
         + ","
-        + p_bounds.ur.y
+        + pBounds.ur.y
         + ")]";
   }
 
@@ -215,14 +215,14 @@ public class BasicBoard implements Serializable {
     return null;
   }
 
-  public int diffTraces(BasicBoard compare_to) {
+  public int diffTraces(BasicBoard compareTo) {
     int result = 0;
     HashSet<Integer> traceIds = new HashSet<>();
     for (Trace trace : this.getTraces()) {
       traceIds.add(trace.getIdNo());
     }
 
-    for (Trace trace : compare_to.getTraces()) {
+    for (Trace trace : compareTo.getTraces()) {
       if (!traceIds.contains(trace.getIdNo())) {
         result++;
       } else {
@@ -240,35 +240,27 @@ public class BasicBoard implements Serializable {
    * items. Because no internal cleaning of items is done, the new inserted item can be returned.
    */
   public PolylineTrace insertTraceWithoutCleaning(
-      Polyline p_polyline,
-      int p_layer,
-      int p_half_width,
-      int[] p_net_no_arr,
-      int p_clearance_class,
-      FixedState p_fixed_state) {
-    if (p_polyline.cornerCount() < 2) {
+      Polyline pPolyline,
+      int pLayer,
+      int pHalfWidth,
+      int[] pNetNoArr,
+      int pClearanceClass,
+      FixedState pFixedState) {
+    if (pPolyline.cornerCount() < 2) {
       return null;
     }
     PolylineTrace newTrace =
         new PolylineTrace(
-            p_polyline,
-            p_layer,
-            p_half_width,
-            p_net_no_arr,
-            p_clearance_class,
-            0,
-            0,
-            p_fixed_state,
-            this);
+            pPolyline, pLayer, pHalfWidth, pNetNoArr, pClearanceClass, 0, 0, pFixedState, this);
     if (newTrace.firstCorner().equals(newTrace.lastCorner())) {
-      if (p_fixed_state.ordinal() < FixedState.USER_FIXED.ordinal()) {
+      if (pFixedState.ordinal() < FixedState.USER_FIXED.ordinal()) {
         return null;
       }
     }
     insertItem(newTrace);
     if (newTrace.netsNormal()) {
-      maxTraceHalfWidth = Math.max(maxTraceHalfWidth, p_half_width);
-      minTraceHalfWidth = Math.min(minTraceHalfWidth, p_half_width);
+      maxTraceHalfWidth = Math.max(maxTraceHalfWidth, pHalfWidth);
+      minTraceHalfWidth = Math.min(minTraceHalfWidth, pHalfWidth);
     }
     return newTrace;
   }
@@ -279,15 +271,15 @@ public class BasicBoard implements Serializable {
    * items.
    */
   public void insertTrace(
-      Polyline p_polyline,
-      int p_layer,
-      int p_half_width,
-      int[] p_net_no_arr,
-      int p_clearance_class,
-      FixedState p_fixed_state) {
+      Polyline pPolyline,
+      int pLayer,
+      int pHalfWidth,
+      int[] pNetNoArr,
+      int pClearanceClass,
+      FixedState pFixedState) {
     PolylineTrace newTrace =
         insertTraceWithoutCleaning(
-            p_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class, p_fixed_state);
+            pPolyline, pLayer, pHalfWidth, pNetNoArr, pClearanceClass, pFixedState);
     if (newTrace == null) {
       return;
     }
@@ -295,7 +287,7 @@ public class BasicBoard implements Serializable {
     if (this instanceof RoutingBoard board) {
       ChangedArea changedArea = board.changedArea;
       if (changedArea != null) {
-        clipShape = changedArea.getArea(p_layer);
+        clipShape = changedArea.getArea(pLayer);
       }
     }
 
@@ -318,19 +310,19 @@ public class BasicBoard implements Serializable {
    * up the net.
    */
   public void insertTrace(
-      Point[] p_points,
-      int p_layer,
-      int p_half_width,
-      int[] p_net_no_arr,
-      int p_clearance_class,
-      FixedState p_fixed_state) {
-    for (int i = 0; i < p_points.length; i++) {
-      if (!this.boundingBox.contains(p_points[i])) {
+      Point[] pPoints,
+      int pLayer,
+      int pHalfWidth,
+      int[] pNetNoArr,
+      int pClearanceClass,
+      FixedState pFixedState) {
+    for (int i = 0; i < pPoints.length; i++) {
+      if (!this.boundingBox.contains(pPoints[i])) {
         FRLogger.warn("LayeredBoard.insert_trace: input point out of range");
       }
     }
-    Polyline poly = new Polyline(p_points);
-    insertTrace(poly, p_layer, p_half_width, p_net_no_arr, p_clearance_class, p_fixed_state);
+    Polyline poly = new Polyline(pPoints);
+    insertTrace(poly, pLayer, pHalfWidth, pNetNoArr, pClearanceClass, pFixedState);
   }
 
   /**
@@ -338,29 +330,29 @@ public class BasicBoard implements Serializable {
    * of the same net.
    */
   public Via insertVia(
-      Padstack p_padstack,
-      Point p_center,
-      int[] p_net_no_arr,
-      int p_clearance_class,
-      FixedState p_fixed_state,
-      boolean p_attach_allowed) {
+      Padstack pPadstack,
+      Point pCenter,
+      int[] pNetNoArr,
+      int pClearanceClass,
+      FixedState pFixedState,
+      boolean pAttachAllowed) {
     Via newVia =
         new Via(
-            p_padstack,
-            p_center,
-            p_net_no_arr,
-            p_clearance_class,
+            pPadstack,
+            pCenter,
+            pNetNoArr,
+            pClearanceClass,
             0,
             0,
-            p_fixed_state,
-            p_attach_allowed,
+            pFixedState,
+            pAttachAllowed,
             this);
     insertItem(newVia);
-    int fromLayer = p_padstack.fromLayer();
-    int toLayer = p_padstack.toLayer();
+    int fromLayer = pPadstack.fromLayer();
+    int toLayer = pPadstack.toLayer();
     for (int i = fromLayer; i < toLayer; i++) {
-      for (int currNetNo : p_net_no_arr) {
-        splitTraces(p_center, i, currNetNo);
+      for (int currNetNo : pNetNoArr) {
+        splitTraces(pCenter, i, currNetNo);
       }
     }
     return newVia;
@@ -372,31 +364,30 @@ public class BasicBoard implements Serializable {
    * SMD layer it uses SMD-to-SMD clearance rules (because its copper is inside the SMD pad
    * footprint); on inner layers it uses normal via clearance.
    *
-   * @param p_padstack The padstack describing the via geometry
-   * @param p_center The center point (at the SMD pin center)
-   * @param p_net_no_arr The net numbers
-   * @param p_clearance_class The clearance class to use
-   * @param p_fixed_state The fixed state
-   * @param p_smd_layer The SMD layer where the pin lives (clearance exception layer)
+   * @param pPadstack The padstack describing the via geometry
+   * @param pCenter The center point (at the SMD pin center)
+   * @param pNetNoArr The net numbers
+   * @param pClearanceClass The clearance class to use
+   * @param pFixedState The fixed state
+   * @param pSmdLayer The SMD layer where the pin lives (clearance exception layer)
    */
   public Via insertEscapeVia(
-      Padstack p_padstack,
-      Point p_center,
-      int[] p_net_no_arr,
-      int p_clearance_class,
-      FixedState p_fixed_state,
-      int p_smd_layer) {
+      Padstack pPadstack,
+      Point pCenter,
+      int[] pNetNoArr,
+      int pClearanceClass,
+      FixedState pFixedState,
+      int pSmdLayer) {
     Via newVia =
-        new Via(
-            p_padstack, p_center, p_net_no_arr, p_clearance_class, 0, 0, p_fixed_state, true, this);
+        new Via(pPadstack, pCenter, pNetNoArr, pClearanceClass, 0, 0, pFixedState, true, this);
     newVia.isEscapeVia = true;
-    newVia.escapeViaSmdLayer = p_smd_layer;
+    newVia.escapeViaSmdLayer = pSmdLayer;
     insertItem(newVia);
-    int fromLayer = p_padstack.fromLayer();
-    int toLayer = p_padstack.toLayer();
+    int fromLayer = pPadstack.fromLayer();
+    int toLayer = pPadstack.toLayer();
     for (int i = fromLayer; i <= toLayer; i++) {
-      for (int currNetNo : p_net_no_arr) {
-        splitTraces(p_center, i, currNetNo);
+      for (int currNetNo : pNetNoArr) {
+        splitTraces(pCenter, i, currNetNo);
       }
     }
     return newVia;
@@ -407,13 +398,8 @@ public class BasicBoard implements Serializable {
    * component (starting with 0).
    */
   public Pin insertPin(
-      int p_component_no,
-      int p_pin_no,
-      int[] p_net_no_arr,
-      int p_clearance_class,
-      FixedState p_fixed_state) {
-    Pin newPin =
-        new Pin(p_component_no, p_pin_no, p_net_no_arr, p_clearance_class, 0, p_fixed_state, this);
+      int pComponentNo, int pPinNo, int[] pNetNoArr, int pClearanceClass, FixedState pFixedState) {
+    Pin newPin = new Pin(pComponentNo, pPinNo, pNetNoArr, pClearanceClass, 0, pFixedState, this);
     insertItem(newPin);
     return newPin;
   }
@@ -423,24 +409,14 @@ public class BasicBoard implements Serializable {
    * may have holes. If p_component_no != 0, the obstacle belongs to a component.
    */
   public ObstacleArea insertObstacle(
-      Area p_area, int p_layer, int p_clearance_class, FixedState p_fixed_state) {
-    if (p_area == null) {
+      Area pArea, int pLayer, int pClearanceClass, FixedState pFixedState) {
+    if (pArea == null) {
       FRLogger.warn("BasicBoard.insert_obstacle: p_area is null");
       return null;
     }
     ObstacleArea obs =
         new ObstacleArea(
-            p_area,
-            p_layer,
-            Vector.ZERO,
-            0,
-            false,
-            p_clearance_class,
-            0,
-            0,
-            null,
-            p_fixed_state,
-            this);
+            pArea, pLayer, Vector.ZERO, 0, false, pClearanceClass, 0, 0, null, pFixedState, this);
     insertItem(obs);
     return obs;
   }
@@ -450,31 +426,31 @@ public class BasicBoard implements Serializable {
    * corresponding ObstacleArea in the component package.
    */
   public ObstacleArea insertObstacle(
-      Area p_area,
-      int p_layer,
-      Vector p_translation,
-      double p_rotation_in_degree,
-      boolean p_side_changed,
-      int p_clearance_class,
-      int p_component_no,
-      String p_name,
-      FixedState p_fixed_state) {
-    if (p_area == null) {
+      Area pArea,
+      int pLayer,
+      Vector pTranslation,
+      double pRotationInDegree,
+      boolean pSideChanged,
+      int pClearanceClass,
+      int pComponentNo,
+      String pName,
+      FixedState pFixedState) {
+    if (pArea == null) {
       FRLogger.warn("BasicBoard.insert_obstacle: p_area is null");
       return null;
     }
     ObstacleArea obs =
         new ObstacleArea(
-            p_area,
-            p_layer,
-            p_translation,
-            p_rotation_in_degree,
-            p_side_changed,
-            p_clearance_class,
+            pArea,
+            pLayer,
+            pTranslation,
+            pRotationInDegree,
+            pSideChanged,
+            pClearanceClass,
             0,
-            p_component_no,
-            p_name,
-            p_fixed_state,
+            pComponentNo,
+            pName,
+            pFixedState,
             this);
     insertItem(obs);
     return obs;
@@ -485,24 +461,14 @@ public class BasicBoard implements Serializable {
    * which may have holes.
    */
   public ViaObstacleArea insertViaObstacle(
-      Area p_area, int p_layer, int p_clearance_class, FixedState p_fixed_state) {
-    if (p_area == null) {
+      Area pArea, int pLayer, int pClearanceClass, FixedState pFixedState) {
+    if (pArea == null) {
       FRLogger.warn("BasicBoard.insert_via_obstacle: p_area is null");
       return null;
     }
     ViaObstacleArea obs =
         new ViaObstacleArea(
-            p_area,
-            p_layer,
-            Vector.ZERO,
-            0,
-            false,
-            p_clearance_class,
-            0,
-            0,
-            null,
-            p_fixed_state,
-            this);
+            pArea, pLayer, Vector.ZERO, 0, false, pClearanceClass, 0, 0, null, pFixedState, this);
     insertItem(obs);
     return obs;
   }
@@ -512,31 +478,31 @@ public class BasicBoard implements Serializable {
    * corresponding ObstacleArea in the component package.
    */
   public ViaObstacleArea insertViaObstacle(
-      Area p_area,
-      int p_layer,
-      Vector p_translation,
-      double p_rotation_in_degree,
-      boolean p_side_changed,
-      int p_clearance_class,
-      int p_component_no,
-      String p_name,
-      FixedState p_fixed_state) {
-    if (p_area == null) {
+      Area pArea,
+      int pLayer,
+      Vector pTranslation,
+      double pRotationInDegree,
+      boolean pSideChanged,
+      int pClearanceClass,
+      int pComponentNo,
+      String pName,
+      FixedState pFixedState) {
+    if (pArea == null) {
       FRLogger.warn("BasicBoard.insert_via_obstacle: p_area is null");
       return null;
     }
     ViaObstacleArea obs =
         new ViaObstacleArea(
-            p_area,
-            p_layer,
-            p_translation,
-            p_rotation_in_degree,
-            p_side_changed,
-            p_clearance_class,
+            pArea,
+            pLayer,
+            pTranslation,
+            pRotationInDegree,
+            pSideChanged,
+            pClearanceClass,
             0,
-            p_component_no,
-            p_name,
-            p_fixed_state,
+            pComponentNo,
+            pName,
+            pFixedState,
             this);
     insertItem(obs);
     return obs;
@@ -547,24 +513,14 @@ public class BasicBoard implements Serializable {
    * shape, which may have holes.
    */
   public ComponentObstacleArea insertComponentObstacle(
-      Area p_area, int p_layer, int p_clearance_class, FixedState p_fixed_state) {
-    if (p_area == null) {
+      Area pArea, int pLayer, int pClearanceClass, FixedState pFixedState) {
+    if (pArea == null) {
       FRLogger.warn("BasicBoard.insert_component_obstacle: p_area is null");
       return null;
     }
     ComponentObstacleArea obs =
         new ComponentObstacleArea(
-            p_area,
-            p_layer,
-            Vector.ZERO,
-            0,
-            false,
-            p_clearance_class,
-            0,
-            0,
-            null,
-            p_fixed_state,
-            this);
+            pArea, pLayer, Vector.ZERO, 0, false, pClearanceClass, 0, 0, null, pFixedState, this);
     insertItem(obs);
     return obs;
   }
@@ -574,31 +530,31 @@ public class BasicBoard implements Serializable {
    * corresponding ObstacleArea in the component package.
    */
   public ComponentObstacleArea insertComponentObstacle(
-      Area p_area,
-      int p_layer,
-      Vector p_translation,
-      double p_rotation_in_degree,
-      boolean p_side_changed,
-      int p_clearance_class,
-      int p_component_no,
-      String p_name,
-      FixedState p_fixed_state) {
-    if (p_area == null) {
+      Area pArea,
+      int pLayer,
+      Vector pTranslation,
+      double pRotationInDegree,
+      boolean pSideChanged,
+      int pClearanceClass,
+      int pComponentNo,
+      String pName,
+      FixedState pFixedState) {
+    if (pArea == null) {
       FRLogger.warn("BasicBoard.insert_component_obstacle: p_area is null");
       return null;
     }
     ComponentObstacleArea obs =
         new ComponentObstacleArea(
-            p_area,
-            p_layer,
-            p_translation,
-            p_rotation_in_degree,
-            p_side_changed,
-            p_clearance_class,
+            pArea,
+            pLayer,
+            pTranslation,
+            pRotationInDegree,
+            pSideChanged,
+            pClearanceClass,
             0,
-            p_component_no,
-            p_name,
-            p_fixed_state,
+            pComponentNo,
+            pName,
+            pFixedState,
             this);
     insertItem(obs);
     return obs;
@@ -606,35 +562,35 @@ public class BasicBoard implements Serializable {
 
   /** Inserts a component outline into the board. */
   public ComponentOutline insertComponentOutline(
-      Area p_area,
-      boolean p_is_front,
-      Vector p_translation,
-      double p_rotation_in_degree,
-      int p_component_no,
-      boolean p_is_courtyard,
-      boolean p_is_fabrication,
-      boolean p_is_closed,
-      FixedState p_fixed_state) {
-    if (p_area == null) {
+      Area pArea,
+      boolean pIsFront,
+      Vector pTranslation,
+      double pRotationInDegree,
+      int pComponentNo,
+      boolean pIsCourtyard,
+      boolean pIsFabrication,
+      boolean pIsClosed,
+      FixedState pFixedState) {
+    if (pArea == null) {
       FRLogger.warn("BasicBoard.insert_component_outline: p_area is null");
       return null;
     }
-    if (!p_area.isBounded()) {
+    if (!pArea.isBounded()) {
       FRLogger.warn("BasicBoard.insert_component_outline: p_area is not bounded");
       return null;
     }
     ComponentOutline outline =
         new ComponentOutline(
-            p_area,
-            p_is_front,
-            p_translation,
-            p_rotation_in_degree,
+            pArea,
+            pIsFront,
+            pTranslation,
+            pRotationInDegree,
             0,
-            p_component_no,
-            p_is_courtyard,
-            p_is_fabrication,
-            p_is_closed,
-            p_fixed_state,
+            pComponentNo,
+            pIsCourtyard,
+            pIsFabrication,
+            pIsClosed,
+            pFixedState,
             this);
     insertItem(outline);
     return outline;
@@ -646,38 +602,38 @@ public class BasicBoard implements Serializable {
    * area with traces and vias of foreign nets.
    */
   public ConductionArea insertConductionArea(
-      Area p_area,
-      int p_layer,
-      int[] p_net_no_arr,
-      int p_clearance_class,
-      boolean p_is_obstacle,
-      FixedState p_fixed_state) {
-    if (p_area == null) {
+      Area pArea,
+      int pLayer,
+      int[] pNetNoArr,
+      int pClearanceClass,
+      boolean pIsObstacle,
+      FixedState pFixedState) {
+    if (pArea == null) {
       FRLogger.warn("BasicBoard.insert_conduction_area: p_area is null");
       return null;
     }
     ConductionArea c =
         new ConductionArea(
-            p_area,
-            p_layer,
+            pArea,
+            pLayer,
             Vector.ZERO,
             0,
             false,
-            p_net_no_arr,
-            p_clearance_class,
+            pNetNoArr,
+            pClearanceClass,
             0,
             0,
             null,
-            p_is_obstacle,
-            p_fixed_state,
+            pIsObstacle,
+            pFixedState,
             this);
     insertItem(c);
     return c;
   }
 
   /** Inserts an Outline into the board. */
-  public BoardOutline insertOutline(PolylineShape[] p_outline_shapes, int p_clearance_class_no) {
-    BoardOutline result = new BoardOutline(p_outline_shapes, p_clearance_class_no, 0, this);
+  public BoardOutline insertOutline(PolylineShape[] pOutlineShapes, int pClearanceClassNo) {
+    BoardOutline result = new BoardOutline(pOutlineShapes, pClearanceClassNo, 0, this);
     insertItem(result);
     return result;
   }
@@ -698,27 +654,26 @@ public class BasicBoard implements Serializable {
   }
 
   /** Removes an item from the board */
-  public void removeItem(Item p_item) {
-    if (p_item == null) {
+  public void removeItem(Item pItem) {
+    if (pItem == null) {
       return;
     }
-    if (isItemActivityDebugCandidate(p_item)) {
+    if (isItemActivityDebugCandidate(pItem)) {
       FRLogger.trace(
           "ITEM_ACTIVITY action=REMOVE"
               + ", id="
-              + p_item.getIdNo()
+              + pItem.getIdNo()
               + ", type="
-              + p_item.getClass().getSimpleName()
+              + pItem.getClass().getSimpleName()
               + ", bounds="
-              + describeBounds(p_item.boundingBox())
+              + describeBounds(pItem.boundingBox())
               + ", net0="
-              + firstNetOrNone(p_item));
+              + firstNetOrNone(pItem));
     }
-    if (p_item instanceof Trace t && t.netNoArr.length > 0 && t.netNoArr[0] == 94) {
+    if (pItem instanceof Trace t && t.netNoArr.length > 0 && t.netNoArr[0] == 94) {
       if (t instanceof PolylineTrace pt
           && pt.cornerCount() == 2
-          && t.firstCorner()
-              .equals(new app.freerouting.geometry.planar.IntPoint(1885928, -1097274))
+          && t.firstCorner().equals(new app.freerouting.geometry.planar.IntPoint(1885928, -1097274))
           && t.lastCorner()
               .equals(new app.freerouting.geometry.planar.IntPoint(1885928, -1098024))) {
         FRLogger.trace(
@@ -744,16 +699,16 @@ public class BasicBoard implements Serializable {
             new Point[] {t.firstCorner(), t.lastCorner()});
       }
     }
-    if (p_item.isDeletionForbidden()) {
+    if (pItem.isDeletionForbidden()) {
       return;
     }
-    additionalUpdateAfterChange(p_item); // must be called before p_item is deleted.
-    searchTreeManager.remove(p_item);
-    itemList.delete(p_item);
+    additionalUpdateAfterChange(pItem); // must be called before p_item is deleted.
+    searchTreeManager.remove(pItem);
+    itemList.delete(pItem);
 
     // let the observers synchronize the deletion
     if ((communication != null) && (communication.observers != null)) {
-      communication.observers.notifyDeleted(p_item);
+      communication.observers.notifyDeleted(pItem);
     }
     incrementRevision();
   }
@@ -761,17 +716,17 @@ public class BasicBoard implements Serializable {
   /**
    * Searches for an item with the specified id number on the board.
    *
-   * @param p_id_no the id number of the item to search for
+   * @param pIdNo the id number of the item to search for
    * @return the found item, or null if no such item is found
    */
-  public Item getItem(int p_id_no) {
+  public Item getItem(int pIdNo) {
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
     for (; ; ) {
       Item currItem = (Item) itemList.readObject(it);
       if (currItem == null) {
         break;
       }
-      if (currItem.getIdNo() == p_id_no) {
+      if (currItem.getIdNo() == pIdNo) {
         return currItem;
       }
     }
@@ -793,7 +748,7 @@ public class BasicBoard implements Serializable {
   }
 
   /** Returns all connectable items on the board containing p_net_no */
-  public Collection<Item> getConnectableItems(int p_net_no) {
+  public Collection<Item> getConnectableItems(int pNetNo) {
     Collection<Item> result = new LinkedList<>();
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
     for (; ; ) {
@@ -801,7 +756,7 @@ public class BasicBoard implements Serializable {
       if (currItem == null) {
         break;
       }
-      if (currItem instanceof Connectable && currItem.containsNet(p_net_no)) {
+      if (currItem instanceof Connectable && currItem.containsNet(pNetNo)) {
         result.add(currItem);
       }
     }
@@ -809,7 +764,7 @@ public class BasicBoard implements Serializable {
   }
 
   /** Returns the count of connectable items of the net with number p_net_no */
-  public int connectableItemCount(int p_net_no) {
+  public int connectableItemCount(int pNetNo) {
     int result = 0;
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
     for (; ; ) {
@@ -817,7 +772,7 @@ public class BasicBoard implements Serializable {
       if (currItem == null) {
         break;
       }
-      if (currItem instanceof Connectable && currItem.containsNet(p_net_no)) {
+      if (currItem instanceof Connectable && currItem.containsNet(pNetNo)) {
         ++result;
       }
     }
@@ -825,7 +780,7 @@ public class BasicBoard implements Serializable {
   }
 
   /** Returns all items with the input component number */
-  public Collection<Item> getComponentItems(int p_component_no) {
+  public Collection<Item> getComponentItems(int pComponentNo) {
     Collection<Item> result = new LinkedList<>();
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
     for (; ; ) {
@@ -833,7 +788,7 @@ public class BasicBoard implements Serializable {
       if (currItem == null) {
         break;
       }
-      if (currItem.getComponentNo() == p_component_no) {
+      if (currItem.getComponentNo() == pComponentNo) {
         result.add(currItem);
       }
     }
@@ -841,7 +796,7 @@ public class BasicBoard implements Serializable {
   }
 
   /** Returns all pins with the input component number */
-  public Collection<Pin> getComponentPins(int p_component_no) {
+  public Collection<Pin> getComponentPins(int pComponentNo) {
     Collection<Pin> result = new LinkedList<>();
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
     for (; ; ) {
@@ -849,7 +804,7 @@ public class BasicBoard implements Serializable {
       if (currItem == null) {
         break;
       }
-      if (currItem.getComponentNo() == p_component_no && currItem instanceof Pin pin) {
+      if (currItem.getComponentNo() == pComponentNo && currItem instanceof Pin pin) {
         result.add(pin);
       }
     }
@@ -859,15 +814,15 @@ public class BasicBoard implements Serializable {
   /**
    * Returns the pin with the input component number and pin number, or null, if no such pin exists.
    */
-  public Pin getPin(int p_component_no, int p_pin_no) {
+  public Pin getPin(int pComponentNo, int pPinNo) {
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
     for (; ; ) {
       Item currItem = (Item) itemList.readObject(it);
       if (currItem == null) {
         break;
       }
-      if (currItem.getComponentNo() == p_component_no && currItem instanceof Pin currPin) {
-        if (currPin.pinNo == p_pin_no) {
+      if (currItem.getComponentNo() == pComponentNo && currItem instanceof Pin currPin) {
+        if (currPin.pinNo == pPinNo) {
           return currPin;
         }
       }
@@ -879,9 +834,9 @@ public class BasicBoard implements Serializable {
    * Removes the items in p_item_list. Returns false, if some items could not be removed, because
    * they are fixed.
    */
-  public boolean removeItems(Collection<Item> p_item_list) {
+  public boolean removeItems(Collection<Item> pItemList) {
     boolean result = true;
-    for (Item currItem : p_item_list) {
+    for (Item currItem : pItemList) {
       if (currItem.isDeletionForbidden() || currItem.isUserFixed()) {
         // We are not allowed to delete this item
         result = false;
@@ -994,7 +949,7 @@ public class BasicBoard implements Serializable {
    * Combines the connected traces of this net, which have only 1 contact at the connection point.
    * if p_net_no {@literal <} 0 traces of all nets are combined.
    */
-  public boolean combineTraces(int p_net_no) {
+  public boolean combineTraces(int pNetNo) {
     boolean result = false;
     boolean somethingChanged = true;
     while (somethingChanged) {
@@ -1005,7 +960,7 @@ public class BasicBoard implements Serializable {
         if (currItem == null) {
           break;
         }
-        if ((p_net_no < 0 || currItem.containsNet(p_net_no))
+        if ((pNetNo < 0 || currItem.containsNet(pNetNo))
             && currItem instanceof Trace trace
             && currItem.isOnTheBoard()) {
           if (trace.combine()) {
@@ -1020,15 +975,15 @@ public class BasicBoard implements Serializable {
   }
 
   /** Normalizes the traces of this net */
-  public boolean normalizeTraces(int p_net_no) {
+  public boolean normalizeTraces(int pNetNo) {
     if (normalizeSuppressedNetNos == null) {
       normalizeSuppressedNetNos = new HashSet<>();
     }
-    if (normalizeSuppressedNetNos.contains(p_net_no)) {
+    if (normalizeSuppressedNetNos.contains(pNetNo)) {
       String netName =
-          rules != null && rules.nets != null && rules.nets.get(p_net_no) != null
-              ? rules.nets.get(p_net_no).name
-              : String.valueOf(p_net_no);
+          rules != null && rules.nets != null && rules.nets.get(pNetNo) != null
+              ? rules.nets.get(pNetNo).name
+              : String.valueOf(pNetNo);
       FRLogger.debug(
           "BasicBoard.normalize_traces: skipping net '"
               + netName
@@ -1046,9 +1001,9 @@ public class BasicBoard implements Serializable {
         // the geometry engine cannot cleanly normalise).  Stop here rather than hanging
         // the board-load thread for minutes.
         String netName =
-            rules != null && rules.nets != null && rules.nets.get(p_net_no) != null
-                ? rules.nets.get(p_net_no).name
-                : String.valueOf(p_net_no);
+            rules != null && rules.nets != null && rules.nets.get(pNetNo) != null
+                ? rules.nets.get(pNetNo).name
+                : String.valueOf(pNetNo);
         FRLogger.warn(
             "BasicBoard.normalize_traces: reached "
                 + MAX_NORMALIZE_ITERATIONS
@@ -1058,7 +1013,7 @@ public class BasicBoard implements Serializable {
                 + " The board geometry for this net may be oscillating (split/combine cycle);"
                 + " traces are kept as-is and further normalization for this net is suppressed"
                 + " on this board candidate.");
-        normalizeSuppressedNetNos.add(p_net_no);
+        normalizeSuppressedNetNos.add(pNetNo);
         break;
       }
       somethingChanged = false;
@@ -1082,7 +1037,7 @@ public class BasicBoard implements Serializable {
         if (currItem == null) {
           break;
         }
-        if (currItem.containsNet(p_net_no)
+        if (currItem.containsNet(pNetNo)
             && currItem instanceof PolylineTrace currTrace
             && currItem.isOnTheBoard()) {
           netTraces.add(currTrace);
@@ -1200,15 +1155,15 @@ public class BasicBoard implements Serializable {
    * Looks for traces of the input net on the input layer, so that p_location is on the trace
    * polygon, and splits these traces. Returns false, if no trace was split.
    */
-  public boolean splitTraces(Point p_location, int p_layer, int p_net_no) {
+  public boolean splitTraces(Point pLocation, int pLayer, int pNetNo) {
     ItemSelectionFilter filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
-    Collection<Item> pickedItems = this.pickItems(p_location, p_layer, filter);
-    IntOctagon locationShape = TileShape.getInstance(p_location).boundingOctagon();
+    Collection<Item> pickedItems = this.pickItems(pLocation, pLayer, filter);
+    IntOctagon locationShape = TileShape.getInstance(pLocation).boundingOctagon();
     boolean traceSplit = false;
     for (Item currItem : pickedItems) {
       Trace currTrace = (Trace) currItem;
-      if (currTrace.containsNet(p_net_no)) {
+      if (currTrace.containsNet(pNetNo)) {
         Collection<PolylineTrace> splitPieces = currTrace.split(locationShape);
         if (splitPieces.size() != 1) {
           traceSplit = true;
@@ -1219,9 +1174,9 @@ public class BasicBoard implements Serializable {
   }
 
   /** Returns a Collection of Collections of items forming a connected set. */
-  public Collection<Collection<Item>> getConnectedSets(int p_net_no) {
+  public Collection<Collection<Item>> getConnectedSets(int pNetNo) {
     Collection<Collection<Item>> result = new LinkedList<>();
-    if (p_net_no <= 0) {
+    if (pNetNo <= 0) {
       return result;
     }
     SortedSet<Item> itemsToHandle = new TreeSet<>();
@@ -1231,14 +1186,14 @@ public class BasicBoard implements Serializable {
       if (currItem == null) {
         break;
       }
-      if (currItem instanceof Connectable && currItem.containsNet(p_net_no)) {
+      if (currItem instanceof Connectable && currItem.containsNet(pNetNo)) {
         itemsToHandle.add(currItem);
       }
     }
     Iterator<Item> it2 = itemsToHandle.iterator();
     while (it2.hasNext()) {
       Item currItem = it2.next();
-      Collection<Item> nextConnectedSet = currItem.getConnectedSet(p_net_no);
+      Collection<Item> nextConnectedSet = currItem.getConnectedSet(pNetNo);
       result.add(nextConnectedSet);
       itemsToHandle.removeAll(nextConnectedSet);
       it2 = itemsToHandle.iterator();
@@ -1250,8 +1205,8 @@ public class BasicBoard implements Serializable {
    * Returns all SearchTreeObjects on layer p_layer, which overlap with p_shape. If p_layer
    * {@literal <} 0, the layer is ignored
    */
-  public Set<SearchTreeObject> overlappingObjects(ConvexShape p_shape, int p_layer) {
-    return this.searchTreeManager.getDefaultTree().overlappingObjects(p_shape, p_layer);
+  public Set<SearchTreeObject> overlappingObjects(ConvexShape pShape, int pLayer) {
+    return this.searchTreeManager.getDefaultTree().overlappingObjects(pShape, pLayer);
   }
 
   /**
@@ -1261,23 +1216,23 @@ public class BasicBoard implements Serializable {
    * but do not overlap with exact calculation. If p_layer {@literal <} 0, the layer is ignored.
    */
   public Set<Item> overlappingItemsWithClearance(
-      ConvexShape p_shape, int p_layer, int[] p_ignore_net_nos, int p_clearance_class) {
+      ConvexShape pShape, int pLayer, int[] pIgnoreNetNos, int pClearanceClass) {
     ShapeSearchTree defaultTree = this.searchTreeManager.getDefaultTree();
     return defaultTree.overlappingItemsWithClearance(
-        p_shape, p_layer, p_ignore_net_nos, p_clearance_class);
+        pShape, pLayer, pIgnoreNetNos, pClearanceClass);
   }
 
   /**
    * Returns all items on layer p_layer, which overlap with p_area. If p_layer {@literal <} 0, the
    * layer is ignored
    */
-  public Set<Item> overlappingItems(Area p_area, int p_layer) {
+  public Set<Item> overlappingItems(Area pArea, int pLayer) {
     Set<Item> result = new TreeSet<>();
-    TileShape[] tileShapes = p_area.splitToConvex();
+    TileShape[] tileShapes = pArea.splitToConvex();
     for (int i = 0; i < tileShapes.length; i++) {
-      Set<SearchTreeObject> currOverlaps = overlappingObjects(tileShapes[i], p_layer);
-      for (SearchTreeObject curr_overlap : currOverlaps) {
-        if (curr_overlap instanceof Item item) {
+      Set<SearchTreeObject> currOverlaps = overlappingObjects(tileShapes[i], pLayer);
+      for (SearchTreeObject currOverlap : currOverlaps) {
+        if (currOverlap instanceof Item item) {
           result.add(item);
         }
       }
@@ -1289,8 +1244,8 @@ public class BasicBoard implements Serializable {
    * Checks, if an object with shape p_shape and net nos p_net_no_arr and clearance class p_cl_class
    * can be inserted on layer p_layer without clearance violation.
    */
-  public boolean checkShape(Area p_shape, int p_layer, int[] p_net_no_arr, int p_cl_class) {
-    TileShape[] tiles = p_shape.splitToConvex();
+  public boolean checkShape(Area pShape, int pLayer, int[] pNetNoArr, int pClClass) {
+    TileShape[] tiles = pShape.splitToConvex();
     ShapeSearchTree defaultTree = this.searchTreeManager.getDefaultTree();
     for (int i = 0; i < tiles.length; i++) {
       TileShape currShape = tiles[i];
@@ -1299,11 +1254,11 @@ public class BasicBoard implements Serializable {
       }
       Set<SearchTreeObject> obstacles = new TreeSet<>();
       defaultTree.overlappingObjectsWithClearance(
-          currShape, p_layer, p_net_no_arr, p_cl_class, obstacles);
+          currShape, pLayer, pNetNoArr, pClClass, obstacles);
       for (SearchTreeObject currOb : obstacles) {
         boolean isObstacle = true;
-        for (int j = 0; j < p_net_no_arr.length; j++) {
-          if (!currOb.isObstacle(p_net_no_arr[j])) {
+        for (int j = 0; j < pNetNoArr.length; j++) {
+          if (!currOb.isObstacle(pNetNoArr[j])) {
             isObstacle = false;
           }
         }
@@ -1322,25 +1277,25 @@ public class BasicBoard implements Serializable {
    * the own net.
    */
   public boolean checkTraceShape(
-      TileShape p_shape, int p_layer, int[] p_net_no_arr, int p_cl_class, Set<Pin> p_contact_pins) {
-    if (!p_shape.isContainedIn(boundingBox)) {
+      TileShape pShape, int pLayer, int[] pNetNoArr, int pClClass, Set<Pin> pContactPins) {
+    if (!pShape.isContainedIn(boundingBox)) {
       return false;
     }
     ShapeSearchTree defaultTree = this.searchTreeManager.getDefaultTree();
     Collection<TreeEntry> treeEntries = new LinkedList<>();
     int[] ignoreNetNos = new int[0];
     if (defaultTree.isClearanceCompensationUsed()) {
-      defaultTree.overlappingTreeEntries(p_shape, p_layer, ignoreNetNos, treeEntries);
+      defaultTree.overlappingTreeEntries(pShape, pLayer, ignoreNetNos, treeEntries);
     } else {
       defaultTree.overlappingTreeEntriesWithClearance(
-          p_shape, p_layer, ignoreNetNos, p_cl_class, treeEntries);
+          pShape, pLayer, ignoreNetNos, pClClass, treeEntries);
     }
-    for (TreeEntry curr_tree_entry : treeEntries) {
-      if (!(curr_tree_entry.object instanceof Item currItem)) {
+    for (TreeEntry currTreeEntry : treeEntries) {
+      if (!(currTreeEntry.object instanceof Item currItem)) {
         continue;
       }
-      if (p_contact_pins != null) {
-        if (p_contact_pins.contains(currItem)) {
+      if (pContactPins != null) {
+        if (pContactPins.contains(currItem)) {
           continue;
         }
         if (currItem instanceof Pin) {
@@ -1350,25 +1305,24 @@ public class BasicBoard implements Serializable {
         }
       }
       boolean isObstacle = true;
-      for (int i = 0; i < p_net_no_arr.length; i++) {
-        if (!currItem.isTraceObstacle(p_net_no_arr[i])) {
+      for (int i = 0; i < pNetNoArr.length; i++) {
+        if (!currItem.isTraceObstacle(pNetNoArr[i])) {
           isObstacle = false;
         }
       }
-      if (isObstacle && (currItem instanceof PolylineTrace) && p_contact_pins != null) {
+      if (isObstacle && (currItem instanceof PolylineTrace) && pContactPins != null) {
         // check for traces of foreign nets at tie pins, which will be ignored inside
         // the pin shape
         TileShape intersection = null;
-        for (Pin curr_contact_pin : p_contact_pins) {
-          if (curr_contact_pin.netCount() <= 1 || !curr_contact_pin.sharesNet(currItem)) {
+        for (Pin currContactPin : pContactPins) {
+          if (currContactPin.netCount() <= 1 || !currContactPin.sharesNet(currItem)) {
             continue;
           }
           if (intersection == null) {
-            TileShape obstacleTraceShape =
-                currItem.getTileShape(curr_tree_entry.shapeIndexInObject);
-            intersection = p_shape.intersection(obstacleTraceShape);
+            TileShape obstacleTraceShape = currItem.getTileShape(currTreeEntry.shapeIndexInObject);
+            intersection = pShape.intersection(obstacleTraceShape);
           }
-          TileShape pinShape = curr_contact_pin.getTileShapeOnLayer(p_layer);
+          TileShape pinShape = currContactPin.getTileShapeOnLayer(pLayer);
           if (pinShape.containsApprox(intersection)) {
             isObstacle = false;
             break;
@@ -1387,18 +1341,14 @@ public class BasicBoard implements Serializable {
    * violations
    */
   public boolean checkPolylineTrace(
-      Polyline p_polyline,
-      int p_layer,
-      int p_pen_half_width,
-      int[] p_net_no_arr,
-      int p_clearance_class) {
+      Polyline pPolyline, int pLayer, int pPenHalfWidth, int[] pNetNoArr, int pClearanceClass) {
     Trace tmpTrace =
         new PolylineTrace(
-            p_polyline,
-            p_layer,
-            p_pen_half_width,
-            p_net_no_arr,
-            p_clearance_class,
+            pPolyline,
+            pLayer,
+            pPenHalfWidth,
+            pNetNoArr,
+            pClearanceClass,
             0,
             0,
             FixedState.UNFIXED,
@@ -1406,7 +1356,7 @@ public class BasicBoard implements Serializable {
     Set<Pin> contactPins = tmpTrace.touchingPinsAtEndCorners();
     for (int i = 0; i < tmpTrace.tileShapeCount(); i++) {
       if (!this.checkTraceShape(
-          tmpTrace.getTileShape(i), p_layer, p_net_no_arr, p_clearance_class, contactPins)) {
+          tmpTrace.getTileShape(i), pLayer, pNetNoArr, pClearanceClass, contactPins)) {
         return false;
       }
     }
@@ -1418,14 +1368,14 @@ public class BasicBoard implements Serializable {
     return layerStructure.arr.length;
   }
 
-  public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
-    if (p_graphics_context == null) {
+  public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext) {
+    if (pGraphicsContext == null) {
       return;
     }
 
     // Determine the currently selected layer and virtual layer
-    int activeLayer = p_graphics_context.getFullyVisibleLayer();
-    int activeVirtualLayer = p_graphics_context.getFullyVisibleVirtualLayer();
+    int activeLayer = pGraphicsContext.getFullyVisibleLayer();
+    int activeVirtualLayer = pGraphicsContext.getFullyVisibleVirtualLayer();
 
     DominantSide dominantSide = DominantSide.NONE;
     if (activeVirtualLayer != -1) {
@@ -1609,9 +1559,9 @@ public class BasicBoard implements Serializable {
     long startLoop = System.nanoTime();
 
     // Viewport culling bounds in board coordinates
-    java.awt.Rectangle clipRect = p_graphics.getClipBounds();
+    java.awt.Rectangle clipRect = pGraphics.getClipBounds();
     IntBox clipBox =
-        clipRect != null ? p_graphics_context.coordinateTransform.screenToBoard(clipRect) : null;
+        clipRect != null ? pGraphicsContext.coordinateTransform.screenToBoard(clipRect) : null;
 
     long timeTrace = 0;
     long timeVia = 0;
@@ -1651,14 +1601,14 @@ public class BasicBoard implements Serializable {
                 itemVirtualIdx = co.isFront() ? 0 : 1;
               }
               if (itemVirtualIdx == step.index) {
-                currItem.draw(p_graphics, p_graphics_context);
+                currItem.draw(pGraphics, pGraphicsContext);
               }
             } else if (currItem instanceof ComponentObstacleArea coa) {
               // Courtyard keepout areas map to virtual courtyard layers (2=F.Courtyard,
               // 3=B.Courtyard)
               int itemVirtualIdx = coa.isFront() ? 2 : 3;
               if (itemVirtualIdx == step.index) {
-                currItem.draw(p_graphics, p_graphics_context);
+                currItem.draw(pGraphics, pGraphicsContext);
               }
             }
           } else {
@@ -1666,7 +1616,7 @@ public class BasicBoard implements Serializable {
             // (they are rendered exclusively in their corresponding virtual layer steps)
             if (!(currItem instanceof ComponentOutline)
                 && !(currItem instanceof ComponentObstacleArea)) {
-              currItem.drawLayer(p_graphics, p_graphics_context, step.index);
+              currItem.drawLayer(pGraphics, pGraphicsContext, step.index);
             }
           }
           long itemDur = System.nanoTime() - itemStart;
@@ -1694,17 +1644,15 @@ public class BasicBoard implements Serializable {
 
     long startText = System.nanoTime();
     // Draw component values on Front Fab (virtual index 4) / Back Fab (virtual index 5)
-    double intensityFront = p_graphics_context.getVirtualLayerVisibility(4);
-    double intensityBack = p_graphics_context.getVirtualLayerVisibility(5);
+    double intensityFront = pGraphicsContext.getVirtualLayerVisibility(4);
+    double intensityBack = pGraphicsContext.getVirtualLayerVisibility(5);
     if (intensityFront > 0 || intensityBack > 0) {
-      java.awt.Graphics2D g2 = (java.awt.Graphics2D) p_graphics;
+      java.awt.Graphics2D g2 = (java.awt.Graphics2D) pGraphics;
       java.awt.Font originalFont = g2.getFont();
       java.awt.Composite originalComposite = g2.getComposite();
       g2.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
       for (Component comp : components.getAll()) {
-        if (!comp.isPlaced()
-            || comp.getPartNumber() == null
-            || comp.getPartNumber().isEmpty()) {
+        if (!comp.isPlaced() || comp.getPartNumber() == null || comp.getPartNumber().isEmpty()) {
           continue;
         }
         boolean isFront = comp.placedOnFront();
@@ -1714,8 +1662,8 @@ public class BasicBoard implements Serializable {
         }
         java.awt.Color color =
             isFront
-                ? p_graphics_context.otherColorTable.getFabColor(true)
-                : p_graphics_context.otherColorTable.getFabColor(false);
+                ? pGraphicsContext.otherColorTable.getFabColor(true)
+                : pGraphicsContext.otherColorTable.getFabColor(false);
         if (color == null) {
           continue;
         }
@@ -1724,7 +1672,7 @@ public class BasicBoard implements Serializable {
         g2.setComposite(
             java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, alpha));
         java.awt.geom.Point2D screenLoc =
-            p_graphics_context.coordinateTransform.boardToScreen(comp.getLocation().toFloat());
+            pGraphicsContext.coordinateTransform.boardToScreen(comp.getLocation().toFloat());
         java.awt.FontMetrics metrics = g2.getFontMetrics();
         int textWidth = metrics.stringWidth(comp.getPartNumber());
         int textHeight = metrics.getAscent();
@@ -1771,35 +1719,35 @@ public class BasicBoard implements Serializable {
    * p_location. If p_layer {@literal <} 0, the layer is ignored. If p_item_selection_filter !=
    * null, only items of types selected by the filter are picked.
    */
-  public Set<Item> pickItems(Point p_location, int p_layer, ItemSelectionFilter p_filter) {
-    TileShape pointShape = TileShape.getInstance(p_location);
-    Collection<SearchTreeObject> overlaps = overlappingObjects(pointShape, p_layer);
+  public Set<Item> pickItems(Point pLocation, int pLayer, ItemSelectionFilter pFilter) {
+    TileShape pointShape = TileShape.getInstance(pLocation);
+    Collection<SearchTreeObject> overlaps = overlappingObjects(pointShape, pLayer);
     Set<Item> result = new TreeSet<>();
     for (SearchTreeObject currObject : overlaps) {
       if (currObject instanceof Item item) {
         result.add(item);
       }
     }
-    if (p_filter != null) {
-      result = p_filter.filter(result);
+    if (pFilter != null) {
+      result = pFilter.filter(result);
     }
     return result;
   }
 
   /** checks, if p_point is contained in the bounding box of this board. */
-  public boolean contains(Point p_point) {
-    return p_point.isContainedIn(boundingBox);
+  public boolean contains(Point pPoint) {
+    return pPoint.isContainedIn(boundingBox);
   }
 
   /**
    * Returns the minimum clearance requested between items of clearance class p_class_1 and
    * p_class_2. p_class_1 and p_class_2 are indices in the clearance matrix.
    */
-  public int clearanceValue(int p_class_1, int p_class_2, int p_layer) {
+  public int clearanceValue(int pClass1, int pClass2, int pLayer) {
     if (rules == null || rules.clearanceMatrix == null) {
       return 0;
     }
-    return rules.clearanceMatrix.getValue(p_class_1, p_class_2, p_layer, true);
+    return rules.clearanceMatrix.getValue(pClass1, pClass2, pLayer, true);
   }
 
   /** returns the biggest half width of all traces on the board. */
@@ -1818,9 +1766,9 @@ public class BasicBoard implements Serializable {
   }
 
   /** Returns a box containing all items in p_item_list. */
-  public IntBox getBoundingBox(Collection<Item> p_item_list) {
+  public IntBox getBoundingBox(Collection<Item> pItemList) {
     IntBox result = IntBox.EMPTY;
-    for (Item currItem : p_item_list) {
+    for (Item currItem : pItemList) {
       result = result.union(currItem.boundingBox());
     }
     return result;
@@ -1837,11 +1785,11 @@ public class BasicBoard implements Serializable {
   }
 
   /** enlarges the graphics update box, so that it contains p_box */
-  public void joinGraphicsUpdateBox(IntBox p_box) {
+  public void joinGraphicsUpdateBox(IntBox pBox) {
     if (updateBox == null) {
       resetGraphicsUpdateBox();
     }
-    updateBox = updateBox.union(p_box);
+    updateBox = updateBox.union(pBox);
   }
 
   /** starts notifying the observers of any change in the objects list */
@@ -1873,16 +1821,16 @@ public class BasicBoard implements Serializable {
    * Turns an obstacle area into a conduction area with net number p_net_no If it is convex and has
    * no holes, it is turned into a Pin, else into a conduction area.
    */
-  public Connectable makeConductive(ObstacleArea p_area, int p_net_no) {
+  public Connectable makeConductive(ObstacleArea pArea, int pNetNo) {
     Item newItem;
-    Area currArea = p_area.getRelativeArea();
-    int layer = p_area.getLayer();
-    FixedState fixedState = p_area.getFixedState();
-    Vector translation = p_area.getTranslation();
-    double rotation = p_area.getRotationInDegree();
-    boolean sideChanged = p_area.getSideChanged();
+    Area currArea = pArea.getRelativeArea();
+    int layer = pArea.getLayer();
+    FixedState fixedState = pArea.getFixedState();
+    Vector translation = pArea.getTranslation();
+    double rotation = pArea.getRotationInDegree();
+    boolean sideChanged = pArea.getSideChanged();
     int[] netNoArr = new int[1];
-    netNoArr[0] = p_net_no;
+    netNoArr[0] = pNetNo;
     newItem =
         new ConductionArea(
             currArea,
@@ -1891,50 +1839,50 @@ public class BasicBoard implements Serializable {
             rotation,
             sideChanged,
             netNoArr,
-            p_area.clearanceClassNo(),
+            pArea.clearanceClassNo(),
             0,
-            p_area.getComponentNo(),
-            p_area.name,
+            pArea.getComponentNo(),
+            pArea.name,
             true,
             fixedState,
             this);
-    removeItem(p_area);
+    removeItem(pArea);
     insertItem(newItem);
     return (Connectable) newItem;
   }
 
   /** Inserts an item into the board database */
-  public void insertItem(Item p_item) {
-    if (p_item == null) {
+  public void insertItem(Item pItem) {
+    if (pItem == null) {
       return;
     }
-    if (isItemActivityDebugCandidate(p_item)) {
+    if (isItemActivityDebugCandidate(pItem)) {
       FRLogger.trace(
           "ITEM_ACTIVITY action=INSERT"
               + ", id="
-              + p_item.getIdNo()
+              + pItem.getIdNo()
               + ", type="
-              + p_item.getClass().getSimpleName()
+              + pItem.getClass().getSimpleName()
               + ", bounds="
-              + describeBounds(p_item.boundingBox())
+              + describeBounds(pItem.boundingBox())
               + ", net0="
-              + firstNetOrNone(p_item));
+              + firstNetOrNone(pItem));
     }
 
     if (rules == null
         || rules.clearanceMatrix == null
-        || p_item.clearanceClassNo() < 0
-        || p_item.clearanceClassNo() >= rules.clearanceMatrix.getClassCount()) {
+        || pItem.clearanceClassNo() < 0
+        || pItem.clearanceClassNo() >= rules.clearanceMatrix.getClassCount()) {
       FRLogger.warn("LayeredBoard.insert_item: clearanceClass no out of range");
-      p_item.setClearanceClassNo(0);
+      pItem.setClearanceClassNo(0);
     }
-    p_item.board = this;
-    itemList.insert(p_item);
-    searchTreeManager.insert(p_item);
+    pItem.board = this;
+    itemList.insert(pItem);
+    searchTreeManager.insert(pItem);
     if ((communication != null) && (communication.observers != null)) {
-      communication.observers.notifyNew(p_item);
+      communication.observers.notifyNew(pItem);
     }
-    additionalUpdateAfterChange(p_item);
+    additionalUpdateAfterChange(pItem);
     incrementRevision();
   }
 
@@ -1942,13 +1890,13 @@ public class BasicBoard implements Serializable {
    * Stub function overwritten in class RoutingBoard to maintain the autorouter database if
    * necessary.
    */
-  public void additionalUpdateAfterChange(Item p_item) {}
+  public void additionalUpdateAfterChange(Item pItem) {}
 
   /**
    * Restores the situation at the previous snapshot. Returns false, if no more undo is possible.
    * Puts the numbers of the changed nets into the set p_changed_nets, if p_changed_nets != null
    */
-  public boolean undo(Set<Integer> p_changed_nets) {
+  public boolean undo(Set<Integer> pChangedNets) {
     this.components.undo(this.communication.observers);
     Collection<UndoableObjects.Storable> cancelledObjects = new LinkedList<>();
     Collection<UndoableObjects.Storable> restoredObjects = new LinkedList<>();
@@ -1964,9 +1912,9 @@ public class BasicBoard implements Serializable {
         communication.observers.notifyDeleted(currItem);
       }
 
-      if (p_changed_nets != null) {
+      if (pChangedNets != null) {
         for (int i = 0; i < currItem.netCount(); i++) {
-          p_changed_nets.add(currItem.getNetNo(i));
+          pChangedNets.add(currItem.getNetNo(i));
         }
       }
     }
@@ -1980,9 +1928,9 @@ public class BasicBoard implements Serializable {
       if ((communication != null) && (communication.observers != null)) {
         communication.observers.notifyNew(currItem);
       }
-      if (p_changed_nets != null) {
+      if (pChangedNets != null) {
         for (int i = 0; i < currItem.netCount(); i++) {
-          p_changed_nets.add(currItem.getNetNo(i));
+          pChangedNets.add(currItem.getNetNo(i));
         }
       }
     }
@@ -1993,7 +1941,7 @@ public class BasicBoard implements Serializable {
    * Restores the situation before the last undo. Returns false, if no more redo is possible. Puts
    * the numbers of the changed nets into the set p_changed_nets, if p_changed_nets != null
    */
-  public boolean redo(Set<Integer> p_changed_nets) {
+  public boolean redo(Set<Integer> pChangedNets) {
     this.components.redo(this.communication.observers);
     Collection<UndoableObjects.Storable> cancelledObjects = new LinkedList<>();
     Collection<UndoableObjects.Storable> restoredObjects = new LinkedList<>();
@@ -2005,9 +1953,9 @@ public class BasicBoard implements Serializable {
       searchTreeManager.remove(currItem);
       // let the observers synchronize the deletion
       communication.observers.notifyDeleted(currItem);
-      if (p_changed_nets != null) {
+      if (pChangedNets != null) {
         for (int i = 0; i < currItem.netCount(); i++) {
-          p_changed_nets.add(currItem.getNetNo(i));
+          pChangedNets.add(currItem.getNetNo(i));
         }
       }
     }
@@ -2021,9 +1969,9 @@ public class BasicBoard implements Serializable {
       if ((communication != null) && (communication.observers != null)) {
         communication.observers.notifyNew(currItem);
       }
-      if (p_changed_nets != null) {
+      if (pChangedNets != null) {
         for (int i = 0; i < currItem.netCount(); i++) {
-          p_changed_nets.add(currItem.getNetNo(i));
+          pChangedNets.add(currItem.getNetNo(i));
         }
       }
     }
@@ -2048,21 +1996,21 @@ public class BasicBoard implements Serializable {
    * Looks if at the input position ends a trace with the input net number, which has no normal
    * contact at that position. Returns null, if no tail is found.
    */
-  public Trace getTraceTail(Point p_location, int p_layer, int[] p_net_no_arr) {
-    TileShape pointShape = TileShape.getInstance(p_location);
-    Collection<SearchTreeObject> foundItems = overlappingObjects(pointShape, p_layer);
+  public Trace getTraceTail(Point pLocation, int pLayer, int[] pNetNoArr) {
+    TileShape pointShape = TileShape.getInstance(pLocation);
+    Collection<SearchTreeObject> foundItems = overlappingObjects(pointShape, pLayer);
     for (SearchTreeObject currOb : foundItems) {
       if (currOb instanceof Trace currTrace) {
-        if (!currTrace.netsEqual(p_net_no_arr)) {
+        if (!currTrace.netsEqual(pNetNoArr)) {
           continue;
         }
-        if (currTrace.firstCorner().equals(p_location)) {
+        if (currTrace.firstCorner().equals(pLocation)) {
           Collection<Item> contacts = currTrace.getStartContacts();
           if (contacts.isEmpty()) {
             return currTrace;
           }
         }
-        if (currTrace.lastCorner().equals(p_location)) {
+        if (currTrace.lastCorner().equals(pLocation)) {
           Collection<Item> contacts = currTrace.getEndContacts();
           if (contacts.isEmpty()) {
             return currTrace;
@@ -2077,28 +2025,28 @@ public class BasicBoard implements Serializable {
    * Checks, if p_item item is part of a cycle and remove it together with its connection in this
    * case.
    */
-  public boolean removeIfCycle(Trace p_trace) {
-    if (!p_trace.isOnTheBoard()) {
+  public boolean removeIfCycle(Trace pTrace) {
+    if (!pTrace.isOnTheBoard()) {
       return false;
     }
-    if (!p_trace.isCycle()) {
+    if (!pTrace.isCycle()) {
       return false;
     }
     // Remove tails at the endpoints after removing the cycle,
     // if there was no tail before.
     boolean[] tailAtEndpointBefore;
     Point[] endCorners;
-    int currLayer = p_trace.getLayer();
-    int[] currNetNoArr = p_trace.netNoArr;
+    int currLayer = pTrace.getLayer();
+    int[] currNetNoArr = pTrace.netNoArr;
     endCorners = new Point[2];
-    endCorners[0] = p_trace.firstCorner();
-    endCorners[1] = p_trace.lastCorner();
+    endCorners[0] = pTrace.firstCorner();
+    endCorners[1] = pTrace.lastCorner();
     tailAtEndpointBefore = new boolean[2];
     for (int i = 0; i < 2; i++) {
       Trace tail = getTraceTail(endCorners[i], currLayer, currNetNoArr);
       tailAtEndpointBefore[i] = tail != null;
     }
-    Set<Item> connectionItems = p_trace.getConnectionItems();
+    Set<Item> connectionItems = pTrace.getConnectionItems();
     this.removeItems(connectionItems);
     for (int i = 0; i < 2; i++) {
       if (!tailAtEndpointBefore[i]) {
@@ -2111,8 +2059,8 @@ public class BasicBoard implements Serializable {
     return true;
   }
 
-  private void readObject(ObjectInputStream p_stream) throws IOException, ClassNotFoundException {
-    p_stream.defaultReadObject();
+  private void readObject(ObjectInputStream pStream) throws IOException, ClassNotFoundException {
+    pStream.defaultReadObject();
     // insert the items on the board into the search trees
     searchTreeManager = new SearchTreeManager(this);
     normalizeSuppressedNetNos = new HashSet<>();
@@ -2161,7 +2109,7 @@ public class BasicBoard implements Serializable {
     this.searchTreeManager.reinsertTreeItems();
   }
 
-  public void areThereItemsOnInactiveLayer(AutorouteControl p_ctrl) {
+  public void areThereItemsOnInactiveLayer(AutorouteControl pCtrl) {
     if (this.getLayerCount() > 2) {
       boolean hasSomethingOnInactiveLayer = false;
       Iterator<UndoableObjects.UndoableObjectNode> it = this.itemList.startReadObject();
@@ -2172,7 +2120,7 @@ public class BasicBoard implements Serializable {
         }
         if (currOb instanceof PolylineTrace currItem) {
           // This is a connectable item, like PolylineTrace or Pin
-          if (!p_ctrl.layerActive[currItem.getLayer()]) {
+          if (!pCtrl.layerActive[currItem.getLayer()]) {
             hasSomethingOnInactiveLayer = true;
             FRLogger.warn("There is an item on an inactive layer.");
             break;

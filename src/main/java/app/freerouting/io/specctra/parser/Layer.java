@@ -24,11 +24,11 @@ public class Layer {
    * otherwise it is a powerground layer. For Layer objects describing more than 1 layer the number
    * is -1. p_net_names is a list of nets for this layer, if the layer is a power plane.
    */
-  public Layer(String p_name, int p_no, boolean p_is_signal, Collection<String> p_net_names) {
-    name = p_name;
-    no = p_no;
-    isSignal = p_is_signal;
-    netNames = p_net_names;
+  public Layer(String pName, int pNo, boolean pIsSignal, Collection<String> pNetNames) {
+    name = pName;
+    no = pNo;
+    isSignal = pIsSignal;
+    netNames = pNetNames;
   }
 
   /**
@@ -37,30 +37,30 @@ public class Layer {
    * otherwise it is a powerground layer. For Layer objects describing more than 1 layer the number
    * is -1.
    */
-  public Layer(String p_name, int p_no, boolean p_is_signal) {
-    name = p_name;
-    no = p_no;
-    isSignal = p_is_signal;
+  public Layer(String pName, int pNo, boolean pIsSignal) {
+    name = pName;
+    no = pNo;
+    isSignal = pIsSignal;
     netNames = new LinkedList<>();
   }
 
   /** Writes a layer scope in the structure scope. */
-  public static void writeScope(WriteScopeParameter p_par, int p_layer_no, boolean p_write_rule)
+  public static void writeScope(WriteScopeParameter pPar, int pLayerNo, boolean pWriteRule)
       throws IOException {
-    p_par.file.startScope();
-    p_par.file.write("layer ");
-    app.freerouting.board.Layer boardLayer = p_par.board.layerStructure.arr[p_layer_no];
-    p_par.identifierType.write(boardLayer.name, p_par.file);
-    p_par.file.newLine();
-    p_par.file.write("(type ");
+    pPar.file.startScope();
+    pPar.file.write("layer ");
+    app.freerouting.board.Layer boardLayer = pPar.board.layerStructure.arr[pLayerNo];
+    pPar.identifierType.write(boardLayer.name, pPar.file);
+    pPar.file.newLine();
+    pPar.file.write("(type ");
     if (boardLayer.isSignal) {
-      p_par.file.write("signal)");
+      pPar.file.write("signal)");
     } else {
-      p_par.file.write("power)");
+      pPar.file.write("power)");
     }
-    if (p_write_rule) {
-      Rule.writeDefaultRule(p_par, p_layer_no);
+    if (pWriteRule) {
+      Rule.writeDefaultRule(pPar, pLayerNo);
     }
-    p_par.file.endScope();
+    pPar.file.endScope();
   }
 }

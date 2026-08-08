@@ -15,7 +15,9 @@ public class RouterCounters implements Serializable {
   public Integer queuedToBeRoutedCount;
 
   // The number of items on the board that got successfully routed in this pass
-  @SerializedName(value = "routed_count", alternate = {"routedCount"})
+  @SerializedName(
+      value = "routed_count",
+      alternate = {"routedCount"})
   public Integer routedCount;
 
   // The number of items on the board that were skipped in this pass
@@ -31,7 +33,9 @@ public class RouterCounters implements Serializable {
   public Integer failedToBeRoutedCount;
 
   // The number of items on the board that are still in the ratsnest (so they are not yet routed)
-  @SerializedName(value = "incomplete_count", alternate = {"incompleteCount"})
+  @SerializedName(
+      value = "incomplete_count",
+      alternate = {"incompleteCount"})
   public Integer incompleteCount;
 
   // Optional phase marker (for example "autoroute" or "fanout") used by GUI progress rendering.

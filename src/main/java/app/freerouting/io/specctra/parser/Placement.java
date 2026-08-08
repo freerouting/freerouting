@@ -10,19 +10,19 @@ public class Placement extends ScopeKeyword {
     super("placement");
   }
 
-  public static void writeScope(WriteScopeParameter p_par) throws IOException {
-    p_par.file.startScope();
-    p_par.file.write("placement");
-    if (p_par.board.components.getFlipStyleRotateFirst()) {
-      p_par.file.newLine();
-      p_par.file.write("(place_control (flip_style rotate_first))");
+  public static void writeScope(WriteScopeParameter pPar) throws IOException {
+    pPar.file.startScope();
+    pPar.file.write("placement");
+    if (pPar.board.components.getFlipStyleRotateFirst()) {
+      pPar.file.newLine();
+      pPar.file.write("(place_control (flip_style rotate_first))");
     }
 
-    if (p_par.board.library.packages != null) {
-      for (int i = 1; i <= p_par.board.library.packages.count(); i++) {
-        Package.writePlacementScope(p_par, p_par.board.library.packages.get(i));
+    if (pPar.board.library.packages != null) {
+      for (int i = 1; i <= pPar.board.library.packages.count(); i++) {
+        Package.writePlacementScope(pPar, pPar.board.library.packages.get(i));
       }
     }
-    p_par.file.endScope();
+    pPar.file.endScope();
   }
 }

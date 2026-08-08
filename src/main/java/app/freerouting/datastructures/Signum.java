@@ -8,17 +8,17 @@ public final class Signum {
   public static final Signum ZERO = new Signum("zero");
   private final String name;
 
-  private Signum(String p_name) {
-    name = p_name;
+  private Signum(String pName) {
+    name = pName;
   }
 
   /** Returns the signum of p_value. Values are Signum.POSITIVE, Signum.NEGATIVE and Signum.ZERO */
-  public static Signum of(double p_value) {
+  public static Signum of(double pValue) {
     Signum result;
 
-    if (p_value > 0) {
+    if (pValue > 0) {
       result = POSITIVE;
-    } else if (p_value < 0) {
+    } else if (pValue < 0) {
       result = NEGATIVE;
     } else {
       result = ZERO;
@@ -27,12 +27,12 @@ public final class Signum {
   }
 
   /** Returns the signum of p_value as an int. Values are +1, 0 and -1 */
-  public static int asInt(double p_value) {
+  public static int asInt(double pValue) {
     int result;
 
-    if (p_value > 0) {
+    if (pValue > 0) {
       result = 1;
-    } else if (p_value < 0) {
+    } else if (pValue < 0) {
       result = -1;
     } else {
       result = 0;

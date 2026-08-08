@@ -18,32 +18,32 @@ public final class OrthogonalBoundingDirections implements ShapeBoundingDirectio
   }
 
   @Override
-  public RegularTileShape bounds(ConvexShape p_shape) {
-    return p_shape.boundingShape(this);
+  public RegularTileShape bounds(ConvexShape pShape) {
+    return pShape.boundingShape(this);
   }
 
   @Override
-  public RegularTileShape bounds(IntBox p_box) {
-    return p_box;
+  public RegularTileShape bounds(IntBox pBox) {
+    return pBox;
   }
 
   @Override
-  public RegularTileShape bounds(IntOctagon p_oct) {
-    return p_oct.boundingBox();
+  public RegularTileShape bounds(IntOctagon pOct) {
+    return pOct.boundingBox();
   }
 
   @Override
-  public RegularTileShape bounds(Simplex p_simplex) {
-    return p_simplex.boundingBox();
+  public RegularTileShape bounds(Simplex pSimplex) {
+    return pSimplex.boundingBox();
   }
 
   @Override
-  public RegularTileShape bounds(Circle p_circle) {
-    return p_circle.boundingBox();
+  public RegularTileShape bounds(Circle pCircle) {
+    return pCircle.boundingBox();
   }
 
   @Override
-  public RegularTileShape bounds(PolygonShape p_polygon) {
-    return p_polygon.boundingBox();
+  public RegularTileShape bounds(PolygonShape pPolygon) {
+    return pPolygon.boundingBox();
   }
 }

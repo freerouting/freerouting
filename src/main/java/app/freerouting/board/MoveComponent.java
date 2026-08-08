@@ -26,14 +26,11 @@ public class MoveComponent {
 
   /** Creates a new instance of MoveItemGroup */
   public MoveComponent(
-      Item p_item,
-      Vector p_translate_vector,
-      int p_max_recursion_depth,
-      int p_max_via_recursion_depth) {
-    translateVector = p_translate_vector;
-    maxRecursionDepth = p_max_recursion_depth;
-    maxViaRecursionDepth = p_max_via_recursion_depth;
-    if (p_item.board instanceof RoutingBoard routingBoard) {
+      Item pItem, Vector pTranslateVector, int pMaxRecursionDepth, int pMaxViaRecursionDepth) {
+    translateVector = pTranslateVector;
+    maxRecursionDepth = pMaxRecursionDepth;
+    maxViaRecursionDepth = pMaxViaRecursionDepth;
+    if (pItem.board instanceof RoutingBoard routingBoard) {
       board = routingBoard;
     } else {
       board = null;
@@ -41,13 +38,13 @@ public class MoveComponent {
     }
 
     Collection<Item> itemGroupList;
-    int componentNo = p_item.getComponentNo();
+    int componentNo = pItem.getComponentNo();
     if (componentNo > 0) {
       itemGroupList = board.getComponentItems(componentNo);
       this.component = board.components.get(componentNo);
     } else {
       itemGroupList = new LinkedList<>();
-      itemGroupList.add(p_item);
+      itemGroupList.add(pItem);
     }
     Collection<FloatPoint> itemCenters = new LinkedList<>();
     for (Item currItem : itemGroupList) {
@@ -137,7 +134,7 @@ public class MoveComponent {
    * false, if that was not possible without creating clearance violations. In this case an undo may
    * be necessary.
    */
-  public boolean insert(int p_tidy_width, int p_pull_tight_accuracy) {
+  public boolean insert(int pTidyWidth, int pPullTightAccuracy) {
     if (!allItemsMovable) {
       return false;
     }
@@ -155,8 +152,8 @@ public class MoveComponent {
                 this.translateVector,
                 this.maxRecursionDepth,
                 this.maxViaRecursionDepth,
-                p_tidy_width,
-                p_pull_tight_accuracy,
+                pTidyWidth,
+                pPullTightAccuracy,
                 PULL_TIGHT_TIME_LIMIT);
         if (!moveOk) {
           if (this.component != null) {
@@ -179,8 +176,8 @@ public class MoveComponent {
   private record SortedItem(Item item, double projection) implements Comparable<SortedItem> {
 
     @Override
-    public int compareTo(SortedItem p_other) {
-      return Signum.asInt(this.projection - p_other.projection);
+    public int compareTo(SortedItem pOther) {
+      return Signum.asInt(this.projection - pOther.projection);
     }
   }
 }

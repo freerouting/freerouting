@@ -33,15 +33,15 @@ public class WindowViaRule extends WindowBase {
   private final DefaultListModel<ViaInfo> ruleListModel;
 
   /** Creates a new instance of ViaRuleWindow */
-  public WindowViaRule(ViaRule p_via_rule, ViaInfos p_via_list, BoardFrame p_board_frame) {
+  public WindowViaRule(ViaRule pViaRule, ViaInfos pViaList, BoardFrame pBoardFrame) {
     super(300, 150);
 
-    this.viaRule = p_via_rule;
-    this.viaList = p_via_list;
+    this.viaRule = pViaRule;
+    this.viaList = pViaList;
 
-    setLanguage(p_board_frame.get_locale());
+    setLanguage(pBoardFrame.get_locale());
 
-    this.setTitle(tm.getText("title") + " " + p_via_rule.name);
+    this.setTitle(tm.getText("title") + " " + pViaRule.name);
 
     this.mainPanel = new JPanel();
     mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -57,8 +57,8 @@ public class WindowViaRule extends WindowBase {
     this.mainPanel.add(listScrollPane, BorderLayout.CENTER);
 
     // fill the list
-    for (int i = 0; i < p_via_rule.viaCount(); i++) {
-      this.ruleListModel.addElement(p_via_rule.getVia(i));
+    for (int i = 0; i < pViaRule.viaCount(); i++) {
+      this.ruleListModel.addElement(pViaRule.getVia(i));
     }
 
     // Add a panel with buttons for editing the via list.
@@ -120,21 +120,21 @@ public class WindowViaRule extends WindowBase {
   }
 
   /** Swaps the position of the vias with index p_1 and p_2. */
-  private void swapPosition(int p_1, int p_2) {
-    ViaInfo via1 = this.ruleListModel.get(p_1);
-    ViaInfo via2 = this.ruleListModel.get(p_2);
+  private void swapPosition(int p1, int p2) {
+    ViaInfo via1 = this.ruleListModel.get(p1);
+    ViaInfo via2 = this.ruleListModel.get(p2);
     if (via1 == null || via2 == null) {
       return;
     }
-    this.ruleListModel.set(p_1, via2);
-    this.ruleListModel.set(p_2, via1);
+    this.ruleListModel.set(p1, via2);
+    this.ruleListModel.set(p2, via1);
     this.viaRule.swap(via1, via2);
   }
 
   private class AppendListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       Object[] possibleValues = new Object[viaList.count() - viaRule.viaCount()];
       if (possibleValues.length == 0) {
         return;
@@ -172,7 +172,7 @@ public class WindowViaRule extends WindowBase {
   private class DeleteListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       ViaInfo selectedVia = ruleList.getSelectedValue();
       if (selectedVia != null) {
         if (WindowMessage.confirm(
@@ -187,7 +187,7 @@ public class WindowViaRule extends WindowBase {
   private class MoveUpListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       int selectedIndex = ruleList.getSelectedIndex();
       if (selectedIndex <= 0) {
         return;
@@ -200,7 +200,7 @@ public class WindowViaRule extends WindowBase {
   private class MoveDownListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       int selectedIndex = ruleList.getSelectedIndex();
       if (selectedIndex < 0 || selectedIndex >= ruleListModel.getSize() - 1) {
         return;

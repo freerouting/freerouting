@@ -14,14 +14,13 @@ public interface Drawable {
    * Draws this item to the device provided in p_graphics_context. p_color_arr is an array of
    * dimension layerCount. p_intensity is a number between 0 and 1.
    */
-  void draw(
-      Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity);
+  void draw(Graphics pG, GraphicsContext pGraphicsContext, Color[] pColorArr, double pIntensity);
 
   /**
    * Draws this item to the device provided in p_graphics_context. It is drawn on each layer with
    * the same color p_color. p_intensity is a number between 0 and 1.
    */
-  void draw(Graphics p_g, GraphicsContext p_graphics_context, Color p_color, double p_intensity);
+  void draw(Graphics pG, GraphicsContext pGraphicsContext, Color pColor, double pIntensity);
 
   /**
    * Returns the priority for drawing an item. Items with higher priority are drawn later than items
@@ -30,8 +29,8 @@ public interface Drawable {
   int getDrawPriority();
 
   /** Gets the drawing intensity in the alpha blending for this item. */
-  double getDrawIntensity(GraphicsContext p_graphics_context);
+  double getDrawIntensity(GraphicsContext pGraphicsContext);
 
   /** gets the draw colors for this object from p_graphics_context */
-  Color[] getDrawColors(GraphicsContext p_graphics_context);
+  Color[] getDrawColors(GraphicsContext pGraphicsContext);
 }

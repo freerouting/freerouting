@@ -46,25 +46,25 @@ public class ObstacleArea extends Item implements Serializable {
    * ObstacleArea does not belong to a component.
    */
   ObstacleArea(
-      Area p_area,
-      int p_layer,
-      Vector p_translation,
-      double p_rotation_in_degree,
-      boolean p_side_changed,
-      int[] p_net_no_arr,
-      int p_clearance_type,
-      int p_id_no,
-      int p_cmp_no,
-      String p_name,
-      FixedState p_fixed_state,
-      BasicBoard p_board) {
-    super(p_net_no_arr, p_clearance_type, p_id_no, p_cmp_no, p_fixed_state, p_board);
-    this.relativeArea = p_area;
-    this.layer = p_layer;
-    this.translation = p_translation;
-    this.rotationInDegree = p_rotation_in_degree;
-    this.sideChanged = p_side_changed;
-    this.name = p_name;
+      Area pArea,
+      int pLayer,
+      Vector pTranslation,
+      double pRotationInDegree,
+      boolean pSideChanged,
+      int[] pNetNoArr,
+      int pClearanceType,
+      int pIdNo,
+      int pCmpNo,
+      String pName,
+      FixedState pFixedState,
+      BasicBoard pBoard) {
+    super(pNetNoArr, pClearanceType, pIdNo, pCmpNo, pFixedState, pBoard);
+    this.relativeArea = pArea;
+    this.layer = pLayer;
+    this.translation = pTranslation;
+    this.rotationInDegree = pRotationInDegree;
+    this.sideChanged = pSideChanged;
+    this.name = pName;
   }
 
   /**
@@ -72,34 +72,34 @@ public class ObstacleArea extends Item implements Serializable {
    * belong to a component.
    */
   ObstacleArea(
-      Area p_area,
-      int p_layer,
-      Vector p_translation,
-      double p_rotation_in_degree,
-      boolean p_side_changed,
-      int p_clearance_type,
-      int p_id_no,
-      int p_group_no,
-      String p_name,
-      FixedState p_fixed_state,
-      BasicBoard p_board) {
+      Area pArea,
+      int pLayer,
+      Vector pTranslation,
+      double pRotationInDegree,
+      boolean pSideChanged,
+      int pClearanceType,
+      int pIdNo,
+      int pGroupNo,
+      String pName,
+      FixedState pFixedState,
+      BasicBoard pBoard) {
     this(
-        p_area,
-        p_layer,
-        p_translation,
-        p_rotation_in_degree,
-        p_side_changed,
+        pArea,
+        pLayer,
+        pTranslation,
+        pRotationInDegree,
+        pSideChanged,
         new int[0],
-        p_clearance_type,
-        p_id_no,
-        p_group_no,
-        p_name,
-        p_fixed_state,
-        p_board);
+        pClearanceType,
+        pIdNo,
+        pGroupNo,
+        pName,
+        pFixedState,
+        pBoard);
   }
 
   @Override
-  public Item copy(int p_id_no) {
+  public Item copy(int pIdNo) {
     int[] copiedNetNos = new int[netNoArr.length];
     System.arraycopy(netNoArr, 0, copiedNetNos, 0, netNoArr.length);
     return new ObstacleArea(
@@ -110,7 +110,7 @@ public class ObstacleArea extends Item implements Serializable {
         sideChanged,
         copiedNetNos,
         clearanceClassNo(),
-        p_id_no,
+        pIdNo,
         getComponentNo(),
         name,
         getFixedState(),
@@ -148,8 +148,8 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   @Override
-  public boolean isOnLayer(int p_layer) {
-    return layer == p_layer;
+  public boolean isOnLayer(int pLayer) {
+    return layer == pLayer;
   }
 
   @Override
@@ -172,16 +172,16 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   @Override
-  public boolean isObstacle(Item p_other) {
-    if (p_other.sharesNet(this)) {
+  public boolean isObstacle(Item pOther) {
+    if (pOther.sharesNet(this)) {
       return false;
     }
-    return p_other instanceof Trace || p_other instanceof Via;
+    return pOther instanceof Trace || pOther instanceof Via;
   }
 
   @Override
-  protected TileShape[] calculateTreeShapes(ShapeSearchTree p_search_tree) {
-    return p_search_tree.calculateTreeShapes(this);
+  protected TileShape[] calculateTreeShapes(ShapeSearchTree pSearchTree) {
+    return pSearchTree.calculateTreeShapes(this);
   }
 
   @Override
@@ -195,24 +195,24 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   @Override
-  public TileShape getTileShape(int p_no) {
+  public TileShape getTileShape(int pNo) {
     TileShape[] tileShapes = this.splitToConvex();
-    if (tileShapes == null || p_no < 0 || p_no >= tileShapes.length) {
+    if (tileShapes == null || pNo < 0 || pNo >= tileShapes.length) {
       FRLogger.warn("ConvexObstacle.get_tile_shape: p_no out of range");
       return null;
     }
-    return tileShapes[p_no];
+    return tileShapes[pNo];
   }
 
   @Override
-  public void translateBy(Vector p_vector) {
-    this.translation = this.translation.add(p_vector);
+  public void translateBy(Vector pVector) {
+    this.translation = this.translation.add(pVector);
     this.clearDerivedData();
   }
 
   @Override
-  public void turn90Degree(int p_factor, IntPoint p_pole) {
-    this.rotationInDegree += p_factor * 90;
+  public void turn90Degree(int pFactor, IntPoint pPole) {
+    this.rotationInDegree += pFactor * 90;
     while (this.rotationInDegree >= 360) {
       this.rotationInDegree -= 360;
     }
@@ -220,15 +220,15 @@ public class ObstacleArea extends Item implements Serializable {
       this.rotationInDegree += 360;
     }
     Point relLocation = Point.ZERO.translateBy(this.translation);
-    this.translation = relLocation.turn90Degree(p_factor, p_pole).differenceBy(Point.ZERO);
+    this.translation = relLocation.turn90Degree(pFactor, pPole).differenceBy(Point.ZERO);
     this.clearDerivedData();
   }
 
   @Override
-  public void rotateApprox(double p_angle_in_degree, FloatPoint p_pole) {
-    double turnAngle = p_angle_in_degree;
+  public void rotateApprox(double pAngleInDegree, FloatPoint pPole) {
+    double turnAngle = pAngleInDegree;
     if (this.sideChanged && this.board.components.getFlipStyleRotateFirst()) {
-      turnAngle = 360 - p_angle_in_degree;
+      turnAngle = 360 - pAngleInDegree;
     }
     this.rotationInDegree += turnAngle;
     while (this.rotationInDegree >= 360) {
@@ -238,38 +238,38 @@ public class ObstacleArea extends Item implements Serializable {
       this.rotationInDegree += 360;
     }
     FloatPoint newTranslation =
-        this.translation.toFloat().rotate(Math.toRadians(p_angle_in_degree), p_pole);
+        this.translation.toFloat().rotate(Math.toRadians(pAngleInDegree), pPole);
     this.translation = newTranslation.round().differenceBy(Point.ZERO);
     this.clearDerivedData();
   }
 
   @Override
-  public void changePlacementSide(IntPoint p_pole) {
+  public void changePlacementSide(IntPoint pPole) {
     this.sideChanged = !this.sideChanged;
     if (this.board != null) {
       this.layer = board.getLayerCount() - this.layer - 1;
     }
     Point relLocation = Point.ZERO.translateBy(this.translation);
-    this.translation = relLocation.mirrorVertical(p_pole).differenceBy(Point.ZERO);
+    this.translation = relLocation.mirrorVertical(pPole).differenceBy(Point.ZERO);
     this.clearDerivedData();
   }
 
   @Override
-  public boolean isSelectedByFilter(ItemSelectionFilter p_filter) {
-    if (!this.isSelectedByFixedFilter(p_filter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter pFilter) {
+    if (!this.isSelectedByFixedFilter(pFilter)) {
       return false;
     }
-    return p_filter.isSelected(ItemSelectionFilter.SelectableChoices.KEEPOUT);
+    return pFilter.isSelected(ItemSelectionFilter.SelectableChoices.KEEPOUT);
   }
 
   @Override
-  public Color[] getDrawColors(GraphicsContext p_graphics_context) {
-    return p_graphics_context.getObstacleColors();
+  public Color[] getDrawColors(GraphicsContext pGraphicsContext) {
+    return pGraphicsContext.getObstacleColors();
   }
 
   @Override
-  public double getDrawIntensity(GraphicsContext p_graphics_context) {
-    return p_graphics_context.getObstacleColorIntensity();
+  public double getDrawIntensity(GraphicsContext pGraphicsContext) {
+    return pGraphicsContext.getObstacleColorIntensity();
   }
 
   @Override
@@ -279,24 +279,23 @@ public class ObstacleArea extends Item implements Serializable {
 
   @Override
   public void draw(
-      Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
-    if (p_graphics_context == null || p_intensity <= 0) {
+      Graphics pG, GraphicsContext pGraphicsContext, Color[] pColorArr, double pIntensity) {
+    if (pGraphicsContext == null || pIntensity <= 0) {
       return;
     }
-    Color color = p_color_arr[this.layer];
-    double intensity = p_graphics_context.getLayerVisibility(this.layer) * p_intensity;
-    p_graphics_context.fillArea(this.getArea(), p_g, color, intensity);
+    Color color = pColorArr[this.layer];
+    double intensity = pGraphicsContext.getLayerVisibility(this.layer) * pIntensity;
+    pGraphicsContext.fillArea(this.getArea(), pG, color, intensity);
     if (intensity > 0 && display_tree_shapes) {
       ShapeSearchTree defaultTree = this.board.searchTreeManager.getDefaultTree();
       for (int i = 0; i < this.treeShapeCount(defaultTree); i++) {
-        p_graphics_context.drawBoundary(
-            this.getTreeShape(defaultTree, i), 1, Color.white, p_g, 1);
+        pGraphicsContext.drawBoundary(this.getTreeShape(defaultTree, i), 1, Color.white, pG, 1);
       }
     }
   }
 
   @Override
-  public int shapeLayer(int p_index) {
+  public int shapeLayer(int pIndex) {
     return layer;
   }
 
@@ -313,41 +312,41 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
-    p_window.appendBold(tm.getText("keepout"));
+    pWindow.appendBold(tm.getText("keepout"));
     int cmpNo = this.getComponentNo();
     if (cmpNo > 0) {
-      p_window.append(" " + tm.getText("of_component") + " ");
+      pWindow.append(" " + tm.getText("of_component") + " ");
       Component component = board.components.get(cmpNo);
-      p_window.append(component.name, tm.getText("component_info"), component);
+      pWindow.append(component.name, tm.getText("component_info"), component);
     }
-    this.printShapeInfo(p_window, p_locale);
-    this.printItemInfo(p_window, p_locale);
-    p_window.newline();
+    this.printShapeInfo(pWindow, pLocale);
+    this.printItemInfo(pWindow, pLocale);
+    pWindow.newline();
   }
 
   /** Used in the implementation of print_info for this class and derived classes. */
-  protected final void printShapeInfo(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  protected final void printShapeInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
-    p_window.append(" " + tm.getText("at") + " ");
+    pWindow.append(" " + tm.getText("at") + " ");
     FloatPoint center = this.getArea().getBorder().centreOfGravity();
-    p_window.append(center);
+    pWindow.append(center);
     Integer holeCount = this.relativeArea.getHoles().length;
     if (holeCount > 0) {
-      p_window.append(" " + tm.getText("with") + " ");
-      NumberFormat nf = NumberFormat.getInstance(p_locale);
-      p_window.append(nf.format(holeCount));
+      pWindow.append(" " + tm.getText("with") + " ");
+      NumberFormat nf = NumberFormat.getInstance(pLocale);
+      pWindow.append(nf.format(holeCount));
       if (holeCount == 1) {
-        p_window.append(" " + tm.getText("hole"));
+        pWindow.append(" " + tm.getText("hole"));
       } else {
-        p_window.append(" " + tm.getText("holes"));
+        pWindow.append(" " + tm.getText("holes"));
       }
     }
-    p_window.append(" " + tm.getText("on_layer") + " ");
-    p_window.append(this.board.layerStructure.arr[this.getLayer()].name);
+    pWindow.append(" " + tm.getText("on_layer") + " ");
+    pWindow.append(this.board.layerStructure.arr[this.getLayer()].name);
   }
 
   TileShape[] splitToConvex() {
@@ -365,9 +364,9 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   @Override
-  public boolean write(ObjectOutputStream p_stream) {
+  public boolean write(ObjectOutputStream pStream) {
     try {
-      p_stream.writeObject(this);
+      pStream.writeObject(this);
     } catch (IOException _) {
       return false;
     }

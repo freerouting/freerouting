@@ -132,8 +132,7 @@ public class BoardStatistics implements Serializable {
             0,
             0,
             Math.abs((float) board.getBoundingBox().ll.x - (float) board.getBoundingBox().ur.x),
-            Math.abs(
-                (float) board.getBoundingBox().ll.y - (float) board.getBoundingBox().ur.y));
+            Math.abs((float) board.getBoundingBox().ll.y - (float) board.getBoundingBox().ur.y));
 
     // Layers
     this.layers.totalCount = board.getLayerCount();

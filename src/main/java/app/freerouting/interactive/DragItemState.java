@@ -17,12 +17,12 @@ public class DragItemState extends DragState {
 
   /** Creates a new instance of MoveItemState */
   protected DragItemState(
-      Item p_item_to_move,
-      FloatPoint p_location,
-      InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
-    super(p_location, p_parent_state, p_board_handling);
-    itemToMove = p_item_to_move;
+      Item pItemToMove,
+      FloatPoint pLocation,
+      InteractiveState pParentState,
+      GuiBoardManager pBoardHandling) {
+    super(pLocation, pParentState, pBoardHandling);
+    itemToMove = pItemToMove;
   }
 
   @Override
@@ -35,11 +35,10 @@ public class DragItemState extends DragState {
    * while moving, so that an undo may be necessary.
    */
   @Override
-  public InteractiveState moveTo(FloatPoint p_to_location) {
-    IntPoint toLocation = p_to_location.round();
+  public InteractiveState moveTo(FloatPoint pToLocation) {
+    IntPoint toLocation = pToLocation.round();
     IntPoint fromLocation = this.previousLocation.round();
-    if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
-        == AngleRestriction.NINETY_DEGREE) {
+    if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
       toLocation = toLocation.orthogonalProjection(fromLocation);
     } else if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
         == AngleRestriction.FORTYFIVE_DEGREE) {
@@ -91,7 +90,7 @@ public class DragItemState extends DragState {
       }
       hdlg.repaint();
     }
-    this.previousLocation = p_to_location; // (IntPoint)this.curr_location.translate_by(relCoor);
+    this.previousLocation = pToLocation; // (IntPoint)this.curr_location.translate_by(relCoor);
     return this;
   }
 
@@ -111,9 +110,9 @@ public class DragItemState extends DragState {
         Collection<Item> movedItems =
             hdlg.getRoutingBoard().getComponentItems(itemToMove.getComponentNo());
         Set<Integer> changedNets = new TreeSet<>();
-        for (Item curr_moved_item : movedItems) {
-          for (int i = 0; i < curr_moved_item.netCount(); i++) {
-            changedNets.add(curr_moved_item.getNetNo(i));
+        for (Item currMovedItem : movedItems) {
+          for (int i = 0; i < currMovedItem.netCount(); i++) {
+            changedNets.add(currMovedItem.getNetNo(i));
           }
         }
         for (Integer currNetNo : changedNets) {

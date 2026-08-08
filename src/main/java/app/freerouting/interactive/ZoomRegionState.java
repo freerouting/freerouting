@@ -7,21 +7,21 @@ import java.awt.geom.Point2D;
 public class ZoomRegionState extends SelectRegionState {
 
   /** Creates a new instance of ZoomRegionState */
-  public ZoomRegionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
+  public ZoomRegionState(InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    super(pParentState, pBoardHandling);
   }
 
   /** Returns a new instance of this class. */
   public static ZoomRegionState getInstance(
-      InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    return getInstance(null, p_parent_state, p_board_handling);
+      InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    return getInstance(null, pParentState, pBoardHandling);
   }
 
   /** Returns a new instance of this class with first point p_location. */
   public static ZoomRegionState getInstance(
-      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    ZoomRegionState newInstance = new ZoomRegionState(p_parent_state, p_board_handling);
-    newInstance.corner1 = p_location;
+      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    ZoomRegionState newInstance = new ZoomRegionState(pParentState, pBoardHandling);
+    newInstance.corner1 = pLocation;
     newInstance.hdlg.screenMessages.setStatusMessage(
         newInstance.tm.getText("drag_left_mouse_button_to_create_region_to_display"));
     return newInstance;

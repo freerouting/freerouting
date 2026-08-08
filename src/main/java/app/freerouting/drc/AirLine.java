@@ -27,21 +27,17 @@ public class AirLine implements Comparable<AirLine> {
   public final FloatPoint toCorner;
 
   public AirLine(
-      Net p_net,
-      Item p_from_item,
-      FloatPoint p_from_corner,
-      Item p_to_item,
-      FloatPoint p_to_corner) {
-    net = p_net;
-    fromItem = p_from_item;
-    fromCorner = p_from_corner;
-    toItem = p_to_item;
-    toCorner = p_to_corner;
+      Net pNet, Item pFromItem, FloatPoint pFromCorner, Item pToItem, FloatPoint pToCorner) {
+    net = pNet;
+    fromItem = pFromItem;
+    fromCorner = pFromCorner;
+    toItem = pToItem;
+    toCorner = pToCorner;
   }
 
   @Override
-  public int compareTo(AirLine p_other) {
-    return this.net.name.compareTo(p_other.net.name);
+  public int compareTo(AirLine pOther) {
+    return this.net.name.compareTo(pOther.net.name);
   }
 
   @Override

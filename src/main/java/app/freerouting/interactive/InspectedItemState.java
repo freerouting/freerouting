@@ -18,9 +18,9 @@ public final class InspectedItemState extends InteractiveState {
 
   /** Creates a new instance of InspectedItemState */
   private InspectedItemState(
-      Set<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
-    itemList = p_item_list;
+      Set<Item> pItemList, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    super(pParentState, pBoardHandling);
+    itemList = pItemList;
   }
 
   /**
@@ -28,11 +28,11 @@ public final class InspectedItemState extends InteractiveState {
    * p_item_list is empty.
    */
   public static InspectedItemState getInstance(
-      Set<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    if (p_item_list.isEmpty()) {
+      Set<Item> pItemList, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    if (pItemList.isEmpty()) {
       return null;
     }
-    return new InspectedItemState(p_item_list, p_parent_state, p_board_handling);
+    return new InspectedItemState(pItemList, pParentState, pBoardHandling);
   }
 
   /** Gets the list of the currently selected items. */
@@ -41,30 +41,29 @@ public final class InspectedItemState extends InteractiveState {
   }
 
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint p_location) {
-    return toggleSelect(p_location);
+  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
+    return toggleSelect(pLocation);
   }
 
   @Override
-  public InteractiveState mouseDragged(FloatPoint p_point) {
+  public InteractiveState mouseDragged(FloatPoint pPoint) {
     return InspectItemsInRegionState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
   }
 
   /** Action to be taken when a key is pressed (Shortcut). */
   @Override
-  public InteractiveState keyTyped(char p_key_char) {
+  public InteractiveState keyTyped(char pKeyChar) {
     InteractiveState result = this;
 
-    switch (p_key_char) {
+    switch (pKeyChar) {
       case 'e' -> result = this.extentToWholeConnections();
       case 'i' -> result = this.info();
       case 'n' -> this.extentToWholeNets();
-      case 'r' ->
-          result = ZoomRegionState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
+      case 'r' -> result = ZoomRegionState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
       case 's' -> result = this.extentToWholeConnectedSets();
       case 'v' -> this.toggleClearanceViolations();
       case 'w' -> this.hdlg.zoomSelection();
-      default -> result = super.keyTyped(p_key_char);
+      default -> result = super.keyTyped(pKeyChar);
     }
     return result;
   }
@@ -105,8 +104,8 @@ public final class InspectedItemState extends InteractiveState {
       }
     }
     Set<Item> newSelectedItems = new TreeSet<>(itemList);
-    for (int curr_group_no : currGroupNoSet) {
-      newSelectedItems.addAll(hdlg.getRoutingBoard().getComponentItems(curr_group_no));
+    for (int currGroupNo : currGroupNoSet) {
+      newSelectedItems.addAll(hdlg.getRoutingBoard().getComponentItems(currGroupNo));
     }
     if (newSelectedItems.isEmpty()) {
       return this.returnState;
@@ -155,8 +154,8 @@ public final class InspectedItemState extends InteractiveState {
    * otherwise adds it to the list. Returns true (to change to the returnState) if nothing was
    * picked.
    */
-  public InteractiveState toggleSelect(FloatPoint p_point) {
-    Collection<Item> pickedItems = hdlg.pickItems(p_point);
+  public InteractiveState toggleSelect(FloatPoint pPoint) {
+    Collection<Item> pickedItems = hdlg.pickItems(pPoint);
     boolean stateEnded = pickedItems.isEmpty();
     if (pickedItems.size() == 1) {
       Item pickedItem = pickedItems.iterator().next();
@@ -220,20 +219,20 @@ public final class InspectedItemState extends InteractiveState {
   }
 
   @Override
-  public void draw(Graphics p_graphics) {
+  public void draw(Graphics pGraphics) {
     if (itemList == null) {
       return;
     }
 
     for (Item currItem : itemList) {
       currItem.draw(
-          p_graphics,
+          pGraphics,
           hdlg.graphicsContext,
           hdlg.graphicsContext.getHilightColor(),
           hdlg.graphicsContext.getHilightColorIntensity());
     }
     if (clearanceViolations != null) {
-      clearanceViolations.draw(p_graphics, hdlg.graphicsContext);
+      clearanceViolations.draw(pGraphics, hdlg.graphicsContext);
     }
   }
 

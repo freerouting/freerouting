@@ -19,11 +19,11 @@ import java.util.TreeSet;
 public class WindowRouteStubs extends CleanupWindows {
 
   /** Creates a new instance of WindowRouteStubs */
-  public WindowRouteStubs(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  public WindowRouteStubs(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
+    setLanguage(pBoardFrame.get_locale());
 
-    this.tm = new TextManager(CleanupWindows.class, p_board_frame.get_locale());
+    this.tm = new TextManager(CleanupWindows.class, pBoardFrame.get_locale());
 
     this.setTitle(tm.getText("route_stubs"));
     this.listEmptyMessage.setText(tm.getText("no_route_stubs_found"));
@@ -119,12 +119,12 @@ public class WindowRouteStubs extends CleanupWindows {
     private final FloatPoint location;
     private final int layerNo;
 
-    public RouteStubInfo(Item p_stub, FloatPoint p_location, int p_layer_no) {
+    public RouteStubInfo(Item pStub, FloatPoint pLocation, int pLayerNo) {
       GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
-      this.stubItem = p_stub;
-      this.location = boardHandling.coordinateTransform.boardToUser(p_location);
-      this.layerNo = p_layer_no;
-      int netNo = p_stub.getNetNo(0);
+      this.stubItem = pStub;
+      this.location = boardHandling.coordinateTransform.boardToUser(pLocation);
+      this.layerNo = pLayerNo;
+      int netNo = pStub.getNetNo(0);
       this.net = boardHandling.getRoutingBoard().rules.nets.get(netNo);
     }
 
@@ -147,16 +147,16 @@ public class WindowRouteStubs extends CleanupWindows {
     }
 
     @Override
-    public int compareTo(RouteStubInfo p_other) {
-      int result = this.net.name.compareTo(p_other.net.name);
+    public int compareTo(RouteStubInfo pOther) {
+      int result = this.net.name.compareTo(pOther.net.name);
       if (result == 0) {
-        result = Signum.asInt(this.location.x - p_other.location.x);
+        result = Signum.asInt(this.location.x - pOther.location.x);
       }
       if (result == 0) {
-        result = Signum.asInt(this.location.y - p_other.location.y);
+        result = Signum.asInt(this.location.y - pOther.location.y);
       }
       if (result == 0) {
-        result = this.layerNo - p_other.layerNo;
+        result = this.layerNo - pOther.layerNo;
       }
       return result;
     }

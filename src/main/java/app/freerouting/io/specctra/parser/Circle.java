@@ -16,37 +16,37 @@ public class Circle extends Shape {
    * the radius of the circle, p_coor[1] is the x coordinate of the circle, p_coor[2] is the y
    * coordinate of the circle.
    */
-  public Circle(Layer p_layer, double[] p_coor) {
-    super(p_layer);
-    coor = p_coor;
+  public Circle(Layer pLayer, double[] pCoor) {
+    super(pLayer);
+    coor = pCoor;
   }
 
-  public Circle(Layer p_layer, double p_radius, double p_center_x, double p_center_y) {
-    super(p_layer);
+  public Circle(Layer pLayer, double pRadius, double pCenterX, double pCenterY) {
+    super(pLayer);
     coor = new double[3];
-    coor[0] = p_radius;
-    coor[1] = p_center_x;
-    coor[2] = p_center_y;
+    coor[0] = pRadius;
+    coor[1] = pCenterX;
+    coor[2] = pCenterY;
   }
 
   @Override
   public app.freerouting.geometry.planar.Shape transformToBoard(
-      CoordinateTransform p_coordinate_transform) {
+      CoordinateTransform pCoordinateTransform) {
     double[] location = new double[2];
     location[0] = coor[1];
     location[1] = coor[2];
-    IntPoint center = p_coordinate_transform.dsnToBoard(location).round();
-    int radius = (int) Math.round(p_coordinate_transform.dsnToBoard(coor[0]) / 2);
+    IntPoint center = pCoordinateTransform.dsnToBoard(location).round();
+    int radius = (int) Math.round(pCoordinateTransform.dsnToBoard(coor[0]) / 2);
     return new app.freerouting.geometry.planar.Circle(center, radius);
   }
 
   @Override
   public app.freerouting.geometry.planar.Shape transformToBoardRel(
-      CoordinateTransform p_coordinate_transform) {
+      CoordinateTransform pCoordinateTransform) {
     int[] newCoor = new int[3];
-    newCoor[0] = (int) Math.round(p_coordinate_transform.dsnToBoard(coor[0]) / 2);
+    newCoor[0] = (int) Math.round(pCoordinateTransform.dsnToBoard(coor[0]) / 2);
     for (int i = 1; i < 3; i++) {
-      newCoor[i] = (int) Math.round(p_coordinate_transform.dsnToBoard(coor[i]));
+      newCoor[i] = (int) Math.round(pCoordinateTransform.dsnToBoard(coor[i]));
     }
     return new app.freerouting.geometry.planar.Circle(
         new IntPoint(newCoor[1], newCoor[2]), newCoor[0]);
@@ -63,29 +63,29 @@ public class Circle extends Shape {
   }
 
   @Override
-  public void writeScope(IndentFileWriter p_file, IdentifierType p_identifier_type)
+  public void writeScope(IndentFileWriter pFile, IdentifierType pIdentifierType)
       throws IOException {
-    p_file.newLine();
-    p_file.write("(circle ");
-    p_identifier_type.write(this.layer.name, p_file);
+    pFile.newLine();
+    pFile.write("(circle ");
+    pIdentifierType.write(this.layer.name, pFile);
     for (int i = 0; i < coor.length; i++) {
-      p_file.write(" ");
-      p_file.write(String.valueOf(coor[i]));
+      pFile.write(" ");
+      pFile.write(String.valueOf(coor[i]));
     }
-    p_file.write(")");
+    pFile.write(")");
   }
 
   @Override
-  public void writeScopeInt(IndentFileWriter p_file, IdentifierType p_identifier_type)
+  public void writeScopeInt(IndentFileWriter pFile, IdentifierType pIdentifierType)
       throws IOException {
-    p_file.newLine();
-    p_file.write("(circle ");
-    p_identifier_type.write(this.layer.name, p_file);
+    pFile.newLine();
+    pFile.write("(circle ");
+    pIdentifierType.write(this.layer.name, pFile);
     for (int i = 0; i < coor.length; i++) {
-      p_file.write(" ");
+      pFile.write(" ");
       int currCoor = (int) Math.round(coor[i]);
-      p_file.write(String.valueOf(currCoor));
+      pFile.write(String.valueOf(currCoor));
     }
-    p_file.write(")");
+    pFile.write(")");
   }
 }

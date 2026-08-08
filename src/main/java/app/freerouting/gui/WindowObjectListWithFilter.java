@@ -19,9 +19,9 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
   private final JTextField filterString;
 
   /** Creates a new instance of ObjectListWindowWithFilter */
-  protected WindowObjectListWithFilter(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  protected WindowObjectListWithFilter(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
+    setLanguage(pBoardFrame.get_locale());
 
     this.inputPanel = new JPanel();
     this.southPanel.add(inputPanel, BorderLayout.SOUTH);
@@ -56,16 +56,16 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
 
   /** Adds p_object to the list only if its name matches the filter. */
   @Override
-  protected void addToList(Object p_object) {
+  protected void addToList(Object pObject) {
     String currFilterString = this.filterString.getText().trim();
     boolean objectMatches;
     if (currFilterString.isEmpty()) {
       objectMatches = true;
     } else {
-      objectMatches = p_object.toString().toLowerCase().contains(currFilterString.toLowerCase());
+      objectMatches = pObject.toString().toLowerCase().contains(currFilterString.toLowerCase());
     }
     if (objectMatches) {
-      super.addToList(p_object);
+      super.addToList(pObject);
     }
   }
 
@@ -73,23 +73,23 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
 
   /** Saves also the filter string to disk. */
   @Override
-  public void save(ObjectOutputStream p_object_stream) {
+  public void save(ObjectOutputStream pObjectStream) {
     try {
-      p_object_stream.writeObject(filterString.getText());
+      pObjectStream.writeObject(filterString.getText());
     } catch (IOException _) {
       FRLogger.warn("WindowObjectListWithFilter.save: save failed");
     }
-    super.save(p_object_stream);
+    super.save(pObjectStream);
   }
 
   @Override
-  public boolean read(ObjectInputStream p_object_stream) {
+  public boolean read(ObjectInputStream pObjectStream) {
     try {
-      String currString = (String) p_object_stream.readObject();
+      String currString = (String) pObjectStream.readObject();
       this.filterString.setText(currString);
     } catch (Exception _) {
       FRLogger.warn("WindowObjectListWithFilter.read: read failed");
     }
-    return super.read(p_object_stream);
+    return super.read(pObjectStream);
   }
 }

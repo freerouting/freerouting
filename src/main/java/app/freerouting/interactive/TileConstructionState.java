@@ -18,9 +18,9 @@ public final class TileConstructionState extends CornerItemConstructionState {
 
   /** Creates a new instance of TileConstructionState */
   private TileConstructionState(
-      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
-    this.addCorner(p_location);
+      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    super(pParentState, pBoardHandling);
+    this.addCorner(pLocation);
   }
 
   /**
@@ -28,14 +28,14 @@ public final class TileConstructionState extends CornerItemConstructionState {
    * in a logfile
    */
   public static TileConstructionState getInstance(
-      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    return new TileConstructionState(p_location, p_parent_state, p_board_handling);
+      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    return new TileConstructionState(pLocation, pParentState, pBoardHandling);
   }
 
   /** adds a corner to the tile under construction */
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint p_location) {
-    super.leftButtonClicked(p_location);
+  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
+    super.leftButtonClicked(pLocation);
     removeConcaveCorners();
     hdlg.repaint();
     return this;

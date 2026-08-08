@@ -205,7 +205,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    * <p><strong>Warning:</strong> Multi-threaded optimization is known to potentially generate
    * clearance violations. Single-threaded mode is recommended for production.
    *
-   * @param p_board_handling the GUI board manager for display updates
+   * @param pBoardHandling the GUI board manager for display updates
    * @param routingJob the routing job containing configuration and board data
    * @see BatchAutorouter
    * @see BatchAutorouterV19
@@ -213,11 +213,11 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    * @see BatchOptimizerMultiThreaded
    */
   protected AutorouterAndRouteOptimizerThread(
-      GuiBoardManager p_board_handling, RoutingJob routingJob) {
-    super(p_board_handling, routingJob);
+      GuiBoardManager pBoardHandling, RoutingJob routingJob) {
+    super(pBoardHandling, routingJob);
 
     routingJob.thread = this;
-    routingJob.board = p_board_handling.getRoutingBoard();
+    routingJob.board = pBoardHandling.getRoutingBoard();
 
     // Select the appropriate router algorithm based on settings
     String algorithm = routingJob.routerSettings.algorithm;
@@ -576,8 +576,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         } else if (batchAutorouter instanceof BatchAutorouterV19) {
           ((BatchAutorouterV19) batchAutorouter).runBatchLoop();
         }
-      } else if (routingJob.routerSettings.isFanoutEnabled()
-          && !this.isStopAutoRouterRequested()) {
+      } else if (routingJob.routerSettings.isFanoutEnabled() && !this.isStopAutoRouterRequested()) {
         // Run only the fanout pre-pass
         Integer originalMaxPasses = routingJob.routerSettings.maxPasses;
         try {
@@ -855,13 +854,13 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    *   <li>Scales indicators based on board resolution and trace widths
    * </ul>
    *
-   * @param p_graphics the graphics context for rendering overlay indicators
+   * @param pGraphics the graphics context for rendering overlay indicators
    * @see BatchAutorouter#getAirLine()
    * @see BatchAutorouterV19#getAirLine()
    * @see BatchOptimizer#getCurrentPosition()
    */
   @Override
-  public void draw(Graphics p_graphics) {
+  public void draw(Graphics pGraphics) {
     // Cast to access get_air_line() which exists on both BatchAutorouter and
     // BatchAutorouterV19
     FloatLine currAirLine = null;
@@ -880,7 +879,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
           Math.min(
               this.boardManager.getRoutingBoard().communication.getResolution(Unit.MIL) * 3,
               300); // problem with low resolution on Kicad300;
-      this.boardManager.graphicsContext.draw(drawLine, drawWidth, drawColor, p_graphics, 1);
+      this.boardManager.graphicsContext.draw(drawLine, drawWidth, drawColor, pGraphics, 1);
     }
 
     if (this.batchOptimizer != null) {
@@ -895,14 +894,14 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
             new FloatPoint(currentOptPosition.x - radius, currentOptPosition.y - radius);
         drawPoints[1] =
             new FloatPoint(currentOptPosition.x + radius, currentOptPosition.y + radius);
-        this.boardManager.graphicsContext.draw(drawPoints, drawWidth, drawColor, p_graphics, 1);
+        this.boardManager.graphicsContext.draw(drawPoints, drawWidth, drawColor, pGraphics, 1);
         drawPoints[0] =
             new FloatPoint(currentOptPosition.x + radius, currentOptPosition.y - radius);
         drawPoints[1] =
             new FloatPoint(currentOptPosition.x - radius, currentOptPosition.y + radius);
-        this.boardManager.graphicsContext.draw(drawPoints, drawWidth, drawColor, p_graphics, 1);
+        this.boardManager.graphicsContext.draw(drawPoints, drawWidth, drawColor, pGraphics, 1);
         this.boardManager.graphicsContext.drawCircle(
-            currentOptPosition, radius, drawWidth, drawColor, p_graphics, 1);
+            currentOptPosition, radius, drawWidth, drawColor, pGraphics, 1);
       }
     }
   }

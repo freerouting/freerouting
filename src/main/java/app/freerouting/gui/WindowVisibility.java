@@ -174,8 +174,8 @@ public class WindowVisibility extends BoardSavableSubWindow {
     return Math.max(0, Math.min(MAX_SLIDER_VALUE, snappedValue));
   }
 
-  private void setSliderTextValue(JTextField value_field, int value) {
-    value_field.setText(value + "%");
+  private void setSliderTextValue(JTextField valueField, int value) {
+    valueField.setText(value + "%");
   }
 
   private final class SliderChangeListener implements ChangeListener {
@@ -222,11 +222,11 @@ public class WindowVisibility extends BoardSavableSubWindow {
         String title,
         String[] messageArr,
         IntToDoubleFunction currentValueSupplier,
-        BiConsumer<Integer, Double> changed_value_consumer) {
+        BiConsumer<Integer, Double> changedValueConsumer) {
       this.title = title;
       this.messageArr = messageArr;
       this.currentValueSupplier = currentValueSupplier;
-      this.changed_value_consumer = changed_value_consumer;
+      this.changed_value_consumer = changedValueConsumer;
       this.sliderArr = new JSlider[messageArr.length];
       this.valueArr = new JTextField[messageArr.length];
       this.originalDefaults = new int[messageArr.length];

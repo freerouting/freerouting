@@ -14,52 +14,52 @@ public class Resolution extends ScopeKeyword {
     super("resolution");
   }
 
-  public static void writeScope(IndentFileWriter p_file, Communication p_board_communication)
+  public static void writeScope(IndentFileWriter pFile, Communication pBoardCommunication)
       throws IOException {
-    p_file.newLine();
-    p_file.write("(resolution ");
-    p_file.write(p_board_communication.unit.toString());
-    p_file.write(" ");
-    p_file.write(String.valueOf(p_board_communication.resolution));
-    p_file.write(")");
+    pFile.newLine();
+    pFile.write("(resolution ");
+    pFile.write(pBoardCommunication.unit.toString());
+    pFile.write(" ");
+    pFile.write(String.valueOf(pBoardCommunication.resolution));
+    pFile.write(")");
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter p_par) {
+  public boolean readScope(ReadScopeParameter pPar) {
     try {
       // read the unit
-      Object nextToken = p_par.scanner.nextToken();
+      Object nextToken = pPar.scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
             "Resolution.read_scope: string expected at '"
-                + p_par.scanner.getScopeIdentifier()
+                + pPar.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
-      p_par.unit = Unit.fromString((String) nextToken);
-      if (p_par.unit == null) {
+      pPar.unit = Unit.fromString((String) nextToken);
+      if (pPar.unit == null) {
         FRLogger.warn(
             "Resolution.read_scope: unit mil, inch or mm expected at '"
-                + p_par.scanner.getScopeIdentifier()
+                + pPar.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
       // read the scale factor
-      nextToken = p_par.scanner.nextToken();
+      nextToken = pPar.scanner.nextToken();
       if (!(nextToken instanceof Integer)) {
         FRLogger.warn(
             "Resolution.read_scope: integer expected at '"
-                + p_par.scanner.getScopeIdentifier()
+                + pPar.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
-      p_par.resolution = (Integer) nextToken;
+      pPar.resolution = (Integer) nextToken;
       // overread the closing bracket
-      nextToken = p_par.scanner.nextToken();
+      nextToken = pPar.scanner.nextToken();
       if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Resolution.read_scope: closing bracket expected at '"
-                + p_par.scanner.getScopeIdentifier()
+                + pPar.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }

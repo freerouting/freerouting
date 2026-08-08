@@ -17,17 +17,17 @@ public class Ellipse implements Serializable {
   public final double smallerRadius;
 
   /** Creates a new instance of Ellipse */
-  public Ellipse(FloatPoint p_center, double p_rotation, double p_radius_1, double p_radius_2) {
-    this.center = p_center;
+  public Ellipse(FloatPoint pCenter, double pRotation, double pRadius1, double pRadius2) {
+    this.center = pCenter;
     double currRotation;
-    if (p_radius_1 >= p_radius_2) {
-      this.biggerRadius = p_radius_1;
-      this.smallerRadius = p_radius_2;
-      currRotation = p_rotation;
+    if (pRadius1 >= pRadius2) {
+      this.biggerRadius = pRadius1;
+      this.smallerRadius = pRadius2;
+      currRotation = pRotation;
     } else {
-      this.biggerRadius = p_radius_2;
-      this.smallerRadius = p_radius_1;
-      currRotation = p_rotation + 0.5 * Math.PI;
+      this.biggerRadius = pRadius2;
+      this.smallerRadius = pRadius1;
+      currRotation = pRotation + 0.5 * Math.PI;
     }
     while (currRotation >= Math.PI) {
       currRotation -= Math.PI;

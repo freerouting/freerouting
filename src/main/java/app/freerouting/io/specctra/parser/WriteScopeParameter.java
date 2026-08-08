@@ -21,18 +21,18 @@ public class WriteScopeParameter {
    * dsb scopes are written, so that any host system with a specctra interface can read them.
    */
   public WriteScopeParameter(
-      BasicBoard p_board,
-      RouterSettings p_autoroute_settings,
-      IndentFileWriter p_file,
-      String p_string_quote,
-      CoordinateTransform p_coordinate_transform,
-      boolean p_compat_mode) {
-    board = p_board;
-    autorouteSettings = p_autoroute_settings;
-    file = p_file;
-    coordinateTransform = p_coordinate_transform;
-    compatMode = p_compat_mode;
+      BasicBoard pBoard,
+      RouterSettings pAutorouteSettings,
+      IndentFileWriter pFile,
+      String pStringQuote,
+      CoordinateTransform pCoordinateTransform,
+      boolean pCompatMode) {
+    board = pBoard;
+    autorouteSettings = pAutorouteSettings;
+    file = pFile;
+    coordinateTransform = pCoordinateTransform;
+    compatMode = pCompatMode;
     String[] reservedChars = {"(", ")", " ", ";", "-", "_"};
-    identifierType = new IdentifierType(reservedChars, p_string_quote);
+    identifierType = new IdentifierType(reservedChars, pStringQuote);
   }
 }

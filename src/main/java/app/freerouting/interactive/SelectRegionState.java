@@ -11,8 +11,8 @@ public class SelectRegionState extends InteractiveState {
   protected FloatPoint corner1;
   protected FloatPoint corner2;
 
-  protected SelectRegionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
+  protected SelectRegionState(InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    super(pParentState, pBoardHandling);
   }
 
   @Override
@@ -24,14 +24,14 @@ public class SelectRegionState extends InteractiveState {
   }
 
   @Override
-  public InteractiveState mouseDragged(FloatPoint p_point) {
+  public InteractiveState mouseDragged(FloatPoint pPoint) {
     // Early exit on null or redundant micro-movements
-    if (p_point == null || (corner2 != null && p_point.equals(corner2))) {
+    if (pPoint == null || (corner2 != null && pPoint.equals(corner2))) {
       return this;
     }
 
     if (corner1 == null) {
-      corner1 = p_point;
+      corner1 = pPoint;
       if (hdlg != null) {
         hdlg.repaint();
       }
@@ -39,7 +39,7 @@ public class SelectRegionState extends InteractiveState {
     }
 
     var previousCorner2 = corner2;
-    corner2 = p_point;
+    corner2 = pPoint;
 
     if (hdlg != null) {
       var dirtyRect = rubberBandDirtyRect(previousCorner2, corner2);
@@ -53,7 +53,7 @@ public class SelectRegionState extends InteractiveState {
     return this;
   }
 
-  private Rectangle rubberBandDirtyRect(FloatPoint p_old_corner2, FloatPoint p_new_corner2) {
+  private Rectangle rubberBandDirtyRect(FloatPoint pOldCorner2, FloatPoint pNewCorner2) {
     if (hdlg == null
         || hdlg.graphicsContext == null
         || hdlg.graphicsContext.coordinateTransform == null) {
@@ -62,7 +62,7 @@ public class SelectRegionState extends InteractiveState {
 
     var transform = hdlg.graphicsContext.coordinateTransform;
     var scCorner1 = transform.boardToScreen(corner1);
-    var scNewCorner2 = transform.boardToScreen(p_new_corner2);
+    var scNewCorner2 = transform.boardToScreen(pNewCorner2);
 
     // Fail gracefully if transforms fail
     if (scCorner1 == null || scNewCorner2 == null) {
@@ -71,8 +71,8 @@ public class SelectRegionState extends InteractiveState {
 
     var dirtyRect = screenRect(scCorner1, scNewCorner2);
 
-    if (p_old_corner2 != null) {
-      var scOldCorner2 = transform.boardToScreen(p_old_corner2);
+    if (pOldCorner2 != null) {
+      var scOldCorner2 = transform.boardToScreen(pOldCorner2);
       if (scOldCorner2 != null) {
         // Mutate in-place to avoid GC allocation during rapid drags
         dirtyRect.add(screenRect(scCorner1, scOldCorner2));
@@ -83,18 +83,18 @@ public class SelectRegionState extends InteractiveState {
     return dirtyRect;
   }
 
-  private static Rectangle screenRect(Point2D p_a, Point2D p_b) {
-    int x = (int) Math.min(p_a.getX(), p_b.getX());
-    int y = (int) Math.min(p_a.getY(), p_b.getY());
-    int w = (int) Math.abs(p_a.getX() - p_b.getX()) + 1;
-    int h = (int) Math.abs(p_a.getY() - p_b.getY()) + 1;
+  private static Rectangle screenRect(Point2D pA, Point2D pB) {
+    int x = (int) Math.min(pA.getX(), pB.getX());
+    int y = (int) Math.min(pA.getY(), pB.getY());
+    int w = (int) Math.abs(pA.getX() - pB.getX()) + 1;
+    int h = (int) Math.abs(pA.getY() - pB.getY()) + 1;
     return new Rectangle(x, y, w, h);
   }
 
   @Override
-  public void draw(Graphics p_graphics) {
+  public void draw(Graphics pGraphics) {
     if (this.returnState != null) {
-      this.returnState.draw(p_graphics);
+      this.returnState.draw(pGraphics);
     }
 
     if (hdlg == null || hdlg.graphicsContext == null) {
@@ -107,6 +107,6 @@ public class SelectRegionState extends InteractiveState {
     }
 
     corner2 = currentMouse;
-    hdlg.graphicsContext.drawRectangle(corner1, corner2, 1, Color.white, p_graphics, 1);
+    hdlg.graphicsContext.drawRectangle(corner1, corner2, 1, Color.white, pGraphics, 1);
   }
 }

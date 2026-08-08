@@ -12,14 +12,14 @@ public abstract class ColorTableModel extends AbstractTableModel {
   protected final Object[][] data;
   protected final Locale locale;
 
-  protected ColorTableModel(int p_row_count, Locale p_locale) {
-    this.data = new Object[p_row_count][];
-    this.locale = p_locale;
+  protected ColorTableModel(int pRowCount, Locale pLocale) {
+    this.data = new Object[pRowCount][];
+    this.locale = pLocale;
   }
 
-  protected ColorTableModel(ObjectInputStream p_stream) throws IOException, ClassNotFoundException {
-    this.data = (Object[][]) p_stream.readObject();
-    this.locale = (Locale) p_stream.readObject();
+  protected ColorTableModel(ObjectInputStream pStream) throws IOException, ClassNotFoundException {
+    this.data = (Object[][]) pStream.readObject();
+    this.locale = (Locale) pStream.readObject();
   }
 
   @Override
@@ -28,14 +28,14 @@ public abstract class ColorTableModel extends AbstractTableModel {
   }
 
   @Override
-  public Object getValueAt(int p_row, int p_col) {
-    return data[p_row][p_col];
+  public Object getValueAt(int pRow, int pCol) {
+    return data[pRow][pCol];
   }
 
   @Override
-  public void setValueAt(Object p_value, int p_row, int p_col) {
-    data[p_row][p_col] = p_value;
-    fireTableCellUpdated(p_row, p_col);
+  public void setValueAt(Object pValue, int pRow, int pCol) {
+    data[pRow][pCol] = pValue;
+    fireTableCellUpdated(pRow, pCol);
   }
 
   /**
@@ -44,12 +44,12 @@ public abstract class ColorTableModel extends AbstractTableModel {
    * check box.
    */
   @Override
-  public Class<?> getColumnClass(int p_c) {
-    return getValueAt(0, p_c).getClass();
+  public Class<?> getColumnClass(int pC) {
+    return getValueAt(0, pC).getClass();
   }
 
-  protected void writeObject(ObjectOutputStream p_stream) throws IOException {
-    p_stream.writeObject(this.data);
-    p_stream.writeObject(this.locale);
+  protected void writeObject(ObjectOutputStream pStream) throws IOException {
+    pStream.writeObject(this.data);
+    pStream.writeObject(this.locale);
   }
 }

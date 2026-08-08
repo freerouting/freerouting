@@ -10,8 +10,8 @@ import java.util.Locale;
 /** Stores the colors used for the background and highlighting. */
 public class OtherColorTableModel extends ColorTableModel implements Serializable {
 
-  public OtherColorTableModel(Locale p_locale) {
-    super(1, p_locale);
+  public OtherColorTableModel(Locale pLocale) {
+    super(1, pLocale);
     data[0] = new Color[ColumnNames.values().length];
     Object[] currRow = data[0];
     currRow[ColumnNames.BACKGROUND.ordinal()] = new Color(0, 16, 35);
@@ -31,17 +31,17 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
     currRow[ColumnNames.FAB_BACK.ordinal()] = new Color(88, 93, 132);
   }
 
-  public OtherColorTableModel(ObjectInputStream p_stream)
+  public OtherColorTableModel(ObjectInputStream pStream)
       throws IOException, ClassNotFoundException {
-    super(p_stream);
+    super(pStream);
   }
 
   /** Copy constructor. */
-  public OtherColorTableModel(OtherColorTableModel p_item_color_model) {
-    super(p_item_color_model.data.length, p_item_color_model.locale);
+  public OtherColorTableModel(OtherColorTableModel pItemColorModel) {
+    super(pItemColorModel.data.length, pItemColorModel.locale);
     for (int i = 0; i < this.data.length; i++) {
-      this.data[i] = new Object[p_item_color_model.data[i].length];
-      System.arraycopy(p_item_color_model.data[i], 0, this.data[i], 0, this.data[i].length);
+      this.data[i] = new Object[pItemColorModel.data[i].length];
+      System.arraycopy(pItemColorModel.data[i], 0, this.data[i], 0, this.data[i].length);
     }
   }
 
@@ -51,13 +51,13 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
   }
 
   @Override
-  public String getColumnName(int p_col) {
+  public String getColumnName(int pCol) {
     TextManager tm = new TextManager(ColorTableModel.class, this.locale);
-    return tm.getText(ColumnNames.values()[p_col].toString());
+    return tm.getText(ColumnNames.values()[pCol].toString());
   }
 
   @Override
-  public boolean isCellEditable(int p_row, int p_col) {
+  public boolean isCellEditable(int pRow, int pCol) {
     return true;
   }
 
@@ -72,10 +72,10 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
     return defaultColor;
   }
 
-  private void setColorSafe(ColumnNames col, Color p_color) {
+  private void setColorSafe(ColumnNames col, Color pColor) {
     int idx = col.ordinal();
     if (data != null && data.length > 0 && data[0] != null && idx >= 0 && idx < data[0].length) {
-      data[0][idx] = p_color;
+      data[0][idx] = pColor;
     }
   }
 
@@ -83,44 +83,44 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
     return getColorSafe(ColumnNames.BACKGROUND, new Color(0, 16, 35));
   }
 
-  public void setBackgroundColor(Color p_color) {
-    setColorSafe(ColumnNames.BACKGROUND, p_color);
+  public void setBackgroundColor(Color pColor) {
+    setColorSafe(ColumnNames.BACKGROUND, pColor);
   }
 
   public Color getHilightColor() {
     return getColorSafe(ColumnNames.HIGHLIGHT, Color.white);
   }
 
-  public void setHilightColor(Color p_color) {
-    setColorSafe(ColumnNames.HIGHLIGHT, p_color);
+  public void setHilightColor(Color pColor) {
+    setColorSafe(ColumnNames.HIGHLIGHT, pColor);
   }
 
   public Color getIncompleteColor() {
     return getColorSafe(ColumnNames.INCOMPLETES, Color.white);
   }
 
-  public void setIncompleteColor(Color p_color) {
-    setColorSafe(ColumnNames.INCOMPLETES, p_color);
+  public void setIncompleteColor(Color pColor) {
+    setColorSafe(ColumnNames.INCOMPLETES, pColor);
   }
 
   public Color getOutlineColor() {
     return getColorSafe(ColumnNames.OUTLINE, new Color(100, 150, 255));
   }
 
-  public void setOutlineColor(Color p_color) {
-    setColorSafe(ColumnNames.OUTLINE, p_color);
+  public void setOutlineColor(Color pColor) {
+    setColorSafe(ColumnNames.OUTLINE, pColor);
   }
 
   public Color getViolationsColor() {
     return getColorSafe(ColumnNames.VIOLATIONS, Color.magenta);
   }
 
-  public void setViolationsColor(Color p_color) {
-    setColorSafe(ColumnNames.VIOLATIONS, p_color);
+  public void setViolationsColor(Color pColor) {
+    setColorSafe(ColumnNames.VIOLATIONS, pColor);
   }
 
-  public Color getComponentColor(boolean p_front) {
-    if (p_front) {
+  public Color getComponentColor(boolean pFront) {
+    if (pFront) {
       return getColorSafe(ColumnNames.COMPONENT_FRONT, new Color(255, 38, 226));
     } else {
       return getColorSafe(ColumnNames.COMPONENT_BACK, new Color(38, 233, 255));
@@ -131,15 +131,15 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
     return getColorSafe(ColumnNames.LENGTH_MATCHING_AREA, Color.green);
   }
 
-  public void setLengthMatchingAreaColor(Color p_color) {
-    setColorSafe(ColumnNames.LENGTH_MATCHING_AREA, p_color);
+  public void setLengthMatchingAreaColor(Color pColor) {
+    setColorSafe(ColumnNames.LENGTH_MATCHING_AREA, pColor);
   }
 
-  public void setComponentColor(Color p_color, boolean p_front) {
-    if (p_front) {
-      setColorSafe(ColumnNames.COMPONENT_FRONT, p_color);
+  public void setComponentColor(Color pColor, boolean pFront) {
+    if (pFront) {
+      setColorSafe(ColumnNames.COMPONENT_FRONT, pColor);
     } else {
-      setColorSafe(ColumnNames.COMPONENT_BACK, p_color);
+      setColorSafe(ColumnNames.COMPONENT_BACK, pColor);
     }
   }
 
@@ -147,55 +147,55 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
     return getColorSafe(ColumnNames.DRILL_HOLE, Color.black);
   }
 
-  public void setDrillHoleColor(Color p_color) {
-    setColorSafe(ColumnNames.DRILL_HOLE, p_color);
+  public void setDrillHoleColor(Color pColor) {
+    setColorSafe(ColumnNames.DRILL_HOLE, pColor);
   }
 
-  public Color getSilkscreenColor(boolean p_front) {
-    if (p_front) {
+  public Color getSilkscreenColor(boolean pFront) {
+    if (pFront) {
       return getColorSafe(ColumnNames.SILKSCREEN_FRONT, new Color(242, 237, 161));
     } else {
       return getColorSafe(ColumnNames.SILKSCREEN_BACK, new Color(232, 178, 167));
     }
   }
 
-  public void setSilkscreenColor(Color p_color, boolean p_front) {
-    if (p_front) {
-      setColorSafe(ColumnNames.SILKSCREEN_FRONT, p_color);
+  public void setSilkscreenColor(Color pColor, boolean pFront) {
+    if (pFront) {
+      setColorSafe(ColumnNames.SILKSCREEN_FRONT, pColor);
     } else {
-      setColorSafe(ColumnNames.SILKSCREEN_BACK, p_color);
+      setColorSafe(ColumnNames.SILKSCREEN_BACK, pColor);
     }
   }
 
-  public Color getCourtyardColor(boolean p_front) {
-    if (p_front) {
+  public Color getCourtyardColor(boolean pFront) {
+    if (pFront) {
       return getColorSafe(ColumnNames.COURTYARD_FRONT, new Color(255, 38, 226));
     } else {
       return getColorSafe(ColumnNames.COURTYARD_BACK, new Color(38, 233, 255));
     }
   }
 
-  public void setCourtyardColor(Color p_color, boolean p_front) {
-    if (p_front) {
-      setColorSafe(ColumnNames.COURTYARD_FRONT, p_color);
+  public void setCourtyardColor(Color pColor, boolean pFront) {
+    if (pFront) {
+      setColorSafe(ColumnNames.COURTYARD_FRONT, pColor);
     } else {
-      setColorSafe(ColumnNames.COURTYARD_BACK, p_color);
+      setColorSafe(ColumnNames.COURTYARD_BACK, pColor);
     }
   }
 
-  public Color getFabColor(boolean p_front) {
-    if (p_front) {
+  public Color getFabColor(boolean pFront) {
+    if (pFront) {
       return getColorSafe(ColumnNames.FAB_FRONT, new Color(175, 175, 175));
     } else {
       return getColorSafe(ColumnNames.FAB_BACK, new Color(88, 93, 132));
     }
   }
 
-  public void setFabColor(Color p_color, boolean p_front) {
-    if (p_front) {
-      setColorSafe(ColumnNames.FAB_FRONT, p_color);
+  public void setFabColor(Color pColor, boolean pFront) {
+    if (pFront) {
+      setColorSafe(ColumnNames.FAB_FRONT, pColor);
     } else {
-      setColorSafe(ColumnNames.FAB_BACK, p_color);
+      setColorSafe(ColumnNames.FAB_BACK, pColor);
     }
   }
 

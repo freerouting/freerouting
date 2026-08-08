@@ -14,5 +14,5 @@ public interface CompleteExpansionRoom extends ExpansionRoom {
   SearchTreeObject getObject();
 
   /** Draws the shape of this room for test purposes */
-  void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity);
+  void draw(Graphics pGraphics, GraphicsContext pGraphicsContext, double pIntensity);
 }

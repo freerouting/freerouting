@@ -19,63 +19,63 @@ public class Net {
   private Set<Pin> pinList;
 
   /** Creates a new instance of Net */
-  public Net(Id p_net_id) {
-    id = p_net_id;
+  public Net(Id pNetId) {
+    id = pNetId;
   }
 
   public static void writeScope(
-      WriteScopeParameter p_par,
-      app.freerouting.rules.Net p_net,
-      Collection<app.freerouting.board.Pin> p_pin_list)
+      WriteScopeParameter pPar,
+      app.freerouting.rules.Net pNet,
+      Collection<app.freerouting.board.Pin> pPinList)
       throws IOException {
-    p_par.file.startScope();
-    writeNetId(p_net, p_par.file, p_par.identifierType);
+    pPar.file.startScope();
+    writeNetId(pNet, pPar.file, pPar.identifierType);
     // write the pins scope
-    p_par.file.startScope();
-    p_par.file.write("pins");
-    for (app.freerouting.board.Pin currPin : p_pin_list) {
-      if (currPin.containsNet(p_net.netNumber)) {
-        writePin(p_par, currPin);
+    pPar.file.startScope();
+    pPar.file.write("pins");
+    for (app.freerouting.board.Pin currPin : pPinList) {
+      if (currPin.containsNet(pNet.netNumber)) {
+        writePin(pPar, currPin);
       }
     }
-    p_par.file.endScope();
-    p_par.file.endScope();
+    pPar.file.endScope();
+    pPar.file.endScope();
   }
 
   public static void writeNetId(
-      app.freerouting.rules.Net p_net, IndentFileWriter p_file, IdentifierType p_identifier_type)
+      app.freerouting.rules.Net pNet, IndentFileWriter pFile, IdentifierType pIdentifierType)
       throws IOException {
-    p_file.write("net ");
-    p_identifier_type.write(p_net.name, p_file);
-    p_file.write(" ");
-    int subnetNumber = p_net.subnetNumber;
-    p_file.write(String.valueOf(subnetNumber));
+    pFile.write("net ");
+    pIdentifierType.write(pNet.name, pFile);
+    pFile.write(" ");
+    int subnetNumber = pNet.subnetNumber;
+    pFile.write(String.valueOf(subnetNumber));
   }
 
-  public static void writePin(WriteScopeParameter p_par, app.freerouting.board.Pin p_pin)
+  public static void writePin(WriteScopeParameter pPar, app.freerouting.board.Pin pPin)
       throws IOException {
-    Component currComponent = p_par.board.components.get(p_pin.getComponentNo());
+    Component currComponent = pPar.board.components.get(pPin.getComponentNo());
     if (currComponent == null) {
       FRLogger.warn("Net.write_scope: component not found at '" + currComponent.name + "'");
       return;
     }
-    Package.Pin libPin = currComponent.getPackage().getPin(p_pin.getIndexInPackage());
+    Package.Pin libPin = currComponent.getPackage().getPin(pPin.getIndexInPackage());
     if (libPin == null) {
       FRLogger.warn("Net.write_scope:  pin number out of range at '" + currComponent.name + "'");
       return;
     }
-    p_par.file.newLine();
-    p_par.identifierType.write(currComponent.name, p_par.file);
-    p_par.file.write("-");
-    p_par.identifierType.write(libPin.name, p_par.file);
+    pPar.file.newLine();
+    pPar.identifierType.write(currComponent.name, pPar.file);
+    pPar.file.write("-");
+    pPar.identifierType.write(libPin.name, pPar.file);
   }
 
   public Set<Pin> getPins() {
     return pinList;
   }
 
-  public void setPins(Collection<Pin> p_pin_list) {
-    pinList = new TreeSet<>(p_pin_list);
+  public void setPins(Collection<Pin> pPinList) {
+    pinList = new TreeSet<>(pPinList);
   }
 
   public static class Id implements Comparable<Id> {
@@ -83,16 +83,16 @@ public class Net {
     public final String name;
     public final int subnetNumber;
 
-    public Id(String p_name, int p_subnet_number) {
-      name = p_name;
-      subnetNumber = p_subnet_number;
+    public Id(String pName, int pSubnetNumber) {
+      name = pName;
+      subnetNumber = pSubnetNumber;
     }
 
     @Override
-    public int compareTo(Id p_other) {
-      int result = this.name.compareTo(p_other.name);
+    public int compareTo(Id pOther) {
+      int result = this.name.compareTo(pOther.name);
       if (result == 0) {
-        result = this.subnetNumber - p_other.subnetNumber;
+        result = this.subnetNumber - pOther.subnetNumber;
       }
       return result;
     }
@@ -104,16 +104,16 @@ public class Net {
     public final String componentName;
     public final String pinName;
 
-    public Pin(String p_component_name, String p_pin_name) {
-      componentName = p_component_name;
-      pinName = p_pin_name;
+    public Pin(String pComponentName, String pPinName) {
+      componentName = pComponentName;
+      pinName = pPinName;
     }
 
     @Override
-    public int compareTo(Pin p_other) {
-      int result = this.componentName.compareTo(p_other.componentName);
+    public int compareTo(Pin pOther) {
+      int result = this.componentName.compareTo(pOther.componentName);
       if (result == 0) {
-        result = this.pinName.compareTo(p_other.pinName);
+        result = this.pinName.compareTo(pOther.pinName);
       }
       return result;
     }

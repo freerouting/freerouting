@@ -41,12 +41,12 @@ public final class WindowUserSettings extends WindowBase {
   /**
    * Creates and initializes a new user settings dialog window.
    *
-   * @param p_board_frame the parent board frame, used to retrieve the active locale settings.
+   * @param pBoardFrame the parent board frame, used to retrieve the active locale settings.
    */
-  private WindowUserSettings(BoardFrame p_board_frame) {
+  private WindowUserSettings(BoardFrame pBoardFrame) {
     super(480, 355);
 
-    setLanguage(p_board_frame.get_locale());
+    setLanguage(pBoardFrame.get_locale());
 
     JDialog profileDialog = new JDialog((Frame) null, "User Settings", true);
     profileDialog.setTitle(tm.getText("title"));
@@ -339,11 +339,11 @@ public final class WindowUserSettings extends WindowBase {
   /**
    * Displays the user settings dialog window, centered relative to the screen.
    *
-   * @param p_board_frame the parent board frame.
+   * @param pBoardFrame the parent board frame.
    * @return the created WindowUserSettings instance.
    */
-  public static WindowUserSettings show(BoardFrame p_board_frame) {
-    return new WindowUserSettings(p_board_frame);
+  public static WindowUserSettings show(BoardFrame pBoardFrame) {
+    return new WindowUserSettings(pBoardFrame);
   }
 
   /**

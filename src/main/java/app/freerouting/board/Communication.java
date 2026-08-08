@@ -30,18 +30,18 @@ public class Communication implements Serializable {
 
   /** Creates a new instance of BoardCommunication */
   public Communication(
-      Unit p_unit,
-      int p_resolution,
-      SpecctraParserInfo p_specctra_parser_info,
-      CoordinateTransform p_coordinate_transform,
-      IdentificationNumberGenerator p_id_no_generator,
-      BoardObservers p_observers) {
-    coordinateTransform = p_coordinate_transform;
-    unit = p_unit;
-    resolution = p_resolution;
-    specctraParserInfo = p_specctra_parser_info;
-    idNoGenerator = p_id_no_generator;
-    observers = p_observers;
+      Unit pUnit,
+      int pResolution,
+      SpecctraParserInfo pSpecctraParserInfo,
+      CoordinateTransform pCoordinateTransform,
+      IdentificationNumberGenerator pIdNoGenerator,
+      BoardObservers pObservers) {
+    coordinateTransform = pCoordinateTransform;
+    unit = pUnit;
+    resolution = pResolution;
+    specctraParserInfo = pSpecctraParserInfo;
+    idNoGenerator = pIdNoGenerator;
+    observers = pObservers;
   }
 
   /** Creates a new instance of BoardCommunication */
@@ -85,12 +85,12 @@ public class Communication implements Serializable {
   }
 
   /** Returns the resolution scaled to the input unit */
-  public double getResolution(Unit p_unit) {
-    return Unit.scale(this.resolution, p_unit, this.unit);
+  public double getResolution(Unit pUnit) {
+    return Unit.scale(this.resolution, pUnit, this.unit);
   }
 
-  private void readObject(ObjectInputStream p_stream) throws IOException, ClassNotFoundException {
-    p_stream.defaultReadObject();
+  private void readObject(ObjectInputStream pStream) throws IOException, ClassNotFoundException {
+    pStream.defaultReadObject();
     observers = new BoardObserverAdaptor();
   }
 
@@ -110,18 +110,18 @@ public class Communication implements Serializable {
     public final boolean dsnFileGeneratedByHost;
 
     public SpecctraParserInfo(
-        String p_string_quote,
-        String p_host_cad,
-        String p_host_version,
-        Collection<String[]> p_constants,
-        WriteResolution p_write_resolution,
-        boolean p_dsn_file_generated_by_host) {
-      stringQuote = p_string_quote;
-      hostCad = p_host_cad;
-      hostVersion = p_host_version;
-      constants = p_constants;
-      writeResolution = p_write_resolution;
-      dsnFileGeneratedByHost = p_dsn_file_generated_by_host;
+        String pStringQuote,
+        String pHostCad,
+        String pHostVersion,
+        Collection<String[]> pConstants,
+        WriteResolution pWriteResolution,
+        boolean pDsnFileGeneratedByHost) {
+      stringQuote = pStringQuote;
+      hostCad = pHostCad;
+      hostVersion = pHostVersion;
+      constants = pConstants;
+      writeResolution = pWriteResolution;
+      dsnFileGeneratedByHost = pDsnFileGeneratedByHost;
     }
 
     public static class WriteResolution implements Serializable {
@@ -129,9 +129,9 @@ public class Communication implements Serializable {
       public final String charName;
       public final int positiveInt;
 
-      public WriteResolution(String p_char_name, int p_positive_int) {
-        charName = p_char_name;
-        positiveInt = p_positive_int;
+      public WriteResolution(String pCharName, int pPositiveInt) {
+        charName = pCharName;
+        positiveInt = pPositiveInt;
       }
     }
   }

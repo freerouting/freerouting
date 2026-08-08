@@ -43,52 +43,52 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
    * package.
    */
   public Package(
-      String p_name,
-      int p_no,
-      Pin[] p_pin_arr,
-      Shape[] p_outline,
-      double[] p_outline_widths,
-      boolean[] p_outline_is_closed,
-      Keepout[] p_keepout_arr,
-      Keepout[] p_via_keepout_arr,
-      Keepout[] p_place_keepout_arr,
-      boolean p_is_front,
-      Packages p_package_list) {
-    name = p_name;
-    no = p_no;
-    pinArr = p_pin_arr;
-    outline = p_outline;
-    outlineWidths = p_outline_widths;
-    outlineIsClosed = p_outline_is_closed;
-    keepoutArr = p_keepout_arr;
-    viaKeepoutArr = p_via_keepout_arr;
-    placeKeepoutArr = p_place_keepout_arr;
-    isFront = p_is_front;
-    packageList = p_package_list;
+      String pName,
+      int pNo,
+      Pin[] pPinArr,
+      Shape[] pOutline,
+      double[] pOutlineWidths,
+      boolean[] pOutlineIsClosed,
+      Keepout[] pKeepoutArr,
+      Keepout[] pViaKeepoutArr,
+      Keepout[] pPlaceKeepoutArr,
+      boolean pIsFront,
+      Packages pPackageList) {
+    name = pName;
+    no = pNo;
+    pinArr = pPinArr;
+    outline = pOutline;
+    outlineWidths = pOutlineWidths;
+    outlineIsClosed = pOutlineIsClosed;
+    keepoutArr = pKeepoutArr;
+    viaKeepoutArr = pViaKeepoutArr;
+    placeKeepoutArr = pPlaceKeepoutArr;
+    isFront = pIsFront;
+    packageList = pPackageList;
   }
 
   /** Compares 2 packages by name. Useful for example to display packages in alphabetic order. */
   @Override
-  public int compareTo(Package p_other) {
-    return this.name.compareToIgnoreCase(p_other.name);
+  public int compareTo(Package pOther) {
+    return this.name.compareToIgnoreCase(pOther.name);
   }
 
   /** Returns the pin with the input number from this package. */
-  public Pin getPin(int p_no) {
-    if (p_no < 0 || p_no >= pinArr.length) {
+  public Pin getPin(int pNo) {
+    if (pNo < 0 || pNo >= pinArr.length) {
       FRLogger.warn("Package.get_pin: p_no out of range");
       return null;
     }
-    return pinArr[p_no];
+    return pinArr[pNo];
   }
 
   /**
    * Returns the pin number of the pin with the input name from this package, or -1, if no such pin
    * exists Pin numbers are from 0 to pinCount - 1.
    */
-  public int getPinNo(String p_name) {
+  public int getPinNo(String pName) {
     for (int i = 0; i < pinArr.length; i++) {
-      if (pinArr[i].name.equals(p_name)) {
+      if (pinArr[i].name.equals(pName)) {
         return i;
       }
     }
@@ -106,26 +106,26 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
-    p_window.appendBold(tm.getText("package") + " ");
-    p_window.appendBold(this.name);
+    pWindow.appendBold(tm.getText("package") + " ");
+    pWindow.appendBold(this.name);
     for (int i = 0; i < this.pinArr.length; i++) {
       Pin currPin = this.pinArr[i];
-      p_window.newline();
-      p_window.indent();
-      p_window.append(tm.getText("pin") + " ");
-      p_window.append(currPin.name);
-      p_window.append(", " + tm.getText("padstack") + " ");
+      pWindow.newline();
+      pWindow.indent();
+      pWindow.append(tm.getText("pin") + " ");
+      pWindow.append(currPin.name);
+      pWindow.append(", " + tm.getText("padstack") + " ");
       Padstack currPadstack = this.packageList.padstackList.get(currPin.padstackNo);
-      p_window.append(currPadstack.name, tm.getText("padstack_info"), currPadstack);
-      p_window.append(" " + tm.getText("at") + " ");
-      p_window.append(currPin.relativeLocation.toFloat());
-      p_window.append(", " + tm.getText("rotation") + " ");
-      p_window.appendWithoutTransforming(currPin.rotationInDegree);
+      pWindow.append(currPadstack.name, tm.getText("padstack_info"), currPadstack);
+      pWindow.append(" " + tm.getText("at") + " ");
+      pWindow.append(currPin.relativeLocation.toFloat());
+      pWindow.append(", " + tm.getText("rotation") + " ");
+      pWindow.appendWithoutTransforming(currPin.rotationInDegree);
     }
-    p_window.newline();
+    pWindow.newline();
   }
 
   /** Describes a pin padstack of a package. */
@@ -144,12 +144,11 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
     public final double rotationInDegree;
 
     /** Creates a new package pin with the input coordinates relative to the package location. */
-    public Pin(
-        String p_name, int p_padstack_no, Vector p_relative_location, double p_rotation_in_degree) {
-      name = p_name;
-      padstackNo = p_padstack_no;
-      relativeLocation = p_relative_location;
-      rotationInDegree = p_rotation_in_degree;
+    public Pin(String pName, int pPadstackNo, Vector pRelativeLocation, double pRotationInDegree) {
+      name = pName;
+      padstackNo = pPadstackNo;
+      relativeLocation = pRelativeLocation;
+      rotationInDegree = pRotationInDegree;
     }
   }
 
@@ -160,10 +159,10 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
     public final Area area;
     public final int layer;
 
-    public Keepout(String p_name, Area p_area, int p_layer) {
-      name = p_name;
-      area = p_area;
-      layer = p_layer;
+    public Keepout(String pName, Area pArea, int pLayer) {
+      name = pName;
+      area = pArea;
+      layer = pLayer;
     }
   }
 }

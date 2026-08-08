@@ -22,22 +22,22 @@ public final class InspectMenuState extends MenuState {
   private String backupMessage;
 
   /** Creates a new instance of InspectMenuState */
-  private InspectMenuState(GuiBoardManager p_board_handling) {
-    super(p_board_handling);
+  private InspectMenuState(GuiBoardManager pBoardHandling) {
+    super(pBoardHandling);
   }
 
   /** Returns a new instance of InspectMenuState */
-  public static InspectMenuState getInstance(GuiBoardManager p_board_handling) {
-    return new InspectMenuState(p_board_handling);
+  public static InspectMenuState getInstance(GuiBoardManager pBoardHandling) {
+    return new InspectMenuState(pBoardHandling);
   }
 
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint p_location) {
-    return selectItems(p_location);
+  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
+    return selectItems(pLocation);
   }
 
   @Override
-  public InteractiveState mouseDragged(FloatPoint p_point) {
+  public InteractiveState mouseDragged(FloatPoint pPoint) {
     return InspectItemsInRegionState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
   }
 
@@ -240,7 +240,7 @@ public final class InspectMenuState extends MenuState {
   }
 
   @Override
-  public void draw(java.awt.Graphics p_graphics) {
+  public void draw(java.awt.Graphics pGraphics) {
     // Draw the hovered clearance violation with highlight
     if (lastHoveredViolation != null && hdlg.graphicsContext != null) {
       Color violationColor = hdlg.graphicsContext.getViolationsColor();
@@ -248,7 +248,7 @@ public final class InspectMenuState extends MenuState {
 
       // Draw the violation area with increased brightness
       hdlg.graphicsContext.fillArea(
-          lastHoveredViolation.shape, p_graphics, violationColor, Math.min(1.0, intensity * 1.8));
+          lastHoveredViolation.shape, pGraphics, violationColor, Math.min(1.0, intensity * 1.8));
 
       // Draw a prominent circle around the violation
       double drawRadius = hdlg.getRoutingBoard().rules.getMinTraceHalfWidth() * 8;
@@ -257,7 +257,7 @@ public final class InspectMenuState extends MenuState {
           drawRadius,
           0.15 * drawRadius,
           violationColor,
-          p_graphics,
+          pGraphics,
           Math.min(1.0, intensity * 1.5));
     }
 
@@ -270,7 +270,7 @@ public final class InspectMenuState extends MenuState {
       double highlightIntensity = Math.min(1.0, baseIntensity * 1.5);
 
       // Draw with increased brightness
-      lastHoveredItem.draw(p_graphics, hdlg.graphicsContext, highlightColors, highlightIntensity);
+      lastHoveredItem.draw(pGraphics, hdlg.graphicsContext, highlightColors, highlightIntensity);
     }
   }
 

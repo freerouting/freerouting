@@ -24,36 +24,36 @@ public final class ForcedViaAlgo {
    * p_room_shape is used for calculating the fromSide.
    */
   public static ForcedPadAlgo.CheckDrillResult checkLayer(
-      double p_via_radius,
-      int p_cl_class,
-      boolean p_attach_smd_allowed,
-      TileShape p_room_shape,
-      Point p_location,
-      int p_layer,
-      int[] p_net_no_arr,
-      int p_max_recursion_depth,
-      int p_max_via_recursion_depth,
-      RoutingBoard p_board,
-      int p_trace_half_width,
-      int p_trace_clearance_class) {
-    if (p_via_radius <= 0) {
+      double pViaRadius,
+      int pClClass,
+      boolean pAttachSmdAllowed,
+      TileShape pRoomShape,
+      Point pLocation,
+      int pLayer,
+      int[] pNetNoArr,
+      int pMaxRecursionDepth,
+      int pMaxViaRecursionDepth,
+      RoutingBoard pBoard,
+      int pTraceHalfWidth,
+      int pTraceClearanceClass) {
+    if (pViaRadius <= 0) {
       return ForcedPadAlgo.CheckDrillResult.DRILLABLE;
     }
-    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(p_board);
-    if (!(p_location instanceof IntPoint)) {
+    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(pBoard);
+    if (!(pLocation instanceof IntPoint)) {
       return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
     }
-    IntPoint intLocation = (IntPoint) p_location;
-    ConvexShape viaShape = new Circle(intLocation, (int) Math.ceil(p_via_radius));
+    IntPoint intLocation = (IntPoint) pLocation;
+    ConvexShape viaShape = new Circle(intLocation, (int) Math.ceil(pViaRadius));
 
     double checkRadius =
-        p_via_radius
-            + 0.5 * p_board.clearanceValue(p_cl_class, p_cl_class, p_layer)
-            + p_board.getMinTraceHalfWidth();
+        pViaRadius
+            + 0.5 * pBoard.clearanceValue(pClClass, pClClass, pLayer)
+            + pBoard.getMinTraceHalfWidth();
 
     TileShape tileShape;
     boolean is90Degree;
-    if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+    if (pBoard.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
       tileShape = viaShape.boundingBox();
       is90Degree = true;
     } else {
@@ -63,7 +63,7 @@ public final class ForcedViaAlgo {
 
     CalcFromSide fromSide =
         calculateFromSide(
-            p_location.toFloat(), tileShape, p_room_shape.toSimplex(), checkRadius, is90Degree);
+            pLocation.toFloat(), tileShape, pRoomShape.toSimplex(), checkRadius, is90Degree);
     if (fromSide == null) {
       return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
     }
@@ -72,26 +72,26 @@ public final class ForcedViaAlgo {
         forcedPadAlgo.checkForcedPad(
             tileShape,
             fromSide,
-            p_layer,
-            p_net_no_arr,
-            p_cl_class,
-            p_attach_smd_allowed,
+            pLayer,
+            pNetNoArr,
+            pClClass,
+            pAttachSmdAllowed,
             null,
-            p_max_recursion_depth,
-            p_max_via_recursion_depth,
+            pMaxRecursionDepth,
+            pMaxViaRecursionDepth,
             false,
             null);
     if (viaResult == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
       return viaResult;
     }
 
-    if (p_trace_half_width <= 0) {
+    if (pTraceHalfWidth <= 0) {
       return viaResult;
     }
 
-    Circle startTraceCircle = new Circle(intLocation, p_trace_half_width);
+    Circle startTraceCircle = new Circle(intLocation, pTraceHalfWidth);
     TileShape startTraceShape;
-    if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+    if (pBoard.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
       startTraceShape = startTraceCircle.boundingBox();
     } else {
       startTraceShape = startTraceCircle.boundingOctagon();
@@ -101,13 +101,13 @@ public final class ForcedViaAlgo {
         forcedPadAlgo.checkForcedPad(
             startTraceShape,
             fromSide,
-            p_layer,
-            p_net_no_arr,
-            p_trace_clearance_class,
+            pLayer,
+            pNetNoArr,
+            pTraceClearanceClass,
             true,
             null,
-            p_max_recursion_depth,
-            p_max_via_recursion_depth,
+            pMaxRecursionDepth,
+            pMaxViaRecursionDepth,
             false,
             null);
     if (traceResult == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
@@ -125,22 +125,22 @@ public final class ForcedViaAlgo {
    * traces.
    */
   public static boolean check(
-      ViaInfo p_via_info,
-      Point p_location,
-      int[] p_net_no_arr,
-      int p_max_recursion_depth,
-      int p_max_via_recursion_depth,
-      RoutingBoard p_board,
-      int[] p_trace_pen_halfwidth_arr,
-      int p_trace_clearance_class_no) {
-    Vector translateVector = p_location.differenceBy(Point.ZERO);
-    int calcFromSideOffset = p_board.getMinTraceHalfWidth();
-    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(p_board);
-    Padstack viaPadstack = p_via_info.getPadstack();
-    Shape holeShape = holeCheckShape(viaPadstack, p_location, p_board);
+      ViaInfo pViaInfo,
+      Point pLocation,
+      int[] pNetNoArr,
+      int pMaxRecursionDepth,
+      int pMaxViaRecursionDepth,
+      RoutingBoard pBoard,
+      int[] pTracePenHalfwidthArr,
+      int pTraceClearanceClassNo) {
+    Vector translateVector = pLocation.differenceBy(Point.ZERO);
+    int calcFromSideOffset = pBoard.getMinTraceHalfWidth();
+    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(pBoard);
+    Padstack viaPadstack = pViaInfo.getPadstack();
+    Shape holeShape = holeCheckShape(viaPadstack, pLocation, pBoard);
     for (int i = viaPadstack.fromLayer(); i <= viaPadstack.toLayer(); i++) {
       Shape currPadShape = viaPadstack.getShape(i);
-      int currClearanceClass = p_via_info.getClearanceClass();
+      int currClearanceClass = pViaInfo.getClearanceClass();
       if (currPadShape == null) {
         if (holeShape == null) {
           continue;
@@ -152,35 +152,35 @@ public final class ForcedViaAlgo {
         currPadShape = (Shape) currPadShape.translateBy(translateVector);
       }
       TileShape tileShape;
-      if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+      if (pBoard.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
         tileShape = currPadShape.boundingBox();
       } else {
         tileShape = currPadShape.boundingOctagon();
       }
       CalcFromSide fromSide =
           forcedPadAlgo.calcFromSide(
-              tileShape, p_location, i, calcFromSideOffset, currClearanceClass);
+              tileShape, pLocation, i, calcFromSideOffset, currClearanceClass);
       if (forcedPadAlgo.checkForcedPad(
               tileShape,
               fromSide,
               i,
-              p_net_no_arr,
+              pNetNoArr,
               currClearanceClass,
-              p_via_info.attachSmdAllowed(),
+              pViaInfo.attachSmdAllowed(),
               null,
-              p_max_recursion_depth,
-              p_max_via_recursion_depth,
+              pMaxRecursionDepth,
+              pMaxViaRecursionDepth,
               false,
               null)
           == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
-        p_board.setShoveFailingLayer(i);
+        pBoard.setShoveFailingLayer(i);
         return false;
       }
       if (currClearanceClass != 0 && holeShape != null) {
         // The drill hole must ALSO keep hole clearance from other-net copper on layers where
         // the pad exists — the pad check above only enforces the (smaller) copper clearance.
         TileShape holeTile;
-        if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+        if (pBoard.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
           holeTile = holeShape.boundingBox();
         } else {
           holeTile = holeShape.boundingOctagon();
@@ -189,27 +189,27 @@ public final class ForcedViaAlgo {
                 holeTile,
                 fromSide,
                 i,
-                p_net_no_arr,
+                pNetNoArr,
                 0,
-                p_via_info.attachSmdAllowed(),
+                pViaInfo.attachSmdAllowed(),
                 null,
-                p_max_recursion_depth,
-                p_max_via_recursion_depth,
+                pMaxRecursionDepth,
+                pMaxViaRecursionDepth,
                 false,
                 null)
             == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
-          p_board.setShoveFailingLayer(i);
+          pBoard.setShoveFailingLayer(i);
           return false;
         }
       }
 
-      if (p_trace_pen_halfwidth_arr != null
-          && i < p_trace_pen_halfwidth_arr.length
-          && p_trace_pen_halfwidth_arr[i] > 0
-          && p_location instanceof IntPoint tracePoint) {
-        Circle startTraceCircle = new Circle(tracePoint, p_trace_pen_halfwidth_arr[i]);
+      if (pTracePenHalfwidthArr != null
+          && i < pTracePenHalfwidthArr.length
+          && pTracePenHalfwidthArr[i] > 0
+          && pLocation instanceof IntPoint tracePoint) {
+        Circle startTraceCircle = new Circle(tracePoint, pTracePenHalfwidthArr[i]);
         TileShape startTraceShape;
-        if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+        if (pBoard.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
           startTraceShape = startTraceCircle.boundingBox();
         } else {
           startTraceShape = startTraceCircle.boundingOctagon();
@@ -218,16 +218,16 @@ public final class ForcedViaAlgo {
                 startTraceShape,
                 fromSide,
                 i,
-                p_net_no_arr,
-                p_trace_clearance_class_no,
+                pNetNoArr,
+                pTraceClearanceClassNo,
                 true,
                 null,
-                p_max_recursion_depth,
-                p_max_via_recursion_depth,
+                pMaxRecursionDepth,
+                pMaxViaRecursionDepth,
                 false,
                 null)
             == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
-          p_board.setShoveFailingLayer(i);
+          pBoard.setShoveFailingLayer(i);
           return false;
         }
       }
@@ -243,22 +243,22 @@ public final class ForcedViaAlgo {
    * the forced via failed.
    */
   public static boolean insert(
-      ViaInfo p_via_info,
-      Point p_location,
-      int[] p_net_no_arr,
-      int p_trace_clearance_class_no,
-      int[] p_trace_pen_halfwidth_arr,
-      int p_max_recursion_depth,
-      int p_max_via_recursion_depth,
-      RoutingBoard p_board) {
-    Vector translateVector = p_location.differenceBy(Point.ZERO);
-    int calcFromSideOffset = p_board.getMinTraceHalfWidth();
-    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(p_board);
-    Padstack viaPadstack = p_via_info.getPadstack();
-    Shape holeShape = holeCheckShape(viaPadstack, p_location, p_board);
+      ViaInfo pViaInfo,
+      Point pLocation,
+      int[] pNetNoArr,
+      int pTraceClearanceClassNo,
+      int[] pTracePenHalfwidthArr,
+      int pMaxRecursionDepth,
+      int pMaxViaRecursionDepth,
+      RoutingBoard pBoard) {
+    Vector translateVector = pLocation.differenceBy(Point.ZERO);
+    int calcFromSideOffset = pBoard.getMinTraceHalfWidth();
+    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(pBoard);
+    Padstack viaPadstack = pViaInfo.getPadstack();
+    Shape holeShape = holeCheckShape(viaPadstack, pLocation, pBoard);
     for (int i = viaPadstack.fromLayer(); i <= viaPadstack.toLayer(); i++) {
       Shape currPadShape = viaPadstack.getShape(i);
-      int currClearanceClass = p_via_info.getClearanceClass();
+      int currClearanceClass = pViaInfo.getClearanceClass();
       if (currPadShape == null) {
         if (holeShape == null) {
           continue;
@@ -270,13 +270,13 @@ public final class ForcedViaAlgo {
       }
       TileShape tileShape;
       Circle startTraceCircle;
-      if (p_trace_pen_halfwidth_arr[i] > 0 && p_location instanceof IntPoint point) {
-        startTraceCircle = new Circle(point, p_trace_pen_halfwidth_arr[i]);
+      if (pTracePenHalfwidthArr[i] > 0 && pLocation instanceof IntPoint point) {
+        startTraceCircle = new Circle(point, pTracePenHalfwidthArr[i]);
       } else {
         startTraceCircle = null;
       }
       TileShape startTraceShape = null;
-      if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+      if (pBoard.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
         tileShape = currPadShape.boundingBox();
         if (startTraceCircle != null) {
           startTraceShape = startTraceCircle.boundingBox();
@@ -289,23 +289,23 @@ public final class ForcedViaAlgo {
       }
       CalcFromSide fromSide =
           forcedPadAlgo.calcFromSide(
-              tileShape, p_location, i, calcFromSideOffset, currClearanceClass);
+              tileShape, pLocation, i, calcFromSideOffset, currClearanceClass);
       if (!forcedPadAlgo.forcedPad(
           tileShape,
           fromSide,
           i,
-          p_net_no_arr,
+          pNetNoArr,
           currClearanceClass,
-          p_via_info.attachSmdAllowed(),
+          pViaInfo.attachSmdAllowed(),
           null,
-          p_max_recursion_depth,
-          p_max_via_recursion_depth)) {
-        p_board.setShoveFailingLayer(i);
+          pMaxRecursionDepth,
+          pMaxViaRecursionDepth)) {
+        pBoard.setShoveFailingLayer(i);
         return false;
       }
       if (currClearanceClass != 0 && holeShape != null) {
         TileShape holeTile;
-        if (p_board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+        if (pBoard.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
           holeTile = holeShape.boundingBox();
         } else {
           holeTile = holeShape.boundingOctagon();
@@ -314,13 +314,13 @@ public final class ForcedViaAlgo {
             holeTile,
             fromSide,
             i,
-            p_net_no_arr,
+            pNetNoArr,
             0,
-            p_via_info.attachSmdAllowed(),
+            pViaInfo.attachSmdAllowed(),
             null,
-            p_max_recursion_depth,
-            p_max_via_recursion_depth)) {
-          p_board.setShoveFailingLayer(i);
+            pMaxRecursionDepth,
+            pMaxViaRecursionDepth)) {
+          pBoard.setShoveFailingLayer(i);
           return false;
         }
       }
@@ -330,24 +330,24 @@ public final class ForcedViaAlgo {
             startTraceShape,
             fromSide,
             i,
-            p_net_no_arr,
-            p_trace_clearance_class_no,
+            pNetNoArr,
+            pTraceClearanceClassNo,
             true,
             null,
-            p_max_recursion_depth,
-            p_max_via_recursion_depth)) {
-          p_board.setShoveFailingLayer(i);
+            pMaxRecursionDepth,
+            pMaxViaRecursionDepth)) {
+          pBoard.setShoveFailingLayer(i);
           return false;
         }
       }
     }
-    p_board.insertVia(
+    pBoard.insertVia(
         viaPadstack,
-        p_location,
-        p_net_no_arr,
-        p_via_info.getClearanceClass(),
+        pLocation,
+        pNetNoArr,
+        pViaInfo.getClearanceClass(),
         FixedState.UNFIXED,
-        p_via_info.attachSmdAllowed());
+        pViaInfo.attachSmdAllowed());
     return true;
   }
 
@@ -356,13 +356,12 @@ public final class ForcedViaAlgo {
    * passes through, so other copper must stay holeClearance away from it. Returns null when the
    * rule is off or no drill radius is known.
    */
-  private static Shape holeCheckShape(
-      Padstack p_padstack, Point p_location, RoutingBoard p_board) {
-    int holeClearance = p_board.rules.getHoleClearance();
-    if (holeClearance <= 0 || !(p_location instanceof IntPoint center)) {
+  private static Shape holeCheckShape(Padstack pPadstack, Point pLocation, RoutingBoard pBoard) {
+    int holeClearance = pBoard.rules.getHoleClearance();
+    if (holeClearance <= 0 || !(pLocation instanceof IntPoint center)) {
       return null;
     }
-    double drillRadius = p_padstack.getDrillRadius();
+    double drillRadius = pPadstack.getDrillRadius();
     if (drillRadius <= 0) {
       return null;
     }
@@ -372,39 +371,39 @@ public final class ForcedViaAlgo {
   }
 
   private static CalcFromSide calculateFromSide(
-      FloatPoint p_via_location,
-      TileShape p_via_shape,
-      Simplex p_room_shape,
-      double p_dist,
+      FloatPoint pViaLocation,
+      TileShape pViaShape,
+      Simplex pRoomShape,
+      double pDist,
       boolean is90Degree) {
-    IntBox viaBox = p_via_shape.boundingBox();
+    IntBox viaBox = pViaShape.boundingBox();
     for (int i = 0; i < 4; i++) {
       FloatPoint checkPoint;
       double borderX;
       double borderY;
       switch (i) {
         case 0 -> {
-          checkPoint = new FloatPoint(p_via_location.x, p_via_location.y - p_dist);
-          borderX = p_via_location.x;
+          checkPoint = new FloatPoint(pViaLocation.x, pViaLocation.y - pDist);
+          borderX = pViaLocation.x;
           borderY = viaBox.ll.y;
         }
         case 1 -> {
-          checkPoint = new FloatPoint(p_via_location.x + p_dist, p_via_location.y);
+          checkPoint = new FloatPoint(pViaLocation.x + pDist, pViaLocation.y);
           borderX = viaBox.ur.x;
-          borderY = p_via_location.y;
+          borderY = pViaLocation.y;
         }
         case 2 -> {
-          checkPoint = new FloatPoint(p_via_location.x, p_via_location.y + p_dist);
-          borderX = p_via_location.x;
+          checkPoint = new FloatPoint(pViaLocation.x, pViaLocation.y + pDist);
+          borderX = pViaLocation.x;
           borderY = viaBox.ur.y;
         }
         default -> { // i == 3
-          checkPoint = new FloatPoint(p_via_location.x - p_dist, p_via_location.y);
+          checkPoint = new FloatPoint(pViaLocation.x - pDist, pViaLocation.y);
           borderX = viaBox.ll.x;
-          borderY = p_via_location.y;
+          borderY = pViaLocation.y;
         }
       }
-      if (p_room_shape.contains(checkPoint)) {
+      if (pRoomShape.contains(checkPoint)) {
         int fromSideNo;
         if (is90Degree) {
           fromSideNo = i;
@@ -419,7 +418,7 @@ public final class ForcedViaAlgo {
       return null;
     }
     // try the diagonal directions
-    double dist = p_dist / Limits.sqrt2;
+    double dist = pDist / Limits.sqrt2;
     double borderDist = viaBox.maxWidth() / (2 * Limits.sqrt2);
     for (int i = 0; i < 4; i++) {
       FloatPoint checkPoint;
@@ -427,27 +426,27 @@ public final class ForcedViaAlgo {
       double borderY;
       switch (i) {
         case 0 -> {
-          checkPoint = new FloatPoint(p_via_location.x + dist, p_via_location.y - dist);
-          borderX = p_via_location.x + borderDist;
-          borderY = p_via_location.y - borderDist;
+          checkPoint = new FloatPoint(pViaLocation.x + dist, pViaLocation.y - dist);
+          borderX = pViaLocation.x + borderDist;
+          borderY = pViaLocation.y - borderDist;
         }
         case 1 -> {
-          checkPoint = new FloatPoint(p_via_location.x + dist, p_via_location.y + dist);
-          borderX = p_via_location.x + borderDist;
-          borderY = p_via_location.y + borderDist;
+          checkPoint = new FloatPoint(pViaLocation.x + dist, pViaLocation.y + dist);
+          borderX = pViaLocation.x + borderDist;
+          borderY = pViaLocation.y + borderDist;
         }
         case 2 -> {
-          checkPoint = new FloatPoint(p_via_location.x - dist, p_via_location.y + dist);
-          borderX = p_via_location.x - borderDist;
-          borderY = p_via_location.y + borderDist;
+          checkPoint = new FloatPoint(pViaLocation.x - dist, pViaLocation.y + dist);
+          borderX = pViaLocation.x - borderDist;
+          borderY = pViaLocation.y + borderDist;
         }
         default -> { // i == 3
-          checkPoint = new FloatPoint(p_via_location.x - dist, p_via_location.y - dist);
-          borderX = p_via_location.x - borderDist;
-          borderY = p_via_location.y - borderDist;
+          checkPoint = new FloatPoint(pViaLocation.x - dist, pViaLocation.y - dist);
+          borderX = pViaLocation.x - borderDist;
+          borderY = pViaLocation.y - borderDist;
         }
       }
-      if (p_room_shape.contains(checkPoint)) {
+      if (pRoomShape.contains(checkPoint)) {
 
         int fromSideNo = 2 * i + 1;
         FloatPoint currBorderPoint = new FloatPoint(borderX, borderY);

@@ -24,11 +24,11 @@ public class WindowAbout extends BoardSavableSubWindow {
   /**
    * Creates and initializes a new "About" dialog window.
    *
-   * @param p_locale the locale to determine the language of the displayed texts.
+   * @param pLocale the locale to determine the language of the displayed texts.
    * @param freeroutingVersion the version string of the Freerouting application.
    */
-  public WindowAbout(Locale p_locale, String freeroutingVersion) {
-    setLanguage(p_locale);
+  public WindowAbout(Locale pLocale, String freeroutingVersion) {
+    setLanguage(pLocale);
     this.setTitle(tm.getText("title"));
 
     // Initialize panel and layout in one step

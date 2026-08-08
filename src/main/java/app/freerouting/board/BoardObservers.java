@@ -8,5 +8,5 @@ import app.freerouting.datastructures.Observers;
 public interface BoardObservers extends Observers<Item> {
 
   /** Enable the observers to synchronize the moved component. */
-  void notifyMoved(Component p_component);
+  void notifyMoved(Component pComponent);
 }

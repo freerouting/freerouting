@@ -206,8 +206,7 @@ public final class SesWriter {
         if (swapCmp != null) {
           identifierType.write(swapCmp.name, file);
           file.write("-");
-          Package.Pin packagePin =
-              swapCmp.getPackage().getPin(swappedWith.getIndexInPackage());
+          Package.Pin packagePin = swapCmp.getPackage().getPin(swappedWith.getIndexInPackage());
           identifierType.write(packagePin.name, file);
         } else {
           FRLogger.warn("SesWriter.writeWasIs: component not found");

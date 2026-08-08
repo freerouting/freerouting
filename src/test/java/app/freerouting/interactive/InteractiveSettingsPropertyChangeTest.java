@@ -84,8 +84,7 @@ class InteractiveSettingsPropertyChangeTest {
   void setPushEnabledFiresPropertyChangeEvent() {
     settings.setPushEnabled(true);
     var events =
-        collectEvents(
-            InteractiveSettings.PROP_PUSH_ENABLED, () -> settings.setPushEnabled(false));
+        collectEvents(InteractiveSettings.PROP_PUSH_ENABLED, () -> settings.setPushEnabled(false));
 
     assertEquals(1, events.size());
     assertEquals(true, events.get(0).getOldValue());

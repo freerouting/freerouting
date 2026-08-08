@@ -43,9 +43,9 @@ public class BoardOutline extends Item implements Serializable {
 
   /** Creates a new instance of BoardOutline */
   public BoardOutline(
-      PolylineShape[] p_shapes, int p_clearance_class_no, int p_id_no, BasicBoard p_board) {
-    super(new int[0], p_clearance_class_no, p_id_no, 0, FixedState.SYSTEM_FIXED, p_board);
-    shapes = p_shapes;
+      PolylineShape[] pShapes, int pClearanceClassNo, int pIdNo, BasicBoard pBoard) {
+    super(new int[0], pClearanceClassNo, pIdNo, 0, FixedState.SYSTEM_FIXED, pBoard);
+    shapes = pShapes;
   }
 
   @Override
@@ -66,11 +66,11 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   @Override
-  public int shapeLayer(int p_index) {
+  public int shapeLayer(int pIndex) {
     int shapeCount = this.tileShapeCount();
     int result;
     if (shapeCount > 0) {
-      result = p_index * this.board.layerStructure.arr.length / shapeCount;
+      result = pIndex * this.board.layerStructure.arr.length / shapeCount;
     } else {
       result = 0;
     }
@@ -81,8 +81,8 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   @Override
-  public boolean isObstacle(Item p_other) {
-    return !(p_other instanceof BoardOutline || p_other instanceof ObstacleArea);
+  public boolean isObstacle(Item pOther) {
+    return !(pOther instanceof BoardOutline || pOther instanceof ObstacleArea);
   }
 
   @Override
@@ -105,57 +105,57 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   @Override
-  public boolean isOnLayer(int p_layer) {
+  public boolean isOnLayer(int pLayer) {
     return true;
   }
 
   @Override
-  public void translateBy(Vector p_vector) {
+  public void translateBy(Vector pVector) {
     for (PolylineShape currShape : this.shapes) {
-      currShape = currShape.translateBy(p_vector);
+      currShape = currShape.translateBy(pVector);
     }
     if (keepoutArea != null) {
-      keepoutArea = keepoutArea.translateBy(p_vector);
+      keepoutArea = keepoutArea.translateBy(pVector);
     }
     keepoutLines = null;
   }
 
   @Override
-  public void turn90Degree(int p_factor, IntPoint p_pole) {
+  public void turn90Degree(int pFactor, IntPoint pPole) {
     for (PolylineShape currShape : this.shapes) {
-      currShape = currShape.turn90Degree(p_factor, p_pole);
+      currShape = currShape.turn90Degree(pFactor, pPole);
     }
     if (keepoutArea != null) {
-      keepoutArea = keepoutArea.turn90Degree(p_factor, p_pole);
+      keepoutArea = keepoutArea.turn90Degree(pFactor, pPole);
     }
     keepoutLines = null;
   }
 
   @Override
-  public void rotateApprox(double p_angle_in_degree, FloatPoint p_pole) {
-    double angle = Math.toRadians(p_angle_in_degree);
+  public void rotateApprox(double pAngleInDegree, FloatPoint pPole) {
+    double angle = Math.toRadians(pAngleInDegree);
     for (PolylineShape currShape : this.shapes) {
-      currShape = currShape.rotateApprox(angle, p_pole);
+      currShape = currShape.rotateApprox(angle, pPole);
     }
     if (keepoutArea != null) {
-      keepoutArea = keepoutArea.rotateApprox(angle, p_pole);
+      keepoutArea = keepoutArea.rotateApprox(angle, pPole);
     }
     keepoutLines = null;
   }
 
   @Override
-  public void changePlacementSide(IntPoint p_pole) {
+  public void changePlacementSide(IntPoint pPole) {
     for (PolylineShape currShape : this.shapes) {
-      currShape = currShape.mirrorVertical(p_pole);
+      currShape = currShape.mirrorVertical(pPole);
     }
     if (keepoutArea != null) {
-      keepoutArea = keepoutArea.mirrorVertical(p_pole);
+      keepoutArea = keepoutArea.mirrorVertical(pPole);
     }
     keepoutLines = null;
   }
 
   @Override
-  public double getDrawIntensity(GraphicsContext p_graphics_context) {
+  public double getDrawIntensity(GraphicsContext pGraphicsContext) {
     return 1;
   }
 
@@ -168,26 +168,26 @@ public class BoardOutline extends Item implements Serializable {
     return this.shapes.length;
   }
 
-  public PolylineShape getShape(int p_index) {
-    if (p_index < 0 || p_index >= this.shapes.length) {
+  public PolylineShape getShape(int pIndex) {
+    if (pIndex < 0 || pIndex >= this.shapes.length) {
       FRLogger.warn("BoardOutline.get_shape: p_index out of range");
       return null;
     }
-    return this.shapes[p_index];
+    return this.shapes[pIndex];
   }
 
   @Override
-  public boolean isSelectedByFilter(ItemSelectionFilter p_filter) {
-    if (!this.isSelectedByFixedFilter(p_filter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter pFilter) {
+    if (!this.isSelectedByFixedFilter(pFilter)) {
       return false;
     }
-    return p_filter.isSelected(ItemSelectionFilter.SelectableChoices.BOARD_OUTLINE);
+    return pFilter.isSelected(ItemSelectionFilter.SelectableChoices.BOARD_OUTLINE);
   }
 
   @Override
-  public Color[] getDrawColors(GraphicsContext p_graphics_context) {
+  public Color[] getDrawColors(GraphicsContext pGraphicsContext) {
     Color[] colorArr = new Color[this.board.layerStructure.arr.length];
-    Color drawColor = p_graphics_context.getOutlineColor();
+    Color drawColor = pGraphicsContext.getOutlineColor();
     Arrays.fill(colorArr, drawColor);
     return colorArr;
   }
@@ -213,8 +213,8 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void draw(
-      Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
-    if (p_graphics_context == null || p_intensity <= 0) {
+      Graphics pG, GraphicsContext pGraphicsContext, Color[] pColorArr, double pIntensity) {
+    if (pGraphicsContext == null || pIntensity <= 0) {
       return;
     }
     for (PolylineShape currShape : this.shapes) {
@@ -222,27 +222,27 @@ public class BoardOutline extends Item implements Serializable {
       FloatPoint[] closedDrawCorners = new FloatPoint[drawCorners.length + 1];
       System.arraycopy(drawCorners, 0, closedDrawCorners, 0, drawCorners.length);
       closedDrawCorners[closedDrawCorners.length - 1] = drawCorners[0];
-      p_graphics_context.draw(closedDrawCorners, HALF_WIDTH, p_color_arr[0], p_g, p_intensity);
+      pGraphicsContext.draw(closedDrawCorners, HALF_WIDTH, pColorArr[0], pG, pIntensity);
     }
   }
 
   @Override
-  public Item copy(int p_id_no) {
-    return new BoardOutline(this.shapes, this.clearanceClassNo(), p_id_no, this.board);
+  public Item copy(int pIdNo) {
+    return new BoardOutline(this.shapes, this.clearanceClassNo(), pIdNo, this.board);
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
-    p_window.appendBold(tm.getText("boardOutline"));
-    printClearanceInfo(p_window, p_locale);
-    p_window.newline();
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
+    pWindow.appendBold(tm.getText("boardOutline"));
+    printClearanceInfo(pWindow, pLocale);
+    pWindow.newline();
   }
 
   @Override
-  public boolean write(ObjectOutputStream p_stream) {
+  public boolean write(ObjectOutputStream pStream) {
     try {
-      p_stream.writeObject(this);
+      pStream.writeObject(this);
     } catch (IOException _) {
       return false;
     }
@@ -261,11 +261,11 @@ public class BoardOutline extends Item implements Serializable {
    * Makes the area outside this Outline to Keepout, if p_value = true. Reinserts this Outline into
    * the search trees, if the value changes.
    */
-  public void generateKeepoutOutside(boolean p_value) {
-    if (p_value == keepoutOutsideOutline) {
+  public void generateKeepoutOutside(boolean pValue) {
+    if (pValue == keepoutOutsideOutline) {
       return;
     }
-    keepoutOutsideOutline = p_value;
+    keepoutOutsideOutline = pValue;
     if (this.board == null || this.board.searchTreeManager == null) {
       return;
     }
@@ -288,7 +288,7 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   @Override
-  protected TileShape[] calculateTreeShapes(ShapeSearchTree p_search_tree) {
-    return p_search_tree.calculateTreeShapes(this);
+  protected TileShape[] calculateTreeShapes(ShapeSearchTree pSearchTree) {
+    return pSearchTree.calculateTreeShapes(this);
   }
 }

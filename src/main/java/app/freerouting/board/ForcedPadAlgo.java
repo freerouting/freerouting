@@ -24,19 +24,19 @@ public class ForcedPadAlgo {
   private final RoutingBoard board;
 
   /** Creates a new instance of ForcedPadAlgo */
-  public ForcedPadAlgo(RoutingBoard p_board) {
-    board = p_board;
+  public ForcedPadAlgo(RoutingBoard pBoard) {
+    board = pBoard;
   }
 
   private static TileShape calcCheckShapeForFromSide(
-      TileShape p_shape, Point p_shape_center, Line p_border_line) {
-    FloatPoint shapeCenter = p_shape_center.toFloat();
-    FloatPoint offsetProjection = shapeCenter.projectionApprox(p_border_line);
+      TileShape pShape, Point pShapeCenter, Line pBorderLine) {
+    FloatPoint shapeCenter = pShapeCenter.toFloat();
+    FloatPoint offsetProjection = shapeCenter.projectionApprox(pBorderLine);
     // Make sure, that direction restrictions are retained.
     Line[] lineArr = new Line[3];
-    Direction currDir = p_border_line.direction();
-    lineArr[0] = new Line(p_shape_center, currDir);
-    lineArr[1] = new Line(p_shape_center, currDir.turn45Degree(2));
+    Direction currDir = pBorderLine.direction();
+    lineArr[0] = new Line(pShapeCenter, currDir);
+    lineArr[1] = new Line(pShapeCenter, currDir.turn45Degree(2));
     lineArr[2] = new Line(offsetProjection.round(), currDir);
     Polyline checkLine = new Polyline(lineArr);
     return checkLine.offsetShape(1, 0);
@@ -44,149 +44,149 @@ public class ForcedPadAlgo {
 
   /** Checks, if p_line is in front of p_pad_shape when shoving from p_from_side */
   private static boolean inFrontOfPad(
-      Line p_line, TileShape p_pad_shape, int p_from_side, int p_width, boolean p_with_sides) {
-    if (!p_pad_shape.isIntOctagon()) {
+      Line pLine, TileShape pPadShape, int pFromSide, int pWidth, boolean pWithSides) {
+    if (!pPadShape.isIntOctagon()) {
       // only implemented for octagons
       return true;
     }
-    IntOctagon padOctagon = p_pad_shape.boundingOctagon();
-    if (!(p_line.a instanceof IntPoint lineA && p_line.b instanceof IntPoint line_b)) {
+    IntOctagon padOctagon = pPadShape.boundingOctagon();
+    if (!(pLine.a instanceof IntPoint lineA && pLine.b instanceof IntPoint line_b)) {
       // not implemented
       return true;
     }
 
-    double diagWidth = p_width * Math.sqrt(2);
+    double diagWidth = pWidth * Math.sqrt(2);
 
     boolean result;
-    switch (p_from_side) {
+    switch (pFromSide) {
       case 0 -> {
         result =
-            Math.min(lineA.y, line_b.y) >= padOctagon.topY + p_width
+            Math.min(lineA.y, line_b.y) >= padOctagon.topY + pWidth
                 || Math.max(lineA.x - lineA.y, line_b.x - line_b.y)
                     <= padOctagon.upperLeftDiagonalX - diagWidth
                 || Math.min(lineA.x + lineA.y, line_b.x + line_b.x)
                     >= padOctagon.upperRightDiagonalX + diagWidth;
-        if (p_with_sides && !result) {
+        if (pWithSides && !result) {
           result =
-              Math.max(lineA.x, line_b.x) <= padOctagon.leftX - p_width
+              Math.max(lineA.x, line_b.x) <= padOctagon.leftX - pWidth
                       && Math.min(lineA.x - lineA.y, line_b.x - line_b.y)
                           <= padOctagon.upperLeftDiagonalX - diagWidth
-                  || Math.min(lineA.x, line_b.x) >= padOctagon.rightX + p_width
+                  || Math.min(lineA.x, line_b.x) >= padOctagon.rightX + pWidth
                       && Math.min(lineA.x + lineA.y, line_b.x + line_b.y)
                           >= padOctagon.upperRightDiagonalX + diagWidth;
         }
       }
       case 1 -> {
         result =
-            Math.min(lineA.y, line_b.y) >= padOctagon.topY + p_width
+            Math.min(lineA.y, line_b.y) >= padOctagon.topY + pWidth
                 || Math.max(lineA.x - lineA.y, line_b.x - line_b.y)
                     <= padOctagon.upperLeftDiagonalX - diagWidth
-                || Math.max(lineA.x, line_b.x) <= padOctagon.leftX - p_width;
-        if (p_with_sides && !result) {
+                || Math.max(lineA.x, line_b.x) <= padOctagon.leftX - pWidth;
+        if (pWithSides && !result) {
           result =
-              Math.min(lineA.x, line_b.x) <= padOctagon.leftX - p_width
+              Math.min(lineA.x, line_b.x) <= padOctagon.leftX - pWidth
                       && Math.max(lineA.x + lineA.y, line_b.x + line_b.y)
                           <= padOctagon.lowerLeftDiagonalX - diagWidth
-                  || Math.max(lineA.y, line_b.y) >= padOctagon.topY + p_width
+                  || Math.max(lineA.y, line_b.y) >= padOctagon.topY + pWidth
                       && Math.min(lineA.x + lineA.y, line_b.x + line_b.y)
                           >= padOctagon.upperRightDiagonalX + diagWidth;
         }
       }
       case 2 -> {
         result =
-            Math.max(lineA.x, line_b.x) <= padOctagon.leftX - p_width
+            Math.max(lineA.x, line_b.x) <= padOctagon.leftX - pWidth
                 || Math.max(lineA.x - lineA.y, line_b.x - line_b.y)
                     <= padOctagon.upperLeftDiagonalX - diagWidth
                 || Math.max(lineA.x + lineA.y, line_b.x + line_b.y)
                     <= padOctagon.lowerLeftDiagonalX - diagWidth;
-        if (p_with_sides && !result) {
+        if (pWithSides && !result) {
           result =
-              Math.max(lineA.y, line_b.y) <= padOctagon.bottomY - p_width
+              Math.max(lineA.y, line_b.y) <= padOctagon.bottomY - pWidth
                       && Math.min(lineA.x + lineA.y, line_b.x + line_b.y)
                           <= padOctagon.lowerLeftDiagonalX - diagWidth
-                  || Math.min(lineA.y, line_b.y) >= padOctagon.topY + p_width
+                  || Math.min(lineA.y, line_b.y) >= padOctagon.topY + pWidth
                       && Math.min(lineA.x - lineA.y, line_b.x - line_b.y)
                           <= padOctagon.upperLeftDiagonalX - diagWidth;
         }
       }
       case 3 -> {
         result =
-            Math.max(lineA.x, line_b.x) <= padOctagon.leftX - p_width
-                || Math.max(lineA.y, line_b.y) <= padOctagon.bottomY - p_width
+            Math.max(lineA.x, line_b.x) <= padOctagon.leftX - pWidth
+                || Math.max(lineA.y, line_b.y) <= padOctagon.bottomY - pWidth
                 || Math.max(lineA.x + lineA.y, line_b.x + line_b.y)
                     <= padOctagon.lowerLeftDiagonalX - diagWidth;
-        if (p_with_sides && !result) {
+        if (pWithSides && !result) {
           result =
-              Math.min(lineA.y, line_b.y) <= padOctagon.bottomY - p_width
+              Math.min(lineA.y, line_b.y) <= padOctagon.bottomY - pWidth
                       && Math.min(lineA.x - lineA.y, line_b.x - line_b.y)
                           >= padOctagon.lowerRightDiagonalX + diagWidth
-                  || Math.min(lineA.x, line_b.x) <= padOctagon.leftX - p_width
+                  || Math.min(lineA.x, line_b.x) <= padOctagon.leftX - pWidth
                       && Math.max(lineA.x - lineA.y, line_b.x - line_b.y)
                           <= padOctagon.upperLeftDiagonalX - diagWidth;
         }
       }
       case 4 -> {
         result =
-            Math.max(lineA.y, line_b.y) <= padOctagon.bottomY - p_width
+            Math.max(lineA.y, line_b.y) <= padOctagon.bottomY - pWidth
                 || Math.max(lineA.x + lineA.y, line_b.x + line_b.y)
                     <= padOctagon.lowerLeftDiagonalX - diagWidth
                 || Math.min(lineA.x - lineA.y, line_b.x - line_b.y)
                     >= padOctagon.lowerRightDiagonalX + diagWidth;
-        if (p_with_sides && !result) {
+        if (pWithSides && !result) {
           result =
-              Math.min(lineA.x, line_b.x) >= padOctagon.rightX + p_width
+              Math.min(lineA.x, line_b.x) >= padOctagon.rightX + pWidth
                       && Math.max(lineA.x - lineA.y, line_b.x - line_b.y)
                           >= padOctagon.lowerRightDiagonalX + diagWidth
-                  || Math.max(lineA.x, line_b.x) <= padOctagon.leftX - p_width
+                  || Math.max(lineA.x, line_b.x) <= padOctagon.leftX - pWidth
                       && Math.min(lineA.x + lineA.y, line_b.x + line_b.y)
                           <= padOctagon.lowerLeftDiagonalX - diagWidth;
         }
       }
       case 5 -> {
         result =
-            Math.max(lineA.y, line_b.y) <= padOctagon.bottomY - p_width
-                || Math.min(lineA.x, line_b.x) >= padOctagon.rightX + p_width
+            Math.max(lineA.y, line_b.y) <= padOctagon.bottomY - pWidth
+                || Math.min(lineA.x, line_b.x) >= padOctagon.rightX + pWidth
                 || Math.min(lineA.x - lineA.y, line_b.x - line_b.y)
                     >= padOctagon.lowerRightDiagonalX + diagWidth;
-        if (p_with_sides && !result) {
+        if (pWithSides && !result) {
           result =
-              Math.max(lineA.x, line_b.x) >= padOctagon.rightX + p_width
+              Math.max(lineA.x, line_b.x) >= padOctagon.rightX + pWidth
                       && Math.min(lineA.x + lineA.y, line_b.x + line_b.y)
                           >= padOctagon.upperRightDiagonalX + diagWidth
-                  || Math.min(lineA.y, line_b.y) <= padOctagon.bottomY - p_width
+                  || Math.min(lineA.y, line_b.y) <= padOctagon.bottomY - pWidth
                       && Math.max(lineA.x + lineA.y, line_b.x + line_b.y)
                           <= padOctagon.lowerLeftDiagonalX - diagWidth;
         }
       }
       case 6 -> {
         result =
-            Math.min(lineA.x, line_b.x) >= padOctagon.rightX + p_width
+            Math.min(lineA.x, line_b.x) >= padOctagon.rightX + pWidth
                 || Math.min(lineA.x + lineA.y, line_b.x + line_b.y)
                     >= padOctagon.upperRightDiagonalX + diagWidth
                 || Math.min(lineA.x - lineA.y, line_b.x - line_b.y)
                     >= padOctagon.lowerRightDiagonalX + diagWidth;
-        if (p_with_sides && !result) {
+        if (pWithSides && !result) {
           result =
-              Math.max(lineA.y, line_b.y) <= padOctagon.bottomY - p_width
+              Math.max(lineA.y, line_b.y) <= padOctagon.bottomY - pWidth
                       && Math.max(lineA.x - lineA.y, line_b.x - line_b.y)
                           >= padOctagon.lowerRightDiagonalX + diagWidth
-                  || Math.min(lineA.y, line_b.y) >= padOctagon.topY + p_width
+                  || Math.min(lineA.y, line_b.y) >= padOctagon.topY + pWidth
                       && Math.max(lineA.x + lineA.y, line_b.x + line_b.y)
                           >= padOctagon.upperRightDiagonalX + diagWidth;
         }
       }
       case 7 -> {
         result =
-            Math.min(lineA.y, line_b.y) >= padOctagon.topY + p_width
+            Math.min(lineA.y, line_b.y) >= padOctagon.topY + pWidth
                 || Math.min(lineA.x + lineA.y, line_b.x + line_b.y)
                     >= padOctagon.upperRightDiagonalX + diagWidth
-                || Math.min(lineA.x, line_b.x) >= padOctagon.rightX + p_width;
-        if (p_with_sides && !result) {
+                || Math.min(lineA.x, line_b.x) >= padOctagon.rightX + pWidth;
+        if (pWithSides && !result) {
           result =
-              Math.max(lineA.y, line_b.y) >= padOctagon.topY + p_width
+              Math.max(lineA.y, line_b.y) >= padOctagon.topY + pWidth
                       && Math.max(lineA.x - lineA.y, line_b.x - line_b.y)
                           <= padOctagon.upperLeftDiagonalX - diagWidth
-                  || Math.max(lineA.x, line_b.x) >= padOctagon.rightX + p_width
+                  || Math.max(lineA.x, line_b.x) >= padOctagon.rightX + pWidth
                       && Math.min(lineA.x - lineA.y, line_b.x - line_b.y)
                           >= padOctagon.lowerRightDiagonalX + diagWidth;
         }
@@ -208,31 +208,31 @@ public class ForcedPadAlgo {
    * cave when moving drill_items
    */
   public CheckDrillResult checkForcedPad(
-      TileShape p_pad_shape,
-      CalcFromSide p_from_side,
-      int p_layer,
-      int[] p_net_no_arr,
-      int p_cl_type,
-      boolean p_copper_sharing_allowed,
-      Collection<Item> p_ignore_items,
-      int p_max_recursion_depth,
-      int p_max_via_recursion_depth,
-      boolean p_check_only_front,
-      TimeLimit p_time_limit) {
-    if (!p_pad_shape.isContainedIn(board.getBoundingBox())) {
+      TileShape pPadShape,
+      CalcFromSide pFromSide,
+      int pLayer,
+      int[] pNetNoArr,
+      int pClType,
+      boolean pCopperSharingAllowed,
+      Collection<Item> pIgnoreItems,
+      int pMaxRecursionDepth,
+      int pMaxViaRecursionDepth,
+      boolean pCheckOnlyFront,
+      TimeLimit pTimeLimit) {
+    if (!pPadShape.isContainedIn(board.getBoundingBox())) {
       this.board.setShoveFailingObstacle(board.getOutline());
       return CheckDrillResult.NOT_DRILLABLE;
     }
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, board);
+        new ShapeTraceEntries(pPadShape, pLayer, pNetNoArr, pClType, pFromSide, board);
     Collection<Item> obstacles =
-        searchTree.overlappingItemsWithClearance(p_pad_shape, p_layer, new int[0], p_cl_type);
+        searchTree.overlappingItemsWithClearance(pPadShape, pLayer, new int[0], pClType);
 
-    if (p_ignore_items != null) {
-      obstacles.removeAll(p_ignore_items);
+    if (pIgnoreItems != null) {
+      obstacles.removeAll(pIgnoreItems);
     }
-    boolean obstaclesShovable = shapeEntries.storeItems(obstacles, true, p_copper_sharing_allowed);
+    boolean obstaclesShovable = shapeEntries.storeItems(obstacles, true, pCopperSharingAllowed);
     if (!obstaclesShovable) {
       this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
       return CheckDrillResult.NOT_DRILLABLE;
@@ -240,36 +240,36 @@ public class ForcedPadAlgo {
 
     // check, if the obstacle vias can be shoved
 
-    for (Via curr_shove_via : shapeEntries.shoveViaList) {
-      if (p_max_via_recursion_depth <= 0) {
-        this.board.setShoveFailingObstacle(curr_shove_via);
+    for (Via currShoveVia : shapeEntries.shoveViaList) {
+      if (pMaxViaRecursionDepth <= 0) {
+        this.board.setShoveFailingObstacle(currShoveVia);
         return CheckDrillResult.NOT_DRILLABLE;
       }
       IntPoint[] newViaCenter =
           MoveDrillItemAlgo.tryShoveViaPoints(
-              p_pad_shape, p_layer, curr_shove_via, p_cl_type, false, board);
+              pPadShape, pLayer, currShoveVia, pClType, false, board);
 
       if (newViaCenter.length == 0) {
-        this.board.setShoveFailingObstacle(curr_shove_via);
+        this.board.setShoveFailingObstacle(currShoveVia);
         return CheckDrillResult.NOT_DRILLABLE;
       }
-      Vector delta = newViaCenter[0].differenceBy(curr_shove_via.getCenter());
+      Vector delta = newViaCenter[0].differenceBy(currShoveVia.getCenter());
       Collection<Item> ignoreItems = new LinkedList<>();
       if (!MoveDrillItemAlgo.check(
-          curr_shove_via,
+          currShoveVia,
           delta,
-          p_max_recursion_depth,
-          p_max_via_recursion_depth - 1,
+          pMaxRecursionDepth,
+          pMaxViaRecursionDepth - 1,
           ignoreItems,
           this.board,
-          p_time_limit)) {
+          pTimeLimit)) {
         return CheckDrillResult.NOT_DRILLABLE;
       }
     }
     CheckDrillResult result = CheckDrillResult.DRILLABLE;
-    if (p_copper_sharing_allowed) {
-      for (Item curr_obstacle : obstacles) {
-        if (curr_obstacle instanceof Pin) {
+    if (pCopperSharingAllowed) {
+      for (Item currObstacle : obstacles) {
+        if (currObstacle instanceof Pin) {
           result = CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD;
           break;
         }
@@ -279,7 +279,7 @@ public class ForcedPadAlgo {
     if (tracePieceCount == 0) {
       return result;
     }
-    if (p_max_recursion_depth <= 0) {
+    if (pMaxRecursionDepth <= 0) {
       this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
       return CheckDrillResult.NOT_DRILLABLE;
     }
@@ -288,7 +288,7 @@ public class ForcedPadAlgo {
       return CheckDrillResult.NOT_DRILLABLE;
     }
     ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(board);
-    boolean isOrthogonalMode = p_pad_shape instanceof IntBox;
+    boolean isOrthogonalMode = pPadShape instanceof IntBox;
     for (; ; ) {
       PolylineTrace currSubstituteTrace = shapeEntries.nextSubstituteTracePiece();
       if (currSubstituteTrace == null) {
@@ -298,14 +298,10 @@ public class ForcedPadAlgo {
         Line currLine = currSubstituteTrace.polyline().arr[i + 1];
         Direction currDir = currLine.direction();
         boolean isInFront;
-        if (p_check_only_front) {
+        if (pCheckOnlyFront) {
           isInFront =
               inFrontOfPad(
-                  currLine,
-                  p_pad_shape,
-                  p_from_side.no,
-                  currSubstituteTrace.getHalfWidth(),
-                  true);
+                  currLine, pPadShape, pFromSide.no, currSubstituteTrace.getHalfWidth(), true);
         } else {
           isInFront = true;
         }
@@ -316,13 +312,13 @@ public class ForcedPadAlgo {
               curr.shape,
               curr.fromSide,
               currDir,
-              p_layer,
+              pLayer,
               currSubstituteTrace.netNoArr,
               currSubstituteTrace.clearanceClassNo(),
-              p_max_recursion_depth - 1,
-              p_max_via_recursion_depth,
+              pMaxRecursionDepth - 1,
+              pMaxViaRecursionDepth,
               0,
-              p_time_limit)) {
+              pTimeLimit)) {
             return CheckDrillResult.NOT_DRILLABLE;
           }
         }
@@ -337,46 +333,46 @@ public class ForcedPadAlgo {
    * that an undo becomes necessary.
    */
   boolean forcedPad(
-      TileShape p_pad_shape,
-      CalcFromSide p_from_side,
-      int p_layer,
-      int[] p_net_no_arr,
-      int p_cl_type,
-      boolean p_copper_sharing_allowed,
-      Collection<Item> p_ignore_items,
-      int p_max_recursion_depth,
-      int p_max_via_recursion_depth) {
-    if (p_pad_shape.isEmpty()) {
+      TileShape pPadShape,
+      CalcFromSide pFromSide,
+      int pLayer,
+      int[] pNetNoArr,
+      int pClType,
+      boolean pCopperSharingAllowed,
+      Collection<Item> pIgnoreItems,
+      int pMaxRecursionDepth,
+      int pMaxViaRecursionDepth) {
+    if (pPadShape.isEmpty()) {
       FRLogger.warn("ShoveTraceAux.forced_pad: p_pad_shape is empty");
       return true;
     }
-    if (!p_pad_shape.isContainedIn(board.getBoundingBox())) {
+    if (!pPadShape.isContainedIn(board.getBoundingBox())) {
       this.board.setShoveFailingObstacle(board.getOutline());
       return false;
     }
     if (!MoveDrillItemAlgo.shoveVias(
-        p_pad_shape,
-        p_from_side,
-        p_layer,
-        p_net_no_arr,
-        p_cl_type,
-        p_ignore_items,
-        p_max_recursion_depth,
-        p_max_via_recursion_depth,
+        pPadShape,
+        pFromSide,
+        pLayer,
+        pNetNoArr,
+        pClType,
+        pIgnoreItems,
+        pMaxRecursionDepth,
+        pMaxViaRecursionDepth,
         false,
         this.board)) {
       return false;
     }
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, board);
+        new ShapeTraceEntries(pPadShape, pLayer, pNetNoArr, pClType, pFromSide, board);
     Collection<Item> obstacles =
-        searchTree.overlappingItemsWithClearance(p_pad_shape, p_layer, new int[0], p_cl_type);
-    if (p_ignore_items != null) {
-      obstacles.removeAll(p_ignore_items);
+        searchTree.overlappingItemsWithClearance(pPadShape, pLayer, new int[0], pClType);
+    if (pIgnoreItems != null) {
+      obstacles.removeAll(pIgnoreItems);
     }
     boolean obstaclesShovable =
-        shapeEntries.storeItems(obstacles, true, p_copper_sharing_allowed)
+        shapeEntries.storeItems(obstacles, true, pCopperSharingAllowed)
             && shapeEntries.shoveViaList.isEmpty();
     if (!obstaclesShovable) {
       this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
@@ -386,13 +382,13 @@ public class ForcedPadAlgo {
     if (tracePieceCount == 0) {
       return true;
     }
-    if (p_max_recursion_depth <= 0) {
+    if (pMaxRecursionDepth <= 0) {
       this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
       return false;
     }
-    boolean tailsExistBefore = board.containsTraceTails(obstacles, p_net_no_arr);
+    boolean tailsExistBefore = board.containsTraceTails(obstacles, pNetNoArr);
     shapeEntries.cutoutTraces(obstacles);
-    boolean isOrthogonalMode = p_pad_shape instanceof IntBox;
+    boolean isOrthogonalMode = pPadShape instanceof IntBox;
     ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(this.board);
     for (; ; ) {
       PolylineTrace currSubstituteTrace = shapeEntries.nextSubstituteTracePiece();
@@ -409,18 +405,18 @@ public class ForcedPadAlgo {
         if (!shoveTraceAlgo.insert(
             curr.shape,
             curr.fromSide,
-            p_layer,
+            pLayer,
             currNetNoArr,
             currSubstituteTrace.clearanceClassNo(),
-            p_ignore_items,
-            p_max_recursion_depth - 1,
-            p_max_via_recursion_depth,
+            pIgnoreItems,
+            pMaxRecursionDepth - 1,
+            pMaxViaRecursionDepth,
             0)) {
           return false;
         }
       }
       for (int i = 0; i < currSubstituteTrace.cornerCount(); i++) {
-        board.joinChangedArea(currSubstituteTrace.polyline().cornerApprox(i), p_layer);
+        board.joinChangedArea(currSubstituteTrace.polyline().cornerApprox(i), pLayer);
       }
       Point[] endCorners = null;
       if (!tailsExistBefore) {
@@ -431,7 +427,7 @@ public class ForcedPadAlgo {
       board.insertItem(currSubstituteTrace);
       IntOctagon optArea;
       if (board.changedArea != null) {
-        optArea = board.changedArea.getArea(p_layer);
+        optArea = board.changedArea.getArea(pLayer);
       } else {
         optArea = null;
       }
@@ -444,7 +440,7 @@ public class ForcedPadAlgo {
 
       if (!tailsExistBefore) {
         for (int i = 0; i < 2; i++) {
-          Trace tail = board.getTraceTail(endCorners[i], p_layer, currNetNoArr);
+          Trace tail = board.getTraceTail(endCorners[i], pLayer, currNetNoArr);
           if (tail != null) {
             board.removeItems(tail.getConnectionItems(Item.StopConnectionOption.VIA));
             for (int currNetNo : currNetNoArr) {
@@ -462,22 +458,22 @@ public class ForcedPadAlgo {
    * this side does not conflict with any obstacles.
    */
   CalcFromSide calcFromSide(
-      TileShape p_shape, Point p_shape_center, int p_layer, int p_offset, int p_cl_class) {
+      TileShape pShape, Point pShapeCenter, int pLayer, int pOffset, int pClClass) {
     int[] emptyArr = new int[0];
-    TileShape offsetShape = (TileShape) p_shape.offset(p_offset);
+    TileShape offsetShape = (TileShape) pShape.offset(pOffset);
     for (int i = 0; i < offsetShape.borderLineCount(); i++) {
       TileShape checkShape =
-          calcCheckShapeForFromSide(p_shape, p_shape_center, offsetShape.borderLine(i));
+          calcCheckShapeForFromSide(pShape, pShapeCenter, offsetShape.borderLine(i));
 
-      if (board.checkTraceShape(checkShape, p_layer, emptyArr, p_cl_class, null)) {
+      if (board.checkTraceShape(checkShape, pLayer, emptyArr, pClClass, null)) {
         return new CalcFromSide(i, null);
       }
     }
     // try second check without clearance
     for (int i = 0; i < offsetShape.borderLineCount(); i++) {
       TileShape checkShape =
-          calcCheckShapeForFromSide(p_shape, p_shape_center, offsetShape.borderLine(i));
-      if (board.checkTraceShape(checkShape, p_layer, emptyArr, 0, null)) {
+          calcCheckShapeForFromSide(pShape, pShapeCenter, offsetShape.borderLine(i));
+      if (board.checkTraceShape(checkShape, pLayer, emptyArr, 0, null)) {
         return new CalcFromSide(i, null);
       }
     }

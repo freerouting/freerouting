@@ -10,9 +10,9 @@ import javax.swing.JMenuItem;
 public class PopupMenuMove extends PopupMenuDisplay {
 
   /** Creates a new instance of PopupMenuMove */
-  public PopupMenuMove(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+  public PopupMenuMove(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
+    TextManager tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
 
     // Add menu for turning the items by a multiple of 90 degree
 
@@ -71,8 +71,7 @@ public class PopupMenuMove extends PopupMenuDisplay {
 
     JMenuItem popupChangeSideMenuitem = new JMenuItem();
     popupChangeSideMenuitem.setText(tm.getText("change_side"));
-    popupChangeSideMenuitem.addActionListener(
-        _ -> boardPanel.boardHandling.changePlacementSide());
+    popupChangeSideMenuitem.addActionListener(_ -> boardPanel.boardHandling.changePlacementSide());
     popupChangeSideMenuitem.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
@@ -113,8 +112,8 @@ public class PopupMenuMove extends PopupMenuDisplay {
     this.add(popupCancelMenuitem, 4);
   }
 
-  private void turn45Degree(int p_factor) {
-    boardPanel.boardHandling.turn45Degree(p_factor);
+  private void turn45Degree(int pFactor) {
+    boardPanel.boardHandling.turn45Degree(pFactor);
     boardPanel.moveMouse(boardPanel.rightButtonClickLocation);
   }
 }

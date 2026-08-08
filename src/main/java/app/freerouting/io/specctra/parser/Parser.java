@@ -14,30 +14,30 @@ public class Parser extends ScopeKeyword {
     super("parser");
   }
 
-  private static SpecctraParserInfo.WriteResolution readWriteSolution(ReadScopeParameter p_par) {
+  private static SpecctraParserInfo.WriteResolution readWriteSolution(ReadScopeParameter pPar) {
     try {
-      Object nextToken = p_par.scanner.nextToken();
+      Object nextToken = pPar.scanner.nextToken();
       if (!(nextToken instanceof String resolution_string)) {
         FRLogger.warn(
             "Parser.read_write_solution: string expected at '"
-                + p_par.scanner.getScopeIdentifier()
+                + pPar.scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
-      nextToken = p_par.scanner.nextToken();
+      nextToken = pPar.scanner.nextToken();
       if (!(nextToken instanceof Integer)) {
         FRLogger.warn(
             "Parser.read_write_solution: integer expected expected at '"
-                + p_par.scanner.getScopeIdentifier()
+                + pPar.scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
       int resolutionValue = (Integer) nextToken;
-      nextToken = p_par.scanner.nextToken();
+      nextToken = pPar.scanner.nextToken();
       if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Parser.read_write_solution: closing_bracket expected at '"
-                + p_par.scanner.getScopeIdentifier()
+                + pPar.scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -48,34 +48,30 @@ public class Parser extends ScopeKeyword {
     }
   }
 
-  private static String[] readConstant(ReadScopeParameter p_par) {
+  private static String[] readConstant(ReadScopeParameter pPar) {
     try {
       String[] result = new String[2];
-      p_par.scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      Object nextToken = p_par.scanner.nextToken();
+      pPar.scanner.yybegin(SpecctraDsnStreamReader.NAME);
+      Object nextToken = pPar.scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
-            "Parser.read_constant: string expected at '"
-                + p_par.scanner.getScopeIdentifier()
-                + "'");
+            "Parser.read_constant: string expected at '" + pPar.scanner.getScopeIdentifier() + "'");
         return null;
       }
       result[0] = (String) nextToken;
-      p_par.scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      nextToken = p_par.scanner.nextToken();
+      pPar.scanner.yybegin(SpecctraDsnStreamReader.NAME);
+      nextToken = pPar.scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
-            "Parser.read_constant: string expected at '"
-                + p_par.scanner.getScopeIdentifier()
-                + "'");
+            "Parser.read_constant: string expected at '" + pPar.scanner.getScopeIdentifier() + "'");
         return null;
       }
       result[1] = (String) nextToken;
-      nextToken = p_par.scanner.nextToken();
+      nextToken = pPar.scanner.nextToken();
       if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Parser.read_constant: closing_bracket expected at '"
-                + p_par.scanner.getScopeIdentifier()
+                + pPar.scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -88,75 +84,73 @@ public class Parser extends ScopeKeyword {
 
   /** p_reduced is true if the scope is written to a session file. */
   public static void writeScope(
-      IndentFileWriter p_file,
-      SpecctraParserInfo p_parser_info,
-      IdentifierType p_identifier_type,
-      boolean p_reduced)
+      IndentFileWriter pFile,
+      SpecctraParserInfo pParserInfo,
+      IdentifierType pIdentifierType,
+      boolean pReduced)
       throws IOException {
-    p_file.startScope();
-    p_file.write("parser");
-    if (!p_reduced) {
-      p_file.newLine();
-      p_file.write("(stringQuote ");
-      p_file.write(p_parser_info.stringQuote);
-      p_file.write(")");
-      p_file.newLine();
-      p_file.write("(space_in_quoted_tokens on)");
+    pFile.startScope();
+    pFile.write("parser");
+    if (!pReduced) {
+      pFile.newLine();
+      pFile.write("(stringQuote ");
+      pFile.write(pParserInfo.stringQuote);
+      pFile.write(")");
+      pFile.newLine();
+      pFile.write("(space_in_quoted_tokens on)");
     }
-    if (p_parser_info.hostCad != null) {
-      p_file.newLine();
-      p_file.write("(hostCad ");
-      p_identifier_type.write(p_parser_info.hostCad, p_file);
-      p_file.write(")");
+    if (pParserInfo.hostCad != null) {
+      pFile.newLine();
+      pFile.write("(hostCad ");
+      pIdentifierType.write(pParserInfo.hostCad, pFile);
+      pFile.write(")");
     }
-    if (p_parser_info.hostVersion != null) {
-      p_file.newLine();
-      p_file.write("(hostVersion ");
-      p_identifier_type.write(p_parser_info.hostVersion, p_file);
-      p_file.write(")");
+    if (pParserInfo.hostVersion != null) {
+      pFile.newLine();
+      pFile.write("(hostVersion ");
+      pIdentifierType.write(pParserInfo.hostVersion, pFile);
+      pFile.write(")");
     }
-    if (p_parser_info.constants != null) {
-      for (String[] currConstant : p_parser_info.constants) {
-        p_file.newLine();
-        p_file.write("(constant ");
+    if (pParserInfo.constants != null) {
+      for (String[] currConstant : pParserInfo.constants) {
+        pFile.newLine();
+        pFile.write("(constant ");
         for (int i = 0; i < currConstant.length; i++) {
-          p_identifier_type.write(currConstant[i], p_file);
-          p_file.write(" ");
+          pIdentifierType.write(currConstant[i], pFile);
+          pFile.write(" ");
         }
-        p_file.write(")");
+        pFile.write(")");
       }
     }
-    if (p_parser_info.writeResolution != null) {
-      p_file.newLine();
-      p_file.write("(writeResolution ");
-      p_file.write(p_parser_info.writeResolution.charName.substring(0, 1));
-      p_file.write(" ");
-      int positiveInt = p_parser_info.writeResolution.positiveInt;
-      p_file.write(String.valueOf(positiveInt));
-      p_file.write(")");
+    if (pParserInfo.writeResolution != null) {
+      pFile.newLine();
+      pFile.write("(writeResolution ");
+      pFile.write(pParserInfo.writeResolution.charName.substring(0, 1));
+      pFile.write(" ");
+      int positiveInt = pParserInfo.writeResolution.positiveInt;
+      pFile.write(String.valueOf(positiveInt));
+      pFile.write(")");
     }
-    if (!p_reduced) {
-      p_file.newLine();
-      p_file.write("(generated_by_freerouting)");
+    if (!pReduced) {
+      pFile.newLine();
+      pFile.write("(generated_by_freerouting)");
     }
-    p_file.endScope();
+    pFile.endScope();
   }
 
-  private static String readQuoteChar(IJFlexScanner p_scanner) {
+  private static String readQuoteChar(IJFlexScanner pScanner) {
     try {
-      Object nextToken = p_scanner.nextToken();
+      Object nextToken = pScanner.nextToken();
       if (!(nextToken instanceof String result)) {
         FRLogger.warn(
-            "Parser.read_quote_char: string expected at '"
-                + p_scanner.getScopeIdentifier()
-                + "'");
+            "Parser.read_quote_char: string expected at '" + pScanner.getScopeIdentifier() + "'");
         return null;
       }
-      nextToken = p_scanner.nextToken();
+      nextToken = pScanner.nextToken();
       if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Parser.read_quote_char: closing bracket expected at '"
-                + p_scanner.getScopeIdentifier()
+                + pScanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -168,23 +162,23 @@ public class Parser extends ScopeKeyword {
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter p_par) {
+  public boolean readScope(ReadScopeParameter pPar) {
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = p_par.scanner.nextToken();
+        nextToken = pPar.scanner.nextToken();
       } catch (IOException _) {
         FRLogger.warn(
             "Parser.read_scope: IO error scanning file at '"
-                + p_par.scanner.getScopeIdentifier()
+                + pPar.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
       if (nextToken == null) {
         FRLogger.warn(
             "Parser.read_scope: unexpected end of file at '"
-                + p_par.scanner.getScopeIdentifier()
+                + pPar.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -195,28 +189,28 @@ public class Parser extends ScopeKeyword {
       boolean readOk = true;
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == STRING_QUOTE) {
-          String quoteChar = readQuoteChar(p_par.scanner);
+          String quoteChar = readQuoteChar(pPar.scanner);
           if (quoteChar == null) {
             return false;
           }
-          p_par.stringQuote = quoteChar;
+          pPar.stringQuote = quoteChar;
         } else if (nextToken == HOST_CAD) {
-          p_par.hostCad = DsnFile.readStringScope(p_par.scanner);
+          pPar.hostCad = DsnFile.readStringScope(pPar.scanner);
         } else if (nextToken == HOST_VERSION) {
-          p_par.hostVersion = DsnFile.readStringScope(p_par.scanner);
+          pPar.hostVersion = DsnFile.readStringScope(pPar.scanner);
         } else if (nextToken == CONSTANT) {
-          String[] currConstant = readConstant(p_par);
+          String[] currConstant = readConstant(pPar);
           if (currConstant != null) {
-            p_par.constants.add(currConstant);
+            pPar.constants.add(currConstant);
           }
         } else if (nextToken == WRITE_RESOLUTION) {
-          p_par.writeResolution = readWriteSolution(p_par);
+          pPar.writeResolution = readWriteSolution(pPar);
         } else if (nextToken == GENERATED_BY_FREEROUTING) {
-          p_par.dsnFileGeneratedByHost = false;
+          pPar.dsnFileGeneratedByHost = false;
           // skip the closing bracket
-          skipScope(p_par.scanner);
+          skipScope(pPar.scanner);
         } else {
-          skipScope(p_par.scanner);
+          skipScope(pPar.scanner);
         }
       }
       if (!readOk) {

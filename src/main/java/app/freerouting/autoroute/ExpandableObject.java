@@ -18,13 +18,13 @@ public interface ExpandableObject {
    * Returns the other room to p_room if this is a door and the other room is a
    * CompleteExpansionRoom. Else null is returned.
    */
-  CompleteExpansionRoom otherRoom(CompleteExpansionRoom p_room);
+  CompleteExpansionRoom otherRoom(CompleteExpansionRoom pRoom);
 
   /** Returns the count of MazeSearchElements in this expandable object */
   int mazeSearchElementCount();
 
   /** Returns the p_no-th MazeSearchElements in this expandable object */
-  MazeSearchElement getMazeSearchElement(int p_no);
+  MazeSearchElement getMazeSearchElement(int pNo);
 
   /** Resets this ExpandableObject for autorouting the next connection. */
   void reset();

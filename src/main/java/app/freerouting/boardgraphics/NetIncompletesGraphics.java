@@ -14,95 +14,92 @@ public class NetIncompletesGraphics {
   /**
    * Draws the incomplete connections and optional length violations.
    *
-   * @param p_net_incompletes The net incompletes data object.
-   * @param p_graphics The AWT graphics object.
-   * @param p_graphics_context The board graphics context.
-   * @param p_length_violations_only If true, only draws length violation markers, not airlines.
+   * @param pNetIncompletes The net incompletes data object.
+   * @param pGraphics The AWT graphics object.
+   * @param pGraphicsContext The board graphics context.
+   * @param pLengthViolationsOnly If true, only draws length violation markers, not airlines.
    */
   public static void draw(
-      NetIncompletes p_net_incompletes,
-      Graphics p_graphics,
-      GraphicsContext p_graphics_context,
-      boolean p_length_violations_only) {
-    if (!p_length_violations_only) {
-      Color drawColor = p_graphics_context.getIncompleteColor();
-      double drawIntensity = p_graphics_context.getIncompleteColorIntensity();
+      NetIncompletes pNetIncompletes,
+      Graphics pGraphics,
+      GraphicsContext pGraphicsContext,
+      boolean pLengthViolationsOnly) {
+    if (!pLengthViolationsOnly) {
+      Color drawColor = pGraphicsContext.getIncompleteColor();
+      double drawIntensity = pGraphicsContext.getIncompleteColorIntensity();
       if (drawIntensity <= 0) {
         return;
       }
       FloatPoint[] drawPoints = new FloatPoint[2];
       int drawWidth = 1;
-      for (AirLine curr_incomplete : p_net_incompletes.getIncompletes()) {
-        drawPoints[0] = curr_incomplete.fromCorner;
-        drawPoints[1] = curr_incomplete.toCorner;
-        p_graphics_context.draw(drawPoints, drawWidth, drawColor, p_graphics, drawIntensity);
-        if (!curr_incomplete.fromItem.sharesLayer(curr_incomplete.toItem)) {
+      for (AirLine currIncomplete : pNetIncompletes.getIncompletes()) {
+        drawPoints[0] = currIncomplete.fromCorner;
+        drawPoints[1] = currIncomplete.toCorner;
+        pGraphicsContext.draw(drawPoints, drawWidth, drawColor, pGraphics, drawIntensity);
+        if (!currIncomplete.fromItem.sharesLayer(currIncomplete.toItem)) {
           drawLayerChangeMarker(
-              curr_incomplete.fromCorner,
-              p_net_incompletes.getMarkerRadius(),
-              p_graphics,
-              p_graphics_context);
+              currIncomplete.fromCorner,
+              pNetIncompletes.getMarkerRadius(),
+              pGraphics,
+              pGraphicsContext);
           drawLayerChangeMarker(
-              curr_incomplete.toCorner,
-              p_net_incompletes.getMarkerRadius(),
-              p_graphics,
-              p_graphics_context);
+              currIncomplete.toCorner,
+              pNetIncompletes.getMarkerRadius(),
+              pGraphics,
+              pGraphicsContext);
         }
       }
     }
-    if (p_net_incompletes.getLengthViolation() == 0) {
+    if (pNetIncompletes.getLengthViolation() == 0) {
       return;
     }
     // draw the length violation around every Pin of the net.
-    Collection<Pin> netPins = p_net_incompletes.getNet().getPins();
+    Collection<Pin> netPins = pNetIncompletes.getNet().getPins();
     for (Pin currPin : netPins) {
       drawLengthViolationMarker(
           currPin.getCenter().toFloat(),
-          p_net_incompletes.getLengthViolation(),
-          p_graphics,
-          p_graphics_context);
+          pNetIncompletes.getLengthViolation(),
+          pGraphics,
+          pGraphicsContext);
     }
   }
 
   /** Draws a marker indicating a layer change (via or trace segment end) in an airline. */
   public static void drawLayerChangeMarker(
-      FloatPoint p_location,
-      double p_radius,
-      Graphics p_graphics,
-      GraphicsContext p_graphics_context) {
+      FloatPoint pLocation, double pRadius, Graphics pGraphics, GraphicsContext pGraphicsContext) {
     final int drawWidth = 1;
-    Color drawColor = p_graphics_context.getIncompleteColor();
-    double drawIntensity = p_graphics_context.getIncompleteColorIntensity();
+    Color drawColor = pGraphicsContext.getIncompleteColor();
+    double drawIntensity = pGraphicsContext.getIncompleteColorIntensity();
     FloatPoint[] drawPoints = new FloatPoint[2];
-    drawPoints[0] = new FloatPoint(p_location.x - p_radius, p_location.y - p_radius);
-    drawPoints[1] = new FloatPoint(p_location.x + p_radius, p_location.y + p_radius);
-    p_graphics_context.draw(drawPoints, drawWidth, drawColor, p_graphics, drawIntensity);
-    drawPoints[0] = new FloatPoint(p_location.x + p_radius, p_location.y - p_radius);
-    drawPoints[1] = new FloatPoint(p_location.x - p_radius, p_location.y + p_radius);
-    p_graphics_context.draw(drawPoints, drawWidth, drawColor, p_graphics, drawIntensity);
+    drawPoints[0] = new FloatPoint(pLocation.x - pRadius, pLocation.y - pRadius);
+    drawPoints[1] = new FloatPoint(pLocation.x + pRadius, pLocation.y + pRadius);
+    pGraphicsContext.draw(drawPoints, drawWidth, drawColor, pGraphics, drawIntensity);
+    drawPoints[0] = new FloatPoint(pLocation.x + pRadius, pLocation.y - pRadius);
+    drawPoints[1] = new FloatPoint(pLocation.x - pRadius, pLocation.y + pRadius);
+    pGraphicsContext.draw(drawPoints, drawWidth, drawColor, pGraphics, drawIntensity);
   }
 
   /** Draws a marker indicating a length violation on a pin. */
   static void drawLengthViolationMarker(
-      FloatPoint p_location,
-      double p_diameter,
-      Graphics p_graphics,
-      GraphicsContext p_graphics_context) {
+      FloatPoint pLocation,
+      double pDiameter,
+      Graphics pGraphics,
+      GraphicsContext pGraphicsContext) {
     final int drawWidth = 1;
-    Color drawColor = p_graphics_context.getIncompleteColor();
-    double drawIntensity = p_graphics_context.getIncompleteColorIntensity();
-    double circleRadius = 0.5 * Math.abs(p_diameter);
-    p_graphics_context.drawCircle(
-        p_location, circleRadius, drawWidth, drawColor, p_graphics, drawIntensity);
+    Color drawColor = pGraphicsContext.getIncompleteColor();
+    double drawIntensity = pGraphicsContext.getIncompleteColorIntensity();
+    double circleRadius = 0.5 * Math.abs(pDiameter);
+    pGraphicsContext.drawCircle(
+        pLocation, circleRadius, drawWidth, drawColor, pGraphics, drawIntensity);
     FloatPoint[] drawPoints = new FloatPoint[2];
-    drawPoints[0] = new FloatPoint(p_location.x - circleRadius, p_location.y);
-    drawPoints[1] = new FloatPoint(p_location.x + circleRadius, p_location.y);
-    p_graphics_context.draw(drawPoints, drawWidth, drawColor, p_graphics, drawIntensity);
-    if (p_diameter > 0) {
+    drawPoints[0] = new FloatPoint(pLocation.x - circleRadius, pLocation.y);
+    drawPoints[1] = new FloatPoint(pLocation.x + circleRadius, pLocation.y);
+    pGraphicsContext.draw(drawPoints, drawWidth, drawColor, pGraphics, drawIntensity);
+    if (pDiameter > 0) {
       // draw also the vertical diameter to create a "+"
-      drawPoints[0] = new FloatPoint(p_location.x, p_location.y - circleRadius);
-      drawPoints[1] = new FloatPoint(p_location.x, p_location.y + circleRadius);
-      p_graphics_context.draw(drawPoints, drawWidth, drawColor, p_graphics, drawIntensity);
+      drawPoints[0] = new FloatPoint(pLocation.x, pLocation.y - circleRadius);
+      drawPoints[1] = new FloatPoint(pLocation.x, pLocation.y + circleRadius);
+      pGraphicsContext.draw(drawPoints, drawWidth, drawColor, pGraphics, drawIntensity);
     }
   }
 }

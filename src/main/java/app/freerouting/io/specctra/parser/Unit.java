@@ -11,16 +11,16 @@ public class Unit extends ScopeKeyword {
     super("unit");
   }
 
-  public static void writeScope(IndentFileWriter p_file, app.freerouting.board.Unit p_unit)
+  public static void writeScope(IndentFileWriter pFile, app.freerouting.board.Unit pUnit)
       throws IOException {
-    p_file.newLine();
-    p_file.write("(unit ");
-    p_file.write(p_unit.toString());
-    p_file.write(")");
+    pFile.newLine();
+    pFile.write("(unit ");
+    pFile.write(pUnit.toString());
+    pFile.write(")");
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter p_par) {
+  public boolean readScope(ReadScopeParameter pPar) {
     return false;
   }
 }

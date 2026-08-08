@@ -20,20 +20,20 @@ public class CornerItemConstructionState extends InteractiveState {
 
   /** Creates a new instance of CornerItemConstructionState */
   protected CornerItemConstructionState(
-      InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
-    p_board_handling.removeRatsnest(); // Constructing an item may change the connectivity.
+      InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    super(pParentState, pBoardHandling);
+    pBoardHandling.removeRatsnest(); // Constructing an item may change the connectivity.
   }
 
   /** adds a corner to the polygon of the item under construction */
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint p_location) {
-    return addCorner(p_location);
+  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
+    return addCorner(pLocation);
   }
 
   /** adds a corner to the polygon of the item under construction */
-  public InteractiveState addCorner(FloatPoint p_location) {
-    IntPoint location = this.snap(p_location.round());
+  public InteractiveState addCorner(FloatPoint pLocation) {
+    IntPoint location = this.snap(pLocation.round());
     // make sure that the coordinates are integer
     this.cornerList.add(location);
     hdlg.repaint();
@@ -57,7 +57,7 @@ public class CornerItemConstructionState extends InteractiveState {
 
   /** draws the polygon constructed so far as a visual aid */
   @Override
-  public void draw(Graphics p_graphics) {
+  public void draw(Graphics pGraphics) {
     int cornerCount = cornerList.size();
     if (this.snappedMousePosition != null) {
       ++cornerCount;
@@ -72,7 +72,7 @@ public class CornerItemConstructionState extends InteractiveState {
     } else {
       corners[corners.length - 1] = this.snappedMousePosition;
     }
-    hdlg.graphicsContext.draw(corners, 300, Color.white, p_graphics, 0.5);
+    hdlg.graphicsContext.draw(corners, 300, Color.white, pGraphics, 0.5);
   }
 
   /** add a corner to make the last lines fulfil the snap angle restrictions */
@@ -83,8 +83,7 @@ public class CornerItemConstructionState extends InteractiveState {
     IntPoint firstCorner = cornerList.getFirst();
     IntPoint lastCorner = cornerList.getLast();
     IntPoint addCorner = null;
-    if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
-        == AngleRestriction.NINETY_DEGREE) {
+    if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
       addCorner = lastCorner.ninetyDegreeCorner(firstCorner, true);
     } else if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
         == AngleRestriction.FORTYFIVE_DEGREE) {
@@ -99,21 +98,20 @@ public class CornerItemConstructionState extends InteractiveState {
    * snaps the line from the last point in the cornerList to the input point according to
    * this.mouse_snap_angle
    */
-  private IntPoint snap(IntPoint p_point) {
+  private IntPoint snap(IntPoint pPoint) {
     IntPoint result;
     boolean listEmpty = cornerList.isEmpty();
-    if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
-            == AngleRestriction.NINETY_DEGREE
+    if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE
         && !listEmpty) {
       IntPoint lastCorner = cornerList.getLast();
-      result = p_point.orthogonalProjection(lastCorner);
+      result = pPoint.orthogonalProjection(lastCorner);
     } else if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
             == AngleRestriction.FORTYFIVE_DEGREE
         && !listEmpty) {
       IntPoint lastCorner = cornerList.getLast();
-      result = p_point.fortyfiveDegreeProjection(lastCorner);
+      result = pPoint.fortyfiveDegreeProjection(lastCorner);
     } else {
-      result = p_point;
+      result = pPoint;
     }
     return result;
   }

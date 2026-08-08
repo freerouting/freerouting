@@ -51,9 +51,9 @@ public class UndoableObjects implements Serializable {
    * Reads the next object in this list. Returns null, if the list is exhausted. p_it must be
    * created by start_read_object.
    */
-  public UndoableObjects.Storable readObject(Iterator<UndoableObjectNode> p_it) {
-    while (p_it.hasNext()) {
-      UndoableObjectNode currNode = p_it.next();
+  public UndoableObjects.Storable readObject(Iterator<UndoableObjectNode> pIt) {
+    while (pIt.hasNext()) {
+      UndoableObjectNode currNode = pIt.next();
       // skip objects getting alive only by redo
       if (currNode != null && currNode.level <= this.stackLevel) {
         return currNode.object;
@@ -63,17 +63,17 @@ public class UndoableObjects implements Serializable {
   }
 
   /** Adds p_object to the UndoableObjectsList. */
-  public void insert(UndoableObjects.Storable p_object) {
+  public void insert(UndoableObjects.Storable pObject) {
     disableRedo();
-    UndoableObjectNode currUndoableObject = new UndoableObjectNode(p_object, stackLevel);
-    objects.put(p_object, currUndoableObject);
+    UndoableObjectNode currUndoableObject = new UndoableObjectNode(pObject, stackLevel);
+    objects.put(pObject, currUndoableObject);
   }
 
   /**
    * Removes p_object from the top level of the UndoableObjectsList. Returns false, if p_object was
    * not found in the list.
    */
-  public boolean delete(UndoableObjects.Storable p_object) {
+  public boolean delete(UndoableObjects.Storable pObject) {
     disableRedo();
     Collection<UndoableObjectNode> currDeleteList;
     if (deletedObjectsStack.isEmpty()) {
@@ -83,12 +83,12 @@ public class UndoableObjects implements Serializable {
       currDeleteList = deletedObjectsStack.lastElement();
     }
     // search p_object in the list
-    UndoableObjectNode objectNode = objects.get(p_object);
+    UndoableObjectNode objectNode = objects.get(pObject);
     if (objectNode == null) {
       return false;
     }
 
-    if (p_object instanceof app.freerouting.board.Item item) {
+    if (pObject instanceof app.freerouting.board.Item item) {
       String itemNetNames = item.getAllNetNames();
       FRLogger.trace(
           "UndoableObjects.delete",
@@ -123,7 +123,7 @@ public class UndoableObjects implements Serializable {
         currDeleteList.add(objectNode.undoObject);
       }
     }
-    objects.remove(p_object);
+    objects.remove(pObject);
     return true;
   }
 
@@ -141,8 +141,8 @@ public class UndoableObjects implements Serializable {
    * objects. Returns false, if no more undo is possible
    */
   public boolean undo(
-      Collection<UndoableObjects.Storable> p_cancelled_objects,
-      Collection<UndoableObjects.Storable> p_restored_objects) {
+      Collection<UndoableObjects.Storable> pCancelledObjects,
+      Collection<UndoableObjects.Storable> pRestoredObjects) {
     if (stackLevel == 0) {
       return false; // no more undo possible
     }
@@ -152,21 +152,21 @@ public class UndoableObjects implements Serializable {
           // replace the current object by its previous state.
           currNode.undoObject.redoObject = currNode;
           objects.put(currNode.object, currNode.undoObject);
-          if (p_restored_objects != null) {
-            p_restored_objects.add(currNode.undoObject.object);
+          if (pRestoredObjects != null) {
+            pRestoredObjects.add(currNode.undoObject.object);
           }
         }
-        if (p_cancelled_objects != null) {
-          p_cancelled_objects.add(currNode.object);
+        if (pCancelledObjects != null) {
+          pCancelledObjects.add(currNode.object);
         }
       }
     }
     // restore the deleted objects
     Collection<UndoableObjectNode> currDeleteList = deletedObjectsStack.elementAt(stackLevel - 1);
-    for (UndoableObjectNode curr_deleted_node : currDeleteList) {
-      this.objects.put(curr_deleted_node.object, curr_deleted_node);
-      if (p_restored_objects != null) {
-        p_restored_objects.add(curr_deleted_node.object);
+    for (UndoableObjectNode currDeletedNode : currDeleteList) {
+      this.objects.put(currDeletedNode.object, currDeletedNode);
+      if (pRestoredObjects != null) {
+        pRestoredObjects.add(currDeletedNode.object);
       }
     }
     --this.stackLevel;
@@ -180,8 +180,8 @@ public class UndoableObjects implements Serializable {
    * Returns false, if no more redo is possible.
    */
   public boolean redo(
-      Collection<UndoableObjects.Storable> p_cancelled_objects,
-      Collection<UndoableObjects.Storable> p_restored_objects) {
+      Collection<UndoableObjects.Storable> pCancelledObjects,
+      Collection<UndoableObjects.Storable> pRestoredObjects) {
     if (this.stackLevel >= deletedObjectsStack.size()) {
       return false; // already at the top level
     }
@@ -191,32 +191,32 @@ public class UndoableObjects implements Serializable {
         // Object was created on a lower level and changed on the current level,
         // replace the lower level object by the object on the current layer.
         objects.put(currNode.object, currNode.redoObject);
-        if (p_cancelled_objects != null) {
-          p_cancelled_objects.add(currNode.object);
+        if (pCancelledObjects != null) {
+          pCancelledObjects.add(currNode.object);
         }
-        if (p_restored_objects != null) {
-          p_restored_objects.add(currNode.redoObject.object);
+        if (pRestoredObjects != null) {
+          pRestoredObjects.add(currNode.redoObject.object);
           // else the redoObject was deleted on the redo level
         }
       } else if (currNode.level == this.stackLevel) {
         // Object was created on the current level, allow it to be restored.
-        p_restored_objects.add(currNode.object);
+        pRestoredObjects.add(currNode.object);
       }
     }
     // Delete the objects, which were deleted on the current level, again.
     Collection<UndoableObjectNode> currDeleteList = deletedObjectsStack.elementAt(stackLevel - 1);
-    for (UndoableObjectNode curr_deleted_node : currDeleteList) {
-      while (curr_deleted_node.redoObject != null
-          && curr_deleted_node.redoObject.level <= this.stackLevel) {
-        curr_deleted_node = curr_deleted_node.redoObject;
+    for (UndoableObjectNode currDeletedNode : currDeleteList) {
+      while (currDeletedNode.redoObject != null
+          && currDeletedNode.redoObject.level <= this.stackLevel) {
+        currDeletedNode = currDeletedNode.redoObject;
       }
-      if (this.objects.remove(curr_deleted_node.object) == null) {
+      if (this.objects.remove(currDeletedNode.object) == null) {
         FRLogger.warn("previous deleted object not found");
       }
-      if (p_restored_objects == null || !p_restored_objects.remove(curr_deleted_node.object)) {
+      if (pRestoredObjects == null || !pRestoredObjects.remove(currDeletedNode.object)) {
         // the object needs only be cancelled if it is already in the board
-        if (p_cancelled_objects != null) {
-          p_cancelled_objects.add(curr_deleted_node.object);
+        if (pCancelledObjects != null) {
+          pCancelledObjects.add(currDeletedNode.object);
         }
       }
     }
@@ -251,11 +251,11 @@ public class UndoableObjects implements Serializable {
           deletedObjectsStack.elementAt(deletedObjectsStackSize - 1);
       Collection<UndoableObjectNode> toDeleteList =
           deletedObjectsStack.elementAt(deletedObjectsStackSize - 2);
-      for (UndoableObjectNode curr_deleted_node : fromDeleteList) {
-        if (curr_deleted_node.level < this.stackLevel - 1) {
-          toDeleteList.add(curr_deleted_node);
-        } else if (curr_deleted_node.undoObject != null) {
-          toDeleteList.add(curr_deleted_node.undoObject);
+      for (UndoableObjectNode currDeletedNode : fromDeleteList) {
+        if (currDeletedNode.level < this.stackLevel - 1) {
+          toDeleteList.add(currDeletedNode);
+        } else if (currDeletedNode.undoObject != null) {
+          toDeleteList.add(currDeletedNode.undoObject);
         }
       }
     }
@@ -268,10 +268,10 @@ public class UndoableObjects implements Serializable {
    * Must be called before p_object will be modified after a snapshot for the first time, if it may
    * have existed before that snapshot.
    */
-  public void saveForUndo(UndoableObjects.Storable p_object) {
+  public void saveForUndo(UndoableObjects.Storable pObject) {
     disableRedo();
     // search p_object in the map
-    UndoableObjectNode currNode = objects.get(p_object);
+    UndoableObjectNode currNode = objects.get(pObject);
     if (currNode == null) {
       FRLogger.warn("UndoableObjects.save_for_undo: object node not found");
       return;
@@ -279,7 +279,7 @@ public class UndoableObjects implements Serializable {
     if (currNode.level < this.stackLevel) {
 
       UndoableObjectNode oldNode =
-          new UndoableObjectNode((UndoableObjects.Storable) p_object.clone(), currNode.level);
+          new UndoableObjectNode((UndoableObjects.Storable) pObject.clone(), currNode.level);
       oldNode.undoObject = currNode.undoObject;
       oldNode.redoObject = currNode;
       currNode.undoObject = oldNode;
@@ -331,9 +331,9 @@ public class UndoableObjects implements Serializable {
     UndoableObjectNode redoObject; // the object to restore in a redo or null.
 
     /** Creates a new instance of UndoableObjectNode */
-    UndoableObjectNode(Storable p_object, int p_level) {
-      object = p_object;
-      level = p_level;
+    UndoableObjectNode(Storable pObject, int pLevel) {
+      object = pObject;
+      level = pLevel;
       undoObject = null;
       redoObject = null;
     }

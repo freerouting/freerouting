@@ -18,8 +18,8 @@ public class MakeSpaceState extends DragState {
 
   /** Creates a new instance of MakeSpaceState */
   public MakeSpaceState(
-      FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_location, p_parent_state, p_board_handling);
+      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
+    super(pLocation, pParentState, pBoardHandling);
     int[] shoveTraceWidthArr = new int[hdlg.getRoutingBoard().getLayerCount()];
     boolean[] layerActiveArr = new boolean[shoveTraceWidthArr.length];
     int shoveTraceWidth = Math.min(100, hdlg.getRoutingBoard().getMinTraceHalfWidth() / 10);
@@ -32,7 +32,7 @@ public class MakeSpaceState extends DragState {
     routeNetNoArr[0] = Nets.hidden_net_no;
     route =
         new Route(
-            p_location.round(),
+            pLocation.round(),
             hdlg.getInteractiveSettings().getLayer(),
             shoveTraceWidthArr,
             layerActiveArr,
@@ -52,7 +52,7 @@ public class MakeSpaceState extends DragState {
   }
 
   @Override
-  public InteractiveState moveTo(FloatPoint p_to_location) {
+  public InteractiveState moveTo(FloatPoint pToLocation) {
     if (!somethingDragged) {
       // initialisations for the first time dragging
       this.observersActivated = !hdlg.getRoutingBoard().observersActive();
@@ -63,11 +63,11 @@ public class MakeSpaceState extends DragState {
       hdlg.getRoutingBoard().generateSnapshot();
       somethingDragged = true;
     }
-    route.nextCorner(p_to_location);
+    route.nextCorner(pToLocation);
 
     Point routeEnd = route.getLastCorner();
     if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction() == AngleRestriction.NONE
-        && !routeEnd.equals(p_to_location.round())) {
+        && !routeEnd.equals(pToLocation.round())) {
       hdlg.moveMouse(routeEnd.toFloat());
     }
     hdlg.recalculateLengthViolations();
@@ -89,9 +89,9 @@ public class MakeSpaceState extends DragState {
   }
 
   @Override
-  public void draw(Graphics p_graphics) {
+  public void draw(Graphics pGraphics) {
     if (route != null) {
-      route.draw(p_graphics, hdlg.graphicsContext);
+      route.draw(pGraphics, hdlg.graphicsContext);
     }
   }
 }

@@ -15,9 +15,9 @@ import java.util.TreeSet;
 public class WindowPackages extends WindowObjectListWithFilter {
 
   /** Creates a new instance of PackagesWindow */
-  public WindowPackages(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  public WindowPackages(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
+    setLanguage(pBoardFrame.get_locale());
 
     this.setTitle(tm.getText("packages"));
   }
@@ -25,8 +25,7 @@ public class WindowPackages extends WindowObjectListWithFilter {
   /** Fills the list with the library packages. */
   @Override
   protected void fillList() {
-    Packages packages =
-        this.boardFrame.boardPanel.boardHandling.getRoutingBoard().library.packages;
+    Packages packages = this.boardFrame.boardPanel.boardHandling.getRoutingBoard().library.packages;
     Package[] sortedArr = new Package[packages.count()];
     for (int i = 0; i < sortedArr.length; i++) {
       sortedArr[i] = packages.get(i + 1);

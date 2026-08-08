@@ -47,53 +47,53 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   private int precalculatedLastLayer = -1;
 
   protected DrillItem(
-      Point p_center,
-      int[] p_net_no_arr,
-      int p_clearance_type,
-      int p_id_no,
-      int p_group_no,
-      FixedState p_fixed_state,
-      BasicBoard p_board) {
-    super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
-    this.center = p_center;
+      Point pCenter,
+      int[] pNetNoArr,
+      int pClearanceType,
+      int pIdNo,
+      int pGroupNo,
+      FixedState pFixedState,
+      BasicBoard pBoard) {
+    super(pNetNoArr, pClearanceType, pIdNo, pGroupNo, pFixedState, pBoard);
+    this.center = pCenter;
   }
 
   /** Works only for symmetric DrillItems */
   @Override
-  public void translateBy(Vector p_vector) {
+  public void translateBy(Vector pVector) {
     if (center != null) {
-      center = center.translateBy(p_vector);
+      center = center.translateBy(pVector);
     }
     this.clearDerivedData();
   }
 
   @Override
-  public void turn90Degree(int p_factor, IntPoint p_pole) {
+  public void turn90Degree(int pFactor, IntPoint pPole) {
     if (center != null) {
-      center = center.turn90Degree(p_factor, p_pole);
+      center = center.turn90Degree(pFactor, pPole);
     }
     this.clearDerivedData();
   }
 
   @Override
-  public void rotateApprox(double p_angle_in_degree, FloatPoint p_pole) {
+  public void rotateApprox(double pAngleInDegree, FloatPoint pPole) {
     if (center != null) {
-      FloatPoint newCenter = center.toFloat().rotate(Math.toRadians(p_angle_in_degree), p_pole);
+      FloatPoint newCenter = center.toFloat().rotate(Math.toRadians(pAngleInDegree), pPole);
       this.center = newCenter.round();
     }
     this.clearDerivedData();
   }
 
   @Override
-  public void changePlacementSide(IntPoint p_pole) {
+  public void changePlacementSide(IntPoint pPole) {
     if (center != null) {
-      center = center.mirrorVertical(p_pole);
+      center = center.mirrorVertical(pPole);
     }
     this.clearDerivedData();
   }
 
   @Override
-  public void moveBy(Vector p_vector) {
+  public void moveBy(Vector pVector) {
     Point oldCenter = this.getCenter();
     // remember the contact situation of this drillitem to traces on each layer
     Set<TraceInfo> contactTraceInfo = new TreeSet<>();
@@ -106,7 +106,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
         contactTraceInfo.add(currTraceInfo);
       }
     }
-    super.moveBy(p_vector);
+    super.moveBy(pVector);
 
     // Insert a Trace from the old center to the new center, on all layers, where
     // this DrillItem was connected to a Trace.
@@ -143,8 +143,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   @Override
-  public int shapeLayer(int p_index) {
-    int index = Math.max(p_index, 0);
+  public int shapeLayer(int pIndex) {
+    int index = Math.max(pIndex, 0);
     int fromLayer = firstLayer();
     int toLayer = lastLayer();
     index = Math.min(index, toLayer - fromLayer);
@@ -152,8 +152,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   @Override
-  public boolean isOnLayer(int p_layer) {
-    return p_layer >= firstLayer() && p_layer <= lastLayer();
+  public boolean isOnLayer(int pLayer) {
+    return pLayer >= firstLayer() && pLayer <= lastLayer();
   }
 
   @Override
@@ -182,7 +182,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     return this.precalculatedLastLayer;
   }
 
-  public abstract Shape getShape(int p_index);
+  public abstract Shape getShape(int pIndex);
 
   @Override
   public IntBox boundingBox() {
@@ -205,8 +205,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   @Override
-  protected TileShape[] calculateTreeShapes(ShapeSearchTree p_search_tree) {
-    return p_search_tree.calculateTreeShapes(this);
+  protected TileShape[] calculateTreeShapes(ShapeSearchTree pSearchTree) {
+    return pSearchTree.calculateTreeShapes(this);
   }
 
   /** Returns the smallest distance from the center to the border of the shape on any layer. */
@@ -227,41 +227,41 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     return center;
   }
 
-  protected void setCenter(Point p_center) {
-    center = p_center;
+  protected void setCenter(Point pCenter) {
+    center = pCenter;
   }
 
   /** Returns the padstack of this drillitem. */
   public abstract Padstack getPadstack();
 
-  public TileShape getTreeShapeOnLayer(ShapeSearchTree p_tree, int p_layer) {
+  public TileShape getTreeShapeOnLayer(ShapeSearchTree pTree, int pLayer) {
     int fromLayer = firstLayer();
     int toLayer = lastLayer();
-    if (p_layer < fromLayer || p_layer > toLayer) {
+    if (pLayer < fromLayer || pLayer > toLayer) {
       FRLogger.warn("DrillItem.get_tree_shape_on_layer: p_layer out of range");
       return null;
     }
-    return getTreeShape(p_tree, p_layer - fromLayer);
+    return getTreeShape(pTree, pLayer - fromLayer);
   }
 
-  public TileShape getTileShapeOnLayer(int p_layer) {
+  public TileShape getTileShapeOnLayer(int pLayer) {
     int fromLayer = firstLayer();
     int toLayer = lastLayer();
-    if (p_layer < fromLayer || p_layer > toLayer) {
+    if (pLayer < fromLayer || pLayer > toLayer) {
       FRLogger.warn("DrillItem.get_tile_shape_on_layer: p_layer out of range");
       return null;
     }
-    return getTileShape(p_layer - fromLayer);
+    return getTileShape(pLayer - fromLayer);
   }
 
-  public Shape getShapeOnLayer(int p_layer) {
+  public Shape getShapeOnLayer(int pLayer) {
     int fromLayer = firstLayer();
     int toLayer = lastLayer();
-    if (p_layer < fromLayer || p_layer > toLayer) {
+    if (pLayer < fromLayer || pLayer > toLayer) {
       FRLogger.warn("DrillItem.get_shape_on_layer: p_layer out of range");
       return null;
     }
-    return getShape(p_layer - fromLayer);
+    return getShape(pLayer - fromLayer);
   }
 
   @Override
@@ -318,25 +318,25 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   @Override
-  public Point normalContactPoint(Item p_other) {
-    return p_other.normalContactPoint(this);
+  public Point normalContactPoint(Item pOther) {
+    return pOther.normalContactPoint(this);
   }
 
   @Override
-  Point normalContactPoint(DrillItem p_other) {
-    if (this.sharesLayer(p_other) && this.getCenter().equals(p_other.getCenter())) {
+  Point normalContactPoint(DrillItem pOther) {
+    if (this.sharesLayer(pOther) && this.getCenter().equals(pOther.getCenter())) {
       return this.getCenter();
     }
     return null;
   }
 
   @Override
-  Point normalContactPoint(Trace p_trace) {
-    if (!this.sharesLayer(p_trace)) {
+  Point normalContactPoint(Trace pTrace) {
+    if (!this.sharesLayer(pTrace)) {
       return null;
     }
     Point drillCenter = this.getCenter();
-    if (drillCenter.equals(p_trace.firstCorner()) || drillCenter.equals(p_trace.lastCorner())) {
+    if (drillCenter.equals(pTrace.firstCorner()) || drillCenter.equals(pTrace.lastCorner())) {
       return drillCenter;
     }
     return null;
@@ -350,7 +350,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   @Override
-  public TileShape getTraceConnectionShape(ShapeSearchTree p_search_tree, int p_index) {
+  public TileShape getTraceConnectionShape(ShapeSearchTree pSearchTree, int pIndex) {
     return TileShape.getInstance(this.getCenter());
   }
 
@@ -395,17 +395,17 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
 
   @Override
   public void drawLayer(
-      Graphics p_g,
-      GraphicsContext p_graphics_context,
-      Color[] p_color_arr,
-      double p_intensity,
-      int p_layer_no) {
-    if (p_graphics_context == null || p_intensity <= 0) {
+      Graphics pG,
+      GraphicsContext pGraphicsContext,
+      Color[] pColorArr,
+      double pIntensity,
+      int pLayerNo) {
+    if (pGraphicsContext == null || pIntensity <= 0) {
       return;
     }
     int fromLayer = firstLayer();
     int toLayer = lastLayer();
-    if (p_layer_no < fromLayer || p_layer_no > toLayer) {
+    if (pLayerNo < fromLayer || pLayerNo > toLayer) {
       return;
     }
 
@@ -414,11 +414,11 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     boolean isLastPhysicalLayer = false;
     if (this instanceof Pin && fromLayer != toLayer) {
       int lastPhysicalLayer;
-      int activeLayer = p_graphics_context.getFullyVisibleLayer();
+      int activeLayer = pGraphicsContext.getFullyVisibleLayer();
       if (activeLayer != -1) {
         lastPhysicalLayer = activeLayer;
       } else {
-        int activeVirtual = p_graphics_context.getFullyVisibleVirtualLayer();
+        int activeVirtual = pGraphicsContext.getFullyVisibleVirtualLayer();
         boolean isBack = false;
         if (activeVirtual != -1) {
           isBack =
@@ -428,28 +428,28 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
         int layerCount = board.getLayerCount();
         lastPhysicalLayer = isBack ? (layerCount - 1) : 0;
       }
-      if (p_layer_no == lastPhysicalLayer) {
+      if (pLayerNo == lastPhysicalLayer) {
         isLastPhysicalLayer = true;
       }
     }
 
     double visibilityFactor = 0;
     for (int i = fromLayer; i <= toLayer; i++) {
-      visibilityFactor += p_graphics_context.getLayerVisibility(i);
+      visibilityFactor += pGraphicsContext.getLayerVisibility(i);
     }
 
     if (visibilityFactor >= 0.001) {
-      double intensity = p_intensity;
+      double intensity = pIntensity;
       if (!(this instanceof Pin)) {
-        intensity = p_intensity / Math.max(visibilityFactor, 1);
+        intensity = pIntensity / Math.max(visibilityFactor, 1);
       }
-      Shape currShape = this.getShape(p_layer_no - fromLayer);
+      Shape currShape = this.getShape(pLayerNo - fromLayer);
       if (currShape != null) {
-        double layerVis = p_graphics_context.getLayerVisibility(p_layer_no);
+        double layerVis = pGraphicsContext.getLayerVisibility(pLayerNo);
         if (layerVis > 0.001) {
-          Color color = p_color_arr[p_layer_no];
+          Color color = pColorArr[pLayerNo];
           double layerIntensity = this instanceof Pin ? intensity : intensity * layerVis;
-          p_graphics_context.fillArea(currShape, p_g, color, layerIntensity);
+          pGraphicsContext.fillArea(currShape, pG, color, layerIntensity);
         }
       }
     }
@@ -460,13 +460,13 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       if (padstack != null) {
         double drillRadius = padstack.getDrillRadius();
         if (drillRadius > 0) {
-          Color drillColor = p_graphics_context.otherColorTable.getDrillHoleColor();
+          Color drillColor = pGraphicsContext.otherColorTable.getDrillHoleColor();
           double drillIntensity =
-              p_graphics_context.colorIntensityTable.getValue(
+              pGraphicsContext.colorIntensityTable.getValue(
                   ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
           IntPoint centerPoint = getCenter().toFloat().round();
           Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
-          p_graphics_context.fillCircle(drillCircle, p_g, drillColor, drillIntensity);
+          pGraphicsContext.fillCircle(drillCircle, pG, drillColor, drillIntensity);
         }
       }
     }
@@ -474,8 +474,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
 
   @Override
   public void draw(
-      Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
-    if (p_graphics_context == null || p_intensity <= 0) {
+      Graphics pG, GraphicsContext pGraphicsContext, Color[] pColorArr, double pIntensity) {
+    if (pGraphicsContext == null || pIntensity <= 0) {
       return;
     }
     int fromLayer = firstLayer();
@@ -483,26 +483,26 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     // Decrease the drawing intensity for items with many layers.
     double visibilityFactor = 0;
     for (int i = fromLayer; i <= toLayer; i++) {
-      visibilityFactor += p_graphics_context.getLayerVisibility(i);
+      visibilityFactor += pGraphicsContext.getLayerVisibility(i);
     }
 
     if (visibilityFactor >= 0.001) {
-      double intensity = p_intensity;
+      double intensity = pIntensity;
       if (!(this instanceof Pin)) {
-        intensity = p_intensity / Math.max(visibilityFactor, 1);
+        intensity = pIntensity / Math.max(visibilityFactor, 1);
       }
       for (int i = 0; i <= toLayer - fromLayer; i++) {
         Shape currShape = this.getShape(i);
         if (currShape == null) {
           continue;
         }
-        double layerVis = p_graphics_context.getLayerVisibility(fromLayer + i);
+        double layerVis = pGraphicsContext.getLayerVisibility(fromLayer + i);
         if (layerVis <= 0.001) {
           continue;
         }
-        Color color = p_color_arr[fromLayer + i];
+        Color color = pColorArr[fromLayer + i];
         double layerIntensity = this instanceof Pin ? intensity : intensity * layerVis;
-        p_graphics_context.fillArea(currShape, p_g, color, layerIntensity);
+        pGraphicsContext.fillArea(currShape, pG, color, layerIntensity);
       }
     }
 
@@ -512,13 +512,13 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       if (padstack != null) {
         double drillRadius = padstack.getDrillRadius();
         if (drillRadius > 0) {
-          Color drillColor = p_graphics_context.otherColorTable.getDrillHoleColor();
+          Color drillColor = pGraphicsContext.otherColorTable.getDrillHoleColor();
           double drillIntensity =
-              p_graphics_context.colorIntensityTable.getValue(
+              pGraphicsContext.colorIntensityTable.getValue(
                   ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
           IntPoint centerPoint = getCenter().toFloat().round();
           Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
-          p_graphics_context.fillCircle(drillCircle, p_g, drillColor, drillIntensity);
+          pGraphicsContext.fillCircle(drillCircle, pG, drillColor, drillIntensity);
         }
       }
     }
@@ -531,16 +531,16 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     int halfWidth;
     int clearanceType;
 
-    TraceInfo(int p_layer, int p_half_width, int p_clearance_type) {
-      layer = p_layer;
-      halfWidth = p_half_width;
-      clearanceType = p_clearance_type;
+    TraceInfo(int pLayer, int pHalfWidth, int pClearanceType) {
+      layer = pLayer;
+      halfWidth = pHalfWidth;
+      clearanceType = pClearanceType;
     }
 
     /** Implements the comparable interface. */
     @Override
-    public int compareTo(TraceInfo p_other) {
-      return p_other.layer - this.layer;
+    public int compareTo(TraceInfo pOther) {
+      return pOther.layer - this.layer;
     }
   }
 }

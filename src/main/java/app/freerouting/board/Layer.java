@@ -15,9 +15,9 @@ public class Layer implements Serializable {
   public final boolean isSignal;
 
   /** Creates a new instance of Layer */
-  public Layer(String p_name, boolean p_is_signal) {
-    name = p_name;
-    isSignal = p_is_signal;
+  public Layer(String pName, boolean pIsSignal) {
+    name = pName;
+    isSignal = pIsSignal;
   }
 
   @Override

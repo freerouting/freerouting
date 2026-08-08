@@ -29,9 +29,9 @@ public final class BigIntAux {
 
   /** calculates the determinant of the vectors (p_x_1, p_y_1) and (p_x_2, p_y_2) */
   public static BigInteger determinant(
-      BigInteger p_x_1, BigInteger p_y_1, BigInteger p_x_2, BigInteger p_y_2) {
-    BigInteger tmp1 = p_x_1.multiply(p_y_2);
-    BigInteger tmp2 = p_x_2.multiply(p_y_1);
+      BigInteger pX1, BigInteger pY1, BigInteger pX2, BigInteger pY2) {
+    BigInteger tmp1 = pX1.multiply(pY2);
+    BigInteger tmp2 = pX2.multiply(pY1);
     return tmp1.subtract(tmp2);
   }
 
@@ -39,25 +39,25 @@ public final class BigIntAux {
    * auxiliary function to implement addition and translation in the classes RationalVector and
    * RationalPoint
    */
-  public static BigInteger[] addRationalCoordinates(BigInteger[] p_first, BigInteger[] p_second) {
+  public static BigInteger[] addRationalCoordinates(BigInteger[] pFirst, BigInteger[] pSecond) {
     BigInteger[] result = new BigInteger[3];
-    if (p_first[2].equals(p_second[2]))
+    if (pFirst[2].equals(pSecond[2]))
     // both rational numbers have the same denominator
     {
-      result[2] = p_first[2];
-      result[0] = p_first[0].add(p_second[0]);
-      result[1] = p_first[1].add(p_second[1]);
+      result[2] = pFirst[2];
+      result[0] = pFirst[0].add(pSecond[0]);
+      result[1] = pFirst[1].add(pSecond[1]);
     } else
     // multiply both denominators for the new denominator
     // to be on the save side:
     // taking the least common multiple would be optimal
     {
-      result[2] = p_first[2].multiply(p_second[2]);
-      BigInteger tmp1 = p_first[0].multiply(p_second[2]);
-      BigInteger tmp2 = p_second[0].multiply(p_first[2]);
+      result[2] = pFirst[2].multiply(pSecond[2]);
+      BigInteger tmp1 = pFirst[0].multiply(pSecond[2]);
+      BigInteger tmp2 = pSecond[0].multiply(pFirst[2]);
       result[0] = tmp1.add(tmp2);
-      tmp1 = p_first[1].multiply(p_second[2]);
-      tmp2 = p_second[1].multiply(p_first[2]);
+      tmp1 = pFirst[1].multiply(pSecond[2]);
+      tmp2 = pSecond[1].multiply(pFirst[2]);
       result[1] = tmp1.add(tmp2);
     }
     return result;

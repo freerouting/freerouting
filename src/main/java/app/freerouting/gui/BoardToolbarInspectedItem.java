@@ -14,10 +14,10 @@ class BoardToolbarInspectedItem extends JToolBar {
   private final TextManager tm;
 
   /** Creates a new instance of BoardToolbarInspectedItem. */
-  BoardToolbarInspectedItem(BoardFrame p_board_frame) {
-    this.boardFrame = p_board_frame;
+  BoardToolbarInspectedItem(BoardFrame pBoardFrame) {
+    this.boardFrame = pBoardFrame;
 
-    this.tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+    this.tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
 
     JButton toolbarCancelButton = new JButton();
     toolbarCancelButton.setText(tm.getText("cancel"));

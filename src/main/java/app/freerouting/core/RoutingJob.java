@@ -146,8 +146,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   /** Shows a file chooser for opening a design file. */
-  public static File showOpenDialog(String p_default_directory, Component p_parent) {
-    JFileChooser fileChooser = new JFileChooser(p_default_directory);
+  public static File showOpenDialog(String pDefaultDirectory, Component pParent) {
+    JFileChooser fileChooser = new JFileChooser(pDefaultDirectory);
     fileChooser.setMinimumSize(new Dimension(500, 250));
 
     // Add the file filter for SPECCTRA Design .DSN files
@@ -168,7 +168,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     // Set a file filter as the default one
     fileChooser.setFileFilter(dsnFilter);
 
-    fileChooser.showOpenDialog(p_parent);
+    fileChooser.showOpenDialog(pParent);
     return fileChooser.getSelectedFile();
   }
 

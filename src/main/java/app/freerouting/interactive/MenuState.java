@@ -14,8 +14,8 @@ import javax.swing.JPopupMenu;
 public class MenuState extends InteractiveState {
 
   /** Creates a new instance of MenuState */
-  MenuState(GuiBoardManager p_board_handle) {
-    super(null, p_board_handle);
+  MenuState(GuiBoardManager pBoardHandle) {
+    super(null, pBoardHandle);
     this.returnState = this;
   }
 
@@ -28,9 +28,9 @@ public class MenuState extends InteractiveState {
    * Selects items at p_location. Returns a new instance of SelectedItemState with the selected
    * items, if something was selected.
    */
-  public InteractiveState selectItems(FloatPoint p_location) {
+  public InteractiveState selectItems(FloatPoint pLocation) {
     this.hdlg.displayLayerMessage();
-    Set<Item> pickedItems = hdlg.pickItems(p_location);
+    Set<Item> pickedItems = hdlg.pickItems(pLocation);
     boolean somethingFound = !pickedItems.isEmpty();
     InteractiveState result;
     if (somethingFound) {
@@ -43,10 +43,10 @@ public class MenuState extends InteractiveState {
     return result;
   }
 
-  public InteractiveState swapPin(FloatPoint p_location) {
+  public InteractiveState swapPin(FloatPoint pLocation) {
     ItemSelectionFilter selectionFilter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
-    Collection<Item> pickedItems = hdlg.pickItems(p_location, selectionFilter);
+    Collection<Item> pickedItems = hdlg.pickItems(pLocation, selectionFilter);
     InteractiveState result = this;
     if (!pickedItems.isEmpty()) {
       Item firstItem = pickedItems.iterator().next();
@@ -64,14 +64,13 @@ public class MenuState extends InteractiveState {
 
   /** Action to be taken when a key shortcut is pressed. */
   @Override
-  public InteractiveState keyTyped(char p_key_char) {
+  public InteractiveState keyTyped(char pKeyChar) {
     InteractiveState currReturnState = this;
-    switch (p_key_char) {
+    switch (pKeyChar) {
       case 'b' -> hdlg.redo();
       case 'd' -> currReturnState = DragMenuState.getInstance(hdlg);
       case 'e' ->
-          currReturnState =
-              ExpandTestState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
+          currReturnState = ExpandTestState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
       case 'g' -> hdlg.toggleRatsnest();
       case 'i' -> currReturnState = this.selectItems(hdlg.getCurrentMousePosition());
       case 'p' -> {
@@ -111,7 +110,7 @@ public class MenuState extends InteractiveState {
           hdlg.setCurrentLayer(currentLayerNo);
         }
       }
-      default -> currReturnState = super.keyTyped(p_key_char);
+      default -> currReturnState = super.keyTyped(pKeyChar);
     }
     return currReturnState;
   }

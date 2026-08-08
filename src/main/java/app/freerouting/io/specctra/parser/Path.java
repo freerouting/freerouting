@@ -11,14 +11,14 @@ public abstract class Path extends Shape {
   public final double[] coordinateArr;
 
   /** Creates a new instance of Path */
-  Path(Layer p_layer, double p_width, double[] p_coordinate_arr) {
-    super(p_layer);
-    width = p_width;
-    coordinateArr = p_coordinate_arr;
+  Path(Layer pLayer, double pWidth, double[] pCoordinateArr) {
+    super(pLayer);
+    width = pWidth;
+    coordinateArr = pCoordinateArr;
   }
 
   /** Writes this path as a scope to an output dsn-file. */
   @Override
-  public abstract void writeScope(IndentFileWriter p_file, IdentifierType p_identifier)
+  public abstract void writeScope(IndentFileWriter pFile, IdentifierType pIdentifier)
       throws IOException;
 }

@@ -4,7 +4,7 @@ package app.freerouting.gui;
 class PopupMenuInspectedItems extends PopupMenuDisplay {
 
   /** Creates a new instance of PopupMenuInspectedItems */
-  PopupMenuInspectedItems(BoardFrame p_board_frame) {
-    super(p_board_frame);
+  PopupMenuInspectedItems(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
   }
 }

@@ -68,7 +68,9 @@ public class RouterSettings implements Serializable, Cloneable {
   public transient String[] ignoreNetClasses;
 
   /** The accuracy of the pull tight algorithm. */
-  @SerializedName(value = "trace_pull_tight_accuracy", alternate = {"tracePullTightAccuracy"})
+  @SerializedName(
+      value = "trace_pull_tight_accuracy",
+      alternate = {"tracePullTightAccuracy"})
   public Integer tracePullTightAccuracy;
 
   @SerializedName("allowed_via_types")
@@ -78,7 +80,9 @@ public class RouterSettings implements Serializable, Cloneable {
    * If true, the trace width at static pins smaller the trace width will be lowered automatically
    * to the pin with, if necessary.
    */
-  @SerializedName(value = "automatic_neckdown", alternate = {"automaticNeckdown"})
+  @SerializedName(
+      value = "automatic_neckdown",
+      alternate = {"automaticNeckdown"})
   public Boolean automaticNeckdown;
 
   @SerializedName("optimizer")
@@ -111,10 +115,10 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   /** Creates a new instance of AutorouteSettings */
-  public RouterSettings(RoutingBoard p_board) {
+  public RouterSettings(RoutingBoard pBoard) {
     this();
-    setLayerCount(p_board.getLayerCount());
-    applyBoardSpecificOptimizations(p_board);
+    setLayerCount(pBoard.getLayerCount());
+    applyBoardSpecificOptimizations(pBoard);
   }
 
   private static int defaultMaxThreads() {
@@ -217,16 +221,16 @@ public class RouterSettings implements Serializable, Cloneable {
    * structure. This calculates layer costs based on board aspect ratio and adds penalties for outer
    * layers. Should be called after loading a board to optimize routing performance.
    *
-   * @param p_board The routing board to optimize settings for
+   * @param pBoard The routing board to optimize settings for
    */
-  public void applyBoardSpecificOptimizationsIfNeeded(RoutingBoard p_board) {
-    if (p_board == null) {
+  public void applyBoardSpecificOptimizationsIfNeeded(RoutingBoard pBoard) {
+    if (pBoard == null) {
       return;
     }
-    int boardLayerCount = p_board.getLayerCount();
+    int boardLayerCount = pBoard.getLayerCount();
     if (getLayerCount() != boardLayerCount
         || !Boolean.TRUE.equals(boardSpecificTraceCostsApplied)) {
-      applyBoardSpecificOptimizations(p_board);
+      applyBoardSpecificOptimizations(pBoard);
     }
   }
 
@@ -235,11 +239,11 @@ public class RouterSettings implements Serializable, Cloneable {
     return Boolean.TRUE.equals(boardSpecificTraceCostsApplied);
   }
 
-  public void applyBoardSpecificOptimizations(RoutingBoard p_board) {
-    double horizontalWidth = p_board.boundingBox.width();
-    double verticalWidth = p_board.boundingBox.height();
+  public void applyBoardSpecificOptimizations(RoutingBoard pBoard) {
+    double horizontalWidth = pBoard.boundingBox.width();
+    double verticalWidth = pBoard.boundingBox.height();
 
-    int layerCount = p_board.getLayerCount();
+    int layerCount = pBoard.getLayerCount();
 
     // Track original values to log changes later
     Boolean[] originalRoutable = new Boolean[layerCount];
@@ -321,7 +325,7 @@ public class RouterSettings implements Serializable, Cloneable {
     boolean initializeTraceCosts = !Boolean.TRUE.equals(boardSpecificTraceCostsApplied);
 
     for (int i = 0; i < layerCount; i++) {
-      if (!p_board.layerStructure.arr[i].isSignal) {
+      if (!pBoard.layerStructure.arr[i].isSignal) {
         layers[i].routable = false;
       } else if (layers[i].routable == null) {
         layers[i].routable = true;
@@ -330,7 +334,7 @@ public class RouterSettings implements Serializable, Cloneable {
         layers[i].bendCost =
             scoring != null && scoring.defaultBendCost != null ? scoring.defaultBendCost : 0.0;
       }
-      if (p_board.layerStructure.arr[i].isSignal) {
+      if (pBoard.layerStructure.arr[i].isSignal) {
         currPreferredDirectionIsHorizontal = !currPreferredDirectionIsHorizontal;
       }
       if (layers[i].preferredDirectionHorizontal == null) {
@@ -348,7 +352,7 @@ public class RouterSettings implements Serializable, Cloneable {
       }
     }
     if (initializeTraceCosts) {
-      int signalLayerCount = p_board.layerStructure.signalLayerCount();
+      int signalLayerCount = pBoard.layerStructure.signalLayerCount();
       if (signalLayerCount > 2) {
         double outerAddCosts = 0.2 * signalLayerCount;
         // increase costs on the outer layers.
@@ -514,30 +518,30 @@ public class RouterSettings implements Serializable, Cloneable {
     return scoring != null && scoring.startRipupCosts != null ? scoring.startRipupCosts : 1;
   }
 
-  public void setStartRipupCosts(int p_value) {
+  public void setStartRipupCosts(int pValue) {
     if (scoring == null) {
       scoring = new ScoringSettings();
     }
-    scoring.startRipupCosts = Math.max(p_value, 1);
+    scoring.startRipupCosts = Math.max(pValue, 1);
   }
 
   public boolean getRunRouter() {
     return enabled != null ? enabled : true;
   }
 
-  public void setRunRouter(boolean p_value) {
-    enabled = p_value;
+  public void setRunRouter(boolean pValue) {
+    enabled = pValue;
   }
 
   public boolean getRunOptimizer() {
     return optimizer != null && optimizer.enabled != null ? optimizer.enabled : false;
   }
 
-  public void setRunOptimizer(boolean p_value) {
+  public void setRunOptimizer(boolean pValue) {
     if (optimizer == null) {
       optimizer = new OptimizerSettings();
     }
-    optimizer.enabled = p_value;
+    optimizer.enabled = pValue;
   }
 
   public boolean getRunFanout() {
@@ -564,124 +568,124 @@ public class RouterSettings implements Serializable, Cloneable {
     return viasAllowed != null ? viasAllowed : true;
   }
 
-  public void setViasAllowed(boolean p_value) {
-    viasAllowed = p_value;
+  public void setViasAllowed(boolean pValue) {
+    viasAllowed = pValue;
   }
 
   public int getViaCosts() {
     return scoring != null && scoring.viaCosts != null ? scoring.viaCosts : 1;
   }
 
-  public void setViaCosts(int p_value) {
+  public void setViaCosts(int pValue) {
     if (scoring == null) {
       scoring = new ScoringSettings();
     }
-    scoring.viaCosts = Math.max(p_value, 1);
+    scoring.viaCosts = Math.max(pValue, 1);
   }
 
   public int getPlaneViaCosts() {
     return scoring != null && scoring.planeViaCosts != null ? scoring.planeViaCosts : 1;
   }
 
-  public void setPlaneViaCosts(int p_value) {
+  public void setPlaneViaCosts(int pValue) {
     if (scoring == null) {
       scoring = new ScoringSettings();
     }
-    scoring.planeViaCosts = Math.max(p_value, 1);
+    scoring.planeViaCosts = Math.max(pValue, 1);
   }
 
-  public void setLayerActive(int p_layer, boolean p_value) {
-    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+  public void setLayerActive(int pLayer, boolean pValue) {
+    if (pLayer < 0 || pLayer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.set_layer_active: p_layer="
-              + p_layer
+              + pLayer
               + " out of range [0.."
               + (this.getLayerCount() - 1)
               + "]");
       return;
     }
-    if (layers[p_layer] == null) {
-      layers[p_layer] = new LayerSettings();
+    if (layers[pLayer] == null) {
+      layers[pLayer] = new LayerSettings();
     }
-    layers[p_layer].routable = p_value;
+    layers[pLayer].routable = pValue;
   }
 
-  public boolean getLayerActive(int p_layer) {
-    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+  public boolean getLayerActive(int pLayer) {
+    if (pLayer < 0 || pLayer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.get_layer_active: p_layer="
-              + p_layer
+              + pLayer
               + " out of range [0.."
               + (this.getLayerCount() - 1)
               + "]");
       return false;
     }
-    if (layers[p_layer] == null) {
+    if (layers[pLayer] == null) {
       return true;
     }
-    return layers[p_layer].routable != null ? layers[p_layer].routable : true;
+    return layers[pLayer].routable != null ? layers[pLayer].routable : true;
   }
 
-  public void setBendCost(int p_layer, double p_value) {
-    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+  public void setBendCost(int pLayer, double pValue) {
+    if (pLayer < 0 || pLayer >= this.getLayerCount()) {
       FRLogger.warn("RouterSettings.set_bend_cost: p_layer out of range");
       return;
     }
-    if (layers[p_layer] == null) {
-      layers[p_layer] = new LayerSettings();
+    if (layers[pLayer] == null) {
+      layers[pLayer] = new LayerSettings();
     }
-    layers[p_layer].bendCost = Math.max(MIN_BEND_COST, Math.min(MAX_BEND_COST, p_value));
+    layers[pLayer].bendCost = Math.max(MIN_BEND_COST, Math.min(MAX_BEND_COST, pValue));
   }
 
-  public double getBendCost(int p_layer) {
-    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+  public double getBendCost(int pLayer) {
+    if (pLayer < 0 || pLayer >= this.getLayerCount()) {
       FRLogger.warn("RouterSettings.get_bend_cost: p_layer out of range");
       return 0.0;
     }
-    if (layers[p_layer] == null || layers[p_layer].bendCost == null) {
+    if (layers[pLayer] == null || layers[pLayer].bendCost == null) {
       return scoring != null && scoring.defaultBendCost != null
           ? Math.max(MIN_BEND_COST, Math.min(MAX_BEND_COST, scoring.defaultBendCost))
           : 0.0;
     }
-    return layers[p_layer].bendCost;
+    return layers[pLayer].bendCost;
   }
 
-  public void setPreferredDirectionIsHorizontal(int p_layer, boolean p_value) {
-    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+  public void setPreferredDirectionIsHorizontal(int pLayer, boolean pValue) {
+    if (pLayer < 0 || pLayer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.set_preferred_direction_is_horizontal: p_layer="
-              + p_layer
+              + pLayer
               + " out of range [0.."
               + (this.getLayerCount() - 1)
               + "]");
       return;
     }
-    if (layers[p_layer] == null) {
-      layers[p_layer] = new LayerSettings();
+    if (layers[pLayer] == null) {
+      layers[pLayer] = new LayerSettings();
     }
-    layers[p_layer].preferredDirectionHorizontal = p_value;
+    layers[pLayer].preferredDirectionHorizontal = pValue;
   }
 
-  public boolean getPreferredDirectionIsHorizontal(int p_layer) {
-    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+  public boolean getPreferredDirectionIsHorizontal(int pLayer) {
+    if (pLayer < 0 || pLayer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.get_preferred_direction_is_horizontal: p_layer="
-              + p_layer
+              + pLayer
               + " out of range [0.."
               + (this.getLayerCount() - 1)
               + "]");
       return false;
     }
-    if (layers[p_layer] == null) {
-      return p_layer % 2 == 1;
+    if (layers[pLayer] == null) {
+      return pLayer % 2 == 1;
     }
-    return layers[p_layer].preferredDirectionHorizontal != null
-        ? layers[p_layer].preferredDirectionHorizontal
-        : (p_layer % 2 == 1);
+    return layers[pLayer].preferredDirectionHorizontal != null
+        ? layers[pLayer].preferredDirectionHorizontal
+        : (pLayer % 2 == 1);
   }
 
-  public void setPreferredDirectionTraceCosts(int p_layer, double p_value) {
-    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+  public void setPreferredDirectionTraceCosts(int pLayer, double pValue) {
+    if (pLayer < 0 || pLayer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.set_preferred_direction_trace_costs: p_layer out of range");
       return;
     }
@@ -692,53 +696,53 @@ public class RouterSettings implements Serializable, Cloneable {
         || scoring.preferredDirectionTraceCost.length != this.getLayerCount()) {
       scoring.preferredDirectionTraceCost = new double[this.getLayerCount()];
     }
-    scoring.preferredDirectionTraceCost[p_layer] = Math.max(p_value, 0.1);
+    scoring.preferredDirectionTraceCost[pLayer] = Math.max(pValue, 0.1);
     boardSpecificTraceCostsApplied = true;
   }
 
-  public double getPreferredDirectionTraceCosts(int p_layer) {
-    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+  public double getPreferredDirectionTraceCosts(int pLayer) {
+    if (pLayer < 0 || pLayer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.get_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }
     if (scoring == null
         || scoring.preferredDirectionTraceCost == null
-        || p_layer >= scoring.preferredDirectionTraceCost.length) {
+        || pLayer >= scoring.preferredDirectionTraceCost.length) {
       return 1.0;
     }
-    return scoring.preferredDirectionTraceCost[p_layer];
+    return scoring.preferredDirectionTraceCost[pLayer];
   }
 
-  public double getAgainstPreferredDirectionTraceCosts(int p_layer) {
-    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+  public double getAgainstPreferredDirectionTraceCosts(int pLayer) {
+    if (pLayer < 0 || pLayer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.get_against_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }
     if (scoring == null
         || scoring.undesiredDirectionTraceCost == null
-        || p_layer >= scoring.undesiredDirectionTraceCost.length) {
+        || pLayer >= scoring.undesiredDirectionTraceCost.length) {
       return 1.0;
     }
-    return scoring.undesiredDirectionTraceCost[p_layer];
+    return scoring.undesiredDirectionTraceCost[pLayer];
   }
 
-  public double getHorizontalTraceCosts(int p_layer) {
-    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+  public double getHorizontalTraceCosts(int pLayer) {
+    if (pLayer < 0 || pLayer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.get_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }
     double result;
-    if (getPreferredDirectionIsHorizontal(p_layer)) {
-      result = scoring.preferredDirectionTraceCost[p_layer];
+    if (getPreferredDirectionIsHorizontal(pLayer)) {
+      result = scoring.preferredDirectionTraceCost[pLayer];
     } else {
-      result = scoring.undesiredDirectionTraceCost[p_layer];
+      result = scoring.undesiredDirectionTraceCost[pLayer];
     }
     return result;
   }
 
-  public void setAgainstPreferredDirectionTraceCosts(int p_layer, double p_value) {
-    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+  public void setAgainstPreferredDirectionTraceCosts(int pLayer, double pValue) {
+    if (pLayer < 0 || pLayer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.set_against_preferred_direction_trace_costs: p_layer out of range");
       return;
@@ -750,21 +754,21 @@ public class RouterSettings implements Serializable, Cloneable {
         || scoring.undesiredDirectionTraceCost.length != this.getLayerCount()) {
       scoring.undesiredDirectionTraceCost = new double[this.getLayerCount()];
     }
-    scoring.undesiredDirectionTraceCost[p_layer] = Math.max(p_value, 0.1);
+    scoring.undesiredDirectionTraceCost[pLayer] = Math.max(pValue, 0.1);
     boardSpecificTraceCostsApplied = true;
   }
 
-  public double getVerticalTraceCosts(int p_layer) {
-    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+  public double getVerticalTraceCosts(int pLayer) {
+    if (pLayer < 0 || pLayer >= this.getLayerCount()) {
       FRLogger.warn(
           "AutorouteSettings.get_against_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }
     double result;
-    if (getPreferredDirectionIsHorizontal(p_layer)) {
-      result = scoring.undesiredDirectionTraceCost[p_layer];
+    if (getPreferredDirectionIsHorizontal(pLayer)) {
+      result = scoring.undesiredDirectionTraceCost[pLayer];
     } else {
-      result = scoring.preferredDirectionTraceCost[p_layer];
+      result = scoring.preferredDirectionTraceCost[pLayer];
     }
     return result;
   }
@@ -795,8 +799,8 @@ public class RouterSettings implements Serializable, Cloneable {
    * If true, the trace width at static pins smaller the trace width will be lowered automatically
    * to the pin with, if necessary.
    */
-  public void setAutomaticNeckdown(boolean p_value) {
-    this.automaticNeckdown = p_value;
+  public void setAutomaticNeckdown(boolean pValue) {
+    this.automaticNeckdown = pValue;
   }
 
   /**

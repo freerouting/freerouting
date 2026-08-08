@@ -34,10 +34,10 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private final JSlider autoLayerDimSlider;
 
   /** Creates a new instance of DisplayMiscWindow */
-  public WindowDisplayMisc(BoardFrame p_board_frame) {
-    setLanguage(p_board_frame.get_locale());
+  public WindowDisplayMisc(BoardFrame pBoardFrame) {
+    setLanguage(pBoardFrame.get_locale());
 
-    this.panel = p_board_frame.boardPanel;
+    this.panel = pBoardFrame.boardPanel;
     this.setTitle(tm.getText("title"));
 
     // Create main panel
@@ -262,7 +262,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class SmallCursorListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       panel.setCustomCrosshairCursor(false);
     }
   }
@@ -270,7 +270,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class BigCursorListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       panel.setCustomCrosshairCursor(true);
     }
   }
@@ -278,7 +278,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class RotationNoneListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
       coordinateTransform.setRotation(0);
@@ -289,7 +289,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class Rotation90Listener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
       coordinateTransform.setRotation(0.5 * Math.PI);
@@ -300,7 +300,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class Rotation180Listener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
       coordinateTransform.setRotation(Math.PI);
@@ -311,7 +311,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class Rotation270Listener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
       coordinateTransform.setRotation(1.5 * Math.PI);
@@ -322,16 +322,14 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class MirrorNoneListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
-      if (!(coordinateTransform.isMirrorLeftRight()
-          || coordinateTransform.isMirrorTopBottom())) {
+      if (!(coordinateTransform.isMirrorLeftRight() || coordinateTransform.isMirrorTopBottom())) {
         return; // mirroring already switched off
       }
       // remember the old viewort center to retain the displayed section of the board.
-      FloatPoint oldViewportCenter =
-          coordinateTransform.screenToBoard(panel.getViewportCenter());
+      FloatPoint oldViewportCenter = coordinateTransform.screenToBoard(panel.getViewportCenter());
       coordinateTransform.setMirrorLeftRight(false);
       coordinateTransform.setMirrorTopBottom(false);
       panel.setViewportCenter(coordinateTransform.boardToScreen(oldViewportCenter));
@@ -342,15 +340,14 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class VerticalMirrorListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
       if (coordinateTransform.isMirrorLeftRight()) {
         return; // already mirrored
       }
       // remember the old viewport center to retain the displayed section of the board.
-      FloatPoint oldViewportCenter =
-          coordinateTransform.screenToBoard(panel.getViewportCenter());
+      FloatPoint oldViewportCenter = coordinateTransform.screenToBoard(panel.getViewportCenter());
       coordinateTransform.setMirrorLeftRight(true);
       coordinateTransform.setMirrorTopBottom(false);
       panel.setViewportCenter(coordinateTransform.boardToScreen(oldViewportCenter));
@@ -361,15 +358,14 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class HorizontalMirrorListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
       if (coordinateTransform.isMirrorTopBottom()) {
         return; // already mirrored
       }
       // remember the old viewport center to retain the displayed section of the board.
-      FloatPoint oldViewportCenter =
-          coordinateTransform.screenToBoard(panel.getViewportCenter());
+      FloatPoint oldViewportCenter = coordinateTransform.screenToBoard(panel.getViewportCenter());
       coordinateTransform.setMirrorTopBottom(true);
       coordinateTransform.setMirrorLeftRight(false);
       panel.setViewportCenter(coordinateTransform.boardToScreen(oldViewportCenter));

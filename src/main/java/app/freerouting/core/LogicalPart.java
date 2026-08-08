@@ -17,10 +17,10 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
    * Creates a new instance of LogicalPart. The part pins are sorted by pinNo. The pinNo's of the
    * part pins must be the same number as in the components' library package.
    */
-  public LogicalPart(String p_name, int p_no, PartPin[] p_part_pin_arr) {
-    name = p_name;
-    no = p_no;
-    partPinArr = p_part_pin_arr;
+  public LogicalPart(String pName, int pNo, PartPin[] pPartPinArr) {
+    name = pName;
+    no = pNo;
+    partPinArr = pPartPinArr;
   }
 
   public int pinCount() {
@@ -28,39 +28,39 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
   }
 
   /** Returns the pim with index p_no. Pin numbers are from 0 to pinCount - 1 */
-  public PartPin getPin(int p_no) {
-    if (p_no < 0 || p_no >= partPinArr.length) {
+  public PartPin getPin(int pNo) {
+    if (pNo < 0 || pNo >= partPinArr.length) {
       FRLogger.warn("LogicalPart.get_pin: p_no out of range");
       return null;
     }
-    return partPinArr[p_no];
+    return partPinArr[pNo];
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+    TextManager tm = new TextManager(this.getClass(), pLocale);
 
-    p_window.appendBold(tm.getText("logical_part_2") + " ");
-    p_window.appendBold(this.name);
+    pWindow.appendBold(tm.getText("logical_part_2") + " ");
+    pWindow.appendBold(this.name);
     for (int i = 0; i < this.partPinArr.length; i++) {
       PartPin currPin = this.partPinArr[i];
-      p_window.newline();
-      p_window.indent();
-      p_window.append(tm.getText("pin") + " ");
-      p_window.append(currPin.pinName);
-      p_window.append(", " + tm.getText("gate") + " ");
-      p_window.append(currPin.gateName);
-      p_window.append(", " + tm.getText("swap_code") + " ");
+      pWindow.newline();
+      pWindow.indent();
+      pWindow.append(tm.getText("pin") + " ");
+      pWindow.append(currPin.pinName);
+      pWindow.append(", " + tm.getText("gate") + " ");
+      pWindow.append(currPin.gateName);
+      pWindow.append(", " + tm.getText("swap_code") + " ");
       int gateSwapCode = currPin.gateSwapCode;
-      p_window.append(String.valueOf(gateSwapCode));
-      p_window.append(", " + tm.getText("gate_pin") + " ");
-      p_window.append(currPin.gatePinName);
-      p_window.append(", " + tm.getText("swap_code") + " ");
+      pWindow.append(String.valueOf(gateSwapCode));
+      pWindow.append(", " + tm.getText("gate_pin") + " ");
+      pWindow.append(currPin.gatePinName);
+      pWindow.append(", " + tm.getText("swap_code") + " ");
       int pinSwapCode = currPin.gatePinSwapCode;
-      p_window.append(String.valueOf(pinSwapCode));
+      pWindow.append(String.valueOf(pinSwapCode));
     }
-    p_window.newline();
-    p_window.newline();
+    pWindow.newline();
+    pWindow.newline();
   }
 
   public static class PartPin implements Comparable<PartPin>, Serializable {
@@ -90,23 +90,23 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
     public final int gatePinSwapCode;
 
     public PartPin(
-        int p_pin_no,
-        String p_pin_name,
-        String p_gate_name,
-        int p_gate_swap_code,
-        String p_gate_pin_name,
-        int p_gate_pin_swap_code) {
-      pinNo = p_pin_no;
-      pinName = p_pin_name;
-      gateName = p_gate_name;
-      gateSwapCode = p_gate_swap_code;
-      gatePinName = p_gate_pin_name;
-      gatePinSwapCode = p_gate_pin_swap_code;
+        int pPinNo,
+        String pPinName,
+        String pGateName,
+        int pGateSwapCode,
+        String pGatePinName,
+        int pGatePinSwapCode) {
+      pinNo = pPinNo;
+      pinName = pPinName;
+      gateName = pGateName;
+      gateSwapCode = pGateSwapCode;
+      gatePinName = pGatePinName;
+      gatePinSwapCode = pGatePinSwapCode;
     }
 
     @Override
-    public int compareTo(PartPin p_other) {
-      return this.pinNo - p_other.pinNo;
+    public int compareTo(PartPin pOther) {
+      return this.pinNo - pOther.pinNo;
     }
   }
 }

@@ -32,12 +32,12 @@ public class DrillPageArray {
   private final DrillPage[][] pageArr;
 
   /** Creates a new instance of DrillPageArray */
-  public DrillPageArray(RoutingBoard p_board, int p_max_page_width) {
-    this.bounds = p_board.boundingBox;
+  public DrillPageArray(RoutingBoard pBoard, int pMaxPageWidth) {
+    this.bounds = pBoard.boundingBox;
     double length = bounds.ur.x - bounds.ll.x;
     double height = bounds.ur.y - bounds.ll.y;
-    this.columnCount = (int) Math.ceil(length / p_max_page_width);
-    this.rowCount = (int) Math.ceil(height / p_max_page_width);
+    this.columnCount = (int) Math.ceil(length / pMaxPageWidth);
+    this.rowCount = (int) Math.ceil(height / pMaxPageWidth);
     this.pageWidth = (int) Math.ceil(length / columnCount);
     this.pageHeight = (int) Math.ceil(height / rowCount);
     this.pageArr = new DrillPage[rowCount][columnCount];
@@ -57,7 +57,7 @@ public class DrillPageArray {
         } else {
           urY = llY + pageHeight;
         }
-        pageArr[j][i] = new DrillPage(new IntBox(llX, llY, urX, urY), p_board);
+        pageArr[j][i] = new DrillPage(new IntBox(llX, llY, urX, urY), pBoard);
       }
     }
   }
@@ -66,18 +66,18 @@ public class DrillPageArray {
    * Invalidates all drill pages intersecting with p_shape, so they must be recalculated at the next
    * call of get_ddrills()
    */
-  public void invalidate(TileShape p_shape) {
-    Collection<DrillPage> overlaps = overlappingPages(p_shape);
+  public void invalidate(TileShape pShape) {
+    Collection<DrillPage> overlaps = overlappingPages(pShape);
     for (DrillPage currPage : overlaps) {
       currPage.invalidate();
     }
   }
 
   /** Collects all drill pages with a 2-dimensional overlap with p_shape. */
-  public Collection<DrillPage> overlappingPages(TileShape p_shape) {
+  public Collection<DrillPage> overlappingPages(TileShape pShape) {
     Collection<DrillPage> result = new LinkedList<>();
 
-    IntBox shapeBox = p_shape.boundingBox().intersection(this.bounds);
+    IntBox shapeBox = pShape.boundingBox().intersection(this.bounds);
 
     int minJ = (int) Math.floor(((double) (shapeBox.ll.y - bounds.ll.y)) / (double) pageHeight);
     double maxJ = ((double) (shapeBox.ur.y - bounds.ll.y)) / (double) pageHeight;
@@ -88,7 +88,7 @@ public class DrillPageArray {
     for (int j = minJ; j < maxJ; j++) {
       for (int i = minI; i < maxI; i++) {
         DrillPage currPage = this.pageArr[j][i];
-        TileShape intersection = p_shape.intersection(currPage.shape);
+        TileShape intersection = pShape.intersection(currPage.shape);
         if (intersection.dimension() > 1) {
           result.add(this.pageArr[j][i]);
         }
@@ -110,11 +110,11 @@ public class DrillPageArray {
   /*
    * Test draw of the all drills
    */
-  public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity) {
+  public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext, double pIntensity) {
     for (int j = 0; j < pageArr.length; j++) {
       DrillPage[] currRow = pageArr[j];
       for (int i = 0; i < currRow.length; i++) {
-        currRow[i].draw(p_graphics, p_graphics_context, p_intensity);
+        currRow[i].draw(pGraphics, pGraphicsContext, pIntensity);
       }
     }
   }

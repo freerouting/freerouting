@@ -469,28 +469,28 @@ public class GlobalSettings implements Serializable {
     return currentLocale;
   }
 
-  public void applyCommandLineArguments(String[] p_args) {
-    for (int i = 0; i < p_args.length; i++) {
+  public void applyCommandLineArguments(String[] pArgs) {
+    for (int i = 0; i < pArgs.length; i++) {
       try {
-        if ("-help".equalsIgnoreCase(p_args[i])
-            || "--help".equalsIgnoreCase(p_args[i])
-            || "-h".equalsIgnoreCase(p_args[i])) {
+        if ("-help".equalsIgnoreCase(pArgs[i])
+            || "--help".equalsIgnoreCase(pArgs[i])
+            || "-h".equalsIgnoreCase(pArgs[i])) {
           showHelpOption = true;
           continue;
         }
-        if (p_args[i].startsWith("--compare-boards=")) {
-          String[] files = p_args[i].substring("--compare-boards=".length()).split(",");
+        if (pArgs[i].startsWith("--compare-boards=")) {
+          String[] files = pArgs[i].substring("--compare-boards=".length()).split(",");
           if (files.length == 2) {
             compareFile1 = files[0].trim();
             compareFile2 = files[1].trim();
           }
           continue;
         }
-        if (p_args[i].startsWith("--")) {
+        if (pArgs[i].startsWith("--")) {
           // it's a general settings value setter
           // Use split limit=2 so that values containing '=' (e.g. URLs with query strings)
           // are captured correctly as a single token.
-          String[] parts = p_args[i].substring(2).split("=", 2);
+          String[] parts = pArgs[i].substring(2).split("=", 2);
           if ((parts.length == 2) && (!Objects.equals(parts[0], "user_data_path"))) {
             if (parts[0].startsWith("debug.")) {
               // handle debug settings
@@ -510,17 +510,17 @@ public class GlobalSettings implements Serializable {
               setValue(parts[0], parts[1]);
             }
           } else if (!Objects.equals(parts[0], "user_data_path")) {
-            FRLogger.warn("Unknown command line argument: " + p_args[i]);
+            FRLogger.warn("Unknown command line argument: " + pArgs[i]);
           }
-        } else if (p_args[i].startsWith("-de")) {
+        } else if (pArgs[i].startsWith("-de")) {
           // the design file(s) are provided - can be DSN, SES, and/or RULES files
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
             java.util.List<String> files = new java.util.ArrayList<>();
             int j = i + 1;
-            while (j < p_args.length && !p_args[j].startsWith("-")) {
+            while (j < pArgs.length && !pArgs[j].startsWith("-")) {
               // Split each argument by '+' to support legacy concatenation (e.g.
               // file1.dsn+file2.rules)
-              String[] parts = p_args[j].split("\\+");
+              String[] parts = pArgs[j].split("\\+");
               for (String part : parts) {
                 files.add(part.trim());
               }
@@ -584,35 +584,35 @@ public class GlobalSettings implements Serializable {
             // Skip the processed arguments
             i = j - 1;
           }
-        } else if (p_args[i].startsWith("-di")) {
+        } else if (pArgs[i].startsWith("-di")) {
           // the design directory is provided
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            guiSettings.inputDirectory = p_args[i + 1];
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+            guiSettings.inputDirectory = pArgs[i + 1];
             i++;
           }
-        } else if (p_args[i].startsWith("-do")) {
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            initialOutputFile = p_args[i + 1];
+        } else if (pArgs[i].startsWith("-do")) {
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+            initialOutputFile = pArgs[i + 1];
             i++;
           }
-        } else if (p_args[i].startsWith("-drc")) {
+        } else if (pArgs[i].startsWith("-drc")) {
           // DRC-only mode (must be checked before -dr)
           routerSettings.enabled = false;
           drcSettings.enabled = true;
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
             drcReportFile = new BoardFileDetails();
             drcReportFile.format = FileFormat.DRC_JSON;
-            drcReportFile.setFilename(p_args[i + 1]);
+            drcReportFile.setFilename(pArgs[i + 1]);
             i++;
           }
-        } else if (p_args[i].startsWith("-dr")) {
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            initialRulesFile = p_args[i + 1];
+        } else if (pArgs[i].startsWith("-dr")) {
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+            initialRulesFile = pArgs[i + 1];
             i++;
           }
-        } else if (p_args[i].startsWith("-mp")) {
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            routerSettings.maxPasses = Integer.decode(p_args[i + 1]);
+        } else if (pArgs[i].startsWith("-mp")) {
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+            routerSettings.maxPasses = Integer.decode(pArgs[i + 1]);
 
             if (routerSettings.maxPasses < 0) {
               routerSettings.maxPasses = 1;
@@ -623,9 +623,9 @@ public class GlobalSettings implements Serializable {
             // Note: 0 is allowed and means no limit
             i++;
           }
-        } else if (p_args[i].startsWith("-mt")) {
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            routerSettings.optimizer.maxThreads = Integer.decode(p_args[i + 1]);
+        } else if (pArgs[i].startsWith("-mt")) {
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+            routerSettings.optimizer.maxThreads = Integer.decode(pArgs[i + 1]);
 
             if (routerSettings.optimizer.maxThreads < 0) {
               routerSettings.optimizer.maxThreads = 0;
@@ -635,19 +635,19 @@ public class GlobalSettings implements Serializable {
             }
             i++;
           }
-        } else if (p_args[i].startsWith("-oit")) {
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+        } else if (pArgs[i].startsWith("-oit")) {
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
             routerSettings.optimizer.optimizationImprovementThreshold =
-                Float.parseFloat(p_args[i + 1]) / 100;
+                Float.parseFloat(pArgs[i + 1]) / 100;
 
             if (routerSettings.optimizer.optimizationImprovementThreshold <= 0) {
               routerSettings.optimizer.optimizationImprovementThreshold = 0.0f;
             }
             i++;
           }
-        } else if (p_args[i].startsWith("-us")) {
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            String op = p_args[i + 1].toLowerCase().trim();
+        } else if (pArgs[i].startsWith("-us")) {
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+            String op = pArgs[i + 1].toLowerCase().trim();
             routerSettings.optimizer.boardUpdateStrategy =
                 "global".equals(op)
                     ? BoardUpdateStrategy.GLOBAL_OPTIMAL
@@ -656,9 +656,9 @@ public class GlobalSettings implements Serializable {
                         : BoardUpdateStrategy.GREEDY);
             i++;
           }
-        } else if (p_args[i].startsWith("-is")) {
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            String op = p_args[i + 1].toLowerCase().trim();
+        } else if (pArgs[i].startsWith("-is")) {
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+            String op = pArgs[i + 1].toLowerCase().trim();
             routerSettings.optimizer.itemSelectionStrategy =
                 op.indexOf("seq") == 0
                     ? ItemSelectionStrategy.SEQUENTIAL
@@ -667,15 +667,15 @@ public class GlobalSettings implements Serializable {
                         : ItemSelectionStrategy.PRIORITIZED);
             i++;
           }
-        } else if (p_args[i].startsWith("-hr")) { // hybrid ratio
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            routerSettings.optimizer.hybridRatio = p_args[i + 1].trim();
+        } else if (pArgs[i].startsWith("-hr")) { // hybrid ratio
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+            routerSettings.optimizer.hybridRatio = pArgs[i + 1].trim();
             i++;
           }
-        } else if ("-l".equals(p_args[i])) {
+        } else if ("-l".equals(pArgs[i])) {
           String localeString = "";
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            localeString = p_args[i + 1].toLowerCase().replace("-", "_");
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+            localeString = pArgs[i + 1].toLowerCase().replace("-", "_");
             i++;
           }
 
@@ -734,44 +734,44 @@ public class GlobalSettings implements Serializable {
             currentLocale = Locale.forLanguageTag("ro-RO");
           }
 
-        } else if (p_args[i].startsWith("-dl")) {
+        } else if (pArgs[i].startsWith("-dl")) {
           logging.file.enabled = false;
-        } else if (p_args[i].startsWith("-da")) {
+        } else if (pArgs[i].startsWith("-da")) {
           usageAndDiagnosticData.disableAnalytics = true;
-        } else if (p_args[i].startsWith("-host")) {
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            runtimeEnvironment.host = p_args[i + 1].trim();
+        } else if (pArgs[i].startsWith("-host")) {
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+            runtimeEnvironment.host = pArgs[i + 1].trim();
             i++;
           }
-        } else if (p_args[i].startsWith("-help")) {
+        } else if (pArgs[i].startsWith("-help")) {
           showHelpOption = true;
-        } else if (p_args[i].startsWith("-inc")) {
+        } else if (pArgs[i].startsWith("-inc")) {
           // ignore net class(es)
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            routerSettings.ignoreNetClasses = p_args[i + 1].split(",");
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+            routerSettings.ignoreNetClasses = pArgs[i + 1].split(",");
             i++;
           }
-        } else if (p_args[i].startsWith("-dct")) {
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            guiSettings.dialogConfirmationTimeout = Integer.parseInt(p_args[i + 1]);
+        } else if (pArgs[i].startsWith("-dct")) {
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+            guiSettings.dialogConfirmationTimeout = Integer.parseInt(pArgs[i + 1]);
 
             if (guiSettings.dialogConfirmationTimeout <= 0) {
               guiSettings.dialogConfirmationTimeout = 0;
             }
             i++;
           }
-        } else if (p_args[i].startsWith("-ll")) {
+        } else if (pArgs[i].startsWith("-ll")) {
           // get the log level from the command line arguments
           // and save it to the settings
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            logging.console.level = p_args[i + 1].toUpperCase();
+          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+            logging.console.level = pArgs[i + 1].toUpperCase();
             i++;
           }
         } else {
-          FRLogger.warn("Unknown command line argument: " + p_args[i]);
+          FRLogger.warn("Unknown command line argument: " + pArgs[i]);
         }
       } catch (Exception e) {
-        FRLogger.error("There was a problem parsing the '" + p_args[i] + "' parameter", e);
+        FRLogger.error("There was a problem parsing the '" + pArgs[i] + "' parameter", e);
       }
     }
   }

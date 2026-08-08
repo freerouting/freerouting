@@ -19,32 +19,32 @@ public final class FortyfiveDegreeBoundingDirections implements ShapeBoundingDir
   }
 
   @Override
-  public RegularTileShape bounds(ConvexShape p_shape) {
-    return p_shape.boundingShape(this);
+  public RegularTileShape bounds(ConvexShape pShape) {
+    return pShape.boundingShape(this);
   }
 
   @Override
-  public RegularTileShape bounds(IntBox p_box) {
-    return p_box.toIntOctagon();
+  public RegularTileShape bounds(IntBox pBox) {
+    return pBox.toIntOctagon();
   }
 
   @Override
-  public RegularTileShape bounds(IntOctagon p_oct) {
-    return p_oct;
+  public RegularTileShape bounds(IntOctagon pOct) {
+    return pOct;
   }
 
   @Override
-  public RegularTileShape bounds(Simplex p_simplex) {
-    return p_simplex.boundingOctagon();
+  public RegularTileShape bounds(Simplex pSimplex) {
+    return pSimplex.boundingOctagon();
   }
 
   @Override
-  public RegularTileShape bounds(Circle p_circle) {
-    return p_circle.boundingOctagon();
+  public RegularTileShape bounds(Circle pCircle) {
+    return pCircle.boundingOctagon();
   }
 
   @Override
-  public RegularTileShape bounds(PolygonShape p_polygon) {
-    return p_polygon.boundingOctagon();
+  public RegularTileShape bounds(PolygonShape pPolygon) {
+    return pPolygon.boundingOctagon();
   }
 }

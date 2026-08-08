@@ -21,18 +21,18 @@ class CalcShapeAndFromSide {
    * actual shove functions p_in_shove_check is expected to be false.
    */
   CalcShapeAndFromSide(
-      PolylineTrace p_trace, int p_index, boolean p_orthogonal, boolean p_in_shove_check) {
-    ShapeSearchTree searchTree = p_trace.board.searchTreeManager.getDefaultTree();
-    TileShape currShape = p_trace.getTreeShape(searchTree, p_index);
+      PolylineTrace pTrace, int pIndex, boolean pOrthogonal, boolean pInShoveCheck) {
+    ShapeSearchTree searchTree = pTrace.board.searchTreeManager.getDefaultTree();
+    TileShape currShape = pTrace.getTreeShape(searchTree, pIndex);
     CalcFromSide currFromSide = null;
     boolean cutOffAtStart = false;
     boolean cutOffAtEnd = false;
-    if (p_orthogonal) {
+    if (pOrthogonal) {
       currShape = currShape.boundingBox();
     } else {
       // prevent dog ears at the start and the end of the substitute trace
       currShape = currShape.toSimplex();
-      Line endCutline = calcCutlineAtEnd(p_index, p_trace);
+      Line endCutline = calcCutlineAtEnd(pIndex, pTrace);
       if (endCutline != null) {
         TileShape cutPlane = TileShape.getInstance(endCutline);
         TileShape tmpShape = currShape.intersection(cutPlane);
@@ -41,7 +41,7 @@ class CalcShapeAndFromSide {
           cutOffAtEnd = true;
         }
       }
-      Line startCutline = calcCutlineAtStart(p_index, p_trace);
+      Line startCutline = calcCutlineAtStart(pIndex, pTrace);
       if (startCutline != null) {
         TileShape cutPlane = TileShape.getInstance(startCutline);
         TileShape tmpShape = currShape.intersection(cutPlane);
@@ -66,23 +66,23 @@ class CalcShapeAndFromSide {
         currFromSide = new CalcFromSide(fromSideNo, borderIntersection);
       }
     }
-    if (currFromSide == null && !p_in_shove_check) {
+    if (currFromSide == null && !pInShoveCheck) {
       // In p_in_shove_check, using this calculation may produce an undesired stackLevel > 1 in
       // ShapeTraceEntries.
-      currFromSide = new CalcFromSide(p_trace.polyline(), p_index, currShape);
+      currFromSide = new CalcFromSide(pTrace.polyline(), pIndex, currShape);
     }
     this.shape = currShape;
     this.fromSide = currFromSide;
   }
 
-  private static Line calcCutlineAtEnd(int p_index, PolylineTrace p_trace) {
-    Polyline traceLines = p_trace.polyline();
-    ShapeSearchTree searchTree = p_trace.board.searchTreeManager.getDefaultTree();
-    if (p_index == traceLines.arr.length - 3
+  private static Line calcCutlineAtEnd(int pIndex, PolylineTrace pTrace) {
+    Polyline traceLines = pTrace.polyline();
+    ShapeSearchTree searchTree = pTrace.board.searchTreeManager.getDefaultTree();
+    if (pIndex == traceLines.arr.length - 3
         || traceLines
                 .cornerApprox(traceLines.arr.length - 2)
-                .distance(traceLines.cornerApprox(p_index + 1))
-            < p_trace.getCompensatedHalfWidth(searchTree)) {
+                .distance(traceLines.cornerApprox(pIndex + 1))
+            < pTrace.getCompensatedHalfWidth(searchTree)) {
 
       Line currLine = traceLines.arr[traceLines.arr.length - 1];
       FloatPoint is = traceLines.cornerApprox(traceLines.arr.length - 3);
@@ -97,12 +97,12 @@ class CalcShapeAndFromSide {
     return null;
   }
 
-  private static Line calcCutlineAtStart(int p_index, PolylineTrace p_trace) {
-    Polyline traceLines = p_trace.polyline();
-    ShapeSearchTree searchTree = p_trace.board.searchTreeManager.getDefaultTree();
-    if (p_index == 0
-        || traceLines.cornerApprox(0).distance(traceLines.cornerApprox(p_index))
-            < p_trace.getCompensatedHalfWidth(searchTree)) {
+  private static Line calcCutlineAtStart(int pIndex, PolylineTrace pTrace) {
+    Polyline traceLines = pTrace.polyline();
+    ShapeSearchTree searchTree = pTrace.board.searchTreeManager.getDefaultTree();
+    if (pIndex == 0
+        || traceLines.cornerApprox(0).distance(traceLines.cornerApprox(pIndex))
+            < pTrace.getCompensatedHalfWidth(searchTree)) {
       Line currLine = traceLines.arr[0];
       FloatPoint is = traceLines.cornerApprox(1);
       Line cutLine;

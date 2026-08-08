@@ -43,9 +43,9 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   private DefaultListModel<Object> listModel;
 
   /** Creates a new instance of ObjectListWindow */
-  protected WindowObjectList(BoardFrame p_board_frame) {
-    setLanguage(p_board_frame.get_locale());
-    this.boardFrame = p_board_frame;
+  protected WindowObjectList(BoardFrame pBoardFrame) {
+    setLanguage(pBoardFrame.get_locale());
+    this.boardFrame = pBoardFrame;
 
     // create main panel
     this.mainPanel = new JPanel();
@@ -148,11 +148,11 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   }
 
   @Override
-  public void setVisible(boolean p_value) {
-    if (p_value) {
+  public void setVisible(boolean pValue) {
+    if (pValue) {
       recalculate();
     }
-    super.setVisible(p_value);
+    super.setVisible(pValue);
   }
 
   protected void recalculate() {
@@ -213,8 +213,8 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     super.dispose();
   }
 
-  protected void addToList(Object p_object) {
-    this.listModel.addElement(p_object);
+  protected void addToList(Object pObject) {
+    this.listModel.addElement(pObject);
   }
 
   /** Fills the list with the objects to display. */
@@ -224,7 +224,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
 
   /** Saves also the filter string to disk. */
   @Override
-  public void save(ObjectOutputStream p_object_stream) {
+  public void save(ObjectOutputStream pObjectStream) {
     int[] selectedIndices;
     if (this.list != null) {
       selectedIndices = this.list.getSelectedIndices();
@@ -232,23 +232,23 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
       selectedIndices = new int[0];
     }
     try {
-      p_object_stream.writeObject(selectedIndices);
+      pObjectStream.writeObject(selectedIndices);
     } catch (IOException e) {
       FRLogger.error("WindowObjectList.save: save failed", e);
     }
-    super.save(p_object_stream);
+    super.save(pObjectStream);
   }
 
   @Override
-  public boolean read(ObjectInputStream p_object_stream) {
+  public boolean read(ObjectInputStream pObjectStream) {
     int[] savedSelectedIndices;
     try {
-      savedSelectedIndices = (int[]) p_object_stream.readObject();
+      savedSelectedIndices = (int[]) pObjectStream.readObject();
     } catch (Exception e) {
       FRLogger.error("WindowObjectListWithFilter.read: read failed", e);
       return false;
     }
-    boolean result = super.read(p_object_stream);
+    boolean result = super.read(pObjectStream);
     if (this.list != null && savedSelectedIndices.length > 0) {
       this.list.setSelectedIndices(savedSelectedIndices);
     }
@@ -261,7 +261,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     private static final int WINDOW_OFFSET = 30;
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       List<Object> selectedObjects = list.getSelectedValuesList();
       if (selectedObjects.isEmpty()) {
         return;
@@ -287,7 +287,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   private class SelectListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       selectInstances();
     }
   }
@@ -296,7 +296,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   private class InvertListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       if (listModel == null) {
         return;
       }
@@ -316,7 +316,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   private class RecalculateListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent pEvt) {
       recalculate();
     }
   }

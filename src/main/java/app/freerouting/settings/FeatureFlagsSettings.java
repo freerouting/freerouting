@@ -11,7 +11,9 @@ public class FeatureFlagsSettings implements Serializable {
   @SerializedName("inspection_mode")
   public boolean inspectionMode;
 
-  @SerializedName(value = "other_menu", alternate = {"otherMenu"})
+  @SerializedName(
+      value = "other_menu",
+      alternate = {"otherMenu"})
   public boolean otherMenu;
 
   @SerializedName("save_jobs")

@@ -15,17 +15,17 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
   private transient Color[][] precalculatedItemColors;
 
   // Create the default color table for the layers
-  public ItemColorTableModel(LayerStructure p_layer_structure, Locale p_locale) {
-    super(p_layer_structure.arr.length, p_locale);
+  public ItemColorTableModel(LayerStructure pLayerStructure, Locale pLocale) {
+    super(pLayerStructure.arr.length, pLocale);
 
-    int rowCount = p_layer_structure.arr.length;
+    int rowCount = pLayerStructure.arr.length;
     final int itemTypeCount = ColumnNames.values().length - 1;
     int signalLayerNo = 0;
     for (int layer = 0; layer < rowCount; layer++) {
-      boolean isSignalLayer = p_layer_structure.arr[layer].isSignal;
+      boolean isSignalLayer = pLayerStructure.arr[layer].isSignal;
       data[layer] = new Object[itemTypeCount + 1];
       Object[] currRow = data[layer];
-      currRow[0] = p_layer_structure.arr[layer].name;
+      currRow[0] = pLayerStructure.arr[layer].name;
       if (layer == 0) {
         // F.Cu
         currRow[ColumnNames.PINS.ordinal()] = new Color(227, 183, 46);
@@ -74,17 +74,16 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     }
   }
 
-  public ItemColorTableModel(ObjectInputStream p_stream)
-      throws IOException, ClassNotFoundException {
-    super(p_stream);
+  public ItemColorTableModel(ObjectInputStream pStream) throws IOException, ClassNotFoundException {
+    super(pStream);
   }
 
   /** Copy constructor. */
-  public ItemColorTableModel(ItemColorTableModel p_item_color_model) {
-    super(p_item_color_model.data.length, p_item_color_model.locale);
+  public ItemColorTableModel(ItemColorTableModel pItemColorModel) {
+    super(pItemColorModel.data.length, pItemColorModel.locale);
     for (int i = 0; i < this.data.length; i++) {
-      this.data[i] = new Object[p_item_color_model.data[i].length];
-      System.arraycopy(p_item_color_model.data[i], 0, this.data[i], 0, this.data[i].length);
+      this.data[i] = new Object[pItemColorModel.data[i].length];
+      System.arraycopy(pItemColorModel.data[i], 0, this.data[i], 0, this.data[i].length);
     }
   }
 
@@ -99,31 +98,31 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
   }
 
   @Override
-  public String getColumnName(int p_col) {
+  public String getColumnName(int pCol) {
     TextManager tm = new TextManager(ColorTableModel.class, this.locale);
-    return tm.getText(ColumnNames.values()[p_col].toString());
+    return tm.getText(ColumnNames.values()[pCol].toString());
   }
 
   @Override
-  public void setValueAt(Object p_value, int p_row, int p_col) {
-    super.setValueAt(p_value, p_row, p_col);
+  public void setValueAt(Object pValue, int pRow, int pCol) {
+    super.setValueAt(pValue, pRow, pCol);
     this.itemColorsPrecalculated = false;
   }
 
   /** Don't need to implement this method unless your table's editable. */
   @Override
-  public boolean isCellEditable(int p_row, int p_col) {
+  public boolean isCellEditable(int pRow, int pCol) {
     // Note that the data/cell address is constant,
     // no matter where the cell appears onscreen.
-    return p_col >= 1;
+    return pCol >= 1;
   }
 
-  Color[] getTraceColors(boolean p_fixed) {
+  Color[] getTraceColors(boolean pFixed) {
     if (!itemColorsPrecalculated) {
       precalculateItemColors();
     }
     Color[] result;
-    if (p_fixed) {
+    if (pFixed) {
       result = precalculatedItemColors[ColumnNames.FIXED_TRACES.ordinal() - 1];
     } else {
       result = precalculatedItemColors[ColumnNames.TRACES.ordinal() - 1];
@@ -131,12 +130,12 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     return result;
   }
 
-  Color[] getViaColors(boolean p_fixed) {
+  Color[] getViaColors(boolean pFixed) {
     if (!itemColorsPrecalculated) {
       precalculateItemColors();
     }
     Color[] result;
-    if (p_fixed) {
+    if (pFixed) {
       result = precalculatedItemColors[ColumnNames.FIXED_VIAS.ordinal() - 1];
     } else {
       result = precalculatedItemColors[ColumnNames.VIAS.ordinal() - 1];
@@ -151,8 +150,8 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     return precalculatedItemColors[ColumnNames.PINS.ordinal() - 1];
   }
 
-  public void setPinColors(Color[] p_color_arr) {
-    setColors(ColumnNames.PINS.ordinal(), p_color_arr);
+  public void setPinColors(Color[] pColorArr) {
+    setColors(ColumnNames.PINS.ordinal(), pColorArr);
   }
 
   Color[] getConductionColors() {
@@ -162,8 +161,8 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     return precalculatedItemColors[ColumnNames.CONDUCTION_AREAS.ordinal() - 1];
   }
 
-  public void setConductionColors(Color[] p_color_arr) {
-    setColors(ColumnNames.CONDUCTION_AREAS.ordinal(), p_color_arr);
+  public void setConductionColors(Color[] pColorArr) {
+    setColors(ColumnNames.CONDUCTION_AREAS.ordinal(), pColorArr);
   }
 
   Color[] getObstacleColors() {
@@ -187,40 +186,40 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     return precalculatedItemColors[ColumnNames.PLACE_KEEPOUTS.ordinal() - 1];
   }
 
-  public void setTraceColors(Color[] p_color_arr, boolean p_fixed) {
-    if (p_fixed) {
-      setColors(ColumnNames.FIXED_TRACES.ordinal(), p_color_arr);
+  public void setTraceColors(Color[] pColorArr, boolean pFixed) {
+    if (pFixed) {
+      setColors(ColumnNames.FIXED_TRACES.ordinal(), pColorArr);
     } else {
-      setColors(ColumnNames.TRACES.ordinal(), p_color_arr);
+      setColors(ColumnNames.TRACES.ordinal(), pColorArr);
     }
   }
 
-  public void setViaColors(Color[] p_color_arr, boolean p_fixed) {
-    if (p_fixed) {
-      setColors(ColumnNames.FIXED_VIAS.ordinal(), p_color_arr);
+  public void setViaColors(Color[] pColorArr, boolean pFixed) {
+    if (pFixed) {
+      setColors(ColumnNames.FIXED_VIAS.ordinal(), pColorArr);
     } else {
-      setColors(ColumnNames.VIAS.ordinal(), p_color_arr);
+      setColors(ColumnNames.VIAS.ordinal(), pColorArr);
     }
   }
 
-  public void setKeepoutColors(Color[] p_color_arr) {
-    setColors(ColumnNames.KEEPOUTS.ordinal(), p_color_arr);
+  public void setKeepoutColors(Color[] pColorArr) {
+    setColors(ColumnNames.KEEPOUTS.ordinal(), pColorArr);
   }
 
-  public void setViaKeepoutColors(Color[] p_color_arr) {
-    setColors(ColumnNames.VIA_KEEPOUTS.ordinal(), p_color_arr);
+  public void setViaKeepoutColors(Color[] pColorArr) {
+    setColors(ColumnNames.VIA_KEEPOUTS.ordinal(), pColorArr);
   }
 
-  public void setPlaceKeepoutColors(Color[] p_color_arr) {
-    setColors(ColumnNames.PLACE_KEEPOUTS.ordinal(), p_color_arr);
+  public void setPlaceKeepoutColors(Color[] pColorArr) {
+    setColors(ColumnNames.PLACE_KEEPOUTS.ordinal(), pColorArr);
   }
 
-  private void setColors(int p_item_type, Color[] p_color_arr) {
+  private void setColors(int pItemType, Color[] pColorArr) {
     for (int layer = 0; layer < this.data.length - 1; layer++) {
-      int colorIndex = layer % p_color_arr.length;
-      this.data[layer][p_item_type] = p_color_arr[colorIndex];
+      int colorIndex = layer % pColorArr.length;
+      this.data[layer][pItemType] = pColorArr[colorIndex];
     }
-    data[this.data.length - 1][p_item_type] = p_color_arr[p_color_arr.length - 1];
+    data[this.data.length - 1][pItemType] = pColorArr[pColorArr.length - 1];
     this.itemColorsPrecalculated = false;
   }
 

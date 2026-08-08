@@ -12,26 +12,26 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
   private final int incompleteCountAfter;
   private boolean improved;
 
-  public ItemRouteResult(int p_item_id) {
-    this(p_item_id, 0, 0, 0, 0, 0, 1);
+  public ItemRouteResult(int pItemId) {
+    this(pItemId, 0, 0, 0, 0, 0, 1);
     this.improved = false;
   }
 
   public ItemRouteResult(
-      int p_item_id,
-      int p_via_count_before,
-      int p_via_count_after,
-      double p_trace_length_before,
-      double p_trace_length_after,
-      int p_incomplete_count_before,
-      int p_incomplete_count_after) {
-    itemId = p_item_id;
-    viaCountBefore = p_via_count_before;
-    viaCountAfter = p_via_count_after;
-    traceLengthBefore = p_trace_length_before;
-    traceLengthAfter = p_trace_length_after;
-    incompleteCountBefore = p_incomplete_count_before;
-    incompleteCountAfter = p_incomplete_count_after;
+      int pItemId,
+      int pViaCountBefore,
+      int pViaCountAfter,
+      double pTraceLengthBefore,
+      double pTraceLengthAfter,
+      int pIncompleteCountBefore,
+      int pIncompleteCountAfter) {
+    itemId = pItemId;
+    viaCountBefore = pViaCountBefore;
+    viaCountAfter = pViaCountAfter;
+    traceLengthBefore = pTraceLengthBefore;
+    traceLengthAfter = pTraceLengthAfter;
+    incompleteCountBefore = pIncompleteCountBefore;
+    incompleteCountAfter = pIncompleteCountAfter;
 
     if (incompleteCountAfter < incompleteCountBefore) {
       improved = true;
@@ -121,8 +121,8 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
     return traceLengthBefore - traceLengthAfter;
   }
 
-  public void updateImproved(boolean p_improved) {
-    improved = p_improved;
+  public void updateImproved(boolean pImproved) {
+    improved = pImproved;
   }
 
   public int incompleteCountBefore() {

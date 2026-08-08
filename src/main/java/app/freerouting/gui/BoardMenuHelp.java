@@ -14,9 +14,9 @@ public class BoardMenuHelp extends JMenu {
    * ClassNotFound exception when the library jh.jar is not found, which is only used in the
    * extended help menu.
    */
-  public BoardMenuHelp(BoardFrame p_board_frame) {
-    this.boardFrame = p_board_frame;
-    TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+  public BoardMenuHelp(BoardFrame pBoardFrame) {
+    this.boardFrame = pBoardFrame;
+    TextManager tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
     this.setText(tm.getText("help"));
 
     JMenuItem helpAboutMenuitem = new JMenuItem();

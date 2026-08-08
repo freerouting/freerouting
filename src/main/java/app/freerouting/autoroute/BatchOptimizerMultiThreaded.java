@@ -191,7 +191,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
   }
 
   @Override
-  protected float optRoutePass(int p_pass_no, boolean p_with_preferred_directions) {
+  protected float optRoutePass(int pPassNo, boolean pWithPreferredDirections) {
     long startTime = System.currentTimeMillis();
     updateCount = 0;
     numTasksFinished = 0;
@@ -203,14 +203,14 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
 
     BoardStatistics boardStatisticsBefore = board.getStatistics();
     RouterCounters routerCounters = new RouterCounters();
-    routerCounters.passCount = p_pass_no;
+    routerCounters.passCount = pPassNo;
     this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCounters, this.board);
 
     this.minCumulativeTraceLength = boardStatisticsBefore.traces.totalWeightedLength;
 
     String optimizationPassId =
         "BatchOptRouteMT.opt_route_pass #"
-            + p_pass_no
+            + pPassNo
             + " with "
             + itemIds.size()
             + " items, "
@@ -248,7 +248,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
       // We schedule just enough tasks to keep workers busy in order not to exhaust JVM memory so
       // that it can run on systems without huge amount of RAM using the pool
       OptimizeRouteTask newTask =
-          new OptimizeRouteTask(this, this.job, itemId, p_pass_no, p_with_preferred_directions);
+          new OptimizeRouteTask(this, this.job, itemId, pPassNo, pWithPreferredDirections);
       pool.execute(newTask);
     }
 
@@ -318,7 +318,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
 
     job.logDebug(
         "Finished optimizer pass #"
-            + p_pass_no
+            + pPassNo
             + " in "
             + minutes
             + " minutes "

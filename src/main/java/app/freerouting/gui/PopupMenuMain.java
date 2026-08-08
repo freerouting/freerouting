@@ -9,9 +9,9 @@ import javax.swing.JMenuItem;
 class PopupMenuMain extends PopupMenuDisplay {
 
   /** Creates a new instance of MainPopupMenu */
-  PopupMenuMain(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+  PopupMenuMain(BoardFrame pBoardFrame) {
+    super(pBoardFrame);
+    TextManager tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
 
     // add the item for selecting items
 

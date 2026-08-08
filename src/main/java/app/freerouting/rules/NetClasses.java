@@ -15,15 +15,15 @@ public class NetClasses implements Serializable {
   }
 
   /** Returns the net class with index p_index. */
-  public NetClass get(int p_index) {
-    assert p_index >= 0 && p_index <= classArr.size() - 1;
-    return classArr.get(p_index);
+  public NetClass get(int pIndex) {
+    assert pIndex >= 0 && pIndex <= classArr.size() - 1;
+    return classArr.get(pIndex);
   }
 
   /** Returns the net class with name p_name, or null, if no such class exists. */
-  public NetClass get(String p_name) {
+  public NetClass get(String pName) {
     for (NetClass currClass : this.classArr) {
-      if (currClass.getName().equals(p_name)) {
+      if (currClass.getName().equals(pName)) {
         return currClass;
       }
     }
@@ -32,25 +32,25 @@ public class NetClasses implements Serializable {
 
   /** Appends a new empty class with name p_name to the class array */
   public NetClass append(
-      String p_name,
-      LayerStructure p_layer_structure,
-      ClearanceMatrix p_clearance_matrix,
-      boolean p_is_ignored_by_autorouter) {
+      String pName,
+      LayerStructure pLayerStructure,
+      ClearanceMatrix pClearanceMatrix,
+      boolean pIsIgnoredByAutorouter) {
     NetClass newClass =
-        new NetClass(p_name, p_layer_structure, p_clearance_matrix, p_is_ignored_by_autorouter);
+        new NetClass(pName, pLayerStructure, pClearanceMatrix, pIsIgnoredByAutorouter);
     classArr.add(newClass);
     return newClass;
   }
 
   /** Appends a new empty class to the class array. A name for the class is created internally */
-  public NetClass append(LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix) {
+  public NetClass append(LayerStructure pLayerStructure, ClearanceMatrix pClearanceMatrix) {
     String newName;
     int index = 0;
     do {
       ++index;
       newName = "class" + index;
     } while (this.get(newName) != null);
-    return append(newName, p_layer_structure, p_clearance_matrix, false);
+    return append(newName, pLayerStructure, pClearanceMatrix, false);
   }
 
   /**
@@ -58,13 +58,13 @@ public class NetClasses implements Serializable {
    * trace clearance class equal to p_trace_clearance_class and via rule equal to p_cia_rule.
    * Returns null, if no such net class was found.
    */
-  public NetClass find(int p_trace_half_width, int p_trace_clearance_class, ViaRule p_via_rule) {
+  public NetClass find(int pTraceHalfWidth, int pTraceClearanceClass, ViaRule pViaRule) {
     for (NetClass currClass : this.classArr) {
-      if (currClass.getTraceClearanceClass() == p_trace_clearance_class
-          && currClass.getViaRule() == p_via_rule) {
+      if (currClass.getTraceClearanceClass() == pTraceClearanceClass
+          && currClass.getViaRule() == pViaRule) {
         boolean traceWidthsEqual = true;
         for (int i = 0; i < currClass.layerCount(); i++) {
-          if (currClass.getTraceHalfWidth(i) != p_trace_half_width) {
+          if (currClass.getTraceHalfWidth(i) != pTraceHalfWidth) {
             traceWidthsEqual = false;
             break;
           }
@@ -83,15 +83,14 @@ public class NetClasses implements Serializable {
    * equal to p_trace_clearance_class and via rule equal to p_via_rule. Returns null, if no such net
    * class was found.
    */
-  public NetClass find(
-      int[] p_trace_half_width_arr, int p_trace_clearance_class, ViaRule p_via_rule) {
+  public NetClass find(int[] pTraceHalfWidthArr, int pTraceClearanceClass, ViaRule pViaRule) {
     for (NetClass currClass : this.classArr) {
-      if (currClass.getTraceClearanceClass() == p_trace_clearance_class
-          && currClass.getViaRule() == p_via_rule
-          && p_trace_half_width_arr.length == currClass.layerCount()) {
+      if (currClass.getTraceClearanceClass() == pTraceClearanceClass
+          && currClass.getViaRule() == pViaRule
+          && pTraceHalfWidthArr.length == currClass.layerCount()) {
         boolean traceWidthsEqual = true;
         for (int i = 0; i < currClass.layerCount(); i++) {
-          if (currClass.getTraceHalfWidth(i) != p_trace_half_width_arr[i]) {
+          if (currClass.getTraceHalfWidth(i) != pTraceHalfWidthArr[i]) {
             traceWidthsEqual = false;
             break;
           }
@@ -108,7 +107,7 @@ public class NetClasses implements Serializable {
    * Removes p_net_class from this list. Returns false, if p_net_class was not contained in the
    * list.
    */
-  public boolean remove(NetClass p_net_class) {
-    return this.classArr.remove(p_net_class);
+  public boolean remove(NetClass pNetClass) {
+    return this.classArr.remove(pNetClass);
   }
 }

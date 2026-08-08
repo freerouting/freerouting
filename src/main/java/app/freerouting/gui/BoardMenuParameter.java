@@ -12,14 +12,14 @@ public final class BoardMenuParameter extends JMenu {
   private final TextManager tm;
 
   /** Creates a new instance of BoardSelectMenu */
-  private BoardMenuParameter(BoardFrame p_board_frame) {
-    boardFrame = p_board_frame;
-    tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+  private BoardMenuParameter(BoardFrame pBoardFrame) {
+    boardFrame = pBoardFrame;
+    tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
   }
 
   /** Returns a new windows menu for the board frame. */
-  public static BoardMenuParameter getInstance(BoardFrame p_board_frame) {
-    final BoardMenuParameter parameterMenu = new BoardMenuParameter(p_board_frame);
+  public static BoardMenuParameter getInstance(BoardFrame pBoardFrame) {
+    final BoardMenuParameter parameterMenu = new BoardMenuParameter(pBoardFrame);
 
     parameterMenu.setText(parameterMenu.tm.getText("parameter"));
 

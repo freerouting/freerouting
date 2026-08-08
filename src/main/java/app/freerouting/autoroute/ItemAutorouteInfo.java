@@ -19,8 +19,8 @@ public class ItemAutorouteInfo {
   /** ExpansionRoom for pushing or ripping this object for each tree shape. */
   private ObstacleExpansionRoom[] expansionRoomArr;
 
-  public ItemAutorouteInfo(Item p_item) {
-    this.item = p_item;
+  public ItemAutorouteInfo(Item pItem) {
+    this.item = pItem;
   }
 
   /**
@@ -35,8 +35,8 @@ public class ItemAutorouteInfo {
    * Sets, if the corresponding item belongs to the start or destination set of the autoroute
    * algorithm. Only used, if the item belongs to the net, which will be currently routed.
    */
-  public void setStartInfo(boolean p_value) {
-    startInfo = p_value;
+  public void setStartInfo(boolean pValue) {
+    startInfo = pValue;
   }
 
   /** Returns the precalculated connection of this item or null, if it is not yet precalculated. */
@@ -45,13 +45,13 @@ public class ItemAutorouteInfo {
   }
 
   /** Sets the precalculated connection of this item. */
-  public void setPrecalculatedConnection(Connection p_connection) {
-    this.precalculatedConnection = p_connection;
+  public void setPrecalculatedConnection(Connection pConnection) {
+    this.precalculatedConnection = pConnection;
   }
 
   /** Gets the ExpansionRoom of index p_index. Creates it, if it is not yet existing. */
-  public ObstacleExpansionRoom getExpansionRoom(int p_index, ShapeSearchTree p_autoroute_tree) {
-    int currentShapeCount = this.item.treeShapeCount(p_autoroute_tree);
+  public ObstacleExpansionRoom getExpansionRoom(int pIndex, ShapeSearchTree pAutorouteTree) {
+    int currentShapeCount = this.item.treeShapeCount(pAutorouteTree);
 
     if (expansionRoomArr == null) {
       expansionRoomArr = new ObstacleExpansionRoom[currentShapeCount];
@@ -64,19 +64,19 @@ public class ItemAutorouteInfo {
       expansionRoomArr = newArr;
     }
 
-    if (p_index < 0 || p_index >= expansionRoomArr.length) {
+    if (pIndex < 0 || pIndex >= expansionRoomArr.length) {
       FRLogger.warn(
           "ItemAutorouteInfo.get_expansion_room: p_index "
-              + p_index
+              + pIndex
               + " out of range [0, "
               + expansionRoomArr.length
               + ")");
       return null;
     }
-    if (expansionRoomArr[p_index] == null) {
-      expansionRoomArr[p_index] = new ObstacleExpansionRoom(this.item, p_index, p_autoroute_tree);
+    if (expansionRoomArr[pIndex] == null) {
+      expansionRoomArr[pIndex] = new ObstacleExpansionRoom(this.item, pIndex, pAutorouteTree);
     }
-    return expansionRoomArr[p_index];
+    return expansionRoomArr[pIndex];
   }
 
   /** Resets the expansion rooms for autorouting the next connection. */
@@ -91,13 +91,13 @@ public class ItemAutorouteInfo {
   }
 
   /** Draws the shapes of the expansion rooms of this info for testing purposes. */
-  public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity) {
+  public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext, double pIntensity) {
     if (expansionRoomArr == null) {
       return;
     }
     for (ObstacleExpansionRoom currRoom : expansionRoomArr) {
       if (currRoom != null) {
-        currRoom.draw(p_graphics, p_graphics_context, p_intensity);
+        currRoom.draw(pGraphics, pGraphicsContext, pIntensity);
       }
     }
   }
