@@ -85,6 +85,7 @@ tasks.named('check') {
 }
 
 spotless {
+    lineEndings = 'UNIX'
     java {
         // Explicit targets: main + test only. Excludes src_v19 (reference baseline) and
         // build/generated-src (VersionInfo.java regenerated on every build).
