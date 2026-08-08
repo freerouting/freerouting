@@ -236,7 +236,7 @@ function Export-MarkdownReport {
 
             $sortedRuns = $latestRuns | Sort-Object -Property { $_.binary.version_label }
 
-            $tableHeaders = @("Version", "Mode", "Fanout", "Fanout Time (s)", "Router Time (s)", "Optimizer Time (s)", "Total Time (s)", "Passes", "Unrouted", "Violations", "Score", "Peak Heap (MB)", "Total Alloc (GB)", "Warn/Err", "Notes")
+            $tableHeaders = @("Version", "Mode", "Fanout", "Fanout (s)", "Router (s)", "Opt. (s)", "Total (s)", "Passes", "Unrouted", "Violations", "Score", "Heap (MB)", "Alloc (GB)", "Warn/Err", "Notes")
             $tableAlignments = @("L", "L", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "L")
             $tableRows = [System.Collections.ArrayList]::new()
 
