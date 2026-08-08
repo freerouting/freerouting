@@ -153,8 +153,11 @@ public class BigQueryClient implements AnalyticsClient {
   }
 
   /**
-   * Appends a snapshot row to the {@code users} dimension table. Queries should take the latest
-   * row per {@code anonymous_id} (or {@code user_id}) ordered by {@code received_at}.
+   * Appends a snapshot row to the {@code user_snapshots} dimension table. Queries should take the
+   * latest row per {@code anonymous_id} (or {@code user_id}) ordered by {@code received_at}.
+   *
+   * <p>Uses {@code user_snapshots} rather than {@code users} to avoid colliding with any legacy
+   * {@code users} table that may exist in the dataset with an incompatible schema.</p>
    */
   public void upsertUserSnapshot(String userId, String anonymousId, Traits traits) throws IOException {
     Traits snapshotTraits = new Traits();
@@ -172,7 +175,7 @@ public class BigQueryClient implements AnalyticsClient {
     payload.context.library = new Library();
     payload.context.library.name = LIBRARY_NAME;
     payload.context.library.version = LIBRARY_VERSION;
-    payload.event = "users";
+    payload.event = "user_snapshots";
     payload.traits = snapshotTraits;
 
     sendPayloadAsync(payload);
@@ -219,13 +222,19 @@ public class BigQueryClient implements AnalyticsClient {
             .replace(" ", "_")
             .replace("-", "_");
 
-        // Apply a text transformation to the event and event_text fields.
-        fields.put("event_text", fields.get("event"));
-        fields.remove("event");
-        fields.put("event", tableName);
+        // Trait-only tables (identifies, user_snapshots) follow the Segment identifies schema:
+        // flattened traits + standard metadata, but no event / event_text columns.
+        if (!isTraitOnlyTable(tableName)) {
+          fields.put("event_text", fields.get("event"));
+          fields.remove("event");
+          fields.put("event", tableName);
+        } else {
+          fields.remove("event");
+        }
 
         TableId tableId = TableId.of(BIGQUERY_PROJECT_ID, BIGQUERY_DATASET_ID, tableName);
         InsertAllRequest request = InsertAllRequest.newBuilder(tableId)
+            .setIgnoreUnknownValues(true)
             .addRow(InsertAllRequest.RowToInsert.of(fields))
             .build();
 
@@ -268,5 +277,9 @@ public class BigQueryClient implements AnalyticsClient {
     }
 
     return fields;
+  }
+
+  private static boolean isTraitOnlyTable(String tableName) {
+    return "identifies".equals(tableName) || "user_snapshots".equals(tableName);
   }
 }
