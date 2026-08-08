@@ -1749,7 +1749,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #handleTraceEvent(TraceEvent)
    */
   private void drawImpactedPointsIndicators(Graphics pGraphics) {
-    Color drawColor = graphicsContext.getHilightColor();
+    Color drawColor = graphicsContext.getHighlightColor();
     double drawIntensity = graphicsContext.getHilightColorIntensity();
     int defaultTraceHalfWidth = board.rules.getDefaultTraceHalfWidth(0);
     double radius = Math.max(5 * defaultTraceHalfWidth / 10, 500); // Minimum radius of 500

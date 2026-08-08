@@ -130,7 +130,7 @@ class InteractiveSettingsPropertyChangeTest {
     settings.setHilightRoutingObstacle(false);
     var events =
         collectEvents(
-            InteractiveSettings.PROP_HILIGHT_ROUTING_OBSTACLE,
+            InteractiveSettings.PROP_HIGHLIGHT_ROUTING_OBSTACLE,
             () -> settings.setHilightRoutingObstacle(true));
 
     assertEquals(1, events.size());

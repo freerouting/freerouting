@@ -249,7 +249,7 @@ public final class CopyItemState extends InteractiveState {
       currItem.draw(
           pGraphics,
           hdlg.graphicsContext,
-          hdlg.graphicsContext.getHilightColor(),
+          hdlg.graphicsContext.getHighlightColor(),
           hdlg.graphicsContext.getHilightColorIntensity());
     }
   }

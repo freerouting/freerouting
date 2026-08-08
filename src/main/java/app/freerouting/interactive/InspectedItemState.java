@@ -228,7 +228,7 @@ public final class InspectedItemState extends InteractiveState {
       currItem.draw(
           pGraphics,
           hdlg.graphicsContext,
-          hdlg.graphicsContext.getHilightColor(),
+          hdlg.graphicsContext.getHighlightColor(),
           hdlg.graphicsContext.getHilightColorIntensity());
     }
     if (clearanceViolations != null) {

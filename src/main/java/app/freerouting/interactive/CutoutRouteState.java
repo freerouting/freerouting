@@ -103,7 +103,7 @@ public final class CutoutRouteState extends SelectRegionState {
       currTrace.draw(
           pGraphics,
           hdlg.graphicsContext,
-          hdlg.graphicsContext.getHilightColor(),
+          hdlg.graphicsContext.getHighlightColor(),
           hdlg.graphicsContext.getHilightColorIntensity());
     }
     super.draw(pGraphics);

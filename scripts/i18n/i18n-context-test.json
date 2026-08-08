@@ -10618,11 +10618,11 @@
     "related_keys": [],
     "java_class": "app.freerouting.gui.WindowObjectVisibility"
   },
-  "gui.WindowObjectVisibility.HILIGHT": {
+  "gui.WindowObjectVisibility.HIGHLIGHT": {
     "bundle": "gui.WindowObjectVisibility",
     "bundle_desc": "GUI (graphical user interface)",
-    "key": "HILIGHT",
-    "english_value": "hilight",
+    "key": "HIGHLIGHT",
+    "english_value": "highlight",
     "english_hash": "003dba7ff3a14ebfbe0778887be3558041bd7bad8c83fc8ca9aa851dbef6349d",
     "ui_role": "label",
     "grammatical_role": "fragment",

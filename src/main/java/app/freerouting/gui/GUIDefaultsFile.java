@@ -367,7 +367,7 @@ public final class GUIDefaultsFile {
           if (!readConductionColors()) {
             return false;
           }
-        } else if (nextToken == Keyword.HILIGHT) {
+        } else if (nextToken == Keyword.HIGHLIGHT) {
           if (!readHilightColor()) {
             return false;
           }
@@ -690,9 +690,9 @@ public final class GUIDefaultsFile {
     writeColorScope(graphicsContext.getBackgroundColor());
     outFile.endScope();
     outFile.startScope();
-    outFile.write("hilight");
+    outFile.write("highlight");
     writeColorIntensity(graphicsContext.getHilightColorIntensity());
-    writeColorScope(graphicsContext.getHilightColor());
+    writeColorScope(graphicsContext.getHighlightColor());
     outFile.endScope();
     outFile.startScope();
     outFile.write("incompletes");
@@ -844,7 +844,7 @@ public final class GUIDefaultsFile {
           if (!readClearanceCompensationScope()) {
             return false;
           }
-        } else if (nextToken == Keyword.HILIGHT_ROUTING_OBSTACLE) {
+        } else if (nextToken == Keyword.HIGHLIGHT_ROUTING_OBSTACLE) {
           if (!readHilightRoutingObstacleScope()) {
             return false;
           }
@@ -1299,8 +1299,8 @@ public final class GUIDefaultsFile {
     FIXED_VIAS,
     FORTYFIVE_DEGREE,
     GUI_DEFAULTS,
-    HILIGHT,
-    HILIGHT_ROUTING_OBSTACLE,
+    HIGHLIGHT,
+    HIGHLIGHT_ROUTING_OBSTACLE,
     IGNORE_CONDUCTION_AREAS,
     INCOMPLETES,
     INCOMPLETES_INFO,

@@ -69,8 +69,8 @@ Identifier = ({Letter}|{SpecChar})({Letter}|{Digit}|{SpecChar})*
    "fixed_vias"                { return GUIDefaultsFile.Keyword.FIXED_VIAS; }
    "fortyfive_degree"          { return GUIDefaultsFile.Keyword.FORTYFIVE_DEGREE; }
    "gui_defaults"              { return GUIDefaultsFile.Keyword.GUI_DEFAULTS; }
-   "hilight"                   { return GUIDefaultsFile.Keyword.HILIGHT; }
-   "hilight_routing_obstacle"  { return GUIDefaultsFile.Keyword.HILIGHT_ROUTING_OBSTACLE; }
+   "highlight"                 { return GUIDefaultsFile.Keyword.HIGHLIGHT; }
+   "highlight_routing_obstacle"  { return GUIDefaultsFile.Keyword.HIGHLIGHT_ROUTING_OBSTACLE; }
    "ignore_conduction_areas"   { return GUIDefaultsFile.Keyword.IGNORE_CONDUCTION_AREAS; }
    "incompletes"               { return GUIDefaultsFile.Keyword.INCOMPLETES; }
    "incompletes_info"          { return GUIDefaultsFile.Keyword.INCOMPLETES_INFO; }

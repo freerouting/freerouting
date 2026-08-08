@@ -1502,7 +1502,7 @@ class GUIDefaultsScanner {
           break;
         case 22:
           {
-            return GUIDefaultsFile.Keyword.HILIGHT;
+            return GUIDefaultsFile.Keyword.HIGHLIGHT;
           }
         case 121:
           break;
@@ -1731,7 +1731,7 @@ class GUIDefaultsScanner {
           break;
         case 83:
           {
-            return GUIDefaultsFile.Keyword.HILIGHT_ROUTING_OBSTACLE;
+            return GUIDefaultsFile.Keyword.HIGHLIGHT_ROUTING_OBSTACLE;
           }
         case 159:
           break;

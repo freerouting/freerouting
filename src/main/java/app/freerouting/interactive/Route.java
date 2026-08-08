@@ -473,10 +473,10 @@ public class Route {
     if (currentNet == null) {
       return;
     }
-    Color highlightColor = pGraphicsContext.getHilightColor();
+    Color highlightColor = pGraphicsContext.getHighlightColor();
     double highligtColorIntensity = pGraphicsContext.getHilightColorIntensity();
 
-    // hilight the swappable pins and their incompletes
+    // highlight the swappable pins and their incompletes
     for (SwapPinInfo currInfo : this.swapPinInfos) {
       currInfo.pin.draw(pGraphics, pGraphicsContext, highlightColor, 0.3 * highligtColorIntensity);
       if (currInfo.incomplete != null) {
@@ -489,7 +489,7 @@ public class Route {
       }
     }
 
-    // hilight the target set
+    // highlight the target set
     for (Item currItem : targetSet) {
       if (!(currItem instanceof ConductionArea)) {
         currItem.draw(pGraphics, pGraphicsContext, highlightColor, highligtColorIntensity);

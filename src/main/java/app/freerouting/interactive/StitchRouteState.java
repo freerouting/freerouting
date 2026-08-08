@@ -55,7 +55,7 @@ public class StitchRouteState extends RouteState {
     FloatPoint[] drawPoints = new FloatPoint[2];
     drawPoints[0] = route.getLastCorner().toFloat();
     drawPoints[1] = hdlg.getCurrentMousePosition();
-    Color drawColor = hdlg.graphicsContext.getHilightColor();
+    Color drawColor = hdlg.graphicsContext.getHighlightColor();
     double displayWidth =
         hdlg.getTraceHalfwidth(route.netNoArr[0], hdlg.getInteractiveSettings().getLayer());
     int clearanceDrawWidth = 50;

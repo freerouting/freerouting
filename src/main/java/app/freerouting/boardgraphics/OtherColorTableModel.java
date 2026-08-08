@@ -87,7 +87,7 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
     setColorSafe(ColumnNames.BACKGROUND, pColor);
   }
 
-  public Color getHilightColor() {
+  public Color getHighlightColor() {
     return getColorSafe(ColumnNames.HIGHLIGHT, Color.white);
   }
 

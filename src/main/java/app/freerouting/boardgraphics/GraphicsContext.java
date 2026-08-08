@@ -62,6 +62,9 @@ public class GraphicsContext implements Serializable {
 
   /** When true, copper pours use fast solid fills (used during the first paint after load). */
   private transient boolean simplifiedPlaneRendering;
+  private transient java.awt.TexturePaint cachedHatchPaint;
+  private transient double cachedHatchPitchPx = -1.0;
+  private transient Color cachedHatchColor;
 
   public GraphicsContext(
       IntBox pDesignBounds,
@@ -97,13 +100,6 @@ public class GraphicsContext implements Serializable {
     return new boolean[] {true, true, true, true, true, true};
   }
 
-  private boolean[] getVirtualLayerVisibilityArr() {
-    if (virtualLayerVisibilityArr == null || virtualLayerVisibilityArr.length == 0) {
-      virtualLayerVisibilityArr = createDefaultVirtualLayerVisibilityArr();
-    }
-    return virtualLayerVisibilityArr;
-  }
-
   /** initialise some values in p_graphics */
   private static void initDrawGraphics(Graphics2D pGraphics, Color pColor, float pWidth) {
     BasicStroke bs =
@@ -121,6 +117,13 @@ public class GraphicsContext implements Serializable {
       currAlphaComposite = AlphaComposite.getInstance(AlphaComposite.DST_OVER, (float) -pFactor);
     }
     pG2.setComposite(currAlphaComposite);
+  }
+
+  private boolean[] getVirtualLayerVisibilityArr() {
+    if (virtualLayerVisibilityArr == null || virtualLayerVisibilityArr.length == 0) {
+      virtualLayerVisibilityArr = createDefaultVirtualLayerVisibilityArr();
+    }
+    return virtualLayerVisibilityArr;
   }
 
   /**
@@ -286,10 +289,6 @@ public class GraphicsContext implements Serializable {
     }
   }
 
-  private transient java.awt.TexturePaint cachedHatchPaint;
-  private transient double cachedHatchPitchPx = -1.0;
-  private transient Color cachedHatchColor;
-
   public java.awt.geom.Area getAwtArea(Area pArea) {
     if (pArea == null || pArea.isEmpty()) {
       return null;
@@ -433,15 +432,6 @@ public class GraphicsContext implements Serializable {
     }
     return null;
   }
-
-  public record ClearanceItem(java.awt.geom.Area area) {}
-
-  public record ThermalReliefItem(
-      java.awt.geom.Area clearanceArea,
-      double cx,
-      double cy,
-      double expansionRadiusPx,
-      double spokeWidthPx) {}
 
   public void fillPlaneArea(
       Area pArea,
@@ -698,8 +688,8 @@ public class GraphicsContext implements Serializable {
     return otherColorTable.getBackgroundColor();
   }
 
-  public Color getHilightColor() {
-    return otherColorTable.getHilightColor();
+  public Color getHighlightColor() {
+    return otherColorTable.getHighlightColor();
   }
 
   public Color getIncompleteColor() {
@@ -873,6 +863,10 @@ public class GraphicsContext implements Serializable {
     autoLayerDimFactor = pValue;
   }
 
+  public int getFullyVisibleLayer() {
+    return fullyVisibleLayer;
+  }
+
   /** Sets the layer, which will be excluded from automatic layer dimming. */
   public void setFullyVisibleLayer(int pLayerNo) {
     fullyVisibleLayer = pLayerNo;
@@ -881,16 +875,12 @@ public class GraphicsContext implements Serializable {
     }
   }
 
-  public int getFullyVisibleLayer() {
-    return fullyVisibleLayer;
+  public boolean isSimplifiedPlaneRendering() {
+    return simplifiedPlaneRendering;
   }
 
   public void setSimplifiedPlaneRendering(boolean simplifiedPlaneRendering) {
     this.simplifiedPlaneRendering = simplifiedPlaneRendering;
-  }
-
-  public boolean isSimplifiedPlaneRendering() {
-    return simplifiedPlaneRendering;
   }
 
   public int getFullyVisibleVirtualLayer() {
@@ -899,6 +889,17 @@ public class GraphicsContext implements Serializable {
       return -1;
     }
     return fullyVisibleVirtualLayer;
+  }
+
+  public void setFullyVisibleVirtualLayer(int idx) {
+    boolean[] visibilityArr = getVirtualLayerVisibilityArr();
+    if (idx < -1 || idx >= visibilityArr.length) {
+      idx = -1;
+    }
+    fullyVisibleVirtualLayer = idx;
+    if (idx != -1) {
+      fullyVisibleLayer = -1;
+    }
   }
 
   public boolean isFrontSelected() {
@@ -924,17 +925,6 @@ public class GraphicsContext implements Serializable {
     boolean[] visibilityArr = getVirtualLayerVisibilityArr();
     if (idx >= 0 && idx < visibilityArr.length) {
       visibilityArr[idx] = visible;
-    }
-  }
-
-  public void setFullyVisibleVirtualLayer(int idx) {
-    boolean[] visibilityArr = getVirtualLayerVisibilityArr();
-    if (idx < -1 || idx >= visibilityArr.length) {
-      idx = -1;
-    }
-    fullyVisibleVirtualLayer = idx;
-    if (idx != -1) {
-      fullyVisibleLayer = -1;
     }
   }
 
@@ -1043,4 +1033,13 @@ public class GraphicsContext implements Serializable {
     this.itemColorTable = new ItemColorTableModel(pStream);
     this.otherColorTable = new OtherColorTableModel(pStream);
   }
+
+  public record ClearanceItem(java.awt.geom.Area area) {}
+
+  public record ThermalReliefItem(
+      java.awt.geom.Area clearanceArea,
+      double cx,
+      double cy,
+      double expansionRadiusPx,
+      double spokeWidthPx) {}
 }

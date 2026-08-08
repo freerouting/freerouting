@@ -130,7 +130,7 @@ public class ExpansionDrill implements ExpandableObject {
 
   */
   public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext, double pIntensity) {
-    Color drawColor = pGraphicsContext.getHilightColor();
+    Color drawColor = pGraphicsContext.getHighlightColor();
     pGraphicsContext.fillArea(this.shape, pGraphics, drawColor, pIntensity);
     pGraphicsContext.drawBoundary(this.shape, 0, drawColor, pGraphics, 1);
   }

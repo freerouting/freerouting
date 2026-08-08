@@ -52,7 +52,7 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   public static final String PROP_HORIZONTAL_COMPONENT_GRID = "horizontalComponentGrid";
   public static final String PROP_VERTICAL_COMPONENT_GRID = "verticalComponentGrid";
   public static final String PROP_MANUAL_RULE_SELECTION = "manualRuleSelection";
-  public static final String PROP_HILIGHT_ROUTING_OBSTACLE = "hilightRoutingObstacle";
+  public static final String PROP_HIGHLIGHT_ROUTING_OBSTACLE = "highlightRoutingObstacle";
   public static final String PROP_MANUAL_TRACE_CLEARANCE_CLASS = "manualTraceClearanceClass";
   public static final String PROP_MANUAL_VIA_RULE_INDEX = "manualViaRuleIndex";
   public static final String PROP_ZOOM_WITH_WHEEL = "zoomWithWheel";
@@ -498,14 +498,14 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
     return this.hilightRoutingObstacle;
   }
 
-  /** Sets hilight routing obstacle and fires {@link #PROP_HILIGHT_ROUTING_OBSTACLE}. */
+  /** Sets highlight routing obstacle and fires {@link #PROP_HIGHLIGHT_ROUTING_OBSTACLE}. */
   public void setHilightRoutingObstacle(boolean pValue) {
     if (readOnly) {
       return;
     }
     boolean old = this.hilightRoutingObstacle;
     this.hilightRoutingObstacle = pValue;
-    pcs.firePropertyChange(PROP_HILIGHT_ROUTING_OBSTACLE, old, pValue);
+    pcs.firePropertyChange(PROP_HIGHLIGHT_ROUTING_OBSTACLE, old, pValue);
   }
 
   /** If true, the mouse wheel is used for zooming. */

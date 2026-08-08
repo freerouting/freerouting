@@ -47,7 +47,7 @@
     "related_keys": [],
     "ui_role": "label"
   },
-  "HILIGHT": {
+  "HIGHLIGHT": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.WindowVisibility"
