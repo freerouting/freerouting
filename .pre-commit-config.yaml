@@ -69,7 +69,7 @@ repos:
     hooks:
       - id: spotless-check
         name: Spotless Check
-        entry: ./gradlew spotlessCheck
+        entry: python scripts/run-gradle.py spotlessCheck
         language: system
         files: \.(java|groovy|gradle)$
         pass_filenames: false
