@@ -167,21 +167,21 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     netNoArr[0] = pAutorouteEngine.getNetNo();
     pAutorouteEngine.autorouteSearchTree.overlappingTreeEntries(
         this.getShape(), this.getLayer(), netNoArr, overlappingObjects);
-    for (ShapeTree.TreeEntry currEntry : overlappingObjects) {
-      if (currEntry.object == this) {
+    for (ShapeTree.TreeEntry currentEntry : overlappingObjects) {
+      if (currentEntry.object == this) {
         continue;
       }
-      SearchTreeObject currObject = (SearchTreeObject) currEntry.object;
-      if (!currObject.isTraceObstacle(pAutorouteEngine.getNetNo())) {
+      SearchTreeObject currentObject = (SearchTreeObject) currentEntry.object;
+      if (!currentObject.isTraceObstacle(pAutorouteEngine.getNetNo())) {
         continue;
       }
-      if (currObject.shapeLayer(currEntry.shapeIndexInObject) != getLayer()) {
+      if (currentObject.shapeLayer(currentEntry.shapeIndexInObject) != getLayer()) {
         continue;
       }
-      TileShape currShape =
-          currObject.getTreeShape(
-              pAutorouteEngine.autorouteSearchTree, currEntry.shapeIndexInObject);
-      TileShape intersection = this.getShape().intersection(currShape);
+      TileShape currentShape =
+          currentObject.getTreeShape(
+              pAutorouteEngine.autorouteSearchTree, currentEntry.shapeIndexInObject);
+      TileShape intersection = this.getShape().intersection(currentShape);
       if (intersection.dimension() > 1) {
         FRLogger.warn("ExpansionRoom overlap conflict");
         result = false;

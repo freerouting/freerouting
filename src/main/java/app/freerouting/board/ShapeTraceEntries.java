@@ -575,31 +575,31 @@ public class ShapeTraceEntries {
     if (listAnchor == null) {
       return true;
     }
-    EntryPoint currEntry = listAnchor;
-    int[] currNetNos = currEntry.trace.netNoArr;
-    int currLevel;
-    if (netNosEqual(currNetNos, this.ownNetNos)) {
+    EntryPoint currentEntry = listAnchor;
+    int[] currentNetNos = currentEntry.trace.netNoArr;
+    int currentLevel;
+    if (netNosEqual(currentNetNos, this.ownNetNos)) {
       // ignore own net when calculating the stack level
-      currLevel = 0;
+      currentLevel = 0;
     } else {
-      currLevel = 1;
+      currentLevel = 1;
     }
 
-    while (currEntry != null) {
-      if (currEntry.stackLevel < 0) // not yet calculated
+    while (currentEntry != null) {
+      if (currentEntry.stackLevel < 0) // not yet calculated
       {
         ++tracePieceCount;
-        currEntry.stackLevel = currLevel;
-        if (currLevel > maxStackLevel) {
+        currentEntry.stackLevel = currentLevel;
+        if (currentLevel > maxStackLevel) {
           if (maxStackLevel > 1) {
-            this.foundObstacle = currEntry.trace;
+            this.foundObstacle = currentEntry.trace;
           }
-          maxStackLevel = currLevel;
+          maxStackLevel = currentLevel;
         }
       }
 
       // set stack level for all entries of the current net;
-      EntryPoint checkEntry = currEntry.next;
+      EntryPoint checkEntry = currentEntry.next;
       int indexOfNextForeignSet = 0;
       int indexOfLastOccurrenceOfSet = 0;
       int nextIndex = 0;
@@ -609,10 +609,10 @@ public class ShapeTraceEntries {
       while (checkEntry != null) {
         ++nextIndex;
         int[] checkNetNos = checkEntry.trace.netNoArr;
-        if (netNosEqual(checkNetNos, currNetNos)) {
+        if (netNosEqual(checkNetNos, currentNetNos)) {
           indexOfLastOccurrenceOfSet = nextIndex;
           lastOwnEntry = checkEntry;
-          checkEntry.stackLevel = currEntry.stackLevel;
+          checkEntry.stackLevel = currentEntry.stackLevel;
         } else if (indexOfNextForeignSet == 0) {
           // first occurrence of a foreign connected set
           indexOfNextForeignSet = nextIndex;
@@ -632,7 +632,7 @@ public class ShapeTraceEntries {
             // stack property fails
             return false;
           }
-          ++currLevel;
+          ++currentLevel;
         } else {
           if (indexOfLastOccurrenceOfSet != 0) {
             nextEntry = lastOwnEntry;
@@ -640,28 +640,28 @@ public class ShapeTraceEntries {
             nextEntry = firstForeignEntry;
             if (nextEntry.stackLevel >= 0) // already calculated
             {
-              --currLevel;
-              if (nextEntry.stackLevel != currLevel) {
+              --currentLevel;
+              if (nextEntry.stackLevel != currentLevel) {
                 return false;
               }
             }
           }
         }
-        currNetNos = nextEntry.trace.netNoArr;
-        // remove all entries between currEntry and nextEntry, because
+        currentNetNos = nextEntry.trace.netNoArr;
+        // remove all entries between currentEntry and nextEntry, because
         // they are irrelevant;
-        checkEntry = currEntry.next;
+        checkEntry = currentEntry.next;
         while (checkEntry != nextEntry) {
           checkEntry = checkEntry.next;
         }
-        currEntry.next = nextEntry;
-        currEntry = nextEntry;
+        currentEntry.next = nextEntry;
+        currentEntry = nextEntry;
       } else {
-        currEntry = null;
+        currentEntry = null;
       }
     }
-    if (currLevel != 1) {
-      FRLogger.warn("ShapeTraceEntries.calculate_stack_levels: currLevel inconsistent");
+    if (currentLevel != 1) {
+      FRLogger.warn("ShapeTraceEntries.calculate_stack_levels: currentLevel inconsistent");
       return false;
     }
     return true;

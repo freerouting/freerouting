@@ -370,10 +370,10 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       NetClass netRule = boardRules.netClasses.get((String) netClassName);
       // Check, if netRule is used in a net of the net list
       for (int i = 1; i < boardRules.nets.maxNetNo(); i++) {
-        Net currNet = boardRules.nets.get(i);
-        if (currNet.getNetClass() == netRule) {
+        Net currentNet = boardRules.nets.get(i);
+        if (currentNet.getNetClass() == netRule) {
           boardFrame.screenMessages.setStatusMessage(
-              tm.getText("net_class_not_removed_in_use_message", currNet.name));
+              tm.getText("net_class_not_removed_in_use_message", currentNet.name));
           return;
         }
       }

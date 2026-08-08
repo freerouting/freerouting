@@ -174,7 +174,7 @@ consider the following questions:
 n Is the information organized logically? If your answer is no, how could we better organize
 the information?
 n Did you find any inaccuracies or omissions? If your answer is yes, what are the
-inacurracies or omissions?
+inaccuracies or omissions?
 n What suggestions do you have for improving this manual?
 Please send your comments by fax to (408) 342-5647, or via the Internet by email to
 cct_pubs@cadence.com. Remember to include the document title with your comments.

@@ -2,6 +2,7 @@ extends: default
 
 rules:
   line-length: disable
+  brackets: disable
   comments:
     min-spaces-from-content: 1
   document-start: disable
@@ -9,3 +10,6 @@ rules:
 
 ignore: |
   src_v19/
+  fixtures/
+  integrations/
+  examples/

@@ -342,8 +342,8 @@ public class ShapeSearchTree extends MinAreaTree {
     Collection<TreeEntry> treeEntries = new LinkedList<>();
     overlappingTreeEntries(pShape, pLayer, pIgnoreNetNos, treeEntries);
     if (pObstacles != null) {
-      for (TreeEntry currEntry : treeEntries) {
-        pObstacles.add((SearchTreeObject) currEntry.object);
+      for (TreeEntry currentEntry : treeEntries) {
+        pObstacles.add((SearchTreeObject) currentEntry.object);
       }
     }
   }
@@ -389,30 +389,30 @@ public class ShapeSearchTree extends MinAreaTree {
     Collection<Leaf> tmpList = this.overlaps(bounds);
     boolean is45Degree = pShape instanceof IntOctagon;
 
-    for (Leaf currLeaf : tmpList) {
-      SearchTreeObject currObject = (SearchTreeObject) currLeaf.object;
-      int shapeIndex = currLeaf.shapeIndexInObject;
-      boolean ignoreObject = pLayer >= 0 && currObject.shapeLayer(shapeIndex) != pLayer;
+    for (Leaf currentLeaf : tmpList) {
+      SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
+      int shapeIndex = currentLeaf.shapeIndexInObject;
+      boolean ignoreObject = pLayer >= 0 && currentObject.shapeLayer(shapeIndex) != pLayer;
       if (!ignoreObject) {
         for (int i = 0; i < pIgnoreNetNos.length; i++) {
-          if (!currObject.isObstacle(pIgnoreNetNos[i])) {
+          if (!currentObject.isObstacle(pIgnoreNetNos[i])) {
             ignoreObject = true;
           }
         }
       }
       if (!ignoreObject) {
-        TileShape currShape = currObject.getTreeShape(this, currLeaf.shapeIndexInObject);
+        TileShape currentShape = currentObject.getTreeShape(this, currentLeaf.shapeIndexInObject);
         boolean addItem;
-        if (is45Degree && currShape instanceof IntOctagon)
+        if (is45Degree && currentShape instanceof IntOctagon)
         // in this case the check for intersection is redundant and
         // therefore skipped for performance reasons
         {
           addItem = true;
         } else {
-          addItem = currShape.intersects(pShape);
+          addItem = currentShape.intersects(pShape);
         }
         if (addItem) {
-          TreeEntry newEntry = new TreeEntry(currObject, shapeIndex);
+          TreeEntry newEntry = new TreeEntry(currentObject, shapeIndex);
           pTreeEntries.add(newEntry);
         }
       }
@@ -455,37 +455,38 @@ public class ShapeSearchTree extends MinAreaTree {
     // sort the found items by its clearances tp p_cl_type on layer p_layer
     Set<EntrySortedByClearance> sortedItems = new TreeSet<>();
 
-    for (Leaf currLeaf : tmpList) {
-      Item currItem = (Item) currLeaf.object;
-      int shapeIndex = currLeaf.shapeIndexInObject;
-      boolean ignoreItem = pLayer >= 0 && currItem.shapeLayer(shapeIndex) != pLayer;
+    for (Leaf currentLeaf : tmpList) {
+      Item currentItem = (Item) currentLeaf.object;
+      int shapeIndex = currentLeaf.shapeIndexInObject;
+      boolean ignoreItem = pLayer >= 0 && currentItem.shapeLayer(shapeIndex) != pLayer;
       if (!ignoreItem) {
         for (int i = 0; i < pIgnoreNetNos.length; i++) {
-          if (!currItem.isObstacle(pIgnoreNetNos[i])) {
+          if (!currentItem.isObstacle(pIgnoreNetNos[i])) {
             ignoreItem = true;
           }
         }
       }
       if (!ignoreItem) {
-        int currClearance = clMatrix.getValue(pClType, currItem.clearanceClassNo(), pLayer, true);
-        EntrySortedByClearance sortedOb = new EntrySortedByClearance(currLeaf, currClearance);
+        int currentClearance =
+            clMatrix.getValue(pClType, currentItem.clearanceClassNo(), pLayer, true);
+        EntrySortedByClearance sortedOb = new EntrySortedByClearance(currentLeaf, currentClearance);
         sortedItems.add(sortedOb);
       }
     }
-    int currHalfClearance = 0;
-    ConvexShape currOffsetShape = pShape;
+    int currentHalfClearance = 0;
+    ConvexShape currentOffsetShape = pShape;
     for (EntrySortedByClearance tmpEntry : sortedItems) {
       int tmpHalfClearance = tmpEntry.clearance / 2;
-      if (tmpHalfClearance != currHalfClearance) {
-        currHalfClearance = tmpHalfClearance;
-        currOffsetShape = (TileShape) pShape.enlarge(currHalfClearance);
+      if (tmpHalfClearance != currentHalfClearance) {
+        currentHalfClearance = tmpHalfClearance;
+        currentOffsetShape = (TileShape) pShape.enlarge(currentHalfClearance);
       }
       TileShape tmpShape =
           tmpEntry.leaf.object.getTreeShape(this, tmpEntry.leaf.shapeIndexInObject);
       // enlarge both item shapes by the half clearance to create
       // symmetry.
-      ConvexShape tmpOffsetShape = (ConvexShape) tmpShape.enlarge(currHalfClearance);
-      if (currOffsetShape.intersects(tmpOffsetShape)) {
+      ConvexShape tmpOffsetShape = (ConvexShape) tmpShape.enlarge(currentHalfClearance);
+      if (currentOffsetShape.intersects(tmpOffsetShape)) {
         pObstacleEntries.add(new TreeEntry(tmpEntry.leaf.object, tmpEntry.leaf.shapeIndexInObject));
       }
     }
@@ -510,8 +511,8 @@ public class ShapeSearchTree extends MinAreaTree {
     if (pObstacles == null) {
       return;
     }
-    for (TreeEntry currEntry : treeEntries) {
-      pObstacles.add((SearchTreeObject) currEntry.object);
+    for (TreeEntry currentEntry : treeEntries) {
+      pObstacles.add((SearchTreeObject) currentEntry.object);
     }
   }
 
