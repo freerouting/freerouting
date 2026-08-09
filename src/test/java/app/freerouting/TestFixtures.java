@@ -19,6 +19,7 @@ public final class TestFixtures {
 
   private TestFixtures() {}
 
+  /** Resolves a fixture path under the repository fixtures directory. */
   public static Path resolvePath(String filename) throws IOException {
     Path fromProperty = resolveFromSystemProperty(filename);
     if (fromProperty != null) {
@@ -42,6 +43,7 @@ public final class TestFixtures {
             + ")");
   }
 
+  /** Resolves a fixture file under the repository fixtures directory. */
   public static File resolveFile(String filename) throws IOException {
     return resolvePath(filename).toFile();
   }

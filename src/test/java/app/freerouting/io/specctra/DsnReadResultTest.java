@@ -78,11 +78,11 @@ class DsnReadResultTest {
     BoardReadResult success = new BoardReadResult.Success(null, null, List.of());
     BoardReadResult outlineMiss = new BoardReadResult.OutlineMissing(null, null, List.of());
     BoardReadResult parseErr = new BoardReadResult.ParseError("x", "y");
-    BoardReadResult ioErr = new BoardReadResult.IoError(new IOException());
 
     assertInstanceOf(BoardReadResult.Success.class, success);
     assertInstanceOf(BoardReadResult.OutlineMissing.class, outlineMiss);
     assertInstanceOf(BoardReadResult.ParseError.class, parseErr);
+    BoardReadResult ioErr = new BoardReadResult.IoError(new IOException());
     assertInstanceOf(BoardReadResult.IoError.class, ioErr);
   }
 }

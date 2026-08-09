@@ -42,7 +42,7 @@ class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  void issue508BM06() {
+  void issue508Bm06() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(10);
     testSettingsSource.setJobTimeoutString("00:02:00");
@@ -57,7 +57,7 @@ class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
 
   @Test
   @Tag("slow")
-  void issue508BM10() {
+  void issue508Bm10() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(10);
     testSettingsSource.setJobTimeoutString("00:02:00");

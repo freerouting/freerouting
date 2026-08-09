@@ -15,8 +15,10 @@ import com.google.gson.JsonParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/** DesignRulesCheckerTest. */
 public class DesignRulesCheckerTest extends RoutingFixtureTest {
 
+  /** Resets global settings before each DRC test. */
   @BeforeEach
   protected void setUp() {
     Freerouting.globalSettings = new GlobalSettings();

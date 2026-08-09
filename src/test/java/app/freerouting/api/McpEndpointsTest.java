@@ -354,8 +354,6 @@ class McpEndpointsTest {
           sourceDsn, tempInput, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
       // We need a session and job first to upload input to
-      String sessionId = createTestSession();
-      String jobId = enqueueTestJob(sessionId);
 
       // Call upload_job_input_from_local_file
       JsonObject uploadRequest = new JsonObject();
@@ -366,6 +364,8 @@ class McpEndpointsTest {
       JsonObject uploadParams = new JsonObject();
       uploadParams.addProperty("name", "upload_job_input_from_local_file");
       JsonObject uploadArgs = new JsonObject();
+      String sessionId = createTestSession();
+      String jobId = enqueueTestJob(sessionId);
       uploadArgs.addProperty("jobId", jobId);
       uploadArgs.addProperty("filePath", tempInput.toAbsolutePath().toString());
       uploadParams.add("arguments", uploadArgs);

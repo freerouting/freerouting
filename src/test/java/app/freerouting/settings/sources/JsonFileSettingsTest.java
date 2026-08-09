@@ -32,12 +32,12 @@ class JsonFileSettingsTest {
         write(
             "valid.json",
             """
-        {
-          "router": {
-            "max_passes": 42
-          }
-        }
-        """);
+            {
+              "router": {
+                "max_passes": 42
+              }
+            }
+            """);
 
     JsonFileSettings sut = new JsonFileSettings(file);
     RouterSettings settings = sut.getSettings();
@@ -53,12 +53,12 @@ class JsonFileSettingsTest {
         write(
             "no_router.json",
             """
-        {
-          "gui": {
-            "enabled": true
-          }
-        }
-        """);
+            {
+              "gui": {
+                "enabled": true
+              }
+            }
+            """);
 
     JsonFileSettings sut = new JsonFileSettings(file);
     RouterSettings settings = sut.getSettings();
@@ -74,10 +74,10 @@ class JsonFileSettingsTest {
         write(
             "router_not_object.json",
             """
-        {
-          "router": "not-an-object"
-        }
-        """);
+            {
+              "router": "not-an-object"
+            }
+            """);
 
     JsonFileSettings sut = new JsonFileSettings(file);
     RouterSettings settings = sut.getSettings();

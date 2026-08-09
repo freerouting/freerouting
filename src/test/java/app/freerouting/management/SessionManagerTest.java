@@ -12,6 +12,7 @@ import app.freerouting.core.Session;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
+/** SessionManagerTest. */
 public class SessionManagerTest {
 
   @Test

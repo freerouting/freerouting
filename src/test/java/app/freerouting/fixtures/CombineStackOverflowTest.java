@@ -61,7 +61,8 @@ class CombineStackOverflowTest {
     if (reader.isAlive()) {
       reader.interrupt();
       fail(
-          "Timed out while reading the DSN fixture; possible deadlock or infinite loop in DSN import.");
+          "Timed out while reading the DSN fixture; possible deadlock or infinite loop in DSN "
+              + "import.");
     }
     if (error[0] instanceof StackOverflowError) {
       fail(

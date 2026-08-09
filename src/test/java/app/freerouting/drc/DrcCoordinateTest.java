@@ -14,8 +14,10 @@ import com.google.gson.JsonParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/** DrcCoordinateTest. */
 public class DrcCoordinateTest extends RoutingFixtureTest {
 
+  /** Resets global settings before each coordinate test. */
   @BeforeEach
   protected void setUp() {
     Freerouting.globalSettings = new GlobalSettings();

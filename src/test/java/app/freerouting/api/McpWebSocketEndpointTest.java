@@ -147,7 +147,7 @@ class McpWebSocketEndpointTest {
     }
 
     @Override
-    public java.util.concurrent.CompletionStage<?> onText( // codespell:ignore
+    public java.util.concurrent.CompletionStage<?> onText(// codespell:ignore
         WebSocket webSocket, CharSequence data, boolean last) {
       messages.offer(data.toString());
       webSocket.request(1);

@@ -24,6 +24,7 @@ public final class EmbeddedServerTestSupport {
 
   private EmbeddedServerTestSupport() {}
 
+  /** Waits until Jetty reports the server as started. */
   public static void waitForServerStarted(Server server) throws InterruptedException {
     long deadline = System.currentTimeMillis() + STARTUP_TIMEOUT_MS;
     while (!server.isStarted()) {
@@ -37,14 +38,17 @@ public final class EmbeddedServerTestSupport {
     }
   }
 
+  /** Waits until the REST API status endpoint responds successfully. */
   public static void waitForApiServerReady(URI baseUri) throws Exception {
     waitForHttpOk(baseUri, "/v1/system/status");
   }
 
+  /** Waits until the MCP discovery endpoint responds successfully. */
   public static void waitForMcpServerReady(URI baseUri) throws Exception {
     waitForHttpOk(baseUri, "/.well-known/agent.json");
   }
 
+  /** Stops the embedded server and waits until it is fully stopped. */
   public static void stopServerGracefully(Server server) throws Exception {
     if (server == null || server.isStopped()) {
       return;

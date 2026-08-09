@@ -137,6 +137,7 @@ class BoardHistoryTest {
     assertEquals(
         board1.getHash(),
         best.getHash(),
-        "The better-scoring board (board1) must be retained when a worse board is added at capacity");
+        "The better-scoring board (board1) must be retained when a worse board is added at "
+            + "capacity");
   }
 }

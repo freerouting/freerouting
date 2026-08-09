@@ -282,7 +282,8 @@ class GlobalSettingsUserDataPathTest {
     assertThrows(
         IOException.class,
         GlobalSettings::load,
-        "load() must throw IOException when freerouting.json does not exist at the registered path");
+        "load() must throw IOException when freerouting.json does not exist at the registered "
+            + "path");
   }
 
   // -------------------------------------------------------------------------
@@ -467,7 +468,8 @@ class GlobalSettingsUserDataPathTest {
     // Expect at least one WARN about the older version.
     assertTrue(
         FRLogger.getLogEntries().getWarningCount() > 0,
-        "load() must emit a warning when the config file version is older than the current version");
+        "load() must emit a warning when the config file version is older than the current "
+            + "version");
     assertTrue(
         java.util.Arrays.stream(FRLogger.getLogEntries().get())
             .anyMatch(s -> s.contains("1.0.0") && s.contains("older")),
@@ -489,7 +491,8 @@ class GlobalSettingsUserDataPathTest {
     // Expect at least one WARN about the newer version.
     assertTrue(
         FRLogger.getLogEntries().getWarningCount() > 0,
-        "load() must emit a warning when the config file version is newer than the current version");
+        "load() must emit a warning when the config file version is newer than the current "
+            + "version");
     assertTrue(
         java.util.Arrays.stream(FRLogger.getLogEntries().get())
             .anyMatch(s -> s.contains("999.0.0") && s.contains("newer")),
@@ -568,6 +571,7 @@ class GlobalSettingsUserDataPathTest {
     assertEquals(
         0,
         versionWarnings,
-        "load() must not emit any version-change warning when the file version matches the current version");
+        "load() must not emit any version-change warning when the file version matches the current "
+            + "version");
   }
 }

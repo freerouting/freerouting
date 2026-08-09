@@ -200,9 +200,6 @@ class SettingsMergerGuiIntegrationTest {
     cliSettings.setLayerCount(2);
     cliSettings.layers[0].routable = false;
     cliSettings.layers[1].routable = true;
-    app.freerouting.settings.SettingsSource cliSource =
-        new app.freerouting.settings.sources.CliSettings(
-            new String[] {"--router.layers.routable=false,true"});
 
     // Gui Settings initially contains the active settings (which got the merged startup settings
     // from CLI)
@@ -211,6 +208,10 @@ class SettingsMergerGuiIntegrationTest {
     guiActiveSettings.layers[0].routable = false;
     guiActiveSettings.layers[1].routable = true;
     InteractiveSettings interactiveSettings = InteractiveSettings.reset(board, guiActiveSettings);
+
+    app.freerouting.settings.SettingsSource cliSource =
+        new app.freerouting.settings.sources.CliSettings(
+            new String[] {"--router.layers.routable=false,true"});
 
     // Merger setup: defaults (0), GuiSettings (65), CliSettings (60)
     SettingsMerger merger =
@@ -238,9 +239,6 @@ class SettingsMergerGuiIntegrationTest {
    */
   @Test
   void settingsMergeGuiOverridesCliCorrectlyWithSharedReference() {
-    // 1. Setup job settings (like routingJob.routerSettings at startup, layers is null)
-    RouterSettings jobSettings = new RouterSettings();
-
     // 2. CLI Source disables the first layer: --router.layers.routable=false,true
     RouterSettings cliSettings = new RouterSettings();
     cliSettings.setLayerCount(2);
@@ -249,6 +247,9 @@ class SettingsMergerGuiIntegrationTest {
     app.freerouting.settings.SettingsSource cliSource =
         new app.freerouting.settings.sources.CliSettings(
             new String[] {"--router.layers.routable=false,true"});
+
+    // 1. Setup job settings (like routingJob.routerSettings at startup, layers is null)
+    RouterSettings jobSettings = new RouterSettings();
 
     // 3. InteractiveSettings initially created with jobSettings (contains null layers)
     InteractiveSettings interactiveSettings = InteractiveSettings.reset(board, jobSettings);

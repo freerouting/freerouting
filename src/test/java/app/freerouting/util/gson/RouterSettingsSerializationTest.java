@@ -56,7 +56,7 @@ class RouterSettingsSerializationTest {
             {"routable": false, "preferred_direction_horizontal": true},
             {"routable": true, "preferred_direction_horizontal": false}
           ]
-        }\
+        }
         """;
     RouterSettings deserializedFromApi = GsonProvider.GSON.fromJson(apiJson, RouterSettings.class);
     assertNotNull(deserializedFromApi);

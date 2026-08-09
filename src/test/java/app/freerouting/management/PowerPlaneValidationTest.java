@@ -22,6 +22,7 @@ import app.freerouting.rules.Net;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/** PowerPlaneValidationTest. */
 public class PowerPlaneValidationTest {
 
   @BeforeEach

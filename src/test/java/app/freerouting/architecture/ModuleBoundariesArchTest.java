@@ -132,7 +132,8 @@ class ModuleBoundariesArchTest {
         .dependOnClassesThat()
         .resideInAPackage("app.freerouting.interactive..")
         .because(
-            "interactive is a GUI-session state machine and should not leak to headless/service modules")
+            "interactive is a GUI-session state machine and should not leak to"
+                + " headless/service modules")
         .check(classes);
   }
 
@@ -147,7 +148,8 @@ class ModuleBoundariesArchTest {
         .dependOnClassesThat()
         .resideInAPackage("app.freerouting.io.specctra.parser..")
         .because(
-            "specctra parser internals are implementation details; only io packages (specctra, kicad) may access them")
+            "specctra parser internals are implementation details; only io packages"
+                + " (specctra, kicad) may access them")
         .check(classes);
   }
 }

@@ -43,8 +43,9 @@ class DsnFileSettingsTest {
         2,
         settings.getSettings().getLayerCount(),
         """
-        DsnFileSettings should read the layer count from the DSN structure section (2 layers: \
-        F.Cu and B.Cu) even when the file has no (autorouteSettings ...) block.""");
+        DsnFileSettings should read the layer count from the DSN structure section (2 layers:
+        F.Cu and B.Cu) even when the file has no (autorouteSettings ...) block.
+        """);
   }
 
   /**
@@ -67,8 +68,9 @@ class DsnFileSettingsTest {
         4,
         settings.getSettings().getLayerCount(),
         """
-        DsnFileSettings should read the layer count from the DSN structure section (4 layers: \
-        F.Cu, In1.Cu, In2.Cu, B.Cu) even when the file has no (autorouteSettings ...) block.""");
+        DsnFileSettings should read the layer count from the DSN structure section (4 layers:
+        F.Cu, In1.Cu, In2.Cu, B.Cu) even when the file has no (autorouteSettings ...) block.
+        """);
   }
 
   @Test

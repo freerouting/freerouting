@@ -69,7 +69,8 @@ class HeadlessRoutingTest {
 
           assertNull(
               manager.getInteractiveSettings(),
-              "HeadlessBoardManager.getInteractiveSettings() must return null at all times in headless mode");
+              "HeadlessBoardManager.getInteractiveSettings() must return null at all times in "
+                  + "headless mode");
         });
   }
 
@@ -146,11 +147,6 @@ class HeadlessRoutingTest {
     try {
       job.setInput(testFile);
 
-      SettingsMerger merger =
-          new SettingsMerger(
-              new DefaultSettings(),
-              new DsnFileSettings(job.input.getData(), job.input.getFilename()));
-
       if (testingSettings == null) {
         testingSettings = new TestingSettings();
       }
@@ -161,6 +157,11 @@ class HeadlessRoutingTest {
       if (testRouterSettings.maxPasses == null) {
         testingSettings.setMaxPasses(100);
       }
+
+      SettingsMerger merger =
+          new SettingsMerger(
+              new DefaultSettings(),
+              new DsnFileSettings(job.input.getData(), job.input.getFilename()));
       merger.addOrReplaceSources(testingSettings);
 
       Freerouting.globalSettings.settingsMergerProtype.addOrReplaceSources(testingSettings);

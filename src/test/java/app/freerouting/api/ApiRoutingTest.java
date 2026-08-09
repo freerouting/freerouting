@@ -89,7 +89,7 @@ class ApiRoutingTest {
   }
 
   /**
-   * Full routing workflow via the REST API using a small, real-world DSN file:
+   * Full routing workflow via the REST API using a small, real-world DSN file.
    *
    * <ol>
    *   <li>POST {@code /v1/sessions/create} – obtain a session ID.

@@ -24,10 +24,12 @@ import java.time.Duration;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 
+/** RoutingFixtureTest. */
 public class RoutingFixtureTest {
 
   protected RoutingJobScheduler scheduler;
 
+  /** Resets global state before each fixture test. */
   @BeforeEach
   protected void setUp() {
     // Reset static logging flags so that a previous test (e.g. Dac2020Bm01RoutingTest) that sets
@@ -42,10 +44,12 @@ public class RoutingFixtureTest {
     }
   }
 
+  /** Loads a routing job from the given fixture file. */
   protected RoutingJob getRoutingJob(String filename) {
     return getRoutingJob(filename, null);
   }
 
+  /** Loads a routing job with optional testing overrides. */
   protected RoutingJob getRoutingJob(String filename, TestingSettings testingSettings) {
     // Create a new session
     UUID sessionId = UUID.randomUUID();
@@ -64,17 +68,17 @@ public class RoutingFixtureTest {
 
       var statsBefore = new BoardStatistics(job.input.getData().readAllBytes(), job.input.format);
 
-      SettingsMerger merger =
-          new SettingsMerger(
-              new DefaultSettings(),
-              new DsnFileSettings(job.input.getData(), job.input.getFilename()));
-
       if (testingSettings == null) {
         testingSettings = new TestingSettings();
       }
 
       testingSettings.setJobTimeoutString("00:01:00");
       testingSettings.setMaxPasses(100);
+
+      SettingsMerger merger =
+          new SettingsMerger(
+              new DefaultSettings(),
+              new DsnFileSettings(job.input.getData(), job.input.getFilename()));
       merger.addOrReplaceSources(testingSettings);
 
       job.routerSettings = merger.merge();
@@ -87,9 +91,11 @@ public class RoutingFixtureTest {
       throw new RuntimeException(filename + " not found.", e);
     }
 
+
     return job;
   }
 
+  /** Runs the job to completion or until it times out. */
   protected RoutingJob runRoutingJob(RoutingJob job) {
     if (job == null) {
       throw new IllegalArgumentException("The job cannot be null.");
@@ -127,9 +133,12 @@ public class RoutingFixtureTest {
       }
     }
 
+
+
     return job;
   }
 
+  /** Returns board statistics for the routed job. */
   protected BoardStatistics getBoardStatistics(RoutingJob job) {
     if ((job == null) || (job.board == null)) {
       throw new IllegalArgumentException("The job or its board cannot be null.");
@@ -281,9 +290,6 @@ public class RoutingFixtureTest {
     public void check() {
       Duration actualDuration = job.getDuration();
       int actualPasses = job.getCurrentPass();
-      BoardStatistics stats = new BoardStatistics(job.board);
-      int actualIncomplete = stats.connections.incompleteCount;
-      int actualViolations = stats.clearanceViolations.totalCount;
 
       if (maxDuration != null) {
         assertTrue(
@@ -310,6 +316,10 @@ public class RoutingFixtureTest {
             "'%s' should complete within at most %d routing pass(es), but required %d."
                 .formatted(boardName, maxPasses, actualPasses));
       }
+
+      BoardStatistics stats = new BoardStatistics(job.board);
+      int actualIncomplete = stats.connections.incompleteCount;
+      int actualViolations = stats.clearanceViolations.totalCount;
 
       if (maxIncompleteConnections != null) {
         assertTrue(

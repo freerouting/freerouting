@@ -1,5 +1,7 @@
 package app.freerouting.gui;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
@@ -21,10 +23,10 @@ class Issue029LoadPhaseTimingTest {
     try (InputStream stream = DsnTestFixtures.openResource("Issue029-hw48na.dsn")) {
       long t0 = System.nanoTime();
       BoardReadResult result = DsnReader.readBoard(stream, null, null, "Issue029-hw48na.dsn");
+      assertNotNull(result);
       long t1 = System.nanoTime();
       System.out.printf("1 parse: %.2f ms%n", ms(t0, t1));
 
-      RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
       RoutingJob job = new RoutingJob(UUID.randomUUID());
       job.setDummyInputFile("Issue029-hw48na.dsn");
 
@@ -43,6 +45,7 @@ class Issue029LoadPhaseTimingTest {
       System.out.printf("3 settingsMerger.merge: %.2f ms%n", ms(t4, t5));
 
       long t6 = System.nanoTime();
+      RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
       new RatsNest(board);
       long t7 = System.nanoTime();
       System.out.printf("4 RatsNest: %.2f ms%n", ms(t6, t7));

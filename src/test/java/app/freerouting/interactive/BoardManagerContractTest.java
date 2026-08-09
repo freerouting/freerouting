@@ -69,7 +69,8 @@ class BoardManagerContractTest {
     app.freerouting.settings.sources.GuiSettings settings = manager.getSettings();
     assertNull(
         settings,
-        "Deprecated get_settings() must delegate to getInteractiveSettings() and return null in headless mode");
+        "Deprecated get_settings() must delegate to getInteractiveSettings() and return null in "
+            + "headless mode");
   }
 
   // ── GUI contract (static, no Swing needed) ────────────────────────────────

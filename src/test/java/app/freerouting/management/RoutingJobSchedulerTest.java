@@ -17,6 +17,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/** RoutingJobSchedulerTest. */
 public class RoutingJobSchedulerTest {
 
   private RoutingJobScheduler scheduler;
@@ -177,6 +178,11 @@ public class RoutingJobSchedulerTest {
     return false;
   }
 
+  // Helper method to check if a job list contains a specific job
+  private boolean containsJob(LinkedList<RoutingJob> jobs, RoutingJob targetJob) {
+    return jobs.contains(targetJob);
+  }
+
   @Test
   void testCurrentPass() {
     RoutingJob job = new RoutingJob();
@@ -258,10 +264,5 @@ public class RoutingJobSchedulerTest {
     assertFalse(
         completedJob.isCancelledByUser(),
         "isCancelledByUser should remain false for COMPLETED job.");
-  }
-
-  // Helper method to check if a job list contains a specific job
-  private boolean containsJob(LinkedList<RoutingJob> jobs, RoutingJob targetJob) {
-    return jobs.contains(targetJob);
   }
 }

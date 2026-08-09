@@ -21,12 +21,12 @@ import org.junit.jupiter.api.Test;
  * <p><b>Test Configuration Used to Reproduce:</b>
  *
  * <pre>
- *   java -jar freerouting-executable.jar \
- *     -de BBD_Mars-64.dsn -do BBD_Mars-64.ses \
- *     --gui.enabled=false \
- *     --router.max_threads=11 \
- *     --router.max_passes=120 \
- *     --router.optimizer.enabled=false \
+ *   java -jar freerouting-executable.jar
+ *     -de BBD_Mars-64.dsn -do BBD_Mars-64.ses
+ *     --gui.enabled=false
+ *     --router.max_threads=11
+ *     --router.max_passes=120
+ *     --router.optimizer.enabled=false
  *     --router.job_timeout="00:15:00"
  * </pre>
  *
@@ -62,17 +62,22 @@ import org.junit.jupiter.api.Test;
 class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
 
   @Test
-  void issue555RoutingPerformanceWithCNHFunctionalTester1() {
+  void issue555RoutingPerformanceWithCnhfunctionalTester1() {
     IO.println(
-        "Testing performance by routing reference board 'Issue555-CNH_Functional_Tester_1.dsn' with default settings.");
+        "Testing performance by routing reference board "
+            + "'Issue555-CNH_Functional_Tester_1.dsn' with default settings.");
     IO.println(
-        "The benchmark times for Freerouting v1.8, v1.9 and v2.0 were 12 seconds (4 unrouted), 10 seconds (4 unrouted) and 11 seconds (4 unrouted) in 6 passes.");
+        "The benchmark times for Freerouting v1.8, v1.9 and v2.0 were 12 seconds (4 unrouted), "
+            + "10 seconds (4 unrouted) and 11 seconds (4 unrouted) in 6 passes.");
     IO.println(
-        "The benchmark score for Freerouting v2.1 is 962.18 (6 unrouted), completed in 54 seconds, hitting the 40 pass limit.");
+        "The benchmark score for Freerouting v2.1 is 962.18 (6 unrouted), completed in 54 "
+            + "seconds, hitting the 40 pass limit.");
     IO.println(
-        "The benchmark score for Freerouting v2.2.4 is 983.76 (5 unrouted), completed in 22 seconds with 6 passes.");
+        "The benchmark score for Freerouting v2.2.4 is 983.76 (5 unrouted), completed in 22 "
+            + "seconds with 6 passes.");
     IO.println(
-        "The benchmark score for Freerouting v2.3.0 is 980.17 (4 unrouted, 16 violations), completed in 47 seconds with 20+18 passes.");
+        "The benchmark score for Freerouting v2.3.0 is 980.17 (4 unrouted, 16 violations), "
+            + "completed in 47 seconds with 20+18 passes.");
 
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:03:00");
@@ -107,18 +112,23 @@ class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  void issue555RoutingPerformanceWithBBDMars64() {
+  void issue555RoutingPerformanceWithBbdmars64() {
     IO.println(
-        "Testing performance by routing reference board 'Issue555-BBD_Mars-64.dsn' with default settings.");
+        "Testing performance by routing reference board "
+            + "'Issue555-BBD_Mars-64.dsn' with default settings.");
     IO.println(
-        "The benchmark times for Freerouting v1.8, v1.9 and v2.0 were 29.5 minutes, 27 minutes with failure and 9 minutes with partial failure.");
+        "The benchmark times for Freerouting v1.8, v1.9 and v2.0 were 29.5 minutes, 27 minutes "
+            + "with failure and 9 minutes with partial failure.");
     IO.println("The benchmark score for Freerouting v2.1 is 976.35, completed in 3.6 minutes.");
     IO.println(
-        "The benchmark score for Freerouting v2.2.0 is 968.15 (7 unrouted), completed in 4.0 minutes with 41 passes.");
+        "The benchmark score for Freerouting v2.2.0 is 968.15 (7 unrouted), completed in 4.0 "
+            + "minutes with 41 passes.");
     IO.println(
-        "The benchmark score for Freerouting v2.2.4 is 983.70 (5 unrouted), completed in 3.5 minutes with 41 passes.");
+        "The benchmark score for Freerouting v2.2.4 is 983.70 (5 unrouted), completed in 3.5 "
+            + "minutes with 41 passes.");
     IO.println(
-        "The benchmark score for Freerouting v2.3.0 is 980.96 (2 unrouted), completed in 2.7 minutes with 20+31 passes.");
+        "The benchmark score for Freerouting v2.3.0 is 980.96 (2 unrouted), completed in 2.7 "
+            + "minutes with 20+31 passes.");
 
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:10:00");

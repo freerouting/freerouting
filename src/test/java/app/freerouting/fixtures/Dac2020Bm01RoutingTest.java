@@ -11,7 +11,7 @@ class Dac2020Bm01RoutingTest extends RoutingFixtureTest {
   private RoutingJob job;
 
   @Test
-  void issue508BM01First2NetsOnly() {
+  void issue508Bm01First2NetsOnly() {
     // Set console logging level to INFO for quick test
     System.setProperty("freerouting.logging.console.level", "INFO");
     FRLogger.granularTraceEnabled = false;

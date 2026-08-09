@@ -44,10 +44,12 @@ class EnglishPropertiesParityTest {
       Pattern.compile("\\bgetText\\(\\s*(.+?)\\.toString\\(\\)\\s*\\)");
   private static final Pattern FIELD_DECLARATION_PATTERN =
       Pattern.compile(
-          "(?m)^\\s*(?:private|protected|public)?\\s*(?:static\\s+)?(?:final\\s+)?([A-Z][A-Za-z0-9_$.<>]*)\\s+([a-z_][A-Za-z0-9_]*)\\s*(?:[=;])");
+          "(?m)^\\s*(?:private|protected|public)?\\s*(?:static\\s+)?(?:final\\s+)?"
+              + "([A-Z][A-Za-z0-9_$.<>]*)\\s+([a-z_][A-Za-z0-9_]*)\\s*(?:[=;])");
   private static final Pattern ENUM_ARRAY_DECLARATION_PATTERN =
       Pattern.compile(
-          "(?m)^\\s*(?:final\\s+)?([A-Z][A-Za-z0-9_$.<>]*)\\[\\]\\s+([a-z_][A-Za-z0-9_]*)\\s*=\\s*[^;]*\\.values\\(\\)\\s*;");
+          "(?m)^\\s*(?:final\\s+)?([A-Z][A-Za-z0-9_$.<>]*)\\[\\]\\s+([a-z_][A-Za-z0-9_]*)\\s*="
+              + "\\s*[^;]*\\.values\\(\\)\\s*;");
   private static final Pattern SET_LANGUAGE_PATTERN = Pattern.compile("\\bsetLanguage\\s*\\(");
   private static final Pattern INHERITED_TM_USAGE_PATTERN =
       Pattern.compile("\\btm\\.(?:getText|setText)\\s*\\(");
@@ -55,14 +57,16 @@ class EnglishPropertiesParityTest {
       Pattern.compile("\\bextends\\s+(?:InteractiveState|\\w+State)\\b");
   private static final Pattern LOCAL_ENUM_ARRAY_PATTERN =
       Pattern.compile(
-          "(?:final\\s+)?([A-Za-z_][A-Za-z0-9_.]*)\\[\\]\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*\\1\\.values\\(\\)\\s*;");
+          "(?:final\\s+)?([A-Za-z_][A-Za-z0-9_.]*)\\[\\]\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*="
+              + "\\s*\\1\\.values\\(\\)\\s*;");
   private static final Pattern TEXT_MANAGER_SUFFIX_USAGE_PATTERN =
       Pattern.compile("\\b([A-Za-z_][A-Za-z0-9_]*)tm\\.(?:getText|setText)\\s*\\(");
   private static final Pattern CREATE_WORD_WRAP_LABEL_PATTERN =
       Pattern.compile("\\bcreateWordWrapLabel\\s*\\(\\s*\"([^\"]+)\"");
   private static final Pattern TEXT_MANAGER_DECL_PATTERN =
       Pattern.compile(
-          "(?:TextManager\\s+)?([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*new\\s+TextManager\\s*\\(\\s*([A-Za-z_][A-Za-z0-9_$.]*)\\.class");
+          "(?:TextManager\\s+)?([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*new\\s+TextManager\\s*\\("
+              + "\\s*([A-Za-z_][A-Za-z0-9_$.]*)\\.class");
   private static final Pattern THIS_TM_ASSIGN_PATTERN =
       Pattern.compile(
           "this\\.tm\\s*=\\s*new\\s+TextManager\\s*\\(\\s*([A-Za-z_][A-Za-z0-9_$.]*)\\.class");
@@ -72,7 +76,8 @@ class EnglishPropertiesParityTest {
       Pattern.compile("^import\\s+(?:static\\s+)?([\\w.]+);\\s*$", Pattern.MULTILINE);
   private static final Pattern STATIC_STRING_ARRAY_PATTERN =
       Pattern.compile(
-          "private\\s+static\\s+final\\s+String\\[\\]\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*\\{([^}]+)\\}");
+          "private\\s+static\\s+final\\s+String\\[\\]\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*="
+              + "\\s*\\{([^}]+)\\}");
   private static final Pattern SEGMENTED_BUTTONS_PATTERN =
       Pattern.compile("new\\s+SegmentedButtons\\s*\\((.*?)\\)", Pattern.DOTALL);
   private static final Pattern QUOTED_STRING_PATTERN = Pattern.compile("\"([^\"]+)\"");

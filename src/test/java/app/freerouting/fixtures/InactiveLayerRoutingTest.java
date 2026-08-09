@@ -30,10 +30,10 @@ import org.junit.jupiter.api.Test;
  *   <li>{@code B.Cu} — Bottom signal layer (enabled for routing)
  * </ol>
  *
- * When the DSN file is imported into freerouting, the inner power-plane layers ({@code In1.Cu} and
- * {@code In2.Cu}) do not appear in freerouting's layer list at all — they are effectively invisible
- * to the router, which should mean the router has no knowledge of and no permission to use those
- * layers.
+ * <p>When the DSN file is imported into freerouting, the inner power-plane layers ({@code In1.Cu}
+ * and {@code In2.Cu}) do not appear in freerouting's layer list at all — they are effectively
+ * invisible to the router, which should mean the router has no knowledge of and no permission to
+ * use those layers.
  *
  * <p>The problem manifests when the user opens the freerouting "Interactive Router Settings" dialog
  * and lowers the <em>via cost</em> parameter to 45 or below. With the default via cost (which is
@@ -164,6 +164,7 @@ class InactiveLayerRoutingTest extends RoutingFixtureTest {
         "The router placed "
             + tracesOnPowerLayers
             + " trace(s) on inactive power-plane layers (In1.Cu or In2.Cu). "
-            + "Traces must never be placed on layers that are not marked as signal layers in the DSN file.");
+            + "Traces must never be placed on layers that are not marked as signal layers in the "
+            + "DSN file.");
   }
 }

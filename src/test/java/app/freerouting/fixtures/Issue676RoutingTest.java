@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
  *
  * <h2>Root cause summary</h2>
  *
- * When the user opens a DSN file through the GUI (File → Open) and then clicks the <em>Start
+ * <p>When the user opens a DSN file through the GUI (File → Open) and then clicks the <em>Start
  * autorouter</em> button, {@code BoardToolbar} calls {@code settingsMerger.merge()} and assigns the
  * result <strong>directly</strong> to {@code guiRoutingJob.routerSettings}. The GUI-path {@code
  * settingsMerger} does <em>not</em> include {@link
@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
  *
  * <h2>Fix</h2>
  *
- * After calling {@code settingsMerger.merge()}, {@code BoardToolbar} now calls {@code
+ * <p>After calling {@code settingsMerger.merge()}, {@code BoardToolbar} now calls {@code
  * routerSettings.applyBoardSpecificOptimizations(routingBoard)}, which re-initialises the layer
  * arrays from the actual loaded board before the autorouter reads them.
  */

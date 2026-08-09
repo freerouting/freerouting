@@ -16,7 +16,7 @@ class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
   private RoutingJob job;
 
   @Test
-  void issue508BM01First2NetsOnly() {
+  void issue508Bm01First2NetsOnly() {
     // Create testing settings
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
@@ -32,7 +32,7 @@ class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  void issue508BM01First43NetsOnly() {
+  void issue508Bm01First43NetsOnly() {
     // Create testing settings
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
@@ -48,7 +48,7 @@ class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  void issue508BM01First61NetsOnly() {
+  void issue508Bm01First61NetsOnly() {
     // Create testing settings
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
@@ -64,7 +64,7 @@ class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  void issue508BM01First111NetsOnly() {
+  void issue508Bm01First111NetsOnly() {
     // Create testing settings
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
@@ -80,7 +80,7 @@ class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  void issue508BM01First151NetsOnly() {
+  void issue508Bm01First151NetsOnly() {
     // Create testing settings
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
@@ -96,7 +96,7 @@ class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  void issue508BM01FirstPassOnly() {
+  void issue508Bm01FirstPassOnly() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:04:30");
     testingSettings.setMaxPasses(1);
@@ -111,7 +111,7 @@ class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  void issue508BM01First2PassesOnly() {
+  void issue508Bm01First2PassesOnly() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:05:00");
     testingSettings.setMaxPasses(2);
@@ -126,7 +126,7 @@ class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  void issue508BM07() {
+  void issue508Bm07() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:00:30");
 
@@ -144,7 +144,7 @@ class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  void issue508BM08() {
+  void issue508Bm08() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:00:20");
 

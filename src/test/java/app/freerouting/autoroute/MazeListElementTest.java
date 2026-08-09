@@ -50,7 +50,7 @@ class MazeListElementTest {
     }
 
     @Override
-    public CompleteExpansionRoom otherRoom(CompleteExpansionRoom p_room) {
+    public CompleteExpansionRoom otherRoom(CompleteExpansionRoom room) {
       return null;
     }
 
@@ -60,7 +60,7 @@ class MazeListElementTest {
     }
 
     @Override
-    public MazeSearchElement getMazeSearchElement(int p_no) {
+    public MazeSearchElement getMazeSearchElement(int no) {
       throw new UnsupportedOperationException();
     }
 

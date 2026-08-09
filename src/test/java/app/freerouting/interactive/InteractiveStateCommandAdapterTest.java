@@ -61,9 +61,9 @@ class InteractiveStateCommandAdapterTest {
     }
 
     @Override
-    public InteractiveState leftButtonClicked(FloatPoint p_location) {
+    public InteractiveState leftButtonClicked(FloatPoint location) {
       this.leftClickCalled = true;
-      this.lastLeftClickLocation = p_location;
+      this.lastLeftClickLocation = location;
       return leftClickResult;
     }
 

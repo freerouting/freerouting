@@ -297,12 +297,12 @@ public class PolylineTraceSplitTest {
     int halfWidth = 1000;
 
     // Create trace from A to C via B
-    Point pA = new IntPoint(0, 0);
-    Point pB = new IntPoint(10000, 0);
-    Point pC = new IntPoint(20000, 0);
+    Point pointA = new IntPoint(0, 0);
+    Point pointB = new IntPoint(10000, 0);
+    Point pointC = new IntPoint(20000, 0);
 
-    Polyline polyline1 = new Polyline(new Point[] {pA, pB, pC});
-    PolylineTrace traceABC =
+    Polyline polyline1 = new Polyline(new Point[] {pointA, pointB, pointC});
+    PolylineTrace traceAbc =
         new PolylineTrace(
             polyline1,
             layerIndex,
@@ -313,11 +313,11 @@ public class PolylineTraceSplitTest {
             0,
             app.freerouting.board.FixedState.UNFIXED,
             board);
-    board.insertItem(traceABC);
+    board.insertItem(traceAbc);
 
     // Insert overlapping trace from B to C
-    Polyline polyline2 = new Polyline(pB, pC);
-    PolylineTrace traceBC =
+    Polyline polyline2 = new Polyline(pointB, pointC);
+    PolylineTrace traceBc =
         new PolylineTrace(
             polyline2,
             layerIndex,
@@ -328,12 +328,12 @@ public class PolylineTraceSplitTest {
             0,
             app.freerouting.board.FixedState.UNFIXED,
             board);
-    board.insertItem(traceBC);
+    board.insertItem(traceBc);
 
     // Check that traceABC is NOT detected as a cycle
     // (even though after insertion of traceBC, if we were to split inappropriately,
     // both ends of a remaining piece might touch traceBC)
-    boolean isCycle = traceABC.isCycle();
+    boolean isCycle = traceAbc.isCycle();
 
     Assertions.assertFalse(
         isCycle,

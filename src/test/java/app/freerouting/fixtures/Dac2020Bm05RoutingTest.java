@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class Dac2020Bm05RoutingTest extends RoutingFixtureTest {
 
   @Test
-  void issue508BM05First2Items() {
+  void issue508Bm05First2Items() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
     testSettingsSource.setMaxItems(2);
@@ -21,7 +21,7 @@ class Dac2020Bm05RoutingTest extends RoutingFixtureTest {
   }
 
   @Test
-  void issue508BM05First5Items() {
+  void issue508Bm05First5Items() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
     testSettingsSource.setMaxItems(5);
@@ -35,7 +35,7 @@ class Dac2020Bm05RoutingTest extends RoutingFixtureTest {
 
   @Test
   @Tag("slow")
-  void issue508BM05FirstPass() {
+  void issue508Bm05FirstPass() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
     testSettingsSource.setJobTimeoutString("00:02:00");
@@ -48,7 +48,7 @@ class Dac2020Bm05RoutingTest extends RoutingFixtureTest {
 
   @Test
   @Tag("slow")
-  void issue508BM05FullRouting() {
+  void issue508Bm05FullRouting() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(20);
     testSettingsSource.setJobTimeoutString("00:05:00");

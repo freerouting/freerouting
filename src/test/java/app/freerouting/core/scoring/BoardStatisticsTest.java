@@ -21,7 +21,7 @@ class BoardStatisticsTest {
           "nets": [{"id": 1, "name": "N1"}, {"id": 2, "name": "N2"}],
           "traces": [{"netName": "N1"}],
           "vias": [{"netName": "N1"}]
-        }\
+        }
         """;
 
     byte[] data = jsonContent.getBytes(StandardCharsets.UTF_8);

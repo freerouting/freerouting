@@ -39,6 +39,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
   private static final int EXPECTED_DANGLING_TRACKS = 24;
   private static final int EXPECTED_DANGLING_VIAS = 4;
 
+  /** Resets global settings before the reproduction test. */
   @BeforeEach
   protected void setUp() {
     Freerouting.globalSettings = new GlobalSettings();
@@ -52,13 +53,10 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
     assertNotNull(job.board, "Board should be loaded");
 
     BasicBoard board = job.board;
-    DesignRulesChecker drc = new DesignRulesChecker(board, new DesignRulesCheckerSettings());
-    Collection<UnconnectedItems> allIssues = drc.getAllUnconnectedItems();
 
     // Connectivity spot-check: overlapping GND traces and nearby pin.
     Item item1 = board.getItem(2402); // GND trace, Top layer
     Item item2 = board.getItem(2411); // GND trace, Bottom layer
-    Item item321 = board.getItem(321); // GND pin (component #26)
 
     assertNotNull(item1, "Item 2402 not found");
     assertNotNull(item2, "Item 2411 not found");
@@ -77,6 +75,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
         "Trace 2402 (GND) is expected to be a dangling trace (is_tail == true). "
             + "It has no connected endpoints in this partially-routed board.");
 
+    Item item321 = board.getItem(321); // GND pin (component #26)
     // Confirm that pin 321 is indeed NOT in the normal contacts of trace 2402.
     // (This is the correct board state — not a false negative from the DRC.)
     if (item321 != null) {
@@ -99,6 +98,8 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
     // NOTE: via 2522 may or may not be is_tail() depending on normalization/contact state.
     // DRC results were captured above before these diagnostic reads.
 
+    DesignRulesChecker drc = new DesignRulesChecker(board, new DesignRulesCheckerSettings());
+    Collection<UnconnectedItems> allIssues = drc.getAllUnconnectedItems();
     long danglingTracks = allIssues.stream().filter(ui -> "track_dangling".equals(ui.type)).count();
     long danglingVias = allIssues.stream().filter(ui -> "via_dangling".equals(ui.type)).count();
 
