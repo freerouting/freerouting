@@ -11,20 +11,17 @@ public interface ObjectInfoPanel {
   /** Appends p_string to the window. Returns false, if that was not possible. */
   boolean append(String string);
 
-  /** Appends p_string in bold style to the window. Returns false, if that was not possible. */
-  boolean appendBold(String string);
+  /**
+   * Appends a link for creating a new PrintInfoWindow with the information of p_object to the
+   * window. Returns false, if that was not possible.
+   */
+  boolean append(String linkName, String windowTitle, ObjectInfoPanel.Printable object);
 
   /**
    * Appends p_value to the window after transforming it to the user coordinate system. Returns
    * false, if that was not possible.
    */
   boolean append(double value);
-
-  /**
-   * Appends p_value to the window without transforming it to the user coordinate system. Returns
-   * false, if that was not possible.
-   */
-  boolean appendWithoutTransforming(double value);
 
   /**
    * Appends p_point to the window after transforming to the user coordinate system. Returns false,
@@ -38,17 +35,20 @@ public interface ObjectInfoPanel {
    */
   boolean append(Shape shape, Locale locale);
 
+  /**
+   * Appends p_value to the window without transforming it to the user coordinate system. Returns
+   * false, if that was not possible.
+   */
+  boolean appendWithoutTransforming(double value);
+
+  /** Appends p_string in bold style to the window. Returns false, if that was not possible. */
+  boolean appendBold(String string);
+
   /** Begins a new line in the window. */
   boolean newline();
 
   /** Appends a fixed number of spaces to the window. */
   boolean indent();
-
-  /**
-   * Appends a link for creating a new PrintInfoWindow with the information of p_object to the
-   * window. Returns false, if that was not possible.
-   */
-  boolean append(String linkName, String windowTitle, ObjectInfoPanel.Printable object);
 
   /**
    * Appends a link for creating a new PrintInfoWindow with the information of p_items to the

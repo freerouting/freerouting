@@ -76,8 +76,8 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * returns the first corner of this trace, which is the intersection of the first and second lines.
-   * of its polyline
+   * Returns the first corner of this trace, which is the intersection of the first and second lines
+   * of its polyline.
    */
   @Override
   public Point firstCorner() {
@@ -85,8 +85,8 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * returns the last corner of this trace, which is the intersection of the last two lines of its.
-   * polyline
+   * Returns the last corner of this trace, which is the intersection of the last two lines of its
+   * polyline.
    */
   @Override
   public Point lastCorner() {
@@ -94,8 +94,8 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * returns the number of corners of this trace, which is the number of lines of its polyline minus.
-   * one
+   * Returns the number of corners of this trace, which is the number of lines of its polyline
+   * minus one.
    */
   public int cornerCount() {
     return lines.arr.length - 1;
@@ -193,9 +193,11 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * looks, if this trace can be combined at its first point with another trace. Returns true, if.
-   * something was combined. The corners of the other trace will be inserted in front of this trace.
-   * In case of combine the other trace will be deleted and this trace will remain.
+   * Checks if this trace can be combined at its first point with another trace.
+   *
+   * <p>Returns true if something was combined. The corners of the other trace will be inserted in
+   * front of this trace. In case of combine the other trace will be deleted and this trace will
+   * remain.
    */
   private boolean combineAtStart(boolean ignoreAreas) {
     boolean debugNet49 =
@@ -337,9 +339,11 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * looks, if this trace can be combined at its last point with another trace. Returns true, if.
-   * something was combined. The corners of the other trace will be inserted at the end of this
-   * trace. In case of combine the other trace will be deleted and this trace will remain.
+   * Checks if this trace can be combined at its last point with another trace.
+   *
+   * <p>Returns true if something was combined. The corners of the other trace will be inserted at
+   * the end of this trace. In case of combine the other trace will be deleted and this trace will
+   * remain.
    */
   private boolean combineAtEnd(boolean ignoreAreas) {
     boolean debugNet49 =
@@ -697,38 +701,6 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Checks, if the intersection of the p_line_no-th line of this trace with p_line is inside the
-   * pad of a pin. In this case the trace will be split only, if the intersection is at the center
-   * of the pin. Extending the function to vias led to broken connection problems when the
-   * autorouter connected to a trace.
-   */
-  private boolean splitInsideDrillPadProhibited(int lineNo, Line line) {
-    if (this.board == null) {
-      return false;
-    }
-    Point intersection = this.lines.arr[lineNo].intersection(line);
-    Collection<Item> overlapItems = this.board.pickItems(intersection, this.getLayer(), null);
-    boolean padFound = false;
-    for (Item currItem : overlapItems) {
-      if (!currItem.sharesNet(this)) {
-        continue;
-      }
-      if (currItem instanceof Pin currDrillItem) {
-        if (currDrillItem.getCenter().equals(intersection)) {
-          return false; // split always at the center of a drill item.
-        }
-        padFound = true;
-      } else if (currItem instanceof Trace currTrace) {
-        if (currTrace != this && currTrace.firstCorner().equals(intersection)
-            || currTrace.lastCorner().equals(intersection)) {
-          return false;
-        }
-      }
-    }
-    return padFound;
-  }
-
-  /**
    * Splits this trace into two at p_point. Returns the 2 pieces of the split trace, or null if
    * nothing was split because for example p_point is not located on a line segment of the
    * p_polyline of this trace.
@@ -795,6 +767,38 @@ public class PolylineTrace extends Trace implements Serializable {
             clearanceClassNo(),
             getFixedState());
     return result;
+  }
+
+  /**
+   * Checks, if the intersection of the p_line_no-th line of this trace with p_line is inside the
+   * pad of a pin. In this case the trace will be split only, if the intersection is at the center
+   * of the pin. Extending the function to vias led to broken connection problems when the
+   * autorouter connected to a trace.
+   */
+  private boolean splitInsideDrillPadProhibited(int lineNo, Line line) {
+    if (this.board == null) {
+      return false;
+    }
+    Point intersection = this.lines.arr[lineNo].intersection(line);
+    Collection<Item> overlapItems = this.board.pickItems(intersection, this.getLayer(), null);
+    boolean padFound = false;
+    for (Item currItem : overlapItems) {
+      if (!currItem.sharesNet(this)) {
+        continue;
+      }
+      if (currItem instanceof Pin currDrillItem) {
+        if (currDrillItem.getCenter().equals(intersection)) {
+          return false; // split always at the center of a drill item.
+        }
+        padFound = true;
+      } else if (currItem instanceof Trace currTrace) {
+        if (currTrace != this && currTrace.firstCorner().equals(intersection)
+            || currTrace.lastCorner().equals(intersection)) {
+          return false;
+        }
+      }
+    }
+    return padFound;
   }
 
   /**
@@ -1131,9 +1135,10 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * checks, that the connection restrictions to the contact pins are satisfied. If p_at_start, the.
-   * start of this trace is checked, else the end. Returns false, if a pin is at that end, where the
-   * connection is checked and the connection is not ok.
+   * Checks that the connection restrictions to the contact pins are satisfied.
+   *
+   * <p>If p_at_start, the start of this trace is checked, else the end. Returns false if a pin is
+   * at that end where the connection is checked and the connection is not ok.
    */
   @Override
   public boolean checkConnectionToPin(boolean atStart) {
@@ -1237,8 +1242,6 @@ public class PolylineTrace extends Trace implements Serializable {
     if (!(pinShape instanceof TileShape)) {
       return false;
     }
-    Point pinCenter = contactPin.getCenter();
-
     final double edgeToTurnDist = this.board.rules.getPinEdgeToTurnDist();
     if (edgeToTurnDist < 0) {
       return false;
@@ -1269,6 +1272,7 @@ public class PolylineTrace extends Trace implements Serializable {
     Direction pinExitDirection = null;
     FloatPoint nearestExitCorner = null;
     final double tolerance = 1;
+    Point pinCenter = contactPin.getCenter();
     for (Pin.TraceExitRestriction currExitRestriction : traceExitRestrictions) {
       int currIntersectingBorderLineNo =
           offsetPinShape.intersectingBorderLineNo(pinCenter, currExitRestriction.direction);

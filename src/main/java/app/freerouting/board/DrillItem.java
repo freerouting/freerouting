@@ -183,7 +183,6 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     return this.precalculatedLastLayer;
   }
 
-
   /** Get shape. */
   public abstract Shape getShape(int index);
 
@@ -240,7 +239,6 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   /** Get tree shape on layer. */
   public TileShape getTreeShapeOnLayer(ShapeSearchTree tree, int layer) {
     int fromLayer = firstLayer();
-    /** Last layer. */
     int toLayer = lastLayer();
     if (layer < fromLayer || layer > toLayer) {
       FRLogger.warn("DrillItem.get_tree_shape_on_layer: p_layer out of range");
@@ -249,9 +247,9 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     return getTreeShape(tree, layer - fromLayer);
   }
 
+  /** Returns the tile shape on the given layer. */
   public TileShape getTileShapeOnLayer(int layer) {
     int fromLayer = firstLayer();
-    /** Last layer. */
     int toLayer = lastLayer();
     if (layer < fromLayer || layer > toLayer) {
       FRLogger.warn("DrillItem.get_tile_shape_on_layer: p_layer out of range");
@@ -260,9 +258,9 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     return getTileShape(layer - fromLayer);
   }
 
+  /** Returns the shape on the given layer. */
   public Shape getShapeOnLayer(int layer) {
     int fromLayer = firstLayer();
-    /** Last layer. */
     int toLayer = lastLayer();
     if (layer < fromLayer || layer > toLayer) {
       FRLogger.warn("DrillItem.get_shape_on_layer: p_layer out of range");

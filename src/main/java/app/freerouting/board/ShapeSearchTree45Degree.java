@@ -74,7 +74,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       case 7 -> 0.5 * (obstacleShape.lowerLeftDiagonalX - containedShape.upperRightDiagonalX);
       default -> {
         FRLogger.warn(
-            "ShapeSearchTree45Degree.signed_line_distance: p_obstacle_line_no out of range");
+            "ShapeSearchTree45Degree.signed_line_distance: p_obstacleLineNo out of range");
         yield 0;
       }
     };
@@ -97,7 +97,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     TileShape containedRaw = room.getContainedShape();
     if (containedRaw == null) {
       FRLogger.warn(
-          "ShapeSearchTree45Degree.complete_shape: contained shape is null, skipping expansion room");
+          "ShapeSearchTree45Degree.complete_shape: contained shape is null,"
+              + " skipping expansion room");
       return new LinkedList<>();
     }
     if (!containedRaw.isIntOctagon()) {
@@ -105,14 +106,16 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       // Use the bounding octagon as a safe conservative approximation so the expansion room is
       // not silently discarded, which was previously causing incomplete routing connections.
       FRLogger.debug(
-          "ShapeSearchTree45Degree.complete_shape: non-IntOctagon contained shape, using bounding octagon approximation");
+          "ShapeSearchTree45Degree.complete_shape: non-IntOctagon contained shape,"
+              + " using bounding octagon approximation");
     }
     IntOctagon shapeToBeContained = containedRaw.boundingOctagon();
     if (shapeToBeContained == null) {
       // bounding_octagon() returned null — this can happen for empty/degenerate shapes (e.g. a
       // zero-length trace segment). Discard the expansion room gracefully rather than throw NPE.
       FRLogger.debug(
-          "ShapeSearchTree45Degree.complete_shape: bounding_octagon() returned null for contained shape of type "
+          "ShapeSearchTree45Degree.complete_shape: bounding_octagon() returned null"
+              + " for contained shape of type "
               + containedRaw.getClass().getSimpleName()
               + ", skipping expansion room");
       return new LinkedList<>();
@@ -267,7 +270,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
     result = divideLargeRoom(result, board.getBoundingBox());
     // remove rooms with shapes equal to the contained shape to prevent endless loop.
-    result.removeIf(expansionRoom -> expansionRoom.getContainedShape().contains(expansionRoom.getShape()));
+    result.removeIf(
+        expansionRoom -> expansionRoom.getContainedShape().contains(expansionRoom.getShape()));
     return result;
   }
 
@@ -341,13 +345,13 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     double cutLineDistance = -1;
     int restrainingLineNo = -1;
 
-    for (int obstacle_line_no = 0; obstacle_line_no < 8; obstacle_line_no++) {
+    for (int obstacleLineNo = 0; obstacleLineNo < 8; obstacleLineNo++) {
       double currDistance =
-          signedLineDistance(obstacleShape, obstacle_line_no, shapeToBeContained);
+          signedLineDistance(obstacleShape, obstacleLineNo, shapeToBeContained);
       if (currDistance > cutLineDistance) {
-        if (obstacleSegmentTouchesInside(obstacleShape, obstacle_line_no, roomShape)) {
+        if (obstacleSegmentTouchesInside(obstacleShape, obstacleLineNo, roomShape)) {
           cutLineDistance = currDistance;
-          restrainingLineNo = obstacle_line_no;
+          restrainingLineNo = obstacleLineNo;
         }
       }
     }
@@ -369,12 +373,12 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     }
 
     restrainingLineNo = -1;
-    for (int obstacle_line_no = 0; obstacle_line_no < 8; obstacle_line_no++) {
-      if (obstacleSegmentTouchesInside(obstacleShape, obstacle_line_no, roomShape)) {
-        Line currLine = obstacleShape.borderLine(obstacle_line_no);
+    for (int obstacleLineNo = 0; obstacleLineNo < 8; obstacleLineNo++) {
+      if (obstacleSegmentTouchesInside(obstacleShape, obstacleLineNo, roomShape)) {
+        Line currLine = obstacleShape.borderLine(obstacleLineNo);
         if (shapeToBeContained.sideOf(currLine) == Side.COLLINEAR) {
           // currLine intersects with the interior of p_shape_to_be_contained
-          restrainingLineNo = obstacle_line_no;
+          restrainingLineNo = obstacleLineNo;
           break;
         }
       }
@@ -410,7 +414,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
   /**
    * Intersects p_room_shape with the half plane defined by the outside of the borderline with index
-   * p_obstacle_line_no of p_obstacle_shape.
+   * p_obstacleLineNo of p_obstacle_shape.
    */
   IntOctagon calcOutsideRestrainedShape(
       IntOctagon obstacleShape, int obstacleLineNo, IntOctagon roomShape) {
@@ -434,7 +438,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       case 7 -> urx = obstacleShape.lowerLeftDiagonalX;
       default ->
           FRLogger.warn(
-              "ShapeSearchTree45Degree.calc_outside_restrained_shape: p_obstacle_line_no out of range");
+              "ShapeSearchTree45Degree.calc_outside_restrained_shape:"
+                  + " p_obstacleLineNo out of range");
     }
 
     IntOctagon result = new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);
@@ -443,7 +448,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
   /**
    * Intersects p_room_shape with the half plane defined by the inside of the borderline with index
-   * p_obstacle_line_no of p_obstacle_shape.
+   * p_obstacleLineNo of p_obstacle_shape.
    */
   IntOctagon calcInsideRestrainedShape(
       IntOctagon obstacleShape, int obstacleLineNo, IntOctagon roomShape) {
@@ -467,7 +472,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       case 7 -> llx = obstacleShape.lowerLeftDiagonalX;
       default ->
           FRLogger.warn(
-              "ShapeSearchTree45Degree.calc_inside_restrained_shape: p_obstacle_line_no out of range");
+              "ShapeSearchTree45Degree.calc_inside_restrained_shape:"
+                  + " p_obstacleLineNo out of range");
     }
 
     IntOctagon result = new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);

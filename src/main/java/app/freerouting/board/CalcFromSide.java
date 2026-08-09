@@ -18,9 +18,10 @@ public class CalcFromSide {
   FloatPoint borderIntersection;
 
   /**
-   * calculates the number of the edge line of p_shape where p_polyline enters. Used in the push.
-   * trace algorithm to determine the shove direction. p_no is expected between 1 and
-   * p_polyline.lineCount - 2 inclusive.
+   * Calculates the number of the edge line of p_shape where p_polyline enters.
+   *
+   * <p>Used in the push trace algorithm to determine the shove direction. p_no is expected
+   * between 1 and p_polyline.lineCount - 2 inclusive.
    */
   CalcFromSide(Polyline polyline, int no, TileShape shape) {
     int fromsideNo = -1;

@@ -167,11 +167,7 @@ public class SearchTreeManager {
     return currAutorouteTree;
   }
 
-  // ********************************************************************************
-
   // The following functions are used internally for performance improvement.
-
-  // ********************************************************************************
 
   /** Clears all compensated trees used in the autoroute algorithm apart from the default tree. */
   public void resetCompensatedTrees() {

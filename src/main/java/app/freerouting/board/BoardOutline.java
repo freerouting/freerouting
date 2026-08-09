@@ -169,7 +169,6 @@ public class BoardOutline extends Item implements Serializable {
     return this.shapes.length;
   }
 
-
   /** Get shape. */
   public PolylineShape getShape(int index) {
     if (index < 0 || index >= this.shapes.length) {

@@ -251,7 +251,6 @@ public class ComponentOutline extends Item implements Serializable {
     clearDerivedData();
   }
 
-
   /** Get area. */
   public Area getArea() {
     if (this.precalculatedAbsoluteArea == null) {

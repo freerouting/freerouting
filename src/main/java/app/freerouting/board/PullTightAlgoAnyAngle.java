@@ -82,7 +82,6 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
                   && currClipShape.contains(polyline.cornerApprox(newLineIndex));
 
       if (inClipShape) {
-        FloatPoint skipCorner = newLines[newLineIndex].intersectionApprox(polyline.arr[i + 2]);
         currLines[1] = new Line(newA.round(), newB.round());
         boolean ok = true;
         if (newLineIndex == 1) {
@@ -152,6 +151,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         }
         Polyline currPolyline = null;
         if (ok) {
+          FloatPoint skipCorner = newLines[newLineIndex].intersectionApprox(polyline.arr[i + 2]);
           currPolyline = new Polyline(currLines);
           if (currPolyline.arr.length != 3) {
             ok = false;
@@ -268,7 +268,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
   }
 
   /**
-   * tries to reduce the number of lines of polyline by moving lines parallel beyond the
+   * Tries to reduce the number of lines of polyline by moving lines parallel beyond the
    * intersection of the next or previous lines.
    */
   private Polyline reduceLines(Polyline polyline) {
@@ -457,10 +457,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         } else {
           translateDist -= deltaDist;
         }
-      } else
-      // moved a little bit to far at the first time
-      // because of numerical inaccuracy
-      {
+      } else { // moved a little bit too far at the first time because of numerical inaccuracy
         double shortenValue = sign * 0.5;
         maxTranslateDist -= shortenValue;
         translateDist -= shortenValue;
@@ -503,8 +500,8 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     double prevDist = translateLine.signedDistance(prevCorner);
     int cornersSkippedBefore = 0;
     int cornersSkippedAfter = 0;
-    final double cEpsilon = 0.001;
-    while (Math.abs(prevDist) < cEpsilon) {
+    final double epsilon = 0.001;
+    while (Math.abs(prevDist) < epsilon) {
       // move also all lines through the start corner of the line to translate
       ++cornersSkippedBefore;
       int currNo = startNo - cornersSkippedBefore;
@@ -516,7 +513,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
       prevDist = translateLine.signedDistance(prevCorner);
     }
     double nextDist = translateLine.signedDistance(nextCorner);
-    while (Math.abs(nextDist) < cEpsilon) {
+    while (Math.abs(nextDist) < epsilon) {
       // move also all lines through the end corner of the line to translate
       ++cornersSkippedAfter;
       int currNo = startNo + 3 + cornersSkippedAfter;
@@ -617,10 +614,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         } else {
           translateDist -= deltaDist;
         }
-      } else
-      // moved a little bit to far at the first time
-      // because of numerical inaccuracy
-      {
+      } else { // moved a little bit too far at the first time because of numerical inaccuracy
         double shortenValue = sign * 0.5;
         maxTranslateDist -= shortenValue;
         translateDist -= shortenValue;
@@ -647,13 +641,11 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         FloatPoint corner1;
         FloatPoint corner2;
         Line currLine;
-        if (j == 0) // try to skip the line before the i+2-th line
-        {
+        if (j == 0) { // try to skip the line before the i+2-th line
           currLine = polyline.arr[i + 2];
           corner1 = polyline.cornerApprox(i);
           corner2 = polyline.cornerApprox(i - 1);
-        } else // try to skip the line after i-th line
-        {
+        } else { // try to skip the line after i-th line
           currLine = polyline.arr[i];
           corner1 = polyline.cornerApprox(i + 1);
           corner2 = polyline.cornerApprox(i + 2);

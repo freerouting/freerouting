@@ -276,7 +276,8 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     IntBox is = shapeToBeContained.intersection(obstacleShape);
     if (is.isEmpty()) {
       FRLogger.warn(
-          "BoxShapeSearchTree.restrain_shape: Intersection between obstacleShape and shapeToBeContained expected");
+          "BoxShapeSearchTree.restrain_shape: Intersection between obstacleShape"
+              + " and shapeToBeContained expected");
       return result;
     }
     IntBox newShape1 = null;

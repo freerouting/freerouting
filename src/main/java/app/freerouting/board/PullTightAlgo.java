@@ -177,6 +177,8 @@ public abstract class PullTightAlgo {
     return pullTight(polyline);
   }
 
+  abstract Polyline pullTight(Polyline polyline);
+
   /** Terminates the pull tight algorithm, if the user has made a stop request. */
   protected boolean isStopRequested() {
     if (this.stoppableThread != null && this.stoppableThread.isStopRequested()) {
@@ -260,8 +262,6 @@ public abstract class PullTightAlgo {
     checkLines[2] = lineArr[no + 1];
     boolean firstTime = true;
     while (firstTime || Math.abs(deltaDist) > minTranslateDist) {
-      boolean checkOk = false;
-
       if (firstTime && nearestPoint instanceof IntPoint) {
         checkLines[1] = Line.getInstance(nearestPoint, translateLine.direction());
       } else {
@@ -285,6 +285,7 @@ public abstract class PullTightAlgo {
       }
       Polyline tmp = new Polyline(checkLines);
 
+      boolean checkOk = false;
       if (tmp.arr.length == 3) {
         TileShape shapeToCheck = tmp.offsetShape(currHalfWidth, 0);
         checkOk =
@@ -315,8 +316,9 @@ public abstract class PullTightAlgo {
   }
 
   /**
-   * tries to skip linesegments of length 0. A check is necessary before skipping because new dog.
-   * ears may occur.
+   * Tries to skip line segments of length 0.
+   *
+   * <p>A check is necessary before skipping because new dog ears may occur.
    */
   Polyline skipSegmentsOfLength0(Polyline polyline) {
     boolean polylineChanged = false;
@@ -504,8 +506,6 @@ public abstract class PullTightAlgo {
     }
     return result;
   }
-
-  abstract Polyline pullTight(Polyline polyline);
 
   abstract Polyline smoothenStartCornerAtTrace(PolylineTrace trace);
 

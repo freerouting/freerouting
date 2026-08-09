@@ -170,7 +170,6 @@ public class BasicBoard implements Serializable {
     return revision;
   }
 
-
   /** Increment revision. */
   public void incrementRevision() {
     revision++;
@@ -179,7 +178,6 @@ public class BasicBoard implements Serializable {
   /** Serialize. */
   public byte[] serialize(boolean basicProfile) {
     try {
-      /** Byte array output stream. */
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       ObjectOutputStream objectStream = new ObjectOutputStream(outputStream);
 
@@ -207,6 +205,7 @@ public class BasicBoard implements Serializable {
     return deserialize(this.serialize(false));
   }
 
+  /** Returns an MD5 hash of the board trace state. */
   public String getHash() {
     try {
       MessageDigest digest = MessageDigest.getInstance("MD5");
@@ -221,6 +220,7 @@ public class BasicBoard implements Serializable {
     return null;
   }
 
+  /** Returns the number of trace ID differences compared to another board. */
   public int diffTraces(BasicBoard compareTo) {
     int result = 0;
     HashSet<Integer> traceIds = new HashSet<>();
@@ -1369,12 +1369,12 @@ public class BasicBoard implements Serializable {
     return true;
   }
 
-
   /** Returns the layer count of this board. */
   public int getLayerCount() {
     return layerStructure.arr.length;
   }
 
+  /** Draws all board items to the given graphics context. */
   public void draw(Graphics graphics, GraphicsContext graphicsContext) {
     if (graphicsContext == null) {
       return;
@@ -1524,12 +1524,10 @@ public class BasicBoard implements Serializable {
               selectedLayerName, dominantSide, renderingOrderNames));
     }
 
-    long drawStart = System.nanoTime();
-
-    // Pre-collect all items once to avoid re-iterating itemList for every (priority × step)
-    long startCollect = System.nanoTime();
+    long collectDurationNs;
     java.util.List<Item> allItems = new java.util.ArrayList<>();
     {
+      long phaseStartNs = System.nanoTime();
       Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
       for (; ; ) {
         try {
@@ -1543,33 +1541,29 @@ public class BasicBoard implements Serializable {
           return;
         }
       }
+      collectDurationNs = System.nanoTime() - phaseStartNs;
     }
-    long endCollect = System.nanoTime();
 
-    long startGroup = System.nanoTime();
-    // Group items by priority to optimize rendering loops
+    long groupDurationNs;
     int maxPriority = Drawable.MAX_DRAW_PRIORITY;
     @SuppressWarnings("unchecked")
     java.util.List<Item>[] itemsByPriority =
         (java.util.List<Item>[]) new java.util.List[maxPriority + 1];
-    for (int i = 0; i <= maxPriority; i++) {
-      itemsByPriority[i] = new java.util.ArrayList<>();
-    }
-    for (Item currItem : allItems) {
-      int p = currItem.getDrawPriority();
-      if (p >= 0 && p <= maxPriority) {
-        itemsByPriority[p].add(currItem);
+    {
+      long phaseStartNs = System.nanoTime();
+      for (int i = 0; i <= maxPriority; i++) {
+        itemsByPriority[i] = new java.util.ArrayList<>();
       }
+      for (Item currItem : allItems) {
+        int p = currItem.getDrawPriority();
+        if (p >= 0 && p <= maxPriority) {
+          itemsByPriority[p].add(currItem);
+        }
+      }
+      groupDurationNs = System.nanoTime() - phaseStartNs;
     }
-    long endGroup = System.nanoTime();
 
-    long startLoop = System.nanoTime();
-
-    // Viewport culling bounds in board coordinates
-    java.awt.Rectangle clipRect = graphics.getClipBounds();
-    IntBox clipBox =
-        clipRect != null ? graphicsContext.coordinateTransform.screenToBoard(clipRect) : null;
-
+    long loopDurationNs;
     long timeTrace = 0;
     long timeVia = 0;
     long timePin = 0;
@@ -1581,133 +1575,151 @@ public class BasicBoard implements Serializable {
     int countConduction = 0;
     int countOther = 0;
     int culledCount = 0;
+    {
+      long phaseStartNs = System.nanoTime();
 
-    // Draw elements according to the calculated steps sequence
-    for (int currPriority = Drawable.MIN_DRAW_PRIORITY;
-        currPriority <= maxPriority;
-        currPriority++) {
-      java.util.List<Item> priorityItems = itemsByPriority[currPriority];
-      for (RenderStep step : drawSteps) {
-        for (Item currItem : priorityItems) {
-          if (clipBox != null && !clipBox.intersects(currItem.boundingBox())) {
-            culledCount++;
-            continue;
-          }
+      // Viewport culling bounds in board coordinates
+      java.awt.Rectangle clipRect = graphics.getClipBounds();
+      IntBox clipBox =
+          clipRect != null ? graphicsContext.coordinateTransform.screenToBoard(clipRect) : null;
 
-          long itemStart = System.nanoTime();
-          if (step.isVirtual) {
-            // Virtual layer step: render ComponentOutline and ComponentObstacleArea (courtyard)
-            // items matching that virtual layer index
-            if (currItem instanceof ComponentOutline co) {
-              int itemVirtualIdx;
-              if (co.isCourtyard()) {
-                itemVirtualIdx = co.isFront() ? 2 : 3;
-              } else if (co.isFabrication()) {
-                itemVirtualIdx = co.isFront() ? 4 : 5;
-              } else {
-                itemVirtualIdx = co.isFront() ? 0 : 1;
+      // Draw elements according to the calculated steps sequence
+      for (int currPriority = Drawable.MIN_DRAW_PRIORITY;
+          currPriority <= maxPriority;
+          currPriority++) {
+        java.util.List<Item> priorityItems = itemsByPriority[currPriority];
+        for (RenderStep step : drawSteps) {
+          for (Item currItem : priorityItems) {
+            if (clipBox != null && !clipBox.intersects(currItem.boundingBox())) {
+              culledCount++;
+              continue;
+            }
+
+            long itemStart = System.nanoTime();
+            if (step.isVirtual) {
+              // Virtual layer step: render ComponentOutline and ComponentObstacleArea (courtyard)
+              // items matching that virtual layer index
+              if (currItem instanceof ComponentOutline co) {
+                int itemVirtualIdx;
+                if (co.isCourtyard()) {
+                  itemVirtualIdx = co.isFront() ? 2 : 3;
+                } else if (co.isFabrication()) {
+                  itemVirtualIdx = co.isFront() ? 4 : 5;
+                } else {
+                  itemVirtualIdx = co.isFront() ? 0 : 1;
+                }
+                if (itemVirtualIdx == step.index) {
+                  currItem.draw(graphics, graphicsContext);
+                }
+              } else if (currItem instanceof ComponentObstacleArea coa) {
+                // Courtyard keepout areas map to virtual courtyard layers (2=F.Courtyard,
+                // 3=B.Courtyard)
+                int itemVirtualIdx = coa.isFront() ? 2 : 3;
+                if (itemVirtualIdx == step.index) {
+                  currItem.draw(graphics, graphicsContext);
+                }
               }
-              if (itemVirtualIdx == step.index) {
-                currItem.draw(graphics, graphicsContext);
-              }
-            } else if (currItem instanceof ComponentObstacleArea coa) {
-              // Courtyard keepout areas map to virtual courtyard layers (2=F.Courtyard,
-              // 3=B.Courtyard)
-              int itemVirtualIdx = coa.isFront() ? 2 : 3;
-              if (itemVirtualIdx == step.index) {
-                currItem.draw(graphics, graphicsContext);
+            } else {
+              // Physical layer step: skip ComponentOutline and ComponentObstacleArea
+              // (they are rendered exclusively in their corresponding virtual layer steps)
+              if (!(currItem instanceof ComponentOutline)
+                  && !(currItem instanceof ComponentObstacleArea)) {
+                currItem.drawLayer(graphics, graphicsContext, step.index);
               }
             }
-          } else {
-            // Physical layer step: skip ComponentOutline and ComponentObstacleArea
-            // (they are rendered exclusively in their corresponding virtual layer steps)
-            if (!(currItem instanceof ComponentOutline)
-                && !(currItem instanceof ComponentObstacleArea)) {
-              currItem.drawLayer(graphics, graphicsContext, step.index);
-            }
-          }
-          long itemDur = System.nanoTime() - itemStart;
+            long itemDur = System.nanoTime() - itemStart;
 
-          if (currItem instanceof PolylineTrace) {
-            timeTrace += itemDur;
-            countTrace++;
-          } else if (currItem instanceof Via) {
-            timeVia += itemDur;
-            countVia++;
-          } else if (currItem instanceof Pin) {
-            timePin += itemDur;
-            countPin++;
-          } else if (currItem instanceof ConductionArea) {
-            timeConduction += itemDur;
-            countConduction++;
-          } else {
-            timeOther += itemDur;
-            countOther++;
+            if (currItem instanceof PolylineTrace) {
+              timeTrace += itemDur;
+              countTrace++;
+            } else if (currItem instanceof Via) {
+              timeVia += itemDur;
+              countVia++;
+            } else if (currItem instanceof Pin) {
+              timePin += itemDur;
+              countPin++;
+            } else if (currItem instanceof ConductionArea) {
+              timeConduction += itemDur;
+              countConduction++;
+            } else {
+              timeOther += itemDur;
+              countOther++;
+            }
           }
         }
       }
+      loopDurationNs = System.nanoTime() - phaseStartNs;
     }
-    long endLoop = System.nanoTime();
 
-    long startText = System.nanoTime();
-    // Draw component values on Front Fab (virtual index 4) / Back Fab (virtual index 5)
-    double intensityFront = graphicsContext.getVirtualLayerVisibility(4);
-    double intensityBack = graphicsContext.getVirtualLayerVisibility(5);
-    if (intensityFront > 0 || intensityBack > 0) {
-      java.awt.Graphics2D g2 = (java.awt.Graphics2D) graphics;
-      java.awt.Font originalFont = g2.getFont();
-      java.awt.Composite originalComposite = g2.getComposite();
-      g2.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
-      for (Component comp : components.getAll()) {
-        if (!comp.isPlaced() || comp.getPartNumber() == null || comp.getPartNumber().isEmpty()) {
-          continue;
+    long textDurationNs = 0;
+    {
+      long phaseStartNs = System.nanoTime();
+      // Draw component values on Front Fab (virtual index 4) / Back Fab (virtual index 5)
+      double intensityFront = graphicsContext.getVirtualLayerVisibility(4);
+      double intensityBack = graphicsContext.getVirtualLayerVisibility(5);
+      if (intensityFront > 0 || intensityBack > 0) {
+        java.awt.Graphics2D g2 = (java.awt.Graphics2D) graphics;
+        java.awt.Font originalFont = g2.getFont();
+        g2.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+        java.awt.Composite previousComposite = g2.getComposite();
+        try {
+          for (Component comp : components.getAll()) {
+            if (!comp.isPlaced()
+                || comp.getPartNumber() == null
+                || comp.getPartNumber().isEmpty()) {
+              continue;
+            }
+            boolean isFront = comp.placedOnFront();
+            double intensity = isFront ? intensityFront : intensityBack;
+            if (intensity <= 0) {
+              continue;
+            }
+            java.awt.Color color =
+                isFront
+                    ? graphicsContext.otherColorTable.getFabColor(true)
+                    : graphicsContext.otherColorTable.getFabColor(false);
+            if (color == null) {
+              continue;
+            }
+            g2.setColor(color);
+            float alpha = (float) Math.max(0.0, Math.min(1.0, intensity));
+            g2.setComposite(
+                java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, alpha));
+            java.awt.geom.Point2D screenLoc =
+                graphicsContext.coordinateTransform.boardToScreen(comp.getLocation().toFloat());
+            java.awt.FontMetrics metrics = g2.getFontMetrics();
+            int textWidth = metrics.stringWidth(comp.getPartNumber());
+            int textHeight = metrics.getAscent();
+            g2.drawString(
+                comp.getPartNumber(),
+                (float) (screenLoc.getX() - textWidth / 2.0),
+                (float) (screenLoc.getY() + textHeight / 2.0));
+          }
+        } finally {
+          g2.setComposite(previousComposite);
         }
-        boolean isFront = comp.placedOnFront();
-        double intensity = isFront ? intensityFront : intensityBack;
-        if (intensity <= 0) {
-          continue;
-        }
-        java.awt.Color color =
-            isFront
-                ? graphicsContext.otherColorTable.getFabColor(true)
-                : graphicsContext.otherColorTable.getFabColor(false);
-        if (color == null) {
-          continue;
-        }
-        g2.setColor(color);
-        float alpha = (float) Math.max(0.0, Math.min(1.0, intensity));
-        g2.setComposite(
-            java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, alpha));
-        java.awt.geom.Point2D screenLoc =
-            graphicsContext.coordinateTransform.boardToScreen(comp.getLocation().toFloat());
-        java.awt.FontMetrics metrics = g2.getFontMetrics();
-        int textWidth = metrics.stringWidth(comp.getPartNumber());
-        int textHeight = metrics.getAscent();
-        g2.drawString(
-            comp.getPartNumber(),
-            (float) (screenLoc.getX() - textWidth / 2.0),
-            (float) (screenLoc.getY() + textHeight / 2.0));
+        g2.setFont(originalFont);
       }
-      g2.setFont(originalFont);
-      g2.setComposite(originalComposite);
+      textDurationNs = System.nanoTime() - phaseStartNs;
     }
-    long endText = System.nanoTime();
 
-    long drawEnd = System.nanoTime();
     if (FRLogger.getLogger().isDebugEnabled()) {
       FRLogger.debug(
           String.format(
-              "BasicBoard.draw: total %.2f ms [collect=%.2f ms, group=%.2f ms, loop=%.2f ms (culled: %d), texts=%.2f ms] (items: %d)",
-              (drawEnd - drawStart) / 1_000_000.0,
-              (endCollect - startCollect) / 1_000_000.0,
-              (endGroup - startGroup) / 1_000_000.0,
-              (endLoop - startLoop) / 1_000_000.0,
+              "BasicBoard.draw: total %.2f ms [collect=%.2f ms, group=%.2f ms,"
+                  + " loop=%.2f ms (culled: %d), texts=%.2f ms] (items: %d)",
+              (collectDurationNs + groupDurationNs + loopDurationNs + textDurationNs)
+                  / 1_000_000.0,
+              collectDurationNs / 1_000_000.0,
+              groupDurationNs / 1_000_000.0,
+              loopDurationNs / 1_000_000.0,
               culledCount,
-              (endText - startText) / 1_000_000.0,
+              textDurationNs / 1_000_000.0,
               allItems.size()));
       FRLogger.debug(
           String.format(
-              "  - Item drawing times: Trace=%.2f ms (%d), Via=%.2f ms (%d), Pin=%.2f ms (%d), Plane=%.2f ms (%d), Other=%.2f ms (%d)",
+              "  - Item drawing times: Trace=%.2f ms (%d), Via=%.2f ms (%d),"
+                  + " Pin=%.2f ms (%d), Plane=%.2f ms (%d), Other=%.2f ms (%d)",
               timeTrace / 1_000_000.0,
               countTrace,
               timeVia / 1_000_000.0,
@@ -1908,39 +1920,7 @@ public class BasicBoard implements Serializable {
     Collection<UndoableObjects.Storable> cancelledObjects = new LinkedList<>();
     Collection<UndoableObjects.Storable> restoredObjects = new LinkedList<>();
     boolean result = itemList.undo(cancelledObjects, restoredObjects);
-    // update the search trees
-    Iterator<UndoableObjects.Storable> it = cancelledObjects.iterator();
-    while (it.hasNext()) {
-      Item currItem = (Item) it.next();
-      searchTreeManager.remove(currItem);
-
-      // let the observers synchronize the deletion
-      if ((communication != null) && (communication.observers != null)) {
-        communication.observers.notifyDeleted(currItem);
-      }
-
-      if (changedNets != null) {
-        for (int i = 0; i < currItem.netCount(); i++) {
-          changedNets.add(currItem.getNetNo(i));
-        }
-      }
-    }
-    it = restoredObjects.iterator();
-    while (it.hasNext()) {
-      Item currItem = (Item) it.next();
-      currItem.board = this;
-      searchTreeManager.insert(currItem);
-      currItem.clearAutorouteInfo();
-      // let the observers know the insertion
-      if ((communication != null) && (communication.observers != null)) {
-        communication.observers.notifyNew(currItem);
-      }
-      if (changedNets != null) {
-        for (int i = 0; i < currItem.netCount(); i++) {
-          changedNets.add(currItem.getNetNo(i));
-        }
-      }
-    }
+    applyUndoRedoSideEffects(cancelledObjects, restoredObjects, changedNets);
     return result;
   }
 
@@ -1953,13 +1933,21 @@ public class BasicBoard implements Serializable {
     Collection<UndoableObjects.Storable> cancelledObjects = new LinkedList<>();
     Collection<UndoableObjects.Storable> restoredObjects = new LinkedList<>();
     boolean result = itemList.redo(cancelledObjects, restoredObjects);
-    // update the search trees
+    applyUndoRedoSideEffects(cancelledObjects, restoredObjects, changedNets);
+    return result;
+  }
+
+  private void applyUndoRedoSideEffects(
+      Collection<UndoableObjects.Storable> cancelledObjects,
+      Collection<UndoableObjects.Storable> restoredObjects,
+      Set<Integer> changedNets) {
     Iterator<UndoableObjects.Storable> it = cancelledObjects.iterator();
     while (it.hasNext()) {
       Item currItem = (Item) it.next();
       searchTreeManager.remove(currItem);
-      // let the observers synchronize the deletion
-      communication.observers.notifyDeleted(currItem);
+      if ((communication != null) && (communication.observers != null)) {
+        communication.observers.notifyDeleted(currItem);
+      }
       if (changedNets != null) {
         for (int i = 0; i < currItem.netCount(); i++) {
           changedNets.add(currItem.getNetNo(i));
@@ -1972,7 +1960,6 @@ public class BasicBoard implements Serializable {
       currItem.board = this;
       searchTreeManager.insert(currItem);
       currItem.clearAutorouteInfo();
-      // let the observers know the insertion
       if ((communication != null) && (communication.observers != null)) {
         communication.observers.notifyNew(currItem);
       }
@@ -1982,7 +1969,6 @@ public class BasicBoard implements Serializable {
         }
       }
     }
-    return result;
   }
 
   /** Makes the current board situation restorable by undo. */
@@ -2041,14 +2027,12 @@ public class BasicBoard implements Serializable {
     }
     // Remove tails at the endpoints after removing the cycle,
     // if there was no tail before.
-    boolean[] tailAtEndpointBefore;
-    Point[] endCorners;
     int currLayer = trace.getLayer();
     int[] currNetNoArr = trace.netNoArr;
-    endCorners = new Point[2];
+    Point[] endCorners = new Point[2];
     endCorners[0] = trace.firstCorner();
     endCorners[1] = trace.lastCorner();
-    tailAtEndpointBefore = new boolean[2];
+    boolean[] tailAtEndpointBefore = new boolean[2];
     for (int i = 0; i < 2; i++) {
       Trace tail = getTraceTail(endCorners[i], currLayer, currNetNoArr);
       tailAtEndpointBefore[i] = tail != null;
@@ -2069,7 +2053,6 @@ public class BasicBoard implements Serializable {
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     // insert the items on the board into the search trees
-    /** SearchTreeManager. */
     searchTreeManager = new SearchTreeManager(this);
     normalizeSuppressedNetNos = new HashSet<>();
     for (Item currItem : this.getItems()) {
@@ -2078,10 +2061,10 @@ public class BasicBoard implements Serializable {
     }
   }
 
+  /** Deletes all traces and vias from the board. */
   public void deleteAllTracksAndVias() {
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
     for (; ; ) {
-      /** Read object. */
       UndoableObjects.Storable currItem = itemList.readObject(it);
       if (currItem == null) {
         break;
@@ -2118,10 +2101,10 @@ public class BasicBoard implements Serializable {
     this.searchTreeManager.reinsertTreeItems();
   }
 
+  /** Logs a warning if connectable items exist on inactive routing layers. */
   public void areThereItemsOnInactiveLayer(AutorouteControl ctrl) {
     if (this.getLayerCount() > 2) {
       boolean hasSomethingOnInactiveLayer = false;
-      /** Start read object. */
       Iterator<UndoableObjects.UndoableObjectNode> it = this.itemList.startReadObject();
       for (; ; ) {
         UndoableObjects.Storable currOb = this.itemList.readObject(it);

@@ -126,13 +126,13 @@ public abstract class Item
     return !containsNet(netNo);
   }
 
+  /** Returns, if this item in not allowed to overlap with p_other. */
+  public abstract boolean isObstacle(Item other);
+
   @Override
   public boolean isTraceObstacle(int netNo) {
     return !containsNet(netNo);
   }
-
-  /** Returns, if this item in not allowed to overlap with p_other. */
-  public abstract boolean isObstacle(Item other);
 
   /** Returns true if the net number arrays of this and p_other have a common number. */
   public boolean sharesNet(Item other) {
@@ -155,7 +155,7 @@ public abstract class Item
   public abstract int tileShapeCount();
 
   /**
-   * Returns the p_index-throws shape of this item after decomposition into convex polygonal shapes
+   * Returns the p_index-th shape of this item after decomposition into convex polygonal shapes.
    */
   public TileShape getTileShape(int index) {
     if (this.board == null) {
@@ -857,8 +857,7 @@ public abstract class Item
   }
 
   /**
-   * gets the p_no-th net number of this item for 0 {@literal <}= p_no {@literal <}.
-   * this.net_count().
+   * Returns the p_no-th net number of this item for 0 {@literal <=} p_no {@literal <} netCount().
    */
   public int getNetNo(int no) {
     return netNoArr[no];
@@ -895,8 +894,8 @@ public abstract class Item
   }
 
   /**
-   * Returns the index in the clearance matrix describing the required spacing of this item to other.
-   * items
+   * Returns the index in the clearance matrix describing the required spacing of this item to
+   * other items.
    */
   public int clearanceClassNo() {
     return clearanceClass;

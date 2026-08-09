@@ -334,7 +334,7 @@ public final class OptViaAlgo {
       return newToLocation;
     }
 
-    final double cMinLength = 0.3 * traceHalfWidth + 1;
+    final double minLength = 0.3 * traceHalfWidth + 1;
 
     okLength = Math.min(okLength, floatFromLocation.distance(floatToLocation));
 
@@ -343,7 +343,7 @@ public final class OptViaAlgo {
     okLength = 0;
     Point result = null;
 
-    while (currLength >= cMinLength) {
+    while (currLength >= minLength) {
       Point checkPoint =
           floatFromLocation.changeLength(floatToLocation, okLength + currLength).round();
 

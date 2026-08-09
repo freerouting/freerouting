@@ -499,23 +499,7 @@ public class ShapeTraceEntries {
       curr = prev.next;
     }
     if (curr != null && curr != listAnchor) {
-      EntryPoint newAnchor = curr;
-
-      while (curr != null) {
-        prev = curr;
-        curr = prev.next;
-      }
-      prev.next = listAnchor;
-      curr = listAnchor;
-      while (curr != newAnchor) {
-        // add edgeCount to curr.side to differentiate points
-        // before and after the middle of fromSide
-        curr.edgeNo += edgeCount;
-        prev = curr;
-        curr = prev.next;
-      }
-      prev.next = null;
-      listAnchor = newAnchor;
+      rotateEntryListAroundAnchor(curr, edgeCount);
     }
     // remove intersections between two other intersections of the same
     // connected set, so that only first and last intersection is kept.
@@ -587,8 +571,7 @@ public class ShapeTraceEntries {
     }
 
     while (currentEntry != null) {
-      if (currentEntry.stackLevel < 0) // not yet calculated
-      {
+      if (currentEntry.stackLevel < 0) { // not yet calculated
         ++tracePieceCount;
         currentEntry.stackLevel = currentLevel;
         if (currentLevel > maxStackLevel) {
@@ -627,8 +610,7 @@ public class ShapeTraceEntries {
         if (indexOfNextForeignSet != 0 && indexOfNextForeignSet < indexOfLastOccurrenceOfSet) {
           // raise level
           nextEntry = firstForeignEntry;
-          if (nextEntry.stackLevel >= 0) // already calculated
-          {
+          if (nextEntry.stackLevel >= 0) { // already calculated
             // stack property fails
             return false;
           }
@@ -638,8 +620,7 @@ public class ShapeTraceEntries {
             nextEntry = lastOwnEntry;
           } else {
             nextEntry = firstForeignEntry;
-            if (nextEntry.stackLevel >= 0) // already calculated
-            {
+            if (nextEntry.stackLevel >= 0) { // already calculated
               --currentLevel;
               if (nextEntry.stackLevel != currentLevel) {
                 return false;
@@ -746,13 +727,10 @@ public class ShapeTraceEntries {
         } else {
           nextCorner = shape.cornerApprox(newEntry.edgeNo + 1);
         }
-        if (prevCorner.scalarProduct(entryApprox, nextCorner)
-            <= prevCorner.scalarProduct(currNext.entryApprox, nextCorner))
-        // the projection of the line from prevCorner to entryApprox
-        // onto the line from prevCorner to nextCorner is smaller
         // than the projection of the line from prevCorner to
         // next.entryApprox onto the same line.
-        {
+        if (prevCorner.scalarProduct(entryApprox, nextCorner)
+            <= prevCorner.scalarProduct(currNext.entryApprox, nextCorner)) {
           break;
         }
       }
@@ -765,6 +743,27 @@ public class ShapeTraceEntries {
     } else {
       listAnchor = newEntry;
     }
+  }
+
+  /** Rotates the entry list so that newAnchor becomes the list head. */
+  private void rotateEntryListAroundAnchor(EntryPoint newAnchor, int edgeCount) {
+    EntryPoint curr = newAnchor;
+    EntryPoint prev = null;
+    while (curr != null) {
+      prev = curr;
+      curr = prev.next;
+    }
+    prev.next = listAnchor;
+    curr = listAnchor;
+    while (curr != newAnchor) {
+      // add edgeCount to curr.side to differentiate points
+      // before and after the middle of fromSide
+      curr.edgeNo += edgeCount;
+      prev = curr;
+      curr = prev.next;
+    }
+    prev.next = null;
+    listAnchor = newAnchor;
   }
 
   /**

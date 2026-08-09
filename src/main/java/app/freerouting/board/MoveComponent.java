@@ -170,8 +170,9 @@ public class MoveComponent {
   }
 
   /**
-   * used to sort the group items in the direction of translateVector, so that the front items can.
-   * be moved first.
+   * Sorts group items in the direction of translateVector.
+   *
+   * <p>Front items are moved first.
    */
   private record SortedItem(Item item, double projection) implements Comparable<SortedItem> {
 

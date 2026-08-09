@@ -728,10 +728,6 @@ public class ShoveTraceAlgo {
       this.board.setShoveFailingObstacle(foundObstacle);
       return null;
     }
-    Polyline[] pieces =
-        offsetShape.cutout(
-            polyline); // build a circuit around the offsetShape in counter clock sense
-    // from the first intersection point to the second intersection point
     int firstIntersectionSideNo = entries[0][1];
     int lastIntersectionSideNo = entries[entries.length - 1][1];
     int firstIntersectionLineNo = entries[0][0];
@@ -765,6 +761,10 @@ public class ShoveTraceAlgo {
     }
     substituteLines[sideDiff + 2] = polyline.arr[lastIntersectionLineNo];
     Polyline substitutePolyline = new Polyline(substituteLines);
+    Polyline[] pieces =
+        offsetShape.cutout(
+            polyline); // build a circuit around the offsetShape in counter clock sense
+    // from the first intersection point to the second intersection point
     Polyline result = substitutePolyline;
 
     if (pieces.length > 0) {
@@ -798,7 +798,7 @@ public class ShoveTraceAlgo {
       int[] netNoArr,
       int clType,
       Set<Pin> contactPins) {
-    final int cMaxSpringOverRecursionDepth = 20;
+    final int maxSpringOverRecursionDepth = 20;
     Polyline counterClockWiseResult =
         springOver(
             polyline,
@@ -807,7 +807,7 @@ public class ShoveTraceAlgo {
             netNoArr,
             clType,
             true,
-            cMaxSpringOverRecursionDepth,
+            maxSpringOverRecursionDepth,
             contactPins);
     if (counterClockWiseResult == polyline) {
       return polyline; // no obstacle
@@ -821,7 +821,7 @@ public class ShoveTraceAlgo {
             netNoArr,
             clType,
             true,
-            cMaxSpringOverRecursionDepth,
+            maxSpringOverRecursionDepth,
             contactPins);
     Polyline result = null;
     if (clockWiseResult != null && counterClockWiseResult != null) {

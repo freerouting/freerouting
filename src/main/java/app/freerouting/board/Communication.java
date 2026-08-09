@@ -62,7 +62,6 @@ public class Communication implements Serializable {
         && "CadSoft".equalsIgnoreCase(specctraParserInfo.hostCad);
   }
 
-
   /** Host is old kicad. */
   public boolean hostIsOldKicad() {
     if ((specctraParserInfo == null)
@@ -113,6 +112,7 @@ public class Communication implements Serializable {
     public final WriteResolution writeResolution;
     public final boolean dsnFileGeneratedByHost;
 
+    /** Creates parser metadata read from a Specctra DSN file. */
     public SpecctraParserInfo(
         String stringQuote,
         String hostCad,
@@ -123,19 +123,18 @@ public class Communication implements Serializable {
       this.stringQuote = stringQuote;
       this.hostCad = hostCad;
       this.hostVersion = hostVersion;
-      /** Type. */
       this.constants = constants;
       this.writeResolution = writeResolution;
       this.dsnFileGeneratedByHost = dsnFileGeneratedByHost;
     }
 
-    /** Type. */
-
+    /** Resolution metadata for Specctra DSN export. */
     public static class WriteResolution implements Serializable {
 
       public final String charName;
       public final int positiveInt;
 
+      /** Creates a write-resolution descriptor. */
       public WriteResolution(String charName, int positiveInt) {
         this.charName = charName;
         this.positiveInt = positiveInt;

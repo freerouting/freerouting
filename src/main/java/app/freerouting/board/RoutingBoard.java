@@ -441,7 +441,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     int[] optNetNoArr;
     if (maxRecursionDepth <= 0) {
-    int[] netNoArr = drillItem.netNoArr;
+      int[] netNoArr = drillItem.netNoArr;
       optNetNoArr = netNoArr;
     } else {
       optNetNoArr = new int[0];
@@ -1043,7 +1043,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       // Max normalization depth is hit for geometrically complex or degenerate trace segments.
       // The router skips the segment and continues; affected connections may remain unrouted.
       FRLogger.trace(
-          "RoutingBoard.insert_forced_trace_polyline: A trace could not be normalized and was skipped. Cause: "
+          "RoutingBoard.insert_forced_trace_polyline: A trace could not be normalized"
+              + " and was skipped. Cause: "
               + e.getMessage());
     }
 
@@ -1067,9 +1068,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       newTrace.pullTight(pullTightAlgo);
     }
     if (netNoArr != null && netNoArr.length > 0) {
-      ItemSelectionFilter _dbg_filter =
+      ItemSelectionFilter dbgFilter =
           new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
-      Set<Item> dbgAfter = this.pickItems(newCorner, layer, _dbg_filter);
+      Set<Item> dbgAfter = this.pickItems(newCorner, layer, dbgFilter);
       FRLogger.trace(
           "compare_trace_insert_forced_sub net="
               + netNoArr[0]
@@ -1325,15 +1326,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   public boolean connectToTrace(
       IntPoint fromPoint, Trace toTrace, int penHalfWidth, int clType) {
 
-    Point firstCorner = toTrace.firstCorner();
-
-    Point lastCorner = toTrace.lastCorner();
-
-    int[] netNoArr = toTrace.netNoArr;
-
     if (!(toTrace instanceof PolylineTrace polylineTrace)) {
       return false; // not yet implemented
     }
+
     if (polylineTrace.polyline().contains(fromPoint)) {
       // no connection line necessary
       return true;
@@ -1358,8 +1354,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
 
     this.insertTrace(
-        connectionLine, traceLayer, penHalfWidth, netNoArr, clType, FixedState.UNFIXED);
+        connectionLine, traceLayer, penHalfWidth, toTrace.netNoArr, clType, FixedState.UNFIXED);
 
+    Point firstCorner = toTrace.firstCorner();
+    Point lastCorner = toTrace.lastCorner();
+    int[] netNoArr = toTrace.netNoArr;
     if (!fromPoint.equals(firstCorner)) {
       Trace tail = this.getTraceTail(firstCorner, traceLayer, netNoArr);
       if (tail != null && !tail.isUserFixed()) {
@@ -1532,8 +1531,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
                   }
                 }
               }
-              if (!pinFound) // at tie pins traces may have different nets
-              {
+              if (!pinFound) { // at tie pins traces may have different nets
                 for (Item currContact : contacts) {
                   if (!(currContact instanceof Pin) && !currContact.containsNet(currNetNo)) {
                     currItem.removeFromNet(currNetNo);
@@ -1643,6 +1641,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           objectInputStream.close();
         }
       } catch (Exception _) {
+        // Best-effort stream cleanup during board deserialization.
       }
     }
   }

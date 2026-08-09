@@ -184,10 +184,10 @@ public class Pin extends DrillItem implements Serializable {
       Vector relLocation = packagePin.relativeLocation;
       double componentRotation = component.getRotationInDegree();
 
-      boolean mirrorAtYAxis =
+      boolean mirrorOnYaxis =
           !component.placedOnFront() && !board.components.getFlipStyleRotateFirst();
 
-      if (mirrorAtYAxis) {
+      if (mirrorOnYaxis) {
         relLocation = packagePin.relativeLocation.mirrorAtYAxis();
       }
 
@@ -212,7 +212,7 @@ public class Pin extends DrillItem implements Serializable {
               (ConvexShape) currShape.rotateApprox(Math.toRadians(pinRotation), FloatPoint.ZERO);
         }
 
-        if (mirrorAtYAxis) {
+        if (mirrorOnYaxis) {
           currShape = (ConvexShape) currShape.mirrorVertical(Point.ZERO);
         }
 
@@ -592,7 +592,6 @@ public class Pin extends DrillItem implements Serializable {
       return null;
     }
     Shape pinShape = this.getShape(layer - this.firstLayer());
-    Point pinCenter = this.getCenter();
     if (!(pinShape instanceof TileShape)) {
       return null;
     }
@@ -615,6 +614,7 @@ public class Pin extends DrillItem implements Serializable {
     FloatPoint nearestExitCorner = null;
     Direction pinExitDirection = null;
     final double tolerance = 1;
+    Point pinCenter = this.getCenter();
     for (Pin.TraceExitRestriction currExitRestriction : traceExitRestrictions) {
       int currIntersectingBorderLineNo =
           offsetPinShape.intersectingBorderLineNo(pinCenter, currExitRestriction.direction);

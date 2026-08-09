@@ -25,8 +25,8 @@ public class CoordinateTransform implements Serializable {
   public final double boardUnitFactor;
 
   /**
-   * The factor used for transforming coordinates between user coordinate space and board coordinate
-   * space
+   * The factor used for transforming coordinates between user coordinate space and board
+   * coordinate space.
    */
   private final double scaleFactor;
 
@@ -44,14 +44,9 @@ public class CoordinateTransform implements Serializable {
     }
   }
 
-  /** Scale a value from the board to the user coordinate system. */
+  /** Scales a value from the board to the user coordinate system. */
   public double boardToUser(double value) {
     return Unit.scale(value * scaleFactor, boardUnit, userUnit);
-  }
-
-  /** Scale a value from the user to the board coordinate system. */
-  public double userToBoard(double value) {
-    return Unit.scale(value / scaleFactor, userUnit, boardUnit);
   }
 
   /**
@@ -62,15 +57,7 @@ public class CoordinateTransform implements Serializable {
     return new FloatPoint(boardToUser(point.x), boardToUser(point.y));
   }
 
-  /**
-   * Transforms a geometry.planar.FloatPoint from the user coordinate space. to the board coordinate
-   * space.
-   */
-  public FloatPoint userToBoard(FloatPoint point) {
-    return new FloatPoint(userToBoard(point.x), userToBoard(point.y));
-  }
-
-  /** BoardToUser. */
+  /** Transforms a board shape to a printable user-coordinate representation. */
   public PrintableShape boardToUser(Shape shape, Locale locale) {
     PrintableShape result;
     if (shape instanceof Circle circle) {
@@ -86,28 +73,38 @@ public class CoordinateTransform implements Serializable {
     return result;
   }
 
-
-  /** Board to user. */
+  /** Transforms a board circle to a printable user-coordinate circle. */
   public PrintableShape.Circle boardToUser(Circle circle, Locale locale) {
     return new PrintableShape.Circle(
-        /** BoardToUser. */
         boardToUser(circle.center.toFloat()), boardToUser(circle.radius), locale);
   }
 
-  /** Board to user. */
+  /** Transforms a board bounding box to a printable user-coordinate rectangle. */
   public PrintableShape.Rectangle boardToUser(IntBox box, Locale locale) {
-    /** Rectangle. */
     return new PrintableShape.Rectangle(
         boardToUser(box.ll.toFloat()), boardToUser(box.ur.toFloat()), locale);
   }
 
+  /** Transforms a board polyline shape to a printable user-coordinate polygon. */
   public PrintableShape.Polygon boardToUser(PolylineShape shape, Locale locale) {
-    /** Corner approx arr. */
     FloatPoint[] corners = shape.cornerApproxArr();
     FloatPoint[] transformedCorners = new FloatPoint[corners.length];
     for (int i = 0; i < corners.length; i++) {
       transformedCorners[i] = boardToUser(corners[i]);
     }
     return new PrintableShape.Polygon(transformedCorners, locale);
+  }
+
+  /** Scales a value from the user to the board coordinate system. */
+  public double userToBoard(double value) {
+    return Unit.scale(value / scaleFactor, userUnit, boardUnit);
+  }
+
+  /**
+   * Transforms a geometry.planar.FloatPoint from the user coordinate space to the board coordinate
+   * space.
+   */
+  public FloatPoint userToBoard(FloatPoint point) {
+    return new FloatPoint(userToBoard(point.x), userToBoard(point.y));
   }
 }

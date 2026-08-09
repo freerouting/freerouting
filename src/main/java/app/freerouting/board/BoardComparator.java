@@ -34,8 +34,7 @@ public class BoardComparator {
     }
   }
 
-
-  /** Compare. */
+  /** Compares two routing boards for parity. */
   public static ComparisonResult compare(
       RoutingBoard board1, RoutingBoard board2, double epsilonMm) {
     StringBuilder report = new StringBuilder();
@@ -44,7 +43,8 @@ public class BoardComparator {
     report.append("=== Freerouting Board Parity Report ===\n");
     report.append(
         String.format(
-            "Comparing Board 1 (from DSN/JSON) and Board 2 (from JSON/DSN) with epsilon = %.6f mm\n\n",
+            "Comparing Board 1 (from DSN/JSON) and Board 2 (from JSON/DSN)"
+                + " with epsilon = %.6f mm%n%n",
             epsilonMm));
 
     // 1. Check units and scaling factors
@@ -162,7 +162,8 @@ public class BoardComparator {
           equal = false;
           report.append(
               String.format(
-                  "[-] Component '%s' position mismatch: Board 1 = (%.4f, %.4f), Board 2 = (%.4f, %.4f) mm\n",
+                  "[-] Component '%s' position mismatch:"
+                      + " Board 1 = (%.4f, %.4f), Board 2 = (%.4f, %.4f) mm%n",
                   compName, x1, y1, x2, y2));
         }
       }
@@ -372,7 +373,8 @@ public class BoardComparator {
           double sy = startPt.toFloat().y * scale2;
           report.append(
               String.format(
-                  "[-] Trace in Board 2 on layer %d of net '%s' starting at (%.4f, %.4f) mm has no matching trace in Board 1.\n",
+                  "[-] Trace in Board 2 on layer %d of net '%s' starting at (%.4f, %.4f) mm"
+                      + " has no matching trace in Board 1.%n",
                   pt2.getLayer(), netName2, sx, sy));
         }
       }
@@ -401,9 +403,6 @@ public class BoardComparator {
           netName1 = net.name;
         }
       }
-      double cx1 = v1.getCenter().toFloat().x * scale1;
-      double cy1 = v1.getCenter().toFloat().y * scale1;
-
       app.freerouting.core.Padstack pad1 = v1.getPadstack();
       int firstLayer1 = 0;
       while (firstLayer1 < board1.getLayerCount() && pad1.getShape(firstLayer1) == null) {
@@ -419,6 +418,9 @@ public class BoardComparator {
       if (shape1 != null) {
         diameter1 = shape1.boundingBox().width() * scale1;
       }
+
+      double cx1 = v1.getCenter().toFloat().x * scale1;
+      double cy1 = v1.getCenter().toFloat().y * scale1;
 
       boolean foundMatch = false;
       for (int i = 0; i < vias2.size(); i++) {
@@ -469,7 +471,8 @@ public class BoardComparator {
         viasAllMatched = false;
         report.append(
             String.format(
-                "[-] Via in Board 1 at (%.4f, %.4f) mm on net '%s' has no matching via in Board 2.\n",
+                "[-] Via in Board 1 at (%.4f, %.4f) mm on net '%s'"
+                    + " has no matching via in Board 2.%n",
                 cx1, cy1, netName1));
       }
     }
@@ -488,7 +491,8 @@ public class BoardComparator {
         double cy2 = v2.getCenter().toFloat().y * scale2;
         report.append(
             String.format(
-                "[-] Via in Board 2 at (%.4f, %.4f) mm on net '%s' has no matching via in Board 1.\n",
+                "[-] Via in Board 2 at (%.4f, %.4f) mm on net '%s'"
+                    + " has no matching via in Board 1.%n",
                 cx2, cy2, netName2));
       }
     }
@@ -624,7 +628,8 @@ public class BoardComparator {
           equal = false;
           report.append(
               String.format(
-                  "[-] Conduction Area fill status mismatch on layer %d: Board 1 = %b, Board 2 = %b\n",
+                  "[-] Conduction Area fill status mismatch on layer %d:"
+                      + " Board 1 = %b, Board 2 = %b%n",
                   area1.getLayer(), area1.getIsFilled(), matchArea2.getIsFilled()));
         }
       }

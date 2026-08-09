@@ -39,7 +39,6 @@ public final class ForcedViaAlgo {
     if (viaRadius <= 0) {
       return ForcedPadAlgo.CheckDrillResult.DRILLABLE;
     }
-    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(board);
     if (!(location instanceof IntPoint)) {
       return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
     }
@@ -68,6 +67,7 @@ public final class ForcedViaAlgo {
       return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
     }
 
+    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(board);
     ForcedPadAlgo.CheckDrillResult viaResult =
         forcedPadAlgo.checkForcedPad(
             tileShape,

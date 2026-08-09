@@ -116,6 +116,35 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   @Override
+  Point normalContactPoint(DrillItem drillItem) {
+    return drillItem.normalContactPoint(this);
+  }
+
+  @Override
+  Point normalContactPoint(Trace other) {
+    if (this.layer != other.layer) {
+      return null;
+    }
+    boolean contactAtFirstCorner =
+        this.firstCorner().equals(other.firstCorner())
+            || this.firstCorner().equals(other.lastCorner());
+    boolean contactAtLastCorner =
+        this.lastCorner().equals(other.firstCorner())
+            || this.lastCorner().equals(other.lastCorner());
+    Point result;
+    if (!(contactAtFirstCorner || contactAtLastCorner)
+        || contactAtFirstCorner && contactAtLastCorner) {
+      // no contact point or more than 1 contact point
+      result = null;
+    } else if (contactAtFirstCorner) {
+      result = this.firstCorner();
+    } else { // contact at last corner
+      result = this.lastCorner();
+    }
+    return result;
+  }
+
+  @Override
   public Set<Item> getNormalContacts() {
     Set<Item> result = new TreeSet<>();
     Point startCorner = this.firstCorner();
@@ -127,37 +156,6 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       result.addAll(getNormalContacts(endCorner, false));
     }
     return result;
-  }
-
-  @Override
-  public boolean isRoutable() {
-    return !isUserFixed() && (this.netCount() > 0);
-  }
-
-  /** Returns true, if this trace is not contacted at its first or at its last point. */
-  @Override
-  public boolean isTail() {
-    Collection<Item> contactList = this.getStartContacts();
-    if (contactList.isEmpty()) {
-      return true;
-    }
-    contactList = this.getEndContacts();
-    return contactList.isEmpty();
-  }
-
-  @Override
-  public Color[] getDrawColors(GraphicsContext graphicsContext) {
-    return graphicsContext.getTraceColors(this.isUserFixed());
-  }
-
-  @Override
-  public int getDrawPriority() {
-    return Drawable.MAX_DRAW_PRIORITY;
-  }
-
-  @Override
-  public double getDrawIntensity(GraphicsContext graphicsContext) {
-    return graphicsContext.getTraceColorIntensity();
   }
 
   /**
@@ -199,32 +197,34 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   @Override
-  Point normalContactPoint(DrillItem drillItem) {
-    return drillItem.normalContactPoint(this);
+  public boolean isRoutable() {
+    return !isUserFixed() && (this.netCount() > 0);
+  }
+
+  /** Returns true, if this trace is not contacted at its first or at its last point. */
+  @Override
+  public boolean isTail() {
+    Collection<Item> contactList = this.getStartContacts();
+    if (contactList.isEmpty()) {
+      return true;
+    }
+    contactList = this.getEndContacts();
+    return contactList.isEmpty();
   }
 
   @Override
-  Point normalContactPoint(Trace other) {
-    if (this.layer != other.layer) {
-      return null;
-    }
-    boolean contactAtFirstCorner =
-        this.firstCorner().equals(other.firstCorner())
-            || this.firstCorner().equals(other.lastCorner());
-    boolean contactAtLastCorner =
-        this.lastCorner().equals(other.firstCorner())
-            || this.lastCorner().equals(other.lastCorner());
-    Point result;
-    if (!(contactAtFirstCorner || contactAtLastCorner)
-        || contactAtFirstCorner && contactAtLastCorner) {
-      // no contact point or more than 1 contact point
-      result = null;
-    } else if (contactAtFirstCorner) {
-      result = this.firstCorner();
-    } else { // contact at last corner
-      result = this.lastCorner();
-    }
-    return result;
+  public Color[] getDrawColors(GraphicsContext graphicsContext) {
+    return graphicsContext.getTraceColors(this.isUserFixed());
+  }
+
+  @Override
+  public int getDrawPriority() {
+    return Drawable.MAX_DRAW_PRIORITY;
+  }
+
+  @Override
+  public double getDrawIntensity(GraphicsContext graphicsContext) {
+    return graphicsContext.getTraceColorIntensity();
   }
 
   @Override
@@ -377,9 +377,10 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * checks, that the connection restrictions to the contact pins are satisfied. If p_at_start, the.
-   * start of this trace is checked, else the end. Returns false, if a pin is at that end, where the
-   * connection is checked and the connection is not ok.
+   * Checks that the connection restrictions to the contact pins are satisfied.
+   *
+   * <p>If p_at_start, the start of this trace is checked, else the end. Returns false if a pin is
+   * at that end where the connection is checked and the connection is not ok.
    */
   public abstract boolean checkConnectionToPin(boolean atStart);
 
@@ -464,8 +465,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * looks, if this trace can be combined with other traces . Returns true, if something has been.
-   * combined.
+   * Checks if this trace can be combined with other traces.
+   *
+   * <p>Returns true if something has been combined.
    */
   abstract boolean combine();
 

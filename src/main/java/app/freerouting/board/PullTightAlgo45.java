@@ -51,7 +51,6 @@ class PullTightAlgo45 extends PullTightAlgo {
     if (polyline.arr.length <= 4) {
       return polyline;
     }
-    int newCornerCount = 1;
     Point[] currCorner = new Point[4];
     for (int i = 0; i < 4; i++) {
       currCorner[i] = polyline.corner(i);
@@ -70,13 +69,13 @@ class PullTightAlgo45 extends PullTightAlgo {
     }
 
     boolean polylineChanged = false;
+    int newCornerCount = 1;
     Point[] newCorners = new Point[polyline.arr.length - 3];
     newCorners[0] = currCorner[0];
     Point[] currCheckPoints = new Point[2];
     Point newCorner = null;
     int cornerNo = 3;
     while (cornerNo < polyline.arr.length - 1) {
-      boolean cornerRemoved = false;
       currCorner[3] = polyline.corner(cornerNo);
       if (!(currCorner[3] instanceof IntPoint)) {
         return polyline;
@@ -97,6 +96,7 @@ class PullTightAlgo45 extends PullTightAlgo {
         polylineChanged = true;
       }
       currCornerInClipShape[3] = currClipShape == null || !currClipShape.isOutside(currCorner[3]);
+      boolean cornerRemoved = false;
       if (currCornerInClipShape[1] && currCornerInClipShape[2] && currCornerInClipShape[3]) {
         // translate the line from currCorner[2] to currCorner[1] to currCorner[3]
         Vector delta = currCorner[3].differenceBy(currCorner[2]);
@@ -245,8 +245,9 @@ class PullTightAlgo45 extends PullTightAlgo {
   }
 
   /**
-   * adds a line between at p_no to smoothen a 90 degree corner between p_line_1 and p_line_2 to 45.
-   * degree. The distance of the new line to the corner will be so small that no clearance check is
+   * Adds a line at p_no to smoothen a 90 degree corner between p_line_1 and p_line_2 to 45 degree.
+   *
+   * <p>The distance of the new line to the corner will be so small that no clearance check is
    * necessary.
    */
   private Line smoothenSharpCorner(Line[] lineArr, int no) {
@@ -345,8 +346,9 @@ class PullTightAlgo45 extends PullTightAlgo {
   }
 
   /**
-   * adds a line between at p_no to smoothen a 90 degree corner between p_line_1 and p_line_2 to 45.
-   * degree. The distance of the new line to the corner will be so big that a clearance check is
+   * Adds a line at p_no to smoothen a 90 degree corner between p_line_1 and p_line_2 to 45 degree.
+   *
+   * <p>The distance of the new line to the corner will be so big that a clearance check is
    * necessary.
    */
   private Line smoothenCorner(Line[] lineArr, int no) {
