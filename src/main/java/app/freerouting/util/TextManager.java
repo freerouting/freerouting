@@ -29,7 +29,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JToggleButton;
 
-/** Singleton class to manage the text resources for the application */
+/** Singleton class to manage the text resources for the application. */
 public class TextManager {
 
   // A key-value pair for Material Design icon names and their corresponding
@@ -67,6 +67,12 @@ public class TextManager {
   private ResourceBundle englishClassMessages;
   private Font materialDesignIcons;
 
+  /**
+   * Creates a text manager for the given base resource class and locale.
+   *
+   * @param baseClass the class whose resource bundle names the lookup hierarchy
+   * @param locale the locale for message lookup
+   */
   public TextManager(Class baseClass, Locale locale) {
     this.currentLocale = locale;
     loadResourceBundle(baseClass.getName());
@@ -86,16 +92,30 @@ public class TextManager {
     }
   }
 
+  /** Formats an instant using the default timestamp pattern. */
   public static String convertInstantToString(Instant instant) {
     return convertInstantToString(instant, "yyyyMMdd_HHmmss");
   }
 
+  /**
+   * Formats an instant using the given date-time pattern.
+   *
+   * @param instant the instant to format
+   * @param format the {@link DateTimeFormatter} pattern
+   * @return the formatted timestamp string
+   */
   public static String convertInstantToString(Instant instant, String format) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
     LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
     return localDateTime.format(formatter);
   }
 
+  /**
+   * Generates a random alphanumeric string of the requested length.
+   *
+   * @param length number of characters to generate
+   * @return the random string
+   */
   public static String generateRandomAlphanumericString(int length) {
     String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     StringBuilder randomString = new StringBuilder();
@@ -106,6 +126,12 @@ public class TextManager {
     return randomString.toString();
   }
 
+  /**
+   * Parses a human-readable timespan string into seconds.
+   *
+   * @param timespanString value in {@code HH:mm:ss}, {@code mm:ss}, or {@code ss} form
+   * @return duration in seconds, or {@code null} if parsing fails
+   */
   public static Long parseTimespanString(String timespanString) {
     try {
       // convert the string from "HH:mm:ss" or "mm:ss" or "ss" format to
@@ -119,6 +145,12 @@ public class TextManager {
     }
   }
 
+  /**
+   * Converts a colon-separated timespan into an ISO-8601 duration string.
+   *
+   * @param timespanString value in {@code HH:mm:ss}, {@code mm:ss}, or {@code ss} form
+   * @return ISO-8601 duration text suitable for {@link Duration#parse(String)}
+   */
   public static String convertFromTimespanToDurationFormat(String timespanString) {
     String[] parts = timespanString.split(":");
     StringBuilder durationString = new StringBuilder("PT");
@@ -141,7 +173,7 @@ public class TextManager {
   }
 
   /**
-   * Shortens a string to a specified number of characters by replacing the middle part with dots
+   * Shortens a string to a specified number of characters by replacing the middle part with dots.
    *
    * @param text The text to shorten
    * @param peakCharacterCount The number of characters to keep at the beginning and end of the text
@@ -162,7 +194,7 @@ public class TextManager {
   }
 
   /**
-   * Removes quotes from the beginning and end of a string
+   * Removes quotes from the beginning and end of a string.
    *
    * @param text The text to remove quotes from
    * @return The text without quotes
@@ -180,11 +212,11 @@ public class TextManager {
   }
 
   /**
-   * Decrypts a string using AES-256-CBC with a passphrase
+   * Decrypts a byte array using AES-256-CBC with a passphrase.
    *
-   * @param encodedText The text to encrypt
-   * @param passphrase The passphrase to use for encryption
-   * @return The encrypted text
+   * @param encodedText The encrypted bytes
+   * @param passphrase The passphrase to use for decryption
+   * @return The decrypted bytes, or {@code null} on failure
    */
   public static byte[] decryptAes256Cbc(byte[] encodedText, String passphrase) {
     try {
@@ -205,10 +237,11 @@ public class TextManager {
   }
 
   /**
-   * Unescapes unicode characters in a string
+   * Unescapes unicode characters in a string.
    *
    * @param text The text to unescape Example: unescapeUnicode("This is a \\u0063haracter") -> "This
    *     is a character"
+   * @return the text with {@code \\uXXXX} sequences replaced by their characters
    */
   public static String unescapeUnicode(String text) {
     Pattern pattern = Pattern.compile("\\\\u(\\p{XDigit}{4})");
@@ -225,10 +258,17 @@ public class TextManager {
     return result.toString();
   }
 
+  /** Formats a long value as a fixed-width uppercase hexadecimal string. */
   public static String longToHexadecimalString(Long longValue) {
     return "0x%016X".formatted(longValue);
   }
 
+  /**
+   * Parses a hexadecimal or decimal string into an unsigned long value.
+   *
+   * @param hexString value with optional {@code 0x} prefix
+   * @return the parsed unsigned long
+   */
   public static Long hexadecimalStringToLong(String hexString) {
     if (hexString.startsWith("0x") || hexString.startsWith("0X")) {
       hexString = hexString.substring(2);
@@ -281,6 +321,13 @@ public class TextManager {
     return null;
   }
 
+  /**
+   * Looks up and formats a localized message for the given key.
+   *
+   * @param key the resource bundle key
+   * @param args optional placeholder values
+   * @return the localized text, or the key if no message is found
+   */
   public String getText(String key, String... args) {
     String text = lookupMessage(key);
     if (text == null) {
@@ -395,7 +442,13 @@ public class TextManager {
     return text;
   }
 
-  // Add methods to set text for different GUI components
+  /**
+   * Sets localized text (and optional tooltip/icons) on a Swing component.
+   *
+   * @param component the target component
+   * @param key the resource bundle key
+   * @param args optional placeholder values
+   */
   public void setText(JComponent component, String key, String... args) {
     String text = getText(key, args);
     String tooltip = getText(key + "_tooltip", args);
@@ -452,6 +505,7 @@ public class TextManager {
     return currentLocale;
   }
 
+  /** Switches the active locale and reloads the resource bundles. */
   public void setLocale(Locale locale) {
     this.currentLocale = locale;
     loadResourceBundle(currentBaseName);

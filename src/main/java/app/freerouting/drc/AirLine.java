@@ -26,18 +26,27 @@ public class AirLine implements Comparable<AirLine> {
   /** The exact ending coordinate of the airline. */
   public final FloatPoint toCorner;
 
+  /**
+   * Creates an airline between two net items at the given corner coordinates.
+   *
+   * @param net the net this airline belongs to
+   * @param fromItem the starting item
+   * @param fromCorner the starting coordinate
+   * @param toItem the ending item
+   * @param toCorner the ending coordinate
+   */
   public AirLine(
-      Net pNet, Item pFromItem, FloatPoint pFromCorner, Item pToItem, FloatPoint pToCorner) {
-    net = pNet;
-    fromItem = pFromItem;
-    fromCorner = pFromCorner;
-    toItem = pToItem;
-    toCorner = pToCorner;
+      Net net, Item fromItem, FloatPoint fromCorner, Item toItem, FloatPoint toCorner) {
+    this.net = net;
+    this.fromItem = fromItem;
+    this.fromCorner = fromCorner;
+    this.toItem = toItem;
+    this.toCorner = toCorner;
   }
 
   @Override
-  public int compareTo(AirLine pOther) {
-    return this.net.name.compareTo(pOther.net.name);
+  public int compareTo(AirLine other) {
+    return this.net.name.compareTo(other.net.name);
   }
 
   @Override

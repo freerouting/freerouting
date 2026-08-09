@@ -37,6 +37,7 @@ public final class DebugControl {
     return INSTANCE;
   }
 
+  /** Registers a listener for debug pause/resume state changes. */
   public void addDebugStateListener(DebugStateListener listener) {
     synchronized (listeners) {
       listeners.add(listener);
@@ -91,6 +92,7 @@ public final class DebugControl {
     return !stepNetHistory.isEmpty() && stepNetHistory.peek() == targetNetNo;
   }
 
+  /** Removes and returns the net number from the most recent debug step. */
   public int popLastStepNet() {
     if (stepNetHistory.isEmpty()) {
       return -1;
@@ -98,6 +100,7 @@ public final class DebugControl {
     return stepNetHistory.pop();
   }
 
+  /** Returns the net number from the most recent debug step without removing it. */
   public int peekLastStepNet() {
     if (stepNetHistory.isEmpty()) {
       return -1;
@@ -117,16 +120,10 @@ public final class DebugControl {
   }
 
   /**
-   * Called by the logging framework at potential breakpoints. Parses the impactedItems string to
-   * extract net numbers for filtering.
+   * Parses the net number from an impacted-items description string.
    *
    * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
-   */
-  /**
-   * Checks if the debug control is interested in the given items based on the filter.
-   *
-   * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
-   * @return true if the items should be processed/logged, false otherwise.
+   * @return the parsed net number, or -1 if none was found
    */
   private int getNetNo(String impactedItems) {
     int netNo = -1;
@@ -290,8 +287,6 @@ public final class DebugControl {
 
   // GUI Control Methods
 
-  /** Pauses the execution. */
-
   /** Resumes execution (Play). */
   public void resume() {
     synchronized (lock) {
@@ -318,7 +313,10 @@ public final class DebugControl {
     return isPaused.get();
   }
 
+  /** Listener for debug pause/resume state changes. */
   public interface DebugStateListener {
+
+    /** Called when the debug execution state changes. */
     void onDebugStateChanged(boolean isPaused);
   }
 }

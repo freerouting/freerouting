@@ -13,6 +13,16 @@ public class TraceEvent {
   private final Point[] impactedPoints;
   private final Instant timestamp;
 
+  /**
+   * Creates a trace event payload for debug visualization.
+   *
+   * @param method the originating method name
+   * @param operation the operation type
+   * @param message the trace message
+   * @param impactedItems description of impacted board items
+   * @param impactedPoints optional geometry points involved in the operation
+   * @param timestamp when the event occurred
+   */
   public TraceEvent(
       String method,
       String operation,

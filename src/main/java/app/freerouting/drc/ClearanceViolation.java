@@ -9,61 +9,61 @@ import java.util.Locale;
 /** Information of a clearance violation between 2 items. */
 public class ClearanceViolation implements ObjectInfoPanel.Printable {
 
-  /** The first item of the clearance violation */
+  /** The first item of the clearance violation. */
   public final Item firstItem;
 
-  /** The second item of the clearance violation */
+  /** The second item of the clearance violation. */
   public final Item secondItem;
 
-  /** The shape of the clearance violation */
+  /** The shape of the clearance violation. */
   public final ConvexShape shape;
 
-  /** The layer of the clearance violation */
+  /** The layer of the clearance violation. */
   public final int layer;
 
   public final double expectedClearance;
   public final double actualClearance;
 
-  /** Creates a new instance of ClearanceViolation */
+  /** Creates a new instance of ClearanceViolation. */
   public ClearanceViolation(
-      Item pFirstItem,
-      Item pSecondItem,
-      ConvexShape pShape,
-      int pLayer,
-      double pExpectedClearance,
-      double pActualClearance) {
-    firstItem = pFirstItem;
-    secondItem = pSecondItem;
-    shape = pShape;
-    layer = pLayer;
-    expectedClearance = pExpectedClearance;
-    actualClearance = pActualClearance;
+      Item firstItem,
+      Item secondItem,
+      ConvexShape shape,
+      int layer,
+      double expectedClearance,
+      double actualClearance) {
+    this.firstItem = firstItem;
+    this.secondItem = secondItem;
+    this.shape = shape;
+    this.layer = layer;
+    this.expectedClearance = expectedClearance;
+    this.actualClearance = actualClearance;
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
-    TextManager tm = new TextManager(this.getClass(), pLocale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    pWindow.appendBold(tm.getText("clearance_violation_2"));
-    pWindow.append(" " + tm.getText("at") + " ");
-    pWindow.append(shape.centreOfGravity());
-    pWindow.append(", " + tm.getText("width") + " ");
-    pWindow.append(2 * this.shape.smallestRadius());
-    pWindow.append(", " + tm.getText("layer") + " ");
-    pWindow.append(firstItem.board.layerStructure.arr[this.layer].name);
-    pWindow.append(", " + tm.getText("between"));
-    pWindow.newline();
-    pWindow.indent();
-    firstItem.printInfo(pWindow, pLocale);
-    pWindow.indent();
-    secondItem.printInfo(pWindow, pLocale);
-    pWindow.newline();
-    pWindow.indent();
+    window.appendBold(tm.getText("clearance_violation_2"));
+    window.append(" " + tm.getText("at") + " ");
+    window.append(shape.centreOfGravity());
+    window.append(", " + tm.getText("width") + " ");
+    window.append(2 * this.shape.smallestRadius());
+    window.append(", " + tm.getText("layer") + " ");
+    window.append(firstItem.board.layerStructure.arr[this.layer].name);
+    window.append(", " + tm.getText("between"));
+    window.newline();
+    window.indent();
+    firstItem.printInfo(window, locale);
+    window.indent();
+    secondItem.printInfo(window, locale);
+    window.newline();
+    window.indent();
     String clearanceViolationInfoExpectedClearance =
         tm.getText(
             "clearanceViolationInfoExpectedClearance",
             "%.4f".formatted(this.expectedClearance / 10000.0),
             "%.4f".formatted(this.actualClearance / 10000.0));
-    pWindow.append(clearanceViolationInfoExpectedClearance);
+    window.append(clearanceViolationInfoExpectedClearance);
   }
 }

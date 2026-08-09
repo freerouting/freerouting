@@ -5,10 +5,19 @@ import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+/** Utility methods for reflective field access and copying between settings objects. */
 public final class ReflectionUtil {
 
   private ReflectionUtil() {}
 
+  /**
+   * Sets a nested field value on an object using a dot-separated property path.
+   *
+   * @param obj the target object
+   * @param propertyName path to the field (supports {@code .}, {@code :}, and {@code -} separators)
+   * @param newValue the value to assign
+   * @throws Exception if reflection fails or the field cannot be found
+   */
   public static void setFieldValue(Object obj, String propertyName, Object newValue)
       throws Exception {
     String[] propertyPath = propertyName.split("[.:\\-]");
@@ -103,7 +112,9 @@ public final class ReflectionUtil {
   }
 
   private static String snakeToLowerCamel(String name) {
-    if (!name.contains("_")) return name;
+    if (!name.contains("_")) {
+      return name;
+    }
     String[] parts = name.split("_");
     StringBuilder sb = new StringBuilder(parts[0].toLowerCase());
     for (int i = 1; i < parts.length; i++) {
@@ -156,7 +167,7 @@ public final class ReflectionUtil {
   }
 
   /**
-   * Copy all non-null, and non-default fields from one object to another recursively
+   * Copy all non-null, and non-default fields from one object to another recursively.
    *
    * @param source The source object
    * @param target The target object
@@ -208,19 +219,14 @@ public final class ReflectionUtil {
               field.set(target, sourceValue);
               numberOfFieldsChanged++;
             }
-          } else
-          // Check if the field is an enum
-          if (field.getType().isEnum()) {
+          } else if (field.getType().isEnum()) {
             var enumType = (Class<Enum>) field.getType();
             var enumValue = Enum.valueOf(enumType, sourceValue.toString());
 
             // Copy the enum value
             field.set(target, enumValue);
             numberOfFieldsChanged++;
-          } else
-          // Check if the field is an array
-          if (field.getType().isArray()) {
-
+          } else if (field.getType().isArray()) {
             // Is the array of primitive types or strings?
             if (field.getType().getComponentType().isPrimitive()
                 || field.getType().getComponentType() == String.class) {

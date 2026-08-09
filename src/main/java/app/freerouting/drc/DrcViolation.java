@@ -6,15 +6,15 @@ import java.util.List;
 /** Represents a single DRC violation, matching KiCad's JSON schema. */
 public class DrcViolation {
 
-  /** Human-readable description of the violation */
+  /** Human-readable description of the violation. */
   @SerializedName("description")
   public final String description;
 
-  /** Items involved in the violation */
+  /** Items involved in the violation. */
   @SerializedName("items")
   public final List<DrcViolationItem> items;
 
-  /** Severity of the violation ("error", "warning", "ignore") */
+  /** Severity of the violation ("error", "warning", "ignore"). */
   @SerializedName("severity")
   public final String severity;
 
@@ -33,6 +33,14 @@ public class DrcViolation {
   @SerializedName("type")
   public final String type;
 
+  /**
+   * Creates a DRC violation entry for the report.
+   *
+   * @param type violation type identifier
+   * @param description human-readable description
+   * @param severity severity level
+   * @param items involved board items
+   */
   public DrcViolation(
       String type, String description, String severity, List<DrcViolationItem> items) {
     this.type = type;

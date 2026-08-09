@@ -49,7 +49,7 @@ public class DesignRulesCheckerTest extends RoutingFixtureTest {
     assertNotNull(report, "Report should not be null");
     assertEquals(
         "https://schemas.kicad.org/drc.v1.json",
-        report.$schema,
+        report.jsonSchema,
         "Schema should match KiCad format");
     assertEquals("mm", report.coordinateUnits, "Coordinate units should be mm");
     assertEquals("test.dsn", report.source, "Source should match");

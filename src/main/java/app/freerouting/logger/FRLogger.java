@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
  * Provides centralized logging functionality for the application. Wraps Log4j2 and maintains an
  * internal list of log entries for UI display.
  */
+@SuppressWarnings("AbbreviationAsWordInName")
 public final class FRLogger {
 
   public static final DecimalFormat defaultFloatFormat =
@@ -87,6 +88,15 @@ public final class FRLogger {
     return sb.toString();
   }
 
+  /**
+   * Builds a structured key-value trace payload string.
+   *
+   * @param event the trace event name
+   * @param phase optional routing phase
+   * @param action optional action name
+   * @param kvPairs optional additional key-value pairs
+   * @return the formatted payload string
+   */
   public static String buildTracePayload(
       String event, String phase, String action, String kvPairs) {
     StringBuilder sb = new StringBuilder();
@@ -103,6 +113,13 @@ public final class FRLogger {
     return sb.toString();
   }
 
+  /**
+   * Formats labels for one or more net numbers.
+   *
+   * @param board the board containing net definitions
+   * @param netNoArr array of net numbers
+   * @return a comma-separated net label string
+   */
   public static String formatNetLabel(BasicBoard board, int[] netNoArr) {
     if (netNoArr == null || netNoArr.length == 0) {
       return "No net";
@@ -117,6 +134,13 @@ public final class FRLogger {
     return sb.toString();
   }
 
+  /**
+   * Formats a label for a single net number.
+   *
+   * @param board the board containing net definitions
+   * @param netNo the net number
+   * @return the net label string
+   */
   public static String formatNetLabel(BasicBoard board, int netNo) {
     if (board == null || board.rules == null || board.rules.nets == null) {
       return "Net #" + netNo + " (Unknown)";
@@ -207,8 +231,6 @@ public final class FRLogger {
    * @return The created LogEntry.
    */
   public static LogEntry info(String msg, UUID topic) {
-    LogEntry logEntry = logEntries.add(LogEntryType.Info, msg, topic);
-
     if (!enabled) {
       return null;
     }
@@ -218,7 +240,7 @@ public final class FRLogger {
 
     logger.info(msg);
 
-    return logEntry;
+    return logEntries.add(LogEntryType.Info, msg, topic);
   }
 
   /**
@@ -239,8 +261,6 @@ public final class FRLogger {
    * @return The created LogEntry.
    */
   public static LogEntry warn(String msg, UUID topic) {
-    LogEntry logEntry = logEntries.add(LogEntryType.Warning, msg, topic);
-
     if (!enabled) {
       return null;
     }
@@ -250,7 +270,7 @@ public final class FRLogger {
 
     logger.warn(msg);
 
-    return logEntry;
+    return logEntries.add(LogEntryType.Warning, msg, topic);
   }
 
   /**
@@ -302,8 +322,6 @@ public final class FRLogger {
    * @return The created LogEntry.
    */
   public static LogEntry error(String msg, UUID topic, Throwable exception) {
-    LogEntry logEntry = logEntries.add(LogEntryType.Error, msg, topic, exception);
-
     if (!enabled) {
       return null;
     }
@@ -317,7 +335,7 @@ public final class FRLogger {
       logger.error(msg, exception);
     }
 
-    return logEntry;
+    return logEntries.add(LogEntryType.Error, msg, topic, exception);
   }
 
   /**
@@ -365,6 +383,15 @@ public final class FRLogger {
     return null;
   }
 
+  /**
+   * Logs a granular TRACE message without impacted points and triggers a debug check.
+   *
+   * @param method the method name where the log originates
+   * @param operation the operation type
+   * @param message the log message details
+   * @param impactedItems description of impacted items for debug filtering
+   * @return true if the trace event was interesting to debug control
+   */
   public static boolean trace(
       String method, String operation, String message, String impactedItems) {
     return trace(method, operation, message, impactedItems, null);

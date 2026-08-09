@@ -1,8 +1,6 @@
 package app.freerouting.logger;
 
-/// <summary>
-/// Represents a log entry type.
-/// </summary>
+/** Severity/type of an in-memory log entry. */
 public enum LogEntryType {
   Error,
   Warning,

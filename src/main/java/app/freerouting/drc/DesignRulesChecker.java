@@ -30,6 +30,12 @@ public class DesignRulesChecker {
   // State for incomplete connections (ratsnest)
   private NetIncompletes[] netIncompletes;
 
+  /**
+   * Creates a design rules checker for the given board and settings.
+   *
+   * @param board the board to inspect
+   * @param drcSettings checker configuration
+   */
   public DesignRulesChecker(BasicBoard board, DesignRulesCheckerSettings drcSettings) {
     this.board = board;
     this.drcSettings = drcSettings;
@@ -344,15 +350,6 @@ public class DesignRulesChecker {
     return new DrcViolation(type, description, "error", items);
   }
 
-  private boolean isHole(Item item) {
-    if (item instanceof Via) {
-      return true;
-    }
-    // Pins are treated as holes for DRC classification to match expected output,
-    // although this might include SMT pins (DrillItem).
-    return item instanceof Pin;
-  }
-
   private DrcViolation convertToDrcViolation(
       UnconnectedItems unconnectedItems, String coordinateUnit) {
     List<DrcViolationItem> items = new ArrayList<>();
@@ -416,6 +413,15 @@ public class DesignRulesChecker {
     }
 
     return new DrcViolation(unconnectedItems.type, description, "warning", items);
+  }
+
+  private boolean isHole(Item item) {
+    if (item instanceof Via) {
+      return true;
+    }
+    // Pins are treated as holes for DRC classification to match expected output,
+    // although this might include SMT pins (DrillItem).
+    return item instanceof Pin;
   }
 
   /**

@@ -7,6 +7,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 
+/** Gson adapter for {@link Path} values using their string form. */
 public class PathTypeAdapter extends TypeAdapter<Path> {
 
   @Override

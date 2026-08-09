@@ -6,6 +6,7 @@ import com.google.gson.Strictness;
 import java.nio.file.Path;
 import java.time.Instant;
 
+/** Shared Gson instance configured for Freerouting API and settings serialization. */
 public final class GsonProvider {
 
   public static final Gson GSON =

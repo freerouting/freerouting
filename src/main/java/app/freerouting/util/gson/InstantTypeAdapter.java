@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.time.Instant;
 
+/** Gson adapter for {@link Instant} values using ISO-8601 text. */
 public class InstantTypeAdapter extends TypeAdapter<Instant> {
 
   @Override

@@ -45,12 +45,6 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
 
     // Read configuration from system properties
     boolean consoleEnabled = getBooleanProperty("freerouting.logging.console.enabled", true);
-    String consoleLevel = getProperty("freerouting.logging.console.level", "INFO");
-
-    boolean fileEnabled = getBooleanProperty("freerouting.logging.file.enabled", true);
-    String fileLevel = getProperty("freerouting.logging.file.level", "DEBUG");
-    String fileLocation = getProperty("freerouting.logging.file.location", null);
-    String filePattern = getProperty("freerouting.logging.file.pattern", PATTERN);
 
     // Set configuration name and status
     builder.setConfigurationName("FreeroutingConfiguration");
@@ -67,6 +61,9 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
     }
 
     // Create File appender if enabled
+    String filePattern = getProperty("freerouting.logging.file.pattern", PATTERN);
+    boolean fileEnabled = getBooleanProperty("freerouting.logging.file.enabled", true);
+    String fileLocation = getProperty("freerouting.logging.file.location", null);
     if (fileEnabled && fileLocation != null && !fileLocation.isBlank()) {
       // Ensure parent directory exists
       File logFile = new File(fileLocation);
@@ -102,11 +99,13 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
     RootLoggerComponentBuilder rootLogger = builder.newRootLogger(Level.ALL);
 
     if (consoleEnabled) {
+      String consoleLevel = getProperty("freerouting.logging.console.level", "INFO");
       rootLogger.add(
           builder.newAppenderRef("Console").addAttribute("level", parseLevel(consoleLevel)));
     }
 
     if (fileEnabled && fileLocation != null && !fileLocation.isBlank()) {
+      String fileLevel = getProperty("freerouting.logging.file.level", "DEBUG");
       rootLogger.add(builder.newAppenderRef("File").addAttribute("level", parseLevel(fileLevel)));
     }
 
