@@ -64,23 +64,23 @@ public class MazeSearchAlgo {
 
   private int sectionNoOfDestinationDoor;
 
-  /** Creates a new instance of MazeSearchAlgo */
-  MazeSearchAlgo(AutorouteEngine pAutorouteEngine, AutorouteControl pCtrl) {
-    autorouteEngine = pAutorouteEngine;
-    ctrl = pCtrl;
+  /** Creates a new instance of MazeSearchAlgo. */
+  MazeSearchAlgo(AutorouteEngine autorouteEngine, AutorouteControl ctrl) {
+    this.autorouteEngine = autorouteEngine;
+    this.ctrl = ctrl;
     randomGenerator.setSeed(
-        pCtrl.ripupCosts); // Keep v1.9 deterministic randomization across passes.
-    this.searchTree = pAutorouteEngine.autorouteSearchTree;
+        ctrl.ripupCosts); // Keep v1.9 deterministic randomization across passes.
+    this.searchTree = autorouteEngine.autorouteSearchTree;
     mazeExpansionList =
         new TreeSet<>() {
           @Override
-          public boolean add(MazeListElement pElement) {
+          public boolean add(MazeListElement element) {
             if (ctrl.isFanout && ctrl.fanoutStartPinCenter != null) {
               app.freerouting.geometry.planar.FloatPoint pinCenterFloat =
                   ctrl.fanoutStartPinCenter.toFloat();
               boolean onStartLayer =
-                  pElement.nextRoom != null
-                      && pElement.nextRoom.getLayer() == ctrl.fanoutStartPinLayer;
+                  element.nextRoom != null
+                      && element.nextRoom.getLayer() == ctrl.fanoutStartPinLayer;
               if (onStartLayer) {
                 double maxLen =
                     ctrl.settings.fanout != null && ctrl.settings.fanout.maxEscapeLengthMm != null
@@ -90,13 +90,13 @@ public class MazeSearchAlgo {
                     autorouteEngine.board.communication.getResolution(
                         app.freerouting.board.Unit.UM);
                 app.freerouting.geometry.planar.FloatPoint entryPoint =
-                    pElement.shapeEntry.a.middlePoint(pElement.shapeEntry.b);
+                    element.shapeEntry.a.middlePoint(element.shapeEntry.b);
                 double dist = entryPoint.distance(pinCenterFloat);
                 if (dist > maxLen * resolution) {
                   return false;
                 }
               }
-              if (pElement.door instanceof ExpansionDrill drill) {
+              if (element.door instanceof ExpansionDrill drill) {
                 double minLen =
                     ctrl.settings.fanout != null && ctrl.settings.fanout.minEscapeLengthMm != null
                         ? ctrl.settings.fanout.minEscapeLengthMm * 1000.0
@@ -110,7 +110,7 @@ public class MazeSearchAlgo {
                 }
               }
             }
-            return super.add(pElement);
+            return super.add(element);
           }
         };
     destinationDistance =

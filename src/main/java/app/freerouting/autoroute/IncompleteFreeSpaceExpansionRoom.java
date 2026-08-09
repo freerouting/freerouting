@@ -11,22 +11,25 @@ public class IncompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom {
   private TileShape containedShape;
 
   /**
-   * Creates a new instance of IncompleteFreeSpaceExpansionRoom. If p_shape == null means p_shape is
+   * Creates a new instance of IncompleteFreeSpaceExpansionRoom. If shape == null, it means shape is
    * the whole plane.
    */
-  public IncompleteFreeSpaceExpansionRoom(TileShape pShape, int pLayer, TileShape pContainedShape) {
-    super(pShape, pLayer);
-    containedShape = pContainedShape;
+  public IncompleteFreeSpaceExpansionRoom(TileShape shape, int layer, TileShape containedShape) {
+    super(shape, layer);
+    this.containedShape = containedShape;
   }
 
+  /** Gets the shape that is contained within this room. */
   public TileShape getContainedShape() {
     return this.containedShape;
   }
 
-  public void setContainedShape(TileShape pShape) {
-    this.containedShape = pShape;
+  /** Sets the contained shape for this room. */
+  public void setContainedShape(TileShape shape) {
+    this.containedShape = shape;
   }
 
+  /** Returns an empty list of target doors for incomplete rooms. */
   public Collection<TargetItemExpansionDoor> getTargetDoors() {
     return new ArrayList<>();
   }

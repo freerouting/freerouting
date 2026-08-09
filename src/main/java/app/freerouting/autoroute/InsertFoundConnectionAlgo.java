@@ -26,24 +26,24 @@ public final class InsertFoundConnectionAlgo {
   private IntPoint lastCorner;
   private IntPoint firstCorner;
 
-  /** Creates a new instance of InsertFoundConnectionAlgo */
-  private InsertFoundConnectionAlgo(RoutingBoard pBoard, AutorouteControl pCtrl) {
-    this.board = pBoard;
-    this.ctrl = pCtrl;
+  /** Creates a new instance of InsertFoundConnectionAlgo. */
+  private InsertFoundConnectionAlgo(RoutingBoard board, AutorouteControl ctrl) {
+    this.board = board;
+    this.ctrl = ctrl;
   }
 
   /**
-   * Creates a new instance of InsertFoundConnectionAlgo . Returns null, if the insertion did not
+   * Creates a new instance of InsertFoundConnectionAlgo. Returns null if the insertion did not
    * succeed.
    */
   public static InsertFoundConnectionAlgo getInstance(
-      LocateFoundConnectionAlgo pConnection, RoutingBoard pBoard, AutorouteControl pCtrl) {
-    if (pConnection == null || pConnection.connectionItems == null) {
+      LocateFoundConnectionAlgo connection, RoutingBoard board, AutorouteControl ctrl) {
+    if (connection == null || connection.connectionItems == null) {
       return null;
     }
-    int currLayer = pConnection.targetLayer;
-    InsertFoundConnectionAlgo newInstance = new InsertFoundConnectionAlgo(pBoard, pCtrl);
-    for (LocateFoundConnectionAlgoAnyAngle.ResultItem currNewItem : pConnection.connectionItems) {
+    int currLayer = connection.targetLayer;
+    InsertFoundConnectionAlgo newInstance = new InsertFoundConnectionAlgo(board, ctrl);
+    for (LocateFoundConnectionAlgoAnyAngle.ResultItem currNewItem : connection.connectionItems) {
       if (true) {
         Point startCorner = currNewItem.corners.length > 0 ? currNewItem.corners[0] : null;
         Point endCorner =
@@ -52,7 +52,7 @@ public final class InsertFoundConnectionAlgo {
                 : null;
         FRLogger.trace(
             "compare_trace_connection_item_raw net="
-                + pCtrl.netNo
+                + ctrl.netNo
                 + ", item_layer="
                 + currNewItem.layer
                 + ", cornerCount="
@@ -70,39 +70,39 @@ public final class InsertFoundConnectionAlgo {
         return null;
       }
     }
-    if (!newInstance.insertVia(newInstance.lastCorner, currLayer, pConnection.startLayer)) {
+    if (!newInstance.insertVia(newInstance.lastCorner, currLayer, connection.startLayer)) {
       return null;
     }
-    if (pConnection.targetItem instanceof PolylineTrace to_trace) {
+    if (connection.targetItem instanceof PolylineTrace to_trace) {
       if (newInstance.firstCorner != null) {
-        pBoard.connectToTrace(
+        board.connectToTrace(
             newInstance.firstCorner,
             to_trace,
-            pCtrl.traceHalfWidth[pConnection.startLayer],
-            pCtrl.traceClearanceClassNo);
+            ctrl.traceHalfWidth[connection.startLayer],
+            ctrl.traceClearanceClassNo);
       } else {
         FRLogger.warn(
             "InsertFoundConnectionAlgo: firstCorner is null for net #"
-                + pCtrl.netNo
+                + ctrl.netNo
                 + ", skipping connect_to_trace for target item. This may indicate a degenerate route segment.");
       }
     }
-    if (pConnection.startItem instanceof PolylineTrace to_trace) {
+    if (connection.startItem instanceof PolylineTrace to_trace) {
       if (newInstance.lastCorner != null) {
-        pBoard.connectToTrace(
+        board.connectToTrace(
             newInstance.lastCorner,
             to_trace,
-            pCtrl.traceHalfWidth[pConnection.targetLayer],
-            pCtrl.traceClearanceClassNo);
+            ctrl.traceHalfWidth[connection.targetLayer],
+            ctrl.traceClearanceClassNo);
       } else {
         FRLogger.warn(
             "InsertFoundConnectionAlgo: lastCorner is null for net #"
-                + pCtrl.netNo
+                + ctrl.netNo
                 + ", skipping connect_to_trace for start item. This may indicate a degenerate route segment.");
       }
     }
 
-    pBoard.normalizeTraces(pCtrl.netNo);
+    board.normalizeTraces(ctrl.netNo);
 
     return newInstance;
   }

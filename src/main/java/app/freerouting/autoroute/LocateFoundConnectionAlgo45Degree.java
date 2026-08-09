@@ -15,32 +15,33 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.SortedSet;
 
+/** Locates and constructs 45-degree trace connection geometries from maze search backtrack paths. */
 public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo {
 
-  /** Creates a new instance of LocateFoundConnectionAlgo45Degree */
+  /** Creates a new instance of LocateFoundConnectionAlgo45Degree. */
   public LocateFoundConnectionAlgo45Degree(
-      MazeSearchAlgo.Result pMazeSearchResult,
-      AutorouteControl pCtrl,
-      ShapeSearchTree pSearchTree,
-      AngleRestriction pAngleRestriction,
-      SortedSet<Item> pRippedItemList,
-      Map<Item, Integer> pRipupCosts) {
-    super(pMazeSearchResult, pCtrl, pSearchTree, pAngleRestriction, pRippedItemList, pRipupCosts);
+      MazeSearchAlgo.Result mazeSearchResult,
+      AutorouteControl ctrl,
+      ShapeSearchTree searchTree,
+      AngleRestriction angleRestriction,
+      SortedSet<Item> rippedItemList,
+      Map<Item, Integer> ripupCosts) {
+    super(mazeSearchResult, ctrl, searchTree, angleRestriction, rippedItemList, ripupCosts);
   }
 
-  private static FloatPoint roundToInteger(FloatPoint pPoint) {
-    return pPoint.round().toFloat();
+  private static FloatPoint roundToInteger(FloatPoint point) {
+    return point.round().toFloat();
   }
 
   /**
-   * Calculates, if the next 45-degree angle should be horizontal first when coming from
-   * p_from_point on p_from_door.
+   * Calculates if the next 45-degree angle should be horizontal first when coming from
+   * fromPoint on fromDoor.
    */
   private static boolean calcHorizontalFirstFromDoor(
-      ExpandableObject pFromDoor, FloatPoint pFromPoint, FloatPoint pToPoint) {
-    TileShape doorShape = pFromDoor.getShape();
+      ExpandableObject fromDoor, FloatPoint fromPoint, FloatPoint toPoint) {
+    TileShape doorShape = fromDoor.getShape();
     IntBox fromDoorBox = doorShape.boundingBox();
-    if (pFromDoor.getDimension() != 1) {
+    if (fromDoor.getDimension() != 1) {
       return fromDoorBox.height() >= fromDoorBox.width();
     }
 
@@ -69,8 +70,8 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       // door is about horizontal
       result = false;
     } else {
-      double dx = pToPoint.x - pFromPoint.x;
-      double dy = pToPoint.y - pFromPoint.y;
+      double dx = toPoint.x - fromPoint.x;
+      double dy = toPoint.y - fromPoint.y;
       if (leftCorner.y < rightCorner.y) {
         // door is about right diagonal
         if (Signum.of(dx) == Signum.of(dy)) {

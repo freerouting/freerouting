@@ -77,10 +77,12 @@ public abstract class NamedAlgorithm implements Serializable {
    */
   protected abstract NamedAlgorithmType getType();
 
+  /** Adds a listener for board snapshot events. */
   public void addBoardSnapshotEventListener(BoardSnapshotEventListener listener) {
     boardSnapshotEventListeners.add(listener);
   }
 
+  /** Fires a board snapshot event. */
   public void fireBoardSnapshotEvent(RoutingBoard board) {
     BoardSnapshotEvent event = new BoardSnapshotEvent(this, board);
     for (BoardSnapshotEventListener listener : boardSnapshotEventListeners) {
@@ -88,6 +90,7 @@ public abstract class NamedAlgorithm implements Serializable {
     }
   }
 
+  /** Adds a listener for board updated events. */
   public void addBoardUpdatedEventListener(BoardUpdatedEventListener listener) {
     boardUpdatedEventListeners.add(listener);
   }
@@ -104,6 +107,7 @@ public abstract class NamedAlgorithm implements Serializable {
     }
   }
 
+  /** Adds a listener for task state changed events. */
   public void addTaskStateChangedEventListener(TaskStateChangedEventListener listener) {
     taskStateChangedEventListeners.add(listener);
   }

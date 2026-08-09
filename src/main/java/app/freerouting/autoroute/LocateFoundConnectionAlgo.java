@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.SortedSet;
 
+/** Locates and constructs trace connection geometries from maze search backtrack paths. */
 public abstract class LocateFoundConnectionAlgo {
 
   /** The new items implementing the found connection */
@@ -50,18 +51,18 @@ public abstract class LocateFoundConnectionAlgo {
   protected int currentTargetDoorIndex;
   protected TileShape currentTargetShape;
 
-  /** Creates a new instance of LocateFoundConnectionAlgo */
+  /** Creates a new instance of LocateFoundConnectionAlgo. */
   protected LocateFoundConnectionAlgo(
-      MazeSearchAlgo.Result pMazeSearchResult,
-      AutorouteControl pCtrl,
-      ShapeSearchTree pSearchTree,
-      AngleRestriction pAngleRestriction,
-      SortedSet<Item> pRippedItemList,
-      Map<Item, Integer> pRipupCosts) {
-    this.ctrl = pCtrl;
-    this.angleRestriction = pAngleRestriction;
+      MazeSearchAlgo.Result mazeSearchResult,
+      AutorouteControl ctrl,
+      ShapeSearchTree searchTree,
+      AngleRestriction angleRestriction,
+      SortedSet<Item> rippedItemList,
+      Map<Item, Integer> ripupCosts) {
+    this.ctrl = ctrl;
+    this.angleRestriction = angleRestriction;
     Collection<BacktrackElement> backtrackList =
-        backtrack(pMazeSearchResult, pRippedItemList, pRipupCosts, pCtrl.netNo);
+        backtrack(mazeSearchResult, rippedItemList, ripupCosts, ctrl.netNo);
     this.backtrackArray = new BacktrackElement[backtrackList.size()];
     Iterator<BacktrackElement> it = backtrackList.iterator();
     for (int i = 0; i < backtrackArray.length; i++) {
@@ -107,17 +108,17 @@ public abstract class LocateFoundConnectionAlgo {
 
     this.currentFromDoorIndex = 0;
     boolean atFanoutEnd = false;
-    if (pMazeSearchResult.destinationDoor
+    if (mazeSearchResult.destinationDoor
         instanceof TargetItemExpansionDoor curr_destination_door) {
       this.targetItem = curr_destination_door.item;
       this.targetLayer = curr_destination_door.room.getLayer();
 
-      this.currentFromPoint = calculateStartingPoint(curr_destination_door, pSearchTree);
-    } else if (pMazeSearchResult.destinationDoor instanceof ExpansionDrill currDrill) {
+      this.currentFromPoint = calculateStartingPoint(curr_destination_door, searchTree);
+    } else if (mazeSearchResult.destinationDoor instanceof ExpansionDrill currDrill) {
       // may happen only in case of fanout
       this.targetItem = null;
       this.currentFromPoint = currDrill.location.toFloat();
-      this.targetLayer = currDrill.firstLayer + pMazeSearchResult.sectionNoOfDoor;
+      this.targetLayer = currDrill.firstLayer + mazeSearchResult.sectionNoOfDoor;
       atFanoutEnd = true;
     } else {
       FRLogger.warn("LocateFoundConnectionAlgo: unexpected type of destinationDoor");
@@ -154,7 +155,7 @@ public abstract class LocateFoundConnectionAlgo {
         connectionDone = true;
         this.currentTargetDoorIndex = this.backtrackArray.length - 1;
         TileShape targetShape =
-            ((Connectable) startItem).getTraceConnectionShape(pSearchTree, startDoor.treeEntryNo);
+            ((Connectable) startItem).getTraceConnectionShape(searchTree, startDoor.treeEntryNo);
         this.currentTargetShape = targetShape.intersection(startDoor.room.getShape());
         if (this.currentTargetShape.dimension() >= 2) {
           // the target is a conduction area, make a save connection

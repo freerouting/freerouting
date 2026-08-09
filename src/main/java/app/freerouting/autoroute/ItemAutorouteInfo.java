@@ -6,12 +6,12 @@ import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.logger.FRLogger;
 import java.awt.Graphics;
 
-/** Temporary data stored in board Items used in the autoroute algorithm */
+/** Temporary data stored in board Items used in the autoroute algorithm. */
 public class ItemAutorouteInfo {
 
   private final Item item;
 
-  /** Defines, if this item belongs to the start or destination set of the maze search algorithm */
+  /** Defines, if this item belongs to the start or destination set of the maze search algorithm. */
   private boolean startInfo;
 
   private Connection precalculatedConnection;
@@ -19,8 +19,9 @@ public class ItemAutorouteInfo {
   /** ExpansionRoom for pushing or ripping this object for each tree shape. */
   private ObstacleExpansionRoom[] expansionRoomArr;
 
-  public ItemAutorouteInfo(Item pItem) {
-    this.item = pItem;
+  /** Constructs an ItemAutorouteInfo for the given item. */
+  public ItemAutorouteInfo(Item item) {
+    this.item = item;
   }
 
   /**
@@ -35,8 +36,8 @@ public class ItemAutorouteInfo {
    * Sets, if the corresponding item belongs to the start or destination set of the autoroute
    * algorithm. Only used, if the item belongs to the net, which will be currently routed.
    */
-  public void setStartInfo(boolean pValue) {
-    startInfo = pValue;
+  public void setStartInfo(boolean value) {
+    startInfo = value;
   }
 
   /** Returns the precalculated connection of this item or null, if it is not yet precalculated. */
@@ -45,13 +46,13 @@ public class ItemAutorouteInfo {
   }
 
   /** Sets the precalculated connection of this item. */
-  public void setPrecalculatedConnection(Connection pConnection) {
-    this.precalculatedConnection = pConnection;
+  public void setPrecalculatedConnection(Connection connection) {
+    this.precalculatedConnection = connection;
   }
 
-  /** Gets the ExpansionRoom of index p_index. Creates it, if it is not yet existing. */
-  public ObstacleExpansionRoom getExpansionRoom(int pIndex, ShapeSearchTree pAutorouteTree) {
-    int currentShapeCount = this.item.treeShapeCount(pAutorouteTree);
+  /** Gets the ExpansionRoom of index index. Creates it, if it is not yet existing. */
+  public ObstacleExpansionRoom getExpansionRoom(int index, ShapeSearchTree autorouteTree) {
+    int currentShapeCount = this.item.treeShapeCount(autorouteTree);
 
     if (expansionRoomArr == null) {
       expansionRoomArr = new ObstacleExpansionRoom[currentShapeCount];
@@ -64,19 +65,19 @@ public class ItemAutorouteInfo {
       expansionRoomArr = newArr;
     }
 
-    if (pIndex < 0 || pIndex >= expansionRoomArr.length) {
+    if (index < 0 || index >= expansionRoomArr.length) {
       FRLogger.warn(
-          "ItemAutorouteInfo.get_expansion_room: p_index "
-              + pIndex
+          "ItemAutorouteInfo.get_expansion_room: index "
+              + index
               + " out of range [0, "
               + expansionRoomArr.length
               + ")");
       return null;
     }
-    if (expansionRoomArr[pIndex] == null) {
-      expansionRoomArr[pIndex] = new ObstacleExpansionRoom(this.item, pIndex, pAutorouteTree);
+    if (expansionRoomArr[index] == null) {
+      expansionRoomArr[index] = new ObstacleExpansionRoom(this.item, index, autorouteTree);
     }
-    return expansionRoomArr[pIndex];
+    return expansionRoomArr[index];
   }
 
   /** Resets the expansion rooms for autorouting the next connection. */
@@ -91,13 +92,13 @@ public class ItemAutorouteInfo {
   }
 
   /** Draws the shapes of the expansion rooms of this info for testing purposes. */
-  public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext, double pIntensity) {
+  public void draw(Graphics graphics, GraphicsContext graphicsContext, double intensity) {
     if (expansionRoomArr == null) {
       return;
     }
     for (ObstacleExpansionRoom currRoom : expansionRoomArr) {
       if (currRoom != null) {
-        currRoom.draw(pGraphics, pGraphicsContext, pIntensity);
+        currRoom.draw(graphics, graphicsContext, intensity);
       }
     }
   }

@@ -21,32 +21,32 @@ public final class Connection {
   public final int endLayer;
   public final Set<Item> itemList;
 
-  /** Creates a new instance of Connection */
+  /** Creates a new instance of Connection. */
   private Connection(
-      Point pStartPoint, int pStartLayer, Point pEndPoint, int pEndLayer, Set<Item> pItemList) {
-    startPoint = pStartPoint;
-    startLayer = pStartLayer;
-    endPoint = pEndPoint;
-    endLayer = pEndLayer;
-    itemList = pItemList;
+      Point startPoint, int startLayer, Point endPoint, int endLayer, Set<Item> itemList) {
+    this.startPoint = startPoint;
+    this.startLayer = startLayer;
+    this.endPoint = endPoint;
+    this.endLayer = endLayer;
+    this.itemList = itemList;
   }
 
   /**
    * Gets the connection this item belongs to. A connection ends at the next fork or terminal item.
-   * Returns null, if p_item is not a route item, or if it is a via belonging to more than 1
+   * Returns null if item is not a route item, or if it is a via belonging to more than 1
    * connection.
    */
-  public static Connection get(Item pItem) {
-    if (!pItem.isRoutable()) {
+  public static Connection get(Item item) {
+    if (!item.isRoutable()) {
       return null;
     }
-    Connection precalculatedConnection = pItem.getAutorouteInfo().getPrecalculatedConnection();
+    Connection precalculatedConnection = item.getAutorouteInfo().getPrecalculatedConnection();
     if (precalculatedConnection != null) {
       return precalculatedConnection;
     }
-    Set<Item> contacts = pItem.getNormalContacts();
+    Set<Item> contacts = item.getNormalContacts();
     Set<Item> connectionItems = new TreeSet<>();
-    connectionItems.add(pItem);
+    connectionItems.add(item);
 
     Point startPoint = null;
     int startLayer = 0;
@@ -54,18 +54,18 @@ public final class Connection {
     int endLayer = 0;
 
     for (Item currItem : contacts) {
-      Point prevContactPoint = pItem.normalContactPoint(currItem);
+      Point prevContactPoint = item.normalContactPoint(currItem);
       if (prevContactPoint == null) {
         // no unique contact point
         continue;
       }
-      int prevContactLayer = pItem.firstCommonLayer(currItem);
+      int prevContactLayer = item.firstCommonLayer(currItem);
       boolean forkFound = false;
-      if (pItem instanceof Trace start_trace) {
+      if (item instanceof Trace startTrace) {
         // Check, that there is only 1 contact at this location.
         // Only for pins and vias items of more than 1 connection
         // are collected
-        Collection<Item> checkContacts = start_trace.getNormalContacts(prevContactPoint, false);
+        Collection<Item> checkContacts = startTrace.getNormalContacts(prevContactPoint, false);
         if (checkContacts.size() != 1) {
           forkFound = true;
         }

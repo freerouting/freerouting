@@ -15,10 +15,10 @@ public class ExpansionDrill implements ExpandableObject {
   /** The location, where the drill is checked. */
   public final Point location;
 
-  /** The first layer of the drill */
+  /** The first layer of the drill. */
   public final int firstLayer;
 
-  /** The last layer of the drill */
+  /** The last layer of the drill. */
   public final int lastLayer;
 
   /** Array of dimension lastLayer - firstLayer + 1. */
@@ -29,13 +29,13 @@ public class ExpansionDrill implements ExpandableObject {
   /** The shape of the drill. */
   private final TileShape shape;
 
-  /** Creates a new instance of Drill */
-  public ExpansionDrill(TileShape pShape, Point pLocation, int pFirstLayer, int pLastLayer) {
-    shape = pShape;
-    location = pLocation;
-    firstLayer = pFirstLayer;
-    lastLayer = pLastLayer;
-    int layerCount = pLastLayer - pFirstLayer + 1;
+  /** Creates a new instance of Drill. */
+  public ExpansionDrill(TileShape shape, Point location, int firstLayer, int lastLayer) {
+    this.shape = shape;
+    this.location = location;
+    this.firstLayer = firstLayer;
+    this.lastLayer = lastLayer;
+    int layerCount = lastLayer - firstLayer + 1;
     roomArr = new CompleteExpansionRoom[layerCount];
     mazeSearchInfoArr = new MazeSearchElement[layerCount];
     for (int i = 0; i < mazeSearchInfoArr.length; i++) {
@@ -45,13 +45,13 @@ public class ExpansionDrill implements ExpandableObject {
 
   /**
    * Looks for the expansion room of this drill on each layer. Creates a
-   * CompleteFreeSpaceExpansionRoom, if no expansion room is found. Returns false, if that was not
-   * possible because of an obstacle at this.location on some layer in the compensated search tree.
+   * CompleteFreeSpaceExpansionRoom if no expansion room is found. Returns false if that was not
+   * possible because of an obstacle at location on some layer in the compensated search tree.
    */
-  public boolean calculateExpansionRooms(AutorouteEngine pAutorouteEngine) {
+  public boolean calculateExpansionRooms(AutorouteEngine autorouteEngine) {
     TileShape searchShape = TileShape.getInstance(location);
     Collection<SearchTreeObject> overlaps =
-        pAutorouteEngine.autorouteSearchTree.overlappingObjects(searchShape, -1);
+        autorouteEngine.autorouteSearchTree.overlappingObjects(searchShape, -1);
     for (int i = this.firstLayer; i <= this.lastLayer; i++) {
       CompleteExpansionRoom foundRoom = null;
       Iterator<SearchTreeObject> it = overlaps.iterator();
@@ -72,7 +72,7 @@ public class ExpansionDrill implements ExpandableObject {
         IncompleteFreeSpaceExpansionRoom newIncompleteRoom =
             new IncompleteFreeSpaceExpansionRoom(null, i, searchShape);
         Collection<CompleteFreeSpaceExpansionRoom> newRooms =
-            pAutorouteEngine.completeExpansionRoom(newIncompleteRoom);
+            autorouteEngine.completeExpansionRoom(newIncompleteRoom);
         if (newRooms.size() != 1) {
           // the size may be 0 because of an obstacle in the compensated tree at this.location
           return false;
@@ -98,7 +98,7 @@ public class ExpansionDrill implements ExpandableObject {
   }
 
   @Override
-  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom pRoom) {
+  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom room) {
     return null;
   }
 
@@ -108,8 +108,8 @@ public class ExpansionDrill implements ExpandableObject {
   }
 
   @Override
-  public MazeSearchElement getMazeSearchElement(int pNo) {
-    return this.mazeSearchInfoArr[pNo];
+  public MazeSearchElement getMazeSearchElement(int index) {
+    return this.mazeSearchInfoArr[index];
   }
 
   @Override
@@ -125,13 +125,10 @@ public class ExpansionDrill implements ExpandableObject {
     return 31 * (31 * location.getIdNo() + firstLayer) + lastLayer;
   }
 
-  /*
-  * Test draw of the shape of this drill.
-
-  */
-  public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext, double pIntensity) {
-    Color drawColor = pGraphicsContext.getHighlightColor();
-    pGraphicsContext.fillArea(this.shape, pGraphics, drawColor, pIntensity);
-    pGraphicsContext.drawBoundary(this.shape, 0, drawColor, pGraphics, 1);
+  /** Test draw of the shape of this drill. */
+  public void draw(Graphics graphics, GraphicsContext graphicsContext, double intensity) {
+    Color drawColor = graphicsContext.getHighlightColor();
+    graphicsContext.fillArea(this.shape, graphics, drawColor, intensity);
+    graphicsContext.drawBoundary(this.shape, 0, drawColor, graphics, 1);
   }
 }

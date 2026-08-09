@@ -15,16 +15,16 @@ public interface ExpandableObject {
   int getDimension();
 
   /**
-   * Returns the other room to p_room if this is a door and the other room is a
+   * Returns the other room to room if this is a door and the other room is a
    * CompleteExpansionRoom. Else null is returned.
    */
-  CompleteExpansionRoom otherRoom(CompleteExpansionRoom pRoom);
+  CompleteExpansionRoom otherRoom(CompleteExpansionRoom room);
 
-  /** Returns the count of MazeSearchElements in this expandable object */
+  /** Returns the count of MazeSearchElements in this expandable object. */
   int mazeSearchElementCount();
 
-  /** Returns the p_no-th MazeSearchElements in this expandable object */
-  MazeSearchElement getMazeSearchElement(int pNo);
+  /** Returns the index-th MazeSearchElements in this expandable object. */
+  MazeSearchElement getMazeSearchElement(int index);
 
   /** Resets this ExpandableObject for autorouting the next connection. */
   void reset();

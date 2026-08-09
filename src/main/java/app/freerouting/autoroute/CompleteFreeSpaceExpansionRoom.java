@@ -20,77 +20,77 @@ import java.util.LinkedList;
 public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     implements CompleteExpansionRoom, SearchTreeObject {
 
-  // ** identification number for implementing the Comparable interface */
+  /** Identification number for implementing the Comparable interface. */
   private final int idNo;
 
-  /** The array of entries in the SearchTree. Consists of just one element */
+  /** The array of entries in the SearchTree. Consists of just one element. */
   private ShapeTree.Leaf[] treeEntries;
 
-  /** The list of doors to items of the own net */
+  /** The list of doors to items of the own net. */
   private Collection<TargetItemExpansionDoor> targetDoors;
 
   private boolean roomIsNetDependent;
 
-  /** Creates a new instance of CompleteFreeSpaceExpansionRoom */
-  public CompleteFreeSpaceExpansionRoom(TileShape pShape, int pLayer, int pIdNo) {
-    super(pShape, pLayer);
+  /** Creates a new instance of CompleteFreeSpaceExpansionRoom. */
+  public CompleteFreeSpaceExpansionRoom(TileShape shape, int layer, int idNo) {
+    super(shape, layer);
     targetDoors = new LinkedList<>();
-    idNo = pIdNo;
+    this.idNo = idNo;
   }
 
   @Override
-  public void setSearchTreeEntries(ShapeTree.Leaf[] pEntries, ShapeTree pTree) {
-    treeEntries = pEntries;
+  public void setSearchTreeEntries(ShapeTree.Leaf[] entries, ShapeTree tree) {
+    treeEntries = entries;
   }
 
   @Override
-  public int compareTo(Object pOther) {
+  public int compareTo(Object other) {
     int result;
-    if (pOther instanceof FreeSpaceExpansionRoom) {
-      result = ((CompleteFreeSpaceExpansionRoom) pOther).idNo - this.idNo;
+    if (other instanceof FreeSpaceExpansionRoom) {
+      result = ((CompleteFreeSpaceExpansionRoom) other).idNo - this.idNo;
     } else {
       result = -1;
     }
     return result;
   }
 
-  /** Removes the tree entries of this room from p_shape_tree. */
-  public void removeFromTree(ShapeTree pShapeTree) {
-    pShapeTree.remove(this.treeEntries);
+  /** Removes the tree entries of this room from shapeTree. */
+  public void removeFromTree(ShapeTree shapeTree) {
+    shapeTree.remove(this.treeEntries);
   }
 
   @Override
-  public int treeShapeCount(ShapeTree pShapeTree) {
+  public int treeShapeCount(ShapeTree shapeTree) {
     return 1;
   }
 
   @Override
-  public TileShape getTreeShape(ShapeTree pShapeTree, int pIndex) {
+  public TileShape getTreeShape(ShapeTree shapeTree, int index) {
     return this.getShape();
   }
 
   @Override
-  public int shapeLayer(int pIndex) {
+  public int shapeLayer(int index) {
     return this.getLayer();
   }
 
   @Override
-  public boolean isObstacle(int pNetNo) {
+  public boolean isObstacle(int netNo) {
     return true;
   }
 
   @Override
-  public boolean isTraceObstacle(int pNetNo) {
+  public boolean isTraceObstacle(int netNo) {
     return true;
   }
 
-  /** Will be called, when the room overlaps with net dependent objects. */
+  /** Will be called when the room overlaps with net dependent objects. */
   public void setNetDependent() {
     this.roomIsNetDependent = true;
   }
 
   /**
-   * Returns, if the room overlaps with net dependent objects. In this case it cannot be retained,
+   * Returns if the room overlaps with net dependent objects. In this case it cannot be retained
    * when the net number changes in autorouting.
    */
   public boolean isNetDependent() {
@@ -102,24 +102,24 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     return idNo;
   }
 
-  /** Returns the list doors to target items of this room */
+  /** Returns the list doors to target items of this room. */
   @Override
   public Collection<TargetItemExpansionDoor> getTargetDoors() {
     return this.targetDoors;
   }
 
-  /** Adds p_door to the list of target doors of this room. */
-  public void addTargetDoor(TargetItemExpansionDoor pDoor) {
-    this.targetDoors.add(pDoor);
+  /** Adds door to the list of target doors of this room. */
+  public void addTargetDoor(TargetItemExpansionDoor door) {
+    this.targetDoors.add(door);
   }
 
   @Override
-  public boolean removeDoor(ExpandableObject pDoor) {
+  public boolean removeDoor(ExpandableObject door) {
     boolean result;
-    if (pDoor instanceof TargetItemExpansionDoor) {
-      result = this.targetDoors.remove(pDoor);
+    if (door instanceof TargetItemExpansionDoor) {
+      result = this.targetDoors.remove(door);
     } else {
-      result = super.removeDoor(pDoor);
+      result = super.removeDoor(door);
     }
     return result;
   }
@@ -131,19 +131,19 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
 
   /** Calculates the doors to the start and destination items of the autoroute algorithm. */
   public void calculateTargetDoors(
-      ShapeTree.TreeEntry pOwnNetObject, int pNetNo, ShapeSearchTree pAutorouteSearchTree) {
+      ShapeTree.TreeEntry ownNetObject, int netNo, ShapeSearchTree autorouteSearchTree) {
     this.setNetDependent();
 
-    if (pOwnNetObject.object instanceof Connectable currObject) {
-      if (currObject.containsNet(pNetNo)) {
+    if (ownNetObject.object instanceof Connectable currObject) {
+      if (currObject.containsNet(netNo)) {
         TileShape currConnectionShape =
             currObject.getTraceConnectionShape(
-                pAutorouteSearchTree, pOwnNetObject.shapeIndexInObject);
+                autorouteSearchTree, ownNetObject.shapeIndexInObject);
         if (currConnectionShape != null && this.getShape().intersects(currConnectionShape)) {
           Item currItem = (Item) currObject;
           TargetItemExpansionDoor newTargetDoor =
               new TargetItemExpansionDoor(
-                  currItem, pOwnNetObject.shapeIndexInObject, this, pAutorouteSearchTree);
+                  currItem, ownNetObject.shapeIndexInObject, this, autorouteSearchTree);
           this.addTargetDoor(newTargetDoor);
         }
       }
@@ -152,27 +152,27 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
 
   /** Draws the shape of this room. */
   @Override
-  public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext, double pIntensity) {
-    Color drawColor = pGraphicsContext.getTraceColors(false)[this.getLayer()];
-    double layerVisibility = pGraphicsContext.getLayerVisibility(this.getLayer());
-    pGraphicsContext.fillArea(this.getShape(), pGraphics, drawColor, pIntensity * layerVisibility);
-    pGraphicsContext.drawBoundary(this.getShape(), 0, drawColor, pGraphics, layerVisibility);
+  public void draw(Graphics graphics, GraphicsContext graphicsContext, double intensity) {
+    Color drawColor = graphicsContext.getTraceColors(false)[this.getLayer()];
+    double layerVisibility = graphicsContext.getLayerVisibility(this.getLayer());
+    graphicsContext.fillArea(this.getShape(), graphics, drawColor, intensity * layerVisibility);
+    graphicsContext.drawBoundary(this.getShape(), 0, drawColor, graphics, layerVisibility);
   }
 
-  /** Check, if this FreeSpaceExpansionRoom is valid. */
-  public boolean validate(AutorouteEngine pAutorouteEngine) {
+  /** Check if this FreeSpaceExpansionRoom is valid. */
+  public boolean validate(AutorouteEngine autorouteEngine) {
     boolean result = true;
     Collection<ShapeTree.TreeEntry> overlappingObjects = new LinkedList<>();
     int[] netNoArr = new int[1];
-    netNoArr[0] = pAutorouteEngine.getNetNo();
-    pAutorouteEngine.autorouteSearchTree.overlappingTreeEntries(
+    netNoArr[0] = autorouteEngine.getNetNo();
+    autorouteEngine.autorouteSearchTree.overlappingTreeEntries(
         this.getShape(), this.getLayer(), netNoArr, overlappingObjects);
     for (ShapeTree.TreeEntry currentEntry : overlappingObjects) {
       if (currentEntry.object == this) {
         continue;
       }
       SearchTreeObject currentObject = (SearchTreeObject) currentEntry.object;
-      if (!currentObject.isTraceObstacle(pAutorouteEngine.getNetNo())) {
+      if (!currentObject.isTraceObstacle(autorouteEngine.getNetNo())) {
         continue;
       }
       if (currentObject.shapeLayer(currentEntry.shapeIndexInObject) != getLayer()) {
@@ -180,7 +180,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
       }
       TileShape currentShape =
           currentObject.getTreeShape(
-              pAutorouteEngine.autorouteSearchTree, currentEntry.shapeIndexInObject);
+              autorouteEngine.autorouteSearchTree, currentEntry.shapeIndexInObject);
       TileShape intersection = this.getShape().intersection(currentShape);
       if (intersection.dimension() > 1) {
         FRLogger.warn("ExpansionRoom overlap conflict");

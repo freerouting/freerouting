@@ -1,6 +1,6 @@
 package app.freerouting.autoroute;
 
-/** The possible results of auto-routing a connection */
+/** The possible results of auto-routing a connection. */
 public enum AutorouteAttemptState {
   UNKNOWN, // Unknown result
   SKIPPED, // Item was skipped

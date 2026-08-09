@@ -21,7 +21,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
   private final ItemSelectionStrategy itemSelectionStrategy;
   private final int threadPoolSize;
   private final ArrayList<Integer> itemIds = new ArrayList<>();
-  private final HashMap<Integer, ItemRouteResult> result_map = new HashMap<>();
+  private final HashMap<Integer, ItemRouteResult> resultMap = new HashMap<>();
   private final ArrayList<BoardUpdateStrategy> hybridList = new ArrayList<>();
   private ThreadPoolExecutor pool;
   private ItemRouteResult bestRouteResult;
@@ -31,6 +31,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
   private CountDownLatch taskCompletionSignal = new CountDownLatch(1);
   private int hybridIndex = -1;
 
+  /** Constructs a multi-threaded batch optimizer for the given routing job. */
   public BatchOptimizerMultiThreaded(RoutingJob job) {
     super(job);
 
@@ -72,10 +73,12 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     }
   }
 
+  /** Returns the total number of tasks in the current optimization pass. */
   public int getNumTasks() {
     return itemIds.size();
   }
 
+  /** Returns the number of tasks completed so far. */
   public int getNumTasksFinished() {
     return numTasksFinished;
   }
@@ -102,12 +105,13 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     }
   }
 
+  /** Checks if task is the current best winning candidate in this pass. */
   public synchronized boolean isWinningCandidate(OptimizeRouteTask task) {
     ++numTasksFinished;
 
     ItemRouteResult r = task.getRouteResult();
 
-    result_map.put(r.itemId(), r);
+    resultMap.put(r.itemId(), r);
 
     boolean won = false;
 
@@ -158,12 +162,12 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     this.sortedRouteItems = new ReadSortedRouteItems();
 
     if (currentItemSelectionStrategy() == ItemSelectionStrategy.PRIORITIZED
-        && !result_map.isEmpty()) {
+        && !resultMap.isEmpty()) {
       ArrayList<Integer> newItemIds = new ArrayList<>();
       PriorityQueue<ItemRouteResult> pq = new PriorityQueue<>();
 
       for (Item item = sortedRouteItems.next(); item != null; item = sortedRouteItems.next()) {
-        ItemRouteResult r = result_map.get(item.getIdNo());
+        ItemRouteResult r = resultMap.get(item.getIdNo());
         if (r != null) { // use PriorityQueue to sort item according to route result
           pq.add(r);
         } else {
@@ -187,7 +191,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     }
 
     this.sortedRouteItems = null;
-    result_map.clear();
+    resultMap.clear();
   }
 
   @Override

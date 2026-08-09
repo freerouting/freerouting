@@ -16,18 +16,18 @@ public class PerformanceProfiler {
   private static final ThreadLocal<java.util.Deque<Invocation>> stack =
       ThreadLocal.withInitial(java.util.ArrayDeque::new);
 
-  /** Print profiling results sorted by total time */
+  /** Print profiling results sorted by total time. */
   private static final java.util.List<PassInfo> passHistory =
       java.util.Collections.synchronizedList(new java.util.ArrayList<>());
 
   private static ConfigInfo configInfo;
 
-  /** Start timing a section */
+  /** Start timing a section. */
   public static void start(String section) {
     stack.get().push(new Invocation(section, System.nanoTime()));
   }
 
-  /** End timing a section and record the duration */
+  /** End timing a section and record the duration. */
   public static void end(String section) {
     java.util.Deque<Invocation> s = stack.get();
     if (!s.isEmpty()) {
@@ -54,19 +54,18 @@ public class PerformanceProfiler {
     }
   }
 
-  /** Record statistics for a completed pass */
+  /** Record statistics for a completed pass. */
   public static void recordPass(int passNo, int unroutedItems, long durationMs, int ripupCost) {
     passHistory.add(new PassInfo(passNo, unroutedItems, durationMs, ripupCost));
   }
 
+  /** Records configuration parameters for profiling output. */
   public static void recordConfiguration(
       int viaCosts, int planeViaCosts, double[] preferredCosts, double[] againstCosts) {
     configInfo = new ConfigInfo(viaCosts, planeViaCosts, preferredCosts, againstCosts);
   }
 
-  /** Print profiling results sorted by total time */
-
-  /** Print profiling results sorted by total time */
+  /** Print profiling results sorted by total time. */
   public static void printResults() {
     FRLogger.debug("=== Performance Profile ===");
 
@@ -120,7 +119,7 @@ public class PerformanceProfiler {
     FRLogger.debug("===========================");
   }
 
-  /** Clear all profiling data */
+  /** Clear all profiling data. */
   public static void reset() {
     timings.clear();
     counts.clear();
@@ -136,6 +135,7 @@ public class PerformanceProfiler {
     }
   }
 
+  /** Performance info recorded for a single routing pass. */
   public static class PassInfo {
     int passNo;
     int unroutedItems;

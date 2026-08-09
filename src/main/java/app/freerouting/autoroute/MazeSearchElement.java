@@ -3,10 +3,10 @@ package app.freerouting.autoroute;
 /** Describes the structure of a section of an ExpandableObject. */
 public class MazeSearchElement {
 
-  /** true, if this door is already occupied by the maze expanding algorithm */
+  /** true, if this door is already occupied by the maze expanding algorithm. */
   public boolean isOccupied;
 
-  /** Used for backtracking in the maze expanding algorithm */
+  /** Used for backtracking in the maze expanding algorithm. */
   public ExpandableObject backtrackDoor;
 
   public int sectionNoOfBacktrackDoor;
@@ -29,6 +29,7 @@ public class MazeSearchElement {
     ripupCost = 0;
   }
 
+  /** Adjustment directions for maze search expansion. */
   public enum Adjustment {
     NONE,
     RIGHT,

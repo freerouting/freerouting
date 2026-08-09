@@ -14,16 +14,16 @@ public class TargetItemExpansionDoor implements ExpandableObject {
   private final TileShape shape;
   private final MazeSearchElement mazeSearchInfo;
 
-  /** Creates a new instance of ItemExpansionInfo */
+  /** Creates a new instance of ItemExpansionInfo. */
   public TargetItemExpansionDoor(
-      Item pItem, int pTreeEntryNo, CompleteExpansionRoom pRoom, ShapeSearchTree pSearchTree) {
-    item = pItem;
-    treeEntryNo = pTreeEntryNo;
-    room = pRoom;
+      Item item, int treeEntryNo, CompleteExpansionRoom room, ShapeSearchTree searchTree) {
+    this.item = item;
+    this.treeEntryNo = treeEntryNo;
+    this.room = room;
     if (room == null) {
       this.shape = Simplex.EMPTY;
     } else {
-      TileShape itemShape = item.getTreeShape(pSearchTree, treeEntryNo);
+      TileShape itemShape = item.getTreeShape(searchTree, treeEntryNo);
       this.shape = itemShape.intersection(room.getShape());
     }
     mazeSearchInfo = new MazeSearchElement();
@@ -39,18 +39,19 @@ public class TargetItemExpansionDoor implements ExpandableObject {
     return 2;
   }
 
+  /** Returns true if this door leads to a destination item rather than a start item. */
   public boolean isDestinationDoor() {
     ItemAutorouteInfo itemInfo = this.item.getAutorouteInfo();
     return !itemInfo.isStartInfo();
   }
 
   @Override
-  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom pRoom) {
+  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom room) {
     return null;
   }
 
   @Override
-  public MazeSearchElement getMazeSearchElement(int pNo) {
+  public MazeSearchElement getMazeSearchElement(int index) {
     return mazeSearchInfo;
   }
 

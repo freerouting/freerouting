@@ -12,10 +12,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RoutingFailureLog implements Serializable {
 
-  /** Failure threshold - give up after this many failures for the same item */
+  /** Failure threshold - give up after this many failures for the same item. */
   public static final int FAILURE_THRESHOLD = 50;
 
-  /** Map of item ID to failure information */
+  /** Map of item ID to failure information. */
   private final ConcurrentHashMap<Integer, ItemFailureInfo> failures;
 
   public RoutingFailureLog() {

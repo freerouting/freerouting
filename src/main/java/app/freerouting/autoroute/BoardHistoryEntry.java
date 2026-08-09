@@ -5,6 +5,9 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.settings.ScoringSettings;
 import java.time.Instant;
 
+/**
+ * Represents a historical snapshot entry of a board routing state with its score and statistics.
+ */
 public class BoardHistoryEntry implements Comparable<BoardHistoryEntry> {
 
   public final RoutingBoard board;
@@ -14,6 +17,9 @@ public class BoardHistoryEntry implements Comparable<BoardHistoryEntry> {
   public final Instant timestamp;
   public int restoreCount;
 
+  /**
+   * Constructs a BoardHistoryEntry for the given board and scoring settings.
+   */
   public BoardHistoryEntry(RoutingBoard board, ScoringSettings scoringSettings) {
     this.board = board;
     this.statistics = board.getStatistics();

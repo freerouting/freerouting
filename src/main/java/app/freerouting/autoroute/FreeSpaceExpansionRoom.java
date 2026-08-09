@@ -7,37 +7,36 @@ import java.util.List;
 /** Expansion Areas used by the maze search algorithm. */
 public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
 
-  /** The layer of this room */
+  /** The layer of this room. */
   private final int layer;
 
-  /** The shape of this room */
+  /** The shape of this room. */
   private TileShape shape;
 
   /**
-   * The list of doors to neighbour expansion rooms Using ArrayList for better cache locality and
-   * O(1) indexed access
+   * The list of doors to neighbour expansion rooms. Using ArrayList for better cache locality and
+   * O(1) indexed access.
    */
   private List<ExpansionDoor> doors;
 
   /**
    * Creates a new instance of FreeSpaceExpansionRoom. The shape is normally unbounded at
    * construction time of this room. The final (completed) shape will be a subshape of the start
-   * shape, which does not overlap with any obstacle, and is as big as possible. p_contained_points
-   * will remain contained in the shape, after it is completed.
+   * shape, which does not overlap with any obstacle, and is as big as possible.
    */
-  protected FreeSpaceExpansionRoom(TileShape pShape, int pLayer) {
-    shape = pShape;
-    layer = pLayer;
+  protected FreeSpaceExpansionRoom(TileShape shape, int layer) {
+    this.shape = shape;
+    this.layer = layer;
     doors = new ArrayList<>(); // ArrayList for better performance
   }
 
-  /** Adds p_door to the list of doors of this room. */
+  /** Adds door to the list of doors of this room. */
   @Override
-  public void addDoor(ExpansionDoor pDoor) {
-    this.doors.add(pDoor);
+  public void addDoor(ExpansionDoor door) {
+    this.doors.add(door);
   }
 
-  /** Returns the list of doors of this room to neighbour expansion rooms */
+  /** Returns the list of doors of this room to neighbour expansion rooms. */
   @Override
   public List<ExpansionDoor> getDoors() {
     return this.doors;
@@ -57,19 +56,19 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
   }
 
   @Override
-  public boolean removeDoor(ExpandableObject pDoor) {
-    return this.doors.remove(pDoor);
+  public boolean removeDoor(ExpandableObject door) {
+    return this.doors.remove(door);
   }
 
-  /** Gets the shape of this room */
+  /** Gets the shape of this room. */
   @Override
   public TileShape getShape() {
     return this.shape;
   }
 
-  /** sets the shape of this room */
-  public void setShape(TileShape pShape) {
-    this.shape = pShape;
+  /** Sets the shape of this room. */
+  public void setShape(TileShape shape) {
+    this.shape = shape;
   }
 
   @Override
@@ -77,14 +76,14 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
     return this.layer;
   }
 
-  /** Checks, if this room has already a door to p_other */
+  /** Checks if this room already has a door to other. */
   @Override
-  public boolean doorExists(ExpansionRoom pOther) {
+  public boolean doorExists(ExpansionRoom other) {
     if (doors == null) {
       return false;
     }
     for (ExpansionDoor currDoor : doors) {
-      if (currDoor.firstRoom == pOther || currDoor.secondRoom == pOther) {
+      if (currDoor.firstRoom == other || currDoor.secondRoom == other) {
         return true;
       }
     }

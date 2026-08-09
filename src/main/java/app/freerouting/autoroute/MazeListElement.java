@@ -48,50 +48,50 @@ public class MazeListElement implements Comparable<MazeListElement> {
    */
   int ripupCost;
 
-  /** Creates a new instance of ExpansionInfo */
+  /** Creates a new instance of ExpansionInfo. */
   public MazeListElement(
-      ExpandableObject pDoor,
-      int pSectionNoOfDoor,
-      ExpandableObject pBacktrackDoor,
-      int pSectionNoOfBacktrackDoor,
-      double pExpansionValue,
-      double pSortingValue,
-      CompleteExpansionRoom pNextRoom,
-      FloatLine pShapeEntry,
-      boolean pRoomRipped,
-      MazeSearchElement.Adjustment pAdjustment,
-      boolean pAlreadyChecked) {
-    door = pDoor;
-    sectionNoOfDoor = pSectionNoOfDoor;
-    backtrackDoor = pBacktrackDoor;
-    sectionNoOfBacktrackDoor = pSectionNoOfBacktrackDoor;
-    expansionValue = pExpansionValue;
-    sortingValue = pSortingValue;
-    nextRoom = pNextRoom;
-    shapeEntry = pShapeEntry;
-    roomRipped = pRoomRipped;
-    adjustment = pAdjustment;
-    alreadyChecked = pAlreadyChecked;
+      ExpandableObject door,
+      int sectionNoOfDoor,
+      ExpandableObject backtrackDoor,
+      int sectionNoOfBacktrackDoor,
+      double expansionValue,
+      double sortingValue,
+      CompleteExpansionRoom nextRoom,
+      FloatLine shapeEntry,
+      boolean roomRipped,
+      MazeSearchElement.Adjustment adjustment,
+      boolean alreadyChecked) {
+    this.door = door;
+    this.sectionNoOfDoor = sectionNoOfDoor;
+    this.backtrackDoor = backtrackDoor;
+    this.sectionNoOfBacktrackDoor = sectionNoOfBacktrackDoor;
+    this.expansionValue = expansionValue;
+    this.sortingValue = sortingValue;
+    this.nextRoom = nextRoom;
+    this.shapeEntry = shapeEntry;
+    this.roomRipped = roomRipped;
+    this.adjustment = adjustment;
+    this.alreadyChecked = alreadyChecked;
   }
 
   @Override
-  public int compareTo(MazeListElement pOther) {
-    if (this.sortingValue < pOther.sortingValue) {
+  public int compareTo(MazeListElement other) {
+    if (this.sortingValue < other.sortingValue) {
       return -1;
     }
-    if (this.sortingValue > pOther.sortingValue) {
+    if (this.sortingValue > other.sortingValue) {
       return 1;
     }
     // Tie-break 1: expansionValue
-    if (this.expansionValue < pOther.expansionValue) {
+    if (this.expansionValue < other.expansionValue) {
       return -1;
     }
-    if (this.expansionValue > pOther.expansionValue) {
+    if (this.expansionValue > other.expansionValue) {
       return 1;
     }
     // Tie-break 2: door id
     int id1 = this.door.getIdNo();
-    int id2 = pOther.door.getIdNo();
+    int id2 = other.door.getIdNo();
     if (id1 < id2) {
       return -1;
     }
@@ -99,10 +99,10 @@ public class MazeListElement implements Comparable<MazeListElement> {
       return 1;
     }
     // Tie-break 3: sectionNo
-    if (this.sectionNoOfDoor < pOther.sectionNoOfDoor) {
+    if (this.sectionNoOfDoor < other.sectionNoOfDoor) {
       return -1;
     }
-    if (this.sectionNoOfDoor > pOther.sectionNoOfDoor) {
+    if (this.sectionNoOfDoor > other.sectionNoOfDoor) {
       return 1;
     }
     // If truly equal (same door, same section, same values), return 0 to avoid duplicates in the

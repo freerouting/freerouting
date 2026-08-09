@@ -3,12 +3,15 @@ package app.freerouting.autoroute;
 import app.freerouting.geometry.planar.TileShape;
 import java.util.List;
 
+/**
+ * Interface representing a room in the expansion tree during maze routing.
+ */
 public interface ExpansionRoom {
 
-  /** Adds p_door to the list of doors of this room. */
-  void addDoor(ExpansionDoor pDoor);
+  /** Adds door to the list of doors of this room. */
+  void addDoor(ExpansionDoor door);
 
-  /** Returns the list of doors of this room to neighbour expansion rooms */
+  /** Returns the list of doors of this room to neighbour expansion rooms. */
   List<ExpansionDoor> getDoors();
 
   /** Removes all doors from this room. */
@@ -17,11 +20,11 @@ public interface ExpansionRoom {
   /** Clears the autorouting info of all doors for routing the next connection. */
   void resetDoors();
 
-  /** Checks, if this room has already a door to p_other */
-  boolean doorExists(ExpansionRoom pOther);
+  /** Checks if this room already has a door to other. */
+  boolean doorExists(ExpansionRoom other);
 
-  /** Removes p_door from this room. Returns false, if p_room did not contain p_door. */
-  boolean removeDoor(ExpandableObject pDoor);
+  /** Removes door from this room. Returns false if this room did not contain door. */
+  boolean removeDoor(ExpandableObject door);
 
   /** Gets the shape of this room. */
   TileShape getShape();

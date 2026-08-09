@@ -29,13 +29,13 @@ public final class BatchFanout {
   private Long deadlineMs;
   private boolean isTimedOut;
 
-  private BatchFanout(RoutingBoard pBoard, RouterSettings pSettings, StoppableThread pThread) {
-    this.thread = pThread;
-    this.routingBoard = pBoard;
-    this.settings = pSettings;
+  private BatchFanout(RoutingBoard board, RouterSettings settings, StoppableThread thread) {
+    this.thread = thread;
+    this.routingBoard = board;
+    this.settings = settings;
     String sortingOrder =
-        pSettings.fanout != null && pSettings.fanout.pinSortingOrder != null
-            ? pSettings.fanout.pinSortingOrder
+        settings.fanout != null && settings.fanout.pinSortingOrder != null
+            ? settings.fanout.pinSortingOrder
             : "outer_first";
     Collection<app.freerouting.board.Pin> boardSmdPinList = routingBoard.getSmdPins();
     // Filter out SMD pins that belong to no net — they don't need fanout and would inflate
@@ -73,34 +73,36 @@ public final class BatchFanout {
     this.alreadyConnectedPinCount = alreadyConnected;
   }
 
+  /** Performs fanout routing for SMD components on board. */
   public static FanoutRunSummary fanoutBoard(
-      RoutingBoard pBoard, RouterSettings pSettings, StoppableThread pThread) {
-    return fanoutBoard(pBoard, pSettings, pThread, null);
+      RoutingBoard board, RouterSettings settings, StoppableThread thread) {
+    return fanoutBoard(board, settings, thread, null);
   }
 
+  /** Performs fanout routing for SMD components on board with a progress listener. */
   public static FanoutRunSummary fanoutBoard(
-      RoutingBoard pBoard,
-      RouterSettings pSettings,
-      StoppableThread pThread,
+      RoutingBoard board,
+      RouterSettings settings,
+      StoppableThread thread,
       FanoutProgressListener progressListener) {
-    BatchFanout fanoutInstance = new BatchFanout(pBoard, pSettings, pThread);
+    BatchFanout fanoutInstance = new BatchFanout(board, settings, thread);
     long fanoutStart = System.currentTimeMillis();
-    if (pSettings.fanout != null && pSettings.fanout.timeoutString != null) {
+    if (settings.fanout != null && settings.fanout.timeoutString != null) {
       Long timeoutSeconds =
-          app.freerouting.util.TextManager.parseTimespanString(pSettings.fanout.timeoutString);
+          app.freerouting.util.TextManager.parseTimespanString(settings.fanout.timeoutString);
       if (timeoutSeconds != null) {
         fanoutInstance.deadlineMs = fanoutStart + timeoutSeconds * 1000;
       }
     }
     int maxPasses =
-        pSettings.fanout != null && pSettings.fanout.maxPasses != null
-            ? pSettings.fanout.maxPasses
+        settings.fanout != null && settings.fanout.maxPasses != null
+            ? settings.fanout.maxPasses
             : 20;
     final int stagnationPassLimit = 3;
     int completedPasses = 0;
     long previousBoardState = Long.MIN_VALUE;
     int identicalPasses = 0;
-    String lastBoardHash = pBoard.getHash();
+    String lastBoardHash = board.getHash();
     for (int i = 0; i < maxPasses; ++i) {
       if (fanoutInstance.deadlineMs != null
           && System.currentTimeMillis() >= fanoutInstance.deadlineMs) {
@@ -108,10 +110,10 @@ public final class BatchFanout {
         FRLogger.info("Fanout stage timed out before starting pass #" + (i + 1));
         break;
       }
-      if (pSettings.fanout != null
-          && pSettings.fanout.maxItems != null
-          && pSettings.fanout.maxItems > 0
-          && fanoutInstance.totalItemsFanouted >= pSettings.fanout.maxItems) {
+      if (settings.fanout != null
+          && settings.fanout.maxItems != null
+          && settings.fanout.maxItems > 0
+          && fanoutInstance.totalItemsFanouted >= settings.fanout.maxItems) {
         break;
       }
       int routedCount = fanoutInstance.fanoutPass(i, progressListener);
@@ -124,7 +126,7 @@ public final class BatchFanout {
       // board states, so consecutive hashes always differ — but the per-pass outcome
       // (routed count + via count) repeats exactly while ripup costs escalate uselessly
       // (observed: 14 identical passes on a dense SMD carrier).
-      long boardState = ((long) routedCount << 32) ^ pBoard.getVias().size();
+      long boardState = ((long) routedCount << 32) ^ board.getVias().size();
       if (boardState == previousBoardState) {
         identicalPasses++;
         if (identicalPasses >= stagnationPassLimit) {
@@ -143,13 +145,13 @@ public final class BatchFanout {
       if (fanoutInstance.isTimedOut) {
         break;
       }
-      String currentBoardHash = pBoard.getHash();
+      String currentBoardHash = board.getHash();
       if (currentBoardHash.equals(lastBoardHash)) {
         break;
       }
       lastBoardHash = currentBoardHash;
     }
-    BoardStatistics stats = new BoardStatistics(pBoard, null, false);
+    BoardStatistics stats = new BoardStatistics(board, null, false);
     EscapeStatistics finalEscape = EscapeStatistics.fromBoardStatistics(stats);
     long totalDurationMillis = Math.max(0, System.currentTimeMillis() - fanoutStart);
     return new FanoutRunSummary(
@@ -687,19 +689,19 @@ public final class BatchFanout {
       final int surroundingsDensity;
 
       Pin(
-          app.freerouting.board.Pin pBoardPin,
-          Collection<app.freerouting.board.Pin> pBoardSmdPinList,
-          RoutingBoard pRoutingBoard) {
-        this.boardPin = pBoardPin;
-        FloatPoint pinLocation = pBoardPin.getCenter().toFloat();
+          app.freerouting.board.Pin boardPin,
+          Collection<app.freerouting.board.Pin> boardSmdPinList,
+          RoutingBoard routingBoard) {
+        this.boardPin = boardPin;
+        FloatPoint pinLocation = boardPin.getCenter().toFloat();
         this.distanceToComponentCenter = pinLocation.distance(gravityCenterOfSmdPins);
 
         // distanceToClosestOnNet calculation
         double minDistance = Double.MAX_VALUE;
-        int netNo = pBoardPin.netCount() > 0 ? pBoardPin.getNetNo(0) : 0;
+        int netNo = boardPin.netCount() > 0 ? boardPin.getNetNo(0) : 0;
         if (netNo > 0) {
-          for (app.freerouting.board.Pin otherPin : pRoutingBoard.getPins()) {
-            if (otherPin != pBoardPin && otherPin.containsNet(netNo)) {
+          for (app.freerouting.board.Pin otherPin : routingBoard.getPins()) {
+            if (otherPin != boardPin && otherPin.containsNet(netNo)) {
               double dist = pinLocation.distance(otherPin.getCenter().toFloat());
               if (dist < minDistance) {
                 minDistance = dist;
@@ -711,11 +713,11 @@ public final class BatchFanout {
 
         // surroundingsDensity calculation
         double resolution =
-            pRoutingBoard.communication.getResolution(app.freerouting.board.Unit.UM);
+            routingBoard.communication.getResolution(app.freerouting.board.Unit.UM);
         double maxDist = 20000.0 * resolution; // 20.0 mm in coordinate units
         int density = 0;
-        for (app.freerouting.board.Pin otherPin : pBoardSmdPinList) {
-          if (otherPin != pBoardPin) {
+        for (app.freerouting.board.Pin otherPin : boardSmdPinList) {
+          if (otherPin != boardPin) {
             double dist = pinLocation.distance(otherPin.getCenter().toFloat());
             if (dist <= maxDist) {
               density++;
@@ -726,31 +728,31 @@ public final class BatchFanout {
       }
 
       @Override
-      public int compareTo(Pin pOther) {
+      public int compareTo(Pin other) {
         int result = 0;
         if ("inner_first".equals(pinSortingOrder)) {
-          double deltaDist = this.distanceToComponentCenter - pOther.distanceToComponentCenter;
+          double deltaDist = this.distanceToComponentCenter - other.distanceToComponentCenter;
           if (deltaDist > 0) {
             result = 1;
           } else if (deltaDist < 0) {
             result = -1;
           }
         } else if ("outer_first".equals(pinSortingOrder)) {
-          double deltaDist = this.distanceToComponentCenter - pOther.distanceToComponentCenter;
+          double deltaDist = this.distanceToComponentCenter - other.distanceToComponentCenter;
           if (deltaDist > 0) {
             result = -1;
           } else if (deltaDist < 0) {
             result = 1;
           }
         } else if ("distanceToClosestOnNet".equals(pinSortingOrder)) {
-          double delta = this.distanceToClosestOnNet - pOther.distanceToClosestOnNet;
+          double delta = this.distanceToClosestOnNet - other.distanceToClosestOnNet;
           if (delta > 0) {
             result = 1;
           } else if (delta < 0) {
             result = -1;
           }
         } else if ("surroundingsDensity".equals(pinSortingOrder)) {
-          int delta = pOther.surroundingsDensity - this.surroundingsDensity; // densest first
+          int delta = other.surroundingsDensity - this.surroundingsDensity; // densest first
           if (delta > 0) {
             result = 1;
           } else if (delta < 0) {
@@ -758,7 +760,7 @@ public final class BatchFanout {
           }
         }
         if (result == 0) {
-          result = this.boardPin.pinNo - pOther.boardPin.pinNo;
+          result = this.boardPin.pinNo - other.boardPin.pinNo;
         }
         return result;
       }

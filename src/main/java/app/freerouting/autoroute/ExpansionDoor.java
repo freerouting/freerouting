@@ -17,21 +17,21 @@ public class ExpansionDoor implements ExpandableObject {
   /** The dimension of a door may be 1 or 2. */
   public final int dimension;
 
-  /** each section of the following array can be expanded separately by the maze search algorithm */
+  /** Each section of the following array can be expanded separately by the maze search algorithm. */
   MazeSearchElement[] sectionArr;
 
-  /** Creates a new instance of ExpansionDoor */
-  public ExpansionDoor(ExpansionRoom pFirstRoom, ExpansionRoom pSecondRoom, int pDimension) {
-    firstRoom = pFirstRoom;
-    secondRoom = pSecondRoom;
-    dimension = pDimension;
+  /** Creates a new instance of ExpansionDoor. */
+  public ExpansionDoor(ExpansionRoom firstRoom, ExpansionRoom secondRoom, int dimension) {
+    this.firstRoom = firstRoom;
+    this.secondRoom = secondRoom;
+    this.dimension = dimension;
   }
 
-  /** Creates a new instance of ExpansionDoor */
-  public ExpansionDoor(ExpansionRoom pFirstRoom, ExpansionRoom pSecondRoom) {
-    firstRoom = pFirstRoom;
-    secondRoom = pSecondRoom;
-    dimension = firstRoom.getShape().intersection(secondRoom.getShape()).dimension();
+  /** Creates a new instance of ExpansionDoor. */
+  public ExpansionDoor(ExpansionRoom firstRoom, ExpansionRoom secondRoom) {
+    this.firstRoom = firstRoom;
+    this.secondRoom = secondRoom;
+    this.dimension = firstRoom.getShape().intersection(secondRoom.getShape()).dimension();
   }
 
   /** Calculates the intersection of the shapes of the 2 rooms belonging to this door. */
@@ -44,7 +44,7 @@ public class ExpansionDoor implements ExpandableObject {
 
   /**
    * The dimension of a door may be 1 or 2. 2-dimensional doors can only exist between
-   * ObstacleExpansionRooms
+   * ObstacleExpansionRooms.
    */
   @Override
   public int getDimension() {
@@ -52,14 +52,14 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * Returns the other room of this door, or null, if p_room is neither equal to this.firstRoom nor
+   * Returns the other room of this door, or null if room is neither equal to this.firstRoom nor
    * to this.secondRoom.
    */
-  public ExpansionRoom otherRoom(ExpansionRoom pRoom) {
+  public ExpansionRoom otherRoom(ExpansionRoom room) {
     ExpansionRoom result;
-    if (pRoom == firstRoom) {
+    if (room == firstRoom) {
       result = secondRoom;
-    } else if (pRoom == secondRoom) {
+    } else if (room == secondRoom) {
       result = firstRoom;
     } else {
       result = null;
@@ -68,15 +68,15 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * Returns the other room of this door, or null, if p_room is neither equal to this.firstRoom nor
+   * Returns the other room of this door, or null if room is neither equal to this.firstRoom nor
    * to this.secondRoom, or if the other room is not a CompleteExpansionRoom.
    */
   @Override
-  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom pRoom) {
+  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom room) {
     ExpansionRoom result;
-    if (pRoom == firstRoom) {
+    if (room == firstRoom) {
       result = secondRoom;
-    } else if (pRoom == secondRoom) {
+    } else if (room == secondRoom) {
       result = firstRoom;
     } else {
       result = null;
@@ -93,13 +93,13 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   @Override
-  public MazeSearchElement getMazeSearchElement(int pNo) {
-    return this.sectionArr[pNo];
+  public MazeSearchElement getMazeSearchElement(int index) {
+    return this.sectionArr[index];
   }
 
   /** Calculates the Line segments of the sections of this door. */
-  public FloatLine[] getSectionSegments(double pOffset) {
-    double offset = pOffset + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
+  public FloatLine[] getSectionSegments(double offsetParam) {
+    double offset = offsetParam + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
     TileShape doorShape = this.getShape();
     {
       if (doorShape.isEmpty()) {
@@ -131,25 +131,25 @@ public class ExpansionDoor implements ExpandableObject {
       doorLineSegment = new FloatLine(gravityPoint, gravityPoint);
       shrinkedLineSegment = doorLineSegment;
     }
-    final double cMaxDoorSectionWidth = 10 * offset;
+    final double maxDoorSectionWidth = 10 * offset;
     int sectionCount =
-        (int) (doorLineSegment.b.distance(doorLineSegment.a) / cMaxDoorSectionWidth) + 1;
+        (int) (doorLineSegment.b.distance(doorLineSegment.a) / maxDoorSectionWidth) + 1;
     this.allocateSections(sectionCount);
     return shrinkedLineSegment.divideSegmentIntoSections(sectionCount);
   }
 
   /**
-   * Calculates a diagonal line of the 2-dimensional p_door_shape which represents the restraint
+   * Calculates a diagonal line of the 2-dimensional doorShape which represents the restraint
    * line between the shapes of this.firstRoom and this.secondRoom.
    */
-  private FloatLine calcDoorLineSegment(TileShape pDoorShape) {
+  private FloatLine calcDoorLineSegment(TileShape doorShape) {
     TileShape firstRoomShape = this.firstRoom.getShape();
     TileShape secondRoomShape = this.secondRoom.getShape();
     Point firstCorner = null;
     Point secondCorner = null;
-    int cornerCount = pDoorShape.borderLineCount();
+    int cornerCount = doorShape.borderLineCount();
     for (int i = 0; i < cornerCount; i++) {
-      Point currCorner = pDoorShape.corner(i);
+      Point currCorner = doorShape.corner(i);
       if (!firstRoomShape.containsInside(currCorner)
           && !secondRoomShape.containsInside(currCorner)) {
         // currCorner is on the border of both room shapes.
@@ -185,12 +185,12 @@ public class ExpansionDoor implements ExpandableObject {
     return Math.min(id1, id2) * 31 + Math.max(id1, id2);
   }
 
-  /** allocates and initialises p_section_count sections */
-  void allocateSections(int pSectionCount) {
-    if (sectionArr != null && sectionArr.length == pSectionCount) {
+  /** Allocates and initialises sectionCount sections. */
+  void allocateSections(int sectionCount) {
+    if (sectionArr != null && sectionArr.length == sectionCount) {
       return; // already allocated
     }
-    sectionArr = new MazeSearchElement[pSectionCount];
+    sectionArr = new MazeSearchElement[sectionCount];
     for (int i = 0; i < sectionArr.length; i++) {
       sectionArr[i] = new MazeSearchElement();
     }

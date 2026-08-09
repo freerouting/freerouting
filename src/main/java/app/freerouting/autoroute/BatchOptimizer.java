@@ -44,12 +44,13 @@ public class BatchOptimizer extends NamedAlgorithm {
     this.job = job;
   }
 
+  /** Returns true if timed out. */
   public boolean isTimedOut() {
     return this.isTimedOut;
   }
 
-  static boolean containsOnlyUnfixedTraces(Collection<Item> pItemList) {
-    for (Item currItem : pItemList) {
+  static boolean containsOnlyUnfixedTraces(Collection<Item> itemList) {
+    for (Item currItem : itemList) {
       if (currItem.isUserFixed() || !(currItem instanceof Trace)) {
         return false;
       }

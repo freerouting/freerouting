@@ -33,6 +33,7 @@ public class BoardHistory {
   private final ScoringSettings scoringSettings;
   private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
 
+  /** Constructs a BoardHistory with default maximum history size. */
   public BoardHistory(ScoringSettings scoringSettings) {
     this(scoringSettings, MAX_HISTORY_SIZE);
   }
@@ -43,6 +44,7 @@ public class BoardHistory {
     this.maxHistorySize = maxHistorySize;
   }
 
+  /** Adds a routing board to history if it improves overall score or space permits. */
   public synchronized void add(RoutingBoard board) {
     if (contains(board)) {
       return;
@@ -77,10 +79,12 @@ public class BoardHistory {
     boards.add(new BoardHistoryEntry(board, scoringSettings));
   }
 
+  /** Clears all boards from history. */
   public synchronized void clear() {
     boards.clear();
   }
 
+  /** Returns true if the board snapshot is already present in history. */
   public boolean contains(RoutingBoard board) {
     String hash = board.getHash();
     rwLock.readLock().lock();
@@ -96,6 +100,7 @@ public class BoardHistory {
     }
   }
 
+  /** Removes the specified board snapshot from history. */
   public synchronized void remove(RoutingBoard board) {
     String hash = board.getHash();
     for (int i = 0; i < boards.size(); i++) {
@@ -106,6 +111,7 @@ public class BoardHistory {
     }
   }
 
+  /** Returns the highest score among all boards currently in history. */
   public float getMaxScore() {
     rwLock.readLock().lock();
     try {
@@ -148,10 +154,12 @@ public class BoardHistory {
     }
   }
 
+  /** Restores the highest-scoring board in history. */
   public RoutingBoard restoreBestBoard() {
     return restoreBoard(0);
   }
 
+  /** Returns the number of board snapshots in history. */
   public int size() {
     rwLock.readLock().lock();
     try {
@@ -161,6 +169,7 @@ public class BoardHistory {
     }
   }
 
+  /** Returns the rank (1-indexed) of the specified board, or -1 if not found. */
   public int getRank(RoutingBoard board) {
     String hash = board.getHash();
     rwLock.readLock().lock();

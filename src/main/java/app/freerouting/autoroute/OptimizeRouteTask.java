@@ -5,6 +5,9 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.logger.FRLogger;
 
+/**
+ * Task for optimizing a single route item in a multi-threaded routing pass.
+ */
 public class OptimizeRouteTask implements Runnable {
 
   public final RoutingBoard board;
@@ -15,20 +18,21 @@ public class OptimizeRouteTask implements Runnable {
   private Item itemToOptimize;
   private ItemRouteResult optimizationResult;
 
+  /** Constructs an OptimizeRouteTask for optimizing the specified item. */
   public OptimizeRouteTask(
-      BatchOptimizerMultiThreaded pOptimizer,
+      BatchOptimizerMultiThreaded optimizer,
       RoutingJob job,
       int itemId,
-      int pPassNo,
-      boolean pWithPreferredDirections) {
-    optimizer = pOptimizer;
+      int passNo,
+      boolean withPreferredDirections) {
+    this.optimizer = optimizer;
 
     this.job = job;
     this.board = job.board.deepCopy();
     itemToOptimize = this.board.getItem(itemId);
 
-    passNo = pPassNo;
-    withPreferredDirections = pWithPreferredDirections;
+    this.passNo = passNo;
+    this.withPreferredDirections = withPreferredDirections;
   }
 
   @Override
@@ -79,14 +83,17 @@ public class OptimizeRouteTask implements Runnable {
     }
   }
 
+  /** Returns the optimization result of this task. */
   public ItemRouteResult getRouteResult() {
     return this.optimizationResult;
   }
 
+  /** Returns the item being optimized. */
   public Item getItem() {
     return itemToOptimize;
   }
 
+  /** Cleans up resources to release memory quickly. */
   public void clean() { // try to speed up memory release
     itemToOptimize.board = null;
     itemToOptimize = null;

@@ -21,15 +21,15 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
 
   private static final double cTolerance = 1.0;
 
-  /** Creates a new instance of LocateFoundConnectionAlgo */
+  /** Creates a new instance of LocateFoundConnectionAlgoAnyAngle. */
   protected LocateFoundConnectionAlgoAnyAngle(
-      MazeSearchAlgo.Result pMazeSearchResult,
-      AutorouteControl pCtrl,
-      ShapeSearchTree pSearchTree,
-      AngleRestriction pAngleRestriction,
-      SortedSet<Item> pRippedItemList,
-      Map<Item, Integer> pRipupCosts) {
-    super(pMazeSearchResult, pCtrl, pSearchTree, pAngleRestriction, pRippedItemList, pRipupCosts);
+      MazeSearchAlgo.Result mazeSearchResult,
+      AutorouteControl ctrl,
+      ShapeSearchTree searchTree,
+      AngleRestriction angleRestriction,
+      SortedSet<Item> rippedItemList,
+      Map<Item, Integer> ripupCosts) {
+    super(mazeSearchResult, ctrl, searchTree, angleRestriction, rippedItemList, ripupCosts);
   }
 
   /**

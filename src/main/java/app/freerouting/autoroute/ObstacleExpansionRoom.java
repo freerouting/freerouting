@@ -19,19 +19,20 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
   private final int indexInItem;
   private final TileShape shape;
 
-  /** The list of doors to neighbour expansion rooms */
+  /** The list of doors to neighbour expansion rooms. */
   private List<ExpansionDoor> doors;
 
   private boolean doorsCalculated;
 
-  /** Creates a new instance of ObstacleExpansionRoom */
-  ObstacleExpansionRoom(Item pItem, int pIndexInItem, ShapeSearchTree pShapeTree) {
-    this.item = pItem;
-    this.indexInItem = pIndexInItem;
-    this.shape = pItem.getTreeShape(pShapeTree, pIndexInItem);
+  /** Creates a new instance of ObstacleExpansionRoom. */
+  ObstacleExpansionRoom(Item item, int indexInItem, ShapeSearchTree shapeTree) {
+    this.item = item;
+    this.indexInItem = indexInItem;
+    this.shape = item.getTreeShape(shapeTree, indexInItem);
     this.doors = new ArrayList<>();
   }
 
+  /** Returns the index of this shape within the item. */
   public int getIndexInItem() {
     return this.indexInItem;
   }
@@ -51,12 +52,12 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
     return (this.item.getIdNo() << 10) | this.indexInItem;
   }
 
-  /** Checks, if this room has already a 1-dimensional door to p_other */
+  /** Checks if this room already has a 1-dimensional door to other. */
   @Override
-  public boolean doorExists(ExpansionRoom pOther) {
+  public boolean doorExists(ExpansionRoom other) {
     if (doors != null) {
       for (ExpansionDoor currDoor : this.doors) {
-        if (currDoor.firstRoom == pOther || currDoor.secondRoom == pOther) {
+        if (currDoor.firstRoom == other || currDoor.secondRoom == other) {
           return true;
         }
       }
@@ -66,42 +67,42 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
   /** Adds a door to the door list of this room. */
   @Override
-  public void addDoor(ExpansionDoor pDoor) {
-    this.doors.add(pDoor);
+  public void addDoor(ExpansionDoor door) {
+    this.doors.add(door);
   }
 
   /**
-   * Creates a 2-dim door with the other obstacle room, if that is useful for the autoroute
-   * algorithm. It is assumed that this room and p_other have a 2-dimensional overlap. Returns
-   * false, if no door was created.
+   * Creates a 2-dim door with the other obstacle room if that is useful for the autoroute
+   * algorithm. It is assumed that this room and other have a 2-dimensional overlap. Returns
+   * false if no door was created.
    */
-  public boolean createOverlapDoor(ObstacleExpansionRoom pOther) {
-    if (this.doorExists(pOther)) {
+  public boolean createOverlapDoor(ObstacleExpansionRoom other) {
+    if (this.doorExists(other)) {
       return false;
     }
-    if (!(this.item.isRoutable() && pOther.item.isRoutable())) {
+    if (!(this.item.isRoutable() && other.item.isRoutable())) {
       return false;
     }
-    if (!this.item.sharesNet(pOther.item)) {
+    if (!this.item.sharesNet(other.item)) {
       return false;
     }
-    if (this.item == pOther.item) {
+    if (this.item == other.item) {
       if (!(this.item instanceof PolylineTrace)) {
         return false;
       }
       // create only doors between consecutive trace segments
-      if (this.indexInItem != pOther.indexInItem + 1
-          && this.indexInItem != pOther.indexInItem - 1) {
+      if (this.indexInItem != other.indexInItem + 1
+          && this.indexInItem != other.indexInItem - 1) {
         return false;
       }
     }
-    ExpansionDoor newDoor = new ExpansionDoor(this, pOther, 2);
+    ExpansionDoor newDoor = new ExpansionDoor(this, other, 2);
     this.addDoor(newDoor);
-    pOther.addDoor(newDoor);
+    other.addDoor(newDoor);
     return true;
   }
 
-  /** Returns the list of doors of this room to neighbour expansion rooms */
+  /** Returns the list of doors of this room to neighbour expansion rooms. */
   @Override
   public List<ExpansionDoor> getDoors() {
     return this.doors;
@@ -125,6 +126,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
     return new ArrayList<>();
   }
 
+  /** Returns the item associated with this obstacle room. */
   public Item getItem() {
     return this.item;
   }
@@ -135,25 +137,25 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
   }
 
   @Override
-  public boolean removeDoor(ExpandableObject pDoor) {
-    return this.doors.remove(pDoor);
+  public boolean removeDoor(ExpandableObject door) {
+    return this.doors.remove(door);
   }
 
-  /** Returns, if all doors to the neighbour rooms are calculated. */
+  /** Returns if all doors to the neighbour rooms are calculated. */
   boolean allDoorsCalculated() {
     return this.doorsCalculated;
   }
 
-  void setDoorsCalculated(boolean pValue) {
-    this.doorsCalculated = pValue;
+  void setDoorsCalculated(boolean value) {
+    this.doorsCalculated = value;
   }
 
   /** Draws the shape of this room. */
   @Override
-  public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext, double pIntensity) {
+  public void draw(Graphics graphics, GraphicsContext graphicsContext, double intensity) {
     Color drawColor = Color.WHITE;
-    double layerVisibility = pGraphicsContext.getLayerVisibility(this.getLayer());
-    pGraphicsContext.fillArea(this.getShape(), pGraphics, drawColor, pIntensity * layerVisibility);
-    pGraphicsContext.drawBoundary(this.getShape(), 0, drawColor, pGraphics, layerVisibility);
+    double layerVisibility = graphicsContext.getLayerVisibility(this.getLayer());
+    graphicsContext.fillArea(this.getShape(), graphics, drawColor, intensity * layerVisibility);
+    graphicsContext.drawBoundary(this.getShape(), 0, drawColor, graphics, layerVisibility);
   }
 }

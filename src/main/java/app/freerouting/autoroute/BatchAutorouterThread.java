@@ -52,6 +52,7 @@ public class BatchAutorouterThread extends StoppableThread {
   private int routedCount;
   private int failedCount;
 
+  /** Constructs a BatchAutorouterThread for running an autorouting pass. */
   public BatchAutorouterThread(
       RoutingBoard board,
       List<Item> autorouteItemList,
@@ -59,15 +60,15 @@ public class BatchAutorouterThread extends StoppableThread {
       RouterSettings routerSettings,
       int startRipupCosts,
       int tracePullTightAccuracy,
-      boolean pRemoveUnconnectedVias,
-      boolean pWithPreferredDirections) {
+      boolean removeUnconnectedVias,
+      boolean withPreferredDirections) {
     this.board = board;
     this.settings = routerSettings;
     this.autorouteItemList = autorouteItemList;
     this.passNo = passNo;
 
-    this.removeUnconnectedVias = pRemoveUnconnectedVias;
-    if (pWithPreferredDirections) {
+    this.removeUnconnectedVias = removeUnconnectedVias;
+    if (withPreferredDirections) {
       this.traceCostArr = this.settings.getTraceCostArr();
     } else {
       // remove preferred direction
@@ -85,28 +86,28 @@ public class BatchAutorouterThread extends StoppableThread {
 
   // Calculates the shortest distance between two sets of items, specifically
   // between Pin and Via items (pins and vias are connectable DrillItems)
-  private static FloatLine calcAirline(Collection<Item> pFromItems, Collection<Item> pToItems) {
+  private static FloatLine calcAirline(Collection<Item> fromItems, Collection<Item> toItems) {
     FloatPoint fromCorner = null;
     FloatPoint toCorner = null;
     double minDistance = Double.MAX_VALUE;
-    for (Item currFromItem : pFromItems) {
+    for (Item currFromItem : fromItems) {
       FloatPoint currFromCorner;
       if (currFromItem instanceof DrillItem item) {
         currFromCorner = item.getCenter().toFloat();
-      } else if (currFromItem instanceof PolylineTrace from_trace) {
+      } else if (currFromItem instanceof PolylineTrace fromTrace) {
         // Use trace endpoints as potential connection points
         continue; // We'll handle traces in the second loop for better efficiency
       } else {
         continue;
       }
 
-      for (Item currToItem : pToItems) {
+      for (Item currToItem : toItems) {
         FloatPoint currToCorner;
         if (currToItem instanceof DrillItem drillItem) {
           currToCorner = drillItem.getCenter().toFloat();
-        } else if (currToItem instanceof PolylineTrace to_trace) {
+        } else if (currToItem instanceof PolylineTrace toTrace) {
           // Find nearest point on trace to the from item point
-          currToCorner = nearestPointOnTrace(to_trace, currFromCorner);
+          currToCorner = nearestPointOnTrace(toTrace, currFromCorner);
         } else {
           continue;
         }
@@ -121,22 +122,22 @@ public class BatchAutorouterThread extends StoppableThread {
     }
 
     // Check trace-to-trace and trace-to-drill connections
-    for (Item curr_from_item : pFromItems) {
-      if (!(curr_from_item instanceof PolylineTrace from_trace)) {
+    for (Item currFromItem : fromItems) {
+      if (!(currFromItem instanceof PolylineTrace fromTrace)) {
         continue;
       }
 
-      for (Item curr_to_item : pToItems) {
+      for (Item currToItem : toItems) {
         FloatPoint currFromCorner;
         FloatPoint currToCorner;
 
-        if (curr_to_item instanceof DrillItem item) {
+        if (currToItem instanceof DrillItem item) {
           // Trace to drill item
           currToCorner = item.getCenter().toFloat();
-          currFromCorner = nearestPointOnTrace(from_trace, currToCorner);
-        } else if (curr_to_item instanceof PolylineTrace to_trace) {
+          currFromCorner = nearestPointOnTrace(fromTrace, currToCorner);
+        } else if (currToItem instanceof PolylineTrace toTrace) {
           // Trace to trace - find the closest points between the two traces
-          FloatPoint[] closestPoints = findClosestPointsBetweenTraces(from_trace, to_trace);
+          FloatPoint[] closestPoints = findClosestPointsBetweenTraces(fromTrace, toTrace);
           currFromCorner = closestPoints[0];
           currToCorner = closestPoints[1];
         } else {
@@ -597,14 +598,17 @@ public class BatchAutorouterThread extends StoppableThread {
     }
   }
 
+  /** Returns the routing board being processed by this thread. */
   public RoutingBoard getBoard() {
     return board;
   }
 
+  /** Returns the count of successfully routed items in this pass. */
   public int getRoutedCount() {
     return routedCount;
   }
 
+  /** Returns the count of items that failed to route in this pass. */
   public int getFailedCount() {
     return failedCount;
   }

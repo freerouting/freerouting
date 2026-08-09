@@ -35,39 +35,39 @@ public final class SortedRoomNeighbours {
   private final SortedSet<SortedRoomNeighbour> sortedNeighbours;
   private final Collection<ShapeTree.TreeEntry> ownNetObjects;
 
-  /** Creates a new instance of SortedRoomNeighbours */
-  private SortedRoomNeighbours(ExpansionRoom pFromRoom, CompleteExpansionRoom pCompletedRoom) {
-    fromRoom = pFromRoom;
-    completedRoom = pCompletedRoom;
-    roomShape = pCompletedRoom.getShape();
+  /** Creates a new instance of SortedRoomNeighbours. */
+  private SortedRoomNeighbours(ExpansionRoom fromRoom, CompleteExpansionRoom completedRoom) {
+    this.fromRoom = fromRoom;
+    this.completedRoom = completedRoom;
+    roomShape = completedRoom.getShape();
     sortedNeighbours = new TreeSet<>();
     ownNetObjects = new LinkedList<>();
   }
 
   /**
-   * To calculate the neighbour rooms of an expansion room. The neighbour rooms will be sorted in
-   * counterclock sense around the border of the shape of p_room. Overlapping neighbours containing
+   * Calculates the neighbour rooms of an expansion room. The neighbour rooms will be sorted in
+   * counterclock sense around the border of the shape of room. Overlapping neighbours containing
    * an item may be stored in an unordered list.
    */
   public static CompleteExpansionRoom calculate(
-      ExpansionRoom pRoom, AutorouteEngine pAutorouteEngine) {
-    int netNo = pAutorouteEngine.getNetNo();
+      ExpansionRoom room, AutorouteEngine autorouteEngine) {
+    int netNo = autorouteEngine.getNetNo();
 
     SortedRoomNeighbours roomNeighbours =
         calculateNeighbours(
-            pRoom,
+            room,
             netNo,
-            pAutorouteEngine.autorouteSearchTree,
-            pAutorouteEngine.generateRoomIdNo());
+            autorouteEngine.autorouteSearchTree,
+            autorouteEngine.generateRoomIdNo());
 
     // Check, that each side of the room shape has at least one touching neighbour.
     // Otherwise, improve the room shape by enlarging.
 
-    boolean edgeRemoved = roomNeighbours.tryRemoveEdge(netNo, pAutorouteEngine.autorouteSearchTree);
+    boolean edgeRemoved = roomNeighbours.tryRemoveEdge(netNo, autorouteEngine.autorouteSearchTree);
     CompleteExpansionRoom result = roomNeighbours.completedRoom;
     if (edgeRemoved) {
-      pAutorouteEngine.removeAllDoors(result);
-      return calculate(pRoom, pAutorouteEngine);
+      autorouteEngine.removeAllDoors(result);
+      return calculate(room, autorouteEngine);
     }
 
     // Now calculate the new incomplete rooms together with the doors
@@ -75,65 +75,66 @@ public final class SortedRoomNeighbours {
     if (roomNeighbours.sortedNeighbours.isEmpty()) {
       if (result instanceof ObstacleExpansionRoom) {
         calculateIncompleteRoomsWithEmptyNeighbours(
-            (ObstacleExpansionRoom) pRoom, pAutorouteEngine);
+            (ObstacleExpansionRoom) room, autorouteEngine);
       }
     } else {
-      roomNeighbours.calculateNewIncompleteRooms(pAutorouteEngine);
+      roomNeighbours.calculateNewIncompleteRooms(autorouteEngine);
       if (result.getShape().dimension() < 2) {
         FRLogger.trace(
-            "AutorouteEngine.calculate_new_incomplete_rooms_with_more_than_1_neighbour: unexpected dimension for smoothened_shape");
+            "AutorouteEngine.calculate_new_incomplete_rooms_with_more_than_1_neighbour: "
+                + "unexpected dimension for smoothened_shape");
       }
     }
 
-    if (result instanceof CompleteFreeSpaceExpansionRoom room) {
-      calculateTargetDoors(room, roomNeighbours.ownNetObjects, pAutorouteEngine);
+    if (result instanceof CompleteFreeSpaceExpansionRoom freeRoom) {
+      calculateTargetDoors(freeRoom, roomNeighbours.ownNetObjects, autorouteEngine);
     }
     return result;
   }
 
   private static void calculateIncompleteRoomsWithEmptyNeighbours(
-      ObstacleExpansionRoom pRoom, AutorouteEngine pAutorouteEngine) {
-    TileShape roomShape = pRoom.getShape();
+      ObstacleExpansionRoom room, AutorouteEngine autorouteEngine) {
+    TileShape roomShape = room.getShape();
     for (int i = 0; i < roomShape.borderLineCount(); i++) {
       Line currLine = roomShape.borderLine(i);
-      if (SortedRoomNeighbours.insertDoorOk(pRoom, currLine)) {
+      if (SortedRoomNeighbours.insertDoorOk(room, currLine)) {
         Line[] shapeLine = new Line[1];
         shapeLine[0] = currLine.opposite();
         TileShape newRoomShape = new Simplex(shapeLine);
         TileShape newContainedShape = roomShape.intersection(newRoomShape);
         FreeSpaceExpansionRoom newRoom =
-            pAutorouteEngine.addIncompleteExpansionRoom(
-                newRoomShape, pRoom.getLayer(), newContainedShape);
-        ExpansionDoor newDoor = new ExpansionDoor(pRoom, newRoom, 1);
-        pRoom.addDoor(newDoor);
+            autorouteEngine.addIncompleteExpansionRoom(
+                newRoomShape, room.getLayer(), newContainedShape);
+        ExpansionDoor newDoor = new ExpansionDoor(room, newRoom, 1);
+        room.addDoor(newDoor);
         newRoom.addDoor(newDoor);
       }
     }
   }
 
   private static void calculateTargetDoors(
-      CompleteFreeSpaceExpansionRoom pRoom,
-      Collection<ShapeTree.TreeEntry> pOwnNetObjects,
-      AutorouteEngine pAutorouteEngine) {
-    if (!pOwnNetObjects.isEmpty()) {
-      pRoom.setNetDependent();
+      CompleteFreeSpaceExpansionRoom room,
+      Collection<ShapeTree.TreeEntry> ownNetObjects,
+      AutorouteEngine autorouteEngine) {
+    if (!ownNetObjects.isEmpty()) {
+      room.setNetDependent();
     }
-    for (ShapeTree.TreeEntry currentEntry : pOwnNetObjects) {
+    for (ShapeTree.TreeEntry currentEntry : ownNetObjects) {
       if (currentEntry.object instanceof Connectable currentObject) {
-        if (currentObject.containsNet(pAutorouteEngine.getNetNo())) {
+        if (currentObject.containsNet(autorouteEngine.getNetNo())) {
           TileShape currentConnectionShape =
               currentObject.getTraceConnectionShape(
-                  pAutorouteEngine.autorouteSearchTree, currentEntry.shapeIndexInObject);
+                  autorouteEngine.autorouteSearchTree, currentEntry.shapeIndexInObject);
           if (currentConnectionShape != null
-              && pRoom.getShape().intersects(currentConnectionShape)) {
+              && room.getShape().intersects(currentConnectionShape)) {
             Item currentItem = (Item) currentObject;
             TargetItemExpansionDoor newTargetDoor =
                 new TargetItemExpansionDoor(
                     currentItem,
                     currentEntry.shapeIndexInObject,
-                    pRoom,
-                    pAutorouteEngine.autorouteSearchTree);
-            pRoom.addTargetDoor(newTargetDoor);
+                    room,
+                    autorouteEngine.autorouteSearchTree);
+            room.addTargetDoor(newTargetDoor);
           }
         }
       }
@@ -141,20 +142,20 @@ public final class SortedRoomNeighbours {
   }
 
   private static SortedRoomNeighbours calculateNeighbours(
-      ExpansionRoom pRoom, int pNetNo, ShapeSearchTree pAutorouteSearchTree, int pRoomIdNo) {
-    TileShape roomShape = pRoom.getShape();
+      ExpansionRoom room, int netNo, ShapeSearchTree autorouteSearchTree, int roomIdNo) {
+    TileShape roomShape = room.getShape();
     CompleteExpansionRoom completedRoom;
-    if (pRoom instanceof IncompleteFreeSpaceExpansionRoom) {
-      completedRoom = new CompleteFreeSpaceExpansionRoom(roomShape, pRoom.getLayer(), pRoomIdNo);
-    } else if (pRoom instanceof ObstacleExpansionRoom room) {
-      completedRoom = room;
+    if (room instanceof IncompleteFreeSpaceExpansionRoom) {
+      completedRoom = new CompleteFreeSpaceExpansionRoom(roomShape, room.getLayer(), roomIdNo);
+    } else if (room instanceof ObstacleExpansionRoom obstacleRoom) {
+      completedRoom = obstacleRoom;
     } else {
       FRLogger.warn("SortedRoomNeighbours.calculate: unexpected expansion room type");
       return null;
     }
-    SortedRoomNeighbours result = new SortedRoomNeighbours(pRoom, completedRoom);
+    SortedRoomNeighbours result = new SortedRoomNeighbours(room, completedRoom);
     Collection<ShapeTree.TreeEntry> overlappingObjects = new LinkedList<>();
-    pAutorouteSearchTree.overlappingTreeEntries(roomShape, pRoom.getLayer(), overlappingObjects);
+    autorouteSearchTree.overlappingTreeEntries(roomShape, room.getLayer(), overlappingObjects);
 
     // Sort the overlapping objects deterministically to ensure parity with v1.9.
     ((LinkedList<ShapeTree.TreeEntry>) overlappingObjects)
@@ -173,32 +174,33 @@ public final class SortedRoomNeighbours {
     // around the border of the room shape.
     for (ShapeTree.TreeEntry currentEntry : overlappingObjects) {
       SearchTreeObject currentObject = (SearchTreeObject) currentEntry.object;
-      if (currentObject == pRoom) {
+      if (currentObject == room) {
         continue;
       }
-      if ((pRoom instanceof IncompleteFreeSpaceExpansionRoom)
-          && !currentObject.isTraceObstacle(pNetNo)) {
+      if ((room instanceof IncompleteFreeSpaceExpansionRoom)
+          && !currentObject.isTraceObstacle(netNo)) {
         // delay processing the target doors until the room shape will not change anymore
         result.ownNetObjects.add(currentEntry);
         continue;
       }
       TileShape currentShape =
-          currentObject.getTreeShape(pAutorouteSearchTree, currentEntry.shapeIndexInObject);
+          currentObject.getTreeShape(autorouteSearchTree, currentEntry.shapeIndexInObject);
       TileShape intersection = roomShape.intersection(currentShape);
       int dimension = intersection.dimension();
       if (dimension > 1) {
-        if (completedRoom instanceof ObstacleExpansionRoom room
+        if (completedRoom instanceof ObstacleExpansionRoom obstacleRoom
             && currentObject instanceof Item currentItem) {
           // only Obstacle expansion room may have a 2-dim overlap
           if (currentItem.isRoutable()) {
             ItemAutorouteInfo itemInfo = currentItem.getAutorouteInfo();
             ObstacleExpansionRoom currentOverlapRoom =
-                itemInfo.getExpansionRoom(currentEntry.shapeIndexInObject, pAutorouteSearchTree);
-            room.createOverlapDoor(currentOverlapRoom);
+                itemInfo.getExpansionRoom(currentEntry.shapeIndexInObject, autorouteSearchTree);
+            obstacleRoom.createOverlapDoor(currentOverlapRoom);
           }
         } else {
           FRLogger.trace(
-              "SortedRoomNeighbours.calculate: unexpected area overlap of free space expansion room");
+              "SortedRoomNeighbours.calculate: "
+                  + "unexpected area overlap of free space expansion room");
         }
         continue;
       }
@@ -222,14 +224,14 @@ public final class SortedRoomNeighbours {
             false);
         // make  sure, that there is a door to the neighbour room.
         ExpansionRoom neighbourRoom = null;
-        if (currentObject instanceof ExpansionRoom room) {
-          neighbourRoom = room;
+        if (currentObject instanceof ExpansionRoom targetExpansionRoom) {
+          neighbourRoom = targetExpansionRoom;
         } else if (currentObject instanceof Item currentItem) {
           if (currentItem.isRoutable()) {
             // expand the item for ripup and pushing purposes
             ItemAutorouteInfo itemInfo = currentItem.getAutorouteInfo();
             neighbourRoom =
-                itemInfo.getExpansionRoom(currentEntry.shapeIndexInObject, pAutorouteSearchTree);
+                itemInfo.getExpansionRoom(currentEntry.shapeIndexInObject, autorouteSearchTree);
           }
         }
         if (neighbourRoom != null) {
@@ -239,8 +241,8 @@ public final class SortedRoomNeighbours {
             completedRoom.addDoor(newDoor);
           }
         }
-      } else // dimension = 0
-      {
+      } else {
+        // dimension = 0
         Point touchingPoint = intersection.corner(0);
         int roomCornerNo = roomShape.equalsCorner(touchingPoint);
         boolean roomTouchIsCorner;
@@ -268,7 +270,7 @@ public final class SortedRoomNeighbours {
           touchingSideNoOfNeighbourRoom = currentShape.containsOnBorderLineNo(touchingPoint);
           if (touchingSideNoOfNeighbourRoom < 0) {
             FRLogger.debug(
-                "AutorouteEngine.SortedRoomNeighbours.calculate: touchingSideNoOfNeighbourRoom >= 0 expected");
+                "SortedRoomNeighbours.calculate: touchingSideNoOfNeighbourRoom >= 0 expected");
           }
         }
         result.addSortedNeighbour(
@@ -284,41 +286,41 @@ public final class SortedRoomNeighbours {
     return result;
   }
 
-  /** p_door_shape is expected to have dimension 1. */
-  static boolean insertDoorOk(ExpansionRoom pRoom1, ExpansionRoom pRoom2, TileShape pDoorShape) {
-    if (pRoom1.doorExists(pRoom2)) {
+  /** Door shape is expected to have dimension 1. */
+  static boolean insertDoorOk(ExpansionRoom room1, ExpansionRoom room2, TileShape doorShape) {
+    if (room1.doorExists(room2)) {
       return false;
     }
-    if (pRoom1 instanceof ObstacleExpansionRoom room
-        && pRoom2 instanceof ObstacleExpansionRoom room1) {
-      Item firstItem = room.getItem();
-      Item secondItem = room1.getItem();
+    if (room1 instanceof ObstacleExpansionRoom obsRoom1
+        && room2 instanceof ObstacleExpansionRoom obsRoom2) {
+      Item firstItem = obsRoom1.getItem();
+      Item secondItem = obsRoom2.getItem();
       // insert only overlap_doors between items of the same net for performance reasons.
       return firstItem.sharesNet(secondItem);
     }
-    if (!(pRoom1 instanceof ObstacleExpansionRoom) && !(pRoom2 instanceof ObstacleExpansionRoom)) {
+    if (!(room1 instanceof ObstacleExpansionRoom) && !(room2 instanceof ObstacleExpansionRoom)) {
       return true;
     }
     // Insert 1 dimensional doors of trace rooms only, if they are parallel to the trace line.
     // Otherwise, there may be check ripup problems with entering at the wrong side at a fork.
     Line doorLine = null;
-    Point prevCorner = pDoorShape.corner(0);
-    int cornerCount = pDoorShape.borderLineCount();
+    Point prevCorner = doorShape.corner(0);
+    int cornerCount = doorShape.borderLineCount();
     for (int i = 1; i < cornerCount; i++) {
-      Point currCorner = pDoorShape.corner(i);
+      Point currCorner = doorShape.corner(i);
       if (!currCorner.equals(prevCorner)) {
-        doorLine = pDoorShape.borderLine(i - 1);
+        doorLine = doorShape.borderLine(i - 1);
         break;
       }
       prevCorner = currCorner;
     }
-    if (pRoom1 instanceof ObstacleExpansionRoom room) {
-      if (!insertDoorOk(room, doorLine)) {
+    if (room1 instanceof ObstacleExpansionRoom obsRoom) {
+      if (!insertDoorOk(obsRoom, doorLine)) {
         return false;
       }
     }
-    if (pRoom2 instanceof ObstacleExpansionRoom room) {
-      return insertDoorOk(room, doorLine);
+    if (room2 instanceof ObstacleExpansionRoom obsRoom) {
+      return insertDoorOk(obsRoom, doorLine);
     }
     return true;
   }
@@ -328,52 +330,52 @@ public final class SortedRoomNeighbours {
    * parallel to the trace line. Otherwise, there may be check ripup problems with entering at the
    * wrong side at a fork.
    */
-  private static boolean insertDoorOk(ObstacleExpansionRoom pRoom, Line pDoorLine) {
-    if (pDoorLine == null) {
-      FRLogger.warn("SortedRoomNeighbours.insert_door_ok: p_door_line is null");
+  private static boolean insertDoorOk(ObstacleExpansionRoom room, Line doorLine) {
+    if (doorLine == null) {
+      FRLogger.warn("SortedRoomNeighbours.insert_door_ok: doorLine is null");
       return false;
     }
-    Item currItem = pRoom.getItem();
+    Item currItem = room.getItem();
     if (currItem instanceof PolylineTrace currTrace) {
-      int roomIndex = pRoom.getIndexInItem();
+      int roomIndex = room.getIndexInItem();
       if (roomIndex == 0 || roomIndex == currTrace.tileShapeCount() - 1) {
         Line currTraceLine = currTrace.polyline().arr[roomIndex + 1];
-        return currTraceLine.isParallel(pDoorLine);
+        return currTraceLine.isParallel(doorLine);
       }
     }
     return true;
   }
 
   private void addSortedNeighbour(
-      SearchTreeObject pSearchTreeObject,
-      TileShape pNeighbourShape,
-      TileShape pIntersection,
-      int pTouchingSideNoOfRoom,
-      int pTouchingSideNoOfNeighbourRoom,
-      boolean pRoomTouchIsCorner,
-      boolean pNeighbourRoomTouchIsCorner) {
+      SearchTreeObject searchTreeObject,
+      TileShape neighbourShape,
+      TileShape intersection,
+      int touchingSideNoOfRoom,
+      int touchingSideNoOfNeighbourRoom,
+      boolean roomTouchIsCorner,
+      boolean neighbourRoomTouchIsCorner) {
     SortedRoomNeighbour newNeighbour =
         new SortedRoomNeighbour(
-            pSearchTreeObject,
-            pNeighbourShape,
-            pIntersection,
-            pTouchingSideNoOfRoom,
-            pTouchingSideNoOfNeighbourRoom,
-            pRoomTouchIsCorner,
-            pNeighbourRoomTouchIsCorner);
+            searchTreeObject,
+            neighbourShape,
+            intersection,
+            touchingSideNoOfRoom,
+            touchingSideNoOfNeighbourRoom,
+            roomTouchIsCorner,
+            neighbourRoomTouchIsCorner);
     sortedNeighbours.add(newNeighbour);
   }
 
   /**
-   * Check, that each side of the room shape has at least one touching neighbour. Otherwise, the
-   * room shape will be improved the by enlarging. Returns true, if the room shape was changed.
+   * Checks that each side of the room shape has at least one touching neighbour. Otherwise, the
+   * room shape will be improved by enlarging. Returns true if the room shape was changed.
    */
-  private boolean tryRemoveEdge(int pNetNo, ShapeSearchTree pAutorouteSearchTree) {
-    if (!(this.fromRoom instanceof IncompleteFreeSpaceExpansionRoom curr_incomplete_room)) {
+  private boolean tryRemoveEdge(int netNo, ShapeSearchTree autorouteSearchTree) {
+    if (!(this.fromRoom instanceof IncompleteFreeSpaceExpansionRoom currIncompleteRoom)) {
       return false;
     }
     int removeEdgeNo = -1;
-    Simplex roomSimplex = curr_incomplete_room.getShape().toSimplex();
+    Simplex roomSimplex = currIncompleteRoom.getShape().toSimplex();
     double roomShapeArea = roomSimplex.area();
 
     int prevEdgeNo = -1;
@@ -404,27 +406,27 @@ public final class SortedRoomNeighbours {
       FRLogger.trace(
           "ROOM_EDGE_REMOVE start"
               + ", net="
-              + pNetNo
+              + netNo
               + ", layer="
-              + curr_incomplete_room.getLayer()
+              + currIncompleteRoom.getLayer()
               + ", removeEdge="
               + removeEdgeNo
               + ", room_bounds="
-              + curr_incomplete_room.getShape().boundingBox());
+              + currIncompleteRoom.getShape().boundingBox());
       Simplex enlargedShape = roomSimplex.removeBorderLine(removeEdgeNo);
       IncompleteFreeSpaceExpansionRoom enlargedRoom =
           new IncompleteFreeSpaceExpansionRoom(
               enlargedShape,
-              curr_incomplete_room.getLayer(),
-              curr_incomplete_room.getContainedShape());
+              currIncompleteRoom.getLayer(),
+              currIncompleteRoom.getContainedShape());
       Collection<IncompleteFreeSpaceExpansionRoom> newRooms =
-          pAutorouteSearchTree.completeShape(enlargedRoom, pNetNo, null, null);
+          autorouteSearchTree.completeShape(enlargedRoom, netNo, null, null);
       FRLogger.trace(
           "ROOM_EDGE_REMOVE complete_shape"
               + ", net="
-              + pNetNo
+              + netNo
               + ", layer="
-              + curr_incomplete_room.getLayer()
+              + currIncompleteRoom.getLayer()
               + ", removeEdge="
               + removeEdgeNo
               + ", candidate_count="
@@ -445,17 +447,17 @@ public final class SortedRoomNeighbours {
         FRLogger.trace(
             "ROOM_EDGE_REMOVE applied"
                 + ", net="
-                + pNetNo
+                + netNo
                 + ", layer="
-                + curr_incomplete_room.getLayer()
+                + currIncompleteRoom.getLayer()
                 + ", removeEdge="
                 + removeEdgeNo
                 + ", old_bounds="
-                + curr_incomplete_room.getShape().boundingBox()
+                + currIncompleteRoom.getShape().boundingBox()
                 + ", newBounds="
                 + newRoom.getShape().boundingBox());
-        curr_incomplete_room.setShape(newRoom.getShape());
-        curr_incomplete_room.setContainedShape(newRoom.getContainedShape());
+        currIncompleteRoom.setShape(newRoom.getShape());
+        currIncompleteRoom.setContainedShape(newRoom.getContainedShape());
         return true;
       }
     }
@@ -463,9 +465,9 @@ public final class SortedRoomNeighbours {
   }
 
   /**
-   * Called from calculate_doors(). The shape of the room p_result may change inside this function.
+   * Called from calculate_doors(). The shape of the room result may change inside this function.
    */
-  public void calculateNewIncompleteRooms(AutorouteEngine pAutorouteEngine) {
+  public void calculateNewIncompleteRooms(AutorouteEngine autorouteEngine) {
     SortedRoomNeighbour prevNeighbour = this.sortedNeighbours.getLast();
     Simplex roomSimplex = this.fromRoom.getShape().toSimplex();
     for (SortedRoomNeighbour nextNeighbour : this.sortedNeighbours) {
@@ -519,7 +521,7 @@ public final class SortedRoomNeighbours {
         // prevNeighbour.
         for (; ; ) {
           boolean cornerCutOff = false;
-          if (this.fromRoom instanceof IncompleteFreeSpaceExpansionRoom incomplete_room) {
+          if (this.fromRoom instanceof IncompleteFreeSpaceExpansionRoom incompleteRoom) {
             if (currTouchingSideNo == lastTouchingSideNo
                 && firstTouchingSideNo != lastTouchingSideNo) {
               // Create a new line approximately from the last corner of the previous
@@ -535,13 +537,13 @@ public final class SortedRoomNeighbours {
               // Otherwise p_room.containedShape would no longer be contained
               // in the shape after cutting of the corner.
               cornerCutOff =
-                  incomplete_room.getContainedShape().sideOf(cutLine) == Side.ON_THE_LEFT;
+                  incompleteRoom.getContainedShape().sideOf(cutLine) == Side.ON_THE_LEFT;
               if (cornerCutOff) {
                 middleEdgeLine = cutLine.opposite();
               }
             }
           }
-          int nextTouchingSideNo = roomSimplex.prevNo(currTouchingSideNo);
+          final int nextTouchingSideNo = roomSimplex.prevNo(currTouchingSideNo);
 
           if (!cornerCutOff) {
             middleEdgeLine = roomSimplex.borderLine(currTouchingSideNo).opposite();
@@ -598,7 +600,7 @@ public final class SortedRoomNeighbours {
             TileShape newContainedShape = this.completedRoom.getShape().intersection(newRoomShape);
             if (!newContainedShape.isEmpty()) {
               FreeSpaceExpansionRoom newRoom =
-                  pAutorouteEngine.addIncompleteExpansionRoom(
+                  autorouteEngine.addIncompleteExpansionRoom(
                       newRoomShape, this.fromRoom.getLayer(), newContainedShape);
               ExpansionDoor newDoor = new ExpansionDoor(this.completedRoom, newRoom, 1);
               this.completedRoom.addDoor(newDoor);
@@ -625,29 +627,29 @@ public final class SortedRoomNeighbours {
 
     private static final double c_dist_tolerance = 1;
 
-    /** The search tree object of the neighbour room */
+    /** The search tree object of the neighbour room. */
     public final SearchTreeObject searchTreeObject;
 
-    /** The shape of the neighbour room */
+    /** The shape of the neighbour room. */
     public final TileShape neighbourShape;
 
-    /** The intersection of this ExpansionRoom shape with the neighbourShape */
+    /** The intersection of this ExpansionRoom shape with the neighbourShape. */
     public final TileShape intersection;
 
-    /** The side number of this room, where it touches the neighbour */
+    /** The side number of this room, where it touches the neighbour. */
     public final int touchingSideNoOfRoom;
 
-    /** The side number of the neighbour room, where it touches this room */
+    /** The side number of the neighbour room, where it touches this room. */
     public final int touchingSideNoOfNeighbourRoom;
 
     /**
-     * True, if the intersection of this room and the neighbour is equal to a corner of this room
+     * True, if the intersection of this room and the neighbour is equal to a corner of this room.
      */
     public final boolean roomTouchIsCorner;
 
     /**
      * True, if the intersection of this room and the neighbour is equal to a corner of the
-     * neighbour room
+     * neighbour room.
      */
     public final boolean neighbourRoomTouchIsCorner;
 
@@ -655,49 +657,48 @@ public final class SortedRoomNeighbours {
     private Point precalculatedLastCorner;
 
     public SortedRoomNeighbour(
-        SearchTreeObject pSearchTreeObject,
-        TileShape pNeighbourShape,
-        TileShape pIntersection,
-        int pTouchingSideNoOfRoom,
-        int pTouchingSideNoOfNeighbourRoom,
-        boolean pRoomTouchIsCorner,
-        boolean pNeighbourRoomTouchIsCorner) {
-      searchTreeObject = pSearchTreeObject;
-      neighbourShape = pNeighbourShape;
-      intersection = pIntersection;
-      touchingSideNoOfRoom = pTouchingSideNoOfRoom;
-      touchingSideNoOfNeighbourRoom = pTouchingSideNoOfNeighbourRoom;
-      roomTouchIsCorner = pRoomTouchIsCorner;
-      neighbourRoomTouchIsCorner = pNeighbourRoomTouchIsCorner;
+        SearchTreeObject searchTreeObject,
+        TileShape neighbourShape,
+        TileShape intersection,
+        int touchingSideNoOfRoom,
+        int touchingSideNoOfNeighbourRoom,
+        boolean roomTouchIsCorner,
+        boolean neighbourRoomTouchIsCorner) {
+      this.searchTreeObject = searchTreeObject;
+      this.neighbourShape = neighbourShape;
+      this.intersection = intersection;
+      this.touchingSideNoOfRoom = touchingSideNoOfRoom;
+      this.touchingSideNoOfNeighbourRoom = touchingSideNoOfNeighbourRoom;
+      this.roomTouchIsCorner = roomTouchIsCorner;
+      this.neighbourRoomTouchIsCorner = neighbourRoomTouchIsCorner;
     }
 
     /**
-     * Compare function for or sorting the neighbours in counterclock sense around the border of the
+     * Compare function for sorting the neighbours in counterclock sense around the border of the
      * room shape in ascending order.
      */
     @Override
-    public int compareTo(SortedRoomNeighbour pOther) {
-      int compareValue = this.touchingSideNoOfRoom - pOther.touchingSideNoOfRoom;
+    public int compareTo(SortedRoomNeighbour other) {
+      int compareValue = this.touchingSideNoOfRoom - other.touchingSideNoOfRoom;
       if (compareValue != 0) {
         return compareValue;
       }
       FloatPoint compareCorner = roomShape.cornerApprox(touchingSideNoOfRoom);
       double thisDistance = this.firstCorner().toFloat().distance(compareCorner);
-      double otherDistance = pOther.firstCorner().toFloat().distance(compareCorner);
+      double otherDistance = other.firstCorner().toFloat().distance(compareCorner);
       double deltaDistance = thisDistance - otherDistance;
       if (Math.abs(deltaDistance) <= c_dist_tolerance) {
         // check corners for equality
-        if (this.firstCorner().equals(pOther.firstCorner())) {
+        if (this.firstCorner().equals(other.firstCorner())) {
           // in this case compare the last corners
           double thisDistance2 = this.lastCorner().toFloat().distance(compareCorner);
-          double otherDistance2 = pOther.lastCorner().toFloat().distance(compareCorner);
+          double otherDistance2 = other.lastCorner().toFloat().distance(compareCorner);
           deltaDistance = thisDistance2 - otherDistance2;
           if (Math.abs(deltaDistance) <= c_dist_tolerance) {
-            if (this.neighbourRoomTouchIsCorner && pOther.neighbourRoomTouchIsCorner)
-            // Otherwise there may be a short 1 dim. touch at a link between 2 trace lines.
-            // In this case equality is ok, because the 2 intersection pieces with
-            // the expansion room are identical, so that only 1 obstacle is needed.
-            {
+            if (this.neighbourRoomTouchIsCorner && other.neighbourRoomTouchIsCorner) {
+              // Otherwise there may be a short 1 dim. touch at a link between 2 trace lines.
+              // In this case equality is ok, because the 2 intersection pieces with
+              // the expansion room are identical, so that only 1 obstacle is needed.
               int compareLineNo = touchingSideNoOfRoom;
               if (roomTouchIsCorner) {
                 compareLineNo = roomShape.prevNo(compareLineNo);
@@ -706,7 +707,7 @@ public final class SortedRoomNeighbours {
               Line thisCompareLine =
                   this.neighbourShape.borderLine(this.touchingSideNoOfNeighbourRoom);
               Line otherCompareLine =
-                  pOther.neighbourShape.borderLine(pOther.touchingSideNoOfNeighbourRoom);
+                  other.neighbourShape.borderLine(other.touchingSideNoOfNeighbourRoom);
               deltaDistance =
                   compareDir.compareFrom(thisCompareLine.direction(), otherCompareLine.direction());
             }
@@ -716,7 +717,7 @@ public final class SortedRoomNeighbours {
       int res = Signum.asInt(deltaDistance);
       if (res == 0) {
         // Deterministic tie-breaker for identical geometry
-        res = this.searchTreeObject.getIdNo() - pOther.searchTreeObject.getIdNo();
+        res = this.searchTreeObject.getIdNo() - other.searchTreeObject.getIdNo();
       }
       return res;
     }
@@ -734,8 +735,8 @@ public final class SortedRoomNeighbours {
           Line prevLine = roomShape.borderLine(roomShape.prevNo(touchingSideNoOfRoom));
           if (prevLine.sideOf(currFirstCorner) == Side.ON_THE_RIGHT) {
             precalculatedFirstCorner = currFirstCorner;
-          } else // currFirstCorner is outside the door shape
-          {
+          } else {
+            // currFirstCorner is outside the door shape
             precalculatedFirstCorner = roomShape.corner(touchingSideNoOfRoom);
           }
         }
@@ -755,8 +756,8 @@ public final class SortedRoomNeighbours {
           Line nextLine = roomShape.borderLine(roomShape.nextNo(touchingSideNoOfRoom));
           if (nextLine.sideOf(currLastCorner) == Side.ON_THE_RIGHT) {
             precalculatedLastCorner = currLastCorner;
-          } else // currLastCorner is outside the door shape
-          {
+          } else {
+            // currLastCorner is outside the door shape
             precalculatedLastCorner = roomShape.corner(roomShape.nextNo(touchingSideNoOfRoom));
           }
         }
