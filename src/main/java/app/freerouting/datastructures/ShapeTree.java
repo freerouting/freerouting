@@ -13,40 +13,39 @@ import app.freerouting.logger.FRLogger;
 public abstract class ShapeTree {
 
   /**
-   * the fixed directions for calculating bounding RegularTileShapes of shapes to store in this
-   * tree.
+   * Fixed directions for calculating bounding regular tile shapes stored in this tree.
    */
   protected final ShapeBoundingDirections boundingDirections;
 
-  /** Root node - initially null */
+  /** Root node - initially null. */
   protected TreeNode root;
 
-  /** The number of entries stored in the tree */
+  /** The number of entries stored in the tree. */
   protected int leafCount;
 
-  /** Creates a new instance of ShapeTree */
-  protected ShapeTree(ShapeBoundingDirections pDirections) {
-    boundingDirections = pDirections;
+  /** Creates a new instance of ShapeTree. */
+  protected ShapeTree(ShapeBoundingDirections directions) {
+    boundingDirections = directions;
     root = null;
     leafCount = 0;
   }
 
-  /** Inserts all shapes of p_obj into the tree */
-  public void insert(ShapeTree.Storable pObj) {
-    int shapeCount = pObj.treeShapeCount(this);
+  /** Inserts all shapes of obj into the tree. */
+  public void insert(ShapeTree.Storable obj) {
+    int shapeCount = obj.treeShapeCount(this);
     if (shapeCount <= 0) {
       return;
     }
     Leaf[] leafArr = new Leaf[shapeCount];
     for (int i = 0; i < shapeCount; i++) {
-      leafArr[i] = insert(pObj, i);
+      leafArr[i] = insert(obj, i);
     }
-    pObj.setSearchTreeEntries(leafArr, this);
+    obj.setSearchTreeEntries(leafArr, this);
   }
 
-  /** Insert a shape - creates a new node with a bounding shape */
-  protected Leaf insert(ShapeTree.Storable pObject, int pIndex) {
-    Shape objectShape = pObject.getTreeShape(this, pIndex);
+  /** Insert a shape - creates a new node with a bounding shape. */
+  protected Leaf insert(ShapeTree.Storable object, int index) {
+    Shape objectShape = object.getTreeShape(this, index);
     if (objectShape == null) {
       return null;
     }
@@ -57,10 +56,14 @@ public abstract class ShapeTree {
       return null;
     }
     // Construct a new KdLeaf and set it up
-    Leaf newLeaf = new Leaf(pObject, pIndex, null, boundingShape);
+    Leaf newLeaf = new Leaf(object, index, null, boundingShape);
     this.insert(newLeaf);
     return newLeaf;
   }
+
+  abstract void insert(Leaf leaf);
+
+  abstract void removeLeaf(Leaf leaf);
 
   /** Inserts the leaves of this tree into an array. */
   public Leaf[] toArray() {
@@ -92,17 +95,13 @@ public abstract class ShapeTree {
     return result;
   }
 
-  abstract void insert(Leaf pLeaf);
-
-  abstract void removeLeaf(Leaf pLeaf);
-
-  /** removes all entries of p_obj in the tree. */
-  public void remove(Leaf[] pEntries) {
-    if (pEntries == null) {
+  /** Removes all entries of obj in the tree. */
+  public void remove(Leaf[] entries) {
+    if (entries == null) {
       return;
     }
-    for (int i = 0; i < pEntries.length; i++) {
-      removeLeaf(pEntries[i]);
+    for (int i = 0; i < entries.length; i++) {
+      removeLeaf(entries[i]);
     }
   }
 
@@ -112,7 +111,7 @@ public abstract class ShapeTree {
   }
 
   /** Outputs some statistic information about the tree. */
-  public void statistics(String pMessage) {
+  public void statistics(String message) {
     Leaf[] leafArr = this.toArray();
     double cumulativeDepth = 0;
     int maximumDepth = 0;
@@ -135,37 +134,38 @@ public abstract class ShapeTree {
             + " Maximum depth: "
             + maximumDepth
             + " "
-            + pMessage);
+            + message);
   }
 
   /** Interface, which must be implemented by objects to be stored in a ShapeTree. */
   public interface Storable extends Comparable<Object> {
 
-    /** Number of shapes of an object to store in p_shape_tree */
-    int treeShapeCount(ShapeTree pShapeTree);
+    /** Number of shapes of an object to store in shapeTree. */
+    int treeShapeCount(ShapeTree shapeTree);
 
     /**
-     * Get the Shape of this object with index p_index stored in the ShapeTree with index
-     * identification number p_tree_id_no
+     * Get the Shape of this object with index stored in the ShapeTree with index identification
+     * number treeIdNo.
      */
-    TileShape getTreeShape(ShapeTree pTree, int pIndex);
+    TileShape getTreeShape(ShapeTree tree, int index);
 
     /**
      * Stores the entries in the ShapeTrees of this object for better performance while for example
      * deleting tree entries. Called only by insert methods of class ShapeTree.
      */
-    void setSearchTreeEntries(Leaf[] pEntries, ShapeTree pTree);
+    void setSearchTreeEntries(Leaf[] entries, ShapeTree tree);
   }
 
-  /** Information of a single object stored in a tree */
+  /** Information of a single object stored in a tree. */
   public static class TreeEntry {
 
     public final ShapeTree.Storable object;
     public final int shapeIndexInObject;
 
-    public TreeEntry(ShapeTree.Storable pObject, int pShapeIndexInObject) {
-      object = pObject;
-      shapeIndexInObject = pShapeIndexInObject;
+    /** Creates a tree entry for object and shapeIndexInObject. */
+    public TreeEntry(ShapeTree.Storable object, int shapeIndexInObject) {
+      this.object = object;
+      this.shapeIndexInObject = shapeIndexInObject;
     }
   }
 
@@ -186,9 +186,10 @@ public abstract class ShapeTree {
     public TreeNode firstChild;
     public TreeNode secondChild;
 
-    public InnerNode(RegularTileShape pBoundingShape, InnerNode pParent) {
-      boundingShape = pBoundingShape;
-      parent = pParent;
+    /** Creates an inner node with boundingShape and parent. */
+    public InnerNode(RegularTileShape boundingShape, InnerNode parent) {
+      this.boundingShape = boundingShape;
+      this.parent = parent;
       firstChild = null;
       secondChild = null;
     }
@@ -199,28 +200,29 @@ public abstract class ShapeTree {
   /** Description of a leaf of the Tree, where the geometric information is stored. */
   public static class Leaf extends TreeNode implements Comparable<Leaf> {
 
-    /** Actual object stored */
+    /** Actual object stored. */
     public ShapeTree.Storable object;
 
-    /** index of the shape in the object */
+    /** Index of the shape in the object. */
     public int shapeIndexInObject;
 
+    /** Creates a leaf node for object at index with parent and boundingShape. */
     public Leaf(
-        ShapeTree.Storable pObject,
-        int pIndex,
-        InnerNode pParent,
-        RegularTileShape pBoundingShape) {
-      boundingShape = pBoundingShape;
-      parent = pParent;
-      object = pObject;
-      shapeIndexInObject = pIndex;
+        ShapeTree.Storable object,
+        int index,
+        InnerNode parent,
+        RegularTileShape boundingShape) {
+      this.boundingShape = boundingShape;
+      this.parent = parent;
+      this.object = object;
+      this.shapeIndexInObject = index;
     }
 
     @Override
-    public int compareTo(Leaf pOther) {
-      int result = this.object.compareTo(pOther.object);
+    public int compareTo(Leaf other) {
+      int result = this.object.compareTo(other.object);
       if (result == 0) {
-        result = shapeIndexInObject - pOther.shapeIndexInObject;
+        result = shapeIndexInObject - other.shapeIndexInObject;
       }
       return result;
     }

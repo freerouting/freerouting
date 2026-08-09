@@ -14,9 +14,9 @@ public class IndentFileWriter extends OutputStreamWriter {
   private static final String END_SCOPE = ")";
   private int currentIndentLevel;
 
-  /** Creates a new instance of IndentFileWriter */
-  public IndentFileWriter(OutputStream pStream) {
-    super(pStream, StandardCharsets.UTF_8);
+  /** Creates a new instance of IndentFileWriter. */
+  public IndentFileWriter(OutputStream stream) {
+    super(stream, StandardCharsets.UTF_8);
   }
 
   /** Begins a new scope. */
@@ -33,6 +33,7 @@ public class IndentFileWriter extends OutputStreamWriter {
     ++currentIndentLevel;
   }
 
+  /** Begins a new scope on a new line. */
   public void startScope() {
     startScope(true);
   }
