@@ -11,18 +11,26 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+/** Mock system controller for testing and development. */
 @Path("/dev/system")
 @Tag(
     name = "Dev - System",
     description = "Mock system endpoints for testing and development. Returns static test data.")
 public class SystemControllerMocked {
 
+  /** Default constructor for SystemControllerMocked. */
   public SystemControllerMocked() {}
 
+  /**
+   * Returns mock system status.
+   *
+   * @return Response containing static status JSON
+   */
   @Operation(
       summary = "Get system status (mock)",
       description =
-          "Returns mock system status data for testing purposes. This endpoint always returns the same static data.")
+          "Returns mock system status data for testing purposes. This endpoint always returns the"
+              + " same static data.")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -35,7 +43,7 @@ public class SystemControllerMocked {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getStatus() {
     return Response.ok(
-            """
+        """
         {
             "status": "OK",
             "cpu_load": 3.954818264180926,
@@ -48,10 +56,16 @@ public class SystemControllerMocked {
         .build();
   }
 
+  /**
+   * Returns mock environment info.
+   *
+   * @return Response containing static environment JSON
+   */
   @Operation(
       summary = "Get environment information (mock)",
       description =
-          "Returns mock environment information for testing purposes. This endpoint always returns the same static data.")
+          "Returns mock environment information for testing purposes. This endpoint always returns"
+              + " the same static data.")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -64,7 +78,7 @@ public class SystemControllerMocked {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getEnvironment() {
     return Response.ok(
-            """
+        """
         {
             "freeroutingVersion": "2.0.0,2024-10-14",
             "app_started_at": "2024-10-14T10:56:26.730145900Z",

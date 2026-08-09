@@ -19,31 +19,32 @@ import java.util.UUID;
  *
  * <h2>Rationale</h2>
  *
- * Successful responses (2xx) are already tracked with full request/response bodies directly inside
- * each controller method. This filter fills the remaining gap: early-return error paths (invalid
- * session, job not found, auth failures, etc.) that previously produced no analytics event at all.
+ * <p>Successful responses (2xx) are already tracked with full request/response bodies directly
+ * inside each controller method. This filter fills the remaining gap: early-return error paths
+ * (invalid session, job not found, auth failures, etc.) that previously produced no analytics event
+ * at all.
  *
  * <h2>Request phase</h2>
  *
- * Captures the HTTP method, URI path, and caller {@code Freerouting-Profile-ID} UUID into named
+ * <p>Captures the HTTP method, URI path, and caller {@code Freerouting-Profile-ID} UUID into named
  * request properties so they are available to the response phase filter, which has no direct access
  * to the original request URI.
  *
  * <h2>Response phase</h2>
  *
- * When the response status is &ge; 400, emits a single {@code "API Endpoint Called"} analytics
+ * <p>When the response status is &ge; 400, emits a single {@code "API Endpoint Called"} analytics
  * event carrying the HTTP method + path as {@code api_method}, an empty request body (the error
  * paths do not produce a meaningful request echo), and the serialised error entity as {@code
  * api_response}.
  *
  * <h2>Double-tracking guard</h2>
  *
- * Responses with status below 400 are intentionally skipped — those paths delegate analytics to the
- * individual controller methods, which include richer request/response payloads.
+ * <p>Responses with status below 400 are intentionally skipped — those paths delegate analytics to
+ * the individual controller methods, which include richer request/response payloads.
  *
  * <h2>Priority</h2>
  *
- * Runs at {@link Priorities#USER} (5000), after the {@link
+ * <p>Runs at {@link Priorities#USER} (5000), after the {@link
  * app.freerouting.api.security.ApiKeyValidationFilter} at {@link Priorities#AUTHENTICATION} (1000).
  * This ensures that 401 Unauthorized responses produced by the security filter are also captured.
  */

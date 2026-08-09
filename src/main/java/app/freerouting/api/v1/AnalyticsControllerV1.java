@@ -43,10 +43,17 @@ import jakarta.ws.rs.core.Response;
 @Tag(name = "Analytics", description = "Endpoints for tracking user actions and analytics data")
 public class AnalyticsControllerV1 {
 
+  /**
+   * Tracks an analytics event.
+   *
+   * @param requestBody JSON request payload
+   * @return Response status
+   */
   @Operation(
       summary = "Track user action",
       description =
-          "Records an analytics event for tracking user actions and behavior. This endpoint accepts event data and stores it in BigQuery for analysis.")
+          "Records an analytics event for tracking user actions and behavior. This endpoint accepts"
+              + " event data and stores it in BigQuery for analysis.")
   @RequestBody(
       description = "Analytics tracking payload containing user identification and event data",
       required = true,
@@ -59,16 +66,16 @@ public class AnalyticsControllerV1 {
                       name = "Job Started Event",
                       value =
                           """
-      {
-        "userId": "user_12345",
-        "anonymousId": "anon_67890",
-        "event": "job_started",
-        "properties": {
-          "jobId": "550e8400-e29b-41d4-a716-446655440000",
-          "sessionId": "660e8400-e29b-41d4-a716-446655440001"
-        }
-      }
-      """)))
+                          {
+                            "userId": "user_12345",
+                            "anonymousId": "anon_67890",
+                            "event": "job_started",
+                            "properties": {
+                              "jobId": "550e8400-e29b-41d4-a716-446655440000",
+                              "sessionId": "660e8400-e29b-41d4-a716-446655440001"
+                            }
+                          }
+                          """)))
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "200", description = "Event tracked successfully"),
@@ -89,7 +96,8 @@ public class AnalyticsControllerV1 {
                     examples =
                         @ExampleObject(
                             value =
-                                "{\"error\":\"The BigQuery service account key is not configured.\"}")))
+                                "{\"error\":\"The BigQuery service account key is not"
+                                    + " configured.\"}")))
       })
   @POST
   @Path("/track")
@@ -105,7 +113,10 @@ public class AnalyticsControllerV1 {
     if (globalSettings.usageAndDiagnosticData.bigqueryServiceAccountKey == null) {
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
           .entity(
-              "{\"error\":\"The BigQuery service account key is not configured. It must be set to the 'FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY' environment variable in JSON format.\"}")
+              "{\"error\":\"The BigQuery service account key is not configured. It must be set"
+                  + " to the"
+                  + " 'FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY'"
+                  + " environment variable in JSON format.\"}")
           .build();
     }
 
@@ -136,10 +147,18 @@ public class AnalyticsControllerV1 {
     return Response.ok().build();
   }
 
+  /**
+   * Identifies user traits.
+   *
+   * @param requestBody JSON request payload
+   * @return Response status
+   */
   @Operation(
       summary = "Identify user",
       description =
-          "Associates user traits (e.g. anonymous, user_id, user_email, first_seen, client_version, os_name, os_version, allow_telemetry, allow_contact) with a user ID or anonymous ID and persists them to BigQuery for analytics purposes.")
+          "Associates user traits (e.g. anonymous, user_id, user_email, first_seen, client_version,"
+              + " os_name, os_version, allow_telemetry, allow_contact) with a user ID or"
+              + " anonymous ID and persists them to BigQuery for analytics purposes.")
   @RequestBody(
       description = "User identification payload containing user traits",
       required = true,
@@ -152,21 +171,21 @@ public class AnalyticsControllerV1 {
                       name = "Anonymous client session",
                       value =
                           """
-      {
-        "anonymousId": "550e8400-e29b-41d4-a716-446655440000",
-        "traits": {
-          "anonymous": "true",
-          "user_id": "550e8400-e29b-41d4-a716-446655440000",
-          "user_email": "",
-          "first_seen": "2026-06-09T10:00:00Z",
-          "client_version": "2.0.0",
-          "os_name": "Linux",
-          "os_version": "5.15.0",
-          "allow_telemetry": "true",
-          "allow_contact": "true"
-        }
-      }
-      """)))
+                          {
+                            "anonymousId": "550e8400-e29b-41d4-a716-446655440000",
+                            "traits": {
+                              "anonymous": "true",
+                              "user_id": "550e8400-e29b-41d4-a716-446655440000",
+                              "user_email": "",
+                              "first_seen": "2026-06-09T10:00:00Z",
+                              "client_version": "2.0.0",
+                              "os_name": "Linux",
+                              "os_version": "5.15.0",
+                              "allow_telemetry": "true",
+                              "allow_contact": "true"
+                            }
+                          }
+                          """)))
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -182,7 +201,8 @@ public class AnalyticsControllerV1 {
                     examples =
                         @ExampleObject(
                             value =
-                                "{\"error\":\"The input data is invalid. At least one of userId or anonymousId must be provided.\"}"))),
+                                "{\"error\":\"The input data is invalid. At least one of userId or"
+                                    + " anonymousId must be provided.\"}"))),
         @ApiResponse(
             responseCode = "500",
             description = "Server error or BigQuery configuration issue",
@@ -192,7 +212,8 @@ public class AnalyticsControllerV1 {
                     examples =
                         @ExampleObject(
                             value =
-                                "{\"error\":\"The BigQuery service account key is not configured.\"}")))
+                                "{\"error\":\"The BigQuery service account key is not"
+                                    + " configured.\"}")))
       })
   @POST
   @Path("/identify")
@@ -210,14 +231,18 @@ public class AnalyticsControllerV1 {
         && (identifyPayload.anonymousId == null || identifyPayload.anonymousId.isBlank())) {
       return Response.status(Response.Status.BAD_REQUEST)
           .entity(
-              "{\"error\":\"The input data is invalid. At least one of userId or anonymousId must be provided.\"}")
+              "{\"error\":\"The input data is invalid. At least one of userId or anonymousId"
+                  + " must be provided.\"}")
           .build();
     }
 
     if (globalSettings.usageAndDiagnosticData.bigqueryServiceAccountKey == null) {
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
           .entity(
-              "{\"error\":\"The BigQuery service account key is not configured. It must be set to the 'FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY' environment variable in JSON format.\"}")
+              "{\"error\":\"The BigQuery service account key is not configured. It must be set"
+                  + " to the"
+                  + " 'FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY'"
+                  + " environment variable in JSON format.\"}")
           .build();
     }
 

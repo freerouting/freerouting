@@ -16,22 +16,27 @@ public final class McpRealtimeBridge {
 
   private McpRealtimeBridge() {}
 
+  /** Registers an SSE client event sink. */
   public static void registerSseClient(SseEventSink sink, Sse sse) {
     SSE_CLIENTS.put(sink, sse);
   }
 
+  /** Removes an SSE client event sink. */
   public static void removeSseClient(SseEventSink sink) {
     SSE_CLIENTS.remove(sink);
   }
 
+  /** Registers a WebSocket session client. */
   public static void registerWsClient(Session session) {
     WS_CLIENTS.put(session, Boolean.TRUE);
   }
 
+  /** Removes a WebSocket session client. */
   public static void removeWsClient(Session session) {
     WS_CLIENTS.remove(session);
   }
 
+  /** Broadcasts an event name and payload JSON to all connected clients. */
   public static void broadcast(String eventName, JsonObject payload) {
     JsonObject envelope = new JsonObject();
     envelope.addProperty("event", eventName);

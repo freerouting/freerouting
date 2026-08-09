@@ -27,7 +27,7 @@ import java.util.UUID;
  *
  * <h2>Priority</h2>
  *
- * Runs at {@link Priorities#USER} (5000), after authentication and environment-host validation
+ * <p>Runs at {@link Priorities#USER} (5000), after authentication and environment-host validation
  * request filters.
  */
 @Provider

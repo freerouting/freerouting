@@ -57,8 +57,14 @@ public class SessionControllerV1 extends BaseController {
 
   @Context private HttpHeaders httpHeaders;
 
+  /** Default constructor for SessionControllerV1. */
   public SessionControllerV1() {}
 
+  /**
+   * Lists all sessions for the authenticated user.
+   *
+   * @return Response containing session IDs list
+   */
   @Operation(
       summary = "List all sessions",
       description =
@@ -74,7 +80,8 @@ public class SessionControllerV1 extends BaseController {
                     examples =
                         @ExampleObject(
                             value =
-                                "[\"550e8400-e29b-41d4-a716-446655440000\", \"660e8400-e29b-41d4-a716-446655440001\"]")))
+                                "[\"550e8400-e29b-41d4-a716-446655440000\","
+                                    + " \"660e8400-e29b-41d4-a716-446655440001\"]")))
       })
   @GET
   @Path("/list")
@@ -90,16 +97,23 @@ public class SessionControllerV1 extends BaseController {
     return Response.ok(response).build();
   }
 
+  /**
+   * Creates a new session.
+   *
+   * @return Response containing created Session
+   */
   @Operation(
       summary = "Create new session",
       description =
-          "Creates a new routing session for the authenticated user. This is Step 1 of the routing pipeline. Next, call enqueue_job using the returned sessionId.",
+          "Creates a new routing session for the authenticated user. This is Step 1 of the routing"
+              + " pipeline. Next, call enqueue_job using the returned sessionId.",
       parameters = {
         @Parameter(
             name = "Freerouting-Environment-Host",
             in = ParameterIn.HEADER,
             description =
-                "Identifies the calling EDA tool and its version in the format '<name>/<version>' (e.g. 'KiCad/10.0', 'EasyEDA/1.0'). Required on all protected endpoints.",
+                "Identifies the calling EDA tool and its version in the format '<name>/<version>'"
+                    + " (e.g. 'KiCad/10.0', 'EasyEDA/1.0'). Required on all protected endpoints.",
             required = true,
             example = "KiCad/10.0",
             schema = @Schema(type = "string", pattern = "^[^/]+/[^/]+$"))
@@ -122,7 +136,8 @@ public class SessionControllerV1 extends BaseController {
                     examples =
                         @ExampleObject(
                             value =
-                                "{\"error\":\"The 'Freerouting-Environment-Host' request header is required...\"}"))),
+                                "{\"error\":\"The 'Freerouting-Environment-Host' request header is"
+                                    + " required...\"}"))),
         @ApiResponse(
             responseCode = "500",
             description = "Failed to create session",
@@ -153,6 +168,12 @@ public class SessionControllerV1 extends BaseController {
     }
   }
 
+  /**
+   * Retrieves details of a specific session.
+   *
+   * @param sessionId Session ID parameter
+   * @return Response containing Session details
+   */
   @Operation(
       summary = "Get session details",
       description = "Retrieves detailed information about a specific routing session by its ID.")
@@ -196,6 +217,12 @@ public class SessionControllerV1 extends BaseController {
     }
   }
 
+  /**
+   * Retrieves logs for a session.
+   *
+   * @param sessionId Session ID parameter
+   * @return Response containing session logs
+   */
   @Operation(
       summary = "Get session logs",
       description = "Retrieves all log entries associated with a specific routing session.")
@@ -239,10 +266,17 @@ public class SessionControllerV1 extends BaseController {
     return Response.ok(response).build();
   }
 
+  /**
+   * Binds the specified session to the GUI visualizer for monitoring.
+   *
+   * @param sessionId Session ID parameter
+   * @return Response status
+   */
   @Operation(
       summary = "Set session as currently monitored",
       description =
-          "Binds the specified active API session and its board to the visible GUI visualizer for real-time routing display.")
+          "Binds the specified active API session and its board to the visible GUI visualizer for"
+              + " real-time routing display.")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "200", description = "Session monitor status set successfully"),

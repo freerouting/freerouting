@@ -73,12 +73,14 @@ import java.util.concurrent.TimeUnit;
 @Tag(
     name = "Jobs",
     description =
-        "Routing job management endpoints for creating, monitoring, and controlling PCB routing jobs")
+        "Routing job management endpoints for creating, monitoring, and controlling PCB routing"
+            + " jobs")
 public class JobControllerV1 extends BaseController {
 
   private static final ConcurrentHashMap<String, Long> previousOutputChecksums =
       new ConcurrentHashMap<>();
 
+  /** Default constructor for JobControllerV1. */
   public JobControllerV1() {}
 
   /**
@@ -91,7 +93,8 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "Enqueue new routing job",
       description =
-          "Creates and enqueues a new PCB routing job within a session. This is Step 2 of the routing pipeline. Next, call upload_job_input_file using the returned jobId.")
+          "Creates and enqueues a new PCB routing job within a session. This is Step 2 of the"
+              + " routing pipeline. Next, call upload_job_input_file using the returned jobId.")
   @RequestBody(
       description = "Routing job configuration",
       required = true,
@@ -171,7 +174,8 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "List routing jobs",
       description =
-          "Retrieves a list of all routing jobs in the specified session. Use 'all' as sessionId to list all jobs for the authenticated user.")
+          "Retrieves a list of all routing jobs in the specified session. Use 'all' as sessionId"
+              + " to list all jobs for the authenticated user.")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -218,7 +222,9 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "Get job details",
       description =
-          "Retrieves detailed status and progress of a routing job. When polling this endpoint, use an interval of 2 to 5 seconds to prevent server overload. For more real-time feedback, you can stream logs using stream_job_logs.")
+          "Retrieves detailed status and progress of a routing job. When polling this endpoint,"
+              + " use an interval of 2 to 5 seconds to prevent server overload. For more real-time"
+              + " feedback, you can stream logs using stream_job_logs.")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -280,7 +286,8 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "Start routing job",
       description =
-          "Starts or continues a queued routing job. This is Step 4 of the routing pipeline. Next, poll the status using get_job_details until it is COMPLETED.")
+          "Starts or continues a queued routing job. This is Step 4 of the routing pipeline."
+              + " Next, poll the status using get_job_details until it is COMPLETED.")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -347,7 +354,9 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "Cancel routing job",
       description =
-          "Cancels a running or queued routing job. The job state is set to CANCELLED and any in-progress routing pass is interrupted. Partial output (if any) remains accessible.")
+          "Cancels a running or queued routing job. The job state is set to CANCELLED and any"
+              + " in-progress routing pass is interrupted. Partial output (if any) remains"
+              + " accessible.")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -405,7 +414,8 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "Update job settings",
       description =
-          "Updates the router settings for a queued job. This is optional Step 3.5 before starting. Next, call start_job.")
+          "Updates the router settings for a queued job. This is optional Step 3.5 before"
+              + " starting. Next, call start_job.")
   @RequestBody(
       description = "Router settings configuration",
       required = true,
@@ -487,7 +497,11 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "Upload job input file",
       description =
-          "Uploads the input PCB design file for a routing job, typically in Specctra DSN format. The file must be Base64-encoded. For MCP/LLM clients, it is recommended to use the local 'encode_base64' tool to perform this conversion rather than running terminal commands (like powershell or base64). Note: File size limit depends on server configuration (typically 1-30MB).")
+          "Uploads the input PCB design file for a routing job, typically in Specctra DSN format."
+              + " The file must be Base64-encoded. For MCP/LLM clients, it is recommended to use"
+              + " the local 'encode_base64' tool to perform this conversion rather than running"
+              + " terminal commands (like powershell or base64). Note: File size limit depends on"
+              + " server configuration (typically 1-30MB).")
   @RequestBody(
       description = "Board file payload with Base64-encoded data",
       required = true,
@@ -556,7 +570,8 @@ public class JobControllerV1 extends BaseController {
     if ((input.dataBase64 == null) || (input.dataBase64.isEmpty())) {
       return Response.status(Response.Status.BAD_REQUEST)
           .entity(
-              "{\"error\":\"The input data must be base-64 encoded and put into the \\\"data\\\" field.\"}")
+              "{\"error\":\"The input data must be base-64 encoded and put into the"
+                  + " \\\"data\\\" field.\"}")
           .build();
     }
 
@@ -593,8 +608,10 @@ public class JobControllerV1 extends BaseController {
       summary = "Upload job input in KiCad JSON format",
       description =
           """
-          Uploads the input PCB design file in KiCad JSON format. The JSON is sent as the raw request body (not Base64-encoded). \
-          This endpoint is optimized for the KiCad IPC bridge workflow.""")
+          Uploads the input PCB design file in KiCad JSON format. The JSON is sent as the raw
+          request body (not Base64-encoded). This endpoint is optimized for the KiCad IPC bridge
+          workflow.
+          """)
   @RequestBody(
       description = "KiCad JSON board data (raw JSON, not Base64-encoded)",
       required = true,
@@ -691,10 +708,13 @@ public class JobControllerV1 extends BaseController {
       summary = "Download job output file",
       description =
           """
-          Downloads the output file of a routing job in Specctra SES format. \
-          If the job is completed, returns the final output. \
-          If the job is still running or paused, returns the partial output generated so far (202 Accepted). \
-          The file is returned as Base64-encoded data. For MCP/LLM clients, it is recommended to use the local 'decode_base64' tool to decode this output into a text/SES file rather than running external terminal shell commands (like powershell or base64) to perform base64 decoding.""")
+          Downloads the output file of a routing job in Specctra SES format. If the job is
+          completed, returns the final output. If the job is still running or paused, returns the
+          partial output generated so far (202 Accepted). The file is returned as Base64-encoded
+          data. For MCP/LLM clients, it is recommended to use the local 'decode_base64' tool to
+          decode this output into a text/SES file rather than running external terminal shell
+          commands (like powershell or base64) to perform base64 decoding.
+          """)
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -820,9 +840,10 @@ public class JobControllerV1 extends BaseController {
       summary = "Download job output in KiCad JSON format",
       description =
           """
-          Downloads the output of a routing job in KiCad JSON format. \
-          The JSON is returned as raw JSON (not Base64-encoded), optimized for the KiCad IPC bridge. \
-          If the job was submitted with JSON input, the output will also be in JSON format.""")
+          Downloads the output of a routing job in KiCad JSON format. The JSON is returned as raw
+          JSON (not Base64-encoded), optimized for the KiCad IPC bridge. If the job was submitted
+          with JSON input, the output will also be in JSON format.
+          """)
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -960,7 +981,8 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "Stream job output in real-time",
       description =
-          "Streams the output file of a routing job in real-time using Server-Sent Events (SSE). Updates are sent every 200ms when the output changes.")
+          "Streams the output file of a routing job in real-time using Server-Sent Events (SSE)."
+              + " Updates are sent every 200ms when the output changes.")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -1066,9 +1088,10 @@ public class JobControllerV1 extends BaseController {
       summary = "Stream job JSON output in real-time",
       description =
           """
-          Streams the KiCad JSON output of a routing job in real-time using Server-Sent Events (SSE). \
-          Each event contains raw JSON (not Base64-encoded), optimized for the KiCad IPC bridge. \
-          Updates are sent every 500ms when the board state changes.""")
+          Streams the KiCad JSON output of a routing job in real-time using Server-Sent Events (SSE).
+          Each event contains raw JSON (not Base64-encoded), optimized for the KiCad IPC bridge.
+          Updates are sent every 500ms when the board state changes.
+          """)
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -1154,6 +1177,12 @@ public class JobControllerV1 extends BaseController {
         "GET v1/jobs/" + jobId + "/output/json/stream", "", "json-stream-started", userId);
   }
 
+  /**
+   * Retrieves logs for a job.
+   *
+   * @param jobId Job ID parameter
+   * @return Response containing job logs
+   */
   @Operation(
       summary = "Get job logs",
       description = "Retrieves all log entries associated with a specific routing job.")
@@ -1212,7 +1241,8 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "Stream job logs in real-time",
       description =
-          "Streams log entries of a routing job in real-time using Server-Sent Events (SSE). New log entries are sent as they are generated.")
+          "Streams log entries of a routing job in real-time using Server-Sent Events (SSE). New"
+              + " log entries are sent as they are generated.")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -1300,7 +1330,8 @@ public class JobControllerV1 extends BaseController {
   @Operation(
       summary = "Get DRC report",
       description =
-          "Generates and retrieves a Design Rules Check (DRC) report for a routing job. The report includes violations and statistics in JSON format.")
+          "Generates and retrieves a Design Rules Check (DRC) report for a routing job. The report"
+              + " includes violations and statistics in JSON format.")
   @ApiResponses(
       value = {
         @ApiResponse(

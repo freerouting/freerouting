@@ -20,6 +20,7 @@ public class McpWebSocketConfigurator extends ServerEndpointConfig.Configurator 
     sec.getUserProperties().put(HEADERS_PROPERTY, request.getHeaders());
   }
 
+  /** Retrieves handshake headers stored in the user properties of the given EndpointConfig. */
   @SuppressWarnings("unchecked")
   public static Map<String, List<String>> getHeaders(EndpointConfig config) {
     Object value = config.getUserProperties().get(HEADERS_PROPERTY);

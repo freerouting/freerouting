@@ -55,7 +55,8 @@ public class McpContextListener implements ServletContextListener {
 
     if (!McpApiKeyValidationService.getInstance().isAuthenticationEnabled()) {
       FRLogger.warn(
-          "MCP server authentication is DISABLED. Enable it before exposing MCP endpoints to a network.");
+          "MCP server authentication is DISABLED. Enable it before exposing MCP endpoints to a"
+              + " network.");
     }
   }
 

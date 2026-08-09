@@ -24,18 +24,18 @@ import jakarta.ws.rs.core.Application;
             version = "1.0",
             description =
                 """
-    The Freerouting API provides a comprehensive interface for automated PCB routing.
+                The Freerouting API provides a comprehensive interface for automated PCB routing.
 
-    This API enables developers and AI agents to:
-    - Create and manage routing sessions
-    - Submit PCB design files for automated routing
-    - Monitor routing job progress in real-time
-    - Retrieve routing results and DRC reports
-    - Track usage analytics
+                This API enables developers and AI agents to:
+                - Create and manage routing sessions
+                - Submit PCB design files for automated routing
+                - Monitor routing job progress in real-time
+                - Retrieve routing results and DRC reports
+                - Track usage analytics
 
-    The API is fully compliant with OpenAPI 3.0 specification, providing standardized,
-    clear, and machine-readable documentation for seamless integration.
-    """,
+                The API is fully compliant with OpenAPI 3.0 specification, providing standardized,
+                clear, and machine-readable documentation for seamless integration.
+                """,
             contact =
                 @Contact(
                     name = "Freerouting Team",
@@ -74,17 +74,17 @@ import jakarta.ws.rs.core.Application;
     scheme = "bearer",
     description =
         """
-    API Key authentication for the Freerouting API.
+        API Key authentication for the Freerouting API.
 
-    Pass your API key (a RFC 4122 GUID) as a Bearer token in the standard HTTP
-    Authorization header:
+        Pass your API key (a RFC 4122 GUID) as a Bearer token in the standard HTTP
+        Authorization header:
 
-        Authorization: Bearer 550e8400-e29b-41d4-a716-446655440000
+            Authorization: Bearer 550e8400-e29b-41d4-a716-446655440000
 
-    API keys can be obtained by registering at https://www.freerouting.app.
-    When running Freerouting locally (e.g. as a KiCad or EasyEDA plugin) with
-    authentication disabled, this header is not required.
-    """)
+        API keys can be obtained by registering at https://www.freerouting.app.
+        When running Freerouting locally (e.g. as a KiCad or EasyEDA plugin) with
+        authentication disabled, this header is not required.
+        """)
 public class OpenApiConfig extends Application {
   // This class serves as the OpenAPI configuration holder
   // The actual API endpoints are defined in the controller classes

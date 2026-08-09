@@ -77,7 +77,10 @@ public class AppContextListener implements ServletContextListener {
 
     if (!ApiKeyValidationService.getInstance().isAuthenticationEnabled()) {
       FRLogger.warn(
-          "API server authentication is DISABLED. All API endpoints are accessible without an API key. Enable authentication in the configuration before exposing this server to a network.");
+          "API server authentication is DISABLED. All API endpoints are accessible without an"
+              + " API key."
+              + " Enable authentication in the configuration before exposing this server to a"
+              + " network.");
     }
   }
 

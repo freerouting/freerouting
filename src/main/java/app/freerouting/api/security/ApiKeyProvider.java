@@ -20,7 +20,8 @@ package app.freerouting.api.security;
  *
  * <pre>{@code
  * ApiKeyProvider provider = new GoogleSheetsApiKeyProvider(sheetsUrl);
- * if (provider.validateApiKey("550e8400-e29b-41d4-a716-446655440000") == ApiKeyValidationResult.ACCESS_GRANTED) {
+ * String key = "550e8400-e29b-41d4-a716-446655440000";
+ * if (provider.validateApiKey(key) == ApiKeyValidationResult.ACCESS_GRANTED) {
  *     // Grant access
  * } else {
  *     // Deny access

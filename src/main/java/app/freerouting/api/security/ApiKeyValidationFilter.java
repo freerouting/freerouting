@@ -18,7 +18,7 @@ import java.io.IOException;
  *
  * <h2>Excluded Endpoints (Public Access)</h2>
  *
- * The following endpoints do NOT require API key validation:
+ * <p>The following endpoints do NOT require API key validation:
  *
  * <ul>
  *   <li><b>/v1/system/*</b> - System monitoring and health check endpoints
@@ -30,7 +30,7 @@ import java.io.IOException;
  *
  * <h2>Protected Endpoints</h2>
  *
- * All other endpoints require a valid API key in the {@code Authorization: Bearer <API_KEY>}
+ * <p>All other endpoints require a valid API key in the {@code Authorization: Bearer <API_KEY>}
  * header.
  *
  * <h2>Error Responses</h2>
@@ -41,7 +41,7 @@ import java.io.IOException;
  *
  * <h2>Configuration</h2>
  *
- * Authentication is configured through the {@code apiServerSettings.authentication} block. The
+ * <p>Authentication is configured through the {@code apiServerSettings.authentication} block. The
  * relevant environment variables are:
  *
  * <ul>
@@ -53,8 +53,8 @@ import java.io.IOException;
  *   <li>{@code FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY}
  * </ul>
  *
- * If authentication is enabled but no providers are configured, all protected endpoints are denied
- * access (fail-secure).
+ * <p>If authentication is enabled but no providers are configured, all protected endpoints are
+ * denied access (fail-secure).
  *
  * @see ApiKeyProvider
  * @see GoogleSheetsApiKeyProvider

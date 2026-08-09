@@ -23,6 +23,7 @@ public class McpWebSocketEndpoint {
   private static final String AUTHORIZATION_HEADER = "authorization";
   private static final String BEARER_PREFIX = "bearer ";
 
+  /** Called when a WebSocket connection opens; checks authorization and profile headers. */
   @OnOpen
   public void onOpen(Session session, EndpointConfig config) {
     Map<String, List<String>> headers = McpWebSocketConfigurator.getHeaders(config);
@@ -51,16 +52,19 @@ public class McpWebSocketEndpoint {
     McpRealtimeBridge.broadcast("mcp.websocket.connected", hello);
   }
 
+  /** Called when a WebSocket connection closes. */
   @OnClose
   public void onClose(Session session) {
     McpRealtimeBridge.removeWsClient(session);
   }
 
+  /** Called when a WebSocket error occurs. */
   @OnError
   public void onError(Session session, Throwable throwable) {
     McpRealtimeBridge.removeWsClient(session);
   }
 
+  /** Called when an incoming text message is received on the WebSocket. */
   @OnMessage
   public void onMessage(String message, Session session) {
     JsonObject payload = new JsonObject();

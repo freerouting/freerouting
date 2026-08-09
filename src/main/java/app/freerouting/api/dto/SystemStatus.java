@@ -3,6 +3,7 @@ package app.freerouting.api.dto;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/** System status information including resource usage and session count. */
 @Schema(description = "System status information including resource usage and session count")
 public class SystemStatus {
 

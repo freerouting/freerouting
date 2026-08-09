@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.UUID;
 
+/** Payload containing board file data and metadata for routing jobs. */
 @Schema(description = "Payload containing board file data and metadata for routing jobs")
 public class BoardFilePayload extends BoardFileDetails {
 
@@ -19,7 +20,10 @@ public class BoardFilePayload extends BoardFileDetails {
   @Schema(
       name = "data",
       description =
-          "Base64-encoded board file data (typically in Specctra DSN format). For MCP/LLM clients, it is recommended to use the local 'encode_base64' tool to encode, and 'decode_base64' to decode, this data rather than calling external shell commands (like powershell or base64).",
+          "Base64-encoded board file data (typically in Specctra DSN format). For MCP/LLM clients,"
+              + " it is recommended to use the local 'encode_base64' tool to encode, and"
+              + " 'decode_base64' to decode, this data rather than calling external shell commands"
+              + " (like powershell or base64).",
       example = "UENCIERlc2lnbiBGaWxlCg==")
   public String dataBase64;
 }

@@ -27,6 +27,7 @@ import java.util.Set;
 /** Builds MCP tools from the OpenAPI model so REST and MCP contracts stay synchronized. */
 public final class OpenApiMcpToolRegistry {
 
+  /** Tool operation model holding tool name, endpoint info, and schemas. */
   public record ToolOperation(
       String toolName,
       String method,
@@ -43,6 +44,13 @@ public final class OpenApiMcpToolRegistry {
     this.toolsByName = toolsByName;
   }
 
+  /**
+   * Constructs the registry from the JAX-RS application context using OpenAPI scanning.
+   *
+   * @param application JAX-RS Application context
+   * @return OpenApiMcpToolRegistry instance
+   * @throws OpenApiConfigurationException if scanner configuration fails
+   */
   public static OpenApiMcpToolRegistry fromApplication(Application application)
       throws OpenApiConfigurationException {
     SwaggerConfiguration config =
@@ -50,7 +58,7 @@ public final class OpenApiMcpToolRegistry {
             .resourcePackages(Set.of("app.freerouting.api"))
             .prettyPrint(true);
 
-    OpenAPI openAPI =
+    OpenAPI openApi =
         new JaxrsOpenApiContextBuilder()
             .application(application)
             .openApiConfiguration(config)
@@ -58,14 +66,14 @@ public final class OpenApiMcpToolRegistry {
             .read();
 
     Map<String, Schema> componentsSchemas =
-        openAPI.getComponents() != null ? openAPI.getComponents().getSchemas() : null;
+        openApi.getComponents() != null ? openApi.getComponents().getSchemas() : null;
 
     Map<String, ToolOperation> tools = new LinkedHashMap<>();
-    if (openAPI == null || openAPI.getPaths() == null) {
+    if (openApi == null || openApi.getPaths() == null) {
       return new OpenApiMcpToolRegistry(tools);
     }
 
-    for (Map.Entry<String, PathItem> pathEntry : openAPI.getPaths().entrySet()) {
+    for (Map.Entry<String, PathItem> pathEntry : openApi.getPaths().entrySet()) {
       String path = pathEntry.getKey();
       if (!isMcpEligiblePath(path)) {
         continue;
@@ -141,7 +149,10 @@ public final class OpenApiMcpToolRegistry {
             "encode_base64",
             "custom",
             "custom",
-            "Encodes a UTF-8 text string (like a DSN, JSON, or RULES file content) into a Base64 string. IMPORTANT: You MUST use this tool to perform base64 encoding; do NOT call external terminal shell commands (like powershell or base64) to perform this conversion.",
+            "Encodes a UTF-8 text string (like a DSN, JSON, or RULES file content) into a Base64"
+                + " string. IMPORTANT: You MUST use this tool to perform base64 encoding; do NOT"
+                + " call external terminal shell commands (like powershell or base64) to perform"
+                + " this conversion.",
             encodeInput,
             encodeOutput,
             new ArrayList<>(),
@@ -180,7 +191,10 @@ public final class OpenApiMcpToolRegistry {
             "decode_base64",
             "custom",
             "custom",
-            "Decodes a Base64 string (like routed SES or JSON output files) back into a UTF-8 text string. IMPORTANT: You MUST use this tool to perform base64 decoding; do NOT call external terminal shell commands (like powershell or base64) to perform this conversion.",
+            "Decodes a Base64 string (like routed SES or JSON output files) back into a UTF-8 text"
+                + " string. IMPORTANT: You MUST use this tool to perform base64 decoding; do NOT"
+                + " call external terminal shell commands (like powershell or base64) to perform"
+                + " this conversion.",
             decodeInput,
             decodeOutput,
             new ArrayList<>(),
@@ -189,7 +203,6 @@ public final class OpenApiMcpToolRegistry {
     // Register custom upload_job_input_from_local_file tool
     JsonObject uploadInput = new JsonObject();
     uploadInput.addProperty("type", "object");
-    JsonObject uploadInputProps = new JsonObject();
     JsonObject jobIdUploadInput = new JsonObject();
     jobIdUploadInput.addProperty("type", "string");
     jobIdUploadInput.addProperty("description", "Unique identifier of the job");
@@ -197,7 +210,9 @@ public final class OpenApiMcpToolRegistry {
     filePathUploadInput.addProperty("type", "string");
     filePathUploadInput.addProperty(
         "description",
-        "The absolute or relative path to the local PCB design file (typically Specctra DSN format) to upload.");
+        "The absolute or relative path to the local PCB design file (typically Specctra DSN format)"
+            + " to upload.");
+    JsonObject uploadInputProps = new JsonObject();
     uploadInputProps.add("jobId", jobIdUploadInput);
     uploadInputProps.add("filePath", filePathUploadInput);
     uploadInput.add("properties", uploadInputProps);
@@ -226,7 +241,10 @@ public final class OpenApiMcpToolRegistry {
             "upload_job_input_from_local_file",
             "custom",
             "custom",
-            "Reads a local PCB design file, encodes it to Base64 in-memory, and uploads it to the routing engine. Works in both local (offline) and cloud (online) MCP configurations. Use this tool instead of reading and transmitting file contents to conserve context window.",
+            "Reads a local PCB design file, encodes it to Base64 in-memory, and uploads it to the"
+                + " routing engine. Works in both local (offline) and cloud (online) MCP"
+                + " configurations. Use this tool instead of reading and transmitting file contents"
+                + " to conserve context window.",
             uploadInput,
             uploadOutput,
             new ArrayList<>(),
@@ -235,7 +253,6 @@ public final class OpenApiMcpToolRegistry {
     // Register custom download_job_output_to_local_file tool
     JsonObject downloadInput = new JsonObject();
     downloadInput.addProperty("type", "object");
-    JsonObject downloadInputProps = new JsonObject();
     JsonObject jobIdDownloadInput = new JsonObject();
     jobIdDownloadInput.addProperty("type", "string");
     jobIdDownloadInput.addProperty("description", "Unique identifier of the job");
@@ -243,7 +260,9 @@ public final class OpenApiMcpToolRegistry {
     filePathDownloadInput.addProperty("type", "string");
     filePathDownloadInput.addProperty(
         "description",
-        "The path on the local disk where the routed output layout (Specctra SES format) should be saved.");
+        "The path on the local disk where the routed output layout (Specctra SES format) should be"
+            + " saved.");
+    JsonObject downloadInputProps = new JsonObject();
     downloadInputProps.add("jobId", jobIdDownloadInput);
     downloadInputProps.add("filePath", filePathDownloadInput);
     downloadInput.add("properties", downloadInputProps);
@@ -272,7 +291,10 @@ public final class OpenApiMcpToolRegistry {
             "download_job_output_to_local_file",
             "custom",
             "custom",
-            "Downloads the completed routing output, decodes it from Base64 in-memory, and saves it directly to a local file. Works in both local (offline) and cloud (online) MCP configurations. Use this tool instead of retrieving file contents to conserve context window.",
+            "Downloads the completed routing output, decodes it from Base64 in-memory, and saves it"
+                + " directly to a local file. Works in both local (offline) and cloud (online) MCP"
+                + " configurations. Use this tool instead of retrieving file contents to conserve"
+                + " context window.",
             downloadInput,
             downloadOutput,
             new ArrayList<>(),
@@ -281,10 +303,21 @@ public final class OpenApiMcpToolRegistry {
     return new OpenApiMcpToolRegistry(tools);
   }
 
+  /**
+   * Retrieves a ToolOperation by tool name.
+   *
+   * @param toolName Name of the tool
+   * @return ToolOperation instance or null
+   */
   public ToolOperation get(String toolName) {
     return toolsByName.get(toolName);
   }
 
+  /**
+   * Serializes all tools into a JsonArray suitable for MCP tools list response.
+   *
+   * @return JsonArray of MCP tools
+   */
   public JsonArray toMcpToolsArray() {
     JsonArray tools = new JsonArray();
 

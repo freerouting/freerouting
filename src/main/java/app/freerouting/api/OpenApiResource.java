@@ -34,10 +34,18 @@ public class OpenApiResource {
 
   @Context private Application application;
 
+  /**
+   * Returns the OpenAPI specification in JSON format.
+   *
+   * @param uriInfo contextual UriInfo for the request
+   * @return HTTP Response containing the OpenAPI JSON spec
+   */
   @Operation(
       summary = "Get OpenAPI specification in JSON format",
       description =
-          "Returns the complete OpenAPI 3.0 specification for the Freerouting API in JSON format. This spec can be used with API clients, code generators, and documentation tools.")
+          "Returns the complete OpenAPI 3.0 specification for the Freerouting API in JSON format."
+              + " This spec can be used with API clients, code generators, and documentation"
+              + " tools.")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -49,7 +57,8 @@ public class OpenApiResource {
                     examples =
                         @ExampleObject(
                             value =
-                                "{\"openapi\":\"3.0.1\",\"info\":{\"title\":\"Freerouting API\",\"version\":\"1.0\"}}"))),
+                                "{\"openapi\":\"3.0.1\",\"info\":{\"title\":\"Freerouting API\","
+                                    + "\"version\":\"1.0\"}}"))),
         @ApiResponse(responseCode = "500", description = "Failed to generate OpenAPI specification")
       })
   @GET
@@ -66,16 +75,16 @@ public class OpenApiResource {
               .prettyPrint(true);
 
       // Build OpenAPI context and get the spec
-      OpenAPI openAPI =
+      OpenAPI openApi =
           new JaxrsOpenApiContextBuilder()
               .application(application)
               .openApiConfiguration(config)
               .buildContext(true)
               .read();
 
-      if (openAPI != null) {
+      if (openApi != null) {
         // Serialize to JSON
-        return Response.ok(io.swagger.v3.core.util.Json.pretty(openAPI)).build();
+        return Response.ok(io.swagger.v3.core.util.Json.pretty(openApi)).build();
       } else {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
             .entity("{\"error\":\"Failed to generate OpenAPI specification\"}")
@@ -88,10 +97,18 @@ public class OpenApiResource {
     }
   }
 
+  /**
+   * Returns the OpenAPI specification in YAML format.
+   *
+   * @param uriInfo contextual UriInfo for the request
+   * @return HTTP Response containing the OpenAPI YAML spec
+   */
   @Operation(
       summary = "Get OpenAPI specification in YAML format",
       description =
-          "Returns the complete OpenAPI 3.0 specification for the Freerouting API in YAML format. This spec can be used with API clients, code generators, and documentation tools.")
+          "Returns the complete OpenAPI 3.0 specification for the Freerouting API in YAML format."
+              + " This spec can be used with API clients, code generators, and documentation"
+              + " tools.")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -114,16 +131,16 @@ public class OpenApiResource {
               .prettyPrint(true);
 
       // Build OpenAPI context and get the spec
-      OpenAPI openAPI =
+      OpenAPI openApi =
           new JaxrsOpenApiContextBuilder()
               .application(application)
               .openApiConfiguration(config)
               .buildContext(true)
               .read();
 
-      if (openAPI != null) {
+      if (openApi != null) {
         // Serialize to YAML
-        return Response.ok(io.swagger.v3.core.util.Yaml.pretty(openAPI)).build();
+        return Response.ok(io.swagger.v3.core.util.Yaml.pretty(openApi)).build();
       } else {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
             .entity("error: Failed to generate OpenAPI specification")

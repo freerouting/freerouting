@@ -61,6 +61,7 @@ public final class McpApiKeyValidationService {
     }
   }
 
+  /** Returns the singleton instance of McpApiKeyValidationService. */
   public static synchronized McpApiKeyValidationService getInstance() {
     if (instance == null) {
       instance = new McpApiKeyValidationService();
@@ -68,14 +69,22 @@ public final class McpApiKeyValidationService {
     return instance;
   }
 
+  /** Resets the singleton instance for testing purposes. */
   public static synchronized void resetForTesting() {
     instance = null;
   }
 
+  /** Returns whether MCP API key authentication is enabled. */
   public boolean isAuthenticationEnabled() {
     return isEnabled;
   }
 
+  /**
+   * Validates the provided API key against configured providers.
+   *
+   * @param apiKey API key to validate
+   * @return {@code true} if valid or auth disabled; {@code false} otherwise
+   */
   public boolean validateApiKey(String apiKey) {
     if (!isEnabled) {
       return true;
@@ -83,7 +92,8 @@ public final class McpApiKeyValidationService {
 
     if (providers.isEmpty()) {
       FRLogger.warn(
-          "MCP authentication is enabled but no providers are correctly configured. Denying access.");
+          "MCP authentication is enabled but no providers are correctly configured. Denying"
+              + " access.");
       return false;
     }
 

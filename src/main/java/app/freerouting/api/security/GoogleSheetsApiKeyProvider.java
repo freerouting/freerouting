@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  *
  * <h2>Google Sheet Structure</h2>
  *
- * The Google Sheet must have the following columns (order doesn't matter):
+ * <p>The Google Sheet must have the following columns (order doesn't matter):
  *
  * <ul>
  *   <li><b>API Key</b>: Contains valid GUID strings (e.g., 550e8400-e29b-41d4-a716-446655440000)
@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  *
  * <h2>Configuration</h2>
  *
- * The Google Sheet URL and Google API key must be configured via:
+ * <p>The Google Sheet URL and Google API key must be configured via:
  *
  * <pre>
  * FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL
@@ -222,7 +222,8 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
 
       if (apiKeyColumnIndex == -1 || accessGrantedColumnIndex == -1) {
         FRLogger.error(
-            "Required columns not found in Google Sheet. Expected 'API Key' and 'Access granted?' columns. Found: "
+            "Required columns not found in Google Sheet. Expected 'API Key' and 'Access granted?'"
+                + " columns. Found: "
                 + headers,
             null,
             null);
@@ -274,19 +275,21 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
       }
 
       // Atomically replace the cache
-      int previousCacheSize = this.apiKeyCache.size();
+      final int previousCacheSize = this.apiKeyCache.size();
       this.apiKeyCache = newCache;
       this.isHealthy = true;
       this.lastSuccessfulRefresh = System.currentTimeMillis();
 
       if (newCache.size() != previousCacheSize) {
         String message =
-            "Successfully refreshed %d valid API keys from Google Sheets (total entries: %d, skipped: %d)"
+            "Successfully refreshed %d valid API keys from Google Sheets (total entries: %d,"
+                + " skipped: %d)"
                 .formatted(validKeysCount, newCache.size(), skippedRows);
         FRLogger.info(message);
       } else {
         FRLogger.debug(
-            "Google Sheets API key cache refreshed, no change in key count (%d valid keys, total entries: %d, skipped: %d)"
+            ("Google Sheets API key cache refreshed, no change in key count (%d valid keys, total"
+                    + " entries: %d, skipped: %d)")
                 .formatted(validKeysCount, newCache.size(), skippedRows));
       }
 

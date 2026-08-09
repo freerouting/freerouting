@@ -56,10 +56,17 @@ public class McpControllerV1 extends BaseController {
 
   @Context private HttpHeaders headers;
 
+  /**
+   * Main MCP JSON-RPC endpoint handling tools/list, tools/call, and initialize requests.
+   *
+   * @param requestBody JSON-RPC request body
+   * @return Response containing JSON-RPC result
+   */
   @Operation(
       summary = "MCP JSON-RPC endpoint",
       description =
-          "Accepts MCP-compatible JSON-RPC requests including initialize, tools/list and tools/call.")
+          "Accepts MCP-compatible JSON-RPC requests including initialize, tools/list and"
+              + " tools/call.")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -149,6 +156,12 @@ public class McpControllerV1 extends BaseController {
         .build();
   }
 
+  /**
+   * MCP event stream (SSE) endpoint.
+   *
+   * @param sink SSE event sink
+   * @param sse SSE instance
+   */
   @Operation(
       summary = "MCP event stream (SSE)",
       description = "Streams MCP activity notifications to clients.")
@@ -165,6 +178,9 @@ public class McpControllerV1 extends BaseController {
   public void events(@Context SseEventSink sink, @Context Sse sse) {
     authenticateUser();
 
+    if (sink == null || sse == null) {
+      return;
+    }
     McpRealtimeBridge.registerSseClient(sink, sse);
     JsonObject hello = new JsonObject();
     hello.addProperty("message", "MCP SSE stream connected");
@@ -253,12 +269,13 @@ public class McpControllerV1 extends BaseController {
     eventPayload.addProperty("status", response.statusCode());
     McpRealtimeBridge.broadcast("mcp.tool.called", eventPayload);
 
-    JsonObject result = new JsonObject();
     JsonArray content = new JsonArray();
     JsonObject text = new JsonObject();
     text.addProperty("type", "text");
     text.addProperty("text", GsonProvider.GSON.toJson(payload));
     content.add(text);
+
+    JsonObject result = new JsonObject();
     result.add("content", content);
     result.addProperty("isError", response.statusCode() >= 400);
 
@@ -369,7 +386,8 @@ public class McpControllerV1 extends BaseController {
     String basePath = targetBaseUri.getPath() == null ? "" : targetBaseUri.getPath();
     if (basePath.startsWith("/v1/mcp") || basePath.contains("/.well-known")) {
       throw new IllegalArgumentException(
-          "mcp_server.target_api_base_url points to MCP endpoints; it must point to the REST API base URL.");
+          "mcp_server.target_api_base_url points to MCP endpoints; it must point to the REST API"
+              + " base URL.");
     }
 
     UriBuilder builder =
@@ -386,7 +404,8 @@ public class McpControllerV1 extends BaseController {
     if (!targetBaseUri.getHost().equals(result.getHost())
         || targetBaseUri.getPort() != result.getPort()) {
       throw new IllegalArgumentException(
-          "Resolved tool URI target does not match the configured mcp_server.target_api_base_url.");
+          "Resolved tool URI target does not match the configured"
+              + " mcp_server.target_api_base_url.");
     }
 
     return result;
@@ -450,8 +469,6 @@ public class McpControllerV1 extends BaseController {
 
   private JsonObject handleCustomToolCall(
       JsonElement id, String toolName, JsonObject arguments, String correlationId) {
-    JsonObject result = new JsonObject();
-    JsonArray content = new JsonArray();
     JsonObject textObj = new JsonObject();
     textObj.addProperty("type", "text");
 
@@ -573,7 +590,9 @@ public class McpControllerV1 extends BaseController {
     }
 
     textObj.addProperty("text", GsonProvider.GSON.toJson(payload));
+    JsonArray content = new JsonArray();
     content.add(textObj);
+    JsonObject result = new JsonObject();
     result.add("content", content);
     result.addProperty("isError", isError);
 

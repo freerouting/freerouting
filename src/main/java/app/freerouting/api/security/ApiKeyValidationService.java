@@ -12,7 +12,7 @@ import java.util.List;
  *
  * <h2>Provider pipeline</h2>
  *
- * Providers are evaluated in the order they are declared in the {@code providers} configuration
+ * <p>Providers are evaluated in the order they are declared in the {@code providers} configuration
  * string (comma-separated). The first provider that returns {@link
  * ApiKeyValidationResult#ACCESS_GRANTED} or {@link ApiKeyValidationResult#ACCESS_DENIED}
  * short-circuits evaluation. If every provider returns {@link ApiKeyValidationResult#UNDECIDED} or
@@ -20,21 +20,21 @@ import java.util.List;
  *
  * <h2>Disabled mode</h2>
  *
- * When {@code apiServerSettings.authentication.isEnabled} is {@code false} (or the settings object
- * is absent), {@link #isAuthenticationEnabled()} returns {@code false} and {@link
+ * <p>When {@code apiServerSettings.authentication.isEnabled} is {@code false} (or the settings
+ * object is absent), {@link #isAuthenticationEnabled()} returns {@code false} and {@link
  * #validateApiKey(String)} unconditionally returns {@code true}. The {@link ApiKeyValidationFilter}
  * short-circuits on this flag before inspecting any header.
  *
  * <h2>Default configuration</h2>
  *
- * Authentication is <strong>enabled by default</strong>. Operators running Freerouting locally
+ * <p>Authentication is <strong>enabled by default</strong>. Operators running Freerouting locally
  * (e.g. as a KiCad plugin) must explicitly set {@code authentication.enabled=false} to allow
  * unauthenticated access.
  *
  * <h2>Singleton lifecycle</h2>
  *
- * Obtain the instance via {@link #getInstance()}. Call {@link #resetForTesting()} in unit tests to
- * force re-initialization with a fresh configuration.
+ * <p>Obtain the instance via {@link #getInstance()}. Call {@link #resetForTesting()} in unit tests
+ * to force re-initialization with a fresh configuration.
  */
 public final class ApiKeyValidationService {
 
@@ -137,7 +137,8 @@ public final class ApiKeyValidationService {
 
     if (providers.isEmpty()) {
       FRLogger.warn(
-          "API authentication is enabled but no providers are correctly configured. Denying access.");
+          "API authentication is enabled but no providers are correctly configured. Denying"
+              + " access.");
       return false;
     }
 

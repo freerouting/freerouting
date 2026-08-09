@@ -43,6 +43,7 @@ public class CorrelationIdFilter implements ContainerRequestFilter, ContainerRes
     responseContext.getHeaders().putSingle(HEADER_NAME, correlationId);
   }
 
+  /** Resolves an existing correlation ID or creates a new random UUID string if empty. */
   public static String resolveOrCreate(String value) {
     if (value == null || value.isBlank()) {
       return UUID.randomUUID().toString();

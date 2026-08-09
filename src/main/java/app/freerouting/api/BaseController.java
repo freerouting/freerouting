@@ -26,6 +26,7 @@ public class BaseController {
 
   @Context private HttpHeaders httpHeaders;
 
+  /** Default constructor for BaseController. */
   public BaseController() {}
 
   /**
@@ -50,7 +51,8 @@ public class BaseController {
     if (((userIdString == null) || (userIdString.isEmpty()))
         && ((userEmailString == null) || (userEmailString.isEmpty()))) {
       throw new IllegalArgumentException(
-          "Freerouting-Profile-ID or Freerouting-Profile-Email HTTP request header must be set in order to get authenticated.");
+          "Freerouting-Profile-ID or Freerouting-Profile-Email HTTP request header must be set in"
+              + " order to get authenticated.");
     }
 
     UUID userId = null;
@@ -70,7 +72,8 @@ public class BaseController {
 
     if (userId == null) {
       throw new IllegalArgumentException(
-          "The user couldn't be authenticated based on the Freerouting-Profile-ID or Freerouting-Profile-Email HTTP request header values.");
+          "The user couldn't be authenticated based on the Freerouting-Profile-ID or"
+              + " Freerouting-Profile-Email HTTP request header values.");
     }
 
     // TODO: authenticate the user by calling the auth endpoint

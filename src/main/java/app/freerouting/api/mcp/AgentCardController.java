@@ -41,11 +41,6 @@ public class AgentCardController {
       base = base.substring(0, base.length() - 1);
     }
 
-    String wsBase =
-        base.startsWith("https://")
-            ? "wss://" + base.substring("https://".length())
-            : (base.startsWith("http://") ? "ws://" + base.substring("http://".length()) : base);
-
     JsonObject card = new JsonObject();
     card.addProperty("name", "Freerouting MCP");
     card.addProperty("description", "MCP server for Freerouting routing API tools");
@@ -56,13 +51,17 @@ public class AgentCardController {
     endpoints.add(base + "/v1/mcp");
     card.add("endpoints", endpoints);
 
+    String wsBase =
+        base.startsWith("https://")
+            ? "wss://" + base.substring("https://".length())
+            : (base.startsWith("http://") ? "ws://" + base.substring("http://".length()) : base);
+
     JsonObject endpointMap = new JsonObject();
     endpointMap.addProperty("rpc", base + "/v1/mcp");
     endpointMap.addProperty("sse", base + "/v1/mcp/events");
     endpointMap.addProperty("websocket", wsBase + "/v1/mcp/ws");
     card.add("endpointMap", endpointMap);
 
-    JsonObject protocols = new JsonObject();
     JsonObject mcp = new JsonObject();
     mcp.addProperty("version", "2024-11-05");
     JsonArray transports = new JsonArray();
@@ -70,14 +69,13 @@ public class AgentCardController {
     transports.add("sse");
     transports.add("websocket");
     mcp.add("transports", transports);
+    JsonObject protocols = new JsonObject();
     protocols.add("mcp", mcp);
     JsonObject a2a = new JsonObject();
     a2a.addProperty("version", "1.0");
     protocols.add("a2a", a2a);
     card.add("protocols", protocols);
 
-    JsonObject auth = new JsonObject();
-    JsonArray schemes = new JsonArray();
     boolean authEnabled = McpApiKeyValidationService.getInstance().isAuthenticationEnabled();
     JsonObject primaryScheme = new JsonObject();
     primaryScheme.addProperty("type", authEnabled ? "bearer" : "none");
@@ -87,6 +85,8 @@ public class AgentCardController {
         authEnabled
             ? "Bearer API key sent in Authorization header"
             : "Authentication disabled for MCP server");
+    JsonObject auth = new JsonObject();
+    JsonArray schemes = new JsonArray();
     schemes.add(primaryScheme);
     auth.add("schemes", schemes);
     JsonArray requiredHeaders = new JsonArray();

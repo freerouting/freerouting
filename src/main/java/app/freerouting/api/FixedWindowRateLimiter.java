@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /** Lightweight in-memory fixed-window limiter for per-key request throttling. */
 public class FixedWindowRateLimiter {
 
+  /** Rate limiter decision result carrying allowed status and retry-after seconds. */
   public record Decision(boolean allowed, long retryAfterSeconds) {}
 
   private static final int MAX_TRACKED_KEYS = 10_000;
@@ -18,6 +19,7 @@ public class FixedWindowRateLimiter {
 
   private final ConcurrentHashMap<String, WindowCounter> counters = new ConcurrentHashMap<>();
 
+  /** Checks rate limit for the given key, maximum request count, and window size in seconds. */
   public synchronized Decision check(String key, int maxRequests, int windowSeconds) {
     long now = System.currentTimeMillis();
     long windowMs = Math.max(1L, windowSeconds) * 1000L;

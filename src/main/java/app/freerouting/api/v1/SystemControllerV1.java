@@ -73,10 +73,16 @@ public class SystemControllerV1 {
     return -1;
   }
 
+  /**
+   * Retrieves system status metrics.
+   *
+   * @return Response containing SystemStatus
+   */
   @Operation(
       summary = "Get system status",
       description =
-          "Retrieves comprehensive system status including CPU load, memory usage, storage availability, and active session count.")
+          "Retrieves comprehensive system status including CPU load, memory usage, storage"
+              + " availability, and active session count.")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -91,15 +97,15 @@ public class SystemControllerV1 {
                             name = "System Status Example",
                             value =
                                 """
-          {
-            "status": "OK",
-            "cpu_load": 45.5,
-            "ram_used": 512,
-            "ram_available": 1024,
-            "storage_available": 10240,
-            "session_count": 3
-          }
-          """)))
+                                {
+                                  "status": "OK",
+                                  "cpu_load": 45.5,
+                                  "ram_used": 512,
+                                  "ram_available": 1024,
+                                  "storage_available": 10240,
+                                  "session_count": 3
+                                }
+                                """)))
       })
   @GET
   @Path("/status")
@@ -121,6 +127,11 @@ public class SystemControllerV1 {
     return Response.ok(response).build();
   }
 
+  /**
+   * Retrieves runtime environment configuration.
+   *
+   * @return Response containing environment info
+   */
   @Operation(
       summary = "Get environment information",
       description =
