@@ -14,10 +14,10 @@ public class Layer implements Serializable {
    */
   public final boolean isSignal;
 
-  /** Creates a new instance of Layer */
-  public Layer(String pName, boolean pIsSignal) {
-    name = pName;
-    isSignal = pIsSignal;
+  /** Creates a new instance of Layer. */
+  public Layer(String name, boolean isSignal) {
+    this.name = name;
+    this.isSignal = isSignal;
   }
 
   @Override

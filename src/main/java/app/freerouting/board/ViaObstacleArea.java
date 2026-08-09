@@ -10,65 +10,65 @@ import java.util.Locale;
 /** Describes Areas on the board, where vias are not allowed. */
 public class ViaObstacleArea extends ObstacleArea {
 
-  /** Creates a new area item which may belong to several nets */
+  /** Creates a new area item which may belong to several nets. */
   ViaObstacleArea(
-      Area pArea,
-      int pLayer,
-      Vector pTranslation,
-      double pRotationInDegree,
-      boolean pSideChanged,
-      int[] pNetNoArr,
-      int pClearanceType,
-      int pIdNo,
-      int pGroupNo,
-      String pName,
-      FixedState pFixedState,
-      BasicBoard pBoard) {
+      Area area,
+      int layer,
+      Vector translation,
+      double rotationInDegree,
+      boolean sideChanged,
+      int[] netNoArr,
+      int clearanceType,
+      int idNo,
+      int groupNo,
+      String name,
+      FixedState fixedState,
+      BasicBoard board) {
     super(
-        pArea,
-        pLayer,
-        pTranslation,
-        pRotationInDegree,
-        pSideChanged,
-        pNetNoArr,
-        pClearanceType,
-        pIdNo,
-        pGroupNo,
-        pName,
-        pFixedState,
-        pBoard);
+        area,
+        layer,
+        translation,
+        rotationInDegree,
+        sideChanged,
+        netNoArr,
+        clearanceType,
+        idNo,
+        groupNo,
+        name,
+        fixedState,
+        board);
   }
 
-  /** Creates a new area item without net */
+  /** Creates a new area item without net. */
   ViaObstacleArea(
-      Area pArea,
-      int pLayer,
-      Vector pTranslation,
-      double pRotationInDegree,
-      boolean pSideChanged,
-      int pClearanceType,
-      int pIdNo,
-      int pGroupNo,
-      String pName,
-      FixedState pFixedState,
-      BasicBoard pBoard) {
+      Area area,
+      int layer,
+      Vector translation,
+      double rotationInDegree,
+      boolean sideChanged,
+      int clearanceType,
+      int idNo,
+      int groupNo,
+      String name,
+      FixedState fixedState,
+      BasicBoard board) {
     this(
-        pArea,
-        pLayer,
-        pTranslation,
-        pRotationInDegree,
-        pSideChanged,
+        area,
+        layer,
+        translation,
+        rotationInDegree,
+        sideChanged,
         new int[0],
-        pClearanceType,
-        pIdNo,
-        pGroupNo,
-        pName,
-        pFixedState,
-        pBoard);
+        clearanceType,
+        idNo,
+        groupNo,
+        name,
+        fixedState,
+        board);
   }
 
   @Override
-  public Item copy(int pIdNo) {
+  public Item copy(int idNo) {
     int[] copiedNetNos = new int[netNoArr.length];
     System.arraycopy(netNoArr, 0, copiedNetNos, 0, netNoArr.length);
     return new ViaObstacleArea(
@@ -79,7 +79,7 @@ public class ViaObstacleArea extends ObstacleArea {
         getSideChanged(),
         copiedNetNos,
         clearanceClassNo(),
-        pIdNo,
+        idNo,
         getComponentNo(),
         this.name,
         getFixedState(),
@@ -87,44 +87,44 @@ public class ViaObstacleArea extends ObstacleArea {
   }
 
   @Override
-  public boolean isObstacle(Item pOther) {
-    if (pOther.sharesNet(this)) {
+  public boolean isObstacle(Item other) {
+    if (other.sharesNet(this)) {
       return false;
     }
-    return pOther instanceof Via;
+    return other instanceof Via;
   }
 
   @Override
-  public boolean isTraceObstacle(int pNetNo) {
+  public boolean isTraceObstacle(int netNo) {
     return false;
   }
 
   @Override
-  public boolean isSelectedByFilter(ItemSelectionFilter pFilter) {
-    if (!this.isSelectedByFixedFilter(pFilter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter filter) {
+    if (!this.isSelectedByFixedFilter(filter)) {
       return false;
     }
-    return pFilter.isSelected(ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT);
+    return filter.isSelected(ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT);
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
-    TextManager tm = new TextManager(this.getClass(), pLocale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    pWindow.appendBold(tm.getText("via_keepout"));
-    this.printShapeInfo(pWindow, pLocale);
-    this.printClearanceInfo(pWindow, pLocale);
-    this.printClearanceViolationInfo(pWindow, pLocale);
-    pWindow.newline();
+    window.appendBold(tm.getText("via_keepout"));
+    this.printShapeInfo(window, locale);
+    this.printClearanceInfo(window, locale);
+    this.printClearanceViolationInfo(window, locale);
+    window.newline();
   }
 
   @Override
-  public Color[] getDrawColors(GraphicsContext pGraphicsContext) {
-    return pGraphicsContext.getViaObstacleColors();
+  public Color[] getDrawColors(GraphicsContext graphicsContext) {
+    return graphicsContext.getViaObstacleColors();
   }
 
   @Override
-  public double getDrawIntensity(GraphicsContext pGraphicsContext) {
-    return pGraphicsContext.getViaObstacleColorIntensity();
+  public double getDrawIntensity(GraphicsContext graphicsContext) {
+    return graphicsContext.getViaObstacleColorIntensity();
   }
 }

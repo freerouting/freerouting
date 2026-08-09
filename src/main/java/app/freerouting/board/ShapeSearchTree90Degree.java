@@ -18,9 +18,9 @@ import java.util.LinkedList;
  */
 public class ShapeSearchTree90Degree extends ShapeSearchTree {
 
-  /** Creates a new instance of ShapeSearchTree90Degree */
-  public ShapeSearchTree90Degree(BasicBoard pBoard, int pCompensatedClearanceClassNo) {
-    super(OrthogonalBoundingDirections.INSTANCE, pBoard, pCompensatedClearanceClassNo);
+  /** Creates a new instance of ShapeSearchTree90Degree. */
+  public ShapeSearchTree90Degree(BasicBoard board, int compensatedClearanceClassNo) {
+    super(OrthogonalBoundingDirections.INSTANCE, board, compensatedClearanceClassNo);
   }
 
   /**
@@ -33,11 +33,11 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
    */
   @Override
   public Collection<IncompleteFreeSpaceExpansionRoom> completeShape(
-      IncompleteFreeSpaceExpansionRoom pRoom,
-      int pNetNo,
-      SearchTreeObject pIgnoreObject,
-      TileShape pIgnoreShape) {
-    if (!(pRoom.getContainedShape() instanceof IntBox shapeToBeContained)) {
+      IncompleteFreeSpaceExpansionRoom room,
+      int netNo,
+      SearchTreeObject ignoreObject,
+      TileShape ignoreShape) {
+    if (!(room.getContainedShape() instanceof IntBox shapeToBeContained)) {
       FRLogger.warn("BoxShapeSearchTree.complete_shape: unexpected p_shape_to_be_contained");
       return new LinkedList<>();
     }
@@ -45,16 +45,16 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
       return new LinkedList<>();
     }
     IntBox startShape = board.getBoundingBox();
-    if (pRoom.getShape() != null) {
-      if (!(pRoom.getShape() instanceof IntBox)) {
+    if (room.getShape() != null) {
+      if (!(room.getShape() instanceof IntBox)) {
         FRLogger.warn("BoxShapeSearchTree.complete_shape: p_start_shape of type IntBox expected");
         return new LinkedList<>();
       }
-      startShape = ((IntBox) pRoom.getShape()).intersection(startShape);
+      startShape = ((IntBox) room.getShape()).intersection(startShape);
     }
     IntBox boundingShape = startShape;
-    int roomLayer = pRoom.getLayer();
-    boolean debugAnchor = isCompleteShapeDebugAnchor(pNetNo, roomLayer, startShape);
+    int roomLayer = room.getLayer();
+    boolean debugAnchor = isCompleteShapeDebugAnchor(netNo, roomLayer, startShape);
     int debugStep = 0;
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
     result.add(new IncompleteFreeSpaceExpansionRoom(startShape, roomLayer, shapeToBeContained));
@@ -75,14 +75,14 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
         if (currNode instanceof Leaf currLeaf) {
           SearchTreeObject currObject = (SearchTreeObject) currLeaf.object;
           int shapeIndex = currLeaf.shapeIndexInObject;
-          boolean isObstacle = currObject.isTraceObstacle(pNetNo);
+          boolean isObstacle = currObject.isTraceObstacle(netNo);
           int objectLayer = currObject.shapeLayer(shapeIndex);
           boolean sameLayer = objectLayer == roomLayer;
-          boolean ignoredObject = currObject == pIgnoreObject;
+          boolean ignoredObject = currObject == ignoreObject;
           if (debugAnchor) {
             traceCompleteShapeFilter(
                 debugStep,
-                pNetNo,
+                netNo,
                 roomLayer,
                 shapeIndex,
                 objectLayer,
@@ -96,7 +96,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
             IntBox currObjectShape = currObject.getTreeShape(this, shapeIndex).boundingBox();
             if (debugAnchor) {
               traceCompleteShapeCandidate(
-                  debugStep, pNetNo, roomLayer, currObject, currObjectShape);
+                  debugStep, netNo, roomLayer, currObject, currObjectShape);
             }
             Collection<IncompleteFreeSpaceExpansionRoom> newResult = new LinkedList<>();
             IntBox newBoundingShape = IntBox.EMPTY;
@@ -105,13 +105,13 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
               IntBox currShape = (IntBox) currRoom.getShape();
               boolean overlaps = currShape.overlaps(currObjectShape);
               if (overlaps) {
-                if (currObject instanceof CompleteFreeSpaceExpansionRoom && pIgnoreShape != null) {
+                if (currObject instanceof CompleteFreeSpaceExpansionRoom && ignoreShape != null) {
                   IntBox intersection = currShape.intersection(currObjectShape);
-                  if (pIgnoreShape.contains(intersection)) {
+                  if (ignoreShape.contains(intersection)) {
                     if (debugAnchor) {
                       traceCompleteShapeDecision(
                           debugStep,
-                          pNetNo,
+                          netNo,
                           roomLayer,
                           "SKIP_BY_IGNORE_SHAPE",
                           overlaps,
@@ -126,7 +126,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
                 if (debugAnchor) {
                   traceCompleteShapeDecision(
                       debugStep,
-                      pNetNo,
+                      netNo,
                       roomLayer,
                       "RESTRAIN",
                       overlaps,
@@ -144,7 +144,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
                 if (debugAnchor) {
                   traceCompleteShapeDecision(
                       debugStep,
-                      pNetNo,
+                      netNo,
                       roomLayer,
                       "KEEP_NON_OVERLAP",
                       overlaps,
@@ -158,7 +158,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
             if (hadRoomsBeforeObstacle && newResult.isEmpty()) {
               FRLogger.trace(
                   "COMPLETE_SHAPE_BLOCKED net="
-                      + pNetNo
+                      + netNo
                       + ", layer="
                       + roomLayer
                       + ", contained="
@@ -191,7 +191,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
    * shape of the result room.
    */
   private Collection<IncompleteFreeSpaceExpansionRoom> restrainShape(
-      IncompleteFreeSpaceExpansionRoom pIncompleteRoom, IntBox pObstacleShape) {
+      IncompleteFreeSpaceExpansionRoom incompleteRoom, IntBox obstacleShape) {
     // Search the edge line of p_obstacle_shape, so that p_shape_to_be_contained
     // are on the right side of this line, and that the line segment
     // intersects with the interior of p_shape.
@@ -202,78 +202,78 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
 
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
 
-    TileShape containedShape = pIncompleteRoom.getContainedShape();
+    TileShape containedShape = incompleteRoom.getContainedShape();
     if (containedShape == null || containedShape.isEmpty()) {
       FRLogger.trace("BoxShapeSearchTree.restrain_shape: p_shape_to_be_contained is empty");
       return result;
     }
-    IntBox roomShape = pIncompleteRoom.getShape().boundingBox();
-    IntBox shapeToBeContained = pIncompleteRoom.getContainedShape().boundingBox();
+    IntBox roomShape = incompleteRoom.getShape().boundingBox();
+    IntBox shapeToBeContained = incompleteRoom.getContainedShape().boundingBox();
     int cutLineDistance = 0;
     IntBox restrainedShape = null;
 
-    if (roomShape.ll.x < pObstacleShape.ur.x
-        && roomShape.ur.x > pObstacleShape.ur.x
-        && roomShape.ur.y > pObstacleShape.ll.y
-        && roomShape.ll.y < pObstacleShape.ur.y) {
+    if (roomShape.ll.x < obstacleShape.ur.x
+        && roomShape.ur.x > obstacleShape.ur.x
+        && roomShape.ur.y > obstacleShape.ll.y
+        && roomShape.ll.y < obstacleShape.ur.y) {
       // The right line segment of the obstacleShape intersects the interior of
       // p_shape
-      int currDistance = shapeToBeContained.ll.x - pObstacleShape.ur.x;
+      int currDistance = shapeToBeContained.ll.x - obstacleShape.ur.x;
       if (currDistance > cutLineDistance) {
         cutLineDistance = currDistance;
         restrainedShape =
-            new IntBox(pObstacleShape.ur.x, roomShape.ll.y, roomShape.ur.x, roomShape.ur.y);
+            new IntBox(obstacleShape.ur.x, roomShape.ll.y, roomShape.ur.x, roomShape.ur.y);
       }
     }
-    if (roomShape.ll.x < pObstacleShape.ll.x
-        && roomShape.ur.x > pObstacleShape.ll.x
-        && roomShape.ur.y > pObstacleShape.ll.y
-        && roomShape.ll.y < pObstacleShape.ur.y) {
+    if (roomShape.ll.x < obstacleShape.ll.x
+        && roomShape.ur.x > obstacleShape.ll.x
+        && roomShape.ur.y > obstacleShape.ll.y
+        && roomShape.ll.y < obstacleShape.ur.y) {
       // The left line segment of the obstacleShape intersects the interior of
       // p_shape
-      int currDistance = pObstacleShape.ll.x - shapeToBeContained.ur.x;
+      int currDistance = obstacleShape.ll.x - shapeToBeContained.ur.x;
       if (currDistance > cutLineDistance) {
         cutLineDistance = currDistance;
         restrainedShape =
-            new IntBox(roomShape.ll.x, roomShape.ll.y, pObstacleShape.ll.x, roomShape.ur.y);
+            new IntBox(roomShape.ll.x, roomShape.ll.y, obstacleShape.ll.x, roomShape.ur.y);
       }
     }
-    if (roomShape.ll.y < pObstacleShape.ll.y
-        && roomShape.ur.y > pObstacleShape.ll.y
-        && roomShape.ur.x > pObstacleShape.ll.x
-        && roomShape.ll.x < pObstacleShape.ur.x) {
+    if (roomShape.ll.y < obstacleShape.ll.y
+        && roomShape.ur.y > obstacleShape.ll.y
+        && roomShape.ur.x > obstacleShape.ll.x
+        && roomShape.ll.x < obstacleShape.ur.x) {
       // The lower line segment of the obstacleShape intersects the interior of
       // p_shape
-      int currDistance = pObstacleShape.ll.y - shapeToBeContained.ur.y;
+      int currDistance = obstacleShape.ll.y - shapeToBeContained.ur.y;
       if (currDistance > cutLineDistance) {
         cutLineDistance = currDistance;
         restrainedShape =
-            new IntBox(roomShape.ll.x, roomShape.ll.y, roomShape.ur.x, pObstacleShape.ll.y);
+            new IntBox(roomShape.ll.x, roomShape.ll.y, roomShape.ur.x, obstacleShape.ll.y);
       }
     }
-    if (roomShape.ll.y < pObstacleShape.ur.y
-        && roomShape.ur.y > pObstacleShape.ur.y
-        && roomShape.ur.x > pObstacleShape.ll.x
-        && roomShape.ll.x < pObstacleShape.ur.x) {
+    if (roomShape.ll.y < obstacleShape.ur.y
+        && roomShape.ur.y > obstacleShape.ur.y
+        && roomShape.ur.x > obstacleShape.ll.x
+        && roomShape.ll.x < obstacleShape.ur.x) {
       // The upper line segment of the obstacleShape intersects the interior of
       // p_shape
-      int currDistance = shapeToBeContained.ll.y - pObstacleShape.ur.y;
+      int currDistance = shapeToBeContained.ll.y - obstacleShape.ur.y;
       if (currDistance > cutLineDistance) {
         cutLineDistance = currDistance;
         restrainedShape =
-            new IntBox(roomShape.ll.x, pObstacleShape.ur.y, roomShape.ur.x, roomShape.ur.y);
+            new IntBox(roomShape.ll.x, obstacleShape.ur.y, roomShape.ur.x, roomShape.ur.y);
       }
     }
     if (restrainedShape != null) {
       result.add(
           new IncompleteFreeSpaceExpansionRoom(
-              restrainedShape, pIncompleteRoom.getLayer(), shapeToBeContained));
+              restrainedShape, incompleteRoom.getLayer(), shapeToBeContained));
       return result;
     }
 
     // Now shapeToBeContained intersects with the obstacleShape.
     // shapeToBeContained and p_shape evtl. need to be divided in two.
-    IntBox is = shapeToBeContained.intersection(pObstacleShape);
+    IntBox is = shapeToBeContained.intersection(obstacleShape);
     if (is.isEmpty()) {
       FRLogger.warn(
           "BoxShapeSearchTree.restrain_shape: Intersection between obstacleShape and shapeToBeContained expected");
@@ -281,21 +281,21 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     }
     IntBox newShape1 = null;
     IntBox newShape2 = null;
-    if (is.ll.x > roomShape.ll.x && is.ll.x == pObstacleShape.ll.x && is.ll.x < roomShape.ur.x) {
+    if (is.ll.x > roomShape.ll.x && is.ll.x == obstacleShape.ll.x && is.ll.x < roomShape.ur.x) {
       newShape1 = new IntBox(roomShape.ll.x, roomShape.ll.y, is.ll.x, roomShape.ur.y);
       newShape2 = new IntBox(is.ll.x, roomShape.ll.y, roomShape.ur.x, roomShape.ur.y);
     } else if (is.ur.x > roomShape.ll.x
-        && is.ur.x == pObstacleShape.ur.x
+        && is.ur.x == obstacleShape.ur.x
         && is.ur.x < roomShape.ur.x) {
       newShape2 = new IntBox(roomShape.ll.x, roomShape.ll.y, is.ur.x, roomShape.ur.y);
       newShape1 = new IntBox(is.ur.x, roomShape.ll.y, roomShape.ur.x, roomShape.ur.y);
     } else if (is.ll.y > roomShape.ll.y
-        && is.ll.y == pObstacleShape.ll.y
+        && is.ll.y == obstacleShape.ll.y
         && is.ll.y < roomShape.ur.y) {
       newShape1 = new IntBox(roomShape.ll.x, roomShape.ll.y, roomShape.ur.x, is.ll.y);
       newShape2 = new IntBox(roomShape.ll.x, is.ll.y, roomShape.ur.x, roomShape.ur.y);
     } else if (is.ur.y > roomShape.ll.y
-        && is.ur.y == pObstacleShape.ur.y
+        && is.ur.y == obstacleShape.ur.y
         && is.ur.y < roomShape.ur.y) {
       newShape2 = new IntBox(roomShape.ll.x, roomShape.ll.y, roomShape.ur.x, is.ur.y);
       newShape1 = new IntBox(roomShape.ll.x, is.ur.y, roomShape.ur.x, roomShape.ur.y);
@@ -305,25 +305,25 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
       if (newShapeToBeContained.dimension() > 0) {
         result.add(
             new IncompleteFreeSpaceExpansionRoom(
-                newShape1, pIncompleteRoom.getLayer(), newShapeToBeContained));
+                newShape1, incompleteRoom.getLayer(), newShapeToBeContained));
         IncompleteFreeSpaceExpansionRoom newIncompleteRoom =
             new IncompleteFreeSpaceExpansionRoom(
-                newShape2, pIncompleteRoom.getLayer(), shapeToBeContained.intersection(newShape2));
-        result.addAll(restrainShape(newIncompleteRoom, pObstacleShape));
+                newShape2, incompleteRoom.getLayer(), shapeToBeContained.intersection(newShape2));
+        result.addAll(restrainShape(newIncompleteRoom, obstacleShape));
       }
     }
     return result;
   }
 
-  private static String describeBounds(IntBox pBounds) {
+  private static String describeBounds(IntBox bounds) {
     return "[("
-        + pBounds.ll.x
+        + bounds.ll.x
         + ","
-        + pBounds.ll.y
+        + bounds.ll.y
         + ")..("
-        + pBounds.ur.x
+        + bounds.ur.x
         + ","
-        + pBounds.ur.y
+        + bounds.ur.y
         + ")]";
   }
 
@@ -332,117 +332,117 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
    * these coordinates to anchor detailed per-leaf logging to a different room.
    */
   private static boolean isCompleteShapeDebugAnchor(
-      int pNetNo, int pRoomLayer, IntBox pStartShape) {
-    return pNetNo == 84
-        && pRoomLayer == 0
-        && pStartShape.ll.x == 1767436
-        && pStartShape.ll.y == -1206395
-        && pStartShape.ur.x == 1994010
-        && pStartShape.ur.y == -782336;
+      int netNo, int roomLayer, IntBox startShape) {
+    return netNo == 84
+        && roomLayer == 0
+        && startShape.ll.x == 1767436
+        && startShape.ll.y == -1206395
+        && startShape.ur.x == 1994010
+        && startShape.ur.y == -782336;
   }
 
   private static void traceCompleteShapeFilter(
-      int pStep,
-      int pNetNo,
-      int pRoomLayer,
-      int pShapeIndex,
-      int pObjectLayer,
-      boolean pIsObstacle,
-      boolean pSameLayer,
-      boolean pIgnoredObject,
-      SearchTreeObject pObject) {
+      int step,
+      int netNo,
+      int roomLayer,
+      int shapeIndex,
+      int objectLayer,
+      boolean isObstacle,
+      boolean sameLayer,
+      boolean ignoredObject,
+      SearchTreeObject object) {
     FRLogger.trace(
         "COMPLETE_SHAPE_FILTER"
             + ", step="
-            + pStep
+            + step
             + ", net="
-            + pNetNo
+            + netNo
             + ", layer="
-            + pRoomLayer
+            + roomLayer
             + ", shapeIndex="
-            + pShapeIndex
+            + shapeIndex
             + ", object_layer="
-            + pObjectLayer
+            + objectLayer
             + ", is_trace_obstacle="
-            + pIsObstacle
+            + isObstacle
             + ", same_layer="
-            + pSameLayer
+            + sameLayer
             + ", ignored_object="
-            + pIgnoredObject
+            + ignoredObject
             + ", accepted="
-            + (pIsObstacle && pSameLayer && !pIgnoredObject)
+            + (isObstacle && sameLayer && !ignoredObject)
             + ", obstacle_id="
-            + obstacleId(pObject)
+            + obstacleId(object)
             + ", obstacle_nets="
-            + obstacleNets(pObject)
+            + obstacleNets(object)
             + ", obstacle="
-            + pObject);
+            + object);
   }
 
   private static void traceCompleteShapeCandidate(
-      int pStep, int pNetNo, int pRoomLayer, SearchTreeObject pObject, IntBox pObstacleShape) {
+      int step, int netNo, int roomLayer, SearchTreeObject object, IntBox obstacleShape) {
     FRLogger.trace(
         "COMPLETE_SHAPE_OBS candidate"
             + ", step="
-            + pStep
+            + step
             + ", net="
-            + pNetNo
+            + netNo
             + ", layer="
-            + pRoomLayer
+            + roomLayer
             + ", obstacle="
-            + pObject
+            + object
             + ", obstacle_id="
-            + obstacleId(pObject)
+            + obstacleId(object)
             + ", obstacle_nets="
-            + obstacleNets(pObject)
+            + obstacleNets(object)
             + ", obstacle_bounds="
-            + describeBounds(pObstacleShape));
+            + describeBounds(obstacleShape));
   }
 
   private static void traceCompleteShapeDecision(
-      int pStep,
-      int pNetNo,
-      int pRoomLayer,
-      String pAction,
-      boolean pOverlap,
-      IntBox pRoomShape,
-      IntBox pObstacleShape) {
+      int step,
+      int netNo,
+      int roomLayer,
+      String action,
+      boolean overlap,
+      IntBox roomShape,
+      IntBox obstacleShape) {
     FRLogger.trace(
         "COMPLETE_SHAPE_DECISION"
             + ", step="
-            + pStep
+            + step
             + ", net="
-            + pNetNo
+            + netNo
             + ", layer="
-            + pRoomLayer
+            + roomLayer
             + ", action="
-            + pAction
+            + action
             + ", overlap="
-            + pOverlap
+            + overlap
             + ", room_bounds="
-            + describeBounds(pRoomShape)
+            + describeBounds(roomShape)
             + ", obstacle_bounds="
-            + describeBounds(pObstacleShape));
+            + describeBounds(obstacleShape));
   }
 
-  private static int obstacleId(SearchTreeObject pObject) {
-    return pObject instanceof Item item ? item.getIdNo() : -1;
+  private static int obstacleId(SearchTreeObject object) {
+    return object instanceof Item item ? item.getIdNo() : -1;
   }
 
-  private static String obstacleNets(SearchTreeObject pObject) {
-    return pObject instanceof Item item ? java.util.Arrays.toString(item.netNoArr) : "[]";
+  private static String obstacleNets(SearchTreeObject object) {
+    return object instanceof Item item ? java.util.Arrays.toString(item.netNoArr) : "[]";
   }
 
   @Override
-  TileShape[] calculateTreeShapes(DrillItem pDrillItem) {
+  TileShape[] calculateTreeShapes(DrillItem drillItem) {
     if (this.board == null) {
       return new TileShape[0];
     }
-    TileShape[] result = new TileShape[pDrillItem.tileShapeCount()];
+    TileShape[] result = new TileShape[drillItem.tileShapeCount()];
     for (int i = 0; i < result.length; i++) {
-      Shape currShape = pDrillItem.getShape(i);
+      Shape currShape = drillItem.getShape(i);
       if (currShape == null) {
-        currShape = drillHoleObstacle(pDrillItem);
+        currShape = drillHoleObstacle(drillItem);
       }
       if (currShape == null) {
         result[i] = null;
@@ -450,8 +450,8 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
         IntBox currTileShape = currShape.boundingBox();
         int offsetWidth =
             this.clearanceCompensationValue(
-                pDrillItem.clearanceClassNo(), pDrillItem.shapeLayer(i));
-        offsetWidth += drillHoleClearanceDelta(pDrillItem, currShape, pDrillItem.shapeLayer(i));
+                drillItem.clearanceClassNo(), drillItem.shapeLayer(i));
+        offsetWidth += drillHoleClearanceDelta(drillItem, currShape, drillItem.shapeLayer(i));
         if (currTileShape == null) {
           FRLogger.warn("BoxShapeSearchTree.calculate_tree_shapes: shape is null");
         } else {
@@ -464,8 +464,8 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
   }
 
   @Override
-  TileShape[] calculateTreeShapes(ObstacleArea pObstacleArea) {
-    TileShape[] result = super.calculateTreeShapes(pObstacleArea);
+  TileShape[] calculateTreeShapes(ObstacleArea obstacleArea) {
+    TileShape[] result = super.calculateTreeShapes(obstacleArea);
     for (int i = 0; i < result.length; i++) {
       if (result[i] != null) {
         result[i] = result[i].boundingBox();
@@ -475,8 +475,8 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
   }
 
   @Override
-  TileShape[] calculateTreeShapes(BoardOutline pOutline) {
-    TileShape[] result = super.calculateTreeShapes(pOutline);
+  TileShape[] calculateTreeShapes(BoardOutline outline) {
+    TileShape[] result = super.calculateTreeShapes(outline);
     for (int i = 0; i < result.length; i++) {
       if (result[i] != null) {
         result[i] = result[i].boundingBox();
@@ -487,19 +487,19 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
 
   /** Used for creating the shapes of a polyline_trace for this tree. */
   @Override
-  TileShape offsetShape(Polyline pPolyline, int pHalfWidth, int pNo) {
-    return pPolyline.offsetBox(pHalfWidth, pNo);
+  TileShape offsetShape(Polyline polyline, int halfWidth, int no) {
+    return polyline.offsetBox(halfWidth, no);
   }
 
   /** Used for creating the shapes of a polyline_trace for this tree. */
   @Override
-  public TileShape[] offsetShapes(Polyline pPolyline, int pHalfWidth, int pFromNo, int pToNo) {
-    int fromNo = Math.max(pFromNo, 0);
-    int toNo = Math.min(pToNo, pPolyline.arr.length - 1);
+  public TileShape[] offsetShapes(Polyline polyline, int halfWidth, int fromNo, int toNo) {
+    fromNo = Math.max(fromNo, 0);
+    toNo = Math.min(toNo, polyline.arr.length - 1);
     int shapeCount = Math.max(toNo - fromNo - 1, 0);
     TileShape[] shapeArr = new TileShape[shapeCount];
     for (int j = fromNo; j < toNo - 1; j++) {
-      shapeArr[j - fromNo] = pPolyline.offsetBox(pHalfWidth, j);
+      shapeArr[j - fromNo] = polyline.offsetBox(halfWidth, j);
     }
     return shapeArr;
   }

@@ -18,18 +18,24 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+/** BoardComparator. */
 public class BoardComparator {
+
+  /** Type. */
 
   public static class ComparisonResult {
     public final boolean areEqual;
     public final String report;
 
+    /** ComparisonResult. */
     public ComparisonResult(boolean areEqual, String report) {
       this.areEqual = areEqual;
       this.report = report;
     }
   }
 
+
+  /** Compare. */
   public static ComparisonResult compare(
       RoutingBoard board1, RoutingBoard board2, double epsilonMm) {
     StringBuilder report = new StringBuilder();
@@ -344,7 +350,8 @@ public class BoardComparator {
         double sy = startPt.toFloat().y * scale1;
         report.append(
             String.format(
-                "[-] Trace in Board 1 on layer %d of net '%s' starting at (%.4f, %.4f) mm has no matching trace in Board 2.\n",
+                "[-] Trace in Board 1 on layer %d of net '%s' starting at (%.4f, %.4f) mm"
+                    + " has no matching trace in Board 2.\n",
                 pt1.getLayer(), netName1, sx, sy));
       }
     }

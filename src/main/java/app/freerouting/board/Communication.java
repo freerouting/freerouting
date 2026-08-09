@@ -15,7 +15,7 @@ public class Communication implements Serializable {
   /** For coordinate transforms to a Specctra dsn file for example. */
   public final CoordinateTransform coordinateTransform;
 
-  /** mil, inch or mm */
+  /** Mil, inch or mm. */
   public final Unit unit;
 
   /**
@@ -28,23 +28,23 @@ public class Communication implements Serializable {
   public final IdentificationNumberGenerator idNoGenerator;
   public transient BoardObservers observers;
 
-  /** Creates a new instance of BoardCommunication */
+  /** Creates a new instance of BoardCommunication. */
   public Communication(
-      Unit pUnit,
-      int pResolution,
-      SpecctraParserInfo pSpecctraParserInfo,
-      CoordinateTransform pCoordinateTransform,
-      IdentificationNumberGenerator pIdNoGenerator,
-      BoardObservers pObservers) {
-    coordinateTransform = pCoordinateTransform;
-    unit = pUnit;
-    resolution = pResolution;
-    specctraParserInfo = pSpecctraParserInfo;
-    idNoGenerator = pIdNoGenerator;
-    observers = pObservers;
+      Unit unit,
+      int resolution,
+      SpecctraParserInfo specctraParserInfo,
+      CoordinateTransform coordinateTransform,
+      IdentificationNumberGenerator idNoGenerator,
+      BoardObservers observers) {
+    this.coordinateTransform = coordinateTransform;
+    this.unit = unit;
+    this.resolution = resolution;
+    this.specctraParserInfo = specctraParserInfo;
+    this.idNoGenerator = idNoGenerator;
+    this.observers = observers;
   }
 
-  /** Creates a new instance of BoardCommunication */
+  /** Creates a new instance of BoardCommunication. */
   public Communication() {
     this(
         Unit.MIL,
@@ -55,12 +55,15 @@ public class Communication implements Serializable {
         new BoardObserverAdaptor());
   }
 
+  /** HostCadIsEagle. */
   public boolean hostCadIsEagle() {
     return specctraParserInfo != null
         && specctraParserInfo.hostCad != null
         && "CadSoft".equalsIgnoreCase(specctraParserInfo.hostCad);
   }
 
+
+  /** Host is old kicad. */
   public boolean hostIsOldKicad() {
     if ((specctraParserInfo == null)
         || (specctraParserInfo.hostCad == null)
@@ -80,17 +83,18 @@ public class Communication implements Serializable {
     return false;
   }
 
+  /** Host cad exists. */
   public boolean hostCadExists() {
     return specctraParserInfo != null && specctraParserInfo.hostCad != null;
   }
 
-  /** Returns the resolution scaled to the input unit */
-  public double getResolution(Unit pUnit) {
-    return Unit.scale(this.resolution, pUnit, this.unit);
+  /** Returns the resolution scaled to the input unit. */
+  public double getResolution(Unit unit) {
+    return Unit.scale(this.resolution, unit, this.unit);
   }
 
-  private void readObject(ObjectInputStream pStream) throws IOException, ClassNotFoundException {
-    pStream.defaultReadObject();
+  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    stream.defaultReadObject();
     observers = new BoardObserverAdaptor();
   }
 
@@ -110,28 +114,31 @@ public class Communication implements Serializable {
     public final boolean dsnFileGeneratedByHost;
 
     public SpecctraParserInfo(
-        String pStringQuote,
-        String pHostCad,
-        String pHostVersion,
-        Collection<String[]> pConstants,
-        WriteResolution pWriteResolution,
-        boolean pDsnFileGeneratedByHost) {
-      stringQuote = pStringQuote;
-      hostCad = pHostCad;
-      hostVersion = pHostVersion;
-      constants = pConstants;
-      writeResolution = pWriteResolution;
-      dsnFileGeneratedByHost = pDsnFileGeneratedByHost;
+        String stringQuote,
+        String hostCad,
+        String hostVersion,
+        Collection<String[]> constants,
+        WriteResolution writeResolution,
+        boolean dsnFileGeneratedByHost) {
+      this.stringQuote = stringQuote;
+      this.hostCad = hostCad;
+      this.hostVersion = hostVersion;
+      /** Type. */
+      this.constants = constants;
+      this.writeResolution = writeResolution;
+      this.dsnFileGeneratedByHost = dsnFileGeneratedByHost;
     }
+
+    /** Type. */
 
     public static class WriteResolution implements Serializable {
 
       public final String charName;
       public final int positiveInt;
 
-      public WriteResolution(String pCharName, int pPositiveInt) {
-        charName = pCharName;
-        positiveInt = pPositiveInt;
+      public WriteResolution(String charName, int positiveInt) {
+        this.charName = charName;
+        this.positiveInt = positiveInt;
       }
     }
   }

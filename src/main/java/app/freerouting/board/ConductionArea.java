@@ -38,8 +38,9 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     return this.isFilled;
   }
 
-  public void setIsFilled(boolean pValue) {
-    this.isFilled = pValue;
+  /** SetIsFilled. */
+  public void setIsFilled(boolean value) {
+    this.isFilled = value;
     this.clearDerivedData();
   }
 
@@ -48,35 +49,35 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   private transient int cachedBoardRevision = -1;
   private transient java.awt.geom.Area cachedBoardFillArea;
 
-  /** Creates a new instance of ConductionArea */
+  /** Creates a new instance of ConductionArea. */
   ConductionArea(
-      Area pArea,
-      int pLayer,
-      Vector pTranslation,
-      double pRotationInDegree,
-      boolean pSideChanged,
-      int[] pNetNoArr,
-      int pClearanceClass,
-      int pIdNo,
-      int pGroupNo,
-      String pName,
-      boolean pIsObstacle,
-      FixedState pFixedState,
-      BasicBoard pBoard) {
+      Area area,
+      int layer,
+      Vector translation,
+      double rotationInDegree,
+      boolean sideChanged,
+      int[] netNoArr,
+      int clearanceClass,
+      int idNo,
+      int groupNo,
+      String name,
+      boolean isObstacle,
+      FixedState fixedState,
+      BasicBoard board) {
     super(
-        pArea,
-        pLayer,
-        pTranslation,
-        pRotationInDegree,
-        pSideChanged,
-        pNetNoArr,
-        pClearanceClass,
-        pIdNo,
-        pGroupNo,
-        pName,
-        pFixedState,
-        pBoard);
-    isObstacle = pIsObstacle;
+        area,
+        layer,
+        translation,
+        rotationInDegree,
+        sideChanged,
+        netNoArr,
+        clearanceClass,
+        idNo,
+        groupNo,
+        name,
+        fixedState,
+        board);
+    this.isObstacle = isObstacle;
   }
 
   @Override
@@ -90,19 +91,19 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   @Override
   public void draw(
-      Graphics pG, GraphicsContext pGraphicsContext, Color[] pColorArr, double pIntensity) {
-    if (pGraphicsContext == null || pIntensity <= 0) {
+      Graphics g, GraphicsContext graphicsContext, Color[] colorArr, double intensity) {
+    if (graphicsContext == null || intensity <= 0) {
       return;
     }
     int layerNo = this.getLayer();
-    double layerVis = pGraphicsContext.getLayerVisibility(layerNo);
+    double layerVis = graphicsContext.getLayerVisibility(layerNo);
     if (layerVis <= 0) {
       return;
     }
 
-    Color color = pColorArr[layerNo];
+    Color color = colorArr[layerNo];
     if (this.isFilled) {
-      double fillOpacity = Math.min(layerVis * pIntensity * PLANE_FILL_SCALE, 1.0);
+      double fillOpacity = Math.min(layerVis * intensity * PLANE_FILL_SCALE, 1.0);
 
       double maxClearanceLookupBoard = 2000.0 * this.board.communication.getResolution(Unit.UM);
       if (this.board.rules != null && this.board.rules.clearanceMatrix != null) {
@@ -114,20 +115,20 @@ public class ConductionArea extends ObstacleArea implements Connectable {
                 maxMatrixClearance + 100.0 * this.board.communication.getResolution(Unit.UM));
       }
       double clearanceScreenPx =
-          pGraphicsContext.coordinateTransform.boardToScreen(maxClearanceLookupBoard);
+          graphicsContext.coordinateTransform.boardToScreen(maxClearanceLookupBoard);
       boolean useSimpleFill =
           clearanceScreenPx < PLANE_SIMPLE_FILL_MAX_CLEARANCE_SCREEN_PX
-              || pGraphicsContext.isSimplifiedPlaneRendering();
+              || graphicsContext.isSimplifiedPlaneRendering();
 
       if (useSimpleFill) {
-        pGraphicsContext.fillArea(this.getArea(), pG, color, fillOpacity);
+        graphicsContext.fillArea(this.getArea(), g, color, fillOpacity);
       } else {
         ensureDetailedFillCache(maxClearanceLookupBoard, layerNo);
 
         if (cachedBoardFillArea != null && !cachedBoardFillArea.isEmpty()) {
-          Point2D p0 = pGraphicsContext.coordinateTransform.boardToScreen(FloatPoint.ZERO);
-          Point2D px = pGraphicsContext.coordinateTransform.boardToScreen(new FloatPoint(1, 0));
-          Point2D py = pGraphicsContext.coordinateTransform.boardToScreen(new FloatPoint(0, 1));
+          Point2D p0 = graphicsContext.coordinateTransform.boardToScreen(FloatPoint.ZERO);
+          Point2D px = graphicsContext.coordinateTransform.boardToScreen(new FloatPoint(1, 0));
+          Point2D py = graphicsContext.coordinateTransform.boardToScreen(new FloatPoint(0, 1));
 
           double m00 = px.getX() - p0.getX();
           double m10 = px.getY() - p0.getY();
@@ -140,7 +141,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
               new java.awt.geom.AffineTransform(m00, m10, m01, m11, m02, m12);
           java.awt.geom.Area screenArea = cachedBoardFillArea.createTransformedArea(boardToScreen);
 
-          java.awt.Graphics2D g2 = (java.awt.Graphics2D) pG;
+          java.awt.Graphics2D g2 = (java.awt.Graphics2D) g;
           java.awt.Paint oldPaint = g2.getPaint();
           java.awt.Composite oldComposite = g2.getComposite();
 
@@ -160,11 +161,11 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
     // Hatch border (0.5 mm in board units)
     double hatchPitch = 500.0 * this.board.communication.getResolution(Unit.UM);
-    pGraphicsContext.drawPlaneHatch(
-        this.getArea(), pG, color, layerVis * pIntensity * PLANE_HATCH_OPACITY, hatchPitch);
+    graphicsContext.drawPlaneHatch(
+        this.getArea(), g, color, layerVis * intensity * PLANE_HATCH_OPACITY, hatchPitch);
 
     // Border outline
-    pGraphicsContext.drawBoundary(this.getArea(), 0.0, color, pG, layerVis);
+    graphicsContext.drawBoundary(this.getArea(), 0.0, color, g, layerVis);
   }
 
   /** Pre-computes detailed plane-fill geometry off the EDT so zoom-in paints stay responsive. */
@@ -309,11 +310,11 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     cachedBoardRevision = this.board.getRevision();
   }
 
-  private static java.awt.geom.Area getAwtAreaInBoardUnits(Area pArea) {
-    if (pArea == null || pArea.isEmpty()) {
+  private static java.awt.geom.Area getAwtAreaInBoardUnits(Area area) {
+    if (area == null || area.isEmpty()) {
       return null;
     }
-    if (pArea instanceof app.freerouting.geometry.planar.Circle circle) {
+    if (area instanceof app.freerouting.geometry.planar.Circle circle) {
       double radius = circle.radius;
       double diameter = 2 * radius;
       return new java.awt.geom.Area(
@@ -321,7 +322,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
               circle.center.x - radius, circle.center.y - radius, diameter, diameter));
     }
 
-    Shape borderShape = pArea.getBorder();
+    Shape borderShape = area.getBorder();
     if (!(borderShape instanceof app.freerouting.geometry.planar.PolylineShape border)
         || !border.isBounded()) {
       return null;
@@ -340,7 +341,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     }
     java.awt.geom.Area awtArea = new java.awt.geom.Area(borderPath);
 
-    Shape[] holes = pArea.getHoles();
+    Shape[] holes = area.getHoles();
     for (Shape hole : holes) {
       java.awt.geom.Area holeArea = getAwtAreaFromShapeInBoardUnits(hole);
       if (holeArea != null) {
@@ -350,22 +351,22 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     return awtArea;
   }
 
-  private static java.awt.geom.Area getAwtAreaFromShapeInBoardUnits(Shape pShape) {
-    if (pShape == null) {
+  private static java.awt.geom.Area getAwtAreaFromShapeInBoardUnits(Shape shape) {
+    if (shape == null) {
       return null;
     }
-    if (pShape instanceof app.freerouting.geometry.planar.Circle circle) {
+    if (shape instanceof app.freerouting.geometry.planar.Circle circle) {
       double radius = circle.radius;
       double diameter = 2 * radius;
       return new java.awt.geom.Area(
           new java.awt.geom.Ellipse2D.Double(
               circle.center.x - radius, circle.center.y - radius, diameter, diameter));
     }
-    if (pShape instanceof IntBox box) {
+    if (shape instanceof IntBox box) {
       return new java.awt.geom.Area(
           new java.awt.geom.Rectangle2D.Double(box.ll.x, box.ll.y, box.width(), box.height()));
     }
-    if (pShape instanceof app.freerouting.geometry.planar.PolylineShape poly) {
+    if (shape instanceof app.freerouting.geometry.planar.PolylineShape poly) {
       java.awt.geom.Path2D.Double path = new java.awt.geom.Path2D.Double();
       int count = poly.borderLineCount();
       if (count > 0) {
@@ -383,7 +384,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   @Override
-  public Item copy(int pIdNo) {
+  public Item copy(int idNo) {
     if (this.netCount() != 1) {
       FRLogger.warn("ConductionArea.copy not yet implemented for areas with more than 1 net");
       return null;
@@ -396,7 +397,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         getSideChanged(),
         netNoArr,
         clearanceClassNo(),
-        pIdNo,
+        idNo,
         getComponentNo(),
         this.name,
         isObstacle,
@@ -420,8 +421,8 @@ public class ConductionArea extends ObstacleArea implements Connectable {
                 || currShape.contains(currTrace.lastCorner())) {
               result.add(currItem);
             }
-          } else if (currItem instanceof DrillItem curr_drill_item) {
-            if (currShape.contains(curr_drill_item.getCenter())) {
+          } else if (currItem instanceof DrillItem currDrillItem) {
+            if (currShape.contains(currDrillItem.getCenter())) {
               result.add(currItem);
             }
           }
@@ -432,12 +433,12 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   @Override
-  public TileShape getTraceConnectionShape(ShapeSearchTree pSearchTree, int pIndex) {
-    if (pIndex < 0 || pIndex >= this.treeShapeCount(pSearchTree)) {
+  public TileShape getTraceConnectionShape(ShapeSearchTree searchTree, int index) {
+    if (index < 0 || index >= this.treeShapeCount(searchTree)) {
       FRLogger.warn("ConductionArea.get_trace_connection_shape p_index out of range");
       return null;
     }
-    return this.getTreeShape(pSearchTree, pIndex);
+    return this.getTreeShape(searchTree, index);
   }
 
   @Override
@@ -453,9 +454,9 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   @Override
-  public boolean isObstacle(Item pOther) {
+  public boolean isObstacle(Item other) {
     if (this.isObstacle) {
-      return super.isObstacle(pOther);
+      return super.isObstacle(other);
     }
     return false;
   }
@@ -466,45 +467,45 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   /** Sets, if this conduction area is regarded as obstacle to traces and vias of foreign nets. */
-  public void setIsObstacle(boolean pValue) {
-    this.isObstacle = pValue;
+  public void setIsObstacle(boolean value) {
+    this.isObstacle = value;
   }
 
   @Override
-  public boolean isTraceObstacle(int pNetNo) {
-    return this.isObstacle && !this.containsNet(pNetNo);
+  public boolean isTraceObstacle(int netNo) {
+    return this.isObstacle && !this.containsNet(netNo);
   }
 
   @Override
-  public boolean isDrillable(int pNetNo) {
-    return !this.isObstacle || this.containsNet(pNetNo);
+  public boolean isDrillable(int netNo) {
+    return !this.isObstacle || this.containsNet(netNo);
   }
 
   @Override
-  public boolean isSelectedByFilter(ItemSelectionFilter pFilter) {
-    if (!this.isSelectedByFixedFilter(pFilter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter filter) {
+    if (!this.isSelectedByFixedFilter(filter)) {
       return false;
     }
-    return pFilter.isSelected(ItemSelectionFilter.SelectableChoices.CONDUCTION);
+    return filter.isSelected(ItemSelectionFilter.SelectableChoices.CONDUCTION);
   }
 
   @Override
-  public Color[] getDrawColors(GraphicsContext pGraphicsContext) {
-    return pGraphicsContext.getTraceColors(true);
+  public Color[] getDrawColors(GraphicsContext graphicsContext) {
+    return graphicsContext.getTraceColors(true);
   }
 
   @Override
-  public double getDrawIntensity(GraphicsContext pGraphicsContext) {
-    return pGraphicsContext.getConductionColorIntensity();
+  public double getDrawIntensity(GraphicsContext graphicsContext) {
+    return graphicsContext.getConductionColorIntensity();
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
-    TextManager tm = new TextManager(this.getClass(), pLocale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    pWindow.appendBold(tm.getText("conductionArea"));
-    this.printShapeInfo(pWindow, pLocale);
-    this.printConnectableItemInfo(pWindow, pLocale);
-    pWindow.newline();
+    window.appendBold(tm.getText("conductionArea"));
+    this.printShapeInfo(window, locale);
+    this.printConnectableItemInfo(window, locale);
+    window.newline();
   }
 }

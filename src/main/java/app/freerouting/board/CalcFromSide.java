@@ -10,6 +10,7 @@ import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 
+/** CalcFromSide. */
 public class CalcFromSide {
 
   public static final CalcFromSide NOT_CALCULATED = new CalcFromSide(-1, null);
@@ -17,21 +18,21 @@ public class CalcFromSide {
   FloatPoint borderIntersection;
 
   /**
-   * calculates the number of the edge line of p_shape where p_polyline enters. Used in the push
+   * calculates the number of the edge line of p_shape where p_polyline enters. Used in the push.
    * trace algorithm to determine the shove direction. p_no is expected between 1 and
    * p_polyline.lineCount - 2 inclusive.
    */
-  CalcFromSide(Polyline pPolyline, int pNo, TileShape pShape) {
+  CalcFromSide(Polyline polyline, int no, TileShape shape) {
     int fromsideNo = -1;
     FloatPoint intersection = null;
     boolean borderIntersectionFound = false;
     // calculate the edgeNo of p_shape, where p_polyline enters
-    for (int currNo = pNo; currNo > 0; currNo--) {
-      LineSegment currSeg = new LineSegment(pPolyline, currNo);
-      int[] intersections = currSeg.borderIntersections(pShape);
+    for (int currNo = no; currNo > 0; currNo--) {
+      LineSegment currSeg = new LineSegment(polyline, currNo);
+      int[] intersections = currSeg.borderIntersections(shape);
       if (intersections.length > 0) {
         fromsideNo = intersections[0];
-        intersection = currSeg.getLine().intersectionApprox(pShape.borderLine(fromsideNo));
+        intersection = currSeg.getLine().intersectionApprox(shape.borderLine(fromsideNo));
         borderIntersectionFound = true;
         break;
       }
@@ -40,12 +41,12 @@ public class CalcFromSide {
       // The first corner of p_polyline is inside p_shape.
       // Calculate the nearest intersection point of p_polyline.arr[1]
       // with the border of p_shape to the first corner of p_polyline
-      FloatPoint fromPoint = pPolyline.cornerApprox(0);
-      Line checkLine = pPolyline.arr[1];
+      FloatPoint fromPoint = polyline.cornerApprox(0);
+      Line checkLine = polyline.arr[1];
       double minDist = Double.MAX_VALUE;
-      int edgeCount = pShape.borderLineCount();
+      int edgeCount = shape.borderLineCount();
       for (int i = 0; i < edgeCount; i++) {
-        Line currLine = pShape.borderLine(i);
+        Line currLine = shape.borderLine(i);
         FloatPoint currIntersection = checkLine.intersectionApprox(currLine);
         double currDist = Math.abs(currIntersection.distance(fromPoint));
         if (currDist < minDist) {
@@ -63,9 +64,9 @@ public class CalcFromSide {
    * Calculates the nearest border side of p_shape to p_from_point. Used in the shove_drill_item
    * algorithm to determine the shove direction.
    */
-  CalcFromSide(Point pFromPoint, TileShape pShape) {
-    Point borderProjection = pShape.nearestBorderPoint(pFromPoint);
-    this.no = pShape.containsOnBorderLineNo(borderProjection);
+  CalcFromSide(Point fromPoint, TileShape shape) {
+    Point borderProjection = shape.nearestBorderPoint(fromPoint);
+    this.no = shape.containsOnBorderLineNo(borderProjection);
     if (this.no < 0) {
       FRLogger.warn("CalcFromSide: this.no >= 0 expected");
     }
@@ -76,12 +77,12 @@ public class CalcFromSide {
    * Calculates the Side of p_shape at the start of p_line_segment. If p_shove_to_the_left, the
    * fromSideNo is decremented by 2, else it is increased by 2.
    */
-  CalcFromSide(LineSegment pLineSegment, TileShape pShape, boolean pShoveToTheLeft) {
-    FloatPoint startCorner = pLineSegment.startPointApprox();
-    FloatPoint endCorner = pLineSegment.endPointApprox();
-    int borderLineCount = pShape.borderLineCount();
-    Line checkLine = pLineSegment.getLine();
-    FloatPoint firstCorner = pShape.cornerApprox(0);
+  CalcFromSide(LineSegment lineSegment, TileShape shape, boolean shoveToTheLeft) {
+    FloatPoint startCorner = lineSegment.startPointApprox();
+    FloatPoint endCorner = lineSegment.endPointApprox();
+    int borderLineCount = shape.borderLineCount();
+    Line checkLine = lineSegment.getLine();
+    FloatPoint firstCorner = shape.cornerApprox(0);
     Side prevSide = checkLine.sideOf(firstCorner);
     int frontSideNo = -1;
 
@@ -90,11 +91,11 @@ public class CalcFromSide {
       if (i == borderLineCount) {
         nextCorner = firstCorner;
       } else {
-        nextCorner = pShape.cornerApprox(i);
+        nextCorner = shape.cornerApprox(i);
       }
       Side nextSide = checkLine.sideOf(nextCorner);
       if (prevSide != nextSide) {
-        FloatPoint currIntersection = pShape.borderLine(i - 1).intersectionApprox(checkLine);
+        FloatPoint currIntersection = shape.borderLine(i - 1).intersectionApprox(checkLine);
         if (currIntersection.distanceSquare(startCorner)
             < currIntersection.distanceSquare(endCorner)) {
           frontSideNo = i - 1;
@@ -105,19 +106,19 @@ public class CalcFromSide {
     }
     if (frontSideNo < 0) {
       // Fallback: find the nearest side of the shape to the start point of the line segment
-      startCorner = pLineSegment.startPointApprox();
+      startCorner = lineSegment.startPointApprox();
       double minDistance = Double.MAX_VALUE;
       int nearestSide = 0;
 
       // Check each side of the shape
       for (int i = 0; i < borderLineCount; i++) {
         FloatLine borderLine =
-            new FloatLine(pShape.borderLine(i).a.toFloat(), pShape.borderLine(i).b.toFloat());
+            new FloatLine(shape.borderLine(i).a.toFloat(), shape.borderLine(i).b.toFloat());
         FloatPoint projection = borderLine.perpendicularProjection(startCorner);
 
         // Only consider if projection is on the line segment
-        FloatPoint sideStart = pShape.cornerApprox(i);
-        FloatPoint sideEnd = pShape.cornerApprox((i + 1) % borderLineCount);
+        FloatPoint sideStart = shape.cornerApprox(i);
+        FloatPoint sideEnd = shape.cornerApprox((i + 1) % borderLineCount);
         if (projection.isContainedInBox(sideStart, sideEnd, 0.01)) {
           double distance = startCorner.distance(projection);
           if (distance < minDistance) {
@@ -129,31 +130,31 @@ public class CalcFromSide {
       }
 
       // Apply the same shove direction logic as the original code
-      if (pShoveToTheLeft) {
+      if (shoveToTheLeft) {
         this.no = (nearestSide + 2) % borderLineCount;
       } else {
         this.no = (nearestSide + borderLineCount - 2) % borderLineCount;
       }
 
       // Update border intersection to be the middle of the chosen side
-      FloatPoint prevCorner = pShape.cornerApprox(this.no);
-      FloatPoint nextCorner = pShape.cornerApprox((this.no + 1) % borderLineCount);
+      FloatPoint prevCorner = shape.cornerApprox(this.no);
+      FloatPoint nextCorner = shape.cornerApprox((this.no + 1) % borderLineCount);
       this.borderIntersection = prevCorner.middlePoint(nextCorner);
       return;
     }
-    if (pShoveToTheLeft) {
+    if (shoveToTheLeft) {
       this.no = (frontSideNo + 2) % borderLineCount;
     } else {
       this.no = (frontSideNo + borderLineCount - 2) % borderLineCount;
     }
-    FloatPoint prevCorner = pShape.cornerApprox(this.no);
-    FloatPoint nextCorner = pShape.cornerApprox((this.no + 1) % borderLineCount);
+    FloatPoint prevCorner = shape.cornerApprox(this.no);
+    FloatPoint nextCorner = shape.cornerApprox((this.no + 1) % borderLineCount);
     this.borderIntersection = prevCorner.middlePoint(nextCorner);
   }
 
   /** Values already calculated. Just create an instance from them. */
-  CalcFromSide(int pNo, FloatPoint pBorderIntersection) {
-    no = pNo;
-    borderIntersection = pBorderIntersection;
+  CalcFromSide(int no, FloatPoint borderIntersection) {
+    this.no = no;
+    this.borderIntersection = borderIntersection;
   }
 }

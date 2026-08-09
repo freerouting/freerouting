@@ -21,18 +21,18 @@ class CalcShapeAndFromSide {
    * actual shove functions p_in_shove_check is expected to be false.
    */
   CalcShapeAndFromSide(
-      PolylineTrace pTrace, int pIndex, boolean pOrthogonal, boolean pInShoveCheck) {
-    ShapeSearchTree searchTree = pTrace.board.searchTreeManager.getDefaultTree();
-    TileShape currShape = pTrace.getTreeShape(searchTree, pIndex);
+      PolylineTrace trace, int index, boolean orthogonal, boolean inShoveCheck) {
+    ShapeSearchTree searchTree = trace.board.searchTreeManager.getDefaultTree();
+    TileShape currShape = trace.getTreeShape(searchTree, index);
     CalcFromSide currFromSide = null;
     boolean cutOffAtStart = false;
     boolean cutOffAtEnd = false;
-    if (pOrthogonal) {
+    if (orthogonal) {
       currShape = currShape.boundingBox();
     } else {
       // prevent dog ears at the start and the end of the substitute trace
       currShape = currShape.toSimplex();
-      Line endCutline = calcCutlineAtEnd(pIndex, pTrace);
+      Line endCutline = calcCutlineAtEnd(index, trace);
       if (endCutline != null) {
         TileShape cutPlane = TileShape.getInstance(endCutline);
         TileShape tmpShape = currShape.intersection(cutPlane);
@@ -41,7 +41,7 @@ class CalcShapeAndFromSide {
           cutOffAtEnd = true;
         }
       }
-      Line startCutline = calcCutlineAtStart(pIndex, pTrace);
+      Line startCutline = calcCutlineAtStart(index, trace);
       if (startCutline != null) {
         TileShape cutPlane = TileShape.getInstance(startCutline);
         TileShape tmpShape = currShape.intersection(cutPlane);
@@ -66,23 +66,23 @@ class CalcShapeAndFromSide {
         currFromSide = new CalcFromSide(fromSideNo, borderIntersection);
       }
     }
-    if (currFromSide == null && !pInShoveCheck) {
+    if (currFromSide == null && !inShoveCheck) {
       // In p_in_shove_check, using this calculation may produce an undesired stackLevel > 1 in
       // ShapeTraceEntries.
-      currFromSide = new CalcFromSide(pTrace.polyline(), pIndex, currShape);
+      currFromSide = new CalcFromSide(trace.polyline(), index, currShape);
     }
     this.shape = currShape;
     this.fromSide = currFromSide;
   }
 
-  private static Line calcCutlineAtEnd(int pIndex, PolylineTrace pTrace) {
-    Polyline traceLines = pTrace.polyline();
-    ShapeSearchTree searchTree = pTrace.board.searchTreeManager.getDefaultTree();
-    if (pIndex == traceLines.arr.length - 3
+  private static Line calcCutlineAtEnd(int index, PolylineTrace trace) {
+    Polyline traceLines = trace.polyline();
+    ShapeSearchTree searchTree = trace.board.searchTreeManager.getDefaultTree();
+    if (index == traceLines.arr.length - 3
         || traceLines
                 .cornerApprox(traceLines.arr.length - 2)
-                .distance(traceLines.cornerApprox(pIndex + 1))
-            < pTrace.getCompensatedHalfWidth(searchTree)) {
+                .distance(traceLines.cornerApprox(index + 1))
+            < trace.getCompensatedHalfWidth(searchTree)) {
 
       Line currLine = traceLines.arr[traceLines.arr.length - 1];
       FloatPoint is = traceLines.cornerApprox(traceLines.arr.length - 3);
@@ -97,12 +97,12 @@ class CalcShapeAndFromSide {
     return null;
   }
 
-  private static Line calcCutlineAtStart(int pIndex, PolylineTrace pTrace) {
-    Polyline traceLines = pTrace.polyline();
-    ShapeSearchTree searchTree = pTrace.board.searchTreeManager.getDefaultTree();
-    if (pIndex == 0
-        || traceLines.cornerApprox(0).distance(traceLines.cornerApprox(pIndex))
-            < pTrace.getCompensatedHalfWidth(searchTree)) {
+  private static Line calcCutlineAtStart(int index, PolylineTrace trace) {
+    Polyline traceLines = trace.polyline();
+    ShapeSearchTree searchTree = trace.board.searchTreeManager.getDefaultTree();
+    if (index == 0
+        || traceLines.cornerApprox(0).distance(traceLines.cornerApprox(index))
+            < trace.getCompensatedHalfWidth(searchTree)) {
       Line currLine = traceLines.arr[0];
       FloatPoint is = traceLines.cornerApprox(1);
       Line cutLine;

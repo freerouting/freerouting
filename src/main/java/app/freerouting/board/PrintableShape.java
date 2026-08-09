@@ -14,8 +14,9 @@ public abstract class PrintableShape {
 
   protected final Locale locale;
 
-  protected PrintableShape(Locale pLocale) {
-    this.locale = pLocale;
+  /** PrintableShape. */
+  protected PrintableShape(Locale locale) {
+    this.locale = locale;
   }
 
   /** Returns text information about the PrintableShape. */
@@ -28,10 +29,10 @@ public abstract class PrintableShape {
     public final double radius;
 
     /** Creates a Circle from the input coordinates. */
-    public Circle(FloatPoint pCenter, double pRadius, Locale pLocale) {
-      super(pLocale);
-      center = pCenter;
-      radius = pRadius;
+    public Circle(FloatPoint center, double radius, Locale locale) {
+      super(locale);
+      this.center = center;
+      this.radius = radius;
     }
 
     @Override
@@ -57,10 +58,10 @@ public abstract class PrintableShape {
     public final FloatPoint lowerLeft;
     public final FloatPoint upperRight;
 
-    public Rectangle(FloatPoint pLowerLeft, FloatPoint pUpperRight, Locale pLocale) {
-      super(pLocale);
-      lowerLeft = pLowerLeft;
-      upperRight = pUpperRight;
+    public Rectangle(FloatPoint lowerLeft, FloatPoint upperRight, Locale locale) {
+      super(locale);
+      this.lowerLeft = lowerLeft;
+      this.upperRight = upperRight;
     }
 
     @Override
@@ -83,9 +84,9 @@ public abstract class PrintableShape {
 
     public final FloatPoint[] cornerArr;
 
-    public Polygon(FloatPoint[] pCorners, Locale pLocale) {
-      super(pLocale);
-      cornerArr = pCorners;
+    public Polygon(FloatPoint[] corners, Locale locale) {
+      super(locale);
+      cornerArr = corners;
     }
 
     @Override

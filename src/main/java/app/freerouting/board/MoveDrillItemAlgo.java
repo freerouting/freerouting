@@ -12,7 +12,7 @@ import app.freerouting.geometry.planar.Vector;
 import java.util.Collection;
 import java.util.LinkedList;
 
-/** Contains internal auxiliary functions of class RoutingBoard for shoving vias and pins */
+/** Contains internal auxiliary functions of class RoutingBoard for shoving vias and pins. */
 public final class MoveDrillItemAlgo {
 
   private MoveDrillItemAlgo() {}
@@ -22,69 +22,69 @@ public final class MoveDrillItemAlgo {
    * aside, so that no clearance violations occur.
    */
   public static boolean check(
-      DrillItem pDrillItem,
-      Vector pVector,
-      int pMaxRecursionDepth,
-      int pMaxViaRecursionDepth,
-      Collection<Item> pIgnoreItems,
-      RoutingBoard pBoard,
-      TimeLimit pTimeLimit) {
+      DrillItem drillItem,
+      Vector vector,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      Collection<Item> ignoreItems,
+      RoutingBoard board,
+      TimeLimit timeLimit) {
 
-    if (pTimeLimit != null && pTimeLimit.limitExceeded()) {
+    if (timeLimit != null && timeLimit.limitExceeded()) {
       return false;
     }
-    if (pDrillItem.isShoveFixed()) {
+    if (drillItem.isShoveFixed()) {
       return false;
     }
 
     // Check, that p_drillitem is only connected to traces.
-    Collection<Item> contactList = pDrillItem.getNormalContacts();
+    Collection<Item> contactList = drillItem.getNormalContacts();
     for (Item currContact : contactList) {
       if (!(currContact instanceof Trace || currContact instanceof ConductionArea)) {
         return false;
       }
     }
-    Collection<Item> ignoreItems;
-    if (pIgnoreItems == null) {
-      ignoreItems = new LinkedList<>();
+    Collection<Item> effectiveIgnoreItems;
+    if (ignoreItems == null) {
+      effectiveIgnoreItems = new LinkedList<>();
     } else {
-      ignoreItems = pIgnoreItems;
+      effectiveIgnoreItems = ignoreItems;
     }
-    ignoreItems.add(pDrillItem);
-    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(pBoard);
+    effectiveIgnoreItems.add(drillItem);
+    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(board);
     boolean attachAllowed = false;
-    if (pDrillItem instanceof Via via) {
+    if (drillItem instanceof Via via) {
       attachAllowed = via.attachAllowed;
     }
-    ShapeSearchTree searchTree = pBoard.searchTreeManager.getDefaultTree();
-    for (int currLayer = pDrillItem.firstLayer();
-        currLayer <= pDrillItem.lastLayer();
+    ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
+    for (int currLayer = drillItem.firstLayer();
+        currLayer <= drillItem.lastLayer();
         currLayer++) {
-      int currInd = currLayer - pDrillItem.firstLayer();
-      TileShape currShape = pDrillItem.getTreeShape(searchTree, currInd);
+      int currInd = currLayer - drillItem.firstLayer();
+      TileShape currShape = drillItem.getTreeShape(searchTree, currInd);
       if (currShape == null) {
         continue;
       }
-      ConvexShape newShape = (ConvexShape) currShape.translateBy(pVector);
+      ConvexShape newShape = (ConvexShape) currShape.translateBy(vector);
       TileShape currTileShape;
-      if (pBoard.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+      if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
         currTileShape = newShape.boundingBox();
       } else {
         currTileShape = newShape.boundingOctagon();
       }
-      CalcFromSide fromSide = new CalcFromSide(pDrillItem.getCenter(), currTileShape);
+      CalcFromSide fromSide = new CalcFromSide(drillItem.getCenter(), currTileShape);
       if (forcedPadAlgo.checkForcedPad(
               currTileShape,
               fromSide,
               currLayer,
-              pDrillItem.netNoArr,
-              pDrillItem.clearanceClassNo(),
+              drillItem.netNoArr,
+              drillItem.clearanceClassNo(),
               attachAllowed,
-              ignoreItems,
-              pMaxRecursionDepth,
-              pMaxViaRecursionDepth,
+              effectiveIgnoreItems,
+              maxRecursionDepth,
+              maxViaRecursionDepth,
               true,
-              pTimeLimit)
+              timeLimit)
           == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
         return false;
       }
@@ -98,61 +98,61 @@ public final class MoveDrillItemAlgo {
    * octagons of the translated shapes.
    */
   static boolean insert(
-      DrillItem pDrillItem,
-      Vector pVector,
-      int pMaxRecursionDepth,
-      int pMaxViaRecursionDepth,
-      IntOctagon pTidyRegion,
-      RoutingBoard pBoard) {
-    if (pDrillItem.isShoveFixed()) {
+      DrillItem drillItem,
+      Vector vector,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      IntOctagon tidyRegion,
+      RoutingBoard board) {
+    if (drillItem.isShoveFixed()) {
       return false;
     }
 
     boolean attachAllowed = false;
-    if (pDrillItem instanceof Via via) {
+    if (drillItem instanceof Via via) {
       attachAllowed = via.attachAllowed;
     }
-    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(pBoard);
+    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(board);
     Collection<Item> ignoreItems = new LinkedList<>();
-    ignoreItems.add(pDrillItem);
-    ShapeSearchTree searchTree = pBoard.searchTreeManager.getDefaultTree();
-    for (int currLayer = pDrillItem.firstLayer();
-        currLayer <= pDrillItem.lastLayer();
+    ignoreItems.add(drillItem);
+    ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
+    for (int currLayer = drillItem.firstLayer();
+        currLayer <= drillItem.lastLayer();
         currLayer++) {
-      int currInd = currLayer - pDrillItem.firstLayer();
-      TileShape currShape = pDrillItem.getTreeShape(searchTree, currInd);
+      int currInd = currLayer - drillItem.firstLayer();
+      TileShape currShape = drillItem.getTreeShape(searchTree, currInd);
       if (currShape == null) {
         continue;
       }
-      ConvexShape newShape = (ConvexShape) currShape.translateBy(pVector);
+      ConvexShape newShape = (ConvexShape) currShape.translateBy(vector);
       TileShape currTileShape;
-      if (pBoard.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+      if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
         currTileShape = newShape.boundingBox();
       } else {
         currTileShape = newShape.boundingOctagon();
       }
-      if (pTidyRegion != null) {
-        pTidyRegion = pTidyRegion.union(currTileShape.boundingOctagon());
+      if (tidyRegion != null) {
+        tidyRegion = tidyRegion.union(currTileShape.boundingOctagon());
       }
-      CalcFromSide fromSide = new CalcFromSide(pDrillItem.getCenter(), currTileShape);
+      CalcFromSide fromSide = new CalcFromSide(drillItem.getCenter(), currTileShape);
       if (!forcedPadAlgo.forcedPad(
           currTileShape,
           fromSide,
           currLayer,
-          pDrillItem.netNoArr,
-          pDrillItem.clearanceClassNo(),
+          drillItem.netNoArr,
+          drillItem.clearanceClassNo(),
           attachAllowed,
           ignoreItems,
-          pMaxRecursionDepth,
-          pMaxViaRecursionDepth)) {
+          maxRecursionDepth,
+          maxViaRecursionDepth)) {
         return false;
       }
       IntBox currBoundingBox = currShape.boundingBox();
       for (int j = 0; j < 4; j++) {
-        pBoard.joinChangedArea(currBoundingBox.cornerApprox(j), currLayer);
+        board.joinChangedArea(currBoundingBox.cornerApprox(j), currLayer);
       }
     }
-    pDrillItem.moveBy(pVector);
+    drillItem.moveBy(vector);
     return true;
   }
 
@@ -161,52 +161,52 @@ public final class MoveDrillItemAlgo {
    * is necessary afterwards.
    */
   static boolean shoveVias(
-      TileShape pObstacleShape,
-      CalcFromSide pFromSide,
-      int pLayer,
-      int[] pNetNoArr,
-      int pClType,
-      Collection<Item> pIgnoreItems,
-      int pMaxRecursionDepth,
-      int pMaxViaRecursionDepth,
-      boolean pCopperSharingAllowed,
-      RoutingBoard pBoard) {
-    ShapeSearchTree searchTree = pBoard.searchTreeManager.getDefaultTree();
+      TileShape obstacleShape,
+      CalcFromSide fromSide,
+      int layer,
+      int[] netNoArr,
+      int clType,
+      Collection<Item> ignoreItems,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      boolean copperSharingAllowed,
+      RoutingBoard board) {
+    ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(pObstacleShape, pLayer, pNetNoArr, pClType, pFromSide, pBoard);
+        new ShapeTraceEntries(obstacleShape, layer, netNoArr, clType, fromSide, board);
     Collection<Item> obstacles =
-        searchTree.overlappingItemsWithClearance(pObstacleShape, pLayer, new int[0], pClType);
+        searchTree.overlappingItemsWithClearance(obstacleShape, layer, new int[0], clType);
 
-    if (!shapeEntries.storeItems(obstacles, false, pCopperSharingAllowed)) {
+    if (!shapeEntries.storeItems(obstacles, false, copperSharingAllowed)) {
       return true;
     }
-    if (pIgnoreItems != null) {
-      shapeEntries.shoveViaList.removeAll(pIgnoreItems);
+    if (ignoreItems != null) {
+      shapeEntries.shoveViaList.removeAll(ignoreItems);
     }
     if (shapeEntries.shoveViaList.isEmpty()) {
       return true;
     }
-    double shapeRadius = 0.5 * pObstacleShape.boundingBox().minWidth();
+    double shapeRadius = 0.5 * obstacleShape.boundingBox().minWidth();
     for (Via currVia : shapeEntries.shoveViaList) {
-      if (currVia.sharesNetNo(pNetNoArr)) {
+      if (currVia.sharesNetNo(netNoArr)) {
         continue;
       }
-      if (pMaxViaRecursionDepth <= 0) {
+      if (maxViaRecursionDepth <= 0) {
         return true;
       }
       IntPoint[] tryViaCenters =
-          tryShoveViaPoints(pObstacleShape, pLayer, currVia, pClType, true, pBoard);
+          tryShoveViaPoints(obstacleShape, layer, currVia, clType, true, board);
       IntPoint newViaCenter = null;
-      double maxDist = 0.5 * currVia.getShapeOnLayer(pLayer).boundingBox().maxWidth() + shapeRadius;
+      double maxDist = 0.5 * currVia.getShapeOnLayer(layer).boundingBox().maxWidth() + shapeRadius;
       double maxDistSquare = maxDist * maxDist;
       IntPoint currViaCenter = (IntPoint) currVia.getCenter();
       FloatPoint checkViaCenter = currViaCenter.toFloat();
       Vector relCoor = null;
       for (int i = 0; i < tryViaCenters.length; i++) {
         if (i == 0 || checkViaCenter.distanceSquare(tryViaCenters[i].toFloat()) <= maxDistSquare) {
-          Collection<Item> ignoreItems = new LinkedList<>();
-          if (pIgnoreItems != null) {
-            ignoreItems.addAll(pIgnoreItems);
+          Collection<Item> localIgnoreItems = new LinkedList<>();
+          if (ignoreItems != null) {
+            localIgnoreItems.addAll(ignoreItems);
           }
           relCoor = tryViaCenters[i].differenceBy(currViaCenter);
           // No time limit here because the item database is already changed.
@@ -214,10 +214,10 @@ public final class MoveDrillItemAlgo {
               check(
                   currVia,
                   relCoor,
-                  pMaxRecursionDepth,
-                  pMaxViaRecursionDepth - 1,
-                  ignoreItems,
-                  pBoard,
+                  maxRecursionDepth,
+                  maxViaRecursionDepth - 1,
+                  localIgnoreItems,
+                  board,
                   null);
           if (shoveOk) {
             newViaCenter = tryViaCenters[i];
@@ -228,7 +228,7 @@ public final class MoveDrillItemAlgo {
       if (newViaCenter == null) {
         continue;
       }
-      if (!insert(currVia, relCoor, pMaxRecursionDepth, pMaxViaRecursionDepth - 1, null, pBoard)) {
+      if (!insert(currVia, relCoor, maxRecursionDepth, maxViaRecursionDepth - 1, null, board)) {
         return false;
       }
     }
@@ -241,21 +241,21 @@ public final class MoveDrillItemAlgo {
    * used here and in ShoveTraceAlgo.check.
    */
   static IntPoint[] tryShoveViaPoints(
-      TileShape pObstacleShape,
-      int pLayer,
-      Via pVia,
-      int pClClassNo,
-      boolean pExtendedCheck,
-      RoutingBoard pBoard) {
-    ShapeSearchTree searchTree = pBoard.searchTreeManager.getDefaultTree();
-    TileShape currViaShape = pVia.getTreeShapeOnLayer(searchTree, pLayer);
+      TileShape obstacleShape,
+      int layer,
+      Via via,
+      int clClassNo,
+      boolean extendedCheck,
+      RoutingBoard board) {
+    ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
+    TileShape currViaShape = via.getTreeShapeOnLayer(searchTree, layer);
     if (currViaShape == null) {
       return new IntPoint[0];
     }
-    boolean isIntOctagon = pObstacleShape.isIntOctagon();
-    double clearanceValue = pBoard.clearanceValue(pClClassNo, pVia.clearanceClassNo(), pLayer);
+    boolean isIntOctagon = obstacleShape.isIntOctagon();
+    double clearanceValue = board.clearanceValue(clClassNo, via.clearanceClassNo(), layer);
     double shoveDistance;
-    if (pBoard.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE || isIntOctagon) {
+    if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE || isIntOctagon) {
       shoveDistance = 0.5 * currViaShape.boundingBox().maxWidth();
       if (!searchTree.isClearanceCompensationUsed()) {
         shoveDistance += clearanceValue;
@@ -274,28 +274,28 @@ public final class MoveDrillItemAlgo {
     // shoving.
     shoveDistance += 2;
 
-    IntPoint currViaCenter = (IntPoint) pVia.getCenter();
+    IntPoint currViaCenter = (IntPoint) via.getCenter();
     IntPoint[] tryViaCenters;
     int tryCount = 1;
-    if (pBoard.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
-      IntBox currOffsetBox = pObstacleShape.boundingBox().offset(shoveDistance);
-      if (pExtendedCheck) {
+    if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
+      IntBox currOffsetBox = obstacleShape.boundingBox().offset(shoveDistance);
+      if (extendedCheck) {
         tryCount = 2;
       }
       tryViaCenters = currOffsetBox.nearestBorderProjections(currViaCenter, tryCount);
     } else if (isIntOctagon) {
-      IntOctagon currOffsetOctagon = pObstacleShape.boundingOctagon().enlarge(shoveDistance);
-      if (pExtendedCheck) {
+      IntOctagon currOffsetOctagon = obstacleShape.boundingOctagon().enlarge(shoveDistance);
+      if (extendedCheck) {
         tryCount = 4;
       }
 
       tryViaCenters = currOffsetOctagon.nearestBorderProjections(currViaCenter, tryCount);
     } else {
-      TileShape currOffsetShape = (TileShape) pObstacleShape.enlarge(shoveDistance);
+      TileShape currOffsetShape = (TileShape) obstacleShape.enlarge(shoveDistance);
       if (!searchTree.isClearanceCompensationUsed()) {
         currViaShape = (TileShape) currViaShape.enlarge(0.5 * clearanceValue);
       }
-      if (pExtendedCheck) {
+      if (extendedCheck) {
         tryCount = 4;
       }
       FloatPoint[] shoveDeltas =

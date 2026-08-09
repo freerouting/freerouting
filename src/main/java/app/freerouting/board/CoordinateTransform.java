@@ -12,16 +12,16 @@ import java.util.Locale;
 /** Class for transforming objects between user coordinate space and board coordinate space. */
 public class CoordinateTransform implements Serializable {
 
-  /** The unit used for user coordinates */
+  /** The unit used for user coordinates. */
   public final Unit userUnit;
 
-  /** The factor of the user unit */
+  /** The factor of the user unit. */
   public final double userUnitFactor;
 
-  /** The unit used for board coordinates */
+  /** The unit used for board coordinates. */
   public final Unit boardUnit;
 
-  /** The factor of the board unit */
+  /** The factor of the board unit. */
   public final double boardUnitFactor;
 
   /**
@@ -30,13 +30,13 @@ public class CoordinateTransform implements Serializable {
    */
   private final double scaleFactor;
 
-  /** Creates a new instance of CoordinateTransform */
+  /** Creates a new instance of CoordinateTransform. */
   public CoordinateTransform(
-      double pUserUnitFactor, Unit pUserUnit, double pBoardUnitFactor, Unit pBoardUnit) {
-    userUnit = pUserUnit;
-    boardUnit = pBoardUnit;
-    userUnitFactor = pUserUnitFactor;
-    boardUnitFactor = pBoardUnitFactor;
+      double userUnitFactor, Unit userUnit, double boardUnitFactor, Unit boardUnit) {
+    this.userUnit = userUnit;
+    this.boardUnit = boardUnit;
+    this.userUnitFactor = userUnitFactor;
+    this.boardUnitFactor = boardUnitFactor;
     scaleFactor = boardUnitFactor / userUnitFactor;
 
     if (userUnitFactor != 1.0) {
@@ -45,39 +45,40 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** Scale a value from the board to the user coordinate system. */
-  public double boardToUser(double pValue) {
-    return Unit.scale(pValue * scaleFactor, boardUnit, userUnit);
+  public double boardToUser(double value) {
+    return Unit.scale(value * scaleFactor, boardUnit, userUnit);
   }
 
   /** Scale a value from the user to the board coordinate system. */
-  public double userToBoard(double pValue) {
-    return Unit.scale(pValue / scaleFactor, userUnit, boardUnit);
+  public double userToBoard(double value) {
+    return Unit.scale(value / scaleFactor, userUnit, boardUnit);
   }
 
   /**
    * Transforms a geometry.planar.FloatPoint from the board coordinate space to the user coordinate
    * space.
    */
-  public FloatPoint boardToUser(FloatPoint pPoint) {
-    return new FloatPoint(boardToUser(pPoint.x), boardToUser(pPoint.y));
+  public FloatPoint boardToUser(FloatPoint point) {
+    return new FloatPoint(boardToUser(point.x), boardToUser(point.y));
   }
 
   /**
    * Transforms a geometry.planar.FloatPoint from the user coordinate space. to the board coordinate
    * space.
    */
-  public FloatPoint userToBoard(FloatPoint pPoint) {
-    return new FloatPoint(userToBoard(pPoint.x), userToBoard(pPoint.y));
+  public FloatPoint userToBoard(FloatPoint point) {
+    return new FloatPoint(userToBoard(point.x), userToBoard(point.y));
   }
 
-  public PrintableShape boardToUser(Shape pShape, Locale pLocale) {
+  /** BoardToUser. */
+  public PrintableShape boardToUser(Shape shape, Locale locale) {
     PrintableShape result;
-    if (pShape instanceof Circle circle) {
-      result = boardToUser(circle, pLocale);
-    } else if (pShape instanceof IntBox box) {
-      result = boardToUser(box, pLocale);
-    } else if (pShape instanceof PolylineShape shape) {
-      result = boardToUser(shape, pLocale);
+    if (shape instanceof Circle circle) {
+      result = boardToUser(circle, locale);
+    } else if (shape instanceof IntBox box) {
+      result = boardToUser(box, locale);
+    } else if (shape instanceof PolylineShape polylineShape) {
+      result = boardToUser(polylineShape, locale);
     } else {
       FRLogger.warn("CoordinateTransform.board_to_user not yet implemented for p_shape");
       result = null;
@@ -85,22 +86,28 @@ public class CoordinateTransform implements Serializable {
     return result;
   }
 
-  public PrintableShape.Circle boardToUser(Circle pCircle, Locale pLocale) {
+
+  /** Board to user. */
+  public PrintableShape.Circle boardToUser(Circle circle, Locale locale) {
     return new PrintableShape.Circle(
-        boardToUser(pCircle.center.toFloat()), boardToUser(pCircle.radius), pLocale);
+        /** BoardToUser. */
+        boardToUser(circle.center.toFloat()), boardToUser(circle.radius), locale);
   }
 
-  public PrintableShape.Rectangle boardToUser(IntBox pBox, Locale pLocale) {
+  /** Board to user. */
+  public PrintableShape.Rectangle boardToUser(IntBox box, Locale locale) {
+    /** Rectangle. */
     return new PrintableShape.Rectangle(
-        boardToUser(pBox.ll.toFloat()), boardToUser(pBox.ur.toFloat()), pLocale);
+        boardToUser(box.ll.toFloat()), boardToUser(box.ur.toFloat()), locale);
   }
 
-  public PrintableShape.Polygon boardToUser(PolylineShape pShape, Locale pLocale) {
-    FloatPoint[] corners = pShape.cornerApproxArr();
+  public PrintableShape.Polygon boardToUser(PolylineShape shape, Locale locale) {
+    /** Corner approx arr. */
+    FloatPoint[] corners = shape.cornerApproxArr();
     FloatPoint[] transformedCorners = new FloatPoint[corners.length];
     for (int i = 0; i < corners.length; i++) {
       transformedCorners[i] = boardToUser(corners[i]);
     }
-    return new PrintableShape.Polygon(transformedCorners, pLocale);
+    return new PrintableShape.Polygon(transformedCorners, locale);
   }
 }

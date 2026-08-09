@@ -48,24 +48,24 @@ public abstract class PullTightAlgo {
   protected Set<Pin> contactPins;
   protected int minTranslateDist;
 
-  /** Creates a new instance of PullTightAlgo */
+  /** Creates a new instance of PullTightAlgo. */
   PullTightAlgo(
-      RoutingBoard pBoard,
-      int[] pOnlyNetNoArr,
-      Stoppable pStoppableThread,
-      int pTimeLimit,
-      Point pKeepPoint,
-      int pKeepPointLayer) {
-    board = pBoard;
-    onlyNetNoArr = pOnlyNetNoArr;
-    stoppableThread = pStoppableThread;
-    if (pTimeLimit > 0) {
-      this.timeLimit = new TimeLimit(pTimeLimit);
+      RoutingBoard board,
+      int[] onlyNetNoArr,
+      Stoppable stoppableThread,
+      int timeLimit,
+      Point keepPoint,
+      int keepPointLayer) {
+    this.board = board;
+    this.onlyNetNoArr = onlyNetNoArr;
+    this.stoppableThread = stoppableThread;
+    if (timeLimit > 0) {
+      this.timeLimit = new TimeLimit(timeLimit);
     } else {
       this.timeLimit = null;
     }
-    this.keepPoint = pKeepPoint;
-    this.keepPointLayer = pKeepPointLayer;
+    this.keepPoint = keepPoint;
+    this.keepPointLayer = keepPointLayer;
   }
 
   /**
@@ -74,31 +74,31 @@ public abstract class PullTightAlgo {
    * stopped. If p_time_limit > 0; the algorithm will be stopped after p_time_limit Milliseconds.
    */
   static PullTightAlgo getInstance(
-      RoutingBoard pBoard,
-      int[] pOnlyNetNoArr,
-      IntOctagon pClipShape,
-      int pMinTranslateDist,
-      Stoppable pStoppableThread,
-      int pTimeLimit,
-      Point pKeepPoint,
-      int pKeepPointLayer) {
+      RoutingBoard board,
+      int[] onlyNetNoArr,
+      IntOctagon clipShape,
+      int minTranslateDist,
+      Stoppable stoppableThread,
+      int timeLimit,
+      Point keepPoint,
+      int keepPointLayer) {
     PullTightAlgo result;
-    AngleRestriction angleRestriction = pBoard.rules.getTraceAngleRestriction();
+    AngleRestriction angleRestriction = board.rules.getTraceAngleRestriction();
     if (angleRestriction == AngleRestriction.NINETY_DEGREE) {
       result =
           new PullTightAlgo90(
-              pBoard, pOnlyNetNoArr, pStoppableThread, pTimeLimit, pKeepPoint, pKeepPointLayer);
+              board, onlyNetNoArr, stoppableThread, timeLimit, keepPoint, keepPointLayer);
     } else if (angleRestriction == AngleRestriction.FORTYFIVE_DEGREE) {
       result =
           new PullTightAlgo45(
-              pBoard, pOnlyNetNoArr, pStoppableThread, pTimeLimit, pKeepPoint, pKeepPointLayer);
+              board, onlyNetNoArr, stoppableThread, timeLimit, keepPoint, keepPointLayer);
     } else {
       result =
           new PullTightAlgoAnyAngle(
-              pBoard, pOnlyNetNoArr, pStoppableThread, pTimeLimit, pKeepPoint, pKeepPointLayer);
+              board, onlyNetNoArr, stoppableThread, timeLimit, keepPoint, keepPointLayer);
     }
-    result.currClipShape = pClipShape;
-    result.minTranslateDist = Math.max(pMinTranslateDist, 100);
+    result.currClipShape = clipShape;
+    result.minTranslateDist = Math.max(minTranslateDist, 100);
     return result;
   }
 
@@ -107,7 +107,7 @@ public abstract class PullTightAlgo {
    * optimizing area is restricted to p_clip_shape. p_trace_cost_arr is used for optimizing vias and
    * may be null.
    */
-  void optChangedArea(ExpansionCostFactor[] pTraceCostArr) {
+  void optChangedArea(ExpansionCostFactor[] traceCostArr) {
     if (board.changedArea == null) {
       return;
     }
@@ -146,9 +146,9 @@ public abstract class PullTightAlgo {
               somethingChanged = true;
               break; // because items may be removed
             }
-          } else if (currOb instanceof Via via && pTraceCostArr != null) {
+          } else if (currOb instanceof Via via && traceCostArr != null) {
             if (OptViaAlgo.optViaLocation(
-                this.board, via, pTraceCostArr, this.minTranslateDist, 10)) {
+                this.board, via, traceCostArr, this.minTranslateDist, 10)) {
               somethingChanged = true;
             }
           }
@@ -162,19 +162,19 @@ public abstract class PullTightAlgo {
    * of p_polyline. Other pins are regarded as obstacles, even if they are of the own net.
    */
   Polyline pullTight(
-      Polyline pPolyline,
-      int pLayer,
-      int pHalfWidth,
-      int[] pNetNoArr,
-      int pClType,
-      Set<Pin> pContactPins) {
-    currLayer = pLayer;
+      Polyline polyline,
+      int layer,
+      int halfWidth,
+      int[] netNoArr,
+      int clType,
+      Set<Pin> contactPins) {
+    currLayer = layer;
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
-    currHalfWidth = pHalfWidth + searchTree.clearanceCompensationValue(pClType, pLayer);
-    currNetNoArr = pNetNoArr;
-    currClType = pClType;
-    contactPins = pContactPins;
-    return pullTight(pPolyline);
+    currHalfWidth = halfWidth + searchTree.clearanceCompensationValue(clType, layer);
+    currNetNoArr = netNoArr;
+    currClType = clType;
+    this.contactPins = contactPins;
+    return pullTight(polyline);
   }
 
   /** Terminates the pull tight algorithm, if the user has made a stop request. */
@@ -197,46 +197,44 @@ public abstract class PullTightAlgo {
     return timeLimitExceeded;
   }
 
-  /** tries to shorten p_polyline by relocating its lines */
-  Polyline repositionLines(Polyline pPolyline) {
-    if (pPolyline.arr.length < 5) {
-      return pPolyline;
+  /** Tries to shorten p_polyline by relocating its lines. */
+  Polyline repositionLines(Polyline polyline) {
+    if (polyline.arr.length < 5) {
+      return polyline;
     }
-    for (int i = 2; i < pPolyline.arr.length - 2; i++) {
-      Line newLine = repositionLine(pPolyline.arr, i);
+    for (int i = 2; i < polyline.arr.length - 2; i++) {
+      Line newLine = repositionLine(polyline.arr, i);
       if (newLine != null) {
-        Line[] lineArr = new Line[pPolyline.arr.length];
-        System.arraycopy(pPolyline.arr, 0, lineArr, 0, lineArr.length);
+        Line[] lineArr = new Line[polyline.arr.length];
+        System.arraycopy(polyline.arr, 0, lineArr, 0, lineArr.length);
         lineArr[i] = newLine;
         Polyline result = new Polyline(lineArr);
         return skipSegmentsOfLength0(result);
       }
     }
-    return pPolyline;
+    return polyline;
   }
 
   /**
    * Tries to reposition the line with index p_no to make the polyline consisting of p_line_arr
    * shorter.
    */
-  protected Line repositionLine(Line[] pLineArr, int pNo) {
-    if (pLineArr.length - pNo < 3) {
+  protected Line repositionLine(Line[] lineArr, int no) {
+    if (lineArr.length - no < 3) {
       return null;
     }
-    if (currClipShape != null)
-    // check, that the corners of the line to translate are inside
-    // the clip shape
-    {
+    if (currClipShape != null) {
+      // check, that the corners of the line to translate are inside the clip shape
       for (int i = -1; i < 1; i++) {
-        Point currCorner = pLineArr[pNo + i].intersection(pLineArr[pNo + i + 1]);
+        Point currCorner = lineArr[no + i].intersection(lineArr[no + i + 1]);
         if (currClipShape.isOutside(currCorner)) {
           return null;
         }
       }
     }
-    Line translateLine = pLineArr[pNo];
-    Point prevCorner = pLineArr[pNo - 2].intersection(pLineArr[pNo - 1]);
-    Point nextCorner = pLineArr[pNo + 1].intersection(pLineArr[pNo + 2]);
+    Line translateLine = lineArr[no];
+    Point prevCorner = lineArr[no - 2].intersection(lineArr[no - 1]);
+    Point nextCorner = lineArr[no + 1].intersection(lineArr[no + 2]);
     double prevDist = translateLine.signedDistance(prevCorner.toFloat());
     double nextDist = translateLine.signedDistance(nextCorner.toFloat());
     if (Signum.of(prevDist) != Signum.of(nextDist)) {
@@ -258,8 +256,8 @@ public abstract class PullTightAlgo {
     int sign = Signum.asInt(maxTranslateDist);
     Line newLine = null;
     Line[] checkLines = new Line[3];
-    checkLines[0] = pLineArr[pNo - 1];
-    checkLines[2] = pLineArr[pNo + 1];
+    checkLines[0] = lineArr[no - 1];
+    checkLines[2] = lineArr[no + 1];
     boolean firstTime = true;
     while (firstTime || Math.abs(deltaDist) > minTranslateDist) {
       boolean checkOk = false;
@@ -310,25 +308,24 @@ public abstract class PullTightAlgo {
       // mark the changed area
       board.changedArea.join(checkLines[0].intersectionApprox(newLine), currLayer);
       board.changedArea.join(checkLines[2].intersectionApprox(newLine), currLayer);
-      board.changedArea.join(pLineArr[pNo - 1].intersectionApprox(pLineArr[pNo]), currLayer);
-      board.changedArea.join(pLineArr[pNo].intersectionApprox(pLineArr[pNo + 1]), currLayer);
+      board.changedArea.join(lineArr[no - 1].intersectionApprox(lineArr[no]), currLayer);
+      board.changedArea.join(lineArr[no].intersectionApprox(lineArr[no + 1]), currLayer);
     }
     return newLine;
   }
 
   /**
-   * tries to skip linesegments of length 0. A check is necessary before skipping because new dog
+   * tries to skip linesegments of length 0. A check is necessary before skipping because new dog.
    * ears may occur.
    */
-  Polyline skipSegmentsOfLength0(Polyline pPolyline) {
+  Polyline skipSegmentsOfLength0(Polyline polyline) {
     boolean polylineChanged = false;
-    Polyline currPolyline = pPolyline;
+    Polyline currPolyline = polyline;
     for (int i = 1; i < currPolyline.arr.length - 1; i++) {
       boolean trySkip;
-      if (i == 1 || i == currPolyline.arr.length - 2)
-      // the position of the first corner and the last corner
-      //  must be retained exactly
-      {
+      if (i == 1 || i == currPolyline.arr.length - 2) {
+        // the position of the first corner and the last corner
+        //  must be retained exactly
         Point prevCorner = currPolyline.corner(i - 1);
         Point currCorner = currPolyline.corner(i);
         trySkip = currCorner.equals(prevCorner);
@@ -371,27 +368,27 @@ public abstract class PullTightAlgo {
       }
     }
     if (!polylineChanged) {
-      return pPolyline;
+      return polyline;
     }
     return currPolyline;
   }
 
   /** Smoothens acute angles with contact traces. Returns true, if something was changed. */
-  boolean smoothenEndCornersAtTrace(PolylineTrace pTrace) {
-    if (this.onlyNetNoArr.length > 0 && !pTrace.netsEqual(this.onlyNetNoArr)) {
+  boolean smoothenEndCornersAtTrace(PolylineTrace trace) {
+    if (this.onlyNetNoArr.length > 0 && !trace.netsEqual(this.onlyNetNoArr)) {
       return false;
     }
-    currLayer = pTrace.getLayer();
-    currHalfWidth = pTrace.getHalfWidth();
-    currNetNoArr = pTrace.netNoArr;
-    currClType = pTrace.clearanceClassNo();
-    return smoothenEndCornersAtTrace1(pTrace);
+    currLayer = trace.getLayer();
+    currHalfWidth = trace.getHalfWidth();
+    currNetNoArr = trace.netNoArr;
+    currClType = trace.clearanceClassNo();
+    return smoothenEndCornersAtTrace1(trace);
   }
 
   /** Smoothens acute angles with contact traces. Returns true, if something was changed. */
-  private boolean smoothenEndCornersAtTrace1(PolylineTrace pTrace) {
+  private boolean smoothenEndCornersAtTrace1(PolylineTrace trace) {
     // try to improve the connection to other traces
-    if (pTrace.isShoveFixed()) {
+    if (trace.isShoveFixed()) {
       return false;
     }
     Set<Pin> savedContactPins = this.contactPins;
@@ -400,7 +397,7 @@ public abstract class PullTightAlgo {
     this.contactPins = null;
     boolean result = false;
     boolean connectionToTraceImproved = true;
-    PolylineTrace currTrace = pTrace;
+    PolylineTrace currTrace = trace;
     while (connectionToTraceImproved) {
       connectionToTraceImproved = false;
       Polyline adjustedPolyline = smoothenEndCornersAtTrace2(currTrace);
@@ -467,13 +464,13 @@ public abstract class PullTightAlgo {
   }
 
   /** Smoothens acute angles with contact traces. Returns null, if something was changed. */
-  private Polyline smoothenEndCornersAtTrace2(PolylineTrace pTrace) {
-    if (pTrace == null || !pTrace.isOnTheBoard()) {
+  private Polyline smoothenEndCornersAtTrace2(PolylineTrace trace) {
+    if (trace == null || !trace.isOnTheBoard()) {
       return null;
     }
-    Polyline result = smoothenStartCornerAtTrace(pTrace);
+    Polyline result = smoothenStartCornerAtTrace(trace);
     if (result == null) {
-      result = smoothenEndCornerAtTrace(pTrace);
+      result = smoothenEndCornerAtTrace(trace);
       if (result != null && board.changedArea != null) {
         // mark the changed area
         board.changedArea.join(result.cornerApprox(result.cornerCount() - 1), currLayer);
@@ -483,23 +480,23 @@ public abstract class PullTightAlgo {
       board.changedArea.join(result.cornerApprox(0), currLayer);
     }
     if (result != null) {
-      this.contactPins = pTrace.touchingPinsAtEndCorners();
+      this.contactPins = trace.touchingPinsAtEndCorners();
       result = skipSegmentsOfLength0(result);
     }
     return result;
   }
 
   /** Wraps around pins of the own net to avoid acid traps. */
-  protected Polyline avoidAcidTraps(Polyline pPolyline) {
+  protected Polyline avoidAcidTraps(Polyline polyline) {
     if (true) {
-      return pPolyline;
+      return polyline;
     }
-    Polyline result = pPolyline;
+    Polyline result = polyline;
     ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(this.board);
     Polyline newPolyline =
         shoveTraceAlgo.springOverObstacles(
-            pPolyline, currHalfWidth, currLayer, currNetNoArr, currClType, contactPins);
-    if (newPolyline != null && newPolyline != pPolyline) {
+            polyline, currHalfWidth, currLayer, currNetNoArr, currClType, contactPins);
+    if (newPolyline != null && newPolyline != polyline) {
       if (this.board.checkPolylineTrace(
           newPolyline, currLayer, currHalfWidth, currNetNoArr, currClType)) {
         result = newPolyline;
@@ -508,9 +505,9 @@ public abstract class PullTightAlgo {
     return result;
   }
 
-  abstract Polyline pullTight(Polyline pPolyline);
+  abstract Polyline pullTight(Polyline polyline);
 
-  abstract Polyline smoothenStartCornerAtTrace(PolylineTrace pTrace);
+  abstract Polyline smoothenStartCornerAtTrace(PolylineTrace trace);
 
-  abstract Polyline smoothenEndCornerAtTrace(PolylineTrace pTrace);
+  abstract Polyline smoothenEndCornerAtTrace(PolylineTrace trace);
 }

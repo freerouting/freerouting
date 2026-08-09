@@ -27,26 +27,26 @@ public class Components implements Serializable {
    * p_package_back is used instead of p_package_front.
    */
   public Component add(
-      String pName,
-      Point pLocation,
-      double pRotationInDegree,
-      boolean pOnFront,
-      Package pPackageFront,
-      Package pPackageBack,
-      boolean pPositionFixed,
-      String pPartNumber) {
+      String name,
+      Point location,
+      double rotationInDegree,
+      boolean onFront,
+      Package packageFront,
+      Package packageBack,
+      boolean positionFixed,
+      String partNumber) {
 
     Component newComponent =
         new Component(
-            pName,
-            pLocation,
-            pRotationInDegree,
-            pOnFront,
-            pPackageFront,
-            pPackageBack,
+            name,
+            location,
+            rotationInDegree,
+            onFront,
+            packageFront,
+            packageBack,
             componentArr.size() + 1,
-            pPositionFixed,
-            pPartNumber);
+            positionFixed,
+            partNumber);
     componentArr.add(newComponent);
     undoList.insert(newComponent);
     return newComponent;
@@ -57,15 +57,16 @@ public class Components implements Serializable {
    * the board. If p_on_front is false, the component will be placed on the back side. The component
    * name is generated internally.
    */
-  public Component add(Point pLocation, double pRotation, boolean pOnFront, Package pPackage) {
+  public Component add(Point location, double rotation, boolean onFront, Package componentPackage) {
     String componentName = "Component#" + (componentArr.size() + 1);
-    return add(componentName, pLocation, pRotation, pOnFront, pPackage, pPackage, false, null);
+    return add(componentName,
+        location, rotation, onFront, componentPackage, componentPackage, false, null);
   }
 
   /** Returns the component with the input name or null, if no such component exists. */
-  public Component get(String pName) {
+  public Component get(String name) {
     for (Component curr : componentArr) {
-      if (curr.name.equals(pName)) {
+      if (curr.name.equals(name)) {
         return curr;
       }
     }
@@ -76,14 +77,15 @@ public class Components implements Serializable {
    * Returns the component with the input component number or null, if no such component exists.
    * Component numbers are from 1 to component count
    */
-  public Component get(int pComponentNo) {
-    Component result = componentArr.elementAt(pComponentNo - 1);
-    if (result != null && result.no != pComponentNo) {
+  public Component get(int componentNo) {
+    Component result = componentArr.elementAt(componentNo - 1);
+    if (result != null && result.no != componentNo) {
       FRLogger.warn("Components.get: inconsistent component number");
     }
     return result;
   }
 
+  /** Count. */
   public int count() {
     return componentArr.size();
   }
@@ -100,27 +102,27 @@ public class Components implements Serializable {
   /**
    * Restores the situation at the previous snapshot. Returns false, if no more undo is possible.
    */
-  public boolean undo(BoardObservers pObservers) {
+  public boolean undo(BoardObservers observers) {
     if (!this.undoList.undo(null, null)) {
       return false;
     }
-    restoreComponentArrFromUndoList(pObservers);
+    restoreComponentArrFromUndoList(observers);
     return true;
   }
 
   /** Restores the situation before the last undo. Returns false, if no more redo is possible. */
-  public boolean redo(BoardObservers pObservers) {
+  public boolean redo(BoardObservers observers) {
     if (!this.undoList.redo(null, null)) {
       return false;
     }
-    restoreComponentArrFromUndoList(pObservers);
+    restoreComponentArrFromUndoList(observers);
     return true;
   }
 
   /*
    * Restore the components in componentArr from the undo list.
    */
-  private void restoreComponentArrFromUndoList(BoardObservers pObservers) {
+  private void restoreComponentArrFromUndoList(BoardObservers observers) {
     Iterator<UndoableObjects.UndoableObjectNode> it = this.undoList.startReadObject();
     for (; ; ) {
       Component currComponent = (Component) this.undoList.readObject(it);
@@ -129,8 +131,8 @@ public class Components implements Serializable {
       }
       this.componentArr.setElementAt(currComponent, currComponent.no - 1);
 
-      if (pObservers != null) {
-        pObservers.notifyMoved(currComponent);
+      if (observers != null) {
+        observers.notifyMoved(currComponent);
       }
     }
   }
@@ -139,30 +141,30 @@ public class Components implements Serializable {
    * Moves the component with number p_component_no. Works contrary to Component.translate_by with
    * the undo algorithm of the board.
    */
-  public void move(int pComponentNo, app.freerouting.geometry.planar.Vector pVector) {
-    Component currComponent = this.get(pComponentNo);
+  public void move(int componentNo, app.freerouting.geometry.planar.Vector vector) {
+    Component currComponent = this.get(componentNo);
     this.undoList.saveForUndo(currComponent);
-    currComponent.translateBy(pVector);
+    currComponent.translateBy(vector);
   }
 
   /**
    * Turns the component with number p_component_no by p_factor times 90 degree around p_pole. Works
    * contrary to Component.turn_90_degree with the undo algorithm of the board.
    */
-  public void turn90Degree(int pComponentNo, int pFactor, IntPoint pPole) {
-    Component currComponent = this.get(pComponentNo);
+  public void turn90Degree(int componentNo, int factor, IntPoint pole) {
+    Component currComponent = this.get(componentNo);
     this.undoList.saveForUndo(currComponent);
-    currComponent.turn90Degree(pFactor, pPole);
+    currComponent.turn90Degree(factor, pole);
   }
 
   /**
    * Rotates the component with number p_component_no by p_rotation_in_degree around p_pole. Works
    * contrary to Component.rotate with the undo algorithm of the board.
    */
-  public void rotate(int pComponentNo, double pRotationInDegree, IntPoint pPole) {
-    Component currComponent = this.get(pComponentNo);
+  public void rotate(int componentNo, double rotationInDegree, IntPoint pole) {
+    Component currComponent = this.get(componentNo);
     this.undoList.saveForUndo(currComponent);
-    currComponent.rotate(pRotationInDegree, pPole, flipStyleRotateFirst);
+    currComponent.rotate(rotationInDegree, pole, flipStyleRotateFirst);
   }
 
   /**
@@ -170,10 +172,10 @@ public class Components implements Serializable {
    * vertical line through p_pole. Works contrary to Component.change_side the undo algorithm of the
    * board.
    */
-  public void changeSide(int pComponentNo, IntPoint pPole) {
-    Component currComponent = this.get(pComponentNo);
+  public void changeSide(int componentNo, IntPoint pole) {
+    Component currComponent = this.get(componentNo);
     this.undoList.saveForUndo(currComponent);
-    currComponent.changeSide(pPole);
+    currComponent.changeSide(pole);
   }
 
   /**
@@ -188,7 +190,7 @@ public class Components implements Serializable {
    * If true, components on the back side are rotated before mirroring, else they are mirrored
    * before rotating.
    */
-  public void setFlipStyleRotateFirst(boolean pValue) {
-    flipStyleRotateFirst = pValue;
+  public void setFlipStyleRotateFirst(boolean value) {
+    flipStyleRotateFirst = value;
   }
 }

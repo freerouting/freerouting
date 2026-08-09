@@ -16,34 +16,34 @@ public class ComponentObstacleArea extends ObstacleArea {
    * not regarded as obstacle and used only for displaying on the screen.
    */
   ComponentObstacleArea(
-      Area pArea,
-      int pLayer,
-      Vector pTranslation,
-      double pRotationInDegree,
-      boolean pSideChanged,
-      int pClearanceType,
-      int pIdNo,
-      int pComponentNo,
-      String pName,
-      FixedState pFixedState,
-      BasicBoard pBoard) {
+      Area area,
+      int layer,
+      Vector translation,
+      double rotationInDegree,
+      boolean sideChanged,
+      int clearanceType,
+      int idNo,
+      int componentNo,
+      String name,
+      FixedState fixedState,
+      BasicBoard board) {
     super(
-        pArea,
-        pLayer,
-        pTranslation,
-        pRotationInDegree,
-        pSideChanged,
+        area,
+        layer,
+        translation,
+        rotationInDegree,
+        sideChanged,
         new int[0],
-        pClearanceType,
-        pIdNo,
-        pComponentNo,
-        pName,
-        pFixedState,
-        pBoard);
+        clearanceType,
+        idNo,
+        componentNo,
+        name,
+        fixedState,
+        board);
   }
 
   @Override
-  public Item copy(int pIdNo) {
+  public Item copy(int idNo) {
     return new ComponentObstacleArea(
         getRelativeArea(),
         getLayer(),
@@ -51,7 +51,7 @@ public class ComponentObstacleArea extends ObstacleArea {
         getRotationInDegree(),
         getSideChanged(),
         clearanceClassNo(),
-        pIdNo,
+        idNo,
         getComponentNo(),
         this.name,
         getFixedState(),
@@ -59,75 +59,76 @@ public class ComponentObstacleArea extends ObstacleArea {
   }
 
   @Override
-  public boolean isObstacle(Item pOther) {
-    return pOther != this
-        && pOther instanceof ComponentObstacleArea
-        && pOther.getComponentNo() != this.getComponentNo();
+  public boolean isObstacle(Item other) {
+    return other != this
+        && other instanceof ComponentObstacleArea
+        && other.getComponentNo() != this.getComponentNo();
   }
 
   @Override
-  public boolean isTraceObstacle(int pNetNo) {
+  public boolean isTraceObstacle(int netNo) {
     return false;
   }
 
   @Override
-  public boolean isSelectedByFilter(ItemSelectionFilter pFilter) {
-    if (!this.isSelectedByFixedFilter(pFilter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter filter) {
+    if (!this.isSelectedByFixedFilter(filter)) {
       return false;
     }
-    return pFilter.isSelected(ItemSelectionFilter.SelectableChoices.COMPONENT_KEEPOUT);
+    return filter.isSelected(ItemSelectionFilter.SelectableChoices.COMPONENT_KEEPOUT);
   }
 
+  /** IsFront. */
   public boolean isFront() {
     Component component = board.components.get(this.getComponentNo());
     return component == null || component.placedOnFront();
   }
 
   @Override
-  public Color[] getDrawColors(GraphicsContext pGraphicsContext) {
+  public Color[] getDrawColors(GraphicsContext graphicsContext) {
     Color[] colorArr = new Color[this.board.layerStructure.arr.length];
-    Color frontDrawColor = pGraphicsContext.otherColorTable.getCourtyardColor(true);
+    Color frontDrawColor = graphicsContext.otherColorTable.getCourtyardColor(true);
     for (int i = 0; i < colorArr.length - 1; i++) {
       colorArr[i] = frontDrawColor;
     }
     if (colorArr.length > 1) {
-      colorArr[colorArr.length - 1] = pGraphicsContext.otherColorTable.getCourtyardColor(false);
+      colorArr[colorArr.length - 1] = graphicsContext.otherColorTable.getCourtyardColor(false);
     }
     return colorArr;
   }
 
   @Override
-  public double getDrawIntensity(GraphicsContext pGraphicsContext) {
-    return pGraphicsContext.getComponentOutlineColorIntensity();
+  public double getDrawIntensity(GraphicsContext graphicsContext) {
+    return graphicsContext.getComponentOutlineColorIntensity();
   }
 
   @Override
   public void draw(
-      Graphics pG, GraphicsContext pGraphicsContext, Color[] pColorArr, double pIntensity) {
-    if (pGraphicsContext == null || pIntensity <= 0) {
+      Graphics g, GraphicsContext graphicsContext, Color[] colorArr, double intensity) {
+    if (graphicsContext == null || intensity <= 0) {
       return;
     }
     int virtualLayerIdx = this.isFront() ? 2 : 3;
-    double virtualVisibility = pGraphicsContext.getVirtualLayerVisibility(virtualLayerIdx);
+    double virtualVisibility = graphicsContext.getVirtualLayerVisibility(virtualLayerIdx);
     if (virtualVisibility <= 0) {
       return;
     }
 
-    Color color = pColorArr[this.getLayer()];
-    double intensity = virtualVisibility * pIntensity;
+    Color color = colorArr[this.getLayer()];
+    double drawIntensity = virtualVisibility * intensity;
 
     double drawWidth = Math.min(this.board.communication.getResolution(Unit.MIL), 100);
-    pGraphicsContext.drawBoundary(this.getArea(), drawWidth, color, pG, intensity);
+    graphicsContext.drawBoundary(this.getArea(), drawWidth, color, g, drawIntensity);
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
-    TextManager tm = new TextManager(this.getClass(), pLocale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    pWindow.appendBold(tm.getText("component_keepout"));
-    this.printShapeInfo(pWindow, pLocale);
-    this.printClearanceInfo(pWindow, pLocale);
-    this.printClearanceViolationInfo(pWindow, pLocale);
-    pWindow.newline();
+    window.appendBold(tm.getText("component_keepout"));
+    this.printShapeInfo(window, locale);
+    this.printClearanceInfo(window, locale);
+    this.printClearanceViolationInfo(window, locale);
+    window.newline();
   }
 }

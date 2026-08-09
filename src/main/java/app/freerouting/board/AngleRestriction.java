@@ -7,12 +7,12 @@ public enum AngleRestriction {
   FORTYFIVE_DEGREE,
   NINETY_DEGREE;
 
-  /** Returns instance for given number */
+  /** Returns instance for given number. */
   public static AngleRestriction valueOf(int i) {
     return values()[i];
   }
 
-  /** Returns the number of this instance */
+  /** Returns the number of this instance. */
   public int getValue() {
     return ordinal();
   }

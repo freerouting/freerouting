@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-/** Class for moving a group of items on the board */
+/** Class for moving a group of items on the board. */
 public class MoveComponent {
 
   private static final int PULL_TIGHT_TIME_LIMIT = 1000;
@@ -24,13 +24,13 @@ public class MoveComponent {
   private boolean allItemsMovable = true;
   private Component component;
 
-  /** Creates a new instance of MoveItemGroup */
+  /** Creates a new instance of MoveItemGroup. */
   public MoveComponent(
-      Item pItem, Vector pTranslateVector, int pMaxRecursionDepth, int pMaxViaRecursionDepth) {
-    translateVector = pTranslateVector;
-    maxRecursionDepth = pMaxRecursionDepth;
-    maxViaRecursionDepth = pMaxViaRecursionDepth;
-    if (pItem.board instanceof RoutingBoard routingBoard) {
+      Item item, Vector translateVector, int maxRecursionDepth, int maxViaRecursionDepth) {
+    this.translateVector = translateVector;
+    this.maxRecursionDepth = maxRecursionDepth;
+    this.maxViaRecursionDepth = maxViaRecursionDepth;
+    if (item.board instanceof RoutingBoard routingBoard) {
       board = routingBoard;
     } else {
       board = null;
@@ -38,13 +38,13 @@ public class MoveComponent {
     }
 
     Collection<Item> itemGroupList;
-    int componentNo = pItem.getComponentNo();
+    int componentNo = item.getComponentNo();
     if (componentNo > 0) {
       itemGroupList = board.getComponentItems(componentNo);
       this.component = board.components.get(componentNo);
     } else {
       itemGroupList = new LinkedList<>();
-      itemGroupList.add(pItem);
+      itemGroupList.add(item);
     }
     Collection<FloatPoint> itemCenters = new LinkedList<>();
     for (Item currItem : itemGroupList) {
@@ -59,8 +59,8 @@ public class MoveComponent {
         itemGroupArr = new SortedItem[0];
         return;
       }
-      if (currItem instanceof DrillItem item) {
-        itemCenters.add(item.getCenter().toFloat());
+      if (currItem instanceof DrillItem drillItem) {
+        itemCenters.add(drillItem.getCenter().toFloat());
       }
     }
     // calculate the gravity point of all item centers
@@ -78,8 +78,8 @@ public class MoveComponent {
     for (int i = 0; i < itemGroupArr.length; i++) {
       Item currItem = it.next();
       Point itemCenter;
-      if (currItem instanceof DrillItem item) {
-        itemCenter = item.getCenter();
+      if (currItem instanceof DrillItem drillItem) {
+        itemCenter = drillItem.getCenter();
       } else {
         itemCenter = currItem.boundingBox().centreOfGravity().round();
       }
@@ -104,14 +104,14 @@ public class MoveComponent {
     Collection<Item> ignoreItems = new LinkedList<>();
     for (int i = 0; i < itemGroupArr.length; i++) {
       boolean moveOk;
-      if (itemGroupArr[i].item instanceof DrillItem curr_drill_item) {
-        if (this.translateVector.lengthApprox() >= curr_drill_item.minWidth()) {
+      if (itemGroupArr[i].item instanceof DrillItem currDrillItem) {
+        if (this.translateVector.lengthApprox() >= currDrillItem.minWidth()) {
           // a clearance violation with a connecting trace may occur
           moveOk = false;
         } else {
           moveOk =
               MoveDrillItemAlgo.check(
-                  curr_drill_item,
+                  currDrillItem,
                   this.translateVector,
                   this.maxRecursionDepth,
                   this.maxViaRecursionDepth,
@@ -134,7 +134,7 @@ public class MoveComponent {
    * false, if that was not possible without creating clearance violations. In this case an undo may
    * be necessary.
    */
-  public boolean insert(int pTidyWidth, int pPullTightAccuracy) {
+  public boolean insert(int tidyWidth, int pullTightAccuracy) {
     if (!allItemsMovable) {
       return false;
     }
@@ -145,15 +145,15 @@ public class MoveComponent {
       board.communication.observers.notifyMoved(this.component);
     }
     for (int i = 0; i < itemGroupArr.length; i++) {
-      if (itemGroupArr[i].item instanceof DrillItem curr_drill_item) {
+      if (itemGroupArr[i].item instanceof DrillItem currDrillItem) {
         boolean moveOk =
             board.moveDrillItem(
-                curr_drill_item,
+                currDrillItem,
                 this.translateVector,
                 this.maxRecursionDepth,
                 this.maxViaRecursionDepth,
-                pTidyWidth,
-                pPullTightAccuracy,
+                tidyWidth,
+                pullTightAccuracy,
                 PULL_TIGHT_TIME_LIMIT);
         if (!moveOk) {
           if (this.component != null) {
@@ -170,14 +170,14 @@ public class MoveComponent {
   }
 
   /**
-   * used to sort the group items in the direction of translateVector, so that the front items can
+   * used to sort the group items in the direction of translateVector, so that the front items can.
    * be moved first.
    */
   private record SortedItem(Item item, double projection) implements Comparable<SortedItem> {
 
     @Override
-    public int compareTo(SortedItem pOther) {
-      return Signum.asInt(this.projection - pOther.projection);
+    public int compareTo(SortedItem other) {
+      return Signum.asInt(this.projection - other.projection);
     }
   }
 }

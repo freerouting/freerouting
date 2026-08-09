@@ -25,27 +25,27 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   private int layer; // board layer of the trace
 
   Trace(
-      int pLayer,
-      int pHalfWidth,
-      int[] pNetNoArr,
-      int pClearanceType,
-      int pIdNo,
-      int pGroupNo,
-      FixedState pFixedState,
-      BasicBoard pBoard) {
-    super(pNetNoArr, pClearanceType, pIdNo, pGroupNo, pFixedState, pBoard);
-    halfWidth = pHalfWidth;
-    pLayer = Math.max(pLayer, 0);
-    if (pBoard != null) {
-      pLayer = Math.min(pLayer, pBoard.getLayerCount() - 1);
+      int layer,
+      int halfWidth,
+      int[] netNoArr,
+      int clearanceType,
+      int idNo,
+      int groupNo,
+      FixedState fixedState,
+      BasicBoard board) {
+    super(netNoArr, clearanceType, idNo, groupNo, fixedState, board);
+    this.halfWidth = halfWidth;
+    layer = Math.max(layer, 0);
+    if (board != null) {
+      layer = Math.min(layer, board.getLayerCount() - 1);
     }
-    layer = pLayer;
+    this.layer = layer;
   }
 
-  /** returns the first corner of the trace */
+  /** Returns the first corner of the trace. */
   public abstract Point firstCorner();
 
-  /** returns the last corner of the trace */
+  /** Returns the last corner of the trace. */
   public abstract Point lastCorner();
 
   @Override
@@ -62,8 +62,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return this.layer;
   }
 
-  public void setLayer(int pLayer) {
-    this.layer = pLayer;
+  public void setLayer(int layer) {
+    this.layer = layer;
   }
 
   public int getHalfWidth() {
@@ -77,21 +77,21 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * Returns the half with enlarged by the clearance compensation value for the tree with id number
    * p_tree_id_no Equals get_half_width(), if no clearance compensation is used in this tree.
    */
-  public int getCompensatedHalfWidth(ShapeSearchTree pSearchTree) {
-    return this.halfWidth + pSearchTree.clearanceCompensationValue(clearanceClassNo(), this.layer);
+  public int getCompensatedHalfWidth(ShapeSearchTree searchTree) {
+    return this.halfWidth + searchTree.clearanceCompensationValue(clearanceClassNo(), this.layer);
   }
 
   @Override
-  public boolean isObstacle(Item pOther) {
-    if (pOther == this
-        || pOther instanceof ViaObstacleArea
-        || pOther instanceof ComponentObstacleArea) {
+  public boolean isObstacle(Item other) {
+    if (other == this
+        || other instanceof ViaObstacleArea
+        || other instanceof ComponentObstacleArea) {
       return false;
     }
-    if (pOther instanceof ConductionArea area && !area.getIsObstacle()) {
+    if (other instanceof ConductionArea area && !area.getIsObstacle()) {
       return false;
     }
-    return !pOther.sharesNet(this);
+    return !other.sharesNet(this);
   }
 
   /**
@@ -111,8 +111,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   @Override
-  public Point normalContactPoint(Item pOther) {
-    return pOther.normalContactPoint(this);
+  public Point normalContactPoint(Item other) {
+    return other.normalContactPoint(this);
   }
 
   @Override
@@ -146,8 +146,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   @Override
-  public Color[] getDrawColors(GraphicsContext pGraphicsContext) {
-    return pGraphicsContext.getTraceColors(this.isUserFixed());
+  public Color[] getDrawColors(GraphicsContext graphicsContext) {
+    return graphicsContext.getTraceColors(this.isUserFixed());
   }
 
   @Override
@@ -156,8 +156,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   @Override
-  public double getDrawIntensity(GraphicsContext pGraphicsContext) {
-    return pGraphicsContext.getTraceColorIntensity();
+  public double getDrawIntensity(GraphicsContext graphicsContext) {
+    return graphicsContext.getTraceColorIntensity();
   }
 
   /**
@@ -165,12 +165,12 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * p_ignore_net is false, only contacts to items sharing a net with this trace are calculated.
    * This is the normal case.
    */
-  public Set<Item> getNormalContacts(Point pPoint, boolean pIgnoreNet) {
-    if (pPoint == null
-        || !(pPoint.equals(this.firstCorner()) || pPoint.equals(this.lastCorner()))) {
+  public Set<Item> getNormalContacts(Point point, boolean ignoreNet) {
+    if (point == null
+        || !(point.equals(this.firstCorner()) || point.equals(this.lastCorner()))) {
       return new TreeSet<>();
     }
-    TileShape searchShape = TileShape.getInstance(pPoint);
+    TileShape searchShape = TileShape.getInstance(point);
     Set<SearchTreeObject> overlaps = board.overlappingObjects(searchShape, this.layer);
     Set<Item> result = new TreeSet<>();
     for (SearchTreeObject currOb : overlaps) {
@@ -179,17 +179,17 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       }
       if (currItem != this
           && currItem.sharesLayer(this)
-          && (pIgnoreNet || currItem.sharesNet(this))) {
+          && (ignoreNet || currItem.sharesNet(this))) {
         if (currItem instanceof Trace currTrace) {
-          if (pPoint.equals(currTrace.firstCorner()) || pPoint.equals(currTrace.lastCorner())) {
+          if (point.equals(currTrace.firstCorner()) || point.equals(currTrace.lastCorner())) {
             result.add(currItem);
           }
-        } else if (currItem instanceof DrillItem curr_drill_item) {
-          if (pPoint.equals(curr_drill_item.getCenter())) {
+        } else if (currItem instanceof DrillItem currDrillItem) {
+          if (point.equals(currDrillItem.getCenter())) {
             result.add(currItem);
           }
         } else if (currItem instanceof ConductionArea currArea) {
-          if (currArea.getArea().contains(pPoint)) {
+          if (currArea.getArea().contains(point)) {
             result.add(currItem);
           }
         }
@@ -199,21 +199,21 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   @Override
-  Point normalContactPoint(DrillItem pDrillItem) {
-    return pDrillItem.normalContactPoint(this);
+  Point normalContactPoint(DrillItem drillItem) {
+    return drillItem.normalContactPoint(this);
   }
 
   @Override
-  Point normalContactPoint(Trace pOther) {
-    if (this.layer != pOther.layer) {
+  Point normalContactPoint(Trace other) {
+    if (this.layer != other.layer) {
       return null;
     }
     boolean contactAtFirstCorner =
-        this.firstCorner().equals(pOther.firstCorner())
-            || this.firstCorner().equals(pOther.lastCorner());
+        this.firstCorner().equals(other.firstCorner())
+            || this.firstCorner().equals(other.lastCorner());
     boolean contactAtLastCorner =
-        this.lastCorner().equals(pOther.firstCorner())
-            || this.lastCorner().equals(pOther.lastCorner());
+        this.lastCorner().equals(other.firstCorner())
+            || this.lastCorner().equals(other.lastCorner());
     Point result;
     if (!(contactAtFirstCorner || contactAtLastCorner)
         || contactAtFirstCorner && contactAtLastCorner) {
@@ -221,19 +221,18 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       result = null;
     } else if (contactAtFirstCorner) {
       result = this.firstCorner();
-    } else // contact at last corner
-    {
+    } else { // contact at last corner
       result = this.lastCorner();
     }
     return result;
   }
 
   @Override
-  public boolean isDrillable(int pNetNo) {
-    return this.containsNet(pNetNo);
+  public boolean isDrillable(int netNo) {
+    return this.containsNet(netNo);
   }
 
-  /** looks, if this trace is connected to the same object at its start and its end point */
+  /** Looks, if this trace is connected to the same object at its start and its end point. */
   @Override
   public boolean isOverlap() {
     Set<Item> startContacts = this.getStartContacts();
@@ -262,13 +261,13 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return false;
   }
 
-  /** returns the endpoint of this trace with the shortest distance to p_from_point */
-  public Point nearestEndPoint(Point pFromPoint) {
+  /** Returns the endpoint of this trace with the shortest distance to p_from_point. */
+  public Point nearestEndPoint(Point fromPoint) {
     Point p1 = firstCorner();
     Point p2 = lastCorner();
-    FloatPoint fromPoint = pFromPoint.toFloat();
-    double d1 = fromPoint.distance(p1.toFloat());
-    double d2 = fromPoint.distance(p2.toFloat());
+    FloatPoint fromPointFloat = fromPoint.toFloat();
+    double d1 = fromPointFloat.distance(p1.toFloat());
+    double d2 = fromPointFloat.distance(p2.toFloat());
     Point result;
     if (d1 < d2) {
       result = p1;
@@ -278,7 +277,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return result;
   }
 
-  /** Checks, if this trace can be reached by other items via more than one path */
+  /** Checks, if this trace can be reached by other items via more than one path. */
   public boolean isCycle() {
     boolean debugNet49 =
         this.netNoArr != null && this.netNoArr.length > 0 && this.netNoArr[0] == 49;
@@ -340,7 +339,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   @Override
-  public int shapeLayer(int pIndex) {
+  public int shapeLayer(int index) {
     return layer;
   }
 
@@ -378,18 +377,18 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * checks, that the connection restrictions to the contact pins are satisfied. If p_at_start, the
+   * checks, that the connection restrictions to the contact pins are satisfied. If p_at_start, the.
    * start of this trace is checked, else the end. Returns false, if a pin is at that end, where the
    * connection is checked and the connection is not ok.
    */
-  public abstract boolean checkConnectionToPin(boolean pAtStart);
+  public abstract boolean checkConnectionToPin(boolean atStart);
 
   @Override
-  public boolean isSelectedByFilter(ItemSelectionFilter pFilter) {
-    if (!this.isSelectedByFixedFilter(pFilter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter filter) {
+    if (!this.isSelectedByFixedFilter(filter)) {
       return false;
     }
-    return pFilter.isSelected(ItemSelectionFilter.SelectableChoices.TRACES);
+    return filter.isSelected(ItemSelectionFilter.SelectableChoices.TRACES);
   }
 
   /**
@@ -419,36 +418,36 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
-    TextManager tm = new TextManager(this.getClass(), pLocale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    pWindow.appendBold(tm.getText("trace"));
-    pWindow.append(" " + tm.getText("from") + " ");
-    pWindow.append(this.firstCorner().toFloat());
-    pWindow.append(" " + tm.getText("to") + " ");
-    pWindow.append(this.lastCorner().toFloat());
-    pWindow.append(" " + tm.getText("on_layer") + " ");
-    pWindow.append(this.board.layerStructure.arr[this.layer].name);
-    pWindow.append(", " + tm.getText("width") + " ");
-    pWindow.append(2 * this.halfWidth);
-    pWindow.append(", " + tm.getText("length") + " ");
-    pWindow.append(this.getLength());
-    this.printConnectableItemInfo(pWindow, pLocale);
-    pWindow.newline();
+    window.appendBold(tm.getText("trace"));
+    window.append(" " + tm.getText("from") + " ");
+    window.append(this.firstCorner().toFloat());
+    window.append(" " + tm.getText("to") + " ");
+    window.append(this.lastCorner().toFloat());
+    window.append(" " + tm.getText("on_layer") + " ");
+    window.append(this.board.layerStructure.arr[this.layer].name);
+    window.append(", " + tm.getText("width") + " ");
+    window.append(2 * this.halfWidth);
+    window.append(", " + tm.getText("length") + " ");
+    window.append(this.getLength());
+    this.printConnectableItemInfo(window, locale);
+    window.newline();
   }
 
   @Override
-  public String getHoverInfo(Locale pLocale) {
-    TextManager tm = new TextManager(this.getClass(), pLocale);
+  public String getHoverInfo(Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
     double mmResolution = this.board.communication.getResolution(Unit.MM);
     double widthInMm = (2 * this.halfWidth) / mmResolution;
     double lengthInMm = this.getLength() / mmResolution;
 
     String layerName = this.board.layerStructure.arr[this.layer].name;
-    String widthStr = String.format(pLocale, "%.4f", widthInMm);
-    String lengthStr = String.format(pLocale, "%.4f", lengthInMm);
-    String connInfo = this.getConnectableItemHoverInfo(pLocale);
+    String widthStr = String.format(locale, "%.4f", widthInMm);
+    String lengthStr = String.format(locale, "%.4f", lengthInMm);
+    String connInfo = this.getConnectableItemHoverInfo(locale);
 
     return tm.getText("trace_hover_info", layerName, widthStr, lengthStr, connInfo);
   }
@@ -465,7 +464,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * looks, if this trace can be combined with other traces . Returns true, if something has been
+   * looks, if this trace can be combined with other traces . Returns true, if something has been.
    * combined.
    */
   abstract boolean combine();
@@ -476,17 +475,17 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * the pieces resulting from splitting. If nothing is split, the result will contain just this
    * Trace. If p_clip_shape != null, the split may be restricted to p_clip_shape.
    */
-  public abstract Collection<PolylineTrace> split(IntOctagon pClipShape);
+  public abstract Collection<PolylineTrace> split(IntOctagon clipShape);
 
   /**
    * Splits this trace into two at p_point. Returns the 2 pieces of the split trace, or null if
    * nothing was split because for example p_point is not located on this trace.
    */
-  public abstract Trace[] split(Point pPoint);
+  public abstract Trace[] split(Point point);
 
   /**
    * Tries to make this trace shorter according to its rules. Returns true if the geometry of the
    * trace was changed.
    */
-  public abstract boolean pullTight(PullTightAlgo pPullTightAlgo);
+  public abstract boolean pullTight(PullTightAlgo pullTightAlgo);
 }
