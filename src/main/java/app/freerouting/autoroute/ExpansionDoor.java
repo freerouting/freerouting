@@ -5,7 +5,7 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 
-/** An ExpansionDoor is a common edge between two ExpansionRooms */
+/** An ExpansionDoor is a common edge between two ExpansionRooms. */
 public class ExpansionDoor implements ExpandableObject {
 
   /** The first room of this door. */
@@ -17,7 +17,9 @@ public class ExpansionDoor implements ExpandableObject {
   /** The dimension of a door may be 1 or 2. */
   public final int dimension;
 
-  /** Each section of the following array can be expanded separately by the maze search algorithm. */
+  /**
+   * Each section of the following array can be expanded separately by the maze search algorithm.
+   */
   MazeSearchElement[] sectionArr;
 
   /** Creates a new instance of ExpansionDoor. */

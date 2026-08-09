@@ -18,6 +18,7 @@ public class RoutingFailureLog implements Serializable {
   /** Map of item ID to failure information. */
   private final ConcurrentHashMap<Integer, ItemFailureInfo> failures;
 
+  /** RoutingFailureLog. */
   public RoutingFailureLog() {
     this.failures = new ConcurrentHashMap<>();
   }
@@ -113,6 +114,7 @@ public class RoutingFailureLog implements Serializable {
     public String lastFailureReason;
     public long lastAttemptPass;
 
+    /** Creates failure tracking info for an item. */
     public ItemFailureInfo(Item item) {
       this.item = item;
       this.netNo = item.netCount() > 0 ? item.getNetNo(0) : -1;

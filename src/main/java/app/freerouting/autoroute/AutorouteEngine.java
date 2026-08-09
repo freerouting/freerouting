@@ -41,7 +41,7 @@ public class AutorouteEngine {
    */
   public final boolean maintainDatabase;
 
-  /** The 2-dimensional array of rectangular pages of ExpansionDrills */
+  /** The 2-dimensional array of rectangular pages of ExpansionDrills. */
   final DrillPageArray drillPageArray;
 
   /** The PCB-board of this autoroute algorithm. */
@@ -56,17 +56,17 @@ public class AutorouteEngine {
   /** To stop the expansion algorithm after a time limit is exceeded. */
   private TimeLimit timeLimit;
 
-  /** The list of incomplete expansion rooms on the routing board */
+  /** The list of incomplete expansion rooms on the routing board. */
   private List<IncompleteFreeSpaceExpansionRoom> incompleteExpansionRooms;
 
-  /** The list of complete expansion rooms on the routing board */
+  /** The list of complete expansion rooms on the routing board. */
   private List<CompleteFreeSpaceExpansionRoom> completeExpansionRooms;
 
-  /** The count of expansion rooms created so far */
+  /** The count of expansion rooms created so far. */
   private int expansionRoomInstanceCount;
 
   /**
-   * Creates a new instance of BoardAutorouteEngine. If maintainDatabase, the autorouter database
+   * Creates a new instance of BoardAutorouteEngine. If maintainDatabase, the autorouter database.
    * is maintained after a connection is completed for performance reasons.
    */
   public AutorouteEngine(
@@ -183,7 +183,8 @@ public class AutorouteEngine {
                 ripupCosts);
       } catch (Exception e) {
         FRLogger.error(
-            "AutorouteEngine.autoroute_connection: Exception in LocateFoundConnectionAlgo.get_instance",
+            "AutorouteEngine.autoroute_connection: Exception in "
+                + "LocateFoundConnectionAlgo.get_instance",
             e);
       }
     }
@@ -412,13 +413,14 @@ public class AutorouteEngine {
       IncompleteFreeSpaceExpansionRoom room) {
 
     try {
-      Collection<CompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
+      final Collection<CompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
       TileShape fromDoorShape = null;
       SearchTreeObject ignoreObject = null;
       Collection<ExpansionDoor> roomDoors = room.getDoors();
       for (ExpansionDoor currDoor : roomDoors) {
         ExpansionRoom otherRoom = currDoor.otherRoom(room);
-        if (otherRoom instanceof CompleteFreeSpaceExpansionRoom freeRoom && currDoor.dimension == 2) {
+        if (otherRoom instanceof CompleteFreeSpaceExpansionRoom freeRoom
+            && currDoor.dimension == 2) {
           fromDoorShape = currDoor.getShape();
           ignoreObject = freeRoom;
           break;
@@ -668,6 +670,7 @@ public class AutorouteEngine {
     this.drillPageArray.reset();
   }
 
+  /** Returns the next expansion room identifier. */
   protected int generateRoomIdNo() {
     return ++expansionRoomInstanceCount;
   }

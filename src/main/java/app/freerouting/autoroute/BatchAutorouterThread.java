@@ -160,18 +160,18 @@ public class BatchAutorouterThread extends StoppableThread {
     }
   }
 
-  /** Finds the nearest point on a trace to the given point */
-  private static FloatPoint nearestPointOnTrace(PolylineTrace pTrace, FloatPoint pPoint) {
+  /** Finds the nearest point on a trace to the given point. */
+  private static FloatPoint nearestPointOnTrace(PolylineTrace trace, FloatPoint point) {
     double minDistance = Double.MAX_VALUE;
     FloatPoint nearestPoint = null;
 
     // Get endpoints
-    FloatPoint firstCorner = pTrace.firstCorner().toFloat();
-    FloatPoint lastCorner = pTrace.lastCorner().toFloat();
+    FloatPoint firstCorner = trace.firstCorner().toFloat();
+    FloatPoint lastCorner = trace.lastCorner().toFloat();
 
     // Check distance to endpoints first
-    double distanceToFirst = pPoint.distance(firstCorner);
-    double distanceToLast = pPoint.distance(lastCorner);
+    double distanceToFirst = point.distance(firstCorner);
+    double distanceToLast = point.distance(lastCorner);
 
     if (distanceToFirst < minDistance) {
       minDistance = distanceToFirst;
@@ -184,14 +184,14 @@ public class BatchAutorouterThread extends StoppableThread {
     }
 
     // Check distances to line segments
-    for (int i = 0; i < pTrace.cornerCount() - 1; i++) {
-      FloatPoint segmentStart = pTrace.polyline().cornerApprox(i);
-      FloatPoint segmentEnd = pTrace.polyline().cornerApprox(i + 1);
+    for (int i = 0; i < trace.cornerCount() - 1; i++) {
+      FloatPoint segmentStart = trace.polyline().cornerApprox(i);
+      FloatPoint segmentEnd = trace.polyline().cornerApprox(i + 1);
       FloatLine segment = new FloatLine(segmentStart, segmentEnd);
 
-      FloatPoint projection = segment.perpendicularProjection(pPoint);
+      FloatPoint projection = segment.perpendicularProjection(point);
       if (projection.isContainedInBox(segmentStart, segmentEnd, 0.01)) {
-        double distance = pPoint.distance(projection);
+        double distance = point.distance(projection);
         if (distance < minDistance) {
           minDistance = distance;
           nearestPoint = projection;
@@ -203,20 +203,20 @@ public class BatchAutorouterThread extends StoppableThread {
   }
 
   /**
-   * Finds the closest points between two traces
+   * Finds the closest points between two traces.
    *
    * @return an array with two FloatPoints: [point_on_first_trace, point_on_second_trace]
    */
   private static FloatPoint[] findClosestPointsBetweenTraces(
-      PolylineTrace pFirstTrace, PolylineTrace pSecondTrace) {
+      PolylineTrace firstTrace, PolylineTrace secondTrace) {
     double minDistance = Double.MAX_VALUE;
     FloatPoint[] result = new FloatPoint[2];
 
     // Check endpoints to endpoints
-    FloatPoint firstTraceStart = pFirstTrace.firstCorner().toFloat();
-    FloatPoint firstTraceEnd = pFirstTrace.lastCorner().toFloat();
-    FloatPoint secondTraceStart = pSecondTrace.firstCorner().toFloat();
-    FloatPoint secondTraceEnd = pSecondTrace.lastCorner().toFloat();
+    FloatPoint firstTraceStart = firstTrace.firstCorner().toFloat();
+    final FloatPoint firstTraceEnd = firstTrace.lastCorner().toFloat();
+    FloatPoint secondTraceStart = secondTrace.firstCorner().toFloat();
+    FloatPoint secondTraceEnd = secondTrace.lastCorner().toFloat();
 
     // Check all endpoint combinations
     double distance = firstTraceStart.distance(secondTraceStart);
@@ -248,14 +248,14 @@ public class BatchAutorouterThread extends StoppableThread {
     }
 
     // Check all segment combinations for closest points
-    for (int i = 0; i < pFirstTrace.cornerCount() - 1; i++) {
-      FloatPoint firstSegmentStart = pFirstTrace.polyline().cornerApprox(i);
-      FloatPoint firstSegmentEnd = pFirstTrace.polyline().cornerApprox(i + 1);
+    for (int i = 0; i < firstTrace.cornerCount() - 1; i++) {
+      FloatPoint firstSegmentStart = firstTrace.polyline().cornerApprox(i);
+      FloatPoint firstSegmentEnd = firstTrace.polyline().cornerApprox(i + 1);
       FloatLine firstSegment = new FloatLine(firstSegmentStart, firstSegmentEnd);
 
-      for (int j = 0; j < pSecondTrace.cornerCount() - 1; j++) {
-        FloatPoint secondSegmentStart = pSecondTrace.polyline().cornerApprox(j);
-        FloatPoint secondSegmentEnd = pSecondTrace.polyline().cornerApprox(j + 1);
+      for (int j = 0; j < secondTrace.cornerCount() - 1; j++) {
+        FloatPoint secondSegmentStart = secondTrace.polyline().cornerApprox(j);
+        FloatPoint secondSegmentEnd = secondTrace.polyline().cornerApprox(j + 1);
         FloatLine secondSegment = new FloatLine(secondSegmentStart, secondSegmentEnd);
 
         // Find closest points between these two line segments
@@ -287,19 +287,15 @@ public class BatchAutorouterThread extends StoppableThread {
 
   private RoutingBoard autorouteItems() {
     int itemsToGoCount = autorouteItemList.size();
-    int rippedItemCount = 0;
-    int notRouted = 0;
-    int routed = 0;
-    int skipped = 0;
 
-    BoardStatistics stats = board.getStatistics();
+    final BoardStatistics stats = board.getStatistics();
     RouterCounters routerCounters = new RouterCounters();
     routerCounters.passCount = passNo;
     routerCounters.queuedToBeRoutedCount = itemsToGoCount;
-    routerCounters.skippedCount = skipped;
-    routerCounters.rippedCount = rippedItemCount;
-    routerCounters.failedToBeRoutedCount = notRouted;
-    routerCounters.routedCount = routed;
+    routerCounters.skippedCount = 0;
+    routerCounters.rippedCount = 0;
+    routerCounters.failedToBeRoutedCount = 0;
+    routerCounters.routedCount = 0;
     DesignRulesChecker drc = new DesignRulesChecker(board, null);
     drc.calculateAllIncompletes();
     routerCounters.incompleteCount = drc.getIncompleteCount();
@@ -307,6 +303,10 @@ public class BatchAutorouterThread extends StoppableThread {
     progressThrottler.reset();
     this.fireBoardUpdatedEvent(stats, routerCounters, board);
 
+    int rippedItemCount = 0;
+    int notRouted = 0;
+    int routed = 0;
+    int skipped = 0;
     // Let's go through all items to route
     for (Item currItem : autorouteItemList) {
       // If the user requested to stop the auto-router, we stop it
@@ -397,7 +397,7 @@ public class BatchAutorouterThread extends StoppableThread {
 
         if (progressThrottler.shouldUpdate()) {
           PerformanceProfiler.start("stats_update");
-          BoardStatistics boardStatistics = board.getStatistics();
+          final BoardStatistics boardStatistics = board.getStatistics();
           routerCounters.passCount = passNo;
           routerCounters.queuedToBeRoutedCount = itemsToGoCount;
           routerCounters.skippedCount = skipped;
@@ -419,7 +419,6 @@ public class BatchAutorouterThread extends StoppableThread {
       removeTails(Item.StopConnectionOption.FANOUT_VIA);
     }
 
-    BoardStatistics finalStats = board.getStatistics();
     routerCounters.passCount = passNo;
     routerCounters.queuedToBeRoutedCount = itemsToGoCount;
     routerCounters.skippedCount = skipped;
@@ -429,7 +428,7 @@ public class BatchAutorouterThread extends StoppableThread {
     DesignRulesChecker drc3 = new DesignRulesChecker(board, null);
     drc3.calculateAllIncompletes();
     routerCounters.incompleteCount = drc3.getIncompleteCount();
-    this.fireBoardUpdatedEvent(finalStats, routerCounters, board);
+    this.fireBoardUpdatedEvent(board.getStatistics(), routerCounters, board);
 
     return this.board;
   }
@@ -438,15 +437,15 @@ public class BatchAutorouterThread extends StoppableThread {
   // routed.
   private AutorouteAttemptResult autorouteItem(
       RoutingBoard board,
-      Item pItem,
-      int pRouteNetNo,
-      SortedSet<Item> pRippedItemList,
-      int pRipupPassNo) {
+      Item item,
+      int routeNetNo,
+      SortedSet<Item> rippedItemList,
+      int ripupPassNo) {
     try {
       boolean containsPlane = false;
 
       // Get the net
-      Net routeNet = board.rules.nets.get(pRouteNetNo);
+      Net routeNet = board.rules.nets.get(routeNetNo);
       if (routeNet != null) {
         containsPlane = routeNet.containsPlane();
       }
@@ -462,18 +461,18 @@ public class BatchAutorouterThread extends StoppableThread {
       // Get and calculate the auto-router settings based on the board and net we are
       // working on
       AutorouteControl autorouteControl =
-          new AutorouteControl(board, pRouteNetNo, settings, currViaCosts, traceCostArr);
+          new AutorouteControl(board, routeNetNo, settings, currViaCosts, traceCostArr);
       autorouteControl.ripupAllowed = true;
-      autorouteControl.ripupCosts = startRipupCosts * pRipupPassNo;
+      autorouteControl.ripupCosts = startRipupCosts * ripupPassNo;
       autorouteControl.removeUnconnectedVias = removeUnconnectedVias;
 
       // Check if the item is already routed
-      Set<Item> unconnectedSet = pItem.getUnconnectedSet(pRouteNetNo);
+      Set<Item> unconnectedSet = item.getUnconnectedSet(routeNetNo);
       if (unconnectedSet.isEmpty()) {
         return new AutorouteAttemptResult(AutorouteAttemptState.NO_UNCONNECTED_NETS);
       }
 
-      Set<Item> connectedSet = pItem.getConnectedSet(pRouteNetNo);
+      Set<Item> connectedSet = item.getConnectedSet(routeNetNo);
       Set<Item> routeStartSet;
       Set<Item> routeDestSet;
       if (containsPlane) {
@@ -495,14 +494,14 @@ public class BatchAutorouterThread extends StoppableThread {
       this.latestAirLine = calcAirline(routeStartSet, routeDestSet);
 
       // Calculate the maximum time for this autoroute pass
-      double maxMilliseconds = 100000 * Math.pow(2, pRipupPassNo - 1);
+      double maxMilliseconds = 100000 * Math.pow(2, ripupPassNo - 1);
       maxMilliseconds = Math.min(maxMilliseconds, Integer.MAX_VALUE);
       TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
 
       // Initialize the auto-router engine
       AutorouteEngine autorouteEngine =
           board.initAutoroute(
-              pRouteNetNo,
+              routeNetNo,
               autorouteControl.traceClearanceClassNo,
               this,
               timeLimit,
@@ -514,7 +513,7 @@ public class BatchAutorouterThread extends StoppableThread {
               routeStartSet,
               routeDestSet,
               autorouteControl,
-              pRippedItemList,
+              rippedItemList,
               null); // null: costs not needed by this thread
 
       // Update the changed area of the board
@@ -535,16 +534,16 @@ public class BatchAutorouterThread extends StoppableThread {
     }
   }
 
-  private void removeTails(Item.StopConnectionOption pStopConnectionOption) {
+  private void removeTails(Item.StopConnectionOption stopConnectionOption) {
     FRLogger.trace(
         "BatchAutorouterThread.remove_tails",
         "starting_tail_removal",
         FRLogger.buildTracePayload(
-            "autoroute", "cleanup", "start", "stop_option=" + pStopConnectionOption),
+            "autoroute", "cleanup", "start", "stop_option=" + stopConnectionOption),
         "",
         null);
     board.startMarkingChangedArea();
-    boolean tailsRemoved = board.removeTraceTails(-1, pStopConnectionOption);
+    boolean tailsRemoved = board.removeTraceTails(-1, stopConnectionOption);
     FRLogger.trace(
         "BatchAutorouterThread.remove_tails",
         "tail_removal_complete",
@@ -552,7 +551,7 @@ public class BatchAutorouterThread extends StoppableThread {
             "autoroute",
             "cleanup",
             "complete",
-            "tailsRemoved=" + tailsRemoved + " stop_option=" + pStopConnectionOption),
+            "tailsRemoved=" + tailsRemoved + " stop_option=" + stopConnectionOption),
         "",
         null);
     board.optChangedArea(
@@ -572,16 +571,17 @@ public class BatchAutorouterThread extends StoppableThread {
 
   private void captureStats() {
     try {
-      ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
       long id = this.threadId();
-      this.cpuTimeUsed = threadMXBean.getThreadCpuTime(id) / 1000.0f / 1000.0f / 1000.0f;
-      this.maxMemoryUsed = threadMXBean.getThreadAllocatedBytes(id) / (1024.0f * 1024.0f);
+      this.cpuTimeUsed = threadMxBean.getThreadCpuTime(id) / 1000.0f / 1000.0f / 1000.0f;
+      this.maxMemoryUsed = threadMxBean.getThreadAllocatedBytes(id) / (1024.0f * 1024.0f);
     } catch (Throwable t) {
       // java.management or jdk.management module may not be available in minimal JRE builds;
       // leave cpuTimeUsed and maxMemoryUsed at their zero-initialized defaults.
     }
   }
 
+  /** Registers a listener for board updated events. */
   public void addBoardUpdatedEventListener(BoardUpdatedEventListener listener) {
     boardUpdatedEventListeners.add(listener);
   }

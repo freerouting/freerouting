@@ -216,9 +216,7 @@ public class DestinationDistance {
 
     double result = Integer.MAX_VALUE;
 
-    if (layer == 0)
-    // calculate shortest distance to component side box
-    {
+    if (layer == 0) { // calculate shortest distance to component side box
       // calculate one layer distance
 
       if (!componentSideBoxIsEmpty) {
@@ -294,9 +292,7 @@ public class DestinationDistance {
 
       return Math.min(result, tmpDistance);
     }
-    if (layer == layerCount - 1)
-    // calculate the shortest distance to solder side box
-    {
+    if (layer == layerCount - 1) { // calculate the shortest distance to solder side box
       // calculate one layer distance
 
       if (!solderSideBoxIsEmpty) {

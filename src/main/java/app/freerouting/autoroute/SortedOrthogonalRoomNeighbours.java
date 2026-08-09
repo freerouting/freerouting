@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/** SortedOrthogonalRoomNeighbours. */
 public final class SortedOrthogonalRoomNeighbours {
 
   public final CompleteExpansionRoom completedRoom;
@@ -22,13 +23,13 @@ public final class SortedOrthogonalRoomNeighbours {
   private final IntBox roomShape;
   private final boolean[] edgeInteriorTouchesObstacle;
 
-  /** Creates a new instance of SortedOrthogonalRoomNeighbours */
+  /** Creates a new instance of SortedOrthogonalRoomNeighbours. */
   private SortedOrthogonalRoomNeighbours(
-      ExpansionRoom pFromRoom, CompleteExpansionRoom pCompletedRoom) {
-    fromRoom = pFromRoom;
-    completedRoom = pCompletedRoom;
-    isObstacleExpansionRoom = pFromRoom instanceof ObstacleExpansionRoom;
-    roomShape = (IntBox) pCompletedRoom.getShape();
+      ExpansionRoom fromRoom, CompleteExpansionRoom completedRoom) {
+    this.fromRoom = fromRoom;
+    this.completedRoom = completedRoom;
+    isObstacleExpansionRoom = fromRoom instanceof ObstacleExpansionRoom;
+    roomShape = (IntBox) completedRoom.getShape();
     sortedNeighbours = new TreeSet<>();
     edgeInteriorTouchesObstacle = new boolean[4];
     for (int i = 0; i < 4; i++) {

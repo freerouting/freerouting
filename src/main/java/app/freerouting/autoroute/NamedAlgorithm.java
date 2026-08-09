@@ -36,6 +36,7 @@ public abstract class NamedAlgorithm implements Serializable {
   // board reference after deserialisation if needed.
   protected transient RoutingBoard board;
 
+  /** NamedAlgorithm. */
   protected NamedAlgorithm(StoppableThread thread, RoutingBoard board, RouterSettings settings) {
     this.thread = thread;
     this.board = board;

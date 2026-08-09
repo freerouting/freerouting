@@ -19,7 +19,7 @@ public class AutorouteControl {
 
   public final RouterSettings settings;
 
-  /** The horizontal and vertical trace costs on each layer */
+  /** The horizontal and vertical trace costs on each layer. */
   public final ExpansionCostFactor[] traceCosts;
 
   public final double[] bendCosts;
@@ -30,7 +30,7 @@ public class AutorouteControl {
 
   final int layerCount;
 
-  /** The currently used trace half widths in the autoroute algorithm on each layer */
+  /** The currently used trace half widths in the autoroute algorithm on each layer. */
   final int[] traceHalfWidth;
 
   /**
@@ -41,26 +41,26 @@ public class AutorouteControl {
 
   final double[] viaRadiusArr;
 
-  /** the additional costs to min_normal via_cost for inserting a via between 2 layers */
+  /** The additional costs to min_normal via_cost for inserting a via between 2 layers. */
   final ViaCost[] addViaCosts;
 
-  /** The currently used clearance class for traces in the autoroute algorithm */
+  /** The currently used clearance class for traces in the autoroute algorithm. */
   public int traceClearanceClassNo;
 
-  /** True, if layer change by inserting of vias is allowed */
+  /** True, if layer change by inserting of vias is allowed. */
   public boolean viasAllowed;
 
-  /** True, if vias may drill to the pad of SMD pins */
+  /** True, if vias may drill to the pad of SMD pins. */
   public boolean attachSmdAllowed;
 
-  /** The minimum cost value of all normal vias */
+  /** The minimum cost value of all normal vias. */
   public double minNormalViaCost;
 
   public boolean ripupAllowed;
   public int ripupCosts;
   public int ripupPassNo;
 
-  /** If true, the autoroute algorithm completes after the first drill */
+  /** If true, the autoroute algorithm completes after the first drill. */
   public boolean isFanout;
 
   /** Source pin name for targeted fanout diagnostics. */
@@ -72,45 +72,45 @@ public class AutorouteControl {
   /** Source pin layer for targeted fanout diagnostics and limits. */
   public int fanoutStartPinLayer = -1;
 
-  /** Normally true, if the autorouter contains no fanout pass */
+  /** Normally true, if the autorouter contains no fanout pass. */
   public boolean removeUnconnectedVias;
 
-  /** The currently used net number in the autoroute algorithm */
+  /** The currently used net number in the autoroute algorithm. */
   int netNo;
 
-  /** The currently used clearance class for vias in the autoroute algorithm */
+  /** The currently used clearance class for vias in the autoroute algorithm. */
   int viaClearanceClass;
 
-  /** The possible (partial) vias, which can be used by the autorouter */
+  /** The possible (partial) vias, which can be used by the autorouter. */
   public ViaRule viaRule;
 
-  /** The array of possible via ranges used bei the autorouter */
+  /** The array of possible via ranges used by the autorouter. */
   ViaMask[] viaInfoArr;
 
-  /** The lower bound for the first layer of vias */
+  /** The lower bound for the first layer of vias. */
   int viaLowerBound;
 
-  /** The upper bound for the last layer of vias */
+  /** The upper bound for the last layer of vias. */
   int viaUpperBound;
 
   double maxViaRadius;
 
-  /** The width of the region around changed traces, where traces are pulled tight */
+  /** The width of the region around changed traces, where traces are pulled tight. */
   int tidyRegionWidth;
 
-  /** The pull tight accuracy of traces */
+  /** The pull tight accuracy of traces. */
   int pullTightAccuracy;
 
-  /** The maximum recursion depth for shoving traces */
+  /** The maximum recursion depth for shoving traces. */
   int maxShoveTraceRecursionDepth;
 
-  /** The maximum recursion depth for shoving obstacles */
+  /** The maximum recursion depth for shoving obstacles. */
   int maxShoveViaRecursionDepth;
 
-  /** The maximum recursion depth for traces springing over obstacles */
+  /** The maximum recursion depth for traces springing over obstacles. */
   int maxSpringOverRecursionDepth;
 
-  /** The minimal cost value of all cheap vias */
+  /** The minimal cost value of all cheap vias. */
   double minCheapViaCost;
 
   /** Creates a new instance of AutorouteControl for the input net. */
@@ -153,7 +153,8 @@ public class AutorouteControl {
         FRLogger.warn(
             "Layer '"
                 + board.layerStructure.arr[i].name
-                + "' is a dedicated power plane and cannot be routed. Forcing active state to false.");
+                + "' is a dedicated power plane and cannot be routed. "
+                + "Forcing active state to false.");
         layerActive[i] = false;
       } else {
         layerActive[i] = activeSetting;

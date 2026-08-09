@@ -142,6 +142,7 @@ public class PerformanceProfiler {
     long durationMs;
     int ripupCost;
 
+    /** PassInfo. */
     public PassInfo(int passNo, int unroutedItems, long durationMs, int ripupCost) {
       this.passNo = passNo;
       this.unroutedItems = unroutedItems;
@@ -150,7 +151,7 @@ public class PerformanceProfiler {
     }
   }
 
-  /** Store configuration metrics for reporting */
+  /** Store configuration metrics for reporting. */
   private static class ConfigInfo {
     int viaCosts;
     int planeViaCosts;

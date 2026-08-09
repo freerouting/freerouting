@@ -8,32 +8,32 @@ import app.freerouting.geometry.planar.FloatLine;
  */
 public class MazeListElement implements Comparable<MazeListElement> {
 
-  /** The door or drill belonging to this MazeListElement */
+  /** The door or drill belonging to this MazeListElement. */
   final ExpandableObject door;
 
-  /** The section number of the door (or the layer of the drill) */
+  /** The section number of the door (or the layer of the drill). */
   final int sectionNoOfDoor;
 
-  /** The door, from which this door was expanded */
+  /** The door, from which this door was expanded. */
   final ExpandableObject backtrackDoor;
 
-  /** The section number of the backtrack door */
+  /** The section number of the backtrack door. */
   final int sectionNoOfBacktrackDoor;
 
-  /** The weighted distance to the start of the expansion */
+  /** The weighted distance to the start of the expansion. */
   final double expansionValue;
 
   /**
-   * The expansion value plus the shortest distance to a destination. The list is sorted in
+   * The expansion value plus the shortest distance to a destination. The list is sorted in.
    * ascending order by this value.
    */
   final double sortingValue;
 
-  /** The next room, which will be expanded from this maze search element */
+  /** The next room, which will be expanded from this maze search element. */
   final CompleteExpansionRoom nextRoom;
 
   /**
-   * Point of the region of the expansion door, which has the shortest distance to the backtrack
+   * Point of the region of the expansion door, which has the shortest distance to the backtrack.
    * door.
    */
   final FloatLine shapeEntry;

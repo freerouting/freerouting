@@ -123,13 +123,13 @@ public class MazeSearchAlgo {
    * and p_destination_items. Returns null, if the initialisation failed.
    */
   public static MazeSearchAlgo getInstance(
-      Set<Item> pStartItems,
-      Set<Item> pDestinationItems,
-      AutorouteEngine pAutorouteDatabase,
-      AutorouteControl pCtrl) {
-    MazeSearchAlgo newInstance = new MazeSearchAlgo(pAutorouteDatabase, pCtrl);
+      Set<Item> startItems,
+      Set<Item> destinationItems,
+      AutorouteEngine autorouteDatabase,
+      AutorouteControl ctrl) {
+    MazeSearchAlgo newInstance = new MazeSearchAlgo(autorouteDatabase, ctrl);
     MazeSearchAlgo result;
-    if (newInstance.init(pStartItems, pDestinationItems)) {
+    if (newInstance.init(startItems, destinationItems)) {
       result = newInstance;
     } else {
       result = null;
@@ -142,15 +142,15 @@ public class MazeSearchAlgo {
    * already connected to such a pin, so that the pin center is not blocked for connection.
    */
   private static void reduceTraceShapesAtTiePins(
-      Collection<Item> pItemList, int pOwnNetNo, ShapeSearchTree pAutorouteTree) {
-    for (Item currItem : pItemList) {
-      if ((currItem instanceof Pin curr_tie_pin) && currItem.netCount() > 1) {
+      Collection<Item> itemList, int ownNetNo, ShapeSearchTree autorouteTree) {
+    for (Item currItem : itemList) {
+      if ((currItem instanceof Pin currTiePin) && currItem.netCount() > 1) {
         Collection<Item> pinContacts = currItem.getNormalContacts();
         for (Item currContact : pinContacts) {
-          if (!(currContact instanceof PolylineTrace) || currContact.containsNet(pOwnNetNo)) {
+          if (!(currContact instanceof PolylineTrace) || currContact.containsNet(ownNetNo)) {
             continue;
           }
-          pAutorouteTree.reduceTraceShapeAtTiePin(curr_tie_pin, (PolylineTrace) currContact);
+          autorouteTree.reduceTraceShapeAtTiePin(currTiePin, (PolylineTrace) currContact);
         }
       }
     }
@@ -160,14 +160,14 @@ public class MazeSearchAlgo {
    * Return the additional cost factor for ripping the trace, if it is connected to a fanout via or
    * 1, if no fanout via was found.
    */
-  private static double calcFanoutViaRipupCostFactor(Trace pTrace) {
+  private static double calcFanoutViaRipupCostFactor(Trace trace) {
     final double fanoutCostConst = 20000;
     Collection<Item> currEndContacts;
     for (int i = 0; i < 2; i++) {
       if (i == 0) {
-        currEndContacts = pTrace.getStartContacts();
+        currEndContacts = trace.getStartContacts();
       } else {
-        currEndContacts = pTrace.getEndContacts();
+        currEndContacts = trace.getEndContacts();
       }
       if (currEndContacts.size() != 1) {
         continue;
@@ -186,7 +186,7 @@ public class MazeSearchAlgo {
       }
 
       if (protectFanoutVia) {
-        double fanoutViaCostFactor = pTrace.getHalfWidth() / pTrace.getLength();
+        double fanoutViaCostFactor = trace.getHalfWidth() / trace.getLength();
         fanoutViaCostFactor *= fanoutViaCostFactor;
         fanoutViaCostFactor *= fanoutCostConst;
         return Math.max(fanoutViaCostFactor, 1);
@@ -199,26 +199,26 @@ public class MazeSearchAlgo {
    * Returns the perpendicular projection of p_from_segment onto p_to_segment. Returns null, if the
    * projection is empty.
    */
-  private static FloatLine segmentProjection(FloatLine pFromSegment, FloatLine pToSegment) {
-    FloatLine checkSegment = pFromSegment.adjustDirection(pToSegment);
-    FloatLine firstProjection = pToSegment.segmentProjection(checkSegment);
-    FloatLine secondProjection = pToSegment.segmentProjection2(checkSegment);
+  private static FloatLine segmentProjection(FloatLine fromSegment, FloatLine toSegment) {
+    FloatLine checkSegment = fromSegment.adjustDirection(toSegment);
+    FloatLine firstProjection = toSegment.segmentProjection(checkSegment);
+    FloatLine secondProjection = toSegment.segmentProjection2(checkSegment);
     FloatLine result;
     if (firstProjection != null && secondProjection != null) {
       FloatPoint resultA;
-      if (firstProjection.a == pToSegment.a || secondProjection.a == pToSegment.a) {
-        resultA = pToSegment.a;
-      } else if (firstProjection.a.distanceSquare(pToSegment.a)
-          <= secondProjection.a.distanceSquare(pToSegment.a)) {
+      if (firstProjection.a == toSegment.a || secondProjection.a == toSegment.a) {
+        resultA = toSegment.a;
+      } else if (firstProjection.a.distanceSquare(toSegment.a)
+          <= secondProjection.a.distanceSquare(toSegment.a)) {
         resultA = firstProjection.a;
       } else {
         resultA = secondProjection.a;
       }
       FloatPoint resultB;
-      if (firstProjection.b == pToSegment.b || secondProjection.b == pToSegment.b) {
-        resultB = pToSegment.b;
-      } else if (firstProjection.b.distanceSquare(pToSegment.b)
-          <= secondProjection.b.distanceSquare(pToSegment.b)) {
+      if (firstProjection.b == toSegment.b || secondProjection.b == toSegment.b) {
+        resultB = toSegment.b;
+      } else if (firstProjection.b.distanceSquare(toSegment.b)
+          <= secondProjection.b.distanceSquare(toSegment.b)) {
         resultB = firstProjection.b;
       } else {
         resultB = secondProjection.b;
@@ -328,11 +328,11 @@ public class MazeSearchAlgo {
    * Expands the other door section of the room. Returns true, if the from door section has to be
    * occupied, and false, if the occupation for is delayed.
    */
-  private boolean expandToRoomDoors(MazeListElement pListElement) {
+  private boolean expandToRoomDoors(MazeListElement listElement) {
 
     // Complete the neighbour rooms to make sure, that the
     // doors of this room will not change later on.
-    int layerNo = pListElement.nextRoom.getLayer();
+    int layerNo = listElement.nextRoom.getLayer();
 
     boolean layerActive = ctrl.layerActive[layerNo];
     if (!layerActive) {
@@ -343,11 +343,11 @@ public class MazeSearchAlgo {
 
     double halfWidth = ctrl.compensatedTraceHalfWidth[layerNo];
     boolean currDoorIsSmall = false;
-    if (pListElement.door instanceof ExpansionDoor currDoor) {
+    if (listElement.door instanceof ExpansionDoor currDoor) {
       double halfWidthAdd = halfWidth + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
       if (this.ctrl.withNeckdown) {
         // try evtl. neckdown at a destination pin
-        double neckDownHalfWidth = checkNeckDownAtDestPin(pListElement.nextRoom);
+        double neckDownHalfWidth = checkNeckDownAtDestPin(listElement.nextRoom);
         if (neckDownHalfWidth > 0) {
           halfWidthAdd = Math.min(halfWidthAdd, neckDownHalfWidth);
           halfWidth = halfWidthAdd;
@@ -356,9 +356,9 @@ public class MazeSearchAlgo {
       currDoorIsSmall = doorIsSmall(currDoor, 2 * halfWidthAdd);
     }
 
-    int doorCountBeforeCompletion = pListElement.nextRoom.getDoors().size();
-    this.autorouteEngine.completeNeighbourRooms(pListElement.nextRoom);
-    int doorCountAfterCompletion = pListElement.nextRoom.getDoors().size();
+    int doorCountBeforeCompletion = listElement.nextRoom.getDoors().size();
+    this.autorouteEngine.completeNeighbourRooms(listElement.nextRoom);
+    int doorCountAfterCompletion = listElement.nextRoom.getDoors().size();
     FRLogger.trace(
         "ROOM_COMPLETE_SYNC"
             + ", net="
@@ -366,21 +366,21 @@ public class MazeSearchAlgo {
             + ", layer="
             + layerNo
             + ", from_section="
-            + pListElement.sectionNoOfDoor
+            + listElement.sectionNoOfDoor
             + ", backtrack_section="
-            + pListElement.sectionNoOfBacktrackDoor
+            + listElement.sectionNoOfBacktrackDoor
             + ", from_door="
-            + describeExpandable(pListElement.door)
+            + describeExpandable(listElement.door)
             + ", nextRoom="
-            + describeRoom(pListElement.nextRoom)
+            + describeRoom(listElement.nextRoom)
             + ", door_count_before="
             + doorCountBeforeCompletion
             + ", door_count_after="
             + doorCountAfterCompletion);
 
-    FloatPoint shapeEntryMiddle = pListElement.shapeEntry.a.middlePoint(pListElement.shapeEntry.b);
+    FloatPoint shapeEntryMiddle = listElement.shapeEntry.a.middlePoint(listElement.shapeEntry.b);
 
-    if (this.ctrl.withNeckdown && pListElement.door instanceof TargetItemExpansionDoor door) {
+    if (this.ctrl.withNeckdown && listElement.door instanceof TargetItemExpansionDoor door) {
       // try evtl. neckdown at a start pin
       Item startItem = door.item;
       if (startItem instanceof Pin pin) {
@@ -392,14 +392,14 @@ public class MazeSearchAlgo {
     }
 
     boolean nextRoomIsThick = true;
-    if (pListElement.nextRoom instanceof ObstacleExpansionRoom room) {
+    if (listElement.nextRoom instanceof ObstacleExpansionRoom room) {
       nextRoomIsThick = roomShapeIsThick(room);
     } else {
-      TileShape nextRoomShape = pListElement.nextRoom.getShape();
+      TileShape nextRoomShape = listElement.nextRoom.getShape();
       if (nextRoomShape.minWidth() < 2 * halfWidth) {
         nextRoomIsThick = false; // to prevent problems with the opposite side
-      } else if (!pListElement.alreadyChecked
-          && pListElement.door.getDimension() == 1
+      } else if (!listElement.alreadyChecked
+          && listElement.door.getDimension() == 1
           && !currDoorIsSmall) {
         // The algorithm below works only, if p_location is on the border of p_room_shape.
         // That is only the case for 1 dimensional doors.
@@ -415,7 +415,7 @@ public class MazeSearchAlgo {
         }
       }
     }
-    if (!layerActive && pListElement.door instanceof ExpansionDrill drill) {
+    if (!layerActive && listElement.door instanceof ExpansionDrill drill) {
       // check for drill to a foreign conduction area on split plane.
       Point drillLocation = drill.location;
       ItemSelectionFilter filter =
@@ -428,7 +428,7 @@ public class MazeSearchAlgo {
       }
     }
     boolean somethingExpanded =
-        expandToTargetDoors(pListElement, nextRoomIsThick, currDoorIsSmall, shapeEntryMiddle);
+        expandToTargetDoors(listElement, nextRoomIsThick, currDoorIsSmall, shapeEntryMiddle);
 
     if (!layerActive) {
       return true;
@@ -436,51 +436,51 @@ public class MazeSearchAlgo {
 
     int ripupCosts = 0;
 
-    if (pListElement.nextRoom instanceof FreeSpaceExpansionRoom) {
-      if (!pListElement.alreadyChecked) {
+    if (listElement.nextRoom instanceof FreeSpaceExpansionRoom) {
+      if (!listElement.alreadyChecked) {
         if (currDoorIsSmall) {
           boolean enterThroughSmallDoor = false;
           if (nextRoomIsThick) {
             // check to enter the thick room from a ripped item through a small door (after
             // ripup)
-            enterThroughSmallDoor = checkLeavingRippedItem(pListElement);
+            enterThroughSmallDoor = checkLeavingRippedItem(listElement);
           }
           if (!enterThroughSmallDoor) {
             return somethingExpanded;
           }
         }
       }
-    } else if (pListElement.nextRoom instanceof ObstacleExpansionRoom obstacle_room) {
+    } else if (listElement.nextRoom instanceof ObstacleExpansionRoom obstacleRoom) {
 
-      if (!pListElement.alreadyChecked) {
+      if (!listElement.alreadyChecked) {
         boolean roomRippable = false;
         if (this.ctrl.ripupAllowed) {
-          ripupCosts = checkRipup(pListElement, obstacle_room.getItem(), currDoorIsSmall);
+          ripupCosts = checkRipup(listElement, obstacleRoom.getItem(), currDoorIsSmall);
           roomRippable = ripupCosts >= 0;
         }
 
         if (ripupCosts != ALREADY_RIPPED_COSTS && nextRoomIsThick) {
-          Item obstacleItem = obstacle_room.getItem();
+          Item obstacleItem = obstacleRoom.getItem();
           if (!currDoorIsSmall
               && this.ctrl.maxShoveTraceRecursionDepth > 0
               && obstacleItem instanceof PolylineTrace) {
-            boolean shoved = shoveTraceRoom(pListElement, obstacle_room);
+            boolean shoved = shoveTraceRoom(listElement, obstacleRoom);
             if (!shoved) {
               if (ripupCosts > 0) {
                 // delay the occupation by ripup to allow shoving the room by another door
                 // sections.
                 MazeListElement newElement =
                     new MazeListElement(
-                        pListElement.door,
-                        pListElement.sectionNoOfDoor,
-                        pListElement.backtrackDoor,
-                        pListElement.sectionNoOfBacktrackDoor,
-                        pListElement.expansionValue + ripupCosts,
-                        pListElement.sortingValue + ripupCosts,
-                        pListElement.nextRoom,
-                        pListElement.shapeEntry,
+                        listElement.door,
+                        listElement.sectionNoOfDoor,
+                        listElement.backtrackDoor,
+                        listElement.sectionNoOfBacktrackDoor,
+                        listElement.expansionValue + ripupCosts,
+                        listElement.sortingValue + ripupCosts,
+                        listElement.nextRoom,
+                        listElement.shapeEntry,
                         true,
-                        pListElement.adjustment,
+                        listElement.adjustment,
                         true);
                 newElement.ripupCost = (int) ripupCosts;
                 this.mazeExpansionList.add(newElement);
@@ -495,31 +495,31 @@ public class MazeSearchAlgo {
       }
     }
 
-    List<ExpansionDoor> roomDoorsSnapshot = new LinkedList<>(pListElement.nextRoom.getDoors());
+    List<ExpansionDoor> roomDoorsSnapshot = new LinkedList<>(listElement.nextRoom.getDoors());
     FRLogger.trace(
         "ROOM_DOOR context from_section="
-            + pListElement.sectionNoOfDoor
+            + listElement.sectionNoOfDoor
             + ", backtrack_section="
-            + pListElement.sectionNoOfBacktrackDoor
+            + listElement.sectionNoOfBacktrackDoor
             + ", from_door="
-            + describeExpandable(pListElement.door)
+            + describeExpandable(listElement.door)
             + ", nextRoom="
-            + describeRoom(pListElement.nextRoom)
+            + describeRoom(listElement.nextRoom)
             + ", net="
             + ctrl.netNo);
-    for (int door_index = 0; door_index < roomDoorsSnapshot.size(); door_index++) {
-      ExpansionDoor candidateDoor = roomDoorsSnapshot.get(door_index);
+    for (int doorIndex = 0; doorIndex < roomDoorsSnapshot.size(); doorIndex++) {
+      ExpansionDoor candidateDoor = roomDoorsSnapshot.get(doorIndex);
       FRLogger.trace(
           "ROOM_DOOR candidate index="
-              + door_index
+              + doorIndex
               + ", from_section="
-              + pListElement.sectionNoOfDoor
+              + listElement.sectionNoOfDoor
               + ", backtrack_section="
-              + pListElement.sectionNoOfBacktrackDoor
+              + listElement.sectionNoOfBacktrackDoor
               + ", from_door="
-              + describeExpandable(pListElement.door)
+              + describeExpandable(listElement.door)
               + ", nextRoom="
-              + describeRoom(pListElement.nextRoom)
+              + describeRoom(listElement.nextRoom)
               + ", candidate="
               + describeExpandable(candidateDoor)
               + ", net="
@@ -527,36 +527,36 @@ public class MazeSearchAlgo {
     }
 
     for (ExpansionDoor toDoor : roomDoorsSnapshot) {
-      if (toDoor == pListElement.door) {
+      if (toDoor == listElement.door) {
         continue;
       }
       if (expandToDoor(
-          toDoor, pListElement, ripupCosts, nextRoomIsThick, MazeSearchElement.Adjustment.NONE)) {
+          toDoor, listElement, ripupCosts, nextRoomIsThick, MazeSearchElement.Adjustment.NONE)) {
         somethingExpanded = true;
       }
     }
 
     // Expand also the drill pages intersecting the room.
-    if (ctrl.viasAllowed && !(pListElement.door instanceof ExpansionDrill)) {
+    if (ctrl.viasAllowed && !(listElement.door instanceof ExpansionDrill)) {
       if ((somethingExpanded || nextRoomIsThick)
-          && pListElement.nextRoom instanceof CompleteFreeSpaceExpansionRoom) {
+          && listElement.nextRoom instanceof CompleteFreeSpaceExpansionRoom) {
         // avoid setting somethingExpanded to true when nextRoom is thin to allow
         // occupying by
         // different sections of the door
         Collection<DrillPage> overlappingDrillPages =
-            this.autorouteEngine.drillPageArray.overlappingPages(pListElement.nextRoom.getShape());
+            this.autorouteEngine.drillPageArray.overlappingPages(listElement.nextRoom.getShape());
         {
           for (DrillPage toDrillPage : overlappingDrillPages) {
-            expandToDrillPage(toDrillPage, pListElement);
+            expandToDrillPage(toDrillPage, listElement);
             somethingExpanded = true;
           }
         }
-      } else if (pListElement.nextRoom instanceof ObstacleExpansionRoom room) {
+      } else if (listElement.nextRoom instanceof ObstacleExpansionRoom room) {
         Item currObstacleItem = room.getItem();
         if (currObstacleItem instanceof Via currVia) {
           ExpansionDrill viaDrillInfo =
               currVia.getAutorouteDrillInfo(this.autorouteEngine.autorouteSearchTree);
-          expandToDrill(viaDrillInfo, pListElement, ripupCosts);
+          expandToDrill(viaDrillInfo, listElement, ripupCosts);
         }
       }
     }
@@ -566,14 +566,14 @@ public class MazeSearchAlgo {
 
   /** Expand the target doors of the room. Returns true, if at least 1 target door was expanded */
   private boolean expandToTargetDoors(
-      MazeListElement pListElement,
-      boolean pNextRoomIsThick,
-      boolean pCurrDoorIsSmall,
-      FloatPoint pShapeEntryMiddle) {
-    if (pCurrDoorIsSmall) {
+      MazeListElement listElement,
+      boolean nextRoomIsThick,
+      boolean currDoorIsSmall,
+      FloatPoint shapeEntryMiddle) {
+    if (currDoorIsSmall) {
       boolean enterThroughSmallDoor = false;
-      if (pListElement.door instanceof ExpansionDoor) {
-        CompleteExpansionRoom fromRoom = pListElement.door.otherRoom(pListElement.nextRoom);
+      if (listElement.door instanceof ExpansionDoor) {
+        CompleteExpansionRoom fromRoom = listElement.door.otherRoom(listElement.nextRoom);
         if (fromRoom instanceof ObstacleExpansionRoom) {
           // otherwise entering through the small door may fail, because it was not
           // checked.
@@ -585,8 +585,8 @@ public class MazeSearchAlgo {
       }
     }
     boolean result = false;
-    for (TargetItemExpansionDoor toDoor : pListElement.nextRoom.getTargetDoors()) {
-      if (toDoor == pListElement.door) {
+    for (TargetItemExpansionDoor toDoor : listElement.nextRoom.getTargetDoors()) {
+      if (toDoor == listElement.door) {
         continue;
       }
       // Validate index before calling - prevents warning when indices become stale
@@ -605,14 +605,14 @@ public class MazeSearchAlgo {
         // during routing)
         continue;
       }
-      FloatPoint connectionPoint = targetShape.nearestPointApprox(pShapeEntryMiddle);
-      if (!pNextRoomIsThick) {
+      FloatPoint connectionPoint = targetShape.nearestPointApprox(shapeEntryMiddle);
+      if (!nextRoomIsThick) {
         // check the line from p_shape_entry_middle to the nearest point.
         int[] currNetNoArr = new int[1];
         currNetNoArr[0] = this.ctrl.netNo;
-        int currLayer = pListElement.nextRoom.getLayer();
+        int currLayer = listElement.nextRoom.getLayer();
         IntPoint[] checkPoints = new IntPoint[2];
-        checkPoints[0] = pShapeEntryMiddle.round();
+        checkPoints[0] = shapeEntryMiddle.round();
         checkPoints[1] = connectionPoint.round();
         if (!checkPoints[0].equals(checkPoints[1])) {
           Polyline checkPolyline = new Polyline(checkPoints);
@@ -635,7 +635,7 @@ public class MazeSearchAlgo {
       FloatLine newShapeEntry = new FloatLine(connectionPoint, connectionPoint);
 
       if (expandToDoorSection(
-          toDoor, 0, newShapeEntry, pListElement, 0, MazeSearchElement.Adjustment.NONE)) {
+          toDoor, 0, newShapeEntry, listElement, 0, MazeSearchElement.Adjustment.NONE)) {
         result = true;
       }
     }
@@ -644,30 +644,30 @@ public class MazeSearchAlgo {
 
   /** Return true, if at least 1 door ection was expanded. */
   private boolean expandToDoor(
-      ExpansionDoor pToDoor,
-      MazeListElement pListElement,
-      int pAddCosts,
-      boolean pNextRoomIsThick,
-      MazeSearchElement.Adjustment pAdjustment) {
-    double halfWidth = ctrl.compensatedTraceHalfWidth[pListElement.nextRoom.getLayer()];
+      ExpansionDoor toDoor,
+      MazeListElement listElement,
+      int addCosts,
+      boolean nextRoomIsThick,
+      MazeSearchElement.Adjustment adjustment) {
+    double halfWidth = ctrl.compensatedTraceHalfWidth[listElement.nextRoom.getLayer()];
     boolean somethingExpanded = false;
-    FloatLine[] lineSections = pToDoor.getSectionSegments(halfWidth);
+    FloatLine[] lineSections = toDoor.getSectionSegments(halfWidth);
 
     for (int i = 0; i < lineSections.length; i++) {
-      if (pToDoor.sectionArr[i].isOccupied) {
+      if (toDoor.sectionArr[i].isOccupied) {
         continue;
       }
       FloatLine newShapeEntry;
-      if (pNextRoomIsThick) {
+      if (nextRoomIsThick) {
         newShapeEntry = lineSections[i];
-        if (pToDoor.dimension == 1
+        if (toDoor.dimension == 1
             && lineSections.length == 1
-            && pToDoor.firstRoom instanceof CompleteFreeSpaceExpansionRoom
-            && pToDoor.secondRoom instanceof CompleteFreeSpaceExpansionRoom) {
+            && toDoor.firstRoom instanceof CompleteFreeSpaceExpansionRoom
+            && toDoor.secondRoom instanceof CompleteFreeSpaceExpansionRoom) {
           // check entering the p_to_door at an acute corner of the shape of
           // p_list_element.nextRoom
           FloatPoint shapeEntryMiddle = newShapeEntry.a.middlePoint(newShapeEntry.b);
-          TileShape roomShape = pListElement.nextRoom.getShape();
+          TileShape roomShape = listElement.nextRoom.getShape();
           if (roomShape.minWidth() < 2 * halfWidth) {
             return false;
           }
@@ -679,19 +679,19 @@ public class MazeSearchAlgo {
         }
       } else {
         // expand only doors on the opposite side of the room from the shapeEntry.
-        if (pToDoor.dimension == 1
+        if (toDoor.dimension == 1
             && i == 0
             && lineSections[0].b.distanceSquare(lineSections[0].a) < 1) {
           // p_to_door is small belonging to a via or thin room
           continue;
         }
-        newShapeEntry = segmentProjection(pListElement.shapeEntry, lineSections[i]);
+        newShapeEntry = segmentProjection(listElement.shapeEntry, lineSections[i]);
         if (newShapeEntry == null) {
           continue;
         }
       }
 
-      if (expandToDoorSection(pToDoor, i, newShapeEntry, pListElement, pAddCosts, pAdjustment)) {
+      if (expandToDoorSection(toDoor, i, newShapeEntry, listElement, addCosts, adjustment)) {
         somethingExpanded = true;
       }
     }
@@ -699,11 +699,11 @@ public class MazeSearchAlgo {
   }
 
   /** Checks, if the width p_door is big enough for a trace with width p_trace_width. */
-  private boolean doorIsSmall(ExpansionDoor pDoor, double pTraceWidth) {
-    if (pDoor.dimension == 1
-        || pDoor.firstRoom instanceof CompleteFreeSpaceExpansionRoom
-            && pDoor.secondRoom instanceof CompleteFreeSpaceExpansionRoom) {
-      TileShape doorShape = pDoor.getShape();
+  private boolean doorIsSmall(ExpansionDoor door, double traceWidth) {
+    if (door.dimension == 1
+        || door.firstRoom instanceof CompleteFreeSpaceExpansionRoom
+            && door.secondRoom instanceof CompleteFreeSpaceExpansionRoom) {
+      TileShape doorShape = door.getShape();
       if (doorShape.isEmpty()) {
         FRLogger.trace("MazeSearchAlgo:check_door_width doorShape is empty");
         return true;
@@ -721,81 +721,81 @@ public class MazeSearchAlgo {
         FloatLine doorLineSegment = doorShape.diagonalCornerSegment();
         doorLength = doorLineSegment.b.distance(doorLineSegment.a);
       }
-      return doorLength < pTraceWidth;
+      return doorLength < traceWidth;
     }
     return false;
   }
 
   /** Return true, if the door section was successfully expanded. */
   private boolean expandToDoorSection(
-      ExpandableObject pDoor,
-      int pSectionNo,
-      FloatLine pShapeEntry,
-      MazeListElement pFromElement,
-      int pAddCosts,
-      MazeSearchElement.Adjustment pAdjustment) {
-    boolean doorSectionOccupied = pDoor.getMazeSearchElement(pSectionNo).isOccupied;
-    if (doorSectionOccupied || pShapeEntry == null) {
+      ExpandableObject door,
+      int sectionNo,
+      FloatLine shapeEntry,
+      MazeListElement fromElement,
+      int addCosts,
+      MazeSearchElement.Adjustment adjustment) {
+    boolean doorSectionOccupied = door.getMazeSearchElement(sectionNo).isOccupied;
+    if (doorSectionOccupied || shapeEntry == null) {
       FRLogger.trace(
           "RAW_SECTION skip selected_section="
-              + pSectionNo
+              + sectionNo
               + ", from_section="
-              + pFromElement.sectionNoOfDoor
+              + fromElement.sectionNoOfDoor
               + ", backtrack_section="
-              + pFromElement.sectionNoOfBacktrackDoor
+              + fromElement.sectionNoOfBacktrackDoor
               + ", occupied="
               + doorSectionOccupied
               + ", shape_entry_null="
-              + (pShapeEntry == null)
+              + (shapeEntry == null)
               + ", adjustment="
-              + pAdjustment
+              + adjustment
               + ", door="
-              + describeExpandable(pDoor)
+              + describeExpandable(door)
               + ", door_bounds="
-              + describeExpandableBounds(pDoor)
+              + describeExpandableBounds(door)
               + ", from_door="
-              + describeExpandable(pFromElement.door)
+              + describeExpandable(fromElement.door)
               + ", from_door_bounds="
-              + describeExpandableBounds(pFromElement.door)
+              + describeExpandableBounds(fromElement.door)
               + ", net="
               + ctrl.netNo);
       FRLogger.trace(
           "MazeSearchAlgo.expand_to_door_section",
           "skip_assign_raw",
           "selected_section="
-              + pSectionNo
+              + sectionNo
               + ", from_section="
-              + pFromElement.sectionNoOfDoor
+              + fromElement.sectionNoOfDoor
               + ", backtrack_section="
-              + pFromElement.sectionNoOfBacktrackDoor
+              + fromElement.sectionNoOfBacktrackDoor
               + ", occupied="
               + doorSectionOccupied
               + ", shape_entry_null="
-              + (pShapeEntry == null)
+              + (shapeEntry == null)
               + ", adjustment="
-              + pAdjustment,
+              + adjustment,
           "Net #"
               + ctrl.netNo
               + ", door="
-              + describeExpandable(pDoor)
+              + describeExpandable(door)
               + ", door_bounds="
-              + describeExpandableBounds(pDoor)
+              + describeExpandableBounds(door)
               + ", from_door="
-              + describeExpandable(pFromElement.door)
+              + describeExpandable(fromElement.door)
               + ", from_door_bounds="
-              + describeExpandableBounds(pFromElement.door),
-          toImpactedPoints(pShapeEntry));
+              + describeExpandableBounds(fromElement.door),
+          toImpactedPoints(shapeEntry));
       return false;
     }
-    CompleteExpansionRoom nextRoom = pDoor.otherRoom(pFromElement.nextRoom);
-    int layer = pFromElement.nextRoom.getLayer();
-    FloatPoint shapeEntryMiddle = pShapeEntry.a.middlePoint(pShapeEntry.b);
+    CompleteExpansionRoom nextRoom = door.otherRoom(fromElement.nextRoom);
+    int layer = fromElement.nextRoom.getLayer();
+    FloatPoint shapeEntryMiddle = shapeEntry.a.middlePoint(shapeEntry.b);
 
     double bendCostPenalty = 0.0;
-    if (ctrl.bendCosts[layer] > 0.0 && pFromElement.backtrackDoor != null) {
-      FloatPoint fromMid = pFromElement.shapeEntry.a.middlePoint(pFromElement.shapeEntry.b);
+    if (ctrl.bendCosts[layer] > 0.0 && fromElement.backtrackDoor != null) {
+      FloatPoint fromMid = fromElement.shapeEntry.a.middlePoint(fromElement.shapeEntry.b);
       // Build vectors prev→curr and curr→next to detect a direction change.
-      FloatPoint backtrackCog = pFromElement.backtrackDoor.getShape().centreOfGravity();
+      FloatPoint backtrackCog = fromElement.backtrackDoor.getShape().centreOfGravity();
       double prevDx = fromMid.x - backtrackCog.x;
       double prevDy = fromMid.y - backtrackCog.y;
       double nextDx = shapeEntryMiddle.x - fromMid.x;
@@ -812,48 +812,48 @@ public class MazeSearchAlgo {
     }
 
     double expansionValue =
-        pFromElement.expansionValue
-            + pAddCosts
+        fromElement.expansionValue
+            + addCosts
             + bendCostPenalty
             + shapeEntryMiddle.weightedDistance(
-                pFromElement.shapeEntry.a.middlePoint(pFromElement.shapeEntry.b),
+                fromElement.shapeEntry.a.middlePoint(fromElement.shapeEntry.b),
                 ctrl.traceCosts[layer].horizontal,
                 ctrl.traceCosts[layer].vertical);
     double sortingValue =
         expansionValue + this.destinationDistance.calculate(shapeEntryMiddle, layer);
     boolean roomRipped =
-        pAddCosts > 0 && pAdjustment == MazeSearchElement.Adjustment.NONE
-            || pFromElement.alreadyChecked && pFromElement.roomRipped;
+        addCosts > 0 && adjustment == MazeSearchElement.Adjustment.NONE
+            || fromElement.alreadyChecked && fromElement.roomRipped;
 
     MazeListElement newElement =
         new MazeListElement(
-            pDoor,
-            pSectionNo,
-            pFromElement.door,
-            pFromElement.sectionNoOfDoor,
+            door,
+            sectionNo,
+            fromElement.door,
+            fromElement.sectionNoOfDoor,
             expansionValue,
             sortingValue,
             nextRoom,
-            pShapeEntry,
+            shapeEntry,
             roomRipped,
-            pAdjustment,
+            adjustment,
             false);
     // Store the direct ripup cost on this element (non-zero only when this specific door
     // caused a ripup; propagated roomRipped from a parent keeps ripupCost=0).
-    if (pAddCosts > 0 && pAdjustment == MazeSearchElement.Adjustment.NONE) {
-      newElement.ripupCost = (int) pAddCosts;
+    if (addCosts > 0 && adjustment == MazeSearchElement.Adjustment.NONE) {
+      newElement.ripupCost = (int) addCosts;
     }
     FRLogger.trace(
         "RAW_SECTION assign selected_section="
-            + pSectionNo
+            + sectionNo
             + ", from_section="
-            + pFromElement.sectionNoOfDoor
+            + fromElement.sectionNoOfDoor
             + ", backtrack_section="
-            + pFromElement.sectionNoOfBacktrackDoor
+            + fromElement.sectionNoOfBacktrackDoor
             + ", add_costs="
-            + pAddCosts
+            + addCosts
             + ", adjustment="
-            + pAdjustment
+            + adjustment
             + ", roomRipped="
             + roomRipped
             + ", expansionValue="
@@ -861,28 +861,28 @@ public class MazeSearchAlgo {
             + ", sortingValue="
             + sortingValue
             + ", door="
-            + describeExpandable(pDoor)
+            + describeExpandable(door)
             + ", door_bounds="
-            + describeExpandableBounds(pDoor)
+            + describeExpandableBounds(door)
             + ", from_door="
-            + describeExpandable(pFromElement.door)
+            + describeExpandable(fromElement.door)
             + ", from_door_bounds="
-            + describeExpandableBounds(pFromElement.door)
+            + describeExpandableBounds(fromElement.door)
             + ", net="
             + ctrl.netNo);
     FRLogger.trace(
         "MazeSearchAlgo.expand_to_door_section",
         "assign_raw",
         "selected_section="
-            + pSectionNo
+            + sectionNo
             + ", from_section="
-            + pFromElement.sectionNoOfDoor
+            + fromElement.sectionNoOfDoor
             + ", backtrack_section="
-            + pFromElement.sectionNoOfBacktrackDoor
+            + fromElement.sectionNoOfBacktrackDoor
             + ", add_costs="
-            + pAddCosts
+            + addCosts
             + ", adjustment="
-            + pAdjustment
+            + adjustment
             + ", roomRipped="
             + roomRipped
             + ", expansionValue="
@@ -892,35 +892,35 @@ public class MazeSearchAlgo {
         "Net #"
             + ctrl.netNo
             + ", door="
-            + describeExpandable(pDoor)
+            + describeExpandable(door)
             + ", door_bounds="
-            + describeExpandableBounds(pDoor)
+            + describeExpandableBounds(door)
             + ", from_door="
-            + describeExpandable(pFromElement.door)
+            + describeExpandable(fromElement.door)
             + ", from_door_bounds="
-            + describeExpandableBounds(pFromElement.door),
-        toImpactedPoints(pShapeEntry));
+            + describeExpandableBounds(fromElement.door),
+        toImpactedPoints(shapeEntry));
     this.mazeExpansionList.add(newElement);
     return true;
   }
 
-  private static String describeExpandable(ExpandableObject pDoor) {
-    if (pDoor == null) {
+  private static String describeExpandable(ExpandableObject door) {
+    if (door == null) {
       return "null";
     }
-    String sectionCount = safeMazeSectionCount(pDoor);
-    if (pDoor instanceof TargetItemExpansionDoor targetDoor) {
+    String sectionCount = safeMazeSectionCount(door);
+    if (door instanceof TargetItemExpansionDoor targetDoor) {
       return "TargetItemExpansionDoor"
           + "/item="
           + targetDoor.item.getIdNo()
           + "/tree_entry="
           + targetDoor.treeEntryNo
           + "/dim="
-          + pDoor.getDimension()
+          + door.getDimension()
           + "/sections="
           + sectionCount;
     }
-    if (pDoor instanceof ExpansionDrill drill) {
+    if (door instanceof ExpansionDrill drill) {
       return "ExpansionDrill"
           + "/location="
           + drill.location
@@ -929,12 +929,12 @@ public class MazeSearchAlgo {
           + "-"
           + drill.lastLayer
           + "/dim="
-          + pDoor.getDimension()
+          + door.getDimension()
           + "/sections="
           + sectionCount;
     }
-    IntBox bounds = pDoor.getShape().boundingBox();
-    return pDoor.getClass().getSimpleName()
+    IntBox bounds = door.getShape().boundingBox();
+    return door.getClass().getSimpleName()
         + "/bounds=[("
         + bounds.ll.x
         + ","
@@ -945,35 +945,35 @@ public class MazeSearchAlgo {
         + bounds.ur.y
         + ")]"
         + "/dim="
-        + pDoor.getDimension()
+        + door.getDimension()
         + "/sections="
         + sectionCount;
   }
 
-  private static String safeMazeSectionCount(ExpandableObject pDoor) {
+  private static String safeMazeSectionCount(ExpandableObject door) {
     try {
-      return Integer.toString(pDoor.mazeSearchElementCount());
+      return Integer.toString(door.mazeSearchElementCount());
     } catch (RuntimeException e) {
       return "uninitialized";
     }
   }
 
-  private static String describeExpandableBounds(ExpandableObject pDoor) {
-    if (pDoor == null) {
+  private static String describeExpandableBounds(ExpandableObject door) {
+    if (door == null) {
       return "null";
     }
-    IntBox bounds = pDoor.getShape().boundingBox();
+    IntBox bounds = door.getShape().boundingBox();
     return "[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]";
   }
 
-  private static String describeRoom(CompleteExpansionRoom pRoom) {
-    if (pRoom == null) {
+  private static String describeRoom(CompleteExpansionRoom room) {
+    if (room == null) {
       return "null";
     }
-    IntBox bounds = pRoom.getShape().boundingBox();
-    return pRoom.getClass().getSimpleName()
+    IntBox bounds = room.getShape().boundingBox();
+    return room.getClass().getSimpleName()
         + "/layer="
-        + pRoom.getLayer()
+        + room.getLayer()
         + "/bounds=[("
         + bounds.ll.x
         + ","
@@ -985,11 +985,11 @@ public class MazeSearchAlgo {
         + ")]";
   }
 
-  private static Point[] toImpactedPoints(FloatLine pShapeEntry) {
-    if (pShapeEntry == null) {
+  private static Point[] toImpactedPoints(FloatLine shapeEntry) {
+    if (shapeEntry == null) {
       return null;
     }
-    return new Point[] {pShapeEntry.a.round(), pShapeEntry.b.round()};
+    return new Point[] {shapeEntry.a.round(), shapeEntry.b.round()};
   }
 
   private boolean shouldTraceFanoutDiagnostics() {
@@ -1019,41 +1019,41 @@ public class MazeSearchAlgo {
             + message);
   }
 
-  private void expandToDrill(ExpansionDrill pDrill, MazeListElement pFromElement, int pAddCosts) {
-    int layer = pFromElement.nextRoom.getLayer();
+  private void expandToDrill(ExpansionDrill drill, MazeListElement fromElement, int addCosts) {
+    int layer = fromElement.nextRoom.getLayer();
     int traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[layer];
-    boolean roomShapeIsThin = pFromElement.nextRoom.getShape().minWidth() < 2 * traceHalfWidth;
+    boolean roomShapeIsThin = fromElement.nextRoom.getShape().minWidth() < 2 * traceHalfWidth;
 
     if (roomShapeIsThin) {
       // expand only drills intersecting the backtrack door
-      if (pFromElement.backtrackDoor == null
-          || !pDrill.getShape().intersects(pFromElement.backtrackDoor.getShape())) {
+      if (fromElement.backtrackDoor == null
+          || !drill.getShape().intersects(fromElement.backtrackDoor.getShape())) {
         traceFanoutDiagnostic(
             "drill_rejected_thin_room_no_backtrack_intersection",
             "drill="
-                + describeExpandable(pDrill)
+                + describeExpandable(drill)
                 + ", from_door="
-                + describeExpandable(pFromElement.door)
+                + describeExpandable(fromElement.door)
                 + ", backtrack="
-                + describeExpandable(pFromElement.backtrackDoor)
+                + describeExpandable(fromElement.backtrackDoor)
                 + ", room="
-                + describeRoom(pFromElement.nextRoom));
+                + describeRoom(fromElement.nextRoom));
         return;
       }
     }
 
     double viaRadius = ctrl.viaRadiusArr[layer];
-    ConvexShape shrinkedDrillShape = pDrill.getShape().shrink(viaRadius);
-    FloatPoint compareCorner = pFromElement.shapeEntry.a.middlePoint(pFromElement.shapeEntry.b);
-    if (pFromElement.door instanceof DrillPage
-        && pFromElement.backtrackDoor instanceof TargetItemExpansionDoor door) {
+    ConvexShape shrinkedDrillShape = drill.getShape().shrink(viaRadius);
+    FloatPoint compareCorner = fromElement.shapeEntry.a.middlePoint(fromElement.shapeEntry.b);
+    if (fromElement.door instanceof DrillPage
+        && fromElement.backtrackDoor instanceof TargetItemExpansionDoor door) {
       // If expansion comes from a pin with trace exit directions the expansionValue
       // is calculated
       // from the nearest trace exit point instead from the center olf the pin.
       Item fromItem = door.item;
       if (fromItem instanceof Pin pin) {
         FloatPoint nearestExitCorner =
-            pin.nearestTraceExitCorner(pDrill.location.toFloat(), traceHalfWidth, layer);
+            pin.nearestTraceExitCorner(drill.location.toFloat(), traceHalfWidth, layer);
         if (nearestExitCorner != null) {
           compareCorner = nearestExitCorner;
         }
@@ -1061,28 +1061,28 @@ public class MazeSearchAlgo {
     }
     FloatPoint nearestPoint = shrinkedDrillShape.nearestPointApprox(compareCorner);
     FloatLine shapeEntry = new FloatLine(nearestPoint, nearestPoint);
-    int sectionNo = layer - pDrill.firstLayer;
+    int sectionNo = layer - drill.firstLayer;
     double expansionValue =
-        pFromElement.expansionValue
-            + pAddCosts
+        fromElement.expansionValue
+            + addCosts
             + nearestPoint.weightedDistance(
                 compareCorner, ctrl.traceCosts[layer].horizontal, ctrl.traceCosts[layer].vertical);
     ExpandableObject newBacktrackDoor;
     int newSectionNoOfBacktrackDoor;
-    if (pFromElement.door instanceof DrillPage) {
-      newBacktrackDoor = pFromElement.backtrackDoor;
-      newSectionNoOfBacktrackDoor = pFromElement.sectionNoOfBacktrackDoor;
+    if (fromElement.door instanceof DrillPage) {
+      newBacktrackDoor = fromElement.backtrackDoor;
+      newSectionNoOfBacktrackDoor = fromElement.sectionNoOfBacktrackDoor;
     } else {
       // Expanded directly through already existing via
       // The step expand_to_drill_page is skipped
-      newBacktrackDoor = pFromElement.door;
-      newSectionNoOfBacktrackDoor = pFromElement.sectionNoOfDoor;
+      newBacktrackDoor = fromElement.door;
+      newSectionNoOfBacktrackDoor = fromElement.sectionNoOfDoor;
       expansionValue += ctrl.minNormalViaCost;
     }
     double sortingValue = expansionValue + this.destinationDistance.calculate(nearestPoint, layer);
     MazeListElement newElement =
         new MazeListElement(
-            pDrill,
+            drill,
             sectionNo,
             newBacktrackDoor,
             newSectionNoOfBacktrackDoor,
@@ -1090,16 +1090,16 @@ public class MazeSearchAlgo {
             sortingValue,
             null,
             shapeEntry,
-            pFromElement.roomRipped,
+            fromElement.roomRipped,
             MazeSearchElement.Adjustment.NONE,
             false);
     this.mazeExpansionList.add(newElement);
     traceFanoutDiagnostic(
         "drill_accepted",
         "drill="
-            + describeExpandable(pDrill)
+            + describeExpandable(drill)
             + ", room="
-            + describeRoom(pFromElement.nextRoom)
+            + describeRoom(fromElement.nextRoom)
             + ", nearestPoint="
             + nearestPoint
             + ", expansionValue="
@@ -1110,13 +1110,13 @@ public class MazeSearchAlgo {
    * A drill page is inserted between an expansion room and the drill to expand in order to prevent
    * performance problems with rooms with big shapes containing many drills.
    */
-  private void expandToDrillPage(DrillPage pDrillPage, MazeListElement pFromElement) {
+  private void expandToDrillPage(DrillPage drillPage, MazeListElement fromElement) {
 
-    int layer = pFromElement.nextRoom.getLayer();
+    int layer = fromElement.nextRoom.getLayer();
     FloatPoint fromElementShapeEntryMiddle =
-        pFromElement.shapeEntry.a.middlePoint(pFromElement.shapeEntry.b);
-    FloatPoint nearestPoint = pDrillPage.shape.nearestPoint(fromElementShapeEntryMiddle);
-    double expansionValue = pFromElement.expansionValue + ctrl.minNormalViaCost;
+        fromElement.shapeEntry.a.middlePoint(fromElement.shapeEntry.b);
+    FloatPoint nearestPoint = drillPage.shape.nearestPoint(fromElementShapeEntryMiddle);
+    double expansionValue = fromElement.expansionValue + ctrl.minNormalViaCost;
     double sortingValue =
         expansionValue
             + nearestPoint.weightedDistance(
@@ -1126,23 +1126,23 @@ public class MazeSearchAlgo {
             + this.destinationDistance.calculate(nearestPoint, layer);
     MazeListElement newElement =
         new MazeListElement(
-            pDrillPage,
+            drillPage,
             layer,
-            pFromElement.door,
-            pFromElement.sectionNoOfDoor,
+            fromElement.door,
+            fromElement.sectionNoOfDoor,
             expansionValue,
             sortingValue,
-            pFromElement.nextRoom,
-            pFromElement.shapeEntry,
-            pFromElement.roomRipped,
+            fromElement.nextRoom,
+            fromElement.shapeEntry,
+            fromElement.roomRipped,
             MazeSearchElement.Adjustment.NONE,
             false);
     this.mazeExpansionList.add(newElement);
   }
 
-  private void expandToDrillsOfPage(MazeListElement pFromElement) {
-    int fromRoomLayer = pFromElement.sectionNoOfDoor;
-    DrillPage drillPage = (DrillPage) pFromElement.door;
+  private void expandToDrillsOfPage(MazeListElement fromElement) {
+    int fromRoomLayer = fromElement.sectionNoOfDoor;
+    DrillPage drillPage = (DrillPage) fromElement.door;
     Collection<ExpansionDrill> drillList =
         drillPage.getDrills(this.autorouteEngine, this.ctrl.attachSmdAllowed);
     if (shouldTraceFanoutDiagnostics()) {
@@ -1153,9 +1153,9 @@ public class MazeSearchAlgo {
               + ", attachSmdAllowed="
               + this.ctrl.attachSmdAllowed
               + ", room="
-              + describeRoom(pFromElement.nextRoom)
+              + describeRoom(fromElement.nextRoom)
               + ", from_door="
-              + describeExpandable(pFromElement.door));
+              + describeExpandable(fromElement.door));
       if (drillList.isEmpty()) {
         traceFanoutDiagnostic("drill_page_empty", "no_candidates=true");
       }
@@ -1175,19 +1175,19 @@ public class MazeSearchAlgo {
                 + currDrill.roomArr.length);
         continue;
       }
-      if (currDrill.roomArr[sectionNo] != pFromElement.nextRoom) {
+      if (currDrill.roomArr[sectionNo] != fromElement.nextRoom) {
         traceFanoutDiagnostic(
             "drill_rejected_room_mismatch",
             "drill="
                 + describeExpandable(currDrill)
                 + ", expected_room="
-                + describeRoom(pFromElement.nextRoom)
+                + describeRoom(fromElement.nextRoom)
                 + ", drill_room="
                 + describeRoom(currDrill.roomArr[sectionNo]));
         // Log the first mismatch per page-scan with extra geometric context for investigation.
         if (!firstMismatchLogged && shouldTraceFanoutDiagnostics()) {
           firstMismatchLogged = true;
-          CompleteExpansionRoom expRoom = pFromElement.nextRoom;
+          CompleteExpansionRoom expRoom = fromElement.nextRoom;
           CompleteExpansionRoom drillRoom = currDrill.roomArr[sectionNo];
           FRLogger.trace(
               "FANOUT_DIAG event=first_room_mismatch_detail"
@@ -1206,12 +1206,12 @@ public class MazeSearchAlgo {
                   + ", drill_room_bounds="
                   + (drillRoom != null ? drillRoom.getShape() : "null")
                   + ", from_door_type="
-                  + (pFromElement.door != null
-                      ? pFromElement.door.getClass().getSimpleName()
+                  + (fromElement.door != null
+                      ? fromElement.door.getClass().getSimpleName()
                       : "null")
                   + ", backtrack_door_type="
-                  + (pFromElement.backtrackDoor != null
-                      ? pFromElement.backtrackDoor.getClass().getSimpleName()
+                  + (fromElement.backtrackDoor != null
+                      ? fromElement.backtrackDoor.getClass().getSimpleName()
                       : "null")
                   + ", sectionNo="
                   + sectionNo
@@ -1226,20 +1226,20 @@ public class MazeSearchAlgo {
             "drill=" + describeExpandable(currDrill) + ", section=" + sectionNo);
         continue;
       }
-      expandToDrill(currDrill, pFromElement, 0);
+      expandToDrill(currDrill, fromElement, 0);
     }
   }
 
   /** Tries to expand other layers by inserting a via. */
-  private void expandToOtherLayers(MazeListElement pListElement) {
+  private void expandToOtherLayers(MazeListElement listElement) {
     int viaLowerBound = 0;
     int viaUpperBound = -1;
-    ExpansionDrill currDrill = (ExpansionDrill) pListElement.door;
-    int fromLayer = currDrill.firstLayer + pListElement.sectionNoOfDoor;
+    ExpansionDrill currDrill = (ExpansionDrill) listElement.door;
+    int fromLayer = currDrill.firstLayer + listElement.sectionNoOfDoor;
     boolean smdAttachedOnComponentSide = false;
     boolean smdAttachedOnSolderSide = false;
     boolean roomRipped;
-    if (currDrill.roomArr[pListElement.sectionNoOfDoor] instanceof ObstacleExpansionRoom room) {
+    if (currDrill.roomArr[listElement.sectionNoOfDoor] instanceof ObstacleExpansionRoom room) {
       // check ripup of an existing via
       if (!this.ctrl.ripupAllowed) {
         return;
@@ -1262,7 +1262,7 @@ public class MazeSearchAlgo {
 
       roomRipped = false;
       int viaLowerLimit = Math.max(currDrill.firstLayer, ctrl.viaLowerBound);
-      int viaUpperLimit = Math.min(currDrill.lastLayer, ctrl.viaUpperBound);
+      final int viaUpperLimit = Math.min(currDrill.lastLayer, ctrl.viaUpperBound);
       // Calculate the lower bound of possible vias.
       int currLayer = fromLayer;
       for (; ; ) {
@@ -1353,9 +1353,9 @@ public class MazeSearchAlgo {
         continue;
       }
       double expansionValue =
-          pListElement.expansionValue + ctrl.addViaCosts[fromLayer].toLayer[toLayer];
+          listElement.expansionValue + ctrl.addViaCosts[fromLayer].toLayer[toLayer];
       FloatPoint shapeEntryMiddle =
-          pListElement.shapeEntry.a.middlePoint(pListElement.shapeEntry.b);
+          listElement.shapeEntry.a.middlePoint(listElement.shapeEntry.b);
       double sortingValue =
           expansionValue + this.destinationDistance.calculate(shapeEntryMiddle, toLayer);
       int currRoomIndex = toLayer - currDrill.firstLayer;
@@ -1364,11 +1364,11 @@ public class MazeSearchAlgo {
               currDrill,
               currRoomIndex,
               currDrill,
-              pListElement.sectionNoOfDoor,
+              listElement.sectionNoOfDoor,
               expansionValue,
               sortingValue,
               currDrill.roomArr[currRoomIndex],
-              pListElement.shapeEntry,
+              listElement.shapeEntry,
               roomRipped,
               MazeSearchElement.Adjustment.NONE,
               false);
@@ -1377,30 +1377,30 @@ public class MazeSearchAlgo {
   }
 
   private ForcedPadAlgo.CheckDrillResult checkLayerWithAnyMatchingVia(
-      ExpansionDrill pDrill, int pLayer, TileShape pRoomShape, int[] pNetNoArr) {
+      ExpansionDrill drill, int layer, TileShape roomShape, int[] netNoArr) {
     boolean drillableWithAttachSmd = false;
     for (int i = 0; i < this.ctrl.viaRule.viaCount(); i++) {
       ViaInfo viaInfo = this.ctrl.viaRule.getVia(i);
       Padstack viaPadstack = viaInfo.getPadstack();
-      if (pLayer < viaPadstack.fromLayer() || pLayer > viaPadstack.toLayer()) {
+      if (layer < viaPadstack.fromLayer() || layer > viaPadstack.toLayer()) {
         continue;
       }
-      ConvexShape viaShape = viaPadstack.getShape(pLayer);
+      ConvexShape viaShape = viaPadstack.getShape(layer);
       double viaRadius = viaShape == null ? 0 : 0.5 * viaShape.maxWidth();
-      double requiredRadius = Math.max(viaRadius, this.ctrl.traceHalfWidth[pLayer]);
+      double requiredRadius = Math.max(viaRadius, this.ctrl.traceHalfWidth[layer]);
       ForcedPadAlgo.CheckDrillResult result =
           ForcedViaAlgo.checkLayer(
               requiredRadius,
               viaInfo.getClearanceClass(),
               viaInfo.attachSmdAllowed(),
-              pRoomShape,
-              pDrill.location,
-              pLayer,
-              pNetNoArr,
+              roomShape,
+              drill.location,
+              layer,
+              netNoArr,
               this.ctrl.maxShoveTraceRecursionDepth,
               0,
               this.autorouteEngine.board,
-              this.ctrl.traceHalfWidth[pLayer],
+              this.ctrl.traceHalfWidth[layer],
               this.ctrl.traceClearanceClassNo);
       if (result == ForcedPadAlgo.CheckDrillResult.DRILLABLE) {
         return result;
@@ -1415,12 +1415,12 @@ public class MazeSearchAlgo {
   }
 
   /** Initializes the maze search algorithm. Returns false if the initialisation failed. */
-  private boolean init(Set<Item> pStartItems, Set<Item> pDestinationItems) {
-    reduceTraceShapesAtTiePins(pStartItems, this.ctrl.netNo, this.searchTree);
-    reduceTraceShapesAtTiePins(pDestinationItems, this.ctrl.netNo, this.searchTree);
+  private boolean init(Set<Item> startItems, Set<Item> destinationItems) {
+    reduceTraceShapesAtTiePins(startItems, this.ctrl.netNo, this.searchTree);
+    reduceTraceShapesAtTiePins(destinationItems, this.ctrl.netNo, this.searchTree);
     // process the destination items
     boolean destinationOk = false;
-    for (Item currItem : pDestinationItems) {
+    for (Item currItem : destinationItems) {
       if (this.autorouteEngine.isStopRequested()) {
         return false;
       }
@@ -1446,7 +1446,7 @@ public class MazeSearchAlgo {
       FRLogger.debug(
           "MazeSearchAlgo.init: Failed - no valid destination items found"
               + " (dest set size: "
-              + pDestinationItems.size()
+              + destinationItems.size()
               + ", isFanout: "
               + this.ctrl.isFanout
               + ")");
@@ -1454,7 +1454,7 @@ public class MazeSearchAlgo {
     }
     // process the start items
     Collection<IncompleteFreeSpaceExpansionRoom> startRooms = new LinkedList<>();
-    for (Item currItem : pStartItems) {
+    for (Item currItem : startItems) {
       if (this.autorouteEngine.isStopRequested()) {
         return false;
       }
@@ -1477,7 +1477,7 @@ public class MazeSearchAlgo {
     if (this.autorouteEngine.maintainDatabase) {
       // add the completed start rooms carried over from the last autoroute to the
       // start rooms.
-      completedStartRooms.addAll(this.autorouteEngine.getRoomsWithTargetItems(pStartItems));
+      completedStartRooms.addAll(this.autorouteEngine.getRoomsWithTargetItems(startItems));
     }
 
     for (IncompleteFreeSpaceExpansionRoom currRoom : startRooms) {
@@ -1531,7 +1531,7 @@ public class MazeSearchAlgo {
       FRLogger.debug(
           "MazeSearchAlgo.init: Failed - no accessible expansion doors found"
               + " (start items: "
-              + pStartItems.size()
+              + startItems.size()
               + ", start rooms: "
               + startRooms.size()
               + ", completed start rooms: "
@@ -1549,9 +1549,9 @@ public class MazeSearchAlgo {
     return startOk;
   }
 
-  private boolean roomShapeIsThick(ObstacleExpansionRoom pObstacleRoom) {
-    Item obstacleItem = pObstacleRoom.getItem();
-    int layer = pObstacleRoom.getLayer();
+  private boolean roomShapeIsThick(ObstacleExpansionRoom obstacleRoom) {
+    Item obstacleItem = obstacleRoom.getItem();
+    int layer = obstacleRoom.getLayer();
     double obstacleHalfWidth;
     if (obstacleItem instanceof Trace trace) {
       obstacleHalfWidth =
@@ -1573,33 +1573,33 @@ public class MazeSearchAlgo {
    * ripped and -1, if no ripup was possible. If the previous room was also ripped and contained the
    * same item or an item of the same connection, the result will be equal to ALREADY_RIPPED_COSTS
    */
-  private int checkRipup(MazeListElement pListElement, Item pObstacleItem, boolean pDoorIsSmall) {
-    if (!pObstacleItem.isRoutable()) {
+  private int checkRipup(MazeListElement listElement, Item obstacleItem, boolean doorIsSmall) {
+    if (!obstacleItem.isRoutable()) {
       return -1;
     }
-    if (pDoorIsSmall) {
+    if (doorIsSmall) {
       // allow entering a via or trace, if its corresponding border segment is smaller
       // than the
       // current trace width
 
-      if (!enterThroughSmallDoor(pListElement, pObstacleItem)) {
+      if (!enterThroughSmallDoor(listElement, obstacleItem)) {
         return -1;
       }
     }
-    CompleteExpansionRoom previousRoom = pListElement.door.otherRoom(pListElement.nextRoom);
-    boolean roomWasShoved = pListElement.adjustment != MazeSearchElement.Adjustment.NONE;
+    CompleteExpansionRoom previousRoom = listElement.door.otherRoom(listElement.nextRoom);
+    boolean roomWasShoved = listElement.adjustment != MazeSearchElement.Adjustment.NONE;
     Item previousItem = null;
     if (previousRoom instanceof ObstacleExpansionRoom room) {
       previousItem = room.getItem();
     }
     if (roomWasShoved) {
       if (previousItem != null
-          && previousItem != pObstacleItem
-          && previousItem.sharesNet(pObstacleItem)) {
+          && previousItem != obstacleItem
+          && previousItem.sharesNet(obstacleItem)) {
         // The ripped trace may start at a fork.
         return -1;
       }
-    } else if (previousItem == pObstacleItem) {
+    } else if (previousItem == obstacleItem) {
       return ALREADY_RIPPED_COSTS;
     }
 
@@ -1608,24 +1608,24 @@ public class MazeSearchAlgo {
     boolean preserveFanoutProtection =
         !this.ctrl.removeUnconnectedVias
             && this.ctrl.ripupCosts <= (this.ctrl.settings.getStartRipupCosts() * 2);
-    if (pObstacleItem instanceof Trace obstacle_trace) {
-      costFactor = obstacle_trace.getHalfWidth();
+    if (obstacleItem instanceof Trace obstacleTrace) {
+      costFactor = obstacleTrace.getHalfWidth();
       if (preserveFanoutProtection) {
         // protect traces between SMD-pins and fanout vias
-        fanoutViaCostFactor = calcFanoutViaRipupCostFactor(obstacle_trace);
+        fanoutViaCostFactor = calcFanoutViaRipupCostFactor(obstacleTrace);
       }
-    } else if (pObstacleItem instanceof Via) {
+    } else if (obstacleItem instanceof Via) {
       boolean lookIfFanoutVia = preserveFanoutProtection;
-      Collection<Item> contactList = pObstacleItem.getNormalContacts();
+      Collection<Item> contactList = obstacleItem.getNormalContacts();
       int contactCount = 0;
       for (Item currContact : contactList) {
-        if (!(currContact instanceof Trace obstacle_trace) || currContact.isUserFixed()) {
+        if (!(currContact instanceof Trace obstacleTrace) || currContact.isUserFixed()) {
           return -1;
         }
         ++contactCount;
-        costFactor = Math.max(costFactor, obstacle_trace.getHalfWidth());
+        costFactor = Math.max(costFactor, obstacleTrace.getHalfWidth());
         if (lookIfFanoutVia && !this.ctrl.isFanout) {
-          double currFanoutViaCostFactor = calcFanoutViaRipupCostFactor(obstacle_trace);
+          double currFanoutViaCostFactor = calcFanoutViaRipupCostFactor(obstacleTrace);
           if (currFanoutViaCostFactor > 1) {
             fanoutViaCostFactor = currFanoutViaCostFactor;
             lookIfFanoutVia = false;
@@ -1644,11 +1644,9 @@ public class MazeSearchAlgo {
     double minTraceLength = 0;
     int itemCount = 0;
     String connectionItemIds = "[]";
-    if (fanoutViaCostFactor <= 1
-        && !this.ctrl
-            .isFanout) // p_obstacle_item does not belong to a fanout, and not during fanout pass
-    {
-      Connection obstacleConnection = Connection.get(pObstacleItem);
+    if (fanoutViaCostFactor <= 1 && !this.ctrl.isFanout) {
+      // obstacle item does not belong to a fanout, and not during fanout pass
+      Connection obstacleConnection = Connection.get(obstacleItem);
       if (obstacleConnection != null) {
         detour = obstacleConnection.getDetour();
         traceLength = obstacleConnection.traceLength();
@@ -1685,10 +1683,10 @@ public class MazeSearchAlgo {
     final int maxRipupCosts = Integer.MAX_VALUE / 100;
     result = Math.min(result, maxRipupCosts);
     String obstacleNets = "[]";
-    if (pObstacleItem instanceof app.freerouting.board.Item obstacleItem) {
-      int[] nets = new int[obstacleItem.netCount()];
+    if (obstacleItem instanceof app.freerouting.board.Item obstacleBoardItem) {
+      int[] nets = new int[obstacleBoardItem.netCount()];
       for (int i = 0; i < nets.length; i++) {
-        nets[i] = obstacleItem.getNetNo(i);
+        nets[i] = obstacleBoardItem.getNetNo(i);
       }
       obstacleNets = java.util.Arrays.toString(nets);
     }
@@ -1696,7 +1694,7 @@ public class MazeSearchAlgo {
         "CHECK_RIPUP net="
             + ctrl.netNo
             + ", obstacle_id="
-            + (pObstacleItem instanceof app.freerouting.board.Item obstItem
+            + (obstacleItem instanceof app.freerouting.board.Item obstItem
                 ? obstItem.getIdNo()
                 : -1)
             + ", obstacle_nets="
@@ -1726,21 +1724,21 @@ public class MazeSearchAlgo {
    * from a different door section
    */
   private boolean shoveTraceRoom(
-      MazeListElement pListElement, ObstacleExpansionRoom pObstacleRoom) {
-    if (pListElement.sectionNoOfDoor != 0
-        && pListElement.sectionNoOfDoor != pListElement.door.mazeSearchElementCount() - 1) {
+      MazeListElement listElement, ObstacleExpansionRoom obstacleRoom) {
+    if (listElement.sectionNoOfDoor != 0
+        && listElement.sectionNoOfDoor != listElement.door.mazeSearchElementCount() - 1) {
       // No delay of occupation necessary because inner sections of a door are
       // currently not
       // shoved.
       return true;
     }
     boolean result = false;
-    if (pListElement.adjustment != MazeSearchElement.Adjustment.RIGHT) {
+    if (listElement.adjustment != MazeSearchElement.Adjustment.RIGHT) {
       Collection<MazeShoveTraceAlgo.DoorSection> leftToDoorSectionList = new LinkedList<>();
 
       if (MazeShoveTraceAlgo.checkShoveTraceLine(
-          pListElement,
-          pObstacleRoom,
+          listElement,
+          obstacleRoom,
           this.autorouteEngine.board,
           this.ctrl,
           false,
@@ -1761,18 +1759,18 @@ public class MazeSearchAlgo {
             currLeftDoorSection.door,
             currLeftDoorSection.sectionNo,
             currLeftDoorSection.sectionLine,
-            pListElement,
+            listElement,
             0,
             currAdjustment);
       }
     }
 
-    if (pListElement.adjustment != MazeSearchElement.Adjustment.LEFT) {
+    if (listElement.adjustment != MazeSearchElement.Adjustment.LEFT) {
       Collection<MazeShoveTraceAlgo.DoorSection> rightToDoorSectionList = new LinkedList<>();
 
       if (MazeShoveTraceAlgo.checkShoveTraceLine(
-          pListElement,
-          pObstacleRoom,
+          listElement,
+          obstacleRoom,
           this.autorouteEngine.board,
           this.ctrl,
           true,
@@ -1791,7 +1789,7 @@ public class MazeSearchAlgo {
             currRightDoorSection.door,
             currRightDoorSection.sectionNo,
             currRightDoorSection.sectionLine,
-            pListElement,
+            listElement,
             0,
             currAdjustment);
       }
@@ -1803,11 +1801,11 @@ public class MazeSearchAlgo {
    * Checks, if the next room contains a destination pin, where evtl. neckdown is necessary. Return
    * the neck down width in this case, or 0, if no such pin was found,
    */
-  private double checkNeckDownAtDestPin(CompleteExpansionRoom pRoom) {
-    Collection<TargetItemExpansionDoor> targetDoors = pRoom.getTargetDoors();
+  private double checkNeckDownAtDestPin(CompleteExpansionRoom room) {
+    Collection<TargetItemExpansionDoor> targetDoors = room.getTargetDoors();
     for (TargetItemExpansionDoor currTargetDoor : targetDoors) {
       if (currTargetDoor.item instanceof Pin pin) {
-        return pin.getTraceNeckdownHalfwidth(pRoom.getLayer());
+        return pin.getTraceNeckdownHalfwidth(room.getLayer());
       }
     }
     return 0;
@@ -1818,11 +1816,11 @@ public class MazeSearchAlgo {
    * p_ignore_item != null, p_ignore_item and all other items directly connected to p_ignore_item
    * are ignored in the check.
    */
-  private boolean enterThroughSmallDoor(MazeListElement pListElement, Item pIgnoreItem) {
-    if (pListElement.door.getDimension() != 1) {
+  private boolean enterThroughSmallDoor(MazeListElement listElement, Item ignoreItem) {
+    if (listElement.door.getDimension() != 1) {
       return false;
     }
-    TileShape doorShape = pListElement.door.getShape();
+    TileShape doorShape = listElement.door.getShape();
 
     // Get the line of the 1 dimensional door.
     Line doorLine = null;
@@ -1842,7 +1840,7 @@ public class MazeSearchAlgo {
     }
 
     IntPoint doorCenter = doorShape.centreOfGravity().round();
-    int currLayer = pListElement.nextRoom.getLayer();
+    int currLayer = listElement.nextRoom.getLayer();
     int checkRadius =
         this.ctrl.compensatedTraceHalfWidth[currLayer] + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
     // create a perpendicular line segment of length 2 * checkRadius through the
@@ -1861,26 +1859,26 @@ public class MazeSearchAlgo {
         checkShape, currLayer, ignoreNetNos, overlappingObjects);
 
     for (SearchTreeObject currObject : overlappingObjects) {
-      if (!(currObject instanceof Item currItem) || currObject == pIgnoreItem) {
+      if (!(currObject instanceof Item currItem) || currObject == ignoreItem) {
         continue;
       }
-      if (!currItem.sharesNet(pIgnoreItem)) {
+      if (!currItem.sharesNet(ignoreItem)) {
         return false;
       }
       Set<Item> currContacts = currItem.getNormalContacts();
-      if (!currContacts.contains(pIgnoreItem)) {
+      if (!currContacts.contains(ignoreItem)) {
         return false;
       }
     }
     return true;
   }
 
-  /** Checks entering a thick room from a via or trace through a small door (after ripup) */
-  private boolean checkLeavingRippedItem(MazeListElement pListElement) {
-    if (!(pListElement.door instanceof ExpansionDoor currDoor)) {
+  /** Checks entering a thick room from a via or trace through a small door (after ripup). */
+  private boolean checkLeavingRippedItem(MazeListElement listElement) {
+    if (!(listElement.door instanceof ExpansionDoor currDoor)) {
       return false;
     }
-    CompleteExpansionRoom fromRoom = currDoor.otherRoom(pListElement.nextRoom);
+    CompleteExpansionRoom fromRoom = currDoor.otherRoom(listElement.nextRoom);
     if (!(fromRoom instanceof ObstacleExpansionRoom)) {
       return false;
     }
@@ -1888,28 +1886,28 @@ public class MazeSearchAlgo {
     if (!currItem.isRoutable()) {
       return false;
     }
-    return enterThroughSmallDoor(pListElement, currItem);
+    return enterThroughSmallDoor(listElement, currItem);
   }
 
-  /** The result type of MazeSearchAlgo.find_connection */
+  /** The result type of MazeSearchAlgo.find_connection. */
   public static class Result {
 
     public final ExpandableObject destinationDoor;
     public final int sectionNoOfDoor;
 
-    Result(ExpandableObject pDestinationDoor, int pSectionNoOfDoor) {
-      destinationDoor = pDestinationDoor;
-      sectionNoOfDoor = pSectionNoOfDoor;
+    Result(ExpandableObject destinationDoor, int sectionNoOfDoor) {
+      this.destinationDoor = destinationDoor;
+      this.sectionNoOfDoor = sectionNoOfDoor;
     }
   }
 
   /**
-   * Used for the result of MazeShoveViaAlgo.check_shove_via and
+   * Used for the result of MazeShoveViaAlgo.check_shove_via and.
    * MazeShoveThinRoomAlgo.check_shove_thin_room.
    */
   static class ShoveResult {
 
-    /** The opposite door to be expanded */
+    /** The opposite door to be expanded. */
     final ExpansionDoor oppositeDoor;
 
     /** The doors at the adjusted edge of the room shape to be expanded. */
@@ -1922,14 +1920,14 @@ public class MazeSearchAlgo {
     final FloatPoint oppositeDoorPassingPoint;
 
     ShoveResult(
-        ExpansionDoor pOppositeDoor,
-        Collection<ExpansionDoor> pSideDoors,
-        FloatPoint pFromDoorPassingPoint,
-        FloatPoint pOppositeDoorPassingPoint) {
-      oppositeDoor = pOppositeDoor;
-      sideDoors = pSideDoors;
-      fromDoorPassingPoint = pFromDoorPassingPoint;
-      oppositeDoorPassingPoint = pOppositeDoorPassingPoint;
+        ExpansionDoor oppositeDoor,
+        Collection<ExpansionDoor> sideDoors,
+        FloatPoint fromDoorPassingPoint,
+        FloatPoint oppositeDoorPassingPoint) {
+      this.oppositeDoor = oppositeDoor;
+      this.sideDoors = sideDoors;
+      this.fromDoorPassingPoint = fromDoorPassingPoint;
+      this.oppositeDoorPassingPoint = oppositeDoorPassingPoint;
     }
   }
 }

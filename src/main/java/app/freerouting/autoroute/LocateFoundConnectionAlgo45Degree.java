@@ -15,7 +15,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.SortedSet;
 
-/** Locates and constructs 45-degree trace connection geometries from maze search backtrack paths. */
+/**
+ * Locates and constructs 45-degree trace connection geometries from maze search backtrack paths.
+ */
 public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo {
 
   /** Creates a new instance of LocateFoundConnectionAlgo45Degree. */
@@ -217,25 +219,26 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
     }
 
     BacktrackElement currToInfo = this.backtrackArray[this.currentToDoorIndex];
-    if (!(currToInfo.door instanceof ExpansionDoor curr_to_door)) {
+    if (!(currToInfo.door instanceof ExpansionDoor currToDoor)) {
       FRLogger.warn(
           "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: ExpansionDoor expected");
       return result;
     }
 
     FloatPoint nearestToDoorPoint;
-    if (curr_to_door.dimension == 2) {
+    if (currToDoor.dimension == 2) {
       // May not happen in free angle routing mode because then corners are cut off.
-      TileShape toDoorShape = curr_to_door.getShape();
+      TileShape toDoorShape = currToDoor.getShape();
 
       TileShape shrinkedToDoorShape = (TileShape) toDoorShape.shrink(shrinkOffset);
       nearestToDoorPoint = shrinkedToDoorShape.nearestPointApprox(this.currentFromPoint);
       nearestToDoorPoint = roundToInteger(nearestToDoorPoint);
     } else {
-      FloatLine[] lineSections = curr_to_door.getSectionSegments(traceHalfwidth);
+      FloatLine[] lineSections = currToDoor.getSectionSegments(traceHalfwidth);
       if (currToInfo.sectionNoOfDoor >= lineSections.length) {
         FRLogger.warn(
-            "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: lineSections inconsistent");
+            "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: "
+                + "lineSections inconsistent");
         return result;
       }
       FloatLine currLineSection = lineSections[currToInfo.sectionNoOfDoor];
@@ -292,10 +295,10 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
    * coming from p_from_point.
    */
   private boolean calcHorizontalFirstToDoor(
-      ExpandableObject pToDoor, FloatPoint pFromPoint, FloatPoint pToPoint) {
-    TileShape doorShape = pToDoor.getShape();
+      ExpandableObject toDoor, FloatPoint fromPoint, FloatPoint toPoint) {
+    TileShape doorShape = toDoor.getShape();
     IntBox fromDoorBox = doorShape.boundingBox();
-    if (pToDoor.getDimension() != 1) {
+    if (toDoor.getDimension() != 1) {
       return fromDoorBox.height() <= fromDoorBox.width();
     }
     FloatLine doorLineSegment = doorShape.diagonalCornerSegment();
@@ -323,8 +326,8 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       // door is about horizontal
       result = true;
     } else {
-      double dx = pToPoint.x - pFromPoint.x;
-      double dy = pToPoint.y - pFromPoint.y;
+      double dx = toPoint.x - fromPoint.x;
+      double dy = toPoint.y - fromPoint.y;
       if (leftCorner.y < rightCorner.y) {
         // door is about right diagonal
         if (Signum.of(dx) == Signum.of(dy)) {

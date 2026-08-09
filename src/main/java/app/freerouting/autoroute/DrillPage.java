@@ -17,7 +17,7 @@ import java.util.LinkedList;
 
 class DrillPage implements ExpandableObject {
 
-  /** The shape of the page */
+  /** The shape of the page. */
   final IntBox shape;
 
   private final MazeSearchElement[] mazeSearchInfoArr;
@@ -26,7 +26,7 @@ class DrillPage implements ExpandableObject {
   /** The list of expansion drills on this page. Null, if not yet calculated. */
   private Collection<ExpansionDrill> drills;
 
-  /** The number of the net, for which the drills are calculated */
+  /** The number of the net, for which the drills are calculated. */
   private int netNo = -1;
 
   /** Creates a new instance of DrillPage. */
@@ -40,7 +40,7 @@ class DrillPage implements ExpandableObject {
   }
 
   /**
-   * Looks if drillShape contains the center of a drillable Pin on layer. Returns null if no
+   * Looks if drillShape contains the center of a drillable Pin on layer. Returns null if no.
    * such Pin was found.
    */
   private static Point calcPinCenterInDrill(

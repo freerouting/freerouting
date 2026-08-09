@@ -159,15 +159,14 @@ public final class BatchFanout {
   }
 
   /** Routes a fanout pass and returns the number of new fanouted SMD-pins in this pass. */
-  private int fanoutPass(int pPassNo, FanoutProgressListener progressListener) {
+  private int fanoutPass(int passNo, FanoutProgressListener progressListener) {
     long passStart = System.currentTimeMillis();
     int pinsToGo = this.totalSmdPinCount;
     int routedCount = 0;
     int notRoutedCount = 0;
     int insertErrorCount = 0;
-    int alreadyConnectedCount = 0;
-    int viasBeforePass = this.routingBoard.getVias().size();
-    int ripupCosts = this.settings.getStartRipupCosts() * (pPassNo + 1);
+    final int viasBeforePass = this.routingBoard.getVias().size();
+    int ripupCosts = this.settings.getStartRipupCosts() * (passNo + 1);
 
     long baseMillisPerPin =
         this.settings.fanout != null && this.settings.fanout.maxMillisecondsPerPin != null
@@ -183,7 +182,7 @@ public final class BatchFanout {
         "BatchFanout.fanout_pass",
         "pass_start",
         "pass="
-            + (pPassNo + 1)
+            + (passNo + 1)
             + ", totalPins="
             + this.totalSmdPinCount
             + ", alreadyConnected="
@@ -201,7 +200,7 @@ public final class BatchFanout {
     BoardStatistics progressStats = new BoardStatistics(this.routingBoard, null, false);
     publishProgress(
         progressListener,
-        pPassNo,
+        passNo,
         ripupCosts,
         pinsToGo,
         routedCount,
@@ -213,6 +212,7 @@ public final class BatchFanout {
         passStart,
         progressStats);
     boolean maxLimitReached = false;
+    int alreadyConnectedCount = 0;
     for (Component currComponent : this.sortedComponents) {
       for (Component.Pin currPin : currComponent.smdPins) {
         if (this.settings.fanout != null
@@ -224,8 +224,8 @@ public final class BatchFanout {
           maxLimitReached = true;
           break;
         }
-        double maxMilliseconds = baseMillisPerPin * (pPassNo + 1);
-        TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
+        double maxMilliseconds = baseMillisPerPin * (passNo + 1);
+        final TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
         String fullPinName = currComponent.boardComponent.name + "-" + currPin.boardPin.name();
         int netNo = currPin.boardPin.getNetNo(0);
         int targetCount = currPin.boardPin.getUnconnectedSet(netNo).size();
@@ -246,7 +246,8 @@ public final class BatchFanout {
             FRLogger.debug(
                 "BatchFanout: skipping pin "
                     + fullPinName
-                    + " because its net class has no vias defined and fallback is disabled/unavailable.");
+                    + " because its net class has no vias defined and fallback is "
+                    + "disabled/unavailable.");
             --pinsToGo;
             continue;
           }
@@ -266,7 +267,7 @@ public final class BatchFanout {
                 + ", layer="
                 + currPin.boardPin.firstLayer()
                 + ", pass="
-                + (pPassNo + 1),
+                + (passNo + 1),
             fullPinName,
             new app.freerouting.geometry.planar.Point[] {currPin.boardPin.getCenter()});
 
@@ -377,7 +378,7 @@ public final class BatchFanout {
         int extraViasThisPass = Math.max(0, this.routingBoard.getVias().size() - viasBeforePass);
         maybePublishProgress(
             progressListener,
-            pPassNo,
+            passNo,
             ripupCosts,
             pinsToGo,
             routedCount,
@@ -394,7 +395,7 @@ public final class BatchFanout {
           EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
           publishProgress(
               progressListener,
-              pPassNo,
+              passNo,
               ripupCosts,
               pinsToGo,
               routedCount,
@@ -412,7 +413,7 @@ public final class BatchFanout {
           EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
           publishProgress(
               progressListener,
-              pPassNo,
+              passNo,
               ripupCosts,
               pinsToGo,
               routedCount,
@@ -440,7 +441,7 @@ public final class BatchFanout {
         "BatchFanout.fanout_pass",
         "pass_end",
         "pass="
-            + (pPassNo + 1)
+            + (passNo + 1)
             + ", durationMs="
             + passDurationMs
             + ", routed="
@@ -464,7 +465,7 @@ public final class BatchFanout {
     if (progressListener == null) {
       FRLogger.info(
           "fanout pass: "
-              + (pPassNo + 1)
+              + (passNo + 1)
               + ", routed: "
               + routedCount
               + ", not routed: "
@@ -484,7 +485,7 @@ public final class BatchFanout {
     this.lastNotRoutedCount = notRoutedCount;
     publishProgress(
         progressListener,
-        pPassNo,
+        passNo,
         ripupCosts,
         pinsToGo,
         routedCount,
@@ -569,8 +570,10 @@ public final class BatchFanout {
             escapeStatistics));
   }
 
+  /** Listener for fanout pass progress updates. */
   @FunctionalInterface
   public interface FanoutProgressListener {
+    /** Reports fanout pass progress. */
     void onProgress(FanoutPassStatus status);
   }
 
@@ -582,6 +585,7 @@ public final class BatchFanout {
    */
   public record EscapeStatistics(int totalSmdPins, int escapedCount, double escapedPercentage) {
 
+    /** Creates escape statistics from board statistics. */
     public static EscapeStatistics fromBoardStatistics(BoardStatistics stats) {
       double percentage =
           stats.fanout.totalSmdPins > 0
@@ -596,6 +600,7 @@ public final class BatchFanout {
     }
   }
 
+  /** Status snapshot for a single fanout pass. */
   public record FanoutPassStatus(
       int passNo,
       int ripupCosts,
@@ -611,6 +616,7 @@ public final class BatchFanout {
       boolean passCompleted,
       EscapeStatistics escapeStatistics) {}
 
+  /** Summary of a complete fanout run. */
   public record FanoutRunSummary(
       int completedPassCount,
       long totalDurationMillis,
@@ -629,17 +635,17 @@ public final class BatchFanout {
     final String pinSortingOrder;
 
     Component(
-        app.freerouting.board.Component pBoardComponent,
-        Collection<app.freerouting.board.Pin> pBoardSmdPinList,
-        String pPinSortingOrder,
-        RoutingBoard pRoutingBoard) {
-      this.boardComponent = pBoardComponent;
-      this.pinSortingOrder = pPinSortingOrder;
+        app.freerouting.board.Component boardComponent,
+        Collection<app.freerouting.board.Pin> boardSmdPinList,
+        String pinSortingOrder,
+        RoutingBoard routingBoard) {
+      this.boardComponent = boardComponent;
+      this.pinSortingOrder = pinSortingOrder;
 
       // calculate the center of gravity of all SMD pins of this component.
       Collection<app.freerouting.board.Pin> currPinList = new LinkedList<>();
-      int cmpNo = pBoardComponent.no;
-      for (app.freerouting.board.Pin currBoardPin : pBoardSmdPinList) {
+      int cmpNo = boardComponent.no;
+      for (app.freerouting.board.Pin currBoardPin : boardSmdPinList) {
         if (currBoardPin.getComponentNo() == cmpNo) {
           currPinList.add(currBoardPin);
         }
@@ -661,22 +667,22 @@ public final class BatchFanout {
       // calculate the sorted SMD pins of this component
       this.smdPins = new TreeSet<>();
 
-      for (app.freerouting.board.Pin curr_board_pin : currPinList) {
-        this.smdPins.add(new Pin(curr_board_pin, pBoardSmdPinList, pRoutingBoard));
+      for (app.freerouting.board.Pin currBoardPin : currPinList) {
+        this.smdPins.add(new Pin(currBoardPin, boardSmdPinList, routingBoard));
       }
     }
 
-    /** Sort the components, so that components with more pins come first */
+    /** Sort the components, so that components with more pins come first. */
     @Override
-    public int compareTo(Component pOther) {
-      int compareValue = this.smdPinCount - pOther.smdPinCount;
+    public int compareTo(Component other) {
+      int compareValue = this.smdPinCount - other.smdPinCount;
       int result;
       if (compareValue > 0) {
         result = -1;
       } else if (compareValue < 0) {
         result = 1;
       } else {
-        result = this.boardComponent.no - pOther.boardComponent.no;
+        result = this.boardComponent.no - other.boardComponent.no;
       }
       return result;
     }

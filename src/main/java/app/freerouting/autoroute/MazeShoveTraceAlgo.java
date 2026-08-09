@@ -27,33 +27,33 @@ public final class MazeShoveTraceAlgo {
    * may be more successful.
    */
   public static boolean checkShoveTraceLine(
-      MazeListElement pListElement,
-      ObstacleExpansionRoom pObstacleRoom,
-      RoutingBoard pBoard,
-      AutorouteControl pCtrl,
-      boolean pShoveToTheLeft,
-      Collection<DoorSection> pToDoorList) {
-    if (!(pListElement.door instanceof ExpansionDoor from_door)) {
+      MazeListElement listElement,
+      ObstacleExpansionRoom obstacleRoom,
+      RoutingBoard board,
+      AutorouteControl ctrl,
+      boolean shoveToTheLeft,
+      Collection<DoorSection> toDoorList) {
+    if (!(listElement.door instanceof ExpansionDoor fromDoor)) {
       return true;
     }
-    if (!(pObstacleRoom.getItem() instanceof PolylineTrace obstacle_trace)) {
+    if (!(obstacleRoom.getItem() instanceof PolylineTrace obstacleTrace)) {
       return true;
     }
-    int traceLayer = pObstacleRoom.getLayer();
+    int traceLayer = obstacleRoom.getLayer();
     // only traces with the same halfwidth and the same clearance class can be
     // shoved.
-    if (obstacle_trace.getHalfWidth() != pCtrl.traceHalfWidth[traceLayer]
-        || obstacle_trace.clearanceClassNo() != pCtrl.traceClearanceClassNo) {
+    if (obstacleTrace.getHalfWidth() != ctrl.traceHalfWidth[traceLayer]
+        || obstacleTrace.clearanceClassNo() != ctrl.traceClearanceClassNo) {
       return true;
     }
-    double compensatedTraceHalfWidth = pCtrl.compensatedTraceHalfWidth[traceLayer];
-    TileShape fromDoorShape = from_door.getShape();
+    double compensatedTraceHalfWidth = ctrl.compensatedTraceHalfWidth[traceLayer];
+    TileShape fromDoorShape = fromDoor.getShape();
     if (fromDoorShape.maxWidth() < 2 * compensatedTraceHalfWidth) {
       return true;
     }
-    int traceCornerNo = pObstacleRoom.getIndexInItem();
+    int traceCornerNo = obstacleRoom.getIndexInItem();
 
-    Polyline tracePolyline = obstacle_trace.polyline();
+    Polyline tracePolyline = obstacleTrace.polyline();
 
     // Check if traceCornerNo allows access to indices up to traceCornerNo + 2
     // (needed at lines 133-134 and 136-140)
@@ -62,18 +62,18 @@ public final class MazeShoveTraceAlgo {
     if (traceCornerNo < 0 || traceCornerNo >= tracePolyline.arr.length - 2) {
       return false;
     }
-    Collection<ExpansionDoor> roomDoors = pObstacleRoom.getDoors();
+    final Collection<ExpansionDoor> roomDoors = obstacleRoom.getDoors();
     // The side of the trace line seen from the doors to expand.
     // Used to determine, if a door is on the right side to put it into the
     // p_door_list.
     LineSegment shoveLineSegment;
-    if (from_door.dimension == 2) {
+    if (fromDoor.dimension == 2) {
       // shove from a link door into the direction of the other link door.
-      CompleteExpansionRoom otherRoom = from_door.otherRoom(pObstacleRoom);
+      CompleteExpansionRoom otherRoom = fromDoor.otherRoom(obstacleRoom);
       if (!(otherRoom instanceof ObstacleExpansionRoom)) {
         return false;
       }
-      if (!endPointsMatching(obstacle_trace, ((ObstacleExpansionRoom) otherRoom).getItem())) {
+      if (!endPointsMatching(obstacleTrace, ((ObstacleExpansionRoom) otherRoom).getItem())) {
         return false;
       }
       FloatPoint doorCenter = fromDoorShape.centreOfGravity();
@@ -92,7 +92,7 @@ public final class MazeShoveTraceAlgo {
         shoveLineSegment = shoveLineSegment.opposite();
       }
     } else {
-      CompleteExpansionRoom fromRoom = from_door.otherRoom(pObstacleRoom);
+      CompleteExpansionRoom fromRoom = fromDoor.otherRoom(obstacleRoom);
       FloatPoint fromPoint = fromRoom.getShape().centreOfGravity();
       Line shoveTraceLine = tracePolyline.arr[traceCornerNo + 1];
       FloatLine doorLineSegment = fromDoorShape.diagonalCornerSegment();
@@ -112,17 +112,17 @@ public final class MazeShoveTraceAlgo {
       double shapeEntryCheckDistance = compensatedTraceHalfWidth + 5;
       double checkDistSquare = shapeEntryCheckDistance * shapeEntryCheckDistance;
 
-      if (pShoveToTheLeft && !doorLineSwapped || !pShoveToTheLeft && doorLineSwapped) {
+      if (shoveToTheLeft && !doorLineSwapped || !shoveToTheLeft && doorLineSwapped) {
         sectionOk =
-            pListElement.sectionNoOfDoor == pListElement.door.mazeSearchElementCount() - 1
-                && (pListElement.shapeEntry.a.distanceSquare(doorLineSegment.b) <= checkDistSquare
-                    || pListElement.shapeEntry.b.distanceSquare(doorLineSegment.b)
+            listElement.sectionNoOfDoor == listElement.door.mazeSearchElementCount() - 1
+                && (listElement.shapeEntry.a.distanceSquare(doorLineSegment.b) <= checkDistSquare
+                    || listElement.shapeEntry.b.distanceSquare(doorLineSegment.b)
                         <= checkDistSquare);
       } else {
         sectionOk =
-            pListElement.sectionNoOfDoor == 0
-                && (pListElement.shapeEntry.a.distanceSquare(doorLineSegment.a) <= checkDistSquare
-                    || pListElement.shapeEntry.b.distanceSquare(doorLineSegment.a)
+            listElement.sectionNoOfDoor == 0
+                && (listElement.shapeEntry.a.distanceSquare(doorLineSegment.a) <= checkDistSquare
+                    || listElement.shapeEntry.b.distanceSquare(doorLineSegment.a)
                         <= checkDistSquare);
       }
       if (!sectionOk) {
@@ -134,7 +134,7 @@ public final class MazeShoveTraceAlgo {
       FloatLine shrinkedLineSegment = polarLineSegment.shrinkSegment(compensatedTraceHalfWidth);
       Direction perpendicularDirection = shoveTraceLine.direction().turn45Degree(2);
       if (sideOfTraceLine == Side.ON_THE_LEFT) {
-        if (pShoveToTheLeft) {
+        if (shoveToTheLeft) {
           Line startClosingLine = new Line(shrinkedLineSegment.b.round(), perpendicularDirection);
           shoveLineSegment =
               new LineSegment(
@@ -150,7 +150,7 @@ public final class MazeShoveTraceAlgo {
                   tracePolyline.arr[traceCornerNo].opposite());
         }
       } else {
-        if (pShoveToTheLeft) {
+        if (shoveToTheLeft) {
           Line startClosingLine = new Line(shrinkedLineSegment.b.round(), perpendicularDirection);
           shoveLineSegment =
               new LineSegment(
@@ -167,17 +167,17 @@ public final class MazeShoveTraceAlgo {
         }
       }
     }
-    int traceHalfWidth = pCtrl.traceHalfWidth[traceLayer];
+    int traceHalfWidth = ctrl.traceHalfWidth[traceLayer];
     int[] netNoArr = new int[1];
-    netNoArr[0] = pCtrl.netNo;
+    netNoArr[0] = ctrl.netNo;
 
     double shoveWidth =
-        pBoard.checkTraceSegment(
+        board.checkTraceSegment(
             shoveLineSegment,
             traceLayer,
             netNoArr,
             traceHalfWidth,
-            pCtrl.traceClearanceClassNo,
+            ctrl.traceClearanceClassNo,
             true);
     boolean segmentShortened = false;
     if (shoveWidth < Integer.MAX_VALUE) {
@@ -197,15 +197,15 @@ public final class MazeShoveTraceAlgo {
     if (!segmentIstPoint) {
       shoveWidth =
           ShoveTraceAlgo.check(
-              pBoard,
+              board,
               shoveLineSegment,
-              pShoveToTheLeft,
+              shoveToTheLeft,
               traceLayer,
               netNoArr,
               traceHalfWidth,
-              pCtrl.traceClearanceClassNo,
-              pCtrl.maxShoveTraceRecursionDepth,
-              pCtrl.maxShoveViaRecursionDepth);
+              ctrl.traceClearanceClassNo,
+              ctrl.maxShoveTraceRecursionDepth,
+              ctrl.maxShoveViaRecursionDepth);
 
       if (shoveWidth <= 0) {
         return true;
@@ -219,19 +219,19 @@ public final class MazeShoveTraceAlgo {
 
     Line shoveLine = shoveLineSegment.getLine();
 
-    // From_door_compare_distance is used to check, that a door is between from_door
+    // From_door_compare_distance is used to check, that a door is between fromDoor
     // and the end
     // point
     // of the shove line.
     double fromDoorCompareDistance;
-    if (from_door.dimension == 2 || segmentIstPoint) {
+    if (fromDoor.dimension == 2 || segmentIstPoint) {
       fromDoorCompareDistance = Double.MAX_VALUE;
     } else {
       fromDoorCompareDistance = toCorner.distanceSquare(fromDoorShape.cornerApprox(0));
     }
 
     for (ExpansionDoor currDoor : roomDoors) {
-      if (currDoor == from_door) {
+      if (currDoor == fromDoor) {
         continue;
       }
       if (currDoor.firstRoom instanceof ObstacleExpansionRoom room
@@ -249,7 +249,7 @@ public final class MazeShoveTraceAlgo {
 
         if (addLinkDoor) {
           FloatLine[] lineSections = currDoor.getSectionSegments(compensatedTraceHalfWidth);
-          pToDoorList.add(new DoorSection(currDoor, 0, lineSections[0]));
+          toDoorList.add(new DoorSection(currDoor, 0, lineSections[0]));
         }
       } else if (!segmentIstPoint) {
         // now currDoor is 1-dimensional
@@ -262,7 +262,7 @@ public final class MazeShoveTraceAlgo {
         }
         Side startCornerSideOfTraceLine = shoveLine.sideOf(currDoorSegment.a, 0);
         Side endCornerSideOfTraceLine = shoveLine.sideOf(currDoorSegment.b, 0);
-        if (pShoveToTheLeft) {
+        if (shoveToTheLeft) {
           if (startCornerSideOfTraceLine != Side.ON_THE_LEFT
               || endCornerSideOfTraceLine != Side.ON_THE_LEFT) {
             continue;
@@ -300,7 +300,7 @@ public final class MazeShoveTraceAlgo {
             }
             FloatPoint currSectionProjection = currSectionNearestCorner.projectionApprox(shoveLine);
             if (currSectionProjection.distance(fromCorner) <= shoveWidth) {
-              pToDoorList.add(new DoorSection(currDoor, i, currLineSection));
+              toDoorList.add(new DoorSection(currDoor, i, currLineSection));
             }
           }
         }
@@ -313,40 +313,41 @@ public final class MazeShoveTraceAlgo {
    * Check if the endpoints of p_trace and p_from_item are matching, so that the shove can continue
    * through a link door.
    */
-  private static boolean endPointsMatching(PolylineTrace pTrace, Item pFromItem) {
-    if (pFromItem == pTrace) {
+  private static boolean endPointsMatching(PolylineTrace trace, Item fromItem) {
+    if (fromItem == trace) {
       return true;
     }
-    if (!pTrace.sharesNet(pFromItem)) {
+    if (!trace.sharesNet(fromItem)) {
       return false;
     }
     boolean pointsMatching;
-    if (pFromItem instanceof DrillItem item) {
+    if (fromItem instanceof DrillItem item) {
       Point fromCenter = item.getCenter();
       pointsMatching =
-          fromCenter.equals(pTrace.firstCorner()) || fromCenter.equals(pTrace.lastCorner());
-    } else if (pFromItem instanceof PolylineTrace from_trace) {
+          fromCenter.equals(trace.firstCorner()) || fromCenter.equals(trace.lastCorner());
+    } else if (fromItem instanceof PolylineTrace fromTrace) {
       pointsMatching =
-          pTrace.firstCorner().equals(from_trace.firstCorner())
-              || pTrace.firstCorner().equals(from_trace.lastCorner())
-              || pTrace.lastCorner().equals(from_trace.firstCorner())
-              || pTrace.lastCorner().equals(from_trace.lastCorner());
+          trace.firstCorner().equals(fromTrace.firstCorner())
+              || trace.firstCorner().equals(fromTrace.lastCorner())
+              || trace.lastCorner().equals(fromTrace.firstCorner())
+              || trace.lastCorner().equals(fromTrace.lastCorner());
     } else {
       pointsMatching = false;
     }
     return pointsMatching;
   }
 
+  /** DoorSection. */
   public static class DoorSection {
 
     final ExpansionDoor door;
     final int sectionNo;
     final FloatLine sectionLine;
 
-    DoorSection(ExpansionDoor pDoor, int pSectionNo, FloatLine pSectionLine) {
-      door = pDoor;
-      sectionNo = pSectionNo;
-      sectionLine = pSectionLine;
+    DoorSection(ExpansionDoor door, int sectionNo, FloatLine sectionLine) {
+      this.door = door;
+      this.sectionNo = sectionNo;
+      this.sectionLine = sectionLine;
     }
   }
 }

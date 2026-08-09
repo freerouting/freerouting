@@ -37,7 +37,7 @@ public class BatchOptimizer extends NamedAlgorithm {
   /**
    * Creates a new instance of BatchOptRoute, which is used to optimize the board.
    *
-   * @param job
+   * @param job the routing job to optimize.
    */
   public BatchOptimizer(RoutingJob job) {
     super(job.thread, job.board, job.routerSettings);
@@ -96,8 +96,6 @@ public class BatchOptimizer extends NamedAlgorithm {
             + ", trace length: "
             + Math.round(board.cumulativeTraceLength()));
 
-    double scoreImprovement = -1;
-    int currentPass = 0;
     useIncreasedRipupCosts = true;
 
     // Capture initial board state for session summary
@@ -115,8 +113,8 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     // Capture start-of-session resource usage baselines
     long sessionStartMs = System.currentTimeMillis();
-    float cpuSecondsStart = sampleCurrentThreadCpuSeconds();
-    float allocMbStart = sampleCurrentThreadAllocatedMb();
+    final float cpuSecondsStart = sampleCurrentThreadCpuSeconds();
+    final float allocMbStart = sampleCurrentThreadAllocatedMb();
     float peakHeapMb = sampleHeapUsageMb();
 
     if (this.settings.optimizer != null && this.settings.optimizer.timeoutString != null) {
@@ -131,6 +129,8 @@ public class BatchOptimizer extends NamedAlgorithm {
     this.fireTaskStateChangedEvent(
         new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.getHash()));
 
+    double scoreImprovement = -1;
+    int currentPass = 0;
     while ((this.settings.optimizer.maxPasses == null
             || currentPass < this.settings.optimizer.maxPasses)
         && (this.settings.optimizer.maxItems == null
@@ -151,7 +151,9 @@ public class BatchOptimizer extends NamedAlgorithm {
         job.logInfo(
             String.format(
                 java.util.Locale.US,
-                "Stopping optimizer because the current board score (%.2f) is already close to the maximum score (1000). Remaining potential improvement is less than the threshold (%.2f%%).",
+                "Stopping optimizer because the current board score (%.2f) is already close to the "
+                    + "maximum score (1000). Remaining potential improvement is less than the "
+                    + "threshold (%.2f%%).",
                 scoreBeforePass,
                 this.settings.optimizer.optimizationImprovementThreshold * 100));
         break;
@@ -187,7 +189,8 @@ public class BatchOptimizer extends NamedAlgorithm {
         job.logInfo(
             String.format(
                 java.util.Locale.US,
-                "Stopping optimizer because the improvement in this pass (%.4f%%) is below the threshold (%.2f%%).",
+                "Stopping optimizer because the improvement in this pass (%.4f%%) is below "
+                    + "the threshold (%.2f%%).",
                 scoreImprovement * 100,
                 this.settings.optimizer.optimizationImprovementThreshold * 100));
         break;
@@ -220,7 +223,9 @@ public class BatchOptimizer extends NamedAlgorithm {
     job.logInfo(
         String.format(
             java.util.Locale.US,
-            "Optimization stage %s started with score %s, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+            "Optimization stage %s started with score %s, completed in %.2f seconds, "
+                + "final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, "
+                + "and %.1f MB peak heap usage.",
             completionStatus,
             FRLogger.formatScore(initialScore, initialIncomplete, initialViolations),
             sessionDurationSeconds,
@@ -238,12 +243,11 @@ public class BatchOptimizer extends NamedAlgorithm {
    * the amount of improvements is made in percentage (expressed between 0.0 and 1.0). -1 if the
    * routing must go on no matter how much it improved.
    */
-  protected float optRoutePass(int pPassNo, boolean pWithPreferredDirections) {
-    float routeImproved = 0.0F;
+  protected float optRoutePass(int passNo, boolean withPreferredDirections) {
 
     BoardStatistics boardStatisticsBefore = board.getStatistics();
     RouterCounters routerCounters = new RouterCounters();
-    routerCounters.passCount = pPassNo;
+    routerCounters.passCount = passNo;
     progressThrottler.reset();
     this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCounters, this.board);
 
@@ -251,7 +255,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     this.minCumulativeTraceLength = boardStatisticsBefore.traces.totalWeightedLength;
     String optimizationPassId =
         "BatchOptRoute.opt_route_pass #"
-            + pPassNo
+            + passNo
             + " with "
             + boardStatisticsBefore.items.viaCount
             + " vias and "
@@ -266,6 +270,7 @@ public class BatchOptimizer extends NamedAlgorithm {
             ? this.settings.optimizer.maxConsecutiveFailures
             : 50;
 
+    float routeImproved = 0.0F;
     while (true) {
       if (this.deadlineMs != null && System.currentTimeMillis() >= this.deadlineMs) {
         job.logInfo("Optimizer stage timed out.");
@@ -290,7 +295,7 @@ public class BatchOptimizer extends NamedAlgorithm {
       if (currItem == null) {
         break;
       }
-      ItemRouteResult result = optRouteItem(currItem, pWithPreferredDirections, false);
+      ItemRouteResult result = optRouteItem(currItem, withPreferredDirections, false);
       this.totalItemsOptimized++;
       if (result.improved()) {
         consecutiveFailures = 0;
@@ -314,8 +319,9 @@ public class BatchOptimizer extends NamedAlgorithm {
           job.logInfo(
               String.format(
                   java.util.Locale.US,
-                  "Stopping optimization pass #%d early after %d consecutive items could not be improved.",
-                  pPassNo,
+                  "Stopping optimization pass #%d early after %d consecutive items "
+                      + "could not be improved.",
+                  passNo,
                   consecutiveFailures));
           break;
         }
@@ -335,7 +341,7 @@ public class BatchOptimizer extends NamedAlgorithm {
         String.format(
             java.util.Locale.US,
             "Optimizer pass #%d on board '%s' was completed in %.2f seconds with the score of %s.",
-            pPassNo,
+            passNo,
             this.board.getHash(),
             routeoptimizerPassDuration,
             FRLogger.formatScore(
@@ -348,17 +354,17 @@ public class BatchOptimizer extends NamedAlgorithm {
   /**
    * Try to improve the route by re-routing the connections containing p_item.
    *
-   * @param pItem the item to be re-routed
-   * @param pWithPreferredDirections if true, the preferred directions are used for the traces
+   * @param item the item to be re-routed
+   * @param withPreferredDirections if true, the preferred directions are used for the traces
    * @param disableSnapshots if true, the snapshots are not used which means that the routing cannot
    *     be undone, but it's much more efficient
    */
   protected ItemRouteResult optRouteItem(
-      Item pItem, boolean pWithPreferredDirections, boolean disableSnapshots) {
+      Item item, boolean withPreferredDirections, boolean disableSnapshots) {
     // check if item.board is a RoutingBoard
-    if (!(pItem.board instanceof RoutingBoard routingBoard)) {
+    if (!(item.board instanceof RoutingBoard routingBoard)) {
       job.logWarning("The item to be optimized is not on a RoutingBoard.");
-      return new ItemRouteResult(pItem.getIdNo());
+      return new ItemRouteResult(item.getIdNo());
     }
 
     // calculate the statistics for the board before the routing
@@ -371,10 +377,10 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     // collect the items to be re-routed
     Set<Item> rippedItems = new TreeSet<>();
-    rippedItems.add(pItem);
+    rippedItems.add(item);
 
     // add the contacts of the traces to the ripped items if it's a trace
-    if (pItem instanceof Trace currTrace) {
+    if (item instanceof Trace currTrace) {
       // add also the fork items, especially because not all fork items may be
       // returned by ReadSortedRouteItems because of matching end points.
       Set<Item> currContactList = currTrace.getStartContacts();
@@ -396,7 +402,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // re-routed
     for (Item currItem : rippedConnections) {
       if (currItem.isUserFixed()) {
-        return new ItemRouteResult(pItem.getIdNo());
+        return new ItemRouteResult(item.getIdNo());
       }
     }
 
@@ -407,8 +413,8 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     // remove the items to be re-routed
     routingBoard.removeItems(rippedConnections);
-    for (int i = 0; i < pItem.netCount(); i++) {
-      routingBoard.combineTraces(pItem.getNetNo(i));
+    for (int i = 0; i < item.netCount(); i++) {
+      routingBoard.combineTraces(item.getNetNo(i));
     }
 
     // calculate the ripup costs
@@ -418,7 +424,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     }
 
     // reduce the ripup costs for traces
-    if (pItem instanceof Trace) {
+    if (item instanceof Trace) {
       ripupCosts =
           (int) Math.round(this.settings.optimizer.traceRipupCostFactor * (double) ripupCosts);
     }
@@ -429,7 +435,7 @@ public class BatchOptimizer extends NamedAlgorithm {
         this.settings.optimizer.maxAutoroutePasses,
         ripupCosts,
         settings.tracePullTightAccuracy,
-        pWithPreferredDirections,
+        withPreferredDirections,
         routingBoard,
         settings);
 
@@ -445,7 +451,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // check if the board was improved
     ItemRouteResult result =
         new ItemRouteResult(
-            pItem.getIdNo(),
+            item.getIdNo(),
             boardStatisticsBefore.items.viaCount,
             boardStatisticsAfter.items.viaCount,
             this.minCumulativeTraceLength,

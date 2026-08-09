@@ -3,7 +3,7 @@ package app.freerouting.autoroute;
 /** Describes the structure of a section of an ExpandableObject. */
 public class MazeSearchElement {
 
-  /** true, if this door is already occupied by the maze expanding algorithm. */
+  /** True if this door is already occupied by the maze expanding algorithm. */
   public boolean isOccupied;
 
   /** Used for backtracking in the maze expanding algorithm. */
@@ -14,7 +14,7 @@ public class MazeSearchElement {
   public Adjustment adjustment = Adjustment.NONE;
 
   /**
-   * The ripup cost paid to enter this door's room via the maze search. Zero when roomRipped is
+   * The ripup cost paid to enter this door's room via the maze search. Zero when roomRipped is.
    * false.
    */
   public int ripupCost;
