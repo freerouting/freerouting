@@ -3,7 +3,7 @@ package app.freerouting.boardgraphics;
 import java.awt.Color;
 import java.awt.Graphics;
 
-/** items to be drawn by the functions in GraphicsContext must implement this interface */
+/** Items drawn by {@link GraphicsContext} must implement this interface. */
 public interface Drawable {
 
   int MIN_DRAW_PRIORITY = 1;
@@ -11,16 +11,18 @@ public interface Drawable {
   int MAX_DRAW_PRIORITY = 3;
 
   /**
-   * Draws this item to the device provided in p_graphics_context. p_color_arr is an array of
-   * dimension layerCount. p_intensity is a number between 0 and 1.
+   * Draws this item using per-layer colors from {@code colorArr}.
+   *
+   * <p>{@code colorArr} has one entry per layer. {@code intensity} is between 0 and 1.
    */
-  void draw(Graphics pG, GraphicsContext pGraphicsContext, Color[] pColorArr, double pIntensity);
+  void draw(Graphics g, GraphicsContext graphicsContext, Color[] colorArr, double intensity);
 
   /**
-   * Draws this item to the device provided in p_graphics_context. It is drawn on each layer with
-   * the same color p_color. p_intensity is a number between 0 and 1.
+   * Draws this item using the same color on every layer.
+   *
+   * <p>{@code intensity} is a number between 0 and 1.
    */
-  void draw(Graphics pG, GraphicsContext pGraphicsContext, Color pColor, double pIntensity);
+  void draw(Graphics g, GraphicsContext graphicsContext, Color color, double intensity);
 
   /**
    * Returns the priority for drawing an item. Items with higher priority are drawn later than items
@@ -29,8 +31,8 @@ public interface Drawable {
   int getDrawPriority();
 
   /** Gets the drawing intensity in the alpha blending for this item. */
-  double getDrawIntensity(GraphicsContext pGraphicsContext);
+  double getDrawIntensity(GraphicsContext graphicsContext);
 
-  /** gets the draw colors for this object from p_graphics_context */
-  Color[] getDrawColors(GraphicsContext pGraphicsContext);
+  /** Returns the draw colors for this object from the graphics context. */
+  Color[] getDrawColors(GraphicsContext graphicsContext);
 }

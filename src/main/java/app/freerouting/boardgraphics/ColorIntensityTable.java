@@ -33,49 +33,52 @@ public class ColorIntensityTable implements Serializable {
   }
 
   /** Copy constructor. */
-  public ColorIntensityTable(ColorIntensityTable pColorIntensityTable) {
-    this.arr = pColorIntensityTable.arr.clone();
+  public ColorIntensityTable(ColorIntensityTable colorIntensityTable) {
+    this.arr = colorIntensityTable.arr.clone();
   }
 
-  public double getValue(int pNo) {
-    if (pNo < 0 || pNo >= ObjectNames.values().length) {
+  /** Returns the intensity value for the given object type index. */
+  public double getValue(int no) {
+    if (no < 0 || no >= ObjectNames.values().length) {
       FRLogger.warn("ColorIntensityTable.get_value: p_no out of range");
       return 0;
     }
-    if (pNo >= arr.length) {
-      logMissingSerializedDataOnce("get_value", pNo);
-      return getDefaultValue(pNo);
+    if (no >= arr.length) {
+      logMissingSerializedDataOnce("get_value", no);
+      return getDefaultValue(no);
     }
-    return arr[pNo];
+    return arr[no];
   }
 
-  public void setValue(int pNo, double pValue) {
-    if (pNo < 0 || pNo >= ObjectNames.values().length) {
+  /** Sets the intensity value for the given object type index. */
+  public void setValue(int no, double value) {
+    if (no < 0 || no >= ObjectNames.values().length) {
       FRLogger.warn("ColorIntensityTable.set_value: p_no out of range");
       return;
     }
-    if (pNo >= arr.length) {
-      logMissingSerializedDataOnce("set_value", pNo);
+    if (no >= arr.length) {
+      logMissingSerializedDataOnce("set_value", no);
       return;
     }
-    arr[pNo] = pValue;
+    arr[no] = value;
   }
 
-  private void logMissingSerializedDataOnce(String methodName, int pNo) {
+  private void logMissingSerializedDataOnce(String methodName, int no) {
     if (!missingSerializedDataLogged) {
       FRLogger.warn(
-          "ColorIntensityTable." + methodName + ": p_no " + pNo + " missing in serialized data");
+          "ColorIntensityTable." + methodName + ": p_no " + no + " missing in serialized data");
       missingSerializedDataLogged = true;
     }
   }
 
-  private double getDefaultValue(int pNo) {
-    if (pNo == ObjectNames.DRILL_HOLES.ordinal()) {
+  private double getDefaultValue(int no) {
+    if (no == ObjectNames.DRILL_HOLES.ordinal()) {
       return 1.0;
     }
     return 0;
   }
 
+  /** Object type names indexed in the intensity table. */
   public enum ObjectNames {
     TRACES,
     VIAS,

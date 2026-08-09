@@ -23,6 +23,7 @@ public final class TutorialBoardPalette {
 
   private TutorialBoardPalette() {}
 
+  /** Returns whether the given filename is the bundled tutorial board. */
   public static boolean isTutorialBoard(String filename) {
     return TUTORIAL_BOARD_FILENAME.equals(filename);
   }
@@ -34,8 +35,6 @@ public final class TutorialBoardPalette {
     }
 
     int layerCount = Math.max(graphicsContext.layerCount(), 1);
-    Color[] primaryLayerColors = alternatingLayerColors(layerCount, SECONDARY, SECONDARY_HOVER);
-    Color[] mutedLayerColors = alternatingLayerColors(layerCount, SECONDARY_HOVER, SECONDARY);
 
     graphicsContext.otherColorTable.setBackgroundColor(PRIMARY);
     graphicsContext.otherColorTable.setOutlineColor(SECONDARY);
@@ -48,6 +47,8 @@ public final class TutorialBoardPalette {
     graphicsContext.otherColorTable.setSilkscreenColor(SECONDARY_HOVER, false);
     graphicsContext.otherColorTable.setDrillHoleColor(new Color(0, 28, 15));
 
+    Color[] primaryLayerColors = alternatingLayerColors(layerCount, SECONDARY, SECONDARY_HOVER);
+    Color[] mutedLayerColors = alternatingLayerColors(layerCount, SECONDARY_HOVER, SECONDARY);
     graphicsContext.itemColorTable.setTraceColors(primaryLayerColors, false);
     graphicsContext.itemColorTable.setTraceColors(mutedLayerColors, true);
     graphicsContext.itemColorTable.setViaColors(primaryLayerColors, false);
@@ -71,6 +72,7 @@ public final class TutorialBoardPalette {
         ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal(), 1.0);
   }
 
+  /** BackgroundColor. */
   public static Color backgroundColor() {
     return PRIMARY;
   }

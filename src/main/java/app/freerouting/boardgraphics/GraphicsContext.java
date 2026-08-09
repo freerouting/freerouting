@@ -44,7 +44,7 @@ public class GraphicsContext implements Serializable {
   public CoordinateTransform coordinateTransform;
 
   /**
-   * layerVisibilityArr[i] is between 0 and 1, for each layer i, 0 is invisible and 1 fully visible.
+   * Layer visibility per board layer, where 0 is invisible and 1 is fully visible.
    */
   private double[] layerVisibilityArr;
 
@@ -67,18 +67,19 @@ public class GraphicsContext implements Serializable {
   private transient double cachedHatchPitchPx = -1.0;
   private transient Color cachedHatchColor;
 
+  /** Creates a graphics context for the given board bounds and layer structure. */
   public GraphicsContext(
-      IntBox pDesignBounds,
-      Dimension pPanelBounds,
-      LayerStructure pLayerStructure,
-      Locale pLocale) {
-    coordinateTransform = new CoordinateTransform(pDesignBounds, pPanelBounds);
-    itemColorTable = new ItemColorTableModel(pLayerStructure, pLocale);
-    otherColorTable = new OtherColorTableModel(pLocale);
+      IntBox designBounds,
+      Dimension panelBounds,
+      LayerStructure layerStructure,
+      Locale locale) {
+    coordinateTransform = new CoordinateTransform(designBounds, panelBounds);
+    itemColorTable = new ItemColorTableModel(layerStructure, locale);
+    otherColorTable = new OtherColorTableModel(locale);
     colorIntensityTable = new ColorIntensityTable();
-    layerVisibilityArr = new double[pLayerStructure.arr.length];
+    layerVisibilityArr = new double[layerStructure.arr.length];
     for (int i = 0; i < layerVisibilityArr.length; i++) {
-      if (pLayerStructure.arr[i].isSignal) {
+      if (layerStructure.arr[i].isSignal) {
         layerVisibilityArr[i] = 1.00;
       } else {
         layerVisibilityArr[i] = 0.25;
@@ -86,38 +87,100 @@ public class GraphicsContext implements Serializable {
     }
   }
 
-  /** Copy constructor */
-  public GraphicsContext(GraphicsContext pGraphicsContext) {
-    this.coordinateTransform = new CoordinateTransform(pGraphicsContext.coordinateTransform);
-    this.itemColorTable = new ItemColorTableModel(pGraphicsContext.itemColorTable);
-    this.otherColorTable = new OtherColorTableModel(pGraphicsContext.otherColorTable);
-    this.colorIntensityTable = new ColorIntensityTable(pGraphicsContext.colorIntensityTable);
-    this.layerVisibilityArr = pGraphicsContext.copyLayerVisibilityArr();
-    this.virtualLayerVisibilityArr = pGraphicsContext.getVirtualLayerVisibilityArr().clone();
-    this.fullyVisibleVirtualLayer = pGraphicsContext.fullyVisibleVirtualLayer;
+  /** Copy constructor. */
+  public GraphicsContext(GraphicsContext graphicsContext) {
+    this.coordinateTransform = new CoordinateTransform(graphicsContext.coordinateTransform);
+    this.itemColorTable = new ItemColorTableModel(graphicsContext.itemColorTable);
+    this.otherColorTable = new OtherColorTableModel(graphicsContext.otherColorTable);
+    this.colorIntensityTable = new ColorIntensityTable(graphicsContext.colorIntensityTable);
+    this.layerVisibilityArr = graphicsContext.copyLayerVisibilityArr();
+    this.virtualLayerVisibilityArr = graphicsContext.getVirtualLayerVisibilityArr().clone();
+    this.fullyVisibleVirtualLayer = graphicsContext.fullyVisibleVirtualLayer;
   }
 
   private static boolean[] createDefaultVirtualLayerVisibilityArr() {
     return new boolean[] {true, true, true, true, true, true};
   }
 
-  /** initialise some values in p_graphics */
-  private static void initDrawGraphics(Graphics2D pGraphics, Color pColor, float pWidth) {
+  /** Initializes stroke and color settings on the given graphics context. */
+  private static void initDrawGraphics(Graphics2D graphics, Color color, float width) {
     BasicStroke bs =
-        new BasicStroke(Math.max(pWidth, 0), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-    pGraphics.setStroke(bs);
-    pGraphics.setColor(pColor);
-    pGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        new BasicStroke(Math.max(width, 0), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    graphics.setStroke(bs);
+    graphics.setColor(color);
+    graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
   }
 
-  static void setTranslucency(Graphics2D pG2, double pFactor) {
+  static void setTranslucency(Graphics2D g2, double factor) {
     AlphaComposite currAlphaComposite;
-    if (pFactor >= 0) {
-      currAlphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) pFactor);
+    if (factor >= 0) {
+      currAlphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) factor);
     } else {
-      currAlphaComposite = AlphaComposite.getInstance(AlphaComposite.DST_OVER, (float) -pFactor);
+      currAlphaComposite = AlphaComposite.getInstance(AlphaComposite.DST_OVER, (float) -factor);
     }
-    pG2.setComposite(currAlphaComposite);
+    g2.setComposite(currAlphaComposite);
+  }
+
+  private static void restoreGraphics2dState(
+      Graphics2D g2,
+      java.awt.Stroke stroke,
+      java.awt.Shape clip,
+      java.awt.Paint paint,
+      java.awt.Composite composite) {
+    g2.setStroke(stroke);
+    g2.setClip(clip);
+    g2.setPaint(paint);
+    g2.setComposite(composite);
+  }
+
+  private static void restorePaintAndComposite(
+      Graphics2D g2, java.awt.Paint paint, java.awt.Composite composite) {
+    g2.setPaint(paint);
+    g2.setComposite(composite);
+  }
+
+  private void prepareAndDrawHatch(
+      Graphics2D g2,
+      java.awt.geom.Area outerArea,
+      Color color,
+      double translucencyFactor,
+      double pitchPx,
+      int pitchPixels) {
+    setTranslucency(g2, translucencyFactor);
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+    if (cachedHatchPaint == null
+        || cachedHatchPitchPx != pitchPx
+        || !color.equals(cachedHatchColor)) {
+      java.awt.image.BufferedImage bi =
+          new java.awt.image.BufferedImage(
+              pitchPixels, pitchPixels, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+      Graphics2D g2t = bi.createGraphics();
+      g2t.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+      g2t.setColor(color);
+      g2t.setStroke(new BasicStroke(1.0f));
+      g2t.drawLine(0, pitchPixels, pitchPixels, 0);
+      g2t.drawLine(-1, pitchPixels + 1, pitchPixels + 1, -1);
+      g2t.dispose();
+      cachedHatchPaint =
+          new java.awt.TexturePaint(bi, new Rectangle2D.Double(0, 0, pitchPixels, pitchPixels));
+      cachedHatchPitchPx = pitchPx;
+      cachedHatchColor = color;
+    }
+
+    g2.clip(outerArea);
+    g2.setPaint(cachedHatchPaint);
+    g2.setStroke(
+        new BasicStroke((float) (2 * pitchPx), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
+    g2.draw(outerArea);
+  }
+
+  private static void fillWithColor(
+      Graphics2D g2, java.awt.geom.Area fillArea, Color color, double translucencyFactor) {
+    g2.setColor(color);
+    setTranslucency(g2, translucencyFactor);
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    g2.fill(fillArea);
   }
 
   private boolean[] getVirtualLayerVisibilityArr() {
@@ -128,67 +191,62 @@ public class GraphicsContext implements Serializable {
   }
 
   /**
-   * Changes the bounds of the board design to p_design_bounds. Useful when components are still
-   * placed outside the board.
+   * Changes the bounds of the board design.
+   *
+   * <p>Useful when components are still placed outside the board.
    */
-  public void changeDesignBounds(IntBox pNewDesignBounds) {
-    if (pNewDesignBounds.equals(this.coordinateTransform.designBox)) {
+  public void changeDesignBounds(IntBox newDesignBounds) {
+    if (newDesignBounds.equals(this.coordinateTransform.designBox)) {
       return;
     }
     Dimension screenBounds = this.coordinateTransform.screenBounds;
-    this.coordinateTransform = new CoordinateTransform(pNewDesignBounds, screenBounds);
+    this.coordinateTransform = new CoordinateTransform(newDesignBounds, screenBounds);
   }
 
-  /** changes the size of the panel to p_new_bounds */
-  public void changePanelSize(Dimension pNewBounds) {
+  /** Changes the size of the panel to {@code newBounds}. */
+  public void changePanelSize(Dimension newBounds) {
     if (coordinateTransform == null) {
       return;
     }
     IntBox designBox = coordinateTransform.designBox;
-    boolean leftRightSwapped = coordinateTransform.isMirrorLeftRight();
-    boolean topBottomSwapped = coordinateTransform.isMirrorTopBottom();
-    double rotation = coordinateTransform.getRotation();
-    coordinateTransform = new CoordinateTransform(designBox, pNewBounds);
-    coordinateTransform.setMirrorLeftRight(leftRightSwapped);
-    coordinateTransform.setMirrorTopBottom(topBottomSwapped);
-    coordinateTransform.setRotation(rotation);
+    CoordinateTransform updatedTransform = new CoordinateTransform(designBox, newBounds);
+    updatedTransform.setMirrorLeftRight(coordinateTransform.isMirrorLeftRight());
+    updatedTransform.setMirrorTopBottom(coordinateTransform.isMirrorTopBottom());
+    updatedTransform.setRotation(coordinateTransform.getRotation());
+    coordinateTransform = updatedTransform;
   }
 
-  /** draws a polygon with corners p_points */
+  /** Draws a polygon with the given corner points. */
   public void draw(
-      FloatPoint[] pPoints,
-      double pHalfWidth,
-      Color pColor,
-      Graphics pG,
-      double pTranslucencyFactor) {
-    if (pColor == null) {
+      FloatPoint[] points,
+      double halfWidth,
+      Color color,
+      Graphics g,
+      double translucencyFactor) {
+    if (color == null) {
       return;
     }
-    Graphics2D g2 = (Graphics2D) pG;
-    Rectangle clipShape = pG.getClip().getBounds();
-    // the class member updateBox cannot be used here, because
-    // the dirty rectangle is internally enlarged by the system.
-    // Therefore, we can not improve the performance by using an
-    // update octagon instead of a box.
-    IntBox clipBox = coordinateTransform.screenToBoard(clipShape);
-    double scaledWidth = coordinateTransform.boardToScreen(pHalfWidth);
+    Graphics2D g2 = (Graphics2D) g;
+    double scaledWidth = coordinateTransform.boardToScreen(halfWidth);
 
-    initDrawGraphics(g2, pColor, (float) scaledWidth * 2);
-    setTranslucency(g2, pTranslucencyFactor);
+    initDrawGraphics(g2, color, (float) scaledWidth * 2);
+    setTranslucency(g2, translucencyFactor);
 
     GeneralPath drawPath = null;
     if (!show_line_segments) {
       drawPath = new GeneralPath();
     }
 
-    for (int i = 0; i < (pPoints.length - 1); i++) {
-      if (lineOutsideUpdateBox(pPoints[i], pPoints[i + 1], pHalfWidth + update_offset, clipBox)) {
+    Rectangle clipShape = g.getClip().getBounds();
+    IntBox clipBox = coordinateTransform.screenToBoard(clipShape);
+    for (int i = 0; i < (points.length - 1); i++) {
+      if (lineOutsideUpdateBox(points[i], points[i + 1], halfWidth + update_offset, clipBox)) {
         // this check should be unnecessary here,
         // the system should do it in the draw(line) function
         continue;
       }
-      Point2D p1 = coordinateTransform.boardToScreen(pPoints[i]);
-      Point2D p2 = coordinateTransform.boardToScreen(pPoints[i + 1]);
+      Point2D p1 = coordinateTransform.boardToScreen(points[i]);
+      Point2D p2 = coordinateTransform.boardToScreen(points[i + 1]);
       Line2D line = new Line2D.Double(p1, p2);
 
       if (show_line_segments) {
@@ -203,98 +261,105 @@ public class GraphicsContext implements Serializable {
   }
 
   /*
-   * draws the boundary of a circle
+    * draws the boundary of a circle.
    */
+  /** DrawCircle. */
   public void drawCircle(
-      FloatPoint pCenter,
-      double pRadius,
-      double pDrawHalfWidth,
-      Color pColor,
-      Graphics pG,
-      double pTranslucencyFactor) {
-    if (pColor == null) {
+      FloatPoint center,
+      double radius,
+      double drawHalfWidth,
+      Color color,
+      Graphics g,
+      double translucencyFactor) {
+    if (color == null) {
       return;
     }
-    Graphics2D g2 = (Graphics2D) pG;
-    Point2D center = coordinateTransform.boardToScreen(pCenter);
+    Graphics2D g2 = (Graphics2D) g;
+    Point2D screenCenter = coordinateTransform.boardToScreen(center);
 
-    double radius = coordinateTransform.boardToScreen(pRadius);
-    double diameter = 2 * radius;
-    float drawWidth = (float) (2 * coordinateTransform.boardToScreen(pDrawHalfWidth));
+    double screenRadius = coordinateTransform.boardToScreen(radius);
+    double diameter = 2 * screenRadius;
+    float drawWidth = (float) (2 * coordinateTransform.boardToScreen(drawHalfWidth));
     Ellipse2D circle =
-        new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, diameter, diameter);
-    setTranslucency(g2, pTranslucencyFactor);
-    initDrawGraphics(g2, pColor, drawWidth);
+        new Ellipse2D.Double(
+            screenCenter.getX() - screenRadius,
+            screenCenter.getY() - screenRadius,
+            diameter,
+            diameter);
+    setTranslucency(g2, translucencyFactor);
+    initDrawGraphics(g2, color, drawWidth);
     g2.draw(circle);
   }
 
   /*
    * draws a rectangle
    */
+  /** DrawRectangle. */
   public void drawRectangle(
-      FloatPoint pCorner1,
-      FloatPoint pCorner2,
-      double pDrawHalfWidth,
-      Color pColor,
-      Graphics pG,
-      double pTranslucencyFactor) {
-    if (pColor == null) {
+      FloatPoint corner1,
+      FloatPoint corner2,
+      double drawHalfWidth,
+      Color color,
+      Graphics g,
+      double translucencyFactor) {
+    if (color == null) {
       return;
     }
-    Graphics2D g2 = (Graphics2D) pG;
-    Point2D corner1 = coordinateTransform.boardToScreen(pCorner1);
-    Point2D corner2 = coordinateTransform.boardToScreen(pCorner2);
+    Graphics2D g2 = (Graphics2D) g;
+    Point2D screenCorner1 = coordinateTransform.boardToScreen(corner1);
+    Point2D screenCorner2 = coordinateTransform.boardToScreen(corner2);
 
-    double xmin = Math.min(corner1.getX(), corner2.getX());
-    double ymin = Math.min(corner1.getY(), corner2.getY());
+    double xmin = Math.min(screenCorner1.getX(), screenCorner2.getX());
+    double ymin = Math.min(screenCorner1.getY(), screenCorner2.getY());
 
-    float drawWidth = (float) (2 * coordinateTransform.boardToScreen(pDrawHalfWidth));
-    double width = Math.abs(corner2.getX() - corner1.getX());
-    double height = Math.abs(corner2.getY() - corner1.getY());
+    float drawWidth = (float) (2 * coordinateTransform.boardToScreen(drawHalfWidth));
+    double width = Math.abs(screenCorner2.getX() - screenCorner1.getX());
+    double height = Math.abs(screenCorner2.getY() - screenCorner1.getY());
     Rectangle2D rectangle = new Rectangle2D.Double(xmin, ymin, width, height);
-    setTranslucency(g2, pTranslucencyFactor);
-    initDrawGraphics(g2, pColor, drawWidth);
+    setTranslucency(g2, translucencyFactor);
+    initDrawGraphics(g2, color, drawWidth);
     g2.draw(rectangle);
   }
 
   /** Draws the boundary of p_shape. */
   public void drawBoundary(
-      Shape pShape, double pDrawHalfWidth, Color pColor, Graphics pG, double pTranslucencyFactor) {
-    if (pShape instanceof PolylineShape) {
-      FloatPoint[] drawCorners = pShape.cornerApproxArr();
+      Shape shape, double drawHalfWidth, Color color, Graphics g, double translucencyFactor) {
+    if (shape instanceof PolylineShape) {
+      FloatPoint[] drawCorners = shape.cornerApproxArr();
       if (drawCorners.length <= 1) {
         return;
       }
       FloatPoint[] closedDrawCorners = new FloatPoint[drawCorners.length + 1];
       System.arraycopy(drawCorners, 0, closedDrawCorners, 0, drawCorners.length);
       closedDrawCorners[closedDrawCorners.length - 1] = drawCorners[0];
-      this.draw(closedDrawCorners, pDrawHalfWidth, pColor, pG, pTranslucencyFactor);
-    } else if (pShape instanceof Circle curr_circle) {
+      this.draw(closedDrawCorners, drawHalfWidth, color, g, translucencyFactor);
+    } else if (shape instanceof Circle currCircle) {
       this.drawCircle(
-          curr_circle.center.toFloat(),
-          curr_circle.radius,
-          pDrawHalfWidth,
-          pColor,
-          pG,
-          pTranslucencyFactor);
+          currCircle.center.toFloat(),
+          currCircle.radius,
+          drawHalfWidth,
+          color,
+          g,
+          translucencyFactor);
     }
   }
 
   /** Draws the boundary of p_area. */
   public void drawBoundary(
-      Area pArea, double pDrawHalfWidth, Color pColor, Graphics pG, double pTranslucencyFactor) {
-    drawBoundary(pArea.getBorder(), pDrawHalfWidth, pColor, pG, pTranslucencyFactor);
-    Shape[] holes = pArea.getHoles();
+      Area area, double drawHalfWidth, Color color, Graphics g, double translucencyFactor) {
+    drawBoundary(area.getBorder(), drawHalfWidth, color, g, translucencyFactor);
+    Shape[] holes = area.getHoles();
     for (int i = 0; i < holes.length; i++) {
-      drawBoundary(holes[i], pDrawHalfWidth, pColor, pG, pTranslucencyFactor);
+      drawBoundary(holes[i], drawHalfWidth, color, g, translucencyFactor);
     }
   }
 
-  public java.awt.geom.Area getAwtArea(Area pArea) {
-    if (pArea == null || pArea.isEmpty()) {
+  /** GetAwtArea. */
+  public java.awt.geom.Area getAwtArea(Area area) {
+    if (area == null || area.isEmpty()) {
       return null;
     }
-    if (pArea instanceof Circle circle) {
+    if (area instanceof Circle circle) {
       Point2D center = coordinateTransform.boardToScreen(circle.center.toFloat());
       double radius = coordinateTransform.boardToScreen(circle.radius);
       double diameter = 2 * radius;
@@ -302,7 +367,7 @@ public class GraphicsContext implements Serializable {
           new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, diameter, diameter));
     }
 
-    Shape borderShape = pArea.getBorder();
+    Shape borderShape = area.getBorder();
     if (!(borderShape instanceof PolylineShape border) || !border.isBounded()) {
       return null;
     }
@@ -320,15 +385,15 @@ public class GraphicsContext implements Serializable {
     }
     java.awt.geom.Area awtArea = new java.awt.geom.Area(borderPath);
 
-    Shape[] holes = pArea.getHoles();
+    Shape[] holes = area.getHoles();
     for (Shape hole : holes) {
       if (hole instanceof PolylineShape holePoly) {
-        int hCount = holePoly.borderLineCount();
-        if (hCount > 0) {
+        int holeCount = holePoly.borderLineCount();
+        if (holeCount > 0) {
           java.awt.geom.Path2D.Double holePath = new java.awt.geom.Path2D.Double();
           Point2D hp0 = coordinateTransform.boardToScreen(holePoly.cornerApprox(0));
           holePath.moveTo(hp0.getX(), hp0.getY());
-          for (int i = 1; i < hCount; i++) {
+          for (int i = 1; i < holeCount; i++) {
             Point2D hpi = coordinateTransform.boardToScreen(holePoly.cornerApprox(i));
             holePath.lineTo(hpi.getX(), hpi.getY());
           }
@@ -348,75 +413,49 @@ public class GraphicsContext implements Serializable {
     return awtArea;
   }
 
+  /** Draws a hatched fill pattern inside a copper pour area. */
   public void drawPlaneHatch(
-      Area pArea, Graphics pG, Color pColor, double pTranslucencyFactor, double pPitchBoardUnits) {
-    if (pColor == null || pArea == null || pArea.isEmpty() || pTranslucencyFactor <= 0) {
+      Area area, Graphics g, Color color, double translucencyFactor, double pitchBoardUnits) {
+    if (color == null || area == null || area.isEmpty() || translucencyFactor <= 0) {
       return;
     }
-    double pitchPx = coordinateTransform.boardToScreen(pPitchBoardUnits);
+    double pitchPx = coordinateTransform.boardToScreen(pitchBoardUnits);
     if (pitchPx < 2.0) {
       return;
     }
     if (pitchPx > 1000.0) {
       pitchPx = 1000.0;
     }
-    int pInt = (int) Math.round(pitchPx);
 
-    java.awt.geom.Area outerArea = getAwtArea(pArea);
+    java.awt.geom.Area outerArea = getAwtArea(area);
     if (outerArea == null || outerArea.isEmpty()) {
       return;
     }
 
-    Graphics2D g2 = (Graphics2D) pG;
+    int pitchPixels = (int) Math.round(pitchPx);
+
+    Graphics2D g2 = (Graphics2D) g;
     java.awt.Paint oldPaint = g2.getPaint();
     java.awt.Composite oldComposite = g2.getComposite();
-
-    setTranslucency(g2, pTranslucencyFactor);
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-    if (cachedHatchPaint == null
-        || cachedHatchPitchPx != pitchPx
-        || !pColor.equals(cachedHatchColor)) {
-      java.awt.image.BufferedImage bi =
-          new java.awt.image.BufferedImage(pInt, pInt, java.awt.image.BufferedImage.TYPE_INT_ARGB);
-      Graphics2D g2t = bi.createGraphics();
-      g2t.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-      g2t.setColor(pColor);
-      g2t.setStroke(new BasicStroke(1.0f));
-      g2t.drawLine(0, pInt, pInt, 0);
-      g2t.drawLine(-1, pInt + 1, pInt + 1, -1);
-      g2t.dispose();
-      cachedHatchPaint = new java.awt.TexturePaint(bi, new Rectangle2D.Double(0, 0, pInt, pInt));
-      cachedHatchPitchPx = pitchPx;
-      cachedHatchColor = pColor;
-    }
-
     java.awt.Shape oldClip = g2.getClip();
     java.awt.Stroke oldStroke = g2.getStroke();
-    g2.clip(outerArea);
-    g2.setPaint(cachedHatchPaint);
-    g2.setStroke(
-        new BasicStroke((float) (2 * pitchPx), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
-    g2.draw(outerArea);
-
-    g2.setStroke(oldStroke);
-    g2.setClip(oldClip);
-    g2.setPaint(oldPaint);
-    g2.setComposite(oldComposite);
+    prepareAndDrawHatch(g2, outerArea, color, translucencyFactor, pitchPx, pitchPixels);
+    restoreGraphics2dState(g2, oldStroke, oldClip, oldPaint, oldComposite);
   }
 
-  public java.awt.geom.Area getAwtAreaFromShape(Shape pShape) {
-    if (pShape == null) {
+  /** GetAwtAreaFromShape. */
+  public java.awt.geom.Area getAwtAreaFromShape(Shape shape) {
+    if (shape == null) {
       return null;
     }
-    if (pShape instanceof Circle circle) {
+    if (shape instanceof Circle circle) {
       Point2D center = coordinateTransform.boardToScreen(circle.center.toFloat());
       double radius = coordinateTransform.boardToScreen(circle.radius);
       double diameter = 2 * radius;
       return new java.awt.geom.Area(
           new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, diameter, diameter));
     }
-    if (pShape instanceof PolylineShape poly) {
+    if (shape instanceof PolylineShape poly) {
       int count = poly.borderLineCount();
       if (count <= 0) {
         return null;
@@ -434,25 +473,26 @@ public class GraphicsContext implements Serializable {
     return null;
   }
 
+  /** FillPlaneArea. */
   public void fillPlaneArea(
-      Area pArea,
-      Graphics pG,
-      Color pColor,
-      double pTranslucencyFactor,
-      java.util.List<ClearanceItem> pClearances,
-      java.util.List<ThermalReliefItem> pThermals) {
-    if (pColor == null || pArea == null || pArea.isEmpty() || pTranslucencyFactor <= 0) {
+      Area area,
+      Graphics g,
+      Color color,
+      double translucencyFactor,
+      java.util.List<ClearanceItem> clearances,
+      java.util.List<ThermalReliefItem> thermals) {
+    if (color == null || area == null || area.isEmpty() || translucencyFactor <= 0) {
       return;
     }
 
-    java.awt.geom.Area fillArea = getAwtArea(pArea);
+    java.awt.geom.Area fillArea = getAwtArea(area);
     if (fillArea == null || fillArea.isEmpty()) {
       return;
     }
 
     // Subtract foreign clearances
-    if (pClearances != null) {
-      for (ClearanceItem item : pClearances) {
+    if (clearances != null) {
+      for (ClearanceItem item : clearances) {
         if (item != null && item.area != null) {
           fillArea.subtract(item.area);
         }
@@ -460,8 +500,8 @@ public class GraphicsContext implements Serializable {
     }
 
     // Process thermal reliefs
-    if (pThermals != null) {
-      for (ThermalReliefItem thermal : pThermals) {
+    if (thermals != null) {
+      for (ThermalReliefItem thermal : thermals) {
         if (thermal == null || thermal.clearanceArea == null) {
           continue;
         }
@@ -496,61 +536,58 @@ public class GraphicsContext implements Serializable {
       return;
     }
 
-    Graphics2D g2 = (Graphics2D) pG;
+    Graphics2D g2 = (Graphics2D) g;
     java.awt.Paint oldPaint = g2.getPaint();
     java.awt.Composite oldComposite = g2.getComposite();
-
-    g2.setColor(pColor);
-    setTranslucency(g2, pTranslucencyFactor);
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    g2.fill(fillArea);
-
-    g2.setPaint(oldPaint);
-    g2.setComposite(oldComposite);
+    fillWithColor(g2, fillArea, color, translucencyFactor);
+    restorePaintAndComposite(g2, oldPaint, oldComposite);
   }
 
-  /** Draws the interior of a circle */
-  public void fillCircle(Circle pCircle, Graphics pG, Color pColor, double pTranslucencyFactor) {
-    if (pColor == null) {
+  /** Draws the interior of a circle. */
+  public void fillCircle(Circle circle, Graphics g, Color color, double translucencyFactor) {
+    if (color == null) {
       return;
     }
-    Point2D center = coordinateTransform.boardToScreen(pCircle.center.toFloat());
-    double radius = coordinateTransform.boardToScreen(pCircle.radius);
-    if (!pointNearRectangle(center.getX(), center.getY(), pG.getClip().getBounds(), radius)) {
+    Point2D center = coordinateTransform.boardToScreen(circle.center.toFloat());
+    double radius = coordinateTransform.boardToScreen(circle.radius);
+    if (!pointNearRectangle(center.getX(), center.getY(), g.getClip().getBounds(), radius)) {
       return;
     }
-    double diameter = 2 * radius;
-    Ellipse2D circle =
-        new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, diameter, diameter);
-    Graphics2D g2 = (Graphics2D) pG;
-    g2.setColor(pColor);
-    setTranslucency(g2, pTranslucencyFactor);
+    Graphics2D g2 = (Graphics2D) g;
+    g2.setColor(color);
+    setTranslucency(g2, translucencyFactor);
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    g2.fill(circle);
+    g2.fill(
+        new Ellipse2D.Double(
+            center.getX() - radius,
+            center.getY() - radius,
+            2 * radius,
+            2 * radius));
   }
 
   /** Draws the interior of an ellipse. */
-  public void fillEllipse(Ellipse pEllipse, Graphics pG, Color pColor, double pTranslucencyFactor) {
+  public void fillEllipse(Ellipse ellipse, Graphics g, Color color, double translucencyFactor) {
     Ellipse[] ellipseArr = new Ellipse[1];
-    ellipseArr[0] = pEllipse;
-    fillEllipseArr(ellipseArr, pG, pColor, pTranslucencyFactor);
+    ellipseArr[0] = ellipse;
+    fillEllipseArr(ellipseArr, g, color, translucencyFactor);
   }
 
   /**
-   * Draws the interior of an array of ellipses. Ellipses contained in another ellipse are treated
-   * as holes.
+   * Draws the interior of an array of ellipses.
+   *
+   * <p>Ellipses contained in another ellipse are treated as holes.
    */
   public void fillEllipseArr(
-      Ellipse[] pEllipseArr, Graphics pG, Color pColor, double pTranslucencyFactor) {
-    if (pColor == null || pEllipseArr.length == 0) {
+      Ellipse[] ellipseArr, Graphics g, Color color, double translucencyFactor) {
+    if (color == null || ellipseArr.length == 0) {
       return;
     }
     GeneralPath drawPath = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
-    for (Ellipse currEllipse : pEllipseArr) {
+    for (Ellipse currEllipse : ellipseArr) {
       Point2D center = coordinateTransform.boardToScreen(currEllipse.center);
       double biggerRadius = coordinateTransform.boardToScreen(currEllipse.biggerRadius);
       if (!pointNearRectangle(
-          center.getX(), center.getY(), pG.getClip().getBounds(), biggerRadius)) {
+          center.getX(), center.getY(), g.getClip().getBounds(), biggerRadius)) {
         continue;
       }
       double smallerRadius = coordinateTransform.boardToScreen(currEllipse.smallerRadius);
@@ -566,42 +603,42 @@ public class GraphicsContext implements Serializable {
       java.awt.Shape rotatedEllipse = affineTransform.createTransformedShape(drawEllipse);
       drawPath.append(rotatedEllipse, false);
     }
-    Graphics2D g2 = (Graphics2D) pG;
-    g2.setColor(pColor);
-    setTranslucency(g2, pTranslucencyFactor);
+    Graphics2D g2 = (Graphics2D) g;
+    g2.setColor(color);
+    setTranslucency(g2, translucencyFactor);
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     g2.fill(drawPath);
   }
 
   /** Checks, if the distance of the point with coordinates p_x, p_y to p_rect is at most p_dist. */
-  private boolean pointNearRectangle(double pX, double pY, Rectangle pRect, double pDist) {
-    if (pX < pRect.x - pDist) {
+  private boolean pointNearRectangle(double x, double y, Rectangle rect, double dist) {
+    if (x < rect.x - dist) {
       return false;
     }
-    if (pY < pRect.y - pDist) {
+    if (y < rect.y - dist) {
       return false;
     }
-    if (pX > pRect.x + pRect.width + pDist) {
+    if (x > rect.x + rect.width + dist) {
       return false;
     }
-    return pY <= pRect.y + pRect.height + pDist;
+    return y <= rect.y + rect.height + dist;
   }
 
   /** Fill the interior of the polygon shape represented by p_points. */
   public void fillShape(
-      FloatPoint[] pPoints, Graphics pG, Color pColor, double pTranslucencyFactor) {
-    if (pColor == null) {
+      FloatPoint[] points, Graphics g, Color color, double translucencyFactor) {
+    if (color == null) {
       return;
     }
-    Graphics2D g2 = (Graphics2D) pG;
+    Graphics2D g2 = (Graphics2D) g;
     Polygon drawPolygon = new Polygon();
-    for (int i = 0; i < pPoints.length; i++) {
-      Point2D currCorner = coordinateTransform.boardToScreen(pPoints[i]);
+    for (int i = 0; i < points.length; i++) {
+      Point2D currCorner = coordinateTransform.boardToScreen(points[i]);
       drawPolygon.addPoint(
           (int) Math.round(currCorner.getX()), (int) Math.round(currCorner.getY()));
     }
-    g2.setColor(pColor);
-    setTranslucency(g2, pTranslucencyFactor);
+    g2.setColor(color);
+    setTranslucency(g2, translucencyFactor);
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     g2.fill(drawPolygon);
   }
@@ -611,14 +648,14 @@ public class GraphicsContext implements Serializable {
    * polygon and some holes.
    */
   public void fillArea(
-      FloatPoint[][] pPointLists, Graphics pG, Color pColor, double pTranslucencyFactor) {
-    if (pColor == null) {
+      FloatPoint[][] pointLists, Graphics g, Color color, double translucencyFactor) {
+    if (color == null) {
       return;
     }
     GeneralPath drawPath = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
-    for (int j = 0; j < pPointLists.length; j++) {
+    for (int j = 0; j < pointLists.length; j++) {
       Polygon drawPolygon = new Polygon();
-      FloatPoint[] currPointList = pPointLists[j];
+      FloatPoint[] currPointList = pointLists[j];
       for (int i = 0; i < currPointList.length; i++) {
         Point2D currCorner = coordinateTransform.boardToScreen(currPointList[i]);
         drawPolygon.addPoint(
@@ -626,32 +663,32 @@ public class GraphicsContext implements Serializable {
       }
       drawPath.append(drawPolygon, false);
     }
-    Graphics2D g2 = (Graphics2D) pG;
-    g2.setColor(pColor);
-    setTranslucency(g2, pTranslucencyFactor);
+    Graphics2D g2 = (Graphics2D) g;
+    g2.setColor(color);
+    setTranslucency(g2, translucencyFactor);
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     g2.fill(drawPath);
   }
 
-  /** draws the interior of an item of class geometry.planar.Area */
-  public void fillArea(Area pArea, Graphics pG, Color pColor, double pTranslucencyFactor) {
-    if (pColor == null || pArea.isEmpty()) {
+  /** Draws the interior of a geometry {@link Area}. */
+  public void fillArea(Area area, Graphics g, Color color, double translucencyFactor) {
+    if (color == null || area.isEmpty()) {
       return;
     }
-    if (pArea instanceof Circle circle) {
-      fillCircle(circle, pG, pColor, pTranslucencyFactor);
+    if (area instanceof Circle circle) {
+      fillCircle(circle, g, color, translucencyFactor);
     } else {
-      PolylineShape border = (PolylineShape) pArea.getBorder();
+      PolylineShape border = (PolylineShape) area.getBorder();
       if (!border.isBounded()) {
         FRLogger.warn("GraphicsContext.fill_area: shape not bounded");
         return;
       }
-      Rectangle clipShape = pG.getClip().getBounds();
+      Rectangle clipShape = g.getClip().getBounds();
       IntBox clipBox = coordinateTransform.screenToBoard(clipShape);
       if (!border.boundingBox().intersects(clipBox)) {
         return;
       }
-      Shape[] holes = pArea.getHoles();
+      Shape[] holes = area.getHoles();
 
       FloatPoint[][] drawPolygons = new FloatPoint[holes.length + 1][];
       for (int j = 0; j < drawPolygons.length; j++) {
@@ -669,10 +706,10 @@ public class GraphicsContext implements Serializable {
         // close the polygon
         currDrawPolygon[currDrawPolygon.length - 1] = currDrawPolygon[0];
       }
-      fillArea(drawPolygons, pG, pColor, pTranslucencyFactor);
+      fillArea(drawPolygons, g, color, translucencyFactor);
     }
     if (show_area_division) {
-      TileShape[] tiles = pArea.splitToConvex();
+      TileShape[] tiles = area.splitToConvex();
       for (int i = 0; i < tiles.length; i++) {
         FloatPoint[] corners = new FloatPoint[tiles[i].borderLineCount() + 1];
         TileShape currTile = tiles[i];
@@ -680,7 +717,7 @@ public class GraphicsContext implements Serializable {
           corners[j] = currTile.cornerApprox(j);
         }
         corners[corners.length - 1] = corners[0];
-        draw(corners, 1, Color.white, pG, 0.7);
+        draw(corners, 1, Color.white, g, 0.7);
       }
     }
   }
@@ -701,8 +738,9 @@ public class GraphicsContext implements Serializable {
     return otherColorTable.getOutlineColor();
   }
 
-  public Color getComponentColor(boolean pFront) {
-    return otherColorTable.getComponentColor(pFront);
+  /** GetComponentColor. */
+  public Color getComponentColor(boolean front) {
+    return otherColorTable.getComponentColor(front);
   }
 
   public Color getViolationsColor() {
@@ -713,13 +751,15 @@ public class GraphicsContext implements Serializable {
     return otherColorTable.getLengthMatchingAreaColor();
   }
 
-  public Color[] getTraceColors(boolean pFixed) {
+  /** GetTraceColors. */
+  public Color[] getTraceColors(boolean fixed) {
 
-    return itemColorTable.getTraceColors(pFixed);
+    return itemColorTable.getTraceColors(fixed);
   }
 
-  public Color[] getViaColors(boolean pFixed) {
-    return itemColorTable.getViaColors(pFixed);
+  /** GetViaColors. */
+  public Color[] getViaColors(boolean fixed) {
+    return itemColorTable.getViaColors(fixed);
   }
 
   public Color[] getPinColors() {
@@ -746,49 +786,55 @@ public class GraphicsContext implements Serializable {
     return colorIntensityTable.getValue(ColorIntensityTable.ObjectNames.TRACES.ordinal());
   }
 
-  public void setTraceColorIntensity(double pValue) {
-    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.TRACES.ordinal(), pValue);
+  /** SetTraceColorIntensity. */
+  public void setTraceColorIntensity(double value) {
+    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.TRACES.ordinal(), value);
   }
 
   public double getViaColorIntensity() {
     return colorIntensityTable.getValue(ColorIntensityTable.ObjectNames.VIAS.ordinal());
   }
 
-  public void setViaColorIntensity(double pValue) {
-    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.VIAS.ordinal(), pValue);
+  /** SetViaColorIntensity. */
+  public void setViaColorIntensity(double value) {
+    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.VIAS.ordinal(), value);
   }
 
   public double getPinColorIntensity() {
     return colorIntensityTable.getValue(ColorIntensityTable.ObjectNames.PINS.ordinal());
   }
 
-  public void setPinColorIntensity(double pValue) {
-    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.PINS.ordinal(), pValue);
+  /** SetPinColorIntensity. */
+  public void setPinColorIntensity(double value) {
+    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.PINS.ordinal(), value);
   }
 
   public double getConductionColorIntensity() {
     return colorIntensityTable.getValue(ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal());
   }
 
-  public void setConductionColorIntensity(double pValue) {
+  /** SetConductionColorIntensity. */
+  public void setConductionColorIntensity(double value) {
     colorIntensityTable.setValue(
-        ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(), pValue);
+        ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(), value);
   }
 
   public double getObstacleColorIntensity() {
     return colorIntensityTable.getValue(ColorIntensityTable.ObjectNames.KEEPOUTS.ordinal());
   }
 
-  public void setObstacleColorIntensity(double pValue) {
-    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.KEEPOUTS.ordinal(), pValue);
+  /** SetObstacleColorIntensity. */
+  public void setObstacleColorIntensity(double value) {
+    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.KEEPOUTS.ordinal(), value);
   }
 
   public double getViaObstacleColorIntensity() {
     return colorIntensityTable.getValue(ColorIntensityTable.ObjectNames.VIA_KEEPOUTS.ordinal());
   }
 
-  public void setViaObstacleColorIntensity(double pValue) {
-    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.VIA_KEEPOUTS.ordinal(), pValue);
+  /** SetViaObstacleColorIntensity. */
+  public void setViaObstacleColorIntensity(double value) {
+    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.VIA_KEEPOUTS.ordinal(), value);
   }
 
   public double getPlaceObstacleColorIntensity() {
@@ -804,16 +850,18 @@ public class GraphicsContext implements Serializable {
     return colorIntensityTable.getValue(ColorIntensityTable.ObjectNames.HIGHLIGHT.ordinal());
   }
 
-  public void setHighlightColorIntensity(double pValue) {
-    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.HIGHLIGHT.ordinal(), pValue);
+  /** SetHighlightColorIntensity. */
+  public void setHighlightColorIntensity(double value) {
+    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.HIGHLIGHT.ordinal(), value);
   }
 
   public double getIncompleteColorIntensity() {
     return colorIntensityTable.getValue(ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal());
   }
 
-  public void setIncompleteColorIntensity(double pValue) {
-    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal(), pValue);
+  /** SetIncompleteColorIntensity. */
+  public void setIncompleteColorIntensity(double value) {
+    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal(), value);
   }
 
   public double getLengthMatchingAreaColorIntensity() {
@@ -821,9 +869,10 @@ public class GraphicsContext implements Serializable {
         ColorIntensityTable.ObjectNames.LENGTH_MATCHING_AREAS.ordinal());
   }
 
-  public void setLengthMatchingAreaColorIntensity(double pValue) {
+  /** SetLengthMatchingAreaColorIntensity. */
+  public void setLengthMatchingAreaColorIntensity(double value) {
     colorIntensityTable.setValue(
-        ColorIntensityTable.ObjectNames.LENGTH_MATCHING_AREAS.ordinal(), pValue);
+        ColorIntensityTable.ObjectNames.LENGTH_MATCHING_AREAS.ordinal(), value);
   }
 
   public Dimension getPanelSize() {
@@ -841,17 +890,18 @@ public class GraphicsContext implements Serializable {
     return coordinateTransform.boardToScreen(coordinateTransform.designBox);
   }
 
-  /** gets the factor for automatic layer dimming */
+  /** Returns the factor used for automatic layer dimming. */
   public double getAutoLayerDimFactor() {
     return this.autoLayerDimFactor;
   }
 
   /**
-   * Sets the factor for automatic layer dimming. Values are between 0 and 1. If 1, there is no
-   * automatic layer dimming.
+   * Sets the factor for automatic layer dimming.
+   *
+   * <p>Values are between 0 and 1. If 1, there is no automatic layer dimming.
    */
-  public void setAutoLayerDimFactor(double pValue) {
-    autoLayerDimFactor = pValue;
+  public void setAutoLayerDimFactor(double value) {
+    autoLayerDimFactor = value;
   }
 
   public int getFullyVisibleLayer() {
@@ -859,9 +909,9 @@ public class GraphicsContext implements Serializable {
   }
 
   /** Sets the layer, which will be excluded from automatic layer dimming. */
-  public void setFullyVisibleLayer(int pLayerNo) {
-    fullyVisibleLayer = pLayerNo;
-    if (pLayerNo != -1) {
+  public void setFullyVisibleLayer(int layerNo) {
+    fullyVisibleLayer = layerNo;
+    if (layerNo != -1) {
       fullyVisibleVirtualLayer = -1;
     }
   }
@@ -874,6 +924,7 @@ public class GraphicsContext implements Serializable {
     this.simplifiedPlaneRendering = simplifiedPlaneRendering;
   }
 
+  /** GetFullyVisibleVirtualLayer. */
   public int getFullyVisibleVirtualLayer() {
     boolean[] visibilityArr = getVirtualLayerVisibilityArr();
     if (fullyVisibleVirtualLayer < -1 || fullyVisibleVirtualLayer >= visibilityArr.length) {
@@ -882,6 +933,7 @@ public class GraphicsContext implements Serializable {
     return fullyVisibleVirtualLayer;
   }
 
+  /** SetFullyVisibleVirtualLayer. */
   public void setFullyVisibleVirtualLayer(int idx) {
     boolean[] visibilityArr = getVirtualLayerVisibilityArr();
     if (idx < -1 || idx >= visibilityArr.length) {
@@ -893,6 +945,7 @@ public class GraphicsContext implements Serializable {
     }
   }
 
+  /** IsFrontSelected. */
   public boolean isFrontSelected() {
     int selectedVirtualLayer = getFullyVisibleVirtualLayer();
     if (selectedVirtualLayer != -1) {
@@ -904,6 +957,7 @@ public class GraphicsContext implements Serializable {
     return true;
   }
 
+  /** GetVirtualLayerVisible. */
   public boolean getVirtualLayerVisible(int idx) {
     boolean[] visibilityArr = getVirtualLayerVisibilityArr();
     if (idx >= 0 && idx < visibilityArr.length) {
@@ -912,6 +966,7 @@ public class GraphicsContext implements Serializable {
     return true;
   }
 
+  /** SetVirtualLayerVisible. */
   public void setVirtualLayerVisible(int idx, boolean visible) {
     boolean[] visibilityArr = getVirtualLayerVisibilityArr();
     if (idx >= 0 && idx < visibilityArr.length) {
@@ -919,6 +974,7 @@ public class GraphicsContext implements Serializable {
     }
   }
 
+  /** GetVirtualLayerVisibility. */
   public double getVirtualLayerVisibility(int virtualLayerIdx) {
     boolean[] visibilityArr = getVirtualLayerVisibilityArr();
     if (virtualLayerIdx < 0 || virtualLayerIdx >= visibilityArr.length) {
@@ -945,88 +1001,92 @@ public class GraphicsContext implements Serializable {
    * Gets the visibility factor of the input layer. The result is between 0 and 1. If the result is
    * 0, the layer is invisible, if the result is 1, the layer is fully visible.
    */
-  public double getLayerVisibility(int pLayerNo) {
+  public double getLayerVisibility(int layerNo) {
     double result;
     if (fullyVisibleVirtualLayer != -1) {
-      result = this.autoLayerDimFactor * layerVisibilityArr[pLayerNo];
-    } else if (pLayerNo == this.fullyVisibleLayer) {
-      result = layerVisibilityArr[pLayerNo];
+      result = this.autoLayerDimFactor * layerVisibilityArr[layerNo];
+    } else if (layerNo == this.fullyVisibleLayer) {
+      result = layerVisibilityArr[layerNo];
     } else {
-      result = this.autoLayerDimFactor * layerVisibilityArr[pLayerNo];
+      result = this.autoLayerDimFactor * layerVisibilityArr[layerNo];
     }
     return result;
   }
 
   /** Gets the visibility factor of the input layer without the automatic layer dimming. */
-  public double getRawLayerVisibility(int pLayerNo) {
-    return layerVisibilityArr[pLayerNo];
+  public double getRawLayerVisibility(int layerNo) {
+    return layerVisibilityArr[layerNo];
   }
 
   /**
    * Gets the visibility factor of the input layer. The value is expected between 0 and 1. If the
    * value is 0, the layer is invisible, if the value is 1, the layer is fully visible.
    */
-  public void setLayerVisibility(int pLayerNo, double pValue) {
-    layerVisibilityArr[pLayerNo] = Math.max(0, Math.min(pValue, 1));
+  public void setLayerVisibility(int layerNo, double value) {
+    layerVisibilityArr[layerNo] = Math.max(0, Math.min(value, 1));
   }
 
-  public void setLayerVisibilityArr(double[] pLayerVisibilityArr) {
-    this.layerVisibilityArr = pLayerVisibilityArr;
+  public void setLayerVisibilityArr(double[] layerVisibilityArr) {
+    this.layerVisibilityArr = layerVisibilityArr;
   }
 
+  /** Returns a copy of the layer visibility array. */
   public double[] copyLayerVisibilityArr() {
     double[] result = new double[this.layerVisibilityArr.length];
     System.arraycopy(this.layerVisibilityArr, 0, result, 0, this.layerVisibilityArr.length);
     return result;
   }
 
-  /** Returns the number of layers on the board */
+  /** Returns the number of layers on the board. */
   public int layerCount() {
     return layerVisibilityArr.length;
   }
 
   /**
-   * filter lines, which cannot touch the updateBox to improve the performance of the draw function
-   * by avoiding unnecessary calls of draw (line)
+   * Returns whether a line segment is outside the update box.
+   *
+   * <p>Used to skip draw calls that cannot affect the visible region.
    */
   private boolean lineOutsideUpdateBox(
-      FloatPoint p1, FloatPoint p2, double pUpdateOffset, IntBox pUpdateBox) {
+      FloatPoint p1, FloatPoint p2, double updateOffset, IntBox updateBox) {
     if (p1 == null || p2 == null) {
       return true;
     }
-    if (Math.max(p1.x, p2.x) < pUpdateBox.ll.x - pUpdateOffset) {
+    if (Math.max(p1.x, p2.x) < updateBox.ll.x - updateOffset) {
       return true;
     }
-    if (Math.max(p1.y, p2.y) < pUpdateBox.ll.y - pUpdateOffset) {
+    if (Math.max(p1.y, p2.y) < updateBox.ll.y - updateOffset) {
       return true;
     }
-    if (Math.min(p1.x, p2.x) > pUpdateBox.ur.x + pUpdateOffset) {
+    if (Math.min(p1.x, p2.x) > updateBox.ur.x + updateOffset) {
       return true;
     }
-    return Math.min(p1.y, p2.y) > pUpdateBox.ur.y + pUpdateOffset;
+    return Math.min(p1.y, p2.y) > updateBox.ur.y + updateOffset;
   }
 
   /** Writes an instance of this class to a file. */
-  private void writeObject(ObjectOutputStream pStream) throws IOException {
-    pStream.defaultWriteObject();
-    itemColorTable.writeObject(pStream);
-    otherColorTable.writeObject(pStream);
+  private void writeObject(ObjectOutputStream stream) throws IOException {
+    stream.defaultWriteObject();
+    itemColorTable.writeObject(stream);
+    otherColorTable.writeObject(stream);
   }
 
-  /** Reads an instance of this class from a file */
-  private void readObject(ObjectInputStream pStream) throws IOException, ClassNotFoundException {
-    pStream.defaultReadObject();
+  /** Reads an instance of this class from a file. */
+  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    stream.defaultReadObject();
     if (virtualLayerVisibilityArr == null
         || virtualLayerVisibilityArr.length != virtual_layer_count) {
       virtualLayerVisibilityArr = createDefaultVirtualLayerVisibilityArr();
     }
     fullyVisibleVirtualLayer = getFullyVisibleVirtualLayer();
-    this.itemColorTable = new ItemColorTableModel(pStream);
-    this.otherColorTable = new OtherColorTableModel(pStream);
+    this.itemColorTable = new ItemColorTableModel(stream);
+    this.otherColorTable = new OtherColorTableModel(stream);
   }
 
+  /** Clearance shape used during thermal-relief rendering. */
   public record ClearanceItem(java.awt.geom.Area area) {}
 
+  /** Thermal relief geometry used during plane fill rendering. */
   public record ThermalReliefItem(
       java.awt.geom.Area clearanceArea,
       double cx,

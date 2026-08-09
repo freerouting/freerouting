@@ -12,14 +12,16 @@ public abstract class ColorTableModel extends AbstractTableModel {
   protected final Object[][] data;
   protected final Locale locale;
 
-  protected ColorTableModel(int pRowCount, Locale pLocale) {
-    this.data = new Object[pRowCount][];
-    this.locale = pLocale;
+  /** ColorTableModel. */
+  protected ColorTableModel(int rowCount, Locale locale) {
+    this.data = new Object[rowCount][];
+    this.locale = locale;
   }
 
-  protected ColorTableModel(ObjectInputStream pStream) throws IOException, ClassNotFoundException {
-    this.data = (Object[][]) pStream.readObject();
-    this.locale = (Locale) pStream.readObject();
+  /** ColorTableModel. */
+  protected ColorTableModel(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    this.data = (Object[][]) stream.readObject();
+    this.locale = (Locale) stream.readObject();
   }
 
   @Override
@@ -28,14 +30,14 @@ public abstract class ColorTableModel extends AbstractTableModel {
   }
 
   @Override
-  public Object getValueAt(int pRow, int pCol) {
-    return data[pRow][pCol];
+  public Object getValueAt(int row, int col) {
+    return data[row][col];
   }
 
   @Override
-  public void setValueAt(Object pValue, int pRow, int pCol) {
-    data[pRow][pCol] = pValue;
-    fireTableCellUpdated(pRow, pCol);
+  public void setValueAt(Object value, int row, int col) {
+    data[row][col] = value;
+    fireTableCellUpdated(row, col);
   }
 
   /**
@@ -44,12 +46,13 @@ public abstract class ColorTableModel extends AbstractTableModel {
    * check box.
    */
   @Override
-  public Class<?> getColumnClass(int pC) {
-    return getValueAt(0, pC).getClass();
+  public Class<?> getColumnClass(int c) {
+    return getValueAt(0, c).getClass();
   }
 
-  protected void writeObject(ObjectOutputStream pStream) throws IOException {
-    pStream.writeObject(this.data);
-    pStream.writeObject(this.locale);
+  /** WriteObject. */
+  protected void writeObject(ObjectOutputStream stream) throws IOException {
+    stream.writeObject(this.data);
+    stream.writeObject(this.locale);
   }
 }
