@@ -1,386 +1,850 @@
 [
-  {
-    "cpu_time": 0.0,
-    "version": "2.2.4",
-    "fixture": "DAC2020_bm07.dsn",
-    "score": 0.0,
-    "date": "2026-06-23T16:09:25Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 95.2,
-    "version": "2.3.0",
-    "fixture": "DAC2020_bm11.dsn",
-    "score": 987.4915771484375,
-    "date": "2026-08-07T11:54:58Z",
-    "unrouted": 2
-  },
-  {
-    "cpu_time": 0.0,
-    "version": "1.9.0",
-    "fixture": "DAC2020_bm07.dsn",
-    "score": 0.0,
-    "date": "2026-06-23T16:08:27Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 15.83,
-    "version": "s2026.08.08",
-    "fixture": "DAC2020_bm07.dsn",
-    "score": 965.1080932617188,
-    "date": "2026-08-08T00:56:17Z",
-    "unrouted": 3
-  },
-  {
-    "cpu_time": 291.03999999999996,
-    "version": "s2026.08.08",
-    "fixture": "StickHub.dsn",
-    "score": 989.6050415039062,
-    "date": "2026-08-08T01:46:30Z",
-    "unrouted": 2
-  },
-  {
-    "cpu_time": 0.44,
-    "version": "2.3.0",
-    "fixture": "DAC2020_bm08.dsn",
-    "score": 999.9967651367188,
-    "date": "2026-08-07T11:51:35Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 388.52,
-    "version": "s2026.08.08",
-    "fixture": "DAC2020_bm01.dsn",
-    "score": 974.3392944335938,
-    "date": "2026-08-08T00:44:14Z",
-    "unrouted": 5
-  },
-  {
-    "cpu_time": 135.31,
-    "version": "s2026.08.08",
-    "fixture": "DAC2020_bm05.dsn",
-    "score": 785.0419921875,
-    "date": "2026-08-08T00:55:16Z",
-    "unrouted": 22
-  },
-  {
-    "cpu_time": 3.1699999999999995,
-    "version": "2.3.0",
-    "fixture": "pic_programmer.dsn",
-    "score": 998.4081420898438,
-    "date": "2026-08-07T12:37:57Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 75.37,
-    "version": "s2026.08.08",
-    "fixture": "DAC2020_bm10.dsn",
-    "score": 999.9830932617188,
-    "date": "2026-08-08T00:58:00Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 181.06,
-    "version": "s2026.08.08",
-    "fixture": "interf_u.dsn",
-    "score": 938.2962646484375,
-    "date": "2026-08-08T01:34:16Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 17.0,
-    "version": "2.3.0",
-    "fixture": "DAC2020_bm07.dsn",
-    "score": 965.1080932617188,
-    "date": "2026-08-07T11:51:27Z",
-    "unrouted": 3
-  },
-  {
-    "cpu_time": 0.0,
-    "version": "1.9.0",
-    "fixture": "multichannel_mixer-unrouted.dsn",
-    "score": 0.0,
-    "date": "2026-06-24T19:44:09Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 0.0,
-    "version": "2.0.1",
-    "fixture": "DAC2020_bm07.dsn",
-    "score": 0.0,
-    "date": "2026-06-23T16:08:47Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 186.66,
-    "version": "2.3.0",
-    "fixture": "interf_u.dsn",
-    "score": 938.2962646484375,
-    "date": "2026-08-07T12:29:46Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 0.0,
-    "version": "2.1.0",
-    "fixture": "DAC2020_bm07.dsn",
-    "score": 0.0,
-    "date": "2026-06-23T17:56:48Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 304.32,
-    "version": "2.3.0",
-    "fixture": "StickHub.dsn",
-    "score": 989.6050415039062,
-    "date": "2026-08-07T12:43:06Z",
-    "unrouted": 2
-  },
-  {
-    "cpu_time": 34.17,
-    "version": "s2026.08.08",
-    "fixture": "DAC2020_bm06.dsn",
-    "score": 963.25927734375,
-    "date": "2026-08-08T00:55:55Z",
-    "unrouted": 2
-  },
-  {
-    "cpu_time": 80.05,
-    "version": "2.3.0",
-    "fixture": "DAC2020_bm10.dsn",
-    "score": 999.9830932617188,
-    "date": "2026-08-07T11:53:16Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 363.56999999999994,
-    "version": "2.3.0",
-    "fixture": "multichannel_mixer-unrouted.dsn",
-    "score": 0.0,
-    "date": "2026-08-07T12:36:04Z",
-    "unrouted": 59
-  },
-  {
-    "cpu_time": 0.7,
-    "version": "2.3.0",
-    "fixture": "ecc83-pp_v2.dsn",
-    "score": 771.4249877929688,
-    "date": "2026-08-07T12:26:28Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 87.37,
-    "version": "s2026.08.08",
-    "fixture": "multichannel_mixer.dsn",
-    "score": 211.82241821289062,
-    "date": "2026-08-08T01:41:27Z",
-    "unrouted": 75
-  },
-  {
-    "cpu_time": 14.280000000000001,
-    "version": "2.3.0",
-    "fixture": "DAC2020_bm09.dsn",
-    "score": 991.3759765625,
-    "date": "2026-08-07T11:51:56Z",
-    "unrouted": 1
-  },
-  {
-    "cpu_time": 0.72,
-    "version": "s2026.08.08",
-    "fixture": "ecc83-pp_v2.dsn",
-    "score": 771.4249877929688,
-    "date": "2026-08-08T01:31:05Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 53.03,
-    "version": "s2026.08.08",
-    "fixture": "CM5_MINIMA_3.dsn",
-    "score": 898.77,
-    "date": "2026-08-08T01:30:28Z",
-    "unrouted": 30
-  },
-  {
-    "cpu_time": 93.17,
-    "version": "2.3.0",
-    "fixture": "multichannel_mixer.dsn",
-    "score": 211.82241821289062,
-    "date": "2026-08-07T12:37:47Z",
-    "unrouted": 75
-  },
-  {
-    "cpu_time": 9.48,
-    "version": "2.3.0",
-    "fixture": "sonde xilinx.dsn",
-    "score": 999.99609375,
-    "date": "2026-08-07T12:38:14Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 54.3,
-    "version": "2.3.0",
-    "fixture": "CM5_MINIMA_3.dsn",
-    "score": 896.32,
-    "date": "2026-08-07T12:25:49Z",
-    "unrouted": 31
-  },
-  {
-    "cpu_time": 0.0,
-    "version": "2.2.4",
-    "fixture": "sonde xilinx.dsn",
-    "score": 0.0,
-    "date": "2026-07-01T17:11:16Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 3.21,
-    "version": "s2026.08.08",
-    "fixture": "pic_programmer.dsn",
-    "score": 998.4081420898438,
-    "date": "2026-08-08T01:41:37Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 0.49,
-    "version": "s2026.08.08",
-    "fixture": "DAC2020_bm08.dsn",
-    "score": 999.9967651367188,
-    "date": "2026-08-08T00:56:25Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 3.11,
-    "version": "2.3.0",
-    "fixture": "DAC2020_bm02.dsn",
-    "score": 999.98974609375,
-    "date": "2026-08-07T11:38:22Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 137.41,
-    "version": "2.3.0",
-    "fixture": "DAC2020_bm05.dsn",
-    "score": 785.0419921875,
-    "date": "2026-08-07T11:50:07Z",
-    "unrouted": 22
-  },
-  {
-    "cpu_time": 0.0,
-    "version": "s2026.08.08",
-    "fixture": "ecc83-pp.dsn",
-    "score": 999.9970092773438,
-    "date": "2026-08-08T01:30:57Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 8.69,
-    "version": "s2026.08.08",
-    "fixture": "sonde xilinx.dsn",
-    "score": 999.99609375,
-    "date": "2026-08-08T01:41:53Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 31.660000000000004,
-    "version": "2.3.0",
-    "fixture": "DAC2020_bm06.dsn",
-    "score": 963.25927734375,
-    "date": "2026-08-07T11:51:05Z",
-    "unrouted": 2
-  },
-  {
-    "cpu_time": 92.74,
-    "version": "s2026.08.08",
-    "fixture": "DAC2020_bm11.dsn",
-    "score": 987.4915771484375,
-    "date": "2026-08-08T00:59:39Z",
-    "unrouted": 2
-  },
-  {
-    "cpu_time": 496.56999999999994,
-    "version": "s2026.08.08",
-    "fixture": "DAC2020_bm04.dsn",
-    "score": 979.0128784179688,
-    "date": "2026-08-08T00:52:55Z",
-    "unrouted": 3
-  },
-  {
-    "cpu_time": 323.71999999999997,
-    "version": "s2026.08.08",
-    "fixture": "multichannel_mixer-unrouted.dsn",
-    "score": 0.0,
-    "date": "2026-08-08T01:39:52Z",
-    "unrouted": 59
-  },
-  {
-    "cpu_time": 538.5,
-    "version": "2.3.0",
-    "fixture": "DAC2020_bm04.dsn",
-    "score": 979.0128784179688,
-    "date": "2026-08-07T11:47:43Z",
-    "unrouted": 3
-  },
-  {
-    "cpu_time": 257.12,
-    "version": "2.3.0",
-    "fixture": "DAC2020_bm01.dsn",
-    "score": 979.4683227539062,
-    "date": "2026-08-07T11:38:13Z",
-    "unrouted": 4
-  },
-  {
-    "cpu_time": 3.1199999999999997,
-    "version": "s2026.08.08",
-    "fixture": "DAC2020_bm02.dsn",
-    "score": 999.98974609375,
-    "date": "2026-08-08T00:44:23Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 43.92,
-    "version": "1.9.0",
-    "fixture": "DAC2020_bm07.dsn",
-    "score": 999.99,
-    "date": "2026-06-24T14:03:27Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 15.4,
-    "version": "2.3.0",
-    "fixture": "complex_hierarchy.dsn",
-    "score": 911.499755859375,
-    "date": "2026-08-07T12:26:13Z",
-    "unrouted": 9
-  },
-  {
-    "cpu_time": 12.74,
-    "version": "s2026.08.08",
-    "fixture": "DAC2020_bm09.dsn",
-    "score": 991.3759765625,
-    "date": "2026-08-08T00:56:45Z",
-    "unrouted": 1
-  },
-  {
-    "cpu_time": 0.0,
-    "version": "2.1.0",
-    "fixture": "DAC2020_bm07.dsn",
-    "score": 0.0,
-    "date": "2026-06-23T16:09:06Z",
-    "unrouted": 0
-  },
-  {
-    "cpu_time": 15.14,
-    "version": "s2026.08.08",
-    "fixture": "complex_hierarchy.dsn",
-    "score": 911.499755859375,
-    "date": "2026-08-08T01:30:50Z",
-    "unrouted": 9
-  },
-  {
-    "cpu_time": 0.0,
-    "version": "2.3.0",
-    "fixture": "ecc83-pp.dsn",
-    "score": 999.9970092773438,
-    "date": "2026-08-07T12:26:20Z",
-    "unrouted": 0
-  }
+    {
+        "cpu_time":  140.03,
+        "version":  "modernize-codebase",
+        "unrouted":  22,
+        "fixture":  "DAC2020_bm05.dsn",
+        "date":  "2026-08-09T03:18:04Z",
+        "score":  785.0419921875
+    },
+    {
+        "cpu_time":  27.19,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm10.dsn",
+        "date":  "2026-08-09T02:51:10Z",
+        "score":  999.98748779296875
+    },
+    {
+        "cpu_time":  3.1199999999999997,
+        "version":  "s2026.08.08",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm02.dsn",
+        "date":  "2026-08-08T00:44:23Z",
+        "score":  999.98974609375
+    },
+    {
+        "cpu_time":  0.02,
+        "version":  "modernize-codebase",
+        "unrouted":  0,
+        "fixture":  "ecc83-pp.dsn",
+        "date":  "2026-08-09T03:54:09Z",
+        "score":  999.99700927734375
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.1.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T17:56:48Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  3.21,
+        "version":  "s2026.08.08",
+        "unrouted":  0,
+        "fixture":  "pic_programmer.dsn",
+        "date":  "2026-08-08T01:41:37Z",
+        "score":  998.40814208984375
+    },
+    {
+        "cpu_time":  3.07,
+        "version":  "modernize-codebase",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm02.dsn",
+        "date":  "2026-08-09T03:06:46Z",
+        "score":  999.98974609375
+    },
+    {
+        "cpu_time":  3.91,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-08-09T02:42:37Z",
+        "score":  999.99279785156239
+    },
+    {
+        "cpu_time":  53.03,
+        "version":  "s2026.08.08",
+        "unrouted":  30,
+        "fixture":  "CM5_MINIMA_3.dsn",
+        "date":  "2026-08-08T01:30:28Z",
+        "score":  898.77
+    },
+    {
+        "cpu_time":  12.74,
+        "version":  "s2026.08.08",
+        "unrouted":  1,
+        "fixture":  "DAC2020_bm09.dsn",
+        "date":  "2026-08-08T00:56:45Z",
+        "score":  991.3759765625
+    },
+    {
+        "cpu_time":  6.9,
+        "version":  "1.9.0",
+        "unrouted":  2,
+        "fixture":  "pic_programmer.dsn",
+        "date":  "2026-08-09T02:10:14Z",
+        "score":  958.72613525390625
+    },
+    {
+        "cpu_time":  8.69,
+        "version":  "s2026.08.08",
+        "unrouted":  0,
+        "fixture":  "sonde xilinx.dsn",
+        "date":  "2026-08-08T01:41:53Z",
+        "score":  999.99609375
+    },
+    {
+        "cpu_time":  0,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T16:08:27Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  3.11,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm02.dsn",
+        "date":  "2026-08-07T11:38:22Z",
+        "score":  999.98974609375
+    },
+    {
+        "cpu_time":  15.61,
+        "version":  "1.9.0",
+        "unrouted":  1,
+        "fixture":  "DAC2020_bm09.dsn",
+        "date":  "2026-08-09T01:19:20Z",
+        "score":  991.3759765625
+    },
+    {
+        "cpu_time":  85.52,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm01.dsn",
+        "date":  "2026-08-09T02:38:20Z",
+        "score":  999.98376464843761
+    },
+    {
+        "cpu_time":  0.49,
+        "version":  "s2026.08.08",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm08.dsn",
+        "date":  "2026-08-08T00:56:25Z",
+        "score":  999.99676513671875
+    },
+    {
+        "cpu_time":  72.12,
+        "version":  "1.9.0",
+        "unrouted":  6,
+        "fixture":  "complex_hierarchy.dsn",
+        "date":  "2026-08-09T02:03:23Z",
+        "score":  938.04852294921875
+    },
+    {
+        "cpu_time":  13.28,
+        "version":  "modernize-codebase",
+        "unrouted":  1,
+        "fixture":  "DAC2020_bm09.dsn",
+        "date":  "2026-08-09T03:19:35Z",
+        "score":  991.3759765625
+    },
+    {
+        "cpu_time":  14.28,
+        "version":  "2.3.0",
+        "unrouted":  1,
+        "fixture":  "DAC2020_bm09.dsn",
+        "date":  "2026-08-07T11:51:56Z",
+        "score":  991.3759765625
+    },
+    {
+        "cpu_time":  137.41,
+        "version":  "2.3.0",
+        "unrouted":  22,
+        "fixture":  "DAC2020_bm05.dsn",
+        "date":  "2026-08-07T11:50:07Z",
+        "score":  785.0419921875
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "ecc83-pp.dsn",
+        "date":  "2026-08-09T02:57:47Z",
+        "score":  999.9970703125
+    },
+    {
+        "cpu_time":  248.39999999999998,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "interf_u.dsn",
+        "date":  "2026-08-09T02:09:03Z",
+        "score":  938.29730224609375
+    },
+    {
+        "cpu_time":  0.64,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "ecc83-pp.dsn",
+        "date":  "2026-08-09T02:03:51Z",
+        "score":  999.997314453125
+    },
+    {
+        "cpu_time":  0.72,
+        "version":  "s2026.08.08",
+        "unrouted":  0,
+        "fixture":  "ecc83-pp_v2.dsn",
+        "date":  "2026-08-08T01:31:05Z",
+        "score":  771.42498779296875
+    },
+    {
+        "cpu_time":  16.41,
+        "version":  "2.2.4",
+        "unrouted":  5,
+        "fixture":  "StickHub.dsn",
+        "date":  "2026-08-09T03:01:27Z",
+        "score":  976.61901855468761
+    },
+    {
+        "cpu_time":  293.73,
+        "version":  "modernize-codebase",
+        "unrouted":  2,
+        "fixture":  "StickHub.dsn",
+        "date":  "2026-08-09T04:10:15Z",
+        "score":  989.60504150390625
+    },
+    {
+        "cpu_time":  87.37,
+        "version":  "s2026.08.08",
+        "unrouted":  75,
+        "fixture":  "multichannel_mixer.dsn",
+        "date":  "2026-08-08T01:41:27Z",
+        "score":  211.82241821289065
+    },
+    {
+        "cpu_time":  93.72,
+        "version":  "modernize-codebase",
+        "unrouted":  2,
+        "fixture":  "DAC2020_bm11.dsn",
+        "date":  "2026-08-09T03:22:34Z",
+        "score":  987.49157714843761
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.0.1",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T16:08:47Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  296.75,
+        "version":  "modernize-codebase",
+        "unrouted":  5,
+        "fixture":  "DAC2020_bm01.dsn",
+        "date":  "2026-08-09T03:06:37Z",
+        "score":  974.33929443359375
+    },
+    {
+        "cpu_time":  1765.01,
+        "version":  "1.9.0",
+        "unrouted":  2,
+        "fixture":  "DAC2020_bm04.dsn",
+        "date":  "2026-08-09T00:23:06Z",
+        "score":  986.00677490234375
+    },
+    {
+        "cpu_time":  1750.3500000000001,
+        "version":  "1.9.0",
+        "unrouted":  6,
+        "fixture":  "DAC2020_bm11.dsn",
+        "date":  "2026-08-09T01:56:30Z",
+        "score":  918.74401855468761
+    },
+    {
+        "cpu_time":  750.95,
+        "version":  "1.9.0",
+        "unrouted":  2,
+        "fixture":  "StickHub.dsn",
+        "date":  "2026-08-09T02:24:04Z",
+        "score":  989.60607910156239
+    },
+    {
+        "cpu_time":  188.59,
+        "version":  "modernize-codebase",
+        "unrouted":  0,
+        "fixture":  "interf_u.dsn",
+        "date":  "2026-08-09T03:57:37Z",
+        "score":  938.29626464843761
+    },
+    {
+        "cpu_time":  186.66,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "interf_u.dsn",
+        "date":  "2026-08-07T12:29:46Z",
+        "score":  938.29626464843761
+    },
+    {
+        "cpu_time":  304.32,
+        "version":  "2.3.0",
+        "unrouted":  2,
+        "fixture":  "StickHub.dsn",
+        "date":  "2026-08-07T12:43:06Z",
+        "score":  989.60504150390625
+    },
+    {
+        "cpu_time":  43.92,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-24T14:03:27Z",
+        "score":  999.99
+    },
+    {
+        "cpu_time":  75.37,
+        "version":  "s2026.08.08",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm10.dsn",
+        "date":  "2026-08-08T00:58:00Z",
+        "score":  999.98309326171875
+    },
+    {
+        "cpu_time":  1.94,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm02.dsn",
+        "date":  "2026-08-09T02:38:31Z",
+        "score":  999.99273681640625
+    },
+    {
+        "cpu_time":  363.56999999999994,
+        "version":  "2.3.0",
+        "unrouted":  59,
+        "fixture":  "multichannel_mixer-unrouted.dsn",
+        "date":  "2026-08-07T12:36:04Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  5.18,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "sonde xilinx.dsn",
+        "date":  "2026-08-09T02:10:47Z",
+        "score":  999.99664306640625
+    },
+    {
+        "cpu_time":  92.74,
+        "version":  "s2026.08.08",
+        "unrouted":  2,
+        "fixture":  "DAC2020_bm11.dsn",
+        "date":  "2026-08-08T00:59:39Z",
+        "score":  987.49157714843761
+    },
+    {
+        "cpu_time":  538.5,
+        "version":  "2.3.0",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm04.dsn",
+        "date":  "2026-08-07T11:47:43Z",
+        "score":  979.01287841796875
+    },
+    {
+        "cpu_time":  135.31,
+        "version":  "s2026.08.08",
+        "unrouted":  22,
+        "fixture":  "DAC2020_bm05.dsn",
+        "date":  "2026-08-08T00:55:16Z",
+        "score":  785.0419921875
+    },
+    {
+        "cpu_time":  87.94,
+        "version":  "2.2.4",
+        "unrouted":  2,
+        "fixture":  "DAC2020_bm04.dsn",
+        "date":  "2026-08-09T02:40:21Z",
+        "score":  986.00762939453125
+    },
+    {
+        "cpu_time":  16.619999999999997,
+        "version":  "modernize-codebase",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-08-09T03:19:07Z",
+        "score":  965.10809326171875
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T16:09:25Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  80.05,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm10.dsn",
+        "date":  "2026-08-07T11:53:16Z",
+        "score":  999.98309326171875
+    },
+    {
+        "cpu_time":  9.03,
+        "version":  "modernize-codebase",
+        "unrouted":  0,
+        "fixture":  "sonde xilinx.dsn",
+        "date":  "2026-08-09T04:05:32Z",
+        "score":  999.99609375
+    },
+    {
+        "cpu_time":  54.3,
+        "version":  "2.3.0",
+        "unrouted":  31,
+        "fixture":  "CM5_MINIMA_3.dsn",
+        "date":  "2026-08-07T12:25:49Z",
+        "score":  896.32
+    },
+    {
+        "cpu_time":  0,
+        "version":  "s2026.08.08",
+        "unrouted":  0,
+        "fixture":  "ecc83-pp.dsn",
+        "date":  "2026-08-08T01:30:57Z",
+        "score":  999.99700927734375
+    },
+    {
+        "cpu_time":  1199.2,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm01.dsn",
+        "date":  "2026-08-08T23:51:20Z",
+        "score":  999.98425292968761
+    },
+    {
+        "cpu_time":  380.56,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm10.dsn",
+        "date":  "2026-08-09T01:26:17Z",
+        "score":  999.98846435546875
+    },
+    {
+        "cpu_time":  15.45,
+        "version":  "2.2.4",
+        "unrouted":  7,
+        "fixture":  "DAC2020_bm11.dsn",
+        "date":  "2026-08-09T02:51:43Z",
+        "score":  899.99285888671875
+    },
+    {
+        "cpu_time":  0.47000000000000003,
+        "version":  "modernize-codebase",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm08.dsn",
+        "date":  "2026-08-09T03:19:14Z",
+        "score":  999.99676513671875
+    },
+    {
+        "cpu_time":  15.83,
+        "version":  "s2026.08.08",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-08-08T00:56:17Z",
+        "score":  965.10809326171875
+    },
+    {
+        "cpu_time":  53,
+        "version":  "modernize-codebase",
+        "unrouted":  31,
+        "fixture":  "CM5_MINIMA_3.dsn",
+        "date":  "2026-08-09T03:53:38Z",
+        "score":  896.32
+    },
+    {
+        "cpu_time":  90.59,
+        "version":  "modernize-codebase",
+        "unrouted":  75,
+        "fixture":  "multichannel_mixer.dsn",
+        "date":  "2026-08-09T04:05:06Z",
+        "score":  211.82241821289065
+    },
+    {
+        "cpu_time":  323.71999999999997,
+        "version":  "s2026.08.08",
+        "unrouted":  59,
+        "fixture":  "multichannel_mixer-unrouted.dsn",
+        "date":  "2026-08-08T01:39:52Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  8.2,
+        "version":  "1.9.0",
+        "unrouted":  75,
+        "fixture":  "multichannel_mixer.dsn",
+        "date":  "2026-08-09T02:09:39Z",
+        "score":  211.82241821289065
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "sonde xilinx.dsn",
+        "date":  "2026-07-01T17:11:16Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  0.44,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm08.dsn",
+        "date":  "2026-08-07T11:51:35Z",
+        "score":  999.99676513671875
+    },
+    {
+        "cpu_time":  64.86,
+        "version":  "2.2.4",
+        "unrouted":  75,
+        "fixture":  "multichannel_mixer.dsn",
+        "date":  "2026-08-09T03:00:30Z",
+        "score":  201.9701232910156
+    },
+    {
+        "cpu_time":  1760.08,
+        "version":  "1.9.0",
+        "unrouted":  37,
+        "fixture":  "DAC2020_bm05.dsn",
+        "date":  "2026-08-09T00:53:35Z",
+        "score":  588.7821044921875
+    },
+    {
+        "cpu_time":  29.16,
+        "version":  "2.2.4",
+        "unrouted":  2,
+        "fixture":  "interf_u.dsn",
+        "date":  "2026-08-09T02:58:50Z",
+        "score":  928.346923828125
+    },
+    {
+        "cpu_time":  15.57,
+        "version":  "modernize-codebase",
+        "unrouted":  9,
+        "fixture":  "complex_hierarchy.dsn",
+        "date":  "2026-08-09T03:54:02Z",
+        "score":  911.499755859375
+    },
+    {
+        "cpu_time":  66.83,
+        "version":  "2.2.4",
+        "unrouted":  37,
+        "fixture":  "DAC2020_bm05.dsn",
+        "date":  "2026-08-09T02:41:39Z",
+        "score":  570.09100341796875
+    },
+    {
+        "cpu_time":  0.7,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "ecc83-pp_v2.dsn",
+        "date":  "2026-08-07T12:26:28Z",
+        "score":  771.42498779296875
+    },
+    {
+        "cpu_time":  31.660000000000004,
+        "version":  "2.3.0",
+        "unrouted":  2,
+        "fixture":  "DAC2020_bm06.dsn",
+        "date":  "2026-08-07T11:51:05Z",
+        "score":  963.25927734375
+    },
+    {
+        "cpu_time":  0,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "multichannel_mixer-unrouted.dsn",
+        "date":  "2026-06-24T19:44:09Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  35.54,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm02.dsn",
+        "date":  "2026-08-08T23:52:24Z",
+        "score":  999.99395751953125
+    },
+    {
+        "cpu_time":  5.59,
+        "version":  "2.2.4",
+        "unrouted":  2,
+        "fixture":  "DAC2020_bm09.dsn",
+        "date":  "2026-08-09T02:43:06Z",
+        "score":  982.75543212890625
+    },
+    {
+        "cpu_time":  15.14,
+        "version":  "s2026.08.08",
+        "unrouted":  9,
+        "fixture":  "complex_hierarchy.dsn",
+        "date":  "2026-08-08T01:30:50Z",
+        "score":  911.499755859375
+    },
+    {
+        "cpu_time":  181.06,
+        "version":  "s2026.08.08",
+        "unrouted":  0,
+        "fixture":  "interf_u.dsn",
+        "date":  "2026-08-08T01:34:16Z",
+        "score":  938.29626464843761
+    },
+    {
+        "cpu_time":  15.4,
+        "version":  "2.3.0",
+        "unrouted":  9,
+        "fixture":  "complex_hierarchy.dsn",
+        "date":  "2026-08-07T12:26:13Z",
+        "score":  911.499755859375
+    },
+    {
+        "cpu_time":  496.56999999999994,
+        "version":  "s2026.08.08",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm04.dsn",
+        "date":  "2026-08-08T00:52:55Z",
+        "score":  979.01287841796875
+    },
+    {
+        "cpu_time":  332.96,
+        "version":  "modernize-codebase",
+        "unrouted":  59,
+        "fixture":  "multichannel_mixer-unrouted.dsn",
+        "date":  "2026-08-09T04:03:27Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  1.05,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm08.dsn",
+        "date":  "2026-08-09T01:18:36Z",
+        "score":  999.997802734375
+    },
+    {
+        "cpu_time":  511.48,
+        "version":  "modernize-codebase",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm04.dsn",
+        "date":  "2026-08-09T03:15:37Z",
+        "score":  979.01287841796875
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm08.dsn",
+        "date":  "2026-08-09T02:42:45Z",
+        "score":  999.99768066406239
+    },
+    {
+        "cpu_time":  168.72,
+        "version":  "2.2.4",
+        "unrouted":  6,
+        "fixture":  "CM5_MINIMA_3.dsn",
+        "date":  "2026-08-09T02:57:23Z",
+        "score":  954.02600097656239
+    },
+    {
+        "cpu_time":  33.41,
+        "version":  "modernize-codebase",
+        "unrouted":  2,
+        "fixture":  "DAC2020_bm06.dsn",
+        "date":  "2026-08-09T03:18:44Z",
+        "score":  963.25927734375
+    },
+    {
+        "cpu_time":  257.12,
+        "version":  "2.3.0",
+        "unrouted":  4,
+        "fixture":  "DAC2020_bm01.dsn",
+        "date":  "2026-08-07T11:38:13Z",
+        "score":  979.46832275390625
+    },
+    {
+        "cpu_time":  0.67,
+        "version":  "modernize-codebase",
+        "unrouted":  0,
+        "fixture":  "ecc83-pp_v2.dsn",
+        "date":  "2026-08-09T03:54:17Z",
+        "score":  771.42498779296875
+    },
+    {
+        "cpu_time":  3.1999999999999997,
+        "version":  "modernize-codebase",
+        "unrouted":  0,
+        "fixture":  "pic_programmer.dsn",
+        "date":  "2026-08-09T04:05:16Z",
+        "score":  998.40814208984375
+    },
+    {
+        "cpu_time":  1345.72,
+        "version":  "1.9.0",
+        "unrouted":  8,
+        "fixture":  "DAC2020_bm06.dsn",
+        "date":  "2026-08-09T01:17:00Z",
+        "score":  891.83245849609375
+    },
+    {
+        "cpu_time":  291.03999999999996,
+        "version":  "s2026.08.08",
+        "unrouted":  2,
+        "fixture":  "StickHub.dsn",
+        "date":  "2026-08-08T01:46:30Z",
+        "score":  989.60504150390625
+    },
+    {
+        "cpu_time":  34.17,
+        "version":  "s2026.08.08",
+        "unrouted":  2,
+        "fixture":  "DAC2020_bm06.dsn",
+        "date":  "2026-08-08T00:55:55Z",
+        "score":  963.25927734375
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "ecc83-pp_v2.dsn",
+        "date":  "2026-08-09T02:57:55Z",
+        "score":  771.42535400390625
+    },
+    {
+        "cpu_time":  17,
+        "version":  "2.3.0",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-08-07T11:51:27Z",
+        "score":  965.10809326171875
+    },
+    {
+        "cpu_time":  3.1699999999999995,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "pic_programmer.dsn",
+        "date":  "2026-08-07T12:37:57Z",
+        "score":  998.40814208984375
+    },
+    {
+        "cpu_time":  9.48,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "sonde xilinx.dsn",
+        "date":  "2026-08-07T12:38:14Z",
+        "score":  999.99609375
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "ecc83-pp.dsn",
+        "date":  "2026-08-07T12:26:20Z",
+        "score":  999.99700927734375
+    },
+    {
+        "cpu_time":  15.45,
+        "version":  "2.2.4",
+        "unrouted":  59,
+        "fixture":  "multichannel_mixer-unrouted.dsn",
+        "date":  "2026-08-09T02:59:16Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  274.48,
+        "version":  "1.9.0",
+        "unrouted":  4,
+        "fixture":  "CM5_MINIMA_3.dsn",
+        "date":  "2026-08-09T02:01:41Z",
+        "score":  971.14141845703125
+    },
+    {
+        "cpu_time":  4.78,
+        "version":  "2.2.4",
+        "unrouted":  8,
+        "fixture":  "complex_hierarchy.dsn",
+        "date":  "2026-08-09T02:57:40Z",
+        "score":  911.50012207031239
+    },
+    {
+        "cpu_time":  77.11,
+        "version":  "modernize-codebase",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm10.dsn",
+        "date":  "2026-08-09T03:20:53Z",
+        "score":  999.98309326171875
+    },
+    {
+        "cpu_time":  1.94,
+        "version":  "2.2.4",
+        "unrouted":  2,
+        "fixture":  "pic_programmer.dsn",
+        "date":  "2026-08-09T03:00:46Z",
+        "score":  982.53527832031239
+    },
+    {
+        "cpu_time":  388.52,
+        "version":  "s2026.08.08",
+        "unrouted":  5,
+        "fixture":  "DAC2020_bm01.dsn",
+        "date":  "2026-08-08T00:44:14Z",
+        "score":  974.33929443359375
+    },
+    {
+        "cpu_time":  95.2,
+        "version":  "2.3.0",
+        "unrouted":  2,
+        "fixture":  "DAC2020_bm11.dsn",
+        "date":  "2026-08-07T11:54:58Z",
+        "score":  987.49157714843761
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.1.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T16:09:06Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  38.73,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-08-09T01:18:07Z",
+        "score":  999.99249267578125
+    },
+    {
+        "cpu_time":  16.16,
+        "version":  "2.2.4",
+        "unrouted":  8,
+        "fixture":  "DAC2020_bm06.dsn",
+        "date":  "2026-08-09T02:42:06Z",
+        "score":  881.628173828125
+    },
+    {
+        "cpu_time":  0.94000000000000006,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "ecc83-pp_v2.dsn",
+        "date":  "2026-08-09T02:04:20Z",
+        "score":  771.42510986328125
+    },
+    {
+        "cpu_time":  93.17,
+        "version":  "2.3.0",
+        "unrouted":  75,
+        "fixture":  "multichannel_mixer.dsn",
+        "date":  "2026-08-07T12:37:47Z",
+        "score":  211.82241821289065
+    }
 ]
