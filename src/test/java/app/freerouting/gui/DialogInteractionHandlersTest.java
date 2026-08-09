@@ -5,9 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import app.freerouting.board.CoordinateTransform;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.InteractiveSettings;
 import app.freerouting.rules.ClearanceMatrix;
@@ -116,6 +122,41 @@ class DialogInteractionHandlersTest {
     assertTrue(fieldNetClass.is_ignored_by_autorouter);
     WindowNetClasses.applyAutorouterIgnoreSelection(fieldNetClass, false);
     assertFalse(fieldNetClass.is_ignored_by_autorouter);
+  }
+
+  @Test
+  void netClasses_traceWidthApplyHandlesValidInvalidAndZeroInputs() {
+    CoordinateTransform transform = mock(CoordinateTransform.class);
+    when(transform.user_to_board(anyDouble()))
+        .thenAnswer(inv -> ((Double) inv.getArgument(0)) * 1000.0);
+
+    NetClass positiveFloat = mock(NetClass.class);
+    assertTrue(WindowNetClasses.applyTraceWidthValue(positiveFloat, transform, 0.2f));
+    verify(positiveFloat).set_trace_half_width(100);
+    verify(positiveFloat, never()).set_all_layers_active(anyBoolean());
+
+    NetClass positiveString = mock(NetClass.class);
+    assertTrue(WindowNetClasses.applyTraceWidthValue(positiveString, transform, "  0.25  "));
+    verify(positiveString).set_trace_half_width(125);
+
+    NetClass zeroValue = mock(NetClass.class);
+    assertTrue(WindowNetClasses.applyTraceWidthValue(zeroValue, transform, 0f));
+    verify(zeroValue).set_trace_half_width(0);
+    verify(zeroValue).set_all_layers_active(false);
+
+    NetClass invalid = mock(NetClass.class);
+    assertFalse(WindowNetClasses.applyTraceWidthValue(invalid, transform, null));
+    assertFalse(WindowNetClasses.applyTraceWidthValue(invalid, transform, "not-a-number"));
+    assertFalse(WindowNetClasses.applyTraceWidthValue(invalid, transform, "width_multiple"));
+    assertFalse(WindowNetClasses.applyTraceWidthValue(invalid, transform, -0.5f));
+    assertFalse(WindowNetClasses.applyTraceWidthValue(invalid, transform, Float.NaN));
+    assertFalse(WindowNetClasses.applyTraceWidthValue(invalid, transform, Float.POSITIVE_INFINITY));
+    assertFalse(WindowNetClasses.applyTraceWidthValue(invalid, transform, 0.0001f));
+    assertFalse(WindowNetClasses.applyTraceWidthValue(invalid, transform, 7));
+    verify(invalid, never()).set_trace_half_width(anyInt());
+
+    assertFalse(WindowNetClasses.applyTraceWidthValue(null, transform, 0.2f));
+    assertFalse(WindowNetClasses.applyTraceWidthValue(mock(NetClass.class), null, 0.2f));
   }
 
   @Test

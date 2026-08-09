@@ -146,6 +146,50 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     netClass.is_ignored_by_autorouter = ignoredByAutorouter;
   }
 
+  /**
+   * Parses a user-entered trace width (full width in user units) and, if valid, applies it to the
+   * input net class on all layers. Positive values only change the width; an explicit {@code 0}
+   * additionally deactivates routing on all layers (legacy v1.9 semantic). Returns {@code true} if
+   * the value was applied, {@code false} for null, non-numeric, negative or otherwise unusable
+   * input.
+   */
+  static boolean applyTraceWidthValue(
+      NetClass p_net_class, CoordinateTransform p_coordinate_transform, Object p_value) {
+    if (p_net_class == null || p_coordinate_transform == null || p_value == null) {
+      return false;
+    }
+    float curr_value;
+    if (p_value instanceof Float float1) {
+      curr_value = float1;
+    } else if (p_value instanceof String string) {
+      try {
+        curr_value = Float.parseFloat(string.trim());
+      } catch (NumberFormatException _) {
+        FRLogger.warn(
+            "WindowNetClasses.applyTraceWidthValue: invalid trace width input '" + string + "'");
+        return false;
+      }
+    } else {
+      return false;
+    }
+    if (!Float.isFinite(curr_value) || curr_value < 0) {
+      return false;
+    }
+    if (curr_value == 0) {
+      p_net_class.set_trace_half_width(0);
+      p_net_class.set_all_layers_active(false);
+      return true;
+    }
+    int curr_half_width =
+        (int) Math.round(0.5 * p_coordinate_transform.user_to_board(curr_value));
+    if (curr_half_width <= 0) {
+      // value too small to be representable as a board half width (or int overflow wrap)
+      return false;
+    }
+    p_net_class.set_trace_half_width(curr_half_width);
+    return true;
+  }
+
   @Override
   public void refresh() {
     this.cl_class_combo_box.removeAllItems();
@@ -585,7 +629,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     public void setValueAt(Object p_value, int p_row, int p_col) {
       RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
       BoardRules board_rules = routing_board.rules;
-      if (p_col == ColumnName.ON_LAYER.ordinal() || p_col == ColumnName.TRACE_WIDTH.ordinal()) {
+      if (p_col == ColumnName.ON_LAYER.ordinal()) {
         return;
       }
       Object net_class_name = getValueAt(p_row, ColumnName.NAME.ordinal());
@@ -692,6 +736,16 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           }
         }
         net_rule.set_trace_clearance_class(new_cl_class_index);
+      } else if (p_col == ColumnName.TRACE_WIDTH.ordinal()) {
+        if (applyTraceWidthValue(
+            net_rule,
+            board_frame.board_panel.board_handling.coordinate_transform,
+            p_value)) {
+          this.data[p_row][p_col] =
+              p_value instanceof String s ? s.trim() : String.valueOf(p_value);
+          fireTableRowsUpdated(p_row, p_row);
+        }
+        return;
       }
       this.data[p_row][p_col] = p_value;
       fireTableCellUpdated(p_row, p_col);
