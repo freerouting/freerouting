@@ -2,6 +2,7 @@ package app.freerouting.gui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,8 +15,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import app.freerouting.board.CoordinateTransform;
+import app.freerouting.board.Layer;
+import app.freerouting.board.LayerStructure;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.InteractiveSettings;
+import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.NetClass;
 import app.freerouting.settings.RouterSettings;
@@ -157,6 +161,47 @@ class DialogInteractionHandlersTest {
 
     assertFalse(WindowNetClasses.applyTraceWidthValue(null, transform, 0.2f));
     assertFalse(WindowNetClasses.applyTraceWidthValue(mock(NetClass.class), null, 0.2f));
+  }
+
+  @Test
+  void netClasses_traceWidthEditActuallyMutatesTheBoardModel() {
+    // Build a real adjacency between NetClass and its model as used by the GUI table.
+    LayerStructure layerStructure =
+        new LayerStructure(
+            new Layer[] {new Layer("Top", true), new Layer("In1", false), new Layer("Bottom", true)});
+    ClearanceMatrix clearanceMatrix = ClearanceMatrix.get_default_instance(layerStructure, 10);
+    BoardRules boardRules = new BoardRules(layerStructure, clearanceMatrix);
+    boardRules.create_default_net_class();
+    NetClass netClass = boardRules.get_default_net_class();
+
+    CoordinateTransform transform = mock(CoordinateTransform.class);
+    when(transform.user_to_board(anyDouble()))
+        .thenAnswer(inv -> ((Double) inv.getArgument(0)) * 1000.0);
+
+    int originalHalfWidth = netClass.get_trace_half_width(0);
+    assertTrue(originalHalfWidth > 0);
+
+    // Editing the "track width" from the GUI cell persists into the real model.
+    assertTrue(WindowNetClasses.applyTraceWidthValue(netClass, transform, "0.25"));
+    assertEquals(125, netClass.get_trace_half_width(0));
+    assertNotEquals(originalHalfWidth, netClass.get_trace_half_width(0));
+    for (int i = 0; i < layerStructure.arr.length; i++) {
+      assertEquals(125, netClass.get_trace_half_width(i));
+      if (layerStructure.arr[i].is_signal) {
+        // a positive edit must never silently re-activate or deactivate layers
+        assertTrue(netClass.is_active_routing_layer(i));
+      }
+    }
+
+    // Explicit 0 keeps the legacy semantic: routing disabled on this class.
+    assertTrue(WindowNetClasses.applyTraceWidthValue(netClass, transform, 0f));
+    assertEquals(0, netClass.get_trace_half_width(0));
+    for (int i = 0; i < layerStructure.arr.length; i++) {
+      assertEquals(0, netClass.get_trace_half_width(i));
+      if (layerStructure.arr[i].is_signal) {
+        assertFalse(netClass.is_active_routing_layer(i));
+      }
+    }
   }
 
   @Test
