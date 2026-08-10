@@ -16,7 +16,11 @@ plugins {
 checkstyle {
     toolVersion = '13.9.0'
     configFile = file('config/checkstyle/google_checks.xml')
-    ignoreFailures = true
+    configProperties = [
+            'org.checkstyle.google.suppressionfilter.config':
+                    file('config/checkstyle/checkstyle-suppressions.xml').absolutePath
+    ]
+    ignoreFailures = false
 }
 
 
@@ -372,6 +376,12 @@ sourceSets {
         compileClasspath += sourceSets.main.compileClasspath
         runtimeClasspath += sourceSets.main.runtimeClasspath
     }
+}
+
+// The v1.9 source tree is a frozen compatibility baseline and is intentionally
+// excluded from current Checkstyle enforcement.
+tasks.matching { it.name == 'checkstyleV19' }.configureEach {
+    enabled = false
 }
 
 // V1.9 Version Info Generator

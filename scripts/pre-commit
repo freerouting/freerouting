@@ -1,3 +1,5 @@
 #!/bin/bash
-./gradlew spotlessApply
-git add -u
+set -euo pipefail
+
+./gradlew spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes
+python scripts/i18n/extract-context.py --check

@@ -75,7 +75,11 @@ CI runs `python scripts/i18n/extract-context.py --check` on pull requests to ens
 
 ## Code Quality & Pre-commit Automation
 
-Freerouting uses **Spotless** (Google Java Style), **Checkstyle 13.9.0**, and **pre-commit** hooks to ensure code consistency across all assets (Java sources, shell scripts, Markdown, YAML, JSON).
+Freerouting uses **Spotless** (Google Java Style), **Checkstyle 13.9.0**, explicit LF
+line-ending rules, and **pre-commit** hooks. The Gradle quality checks are check-only:
+they fail when code is not ready rather than formatting unrelated files or staging
+changes automatically. Generic pre-commit hygiene hooks may fix whitespace in files
+selected for the current commit.
 
 ### Installing & Setting Up Pre-commit Hooks
 
@@ -101,15 +105,33 @@ Freerouting uses **Spotless** (Google Java Style), **Checkstyle 13.9.0**, and **
   ./gradlew check
   ```
 
-- **Automatically format Java sources with Spotless (Google Java Style)**:
+- **Check Java formatting without changing files**:
+  ```bash
+  ./gradlew spotlessCheck
+  ```
+
+- **Format all configured Java sources intentionally**:
   ```bash
   ./gradlew spotlessApply
   ```
+  `spotlessApply` can modify hundreds of files. Use it only as a deliberate,
+  separately reviewed formatting operation, and inspect the resulting diff.
 
-- **Run Checkstyle independently**:
+- **Run Checkstyle on maintained sources independently**:
   ```bash
-  ./gradlew checkstyleMain
+  ./gradlew checkstyleMain checkstyleTest checkstyleRewriteRecipes
   ```
+
+- **Verify generated i18n context without rewriting it**:
+  ```bash
+  python scripts/i18n/extract-context.py --check
+  ```
+
+The frozen `src_v19/` compatibility source set is compiled for compatibility but is
+excluded from current Checkstyle enforcement. Java text-block formatting is owned by
+Spotless; the project-specific Checkstyle suppression is kept in
+`config/checkstyle/checkstyle-suppressions.xml` so updates to the upstream Google
+Checkstyle configuration do not overwrite it.
 
 ## How to create a new release
 
