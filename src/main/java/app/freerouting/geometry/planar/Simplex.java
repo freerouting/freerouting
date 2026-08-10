@@ -733,12 +733,8 @@ public class Simplex extends TileShape implements Serializable {
     Collection<Simplex> resultList = new LinkedList<>();
 
     for (int innerCornerNo = 0; innerCornerNo < innerCornerCount; innerCornerNo++) {
-      Line nextDivisionLine;
-      if (innerCornerNo == innerSimplex.arr.length - 1) {
-        nextDivisionLine = divisionLineArr[0][0];
-      } else {
-        nextDivisionLine = divisionLineArr[innerCornerNo + 1][0];
-      }
+      int nextCornerNo = (innerCornerNo + 1) % innerCornerCount;
+      Line nextDivisionLine = divisionLineArr[nextCornerNo][0];
       Line[] currDivisionLines = divisionLineArr[innerCornerNo];
       if (currDivisionLines.length == 2) {
         // 2 division lines are necessary (sharp corner).

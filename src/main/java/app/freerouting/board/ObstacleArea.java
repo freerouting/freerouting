@@ -150,7 +150,7 @@ public class ObstacleArea extends Item implements Serializable {
 
   @Override
   public boolean isOnLayer(int layer) {
-    return layer == layer;
+    return this.layer == layer;
   }
 
   @Override
