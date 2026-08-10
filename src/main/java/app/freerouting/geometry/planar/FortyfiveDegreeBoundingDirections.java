@@ -6,11 +6,11 @@ package app.freerouting.geometry.planar;
  */
 public final class FortyfiveDegreeBoundingDirections implements ShapeBoundingDirections {
 
-  /** the one and only instantiation */
+  /** The one and only instantiation. */
   public static final FortyfiveDegreeBoundingDirections INSTANCE =
       new FortyfiveDegreeBoundingDirections();
 
-  /** prevent instantiation */
+  /** Prevent instantiation. */
   private FortyfiveDegreeBoundingDirections() {}
 
   @Override
@@ -19,32 +19,32 @@ public final class FortyfiveDegreeBoundingDirections implements ShapeBoundingDir
   }
 
   @Override
-  public RegularTileShape bounds(ConvexShape pShape) {
-    return pShape.boundingShape(this);
+  public RegularTileShape bounds(ConvexShape shape) {
+    return shape.boundingShape(this);
   }
 
   @Override
-  public RegularTileShape bounds(IntBox pBox) {
-    return pBox.toIntOctagon();
+  public RegularTileShape bounds(IntBox box) {
+    return box.toIntOctagon();
   }
 
   @Override
-  public RegularTileShape bounds(IntOctagon pOct) {
-    return pOct;
+  public RegularTileShape bounds(IntOctagon oct) {
+    return oct;
   }
 
   @Override
-  public RegularTileShape bounds(Simplex pSimplex) {
-    return pSimplex.boundingOctagon();
+  public RegularTileShape bounds(Simplex simplex) {
+    return simplex.boundingOctagon();
   }
 
   @Override
-  public RegularTileShape bounds(Circle pCircle) {
-    return pCircle.boundingOctagon();
+  public RegularTileShape bounds(Circle circle) {
+    return circle.boundingOctagon();
   }
 
   @Override
-  public RegularTileShape bounds(PolygonShape pPolygon) {
-    return pPolygon.boundingOctagon();
+  public RegularTileShape bounds(PolygonShape polygon) {
+    return polygon.boundingOctagon();
   }
 }

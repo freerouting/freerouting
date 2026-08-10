@@ -10,24 +10,24 @@ public class Ellipse implements Serializable {
 
   public final FloatPoint center;
 
-  /** Rotation of the ellipse in radian normed to 0 {@literal <}= rotation {@literal <} pi */
+  /** Rotation of the ellipse in radian normed to 0 {@literal <}= rotation {@literal <} pi. */
   public final double rotation;
 
   public final double biggerRadius;
   public final double smallerRadius;
 
-  /** Creates a new instance of Ellipse */
-  public Ellipse(FloatPoint pCenter, double pRotation, double pRadius1, double pRadius2) {
-    this.center = pCenter;
+  /** Creates a new instance of Ellipse. */
+  public Ellipse(FloatPoint center, double rotation, double radius1, double radius2) {
+    this.center = center;
     double currRotation;
-    if (pRadius1 >= pRadius2) {
-      this.biggerRadius = pRadius1;
-      this.smallerRadius = pRadius2;
-      currRotation = pRotation;
+    if (radius1 >= radius2) {
+      this.biggerRadius = radius1;
+      this.smallerRadius = radius2;
+      currRotation = rotation;
     } else {
-      this.biggerRadius = pRadius2;
-      this.smallerRadius = pRadius1;
-      currRotation = pRotation + 0.5 * Math.PI;
+      this.biggerRadius = radius2;
+      this.smallerRadius = radius1;
+      currRotation = rotation + 0.5 * Math.PI;
     }
     while (currRotation >= Math.PI) {
       currRotation -= Math.PI;

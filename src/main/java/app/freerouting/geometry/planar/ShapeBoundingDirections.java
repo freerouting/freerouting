@@ -10,20 +10,20 @@ public interface ShapeBoundingDirections {
    * Calculates for an arbitrary ConvexShape a surrounding RegularTileShape with this fixed
    * directions. Is used in the implementation of the search trees.
    */
-  RegularTileShape bounds(ConvexShape pShape);
+  RegularTileShape bounds(ConvexShape shape);
 
   /** Auxiliary function to implement the same function with parameter type ConvexShape. */
-  RegularTileShape bounds(IntBox pBox);
+  RegularTileShape bounds(IntBox box);
 
   /** Auxiliary function to implement the same function with parameter type ConvexShape. */
-  RegularTileShape bounds(IntOctagon pOct);
+  RegularTileShape bounds(IntOctagon oct);
 
   /** Auxiliary function to implement the same function with parameter type ConvexShape. */
-  RegularTileShape bounds(Simplex pSimplex);
+  RegularTileShape bounds(Simplex simplex);
 
   /** Auxiliary function to implement the same function with parameter type ConvexShape. */
-  RegularTileShape bounds(Circle pCircle);
+  RegularTileShape bounds(Circle circle);
 
   /** Auxiliary function to implement the same function with parameter type ConvexShape. */
-  RegularTileShape bounds(PolygonShape pPolygon);
+  RegularTileShape bounds(PolygonShape polygon);
 }

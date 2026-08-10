@@ -7,18 +7,21 @@ import java.math.BigInteger;
 /** Implements the abstract class Direction as a tuple of infinite precision integers. */
 public class BigIntDirection extends Direction implements Serializable {
 
+  @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   final BigInteger x;
+
+  @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   final BigInteger y;
 
-  BigIntDirection(BigInteger pX, BigInteger pY) {
-    x = pX;
-    y = pY;
+  BigIntDirection(BigInteger x, BigInteger y) {
+    this.x = x;
+    this.y = y;
   }
 
-  /** creates a BigIntDirection from an IntDirection */
-  BigIntDirection(IntDirection pDir) {
-    x = BigInteger.valueOf(pDir.x);
-    y = BigInteger.valueOf(pDir.y);
+  /** Creates a BigIntDirection from an IntDirection. */
+  BigIntDirection(IntDirection dir) {
+    x = BigInteger.valueOf(dir.x);
+    y = BigInteger.valueOf(dir.y);
   }
 
   @Override
@@ -37,7 +40,7 @@ public class BigIntDirection extends Direction implements Serializable {
   }
 
   @Override
-  public Direction turn45Degree(int pFactor) {
+  public Direction turn45Degree(int factor) {
     FRLogger.warn("BigIntDirection: turn_45_degree not yet implemented");
     return this;
   }
@@ -54,22 +57,22 @@ public class BigIntDirection extends Direction implements Serializable {
    * Direction.
    */
   @Override
-  public int compareTo(Direction pOtherDirection) {
-    return -pOtherDirection.compareTo(this);
+  public int compareTo(Direction otherDirection) {
+    return -otherDirection.compareTo(this);
   }
 
   @Override
-  int compareTo(IntDirection pOther) {
-    BigIntDirection other = new BigIntDirection(pOther);
+  int compareTo(IntDirection otherDirection) {
+    BigIntDirection other = new BigIntDirection(otherDirection);
     return compareTo(other);
   }
 
   @Override
-  int compareTo(BigIntDirection pOther) {
+  int compareTo(BigIntDirection other) {
     int x1 = x.signum();
     int y1 = y.signum();
-    int x2 = pOther.x.signum();
-    int y2 = pOther.y.signum();
+    int x2 = other.x.signum();
+    int y2 = other.y.signum();
     if (y1 > 0) {
       if (y2 < 0) {
         return -1;
@@ -84,8 +87,7 @@ public class BigIntDirection extends Direction implements Serializable {
       if (y2 >= 0) {
         return 1;
       }
-    } else // y1 == 0
-    {
+    } else { // y1 == 0
       if (x1 > 0) {
         if (y2 != 0 || x2 < 0) {
           return -1;
@@ -105,8 +107,8 @@ public class BigIntDirection extends Direction implements Serializable {
     // now this direction and p_other are located in the same
     // open horizontal half plane
 
-    BigInteger tmp1 = y.multiply(pOther.x);
-    BigInteger tmp2 = x.multiply(pOther.y);
+    BigInteger tmp1 = y.multiply(other.x);
+    BigInteger tmp2 = x.multiply(other.y);
     BigInteger determinant = tmp1.subtract(tmp2);
     return determinant.signum();
   }

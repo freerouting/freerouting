@@ -10,13 +10,13 @@ import java.math.BigInteger;
  */
 public abstract class Vector implements Serializable {
 
-  /** Standard implementation of the zero vector . */
+  /** Standard implementation of the zero vector. */
   public static final IntVector ZERO = new IntVector(0, 0);
 
   /** Creates a Vector (p_x, p_y) in the plane. */
-  public static Vector getInstance(int pX, int pY) {
-    IntVector result = new IntVector(pX, pY);
-    if (Math.abs(pX) > Limits.CRIT_INT || Math.abs(pY) > Limits.CRIT_INT) {
+  public static Vector getInstance(int x, int y) {
+    IntVector result = new IntVector(x, y);
+    if (Math.abs(x) > Limits.CRIT_INT || Math.abs(y) > Limits.CRIT_INT) {
       return new RationalVector(result);
     }
     return result;
@@ -26,52 +26,60 @@ public abstract class Vector implements Serializable {
    * Creates a 2-dimensional Vector from the 3 input values. If p_z != 0 it correspondents to the
    * Vector in the plane with rational number coordinates (p_x / p_z, p_y / p_z).
    */
-  public static Vector getInstance(BigInteger pX, BigInteger pY, BigInteger pZ) {
-    if (pZ.signum() < 0) {
+  public static Vector getInstance(BigInteger x, BigInteger y, BigInteger z) {
+    if (z.signum() < 0) {
       // the dominator z of a RationalVector is expected to be positive
-      pX = pX.negate();
-      pY = pY.negate();
-      pZ = pZ.negate();
+      x = x.negate();
+      y = y.negate();
+      z = z.negate();
     }
-    if (pX.mod(pZ).signum() == 0) {
+    if (x.mod(z).signum() == 0) {
       // p_x and p_y can be divided by p_z
-      pX = pX.divide(pZ);
-      pY = pY.divide(pZ);
-      pZ = BigInteger.ONE;
+      x = x.divide(z);
+      y = y.divide(z);
+      z = BigInteger.ONE;
     }
-    if (pZ.equals(BigInteger.ONE)) {
-      if (pX.abs().compareTo(Limits.CRIT_INT_BIG) <= 0
-          && pY.abs().compareTo(Limits.CRIT_INT_BIG) <= 0) {
+    if (z.equals(BigInteger.ONE)) {
+      if (x.abs().compareTo(Limits.CRIT_INT_BIG) <= 0
+          && y.abs().compareTo(Limits.CRIT_INT_BIG) <= 0) {
         // the Point fits into an IntPoint
-        return new IntVector(pX.intValue(), pY.intValue());
+        return new IntVector(x.intValue(), y.intValue());
       }
     }
-    return new RationalVector(pX, pY, pZ);
+    return new RationalVector(x, y, z);
   }
 
-  /** returns true, if this vector is equal to the zero vector. */
+  /** Returns true, if this vector is equal to the zero vector. */
   public abstract boolean isZero();
 
-  /** returns the Vector such that this plus this.negate() is zero */
+  /** Returns the Vector such that this plus this.negate() is zero. */
   public abstract Vector negate();
 
-  /** adds p_other to this vector */
-  public abstract Vector add(Vector pOther);
+  /** Adds p_other to this vector. */
+  public abstract Vector add(Vector other);
+
+  abstract Vector add(IntVector other);
+
+  abstract Vector add(RationalVector other);
 
   /**
    * Let L be the line from the Zero Vector to p_other. The function returns Side.ON_THE_LEFT, if
    * this Vector is on the left of L Side.ON_THE_RIGHT, if this Vector is on the right of L and
    * Side.COLLINEAR, if this Vector is collinear with L.
    */
-  public abstract Side sideOf(Vector pOther);
+  public abstract Side sideOf(Vector other);
 
-  /** returns true, if the vector is horizontal or vertical */
+  abstract Side sideOf(IntVector other);
+
+  abstract Side sideOf(RationalVector other);
+
+  /** Returns true, if the vector is horizontal or vertical. */
   public abstract boolean isOrthogonal();
 
-  /** returns true, if the vector is diagonal */
+  /** Returns true, if the vector is diagonal. */
   public abstract boolean isDiagonal();
 
-  /** Returns true, if the vector is orthogonal or diagonal */
+  /** Returns true, if the vector is orthogonal or diagonal. */
   public boolean isMultipleOf45Degree() {
     return isOrthogonal() || isDiagonal();
   }
@@ -81,24 +89,34 @@ public abstract class Vector implements Serializable {
    * {@literal >} 0, Signum.NEGATIVE, if the scalar product Vector is {@literal <} 0, and
    * Signum.ZERO, if the scalar product is equal 0.
    */
-  public abstract Signum projection(Vector pOther);
+  public abstract Signum projection(Vector other);
+
+  abstract Signum projection(IntVector other);
+
+  abstract Signum projection(RationalVector other);
 
   /** Returns an approximation of the scalar product of this vector with p_other by a double. */
-  public abstract double scalarProduct(Vector pOther);
+  public abstract double scalarProduct(Vector other);
 
-  /** approximates the coordinates of this vector by float coordinates */
+  abstract double scalarProduct(IntVector other);
+
+  abstract double scalarProduct(RationalVector other);
+
+  /** Approximates the coordinates of this vector by float coordinates. */
   public abstract FloatPoint toFloat();
 
   /** Turns this vector by p_factor times 90 degree. */
-  public abstract Vector turn90Degree(int pFactor);
+  public abstract Vector turn90Degree(int factor);
 
   /** Mirrors this vector at the x axis. */
+  @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
   public abstract Vector mirrorAtXAxis();
 
   /** Mirrors this vector at the y axis. */
+  @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
   public abstract Vector mirrorAtYAxis();
 
-  /** returns an approximation of the Euclidean length of this vector */
+  /** Returns an approximation of the Euclidean length of this vector. */
   public double lengthApprox() {
     return this.toFloat().size();
   }
@@ -107,16 +125,16 @@ public abstract class Vector implements Serializable {
    * Returns an approximation of the cosinus of the angle between this vector and p_other by a
    * double.
    */
-  public double cosAngle(Vector pOther) {
-    double result = this.scalarProduct(pOther);
-    result /= this.toFloat().size() * pOther.toFloat().size();
+  public double cosAngle(Vector other) {
+    double result = this.scalarProduct(other);
+    result /= this.toFloat().size() * other.toFloat().size();
     return result;
   }
 
   /** Returns an approximation of the signed angle between this vector and p_other. */
-  public double angleApprox(Vector pOther) {
-    double result = Math.acos(cosAngle(pOther));
-    if (this.sideOf(pOther) == Side.ON_THE_LEFT) {
+  public double angleApprox(Vector other) {
+    double result = Math.acos(cosAngle(other));
+    if (this.sideOf(other) == Side.ON_THE_LEFT) {
       result = -result;
     }
     return result;
@@ -129,30 +147,11 @@ public abstract class Vector implements Serializable {
   }
 
   /** Returns an approximation vector of this vector with the same direction and length p_length. */
-  public abstract Vector changeLengthApprox(double pLength);
+  public abstract Vector changeLengthApprox(double length);
 
   abstract Direction toNormalizedDirection();
 
-  // auxiliary functions needed because the virtual function mechanism
-  // does not work in parameter position
+  abstract Point addTo(IntPoint point);
 
-  abstract Vector add(IntVector pOther);
-
-  abstract Vector add(RationalVector pOther);
-
-  abstract Point addTo(IntPoint pPoint);
-
-  abstract Point addTo(RationalPoint pPoint);
-
-  abstract Side sideOf(IntVector pOther);
-
-  abstract Side sideOf(RationalVector pOther);
-
-  abstract Signum projection(IntVector pOther);
-
-  abstract Signum projection(RationalVector pOther);
-
-  abstract double scalarProduct(IntVector pOther);
-
-  abstract double scalarProduct(RationalVector pOther);
+  abstract Point addTo(RationalPoint point);
 }

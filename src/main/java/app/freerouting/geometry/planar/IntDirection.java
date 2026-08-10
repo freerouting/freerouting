@@ -6,17 +6,20 @@ import java.io.Serializable;
 /** Implements an abstract class Direction as an equivalence class of IntVector's. */
 public class IntDirection extends Direction implements Serializable {
 
+  @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   public final int x;
+
+  @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   public final int y;
 
-  IntDirection(int pX, int pY) {
-    x = pX;
-    y = pY;
+  IntDirection(int x, int y) {
+    this.x = x;
+    this.y = y;
   }
 
-  IntDirection(IntVector pVector) {
-    x = pVector.x;
-    y = pVector.y;
+  IntDirection(IntVector vector) {
+    x = vector.x;
+    y = vector.y;
   }
 
   @Override
@@ -35,34 +38,33 @@ public class IntDirection extends Direction implements Serializable {
   }
 
   @Override
-  int compareTo(IntDirection pOther) {
+  int compareTo(IntDirection other) {
     if (y > 0) {
-      if (pOther.y < 0) {
+      if (other.y < 0) {
         return -1;
       }
-      if (pOther.y == 0) {
-        if (pOther.x > 0) {
+      if (other.y == 0) {
+        if (other.x > 0) {
           return 1;
         }
         return -1;
       }
     } else if (y < 0) {
-      if (pOther.y >= 0) {
+      if (other.y >= 0) {
         return 1;
       }
-    } else // y == 0
-    {
+    } else { // y == 0
       if (x > 0) {
-        if (pOther.y != 0 || pOther.x < 0) {
+        if (other.y != 0 || other.x < 0) {
           return -1;
         }
         return 0;
       }
       // x < 0
-      if (pOther.y > 0 || pOther.y == 0 && pOther.x > 0) {
+      if (other.y > 0 || other.y == 0 && other.x > 0) {
         return 1;
       }
-      if (pOther.y < 0) {
+      if (other.y < 0) {
         return -1;
       }
       return 0;
@@ -71,8 +73,24 @@ public class IntDirection extends Direction implements Serializable {
     // now this direction and p_other are located in the same
     // open horizontal half plane
 
-    double determinant = (double) pOther.x * y - (double) pOther.y * x;
+    double determinant = (double) other.x * y - (double) other.y * x;
     return Signum.asInt(determinant);
+  }
+
+  /**
+   * Implements the Comparable interface. Returns 1, if this direction has a strict bigger angle
+   * with the positive x-axis than p_other_direction, 0, if this direction is equal to
+   * p_other_direction, and -1 otherwise. Throws an exception, if p_other_direction is not a
+   * Direction.
+   */
+  @Override
+  public int compareTo(Direction otherDirection) {
+    return -otherDirection.compareTo(this);
+  }
+
+  @Override
+  int compareTo(BigIntDirection other) {
+    return -other.compareTo(this);
   }
 
   @Override
@@ -81,8 +99,8 @@ public class IntDirection extends Direction implements Serializable {
   }
 
   @Override
-  public Direction turn45Degree(int pFactor) {
-    int n = pFactor % 8;
+  public Direction turn45Degree(int factor) {
+    int n = factor % 8;
     int newX;
     int newY;
     switch (n) {
@@ -126,23 +144,7 @@ public class IntDirection extends Direction implements Serializable {
     return new IntDirection(newX, newY);
   }
 
-  /**
-   * Implements the Comparable interface. Returns 1, if this direction has a strict bigger angle
-   * with the positive x-axis than p_other_direction, 0, if this direction is equal to
-   * p_other_direction, and -1 otherwise. Throws an exception, if p_other_direction is not a
-   * Direction.
-   */
-  @Override
-  public int compareTo(Direction pOtherDirection) {
-    return -pOtherDirection.compareTo(this);
-  }
-
-  @Override
-  int compareTo(BigIntDirection pOther) {
-    return -pOther.compareTo(this);
-  }
-
-  final double determinant(IntDirection pOther) {
-    return (double) x * pOther.y - (double) y * pOther.x;
+  final double determinant(IntDirection other) {
+    return (double) x * other.y - (double) y * other.x;
   }
 }

@@ -6,13 +6,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-/** Abstract class with functions for shapes, whose borders consist ob straight lines. */
+/** Abstract class with functions for shapes whose borders consist of straight lines. */
 public abstract class PolylineShape implements Shape, Serializable {
 
-  /** returns true, if the shape has no infinite part at this corner */
-  public abstract boolean cornerIsBounded(int pNo);
+  /** Returns true if the shape has no infinite part at this corner. */
+  public abstract boolean cornerIsBounded(int no);
 
-  /** Returns the number of borderlines of the shape */
+  /** Returns the number of borderlines of the shape. */
   public abstract int borderLineCount();
 
   /**
@@ -21,27 +21,27 @@ public abstract class PolylineShape implements Shape, Serializable {
    * shape. If there are several corners with the smallest y-coordinate, the corner with the
    * smallest x-coordinate comes first. Consecutive corners may be equal.
    */
-  public abstract Point corner(int pNo);
+  public abstract Point corner(int no);
 
   /** Turns this shape by p_factor times 90 degree around p_pole. */
   @Override
-  public abstract PolylineShape turn90Degree(int pFactor, IntPoint pPole);
+  public abstract PolylineShape turn90Degree(int factor, IntPoint pole);
 
   /** Rotates this shape around p_pole by p_angle. The result may be not exact. */
   @Override
-  public abstract PolylineShape rotateApprox(double pAngle, FloatPoint pPole);
+  public abstract PolylineShape rotateApprox(double angle, FloatPoint pole);
 
   /** Mirrors this shape at the horizontal line through p_pole. */
   @Override
-  public abstract PolylineShape mirrorHorizontal(IntPoint pPole);
+  public abstract PolylineShape mirrorHorizontal(IntPoint pole);
 
   /** Mirrors this shape at the vertical line through p_pole. */
   @Override
-  public abstract PolylineShape mirrorVertical(IntPoint pPole);
+  public abstract PolylineShape mirrorVertical(IntPoint pole);
 
-  /** Returns the affine translation of the area by p_vector */
+  /** Returns the affine translation of the area by p_vector. */
   @Override
-  public abstract PolylineShape translateBy(Vector pVector);
+  public abstract PolylineShape translateBy(Vector vector);
 
   /** Return all unbounded corners of this shape. */
   public Point[] boundedCorners() {
@@ -65,8 +65,8 @@ public abstract class PolylineShape implements Shape, Serializable {
    * border_line_count() - 1. If the shape is not bounded at this corner, the coordinates of the
    * result will be set to Integer.MAX_VALUE.
    */
-  public FloatPoint cornerApprox(int pNo) {
-    return corner(pNo).toFloat();
+  public FloatPoint cornerApprox(int no) {
+    return corner(no).toFloat();
   }
 
   /**
@@ -87,9 +87,9 @@ public abstract class PolylineShape implements Shape, Serializable {
    * If p_point is equal to a corner of this shape, the number of that corner is returned; -1
    * otherwise.
    */
-  public int equalsCorner(Point pPoint) {
+  public int equalsCorner(Point point) {
     for (int i = 0; i < borderLineCount(); i++) {
-      if (pPoint.equals(corner(i))) {
+      if (point.equals(corner(i))) {
         return i;
       }
     }
@@ -116,7 +116,7 @@ public abstract class PolylineShape implements Shape, Serializable {
     return result;
   }
 
-  /** Returns the arithmetic middle of the corners of this shape */
+  /** Returns the arithmetic middle of the corners of this shape. */
   @Override
   public FloatPoint centreOfGravity() {
     int cornerCount = borderLineCount();
@@ -132,23 +132,23 @@ public abstract class PolylineShape implements Shape, Serializable {
     return new FloatPoint(x, y);
   }
 
-  /** checks, if this shape is completely contained in p_box. */
+  /** Checks if this shape is completely contained in p_box. */
   @Override
-  public boolean isContainedIn(IntBox pBox) {
-    return pBox.contains(boundingBox());
+  public boolean isContainedIn(IntBox box) {
+    return box.contains(boundingBox());
   }
 
   /**
    * Returns the index of the corner of the shape, so that all other points of the shape are to the
-   * right of the line from p_from_point to this corner
+   * right of the line from p_from_point to this corner.
    */
-  public int indexOfLeftMostCorner(FloatPoint pFromPoint) {
+  public int indexOfLeftMostCorner(FloatPoint fromPoint) {
     FloatPoint leftMostCorner = cornerApprox(0);
     int cornerCount = borderLineCount();
     int result = 0;
     for (int i = 1; i < cornerCount; i++) {
       FloatPoint currCorner = cornerApprox(i);
-      if (currCorner.sideOf(pFromPoint, leftMostCorner) == Side.ON_THE_LEFT) {
+      if (currCorner.sideOf(fromPoint, leftMostCorner) == Side.ON_THE_LEFT) {
         leftMostCorner = currCorner;
         result = i;
       }
@@ -158,15 +158,15 @@ public abstract class PolylineShape implements Shape, Serializable {
 
   /**
    * Returns the index of the corner of the shape, so that all other points of the shape are to the
-   * left of the line from p_from_point to this corner
+   * left of the line from p_from_point to this corner.
    */
-  public int indexOfRightMostCorner(FloatPoint pFromPoint) {
+  public int indexOfRightMostCorner(FloatPoint fromPoint) {
     FloatPoint rightMostCorner = cornerApprox(0);
     int cornerCount = borderLineCount();
     int result = 0;
     for (int i = 1; i < cornerCount; i++) {
       FloatPoint currCorner = cornerApprox(i);
-      if (currCorner.sideOf(pFromPoint, rightMostCorner) == Side.ON_THE_RIGHT) {
+      if (currCorner.sideOf(fromPoint, rightMostCorner) == Side.ON_THE_RIGHT) {
         rightMostCorner = currCorner;
         result = i;
       }
@@ -179,7 +179,7 @@ public abstract class PolylineShape implements Shape, Serializable {
    * this shape when viewed from p_from_point, and result.b is an approximation of the right most
    * corner.
    */
-  public FloatLine polarLineSegment(FloatPoint pFromPoint) {
+  public FloatLine polarLineSegment(FloatPoint fromPoint) {
     if (this.isEmpty()) {
       FRLogger.warn("PolylineShape.polarLineSegment: shape is empty");
       return null;
@@ -189,10 +189,10 @@ public abstract class PolylineShape implements Shape, Serializable {
     int cornerCount = borderLineCount();
     for (int i = 1; i < cornerCount; i++) {
       FloatPoint currCorner = cornerApprox(i);
-      if (currCorner.sideOf(pFromPoint, rightMostCorner) == Side.ON_THE_RIGHT) {
+      if (currCorner.sideOf(fromPoint, rightMostCorner) == Side.ON_THE_RIGHT) {
         rightMostCorner = currCorner;
       }
-      if (currCorner.sideOf(pFromPoint, leftMostCorner) == Side.ON_THE_LEFT) {
+      if (currCorner.sideOf(fromPoint, leftMostCorner) == Side.ON_THE_LEFT) {
         leftMostCorner = currCorner;
       }
     }
@@ -200,22 +200,22 @@ public abstract class PolylineShape implements Shape, Serializable {
   }
 
   /** Returns the p_no-th border line of this shape. */
-  public abstract Line borderLine(int pNo);
+  public abstract Line borderLine(int no);
 
   /** Returns the previous border line or corner number of this shape. */
-  public int prevNo(int pNo) {
+  public int prevNo(int no) {
     int result;
-    if (pNo == 0) {
+    if (no == 0) {
       result = borderLineCount() - 1;
     } else {
-      result = pNo - 1;
+      result = no - 1;
     }
     return result;
   }
 
   /** Returns the next border line or corner number of this shape. */
-  public int nextNo(int pNo) {
-    return (pNo + 1) % borderLineCount();
+  public int nextNo(int no) {
+    return (no + 1) % borderLineCount();
   }
 
   @Override
@@ -229,13 +229,13 @@ public abstract class PolylineShape implements Shape, Serializable {
   }
 
   /** Checks, if this shape and p_line have a common point. */
-  public boolean intersects(Line pLine) {
-    Side sideOfFirstCorner = pLine.sideOf(corner(0));
+  public boolean intersects(Line line) {
+    Side sideOfFirstCorner = line.sideOf(corner(0));
     if (sideOfFirstCorner == Side.COLLINEAR) {
       return true;
     }
     for (int i = 1; i < this.borderLineCount(); i++) {
-      if (pLine.sideOf(corner(i)) != sideOfFirstCorner) {
+      if (line.sideOf(corner(i)) != sideOfFirstCorner) {
         return true;
       }
     }
@@ -243,15 +243,15 @@ public abstract class PolylineShape implements Shape, Serializable {
   }
 
   /** Calculates the left most corner of this shape, when looked at from p_from_point. */
-  public Point leftMostCorner(Point pFromPoint) {
+  public Point leftMostCorner(Point fromPoint) {
     if (this.isEmpty()) {
-      return pFromPoint;
+      return fromPoint;
     }
     Point result = this.corner(0);
     int cornerCount = this.borderLineCount();
     for (int i = 1; i < cornerCount; i++) {
       Point currCorner = this.corner(i);
-      if (currCorner.sideOf(pFromPoint, result) == Side.ON_THE_LEFT) {
+      if (currCorner.sideOf(fromPoint, result) == Side.ON_THE_LEFT) {
         result = currCorner;
       }
     }
@@ -259,15 +259,15 @@ public abstract class PolylineShape implements Shape, Serializable {
   }
 
   /** Calculates the left most corner of this shape, when looked at from p_from_point. */
-  public Point rightMostCorner(Point pFromPoint) {
+  public Point rightMostCorner(Point fromPoint) {
     if (this.isEmpty()) {
-      return pFromPoint;
+      return fromPoint;
     }
     Point result = this.corner(0);
     int cornerCount = this.borderLineCount();
     for (int i = 1; i < cornerCount; i++) {
       Point currCorner = this.corner(i);
-      if (currCorner.sideOf(pFromPoint, result) == Side.ON_THE_RIGHT) {
+      if (currCorner.sideOf(fromPoint, result) == Side.ON_THE_RIGHT) {
         result = currCorner;
       }
     }

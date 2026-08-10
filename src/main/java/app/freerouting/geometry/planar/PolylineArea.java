@@ -18,19 +18,19 @@ public class PolylineArea implements Area, Serializable {
   final PolylineShape[] holeArr;
   private transient TileShape[] precalculatedConvexPieces;
 
-  /** Creates a new instance of PolylineShapeWithHoles */
-  public PolylineArea(PolylineShape pBorderShape, PolylineShape[] pHoleArr) {
-    borderShape = pBorderShape;
-    holeArr = pHoleArr;
+  /** Creates a new instance of PolylineShapeWithHoles. */
+  public PolylineArea(PolylineShape borderShape, PolylineShape[] holeArr) {
+    this.borderShape = borderShape;
+    this.holeArr = holeArr;
   }
 
   private static void cutoutHolePiece(
-      TileShape pDividePiece, TileShape pHolePiece, Collection<TileShape> pResultPieces) {
-    TileShape[] resultPieces = pDividePiece.cutout(pHolePiece);
+      TileShape dividePiece, TileShape holePiece, Collection<TileShape> pieces) {
+    TileShape[] resultPieces = dividePiece.cutout(holePiece);
     for (int i = 0; i < resultPieces.length; i++) {
       TileShape currPiece = resultPieces[i];
       if (currPiece.dimension() == 2) {
-        pResultPieces.add(currPiece);
+        pieces.add(currPiece);
       }
     }
   }
@@ -51,8 +51,8 @@ public class PolylineArea implements Area, Serializable {
   }
 
   @Override
-  public boolean isContainedIn(IntBox pBox) {
-    return borderShape.isContainedIn(pBox);
+  public boolean isContainedIn(IntBox box) {
+    return borderShape.isContainedIn(box);
   }
 
   @Override
@@ -76,12 +76,12 @@ public class PolylineArea implements Area, Serializable {
   }
 
   @Override
-  public boolean contains(FloatPoint pPoint) {
-    if (!borderShape.contains(pPoint)) {
+  public boolean contains(FloatPoint point) {
+    if (!borderShape.contains(point)) {
       return false;
     }
     for (int i = 0; i < holeArr.length; i++) {
-      if (holeArr[i].contains(pPoint)) {
+      if (holeArr[i].contains(point)) {
         return false;
       }
     }
@@ -89,12 +89,12 @@ public class PolylineArea implements Area, Serializable {
   }
 
   @Override
-  public boolean contains(Point pPoint) {
-    if (!borderShape.contains(pPoint)) {
+  public boolean contains(Point point) {
+    if (!borderShape.contains(point)) {
       return false;
     }
     for (int i = 0; i < holeArr.length; i++) {
-      if (holeArr[i].containsInside(pPoint)) {
+      if (holeArr[i].containsInside(point)) {
         return false;
       }
     }
@@ -102,13 +102,13 @@ public class PolylineArea implements Area, Serializable {
   }
 
   @Override
-  public FloatPoint nearestPointApprox(FloatPoint pFromPoint) {
+  public FloatPoint nearestPointApprox(FloatPoint fromPoint) {
     double minDist = Double.MAX_VALUE;
     FloatPoint result = null;
     TileShape[] convexShapes = splitToConvex();
     for (int i = 0; i < convexShapes.length; i++) {
-      FloatPoint currNearestPoint = convexShapes[i].nearestPointApprox(pFromPoint);
-      double currDist = currNearestPoint.distanceSquare(pFromPoint);
+      FloatPoint currNearestPoint = convexShapes[i].nearestPointApprox(fromPoint);
+      double currDist = currNearestPoint.distanceSquare(fromPoint);
       if (currDist < minDist) {
         minDist = currDist;
         result = currNearestPoint;
@@ -118,14 +118,14 @@ public class PolylineArea implements Area, Serializable {
   }
 
   @Override
-  public PolylineArea translateBy(Vector pVector) {
-    if (pVector.equals(Vector.ZERO)) {
+  public PolylineArea translateBy(Vector vector) {
+    if (vector.equals(Vector.ZERO)) {
       return this;
     }
-    PolylineShape translatedBorder = borderShape.translateBy(pVector);
+    PolylineShape translatedBorder = borderShape.translateBy(vector);
     PolylineShape[] translatedHoles = new PolylineShape[holeArr.length];
     for (int i = 0; i < holeArr.length; i++) {
-      translatedHoles[i] = holeArr[i].translateBy(pVector);
+      translatedHoles[i] = holeArr[i].translateBy(vector);
     }
     return new PolylineArea(translatedBorder, translatedHoles);
   }
@@ -165,7 +165,7 @@ public class PolylineArea implements Area, Serializable {
    * Polylines are returned instead of Polygons, so that no intersection points are needed in the
    * result. If p_stoppable_thread != null, this function can be interrupted.
    */
-  public TileShape[] splitToConvex(Stoppable pStoppableThread) {
+  public TileShape[] splitToConvex(Stoppable stoppableThread) {
     if (precalculatedConvexPieces == null) {
       TileShape[] convexBorderPieces = borderShape.splitToConvex();
       if (convexBorderPieces == null) {
@@ -186,7 +186,7 @@ public class PolylineArea implements Area, Serializable {
           TileShape currHolePiece = convexHolePieces[j];
           Collection<TileShape> newPieceList = new LinkedList<>();
           for (TileShape currDividePiece : currPieceList) {
-            if (pStoppableThread != null && pStoppableThread.isStopRequested()) {
+            if (stoppableThread != null && stoppableThread.isStopRequested()) {
               return null;
             }
             cutoutHolePiece(currDividePiece, currHolePiece, newPieceList);
@@ -204,41 +204,41 @@ public class PolylineArea implements Area, Serializable {
   }
 
   @Override
-  public PolylineArea turn90Degree(int pFactor, IntPoint pPole) {
-    PolylineShape newBorder = borderShape.turn90Degree(pFactor, pPole);
+  public PolylineArea turn90Degree(int factor, IntPoint pole) {
+    PolylineShape newBorder = borderShape.turn90Degree(factor, pole);
     PolylineShape[] newHoleArr = new PolylineShape[holeArr.length];
     for (int i = 0; i < newHoleArr.length; i++) {
-      newHoleArr[i] = holeArr[i].turn90Degree(pFactor, pPole);
+      newHoleArr[i] = holeArr[i].turn90Degree(factor, pole);
     }
     return new PolylineArea(newBorder, newHoleArr);
   }
 
   @Override
-  public PolylineArea rotateApprox(double pAngle, FloatPoint pPole) {
-    PolylineShape newBorder = borderShape.rotateApprox(pAngle, pPole);
+  public PolylineArea rotateApprox(double angle, FloatPoint pole) {
+    PolylineShape newBorder = borderShape.rotateApprox(angle, pole);
     PolylineShape[] newHoleArr = new PolylineShape[holeArr.length];
     for (int i = 0; i < newHoleArr.length; i++) {
-      newHoleArr[i] = holeArr[i].rotateApprox(pAngle, pPole);
+      newHoleArr[i] = holeArr[i].rotateApprox(angle, pole);
     }
     return new PolylineArea(newBorder, newHoleArr);
   }
 
   @Override
-  public PolylineArea mirrorVertical(IntPoint pPole) {
-    PolylineShape newBorder = borderShape.mirrorVertical(pPole);
+  public PolylineArea mirrorVertical(IntPoint pole) {
+    PolylineShape newBorder = borderShape.mirrorVertical(pole);
     PolylineShape[] newHoleArr = new PolylineShape[holeArr.length];
     for (int i = 0; i < newHoleArr.length; i++) {
-      newHoleArr[i] = holeArr[i].mirrorVertical(pPole);
+      newHoleArr[i] = holeArr[i].mirrorVertical(pole);
     }
     return new PolylineArea(newBorder, newHoleArr);
   }
 
   @Override
-  public PolylineArea mirrorHorizontal(IntPoint pPole) {
-    PolylineShape newBorder = borderShape.mirrorHorizontal(pPole);
+  public PolylineArea mirrorHorizontal(IntPoint pole) {
+    PolylineShape newBorder = borderShape.mirrorHorizontal(pole);
     PolylineShape[] newHoleArr = new PolylineShape[holeArr.length];
     for (int i = 0; i < newHoleArr.length; i++) {
-      newHoleArr[i] = holeArr[i].mirrorHorizontal(pPole);
+      newHoleArr[i] = holeArr[i].mirrorHorizontal(pole);
     }
     return new PolylineArea(newBorder, newHoleArr);
   }

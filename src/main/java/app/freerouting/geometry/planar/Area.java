@@ -6,22 +6,22 @@ package app.freerouting.geometry.planar;
  */
 public interface Area {
 
-  /** returns true, if the area is empty */
+  /** Returns true if the area is empty. */
   boolean isEmpty();
 
-  /** returns true, if the area is contained in a sufficiently large box */
+  /** Returns true if the area is contained in a sufficiently large box. */
   boolean isBounded();
 
   /**
-   * returns 2, if the area contains 2 dimensional shapes , 1, if it contains curves, 0, if it is
-   * reduced to a points and -1, if it is empty.
+   * Returns 2 if the area contains two-dimensional shapes, 1 if it contains curves, 0 if it is
+   * reduced to a point, and -1 if it is empty.
    */
   int dimension();
 
   /** Checks, if this area is completely contained in p_box. */
-  boolean isContainedIn(IntBox pBox);
+  boolean isContainedIn(IntBox box);
 
-  /** returns the border shape of this area */
+  /** Returns the border shape of this area. */
   Shape getBorder();
 
   /** Returns the array of holes, of this area. */
@@ -43,28 +43,28 @@ public interface Area {
    * Returns true, if p_point is contained in this area, but not inside a hole. Being on the border
    * is not defined for FloatPoints because of numerical inaccuracy.
    */
-  boolean contains(FloatPoint pPoint);
+  boolean contains(FloatPoint point);
 
   /** Returns true, if p_point is inside or on the border of this area, but not inside a hole. */
-  boolean contains(Point pPoint);
+  boolean contains(Point point);
 
-  /** Calculates an approximation of the nearest point of the shape to p_from_point */
-  FloatPoint nearestPointApprox(FloatPoint pFromPoint);
+  /** Calculates an approximation of the nearest point of the shape to p_from_point. */
+  FloatPoint nearestPointApprox(FloatPoint fromPoint);
 
   /** Turns this area by p_factor times 90 degree around p_pole. */
-  Area turn90Degree(int pFactor, IntPoint pPole);
+  Area turn90Degree(int factor, IntPoint pole);
 
   /** Rotates the area around p_pole by p_angle. The result may be not exact. */
-  Area rotateApprox(double pAngle, FloatPoint pPole);
+  Area rotateApprox(double angle, FloatPoint pole);
 
-  /** Returns the affine translation of the area by p_vector */
-  Area translateBy(Vector pVector);
+  /** Returns the affine translation of the area by p_vector. */
+  Area translateBy(Vector vector);
 
   /** Mirrors this area at the horizontal line through p_pole. */
-  Area mirrorHorizontal(IntPoint pPole);
+  Area mirrorHorizontal(IntPoint pole);
 
   /** Mirrors this area at the vertical line through p_pole. */
-  Area mirrorVertical(IntPoint pPole);
+  Area mirrorVertical(IntPoint pole);
 
   /** Returns an approximation of the corners of this area. */
   FloatPoint[] cornerApproxArr();

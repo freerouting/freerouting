@@ -13,75 +13,75 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
 
   public static final IntDirection NULL = new IntDirection(0, 0);
 
-  /** the direction to the east */
+  /** The direction to the east. */
   public static final IntDirection RIGHT = new IntDirection(1, 0);
 
-  /** the direction to the northeast */
+  /** The direction to the northeast. */
   public static final IntDirection RIGHT45 = new IntDirection(1, 1);
 
-  /** the direction to the north */
+  /** The direction to the north. */
   public static final IntDirection UP = new IntDirection(0, 1);
 
-  /** the direction to the northwest */
+  /** The direction to the northwest. */
   public static final IntDirection UP45 = new IntDirection(-1, 1);
 
-  /** the direction to the west */
+  /** The direction to the west. */
   public static final IntDirection LEFT = new IntDirection(-1, 0);
 
-  /** the direction to the southwest */
+  /** The direction to the southwest. */
   public static final IntDirection LEFT45 = new IntDirection(-1, -1);
 
-  /** the direction to the south */
+  /** The direction to the south. */
   public static final IntDirection DOWN = new IntDirection(0, -1);
 
-  /** the direction to the southeast */
+  /** The direction to the southeast. */
   public static final IntDirection DOWN45 = new IntDirection(1, -1);
 
-  /** creates a Direction from the input Vector */
-  public static Direction getInstance(Vector pVector) {
-    return pVector.toNormalizedDirection();
+  /** Creates a Direction from the input Vector. */
+  public static Direction getInstance(Vector vector) {
+    return vector.toNormalizedDirection();
   }
 
   /**
    * Calculates the direction from p_from to p_to. If p_from and p_to are equal, null is returned.
    */
-  public static Direction getInstance(Point pFrom, Point pTo) {
-    if (pFrom.equals(pTo)) {
+  public static Direction getInstance(Point from, Point to) {
+    if (from.equals(to)) {
       return null;
     }
-    return getInstance(pTo.differenceBy(pFrom));
+    return getInstance(to.differenceBy(from));
   }
 
-  /** Creates a Direction whose angle with the x-axis is nearly equal to p_angle */
-  public static Direction getInstanceApprox(double pAngle) {
+  /** Creates a Direction whose angle with the x-axis is nearly equal to p_angle. */
+  public static Direction getInstanceApprox(double angle) {
     final double scaleFactor = 10000;
-    int x = (int) Math.round(Math.cos(pAngle) * scaleFactor);
-    int y = (int) Math.round(Math.sin(pAngle) * scaleFactor);
+    int x = (int) Math.round(Math.cos(angle) * scaleFactor);
+    int y = (int) Math.round(Math.sin(angle) * scaleFactor);
     return getInstance(new IntVector(x, y));
   }
 
-  /** return any Vector pointing into this direction */
+  /** Returns any Vector pointing into this direction. */
   public abstract Vector getVector();
 
-  /** returns true, if the direction is horizontal or vertical */
+  /** Returns true, if the direction is horizontal or vertical. */
   public abstract boolean isOrthogonal();
 
-  /** returns true, if the direction is diagonal */
+  /** Returns true, if the direction is diagonal. */
   public abstract boolean isDiagonal();
 
-  /** returns true, if the direction is orthogonal or diagonal */
+  /** Returns true, if the direction is orthogonal or diagonal. */
   public boolean isMultipleOf45Degree() {
     return isOrthogonal() || isDiagonal();
   }
 
-  /** turns the direction by p_factor times 45 degree */
-  public abstract Direction turn45Degree(int pFactor);
+  /** Turns the direction by p_factor times 45 degree. */
+  public abstract Direction turn45Degree(int factor);
 
-  /** returns the opposite direction of this direction */
+  /** Returns the opposite direction of this direction. */
   public abstract Direction opposite();
 
   /**
-   * Returns true, if p_ob is a Direction and this Direction and p_ob point into the same direction
+   * Returns true, if p_ob is a Direction and this Direction and p_ob point into the same direction.
    */
   @Override
   public final boolean equals(Object obj) {
@@ -91,20 +91,20 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
     if (obj == null || getClass() != obj.getClass()) {
       return false;
     }
-    Direction pOther = (Direction) obj;
-    if (this == pOther) {
+    Direction other = (Direction) obj;
+    if (this == other) {
       return true;
     }
-    if (pOther == null) {
+    if (other == null) {
       return false;
     }
 
-    if (this.sideOf(pOther) != Side.COLLINEAR) {
+    if (this.sideOf(other) != Side.COLLINEAR) {
       return false;
     }
     // check, that dir and other_dir do not point into opposite directions
     Vector thisVector = getVector();
-    Vector otherVector = pOther.getVector();
+    Vector otherVector = other.getVector();
     return thisVector.projection(otherVector) == Signum.POSITIVE;
   }
 
@@ -114,8 +114,8 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
    * this.get_vector() is on the right of L and Side.COLLINEAR, if this.get_vector() is collinear
    * with L.
    */
-  public Side sideOf(Direction pOther) {
-    return this.getVector().sideOf(pOther.getVector());
+  public Side sideOf(Direction other) {
+    return this.getVector().sideOf(other.getVector());
   }
 
   /**
@@ -123,14 +123,14 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
    * direction and a vector representing p_other is {@literal >} 0, Signum.NEGATIVE, if the scalar
    * product is {@literal <} 0, and Signum.ZERO, if the scalar product is equal 0.
    */
-  public Signum projection(Direction pOther) {
-    return this.getVector().projection(pOther.getVector());
+  public Signum projection(Direction other) {
+    return this.getVector().projection(other.getVector());
   }
 
-  /** calculates an approximation of the direction in the middle of this direction and p_other */
-  public Direction middleApprox(Direction pOther) {
+  /** Calculates an approximation of the direction in the middle of this direction and p_other. */
+  public Direction middleApprox(Direction other) {
     FloatPoint v1 = getVector().toFloat();
-    FloatPoint v2 = pOther.getVector().toFloat();
+    FloatPoint v2 = other.getVector().toFloat();
     double length1 = v1.size();
     double length2 = v2.size();
     double x = v1.x / length1 + v2.x / length2;
@@ -170,9 +170,9 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
   // auxiliary functions needed because the virtual function mechanism
   // does not work in parameter position
 
-  abstract int compareTo(IntDirection pOther);
+  abstract int compareTo(IntDirection other);
 
-  abstract int compareTo(BigIntDirection pOther);
+  abstract int compareTo(BigIntDirection other);
 
   @Override
   public String toString() {

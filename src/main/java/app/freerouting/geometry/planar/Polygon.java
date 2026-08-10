@@ -19,12 +19,12 @@ public class Polygon implements Serializable {
    * Creates a polygon from p_point_arr. Multiple points and points, which are collinear with its
    * previous and next point will be removed.
    */
-  public Polygon(Point[] pPointArr) {
+  public Polygon(Point[] pointArr) {
     corners = new LinkedList<>();
-    if (pPointArr.length == 0) {
+    if (pointArr.length == 0) {
       return;
     }
-    corners.addAll(Arrays.asList(pPointArr));
+    corners.addAll(Arrays.asList(pointArr));
 
     boolean cornerRemoved = true;
     while (cornerRemoved) {
@@ -71,7 +71,7 @@ public class Polygon implements Serializable {
     }
   }
 
-  /** returns the array of corners of this polygon */
+  /** Returns the array of corners of this polygon. */
   public Point[] cornerArray() {
     int cornerCount = corners.size();
     Point[] result = new Point[cornerCount];

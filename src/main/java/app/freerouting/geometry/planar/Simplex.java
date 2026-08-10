@@ -18,7 +18,7 @@ public class Simplex extends TileShape implements Serializable {
 
   private final Line[] arr;
 
-  /** the following fields are for storing precalculated data */
+  /** Stores precalculated data for this simplex. */
   private transient Point[] precalculatedCorners;
 
   private transient FloatPoint[] precalculatedFloatCorners;
@@ -29,24 +29,24 @@ public class Simplex extends TileShape implements Serializable {
    * Constructs a Simplex from the directed lines in p_line_arr. The simplex will not be normalized.
    * To get a normalized simplex use TileShape.get_instance
    */
-  public Simplex(Line[] pLineArr) {
-    arr = pLineArr;
+  public Simplex(Line[] lineArr) {
+    arr = lineArr;
   }
 
-  /** creates a Simplex as intersection of the halfplanes defined by an array of directed lines */
-  public static Simplex getInstance(Line[] pLineArr) {
-    if (pLineArr.length == 0) {
+  /** Creates a Simplex as intersection of the half-planes defined by directed lines. */
+  public static Simplex getInstance(Line[] lineArr) {
+    if (lineArr.length == 0) {
       return Simplex.EMPTY;
     }
-    Line[] currArr = new Line[pLineArr.length];
-    System.arraycopy(pLineArr, 0, currArr, 0, pLineArr.length);
+    Line[] currArr = new Line[lineArr.length];
+    System.arraycopy(lineArr, 0, currArr, 0, lineArr.length);
     // sort the lines in ascending direction
     Arrays.sort(currArr);
     Simplex currSimplex = new Simplex(currArr);
     return currSimplex.removeRedundantLines();
   }
 
-  /** Return true, if this simplex is empty */
+  /** Return true, if this simplex is empty. */
   @Override
   public boolean isEmpty() {
     return arr.length == 0;
@@ -80,19 +80,19 @@ public class Simplex extends TileShape implements Serializable {
 
   /**
    * Returns true, if the determinant of the direction of index p_no -1 and the direction of index
-   * p_no is {@literal >} 0
+   * p_no is {@literal >} 0.
    */
   @Override
-  public boolean cornerIsBounded(int pNo) {
+  public boolean cornerIsBounded(int cornerIndex) {
     int no;
-    if (pNo < 0) {
+    if (cornerIndex < 0) {
       FRLogger.warn("corner: p_no is < 0");
       no = 0;
-    } else if (pNo >= arr.length) {
+    } else if (cornerIndex >= arr.length) {
       FRLogger.warn("corner: p_index must be less than arr.length - 1");
       no = arr.length - 1;
     } else {
-      no = pNo;
+      no = cornerIndex;
     }
     if (arr.length == 1) {
       return false;
@@ -108,7 +108,7 @@ public class Simplex extends TileShape implements Serializable {
     return prevDir.determinant(currDir) > 0;
   }
 
-  /** Returns true, if the shape of this simplex is contained in a sufficiently large box */
+  /** Returns true, if the shape of this simplex is contained in a sufficiently large box. */
   @Override
   public boolean isBounded() {
     if (arr.length == 0) {
@@ -125,7 +125,7 @@ public class Simplex extends TileShape implements Serializable {
     return true;
   }
 
-  /** Returns the number of edge lines defining this simplex */
+  /** Returns the number of edge lines defining this simplex. */
   @Override
   public int borderLineCount() {
     return arr.length;
@@ -137,25 +137,23 @@ public class Simplex extends TileShape implements Serializable {
    * Integer.MAX_VALUE.
    */
   @Override
-  public Point corner(int pNo) {
+  public Point corner(int cornerIndex) {
     int no;
-    if (pNo < 0) {
+    if (cornerIndex < 0) {
       FRLogger.warn("Simplex.corner: p_no is < 0");
       no = 0;
-    } else if (pNo >= arr.length) {
+    } else if (cornerIndex >= arr.length) {
       FRLogger.warn("Simplex.corner: p_no must be less than arr.length - 1");
       no = arr.length - 1;
     } else {
-      no = pNo;
+      no = cornerIndex;
     }
-    if (precalculatedCorners == null)
-    // corner array is not yet allocated
-    {
+    if (precalculatedCorners == null) {
+      // corner array is not yet allocated
       precalculatedCorners = new Point[arr.length];
     }
-    if (precalculatedCorners[no] == null)
-    // corner is not yet calculated
-    {
+    if (precalculatedCorners[no] == null) {
+      // corner is not yet calculated
       Line prev;
       if (no == 0) {
         prev = arr[arr.length - 1];
@@ -173,28 +171,26 @@ public class Simplex extends TileShape implements Serializable {
    * result will be set to Integer.MAX_VALUE.
    */
   @Override
-  public FloatPoint cornerApprox(int pNo) {
+  public FloatPoint cornerApprox(int cornerIndex) {
     if (arr.length == 0) {
       return null;
     }
     int no;
-    if (pNo < 0) {
+    if (cornerIndex < 0) {
       FRLogger.warn("Simplex.corner_approx: p_no is < 0");
       no = 0;
-    } else if (pNo >= arr.length) {
+    } else if (cornerIndex >= arr.length) {
       FRLogger.warn("Simplex.corner_approx: p_no must be less than arr.length - 1");
       no = arr.length - 1;
     } else {
-      no = pNo;
+      no = cornerIndex;
     }
-    if (precalculatedFloatCorners == null)
-    // corner array is not yet allocated
-    {
+    if (precalculatedFloatCorners == null) {
+      // corner array is not yet allocated
       precalculatedFloatCorners = new FloatPoint[arr.length];
     }
-    if (precalculatedFloatCorners[no] == null)
-    // corner is not yet calculated
-    {
+    if (precalculatedFloatCorners[no] == null) {
+      // corner is not yet calculated
       Line prev;
       if (no == 0) {
         prev = arr[arr.length - 1];
@@ -208,15 +204,13 @@ public class Simplex extends TileShape implements Serializable {
 
   @Override
   public FloatPoint[] cornerApproxArr() {
-    if (precalculatedFloatCorners == null)
-    // corner array is not yet allocated
-    {
+    if (precalculatedFloatCorners == null) {
+      // corner array is not yet allocated
       precalculatedFloatCorners = new FloatPoint[arr.length];
     }
     for (int i = 0; i < precalculatedFloatCorners.length; i++) {
-      if (precalculatedFloatCorners[i] == null)
-      // corner is not yet calculated
-      {
+      if (precalculatedFloatCorners[i] == null) {
+        // corner is not yet calculated
         Line prev;
         if (i == 0) {
           prev = arr[arr.length - 1];
@@ -230,24 +224,24 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   /**
-   * returns the p_no-th edge line of this simplex. The edge lines are sorted in ascending
+   * Returns the p_no-th edge line of this simplex. The edge lines are sorted in ascending
    * direction.
    */
   @Override
-  public Line borderLine(int pNo) {
+  public Line borderLine(int edgeIndex) {
     if (arr.length == 0) {
       FRLogger.warn("Simplex.edge_line : simplex is empty");
       return null;
     }
     int no;
-    if (pNo < 0) {
+    if (edgeIndex < 0) {
       FRLogger.warn("Simplex.edge_line : p_no is < 0");
       no = 0;
-    } else if (pNo >= arr.length) {
+    } else if (edgeIndex >= arr.length) {
       FRLogger.warn("Simplex.edge_line: p_no must be less than arr.length - 1");
       no = arr.length - 1;
     } else {
-      no = pNo;
+      no = edgeIndex;
     }
     return arr[no];
   }
@@ -348,7 +342,7 @@ public class Simplex extends TileShape implements Serializable {
     return minDistance + minDistance2;
   }
 
-  /** checks if this simplex can be converted into an IntBox */
+  /** Checks if this simplex can be converted into an IntBox. */
   @Override
   public boolean isIntBox() {
     for (int i = 0; i < arr.length; i++) {
@@ -366,7 +360,7 @@ public class Simplex extends TileShape implements Serializable {
     return true;
   }
 
-  /** checks if this simplex can be converted into an IntOctagon */
+  /** Checks if this simplex can be converted into an IntOctagon. */
   @Override
   public boolean isIntOctagon() {
     for (int i = 0; i < arr.length; i++) {
@@ -386,7 +380,7 @@ public class Simplex extends TileShape implements Serializable {
 
   /**
    * Converts this IntSimplex to an IntOctagon. Returns null, if that is not possible, because not
-   * all lines of this IntSimplex are 45 degree
+   * all lines of this IntSimplex are 45 degrees.
    */
   public IntOctagon toIntOctagon() {
     // this function is at the moment only implemented for lines
@@ -455,22 +449,22 @@ public class Simplex extends TileShape implements Serializable {
     return result.normalize();
   }
 
-  /** Returns the simplex, which results from translating the lines of this simplex by p_vector */
+  /** Returns the simplex that results from translating its lines by p_vector. */
   @Override
-  public Simplex translateBy(Vector pVector) {
-    if (pVector.equals(Vector.ZERO)) {
+  public Simplex translateBy(Vector vector) {
+    if (vector.equals(Vector.ZERO)) {
       return this;
     }
     Line[] newArr = new Line[arr.length];
     for (int i = 0; i < arr.length; i++) {
-      newArr[i] = arr[i].translateBy(pVector);
+      newArr[i] = arr[i].translateBy(vector);
     }
     return new Simplex(newArr);
   }
 
   /**
    * Returns the smallest box with int coordinates containing all corners of this simplex. The
-   * coordinates of the result will be Integer.MAX_VALUE, if the simplex is not bounded
+   * coordinates of the result will be Integer.MAX_VALUE if the simplex is not bounded.
    */
   @Override
   public IntBox boundingBox() {
@@ -526,9 +520,8 @@ public class Simplex extends TileShape implements Serializable {
       if (Math.min(lx, ly) < -Limits.CRIT_INT
           || Math.max(rx, uy) > Limits.CRIT_INT
           || Math.min(ulx, llx) < -Limits.CRIT_INT
-          || Math.max(lrx, urx) > Limits.CRIT_INT)
-      // result is not bounded
-      {
+          || Math.max(lrx, urx) > Limits.CRIT_INT) {
+        // result is not bounded
         return null;
       }
       precalculatedBoundingOctagon =
@@ -551,8 +544,8 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   @Override
-  public RegularTileShape boundingShape(ShapeBoundingDirections pDirs) {
-    return pDirs.bounds(this);
+  public RegularTileShape boundingShape(ShapeBoundingDirections dirs) {
+    return dirs.bounds(this);
   }
 
   /**
@@ -560,16 +553,16 @@ public class Simplex extends TileShape implements Serializable {
    * else to the inner.
    */
   @Override
-  public Simplex offset(double pWidth) {
-    if (pWidth == 0) {
+  public Simplex offset(double width) {
+    if (width == 0) {
       return this;
     }
     Line[] newArr = new Line[arr.length];
     for (int i = 0; i < arr.length; i++) {
-      newArr[i] = arr[i].translate(-pWidth);
+      newArr[i] = arr[i].translate(-width);
     }
     Simplex offsetSimplex = new Simplex(newArr);
-    if (pWidth < 0) {
+    if (width < 0) {
       offsetSimplex = offsetSimplex.removeRedundantLines();
     }
     return offsetSimplex;
@@ -580,16 +573,16 @@ public class Simplex extends TileShape implements Serializable {
    * p_offset enlarged bounding octagon of this simplex
    */
   @Override
-  public Simplex enlarge(double pOffset) {
-    if (pOffset == 0) {
+  public Simplex enlarge(double offset) {
+    if (offset == 0) {
       return this;
     }
-    Simplex offsetSimplex = offset(pOffset);
+    Simplex offsetSimplex = offset(offset);
     IntOctagon boundingOct = this.boundingOctagon();
     if (boundingOct == null) {
       return Simplex.EMPTY;
     }
-    IntOctagon offsetOct = boundingOct.offset(pOffset);
+    IntOctagon offsetOct = boundingOct.offset(offset);
     return offsetSimplex.intersection(offsetOct.toSimplex());
   }
 
@@ -597,8 +590,8 @@ public class Simplex extends TileShape implements Serializable {
    * Returns the number of the rightmost corner seen from p_from_point No other point of this
    * simplex may be to the right of the line from p_from_point to the result corner.
    */
-  public int indexOfRightMostCorner(Point pFromPoint) {
-    Point pole = pFromPoint;
+  public int indexOfRightMostCorner(Point fromPoint) {
+    Point pole = fromPoint;
     Point rightMostCorner = corner(0);
     int result = 0;
     for (int i = 1; i < arr.length; i++) {
@@ -611,48 +604,68 @@ public class Simplex extends TileShape implements Serializable {
     return result;
   }
 
-  /** Returns the intersection of p_box with this simplex */
+  /** Returns the intersection of p_box with this simplex. */
   @Override
-  public Simplex intersection(IntBox pBox) {
-    return intersection(pBox.toSimplex());
+  public Simplex intersection(IntBox box) {
+    return intersection(box.toSimplex());
   }
 
-  /** Returns the intersection of this simplex and p_other */
   @Override
-  public Simplex intersection(Simplex pOther) {
-    if (this.isEmpty() || pOther.isEmpty()) {
+  Simplex intersection(IntOctagon other) {
+    return intersection(other.toSimplex());
+  }
+
+  /** Returns the intersection of this simplex and p_other. */
+  @Override
+  public Simplex intersection(Simplex other) {
+    if (this.isEmpty() || other.isEmpty()) {
       return EMPTY;
     }
-    Line[] newArr = new Line[arr.length + pOther.arr.length];
+    Line[] newArr = new Line[arr.length + other.arr.length];
     System.arraycopy(arr, 0, newArr, 0, arr.length);
-    System.arraycopy(pOther.arr, 0, newArr, arr.length, pOther.arr.length);
+    System.arraycopy(other.arr, 0, newArr, arr.length, other.arr.length);
     Arrays.sort(newArr);
     Simplex result = new Simplex(newArr);
     return result.removeRedundantLines();
   }
 
-  /** Returns the intersection of this simplex and the shape p_other */
+  /** Returns the intersection of this simplex and the shape p_other. */
   @Override
-  public TileShape intersection(TileShape pOther) {
-    return pOther.intersection(this);
+  public TileShape intersection(TileShape other) {
+    return other.intersection(this);
   }
 
   @Override
-  public boolean intersects(Shape pOther) {
-    return pOther.intersects(this);
+  public boolean intersects(Shape other) {
+    return other.intersects(this);
   }
 
   @Override
-  public boolean intersects(Simplex pOther) {
-    ConvexShape is = intersection(pOther);
+  public boolean intersects(Simplex other) {
+    ConvexShape is = intersection(other);
     return !is.isEmpty();
   }
 
-  /** if p_line is a borderline of this simplex the number of that edge is returned, otherwise -1 */
   @Override
-  public int borderLineIndex(Line pLine) {
+  public boolean intersects(IntBox box) {
+    return intersects(box.toSimplex());
+  }
+
+  @Override
+  public boolean intersects(IntOctagon octagon) {
+    return intersects(octagon.toSimplex());
+  }
+
+  @Override
+  public boolean intersects(Circle circle) {
+    return circle.intersects(this);
+  }
+
+  /** Returns the edge number if p_line is a border line of this simplex, otherwise -1. */
+  @Override
+  public int borderLineIndex(Line line) {
     for (int i = 0; i < arr.length; i++) {
-      if (pLine.equals(arr[i])) {
+      if (line.equals(arr[i])) {
         return i;
       }
     }
@@ -663,13 +676,13 @@ public class Simplex extends TileShape implements Serializable {
    * Enlarges the simplex by removing the edge line with index p_no. The result simplex may get
    * unbounded.
    */
-  public Simplex removeBorderLine(int pNo) {
-    if (pNo < 0 || pNo >= arr.length) {
+  public Simplex removeBorderLine(int no) {
+    if (no < 0 || no >= arr.length) {
       return this;
     }
     Line[] newArr = new Line[this.arr.length - 1];
-    System.arraycopy(this.arr, 0, newArr, 0, pNo);
-    System.arraycopy(this.arr, pNo + 1, newArr, pNo, newArr.length - pNo);
+    System.arraycopy(this.arr, 0, newArr, 0, no);
+    System.arraycopy(this.arr, no + 1, newArr, no, newArr.length - no);
     return new Simplex(newArr);
   }
 
@@ -679,42 +692,38 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   @Override
-  Simplex intersection(IntOctagon pOther) {
-    return intersection(pOther.toSimplex());
-  }
-
-  @Override
-  public TileShape[] cutout(TileShape pShape) {
-    return pShape.cutoutFrom(this);
+  public TileShape[] cutout(TileShape shape) {
+    return shape.cutoutFrom(this);
   }
 
   /**
-   * cuts this simplex out of p_outer_simplex. Divides the resulting shape into simplices along the
+   * Cuts this simplex out of p_outer_simplex. Divides the resulting shape into simplices along the
    * minimal distance lines from the vertices of the inner simplex to the outer simplex; Returns the
    * convex pieces constructed by this division.
    */
   @Override
-  public Simplex[] cutoutFrom(Simplex pOuterSimplex) {
+  @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
+  public Simplex[] cutoutFrom(Simplex outerSimplex) {
     if (this.dimension() < 2) {
       FRLogger.warn("Simplex.cutout_from only implemented for 2-dim simplex");
       return null;
     }
-    Simplex innerSimplex = this.intersection(pOuterSimplex);
+    Simplex innerSimplex = this.intersection(outerSimplex);
     if (innerSimplex.dimension() < 2) {
       // nothing to cutout from p_outer_simplex
       Simplex[] result = new Simplex[1];
-      result[0] = pOuterSimplex;
+      result[0] = outerSimplex;
       return result;
     }
     int innerCornerCount = innerSimplex.arr.length;
     Line[][] divisionLineArr = new Line[innerCornerCount][];
-    for (int inner_corner_no = 0; inner_corner_no < innerCornerCount; inner_corner_no++) {
-      divisionLineArr[inner_corner_no] =
-          innerSimplex.calcDivisionLines(inner_corner_no, pOuterSimplex);
-      if (divisionLineArr[inner_corner_no] == null) {
+    for (int innerCornerNo = 0; innerCornerNo < innerCornerCount; innerCornerNo++) {
+      divisionLineArr[innerCornerNo] =
+          innerSimplex.calcDivisionLines(innerCornerNo, outerSimplex);
+      if (divisionLineArr[innerCornerNo] == null) {
         FRLogger.warn("Simplex.cutout_from: division line is null");
         Simplex[] result = new Simplex[1];
-        result[0] = pOuterSimplex;
+        result[0] = outerSimplex;
         return result;
       }
     }
@@ -724,14 +733,14 @@ public class Simplex extends TileShape implements Serializable {
     IntDirection firstDirection = (IntDirection) firstDivisionLine.direction();
     Collection<Simplex> resultList = new LinkedList<>();
 
-    for (int inner_corner_no = 0; inner_corner_no < innerCornerCount; inner_corner_no++) {
+    for (int innerCornerNo = 0; innerCornerNo < innerCornerCount; innerCornerNo++) {
       Line nextDivisionLine;
-      if (inner_corner_no == innerSimplex.arr.length - 1) {
+      if (innerCornerNo == innerSimplex.arr.length - 1) {
         nextDivisionLine = divisionLineArr[0][0];
       } else {
-        nextDivisionLine = divisionLineArr[inner_corner_no + 1][0];
+        nextDivisionLine = divisionLineArr[innerCornerNo + 1][0];
       }
-      Line[] currDivisionLines = divisionLineArr[inner_corner_no];
+      Line[] currDivisionLines = divisionLineArr[innerCornerNo];
       if (currDivisionLines.length == 2) {
         // 2 division lines are necessary (sharp corner).
         // Construct an unbounded simplex from
@@ -750,7 +759,7 @@ public class Simplex extends TileShape implements Serializable {
           }
         }
         if (!checkCrossFirstLine) {
-          checkCrossFirstLine = inner_corner_no > 0 && currDir.determinant(firstDirection) > 0;
+          checkCrossFirstLine = innerCornerNo > 0 && currDir.determinant(firstDirection) > 0;
         }
         if (checkCrossFirstLine) {
           IntDirection currDir2 = (IntDirection) currDivisionLines[1].direction();
@@ -781,10 +790,10 @@ public class Simplex extends TileShape implements Serializable {
           pieceLines[currLineNo] = new Line(firstDivisionLine.b, firstDivisionLine.a);
         }
         Simplex currPiece = new Simplex(pieceLines);
-        resultList.add(currPiece.intersection(pOuterSimplex));
+        resultList.add(currPiece.intersection(outerSimplex));
       }
       // construct an unbounded simplex from nextDivisionLine,
-      // innerSimplex.line [inner_corner_no] and the last current division line
+      // innerSimplex.line [innerCornerNo] and the last current division line
       // and intersect it with the outer simplex
       boolean mergeNextDivisionLine = !nextDivisionLine.b.equals(nextDivisionLine.a);
       Line lastCurrDivisionLine = currDivisionLines[currDivisionLines.length - 1];
@@ -803,11 +812,11 @@ public class Simplex extends TileShape implements Serializable {
       }
       if (!checkCrossFirstLine) {
         checkCrossFirstLine =
-            inner_corner_no > 0
+            innerCornerNo > 0
                 && lastCurrDir.determinant(firstDirection) > 0
                 && lastCurrDir.getVector().scalarProduct(firstDirection.getVector()) < 0;
         // scalarProduct checked to ignore backcrossing at
-        // small inner_corner_no
+        // small innerCornerNo
       }
       if (checkCrossFirstLine) {
         IntDirection nextDir = (IntDirection) nextDivisionLine.direction();
@@ -831,7 +840,7 @@ public class Simplex extends TileShape implements Serializable {
         ++pieceLineCount;
       }
       Line[] pieceLines = new Line[pieceLineCount];
-      Line currLine = innerSimplex.arr[inner_corner_no];
+      Line currLine = innerSimplex.arr[innerCornerNo];
       pieceLines[0] = new Line(currLine.b, currLine.a);
       int currLineNo = 0;
       if (mergeNextDivisionLine) {
@@ -851,7 +860,7 @@ public class Simplex extends TileShape implements Serializable {
         pieceLines[currLineNo] = new Line(firstDivisionLine.b, firstDivisionLine.a);
       }
       Simplex currPiece = new Simplex(pieceLines);
-      resultList.add(currPiece.intersection(pOuterSimplex));
+      resultList.add(currPiece.intersection(outerSimplex));
       nextDivisionLine = prevDivisionLine;
     }
     Simplex[] result = new Simplex[resultList.size()];
@@ -863,13 +872,13 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   @Override
-  Simplex[] cutoutFrom(IntOctagon pOct) {
-    return cutoutFrom(pOct.toSimplex());
+  Simplex[] cutoutFrom(IntOctagon oct) {
+    return cutoutFrom(oct.toSimplex());
   }
 
   @Override
-  Simplex[] cutoutFrom(IntBox pBox) {
-    return cutoutFrom(pBox.toSimplex());
+  Simplex[] cutoutFrom(IntBox box) {
+    return cutoutFrom(box.toSimplex());
   }
 
   /**
@@ -916,28 +925,22 @@ public class Simplex extends TileShape implements Serializable {
         IntDirection prevDir = (IntDirection) prevLine.direction();
         IntDirection nextDir = (IntDirection) nextLine.direction();
         double det = prevDir.determinant(nextDir);
-        if (det != 0) // prevLine and nextLine are not parallel
-        {
+        if (det != 0) { // prevLine and nextLine are not parallel
           if (intersectionSides[ind] == null) {
             // intersectionSides [ind] not precalculated
             intersectionSides[ind] = currLine.sideOfIntersection(prevLine, nextLine);
           }
-          if (det > 0)
-          // direction of nextLine is bigger than direction of prevLine
-          {
+          if (det > 0) { // direction of nextLine is bigger than direction of prevLine
             // if the intersection of prevLine and nextLine
             // is on the left of currLine, currLine does not
             // contribute to the shape of the simplex
             removeLine = intersectionSides[ind] != Side.ON_THE_LEFT;
-          } else
-          // direction of nextLine is smaller than direction of prevLine
-          {
+          } else { // direction of nextLine is smaller than direction of prevLine
 
             if (intersectionSides[ind] == Side.ON_THE_LEFT) {
               IntDirection currDir = (IntDirection) currLine.direction();
-              if (prevDir.determinant(currDir) > 0)
-              // direction of currLine is bigger than direction of prevLine
-              {
+              if (prevDir.determinant(currDir) > 0) {
+                // direction of currLine is bigger than direction of prevLine
                 // the halfplane defined by currLine does not intersect
                 // with the simplex defined by prevLine and nex_line,
                 // hence this simplex must be empty
@@ -947,13 +950,10 @@ public class Simplex extends TileShape implements Serializable {
               }
             }
           }
-        } else // prevLine and nextLine are parallel
-        {
-          if (prevLine.sideOf(nextLine.a) == Side.ON_THE_LEFT)
-          // prevLine is to the left of nextLine,
-          // the halfplanes defined by prevLine and nextLine
-          // do not intersect
-          {
+        } else { // prevLine and nextLine are parallel
+          if (prevLine.sideOf(nextLine.a) == Side.ON_THE_LEFT) {
+            // prevLine is to the left of nextLine; the half-planes defined by
+            // prevLine and nextLine do not intersect.
             newLength = 0;
             tryAgain = false;
             break;
@@ -989,9 +989,8 @@ public class Simplex extends TileShape implements Serializable {
           prevInd = ind;
         }
         currLine = nextLine;
-        if (!tryAgain && ind >= indexOfLastRemovedLine)
-        // tried all lines without removing one
-        {
+        if (!tryAgain && ind >= indexOfLastRemovedLine) {
+          // tried all lines without removing one
           break;
         }
       }
@@ -999,17 +998,14 @@ public class Simplex extends TileShape implements Serializable {
 
     if (newLength == 2) {
       if (lineArr[0].isParallel(lineArr[1])) {
-        if (lineArr[0].direction().equals(lineArr[1].direction()))
-        // one of the two remaining lines is redundant
-        {
+        if (lineArr[0].direction().equals(lineArr[1].direction())) {
+          // one of the two remaining lines is redundant
           if (lineArr[1].sideOf(lineArr[0].a) == Side.ON_THE_LEFT) {
             lineArr[0] = lineArr[1];
           }
           --newLength;
-        } else
-        // the two remaining lines have opposite direction
-        // the simplex may be empty
-        {
+        } else {
+          // the two remaining lines have opposite direction; the simplex may be empty.
           if (lineArr[1].sideOf(lineArr[0].a) == Side.ON_THE_LEFT) {
             newLength = 0;
           }
@@ -1027,32 +1023,17 @@ public class Simplex extends TileShape implements Serializable {
     return new Simplex(result);
   }
 
-  @Override
-  public boolean intersects(IntBox pBox) {
-    return intersects(pBox.toSimplex());
-  }
-
-  @Override
-  public boolean intersects(IntOctagon pOctagon) {
-    return intersects(pOctagon.toSimplex());
-  }
-
-  @Override
-  public boolean intersects(Circle pCircle) {
-    return pCircle.intersects(this);
-  }
-
   /**
    * For each corner of this inner simplex 1 or 2 perpendicular projections onto lines of the outer
    * simplex are constructed, so that the resulting pieces after cutting out the inner simplex are
    * convex. 2 projections may be necessary at sharp angle corners. Used in the method cutout_from
    * with parametertype Simplex.
    */
-  private Line[] calcDivisionLines(int pInnerCornerNo, Simplex pOuterSimplex) {
-    Line currInnerLine = this.arr[pInnerCornerNo];
+  private Line[] calcDivisionLines(int innerCornerNo, Simplex outerSimplex) {
+    Line currInnerLine = this.arr[innerCornerNo];
     Line prevInnerLine;
-    if (pInnerCornerNo != 0) {
-      prevInnerLine = this.arr[pInnerCornerNo - 1];
+    if (innerCornerNo != 0) {
+      prevInnerLine = this.arr[innerCornerNo - 1];
     } else {
       prevInnerLine = this.arr[arr.length - 1];
     }
@@ -1062,10 +1043,10 @@ public class Simplex extends TileShape implements Serializable {
       return null;
     }
     IntPoint innerCorner = intersection.round();
-    double cTolerance = 0.0001;
+    double ctolerance = 0.0001;
     boolean isExact =
-        Math.abs(innerCorner.x - intersection.x) < cTolerance
-            && Math.abs(innerCorner.y - intersection.y) < cTolerance;
+        Math.abs(innerCorner.x - intersection.x) < ctolerance
+            && Math.abs(innerCorner.y - intersection.y) < ctolerance;
 
     if (!isExact) {
       // it is assumed, that the corners of the original inner simplex are
@@ -1089,8 +1070,8 @@ public class Simplex extends TileShape implements Serializable {
 
     double minDistance = Integer.MAX_VALUE;
 
-    for (int ind = 0; ind < pOuterSimplex.arr.length; ind++) {
-      Line outerLine = pOuterSimplex.arr[outerLineNo];
+    for (int ind = 0; ind < outerSimplex.arr.length; ind++) {
+      Line outerLine = outerSimplex.arr[outerLineNo];
       IntDirection currProjectionDir = (IntDirection) innerCorner.perpendicularDirection(outerLine);
       if (currProjectionDir == Direction.NULL) {
         Line[] result = new Line[1];
@@ -1110,18 +1091,16 @@ public class Simplex extends TileShape implements Serializable {
           boolean secondProjectionVisible = false;
           int tmpOuterLineNo = outerLineNo;
           while (!secondProjectionVisible) {
-            if (tmpOuterLineNo == pOuterSimplex.arr.length - 1) {
+            if (tmpOuterLineNo == outerSimplex.arr.length - 1) {
               tmpOuterLineNo = 0;
             } else {
               ++tmpOuterLineNo;
             }
             currSecondProjectionDir =
-                (IntDirection)
-                    innerCorner.perpendicularDirection(pOuterSimplex.arr[tmpOuterLineNo]);
+                (IntDirection) innerCorner.perpendicularDirection(outerSimplex.arr[tmpOuterLineNo]);
 
-            if (currSecondProjectionDir == Direction.NULL)
-            // inner corner is on outerLine
-            {
+            if (currSecondProjectionDir == Direction.NULL) {
+              // inner corner is on outerLine
               Line[] result = new Line[1];
               result[0] = new Line(innerCorner, innerCorner);
               return result;
@@ -1138,7 +1117,7 @@ public class Simplex extends TileShape implements Serializable {
             secondProjectionVisible = currSecondProjectionDir.determinant(nextInnerDir) >= 0;
           }
           currDistance +=
-              Math.abs(pOuterSimplex.arr[tmpOuterLineNo].signedDistance(innerCorner.toFloat()));
+              Math.abs(outerSimplex.arr[tmpOuterLineNo].signedDistance(innerCorner.toFloat()));
         }
         if (currDistance < minDistance) {
           minDistance = currDistance;
@@ -1146,7 +1125,7 @@ public class Simplex extends TileShape implements Serializable {
           secondProjectionDir = currSecondProjectionDir;
         }
       }
-      if (outerLineNo == pOuterSimplex.arr.length - 1) {
+      if (outerLineNo == outerSimplex.arr.length - 1) {
         outerLineNo = 0;
       } else {
         ++outerLineNo;

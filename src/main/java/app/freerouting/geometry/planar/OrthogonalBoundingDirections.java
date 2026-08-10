@@ -6,10 +6,10 @@ package app.freerouting.geometry.planar;
  */
 public final class OrthogonalBoundingDirections implements ShapeBoundingDirections {
 
-  /** the one and only instantiation */
+  /** The one and only instantiation. */
   public static final OrthogonalBoundingDirections INSTANCE = new OrthogonalBoundingDirections();
 
-  /** prevent instantiation */
+  /** Prevent instantiation. */
   private OrthogonalBoundingDirections() {}
 
   @Override
@@ -18,32 +18,32 @@ public final class OrthogonalBoundingDirections implements ShapeBoundingDirectio
   }
 
   @Override
-  public RegularTileShape bounds(ConvexShape pShape) {
-    return pShape.boundingShape(this);
+  public RegularTileShape bounds(ConvexShape shape) {
+    return shape.boundingShape(this);
   }
 
   @Override
-  public RegularTileShape bounds(IntBox pBox) {
-    return pBox;
+  public RegularTileShape bounds(IntBox box) {
+    return box;
   }
 
   @Override
-  public RegularTileShape bounds(IntOctagon pOct) {
-    return pOct.boundingBox();
+  public RegularTileShape bounds(IntOctagon oct) {
+    return oct.boundingBox();
   }
 
   @Override
-  public RegularTileShape bounds(Simplex pSimplex) {
-    return pSimplex.boundingBox();
+  public RegularTileShape bounds(Simplex simplex) {
+    return simplex.boundingBox();
   }
 
   @Override
-  public RegularTileShape bounds(Circle pCircle) {
-    return pCircle.boundingBox();
+  public RegularTileShape bounds(Circle circle) {
+    return circle.boundingBox();
   }
 
   @Override
-  public RegularTileShape bounds(PolygonShape pPolygon) {
-    return pPolygon.boundingBox();
+  public RegularTileShape bounds(PolygonShape polygon) {
+    return polygon.boundingBox();
   }
 }

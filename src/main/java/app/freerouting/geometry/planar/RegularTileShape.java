@@ -12,30 +12,30 @@ public abstract class RegularTileShape extends TileShape {
    * Side.COLLINEAR, if the edlines are equal, and Side.ON_THE_RIGHT, if this edgeline is to the
    * right of the edgeline of p_other.
    */
-  public abstract Side compare(RegularTileShape pOther, int pEdgeNo);
-
-  /** calculates the smallest RegularTileShape containing this shape and p_other. */
-  public abstract RegularTileShape union(RegularTileShape pOther);
-
-  /** returns true, if p_other is completely contained in this shape */
-  public abstract boolean contains(RegularTileShape pOther);
+  public abstract Side compare(RegularTileShape other, int edgeNo);
 
   /** Auxiliary function to implement the same function with parameter type RegularTileShape. */
-  abstract Side compare(IntBox pOther, int pEdgeNo);
+  abstract Side compare(IntBox other, int edgeNo);
 
   /** Auxiliary function to implement the same function with parameter type RegularTileShape. */
-  abstract Side compare(IntOctagon pOther, int pEdgeNo);
+  abstract Side compare(IntOctagon other, int edgeNo);
+
+  /** Calculates the smallest RegularTileShape containing this shape and p_other. */
+  public abstract RegularTileShape union(RegularTileShape other);
 
   /** Auxiliary function to implement the same function with parameter type RegularTileShape. */
-  abstract RegularTileShape union(IntBox pOther);
+  abstract RegularTileShape union(IntBox other);
 
   /** Auxiliary function to implement the same function with parameter type RegularTileShape. */
-  abstract RegularTileShape union(IntOctagon pOther);
+  abstract RegularTileShape union(IntOctagon other);
+
+  /** Auxiliary function to implement the same function with parameter type RegularTileShape. */
+  public abstract boolean contains(RegularTileShape other);
 
   /** Auxiliary function to implement the same function with parameter type RegularTileShape. */
   @Override
-  public abstract boolean isContainedIn(IntBox pOther);
+  public abstract boolean isContainedIn(IntBox other);
 
   /** Auxiliary function to implement the same function with parameter type RegularTileShape. */
-  abstract boolean isContainedIn(IntOctagon pOther);
+  abstract boolean isContainedIn(IntOctagon other);
 }
