@@ -334,6 +334,8 @@ public class PolygonShape extends PolylineShape {
       currPoint = nextPoint;
       if (ind == corners.length - 2) {
         nextPoint = corners[0];
+      } else if (ind == corners.length - 1) {
+        nextPoint = corners[1];
       } else {
         nextPoint = corners[ind + 2];
       }

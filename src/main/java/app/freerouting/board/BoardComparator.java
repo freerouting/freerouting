@@ -513,7 +513,6 @@ public class BoardComparator {
       if (item instanceof ConductionArea) {
         condCount1++;
       } else if (item instanceof ObstacleArea
-          && !(item instanceof ConductionArea)
           && !(item instanceof Pin)
           && !(item instanceof ComponentOutline)) {
         obstCount1++;
@@ -528,7 +527,6 @@ public class BoardComparator {
       if (item instanceof ConductionArea) {
         condCount2++;
       } else if (item instanceof ObstacleArea
-          && !(item instanceof ConductionArea)
           && !(item instanceof Pin)
           && !(item instanceof ComponentOutline)) {
         obstCount2++;

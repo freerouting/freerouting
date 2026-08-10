@@ -161,10 +161,10 @@ public class BoardStatistics implements Serializable {
         this.items.viaCount++;
       } else if (currItem instanceof ConductionArea) {
         this.items.conductionAreaCount++;
-      } else if (currItem instanceof DrillItem) {
-        this.items.drillItemCount++;
       } else if (currItem instanceof Pin) {
         this.items.pinCount++;
+      } else if (currItem instanceof DrillItem) {
+        this.items.drillItemCount++;
       } else if (currItem instanceof ComponentOutline) {
         this.items.componentOutlineCount++;
       } else {

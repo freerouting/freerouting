@@ -151,9 +151,6 @@ public final class CopyItemState extends InteractiveState {
     // Contains the old and new id no of a copied component.
     Map<Integer, Integer> cmpNoPairs = new TreeMap<>();
 
-    // Contains the new created components after copying.
-    Collection<Component> copiedComponents = new LinkedList<>();
-
     Vector translateVector = currentPosition.differenceBy(startPosition);
     for (Item currItem : itemList) {
       int currCmpNo = currItem.getComponentNo();
@@ -202,7 +199,6 @@ public final class CopyItemState extends InteractiveState {
                   oldComponent.getRotationInDegree(),
                   oldComponent.placedOnFront(),
                   newPackage);
-          copiedComponents.add(newComponent);
           newCmpNo = newComponent.no;
           cmpNoPairs.put(currCmpNo, newCmpNo);
         }

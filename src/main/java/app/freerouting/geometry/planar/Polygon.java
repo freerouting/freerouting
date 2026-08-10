@@ -110,18 +110,17 @@ public class Polygon implements Serializable {
       --cornerCount;
     }
     double angleSum = 0;
-    for (int i = 1; i <= cornerCount; i++) {
-      Vector nextSideVector;
-      if (i == cornerCount - 1) {
-        nextSideVector = cornerArr[0].differenceBy(cornerArr[i]);
-      } else if (i == cornerCount) {
-        nextSideVector = firstSideVector;
-      } else {
-        nextSideVector = cornerArr[i + 1].differenceBy(cornerArr[i]);
-      }
+    for (int i = 1; i < cornerCount - 1; i++) {
+      Vector nextSideVector = cornerArr[i + 1].differenceBy(cornerArr[i]);
       angleSum += prevSideVector.angleApprox(nextSideVector);
       prevSideVector = nextSideVector;
     }
+    if (cornerCount > 1) {
+      Vector nextSideVector = cornerArr[0].differenceBy(cornerArr[cornerCount - 1]);
+      angleSum += prevSideVector.angleApprox(nextSideVector);
+      prevSideVector = nextSideVector;
+    }
+    angleSum += prevSideVector.angleApprox(firstSideVector);
     angleSum /= 2.0 * Math.PI;
     if (Math.abs(angleSum) < 0.5) {
       FRLogger.warn("Polygon.winding_number_after_closing: winding number != 0 expected");

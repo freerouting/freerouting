@@ -87,12 +87,12 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
       result = tm.getText("trace_with_net_label", currentNet.name);
     } else if (item instanceof ConductionArea) {
       result = tm.getText("conductionArea");
-    } else if (item instanceof ObstacleArea) {
-      result = tm.getText("keepout");
     } else if (item instanceof ViaObstacleArea) {
       result = tm.getText("via_keepout");
     } else if (item instanceof ComponentObstacleArea) {
       result = tm.getText("component_keepout");
+    } else if (item instanceof ObstacleArea) {
+      result = tm.getText("keepout");
     } else if (item instanceof BoardOutline) {
       result = tm.getText("boardOutline");
     } else {
