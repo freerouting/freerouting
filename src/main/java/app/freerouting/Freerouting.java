@@ -57,7 +57,7 @@ import org.eclipse.jetty.server.handler.CrossOriginHandler;
 import org.eclipse.jetty.server.handler.PathMappingsHandler;
 import org.glassfish.jersey.servlet.ServletContainer;
 
-/* Entry point class of the application */
+/** Entry point for the Freerouting application. */
 public class Freerouting {
 
   public static final String WEB_URL = "https://www.freerouting.app";
@@ -73,10 +73,11 @@ public class Freerouting {
   private static Server mcpServer; // MCP server instance
   private static java.io.PrintStream originalSystemOut;
 
-  private static boolean initializeCLI(GlobalSettings globalSettings) {
+  private static boolean initializeCli(GlobalSettings globalSettings) {
     if ((globalSettings.initialInputFile == null) || (globalSettings.initialOutputFile == null)) {
       FRLogger.error(
-          "Both an input file and an output file must be specified with command line arguments if you are running in CLI mode.",
+          "Both an input file and an output file must be specified with command line arguments "
+              + "if you are running in CLI mode.",
           null);
       return false;
     }
@@ -173,7 +174,7 @@ public class Freerouting {
     return true;
   }
 
-  private static boolean initializeDRC(GlobalSettings globalSettings) {
+  private static boolean initializeDrc(GlobalSettings globalSettings) {
     if (globalSettings.initialInputFile == null) {
       FRLogger.error("An input file must be specified with -de argument in DRC mode.", null);
       return false;
@@ -300,6 +301,13 @@ public class Freerouting {
     FRAnalytics.appClosed();
   }
 
+  /**
+   * Initializes and starts the API server.
+   *
+   * @param apiServerSettings settings used to configure the API server
+   * @return the initialized API server, or {@code null} if it could not be started
+   */
+  @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
   public static Server initializeAPI(ApiServerSettings apiServerSettings) {
     // Check if there are any endpoints defined
     if (apiServerSettings.endpoints.length == 0) {
@@ -316,15 +324,12 @@ public class Freerouting {
       endpointUrl = endpointUrl.toLowerCase();
       String[] endpointParts = endpointUrl.split("://");
       String protocol = endpointParts[0];
-      String hostAndPort = endpointParts[1];
-      String[] hostAndPortParts = hostAndPort.split(":");
-      String host = hostAndPortParts[0];
-      int port = Integer.parseInt(hostAndPortParts[1]);
 
       // Check if the protocol is HTTP or HTTPS
       if (!"http".equals(protocol) && !"https".equals(protocol)) {
         FRLogger.warn(
-            "Can't use the endpoint '%s' for the API server, because its protocol is not HTTP or HTTPS."
+            "Can't use the endpoint '%s' for the API server, because its protocol is not HTTP "
+                + "or HTTPS."
                 .formatted(endpointUrl));
         continue;
       }
@@ -343,6 +348,10 @@ public class Freerouting {
             "HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
       }
 
+      String hostAndPort = endpointParts[1];
+      String[] hostAndPortParts = hostAndPort.split(":");
+      String host = hostAndPortParts[0];
+      int port = Integer.parseInt(hostAndPortParts[1]);
       ServerConnector connector = new ServerConnector(apiServer);
       connector.setHost(host);
       connector.setPort(port);
@@ -412,6 +421,13 @@ public class Freerouting {
     return apiServer;
   }
 
+  /**
+   * Initializes and starts the MCP server.
+   *
+   * @param mcpServerSettings settings used to configure the MCP server
+   * @return the initialized MCP server, or {@code null} if it could not be started
+   */
+  @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
   public static Server initializeMCP(McpServerSettings mcpServerSettings) {
     if (mcpServerSettings.endpoints.length == 0) {
       FRLogger.warn(
@@ -425,14 +441,11 @@ public class Freerouting {
       endpointUrl = endpointUrl.toLowerCase();
       String[] endpointParts = endpointUrl.split("://");
       String protocol = endpointParts[0];
-      String hostAndPort = endpointParts[1];
-      String[] hostAndPortParts = hostAndPort.split(":");
-      String host = hostAndPortParts[0];
-      int port = Integer.parseInt(hostAndPortParts[1]);
 
       if (!"http".equals(protocol) && !"https".equals(protocol)) {
         FRLogger.warn(
-            "Can't use the endpoint '%s' for the MCP server, because its protocol is not HTTP or HTTPS."
+            "Can't use the endpoint '%s' for the MCP server, because its protocol is not HTTP "
+                + "or HTTPS."
                 .formatted(endpointUrl));
         continue;
       }
@@ -449,6 +462,10 @@ public class Freerouting {
             "HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
       }
 
+      String hostAndPort = endpointParts[1];
+      String[] hostAndPortParts = hostAndPort.split(":");
+      String host = hostAndPortParts[0];
+      int port = Integer.parseInt(hostAndPortParts[1]);
       ServerConnector connector = new ServerConnector(mcpServer);
       connector.setHost(host);
       connector.setPort(port);
@@ -517,6 +534,12 @@ public class Freerouting {
     return mcpServer;
   }
 
+  /**
+   * Starts the MCP standard-input/output bridge.
+   *
+   * @param originalOut stream receiving bridge output
+   * @param server MCP server whose local endpoint is used by the bridge
+   */
   public static void startMcpStdioBridge(java.io.PrintStream originalOut, Server server) {
     Thread bridgeThread =
         new Thread(
@@ -663,9 +686,9 @@ public class Freerouting {
   }
 
   /**
-   * The entry point of the Freerouting application
+   * The entry point of the Freerouting application.
    *
-   * @param args
+   * @param args command-line arguments
    */
   void main(String[] args) {
     originalSystemOut = System.out;
@@ -776,14 +799,12 @@ public class Freerouting {
     boolean fileLoggingEnabled = true;
     boolean consoleLoggingEnabled = true;
     String fileLoggingLevel = "DEBUG";
-    String consoleLoggingLevel = "INFO";
-    String fileLoggingLocation = null;
-    String fileLoggingPattern = null;
 
     if (System.getenv("FREEROUTING__LOGGING__FILE__ENABLED") != null) {
       fileLoggingEnabled =
           Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__FILE__ENABLED"));
     }
+    String consoleLoggingLevel = "INFO";
     if (System.getenv("FREEROUTING__LOGGING__CONSOLE__ENABLED") != null) {
       consoleLoggingEnabled =
           Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__CONSOLE__ENABLED"));
@@ -794,9 +815,11 @@ public class Freerouting {
     if (System.getenv("FREEROUTING__LOGGING__CONSOLE__LEVEL") != null) {
       consoleLoggingLevel = System.getenv("FREEROUTING__LOGGING__CONSOLE__LEVEL");
     }
+    String fileLoggingLocation = null;
     if (System.getenv("FREEROUTING__LOGGING__FILE__LOCATION") != null) {
       fileLoggingLocation = System.getenv("FREEROUTING__LOGGING__FILE__LOCATION");
     }
+    String fileLoggingPattern = null;
     if (System.getenv("FREEROUTING__LOGGING__FILE__PATTERN") != null) {
       fileLoggingPattern = System.getenv("FREEROUTING__LOGGING__FILE__PATTERN");
     }
@@ -941,8 +964,9 @@ public class Freerouting {
               + fileLoggingLocation
               + "' (as resolved at startup). "
               + "The stale value will be corrected in freerouting.json on next save. "
-              + "If you see this in Docker, the old JSON was written by an earlier version that stored "
-              + "the host path; the fix is to delete freerouting.json so it is regenerated with the correct path.");
+              + "If you see this in Docker, the old JSON was written by an earlier version that "
+              + "stored the host path; the fix is to delete freerouting.json so it is regenerated "
+              + "with the correct path.");
     }
     // Always keep the stored log path in sync with the resolved path so the JSON
     // self-heals and old images that do apply the stored path will get the right value.
@@ -964,7 +988,8 @@ public class Freerouting {
           The stdio redirect must be requested before logging is initialised and therefore \
           can only be set via the '--mcp_server.stdio=true' CLI argument or the \
           'FREEROUTING__MCP_SERVER__STDIO=true' environment variable. \
-          The JSON setting has no effect and the MCP stdio transport will NOT work correctly.""");
+          The JSON setting has no effect and the MCP stdio transport will NOT work correctly.
+          """);
     }
 
     if ((globalSettings == null)
@@ -1016,7 +1041,8 @@ public class Freerouting {
     // if we don't have a GUI enabled then we must use the console as our output
     if ((!globalSettings.guiSettings.isEnabled) && (System.console() == null)) {
       FRLogger.warn(
-          "GUI is disabled and you don't have a console available, so the only feedback from Freerouting is in the log.");
+          "GUI is disabled and you don't have a console available, so the only feedback from "
+              + "Freerouting is in the log.");
     }
 
     // get environment parameters and save them in the settings
@@ -1081,7 +1107,8 @@ public class Freerouting {
         FRLogger.debug("Screen: " + width + "x" + height + ", " + dpi + " DPI");
       } catch (Exception _) {
         FRLogger.warn(
-            "Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.");
+            "Couldn't get screen resolution. If you are running in a headless environment, "
+                + "disable the GUI by setting gui.enabled to false.");
         globalSettings.guiSettings.isEnabled = false;
       }
     }
@@ -1119,6 +1146,7 @@ public class Freerouting {
     try {
       Thread.sleep(1000);
     } catch (Exception _) {
+      // Ignore interruption during the analytics startup delay.
     }
     FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
     FRAnalytics.appStarted(
@@ -1213,9 +1241,9 @@ public class Freerouting {
         && !globalSettings.apiServerSettings.isRunning
         && !globalSettings.mcpServerSettings.isRunning) {
       if (globalSettings.drcReportFile != null) {
-        cliResult = initializeDRC(globalSettings);
+        cliResult = initializeDrc(globalSettings);
       } else {
-        cliResult = initializeCLI(globalSettings);
+        cliResult = initializeCli(globalSettings);
       }
     }
 

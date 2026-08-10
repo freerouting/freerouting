@@ -333,6 +333,8 @@ tasks.register('writeVersionInfo') {
         buildInfoCode.write(
                 """
             package app.freerouting.constants;
+
+            /** Build metadata constants. */
             public final class Constants {
               public static final String FREEROUTING_VERSION = \"${versionId}\";
               public static final String FREEROUTING_BUILD_DATE = \"${buildDateValue}\";
@@ -388,6 +390,8 @@ tasks.register('writeVersionInfoV19') {
         buildInfoCode.write(
                 """
             package app.freerouting.constants;
+
+            /** Build metadata constants. */
             public final class Constants {
               public static final String FREEROUTING_VERSION = \"${versionId}\";
               public static final String FREEROUTING_BUILD_DATE = \"${buildDateValue}\";

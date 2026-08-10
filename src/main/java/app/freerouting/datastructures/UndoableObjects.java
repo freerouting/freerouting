@@ -108,7 +108,7 @@ public class UndoableObjects implements Serializable {
       // Since objectNode.object has been retrieved via objects.get(object)
       // objects.remove(object) would certainly remove the object.
       // Thus ignore the warning and proceed with the deletion
-      //
+      // Intentionally left blank.
       // FRLogger.warn("UndoableObjectList.delete: Object inconsistent");
       // return false;
     }
