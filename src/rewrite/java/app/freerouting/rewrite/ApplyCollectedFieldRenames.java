@@ -53,16 +53,7 @@ public class ApplyCollectedFieldRenames extends Recipe {
         continue;
       }
       try {
-        Map<String, String> renames = new LinkedHashMap<>();
-        for (String line : Files.readAllLines(path)) {
-          if (line.isBlank()) {
-            continue;
-          }
-          String[] parts = line.split("\t", 2);
-          if (parts.length == 2 && !parts[0].equals(parts[1])) {
-            renames.put(parts[0], parts[1]);
-          }
-        }
+        Map<String, String> renames = parseRenameMapLines(Files.readAllLines(path));
         if (!renames.isEmpty()) {
           return renames;
         }
@@ -71,6 +62,31 @@ public class ApplyCollectedFieldRenames extends Recipe {
       }
     }
     return Map.of();
+  }
+
+  static Map<String, String> parseRenameMapLines(List<String> lines) {
+    Map<String, String> renames = new LinkedHashMap<>();
+    for (String line : lines) {
+      if (line.isBlank()) {
+        continue;
+      }
+      String[] parts = line.split("\t", -1);
+      String oldName;
+      String newName;
+      if (parts.length >= 3) {
+        oldName = parts[1].trim();
+        newName = parts[2].trim();
+      } else if (parts.length == 2) {
+        oldName = parts[0].trim();
+        newName = parts[1].trim();
+      } else {
+        continue;
+      }
+      if (!oldName.isEmpty() && !newName.isEmpty() && !oldName.equals(newName)) {
+        renames.put(oldName, newName);
+      }
+    }
+    return renames;
   }
 
   static Map<String, String> collectedRenames() {

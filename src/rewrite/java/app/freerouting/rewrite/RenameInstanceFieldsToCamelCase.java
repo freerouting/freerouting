@@ -233,6 +233,15 @@ public class RenameInstanceFieldsToCamelCase
     }
 
     @Override
+    public J.Block visitBlock(J.Block block, ExecutionContext ctx) {
+      Set<String> localsBeforeBlock = new HashSet<>(scopedLocals);
+      J.Block result = super.visitBlock(block, ctx);
+      scopedLocals.clear();
+      scopedLocals.addAll(localsBeforeBlock);
+      return result;
+    }
+
+    @Override
     public J.VariableDeclarations visitVariableDeclarations(
         J.VariableDeclarations multiVariable, ExecutionContext ctx) {
       Cursor parentScope =
