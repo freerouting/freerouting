@@ -66,6 +66,14 @@ class TextManagerFallbackTest {
   }
 
   @Test
+  void resolvesCamelCaseKeyFromSnakeCasePropertiesEntry() {
+    TextManager english =
+        new TextManager(WindowClearanceViolations.class, Locale.forLanguageTag("en"));
+
+    assertEquals("No violations found", english.getText("listEmptyMessage"));
+  }
+
+  @Test
   void resolvesTranslatedCommonBundleWhenLocaleKeyPresent() {
     TextManager english = new TextManager(BoardFrame.class, Locale.forLanguageTag("en"));
     TextManager arabic = new TextManager(BoardFrame.class, Locale.forLanguageTag("ar"));

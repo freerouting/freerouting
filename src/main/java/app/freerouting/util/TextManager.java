@@ -355,6 +355,20 @@ public class TextManager {
   }
 
   private String lookupMessage(String key) {
+    String message = lookupMessageForKey(key);
+    if (message != null) {
+      return message;
+    }
+
+    String snakeCaseKey = toSnakeCase(key);
+    if (!snakeCaseKey.equals(key)) {
+      return lookupMessageForKey(snakeCaseKey);
+    }
+
+    return null;
+  }
+
+  private String lookupMessageForKey(String key) {
     String message = getBundleString(classMessages, key);
     if (message != null) {
       return message;
@@ -392,6 +406,12 @@ public class TextManager {
     }
 
     return null;
+  }
+
+  private static String toSnakeCase(String key) {
+    return key.replaceAll("([A-Z]+)([A-Z][a-z])", "$1_$2")
+        .replaceAll("([a-z\\d])([A-Z])", "$1_$2")
+        .toLowerCase(Locale.ROOT);
   }
 
   private String lookupParentClassMessage(String key, Locale locale) {
