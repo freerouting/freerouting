@@ -14,23 +14,28 @@ import java.util.List;
 import java.util.Objects;
 
 /** Class for reading and writing rule scopes from dsn-files. */
+@SuppressWarnings({
+  "checkstyle:MissingJavadocMethod",
+  "checkstyle:MissingJavadocType",
+  "checkstyle:VariableDeclarationUsageDistance"
+})
 public abstract class Rule {
 
   /** Returns a collection of objects of class Rule. */
-  public static Collection<Rule> readScope(IJFlexScanner pScanner) {
+  public static Collection<Rule> readScope(IJFlexScanner scanner) {
     Collection<Rule> result = new LinkedList<>();
     Object currentToken = null;
     for (; ; ) {
       Object prevToken = currentToken;
       try {
-        currentToken = pScanner.nextToken();
+        currentToken = scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("Rule.read_scope: IO error scanning file", e);
         return null;
       }
       if (currentToken == null) {
         FRLogger.warn(
-            "Rule.read_scope: unexpected end of file at '" + pScanner.getScopeIdentifier() + "'");
+            "Rule.read_scope: unexpected end of file at '" + scanner.getScopeIdentifier() + "'");
         return null;
       }
       if (currentToken == Keyword.CLOSED_BRACKET) {
@@ -43,12 +48,12 @@ public abstract class Rule {
         Rule currRule = null;
         if (currentToken == Keyword.WIDTH) {
           // this is a "(width" rule
-          currRule = readWidthRule(pScanner);
+          currRule = readWidthRule(scanner);
         } else if (currentToken == Keyword.CLEARANCE) {
           // this is a "(clear" rule
-          currRule = readClearanceRule(pScanner);
+          currRule = readClearanceRule(scanner);
         } else {
-          ScopeKeyword.skipScope(pScanner);
+          ScopeKeyword.skipScope(scanner);
         }
 
         if (currRule != null) {
@@ -60,13 +65,13 @@ public abstract class Rule {
   }
 
   /** Reads a LayerRule from dsn-file. */
-  public static LayerRule readLayerRuleScope(IJFlexScanner pScanner) {
+  public static LayerRule readLayerRuleScope(IJFlexScanner scanner) {
     try {
       Collection<String> layerNames = new LinkedList<>();
       Collection<Rule> ruleList = new LinkedList<>();
       for (; ; ) {
-        pScanner.yybegin(SpecctraDsnStreamReader.LAYER_NAME);
-        Object nextToken = pScanner.nextToken();
+        scanner.yybegin(SpecctraDsnStreamReader.LAYER_NAME);
+        Object nextToken = scanner.nextToken();
         if (nextToken == Keyword.OPEN_BRACKET) {
           break;
         }
@@ -74,14 +79,14 @@ public abstract class Rule {
 
           FRLogger.warn(
               "Rule.read_layer_rule_scope: string expected at '"
-                  + pScanner.getScopeIdentifier()
+                  + scanner.getScopeIdentifier()
                   + "'");
           return null;
         }
         layerNames.add((String) nextToken);
       }
       for (; ; ) {
-        Object nextToken = pScanner.nextToken();
+        Object nextToken = scanner.nextToken();
         if (nextToken == Keyword.CLOSED_BRACKET) {
           break;
         }
@@ -89,11 +94,11 @@ public abstract class Rule {
 
           FRLogger.warn(
               "Rule.read_layer_rule_scope: rule expected at '"
-                  + pScanner.getScopeIdentifier()
+                  + scanner.getScopeIdentifier()
                   + "'");
           return null;
         }
-        ruleList.addAll(readScope(pScanner));
+        ruleList.addAll(readScope(scanner));
       }
       return new LayerRule(layerNames, ruleList);
     } catch (IOException e) {
@@ -102,184 +107,184 @@ public abstract class Rule {
     }
   }
 
-  public static WidthRule readWidthRule(IJFlexScanner pScanner) {
-    double value = pScanner.nextDouble();
+  public static WidthRule readWidthRule(IJFlexScanner scanner) {
+    double value = scanner.nextDouble();
 
-    if (!pScanner.nextClosingBracket()) {
+    if (!scanner.nextClosingBracket()) {
       return null;
     }
 
     return new WidthRule(value);
   }
 
-  public static void writeScope(NetClass pNetClass, WriteScopeParameter pPar) throws IOException {
-    pPar.file.startScope();
-    pPar.file.write("rule");
+  public static void writeScope(NetClass netClass, WriteScopeParameter par) throws IOException {
+    par.file.startScope();
+    par.file.write("rule");
 
     // write the trace width
-    int defaultTraceHalfWidth = pNetClass.getTraceHalfWidth(0);
-    double traceWidth = 2 * pPar.coordinateTransform.boardToDsn(defaultTraceHalfWidth);
-    pPar.file.newLine();
-    pPar.file.write("(width ");
-    pPar.file.write(String.valueOf(traceWidth));
-    pPar.file.write(")");
-    pPar.file.endScope();
-    for (int i = 1; i < pPar.board.layerStructure.arr.length; i++) {
-      if (pNetClass.getTraceHalfWidth(i) != defaultTraceHalfWidth) {
-        writeLayerRule(pNetClass, i, pPar);
+    int defaultTraceHalfWidth = netClass.getTraceHalfWidth(0);
+    double traceWidth = 2 * par.coordinateTransform.boardToDsn(defaultTraceHalfWidth);
+    par.file.newLine();
+    par.file.write("(width ");
+    par.file.write(String.valueOf(traceWidth));
+    par.file.write(")");
+    par.file.endScope();
+    for (int i = 1; i < par.board.layerStructure.arr.length; i++) {
+      if (netClass.getTraceHalfWidth(i) != defaultTraceHalfWidth) {
+        writeLayerRule(netClass, i, par);
       }
     }
   }
 
-  private static void writeLayerRule(NetClass pNetClass, int pLayerNo, WriteScopeParameter pPar)
+  private static void writeLayerRule(NetClass netClass, int layerNo, WriteScopeParameter par)
       throws IOException {
-    pPar.file.startScope();
-    pPar.file.write("layer_rule ");
+    par.file.startScope();
+    par.file.write("layer_rule ");
 
-    Layer currBoardLayer = pPar.board.layerStructure.arr[pLayerNo];
+    Layer currBoardLayer = par.board.layerStructure.arr[layerNo];
 
-    pPar.file.write(currBoardLayer.name);
-    pPar.file.startScope();
-    pPar.file.write("rule ");
+    par.file.write(currBoardLayer.name);
+    par.file.startScope();
+    par.file.write("rule ");
 
-    int currTraceHalfWidth = pNetClass.getTraceHalfWidth(pLayerNo);
+    int currTraceHalfWidth = netClass.getTraceHalfWidth(layerNo);
 
     // write the trace width
-    double traceWidth = 2 * pPar.coordinateTransform.boardToDsn(currTraceHalfWidth);
-    pPar.file.newLine();
-    pPar.file.write("(width ");
-    pPar.file.write(String.valueOf(traceWidth));
-    pPar.file.write(") ");
-    pPar.file.endScope();
-    pPar.file.endScope();
+    double traceWidth = 2 * par.coordinateTransform.boardToDsn(currTraceHalfWidth);
+    par.file.newLine();
+    par.file.write("(width ");
+    par.file.write(String.valueOf(traceWidth));
+    par.file.write(") ");
+    par.file.endScope();
+    par.file.endScope();
   }
 
   /** Writes the default rule as a scope to an output dsn-file. */
-  public static void writeDefaultRule(WriteScopeParameter pPar, int pLayer) throws IOException {
-    pPar.file.startScope();
-    pPar.file.write("rule");
+  public static void writeDefaultRule(WriteScopeParameter par, int layer) throws IOException {
+    par.file.startScope();
+    par.file.write("rule");
     // write the trace width
     double traceWidth =
         2
-            * pPar.coordinateTransform.boardToDsn(
-                pPar.board.rules.getDefaultNetClass().getTraceHalfWidth(0));
-    pPar.file.newLine();
-    pPar.file.write("(width ");
-    pPar.file.write(String.valueOf(traceWidth));
-    pPar.file.write(")");
+            * par.coordinateTransform.boardToDsn(
+                par.board.rules.getDefaultNetClass().getTraceHalfWidth(0));
+    par.file.newLine();
+    par.file.write("(width ");
+    par.file.write(String.valueOf(traceWidth));
+    par.file.write(")");
     // write the default clearance rule
     int defaultClNo = BoardRules.defaultClearanceClass();
     int defaultBoardClearance =
-        pPar.board.rules.clearanceMatrix.getValue(defaultClNo, defaultClNo, pLayer, false);
-    double defaultClearance = pPar.coordinateTransform.boardToDsn(defaultBoardClearance);
-    pPar.file.newLine();
+        par.board.rules.clearanceMatrix.getValue(defaultClNo, defaultClNo, layer, false);
+    double defaultClearance = par.coordinateTransform.boardToDsn(defaultBoardClearance);
+    par.file.newLine();
     // write the default clearance
-    pPar.file.write("(clearance ");
-    pPar.file.write(String.valueOf(defaultClearance));
-    pPar.file.write(")");
+    par.file.write("(clearance ");
+    par.file.write(String.valueOf(defaultClearance));
+    par.file.write(")");
     // write the smd_to_turn_gap
     double smdToTurnDist =
-        pPar.coordinateTransform.boardToDsn(pPar.board.rules.getPinEdgeToTurnDist());
-    pPar.file.newLine();
-    pPar.file.write("(clearance ");
-    pPar.file.write(String.valueOf(smdToTurnDist));
-    pPar.file.write(" (type smd_to_turn_gap))");
+        par.coordinateTransform.boardToDsn(par.board.rules.getPinEdgeToTurnDist());
+    par.file.newLine();
+    par.file.write("(clearance ");
+    par.file.write(String.valueOf(smdToTurnDist));
+    par.file.write(" (type smd_to_turn_gap))");
 
     // write the named clearance rules from the clearance matrix
-    writeNamedClearanceRules(pPar, pLayer);
+    writeNamedClearanceRules(par, layer);
     // write_non_default_clearance_rules(p_par, p_layer, defaultBoardClearance);
 
-    pPar.file.endScope();
+    par.file.endScope();
   }
 
   /** Write the clearance rules, which are different from the default clearance. */
   private static void writeNonDefaultClearanceRules(
-      WriteScopeParameter pPar, int pLayer, int pDefaultClearance) throws IOException {
+      WriteScopeParameter par, int layer, int defaultClearance) throws IOException {
 
-    ClearanceMatrix clMatrix = pPar.board.rules.clearanceMatrix;
-    int clCount = pPar.board.rules.clearanceMatrix.getClassCount();
+    ClearanceMatrix clMatrix = par.board.rules.clearanceMatrix;
+    int clCount = par.board.rules.clearanceMatrix.getClassCount();
 
     for (int i = 1; i <= clCount; i++) {
       for (int j = i; j < clCount; j++) {
-        int currBoardClearance = clMatrix.getValue(i, j, pLayer, false);
+        int currBoardClearance = clMatrix.getValue(i, j, layer, false);
 
-        if (currBoardClearance == pDefaultClearance) {
+        if (currBoardClearance == defaultClearance) {
           continue;
         }
 
-        double currClearance = pPar.coordinateTransform.boardToDsn(currBoardClearance);
-        pPar.file.newLine();
-        pPar.file.write("(clearance ");
-        pPar.file.write(String.valueOf(currClearance));
-        pPar.file.write(" (type ");
-        pPar.identifierType.write(clMatrix.getName(i), pPar.file);
-        pPar.file.write(DsnFile.CLASS_CLEARANCE_SEPARATOR);
-        pPar.identifierType.write(clMatrix.getName(j), pPar.file);
-        pPar.file.write("))");
+        double currClearance = par.coordinateTransform.boardToDsn(currBoardClearance);
+        par.file.newLine();
+        par.file.write("(clearance ");
+        par.file.write(String.valueOf(currClearance));
+        par.file.write(" (type ");
+        par.identifierType.write(clMatrix.getName(i), par.file);
+        par.file.write(DsnFile.CLASS_CLEARANCE_SEPARATOR);
+        par.identifierType.write(clMatrix.getName(j), par.file);
+        par.file.write("))");
       }
     }
   }
 
   /** Write the clearance rules for the named classes in the clearance matrix. */
-  private static void writeNamedClearanceRules(WriteScopeParameter pPar, int pLayer)
+  private static void writeNamedClearanceRules(WriteScopeParameter par, int layer)
       throws IOException {
 
-    ClearanceMatrix clMatrix = pPar.board.rules.clearanceMatrix;
-    int clCount = pPar.board.rules.clearanceMatrix.getClassCount();
+    ClearanceMatrix clMatrix = par.board.rules.clearanceMatrix;
+    int clCount = par.board.rules.clearanceMatrix.getClassCount();
 
     for (int i = 1; i < clCount; i++) {
       if (Objects.equals(clMatrix.getName(i), "default")) {
         continue;
       }
 
-      int currBoardClearance = clMatrix.getValue(i, i, pLayer, false);
-      double currClearance = pPar.coordinateTransform.boardToDsn(currBoardClearance);
+      int currBoardClearance = clMatrix.getValue(i, i, layer, false);
+      double currClearance = par.coordinateTransform.boardToDsn(currBoardClearance);
 
-      pPar.file.newLine();
-      pPar.file.write("(clearance ");
-      pPar.file.write(String.valueOf(currClearance));
-      pPar.file.write(" (type ");
-      pPar.identifierType.write(clMatrix.getName(i), pPar.file);
-      pPar.file.write("))");
+      par.file.newLine();
+      par.file.write("(clearance ");
+      par.file.write(String.valueOf(currClearance));
+      par.file.write(" (type ");
+      par.identifierType.write(clMatrix.getName(i), par.file);
+      par.file.write("))");
     }
   }
 
-  public static ClearanceRule readClearanceRule(IJFlexScanner pScanner) {
+  public static ClearanceRule readClearanceRule(IJFlexScanner scanner) {
     try {
-      double value = pScanner.nextDouble();
+      double value = scanner.nextDouble();
 
       Collection<String> classPairs = new LinkedList<>();
-      Object nextToken = pScanner.nextToken();
+      Object nextToken = scanner.nextToken();
       if (nextToken != Keyword.CLOSED_BRACKET) {
         // look for "(type"
         if (nextToken != Keyword.OPEN_BRACKET) {
           FRLogger.warn(
-              "Rule.read_clearance_rule: ( expected at '" + pScanner.getScopeIdentifier() + "'");
+              "Rule.read_clearance_rule: ( expected at '" + scanner.getScopeIdentifier() + "'");
           return null;
         }
-        nextToken = pScanner.nextToken();
+        nextToken = scanner.nextToken();
         if (nextToken != Keyword.TYPE) {
           FRLogger.warn(
-              "Rule.read_clearance_rule: type expected at '" + pScanner.getScopeIdentifier() + "'");
+              "Rule.read_clearance_rule: type expected at '" + scanner.getScopeIdentifier() + "'");
           return null;
         }
 
-        classPairs.addAll(List.of(pScanner.nextStringList(DsnFile.CLASS_CLEARANCE_SEPARATOR)));
+        classPairs.addAll(List.of(scanner.nextStringList(DsnFile.CLASS_CLEARANCE_SEPARATOR)));
 
         // check the closing ")" of "(type"
-        if (!pScanner.nextClosingBracket()) {
+        if (!scanner.nextClosingBracket()) {
           FRLogger.warn(
               "Rule.read_clearance_rule: closing bracket expected at '"
-                  + pScanner.getScopeIdentifier()
+                  + scanner.getScopeIdentifier()
                   + "'");
           return null;
         }
 
         // check the closing ")" of "(clear"
-        if (!pScanner.nextClosingBracket()) {
+        if (!scanner.nextClosingBracket()) {
           FRLogger.warn(
               "Rule.read_clearance_rule: closing bracket expected at '"
-                  + pScanner.getScopeIdentifier()
+                  + scanner.getScopeIdentifier()
                   + "'");
           return null;
         }
@@ -293,19 +298,19 @@ public abstract class Rule {
   }
 
   public static void writeItemClearanceClass(
-      String pName, IndentFileWriter pFile, IdentifierType pIdentifierType) throws IOException {
-    pFile.newLine();
-    pFile.write("(clearanceClass ");
-    pIdentifierType.write(pName, pFile);
-    pFile.write(")");
+      String name, IndentFileWriter file, IdentifierType identifierType) throws IOException {
+    file.newLine();
+    file.write("(clearanceClass ");
+    identifierType.write(name, file);
+    file.write(")");
   }
 
   public static class WidthRule extends Rule {
 
     public final double value;
 
-    public WidthRule(double pValue) {
-      value = pValue;
+    public WidthRule(double value) {
+      this.value = value;
     }
   }
 
@@ -314,9 +319,9 @@ public abstract class Rule {
     final double value;
     final Collection<String> clearanceClassPairs;
 
-    public ClearanceRule(double pValue, Collection<String> pClassPairs) {
-      value = pValue;
-      clearanceClassPairs = pClassPairs;
+    public ClearanceRule(double value, Collection<String> classPairs) {
+      this.value = value;
+      clearanceClassPairs = classPairs;
     }
   }
 
@@ -325,9 +330,9 @@ public abstract class Rule {
     final Collection<String> layerNames;
     final Collection<Rule> rules;
 
-    LayerRule(Collection<String> pLayerNames, Collection<Rule> pRules) {
-      layerNames = pLayerNames;
-      rules = pRules;
+    LayerRule(Collection<String> layerNames, Collection<Rule> rules) {
+      this.layerNames = layerNames;
+      this.rules = rules;
     }
   }
 }

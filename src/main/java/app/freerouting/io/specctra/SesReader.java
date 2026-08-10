@@ -120,7 +120,7 @@ public final class SesReader {
 
     // Read the direct subscopes of the session scope
     for (; ; ) {
-      Object prevToken = nextToken;
+      final Object prevToken = nextToken;
       nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         // end of file
@@ -146,7 +146,7 @@ public final class SesReader {
   private void processRoutesScope() throws IOException {
     Object nextToken = null;
     for (; ; ) {
-      Object prevToken = nextToken;
+      final Object prevToken = nextToken;
       nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         FRLogger.warn(
@@ -173,7 +173,7 @@ public final class SesReader {
   private void processNetworkScope() throws IOException {
     Object nextToken = null;
     for (; ; ) {
-      Object prevToken = nextToken;
+      final Object prevToken = nextToken;
       nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         FRLogger.warn(
@@ -220,7 +220,7 @@ public final class SesReader {
     int[] netNoArr = new int[] {netNo};
 
     for (; ; ) {
-      Object prevToken = nextToken;
+      final Object prevToken = nextToken;
       nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         return;
@@ -255,7 +255,7 @@ public final class SesReader {
     PolygonPath wirePath = null;
     Object nextToken = null;
     for (; ; ) {
-      Object prevToken = nextToken;
+      final Object prevToken = nextToken;
       nextToken = this.scanner.nextToken();
       if (nextToken == null) {
         FRLogger.warn(

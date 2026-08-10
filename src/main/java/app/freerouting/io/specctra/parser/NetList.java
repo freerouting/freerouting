@@ -13,21 +13,21 @@ public class NetList {
   private final Map<Net.Id, Net> nets = new TreeMap<>();
 
   /** Returns true, if the netlist contains a net with the input name. */
-  public boolean contains(Net.Id pNetId) {
-    return nets.containsKey(pNetId);
+  public boolean contains(Net.Id netId) {
+    return nets.containsKey(netId);
   }
 
   /**
    * Adds a new net mit the input name to the net list. Returns null, if a net with p_name already
    * exists in the net list. In this case no new net is added.
    */
-  public Net addNet(Net.Id pNetId) {
+  public Net addNet(Net.Id netId) {
     Net result;
-    if (nets.containsKey(pNetId)) {
+    if (nets.containsKey(netId)) {
       result = null;
     } else {
-      result = new Net(pNetId);
-      nets.put(pNetId, result);
+      result = new Net(netId);
+      nets.put(netId, result);
     }
     return result;
   }
@@ -36,14 +36,14 @@ public class NetList {
    * Returns the net with the input name, or null, if the netlist does not contain a net with the
    * input name.
    */
-  public Net getNet(Net.Id pNetId) {
-    return nets.get(pNetId);
+  public Net getNet(Net.Id netId) {
+    return nets.get(netId);
   }
 
   /** Returns all nets in this net list containing the input pin. */
-  public Collection<Net> getNets(String pComponentName, String pPinName) {
+  public Collection<Net> getNets(String componentName, String pinName) {
     Collection<Net> result = new LinkedList<>();
-    Net.Pin searchPin = new Net.Pin(pComponentName, pPinName);
+    Net.Pin searchPin = new Net.Pin(componentName, pinName);
     Collection<Net> netList = nets.values();
     for (Net currentNet : netList) {
       Set<Net.Pin> netPins = currentNet.getPins();

@@ -12,61 +12,61 @@ import java.io.IOException;
 /** Class for reading and writing path scopes consisting of a polygon from dsn-files. */
 public class PolygonPath extends Path {
 
-  /** Creates a new instance of PolygonPath */
-  public PolygonPath(Layer pLayer, double pWidth, double[] pCoordinateArr) {
-    super(pLayer, pWidth, pCoordinateArr);
+  /** Creates a new instance of PolygonPath. */
+  public PolygonPath(Layer layer, double width, double[] coordinateArr) {
+    super(layer, width, coordinateArr);
   }
 
   /** Writes this path as a scope to an output dsn-file. */
   @Override
-  public void writeScope(IndentFileWriter pFile, IdentifierType pIdentifierType)
+  public void writeScope(IndentFileWriter file, IdentifierType identifierType)
       throws IOException {
-    pFile.startScope();
-    pFile.write("path ");
-    pIdentifierType.write(this.layer.name, pFile);
-    pFile.write(" ");
-    pFile.write(String.valueOf(this.width));
+    file.startScope();
+    file.write("path ");
+    identifierType.write(this.layer.name, file);
+    file.write(" ");
+    file.write(String.valueOf(this.width));
     int cornerCount = coordinateArr.length / 2;
     for (int i = 0; i < cornerCount; i++) {
-      pFile.newLine();
-      pFile.write(String.valueOf(coordinateArr[2 * i]));
-      pFile.write(" ");
-      pFile.write(String.valueOf(coordinateArr[2 * i + 1]));
+      file.newLine();
+      file.write(String.valueOf(coordinateArr[2 * i]));
+      file.write(" ");
+      file.write(String.valueOf(coordinateArr[2 * i + 1]));
     }
-    pFile.endScope();
+    file.endScope();
   }
 
   @Override
-  public void writeScopeInt(IndentFileWriter pFile, IdentifierType pIdentifierType)
+  public void writeScopeInt(IndentFileWriter file, IdentifierType identifierType)
       throws IOException {
-    pFile.startScope();
-    pFile.write("path ");
-    pIdentifierType.write(this.layer.name, pFile);
-    pFile.write(" ");
-    pFile.write(String.valueOf(this.width));
+    file.startScope();
+    file.write("path ");
+    identifierType.write(this.layer.name, file);
+    file.write(" ");
+    file.write(String.valueOf(this.width));
     int cornerCount = coordinateArr.length / 2;
     for (int i = 0; i < cornerCount; i++) {
-      pFile.newLine();
+      file.newLine();
       int currCoor = (int) Math.round(coordinateArr[2 * i]);
-      pFile.write(String.valueOf(currCoor));
-      pFile.write(" ");
+      file.write(String.valueOf(currCoor));
+      file.write(" ");
       currCoor = (int) Math.round(coordinateArr[2 * i + 1]);
-      pFile.write(String.valueOf(currCoor));
+      file.write(String.valueOf(currCoor));
     }
-    pFile.endScope();
+    file.endScope();
   }
 
   @Override
   public app.freerouting.geometry.planar.Shape transformToBoard(
-      CoordinateTransform pCoordinateTransform) {
+      CoordinateTransform coordinateTransform) {
     FloatPoint[] cornerArr = new FloatPoint[this.coordinateArr.length / 2];
     double[] currPoint = new double[2];
     for (int i = 0; i < cornerArr.length; i++) {
       currPoint[0] = this.coordinateArr[2 * i];
       currPoint[1] = this.coordinateArr[2 * i + 1];
-      cornerArr[i] = pCoordinateTransform.dsnToBoard(currPoint);
+      cornerArr[i] = coordinateTransform.dsnToBoard(currPoint);
     }
-    double offset = pCoordinateTransform.dsnToBoard(this.width) / 2;
+    final double offset = coordinateTransform.dsnToBoard(this.width) / 2;
     if (cornerArr.length <= 2) {
       IntOctagon boundingOct = FloatPoint.boundingOctagon(cornerArr);
       return boundingOct.enlarge(offset);
@@ -84,15 +84,15 @@ public class PolygonPath extends Path {
 
   @Override
   public app.freerouting.geometry.planar.Shape transformToBoardRel(
-      CoordinateTransform pCoordinateTransform) {
+      CoordinateTransform coordinateTransform) {
     FloatPoint[] cornerArr = new FloatPoint[this.coordinateArr.length / 2];
     double[] currPoint = new double[2];
     for (int i = 0; i < cornerArr.length; i++) {
       currPoint[0] = this.coordinateArr[2 * i];
       currPoint[1] = this.coordinateArr[2 * i + 1];
-      cornerArr[i] = pCoordinateTransform.dsnToBoardRel(currPoint);
+      cornerArr[i] = coordinateTransform.dsnToBoardRel(currPoint);
     }
-    double offset = pCoordinateTransform.dsnToBoard(this.width) / 2;
+    final double offset = coordinateTransform.dsnToBoard(this.width) / 2;
     if (cornerArr.length <= 2) {
       IntOctagon boundingOct = FloatPoint.boundingOctagon(cornerArr);
       return boundingOct.enlarge(offset);
@@ -110,7 +110,7 @@ public class PolygonPath extends Path {
 
   @Override
   public Rectangle boundingBox() {
-    double offset = this.width / 2;
+    final double offset = this.width / 2;
     double[] bounds = new double[4];
     bounds[0] = Integer.MAX_VALUE;
     bounds[1] = Integer.MAX_VALUE;

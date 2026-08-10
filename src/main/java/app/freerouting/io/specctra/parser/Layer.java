@@ -7,10 +7,10 @@ import java.util.LinkedList;
 /** Describes a layer in a Specctra dsn file. */
 public class Layer {
 
-  /** all layers of the board */
+  /** All layers of the board. */
   public static final Layer PCB = new Layer("pcb", -1, false);
 
-  /** the signal layers */
+  /** The signal layers. */
   public static final Layer SIGNAL = new Layer("signal", -1, true);
 
   public final String name;
@@ -24,11 +24,11 @@ public class Layer {
    * otherwise it is a powerground layer. For Layer objects describing more than 1 layer the number
    * is -1. p_net_names is a list of nets for this layer, if the layer is a power plane.
    */
-  public Layer(String pName, int pNo, boolean pIsSignal, Collection<String> pNetNames) {
-    name = pName;
-    no = pNo;
-    isSignal = pIsSignal;
-    netNames = pNetNames;
+  public Layer(String name, int no, boolean isSignal, Collection<String> netNames) {
+    this.name = name;
+    this.no = no;
+    this.isSignal = isSignal;
+    this.netNames = netNames;
   }
 
   /**
@@ -37,30 +37,30 @@ public class Layer {
    * otherwise it is a powerground layer. For Layer objects describing more than 1 layer the number
    * is -1.
    */
-  public Layer(String pName, int pNo, boolean pIsSignal) {
-    name = pName;
-    no = pNo;
-    isSignal = pIsSignal;
+  public Layer(String name, int no, boolean isSignal) {
+    this.name = name;
+    this.no = no;
+    this.isSignal = isSignal;
     netNames = new LinkedList<>();
   }
 
   /** Writes a layer scope in the structure scope. */
-  public static void writeScope(WriteScopeParameter pPar, int pLayerNo, boolean pWriteRule)
+  public static void writeScope(WriteScopeParameter par, int layerNo, boolean writeRule)
       throws IOException {
-    pPar.file.startScope();
-    pPar.file.write("layer ");
-    app.freerouting.board.Layer boardLayer = pPar.board.layerStructure.arr[pLayerNo];
-    pPar.identifierType.write(boardLayer.name, pPar.file);
-    pPar.file.newLine();
-    pPar.file.write("(type ");
+    par.file.startScope();
+    par.file.write("layer ");
+    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerNo];
+    par.identifierType.write(boardLayer.name, par.file);
+    par.file.newLine();
+    par.file.write("(type ");
     if (boardLayer.isSignal) {
-      pPar.file.write("signal)");
+      par.file.write("signal)");
     } else {
-      pPar.file.write("power)");
+      par.file.write("power)");
     }
-    if (pWriteRule) {
-      Rule.writeDefaultRule(pPar, pLayerNo);
+    if (writeRule) {
+      Rule.writeDefaultRule(par, layerNo);
     }
-    pPar.file.endScope();
+    par.file.endScope();
   }
 }

@@ -10,57 +10,57 @@ import java.io.IOException;
 /** Describes a path defined by a sequence of lines instead of a sequence of corners. */
 public class PolylinePath extends Path {
 
-  /** Creates a new instance of PolylinePath */
-  public PolylinePath(Layer pLayer, double pWidth, double[] pCornerArr) {
-    super(pLayer, pWidth, pCornerArr);
+  /** Creates a new instance of PolylinePath. */
+  public PolylinePath(Layer layer, double width, double[] cornerArr) {
+    super(layer, width, cornerArr);
   }
 
   /** Writes this path as a scope to an output dsn-file. */
   @Override
-  public void writeScope(IndentFileWriter pFile, IdentifierType pIdentifier) throws IOException {
-    pFile.startScope();
-    pFile.write("polyline_path ");
-    pIdentifier.write(this.layer.name, pFile);
-    pFile.write(" ");
-    pFile.write(String.valueOf(this.width));
+  public void writeScope(IndentFileWriter file, IdentifierType identifier) throws IOException {
+    file.startScope();
+    file.write("polyline_path ");
+    identifier.write(this.layer.name, file);
+    file.write(" ");
+    file.write(String.valueOf(this.width));
     int lineCount = coordinateArr.length / 4;
     for (int i = 0; i < lineCount; i++) {
-      pFile.newLine();
+      file.newLine();
       for (int j = 0; j < 4; j++) {
-        pFile.write(String.valueOf(coordinateArr[4 * i + j]));
-        pFile.write(" ");
+        file.write(String.valueOf(coordinateArr[4 * i + j]));
+        file.write(" ");
       }
     }
-    pFile.endScope();
+    file.endScope();
   }
 
   @Override
-  public void writeScopeInt(IndentFileWriter pFile, IdentifierType pIdentifier) throws IOException {
-    pFile.startScope();
-    pFile.write("polyline_path ");
-    pIdentifier.write(this.layer.name, pFile);
-    pFile.write(" ");
-    pFile.write(String.valueOf(this.width));
+  public void writeScopeInt(IndentFileWriter file, IdentifierType identifier) throws IOException {
+    file.startScope();
+    file.write("polyline_path ");
+    identifier.write(this.layer.name, file);
+    file.write(" ");
+    file.write(String.valueOf(this.width));
     int lineCount = coordinateArr.length / 4;
     for (int i = 0; i < lineCount; i++) {
-      pFile.newLine();
+      file.newLine();
       for (int j = 0; j < 4; j++) {
         int currCoor = (int) Math.round(coordinateArr[4 * i + j]);
-        pFile.write(String.valueOf(currCoor));
-        pFile.write(" ");
+        file.write(String.valueOf(currCoor));
+        file.write(" ");
       }
     }
-    pFile.endScope();
+    file.endScope();
   }
 
   @Override
-  public Shape transformToBoardRel(CoordinateTransform pCoordinateTransform) {
+  public Shape transformToBoardRel(CoordinateTransform coordinateTransform) {
     FRLogger.warn("PolylinePath.transform_to_board_rel not implemented");
     return null;
   }
 
   @Override
-  public Shape transformToBoard(CoordinateTransform pCoordinateTransform) {
+  public Shape transformToBoard(CoordinateTransform coordinateTransform) {
     FRLogger.warn("PolylinePath.transform_to_board not implemented");
     return null;
   }

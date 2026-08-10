@@ -4,26 +4,27 @@ import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 
 /** Class for reading place_control scopes from dsn-files. */
+@SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
 public class PlaceControl extends ScopeKeyword {
 
-  /** Creates a new instance of PlaceControl */
+  /** Creates a new instance of PlaceControl. */
   public PlaceControl() {
     super("place_control");
   }
 
   /** Returns true, if rotate_first is read, else false. */
-  static boolean readFlipStyleRotateFirst(IJFlexScanner pScanner) {
+  static boolean readFlipStyleRotateFirst(IJFlexScanner scanner) {
     try {
       boolean result = false;
-      Object nextToken = pScanner.nextToken();
+      Object nextToken = scanner.nextToken();
       if (nextToken == ROTATE_FIRST) {
         result = true;
       }
-      nextToken = pScanner.nextToken();
+      nextToken = scanner.nextToken();
       if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Structure.read_flip_style: closing bracket expected at '"
-                + pScanner.getScopeIdentifier()
+                + scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -34,15 +35,15 @@ public class PlaceControl extends ScopeKeyword {
     }
   }
 
-  /** Reads the flip_style */
+  /** Reads the flip_style. */
   @Override
-  public boolean readScope(ReadScopeParameter pPar) {
+  public boolean readScope(ReadScopeParameter par) {
     boolean flipStyleRotateFirst = false;
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = pPar.scanner.nextToken();
+        nextToken = par.scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("PlaceControl.read_scope: IO error scanning file", e);
         return false;
@@ -50,7 +51,7 @@ public class PlaceControl extends ScopeKeyword {
       if (nextToken == null) {
         FRLogger.warn(
             "PlaceControl.read_scope: unexpected end of file at '"
-                + pPar.scanner.getScopeIdentifier()
+                + par.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -60,12 +61,12 @@ public class PlaceControl extends ScopeKeyword {
       }
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == FLIP_STYLE) {
-          flipStyleRotateFirst = readFlipStyleRotateFirst(pPar.scanner);
+          flipStyleRotateFirst = readFlipStyleRotateFirst(par.scanner);
         }
       }
     }
     if (flipStyleRotateFirst) {
-      pPar.boardHandling.getRoutingBoard().components.setFlipStyleRotateFirst(true);
+      par.boardHandling.getRoutingBoard().components.setFlipStyleRotateFirst(true);
     }
     return true;
   }

@@ -143,40 +143,40 @@ public final class KiCadJsonWriter {
     int traceId = 1;
     for (Trace trace : board.getTraces()) {
       if (trace instanceof PolylineTrace polyTrace) {
-        KiCadBoardJson.TraceJson tJson = new KiCadBoardJson.TraceJson();
-        tJson.id = traceId++;
-        tJson.layerIndex = polyTrace.getLayer();
-        tJson.width = (2 * polyTrace.getHalfWidth()) / scaleFactor;
+        KiCadBoardJson.TraceJson traceJson = new KiCadBoardJson.TraceJson();
+        traceJson.id = traceId++;
+        traceJson.layerIndex = polyTrace.getLayer();
+        traceJson.width = (2 * polyTrace.getHalfWidth()) / scaleFactor;
         if (polyTrace.netCount() > 0) {
           int netNo = polyTrace.getNetNo(0);
           Net net = board.rules.nets.get(netNo);
           if (net != null) {
-            tJson.netName = net.name;
+            traceJson.netName = net.name;
           }
         }
         for (Point pt : polyTrace.polyline().cornerArr()) {
-          tJson.points.add(
+          traceJson.points.add(
               new KiCadBoardJson.Point2D(
                   pt.toFloat().x / scaleFactor, -pt.toFloat().y / scaleFactor));
         }
-        boardJson.traces.add(tJson);
+        boardJson.traces.add(traceJson);
       }
     }
 
     // 6. Vias
     int viaId = 1;
     for (Via via : board.getVias()) {
-      KiCadBoardJson.ViaJson vJson = new KiCadBoardJson.ViaJson();
-      vJson.id = viaId++;
+      KiCadBoardJson.ViaJson viaJson = new KiCadBoardJson.ViaJson();
+      viaJson.id = viaId++;
       if (via.netCount() > 0) {
         int netNo = via.getNetNo(0);
         Net net = board.rules.nets.get(netNo);
         if (net != null) {
-          vJson.netName = net.name;
+          viaJson.netName = net.name;
         }
       }
       Point center = via.getCenter();
-      vJson.position =
+      viaJson.position =
           new KiCadBoardJson.Point2D(
               center.toFloat().x / scaleFactor, -center.toFloat().y / scaleFactor);
 
@@ -189,37 +189,39 @@ public final class KiCadJsonWriter {
       while (lastLayer >= 0 && padstack.getShape(lastLayer) == null) {
         lastLayer--;
       }
-      vJson.startLayerIndex = firstLayer;
-      vJson.endLayerIndex = lastLayer;
+      viaJson.startLayerIndex = firstLayer;
+      viaJson.endLayerIndex = lastLayer;
 
       app.freerouting.geometry.planar.Shape shape = padstack.getShape(firstLayer);
       if (shape != null) {
-        vJson.diameter = shape.boundingBox().width() / scaleFactor;
+        viaJson.diameter = shape.boundingBox().width() / scaleFactor;
       } else {
-        vJson.diameter = 0.8;
+        viaJson.diameter = 0.8;
       }
-      vJson.drill = vJson.diameter * 0.5;
-      boardJson.vias.add(vJson);
+      viaJson.drill = viaJson.diameter * 0.5;
+      boardJson.vias.add(viaJson);
     }
 
     // 7. Conduction Areas
     int areaId = 1;
     for (ConductionArea area : board.getConductionAreas()) {
-      KiCadBoardJson.ConductionAreaJson aJson = new KiCadBoardJson.ConductionAreaJson();
-      aJson.id = areaId++;
+      KiCadBoardJson.ConductionAreaJson areaJson =
+          new KiCadBoardJson.ConductionAreaJson();
+      areaJson.id = areaId++;
       if (area.netCount() > 0) {
         int netNo = area.getNetNo(0);
         Net net = board.rules.nets.get(netNo);
         if (net != null) {
-          aJson.netName = net.name;
+          areaJson.netName = net.name;
         }
       }
-      aJson.layerIndex = area.getLayer();
-      aJson.isObstacle = area.getIsObstacle();
+      areaJson.layerIndex = area.getLayer();
+      areaJson.isObstacle = area.getIsObstacle();
       for (FloatPoint pt : area.getArea().cornerApproxArr()) {
-        aJson.polygon.add(new KiCadBoardJson.Point2D(pt.x / scaleFactor, -pt.y / scaleFactor));
+        areaJson.polygon.add(
+            new KiCadBoardJson.Point2D(pt.x / scaleFactor, -pt.y / scaleFactor));
       }
-      boardJson.conductionAreas.add(aJson);
+      boardJson.conductionAreas.add(areaJson);
     }
 
     return GsonProvider.GSON.toJson(boardJson);

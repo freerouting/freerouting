@@ -16,6 +16,12 @@ public final class KiCadNetClassNames {
 
   private KiCadNetClassNames() {}
 
+  /**
+   * Returns whether a name identifies KiCad's default net class.
+   *
+   * @param name net-class name to inspect
+   * @return {@code true} when the name is KiCad's default net-class name
+   */
   public static boolean isKiCadDefaultNetClassName(String name) {
     if (name == null || name.isEmpty()) {
       return false;
@@ -23,6 +29,13 @@ public final class KiCadNetClassNames {
     return "default".equalsIgnoreCase(name) || KICAD_DSN_DEFAULT.equalsIgnoreCase(name);
   }
 
+  /**
+   * Resolves a KiCad net-class name against the board rules.
+   *
+   * @param rules board rules containing the net classes
+   * @param name net-class name to resolve
+   * @return the matching net class, or {@code null} when no class exists
+   */
   public static NetClass resolveNetClass(BoardRules rules, String name) {
     if (isKiCadDefaultNetClassName(name)) {
       return rules.getDefaultNetClass();

@@ -7,59 +7,60 @@ import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 
 /** Class for reading resolution scopes from dsn-files. */
+@SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
 public class Resolution extends ScopeKeyword {
 
-  /** Creates a new instance of Resolution */
+  /** Creates a new instance of Resolution. */
   public Resolution() {
     super("resolution");
   }
 
-  public static void writeScope(IndentFileWriter pFile, Communication pBoardCommunication)
+  public static void writeScope(IndentFileWriter file, Communication boardCommunication)
       throws IOException {
-    pFile.newLine();
-    pFile.write("(resolution ");
-    pFile.write(pBoardCommunication.unit.toString());
-    pFile.write(" ");
-    pFile.write(String.valueOf(pBoardCommunication.resolution));
-    pFile.write(")");
+    file.newLine();
+    file.write("(resolution ");
+    file.write(boardCommunication.unit.toString());
+    file.write(" ");
+    file.write(String.valueOf(boardCommunication.resolution));
+    file.write(")");
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter pPar) {
+  public boolean readScope(ReadScopeParameter par) {
     try {
       // read the unit
-      Object nextToken = pPar.scanner.nextToken();
+      Object nextToken = par.scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
             "Resolution.read_scope: string expected at '"
-                + pPar.scanner.getScopeIdentifier()
+                + par.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
-      pPar.unit = Unit.fromString((String) nextToken);
-      if (pPar.unit == null) {
+      par.unit = Unit.fromString((String) nextToken);
+      if (par.unit == null) {
         FRLogger.warn(
             "Resolution.read_scope: unit mil, inch or mm expected at '"
-                + pPar.scanner.getScopeIdentifier()
+                + par.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
       // read the scale factor
-      nextToken = pPar.scanner.nextToken();
+      nextToken = par.scanner.nextToken();
       if (!(nextToken instanceof Integer)) {
         FRLogger.warn(
             "Resolution.read_scope: integer expected at '"
-                + pPar.scanner.getScopeIdentifier()
+                + par.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
-      pPar.resolution = (Integer) nextToken;
+      par.resolution = (Integer) nextToken;
       // overread the closing bracket
-      nextToken = pPar.scanner.nextToken();
+      nextToken = par.scanner.nextToken();
       if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Resolution.read_scope: closing bracket expected at '"
-                + pPar.scanner.getScopeIdentifier()
+                + par.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }

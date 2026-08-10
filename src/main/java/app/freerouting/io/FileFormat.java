@@ -1,5 +1,6 @@
 package app.freerouting.io;
 
+/** Supported board and routing file formats. */
 public enum FileFormat {
   UNKNOWN,
   DSN,

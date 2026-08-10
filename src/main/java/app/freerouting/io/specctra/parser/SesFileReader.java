@@ -22,15 +22,15 @@ public final class SesFileReader {
   /**
    * Reads a SES file and imports the routing data into the board.
    *
-   * @param pSession Input stream of the SES file
-   * @param pBoard The board to import routing data into
+   * @param session Input stream of the SES file
+   * @param board The board to import routing data into
    * @return true if successful, false if an error occurred
    * @deprecated Use {@link SesReader#read(InputStream, BasicBoard)} instead.
    */
   @Deprecated
-  public static boolean read(InputStream pSession, BasicBoard pBoard) {
+  public static boolean read(InputStream session, BasicBoard board) {
     try {
-      SesImportSummary summary = SesReader.read(pSession, pBoard);
+      SesImportSummary summary = SesReader.read(session, board);
       return summary.errorsEncountered() == 0
           || summary.wiresImported() > 0
           || summary.viasImported() > 0;

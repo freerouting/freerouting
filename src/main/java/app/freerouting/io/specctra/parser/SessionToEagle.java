@@ -17,9 +17,14 @@ import java.util.Collection;
 import javax.swing.JFrame;
 
 /** Transforms a Specctra session file into an Eagle script file. */
+@SuppressWarnings({
+  "checkstyle:MissingJavadocMethod",
+  "checkstyle:MissingJavadocType",
+  "checkstyle:VariableDeclarationUsageDistance"
+})
 public class SessionToEagle extends JFrame {
 
-  /** The function for scanning the session file */
+  /** The function for scanning the session file. */
   private final IJFlexScanner scanner;
 
   /** The generated Eagle script file. */
@@ -31,54 +36,54 @@ public class SessionToEagle extends JFrame {
    */
   private final BasicBoard board;
 
-  /** The layer structure in specctra format */
+  /** The layer structure in specctra format. */
   private final LayerStructure specctraLayerStructure;
 
   private final Unit unit;
 
-  /** The scale factor for transforming coordinates from the session file to Eagle */
+  /** The scale factor for transforming coordinates from the session file to Eagle. */
   private final double sessionFileScaleDenominator;
 
-  /** The scale factor for transforming coordinates from the board to Eagle */
+  /** The scale factor for transforming coordinates from the board to Eagle. */
   private final double boardScaleFactor;
 
   SessionToEagle(
-      IJFlexScanner pScanner,
-      OutputStreamWriter pOutFile,
-      BasicBoard pBoard,
-      Unit pUnit,
-      double pSessionFileScaleDominator,
-      double pBoardScaleFactor) {
-    scanner = pScanner;
-    outFile = pOutFile;
-    board = pBoard;
-    this.specctraLayerStructure = new LayerStructure(pBoard.layerStructure);
-    unit = pUnit;
-    sessionFileScaleDenominator = pSessionFileScaleDominator;
-    boardScaleFactor = pBoardScaleFactor;
+      IJFlexScanner scanner,
+      OutputStreamWriter outFile,
+      BasicBoard board,
+      Unit unit,
+      double sessionFileScaleDominator,
+      double boardScaleFactor) {
+    this.scanner = scanner;
+    this.outFile = outFile;
+    this.board = board;
+    this.specctraLayerStructure = new LayerStructure(board.layerStructure);
+    this.unit = unit;
+    sessionFileScaleDenominator = sessionFileScaleDominator;
+    this.boardScaleFactor = boardScaleFactor;
   }
 
   public static boolean getInstance(
-      InputStream pSession, OutputStream pOutputStream, BasicBoard pBoard) {
-    if (pOutputStream == null) {
+      InputStream session, OutputStream outputStream, BasicBoard board) {
+    if (outputStream == null) {
       return false;
     }
 
     // create a scanner for reading the session_file.
 
-    IJFlexScanner scanner = new SpecctraDsnStreamReader(pSession);
+    IJFlexScanner scanner = new SpecctraDsnStreamReader(session);
 
     // create a fileWriter for the eagle script file.
-    OutputStreamWriter fileWriter = new OutputStreamWriter(pOutputStream);
+    OutputStreamWriter fileWriter = new OutputStreamWriter(outputStream);
 
-    double boardScaleFactor = pBoard.communication.coordinateTransform.boardToDsn(1);
+    double boardScaleFactor = board.communication.coordinateTransform.boardToDsn(1);
     SessionToEagle newInstance =
         new SessionToEagle(
             scanner,
             fileWriter,
-            pBoard,
-            pBoard.communication.unit,
-            pBoard.communication.resolution,
+            board,
+            board.communication.unit,
+            board.communication.resolution,
             boardScaleFactor);
 
     boolean result;
@@ -91,7 +96,7 @@ public class SessionToEagle extends JFrame {
 
     // close files
     try {
-      pSession.close();
+      session.close();
       fileWriter.close();
     } catch (IOException e) {
       FRLogger.error("unable to close files", e);
@@ -247,11 +252,11 @@ public class SessionToEagle extends JFrame {
       this.outFile.write("move '");
       this.outFile.write(currLocation.name);
       this.outFile.write("' (");
-      double xCoor = currLocation.coor[0] / this.sessionFileScaleDenominator;
-      this.outFile.write(String.valueOf(xCoor));
+      double xcoordinate = currLocation.coor[0] / this.sessionFileScaleDenominator;
+      this.outFile.write(String.valueOf(xcoordinate));
       this.outFile.write(" ");
-      double yCoor = currLocation.coor[1] / this.sessionFileScaleDenominator;
-      this.outFile.write(String.valueOf(yCoor));
+      double ycoordinate = currLocation.coor[1] / this.sessionFileScaleDenominator;
+      this.outFile.write(String.valueOf(ycoordinate));
       this.outFile.write(");\n");
     }
     return true;
@@ -359,7 +364,7 @@ public class SessionToEagle extends JFrame {
     return true;
   }
 
-  private boolean processWireScope(String pNetName) throws IOException {
+  private boolean processWireScope(String netName) throws IOException {
     PolygonPath wirePath = null;
     Object nextToken = null;
     for (; ; ) {
@@ -398,9 +403,9 @@ public class SessionToEagle extends JFrame {
 
     this.outFile.write("WIRE '");
 
-    this.outFile.write(pNetName);
+    this.outFile.write(netName);
     this.outFile.write("' ");
-    double wireWidth = wirePath.width / this.sessionFileScaleDenominator;
+    final double wireWidth = wirePath.width / this.sessionFileScaleDenominator;
     this.outFile.write(String.valueOf(wireWidth));
     this.outFile.write(" (");
     for (int i = 0; i < wirePath.coordinateArr.length; i++) {
@@ -421,7 +426,7 @@ public class SessionToEagle extends JFrame {
     return true;
   }
 
-  private boolean processViaScope(String pNetName) throws IOException {
+  private boolean processViaScope(String netName) throws IOException {
     // read the padstack name
     Object nextToken = this.scanner.nextToken();
     if (!(nextToken instanceof String padstackName)) {
@@ -495,7 +500,7 @@ public class SessionToEagle extends JFrame {
     // Via Net2 0.6 round 1-4 (20.0, 222.0);
     this.outFile.write("VIA '");
 
-    this.outFile.write(pNetName);
+    this.outFile.write(netName);
     this.outFile.write("' ");
 
     // Durchmesser aus Padstack
@@ -513,21 +518,21 @@ public class SessionToEagle extends JFrame {
     this.outFile.write("-");
     this.outFile.write(getEagleLayerString(viaPadstack.toLayer()));
     this.outFile.write(" (");
-    double xCoor = location[0] / this.sessionFileScaleDenominator;
-    this.outFile.write(String.valueOf(xCoor));
+    double xcoordinate = location[0] / this.sessionFileScaleDenominator;
+    this.outFile.write(String.valueOf(xcoordinate));
     this.outFile.write(" ");
-    double yCoor = location[1] / this.sessionFileScaleDenominator;
-    this.outFile.write(String.valueOf(yCoor));
+    double ycoordinate = location[1] / this.sessionFileScaleDenominator;
+    this.outFile.write(String.valueOf(ycoordinate));
     this.outFile.write(");\n");
 
     return true;
   }
 
-  private String getEagleLayerString(int pLayerNo) {
-    if (pLayerNo < 0 || pLayerNo >= specctraLayerStructure.arr.length) {
+  private String getEagleLayerString(int layerNo) {
+    if (layerNo < 0 || layerNo >= specctraLayerStructure.arr.length) {
       return "0";
     }
-    String[] namePieces = this.specctraLayerStructure.arr[pLayerNo].name.split("#", 2);
+    String[] namePieces = this.specctraLayerStructure.arr[layerNo].name.split("#", 2);
     return namePieces[0];
   }
 
@@ -540,8 +545,8 @@ public class SessionToEagle extends JFrame {
     return true;
   }
 
-  private boolean processSwappedPins(int pComponentNo) throws IOException {
-    Collection<Pin> componentPins = this.board.getComponentPins(pComponentNo);
+  private boolean processSwappedPins(int componentNo) throws IOException {
+    Collection<Pin> componentPins = this.board.getComponentPins(componentNo);
     boolean componentHasSwappedPins = false;
     for (Pin currPin : componentPins) {
       if (currPin.getChangedTo() != currPin) {
@@ -582,8 +587,8 @@ public class SessionToEagle extends JFrame {
     return true;
   }
 
-  private void writePinSwap(Pin pPin1, Pin pPin2) throws IOException {
-    int layerNo = Math.max(pPin1.firstLayer(), pPin2.firstLayer());
+  private void writePinSwap(Pin pin1, Pin pin2) throws IOException {
+    int layerNo = Math.max(pin1.firstLayer(), pin2.firstLayer());
     String layerName = board.layerStructure.arr[layerNo].name;
 
     this.outFile.write("CHANGE LAYER ");
@@ -591,9 +596,9 @@ public class SessionToEagle extends JFrame {
     this.outFile.write(";\n");
 
     double[] location1 =
-        this.board.communication.coordinateTransform.boardToDsn(pPin1.getCenter().toFloat());
-    double[] location2 =
-        this.board.communication.coordinateTransform.boardToDsn(pPin2.getCenter().toFloat());
+        this.board.communication.coordinateTransform.boardToDsn(pin1.getCenter().toFloat());
+    final double[] location2 =
+        this.board.communication.coordinateTransform.boardToDsn(pin2.getCenter().toFloat());
 
     this.outFile.write("PINSWAP ");
     this.outFile.write(" (");
@@ -616,9 +621,9 @@ public class SessionToEagle extends JFrame {
     final Pin pin;
     Pin currChangedTo;
 
-    PinInfo(Pin pPin) {
-      pin = pPin;
-      currChangedTo = pPin;
+    PinInfo(Pin pin) {
+      this.pin = pin;
+      currChangedTo = pin;
     }
   }
 }

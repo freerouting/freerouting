@@ -14,8 +14,8 @@ import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 
 /**
- * Computes transformations between board coordinates and external (e.g. Specctra DSN, KiCad JSON)
- * coordinates.
+ * Computes transformations between board coordinates and external coordinates, such as Specctra DSN
+ * or KiCad JSON coordinates.
  */
 public class CoordinateTransform implements Serializable {
 
@@ -24,66 +24,41 @@ public class CoordinateTransform implements Serializable {
   private final double baseY;
 
   /** Creates a new instance of CoordinateTransform. */
-  public CoordinateTransform(double pScaleFactor, double pBaseX, double pBaseY) {
-    scaleFactor = pScaleFactor;
-    baseX = pBaseX;
-    baseY = pBaseY;
+  public CoordinateTransform(double scaleFactor, double baseX, double baseY) {
+    this.scaleFactor = scaleFactor;
+    this.baseX = baseX;
+    this.baseY = baseY;
   }
 
-  /** Scale a value from the board to the external coordinate system */
-  public double boardToDsn(double pVal) {
-    return pVal / scaleFactor;
+  /** Scales a value from the board to the external coordinate system. */
+  public double boardToDsn(double value) {
+    return value / scaleFactor;
   }
 
-  /** Scale a value from the external to the board coordinate system */
-  public double dsnToBoard(double pVal) {
-    return pVal * scaleFactor;
-  }
-
-  /**
-   * Transforms a geometry.planar.FloatPoint to a tuple of doubles in the external coordinate
-   * system.
-   */
-  public double[] boardToDsn(FloatPoint pPoint) {
+  /** Transforms a point from the board to the external coordinate system. */
+  public double[] boardToDsn(FloatPoint point) {
     double[] result = new double[2];
-    result[0] = boardToDsn(pPoint.x) + baseX;
-    result[1] = boardToDsn(pPoint.y) + baseY;
+    result[0] = boardToDsn(point.x) + baseX;
+    result[1] = boardToDsn(point.y) + baseY;
     return result;
   }
 
-  /**
-   * Transforms a geometry.planar.FloatPoint to a tuple of doubles in the external coordinate system
-   * in relative (vector) coordinates.
-   */
-  public double[] boardToDsnRel(FloatPoint pPoint) {
-    double[] result = new double[2];
-    result[0] = boardToDsn(pPoint.x);
-    result[1] = boardToDsn(pPoint.y);
-    return result;
-  }
-
-  /**
-   * Transforms an array of n geometry.planar.FloatPoints to an array of 2*n doubles in the external
-   * coordinate system.
-   */
-  public double[] boardToDsn(FloatPoint[] pPoints) {
-    double[] result = new double[2 * pPoints.length];
-    for (int i = 0; i < pPoints.length; i++) {
-      result[2 * i] = boardToDsn(pPoints[i].x) + baseX;
-      result[2 * i + 1] = boardToDsn(pPoints[i].y) + baseY;
+  /** Transforms points from the board to the external coordinate system. */
+  public double[] boardToDsn(FloatPoint[] points) {
+    double[] result = new double[2 * points.length];
+    for (int i = 0; i < points.length; i++) {
+      result[2 * i] = boardToDsn(points[i].x) + baseX;
+      result[2 * i + 1] = boardToDsn(points[i].y) + baseY;
     }
     return result;
   }
 
-  /**
-   * Transforms an array of n geometry.planar.Lines to an array of 4*n doubles in the external
-   * coordinate system.
-   */
-  public double[] boardToDsn(Line[] pLines) {
-    double[] result = new double[4 * pLines.length];
-    for (int i = 0; i < pLines.length; i++) {
-      FloatPoint a = pLines[i].a.toFloat();
-      FloatPoint b = pLines[i].b.toFloat();
+  /** Transforms lines from the board to the external coordinate system. */
+  public double[] boardToDsn(Line[] lines) {
+    double[] result = new double[4 * lines.length];
+    for (int i = 0; i < lines.length; i++) {
+      FloatPoint a = lines[i].a.toFloat();
+      FloatPoint b = lines[i].b.toFloat();
       result[4 * i] = boardToDsn(a.x) + baseX;
       result[4 * i + 1] = boardToDsn(a.y) + baseY;
       result[4 * i + 2] = boardToDsn(b.x) + baseX;
@@ -92,79 +67,38 @@ public class CoordinateTransform implements Serializable {
     return result;
   }
 
-  /**
-   * Transforms an array of n geometry.planar.FloatPoints to an array of 2*n doubles in the external
-   * coordinate system in relative (vector) coordinates.
-   */
-  public double[] boardToDsnRel(FloatPoint[] pPoints) {
-    double[] result = new double[2 * pPoints.length];
-    for (int i = 0; i < pPoints.length; i++) {
-      result[2 * i] = boardToDsn(pPoints[i].x);
-      result[2 * i + 1] = boardToDsn(pPoints[i].y);
-    }
-    return result;
-  }
-
-  /**
-   * Transforms a geometry.planar.Vector to a tuple of doubles in the external coordinate system.
-   */
-  public double[] boardToDsn(Vector pVector) {
+  /** Transforms a vector from the board to the external coordinate system. */
+  public double[] boardToDsn(Vector vector) {
     double[] result = new double[2];
-    FloatPoint v = pVector.toFloat();
-    result[0] = boardToDsn(v.x);
-    result[1] = boardToDsn(v.y);
+    FloatPoint value = vector.toFloat();
+    result[0] = boardToDsn(value.x);
+    result[1] = boardToDsn(value.y);
     return result;
   }
 
-  /** Transforms an external tuple to a geometry.planar.FloatPoint */
-  public FloatPoint dsnToBoard(double[] pTuple) {
-    double x = dsnToBoard(pTuple[0] - baseX);
-    double y = dsnToBoard(pTuple[1] - baseY);
-    return new FloatPoint(x, y);
-  }
-
-  /**
-   * Transforms an external tuple to a geometry.planar.FloatPoint in relative (vector) coordinates.
-   */
-  public FloatPoint dsnToBoardRel(double[] pTuple) {
-    double x = dsnToBoard(pTuple[0]);
-    double y = dsnToBoard(pTuple[1]);
-    return new FloatPoint(x, y);
-  }
-
-  /** Transforms a geometry.planar.Intbox to the coordinates of a Rectangle. */
-  public double[] boardToDsn(IntBox pBox) {
+  /** Transforms a box from the board to the external coordinate system. */
+  public double[] boardToDsn(IntBox box) {
     double[] result = new double[4];
-    result[0] = pBox.ll.x / scaleFactor + baseX;
-    result[1] = pBox.ll.y / scaleFactor + baseY;
-    result[2] = pBox.ur.x / scaleFactor + baseX;
-    result[3] = pBox.ur.y / scaleFactor + baseY;
-    return result;
-  }
-
-  /** Transforms a geometry.planar.Intbox to a Rectangle in relative (vector) coordinates. */
-  public double[] boardToDsnRel(IntBox pBox) {
-    double[] result = new double[4];
-    result[0] = pBox.ll.x / scaleFactor;
-    result[1] = pBox.ll.y / scaleFactor;
-    result[2] = pBox.ur.x / scaleFactor;
-    result[3] = pBox.ur.y / scaleFactor;
+    result[0] = box.ll.x / scaleFactor + baseX;
+    result[1] = box.ll.y / scaleFactor + baseY;
+    result[2] = box.ur.x / scaleFactor + baseX;
+    result[3] = box.ur.y / scaleFactor + baseY;
     return result;
   }
 
   /** Transforms a board shape to an external shape. */
-  public Shape boardToDsn(app.freerouting.geometry.planar.Shape pBoardShape, Layer pLayer) {
+  public Shape boardToDsn(app.freerouting.geometry.planar.Shape boardShape, Layer layer) {
     Shape result;
-    if (pBoardShape instanceof IntBox box) {
-      result = new Rectangle(pLayer, boardToDsn(box));
-    } else if (pBoardShape instanceof PolylineShape) {
-      FloatPoint[] corners = pBoardShape.cornerApproxArr();
-      double[] coors = boardToDsn(corners);
-      result = new Polygon(pLayer, coors);
-    } else if (pBoardShape instanceof app.freerouting.geometry.planar.Circle board_circle) {
-      double diameter = 2 * boardToDsn(board_circle.radius);
-      double[] centerCoor = boardToDsn(board_circle.center.toFloat());
-      result = new Circle(pLayer, diameter, centerCoor[0], centerCoor[1]);
+    if (boardShape instanceof IntBox box) {
+      result = new Rectangle(layer, boardToDsn(box));
+    } else if (boardShape instanceof PolylineShape) {
+      FloatPoint[] corners = boardShape.cornerApproxArr();
+      double[] coordinates = boardToDsn(corners);
+      result = new Polygon(layer, coordinates);
+    } else if (boardShape instanceof app.freerouting.geometry.planar.Circle boardCircle) {
+      double diameter = 2 * boardToDsn(boardCircle.radius);
+      double[] centerCoordinates = boardToDsn(boardCircle.center.toFloat());
+      result = new Circle(layer, diameter, centerCoordinates[0], centerCoordinates[1]);
     } else {
       FRLogger.warn("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
       result = null;
@@ -172,25 +106,70 @@ public class CoordinateTransform implements Serializable {
     return result;
   }
 
-  /**
-   * Transforms the relative (vector) coordinates of a geometry.planar.Shape to an external shape.
-   */
-  public Shape boardToDsnRel(app.freerouting.geometry.planar.Shape pBoardShape, Layer pLayer) {
+  /** Transforms a point to relative external (vector) coordinates. */
+  public double[] boardToDsnRel(FloatPoint point) {
+    double[] result = new double[2];
+    result[0] = boardToDsn(point.x);
+    result[1] = boardToDsn(point.y);
+    return result;
+  }
+
+  /** Transforms points to relative external (vector) coordinates. */
+  public double[] boardToDsnRel(FloatPoint[] points) {
+    double[] result = new double[2 * points.length];
+    for (int i = 0; i < points.length; i++) {
+      result[2 * i] = boardToDsn(points[i].x);
+      result[2 * i + 1] = boardToDsn(points[i].y);
+    }
+    return result;
+  }
+
+  /** Transforms a box to relative external (vector) coordinates. */
+  public double[] boardToDsnRel(IntBox box) {
+    double[] result = new double[4];
+    result[0] = box.ll.x / scaleFactor;
+    result[1] = box.ll.y / scaleFactor;
+    result[2] = box.ur.x / scaleFactor;
+    result[3] = box.ur.y / scaleFactor;
+    return result;
+  }
+
+  /** Transforms a board shape to a relative external shape. */
+  public Shape boardToDsnRel(app.freerouting.geometry.planar.Shape boardShape, Layer layer) {
     Shape result;
-    if (pBoardShape instanceof IntBox box) {
-      result = new Rectangle(pLayer, boardToDsnRel(box));
-    } else if (pBoardShape instanceof PolylineShape) {
-      FloatPoint[] corners = pBoardShape.cornerApproxArr();
-      double[] coors = boardToDsnRel(corners);
-      result = new Polygon(pLayer, coors);
-    } else if (pBoardShape instanceof app.freerouting.geometry.planar.Circle board_circle) {
-      double diameter = 2 * boardToDsn(board_circle.radius);
-      double[] centerCoor = boardToDsnRel(board_circle.center.toFloat());
-      result = new Circle(pLayer, diameter, centerCoor[0], centerCoor[1]);
+    if (boardShape instanceof IntBox box) {
+      result = new Rectangle(layer, boardToDsnRel(box));
+    } else if (boardShape instanceof PolylineShape) {
+      FloatPoint[] corners = boardShape.cornerApproxArr();
+      double[] coordinates = boardToDsnRel(corners);
+      result = new Polygon(layer, coordinates);
+    } else if (boardShape instanceof app.freerouting.geometry.planar.Circle boardCircle) {
+      double diameter = 2 * boardToDsn(boardCircle.radius);
+      double[] centerCoordinates = boardToDsnRel(boardCircle.center.toFloat());
+      result = new Circle(layer, diameter, centerCoordinates[0], centerCoordinates[1]);
     } else {
       FRLogger.warn("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
       result = null;
     }
     return result;
+  }
+
+  /** Scales a value from the external to the board coordinate system. */
+  public double dsnToBoard(double value) {
+    return value * scaleFactor;
+  }
+
+  /** Transforms an external tuple to a board point. */
+  public FloatPoint dsnToBoard(double[] tuple) {
+    double x = dsnToBoard(tuple[0] - baseX);
+    double y = dsnToBoard(tuple[1] - baseY);
+    return new FloatPoint(x, y);
+  }
+
+  /** Transforms an external tuple to a board point in relative coordinates. */
+  public FloatPoint dsnToBoardRel(double[] tuple) {
+    double x = dsnToBoard(tuple[0]);
+    double y = dsnToBoard(tuple[1]);
+    return new FloatPoint(x, y);
   }
 }

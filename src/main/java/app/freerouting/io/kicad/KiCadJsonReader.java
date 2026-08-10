@@ -61,12 +61,11 @@ public final class KiCadJsonReader {
   public static BoardReadResult readBoard(
       Reader reader, BoardObservers observers, IdentificationNumberGenerator idGenerator) {
 
-    long startTime = System.nanoTime();
-
     if (reader == null) {
       return new BoardReadResult.ParseError("json_root", "Reader must not be null");
     }
 
+    long startTime = System.nanoTime();
     if (observers == null) {
       observers = new BoardObserverAdaptor();
     }
@@ -100,8 +99,7 @@ public final class KiCadJsonReader {
         resolution = 10000; // 0.1 micrometer resolution is default for mm if unspecified
       }
 
-      double scaleFactor = resolution;
-      CoordinateTransform coordinateTransform = new CoordinateTransform(scaleFactor, 0, 0);
+      final double scaleFactor = resolution;
 
       // 3. Layer Structure
       int layerCount = boardJson.layers.isEmpty() ? 2 : boardJson.layers.size();
@@ -122,8 +120,6 @@ public final class KiCadJsonReader {
               layerStructure); // dummy or map layer names if needed
 
       // 4. Clearance Matrix
-      KiCadBoardJson.NetClassJson kiCadDefaultNetClass =
-          findKiCadDefaultNetClass(boardJson.netClasses);
       List<KiCadBoardJson.NetClassJson> additionalNetClasses =
           nonDefaultNetClasses(boardJson.netClasses);
 
@@ -141,6 +137,8 @@ public final class KiCadJsonReader {
           (int) Math.round(Unit.scale(0.2, Unit.MM, userUnit) * scaleFactor); // fallback 0.2mm
       clearanceMatrix.setDefaultValue(defaultClearance);
 
+      KiCadBoardJson.NetClassJson kiCadDefaultNetClass =
+          findKiCadDefaultNetClass(boardJson.netClasses);
       if (kiCadDefaultNetClass != null && kiCadDefaultNetClass.clearance > 0) {
         int defaultClVal = (int) Math.round(kiCadDefaultNetClass.clearance * scaleFactor);
         clearanceMatrix.setValue(1, 1, defaultClVal);
@@ -164,15 +162,17 @@ public final class KiCadJsonReader {
         }
       }
 
-      BoardRules boardRules = new BoardRules(layerStructure, clearanceMatrix);
-
       // 5. Board Outline / Boundary Shape Creation
-      PointOutline boundingBoxOutline = new PointOutline();
-      List<PolylineShape> outlineShapes = new ArrayList<>();
-      boolean outlineGenerated = false;
-      if (boardJson.outline == null || boardJson.outline.corners.size() < 3) {
+      List<PolylineShape> outlineShapes;
+      IntBox boundingBox;
+      final boolean outlineMissing =
+          boardJson.outline == null || boardJson.outline.corners.size() < 3;
+      if (outlineMissing) {
+        outlineShapes = new ArrayList<>();
+        final PointOutline outline = new PointOutline();
         FRLogger.warn(
-            "Board Outline/Boundary is missing or empty in the JSON file. A supposed board edge around components with 5mm padding will be generated for routing.");
+            "Board Outline/Boundary is missing or empty in the JSON file. A supposed board edge "
+                + "around components with 5mm padding will be generated for routing.");
         double minX = Double.MAX_VALUE;
         double maxX = -Double.MAX_VALUE;
         double minY = Double.MAX_VALUE;
@@ -272,11 +272,13 @@ public final class KiCadJsonReader {
                 (int) Math.round(maxX * scaleFactor), (int) Math.round(-minY * scaleFactor));
 
         for (Point point : points) {
-          boundingBoxOutline.addPoint(point.toFloat());
+          outline.addPoint(point.toFloat());
         }
         outlineShapes.add(new PolygonShape(points));
-        outlineGenerated = true;
+        boundingBox = outline.boundingBox().offset(1000);
       } else {
+        outlineShapes = new ArrayList<>();
+        PointOutline outline = new PointOutline();
         List<KiCadBoardJson.Point2D> corners = new ArrayList<>(boardJson.outline.corners);
         if (corners.size() > 2) {
           // Sort corners by polar angle around centroid to ensure simple polygon construction
@@ -299,15 +301,17 @@ public final class KiCadJsonReader {
           points[i] =
               new IntPoint(
                   (int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
-          boundingBoxOutline.addPoint(points[i].toFloat());
+          outline.addPoint(points[i].toFloat());
         }
         outlineShapes.add(new PolygonShape(points));
+        boundingBox = outline.boundingBox().offset(1000);
       }
 
-      IntBox boundingBox = boundingBoxOutline.boundingBox().offset(1000);
-      int outlineClearanceNo = 1; // Default clearance class
+      final int outlineClearanceNo = 1; // Default clearance class
 
       // 6. Communication object setup
+      final CoordinateTransform coordinateTransform =
+          new CoordinateTransform(scaleFactor, 0, 0);
       Communication.SpecctraParserInfo parserInfo =
           new Communication.SpecctraParserInfo("\"", "KiCad", "v10.0", null, null, false);
       Communication communication =
@@ -315,6 +319,7 @@ public final class KiCadJsonReader {
               userUnit, resolution, parserInfo, coordinateTransform, idGenerator, observers);
 
       // 7. Construct RoutingBoard
+      final BoardRules boardRules = new BoardRules(layerStructure, clearanceMatrix);
       RoutingBoard board =
           new RoutingBoard(
               boundingBox,
@@ -530,9 +535,9 @@ public final class KiCadJsonReader {
             // Find active layers by name matching
             int lowestIdx = layerCount - 1;
             int highestIdx = 0;
-            for (String lName : pad.layers) {
+            for (String layerName : pad.layers) {
               for (int li = 0; li < layerCount; li++) {
-                if (boardLayers[li].name.equalsIgnoreCase(lName)) {
+                if (boardLayers[li].name.equalsIgnoreCase(layerName)) {
                   lowestIdx = Math.min(lowestIdx, li);
                   highestIdx = Math.max(highestIdx, li);
                 }
@@ -624,13 +629,13 @@ public final class KiCadJsonReader {
                 comp.value);
 
         // Insert actual pin items mapped to nets
-        for (int pIdx = 0; pIdx < comp.pads.size(); pIdx++) {
-          KiCadBoardJson.PadJson pad = comp.pads.get(pIdx);
+        for (int padIndex = 0; padIndex < comp.pads.size(); padIndex++) {
+          KiCadBoardJson.PadJson pad = comp.pads.get(padIndex);
           Net targetNet = boardRules.nets.get(pad.netName, 1);
           int netNo = targetNet != null ? targetNet.netNumber : 0;
           int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
           board.insertPin(
-              boardComp.no, pIdx, netNoArr, outlineClearanceNo, FixedState.SYSTEM_FIXED);
+              boardComp.no, padIndex, netNoArr, outlineClearanceNo, FixedState.SYSTEM_FIXED);
         }
       }
 
@@ -710,7 +715,8 @@ public final class KiCadJsonReader {
       double durationMs = (endTime - startTime) / 1_000_000.0;
       FRLogger.debug(
           String.format(
-              "KiCad JSON Loader performance: built RoutingBoard in %.2f ms (parsing + structure mapping)",
+              "KiCad JSON Loader performance: built RoutingBoard in %.2f ms (parsing + "
+                  + "structure mapping)",
               durationMs));
 
       // Build metadata for the board
@@ -725,9 +731,10 @@ public final class KiCadJsonReader {
               null);
 
       List<String> warnings = new ArrayList<>();
-      if (outlineGenerated) {
+      if (outlineMissing) {
         warnings.add(
-            "Board Outline/Boundary is missing or empty in the JSON file. A supposed board edge around components with 5mm padding was generated.");
+            "Board Outline/Boundary is missing or empty in the JSON file. A supposed board edge "
+                + "around components with 5mm padding was generated.");
       }
       return new BoardReadResult.Success(board, metadata, warnings);
 
@@ -846,10 +853,12 @@ public final class KiCadJsonReader {
   private static class PointOutline {
     private final List<FloatPoint> points = new ArrayList<>();
 
+    /** Adds a point to the outline. */
     public void addPoint(FloatPoint pt) {
       points.add(pt);
     }
 
+    /** Returns the integer bounding box of the outline points. */
     public IntBox boundingBox() {
       if (points.isEmpty()) {
         return IntBox.EMPTY;
@@ -889,10 +898,10 @@ public final class KiCadJsonReader {
 
     String layerType = "A";
     if (pad.layers != null && pad.layers.size() == 1) {
-      String lName = pad.layers.get(0);
-      if (boardLayers[0].name.equalsIgnoreCase(lName)) {
+      String layerName = pad.layers.get(0);
+      if (boardLayers[0].name.equalsIgnoreCase(layerName)) {
         layerType = "T";
-      } else if (boardLayers[layerCount - 1].name.equalsIgnoreCase(lName)) {
+      } else if (boardLayers[layerCount - 1].name.equalsIgnoreCase(layerName)) {
         layerType = "B";
       }
     }

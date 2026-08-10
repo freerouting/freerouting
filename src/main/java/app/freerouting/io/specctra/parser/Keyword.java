@@ -1,12 +1,12 @@
 package app.freerouting.io.specctra.parser;
 
-/** Enumeration class for keywords of the specctra dsn file format */
+/** Enumeration class for keywords of the specctra dsn file format. */
 public class Keyword {
 
   /**
-   * The only instances of the internal classes:
+   * Defines the keyword instances used by the parser.
    *
-   * <p>ScopeKeywords with an individual read_scope method are defined in an extra class,
+   * <p>Scope keywords with individual read-scope methods are defined in separate classes.
    */
   public static final Keyword ABSOLUTE = new Keyword("absolute");
 
@@ -119,9 +119,9 @@ public class Keyword {
   public static final Keyword WRITE_RESOLUTION = new Keyword("writeResolution");
   private final String name;
 
-  /** prevents creating more instances */
-  protected Keyword(String pName) {
-    name = pName;
+  /** Prevents creating more instances. */
+  protected Keyword(String name) {
+    this.name = name;
   }
 
   /** Returns the name string of this Keyword. The name is used for debugging purposes. */

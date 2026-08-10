@@ -4,18 +4,19 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 
-/** Describes the placement data of a library component */
+/** Describes placement data for a library component. */
+@SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
 public class ComponentPlacement {
 
-  /** The name of the corresponding library component */
+  /** The name of the corresponding library component. */
   public final String libName;
 
   /** The list of ComponentLocations of the library component on the board. */
   public final Collection<ComponentLocation> locations;
 
-  /** Creates a new instance of ComponentPlacement */
-  public ComponentPlacement(String pLibName) {
-    libName = pLibName;
+  /** Creates a new instance of ComponentPlacement. */
+  public ComponentPlacement(String libName) {
+    this.libName = libName;
     locations = new LinkedList<>();
   }
 
@@ -24,7 +25,7 @@ public class ComponentPlacement {
 
     public final String name;
 
-    /** the x- and the y-coordinate of the location. */
+    /** The x- and y-coordinates of the location. */
     public final double[] coor;
 
     /**
@@ -40,35 +41,41 @@ public class ComponentPlacement {
     public final boolean positionFixed;
 
     /** The entries of this map are of type ItemClearanceInfo, the keys are the pin names. */
+    @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
     public final Map<String, ItemClearanceInfo> pin_infos;
 
+    @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
     public final Map<String, ItemClearanceInfo> keepout_infos;
+
+    @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
     public final Map<String, ItemClearanceInfo> via_keepout_infos;
+
+    @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
     public final Map<String, ItemClearanceInfo> place_keepout_infos;
 
     public final String partNumber;
 
     ComponentLocation(
-        String pName,
-        double[] pCoor,
-        boolean pIsFront,
-        double pRotation,
-        boolean pPositionFixed,
-        Map<String, ItemClearanceInfo> pPinInfos,
-        Map<String, ItemClearanceInfo> pKeepoutInfos,
-        Map<String, ItemClearanceInfo> pViaKeepoutInfos,
-        Map<String, ItemClearanceInfo> pPlaceKeepoutInfos,
-        String pPartNumber) {
-      name = pName;
-      coor = pCoor;
-      isFront = pIsFront;
-      rotation = pRotation;
-      positionFixed = pPositionFixed;
-      pin_infos = pPinInfos;
-      keepout_infos = pKeepoutInfos;
-      via_keepout_infos = pViaKeepoutInfos;
-      place_keepout_infos = pPlaceKeepoutInfos;
-      partNumber = pPartNumber;
+        String name,
+        double[] coor,
+        boolean isFront,
+        double rotation,
+        boolean positionFixed,
+        Map<String, ItemClearanceInfo> pinInfos,
+        Map<String, ItemClearanceInfo> keepoutInfos,
+        Map<String, ItemClearanceInfo> viaKeepoutInfos,
+        Map<String, ItemClearanceInfo> placeKeepoutInfos,
+        String partNumber) {
+      this.name = name;
+      this.coor = coor;
+      this.isFront = isFront;
+      this.rotation = rotation;
+      this.positionFixed = positionFixed;
+      pin_infos = pinInfos;
+      keepout_infos = keepoutInfos;
+      via_keepout_infos = viaKeepoutInfos;
+      place_keepout_infos = placeKeepoutInfos;
+      this.partNumber = partNumber;
     }
   }
 
@@ -77,9 +84,9 @@ public class ComponentPlacement {
     public final String name;
     public final String clearanceClass;
 
-    ItemClearanceInfo(String pName, String pClearanceClass) {
-      name = pName;
-      clearanceClass = pClearanceClass;
+    ItemClearanceInfo(String name, String clearanceClass) {
+      this.name = name;
+      this.clearanceClass = clearanceClass;
     }
   }
 }

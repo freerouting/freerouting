@@ -3,23 +3,28 @@ package app.freerouting.io.specctra.parser;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 
-/** Keywords defining a scope object */
+/** Keywords defining a scope object. */
+@SuppressWarnings({
+  "checkstyle:MissingJavadocMethod",
+  "checkstyle:MissingJavadocType",
+  "checkstyle:VariableDeclarationUsageDistance"
+})
 public class ScopeKeyword extends Keyword {
 
-  public ScopeKeyword(String pName) {
-    super(pName);
+  public ScopeKeyword(String name) {
+    super(name);
   }
 
   /**
    * Skips the current scope while reading a dsn file. Returns false, if no legal scope was found.
    */
-  public static boolean skipScope(IJFlexScanner pScanner) {
+  public static boolean skipScope(IJFlexScanner scanner) {
     int openBrackedCount = 1;
     while (openBrackedCount > 0) {
-      pScanner.yybegin(SpecctraDsnStreamReader.NAME);
+      scanner.yybegin(SpecctraDsnStreamReader.NAME);
       Object currToken;
       try {
-        currToken = pScanner.nextToken();
+        currToken = scanner.nextToken();
       } catch (Exception e) {
         FRLogger.error("ScopeKeyword.skip_scope: Error while scanning file", e);
         return false;
@@ -37,12 +42,12 @@ public class ScopeKeyword extends Keyword {
   }
 
   /** Reads the next scope of this keyword from dsn file. */
-  public boolean readScope(ReadScopeParameter pPar) {
+  public boolean readScope(ReadScopeParameter par) {
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = pPar.scanner.nextToken();
+        nextToken = par.scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("ScopeKeyword.read_scope: IO error scanning file", e);
         return false;
@@ -62,12 +67,12 @@ public class ScopeKeyword extends Keyword {
         if (nextToken instanceof ScopeKeyword keyword) {
           // read the next scope, which is the "structure" part of the DSN file
           nextScope = keyword;
-          if (!nextScope.readScope(pPar)) {
+          if (!nextScope.readScope(par)) {
             return false;
           }
         } else {
           // skip unknown scope
-          skipScope(pPar.scanner);
+          skipScope(par.scanner);
         }
       }
     }

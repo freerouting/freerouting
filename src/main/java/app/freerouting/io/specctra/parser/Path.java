@@ -10,15 +10,15 @@ public abstract class Path extends Shape {
   public final double width;
   public final double[] coordinateArr;
 
-  /** Creates a new instance of Path */
-  Path(Layer pLayer, double pWidth, double[] pCoordinateArr) {
-    super(pLayer);
-    width = pWidth;
-    coordinateArr = pCoordinateArr;
+  /** Creates a new instance of Path. */
+  Path(Layer layer, double width, double[] coordinateArr) {
+    super(layer);
+    this.width = width;
+    this.coordinateArr = coordinateArr;
   }
 
   /** Writes this path as a scope to an output dsn-file. */
   @Override
-  public abstract void writeScope(IndentFileWriter pFile, IdentifierType pIdentifier)
+  public abstract void writeScope(IndentFileWriter file, IdentifierType identifier)
       throws IOException;
 }

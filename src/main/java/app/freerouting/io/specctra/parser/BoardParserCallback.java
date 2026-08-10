@@ -28,12 +28,12 @@ interface BoardParserCallback {
    * Implementations should create and store a new {@link RoutingBoard} from the given parameters.
    */
   void createBoard(
-      IntBox pBoundingBox,
-      LayerStructure pLayerStructure,
-      PolylineShape[] pOutlineShapes,
-      String pOutlineClearanceClassName,
-      BoardRules pRules,
-      Communication pBoardCommunication);
+      IntBox boundingBox,
+      LayerStructure layerStructure,
+      PolylineShape[] outlineShapes,
+      String outlineClearanceClassName,
+      BoardRules rules,
+      Communication boardCommunication);
 
   /**
    * Called after board creation to populate per-layer manual trace widths from the default net

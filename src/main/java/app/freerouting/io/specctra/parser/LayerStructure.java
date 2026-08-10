@@ -4,42 +4,41 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /** Describes a layer structure read from a dsn file. */
+@SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
 public class LayerStructure {
 
   public final Layer[] arr;
 
-  /** Creates a new instance of LayerStructure from a list of layers */
-  public LayerStructure(Collection<Layer> pLayerList) {
-    arr = new Layer[pLayerList.size()];
-    Iterator<Layer> it = pLayerList.iterator();
+  /** Creates a new instance of LayerStructure from a list of layers. */
+  public LayerStructure(Collection<Layer> layerList) {
+    arr = new Layer[layerList.size()];
+    Iterator<Layer> it = layerList.iterator();
     for (int i = 0; i < arr.length; i++) {
       arr[i] = it.next();
     }
   }
 
   /** Creates a dsn-LayerStructure from a board LayerStructure. */
-  public LayerStructure(app.freerouting.board.LayerStructure pBoardLayerStructure) {
-    arr = new Layer[pBoardLayerStructure.arr.length];
+  public LayerStructure(app.freerouting.board.LayerStructure boardLayerStructure) {
+    arr = new Layer[boardLayerStructure.arr.length];
     for (int i = 0; i < arr.length; i++) {
-      app.freerouting.board.Layer boardLayer = pBoardLayerStructure.arr[i];
+      app.freerouting.board.Layer boardLayer = boardLayerStructure.arr[i];
       arr[i] = new Layer(boardLayer.name, i, boardLayer.isSignal);
     }
   }
 
-  /**
-   * returns the number of the layer with the name p_name, -1, if no layer with name p_name exists.
-   */
-  public int getNo(String pName) {
+  /** Returns the number of the named layer, or {@code -1} when it does not exist. */
+  public int getNo(String name) {
     for (int i = 0; i < arr.length; i++) {
-      if (pName.equals(arr[i].name)) {
+      if (name.equals(arr[i].name)) {
         return i;
       }
     }
     // check for special layers of the Electra autorouter used for the outline
-    if (pName.contains("Top")) {
+    if (name.contains("Top")) {
       return 0;
     }
-    if (pName.contains("Bottom")) {
+    if (name.contains("Bottom")) {
       return arr.length - 1;
     }
     return -1;
@@ -56,11 +55,11 @@ public class LayerStructure {
   }
 
   /** Returns, if the net with name p_net_name contains a power plane. */
-  public boolean containsPlane(String pNetName) {
+  public boolean containsPlane(String netName) {
 
     for (Layer currLayer : arr) {
       if (!currLayer.isSignal) {
-        if (currLayer.netNames.contains(pNetName)) {
+        if (currLayer.netNames.contains(netName)) {
           return true;
         }
       }

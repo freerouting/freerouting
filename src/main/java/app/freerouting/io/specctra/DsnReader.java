@@ -34,17 +34,6 @@ public final class DsnReader {
   private DsnReader() {}
 
   /**
-   * Reads a DSN stream and returns a fully constructed board or a typed failure.
-   *
-   * <p>The stream is <em>closed</em> by this method once reading completes (successfully or not).
-   *
-   * @param inputStream source — closed by this method on completion
-   * @param observers nullable; passed through to board items for host-system embedding
-   * @param idGenerator nullable; for consistent item identification in host-system embedding
-   * @return one of {@link BoardReadResult.Success}, {@link BoardReadResult.OutlineMissing}, {@link
-   *     BoardReadResult.ParseError}, or {@link BoardReadResult.IoError}
-   */
-  /**
    * Convenience overload — equivalent to {@link #readBoard(InputStream, BoardObservers,
    * IdentificationNumberGenerator, String)} with {@code null} for the design-name hint.
    */

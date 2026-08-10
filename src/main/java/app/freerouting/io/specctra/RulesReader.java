@@ -94,7 +94,7 @@ public final class RulesReader {
       // Parse all top-level scopes in the rules body
       Object nextToken = null;
       for (; ; ) {
-        Object prevToken = nextToken;
+        final Object prevToken = nextToken;
         try {
           nextToken = scanner.nextToken();
         } catch (IOException e) {

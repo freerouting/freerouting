@@ -7,20 +7,25 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 import java.io.IOException;
 
+@SuppressWarnings({
+  "checkstyle:MissingJavadocMethod",
+  "checkstyle:MissingJavadocType",
+  "checkstyle:VariableDeclarationUsageDistance"
+})
 public final class AutorouteSettings {
 
   private AutorouteSettings() {}
 
-  static RouterSettings readScope(IJFlexScanner pScanner, LayerStructure pLayerStructure) {
+  static RouterSettings readScope(IJFlexScanner scanner, LayerStructure layerStructure) {
     RouterSettings result = new RouterSettings();
-    result.setLayerCount(pLayerStructure.arr.length);
+    result.setLayerCount(layerStructure.arr.length);
     boolean withAutoroute = true;
     boolean withPostroute = true;
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = pScanner.nextToken();
+        nextToken = scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("AutorouteSettings.read_scope: IO error scanning file", e);
         return null;
@@ -28,7 +33,7 @@ public final class AutorouteSettings {
       if (nextToken == null) {
         FRLogger.warn(
             "AutorouteSettings.read_scope: unexpected end of file at '"
-                + pScanner.getScopeIdentifier()
+                + scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -38,26 +43,26 @@ public final class AutorouteSettings {
       }
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.FANOUT) {
-          DsnFile.readOnOffScope(pScanner);
+          DsnFile.readOnOffScope(scanner);
         } else if (nextToken == Keyword.AUTOROUTE) {
-          withAutoroute = DsnFile.readOnOffScope(pScanner);
+          withAutoroute = DsnFile.readOnOffScope(scanner);
         } else if (nextToken == Keyword.POSTROUTE) {
-          withPostroute = DsnFile.readOnOffScope(pScanner);
+          withPostroute = DsnFile.readOnOffScope(scanner);
         } else if (nextToken == Keyword.VIAS) {
-          result.setViasAllowed(DsnFile.readOnOffScope(pScanner));
+          result.setViasAllowed(DsnFile.readOnOffScope(scanner));
         } else if (nextToken == Keyword.VIA_COSTS) {
-          result.setViaCosts(DsnFile.readIntegerScope(pScanner));
+          result.setViaCosts(DsnFile.readIntegerScope(scanner));
         } else if (nextToken == Keyword.PLANE_VIA_COSTS) {
-          result.setPlaneViaCosts(DsnFile.readIntegerScope(pScanner));
+          result.setPlaneViaCosts(DsnFile.readIntegerScope(scanner));
         } else if (nextToken == Keyword.START_RIPUP_COSTS) {
-          result.setStartRipupCosts(DsnFile.readIntegerScope(pScanner));
+          result.setStartRipupCosts(DsnFile.readIntegerScope(scanner));
         } else if (nextToken == Keyword.LAYER_RULE) {
-          result = readLayerRule(pScanner, pLayerStructure, result);
+          result = readLayerRule(scanner, layerStructure, result);
           if (result == null) {
             return null;
           }
         } else {
-          ScopeKeyword.skipScope(pScanner);
+          ScopeKeyword.skipScope(scanner);
         }
       }
     }
@@ -67,11 +72,11 @@ public final class AutorouteSettings {
   }
 
   static RouterSettings readLayerRule(
-      IJFlexScanner pScanner, LayerStructure pLayerStructure, RouterSettings pSettings) {
-    pScanner.yybegin(SpecctraDsnStreamReader.NAME);
+      IJFlexScanner scanner, LayerStructure layerStructure, RouterSettings settings) {
+    scanner.yybegin(SpecctraDsnStreamReader.NAME);
     Object nextToken;
     try {
-      nextToken = pScanner.nextToken();
+      nextToken = scanner.nextToken();
     } catch (IOException e) {
       FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
       return null;
@@ -79,22 +84,22 @@ public final class AutorouteSettings {
     if (!(nextToken instanceof String)) {
       FRLogger.warn(
           "AutorouteSettings.read_layer_rule: String expected at '"
-              + pScanner.getScopeIdentifier()
+              + scanner.getScopeIdentifier()
               + "'");
       return null;
     }
-    int layerNo = pLayerStructure.getNo((String) nextToken);
+    int layerNo = layerStructure.getNo((String) nextToken);
     if (layerNo < 0) {
       FRLogger.warn(
           "AutorouteSettings.read_layer_rule: layer not found at '"
-              + pScanner.getScopeIdentifier()
+              + scanner.getScopeIdentifier()
               + "'");
       return null;
     }
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = pScanner.nextToken();
+        nextToken = scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
         return null;
@@ -102,7 +107,7 @@ public final class AutorouteSettings {
       if (nextToken == null) {
         FRLogger.warn(
             "AutorouteSettings.read_layer_rule: unexpected end of file at '"
-                + pScanner.getScopeIdentifier()
+                + scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -112,26 +117,26 @@ public final class AutorouteSettings {
       }
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.ACTIVE) {
-          pSettings.setLayerActive(layerNo, DsnFile.readOnOffScope(pScanner));
+          settings.setLayerActive(layerNo, DsnFile.readOnOffScope(scanner));
         } else if (nextToken == Keyword.PREFERRED_DIRECTION) {
           try {
             boolean prefDirIsHorizontal = true;
-            nextToken = pScanner.nextToken();
+            nextToken = scanner.nextToken();
             if (nextToken == Keyword.VERTICAL) {
               prefDirIsHorizontal = false;
             } else if (nextToken != Keyword.HORIZONTAL) {
               FRLogger.warn(
                   "AutorouteSettings.read_layer_rule: unexpected key word at '"
-                      + pScanner.getScopeIdentifier()
+                      + scanner.getScopeIdentifier()
                       + "'");
               return null;
             }
-            pSettings.setPreferredDirectionIsHorizontal(layerNo, prefDirIsHorizontal);
-            nextToken = pScanner.nextToken();
+            settings.setPreferredDirectionIsHorizontal(layerNo, prefDirIsHorizontal);
+            nextToken = scanner.nextToken();
             if (nextToken != Keyword.CLOSED_BRACKET) {
               FRLogger.warn(
                   "AutorouteSettings.read_layer_rule: closing bracket expected at '"
-                      + pScanner.getScopeIdentifier()
+                      + scanner.getScopeIdentifier()
                       + "'");
               return null;
             }
@@ -140,100 +145,100 @@ public final class AutorouteSettings {
             return null;
           }
         } else if (nextToken == Keyword.PREFERRED_DIRECTION_TRACE_COSTS) {
-          pSettings.setPreferredDirectionTraceCosts(layerNo, DsnFile.readFloatScope(pScanner));
+          settings.setPreferredDirectionTraceCosts(layerNo, DsnFile.readFloatScope(scanner));
         } else if (nextToken == Keyword.AGAINST_PREFERRED_DIRECTION_TRACE_COSTS) {
-          pSettings.setAgainstPreferredDirectionTraceCosts(
-              layerNo, DsnFile.readFloatScope(pScanner));
+          settings.setAgainstPreferredDirectionTraceCosts(
+              layerNo, DsnFile.readFloatScope(scanner));
         } else {
-          ScopeKeyword.skipScope(pScanner);
+          ScopeKeyword.skipScope(scanner);
         }
       }
     }
-    return pSettings;
+    return settings;
   }
 
   public static void writeScope(
-      IndentFileWriter pFile,
-      RouterSettings pSettings,
-      app.freerouting.board.LayerStructure pLayerStructure,
-      IdentifierType pIdentifierType)
+      IndentFileWriter file,
+      RouterSettings settings,
+      app.freerouting.board.LayerStructure layerStructure,
+      IdentifierType identifierType)
       throws IOException {
-    pFile.startScope();
-    pFile.write("autorouteSettings");
-    pFile.newLine();
-    pFile.write("(autoroute ");
-    if (pSettings.getRunRouter()) {
-      pFile.write("on)");
+    file.startScope();
+    file.write("autorouteSettings");
+    file.newLine();
+    file.write("(autoroute ");
+    if (settings.getRunRouter()) {
+      file.write("on)");
     } else {
-      pFile.write("off)");
+      file.write("off)");
     }
-    pFile.newLine();
-    pFile.write("(postroute ");
-    if (pSettings.getRunOptimizer()) {
-      pFile.write("on)");
+    file.newLine();
+    file.write("(postroute ");
+    if (settings.getRunOptimizer()) {
+      file.write("on)");
     } else {
-      pFile.write("off)");
+      file.write("off)");
     }
-    pFile.newLine();
-    pFile.write("(vias ");
-    if (pSettings.getViasAllowed()) {
-      pFile.write("on)");
+    file.newLine();
+    file.write("(vias ");
+    if (settings.getViasAllowed()) {
+      file.write("on)");
     } else {
-      pFile.write("off)");
+      file.write("off)");
     }
-    pFile.newLine();
-    pFile.write("(viaCosts ");
+    file.newLine();
+    file.write("(viaCosts ");
     {
-      int viaCosts = pSettings.getViaCosts();
-      pFile.write(String.valueOf(viaCosts));
+      int viaCosts = settings.getViaCosts();
+      file.write(String.valueOf(viaCosts));
     }
-    pFile.write(")");
-    pFile.newLine();
-    pFile.write("(plane_via_costs ");
+    file.write(")");
+    file.newLine();
+    file.write("(plane_via_costs ");
     {
-      int viaCosts = pSettings.getPlaneViaCosts();
-      pFile.write(String.valueOf(viaCosts));
+      int viaCosts = settings.getPlaneViaCosts();
+      file.write(String.valueOf(viaCosts));
     }
-    pFile.write(")");
-    pFile.newLine();
-    pFile.write("(startRipupCosts ");
+    file.write(")");
+    file.newLine();
+    file.write("(startRipupCosts ");
     {
-      int ripupCosts = pSettings.getStartRipupCosts();
-      pFile.write(String.valueOf(ripupCosts));
+      int ripupCosts = settings.getStartRipupCosts();
+      file.write(String.valueOf(ripupCosts));
     }
-    pFile.write(")");
-    pFile.newLine();
-    for (int i = 0; i < pLayerStructure.arr.length; i++) {
-      Layer currLayer = pLayerStructure.arr[i];
-      pFile.startScope();
-      pFile.write("layer_rule ");
-      pIdentifierType.write(currLayer.name, pFile);
-      pFile.newLine();
-      pFile.write("(active ");
-      if (pSettings.getLayerActive(i)) {
-        pFile.write("on)");
+    file.write(")");
+    file.newLine();
+    for (int i = 0; i < layerStructure.arr.length; i++) {
+      final Layer currLayer = layerStructure.arr[i];
+      file.startScope();
+      file.write("layer_rule ");
+      identifierType.write(currLayer.name, file);
+      file.newLine();
+      file.write("(active ");
+      if (settings.getLayerActive(i)) {
+        file.write("on)");
       } else {
-        pFile.write("off)");
+        file.write("off)");
       }
-      pFile.newLine();
-      pFile.write("(preferred_direction ");
-      if (pSettings.getPreferredDirectionIsHorizontal(i)) {
-        pFile.write("horizontal)");
+      file.newLine();
+      file.write("(preferred_direction ");
+      if (settings.getPreferredDirectionIsHorizontal(i)) {
+        file.write("horizontal)");
       } else {
-        pFile.write("vertical)");
+        file.write("vertical)");
       }
-      pFile.newLine();
-      pFile.write("(preferred_direction_trace_costs ");
-      float traceCosts = (float) pSettings.getPreferredDirectionTraceCosts(i);
-      pFile.write(String.valueOf(traceCosts));
-      pFile.write(")");
-      pFile.newLine();
-      pFile.write("(against_preferred_direction_trace_costs ");
-      traceCosts = (float) pSettings.getAgainstPreferredDirectionTraceCosts(i);
-      pFile.write(String.valueOf(traceCosts));
-      pFile.write(")");
-      pFile.endScope();
+      file.newLine();
+      file.write("(preferred_direction_trace_costs ");
+      float traceCosts = (float) settings.getPreferredDirectionTraceCosts(i);
+      file.write(String.valueOf(traceCosts));
+      file.write(")");
+      file.newLine();
+      file.write("(against_preferred_direction_trace_costs ");
+      traceCosts = (float) settings.getAgainstPreferredDirectionTraceCosts(i);
+      file.write(String.valueOf(traceCosts));
+      file.write(")");
+      file.endScope();
     }
-    pFile.endScope();
+    file.endScope();
   }
 }

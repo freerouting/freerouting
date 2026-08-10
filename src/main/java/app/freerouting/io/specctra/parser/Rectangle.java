@@ -17,9 +17,9 @@ public class Rectangle extends Shape {
    * rectangle coordinates in the following order: lower left x, lower left y, upper right x, upper
    * right y.
    */
-  public Rectangle(Layer pLayer, double[] pCoor) {
-    super(pLayer);
-    coor = pCoor;
+  public Rectangle(Layer layer, double[] coor) {
+    super(layer);
+    this.coor = coor;
   }
 
   @Override
@@ -27,22 +27,22 @@ public class Rectangle extends Shape {
     return this;
   }
 
-  /** Creates the smallest rectangle containing this rectangle and p_other */
-  public Rectangle union(Rectangle pOther) {
+  /** Creates the smallest rectangle containing this rectangle and p_other. */
+  public Rectangle union(Rectangle other) {
     double[] resultCoor = new double[4];
-    resultCoor[0] = Math.min(this.coor[0], pOther.coor[0]);
-    resultCoor[1] = Math.min(this.coor[1], pOther.coor[1]);
-    resultCoor[2] = Math.max(this.coor[2], pOther.coor[2]);
-    resultCoor[3] = Math.max(this.coor[3], pOther.coor[3]);
+    resultCoor[0] = Math.min(this.coor[0], other.coor[0]);
+    resultCoor[1] = Math.min(this.coor[1], other.coor[1]);
+    resultCoor[2] = Math.max(this.coor[2], other.coor[2]);
+    resultCoor[3] = Math.max(this.coor[3], other.coor[3]);
     return new Rectangle(this.layer, resultCoor);
   }
 
   @Override
   public app.freerouting.geometry.planar.Shape transformToBoardRel(
-      CoordinateTransform pCoordinateTransform) {
+      CoordinateTransform coordinateTransform) {
     int[] boxCoor = new int[4];
     for (int i = 0; i < 4; i++) {
-      boxCoor[i] = (int) Math.round(pCoordinateTransform.dsnToBoard(this.coor[i]));
+      boxCoor[i] = (int) Math.round(coordinateTransform.dsnToBoard(this.coor[i]));
     }
 
     IntBox result;
@@ -58,40 +58,40 @@ public class Rectangle extends Shape {
 
   @Override
   public app.freerouting.geometry.planar.Shape transformToBoard(
-      CoordinateTransform pCoordinateTransform) {
+      CoordinateTransform coordinateTransform) {
     double[] currPoint = new double[2];
     currPoint[0] = Math.min(coor[0], coor[2]);
     currPoint[1] = Math.min(coor[1], coor[3]);
-    FloatPoint lowerLeft = pCoordinateTransform.dsnToBoard(currPoint);
+    FloatPoint lowerLeft = coordinateTransform.dsnToBoard(currPoint);
     currPoint[0] = Math.max(coor[0], coor[2]);
     currPoint[1] = Math.max(coor[1], coor[3]);
-    FloatPoint upperRight = pCoordinateTransform.dsnToBoard(currPoint);
+    FloatPoint upperRight = coordinateTransform.dsnToBoard(currPoint);
     return new IntBox(lowerLeft.round(), upperRight.round());
   }
 
   /** Writes this rectangle as a scope to an output dsn-file. */
   @Override
-  public void writeScope(IndentFileWriter pFile, IdentifierType pIdentifier) throws IOException {
-    pFile.newLine();
-    pFile.write("(rect ");
-    pIdentifier.write(this.layer.name, pFile);
+  public void writeScope(IndentFileWriter file, IdentifierType identifier) throws IOException {
+    file.newLine();
+    file.write("(rect ");
+    identifier.write(this.layer.name, file);
     for (int i = 0; i < coor.length; i++) {
-      pFile.write(" ");
-      pFile.write(String.valueOf(coor[i]));
+      file.write(" ");
+      file.write(String.valueOf(coor[i]));
     }
-    pFile.write(")");
+    file.write(")");
   }
 
   @Override
-  public void writeScopeInt(IndentFileWriter pFile, IdentifierType pIdentifier) throws IOException {
-    pFile.newLine();
-    pFile.write("(rect ");
-    pIdentifier.write(this.layer.name, pFile);
+  public void writeScopeInt(IndentFileWriter file, IdentifierType identifier) throws IOException {
+    file.newLine();
+    file.write("(rect ");
+    identifier.write(this.layer.name, file);
     for (int i = 0; i < coor.length; i++) {
-      pFile.write(" ");
+      file.write(" ");
       int currCoor = (int) Math.round(coor[i]);
-      pFile.write(String.valueOf(currCoor));
+      file.write(String.valueOf(currCoor));
     }
-    pFile.write(")");
+    file.write(")");
   }
 }

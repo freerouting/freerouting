@@ -59,7 +59,7 @@ public class ReadScopeParameter {
   boolean viaAtSmdAllowed;
   public AngleRestriction snapAngle = AngleRestriction.FORTYFIVE_DEGREE;
 
-  /** The logical parts are used for pin and gate swaw */
+  /** The logical parts are used for pin and gate swaw. */
   Collection<PartLibrary.LogicalPartMapping> logicalPartMappings = new LinkedList<>();
 
   Collection<PartLibrary.LogicalPart> logicalParts = new LinkedList<>();
@@ -93,18 +93,18 @@ public class ReadScopeParameter {
    * minimal shim is constructed to receive the parsed board. Use this constructor from {@link
    * app.freerouting.io.specctra.DsnReader#readBoard}.
    *
-   * @param pScanner the token scanner over the DSN input stream
-   * @param pObservers nullable; for host-system embedding
-   * @param pItemIdNoGenerator nullable; for host-system embedding
+   * @param scanner the token scanner over the DSN input stream
+   * @param observers nullable; for host-system embedding
+   * @param itemIdNoGenerator nullable; for host-system embedding
    */
   public ReadScopeParameter(
-      IJFlexScanner pScanner,
-      BoardObservers pObservers,
-      IdentificationNumberGenerator pItemIdNoGenerator) {
-    scanner = pScanner;
+      IJFlexScanner scanner,
+      BoardObservers observers,
+      IdentificationNumberGenerator itemIdNoGenerator) {
+    this.scanner = scanner;
     boardHandling = new MinimalBoardManager();
-    observers = pObservers;
-    itemIdNoGenerator = pItemIdNoGenerator;
+    this.observers = observers;
+    this.itemIdNoGenerator = itemIdNoGenerator;
   }
 
   /**
@@ -139,20 +139,20 @@ public class ReadScopeParameter {
 
     @Override
     public void createBoard(
-        IntBox pBoundingBox,
-        app.freerouting.board.LayerStructure pLayerStructure,
-        PolylineShape[] pOutlineShapes,
-        String pOutlineClearanceClassName,
-        BoardRules pRules,
-        Communication pBoardCommunication) {
+        IntBox boundingBox,
+        app.freerouting.board.LayerStructure layerStructure,
+        PolylineShape[] outlineShapes,
+        String outlineClearanceClassName,
+        BoardRules rules,
+        Communication boardCommunication) {
       int outlineClearanceNo = 0;
-      if (pRules != null) {
-        if (pOutlineClearanceClassName != null && pRules.clearanceMatrix != null) {
+      if (rules != null) {
+        if (outlineClearanceClassName != null && rules.clearanceMatrix != null) {
           outlineClearanceNo =
-              Math.max(0, pRules.clearanceMatrix.getNo(pOutlineClearanceClassName));
+              Math.max(0, rules.clearanceMatrix.getNo(outlineClearanceClassName));
         } else {
           outlineClearanceNo =
-              pRules
+              rules
                   .getDefaultNetClass()
                   .defaultItemClearanceClasses
                   .get(DefaultItemClearanceClasses.ItemClass.AREA);
@@ -160,12 +160,12 @@ public class ReadScopeParameter {
       }
       board =
           new RoutingBoard(
-              pBoundingBox,
-              pLayerStructure,
-              pOutlineShapes,
+              boundingBox,
+              layerStructure,
+              outlineShapes,
               outlineClearanceNo,
-              pRules,
-              pBoardCommunication);
+              rules,
+              boardCommunication);
     }
 
     @Override
@@ -181,15 +181,15 @@ public class ReadScopeParameter {
 
   // -------------------------------------------------------------------------
 
-  /** Information for inserting a plane */
+  /** Information for inserting a plane. */
   static class PlaneInfo {
 
     final Shape.ReadAreaScopeResult area;
     final String netName;
 
-    PlaneInfo(Shape.ReadAreaScopeResult pArea, String pNetName) {
-      area = pArea;
-      netName = pNetName;
+    PlaneInfo(Shape.ReadAreaScopeResult area, String netName) {
+      this.area = area;
+      this.netName = netName;
     }
   }
 }

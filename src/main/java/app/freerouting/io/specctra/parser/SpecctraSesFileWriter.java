@@ -23,9 +23,9 @@ public final class SpecctraSesFileWriter {
    * @deprecated Use {@link SesWriter#write(BasicBoard, OutputStream, String)} instead.
    */
   @Deprecated
-  public static boolean write(BasicBoard pBoard, OutputStream pOutputStream, String pDesignName) {
+  public static boolean write(BasicBoard board, OutputStream outputStream, String designName) {
     try {
-      SesWriter.write(pBoard, pOutputStream, pDesignName);
+      SesWriter.write(board, outputStream, designName);
       return true;
     } catch (IOException e) {
       FRLogger.error("unable to write session file", e);

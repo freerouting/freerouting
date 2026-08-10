@@ -80,7 +80,7 @@ public final class SesWriter {
       throws IOException {
     double scaleFactor =
         board.communication.coordinateTransform.dsnToBoard(1) / board.communication.resolution;
-    CoordinateTransform coordinateTransform = new CoordinateTransform(scaleFactor, 0, 0);
+    final CoordinateTransform coordinateTransform = new CoordinateTransform(scaleFactor, 0, 0);
     file.startScope(false);
     file.write("session ");
     identifierType.write(sessionName, file);
@@ -162,12 +162,12 @@ public final class SesWriter {
     file.write("(place ");
     identifierType.write(component.name, file);
     double[] location = coordinateTransform.boardToDsn(component.getLocation().toFloat());
-    int xCoor = (int) Math.round(location[0]);
-    int yCoor = (int) Math.round(location[1]);
+    final int xcoordinate = (int) Math.round(location[0]);
+    final int ycoordinate = (int) Math.round(location[1]);
     file.write(" ");
-    file.write(String.valueOf(xCoor));
+    file.write(String.valueOf(xcoordinate));
     file.write(" ");
-    file.write(String.valueOf(yCoor));
+    file.write(String.valueOf(ycoordinate));
     if (component.placedOnFront()) {
       file.write(" front ");
     } else {
@@ -377,8 +377,9 @@ public final class SesWriter {
       IndentFileWriter file)
       throws IOException {
     int layerNo = wire.getLayer();
-    app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerNo];
-    int wireWidth = (int) Math.round(coordinateTransform.boardToDsn(2 * wire.getHalfWidth()));
+    final app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerNo];
+    final int wireWidth =
+        (int) Math.round(coordinateTransform.boardToDsn(2 * wire.getHalfWidth()));
     file.startScope();
     file.write("wire");
     Point[] cornerArr = wire.polyline().cornerArr();
@@ -459,17 +460,17 @@ public final class SesWriter {
       IndentFileWriter file)
       throws IOException {
     Padstack viaPadstack = via.getPadstack();
-    FloatPoint viaLocation = via.getCenter().toFloat();
+    final FloatPoint viaLocation = via.getCenter().toFloat();
     file.startScope();
     file.write("via ");
     identifierType.write(viaPadstack.name, file);
     file.write(" ");
     double[] location = coordinateTransform.boardToDsn(viaLocation);
-    int xCoor = (int) Math.round(location[0]);
-    file.write(String.valueOf(xCoor));
+    final int xcoordinate = (int) Math.round(location[0]);
+    file.write(String.valueOf(xcoordinate));
     file.write(" ");
-    int yCoor = (int) Math.round(location[1]);
-    file.write(String.valueOf(yCoor));
+    final int ycoordinate = (int) Math.round(location[1]);
+    file.write(String.valueOf(ycoordinate));
     writeFixedState(file, via.getFixedState());
     file.endScope();
   }
@@ -525,7 +526,7 @@ public final class SesWriter {
     Area currArea = conductionArea.getArea();
     int layerNo = conductionArea.getLayer();
     app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerNo];
-    Layer conductionLayer = new Layer(boardLayer.name, layerNo, boardLayer.isSignal);
+    final Layer conductionLayer = new Layer(boardLayer.name, layerNo, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
     if (currArea instanceof app.freerouting.geometry.planar.Shape shape) {

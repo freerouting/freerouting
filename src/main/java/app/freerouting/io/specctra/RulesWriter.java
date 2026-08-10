@@ -52,27 +52,27 @@ public final class RulesWriter {
   // Private helpers (migrated from RulesFile)
   // -------------------------------------------------------------------------
 
-  private static void writeRules(WriteScopeParameter pPar, String pDesignName) throws IOException {
-    pPar.file.startScope();
-    pPar.file.write("rules PCB ");
-    pPar.file.write(pDesignName);
-    Structure.writeSnapAngle(pPar.file, pPar.board.rules.getTraceAngleRestriction());
-    if (pPar.autorouteSettings != null) {
+  private static void writeRules(WriteScopeParameter par, String designName) throws IOException {
+    par.file.startScope();
+    par.file.write("rules PCB ");
+    par.file.write(designName);
+    Structure.writeSnapAngle(par.file, par.board.rules.getTraceAngleRestriction());
+    if (par.autorouteSettings != null) {
       AutorouteSettings.writeScope(
-          pPar.file, pPar.autorouteSettings, pPar.board.layerStructure, pPar.identifierType);
+          par.file, par.autorouteSettings, par.board.layerStructure, par.identifierType);
     }
     // write the default rule using 0 as default layer
-    Rule.writeDefaultRule(pPar, 0);
+    Rule.writeDefaultRule(par, 0);
     // write the via padstacks
-    for (int i = 1; i <= pPar.board.library.padstacks.count(); i++) {
-      Padstack currPadstack = pPar.board.library.padstacks.get(i);
-      if (pPar.board.library.getViaPadstack(currPadstack.name) != null) {
-        Library.writePadstackScope(pPar, currPadstack);
+    for (int i = 1; i <= par.board.library.padstacks.count(); i++) {
+      Padstack currPadstack = par.board.library.padstacks.get(i);
+      if (par.board.library.getViaPadstack(currPadstack.name) != null) {
+        Library.writePadstackScope(par, currPadstack);
       }
     }
-    Network.writeViaInfos(pPar.board.rules, pPar.file, pPar.identifierType);
-    Network.writeViaRules(pPar.board.rules, pPar.file, pPar.identifierType);
-    Network.writeNetClasses(pPar);
-    pPar.file.endScope();
+    Network.writeViaInfos(par.board.rules, par.file, par.identifierType);
+    Network.writeViaRules(par.board.rules, par.file, par.identifierType);
+    Network.writeNetClasses(par);
+    par.file.endScope();
   }
 }

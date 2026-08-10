@@ -7,71 +7,72 @@ import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 
 /** Class for reading and writing parser scopes from dsn-files. */
+@SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
 public class Parser extends ScopeKeyword {
 
-  /** Creates a new instance of Parser */
+  /** Creates a new instance of Parser. */
   public Parser() {
     super("parser");
   }
 
-  private static SpecctraParserInfo.WriteResolution readWriteSolution(ReadScopeParameter pPar) {
+  private static SpecctraParserInfo.WriteResolution readWriteSolution(ReadScopeParameter par) {
     try {
-      Object nextToken = pPar.scanner.nextToken();
-      if (!(nextToken instanceof String resolution_string)) {
+      Object nextToken = par.scanner.nextToken();
+      if (!(nextToken instanceof String resolutionString)) {
         FRLogger.warn(
             "Parser.read_write_solution: string expected at '"
-                + pPar.scanner.getScopeIdentifier()
+                + par.scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
-      nextToken = pPar.scanner.nextToken();
+      nextToken = par.scanner.nextToken();
       if (!(nextToken instanceof Integer)) {
         FRLogger.warn(
             "Parser.read_write_solution: integer expected expected at '"
-                + pPar.scanner.getScopeIdentifier()
+                + par.scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
       int resolutionValue = (Integer) nextToken;
-      nextToken = pPar.scanner.nextToken();
+      nextToken = par.scanner.nextToken();
       if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Parser.read_write_solution: closing_bracket expected at '"
-                + pPar.scanner.getScopeIdentifier()
+                + par.scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
-      return new SpecctraParserInfo.WriteResolution(resolution_string, resolutionValue);
+      return new SpecctraParserInfo.WriteResolution(resolutionString, resolutionValue);
     } catch (IOException e) {
       FRLogger.error("Parser.read_write_solution: IO error scanning file", e);
       return null;
     }
   }
 
-  private static String[] readConstant(ReadScopeParameter pPar) {
+  private static String[] readConstant(ReadScopeParameter par) {
     try {
       String[] result = new String[2];
-      pPar.scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      Object nextToken = pPar.scanner.nextToken();
+      par.scanner.yybegin(SpecctraDsnStreamReader.NAME);
+      Object nextToken = par.scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
-            "Parser.read_constant: string expected at '" + pPar.scanner.getScopeIdentifier() + "'");
+            "Parser.read_constant: string expected at '" + par.scanner.getScopeIdentifier() + "'");
         return null;
       }
       result[0] = (String) nextToken;
-      pPar.scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      nextToken = pPar.scanner.nextToken();
+      par.scanner.yybegin(SpecctraDsnStreamReader.NAME);
+      nextToken = par.scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
-            "Parser.read_constant: string expected at '" + pPar.scanner.getScopeIdentifier() + "'");
+            "Parser.read_constant: string expected at '" + par.scanner.getScopeIdentifier() + "'");
         return null;
       }
       result[1] = (String) nextToken;
-      nextToken = pPar.scanner.nextToken();
+      nextToken = par.scanner.nextToken();
       if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Parser.read_constant: closing_bracket expected at '"
-                + pPar.scanner.getScopeIdentifier()
+                + par.scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -82,75 +83,75 @@ public class Parser extends ScopeKeyword {
     }
   }
 
-  /** p_reduced is true if the scope is written to a session file. */
+  /** Writes parser settings, optionally using the reduced session-file representation. */
   public static void writeScope(
-      IndentFileWriter pFile,
-      SpecctraParserInfo pParserInfo,
-      IdentifierType pIdentifierType,
-      boolean pReduced)
+      IndentFileWriter file,
+      SpecctraParserInfo parserInfo,
+      IdentifierType identifierType,
+      boolean reduced)
       throws IOException {
-    pFile.startScope();
-    pFile.write("parser");
-    if (!pReduced) {
-      pFile.newLine();
-      pFile.write("(stringQuote ");
-      pFile.write(pParserInfo.stringQuote);
-      pFile.write(")");
-      pFile.newLine();
-      pFile.write("(space_in_quoted_tokens on)");
+    file.startScope();
+    file.write("parser");
+    if (!reduced) {
+      file.newLine();
+      file.write("(stringQuote ");
+      file.write(parserInfo.stringQuote);
+      file.write(")");
+      file.newLine();
+      file.write("(space_in_quoted_tokens on)");
     }
-    if (pParserInfo.hostCad != null) {
-      pFile.newLine();
-      pFile.write("(hostCad ");
-      pIdentifierType.write(pParserInfo.hostCad, pFile);
-      pFile.write(")");
+    if (parserInfo.hostCad != null) {
+      file.newLine();
+      file.write("(hostCad ");
+      identifierType.write(parserInfo.hostCad, file);
+      file.write(")");
     }
-    if (pParserInfo.hostVersion != null) {
-      pFile.newLine();
-      pFile.write("(hostVersion ");
-      pIdentifierType.write(pParserInfo.hostVersion, pFile);
-      pFile.write(")");
+    if (parserInfo.hostVersion != null) {
+      file.newLine();
+      file.write("(hostVersion ");
+      identifierType.write(parserInfo.hostVersion, file);
+      file.write(")");
     }
-    if (pParserInfo.constants != null) {
-      for (String[] currConstant : pParserInfo.constants) {
-        pFile.newLine();
-        pFile.write("(constant ");
+    if (parserInfo.constants != null) {
+      for (String[] currConstant : parserInfo.constants) {
+        file.newLine();
+        file.write("(constant ");
         for (int i = 0; i < currConstant.length; i++) {
-          pIdentifierType.write(currConstant[i], pFile);
-          pFile.write(" ");
+          identifierType.write(currConstant[i], file);
+          file.write(" ");
         }
-        pFile.write(")");
+        file.write(")");
       }
     }
-    if (pParserInfo.writeResolution != null) {
-      pFile.newLine();
-      pFile.write("(writeResolution ");
-      pFile.write(pParserInfo.writeResolution.charName.substring(0, 1));
-      pFile.write(" ");
-      int positiveInt = pParserInfo.writeResolution.positiveInt;
-      pFile.write(String.valueOf(positiveInt));
-      pFile.write(")");
+    if (parserInfo.writeResolution != null) {
+      file.newLine();
+      file.write("(writeResolution ");
+      file.write(parserInfo.writeResolution.charName.substring(0, 1));
+      file.write(" ");
+      int positiveInt = parserInfo.writeResolution.positiveInt;
+      file.write(String.valueOf(positiveInt));
+      file.write(")");
     }
-    if (!pReduced) {
-      pFile.newLine();
-      pFile.write("(generated_by_freerouting)");
+    if (!reduced) {
+      file.newLine();
+      file.write("(generated_by_freerouting)");
     }
-    pFile.endScope();
+    file.endScope();
   }
 
-  private static String readQuoteChar(IJFlexScanner pScanner) {
+  private static String readQuoteChar(IJFlexScanner scanner) {
     try {
-      Object nextToken = pScanner.nextToken();
+      Object nextToken = scanner.nextToken();
       if (!(nextToken instanceof String result)) {
         FRLogger.warn(
-            "Parser.read_quote_char: string expected at '" + pScanner.getScopeIdentifier() + "'");
+            "Parser.read_quote_char: string expected at '" + scanner.getScopeIdentifier() + "'");
         return null;
       }
-      nextToken = pScanner.nextToken();
+      nextToken = scanner.nextToken();
       if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Parser.read_quote_char: closing bracket expected at '"
-                + pScanner.getScopeIdentifier()
+                + scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -162,23 +163,23 @@ public class Parser extends ScopeKeyword {
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter pPar) {
+  public boolean readScope(ReadScopeParameter par) {
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = pPar.scanner.nextToken();
+        nextToken = par.scanner.nextToken();
       } catch (IOException _) {
         FRLogger.warn(
             "Parser.read_scope: IO error scanning file at '"
-                + pPar.scanner.getScopeIdentifier()
+                + par.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
       if (nextToken == null) {
         FRLogger.warn(
             "Parser.read_scope: unexpected end of file at '"
-                + pPar.scanner.getScopeIdentifier()
+                + par.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -189,28 +190,28 @@ public class Parser extends ScopeKeyword {
       boolean readOk = true;
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == STRING_QUOTE) {
-          String quoteChar = readQuoteChar(pPar.scanner);
+          String quoteChar = readQuoteChar(par.scanner);
           if (quoteChar == null) {
             return false;
           }
-          pPar.stringQuote = quoteChar;
+          par.stringQuote = quoteChar;
         } else if (nextToken == HOST_CAD) {
-          pPar.hostCad = DsnFile.readStringScope(pPar.scanner);
+          par.hostCad = DsnFile.readStringScope(par.scanner);
         } else if (nextToken == HOST_VERSION) {
-          pPar.hostVersion = DsnFile.readStringScope(pPar.scanner);
+          par.hostVersion = DsnFile.readStringScope(par.scanner);
         } else if (nextToken == CONSTANT) {
-          String[] currConstant = readConstant(pPar);
+          String[] currConstant = readConstant(par);
           if (currConstant != null) {
-            pPar.constants.add(currConstant);
+            par.constants.add(currConstant);
           }
         } else if (nextToken == WRITE_RESOLUTION) {
-          pPar.writeResolution = readWriteSolution(pPar);
+          par.writeResolution = readWriteSolution(par);
         } else if (nextToken == GENERATED_BY_FREEROUTING) {
-          pPar.dsnFileGeneratedByHost = false;
+          par.dsnFileGeneratedByHost = false;
           // skip the closing bracket
-          skipScope(pPar.scanner);
+          skipScope(par.scanner);
         } else {
-          skipScope(pPar.scanner);
+          skipScope(par.scanner);
         }
       }
       if (!readOk) {
