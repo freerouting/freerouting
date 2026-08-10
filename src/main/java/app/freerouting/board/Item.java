@@ -141,9 +141,9 @@ public abstract class Item
 
   /** Returns true if the net number array of this and p_net_no_arr have a common number. */
   public boolean sharesNetNo(int[] netNoArr) {
-    for (int i = 0; i < netNoArr.length; i++) {
+    for (int i = 0; i < this.netNoArr.length; i++) {
       for (int j = 0; j < netNoArr.length; j++) {
-        if (netNoArr[i] == netNoArr[j]) {
+        if (this.netNoArr[i] == netNoArr[j]) {
           return true;
         }
       }

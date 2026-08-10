@@ -76,7 +76,7 @@ public class Net {
   }
 
   public void setPins(Collection<Pin> pinList) {
-    pinList = new TreeSet<>(pinList);
+    this.pinList = new TreeSet<>(pinList);
   }
 
   public static class Id implements Comparable<Id> {
