@@ -23,7 +23,7 @@ public class BoardMenuFile extends JMenu {
   private final List<Consumer<File>> openEventListeners = new ArrayList<>();
   private final List<Consumer<File>> saveAsEventListeners = new ArrayList<>();
 
-  /** Creates a new instance of BoardFileMenu */
+  /** Creates a new instance of BoardFileMenu. */
   public BoardMenuFile(BoardFrame boardFrame) {
     tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
@@ -78,10 +78,20 @@ public class BoardMenuFile extends JMenu {
     add(fileExitMenuitem);
   }
 
+  /**
+   * Registers a listener notified when a file is selected for opening.
+   *
+   * @param listener the listener to register
+   */
   public void addOpenEventListener(Consumer<File> listener) {
     openEventListeners.add(listener);
   }
 
+  /**
+   * Registers a listener notified when a file is selected for saving.
+   *
+   * @param listener the listener to register
+   */
   public void addSaveAsEventListener(Consumer<File> listener) {
     saveAsEventListeners.add(listener);
   }

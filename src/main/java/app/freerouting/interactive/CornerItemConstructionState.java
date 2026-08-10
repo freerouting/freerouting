@@ -12,35 +12,35 @@ import javax.swing.JPopupMenu;
 /** Common class for constructing an obstacle with a polygonal shape. */
 public class CornerItemConstructionState extends InteractiveState {
 
-  /** stored corners of the shape of the item under construction */
+  /** Stores the corners of the shape of the item under construction. */
   protected LinkedList<IntPoint> cornerList = new LinkedList<>();
 
   protected FloatPoint snappedMousePosition;
   protected boolean observersActivated;
 
-  /** Creates a new instance of CornerItemConstructionState */
+  /** Creates a new instance of CornerItemConstructionState. */
   protected CornerItemConstructionState(
-      InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
-    pBoardHandling.removeRatsnest(); // Constructing an item may change the connectivity.
+      InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
+    boardHandling.removeRatsnest(); // Constructing an item may change the connectivity.
   }
 
-  /** adds a corner to the polygon of the item under construction */
+  /** Adds a corner to the polygon of the item under construction. */
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
-    return addCorner(pLocation);
+  public InteractiveState leftButtonClicked(FloatPoint location) {
+    return addCorner(location);
   }
 
-  /** adds a corner to the polygon of the item under construction */
-  public InteractiveState addCorner(FloatPoint pLocation) {
-    IntPoint location = this.snap(pLocation.round());
+  /** Adds a corner to the polygon of the item under construction. */
+  public InteractiveState addCorner(FloatPoint location) {
+    IntPoint snappedLocation = this.snap(location.round());
     // make sure that the coordinates are integer
-    this.cornerList.add(location);
+    this.cornerList.add(snappedLocation);
     hdlg.repaint();
     return this;
   }
 
-  /** stores the location of the mouse pointer after snapping it to the snapAngle */
+  /** Stores the mouse pointer location after snapping it to the snap angle. */
   @Override
   public InteractiveState mouseMoved() {
     super.mouseMoved();
@@ -55,9 +55,9 @@ public class CornerItemConstructionState extends InteractiveState {
     return hdlg.getPanel().popupMenuCorneritemConstruction;
   }
 
-  /** draws the polygon constructed so far as a visual aid */
+  /** Draws the polygon constructed so far as a visual aid. */
   @Override
-  public void draw(Graphics pGraphics) {
+  public void draw(Graphics graphics) {
     int cornerCount = cornerList.size();
     if (this.snappedMousePosition != null) {
       ++cornerCount;
@@ -72,10 +72,10 @@ public class CornerItemConstructionState extends InteractiveState {
     } else {
       corners[corners.length - 1] = this.snappedMousePosition;
     }
-    hdlg.graphicsContext.draw(corners, 300, Color.white, pGraphics, 0.5);
+    hdlg.graphicsContext.draw(corners, 300, Color.white, graphics, 0.5);
   }
 
-  /** add a corner to make the last lines fulfil the snap angle restrictions */
+  /** Adds a corner so the last lines fulfil the snap angle restrictions. */
   protected void addCornerForSnapAngle() {
     if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction() == AngleRestriction.NONE) {
       return;
@@ -95,23 +95,23 @@ public class CornerItemConstructionState extends InteractiveState {
   }
 
   /**
-   * snaps the line from the last point in the cornerList to the input point according to
-   * this.mouse_snap_angle
+   * Snaps the line from the last point in the corner list to the input point according to the
+   * mouse snap angle.
    */
-  private IntPoint snap(IntPoint pPoint) {
+  private IntPoint snap(IntPoint point) {
     IntPoint result;
     boolean listEmpty = cornerList.isEmpty();
     if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE
         && !listEmpty) {
       IntPoint lastCorner = cornerList.getLast();
-      result = pPoint.orthogonalProjection(lastCorner);
+      result = point.orthogonalProjection(lastCorner);
     } else if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
             == AngleRestriction.FORTYFIVE_DEGREE
         && !listEmpty) {
       IntPoint lastCorner = cornerList.getLast();
-      result = pPoint.fortyfiveDegreeProjection(lastCorner);
+      result = point.fortyfiveDegreeProjection(lastCorner);
     } else {
-      result = pPoint;
+      result = point;
     }
     return result;
   }

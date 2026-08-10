@@ -11,13 +11,14 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
 
   private final PopupMenuChangeLayer changeLayerMenu;
 
-  /** Creates a new instance of RoutePopupMenu */
-  PopupMenuDynamicRoute(BoardFrame pBoardFrame) {
-    super(pBoardFrame);
+  /** Creates a new instance of RoutePopupMenu. */
+  PopupMenuDynamicRoute(BoardFrame boardFrame) {
+    super(boardFrame);
 
-    TextManager tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
-    LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
+    final LayerStructure layerStructure =
+        boardPanel.boardHandling.getRoutingBoard().layerStructure;
 
     JMenuItem popupEndRouteMenuitem = new JMenuItem();
     popupEndRouteMenuitem.setText(tm.getText("end_route"));
@@ -36,7 +37,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
     this.add(popupCancelMenuitem, 1);
 
     if (layerStructure.arr.length > 0) {
-      this.changeLayerMenu = new PopupMenuChangeLayer(pBoardFrame);
+      this.changeLayerMenu = new PopupMenuChangeLayer(boardFrame);
       this.add(changeLayerMenu, 0);
     } else {
       this.changeLayerMenu = null;
@@ -48,9 +49,9 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
   }
 
   /** Disables the p_no-th item in the changeLayerMenu. */
-  void disableLayerItem(int pNo) {
+  void disableLayerItem(int no) {
     if (this.changeLayerMenu != null) {
-      this.changeLayerMenu.disableItem(pNo);
+      this.changeLayerMenu.disableItem(no);
     }
   }
 }

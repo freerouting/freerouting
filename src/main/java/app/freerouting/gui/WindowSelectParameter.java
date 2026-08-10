@@ -38,20 +38,20 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   private final JToggleButton settingsSelectCurrentOnlyButton;
 
   /**
-   * Resource-bundle keys for the six virtual layers, in order: F.Silk, B.Silk, F.CY, B.CY, F.Fab,
+   * Resource-bundle keys for the six virtual layers, in order: F.Silk, B.Silk, F.CY, B.CY, F.Fab,.
    * B.Fab
    */
   private static final String[] VIRTUAL_LAYER_KEYS = {
     "F_Silkscreen", "B_Silkscreen", "F_Courtyard", "B_Courtyard", "F_Fab", "B_Fab"
   };
 
-  /** Creates a new instance of SelectWindow */
-  public WindowSelectParameter(BoardFrame pBoardFrame) {
-    this.boardFrame = pBoardFrame;
-    this.boardHandling = pBoardFrame.boardPanel.boardHandling;
-    GraphicsContext gc = this.boardHandling.graphicsContext;
+  /** Creates a new instance of SelectWindow. */
+  public WindowSelectParameter(BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
+    this.boardHandling = boardFrame.boardPanel.boardHandling;
+    final GraphicsContext gc = this.boardHandling.graphicsContext;
 
-    setLanguage(pBoardFrame.get_locale());
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
@@ -128,7 +128,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(currentLayerLabel, gridbagConstraints);
     mainPanel.add(currentLayerLabel);
 
-    JPanel layersPanel = new JPanel(new GridBagLayout());
+    final JPanel layersPanel = new JPanel(new GridBagLayout());
     GridBagConstraints lc = new GridBagConstraints();
     lc.anchor = GridBagConstraints.WEST;
     lc.insets = new Insets(1, 2, 1, 2);
@@ -145,7 +145,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     // 1. Signal Layers
     for (int i = 0; i < layerCount; i++) {
       Layer currLayer = layerStructure.arr[i];
-      int layerNo = layerStructure.getNo(currLayer);
+      final int layerNo = layerStructure.getNo(currLayer);
 
       // Eye visibility toggle
       JCheckBox eyeCb = new JCheckBox();
@@ -156,7 +156,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
       // Color swatch
       Color traceColor = gc.getTraceColors(false)[i];
-      JLabel swatch = createSwatch(traceColor);
+      final JLabel swatch = createSwatch(traceColor);
 
       // Active layer selection button
       JToggleButton btn = new JToggleButton(currLayer.name);
@@ -210,7 +210,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       } else {
         layerColor = gc.otherColorTable.getFabColor(i == 4);
       }
-      JLabel swatch = createSwatch(layerColor);
+      final JLabel swatch = createSwatch(layerColor);
 
       // Active layer selection button
       JToggleButton btn = new JToggleButton(layerName);
@@ -309,11 +309,11 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   }
 
   /** Selects the layer with the input signal number. */
-  public void select(int pSignalLayerNo) {
-    if (pSignalLayerNo >= 0 && pSignalLayerNo < settingsSelectLayerNameArr.length) {
-      settingsSelectLayerNameArr[pSignalLayerNo].setSelected(true);
+  public void select(int signalLayerNo) {
+    if (signalLayerNo >= 0 && signalLayerNo < settingsSelectLayerNameArr.length) {
+      settingsSelectLayerNameArr[signalLayerNo].setSelected(true);
       if (boardHandling.graphicsContext != null) {
-        boardHandling.graphicsContext.setFullyVisibleLayer(pSignalLayerNo);
+        boardHandling.graphicsContext.setFullyVisibleLayer(signalLayerNo);
       }
       boardFrame.boardPanel.repaint();
     }
@@ -323,13 +323,13 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     public final int signalLayerNo;
     public final int layerNo;
 
-    public CurrentLayerListener(int pSignalLayerNo, int pLayerNo) {
-      signalLayerNo = pSignalLayerNo;
-      layerNo = pLayerNo;
+    public CurrentLayerListener(int signalLayerNo, int layerNo) {
+      this.signalLayerNo = signalLayerNo;
+      this.layerNo = layerNo;
     }
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       if (settingsSelectLayerNameArr[signalLayerNo].isSelected()) {
         boardHandling.setCurrentLayer(layerNo);
       } else {
@@ -344,11 +344,11 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     private final int layerIdx;
 
     public LayerEyeListener(int idx) {
-      layerIdx = idx;
+      this.layerIdx = idx;
     }
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       boolean visible = settingsSelectLayerEyeArr[layerIdx].isSelected();
       boardHandling.setLayerVisibility(layerIdx, visible ? 1.0 : 0.0);
       boardFrame.boardPanel.repaint();
@@ -359,11 +359,11 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     private final int virtualIdx;
 
     public VirtualLayerEyeListener(int idx) {
-      virtualIdx = idx;
+      this.virtualIdx = idx;
     }
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       boolean visible = settingsVirtualLayerEyeArr[virtualIdx].isSelected();
       boardHandling.graphicsContext.setVirtualLayerVisible(virtualIdx, visible);
       boardFrame.boardPanel.repaint();
@@ -374,11 +374,11 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     private final int virtualIdx;
 
     public VirtualLayerActiveListener(int idx) {
-      virtualIdx = idx;
+      this.virtualIdx = idx;
     }
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       if (settingsVirtualLayerNameArr[virtualIdx].isSelected()) {
         boardHandling.graphicsContext.setFullyVisibleVirtualLayer(virtualIdx);
       } else {
@@ -391,14 +391,14 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
   private class AllVisibleListener implements ActionListener {
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       boardHandling.getInteractiveSettings().setSelectOnAllVisibleLayers(true);
     }
   }
 
   private class CurrentOnlyListener implements ActionListener {
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       boardHandling.getInteractiveSettings().setSelectOnAllVisibleLayers(false);
     }
   }
@@ -406,12 +406,12 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   private class ItemSelectionListener implements ActionListener {
     private final int itemNo;
 
-    public ItemSelectionListener(int pItemNo) {
-      itemNo = pItemNo;
+    public ItemSelectionListener(int itemNo) {
+      this.itemNo = itemNo;
     }
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       boolean isSelected = settingsSelectItemSelectionChoices[itemNo].isSelected();
       ItemSelectionFilter.SelectableChoices itemType =
           ItemSelectionFilter.SelectableChoices.values()[itemNo];

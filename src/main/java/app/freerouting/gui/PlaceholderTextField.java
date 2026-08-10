@@ -5,10 +5,16 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.JTextField;
 
+/** A text field that displays a placeholder until the user enters text. */
 public class PlaceholderTextField extends JTextField {
 
   private final String placeholder;
 
+  /**
+   * Creates a text field with the supplied placeholder.
+   *
+   * @param placeholder text displayed while the field is empty
+   */
   public PlaceholderTextField(String placeholder) {
     this.placeholder = placeholder;
     setForeground(Color.GRAY);

@@ -44,8 +44,9 @@ import java.util.List;
  * <p><strong>Usage Pattern:</strong>
  *
  * <pre>{@code
- * InteractiveActionThread thread = InteractiveActionThread.get_autorouter_and_route_optimizer_instance(
- *     boardManager, routingJob);
+ * InteractiveActionThread thread =
+ *     InteractiveActionThread.get_autorouter_and_route_optimizer_instance(
+ *         boardManager, routingJob);
  * thread.addListener(myListener);
  * thread.start();
  * // Later, to stop:
@@ -298,10 +299,10 @@ public abstract class InteractiveActionThread extends StoppableThread {
    *
    * <p>The default implementation does nothing. Drawing is synchronized to ensure thread safety.
    *
-   * @param pGraphics the graphics context for drawing overlays
+   * @param graphics the graphics context for drawing overlays
    * @see AutorouterAndRouteOptimizerThread#draw(Graphics)
    */
-  public synchronized void draw(Graphics pGraphics) {
+  public synchronized void draw(Graphics graphics) {
     // Can be overwritten in derived classes.
   }
 
@@ -321,8 +322,8 @@ public abstract class InteractiveActionThread extends StoppableThread {
    */
   private static final class AutorouteThread extends InteractiveActionThread {
 
-    private AutorouteThread(GuiBoardManager pBoardHandling, RoutingJob job) {
-      super(pBoardHandling, job);
+    private AutorouteThread(GuiBoardManager boardHandling, RoutingJob job) {
+      super(boardHandling, job);
     }
 
     /**
@@ -357,8 +358,8 @@ public abstract class InteractiveActionThread extends StoppableThread {
    */
   private static final class PullTightThread extends InteractiveActionThread {
 
-    private PullTightThread(GuiBoardManager pBoardHandling, RoutingJob job) {
-      super(pBoardHandling, job);
+    private PullTightThread(GuiBoardManager boardHandling, RoutingJob job) {
+      super(boardHandling, job);
     }
 
     /**

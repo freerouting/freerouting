@@ -27,22 +27,23 @@ public final class ExpandTestState extends InteractiveState {
   private AutorouteControl controlSettings;
   private AutorouteEngine autorouteEngine;
 
-  /** Creates a new instance of ExpandTestState */
+  /** Creates a new instance of ExpandTestState. */
   private ExpandTestState(
-      FloatPoint pLocation, InteractiveState pReturnState, GuiBoardManager pBoardHandling) {
-    super(pReturnState, pBoardHandling);
-    init(pLocation);
+      FloatPoint location, InteractiveState returnState, GuiBoardManager boardHandling) {
+    super(returnState, boardHandling);
+    init(location);
   }
 
+  /** Returns a new instance of ExpandTestState. */
   public static ExpandTestState getInstance(
-      FloatPoint pLocation, InteractiveState pReturnState, GuiBoardManager pBoardHandling) {
-    return new ExpandTestState(pLocation, pReturnState, pBoardHandling);
+      FloatPoint location, InteractiveState returnState, GuiBoardManager boardHandling) {
+    return new ExpandTestState(location, returnState, boardHandling);
   }
 
   @Override
-  public InteractiveState keyTyped(char pKeyChar) {
+  public InteractiveState keyTyped(char keyChar) {
     InteractiveState result;
-    if (pKeyChar == 'n') {
+    if (keyChar == 'n') {
       if (inAutoroute) {
         if (!this.mazeSearchAlgo.occupyNextElement()) {
           // to display the backtack rooms
@@ -63,7 +64,7 @@ public final class ExpandTestState extends InteractiveState {
       }
       // hdlg.get_routing_board().autoroute_data().validate();
       result = this;
-    } else if (pKeyChar == 'a') {
+    } else if (keyChar == 'a') {
       if (inAutoroute) {
         completeAutoroute();
       } else {
@@ -76,9 +77,9 @@ public final class ExpandTestState extends InteractiveState {
       }
       result = this;
       // hdlg.get_routing_board().autoroute_data().validate();
-    } else if (Character.isDigit(pKeyChar)) {
+    } else if (Character.isDigit(keyChar)) {
       // next 10^p_key_char expansions
-      int d = Character.digit(pKeyChar, 10);
+      int d = Character.digit(keyChar, 10);
       final int maxCount = (int) Math.pow(10, d);
       if (inAutoroute) {
         for (int i = 0; i < maxCount; i++) {
@@ -103,14 +104,14 @@ public final class ExpandTestState extends InteractiveState {
       // hdlg.get_routing_board().autoroute_data().validate();
     } else {
       autorouteEngine.clear();
-      result = super.keyTyped(pKeyChar);
+      result = super.keyTyped(keyChar);
     }
     hdlg.repaint();
     return result;
   }
 
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
+  public InteractiveState leftButtonClicked(FloatPoint location) {
     return cancel();
   }
 
@@ -126,18 +127,18 @@ public final class ExpandTestState extends InteractiveState {
   }
 
   @Override
-  public void draw(Graphics pGraphics) {
-    autorouteEngine.draw(pGraphics, hdlg.graphicsContext, 0.1);
+  public void draw(Graphics graphics) {
+    autorouteEngine.draw(graphics, hdlg.graphicsContext, 0.1);
     if (this.autorouteResult != null) {
-      this.autorouteResult.draw(pGraphics, hdlg.graphicsContext);
+      this.autorouteResult.draw(graphics, hdlg.graphicsContext);
     }
   }
 
-  private void init(FloatPoint pLocation) {
+  private void init(FloatPoint location) {
     // look if an autoroute can be started at the input location
     RoutingBoard board = hdlg.getRoutingBoard();
     int layer = hdlg.getInteractiveSettings().getLayer();
-    Collection<Item> foundItems = board.pickItems(pLocation.round(), layer, null);
+    Collection<Item> foundItems = board.pickItems(location.round(), layer, null);
     Item routeItem = null;
     int routeNetNo = 0;
     for (Item currOb : foundItems) {
@@ -165,7 +166,7 @@ public final class ExpandTestState extends InteractiveState {
     this.autorouteEngine.initConnection(routeNetNo, null, null);
     if (routeItem == null) {
       // create an expansion room in the empty space
-      TileShape containedShape = TileShape.getInstance(pLocation.round());
+      TileShape containedShape = TileShape.getInstance(location.round());
       IncompleteFreeSpaceExpansionRoom expansionRoom =
           autorouteEngine.addIncompleteExpansionRoom(null, layer, containedShape);
       hdlg.screenMessages.setStatusMessage("expansion test started");
@@ -206,9 +207,9 @@ public final class ExpandTestState extends InteractiveState {
   }
 
   /** Returns true, if the completion succeeded. */
-  private boolean completeExpansionRoom(IncompleteFreeSpaceExpansionRoom pIncompleteRoom) {
+  private boolean completeExpansionRoom(IncompleteFreeSpaceExpansionRoom incompleteRoom) {
     Collection<CompleteFreeSpaceExpansionRoom> completedRooms =
-        autorouteEngine.completeExpansionRoom(pIncompleteRoom);
+        autorouteEngine.completeExpansionRoom(incompleteRoom);
     return !completedRooms.isEmpty();
   }
 }

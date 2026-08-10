@@ -8,18 +8,18 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-/** Class implementing functionality when the mouse is dragged on a routing board */
+/** Class implementing functionality when the mouse is dragged on a routing board. */
 public abstract class DragState extends InteractiveState {
 
   protected FloatPoint previousLocation;
   protected boolean somethingDragged;
   protected boolean observersActivated;
 
-  /** Creates a new instance of DragState */
+  /** Creates a new instance of DragState. */
   protected DragState(
-      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
-    previousLocation = pLocation;
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
+    previousLocation = location;
   }
 
   /**
@@ -27,68 +27,92 @@ public abstract class DragState extends InteractiveState {
    * otherwise.
    */
   public static DragState getInstance(
-      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    pBoardHandling.displayLayerMessage();
-    Item itemToMove = null;
-    int tryCount = 1;
-    if (pBoardHandling.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
-      tryCount += pBoardHandling.getLayerCount();
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    boardHandling.displayLayerMessage();
+    DragCandidate candidate = findItemToMove(location, boardHandling);
+    Item itemToMove = candidate.item();
+    boolean itemFound = candidate.itemFound();
+    DragState result;
+    if (itemToMove != null) {
+      result = new DragItemState(itemToMove, location, parentState, boardHandling);
+    } else if (!itemFound) {
+      result = new MakeSpaceState(location, parentState, boardHandling);
+    } else {
+      result = null;
     }
-    int currLayer = pBoardHandling.getInteractiveSettings().getLayer();
+    if (result != null) {
+      boardHandling.hideRatsnest();
+    }
+    return result;
+  }
+
+  private static DragCandidate findItemToMove(
+      FloatPoint location, GuiBoardManager boardHandling) {
+    int tryCount = 1;
+    if (boardHandling.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
+      tryCount += boardHandling.getLayerCount();
+    }
+    int currLayer = boardHandling.getInteractiveSettings().getLayer();
     int pickLayer = currLayer;
     boolean itemFound = false;
 
     for (int i = 0; i < tryCount; i++) {
       if (i == 0
           || pickLayer != currLayer
-              && (pBoardHandling.graphicsContext.getLayerVisibility(pickLayer)) > 0) {
+              && (boardHandling.graphicsContext.getLayerVisibility(pickLayer)) > 0) {
         Collection<Item> foundItems =
-            pBoardHandling
+            boardHandling
                 .getRoutingBoard()
                 .pickItems(
-                    pLocation.round(),
+                    location.round(),
                     pickLayer,
-                    pBoardHandling.getInteractiveSettings().getItemSelectionFilter());
-        for (Item currItem : foundItems) {
-          itemFound = true;
-          if (currItem instanceof Trace) {
-            continue; // traces are not moved
-          }
-          if (!pBoardHandling.getInteractiveSettings().getDragComponentsEnabled()
-              && currItem.getComponentNo() != 0) {
-            continue;
-          }
-          itemToMove = currItem;
-          if (currItem instanceof DrillItem) {
-            break; // drill items are preferred
-          }
-        }
-        if (itemToMove != null) {
-          break;
+                    boardHandling.getInteractiveSettings().getItemSelectionFilter());
+        DragCandidate candidate = selectItemToMove(foundItems, boardHandling);
+        itemFound |= candidate.itemFound();
+        if (candidate.item() != null) {
+          return new DragCandidate(candidate.item(), itemFound);
         }
       }
-      // nothing found on settings.layer, try all visible layers
+      // Nothing found on the settings layer; try all visible layers.
       pickLayer = i;
     }
-    DragState result;
-    if (itemToMove != null) {
-      result = new DragItemState(itemToMove, pLocation, pParentState, pBoardHandling);
-    } else if (!itemFound) {
-      result = new MakeSpaceState(pLocation, pParentState, pBoardHandling);
-    } else {
-      result = null;
-    }
-    if (result != null) {
-      pBoardHandling.hideRatsnest();
-    }
-    return result;
+    return new DragCandidate(null, itemFound);
   }
 
-  public abstract InteractiveState moveTo(FloatPoint pToLocation);
+  private static DragCandidate selectItemToMove(
+      Collection<Item> foundItems, GuiBoardManager boardHandling) {
+    Item itemToMove = null;
+    boolean itemFound = false;
+    for (Item currItem : foundItems) {
+      itemFound = true;
+      if (currItem instanceof Trace) {
+        continue; // traces are not moved
+      }
+      if (!boardHandling.getInteractiveSettings().getDragComponentsEnabled()
+          && currItem.getComponentNo() != 0) {
+        continue;
+      }
+      itemToMove = currItem;
+      if (currItem instanceof DrillItem) {
+        break; // drill items are preferred
+      }
+    }
+    return new DragCandidate(itemToMove, itemFound);
+  }
+
+  private record DragCandidate(Item item, boolean itemFound) {}
+
+  /**
+   * Moves the state-managed item or route to the given location.
+   *
+   * @param toLocation the destination location
+   * @return the resulting interaction state
+   */
+  public abstract InteractiveState moveTo(FloatPoint toLocation);
 
   @Override
-  public InteractiveState mouseDragged(FloatPoint pPoint) {
-    InteractiveState result = this.moveTo(pPoint);
+  public InteractiveState mouseDragged(FloatPoint point) {
+    InteractiveState result = this.moveTo(point);
     if (result != this) {
       // an error occurred
       Set<Integer> changedNets = new TreeSet<>();

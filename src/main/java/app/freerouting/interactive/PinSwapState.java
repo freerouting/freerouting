@@ -10,26 +10,28 @@ import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Set;
 
+/** Interactive state for swapping the nets of two compatible pins. */
 public final class PinSwapState extends InteractiveState {
 
   private final Pin fromPin;
   private final Set<Pin> swappablePins;
   private Pin toPin;
 
-  /** Creates a new instance of PinSwapState */
+  /** Creates a new instance of PinSwapState. */
   private PinSwapState(
-      Pin pPinToSwap, InteractiveState pReturnState, GuiBoardManager pBoardHandling) {
-    super(pReturnState, pBoardHandling);
-    this.fromPin = pPinToSwap;
-    this.swappablePins = pPinToSwap.getSwappablePins();
+      Pin pinToSwap, InteractiveState returnState, GuiBoardManager boardHandling) {
+    super(returnState, boardHandling);
+    this.fromPin = pinToSwap;
+    this.swappablePins = pinToSwap.getSwappablePins();
   }
 
+  /** Returns a pin-swap state, or the parent state if no swap is available. */
   public static InteractiveState getInstance(
-      Pin pPinToSwap, InteractiveState pReturnState, GuiBoardManager pBoardHandling) {
-    PinSwapState newState = new PinSwapState(pPinToSwap, pReturnState, pBoardHandling);
+      Pin pinToSwap, InteractiveState returnState, GuiBoardManager boardHandling) {
+    PinSwapState newState = new PinSwapState(pinToSwap, returnState, boardHandling);
     if (newState.swappablePins.isEmpty()) {
       newState.hdlg.screenMessages.setStatusMessage(newState.tm.getText("no_swappable_pin_found"));
-      return pReturnState;
+      return returnState;
     }
     newState.hdlg.screenMessages.setStatusMessage(
         newState.tm.getText("please_click_second_pin_with_the_left_mouse_button"));
@@ -37,10 +39,10 @@ public final class PinSwapState extends InteractiveState {
   }
 
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
+  public InteractiveState leftButtonClicked(FloatPoint location) {
     ItemSelectionFilter selectionFilter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
-    Collection<Item> pickedItems = hdlg.pickItems(pLocation, selectionFilter);
+    Collection<Item> pickedItems = hdlg.pickItems(location, selectionFilter);
     if (pickedItems.isEmpty()) {
       this.hdlg.screenMessages.setStatusMessage(tm.getText("no_pin_selected"));
       return this.cancel();
@@ -66,7 +68,8 @@ public final class PinSwapState extends InteractiveState {
     }
     if (this.fromPin.netCount() > 1 || this.toPin.netCount() > 1) {
       FRLogger.warn(
-          "PinSwapState.complete: pin swap not yet implemented for pins belonging to more than 1 net ");
+          "PinSwapState.complete: pin swap is not implemented for pins "
+              + "belonging to more than one net.");
       return this.cancel();
     }
     int fromNetNo;
@@ -104,12 +107,12 @@ public final class PinSwapState extends InteractiveState {
   }
 
   @Override
-  public void draw(Graphics pGraphics) {
+  public void draw(Graphics graphics) {
     Color highlightColor = hdlg.graphicsContext.getHighlightColor();
     double highligtColorIntensity = hdlg.graphicsContext.getHighlightColorIntensity();
-    fromPin.draw(pGraphics, hdlg.graphicsContext, highlightColor, 0.5 * highligtColorIntensity);
+    fromPin.draw(graphics, hdlg.graphicsContext, highlightColor, 0.5 * highligtColorIntensity);
     for (Pin currPin : swappablePins) {
-      currPin.draw(pGraphics, hdlg.graphicsContext, highlightColor, highligtColorIntensity);
+      currPin.draw(graphics, hdlg.graphicsContext, highlightColor, highligtColorIntensity);
     }
   }
 }

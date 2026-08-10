@@ -15,32 +15,32 @@ import app.freerouting.geometry.planar.Shape;
 import java.util.Collection;
 import java.util.Iterator;
 
-/** Interactive cutting a hole into an obstacle shape */
+/** Interactive state for cutting a hole into an obstacle shape. */
 public final class HoleConstructionState extends CornerItemConstructionState {
 
   private ObstacleArea itemToModify;
 
-  /** Creates a new instance of HoleConstructionState */
-  private HoleConstructionState(InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
+  /** Creates a new instance of HoleConstructionState. */
+  private HoleConstructionState(InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
   }
 
   /**
-   * Returns a new instance of this class or null, if that was not possible with the input
-   * parameters. If p_logfile != null, the construction of this hole is stored in a logfile.
+   * Returns a new instance of this class, or {@code null} if creation was not possible with the
+   * input parameters. If logging is enabled, the construction of this hole is stored in a log file.
    */
   public static HoleConstructionState getInstance(
-      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    HoleConstructionState newInstance = new HoleConstructionState(pParentState, pBoardHandling);
-    if (!newInstance.startOk(pLocation)) {
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    HoleConstructionState newInstance = new HoleConstructionState(parentState, boardHandling);
+    if (!newInstance.startOk(location)) {
       newInstance = null;
     }
     return newInstance;
   }
 
-  /** Looks for an obstacle area to modify Returns false, if it cannot find one. */
-  private boolean startOk(FloatPoint pLocation) {
-    IntPoint pickLocation = pLocation.round();
+  /** Looks for an obstacle area to modify. Returns false if it cannot find one. */
+  private boolean startOk(FloatPoint location) {
+    IntPoint pickLocation = location.round();
     ItemSelectionFilter.SelectableChoices[] selectableChoices = {
       ItemSelectionFilter.SelectableChoices.KEEPOUT,
       ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT,
@@ -68,26 +68,26 @@ public final class HoleConstructionState extends CornerItemConstructionState {
       hdlg.screenMessages.setStatusMessage(tm.getText("adding_hole_to_circle_not_yet_implemented"));
       return false;
     }
-    this.addCorner(pLocation);
+    this.addCorner(location);
     return true;
   }
 
   /** Adds a corner to the polygon of the hole under construction. */
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint pNextCorner) {
+  public InteractiveState leftButtonClicked(FloatPoint nextCorner) {
     if (itemToModify == null) {
       return this.returnState;
     }
-    if (itemToModify.getArea().contains(pNextCorner)) {
-      super.addCorner(pNextCorner);
+    if (itemToModify.getArea().contains(nextCorner)) {
+      super.addCorner(nextCorner);
       hdlg.repaint();
     }
     return this;
   }
 
   /**
-   * adds the just constructed hole to the item under modification, if that is possible without
-   * clearance violations
+   * Adds the just-constructed hole to the item under modification when possible without clearance
+   * violations.
    */
   @Override
   public InteractiveState complete() {

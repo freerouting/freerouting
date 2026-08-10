@@ -10,8 +10,14 @@ import java.awt.GraphicsEnvironment;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+/** Logs uncaught exceptions and shows them in the GUI when appropriate. */
 public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler {
 
+  /**
+   * Handles an exception outside the normal application flow.
+   *
+   * @param e the exception to report
+   */
   public static void handleException(Throwable e) {
     // Here you should have a more robust, permanent record of problems
     FRLogger.error(e.getLocalizedMessage(), e);

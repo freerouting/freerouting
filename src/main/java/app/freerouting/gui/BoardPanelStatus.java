@@ -43,7 +43,7 @@ class BoardPanelStatus extends JPanel {
    * @param locale the locale to use for resource bundles
    */
   BoardPanelStatus(Locale locale) {
-    TextManager tm = new TextManager(this.getClass(), locale);
+    final TextManager tm = new TextManager(this.getClass(), locale);
 
     setLayout(new BorderLayout());
 
@@ -69,7 +69,7 @@ class BoardPanelStatus extends JPanel {
     errorsWarningsPanel.add(countsPanel, BorderLayout.WEST);
 
     // Add mouse listeners for error and warning labels
-    addErrorOrWarningLabelClickedListener();
+    installErrorOrWarningLabelClickedListener();
 
     // Add margin to the right of the labels
     int top = 0;
@@ -137,7 +137,7 @@ class BoardPanelStatus extends JPanel {
   }
 
   /** Adds mouse listeners for error and warning labels to handle click events. */
-  private void addErrorOrWarningLabelClickedListener() {
+  private void installErrorOrWarningLabelClickedListener() {
     // Raise an event if the user clicks on the error or warning label
     errorsWarningsPanel.addMouseListener(
         new MouseAdapter() {

@@ -10,23 +10,23 @@ import java.util.Iterator;
 /** Interactive state for constructing an obstacle with a polygon shape. */
 public final class PolygonShapeConstructionState extends CornerItemConstructionState {
 
-  /** Creates a new instance of PolygonShapeConstructionState */
+  /** Creates a new instance of PolygonShapeConstructionState. */
   private PolygonShapeConstructionState(
-      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
-    this.addCorner(pLocation);
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
+    this.addCorner(location);
   }
 
   /**
-   * Returns a new instance of this class If p_logfile != null; the creation of this item is stored
-   * in a logfile
+   * Returns a new instance of this class. The creation of this item is stored in a logfile when
+   * logging is enabled.
    */
   public static PolygonShapeConstructionState getInstance(
-      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    return new PolygonShapeConstructionState(pLocation, pParentState, pBoardHandling);
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    return new PolygonShapeConstructionState(location, parentState, boardHandling);
   }
 
-  /** Inserts the polygon shape item into the board, if possible and returns to the main state */
+  /** Inserts the polygon shape item into the board, if possible, and returns to the main state. */
   @Override
   public InteractiveState complete() {
     addCornerForSnapAngle();

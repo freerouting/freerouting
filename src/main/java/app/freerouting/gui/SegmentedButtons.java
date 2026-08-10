@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 
+/** Displays a group of mutually exclusive toggle buttons. */
 public class SegmentedButtons extends JPanel {
 
   private final ButtonGroup buttonGroup;
@@ -37,6 +38,13 @@ public class SegmentedButtons extends JPanel {
   private final List<Consumer<String>> valueChangedEventListeners = new ArrayList<>();
   private String selectedValue;
 
+  /**
+   * Creates a segmented button group.
+   *
+   * @param tm text manager used to translate button values
+   * @param heading heading displayed above the buttons
+   * @param values values represented by the buttons
+   */
   public SegmentedButtons(TextManager tm, String heading, String... values) {
     setLayout(new BorderLayout());
 
@@ -194,14 +202,25 @@ public class SegmentedButtons extends JPanel {
     }
   }
 
+  /**
+   * Registers a listener for selected-value changes.
+   *
+   * @param listener the listener to register
+   */
   public void addValueChangedEventListener(Consumer<String> listener) {
     valueChangedEventListeners.add(listener);
   }
 
+  /** Returns the value currently selected by the user. */
   public String getSelectedValue() {
     return selectedValue;
   }
 
+  /**
+   * Selects the button associated with a value.
+   *
+   * @param value the value to select
+   */
   public void setSelectedValue(String value) {
     for (Map.Entry<JToggleButton, String> entry : buttonValues.entrySet()) {
       JToggleButton button = entry.getKey();

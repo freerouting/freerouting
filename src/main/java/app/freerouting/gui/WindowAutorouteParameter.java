@@ -77,11 +77,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   // Flag to prevent circular updates between GUI and settings
   private boolean isUpdatingFromSettings;
 
-  /** Creates a new instance of WindowAutorouteParameter */
-  public WindowAutorouteParameter(BoardFrame pBoardFrame) {
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of WindowAutorouteParameter. */
+  public WindowAutorouteParameter(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
 
-    this.boardHandling = pBoardFrame.boardPanel.boardHandling;
+    this.boardHandling = boardFrame.boardPanel.boardHandling;
     this.setTitle(tm.getText("title"));
 
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -256,7 +256,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(viaCostLabel, gridbagConstraints);
     mainPanel.add(viaCostLabel);
 
-    NumberFormat numberFormat = NumberFormat.getIntegerInstance(pBoardFrame.get_locale());
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance(boardFrame.get_locale());
     this.viaCostField = new JFormattedTextField(numberFormat);
     this.viaCostField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
     this.viaCostField.setColumns(3);
@@ -332,7 +332,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(jobTimeoutLabel, gridbagConstraints);
     mainPanel.add(jobTimeoutLabel);
 
-    NumberFormat timeoutNumberFormat = new DecimalFormat("00");
+    final NumberFormat timeoutNumberFormat = new DecimalFormat("00");
 
     this.jobTimeoutPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     this.jobTimeoutPanel.setOpaque(false);
@@ -456,7 +456,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     preferredDirectionTraceCostsInputCompleted = new boolean[signalLayerCount];
     againstPreferredDirectionTraceCostsInputCompleted = new boolean[signalLayerCount];
     bendCostsInputCompleted = new boolean[signalLayerCount];
-    numberFormat = NumberFormat.getInstance(pBoardFrame.get_locale());
+    numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
     numberFormat.setMaximumFractionDigits(2);
     final int textFieldLength = 3;
     NumberFormat floatNumberFormat = new DecimalFormat("0.0");
@@ -563,7 +563,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     settings.setAlgorithm(useV19 ? RouterSettings.ALGORITHM_V19 : RouterSettings.ALGORITHM_CURRENT);
   }
 
-  /** Handle property change events from RouterSettings to update GUI controls */
+  /** Handle property change events from RouterSettings to update GUI controls. */
   private void onSettingsChanged(java.beans.PropertyChangeEvent evt) {
     if (isUpdatingFromSettings) {
       return; // Prevent circular updates
@@ -621,17 +621,20 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
             settingsAutorouterOptimizationButton.setSelected((Boolean) newValue);
           }
           break;
+        default:
+          break;
       }
     } finally {
       isUpdatingFromSettings = false;
     }
   }
 
-  /** Recalculates all displayed values */
+  /** Recalculates all displayed values. */
   @Override
   public void refresh() {
     RouterSettings settings = this.boardHandling.getCurrentRoutingJob().routerSettings;
-    LayerStructure layerStructure = this.boardHandling.getRoutingBoard().layerStructure;
+    final LayerStructure layerStructure =
+        this.boardHandling.getRoutingBoard().layerStructure;
 
     this.settingsAutorouterViasAllowed.setSelected(settings.getViasAllowed());
     this.settingsAutorouterFanoutButton.setSelected(settings.getRunFanout());
@@ -848,12 +851,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public LayerActiveListener(int pLayerNo) {
-      signalLayerNo = pLayerNo;
+    public LayerActiveListener(int layerNo) {
+      signalLayerNo = layerNo;
     }
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       int currLayerNo = this.signalLayerNo;
       boardHandling
           .getCurrentRoutingJob()
@@ -867,12 +870,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public PreferredDirectionListener(int pLayerNo) {
-      signalLayerNo = pLayerNo;
+    public PreferredDirectionListener(int layerNo) {
+      signalLayerNo = layerNo;
     }
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       int currLayerNo =
           boardHandling.getRoutingBoard().layerStructure.getLayerNo(this.signalLayerNo);
       boardHandling
@@ -887,7 +890,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private class ViasAllowedListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       isUpdatingFromSettings = true;
       try {
         applyViasAllowedSelection(
@@ -902,7 +905,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private class FanoutListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       RouterSettings autorouteSettings = boardHandling.getCurrentRoutingJob().routerSettings;
       isUpdatingFromSettings = true;
       try {
@@ -916,7 +919,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private class AutorouteListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       RouterSettings autorouteSettings = boardHandling.getCurrentRoutingJob().routerSettings;
       isUpdatingFromSettings = true;
       try {
@@ -931,7 +934,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private class OptimizationListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       RouterSettings autorouteSettings = boardHandling.getCurrentRoutingJob().routerSettings;
       isUpdatingFromSettings = true;
       try {
@@ -946,8 +949,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private class ViaCostFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(KeyEvent pEvt) {
-      if (pEvt.getKeyChar() == '\n') {
+    public void keyTyped(KeyEvent evt) {
+      if (evt.getKeyChar() == '\n') {
         int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.getViaCosts();
         Object input = viaCostField.getValue();
         int inputValue = normalizeIntInput(input, oldValue, 1, Integer.MAX_VALUE);
@@ -964,7 +967,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private class ViaCostFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(FocusEvent pEvt) {
+    public void focusLost(FocusEvent evt) {
       if (!viaCostInputCompleted) {
         // Save the value when focus is lost
         int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.getViaCosts();
@@ -996,14 +999,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent pEvt) {}
+    public void focusGained(FocusEvent evt) {}
   }
 
   private class PlaneViaCostFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(KeyEvent pEvt) {
-      if (pEvt.getKeyChar() == '\n') {
+    public void keyTyped(KeyEvent evt) {
+      if (evt.getKeyChar() == '\n') {
         int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.getPlaneViaCosts();
         Object input = planeViaCostField.getValue();
         int inputValue = normalizeIntInput(input, oldValue, 1, Integer.MAX_VALUE);
@@ -1020,7 +1023,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private class PlaneViaCostFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(FocusEvent pEvt) {
+    public void focusLost(FocusEvent evt) {
       if (!planeViaCostInputCompleted) {
         // Save the value when focus is lost
         int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.getPlaneViaCosts();
@@ -1052,14 +1055,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent pEvt) {}
+    public void focusGained(FocusEvent evt) {}
   }
 
   private class StartRipupCostFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(KeyEvent pEvt) {
-      if (pEvt.getKeyChar() == '\n') {
+    public void keyTyped(KeyEvent evt) {
+      if (evt.getKeyChar() == '\n') {
         int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.getStartRipupCosts();
         Object input = startRipupCosts.getValue();
         int inputValue = normalizeIntInput(input, oldValue, 1, Integer.MAX_VALUE);
@@ -1075,7 +1078,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private class StartRipupCostFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(FocusEvent pEvt) {
+    public void focusLost(FocusEvent evt) {
       if (!startRipupCostInputCompleted) {
         // Save the value when focus is lost
         int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.getStartRipupCosts();
@@ -1105,14 +1108,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent pEvt) {}
+    public void focusGained(FocusEvent evt) {}
   }
 
   private class MaxPassesFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(KeyEvent pEvt) {
-      if (pEvt.getKeyChar() == '\n') {
+    public void keyTyped(KeyEvent evt) {
+      if (evt.getKeyChar() == '\n') {
         int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.maxPasses;
         Object input = maxPassesField.getValue();
         int inputValue = normalizeIntInput(input, oldValue, 1, 9999);
@@ -1134,7 +1137,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private class MaxPassesFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(FocusEvent pEvt) {
+    public void focusLost(FocusEvent evt) {
       if (!maxPassesInputCompleted) {
         // Save the value when focus is lost
         int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.maxPasses;
@@ -1172,14 +1175,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent pEvt) {}
+    public void focusGained(FocusEvent evt) {}
   }
 
   private class MaxThreadsFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(KeyEvent pEvt) {
-      if (pEvt.getKeyChar() == '\n') {
+    public void keyTyped(KeyEvent evt) {
+      if (evt.getKeyChar() == '\n') {
         int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.maxThreads;
         Object input = maxThreadsField.getValue();
         int inputValue;
@@ -1203,7 +1206,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private class MaxThreadsFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(FocusEvent pEvt) {
+    public void focusLost(FocusEvent evt) {
       if (!maxThreadsInputCompleted) {
         // Save the value when focus is lost
         int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.maxThreads;
@@ -1242,13 +1245,13 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent pEvt) {}
+    public void focusGained(FocusEvent evt) {}
   }
 
   private class AlgorithmListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       String oldAlgorithm = boardHandling.getCurrentRoutingJob().routerSettings.algorithm;
       boolean useV19 = settingsAutorouterAlgorithmComboBox.getSelectedItem() == algorithmV19;
       String newAlgorithm =
@@ -1268,12 +1271,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public PreferredDirectionTraceCostKeyListener(int pLayerNo) {
-      this.signalLayerNo = pLayerNo;
+    public PreferredDirectionTraceCostKeyListener(int layerNo) {
+      this.signalLayerNo = layerNo;
     }
 
     @Override
-    public void keyTyped(KeyEvent pEvt) {
+    public void keyTyped(KeyEvent evt) {
       preferredDirectionTraceCostsInputCompleted[this.signalLayerNo] = false;
     }
   }
@@ -1282,12 +1285,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public PreferredDirectionTraceCostFocusListener(int pLayerNo) {
-      this.signalLayerNo = pLayerNo;
+    public PreferredDirectionTraceCostFocusListener(int layerNo) {
+      this.signalLayerNo = layerNo;
     }
 
     @Override
-    public void focusLost(FocusEvent pEvt) {
+    public void focusLost(FocusEvent evt) {
       if (!preferredDirectionTraceCostsInputCompleted[this.signalLayerNo]) {
         int currLayerNo =
             boardHandling.getRoutingBoard().layerStructure.getLayerNo(this.signalLayerNo);
@@ -1327,19 +1330,19 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent pEvt) {}
+    public void focusGained(FocusEvent evt) {}
   }
 
   private class AgainstPreferredDirectionTraceCostKeyListener extends KeyAdapter {
 
     private final int signalLayerNo;
 
-    public AgainstPreferredDirectionTraceCostKeyListener(int pLayerNo) {
-      this.signalLayerNo = pLayerNo;
+    public AgainstPreferredDirectionTraceCostKeyListener(int layerNo) {
+      this.signalLayerNo = layerNo;
     }
 
     @Override
-    public void keyTyped(KeyEvent pEvt) {
+    public void keyTyped(KeyEvent evt) {
       againstPreferredDirectionTraceCostsInputCompleted[this.signalLayerNo] = false;
     }
   }
@@ -1348,12 +1351,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public AgainstPreferredDirectionTraceCostFocusListener(int pLayerNo) {
-      this.signalLayerNo = pLayerNo;
+    public AgainstPreferredDirectionTraceCostFocusListener(int layerNo) {
+      this.signalLayerNo = layerNo;
     }
 
     @Override
-    public void focusLost(FocusEvent pEvt) {
+    public void focusLost(FocusEvent evt) {
       if (!againstPreferredDirectionTraceCostsInputCompleted[this.signalLayerNo]) {
         int currLayerNo =
             boardHandling.getRoutingBoard().layerStructure.getLayerNo(this.signalLayerNo);
@@ -1393,19 +1396,19 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent pEvt) {}
+    public void focusGained(FocusEvent evt) {}
   }
 
   private class BendCostKeyListener extends KeyAdapter {
 
     private final int signalLayerNo;
 
-    public BendCostKeyListener(int pLayerNo) {
-      this.signalLayerNo = pLayerNo;
+    public BendCostKeyListener(int layerNo) {
+      this.signalLayerNo = layerNo;
     }
 
     @Override
-    public void keyTyped(KeyEvent pEvt) {
+    public void keyTyped(KeyEvent evt) {
       bendCostsInputCompleted[this.signalLayerNo] = false;
     }
   }
@@ -1414,12 +1417,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public BendCostFocusListener(int pLayerNo) {
-      this.signalLayerNo = pLayerNo;
+    public BendCostFocusListener(int layerNo) {
+      this.signalLayerNo = layerNo;
     }
 
     @Override
-    public void focusLost(FocusEvent pEvt) {
+    public void focusLost(FocusEvent evt) {
       if (!bendCostsInputCompleted[this.signalLayerNo]) {
         // Save the value when focus is lost
         int currLayerNo =
@@ -1454,6 +1457,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent pEvt) {}
+    public void focusGained(FocusEvent evt) {}
   }
 }

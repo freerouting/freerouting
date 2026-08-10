@@ -11,9 +11,9 @@ import java.io.Serializable;
 public abstract class BoardSavableSubWindow extends BoardSubWindow {
 
   /** Reads the data of this frame from disc. Returns false, if the reading failed. */
-  public boolean read(ObjectInputStream pObjectStream) {
+  public boolean read(ObjectInputStream objectStream) {
     try {
-      SavedAttributes savedAttributes = (SavedAttributes) pObjectStream.readObject();
+      SavedAttributes savedAttributes = (SavedAttributes) objectStream.readObject();
       this.setBounds(savedAttributes.bounds);
       this.setVisible(savedAttributes.isVisible);
       return true;
@@ -24,11 +24,11 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
   }
 
   /** Saves this frame to disk. */
-  public void save(ObjectOutputStream pObjectStream) {
+  public void save(ObjectOutputStream objectStream) {
     SavedAttributes savedAttributes = new SavedAttributes(this.getBounds(), this.isVisible());
 
     try {
-      pObjectStream.writeObject(savedAttributes);
+      objectStream.writeObject(savedAttributes);
     } catch (IOException e) {
       FRLogger.error("BoardSubWindow.save: save failed", e);
     }
@@ -56,9 +56,9 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
     public final Rectangle bounds;
     public final boolean isVisible;
 
-    public SavedAttributes(Rectangle pBounds, boolean pIsVisible) {
-      bounds = pBounds;
-      isVisible = pIsVisible;
+    public SavedAttributes(Rectangle bounds, boolean isVisible) {
+      this.bounds = bounds;
+      this.isVisible = isVisible;
     }
   }
 }

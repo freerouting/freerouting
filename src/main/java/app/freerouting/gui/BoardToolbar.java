@@ -41,7 +41,7 @@ import javax.swing.border.BevelBorder;
 /** Implements the toolbar panel of the board frame. */
 class BoardToolbar extends JPanel {
 
-  private final float ICON_FONT_SIZE = 26.0F;
+  private final float iconFontSize = 26.0F;
   private final SegmentedButtons modeSelectionPanel;
   private final JButton settingsButton;
   private final JButton toolbarAutorouteButton;
@@ -64,9 +64,9 @@ class BoardToolbar extends JPanel {
 
   private boolean isShiftDown;
 
-  /** Creates a new instance of BoardToolbarPanel */
-  BoardToolbar(BoardFrame pBoardFrame, boolean pDisableSelectMode) {
-    this.boardFrame = pBoardFrame;
+  /** Creates a new instance of BoardToolbarPanel. */
+  BoardToolbar(BoardFrame boardFrame, boolean disableSelectMode) {
+    this.boardFrame = boardFrame;
 
     // Listen for Shift key globally to update icons
     KeyboardFocusManager.getCurrentKeyboardFocusManager()
@@ -98,7 +98,7 @@ class BoardToolbar extends JPanel {
         .addDebugStateListener(
             isPaused -> SwingUtilities.invokeLater(this::updateDebugButtonsState));
 
-    TextManager tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
     this.setLayout(new BorderLayout());
 
@@ -108,7 +108,7 @@ class BoardToolbar extends JPanel {
 
     leftToolbar.setMaximumSize(new Dimension(1200, 30));
 
-    if (!pDisableSelectMode) {
+    if (!disableSelectMode) {
       modeSelectionPanel =
           new SegmentedButtons(
               tm, tm.getText("mode_heading"), "inspect_button", "route_button", "drag_button");
@@ -127,6 +127,8 @@ class BoardToolbar extends JPanel {
               break;
             case "drag_button":
               boardFrame.boardPanel.boardHandling.setDragMenuState();
+              break;
+            default:
               break;
           }
         });
@@ -437,6 +439,8 @@ class BoardToolbar extends JPanel {
             case "unit_um":
               boardFrame.boardPanel.boardHandling.changeUserUnit(Unit.UM);
               break;
+            default:
+              break;
           }
           boardFrame.refreshWindows();
         });
@@ -447,7 +451,7 @@ class BoardToolbar extends JPanel {
     this.add(rightToolbar, BorderLayout.EAST);
 
     // Set the font size for the toolbar icons
-    changeToolbarFontSize(middleToolbar, ICON_FONT_SIZE);
+    changeToolbarFontSize(middleToolbar, iconFontSize);
 
     // Add listeners to enable/disable buttons based on the board read-only state
     boardFrame.addBoardLoadedEventListener(
@@ -503,7 +507,7 @@ class BoardToolbar extends JPanel {
     deleteAllTracksButton.setEnabled(enabled);
   }
 
-  /** Sets the selected button in the menu button group */
+  /** Sets the selected button in the menu button group. */
   void setModeSelectionPanelValue(InteractiveState interactiveState) {
     if (interactiveState instanceof RouteMenuState) {
       this.modeSelectionPanel.setSelectedValue("route_button");
@@ -527,6 +531,8 @@ class BoardToolbar extends JPanel {
         break;
       case UM:
         this.unitSelectionPanel.setSelectedValue("unit_um");
+        break;
+      default:
         break;
     }
   }
@@ -673,10 +679,10 @@ class BoardToolbar extends JPanel {
 
     // Reset fonts to the icon size AFTER TextManager (which scales them)
     // to avoid them being larger than the rest of the toolbar
-    Font nextFont = varsNextButton.getFont().deriveFont(ICON_FONT_SIZE);
+    Font nextFont = varsNextButton.getFont().deriveFont(iconFontSize);
     varsNextButton.setFont(nextFont);
 
-    Font prevFont = varsPreviousButton.getFont().deriveFont(ICON_FONT_SIZE);
+    Font prevFont = varsPreviousButton.getFont().deriveFont(iconFontSize);
     varsPreviousButton.setFont(prevFont);
   }
 }

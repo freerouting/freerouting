@@ -23,12 +23,13 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/** Displays clearance violations detected on the current board. */
 public class WindowClearanceViolations extends WindowObjectListWithFilter {
 
-  /** Creates a new instance of clearance violations window */
-  public WindowClearanceViolations(BoardFrame pBoardFrame) {
-    super(pBoardFrame);
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of clearance violations window. */
+  public WindowClearanceViolations(BoardFrame boardFrame) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
     this.listEmptyMessage.setText(tm.getText("listEmptyMessage"));
@@ -74,25 +75,25 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     boardHandling.zoomSelection();
   }
 
-  private String itemInfo(Item pItem) {
+  private String itemInfo(Item item) {
     String result;
-    if (pItem instanceof Pin) {
+    if (item instanceof Pin) {
       result = tm.getText("pin");
-    } else if (pItem instanceof Via via) {
-      Net currentNet = pItem.board.rules.nets.get(via.getNetNo(0));
+    } else if (item instanceof Via via) {
+      Net currentNet = item.board.rules.nets.get(via.getNetNo(0));
       result = tm.getText("via_with_net_label", currentNet.name);
-    } else if (pItem instanceof Trace trace) {
-      Net currentNet = pItem.board.rules.nets.get(trace.getNetNo(0));
+    } else if (item instanceof Trace trace) {
+      Net currentNet = item.board.rules.nets.get(trace.getNetNo(0));
       result = tm.getText("trace_with_net_label", currentNet.name);
-    } else if (pItem instanceof ConductionArea) {
+    } else if (item instanceof ConductionArea) {
       result = tm.getText("conductionArea");
-    } else if (pItem instanceof ObstacleArea) {
+    } else if (item instanceof ObstacleArea) {
       result = tm.getText("keepout");
-    } else if (pItem instanceof ViaObstacleArea) {
+    } else if (item instanceof ViaObstacleArea) {
       result = tm.getText("via_keepout");
-    } else if (pItem instanceof ComponentObstacleArea) {
+    } else if (item instanceof ComponentObstacleArea) {
       result = tm.getText("component_keepout");
-    } else if (pItem instanceof BoardOutline) {
+    } else if (item instanceof BoardOutline) {
       result = tm.getText("boardOutline");
     } else {
       result = tm.getText("unknown");
@@ -106,12 +107,12 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     public final FloatPoint location;
     public final double delta;
 
-    public ViolationInfo(ClearanceViolation pViolation) {
-      this.violation = pViolation;
-      FloatPoint boardLocation = pViolation.shape.centreOfGravity();
+    public ViolationInfo(ClearanceViolation violation) {
+      this.violation = violation;
+      FloatPoint boardLocation = violation.shape.centreOfGravity();
       this.location =
           boardFrame.boardPanel.boardHandling.coordinateTransform.boardToUser(boardLocation);
-      this.delta = (pViolation.expectedClearance - pViolation.actualClearance) / 10000.0;
+      this.delta = (violation.expectedClearance - violation.actualClearance) / 10000.0;
     }
 
     @Override
@@ -129,21 +130,21 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     }
 
     @Override
-    public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
-      this.violation.printInfo(pWindow, pLocale);
+    public void printInfo(ObjectInfoPanel window, Locale locale) {
+      this.violation.printInfo(window, locale);
     }
 
     @Override
-    public int compareTo(ViolationInfo pOther) {
-      if (this.delta > pOther.delta) {
+    public int compareTo(ViolationInfo other) {
+      if (this.delta > other.delta) {
         return -1;
-      } else if (this.delta < pOther.delta) {
+      } else if (this.delta < other.delta) {
         return +1;
       }
 
-      if (this.violation.layer < pOther.violation.layer) {
+      if (this.violation.layer < other.violation.layer) {
         return -1;
-      } else if (this.violation.layer > pOther.violation.layer) {
+      } else if (this.violation.layer > other.violation.layer) {
         return +1;
       }
 

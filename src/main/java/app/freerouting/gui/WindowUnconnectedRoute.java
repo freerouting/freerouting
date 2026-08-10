@@ -14,16 +14,17 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/** Displays route segments that are not connected to their net. */
 public class WindowUnconnectedRoute extends CleanupWindows {
 
   private int maxUnconnectedRouteInfoIdNo;
 
-  /** Creates a new instance of WindowUnconnectedRoute */
-  public WindowUnconnectedRoute(BoardFrame pBoardFrame) {
-    super(pBoardFrame);
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of WindowUnconnectedRoute. */
+  public WindowUnconnectedRoute(BoardFrame boardFrame) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
 
-    this.tm = new TextManager(CleanupWindows.class, pBoardFrame.get_locale());
+    this.tm = new TextManager(CleanupWindows.class, boardFrame.get_locale());
 
     this.setTitle(tm.getText("unconnected_route"));
     this.listEmptyMessage.setText(tm.getText("no_unconnected_route_found"));
@@ -98,14 +99,14 @@ public class WindowUnconnectedRoute extends CleanupWindows {
     private final Integer traceCount;
     private final Integer viaCount;
 
-    public UnconnectedRouteInfo(Net pNet, Collection<Item> pItemList) {
-      this.net = pNet;
-      this.itemList = pItemList;
+    public UnconnectedRouteInfo(Net net, Collection<Item> itemList) {
+      this.net = net;
+      this.itemList = itemList;
       ++maxUnconnectedRouteInfoIdNo;
       this.idNo = maxUnconnectedRouteInfoIdNo;
       int currTraceCount = 0;
       int currViaCount = 0;
-      for (Item currItem : pItemList) {
+      for (Item currItem : itemList) {
         if (currItem instanceof Trace) {
           ++currTraceCount;
         } else if (currItem instanceof Via) {
@@ -126,10 +127,10 @@ public class WindowUnconnectedRoute extends CleanupWindows {
     }
 
     @Override
-    public int compareTo(UnconnectedRouteInfo pOther) {
-      int result = this.net.name.compareTo(pOther.net.name);
+    public int compareTo(UnconnectedRouteInfo other) {
+      int result = this.net.name.compareTo(other.net.name);
       if (result == 0) {
-        result = this.idNo - pOther.idNo;
+        result = this.idNo - other.idNo;
       }
       return result;
     }

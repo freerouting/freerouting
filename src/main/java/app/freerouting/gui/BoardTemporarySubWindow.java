@@ -3,15 +3,15 @@ package app.freerouting.gui;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-/** Class for temporary subwindows of the board frame */
+/** Class for temporary subwindows of the board frame. */
 public class BoardTemporarySubWindow extends BoardSubWindow {
 
   protected final BoardFrame boardFrame;
 
-  /** Creates a new instance of BoardTemporarySubWindow */
-  public BoardTemporarySubWindow(BoardFrame pBoardFrame) {
-    this.boardFrame = pBoardFrame;
-    pBoardFrame.temporarySubwindows.add(this);
+  /** Creates a new instance of BoardTemporarySubWindow. */
+  public BoardTemporarySubWindow(BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
+    boardFrame.temporarySubwindows.add(this);
 
     this.addWindowListener(
         new WindowAdapter() {

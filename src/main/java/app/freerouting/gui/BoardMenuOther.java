@@ -6,20 +6,21 @@ import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+/** Creates the miscellaneous actions menu for a board frame. */
 public final class BoardMenuOther extends JMenu {
 
   private final BoardFrame boardFrame;
   private final TextManager tm;
 
-  /** Creates a new instance of BoardMenuOther */
-  private BoardMenuOther(BoardFrame pBoardFrame) {
-    boardFrame = pBoardFrame;
-    tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
+  /** Creates a new instance of BoardMenuOther. */
+  private BoardMenuOther(BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
+    tm = new TextManager(this.getClass(), boardFrame.get_locale());
   }
 
   /** Returns a new other menu for the board frame. */
-  public static BoardMenuOther getInstance(BoardFrame pBoardFrame) {
-    final BoardMenuOther otherMenu = new BoardMenuOther(pBoardFrame);
+  public static BoardMenuOther getInstance(BoardFrame boardFrame) {
+    final BoardMenuOther otherMenu = new BoardMenuOther(boardFrame);
 
     otherMenu.setText(otherMenu.tm.getText("other"));
 

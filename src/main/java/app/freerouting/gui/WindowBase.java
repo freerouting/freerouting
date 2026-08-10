@@ -21,6 +21,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+/** Provides common behavior for Freerouting windows. */
 public class WindowBase extends JFrame {
 
   protected TextManager tm;

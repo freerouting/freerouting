@@ -145,7 +145,7 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   private transient boolean readOnly;
 
   /** Creates a new interactive settings variable. */
-  public InteractiveSettings(RoutingBoard pBoard) {
+  public InteractiveSettings(RoutingBoard board) {
     super(null);
     // Initialise with default values.
     layer = 0;
@@ -164,45 +164,45 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
     zoomWithWheel = true;
     tracePullTightAccuracy = 500;
     automaticNeckdown = true;
-    manualTraceHalfWidthArr = new int[pBoard.getLayerCount()];
+    manualTraceHalfWidthArr = new int[board.getLayerCount()];
     Arrays.fill(manualTraceHalfWidthArr, 1000);
     itemSelectionFilter = new ItemSelectionFilter();
   }
 
   /** Creates a new interactive settings variable bound to the active job settings. */
-  public InteractiveSettings(RoutingBoard pBoard, RouterSettings pSettings) {
-    this(pBoard);
-    setSettings(pSettings);
+  public InteractiveSettings(RoutingBoard board, RouterSettings settings) {
+    this(board);
+    setSettings(settings);
   }
 
-  /** Copy constructor */
-  public InteractiveSettings(InteractiveSettings pSettings) {
+  /** Creates a copy of another interactive settings instance. */
+  public InteractiveSettings(InteractiveSettings settings) {
     super(null);
-    this.readOnly = pSettings.readOnly;
-    this.layer = pSettings.layer;
-    this.pushEnabled = pSettings.pushEnabled;
-    this.dragComponentsEnabled = pSettings.dragComponentsEnabled;
-    this.selectOnAllVisibleLayers = pSettings.selectOnAllVisibleLayers;
-    this.isStitchRoute = pSettings.isStitchRoute;
-    this.tracePullTightRegionWidth = pSettings.tracePullTightRegionWidth;
-    this.viaSnapToSmdCenter = pSettings.viaSnapToSmdCenter;
-    this.horizontalComponentGrid = pSettings.horizontalComponentGrid;
-    this.verticalComponentGrid = pSettings.verticalComponentGrid;
-    this.manualRuleSelection = pSettings.manualRuleSelection;
-    this.highlightRoutingObstacle = pSettings.highlightRoutingObstacle;
-    this.zoomWithWheel = pSettings.zoomWithWheel;
-    this.manualTraceClearanceClass = pSettings.manualTraceClearanceClass;
-    this.manualViaRuleIndex = pSettings.manualViaRuleIndex;
-    this.tracePullTightAccuracy = pSettings.tracePullTightAccuracy;
-    this.automaticNeckdown = pSettings.automaticNeckdown;
-    this.manualTraceHalfWidthArr = new int[pSettings.manualTraceHalfWidthArr.length];
+    this.readOnly = settings.readOnly;
+    this.layer = settings.layer;
+    this.pushEnabled = settings.pushEnabled;
+    this.dragComponentsEnabled = settings.dragComponentsEnabled;
+    this.selectOnAllVisibleLayers = settings.selectOnAllVisibleLayers;
+    this.isStitchRoute = settings.isStitchRoute;
+    this.tracePullTightRegionWidth = settings.tracePullTightRegionWidth;
+    this.viaSnapToSmdCenter = settings.viaSnapToSmdCenter;
+    this.horizontalComponentGrid = settings.horizontalComponentGrid;
+    this.verticalComponentGrid = settings.verticalComponentGrid;
+    this.manualRuleSelection = settings.manualRuleSelection;
+    this.highlightRoutingObstacle = settings.highlightRoutingObstacle;
+    this.zoomWithWheel = settings.zoomWithWheel;
+    this.manualTraceClearanceClass = settings.manualTraceClearanceClass;
+    this.manualViaRuleIndex = settings.manualViaRuleIndex;
+    this.tracePullTightAccuracy = settings.tracePullTightAccuracy;
+    this.automaticNeckdown = settings.automaticNeckdown;
+    this.manualTraceHalfWidthArr = new int[settings.manualTraceHalfWidthArr.length];
     System.arraycopy(
-        pSettings.manualTraceHalfWidthArr,
+        settings.manualTraceHalfWidthArr,
         0,
         this.manualTraceHalfWidthArr,
         0,
         this.manualTraceHalfWidthArr.length);
-    this.itemSelectionFilter = new ItemSelectionFilter(pSettings.itemSelectionFilter);
+    this.itemSelectionFilter = new ItemSelectionFilter(settings.itemSelectionFilter);
   }
 
   /**
@@ -297,17 +297,6 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /**
-   * Removes a previously registered {@link PropertyChangeListener}.
-   *
-   * @param listener the listener to remove; ignored if {@code null}
-   */
-  public void removePropertyChangeListener(PropertyChangeListener listener) {
-    if (listener != null) {
-      pcs.removePropertyChangeListener(listener);
-    }
-  }
-
-  /**
    * Registers a {@link PropertyChangeListener} for a specific named property.
    *
    * @param propertyName one of the {@code PROP_*} constants defined on this class
@@ -316,6 +305,17 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
     if (listener != null) {
       pcs.addPropertyChangeListener(propertyName, listener);
+    }
+  }
+
+  /**
+   * Removes a previously registered {@link PropertyChangeListener}.
+   *
+   * @param listener the listener to remove; ignored if {@code null}
+   */
+  public void removePropertyChangeListener(PropertyChangeListener listener) {
+    if (listener != null) {
+      pcs.removePropertyChangeListener(listener);
     }
   }
 
@@ -340,7 +340,7 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
    * instance.
    *
    * <p>This override ensures that the {@link app.freerouting.settings.SettingsMerger} always reads
-   * up-to-date GUI state at priority 65 rather than a stale static snapshot. It is called on every
+   * up-to-date GUI state at priority 50 rather than a stale static snapshot. It is called on every
    * {@code merge()} invocation (e.g. when the user starts the autorouter, saves settings, or the
    * toolbar rebuilds settings).
    *
@@ -371,6 +371,7 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
     return manualTraceHalfWidthArr.length;
   }
 
+  /** Returns the currently active layer index. */
   public int getLayer() {
     return this.layer;
   }
@@ -378,15 +379,15 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   /**
    * Sets the current active layer index and fires {@link #PROP_LAYER}.
    *
-   * @param pLayerNo the new layer index
+   * @param layerNo the new layer index
    */
-  public void setLayer(int pLayerNo) {
+  public void setLayer(int layerNo) {
     if (readOnly) {
       return;
     }
     int old = this.layer;
-    layer = pLayerNo;
-    pcs.firePropertyChange(PROP_LAYER, old, pLayerNo);
+    layer = layerNo;
+    pcs.firePropertyChange(PROP_LAYER, old, layerNo);
   }
 
   /** Returns the trace pull tight accuracy. */
@@ -395,13 +396,13 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** Sets the trace pull tight accuracy and fires {@link #PROP_TRACE_PULL_TIGHT_ACCURACY}. */
-  public void setTracePullTightAccuracy(int pValue) {
+  public void setTracePullTightAccuracy(int value) {
     if (readOnly) {
       return;
     }
     int old = this.tracePullTightAccuracy;
-    tracePullTightAccuracy = pValue;
-    pcs.firePropertyChange(PROP_TRACE_PULL_TIGHT_ACCURACY, old, pValue);
+    tracePullTightAccuracy = value;
+    pcs.firePropertyChange(PROP_TRACE_PULL_TIGHT_ACCURACY, old, value);
   }
 
   /** Returns whether automatic neckdown is enabled in interactive routing. */
@@ -410,13 +411,13 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** Enables or disables automatic neckdown and fires {@link #PROP_AUTOMATIC_NECKDOWN}. */
-  public void setAutomaticNeckdown(boolean pValue) {
+  public void setAutomaticNeckdown(boolean value) {
     if (readOnly) {
       return;
     }
     boolean old = this.automaticNeckdown;
-    automaticNeckdown = pValue;
-    pcs.firePropertyChange(PROP_AUTOMATIC_NECKDOWN, old, pValue);
+    automaticNeckdown = value;
+    pcs.firePropertyChange(PROP_AUTOMATIC_NECKDOWN, old, value);
   }
 
   /** Allows pushing obstacles aside. */
@@ -425,13 +426,13 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** Enables or disables pushing obstacles and fires {@link #PROP_PUSH_ENABLED}. */
-  public void setPushEnabled(boolean pValue) {
+  public void setPushEnabled(boolean value) {
     if (readOnly) {
       return;
     }
     boolean old = this.pushEnabled;
-    pushEnabled = pValue;
-    pcs.firePropertyChange(PROP_PUSH_ENABLED, old, pValue);
+    pushEnabled = value;
+    pcs.firePropertyChange(PROP_PUSH_ENABLED, old, value);
   }
 
   /** Route mode: stitching or dynamic. */
@@ -445,13 +446,13 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** Enables or disables dragging components and fires {@link #PROP_DRAG_COMPONENTS_ENABLED}. */
-  public void setDragComponentsEnabled(boolean pValue) {
+  public void setDragComponentsEnabled(boolean value) {
     if (readOnly) {
       return;
     }
     boolean old = this.dragComponentsEnabled;
-    dragComponentsEnabled = pValue;
-    pcs.firePropertyChange(PROP_DRAG_COMPONENTS_ENABLED, old, pValue);
+    dragComponentsEnabled = value;
+    pcs.firePropertyChange(PROP_DRAG_COMPONENTS_ENABLED, old, value);
   }
 
   /**
@@ -463,13 +464,13 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** Sets layer-selection scope and fires {@link #PROP_SELECT_ON_ALL_VISIBLE_LAYERS}. */
-  public void setSelectOnAllVisibleLayers(boolean pValue) {
+  public void setSelectOnAllVisibleLayers(boolean value) {
     if (readOnly) {
       return;
     }
     boolean old = this.selectOnAllVisibleLayers;
-    selectOnAllVisibleLayers = pValue;
-    pcs.firePropertyChange(PROP_SELECT_ON_ALL_VISIBLE_LAYERS, old, pValue);
+    selectOnAllVisibleLayers = value;
+    pcs.firePropertyChange(PROP_SELECT_ON_ALL_VISIBLE_LAYERS, old, value);
   }
 
   /** Indicates if the routing rule selection is manual or automatic. */
@@ -483,13 +484,13 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** Changes via snap to SMD center and fires {@link #PROP_VIA_SNAP_TO_SMD_CENTER}. */
-  public void setViaSnapToSmdCenter(boolean pValue) {
+  public void setViaSnapToSmdCenter(boolean value) {
     if (readOnly) {
       return;
     }
     boolean old = this.viaSnapToSmdCenter;
-    viaSnapToSmdCenter = pValue;
-    pcs.firePropertyChange(PROP_VIA_SNAP_TO_SMD_CENTER, old, pValue);
+    viaSnapToSmdCenter = value;
+    pcs.firePropertyChange(PROP_VIA_SNAP_TO_SMD_CENTER, old, value);
   }
 
   /** If true, the current routing obstacle is highlighted in dynamic routing. */
@@ -498,13 +499,13 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** Sets highlight routing obstacle and fires {@link #PROP_HIGHLIGHT_ROUTING_OBSTACLE}. */
-  public void setHighlightRoutingObstacle(boolean pValue) {
+  public void setHighlightRoutingObstacle(boolean value) {
     if (readOnly) {
       return;
     }
     boolean old = this.highlightRoutingObstacle;
-    this.highlightRoutingObstacle = pValue;
-    pcs.firePropertyChange(PROP_HIGHLIGHT_ROUTING_OBSTACLE, old, pValue);
+    this.highlightRoutingObstacle = value;
+    pcs.firePropertyChange(PROP_HIGHLIGHT_ROUTING_OBSTACLE, old, value);
   }
 
   /** If true, the mouse wheel is used for zooming. */
@@ -513,14 +514,14 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** Sets zoom-with-wheel and fires {@link #PROP_ZOOM_WITH_WHEEL}. */
-  public void setZoomWithWheel(boolean pValue) {
+  public void setZoomWithWheel(boolean value) {
     if (readOnly) {
       return;
     }
     boolean old = this.zoomWithWheel;
-    if (zoomWithWheel != pValue) {
-      zoomWithWheel = pValue;
-      pcs.firePropertyChange(PROP_ZOOM_WITH_WHEEL, old, pValue);
+    if (zoomWithWheel != value) {
+      zoomWithWheel = value;
+      pcs.firePropertyChange(PROP_ZOOM_WITH_WHEEL, old, value);
     }
   }
 
@@ -530,13 +531,13 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** Sets the item selection filter and fires {@link #PROP_ITEM_SELECTION_FILTER}. */
-  public void setItemSelectionFilter(ItemSelectionFilter pValue) {
+  public void setItemSelectionFilter(ItemSelectionFilter value) {
     if (readOnly) {
       return;
     }
     ItemSelectionFilter old = this.itemSelectionFilter;
-    this.itemSelectionFilter = pValue;
-    pcs.firePropertyChange(PROP_ITEM_SELECTION_FILTER, old, pValue);
+    this.itemSelectionFilter = value;
+    pcs.firePropertyChange(PROP_ITEM_SELECTION_FILTER, old, value);
   }
 
   /** The width of the pull tight region of traces around the cursor. */
@@ -550,13 +551,13 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** Sets the horizontal component grid and fires {@link #PROP_HORIZONTAL_COMPONENT_GRID}. */
-  public void setHorizontalComponentGrid(int pValue) {
+  public void setHorizontalComponentGrid(int value) {
     if (readOnly) {
       return;
     }
     int old = this.horizontalComponentGrid;
-    this.horizontalComponentGrid = pValue;
-    pcs.firePropertyChange(PROP_HORIZONTAL_COMPONENT_GRID, old, pValue);
+    this.horizontalComponentGrid = value;
+    pcs.firePropertyChange(PROP_HORIZONTAL_COMPONENT_GRID, old, value);
   }
 
   /** The vertical placement grid when moving components, if positive. */
@@ -565,13 +566,13 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** Sets the vertical component grid and fires {@link #PROP_VERTICAL_COMPONENT_GRID}. */
-  public void setVerticalComponentGrid(int pValue) {
+  public void setVerticalComponentGrid(int value) {
     if (readOnly) {
       return;
     }
     int old = this.verticalComponentGrid;
-    this.verticalComponentGrid = pValue;
-    pcs.firePropertyChange(PROP_VERTICAL_COMPONENT_GRID, old, pValue);
+    this.verticalComponentGrid = value;
+    pcs.firePropertyChange(PROP_VERTICAL_COMPONENT_GRID, old, value);
   }
 
   /** The index of the clearance class used for traces in interactive routing. */
@@ -580,13 +581,13 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** Sets the manual trace clearance class and fires {@link #PROP_MANUAL_TRACE_CLEARANCE_CLASS}. */
-  public void setManualTraceClearanceClass(int pIndex) {
+  public void setManualTraceClearanceClass(int index) {
     if (readOnly) {
       return;
     }
     int old = this.manualTraceClearanceClass;
-    manualTraceClearanceClass = pIndex;
-    pcs.firePropertyChange(PROP_MANUAL_TRACE_CLEARANCE_CLASS, old, pIndex);
+    manualTraceClearanceClass = index;
+    pcs.firePropertyChange(PROP_MANUAL_TRACE_CLEARANCE_CLASS, old, index);
   }
 
   /** The index of the via rule used in routing. */
@@ -595,96 +596,96 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /** Sets the manual via rule index and fires {@link #PROP_MANUAL_VIA_RULE_INDEX}. */
-  public void setManualViaRuleIndex(int pValue) {
+  public void setManualViaRuleIndex(int value) {
     if (readOnly) {
       return;
     }
     int old = this.manualViaRuleIndex;
-    this.manualViaRuleIndex = pValue;
-    pcs.firePropertyChange(PROP_MANUAL_VIA_RULE_INDEX, old, pValue);
+    this.manualViaRuleIndex = value;
+    pcs.firePropertyChange(PROP_MANUAL_VIA_RULE_INDEX, old, value);
   }
 
-  /** Get the trace half width in manual routing mode on layer p_layer_no. */
-  public int getManualTraceHalfWidth(int pLayerNo) {
-    if (pLayerNo < 0 || pLayerNo >= this.manualTraceHalfWidthArr.length) {
-      FRLogger.warn("InteractiveSettings.get_manual_trace_half_width p_layer_no out of range");
+  /** Returns the trace half-width in manual routing mode on the specified layer. */
+  public int getManualTraceHalfWidth(int layerNo) {
+    if (layerNo < 0 || layerNo >= this.manualTraceHalfWidthArr.length) {
+      FRLogger.warn("InteractiveSettings.get_manual_trace_half_width layer number out of range");
       return 0;
     }
-    return this.manualTraceHalfWidthArr[pLayerNo];
+    return this.manualTraceHalfWidthArr[layerNo];
   }
 
   /** Route mode: stitching or dynamic. Fires {@link #PROP_IS_STITCH_ROUTE}. */
-  public void setStitchRoute(boolean pValue) {
+  public void setStitchRoute(boolean value) {
     if (readOnly) {
       return;
     }
     boolean old = this.isStitchRoute;
-    isStitchRoute = pValue;
-    pcs.firePropertyChange(PROP_IS_STITCH_ROUTE, old, pValue);
+    isStitchRoute = value;
+    pcs.firePropertyChange(PROP_IS_STITCH_ROUTE, old, value);
   }
 
   /**
    * Changes the current width of the tidy region for traces. Fires {@link
    * #PROP_TRACE_PULL_TIGHT_REGION_WIDTH}.
    */
-  public void setCurrentPullTightRegionWidth(int pValue) {
+  public void setCurrentPullTightRegionWidth(int value) {
     if (readOnly) {
       return;
     }
     int old = this.tracePullTightRegionWidth;
-    tracePullTightRegionWidth = pValue;
-    pcs.firePropertyChange(PROP_TRACE_PULL_TIGHT_REGION_WIDTH, old, pValue);
+    tracePullTightRegionWidth = value;
+    pcs.firePropertyChange(PROP_TRACE_PULL_TIGHT_REGION_WIDTH, old, value);
   }
 
   /**
    * Sets the current trace width selection to manual or automatic. Fires {@link
    * #PROP_MANUAL_RULE_SELECTION}.
    */
-  public void setManualTracewidthSelection(boolean pValue) {
+  public void setManualTracewidthSelection(boolean value) {
     if (readOnly) {
       return;
     }
     boolean old = this.manualRuleSelection;
-    manualRuleSelection = pValue;
-    pcs.firePropertyChange(PROP_MANUAL_RULE_SELECTION, old, pValue);
+    manualRuleSelection = value;
+    pcs.firePropertyChange(PROP_MANUAL_RULE_SELECTION, old, value);
   }
 
   /**
    * Sets the manual trace half width used in interactive routing. Fires {@link
    * #PROP_MANUAL_TRACE_HALF_WIDTH}.
    */
-  public void setManualTraceHalfWidth(int pLayerNo, int pValue) {
+  public void setManualTraceHalfWidth(int layerNo, int value) {
     if (readOnly) {
       return;
     }
-    int old = manualTraceHalfWidthArr[pLayerNo];
-    manualTraceHalfWidthArr[pLayerNo] = pValue;
-    pcs.firePropertyChange(PROP_MANUAL_TRACE_HALF_WIDTH, old, pValue);
+    int old = manualTraceHalfWidthArr[layerNo];
+    manualTraceHalfWidthArr[layerNo] = value;
+    pcs.firePropertyChange(PROP_MANUAL_TRACE_HALF_WIDTH, old, value);
   }
 
   /**
-   * Changes the interactive selectability of p_item_type. Fires {@link
+   * Changes the interactive selectability of the specified item type. Fires {@link
    * #PROP_ITEM_SELECTION_FILTER}.
    */
-  public void setSelectable(ItemSelectionFilter.SelectableChoices pItemType, boolean pValue) {
+  public void setSelectable(ItemSelectionFilter.SelectableChoices itemType, boolean value) {
     if (readOnly) {
       return;
     }
-    itemSelectionFilter.setSelected(pItemType, pValue);
+    itemSelectionFilter.setSelected(itemType, value);
     pcs.firePropertyChange(PROP_ITEM_SELECTION_FILTER, null, itemSelectionFilter);
   }
 
   /** Defines, if the setting attributes are allowed to be changed interactively or not. */
-  public void setReadOnly(Boolean pValue) {
-    this.readOnly = pValue;
+  public void setReadOnly(Boolean value) {
+    this.readOnly = value;
   }
 
   /**
    * Reads an instance of this class from a file. Re-initialises the transient {@link
    * PropertyChangeSupport} that is not part of the serialised form.
    */
-  private void readObject(ObjectInputStream pStream) throws IOException, ClassNotFoundException {
-    pStream.defaultReadObject();
+  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    stream.defaultReadObject();
     // Re-create the transient PropertyChangeSupport after deserialisation.
     this.pcs = new PropertyChangeSupport(this);
     if (this.itemSelectionFilter == null) {

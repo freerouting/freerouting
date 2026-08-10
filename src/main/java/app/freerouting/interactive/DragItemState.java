@@ -10,19 +10,19 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-/** Class for interactive dragging items with the mouse on a routing board */
+/** Class for interactive dragging items with the mouse on a routing board. */
 public class DragItemState extends DragState {
 
   private final Item itemToMove;
 
-  /** Creates a new instance of MoveItemState */
+  /** Creates a new instance of DragItemState. */
   protected DragItemState(
-      Item pItemToMove,
-      FloatPoint pLocation,
-      InteractiveState pParentState,
-      GuiBoardManager pBoardHandling) {
-    super(pLocation, pParentState, pBoardHandling);
-    itemToMove = pItemToMove;
+      Item itemToMove,
+      FloatPoint location,
+      InteractiveState parentState,
+      GuiBoardManager boardHandling) {
+    super(location, parentState, boardHandling);
+    this.itemToMove = itemToMove;
   }
 
   @Override
@@ -31,20 +31,21 @@ public class DragItemState extends DragState {
   }
 
   /**
-   * Moves the items of the group to p_to_location. Return this.returnState, if an error occurred
-   * while moving, so that an undo may be necessary.
+   * Moves the items of the group to the specified location.
+   *
+   * @return the parent state if an error occurred while moving; otherwise, this state
    */
   @Override
-  public InteractiveState moveTo(FloatPoint pToLocation) {
-    IntPoint toLocation = pToLocation.round();
+  public InteractiveState moveTo(FloatPoint toLocation) {
+    IntPoint roundedLocation = toLocation.round();
     IntPoint fromLocation = this.previousLocation.round();
     if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
-      toLocation = toLocation.orthogonalProjection(fromLocation);
+      roundedLocation = roundedLocation.orthogonalProjection(fromLocation);
     } else if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
         == AngleRestriction.FORTYFIVE_DEGREE) {
-      toLocation = toLocation.fortyfiveDegreeProjection(fromLocation);
+      roundedLocation = roundedLocation.fortyfiveDegreeProjection(fromLocation);
     }
-    if (toLocation.equals(fromLocation)) {
+    if (roundedLocation.equals(fromLocation)) {
       return this;
     }
     if (itemToMove.isUserFixed()) {
@@ -52,7 +53,7 @@ public class DragItemState extends DragState {
       return this;
     }
     MoveComponent moveComponent = null;
-    Vector relCoor = toLocation.differenceBy(fromLocation);
+    Vector relCoor = roundedLocation.differenceBy(fromLocation);
     double length = relCoor.lengthApprox();
     boolean shoveOk = false;
     for (int i = 0; i < 2; i++) {
@@ -90,7 +91,7 @@ public class DragItemState extends DragState {
       }
       hdlg.repaint();
     }
-    this.previousLocation = pToLocation; // (IntPoint)this.curr_location.translate_by(relCoor);
+    this.previousLocation = toLocation; // (IntPoint)this.curr_location.translate_by(relCoor);
     return this;
   }
 

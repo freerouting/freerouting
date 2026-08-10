@@ -6,22 +6,22 @@ import java.awt.geom.Point2D;
 /** Class for interactive zooming to a rectangle. */
 public class ZoomRegionState extends SelectRegionState {
 
-  /** Creates a new instance of ZoomRegionState */
-  public ZoomRegionState(InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
+  /** Creates a new instance of ZoomRegionState. */
+  public ZoomRegionState(InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
   }
 
   /** Returns a new instance of this class. */
   public static ZoomRegionState getInstance(
-      InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    return getInstance(null, pParentState, pBoardHandling);
+      InteractiveState parentState, GuiBoardManager boardHandling) {
+    return getInstance(null, parentState, boardHandling);
   }
 
-  /** Returns a new instance of this class with first point p_location. */
+  /** Returns a new instance of this class with the first point at the given location. */
   public static ZoomRegionState getInstance(
-      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    ZoomRegionState newInstance = new ZoomRegionState(pParentState, pBoardHandling);
-    newInstance.corner1 = pLocation;
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    ZoomRegionState newInstance = new ZoomRegionState(parentState, boardHandling);
+    newInstance.corner1 = location;
     newInstance.hdlg.screenMessages.setStatusMessage(
         newInstance.tm.getText("drag_left_mouse_button_to_create_region_to_display"));
     return newInstance;

@@ -9,22 +9,22 @@ public class ComboBoxClearance extends JComboBox<ComboBoxClearance.ClearanceClas
 
   private ClearanceClass[] classArr;
 
-  /** Creates a new instance of ClearanceComboBox */
-  public ComboBoxClearance(ClearanceMatrix pClearanceMatrix) {
-    this.classArr = new ClearanceClass[pClearanceMatrix.getClassCount()];
+  /** Creates a new instance of ClearanceComboBox. */
+  public ComboBoxClearance(ClearanceMatrix clearanceMatrix) {
+    this.classArr = new ClearanceClass[clearanceMatrix.getClassCount()];
     for (int i = 0; i < this.classArr.length; i++) {
-      this.classArr[i] = new ClearanceClass(pClearanceMatrix.getName(i), i);
+      this.classArr[i] = new ClearanceClass(clearanceMatrix.getName(i), i);
     }
     this.setModel(new DefaultComboBoxModel<>(this.classArr));
     this.setSelectedIndex(1);
   }
 
   /** Adjusts this combo box to p_new_clearance_matrix. */
-  public void adjust(ClearanceMatrix pNewClearanceMatrix) {
-    int oldIndex = this.getSelectedClassIndex();
-    this.classArr = new ClearanceClass[pNewClearanceMatrix.getClassCount()];
+  public void adjust(ClearanceMatrix newClearanceMatrix) {
+    final int oldIndex = this.getSelectedClassIndex();
+    this.classArr = new ClearanceClass[newClearanceMatrix.getClassCount()];
     for (int i = 0; i < this.classArr.length; i++) {
-      this.classArr[i] = new ClearanceClass(pNewClearanceMatrix.getName(i), i);
+      this.classArr[i] = new ClearanceClass(newClearanceMatrix.getName(i), i);
     }
     this.setModel(new DefaultComboBoxModel<>(this.classArr));
     this.setSelectedIndex(Math.min(oldIndex, this.classArr.length - 1));
@@ -46,9 +46,9 @@ public class ComboBoxClearance extends JComboBox<ComboBoxClearance.ClearanceClas
     public final String name;
     public final int index;
 
-    public ClearanceClass(String pName, int pIndex) {
-      this.name = pName;
-      this.index = pIndex;
+    public ClearanceClass(String name, int index) {
+      this.name = name;
+      this.index = index;
     }
 
     @Override

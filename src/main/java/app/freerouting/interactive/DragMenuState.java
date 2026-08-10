@@ -2,22 +2,22 @@ package app.freerouting.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
 
-/** Class implementing the different functionality in the drag menu */
+/** Implements the functionality of the drag menu. */
 public class DragMenuState extends MenuState {
 
-  /** Creates a new instance of DragMenuState */
-  public DragMenuState(GuiBoardManager pBoardHandling) {
-    super(pBoardHandling);
+  /** Creates a new instance of DragMenuState. */
+  public DragMenuState(GuiBoardManager boardHandling) {
+    super(boardHandling);
   }
 
-  /** Returns a new instance of DragMenuState */
-  public static DragMenuState getInstance(GuiBoardManager pBoardHandling) {
-    return new DragMenuState(pBoardHandling);
+  /** Returns a new instance of DragMenuState. */
+  public static DragMenuState getInstance(GuiBoardManager boardHandling) {
+    return new DragMenuState(boardHandling);
   }
 
   @Override
-  public InteractiveState mousePressed(FloatPoint pPoint) {
-    return DragState.getInstance(pPoint, this, hdlg);
+  public InteractiveState mousePressed(FloatPoint point) {
+    return DragState.getInstance(point, this, hdlg);
   }
 
   @Override

@@ -48,16 +48,16 @@ public class WindowVia extends BoardSavableSubWindow {
   private final DefaultListModel<ViaRule> ruleListModel;
   private final JPanel mainPanel;
 
-  /** The subwindows with information about selected object */
+  /** The subwindows with information about selected object. */
   private final Collection<JFrame> subwindows = new LinkedList<>();
 
-  /** Creates a new instance of ViaWindow */
-  public WindowVia(BoardFrame pBoardFrame) {
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of ViaWindow. */
+  public WindowVia(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
-    this.boardFrame = pBoardFrame;
+    this.boardFrame = boardFrame;
 
     this.mainPanel = new JPanel();
     mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -250,7 +250,7 @@ public class WindowVia extends BoardSavableSubWindow {
   private class ShowPadstacksListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       Collection<WindowObjectInfo.Printable> objectList = new LinkedList<>();
       BoardLibrary boardLibrary = boardFrame.boardPanel.boardHandling.getRoutingBoard().library;
       for (int i = 0; i < boardLibrary.viaPadstackCount(); i++) {
@@ -272,7 +272,7 @@ public class WindowVia extends BoardSavableSubWindow {
   private class AddPadstackListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       BasicBoard pcb = boardFrame.boardPanel.boardHandling.getRoutingBoard();
       if (pcb.layerStructure.arr.length <= 1) {
         return;
@@ -332,8 +332,6 @@ public class WindowVia extends BoardSavableSubWindow {
         }
         endLayer = (Layer) selectedValue;
       }
-      double defaultRadius = 100.0;
-
       // ask for the default radius
 
       JPanel defaultRadiusInputPanel = new JPanel();
@@ -345,6 +343,7 @@ public class WindowVia extends BoardSavableSubWindow {
       defaultRadiusInputPanel.add(defaultRadiusInputField);
       JOptionPane.showMessageDialog(
           boardFrame, defaultRadiusInputPanel, null, JOptionPane.PLAIN_MESSAGE);
+      double defaultRadius = 100.0;
       Object inputValue = defaultRadiusInputField.getValue();
       if (inputValue instanceof Number number) {
         defaultRadius = number.doubleValue();
@@ -382,21 +381,21 @@ public class WindowVia extends BoardSavableSubWindow {
     }
   }
 
-  /** Internal class used in AddPadstackListener */
+  /** Internal class used in AddPadstackListener. */
   private class PadstackInputPanel extends JPanel {
 
     private final JLabel[] layerNames;
     private final JFormattedTextField[] circleRadius;
 
-    PadstackInputPanel(Layer pFromLayer, Layer pToLayer, Double pDefaultRadius) {
+    PadstackInputPanel(Layer fromLayer, Layer toLayer, Double defaultRadius) {
       GridBagLayout gridbag = new GridBagLayout();
       this.setLayout(gridbag);
       GridBagConstraints gridbagConstraints = new GridBagConstraints();
 
       LayerStructure layerStructure =
           boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure;
-      int fromLayerNo = layerStructure.getNo(pFromLayer);
-      int toLayerNo = layerStructure.getNo(pToLayer);
+      int fromLayerNo = layerStructure.getNo(fromLayer);
+      int toLayerNo = layerStructure.getNo(toLayer);
       int layerCount = toLayerNo - fromLayerNo + 1;
       layerNames = new JLabel[layerCount];
       circleRadius = new JFormattedTextField[layerCount];
@@ -408,7 +407,7 @@ public class WindowVia extends BoardSavableSubWindow {
         numberFormat.setMaximumFractionDigits(7);
         circleRadius[i] = new JFormattedTextField(numberFormat);
         circleRadius[i].setColumns(7);
-        circleRadius[i].setValue(pDefaultRadius);
+        circleRadius[i].setValue(defaultRadius);
         gridbag.setConstraints(layerNames[i], gridbagConstraints);
         gridbagConstraints.gridwidth = 2;
         this.add(layerNames[i], gridbagConstraints);
@@ -422,7 +421,7 @@ public class WindowVia extends BoardSavableSubWindow {
   private class RemovePadstackListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       BasicBoard pcb = boardFrame.boardPanel.boardHandling.getRoutingBoard();
       Padstack[] viaPadstacks = pcb.library.getViaPadstacks();
       Object selectedValue =
@@ -457,7 +456,7 @@ public class WindowVia extends BoardSavableSubWindow {
   private class ShowViasListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       Collection<WindowObjectInfo.Printable> objectList = new LinkedList<>();
       ViaInfos viaInfos = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.viaInfos;
       for (int i = 0; i < viaInfos.count(); i++) {
@@ -479,7 +478,7 @@ public class WindowVia extends BoardSavableSubWindow {
   private class EditViasListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       boardFrame.editViasWindow.setVisible(true);
     }
   }
@@ -487,7 +486,7 @@ public class WindowVia extends BoardSavableSubWindow {
   private class ShowViaRuleListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       List<ViaRule> selectedObjects = ruleList.getSelectedValuesList();
       if (selectedObjects.isEmpty()) {
         return;
@@ -509,7 +508,7 @@ public class WindowVia extends BoardSavableSubWindow {
   private class EditViaRuleListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       ViaRule selectedObject = ruleList.getSelectedValue();
       if (selectedObject == null) {
         return;
@@ -527,7 +526,7 @@ public class WindowVia extends BoardSavableSubWindow {
   private class AddViaRuleListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       String newName = JOptionPane.showInputDialog(tm.getText("prompt_new_via_rule_name"));
       if (newName == null) {
         return;
@@ -547,7 +546,7 @@ public class WindowVia extends BoardSavableSubWindow {
   private class RemoveViaRuleListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       ViaRule selectedObject = ruleList.getSelectedValue();
       if (selectedObject == null) {
         return;

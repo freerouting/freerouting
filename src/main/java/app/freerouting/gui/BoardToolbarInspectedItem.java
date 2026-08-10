@@ -14,10 +14,10 @@ class BoardToolbarInspectedItem extends JToolBar {
   private final TextManager tm;
 
   /** Creates a new instance of BoardToolbarInspectedItem. */
-  BoardToolbarInspectedItem(BoardFrame pBoardFrame) {
-    this.boardFrame = pBoardFrame;
+  BoardToolbarInspectedItem(BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
 
-    this.tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
+    this.tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
     JButton toolbarCancelButton = new JButton();
     toolbarCancelButton.setText(tm.getText("cancel"));
@@ -38,10 +38,10 @@ class BoardToolbarInspectedItem extends JToolBar {
 
     this.add(toolbarInfoButton);
 
-    JLabel jLabel5 = new JLabel();
-    jLabel5.setMaximumSize(new Dimension(10, 10));
-    jLabel5.setPreferredSize(new Dimension(10, 10));
-    this.add(jLabel5);
+    JLabel separatorAfterInfo = new JLabel();
+    separatorAfterInfo.setMaximumSize(new Dimension(10, 10));
+    separatorAfterInfo.setPreferredSize(new Dimension(10, 10));
+    this.add(separatorAfterInfo);
 
     JButton toolbarWholeNetsButton = new JButton();
     toolbarWholeNetsButton.setText(tm.getText("nets"));
@@ -89,10 +89,10 @@ class BoardToolbarInspectedItem extends JToolBar {
 
     this.add(toolbarWholeGroupsButton);
 
-    JLabel jLabel6 = new JLabel();
-    jLabel6.setMaximumSize(new Dimension(10, 10));
-    jLabel6.setPreferredSize(new Dimension(10, 10));
-    this.add(jLabel6);
+    JLabel separatorAfterGroups = new JLabel();
+    separatorAfterGroups.setMaximumSize(new Dimension(10, 10));
+    separatorAfterGroups.setPreferredSize(new Dimension(10, 10));
+    this.add(separatorAfterGroups);
 
     JButton toolbarViolationButton = new JButton();
     toolbarViolationButton.setText(tm.getText("violations"));
@@ -104,10 +104,10 @@ class BoardToolbarInspectedItem extends JToolBar {
 
     this.add(toolbarViolationButton);
 
-    JLabel jLabel7 = new JLabel();
-    jLabel7.setMaximumSize(new Dimension(10, 10));
-    jLabel7.setPreferredSize(new Dimension(10, 10));
-    this.add(jLabel7);
+    JLabel separatorAfterViolations = new JLabel();
+    separatorAfterViolations.setMaximumSize(new Dimension(10, 10));
+    separatorAfterViolations.setPreferredSize(new Dimension(10, 10));
+    this.add(separatorAfterViolations);
 
     JButton toolbarDisplaySelectionButton = new JButton();
     toolbarDisplaySelectionButton.setText(tm.getText("zoom_selection"));

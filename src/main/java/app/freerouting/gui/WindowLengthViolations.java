@@ -12,12 +12,13 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/** Displays nets whose routed lengths violate their rules. */
 public class WindowLengthViolations extends WindowObjectListWithFilter {
 
-  /** Creates a new instance of WindowLengthViolations */
-  public WindowLengthViolations(BoardFrame pBoardFrame) {
-    super(pBoardFrame);
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of WindowLengthViolations. */
+  public WindowLengthViolations(BoardFrame boardFrame) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
     this.listEmptyMessage.setText(tm.getText("listEmpty"));
@@ -64,14 +65,14 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     final Net net;
     final double violationLength;
 
-    LengthViolation(Net pNet, double pViolationLength) {
-      net = pNet;
-      violationLength = pViolationLength;
+    LengthViolation(Net net, double violationLength) {
+      this.net = net;
+      this.violationLength = violationLength;
     }
 
     @Override
-    public int compareTo(LengthViolation pOther) {
-      return this.net.name.compareToIgnoreCase(pOther.net.name);
+    public int compareTo(LengthViolation other) {
+      return this.net.name.compareToIgnoreCase(other.net.name);
     }
 
     @Override

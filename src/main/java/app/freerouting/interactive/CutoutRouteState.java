@@ -12,43 +12,44 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
+/** Interactive state for cutting selected traces within a rectangular region. */
 public final class CutoutRouteState extends SelectRegionState {
 
   private final Collection<PolylineTrace> traceList;
 
-  /** Creates a new instance of CutoutRouteState */
+  /** Creates a new instance of CutoutRouteState. */
   private CutoutRouteState(
-      Collection<PolylineTrace> pItemList,
-      InteractiveState pParentState,
-      GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
-    this.traceList = pItemList;
+      Collection<PolylineTrace> itemList,
+      InteractiveState parentState,
+      GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
+    this.traceList = itemList;
   }
 
   /** Returns a new instance of this class. */
   public static CutoutRouteState getInstance(
-      Collection<Item> pItemList, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    return getInstance(pItemList, null, pParentState, pBoardHandling);
+      Collection<Item> itemList, InteractiveState parentState, GuiBoardManager boardHandling) {
+    return getInstance(itemList, null, parentState, boardHandling);
   }
 
   /** Returns a new instance of this class. */
   public static CutoutRouteState getInstance(
-      Collection<Item> pItemList,
-      FloatPoint pLocation,
-      InteractiveState pParentState,
-      GuiBoardManager pBoardHandling) {
-    pBoardHandling.displayLayerMessage();
+      Collection<Item> itemList,
+      FloatPoint location,
+      InteractiveState parentState,
+      GuiBoardManager boardHandling) {
+    boardHandling.displayLayerMessage();
     // filter items, which cannot be cutout
-    Collection<PolylineTrace> itemList = new LinkedList<>();
+    Collection<PolylineTrace> traceList = new LinkedList<>();
 
-    for (Item currItem : pItemList) {
+    for (Item currItem : itemList) {
       if (!currItem.isUserFixed() && currItem instanceof PolylineTrace trace) {
-        itemList.add(trace);
+        traceList.add(trace);
       }
     }
 
-    CutoutRouteState newInstance = new CutoutRouteState(itemList, pParentState, pBoardHandling);
-    newInstance.corner1 = pLocation;
+    CutoutRouteState newInstance = new CutoutRouteState(traceList, parentState, boardHandling);
+    newInstance.corner1 = location;
     newInstance.hdlg.screenMessages.setStatusMessage(
         newInstance.tm.getText("drag_left_mouse_button_to_select_cutout_rectangle"));
     return newInstance;
@@ -93,7 +94,7 @@ public final class CutoutRouteState extends SelectRegionState {
   }
 
   @Override
-  public void draw(Graphics pGraphics) {
+  public void draw(Graphics graphics) {
     if (traceList == null) {
       return;
     }
@@ -101,11 +102,11 @@ public final class CutoutRouteState extends SelectRegionState {
     for (PolylineTrace currTrace : this.traceList) {
 
       currTrace.draw(
-          pGraphics,
+          graphics,
           hdlg.graphicsContext,
           hdlg.graphicsContext.getHighlightColor(),
           hdlg.graphicsContext.getHighlightColorIntensity());
     }
-    super.draw(pGraphics);
+    super.draw(graphics);
   }
 }

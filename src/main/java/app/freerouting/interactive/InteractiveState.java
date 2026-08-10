@@ -9,43 +9,43 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import javax.swing.JPopupMenu;
 
-/** Common base class of all interaction states with the graphical interface */
+/** Common base class of all interaction states with the graphical interface. */
 public class InteractiveState {
 
-  /** board setting access handler for the derived classes */
+  /** Provides board settings access to derived classes. */
   protected final GuiBoardManager hdlg;
 
-  /** Contains the files with the language dependent messages */
+  /** Contains the language-dependent messages. */
   protected final TextManager tm;
 
-  /** The intended state after this state is finished */
+  /** The intended state after this state is finished. */
   protected InteractiveState returnState;
 
-  /** Creates a new instance of InteractiveState */
-  protected InteractiveState(InteractiveState pReturnState, GuiBoardManager pBoardHandling) {
-    this.returnState = pReturnState;
-    this.hdlg = pBoardHandling;
+  /** Creates a new instance of InteractiveState. */
+  protected InteractiveState(InteractiveState returnState, GuiBoardManager boardHandling) {
+    this.returnState = returnState;
+    this.hdlg = boardHandling;
 
-    this.tm = new TextManager(InteractiveState.class, pBoardHandling.getLocale());
+    this.tm = new TextManager(InteractiveState.class, boardHandling.getLocale());
   }
 
-  /** default draw function to be overwritten in derived classes */
-  public void draw(Graphics pGraphics) {}
+  /** Provides the default draw function to be overridden in derived classes. */
+  public void draw(Graphics graphics) {}
 
   /**
    * Default function to be overwritten in derived classes. Returns the returnState of this state,
    * if the state is left after the method, or else this state.
    */
-  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
+  public InteractiveState leftButtonClicked(FloatPoint location) {
     return this;
   }
 
   /** Wraps {@link #leftButtonClicked(FloatPoint)} into a command for easier event testing. */
-  public InteractiveCommand leftButtonClickedCommand(FloatPoint pLocation) {
-    return InteractiveCommand.from(() -> this.leftButtonClicked(pLocation));
+  public InteractiveCommand leftButtonClickedCommand(FloatPoint location) {
+    return InteractiveCommand.from(() -> this.leftButtonClicked(location));
   }
 
-  /*
+  /**
    * Actions to be taken when a mouse button is released.
    * Default function to be overwritten in derived classes.
    * Returns the returnState of this state, if the state is left
@@ -81,13 +81,13 @@ public class InteractiveState {
    * overwritten in derived classes. Returns the returnState of this state, if the state is left
    * after the method, or else this state.
    */
-  public InteractiveState mouseDragged(FloatPoint pPoint) {
+  public InteractiveState mouseDragged(FloatPoint point) {
     return this;
   }
 
   /** Wraps {@link #mouseDragged(FloatPoint)} into a command for easier event testing. */
-  public InteractiveCommand mouseDraggedCommand(FloatPoint pPoint) {
-    return InteractiveCommand.from(() -> this.mouseDragged(pPoint));
+  public InteractiveCommand mouseDraggedCommand(FloatPoint point) {
+    return InteractiveCommand.from(() -> this.mouseDragged(point));
   }
 
   /**
@@ -95,40 +95,40 @@ public class InteractiveState {
    * overwritten in derived classes. Returns the returnState of this state, if the state is left
    * after the method, or else this state.
    */
-  public InteractiveState mousePressed(FloatPoint pPoint) {
+  public InteractiveState mousePressed(FloatPoint point) {
     return this;
   }
 
   /** Wraps {@link #mousePressed(FloatPoint)} into a command for easier event testing. */
-  public InteractiveCommand mousePressedCommand(FloatPoint pPoint) {
-    return InteractiveCommand.from(() -> this.mousePressed(pPoint));
+  public InteractiveCommand mousePressedCommand(FloatPoint point) {
+    return InteractiveCommand.from(() -> this.mousePressed(point));
   }
 
   /** Action to be taken, when the mouse wheel was turned. */
-  public InteractiveState mouseWheelMoved(int pRotation) {
+  public InteractiveState mouseWheelMoved(int rotation) {
     FloatPoint mousePosition = hdlg.getCurrentMousePosition();
     if (mousePosition != null) {
       Point2D screenMousePos =
           hdlg.graphicsContext.coordinateTransform.boardToScreen(mousePosition);
-      hdlg.getPanel().zoomWithMouseWheel(screenMousePos, pRotation);
+      hdlg.getPanel().zoomWithMouseWheel(screenMousePos, rotation);
     }
     return this;
   }
 
   /** Wraps {@link #mouseWheelMoved(int)} into a command for easier event testing. */
-  public InteractiveCommand mouseWheelMovedCommand(int pRotation) {
-    return InteractiveCommand.from(() -> this.mouseWheelMoved(pRotation));
+  public InteractiveCommand mouseWheelMovedCommand(int rotation) {
+    return InteractiveCommand.from(() -> this.mouseWheelMoved(rotation));
   }
 
   /**
    * Default actions when a key shortcut is pressed. Overwritten in derived classes for other key
    * shortcut actions.
    */
-  public InteractiveState keyTyped(char pKeyChar) {
+  public InteractiveState keyTyped(char keyChar) {
     InteractiveState result = this;
     Point2D screenMousePos =
         hdlg.graphicsContext.coordinateTransform.boardToScreen(hdlg.getCurrentMousePosition());
-    switch (pKeyChar) {
+    switch (keyChar) {
       case 'a' -> hdlg.getPanel().boardFrame.zoomAll();
       case 'c' -> hdlg.getPanel().centerDisplay(screenMousePos);
       case 'f' -> result = ZoomRegionState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
@@ -141,10 +141,10 @@ public class InteractiveState {
       case '\n', ' ' -> result = this.complete();
       case KeyEvent.VK_ESCAPE -> result = this.cancel();
       default -> {
-        if (Character.isDigit(pKeyChar)) {
-          // change the current layer to the p_key_char-ths signal layer
+        if (Character.isDigit(keyChar)) {
+          // Change the current layer to the signal layer selected by the numeric key.
           LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
-          int d = Character.digit(pKeyChar, 10);
+          int d = Character.digit(keyChar, 10);
           d = Math.min(d, layerStructure.signalLayerCount());
           // Board layers start at 0, keyboard input for layers starts at 1.
           d = Math.max(d - 1, 0);
@@ -157,8 +157,8 @@ public class InteractiveState {
   }
 
   /** Wraps {@link #keyTyped(char)} into a command for easier event testing. */
-  public InteractiveCommand keyTypedCommand(char pKeyChar) {
-    return InteractiveCommand.from(() -> this.keyTyped(pKeyChar));
+  public InteractiveCommand keyTypedCommand(char keyChar) {
+    return InteractiveCommand.from(() -> this.keyTyped(keyChar));
   }
 
   /**
@@ -190,11 +190,12 @@ public class InteractiveState {
   }
 
   /**
-   * Action to be taken, when the current layer is changed. returns false, if the layer could not be
-   * changed, Default function to be overwritten in derived classes.
+   * Changes the current layer. Returns false if the layer could not be changed.
+   *
+   * <p>This is the default implementation for derived classes.
    */
-  public boolean changeLayerAction(int pNewLayer) {
-    hdlg.setLayer(pNewLayer);
+  public boolean changeLayerAction(int newLayer) {
+    hdlg.setLayer(newLayer);
     return true;
   }
 

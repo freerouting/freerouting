@@ -45,6 +45,13 @@ import javax.swing.plaf.FontUIResource;
 /** Manages GUI initialization and board frame creation for the Freerouting application. */
 public class GuiManager {
 
+  /**
+   * Initializes the Freerouting GUI session and opens its initial board.
+   *
+   * @param globalSettings application-wide settings used to configure the session
+   * @return {@code true} when GUI initialization completes successfully
+   */
+  // CHECKSTYLE.SUPPRESS: AbbreviationAsWordInName for +1 lines
   public static boolean initializeGUI(GlobalSettings globalSettings) {
     // Start a new Freerouting session
     var guiSession =
@@ -199,6 +206,9 @@ public class GuiManager {
                         newFrame.boardPanel.boardHandling.saveSpecctraSessionSesAsEagleScriptScr(
                             inputStream, outputStream);
                       }
+                      default -> {
+                        // The output extension was validated before opening the stream.
+                      }
                     }
                   }
 
@@ -327,7 +337,7 @@ public class GuiManager {
    */
   private static BoardFrame createBoardFrame(
       RoutingJob routingJob,
-      JTextField pMessageField,
+      JTextField messageField,
       GlobalSettings globalSettings,
       SettingsMerger settingsMerger) {
     TextManager tm = new TextManager(GuiManager.class, globalSettings.currentLocale);
@@ -343,8 +353,8 @@ public class GuiManager {
     } else {
       inputStream = routingJob.input.getData();
       if (inputStream == null) {
-        if (pMessageField != null) {
-          pMessageField.setText(
+        if (messageField != null) {
+          messageField.setText(
               tm.getText(
                   "error_design_file_read_failed_with_file", routingJob.input.getFilename()));
         }
@@ -354,7 +364,7 @@ public class GuiManager {
 
     BoardFrame newFrame = new BoardFrame(routingJob, globalSettings, settingsMerger);
 
-    boolean readOk = newFrame.load(inputStream, routingJob.input.format, pMessageField, routingJob);
+    boolean readOk = newFrame.load(inputStream, routingJob.input.format, messageField, routingJob);
     if (!readOk) {
       return null;
     }
@@ -457,26 +467,37 @@ public class GuiManager {
     return newFrame;
   }
 
+  /** Saves the current global GUI settings to the Freerouting configuration file. */
   public static void saveSettings() throws IOException {
     GlobalSettings.saveAsJson(Freerouting.globalSettings);
   }
 
+  /**
+   * Reads a rules file and applies it when the user confirms the import.
+   *
+   * @param designName the design name associated with the rules
+   * @param parentName the directory containing the rules file
+   * @param rulesFileName the rules filename
+   * @param boardHandling the GUI board manager receiving the rules
+   * @param confirmMessage the confirmation prompt, when applicable
+   * @return {@code true} when the rules were read successfully
+   */
   private static boolean readRulesFile(
-      String pDesignName,
-      String pParentName,
+      String designName,
+      String parentName,
       String rulesFileName,
-      GuiBoardManager pBoardHandling,
-      String pConfirmMessage) {
+      GuiBoardManager boardHandling,
+      String confirmMessage) {
 
     boolean dsnFileGeneratedByHost =
-        pBoardHandling.getRoutingBoard().communication.specctraParserInfo.dsnFileGeneratedByHost;
+        boardHandling.getRoutingBoard().communication.specctraParserInfo.dsnFileGeneratedByHost;
 
     try {
-      File rulesFile = new File(pParentName, rulesFileName);
+      File rulesFile = new File(parentName, rulesFileName);
       FRLogger.info("Opening '" + rulesFileName + "'...");
       try (InputStream inputStream = new FileInputStream(rulesFile)) {
-        if (dsnFileGeneratedByHost && WindowMessage.confirm(pConfirmMessage)) {
-          return RulesReader.read(inputStream, pDesignName, pBoardHandling.getRoutingBoard());
+        if (dsnFileGeneratedByHost && WindowMessage.confirm(confirmMessage)) {
+          return RulesReader.read(inputStream, designName, boardHandling.getRoutingBoard());
         }
       }
     } catch (IOException e) {

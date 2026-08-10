@@ -10,21 +10,21 @@ import javax.swing.JPopupMenu;
 /** State for interactive routing by adding corners with the left mouse button. */
 public class StitchRouteState extends RouteState {
 
-  /** Creates a new instance of StitchRouteState */
-  protected StitchRouteState(InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
+  /** Creates a new instance of StitchRouteState. */
+  protected StitchRouteState(InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
   }
 
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
-    return addCorner(pLocation);
+  public InteractiveState leftButtonClicked(FloatPoint location) {
+    return addCorner(location);
   }
 
   @Override
-  public InteractiveState addCorner(FloatPoint pLocation) {
+  public InteractiveState addCorner(FloatPoint location) {
     // make the current situation restorable by undo
     hdlg.getRoutingBoard().generateSnapshot();
-    return super.addCorner(pLocation);
+    return super.addCorner(location);
   }
 
   @Override
@@ -46,8 +46,8 @@ public class StitchRouteState extends RouteState {
   }
 
   @Override
-  public void draw(Graphics pGraphics) {
-    super.draw(pGraphics);
+  public void draw(Graphics graphics) {
+    super.draw(graphics);
     if (route == null) {
       return;
     }
@@ -67,9 +67,9 @@ public class StitchRouteState extends RouteState {
     radiusWithClearance +=
         hdlg.getRoutingBoard()
             .clearanceValue(clClass, clClass, hdlg.getInteractiveSettings().getLayer());
-    hdlg.graphicsContext.draw(drawPoints, displayWidth, drawColor, pGraphics, 0.5);
+    hdlg.graphicsContext.draw(drawPoints, displayWidth, drawColor, graphics, 0.5);
     // draw the clearance boundary around the end point
     hdlg.graphicsContext.drawCircle(
-        drawPoints[1], radiusWithClearance, clearanceDrawWidth, drawColor, pGraphics, 0.5);
+        drawPoints[1], radiusWithClearance, clearanceDrawWidth, drawColor, graphics, 0.5);
   }
 }

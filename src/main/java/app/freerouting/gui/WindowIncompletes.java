@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+/** Displays incomplete connections on the current board. */
 public class WindowIncompletes extends WindowObjectListWithFilter {
 
-  /** Creates a new instance of IncompletesWindow */
-  public WindowIncompletes(BoardFrame pBoardFrame) {
-    super(pBoardFrame);
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of IncompletesWindow. */
+  public WindowIncompletes(BoardFrame boardFrame) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("incompletes"));
     this.listEmptyMessage.setText(tm.getText("routeCompleted"));

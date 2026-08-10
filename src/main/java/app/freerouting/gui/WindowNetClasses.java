@@ -56,7 +56,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private final BoardFrame boardFrame;
   private final JPanel mainPanel;
 
-  /** The subwindows created inside this window */
+  /** The subwindows created inside this window. */
   private final Collection<JFrame> subwindows = new LinkedList<>();
 
   private final JComboBox<String> clClassComboBox;
@@ -65,18 +65,18 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private NetClassTable table;
   private NetClassTableModel tableModel;
 
-  /** Creates a new instance of NetClassesWindow */
-  public WindowNetClasses(BoardFrame pBoardFrame) {
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of NetClassesWindow. */
+  public WindowNetClasses(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
-    this.boardFrame = pBoardFrame;
+    this.boardFrame = boardFrame;
 
     this.mainPanel = new JPanel();
     this.mainPanel.setLayout(new BorderLayout());
 
-    BasicBoard routingBoard = pBoardFrame.boardPanel.boardHandling.getRoutingBoard();
+    BasicBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
 
     this.clClassComboBox = new JComboBox<>();
     this.viaRuleComboBox = new JComboBox<>();
@@ -202,7 +202,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private void addTable() {
     this.tableModel = new NetClassTableModel();
     this.table = new NetClassTable(this.tableModel);
-    JScrollPane scrollPane = new JScrollPane(this.table);
+    final JScrollPane scrollPane = new JScrollPane(this.table);
     int tableHeight = TEXTFIELD_HEIGHT * this.tableModel.getRowCount();
     int tableWidth = TEXTFIELD_WIDTH * this.tableModel.getColumnCount();
     this.table.setPreferredScrollableViewportSize(new Dimension(tableWidth, tableHeight));
@@ -216,7 +216,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       // Due to a Java system bug, the decimal comma in this table must be entered as a dot.
       JLabel bugLabel =
           new JLabel(
-              "Due to a Java system bug, the decimal comma in this table must currently be entered as a dot!");
+              "Due to a Java system bug, the decimal comma in this table must currently be entered "
+                  + "as a dot!");
       this.centerPanel.add(bugLabel, BorderLayout.SOUTH);
     }
     this.mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -258,7 +259,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     this.boardFrame.refreshWindows();
   }
 
-  private String getLayerSummary(NetClass pNetClass) {
+  private String getLayerSummary(NetClass netClass) {
     RoutingBoard board = boardFrame.boardPanel.boardHandling.getRoutingBoard();
     LayerStructure ls = board.layerStructure;
     List<Integer> activeSignalLayers = new ArrayList<>();
@@ -268,7 +269,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     for (int i = 0; i < ls.arr.length; i++) {
       if (ls.arr[i].isSignal) {
         allSignalLayers.add(i);
-        if (pNetClass.isActiveRoutingLayer(i)) {
+        if (netClass.isActiveRoutingLayer(i)) {
           activeSignalLayers.add(i);
           activeLayerNames.add(ls.arr[i].name);
         }
@@ -301,16 +302,16 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     }
   }
 
-  private String getTraceWidthSummary(NetClass pNetClass) {
-    RoutingBoard board = boardFrame.boardPanel.boardHandling.getRoutingBoard();
-    LayerStructure ls = board.layerStructure;
-    CoordinateTransform ct = boardFrame.boardPanel.boardHandling.coordinateTransform;
+  private String getTraceWidthSummary(NetClass netClass) {
+    final RoutingBoard board = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+    final LayerStructure ls = board.layerStructure;
+    final CoordinateTransform ct = boardFrame.boardPanel.boardHandling.coordinateTransform;
     Integer commonHalfWidth = null;
     boolean multiple = false;
 
     for (int i = 0; i < ls.arr.length; i++) {
-      if (ls.arr[i].isSignal && pNetClass.isActiveRoutingLayer(i)) {
-        int width = pNetClass.getTraceHalfWidth(i);
+      if (ls.arr[i].isSignal && netClass.isActiveRoutingLayer(i)) {
+        int width = netClass.getTraceHalfWidth(i);
         if (commonHalfWidth == null) {
           commonHalfWidth = width;
         } else if (width != commonHalfWidth) {
@@ -345,7 +346,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private class AddNetClassListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.appendNetClass();
       adjustTable();
     }
@@ -354,7 +355,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private class RemoveNetClassListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       int selectedRow = table.getSelectedRow();
       if (!canRemoveNetClass(tableModel.getRowCount(), selectedRow)) {
         if (tableModel.getRowCount() <= 1) {
@@ -388,7 +389,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private class AssignClassesListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       boardFrame.assignNetClassesWindow.setVisible(true);
     }
   }
@@ -396,7 +397,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private class SelectClassesListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       int[] selectedRows = table.getSelectedRows();
       if (selectedRows.length == 0) {
         return;
@@ -440,7 +441,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private class FilterIncompletesListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       int[] selectedRows = table.getSelectedRows();
       if (selectedRows.length == 0) {
         return;
@@ -471,7 +472,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private class ContainedNetsListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       int[] selectedRows = table.getSelectedRows();
       if (selectedRows.length == 0) {
         return;
@@ -513,8 +514,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
     private final String[] columnToolTips;
 
-    public NetClassTable(NetClassTableModel pTableModel) {
-      super(pTableModel);
+    public NetClassTable(NetClassTableModel tableModel) {
+      super(tableModel);
       columnToolTips = new String[10];
       columnToolTips[0] = null;
       columnToolTips[1] = tm.getText("column_tool_tip_1");
@@ -558,7 +559,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       setValues();
     }
 
-    /** Calculates the values in this table */
+    /** Calculates the values in this table. */
     public void setValues() {
       BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
       this.data = new Object[boardRules.netClasses.count()][];
@@ -597,8 +598,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     }
 
     @Override
-    public String getColumnName(int pCol) {
-      return columnNames[pCol];
+    public String getColumnName(int col) {
+      return columnNames[col];
     }
 
     @Override
@@ -612,26 +613,26 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     }
 
     @Override
-    public Object getValueAt(int pRow, int pCol) {
+    public Object getValueAt(int row, int col) {
       NetClass currNetClass =
-          boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.netClasses.get(pRow);
-      if (pCol == ColumnName.ON_LAYER.ordinal()) {
+          boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.netClasses.get(row);
+      if (col == ColumnName.ON_LAYER.ordinal()) {
         return getLayerSummary(currNetClass);
       }
-      if (pCol == ColumnName.TRACE_WIDTH.ordinal()) {
+      if (col == ColumnName.TRACE_WIDTH.ordinal()) {
         return getTraceWidthSummary(currNetClass);
       }
-      return data[pRow][pCol];
+      return data[row][col];
     }
 
     @Override
-    public void setValueAt(Object pValue, int pRow, int pCol) {
+    public void setValueAt(Object value, int row, int col) {
       RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
       BoardRules boardRules = routingBoard.rules;
-      if (pCol == ColumnName.ON_LAYER.ordinal() || pCol == ColumnName.TRACE_WIDTH.ordinal()) {
+      if (col == ColumnName.ON_LAYER.ordinal() || col == ColumnName.TRACE_WIDTH.ordinal()) {
         return;
       }
-      Object netClassName = getValueAt(pRow, ColumnName.NAME.ordinal());
+      Object netClassName = getValueAt(row, ColumnName.NAME.ordinal());
       if (!(netClassName instanceof String)) {
         FRLogger.warn("EditNetRuLesVindow.setValueAt: String expected");
         return;
@@ -642,8 +643,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         return;
       }
 
-      if (pCol == ColumnName.NAME.ordinal()) {
-        if (!(pValue instanceof String newName)) {
+      if (col == ColumnName.NAME.ordinal()) {
+        if (!(value instanceof String newName)) {
           return;
         }
         if (boardRules.netClasses.get(newName) != null) {
@@ -651,8 +652,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         }
         netRule.setName(newName);
         boardFrame.viaWindow.refresh();
-      } else if (pCol == ColumnName.VIA_RULE.ordinal()) {
-        if (!(pValue instanceof String newName)) {
+      } else if (col == ColumnName.VIA_RULE.ordinal()) {
+        if (!(value instanceof String newName)) {
           return;
         }
         ViaRule newViaRule = boardRules.getViaRule(newName);
@@ -661,23 +662,23 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           return;
         }
         netRule.setViaRule(newViaRule);
-      } else if (pCol == ColumnName.SHOVE_FIXED.ordinal()) {
-        if (!(pValue instanceof Boolean)) {
+      } else if (col == ColumnName.SHOVE_FIXED.ordinal()) {
+        if (!(value instanceof Boolean)) {
           return;
         }
-        applyShoveFixedSelection(netRule, (Boolean) pValue);
-      } else if (pCol == ColumnName.CYCLES_WITH_AREAS.ordinal()) {
-        if (!(pValue instanceof Boolean)) {
+        applyShoveFixedSelection(netRule, (Boolean) value);
+      } else if (col == ColumnName.CYCLES_WITH_AREAS.ordinal()) {
+        if (!(value instanceof Boolean)) {
           return;
         }
-        boolean value = (Boolean) pValue;
-        netRule.setIgnoreCyclesWithAreas(value);
-      } else if (pCol == ColumnName.MIN_TRACE_LENGTH.ordinal()) {
+        boolean ignoreCyclesWithAreas = (Boolean) value;
+        netRule.setIgnoreCyclesWithAreas(ignoreCyclesWithAreas);
+      } else if (col == ColumnName.MIN_TRACE_LENGTH.ordinal()) {
 
         float currValue = 0F;
-        if (pValue instanceof Float float1) {
+        if (value instanceof Float float1) {
           currValue = float1;
-        } else if (pValue instanceof String string) {
+        } else if (value instanceof String string) {
           // Workaround because of a localisation Bug in Java
           // The numbers are always displayed in the English Format.
 
@@ -686,22 +687,22 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           } catch (Exception _) {
             currValue = 0f;
           }
-          pValue = String.valueOf(currValue);
+          value = String.valueOf(currValue);
         }
         if (currValue <= 0) {
           currValue = (float) 0;
-          pValue = currValue;
+          value = currValue;
         }
         double minTraceLength =
             Math.round(
                 boardFrame.boardPanel.boardHandling.coordinateTransform.userToBoard(currValue));
         netRule.setMinimumTraceLength(minTraceLength);
         boardFrame.boardPanel.boardHandling.recalculateLengthViolations();
-      } else if (pCol == ColumnName.MAX_TRACE_LENGTH.ordinal()) {
+      } else if (col == ColumnName.MAX_TRACE_LENGTH.ordinal()) {
         float currValue = 0F;
-        if (pValue instanceof Float float1) {
+        if (value instanceof Float float1) {
           currValue = float1;
-        } else if (pValue instanceof String string) {
+        } else if (value instanceof String string) {
           // Workaround because of a localisation Bug in Java
           // The numbers are always displayed in the English Format.
 
@@ -710,11 +711,11 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           } catch (Exception _) {
             currValue = 0f;
           }
-          pValue = String.valueOf(currValue);
+          value = String.valueOf(currValue);
         }
         if (currValue <= 0) {
           currValue = (float) 0;
-          pValue = currValue - 1;
+          value = currValue - 1;
         }
 
         double maxTraceLength =
@@ -722,13 +723,13 @@ public class WindowNetClasses extends BoardSavableSubWindow {
                 boardFrame.boardPanel.boardHandling.coordinateTransform.userToBoard(currValue));
         netRule.setMaximumTraceLength(maxTraceLength);
         boardFrame.boardPanel.boardHandling.recalculateLengthViolations();
-      } else if (pCol == ColumnName.IGNORED_BY_AUTOROUTER.ordinal()) {
-        if (!(pValue instanceof Boolean)) {
+      } else if (col == ColumnName.IGNORED_BY_AUTOROUTER.ordinal()) {
+        if (!(value instanceof Boolean)) {
           return;
         }
-        applyAutorouterIgnoreSelection(netRule, (Boolean) pValue);
-      } else if (pCol == ColumnName.CLEARANCE_CLASS.ordinal()) {
-        if (!(pValue instanceof String newName)) {
+        applyAutorouterIgnoreSelection(netRule, (Boolean) value);
+      } else if (col == ColumnName.CLEARANCE_CLASS.ordinal()) {
+        if (!(value instanceof String newName)) {
           return;
         }
         int newClClassIndex = boardRules.clearanceMatrix.getNo(newName);
@@ -740,25 +741,25 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         }
         netRule.setTraceClearanceClass(newClClassIndex);
       }
-      this.data[pRow][pCol] = pValue;
-      fireTableCellUpdated(pRow, pCol);
+      this.data[row][col] = value;
+      fireTableCellUpdated(row, col);
     }
 
     @Override
-    public boolean isCellEditable(int pRow, int pCol) {
+    public boolean isCellEditable(int row, int col) {
       // the name of the default class is not editable
-      return pRow > 0 || pCol > 0;
+      return row > 0 || col > 0;
     }
 
     @Override
-    public Class<?> getColumnClass(int pCol) {
-      if (pCol == ColumnName.ON_LAYER.ordinal() || pCol == ColumnName.TRACE_WIDTH.ordinal()) {
+    public Class<?> getColumnClass(int col) {
+      if (col == ColumnName.ON_LAYER.ordinal() || col == ColumnName.TRACE_WIDTH.ordinal()) {
         return String.class;
       }
       if (getRowCount() == 0) {
         return Object.class;
       }
-      Object currentEntry = getValueAt(0, pCol);
+      Object currentEntry = getValueAt(0, col);
       if (currentEntry == null) {
         return Object.class;
       }
@@ -779,23 +780,23 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
     public LayerRulesDialog(
         JFrame owner,
-        NetClass pNetClass,
-        GuiBoardManager pBoardHandling,
-        app.freerouting.util.TextManager pTm) {
-      super(owner, pTm.getText("dialog_layer_rules_title"), true);
-      this.netClass = pNetClass;
-      this.boardHandling = pBoardHandling;
-      LayerStructure ls = boardHandling.getRoutingBoard().layerStructure;
+        NetClass netClass,
+        GuiBoardManager boardHandling,
+        app.freerouting.util.TextManager tm) {
+      super(owner, tm.getText("dialog_layer_rules_title"), true);
+      this.netClass = netClass;
+      this.boardHandling = boardHandling;
+      final LayerStructure ls = boardHandling.getRoutingBoard().layerStructure;
 
       setLayout(new BorderLayout(10, 10));
       ((javax.swing.JComponent) getContentPane())
           .setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
       JPanel macroPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 5));
-      JButton btnAll = new JButton(pTm.getText("btn_all"));
-      JButton btnOuter = new JButton(pTm.getText("btn_outer"));
-      JButton btnInner = new JButton(pTm.getText("btn_inner"));
-      JButton btnClear = new JButton(pTm.getText("btn_clear"));
+      JButton btnAll = new JButton(tm.getText("btn_all"));
+      JButton btnOuter = new JButton(tm.getText("btn_outer"));
+      JButton btnInner = new JButton(tm.getText("btn_inner"));
+      JButton btnClear = new JButton(tm.getText("btn_clear"));
       macroPanel.add(btnAll);
       macroPanel.add(btnOuter);
       macroPanel.add(btnInner);
@@ -817,7 +818,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       }
 
       int rows = (int) Math.ceil(allSignalLayers.size() / 2.0);
-      int dynamicHeight = Math.min(300, Math.max(80, rows * 35 + 20));
+      final int dynamicHeight = Math.min(300, Math.max(80, rows * 35 + 20));
 
       btnAll.addActionListener(
           _ -> {
@@ -852,8 +853,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
             }
           });
 
-      JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
-      JButton btnOk = new JButton(pTm.getText("button_ok"));
+      final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
+      JButton btnOk = new JButton(tm.getText("button_ok"));
       btnOk.setPreferredSize(new Dimension(90, 28));
       btnOk.setFont(btnOk.getFont().deriveFont(Font.BOLD));
       btnOk.addActionListener(_ -> save());

@@ -8,10 +8,10 @@ import javax.swing.JMenuItem;
 /** Popup Menu used in the interactive select state. */
 class PopupMenuMain extends PopupMenuDisplay {
 
-  /** Creates a new instance of MainPopupMenu */
-  PopupMenuMain(BoardFrame pBoardFrame) {
-    super(pBoardFrame);
-    TextManager tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
+  /** Creates a new instance of MainPopupMenu. */
+  PopupMenuMain(BoardFrame boardFrame) {
+    super(boardFrame);
+    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
     // add the item for selecting items
 

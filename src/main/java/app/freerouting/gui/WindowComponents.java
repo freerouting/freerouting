@@ -13,10 +13,10 @@ import java.util.TreeSet;
 /** Window displaying the components on the board. */
 public class WindowComponents extends WindowObjectListWithFilter {
 
-  /** Creates a new instance of ComponentsWindow */
-  public WindowComponents(BoardFrame pBoardFrame) {
-    super(pBoardFrame);
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of ComponentsWindow. */
+  public WindowComponents(BoardFrame boardFrame) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("components"));
   }

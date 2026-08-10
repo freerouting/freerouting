@@ -10,22 +10,27 @@ public class AirLineInfo implements ObjectInfoPanel.Printable {
 
   public final AirLine airline;
 
-  public AirLineInfo(AirLine pAirline) {
-    this.airline = pAirline;
+  /**
+   * Creates an information-panel adapter for an incomplete connection.
+   *
+   * @param airline the incomplete connection to display
+   */
+  public AirLineInfo(AirLine airline) {
+    this.airline = airline;
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
-    TextManager tm = new TextManager(AirLine.class, pLocale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(AirLine.class, locale);
 
-    pWindow.appendBold(tm.getText("incomplete"));
-    pWindow.append(" " + tm.getText("net") + " ");
-    pWindow.append(airline.net.name);
-    pWindow.append(" " + tm.getText("from") + " ", "Incomplete Start Item", airline.fromItem);
-    pWindow.append(airline.fromCorner);
-    pWindow.append(" " + tm.getText("to") + " ", "Incomplete End Item", airline.toItem);
-    pWindow.append(airline.toCorner);
-    pWindow.newline();
+    window.appendBold(tm.getText("incomplete"));
+    window.append(" " + tm.getText("net") + " ");
+    window.append(airline.net.name);
+    window.append(" " + tm.getText("from") + " ", "Incomplete Start Item", airline.fromItem);
+    window.append(airline.fromCorner);
+    window.append(" " + tm.getText("to") + " ", "Incomplete End Item", airline.toItem);
+    window.append(airline.toCorner);
+    window.newline();
   }
 
   @Override

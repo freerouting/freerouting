@@ -13,29 +13,29 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-/** Class for interactive construction of a tile shaped obstacle */
+/** Class for interactive construction of a tile-shaped obstacle. */
 public final class TileConstructionState extends CornerItemConstructionState {
 
-  /** Creates a new instance of TileConstructionState */
+  /** Creates a new instance of TileConstructionState. */
   private TileConstructionState(
-      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
-    this.addCorner(pLocation);
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
+    this.addCorner(location);
   }
 
   /**
-   * Returns a new instance of this class If p_logfile != null; the creation of this item is stored
-   * in a logfile
+   * Returns a new instance of this class. The creation of this item is stored in a logfile when
+   * logging is enabled.
    */
   public static TileConstructionState getInstance(
-      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    return new TileConstructionState(pLocation, pParentState, pBoardHandling);
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    return new TileConstructionState(location, parentState, boardHandling);
   }
 
-  /** adds a corner to the tile under construction */
+  /** Adds a corner to the tile under construction. */
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
-    super.leftButtonClicked(pLocation);
+  public InteractiveState leftButtonClicked(FloatPoint location) {
+    super.leftButtonClicked(location);
     removeConcaveCorners();
     hdlg.repaint();
     return this;
@@ -86,7 +86,7 @@ public final class TileConstructionState extends CornerItemConstructionState {
     return this.returnState;
   }
 
-  /** skips concave corners at the end of the cornerList. */
+  /** Skips concave corners at the end of the corner list. */
   private void removeConcaveCorners() {
     IntPoint[] cornerArr = new IntPoint[cornerList.size()];
     Iterator<IntPoint> it = cornerList.iterator();
@@ -138,8 +138,8 @@ public final class TileConstructionState extends CornerItemConstructionState {
   }
 
   /**
-   * removes as many corners at the end of the corner list, so that closing the polygon will not
-   * create a concave corner
+   * Removes corners from the end of the corner list so closing the polygon will not create a
+   * concave corner.
    */
   private void removeConcaveCornersAtClose() {
     addCornerForSnapAngle();

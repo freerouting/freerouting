@@ -5,20 +5,21 @@ import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+/** Creates the information menu for a board frame. */
 public final class BoardMenuInfo extends JMenu {
 
   private final BoardFrame boardFrame;
   private final TextManager tm;
 
-  /** Creates a new instance of BoardLibraryMenu */
-  private BoardMenuInfo(BoardFrame pBoardFrame) {
-    boardFrame = pBoardFrame;
-    tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
+  /** Creates a new instance of BoardLibraryMenu. */
+  private BoardMenuInfo(BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
+    tm = new TextManager(this.getClass(), boardFrame.get_locale());
   }
 
   /** Returns a new info menu for the board frame. */
-  public static BoardMenuInfo getInstance(BoardFrame pBoardFrame) {
-    final BoardMenuInfo infoMenu = new BoardMenuInfo(pBoardFrame);
+  public static BoardMenuInfo getInstance(BoardFrame boardFrame) {
+    final BoardMenuInfo infoMenu = new BoardMenuInfo(boardFrame);
 
     infoMenu.setText(infoMenu.tm.getText("info"));
 

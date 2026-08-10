@@ -34,11 +34,11 @@ public class WindowManualRules extends BoardSavableSubWindow {
   private final JFormattedTextField traceWidthField;
   private boolean keyInputCompleted = true;
 
-  /** Creates a new instance of TraceWidthWindow */
-  public WindowManualRules(BoardFrame pBoardFrame) {
-    setLanguage(pBoardFrame.get_locale());
-    this.boardHandling = pBoardFrame.boardPanel.boardHandling;
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of TraceWidthWindow. */
+  public WindowManualRules(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
+    this.boardHandling = boardFrame.boardPanel.boardHandling;
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
@@ -96,7 +96,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     gridbagConstraints.gridwidth = 2;
     gridbag.setConstraints(widthLabel, gridbagConstraints);
     mainPanel.add(widthLabel);
-    NumberFormat numberFormat = NumberFormat.getInstance(pBoardFrame.get_locale());
+    NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
     numberFormat.setMaximumFractionDigits(7);
     this.traceWidthField = new JFormattedTextField(numberFormat);
     this.traceWidthField.setColumns(7);
@@ -115,7 +115,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
 
     settingsRoutingManualRuleSelectionLayerComboBox =
         new ComboBoxLayer(
-            this.boardHandling.getRoutingBoard().layerStructure, pBoardFrame.get_locale());
+            this.boardHandling.getRoutingBoard().layerStructure, boardFrame.get_locale());
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(
         this.settingsRoutingManualRuleSelectionLayerComboBox, gridbagConstraints);
@@ -157,19 +157,24 @@ public class WindowManualRules extends BoardSavableSubWindow {
     this.repaint();
   }
 
-  public void setTraceWidthField(int pHalfWidth) {
-    if (pHalfWidth < 0) {
+  /**
+   * Updates the trace-width field from a board-unit half-width.
+   *
+   * @param halfWidth trace half-width in board units
+   */
+  public void setTraceWidthField(int halfWidth) {
+    if (halfWidth < 0) {
       this.traceWidthField.setText("");
     } else {
-      Float traceWidth = (float) boardHandling.coordinateTransform.boardToUser(2 * pHalfWidth);
+      Float traceWidth = (float) boardHandling.coordinateTransform.boardToUser(2 * halfWidth);
       this.traceWidthField.setValue(traceWidth);
     }
   }
 
   /** Sets the selected layer to p_layer. */
-  private void setSelectedLayer(ComboBoxLayer.Layer pLayer) {
+  private void setSelectedLayer(ComboBoxLayer.Layer layer) {
     int currHalfWidth;
-    if (pLayer.index == ComboBoxLayer.ALL_LAYER_INDEX) {
+    if (layer.index == ComboBoxLayer.ALL_LAYER_INDEX) {
       // check if the half width is layer_dependent.
       boolean traceWidthsLayerDependent = false;
       int firstHalfWidth = this.boardHandling.getInteractiveSettings().getManualTraceHalfWidth(0);
@@ -185,7 +190,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
       } else {
         currHalfWidth = firstHalfWidth;
       }
-    } else if (pLayer.index == ComboBoxLayer.INNER_LAYER_INDEX) {
+    } else if (layer.index == ComboBoxLayer.INNER_LAYER_INDEX) {
       // check if the half width is layer_dependent on the inner layers.
       boolean traceWidthsLayerDependent = false;
       int firstHalfWidth = this.boardHandling.getInteractiveSettings().getManualTraceHalfWidth(1);
@@ -203,7 +208,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
       }
     } else {
       currHalfWidth =
-          this.boardHandling.getInteractiveSettings().getManualTraceHalfWidth(pLayer.index);
+          this.boardHandling.getInteractiveSettings().getManualTraceHalfWidth(layer.index);
     }
     setTraceWidthField(currHalfWidth);
   }
@@ -239,8 +244,8 @@ public class WindowManualRules extends BoardSavableSubWindow {
   private class TraceWidthFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(KeyEvent pEvt) {
-      if (pEvt.getKeyChar() == '\n') {
+    public void keyTyped(KeyEvent evt) {
+      if (evt.getKeyChar() == '\n') {
         keyInputCompleted = true;
         Object input = traceWidthField.getValue();
         if (!(input instanceof Number)) {
@@ -264,7 +269,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
   private class TraceWidthFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(FocusEvent pEvt) {
+    public void focusLost(FocusEvent evt) {
       if (!keyInputCompleted) {
         // restore the text field.
         setSelectedLayer(settingsRoutingManualRuleSelectionLayerComboBox.getSelectedLayer());
@@ -273,6 +278,6 @@ public class WindowManualRules extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent pEvt) {}
+    public void focusGained(FocusEvent evt) {}
   }
 }

@@ -41,10 +41,10 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   private JTable clearanceTable;
   private ClearanceTableModel clearanceTableModel;
 
-  /** Creates a new instance of ClearanceMatrixWindow */
-  public WindowClearanceMatrix(BoardFrame pBoardFrame) {
-    this.boardFrame = pBoardFrame;
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of ClearanceMatrixWindow. */
+  public WindowClearanceMatrix(BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
@@ -62,7 +62,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
     GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
     rulesClearanceLayerComboBox =
-        new ComboBoxLayer(boardHandling.getRoutingBoard().layerStructure, pBoardFrame.get_locale());
+        new ComboBoxLayer(boardHandling.getRoutingBoard().layerStructure, boardFrame.get_locale());
     northPanel.add(this.rulesClearanceLayerComboBox);
     rulesClearanceLayerComboBox.addActionListener(new ComboBoxListener());
     rulesClearanceLayerComboBox.addActionListener(
@@ -75,7 +75,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
     // Add the clearance table.
 
-    this.centerPanel = addClearanceTable(pBoardFrame);
+    this.centerPanel = addClearanceTable(boardFrame);
 
     mainPanel.add(centerPanel, BorderLayout.CENTER);
 
@@ -110,7 +110,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     this.pack();
   }
 
-  /** Recalculates all displayed values */
+  /** Recalculates all displayed values. */
   @Override
   public void refresh() {
     BasicBoard routingBoard = this.boardFrame.boardPanel.boardHandling.getRoutingBoard();
@@ -122,8 +122,8 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     this.repaint();
   }
 
-  private JPanel addClearanceTable(BoardFrame pBoardFrame) {
-    this.clearanceTableModel = new ClearanceTableModel(pBoardFrame.boardPanel.boardHandling);
+  private JPanel addClearanceTable(BoardFrame boardFrame) {
+    this.clearanceTableModel = new ClearanceTableModel(boardFrame.boardPanel.boardHandling);
     this.clearanceTable = new JTable(clearanceTableModel);
 
     // Put the clearance table into a scroll pane.
@@ -166,11 +166,12 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     result.add(scrollPane, BorderLayout.CENTER);
 
     // add message for german localisation bug
-    if ("de".equalsIgnoreCase(pBoardFrame.get_locale().getLanguage())) {
+    if ("de".equalsIgnoreCase(boardFrame.get_locale().getLanguage())) {
       // Due to a Java system bug, the decimal comma in this table must be entered as a dot.
       JLabel bugLabel =
           new JLabel(
-              "Due to a Java system bug, the decimal comma in this table must be entered as a dot!");
+              "Due to a Java system bug, the decimal comma in this table must be entered "
+                  + "as a dot!");
       result.add(bugLabel, BorderLayout.SOUTH);
     }
     return result;
@@ -186,7 +187,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
         return;
       }
       newName = newName.trim();
-    } while (!is_legal_class_name(newName));
+    } while (!isLegalClassName(newName));
 
     final BasicBoard routingBoard = this.boardFrame.boardPanel.boardHandling.getRoutingBoard();
     final ClearanceMatrix clearanceMatrix = routingBoard.rules.clearanceMatrix;
@@ -295,11 +296,6 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     }
   }
 
-  /** Returns true, if p_string is a legal class name. */
-  private boolean is_legal_class_name(String pString) {
-    return isLegalClassName(pString);
-  }
-
   private int maxNameLength() {
     int result = 1;
     ClearanceMatrix clearanceMatrix =
@@ -321,7 +317,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   private class AddClassListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       addClass();
     }
   }
@@ -329,7 +325,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   private class PruneListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       pruneClearanceMatrix();
     }
   }
@@ -340,8 +336,8 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     private final Object[][] data;
     private final String[] columnNames;
 
-    public ClearanceTableModel(GuiBoardManager pBoardHandling) {
-      ClearanceMatrix clearanceMatrix = pBoardHandling.getRoutingBoard().rules.clearanceMatrix;
+    public ClearanceTableModel(GuiBoardManager boardHandling) {
+      ClearanceMatrix clearanceMatrix = boardHandling.getRoutingBoard().rules.clearanceMatrix;
 
       columnNames = new String[clearanceMatrix.getClassCount() + 1];
       columnNames[0] = tm.getText("class");
@@ -356,8 +352,8 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     }
 
     @Override
-    public String getColumnName(int pCol) {
-      return columnNames[pCol];
+    public String getColumnName(int col) {
+      return columnNames[col];
     }
 
     @Override
@@ -371,19 +367,19 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     }
 
     @Override
-    public Object getValueAt(int pRow, int pCol) {
-      return data[pRow][pCol];
+    public Object getValueAt(int row, int col) {
+      return data[row][col];
     }
 
     @Override
-    public void setValueAt(Object pValue, int pRow, int pCol) {
-      Float parsedValue = parseClearanceTableValue(pValue);
+    public void setValueAt(Object value, int row, int col) {
+      Float parsedValue = parseClearanceTableValue(value);
       if (parsedValue == null) {
         return;
       }
       Number numberValue = parsedValue;
-      int currRow = pRow;
-      int currColumn = pCol - 1;
+      int currRow = row;
+      int currColumn = col - 1;
 
       // check, if there are items on the board assigned to clearance class i or j.
 
@@ -428,10 +424,10 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
         }
       }
 
-      this.data[pRow][pCol] = numberValue;
-      this.data[pCol - 1][pRow + 1] = numberValue;
-      fireTableCellUpdated(pRow, pCol);
-      fireTableCellUpdated(pCol - 1, pRow + 1);
+      this.data[row][col] = numberValue;
+      this.data[col - 1][row + 1] = numberValue;
+      fireTableCellUpdated(row, col);
+      fireTableCellUpdated(col - 1, row + 1);
 
       int boardValue =
           (int)
@@ -446,13 +442,13 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     }
 
     @Override
-    public boolean isCellEditable(int pRow, int pCol) {
-      return pRow > 0 && pCol > 1;
+    public boolean isCellEditable(int row, int col) {
+      return row > 0 && col > 1;
     }
 
     @Override
-    public Class<?> getColumnClass(int pCol) {
-      if (pCol == 0) {
+    public Class<?> getColumnClass(int col) {
+      if (col == 0) {
         return String.class;
       }
       return Float.class;
@@ -462,13 +458,13 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
      * Sets the values of this clearance table to the values of the clearance matrix on the input
      * layer.
      */
-    private void setValues(int pLayer) {
+    private void setValues(int layer) {
       GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
       ClearanceMatrix clearanceMatrix = boardHandling.getRoutingBoard().rules.clearanceMatrix;
 
       for (int i = 0; i < clearanceMatrix.getClassCount(); i++) {
         for (int j = 0; j < clearanceMatrix.getClassCount(); j++) {
-          if (pLayer == ComboBoxLayer.ALL_LAYER_INDEX) {
+          if (layer == ComboBoxLayer.ALL_LAYER_INDEX) {
             // all layers
 
             if (clearanceMatrix.isLayerDependent(i, j)) {
@@ -480,7 +476,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
                           clearanceMatrix.getValue(i, j, 0, false));
               this.data[i][j + 1] = currTableValue;
             }
-          } else if (pLayer == ComboBoxLayer.INNER_LAYER_INDEX) {
+          } else if (layer == ComboBoxLayer.INNER_LAYER_INDEX) {
             // all layers
 
             if (clearanceMatrix.isInnerLayerDependent(i, j)) {
@@ -496,7 +492,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
             float currTableValue =
                 (float)
                     boardHandling.coordinateTransform.boardToUser(
-                        clearanceMatrix.getValue(i, j, pLayer, false));
+                        clearanceMatrix.getValue(i, j, layer, false));
             this.data[i][j + 1] = currTableValue;
           }
         }

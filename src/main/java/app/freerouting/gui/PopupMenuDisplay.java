@@ -6,15 +6,16 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+/** Provides display-related actions for the board context menu. */
 public class PopupMenuDisplay extends JPopupMenu {
 
   protected final BoardPanel boardPanel;
 
-  /** Creates a new instance of PopupMenuDisplay */
-  public PopupMenuDisplay(BoardFrame pBoardFrame) {
-    this.boardPanel = pBoardFrame.boardPanel;
+  /** Creates a new instance of PopupMenuDisplay. */
+  public PopupMenuDisplay(BoardFrame boardFrame) {
+    this.boardPanel = boardFrame.boardPanel;
 
-    TextManager tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
     JMenuItem popupCenterDisplayMenuitem = new JMenuItem();
     popupCenterDisplayMenuitem.setText(tm.getText("center_display"));

@@ -29,10 +29,10 @@ public class ColorManager extends BoardSavableSubWindow {
   private final JTable layersColorTable;
   private final JTable generalColorTable;
 
-  /** Creates a new instance of ColorManager */
-  public ColorManager(BoardFrame pBoardFrame) {
-    setLanguage(pBoardFrame.get_locale());
-    GraphicsContext graphicsContext = pBoardFrame.boardPanel.boardHandling.graphicsContext;
+  /** Creates a new instance of ColorManager. */
+  public ColorManager(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
+    GraphicsContext graphicsContext = boardFrame.boardPanel.boardHandling.graphicsContext;
 
     this.setTitle(tm.getText("colorManager"));
     final JPanel panel = new JPanel();
@@ -45,13 +45,13 @@ public class ColorManager extends BoardSavableSubWindow {
     layersColorTable = new JTable(graphicsContext.itemColorTable);
     layersColorTable.setPreferredScrollableViewportSize(
         new Dimension(tableWidth, itemColorTableHeight));
-    JScrollPane itemScrollPane = initColorTable(layersColorTable, pBoardFrame.get_locale());
+    JScrollPane itemScrollPane = initColorTable(layersColorTable, boardFrame.get_locale());
     panel.add(itemScrollPane, BorderLayout.NORTH);
 
     generalColorTable = new JTable(graphicsContext.otherColorTable);
     generalColorTable.setPreferredScrollableViewportSize(
         new Dimension(tableWidth, textfieldHeight));
-    JScrollPane otherScrollPane = initColorTable(generalColorTable, pBoardFrame.get_locale());
+    JScrollPane otherScrollPane = initColorTable(generalColorTable, boardFrame.get_locale());
     panel.add(otherScrollPane, BorderLayout.SOUTH);
     getContentPane().add(panel, BorderLayout.CENTER);
     this.pack();
@@ -59,18 +59,18 @@ public class ColorManager extends BoardSavableSubWindow {
   }
 
   /** Initializes p_color_table and return the created scrollPane of the color table. */
-  private static JScrollPane initColorTable(JTable pColorTable, Locale pLocale) {
+  private static JScrollPane initColorTable(JTable colorTable, Locale locale) {
     // Create the scroll pane and add the table to it.
-    JScrollPane scrollPane = new JScrollPane(pColorTable);
+    JScrollPane scrollPane = new JScrollPane(colorTable);
     // Set up renderer and editor for the Color columns.
-    pColorTable.setDefaultRenderer(Color.class, new ColorRenderer(true));
+    colorTable.setDefaultRenderer(Color.class, new ColorRenderer(true));
 
-    setUpColorEditor(pColorTable, pLocale);
+    setUpColorEditor(colorTable, locale);
     return scrollPane;
   }
 
   // Set up the editor for the Color cells.
-  private static void setUpColorEditor(JTable pTable, Locale pLocale) {
+  private static void setUpColorEditor(JTable table, Locale locale) {
     // First, set up the colorEditorButton that brings up the dialog.
     final JButton colorEditorButton =
         new JButton("") {
@@ -86,13 +86,13 @@ public class ColorManager extends BoardSavableSubWindow {
     // Now create an editor to encapsulate the colorEditorButton, and
     // set it up as the editor for all Color cells.
     final ColorEditor colorEditor = new ColorEditor(colorEditorButton);
-    pTable.setDefaultEditor(Color.class, colorEditor);
+    table.setDefaultEditor(Color.class, colorEditor);
 
     // Set up the dialog that the colorEditorButton brings up.
     final JColorChooser colorChooser = new JColorChooser();
     ActionListener okListener = _ -> colorEditor.currentColor = colorChooser.getColor();
 
-    TextManager tm = new TextManager(ColorManager.class, pLocale);
+    TextManager tm = new TextManager(ColorManager.class, locale);
     final JDialog dialog =
         JColorChooser.createDialog(
             colorEditorButton, tm.getText("pick_a_color"), true, colorChooser, okListener, null);
@@ -112,9 +112,9 @@ public class ColorManager extends BoardSavableSubWindow {
   }
 
   /** Reassigns the table model variables because they may have changed in p_graphics_context. */
-  public void setTableModels(GraphicsContext pGraphicsContext) {
-    this.layersColorTable.setModel(pGraphicsContext.itemColorTable);
-    this.generalColorTable.setModel(pGraphicsContext.otherColorTable);
+  public void setTableModels(GraphicsContext graphicsContext) {
+    this.layersColorTable.setModel(graphicsContext.itemColorTable);
+    this.generalColorTable.setModel(graphicsContext.otherColorTable);
   }
 
   private static class ColorRenderer extends JLabel implements TableCellRenderer {
@@ -123,31 +123,31 @@ public class ColorManager extends BoardSavableSubWindow {
     Border selectedBorder;
     boolean isBordered;
 
-    public ColorRenderer(boolean pIsBordered) {
+    public ColorRenderer(boolean isBordered) {
       super();
-      this.isBordered = pIsBordered;
+      this.isBordered = isBordered;
       setOpaque(true); // MUST do this for background to show up.
     }
 
     @Override
     public Component getTableCellRendererComponent(
-        JTable pTable,
-        Object pColor,
-        boolean pIsSelected,
-        boolean pHasFocus,
-        int pRow,
-        int pColumn) {
-      setBackground((Color) pColor);
+        JTable table,
+        Object color,
+        boolean isSelected,
+        boolean hasFocus,
+        int row,
+        int column) {
+      setBackground((Color) color);
       if (isBordered) {
-        if (pIsSelected) {
+        if (isSelected) {
           if (selectedBorder == null) {
             selectedBorder =
-                BorderFactory.createMatteBorder(2, 5, 2, 5, pTable.getSelectionBackground());
+                BorderFactory.createMatteBorder(2, 5, 2, 5, table.getSelectionBackground());
           }
           setBorder(selectedBorder);
         } else {
           if (unselectedBorder == null) {
-            unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2, 5, pTable.getBackground());
+            unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2, 5, table.getBackground());
           }
           setBorder(unselectedBorder);
         }

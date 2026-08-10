@@ -41,16 +41,17 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
+/** Displays and filters the nets on the current board. */
 public class WindowNets extends WindowObjectListWithFilter {
 
   private final JLabel netCountLabel;
   private final JCheckBox filterIncompletesCheckbox;
   private final NetInfoTextPane infoPane;
 
-  /** Creates a new instance of NetsWindow */
-  public WindowNets(BoardFrame pBoardFrame) {
-    super(pBoardFrame);
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of NetsWindow. */
+  public WindowNets(BoardFrame boardFrame) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
@@ -116,8 +117,8 @@ public class WindowNets extends WindowObjectListWithFilter {
   }
 
   @Override
-  protected void addToList(Object pObject) {
-    if (pObject instanceof Net net) {
+  protected void addToList(Object object) {
+    if (object instanceof Net net) {
       if (this.filterIncompletesCheckbox.isSelected()) {
         RatsNest ratsnest = boardFrame.boardPanel.boardHandling.getRatsnest();
         if (ratsnest.incompleteCount(net.netNumber) == 0) {
@@ -125,7 +126,7 @@ public class WindowNets extends WindowObjectListWithFilter {
         }
       }
     }
-    super.addToList(pObject);
+    super.addToList(object);
   }
 
   @Override
@@ -248,7 +249,7 @@ public class WindowNets extends WindowObjectListWithFilter {
   private class AssignClassListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       List<Object> selectedNets = list.getSelectedValuesList();
       if (selectedNets.isEmpty()) {
         return;
@@ -268,11 +269,11 @@ public class WindowNets extends WindowObjectListWithFilter {
               null,
               classArr,
               classArr[0]);
-      if (!(selectedValue instanceof NetClass selected_class)) {
+      if (!(selectedValue instanceof NetClass selectedClass)) {
         return;
       }
       for (int i = 0; i < selectedNets.size(); i++) {
-        ((Net) selectedNets.get(i)).setClass(selected_class);
+        ((Net) selectedNets.get(i)).setClass(selectedClass);
       }
       boardFrame.refreshWindows();
     }
@@ -294,10 +295,10 @@ public class WindowNets extends WindowObjectListWithFilter {
       StyleConstants.setBold(boldStyle, true);
     }
 
-    private boolean append(String pString, String pStyle) {
+    private boolean appendStyledText(String string, String style) {
       StyledDocument document = this.getStyledDocument();
       try {
-        document.insertString(document.getLength(), pString, document.getStyle(pStyle));
+        document.insertString(document.getLength(), string, document.getStyle(style));
       } catch (BadLocationException _) {
         return false;
       }
@@ -305,46 +306,54 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
 
     @Override
-    public boolean append(String pString) {
-      return append(pString, "normal");
+    public boolean appendBold(String string) {
+      return appendStyledText(string, "bold");
     }
 
     @Override
-    public boolean appendBold(String pString) {
-      return append(pString, "bold");
+    public boolean appendWithoutTransforming(double value) {
+      Float formattedValue = (float) value;
+      return append(numberFormat.format(formattedValue));
     }
 
     @Override
-    public boolean append(double pValue) {
+    public boolean append(String string) {
+      return appendStyledText(string, "normal");
+    }
+
+    @Override
+    public boolean append(double value) {
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
-      Float value = (float) coordinateTransform.boardToUser(pValue);
-      return append(numberFormat.format(value));
+      Float userValue = (float) coordinateTransform.boardToUser(value);
+      return append(numberFormat.format(userValue));
     }
 
     @Override
-    public boolean appendWithoutTransforming(double pValue) {
-      Float value = (float) pValue;
-      return append(numberFormat.format(value));
-    }
-
-    @Override
-    public boolean append(FloatPoint pPoint) {
+    public boolean append(FloatPoint point) {
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
-      FloatPoint transformedPoint = coordinateTransform.boardToUser(pPoint);
+      FloatPoint transformedPoint = coordinateTransform.boardToUser(point);
       return append(transformedPoint.toString(boardFrame.get_locale()));
     }
 
     @Override
-    public boolean append(Shape pShape, Locale pLocale) {
+    public boolean append(Shape shape, Locale locale) {
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
-      PrintableShape transformedShape = coordinateTransform.boardToUser(pShape, pLocale);
+      PrintableShape transformedShape = coordinateTransform.boardToUser(shape, locale);
       if (transformedShape == null) {
         return false;
       }
       return append(transformedShape.toString());
+    }
+
+    @Override
+    public boolean append(
+        String buttonName, String windowTitle, ObjectInfoPanel.Printable object) {
+      Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>();
+      objectList.add(object);
+      return appendObjects(buttonName, windowTitle, objectList);
     }
 
     @Override
@@ -358,24 +367,16 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
 
     @Override
-    public boolean append(
-        String pButtonName, String pWindowTitle, ObjectInfoPanel.Printable pObject) {
-      Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>();
-      objectList.add(pObject);
-      return appendObjects(pButtonName, pWindowTitle, objectList);
-    }
-
-    @Override
-    public boolean appendItems(String pButtonName, String pWindowTitle, Collection<Item> pItems) {
-      Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>(pItems);
-      return appendObjects(pButtonName, pWindowTitle, objectList);
+    public boolean appendItems(String buttonName, String windowTitle, Collection<Item> items) {
+      Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>(items);
+      return appendObjects(buttonName, windowTitle, objectList);
     }
 
     @Override
     public boolean appendObjects(
-        String pButtonName, String pWindowTitle, Collection<ObjectInfoPanel.Printable> pObjects) {
+        String buttonName, String windowTitle, Collection<ObjectInfoPanel.Printable> objects) {
       JButton objectInfoButton = new JButton();
-      objectInfoButton.setText(pButtonName);
+      objectInfoButton.setText(buttonName);
       objectInfoButton.setBorderPainted(false);
       objectInfoButton.setContentAreaFilled(false);
       objectInfoButton.setMargin(new Insets(0, 0, 0, 0));
@@ -385,7 +386,7 @@ public class WindowNets extends WindowObjectListWithFilter {
       objectInfoButton.addActionListener(
           e -> {
             Collection<WindowObjectInfo.Printable> infoObjects = new LinkedList<>();
-            for (ObjectInfoPanel.Printable p : pObjects) {
+            for (ObjectInfoPanel.Printable p : objects) {
               if (p instanceof WindowObjectInfo.Printable wp) {
                 infoObjects.add(wp);
               }
@@ -394,7 +395,7 @@ public class WindowNets extends WindowObjectListWithFilter {
                 boardFrame.boardPanel.boardHandling.coordinateTransform;
             WindowObjectInfo newWindow =
                 WindowObjectInfo.display(
-                    pWindowTitle, infoObjects, boardFrame, coordinateTransform);
+                    windowTitle, infoObjects, boardFrame, coordinateTransform);
             Point loc = getLocation();
             Point newWindowLocation = new Point((int) (loc.getX() + 30), (int) (loc.getY() + 30));
             newWindow.setLocation(newWindowLocation);
@@ -406,12 +407,12 @@ public class WindowNets extends WindowObjectListWithFilter {
       StyledDocument document = this.getStyledDocument();
       Style defaultStyle =
           StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
-      Style buttonStyle = document.addStyle(pButtonName, defaultStyle);
+      Style buttonStyle = document.addStyle(buttonName, defaultStyle);
       StyleConstants.setAlignment(buttonStyle, StyleConstants.ALIGN_CENTER);
       StyleConstants.setComponent(buttonStyle, objectInfoButton);
 
       try {
-        document.insertString(document.getLength(), pButtonName, buttonStyle);
+        document.insertString(document.getLength(), buttonName, buttonStyle);
       } catch (BadLocationException _) {
         return false;
       }

@@ -11,19 +11,19 @@ public class PopupMenuCopy extends PopupMenuDisplay {
 
   private final PopupMenuChangeLayer changeLayerMenu;
 
-  /** Creates a new instance of CopyPopupMenu */
-  PopupMenuCopy(BoardFrame pBoardFrame) {
-    super(pBoardFrame);
+  /** Creates a new instance of CopyPopupMenu. */
+  PopupMenuCopy(BoardFrame boardFrame) {
+    super(boardFrame);
     LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
 
     if (layerStructure.arr.length > 0) {
-      changeLayerMenu = new PopupMenuChangeLayer(pBoardFrame);
+      changeLayerMenu = new PopupMenuChangeLayer(boardFrame);
       this.add(changeLayerMenu, 0);
     } else {
       changeLayerMenu = null;
     }
 
-    TextManager tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
     JMenuItem popupCopyInsertMenuitem = new JMenuItem();
     popupCopyInsertMenuitem.setText(tm.getText("insert"));
@@ -50,9 +50,9 @@ public class PopupMenuCopy extends PopupMenuDisplay {
   }
 
   /** Disables the p_no-th item in the changeLayerMenu. */
-  void disableLayerItem(int pNo) {
+  void disableLayerItem(int no) {
     if (this.changeLayerMenu != null) {
-      this.changeLayerMenu.disableItem(pNo);
+      this.changeLayerMenu.disableItem(no);
     }
   }
 }

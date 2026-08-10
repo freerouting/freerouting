@@ -11,15 +11,15 @@ public final class BoardMenuRules extends JMenu {
   private final BoardFrame boardFrame;
   private final TextManager tm;
 
-  /** Creates a new instance of BoardRulesMenu */
-  private BoardMenuRules(BoardFrame pBoardFrame) {
-    boardFrame = pBoardFrame;
-    tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
+  /** Creates a new instance of BoardRulesMenu. */
+  private BoardMenuRules(BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
+    tm = new TextManager(this.getClass(), boardFrame.get_locale());
   }
 
   /** Returns a new windows menu for the board frame. */
-  public static BoardMenuRules getInstance(BoardFrame pBoardFrame) {
-    final BoardMenuRules rulesMenu = new BoardMenuRules(pBoardFrame);
+  public static BoardMenuRules getInstance(BoardFrame boardFrame) {
+    final BoardMenuRules rulesMenu = new BoardMenuRules(boardFrame);
 
     rulesMenu.setText(rulesMenu.tm.getText("rules"));
 

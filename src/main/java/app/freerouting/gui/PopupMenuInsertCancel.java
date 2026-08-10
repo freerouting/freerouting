@@ -10,11 +10,11 @@ class PopupMenuInsertCancel extends JPopupMenu {
 
   private final BoardPanel boardPanel;
 
-  /** Creates a new instance of CompleteCancelPopupMenu */
-  PopupMenuInsertCancel(BoardFrame pBoardFrame) {
-    this.boardPanel = pBoardFrame.boardPanel;
+  /** Creates a new instance of CompleteCancelPopupMenu. */
+  PopupMenuInsertCancel(BoardFrame boardFrame) {
+    this.boardPanel = boardFrame.boardPanel;
 
-    TextManager tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
     JMenuItem popupInsertMenuitem = new JMenuItem();
     popupInsertMenuitem.setText(tm.getText("insert"));

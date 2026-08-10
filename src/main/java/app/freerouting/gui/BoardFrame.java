@@ -73,7 +73,7 @@ public class BoardFrame extends WindowBase {
 
   public static volatile BoardFrame activeFrame;
 
-  /** The windows above stored in an array */
+  /** The windows above stored in an array. */
   static final int SUBWINDOW_COUNT = 24;
 
   static final String GUI_DEFAULTS_FILE_NAME = "gui_defaults.par";
@@ -152,8 +152,8 @@ public class BoardFrame extends WindowBase {
    * Status bar.
    */
   public BoardFrame(
-      RoutingJob pDesign, GlobalSettings globalSettings, SettingsMerger settingsMerger) {
-    this(pDesign, new BoardObserverAdaptor(), globalSettings, settingsMerger);
+      RoutingJob design, GlobalSettings globalSettings, SettingsMerger settingsMerger) {
+    this(design, new BoardObserverAdaptor(), globalSettings, settingsMerger);
   }
 
   /** Creates new form BoardFrame. */
@@ -246,7 +246,8 @@ public class BoardFrame extends WindowBase {
                   break;
                 default:
                   FRLogger.warn(
-                      "Loading the board failed, because the selected file format is not supported.");
+                      "Loading the board failed, because the selected file format is not "
+                          + "supported.");
                   break;
               }
             }
@@ -900,7 +901,7 @@ public class BoardFrame extends WindowBase {
    * specctra dsn / kicad json file. Returns false, if the file is invalid.
    */
   boolean load(
-      InputStream inputStream, FileFormat format, JTextField pMessageField, RoutingJob routingJob) {
+      InputStream inputStream, FileFormat format, JTextField messageField, RoutingJob routingJob) {
     Point viewportPosition = null;
     BoardReadResult readResult = null;
 
@@ -1000,7 +1001,7 @@ public class BoardFrame extends WindowBase {
       return restoreTutorialBoardAfterFailedLoad(null);
     }
 
-    boolean guiUpdated = updateGui(format, readResult, viewportPosition, pMessageField, false);
+    boolean guiUpdated = updateGui(format, readResult, viewportPosition, messageField, false);
     if (!guiUpdated) {
       return restoreTutorialBoardAfterFailedLoad(null);
     }
@@ -1011,16 +1012,16 @@ public class BoardFrame extends WindowBase {
       FileFormat format,
       BoardReadResult readResult,
       Point viewportPosition,
-      JTextField pMessageField,
+      JTextField messageField,
       boolean deferHeavyWork) {
     boolean isTextDsnOrJson = format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON;
     if (isTextDsnOrJson) {
       if (!(readResult instanceof BoardReadResult.Success)) {
-        if (pMessageField != null) {
+        if (messageField != null) {
           if (readResult instanceof BoardReadResult.OutlineMissing) {
-            pMessageField.setText(tm.getText("error_dsn_outline_missing"));
+            messageField.setText(tm.getText("error_dsn_outline_missing"));
           } else {
-            pMessageField.setText(tm.getText("error_dsn_read_failed"));
+            messageField.setText(tm.getText("error_dsn_read_failed"));
           }
         }
         this.updateTexts();
@@ -1084,8 +1085,8 @@ public class BoardFrame extends WindowBase {
       FileFormat format,
       BoardReadResult readResult,
       Point viewportPosition,
-      JTextField pMessageField) {
-    return updateGui(format, readResult, viewportPosition, pMessageField, false);
+      JTextField messageField) {
+    return updateGui(format, readResult, viewportPosition, messageField, false);
   }
 
   /**
@@ -1208,13 +1209,18 @@ public class BoardFrame extends WindowBase {
     return true;
   }
 
-  public File showSaveAsDialog(String pDefaultDirectory, BoardFileDetails output) {
-    var p_parent = this;
-
+  /**
+   * Displays the save-file chooser using the current output format.
+   *
+   * @param defaultDirectory the directory used when no output file has been selected
+   * @param output the output file details and format
+   * @return the file selected by the user, or {@code null} when the dialog is cancelled
+   */
+  public File showSaveAsDialog(String defaultDirectory, BoardFileDetails output) {
     String directoryName;
     var outputFile = output.getFile();
     if (outputFile == null) {
-      directoryName = pDefaultDirectory;
+      directoryName = defaultDirectory;
     } else {
       directoryName = outputFile.getParent();
     }
@@ -1274,17 +1280,18 @@ public class BoardFrame extends WindowBase {
       fileChooser.setSelectedFile(output.getFile());
     }
 
-    fileChooser.showSaveDialog(p_parent);
+    fileChooser.showSaveDialog(this);
 
     return fileChooser.getSelectedFile();
   }
 
   /** Saves the board rule to file, so that they can be reused later on. */
-  private boolean saveRulesAs(File rulesFile, String designName, GuiBoardManager pBoardHandling) {
+  private boolean saveRulesAs(
+      File rulesFile, String designName, GuiBoardManager boardHandling) {
     FRLogger.info("Saving '" + rulesFile.getPath() + "'...");
 
     try (OutputStream outputStream = new FileOutputStream(rulesFile)) {
-      RulesWriter.write(pBoardHandling.getRoutingBoard(), outputStream, designName);
+      RulesWriter.write(boardHandling.getRoutingBoard(), outputStream, designName);
       return true;
     } catch (IOException e) {
       FRLogger.error("unable to save rules file for design '" + designName + "'", e);
@@ -1292,6 +1299,12 @@ public class BoardFrame extends WindowBase {
     }
   }
 
+  /**
+   * Saves the current routing session as an Eagle script file.
+   *
+   * @param outputFile the destination script file
+   * @param designName the design name written into the intermediate session
+   */
   public void saveAsEagleScriptScr(File outputFile, String designName) {
     ByteArrayOutputStream sesOutputStream = new ByteArrayOutputStream();
     if (!boardPanel.boardHandling.saveAsSpecctraSessionSes(sesOutputStream, designName)) {
@@ -1528,14 +1541,15 @@ public class BoardFrame extends WindowBase {
     this.aboutWindow.setLocation(200, 200);
   }
 
-  /** Returns the currently used locale for the language dependent output. */
+  /** Returns the locale used for language-dependent output. */
+  // CHECKSTYLE.SUPPRESS: MethodName for +1 lines
   public Locale get_locale() {
     return this.locale;
   }
 
-  /** Sets the background of the board panel */
-  public void setBoardBackground(Color pColor) {
-    this.boardPanel.setBackground(pColor);
+  /** Sets the background color of the board panel. */
+  public void setBoardBackground(Color color) {
+    this.boardPanel.setBackground(color);
   }
 
   /** Refreshes all displayed coordinates after the user unit has changed. */
@@ -1547,7 +1561,7 @@ public class BoardFrame extends WindowBase {
     }
   }
 
-  /** Sets the mode value on mode selection component of the toolbar */
+  /** Sets the mode value on mode selection component of the toolbar. */
   public void setToolbarModeSelectionPanelValue(InteractiveState interactiveState) {
     this.toolbarPanel.setModeSelectionPanelValue(interactiveState);
   }
@@ -1566,6 +1580,7 @@ public class BoardFrame extends WindowBase {
     }
   }
 
+  /** Registers a listener that is notified after a board has been loaded. */
   public void addBoardLoadedEventListener(Consumer<RoutingBoard> listener) {
     boardLoadedEventListeners.add(listener);
   }
@@ -1578,6 +1593,7 @@ public class BoardFrame extends WindowBase {
     return permanentSubwindows;
   }
 
+  /** Registers a listener that is notified after a board has been saved. */
   public void addReadOnlyEventListener(Consumer<RoutingBoard> listener) {
     boardSavedEventListeners.add(listener);
   }
@@ -1586,15 +1602,13 @@ public class BoardFrame extends WindowBase {
    * Loads a file that was dropped onto the board panel. Follows the same pattern as the File menu
    * open operation. Shows a save confirmation dialog if the current board has unsaved changes.
    *
-   * @param pFile The file to load
-   * @param pFormat The format of the file (DSN or KiCad design JSON)
+   * @param file the file to load
+   * @param format the format of the file (DSN or KiCad design JSON)
    */
-  public void loadDroppedFile(File pFile, FileFormat pFormat) {
-    if (pFile == null) {
+  public void loadDroppedFile(File file, FileFormat format) {
+    if (file == null) {
       return;
     }
-
-    FileFormat format = pFormat;
 
     // Validate format is supported
     if (format != FileFormat.DSN && format != FileFormat.KICAD_DESIGN_JSON) {
@@ -1615,7 +1629,7 @@ public class BoardFrame extends WindowBase {
     RoutingJobScheduler.getInstance().clearJobs(sessionId);
 
     try {
-      routingJob.setInput(pFile);
+      routingJob.setInput(file);
     } catch (Exception e) {
       FRLogger.error("Error setting input for dropped file", e);
       return;
@@ -1644,7 +1658,7 @@ public class BoardFrame extends WindowBase {
       // Read file content
       byte[] fileContent;
       try {
-        fileContent = Files.readAllBytes(pFile.toPath());
+        fileContent = Files.readAllBytes(file.toPath());
       } catch (IOException e) {
         FRLogger.error("Could not read dropped file content", e);
         return;
@@ -1661,17 +1675,17 @@ public class BoardFrame extends WindowBase {
   /**
    * Convenience overload that auto-detects format.
    *
-   * @param pFile The file to load
+   * @param file the file to load
    */
-  public void loadDroppedFile(File pFile) {
-    if (pFile == null) {
+  public void loadDroppedFile(File file) {
+    if (file == null) {
       return;
     }
 
-    FileFormat format = RoutingJob.getFileFormat(pFile.toPath());
+    FileFormat format = RoutingJob.getFileFormat(file.toPath());
     if (format == FileFormat.UNKNOWN) {
       try {
-        byte[] content = Files.readAllBytes(pFile.toPath());
+        byte[] content = Files.readAllBytes(file.toPath());
         format = RoutingJob.getFileFormat(content);
       } catch (IOException e) {
         FRLogger.error("Could not read dropped file for format detection", e);
@@ -1679,16 +1693,16 @@ public class BoardFrame extends WindowBase {
       }
     }
 
-    loadDroppedFile(pFile, format);
+    loadDroppedFile(file, format);
   }
 
   /**
    * Shows a save confirmation dialog if the board has been modified.
    *
-   * @param pParent The parent frame for the dialog
+   * @param parent the parent frame for the dialog
    * @return true if loading should proceed, false if cancelled
    */
-  private boolean confirmSaveBeforeLoad(BoardFrame pParent) {
+  private boolean confirmSaveBeforeLoad(BoardFrame parent) {
     if (boardPanel == null || boardPanel.boardHandling == null) {
       return true;
     }
@@ -1710,7 +1724,7 @@ public class BoardFrame extends WindowBase {
                 options,
                 options[2] // Default to "Cancel"
                 );
-        JDialog dialog = optionPane.createDialog(pParent, tm.getText("confirm_save_title"));
+        JDialog dialog = optionPane.createDialog(parent, tm.getText("confirm_save_title"));
         dialog.setVisible(true);
 
         Object selectedValue = optionPane.getValue();

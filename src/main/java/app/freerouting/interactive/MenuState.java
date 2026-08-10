@@ -13,9 +13,9 @@ import javax.swing.JPopupMenu;
 /** Common base class for the main menus, which can be selected in the toolbar. */
 public class MenuState extends InteractiveState {
 
-  /** Creates a new instance of MenuState */
-  MenuState(GuiBoardManager pBoardHandle) {
-    super(null, pBoardHandle);
+  /** Creates a new instance of MenuState. */
+  MenuState(GuiBoardManager boardHandle) {
+    super(null, boardHandle);
     this.returnState = this;
   }
 
@@ -25,12 +25,12 @@ public class MenuState extends InteractiveState {
   }
 
   /**
-   * Selects items at p_location. Returns a new instance of SelectedItemState with the selected
-   * items, if something was selected.
+   * Selects items at the specified location. Returns a new instance of InspectedItemState with the
+   * selected items if something was selected.
    */
-  public InteractiveState selectItems(FloatPoint pLocation) {
+  public InteractiveState selectItems(FloatPoint location) {
     this.hdlg.displayLayerMessage();
-    Set<Item> pickedItems = hdlg.pickItems(pLocation);
+    Set<Item> pickedItems = hdlg.pickItems(location);
     boolean somethingFound = !pickedItems.isEmpty();
     InteractiveState result;
     if (somethingFound) {
@@ -43,18 +43,19 @@ public class MenuState extends InteractiveState {
     return result;
   }
 
-  public InteractiveState swapPins(FloatPoint pLocation) {
+  /** Starts pin swapping for the pin selected at the given location. */
+  public InteractiveState swapPins(FloatPoint location) {
     ItemSelectionFilter selectionFilter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
-    Collection<Item> pickedItems = hdlg.pickItems(pLocation, selectionFilter);
+    Collection<Item> pickedItems = hdlg.pickItems(location, selectionFilter);
     InteractiveState result = this;
     if (!pickedItems.isEmpty()) {
       Item firstItem = pickedItems.iterator().next();
-      if (!(firstItem instanceof Pin selected_pin)) {
+      if (!(firstItem instanceof Pin selectedPin)) {
         FRLogger.warn("MenuState.swap_pin: Pin expected");
         return this;
       }
-      result = PinSwapState.getInstance(selected_pin, this, hdlg);
+      result = PinSwapState.getInstance(selectedPin, this, hdlg);
     } else {
       hdlg.screenMessages.setStatusMessage(tm.getText("no_pin_selected"));
     }
@@ -64,9 +65,9 @@ public class MenuState extends InteractiveState {
 
   /** Action to be taken when a key shortcut is pressed. */
   @Override
-  public InteractiveState keyTyped(char pKeyChar) {
+  public InteractiveState keyTyped(char keyChar) {
     InteractiveState currReturnState = this;
-    switch (pKeyChar) {
+    switch (keyChar) {
       case 'b' -> hdlg.redo();
       case 'd' -> currReturnState = DragMenuState.getInstance(hdlg);
       case 'e' ->
@@ -110,7 +111,7 @@ public class MenuState extends InteractiveState {
           hdlg.setCurrentLayer(currentLayerNo);
         }
       }
-      default -> currReturnState = super.keyTyped(pKeyChar);
+      default -> currReturnState = super.keyTyped(keyChar);
     }
     return currReturnState;
   }

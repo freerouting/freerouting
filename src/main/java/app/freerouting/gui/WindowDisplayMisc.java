@@ -33,11 +33,11 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private final JRadioButton appearanceMiscHorizontalMirrorCheckbox;
   private final JSlider autoLayerDimSlider;
 
-  /** Creates a new instance of DisplayMiscWindow */
-  public WindowDisplayMisc(BoardFrame pBoardFrame) {
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of DisplayMiscWindow. */
+  public WindowDisplayMisc(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
 
-    this.panel = pBoardFrame.boardPanel;
+    this.panel = boardFrame.boardPanel;
     this.setTitle(tm.getText("title"));
 
     // Create main panel
@@ -262,7 +262,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class SmallCursorListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       panel.setCustomCrosshairCursor(false);
     }
   }
@@ -270,7 +270,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class BigCursorListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       panel.setCustomCrosshairCursor(true);
     }
   }
@@ -278,7 +278,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class RotationNoneListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
       coordinateTransform.setRotation(0);
@@ -289,7 +289,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class Rotation90Listener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
       coordinateTransform.setRotation(0.5 * Math.PI);
@@ -300,7 +300,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class Rotation180Listener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
       coordinateTransform.setRotation(Math.PI);
@@ -311,7 +311,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class Rotation270Listener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
       coordinateTransform.setRotation(1.5 * Math.PI);
@@ -322,7 +322,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class MirrorNoneListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
       if (!(coordinateTransform.isMirrorLeftRight() || coordinateTransform.isMirrorTopBottom())) {
@@ -340,7 +340,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class VerticalMirrorListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
       if (coordinateTransform.isMirrorLeftRight()) {
@@ -358,7 +358,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private class HorizontalMirrorListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       CoordinateTransform coordinateTransform =
           panel.boardHandling.graphicsContext.coordinateTransform;
       if (coordinateTransform.isMirrorTopBottom()) {

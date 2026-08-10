@@ -25,14 +25,14 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-/** Abstract class for windows displaying a list of objects */
+/** Abstract class for windows displaying a list of objects. */
 public abstract class WindowObjectList extends BoardSavableSubWindow {
 
   protected static final int DEFAULT_TABLE_SIZE = 20;
   protected final BoardFrame boardFrame;
   protected final JPanel southPanel;
 
-  /** The subwindows with information about selected object */
+  /** The subwindows with information about selected object. */
   protected final Collection<WindowObjectInfo> subwindows = new LinkedList<>();
 
   protected final JPanel mainPanel;
@@ -42,10 +42,10 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   private JScrollPane listScrollPane;
   private DefaultListModel<Object> listModel;
 
-  /** Creates a new instance of ObjectListWindow */
-  protected WindowObjectList(BoardFrame pBoardFrame) {
-    setLanguage(pBoardFrame.get_locale());
-    this.boardFrame = pBoardFrame;
+  /** Creates a new instance of ObjectListWindow. */
+  protected WindowObjectList(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
+    this.boardFrame = boardFrame;
 
     // create main panel
     this.mainPanel = new JPanel();
@@ -131,30 +131,35 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
         });
   }
 
+  /** Returns whether the information button should be displayed. */
   protected boolean showInfoButton() {
     return true;
   }
 
+  /** Returns whether the select button should be displayed. */
   protected boolean showSelectButton() {
     return true;
   }
 
+  /** Returns whether the invert button should be displayed. */
   protected boolean showInvertButton() {
     return true;
   }
 
+  /** Returns whether the recalculate button should be displayed. */
   protected boolean showRecalculateButton() {
     return true;
   }
 
   @Override
-  public void setVisible(boolean pValue) {
-    if (pValue) {
+  public void setVisible(boolean value) {
+    if (value) {
       recalculate();
     }
-    super.setVisible(pValue);
+    super.setVisible(value);
   }
 
+  /** Rebuilds the list contents and updates the list controls. */
   protected void recalculate() {
     boolean firstTime = this.list == null;
     if (firstTime) {
@@ -213,18 +218,24 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     super.dispose();
   }
 
-  protected void addToList(Object pObject) {
-    this.listModel.addElement(pObject);
+  /**
+   * Adds an object to the displayed list.
+   *
+   * @param object the object to add
+   */
+  protected void addToList(Object object) {
+    this.listModel.addElement(object);
   }
 
   /** Fills the list with the objects to display. */
   protected abstract void fillList();
 
+  /** Selects the board instances represented by the selected list entries. */
   protected abstract void selectInstances();
 
   /** Saves also the filter string to disk. */
   @Override
-  public void save(ObjectOutputStream pObjectStream) {
+  public void save(ObjectOutputStream objectStream) {
     int[] selectedIndices;
     if (this.list != null) {
       selectedIndices = this.list.getSelectedIndices();
@@ -232,36 +243,36 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
       selectedIndices = new int[0];
     }
     try {
-      pObjectStream.writeObject(selectedIndices);
+      objectStream.writeObject(selectedIndices);
     } catch (IOException e) {
       FRLogger.error("WindowObjectList.save: save failed", e);
     }
-    super.save(pObjectStream);
+    super.save(objectStream);
   }
 
   @Override
-  public boolean read(ObjectInputStream pObjectStream) {
+  public boolean read(ObjectInputStream objectStream) {
     int[] savedSelectedIndices;
     try {
-      savedSelectedIndices = (int[]) pObjectStream.readObject();
+      savedSelectedIndices = (int[]) objectStream.readObject();
     } catch (Exception e) {
       FRLogger.error("WindowObjectListWithFilter.read: read failed", e);
       return false;
     }
-    boolean result = super.read(pObjectStream);
+    boolean result = super.read(objectStream);
     if (this.list != null && savedSelectedIndices.length > 0) {
       this.list.setSelectedIndices(savedSelectedIndices);
     }
     return result;
   }
 
-  /** Listens to the button for showing the selected padstacks */
+  /** Listens to the button for showing the selected padstacks. */
   private class ShowListener implements ActionListener {
 
     private static final int WINDOW_OFFSET = 30;
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       List<Object> selectedObjects = list.getSelectedValuesList();
       if (selectedObjects.isEmpty()) {
         return;
@@ -283,20 +294,20 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     }
   }
 
-  /** Listens to the button for showing the selected incompletes */
+  /** Listens to the button for showing the selected incompletes. */
   private class SelectListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       selectInstances();
     }
   }
 
-  /** Listens to the button for inverting the selection */
+  /** Listens to the button for inverting the selection. */
   private class InvertListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       if (listModel == null) {
         return;
       }
@@ -312,11 +323,11 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     }
   }
 
-  /** Listens to the button for recalculating the content of the window */
+  /** Listens to the button for recalculating the content of the window. */
   private class RecalculateListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       recalculate();
     }
   }

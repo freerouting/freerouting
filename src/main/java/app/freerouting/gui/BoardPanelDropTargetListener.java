@@ -35,10 +35,10 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
   /**
    * Creates a new drop target listener for the board panel.
    *
-   * @param pBoardPanel The board panel to attach the drop target to
+   * @param boardPanel The board panel to attach the drop target to
    */
-  public BoardPanelDropTargetListener(BoardPanel pBoardPanel) {
-    this.boardPanel = pBoardPanel;
+  public BoardPanelDropTargetListener(BoardPanel boardPanel) {
+    this.boardPanel = boardPanel;
   }
 
   @Override
@@ -123,9 +123,9 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
    * Processes the list of dropped files. Only the first valid DSN or JSON file is loaded.
    * Additional valid files are logged for future multi-board support.
    *
-   * @param pFiles The list of dropped files
+   * @param files The list of dropped files
    */
-  private void processDroppedFiles(List<File> pFiles) {
+  private void processDroppedFiles(List<File> files) {
     boolean fileLoaded = false;
 
     if (boardPanel == null || boardPanel.boardFrame == null) {
@@ -133,8 +133,8 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
       return;
     }
 
-    for (int i = 0; i < pFiles.size(); i++) {
-      File file = pFiles.get(i);
+    for (int i = 0; i < files.size(); i++) {
+      File file = files.get(i);
 
       if (file == null) {
         continue;
@@ -198,14 +198,14 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
    * Sets the visual feedback state of the board panel. Changes the background to grayish to
    * indicate drop target.
    *
-   * @param pActive Whether the drag is active
+   * @param active Whether the drag is active
    */
-  private void setDragFeedback(boolean pActive) {
+  private void setDragFeedback(boolean active) {
     if (boardPanel == null) {
       return;
     }
 
-    if (pActive) {
+    if (active) {
       // Show ghosting overlay effect
       isGhostingActive = true;
       boardPanel.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));

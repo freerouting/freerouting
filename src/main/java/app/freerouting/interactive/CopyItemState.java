@@ -30,66 +30,66 @@ public final class CopyItemState extends InteractiveState {
   private boolean layerChanged;
   private Point previousPosition;
 
-  /** Creates a new instance of CopyItemState */
+  /** Creates a new instance of CopyItemState. */
   private CopyItemState(
-      FloatPoint pLocation,
-      Collection<Item> pItemList,
-      InteractiveState pParentState,
-      GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
-    itemList = new LinkedList<>();
+      FloatPoint location,
+      Collection<Item> itemList,
+      InteractiveState parentState,
+      GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
+    this.itemList = new LinkedList<>();
 
-    startPosition = pLocation.round();
-    currentLayer = pBoardHandling.getInteractiveSettings().getLayer();
+    startPosition = location.round();
+    currentLayer = boardHandling.getInteractiveSettings().getLayer();
     layerChanged = false;
     currentPosition = startPosition;
     previousPosition = currentPosition;
-    for (Item currItem : pItemList) {
+    for (Item currItem : itemList) {
       if (currItem instanceof DrillItem || currItem instanceof ObstacleArea) {
         Item newItem = currItem.copy(0);
-        itemList.add(newItem);
+        this.itemList.add(newItem);
       }
     }
   }
 
-  /** Returns a new instance of CopyItemState or null, if p_item_list is empty. */
+  /** Returns a new instance of CopyItemState, or null if the item list is empty. */
   public static CopyItemState getInstance(
-      FloatPoint pLocation,
-      Collection<Item> pItemList,
-      InteractiveState pParentState,
-      GuiBoardManager pBoardHandling) {
-    if (pItemList.isEmpty()) {
+      FloatPoint location,
+      Collection<Item> itemList,
+      InteractiveState parentState,
+      GuiBoardManager boardHandling) {
+    if (itemList.isEmpty()) {
       return null;
     }
-    pBoardHandling.removeRatsnest(); // copying an item may change the connectivity.
-    return new CopyItemState(pLocation, pItemList, pParentState, pBoardHandling);
+    boardHandling.removeRatsnest(); // copying an item may change the connectivity.
+    return new CopyItemState(location, itemList, parentState, boardHandling);
   }
 
-  /** Creates a new padstack from p_old_padstack with a layer range starting at p_new_layer. */
+  /** Creates a new padstack from an old padstack with a layer range starting at the new layer. */
   private static Padstack changePadstackLayers(
-      Padstack pOldPadstack,
-      int pNewLayer,
-      RoutingBoard pBoard,
-      Map<Padstack, Padstack> pPadstackPairs) {
+      Padstack oldPadstack,
+      int newLayer,
+      RoutingBoard board,
+      Map<Padstack, Padstack> padstackPairs) {
     Padstack newPadstack;
-    int oldLayer = pOldPadstack.fromLayer();
-    if (oldLayer == pNewLayer) {
-      newPadstack = pOldPadstack;
-    } else if (pPadstackPairs.containsKey(pOldPadstack)) {
+    int oldLayer = oldPadstack.fromLayer();
+    if (oldLayer == newLayer) {
+      newPadstack = oldPadstack;
+    } else if (padstackPairs.containsKey(oldPadstack)) {
       // New padstack already created, assign it to the via.
-      newPadstack = pPadstackPairs.get(pOldPadstack);
+      newPadstack = padstackPairs.get(oldPadstack);
     } else {
       // Create a new padstack.
-      ConvexShape[] newShapes = new ConvexShape[pBoard.getLayerCount()];
-      int layerDiff = oldLayer - pNewLayer;
+      ConvexShape[] newShapes = new ConvexShape[board.getLayerCount()];
+      int layerDiff = oldLayer - newLayer;
       for (int i = 0; i < newShapes.length; i++) {
         int newLayerNo = i + layerDiff;
         if (newLayerNo >= 0 && newLayerNo < newShapes.length) {
-          newShapes[i] = pOldPadstack.getShape(i + layerDiff);
+          newShapes[i] = oldPadstack.getShape(i + layerDiff);
         }
       }
-      newPadstack = pBoard.library.padstacks.add(newShapes);
-      pPadstackPairs.put(pOldPadstack, newPadstack);
+      newPadstack = board.library.padstacks.add(newShapes);
+      padstackPairs.put(oldPadstack, newPadstack);
     }
     return newPadstack;
   }
@@ -101,9 +101,9 @@ public final class CopyItemState extends InteractiveState {
     return this;
   }
 
-  /** Changes the position for inserting the copied items to p_new_location. */
-  private void changePosition(FloatPoint pNewPosition) {
-    currentPosition = pNewPosition.round();
+  /** Changes the position for inserting the copied items to the specified location. */
+  private void changePosition(FloatPoint newPosition) {
+    currentPosition = newPosition.round();
     if (!currentPosition.equals(previousPosition)) {
       Vector translateVector = currentPosition.differenceBy(previousPosition);
       for (Item currItem : itemList) {
@@ -114,12 +114,12 @@ public final class CopyItemState extends InteractiveState {
     }
   }
 
-  /** Changes the first layer of the items in the copy list to p_new_layer. */
+  /** Changes the first layer of the items in the copy list to the specified layer. */
   @Override
-  public boolean changeLayerAction(int pNewLayer) {
-    currentLayer = pNewLayer;
+  public boolean changeLayerAction(int newLayer) {
+    currentLayer = newLayer;
     layerChanged = true;
-    hdlg.setLayer(pNewLayer);
+    hdlg.setLayer(newLayer);
     return true;
   }
 
@@ -235,19 +235,19 @@ public final class CopyItemState extends InteractiveState {
   }
 
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
+  public InteractiveState leftButtonClicked(FloatPoint location) {
     insert();
     return this;
   }
 
   @Override
-  public void draw(Graphics pGraphics) {
+  public void draw(Graphics graphics) {
     if (itemList == null) {
       return;
     }
     for (Item currItem : itemList) {
       currItem.draw(
-          pGraphics,
+          graphics,
           hdlg.graphicsContext,
           hdlg.graphicsContext.getHighlightColor(),
           hdlg.graphicsContext.getHighlightColorIntensity());

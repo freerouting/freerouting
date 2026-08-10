@@ -6,13 +6,15 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
+/** Interactive state for selecting a rectangular region on the board. */
 public class SelectRegionState extends InteractiveState {
 
   protected FloatPoint corner1;
   protected FloatPoint corner2;
 
-  protected SelectRegionState(InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
+  /** Creates a new instance of SelectRegionState. */
+  protected SelectRegionState(InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
   }
 
   @Override
@@ -24,14 +26,14 @@ public class SelectRegionState extends InteractiveState {
   }
 
   @Override
-  public InteractiveState mouseDragged(FloatPoint pPoint) {
+  public InteractiveState mouseDragged(FloatPoint point) {
     // Early exit on null or redundant micro-movements
-    if (pPoint == null || (corner2 != null && pPoint.equals(corner2))) {
+    if (point == null || (corner2 != null && point.equals(corner2))) {
       return this;
     }
 
     if (corner1 == null) {
-      corner1 = pPoint;
+      corner1 = point;
       if (hdlg != null) {
         hdlg.repaint();
       }
@@ -39,7 +41,7 @@ public class SelectRegionState extends InteractiveState {
     }
 
     var previousCorner2 = corner2;
-    corner2 = pPoint;
+    corner2 = point;
 
     if (hdlg != null) {
       var dirtyRect = rubberBandDirtyRect(previousCorner2, corner2);
@@ -53,7 +55,7 @@ public class SelectRegionState extends InteractiveState {
     return this;
   }
 
-  private Rectangle rubberBandDirtyRect(FloatPoint pOldCorner2, FloatPoint pNewCorner2) {
+  private Rectangle rubberBandDirtyRect(FloatPoint oldCorner2, FloatPoint newCorner2) {
     if (hdlg == null
         || hdlg.graphicsContext == null
         || hdlg.graphicsContext.coordinateTransform == null) {
@@ -62,7 +64,7 @@ public class SelectRegionState extends InteractiveState {
 
     var transform = hdlg.graphicsContext.coordinateTransform;
     var scCorner1 = transform.boardToScreen(corner1);
-    var scNewCorner2 = transform.boardToScreen(pNewCorner2);
+    var scNewCorner2 = transform.boardToScreen(newCorner2);
 
     // Fail gracefully if transforms fail
     if (scCorner1 == null || scNewCorner2 == null) {
@@ -71,8 +73,8 @@ public class SelectRegionState extends InteractiveState {
 
     var dirtyRect = screenRect(scCorner1, scNewCorner2);
 
-    if (pOldCorner2 != null) {
-      var scOldCorner2 = transform.boardToScreen(pOldCorner2);
+    if (oldCorner2 != null) {
+      var scOldCorner2 = transform.boardToScreen(oldCorner2);
       if (scOldCorner2 != null) {
         // Mutate in-place to avoid GC allocation during rapid drags
         dirtyRect.add(screenRect(scCorner1, scOldCorner2));
@@ -83,18 +85,18 @@ public class SelectRegionState extends InteractiveState {
     return dirtyRect;
   }
 
-  private static Rectangle screenRect(Point2D pA, Point2D pB) {
-    int x = (int) Math.min(pA.getX(), pB.getX());
-    int y = (int) Math.min(pA.getY(), pB.getY());
-    int w = (int) Math.abs(pA.getX() - pB.getX()) + 1;
-    int h = (int) Math.abs(pA.getY() - pB.getY()) + 1;
+  private static Rectangle screenRect(Point2D a, Point2D b) {
+    int x = (int) Math.min(a.getX(), b.getX());
+    int y = (int) Math.min(a.getY(), b.getY());
+    int w = (int) Math.abs(a.getX() - b.getX()) + 1;
+    int h = (int) Math.abs(a.getY() - b.getY()) + 1;
     return new Rectangle(x, y, w, h);
   }
 
   @Override
-  public void draw(Graphics pGraphics) {
+  public void draw(Graphics graphics) {
     if (this.returnState != null) {
-      this.returnState.draw(pGraphics);
+      this.returnState.draw(graphics);
     }
 
     if (hdlg == null || hdlg.graphicsContext == null) {
@@ -107,6 +109,6 @@ public class SelectRegionState extends InteractiveState {
     }
 
     corner2 = currentMouse;
-    hdlg.graphicsContext.drawRectangle(corner1, corner2, 1, Color.white, pGraphics, 1);
+    hdlg.graphicsContext.drawRectangle(corner1, corner2, 1, Color.white, graphics, 1);
   }
 }

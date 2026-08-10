@@ -16,10 +16,10 @@ public class MakeSpaceState extends DragState {
 
   private final Route route;
 
-  /** Creates a new instance of MakeSpaceState */
+  /** Creates a new instance of MakeSpaceState. */
   public MakeSpaceState(
-      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    super(pLocation, pParentState, pBoardHandling);
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(location, parentState, boardHandling);
     int[] shoveTraceWidthArr = new int[hdlg.getRoutingBoard().getLayerCount()];
     boolean[] layerActiveArr = new boolean[shoveTraceWidthArr.length];
     int shoveTraceWidth = Math.min(100, hdlg.getRoutingBoard().getMinTraceHalfWidth() / 10);
@@ -32,7 +32,7 @@ public class MakeSpaceState extends DragState {
     routeNetNoArr[0] = Nets.hidden_net_no;
     route =
         new Route(
-            pLocation.round(),
+            location.round(),
             hdlg.getInteractiveSettings().getLayer(),
             shoveTraceWidthArr,
             layerActiveArr,
@@ -52,7 +52,7 @@ public class MakeSpaceState extends DragState {
   }
 
   @Override
-  public InteractiveState moveTo(FloatPoint pToLocation) {
+  public InteractiveState moveTo(FloatPoint toLocation) {
     if (!somethingDragged) {
       // initialisations for the first time dragging
       this.observersActivated = !hdlg.getRoutingBoard().observersActive();
@@ -63,11 +63,11 @@ public class MakeSpaceState extends DragState {
       hdlg.getRoutingBoard().generateSnapshot();
       somethingDragged = true;
     }
-    route.nextCorner(pToLocation);
+    route.nextCorner(toLocation);
 
     Point routeEnd = route.getLastCorner();
     if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction() == AngleRestriction.NONE
-        && !routeEnd.equals(pToLocation.round())) {
+        && !routeEnd.equals(toLocation.round())) {
       hdlg.moveMouse(routeEnd.toFloat());
     }
     hdlg.recalculateLengthViolations();
@@ -89,9 +89,9 @@ public class MakeSpaceState extends DragState {
   }
 
   @Override
-  public void draw(Graphics pGraphics) {
+  public void draw(Graphics graphics) {
     if (route != null) {
-      route.draw(pGraphics, hdlg.graphicsContext);
+      route.draw(graphics, hdlg.graphicsContext);
     }
   }
 }

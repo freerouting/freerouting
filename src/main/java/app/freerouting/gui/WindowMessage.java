@@ -12,8 +12,8 @@ import javax.swing.UIManager;
 /** Startup window visible when the program is loading. */
 public final class WindowMessage extends WindowBase {
 
-  /** Creates a new instance of WindowMessage */
-  private WindowMessage(String[] pMessageArr) {
+  /** Creates a new instance of WindowMessage. */
+  private WindowMessage(String[] messageArr) {
     super(300, 100);
 
     final JPanel mainPanel = new JPanel();
@@ -22,9 +22,9 @@ public final class WindowMessage extends WindowBase {
     final GridBagConstraints gridbagConstraints = new GridBagConstraints();
     gridbagConstraints.insets = new Insets(40, 40, 40, 40);
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
-    for (int i = 0; i < pMessageArr.length; i++) {
+    for (int i = 0; i < messageArr.length; i++) {
       final JLabel messageLabel = new JLabel();
-      messageLabel.setText(pMessageArr[i]);
+      messageLabel.setText(messageArr[i]);
 
       gridbag.setConstraints(messageLabel, gridbagConstraints);
       mainPanel.add(messageLabel, gridbagConstraints);
@@ -36,15 +36,15 @@ public final class WindowMessage extends WindowBase {
   }
 
   /** Displays a window with the input message at the center of the screen. */
-  public static WindowMessage show(String pMessage) {
+  public static WindowMessage show(String message) {
     String[] messageArr = new String[1];
-    messageArr[0] = pMessage;
+    messageArr[0] = message;
     return new WindowMessage(messageArr);
   }
 
   /** Displays a window with the input messages at the center of the screen. */
-  public static WindowMessage show(String[] pMessages) {
-    return new WindowMessage(pMessages);
+  public static WindowMessage show(String[] messages) {
+    return new WindowMessage(messages);
   }
 
   /**
@@ -86,7 +86,7 @@ public final class WindowMessage extends WindowBase {
   }
 
   /** Calls a dialog with an ok-button. */
-  public static void ok(String pMessage) {
-    JOptionPane.showMessageDialog(null, pMessage);
+  public static void ok(String message) {
+    JOptionPane.showMessageDialog(null, message);
   }
 }

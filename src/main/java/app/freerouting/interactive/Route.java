@@ -39,19 +39,19 @@ import java.util.TreeSet;
 /** Functionality for interactive routing. */
 public class Route {
 
-  /** The time limit in milliseconds for the pull tight algorithm */
+  /** The time limit in milliseconds for the forced-trace check. */
   private static final int CHECK_FORCED_TRACE_TIME_LIMIT = 3000;
 
-  /** The time limit in milliseconds for the pull tight algorithm */
+  /** The time limit in milliseconds for the pull-tight algorithm. */
   private static final int PULL_TIGHT_TIME_LIMIT = 2000;
 
-  /** The net numbers used for routing */
+  /** The net numbers used for routing. */
   final int[] netNoArr;
 
   private final Item startItem;
   private final Set<Item> targetSet;
 
-  /** Pins, which can be reached by a pin swap by a target pin. */
+  /** Pins that can be reached by a pin swap from a target pin. */
   private final Set<SwapPinInfo> swapPinInfos;
 
   private final int[] penHalfWidthArr;
@@ -71,37 +71,37 @@ public class Route {
   private final int pullTightTimeLimit;
   private Point prevCorner;
   private int layer;
-  private Collection<TargetPoint> targetPoints; // from drill_items
+  private Collection<TargetPoint> targetPoints; // From drill items.
   private Collection<Item> targetTracesAndAreas; // from traces and conduction areas
   private FloatPoint nearestTargetPoint;
   private Item nearestTargetItem;
   private Item shoveFailingObstacle;
 
   /**
-   * Starts routing a connection. p_pen_half_width_arr is provided because it may be different from
-   * the half width array in p_board.rules.
+   * Starts routing a connection. The trace half-width array is provided because it may be different
+   * from the half-width array in the board rules.
    */
   public Route(
-      Point pStartCorner,
-      int pLayer,
-      int[] pPenHalfWidthArr,
-      boolean[] pLayerActiveArr,
-      int[] pNetNoArr,
-      int pClearanceClass,
-      ViaRule pViaRule,
-      boolean pPushEnabled,
-      int pTraceTidyWidth,
-      int pPullTightAccuracy,
-      Item pStartItem,
-      Set<Item> pTargetSet,
-      RoutingBoard pBoard,
-      boolean pIsStitchMode,
-      boolean pWithNeckdown,
-      boolean pViaSnapToSmdCenter,
-      boolean pHighlightShoveFailingObstacle) {
-    board = pBoard;
-    layer = pLayer;
-    if (pPushEnabled) {
+      Point startCorner,
+      int layerNo,
+      int[] penHalfWidthArr,
+      boolean[] layerActiveArr,
+      int[] netNoArr,
+      int clearanceClassNo,
+      ViaRule viaRuleValue,
+      boolean pushEnabled,
+      int traceTidyWidthValue,
+      int pullTightAccuracyValue,
+      Item startItem,
+      Set<Item> targetSetValue,
+      RoutingBoard routingBoard,
+      boolean stitchMode,
+      boolean neckdown,
+      boolean snapToSmdCenter,
+      boolean highlightShoveFailingObstacleValue) {
+    board = routingBoard;
+    layer = layerNo;
+    if (pushEnabled) {
       maxShoveTraceRecursionDepth = 20;
       maxShoveViaRecursionDepth = 8;
       maxSpringOverRecursionDepth = 5;
@@ -110,20 +110,20 @@ public class Route {
       maxShoveViaRecursionDepth = 0;
       maxSpringOverRecursionDepth = 0;
     }
-    traceTidyWidth = pTraceTidyWidth;
-    pullTightAccuracy = pPullTightAccuracy;
-    prevCorner = pStartCorner;
-    netNoArr = pNetNoArr;
-    penHalfWidthArr = pPenHalfWidthArr;
-    layerActive = pLayerActiveArr;
-    clearanceClass = pClearanceClass;
-    viaRule = pViaRule;
-    startItem = pStartItem;
-    targetSet = pTargetSet;
-    isStitchMode = pIsStitchMode;
-    withNeckdown = pWithNeckdown;
-    viaSnapToSmdCenter = pViaSnapToSmdCenter;
-    highlightShoveFailingObstacle = pHighlightShoveFailingObstacle;
+    traceTidyWidth = traceTidyWidthValue;
+    pullTightAccuracy = pullTightAccuracyValue;
+    prevCorner = startCorner;
+    this.netNoArr = netNoArr;
+    this.penHalfWidthArr = penHalfWidthArr;
+    this.layerActive = layerActiveArr;
+    this.clearanceClass = clearanceClassNo;
+    this.viaRule = viaRuleValue;
+    this.startItem = startItem;
+    this.targetSet = targetSetValue;
+    this.isStitchMode = stitchMode;
+    this.withNeckdown = neckdown;
+    this.viaSnapToSmdCenter = snapToSmdCenter;
+    this.highlightShoveFailingObstacle = highlightShoveFailingObstacleValue;
     pullTightTimeLimit = PULL_TIGHT_TIME_LIMIT;
 
     calculateTargetPointsAndAreas();
@@ -131,14 +131,15 @@ public class Route {
   }
 
   /**
-   * Append a line to the trace routed so far. Return true, if the route is completed by connecting
-   * to a target.
+   * Appends a line to the trace routed so far.
+   *
+   * @return true if the route is completed by connecting to a target
    */
-  public boolean nextCorner(FloatPoint pCorner) {
+  public boolean nextCorner(FloatPoint corner) {
     if (!this.layerActive[this.layer]) {
       return false;
     }
-    IntPoint currCorner = pCorner.round();
+    IntPoint currCorner = corner.round();
     if (!(board.contains(prevCorner)
         && board.contains(currCorner)
         && board.layerStructure.arr[this.layer].isSignal)) {
@@ -251,18 +252,19 @@ public class Route {
   }
 
   /**
-   * Changing the layer in interactive route and inserting a via. Returns false, if changing the
-   * layer was not possible.
+   * Changes the interactive route layer and inserts a via.
+   *
+   * @return true if the layer change was possible
    */
-  public boolean changeLayer(int pToLayer) {
-    if (this.layer == pToLayer) {
+  public boolean changeLayer(int toLayer) {
+    if (this.layer == toLayer) {
       return true;
     }
-    if (pToLayer < 0 || pToLayer >= this.layerActive.length) {
+    if (toLayer < 0 || toLayer >= this.layerActive.length) {
       FRLogger.warn("Route.change_layer: p_to_layer out of range");
       return false;
     }
-    if (!this.layerActive[pToLayer]) {
+    if (!this.layerActive[toLayer]) {
       return false;
     }
     if (this.viaRule == null) {
@@ -270,14 +272,14 @@ public class Route {
     }
     this.shoveFailingObstacle = null;
     if (this.viaSnapToSmdCenter) {
-      boolean snappedToSmdCenter = snapToSmdCenter(pToLayer);
+      boolean snappedToSmdCenter = snapToSmdCenter(toLayer);
       if (!snappedToSmdCenter) {
         snapToSmdCenter(this.layer);
       }
     }
     boolean result = true;
-    int minLayer = Math.min(this.layer, pToLayer);
-    int maxLayer = Math.max(this.layer, pToLayer);
+    int minLayer = Math.min(this.layer, toLayer);
+    int maxLayer = Math.max(this.layer, toLayer);
     boolean viaFound = false;
     for (int i = 0; i < this.viaRule.viaCount(); i++) {
       ViaInfo currViaInfo = this.viaRule.getVia(i);
@@ -307,23 +309,20 @@ public class Route {
       board.undo(null);
     }
     if (viaFound) {
-      this.layer = pToLayer;
+      this.layer = toLayer;
     }
     return result;
   }
 
-  /**
-   * Snaps to the center of a smd pin, if the location on p_layer is inside a smd pin of the own
-   * net,
-   */
-  private boolean snapToSmdCenter(int pLayer) {
+  /** Snaps to the center of an SMD pin on the specified layer when it belongs to this net. */
+  private boolean snapToSmdCenter(int layerNo) {
     ItemSelectionFilter selectionFilter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
-    Collection<Item> pickedItems = board.pickItems(this.prevCorner, pLayer, selectionFilter);
+    Collection<Item> pickedItems = board.pickItems(this.prevCorner, layerNo, selectionFilter);
     Pin foundSmdPin = null;
     for (Item currItem : pickedItems) {
       if (currItem instanceof Pin currPin && currItem.sharesNetNo(this.netNoArr)) {
-        if (currPin.firstLayer() == pLayer && currPin.lastLayer() == pLayer) {
+        if (currPin.firstLayer() == layerNo && currPin.lastLayer() == layerNo) {
           foundSmdPin = currPin;
           break;
         }
@@ -343,10 +342,11 @@ public class Route {
   }
 
   /**
-   * If p_from_point is already on a target item, a connection to the target is made and true
-   * returned.
+   * If the starting point is already on a target item, makes a connection to that target.
+   *
+   * @return true if the connection was completed
    */
-  private boolean connectToTarget(IntPoint pFromPoint) {
+  private boolean connectToTarget(IntPoint fromPoint) {
     if (nearestTargetItem != null && targetSet != null && !targetSet.contains(nearestTargetItem)) {
       nearestTargetItem = null;
     }
@@ -359,22 +359,23 @@ public class Route {
       connectionPoint = target.getCenter();
     } else if (nearestTargetItem instanceof PolylineTrace trace) {
       return board.connectToTrace(
-          pFromPoint, trace, this.penHalfWidthArr[layer], this.clearanceClass);
+          fromPoint, trace, this.penHalfWidthArr[layer], this.clearanceClass);
     } else if (nearestTargetItem instanceof ConductionArea) {
-      connectionPoint = pFromPoint;
+      connectionPoint = fromPoint;
     }
     if (connectionPoint instanceof IntPoint point) {
-      routeCompleted = connect(pFromPoint, point);
+      routeCompleted = connect(fromPoint, point);
     }
     return routeCompleted;
   }
 
   /**
-   * Tries to make a trace connection from p_from_point to p_to_point according to the angle
-   * restriction. Returns true, if the connection succeeded.
+   * Tries to make a trace connection between two points according to the angle restriction.
+   *
+   * @return true if the connection succeeded
    */
-  private boolean connect(Point pFromPoint, IntPoint pToPoint) {
-    Point[] corners = angledConnection(pFromPoint, pToPoint);
+  private boolean connect(Point fromPoint, IntPoint toPoint) {
+    Point[] corners = angledConnection(fromPoint, toPoint);
     boolean connectionSucceeded = true;
     for (int i = 1; i < corners.length; i++) {
       Point fromCorner = corners[i - 1];
@@ -452,8 +453,8 @@ public class Route {
     for (Item currItem : pickedItems) {
       if (currItem instanceof Pin pin) {
         Collection<Pin> currSwappablePins = pin.getSwappablePins();
-        for (Pin curr_swappable_pin : currSwappablePins) {
-          result.add(new SwapPinInfo(curr_swappable_pin));
+        for (Pin currSwappablePin : currSwappablePins) {
+          result.add(new SwapPinInfo(currSwappablePin));
         }
       }
     }
@@ -461,10 +462,10 @@ public class Route {
   }
 
   /** Highlights the targets and draws the incomplete. */
-  public void draw(Graphics pGraphics, GraphicsContext pGraphicsContext) {
+  public void draw(Graphics graphics, GraphicsContext graphicsContext) {
     if (this.highlightShoveFailingObstacle && this.shoveFailingObstacle != null) {
       this.shoveFailingObstacle.draw(
-          pGraphics, pGraphicsContext, pGraphicsContext.getViolationsColor(), 1);
+          graphics, graphicsContext, graphicsContext.getViolationsColor(), 1);
     }
     if (targetSet == null || netNoArr.length < 1) {
       return;
@@ -473,26 +474,26 @@ public class Route {
     if (currentNet == null) {
       return;
     }
-    Color highlightColor = pGraphicsContext.getHighlightColor();
-    double highligtColorIntensity = pGraphicsContext.getHighlightColorIntensity();
+    Color highlightColor = graphicsContext.getHighlightColor();
+    double highlightColorIntensity = graphicsContext.getHighlightColorIntensity();
 
     // highlight the swappable pins and their incompletes
     for (SwapPinInfo currInfo : this.swapPinInfos) {
-      currInfo.pin.draw(pGraphics, pGraphicsContext, highlightColor, 0.3 * highligtColorIntensity);
+      currInfo.pin.draw(graphics, graphicsContext, highlightColor, 0.3 * highlightColorIntensity);
       if (currInfo.incomplete != null) {
         // draw the swap pin incomplete
         FloatPoint[] drawPoints = new FloatPoint[2];
         drawPoints[0] = currInfo.incomplete.a;
         drawPoints[1] = currInfo.incomplete.b;
-        Color drawColor = pGraphicsContext.getIncompleteColor();
-        pGraphicsContext.draw(drawPoints, 1, drawColor, pGraphics, highligtColorIntensity);
+        Color drawColor = graphicsContext.getIncompleteColor();
+        graphicsContext.draw(drawPoints, 1, drawColor, graphics, highlightColorIntensity);
       }
     }
 
     // highlight the target set
     for (Item currItem : targetSet) {
       if (!(currItem instanceof ConductionArea)) {
-        currItem.draw(pGraphics, pGraphicsContext, highlightColor, highligtColorIntensity);
+        currItem.draw(graphics, graphicsContext, highlightColor, highlightColorIntensity);
       }
     }
     FloatPoint fromCorner = this.prevCorner.toFloat();
@@ -500,7 +501,8 @@ public class Route {
       boolean currLengthMatchingOk = true; // used for drawing the incomplete as violation
       double maxTraceLength = currentNet.getNetClass().getMaximumTraceLength();
       double minTraceLength = currentNet.getNetClass().getMinimumTraceLength();
-      double lengthMatchingColorIntensity = pGraphicsContext.getLengthMatchingAreaColorIntensity();
+      double lengthMatchingColorIntensity =
+          graphicsContext.getLengthMatchingAreaColorIntensity();
       if (maxTraceLength > 0 || minTraceLength > 0 && lengthMatchingColorIntensity > 0) {
 
         // draw the length matching area
@@ -545,10 +547,10 @@ public class Route {
                             - incompleteLength * incompleteLength);
             ellipseArr[1] = new Ellipse(center, rotation, biggerRadius, smallerRadius);
           }
-          pGraphicsContext.fillEllipseArr(
+          graphicsContext.fillEllipseArr(
               ellipseArr,
-              pGraphics,
-              pGraphicsContext.getLengthMatchingAreaColor(),
+              graphics,
+              graphicsContext.getLengthMatchingAreaColor(),
               lengthMatchingColorIntensity);
         } else {
           currLengthMatchingOk = false;
@@ -559,30 +561,27 @@ public class Route {
       FloatPoint[] drawPoints = new FloatPoint[2];
       drawPoints[0] = fromCorner;
       drawPoints[1] = nearestTargetPoint;
-      Color drawColor = pGraphicsContext.getIncompleteColor();
+      Color drawColor = graphicsContext.getIncompleteColor();
       double drawWidth =
           Math.min(this.board.communication.getResolution(Unit.MIL), 100); // problem with low
       // resolution on Kicad
       if (!currLengthMatchingOk) {
-        drawColor = pGraphicsContext.getViolationsColor();
+        drawColor = graphicsContext.getViolationsColor();
         drawWidth *= 3;
       }
-      pGraphicsContext.draw(drawPoints, drawWidth, drawColor, pGraphics, highligtColorIntensity);
+      graphicsContext.draw(drawPoints, drawWidth, drawColor, graphics, highlightColorIntensity);
       if (this.nearestTargetItem != null && !this.nearestTargetItem.isOnLayer(this.layer)) {
         // draw a marker to indicate the layer change.
         NetIncompletesGraphics.drawLayerChangeMarker(
-            drawPoints[0], 4 * penHalfWidthArr[0], pGraphics, pGraphicsContext);
+            drawPoints[0], 4 * penHalfWidthArr[0], graphics, graphicsContext);
       }
     }
   }
 
-  /**
-   * Makes a connection polygon from p_from_point to p_to_point whose lines fulfill the angle
-   * restriction.
-   */
-  private Point[] angledConnection(Point pFromPoint, Point pToPoint) {
+  /** Makes a connection polygon whose lines fulfill the angle restriction. */
+  private Point[] angledConnection(Point fromPoint, Point toPoint) {
     IntPoint addCorner = null;
-    if (pFromPoint instanceof IntPoint point && pToPoint instanceof IntPoint point1) {
+    if (fromPoint instanceof IntPoint point && toPoint instanceof IntPoint point1) {
       AngleRestriction angleRestriction = this.board.rules.getTraceAngleRestriction();
       if (angleRestriction == AngleRestriction.NINETY_DEGREE) {
         addCorner = point.ninetyDegreeCorner(point1, true);
@@ -595,18 +594,15 @@ public class Route {
       ++newCornerCount;
     }
     Point[] result = new Point[newCornerCount];
-    result[0] = pFromPoint;
+    result[0] = fromPoint;
     if (addCorner != null) {
       result[1] = addCorner;
     }
-    result[result.length - 1] = pToPoint;
+    result[result.length - 1] = toPoint;
     return result;
   }
 
-  /**
-   * Calculates a list of the center points of DrillItems, end points of traces and areas of
-   * ConductionAreas in the target set.
-   */
+  /** Calculates target points for drill items and target traces or conduction areas. */
   private void calculateTargetPointsAndAreas() {
     targetPoints = new LinkedList<>();
     targetTracesAndAreas = new LinkedList<>();
@@ -623,24 +619,26 @@ public class Route {
     }
   }
 
+  /** Returns the last successfully inserted corner of the route. */
   public Point getLastCorner() {
     return prevCorner;
   }
 
-  public boolean isLayerActive(int pLayer) {
-    if (pLayer < 0 || pLayer >= layerActive.length) {
+  /** Returns whether routing is enabled on the specified layer. */
+  public boolean isLayerActive(int layerNo) {
+    if (layerNo < 0 || layerNo >= layerActive.length) {
       return false;
     }
-    return layerActive[pLayer];
+    return layerActive[layerNo];
   }
 
-  /** The nearest point is used for drawing the incomplete */
-  void calcNearestTargetPoint(FloatPoint pFromPoint) {
+  /** Calculates the nearest target point used to draw the incomplete connection. */
+  void calcNearestTargetPoint(FloatPoint fromPoint) {
     double minDist = Double.MAX_VALUE;
     FloatPoint nearestPoint = null;
     Item nearestItem = null;
     for (TargetPoint currTargetPoint : targetPoints) {
-      double currDist = pFromPoint.distance(currTargetPoint.location);
+      double currDist = fromPoint.distance(currTargetPoint.location);
       if (currDist < minDist) {
         minDist = currDist;
         nearestPoint = currTargetPoint.location;
@@ -650,25 +648,25 @@ public class Route {
     for (Item currItem : targetTracesAndAreas) {
       if (currItem instanceof PolylineTrace currTrace) {
         Polyline currPolyline = currTrace.polyline();
-        if (currPolyline.boundingBox().distance(pFromPoint) < minDist) {
-          FloatPoint currNearestPoint = currPolyline.nearestPointApprox(pFromPoint);
-          double currDist = pFromPoint.distance(currNearestPoint);
+        if (currPolyline.boundingBox().distance(fromPoint) < minDist) {
+          FloatPoint currNearestPoint = currPolyline.nearestPointApprox(fromPoint);
+          double currDist = fromPoint.distance(currNearestPoint);
           if (currDist < minDist) {
             minDist = currDist;
             nearestPoint = currNearestPoint;
             nearestItem = currTrace;
           }
         }
-      } else if (currItem instanceof ConductionArea curr_conduction_area
+      } else if (currItem instanceof ConductionArea currConductionArea
           && currItem.tileShapeCount() > 0) {
-        Area currArea = curr_conduction_area.getArea();
-        if (currArea.boundingBox().distance(pFromPoint) < minDist) {
-          FloatPoint currNearestPoint = currArea.nearestPointApprox(pFromPoint);
-          double currDist = pFromPoint.distance(currNearestPoint);
+        Area currArea = currConductionArea.getArea();
+        if (currArea.boundingBox().distance(fromPoint) < minDist) {
+          FloatPoint currNearestPoint = currArea.nearestPointApprox(fromPoint);
+          double currDist = fromPoint.distance(currNearestPoint);
           if (currDist < minDist) {
             minDist = currDist;
             nearestPoint = currNearestPoint;
-            nearestItem = curr_conduction_area;
+            nearestItem = currConductionArea;
           }
         }
       }
@@ -683,19 +681,19 @@ public class Route {
     board.joinGraphicsUpdateBox(nearestItem.boundingBox());
   }
 
-  private void setShoveFailingObstacle(Item pItem) {
-    this.shoveFailingObstacle = pItem;
-    if (pItem != null) {
-      this.board.joinGraphicsUpdateBox(pItem.boundingBox());
+  private void setShoveFailingObstacle(Item item) {
+    this.shoveFailingObstacle = item;
+    if (item != null) {
+      this.board.joinGraphicsUpdateBox(item.boundingBox());
     }
   }
 
   /**
-   * If the routed starts at a pin and the route failed with the normal trace width, another try
-   * with the smallest pin width is done. Returns the okPoint of the try, which is this.prevPoint,
-   * if the try failed.
+   * Tries a smaller trace width when the route starts at a nearby pin.
+   *
+   * @return the successful point, or the previous corner if the attempt failed
    */
-  private Point tryNeckdownAtStart(IntPoint pToCorner) {
+  private Point tryNeckdownAtStart(IntPoint toCorner) {
     if (!(this.startItem instanceof Pin startPin)) {
       return this.prevCorner;
     }
@@ -728,7 +726,7 @@ public class Route {
     TimeLimit timeLimit = new TimeLimit(CHECK_FORCED_TRACE_TIME_LIMIT);
     return board.insertForcedTraceSegment(
         prevCorner,
-        pToCorner,
+        toCorner,
         neckDownHalfwidth,
         layer,
         netNoArr,
@@ -743,33 +741,33 @@ public class Route {
   }
 
   /**
-   * If the routed ends at a pin and the route failed with the normal trace width, another try with
-   * the smallest pin width is done. Returns the okPoint of the try, which is p_from_corner, if the
-   * try failed.
+   * Tries a smaller trace width when the route ends at a nearby pin.
+   *
+   * @return the successful point, or {@code fromCorner} if the attempt failed
    */
-  private Point tryNeckdownAtEnd(Point pFromCorner, Point pToCorner) {
-    if (!(this.nearestTargetItem instanceof Pin target_pin)) {
-      return pFromCorner;
+  private Point tryNeckdownAtEnd(Point fromCorner, Point toCorner) {
+    if (!(this.nearestTargetItem instanceof Pin targetPin)) {
+      return fromCorner;
     }
-    if (!target_pin.isOnLayer(this.layer)) {
-      return pFromCorner;
+    if (!targetPin.isOnLayer(this.layer)) {
+      return fromCorner;
     }
-    FloatPoint pinCenter = target_pin.getCenter().toFloat();
+    FloatPoint pinCenter = targetPin.getCenter().toFloat();
     double currClearance =
         this.board.rules.clearanceMatrix.getValue(
-            this.clearanceClass, target_pin.clearanceClassNo(), this.layer, true);
-    double pinNeckDownDistance = 2 * (0.5 * target_pin.getMaxWidth(this.layer) + currClearance);
-    if (pinCenter.distance(pFromCorner.toFloat()) >= pinNeckDownDistance) {
-      return pFromCorner;
+            this.clearanceClass, targetPin.clearanceClassNo(), this.layer, true);
+    double pinNeckDownDistance = 2 * (0.5 * targetPin.getMaxWidth(this.layer) + currClearance);
+    if (pinCenter.distance(fromCorner.toFloat()) >= pinNeckDownDistance) {
+      return fromCorner;
     }
-    int neckDownHalfwidth = target_pin.getTraceNeckdownHalfwidth(this.layer);
+    int neckDownHalfwidth = targetPin.getTraceNeckdownHalfwidth(this.layer);
     if (neckDownHalfwidth >= this.penHalfWidthArr[this.layer]) {
-      return pFromCorner;
+      return fromCorner;
     }
     TimeLimit timeLimit = new TimeLimit(CHECK_FORCED_TRACE_TIME_LIMIT);
     return board.insertForcedTraceSegment(
-        pFromCorner,
-        pToCorner,
+        fromCorner,
+        toCorner,
         neckDownHalfwidth,
         layer,
         netNoArr,
@@ -788,9 +786,9 @@ public class Route {
     final FloatPoint location;
     final Item item;
 
-    TargetPoint(FloatPoint pLocation, Item pItem) {
-      location = pLocation;
-      item = pItem;
+    TargetPoint(FloatPoint locationValue, Item itemValue) {
+      location = locationValue;
+      item = itemValue;
     }
   }
 
@@ -799,17 +797,17 @@ public class Route {
     final Pin pin;
     FloatLine incomplete;
 
-    SwapPinInfo(Pin pPin) {
-      pin = pPin;
+    SwapPinInfo(Pin pinValue) {
+      pin = pinValue;
       incomplete = null;
-      if (pPin.isConnected() || pPin.netCount() != 1) {
+      if (pinValue.isConnected() || pinValue.netCount() != 1) {
         return;
       }
       // calculate the incomplete of p_pin
-      FloatPoint pinCenter = pPin.getCenter().toFloat();
+      FloatPoint pinCenter = pinValue.getCenter().toFloat();
       double minDist = Double.MAX_VALUE;
       FloatPoint nearestPoint = null;
-      Collection<Item> netItems = board.getConnectableItems(pPin.getNetNo(0));
+      Collection<Item> netItems = board.getConnectableItems(pinValue.getNetNo(0));
       for (Item currItem : netItems) {
         if (currItem == this.pin || !(currItem instanceof DrillItem)) {
           continue;
@@ -827,8 +825,8 @@ public class Route {
     }
 
     @Override
-    public int compareTo(SwapPinInfo pOther) {
-      return this.pin.compareTo(pOther.pin);
+    public int compareTo(SwapPinInfo other) {
+      return this.pin.compareTo(other.pin);
     }
   }
 }

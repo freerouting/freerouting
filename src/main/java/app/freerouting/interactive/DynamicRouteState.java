@@ -6,9 +6,9 @@ import javax.swing.JPopupMenu;
 /** State for dynamic interactive routing, which is routing while moving the mouse pointer. */
 public class DynamicRouteState extends RouteState {
 
-  /** Creates a new instance of DynamicRouteState */
-  protected DynamicRouteState(InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
+  /** Creates a new instance of DynamicRouteState. */
+  protected DynamicRouteState(InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
   }
 
   @Override
@@ -17,9 +17,9 @@ public class DynamicRouteState extends RouteState {
     return addCorner(hdlg.getCurrentMousePosition());
   }
 
-  /** ends routing */
+  /** Ends routing. */
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
+  public InteractiveState leftButtonClicked(FloatPoint location) {
     if (this.observersActivated) {
       hdlg.getRoutingBoard().endNotifyObservers();
       this.observersActivated = false;
@@ -32,12 +32,12 @@ public class DynamicRouteState extends RouteState {
 
   /** Action to be taken when a key is pressed (Shortcut). */
   @Override
-  public InteractiveState keyTyped(char pKeyChar) {
+  public InteractiveState keyTyped(char keyChar) {
     InteractiveState currReturnState = this;
-    if (pKeyChar == 's') {
+    if (keyChar == 's') {
       hdlg.generateSnapshot();
     } else {
-      currReturnState = super.keyTyped(pKeyChar);
+      currReturnState = super.keyTyped(keyChar);
     }
     return currReturnState;
   }

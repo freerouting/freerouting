@@ -44,6 +44,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
   private static final java.util.Map<Locale, TextManager> text_manager_cache =
       new ConcurrentHashMap<>();
 
+  /** Creates a window for editing layer and object visibility. */
   public WindowVisibility(BoardFrame boardFrame) {
     this.boardPanel = boardFrame.boardPanel;
     setLanguage(boardFrame.get_locale());
@@ -119,7 +120,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
       bulkUpdateInProgress = false;
     }
 
-    JPanel buttonRowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
+    final JPanel buttonRowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
     TextManager visibilityTm =
         text_manager_cache.computeIfAbsent(
             boardFrame.get_locale(), locale -> new TextManager(WindowVisibility.class, locale));
@@ -145,6 +146,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
     this.setResizable(false);
   }
 
+  /** Refreshes visibility controls from the current board state. */
   public void refresh() {
     bulkUpdateInProgress = true;
     try {
@@ -155,10 +157,12 @@ public class WindowVisibility extends BoardSavableSubWindow {
     }
   }
 
+  /** Returns the GUI board manager controlled by this window. */
   protected GuiBoardManager getBoardHandling() {
     return boardPanel.boardHandling;
   }
 
+  /** Restores all visibility controls to their default values. */
   protected void resetToDefaults() {
     bulkUpdateInProgress = true;
     try {
@@ -216,7 +220,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
     private final int[] originalDefaults;
     private final boolean[] defaultsSet;
     private final IntToDoubleFunction currentValueSupplier;
-    private final BiConsumer<Integer, Double> changed_value_consumer;
+    private final BiConsumer<Integer, Double> changedValueConsumer;
 
     private VisibilitySection(
         String title,
@@ -226,7 +230,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
       this.title = title;
       this.messageArr = messageArr;
       this.currentValueSupplier = currentValueSupplier;
-      this.changed_value_consumer = changedValueConsumer;
+      this.changedValueConsumer = changedValueConsumer;
       this.sliderArr = new JSlider[messageArr.length];
       this.valueArr = new JTextField[messageArr.length];
       this.originalDefaults = new int[messageArr.length];
@@ -297,7 +301,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
           int originalVal = originalDefaults[i];
           sliderArr[i].setValue(originalVal);
           setSliderTextValue(valueArr[i], originalVal);
-          changed_value_consumer.accept(i, ((double) originalVal) / ((double) MAX_SLIDER_VALUE));
+          changedValueConsumer.accept(i, ((double) originalVal) / ((double) MAX_SLIDER_VALUE));
         }
       }
     }
@@ -316,7 +320,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
     }
 
     private void setChangedValue(int index, double value) {
-      changed_value_consumer.accept(index, value);
+      changedValueConsumer.accept(index, value);
     }
   }
 }

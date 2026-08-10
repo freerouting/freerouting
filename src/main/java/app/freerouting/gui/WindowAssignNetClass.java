@@ -19,6 +19,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 
+/** Assigns routing net classes to board nets. */
 public class WindowAssignNetClass extends BoardSavableSubWindow {
 
   private static final int TEXTFIELD_HEIGHT = 16;
@@ -31,13 +32,13 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
 
   private JComboBox<NetClass> netRuleComboBox;
 
-  /** Creates a new instance of AssignNetRulesWindow */
-  public WindowAssignNetClass(BoardFrame pBoardFrame) {
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of AssignNetRulesWindow. */
+  public WindowAssignNetClass(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
-    this.boardFrame = pBoardFrame;
+    this.boardFrame = boardFrame;
 
     this.mainPanel = new JPanel();
     this.mainPanel.setLayout(new BorderLayout());
@@ -82,8 +83,8 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
       tm.getText("net_name_tooltip"), tm.getText("class_name_tooltip")
     };
 
-    public AssignRuleTable(AssignRuleTableModel pTableModel) {
-      super(pTableModel);
+    public AssignRuleTable(AssignRuleTableModel tableModel) {
+      super(tableModel);
     }
 
     // Implement table header tool tips.
@@ -121,7 +122,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
       setValues();
     }
 
-    /** Calculates the values in this table */
+    /** Calculates the values in this table. */
     public void setValues() {
       BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
       Net[] sortedArr = new Net[this.getRowCount()];
@@ -136,8 +137,8 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
     }
 
     @Override
-    public String getColumnName(int pCol) {
-      return columnNames[pCol];
+    public String getColumnName(int col) {
+      return columnNames[col];
     }
 
     @Override
@@ -151,29 +152,29 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
     }
 
     @Override
-    public Object getValueAt(int pRow, int pCol) {
-      return data[pRow][pCol];
+    public Object getValueAt(int row, int col) {
+      return data[row][col];
     }
 
     @Override
-    public boolean isCellEditable(int pRow, int pCol) {
-      return pCol > 0;
+    public boolean isCellEditable(int row, int col) {
+      return col > 0;
     }
 
     @Override
-    public void setValueAt(Object pValue, int pRow, int pCol) {
-      if (pCol != 1 || !(pValue instanceof NetClass curr_net_rule)) {
+    public void setValueAt(Object value, int row, int col) {
+      if (col != 1 || !(value instanceof NetClass currNetRule)) {
         return;
       }
-      Object firstRowObject = getValueAt(pRow, 0);
+      Object firstRowObject = getValueAt(row, 0);
       if (!(firstRowObject instanceof Net currentNet)) {
         FRLogger.warn("AssignNetRuLesVindow.setValueAt: Net expected");
         return;
       }
-      currentNet.setClass(curr_net_rule);
+      currentNet.setClass(currNetRule);
 
-      this.data[pRow][pCol] = pValue;
-      fireTableCellUpdated(pRow, pCol);
+      this.data[row][col] = value;
+      fireTableCellUpdated(row, col);
     }
   }
 }

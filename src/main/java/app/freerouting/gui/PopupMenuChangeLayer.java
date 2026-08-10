@@ -11,9 +11,9 @@ class PopupMenuChangeLayer extends JMenu {
   private final BoardFrame boardFrame;
   private final LayermenuItem[] itemArr;
 
-  /** Creates a new instance of ChangeLayerMenu */
-  PopupMenuChangeLayer(BoardFrame pBoardFrame) {
-    this.boardFrame = pBoardFrame;
+  /** Creates a new instance of ChangeLayerMenu. */
+  PopupMenuChangeLayer(BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
 
     LayerStructure layerStructure =
         boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure;
@@ -34,9 +34,9 @@ class PopupMenuChangeLayer extends JMenu {
   }
 
   /** Disables the item with index p_no and enables all other items. */
-  void disableItem(int pNo) {
+  void disableItem(int no) {
     for (int i = 0; i < itemArr.length; i++) {
-      this.itemArr[i].setEnabled(i != pNo);
+      this.itemArr[i].setEnabled(i != no);
     }
   }
 
@@ -44,8 +44,8 @@ class PopupMenuChangeLayer extends JMenu {
 
     private final int layerNo;
 
-    LayermenuItem(int pLayerNo) {
-      layerNo = pLayerNo;
+    LayermenuItem(int layerNo) {
+      this.layerNo = layerNo;
       addActionListener(
           _ -> {
             final BoardPanel boardPanel = boardFrame.boardPanel;

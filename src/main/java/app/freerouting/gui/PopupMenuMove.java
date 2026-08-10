@@ -7,12 +7,13 @@ import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+/** Provides actions for moving and rotating selected board items. */
 public class PopupMenuMove extends PopupMenuDisplay {
 
-  /** Creates a new instance of PopupMenuMove */
-  public PopupMenuMove(BoardFrame pBoardFrame) {
-    super(pBoardFrame);
-    TextManager tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
+  /** Creates a new instance of PopupMenuMove. */
+  public PopupMenuMove(BoardFrame boardFrame) {
+    super(boardFrame);
+    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
     // Add menu for turning the items by a multiple of 90 degree
 
@@ -112,8 +113,8 @@ public class PopupMenuMove extends PopupMenuDisplay {
     this.add(popupCancelMenuitem, 4);
   }
 
-  private void turn45Degree(int pFactor) {
-    boardPanel.boardHandling.turn45Degree(pFactor);
+  private void turn45Degree(int factor) {
+    boardPanel.boardHandling.turn45Degree(factor);
     boardPanel.moveMouse(boardPanel.rightButtonClickLocation);
   }
 }

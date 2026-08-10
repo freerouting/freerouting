@@ -11,15 +11,15 @@ public final class BoardMenuDisplay extends JMenu {
   private final BoardFrame boardFrame;
   private final TextManager tm;
 
-  /** Creates a new instance of BoardDisplayMenu */
-  private BoardMenuDisplay(BoardFrame pBoardFrame) {
-    boardFrame = pBoardFrame;
-    tm = new TextManager(this.getClass(), pBoardFrame.get_locale());
+  /** Creates a new instance of BoardDisplayMenu. */
+  private BoardMenuDisplay(BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
+    tm = new TextManager(this.getClass(), boardFrame.get_locale());
   }
 
   /** Returns a new display menu for the board frame. */
-  public static BoardMenuDisplay getInstance(BoardFrame pBoardFrame) {
-    final BoardMenuDisplay displayMenu = new BoardMenuDisplay(pBoardFrame);
+  public static BoardMenuDisplay getInstance(BoardFrame boardFrame) {
+    final BoardMenuDisplay displayMenu = new BoardMenuDisplay(boardFrame);
     displayMenu.setText(displayMenu.tm.getText("display"));
 
     JMenuItem displayVisibilityMenuitem = new JMenuItem();

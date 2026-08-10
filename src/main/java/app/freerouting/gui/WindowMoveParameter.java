@@ -29,10 +29,10 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
   private final JRadioButton settingsControlsRotateRadiobutton;
   private boolean keyInputCompleted = true;
 
-  /** Creates a new instance of WindowMoveParameter */
-  public WindowMoveParameter(BoardFrame pBoardFrame) {
-    setLanguage(pBoardFrame.get_locale());
-    this.boardHandling = pBoardFrame.boardPanel.boardHandling;
+  /** Creates a new instance of WindowMoveParameter. */
+  public WindowMoveParameter(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
+    this.boardHandling = boardFrame.boardPanel.boardHandling;
 
     this.setTitle(tm.getText("title"));
 
@@ -53,7 +53,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(horizontalGridLabel, gridbagConstraints);
     mainPanel.add(horizontalGridLabel);
 
-    NumberFormat numberFormat = NumberFormat.getInstance(pBoardFrame.get_locale());
+    NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
     numberFormat.setMaximumFractionDigits(7);
     this.horizontalGridField = new JFormattedTextField(numberFormat);
     this.horizontalGridField.setColumns(5);
@@ -133,20 +133,20 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     }
   }
 
-  private void setHorizontalGridField(double pValue) {
-    if (pValue <= 0) {
+  private void setHorizontalGridField(double value) {
+    if (value <= 0) {
       this.horizontalGridField.setValue(0);
     } else {
-      Float gridWidth = (float) boardHandling.coordinateTransform.boardToUser(pValue);
+      Float gridWidth = (float) boardHandling.coordinateTransform.boardToUser(value);
       this.horizontalGridField.setValue(gridWidth);
     }
   }
 
-  private void setVerticalGridField(double pValue) {
-    if (pValue <= 0) {
+  private void setVerticalGridField(double value) {
+    if (value <= 0) {
       this.verticalGridField.setValue(0);
     } else {
-      Float gridWidth = (float) boardHandling.coordinateTransform.boardToUser(pValue);
+      Float gridWidth = (float) boardHandling.coordinateTransform.boardToUser(value);
       this.verticalGridField.setValue(gridWidth);
     }
   }
@@ -154,8 +154,8 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
   private class HorizontalGridFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(KeyEvent pEvt) {
-      if (pEvt.getKeyChar() == '\n') {
+    public void keyTyped(KeyEvent evt) {
+      if (evt.getKeyChar() == '\n') {
         keyInputCompleted = true;
         Object input = horizontalGridField.getValue();
         double inputValue;
@@ -180,7 +180,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
   private class HorizontalGridFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(FocusEvent pEvt) {
+    public void focusLost(FocusEvent evt) {
       if (!keyInputCompleted) {
         // restore the text field.
         setHorizontalGridField(boardHandling.getInteractiveSettings().getHorizontalComponentGrid());
@@ -189,14 +189,14 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent pEvt) {}
+    public void focusGained(FocusEvent evt) {}
   }
 
   private class VerticalGridFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(KeyEvent pEvt) {
-      if (pEvt.getKeyChar() == '\n') {
+    public void keyTyped(KeyEvent evt) {
+      if (evt.getKeyChar() == '\n') {
         keyInputCompleted = true;
         Object input = verticalGridField.getValue();
         double inputValue;
@@ -221,7 +221,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
   private class VerticalGridFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(FocusEvent pEvt) {
+    public void focusLost(FocusEvent evt) {
       if (!keyInputCompleted) {
         // restore the text field.
         setVerticalGridField(boardHandling.getInteractiveSettings().getVerticalComponentGrid());
@@ -230,13 +230,13 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent pEvt) {}
+    public void focusGained(FocusEvent evt) {}
   }
 
   private class ZoomButtonListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       boardHandling.getInteractiveSettings().setZoomWithWheel(true);
     }
   }
@@ -244,7 +244,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
   private class RotateButtonListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent pEvt) {
+    public void actionPerformed(ActionEvent evt) {
       boardHandling.getInteractiveSettings().setZoomWithWheel(false);
     }
   }

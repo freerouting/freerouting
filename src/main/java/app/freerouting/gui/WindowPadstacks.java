@@ -17,10 +17,10 @@ import java.util.TreeSet;
 /** Window displaying the library padstacks. */
 public class WindowPadstacks extends WindowObjectListWithFilter {
 
-  /** Creates a new instance of PadstacksWindow */
-  public WindowPadstacks(BoardFrame pBoardFrame) {
-    super(pBoardFrame);
-    setLanguage(pBoardFrame.get_locale());
+  /** Creates a new instance of PadstacksWindow. */
+  public WindowPadstacks(BoardFrame boardFrame) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("padstacks"));
   }

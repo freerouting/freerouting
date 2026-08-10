@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.JPopupMenu;
 
+/** Interactive state for moving selected items and components. */
 public final class MoveItemState extends InteractiveState {
 
   private final Set<Item> itemList;
@@ -37,18 +38,18 @@ public final class MoveItemState extends InteractiveState {
   private IntPoint previousPosition;
   private Collection<ClearanceViolation> clearanceViolations;
 
-  /** Creates a new instance of MoveComponentState */
+  /** Creates a new instance of MoveItemState. */
   private MoveItemState(
-      FloatPoint pLocation,
-      Set<Item> pItemList,
-      Set<Component> pComponentList,
-      Component pFirstComponent,
-      InteractiveState pParentState,
-      GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
-    this.componentList = pComponentList;
-    this.gridSnapComponent = pFirstComponent;
-    this.currentPosition = pLocation.round();
+      FloatPoint location,
+      Set<Item> itemList,
+      Set<Component> componentList,
+      Component firstComponent,
+      InteractiveState parentState,
+      GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
+    this.componentList = componentList;
+    this.gridSnapComponent = firstComponent;
+    this.currentPosition = location.round();
     this.previousPosition = currentPosition;
     BasicBoard routingBoard = hdlg.getRoutingBoard();
     this.observersActivated = !hdlg.getRoutingBoard().observersActive();
@@ -58,13 +59,13 @@ public final class MoveItemState extends InteractiveState {
     // make the situation restorable by undo
     routingBoard.generateSnapshot();
 
-    for (Item currItem : pItemList) {
+    for (Item currItem : itemList) {
       routingBoard.removeItem(currItem);
     }
     this.netItemsList = new LinkedList<>();
     this.itemList = new TreeSet<>();
 
-    for (Item currItem : pItemList) {
+    for (Item currItem : itemList) {
       // Copy the items in p_item_list, because otherwise the undo algorithm will not
       // work.
       Item copiedItem = currItem.copy(0);
@@ -76,28 +77,28 @@ public final class MoveItemState extends InteractiveState {
   }
 
   /**
-   * Returns a new instance of MoveComponentState, or null, if the items of p_itemlist do not belong
+   * Returns a new instance of MoveItemState, or {@code null} if the selected items do not belong
    * to a single component.
    */
   public static MoveItemState getInstance(
-      FloatPoint pLocation,
-      Collection<Item> pItemList,
-      InteractiveState pParentState,
-      GuiBoardManager pBoardHandling) {
+      FloatPoint location,
+      Collection<Item> itemList,
+      InteractiveState parentState,
+      GuiBoardManager boardHandling) {
 
-    TextManager tm = new TextManager(InteractiveState.class, pBoardHandling.getLocale());
+    TextManager tm = new TextManager(InteractiveState.class, boardHandling.getLocale());
 
-    if (pItemList.isEmpty()) {
-      pBoardHandling.screenMessages.setStatusMessage(
+    if (itemList.isEmpty()) {
+      boardHandling.screenMessages.setStatusMessage(
           tm.getText("move_component_failed_because_no_item_selected"));
       return null;
     }
     // extend p_item_list to full components
-    Set<Item> itemList = new TreeSet<>();
+    Set<Item> allItems = new TreeSet<>();
     Set<Component> componentList = new TreeSet<>();
-    BasicBoard routingBoard = pBoardHandling.getRoutingBoard();
+    BasicBoard routingBoard = boardHandling.getRoutingBoard();
     Component gridSnapComponent = null;
-    for (Item currItem : pItemList) {
+    for (Item currItem : itemList) {
       if (currItem.getComponentNo() > 0) {
         Component currComponent = routingBoard.components.get(currItem.getComponentNo());
         if (currComponent == null) {
@@ -105,28 +106,28 @@ public final class MoveItemState extends InteractiveState {
           return null;
         }
         if (gridSnapComponent == null
-            && (pBoardHandling.getInteractiveSettings().getHorizontalComponentGrid() > 0
-                || pBoardHandling.getInteractiveSettings().getVerticalComponentGrid() > 0)) {
+            && (boardHandling.getInteractiveSettings().getHorizontalComponentGrid() > 0
+                || boardHandling.getInteractiveSettings().getVerticalComponentGrid() > 0)) {
           gridSnapComponent = currComponent;
         }
         if (!componentList.contains(currComponent)) {
           Collection<Item> componentItems = routingBoard.getComponentItems(currComponent.no);
           for (Item currComponentItem : componentItems) {
             componentList.add(currComponent);
-            itemList.add(currComponentItem);
+            allItems.add(currComponentItem);
           }
         }
       } else {
-        itemList.add(currItem);
+        allItems.add(currItem);
       }
     }
+    boolean moveOk = true;
     Set<Item> fixedItems = new TreeSet<>();
     Set<Item> obstacleItems = new TreeSet<>();
     Set<Item> addItems = new TreeSet<>();
-    boolean moveOk = true;
-    for (Item currItem : itemList) {
+    for (Item currItem : allItems) {
       if (currItem.isUserFixed()) {
-        pBoardHandling.screenMessages.setStatusMessage(
+        boardHandling.screenMessages.setStatusMessage(
             tm.getText("some_items_cannot_be_moved_because_they_are_fixed"));
         moveOk = false;
         obstacleItems.add(currItem);
@@ -166,40 +167,40 @@ public final class MoveItemState extends InteractiveState {
       }
     }
     if (!moveOk) {
-      if (pParentState instanceof InspectedItemState state) {
+      if (parentState instanceof InspectedItemState state) {
         if (!fixedItems.isEmpty()) {
           state.getItemList().addAll(fixedItems);
-          pBoardHandling.screenMessages.setStatusMessage(
+          boardHandling.screenMessages.setStatusMessage(
               tm.getText("please_unfix_selected_items_before_moving"));
         } else {
           state.getItemList().addAll(obstacleItems);
-          pBoardHandling.screenMessages.setStatusMessage(
+          boardHandling.screenMessages.setStatusMessage(
               tm.getText("please_unroute_or_extend_selection_before_moving"));
         }
       }
       return null;
     }
-    itemList.addAll(addItems);
+    allItems.addAll(addItems);
     return new MoveItemState(
-        pLocation,
-        itemList,
+        location,
+        allItems,
         componentList,
         gridSnapComponent,
-        pParentState.returnState,
-        pBoardHandling);
+        parentState.returnState,
+        boardHandling);
   }
 
-  private void addToNetItemsList(Item pItem, int pNetNo) {
+  private void addToNetItemsList(Item item, int netNo) {
     for (NetItems currItems : this.netItemsList) {
-      if (currItems.netNo == pNetNo) {
+      if (currItems.netNo == netNo) {
         // list for p_net_no exists already
-        currItems.items.add(pItem);
+        currItems.items.add(item);
         return;
       }
     }
-    Collection<Item> newItemList = hdlg.getRoutingBoard().getConnectableItems(pNetNo);
-    newItemList.add(pItem);
-    NetItems newNetItems = new NetItems(pNetNo, newItemList);
+    Collection<Item> newItemList = hdlg.getRoutingBoard().getConnectableItems(netNo);
+    newItemList.add(item);
+    NetItems newNetItems = new NetItems(netNo, newItemList);
     this.netItemsList.add(newNetItems);
   }
 
@@ -211,7 +212,7 @@ public final class MoveItemState extends InteractiveState {
   }
 
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
+  public InteractiveState leftButtonClicked(FloatPoint location) {
     return this.complete();
   }
 
@@ -251,18 +252,18 @@ public final class MoveItemState extends InteractiveState {
   }
 
   @Override
-  public InteractiveState mouseWheelMoved(int pRotation) {
+  public InteractiveState mouseWheelMoved(int rotation) {
     if (hdlg.getInteractiveSettings().getZoomWithWheel()) {
-      super.mouseWheelMoved(pRotation);
+      super.mouseWheelMoved(rotation);
     } else {
-      this.rotate(-pRotation);
+      this.rotate(-rotation);
     }
     return this;
   }
 
-  /** Changes the position of the items in the list to p_new_location. */
-  private void move(FloatPoint pNewPosition) {
-    currentPosition = pNewPosition.round();
+  /** Changes the position of the items in the list to the given location. */
+  private void move(FloatPoint newPosition) {
+    currentPosition = newPosition.round();
     if (!currentPosition.equals(previousPosition)) {
       Vector translateVector = currentPosition.differenceBy(previousPosition);
       if (this.gridSnapComponent != null) {
@@ -285,8 +286,8 @@ public final class MoveItemState extends InteractiveState {
     }
   }
 
-  private Vector adjustToPlacementGrid(Vector pVector) {
-    Point newComponentLocation = this.gridSnapComponent.getLocation().translateBy(pVector);
+  private Vector adjustToPlacementGrid(Vector vector) {
+    Point newComponentLocation = this.gridSnapComponent.getLocation().translateBy(vector);
     IntPoint roundedComponentLocation =
         newComponentLocation
             .toFloat()
@@ -294,23 +295,23 @@ public final class MoveItemState extends InteractiveState {
                 hdlg.getInteractiveSettings().getHorizontalComponentGrid(),
                 hdlg.getInteractiveSettings().getVerticalComponentGrid());
     Vector adjustment = roundedComponentLocation.differenceBy(newComponentLocation);
-    Vector result = pVector.add(adjustment);
+    Vector result = vector.add(adjustment);
     this.currentPosition = this.previousPosition.translateBy(result).toFloat().round();
-    return pVector.add(adjustment);
+    return vector.add(adjustment);
   }
 
-  /** Turns the items in the list by p_factor times 90 degree around the current position. */
-  public void turn90Degree(int pFactor) {
-    if (pFactor == 0) {
+  /** Turns the items in the list by the given number of 90-degree increments. */
+  public void turn90Degree(int factor) {
+    if (factor == 0) {
       return;
     }
     Components components = hdlg.getRoutingBoard().components;
     for (Component currComponent : this.componentList) {
-      components.turn90Degree(currComponent.no, pFactor, currentPosition);
+      components.turn90Degree(currComponent.no, factor, currentPosition);
     }
     this.clearanceViolations = new LinkedList<>();
     for (Item currItem : this.itemList) {
-      currItem.turn90Degree(pFactor, currentPosition);
+      currItem.turn90Degree(factor, currentPosition);
       this.clearanceViolations.addAll(currItem.clearanceViolations());
     }
     for (NetItems currNetItems : this.netItemsList) {
@@ -319,18 +320,19 @@ public final class MoveItemState extends InteractiveState {
     hdlg.repaint();
   }
 
-  public void rotate(double pAngleInDegree) {
-    if (pAngleInDegree == 0) {
+  /** Rotates the items in the list by the given angle around the current position. */
+  public void rotate(double angleInDegree) {
+    if (angleInDegree == 0) {
       return;
     }
     Components components = hdlg.getRoutingBoard().components;
     for (Component currComponent : this.componentList) {
-      components.rotate(currComponent.no, pAngleInDegree, this.currentPosition);
+      components.rotate(currComponent.no, angleInDegree, this.currentPosition);
     }
     this.clearanceViolations = new LinkedList<>();
     FloatPoint floatPosition = this.currentPosition.toFloat();
     for (Item currItem : this.itemList) {
-      currItem.rotateApprox(pAngleInDegree, floatPosition);
+      currItem.rotateApprox(angleInDegree, floatPosition);
       this.clearanceViolations.addAll(currItem.clearanceViolations());
     }
     for (NetItems currNetItems : this.netItemsList) {
@@ -339,12 +341,12 @@ public final class MoveItemState extends InteractiveState {
     hdlg.repaint();
   }
 
-  /** Turns the items in the list by p_factor times 90 degree around the current position. */
-  public void turn45Degree(int pFactor) {
-    if (pFactor % 2 == 0) {
-      turn90Degree(pFactor / 2);
+  /** Turns the items in the list by the given number of 45-degree increments. */
+  public void turn45Degree(int factor) {
+    if (factor % 2 == 0) {
+      turn90Degree(factor / 2);
     } else {
-      rotate(pFactor * 45);
+      rotate(factor * 45);
     }
   }
 
@@ -388,6 +390,7 @@ public final class MoveItemState extends InteractiveState {
     hdlg.repaint();
   }
 
+  /** Resets the rotation of the moved components. */
   public void resetRotation() {
     Component componentToReset = null;
     for (Component currComponent : this.componentList) {
@@ -412,16 +415,16 @@ public final class MoveItemState extends InteractiveState {
 
   /** Action to be taken when a key is pressed (Shortcut). */
   @Override
-  public InteractiveState keyTyped(char pKeyChar) {
+  public InteractiveState keyTyped(char keyChar) {
     InteractiveState currReturnState = this;
-    switch (pKeyChar) {
+    switch (keyChar) {
       case '+' -> turn90Degree(1);
       case '*' -> turn90Degree(2);
       case '-' -> turn90Degree(3);
       case '/' -> changePlacementSide();
       case 'r' -> hdlg.getInteractiveSettings().setZoomWithWheel(false);
       case 'z' -> hdlg.getInteractiveSettings().setZoomWithWheel(true);
-      default -> currReturnState = super.keyTyped(pKeyChar);
+      default -> currReturnState = super.keyTyped(keyChar);
     }
     return currReturnState;
   }
@@ -437,17 +440,17 @@ public final class MoveItemState extends InteractiveState {
   }
 
   @Override
-  public void draw(Graphics pGraphics) {
+  public void draw(Graphics graphics) {
     if (this.itemList == null) {
       return;
     }
     for (Item currItem : this.itemList) {
-      currItem.draw(pGraphics, hdlg.graphicsContext);
+      currItem.draw(graphics, hdlg.graphicsContext);
     }
     if (this.clearanceViolations != null) {
       Color drawColor = hdlg.graphicsContext.getViolationsColor();
       for (ClearanceViolation currViolation : this.clearanceViolations) {
-        hdlg.graphicsContext.fillArea(currViolation.shape, pGraphics, drawColor, 1);
+        hdlg.graphicsContext.fillArea(currViolation.shape, graphics, drawColor, 1);
       }
     }
   }
@@ -457,9 +460,9 @@ public final class MoveItemState extends InteractiveState {
     final int netNo;
     final Collection<Item> items;
 
-    NetItems(int pNetNo, Collection<Item> pItems) {
-      netNo = pNetNo;
-      items = pItems;
+    NetItems(int netNo, Collection<Item> items) {
+      this.netNo = netNo;
+      this.items = items;
     }
   }
 }

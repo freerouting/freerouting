@@ -8,19 +8,19 @@ import app.freerouting.geometry.planar.FloatPoint;
  */
 public final class RouteMenuState extends MenuState {
 
-  /** Creates a new instance of RouteMenuState */
-  private RouteMenuState(GuiBoardManager pBoardHandling) {
-    super(pBoardHandling);
+  /** Creates a new instance of RouteMenuState. */
+  private RouteMenuState(GuiBoardManager boardHandling) {
+    super(boardHandling);
   }
 
-  /** Returns a new instance of RouteMenuState */
-  public static RouteMenuState getInstance(GuiBoardManager pBoardHandling) {
-    return new RouteMenuState(pBoardHandling);
+  /** Returns a new instance of RouteMenuState. */
+  public static RouteMenuState getInstance(GuiBoardManager boardHandling) {
+    return new RouteMenuState(boardHandling);
   }
 
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
-    return RouteState.getInstance(pLocation, this, hdlg);
+  public InteractiveState leftButtonClicked(FloatPoint location) {
+    return RouteState.getInstance(location, this, hdlg);
   }
 
   @Override

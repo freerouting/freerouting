@@ -12,32 +12,32 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPopupMenu;
 
-/** Interactive creation of a circle obstacle */
+/** Interactive creation of a circle obstacle. */
 public final class CircleConstructionState extends InteractiveState {
 
   private final FloatPoint circleCenter;
   private double circleRadius = 0;
   private boolean observersActivated;
 
-  /** Creates a new instance of CircleConstructionState */
+  /** Creates a new instance of CircleConstructionState. */
   private CircleConstructionState(
-      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
-    circleCenter = pLocation;
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
+    circleCenter = location;
   }
 
   /**
-   * Returns a new instance of this class. If p_logfile != null; the creation of this item is stored
-   * in a logfile
+   * Returns a new instance of this class. If logging is enabled, the creation of this item is
+   * stored in a log file.
    */
   public static CircleConstructionState getInstance(
-      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    pBoardHandling.removeRatsnest(); // inserting a circle may change the connectivity.
-    return new CircleConstructionState(pLocation, pParentState, pBoardHandling);
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    boardHandling.removeRatsnest(); // inserting a circle may change the connectivity.
+    return new CircleConstructionState(location, parentState, boardHandling);
   }
 
   @Override
-  public InteractiveState leftButtonClicked(FloatPoint pLocation) {
+  public InteractiveState leftButtonClicked(FloatPoint location) {
     return this.complete();
   }
 
@@ -48,7 +48,7 @@ public final class CircleConstructionState extends InteractiveState {
     return this;
   }
 
-  /** completes the circle construction state */
+  /** Completes the circle construction state. */
   @Override
   public InteractiveState complete() {
     IntPoint center = this.circleCenter.round();
@@ -92,20 +92,15 @@ public final class CircleConstructionState extends InteractiveState {
     return this.returnState;
   }
 
-  /**
-   * Used when reading the next point from a logfile. Calls complete, because only 1 additional
-   * point is stored in the logfile.
-   */
-
-  /** draws the graphic construction aid for the circle */
+  /** Draws the graphic construction aid for the circle. */
   @Override
-  public void draw(Graphics pGraphics) {
+  public void draw(Graphics graphics) {
     FloatPoint currentMousePosition = hdlg.getCurrentMousePosition();
     if (currentMousePosition == null) {
       return;
     }
     this.circleRadius = circleCenter.distance(currentMousePosition);
-    hdlg.graphicsContext.drawCircle(circleCenter, circleRadius, 300, Color.white, pGraphics, 1);
+    hdlg.graphicsContext.drawCircle(circleCenter, circleRadius, 300, Color.white, graphics, 1);
   }
 
   @Override

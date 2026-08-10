@@ -29,25 +29,26 @@ public class RouteState extends InteractiveState {
   private Set<Item> routingTargetSet;
 
   /**
-   * Creates a new instance of RouteState If p_logfile != null, the creation of the route is stored
-   * in the logfile.
+   * Creates a new instance of RouteState.
+   *
+   * <p>The creation of the route is stored in a logfile when logging is enabled.
    */
-  protected RouteState(InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    super(pParentState, pBoardHandling);
+  protected RouteState(InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
   }
 
   /**
-   * Returns a new instance of this class or null, if starting a new route was not possible at
-   * p_location. If p_logfile != null, the creation of the route is stored in the logfile.
+   * Returns a new instance of this class, or null if starting a new route was not possible at the
+   * given location.
    */
   public static RouteState getInstance(
-      FloatPoint pLocation, InteractiveState pParentState, GuiBoardManager pBoardHandling) {
-    if (!(pParentState instanceof MenuState)) {
+      FloatPoint floatLocation, InteractiveState parentState, GuiBoardManager boardHandling) {
+    if (!(parentState instanceof MenuState)) {
       FRLogger.warn("RouteState.get_instance: unexpected parent state");
     }
-    pBoardHandling.displayLayerMessage();
-    IntPoint location = pLocation.round();
-    Item pickedItem = startOk(location, pBoardHandling);
+    boardHandling.displayLayerMessage();
+    IntPoint location = floatLocation.round();
+    Item pickedItem = startOk(location, boardHandling);
     if (pickedItem == null) {
       return null;
     }
@@ -60,7 +61,7 @@ public class RouteState extends InteractiveState {
       // tie pin, remove nets, which are already connected to this pin on the current
       // layer.
       routeNetNoArr =
-          getRouteNetNumbersAtTiePin(pin, pBoardHandling.getInteractiveSettings().getLayer());
+          getRouteNetNumbersAtTiePin(pin, boardHandling.getInteractiveSettings().getLayer());
     } else {
       routeNetNoArr = new int[netCount];
       for (int i = 0; i < netCount; i++) {
@@ -70,29 +71,29 @@ public class RouteState extends InteractiveState {
     if (routeNetNoArr.length == 0) {
       return null;
     }
-    RoutingBoard routingBoard = pBoardHandling.getRoutingBoard();
+    RoutingBoard routingBoard = boardHandling.getRoutingBoard();
     int[] traceHalfWidths = new int[routingBoard.getLayerCount()];
     boolean[] layerActiveArr = new boolean[traceHalfWidths.length];
     for (int i = 0; i < traceHalfWidths.length; i++) {
-      traceHalfWidths[i] = pBoardHandling.getTraceHalfwidth(routeNetNoArr[0], i);
+      traceHalfWidths[i] = boardHandling.getTraceHalfwidth(routeNetNoArr[0], i);
       layerActiveArr[i] = false;
       for (int j = 0; j < routeNetNoArr.length; j++) {
-        if (pBoardHandling.isActiveRoutingLayer(routeNetNoArr[j], i)) {
+        if (boardHandling.isActiveRoutingLayer(routeNetNoArr[j], i)) {
           layerActiveArr[i] = true;
         }
       }
     }
 
-    int traceClearanceClass = pBoardHandling.getTraceClearanceClass(routeNetNoArr[0]);
+    int traceClearanceClass = boardHandling.getTraceClearanceClass(routeNetNoArr[0]);
     boolean startOk = true;
     if (pickedItem instanceof Trace pickedTrace) {
       Point pickedCorner = pickedTrace.nearestEndPoint(location);
       if (pickedCorner instanceof IntPoint point
-          && pLocation.distance(pickedCorner.toFloat()) < 5 * pickedTrace.getHalfWidth()) {
+          && floatLocation.distance(pickedCorner.toFloat()) < 5 * pickedTrace.getHalfWidth()) {
         location = point;
       } else {
         if (pickedTrace instanceof PolylineTrace trace) {
-          FloatPoint nearestPoint = trace.polyline().nearestPointApprox(pLocation);
+          FloatPoint nearestPoint = trace.polyline().nearestPointApprox(floatLocation);
           location = nearestPoint.round();
         }
         if (!routingBoard.connectToTrace(
@@ -100,7 +101,7 @@ public class RouteState extends InteractiveState {
           startOk = false;
         }
       }
-      if (startOk && !pBoardHandling.getInteractiveSettings().getManualRuleSelection()) {
+      if (startOk && !boardHandling.getInteractiveSettings().getManualRuleSelection()) {
         // Pick up the half with and the clearance class of the found trace.
         int[] newTraceHalfWidths = new int[traceHalfWidths.length];
         System.arraycopy(traceHalfWidths, 0, newTraceHalfWidths, 0, traceHalfWidths.length);
@@ -108,8 +109,8 @@ public class RouteState extends InteractiveState {
         traceHalfWidths = newTraceHalfWidths;
         traceClearanceClass = pickedTrace.clearanceClassNo();
       }
-    } else if (pickedItem instanceof DrillItem drill_item) {
-      Point center = drill_item.getCenter();
+    } else if (pickedItem instanceof DrillItem drillItem) {
+      Point center = drillItem.getCenter();
       if (center instanceof IntPoint point) {
         location = point;
       }
@@ -124,73 +125,73 @@ public class RouteState extends InteractiveState {
     }
     // Switch to stitch mode for nets, which are shove fixed.
     boolean isStitchRoute =
-        pBoardHandling.getInteractiveSettings().getIsStitchRoute()
+        boardHandling.getInteractiveSettings().getIsStitchRoute()
             || currentNet.getNetClass().isShoveFixed()
             || !currentNet.getNetClass().getPullTight();
     routingBoard.generateSnapshot();
     RouteState newInstance;
     if (isStitchRoute) {
-      newInstance = new StitchRouteState(pParentState, pBoardHandling);
+      newInstance = new StitchRouteState(parentState, boardHandling);
     } else {
-      newInstance = new DynamicRouteState(pParentState, pBoardHandling);
+      newInstance = new DynamicRouteState(parentState, boardHandling);
     }
     newInstance.routingTargetSet = pickedItem.getUnconnectedSet(-1);
 
     newInstance.route =
         new Route(
             location,
-            pBoardHandling.getInteractiveSettings().getLayer(),
+            boardHandling.getInteractiveSettings().getLayer(),
             traceHalfWidths,
             layerActiveArr,
             routeNetNoArr,
             traceClearanceClass,
-            pBoardHandling.getViaRule(routeNetNoArr[0]),
-            pBoardHandling.getInteractiveSettings().getPushEnabled(),
-            pBoardHandling.getInteractiveSettings().getTracePullTightRegionWidth(),
-            pBoardHandling.getInteractiveSettings().getTracePullTightAccuracy(),
+            boardHandling.getViaRule(routeNetNoArr[0]),
+            boardHandling.getInteractiveSettings().getPushEnabled(),
+            boardHandling.getInteractiveSettings().getTracePullTightRegionWidth(),
+            boardHandling.getInteractiveSettings().getTracePullTightAccuracy(),
             pickedItem,
             newInstance.routingTargetSet,
             routingBoard,
             isStitchRoute,
-            pBoardHandling.getInteractiveSettings().getAutomaticNeckdown(),
-            pBoardHandling.getInteractiveSettings().getViaSnapToSmdCenter(),
-            pBoardHandling.getInteractiveSettings().getHighlightRoutingObstacle());
+            boardHandling.getInteractiveSettings().getAutomaticNeckdown(),
+            boardHandling.getInteractiveSettings().getViaSnapToSmdCenter(),
+            boardHandling.getInteractiveSettings().getHighlightRoutingObstacle());
     newInstance.observersActivated = !routingBoard.observersActive();
     if (newInstance.observersActivated) {
       routingBoard.startNotifyObservers();
     }
-    pBoardHandling.repaint();
+    boardHandling.repaint();
     newInstance.displayDefaultMessage();
     return newInstance;
   }
 
   /**
-   * Checks starting an interactive route at p_location. Returns the picked start item of the
-   * routing at p_location, or null, if no such item was found.
+   * Checks whether an interactive route can start at the specified location.
+   *
+   * @return the picked start item, or {@code null} if no suitable item was found
    */
-  protected static Item startOk(IntPoint pLocation, GuiBoardManager pHdlg) {
-    RoutingBoard routingBoard = pHdlg.getRoutingBoard();
+  protected static Item startOk(IntPoint location, GuiBoardManager hdlg) {
+    RoutingBoard routingBoard = hdlg.getRoutingBoard();
 
     /*
-     * look if an already existing trace ends at p_start_corner
-     * and pick it up in this case.
+     * Look for an existing trace ending at the specified location and pick it up in that case.
      */
     Item pickedItem =
         routingBoard.pickNearestRoutingItem(
-            pLocation, pHdlg.getInteractiveSettings().getLayer(), null);
+            location, hdlg.getInteractiveSettings().getLayer(), null);
     int layerCount = routingBoard.getLayerCount();
-    if (pickedItem == null && pHdlg.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
+    if (pickedItem == null && hdlg.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
       // Nothing found on preferred layer, try the other visible layers.
       // Prefer the outer layers.
-      pickedItem = pickRoutingItem(pLocation, 0, pHdlg);
+      pickedItem = pickRoutingItem(location, 0, hdlg);
       if (pickedItem == null) {
-        pickedItem = pickRoutingItem(pLocation, layerCount - 1, pHdlg);
+        pickedItem = pickRoutingItem(location, layerCount - 1, hdlg);
       }
       // prefer signal layers
       if (pickedItem == null) {
         for (int i = 1; i < layerCount - 1; i++) {
           if (routingBoard.layerStructure.arr[i].isSignal) {
-            pickedItem = pickRoutingItem(pLocation, i, pHdlg);
+            pickedItem = pickRoutingItem(location, i, hdlg);
             if (pickedItem != null) {
               break;
             }
@@ -200,7 +201,7 @@ public class RouteState extends InteractiveState {
       if (pickedItem == null) {
         for (int i = 1; i < layerCount - 1; i++) {
           if (!routingBoard.layerStructure.arr[i].isSignal) {
-            pickedItem = pickRoutingItem(pLocation, i, pHdlg);
+            pickedItem = pickRoutingItem(location, i, hdlg);
             if (pickedItem != null) {
               break;
             }
@@ -211,31 +212,31 @@ public class RouteState extends InteractiveState {
     return pickedItem;
   }
 
-  private static Item pickRoutingItem(IntPoint pLocation, int pLayerNo, GuiBoardManager pHdlg) {
+  private static Item pickRoutingItem(IntPoint location, int layerNo, GuiBoardManager hdlg) {
 
-    if (pLayerNo == pHdlg.getInteractiveSettings().getLayer()
-        || (pHdlg.graphicsContext.getLayerVisibility(pLayerNo) <= 0)) {
+    if (layerNo == hdlg.getInteractiveSettings().getLayer()
+        || (hdlg.graphicsContext.getLayerVisibility(layerNo) <= 0)) {
       return null;
     }
-    Item pickedItem = pHdlg.getRoutingBoard().pickNearestRoutingItem(pLocation, pLayerNo, null);
+    Item pickedItem = hdlg.getRoutingBoard().pickNearestRoutingItem(location, layerNo, null);
     if (pickedItem != null) {
-      pHdlg.setLayer(pickedItem.firstLayer());
+      hdlg.setLayer(pickedItem.firstLayer());
     }
     return pickedItem;
   }
 
   /**
-   * get nets of p_tie_pin except nets of traces, which are already connected to this pin on
-   * p_layer.
+   * Gets the nets of the tie pin except nets of traces already connected to this pin on the given
+   * layer.
    */
-  static int[] getRouteNetNumbersAtTiePin(Pin pPin, int pLayer) {
+  static int[] getRouteNetNumbersAtTiePin(Pin pin, int layer) {
     Set<Integer> netNumberList = new TreeSet<>();
-    for (int i = 0; i < pPin.netCount(); i++) {
-      netNumberList.add(pPin.getNetNo(i));
+    for (int i = 0; i < pin.netCount(); i++) {
+      netNumberList.add(pin.getNetNo(i));
     }
-    Set<Item> contacts = pPin.getNormalContacts();
+    Set<Item> contacts = pin.getNormalContacts();
     for (Item currContact : contacts) {
-      if (currContact.firstLayer() <= pLayer && currContact.lastLayer() >= pLayer) {
+      if (currContact.firstLayer() <= layer && currContact.lastLayer() >= layer) {
         for (int i = 0; i < currContact.netCount(); i++) {
           netNumberList.remove(currContact.getNetNo(i));
         }
@@ -252,12 +253,12 @@ public class RouteState extends InteractiveState {
 
   /** Action to be taken when a key is pressed (Shortcut). */
   @Override
-  public InteractiveState keyTyped(char pKeyChar) {
+  public InteractiveState keyTyped(char keyChar) {
     InteractiveState currReturnState = this;
-    if (Character.isDigit(pKeyChar)) {
-      // change to the p_key_char-ths signal layer
+    if (Character.isDigit(keyChar)) {
+      // Change to the signal layer selected by the numeric key.
       LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
-      int d = Character.digit(pKeyChar, 10);
+      int d = Character.digit(keyChar, 10);
       d = Math.min(d, layerStructure.signalLayerCount());
       // Board layers start at 0, keyboard input for layers starts at 1.
       d = Math.max(d - 1, 0);
@@ -267,7 +268,7 @@ public class RouteState extends InteractiveState {
       if (d >= 0) {
         changeLayerAction(d);
       }
-    } else if (pKeyChar == '+') {
+    } else if (keyChar == '+') {
       // change to the next signal layer
       LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
       int currentLayerNo = hdlg.getInteractiveSettings().getLayer();
@@ -278,7 +279,7 @@ public class RouteState extends InteractiveState {
       if (currentLayerNo < layerStructure.arr.length) {
         changeLayerAction(currentLayerNo);
       }
-    } else if (pKeyChar == '-') {
+    } else if (keyChar == '-') {
       // change to the previous signal layer
       LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
       int currentLayerNo = hdlg.getInteractiveSettings().getLayer();
@@ -290,17 +291,18 @@ public class RouteState extends InteractiveState {
       }
 
     } else {
-      currReturnState = super.keyTyped(pKeyChar);
+      currReturnState = super.keyTyped(keyChar);
     }
     return currReturnState;
   }
 
   /**
-   * Append a line to p_location to the trace routed so far. Returns from state, if the route is
-   * completed by connecting to a target.
+   * Appends a line to the trace routed so far.
+   *
+   * @return the parent state if the route was completed; otherwise, this state
    */
-  public InteractiveState addCorner(FloatPoint pLocation) {
-    boolean routeCompleted = route.nextCorner(pLocation);
+  public InteractiveState addCorner(FloatPoint location) {
+    boolean routeCompleted = route.nextCorner(location);
     String layerString = hdlg.getRoutingBoard().layerStructure.arr[route.nearestTargetLayer()].name;
     hdlg.screenMessages.setTargetLayer(layerString);
     if (routeCompleted) {
@@ -354,15 +356,15 @@ public class RouteState extends InteractiveState {
   }
 
   @Override
-  public boolean changeLayerAction(int pNewLayer) {
+  public boolean changeLayerAction(int newLayer) {
     boolean result = true;
-    if (pNewLayer >= 0 && pNewLayer < hdlg.getRoutingBoard().getLayerCount()) {
-      if (this.route != null && !this.route.isLayerActive(pNewLayer)) {
-        String layerName = hdlg.getRoutingBoard().layerStructure.arr[pNewLayer].name;
+    if (newLayer >= 0 && newLayer < hdlg.getRoutingBoard().getLayerCount()) {
+      if (this.route != null && !this.route.isLayerActive(newLayer)) {
+        String layerName = hdlg.getRoutingBoard().layerStructure.arr[newLayer].name;
         hdlg.screenMessages.setStatusMessage(
             tm.getText("layer_not_changed_inactive_net_message", layerName));
       }
-      boolean changeLayerSucceeded = route.changeLayer(pNewLayer);
+      boolean changeLayerSucceeded = route.changeLayer(newLayer);
       if (changeLayerSucceeded) {
         boolean connectedToPlane = false;
         // check, if the layer change resulted in a connection to a power plane.
@@ -381,11 +383,11 @@ public class RouteState extends InteractiveState {
         if (newVia != null) {
           int fromLayer;
           int toLayer;
-          if (oldLayer < pNewLayer) {
+          if (oldLayer < newLayer) {
             fromLayer = oldLayer + 1;
-            toLayer = pNewLayer;
+            toLayer = newLayer;
           } else {
-            fromLayer = pNewLayer;
+            fromLayer = newLayer;
             toLayer = oldLayer - 1;
           }
           Collection<Item> contacts = newVia.getNormalContacts();
@@ -405,8 +407,8 @@ public class RouteState extends InteractiveState {
             hdlg.updateRatsnest(currNetNo);
           }
         } else {
-          hdlg.setLayer(pNewLayer);
-          String layerName = hdlg.getRoutingBoard().layerStructure.arr[pNewLayer].name;
+          hdlg.setLayer(newLayer);
+          String layerName = hdlg.getRoutingBoard().layerStructure.arr[newLayer].name;
           hdlg.screenMessages.setStatusMessage(tm.getText("layer_changed_to_message", layerName));
           // make the current situation restorable by undo
           hdlg.getRoutingBoard().generateSnapshot();
@@ -432,9 +434,9 @@ public class RouteState extends InteractiveState {
   }
 
   @Override
-  public void draw(Graphics pGraphics) {
+  public void draw(Graphics graphics) {
     if (route != null) {
-      route.draw(pGraphics, hdlg.graphicsContext);
+      route.draw(graphics, hdlg.graphicsContext);
     }
   }
 

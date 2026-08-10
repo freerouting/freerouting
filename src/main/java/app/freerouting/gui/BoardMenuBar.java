@@ -20,7 +20,7 @@ public class BoardMenuBar extends JMenuBar {
   public BoardMenuRules rulesMenu;
   public BoardMenuInfo infoMenu;
 
-  /** Creates a new BoardMenuBar together with its menus */
+  /** Creates a new BoardMenuBar together with its menus. */
   public BoardMenuBar(BoardFrame boardFrame, FeatureFlagsSettings featureFlags) {
     this.boardFrame = boardFrame;
     fileMenu = new BoardMenuFile(boardFrame);

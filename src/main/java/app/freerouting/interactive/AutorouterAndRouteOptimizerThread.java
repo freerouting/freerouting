@@ -205,7 +205,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    * <p><strong>Warning:</strong> Multi-threaded optimization is known to potentially generate
    * clearance violations. Single-threaded mode is recommended for production.
    *
-   * @param pBoardHandling the GUI board manager for display updates
+   * @param boardHandling the GUI board manager for display updates
    * @param routingJob the routing job containing configuration and board data
    * @see BatchAutorouter
    * @see BatchAutorouterV19
@@ -213,11 +213,11 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    * @see BatchOptimizerMultiThreaded
    */
   protected AutorouterAndRouteOptimizerThread(
-      GuiBoardManager pBoardHandling, RoutingJob routingJob) {
-    super(pBoardHandling, routingJob);
+      GuiBoardManager boardHandling, RoutingJob routingJob) {
+    super(boardHandling, routingJob);
 
     routingJob.thread = this;
-    routingJob.board = pBoardHandling.getRoutingBoard();
+    routingJob.board = boardHandling.getRoutingBoard();
 
     // Select the appropriate router algorithm based on settings
     String algorithm = routingJob.routerSettings.algorithm;
@@ -535,9 +535,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
 
     FRLogger.traceEntry("BatchAutorouterThread.thread_action()");
     try {
-      TextManager tm = new TextManager(InteractiveState.class, boardManager.getLocale());
-
-      boolean savedBoardReadOnly = boardManager.isBoardReadOnly();
+      final boolean savedBoardReadOnly = boardManager.isBoardReadOnly();
       boardManager.setBoardReadOnly(true);
       boolean ratsnestHiddenBefore = boardManager.getRatsnest().isHidden();
       if (!ratsnestHiddenBefore) {
@@ -548,8 +546,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
           routingJob.routerSettings.getRunRouter()
               && (routingJob.routerSettings.maxPasses == null
                   || routingJob.routerSettings.maxPasses >= 0);
-      int threadCount = routingJob.routerSettings.maxThreads;
       if (isRouterEnabled) {
+        int threadCount = routingJob.routerSettings.maxThreads;
         routingJob.logInfo(
             "Starting routing of '"
                 + routingJob.name
@@ -564,6 +562,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       globalSettings.statistics.incrementJobsCompleted();
       FRAnalytics.autorouterStarted();
 
+      TextManager tm = new TextManager(InteractiveState.class, boardManager.getLocale());
       String startMessage = tm.getText("batch_autorouter_start_message");
       boardManager.screenMessages.setStatusMessage(startMessage);
 
@@ -629,7 +628,9 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
           String sessionSummary =
               String.format(
                   java.util.Locale.US,
-                  "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+                  "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, "
+                      + "final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, "
+                      + "and %.1f MB peak heap usage.",
                   completionStatus,
                   initialUnroutedCount,
                   autoroutingSecondsToComplete,
@@ -672,7 +673,10 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
                 + "...");
         if (numThreads > 1) {
           routingJob.logWarning(
-              "Multi-threaded route optimization is broken and it is known to generate clearance violations. It is highly recommended to use the single-threaded route optimization instead by setting the number of threads to 1 with the '-mt 1' command line argument.");
+              "Multi-threaded route optimization is broken and it is known to generate clearance "
+                  + "violations. It is highly recommended to use the single-threaded route "
+                  + "optimization instead by setting the number of threads to 1 with the '-mt 1' "
+                  + "command line argument.");
         }
 
         FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
@@ -697,7 +701,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
 
         double percentageImprovement =
             ((scoreAfterOptimization / scoreBeforeOptimization) * 100.0) - 100.0;
-
         double routeOptimizationSecondsToComplete =
             FRLogger.traceExit("BatchAutorouterThread.thread_action()-routeoptimization");
         routingJob.logInfo(
@@ -792,22 +795,23 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    */
   private void monitorCpuAndMemoryUsage(app.freerouting.core.RoutingJob job) {
     try {
-      ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
-      long[] threadIds = threadMXBean.getAllThreadIds();
+      ThreadMXBean threadBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      long[] threadIds = threadBean.getAllThreadIds();
       for (long threadId : threadIds) {
         if (job.thread != null && threadId == job.thread.threadId()) {
-          float cpuTime = threadMXBean.getThreadCpuTime(threadId) / 1_000_000_000.0f;
-          threadMXBean.setThreadAllocatedMemoryEnabled(true);
-          long allocatedMemory = threadMXBean.getThreadAllocatedBytes(threadId);
-          float allocatedMB = allocatedMemory / (1024.0f * 1024.0f);
+          float cpuTime = threadBean.getThreadCpuTime(threadId) / 1_000_000_000.0f;
+          threadBean.setThreadAllocatedMemoryEnabled(true);
+          long allocatedMemory = threadBean.getThreadAllocatedBytes(threadId);
+          float allocatedMegabytes = allocatedMemory / (1024.0f * 1024.0f);
           job.resourceUsage.cpuTimeUsed = cpuTime;
-          job.resourceUsage.maxMemoryUsed = allocatedMB;
+          job.resourceUsage.maxMemoryUsed = allocatedMegabytes;
         }
       }
-      java.lang.management.MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
-      float heapUsedMB = memoryMXBean.getHeapMemoryUsage().getUsed() / (1024.0f * 1024.0f);
-      if (heapUsedMB > job.resourceUsage.peakMemoryUsed) {
-        job.resourceUsage.peakMemoryUsed = heapUsedMB;
+      java.lang.management.MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
+      float heapUsedMegabytes =
+          memoryBean.getHeapMemoryUsage().getUsed() / (1024.0f * 1024.0f);
+      if (heapUsedMegabytes > job.resourceUsage.peakMemoryUsed) {
+        job.resourceUsage.peakMemoryUsed = heapUsedMegabytes;
       }
     } catch (Throwable t) {
       // java.management or jdk.management module not available in this JRE build
@@ -854,13 +858,13 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    *   <li>Scales indicators based on board resolution and trace widths
    * </ul>
    *
-   * @param pGraphics the graphics context for rendering overlay indicators
+   * @param graphics the graphics context for rendering overlay indicators
    * @see BatchAutorouter#getAirLine()
    * @see BatchAutorouterV19#getAirLine()
    * @see BatchOptimizer#getCurrentPosition()
    */
   @Override
-  public void draw(Graphics pGraphics) {
+  public void draw(Graphics graphics) {
     // Cast to access get_air_line() which exists on both BatchAutorouter and
     // BatchAutorouterV19
     FloatLine currAirLine = null;
@@ -879,7 +883,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
           Math.min(
               this.boardManager.getRoutingBoard().communication.getResolution(Unit.MIL) * 3,
               300); // problem with low resolution on Kicad300;
-      this.boardManager.graphicsContext.draw(drawLine, drawWidth, drawColor, pGraphics, 1);
+      this.boardManager.graphicsContext.draw(drawLine, drawWidth, drawColor, graphics, 1);
     }
 
     if (this.batchOptimizer != null) {
@@ -894,14 +898,14 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
             new FloatPoint(currentOptPosition.x - radius, currentOptPosition.y - radius);
         drawPoints[1] =
             new FloatPoint(currentOptPosition.x + radius, currentOptPosition.y + radius);
-        this.boardManager.graphicsContext.draw(drawPoints, drawWidth, drawColor, pGraphics, 1);
+        this.boardManager.graphicsContext.draw(drawPoints, drawWidth, drawColor, graphics, 1);
         drawPoints[0] =
             new FloatPoint(currentOptPosition.x + radius, currentOptPosition.y - radius);
         drawPoints[1] =
             new FloatPoint(currentOptPosition.x - radius, currentOptPosition.y + radius);
-        this.boardManager.graphicsContext.draw(drawPoints, drawWidth, drawColor, pGraphics, 1);
+        this.boardManager.graphicsContext.draw(drawPoints, drawWidth, drawColor, graphics, 1);
         this.boardManager.graphicsContext.drawCircle(
-            currentOptPosition, radius, drawWidth, drawColor, pGraphics, 1);
+            currentOptPosition, radius, drawWidth, drawColor, graphics, 1);
       }
     }
   }
