@@ -131,12 +131,7 @@ public class ColorManager extends BoardSavableSubWindow {
 
     @Override
     public Component getTableCellRendererComponent(
-        JTable table,
-        Object color,
-        boolean isSelected,
-        boolean hasFocus,
-        int row,
-        int column) {
+        JTable table, Object color, boolean isSelected, boolean hasFocus, int row, int column) {
       setBackground((Color) color);
       if (isBordered) {
         if (isSelected) {

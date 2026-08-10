@@ -43,9 +43,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   /** Cached drill radius to avoid repeated regex parsing on every render call. */
   private Double cachedDrillRadius;
 
-  /**
-   * Creates a new Padstack with one shape per board layer.
-   */
+  /** Creates a new Padstack with one shape per board layer. */
   Padstack(
       String name,
       int no,
@@ -165,8 +163,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
 
   /**
    * Calculates the allowed trace exit directions on a layer. If the length of the pad is smaller
-   * than factor times its height, connection also to
-   * the long side is allowed.
+   * than factor times its height, connection also to the long side is allowed.
    */
   public Collection<Direction> getTraceExitDirections(int layer, double factor) {
     Collection<Direction> result = new LinkedList<>();

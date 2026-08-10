@@ -54,8 +54,8 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * Returns the other room of this door, or null if room is neither equal to this.firstRoom nor
-   * to this.secondRoom.
+   * Returns the other room of this door, or null if room is neither equal to this.firstRoom nor to
+   * this.secondRoom.
    */
   public ExpansionRoom otherRoom(ExpansionRoom room) {
     ExpansionRoom result;
@@ -70,8 +70,8 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * Returns the other room of this door, or null if room is neither equal to this.firstRoom nor
-   * to this.secondRoom, or if the other room is not a CompleteExpansionRoom.
+   * Returns the other room of this door, or null if room is neither equal to this.firstRoom nor to
+   * this.secondRoom, or if the other room is not a CompleteExpansionRoom.
    */
   @Override
   public CompleteExpansionRoom otherRoom(CompleteExpansionRoom room) {
@@ -141,8 +141,8 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * Calculates a diagonal line of the 2-dimensional doorShape which represents the restraint
-   * line between the shapes of this.firstRoom and this.secondRoom.
+   * Calculates a diagonal line of the 2-dimensional doorShape which represents the restraint line
+   * between the shapes of this.firstRoom and this.secondRoom.
    */
   private FloatLine calcDoorLineSegment(TileShape doorShape) {
     TileShape firstRoomShape = this.firstRoom.getShape();

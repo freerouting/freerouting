@@ -33,8 +33,7 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
   }
 
   /** OtherColorTableModel. */
-  public OtherColorTableModel(ObjectInputStream stream)
-      throws IOException, ClassNotFoundException {
+  public OtherColorTableModel(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     super(stream);
   }
 

@@ -46,10 +46,9 @@ public class InteractiveState {
   }
 
   /**
-   * Actions to be taken when a mouse button is released.
-   * Default function to be overwritten in derived classes.
-   * Returns the returnState of this state, if the state is left
-   * after the method, or else this state.
+   * Actions to be taken when a mouse button is released. Default function to be overwritten in
+   * derived classes. Returns the returnState of this state, if the state is left after the method,
+   * or else this state.
    */
   public InteractiveState buttonReleased() {
     return this;

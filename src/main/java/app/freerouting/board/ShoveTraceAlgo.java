@@ -293,8 +293,7 @@ public class ShoveTraceAlgo {
       }
       FloatPoint currShoveViaCenter = currShoveVia.getCenter().toFloat();
       IntPoint[] tryViaCenters =
-          MoveDrillItemAlgo.tryShoveViaPoints(
-              traceShape, layer, currShoveVia, clType, true, board);
+          MoveDrillItemAlgo.tryShoveViaPoints(traceShape, layer, currShoveVia, clType, true, board);
 
       double maxDist =
           0.5 * currShoveVia.getShapeOnLayer(layer).boundingBox().maxWidth() + shapeRadius;

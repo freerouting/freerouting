@@ -88,12 +88,10 @@ public final class InspectItemsInRegionState extends SelectRegionState {
   }
 
   private Set<Item> findItems(int selectLayer) {
-    return hdlg
-        .getInteractiveSettings()
+    return hdlg.getInteractiveSettings()
         .getItemSelectionFilter()
         .filter(
-            hdlg
-                .getRoutingBoard()
+            hdlg.getRoutingBoard()
                 .overlappingItems(createSelectionBox(this.corner1, this.corner2), selectLayer));
   }
 }

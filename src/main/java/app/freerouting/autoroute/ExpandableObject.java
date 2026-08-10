@@ -15,8 +15,8 @@ public interface ExpandableObject {
   int getDimension();
 
   /**
-   * Returns the other room to room if this is a door and the other room is a
-   * CompleteExpansionRoom. Else null is returned.
+   * Returns the other room to room if this is a door and the other room is a CompleteExpansionRoom.
+   * Else null is returned.
    */
   CompleteExpansionRoom otherRoom(CompleteExpansionRoom room);
 

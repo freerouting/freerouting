@@ -285,9 +285,7 @@ public class Structure extends ScopeKeyword {
     }
     if (currShape == null) {
       FRLogger.warn(
-          "Structure.read_boundary_scope: shape is null at '"
-              + scanner.getScopeIdentifier()
-              + "'");
+          "Structure.read_boundary_scope: shape is null at '" + scanner.getScopeIdentifier() + "'");
       return true;
     }
     addBoundaryShape(boardConstructionInfo, currShape);
@@ -359,9 +357,7 @@ public class Structure extends ScopeKeyword {
           nextToken = scanner.nextToken();
           if (nextToken != Keyword.CLOSED_BRACKET) {
             FRLogger.warn(
-                "Structure.read_layer_scope: ) expected at '"
-                    + scanner.getScopeIdentifier()
-                    + "'");
+                "Structure.read_layer_scope: ) expected at '" + scanner.getScopeIdentifier() + "'");
             return false;
           }
         } else if (nextToken == Keyword.RULE) {
@@ -600,15 +596,12 @@ public class Structure extends ScopeKeyword {
 
   /** Updates the board rules from the rules read from the dsn file. */
   private static void updateBoardRules(
-      ReadScopeParameter par,
-      BoardConstructionInfo boardConstructionInfo,
-      BoardRules boardRules) {
+      ReadScopeParameter par, BoardConstructionInfo boardConstructionInfo, BoardRules boardRules) {
     boolean smdToTurnGapFound = false;
     // update the clearance matrix
     for (Rule currOb : boardConstructionInfo.defaultRules) {
       if (currOb instanceof Rule.ClearanceRule currRule) {
-        if (setClearanceRule(
-            currRule, -1, par.coordinateTransform, boardRules, par.stringQuote)) {
+        if (setClearanceRule(currRule, -1, par.coordinateTransform, boardRules, par.stringQuote)) {
           smdToTurnGapFound = true;
         }
       }
@@ -640,8 +633,7 @@ public class Structure extends ScopeKeyword {
           int traceHalfwidth = (int) Math.round(par.coordinateTransform.dsnToBoard(wireWidth) / 2);
           boardRules.setDefaultTraceHalfWidth(layerNo, traceHalfwidth);
         } else if (currOb instanceof Rule.ClearanceRule currRule) {
-          setClearanceRule(
-              currRule, layerNo, par.coordinateTransform, boardRules, par.stringQuote);
+          setClearanceRule(currRule, layerNo, par.coordinateTransform, boardRules, par.stringQuote);
         }
       }
     }
@@ -1099,8 +1091,7 @@ public class Structure extends ScopeKeyword {
     return result;
   }
 
-  private boolean createBoard(
-      ReadScopeParameter par, BoardConstructionInfo boardConstructionInfo) {
+  private boolean createBoard(ReadScopeParameter par, BoardConstructionInfo boardConstructionInfo) {
     int layerCount = boardConstructionInfo.layerInfo.size();
     if (layerCount == 0) {
       FRLogger.warn(

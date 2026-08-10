@@ -5,9 +5,7 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.logger.FRLogger;
 
-/**
- * Task for optimizing a single route item in a multi-threaded routing pass.
- */
+/** Task for optimizing a single route item in a multi-threaded routing pass. */
 public class OptimizeRouteTask implements Runnable {
 
   public final RoutingBoard board;

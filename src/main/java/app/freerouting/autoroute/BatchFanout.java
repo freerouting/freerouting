@@ -718,8 +718,7 @@ public final class BatchFanout {
         this.distanceToClosestOnNet = minDistance;
 
         // surroundingsDensity calculation
-        double resolution =
-            routingBoard.communication.getResolution(app.freerouting.board.Unit.UM);
+        double resolution = routingBoard.communication.getResolution(app.freerouting.board.Unit.UM);
         double maxDist = 20000.0 * resolution; // 20.0 mm in coordinate units
         int density = 0;
         for (app.freerouting.board.Pin otherPin : boardSmdPinList) {

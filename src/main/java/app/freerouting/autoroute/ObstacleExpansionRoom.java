@@ -73,8 +73,8 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
   /**
    * Creates a 2-dim door with the other obstacle room if that is useful for the autoroute
-   * algorithm. It is assumed that this room and other have a 2-dimensional overlap. Returns
-   * false if no door was created.
+   * algorithm. It is assumed that this room and other have a 2-dimensional overlap. Returns false
+   * if no door was created.
    */
   public boolean createOverlapDoor(ObstacleExpansionRoom other) {
     if (this.doorExists(other)) {
@@ -91,8 +91,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
         return false;
       }
       // create only doors between consecutive trace segments
-      if (this.indexInItem != other.indexInItem + 1
-          && this.indexInItem != other.indexInItem - 1) {
+      if (this.indexInItem != other.indexInItem + 1 && this.indexInItem != other.indexInItem - 1) {
         return false;
       }
     }

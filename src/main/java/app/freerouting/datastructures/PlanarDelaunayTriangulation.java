@@ -439,8 +439,7 @@ public class PlanarDelaunayTriangulation {
     /** Returns the common corner of this edge and other, or null, if no common corner exists. */
     public Corner commonCorner(Edge other) {
       Corner result = null;
-      if (other.startCorner.equals(this.startCorner)
-          || other.endCorner.equals(this.startCorner)) {
+      if (other.startCorner.equals(this.startCorner) || other.endCorner.equals(this.startCorner)) {
         result = this.startCorner;
       } else if (other.startCorner.equals(this.endCorner)
           || other.endCorner.equals(this.endCorner)) {
@@ -664,8 +663,8 @@ public class PlanarDelaunayTriangulation {
     }
 
     /**
-     * Calculates the opposite corner of this triangle to edgeLine. Returns null, if edgeLine is
-     * nor an edge line of this triangle.
+     * Calculates the opposite corner of this triangle to edgeLine. Returns null, if edgeLine is nor
+     * an edge line of this triangle.
      */
     public Corner oppositeCorner(Edge edgeLine) {
       int edgeLineNo = -1;

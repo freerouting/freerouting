@@ -100,9 +100,7 @@ public class BoardLibrary implements Serializable {
     return true;
   }
 
-  /**
-   * Removes a padstack from the via padstack list. Returns false if it was not found.
-   */
+  /** Removes a padstack from the via padstack list. Returns false if it was not found. */
   public boolean removeViaPadstack(Padstack padstack, BasicBoard board) {
     return viaPadstacks.remove(padstack);
   }

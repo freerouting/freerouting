@@ -424,8 +424,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     }
     Line[] currLines = new Line[lineArr.length + 1];
     System.arraycopy(lineArr, 0, currLines, 0, startNo + 2);
-    System.arraycopy(
-        lineArr, startNo + 2, currLines, startNo + 3, currLines.length - startNo - 3);
+    System.arraycopy(lineArr, startNo + 2, currLines, startNo + 3, currLines.length - startNo - 3);
     double translateDist = maxTranslateDist;
     double deltaDist = maxTranslateDist;
     Side sideOfNearestPoint = translateLine.sideOf(nearestPoint);
@@ -470,8 +469,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
 
     if (board.changedArea != null) {
       FloatPoint newPrevCorner = currLines[startNo].intersectionApprox(currLines[startNo + 1]);
-      FloatPoint newNextCorner =
-          currLines[startNo + 3].intersectionApprox(currLines[startNo + 4]);
+      FloatPoint newNextCorner = currLines[startNo + 3].intersectionApprox(currLines[startNo + 4]);
       board.changedArea.join(newPrevCorner, currLayer);
       board.changedArea.join(newNextCorner, currLayer);
     }
@@ -487,8 +485,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
       // check, that the corners of the line to translate are inside
       // the clip shape
       for (int i = 1; i < 3; i++) {
-        FloatPoint currCorner =
-            lineArr[startNo + i].intersectionApprox(lineArr[startNo + i + 1]);
+        FloatPoint currCorner = lineArr[startNo + i].intersectionApprox(lineArr[startNo + i + 1]);
         if (!currClipShape.contains(currCorner)) {
           return null;
         }
@@ -539,8 +536,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     }
     Line[] currLines = new Line[lineArr.length];
     System.arraycopy(lineArr, 0, currLines, 0, startNo + 2);
-    System.arraycopy(
-        lineArr, startNo + 3, currLines, startNo + 3, currLines.length - startNo - 3);
+    System.arraycopy(lineArr, startNo + 3, currLines, startNo + 3, currLines.length - startNo - 3);
     double translateDist = maxTranslateDist;
     double deltaDist = maxTranslateDist;
     Side sideOfNearestPoint = translateLine.sideOf(nearestPoint);
@@ -627,8 +623,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
 
     if (board.changedArea != null) {
       FloatPoint newPrevCorner = currLines[startNo].intersectionApprox(currLines[startNo + 1]);
-      FloatPoint newNextCorner =
-          currLines[startNo + 3].intersectionApprox(currLines[startNo + 4]);
+      FloatPoint newNextCorner = currLines[startNo + 3].intersectionApprox(currLines[startNo + 4]);
       board.changedArea.join(newPrevCorner, currLayer);
       board.changedArea.join(newNextCorner, currLayer);
     }

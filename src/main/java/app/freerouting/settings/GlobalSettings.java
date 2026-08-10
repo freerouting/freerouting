@@ -245,17 +245,17 @@ public class GlobalSettings implements Serializable {
   /**
    * Loads settings from the default JSON settings file.
    *
-   * <p>Throws {@link NoSuchFileException} when the file (or its parent directory) does not
-   * exist yet — this is the expected first-run condition and callers should treat it as
-   * "create a new default config".
+   * <p>Throws {@link NoSuchFileException} when the file (or its parent directory) does not exist
+   * yet — this is the expected first-run condition and callers should treat it as "create a new
+   * default config".
    *
-   * <p>Throws {@link AccessDeniedException} when the OS denies read access to the file or
-   * its parent directory.  The exception message already contains the path; the caller
-   * should log an actionable warning that includes instructions on how to fix permissions.
+   * <p>Throws {@link AccessDeniedException} when the OS denies read access to the file or its
+   * parent directory. The exception message already contains the path; the caller should log an
+   * actionable warning that includes instructions on how to fix permissions.
    *
-   * <p>Returns {@code null} when the file exists but its JSON content is corrupt or cannot
-   * be parsed.  A WARN message is logged internally before returning so the user is always
-   * notified regardless of how the caller handles the return value.
+   * <p>Returns {@code null} when the file exists but its JSON content is corrupt or cannot be
+   * parsed. A WARN message is logged internally before returning so the user is always notified
+   * regardless of how the caller handles the return value.
    */
   public static GlobalSettings load() throws IOException {
     GlobalSettings loadedSettings = null;
@@ -360,14 +360,14 @@ public class GlobalSettings implements Serializable {
   /**
    * Saves settings to the default JSON settings file.
    *
-   * <p>The {@code version} field is always normalised to the release-safe version
-   * (no {@code -SNAPSHOT} suffix) before writing so that SNAPSHOT builds never
-   * pollute the stored config with a non-release version string.
+   * <p>The {@code version} field is always normalised to the release-safe version (no {@code
+   * -SNAPSHOT} suffix) before writing so that SNAPSHOT builds never pollute the stored config with
+   * a non-release version string.
    *
-   * <p>Throws {@link AccessDeniedException} (subtype of {@link IOException}) when the OS
-   * denies write access to the target directory or file.  The exception message contains
-   * the path; the caller should log an actionable warning advising the user to check
-   * permissions and, in Docker deployments, to verify the volume mount configuration.
+   * <p>Throws {@link AccessDeniedException} (subtype of {@link IOException}) when the OS denies
+   * write access to the target directory or file. The exception message contains the path; the
+   * caller should log an actionable warning advising the user to check permissions and, in Docker
+   * deployments, to verify the volume mount configuration.
    */
   public static void saveAsJson(GlobalSettings globalSettings) throws IOException {
     // Make sure that we have the directory structure in place, and create it if it
@@ -421,10 +421,9 @@ public class GlobalSettings implements Serializable {
   }
 
   /**
-   * Sets a property value and permanently saves it into the settings file.
-   * settings file.
-   * Property names are in the format of "section.property" (eg.
-   * "router.max_passes", "gui:input_directory" or "profile-email").
+   * Sets a property value and permanently saves it into the settings file. settings file. Property
+   * names are in the format of "section.property" (eg. "router.max_passes", "gui:input_directory"
+   * or "profile-email").
    */
   public static Boolean setDefaultValue(String propertyName, String newValue) {
     try {
@@ -458,12 +457,10 @@ public class GlobalSettings implements Serializable {
   }
 
   /**
-   * Sets a property value for the current process without saving it to disk.
-   * without permanently saving it into the settings file.
-   * For scenarios where the settings also needs to be saved in the settings file,
-   * use the save() method instead.
-   * Property names are in the format of "section.property" (eg.
-   * "router.max_passes", "gui:input_directory" or "profile-email").
+   * Sets a property value for the current process without saving it to disk. without permanently
+   * saving it into the settings file. For scenarios where the settings also needs to be saved in
+   * the settings file, use the save() method instead. Property names are in the format of
+   * "section.property" (eg. "router.max_passes", "gui:input_directory" or "profile-email").
    */
   public Boolean setValue(String propertyName, String newValue) {
     try {

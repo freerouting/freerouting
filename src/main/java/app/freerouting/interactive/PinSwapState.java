@@ -18,8 +18,7 @@ public final class PinSwapState extends InteractiveState {
   private Pin toPin;
 
   /** Creates a new instance of PinSwapState. */
-  private PinSwapState(
-      Pin pinToSwap, InteractiveState returnState, GuiBoardManager boardHandling) {
+  private PinSwapState(Pin pinToSwap, InteractiveState returnState, GuiBoardManager boardHandling) {
     super(returnState, boardHandling);
     this.fromPin = pinToSwap;
     this.swappablePins = pinToSwap.getSwappablePins();

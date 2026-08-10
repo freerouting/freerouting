@@ -420,8 +420,7 @@ public final class FRAnalytics {
     properties.put("total_autorouter_runtime", String.valueOf(totalAutorouterRuntime));
     properties.put("total_route_optimizer_runtime", String.valueOf(totalRouteOptimizerRuntime));
     properties.put(
-        "application_runtime",
-        String.valueOf(Instant.now().getEpochSecond() - appStartedAt));
+        "application_runtime", String.valueOf(Instant.now().getEpochSecond() - appStartedAt));
     properties.put("statistics_start_time", globalSettings.statistics.startTime);
     properties.put("statistics_end_time", globalSettings.statistics.endTime);
     properties.put(

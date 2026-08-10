@@ -277,8 +277,7 @@ public final class OptViaAlgo {
     }
     ItemSelectionFilter filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
-    Collection<Item> pickedItems =
-        board.pickItems(newViaLocation, contactTrace.getLayer(), filter);
+    Collection<Item> pickedItems = board.pickItems(newViaLocation, contactTrace.getLayer(), filter);
     for (Item currItem : pickedItems) {
       ((PolylineTrace) currItem).pullTight(true, tracePullTightAccuracy, null);
     }
@@ -393,13 +392,7 @@ public final class OptViaAlgo {
 
     double okLength =
         board.checkTraceSegment(
-            fromLocation,
-            toLocation,
-            traceLayer1,
-            netNoArr,
-            traceHalfWidth1,
-            traceClClass1,
-            false);
+            fromLocation, toLocation, traceLayer1, netNoArr, traceHalfWidth1, traceClClass1, false);
 
     if (okLength < Integer.MAX_VALUE) {
       return false;
@@ -549,21 +542,11 @@ public final class OptViaAlgo {
         // try moving the via first into the direction of toPoint1
         result =
             repositionVia(
-                board,
-                via,
-                toPoint1,
-                secondTraceHalfWidth,
-                secondTraceLayer,
-                secondTraceClClass);
+                board, via, toPoint1, secondTraceHalfWidth, secondTraceLayer, secondTraceClClass);
         if (result == null) {
           result =
               repositionVia(
-                  board,
-                  via,
-                  toPoint2,
-                  firstTraceHalfWidth,
-                  firstTraceLayer,
-                  firstTraceClClass);
+                  board, via, toPoint2, firstTraceHalfWidth, firstTraceLayer, firstTraceClClass);
         }
       } else {
         // try moving the via first into the direction of toPoint2
@@ -573,12 +556,7 @@ public final class OptViaAlgo {
         if (result == null) {
           result =
               repositionVia(
-                  board,
-                  via,
-                  toPoint1,
-                  secondTraceHalfWidth,
-                  secondTraceLayer,
-                  secondTraceClClass);
+                  board, via, toPoint1, secondTraceHalfWidth, secondTraceLayer, secondTraceClClass);
         }
       }
       if (result != null) {

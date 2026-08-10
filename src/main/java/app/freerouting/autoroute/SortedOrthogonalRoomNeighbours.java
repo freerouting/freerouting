@@ -43,10 +43,7 @@ public final class SortedOrthogonalRoomNeighbours {
     int netNo = autorouteEngine.getNetNo();
     SortedOrthogonalRoomNeighbours roomNeighbours =
         SortedOrthogonalRoomNeighbours.calculateNeighbours(
-            room,
-            netNo,
-            autorouteEngine.autorouteSearchTree,
-            autorouteEngine.generateRoomIdNo());
+            room, netNo, autorouteEngine.autorouteSearchTree, autorouteEngine.generateRoomIdNo());
     if (roomNeighbours == null) {
       return null;
     }
@@ -97,8 +94,7 @@ public final class SortedOrthogonalRoomNeighbours {
           };
       IntBox newContainedBox = roomBox.intersection(newRoomBox);
       FreeSpaceExpansionRoom newRoom =
-          autorouteEngine.addIncompleteExpansionRoom(
-              newRoomBox, room.getLayer(), newContainedBox);
+          autorouteEngine.addIncompleteExpansionRoom(newRoomBox, room.getLayer(), newContainedBox);
       ExpansionDoor newDoor = new ExpansionDoor(room, newRoom, 1);
       room.addDoor(newDoor);
       newRoom.addDoor(newDoor);
@@ -125,8 +121,7 @@ public final class SortedOrthogonalRoomNeighbours {
       FRLogger.warn("SortedOrthogonalRoomNeighbours.calculate: unexpected expansion room type");
       return null;
     }
-    SortedOrthogonalRoomNeighbours result =
-        new SortedOrthogonalRoomNeighbours(room, completedRoom);
+    SortedOrthogonalRoomNeighbours result = new SortedOrthogonalRoomNeighbours(room, completedRoom);
     Collection<ShapeTree.TreeEntry> overlappingObjects = new LinkedList<>();
     autorouteSearchTree.overlappingTreeEntries(roomShape, room.getLayer(), overlappingObjects);
 
@@ -215,8 +210,7 @@ public final class SortedOrthogonalRoomNeighbours {
       case 2 -> new IntBox(roomBox.ll.x, roomBox.ll.y, roomBox.ur.x, Limits.CRIT_INT);
       case 3 -> new IntBox(-Limits.CRIT_INT, roomBox.ll.y, roomBox.ur.x, roomBox.ur.y);
       default -> {
-        FRLogger.warn(
-            "SortedOrthogonalRoomNeighbours.remove_border_line: illegal removeEdgeNo");
+        FRLogger.warn("SortedOrthogonalRoomNeighbours.remove_border_line: illegal removeEdgeNo");
         yield null;
       }
     };
@@ -543,9 +537,7 @@ public final class SortedOrthogonalRoomNeighbours {
               + maxDoorArea);
       IncompleteFreeSpaceExpansionRoom enlargedRoom =
           new IncompleteFreeSpaceExpansionRoom(
-              enlargedBox,
-              currIncompleteRoom.getLayer(),
-              currIncompleteRoom.getContainedShape());
+              enlargedBox, currIncompleteRoom.getLayer(), currIncompleteRoom.getContainedShape());
       Collection<IncompleteFreeSpaceExpansionRoom> newRooms =
           autorouteSearchTree.completeShape(enlargedRoom, netNo, ignoreObject, ignoreShape);
       FRLogger.trace(

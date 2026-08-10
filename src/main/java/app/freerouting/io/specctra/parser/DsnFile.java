@@ -117,9 +117,7 @@ public final class DsnFile {
         result = true;
       } else if (nextToken != Keyword.OFF) {
         FRLogger.warn(
-            "DsnFile.read_boolean: Keyword.OFF expected at '"
-                + scanner.getScopeIdentifier()
-                + "'");
+            "DsnFile.read_boolean: Keyword.OFF expected at '" + scanner.getScopeIdentifier() + "'");
       }
       ScopeKeyword.skipScope(scanner);
       return result;

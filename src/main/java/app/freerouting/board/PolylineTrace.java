@@ -94,8 +94,8 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Returns the number of corners of this trace, which is the number of lines of its polyline
-   * minus one.
+   * Returns the number of corners of this trace, which is the number of lines of its polyline minus
+   * one.
    */
   public int cornerCount() {
     return lines.arr.length - 1;
@@ -995,8 +995,7 @@ public class PolylineTrace extends Trace implements Serializable {
    * Tries to pull this trace tight without creating clearance violations Returns true, if the trace
    * was changed.
    */
-  public boolean pullTight(
-      boolean ownNetOnly, int pullTightAccuracy, Stoppable stoppableThread) {
+  public boolean pullTight(boolean ownNetOnly, int pullTightAccuracy, Stoppable stoppableThread) {
     if (!(this.board instanceof RoutingBoard)) {
       return false;
     }

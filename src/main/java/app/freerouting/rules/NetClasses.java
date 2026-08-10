@@ -36,8 +36,7 @@ public class NetClasses implements Serializable {
       LayerStructure layerStructure,
       ClearanceMatrix clearanceMatrix,
       boolean ignoredByAutorouter) {
-    NetClass newClass =
-        new NetClass(name, layerStructure, clearanceMatrix, ignoredByAutorouter);
+    NetClass newClass = new NetClass(name, layerStructure, clearanceMatrix, ignoredByAutorouter);
     classArr.add(newClass);
     return newClass;
   }
@@ -55,8 +54,8 @@ public class NetClasses implements Serializable {
 
   /**
    * Looks for a net class with trace half-widths equal to {@code traceHalfWidth}, a trace clearance
-   * class equal to {@code traceClearanceClass}, and the given via rule.
-   * Returns null if no such net class was found.
+   * class equal to {@code traceClearanceClass}, and the given via rule. Returns null if no such net
+   * class was found.
    */
   public NetClass find(int traceHalfWidth, int traceClearanceClass, ViaRule viaRule) {
     for (NetClass currClass : this.classArr) {
@@ -102,9 +101,7 @@ public class NetClasses implements Serializable {
     return null;
   }
 
-  /**
-   * Removes {@code netClass} from this list. Returns false if it was not contained in the list.
-   */
+  /** Removes {@code netClass} from this list. Returns false if it was not contained in the list. */
   public boolean remove(NetClass netClass) {
     return this.classArr.remove(netClass);
   }

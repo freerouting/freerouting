@@ -82,9 +82,7 @@ public class Settings implements Serializable {
   /** The filter used in interactive selection of board items. */
   ItemSelectionFilter itemSelectionFilter;
 
-  /**
-   * Indicates whether the data of this class may be changed during interactive board editing.
-   */
+  /** Indicates whether the data of this class may be changed during interactive board editing. */
   private transient boolean readOnly;
 
   /** Creates a new interactive settings variable. */

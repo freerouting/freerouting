@@ -73,8 +73,7 @@ public class Polygon extends Shape {
 
   /** Writes this polygon as a scope to an output dsn-file. */
   @Override
-  public void writeScope(IndentFileWriter file, IdentifierType identifierType)
-      throws IOException {
+  public void writeScope(IndentFileWriter file, IdentifierType identifierType) throws IOException {
     file.startScope();
     file.write("polygon ");
     identifierType.write(this.layer.name, file);

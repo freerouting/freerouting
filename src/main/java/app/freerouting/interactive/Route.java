@@ -501,8 +501,7 @@ public class Route {
       boolean currLengthMatchingOk = true; // used for drawing the incomplete as violation
       double maxTraceLength = currentNet.getNetClass().getMaximumTraceLength();
       double minTraceLength = currentNet.getNetClass().getMinimumTraceLength();
-      double lengthMatchingColorIntensity =
-          graphicsContext.getLengthMatchingAreaColorIntensity();
+      double lengthMatchingColorIntensity = graphicsContext.getLengthMatchingAreaColorIntensity();
       if (maxTraceLength > 0 || minTraceLength > 0 && lengthMatchingColorIntensity > 0) {
 
         // draw the length matching area

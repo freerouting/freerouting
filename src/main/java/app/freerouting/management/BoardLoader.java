@@ -29,8 +29,7 @@ public final class BoardLoader {
     }
 
     // Only DSN and JSON/Native format are supported for now
-    if (job.input.format != FileFormat.DSN
-        && job.input.format != FileFormat.KICAD_DESIGN_JSON) {
+    if (job.input.format != FileFormat.DSN && job.input.format != FileFormat.KICAD_DESIGN_JSON) {
       FRLogger.error(
           "Cannot load board: only DSN and JSON formats are supported, got " + job.input.format,
           null);

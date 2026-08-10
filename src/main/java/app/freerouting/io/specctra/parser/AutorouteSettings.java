@@ -147,8 +147,7 @@ public final class AutorouteSettings {
         } else if (nextToken == Keyword.PREFERRED_DIRECTION_TRACE_COSTS) {
           settings.setPreferredDirectionTraceCosts(layerNo, DsnFile.readFloatScope(scanner));
         } else if (nextToken == Keyword.AGAINST_PREFERRED_DIRECTION_TRACE_COSTS) {
-          settings.setAgainstPreferredDirectionTraceCosts(
-              layerNo, DsnFile.readFloatScope(scanner));
+          settings.setAgainstPreferredDirectionTraceCosts(layerNo, DsnFile.readFloatScope(scanner));
         } else {
           ScopeKeyword.skipScope(scanner);
         }

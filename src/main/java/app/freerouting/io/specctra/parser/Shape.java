@@ -254,8 +254,7 @@ public abstract class Shape {
    * Reads a rectangle scope from a Specctra dsn file. If p_layer_structure == null, only Layer.PCB
    * and Layer.Signal are expected, no individual layers.
    */
-  public static Rectangle readRectangleScope(
-      IJFlexScanner scanner, LayerStructure layerStructure) {
+  public static Rectangle readRectangleScope(IJFlexScanner scanner, LayerStructure layerStructure) {
     try {
       String layerName = scanner.nextString();
       Layer rectLayer = getLayer(layerStructure, layerName);
@@ -428,9 +427,7 @@ public abstract class Shape {
           circleCoor[currIndex] = integer;
         } else {
           FRLogger.warn(
-              "Shape.read_circle_scope: number expected at '"
-                  + scanner.getScopeIdentifier()
-                  + "'");
+              "Shape.read_circle_scope: number expected at '" + scanner.getScopeIdentifier() + "'");
           return null;
         }
         ++currIndex;

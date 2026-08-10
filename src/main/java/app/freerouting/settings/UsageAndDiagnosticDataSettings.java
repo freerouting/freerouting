@@ -12,17 +12,15 @@ public class UsageAndDiagnosticDataSettings implements Serializable {
   public boolean disableAnalytics;
 
   /**
-   * The {@code bigquery_service_account_key} is a JSON file generated when a new
-   * service account key is created in the Google Cloud Console / IAM & Admin /
-   * Service accounts / Keys.
+   * The {@code bigquery_service_account_key} is a JSON file generated when a new service account
+   * key is created in the Google Cloud Console / IAM & Admin / Service accounts / Keys.
    *
    * <p>The value of this key is set to the environment variable
    * FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY.
    *
    * <p>This key is used strictly for analytics purposes and only by the API.
    *
-   * <p>The desktop and CLI clients do not use this key; they call the API endpoint
-   * for analytics.
+   * <p>The desktop and CLI clients do not use this key; they call the API endpoint for analytics.
    */
   @SerializedName("bigquery_service_account_key")
   public transient String bigqueryServiceAccountKey;

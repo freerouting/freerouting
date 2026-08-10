@@ -58,8 +58,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   private transient int shoveFailingLayer = -1;
 
   /**
-   * Creates a new instance of a routing Board with surrounding box boundingBox Rules contains
-   * the restrictions to obey when inserting items. Among other things it may contain a clearance
+   * Creates a new instance of a routing Board with surrounding box boundingBox Rules contains the
+   * restrictions to obey when inserting items. Among other things it may contain a clearance
    * matrix.
    */
   public RoutingBoard(
@@ -69,13 +69,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       int outlineClClassNo,
       BoardRules rules,
       Communication boardCommunication) {
-    super(
-        boundingBox,
-        layerStructure,
-        outlineShapes,
-        outlineClClassNo,
-        rules,
-        boardCommunication);
+    super(boundingBox, layerStructure, outlineShapes, outlineClClassNo, rules, boardCommunication);
     this.failureLog = new app.freerouting.autoroute.RoutingFailureLog();
   }
 
@@ -106,8 +100,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Removes the items in itemList and pulls the nearby rubber traces tight. Returns false, if
-   * some items could not be removed, because they were fixed.
+   * Removes the items in itemList and pulls the nearby rubber traces tight. Returns false, if some
+   * items could not be removed, because they were fixed.
    */
   public boolean removeItemsAndPullTight(
       Collection<Item> itemList, int tidyWidth, int pullTightAccuracy) {
@@ -182,10 +176,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   /**
    * Optimizes the route in the internally marked area. If netNo {@literal >} 0, only traces with
-   * net number netNo are optimized. If clipShape != null the optimizing is restricted to
-   * clipShape. traceCostArr is used for optimizing vias and may be null. If
-   * stoppableThread != null, the algorithm can be requested to be stopped. If timeLimit
-   * {@literal >} 0; the algorithm will be stopped after timeLimit Milliseconds.
+   * net number netNo are optimized. If clipShape != null the optimizing is restricted to clipShape.
+   * traceCostArr is used for optimizing vias and may be null. If stoppableThread != null, the
+   * algorithm can be requested to be stopped. If timeLimit {@literal >} 0; the algorithm will be
+   * stopped after timeLimit Milliseconds.
    */
   public void optChangedArea(
       int[] onlyNetNoArr,
@@ -200,12 +194,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   /**
    * Optimizes the route in the internally marked area. If netNo {@literal >} 0, only traces with
-   * net number netNo are optimized. If clipShape != null the optimizing is restricted to
-   * clipShape. traceCostArr is used for optimizing vias and may be null. If
-   * stoppableThread != null, the algorithm can be requested to be stopped. If timeLimit
-   * {@literal >} 0; the algorithm will be stopped after timeLimit Milliseconds. If keepPoint
-   * != null, traces on layer keepPointLayer containing keepPoint will also contain this
-   * point after optimizing.
+   * net number netNo are optimized. If clipShape != null the optimizing is restricted to clipShape.
+   * traceCostArr is used for optimizing vias and may be null. If stoppableThread != null, the
+   * algorithm can be requested to be stopped. If timeLimit {@literal >} 0; the algorithm will be
+   * stopped after timeLimit Milliseconds. If keepPoint != null, traces on layer keepPointLayer
+   * containing keepPoint will also contain this point after optimizing.
    */
   public void optChangedArea(
       int[] onlyNetNoArr,
@@ -261,8 +254,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   /**
    * Checks if a trace shape around the input parameters can be inserted without conflict. If a
-   * conflict exists, The result length is the maximal line length from line.a to line.b, which
-   * can be inserted without conflict (Integer.MAX_VALUE, if no conflict exists). If
+   * conflict exists, The result length is the maximal line length from line.a to line.b, which can
+   * be inserted without conflict (Integer.MAX_VALUE, if no conflict exists). If
    * onlyNotShovableObstacles, unfixed traces and vias are ignored.
    */
   public double checkTraceSegment(
@@ -284,17 +277,14 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     ShapeSearchTree defaultTree = this.searchTreeManager.getDefaultTree();
 
     Collection<TreeEntry> obstacleEntries =
-        defaultTree.overlappingTreeEntriesWithClearance(
-            shapeToCheck, layer, netNoArr, clClassNo);
+        defaultTree.overlappingTreeEntriesWithClearance(shapeToCheck, layer, netNoArr, clClassNo);
 
     for (TreeEntry currObstacleEntry : obstacleEntries) {
 
       if (!(currObstacleEntry.object instanceof Item currObstacle)) {
         continue;
       }
-      if (onlyNotShovableObstacles
-          && currObstacle.isRoutable()
-          && !currObstacle.isShoveFixed()) {
+      if (onlyNotShovableObstacles && currObstacle.isRoutable() && !currObstacle.isShoveFixed()) {
         continue;
       }
       TileShape currObstacleShape =
@@ -309,8 +299,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
                 + rules.clearanceMatrix.clearanceCompensationValue(
                     currObstacle.clearanceClassNo(), layer);
       } else {
-        int clearanceValue =
-            this.clearanceValue(currObstacle.clearanceClassNo(), clClassNo, layer);
+        int clearanceValue = this.clearanceValue(currObstacle.clearanceClassNo(), clClassNo, layer);
         currOffsetShape = (TileShape) shapeToCheck.offset(clearanceValue);
         shortenValue = traceHalfWidth + clearanceValue;
       }
@@ -336,8 +325,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Checks, if item can be translated by vector without producing overlaps or clearance
-   * violations.
+   * Checks, if item can be translated by vector without producing overlaps or clearance violations.
    */
   public boolean checkMoveItem(Item item, Vector vector, Collection<Item> ignoreItems) {
     int netCount = item.netNoArr.length;
@@ -401,9 +389,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Translates drillItem by vector and shoves obstacle traces aside. Returns false, if that
-   * was not possible without creating clearance violations. In this case the database may be
-   * damaged, so that an undo becomes necessary.
+   * Translates drillItem by vector and shoves obstacle traces aside. Returns false, if that was not
+   * possible without creating clearance violations. In this case the database may be damaged, so
+   * that an undo becomes necessary.
    */
   public boolean moveDrillItem(
       DrillItem drillItem,
@@ -451,10 +439,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Checks, if there is an item nearby sharing a net with netNoArr, from where a routing can
-   * start, or where the routing can connect to. If fromItem != null, items, which are connected
-   * to fromItem, are ignored. Returns null, if no item is found, If layer {@literal <} 0, the
-   * layer is ignored
+   * Checks, if there is an item nearby sharing a net with netNoArr, from where a routing can start,
+   * or where the routing can connect to. If fromItem != null, items, which are connected to
+   * fromItem, are ignored. Returns null, if no item is found, If layer {@literal <} 0, the layer is
+   * ignored
    */
   public Item pickNearestRoutingItem(Point location, int layer, Item fromItem) {
     TileShape pointShape = TileShape.getInstance(location);
@@ -560,10 +548,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   /**
    * Tries to insert a trace line with the input parameters from fromCorner to toCorner while
-   * shoving aside obstacle traces and vias. Returns the last point between fromCorner and
-   * toCorner, to which the shove succeeded. Returns null, if the check was inaccurate and an
-   * error occurred while inserting, so that the database may be damaged and an undo necessary.
-   * searchTree is the shape search tree used in the algorithm.
+   * shoving aside obstacle traces and vias. Returns the last point between fromCorner and toCorner,
+   * to which the shove succeeded. Returns null, if the check was inaccurate and an error occurred
+   * while inserting, so that the database may be damaged and an undo necessary. searchTree is the
+   * shape search tree used in the algorithm.
    */
   public Point insertForcedTraceSegment(
       Point fromCorner,
@@ -1083,8 +1071,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Initialises the auto-route database for routing a connection. If retainAutorouteDatabase,
-   * the auto-route database is retained and maintained after the algorithm for performance reasons.
+   * Initialises the auto-route database for routing a connection. If retainAutorouteDatabase, the
+   * auto-route database is retained and maintained after the algorithm for performance reasons.
    */
   public AutorouteEngine initAutoroute(
       int netNo,
@@ -1112,8 +1100,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Routes automatically item to another item of the same net, to which it is not yet
-   * electrically connected. Returns an enum of type AutorouteAttemptState
+   * Routes automatically item to another item of the same net, to which it is not yet electrically
+   * connected. Returns an enum of type AutorouteAttemptState
    */
   public AutorouteAttemptResult autoroute(
       Item item,
@@ -1147,8 +1135,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     Set<Item> routeDestSet = item.getUnconnectedSet(routeNetNo);
     if (routeDestSet.isEmpty()) {
       return new AutorouteAttemptResult(
-          AutorouteAttemptState.ALREADY_CONNECTED,
-          "The item '" + item + "' is already connected.");
+          AutorouteAttemptState.ALREADY_CONNECTED, "The item '" + item + "' is already connected.");
     }
     SortedSet<Item> rippedItemList = new TreeSet<>();
     AutorouteEngine currAutorouteEngine =
@@ -1199,15 +1186,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     for (Item currItem : pinConnectedSet) {
       if (currItem.firstLayer() != pinLayer || currItem.lastLayer() != pinLayer) {
         return new AutorouteAttemptResult(
-            AutorouteAttemptState.ALREADY_CONNECTED,
-            "The pin '" + pin + "' is already connected.");
+            AutorouteAttemptState.ALREADY_CONNECTED, "The pin '" + pin + "' is already connected.");
       }
     }
     Set<Item> unconnectedSet = pin.getUnconnectedSet(pinNetNo);
     if (unconnectedSet.isEmpty()) {
       return new AutorouteAttemptResult(
-          AutorouteAttemptState.NO_UNCONNECTED_NETS,
-          "The pin '" + pin + "' is already connected.");
+          AutorouteAttemptState.NO_UNCONNECTED_NETS, "The pin '" + pin + "' is already connected.");
     }
     app.freerouting.geometry.planar.FloatPoint pinCenter = pin.getCenter().toFloat();
     java.util.List<Item> sortedUnconnectedList = new java.util.ArrayList<>(unconnectedSet);
@@ -1320,11 +1305,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Inserts a trace from fromPoint to the nearest point on toTrace. Returns false, if that is
-   * not possible without clearance violation.
+   * Inserts a trace from fromPoint to the nearest point on toTrace. Returns false, if that is not
+   * possible without clearance violation.
    */
-  public boolean connectToTrace(
-      IntPoint fromPoint, Trace toTrace, int penHalfWidth, int clType) {
+  public boolean connectToTrace(IntPoint fromPoint, Trace toTrace, int penHalfWidth, int clType) {
 
     if (!(toTrace instanceof PolylineTrace polylineTrace)) {
       return false; // not yet implemented
@@ -1392,8 +1376,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Removes all trace tails of the input net. If netNo {@literal <}= 0, the tails of all nets
-   * are removed. Returns true, if something was removed.
+   * Removes all trace tails of the input net. If netNo {@literal <}= 0, the tails of all nets are
+   * removed. Returns true, if something was removed.
    */
   public boolean removeTraceTails(int netNo, Item.StopConnectionOption stopConnectionOption) {
     SortedSet<Item> stubSet = new TreeSet<>();

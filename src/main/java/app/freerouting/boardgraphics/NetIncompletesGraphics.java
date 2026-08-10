@@ -43,10 +43,7 @@ public class NetIncompletesGraphics {
               graphics,
               graphicsContext);
           drawLayerChangeMarker(
-              currIncomplete.toCorner,
-              netIncompletes.getMarkerRadius(),
-              graphics,
-              graphicsContext);
+              currIncomplete.toCorner, netIncompletes.getMarkerRadius(), graphics, graphicsContext);
         }
       }
     }
@@ -81,10 +78,7 @@ public class NetIncompletesGraphics {
 
   /** Draws a marker indicating a length violation on a pin. */
   static void drawLengthViolationMarker(
-      FloatPoint location,
-      double diameter,
-      Graphics graphics,
-      GraphicsContext graphicsContext) {
+      FloatPoint location, double diameter, Graphics graphics, GraphicsContext graphicsContext) {
     final int drawWidth = 1;
     Color drawColor = graphicsContext.getIncompleteColor();
     double drawIntensity = graphicsContext.getIncompleteColorIntensity();

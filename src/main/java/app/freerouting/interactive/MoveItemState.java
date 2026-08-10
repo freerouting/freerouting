@@ -77,8 +77,8 @@ public final class MoveItemState extends InteractiveState {
   }
 
   /**
-   * Returns a new instance of MoveItemState, or {@code null} if the selected items do not belong
-   * to a single component.
+   * Returns a new instance of MoveItemState, or {@code null} if the selected items do not belong to
+   * a single component.
    */
   public static MoveItemState getInstance(
       FloatPoint location,

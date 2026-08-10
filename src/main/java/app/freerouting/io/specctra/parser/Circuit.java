@@ -35,9 +35,7 @@ public final class Circuit {
       }
       if (nextToken == null) {
         FRLogger.warn(
-            "Circuit.read_scope: unexpected end of file at '"
-                + scanner.getScopeIdentifier()
-                + "'");
+            "Circuit.read_scope: unexpected end of file at '" + scanner.getScopeIdentifier() + "'");
         return null;
       }
       if (nextToken == Keyword.CLOSED_BRACKET) {
@@ -80,9 +78,7 @@ public final class Circuit {
         lengthArr[i] = integer;
       } else {
         FRLogger.warn(
-            "Circuit.read_length_scope: number expected at '"
-                + scanner.getScopeIdentifier()
-                + "'");
+            "Circuit.read_length_scope: number expected at '" + scanner.getScopeIdentifier() + "'");
         return null;
       }
     }

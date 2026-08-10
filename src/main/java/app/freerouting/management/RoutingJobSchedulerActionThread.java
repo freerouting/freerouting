@@ -245,8 +245,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
   private void monitorCpuAndMemoryUsage(RoutingJob job) {
     try {
       // Get the ThreadMXBean instance and cast it to com.sun.management.ThreadMXBean
-      ThreadMXBean threadManagementBean =
-          (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      ThreadMXBean threadManagementBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
 
       // Get all live thread IDs
       long[] threadIds = threadManagementBean.getAllThreadIds();
@@ -280,8 +279,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       }
 
       // Track peak heap memory usage across all threads
-      java.lang.management.MemoryMXBean memoryManagementBean =
-          ManagementFactory.getMemoryMXBean();
+      java.lang.management.MemoryMXBean memoryManagementBean = ManagementFactory.getMemoryMXBean();
       long heapUsed = memoryManagementBean.getHeapMemoryUsage().getUsed();
       float heapUsedMb = heapUsed / (1024.0f * 1024.0f);
 

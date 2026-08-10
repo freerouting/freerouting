@@ -1354,8 +1354,7 @@ public class MazeSearchAlgo {
       }
       double expansionValue =
           listElement.expansionValue + ctrl.addViaCosts[fromLayer].toLayer[toLayer];
-      FloatPoint shapeEntryMiddle =
-          listElement.shapeEntry.a.middlePoint(listElement.shapeEntry.b);
+      FloatPoint shapeEntryMiddle = listElement.shapeEntry.a.middlePoint(listElement.shapeEntry.b);
       double sortingValue =
           expansionValue + this.destinationDistance.calculate(shapeEntryMiddle, toLayer);
       int currRoomIndex = toLayer - currDrill.firstLayer;
@@ -1723,8 +1722,7 @@ public class MazeSearchAlgo {
    * In this case occupation of the door_section by ripup can be delayed to allow shoving the room
    * from a different door section
    */
-  private boolean shoveTraceRoom(
-      MazeListElement listElement, ObstacleExpansionRoom obstacleRoom) {
+  private boolean shoveTraceRoom(MazeListElement listElement, ObstacleExpansionRoom obstacleRoom) {
     if (listElement.sectionNoOfDoor != 0
         && listElement.sectionNoOfDoor != listElement.door.mazeSearchElementCount() - 1) {
       // No delay of occupation necessary because inner sections of a door are

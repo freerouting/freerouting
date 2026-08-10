@@ -46,8 +46,8 @@ public final class SortedRoomNeighbours {
 
   /**
    * Calculates the neighbour rooms of an expansion room. The neighbour rooms will be sorted in
-   * counterclock sense around the border of the shape of room. Overlapping neighbours containing
-   * an item may be stored in an unordered list.
+   * counterclock sense around the border of the shape of room. Overlapping neighbours containing an
+   * item may be stored in an unordered list.
    */
   public static CompleteExpansionRoom calculate(
       ExpansionRoom room, AutorouteEngine autorouteEngine) {
@@ -55,10 +55,7 @@ public final class SortedRoomNeighbours {
 
     SortedRoomNeighbours roomNeighbours =
         calculateNeighbours(
-            room,
-            netNo,
-            autorouteEngine.autorouteSearchTree,
-            autorouteEngine.generateRoomIdNo());
+            room, netNo, autorouteEngine.autorouteSearchTree, autorouteEngine.generateRoomIdNo());
 
     // Check, that each side of the room shape has at least one touching neighbour.
     // Otherwise, improve the room shape by enlarging.
@@ -74,8 +71,7 @@ public final class SortedRoomNeighbours {
     // between this room and the sorted neighbours.
     if (roomNeighbours.sortedNeighbours.isEmpty()) {
       if (result instanceof ObstacleExpansionRoom) {
-        calculateIncompleteRoomsWithEmptyNeighbours(
-            (ObstacleExpansionRoom) room, autorouteEngine);
+        calculateIncompleteRoomsWithEmptyNeighbours((ObstacleExpansionRoom) room, autorouteEngine);
       }
     } else {
       roomNeighbours.calculateNewIncompleteRooms(autorouteEngine);
@@ -416,9 +412,7 @@ public final class SortedRoomNeighbours {
       Simplex enlargedShape = roomSimplex.removeBorderLine(removeEdgeNo);
       IncompleteFreeSpaceExpansionRoom enlargedRoom =
           new IncompleteFreeSpaceExpansionRoom(
-              enlargedShape,
-              currIncompleteRoom.getLayer(),
-              currIncompleteRoom.getContainedShape());
+              enlargedShape, currIncompleteRoom.getLayer(), currIncompleteRoom.getContainedShape());
       Collection<IncompleteFreeSpaceExpansionRoom> newRooms =
           autorouteSearchTree.completeShape(enlargedRoom, netNo, null, null);
       FRLogger.trace(
@@ -536,8 +530,7 @@ public final class SortedRoomNeighbours {
                   .setShape(this.completedRoom.getShape().intersection(cutHalfPlane));
               // Otherwise p_room.containedShape would no longer be contained
               // in the shape after cutting of the corner.
-              cornerCutOff =
-                  incompleteRoom.getContainedShape().sideOf(cutLine) == Side.ON_THE_LEFT;
+              cornerCutOff = incompleteRoom.getContainedShape().sideOf(cutLine) == Side.ON_THE_LEFT;
               if (cornerCutOff) {
                 middleEdgeLine = cutLine.opposite();
               }

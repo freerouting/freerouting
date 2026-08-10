@@ -28,8 +28,8 @@ public class ShapeTraceEntries {
   private Item foundObstacle;
 
   /**
-   * Used for shoving traces and vias out of the input shape. fromSide.no is the side of shape,
-   * from where the shove comes. if fromSide.no < 0, it will be calculated internally.
+   * Used for shoving traces and vias out of the input shape. fromSide.no is the side of shape, from
+   * where the shove comes. if fromSide.no < 0, it will be calculated internally.
    */
   ShapeTraceEntries(
       TileShape shape,
@@ -65,8 +65,7 @@ public class ShapeTraceEntries {
     } else {
       // enlarge the shape in 2 steps  for symmetry reasons
       double clOffset =
-          board.clearanceValue(trace.clearanceClassNo(), clClass, trace.getLayer())
-              + c_offset_add;
+          board.clearanceValue(trace.clearanceClassNo(), clClass, trace.getLayer()) + c_offset_add;
       offsetShape = shape.offset(trace.getHalfWidth());
       offsetShape = offsetShape.offset(clOffset);
     }
@@ -95,8 +94,7 @@ public class ShapeTraceEntries {
   }
 
   /** Optimized function handling the performance critical standard cutout case. */
-  private static void fastCutoutTrace(
-      PolylineTrace trace, Polyline startPiece, Polyline endPiece) {
+  private static void fastCutoutTrace(PolylineTrace trace, Polyline startPiece, Polyline endPiece) {
     BasicBoard board = trace.board;
     board.additionalUpdateAfterChange(trace);
     board.itemList.saveForUndo(trace);
@@ -159,12 +157,11 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * Stores traces and vias in itemList. Returns false, if itemList contains obstacles, which
-   * cannot be shoved aside. If isPadCheck. the check is for vias, otherwise it is for traces.
-   * If copperSharingAllowed, overlaps with traces or pads of the own net are allowed.
+   * Stores traces and vias in itemList. Returns false, if itemList contains obstacles, which cannot
+   * be shoved aside. If isPadCheck. the check is for vias, otherwise it is for traces. If
+   * copperSharingAllowed, overlaps with traces or pads of the own net are allowed.
    */
-  boolean storeItems(
-      Collection<Item> itemList, boolean isPadCheck, boolean copperSharingAllowed) {
+  boolean storeItems(Collection<Item> itemList, boolean isPadCheck, boolean copperSharingAllowed) {
     for (Item currItem : itemList) {
       if (!isPadCheck && currItem instanceof ViaObstacleArea
           || currItem instanceof ComponentObstacleArea) {
@@ -288,8 +285,8 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * Cuts out all traces in itemList out of the stored shape. Traces with net number
-   * exceptNetNo are ignored
+   * Cuts out all traces in itemList out of the stored shape. Traces with net number exceptNetNo are
+   * ignored
    */
   void cutoutTraces(Collection<Item> itemList) {
     for (Item currItem : itemList) {

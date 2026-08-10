@@ -95,8 +95,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
 
             IntBox currObjectShape = currObject.getTreeShape(this, shapeIndex).boundingBox();
             if (debugAnchor) {
-              traceCompleteShapeCandidate(
-                  debugStep, netNo, roomLayer, currObject, currObjectShape);
+              traceCompleteShapeCandidate(debugStep, netNo, roomLayer, currObject, currObjectShape);
             }
             Collection<IncompleteFreeSpaceExpansionRoom> newResult = new LinkedList<>();
             IntBox newBoundingShape = IntBox.EMPTY;
@@ -317,23 +316,14 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
   }
 
   private static String describeBounds(IntBox bounds) {
-    return "[("
-        + bounds.ll.x
-        + ","
-        + bounds.ll.y
-        + ")..("
-        + bounds.ur.x
-        + ","
-        + bounds.ur.y
-        + ")]";
+    return "[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]";
   }
 
   /**
    * Returns true for the specific room being diagnosed in the current parity investigation. Update
    * these coordinates to anchor detailed per-leaf logging to a different room.
    */
-  private static boolean isCompleteShapeDebugAnchor(
-      int netNo, int roomLayer, IntBox startShape) {
+  private static boolean isCompleteShapeDebugAnchor(int netNo, int roomLayer, IntBox startShape) {
     return netNo == 84
         && roomLayer == 0
         && startShape.ll.x == 1767436
@@ -450,8 +440,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
       } else {
         IntBox currTileShape = currShape.boundingBox();
         int offsetWidth =
-            this.clearanceCompensationValue(
-                drillItem.clearanceClassNo(), drillItem.shapeLayer(i));
+            this.clearanceCompensationValue(drillItem.clearanceClassNo(), drillItem.shapeLayer(i));
         offsetWidth += drillHoleClearanceDelta(drillItem, currShape, drillItem.shapeLayer(i));
         if (currTileShape == null) {
           FRLogger.warn("BoxShapeSearchTree.calculate_tree_shapes: shape is null");

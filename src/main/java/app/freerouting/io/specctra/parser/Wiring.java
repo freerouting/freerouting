@@ -214,8 +214,7 @@ public class Wiring extends ScopeKeyword {
     }
   }
 
-  private static Collection<app.freerouting.rules.Net> getSubnets(
-      Net.Id netId, BoardRules rules) {
+  private static Collection<app.freerouting.rules.Net> getSubnets(Net.Id netId, BoardRules rules) {
     Collection<app.freerouting.rules.Net> foundNets = new LinkedList<>();
     if (netId != null) {
       if (netId.subnetNumber > 0) {

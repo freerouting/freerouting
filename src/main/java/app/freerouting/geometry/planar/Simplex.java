@@ -718,8 +718,7 @@ public class Simplex extends TileShape implements Serializable {
     int innerCornerCount = innerSimplex.arr.length;
     Line[][] divisionLineArr = new Line[innerCornerCount][];
     for (int innerCornerNo = 0; innerCornerNo < innerCornerCount; innerCornerNo++) {
-      divisionLineArr[innerCornerNo] =
-          innerSimplex.calcDivisionLines(innerCornerNo, outerSimplex);
+      divisionLineArr[innerCornerNo] = innerSimplex.calcDivisionLines(innerCornerNo, outerSimplex);
       if (divisionLineArr[innerCornerNo] == null) {
         FRLogger.warn("Simplex.cutout_from: division line is null");
         Simplex[] result = new Simplex[1];

@@ -32,9 +32,7 @@ public class Resolution extends ScopeKeyword {
       Object nextToken = par.scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
-            "Resolution.read_scope: string expected at '"
-                + par.scanner.getScopeIdentifier()
-                + "'");
+            "Resolution.read_scope: string expected at '" + par.scanner.getScopeIdentifier() + "'");
         return false;
       }
       par.unit = Unit.fromString((String) nextToken);

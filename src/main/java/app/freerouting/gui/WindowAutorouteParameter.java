@@ -633,8 +633,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   @Override
   public void refresh() {
     RouterSettings settings = this.boardHandling.getCurrentRoutingJob().routerSettings;
-    final LayerStructure layerStructure =
-        this.boardHandling.getRoutingBoard().layerStructure;
+    final LayerStructure layerStructure = this.boardHandling.getRoutingBoard().layerStructure;
 
     this.settingsAutorouterViasAllowed.setSelected(settings.getViasAllowed());
     this.settingsAutorouterFanoutButton.setSelected(settings.getRunFanout());

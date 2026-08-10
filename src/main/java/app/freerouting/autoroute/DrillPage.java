@@ -40,11 +40,10 @@ class DrillPage implements ExpandableObject {
   }
 
   /**
-   * Looks if drillShape contains the center of a drillable Pin on layer. Returns null if no.
-   * such Pin was found.
+   * Looks if drillShape contains the center of a drillable Pin on layer. Returns null if no. such
+   * Pin was found.
    */
-  private static Point calcPinCenterInDrill(
-      TileShape drillShape, int layer, RoutingBoard board) {
+  private static Point calcPinCenterInDrill(TileShape drillShape, int layer, RoutingBoard board) {
     Collection<Item> overlappingItems = board.overlappingItems(drillShape, layer);
     Point result = null;
     for (Item currItem : overlappingItems) {
@@ -58,8 +57,7 @@ class DrillPage implements ExpandableObject {
   }
 
   /** Returns the drills on this page. If attachSmd, drilling to smd pins is allowed. */
-  public Collection<ExpansionDrill> getDrills(
-      AutorouteEngine autorouteEngine, boolean attachSmd) {
+  public Collection<ExpansionDrill> getDrills(AutorouteEngine autorouteEngine, boolean attachSmd) {
     if (this.drills == null || autorouteEngine.getNetNo() != this.netNo) {
       this.netNo = autorouteEngine.getNetNo();
       this.drills = new LinkedList<>();

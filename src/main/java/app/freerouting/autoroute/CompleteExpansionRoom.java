@@ -5,9 +5,7 @@ import app.freerouting.boardgraphics.GraphicsContext;
 import java.awt.Graphics;
 import java.util.Collection;
 
-/**
- * Represents a complete expansion room containing target item doors and search tree objects.
- */
+/** Represents a complete expansion room containing target item doors and search tree objects. */
 public interface CompleteExpansionRoom extends ExpansionRoom {
 
   /** Returns the list of doors to target items of this room. */

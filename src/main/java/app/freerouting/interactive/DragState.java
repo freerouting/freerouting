@@ -46,8 +46,7 @@ public abstract class DragState extends InteractiveState {
     return result;
   }
 
-  private static DragCandidate findItemToMove(
-      FloatPoint location, GuiBoardManager boardHandling) {
+  private static DragCandidate findItemToMove(FloatPoint location, GuiBoardManager boardHandling) {
     int tryCount = 1;
     if (boardHandling.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
       tryCount += boardHandling.getLayerCount();

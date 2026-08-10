@@ -108,8 +108,7 @@ public abstract class LocateFoundConnectionAlgo {
 
     this.currentFromDoorIndex = 0;
     boolean atFanoutEnd = false;
-    if (mazeSearchResult.destinationDoor
-        instanceof TargetItemExpansionDoor currDestinationDoor) {
+    if (mazeSearchResult.destinationDoor instanceof TargetItemExpansionDoor currDestinationDoor) {
       this.targetItem = currDestinationDoor.item;
       this.targetLayer = currDestinationDoor.room.getLayer();
 
@@ -190,21 +189,11 @@ public abstract class LocateFoundConnectionAlgo {
         || angleRestriction == AngleRestriction.FORTYFIVE_DEGREE) {
       result =
           new LocateFoundConnectionAlgo45Degree(
-              mazeSearchResult,
-              ctrl,
-              searchTree,
-              angleRestriction,
-              rippedItemList,
-              ripupCosts);
+              mazeSearchResult, ctrl, searchTree, angleRestriction, rippedItemList, ripupCosts);
     } else {
       result =
           new LocateFoundConnectionAlgoAnyAngle(
-              mazeSearchResult,
-              ctrl,
-              searchTree,
-              angleRestriction,
-              rippedItemList,
-              ripupCosts);
+              mazeSearchResult, ctrl, searchTree, angleRestriction, rippedItemList, ripupCosts);
     }
     return result;
   }

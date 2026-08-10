@@ -272,8 +272,7 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
    * @return whether the button was appended
    */
   @Override
-  public boolean append(
-      String buttonName, String windowTitle, WindowObjectInfo.Printable object) {
+  public boolean append(String buttonName, String windowTitle, WindowObjectInfo.Printable object) {
     Collection<WindowObjectInfo.Printable> objectList = new LinkedList<>();
     objectList.add(object);
     return appendObjects(buttonName, windowTitle, objectList);

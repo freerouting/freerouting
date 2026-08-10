@@ -82,8 +82,8 @@ public class Nets implements Serializable {
   }
 
   /**
-   * Adds a new net with default properties and the given name. {@code subnetNumber} is used only
-   * if a net is divided internally because of from-to rules. For normal nets it is always 1.
+   * Adds a new net with default properties and the given name. {@code subnetNumber} is used only if
+   * a net is divided internally because of from-to rules. For normal nets it is always 1.
    */
   public Net add(String name, int subnetNumber, boolean containsPlane) {
     int newNetNo = netArr.size() + 1;

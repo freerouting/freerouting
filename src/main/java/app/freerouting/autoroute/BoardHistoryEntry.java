@@ -17,9 +17,7 @@ public class BoardHistoryEntry implements Comparable<BoardHistoryEntry> {
   public final Instant timestamp;
   public int restoreCount;
 
-  /**
-   * Constructs a BoardHistoryEntry for the given board and scoring settings.
-   */
+  /** Constructs a BoardHistoryEntry for the given board and scoring settings. */
   public BoardHistoryEntry(RoutingBoard board, ScoringSettings scoringSettings) {
     this.board = board;
     this.statistics = board.getStatistics();

@@ -242,9 +242,7 @@ public class PartLibrary extends ScopeKeyword {
       Object nextToken = scanner.nextToken();
       if (!(nextToken instanceof String pinName)) {
         FRLogger.warn(
-            "PartLibrary.read_part_pin: string expected at '"
-                + scanner.getScopeIdentifier()
-                + "'");
+            "PartLibrary.read_part_pin: string expected at '" + scanner.getScopeIdentifier() + "'");
         return null;
       }
       scanner.setScopeIdentifier(pinName);
@@ -260,9 +258,7 @@ public class PartLibrary extends ScopeKeyword {
       nextToken = scanner.nextToken();
       if (!(nextToken instanceof String gateName)) {
         FRLogger.warn(
-            "PartLibrary.read_part_pin: string expected at '"
-                + scanner.getScopeIdentifier()
-                + "'");
+            "PartLibrary.read_part_pin: string expected at '" + scanner.getScopeIdentifier() + "'");
         return null;
       }
       scanner.setScopeIdentifier(gateName);
@@ -279,9 +275,7 @@ public class PartLibrary extends ScopeKeyword {
       nextToken = scanner.nextToken();
       if (!(nextToken instanceof String gatePinName)) {
         FRLogger.warn(
-            "PartLibrary.read_part_pin: string expected at '"
-                + scanner.getScopeIdentifier()
-                + "'");
+            "PartLibrary.read_part_pin: string expected at '" + scanner.getScopeIdentifier() + "'");
         return null;
       }
       scanner.setScopeIdentifier(gatePinName);

@@ -20,8 +20,7 @@ class CalcShapeAndFromSide {
    * the trace shape. In the check shove functions, p_in_shove_check is expected to be true. In the
    * actual shove functions p_in_shove_check is expected to be false.
    */
-  CalcShapeAndFromSide(
-      PolylineTrace trace, int index, boolean orthogonal, boolean inShoveCheck) {
+  CalcShapeAndFromSide(PolylineTrace trace, int index, boolean orthogonal, boolean inShoveCheck) {
     ShapeSearchTree searchTree = trace.board.searchTreeManager.getDefaultTree();
     TileShape currShape = trace.getTreeShape(searchTree, index);
     CalcFromSide currFromSide = null;

@@ -29,8 +29,7 @@ public final class BigIntAux {
   // because we need it public.
 
   /** Calculates the determinant of the vectors (x1, y1) and (x2, y2). */
-  public static BigInteger determinant(
-      BigInteger x1, BigInteger y1, BigInteger x2, BigInteger y2) {
+  public static BigInteger determinant(BigInteger x1, BigInteger y1, BigInteger x2, BigInteger y2) {
     BigInteger tmp1 = x1.multiply(y2);
     BigInteger tmp2 = x2.multiply(y1);
     return tmp1.subtract(tmp2);

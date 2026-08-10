@@ -22,7 +22,6 @@ import java.util.TreeSet;
 public class BoardComparator {
 
   /** Type. */
-
   public static class ComparisonResult {
     public final boolean areEqual;
     public final String report;

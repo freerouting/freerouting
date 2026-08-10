@@ -45,10 +45,7 @@ public final class Sorted45DegreeRoomNeighbours {
     int netNo = autorouteEngine.getNetNo();
     Sorted45DegreeRoomNeighbours roomNeighbours =
         Sorted45DegreeRoomNeighbours.calculateNeighbours(
-            room,
-            netNo,
-            autorouteEngine.autorouteSearchTree,
-            autorouteEngine.generateRoomIdNo());
+            room, netNo, autorouteEngine.autorouteSearchTree, autorouteEngine.generateRoomIdNo());
     if (roomNeighbours == null) {
       return null;
     }
@@ -375,9 +372,7 @@ public final class Sorted45DegreeRoomNeighbours {
       }
       IncompleteFreeSpaceExpansionRoom enlargedRoom =
           new IncompleteFreeSpaceExpansionRoom(
-              enlargedOct,
-              currIncompleteRoom.getLayer(),
-              currIncompleteRoom.getContainedShape());
+              enlargedOct, currIncompleteRoom.getLayer(), currIncompleteRoom.getContainedShape());
       Collection<IncompleteFreeSpaceExpansionRoom> newRooms =
           autorouteSearchTree.completeShape(enlargedRoom, netNo, ignoreObject, ignoreShape);
       FRLogger.trace(
@@ -412,15 +407,7 @@ public final class Sorted45DegreeRoomNeighbours {
   }
 
   private static String describeBounds(IntBox bounds) {
-    return "[("
-        + bounds.ll.x
-        + ","
-        + bounds.ll.y
-        + ")..("
-        + bounds.ur.x
-        + ","
-        + bounds.ur.y
-        + ")]";
+    return "[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]";
   }
 
   /** Inserts a new incomplete room with an octagon shape. */

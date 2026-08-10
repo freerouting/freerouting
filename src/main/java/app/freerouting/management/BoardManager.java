@@ -152,9 +152,9 @@ public interface BoardManager {
    * specifies which clearance class to use for the board outline. If the name doesn't match an
    * existing class, the default area clearance class is used.
    *
-   * <p><strong>Communication Interface:</strong> The {@code boardCommunication} parameter
-   * enables integration with host CAD systems, supporting coordinate transformations and unit
-   * conversions between the internal board representation and external formats.
+   * <p><strong>Communication Interface:</strong> The {@code boardCommunication} parameter enables
+   * integration with host CAD systems, supporting coordinate transformations and unit conversions
+   * between the internal board representation and external formats.
    *
    * @param boundingBox the rectangular boundary containing all board geometry
    * @param layerStructure the layer stack-up definition (names, types, thicknesses)

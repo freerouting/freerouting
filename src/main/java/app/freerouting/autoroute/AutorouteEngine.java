@@ -69,8 +69,7 @@ public class AutorouteEngine {
    * Creates a new instance of BoardAutorouteEngine. If maintainDatabase, the autorouter database.
    * is maintained after a connection is completed for performance reasons.
    */
-  public AutorouteEngine(
-      RoutingBoard board, int traceClearanceClassNo, boolean maintainDatabase) {
+  public AutorouteEngine(RoutingBoard board, int traceClearanceClassNo, boolean maintainDatabase) {
     this.board = board;
     this.maintainDatabase = maintainDatabase;
     this.netNo = -1;
@@ -406,8 +405,8 @@ public class AutorouteEngine {
   }
 
   /**
-   * Completes the shape of room. Returns the resulting rooms after completing the shape. room
-   * will no longer exist after this function.
+   * Completes the shape of room. Returns the resulting rooms after completing the shape. room will
+   * no longer exist after this function.
    */
   public Collection<CompleteFreeSpaceExpansionRoom> completeExpansionRoom(
       IncompleteFreeSpaceExpansionRoom room) {
@@ -562,8 +561,8 @@ public class AutorouteEngine {
   }
 
   /**
-   * Completes the shapes of the neighbour rooms of room, so that the doors of room will not
-   * change later on.
+   * Completes the shapes of the neighbour rooms of room, so that the doors of room will not change
+   * later on.
    */
   public void completeNeighbourRooms(CompleteExpansionRoom room) {
     if (room.getDoors() == null) {
@@ -616,8 +615,7 @@ public class AutorouteEngine {
   }
 
   /**
-   * Returns all complete free space expansion rooms with a target door to an item in the set
-   * items.
+   * Returns all complete free space expansion rooms with a target door to an item in the set items.
    */
   Set<CompleteFreeSpaceExpansionRoom> getRoomsWithTargetItems(Set<Item> items) {
     Set<CompleteFreeSpaceExpansionRoom> result = new TreeSet<>();

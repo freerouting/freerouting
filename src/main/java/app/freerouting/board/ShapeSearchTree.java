@@ -183,8 +183,7 @@ public class ShapeSearchTree extends MinAreaTree {
         this.offsetShapes(
             joinedPolyline,
             toTrace.getHalfWidth()
-                + this.clearanceCompensationValue(
-                    toTrace.clearanceClassNo(), toTrace.getLayer()),
+                + this.clearanceCompensationValue(toTrace.clearanceClassNo(), toTrace.getLayer()),
             fromEntryNo,
             toEntryNo);
     int newShapeCount = fromTraceEntries.length + linkShapes.length + toTraceEntries.length - 2;
@@ -258,8 +257,7 @@ public class ShapeSearchTree extends MinAreaTree {
         this.offsetShapes(
             joinedPolyline,
             toTrace.getHalfWidth()
-                + this.clearanceCompensationValue(
-                    toTrace.clearanceClassNo(), toTrace.getLayer()),
+                + this.clearanceCompensationValue(toTrace.clearanceClassNo(), toTrace.getLayer()),
             fromEntryNo,
             toEntryNo);
     int newShapeCount = fromTraceEntries.length + linkShapes.length + toTraceEntries.length - 2;
@@ -509,8 +507,7 @@ public class ShapeSearchTree extends MinAreaTree {
     if (this.isClearanceCompensationUsed()) {
       this.overlappingTreeEntries(shape, layer, ignoreNetNos, result);
     } else {
-      this.overlappingTreeEntriesWithClearance(
-          shape, layer, ignoreNetNos, clearanceClass, result);
+      this.overlappingTreeEntriesWithClearance(shape, layer, ignoreNetNos, clearanceClass, result);
     }
     return result;
   }
@@ -881,8 +878,7 @@ public class ShapeSearchTree extends MinAreaTree {
           currTileShape = currShape.boundingTile();
         }
         int offsetWidth =
-            this.clearanceCompensationValue(
-                drillItem.clearanceClassNo(), drillItem.shapeLayer(i));
+            this.clearanceCompensationValue(drillItem.clearanceClassNo(), drillItem.shapeLayer(i));
         offsetWidth += drillHoleClearanceDelta(drillItem, currShape, drillItem.shapeLayer(i));
         if (currTileShape == null) {
           FRLogger.warn("ShapeSearchTree.calculate_tree_shapes: shape is null");
@@ -913,8 +909,7 @@ public class ShapeSearchTree extends MinAreaTree {
     for (int i = 0; i < convexShapes.length; i++) {
       TileShape currConvexShape = convexShapes[i];
       int offsetWidth =
-          this.clearanceCompensationValue(
-              obstacleArea.clearanceClassNo(), obstacleArea.getLayer());
+          this.clearanceCompensationValue(obstacleArea.clearanceClassNo(), obstacleArea.getLayer());
       currConvexShape = (TileShape) currConvexShape.enlarge(offsetWidth);
       TileShape[] currTreeShapes = currConvexShape.divideIntoSections(maxTreeShapeWidth);
       treeShapeList.addAll(Arrays.asList(currTreeShapes));

@@ -155,15 +155,7 @@ public class BasicBoard implements Serializable {
     if (bounds == null) {
       return "null";
     }
-    return "[("
-        + bounds.ll.x
-        + ","
-        + bounds.ll.y
-        + ")..("
-        + bounds.ur.x
-        + ","
-        + bounds.ur.y
-        + ")]";
+    return "[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]";
   }
 
   public int getRevision() {
@@ -343,16 +335,7 @@ public class BasicBoard implements Serializable {
       FixedState fixedState,
       boolean attachAllowed) {
     Via newVia =
-        new Via(
-            padstack,
-            center,
-            netNoArr,
-            clearanceClass,
-            0,
-            0,
-            fixedState,
-            attachAllowed,
-            this);
+        new Via(padstack, center, netNoArr, clearanceClass, 0, 0, fixedState, attachAllowed, this);
     insertItem(newVia);
     int fromLayer = padstack.fromLayer();
     int toLayer = padstack.toLayer();
@@ -384,8 +367,7 @@ public class BasicBoard implements Serializable {
       int clearanceClass,
       FixedState fixedState,
       int smdLayer) {
-    Via newVia =
-        new Via(padstack, center, netNoArr, clearanceClass, 0, 0, fixedState, true, this);
+    Via newVia = new Via(padstack, center, netNoArr, clearanceClass, 0, 0, fixedState, true, this);
     newVia.isEscapeVia = true;
     newVia.escapeViaSmdLayer = smdLayer;
     insertItem(newVia);
@@ -1224,8 +1206,7 @@ public class BasicBoard implements Serializable {
   public Set<Item> overlappingItemsWithClearance(
       ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClass) {
     ShapeSearchTree defaultTree = this.searchTreeManager.getDefaultTree();
-    return defaultTree.overlappingItemsWithClearance(
-        shape, layer, ignoreNetNos, clearanceClass);
+    return defaultTree.overlappingItemsWithClearance(shape, layer, ignoreNetNos, clearanceClass);
   }
 
   /**
@@ -1259,8 +1240,7 @@ public class BasicBoard implements Serializable {
         return false;
       }
       Set<SearchTreeObject> obstacles = new TreeSet<>();
-      defaultTree.overlappingObjectsWithClearance(
-          currShape, layer, netNoArr, clClass, obstacles);
+      defaultTree.overlappingObjectsWithClearance(currShape, layer, netNoArr, clClass, obstacles);
       for (SearchTreeObject currOb : obstacles) {
         boolean isObstacle = true;
         for (int j = 0; j < netNoArr.length; j++) {
@@ -1708,8 +1688,7 @@ public class BasicBoard implements Serializable {
           String.format(
               "BasicBoard.draw: total %.2f ms [collect=%.2f ms, group=%.2f ms,"
                   + " loop=%.2f ms (culled: %d), texts=%.2f ms] (items: %d)",
-              (collectDurationNs + groupDurationNs + loopDurationNs + textDurationNs)
-                  / 1_000_000.0,
+              (collectDurationNs + groupDurationNs + loopDurationNs + textDurationNs) / 1_000_000.0,
               collectDurationNs / 1_000_000.0,
               groupDurationNs / 1_000_000.0,
               loopDurationNs / 1_000_000.0,

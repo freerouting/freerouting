@@ -383,8 +383,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Returns true if p_point is contained in this octagon. Because of the parameter type
-   * FloatPoint, the function may not be exact close to the border.
+   * Returns true if p_point is contained in this octagon. Because of the parameter type FloatPoint,
+   * the function may not be exact close to the border.
    */
   @Override
   public boolean contains(FloatPoint point) {

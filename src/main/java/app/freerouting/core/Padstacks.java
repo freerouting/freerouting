@@ -31,9 +31,7 @@ public class Padstacks implements Serializable {
     return null;
   }
 
-  /**
-   * Returns the padstack with the specified index. Padstack numbers start at 1.
-   */
+  /** Returns the padstack with the specified index. Padstack numbers start at 1. */
   public Padstack get(int padstackNo) {
     if (padstackNo <= 0 || padstackNo > padstackArr.size()) {
       int padstackCount = padstackArr.size();
@@ -62,8 +60,8 @@ public class Padstacks implements Serializable {
   }
 
   /**
-   * Appends a new padstack with the input shapes to this padstacks. The
-   * dimension board layerCount. The padstack name is generated internally.
+   * Appends a new padstack with the input shapes to this padstacks. The dimension board layerCount.
+   * The padstack name is generated internally.
    */
   public Padstack add(ConvexShape[] shapes) {
     String newName = "padstack#" + (padstackArr.size() + 1);
@@ -71,8 +69,8 @@ public class Padstacks implements Serializable {
   }
 
   /**
-   * Appends a new padstack with the input shape from one layer to another and null on the
-   * other layers. The padstack name is generated internally.
+   * Appends a new padstack with the input shape from one layer to another and null on the other
+   * layers. The padstack name is generated internally.
    */
   public Padstack add(ConvexShape shape, int fromLayer, int toLayer) {
     ConvexShape[] shapeArr = new ConvexShape[boardLayerStructure.arr.length];

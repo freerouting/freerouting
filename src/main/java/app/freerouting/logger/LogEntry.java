@@ -8,12 +8,16 @@ public class LogEntry {
 
   /** Timestamp of the log entry. */
   Instant timestamp;
+
   /** Type of the log entry. */
   LogEntryType type;
+
   /** Message of the log entry. */
   String message;
+
   /** Exception of the log entry. */
   transient Throwable exception;
+
   /** Topic of the log entry, usually the ID of the user, session, or job. */
   UUID topic;
 

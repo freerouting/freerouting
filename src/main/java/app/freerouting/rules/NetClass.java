@@ -17,8 +17,8 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   private final boolean[] activeRoutingLayerArr;
 
   /**
-   * The clearance classes of the item types if this net class comes from a class in a Specctra
-   * DSN file. Should eventually be moved to {@code NetClass} and used only when reading a DSN file.
+   * The clearance classes of the item types if this net class comes from a class in a Specctra DSN
+   * file. Should eventually be moved to {@code NetClass} and used only when reading a DSN file.
    */
   public DefaultItemClearanceClasses defaultItemClearanceClasses =
       new DefaultItemClearanceClasses();
@@ -158,9 +158,8 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /**
-   * Sets the minimum trace length of this net class to {@code value}. If {@code value}
-   * is {@literal <}= 0,
-   * there is no minimal trace length restriction.
+   * Sets the minimum trace length of this net class to {@code value}. If {@code value} is {@literal
+   * <}= 0, there is no minimal trace length restriction.
    */
   public void setMinimumTraceLength(double value) {
     minimumTraceLength = value;
@@ -175,9 +174,8 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /**
-   * Sets the maximum trace length of this net class to {@code value}. If {@code value}
-   * is {@literal <}= 0,
-   * there is no maximal trace length restriction.
+   * Sets the maximum trace length of this net class to {@code value}. If {@code value} is {@literal
+   * <}= 0, there is no maximal trace length restriction.
    */
   public void setMaximumTraceLength(double value) {
     maximumTraceLength = value;

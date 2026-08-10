@@ -95,8 +95,8 @@ public class CornerItemConstructionState extends InteractiveState {
   }
 
   /**
-   * Snaps the line from the last point in the corner list to the input point according to the
-   * mouse snap angle.
+   * Snaps the line from the last point in the corner list to the input point according to the mouse
+   * snap angle.
    */
   private IntPoint snap(IntPoint point) {
     IntPoint result;

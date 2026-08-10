@@ -44,7 +44,7 @@ public class SessionControllerMocked {
   @Produces(MediaType.APPLICATION_JSON)
   public Response listSessions() {
     return Response.ok(
-        """
+            """
         [
              "8c6b2f64-b6db-4fb6-9a2f-17610acad966",
              "f7306a32-2cec-44be-a467-cc8d901f98e3",
@@ -74,7 +74,7 @@ public class SessionControllerMocked {
   @Produces(MediaType.APPLICATION_JSON)
   public Response createSession() {
     return Response.ok(
-        """
+            """
         {
             "id": "8c6b2f64-b6db-4fb6-9a2f-17610acad966",
             "userId": "d0071163-7ba3-46b3-b3af-bc2ebfd4d1a0",
@@ -111,7 +111,7 @@ public class SessionControllerMocked {
           @PathParam("sessionId")
           String sessionId) {
     return Response.ok(
-        """
+            """
         {
              "id": "8c6b2f64-b6db-4fb6-9a2f-17610acad966",
              "userId": "d0071163-7ba3-46b3-b3af-bc2ebfd4d1a0",
@@ -148,7 +148,7 @@ public class SessionControllerMocked {
           @PathParam("sessionId")
           String sessionId) {
     return Response.ok(
-        """
+            """
         [
         ]
         """)

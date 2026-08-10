@@ -55,14 +55,12 @@ public class CoordinateTransform implements Serializable {
   /** Copy constructor. */
   public CoordinateTransform(CoordinateTransform coordinateTransform) {
     this.screenBounds = new Dimension(coordinateTransform.screenBounds);
-    this.designBox =
-        new IntBox(coordinateTransform.designBox.ll, coordinateTransform.designBox.ur);
+    this.designBox = new IntBox(coordinateTransform.designBox.ll, coordinateTransform.designBox.ur);
     this.rotationPole =
         new FloatPoint(coordinateTransform.rotationPole.x, coordinateTransform.rotationPole.y);
     this.designBoxWithOffset =
         new IntBox(
-            coordinateTransform.designBoxWithOffset.ll,
-            coordinateTransform.designBoxWithOffset.ur);
+            coordinateTransform.designBoxWithOffset.ll, coordinateTransform.designBoxWithOffset.ur);
     this.scaleFactor = coordinateTransform.scaleFactor;
     this.displayXoffset = coordinateTransform.displayXoffset;
     this.displayYoffset = coordinateTransform.displayYoffset;

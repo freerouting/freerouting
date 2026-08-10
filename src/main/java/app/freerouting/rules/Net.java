@@ -41,8 +41,7 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   private NetClass netClass;
 
   /** Creates a new net. */
-  public Net(
-      String name, int subnetNumber, int number, Nets netList, boolean containsPlane) {
+  public Net(String name, int subnetNumber, int number, Nets netList, boolean containsPlane) {
     this.name = name;
     this.subnetNumber = subnetNumber;
     this.netNumber = number;

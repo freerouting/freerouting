@@ -205,8 +205,7 @@ public final class KiCadJsonWriter {
     // 7. Conduction Areas
     int areaId = 1;
     for (ConductionArea area : board.getConductionAreas()) {
-      KiCadBoardJson.ConductionAreaJson areaJson =
-          new KiCadBoardJson.ConductionAreaJson();
+      KiCadBoardJson.ConductionAreaJson areaJson = new KiCadBoardJson.ConductionAreaJson();
       areaJson.id = areaId++;
       if (area.netCount() > 0) {
         int netNo = area.getNetNo(0);
@@ -218,8 +217,7 @@ public final class KiCadJsonWriter {
       areaJson.layerIndex = area.getLayer();
       areaJson.isObstacle = area.getIsObstacle();
       for (FloatPoint pt : area.getArea().cornerApproxArr()) {
-        areaJson.polygon.add(
-            new KiCadBoardJson.Point2D(pt.x / scaleFactor, -pt.y / scaleFactor));
+        areaJson.polygon.add(new KiCadBoardJson.Point2D(pt.x / scaleFactor, -pt.y / scaleFactor));
       }
       boardJson.conductionAreas.add(areaJson);
     }

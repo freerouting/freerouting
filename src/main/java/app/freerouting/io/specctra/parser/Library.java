@@ -248,10 +248,7 @@ public class Library extends ScopeKeyword {
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == Keyword.PADSTACK) {
           if (!readPadstackScope(
-              par.scanner,
-              par.layerStructure,
-              par.coordinateTransform,
-              board.library.padstacks)) {
+              par.scanner, par.layerStructure, par.coordinateTransform, board.library.padstacks)) {
             return false;
           }
         } else if (nextToken == Keyword.IMAGE) {

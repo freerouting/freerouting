@@ -97,8 +97,7 @@ public class MinAreaTree extends ShapeTree {
       // with the shape of leafToInsert is minimal.
 
       RegularTileShape firstChildShape = currInnerNode.firstChild.boundingShape;
-      RegularTileShape unionWithFirstChildShape =
-          leafToInsert.boundingShape.union(firstChildShape);
+      RegularTileShape unionWithFirstChildShape = leafToInsert.boundingShape.union(firstChildShape);
       double firstAreaIncrease = unionWithFirstChildShape.area() - firstChildShape.area();
 
       RegularTileShape secondChildShape = currInnerNode.secondChild.boundingShape;

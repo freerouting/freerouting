@@ -36,8 +36,8 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
   }
 
   /**
-   * Calculates if the next 45-degree angle should be horizontal first when coming from
-   * fromPoint on fromDoor.
+   * Calculates if the next 45-degree angle should be horizontal first when coming from fromPoint on
+   * fromDoor.
    */
   private static boolean calcHorizontalFirstFromDoor(
       ExpandableObject fromDoor, FloatPoint fromPoint, FloatPoint toPoint) {

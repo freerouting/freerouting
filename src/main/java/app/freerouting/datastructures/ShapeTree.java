@@ -12,9 +12,7 @@ import app.freerouting.logger.FRLogger;
  */
 public abstract class ShapeTree {
 
-  /**
-   * Fixed directions for calculating bounding regular tile shapes stored in this tree.
-   */
+  /** Fixed directions for calculating bounding regular tile shapes stored in this tree. */
   protected final ShapeBoundingDirections boundingDirections;
 
   /** Root node - initially null. */
@@ -208,10 +206,7 @@ public abstract class ShapeTree {
 
     /** Creates a leaf node for object at index with parent and boundingShape. */
     public Leaf(
-        ShapeTree.Storable object,
-        int index,
-        InnerNode parent,
-        RegularTileShape boundingShape) {
+        ShapeTree.Storable object, int index, InnerNode parent, RegularTileShape boundingShape) {
       this.boundingShape = boundingShape;
       this.parent = parent;
       this.object = object;

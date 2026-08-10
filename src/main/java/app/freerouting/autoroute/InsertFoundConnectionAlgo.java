@@ -192,8 +192,7 @@ public final class InsertFoundConnectionAlgo {
           && okPoint != insertPolyline.lastCorner()
           && ctrl.withNeckdown
           && currCornerArr.length == 2) {
-        neckdownInserted =
-            insertNeckdown(okPoint, currCornerArr[1], trace.layer, startPin, endPin);
+        neckdownInserted = insertNeckdown(okPoint, currCornerArr[1], trace.layer, startPin, endPin);
       }
       if (!neckdownInserted
           && okPoint != insertPolyline.lastCorner()
@@ -510,8 +509,7 @@ public final class InsertFoundConnectionAlgo {
     return false;
   }
 
-  boolean insertNeckdown(
-      Point fromCorner, Point toCorner, int layer, Pin startPin, Pin endPin) {
+  boolean insertNeckdown(Point fromCorner, Point toCorner, int layer, Pin startPin, Pin endPin) {
     if (startPin != null) {
       Point okPoint = tryNeckDown(toCorner, fromCorner, layer, startPin, true);
       if (okPoint == fromCorner) {
@@ -525,8 +523,7 @@ public final class InsertFoundConnectionAlgo {
     return false;
   }
 
-  private Point tryNeckDown(
-      Point fromCorner, Point toCorner, int layer, Pin pin, boolean atStart) {
+  private Point tryNeckDown(Point fromCorner, Point toCorner, int layer, Pin pin, boolean atStart) {
     if (!pin.isOnLayer(layer)) {
       return null;
     }

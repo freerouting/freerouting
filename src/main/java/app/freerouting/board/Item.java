@@ -154,9 +154,7 @@ public abstract class Item
   /** Returns the number of shapes of this item after decomposition into convex polygonal shapes. */
   public abstract int tileShapeCount();
 
-  /**
-   * Returns the p_index-th shape of this item after decomposition into convex polygonal shapes.
-   */
+  /** Returns the p_index-th shape of this item after decomposition into convex polygonal shapes. */
   public TileShape getTileShape(int index) {
     if (this.board == null) {
       FRLogger.warn("Item.get_tile_shape: app.freerouting.board is null");
@@ -894,8 +892,8 @@ public abstract class Item
   }
 
   /**
-   * Returns the index in the clearance matrix describing the required spacing of this item to
-   * other items.
+   * Returns the index in the clearance matrix describing the required spacing of this item to other
+   * items.
    */
   public int clearanceClassNo() {
     return clearanceClass;

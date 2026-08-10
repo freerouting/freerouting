@@ -206,9 +206,7 @@ public class Package {
   }
 
   private static void writePackageKeepout(
-      app.freerouting.core.Package.Keepout keepout,
-      WriteScopeParameter par,
-      boolean isViaKeepout)
+      app.freerouting.core.Package.Keepout keepout, WriteScopeParameter par, boolean isViaKeepout)
       throws IOException {
     Layer keepoutLayer;
     if (keepout.layer >= 0) {

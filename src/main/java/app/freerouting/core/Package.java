@@ -38,9 +38,7 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
 
   private final Packages packageList;
 
-  /**
-   * Creates a new instance of Package. The package list contains this package.
-   */
+  /** Creates a new instance of Package. The package list contains this package. */
   public Package(
       String name,
       int no,

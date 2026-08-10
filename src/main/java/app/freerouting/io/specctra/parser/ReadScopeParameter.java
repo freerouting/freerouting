@@ -148,8 +148,7 @@ public class ReadScopeParameter {
       int outlineClearanceNo = 0;
       if (rules != null) {
         if (outlineClearanceClassName != null && rules.clearanceMatrix != null) {
-          outlineClearanceNo =
-              Math.max(0, rules.clearanceMatrix.getNo(outlineClearanceClassName));
+          outlineClearanceNo = Math.max(0, rules.clearanceMatrix.getNo(outlineClearanceClassName));
         } else {
           outlineClearanceNo =
               rules

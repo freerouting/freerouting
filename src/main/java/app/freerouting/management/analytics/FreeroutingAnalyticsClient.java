@@ -55,8 +55,7 @@ public class FreeroutingAnalyticsClient implements AnalyticsClient {
                 connection.setRequestProperty("Content-Type", "application/json");
                 connection.setRequestProperty(
                     "Authorization",
-                    "Basic "
-                        + Base64.getEncoder().encodeToString((writeKey + ":").getBytes()));
+                    "Basic " + Base64.getEncoder().encodeToString((writeKey + ":").getBytes()));
                 connection.setDoOutput(true);
 
                 // Write JSON payload to request

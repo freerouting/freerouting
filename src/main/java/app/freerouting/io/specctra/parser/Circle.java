@@ -64,8 +64,7 @@ public class Circle extends Shape {
   }
 
   @Override
-  public void writeScope(IndentFileWriter file, IdentifierType identifierType)
-      throws IOException {
+  public void writeScope(IndentFileWriter file, IdentifierType identifierType) throws IOException {
     file.newLine();
     file.write("(circle ");
     identifierType.write(this.layer.name, file);

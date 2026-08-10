@@ -93,10 +93,7 @@ public class Packages implements Serializable {
     return newPackage;
   }
 
-  /**
-   * Appends a new package with the specified pins. The package name is generated
-   * internally.
-   */
+  /** Appends a new package with the specified pins. The package name is generated internally. */
   public Package add(Package.Pin[] pinArr) {
     String packageName = "Package#" + (packageArr.size() + 1);
 

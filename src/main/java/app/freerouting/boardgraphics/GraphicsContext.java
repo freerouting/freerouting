@@ -43,9 +43,7 @@ public class GraphicsContext implements Serializable {
   public ColorIntensityTable colorIntensityTable;
   public CoordinateTransform coordinateTransform;
 
-  /**
-   * Layer visibility per board layer, where 0 is invisible and 1 is fully visible.
-   */
+  /** Layer visibility per board layer, where 0 is invisible and 1 is fully visible. */
   private double[] layerVisibilityArr;
 
   /**
@@ -69,10 +67,7 @@ public class GraphicsContext implements Serializable {
 
   /** Creates a graphics context for the given board bounds and layer structure. */
   public GraphicsContext(
-      IntBox designBounds,
-      Dimension panelBounds,
-      LayerStructure layerStructure,
-      Locale locale) {
+      IntBox designBounds, Dimension panelBounds, LayerStructure layerStructure, Locale locale) {
     coordinateTransform = new CoordinateTransform(designBounds, panelBounds);
     itemColorTable = new ItemColorTableModel(layerStructure, locale);
     otherColorTable = new OtherColorTableModel(locale);
@@ -218,11 +213,7 @@ public class GraphicsContext implements Serializable {
 
   /** Draws a polygon with the given corner points. */
   public void draw(
-      FloatPoint[] points,
-      double halfWidth,
-      Color color,
-      Graphics g,
-      double translucencyFactor) {
+      FloatPoint[] points, double halfWidth, Color color, Graphics g, double translucencyFactor) {
     if (color == null) {
       return;
     }
@@ -261,7 +252,7 @@ public class GraphicsContext implements Serializable {
   }
 
   /*
-    * draws the boundary of a circle.
+   * draws the boundary of a circle.
    */
   /** DrawCircle. */
   public void drawCircle(
@@ -559,10 +550,7 @@ public class GraphicsContext implements Serializable {
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     g2.fill(
         new Ellipse2D.Double(
-            center.getX() - radius,
-            center.getY() - radius,
-            2 * radius,
-            2 * radius));
+            center.getX() - radius, center.getY() - radius, 2 * radius, 2 * radius));
   }
 
   /** Draws the interior of an ellipse. */
@@ -625,8 +613,7 @@ public class GraphicsContext implements Serializable {
   }
 
   /** Fill the interior of the polygon shape represented by p_points. */
-  public void fillShape(
-      FloatPoint[] points, Graphics g, Color color, double translucencyFactor) {
+  public void fillShape(FloatPoint[] points, Graphics g, Color color, double translucencyFactor) {
     if (color == null) {
       return;
     }
@@ -815,8 +802,7 @@ public class GraphicsContext implements Serializable {
 
   /** SetConductionColorIntensity. */
   public void setConductionColorIntensity(double value) {
-    colorIntensityTable.setValue(
-        ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(), value);
+    colorIntensityTable.setValue(ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(), value);
   }
 
   public double getObstacleColorIntensity() {

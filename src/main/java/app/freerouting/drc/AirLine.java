@@ -35,8 +35,7 @@ public class AirLine implements Comparable<AirLine> {
    * @param toItem the ending item
    * @param toCorner the ending coordinate
    */
-  public AirLine(
-      Net net, Item fromItem, FloatPoint fromCorner, Item toItem, FloatPoint toCorner) {
+  public AirLine(Net net, Item fromItem, FloatPoint fromCorner, Item toItem, FloatPoint toCorner) {
     this.net = net;
     this.fromItem = fromItem;
     this.fromCorner = fromCorner;

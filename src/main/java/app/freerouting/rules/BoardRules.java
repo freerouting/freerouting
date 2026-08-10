@@ -358,8 +358,8 @@ public class BoardRules implements Serializable {
   }
 
   /**
-   * Sets the minimum distance between the pin border and the next corner of a connected trace for
-   * a pin with connection restrictions. If {@code value} is {@literal <}= 0, there are no exit
+   * Sets the minimum distance between the pin border and the next corner of a connected trace for a
+   * pin with connection restrictions. If {@code value} is {@literal <}= 0, there are no exit
    * restrictions.
    */
   public void setPinEdgeToTurnDist(double value) {

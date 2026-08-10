@@ -246,8 +246,7 @@ public class ForcedPadAlgo {
         return CheckDrillResult.NOT_DRILLABLE;
       }
       IntPoint[] newViaCenter =
-          MoveDrillItemAlgo.tryShoveViaPoints(
-              padShape, layer, currShoveVia, clType, false, board);
+          MoveDrillItemAlgo.tryShoveViaPoints(padShape, layer, currShoveVia, clType, false, board);
 
       if (newViaCenter.length == 0) {
         this.board.setShoveFailingObstacle(currShoveVia);

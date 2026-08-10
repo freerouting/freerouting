@@ -59,8 +59,15 @@ public class Components implements Serializable {
    */
   public Component add(Point location, double rotation, boolean onFront, Package componentPackage) {
     String componentName = "Component#" + (componentArr.size() + 1);
-    return add(componentName,
-        location, rotation, onFront, componentPackage, componentPackage, false, null);
+    return add(
+        componentName,
+        location,
+        rotation,
+        onFront,
+        componentPackage,
+        componentPackage,
+        false,
+        null);
   }
 
   /** Returns the component with the input name or null, if no such component exists. */

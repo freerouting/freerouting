@@ -310,8 +310,7 @@ public final class KiCadJsonReader {
       final int outlineClearanceNo = 1; // Default clearance class
 
       // 6. Communication object setup
-      final CoordinateTransform coordinateTransform =
-          new CoordinateTransform(scaleFactor, 0, 0);
+      final CoordinateTransform coordinateTransform = new CoordinateTransform(scaleFactor, 0, 0);
       Communication.SpecctraParserInfo parserInfo =
           new Communication.SpecctraParserInfo("\"", "KiCad", "v10.0", null, null, false);
       Communication communication =

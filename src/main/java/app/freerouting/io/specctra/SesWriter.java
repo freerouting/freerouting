@@ -378,8 +378,7 @@ public final class SesWriter {
       throws IOException {
     int layerNo = wire.getLayer();
     final app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerNo];
-    final int wireWidth =
-        (int) Math.round(coordinateTransform.boardToDsn(2 * wire.getHalfWidth()));
+    final int wireWidth = (int) Math.round(coordinateTransform.boardToDsn(2 * wire.getHalfWidth()));
     file.startScope();
     file.write("wire");
     Point[] cornerArr = wire.polyline().cornerArr();

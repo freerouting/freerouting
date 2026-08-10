@@ -38,9 +38,7 @@ public class DefaultItemClearanceClasses implements Serializable {
     }
   }
 
-  /**
-   * Defines the item classes for which default clearance values are stored.
-   */
+  /** Defines the item classes for which default clearance values are stored. */
   public enum ItemClass {
     NONE,
     TRACE,

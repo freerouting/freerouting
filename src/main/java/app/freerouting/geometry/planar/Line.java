@@ -10,8 +10,10 @@ public class Line implements Comparable<Line>, Serializable {
 
   @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   public final Point a;
+
   @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   public final Point b;
+
   private transient Direction dir; // should only be accessed from get_direction().
 
   /** Creates a directed Line from two points. */

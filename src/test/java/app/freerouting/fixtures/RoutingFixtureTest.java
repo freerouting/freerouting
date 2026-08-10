@@ -91,7 +91,6 @@ public class RoutingFixtureTest {
       throw new RuntimeException(filename + " not found.", e);
     }
 
-
     return job;
   }
 
@@ -132,8 +131,6 @@ public class RoutingFixtureTest {
         throw new RuntimeException("Routing job timed out after " + timeoutInMinutes + " minutes.");
       }
     }
-
-
 
     return job;
   }

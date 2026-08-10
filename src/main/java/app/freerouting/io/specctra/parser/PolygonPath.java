@@ -19,8 +19,7 @@ public class PolygonPath extends Path {
 
   /** Writes this path as a scope to an output dsn-file. */
   @Override
-  public void writeScope(IndentFileWriter file, IdentifierType identifierType)
-      throws IOException {
+  public void writeScope(IndentFileWriter file, IdentifierType identifierType) throws IOException {
     file.startScope();
     file.write("path ");
     identifierType.write(this.layer.name, file);

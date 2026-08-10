@@ -3,9 +3,7 @@ package app.freerouting.autoroute;
 import app.freerouting.geometry.planar.TileShape;
 import java.util.List;
 
-/**
- * Interface representing a room in the expansion tree during maze routing.
- */
+/** Interface representing a room in the expansion tree during maze routing. */
 public interface ExpansionRoom {
 
   /** Adds door to the list of doors of this room. */

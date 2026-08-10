@@ -25,8 +25,8 @@ public class CoordinateTransform implements Serializable {
   public final double boardUnitFactor;
 
   /**
-   * The factor used for transforming coordinates between user coordinate space and board
-   * coordinate space.
+   * The factor used for transforming coordinates between user coordinate space and board coordinate
+   * space.
    */
   private final double scaleFactor;
 

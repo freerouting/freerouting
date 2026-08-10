@@ -1286,8 +1286,7 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Saves the board rule to file, so that they can be reused later on. */
-  private boolean saveRulesAs(
-      File rulesFile, String designName, GuiBoardManager boardHandling) {
+  private boolean saveRulesAs(File rulesFile, String designName, GuiBoardManager boardHandling) {
     FRLogger.info("Saving '" + rulesFile.getPath() + "'...");
 
     try (OutputStream outputStream = new FileOutputStream(rulesFile)) {

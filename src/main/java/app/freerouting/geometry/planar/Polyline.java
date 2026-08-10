@@ -248,9 +248,7 @@ public class Polyline implements Serializable {
     return precalculatedCorners;
   }
 
-  /**
-   * Returns the array of intersections of consecutive lines, approximated by FloatPoint values.
-   */
+  /** Returns the array of intersections of consecutive lines, approximated by FloatPoint values. */
   public FloatPoint[] cornerApproxArr() {
     if (arr.length < 2) {
       return new FloatPoint[0];

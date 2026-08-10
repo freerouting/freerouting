@@ -57,9 +57,7 @@ public final class MoveDrillItemAlgo {
       attachAllowed = via.attachAllowed;
     }
     ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
-    for (int currLayer = drillItem.firstLayer();
-        currLayer <= drillItem.lastLayer();
-        currLayer++) {
+    for (int currLayer = drillItem.firstLayer(); currLayer <= drillItem.lastLayer(); currLayer++) {
       int currInd = currLayer - drillItem.firstLayer();
       TileShape currShape = drillItem.getTreeShape(searchTree, currInd);
       if (currShape == null) {
@@ -116,9 +114,7 @@ public final class MoveDrillItemAlgo {
     Collection<Item> ignoreItems = new LinkedList<>();
     ignoreItems.add(drillItem);
     ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
-    for (int currLayer = drillItem.firstLayer();
-        currLayer <= drillItem.lastLayer();
-        currLayer++) {
+    for (int currLayer = drillItem.firstLayer(); currLayer <= drillItem.lastLayer(); currLayer++) {
       int currInd = currLayer - drillItem.firstLayer();
       TileShape currShape = drillItem.getTreeShape(searchTree, currInd);
       if (currShape == null) {

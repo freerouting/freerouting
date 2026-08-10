@@ -349,8 +349,7 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
 
     @Override
-    public boolean append(
-        String buttonName, String windowTitle, ObjectInfoPanel.Printable object) {
+    public boolean append(String buttonName, String windowTitle, ObjectInfoPanel.Printable object) {
       Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>();
       objectList.add(object);
       return appendObjects(buttonName, windowTitle, objectList);
@@ -394,8 +393,7 @@ public class WindowNets extends WindowObjectListWithFilter {
             CoordinateTransform coordinateTransform =
                 boardFrame.boardPanel.boardHandling.coordinateTransform;
             WindowObjectInfo newWindow =
-                WindowObjectInfo.display(
-                    windowTitle, infoObjects, boardFrame, coordinateTransform);
+                WindowObjectInfo.display(windowTitle, infoObjects, boardFrame, coordinateTransform);
             Point loc = getLocation();
             Point newWindowLocation = new Point((int) (loc.getX() + 30), (int) (loc.getY() + 30));
             newWindow.setLocation(newWindowLocation);

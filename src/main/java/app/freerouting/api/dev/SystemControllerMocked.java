@@ -43,7 +43,7 @@ public class SystemControllerMocked {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getStatus() {
     return Response.ok(
-        """
+            """
         {
             "status": "OK",
             "cpu_load": 3.954818264180926,
@@ -78,7 +78,7 @@ public class SystemControllerMocked {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getEnvironment() {
     return Response.ok(
-        """
+            """
         {
             "freeroutingVersion": "2.0.0,2024-10-14",
             "app_started_at": "2024-10-14T10:56:26.730145900Z",

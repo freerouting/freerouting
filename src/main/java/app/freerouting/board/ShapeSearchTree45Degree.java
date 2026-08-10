@@ -176,8 +176,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             IntOctagon currObjectShape =
                 currObject.getTreeShape(this, shapeIndex).boundingOctagon();
             if (debugAnchor) {
-              traceCompleteShapeCandidate(
-                  debugStep, netNo, roomLayer, currObject, currObjectShape);
+              traceCompleteShapeCandidate(debugStep, netNo, roomLayer, currObject, currObjectShape);
             }
             Collection<IncompleteFreeSpaceExpansionRoom> newResult = new LinkedList<>();
             IntOctagon newBoundingShape = IntOctagon.EMPTY;
@@ -346,8 +345,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     int restrainingLineNo = -1;
 
     for (int obstacleLineNo = 0; obstacleLineNo < 8; obstacleLineNo++) {
-      double currDistance =
-          signedLineDistance(obstacleShape, obstacleLineNo, shapeToBeContained);
+      double currDistance = signedLineDistance(obstacleShape, obstacleLineNo, shapeToBeContained);
       if (currDistance > cutLineDistance) {
         if (obstacleSegmentTouchesInside(obstacleShape, obstacleLineNo, roomShape)) {
           cutLineDistance = currDistance;
@@ -503,8 +501,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
         }
 
         int offsetWidth =
-            this.clearanceCompensationValue(
-                drillItem.clearanceClassNo(), drillItem.shapeLayer(i));
+            this.clearanceCompensationValue(drillItem.clearanceClassNo(), drillItem.shapeLayer(i));
         offsetWidth += drillHoleClearanceDelta(drillItem, currShape, drillItem.shapeLayer(i));
         currTileShape = (TileShape) currTileShape.offset(offsetWidth);
         result[i] = currTileShape.boundingOctagon();
@@ -536,15 +533,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
   }
 
   private static String describeBounds(IntBox bounds) {
-    return "[("
-        + bounds.ll.x
-        + ","
-        + bounds.ll.y
-        + ")..("
-        + bounds.ur.x
-        + ","
-        + bounds.ur.y
-        + ")]";
+    return "[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]";
   }
 
   private static boolean isCompleteShapeDebugAnchor(

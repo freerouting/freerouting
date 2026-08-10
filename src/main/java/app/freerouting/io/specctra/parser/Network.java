@@ -56,8 +56,7 @@ public class Network extends ScopeKeyword {
   }
 
   public static void writeViaInfos(
-      BoardRules rules, IndentFileWriter file, IdentifierType identifierType)
-      throws IOException {
+      BoardRules rules, IndentFileWriter file, IdentifierType identifierType) throws IOException {
     for (int i = 0; i < rules.viaInfos.count(); i++) {
       final ViaInfo currVia = rules.viaInfos.get(i);
       file.startScope();
@@ -76,8 +75,7 @@ public class Network extends ScopeKeyword {
   }
 
   public static void writeViaRules(
-      BoardRules rules, IndentFileWriter file, IdentifierType identifierType)
-      throws IOException {
+      BoardRules rules, IndentFileWriter file, IdentifierType identifierType) throws IOException {
     for (ViaRule currRule : rules.viaRules) {
       file.startScope();
       file.write("viaRule");
@@ -97,8 +95,8 @@ public class Network extends ScopeKeyword {
     }
   }
 
-  public static void writeNetClass(
-      app.freerouting.rules.NetClass netClass, WriteScopeParameter par) throws IOException {
+  public static void writeNetClass(app.freerouting.rules.NetClass netClass, WriteScopeParameter par)
+      throws IOException {
     par.file.startScope();
     par.file.write("class ");
     par.identifierType.write(netClass.getName(), par.file);
@@ -148,8 +146,8 @@ public class Network extends ScopeKeyword {
     par.file.endScope();
   }
 
-  private static void writeCircuit(
-      app.freerouting.rules.NetClass netClass, WriteScopeParameter par) throws IOException {
+  private static void writeCircuit(app.freerouting.rules.NetClass netClass, WriteScopeParameter par)
+      throws IOException {
     final double minTraceLength = netClass.getMinimumTraceLength();
     final double maxTraceLength = netClass.getMaximumTraceLength();
     par.file.startScope();
@@ -188,8 +186,7 @@ public class Network extends ScopeKeyword {
   }
 
   /** Creates a sequence of subnets with 2 pins from p_pin_list. */
-  private static Collection<Collection<Net.Pin>> createOrderedSubnets(
-      Collection<Net.Pin> pinList) {
+  private static Collection<Collection<Net.Pin>> createOrderedSubnets(Collection<Net.Pin> pinList) {
     Collection<Collection<Net.Pin>> result = new LinkedList<>();
     if (pinList.isEmpty()) {
       return result;
@@ -212,8 +209,7 @@ public class Network extends ScopeKeyword {
     Object nextToken;
     String componentName;
     String pinName;
-    while (!(componentName = ((SpecctraDsnStreamReader) scanner).nextString(true, '-'))
-        .isEmpty()) {
+    while (!(componentName = ((SpecctraDsnStreamReader) scanner).nextString(true, '-')).isEmpty()) {
 
       try {
         scanner.yybegin(SpecctraDsnStreamReader.SPEC_CHAR);
@@ -484,8 +480,7 @@ public class Network extends ScopeKeyword {
         int traceHalfwidth = (int) Math.round(coordinateTransform.dsnToBoard(rule1.value / 2));
         boardNetClass.setTraceHalfWidth(traceHalfwidth);
       } else if (currRule instanceof Rule.ClearanceRule rule) {
-        addClearanceRule(
-            board.rules.clearanceMatrix, boardNetClass, rule, -1, coordinateTransform);
+        addClearanceRule(board.rules.clearanceMatrix, boardNetClass, rule, -1, coordinateTransform);
         clearanceRuleFound = true;
       } else {
         FRLogger.warn(

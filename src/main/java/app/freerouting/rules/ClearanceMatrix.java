@@ -24,8 +24,8 @@ public class ClearanceMatrix implements Serializable {
   private Row[] row; // vector of classCount rows of the clearance matrix
 
   /**
-   * Creates a new instance for {@code classCount} clearance classes on the layers in
-   * {@code layerStructure}. {@code nameArr} must have one entry for each class.
+   * Creates a new instance for {@code classCount} clearance classes on the layers in {@code
+   * layerStructure}. {@code nameArr} must have one entry for each class.
    */
   public ClearanceMatrix(int classCount, LayerStructure layerStructure, String[] nameArr) {
     this.classCount = Math.max(classCount, 1);
@@ -73,9 +73,7 @@ public class ClearanceMatrix implements Serializable {
     return row[clearanceClass].name;
   }
 
-  /**
-   * Sets the value of all clearance classes with number {@literal >}= 1 to {@code value}.
-   */
+  /** Sets the value of all clearance classes with number {@literal >}= 1 to {@code value}. */
   public void setDefaultValue(int value) {
     for (int i = 0; i < layerStructure.arr.length; i++) {
       setDefaultValue(i, value);
@@ -127,9 +125,8 @@ public class ClearanceMatrix implements Serializable {
   }
 
   /**
-   * Gets the required spacing of clearance classes with index {@code classI} and {@code classJ}
-   * on {@code layer}. This value
-   * will be always an even integer.
+   * Gets the required spacing of clearance classes with index {@code classI} and {@code classJ} on
+   * {@code layer}. This value will be always an even integer.
    */
   public int getValue(int classI, int classJ, int layer, boolean addSafetyMargin) {
 

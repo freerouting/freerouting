@@ -164,8 +164,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * This is the normal case.
    */
   public Set<Item> getNormalContacts(Point point, boolean ignoreNet) {
-    if (point == null
-        || !(point.equals(this.firstCorner()) || point.equals(this.lastCorner()))) {
+    if (point == null || !(point.equals(this.firstCorner()) || point.equals(this.lastCorner()))) {
       return new TreeSet<>();
     }
     TileShape searchShape = TileShape.getInstance(point);

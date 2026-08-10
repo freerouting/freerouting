@@ -17,8 +17,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
 
     TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
-    final LayerStructure layerStructure =
-        boardPanel.boardHandling.getRoutingBoard().layerStructure;
+    final LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
 
     JMenuItem popupEndRouteMenuitem = new JMenuItem();
     popupEndRouteMenuitem.setText(tm.getText("end_route"));

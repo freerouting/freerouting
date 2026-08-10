@@ -58,9 +58,7 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
     return false;
   }
 
-  /**
-   * Removes {@code viaInfo} from this list. Returns false if it was not contained in the list.
-   */
+  /** Removes {@code viaInfo} from this list. Returns false if it was not contained in the list. */
   public boolean remove(ViaInfo viaInfo) {
     return this.list.remove(viaInfo);
   }

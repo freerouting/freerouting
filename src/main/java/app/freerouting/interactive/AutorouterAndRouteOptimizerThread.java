@@ -808,8 +808,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         }
       }
       java.lang.management.MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
-      float heapUsedMegabytes =
-          memoryBean.getHeapMemoryUsage().getUsed() / (1024.0f * 1024.0f);
+      float heapUsedMegabytes = memoryBean.getHeapMemoryUsage().getUsed() / (1024.0f * 1024.0f);
       if (heapUsedMegabytes > job.resourceUsage.peakMemoryUsed) {
         job.resourceUsage.peakMemoryUsed = heapUsedMegabytes;
       }

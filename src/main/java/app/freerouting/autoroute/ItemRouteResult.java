@@ -1,8 +1,6 @@
 package app.freerouting.autoroute;
 
-/**
- * Represents the routing result of a single item, comparing metrics before and after routing.
- */
+/** Represents the routing result of a single item, comparing metrics before and after routing. */
 public class ItemRouteResult implements Comparable<ItemRouteResult> {
 
   private final int itemId;

@@ -51,8 +51,8 @@ public class Component extends ScopeKeyword {
     return componentPlacement;
   }
 
-  public static void writeScope(
-      WriteScopeParameter par, app.freerouting.board.Component component) throws IOException {
+  public static void writeScope(WriteScopeParameter par, app.freerouting.board.Component component)
+      throws IOException {
     par.file.startScope();
     par.file.write("place ");
     par.file.newLine();
