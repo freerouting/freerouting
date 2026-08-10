@@ -1,5 +1,6 @@
 package app.freerouting.core;
 
+/** Priority assigned to a routing job. */
 public enum RoutingJobPriority {
   LOWEST(0.0f),
   LOW(2.0f),
@@ -14,6 +15,7 @@ public enum RoutingJobPriority {
     this.value = Math.max(0.0f, Math.min(value, 10.0f));
   }
 
+  /** Returns the numeric priority value. */
   public float getValue() {
     return value;
   }

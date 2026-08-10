@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Contains the lists of different ViaInfo's, which can be used in interactive and automatic
+ * Contains the list of different via definitions that can be used in interactive and automatic
  * routing.
  */
 public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
@@ -16,42 +16,42 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
   private final List<ViaInfo> list = new LinkedList<>();
 
   /**
-   * Adds a via info consisting of padstack, clearance class and drill_to_smd_allowed. Return false,
-   * if the insertion failed, for example if the name existed already.
+   * Adds a via definition consisting of a padstack, clearance class, and drill-to-SMD setting.
+   * Returns false if the insertion failed, for example because the name already exists.
    */
-  public boolean add(ViaInfo pViaInfo) {
-    if (nameExists(pViaInfo.getName())) {
+  public boolean add(ViaInfo viaInfo) {
+    if (nameExists(viaInfo.getName())) {
       return false;
     }
-    this.list.add(pViaInfo);
+    this.list.add(viaInfo);
     return true;
   }
 
-  /** Returns the number of different vias, which can be used for routing. */
+  /** Returns the number of different vias that can be used for routing. */
   public int count() {
     return this.list.size();
   }
 
-  /** Returns the p_no-th via af the via types, which can be used for routing. */
-  public ViaInfo get(int pNo) {
-    assert pNo >= 0 && pNo < this.list.size();
-    return this.list.get(pNo);
+  /** Returns the via at the given index. */
+  public ViaInfo get(int index) {
+    assert index >= 0 && index < this.list.size();
+    return this.list.get(index);
   }
 
-  /** Returns the via info with name p_name, or null, if no such via exists. */
-  public ViaInfo get(String pName) {
+  /** Returns the via definition with the given name, or null if no such via exists. */
+  public ViaInfo get(String name) {
     for (ViaInfo currVia : this.list) {
-      if (currVia.getName().equals(pName)) {
+      if (currVia.getName().equals(name)) {
         return currVia;
       }
     }
     return null;
   }
 
-  /** Returns true, if a via info with name p_name is already wyisting in the list. */
-  public boolean nameExists(String pName) {
+  /** Returns true if a via definition with the given name already exists. */
+  public boolean nameExists(String name) {
     for (ViaInfo currVia : this.list) {
-      if (currVia.getName().equals(pName)) {
+      if (currVia.getName().equals(name)) {
         return true;
       }
     }
@@ -59,17 +59,17 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /**
-   * Removes p_via_info from this list. Returns false, if p_via_info was not contained in the list.
+   * Removes {@code viaInfo} from this list. Returns false if it was not contained in the list.
    */
-  public boolean remove(ViaInfo pViaInfo) {
-    return this.list.remove(pViaInfo);
+  public boolean remove(ViaInfo viaInfo) {
+    return this.list.remove(viaInfo);
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
-    TextManager tm = new TextManager(this.getClass(), pLocale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    pWindow.appendBold(tm.getText("vias") + ": ");
+    window.appendBold(tm.getText("vias") + ": ");
     int counter = 0;
     boolean firstTime = true;
     final int maxViasPerRow = 5;
@@ -77,13 +77,13 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
       if (firstTime) {
         firstTime = false;
       } else {
-        pWindow.append(", ");
+        window.append(", ");
       }
       if (counter == 0) {
-        pWindow.newline();
-        pWindow.indent();
+        window.newline();
+        window.indent();
       }
-      pWindow.append(currVia.getName(), tm.getText("viaInfo"), currVia);
+      window.append(currVia.getName(), tm.getText("viaInfo"), currVia);
       counter = (counter + 1) % maxViasPerRow;
     }
   }

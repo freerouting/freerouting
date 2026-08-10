@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
 
+/** Aggregates persisted, runtime, and source-specific Freerouting settings. */
 public class GlobalSettings implements Serializable {
 
   private static Path userDataPath = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
@@ -36,6 +37,8 @@ public class GlobalSettings implements Serializable {
   public final GuiSettings guiSettings = new GuiSettings();
 
   /**
+   * Legacy router settings bridge retained for JSON serialization and compatibility.
+   *
    * @deprecated Use {@link #settingsMergerProtype} to obtain merged {@link RouterSettings}. This
    *     field is retained as a serialisation bridge for {@code freerouting.json} (written on save,
    *     read back on load) and as a target for legacy code paths such as {@code
@@ -125,6 +128,7 @@ public class GlobalSettings implements Serializable {
    */
   public transient SettingsMerger settingsMergerProtype;
 
+  /** Creates global settings with the supported system locale and default source merger. */
   public GlobalSettings() {
     // validate and set the current locale
     if (Arrays.stream(supportedLanguages).noneMatch(currentLocale.getLanguage()::equals)) {
@@ -135,10 +139,12 @@ public class GlobalSettings implements Serializable {
     settingsMergerProtype = new SettingsMerger(new DefaultSettings());
   }
 
+  /** Prevents subsequent calls from changing the user-data path. */
   public static void lockUserDataPath() {
     isUserDataPathLocked = true;
   }
 
+  /** Returns the directory used for persistent user settings. */
   public static Path getUserDataPath() {
     return userDataPath;
   }
@@ -154,6 +160,11 @@ public class GlobalSettings implements Serializable {
     return configurationFilePath;
   }
 
+  /**
+   * Sets the persistent user-data directory unless the path has already been locked.
+   *
+   * @param userDataPath directory to use for persistent settings
+   */
   public static void setUserDataPath(Path userDataPath) {
     if (!isUserDataPathLocked) {
       GlobalSettings.userDataPath = userDataPath;
@@ -231,8 +242,8 @@ public class GlobalSettings implements Serializable {
     return 0;
   }
 
-  /*
-   * Loads the settings from the default JSON settings file.
+  /**
+   * Loads settings from the default JSON settings file.
    *
    * <p>Throws {@link NoSuchFileException} when the file (or its parent directory) does not
    * exist yet — this is the expected first-run condition and callers should treat it as
@@ -300,7 +311,8 @@ public class GlobalSettings implements Serializable {
                   + ", current: "
                   + currentVersion
                   + "). "
-                  + "No migration logic is implemented for this version transition, so some settings "
+                  + "No migration logic is implemented for this version transition, so some "
+                  + "settings "
                   + "may have been reset to their defaults. "
                   + "The file will be re-saved with the updated version string.");
         } else if (cmp > 0) {
@@ -314,7 +326,8 @@ public class GlobalSettings implements Serializable {
                   + currentVersion
                   + "). "
                   + "Some settings from the newer version may not be understood or may be ignored. "
-                  + "Consider upgrading Freerouting to the version that originally wrote this file.");
+                  + "Consider upgrading Freerouting to the version that originally wrote this "
+                  + "file.");
         }
       }
 
@@ -344,8 +357,8 @@ public class GlobalSettings implements Serializable {
     return loadedSettings;
   }
 
-  /*
-   * Saves the settings to the default JSON settings file.
+  /**
+   * Saves settings to the default JSON settings file.
    *
    * <p>The {@code version} field is always normalised to the release-safe version
    * (no {@code -SNAPSHOT} suffix) before writing so that SNAPSHOT builds never
@@ -407,8 +420,8 @@ public class GlobalSettings implements Serializable {
     }
   }
 
-  /*
-   * Sets a property value in the settings, and it permanently saves it into the
+  /**
+   * Sets a property value and permanently saves it into the settings file.
    * settings file.
    * Property names are in the format of "section.property" (eg.
    * "router.max_passes", "gui:input_directory" or "profile-email").
@@ -425,6 +438,7 @@ public class GlobalSettings implements Serializable {
     }
   }
 
+  /** Applies non-router {@code FREEROUTING__} environment variables to this object. */
   public void applyNonRouterEnvironmentVariables() {
     // Read all the environment variables that begins with "FREEROUTING__"
     for (var entry : System.getenv().entrySet()) {
@@ -443,8 +457,8 @@ public class GlobalSettings implements Serializable {
     }
   }
 
-  /*
-   * Sets a property value in the settings for the current process, but it does so
+  /**
+   * Sets a property value for the current process without saving it to disk.
    * without permanently saving it into the settings file.
    * For scenarios where the settings also needs to be saved in the settings file,
    * use the save() method instead.
@@ -464,32 +478,38 @@ public class GlobalSettings implements Serializable {
     }
   }
 
+  /** Returns the locale currently selected for the application. */
   public Locale getCurrentLocale() {
     return currentLocale;
   }
 
-  public void applyCommandLineArguments(String[] pArgs) {
-    for (int i = 0; i < pArgs.length; i++) {
+  /**
+   * Applies supported command-line arguments to these settings.
+   *
+   * @param args command-line arguments to parse
+   */
+  public void applyCommandLineArguments(String[] args) {
+    for (int i = 0; i < args.length; i++) {
       try {
-        if ("-help".equalsIgnoreCase(pArgs[i])
-            || "--help".equalsIgnoreCase(pArgs[i])
-            || "-h".equalsIgnoreCase(pArgs[i])) {
+        if ("-help".equalsIgnoreCase(args[i])
+            || "--help".equalsIgnoreCase(args[i])
+            || "-h".equalsIgnoreCase(args[i])) {
           showHelpOption = true;
           continue;
         }
-        if (pArgs[i].startsWith("--compare-boards=")) {
-          String[] files = pArgs[i].substring("--compare-boards=".length()).split(",");
+        if (args[i].startsWith("--compare-boards=")) {
+          String[] files = args[i].substring("--compare-boards=".length()).split(",");
           if (files.length == 2) {
             compareFile1 = files[0].trim();
             compareFile2 = files[1].trim();
           }
           continue;
         }
-        if (pArgs[i].startsWith("--")) {
+        if (args[i].startsWith("--")) {
           // it's a general settings value setter
           // Use split limit=2 so that values containing '=' (e.g. URLs with query strings)
           // are captured correctly as a single token.
-          String[] parts = pArgs[i].substring(2).split("=", 2);
+          String[] parts = args[i].substring(2).split("=", 2);
           if ((parts.length == 2) && (!Objects.equals(parts[0], "user_data_path"))) {
             if (parts[0].startsWith("debug.")) {
               // handle debug settings
@@ -509,17 +529,17 @@ public class GlobalSettings implements Serializable {
               setValue(parts[0], parts[1]);
             }
           } else if (!Objects.equals(parts[0], "user_data_path")) {
-            FRLogger.warn("Unknown command line argument: " + pArgs[i]);
+            FRLogger.warn("Unknown command line argument: " + args[i]);
           }
-        } else if (pArgs[i].startsWith("-de")) {
+        } else if (args[i].startsWith("-de")) {
           // the design file(s) are provided - can be DSN, SES, and/or RULES files
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             java.util.List<String> files = new java.util.ArrayList<>();
             int j = i + 1;
-            while (j < pArgs.length && !pArgs[j].startsWith("-")) {
+            while (j < args.length && !args[j].startsWith("-")) {
               // Split each argument by '+' to support legacy concatenation (e.g.
               // file1.dsn+file2.rules)
-              String[] parts = pArgs[j].split("\\+");
+              String[] parts = args[j].split("\\+");
               for (String part : parts) {
                 files.add(part.trim());
               }
@@ -542,7 +562,8 @@ public class GlobalSettings implements Serializable {
               if (lowerFile.endsWith(".dsn")) {
                 if (hasDsn) {
                   FRLogger.warn(
-                      "Multiple DSN files provided in -de argument. Only the last one will be used.");
+                      "Multiple DSN files provided in -de argument. "
+                          + "Only the last one will be used.");
                 }
                 initialInputFile = file;
                 hasDsn = true;
@@ -553,7 +574,8 @@ public class GlobalSettings implements Serializable {
                 } else {
                   if (hasSes) {
                     FRLogger.warn(
-                        "Multiple session files (SES/JSON) provided in -de argument. Only the last one will be used.");
+                        "Multiple session files (SES/JSON) provided in -de argument. "
+                            + "Only the last one will be used.");
                   }
                   designSessionFilename = file;
                   hasSes = true;
@@ -561,14 +583,16 @@ public class GlobalSettings implements Serializable {
               } else if (lowerFile.endsWith(".ses")) {
                 if (hasSes) {
                   FRLogger.warn(
-                      "Multiple SES files provided in -de argument. Only the last one will be used.");
+                      "Multiple SES files provided in -de argument. "
+                          + "Only the last one will be used.");
                 }
                 designSessionFilename = file;
                 hasSes = true;
               } else if (lowerFile.endsWith(".rules")) {
                 if (hasRules) {
                   FRLogger.warn(
-                      "Multiple RULES files provided in -de argument. Only the last one will be used.");
+                      "Multiple RULES files provided in -de argument. "
+                          + "Only the last one will be used.");
                 }
                 initialRulesFile = file;
                 hasRules = true;
@@ -583,35 +607,35 @@ public class GlobalSettings implements Serializable {
             // Skip the processed arguments
             i = j - 1;
           }
-        } else if (pArgs[i].startsWith("-di")) {
+        } else if (args[i].startsWith("-di")) {
           // the design directory is provided
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
-            guiSettings.inputDirectory = pArgs[i + 1];
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            guiSettings.inputDirectory = args[i + 1];
             i++;
           }
-        } else if (pArgs[i].startsWith("-do")) {
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
-            initialOutputFile = pArgs[i + 1];
+        } else if (args[i].startsWith("-do")) {
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            initialOutputFile = args[i + 1];
             i++;
           }
-        } else if (pArgs[i].startsWith("-drc")) {
+        } else if (args[i].startsWith("-drc")) {
           // DRC-only mode (must be checked before -dr)
           routerSettings.enabled = false;
           drcSettings.enabled = true;
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             drcReportFile = new BoardFileDetails();
             drcReportFile.format = FileFormat.DRC_JSON;
-            drcReportFile.setFilename(pArgs[i + 1]);
+            drcReportFile.setFilename(args[i + 1]);
             i++;
           }
-        } else if (pArgs[i].startsWith("-dr")) {
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
-            initialRulesFile = pArgs[i + 1];
+        } else if (args[i].startsWith("-dr")) {
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            initialRulesFile = args[i + 1];
             i++;
           }
-        } else if (pArgs[i].startsWith("-mp")) {
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
-            routerSettings.maxPasses = Integer.decode(pArgs[i + 1]);
+        } else if (args[i].startsWith("-mp")) {
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            routerSettings.maxPasses = Integer.decode(args[i + 1]);
 
             if (routerSettings.maxPasses < 0) {
               routerSettings.maxPasses = 1;
@@ -622,9 +646,9 @@ public class GlobalSettings implements Serializable {
             // Note: 0 is allowed and means no limit
             i++;
           }
-        } else if (pArgs[i].startsWith("-mt")) {
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
-            routerSettings.optimizer.maxThreads = Integer.decode(pArgs[i + 1]);
+        } else if (args[i].startsWith("-mt")) {
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            routerSettings.optimizer.maxThreads = Integer.decode(args[i + 1]);
 
             if (routerSettings.optimizer.maxThreads < 0) {
               routerSettings.optimizer.maxThreads = 0;
@@ -634,19 +658,19 @@ public class GlobalSettings implements Serializable {
             }
             i++;
           }
-        } else if (pArgs[i].startsWith("-oit")) {
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
+        } else if (args[i].startsWith("-oit")) {
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             routerSettings.optimizer.optimizationImprovementThreshold =
-                Float.parseFloat(pArgs[i + 1]) / 100;
+                Float.parseFloat(args[i + 1]) / 100;
 
             if (routerSettings.optimizer.optimizationImprovementThreshold <= 0) {
               routerSettings.optimizer.optimizationImprovementThreshold = 0.0f;
             }
             i++;
           }
-        } else if (pArgs[i].startsWith("-us")) {
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
-            String op = pArgs[i + 1].toLowerCase().trim();
+        } else if (args[i].startsWith("-us")) {
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            String op = args[i + 1].toLowerCase().trim();
             routerSettings.optimizer.boardUpdateStrategy =
                 "global".equals(op)
                     ? BoardUpdateStrategy.GLOBAL_OPTIMAL
@@ -655,9 +679,9 @@ public class GlobalSettings implements Serializable {
                         : BoardUpdateStrategy.GREEDY);
             i++;
           }
-        } else if (pArgs[i].startsWith("-is")) {
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
-            String op = pArgs[i + 1].toLowerCase().trim();
+        } else if (args[i].startsWith("-is")) {
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            String op = args[i + 1].toLowerCase().trim();
             routerSettings.optimizer.itemSelectionStrategy =
                 op.indexOf("seq") == 0
                     ? ItemSelectionStrategy.SEQUENTIAL
@@ -666,15 +690,15 @@ public class GlobalSettings implements Serializable {
                         : ItemSelectionStrategy.PRIORITIZED);
             i++;
           }
-        } else if (pArgs[i].startsWith("-hr")) { // hybrid ratio
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
-            routerSettings.optimizer.hybridRatio = pArgs[i + 1].trim();
+        } else if (args[i].startsWith("-hr")) { // hybrid ratio
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            routerSettings.optimizer.hybridRatio = args[i + 1].trim();
             i++;
           }
-        } else if ("-l".equals(pArgs[i])) {
+        } else if ("-l".equals(args[i])) {
           String localeString = "";
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
-            localeString = pArgs[i + 1].toLowerCase().replace("-", "_");
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            localeString = args[i + 1].toLowerCase().replace("-", "_");
             i++;
           }
 
@@ -733,68 +757,74 @@ public class GlobalSettings implements Serializable {
             currentLocale = Locale.forLanguageTag("ro-RO");
           }
 
-        } else if (pArgs[i].startsWith("-dl")) {
+        } else if (args[i].startsWith("-dl")) {
           logging.file.enabled = false;
-        } else if (pArgs[i].startsWith("-da")) {
+        } else if (args[i].startsWith("-da")) {
           usageAndDiagnosticData.disableAnalytics = true;
-        } else if (pArgs[i].startsWith("-host")) {
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
-            runtimeEnvironment.host = pArgs[i + 1].trim();
+        } else if (args[i].startsWith("-host")) {
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            runtimeEnvironment.host = args[i + 1].trim();
             i++;
           }
-        } else if (pArgs[i].startsWith("-help")) {
+        } else if (args[i].startsWith("-help")) {
           showHelpOption = true;
-        } else if (pArgs[i].startsWith("-inc")) {
+        } else if (args[i].startsWith("-inc")) {
           // ignore net class(es)
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
-            routerSettings.ignoreNetClasses = pArgs[i + 1].split(",");
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            routerSettings.ignoreNetClasses = args[i + 1].split(",");
             i++;
           }
-        } else if (pArgs[i].startsWith("-dct")) {
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
-            guiSettings.dialogConfirmationTimeout = Integer.parseInt(pArgs[i + 1]);
+        } else if (args[i].startsWith("-dct")) {
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            guiSettings.dialogConfirmationTimeout = Integer.parseInt(args[i + 1]);
 
             if (guiSettings.dialogConfirmationTimeout <= 0) {
               guiSettings.dialogConfirmationTimeout = 0;
             }
             i++;
           }
-        } else if (pArgs[i].startsWith("-ll")) {
+        } else if (args[i].startsWith("-ll")) {
           // get the log level from the command line arguments
           // and save it to the settings
-          if (pArgs.length > i + 1 && !pArgs[i + 1].startsWith("-")) {
-            logging.console.level = pArgs[i + 1].toUpperCase();
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            logging.console.level = args[i + 1].toUpperCase();
             i++;
           }
         } else {
-          FRLogger.warn("Unknown command line argument: " + pArgs[i]);
+          FRLogger.warn("Unknown command line argument: " + args[i]);
         }
       } catch (Exception e) {
-        FRLogger.error("There was a problem parsing the '" + pArgs[i] + "' parameter", e);
+        FRLogger.error("There was a problem parsing the '" + args[i] + "' parameter", e);
       }
     }
   }
 
+  /** Returns the configured design input directory. */
   public String getDesignDir() {
     return guiSettings.inputDirectory;
   }
 
+  /** Returns the configured maximum router passes. */
   public int getMaxPasses() {
     return routerSettings.maxPasses;
   }
 
+  /** Returns the configured optimizer thread count. */
   public int getNumThreads() {
     return routerSettings.optimizer.maxThreads;
   }
 
+  /** Returns the configured optimizer hybrid ratio. */
   public String getHybridRatio() {
     return routerSettings.optimizer.hybridRatio;
   }
 
+  /** Returns the configured optimizer board-update strategy. */
   public BoardUpdateStrategy getBoardUpdateStrategy() {
     return routerSettings.optimizer.boardUpdateStrategy;
   }
 
+  /** Returns the configured optimizer item-selection strategy. */
   public ItemSelectionStrategy getItemSelectionStrategy() {
     return routerSettings.optimizer.itemSelectionStrategy;
   }

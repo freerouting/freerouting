@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * Information about a combination of viaPadstack, via clearance class and drill_to_smd_allowed used
- * in interactive and automatic routing.
+ * Information about a combination of a via padstack, via clearance class, and drill-to-SMD setting
+ * used in interactive and automatic routing.
  */
 public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, Serializable {
 
@@ -18,26 +18,28 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
   private int clearanceClass;
   private boolean attachSmdAllowed;
 
-  /** Creates a new instance of ViaRule */
+  /** Creates a via definition. */
   public ViaInfo(
-      String pName,
-      Padstack pPadstack,
-      int pClearanceClass,
-      boolean pDrillToSmdAllowed,
-      BoardRules pBoardRules) {
-    name = pName;
-    padstack = pPadstack;
-    clearanceClass = pClearanceClass;
-    attachSmdAllowed = pDrillToSmdAllowed;
-    boardRules = pBoardRules;
+      String name,
+      Padstack padstack,
+      int clearanceClass,
+      boolean drillToSmdAllowed,
+      BoardRules boardRules) {
+    this.name = name;
+    this.padstack = padstack;
+    this.clearanceClass = clearanceClass;
+    this.attachSmdAllowed = drillToSmdAllowed;
+    this.boardRules = boardRules;
   }
 
+  /** Returns the name of this via definition. */
   public String getName() {
     return name;
   }
 
-  public void setName(String pName) {
-    name = pName;
+  /** Sets the name of this via definition. */
+  public void setName(String name) {
+    this.name = name;
   }
 
   @Override
@@ -45,56 +47,62 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
     return this.name;
   }
 
+  /** Returns the padstack used by this via definition. */
   public Padstack getPadstack() {
     return padstack;
   }
 
-  public void setPadstack(Padstack pPadstack) {
-    padstack = pPadstack;
+  /** Sets the padstack used by this via definition. */
+  public void setPadstack(Padstack padstack) {
+    this.padstack = padstack;
   }
 
+  /** Returns the clearance class used by this via definition. */
   public int getClearanceClass() {
     return clearanceClass;
   }
 
-  public void setClearanceClass(int pClearanceClass) {
-    clearanceClass = pClearanceClass;
+  /** Sets the clearance class used by this via definition. */
+  public void setClearanceClass(int clearanceClass) {
+    this.clearanceClass = clearanceClass;
   }
 
+  /** Returns whether this via may attach to an SMD pad. */
   public boolean attachSmdAllowed() {
     return attachSmdAllowed;
   }
 
-  public void setAttachSmdAllowed(boolean pAttachSmdAllowed) {
-    attachSmdAllowed = pAttachSmdAllowed;
+  /** Sets whether this via may attach to an SMD pad. */
+  public void setAttachSmdAllowed(boolean attachSmdAllowed) {
+    this.attachSmdAllowed = attachSmdAllowed;
   }
 
   @Override
-  public int compareTo(ViaInfo pOther) {
-    return this.name.compareTo(pOther.name);
+  public int compareTo(ViaInfo other) {
+    return this.name.compareTo(other.name);
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
-    TextManager tm = new TextManager(this.getClass(), pLocale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    pWindow.appendBold(tm.getText("via") + " ");
-    pWindow.appendBold(this.name);
-    pWindow.appendBold(": ");
-    pWindow.append(tm.getText("padstack") + " ");
-    pWindow.append(this.padstack.name, tm.getText("padstack_info"), this.padstack);
-    pWindow.append(", " + tm.getText("clearanceClass") + " ");
+    window.appendBold(tm.getText("via") + " ");
+    window.appendBold(this.name);
+    window.appendBold(": ");
+    window.append(tm.getText("padstack") + " ");
+    window.append(this.padstack.name, tm.getText("padstack_info"), this.padstack);
+    window.append(", " + tm.getText("clearanceClass") + " ");
     String currName = boardRules.clearanceMatrix.getName(this.clearanceClass);
-    pWindow.append(
+    window.append(
         currName,
         tm.getText("clearance_class_2"),
         boardRules.clearanceMatrix.getRow(this.clearanceClass));
-    pWindow.append(", " + tm.getText("attach_smd") + " ");
+    window.append(", " + tm.getText("attach_smd") + " ");
     if (attachSmdAllowed) {
-      pWindow.append(" " + tm.getText("on"));
+      window.append(" " + tm.getText("on"));
     } else {
-      pWindow.append(" " + tm.getText("off"));
+      window.append(" " + tm.getText("off"));
     }
-    pWindow.newline();
+    window.newline();
   }
 }

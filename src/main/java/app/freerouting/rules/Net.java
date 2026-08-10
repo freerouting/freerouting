@@ -19,7 +19,7 @@ import java.util.Locale;
 /** Describes properties for an individual electrical net. */
 public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializable {
 
-  /** The name of the net */
+  /** The name of the net. */
   public final String name;
 
   /**
@@ -28,26 +28,27 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
    */
   public final int subnetNumber;
 
-  /** The unique strict positive number of the net */
+  /** The unique strict positive number of the net. */
   public final int netNumber;
 
   /** The net list, where this net belongs to. */
   public final Nets netList;
 
-  /** Indicates, if this net contains a power plane */
+  /** Indicates whether this net contains a power plane. */
   private boolean containsPlane;
 
-  /** The routing rule of this net */
+  /** The routing rule of this net. */
   private NetClass netClass;
 
-  /** Creates a new instance of Net. p_net_list is the net list, where this net belongs to. */
-  public Net(String pName, int pSubnetNumber, int pNo, Nets pNetList, boolean pContainsPlane) {
-    name = pName;
-    subnetNumber = pSubnetNumber;
-    netNumber = pNo;
-    containsPlane = pContainsPlane;
-    netList = pNetList;
-    netClass = pNetList.getBoard().rules.getDefaultNetClass();
+  /** Creates a new net. */
+  public Net(
+      String name, int subnetNumber, int number, Nets netList, boolean containsPlane) {
+    this.name = name;
+    this.subnetNumber = subnetNumber;
+    this.netNumber = number;
+    this.containsPlane = containsPlane;
+    this.netList = netList;
+    this.netClass = netList.getBoard().rules.getDefaultNetClass();
   }
 
   @Override
@@ -55,10 +56,10 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     return "Net #" + this.netNumber + " (" + this.name + ")";
   }
 
-  /** Compares 2 nets by name. Useful for example to display nets in alphabetic order. */
+  /** Compares two nets by name, which is useful for displaying nets alphabetically. */
   @Override
-  public int compareTo(Net pOther) {
-    return this.name.compareToIgnoreCase(pOther.name);
+  public int compareTo(Net other) {
+    return this.name.compareToIgnoreCase(other.name);
   }
 
   /** Returns the class of this net. */
@@ -66,9 +67,9 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     return this.netClass;
   }
 
-  /** Sets the class of this net */
-  public void setClass(NetClass pRule) {
-    this.netClass = pRule;
+  /** Sets the class of this net. */
+  public void setClass(NetClass netClass) {
+    this.netClass = netClass;
   }
 
   /** Returns the pins and conduction areas of this net. */
@@ -151,8 +152,9 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     return result;
   }
 
-  public void setContainsPlane(boolean pValue) {
-    containsPlane = pValue;
+  /** Sets whether this net contains a power plane. */
+  public void setContainsPlane(boolean value) {
+    containsPlane = value;
   }
 
   /**
@@ -165,28 +167,28 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
     int viaCount = this.getViaCount();
     double cumulativeTraceLength = this.getTraceLength();
     Collection<Item> terminalItems = this.getTerminalItems();
     Collection<Printable> terminals = new LinkedList<>(terminalItems);
     int terminalItemCount = terminals.size();
 
-    TextManager tm = new TextManager(this.getClass(), pLocale);
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    pWindow.appendBold(tm.getText("net") + " ");
-    pWindow.appendBold(this.name);
-    pWindow.appendBold(": ");
-    pWindow.append(tm.getText("class") + " ");
-    pWindow.append(netClass.getName(), tm.getText("netClass"), netClass);
-    pWindow.append(", ");
-    pWindow.appendObjects(
+    window.appendBold(tm.getText("net") + " ");
+    window.appendBold(this.name);
+    window.appendBold(": ");
+    window.append(tm.getText("class") + " ");
+    window.append(netClass.getName(), tm.getText("netClass"), netClass);
+    window.append(", ");
+    window.appendObjects(
         String.valueOf(terminalItemCount), tm.getText("terminal_items_2"), terminals);
-    pWindow.append(" " + tm.getText("terminalItems"));
-    pWindow.append(", " + tm.getText("viaCount") + " ");
-    pWindow.append(String.valueOf(viaCount));
-    pWindow.append(", " + tm.getText("traceLength") + " ");
-    pWindow.append(cumulativeTraceLength);
-    pWindow.newline();
+    window.append(" " + tm.getText("terminalItems"));
+    window.append(", " + tm.getText("viaCount") + " ");
+    window.append(String.valueOf(viaCount));
+    window.append(", " + tm.getText("traceLength") + " ");
+    window.append(cumulativeTraceLength);
+    window.newline();
   }
 }

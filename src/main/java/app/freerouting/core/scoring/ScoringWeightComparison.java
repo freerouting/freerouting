@@ -133,7 +133,8 @@ public final class ScoringWeightComparison {
           """
               %n╔══ Scoring Weight Comparison ══════════════════════════════════════╗\
               %n║ Board:  %d connections, %d unrouted, %d violations, %d bends\
-              %n║         total trace %.1f mm, %d vias"""
+              %n║         total trace %.1f mm, %d vias\
+          """
               .formatted(
                   a.maxConnections,
                   a.incompleteConnections,
@@ -145,7 +146,8 @@ public final class ScoringWeightComparison {
       String tableHeader =
           """
               %n╠══ Component breakdown ═════════════════════════════════════════════╣\
-              %n║ %-34s %12s  %12s  %10s"""
+              %n║ %-34s %12s  %12s  %10s\
+          """
               .formatted("", "A (baseline)", "B (candidate)", "Delta");
 
       String rows =
@@ -155,7 +157,8 @@ public final class ScoringWeightComparison {
               %n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.0f → %.0f)\
               %n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.1f → %.1f)\
               %n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.2f → %.2f)\
-              %n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.0f → %.0f)"""
+              %n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.0f → %.0f)\
+          """
               .formatted(
                   "Maximum score",
                   a.maximumScore,
@@ -196,7 +199,8 @@ public final class ScoringWeightComparison {
           """
               %n╠════════════════════════════════════════════════════════════════════╣\
               %n║ %-34s %12.1f  %12.1f  %+10.1f\
-              %n║ %-34s %12.1f  %12.1f  %+10.1f"""
+              %n║ %-34s %12.1f  %12.1f  %+10.1f\
+          """
               .formatted(
                   "Raw score",
                   a.rawScore,

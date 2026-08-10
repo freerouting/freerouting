@@ -11,7 +11,7 @@ import java.util.List;
  *
  * <h2>How merging works</h2>
  *
- * Sources are sorted by ascending priority and applied one on top of another. {@link
+ * <p>Sources are sorted by ascending priority and applied one on top of another. {@link
  * app.freerouting.settings.sources.DefaultSettings} (priority 0) always provides the initial base.
  * Every subsequent source calls {@link RouterSettings#applyNewValuesFrom}, which delegates to
  * {@link app.freerouting.util.ReflectionUtil#copyFields}. That method iterates the public,
@@ -21,8 +21,9 @@ import java.util.List;
  *
  * <h2>Why all {@code RouterSettings} fields must be nullable (no default initializers)</h2>
  *
- * The null-check inside {@code copyFields} is the sole mechanism that distinguishes "this source
- * intentionally sets a value" from "this source has no opinion about this field". If a field were
+ * <p>The null-check inside {@code copyFields} is the sole mechanism that distinguishes "this
+ * source intentionally sets a value" from "this source has no opinion about this field". If a field
+ * were
  * initialised to a non-null default (e.g. {@code public Integer maxPasses = 9999;}), every source's
  * {@code RouterSettings} object would carry that default, and the merger would treat it as an
  * intentional override — meaning a low-priority source (e.g. the JSON file) would silently override
@@ -50,9 +51,10 @@ import java.util.List;
  *
  * <h2>Adding a new source</h2>
  *
- * Implement {@link SettingsSource}, choose a priority that fits the desired override order, and
- * register the instance via {@link #addOrReplaceSources(SettingsSource...)} before calling {@link
- * #merge()}. Remember that the {@code RouterSettings} object returned by the new source must only
+ * <p>Implement {@link SettingsSource}, choose a priority that fits the desired override order, and
+ * register the instance via {@link #addOrReplaceSources(SettingsSource...)} before calling
+ * {@link #merge()}. Remember that the {@code RouterSettings} object returned by the new source must
+ * only
  * populate fields that the source actually provides; all other fields must remain {@code null}.
  */
 public class SettingsMerger implements Cloneable {
@@ -99,7 +101,7 @@ public class SettingsMerger implements Cloneable {
    *       GuiSettings} placeholder that was registered at startup before the board was loaded.
    * </ol>
    *
-   * If no replacement candidate is found the new source is appended.
+   * <p>If no replacement candidate is found the new source is appended.
    *
    * @param newSources List of new settings sources to add or replace
    */
@@ -139,12 +141,10 @@ public class SettingsMerger implements Cloneable {
     List<SettingsSource> sortedSources = new ArrayList<>(sources);
     sortedSources.sort(Comparator.comparingInt(SettingsSource::getPriority));
 
-    // Start with an empty RouterSettings object
-    // The first source (usually DefaultSettings) will provide the base
-    RouterSettings mergedSettings = null;
-
     FRLogger.debug("Merging settings from " + sortedSources.size() + " sources:");
 
+    // The first non-null source (usually DefaultSettings) provides the base.
+    RouterSettings mergedSettings = null;
     for (SettingsSource source : sortedSources) {
       RouterSettings sourceSettings = source.getSettings();
 

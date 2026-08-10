@@ -91,6 +91,7 @@ public class OptimizerSettings implements Serializable, Cloneable {
   @SerializedName("timeout")
   public String timeoutString;
 
+  /** Creates optimizer settings without source-specific values. */
   public OptimizerSettings() {}
 
   /**

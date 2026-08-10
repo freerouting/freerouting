@@ -33,6 +33,7 @@ public class DebugSettings implements Serializable {
         "remove_via"
       };
 
+  /** Creates debugging settings with the default operation filters. */
   public DebugSettings() {}
 
   /**

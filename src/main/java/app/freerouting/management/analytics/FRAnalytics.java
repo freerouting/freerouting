@@ -13,7 +13,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-/** A class to manage analytics for the application. */
+/** Manages analytics identity, application events, and API usage events. */
+@SuppressWarnings("AbbreviationAsWordInName")
 public final class FRAnalytics {
 
   private static final HashMap<String, String> appLocationTable;
@@ -135,8 +136,8 @@ public final class FRAnalytics {
   }
 
   private static AnalyticsClient analytics;
-  private static String permanent_user_id;
-  private static String permanent_user_email;
+  private static String permanentUserId;
+  private static String permanentUserEmail;
   private static String appPreviousLocation = "";
   private static String appCurrentLocation = "";
   private static String appWindowTitle = "";
@@ -150,15 +151,27 @@ public final class FRAnalytics {
 
   private FRAnalytics() {}
 
+  /**
+   * Configures the analytics client used for subsequent events.
+   *
+   * @param libraryVersion the Freerouting version reported to the backend
+   * @param key the analytics access key
+   */
   public static void setAccessKey(String libraryVersion, String key) {
     // analytics = new SegmentClient(libraryVersion, key);
     // analytics = new BigQueryClient(libraryVersion, key);
     analytics = new FreeroutingAnalyticsClient(libraryVersion, key);
   }
 
+  /**
+   * Sets the persistent identity used for GUI analytics events.
+   *
+   * @param userId the persistent user identifier
+   * @param userEmail the user's email address
+   */
   public static void setUserId(String userId, String userEmail) {
-    permanent_user_id = userId;
-    permanent_user_email = userEmail;
+    permanentUserId = userId;
+    permanentUserEmail = userEmail;
   }
 
   private static void identifyUser(String userId, Map<String, String> traits) {
@@ -204,8 +217,8 @@ public final class FRAnalytics {
     try {
       Properties p = new Properties();
       p.put("current_time_utc", Instant.now().toString());
-      p.put("user_id", permanent_user_id);
-      p.put("user_email", permanent_user_email);
+      p.put("user_id", permanentUserId);
+      p.put("user_email", permanentUserEmail);
       p.put("app_current_location", appCurrentLocation);
       p.put("app_previous_location", appPreviousLocation);
       p.put("app_window_title", appWindowTitle);
@@ -230,8 +243,9 @@ public final class FRAnalytics {
     };
   }
 
+  /** Sends the current persistent identity traits to the analytics backend. */
   public static void identify() {
-    identifyAnonymous(permanent_user_id, buildIdentifyTraits());
+    identifyAnonymous(permanentUserId, buildIdentifyTraits());
   }
 
   /**
@@ -239,14 +253,14 @@ public final class FRAnalytics {
    * {@code first_seen} stable so returning users are not misclassified as new.
    */
   public static void refreshIdentity() {
-    identifyAnonymous(permanent_user_id, buildIdentifyTraits());
+    identifyAnonymous(permanentUserId, buildIdentifyTraits());
   }
 
   private static Map<String, String> buildIdentifyTraits() {
     Map<String, String> traits = new HashMap<>();
     traits.put("anonymous", "true");
-    traits.put("user_id", permanent_user_id);
-    traits.put("user_email", permanent_user_email);
+    traits.put("user_id", permanentUserId);
+    traits.put("user_email", permanentUserEmail);
     String firstSeen = globalSettings.statistics.startTime;
     if (firstSeen == null || firstSeen.isBlank()) {
       firstSeen = Instant.now().toString();
@@ -270,14 +284,20 @@ public final class FRAnalytics {
    */
   public static void profileUpdated() {
     Map<String, String> properties = new HashMap<>();
-    properties.put("user_email", permanent_user_email);
+    properties.put("user_email", permanentUserEmail);
     properties.put(
         "allow_contact", Boolean.toString(globalSettings.userProfileSettings.isContactAllowed));
     properties.put(
         "allow_telemetry", Boolean.toString(globalSettings.userProfileSettings.isTelemetryAllowed));
-    trackAnonymousAction(permanent_user_id, "Profile Updated", properties);
+    trackAnonymousAction(permanentUserId, "Profile Updated", properties);
   }
 
+  /**
+   * Records the current application window location.
+   *
+   * @param windowClassName the class name associated with the window
+   * @param windowTitle the visible window title
+   */
   public static void setAppLocation(String windowClassName, String windowTitle) {
     windowClassName = translateClassNameToUrl(windowClassName);
 
@@ -290,16 +310,22 @@ public final class FRAnalytics {
     appWindowTitle = windowTitle;
 
     Properties p = new Properties();
-    trackAnonymousAction(permanent_user_id, "Window Changed", p);
+    trackAnonymousAction(permanentUserId, "Window Changed", p);
   }
 
+  /**
+   * Records a GUI button click.
+   *
+   * @param buttonClassName the class name associated with the button
+   * @param buttonText the visible button text
+   */
   public static void buttonClicked(String buttonClassName, String buttonText) {
     buttonClassName = translateClassNameToUrl(buttonClassName);
 
     Properties p = new Properties();
     p.put("button_name", buttonClassName);
     p.put("button_text", buttonText);
-    trackAnonymousAction(permanent_user_id, "Button Clicked", p);
+    trackAnonymousAction(permanentUserId, "Button Clicked", p);
   }
 
   private static String translateClassNameToUrl(String appLocation) {
@@ -310,6 +336,11 @@ public final class FRAnalytics {
     }
   }
 
+  /**
+   * Enables or disables analytics delivery.
+   *
+   * @param enabled whether analytics events should be sent
+   */
   public static void setEnabled(boolean enabled) {
     if (analytics == null) {
       return;
@@ -318,6 +349,26 @@ public final class FRAnalytics {
     analytics.setEnabled(enabled);
   }
 
+  /**
+   * Records application startup metadata.
+   *
+   * @param freeroutingVersion the application version
+   * @param freeroutingBuildDate the application build date
+   * @param commandLineArguments the original command-line arguments
+   * @param osName the operating-system name
+   * @param osArchitecture the operating-system architecture
+   * @param osVersion the operating-system version
+   * @param javaVersion the Java runtime version
+   * @param javaVendor the Java runtime vendor
+   * @param systemLanguage the system locale
+   * @param guiLanguage the GUI locale
+   * @param cpuCoreCount the number of available CPU cores
+   * @param ramAmount the installed RAM amount
+   * @param host the host application identifier
+   * @param width the screen width
+   * @param height the screen height
+   * @param dpi the screen density
+   */
   public static void appStarted(
       String freeroutingVersion,
       String freeroutingBuildDate,
@@ -356,12 +407,11 @@ public final class FRAnalytics {
     properties.put("screen_width", Integer.toString(width));
     properties.put("screen_height", Integer.toString(height));
     properties.put("screen_dpi", Integer.toString(dpi));
-    trackAnonymousAction(permanent_user_id, "Application Started", properties);
+    trackAnonymousAction(permanentUserId, "Application Started", properties);
   }
 
+  /** Records application shutdown and the accumulated session statistics. */
   public static void appClosed() {
-    long appClosedAt = Instant.now().getEpochSecond();
-
     Map<String, String> properties = new HashMap<>();
     if (sessionId != null) {
       properties.put("session_id", sessionId);
@@ -369,7 +419,9 @@ public final class FRAnalytics {
     properties.put("session_count", String.valueOf(sessionCount));
     properties.put("total_autorouter_runtime", String.valueOf(totalAutorouterRuntime));
     properties.put("total_route_optimizer_runtime", String.valueOf(totalRouteOptimizerRuntime));
-    properties.put("application_runtime", String.valueOf(appClosedAt - appStartedAt));
+    properties.put(
+        "application_runtime",
+        String.valueOf(Instant.now().getEpochSecond() - appStartedAt));
     properties.put("statistics_start_time", globalSettings.statistics.startTime);
     properties.put("statistics_end_time", globalSettings.statistics.endTime);
     properties.put(
@@ -379,7 +431,7 @@ public final class FRAnalytics {
     properties.put(
         "statistics_jobs_completed", String.valueOf(globalSettings.statistics.jobsCompleted));
 
-    trackAnonymousAction(permanent_user_id, "Application Closed", properties);
+    trackAnonymousAction(permanentUserId, "Application Closed", properties);
     try {
       Thread.sleep(500);
     } catch (InterruptedException e) {
@@ -387,6 +439,7 @@ public final class FRAnalytics {
     }
   }
 
+  /** Records the start of an autorouter session. */
   public static void autorouterStarted() {
     autorouterStartedAt = Instant.now().getEpochSecond();
     sessionCount++;
@@ -395,9 +448,18 @@ public final class FRAnalytics {
     properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
     properties.put("session_count", String.valueOf(sessionCount));
 
-    trackAnonymousAction(permanent_user_id, "Auto-router Started", properties);
+    trackAnonymousAction(permanentUserId, "Auto-router Started", properties);
   }
 
+  /**
+   * Records the completion metrics of an autorouter session.
+   *
+   * @param netsTotal the total number of nets, or {@code null}
+   * @param netsIncomplete the number of incomplete nets, or {@code null}
+   * @param clearanceViolations the number of clearance violations, or {@code null}
+   * @param boardHash the resulting board hash, or {@code null}
+   * @param normalizedScore the resulting normalized score, or {@code null}
+   */
   public static void autorouterFinished(
       Integer netsTotal,
       Integer netsIncomplete,
@@ -427,18 +489,20 @@ public final class FRAnalytics {
       properties.put("normalized_score", Float.toString(normalizedScore));
     }
 
-    trackAnonymousAction(permanent_user_id, "Auto-router Finished", properties);
+    trackAnonymousAction(permanentUserId, "Auto-router Finished", properties);
   }
 
+  /** Records the start of a route-optimizer session. */
   public static void routeOptimizerStarted() {
     routeOptimizerStartedAt = Instant.now().getEpochSecond();
 
     Map<String, String> properties = new HashMap<>();
     properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
     properties.put("session_count", String.valueOf(sessionCount));
-    trackAnonymousAction(permanent_user_id, "Route Optimizer Started", properties);
+    trackAnonymousAction(permanentUserId, "Route Optimizer Started", properties);
   }
 
+  /** Records the completion of a route-optimizer session. */
   public static void routeOptimizerFinished() {
     long routeOptimizerFinishedAt = Instant.now().getEpochSecond();
     long routeOptimizerRuntime = routeOptimizerFinishedAt - routeOptimizerStartedAt;
@@ -449,17 +513,32 @@ public final class FRAnalytics {
     properties.put("session_count", String.valueOf(sessionCount));
     properties.put("route_optimizer_runtime", String.valueOf(routeOptimizerRuntime));
 
-    trackAnonymousAction(permanent_user_id, "Route Optimizer Finished", properties);
+    trackAnonymousAction(permanentUserId, "Route Optimizer Finished", properties);
   }
 
+  /**
+   * Records that a board file was loaded.
+   *
+   * @param fileFormat the input file format
+   * @param fileDetails serialized file statistics
+   */
   public static void fileLoaded(String fileFormat, String fileDetails) {
     Map<String, String> properties = new HashMap<>();
     properties.put("file_format", fileFormat);
     properties.put("file_details", fileDetails);
 
-    trackAnonymousAction(permanent_user_id, "File Loaded", properties);
+    trackAnonymousAction(permanentUserId, "File Loaded", properties);
   }
 
+  /**
+   * Records board metadata after loading.
+   *
+   * @param hostName the source CAD host name
+   * @param hostVersion the source CAD host version
+   * @param layerCount the number of board layers
+   * @param componentCount the number of components
+   * @param netCount the number of nets
+   */
   public static void boardLoaded(
       String hostName, String hostVersion, int layerCount, int componentCount, int netCount) {
     Map<String, String> properties = new HashMap<>();
@@ -469,17 +548,29 @@ public final class FRAnalytics {
     properties.put("component_count", Integer.toString(componentCount));
     properties.put("netCount", Integer.toString(netCount));
 
-    trackAnonymousAction(permanent_user_id, "Board Loaded", properties);
+    trackAnonymousAction(permanentUserId, "Board Loaded", properties);
   }
 
+  /**
+   * Records that a board file was saved.
+   *
+   * @param fileFormat the output file format
+   * @param fileDetails serialized file statistics
+   */
   public static void fileSaved(String fileFormat, String fileDetails) {
     Map<String, String> properties = new HashMap<>();
     properties.put("file_format", fileFormat);
     properties.put("file_details", fileDetails);
 
-    trackAnonymousAction(permanent_user_id, "File Saved", properties);
+    trackAnonymousAction(permanentUserId, "File Saved", properties);
   }
 
+  /**
+   * Records an exception raised by the application.
+   *
+   * @param localizedMessage the user-facing exception message
+   * @param e the exception
+   */
   public static void exceptionThrown(String localizedMessage, Throwable e) {
     StringBuilder sb = new StringBuilder();
     for (StackTraceElement ste : e.getStackTrace()) {
@@ -492,9 +583,16 @@ public final class FRAnalytics {
     properties.put("exception_details", e.toString());
     properties.put("exception_stacktrace", sb.toString());
 
-    trackAnonymousAction(permanent_user_id, "Exception Thrown", properties);
+    trackAnonymousAction(permanentUserId, "Exception Thrown", properties);
   }
 
+  /**
+   * Records an API endpoint call without an explicit per-request identity.
+   *
+   * @param apiMethod the HTTP method and endpoint
+   * @param requestBody the serialized request body
+   * @param responseBody the serialized response body
+   */
   public static void apiEndpointCalled(String apiMethod, String requestBody, String responseBody) {
     apiEndpointCalled(apiMethod, requestBody, responseBody, null);
   }
@@ -504,7 +602,7 @@ public final class FRAnalytics {
    * userId}. When {@code userId} is non-null it is used as both the {@code anonymous_id} sent to
    * the analytics backend and the {@code user_id} property stored in BigQuery, so that
    * API-originated events can be correlated per caller even in headless/API-only deployments where
-   * the static {@link #permanent_user_id} is never set.
+   * the static {@link #permanentUserId} is never set.
    */
   public static void apiEndpointCalled(
       String apiMethod, String requestBody, String responseBody, UUID userId) {
@@ -518,11 +616,11 @@ public final class FRAnalytics {
     }
 
     // Determine the effective identity: prefer the per-request caller UUID over the
-    // static permanent_user_id (which is always null in headless / API-only mode).
-    String effectiveUserId = userId != null ? userId.toString() : permanent_user_id;
+    // static permanentUserId (which is always null in headless / API-only mode).
+    String effectiveUserId = userId != null ? userId.toString() : permanentUserId;
 
     // Inject the resolved user_id into the properties map so that it overrides the
-    // null permanent_user_id that trackAnonymousAction would otherwise write.
+    // null permanentUserId that trackAnonymousAction would otherwise write.
     if (effectiveUserId != null) {
       properties.put("user_id", effectiveUserId);
     }
@@ -533,6 +631,19 @@ public final class FRAnalytics {
   /**
    * Records one canonical API usage row for billing and quota analytics. Emitted by {@link
    * app.freerouting.api.ApiUsageFilter} once per HTTP request/response cycle.
+   *
+   * @param httpMethod the HTTP method
+   * @param apiPath the request path
+   * @param apiRouteNormalized the normalized API route
+   * @param httpStatus the HTTP response status
+   * @param durationMs the request duration in milliseconds
+   * @param apiKeyHash the hashed API key, or {@code null}
+   * @param profileId the profile identifier, or {@code null}
+   * @param profileEmail the profile email, or {@code null}
+   * @param environmentHost the environment host, or {@code null}
+   * @param requestBytes the request size, or {@code null}
+   * @param responseBytes the response size, or {@code null}
+   * @param profileUuid the profile UUID, or {@code null}
    */
   public static void apiUsageRecorded(
       String httpMethod,

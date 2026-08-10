@@ -14,57 +14,57 @@ public class NetClasses implements Serializable {
     return classArr.size();
   }
 
-  /** Returns the net class with index p_index. */
-  public NetClass get(int pIndex) {
-    assert pIndex >= 0 && pIndex <= classArr.size() - 1;
-    return classArr.get(pIndex);
+  /** Returns the net class with the given index. */
+  public NetClass get(int index) {
+    assert index >= 0 && index <= classArr.size() - 1;
+    return classArr.get(index);
   }
 
-  /** Returns the net class with name p_name, or null, if no such class exists. */
-  public NetClass get(String pName) {
+  /** Returns the net class with the given name, or null if no such class exists. */
+  public NetClass get(String name) {
     for (NetClass currClass : this.classArr) {
-      if (currClass.getName().equals(pName)) {
+      if (currClass.getName().equals(name)) {
         return currClass;
       }
     }
     return null;
   }
 
-  /** Appends a new empty class with name p_name to the class array */
+  /** Appends a new empty class with the given name to the class array. */
   public NetClass append(
-      String pName,
-      LayerStructure pLayerStructure,
-      ClearanceMatrix pClearanceMatrix,
-      boolean pIsIgnoredByAutorouter) {
+      String name,
+      LayerStructure layerStructure,
+      ClearanceMatrix clearanceMatrix,
+      boolean ignoredByAutorouter) {
     NetClass newClass =
-        new NetClass(pName, pLayerStructure, pClearanceMatrix, pIsIgnoredByAutorouter);
+        new NetClass(name, layerStructure, clearanceMatrix, ignoredByAutorouter);
     classArr.add(newClass);
     return newClass;
   }
 
-  /** Appends a new empty class to the class array. A name for the class is created internally */
-  public NetClass append(LayerStructure pLayerStructure, ClearanceMatrix pClearanceMatrix) {
+  /** Appends a new empty class to the class array with an internally generated name. */
+  public NetClass append(LayerStructure layerStructure, ClearanceMatrix clearanceMatrix) {
     String newName;
     int index = 0;
     do {
       ++index;
       newName = "class" + index;
     } while (this.get(newName) != null);
-    return append(newName, pLayerStructure, pClearanceMatrix, false);
+    return append(newName, layerStructure, clearanceMatrix, false);
   }
 
   /**
-   * Looks, if the list contains a net class with trace half widths all equal to p_trace_half_width,
-   * trace clearance class equal to p_trace_clearance_class and via rule equal to p_cia_rule.
-   * Returns null, if no such net class was found.
+   * Looks for a net class with trace half-widths equal to {@code traceHalfWidth}, a trace clearance
+   * class equal to {@code traceClearanceClass}, and the given via rule.
+   * Returns null if no such net class was found.
    */
-  public NetClass find(int pTraceHalfWidth, int pTraceClearanceClass, ViaRule pViaRule) {
+  public NetClass find(int traceHalfWidth, int traceClearanceClass, ViaRule viaRule) {
     for (NetClass currClass : this.classArr) {
-      if (currClass.getTraceClearanceClass() == pTraceClearanceClass
-          && currClass.getViaRule() == pViaRule) {
+      if (currClass.getTraceClearanceClass() == traceClearanceClass
+          && currClass.getViaRule() == viaRule) {
         boolean traceWidthsEqual = true;
         for (int i = 0; i < currClass.layerCount(); i++) {
-          if (currClass.getTraceHalfWidth(i) != pTraceHalfWidth) {
+          if (currClass.getTraceHalfWidth(i) != traceHalfWidth) {
             traceWidthsEqual = false;
             break;
           }
@@ -78,19 +78,18 @@ public class NetClasses implements Serializable {
   }
 
   /**
-   * Looks, if the list contains a net class with trace half width[i] all equal to
-   * p_trace_half_width_arr[i] for 0 {@literal <}= i {@literal <} layerCount, trace clearance class
-   * equal to p_trace_clearance_class and via rule equal to p_via_rule. Returns null, if no such net
-   * class was found.
+   * Looks for a net class whose trace half-width at each layer equals the corresponding value in
+   * {@code traceHalfWidthArr}, whose trace clearance class equals {@code traceClearanceClass}, and
+   * whose via rule equals {@code viaRule}. Returns null if no such net class was found.
    */
-  public NetClass find(int[] pTraceHalfWidthArr, int pTraceClearanceClass, ViaRule pViaRule) {
+  public NetClass find(int[] traceHalfWidthArr, int traceClearanceClass, ViaRule viaRule) {
     for (NetClass currClass : this.classArr) {
-      if (currClass.getTraceClearanceClass() == pTraceClearanceClass
-          && currClass.getViaRule() == pViaRule
-          && pTraceHalfWidthArr.length == currClass.layerCount()) {
+      if (currClass.getTraceClearanceClass() == traceClearanceClass
+          && currClass.getViaRule() == viaRule
+          && traceHalfWidthArr.length == currClass.layerCount()) {
         boolean traceWidthsEqual = true;
         for (int i = 0; i < currClass.layerCount(); i++) {
-          if (currClass.getTraceHalfWidth(i) != pTraceHalfWidthArr[i]) {
+          if (currClass.getTraceHalfWidth(i) != traceHalfWidthArr[i]) {
             traceWidthsEqual = false;
             break;
           }
@@ -104,10 +103,9 @@ public class NetClasses implements Serializable {
   }
 
   /**
-   * Removes p_net_class from this list. Returns false, if p_net_class was not contained in the
-   * list.
+   * Removes {@code netClass} from this list. Returns false if it was not contained in the list.
    */
-  public boolean remove(NetClass pNetClass) {
-    return this.classArr.remove(pNetClass);
+  public boolean remove(NetClass netClass) {
+    return this.classArr.remove(netClass);
   }
 }

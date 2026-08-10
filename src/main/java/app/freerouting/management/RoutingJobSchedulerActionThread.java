@@ -20,16 +20,18 @@ import java.io.ByteArrayOutputStream;
 import java.lang.management.ManagementFactory;
 import java.time.Instant;
 
-/**
- * Used for running an action in a separate thread, that can be stopped by the user. This typically
- * represents an action that is triggered by job scheduler
- */
+/** Runs a stoppable routing action on behalf of the job scheduler. */
 public class RoutingJobSchedulerActionThread extends StoppableThread {
 
-  private final long MAX_TIMEOUT = 24 * 60 * 60; // 24 hours
-  private final int GRACE_PERIOD = 30; // 30 seconds
+  private static final long MAX_TIMEOUT = 24 * 60 * 60; // 24 hours
+  private static final int GRACE_PERIOD = 30; // 30 seconds
   RoutingJob job;
 
+  /**
+   * Creates a scheduler action thread for a routing job.
+   *
+   * @param job the job to execute
+   */
   public RoutingJobSchedulerActionThread(RoutingJob job) {
     this.job = job;
   }
@@ -37,8 +39,6 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
   @Override
   protected void threadAction() {
     job.startedAt = Instant.now();
-    boolean fanoutTimedOut = false;
-    boolean optimizerTimedOut = false;
     // Use ISO standard time format
     job.logInfo("Job '" + job.shortName + "' started at " + job.startedAt.toString() + ".");
 
@@ -92,6 +92,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     monitorThread.start();
 
     // start the routing task if needed
+    boolean fanoutTimedOut = false;
     if (job.routerSettings.getRunRouter()
         && (job.routerSettings.maxPasses == null || job.routerSettings.maxPasses >= 0)) {
       job.stage = RoutingStage.ROUTING;
@@ -156,7 +157,9 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         String sessionSummary =
             String.format(
                 java.util.Locale.US,
-                "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+                "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, "
+                    + "final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, "
+                    + "and %.1f MB peak heap usage.",
                 completionStatus,
                 initialUnroutedCount,
                 totalTime,
@@ -188,6 +191,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       job.stage = RoutingStage.IDLE;
     }
 
+    boolean optimizerTimedOut = false;
     if (job.routerSettings.getRunOptimizer()) {
       job.stage = RoutingStage.OPTIMIZATION;
       // start the optimizer task
@@ -241,23 +245,25 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
   private void monitorCpuAndMemoryUsage(RoutingJob job) {
     try {
       // Get the ThreadMXBean instance and cast it to com.sun.management.ThreadMXBean
-      ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      ThreadMXBean threadManagementBean =
+          (ThreadMXBean) ManagementFactory.getThreadMXBean();
 
       // Get all live thread IDs
-      long[] threadIds = threadMXBean.getAllThreadIds();
+      long[] threadIds = threadManagementBean.getAllThreadIds();
 
       // Iterate through the thread IDs and get memory usage
       for (long threadId : threadIds) {
         if (threadId == job.thread.threadId()) {
           // CPU time and memory usage
-          float cpuTime = threadMXBean.getThreadCpuTime(threadId) / 1000.0f / 1000.0f / 1000.0f;
+          float cpuTime =
+              threadManagementBean.getThreadCpuTime(threadId) / 1000.0f / 1000.0f / 1000.0f;
 
           // Enable thread memory allocation measurement
-          threadMXBean.setThreadAllocatedMemoryEnabled(true);
+          threadManagementBean.setThreadAllocatedMemoryEnabled(true);
 
           // Get the thread's allocated memory in bytes
-          long allocatedMemory = threadMXBean.getThreadAllocatedBytes(threadId);
-          float allocatedMB = allocatedMemory / (1024.0f * 1024.0f);
+          long allocatedMemory = threadManagementBean.getThreadAllocatedBytes(threadId);
+          float allocatedMemoryMb = allocatedMemory / (1024.0f * 1024.0f);
 
           // Update the job's resource usage
           // Fix: Use assignment instead of accumulation for total time, as
@@ -269,18 +275,19 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
           // we track partials,
           // but here it tracks the monotonically increasing allocation of the main
           // thread.
-          job.resourceUsage.maxMemoryUsed = allocatedMB;
+          job.resourceUsage.maxMemoryUsed = allocatedMemoryMb;
         }
       }
 
       // Track peak heap memory usage across all threads
-      java.lang.management.MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
-      long heapUsed = memoryMXBean.getHeapMemoryUsage().getUsed();
-      float heapUsedMB = heapUsed / (1024.0f * 1024.0f);
+      java.lang.management.MemoryMXBean memoryManagementBean =
+          ManagementFactory.getMemoryMXBean();
+      long heapUsed = memoryManagementBean.getHeapMemoryUsage().getUsed();
+      float heapUsedMb = heapUsed / (1024.0f * 1024.0f);
 
       // Update peak memory if current usage is higher
-      if (heapUsedMB > job.resourceUsage.peakMemoryUsed) {
-        job.resourceUsage.peakMemoryUsed = heapUsedMB;
+      if (heapUsedMb > job.resourceUsage.peakMemoryUsed) {
+        job.resourceUsage.peakMemoryUsed = heapUsedMb;
       }
     } catch (Throwable t) {
       // java.management or jdk.management module may not be available in minimal JRE builds;

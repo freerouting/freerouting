@@ -17,52 +17,54 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
    * Creates a new instance of LogicalPart. The part pins are sorted by pinNo. The pinNo's of the
    * part pins must be the same number as in the components' library package.
    */
-  public LogicalPart(String pName, int pNo, PartPin[] pPartPinArr) {
-    name = pName;
-    no = pNo;
-    partPinArr = pPartPinArr;
+  public LogicalPart(String name, int no, PartPin[] partPinArr) {
+    this.name = name;
+    this.no = no;
+    this.partPinArr = partPinArr;
   }
 
+  /** Returns the number of pins in this logical part. */
   public int pinCount() {
     return partPinArr.length;
   }
 
-  /** Returns the pim with index p_no. Pin numbers are from 0 to pinCount - 1 */
-  public PartPin getPin(int pNo) {
-    if (pNo < 0 || pNo >= partPinArr.length) {
+  /** Returns the pin with the specified index. Pin numbers range from 0 to pinCount - 1. */
+  public PartPin getPin(int no) {
+    if (no < 0 || no >= partPinArr.length) {
       FRLogger.warn("LogicalPart.get_pin: p_no out of range");
       return null;
     }
-    return partPinArr[pNo];
+    return partPinArr[no];
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
-    TextManager tm = new TextManager(this.getClass(), pLocale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    pWindow.appendBold(tm.getText("logical_part_2") + " ");
-    pWindow.appendBold(this.name);
+    window.appendBold(tm.getText("logical_part_2") + " ");
+    window.appendBold(this.name);
     for (int i = 0; i < this.partPinArr.length; i++) {
       PartPin currPin = this.partPinArr[i];
-      pWindow.newline();
-      pWindow.indent();
-      pWindow.append(tm.getText("pin") + " ");
-      pWindow.append(currPin.pinName);
-      pWindow.append(", " + tm.getText("gate") + " ");
-      pWindow.append(currPin.gateName);
-      pWindow.append(", " + tm.getText("swap_code") + " ");
+      window.newline();
+      window.indent();
+      window.append(tm.getText("pin") + " ");
+      window.append(currPin.pinName);
+      window.append(", " + tm.getText("gate") + " ");
+      window.append(currPin.gateName);
+      window.append(", " + tm.getText("swap_code") + " ");
       int gateSwapCode = currPin.gateSwapCode;
-      pWindow.append(String.valueOf(gateSwapCode));
-      pWindow.append(", " + tm.getText("gate_pin") + " ");
-      pWindow.append(currPin.gatePinName);
-      pWindow.append(", " + tm.getText("swap_code") + " ");
+      window.append(String.valueOf(gateSwapCode));
+      window.append(", " + tm.getText("gate_pin") + " ");
+      window.append(currPin.gatePinName);
+      window.append(", " + tm.getText("swap_code") + " ");
       int pinSwapCode = currPin.gatePinSwapCode;
-      pWindow.append(String.valueOf(pinSwapCode));
+      window.append(String.valueOf(pinSwapCode));
     }
-    pWindow.newline();
-    pWindow.newline();
+    window.newline();
+    window.newline();
   }
 
+  /** Describes a pin belonging to a logical part. */
   public static class PartPin implements Comparable<PartPin>, Serializable {
 
     /** The number of the part pin. Must be the same number as in the components library package. */
@@ -89,24 +91,25 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
      */
     public final int gatePinSwapCode;
 
+    /** Creates a part pin with its gate and swap metadata. */
     public PartPin(
-        int pPinNo,
-        String pPinName,
-        String pGateName,
-        int pGateSwapCode,
-        String pGatePinName,
-        int pGatePinSwapCode) {
-      pinNo = pPinNo;
-      pinName = pPinName;
-      gateName = pGateName;
-      gateSwapCode = pGateSwapCode;
-      gatePinName = pGatePinName;
-      gatePinSwapCode = pGatePinSwapCode;
+        int pinNo,
+        String pinName,
+        String gateName,
+        int gateSwapCode,
+        String gatePinName,
+        int gatePinSwapCode) {
+      this.pinNo = pinNo;
+      this.pinName = pinName;
+      this.gateName = gateName;
+      this.gateSwapCode = gateSwapCode;
+      this.gatePinName = gatePinName;
+      this.gatePinSwapCode = gatePinSwapCode;
     }
 
     @Override
-    public int compareTo(PartPin pOther) {
-      return this.pinNo - pOther.pinNo;
+    public int compareTo(PartPin other) {
+      return this.pinNo - other.pinNo;
     }
   }
 }

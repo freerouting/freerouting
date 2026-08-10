@@ -10,38 +10,38 @@ public class Packages implements Serializable {
 
   final Padstacks padstackList;
 
-  /** The array of packages in this object */
+  /** The array of packages in this object. */
   private final Vector<Package> packageArr = new Vector<>();
 
   /**
    * Creates a new instance of Packages. p_padstack_list is the list of padstacks used for the pins
    * of the packages in this data structure.
    */
-  public Packages(Padstacks pPadstackList) {
-    this.padstackList = pPadstackList;
+  public Packages(Padstacks padstackList) {
+    this.padstackList = padstackList;
   }
 
   /**
    * Returns the package with the input name and the input side or null, if no such package exists.
    */
-  public Package get(String pName, boolean pIsFront) {
-    if (pName == null) {
+  public Package get(String name, boolean isFront) {
+    if (name == null) {
       return null;
     }
     Package otherSidePackage = null;
     for (Package currPackage : packageArr) {
-      if (currPackage != null && currPackage.name.equalsIgnoreCase(pName)) {
-        if (currPackage.isFront == pIsFront) {
+      if (currPackage != null && currPackage.name.equalsIgnoreCase(name)) {
+        if (currPackage.isFront == isFront) {
           return currPackage;
         }
         otherSidePackage = currPackage;
       }
     }
-    String baseName = pName.replaceAll("::\\d+$", "");
-    if (!baseName.equalsIgnoreCase(pName)) {
+    String baseName = name.replaceAll("::\\d+$", "");
+    if (!baseName.equalsIgnoreCase(name)) {
       for (Package currPackage : packageArr) {
         if (currPackage != null && currPackage.name.equalsIgnoreCase(baseName)) {
-          if (currPackage.isFront == pIsFront) {
+          if (currPackage.isFront == isFront) {
             return currPackage;
           }
           otherSidePackage = currPackage;
@@ -51,10 +51,10 @@ public class Packages implements Serializable {
     return otherSidePackage;
   }
 
-  /** Returns the package with index p_package_no. Packages numbers are from 1 to package count. */
-  public Package get(int pPackageNo) {
-    Package result = packageArr.elementAt(pPackageNo - 1);
-    if (result != null && result.no != pPackageNo) {
+  /** Returns the package with the specified index. Package numbers start at 1. */
+  public Package get(int packageNo) {
+    Package result = packageArr.elementAt(packageNo - 1);
+    if (result != null && result.no != packageNo) {
       FRLogger.warn("Padstacks.get: inconsistent padstack number");
     }
     return result;
@@ -65,44 +65,44 @@ public class Packages implements Serializable {
     return packageArr.size();
   }
 
-  /** Appends a new package with the input data to this object. */
+  /** Appends a new package with the specified data to this object. */
   public Package add(
-      String pName,
-      Package.Pin[] pPinArr,
-      Shape[] pOutline,
-      double[] pOutlineWidths,
-      boolean[] pOutlineIsClosed,
-      Package.Keepout[] pKeepoutArr,
-      Package.Keepout[] pViaKeepoutArr,
-      Package.Keepout[] pPlaceKeepoutArr,
-      boolean pIsFront) {
+      String name,
+      Package.Pin[] pinArr,
+      Shape[] outline,
+      double[] outlineWidths,
+      boolean[] outlineIsClosed,
+      Package.Keepout[] keepoutArr,
+      Package.Keepout[] viaKeepoutArr,
+      Package.Keepout[] placeKeepoutArr,
+      boolean isFront) {
     Package newPackage =
         new Package(
-            pName,
+            name,
             packageArr.size() + 1,
-            pPinArr,
-            pOutline,
-            pOutlineWidths,
-            pOutlineIsClosed,
-            pKeepoutArr,
-            pViaKeepoutArr,
-            pPlaceKeepoutArr,
-            pIsFront,
+            pinArr,
+            outline,
+            outlineWidths,
+            outlineIsClosed,
+            keepoutArr,
+            viaKeepoutArr,
+            placeKeepoutArr,
+            isFront,
             this);
     packageArr.add(newPackage);
     return newPackage;
   }
 
   /**
-   * Appends a new package with pins p_pin_arr to this object. The package name is generated
+   * Appends a new package with the specified pins. The package name is generated
    * internally.
    */
-  public Package add(Package.Pin[] pPinArr) {
+  public Package add(Package.Pin[] pinArr) {
     String packageName = "Package#" + (packageArr.size() + 1);
 
     return add(
         packageName,
-        pPinArr,
+        pinArr,
         null,
         null,
         null,

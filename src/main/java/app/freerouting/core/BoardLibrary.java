@@ -23,17 +23,17 @@ public class BoardLibrary implements Serializable {
    */
   private List<Padstack> viaPadstacks;
 
-  /** Creates a new instance of BoardLibrary */
-  public BoardLibrary(Padstacks pPadstacks, Packages pPackages) {
-    padstacks = pPadstacks;
-    packages = pPackages;
+  /** Creates a new instance of BoardLibrary. */
+  public BoardLibrary(Padstacks padstacks, Packages packages) {
+    this.padstacks = padstacks;
+    this.packages = packages;
     logicalParts = new LogicalParts();
   }
 
-  /** Creates a new instance of BoardLibrary */
+  /** Creates a new instance of BoardLibrary. */
   public BoardLibrary() {}
 
-  /** The count of padstacks from this.padstacks, which can be used in routing */
+  /** The count of padstacks from this.padstacks, which can be used in routing. */
   public int viaPadstackCount() {
     if (this.viaPadstacks == null) {
       return 0;
@@ -41,21 +41,21 @@ public class BoardLibrary implements Serializable {
     return this.viaPadstacks.size();
   }
 
-  /** Gets the via padstack for routing with index p_no */
-  public Padstack getViaPadstack(int pNo) {
-    if (this.viaPadstacks == null || pNo < 0 || pNo >= this.viaPadstacks.size()) {
+  /** Gets the via padstack for routing with the specified index. */
+  public Padstack getViaPadstack(int no) {
+    if (this.viaPadstacks == null || no < 0 || no >= this.viaPadstacks.size()) {
       return null;
     }
-    return this.viaPadstacks.get(pNo);
+    return this.viaPadstacks.get(no);
   }
 
   /** Gets the via padstack with name p_name, or null, if no such padstack exists. */
-  public Padstack getViaPadstack(String pName) {
+  public Padstack getViaPadstack(String name) {
     if (this.viaPadstacks == null) {
       return null;
     }
     for (Padstack currPadstack : this.viaPadstacks) {
-      if (currPadstack.name.equals(pName)) {
+      if (currPadstack.name.equals(name)) {
         return currPadstack;
       }
     }
@@ -78,17 +78,17 @@ public class BoardLibrary implements Serializable {
    * Sets the subset of padstacks from this.padstacks, which can be used in routing for inserting
    * vias.
    */
-  public void setViaPadstacks(Padstack[] pPadstacks) {
+  public void setViaPadstacks(Padstack[] padstacks) {
 
-    this.viaPadstacks = new Vector<>(Arrays.asList(pPadstacks));
+    this.viaPadstacks = new Vector<>(Arrays.asList(padstacks));
   }
 
   /**
-   * Appends p_padstack to the list of via padstacks. Returns false, if the list contains already a
-   * padstack with p_padstack.name.
+   * Appends a padstack to the list of via padstacks. Returns false if the list already contains a
+   * padstack with the same name.
    */
-  public boolean addViaPadstack(Padstack pPadstack) {
-    if (getViaPadstack(pPadstack.name) != null) {
+  public boolean addViaPadstack(Padstack padstack) {
+    if (getViaPadstack(padstack.name) != null) {
       return false;
     }
 
@@ -96,30 +96,28 @@ public class BoardLibrary implements Serializable {
       this.viaPadstacks = new Vector<>();
     }
 
-    this.viaPadstacks.add(pPadstack);
+    this.viaPadstacks.add(padstack);
     return true;
   }
 
   /**
-   * Removes p_padstack from the via padstack list. Returns false, if p_padstack was not found in
-   * the list. If the padstack is no more used on the board, it will also be removed from the board
-   * padstacks.
+   * Removes a padstack from the via padstack list. Returns false if it was not found.
    */
-  public boolean removeViaPadstack(Padstack pPadstack, BasicBoard pBoard) {
-    return viaPadstacks.remove(pPadstack);
+  public boolean removeViaPadstack(Padstack padstack, BasicBoard board) {
+    return viaPadstacks.remove(padstack);
   }
 
   /**
    * Gets the via padstack mirrored to the back side of the board. Returns null, if no such via
    * padstack exists.
    */
-  public Padstack getMirroredViaPadstack(Padstack pViaPadstack) {
+  public Padstack getMirroredViaPadstack(Padstack viaPadstack) {
     int layerCount = this.padstacks.boardLayerStructure.arr.length;
-    if (pViaPadstack.fromLayer() == 0 && pViaPadstack.toLayer() == layerCount - 1) {
-      return pViaPadstack;
+    if (viaPadstack.fromLayer() == 0 && viaPadstack.toLayer() == layerCount - 1) {
+      return viaPadstack;
     }
-    int newFromLayer = layerCount - pViaPadstack.toLayer() - 1;
-    int newToLayer = layerCount - pViaPadstack.fromLayer() - 1;
+    int newFromLayer = layerCount - viaPadstack.toLayer() - 1;
+    int newToLayer = layerCount - viaPadstack.fromLayer() - 1;
     for (Padstack currViaPadstack : viaPadstacks) {
       if (currViaPadstack.fromLayer() == newFromLayer && currViaPadstack.toLayer() == newToLayer) {
         return currViaPadstack;
@@ -128,16 +126,16 @@ public class BoardLibrary implements Serializable {
     return null;
   }
 
-  /** Looks, if the input padstack is used on p_board in a Package or in drill. */
-  public boolean isUsed(Padstack pPadstack, BasicBoard pBoard) {
-    Iterator<UndoableObjects.UndoableObjectNode> it = pBoard.itemList.startReadObject();
+  /** Returns whether the input padstack is used on the board in a package or drill. */
+  public boolean isUsed(Padstack padstack, BasicBoard board) {
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      UndoableObjects.Storable currItem = pBoard.itemList.readObject(it);
+      UndoableObjects.Storable currItem = board.itemList.readObject(it);
       if (currItem == null) {
         break;
       }
       if (currItem instanceof DrillItem item) {
-        if (item.getPadstack() == pPadstack) {
+        if (item.getPadstack() == padstack) {
           return true;
         }
       }
@@ -145,7 +143,7 @@ public class BoardLibrary implements Serializable {
     for (int i = 1; i <= this.packages.count(); i++) {
       Package currPackage = this.packages.get(i);
       for (int j = 0; j < currPackage.pinCount(); j++) {
-        if (currPackage.getPin(j).padstackNo == pPadstack.no) {
+        if (currPackage.getPin(j).padstackNo == padstack.no) {
           return true;
         }
       }

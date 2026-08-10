@@ -22,14 +22,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A client for Google BigQuery's API.
+ * Provides analytics delivery through Google BigQuery's API.
  *
  * <p>Please note that {@code track} and {@code identify} events are written to their respective
  * BigQuery tables ({@code application_started}, etc. and {@code identify}).
  *
  * <h2>Singleton lifecycle</h2>
  *
- * Creating a BigQuery service involves network I/O (credential refresh against Google's token
+ * <p>Creating a BigQuery service involves network I/O (credential refresh against Google's token
  * endpoint) and is expensive enough to avoid doing on every analytics call. Use {@link
  * #getInstance(String, String)} to obtain the shared instance. The singleton is recreated
  * transparently if the service-account key changes (e.g. key rotation), so callers do not need to
@@ -57,8 +57,8 @@ public class BigQueryClient implements AnalyticsClient {
   // Instance state
   // -------------------------------------------------------------------------
 
-  private final String LIBRARY_NAME = "freerouting";
-  private final String LIBRARY_VERSION;
+  private final String libraryName = "freerouting";
+  private final String libraryVersion;
 
   /** The authenticated BigQuery service. Owned exclusively by this instance. */
   private final BigQuery bigQuery;
@@ -108,8 +108,14 @@ public class BigQueryClient implements AnalyticsClient {
   // Constructor (package-visible for tests; prefer getInstance() in production)
   // -------------------------------------------------------------------------
 
+  /**
+   * Creates a BigQuery analytics client.
+   *
+   * @param libraryVersion the Freerouting version included in each payload
+   * @param serviceAccountKey the full JSON content of the service-account key
+   */
   public BigQueryClient(String libraryVersion, String serviceAccountKey) {
-    LIBRARY_VERSION = libraryVersion;
+    this.libraryVersion = libraryVersion;
     // Enable TLS protocols
     System.setProperty("https.protocols", "TLSv1.2,TLSv1.3");
     bigQuery = createBigQueryService(serviceAccountKey.getBytes());
@@ -143,8 +149,8 @@ public class BigQueryClient implements AnalyticsClient {
     payload.anonymousId = anonymousId;
     payload.context = new Context();
     payload.context.library = new Library();
-    payload.context.library.name = LIBRARY_NAME;
-    payload.context.library.version = LIBRARY_VERSION;
+    payload.context.library.name = libraryName;
+    payload.context.library.version = libraryVersion;
     // Use "identifies" as the event name so sendPayloadAsync routes the row to the
     // BigQuery `identifies` table — this follows the Segment convention and matches
     // the existing table schema.
@@ -174,8 +180,8 @@ public class BigQueryClient implements AnalyticsClient {
     payload.anonymousId = anonymousId;
     payload.context = new Context();
     payload.context.library = new Library();
-    payload.context.library.name = LIBRARY_NAME;
-    payload.context.library.version = LIBRARY_VERSION;
+    payload.context.library.name = libraryName;
+    payload.context.library.version = libraryVersion;
     payload.event = "user_snapshots";
     payload.traits = snapshotTraits;
 
@@ -190,8 +196,8 @@ public class BigQueryClient implements AnalyticsClient {
     payload.anonymousId = anonymousId;
     payload.context = new Context();
     payload.context.library = new Library();
-    payload.context.library.name = LIBRARY_NAME;
-    payload.context.library.version = LIBRARY_VERSION;
+    payload.context.library.name = libraryName;
+    payload.context.library.version = libraryVersion;
     payload.event = event;
     payload.properties = properties;
 

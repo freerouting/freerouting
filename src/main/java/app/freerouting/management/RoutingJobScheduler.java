@@ -204,7 +204,8 @@ public final class RoutingJobScheduler {
                   FRLogger.error("RoutingJobScheduler thread was interrupted.", e);
                 } catch (Exception e) {
                   FRLogger.error(
-                      "RoutingJobScheduler thread encountered an unexpected error and will continue.",
+                      "RoutingJobScheduler thread encountered an unexpected error and will "
+                          + "continue.",
                       e);
                 }
               }
@@ -223,7 +224,7 @@ public final class RoutingJobScheduler {
     return instance;
   }
 
-  private String uUIDtoShortCode(UUID uuid) {
+  private String uuidToShortCode(UUID uuid) {
     return uuid.toString().substring(0, 6).toUpperCase();
   }
 
@@ -231,7 +232,7 @@ public final class RoutingJobScheduler {
    * Enqueues a job to be processed by the router.
    *
    * @param job The job to enqueue.
-   * @return The job that was enqueued.
+   * @return the job that was enqueued
    */
   public RoutingJob enqueueJob(RoutingJob job) {
     // Get the session object from the SessionManager and user ID from the job
@@ -261,6 +262,11 @@ public final class RoutingJobScheduler {
     return job;
   }
 
+  /**
+   * Saves a job and its associated files when job persistence is enabled.
+   *
+   * @param job the job to save
+   */
   public void saveJob(RoutingJob job) {
     if (globalSettings.featureFlags.saveJobs) {
       String sessionIdString = "null";
@@ -279,7 +285,8 @@ public final class RoutingJobScheduler {
         sessionIdString = session.id.toString();
         userIdString = session.userId.toString();
 
-        saveJob("U-" + uUIDtoShortCode(session.userId), "S-" + uUIDtoShortCode(session.id), job);
+        saveJobToDisk(
+            "U-" + uuidToShortCode(session.userId), "S-" + uuidToShortCode(session.id), job);
       } catch (IOException e) {
         FRLogger.error(
             "Failed to save job for user '%s' in session '%s' to disk."
@@ -289,7 +296,8 @@ public final class RoutingJobScheduler {
     }
   }
 
-  private void saveJob(String userFolder, String sessionFolder, RoutingJob job) throws IOException {
+  private void saveJobToDisk(String userFolder, String sessionFolder, RoutingJob job)
+      throws IOException {
     // Create the user's folder if it doesn't exist
     Path userFolderPath = GlobalSettings.getUserDataPath().resolve("data").resolve(userFolder);
 
@@ -333,7 +341,7 @@ public final class RoutingJobScheduler {
         "FRJ_"
             + TextManager.convertInstantToString(job.createdAt)
             + "__J-"
-            + uUIDtoShortCode(job.id)
+            + uuidToShortCode(job.id)
             + ".json";
     Path jobFilePath = sessionFolderPath.resolve(jobFilename);
 
@@ -376,12 +384,19 @@ public final class RoutingJobScheduler {
     }
   }
 
+  /** Returns a snapshot of all jobs currently in the scheduler queue. */
   public RoutingJob[] listJobs() {
     synchronized (jobs) {
       return this.jobs.toArray(RoutingJob[]::new);
     }
   }
 
+  /**
+   * Returns jobs belonging to one session.
+   *
+   * @param sessionId the session identifier
+   * @return a snapshot of the session's jobs
+   */
   public RoutingJob[] listJobs(String sessionId) {
     synchronized (jobs) {
       return this.jobs.stream()
@@ -390,6 +405,13 @@ public final class RoutingJobScheduler {
     }
   }
 
+  /**
+   * Returns jobs visible to a user, optionally restricted to one session.
+   *
+   * @param sessionId a session identifier, or {@code null} for all sessions owned by the user
+   * @param userId the session owner's identifier
+   * @return a snapshot of the matching jobs
+   */
   public RoutingJob[] listJobs(String sessionId, UUID userId) {
     SessionManager sessionManager = SessionManager.getInstance();
 
@@ -417,12 +439,23 @@ public final class RoutingJobScheduler {
     return new RoutingJob[0];
   }
 
+  /**
+   * Finds a queued job by identifier.
+   *
+   * @param jobId the job identifier
+   * @return the matching job, or {@code null} when it is not queued
+   */
   public RoutingJob getJob(String jobId) {
     synchronized (jobs) {
       return this.jobs.stream().filter(j -> j.id.toString().equals(jobId)).findFirst().orElse(null);
     }
   }
 
+  /**
+   * Removes all queued jobs belonging to a session.
+   *
+   * @param sessionId the session identifier
+   */
   public void clearJobs(String sessionId) {
     synchronized (jobs) {
       this.jobs.removeIf(j -> j.sessionId.toString().equals(sessionId));

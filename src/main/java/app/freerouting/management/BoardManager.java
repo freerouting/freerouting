@@ -148,32 +148,32 @@ public interface BoardManager {
    *   <li>Initialize interactive settings to defaults
    * </ol>
    *
-   * <p><strong>Outline Clearance:</strong> The {@code p_outline_clearance_class_name} parameter
+   * <p><strong>Outline Clearance:</strong> The {@code outlineClearanceClassName} parameter
    * specifies which clearance class to use for the board outline. If the name doesn't match an
    * existing class, the default area clearance class is used.
    *
-   * <p><strong>Communication Interface:</strong> The {@code p_board_communication} parameter
+   * <p><strong>Communication Interface:</strong> The {@code boardCommunication} parameter
    * enables integration with host CAD systems, supporting coordinate transformations and unit
    * conversions between the internal board representation and external formats.
    *
-   * @param pBoundingBox the rectangular boundary containing all board geometry
-   * @param pLayerStructure the layer stack-up definition (names, types, thicknesses)
-   * @param pOutlineShapes array of polyline shapes defining the board outline perimeter
-   * @param pOutlineClearanceClassName name of clearance class for board outline
-   * @param pRules the complete set of design rules (clearances, widths, via rules)
-   * @param pBoardCommunication communication interface for external system integration
+   * @param boundingBox the rectangular boundary containing all board geometry
+   * @param layerStructure the layer stack-up definition (names, types, thicknesses)
+   * @param outlineShapes array of polyline shapes defining the board outline perimeter
+   * @param outlineClearanceClassName name of clearance class for board outline
+   * @param rules the complete set of design rules (clearances, widths, via rules)
+   * @param boardCommunication communication interface for external system integration
    * @see RoutingBoard#RoutingBoard
    * @see LayerStructure
    * @see BoardRules
    * @see Communication
    */
   void createBoard(
-      IntBox pBoundingBox,
-      LayerStructure pLayerStructure,
-      PolylineShape[] pOutlineShapes,
-      String pOutlineClearanceClassName,
-      BoardRules pRules,
-      Communication pBoardCommunication);
+      IntBox boundingBox,
+      LayerStructure layerStructure,
+      PolylineShape[] outlineShapes,
+      String outlineClearanceClassName,
+      BoardRules rules,
+      Communication boardCommunication);
 
   /**
    * Returns the interactive GUI settings singleton, or {@code null} when running headless.

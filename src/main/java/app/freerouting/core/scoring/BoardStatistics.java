@@ -76,6 +76,7 @@ public class BoardStatistics implements Serializable {
   @SerializedName("fanout")
   public BoardStatisticsFanout fanout = new BoardStatisticsFanout();
 
+  /** Creates empty board statistics. */
   public BoardStatistics() {}
 
   /** Creates a new BoardFileStatistics object from a RoutingBoard object. */
@@ -107,7 +108,7 @@ public class BoardStatistics implements Serializable {
    */
   public BoardStatistics(
       BasicBoard board, Unit unit, boolean includeClearanceViolations, boolean includeConnections) {
-    var bb = board.getBoundingBox();
+    final var bb = board.getBoundingBox();
 
     this.host =
         board.communication.specctraParserInfo.hostCad
@@ -522,6 +523,7 @@ public class BoardStatistics implements Serializable {
     }
   }
 
+  /** Returns whether a pin has a valid trace or via escape. */
   public static boolean isPinEscaped(Pin pin) {
     java.util.Set<Item> contacts = pin.getNormalContacts();
     for (Item contact : contacts) {
@@ -585,10 +587,12 @@ public class BoardStatistics implements Serializable {
     return maximumScore - penalties - costs;
   }
 
+  /** Returns the maximum score for the supplied scoring settings. */
   public float getMaximumScore(ScoringSettings scoringSettings) {
     return this.connections.maximumCount * scoringSettings.unroutedNetPenalty;
   }
 
+  /** Returns the score normalized to a range from zero to one thousand. */
   public float getNormalizedScore(ScoringSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
     if (maximumScore <= 0f) {
@@ -602,6 +606,7 @@ public class BoardStatistics implements Serializable {
     return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
   }
 
+  /** Statistics for surface-mount pin fanout. */
   public static class BoardStatisticsFanout implements Serializable {
     @SerializedName("total_smd_pins")
     public int totalSmdPins;

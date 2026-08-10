@@ -30,7 +30,7 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
   public final Keepout[] viaKeepoutArr;
   public final Keepout[] placeKeepoutArr;
 
-  /** If false, the package is placed on the back side of the board */
+  /** If false, the package is placed on the back side of the board. */
   public final boolean isFront;
 
   /** The array of pins of this padstack. */
@@ -39,56 +39,55 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
   private final Packages packageList;
 
   /**
-   * Creates a new instance of Package. p_package_list is the list of packages containing this
-   * package.
+   * Creates a new instance of Package. The package list contains this package.
    */
   public Package(
-      String pName,
-      int pNo,
-      Pin[] pPinArr,
-      Shape[] pOutline,
-      double[] pOutlineWidths,
-      boolean[] pOutlineIsClosed,
-      Keepout[] pKeepoutArr,
-      Keepout[] pViaKeepoutArr,
-      Keepout[] pPlaceKeepoutArr,
-      boolean pIsFront,
-      Packages pPackageList) {
-    name = pName;
-    no = pNo;
-    pinArr = pPinArr;
-    outline = pOutline;
-    outlineWidths = pOutlineWidths;
-    outlineIsClosed = pOutlineIsClosed;
-    keepoutArr = pKeepoutArr;
-    viaKeepoutArr = pViaKeepoutArr;
-    placeKeepoutArr = pPlaceKeepoutArr;
-    isFront = pIsFront;
-    packageList = pPackageList;
+      String name,
+      int no,
+      Pin[] pinArr,
+      Shape[] outline,
+      double[] outlineWidths,
+      boolean[] outlineIsClosed,
+      Keepout[] keepoutArr,
+      Keepout[] viaKeepoutArr,
+      Keepout[] placeKeepoutArr,
+      boolean isFront,
+      Packages packageList) {
+    this.name = name;
+    this.no = no;
+    this.pinArr = pinArr;
+    this.outline = outline;
+    this.outlineWidths = outlineWidths;
+    this.outlineIsClosed = outlineIsClosed;
+    this.keepoutArr = keepoutArr;
+    this.viaKeepoutArr = viaKeepoutArr;
+    this.placeKeepoutArr = placeKeepoutArr;
+    this.isFront = isFront;
+    this.packageList = packageList;
   }
 
   /** Compares 2 packages by name. Useful for example to display packages in alphabetic order. */
   @Override
-  public int compareTo(Package pOther) {
-    return this.name.compareToIgnoreCase(pOther.name);
+  public int compareTo(Package other) {
+    return this.name.compareToIgnoreCase(other.name);
   }
 
   /** Returns the pin with the input number from this package. */
-  public Pin getPin(int pNo) {
-    if (pNo < 0 || pNo >= pinArr.length) {
+  public Pin getPin(int no) {
+    if (no < 0 || no >= pinArr.length) {
       FRLogger.warn("Package.get_pin: p_no out of range");
       return null;
     }
-    return pinArr[pNo];
+    return pinArr[no];
   }
 
   /**
    * Returns the pin number of the pin with the input name from this package, or -1, if no such pin
    * exists Pin numbers are from 0 to pinCount - 1.
    */
-  public int getPinNo(String pName) {
+  public int getPinNo(String name) {
     for (int i = 0; i < pinArr.length; i++) {
-      if (pinArr[i].name.equals(pName)) {
+      if (pinArr[i].name.equals(name)) {
         return i;
       }
     }
@@ -106,26 +105,26 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
-    TextManager tm = new TextManager(this.getClass(), pLocale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    pWindow.appendBold(tm.getText("package") + " ");
-    pWindow.appendBold(this.name);
+    window.appendBold(tm.getText("package") + " ");
+    window.appendBold(this.name);
     for (int i = 0; i < this.pinArr.length; i++) {
       Pin currPin = this.pinArr[i];
-      pWindow.newline();
-      pWindow.indent();
-      pWindow.append(tm.getText("pin") + " ");
-      pWindow.append(currPin.name);
-      pWindow.append(", " + tm.getText("padstack") + " ");
+      window.newline();
+      window.indent();
+      window.append(tm.getText("pin") + " ");
+      window.append(currPin.name);
+      window.append(", " + tm.getText("padstack") + " ");
       Padstack currPadstack = this.packageList.padstackList.get(currPin.padstackNo);
-      pWindow.append(currPadstack.name, tm.getText("padstack_info"), currPadstack);
-      pWindow.append(" " + tm.getText("at") + " ");
-      pWindow.append(currPin.relativeLocation.toFloat());
-      pWindow.append(", " + tm.getText("rotation") + " ");
-      pWindow.appendWithoutTransforming(currPin.rotationInDegree);
+      window.append(currPadstack.name, tm.getText("padstack_info"), currPadstack);
+      window.append(" " + tm.getText("at") + " ");
+      window.append(currPin.relativeLocation.toFloat());
+      window.append(", " + tm.getText("rotation") + " ");
+      window.appendWithoutTransforming(currPin.rotationInDegree);
     }
-    pWindow.newline();
+    window.newline();
   }
 
   /** Describes a pin padstack of a package. */
@@ -140,29 +139,30 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
     /** The location of the pin relative to its package. */
     public final Vector relativeLocation;
 
-    /** the rotation of the pin padstack */
+    /** The rotation of the pin padstack. */
     public final double rotationInDegree;
 
     /** Creates a new package pin with the input coordinates relative to the package location. */
-    public Pin(String pName, int pPadstackNo, Vector pRelativeLocation, double pRotationInDegree) {
-      name = pName;
-      padstackNo = pPadstackNo;
-      relativeLocation = pRelativeLocation;
-      rotationInDegree = pRotationInDegree;
+    public Pin(String name, int padstackNo, Vector relativeLocation, double rotationInDegree) {
+      this.name = name;
+      this.padstackNo = padstackNo;
+      this.relativeLocation = relativeLocation;
+      this.rotationInDegree = rotationInDegree;
     }
   }
 
-  /** Describes a named keepout belonging to a package, */
+  /** Describes a named keepout belonging to a package. */
   public static class Keepout implements Serializable {
 
     public final String name;
     public final Area area;
     public final int layer;
 
-    public Keepout(String pName, Area pArea, int pLayer) {
-      name = pName;
-      area = pArea;
-      layer = pLayer;
+    /** Creates a keepout with its area and layer. */
+    public Keepout(String name, Area area, int layer) {
+      this.name = name;
+      this.area = area;
+      this.layer = layer;
     }
   }
 }

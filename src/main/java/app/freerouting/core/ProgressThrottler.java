@@ -5,6 +5,7 @@ public class ProgressThrottler {
   private final long intervalMs;
   private long lastUpdateMs;
 
+  /** Creates a throttler with the specified minimum update interval. */
   public ProgressThrottler(long intervalMs) {
     this.intervalMs = intervalMs;
     this.lastUpdateMs = 0;

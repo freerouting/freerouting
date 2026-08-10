@@ -9,28 +9,28 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Vector;
 
-/** Describes the electrical Nets on a board. */
+/** Describes the electrical nets on a board. */
 public class Nets implements Serializable {
 
   /** The maximum legal net number for nets. */
   public static final int max_legal_net_no = 9999999;
 
-  /** auxiliary net number for internal use */
+  /** The auxiliary net number for internal use. */
   public static final int hidden_net_no = 10000001;
 
-  /** The list of electrical nets on the board */
+  /** The list of electrical nets on the board. */
   private final Vector<Net> netArr;
 
   private BasicBoard board;
 
-  /** Creates a new empty net list */
+  /** Creates a new empty net list. */
   public Nets() {
     netArr = new Vector<>();
   }
 
-  /** Returns false, if p_net_no belongs to a net internally used for special purposes. */
-  public static boolean isNormalNetNo(int pNetNo) {
-    return pNetNo > 0 && pNetNo <= max_legal_net_no;
+  /** Returns false if {@code netNumber} belongs to an internally used special-purpose net. */
+  public static boolean isNormalNetNo(int netNumber) {
+    return netNumber > 0 && netNumber <= max_legal_net_no;
   }
 
   /** Returns the biggest net number on the board. */
@@ -38,11 +38,11 @@ public class Nets implements Serializable {
     return netArr.size();
   }
 
-  /** Returns the net with the input name and subnetNumber , or null, if no such net exists. */
-  public Net get(String pName, int pSubnetNumber) {
+  /** Returns the net with the given name and subnet number, or null if no such net exists. */
+  public Net get(String name, int subnetNumber) {
     for (Net currentNet : netArr) {
-      if (currentNet != null && currentNet.name.equalsIgnoreCase(pName)) {
-        if (currentNet.subnetNumber == pSubnetNumber) {
+      if (currentNet != null && currentNet.name.equalsIgnoreCase(name)) {
+        if (currentNet.subnetNumber == subnetNumber) {
           return currentNet;
         }
       }
@@ -50,58 +50,58 @@ public class Nets implements Serializable {
     return null;
   }
 
-  /** Returns all subnets with the input name. */
-  public Collection<Net> get(String pName) {
+  /** Returns all subnets with the given name. */
+  public Collection<Net> get(String name) {
     Collection<Net> result = new LinkedList<>();
     for (Net currentNet : netArr) {
-      if (currentNet != null && currentNet.name.equalsIgnoreCase(pName)) {
+      if (currentNet != null && currentNet.name.equalsIgnoreCase(name)) {
         result.add(currentNet);
       }
     }
     return result;
   }
 
-  /** Returns the net with the input net number or null, if no such net exists. */
-  public Net get(int pNetNo) {
-    if (pNetNo < 1 || pNetNo > netArr.size()) {
+  /** Returns the net with the given net number, or null if no such net exists. */
+  public Net get(int netNumber) {
+    if (netNumber < 1 || netNumber > netArr.size()) {
       return null;
     }
-    Net result = netArr.elementAt(pNetNo - 1);
-    if (result != null && result.netNumber != pNetNo) {
+    Net result = netArr.elementAt(netNumber - 1);
+    if (result != null && result.netNumber != netNumber) {
       FRLogger.warn("Nets.get: inconsistent netNo");
     }
     return result;
   }
 
   /** Generates a new net number. */
-  public Net newNet(Locale pLocale) {
-    TextManager tm = new TextManager(NetClasses.class, pLocale);
+  public Net newNet(Locale locale) {
+    TextManager tm = new TextManager(NetClasses.class, locale);
 
     String netName = tm.getText("net#") + (netArr.size() + 1);
     return add(netName, 1, false);
   }
 
   /**
-   * Adds a new net with default properties with the input name. p_subnet_number is used only if a
-   * net is divided internally because of fromto rules for example. For normal nets it is always 1.
+   * Adds a new net with default properties and the given name. {@code subnetNumber} is used only
+   * if a net is divided internally because of from-to rules. For normal nets it is always 1.
    */
-  public Net add(String pName, int pSubnetNumber, boolean pContainsPlane) {
+  public Net add(String name, int subnetNumber, boolean containsPlane) {
     int newNetNo = netArr.size() + 1;
     if (newNetNo >= max_legal_net_no) {
       FRLogger.warn("Nets.add_net: maxNetNo out of range");
     }
-    Net newNet = new Net(pName, pSubnetNumber, newNetNo, this, pContainsPlane);
+    Net newNet = new Net(name, subnetNumber, newNetNo, this, containsPlane);
     netArr.add(newNet);
     return newNet;
   }
 
-  /** Gets the Board of this net list. Used for example to get access to the Items of the net. */
+  /** Gets the board of this net list, which provides access to the net's items. */
   public BasicBoard getBoard() {
     return this.board;
   }
 
-  /** Sets the Board of this net list. Used for example to get access to the Items of the net. */
-  public void setBoard(BasicBoard pBoard) {
-    this.board = pBoard;
+  /** Sets the board of this net list, which provides access to the net's items. */
+  public void setBoard(BasicBoard board) {
+    this.board = board;
   }
 }

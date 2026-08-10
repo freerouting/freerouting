@@ -3,6 +3,7 @@ package app.freerouting.core.scoring;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
+/** Statistics describing board connections. */
 public class BoardStatisticsConnections implements Serializable {
 
   @SerializedName("maximum_count")

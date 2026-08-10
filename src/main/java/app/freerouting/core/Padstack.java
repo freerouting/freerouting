@@ -18,7 +18,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   public final String name;
   public final int no;
 
-  /** true, if vias of the own net are allowed to overlap with this padstack */
+  /** Whether vias of the own net may overlap with this padstack. */
   public final boolean attachAllowed;
 
   /**
@@ -37,37 +37,34 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
    */
   public boolean holeOnly;
 
-  /** Pointer to the pacdstack list containing this padstack */
+  /** Pointer to the padstack list containing this padstack. */
   private final Padstacks padstackList;
 
   /** Cached drill radius to avoid repeated regex parsing on every render call. */
   private Double cachedDrillRadius;
 
   /**
-   * Creates a new Padstack with shape p_shapes[i] on layer i (0 <= i < p_shapes.length).
-   * p_is_drilllable indicates, if vias of the own net are allowed to overlap with this padstack If
-   * p_placed_absolute is false, the layers of the padstack are mirrored, if it is placed on the
-   * back side. p_padstack_list is the list, where this padstack belongs to.
+   * Creates a new Padstack with one shape per board layer.
    */
   Padstack(
-      String pName,
-      int pNo,
-      ConvexShape[] pShapes,
-      boolean pIsDrilllable,
-      boolean pPlacedAbsolute,
-      Padstacks pPadstackList) {
-    shapes = pShapes;
-    name = pName;
-    no = pNo;
-    attachAllowed = pIsDrilllable;
-    placedAbsolute = pPlacedAbsolute;
-    padstackList = pPadstackList;
+      String name,
+      int no,
+      ConvexShape[] shapes,
+      boolean isDrillable,
+      boolean placedAbsolute,
+      Padstacks padstackList) {
+    this.shapes = shapes;
+    this.name = name;
+    this.no = no;
+    this.attachAllowed = isDrillable;
+    this.placedAbsolute = placedAbsolute;
+    this.padstackList = padstackList;
   }
 
   /** Compares 2 padstacks by name. Useful for example to display padstacks in alphabetic order. */
   @Override
-  public int compareTo(Padstack pOther) {
-    return this.name.compareToIgnoreCase(pOther.name);
+  public int compareTo(Padstack other) {
+    return this.name.compareToIgnoreCase(other.name);
   }
 
   /**
@@ -129,13 +126,13 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
     return minRadius == Double.MAX_VALUE ? 0.0 : minRadius;
   }
 
-  /** Gets the shape of this padstack on layer p_layer */
-  public ConvexShape getShape(int pLayer) {
-    if (pLayer < 0 || pLayer >= shapes.length) {
+  /** Gets the shape of this padstack on the specified layer. */
+  public ConvexShape getShape(int layer) {
+    if (layer < 0 || layer >= shapes.length) {
       FRLogger.warn("Padstack.get_layer p_layer out of range");
       return null;
     }
-    return shapes[pLayer];
+    return shapes[layer];
   }
 
   /** Returns the first layer of this padstack with a shape != null. */
@@ -167,16 +164,16 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   }
 
   /**
-   * Calculates the allowed trace exit directions of the shape of this padstack on layer p_layer. If
-   * the length of the pad is smaller than p_factor times the height of the pad, connection also to
+   * Calculates the allowed trace exit directions on a layer. If the length of the pad is smaller
+   * than factor times its height, connection also to
    * the long side is allowed.
    */
-  public Collection<Direction> getTraceExitDirections(int pLayer, double pFactor) {
+  public Collection<Direction> getTraceExitDirections(int layer, double factor) {
     Collection<Direction> result = new LinkedList<>();
-    if (pLayer < 0 || pLayer >= shapes.length) {
+    if (layer < 0 || layer >= shapes.length) {
       return result;
     }
-    ConvexShape currShape = shapes[pLayer];
+    ConvexShape currShape = shapes[layer];
     if (currShape == null) {
       return result;
     }
@@ -187,7 +184,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
 
     boolean allDirs =
         Math.max(currBox.width(), currBox.height())
-            < pFactor * Math.min(currBox.width(), currBox.height());
+            < factor * Math.min(currBox.width(), currBox.height());
 
     if (allDirs || currBox.width() >= currBox.height()) {
       result.add(Direction.RIGHT);
@@ -201,20 +198,20 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
-    TextManager tm = new TextManager(this.getClass(), pLocale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    pWindow.appendBold(tm.getText("padstack") + " ");
-    pWindow.appendBold(this.name);
+    window.appendBold(tm.getText("padstack") + " ");
+    window.appendBold(this.name);
     for (int i = 0; i < shapes.length; i++) {
       if (shapes[i] != null) {
-        pWindow.newline();
-        pWindow.indent();
-        pWindow.append(shapes[i], pLocale);
-        pWindow.append(" " + tm.getText("on_layer") + " ");
-        pWindow.append(padstackList.boardLayerStructure.arr[i].name);
+        window.newline();
+        window.indent();
+        window.append(shapes[i], locale);
+        window.append(" " + tm.getText("on_layer") + " ");
+        window.append(padstackList.boardLayerStructure.arr[i].name);
       }
     }
-    pWindow.newline();
+    window.newline();
   }
 }

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.CRC32;
 
+/** Stores file data, metadata, and derived board statistics. */
 public class BoardFileDetails implements Serializable {
 
   protected final transient List<BoardFileDetailsUpdatedEventListener> updatedEventListeners =
@@ -51,6 +52,7 @@ public class BoardFileDetails implements Serializable {
 
   protected transient byte[] dataBytes = new byte[0];
 
+  /** Creates empty file details. */
   public BoardFileDetails() {}
 
   /** Creates a new BoardDetails object from a file. */
@@ -69,6 +71,7 @@ public class BoardFileDetails implements Serializable {
     this.statistics = new BoardStatistics(board);
   }
 
+  /** Calculates the CRC32 checksum of the supplied stream. */
   public static CRC32 calculateCrc32(InputStream inputStream) {
     CRC32 crc = new CRC32();
     try {
@@ -98,6 +101,7 @@ public class BoardFileDetails implements Serializable {
     return new ByteArrayInputStream(this.dataBytes);
   }
 
+  /** Replaces the file data and updates its metadata and statistics. */
   public void setData(byte[] data) {
     this.dataBytes = data;
     this.size = data.length;
@@ -119,6 +123,7 @@ public class BoardFileDetails implements Serializable {
     return GsonProvider.GSON.toJson(this);
   }
 
+  /** Returns the file represented by these details, or {@code null} if no filename is set. */
   public File getFile() {
     if (!this.filename.isEmpty()) {
       return new File(Path.of(this.directoryPath, this.filename).toString());
@@ -126,10 +131,12 @@ public class BoardFileDetails implements Serializable {
     return null;
   }
 
+  /** Returns the directory containing the file. */
   public String getDirectoryPath() {
     return this.directoryPath;
   }
 
+  /** Returns the filename without its directory. */
   public String getFilename() {
     return this.filename;
   }
@@ -200,6 +207,7 @@ public class BoardFileDetails implements Serializable {
     fireUpdatedEvent();
   }
 
+  /** Returns the filename without its final extension. */
   public String getFilenameWithoutExtension() {
     if (this.filename.contains(".")) {
       return this.filename.substring(0, this.filename.lastIndexOf('.'));
@@ -207,10 +215,12 @@ public class BoardFileDetails implements Serializable {
     return this.filename;
   }
 
+  /** Registers a listener for changes to these details. */
   public void addUpdatedEventListener(BoardFileDetailsUpdatedEventListener listener) {
     updatedEventListeners.add(listener);
   }
 
+  /** Notifies all registered listeners of an update. */
   public void fireUpdatedEvent() {
     BoardFileDetailsUpdatedEvent event = new BoardFileDetailsUpdatedEvent(this, this);
     for (BoardFileDetailsUpdatedEventListener listener : updatedEventListeners) {

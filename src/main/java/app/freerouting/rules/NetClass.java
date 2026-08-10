@@ -17,8 +17,8 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   private final boolean[] activeRoutingLayerArr;
 
   /**
-   * The clearance classes of the item types, if this net class comes from a class in a Specctra
-   * dsn-file Should eventually be moved to NetClass and used only when reading a dsn-file.
+   * The clearance classes of the item types if this net class comes from a class in a Specctra
+   * DSN file. Should eventually be moved to {@code NetClass} and used only when reading a DSN file.
    */
   public DefaultItemClearanceClasses defaultItemClearanceClasses =
       new DefaultItemClearanceClasses();
@@ -28,7 +28,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   private ViaRule viaRule;
   private int traceClearanceClass;
 
-  /** if null, all signal layers may be used for routing */
+  /** If null, all signal layers may be used for routing. */
   private boolean shoveFixed;
 
   private boolean pullTight = true;
@@ -36,21 +36,21 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   private double minimumTraceLength = 0;
   private double maximumTraceLength = 0;
 
-  /** Creates a new instance of NetClass */
+  /** Creates a new instance of {@code NetClass}. */
   public NetClass(
-      String pName,
-      LayerStructure pLayerStructure,
-      ClearanceMatrix pClearanceMatrix,
-      boolean pIsIgnoredByAutorouter) {
-    this.name = pName;
-    this.boardLayerStructure = pLayerStructure;
-    this.clearanceMatrix = pClearanceMatrix;
-    this.traceHalfWidthArr = new int[pLayerStructure.arr.length];
-    this.activeRoutingLayerArr = new boolean[pLayerStructure.arr.length];
-    for (int i = 0; i < pLayerStructure.arr.length; i++) {
-      this.activeRoutingLayerArr[i] = pLayerStructure.arr[i].isSignal;
+      String name,
+      LayerStructure layerStructure,
+      ClearanceMatrix clearanceMatrix,
+      boolean ignoredByAutorouter) {
+    this.name = name;
+    this.boardLayerStructure = layerStructure;
+    this.clearanceMatrix = clearanceMatrix;
+    this.traceHalfWidthArr = new int[layerStructure.arr.length];
+    this.activeRoutingLayerArr = new boolean[layerStructure.arr.length];
+    for (int i = 0; i < layerStructure.arr.length; i++) {
+      this.activeRoutingLayerArr[i] = layerStructure.arr[i].isSignal;
     }
-    this.isIgnoredByAutorouter = pIsIgnoredByAutorouter;
+    this.isIgnoredByAutorouter = ignoredByAutorouter;
   }
 
   @Override
@@ -64,38 +64,39 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /** Changes the name of this net class. */
-  public void setName(String pName) {
-    this.name = pName;
+  public void setName(String name) {
+    this.name = name;
   }
 
-  /** Sets the trace half width used for routing to p_value on all layers. */
-  public void setTraceHalfWidth(int pValue) {
-    Arrays.fill(traceHalfWidthArr, pValue);
+  /** Sets the trace half-width used for routing to {@code value} on all layers. */
+  public void setTraceHalfWidth(int value) {
+    Arrays.fill(traceHalfWidthArr, value);
   }
 
-  /** Sets the trace half width used for routing to p_value on all inner layers. */
-  public void setTraceHalfWidthOnInner(int pValue) {
+  /** Sets the trace half-width used for routing to {@code value} on the input layer. */
+  public void setTraceHalfWidth(int layer, int value) {
+    traceHalfWidthArr[layer] = value;
+  }
+
+  /** Sets the trace half-width used for routing to {@code value} on all inner layers. */
+  public void setTraceHalfWidthOnInner(int value) {
     for (int i = 1; i < traceHalfWidthArr.length - 1; i++) {
-      traceHalfWidthArr[i] = pValue;
+      traceHalfWidthArr[i] = value;
     }
   }
 
-  /** Sets the trace half width used for routing to p_value on the input layer. */
-  public void setTraceHalfWidth(int pLayer, int pValue) {
-    traceHalfWidthArr[pLayer] = pValue;
-  }
-
+  /** Returns the number of layers in this net class. */
   public int layerCount() {
     return traceHalfWidthArr.length;
   }
 
-  /** Gets the trace half width used for routing on the input layer. */
-  public int getTraceHalfWidth(int pLayer) {
-    if (pLayer < 0 || pLayer >= traceHalfWidthArr.length) {
+  /** Gets the trace half-width used for routing on the input layer. */
+  public int getTraceHalfWidth(int layer) {
+    if (layer < 0 || layer >= traceHalfWidthArr.length) {
       FRLogger.warn(" NetClass.get_trace_half_width: p_layer out of range");
       return 0;
     }
-    return traceHalfWidthArr[pLayer];
+    return traceHalfWidthArr[layer];
   }
 
   /** Gets the clearance class used for routing traces with this net class. */
@@ -103,49 +104,49 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
     return this.traceClearanceClass;
   }
 
-  /** Sets the clearance class used for routing traces with this net rclass. */
-  public void setTraceClearanceClass(int pClearanceClassNo) {
-    this.traceClearanceClass = pClearanceClassNo;
+  /** Sets the clearance class used for routing traces with this net class. */
+  public void setTraceClearanceClass(int clearanceClass) {
+    this.traceClearanceClass = clearanceClass;
   }
 
-  /** Gets the via rule of this net rule. */
+  /** Gets the via rule of this net class. */
   public ViaRule getViaRule() {
     return this.viaRule;
   }
 
   /** Sets the via rule of this net class. */
-  public void setViaRule(ViaRule pViaRule) {
-    this.viaRule = pViaRule;
+  public void setViaRule(ViaRule viaRule) {
+    this.viaRule = viaRule;
   }
 
-  /** Returns, if traces and vias of this net class can be pushed. */
+  /** Returns whether traces and vias of this net class can be pushed. */
   public boolean isShoveFixed() {
     return this.shoveFixed;
   }
 
-  /** Sets, if traces and vias of this net class can be pushed. */
-  public void setShoveFixed(boolean pValue) {
-    this.shoveFixed = pValue;
+  /** Sets whether traces and vias of this net class can be pushed. */
+  public void setShoveFixed(boolean value) {
+    this.shoveFixed = value;
   }
 
-  /** Returns, if traces of this nets class are pulled tight. */
+  /** Returns whether traces of this net class are pulled tight. */
   public boolean getPullTight() {
     return this.pullTight;
   }
 
-  /** Sets, if traces of this nets class are pulled tight. */
-  public void setPullTight(boolean pValue) {
-    this.pullTight = pValue;
+  /** Sets whether traces of this net class are pulled tight. */
+  public void setPullTight(boolean value) {
+    this.pullTight = value;
   }
 
-  /** Returns, if the cycle remove algorithm ignores cycles, where conduction areas are involved */
+  /** Returns whether the cycle removal algorithm ignores cycles involving conduction areas. */
   public boolean getIgnoreCyclesWithAreas() {
     return this.ignoreCyclesWithAreas;
   }
 
-  /** Sets, if the cycle remove algorithm ignores cycles, where conduction areas are involved */
-  public void setIgnoreCyclesWithAreas(boolean pValue) {
-    this.ignoreCyclesWithAreas = pValue;
+  /** Sets whether the cycle removal algorithm ignores cycles involving conduction areas. */
+  public void setIgnoreCyclesWithAreas(boolean value) {
+    this.ignoreCyclesWithAreas = value;
   }
 
   /**
@@ -157,11 +158,12 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /**
-   * Sets the minimum trace length of this net class to p_value. If p_value is {@literal <}= 0,
+   * Sets the minimum trace length of this net class to {@code value}. If {@code value}
+   * is {@literal <}= 0,
    * there is no minimal trace length restriction.
    */
-  public void setMinimumTraceLength(double pValue) {
-    minimumTraceLength = pValue;
+  public void setMinimumTraceLength(double value) {
+    minimumTraceLength = value;
   }
 
   /**
@@ -173,76 +175,77 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   /**
-   * Sets the maximum trace length of this net class to p_value. If p_value is {@literal <}= 0,
+   * Sets the maximum trace length of this net class to {@code value}. If {@code value}
+   * is {@literal <}= 0,
    * there is no maximal trace length restriction.
    */
-  public void setMaximumTraceLength(double pValue) {
-    maximumTraceLength = pValue;
+  public void setMaximumTraceLength(double value) {
+    maximumTraceLength = value;
   }
 
-  /** Returns if the layer with index p_layer_no is active for routing */
-  public boolean isActiveRoutingLayer(int pLayerNo) {
-    if (pLayerNo < 0 || pLayerNo >= this.activeRoutingLayerArr.length) {
+  /** Returns whether the layer with the given index is active for routing. */
+  public boolean isActiveRoutingLayer(int layerNumber) {
+    if (layerNumber < 0 || layerNumber >= this.activeRoutingLayerArr.length) {
       return false;
     }
-    return this.activeRoutingLayerArr[pLayerNo];
+    return this.activeRoutingLayerArr[layerNumber];
   }
 
-  /** Sets the layer with index p_layer_no to p_active. */
-  public void setActiveRoutingLayer(int pLayerNo, boolean pActive) {
-    if (pLayerNo < 0 || pLayerNo >= this.activeRoutingLayerArr.length) {
+  /** Sets whether the layer with the given index is active for routing. */
+  public void setActiveRoutingLayer(int layerNumber, boolean active) {
+    if (layerNumber < 0 || layerNumber >= this.activeRoutingLayerArr.length) {
       return;
     }
-    this.activeRoutingLayerArr[pLayerNo] = pActive;
+    this.activeRoutingLayerArr[layerNumber] = active;
   }
 
-  /** Activates or deactivates all layers for routing */
-  public void setAllLayersActive(boolean pValue) {
-    Arrays.fill(this.activeRoutingLayerArr, pValue);
+  /** Activates or deactivates all layers for routing. */
+  public void setAllLayersActive(boolean value) {
+    Arrays.fill(this.activeRoutingLayerArr, value);
   }
 
-  /** Activates or deactivates all inner layers for routing */
-  public void setAllInnerLayersActive(boolean pValue) {
+  /** Activates or deactivates all inner layers for routing. */
+  public void setAllInnerLayersActive(boolean value) {
     for (int i = 1; i < traceHalfWidthArr.length - 1; i++) {
-      activeRoutingLayerArr[i] = pValue;
+      activeRoutingLayerArr[i] = value;
     }
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel pWindow, Locale pLocale) {
-    TextManager tm = new TextManager(this.getClass(), pLocale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    pWindow.appendBold(tm.getText("net_class_2") + " ");
-    pWindow.appendBold(this.name);
-    pWindow.appendBold(":");
-    pWindow.append(" " + tm.getText("traceClearanceClass") + " ");
-    String clName = clearanceMatrix.getName(this.traceClearanceClass);
-    pWindow.append(
-        clName,
+    window.appendBold(tm.getText("net_class_2") + " ");
+    window.appendBold(this.name);
+    window.appendBold(":");
+    window.append(" " + tm.getText("traceClearanceClass") + " ");
+    String clearanceName = clearanceMatrix.getName(this.traceClearanceClass);
+    window.append(
+        clearanceName,
         tm.getText("trace_clearance_class_2"),
         clearanceMatrix.getRow(this.traceClearanceClass));
     if (this.shoveFixed) {
-      pWindow.append(", " + tm.getText("shoveFixed"));
+      window.append(", " + tm.getText("shoveFixed"));
     }
-    pWindow.append(", " + tm.getText("viaRule") + " ");
-    pWindow.append(viaRule.name, tm.getText("via_rule_2"), viaRule);
+    window.append(", " + tm.getText("viaRule") + " ");
+    window.append(viaRule.name, tm.getText("via_rule_2"), viaRule);
     if (traceWidthIsLayerDependent()) {
       for (int i = 0; i < traceHalfWidthArr.length; i++) {
-        pWindow.newline();
-        pWindow.indent();
-        pWindow.append(tm.getText("traceWidth") + " ");
-        pWindow.append(2 * traceHalfWidthArr[i]);
-        pWindow.append(" " + tm.getText("on_layer") + " ");
-        pWindow.append(this.boardLayerStructure.arr[i].name);
+        window.newline();
+        window.indent();
+        window.append(tm.getText("traceWidth") + " ");
+        window.append(2 * traceHalfWidthArr[i]);
+        window.append(" " + tm.getText("on_layer") + " ");
+        window.append(this.boardLayerStructure.arr[i].name);
       }
     } else {
-      pWindow.append(", " + tm.getText("traceWidth") + " ");
-      pWindow.append(2 * traceHalfWidthArr[0]);
+      window.append(", " + tm.getText("traceWidth") + " ");
+      window.append(2 * traceHalfWidthArr[0]);
     }
-    pWindow.newline();
+    window.newline();
   }
 
-  /** Returns true, if the trace width of this class is not equal on all layers. */
+  /** Returns true if the trace width of this class is not equal on all layers. */
   public boolean traceWidthIsLayerDependent() {
     int compareValue = traceHalfWidthArr[0];
     for (int i = 1; i < traceHalfWidthArr.length; i++) {
@@ -255,7 +258,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
     return false;
   }
 
-  /** Returns true, if the trace width of this class is not equal on all inner layers. */
+  /** Returns true if the trace width of this class is not equal on all inner layers. */
   public boolean traceWidthIsInnerLayerDependent() {
 
     if (traceHalfWidthArr.length <= 3) {

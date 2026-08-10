@@ -2,6 +2,7 @@ package app.freerouting.core;
 
 import com.google.gson.annotations.SerializedName;
 
+/** Records resource usage for a routing job. */
 public class RouterJobResourceUsage {
 
   // Total CPU time used in seconds

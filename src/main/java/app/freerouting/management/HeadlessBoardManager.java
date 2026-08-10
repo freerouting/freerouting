@@ -251,35 +251,35 @@ public class HeadlessBoardManager implements BoardManager {
    * <p><strong>Note:</strong> If a board already exists, a warning is logged but the operation
    * proceeds, replacing the existing board.
    *
-   * @param pBoundingBox the rectangular boundary of the board
-   * @param pLayerStructure the layer stack-up definition
-   * @param pOutlineShapes array of shapes defining the board outline
-   * @param pOutlineClearanceClassName name of the clearance class for the outline
-   * @param pRules the board design rules and constraints
-   * @param pBoardCommunication communication interface for external integration
+   * @param boundingBox the rectangular boundary of the board
+   * @param layerStructure the layer stack-up definition
+   * @param outlineShapes array of shapes defining the board outline
+   * @param outlineClearanceClassName name of the clearance class for the outline
+   * @param rules the board design rules and constraints
+   * @param boardCommunication communication interface for external integration
    * @see RoutingBoard#RoutingBoard
    * @see app.freerouting.interactive.InteractiveSettings
    */
   @Override
   public void createBoard(
-      IntBox pBoundingBox,
-      LayerStructure pLayerStructure,
-      PolylineShape[] pOutlineShapes,
-      String pOutlineClearanceClassName,
-      BoardRules pRules,
-      Communication pBoardCommunication) {
+      IntBox boundingBox,
+      LayerStructure layerStructure,
+      PolylineShape[] outlineShapes,
+      String outlineClearanceClassName,
+      BoardRules rules,
+      Communication boardCommunication) {
     if (this.board != null) {
       routingJob.logWarning(" BoardHandling.create_board: board already created");
     }
     int outlineClClassNo = 0;
 
-    if (pRules != null) {
-      if (pOutlineClearanceClassName != null && pRules.clearanceMatrix != null) {
-        outlineClClassNo = pRules.clearanceMatrix.getNo(pOutlineClearanceClassName);
+    if (rules != null) {
+      if (outlineClearanceClassName != null && rules.clearanceMatrix != null) {
+        outlineClClassNo = rules.clearanceMatrix.getNo(outlineClearanceClassName);
         outlineClClassNo = Math.max(outlineClClassNo, 0);
       } else {
         outlineClClassNo =
-            pRules
+            rules
                 .getDefaultNetClass()
                 .defaultItemClearanceClasses
                 .get(DefaultItemClearanceClasses.ItemClass.AREA);
@@ -287,12 +287,12 @@ public class HeadlessBoardManager implements BoardManager {
     }
     this.board =
         new RoutingBoard(
-            pBoundingBox,
-            pLayerStructure,
-            pOutlineShapes,
+            boundingBox,
+            layerStructure,
+            outlineShapes,
             outlineClClassNo,
-            pRules,
-            pBoardCommunication);
+            rules,
+            boardCommunication);
     applyCopperToEdgeClearanceOverride();
     applyHoleClearanceOverride();
   }
@@ -1009,18 +1009,26 @@ public class HeadlessBoardManager implements BoardManager {
       sb.append("\nProper Definition and Best Practices for Power Planes:\n")
           .append("1. What Belongs on a Power Plane:\n")
           .append(
-              "   - Solid Copper Pours: A single, uninterrupted sheet of copper assigned to one voltage (e.g., +3.3V).\n")
+              "   - Solid Copper Pours: A single, uninterrupted sheet of copper assigned to one "
+                  + "voltage (e.g., +3.3V).\n")
           .append(
-              "   - Split Planes: Multiple distinct voltage zones divided by thin isolation gaps (puzzle pieces).\n")
+              "   - Split Planes: Multiple distinct voltage zones divided by thin isolation gaps "
+                  + "(puzzle pieces).\n")
           .append(
-              "   - Vias and Anti-Pads: Plated holes passing through the board, surrounded by circular voids (anti-pads) to prevent shorting.\n")
+              "   - Vias and Anti-Pads: Plated holes passing through the board, surrounded by "
+                  + "circular voids (anti-pads) to prevent shorting.\n")
           .append(
-              "   - Thermal Reliefs: Spoked connections for vias or pins that connect to the plane, facilitating soldering.\n")
+              "   - Thermal Reliefs: Spoked connections for vias or pins that connect to the "
+                  + "plane, facilitating soldering.\n")
           .append("2. Why Signal Wires/Traces are Banned:\n")
           .append(
-              "   - Destroyed Return Paths: High-speed signals on adjacent layers couple to the solid plane below/above as return paths. Crossing a trace gap detours return currents, causing severe EMI and signal integrity issues.\n")
+              "   - Destroyed Return Paths: High-speed signals on adjacent layers couple to the "
+                  + "solid plane below/above as return paths. Crossing a trace gap detours return "
+                  + "currents, causing severe EMI and signal integrity issues.\n")
           .append(
-              "   - Compromised Power Delivery: Power planes should provide the lowest impedance path. Routing traces chops up the copper, creating bottleneck restrictions and voltage drops.\n");
+              "   - Compromised Power Delivery: Power planes should provide the lowest impedance "
+                  + "path. Routing traces chops up the copper, creating bottleneck restrictions "
+                  + "and voltage drops.\n");
 
       FRLogger.warn(sb.toString());
     }

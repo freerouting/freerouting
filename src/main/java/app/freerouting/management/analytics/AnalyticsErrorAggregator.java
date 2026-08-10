@@ -44,7 +44,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * <h2>Thread safety</h2>
  *
- * All mutable state is either {@link java.util.concurrent.atomic atomic} or stored in a {@link
+ * <p>All mutable state is either {@link java.util.concurrent.atomic atomic} or stored in a {@link
  * ConcurrentHashMap}. The flush uses an atomic read-and-zero ({@link AtomicLong#getAndSet}) so
  * counts that arrive between the snapshot and the map cleanup are not lost — they stay in the map
  * and are captured by the next flush.
@@ -288,25 +288,26 @@ final class AnalyticsErrorAggregator {
     //   and the origin server.  The application itself is not involved.
     if (key.contains("IOException") && (key.contains("code: 530") || key.contains(" 530"))) {
       return "→ Action: HTTP 530 is a Cloudflare proxy error — the request never reached the "
-          + "origin server. Error 1033 in the response body means the Cloudflare Argo Tunnel "
-          + "to the origin is down or misconfigured. Check the Cloudflare dashboard (Zero Trust → "
+          + "origin server. Error 1033 in the response body means the Cloudflare Argo Tunnel to "
+          + "the origin is down or misconfigured. Check the Cloudflare dashboard (Zero Trust → "
           + "Access → Tunnels) and verify that the tunnel connector on the origin host is running "
           + "(e.g. `cloudflared tunnel run <name>`).";
     }
     if (key.contains("IOException") && (key.contains("code: 52") || key.contains(" 52"))) {
       return "→ Action: HTTP 52x is a Cloudflare error meaning the origin server returned an "
-          + "unexpected or empty response to Cloudflare. Check origin server health and Cloudflare "
-          + "error logs in the dashboard.";
+          + "unexpected or empty response to Cloudflare. Check origin server health and "
+          + "Cloudflare error logs in the dashboard.";
     }
     // ---- Application-level HTTP errors ----
     if (key.contains("IOException") && (key.contains(" 500") || key.contains("code: 500"))) {
-      return "→ Action: The analytics server returned HTTP 500. Check the server logs and verify that the "
-          + "FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY environment variable "
-          + "is set to a valid service-account JSON on the analytics server.";
+      return "→ Action: The analytics server returned HTTP 500. Check the server logs and verify "
+          + "that the FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY "
+          + "environment variable is set to a valid service-account JSON on the analytics server.";
     }
     if (key.contains("IOException") && (key.contains(" 401") || key.contains("code: 401"))) {
-      return "→ Action: HTTP 401 Unauthorized. The write key or service-account credentials used by this "
-          + "instance are invalid or expired. Check FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY.";
+      return "→ Action: HTTP 401 Unauthorized. The write key or service-account credentials used "
+          + "by this instance are invalid or expired. Check "
+          + "FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY.";
     }
     // ---- Network / transport errors ----
     if (key.contains("UnknownHostException")) {
@@ -318,8 +319,8 @@ final class AnalyticsErrorAggregator {
           + "host and the analytics endpoint, or verify that the server is running.";
     }
     if (key.contains("SocketException") && key.contains("reset")) {
-      return "→ Action: Server closed the connection unexpectedly. This may indicate server overload, "
-          + "an intermediate proxy resetting idle connections, or a server-side crash.";
+      return "→ Action: Server closed the connection unexpectedly. This may indicate server "
+          + "overload, an intermediate proxy resetting idle connections, or a server-side crash.";
     }
     if (key.contains("SSLHandshakeException")) {
       return "→ Action: TLS handshake failed. Verify that the JRE trust store contains the server "

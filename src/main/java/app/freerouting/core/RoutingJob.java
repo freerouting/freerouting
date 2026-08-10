@@ -117,10 +117,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public transient Instant timeoutAt;
   private boolean isCancelledByUser;
 
+  /** Returns whether the user cancelled this job. */
   public boolean isCancelledByUser() {
     return isCancelledByUser;
   }
 
+  /** Sets whether the user cancelled this job. */
   public void setCancelledByUser(boolean cancelledByUser) {
     isCancelledByUser = cancelledByUser;
   }
@@ -146,8 +148,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   /** Shows a file chooser for opening a design file. */
-  public static File showOpenDialog(String pDefaultDirectory, Component pParent) {
-    JFileChooser fileChooser = new JFileChooser(pDefaultDirectory);
+  public static File showOpenDialog(String defaultDirectory, Component parent) {
+    JFileChooser fileChooser = new JFileChooser(defaultDirectory);
     fileChooser.setMinimumSize(new Dimension(500, 250));
 
     // Add the file filter for SPECCTRA Design .DSN files
@@ -168,10 +170,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     // Set a file filter as the default one
     fileChooser.setFileFilter(dsnFilter);
 
-    fileChooser.showOpenDialog(pParent);
+    fileChooser.showOpenDialog(parent);
     return fileChooser.getSelectedFile();
   }
 
+  /** Detects the file format from its binary content. */
   public static FileFormat getFileFormat(byte[] content) {
     if (content == null) {
       return FileFormat.UNKNOWN;
@@ -242,6 +245,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     return FileFormat.UNKNOWN;
   }
 
+  /** Detects the file format from a file path extension. */
   public static FileFormat getFileFormat(Path path) {
     String filename = path.toString().toLowerCase();
     String[] parts = filename.split("\\.");
@@ -260,14 +264,17 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     return FileFormat.UNKNOWN;
   }
 
+  /** Returns the current routing pass. */
   public int getCurrentPass() {
     return currentPass;
   }
 
+  /** Sets the current routing pass. */
   public void setCurrentPass(int currentPass) {
     this.currentPass = currentPass;
   }
 
+  /** Returns the elapsed job duration, or {@code null} before the job starts. */
   public Duration getDuration() {
     if (startedAt == null) {
       return null;
@@ -278,21 +285,35 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     return Duration.between(startedAt, Instant.now());
   }
 
+  /** Sets the input from file content. */
   public boolean setInput(byte[] inputFileContent) {
     this.input = new BoardFileDetails();
     this.input.addUpdatedEventListener(_ -> this.fireInputUpdatedEvent());
     return this.tryToSetInput(inputFileContent);
   }
 
+  /** Loads the input file from the specified path. */
+  public void setInput(String inputFilePath) throws IOException {
+    setInput(new File(inputFilePath));
+  }
+
+  /** Loads the input file from the specified file. */
+  public void setInput(File inputFile) throws IOException {
+    setInputFromFile(inputFile);
+  }
+
+  /** Returns the rules file associated with the output file. */
   public File getRulesFile() {
     return new File(changeFileExtension(this.output.getAbsolutePath(), RULES_FILE_EXTENSION));
   }
 
+  /** Returns the EAGLE script file associated with the output file. */
   public File getEagleScriptFile() {
     return new File(
         changeFileExtension(this.output.getAbsolutePath(), EAGLE_SCRIPT_FILE_EXTENSION));
   }
 
+  /** Sets a placeholder input file for the specified path. */
   public void setDummyInputFile(String filename) {
     this.input = new BoardFileDetails();
 
@@ -345,6 +366,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         .toString();
   }
 
+  /** Attempts to set the output file and returns whether its format is supported. */
   public boolean tryToSetOutputFile(File outputFile) {
     if (outputFile == null) {
       return false;
@@ -367,10 +389,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     }
   }
 
+  /** Returns the input file details as JSON. */
   public String getInputFileDetails() {
     return new BoardFileDetails(this.input.getFile()).toString();
   }
 
+  /** Returns the output file details as JSON. */
   public String getOutputFileDetails() {
     return new BoardFileDetails(this.output.getFile()).toString();
   }
@@ -386,15 +410,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     }
   }
 
+  /** Returns the input file details. */
   public BoardFileDetails getInput() {
     return input;
   }
 
-  public void setInput(String inputFilePath) throws IOException {
-    setInput(new File(inputFilePath));
-  }
-
-  public void setInput(File inputFile) throws IOException {
+  private void setInputFromFile(File inputFile) throws IOException {
     // Read the file contents into a byte array and initialize the RoutingJob object
     // with it
     FileInputStream fileInputStream = new FileInputStream(inputFile);
@@ -432,6 +453,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     fireInputUpdatedEvent();
   }
 
+  /** Applies the supplied router settings and returns whether any value changed. */
   public boolean setSettings(RouterSettings settings) {
     // Update the router settings that are defined in the settings parameter. All
     // other settings should remain the same.
@@ -441,10 +463,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     return wereSettingsChanged;
   }
 
+  /** Registers a listener for settings updates. */
   public void addSettingsUpdatedEventListener(RoutingJobUpdatedEventListener listener) {
     settingsUpdatedEventListeners.add(listener);
   }
 
+  /** Notifies listeners that settings changed. */
   public void fireSettingsUpdatedEvent() {
     RoutingJobUpdatedEvent event = new RoutingJobUpdatedEvent(this, this);
     for (RoutingJobUpdatedEventListener listener : settingsUpdatedEventListeners) {
@@ -452,10 +476,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     }
   }
 
+  /** Registers a listener for input updates. */
   public void addInputUpdatedEventListener(RoutingJobUpdatedEventListener listener) {
     inputUpdatedEventListeners.add(listener);
   }
 
+  /** Notifies listeners that input changed. */
   public void fireInputUpdatedEvent() {
     RoutingJobUpdatedEvent event = new RoutingJobUpdatedEvent(this, this);
     for (RoutingJobUpdatedEventListener listener : inputUpdatedEventListeners) {
@@ -463,10 +489,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     }
   }
 
+  /** Registers a listener for output updates. */
   public void addOutputUpdatedEventListener(RoutingJobUpdatedEventListener listener) {
     outputUpdatedEventListeners.add(listener);
   }
 
+  /** Notifies listeners that output changed. */
   public void fireOutputUpdatedEvent() {
     RoutingJobUpdatedEvent event = new RoutingJobUpdatedEvent(this, this);
     for (RoutingJobUpdatedEventListener listener : outputUpdatedEventListeners) {
@@ -474,10 +502,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     }
   }
 
+  /** Registers a listener for new log entries. */
   public void addLogEntryAddedEventListener(RoutingJobLogEntryAddedEventListener listener) {
     logEntryAddedEventListeners.add(listener);
   }
 
+  /** Notifies listeners that a log entry was added. */
   public void fireLogEntryAddedEvent(LogEntry logEntry) {
     RoutingJobLogEntryAddedEvent event = new RoutingJobLogEntryAddedEvent(this, this, logEntry);
     for (RoutingJobLogEntryAddedEventListener listener : logEntryAddedEventListeners) {
@@ -485,21 +515,25 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     }
   }
 
+  /** Adds an informational log entry for this job. */
   public void logInfo(String message) {
     LogEntry logEntry = FRLogger.info("[" + this.shortName + "] " + message, this.id);
     fireLogEntryAddedEvent(logEntry);
   }
 
+  /** Adds a warning log entry for this job. */
   public void logWarning(String message) {
     LogEntry logEntry = FRLogger.warn("[" + this.shortName + "] " + message, this.id);
     fireLogEntryAddedEvent(logEntry);
   }
 
+  /** Adds an error log entry for this job. */
   public void logError(String message, Throwable ex) {
     LogEntry logEntry = FRLogger.error("[" + this.shortName + "] " + message, this.id, ex);
     fireLogEntryAddedEvent(logEntry);
   }
 
+  /** Adds a debug log entry for this job. */
   public void logDebug(String message) {
     LogEntry logEntry = FRLogger.debug("[" + this.shortName + "] " + message, this.id);
     fireLogEntryAddedEvent(logEntry);

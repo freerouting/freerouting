@@ -24,8 +24,9 @@ import app.freerouting.settings.SettingsSource;
  *
  * <h2>Override contract for {@link #getSettings()}</h2>
  *
- * Implementations <strong>must</strong> return a freshly constructed {@link RouterSettings} whose
- * fields contain only the values this source explicitly provides. All other fields must remain
+ * <p>Implementations <strong>must</strong> return a freshly constructed {@link RouterSettings}
+ * whose fields contain only the values this source explicitly provides. All other fields must
+ * remain
  * {@code null} so the {@link app.freerouting.settings.SettingsMerger} can resolve them from their
  * authoritative sources. {@code InteractiveSettings} honours this contract by populating only
  * {@code tracePullTightAccuracy} and {@code automaticNeckdown}.

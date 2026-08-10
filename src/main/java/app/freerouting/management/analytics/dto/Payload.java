@@ -2,6 +2,7 @@ package app.freerouting.management.analytics.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/** Carries one analytics identification or tracking event. */
 @Schema(description = "Analytics tracking payload for user events and identification")
 public class Payload {
 
