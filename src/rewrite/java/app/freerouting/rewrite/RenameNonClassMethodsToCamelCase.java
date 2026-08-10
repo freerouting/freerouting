@@ -1,5 +1,7 @@
 package app.freerouting.rewrite;
 
+import static org.openrewrite.internal.NameCaseConvention.LOWER_CAMEL;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,8 +24,6 @@ import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.JavaSourceFile;
 import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.TypeUtils;
-
-import static org.openrewrite.internal.NameCaseConvention.LOWER_CAMEL;
 
 /**
  * Renames snake_case methods declared in interfaces and enums.
@@ -145,6 +145,7 @@ public class RenameNonClassMethodsToCamelCase
     };
   }
 
+  /** Collects method rename changes for later application. */
   public static final class MethodRenamePlan {
     private final List<ChangeMethodName> changes = new ArrayList<>();
 

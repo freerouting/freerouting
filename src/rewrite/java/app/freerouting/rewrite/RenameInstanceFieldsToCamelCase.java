@@ -1,5 +1,7 @@
 package app.freerouting.rewrite;
 
+import static org.openrewrite.internal.NameCaseConvention.LOWER_CAMEL;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,8 +34,6 @@ import org.openrewrite.java.tree.JavaSourceFile;
 import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.TypeUtils;
 
-import static org.openrewrite.internal.NameCaseConvention.LOWER_CAMEL;
-
 /**
  * Renames non-constant instance fields at any access level to lowerCamelCase.
  *
@@ -41,10 +41,12 @@ import static org.openrewrite.internal.NameCaseConvention.LOWER_CAMEL;
  * references. Does not use {@code ChangeFieldName}, which also renames parameters and locals
  * that share a field name.
  */
-public class RenameInstanceFieldsToCamelCase extends ScanningRecipe<RenameInstanceFieldsToCamelCase.FieldRenamePlan> {
+public class RenameInstanceFieldsToCamelCase
+    extends ScanningRecipe<RenameInstanceFieldsToCamelCase.FieldRenamePlan> {
 
   /** Shared with {@link ApplyCollectedFieldRenames} within the same rewriteRun invocation. */
-  static final Map<String, String> COLLECTED_RENAMES = new java.util.concurrent.ConcurrentHashMap<>();
+  static final Map<String, String> COLLECTED_RENAMES =
+      new java.util.concurrent.ConcurrentHashMap<>();
 
   private static final AnnotationMatcher LOMBOK_ANNOTATION = new AnnotationMatcher("@lombok.*");
 
@@ -63,9 +65,11 @@ public class RenameInstanceFieldsToCamelCase extends ScanningRecipe<RenameInstan
 
   @Override
   public String getDescription() {
-    return """
+    return
+        """
         Reformat instance field names to lowerCamelCase at any access level. \
-        Skips static final constants and Lombok-annotated types.""";
+        Skips static final constants and Lombok-annotated types.
+        """;
   }
 
   @Override
@@ -106,7 +110,8 @@ public class RenameInstanceFieldsToCamelCase extends ScanningRecipe<RenameInstan
       }
 
       @Override
-      public J.ClassDeclaration visitClassDeclaration(J.ClassDeclaration classDecl, ExecutionContext ctx) {
+      public J.ClassDeclaration visitClassDeclaration(
+          J.ClassDeclaration classDecl, ExecutionContext ctx) {
         if (service(AnnotationService.class).matches(getCursor(), LOMBOK_ANNOTATION)) {
           return classDecl;
         }
@@ -193,7 +198,8 @@ public class RenameInstanceFieldsToCamelCase extends ScanningRecipe<RenameInstan
     };
   }
 
-  private static final class RenameSameClassFieldRefsVisitor extends JavaIsoVisitor<ExecutionContext> {
+  private static final class RenameSameClassFieldRefsVisitor
+      extends JavaIsoVisitor<ExecutionContext> {
     private final Map<String, String> renamesInClass;
 
     RenameSameClassFieldRefsVisitor(Map<String, String> renamesInClass) {
@@ -287,10 +293,12 @@ public class RenameInstanceFieldsToCamelCase extends ScanningRecipe<RenameInstan
     }
   }
 
+  /** Collects field rename changes grouped by enclosing class. */
   public static final class FieldRenamePlan {
     private final Map<String, List<ChangeFieldName>> changesByClass = new LinkedHashMap<>();
     private final Map<String, FieldRenameInfo> renameMap = new LinkedHashMap<>();
 
+    /** Describes one field rename. */
     public record FieldRenameInfo(String classFqn, String fromName, String toName) {}
 
     void add(String enclosingClassFqn, ChangeFieldName change) {

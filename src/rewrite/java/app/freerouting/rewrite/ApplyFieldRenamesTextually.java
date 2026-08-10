@@ -21,6 +21,7 @@ public class ApplyFieldRenamesTextually extends JavaIsoVisitor<ExecutionContext>
 
   private final Map<String, String> renames;
 
+  /** Creates a visitor that applies the supplied field renames textually. */
   public ApplyFieldRenamesTextually(Map<String, String> renames) {
     this.renames = renames;
   }

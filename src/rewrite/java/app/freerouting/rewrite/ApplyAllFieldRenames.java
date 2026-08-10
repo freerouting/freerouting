@@ -7,11 +7,14 @@ import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.JLeftPadded;
 import org.openrewrite.java.tree.JavaType;
 
-/** Applies field declaration and reference renames from a global rename map using OpenRewrite AST. */
+/**
+ * Applies field declaration and reference renames from a global rename map using OpenRewrite AST.
+ */
 public class ApplyAllFieldRenames extends JavaIsoVisitor<ExecutionContext> {
 
   private final Map<String, String> renames;
 
+  /** Creates a visitor that applies the supplied field renames. */
   public ApplyAllFieldRenames(Map<String, String> renames) {
     this.renames = renames;
   }

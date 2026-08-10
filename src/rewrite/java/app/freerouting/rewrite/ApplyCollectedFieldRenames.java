@@ -33,7 +33,8 @@ public class ApplyCollectedFieldRenames extends Recipe {
 
   @Override
   public String getDescription() {
-    return "Applies collected field renames to remaining references using word-boundary replacement.";
+    return "Applies collected field renames to remaining references using word-boundary "
+        + "replacement.";
   }
 
   @Override

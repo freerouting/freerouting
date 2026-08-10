@@ -1214,7 +1214,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           "",
           new Point[0]);
 
-      if (this.settings.saveIntermediateStages) {
+      if (Boolean.TRUE.equals(this.settings.saveIntermediateStages)) {
         fireBoardSnapshotEvent(this.board);
       }
 

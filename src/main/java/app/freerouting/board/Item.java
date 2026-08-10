@@ -75,10 +75,10 @@ public abstract class Item
       FixedState fixedState,
       BasicBoard board) {
     if (netNoArr == null) {
-      netNoArr = new int[0];
+      this.netNoArr = new int[0];
     } else {
-      netNoArr = new int[netNoArr.length];
-      System.arraycopy(netNoArr, 0, netNoArr, 0, netNoArr.length);
+      this.netNoArr = new int[netNoArr.length];
+      System.arraycopy(netNoArr, 0, this.netNoArr, 0, netNoArr.length);
     }
     clearanceClass = clearanceType;
     this.componentNo = componentNo;

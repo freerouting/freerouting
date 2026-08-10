@@ -1,5 +1,8 @@
 package app.freerouting.rewrite;
 
+import static java.util.Collections.emptyMap;
+import static org.openrewrite.internal.NameCaseConvention.LOWER_CAMEL;
+
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,9 +25,6 @@ import org.openrewrite.java.tree.JavaSourceFile;
 import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.staticanalysis.csharp.CSharpFileChecker;
 
-import static java.util.Collections.emptyMap;
-import static org.openrewrite.internal.NameCaseConvention.LOWER_CAMEL;
-
 /**
  * Renames snake_case method and constructor parameters to lowerCamelCase.
  *
@@ -46,9 +46,11 @@ public class RenameMethodParametersToCamelCase extends Recipe {
 
   @Override
   public String getDescription() {
-    return """
+    return
+        """
         Rename snake_case method and constructor parameters to lowerCamelCase. \
-        RenameLocalVariablesToCamelCase deliberately skips parameters.""";
+        RenameLocalVariablesToCamelCase deliberately skips parameters.
+        """;
   }
 
   @Override
