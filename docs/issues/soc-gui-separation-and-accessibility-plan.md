@@ -1,6 +1,6 @@
 # GUI Separation and Accessibility Migration Plan
 
-> Status: **Ready to implement** (architectural decisions locked; DeepSeek review incorporated; implementation not started)
+> Status: **Ready to implement** (D1–D30 locked; M1=A / M4=B incorporated; implementation not started)
 >
 > Scope: Separate GUI interaction and rendering from the headless routing pipeline, establish automated GUI accessibility coverage, and reorganize only the packages required for that separation.
 >
@@ -25,7 +25,7 @@
 | **6** Invert board rendering | Domain stops painting; GUI renderer owns paint (revertible commits) | **Critical** | **High** | 1, 5 |
 | **7** Invert autorouter diagnostics | Engine emits data; GUI/debug draws | High | Medium–High | 1, 6* |
 | **8** Move `interactive` → `gui.interactive` | Flat package rename/move | Medium | Medium | 3–5 |
-| **9** Extract `gui.session` | Move session cluster out of interactive; ports + EDT | High | Medium | 3, 8 |
+| **9** Extract `gui.session` | Session cluster + session-owned facade/`InteractiveCommand`; views bootstrap | High | Medium | 3, 8 |
 | **10** Move `boardgraphics` → `gui.rendering` | Rendering under GUI + `ScreenTransform` | Medium | Low–Medium | 6, 7 |
 | **11** Accessibility expansion + CI | Broader coverage; path-filtered `testGui` | High | Medium | 2 |
 | **12** Final cleanup + docs | Strict ArchUnit; architecture docs; empty freeze ledger | High | Low | all prior |
@@ -52,14 +52,18 @@ This is the **strict** package graph. §1.2 is only a narrative summary.
 gui (views / windows / menus / panels)
   → may use gui.interactive, gui.session, gui.rendering, management, board, …
 
-gui.interactive (editor states; commands flattened into this package)
+gui.interactive (editor states; implements session-owned command/facade interfaces)
   → may use gui.session, gui.rendering, board, …
 
-gui.session (GuiBoardManager, InteractiveSettings, GUI action threads)
+gui.session (GuiBoardManager, InteractiveSettings, GUI action threads,
+             InteractiveCommand + interactive facade/API types)
   → may use management, board, …
   → may use gui.rendering  (D26 — accepted; manager owns GraphicsContext state today)
-  → must NOT depend on concrete gui.interactive *State types after Phase 9
-     (D27 — decouple via narrow facade/API; states may depend on session)
+  → must NOT depend on gui.interactive (D27 / D30)
+     — no concrete *State types, and no InteractiveCommand interface from interactive
+     — facade + InteractiveCommand (+ handles) live in gui.session (or gui.session.api)
+     — concrete states in gui.interactive implement those session-owned interfaces
+     — gui (views) owns initial-state bootstrap/registration (may see both packages)
 
 gui.rendering (paint only)
   → may read board / diagnostic snapshots
@@ -73,10 +77,10 @@ board / rules / autoroute / drc / geometry / datastructures / settings / logger 
   → may use java.awt.geom.** only (explicit whitelist)
 ```
 
-**Phase-9 note:** Until the interactive facade exists, a temporary §12 freeze on `gui.session → concrete *State` is allowed only while the facade is being introduced in the same phase. By Phase 9 exit, session depends on the facade/API only — not on concrete state classes.
+**Phase-9 note:** Until the session-owned facade exists, a temporary §12 freeze on `gui.session → gui.interactive` is allowed only while the facade is being introduced in the same phase. By Phase 9 exit there must be **no** `gui.session → gui.interactive` edge (ArchUnit slice-cycle check must pass).
 ### 1.2 Narrative (non-authoritative)
 
-Views and editor states sit above a GUI session façade. Rendering is a **sibling** of session: views/interactive use it for paint, and **session may also use it** because `GuiBoardManager` owns `GraphicsContext` state (D26). Headless services and the routing pipeline sit below and must not see GUI types. After Phase 9, session talks to editor states only through a narrow facade (D27).
+Views and editor states sit above a GUI session façade. Rendering is a **sibling** of session: views/interactive use it for paint, and **session may also use it** because `GuiBoardManager` owns `GraphicsContext` state (D26). After Phase 9, session-owned interfaces (facade + `InteractiveCommand`) live in `gui.session`; concrete states in `gui.interactive` implement them; **views bootstrap** the initial state (D27/D30). Headless services and the routing pipeline sit below and must not see GUI types.
 
 **Naming collision warning:** `management.Session` / `getPrimarySession` (UUID-backed job/session registry) is **unrelated** to package `gui.session` (Swing GUI board-session façade). Do not conflate them in reviews.
 
@@ -94,15 +98,15 @@ Views and editor states sit above a GUI session façade. Rendering is a **siblin
 | D8 | A11y tooling | **Pure JDK `AccessibleContext` harness** |
 | D9 | Canvas a11y depth | **Critical keyboard/menu alternatives + inspect/item lists** |
 | D10 | Rendering package | **`app.freerouting.gui.rendering`** |
-| D11 | Interactive move | **Flat `gui.interactive` first** — flatten `interactive.commands` into `gui.interactive` (no `commands` subpackage) |
+| D11 | Interactive move | **Flat `gui.interactive` first** — flatten `interactive.commands` types into `gui.interactive` sources initially; Phase 9 moves the **`InteractiveCommand` interface** into `gui.session` (D30) |
 | D12 | `GuiBoardManager` home | **Phase 8 park in `gui.interactive`; Phase 9 extract to `gui.session`** |
 | D13 | Ratsnest compute | **Keep in `drc`** (`NetIncompletes` / `AirLine`); GUI presentation only outside |
 | D14 | `ObjectInfoPanel` | **Keep AWT-free interface in `board`**; GUI implements |
 | D15 | AWT policy | **Whitelist `java.awt.geom.*`; ban Swing + AWT UI types** |
 | D16 | `SessionManager` primary session | **`getPrimarySession` / `setPrimarySession`** (management UUID session — not `gui.session`) |
 | D17 | `.frb` save/load code | **Keep code**; there are no `.frb` fixtures to delete |
-| D18 | Graphics transform rename | **`CoordinateTransform` → `ScreenTransform`** |
-| D19 | A11y locale coverage | **English + Hungarian (`hu`)** |
+| D18 | Graphics transform rename | **Rename only `boardgraphics.CoordinateTransform` → `ScreenTransform`.** `board.CoordinateTransform` and `io.CoordinateTransform` stay unchanged. |
+| D19 | A11y locale coverage | **English + Hungarian (`hu`)** (absorbs former R5 “EN+1” + R15 “pick `hu`”) |
 | D20 | `gui.session` membership | **§4.4 default**, adjusted only by Phase 1 inventory |
 | D21 | `InteractiveSettings` rename | **Keep name** |
 | D22 | Accessible locator mechanism | **Stable locator constants + one shared registry/helper**; harness finds by locator, not translated label |
@@ -110,9 +114,10 @@ Views and editor states sit above a GUI session façade. Rendering is a **siblin
 | D24 | Routing parity baseline | **Phase out v1.9 as primary baseline.** Stable **v2.3.0** is the new baseline. Compare WIP to **v2.3.0**. Capture v2.3.0 golden metrics in Phase 0/1; update AGENTS.md in this initiative. |
 | D25 | `testGui` in Gradle task graph | **`testGui` is part of `testAll`**. It is **not** part of `test` or `testSlow`. Path-filtered CI may still run `testGui` alone on GUI paths. |
 | D26 | `gui.session` → `gui.rendering` | **Allowed** for this initiative (`GuiBoardManager` owns `GraphicsContext` state). Document honestly in §1.1. Optional later decoupling is out of scope. |
-| D27 | `gui.session` → interactive states | **Decouple in Phase 9** via a narrow facade/API so session does not import concrete `*State` types. States may depend on session. |
-| D28 | Parity gate frequency | **Full WIP-vs-v2.3.0 compare at Phase 5 and Phase 6 exits only.** Phases 7–8 get a **cheap** golden-fixture full-DRC smoke (no full version compare). |
+| D27 | `gui.session` ↔ interactive decoupling | **Decouple in Phase 9** so session does not import **any** `gui.interactive` type (not only concrete `*State`). States may depend on session. See **D30** for package ownership + bootstrap. |
+| D28 | Parity gate frequency | **Full WIP-vs-v2.3.0 compare at Phase 5 and Phase 6 exits only.** Phases 7–8 get a **cheap** golden-fixture smoke: full DRC **and** completion/unrouted-net parity vs Phase 0 goldens (no full version compare). |
 | D29 | Clearance gate metric | Use **`DesignRulesChecker.getAllClearanceViolations()`**, not `BoardStatistics.clearanceViolations.totalCount`. |
+| D30 | Facade / command package + bootstrap | **Facade + `InteractiveCommand` (+ handles) live in `gui.session`** (or `gui.session.api`). Concrete states in `gui.interactive` implement them. **`gui` views own initial-state bootstrap/registration.** No `gui.session → gui.interactive` edge after Phase 9. |
 
 - No `.frb` backward-compat `ObjectInputStream.resolveClass` mapping (and no `.frb` fixtures exist to migrate).
 - No headful / Xvfb GUI CI requirement.
@@ -122,17 +127,17 @@ Views and editor states sit above a GUI session façade. Rendering is a **siblin
 
 1. Debt tracker → §12; stale standalone tracker retired.
 2. §1.1 authoritative graph; rendering is a sibling of session (**and session may use rendering — D26**).
-3. Decision IDs contiguous **D1–D29**.
+3. Decision IDs contiguous **D1–D30**.
 4. Package map includes headless-safe support packages; `core` listed in ban set.
 5. `testGui` forces headless; belongs in `testAll` only.
-6. Phase 0/1 inventories: DSN coverage, collisions, Swing retags, worker→Swing EDT, `commands` flatten.
+6. Phase 0/1 inventories: DSN coverage, collisions (incl. cross-package `CoordinateTransform`), Swing retags, worker→Swing EDT, `commands` flatten.
 7. Phase 6 revertible commits + early offscreen smoke.
 8. A11y harness EDT asserts; locator registry; EN+`hu` + Hungarian resource check.
 9. Routing parity baseline **v2.3.0** (D24) with **early golden-metric capture** in Phase 0/1; AGENTS.md updated in this initiative.
 10. Full DRC gate via `DesignRulesChecker.getAllClearanceViolations()` (D29).
-11. Phase 9 decouples session from concrete states via facade (D27).
-12. `interactive.commands` flattens into `gui.interactive` (D11 / N9).
-13. Parity compares only at Phase 5/6; Phases 7–8 get cheap full-DRC smoke (D28).
+11. Phase 9: session-owned facade + `InteractiveCommand` in `gui.session`; views bootstrap (D27/D30); no session→interactive edge.
+12. `interactive.commands` types flatten then `InteractiveCommand` moves to session (D11/D30).
+13. Parity compares only at Phase 5/6; Phases 7–8 cheap smoke = full DRC **+ completion** (D28).
 14. Scale ~116 GUI-related classes.
 
 ### 3.1 Former open-point remap
@@ -142,12 +147,17 @@ Views and editor states sit above a GUI session façade. Rendering is a **siblin
 | R1 | D16 (`getPrimarySession`) |
 | R2 | D22 (locator registry) |
 | R3 | D17 (keep `.frb` code) |
-| R4 | D18 (`ScreenTransform`) |
-| R5 | D19 (`hu`) |
+| R4 | D18 (`ScreenTransform`; graphics only) |
+| R5 | D19 (EN+1 policy; refined by R15) |
 | R6 | D20 (§4.4 session cluster) |
 | R7 | D21 (keep `InteractiveSettings` name) |
-| R15–R17 | D19 / D24 / D25 |
+| R15 | D19 (pick `hu` — same decision as R5) |
+| R16 | D24 (v2.3.0 baseline) |
+| R17 | D25 (`testGui` in `testAll`) |
 | N1 / N6 / N9 / N11 | D27 / D26 / D11 / D28 |
+| M1 / M4 | D30 / D28 (completion added) |
+
+R8–R14, R18, R19 remain open — see §10.
 
 ## 4. Target structure
 
@@ -162,9 +172,10 @@ app.freerouting
 ├── api
 └── gui
     ├── …                # existing Swing windows/menus/panels (flat; no further split)
-    ├── interactive      # editor states + flattened commands (after Phase 8/9)
-    ├── session          # GuiBoardManager, InteractiveSettings, ScreenMessages, GUI action threads
-    │                    # may use gui.rendering (D26)
+    ├── interactive      # concrete editor states (implements session-owned command/facade APIs)
+    ├── session          # GuiBoardManager, InteractiveSettings, ScreenMessages, GUI action threads,
+    │                    # InteractiveCommand + interactive facade/API (D30)
+    │                    # may use gui.rendering (D26); must NOT import gui.interactive (D27/D30)
     └── rendering        # GraphicsContext, ScreenTransform, color tables, board/debug renderers
 ```
 
@@ -178,7 +189,7 @@ Unlisted pipeline/support packages above are intentionally **headless-safe** and
 | Remove `Drawable` / paint from board; renderer in GUI | Phase 6 |
 | Autorouter diagnostics → GUI/debug adapters | Phase 7 |
 | `interactive` (+ flatten `commands`) → flat `gui.interactive` | Phase 8 |
-| Session cluster → `gui.session` + **interactive facade** (D27) | Phase 9 |
+| Session cluster → `gui.session` + facade/`InteractiveCommand` in session (D27/D30); views bootstrap | Phase 9 |
 | `boardgraphics` → `gui.rendering` (+ `ScreenTransform`); session→rendering allowed | Phase 10 |
 | `getGuiSession` → `getPrimarySession` in `SessionManager` | Phase 4 |
 | Swing file chooser out of `RoutingJob` | Phase 4 |
@@ -203,18 +214,24 @@ Move from temporary `gui.interactive` into `gui.session` at minimum:
 - `InteractiveActionThread`
 - `AutorouterAndRouteOptimizerThread`
 
-Leave editor states (`*State`) and flattened command types in `gui.interactive`.
+Leave concrete editor states (`*State`) in `gui.interactive`.
 
-**Phase 9 must also introduce** a narrow interactive facade/API (name TBD in Phase 1, e.g. `InteractiveController` / `EditorStateHost`) so `gui.session` does not import concrete `*State` classes (D27). Concrete states depend on the session; the session talks to states only through the facade.
+**Phase 9 must also** (D27 / D30):
 
-Phase 1 inventory may add non-state session types to this list; do not invent extra subpackages for them. Do **not** keep a `commands` subpackage after the flat move (D11).
+1. Move / introduce the narrow interactive facade/API (name TBD — R19) **and** the `InteractiveCommand` interface (+ any state-handle/token types the session passes around) into **`gui.session`** (or `gui.session.api`).
+2. Have concrete states in `gui.interactive` **implement** those session-owned interfaces (`gui.interactive → gui.session` only).
+3. Assign **initial-state bootstrap/registration** to the **`gui` views** layer (views may see both packages; session must not need a concrete `*State` to start).
+4. Ensure **no** `gui.session → gui.interactive` edge remains; ArchUnit `gui.**` slice-cycle check must pass.
+
+Phase 1 inventory may add non-state session types to this list; do not invent extra subpackages for them. Phase 8 may temporarily flatten command *implementations* into `gui.interactive`, but the **`InteractiveCommand` interface** moves to session in Phase 9 (D11/D30). Do **not** keep a `commands` subpackage.
 
 ## 5. Completion criteria (measurable)
 
 - Pipeline/support packages (`board`, `rules`, `autoroute`, `drc`, `geometry`, `datastructures`, `settings`, `logger`, `debug`, `util`, `io`, `core`, `management`, `api`) have no `gui.**`, no Swing, no AWT UI dependencies (geom whitelist only).
 - No production sources under `app.freerouting.interactive` or `app.freerouting.boardgraphics`.
-- `gui.interactive` = editor states (+ flattened commands); `gui.session` = GUI session façade; `gui.rendering` = rendering.
-- `gui.session` does not import concrete `*State` types (facade only — D27).
+- `gui.interactive` = concrete editor states; `gui.session` = GUI session façade + owned command/facade APIs; `gui.rendering` = rendering.
+- `gui.session` does not import any `gui.interactive` type (facade + `InteractiveCommand` owned by session — D27/D30); views bootstrap initial state.
+- ArchUnit: `gui.**` slices are cycle-free.
 - `gui.session → gui.rendering` is an allowed edge (D26).
 - `BoardManager` has no nullable GUI settings API.
 - Board/autorouter do not paint into `java.awt.Graphics`.
@@ -237,7 +254,7 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 - [ ] Run ArchUnit + `test` + quick routing fixture; capture results.
 - [ ] Inventory class counts: `gui`, `interactive`, `boardgraphics`.
 - [ ] **DSN fixture coverage map:** filename → owning test(s) → sole-coverage-for-a-path? (There are **no `.frb` fixtures** in the repo.)
-- [ ] **Capture stable v2.3.0 golden metrics** on the agreed fixture matrix (completion, full-DRC violation count via `DesignRulesChecker.getAllClearanceViolations()`, SES sanity). Record numbers in the branch notes / §12 appendix.
+- [ ] **Capture stable v2.3.0 golden metrics** on the agreed fixture matrix (completion / unrouted-net count, full-DRC violation count via `DesignRulesChecker.getAllClearanceViolations()`, SES sanity). Record numbers in branch notes and **§12.6**.
 - [ ] Snapshot known leaks (board/autoroute paint, `RoutingJob` Swing, `BoardManager` GUI API, `SessionManager` GUI naming, `GuiBoardManager`→`GraphicsContext` / `InteractiveState`).
 - [ ] Start AGENTS.md baseline-policy draft update toward D24 (land fully by Phase 12 at latest; prefer with Phase 0/1).
 
@@ -245,14 +262,16 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 
 - [ ] Full dependency inventory (pipeline ↔ GUI / AWT UI / Swing).
 - [ ] Classify interactive/boardgraphics types (state vs session vs façade vs renderer).
-- [ ] **Simple-name collision check** across `gui`, `interactive`, `boardgraphics` (include flattening `InteractiveCommand`).
+- [ ] **Simple-name collision check** across `gui`, `interactive`, `boardgraphics`, **and** cross-package same-name types touched by moves (at minimum the three `CoordinateTransform` classes in `board` / `boardgraphics` / `io`; flattening `InteractiveCommand`).
 - [ ] Confirm ratsnest compute call chain through `drc.NetIncompletes` / `AirLine`.
 - [ ] List `ObjectInfoPanel.Printable` implementors (awareness only).
 - [ ] Confirm MVP-workflow property bundles have complete `_hu` variants.
-- [ ] Sketch the Phase 9 interactive facade surface (methods `GuiBoardManager` needs from states without importing concrete `*State`).
+- [ ] Sketch the Phase 9 interactive facade surface (R19) and confirm home package = `gui.session` (D30): methods `GuiBoardManager` needs without importing any `gui.interactive` type.
+- [ ] Plan views-layer bootstrap/registration of the initial interactive state (D30).
 - [ ] **Inventory existing tests that construct Swing / need EDT**; plan deliberate `@Tag("gui")` retags.
 - [ ] **Inventory worker-thread → Swing mutations**; assign removal to Phase 9 (or earlier if trivial).
 - [ ] ArchUnit rules + §12 freezes (including planned temporary freeze only if facade lands mid-Phase-9).
+- [ ] Add ArchUnit **`gui.**` slice-cycle** check (must stay green after Phase 9; may be frozen temporarily mid-phase only).
 - [ ] Forbid pipeline/support → gui/interactive/boardgraphics/future gui.interactive|session|rendering; ban Swing + AWT UI; allow `java.awt.geom..`.
 - [ ] Record freeze budget with owners/removal phases in §12.
 - [ ] Adapt or stub WIP-vs-v2.3.0 compare tooling (R18); do not depend on v1.9 `compare-versions.ps1` as the primary gate.
@@ -322,25 +341,27 @@ Land as **independently revertible commits** on the long-lived branch:
 - [ ] Replace `draw(Graphics, …)` with neutral snapshots/events or GUI adapters.
 - [ ] Diagnostics opt-in; logging remains headless path.
 - [ ] ArchUnit: no new AWT UI parameters in `autoroute`.
-- [ ] **Cheap exit gate:** golden-fixture full-DRC smoke only (D28) — no full v2.3.0 version compare.
+- [ ] **Cheap exit gate:** golden-fixture smoke = full DRC **and** completion/unrouted-net parity vs Phase 0 goldens (D28) — no full v2.3.0 version compare.
 
 ### Phase 8 — Move to `gui.interactive` (flat)
 
 - [ ] Resolve any simple-name collisions found in Phase 1 before/during move.
 - [ ] Move remaining interactive production + tests flat into `gui.interactive`.
-- [ ] **Flatten `interactive.commands` into `gui.interactive`** (no `gui.interactive.commands` subpackage) (D11).
+- [ ] **Flatten `interactive.commands` types into `gui.interactive` sources** (no `gui.interactive.commands` subpackage) (D11) — interface moves to `gui.session` in Phase 9 (D30).
 - [ ] Temporarily includes `GuiBoardManager` and session cluster.
 - [ ] Update i18n FQCNs / resources / ArchUnit / docs.
 - [ ] No `.frb` compat shims.
 - [ ] Run interactive tests, ArchUnit, i18n parity (+ `hu` check), MVP a11y, spotlessCheck, checkstyle.
-- [ ] **Cheap exit gate:** golden-fixture full-DRC smoke (D28).
+- [ ] **Cheap exit gate:** golden-fixture smoke = full DRC **and** completion/unrouted-net parity vs Phase 0 goldens (D28).
 
 ### Phase 9 — Extract `gui.session`
 
 - [ ] Extract §4.4 session cluster to `gui.session` (D20); keep `InteractiveSettings` name (D21).
-- [ ] Introduce interactive facade/API; **remove `GuiBoardManager` imports of concrete `*State` / flattened command types** (D27).
+- [ ] Move/introduce facade + `InteractiveCommand` (+ handles) into `gui.session` / `gui.session.api` (D30); pick facade type name (R19).
+- [ ] Concrete states in `gui.interactive` implement session-owned interfaces; **views bootstrap** initial state.
+- [ ] **Remove all `gui.session → gui.interactive` imports** (not only concrete `*State`) (D27/D30).
 - [ ] Confirm `gui.session → gui.rendering` remains the allowed D26 edge (`GraphicsContext` ownership) — no forced decoupling.
-- [ ] Temporary §12 freeze on session→concrete-state only while facade lands; **must be gone by phase exit**.
+- [ ] Temporary §12 freeze on `gui.session → gui.interactive` only while facade lands; **must be gone by phase exit**; `gui.**` slice-cycle check green.
 - [ ] Ports for load / route start-stop / progress / board replace / settings.
 - [ ] Eliminate inventoried worker→Swing call sites; EDT-only Swing mutation.
 - [ ] Confirm `getPrimarySession` / `setPrimarySession` callers remain correct (still management API).
@@ -386,9 +407,9 @@ Land as **independently revertible commits** on the long-lived branch:
 | `.\gradlew.bat check` | Full verification (does **not** imply `testGui` unless wired later) |
 | `.\gradlew.bat testAll` | Fast + slow + **gui** (`test` → `testSlow` → `testGui`) |
 | WIP vs **v2.3.0** compare script/workflow | Full routing parity at Phase 5/6 gates only (D24/D28) |
-| Golden-fixture full DRC (`DesignRulesChecker.getAllClearanceViolations()`) | Clearance delta **0** at Phase 5/6; cheap smoke at Phase 7/8 (D28/D29) |
+| Golden-fixture full DRC + completion/unrouted-net | Clearance delta **0** + completion parity at Phase 5/6; **cheap smoke** at Phase 7/8 (D28/D29) |
 
-**Routing checkpoints:** golden fixture matrix; **full-DRC** clearance-violation delta **0**; completion not regressed vs stable **v2.3.0** at Phase 5/6; SES validity. Phases 7–8: cheap full-DRC smoke only. v1.9 is not the primary parity gate.
+**Routing checkpoints:** golden fixture matrix; **full-DRC** clearance-violation delta **0**; completion not regressed vs stable **v2.3.0** at Phase 5/6; SES validity. Phases 7–8: cheap smoke = full DRC **+** completion/unrouted-net vs Phase 0 goldens. v1.9 is not the primary parity gate.
 
 **GUI checkpoints:** locator discovery/actions; EDT assertion; no leaked windows/threads; forced headless; **EN + hu** (+ `hu` resource parity).
 
@@ -403,9 +424,9 @@ Land as **independently revertible commits** on the long-lived branch:
 5. `RoutingJob` Swing removal + `getPrimarySession` / `setPrimarySession`  
 6. Ratsnest/violations façade thinning + Phase 5 full parity vs **v2.3.0**  
 7. Board paint inversion as revertible commits + Phase 6 full parity vs **v2.3.0**  
-8. Autorouter diagnostic inversion + cheap full-DRC smoke  
-9. Flat move to `gui.interactive` (flatten `commands`) + cheap full-DRC smoke  
-10. Extract `gui.session` + **interactive facade** (D27)  
+8. Autorouter diagnostic inversion + cheap full-DRC **+ completion** smoke  
+9. Flat move to `gui.interactive` (flatten command impls) + cheap full-DRC **+ completion** smoke  
+10. Extract `gui.session` + session-owned facade/`InteractiveCommand`; views bootstrap (D27/D30)  
 11. Move to `gui.rendering` + `ScreenTransform` (session→rendering allowed)  
 12. A11y expansion (EN + `hu`), final CI filters, docs, AGENTS.md D24, strict ArchUnit  
 
@@ -420,8 +441,9 @@ Land as **independently revertible commits** on the long-lived branch:
 | Worker→Swing races | Phase 1 inventory; Phase 9 elimination; harness EDT asserts |
 | i18n / `hu` gaps | English parity + Hungarian resource check; extract-context |
 | Stale `.frb` fixture story | No `.frb` fixtures exist; keep save/load code only |
-| Simple-name collisions on flat moves | Phase 1 collision inventory including `InteractiveCommand` |
-| Session still imports concrete states after Phase 9 | Facade mandatory (D27); no permanent freeze of that edge |
+| Simple-name collisions on flat moves | Phase 1 collision inventory including `InteractiveCommand` + three `CoordinateTransform`s |
+| Session still imports any `gui.interactive` type after Phase 9 | Session owns facade + `InteractiveCommand` (D30); views bootstrap; no permanent freeze of that edge |
+| `gui.session ⇄ gui.interactive` package cycle | D30 + ArchUnit `gui.**` slice-cycle check |
 | Session→rendering coupling | Explicitly allowed (D26) |
 | ArchUnit freeze pile-up | §12 owner + removal phase |
 | `gui.interactive` temporary god-package | Phase 9 mandatory |
@@ -432,7 +454,7 @@ Land as **independently revertible commits** on the long-lived branch:
 
 ## 10. Remaining decision points
 
-D1–D29 are locked. Operational leftovers only:
+D1–D30 are locked. Operational leftovers only:
 
 | ID | Topic | Default / action | When |
 | --- | --- | --- | --- |
@@ -453,7 +475,8 @@ D1–D29 are locked. Operational leftovers only:
 - [ ] No `.frb` compatibility shims (and no `.frb` fixture migration work needed).
 - [ ] Component-only pure-JDK a11y MVP workflows green in forced-headless `testGui` (EN + `hu`).
 - [ ] ArchUnit strict; §12 freezes cleared except accepted permanent debt (incl. D26).
-- [ ] `gui.session` has no concrete `*State` imports (D27).
+- [ ] `gui.session` has no `gui.interactive` imports (D27/D30); `gui.**` slices cycle-free.
+- [ ] Views own initial-state bootstrap/registration (D30).
 - [ ] `spotlessCheck`, checkstyle, i18n extract-context + `hu` checks green after moves.
 - [ ] `.\gradlew.bat check` passes.
 - [ ] `.\gradlew.bat testAll` passes (`test` + `testSlow` + `testGui`).
@@ -504,3 +527,13 @@ These older items were marked FIXED before this initiative and are retained only
 Set-Location "C:\Work\freerouting"
 .\gradlew.bat test --tests "app.freerouting.architecture.ModuleBoundariesArchTest" --tests "app.freerouting.io.SpecctraPackageArchTest"
 ```
+
+### 12.6 v2.3.0 golden metrics (fill in Phase 0/1)
+
+Record baseline numbers here (and/or in branch notes). Cheap Phase 7/8 smokes and Phase 5/6 full compares assert against these.
+
+| Fixture | Metric | v2.3.0 value | Notes |
+| --- | --- | --- | --- |
+| *(populate during Phase 0/1)* | Completion / unrouted nets | | |
+| | Full-DRC violations (`DesignRulesChecker.getAllClearanceViolations()`) | | |
+| | SES sanity | | |
