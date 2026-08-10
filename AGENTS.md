@@ -79,7 +79,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   - DSN fixture files live in `fixtures/`; reference them by filename (e.g., `"Issue508-DAC2020_bm01.dsn"`). The quickest fixture for smoke-checks is `Dac2020Bm01RoutingTest`.
   - Bound long-running routing tests with `TestingSettings.setMaxPasses(n)`, `setMaxItems(m)`, and `setJobTimeoutString("HH:MM:SS")` to keep CI fast.
 - **Issue Tracking:** Detailed per-issue specifications live in `docs/issues/`. Each file documents the problem, sub-issues (with ✅ when done), proposed/actual implementation, and acceptance criteria. Keep these files up-to-date as sub-issues are resolved so future agents have accurate context without re-reading the full conversation history.
-  - Architecture boundary debt is tracked in `docs/issues/Architecture-boundary-debt-tracker.md`. Update it whenever frozen ArchUnit baselines change or when a frozen rule is promoted to strict.
+  - Architecture boundary debt for the GUI/headless separation work is tracked in `docs/issues/soc-gui-separation-and-accessibility-plan.md` §12 (live freeze ledger). Update that section whenever frozen ArchUnit baselines change or when a frozen rule is promoted to strict.
   - Temporary analysis artifacts (draft GitHub replies, one-off log extracts, heap-dump notes) should be written to `logs/<IssueNNN>/` — this directory is git-ignored and will not clutter the repository.
 - **Licensing:** This project is open-source under the **GPLv3** license. Ensure all dependencies and contributions respect this license.
 
