@@ -264,7 +264,7 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 - [ ] Classify interactive/boardgraphics types (state vs session vs façade vs renderer).
 - [ ] **Simple-name collision check** across `gui`, `interactive`, `boardgraphics`, **and** cross-package same-name types touched by moves (at minimum the three `CoordinateTransform` classes in `board` / `boardgraphics` / `io`; flattening `InteractiveCommand`).
 - [ ] Confirm ratsnest compute call chain through `drc.NetIncompletes` / `AirLine`.
-- [ ] List `ObjectInfoPanel.Printable` implementors (awareness only).
+- [ ] List `ObjectInfoPanel.Printable` implementers (awareness only).
 - [ ] Confirm MVP-workflow property bundles have complete `_hu` variants.
 - [ ] Sketch the Phase 9 interactive facade surface (R19) and confirm home package = `gui.session` (D30): methods `GuiBoardManager` needs without importing any `gui.interactive` type.
 - [ ] Plan views-layer bootstrap/registration of the initial interactive state (D30).
@@ -417,18 +417,18 @@ Land as **independently revertible commits** on the long-lived branch:
 
 ## 8. Long-lived branch checkpoints
 
-1. Phase 0–1 inventory + ArchUnit freezes + **v2.3.0 golden metrics** + §12 ledger  
-2. `testGui` (forced headless) + harness + path-filter stub + Swing-test retags  
-3. MVP locators + ≥3 workflows (EN + `hu`) + `hu` resource check  
-4. Headless `BoardManager` split  
-5. `RoutingJob` Swing removal + `getPrimarySession` / `setPrimarySession`  
-6. Ratsnest/violations façade thinning + Phase 5 full parity vs **v2.3.0**  
-7. Board paint inversion as revertible commits + Phase 6 full parity vs **v2.3.0**  
-8. Autorouter diagnostic inversion + cheap full-DRC **+ completion** smoke  
-9. Flat move to `gui.interactive` (flatten command impls) + cheap full-DRC **+ completion** smoke  
-10. Extract `gui.session` + session-owned facade/`InteractiveCommand`; views bootstrap (D27/D30)  
-11. Move to `gui.rendering` + `ScreenTransform` (session→rendering allowed)  
-12. A11y expansion (EN + `hu`), final CI filters, docs, AGENTS.md D24, strict ArchUnit  
+1. Phase 0–1 inventory + ArchUnit freezes + **v2.3.0 golden metrics** + §12 ledger
+2. `testGui` (forced headless) + harness + path-filter stub + Swing-test retags
+3. MVP locators + ≥3 workflows (EN + `hu`) + `hu` resource check
+4. Headless `BoardManager` split
+5. `RoutingJob` Swing removal + `getPrimarySession` / `setPrimarySession`
+6. Ratsnest/violations façade thinning + Phase 5 full parity vs **v2.3.0**
+7. Board paint inversion as revertible commits + Phase 6 full parity vs **v2.3.0**
+8. Autorouter diagnostic inversion + cheap full-DRC **+ completion** smoke
+9. Flat move to `gui.interactive` (flatten command impls) + cheap full-DRC **+ completion** smoke
+10. Extract `gui.session` + session-owned facade/`InteractiveCommand`; views bootstrap (D27/D30)
+11. Move to `gui.rendering` + `ScreenTransform` (session→rendering allowed)
+12. A11y expansion (EN + `hu`), final CI filters, docs, AGENTS.md D24, strict ArchUnit
 
 ## 9. Risks and mitigations
 
