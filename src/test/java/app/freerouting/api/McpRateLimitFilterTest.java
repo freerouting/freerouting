@@ -19,8 +19,10 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Tag("serial")
 class McpRateLimitFilterTest {
 
   private static final String TEST_USER_ID = "00000000-0000-0000-0000-000000000001";

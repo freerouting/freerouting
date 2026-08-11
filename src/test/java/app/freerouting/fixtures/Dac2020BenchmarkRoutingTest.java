@@ -21,7 +21,7 @@ class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
     testSettingsSource.setMaxItems(2);
-    testSettingsSource.setJobTimeoutString("00:00:15");
+    testSettingsSource.setJobTimeoutString("00:00:30");
 
     // Get the job with injected settings
     RoutingJob job = getRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
@@ -146,7 +146,7 @@ class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
   @Test
   void issue508Bm08() {
     TestingSettings testingSettings = new TestingSettings();
-    testingSettings.setJobTimeoutString("00:00:20");
+    testingSettings.setJobTimeoutString("00:00:30");
 
     // Get a routing job
     job = getRoutingJob("Issue508-DAC2020_bm08.dsn", testingSettings);

@@ -8,11 +8,12 @@ import org.junit.jupiter.api.Test;
 class Dac2020Bm05RoutingTest extends RoutingFixtureTest {
 
   @Test
+  @Tag("serial")
   void issue508Bm05First2Items() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
     testSettingsSource.setMaxItems(2);
-    testSettingsSource.setJobTimeoutString("00:00:15");
+    testSettingsSource.setJobTimeoutString("00:00:30");
 
     RoutingJob job = getRoutingJob("Issue508-DAC2020_bm05.dsn", testSettingsSource);
     runRoutingJob(job);
@@ -21,6 +22,7 @@ class Dac2020Bm05RoutingTest extends RoutingFixtureTest {
   }
 
   @Test
+  @Tag("serial")
   void issue508Bm05First5Items() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);

@@ -26,6 +26,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -36,6 +37,7 @@ import org.junit.jupiter.api.Test;
  * any {@link NullPointerException} or {@link IllegalStateException} originating from {@code
  * interactiveSettings} being {@code null} in the headless API code path.
  */
+@Tag("serial")
 class ApiRoutingTest {
 
   private static final int POLL_TIMEOUT_MS = 120_000;

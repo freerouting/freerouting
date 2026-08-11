@@ -509,11 +509,14 @@ tasks.register('installLocalGitHook', Copy) {
 }
 
 tasks.withType(Test).configureEach { Test task ->
-    // Separate JVMs per fork so static singletons (globalSettings, schedulers) stay isolated.
-    // Slow routing fixtures are memory-heavy; cap their parallelism to avoid OOM/timeouts under load.
-    maxParallelForks = task.name == 'testSlow'
-        ? Math.min(2, Math.max(1, Runtime.runtime.availableProcessors().intdiv(4)))
-        : (Runtime.runtime.availableProcessors().intdiv(2) ?: 1)
+    // Keep the established parallelism for independent tests. Tests tagged "serial" run through
+    // the dedicated testSerial task below because they start embedded servers or use substantial
+    // routing resources.
+    maxParallelForks = task.name == 'testSerial'
+        ? 1
+        : (task.name == 'testSlow'
+            ? Math.min(2, Math.max(1, Runtime.runtime.availableProcessors().intdiv(4)))
+            : (Runtime.runtime.availableProcessors().intdiv(2) ?: 1))
 
     // Absolute fixtures path so forked workers find DSN files even when user.dir is not the repo root.
     systemProperty 'freerouting.test.fixtures.dir', layout.projectDirectory.dir('fixtures').asFile.absolutePath
@@ -575,6 +578,7 @@ tasks.withType(Test).configureEach { Test task ->
 
 test {
     useJUnitPlatform {
+        excludeTags 'serial'
         // Daily runs skip slow tests unless explicitly requested.
         if (!includeSlowTests.get()) {
             excludeTags 'slow'
@@ -593,15 +597,33 @@ tasks.register('testSlow', Test) {
     }
 }
 
+tasks.register('testSerial', Test) {
+    group = 'verification'
+    description = 'Runs tests tagged with @Tag("serial") sequentially.'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    mustRunAfter(tasks.named('test'))
+    useJUnitPlatform {
+        includeTags 'serial'
+    }
+}
+
+tasks.named('check') {
+    dependsOn(tasks.named('testSerial'))
+}
+
 tasks.register('testAll') {
     group = 'verification'
-    description = 'Runs both fast/default tests and tests tagged with @Tag("slow").'
-    dependsOn(tasks.named('test'))
-    finalizedBy(tasks.named('testSlow'))
+    description = 'Runs default, serial-sensitive, and slow tests.'
+    dependsOn(tasks.named('test'), tasks.named('testSlow'), tasks.named('testSerial'))
 }
 
 tasks.named('testSlow') {
     mustRunAfter(tasks.named('test'))
+}
+
+tasks.named('testSerial') {
+    mustRunAfter(tasks.named('testSlow'))
 }
 
 rewrite {
