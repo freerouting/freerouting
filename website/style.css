@@ -60,6 +60,16 @@ a:hover {
 .section {
     margin: 2em 0;
 }
+.api-maintenance-notice {
+    border-left: 0.5em solid rgb(230, 167, 0);
+    padding: 1em 1.5em;
+    background-color: rgba(230, 167, 0, 0.16);
+    border-radius: 0 6px 6px 0;
+}
+.api-maintenance-notice h2 {
+    margin-top: 0;
+    color: rgb(255, 214, 102);
+}
 .section h2 {
     font-size: 1.8em;
     margin-bottom: 0.5em;
