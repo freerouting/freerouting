@@ -119,20 +119,98 @@ public class RoutingFixtureTest {
 
       // Check for timeout every iteration
       if (System.currentTimeMillis() - startTime > timeoutInMillis) {
+        String timeoutMessage = buildTimeoutMessage(job, startTime, timeoutInMillis);
+        RoutingJobTimeoutException timeoutException =
+            new RoutingJobTimeoutException(timeoutMessage);
+        FRLogger.error("Routing fixture timeout: " + timeoutMessage, timeoutException);
+
         // Request that the router stops cleanly before propagating the timeout.
         // Without this, the routing thread keeps running and starves subsequent tests.
         if (job.thread != null) {
           job.thread.requestStop();
         }
-        if (job.state == RoutingJobState.RUNNING) {
+        if ((job.state == RoutingJobState.RUNNING)
+            || (job.state == RoutingJobState.READY_TO_START)) {
           job.state = RoutingJobState.TIMED_OUT;
         }
-        float timeoutInMinutes = timeoutInMillis / 60000.0f;
-        throw new RuntimeException("Routing job timed out after " + timeoutInMinutes + " minutes.");
+        throw timeoutException;
       }
     }
 
     return job;
+  }
+
+  /** Builds a diagnostic snapshot for a routing job that did not reach a terminal state. */
+  private String buildTimeoutMessage(RoutingJob job, long startTime, long timeoutInMillis) {
+    String threadDescription = "null";
+    if (job.thread != null) {
+      threadDescription =
+          "name='"
+              + job.thread.getName()
+              + "', state="
+              + job.thread.getState()
+              + ", alive="
+              + job.thread.isAlive()
+              + ", stopRequested="
+              + job.thread.isStopRequested();
+    }
+
+    String queueDescription = "scheduler=null";
+    if (scheduler != null) {
+      StringBuilder queue = new StringBuilder();
+      synchronized (scheduler.jobs) {
+        for (RoutingJob queuedJob : scheduler.jobs) {
+          if (queue.length() > 0) {
+            queue.append(", ");
+          }
+          if (queuedJob == null) {
+            queue.append("null");
+          } else {
+            queue.append(queuedJob.id).append("=").append(queuedJob.state);
+          }
+        }
+      }
+      queueDescription = queue.length() == 0 ? "empty" : queue.toString();
+    }
+
+    String configuredTimeout =
+        job.routerSettings == null ? "null" : job.routerSettings.jobTimeoutString;
+    String filename = job.input == null ? "null" : job.input.getFilename();
+    long elapsedMillis = System.currentTimeMillis() - startTime;
+
+    return "jobId="
+        + job.id
+        + ", filename='"
+        + filename
+        + "', elapsedMillis="
+        + elapsedMillis
+        + ", timeoutMillis="
+        + timeoutInMillis
+        + ", configuredTimeout='"
+        + configuredTimeout
+        + "', state="
+        + job.state
+        + ", stage="
+        + job.stage
+        + ", thread={"
+        + threadDescription
+        + "}, schedulerQueue={"
+        + queueDescription
+        + "}, boardLoaded="
+        + (job.board != null)
+        + ", startedAt="
+        + job.startedAt
+        + ", finishedAt="
+        + job.finishedAt
+        + ", timeoutAt="
+        + job.timeoutAt;
+  }
+
+  /** Identifies a routing fixture timeout separately from generic test runtime failures. */
+  private static final class RoutingJobTimeoutException extends RuntimeException {
+    private RoutingJobTimeoutException(String message) {
+      super(message);
+    }
   }
 
   /** Returns board statistics for the routed job. */

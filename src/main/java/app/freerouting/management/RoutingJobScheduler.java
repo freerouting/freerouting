@@ -171,8 +171,8 @@ public final class RoutingJobScheduler {
                               StoppableThread routerThread =
                                   new RoutingJobSchedulerActionThread(job);
                               job.thread = routerThread;
-                              job.thread.start();
                               job.state = RoutingJobState.RUNNING;
+                              job.thread.start();
                               startedAny = true;
                             } catch (Exception e) {
                               FRLogger.error(
