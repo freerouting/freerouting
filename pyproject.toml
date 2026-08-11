@@ -6,14 +6,14 @@
 # `codespell` can be run as a standalone program from the CLI
 # with the appropriate default options.
 
-SKIP="doxygen,doc,.git,*/.gitignore,.cache,dist,build,gradlew,gradlew.bat,libs,codespell,Makefile,*.pdf,*.dsn,*.ses,*.frb,*.flex,*.bin,*.exe,*.dll,*.so,*.class,*.jar,*.brd,.DS_Store,*.iml,*.ipr,*.iws,.idea/,*fixtures,*build,*.gradle,.gitignore,*logs,*src_v19,*examples,*results,*scripts/benchmark/results,*docs/reference/*,*src/main/resources/app/freerouting/helpset/de,*src/main/resources/app/freerouting/helpset/es,*src/main/resources/app/freerouting/helpset/fr,*src_v19/main/resources/app/freerouting/helpset/de,*src_v19/main/resources/app/freerouting/helpset/es,*src_v19/main/resources/app/freerouting/helpset/fr,*_ar.properties,*_bn.properties,*_de.properties,*_es.properties,*_fr.properties,*_hi.properties,*_it.properties,*_ja.properties,*_ko.properties,*_pt.properties,*_ru.properties,*_zh.properties,*_zh_tw.properties,*_fr.json,*/fr.json,*/es.json,*/pt.json,*/de.json,*.TAB,OFFSETS,.run,*.ulp"
+SKIP="*.dsn,*.ses,*.frb,*.png,*.jpg,*.svg,*.pdf,build,logs,.git,src_v19,fixtures,integrations,docs/reference,scripts/i18n,scripts/benchmark/fixtures,src/main/resources/app/freerouting/*_*.properties,.*"
 
 check-hidden = true
 quiet-level = 2
 ignore-regex = '\\[fnrstv]'
 builtin = "clear,rare,informal,code,names"
 
-ignore-words-list = "slave,master,ue,wan,nto,abd,te,fo,cas,ro,inout,snd,ser,weerd,deweerd,thead,ws,stdio,ois,hilight,curNet,onText,cripts,deque,strat,iam,als,currnet,cloneable"
+ignore-words-list = "autoroute,autorouter,autorouting,padstack,padstacks,netlist,netlists,freerouting"
 
 [tool.yamlfix]
 line_length = 80
