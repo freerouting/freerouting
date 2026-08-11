@@ -23,21 +23,21 @@ Freerouting is a powerful PCB autorouter compatible with any PCB design software
 > ### ⚠️ Notice for contributors
 >
 > For several years, I had been postponing a comprehensive overhaul and refactoring of the Freerouting codebase. As many of you have noticed, parts of it had become dated, with legacy constructs, inconsistent naming, and insufficient documentation.
-> 
+>
 > That refactoring is now underway, and I expect it to take approximately two weeks. The goal is to create a cleaner, more modern, and future-proof foundation for Freerouting.
-> 
+>
 > During this period, please keep pull requests as small and focused as possible. This will make it significantly easier to rebase them onto the refactored codebase afterward.
-> 
+>
 > Once the refactoring is complete, I will tag the current codebase as [`pre-refactor-2026`](https://github.com/freerouting/freerouting/tree/pre-refactor-2026). Anyone who prefers to continue working from the pre-refactoring version will be able to use that tag as a stable starting point.
-> 
+>
 > However, please keep in mind that future features and performance improvements will be developed exclusively on the upgraded codebase. Staying up to date with Freerouting will therefore require moving to the refactored version eventually.
-> 
+>
 > Contributors with forks containing custom modifications, as well as contributors with open pull requests, will likely need to rebase their work once the refactoring is complete. Depending on the changes involved, this may require some manual conflict resolution.
-> 
+>
 > I sincerely apologize for the extra effort. I know that nobody enjoys rebasing or resolving conflicts. The good news is that this should provide a stable foundation for a long time, so we do not expect another change of this scale anytime soon.
-> 
+>
 > Thank you for your understanding, patience, and continued support of Freerouting.
-> 
+>
 > Andras
 
 ## Getting started

@@ -78,8 +78,9 @@ CI runs `python scripts/i18n/extract-context.py --check` on pull requests to ens
 Freerouting uses **Spotless** (Google Java Style), **Checkstyle 13.9.0**, explicit LF
 line-ending rules, and **pre-commit** hooks. The Gradle quality checks are check-only:
 they fail when code is not ready rather than formatting unrelated files or staging
-changes automatically. Generic pre-commit hygiene hooks may fix whitespace in files
-selected for the current commit.
+changes automatically. The pre-commit hygiene hooks automatically repair trailing
+whitespace, final newlines, and LF line endings in files selected for the current
+commit.
 
 ### Installing & Setting Up Pre-commit Hooks
 
@@ -97,6 +98,9 @@ selected for the current commit.
    ```bash
    pre-commit run --all-files
    ```
+   The hygiene hooks may update files and then report that they changed. Review and
+   stage those small non-functional fixes, then rerun the command. CI remains
+   check-only and never modifies the pull request.
 
 ### Gradle Code Quality Commands
 

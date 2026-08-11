@@ -45,7 +45,7 @@ repos:
       - id: check-toml
       - id: mixed-line-ending
         exclude: \.(bat|cmd|ps1)$
-        args: ['--fix=no']
+        args: ['--fix=lf']
 
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.35.1

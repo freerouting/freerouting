@@ -64,8 +64,10 @@ python scripts/i18n/extract-context.py --check
 
 On Windows, use `.\gradlew.bat` instead of `./gradlew`. The Gradle quality hook and
 `scripts/pre-commit` are check-only: they report failures rather than applying formatting
-to unrelated files or staging changes automatically. The generic hygiene hooks may fix
-whitespace only in files selected for the current commit.
+to unrelated files or staging changes automatically. The generic hygiene hooks
+automatically repair trailing whitespace, final newlines, and LF line endings only in
+files selected for the current commit. Review and stage those changes, then rerun the
+hook when it reports that files were modified.
 
 `spotlessApply` is an intentional formatting operation, not a normal pre-commit step.
 It formats every configured Java source. Run it only when you explicitly intend to make
