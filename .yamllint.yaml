@@ -13,6 +13,9 @@ rules:
     min-spaces-inside: 0
     max-spaces-inside-empty: -1
     min-spaces-inside-empty: -1
+  brackets: disable
+  comments:
+    min-spaces-from-content: 1
   document-start: disable
   truthy:
     allowed-values: ['true', 'false', 'on', 'off']

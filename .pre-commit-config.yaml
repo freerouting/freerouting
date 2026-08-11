@@ -39,6 +39,7 @@ repos:
         exclude: ^(docs/reference/)
       - id: check-yaml
         name: Check YAML files
+        args: ['--allow-multiple-documents']
       - id: mixed-line-ending
         name: Fix mixed line endings
       - id: check-merge-conflict

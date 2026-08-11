@@ -6,14 +6,14 @@
 # `codespell` can be run as a standalone program from the CLI
 # with the appropriate default options.
 
-SKIP="*.dsn,*.ses,*.frb,*.png,*.jpg,*.svg,*.pdf,build,logs,.git,src_v19,fixtures,integrations,docs/reference,scripts/i18n,scripts/benchmark/fixtures,src/main/resources/app/freerouting/*_*.properties,.*"
+skip = "*.dsn,*.ses,*.frb,*.png,*.jpg,*.svg,*.pdf,build,logs,.git,src_v19,fixtures,integrations,docs/reference,scripts/i18n,scripts/benchmark/fixtures,src/main/resources/app/freerouting/*_*.properties,.*,website,src/rewrite,config/checkstyle,find-mismatch3.ps1,compare_loop.py"
 
 check-hidden = true
 quiet-level = 2
 ignore-regex = '\\[fnrstv]'
 builtin = "clear,rare,informal,code,names"
 
-ignore-words-list = "autoroute,autorouter,autorouting,padstack,padstacks,netlist,netlists,freerouting"
+ignore-words-list = "autoroute,autorouter,autorouting,padstack,padstacks,netlist,netlists,freerouting,ws,stdio,thead,Cloneable,Deque,IAM,ro"
 
 [tool.yamlfix]
 line_length = 80
