@@ -671,7 +671,11 @@ public class BoardFrame extends WindowBase {
   }
 
   private void schedulePlaneFillCacheWarm() {
-    RoutingBoard board = boardPanel.boardHandling.getRoutingBoard();
+    GuiBoardManager boardHandling = boardPanel.boardHandling;
+    if (boardHandling == null) {
+      return;
+    }
+    RoutingBoard board = boardHandling.getRoutingBoard();
     if (board == null) {
       return;
     }
@@ -691,7 +695,9 @@ public class BoardFrame extends WindowBase {
               FRLogger.debug("Board load: plane fill cache warmed in " + warmMs + " ms");
               javax.swing.SwingUtilities.invokeLater(
                   () -> {
-                    if (boardPanel.boardHandling.getRoutingBoard() == board) {
+                    GuiBoardManager currentBoardHandling = boardPanel.boardHandling;
+                    if (currentBoardHandling != null
+                        && currentBoardHandling.getRoutingBoard() == board) {
                       boardPanel.repaint();
                     }
                   });
