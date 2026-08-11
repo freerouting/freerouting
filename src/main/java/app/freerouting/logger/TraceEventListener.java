@@ -4,5 +4,6 @@ package app.freerouting.logger;
 @FunctionalInterface
 public interface TraceEventListener {
 
+  /** Called when an interesting trace event is published. */
   void onTraceEvent(TraceEvent event);
 }

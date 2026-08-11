@@ -11,9 +11,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 
-/**
- * MCP request rate-limiting filter.
- */
+/** MCP request rate-limiting filter. */
 @Provider
 @Priority(Priorities.AUTHENTICATION + 10)
 public class McpRateLimitFilter implements ContainerRequestFilter {
@@ -27,29 +25,33 @@ public class McpRateLimitFilter implements ContainerRequestFilter {
       return;
     }
 
-    RateLimitSettings cfg = Freerouting.globalSettings != null
-        && Freerouting.globalSettings.mcpServerSettings != null
-        ? Freerouting.globalSettings.mcpServerSettings.rateLimit
-        : null;
+    RateLimitSettings cfg =
+        Freerouting.globalSettings != null && Freerouting.globalSettings.mcpServerSettings != null
+            ? Freerouting.globalSettings.mcpServerSettings.rateLimit
+            : null;
 
     if (cfg == null || !Boolean.TRUE.equals(cfg.enabled)) {
       return;
     }
 
     String key = buildKey(requestContext);
-    FixedWindowRateLimiter.Decision decision = limiter.check(
-        key,
-        cfg.requestsPerWindow == null ? 120 : cfg.requestsPerWindow,
-        cfg.windowSeconds == null ? 60 : cfg.windowSeconds);
+    FixedWindowRateLimiter.Decision decision =
+        limiter.check(
+            key,
+            cfg.requestsPerWindow == null ? 120 : cfg.requestsPerWindow,
+            cfg.windowSeconds == null ? 60 : cfg.windowSeconds);
 
     if (!decision.allowed()) {
-      String body = "{\"error\":\"MCP rate limit exceeded\",\"retry_after_seconds\":"
-          + decision.retryAfterSeconds() + "}";
-      requestContext.abortWith(Response.status(429)
-          .header("Retry-After", String.valueOf(decision.retryAfterSeconds()))
-          .entity(body)
-          .type("application/json")
-          .build());
+      String body =
+          "{\"error\":\"MCP rate limit exceeded\",\"retry_after_seconds\":"
+              + decision.retryAfterSeconds()
+              + "}";
+      requestContext.abortWith(
+          Response.status(429)
+              .header("Retry-After", String.valueOf(decision.retryAfterSeconds()))
+              .entity(body)
+              .type("application/json")
+              .build());
     }
   }
 
@@ -72,9 +74,10 @@ public class McpRateLimitFilter implements ContainerRequestFilter {
   private static String buildKey(ContainerRequestContext requestContext) {
     String profileId = requestContext.getHeaderString("Freerouting-Profile-ID");
     String profileEmail = requestContext.getHeaderString("Freerouting-Profile-Email");
-    String identity = profileId != null && !profileId.isBlank()
-        ? profileId
-        : (profileEmail != null && !profileEmail.isBlank() ? profileEmail : "anonymous");
+    String identity =
+        profileId != null && !profileId.isBlank()
+            ? profileId
+            : (profileEmail != null && !profileEmail.isBlank() ? profileEmail : "anonymous");
 
     return requestContext.getMethod() + ":" + identity;
   }

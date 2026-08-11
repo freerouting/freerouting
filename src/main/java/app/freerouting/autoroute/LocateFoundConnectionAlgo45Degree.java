@@ -15,56 +15,66 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.SortedSet;
 
+/**
+ * Locates and constructs 45-degree trace connection geometries from maze search backtrack paths.
+ */
 public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo {
 
-  /**
-   * Creates a new instance of LocateFoundConnectionAlgo45Degree
-   */
-  public LocateFoundConnectionAlgo45Degree(MazeSearchAlgo.Result p_maze_search_result, AutorouteControl p_ctrl, ShapeSearchTree p_search_tree, AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs) {
-    super(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list, p_ripup_costs);
+  /** Creates a new instance of LocateFoundConnectionAlgo45Degree. */
+  public LocateFoundConnectionAlgo45Degree(
+      MazeSearchAlgo.Result mazeSearchResult,
+      AutorouteControl ctrl,
+      ShapeSearchTree searchTree,
+      AngleRestriction angleRestriction,
+      SortedSet<Item> rippedItemList,
+      Map<Item, Integer> ripupCosts) {
+    super(mazeSearchResult, ctrl, searchTree, angleRestriction, rippedItemList, ripupCosts);
   }
 
-  private static FloatPoint round_to_integer(FloatPoint p_point) {
-    return p_point.round().to_float();
+  private static FloatPoint roundToInteger(FloatPoint point) {
+    return point.round().toFloat();
   }
 
   /**
-   * Calculates, if the next 45-degree angle should be horizontal first when coming from p_from_point on p_from_door.
+   * Calculates if the next 45-degree angle should be horizontal first when coming from fromPoint on
+   * fromDoor.
    */
-  private static boolean calc_horizontal_first_from_door(ExpandableObject p_from_door, FloatPoint p_from_point, FloatPoint p_to_point) {
-    TileShape door_shape = p_from_door.get_shape();
-    IntBox from_door_box = door_shape.bounding_box();
-    if (p_from_door.get_dimension() != 1) {
-      return from_door_box.height() >= from_door_box.width();
+  private static boolean calcHorizontalFirstFromDoor(
+      ExpandableObject fromDoor, FloatPoint fromPoint, FloatPoint toPoint) {
+    TileShape doorShape = fromDoor.getShape();
+    IntBox fromDoorBox = doorShape.boundingBox();
+    if (fromDoor.getDimension() != 1) {
+      return fromDoorBox.height() >= fromDoorBox.width();
     }
 
-    FloatLine door_line_segment = door_shape.diagonal_corner_segment();
-    FloatPoint left_corner;
-    FloatPoint right_corner;
-    if (door_line_segment.a.x < door_line_segment.b.x || door_line_segment.a.x == door_line_segment.b.x && door_line_segment.a.y <= door_line_segment.b.y) {
-      left_corner = door_line_segment.a;
-      right_corner = door_line_segment.b;
+    FloatLine doorLineSegment = doorShape.diagonalCornerSegment();
+    FloatPoint leftCorner;
+    FloatPoint rightCorner;
+    if (doorLineSegment.a.x < doorLineSegment.b.x
+        || doorLineSegment.a.x == doorLineSegment.b.x
+            && doorLineSegment.a.y <= doorLineSegment.b.y) {
+      leftCorner = doorLineSegment.a;
+      rightCorner = doorLineSegment.b;
     } else {
-      left_corner = door_line_segment.b;
-      right_corner = door_line_segment.a;
+      leftCorner = doorLineSegment.b;
+      rightCorner = doorLineSegment.a;
     }
-    double door_dx = right_corner.x - left_corner.x;
-    double door_dy = right_corner.y - left_corner.y;
-    double abs_door_dy = Math.abs(door_dy);
-    double door_max_width = Math.max(door_dx, abs_door_dy);
+    double doorDx = rightCorner.x - leftCorner.x;
+    double doorDy = rightCorner.y - leftCorner.y;
+    double absDoorDy = Math.abs(doorDy);
+    double doorMaxWidth = Math.max(doorDx, absDoorDy);
     boolean result;
-    double door_half_max_width = 0.5 * door_max_width;
-    if (from_door_box.width() <= door_half_max_width) {
+    double doorHalfMaxWidth = 0.5 * doorMaxWidth;
+    if (fromDoorBox.width() <= doorHalfMaxWidth) {
       // door is about vertical
       result = true;
-    } else if (from_door_box.height() <= door_half_max_width) {
+    } else if (fromDoorBox.height() <= doorHalfMaxWidth) {
       // door is about horizontal
       result = false;
     } else {
-      double dx = p_to_point.x - p_from_point.x;
-      double dy = p_to_point.y - p_from_point.y;
-      if (left_corner.y < right_corner.y) {
+      double dx = toPoint.x - fromPoint.x;
+      double dy = toPoint.y - fromPoint.y;
+      if (leftCorner.y < rightCorner.y) {
         // door is about right diagonal
         if (Signum.of(dx) == Signum.of(dy)) {
           result = Math.abs(dx) > Math.abs(dy);
@@ -85,183 +95,240 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
   }
 
   @Override
-  protected Collection<FloatPoint> calculate_next_trace_corners() {
+  protected Collection<FloatPoint> calculateNextTraceCorners() {
     Collection<FloatPoint> result = new LinkedList<>();
 
-    if (this.current_to_door_index > this.current_target_door_index) {
-      if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
-        FRLogger.trace("compare_trace_next_corners_raw net=" + this.ctrl.net_no
-            + ", mode=45, branch=NO_MORE_DOORS"
-            + ", layer=" + this.current_trace_layer
-            + ", from_door=" + this.current_from_door_index
-            + ", to_door=" + this.current_to_door_index
-            + ", target_door=" + this.current_target_door_index
-            + ", result_size=" + result.size());
+    if (this.currentToDoorIndex > this.currentTargetDoorIndex) {
+      if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
+        FRLogger.trace(
+            "compare_trace_next_corners_raw net="
+                + this.ctrl.netNo
+                + ", mode=45, branch=NO_MORE_DOORS"
+                + ", layer="
+                + this.currentTraceLayer
+                + ", from_door="
+                + this.currentFromDoorIndex
+                + ", to_door="
+                + this.currentToDoorIndex
+                + ", target_door="
+                + this.currentTargetDoorIndex
+                + ", result_size="
+                + result.size());
       }
       return result;
     }
 
-    BacktrackElement curr_from_info = this.backtrack_array[this.current_to_door_index - 1];
+    BacktrackElement currFromInfo = this.backtrackArray[this.currentToDoorIndex - 1];
 
-    if (curr_from_info.next_room == null) {
-      FRLogger.warn("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: next_room is null");
+    if (currFromInfo.nextRoom == null) {
+      FRLogger.warn(
+          "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: nextRoom is null");
       return result;
     }
 
-    TileShape room_shape = curr_from_info.next_room.get_shape();
+    TileShape roomShape = currFromInfo.nextRoom.getShape();
 
-    int trace_halfwidth = this.ctrl.compensated_trace_half_width[this.current_trace_layer];
-    int trace_halfwidth_add = trace_halfwidth + AutorouteEngine.TRACE_WIDTH_TOLERANCE; // add some tolerance for free space expansion rooms.
-    int shrink_offset;
-    if (curr_from_info.next_room instanceof ObstacleExpansionRoom) {
+    int traceHalfwidth = this.ctrl.compensatedTraceHalfWidth[this.currentTraceLayer];
+    int traceHalfwidthAdd =
+        traceHalfwidth
+            + AutorouteEngine
+                .TRACE_WIDTH_TOLERANCE; // add some tolerance for free space expansion rooms.
+    int shrinkOffset;
+    if (currFromInfo.nextRoom instanceof ObstacleExpansionRoom) {
 
-      shrink_offset = trace_halfwidth;
+      shrinkOffset = traceHalfwidth;
     } else {
-      shrink_offset = trace_halfwidth_add;
+      shrinkOffset = traceHalfwidthAdd;
     }
 
-    TileShape shrinked_room_shape = (TileShape) room_shape.offset(-shrink_offset);
-    if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
-      FRLogger.trace("compare_trace_room_shrink_raw net=" + this.ctrl.net_no
-          + ", mode=45"
-          + ", layer=" + this.current_trace_layer
-          + ", from_door=" + this.current_from_door_index
-          + ", to_door=" + this.current_to_door_index
-          + ", target_door=" + this.current_target_door_index
-          + ", next_room_type=" + curr_from_info.next_room.getClass().getSimpleName()
-          + ", shrink_offset=" + shrink_offset
-          + ", room_empty=" + room_shape.is_empty()
-          + ", shrinked_empty=" + shrinked_room_shape.is_empty()
-          + ", current_from=" + this.current_from_point);
+    TileShape shrinkedRoomShape = (TileShape) roomShape.offset(-shrinkOffset);
+    if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
+      FRLogger.trace(
+          "compare_trace_room_shrink_raw net="
+              + this.ctrl.netNo
+              + ", mode=45"
+              + ", layer="
+              + this.currentTraceLayer
+              + ", from_door="
+              + this.currentFromDoorIndex
+              + ", to_door="
+              + this.currentToDoorIndex
+              + ", target_door="
+              + this.currentTargetDoorIndex
+              + ", next_room_type="
+              + currFromInfo.nextRoom.getClass().getSimpleName()
+              + ", shrinkOffset="
+              + shrinkOffset
+              + ", room_empty="
+              + roomShape.isEmpty()
+              + ", shrinked_empty="
+              + shrinkedRoomShape.isEmpty()
+              + ", current_from="
+              + this.currentFromPoint);
     }
-    if (!shrinked_room_shape.is_empty()) {
+    if (!shrinkedRoomShape.isEmpty()) {
       // enter the shrunk room shape by a 45-degree angle first
-      FloatPoint nearest_room_point = shrinked_room_shape.nearest_point_approx(this.current_from_point);
-      boolean horizontal_first = calc_horizontal_first_from_door(curr_from_info.door, this.current_from_point, nearest_room_point);
-      nearest_room_point = round_to_integer(nearest_room_point);
-      result.add(calculate_additional_corner(this.current_from_point, nearest_room_point, horizontal_first, this.angle_restriction));
-      result.add(nearest_room_point);
-      this.current_from_point = nearest_room_point;
+      FloatPoint nearestRoomPoint = shrinkedRoomShape.nearestPointApprox(this.currentFromPoint);
+      boolean horizontalFirst =
+          calcHorizontalFirstFromDoor(currFromInfo.door, this.currentFromPoint, nearestRoomPoint);
+      nearestRoomPoint = roundToInteger(nearestRoomPoint);
+      result.add(
+          calculateAdditionalCorner(
+              this.currentFromPoint, nearestRoomPoint, horizontalFirst, this.angleRestriction));
+      result.add(nearestRoomPoint);
+      this.currentFromPoint = nearestRoomPoint;
     } else {
-      shrinked_room_shape = room_shape;
+      shrinkedRoomShape = roomShape;
     }
 
-    if (this.current_to_door_index == this.current_target_door_index) {
-      FloatPoint nearest_point = this.current_target_shape.nearest_point_approx(this.current_from_point);
-      nearest_point = round_to_integer(nearest_point);
-      FloatPoint add_corner = calculate_additional_corner(this.current_from_point, nearest_point, true, this.angle_restriction);
-      if (!shrinked_room_shape.contains(add_corner)) {
-        add_corner = calculate_additional_corner(this.current_from_point, nearest_point, false, this.angle_restriction);
+    if (this.currentToDoorIndex == this.currentTargetDoorIndex) {
+      FloatPoint nearestPoint = this.currentTargetShape.nearestPointApprox(this.currentFromPoint);
+      nearestPoint = roundToInteger(nearestPoint);
+      FloatPoint addCorner =
+          calculateAdditionalCorner(
+              this.currentFromPoint, nearestPoint, true, this.angleRestriction);
+      if (!shrinkedRoomShape.contains(addCorner)) {
+        addCorner =
+            calculateAdditionalCorner(
+                this.currentFromPoint, nearestPoint, false, this.angleRestriction);
       }
-      result.add(add_corner);
-      result.add(nearest_point);
-      ++this.current_to_door_index;
-      if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
-        FRLogger.trace("compare_trace_next_corners_raw net=" + this.ctrl.net_no
-            + ", mode=45, branch=TARGET_DOOR"
-            + ", layer=" + this.current_trace_layer
-            + ", from_door=" + this.current_from_door_index
-            + ", to_door=" + this.current_to_door_index
-            + ", target_door=" + this.current_target_door_index
-            + ", result_size=" + result.size()
-            + ", nearest_point=" + nearest_point
-            + ", add_corner=" + add_corner);
+      result.add(addCorner);
+      result.add(nearestPoint);
+      ++this.currentToDoorIndex;
+      if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
+        FRLogger.trace(
+            "compare_trace_next_corners_raw net="
+                + this.ctrl.netNo
+                + ", mode=45, branch=TARGET_DOOR"
+                + ", layer="
+                + this.currentTraceLayer
+                + ", from_door="
+                + this.currentFromDoorIndex
+                + ", to_door="
+                + this.currentToDoorIndex
+                + ", target_door="
+                + this.currentTargetDoorIndex
+                + ", result_size="
+                + result.size()
+                + ", nearestPoint="
+                + nearestPoint
+                + ", addCorner="
+                + addCorner);
       }
       return result;
     }
 
-    BacktrackElement curr_to_info = this.backtrack_array[this.current_to_door_index];
-    if (!(curr_to_info.door instanceof ExpansionDoor curr_to_door)) {
-      FRLogger.warn("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: ExpansionDoor expected");
+    BacktrackElement currToInfo = this.backtrackArray[this.currentToDoorIndex];
+    if (!(currToInfo.door instanceof ExpansionDoor currToDoor)) {
+      FRLogger.warn(
+          "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: ExpansionDoor expected");
       return result;
     }
 
-    FloatPoint nearest_to_door_point;
-    if (curr_to_door.dimension == 2) {
+    FloatPoint nearestToDoorPoint;
+    if (currToDoor.dimension == 2) {
       // May not happen in free angle routing mode because then corners are cut off.
-      TileShape to_door_shape = curr_to_door.get_shape();
+      TileShape toDoorShape = currToDoor.getShape();
 
-      TileShape shrinked_to_door_shape = (TileShape) to_door_shape.shrink(shrink_offset);
-      nearest_to_door_point = shrinked_to_door_shape.nearest_point_approx(this.current_from_point);
-      nearest_to_door_point = round_to_integer(nearest_to_door_point);
+      TileShape shrinkedToDoorShape = (TileShape) toDoorShape.shrink(shrinkOffset);
+      nearestToDoorPoint = shrinkedToDoorShape.nearestPointApprox(this.currentFromPoint);
+      nearestToDoorPoint = roundToInteger(nearestToDoorPoint);
     } else {
-      FloatLine[] line_sections = curr_to_door.get_section_segments(trace_halfwidth);
-      if (curr_to_info.section_no_of_door >= line_sections.length) {
-        FRLogger.warn("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: line_sections inconsistent");
+      FloatLine[] lineSections = currToDoor.getSectionSegments(traceHalfwidth);
+      if (currToInfo.sectionNoOfDoor >= lineSections.length) {
+        FRLogger.warn(
+            "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: "
+                + "lineSections inconsistent");
         return result;
       }
-      FloatLine curr_line_section = line_sections[curr_to_info.section_no_of_door];
-      nearest_to_door_point = curr_line_section.nearest_segment_point(this.current_from_point);
+      FloatLine currLineSection = lineSections[currToInfo.sectionNoOfDoor];
+      nearestToDoorPoint = currLineSection.nearestSegmentPoint(this.currentFromPoint);
 
-      boolean nearest_to_door_point_ok = true;
-      if (curr_to_info.next_room != null) {
-        Simplex next_room_shape = curr_to_info.next_room.get_shape().to_Simplex();
+      boolean nearestToDoorPointOk = true;
+      if (currToInfo.nextRoom != null) {
+        Simplex nextRoomShape = currToInfo.nextRoom.getShape().toSimplex();
         // with IntBox or IntOctagon the next calculation will not work, because they have
         // border lines of length 0.
-        FloatPoint[] nearest_points = next_room_shape.nearest_border_points_approx(nearest_to_door_point, 2);
-        if (nearest_points.length >= 2) {
-          nearest_to_door_point_ok = nearest_points[1].distance(nearest_to_door_point) >= trace_halfwidth_add;
+        FloatPoint[] nearestPoints = nextRoomShape.nearestBorderPointsApprox(nearestToDoorPoint, 2);
+        if (nearestPoints.length >= 2) {
+          nearestToDoorPointOk = nearestPoints[1].distance(nearestToDoorPoint) >= traceHalfwidthAdd;
         }
       }
-      if (!nearest_to_door_point_ok) {
+      if (!nearestToDoorPointOk) {
         // may be the room has an acute (45 degree) angle at a corner of the door
-        nearest_to_door_point = curr_line_section.a.middle_point(curr_line_section.b);
+        nearestToDoorPoint = currLineSection.a.middlePoint(currLineSection.b);
       }
     }
-    nearest_to_door_point = round_to_integer(nearest_to_door_point);
-    boolean horizontal_first = calc_horizontal_first_to_door(curr_to_info.door, this.current_from_point, nearest_to_door_point);
-    result.add(calculate_additional_corner(this.current_from_point, nearest_to_door_point, horizontal_first, this.angle_restriction));
-    result.add(nearest_to_door_point);
-    ++this.current_to_door_index;
-    if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
-      FRLogger.trace("compare_trace_next_corners_raw net=" + this.ctrl.net_no
-          + ", mode=45, branch=EXPANSION_DOOR"
-          + ", layer=" + this.current_trace_layer
-          + ", from_door=" + this.current_from_door_index
-          + ", to_door=" + this.current_to_door_index
-          + ", target_door=" + this.current_target_door_index
-          + ", result_size=" + result.size()
-          + ", nearest_to_door_point=" + nearest_to_door_point
-          + ", horizontal_first=" + horizontal_first);
+    nearestToDoorPoint = roundToInteger(nearestToDoorPoint);
+    boolean horizontalFirst =
+        calcHorizontalFirstToDoor(currToInfo.door, this.currentFromPoint, nearestToDoorPoint);
+    result.add(
+        calculateAdditionalCorner(
+            this.currentFromPoint, nearestToDoorPoint, horizontalFirst, this.angleRestriction));
+    result.add(nearestToDoorPoint);
+    ++this.currentToDoorIndex;
+    if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
+      FRLogger.trace(
+          "compare_trace_next_corners_raw net="
+              + this.ctrl.netNo
+              + ", mode=45, branch=EXPANSION_DOOR"
+              + ", layer="
+              + this.currentTraceLayer
+              + ", from_door="
+              + this.currentFromDoorIndex
+              + ", to_door="
+              + this.currentToDoorIndex
+              + ", target_door="
+              + this.currentTargetDoorIndex
+              + ", result_size="
+              + result.size()
+              + ", nearestToDoorPoint="
+              + nearestToDoorPoint
+              + ", horizontalFirst="
+              + horizontalFirst);
     }
     return result;
   }
 
   /**
-   * Calculates, if the 45-degree angle to the next door shape should be horizontal first when coming from p_from_point.
+   * Calculates, if the 45-degree angle to the next door shape should be horizontal first when
+   * coming from p_from_point.
    */
-  private boolean calc_horizontal_first_to_door(ExpandableObject p_to_door, FloatPoint p_from_point, FloatPoint p_to_point) {
-    TileShape door_shape = p_to_door.get_shape();
-    IntBox from_door_box = door_shape.bounding_box();
-    if (p_to_door.get_dimension() != 1) {
-      return from_door_box.height() <= from_door_box.width();
+  private boolean calcHorizontalFirstToDoor(
+      ExpandableObject toDoor, FloatPoint fromPoint, FloatPoint toPoint) {
+    TileShape doorShape = toDoor.getShape();
+    IntBox fromDoorBox = doorShape.boundingBox();
+    if (toDoor.getDimension() != 1) {
+      return fromDoorBox.height() <= fromDoorBox.width();
     }
-    FloatLine door_line_segment = door_shape.diagonal_corner_segment();
-    FloatPoint left_corner;
-    FloatPoint right_corner;
-    if (door_line_segment.a.x < door_line_segment.b.x || door_line_segment.a.x == door_line_segment.b.x && door_line_segment.a.y <= door_line_segment.b.y) {
-      left_corner = door_line_segment.a;
-      right_corner = door_line_segment.b;
+    FloatLine doorLineSegment = doorShape.diagonalCornerSegment();
+    FloatPoint leftCorner;
+    FloatPoint rightCorner;
+    if (doorLineSegment.a.x < doorLineSegment.b.x
+        || doorLineSegment.a.x == doorLineSegment.b.x
+            && doorLineSegment.a.y <= doorLineSegment.b.y) {
+      leftCorner = doorLineSegment.a;
+      rightCorner = doorLineSegment.b;
     } else {
-      left_corner = door_line_segment.b;
-      right_corner = door_line_segment.a;
+      leftCorner = doorLineSegment.b;
+      rightCorner = doorLineSegment.a;
     }
-    double door_dx = right_corner.x - left_corner.x;
-    double door_dy = right_corner.y - left_corner.y;
-    double abs_door_dy = Math.abs(door_dy);
-    double door_max_width = Math.max(door_dx, abs_door_dy);
+    double doorDx = rightCorner.x - leftCorner.x;
+    double doorDy = rightCorner.y - leftCorner.y;
+    double absDoorDy = Math.abs(doorDy);
+    double doorMaxWidth = Math.max(doorDx, absDoorDy);
     boolean result;
-    double door_half_max_width = 0.5 * door_max_width;
-    if (from_door_box.width() <= door_half_max_width) {
+    double doorHalfMaxWidth = 0.5 * doorMaxWidth;
+    if (fromDoorBox.width() <= doorHalfMaxWidth) {
       // door is about vertical
       result = false;
-    } else if (from_door_box.height() <= door_half_max_width) {
+    } else if (fromDoorBox.height() <= doorHalfMaxWidth) {
       // door is about horizontal
       result = true;
     } else {
-      double dx = p_to_point.x - p_from_point.x;
-      double dy = p_to_point.y - p_from_point.y;
-      if (left_corner.y < right_corner.y) {
+      double dx = toPoint.x - fromPoint.x;
+      double dy = toPoint.y - fromPoint.y;
+      if (leftCorner.y < rightCorner.y) {
         // door is about right diagonal
         if (Signum.of(dx) == Signum.of(dy)) {
           result = Math.abs(dx) < Math.abs(dy);

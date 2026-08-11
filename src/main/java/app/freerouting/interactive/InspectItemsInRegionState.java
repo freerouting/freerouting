@@ -7,87 +7,91 @@ import app.freerouting.geometry.planar.IntPoint;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Interactive state for selecting all items in a rectangle.
- */
-public class InspectItemsInRegionState extends SelectRegionState {
+/** Interactive state for selecting all items in a rectangle. */
+public final class InspectItemsInRegionState extends SelectRegionState {
 
-  /**
-   * Creates a new instance of InspectItemsInRegionState
-   */
-  private InspectItemsInRegionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
+  /** Creates a new instance of InspectItemsInRegionState. */
+  private InspectItemsInRegionState(InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
   }
 
-  /**
-   * Returns a new instance of this class.
-   */
-  public static InspectItemsInRegionState get_instance(InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
-    return get_instance(null, p_parent_state, p_board_handling);
+  /** Returns a new instance of this class. */
+  public static InspectItemsInRegionState getInstance(
+      InteractiveState parentState, GuiBoardManager boardHandling) {
+    return getInstance(null, parentState, boardHandling);
   }
 
-  /**
-   * Returns a new instance of this class with first point p_location.
-   */
-  public static InspectItemsInRegionState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
-    p_board_handling.display_layer_message();
-    InspectItemsInRegionState new_instance = new InspectItemsInRegionState(p_parent_state, p_board_handling);
-    new_instance.corner1 = p_location;
-    new_instance.hdlg.screen_messages
-        .set_status_message(new_instance.tm.getText("drag_left_mouse_button_to_select_items_in_region"));
-    return new_instance;
+  /** Returns a new instance of this class with the first point at the given location. */
+  public static InspectItemsInRegionState getInstance(
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    boardHandling.displayLayerMessage();
+    InspectItemsInRegionState newInstance =
+        new InspectItemsInRegionState(parentState, boardHandling);
+    newInstance.corner1 = location;
+    newInstance.hdlg.screenMessages.setStatusMessage(
+        newInstance.tm.getText("drag_left_mouse_button_to_select_items_in_region"));
+    return newInstance;
   }
 
   @Override
   public InteractiveState complete() {
-    if (!hdlg.is_board_read_only()) {
-      hdlg.screen_messages.set_status_message("");
-      corner2 = hdlg.get_current_mouse_position();
-      this.select_all_in_region();
+    if (!hdlg.isBoardReadOnly()) {
+      hdlg.screenMessages.setStatusMessage("");
+      corner2 = hdlg.getCurrentMousePosition();
+      this.selectAllInRegion();
     }
-    return this.return_state;
+    return this.returnState;
   }
 
-  /**
-   * Selects all items in the rectangle defined by corner1 and corner2.
-   */
-  private void select_all_in_region() {
-    IntPoint p1 = this.corner1.round();
-    IntPoint p2 = this.corner2.round();
-
-    IntBox b = new IntBox(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.max(p1.x, p2.x), Math.max(p1.y, p2.y));
-    int select_layer;
-    if (hdlg.getInteractiveSettings().get_select_on_all_visible_layers()) {
-      select_layer = -1;
+  /** Selects all items in the rectangle defined by corner1 and corner2. */
+  private void selectAllInRegion() {
+    int selectLayer;
+    if (hdlg.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
+      selectLayer = -1;
     } else {
-      select_layer = hdlg.getInteractiveSettings().get_layer();
+      selectLayer = hdlg.getInteractiveSettings().getLayer();
     }
-    Set<Item> found_items = hdlg.getInteractiveSettings().get_item_selection_filter()
-        .filter(hdlg.get_routing_board().overlapping_items(b, select_layer));
-    if (hdlg.getInteractiveSettings().get_select_on_all_visible_layers()) {
+    Set<Item> foundItems = findItems(selectLayer);
+    if (hdlg.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
       // remove items, which are not visible
-      Set<Item> visible_items = new TreeSet<>();
-      for (Item curr_item : found_items) {
-        for (int i = curr_item.first_layer(); i <= curr_item.last_layer(); i++) {
-          if (hdlg.graphics_context.get_layer_visibility(i) > 0) {
-            visible_items.add(curr_item);
+      Set<Item> visibleItems = new TreeSet<>();
+      for (Item currItem : foundItems) {
+        for (int i = currItem.firstLayer(); i <= currItem.lastLayer(); i++) {
+          if (hdlg.graphicsContext.getLayerVisibility(i) > 0) {
+            visibleItems.add(currItem);
             break;
           }
         }
       }
-      found_items = visible_items;
+      foundItems = visibleItems;
     }
-    boolean something_found = !found_items.isEmpty();
-    if (something_found) {
-      if (this.return_state instanceof InspectedItemState state) {
-        state.get_item_list().addAll(found_items);
+    boolean somethingFound = !foundItems.isEmpty();
+    if (somethingFound) {
+      if (this.returnState instanceof InspectedItemState state) {
+        state.getItemList().addAll(foundItems);
       } else {
-        this.return_state = InspectedItemState.get_instance(found_items, this.return_state, hdlg);
+        this.returnState = InspectedItemState.getInstance(foundItems, this.returnState, hdlg);
       }
     } else {
-      hdlg.screen_messages.set_status_message(tm.getText("nothing_selected"));
+      hdlg.screenMessages.setStatusMessage(tm.getText("nothing_selected"));
     }
+  }
+
+  private static IntBox createSelectionBox(FloatPoint firstCorner, FloatPoint secondCorner) {
+    IntPoint firstPoint = firstCorner.round();
+    IntPoint secondPoint = secondCorner.round();
+    return new IntBox(
+        Math.min(firstPoint.x, secondPoint.x),
+        Math.min(firstPoint.y, secondPoint.y),
+        Math.max(firstPoint.x, secondPoint.x),
+        Math.max(firstPoint.y, secondPoint.y));
+  }
+
+  private Set<Item> findItems(int selectLayer) {
+    return hdlg.getInteractiveSettings()
+        .getItemSelectionFilter()
+        .filter(
+            hdlg.getRoutingBoard()
+                .overlappingItems(createSelectionBox(this.corner1, this.corner2), selectLayer));
   }
 }

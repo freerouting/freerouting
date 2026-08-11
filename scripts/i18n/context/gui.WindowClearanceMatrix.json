@@ -146,9 +146,7 @@
   },
   "new_name": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowClearanceMatrix"
-    ],
+    "code_references": [],
     "english_hash": "20cdffc054f76faf77c8e1f832c82f1ec6a25f7f8caba19d11d812191218c3ed",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

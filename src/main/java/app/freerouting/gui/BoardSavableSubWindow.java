@@ -7,19 +7,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-/**
- * Subwindow of the board frame, whose location and visibility can be saved and read from disc.
- */
+/** Subwindow of the board frame, whose location and visibility can be saved and read from disc. */
 public abstract class BoardSavableSubWindow extends BoardSubWindow {
 
-  /**
-   * Reads the data of this frame from disc. Returns false, if the reading failed.
-   */
-  public boolean read(ObjectInputStream p_object_stream) {
+  /** Reads the data of this frame from disc. Returns false, if the reading failed. */
+  public boolean read(ObjectInputStream objectStream) {
     try {
-      SavedAttributes saved_attributes = (SavedAttributes) p_object_stream.readObject();
-      this.setBounds(saved_attributes.bounds);
-      this.setVisible(saved_attributes.is_visible);
+      SavedAttributes savedAttributes = (SavedAttributes) objectStream.readObject();
+      this.setBounds(savedAttributes.bounds);
+      this.setVisible(savedAttributes.isVisible);
       return true;
     } catch (Exception e) {
       FRLogger.error("SelectParameterWindow.read: read failed", e);
@@ -27,30 +23,24 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
     }
   }
 
-  /**
-   * Saves this frame to disk.
-   */
-  public void save(ObjectOutputStream p_object_stream) {
-    SavedAttributes saved_attributes = new SavedAttributes(this.getBounds(), this.isVisible());
+  /** Saves this frame to disk. */
+  public void save(ObjectOutputStream objectStream) {
+    SavedAttributes savedAttributes = new SavedAttributes(this.getBounds(), this.isVisible());
 
     try {
-      p_object_stream.writeObject(saved_attributes);
+      objectStream.writeObject(savedAttributes);
     } catch (IOException e) {
       FRLogger.error("BoardSubWindow.save: save failed", e);
     }
   }
 
-  /**
-   * Refresh the displayed values in this window. To be overwritten in derived classes.
-   */
-  public void refresh() {
-  }
+  /** Refresh the displayed values in this window. To be overwritten in derived classes. */
+  public void refresh() {}
 
   /**
    * Called when the window has been moved to a different display with a different
-   * GraphicsConfiguration (e.g. different DPI scaling). Re-packs the window and
-   * refreshes displayed values so that component sizes and font metrics are
-   * recomputed for the new display.
+   * GraphicsConfiguration (e.g. different DPI scaling). Re-packs the window and refreshes displayed
+   * values so that component sizes and font metrics are recomputed for the new display.
    */
   @Override
   protected void onGraphicsConfigurationChanged() {
@@ -60,17 +50,15 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
     repaint();
   }
 
-  /**
-   * Type for attributes of this class, which are saved to an Objectstream.
-   */
+  /** Type for attributes of this class, which are saved to an Objectstream. */
   private static class SavedAttributes implements Serializable {
 
     public final Rectangle bounds;
-    public final boolean is_visible;
+    public final boolean isVisible;
 
-    public SavedAttributes(Rectangle p_bounds, boolean p_is_visible) {
-      bounds = p_bounds;
-      is_visible = p_is_visible;
+    public SavedAttributes(Rectangle bounds, boolean isVisible) {
+      this.bounds = bounds;
+      this.isVisible = isVisible;
     }
   }
 }

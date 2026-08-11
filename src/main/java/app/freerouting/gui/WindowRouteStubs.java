@@ -7,8 +7,8 @@ import app.freerouting.board.Via;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.util.TextManager;
 import app.freerouting.rules.Net;
+import app.freerouting.util.TextManager;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -16,154 +16,148 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/** Displays route stubs that can be removed from the board. */
 public class WindowRouteStubs extends CleanupWindows {
 
-  /**
-   * Creates a new instance of WindowRouteStubs
-   */
-  public WindowRouteStubs(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  /** Creates a new instance of WindowRouteStubs. */
+  public WindowRouteStubs(BoardFrame boardFrame) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
 
-    this.tm = new TextManager(CleanupWindows.class, p_board_frame.get_locale());
+    this.tm = new TextManager(CleanupWindows.class, boardFrame.get_locale());
 
     this.setTitle(tm.getText("route_stubs"));
-    this.list_empty_message.setText(tm.getText("no_route_stubs_found"));
+    this.listEmptyMessage.setText(tm.getText("no_route_stubs_found"));
   }
 
   @Override
-  protected void fill_list() {
-    BasicBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
+  protected void fillList() {
+    BasicBoard routingBoard = this.boardFrame.boardPanel.boardHandling.getRoutingBoard();
 
-    SortedSet<RouteStubInfo> route_stub_info_set = new TreeSet<>();
+    SortedSet<RouteStubInfo> routeStubInfoSet = new TreeSet<>();
 
-    Collection<Item> board_items = routing_board.get_items();
-    for (Item curr_item : board_items) {
-      if (!(curr_item instanceof Trace || curr_item instanceof Via)) {
+    Collection<Item> boardItems = routingBoard.getItems();
+    for (Item currItem : boardItems) {
+      if (!(currItem instanceof Trace || currItem instanceof Via)) {
         continue;
       }
-      if (curr_item.net_count() != 1) {
+      if (currItem.netCount() != 1) {
         continue;
       }
 
-      FloatPoint stub_location;
-      int stub_layer;
-      if (curr_item instanceof Via via) {
-        Collection<Item> contact_list = curr_item.get_all_contacts();
-        if (contact_list.isEmpty()) {
-          stub_layer = curr_item.first_layer();
+      FloatPoint stubLocation;
+      int stubLayer;
+      if (currItem instanceof Via via) {
+        Collection<Item> contactList = currItem.getAllContacts();
+        if (contactList.isEmpty()) {
+          stubLayer = currItem.firstLayer();
         } else {
-          Iterator<Item> it = contact_list.iterator();
-          Item curr_contact_item = it.next();
-          int first_contact_first_layer = curr_contact_item.first_layer();
-          int first_contact_last_layer = curr_contact_item.last_layer();
-          boolean all_contacts_on_one_layer = true;
+          Iterator<Item> it = contactList.iterator();
+          Item currContactItem = it.next();
+          int firstContactFirstLayer = currContactItem.firstLayer();
+          int firstContactLastLayer = currContactItem.lastLayer();
+          boolean allContactsOnOneLayer = true;
           while (it.hasNext()) {
-            curr_contact_item = it.next();
-            if (curr_contact_item.first_layer() != first_contact_first_layer || curr_contact_item.last_layer() != first_contact_last_layer) {
-              all_contacts_on_one_layer = false;
+            currContactItem = it.next();
+            if (currContactItem.firstLayer() != firstContactFirstLayer
+                || currContactItem.lastLayer() != firstContactLastLayer) {
+              allContactsOnOneLayer = false;
               break;
             }
           }
-          if (!all_contacts_on_one_layer) {
+          if (!allContactsOnOneLayer) {
             continue;
           }
-          if (curr_item.first_layer() >= first_contact_first_layer && curr_item.last_layer() <= first_contact_first_layer) {
-            stub_layer = first_contact_first_layer;
+          if (currItem.firstLayer() >= firstContactFirstLayer
+              && currItem.lastLayer() <= firstContactFirstLayer) {
+            stubLayer = firstContactFirstLayer;
           } else {
-            stub_layer = first_contact_last_layer;
+            stubLayer = firstContactLastLayer;
           }
         }
-        stub_location = via
-            .get_center()
-            .to_float();
+        stubLocation = via.getCenter().toFloat();
       } else {
-        Trace curr_trace = (Trace) curr_item;
-        if (curr_trace
-            .get_start_contacts()
-            .isEmpty()) {
-          stub_location = curr_trace
-              .first_corner()
-              .to_float();
-        } else if (curr_trace
-            .get_end_contacts()
-            .isEmpty()) {
-          stub_location = curr_trace
-              .last_corner()
-              .to_float();
+        Trace currTrace = (Trace) currItem;
+        if (currTrace.getStartContacts().isEmpty()) {
+          stubLocation = currTrace.firstCorner().toFloat();
+        } else if (currTrace.getEndContacts().isEmpty()) {
+          stubLocation = currTrace.lastCorner().toFloat();
         } else {
           continue;
         }
-        stub_layer = curr_trace.get_layer();
+        stubLayer = currTrace.getLayer();
       }
-      RouteStubInfo curr_route_stub_info = new RouteStubInfo(curr_item, stub_location, stub_layer);
-      route_stub_info_set.add(curr_route_stub_info);
+      RouteStubInfo currRouteStubInfo = new RouteStubInfo(currItem, stubLocation, stubLayer);
+      routeStubInfoSet.add(currRouteStubInfo);
     }
 
-    for (RouteStubInfo curr_info : route_stub_info_set) {
-      this.add_to_list(curr_info);
+    for (RouteStubInfo currInfo : routeStubInfoSet) {
+      this.addToList(currInfo);
     }
-    this.list.setVisibleRowCount(Math.min(route_stub_info_set.size(), DEFAULT_TABLE_SIZE));
+    this.list.setVisibleRowCount(Math.min(routeStubInfoSet.size(), DEFAULT_TABLE_SIZE));
   }
 
   @Override
-  protected void select_instances() {
-    List<Object> selected_list_values = list.getSelectedValuesList();
-    if (selected_list_values.isEmpty()) {
+  protected void selectInstances() {
+    List<Object> selectedListValues = list.getSelectedValuesList();
+    if (selectedListValues.isEmpty()) {
       return;
     }
-    Set<Item> selected_items = new TreeSet<>();
-    for (int i = 0; i < selected_list_values.size(); i++) {
-      selected_items.add(((RouteStubInfo) selected_list_values.get(i)).stub_item);
+    Set<Item> selectedItems = new TreeSet<>();
+    for (int i = 0; i < selectedListValues.size(); i++) {
+      selectedItems.add(((RouteStubInfo) selectedListValues.get(i)).stubItem);
     }
-    GuiBoardManager board_handling = board_frame.board_panel.board_handling;
-    board_handling.select_items(selected_items);
-    board_handling.zoom_selection();
+    GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
+    boardHandling.selectItems(selectedItems);
+    boardHandling.zoomSelection();
   }
 
-  /**
-   * Describes information of a route stub in the list.
-   */
+  /** Describes information of a route stub in the list. */
   private class RouteStubInfo implements Comparable<RouteStubInfo> {
 
-    private final Item stub_item;
+    private final Item stubItem;
     private final Net net;
     private final FloatPoint location;
-    private final int layer_no;
+    private final int layerNo;
 
-    public RouteStubInfo(Item p_stub, FloatPoint p_location, int p_layer_no) {
-      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
-      this.stub_item = p_stub;
-      this.location = board_handling.coordinate_transform.board_to_user(p_location);
-      this.layer_no = p_layer_no;
-      int net_no = p_stub.get_net_no(0);
-      this.net = board_handling.get_routing_board().rules.nets.get(net_no);
+    public RouteStubInfo(Item stub, FloatPoint location, int layerNo) {
+      GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
+      this.stubItem = stub;
+      this.location = boardHandling.coordinateTransform.boardToUser(location);
+      this.layerNo = layerNo;
+      int netNo = stub.getNetNo(0);
+      this.net = boardHandling.getRoutingBoard().rules.nets.get(netNo);
     }
 
     @Override
     public String toString() {
-      String item_string;
-      if (this.stub_item instanceof Trace) {
-        item_string = tm.getText("trace");
+      String itemString;
+      if (this.stubItem instanceof Trace) {
+        itemString = tm.getText("trace");
       } else {
-        item_string = tm.getText("via");
+        itemString = tm.getText("via");
       }
-      String layer_name = board_frame.board_panel.board_handling.get_routing_board().layer_structure.arr[layer_no].name;
-      return tm.getText("route_stub_row_message", item_string, this.net.name,
-          this.location.to_string(board_frame.get_locale()), layer_name);
+      String layerName =
+          boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure.arr[layerNo].name;
+      return tm.getText(
+          "route_stub_row_message",
+          itemString,
+          this.net.name,
+          this.location.toString(boardFrame.get_locale()),
+          layerName);
     }
 
     @Override
-    public int compareTo(RouteStubInfo p_other) {
-      int result = this.net.name.compareTo(p_other.net.name);
+    public int compareTo(RouteStubInfo other) {
+      int result = this.net.name.compareTo(other.net.name);
       if (result == 0) {
-        result = Signum.as_int(this.location.x - p_other.location.x);
+        result = Signum.asInt(this.location.x - other.location.x);
       }
       if (result == 0) {
-        result = Signum.as_int(this.location.y - p_other.location.y);
+        result = Signum.asInt(this.location.y - other.location.y);
       }
       if (result == 0) {
-        result = this.layer_no - p_other.layer_no;
+        result = this.layerNo - other.layerNo;
       }
       return result;
     }

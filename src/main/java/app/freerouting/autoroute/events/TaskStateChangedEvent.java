@@ -3,13 +3,16 @@ package app.freerouting.autoroute.events;
 import app.freerouting.autoroute.TaskState;
 import java.util.EventObject;
 
+/** TaskStateChangedEvent. */
 public class TaskStateChangedEvent extends EventObject {
 
   private final TaskState tastState;
   private final int passNumber;
   private final String boardHash;
 
-  public TaskStateChangedEvent(Object source, TaskState taskState, int passNumber, String boardHash) {
+  /** TaskStateChangedEvent. */
+  public TaskStateChangedEvent(
+      Object source, TaskState taskState, int passNumber, String boardHash) {
     super(source);
     this.tastState = taskState;
     this.passNumber = passNumber;

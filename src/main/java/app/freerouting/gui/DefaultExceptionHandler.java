@@ -10,14 +10,21 @@ import java.awt.GraphicsEnvironment;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+/** Logs uncaught exceptions and shows them in the GUI when appropriate. */
 public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler {
 
+  /**
+   * Handles an exception outside the normal application flow.
+   *
+   * @param e the exception to report
+   */
   public static void handleException(Throwable e) {
     // Here you should have a more robust, permanent record of problems
     FRLogger.error(e.getLocalizedMessage(), e);
     FRAnalytics.exceptionThrown(e.getLocalizedMessage(), e);
     if (shouldShowDialog()) {
-      JOptionPane.showMessageDialog(findActiveFrame(), e.toString(), "Exception Occurred", OK_OPTION);
+      JOptionPane.showMessageDialog(
+          findActiveFrame(), e.toString(), "Exception Occurred", OK_OPTION);
     }
   }
 
@@ -25,11 +32,8 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
     if (GraphicsEnvironment.isHeadless()) {
       return false;
     }
-    if (Freerouting.globalSettings != null
-        && Boolean.FALSE.equals(Freerouting.globalSettings.guiSettings.isEnabled)) {
-      return false;
-    }
-    return true;
+    return !(Freerouting.globalSettings != null
+        && Boolean.FALSE.equals(Freerouting.globalSettings.guiSettings.isEnabled));
   }
 
   private static Frame findActiveFrame() {

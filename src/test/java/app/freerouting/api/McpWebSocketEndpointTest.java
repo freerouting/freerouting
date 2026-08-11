@@ -14,7 +14,6 @@ import app.freerouting.settings.McpServerSettings;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
-import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -22,8 +21,10 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Tag("serial")
 class McpWebSocketEndpointTest {
 
   private Server mcpServer;
@@ -35,16 +36,18 @@ class McpWebSocketEndpointTest {
   }
 
   @Test
-  void websocket_withValidHeaders_acceptsAndResponds() throws Exception {
+  void websocketWithValidHeadersAcceptsAndResponds() throws Exception {
     URI wsUri = startMcpServer(false);
 
     TestWebSocketListener listener = new TestWebSocketListener();
-    WebSocket webSocket = HttpClient.newHttpClient().newWebSocketBuilder()
-        .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000001")
-        .header("Freerouting-Environment-Host", "TestClient/1.0")
-        .connectTimeout(HTTP_TIMEOUT)
-        .buildAsync(wsUri, listener)
-        .join();
+    WebSocket webSocket =
+        HttpClient.newHttpClient()
+            .newWebSocketBuilder()
+            .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000001")
+            .header("Freerouting-Environment-Host", "TestClient/1.0")
+            .connectTimeout(HTTP_TIMEOUT)
+            .buildAsync(wsUri, listener)
+            .join();
 
     webSocket.sendText("hello", true).join();
 
@@ -55,11 +58,12 @@ class McpWebSocketEndpointTest {
   }
 
   @Test
-  void websocket_missingProfileHeader_isRejected() throws Exception {
+  void websocketMissingProfileHeaderIsRejected() throws Exception {
     URI wsUri = startMcpServer(false);
 
     TestWebSocketListener listener = new TestWebSocketListener();
-    HttpClient.newHttpClient().newWebSocketBuilder()
+    HttpClient.newHttpClient()
+        .newWebSocketBuilder()
         .header("Freerouting-Environment-Host", "TestClient/1.0")
         .connectTimeout(HTTP_TIMEOUT)
         .buildAsync(wsUri, listener)
@@ -70,11 +74,12 @@ class McpWebSocketEndpointTest {
   }
 
   @Test
-  void websocket_missingEnvironmentHost_isRejected() throws Exception {
+  void websocketMissingEnvironmentHostIsRejected() throws Exception {
     URI wsUri = startMcpServer(false);
 
     TestWebSocketListener listener = new TestWebSocketListener();
-    HttpClient.newHttpClient().newWebSocketBuilder()
+    HttpClient.newHttpClient()
+        .newWebSocketBuilder()
         .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000001")
         .connectTimeout(HTTP_TIMEOUT)
         .buildAsync(wsUri, listener)
@@ -85,11 +90,12 @@ class McpWebSocketEndpointTest {
   }
 
   @Test
-  void websocket_authEnabled_missingAuthorization_isRejected() throws Exception {
+  void websocketAuthEnabledMissingAuthorizationIsRejected() throws Exception {
     URI wsUri = startMcpServer(true);
 
     TestWebSocketListener listener = new TestWebSocketListener();
-    HttpClient.newHttpClient().newWebSocketBuilder()
+    HttpClient.newHttpClient()
+        .newWebSocketBuilder()
         .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000001")
         .header("Freerouting-Environment-Host", "TestClient/1.0")
         .connectTimeout(HTTP_TIMEOUT)
@@ -112,7 +118,7 @@ class McpWebSocketEndpointTest {
     mcpSettings.endpoints = new String[] {"http://127.0.0.1:0"};
     mcpSettings.authentication.isEnabled = authenticationEnabled;
 
-    mcpServer = Freerouting.InitializeMCP(mcpSettings);
+    mcpServer = Freerouting.initializeMCP(mcpSettings);
     waitForServerStarted(mcpServer);
     int mcpPort = ((ServerConnector) mcpServer.getConnectors()[0]).getLocalPort();
     waitForMcpServerReady(URI.create("http://127.0.0.1:" + mcpPort));
@@ -120,9 +126,8 @@ class McpWebSocketEndpointTest {
   }
 
   private static String waitForMessageContaining(
-      BlockingQueue<String> messages,
-      String expectedText,
-      int timeoutSeconds) throws InterruptedException {
+      BlockingQueue<String> messages, String expectedText, int timeoutSeconds)
+      throws InterruptedException {
     long deadline = System.currentTimeMillis() + timeoutSeconds * 1000L;
     while (System.currentTimeMillis() < deadline) {
       String message = messages.poll(250, TimeUnit.MILLISECONDS);
@@ -144,10 +149,9 @@ class McpWebSocketEndpointTest {
     }
 
     @Override
+    // codespell:ignore
     public java.util.concurrent.CompletionStage<?> onText(
-        WebSocket webSocket,
-        CharSequence data,
-        boolean last) {
+        WebSocket webSocket, CharSequence data, boolean last) {
       messages.offer(data.toString());
       webSocket.request(1);
       return null;
@@ -155,9 +159,7 @@ class McpWebSocketEndpointTest {
 
     @Override
     public java.util.concurrent.CompletionStage<?> onClose(
-        WebSocket webSocket,
-        int statusCode,
-        String reason) {
+        WebSocket webSocket, int statusCode, String reason) {
       closeStatus.complete(statusCode);
       return null;
     }

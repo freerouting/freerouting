@@ -20,66 +20,86 @@ import java.util.Iterator;
 import java.util.Locale;
 
 /**
- * Class describing the functionality of an electrical Item on the board, which may have a shape on several layer, whose geometry is described by a padstack.
+ * Class describing the functionality of an electrical Item on the board, which may have a shape on
+ * several layer, whose geometry is described by a padstack.
  */
 public class Via extends DrillItem implements Serializable {
 
-  /**
-   * True, if coppersharing of this via with smd pins of the same net is allowed.
-   */
-  public final boolean attach_allowed;
-  /**
-   * True if this is an escape via inserted by the escalation fanout phase to provide
-   * a layer transition point from an SMD pin that could not be escaped on its primary layer.
-   * Escape vias use SMD-to-SMD clearance rules on their SMD layer rather than normal
-   * conductor-to-conductor clearance, because they sit inside the SMD pad copper footprint.
-   */
-  public boolean isEscapeVia = false;
-  /**
-   * The SMD layer (primary layer) on which this escape via connects to an SMD pin.
-   * Only relevant when isEscapeVia is true. -1 if not an escape via.
-   */
-  public int escapeViaSmdLayer = -1;
-  private Padstack padstack;
-  private transient Shape[] precalculated_shapes;
-  /**
-   * Temporary data used in the autoroute algorithm.
-   */
-  private transient ExpansionDrill autoroute_drill_info;
+  /** True, if coppersharing of this via with smd pins of the same net is allowed. */
+  public final boolean attachAllowed;
 
   /**
-   * Creates a new instance of Via with the input parameters
+   * True if this is an escape via inserted by the escalation fanout phase to provide a layer
+   * transition point from an SMD pin that could not be escaped on its primary layer. Escape vias
+   * use SMD-to-SMD clearance rules on their SMD layer rather than normal conductor-to-conductor
+   * clearance, because they sit inside the SMD pad copper footprint.
    */
-  public Via(Padstack p_padstack, Point p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, FixedState p_fixed_state, boolean p_attach_allowed, BasicBoard p_board) {
-    super(p_center, p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
-    this.padstack = p_padstack;
-    this.attach_allowed = p_attach_allowed;
+  public boolean isEscapeVia;
+
+  /**
+   * The SMD layer (primary layer) on which this escape via connects to an SMD pin. Only relevant
+   * when isEscapeVia is true. -1 if not an escape via.
+   */
+  public int escapeViaSmdLayer = -1;
+
+  private Padstack padstack;
+  private transient Shape[] precalculatedShapes;
+
+  /** Temporary data used in the autoroute algorithm. */
+  private transient ExpansionDrill autorouteDrillInfo;
+
+  /** Creates a new instance of Via with the input parameters. */
+  public Via(
+      Padstack padstack,
+      Point center,
+      int[] netNoArr,
+      int clearanceType,
+      int idNo,
+      int groupNo,
+      FixedState fixedState,
+      boolean attachAllowed,
+      BasicBoard board) {
+    super(center, netNoArr, clearanceType, idNo, groupNo, fixedState, board);
+    this.padstack = padstack;
+    this.attachAllowed = attachAllowed;
   }
 
   @Override
-  public Item copy(int p_id_no) {
-    Via copy = new Via(padstack, get_center(), net_no_arr, clearance_class_no(), p_id_no, get_component_no(), get_fixed_state(), attach_allowed, board);
+  public Item copy(int idNo) {
+    Via copy =
+        new Via(
+            padstack,
+            getCenter(),
+            netNoArr,
+            clearanceClassNo(),
+            idNo,
+            getComponentNo(),
+            getFixedState(),
+            attachAllowed,
+            board);
     copy.isEscapeVia = this.isEscapeVia;
     copy.escapeViaSmdLayer = this.escapeViaSmdLayer;
     return copy;
   }
 
   @Override
-  public java.util.Collection<app.freerouting.drc.ClearanceViolation> clearance_violations() {
-    java.util.Collection<app.freerouting.drc.ClearanceViolation> rawViolations = super.clearance_violations();
+  public java.util.Collection<app.freerouting.drc.ClearanceViolation> clearanceViolations() {
+    java.util.Collection<app.freerouting.drc.ClearanceViolation> rawViolations =
+        super.clearanceViolations();
     if (!this.isEscapeVia || this.escapeViaSmdLayer < 0) {
       return rawViolations;
     }
-    java.util.Collection<app.freerouting.drc.ClearanceViolation> filteredViolations = new java.util.LinkedList<>();
+    java.util.Collection<app.freerouting.drc.ClearanceViolation> filteredViolations =
+        new java.util.LinkedList<>();
     for (app.freerouting.drc.ClearanceViolation violation : rawViolations) {
       if (violation.layer == this.escapeViaSmdLayer) {
         Item other = null;
-        if (violation.first_item == this) {
-          other = violation.second_item;
-        } else if (violation.second_item == this) {
-          other = violation.first_item;
+        if (violation.firstItem == this) {
+          other = violation.secondItem;
+        } else if (violation.secondItem == this) {
+          other = violation.firstItem;
         }
-        if (other != null && other.shares_net(this)) {
+        if (other != null && other.sharesNet(this)) {
           continue;
         }
       }
@@ -89,75 +109,74 @@ public class Via extends DrillItem implements Serializable {
   }
 
   @Override
-  public Shape get_shape(int p_index) {
+  public Shape getShape(int index) {
     if (padstack == null) {
       FRLogger.warn("Via.get_shape: padstack is null");
       return null;
     }
-    if (this.precalculated_shapes == null) {
-      this.precalculated_shapes = new Shape[padstack.to_layer() - padstack.from_layer() + 1];
-      for (int i = 0; i < this.precalculated_shapes.length; i++) {
-        int padstack_layer = i + this.first_layer();
-        Vector translate_vector = get_center().difference_by(Point.ZERO);
-        Shape curr_shape = padstack.get_shape(padstack_layer);
+    if (this.precalculatedShapes == null) {
+      this.precalculatedShapes = new Shape[padstack.toLayer() - padstack.fromLayer() + 1];
+      for (int i = 0; i < this.precalculatedShapes.length; i++) {
+        int padstackLayer = i + this.firstLayer();
+        Vector translateVector = getCenter().differenceBy(Point.ZERO);
+        Shape currShape = padstack.getShape(padstackLayer);
 
-        if (curr_shape == null) {
-          this.precalculated_shapes[i] = null;
+        if (currShape == null) {
+          this.precalculatedShapes[i] = null;
         } else {
-          this.precalculated_shapes[i] = (Shape) curr_shape.translate_by(translate_vector);
+          this.precalculatedShapes[i] = (Shape) currShape.translateBy(translateVector);
         }
       }
     }
-    return this.precalculated_shapes[p_index];
+    return this.precalculatedShapes[index];
   }
 
   @Override
-  public Padstack get_padstack() {
+  public Padstack getPadstack() {
     return padstack;
   }
 
-  public void set_padstack(Padstack p_padstack) {
-    padstack = p_padstack;
+  public void setPadstack(Padstack padstack) {
+    this.padstack = padstack;
   }
 
   @Override
-  public boolean is_routable() {
-    return !is_user_fixed() && (this.net_count() > 0);
+  public boolean isRoutable() {
+    return !isUserFixed() && (this.netCount() > 0);
   }
 
   @Override
-  public boolean is_obstacle(Item p_other) {
-    if (p_other == this || p_other instanceof ComponentObstacleArea) {
+  public boolean isObstacle(Item other) {
+    if (other == this || other instanceof ComponentObstacleArea) {
       return false;
     }
-    if ((p_other instanceof ConductionArea area) && !area.get_is_obstacle()) {
+    if ((other instanceof ConductionArea area) && !area.getIsObstacle()) {
       return false;
     }
-    if (!p_other.shares_net(this)) {
+    if (!other.sharesNet(this)) {
       return true;
     }
-    if (p_other instanceof Trace) {
+    if (other instanceof Trace) {
       return false;
     }
-    return !this.attach_allowed || !(p_other instanceof Pin) || !((Pin) p_other).drill_allowed();
+    return !this.attachAllowed || !(other instanceof Pin) || !((Pin) other).drillAllowed();
   }
 
-  /**
-   * Checks, if the Via has contacts on at most 1 layer.
-   */
+  /** Checks, if the Via has contacts on at most 1 layer. */
   @Override
-  public boolean is_tail() {
-    Collection<Item> contact_list = this.get_normal_contacts();
-    if (contact_list.size() <= 1) {
+  public boolean isTail() {
+    Collection<Item> contactList = this.getNormalContacts();
+    if (contactList.size() <= 1) {
       return true;
     }
-    Iterator<Item> it = contact_list.iterator();
-    Item curr_contact_item = it.next();
-    int first_contact_first_layer = curr_contact_item.first_layer();
-    int first_contact_last_layer = curr_contact_item.last_layer();
+    Iterator<Item> it = contactList.iterator();
+    Item currContactItem = it.next();
+    int firstContactFirstLayer = currContactItem.firstLayer();
+    int firstContactLastLayer = currContactItem.lastLayer();
     while (it.hasNext()) {
-      curr_contact_item = it.next();
-      if (curr_contact_item.first_layer() != first_contact_first_layer || curr_contact_item.last_layer() != first_contact_last_layer) {
+      currContactItem = it.next();
+      if (currContactItem.firstLayer() != firstContactFirstLayer
+          || currContactItem.lastLayer() != firstContactLastLayer) {
         return false;
       }
     }
@@ -165,110 +184,112 @@ public class Via extends DrillItem implements Serializable {
   }
 
   @Override
-  public void change_placement_side(IntPoint p_pole) {
+  public void changePlacementSide(IntPoint pole) {
     if (this.board == null) {
       return;
     }
-    Padstack new_padstack = this.board.library.get_mirrored_via_padstack(this.padstack);
-    if (new_padstack == null) {
+    Padstack newPadstack = this.board.library.getMirroredViaPadstack(this.padstack);
+    if (newPadstack == null) {
       return;
     }
-    this.padstack = new_padstack;
-    super.change_placement_side(p_pole);
-    clear_derived_data();
+    this.padstack = newPadstack;
+    super.changePlacementSide(pole);
+    clearDerivedData();
   }
 
-  public ExpansionDrill get_autoroute_drill_info(ShapeSearchTree p_autoroute_tree) {
-    if (this.autoroute_drill_info == null) {
-      ItemAutorouteInfo via_autoroute_info = this.get_autoroute_info();
-      TileShape curr_drill_shape = TileShape.get_instance(this.get_center());
-      this.autoroute_drill_info = new ExpansionDrill(curr_drill_shape, this.get_center(), this.first_layer(), this.last_layer());
-      int via_layer_count = this.last_layer() - this.first_layer() + 1;
-      for (int i = 0; i < via_layer_count; i++) {
-        this.autoroute_drill_info.room_arr[i] = via_autoroute_info.get_expansion_room(i, p_autoroute_tree);
+  /** GetAutorouteDrillInfo. */
+  public ExpansionDrill getAutorouteDrillInfo(ShapeSearchTree autorouteTree) {
+    if (this.autorouteDrillInfo == null) {
+      ItemAutorouteInfo viaAutorouteInfo = this.getAutorouteInfo();
+      TileShape currDrillShape = TileShape.getInstance(this.getCenter());
+      this.autorouteDrillInfo =
+          new ExpansionDrill(currDrillShape, this.getCenter(), this.firstLayer(), this.lastLayer());
+      int viaLayerCount = this.lastLayer() - this.firstLayer() + 1;
+      for (int i = 0; i < viaLayerCount; i++) {
+        this.autorouteDrillInfo.roomArr[i] = viaAutorouteInfo.getExpansionRoom(i, autorouteTree);
       }
     }
-    return this.autoroute_drill_info;
+    return this.autorouteDrillInfo;
   }
 
   @Override
-  public void clear_derived_data() {
-    super.clear_derived_data();
-    this.precalculated_shapes = null;
-    this.autoroute_drill_info = null;
+  public void clearDerivedData() {
+    super.clearDerivedData();
+    this.precalculatedShapes = null;
+    this.autorouteDrillInfo = null;
   }
 
   @Override
-  public void clear_autoroute_info() {
-    super.clear_autoroute_info();
-    this.autoroute_drill_info = null;
+  public void clearAutorouteInfo() {
+    super.clearAutorouteInfo();
+    this.autorouteDrillInfo = null;
   }
 
   @Override
-  public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
-    if (!this.is_selected_by_fixed_filter(p_filter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter filter) {
+    if (!this.isSelectedByFixedFilter(filter)) {
       return false;
     }
-    return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.VIAS);
+    return filter.isSelected(ItemSelectionFilter.SelectableChoices.VIAS);
   }
 
   @Override
-  public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
+  public Color[] getDrawColors(GraphicsContext graphicsContext) {
     Color[] result;
-    if (this.net_count() == 0) {
+    if (this.netCount() == 0) {
       // display unconnected vias as obstacles
-      result = p_graphics_context.get_obstacle_colors();
+      result = graphicsContext.getObstacleColors();
     } else {
-      result = p_graphics_context.get_trace_colors(this.is_user_fixed());
+      result = graphicsContext.getTraceColors(this.isUserFixed());
     }
     return result;
   }
 
   @Override
-  public double get_draw_intensity(GraphicsContext p_graphics_context) {
+  public double getDrawIntensity(GraphicsContext graphicsContext) {
     double result;
-    if (this.net_count() == 0) {
+    if (this.netCount() == 0) {
       // display unconnected vias as obstacles
-      result = p_graphics_context.get_obstacle_color_intensity();
+      result = graphicsContext.getObstacleColorIntensity();
 
-    } else if (this.first_layer() >= this.last_layer()) {
+    } else if (this.firstLayer() >= this.lastLayer()) {
       // display vias with only one layer as pins
-      result = p_graphics_context.get_pin_color_intensity();
+      result = graphicsContext.getPinColorIntensity();
     } else {
-      result = p_graphics_context.get_via_color_intensity();
+      result = graphicsContext.getViaColorIntensity();
     }
     return result;
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    p_window.append_bold(tm.getText("via"));
-    p_window.append(" " + tm.getText("at") + " ");
-    p_window.append(this.get_center().to_float());
-    p_window.append(", " + tm.getText("padstack"));
-    p_window.append(padstack.name, tm.getText("padstack_info"), padstack);
-    this.print_connectable_item_info(p_window, p_locale);
-    p_window.newline();
+    window.appendBold(tm.getText("via"));
+    window.append(" " + tm.getText("at") + " ");
+    window.append(this.getCenter().toFloat());
+    window.append(", " + tm.getText("padstack"));
+    window.append(padstack.name, tm.getText("padstack_info"), padstack);
+    this.printConnectableItemInfo(window, locale);
+    window.newline();
   }
 
   @Override
-  public String get_hover_info(Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public String getHoverInfo(Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    String from_layer = this.board.layer_structure.arr[this.first_layer()].name;
-    String to_layer = this.board.layer_structure.arr[this.last_layer()].name;
-    String padstack_name = padstack.name;
-    String connInfo = this.get_connectable_item_hover_info(p_locale);
+    String fromLayer = this.board.layerStructure.arr[this.firstLayer()].name;
+    String toLayer = this.board.layerStructure.arr[this.lastLayer()].name;
+    String padstackName = padstack.name;
+    String connInfo = this.getConnectableItemHoverInfo(locale);
 
-    return tm.getText("via_hover_info", padstack_name, from_layer, to_layer, connInfo);
+    return tm.getText("via_hover_info", padstackName, fromLayer, toLayer, connInfo);
   }
 
   @Override
-  public boolean write(ObjectOutputStream p_stream) {
+  public boolean write(ObjectOutputStream stream) {
     try {
-      p_stream.writeObject(this);
+      stream.writeObject(this);
     } catch (IOException _) {
       return false;
     }

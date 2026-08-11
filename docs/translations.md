@@ -20,9 +20,9 @@ Direct edits are discouraged because they:
 ### How to fix an improper translation
 
 1. **Identify the PCB or UI concept** (e.g. clearance, shove fixed, net class), not just one menu label.
-2. **Edit the locale glossary only:** `scripts/i18n/glossary/{locale}.json`  
-   - Lead with the **localized term** users should see (not English embedded in the value).  
-   - Keep these in Latin script when they appear in UI text: **DSN**, **SES**, **Specctra**, **Freerouting**, **Andras Fuchs**.  
+2. **Edit the locale glossary only:** `scripts/i18n/glossary/{locale}.json`
+   - Lead with the **localized term** users should see (not English embedded in the value).
+   - Keep these in Latin script when they appear in UI text: **DSN**, **SES**, **Specctra**, **Freerouting**, **Andras Fuchs**.
    - If a term is missing, add the same key to `_default.json` first, then to every `{locale}.json` (see [`scripts/i18n/README.md`](../scripts/i18n/README.md#glossaries)).
 3. **Open a pull request or issue** that includes:
    - The glossary change (required)
@@ -61,8 +61,8 @@ python scripts/i18n/validate.py --locale $locale -v
 
 Commit the regenerated `*_{locale}.properties`, updated glossary, and `scripts/i18n/context/` if it changed.
 
-To refresh **without** deleting files (only if keys are flagged stale):  
-`python scripts/i18n/translate.py --locale $locale --missing-only`  
+To refresh **without** deleting files (only if keys are flagged stale):
+`python scripts/i18n/translate.py --locale $locale --missing-only`
 Glossary-only changes do **not** auto-flag keys; prefer full locale regeneration above.
 
 ---
@@ -77,5 +77,5 @@ Glossary-only changes do **not** auto-flag keys; prefer full locale regeneration
 
 ## Supported locales
 
-**Source:** `en`  
+**Source:** `en`
 **Targets:** `ar`, `bn`, `cs`, `de`, `es`, `fr`, `hi`, `hu`, `id`, `it`, `ja`, `ko`, `nl`, `pl`, `pt`, `pt_br`, `ro`, `ru`, `sv`, `th`, `tr`, `uk`, `vi`, `zh`, `zh_tw`

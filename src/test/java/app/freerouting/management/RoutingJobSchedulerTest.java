@@ -17,6 +17,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/** RoutingJobSchedulerTest. */
 public class RoutingJobSchedulerTest {
 
   private RoutingJobScheduler scheduler;
@@ -51,7 +52,8 @@ public class RoutingJobSchedulerTest {
     // Create a test session
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
-    Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    Session session =
+        sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
     // Create a test job
     RoutingJob job = new RoutingJob();
@@ -110,8 +112,11 @@ public class RoutingJobSchedulerTest {
     scheduler.enqueueJob(job);
 
     // Assertions
-    assertEquals(job, scheduler.getJob(job.id.toString()), "Retrieved job should match the enqueued job.");
-    assertNull(scheduler.getJob(UUID.randomUUID().toString()), "Retrieving a non-existent job should return null.");
+    assertEquals(
+        job, scheduler.getJob(job.id.toString()), "Retrieved job should match the enqueued job.");
+    assertNull(
+        scheduler.getJob(UUID.randomUUID().toString()),
+        "Retrieving a non-existent job should return null.");
   }
 
   @Test
@@ -119,8 +124,10 @@ public class RoutingJobSchedulerTest {
     // Create a test session
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
-    Session session1 = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
-    Session session2 = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    Session session1 =
+        sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    Session session2 =
+        sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
     // Create test jobs
     RoutingJob job1 = createTestJob(session1.id);
@@ -136,17 +143,21 @@ public class RoutingJobSchedulerTest {
     scheduler.clearJobs(session1.id.toString());
 
     // Assertions
-    assertEquals(1, scheduler.jobs.size(), "Job queue should contain one job (from a different session).");
+    assertEquals(
+        1, scheduler.jobs.size(), "Job queue should contain one job (from a different session).");
     assertFalse(containsJob(scheduler.jobs, job1), "Job1 should be removed.");
     assertFalse(containsJob(scheduler.jobs, job2), "Job2 should be removed.");
-    assertTrue(containsJob(scheduler.jobs, job3), "Job3 (from a different session) should not be removed.");
+    assertTrue(
+        containsJob(scheduler.jobs, job3),
+        "Job3 (from a different session) should not be removed.");
   }
 
   // Helper method to create a test job with a random session ID
   private RoutingJob createTestJob() {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
-    Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    Session session =
+        sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
     return createTestJob(session.id);
   }
 
@@ -165,6 +176,11 @@ public class RoutingJobSchedulerTest {
       }
     }
     return false;
+  }
+
+  // Helper method to check if a job list contains a specific job
+  private boolean containsJob(LinkedList<RoutingJob> jobs, RoutingJob targetJob) {
+    return jobs.contains(targetJob);
   }
 
   @Test
@@ -197,7 +213,8 @@ public class RoutingJobSchedulerTest {
     readyJob.state = RoutingJobState.READY_TO_START; // Set state AFTER enqueue
 
     scheduler.cancelJob(readyJob);
-    assertEquals(RoutingJobState.CANCELLED, readyJob.state, "READY_TO_START job should be CANCELLED.");
+    assertEquals(
+        RoutingJobState.CANCELLED, readyJob.state, "READY_TO_START job should be CANCELLED.");
     assertTrue(readyJob.isCancelledByUser(), "isCancelledByUser should be true.");
 
     // 4. Test with RUNNING job
@@ -208,7 +225,8 @@ public class RoutingJobSchedulerTest {
     // or mock requirement if checks are in place.
 
     scheduler.cancelJob(runningJob);
-    assertEquals(RoutingJobState.STOPPING, runningJob.state, "RUNNING job should be set to STOPPING.");
+    assertEquals(
+        RoutingJobState.STOPPING, runningJob.state, "RUNNING job should be set to STOPPING.");
     assertTrue(runningJob.isCancelledByUser(), "isCancelledByUser should be true.");
 
     // 5. Test with blocked/other state (e.g. PAUSED or INVALID if broadly
@@ -230,7 +248,10 @@ public class RoutingJobSchedulerTest {
     scheduler.cancelJob(cancelledJob);
     // Should remain cancelled and not change state (code checks
     // !job.isCancelledByUser())
-    assertEquals(RoutingJobState.CANCELLED, cancelledJob.state, "Already CANCELLED job should remain CANCELLED.");
+    assertEquals(
+        RoutingJobState.CANCELLED,
+        cancelledJob.state,
+        "Already CANCELLED job should remain CANCELLED.");
 
     // 7. Test with COMPLETED job
     RoutingJob completedJob = createTestJob();
@@ -238,12 +259,10 @@ public class RoutingJobSchedulerTest {
     completedJob.state = RoutingJobState.COMPLETED; // Set state AFTER enqueue
 
     scheduler.cancelJob(completedJob);
-    assertEquals(RoutingJobState.COMPLETED, completedJob.state, "COMPLETED job should not be cancelled.");
-    assertFalse(completedJob.isCancelledByUser(), "isCancelledByUser should remain false for COMPLETED job.");
-  }
-
-  // Helper method to check if a job list contains a specific job
-  private boolean containsJob(LinkedList<RoutingJob> jobs, RoutingJob targetJob) {
-    return jobs.contains(targetJob);
+    assertEquals(
+        RoutingJobState.COMPLETED, completedJob.state, "COMPLETED job should not be cancelled.");
+    assertFalse(
+        completedJob.isCancelledByUser(),
+        "isCancelledByUser should remain false for COMPLETED job.");
   }
 }

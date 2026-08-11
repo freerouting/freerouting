@@ -9,256 +9,211 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import javax.swing.JPopupMenu;
 
-/**
- * Common base class of all interaction states with the graphical interface
- */
+/** Common base class of all interaction states with the graphical interface. */
 public class InteractiveState {
 
-  /**
-   * board setting access handler for the derived classes
-   */
+  /** Provides board settings access to derived classes. */
   protected final GuiBoardManager hdlg;
 
-  /**
-   * Contains the files with the language dependent messages
-   */
+  /** Contains the language-dependent messages. */
   protected final TextManager tm;
-  /**
-   * The intended state after this state is finished
-   */
-  protected InteractiveState return_state;
 
-  /**
-   * Creates a new instance of InteractiveState
-   */
-  protected InteractiveState(InteractiveState p_return_state, GuiBoardManager p_board_handling) {
-    this.return_state = p_return_state;
-    this.hdlg = p_board_handling;
+  /** The intended state after this state is finished. */
+  protected InteractiveState returnState;
 
-    this.tm = new TextManager(InteractiveState.class, p_board_handling.get_locale());
+  /** Creates a new instance of InteractiveState. */
+  protected InteractiveState(InteractiveState returnState, GuiBoardManager boardHandling) {
+    this.returnState = returnState;
+    this.hdlg = boardHandling;
+
+    this.tm = new TextManager(InteractiveState.class, boardHandling.getLocale());
   }
 
-  /**
-   * default draw function to be overwritten in derived classes
-   */
-  public void draw(Graphics p_graphics) {
-  }
+  /** Provides the default draw function to be overridden in derived classes. */
+  public void draw(Graphics graphics) {}
 
   /**
-   * Default function to be overwritten in derived classes. Returns the
-   * return_state of this state, if the state is left after the method, or else
-   * this state.
+   * Default function to be overwritten in derived classes. Returns the returnState of this state,
+   * if the state is left after the method, or else this state.
    */
-  public InteractiveState left_button_clicked(FloatPoint p_location) {
+  public InteractiveState leftButtonClicked(FloatPoint location) {
     return this;
   }
 
-  /**
-   * Wraps {@link #left_button_clicked(FloatPoint)} into a command for easier event testing.
-   */
-  public InteractiveCommand left_button_clicked_command(FloatPoint p_location) {
-    return InteractiveCommand.from(() -> this.left_button_clicked(p_location));
+  /** Wraps {@link #leftButtonClicked(FloatPoint)} into a command for easier event testing. */
+  public InteractiveCommand leftButtonClickedCommand(FloatPoint location) {
+    return InteractiveCommand.from(() -> this.leftButtonClicked(location));
   }
 
-  /*
-   * Actions to be taken when a mouse button is released.
-   * Default function to be overwritten in derived classes.
-   * Returns the return_state of this state, if the state is left
+  /**
+   * Actions to be taken when a mouse button is released. Default function to be overwritten in
+   * derived classes. Returns the returnState of this state, if the state is left after the method,
+   * or else this state.
+   */
+  public InteractiveState buttonReleased() {
+    return this;
+  }
+
+  /** Wraps {@link #buttonReleased()} into a command for easier event testing. */
+  public InteractiveCommand buttonReleasedCommand() {
+    return InteractiveCommand.from(this::buttonReleased);
+  }
+
+  /**
+   * Actions to be taken, when the location of the mouse pointer changes. Default function to be
+   * overwritten in derived classes. Returns the returnState of this state, if the state ends after
+   * the method, or else this state.
+   */
+  public InteractiveState mouseMoved() {
+    FloatPoint mousePosition = hdlg.coordinateTransform.boardToUser(hdlg.getCurrentMousePosition());
+    hdlg.screenMessages.setMousePosition(mousePosition);
+    return this;
+  }
+
+  /** Wraps {@link #mouseMoved()} into a command for easier event testing. */
+  public InteractiveCommand mouseMovedCommand() {
+    return InteractiveCommand.from(this::mouseMoved);
+  }
+
+  /**
+   * Actions to be taken when the mouse moves with a button pressed down. Default function to be
+   * overwritten in derived classes. Returns the returnState of this state, if the state is left
    * after the method, or else this state.
    */
-  public InteractiveState button_released() {
+  public InteractiveState mouseDragged(FloatPoint point) {
     return this;
   }
 
-  /**
-   * Wraps {@link #button_released()} into a command for easier event testing.
-   */
-  public InteractiveCommand button_released_command() {
-    return InteractiveCommand.from(this::button_released);
+  /** Wraps {@link #mouseDragged(FloatPoint)} into a command for easier event testing. */
+  public InteractiveCommand mouseDraggedCommand(FloatPoint point) {
+    return InteractiveCommand.from(() -> this.mouseDragged(point));
   }
 
   /**
-   * Actions to be taken, when the location of the mouse pointer changes. Default
-   * function to be overwritten in derived classes. Returns the return_state of
-   * this state, if the state ends after the
-   * method, or else this state.
+   * Actions to be taken when the left mouse button is pressed down. Default function to be
+   * overwritten in derived classes. Returns the returnState of this state, if the state is left
+   * after the method, or else this state.
    */
-  public InteractiveState mouse_moved() {
-    FloatPoint mouse_position = hdlg.coordinate_transform.board_to_user(hdlg.get_current_mouse_position());
-    hdlg.screen_messages.set_mouse_position(mouse_position);
+  public InteractiveState mousePressed(FloatPoint point) {
     return this;
   }
 
-  /**
-   * Wraps {@link #mouse_moved()} into a command for easier event testing.
-   */
-  public InteractiveCommand mouse_moved_command() {
-    return InteractiveCommand.from(this::mouse_moved);
+  /** Wraps {@link #mousePressed(FloatPoint)} into a command for easier event testing. */
+  public InteractiveCommand mousePressedCommand(FloatPoint point) {
+    return InteractiveCommand.from(() -> this.mousePressed(point));
   }
 
-  /**
-   * Actions to be taken when the mouse moves with a button pressed down. Default
-   * function to be overwritten in derived classes. Returns the return_state of
-   * this state, if the state is left after the
-   * method, or else this state.
-   */
-  public InteractiveState mouse_dragged(FloatPoint p_point) {
-    return this;
-  }
-
-  /**
-   * Wraps {@link #mouse_dragged(FloatPoint)} into a command for easier event testing.
-   */
-  public InteractiveCommand mouse_dragged_command(FloatPoint p_point) {
-    return InteractiveCommand.from(() -> this.mouse_dragged(p_point));
-  }
-
-  /**
-   * Actions to be taken when the left mouse button is pressed down. Default
-   * function to be overwritten in derived classes. Returns the return_state of
-   * this state, if the state is left after the
-   * method, or else this state.
-   */
-  public InteractiveState mouse_pressed(FloatPoint p_point) {
-    return this;
-  }
-
-  /**
-   * Wraps {@link #mouse_pressed(FloatPoint)} into a command for easier event testing.
-   */
-  public InteractiveCommand mouse_pressed_command(FloatPoint p_point) {
-    return InteractiveCommand.from(() -> this.mouse_pressed(p_point));
-  }
-
-  /**
-   * Action to be taken, when the mouse wheel was turned.
-   */
-  public InteractiveState mouse_wheel_moved(int p_rotation) {
-    FloatPoint mousePosition = hdlg.get_current_mouse_position();
+  /** Action to be taken, when the mouse wheel was turned. */
+  public InteractiveState mouseWheelMoved(int rotation) {
+    FloatPoint mousePosition = hdlg.getCurrentMousePosition();
     if (mousePosition != null) {
-      Point2D screen_mouse_pos = hdlg.graphics_context.coordinate_transform.board_to_screen(mousePosition);
-      hdlg.get_panel().zoom_with_mouse_wheel(screen_mouse_pos, p_rotation);
+      Point2D screenMousePos =
+          hdlg.graphicsContext.coordinateTransform.boardToScreen(mousePosition);
+      hdlg.getPanel().zoomWithMouseWheel(screenMousePos, rotation);
     }
     return this;
   }
 
-  /**
-   * Wraps {@link #mouse_wheel_moved(int)} into a command for easier event testing.
-   */
-  public InteractiveCommand mouse_wheel_moved_command(int p_rotation) {
-    return InteractiveCommand.from(() -> this.mouse_wheel_moved(p_rotation));
+  /** Wraps {@link #mouseWheelMoved(int)} into a command for easier event testing. */
+  public InteractiveCommand mouseWheelMovedCommand(int rotation) {
+    return InteractiveCommand.from(() -> this.mouseWheelMoved(rotation));
   }
 
   /**
-   * Default actions when a key shortcut is pressed. Overwritten in derived
-   * classes for other key shortcut actions.
+   * Default actions when a key shortcut is pressed. Overwritten in derived classes for other key
+   * shortcut actions.
    */
-  public InteractiveState key_typed(char p_key_char) {
+  public InteractiveState keyTyped(char keyChar) {
     InteractiveState result = this;
-    Point2D screen_mouse_pos = hdlg.graphics_context.coordinate_transform
-        .board_to_screen(hdlg.get_current_mouse_position());
-    switch (p_key_char) {
-      case 'a' -> hdlg.get_panel().board_frame.zoom_all();
-      case 'c' -> hdlg.get_panel().center_display(screen_mouse_pos);
-      case 'f' ->
-        result = ZoomRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
+    Point2D screenMousePos =
+        hdlg.graphicsContext.coordinateTransform.boardToScreen(hdlg.getCurrentMousePosition());
+    switch (keyChar) {
+      case 'a' -> hdlg.getPanel().boardFrame.zoomAll();
+      case 'c' -> hdlg.getPanel().centerDisplay(screenMousePos);
+      case 'f' -> result = ZoomRegionState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
 
-      case 'o' -> hdlg.get_panel().zoom_out(screen_mouse_pos);
-      case 'z' -> hdlg.get_panel().zoom_in(screen_mouse_pos);
+      case 'o' -> hdlg.getPanel().zoomOut(screenMousePos);
+      case 'z' -> hdlg.getPanel().zoomIn(screenMousePos);
       case ',' ->
-        // toggle the crosshair cursor
-        hdlg.get_panel().set_custom_crosshair_cursor(!hdlg.get_panel().is_custom_cross_hair_cursor());
+          // toggle the crosshair cursor
+          hdlg.getPanel().setCustomCrosshairCursor(!hdlg.getPanel().isCustomCrossHairCursor());
       case '\n', ' ' -> result = this.complete();
       case KeyEvent.VK_ESCAPE -> result = this.cancel();
       default -> {
-        if (Character.isDigit(p_key_char)) {
-          // change the current layer to the p_key_char-ths signal layer
-          LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
-          int d = Character.digit(p_key_char, 10);
-          d = Math.min(d, layer_structure.signal_layer_count());
+        if (Character.isDigit(keyChar)) {
+          // Change the current layer to the signal layer selected by the numeric key.
+          LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
+          int d = Character.digit(keyChar, 10);
+          d = Math.min(d, layerStructure.signalLayerCount());
           // Board layers start at 0, keyboard input for layers starts at 1.
           d = Math.max(d - 1, 0);
-          d = layer_structure.get_no(layer_structure.get_signal_layer(d));
-          hdlg.set_current_layer(d);
+          d = layerStructure.getNo(layerStructure.getSignalLayer(d));
+          hdlg.setCurrentLayer(d);
         }
       }
     }
     return result;
   }
 
-  /**
-   * Wraps {@link #key_typed(char)} into a command for easier event testing.
-   */
-  public InteractiveCommand key_typed_command(char p_key_char) {
-    return InteractiveCommand.from(() -> this.key_typed(p_key_char));
+  /** Wraps {@link #keyTyped(char)} into a command for easier event testing. */
+  public InteractiveCommand keyTypedCommand(char keyChar) {
+    return InteractiveCommand.from(() -> this.keyTyped(keyChar));
   }
 
   /**
-   * Action to be taken, when this state is completed and exited. Default function
-   * to be overwritten in derived classes. Returns the return_state of this state.
+   * Action to be taken, when this state is completed and exited. Default function to be overwritten
+   * in derived classes. Returns the returnState of this state.
    */
   public InteractiveState complete() {
 
-    return this.return_state;
+    return this.returnState;
   }
 
-  /**
-   * Wraps {@link #complete()} into a command for easier event testing.
-   */
-  public InteractiveCommand complete_command() {
+  /** Wraps {@link #complete()} into a command for easier event testing. */
+  public InteractiveCommand completeCommand() {
     return InteractiveCommand.from(this::complete);
   }
 
   /**
-   * Actions to be taken, when this state gets cancelled. Default function to be
-   * overwritten in derived classes. Returns the parent state of this state.
+   * Actions to be taken, when this state gets cancelled. Default function to be overwritten in
+   * derived classes. Returns the parent state of this state.
    */
   public InteractiveState cancel() {
 
-    return this.return_state;
+    return this.returnState;
   }
 
-  /**
-   * Wraps {@link #cancel()} into a command for easier event testing.
-   */
-  public InteractiveCommand cancel_command() {
+  /** Wraps {@link #cancel()} into a command for easier event testing. */
+  public InteractiveCommand cancelCommand() {
     return InteractiveCommand.from(this::cancel);
   }
 
   /**
-   * Action to be taken, when the current layer is changed. returns false, if the
-   * layer could not be changed, Default function to be overwritten in derived
-   * classes.
+   * Changes the current layer. Returns false if the layer could not be changed.
+   *
+   * <p>This is the default implementation for derived classes.
    */
-  public boolean change_layer_action(int p_new_layer) {
-    hdlg.set_layer(p_new_layer);
+  public boolean changeLayerAction(int newLayer) {
+    hdlg.setLayer(newLayer);
     return true;
   }
 
-  /**
-   * The default message displayed, when this state is active.
-   */
-  public void display_default_message() {
-  }
+  /** The default message displayed, when this state is active. */
+  public void displayDefaultMessage() {}
 
-  /**
-   * Gets the identifier for displaying help for the user about this state.
-   */
-  public String get_help_id() {
+  /** Gets the identifier for displaying help for the user about this state. */
+  public String getHelpId() {
     return "MenuState";
   }
 
   /**
-   * Returns the popup menu from board_panel, which is used in this interactive
-   * state. Default function to be overwritten in derived classes.
+   * Returns the popup menu from boardPanel, which is used in this interactive state. Default
+   * function to be overwritten in derived classes.
    */
-  public JPopupMenu get_popup_menu() {
+  public JPopupMenu getPopupMenu() {
     return null;
   }
 
-  /**
-   * A state using toolbar must overwrite this function.
-   */
-  public void set_toolbar() {
-  }
+  /** A state using toolbar must overwrite this function. */
+  public void setToolbar() {}
 }

@@ -3,35 +3,32 @@ package app.freerouting.logger;
 import java.time.Instant;
 import java.util.UUID;
 
-/// <summary>
-/// Represents a log entry.
-/// </summary>
+/** Represents a single in-memory log entry. */
 public class LogEntry {
 
-  /// <summary>
-  /// Timestamp of the log entry.
-  /// </summary>
+  /** Timestamp of the log entry. */
   Instant timestamp;
-  /// <summary>
-  /// Type of the log entry.
-  /// </summary>
+
+  /** Type of the log entry. */
   LogEntryType type;
-  /// <summary>
-  /// Message of the log entry.
-  /// </summary>
+
+  /** Message of the log entry. */
   String message;
-  /// <summary>
-  /// Exception of the log entry.
-  /// </summary>
+
+  /** Exception of the log entry. */
   transient Throwable exception;
-  /// <summary>
-  /// Topic of the log entry. It is usually the ID of the user, session or job.
-  /// </summary>
+
+  /** Topic of the log entry, usually the ID of the user, session, or job. */
   UUID topic;
 
-  /// <summary>
-  /// Initializes a new instance of the <see cref="LogEntry"/> class.
-  /// </summary>
+  /**
+   * Creates a log entry with the given type, message, optional exception, and topic.
+   *
+   * @param type the entry severity/type
+   * @param message the log message text
+   * @param exception optional associated exception
+   * @param topic optional topic identifier
+   */
   public LogEntry(LogEntryType type, String message, Throwable exception, UUID topic) {
     this.timestamp = Instant.now();
     this.type = type;

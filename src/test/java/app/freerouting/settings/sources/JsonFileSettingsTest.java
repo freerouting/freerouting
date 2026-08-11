@@ -1,25 +1,24 @@
 package app.freerouting.settings.sources;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import app.freerouting.settings.RouterSettings;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class JsonFileSettingsTest {
 
-  @TempDir
-  Path tempDir;
+  @TempDir Path tempDir;
 
   /** Helper: create a temp JSON file with the given content. */
   private Path write(String filename, String content) throws IOException {
     Path file = tempDir.resolve(filename);
-    Files.writeString(file, content, StandardCharsets.UTF_8);
+    Files.writeString(file, content);
     return file;
   }
 
@@ -28,14 +27,17 @@ class JsonFileSettingsTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void loadsMaxPassesFromValidRouterSection() throws IOException {
-    Path file = write("valid.json", """
-        {
-          "router": {
-            "max_passes": 42
-          }
-        }
-        """);
+  void loadsMaxPassesFromValidRouterSection() throws Exception {
+    Path file =
+        write(
+            "valid.json",
+            """
+            {
+              "router": {
+                "max_passes": 42
+              }
+            }
+            """);
 
     JsonFileSettings sut = new JsonFileSettings(file);
     RouterSettings settings = sut.getSettings();
@@ -46,34 +48,42 @@ class JsonFileSettingsTest {
   }
 
   @Test
-  void returnsEmptySettingsWhenRouterSectionIsMissing() throws IOException {
-    Path file = write("no_router.json", """
-        {
-          "gui": {
-            "enabled": true
-          }
-        }
-        """);
+  void returnsEmptySettingsWhenRouterSectionIsMissing() throws Exception {
+    Path file =
+        write(
+            "no_router.json",
+            """
+            {
+              "gui": {
+                "enabled": true
+              }
+            }
+            """);
 
     JsonFileSettings sut = new JsonFileSettings(file);
     RouterSettings settings = sut.getSettings();
 
-    assertNotNull(settings, "getSettings() must not return null even when router section is absent");
+    assertNotNull(
+        settings, "getSettings() must not return null even when router section is absent");
     assertNull(settings.maxPasses, "maxPasses should be null (no router section in JSON)");
   }
 
   @Test
-  void returnsEmptySettingsWhenRouterSectionIsNotAnObject() throws IOException {
-    Path file = write("router_not_object.json", """
-        {
-          "router": "not-an-object"
-        }
-        """);
+  void returnsEmptySettingsWhenRouterSectionIsNotAnObject() throws Exception {
+    Path file =
+        write(
+            "router_not_object.json",
+            """
+            {
+              "router": "not-an-object"
+            }
+            """);
 
     JsonFileSettings sut = new JsonFileSettings(file);
     RouterSettings settings = sut.getSettings();
 
-    assertNotNull(settings, "getSettings() must not return null when router value is not an object");
+    assertNotNull(
+        settings, "getSettings() must not return null when router value is not an object");
     assertNull(settings.maxPasses, "maxPasses should be null when router is not a JSON object");
   }
 
@@ -97,7 +107,7 @@ class JsonFileSettingsTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void returnsEmptySettingsForMalformedJson() throws IOException {
+  void returnsEmptySettingsForMalformedJson() throws Exception {
     Path file = write("malformed.json", "{ this is not valid json !! }");
 
     JsonFileSettings sut = new JsonFileSettings(file);
@@ -123,4 +133,3 @@ class JsonFileSettingsTest {
     assertEquals("freerouting.json", sut.getSourceName());
   }
 }
-

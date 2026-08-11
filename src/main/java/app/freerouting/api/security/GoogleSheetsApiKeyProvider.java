@@ -17,36 +17,36 @@ import java.util.regex.Pattern;
 
 /**
  * Google Sheets implementation of the API key provider.
- * <p>
- * This provider reads API keys from a publicly accessible Google Sheet and
- * validates them against the "API Key" and "Access granted?" columns. It
- * implements caching with a 5-minute refresh interval
- * to minimize API calls to Google Sheets.
- * </p>
+ *
+ * <p>This provider reads API keys from a publicly accessible Google Sheet and validates them
+ * against the "API Key" and "Access granted?" columns. It implements caching with a 5-minute
+ * refresh interval to minimize API calls to Google Sheets.
  *
  * <h2>Google Sheet Structure</h2>
- * The Google Sheet must have the following columns (order doesn't matter):
+ *
+ * <p>The Google Sheet must have the following columns (order doesn't matter):
+ *
  * <ul>
- * <li><b>API Key</b>: Contains valid GUID strings (e.g.,
- * 550e8400-e29b-41d4-a716-446655440000)</li>
- * <li><b>Access granted?</b>: Contains "Yes" for granted access, any other
- * value denies access</li>
+ *   <li><b>API Key</b>: Contains valid GUID strings (e.g., 550e8400-e29b-41d4-a716-446655440000)
+ *   <li><b>Access granted?</b>: Contains "Yes" for granted access, any other value denies access
  * </ul>
  *
  * <h2>Configuration</h2>
- * The Google Sheet URL and Google API key must be configured via:
+ *
+ * <p>The Google Sheet URL and Google API key must be configured via:
+ *
  * <pre>
  * FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL
  * FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY
  * </pre>
  *
  * <h2>Caching and Resilience</h2>
+ *
  * <ul>
- * <li>API keys are cached locally in a thread-safe ConcurrentHashMap</li>
- * <li>Cache refreshes every 5 minutes automatically</li>
- * <li>If refresh fails, cached data is maintained until next successful
- * refresh</li>
- * <li>Initial load happens synchronously during provider construction</li>
+ *   <li>API keys are cached locally in a thread-safe ConcurrentHashMap
+ *   <li>Cache refreshes every 5 minutes automatically
+ *   <li>If refresh fails, cached data is maintained until next successful refresh
+ *   <li>Initial load happens synchronously during provider construction
  * </ul>
  *
  * @see ApiKeyProvider
@@ -61,8 +61,9 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
    * GUID validation pattern (RFC 4122 compliant). Matches format:
    * xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx where x is a hex digit.
    */
-  private static final Pattern GUID_PATTERN = Pattern.compile(
-      "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+  private static final Pattern GUID_PATTERN =
+      Pattern.compile(
+          "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
 
   private final String spreadsheetId;
   private final String googleApiKey;
@@ -77,12 +78,10 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
    * Creates a new Google Sheets API key provider.
    *
    * @param spreadsheetUrl The full URL of the Google Sheet (e.g.,
-   *                       https://docs.google.com/spreadsheets/d/SHEET_ID/...)
-   * @param googleApiKey   The Google API key for authenticating Sheets API
-   *                       requests
+   *     https://docs.google.com/spreadsheets/d/SHEET_ID/...)
+   * @param googleApiKey The Google API key for authenticating Sheets API requests
    * @throws IllegalArgumentException if the spreadsheet URL or API key is invalid
-   * @throws RuntimeException         if the Google Sheets service cannot be
-   *                                  initialized
+   * @throws RuntimeException if the Google Sheets service cannot be initialized
    */
   public GoogleSheetsApiKeyProvider(String spreadsheetUrl, String googleApiKey) {
     if (spreadsheetUrl == null || spreadsheetUrl.trim().isEmpty()) {
@@ -99,9 +98,10 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
 
     try {
       NetHttpTransport httpTransport = new NetHttpTransport();
-      this.sheetsService = new Sheets.Builder(httpTransport, JSON_FACTORY, null)
-          .setApplicationName(APPLICATION_NAME)
-          .build();
+      this.sheetsService =
+          new Sheets.Builder(httpTransport, JSON_FACTORY, null)
+              .setApplicationName(APPLICATION_NAME)
+              .build();
     } catch (Exception e) {
       FRLogger.error("Failed to initialize Google Sheets service", null, e);
       throw new RuntimeException("Failed to initialize Google Sheets API client", e);
@@ -111,11 +111,13 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
     refresh();
 
     // Schedule periodic refresh every 5 minutes
-    this.scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
-      Thread thread = new Thread(r, "GoogleSheetsApiKeyProvider-Refresh");
-      thread.setDaemon(true);
-      return thread;
-    });
+    this.scheduler =
+        Executors.newSingleThreadScheduledExecutor(
+            r -> {
+              Thread thread = new Thread(r, "GoogleSheetsApiKeyProvider-Refresh");
+              thread.setDaemon(true);
+              return thread;
+            });
 
     scheduler.scheduleAtFixedRate(
         this::refresh,
@@ -123,7 +125,8 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
         CACHE_REFRESH_INTERVAL_MINUTES,
         TimeUnit.MINUTES);
 
-    FRLogger.debug("Google Sheets API key provider initialized with " + apiKeyCache.size() + " keys");
+    FRLogger.debug(
+        "Google Sheets API key provider initialized with " + apiKeyCache.size() + " keys");
   }
 
   /**
@@ -193,10 +196,13 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
       // Read all data from the first sheet
       // Google Sheets API will automatically detect the data range when using just
       // the sheet name
-      ValueRange response = sheetsService.spreadsheets().values()
-          .get(spreadsheetId, firstSheetName)
-          .setKey(googleApiKey)
-          .execute();
+      ValueRange response =
+          sheetsService
+              .spreadsheets()
+              .values()
+              .get(spreadsheetId, firstSheetName)
+              .setKey(googleApiKey)
+              .execute();
 
       List<List<Object>> values = response.getValues();
       if (values == null || values.isEmpty()) {
@@ -210,15 +216,17 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
       }
 
       // Find column indices for "API Key" and "Access granted?"
-      List<Object> headers = values.get(0);
+      List<Object> headers = values.getFirst();
       int apiKeyColumnIndex = findColumnIndex(headers, "API Key");
       int accessGrantedColumnIndex = findColumnIndex(headers, "Access granted?");
 
       if (apiKeyColumnIndex == -1 || accessGrantedColumnIndex == -1) {
         FRLogger.error(
-            "Required columns not found in Google Sheet. Expected 'API Key' and 'Access granted?' columns. Found: "
+            "Required columns not found in Google Sheet. Expected 'API Key' and 'Access granted?'"
+                + " columns. Found: "
                 + headers,
-            null, null);
+            null,
+            null);
         return;
       }
 
@@ -267,20 +275,21 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
       }
 
       // Atomically replace the cache
-      int previousCacheSize = this.apiKeyCache.size();
+      final int previousCacheSize = this.apiKeyCache.size();
       this.apiKeyCache = newCache;
       this.isHealthy = true;
       this.lastSuccessfulRefresh = System.currentTimeMillis();
 
       if (newCache.size() != previousCacheSize) {
-        String message = String.format(
-            "Successfully refreshed %d valid API keys from Google Sheets (total entries: %d, skipped: %d)",
-            validKeysCount, newCache.size(), skippedRows);
+        String message =
+            "Successfully refreshed %d valid API keys from Google Sheets (total entries: %d,"
+                + " skipped: %d)".formatted(validKeysCount, newCache.size(), skippedRows);
         FRLogger.info(message);
       } else {
-        FRLogger.debug(String.format(
-            "Google Sheets API key cache refreshed, no change in key count (%d valid keys, total entries: %d, skipped: %d)",
-            validKeysCount, newCache.size(), skippedRows));
+        FRLogger.debug(
+            ("Google Sheets API key cache refreshed, no change in key count (%d valid keys, total"
+                    + " entries: %d, skipped: %d)")
+                .formatted(validKeysCount, newCache.size(), skippedRows));
       }
 
     } catch (IOException e) {
@@ -296,17 +305,19 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
    * @throws IOException if unable to retrieve sheet metadata
    */
   private String getFirstSheetName() throws IOException {
-    Spreadsheet spreadsheet = sheetsService.spreadsheets()
-        .get(spreadsheetId)
-        .setKey(googleApiKey)
-        .setFields("sheets.properties.title")
-        .execute();
+    Spreadsheet spreadsheet =
+        sheetsService
+            .spreadsheets()
+            .get(spreadsheetId)
+            .setKey(googleApiKey)
+            .setFields("sheets.properties.title")
+            .execute();
 
     if (spreadsheet.getSheets() == null || spreadsheet.getSheets().isEmpty()) {
       throw new IOException("No sheets found in spreadsheet");
     }
 
-    String sheetName = spreadsheet.getSheets().get(0).getProperties().getTitle();
+    String sheetName = spreadsheet.getSheets().getFirst().getProperties().getTitle();
     if (sheetName == null || sheetName.isEmpty()) {
       throw new IOException("First sheet has no title");
     }
@@ -317,7 +328,7 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
   /**
    * Finds the column index for a given header name (case-insensitive).
    *
-   * @param headers    The list of header values
+   * @param headers The list of header values
    * @param headerName The header name to find
    * @return The column index, or -1 if not found
    */
@@ -358,10 +369,7 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
     return lastSuccessfulRefresh;
   }
 
-  /**
-   * Shuts down the refresh scheduler. Should be called when the provider is no
-   * longer needed.
-   */
+  /** Shuts down the refresh scheduler. Should be called when the provider is no longer needed. */
   public void shutdown() {
     if (scheduler != null && !scheduler.isShutdown()) {
       scheduler.shutdown();

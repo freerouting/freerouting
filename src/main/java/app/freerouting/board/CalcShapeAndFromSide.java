@@ -7,102 +7,110 @@ import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
 
 /**
- * Used in the shove algorithm to calculate the fromside for pushing and to cut off dog ears of the trace shape.
+ * Used in the shove algorithm to calculate the fromside for pushing and to cut off dog ears of the
+ * trace shape.
  */
 class CalcShapeAndFromSide {
 
   final TileShape shape;
-  final CalcFromSide from_side;
+  final CalcFromSide fromSide;
 
   /**
-   * Used in the shove algorithm to calculate the fromside for pushing and to cut off dog ears of the trace shape. In the check shove functions, p_in_shove_check is expected to be true. In the actual
-   * shove functions p_in_shove_check is expected to be false.
+   * Used in the shove algorithm to calculate the fromside for pushing and to cut off dog ears of
+   * the trace shape. In the check shove functions, p_in_shove_check is expected to be true. In the
+   * actual shove functions p_in_shove_check is expected to be false.
    */
-  CalcShapeAndFromSide(PolylineTrace p_trace, int p_index, boolean p_orthogonal, boolean p_in_shove_check) {
-    ShapeSearchTree search_tree = p_trace.board.search_tree_manager.get_default_tree();
-    TileShape curr_shape = p_trace.get_tree_shape(search_tree, p_index);
-    CalcFromSide curr_from_side = null;
-    boolean cut_off_at_start = false;
-    boolean cut_off_at_end = false;
-    if (p_orthogonal) {
-      curr_shape = curr_shape.bounding_box();
+  CalcShapeAndFromSide(PolylineTrace trace, int index, boolean orthogonal, boolean inShoveCheck) {
+    ShapeSearchTree searchTree = trace.board.searchTreeManager.getDefaultTree();
+    TileShape currShape = trace.getTreeShape(searchTree, index);
+    CalcFromSide currFromSide = null;
+    boolean cutOffAtStart = false;
+    boolean cutOffAtEnd = false;
+    if (orthogonal) {
+      currShape = currShape.boundingBox();
     } else {
       // prevent dog ears at the start and the end of the substitute trace
-      curr_shape = curr_shape.to_Simplex();
-      Line end_cutline = calc_cutline_at_end(p_index, p_trace);
-      if (end_cutline != null) {
-        TileShape cut_plane = TileShape.get_instance(end_cutline);
-        TileShape tmp_shape = curr_shape.intersection(cut_plane);
-        if (tmp_shape != curr_shape && !tmp_shape.is_empty()) {
-          curr_shape = tmp_shape.to_Simplex();
-          cut_off_at_end = true;
+      currShape = currShape.toSimplex();
+      Line endCutline = calcCutlineAtEnd(index, trace);
+      if (endCutline != null) {
+        TileShape cutPlane = TileShape.getInstance(endCutline);
+        TileShape tmpShape = currShape.intersection(cutPlane);
+        if (tmpShape != currShape && !tmpShape.isEmpty()) {
+          currShape = tmpShape.toSimplex();
+          cutOffAtEnd = true;
         }
       }
-      Line start_cutline = calc_cutline_at_start(p_index, p_trace);
-      if (start_cutline != null) {
-        TileShape cut_plane = TileShape.get_instance(start_cutline);
-        TileShape tmp_shape = curr_shape.intersection(cut_plane);
-        if (tmp_shape != curr_shape && !tmp_shape.is_empty()) {
-          curr_shape = tmp_shape.to_Simplex();
-          cut_off_at_start = true;
+      Line startCutline = calcCutlineAtStart(index, trace);
+      if (startCutline != null) {
+        TileShape cutPlane = TileShape.getInstance(startCutline);
+        TileShape tmpShape = currShape.intersection(cutPlane);
+        if (tmpShape != currShape && !tmpShape.isEmpty()) {
+          currShape = tmpShape.toSimplex();
+          cutOffAtStart = true;
         }
       }
-      int from_side_no = -1;
-      Line curr_cut_line = null;
-      if (cut_off_at_start) {
-        curr_cut_line = start_cutline;
-        from_side_no = curr_shape.border_line_index(curr_cut_line);
+      int fromSideNo = -1;
+      Line currCutLine = null;
+      if (cutOffAtStart) {
+        currCutLine = startCutline;
+        fromSideNo = currShape.borderLineIndex(currCutLine);
       }
-      if (from_side_no < 0 && cut_off_at_end) {
-        curr_cut_line = end_cutline;
-        from_side_no = curr_shape.border_line_index(curr_cut_line);
+      if (fromSideNo < 0 && cutOffAtEnd) {
+        currCutLine = endCutline;
+        fromSideNo = currShape.borderLineIndex(currCutLine);
       }
-      if (from_side_no >= 0) {
-        FloatPoint border_intersection = curr_cut_line.intersection_approx(curr_shape.border_line(from_side_no));
-        curr_from_side = new CalcFromSide(from_side_no, border_intersection);
+      if (fromSideNo >= 0) {
+        FloatPoint borderIntersection =
+            currCutLine.intersectionApprox(currShape.borderLine(fromSideNo));
+        currFromSide = new CalcFromSide(fromSideNo, borderIntersection);
       }
     }
-    if (curr_from_side == null && !p_in_shove_check) {
-      // In p_in_shove_check, using this calculation may produce an undesired stack_level > 1 in
+    if (currFromSide == null && !inShoveCheck) {
+      // In p_in_shove_check, using this calculation may produce an undesired stackLevel > 1 in
       // ShapeTraceEntries.
-      curr_from_side = new CalcFromSide(p_trace.polyline(), p_index, curr_shape);
+      currFromSide = new CalcFromSide(trace.polyline(), index, currShape);
     }
-    this.shape = curr_shape;
-    this.from_side = curr_from_side;
+    this.shape = currShape;
+    this.fromSide = currFromSide;
   }
 
-  private static Line calc_cutline_at_end(int p_index, PolylineTrace p_trace) {
-    Polyline trace_lines = p_trace.polyline();
-    ShapeSearchTree search_tree = p_trace.board.search_tree_manager.get_default_tree();
-    if (p_index == trace_lines.arr.length - 3 || trace_lines.corner_approx(trace_lines.arr.length - 2).distance(trace_lines.corner_approx(p_index + 1)) < p_trace.get_compensated_half_width(
-        search_tree)) {
+  private static Line calcCutlineAtEnd(int index, PolylineTrace trace) {
+    Polyline traceLines = trace.polyline();
+    ShapeSearchTree searchTree = trace.board.searchTreeManager.getDefaultTree();
+    if (index == traceLines.arr.length - 3
+        || traceLines
+                .cornerApprox(traceLines.arr.length - 2)
+                .distance(traceLines.cornerApprox(index + 1))
+            < trace.getCompensatedHalfWidth(searchTree)) {
 
-      Line curr_line = trace_lines.arr[trace_lines.arr.length - 1];
-      FloatPoint is = trace_lines.corner_approx(trace_lines.arr.length - 3);
-      Line cut_line;
-      if (curr_line.side_of(is) == Side.ON_THE_LEFT) {
-        cut_line = curr_line.opposite();
+      Line currLine = traceLines.arr[traceLines.arr.length - 1];
+      FloatPoint is = traceLines.cornerApprox(traceLines.arr.length - 3);
+      Line cutLine;
+      if (currLine.sideOf(is) == Side.ON_THE_LEFT) {
+        cutLine = currLine.opposite();
       } else {
-        cut_line = curr_line;
+        cutLine = currLine;
       }
-      return cut_line;
+      return cutLine;
     }
     return null;
   }
 
-  private static Line calc_cutline_at_start(int p_index, PolylineTrace p_trace) {
-    Polyline trace_lines = p_trace.polyline();
-    ShapeSearchTree search_tree = p_trace.board.search_tree_manager.get_default_tree();
-    if (p_index == 0 || trace_lines.corner_approx(0).distance(trace_lines.corner_approx(p_index)) < p_trace.get_compensated_half_width(search_tree)) {
-      Line curr_line = trace_lines.arr[0];
-      FloatPoint is = trace_lines.corner_approx(1);
-      Line cut_line;
-      if (curr_line.side_of(is) == Side.ON_THE_LEFT) {
-        cut_line = curr_line.opposite();
+  private static Line calcCutlineAtStart(int index, PolylineTrace trace) {
+    Polyline traceLines = trace.polyline();
+    ShapeSearchTree searchTree = trace.board.searchTreeManager.getDefaultTree();
+    if (index == 0
+        || traceLines.cornerApprox(0).distance(traceLines.cornerApprox(index))
+            < trace.getCompensatedHalfWidth(searchTree)) {
+      Line currLine = traceLines.arr[0];
+      FloatPoint is = traceLines.cornerApprox(1);
+      Line cutLine;
+      if (currLine.sideOf(is) == Side.ON_THE_LEFT) {
+        cutLine = currLine.opposite();
       } else {
-        cut_line = curr_line;
+        cutLine = currLine;
       }
-      return cut_line;
+      return cutLine;
     }
     return null;
   }

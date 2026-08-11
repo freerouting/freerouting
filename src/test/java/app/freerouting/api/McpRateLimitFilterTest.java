@@ -19,8 +19,10 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Tag("serial")
 class McpRateLimitFilterTest {
 
   private static final String TEST_USER_ID = "00000000-0000-0000-0000-000000000001";
@@ -45,7 +47,7 @@ class McpRateLimitFilterTest {
     Freerouting.globalSettings.mcpServerSettings.rateLimit.requestsPerWindow = 2;
     Freerouting.globalSettings.mcpServerSettings.rateLimit.windowSeconds = 60;
 
-    mcpServer = Freerouting.InitializeMCP(mcpSettings);
+    mcpServer = Freerouting.initializeMCP(mcpSettings);
     waitForServerStarted(mcpServer);
 
     int mcpPort = ((ServerConnector) mcpServer.getConnectors()[0]).getLocalPort();
@@ -61,15 +63,18 @@ class McpRateLimitFilterTest {
   }
 
   @Test
-  void mcpRateLimit_blocksAfterConfiguredThreshold() throws Exception {
+  void mcpRateLimitBlocksAfterConfiguredThreshold() throws Exception {
     JsonObject request = new JsonObject();
     request.addProperty("jsonrpc", "2.0");
     request.addProperty("id", 1);
     request.addProperty("method", "initialize");
 
-    HttpResponse<String> r1 = httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
-    HttpResponse<String> r2 = httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
-    HttpResponse<String> r3 = httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> r1 =
+        httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> r2 =
+        httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> r3 =
+        httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
 
     assertEquals(200, r1.statusCode());
     assertEquals(200, r2.statusCode());

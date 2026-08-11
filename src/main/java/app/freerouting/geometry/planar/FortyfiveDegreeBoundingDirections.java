@@ -1,20 +1,17 @@
 package app.freerouting.geometry.planar;
 
 /**
- * Implements the abstract class ShapeBoundingDirections as the 8 directions, which are multiples of 45 degree. The class is a singleton with the only instantiation INSTANCE.
+ * Implements the abstract class ShapeBoundingDirections as the 8 directions, which are multiples of
+ * 45 degree. The class is a singleton with the only instantiation INSTANCE.
  */
-public class FortyfiveDegreeBoundingDirections implements ShapeBoundingDirections {
+public final class FortyfiveDegreeBoundingDirections implements ShapeBoundingDirections {
 
-  /**
-   * the one and only instantiation
-   */
-  public static final FortyfiveDegreeBoundingDirections INSTANCE = new FortyfiveDegreeBoundingDirections();
+  /** The one and only instantiation. */
+  public static final FortyfiveDegreeBoundingDirections INSTANCE =
+      new FortyfiveDegreeBoundingDirections();
 
-  /**
-   * prevent instantiation
-   */
-  private FortyfiveDegreeBoundingDirections() {
-  }
+  /** Prevent instantiation. */
+  private FortyfiveDegreeBoundingDirections() {}
 
   @Override
   public int count() {
@@ -22,32 +19,32 @@ public class FortyfiveDegreeBoundingDirections implements ShapeBoundingDirection
   }
 
   @Override
-  public RegularTileShape bounds(ConvexShape p_shape) {
-    return p_shape.bounding_shape(this);
+  public RegularTileShape bounds(ConvexShape shape) {
+    return shape.boundingShape(this);
   }
 
   @Override
-  public RegularTileShape bounds(IntBox p_box) {
-    return p_box.to_IntOctagon();
+  public RegularTileShape bounds(IntBox box) {
+    return box.toIntOctagon();
   }
 
   @Override
-  public RegularTileShape bounds(IntOctagon p_oct) {
-    return p_oct;
+  public RegularTileShape bounds(IntOctagon oct) {
+    return oct;
   }
 
   @Override
-  public RegularTileShape bounds(Simplex p_simplex) {
-    return p_simplex.bounding_octagon();
+  public RegularTileShape bounds(Simplex simplex) {
+    return simplex.boundingOctagon();
   }
 
   @Override
-  public RegularTileShape bounds(Circle p_circle) {
-    return p_circle.bounding_octagon();
+  public RegularTileShape bounds(Circle circle) {
+    return circle.boundingOctagon();
   }
 
   @Override
-  public RegularTileShape bounds(PolygonShape p_polygon) {
-    return p_polygon.bounding_octagon();
+  public RegularTileShape bounds(PolygonShape polygon) {
+    return polygon.boundingOctagon();
   }
 }

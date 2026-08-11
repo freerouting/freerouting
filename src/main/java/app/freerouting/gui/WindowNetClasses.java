@@ -47,88 +47,105 @@ import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 
-/**
- * Edit window for the table of net rules.
- */
+/** Edit window for the table of net rules. */
 public class WindowNetClasses extends BoardSavableSubWindow {
 
   private static final int TEXTFIELD_HEIGHT = 16;
   private static final int TEXTFIELD_WIDTH = 100;
   private static final int WINDOW_OFFSET = 30;
-  private final BoardFrame board_frame;
-  private final JPanel main_panel;
-  /**
-   * The subwindows created inside this window
-   */
-  private final Collection<JFrame> subwindows = new LinkedList<>();
-  private final JComboBox<String> cl_class_combo_box;
-  private final JComboBox<String> via_rule_combo_box;
-  private JPanel center_panel;
-  private NetClassTable table;
-  private NetClassTableModel table_model;
+  private final BoardFrame boardFrame;
+  private final JPanel mainPanel;
 
-  /**
-   * Creates a new instance of NetClassesWindow
-   */
-  public WindowNetClasses(BoardFrame p_board_frame) {
-    setLanguage(p_board_frame.get_locale());
+  /** The subwindows created inside this window. */
+  private final Collection<JFrame> subwindows = new LinkedList<>();
+
+  private final JComboBox<String> clClassComboBox;
+  private final JComboBox<String> viaRuleComboBox;
+  private JPanel centerPanel;
+  private NetClassTable table;
+  private NetClassTableModel tableModel;
+
+  /** Creates a new instance of NetClassesWindow. */
+  public WindowNetClasses(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
-    this.board_frame = p_board_frame;
+    this.boardFrame = boardFrame;
 
-    this.main_panel = new JPanel();
-    this.main_panel.setLayout(new BorderLayout());
+    this.mainPanel = new JPanel();
+    this.mainPanel.setLayout(new BorderLayout());
 
-    BasicBoard routing_board = p_board_frame.board_panel.board_handling.get_routing_board();
+    BasicBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
 
-    this.cl_class_combo_box = new JComboBox<>();
-    this.via_rule_combo_box = new JComboBox<>();
-    add_combobox_items();
+    this.clClassComboBox = new JComboBox<>();
+    this.viaRuleComboBox = new JComboBox<>();
+    addComboboxItems();
 
-    add_table();
+    addTable();
 
-    JPanel net_class_button_panel = new JPanel();
-    net_class_button_panel.setLayout(new FlowLayout());
-    this.main_panel.add(net_class_button_panel, BorderLayout.SOUTH);
+    JPanel netClassButtonPanel = new JPanel();
+    netClassButtonPanel.setLayout(new FlowLayout());
+    this.mainPanel.add(netClassButtonPanel, BorderLayout.SOUTH);
 
-    final JButton rules_netclasses_add_class_button = new JButton(tm.getText("add"));
-    rules_netclasses_add_class_button.setToolTipText(tm.getText("add_tooltip"));
-    rules_netclasses_add_class_button.addActionListener(new AddNetClassListener());
-    rules_netclasses_add_class_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_add_class_button", rules_netclasses_add_class_button.getText()));
-    net_class_button_panel.add(rules_netclasses_add_class_button);
+    final JButton rulesNetclassesAddClassButton = new JButton(tm.getText("add"));
+    rulesNetclassesAddClassButton.setToolTipText(tm.getText("add_tooltip"));
+    rulesNetclassesAddClassButton.addActionListener(new AddNetClassListener());
+    rulesNetclassesAddClassButton.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rulesNetclassesAddClassButton", rulesNetclassesAddClassButton.getText()));
+    netClassButtonPanel.add(rulesNetclassesAddClassButton);
 
-    final JButton rules_netclasses_remove_class_button = new JButton(tm.getText("remove"));
-    rules_netclasses_remove_class_button.setToolTipText(tm.getText("remove_tooltip"));
-    rules_netclasses_remove_class_button.addActionListener(new RemoveNetClassListener());
-    rules_netclasses_remove_class_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_remove_class_button", rules_netclasses_remove_class_button.getText()));
-    net_class_button_panel.add(rules_netclasses_remove_class_button);
+    final JButton rulesNetclassesRemoveClassButton = new JButton(tm.getText("remove"));
+    rulesNetclassesRemoveClassButton.setToolTipText(tm.getText("remove_tooltip"));
+    rulesNetclassesRemoveClassButton.addActionListener(new RemoveNetClassListener());
+    rulesNetclassesRemoveClassButton.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rulesNetclassesRemoveClassButton", rulesNetclassesRemoveClassButton.getText()));
+    netClassButtonPanel.add(rulesNetclassesRemoveClassButton);
 
-    final JButton rules_netclasses_assign_button = new JButton(tm.getText("assign"));
-    rules_netclasses_assign_button.setToolTipText(tm.getText("assign_tooltip"));
-    rules_netclasses_assign_button.addActionListener(new AssignClassesListener());
-    rules_netclasses_assign_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_assign_button", rules_netclasses_assign_button.getText()));
-    net_class_button_panel.add(rules_netclasses_assign_button);
+    final JButton rulesNetclassesAssignButton = new JButton(tm.getText("assign"));
+    rulesNetclassesAssignButton.setToolTipText(tm.getText("assign_tooltip"));
+    rulesNetclassesAssignButton.addActionListener(new AssignClassesListener());
+    rulesNetclassesAssignButton.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rulesNetclassesAssignButton", rulesNetclassesAssignButton.getText()));
+    netClassButtonPanel.add(rulesNetclassesAssignButton);
 
-    final JButton rules_netclasses_select_button = new JButton(tm.getText("select"));
-    rules_netclasses_select_button.setToolTipText(tm.getText("select_tooltip"));
-    rules_netclasses_select_button.addActionListener(new SelectClassesListener());
-    rules_netclasses_select_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_select_button", rules_netclasses_select_button.getText()));
-    net_class_button_panel.add(rules_netclasses_select_button);
+    final JButton rulesNetclassesSelectButton = new JButton(tm.getText("select"));
+    rulesNetclassesSelectButton.setToolTipText(tm.getText("select_tooltip"));
+    rulesNetclassesSelectButton.addActionListener(new SelectClassesListener());
+    rulesNetclassesSelectButton.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rulesNetclassesSelectButton", rulesNetclassesSelectButton.getText()));
+    netClassButtonPanel.add(rulesNetclassesSelectButton);
 
-    final JButton rules_netclasses_contained_nets_button = new JButton(tm.getText("show_nets"));
-    net_class_button_panel.add(rules_netclasses_contained_nets_button);
-    rules_netclasses_contained_nets_button.setToolTipText(tm.getText("show_nets_tooltip"));
-    rules_netclasses_contained_nets_button.addActionListener(new ContainedNetsListener());
-    rules_netclasses_contained_nets_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_contained_nets_button", rules_netclasses_contained_nets_button.getText()));
+    final JButton rulesNetclassesContainedNetsButton = new JButton(tm.getText("show_nets"));
+    netClassButtonPanel.add(rulesNetclassesContainedNetsButton);
+    rulesNetclassesContainedNetsButton.setToolTipText(tm.getText("show_nets_tooltip"));
+    rulesNetclassesContainedNetsButton.addActionListener(new ContainedNetsListener());
+    rulesNetclassesContainedNetsButton.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rulesNetclassesContainedNetsButton",
+                rulesNetclassesContainedNetsButton.getText()));
 
-    final JButton rules_netclasses_filter_incompletes_button = new JButton(tm.getText("filter_incompletes"));
-    net_class_button_panel.add(rules_netclasses_filter_incompletes_button);
-    rules_netclasses_filter_incompletes_button.setToolTipText(tm.getText("filter_incompletes_tooltip"));
-    rules_netclasses_filter_incompletes_button.addActionListener(new FilterIncompletesListener());
-    rules_netclasses_filter_incompletes_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_filter_incompletes_button", rules_netclasses_filter_incompletes_button.getText()));
+    final JButton rulesNetclassesFilterIncompletesButton =
+        new JButton(tm.getText("filter_incompletes"));
+    netClassButtonPanel.add(rulesNetclassesFilterIncompletesButton);
+    rulesNetclassesFilterIncompletesButton.setToolTipText(tm.getText("filter_incompletes_tooltip"));
+    rulesNetclassesFilterIncompletesButton.addActionListener(new FilterIncompletesListener());
+    rulesNetclassesFilterIncompletesButton.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rulesNetclassesFilterIncompletesButton",
+                rulesNetclassesFilterIncompletesButton.getText()));
 
-    this.add(main_panel);
+    this.add(mainPanel);
     this.pack();
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
   }
@@ -138,35 +155,35 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   }
 
   static void applyShoveFixedSelection(NetClass netClass, boolean shoveFixed) {
-    netClass.set_shove_fixed(shoveFixed);
-    netClass.set_pull_tight(!shoveFixed);
+    netClass.setShoveFixed(shoveFixed);
+    netClass.setPullTight(!shoveFixed);
   }
 
   static void applyAutorouterIgnoreSelection(NetClass netClass, boolean ignoredByAutorouter) {
-    netClass.is_ignored_by_autorouter = ignoredByAutorouter;
+    netClass.isIgnoredByAutorouter = ignoredByAutorouter;
   }
 
   @Override
   public void refresh() {
-    this.cl_class_combo_box.removeAllItems();
-    this.via_rule_combo_box.removeAllItems();
-    add_combobox_items();
-    this.table_model.set_values();
-    int table_height = TEXTFIELD_HEIGHT * this.table_model.getRowCount();
-    int table_width = TEXTFIELD_WIDTH * this.table_model.getColumnCount();
-    this.table.setPreferredScrollableViewportSize(new Dimension(table_width, table_height));
+    this.clClassComboBox.removeAllItems();
+    this.viaRuleComboBox.removeAllItems();
+    addComboboxItems();
+    this.tableModel.setValues();
+    int tableHeight = TEXTFIELD_HEIGHT * this.tableModel.getRowCount();
+    int tableWidth = TEXTFIELD_WIDTH * this.tableModel.getColumnCount();
+    this.table.setPreferredScrollableViewportSize(new Dimension(tableWidth, tableHeight));
     // reinsert the scroll to display the correct table size if the table size has changed.
-    this.main_panel.remove(this.center_panel);
-    this.main_panel.add(center_panel, BorderLayout.CENTER);
+    this.mainPanel.remove(this.centerPanel);
+    this.mainPanel.add(centerPanel, BorderLayout.CENTER);
     this.pack();
 
     // Dispose all subwindows because they may be no longer up-to-date.
     Iterator<JFrame> it = this.subwindows.iterator();
     while (it.hasNext()) {
-      JFrame curr_subwindow = it.next();
-      if (curr_subwindow != null) {
+      JFrame currSubwindow = it.next();
+      if (currSubwindow != null) {
 
-        curr_subwindow.dispose();
+        currSubwindow.dispose();
       }
       it.remove();
     }
@@ -174,102 +191,107 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
   @Override
   public void dispose() {
-    for (JFrame curr_subwindow : this.subwindows) {
-      if (curr_subwindow != null) {
-        curr_subwindow.dispose();
+    for (JFrame currSubwindow : this.subwindows) {
+      if (currSubwindow != null) {
+        currSubwindow.dispose();
       }
     }
     super.dispose();
   }
 
-  private void add_table() {
-    this.table_model = new NetClassTableModel();
-    this.table = new NetClassTable(this.table_model);
-    JScrollPane scroll_pane = new JScrollPane(this.table);
-    int table_height = TEXTFIELD_HEIGHT * this.table_model.getRowCount();
-    int table_width = TEXTFIELD_WIDTH * this.table_model.getColumnCount();
-    this.table.setPreferredScrollableViewportSize(new Dimension(table_width, table_height));
-    this.center_panel = new JPanel();
-    this.center_panel.setLayout(new BorderLayout());
+  private void addTable() {
+    this.tableModel = new NetClassTableModel();
+    this.table = new NetClassTable(this.tableModel);
+    final JScrollPane scrollPane = new JScrollPane(this.table);
+    int tableHeight = TEXTFIELD_HEIGHT * this.tableModel.getRowCount();
+    int tableWidth = TEXTFIELD_WIDTH * this.tableModel.getColumnCount();
+    this.table.setPreferredScrollableViewportSize(new Dimension(tableWidth, tableHeight));
+    this.centerPanel = new JPanel();
+    this.centerPanel.setLayout(new BorderLayout());
 
-    this.center_panel.add(scroll_pane, BorderLayout.CENTER);
+    this.centerPanel.add(scrollPane, BorderLayout.CENTER);
 
     // add message for german localisation bug
-    if ("de"
-        .equalsIgnoreCase(board_frame
-            .get_locale()
-            .getLanguage())) {
+    if ("de".equalsIgnoreCase(boardFrame.get_locale().getLanguage())) {
       // Due to a Java system bug, the decimal comma in this table must be entered as a dot.
-      JLabel bug_label = new JLabel("Wegen eines Java-System-Bugs muss das Dezimalkomma in dieser Tabelle zur Zeit als Punkt eingegeben werden!");
-      this.center_panel.add(bug_label, BorderLayout.SOUTH);
+      JLabel bugLabel =
+          new JLabel(
+              "Due to a Java system bug, the decimal comma in this table must currently be entered "
+                  + "as a dot!");
+      this.centerPanel.add(bugLabel, BorderLayout.SOUTH);
     }
-    this.main_panel.add(center_panel, BorderLayout.CENTER);
+    this.mainPanel.add(centerPanel, BorderLayout.CENTER);
 
     this.table
         .getColumnModel()
         .getColumn(ColumnName.CLEARANCE_CLASS.ordinal())
-        .setCellEditor(new DefaultCellEditor(cl_class_combo_box));
+        .setCellEditor(new DefaultCellEditor(clClassComboBox));
 
     this.table
         .getColumnModel()
         .getColumn(ColumnName.VIA_RULE.ordinal())
-        .setCellEditor(new DefaultCellEditor(via_rule_combo_box));
+        .setCellEditor(new DefaultCellEditor(viaRuleComboBox));
 
     LayerRulesCellEditor layerEditor = new LayerRulesCellEditor();
     this.table.getColumnModel().getColumn(ColumnName.ON_LAYER.ordinal()).setCellEditor(layerEditor);
   }
 
-  private void add_combobox_items() {
-    RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-    for (int i = 0; i < routing_board.rules.clearance_matrix.get_class_count(); i++) {
-      cl_class_combo_box.addItem(routing_board.rules.clearance_matrix.get_name(i));
+  private void addComboboxItems() {
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+    for (int i = 0; i < routingBoard.rules.clearanceMatrix.getClassCount(); i++) {
+      clClassComboBox.addItem(routingBoard.rules.clearanceMatrix.getName(i));
     }
-    for (ViaRule curr_rule : routing_board.rules.via_rules) {
-      via_rule_combo_box.addItem(curr_rule.name);
+    for (ViaRule currRule : routingBoard.rules.viaRules) {
+      viaRuleComboBox.addItem(currRule.name);
     }
   }
 
   /**
-   * Adjusts the displayed window with the net class table after the size of the table has been changed.
+   * Adjusts the displayed window with the net class table after the size of the table has been
+   * changed.
    */
-  private void adjust_table() {
-    this.table_model = new NetClassTableModel();
-    this.table = new NetClassTable(this.table_model);
-    this.main_panel.remove(this.center_panel);
-    this.add_table();
+  private void adjustTable() {
+    this.tableModel = new NetClassTableModel();
+    this.table = new NetClassTable(this.tableModel);
+    this.mainPanel.remove(this.centerPanel);
+    this.addTable();
     this.pack();
-    this.board_frame.refresh_windows();
+    this.boardFrame.refreshWindows();
   }
 
-  private String getLayerSummary(NetClass p_net_class) {
-    RoutingBoard board = board_frame.board_panel.board_handling.get_routing_board();
-    LayerStructure ls = board.layer_structure;
+  private String getLayerSummary(NetClass netClass) {
+    RoutingBoard board = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+    LayerStructure ls = board.layerStructure;
     List<Integer> activeSignalLayers = new ArrayList<>();
     List<Integer> allSignalLayers = new ArrayList<>();
     List<String> activeLayerNames = new ArrayList<>();
 
     for (int i = 0; i < ls.arr.length; i++) {
-      if (ls.arr[i].is_signal) {
+      if (ls.arr[i].isSignal) {
         allSignalLayers.add(i);
-        if (p_net_class.is_active_routing_layer(i)) {
+        if (netClass.isActiveRoutingLayer(i)) {
           activeSignalLayers.add(i);
           activeLayerNames.add(ls.arr[i].name);
         }
       }
     }
 
-    if (activeSignalLayers.isEmpty()) return tm.getText("layers_none");
-    if (activeSignalLayers.size() == allSignalLayers.size()) return tm.getText("layers_all");
+    if (activeSignalLayers.isEmpty()) {
+      return tm.getText("layers_none");
+    }
+    if (activeSignalLayers.size() == allSignalLayers.size()) {
+      return tm.getText("layers_all");
+    }
 
-    if (activeSignalLayers.size() == 2 &&
-        activeSignalLayers.get(0).equals(allSignalLayers.get(0)) &&
-        activeSignalLayers.get(1).equals(allSignalLayers.get(allSignalLayers.size() - 1))) {
+    if (activeSignalLayers.size() == 2
+        && activeSignalLayers.get(0).equals(allSignalLayers.get(0))
+        && activeSignalLayers.get(1).equals(allSignalLayers.get(allSignalLayers.size() - 1))) {
       return tm.getText("layers_outer");
     }
 
-    if (activeSignalLayers.size() == allSignalLayers.size() - 2 &&
-        !activeSignalLayers.contains(allSignalLayers.get(0)) &&
-        !activeSignalLayers.contains(allSignalLayers.get(allSignalLayers.size() - 1))) {
+    if (activeSignalLayers.size() == allSignalLayers.size() - 2
+        && !activeSignalLayers.contains(allSignalLayers.get(0))
+        && !activeSignalLayers.contains(allSignalLayers.get(allSignalLayers.size() - 1))) {
       return tm.getText("layers_inner");
     }
 
@@ -280,16 +302,16 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     }
   }
 
-  private String getTraceWidthSummary(NetClass p_net_class) {
-    RoutingBoard board = board_frame.board_panel.board_handling.get_routing_board();
-    LayerStructure ls = board.layer_structure;
-    CoordinateTransform ct = board_frame.board_panel.board_handling.coordinate_transform;
+  private String getTraceWidthSummary(NetClass netClass) {
+    final RoutingBoard board = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+    final LayerStructure ls = board.layerStructure;
+    final CoordinateTransform ct = boardFrame.boardPanel.boardHandling.coordinateTransform;
     Integer commonHalfWidth = null;
     boolean multiple = false;
 
     for (int i = 0; i < ls.arr.length; i++) {
-      if (ls.arr[i].is_signal && p_net_class.is_active_routing_layer(i)) {
-        int width = p_net_class.get_trace_half_width(i);
+      if (ls.arr[i].isSignal && netClass.isActiveRoutingLayer(i)) {
+        int width = netClass.getTraceHalfWidth(i);
         if (commonHalfWidth == null) {
           commonHalfWidth = width;
         } else if (width != commonHalfWidth) {
@@ -299,54 +321,67 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       }
     }
 
-    if (commonHalfWidth == null) return "0";
-    if (multiple) return tm.getText("width_multiple");
-    return String.format(Locale.ENGLISH, "%.4f", ct.board_to_user(commonHalfWidth * 2));
+    if (commonHalfWidth == null) {
+      return "0";
+    }
+    if (multiple) {
+      return tm.getText("width_multiple");
+    }
+    return String.format(Locale.ENGLISH, "%.4f", ct.boardToUser(commonHalfWidth * 2));
   }
 
   private enum ColumnName {
-    NAME, VIA_RULE, CLEARANCE_CLASS, TRACE_WIDTH, ON_LAYER, SHOVE_FIXED, CYCLES_WITH_AREAS, MIN_TRACE_LENGTH, MAX_TRACE_LENGTH, IGNORED_BY_AUTOROUTER
+    NAME,
+    VIA_RULE,
+    CLEARANCE_CLASS,
+    TRACE_WIDTH,
+    ON_LAYER,
+    SHOVE_FIXED,
+    CYCLES_WITH_AREAS,
+    MIN_TRACE_LENGTH,
+    MAX_TRACE_LENGTH,
+    IGNORED_BY_AUTOROUTER
   }
 
   private class AddNetClassListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      board_frame.board_panel.board_handling.get_routing_board().rules.append_net_class();
-      adjust_table();
+    public void actionPerformed(ActionEvent evt) {
+      boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.appendNetClass();
+      adjustTable();
     }
   }
 
   private class RemoveNetClassListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      int selected_row = table.getSelectedRow();
-      if (!canRemoveNetClass(table_model.getRowCount(), selected_row)) {
-        if (table_model.getRowCount() <= 1) {
-          board_frame.screen_messages.set_status_message(tm.getText("default_net_class_not_removed"));
+    public void actionPerformed(ActionEvent evt) {
+      int selectedRow = table.getSelectedRow();
+      if (!canRemoveNetClass(tableModel.getRowCount(), selectedRow)) {
+        if (tableModel.getRowCount() <= 1) {
+          boardFrame.screenMessages.setStatusMessage(tm.getText("default_net_class_not_removed"));
         }
         return;
       }
-      Object net_class_name = table_model.getValueAt(selected_row, ColumnName.NAME.ordinal());
-      if (!(net_class_name instanceof String)) {
+      Object netClassName = tableModel.getValueAt(selectedRow, ColumnName.NAME.ordinal());
+      if (!(netClassName instanceof String)) {
         return;
       }
-      BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
-      NetClass net_rule = board_rules.net_classes.get((String) net_class_name);
-      // Check, if net_rule is used in a net of the net list
-      for (int i = 1; i < board_rules.nets.max_net_no(); i++) {
-        Net curr_net = board_rules.nets.get(i);
-        if (curr_net.get_class() == net_rule) {
-          board_frame.screen_messages.set_status_message(
-              tm.getText("net_class_not_removed_in_use_message", curr_net.name));
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
+      NetClass netRule = boardRules.netClasses.get((String) netClassName);
+      // Check, if netRule is used in a net of the net list
+      for (int i = 1; i < boardRules.nets.maxNetNo(); i++) {
+        Net currentNet = boardRules.nets.get(i);
+        if (currentNet.getNetClass() == netRule) {
+          boardFrame.screenMessages.setStatusMessage(
+              tm.getText("net_class_not_removed_in_use_message", currentNet.name));
           return;
         }
       }
-      if (board_rules.net_classes.remove(net_rule)) {
-        adjust_table();
-        board_frame.screen_messages.set_status_message(
-            tm.getText("net_class_removed_message", net_rule.get_name()));
+      if (boardRules.netClasses.remove(netRule)) {
+        adjustTable();
+        boardFrame.screenMessages.setStatusMessage(
+            tm.getText("net_class_removed_message", netRule.getName()));
       }
     }
   }
@@ -354,138 +389,144 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private class AssignClassesListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      board_frame.assign_net_classes_window.setVisible(true);
+    public void actionPerformed(ActionEvent evt) {
+      boardFrame.assignNetClassesWindow.setVisible(true);
     }
   }
 
   private class SelectClassesListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      int[] selected_rows = table.getSelectedRows();
-      if (selected_rows.length == 0) {
+    public void actionPerformed(ActionEvent evt) {
+      int[] selectedRows = table.getSelectedRows();
+      if (selectedRows.length == 0) {
         return;
       }
-      RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-      NetClass[] selected_class_arr = new NetClass[selected_rows.length];
-      for (int i = 0; i < selected_class_arr.length; i++) {
-        selected_class_arr[i] = routing_board.rules.net_classes.get((String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
+      RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+      NetClass[] selectedClassArr = new NetClass[selectedRows.length];
+      for (int i = 0; i < selectedClassArr.length; i++) {
+        selectedClassArr[i] =
+            routingBoard.rules.netClasses.get(
+                (String) table.getValueAt(selectedRows[i], ColumnName.NAME.ordinal()));
       }
-      Nets nets = routing_board.rules.nets;
-      Set<Item> selected_items = new TreeSet<>();
-      Collection<Item> board_items = routing_board.get_items();
-      for (Item curr_item : board_items) {
-        boolean item_matches = false;
-        for (int i = 0; i < curr_item.net_count(); i++) {
-          NetClass curr_net_class = nets
-              .get(curr_item.get_net_no(i))
-              .get_class();
-          if (curr_net_class == null) {
+      Nets nets = routingBoard.rules.nets;
+      Set<Item> selectedItems = new TreeSet<>();
+      Collection<Item> boardItems = routingBoard.getItems();
+      for (Item currItem : boardItems) {
+        boolean itemMatches = false;
+        for (int i = 0; i < currItem.netCount(); i++) {
+          NetClass currNetClass = nets.get(currItem.getNetNo(i)).getNetClass();
+          if (currNetClass == null) {
             continue;
           }
-          for (int j = 0; j < selected_class_arr.length; j++) {
-            if (curr_net_class == selected_class_arr[i]) {
-              item_matches = true;
+          for (int j = 0; j < selectedClassArr.length; j++) {
+            if (currNetClass == selectedClassArr[i]) {
+              itemMatches = true;
               break;
             }
           }
-          if (item_matches) {
+          if (itemMatches) {
             break;
           }
         }
-        if (item_matches) {
-          selected_items.add(curr_item);
+        if (itemMatches) {
+          selectedItems.add(currItem);
         }
       }
-      board_frame.board_panel.board_handling.select_items(selected_items);
-      board_frame.board_panel.board_handling.zoom_selection();
+      boardFrame.boardPanel.boardHandling.selectItems(selectedItems);
+      boardFrame.boardPanel.boardHandling.zoomSelection();
     }
   }
 
   private class FilterIncompletesListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      int[] selected_rows = table.getSelectedRows();
-      if (selected_rows.length == 0) {
+    public void actionPerformed(ActionEvent evt) {
+      int[] selectedRows = table.getSelectedRows();
+      if (selectedRows.length == 0) {
         return;
       }
-      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
-      BoardRules board_rules = board_handling.get_routing_board().rules;
-      NetClass[] selected_class_arr = new NetClass[selected_rows.length];
-      for (int i = 0; i < selected_class_arr.length; i++) {
-        selected_class_arr[i] = board_rules.net_classes.get((String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
+      GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
+      BoardRules boardRules = boardHandling.getRoutingBoard().rules;
+      NetClass[] selectedClassArr = new NetClass[selectedRows.length];
+      for (int i = 0; i < selectedClassArr.length; i++) {
+        selectedClassArr[i] =
+            boardRules.netClasses.get(
+                (String) table.getValueAt(selectedRows[i], ColumnName.NAME.ordinal()));
       }
-      int max_net_no = board_rules.nets.max_net_no();
-      for (int i = 1; i <= max_net_no; i++) {
-        board_handling.set_incompletes_filter(i, true);
-        NetClass curr_net_class = board_rules.nets
-            .get(i)
-            .get_class();
-        for (int j = 0; j < selected_class_arr.length; j++) {
-          if (curr_net_class == selected_class_arr[j]) {
-            board_handling.set_incompletes_filter(i, false);
+      int maxNetNo = boardRules.nets.maxNetNo();
+      for (int i = 1; i <= maxNetNo; i++) {
+        boardHandling.setIncompletesFilter(i, true);
+        NetClass currNetClass = boardRules.nets.get(i).getNetClass();
+        for (int j = 0; j < selectedClassArr.length; j++) {
+          if (currNetClass == selectedClassArr[j]) {
+            boardHandling.setIncompletesFilter(i, false);
             break;
           }
         }
       }
-      board_frame.board_panel.repaint();
+      boardFrame.boardPanel.repaint();
     }
   }
 
   private class ContainedNetsListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      int[] selected_rows = table.getSelectedRows();
-      if (selected_rows.length == 0) {
+    public void actionPerformed(ActionEvent evt) {
+      int[] selectedRows = table.getSelectedRows();
+      if (selectedRows.length == 0) {
         return;
       }
-      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
-      BoardRules board_rules = board_handling.get_routing_board().rules;
-      NetClass[] selected_class_arr = new NetClass[selected_rows.length];
-      for (int i = 0; i < selected_class_arr.length; i++) {
-        selected_class_arr[i] = board_rules.net_classes.get((String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
+      GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
+      BoardRules boardRules = boardHandling.getRoutingBoard().rules;
+      NetClass[] selectedClassArr = new NetClass[selectedRows.length];
+      for (int i = 0; i < selectedClassArr.length; i++) {
+        selectedClassArr[i] =
+            boardRules.netClasses.get(
+                (String) table.getValueAt(selectedRows[i], ColumnName.NAME.ordinal()));
       }
-      Collection<Printable> contained_nets = new LinkedList<>();
-      int max_net_no = board_rules.nets.max_net_no();
-      for (int i = 1; i <= max_net_no; i++) {
-        Net curr_net = board_rules.nets.get(i);
-        NetClass curr_net_class = curr_net.get_class();
-        for (int j = 0; j < selected_class_arr.length; j++) {
-          if (curr_net_class == selected_class_arr[j]) {
-            contained_nets.add(curr_net);
+      Collection<Printable> containedNets = new LinkedList<>();
+      int maxNetNo = boardRules.nets.maxNetNo();
+      for (int i = 1; i <= maxNetNo; i++) {
+        Net currentNet = boardRules.nets.get(i);
+        NetClass currNetClass = currentNet.getNetClass();
+        for (int j = 0; j < selectedClassArr.length; j++) {
+          if (currNetClass == selectedClassArr[j]) {
+            containedNets.add(currentNet);
             break;
           }
         }
       }
-      CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
-      WindowObjectInfo new_window = WindowObjectInfo.display(tm.getText("contained_nets"), contained_nets, board_frame, coordinate_transform);
+      CoordinateTransform coordinateTransform =
+          boardFrame.boardPanel.boardHandling.coordinateTransform;
+      WindowObjectInfo newWindow =
+          WindowObjectInfo.display(
+              tm.getText("containedNets"), containedNets, boardFrame, coordinateTransform);
       Point loc = getLocation();
-      Point new_window_location = new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
-      new_window.setLocation(new_window_location);
-      subwindows.add(new_window);
+      Point newWindowLocation =
+          new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
+      newWindow.setLocation(newWindowLocation);
+      subwindows.add(newWindow);
     }
   }
 
   private class NetClassTable extends JTable {
 
-    private final String[] column_tool_tips;
+    private final String[] columnToolTips;
 
-    public NetClassTable(NetClassTableModel p_table_model) {
-      super(p_table_model);
-      column_tool_tips = new String[10];
-      column_tool_tips[0] = null;
-      column_tool_tips[1] = tm.getText("column_tool_tip_1");
-      column_tool_tips[2] = tm.getText("column_tool_tip_2");
-      column_tool_tips[3] = tm.getText("column_tool_tip_3");
-      column_tool_tips[4] = tm.getText("column_tool_tip_4");
-      column_tool_tips[5] = tm.getText("column_tool_tip_5");
-      column_tool_tips[6] = tm.getText("column_tool_tip_6");
-      column_tool_tips[7] = tm.getText("column_tool_tip_7");
-      column_tool_tips[8] = tm.getText("column_tool_tip_8");
-      column_tool_tips[9] = tm.getText("column_tool_tip_9");
+    public NetClassTable(NetClassTableModel tableModel) {
+      super(tableModel);
+      columnToolTips = new String[10];
+      columnToolTips[0] = null;
+      columnToolTips[1] = tm.getText("column_tool_tip_1");
+      columnToolTips[2] = tm.getText("column_tool_tip_2");
+      columnToolTips[3] = tm.getText("column_tool_tip_3");
+      columnToolTips[4] = tm.getText("column_tool_tip_4");
+      columnToolTips[5] = tm.getText("column_tool_tip_5");
+      columnToolTips[6] = tm.getText("column_tool_tip_6");
+      columnToolTips[7] = tm.getText("column_tool_tip_7");
+      columnToolTips[8] = tm.getText("column_tool_tip_8");
+      columnToolTips[9] = tm.getText("column_tool_tip_9");
     }
 
     // Implement table header tool tips.
@@ -496,67 +537,69 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         public String getToolTipText(MouseEvent e) {
           Point p = e.getPoint();
           int index = columnModel.getColumnIndexAtX(p.x);
-          int realIndex = columnModel
-              .getColumn(index)
-              .getModelIndex();
-          return column_tool_tips[realIndex];
+          int realIndex = columnModel.getColumn(index).getModelIndex();
+          return columnToolTips[realIndex];
         }
       };
     }
   }
 
-  /**
-   * Table model of the net rule table.
-   */
+  /** Table model of the net rule table. */
   private class NetClassTableModel extends AbstractTableModel {
 
-    private final String[] column_names;
+    private final String[] columnNames;
     private Object[][] data;
 
     public NetClassTableModel() {
-      column_names = new String[ColumnName.values().length];
+      columnNames = new String[ColumnName.values().length];
 
-      for (int i = 0; i < column_names.length; i++) {
-        column_names[i] = tm.getText(ColumnName.values()[i].toString());
+      for (int i = 0; i < columnNames.length; i++) {
+        columnNames[i] = tm.getText(ColumnName.values()[i].toString());
       }
-      set_values();
+      setValues();
     }
 
-    /**
-     * Calculates the values in this table
-     */
-    public void set_values() {
-      BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
-      this.data = new Object[board_rules.net_classes.count()][];
+    /** Calculates the values in this table. */
+    public void setValues() {
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
+      this.data = new Object[boardRules.netClasses.count()][];
       for (int i = 0; i < data.length; i++) {
         this.data[i] = new Object[ColumnName.values().length];
       }
       for (int i = 0; i < data.length; i++) {
-        NetClass curr_net_class = board_rules.net_classes.get(i);
-        this.data[i][ColumnName.NAME.ordinal()] = curr_net_class.get_name();
-        if (curr_net_class.get_via_rule() != null) {
-          this.data[i][ColumnName.VIA_RULE.ordinal()] = curr_net_class.get_via_rule().name;
+        NetClass currNetClass = boardRules.netClasses.get(i);
+        this.data[i][ColumnName.NAME.ordinal()] = currNetClass.getName();
+        if (currNetClass.getViaRule() != null) {
+          this.data[i][ColumnName.VIA_RULE.ordinal()] = currNetClass.getViaRule().name;
         }
-        this.data[i][ColumnName.SHOVE_FIXED.ordinal()] = curr_net_class.is_shove_fixed() || !curr_net_class.get_pull_tight();
-        this.data[i][ColumnName.CYCLES_WITH_AREAS.ordinal()] = curr_net_class.get_ignore_cycles_with_areas();
-        double min_trace_length = board_frame.board_panel.board_handling.coordinate_transform.board_to_user(curr_net_class.get_minimum_trace_length());
-        if (min_trace_length <= 0) {
-          min_trace_length = 0;
+        this.data[i][ColumnName.SHOVE_FIXED.ordinal()] =
+            currNetClass.isShoveFixed() || !currNetClass.getPullTight();
+        this.data[i][ColumnName.CYCLES_WITH_AREAS.ordinal()] =
+            currNetClass.getIgnoreCyclesWithAreas();
+        double minTraceLength =
+            boardFrame.boardPanel.boardHandling.coordinateTransform.boardToUser(
+                currNetClass.getMinimumTraceLength());
+        if (minTraceLength <= 0) {
+          minTraceLength = 0;
         }
-        this.data[i][ColumnName.MIN_TRACE_LENGTH.ordinal()] = (float) min_trace_length;
-        double max_trace_length = board_frame.board_panel.board_handling.coordinate_transform.board_to_user(curr_net_class.get_maximum_trace_length());
-        if (max_trace_length <= 0) {
-          max_trace_length = -1;
+        this.data[i][ColumnName.MIN_TRACE_LENGTH.ordinal()] = (float) minTraceLength;
+        double maxTraceLength =
+            boardFrame.boardPanel.boardHandling.coordinateTransform.boardToUser(
+                currNetClass.getMaximumTraceLength());
+        if (maxTraceLength <= 0) {
+          maxTraceLength = -1;
         }
-        this.data[i][ColumnName.MAX_TRACE_LENGTH.ordinal()] = (float) max_trace_length;
-        this.data[i][ColumnName.IGNORED_BY_AUTOROUTER.ordinal()] = curr_net_class.is_ignored_by_autorouter;
-        this.data[i][ColumnName.CLEARANCE_CLASS.ordinal()] = board_rules.clearance_matrix.get_name(curr_net_class.get_trace_clearance_class());
+        this.data[i][ColumnName.MAX_TRACE_LENGTH.ordinal()] = (float) maxTraceLength;
+        this.data[i][ColumnName.IGNORED_BY_AUTOROUTER.ordinal()] =
+            currNetClass.isIgnoredByAutorouter;
+        this.data[i][ColumnName.CLEARANCE_CLASS.ordinal()] =
+            boardRules.clearanceMatrix.getName(currNetClass.getTraceClearanceClass());
       }
     }
 
     @Override
-    public String getColumnName(int p_col) {
-      return column_names[p_col];
+    public String getColumnName(int col) {
+      return columnNames[col];
     }
 
     @Override
@@ -566,157 +609,166 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
     @Override
     public int getColumnCount() {
-      return column_names.length;
+      return columnNames.length;
     }
 
     @Override
-    public Object getValueAt(int p_row, int p_col) {
-      NetClass curr_net_class = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes.get(p_row);
-      if (p_col == ColumnName.ON_LAYER.ordinal()) {
-        return getLayerSummary(curr_net_class);
+    public Object getValueAt(int row, int col) {
+      NetClass currNetClass =
+          boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.netClasses.get(row);
+      if (col == ColumnName.ON_LAYER.ordinal()) {
+        return getLayerSummary(currNetClass);
       }
-      if (p_col == ColumnName.TRACE_WIDTH.ordinal()) {
-        return getTraceWidthSummary(curr_net_class);
+      if (col == ColumnName.TRACE_WIDTH.ordinal()) {
+        return getTraceWidthSummary(currNetClass);
       }
-      return data[p_row][p_col];
+      return data[row][col];
     }
 
     @Override
-    public void setValueAt(Object p_value, int p_row, int p_col) {
-      RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-      BoardRules board_rules = routing_board.rules;
-      if (p_col == ColumnName.ON_LAYER.ordinal() || p_col == ColumnName.TRACE_WIDTH.ordinal()) {
+    public void setValueAt(Object value, int row, int col) {
+      RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+      BoardRules boardRules = routingBoard.rules;
+      if (col == ColumnName.ON_LAYER.ordinal() || col == ColumnName.TRACE_WIDTH.ordinal()) {
         return;
       }
-      Object net_class_name = getValueAt(p_row, ColumnName.NAME.ordinal());
-      if (!(net_class_name instanceof String)) {
+      Object netClassName = getValueAt(row, ColumnName.NAME.ordinal());
+      if (!(netClassName instanceof String)) {
         FRLogger.warn("EditNetRuLesVindow.setValueAt: String expected");
         return;
       }
-      NetClass net_rule = board_rules.net_classes.get((String) net_class_name);
-      if (net_rule == null) {
-        FRLogger.warn("EditNetRuLesVindow.setValueAt: net_rule not found");
+      NetClass netRule = boardRules.netClasses.get((String) netClassName);
+      if (netRule == null) {
+        FRLogger.warn("EditNetRuLesVindow.setValueAt: netRule not found");
         return;
       }
 
-      if (p_col == ColumnName.NAME.ordinal()) {
-        if (!(p_value instanceof String new_name)) {
+      if (col == ColumnName.NAME.ordinal()) {
+        if (!(value instanceof String newName)) {
           return;
         }
-        if (board_rules.net_classes.get(new_name) != null) {
+        if (boardRules.netClasses.get(newName) != null) {
           return; // name exists already
         }
-        net_rule.set_name(new_name);
-        board_frame.via_window.refresh();
-      } else if (p_col == ColumnName.VIA_RULE.ordinal()) {
-        if (!(p_value instanceof String new_name)) {
+        netRule.setName(newName);
+        boardFrame.viaWindow.refresh();
+      } else if (col == ColumnName.VIA_RULE.ordinal()) {
+        if (!(value instanceof String newName)) {
           return;
         }
-        ViaRule new_via_rule = board_rules.get_via_rule(new_name);
-        if (new_via_rule == null) {
-          FRLogger.warn("EditNetRuLesVindow.setValueAt: via_rule not found");
+        ViaRule newViaRule = boardRules.getViaRule(newName);
+        if (newViaRule == null) {
+          FRLogger.warn("EditNetRuLesVindow.setValueAt: viaRule not found");
           return;
         }
-        net_rule.set_via_rule(new_via_rule);
-      } else if (p_col == ColumnName.SHOVE_FIXED.ordinal()) {
-        if (!(p_value instanceof Boolean)) {
+        netRule.setViaRule(newViaRule);
+      } else if (col == ColumnName.SHOVE_FIXED.ordinal()) {
+        if (!(value instanceof Boolean)) {
           return;
         }
-        applyShoveFixedSelection(net_rule, (Boolean) p_value);
-      } else if (p_col == ColumnName.CYCLES_WITH_AREAS.ordinal()) {
-        if (!(p_value instanceof Boolean)) {
+        applyShoveFixedSelection(netRule, (Boolean) value);
+      } else if (col == ColumnName.CYCLES_WITH_AREAS.ordinal()) {
+        if (!(value instanceof Boolean)) {
           return;
         }
-        boolean value = (Boolean) p_value;
-        net_rule.set_ignore_cycles_with_areas(value);
-      } else if (p_col == ColumnName.MIN_TRACE_LENGTH.ordinal()) {
+        boolean ignoreCyclesWithAreas = (Boolean) value;
+        netRule.setIgnoreCyclesWithAreas(ignoreCyclesWithAreas);
+      } else if (col == ColumnName.MIN_TRACE_LENGTH.ordinal()) {
 
-        float curr_value = 0f;
-        if (p_value instanceof Float float1) {
-          curr_value = float1;
-        } else if (p_value instanceof String string) {
+        float currValue = 0F;
+        if (value instanceof Float float1) {
+          currValue = float1;
+        } else if (value instanceof String string) {
           // Workaround because of a localisation Bug in Java
           // The numbers are always displayed in the English Format.
 
           try {
-            curr_value = Float.parseFloat(string);
+            currValue = Float.parseFloat(string);
           } catch (Exception _) {
-            curr_value = 0f;
+            currValue = 0f;
           }
-          p_value = String.valueOf(curr_value);
+          value = String.valueOf(currValue);
         }
-        if (curr_value <= 0) {
-          curr_value = (float) 0;
-          p_value = curr_value;
+        if (currValue <= 0) {
+          currValue = (float) 0;
+          value = currValue;
         }
-        double min_trace_length = Math.round(board_frame.board_panel.board_handling.coordinate_transform.user_to_board(curr_value));
-        net_rule.set_minimum_trace_length(min_trace_length);
-        board_frame.board_panel.board_handling.recalculate_length_violations();
-      } else if (p_col == ColumnName.MAX_TRACE_LENGTH.ordinal()) {
-        float curr_value = 0f;
-        if (p_value instanceof Float float1) {
-          curr_value = float1;
-        } else if (p_value instanceof String string) {
+        double minTraceLength =
+            Math.round(
+                boardFrame.boardPanel.boardHandling.coordinateTransform.userToBoard(currValue));
+        netRule.setMinimumTraceLength(minTraceLength);
+        boardFrame.boardPanel.boardHandling.recalculateLengthViolations();
+      } else if (col == ColumnName.MAX_TRACE_LENGTH.ordinal()) {
+        float currValue = 0F;
+        if (value instanceof Float float1) {
+          currValue = float1;
+        } else if (value instanceof String string) {
           // Workaround because of a localisation Bug in Java
           // The numbers are always displayed in the English Format.
 
           try {
-            curr_value = Float.parseFloat(string);
+            currValue = Float.parseFloat(string);
           } catch (Exception _) {
-            curr_value = 0f;
+            currValue = 0f;
           }
-          p_value = String.valueOf(curr_value);
+          value = String.valueOf(currValue);
         }
-        if (curr_value <= 0) {
-          curr_value = (float) 0;
-          p_value = curr_value - 1;
+        if (currValue <= 0) {
+          currValue = (float) 0;
+          value = currValue - 1;
         }
 
-        double max_trace_length = Math.round(board_frame.board_panel.board_handling.coordinate_transform.user_to_board(curr_value));
-        net_rule.set_maximum_trace_length(max_trace_length);
-        board_frame.board_panel.board_handling.recalculate_length_violations();
-      } else if (p_col == ColumnName.IGNORED_BY_AUTOROUTER.ordinal()) {
-        if (!(p_value instanceof Boolean)) {
+        double maxTraceLength =
+            Math.round(
+                boardFrame.boardPanel.boardHandling.coordinateTransform.userToBoard(currValue));
+        netRule.setMaximumTraceLength(maxTraceLength);
+        boardFrame.boardPanel.boardHandling.recalculateLengthViolations();
+      } else if (col == ColumnName.IGNORED_BY_AUTOROUTER.ordinal()) {
+        if (!(value instanceof Boolean)) {
           return;
         }
-        applyAutorouterIgnoreSelection(net_rule, (Boolean) p_value);
-      } else if (p_col == ColumnName.CLEARANCE_CLASS.ordinal()) {
-        if (!(p_value instanceof String new_name)) {
+        applyAutorouterIgnoreSelection(netRule, (Boolean) value);
+      } else if (col == ColumnName.CLEARANCE_CLASS.ordinal()) {
+        if (!(value instanceof String newName)) {
           return;
         }
-        int new_cl_class_index = board_rules.clearance_matrix.get_no(new_name);
+        int newClClassIndex = boardRules.clearanceMatrix.getNo(newName);
         {
-          if (new_cl_class_index < 0) {
+          if (newClClassIndex < 0) {
             FRLogger.warn("EditNetRuLesVindow.setValueAt: clearance class not found");
             return;
           }
         }
-        net_rule.set_trace_clearance_class(new_cl_class_index);
+        netRule.setTraceClearanceClass(newClClassIndex);
       }
-      this.data[p_row][p_col] = p_value;
-      fireTableCellUpdated(p_row, p_col);
+      this.data[row][col] = value;
+      fireTableCellUpdated(row, col);
     }
 
     @Override
-    public boolean isCellEditable(int p_row, int p_col) {
+    public boolean isCellEditable(int row, int col) {
       // the name of the default class is not editable
-      return p_row > 0 || p_col > 0;
+      return row > 0 || col > 0;
     }
 
     @Override
-    public Class<?> getColumnClass(int p_col) {
-      if (p_col == ColumnName.ON_LAYER.ordinal() || p_col == ColumnName.TRACE_WIDTH.ordinal()) {
+    public Class<?> getColumnClass(int col) {
+      if (col == ColumnName.ON_LAYER.ordinal() || col == ColumnName.TRACE_WIDTH.ordinal()) {
         return String.class;
       }
-      if (getRowCount() == 0) return Object.class;
-      Object curr_entry = getValueAt(0, p_col);
-      if (curr_entry == null) return Object.class;
-      Class<?> curr_class = curr_entry.getClass();
-      // changed because of a localisation bug in Java
-      if (curr_entry instanceof Float) {
-        curr_class = String.class;
+      if (getRowCount() == 0) {
+        return Object.class;
       }
-      return curr_class;
+      Object currentEntry = getValueAt(0, col);
+      if (currentEntry == null) {
+        return Object.class;
+      }
+      Class<?> currClass = currentEntry.getClass();
+      // changed because of a localisation bug in Java
+      if (currentEntry instanceof Float) {
+        currClass = String.class;
+      }
+      return currClass;
     }
   }
 
@@ -726,110 +778,157 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     private final GuiBoardManager boardHandling;
     private final List<Integer> allSignalLayers = new ArrayList<>();
 
-    public LayerRulesDialog(JFrame owner, NetClass p_netClass, GuiBoardManager p_boardHandling, app.freerouting.util.TextManager p_tm) {
-      super(owner, p_tm.getText("dialog_layer_rules_title"), true);
-      this.netClass = p_netClass;
-      this.boardHandling = p_boardHandling;
-      LayerStructure ls = boardHandling.get_routing_board().layer_structure;
+    public LayerRulesDialog(
+        JFrame owner,
+        NetClass netClass,
+        GuiBoardManager boardHandling,
+        app.freerouting.util.TextManager tm) {
+      super(owner, tm.getText("dialog_layer_rules_title"), true);
+      this.netClass = netClass;
+      this.boardHandling = boardHandling;
+      final LayerStructure ls = boardHandling.getRoutingBoard().layerStructure;
 
       setLayout(new BorderLayout(10, 10));
-      ((javax.swing.JComponent) getContentPane()).setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
+      ((javax.swing.JComponent) getContentPane())
+          .setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-      JPanel macro_panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 5));
-      JButton btnAll = new JButton(p_tm.getText("btn_all"));
-      JButton btnOuter = new JButton(p_tm.getText("btn_outer"));
-      JButton btnInner = new JButton(p_tm.getText("btn_inner"));
-      JButton btnClear = new JButton(p_tm.getText("btn_clear"));
-      macro_panel.add(btnAll); macro_panel.add(btnOuter); macro_panel.add(btnInner); macro_panel.add(btnClear);
+      JPanel macroPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 5));
+      JButton btnAll = new JButton(tm.getText("btn_all"));
+      JButton btnOuter = new JButton(tm.getText("btn_outer"));
+      JButton btnInner = new JButton(tm.getText("btn_inner"));
+      JButton btnClear = new JButton(tm.getText("btn_clear"));
+      macroPanel.add(btnAll);
+      macroPanel.add(btnOuter);
+      macroPanel.add(btnInner);
+      macroPanel.add(btnClear);
 
-      JPanel check_grid_panel = new JPanel(new GridLayout(0, 2, 15, 8));
-      check_grid_panel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+      JPanel checkGridPanel = new JPanel(new GridLayout(0, 2, 15, 8));
+      checkGridPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
       checkboxes = new JCheckBox[ls.arr.length];
 
       for (int i = 0; i < ls.arr.length; i++) {
-        if (ls.arr[i].is_signal) {
+        if (ls.arr[i].isSignal) {
           allSignalLayers.add(i);
           checkboxes[i] = new JCheckBox(ls.arr[i].name);
-          if (netClass.is_active_routing_layer(i)) {
+          if (netClass.isActiveRoutingLayer(i)) {
             checkboxes[i].setSelected(true);
           }
-          check_grid_panel.add(checkboxes[i]);
+          checkGridPanel.add(checkboxes[i]);
         }
       }
 
       int rows = (int) Math.ceil(allSignalLayers.size() / 2.0);
-      int dynamicHeight = Math.min(300, Math.max(80, rows * 35 + 20));
+      final int dynamicHeight = Math.min(300, Math.max(80, rows * 35 + 20));
 
-      btnAll.addActionListener(_ -> { for (int idx : allSignalLayers) checkboxes[idx].setSelected(true); });
-      btnOuter.addActionListener(_ -> {
-        for (int idx : allSignalLayers) checkboxes[idx].setSelected(false);
-        if (!allSignalLayers.isEmpty()) {
-          checkboxes[allSignalLayers.get(0)].setSelected(true);
-          checkboxes[allSignalLayers.get(allSignalLayers.size() - 1)].setSelected(true);
-        }
-      });
-      btnInner.addActionListener(_ -> {
-        for (int idx : allSignalLayers) checkboxes[idx].setSelected(true);
-        if (allSignalLayers.size() >= 2) {
-          checkboxes[allSignalLayers.get(0)].setSelected(false);
-          checkboxes[allSignalLayers.get(allSignalLayers.size() - 1)].setSelected(false);
-        }
-      });
-      btnClear.addActionListener(_ -> { for (int idx : allSignalLayers) checkboxes[idx].setSelected(false); });
+      btnAll.addActionListener(
+          _ -> {
+            for (int idx : allSignalLayers) {
+              checkboxes[idx].setSelected(true);
+            }
+          });
+      btnOuter.addActionListener(
+          _ -> {
+            for (int idx : allSignalLayers) {
+              checkboxes[idx].setSelected(false);
+            }
+            if (!allSignalLayers.isEmpty()) {
+              checkboxes[allSignalLayers.get(0)].setSelected(true);
+              checkboxes[allSignalLayers.get(allSignalLayers.size() - 1)].setSelected(true);
+            }
+          });
+      btnInner.addActionListener(
+          _ -> {
+            for (int idx : allSignalLayers) {
+              checkboxes[idx].setSelected(true);
+            }
+            if (allSignalLayers.size() >= 2) {
+              checkboxes[allSignalLayers.get(0)].setSelected(false);
+              checkboxes[allSignalLayers.get(allSignalLayers.size() - 1)].setSelected(false);
+            }
+          });
+      btnClear.addActionListener(
+          _ -> {
+            for (int idx : allSignalLayers) {
+              checkboxes[idx].setSelected(false);
+            }
+          });
 
-      JPanel bottom_panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
-      JButton btn_ok = new JButton(p_tm.getText("button_ok"));
-      btn_ok.setPreferredSize(new Dimension(90, 28));
-      btn_ok.setFont(btn_ok.getFont().deriveFont(Font.BOLD));
-      btn_ok.addActionListener(_ -> save());
-      bottom_panel.add(btn_ok);
-      getRootPane().setDefaultButton(btn_ok);
+      final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
+      JButton btnOk = new JButton(tm.getText("button_ok"));
+      btnOk.setPreferredSize(new Dimension(90, 28));
+      btnOk.setFont(btnOk.getFont().deriveFont(Font.BOLD));
+      btnOk.addActionListener(_ -> save());
+      bottomPanel.add(btnOk);
+      getRootPane().setDefaultButton(btnOk);
 
-      add(macro_panel, BorderLayout.NORTH);
+      add(macroPanel, BorderLayout.NORTH);
 
-      JPanel grid_wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
-      grid_wrapper.add(check_grid_panel);
+      JPanel gridWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
+      gridWrapper.add(checkGridPanel);
 
-      JPanel scroll_content_holder = new JPanel(new BorderLayout());
-      scroll_content_holder.add(grid_wrapper, BorderLayout.NORTH);
-      JScrollPane scroll_pane = new JScrollPane(scroll_content_holder);
-      scroll_pane.setPreferredSize(new Dimension(380, dynamicHeight));
+      JPanel scrollContentHolder = new JPanel(new BorderLayout());
+      scrollContentHolder.add(gridWrapper, BorderLayout.NORTH);
+      JScrollPane scrollPane = new JScrollPane(scrollContentHolder);
+      scrollPane.setPreferredSize(new Dimension(380, dynamicHeight));
 
-      add(scroll_pane, BorderLayout.CENTER);
-      add(bottom_panel, BorderLayout.SOUTH);
+      add(scrollPane, BorderLayout.CENTER);
+      add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private void save() {
       for (int i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i] == null) continue;
-        netClass.set_active_routing_layer(i, checkboxes[i].isSelected());
+        if (checkboxes[i] == null) {
+          continue;
+        }
+        netClass.setActiveRoutingLayer(i, checkboxes[i].isSelected());
       }
       dispose();
     }
   }
 
-  private class LayerRulesCellEditor extends javax.swing.AbstractCellEditor implements javax.swing.table.TableCellEditor, ActionListener {
+  private class LayerRulesCellEditor extends javax.swing.AbstractCellEditor
+      implements javax.swing.table.TableCellEditor, ActionListener {
     private final JButton button = new JButton();
+
     public LayerRulesCellEditor() {
-      button.setBorderPainted(false); button.setContentAreaFilled(false);
-      button.setHorizontalAlignment(SwingConstants.LEFT); button.addActionListener(this);
+      button.setBorderPainted(false);
+      button.setContentAreaFilled(false);
+      button.setHorizontalAlignment(SwingConstants.LEFT);
+      button.addActionListener(this);
     }
-    @Override public void actionPerformed(ActionEvent e) {
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
       int row = table.getEditingRow();
-      if (row < 0) row = table.getSelectedRow();
-      if (row < 0) return;
+      if (row < 0) {
+        row = table.getSelectedRow();
+      }
+      if (row < 0) {
+        return;
+      }
       int modelRow = table.convertRowIndexToModel(row);
-      NetClass nc = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes.get(modelRow);
-      LayerRulesDialog dialog = new LayerRulesDialog(board_frame, nc, board_frame.board_panel.board_handling, tm);
+      NetClass nc =
+          boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.netClasses.get(modelRow);
+      LayerRulesDialog dialog =
+          new LayerRulesDialog(boardFrame, nc, boardFrame.boardPanel.boardHandling, tm);
       dialog.pack();
-      dialog.setLocationRelativeTo(board_frame);
+      dialog.setLocationRelativeTo(boardFrame);
       dialog.setResizable(false);
       dialog.setVisible(true);
       fireEditingStopped();
-      table_model.fireTableRowsUpdated(modelRow, modelRow);
-      board_frame.board_panel.repaint();
+      tableModel.fireTableRowsUpdated(modelRow, modelRow);
+      boardFrame.boardPanel.repaint();
     }
-    @Override public Component getTableCellEditorComponent(JTable t, Object v, boolean s, int r, int c) { button.setText(Objects.toString(v, "")); return button; }
-    @Override public Object getCellEditorValue() { return button.getText(); }
+
+    @Override
+    public Component getTableCellEditorComponent(JTable t, Object v, boolean s, int r, int c) {
+      button.setText(Objects.toString(v, ""));
+      return button;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+      return button.getText();
+    }
   }
 }

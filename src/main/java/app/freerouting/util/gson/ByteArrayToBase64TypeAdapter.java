@@ -10,7 +10,9 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 import java.util.Base64;
 
-public class ByteArrayToBase64TypeAdapter implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {
+/** Gson adapter that serializes {@code byte[]} values as Base64 strings. */
+public class ByteArrayToBase64TypeAdapter
+    implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {
 
   @Override
   public JsonElement serialize(byte[] src, Type typeOfSrc, JsonSerializationContext context) {
@@ -18,7 +20,8 @@ public class ByteArrayToBase64TypeAdapter implements JsonSerializer<byte[]>, Jso
   }
 
   @Override
-  public byte[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+  public byte[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+      throws JsonParseException {
     return Base64.getDecoder().decode(json.getAsString());
   }
 }

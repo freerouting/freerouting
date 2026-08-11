@@ -1,9 +1,7 @@
 {
   "clearance_matrix": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardMenuRules"
-    ],
+    "code_references": [],
     "english_hash": "3e358d5918ec1d9ce5f818e40352504e94a45589d5fc4df5c8c4ccfe75d605be",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -17,9 +15,7 @@
   },
   "net_classes": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardMenuRules"
-    ],
+    "code_references": [],
     "english_hash": "238a2fd317660fa9bd4deedceb2f5cf2c808b66c86c8a03516ce26aa3a9ebc31",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

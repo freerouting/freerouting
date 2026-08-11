@@ -33,9 +33,7 @@
   },
   "trace_clearance_class": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowManualRules"
-    ],
+    "code_references": [],
     "english_hash": "4b7635d8a4a851a0ec9fbeffb3448a955d26346e57d837636b67d5ccff72220f",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -51,9 +49,7 @@
   },
   "trace_width": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowManualRules"
-    ],
+    "code_references": [],
     "english_hash": "5e0c125b82c417e049f2cf6909a936b00920e61a721c1862a4e64a6d7030a0aa",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -69,9 +65,7 @@
   },
   "via_rule": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowManualRules"
-    ],
+    "code_references": [],
     "english_hash": "302340746dcb26a45591132c2c1a03633b3e4619053e11c2d9bdcf113e03516f",
     "grammatical_role": "fragment",
     "has_placeholders": false,

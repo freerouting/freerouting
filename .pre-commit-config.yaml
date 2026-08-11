@@ -1,0 +1,82 @@
+default_language_version:
+  python: python3
+
+exclude: |
+  (?x)^(
+    \..*/|
+    src_v19/|
+    fixtures/|
+    integrations/|
+    examples/|
+    docs/reference/|
+    src/main/resources/app/freerouting/helpset/|
+    build/|
+    out/|
+    bin/|
+    tmp/|
+    logs/|
+    assets/|
+    scripts/benchmark/logs/|
+    scripts/benchmark/outputs/|
+    scripts/benchmark/results/|
+    scripts/benchmark/fixtures/|
+    scripts/i18n/glossary/|
+    scripts/i18n/__pycache__/|
+    .*\.step$|
+    .*\.stp$|
+    .*\.dsn$|
+    .*\.ses$|
+    .*\.rules$|
+    .*\.par$|
+    .*\.PLD$
+  )
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        files: \.(java|md|yml|yaml|properties|py|sh|ps1)$
+      - id: end-of-file-fixer
+        files: \.(java|md|yml|yaml|properties|py|sh|ps1)$
+      - id: check-json
+      - id: check-yaml
+        args: ['--allow-multiple-documents']
+      - id: check-toml
+      - id: mixed-line-ending
+        exclude: \.(bat|cmd|ps1)$
+        args: ['--fix=lf']
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: [-c, .yamllint.yaml]
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.3.0
+    hooks:
+      - id: codespell
+        additional_dependencies:
+          - tomli
+
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.10.0
+    hooks:
+      - id: shellcheck
+
+  - repo: local
+    hooks:
+      - id: gradle-quality-check
+        name: Gradle quality checks
+        entry: python scripts/run-gradle.py spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes
+        language: system
+        files: \.(java|groovy|gradle)$
+        pass_filenames: false
+
+      - id: i18n-context-check
+        name: i18n context check
+        entry: python scripts/i18n/extract-context.py --check
+        language: system
+        files: ^(src/main/java/|src/main/resources/|scripts/i18n/)
+        pass_filenames: false

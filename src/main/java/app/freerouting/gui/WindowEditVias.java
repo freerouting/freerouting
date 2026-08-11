@@ -24,212 +24,218 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 
-/**
- * Edit window for the table of available vias.
- */
+/** Edit window for the table of available vias. */
 public class WindowEditVias extends BoardSavableSubWindow {
 
   private static final int TEXTFIELD_HEIGHT = 16;
   private static final int TEXTFIELD_WIDTH = 100;
-  private final BoardFrame board_frame;
-  private final JPanel main_panel;
-  private final JComboBox<String> cl_class_combo_box;
-  private final JComboBox<String> padstack_combo_box;
-  private JScrollPane scroll_pane;
+  private final BoardFrame boardFrame;
+  private final JPanel mainPanel;
+  private final JComboBox<String> clClassComboBox;
+  private final JComboBox<String> padstackComboBox;
+  private JScrollPane scrollPane;
   private JTable table;
-  private ViaTableModel table_model;
+  private ViaTableModel tableModel;
 
-  /**
-   * Creates a new instance of ViaTablePanel
-   */
-  public WindowEditVias(BoardFrame p_board_frame) {
-    setLanguage(p_board_frame.get_locale());
+  /** Creates a new instance of ViaTablePanel. */
+  public WindowEditVias(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
     this.setTitle(tm.getText("title"));
 
-    this.board_frame = p_board_frame;
+    this.boardFrame = boardFrame;
 
-    this.main_panel = new JPanel();
-    this.main_panel.setLayout(new BorderLayout());
+    this.mainPanel = new JPanel();
+    this.mainPanel.setLayout(new BorderLayout());
 
-    this.cl_class_combo_box = new JComboBox<>();
-    this.padstack_combo_box = new JComboBox<>();
-    add_combobox_items();
+    this.clClassComboBox = new JComboBox<>();
+    this.padstackComboBox = new JComboBox<>();
+    addComboboxItems();
 
-    add_table();
+    addTable();
 
-    JPanel via_info_button_panel = new JPanel();
-    via_info_button_panel.setLayout(new FlowLayout());
-    this.main_panel.add(via_info_button_panel, BorderLayout.SOUTH);
-    final JButton rules_vias_vias_edit_add_button = new JButton(tm.getText("add"));
-    rules_vias_vias_edit_add_button.setToolTipText(tm.getText("add_tooltip"));
-    rules_vias_vias_edit_add_button.addActionListener(new AddViaListener());
-    rules_vias_vias_edit_add_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_vias_vias_edit_add_button", rules_vias_vias_edit_add_button.getText()));
-    via_info_button_panel.add(rules_vias_vias_edit_add_button);
-    final JButton rules_vias_vias_edit_remove_button = new JButton(tm.getText("remove"));
-    rules_vias_vias_edit_remove_button.setToolTipText(tm.getText("remove_tooltip"));
-    rules_vias_vias_edit_remove_button.addActionListener(new RemoveViaListener());
-    rules_vias_vias_edit_remove_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_vias_vias_edit_remove_button", rules_vias_vias_edit_remove_button.getText()));
-    via_info_button_panel.add(rules_vias_vias_edit_remove_button);
+    JPanel viaInfoButtonPanel = new JPanel();
+    viaInfoButtonPanel.setLayout(new FlowLayout());
+    this.mainPanel.add(viaInfoButtonPanel, BorderLayout.SOUTH);
+    final JButton rulesViasViasEditAddButton = new JButton(tm.getText("add"));
+    rulesViasViasEditAddButton.setToolTipText(tm.getText("add_tooltip"));
+    rulesViasViasEditAddButton.addActionListener(new AddViaListener());
+    rulesViasViasEditAddButton.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rulesViasViasEditAddButton", rulesViasViasEditAddButton.getText()));
+    viaInfoButtonPanel.add(rulesViasViasEditAddButton);
+    final JButton rulesViasViasEditRemoveButton = new JButton(tm.getText("remove"));
+    rulesViasViasEditRemoveButton.setToolTipText(tm.getText("remove_tooltip"));
+    rulesViasViasEditRemoveButton.addActionListener(new RemoveViaListener());
+    rulesViasViasEditRemoveButton.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rulesViasViasEditRemoveButton", rulesViasViasEditRemoveButton.getText()));
+    viaInfoButtonPanel.add(rulesViasViasEditRemoveButton);
 
-    this.add(main_panel);
+    this.add(mainPanel);
     this.pack();
   }
 
-  /**
-   * Recalculates all values displayed in the parent window
-   */
+  /** Recalculates all values displayed in the parent window. */
   @Override
   public void refresh() {
-    this.padstack_combo_box.removeAllItems();
-    this.cl_class_combo_box.removeAllItems();
-    this.add_combobox_items();
-    this.table_model.set_values();
+    this.padstackComboBox.removeAllItems();
+    this.clClassComboBox.removeAllItems();
+    this.addComboboxItems();
+    this.tableModel.setValues();
   }
 
-  private void add_table() {
-    this.table_model = new ViaTableModel();
-    this.table = new JTable(this.table_model);
-    this.scroll_pane = new JScrollPane(this.table);
-    int table_height = TEXTFIELD_HEIGHT * this.table_model.getRowCount();
-    int table_width = TEXTFIELD_WIDTH * this.table_model.getColumnCount();
-    this.table.setPreferredScrollableViewportSize(new Dimension(table_width, table_height));
+  private void addTable() {
+    this.tableModel = new ViaTableModel();
+    this.table = new JTable(this.tableModel);
+    this.scrollPane = new JScrollPane(this.table);
+    int tableHeight = TEXTFIELD_HEIGHT * this.tableModel.getRowCount();
+    int tableWidth = TEXTFIELD_WIDTH * this.tableModel.getColumnCount();
+    this.table.setPreferredScrollableViewportSize(new Dimension(tableWidth, tableHeight));
     this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    this.main_panel.add(scroll_pane, BorderLayout.CENTER);
+    this.mainPanel.add(scrollPane, BorderLayout.CENTER);
 
     this.table
         .getColumnModel()
         .getColumn(ColumnName.CLEARANCE_CLASS.ordinal())
-        .setCellEditor(new DefaultCellEditor(cl_class_combo_box));
+        .setCellEditor(new DefaultCellEditor(clClassComboBox));
 
     this.table
         .getColumnModel()
         .getColumn(ColumnName.PADSTACK.ordinal())
-        .setCellEditor(new DefaultCellEditor(padstack_combo_box));
+        .setCellEditor(new DefaultCellEditor(padstackComboBox));
   }
 
-  private void add_combobox_items() {
-    RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-    for (int i = 0; i < routing_board.rules.clearance_matrix.get_class_count(); i++) {
-      cl_class_combo_box.addItem(routing_board.rules.clearance_matrix.get_name(i));
+  private void addComboboxItems() {
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+    for (int i = 0; i < routingBoard.rules.clearanceMatrix.getClassCount(); i++) {
+      clClassComboBox.addItem(routingBoard.rules.clearanceMatrix.getName(i));
     }
-    for (int i = 0; i < routing_board.library.via_padstack_count(); i++) {
-      padstack_combo_box.addItem(routing_board.library.get_via_padstack(i).name);
+    for (int i = 0; i < routingBoard.library.viaPadstackCount(); i++) {
+      padstackComboBox.addItem(routingBoard.library.getViaPadstack(i).name);
     }
   }
 
   /**
    * Adjusts the displayed window with the via table after the size of the table has been changed.
    */
-  private void adjust_table() {
-    this.table_model = new ViaTableModel();
-    this.table = new JTable(this.table_model);
-    this.main_panel.remove(this.scroll_pane);
-    this.add_table();
+  private void adjustTable() {
+    this.tableModel = new ViaTableModel();
+    this.table = new JTable(this.tableModel);
+    this.mainPanel.remove(this.scrollPane);
+    this.addTable();
     this.pack();
-    this.board_frame.refresh_windows();
+    this.boardFrame.refreshWindows();
   }
 
   private enum ColumnName {
-    NAME, PADSTACK, CLEARANCE_CLASS, ATTACH_SMD
+    NAME,
+    PADSTACK,
+    CLEARANCE_CLASS,
+    ATTACH_SMD
   }
 
   private class AddViaListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-      ViaInfos via_infos = routing_board.rules.via_infos;
+    public void actionPerformed(ActionEvent evt) {
+      RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+      ViaInfos viaInfos = routingBoard.rules.viaInfos;
       int no = 1;
-      String new_name;
-      final String name_start = tm.getText("new_via");
+      String newName;
+      final String nameStart = tm.getText("newVia");
       for (; ; ) {
-        new_name = name_start + no;
-        if (!via_infos.name_exists(new_name)) {
+        newName = nameStart + no;
+        if (!viaInfos.nameExists(newName)) {
           break;
         }
         ++no;
       }
-      NetClass default_net_class = routing_board.rules.get_default_net_class();
-      ViaInfo new_via = new ViaInfo(new_name, routing_board.library.get_via_padstack(0), default_net_class.default_item_clearance_classes.get(DefaultItemClearanceClasses.ItemClass.VIA), false,
-          routing_board.rules);
-      via_infos.add(new_via);
-      adjust_table();
+      NetClass defaultNetClass = routingBoard.rules.getDefaultNetClass();
+      ViaInfo newVia =
+          new ViaInfo(
+              newName,
+              routingBoard.library.getViaPadstack(0),
+              defaultNetClass.defaultItemClearanceClasses.get(
+                  DefaultItemClearanceClasses.ItemClass.VIA),
+              false,
+              routingBoard.rules);
+      viaInfos.add(newVia);
+      adjustTable();
     }
   }
 
   private class RemoveViaListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      if (table_model.getRowCount() <= 1) {
-        board_frame.screen_messages.set_status_message(tm.getText("last_via_not_removed"));
+    public void actionPerformed(ActionEvent evt) {
+      if (tableModel.getRowCount() <= 1) {
+        boardFrame.screenMessages.setStatusMessage(tm.getText("last_via_not_removed"));
         return;
       }
-      int selected_row = table.getSelectedRow();
-      if (selected_row < 0) {
+      int selectedRow = table.getSelectedRow();
+      if (selectedRow < 0) {
         return;
       }
-      Object via_name = table_model.getValueAt(selected_row, ColumnName.NAME.ordinal());
-      if (!(via_name instanceof String)) {
+      Object viaName = tableModel.getValueAt(selectedRow, ColumnName.NAME.ordinal());
+      if (!(viaName instanceof String)) {
         return;
       }
-      BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
-      ViaInfo via_info = board_rules.via_infos.get((String) via_name);
-      // Check, if via_info is used in a via rule.
-      for (ViaRule curr_rule : board_rules.via_rules) {
-        if (curr_rule.contains(via_info)) {
-          board_frame.screen_messages.set_status_message(
-              tm.getText("via_not_removed_in_rule_message", curr_rule.name));
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
+      ViaInfo viaInfo = boardRules.viaInfos.get((String) viaName);
+      // Check, if viaInfo is used in a via rule.
+      for (ViaRule currRule : boardRules.viaRules) {
+        if (currRule.contains(viaInfo)) {
+          boardFrame.screenMessages.setStatusMessage(
+              tm.getText("via_not_removed_in_rule_message", currRule.name));
           return;
         }
       }
-      if (board_rules.via_infos.remove(via_info)) {
-        adjust_table();
-        board_frame.screen_messages.set_status_message(
-            tm.getText("via_removed_message", via_info.get_name()));
+      if (boardRules.viaInfos.remove(viaInfo)) {
+        adjustTable();
+        boardFrame.screenMessages.setStatusMessage(
+            tm.getText("via_removed_message", viaInfo.getName()));
       }
     }
   }
 
-  /**
-   * Table model of the via table.
-   */
+  /** Table model of the via table. */
   private class ViaTableModel extends AbstractTableModel {
 
     private final Object[][] data;
-    private final String[] column_names;
+    private final String[] columnNames;
 
     public ViaTableModel() {
-      column_names = new String[ColumnName.values().length];
+      columnNames = new String[ColumnName.values().length];
 
-      for (int i = 0; i < column_names.length; i++) {
-        column_names[i] = tm.getText(ColumnName.values()[i].toString());
+      for (int i = 0; i < columnNames.length; i++) {
+        columnNames[i] = tm.getText(ColumnName.values()[i].toString());
       }
-      BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
-      data = new Object[board_rules.via_infos.count()][];
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
+      data = new Object[boardRules.viaInfos.count()][];
       for (int i = 0; i < data.length; i++) {
         this.data[i] = new Object[ColumnName.values().length];
       }
-      set_values();
+      setValues();
     }
 
-    /**
-     * Calculates the values in this table
-     */
-    public void set_values() {
-      BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
+    /** Calculates the values in this table. */
+    public void setValues() {
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
       for (int i = 0; i < data.length; i++) {
-        ViaInfo curr_via = board_rules.via_infos.get(i);
-        this.data[i][ColumnName.NAME.ordinal()] = curr_via.get_name();
-        this.data[i][ColumnName.PADSTACK.ordinal()] = curr_via.get_padstack().name;
-        this.data[i][ColumnName.CLEARANCE_CLASS.ordinal()] = board_rules.clearance_matrix.get_name(curr_via.get_clearance_class());
-        this.data[i][ColumnName.ATTACH_SMD.ordinal()] = curr_via.attach_smd_allowed();
+        ViaInfo currVia = boardRules.viaInfos.get(i);
+        this.data[i][ColumnName.NAME.ordinal()] = currVia.getName();
+        this.data[i][ColumnName.PADSTACK.ordinal()] = currVia.getPadstack().name;
+        this.data[i][ColumnName.CLEARANCE_CLASS.ordinal()] =
+            boardRules.clearanceMatrix.getName(currVia.getClearanceClass());
+        this.data[i][ColumnName.ATTACH_SMD.ordinal()] = currVia.attachSmdAllowed();
       }
     }
 
     @Override
-    public String getColumnName(int p_col) {
-      return column_names[p_col];
+    public String getColumnName(int col) {
+      return columnNames[col];
     }
 
     @Override
@@ -239,79 +245,79 @@ public class WindowEditVias extends BoardSavableSubWindow {
 
     @Override
     public int getColumnCount() {
-      return column_names.length;
+      return columnNames.length;
     }
 
     @Override
-    public Object getValueAt(int p_row, int p_col) {
-      return data[p_row][p_col];
+    public Object getValueAt(int row, int col) {
+      return data[row][col];
     }
 
     @Override
-    public void setValueAt(Object p_value, int p_row, int p_col) {
-      RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-      BoardRules board_rules = routing_board.rules;
-      Object via_name = getValueAt(p_row, ColumnName.NAME.ordinal());
-      if (!(via_name instanceof String)) {
+    public void setValueAt(Object value, int row, int col) {
+      RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+      BoardRules boardRules = routingBoard.rules;
+      Object viaName = getValueAt(row, ColumnName.NAME.ordinal());
+      if (!(viaName instanceof String)) {
         FRLogger.warn("ViaVindow.setValueAt: String expected");
         return;
       }
-      ViaInfo via_info = board_rules.via_infos.get((String) via_name);
-      if (via_info == null) {
-        FRLogger.warn("ViaVindow.setValueAt: via_info not found");
+      ViaInfo viaInfo = boardRules.viaInfos.get((String) viaName);
+      if (viaInfo == null) {
+        FRLogger.warn("ViaVindow.setValueAt: viaInfo not found");
         return;
       }
 
-      if (p_col == ColumnName.NAME.ordinal()) {
-        if (!(p_value instanceof String new_name)) {
+      if (col == ColumnName.NAME.ordinal()) {
+        if (!(value instanceof String newName)) {
           return;
         }
-        if (board_rules.via_infos.name_exists(new_name)) {
+        if (boardRules.viaInfos.nameExists(newName)) {
           return;
         }
-        via_info.set_name(new_name);
-        board_frame.via_window.refresh();
-      } else if (p_col == ColumnName.PADSTACK.ordinal()) {
-        if (!(p_value instanceof String new_name)) {
+        viaInfo.setName(newName);
+        boardFrame.viaWindow.refresh();
+      } else if (col == ColumnName.PADSTACK.ordinal()) {
+        if (!(value instanceof String newName)) {
           return;
         }
-        Padstack new_padstack = routing_board.library.get_via_padstack(new_name);
-        if (new_padstack == null) {
+        Padstack newPadstack = routingBoard.library.getViaPadstack(newName);
+        if (newPadstack == null) {
           FRLogger.warn("ViaVindow.setValueAt: via padstack not found");
           return;
         }
-        via_info.set_padstack(new_padstack);
-      } else if (p_col == ColumnName.CLEARANCE_CLASS.ordinal()) {
-        if (!(p_value instanceof String new_name)) {
+        viaInfo.setPadstack(newPadstack);
+      } else if (col == ColumnName.CLEARANCE_CLASS.ordinal()) {
+        if (!(value instanceof String newName)) {
           return;
         }
-        int new_cl_class_index = board_rules.clearance_matrix.get_no(new_name);
+        int newClClassIndex = boardRules.clearanceMatrix.getNo(newName);
         {
-          if (new_cl_class_index < 0) {
+          if (newClClassIndex < 0) {
             FRLogger.warn("ViaVindow.setValueAt: clearance class not found");
             return;
           }
         }
-        via_info.set_clearance_class(new_cl_class_index);
-      } else if (p_col == ColumnName.ATTACH_SMD.ordinal()) {
-        if (!(p_value instanceof Boolean attach_smd)) {
+        viaInfo.setClearanceClass(newClClassIndex);
+      } else if (col == ColumnName.ATTACH_SMD.ordinal()) {
+        if (!(value instanceof Boolean attachSmd)) {
           FRLogger.warn("ViaVindow.setValueAt: Boolean expected");
           return;
         }
-        via_info.set_attach_smd_allowed(attach_smd);
+        viaInfo.setAttachSmdAllowed(attachSmd);
       }
-      this.data[p_row][p_col] = p_value;
-      fireTableCellUpdated(p_row, p_col);
+      this.data[row][col] = value;
+      fireTableCellUpdated(row, col);
     }
 
     @Override
-    public boolean isCellEditable(int p_row, int p_col) {
+    public boolean isCellEditable(int row, int col) {
       return true;
     }
 
     @Override
-    public Class<?> getColumnClass(int p_col) {
-      return getValueAt(0, p_col).getClass();
+    public Class<?> getColumnClass(int col) {
+      return getValueAt(0, col).getClass();
     }
   }
 }

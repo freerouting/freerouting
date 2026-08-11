@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 @Tag("slow")
-public class BendCostRoutingTest extends RoutingFixtureTest {
+class BendCostRoutingTest extends RoutingFixtureTest {
 
   @Test
-  public void testRoutingWithBendCosts() {
+  void routingWithBendCosts() {
     System.setProperty("freerouting.logging.console.level", "INFO");
     FRLogger.granularTraceEnabled = false;
     Freerouting.globalSettings.debugSettings.enableDetailedLogging = false;
@@ -24,11 +24,10 @@ public class BendCostRoutingTest extends RoutingFixtureTest {
     // Injects bend cost parameter for layer 0 (or default bend cost)
     testSettingsSource.setDefaultBendCost(5.0);
 
-    RoutingJob job = GetRoutingJob("Issue026-J2_reference.dsn", testSettingsSource);
+    RoutingJob job = getRoutingJob("Issue026-J2_reference.dsn", testSettingsSource);
 
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
-    assertRoutingResult(job, "Issue026-J2_reference.dsn")
-        .check();
+    assertRoutingResult(job, "Issue026-J2_reference.dsn").check();
   }
 }

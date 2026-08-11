@@ -83,9 +83,7 @@
   },
   "algorithm_current": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowAutorouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "439a3bcb2830853ff79a6709b3970a71384ea7bdd6a09dbe8143007abdb706c6",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -123,9 +121,7 @@
   },
   "algorithm_v19": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowAutorouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "f06571f7e2ec0d0b2b3617a4d08beb0394bd51432321d1325a6cd2d1d508c832",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -692,9 +688,7 @@
   },
   "start_ripup_costs": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowAutorouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "2fde9759ca65a8eefeba9bfe832eeb352aa0d52e12badb470d94961d04a85429",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -744,9 +738,7 @@
   },
   "trace_costs_on_layer": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowAutorouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "4b05803568f1171040ba3d65c49d5931842bf8a52a73cf705f245e6f58ce7fcd",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -794,9 +786,7 @@
   },
   "via_costs": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowAutorouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "133e38a18d360c98ff6bc722db2435c85e6e94eb5c4a82c67d0ccaed4217535e",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -831,9 +821,7 @@
   },
   "vias_allowed": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowAutorouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "bb7e76b19286156ce158fb25fa0cc0a98d0fccfd9589456956ad2c61845c4933",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

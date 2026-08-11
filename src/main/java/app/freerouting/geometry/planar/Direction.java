@@ -4,198 +4,175 @@ import app.freerouting.datastructures.Signum;
 import java.io.Serializable;
 
 /**
- * Abstract class defining functionality of directions in the plane. A Direction is an equivalence class of vectors. Two vectors define the same object of class Direction, if they point into the same
- * direction. We prefer using directions instead of angles, because with angles the arithmetic calculations are in general not exact.
+ * Abstract class defining functionality of directions in the plane. A Direction is an equivalence
+ * class of vectors. Two vectors define the same object of class Direction, if they point into the
+ * same direction. We prefer using directions instead of angles, because with angles the arithmetic
+ * calculations are in general not exact.
  */
 public abstract class Direction implements Comparable<Direction>, Serializable {
 
   public static final IntDirection NULL = new IntDirection(0, 0);
 
-  /**
-   * the direction to the east
-   */
+  /** The direction to the east. */
   public static final IntDirection RIGHT = new IntDirection(1, 0);
-  /**
-   * the direction to the northeast
-   */
+
+  /** The direction to the northeast. */
   public static final IntDirection RIGHT45 = new IntDirection(1, 1);
-  /**
-   * the direction to the north
-   */
+
+  /** The direction to the north. */
   public static final IntDirection UP = new IntDirection(0, 1);
-  /**
-   * the direction to the northwest
-   */
+
+  /** The direction to the northwest. */
   public static final IntDirection UP45 = new IntDirection(-1, 1);
-  /**
-   * the direction to the west
-   */
+
+  /** The direction to the west. */
   public static final IntDirection LEFT = new IntDirection(-1, 0);
-  /**
-   * the direction to the southwest
-   */
+
+  /** The direction to the southwest. */
   public static final IntDirection LEFT45 = new IntDirection(-1, -1);
-  /**
-   * the direction to the south
-   */
+
+  /** The direction to the south. */
   public static final IntDirection DOWN = new IntDirection(0, -1);
-  /**
-   * the direction to the southeast
-   */
+
+  /** The direction to the southeast. */
   public static final IntDirection DOWN45 = new IntDirection(1, -1);
 
-  /**
-   * creates a Direction from the input Vector
-   */
-  public static Direction get_instance(Vector p_vector) {
-    return p_vector.to_normalized_direction();
+  /** Creates a Direction from the input Vector. */
+  public static Direction getInstance(Vector vector) {
+    return vector.toNormalizedDirection();
   }
 
   /**
    * Calculates the direction from p_from to p_to. If p_from and p_to are equal, null is returned.
    */
-  public static Direction get_instance(Point p_from, Point p_to) {
-    if (p_from.equals(p_to)) {
+  public static Direction getInstance(Point from, Point to) {
+    if (from.equals(to)) {
       return null;
     }
-    return get_instance(p_to.difference_by(p_from));
+    return getInstance(to.differenceBy(from));
   }
 
-  /**
-   * Creates a Direction whose angle with the x-axis is nearly equal to p_angle
-   */
-  public static Direction get_instance_approx(double p_angle) {
-    final double scale_factor = 10000;
-    int x = (int) Math.round(Math.cos(p_angle) * scale_factor);
-    int y = (int) Math.round(Math.sin(p_angle) * scale_factor);
-    return get_instance(new IntVector(x, y));
+  /** Creates a Direction whose angle with the x-axis is nearly equal to p_angle. */
+  public static Direction getInstanceApprox(double angle) {
+    final double scaleFactor = 10000;
+    int x = (int) Math.round(Math.cos(angle) * scaleFactor);
+    int y = (int) Math.round(Math.sin(angle) * scaleFactor);
+    return getInstance(new IntVector(x, y));
   }
 
-  /**
-   * return any Vector pointing into this direction
-   */
-  public abstract Vector get_vector();
+  /** Returns any Vector pointing into this direction. */
+  public abstract Vector getVector();
 
-  /**
-   * returns true, if the direction is horizontal or vertical
-   */
-  public abstract boolean is_orthogonal();
+  /** Returns true, if the direction is horizontal or vertical. */
+  public abstract boolean isOrthogonal();
 
-  /**
-   * returns true, if the direction is diagonal
-   */
-  public abstract boolean is_diagonal();
+  /** Returns true, if the direction is diagonal. */
+  public abstract boolean isDiagonal();
 
-  /**
-   * returns true, if the direction is orthogonal or diagonal
-   */
-  public boolean is_multiple_of_45_degree() {
-    return is_orthogonal() || is_diagonal();
+  /** Returns true, if the direction is orthogonal or diagonal. */
+  public boolean isMultipleOf45Degree() {
+    return isOrthogonal() || isDiagonal();
   }
 
-  /**
-   * turns the direction by p_factor times 45 degree
-   */
-  public abstract Direction turn_45_degree(int p_factor);
+  /** Turns the direction by p_factor times 45 degree. */
+  public abstract Direction turn45Degree(int factor);
 
-  /**
-   * returns the opposite direction of this direction
-   */
+  /** Returns the opposite direction of this direction. */
   public abstract Direction opposite();
 
   /**
-   * Returns true, if p_ob is a Direction and this Direction and p_ob point into the same direction
+   * Returns true, if p_ob is a Direction and this Direction and p_ob point into the same direction.
    */
-  public final boolean equals(Direction p_other) {
-    if (this == p_other) {
+  @Override
+  public final boolean equals(Object obj) {
+    if (obj == this) {
       return true;
     }
-    if (p_other == null) {
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    Direction other = (Direction) obj;
+    if (this == other) {
+      return true;
+    }
+    if (other == null) {
       return false;
     }
 
-    if (this.side_of(p_other) != Side.COLLINEAR) {
+    if (this.sideOf(other) != Side.COLLINEAR) {
       return false;
     }
     // check, that dir and other_dir do not point into opposite directions
-    Vector this_vector = get_vector();
-    Vector other_vector = p_other.get_vector();
-    return this_vector.projection(other_vector) == Signum.POSITIVE;
+    Vector thisVector = getVector();
+    Vector otherVector = other.getVector();
+    return thisVector.projection(otherVector) == Signum.POSITIVE;
   }
 
   /**
-   * Let L be the line from the Zero Vector to p_other.get_vector(). The function returns Side.ON_THE_LEFT, if this.get_vector() is on the left of L Side.ON_THE_RIGHT, if this.get_vector() is on the
-   * right of L and Side.COLLINEAR, if this.get_vector() is collinear with L.
+   * Let L be the line from the Zero Vector to p_other.get_vector(). The function returns
+   * Side.ON_THE_LEFT, if this.get_vector() is on the left of L Side.ON_THE_RIGHT, if
+   * this.get_vector() is on the right of L and Side.COLLINEAR, if this.get_vector() is collinear
+   * with L.
    */
-  public Side side_of(Direction p_other) {
-    return this
-        .get_vector()
-        .side_of(p_other.get_vector());
+  public Side sideOf(Direction other) {
+    return this.getVector().sideOf(other.getVector());
   }
 
   /**
-   * The function returns Signum.POSITIVE, if the scalar product of a vector representing this direction and a vector representing p_other is {@literal >} 0, Signum.NEGATIVE, if the scalar product is
-   * {@literal <} 0, and Signum.ZERO, if the scalar product is equal 0.
+   * The function returns Signum.POSITIVE, if the scalar product of a vector representing this
+   * direction and a vector representing p_other is {@literal >} 0, Signum.NEGATIVE, if the scalar
+   * product is {@literal <} 0, and Signum.ZERO, if the scalar product is equal 0.
    */
-  public Signum projection(Direction p_other) {
-    return this
-        .get_vector()
-        .projection(p_other.get_vector());
+  public Signum projection(Direction other) {
+    return this.getVector().projection(other.getVector());
   }
 
-  /**
-   * calculates an approximation of the direction in the middle of this direction and p_other
-   */
-  public Direction middle_approx(Direction p_other) {
-    FloatPoint v1 = get_vector().to_float();
-    FloatPoint v2 = p_other
-        .get_vector()
-        .to_float();
+  /** Calculates an approximation of the direction in the middle of this direction and p_other. */
+  public Direction middleApprox(Direction other) {
+    FloatPoint v1 = getVector().toFloat();
+    FloatPoint v2 = other.getVector().toFloat();
     double length1 = v1.size();
     double length2 = v2.size();
     double x = v1.x / length1 + v2.x / length2;
     double y = v1.y / length1 + v2.y / length2;
-    final double scale_factor = 1000;
-    Vector vm = new IntVector((int) Math.round(x * scale_factor), (int) Math.round(y * scale_factor));
-    return Direction.get_instance(vm);
+    final double scaleFactor = 1000;
+    Vector vm = new IntVector((int) Math.round(x * scaleFactor), (int) Math.round(y * scaleFactor));
+    return Direction.getInstance(vm);
   }
 
   /**
-   * Returns 1, if the angle between p_1 and this direction is bigger the angle between p_2 and this direction, 0, if p_1 is equal to p_2, * and -1 otherwise.
+   * Returns 1, if the angle between p_1 and this direction is bigger the angle between p_2 and this
+   * direction, 0, if p_1 is equal to p_2, * and -1 otherwise.
    */
-  public int compare_from(Direction p_1, Direction p_2) {
+  public int compareFrom(Direction p1, Direction p2) {
     int result;
-    if (p_1.compareTo(this) >= 0) {
-      if (p_2.compareTo(this) >= 0) {
-        result = p_1.compareTo(p_2);
+    if (p1.compareTo(this) >= 0) {
+      if (p2.compareTo(this) >= 0) {
+        result = p1.compareTo(p2);
       } else {
         result = -1;
       }
     } else {
-      if (p_2.compareTo(this) >= 0) {
+      if (p2.compareTo(this) >= 0) {
         result = 1;
       } else {
-        result = p_1.compareTo(p_2);
+        result = p1.compareTo(p2);
       }
     }
     return result;
   }
 
-  /**
-   * Returns an approximation of the signed angle corresponding to this direction.
-   */
-  public double angle_approx() {
-    return this
-        .get_vector()
-        .angle_approx();
+  /** Returns an approximation of the signed angle corresponding to this direction. */
+  public double angleApprox() {
+    return this.getVector().angleApprox();
   }
 
   // auxiliary functions needed because the virtual function mechanism
   // does not work in parameter position
 
-  abstract int compareTo(IntDirection p_other);
+  abstract int compareTo(IntDirection other);
 
-  abstract int compareTo(BigIntDirection p_other);
+  abstract int compareTo(BigIntDirection other);
 
   @Override
   public String toString() {

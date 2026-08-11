@@ -4,40 +4,39 @@ import app.freerouting.geometry.planar.TileShape;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * An expansion room, whose shape is not yet completely calculated.
- */
+/** An expansion room, whose shape is not yet completely calculated. */
 public class IncompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom {
 
-  /**
-   * A shape which should be contained in the completed shape.
-   */
-  private TileShape contained_shape;
+  /** A shape which should be contained in the completed shape. */
+  private TileShape containedShape;
 
   /**
-   * Creates a new instance of IncompleteFreeSpaceExpansionRoom. If p_shape ==
-   * null means p_shape is the whole plane.
+   * Creates a new instance of IncompleteFreeSpaceExpansionRoom. If shape == null, it means shape is
+   * the whole plane.
    */
-  public IncompleteFreeSpaceExpansionRoom(TileShape p_shape, int p_layer, TileShape p_contained_shape) {
-    super(p_shape, p_layer);
-    contained_shape = p_contained_shape;
+  public IncompleteFreeSpaceExpansionRoom(TileShape shape, int layer, TileShape containedShape) {
+    super(shape, layer);
+    this.containedShape = containedShape;
   }
 
-  public TileShape get_contained_shape() {
-    return this.contained_shape;
+  /** Gets the shape that is contained within this room. */
+  public TileShape getContainedShape() {
+    return this.containedShape;
   }
 
-  public void set_contained_shape(TileShape p_shape) {
-    this.contained_shape = p_shape;
+  /** Sets the contained shape for this room. */
+  public void setContainedShape(TileShape shape) {
+    this.containedShape = shape;
   }
 
-  public Collection<TargetItemExpansionDoor> get_target_doors() {
+  /** Returns an empty list of target doors for incomplete rooms. */
+  public Collection<TargetItemExpansionDoor> getTargetDoors() {
     return new ArrayList<>();
   }
 
   @Override
-  public int get_id_no() {
+  public int getIdNo() {
     // Stable hash of shape and layer
-    return 31 * get_shape().get_id_no() + get_layer();
+    return 31 * getShape().getIdNo() + getLayer();
   }
-}
+}

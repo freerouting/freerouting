@@ -33,155 +33,167 @@ import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
 /**
- * Window displaying text information for a list of objects implementing the ObjectInfoWindow.Printable interface.
+ * Window displaying text information for a list of objects implementing the
+ * ObjectInfoWindow.Printable interface.
  */
-public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectInfoPanel {
+public final class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectInfoPanel {
 
   private static final int MAX_WINDOW_HEIGHT = 500;
   private static final int SCROLLBAR_ADD = 30;
-  private final JTextPane text_pane;
-  private final CoordinateTransform coordinate_transform;
-  private final NumberFormat number_format;
+  private final JTextPane textPane;
+  private final CoordinateTransform coordinateTransform;
+  private final NumberFormat numberFormat;
+
   /**
-   * The new created windows by pushing buttons inside this window. Used when closing this window to close also all subwindows.
+   * The new created windows by pushing buttons inside this window. Used when closing this window to
+   * close also all subwindows.
    */
   private final Collection<WindowObjectInfo> subwindows = new LinkedList<>();
 
-  /**
-   * Creates a new instance of ItemInfoWindow
-   */
-  private WindowObjectInfo(BoardFrame p_board_frame, CoordinateTransform p_coordinate_transform) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
-    this.coordinate_transform = p_coordinate_transform;
+  /** Creates a new instance of ItemInfoWindow. */
+  private WindowObjectInfo(BoardFrame boardFrame, CoordinateTransform coordinateTransform) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
+    this.coordinateTransform = coordinateTransform;
 
     // create the text pane
-    this.text_pane = new JTextPane();
-    this.text_pane.setEditable(false);
-    this.number_format = NumberFormat.getInstance(p_board_frame.get_locale());
-    this.number_format.setMaximumFractionDigits(4);
+    this.textPane = new JTextPane();
+    this.textPane.setEditable(false);
+    this.numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+    this.numberFormat.setMaximumFractionDigits(4);
 
     // set document and text styles
-    StyledDocument document = this.text_pane.getStyledDocument();
+    StyledDocument document = this.textPane.getStyledDocument();
 
-    Style default_style = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+    Style defaultStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 
     // add bold style to the document
-    Style bold_style = document.addStyle("bold", default_style);
-    StyleConstants.setBold(bold_style, true);
+    Style boldStyle = document.addStyle("bold", defaultStyle);
+    StyleConstants.setBold(boldStyle, true);
 
-    // Create a scroll_pane around the text_pane and insert it into this window.
-    JScrollPane scroll_pane = new JScrollPane(this.text_pane);
-    this.add(scroll_pane);
+    // Create a scrollPane around the textPane and insert it into this window.
+    JScrollPane scrollPane = new JScrollPane(this.textPane);
+    this.add(scrollPane);
 
     // Dispose this window and all subwindows when closing the window.
-    this.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent evt) {
-        dispose();
-      }
-    });
+    this.addWindowListener(
+        new WindowAdapter() {
+          @Override
+          public void windowClosing(WindowEvent evt) {
+            dispose();
+          }
+        });
   }
 
   /**
-   * Displays a new ObjectInfoWindow with information about the items in p_item_list. p_coordinate_transform is for transforming board to user coordinates, and p_location is the location of the
-   * window.
+   * Displays a new ObjectInfoWindow with information about the items in p_item_list.
+   * p_coordinate_transform is for transforming board to user coordinates, and p_location is the
+   * location of the window.
    */
-  public static void display(Collection<Item> p_item_list, BoardFrame p_board_frame, CoordinateTransform p_coordinate_transform, Point p_location) {
-    WindowObjectInfo new_instance = new WindowObjectInfo(p_board_frame, p_coordinate_transform);
-    new_instance.setTitle(new_instance.tm.getText("title"));
-    Integer pin_count = 0;
-    Integer via_count = 0;
-    Integer trace_count = 0;
-    double cumulative_trace_length = 0;
-    for (WindowObjectInfo.Printable curr_object : p_item_list) {
-      curr_object.print_info(new_instance, p_board_frame.get_locale());
-      if (curr_object instanceof Pin) {
-        ++pin_count;
-      } else if (curr_object instanceof Via) {
-        ++via_count;
-      } else if (curr_object instanceof Trace trace) {
-        ++trace_count;
-        cumulative_trace_length += trace.get_length();
+  public static void display(
+      Collection<Item> itemList,
+      BoardFrame boardFrame,
+      CoordinateTransform coordinateTransform,
+      Point location) {
+    WindowObjectInfo newInstance = new WindowObjectInfo(boardFrame, coordinateTransform);
+    newInstance.setTitle(newInstance.tm.getText("title"));
+    Integer pinCount = 0;
+    Integer viaCount = 0;
+    Integer traceCount = 0;
+    double cumulativeTraceLength = 0;
+    for (WindowObjectInfo.Printable currObject : itemList) {
+      currObject.printInfo(newInstance, boardFrame.get_locale());
+      if (currObject instanceof Pin) {
+        ++pinCount;
+      } else if (currObject instanceof Via) {
+        ++viaCount;
+      } else if (currObject instanceof Trace trace) {
+        ++traceCount;
+        cumulativeTraceLength += trace.getLength();
       }
     }
-    new_instance.append_bold(new_instance.tm.getText("summary") + " ");
-    NumberFormat number_format = NumberFormat.getInstance(p_board_frame.get_locale());
-    if (pin_count > 0) {
-      new_instance.append(number_format.format(pin_count));
-      if (pin_count == 1) {
-        new_instance.append(" " + new_instance.tm.getText("pin"));
+    newInstance.appendBold(newInstance.tm.getText("summary") + " ");
+    NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+    if (pinCount > 0) {
+      newInstance.append(numberFormat.format(pinCount));
+      if (pinCount == 1) {
+        newInstance.append(" " + newInstance.tm.getText("pin"));
       } else {
-        new_instance.append(" " + new_instance.tm.getText("pins"));
+        newInstance.append(" " + newInstance.tm.getText("pins"));
       }
-      if (via_count + trace_count > 0) {
-        new_instance.append(", ");
+      if (viaCount + traceCount > 0) {
+        newInstance.append(", ");
       }
     }
-    if (via_count > 0) {
-      new_instance.append(number_format.format(via_count));
-      if (via_count == 1) {
-        new_instance.append(" " + new_instance.tm.getText("via"));
+    if (viaCount > 0) {
+      newInstance.append(numberFormat.format(viaCount));
+      if (viaCount == 1) {
+        newInstance.append(" " + newInstance.tm.getText("via"));
       } else {
-        new_instance.append(" " + new_instance.tm.getText("vias"));
+        newInstance.append(" " + newInstance.tm.getText("vias"));
       }
-      if (trace_count > 0) {
-        new_instance.append(", ");
+      if (traceCount > 0) {
+        newInstance.append(", ");
       }
     }
-    if (trace_count > 0) {
-      new_instance.append(number_format.format(trace_count));
-      if (trace_count == 1) {
-        new_instance.append(" " + new_instance.tm.getText("trace") + " ");
+    if (traceCount > 0) {
+      newInstance.append(numberFormat.format(traceCount));
+      if (traceCount == 1) {
+        newInstance.append(" " + newInstance.tm.getText("trace") + " ");
       } else {
-        new_instance.append(" " + new_instance.tm.getText("traces") + " ");
+        newInstance.append(" " + newInstance.tm.getText("traces") + " ");
       }
-      new_instance.append(cumulative_trace_length);
+      newInstance.append(cumulativeTraceLength);
     }
 
-    new_instance.pack();
-    Dimension size = new_instance.getSize();
+    newInstance.pack();
+    Dimension size = newInstance.getSize();
     // make the window smaller, if its height gets bigger than MAX_WINDOW_HEIGHT
     if (size.getHeight() > MAX_WINDOW_HEIGHT) {
-      new_instance.setPreferredSize(new Dimension((int) size.getWidth() + SCROLLBAR_ADD, MAX_WINDOW_HEIGHT));
-      new_instance.pack();
+      newInstance.setPreferredSize(
+          new Dimension((int) size.getWidth() + SCROLLBAR_ADD, MAX_WINDOW_HEIGHT));
+      newInstance.pack();
     }
-    new_instance.setLocation(p_location);
-    new_instance.setVisible(true);
+    newInstance.setLocation(location);
+    newInstance.setVisible(true);
   }
 
   /**
-   * Displays a new ObjectInfoWindow with information about the objects in p_object_list. p_coordinate_transform is for transforming board to user coordinates, and p_location is the location of the
-   * window.
+   * Displays a new ObjectInfoWindow with information about the objects in p_object_list.
+   * p_coordinate_transform is for transforming board to user coordinates, and p_location is the
+   * location of the window.
    */
-  public static WindowObjectInfo display(String p_title, Collection<Printable> p_object_list, BoardFrame p_board_frame, CoordinateTransform p_coordinate_transform) {
-    WindowObjectInfo new_window = new WindowObjectInfo(p_board_frame, p_coordinate_transform);
-    new_window.setTitle(p_title);
-    if (p_object_list.isEmpty()) {
-      new_window.append(new_window.tm.getText("list_empty"));
+  public static WindowObjectInfo display(
+      String title,
+      Collection<Printable> objectList,
+      BoardFrame boardFrame,
+      CoordinateTransform coordinateTransform) {
+    WindowObjectInfo newWindow = new WindowObjectInfo(boardFrame, coordinateTransform);
+    newWindow.setTitle(title);
+    if (objectList.isEmpty()) {
+      newWindow.append(newWindow.tm.getText("listEmpty"));
     }
-    for (Printable curr_object : p_object_list) {
-      curr_object.print_info(new_window, p_board_frame.get_locale());
+    for (Printable currObject : objectList) {
+      currObject.printInfo(newWindow, boardFrame.get_locale());
     }
-    new_window.pack();
-    Dimension size = new_window.getSize();
+    newWindow.pack();
+    Dimension size = newWindow.getSize();
     // make the window smaller, if its height gets bigger than MAX_WINDOW_HEIGHT
     if (size.getHeight() > MAX_WINDOW_HEIGHT) {
-      new_window.setPreferredSize(new Dimension((int) size.getWidth() + SCROLLBAR_ADD, MAX_WINDOW_HEIGHT));
-      new_window.pack();
+      newWindow.setPreferredSize(
+          new Dimension((int) size.getWidth() + SCROLLBAR_ADD, MAX_WINDOW_HEIGHT));
+      newWindow.pack();
     }
-    new_window.setVisible(true);
-    return new_window;
+    newWindow.setVisible(true);
+    return newWindow;
   }
 
-  /**
-   * Appends p_string to the text pane. Returns false, if that was not possible.
-   */
-  private boolean append(String p_string, String p_style) {
+  /** Appends p_string to the text pane. Returns false, if that was not possible. */
+  private boolean appendStyledText(String string, String style) {
 
-    StyledDocument document = text_pane.getStyledDocument();
+    StyledDocument document = textPane.getStyledDocument();
     try {
-      document.insertString(document.getLength(), p_string, document.getStyle(p_style));
+      document.insertString(document.getLength(), string, document.getStyle(style));
     } catch (BadLocationException _) {
       FRLogger.warn("ObjectInfoWindow.append: unable to insert text into text pane.");
       return false;
@@ -190,123 +202,135 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectI
   }
 
   /**
-   * Appends p_string to the text pane. Returns false, if that was not possible.
+   * Appends a value in bold style to the text pane.
+   *
+   * @param string the text to append
+   * @return whether the text was appended
    */
   @Override
-  public boolean append(String p_string) {
-    return append(p_string, "normal");
+  public boolean appendBold(String string) {
+    return appendStyledText(string, "bold");
   }
 
   /**
-   * Appends p_string in bold styleto the text pane. Returns false, if that was not possible.
+   * Appends a value without transforming it to the user coordinate system.
+   *
+   * @param value the value to append
+   * @return whether the value was appended
    */
   @Override
-  public boolean append_bold(String p_string) {
-    return append(p_string, "bold");
+  public boolean appendWithoutTransforming(double value) {
+    Float formattedValue = (float) value;
+    return append(numberFormat.format(formattedValue));
+  }
+
+  /** Appends p_string to the text pane. Returns false, if that was not possible. */
+  @Override
+  public boolean append(String string) {
+    return appendStyledText(string, "normal");
   }
 
   /**
-   * Appends p_value to the text pane after transforming it to the user coordinate system. Returns false, if that was not possible.
+   * Appends p_value to the text pane after transforming it to the user coordinate system. Returns
+   * false, if that was not possible.
    */
   @Override
-  public boolean append(double p_value) {
-    Float value = (float) this.coordinate_transform.board_to_user(p_value);
-    return append(number_format.format(value));
+  public boolean append(double value) {
+    Float userValue = (float) this.coordinateTransform.boardToUser(value);
+    return append(numberFormat.format(userValue));
   }
 
   /**
-   * Appends p_value to the text pane without transforming it to the user coordinate system. Returns false, if that was not possible.
+   * Appends p_point to the text pane after transforming to the user coordinate system. Returns
+   * false, if that was not possible.
    */
   @Override
-  public boolean append_without_transforming(double p_value) {
-    Float value = (float) p_value;
-    return append(number_format.format(value));
+  public boolean append(FloatPoint point) {
+    FloatPoint transformedPoint = this.coordinateTransform.boardToUser(point);
+    return append(transformedPoint.toString(boardFrame.get_locale()));
   }
 
   /**
-   * Appends p_point to the text pane after transforming to the user coordinate system. Returns false, if that was not possible.
+   * Appends p_shape to the text pane after transforming to the user coordinate system. Returns
+   * false, if that was not possible.
    */
   @Override
-  public boolean append(FloatPoint p_point) {
-    FloatPoint transformed_point = this.coordinate_transform.board_to_user(p_point);
-    return append(transformed_point.to_string(board_frame.get_locale()));
-  }
-
-  /**
-   * Appends p_shape to the text pane after transforming to the user coordinate system. Returns false, if that was not possible.
-   */
-  @Override
-  public boolean append(Shape p_shape, Locale p_locale) {
-    PrintableShape transformed_shape = this.coordinate_transform.board_to_user(p_shape, p_locale);
-    if (transformed_shape == null) {
+  public boolean append(Shape shape, Locale locale) {
+    PrintableShape transformedShape = this.coordinateTransform.boardToUser(shape, locale);
+    if (transformedShape == null) {
       return false;
     }
-    return append(transformed_shape.toString());
+    return append(transformedShape.toString());
   }
 
   /**
-   * Begins a new line in the text pane.
+   * Appends a button for creating a new ObjectInfoWindow with the information of an object.
+   *
+   * @param buttonName the button label
+   * @param windowTitle the title of the information window
+   * @param object the object to display
+   * @return whether the button was appended
    */
+  @Override
+  public boolean append(String buttonName, String windowTitle, WindowObjectInfo.Printable object) {
+    Collection<WindowObjectInfo.Printable> objectList = new LinkedList<>();
+    objectList.add(object);
+    return appendObjects(buttonName, windowTitle, objectList);
+  }
+
+  /** Begins a new line in the text pane. */
   @Override
   public boolean newline() {
     return append("\n");
   }
 
-  /**
-   * Appends a fixed number of spaces to the text pane.
-   */
+  /** Appends a fixed number of spaces to the text pane. */
   @Override
   public boolean indent() {
     return append("       ");
   }
 
   /**
-   * Appends a button for creating a new ObjectInfoWindow with the information of p_object to the text pane. Returns false, if that was not possible.
+   * Appends a button for creating a new ObjectInfoWindow with the information of p_items to the
+   * text pane. Returns false, if that was not possible.
    */
   @Override
-  public boolean append(String p_button_name, String p_window_title, WindowObjectInfo.Printable p_object) {
-    Collection<WindowObjectInfo.Printable> object_list = new LinkedList<>();
-    object_list.add(p_object);
-    return append_objects(p_button_name, p_window_title, object_list);
+  public boolean appendItems(String buttonName, String windowTitle, Collection<Item> items) {
+    Collection<WindowObjectInfo.Printable> objectList = new LinkedList<>(items);
+    return appendObjects(buttonName, windowTitle, objectList);
   }
 
   /**
-   * Appends a button for creating a new ObjectInfoWindow with the information of p_items to the text pane. Returns false, if that was not possible.
+   * Appends a button for creating a new ObjectInfoWindow with the information of p_objects to the
+   * text pane. Returns false, if that was not possible.
    */
   @Override
-  public boolean append_items(String p_button_name, String p_window_title, Collection<Item> p_items) {
-    Collection<WindowObjectInfo.Printable> object_list = new LinkedList<>(p_items);
-    return append_objects(p_button_name, p_window_title, object_list);
-  }
-
-  /**
-   * Appends a button for creating a new ObjectInfoWindow with the information of p_objects to the text pane. Returns false, if that was not possible.
-   */
-  @Override
-  public boolean append_objects(String p_button_name, String p_window_title, Collection<WindowObjectInfo.Printable> p_objects) {
+  public boolean appendObjects(
+      String buttonName, String windowTitle, Collection<WindowObjectInfo.Printable> objects) {
     // create a button without border and color.
-    JButton object_info_button = new JButton();
-    object_info_button.setText(p_button_name);
-    object_info_button.setBorderPainted(false);
-    object_info_button.setContentAreaFilled(false);
-    object_info_button.setMargin(new Insets(0, 0, 0, 0));
-    object_info_button.setAlignmentY(0.75f);
+    JButton objectInfoButton = new JButton();
+    objectInfoButton.setText(buttonName);
+    objectInfoButton.setBorderPainted(false);
+    objectInfoButton.setContentAreaFilled(false);
+    objectInfoButton.setMargin(new Insets(0, 0, 0, 0));
+    objectInfoButton.setAlignmentY(0.75f);
     // Display the button name in blue.
-    object_info_button.setForeground(Color.blue);
+    objectInfoButton.setForeground(Color.blue);
 
-    object_info_button.addActionListener(new InfoButtonListener(p_window_title, p_objects));
-    object_info_button.addActionListener(_ -> FRAnalytics.buttonClicked("object_info_button", object_info_button.getText()));
+    objectInfoButton.addActionListener(new InfoButtonListener(windowTitle, objects));
+    objectInfoButton.addActionListener(
+        _ -> FRAnalytics.buttonClicked("objectInfoButton", objectInfoButton.getText()));
 
     // Add style for inserting the button  to the document.
-    StyledDocument document = this.text_pane.getStyledDocument();
-    Style default_style = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
-    Style button_style = document.addStyle(p_button_name, default_style);
-    StyleConstants.setAlignment(button_style, StyleConstants.ALIGN_CENTER);
-    StyleConstants.setComponent(button_style, object_info_button);
+    StyledDocument document = this.textPane.getStyledDocument();
+    Style defaultStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+    Style buttonStyle = document.addStyle(buttonName, defaultStyle);
+    StyleConstants.setAlignment(buttonStyle, StyleConstants.ALIGN_CENTER);
+    StyleConstants.setComponent(buttonStyle, objectInfoButton);
 
     // Add the button to the document.
     try {
-      document.insertString(document.getLength(), p_button_name, button_style);
+      document.insertString(document.getLength(), buttonName, buttonStyle);
     } catch (BadLocationException _) {
       System.err.println("ObjectInfoWindow.append: unable to insert text into text pane.");
       return false;
@@ -316,9 +340,9 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectI
 
   @Override
   public void dispose() {
-    for (WindowObjectInfo curr_subwindow : this.subwindows) {
-      if (curr_subwindow != null) {
-        curr_subwindow.dispose();
+    for (WindowObjectInfo currSubwindow : this.subwindows) {
+      if (currSubwindow != null) {
+        currSubwindow.dispose();
       }
     }
     super.dispose();
@@ -327,28 +351,28 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectI
   private class InfoButtonListener implements ActionListener {
 
     private static final int WINDOW_OFFSET = 30;
-    /**
-     * The title of this window
-     */
+
+    /** The title of this window. */
     private final String title;
-    /**
-     * The objects, for which information is displayed in the new window
-     */
+
+    /** The objects, for which information is displayed in the new window. */
     private final Collection<Printable> objects;
 
-    public InfoButtonListener(String p_title, Collection<Printable> p_objects) {
-      this.title = p_title;
-      this.objects = p_objects;
+    public InfoButtonListener(String title, Collection<Printable> objects) {
+      this.title = title;
+      this.objects = objects;
     }
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      WindowObjectInfo new_window = display(this.title, this.objects, board_frame, coordinate_transform);
+    public void actionPerformed(ActionEvent evt) {
+      WindowObjectInfo newWindow =
+          display(this.title, this.objects, boardFrame, coordinateTransform);
 
       Point loc = getLocation();
-      Point new_window_location = new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
-      new_window.setLocation(new_window_location);
-      subwindows.add(new_window);
+      Point newWindowLocation =
+          new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
+      newWindow.setLocation(newWindowLocation);
+      subwindows.add(newWindow);
     }
   }
 }

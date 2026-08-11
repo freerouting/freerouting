@@ -3,9 +3,9 @@ package app.freerouting.i18n;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import app.freerouting.gui.BoardFrame;
 import app.freerouting.gui.WindowClearanceViolations;
 import app.freerouting.interactive.InteractiveState;
-import app.freerouting.gui.BoardFrame;
 import app.freerouting.util.TextManager;
 import java.util.Locale;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,8 @@ class TextManagerFallbackTest {
 
   @Test
   void fallsBackToParentClassLocaleBundleWhenSubclassKeyMissing() {
-    TextManager arabic = new TextManager(WindowClearanceViolations.class, Locale.forLanguageTag("ar"));
+    TextManager arabic =
+        new TextManager(WindowClearanceViolations.class, Locale.forLanguageTag("ar"));
 
     assertEquals("تصفية:", arabic.getText("filter"));
   }
@@ -61,9 +62,15 @@ class TextManagerFallbackTest {
     TextManager english = new TextManager(InteractiveState.class, Locale.forLanguageTag("en"));
     TextManager arabic = new TextManager(InteractiveState.class, Locale.forLanguageTag("ar"));
 
-    assertNotEquals(
-        english.getText("autorouter_started"),
-        arabic.getText("autorouter_started"));
+    assertNotEquals(english.getText("autorouter_started"), arabic.getText("autorouter_started"));
+  }
+
+  @Test
+  void resolvesCamelCaseKeyFromSnakeCasePropertiesEntry() {
+    TextManager english =
+        new TextManager(WindowClearanceViolations.class, Locale.forLanguageTag("en"));
+
+    assertEquals("No violations found", english.getText("listEmptyMessage"));
   }
 
   @Test
@@ -71,8 +78,6 @@ class TextManagerFallbackTest {
     TextManager english = new TextManager(BoardFrame.class, Locale.forLanguageTag("en"));
     TextManager arabic = new TextManager(BoardFrame.class, Locale.forLanguageTag("ar"));
 
-    assertNotEquals(
-        english.getText("net_hover_info"),
-        arabic.getText("net_hover_info"));
+    assertNotEquals(english.getText("net_hover_info"), arabic.getText("net_hover_info"));
   }
 }

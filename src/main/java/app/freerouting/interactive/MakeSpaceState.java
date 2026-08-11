@@ -9,76 +9,89 @@ import app.freerouting.rules.ViaRule;
 import java.awt.Graphics;
 
 /**
- * Class for shoving items out of a region to make space to insert something
- * else. For that purpose traces of an invisible net are created temporary for
- * shoving.
+ * Class for shoving items out of a region to make space to insert something else. For that purpose
+ * traces of an invisible net are created temporary for shoving.
  */
 public class MakeSpaceState extends DragState {
 
   private final Route route;
 
-  /**
-   * Creates a new instance of MakeSpaceState
-   */
-  public MakeSpaceState(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_location, p_parent_state, p_board_handling);
-    int[] shove_trace_width_arr = new int[hdlg.get_routing_board().get_layer_count()];
-    boolean[] layer_active_arr = new boolean[shove_trace_width_arr.length];
-    int shove_trace_width = Math.min(100, hdlg.get_routing_board().get_min_trace_half_width() / 10);
-    shove_trace_width = Math.max(shove_trace_width, 5);
-    for (int i = 0; i < shove_trace_width_arr.length; i++) {
-      shove_trace_width_arr[i] = shove_trace_width;
-      layer_active_arr[i] = true;
+  /** Creates a new instance of MakeSpaceState. */
+  public MakeSpaceState(
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(location, parentState, boardHandling);
+    int[] shoveTraceWidthArr = new int[hdlg.getRoutingBoard().getLayerCount()];
+    boolean[] layerActiveArr = new boolean[shoveTraceWidthArr.length];
+    int shoveTraceWidth = Math.min(100, hdlg.getRoutingBoard().getMinTraceHalfWidth() / 10);
+    shoveTraceWidth = Math.max(shoveTraceWidth, 5);
+    for (int i = 0; i < shoveTraceWidthArr.length; i++) {
+      shoveTraceWidthArr[i] = shoveTraceWidth;
+      layerActiveArr[i] = true;
     }
-    int[] route_net_no_arr = new int[1];
-    route_net_no_arr[0] = Nets.hidden_net_no;
-    route = new Route(p_location.round(), hdlg.getInteractiveSettings().get_layer(), shove_trace_width_arr, layer_active_arr,
-        route_net_no_arr, 0, ViaRule.EMPTY, true, hdlg.getInteractiveSettings().get_trace_pull_tight_region_width(),
-        hdlg.getInteractiveSettings().get_trace_pull_tight_accuracy(), null, null, hdlg.get_routing_board(), false, false, false,
-        hdlg.getInteractiveSettings().get_hilight_routing_obstacle());
+    int[] routeNetNoArr = new int[1];
+    routeNetNoArr[0] = Nets.hidden_net_no;
+    route =
+        new Route(
+            location.round(),
+            hdlg.getInteractiveSettings().getLayer(),
+            shoveTraceWidthArr,
+            layerActiveArr,
+            routeNetNoArr,
+            0,
+            ViaRule.EMPTY,
+            true,
+            hdlg.getInteractiveSettings().getTracePullTightRegionWidth(),
+            hdlg.getInteractiveSettings().getTracePullTightAccuracy(),
+            null,
+            null,
+            hdlg.getRoutingBoard(),
+            false,
+            false,
+            false,
+            hdlg.getInteractiveSettings().getHighlightRoutingObstacle());
   }
 
   @Override
-  public InteractiveState move_to(FloatPoint p_to_location) {
-    if (!something_dragged) {
+  public InteractiveState moveTo(FloatPoint toLocation) {
+    if (!somethingDragged) {
       // initialisations for the first time dragging
-      this.observers_activated = !hdlg.get_routing_board().observers_active();
-      if (this.observers_activated) {
-        hdlg.get_routing_board().start_notify_observers();
+      this.observersActivated = !hdlg.getRoutingBoard().observersActive();
+      if (this.observersActivated) {
+        hdlg.getRoutingBoard().startNotifyObservers();
       }
       // make the situation restorable by undo
-      hdlg.get_routing_board().generate_snapshot();
-      something_dragged = true;
+      hdlg.getRoutingBoard().generateSnapshot();
+      somethingDragged = true;
     }
-    route.next_corner(p_to_location);
+    route.nextCorner(toLocation);
 
-    Point route_end = route.get_last_corner();
-    if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NONE
-        && !route_end.equals(p_to_location.round())) {
-      hdlg.move_mouse(route_end.to_float());
+    Point routeEnd = route.getLastCorner();
+    if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction() == AngleRestriction.NONE
+        && !routeEnd.equals(toLocation.round())) {
+      hdlg.moveMouse(routeEnd.toFloat());
     }
-    hdlg.recalculate_length_violations();
+    hdlg.recalculateLengthViolations();
     hdlg.repaint();
     return this;
   }
 
   @Override
-  public InteractiveState button_released() {
-    int delete_net_no = Nets.hidden_net_no;
-    BasicBoard board = hdlg.get_routing_board();
-    board.remove_items(board.get_connectable_items(delete_net_no));
-    if (this.observers_activated) {
-      hdlg.get_routing_board().end_notify_observers();
-      this.observers_activated = false;
+  public InteractiveState buttonReleased() {
+    int deleteNetNo = Nets.hidden_net_no;
+    BasicBoard board = hdlg.getRoutingBoard();
+    board.removeItems(board.getConnectableItems(deleteNetNo));
+    if (this.observersActivated) {
+      hdlg.getRoutingBoard().endNotifyObservers();
+      this.observersActivated = false;
     }
-    hdlg.show_ratsnest();
-    return this.return_state;
+    hdlg.showRatsnest();
+    return this.returnState;
   }
 
   @Override
-  public void draw(Graphics p_graphics) {
+  public void draw(Graphics graphics) {
     if (route != null) {
-      route.draw(p_graphics, hdlg.graphics_context);
+      route.draw(graphics, hdlg.graphicsContext);
     }
   }
 }

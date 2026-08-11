@@ -13,117 +13,113 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 
-/**
- * Class for reading and writing dsn-files.
- */
-public class DsnFile {
+/** Class for reading and writing dsn-files. */
+@SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
+public final class DsnFile {
 
   static final char CLASS_CLEARANCE_SEPARATOR = '-';
 
-  private DsnFile() {
-  }
+  private DsnFile() {}
 
   /**
-   * Sets contains_plane to true for nets with a conduction_area covering a large
-   * part of a signal layer, if that layer does not contain any traces. This is
-   * useful in case the layer type was not set correctly to plane in the dsn-file.
-   * Returns true, if something was changed.
+   * Sets containsPlane to true for nets with a conductionArea covering a large part of a signal
+   * layer, if that layer does not contain any traces. This is useful in case the layer type was not
+   * set correctly to plane in the dsn-file. Returns true, if something was changed.
    *
-   * <p>Called from {@link app.freerouting.io.specctra.DsnReader#readBoard} when the
-   * DSN file contains no {@code (autoroute ...)} scope.
+   * <p>Called from {@link app.freerouting.io.specctra.DsnReader#readBoard} when the DSN file
+   * contains no {@code (autoroute ...)} scope.
    */
-  public static boolean adjustPlaneAutorouteSettings(BasicBoard routing_board) {
-    if (routing_board == null) {
+  public static boolean adjustPlaneAutorouteSettings(BasicBoard routingBoard) {
+    if (routingBoard == null) {
       return false;
     }
-    app.freerouting.board.LayerStructure board_layer_structure = routing_board.layer_structure;
-    if (board_layer_structure.arr.length <= 2) {
+    final app.freerouting.board.LayerStructure boardLayerStructure = routingBoard.layerStructure;
+    if (boardLayerStructure.arr.length <= 2) {
       return false;
     }
-    for (app.freerouting.board.Layer curr_layer : board_layer_structure.arr) {
-      if (!curr_layer.is_signal) {
+    for (app.freerouting.board.Layer currLayer : boardLayerStructure.arr) {
+      if (!currLayer.isSignal) {
         return false;
       }
     }
-    boolean[] layer_contains_wires_arr = new boolean[board_layer_structure.arr.length];
-    boolean[] changed_layer_arr = new boolean[board_layer_structure.arr.length];
-    for (int i = 0; i < layer_contains_wires_arr.length; i++) {
-      layer_contains_wires_arr[i] = false;
-      changed_layer_arr[i] = false;
+    boolean[] layerContainsWiresArr = new boolean[boardLayerStructure.arr.length];
+    boolean[] changedLayerArr = new boolean[boardLayerStructure.arr.length];
+    for (int i = 0; i < layerContainsWiresArr.length; i++) {
+      layerContainsWiresArr[i] = false;
+      changedLayerArr[i] = false;
     }
-    Collection<ConductionArea> conduction_area_list = new LinkedList<>();
-    Collection<Item> item_list = routing_board.get_items();
-    for (Item curr_item : item_list) {
-      if (curr_item instanceof Trace trace) {
-        int curr_layer = trace.get_layer();
-        layer_contains_wires_arr[curr_layer] = true;
-      } else if (curr_item instanceof ConductionArea area) {
-        conduction_area_list.add(area);
+    Collection<ConductionArea> conductionAreaList = new LinkedList<>();
+    Collection<Item> itemList = routingBoard.getItems();
+    for (Item currItem : itemList) {
+      if (currItem instanceof Trace trace) {
+        final int currLayer = trace.getLayer();
+        layerContainsWiresArr[currLayer] = true;
+      } else if (currItem instanceof ConductionArea area) {
+        conductionAreaList.add(area);
       }
     }
-    boolean nothing_changed = true;
+    boolean nothingChanged = true;
 
-    BoardOutline board_outline = routing_board.get_outline();
-    double board_area = 0;
-    for (int i = 0; i < board_outline.shape_count(); i++) {
-      TileShape[] curr_piece_arr = board_outline.get_shape(i).split_to_convex();
-      if (curr_piece_arr != null) {
-        for (TileShape curr_piece : curr_piece_arr) {
-          board_area += curr_piece.area();
+    BoardOutline boardOutline = routingBoard.getOutline();
+    double boardArea = 0;
+    for (int i = 0; i < boardOutline.shapeCount(); i++) {
+      TileShape[] currPieceArr = boardOutline.getShape(i).splitToConvex();
+      if (currPieceArr != null) {
+        for (TileShape currPiece : currPieceArr) {
+          boardArea += currPiece.area();
         }
       }
     }
-    for (ConductionArea curr_conduction_area : conduction_area_list) {
-      int layer_no = curr_conduction_area.get_layer();
-      if (layer_contains_wires_arr[layer_no]) {
+    for (ConductionArea currConductionArea : conductionAreaList) {
+      int layerNo = currConductionArea.getLayer();
+      if (layerContainsWiresArr[layerNo]) {
         continue;
       }
-      app.freerouting.board.Layer curr_layer = routing_board.layer_structure.arr[layer_no];
-      if (!curr_layer.is_signal || layer_no == 0
-          || layer_no == board_layer_structure.arr.length - 1) {
+      final app.freerouting.board.Layer currLayer = routingBoard.layerStructure.arr[layerNo];
+      if (!currLayer.isSignal || layerNo == 0 || layerNo == boardLayerStructure.arr.length - 1) {
         continue;
       }
-      TileShape[] convex_pieces = curr_conduction_area.get_area().split_to_convex();
-      double curr_area = 0;
-      for (TileShape curr_piece : convex_pieces) {
-        curr_area += curr_piece.area();
+      TileShape[] convexPieces = currConductionArea.getArea().splitToConvex();
+      double currArea = 0;
+      for (TileShape currPiece : convexPieces) {
+        currArea += currPiece.area();
       }
-      if (curr_area < 0.5 * board_area) {
+      if (currArea < 0.5 * boardArea) {
         continue;
       }
-      for (int i = 0; i < curr_conduction_area.net_count(); i++) {
-        Net curr_net = routing_board.rules.nets.get(curr_conduction_area.get_net_no(i));
-        curr_net.set_contains_plane(true);
-        nothing_changed = false;
+      for (int i = 0; i < currConductionArea.netCount(); i++) {
+        final Net currentNet = routingBoard.rules.nets.get(currConductionArea.getNetNo(i));
+        currentNet.setContainsPlane(true);
+        nothingChanged = false;
       }
-      changed_layer_arr[layer_no] = true;
-      if (curr_conduction_area.get_fixed_state().ordinal() < FixedState.USER_FIXED.ordinal()) {
-        curr_conduction_area.set_fixed_state(FixedState.USER_FIXED);
-      }
-    }
-    for (int i = 0; i < changed_layer_arr.length; i++) {
-      if (changed_layer_arr[i]) {
-        FRLogger.info("Layer '" + routing_board.layer_structure.arr[i].name 
-            + "' has been automatically configured as a dedicated power plane because it contains a large conduction area covering >50% of the board.");
+      changedLayerArr[layerNo] = true;
+      if (currConductionArea.getFixedState().ordinal() < FixedState.USER_FIXED.ordinal()) {
+        currConductionArea.setFixedState(FixedState.USER_FIXED);
       }
     }
-    if (nothing_changed) {
-      return false;
+    for (int i = 0; i < changedLayerArr.length; i++) {
+      if (changedLayerArr[i]) {
+        FRLogger.info(
+            "Layer '"
+                + routingBoard.layerStructure.arr[i].name
+                + "' has been automatically configured as a dedicated power plane because it "
+                + "contains a large conduction area covering >50% of the board.");
+      }
     }
-    return true;
+    return !nothingChanged;
   }
 
-  static boolean read_on_off_scope(IJFlexScanner p_scanner) {
+  static boolean readOnOffScope(IJFlexScanner scanner) {
     try {
-      Object next_token = p_scanner.next_token();
+      Object nextToken = scanner.nextToken();
       boolean result = false;
-      if (next_token == Keyword.ON) {
+      if (nextToken == Keyword.ON) {
         result = true;
-      } else if (next_token != Keyword.OFF) {
-        FRLogger.warn("DsnFile.read_boolean: Keyword.OFF expected at '"
-            + p_scanner.get_scope_identifier() + "'");
+      } else if (nextToken != Keyword.OFF) {
+        FRLogger.warn(
+            "DsnFile.read_boolean: Keyword.OFF expected at '" + scanner.getScopeIdentifier() + "'");
       }
-      ScopeKeyword.skip_scope(p_scanner);
+      ScopeKeyword.skipScope(scanner);
       return result;
     } catch (IOException e) {
       FRLogger.error("DsnFile.read_boolean: IO error scanning file", e);
@@ -131,21 +127,25 @@ public class DsnFile {
     }
   }
 
-  static int read_integer_scope(IJFlexScanner p_scanner) {
+  static int readIntegerScope(IJFlexScanner scanner) {
     try {
       int value;
-      Object next_token = p_scanner.next_token();
-      if (next_token instanceof Integer integer) {
+      Object nextToken = scanner.nextToken();
+      if (nextToken instanceof Integer integer) {
         value = integer;
       } else {
-        FRLogger.warn("DsnFile.read_integer_scope: number expected at '"
-            + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "DsnFile.read_integer_scope: number expected at '"
+                + scanner.getScopeIdentifier()
+                + "'");
         return 0;
       }
-      next_token = p_scanner.next_token();
-      if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("DsnFile.read_integer_scope: closing bracket expected at '"
-            + p_scanner.get_scope_identifier() + "'");
+      nextToken = scanner.nextToken();
+      if (nextToken != Keyword.CLOSED_BRACKET) {
+        FRLogger.warn(
+            "DsnFile.read_integer_scope: closing bracket expected at '"
+                + scanner.getScopeIdentifier()
+                + "'");
         return 0;
       }
       return value;
@@ -155,23 +155,25 @@ public class DsnFile {
     }
   }
 
-  static double read_float_scope(IJFlexScanner p_scanner) {
+  static double readFloatScope(IJFlexScanner scanner) {
     try {
       double value;
-      Object next_token = p_scanner.next_token();
-      if (next_token instanceof Double double1) {
+      Object nextToken = scanner.nextToken();
+      if (nextToken instanceof Double double1) {
         value = double1;
-      } else if (next_token instanceof Integer integer) {
+      } else if (nextToken instanceof Integer integer) {
         value = integer;
       } else {
-        FRLogger.warn("DsnFile.read_float_scope: number expected at '"
-            + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "DsnFile.read_float_scope: number expected at '" + scanner.getScopeIdentifier() + "'");
         return 0;
       }
-      next_token = p_scanner.next_token();
-      if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("DsnFile.read_float_scope: closing bracket expected at '"
-            + p_scanner.get_scope_identifier() + "'");
+      nextToken = scanner.nextToken();
+      if (nextToken != Keyword.CLOSED_BRACKET) {
+        FRLogger.warn(
+            "DsnFile.read_float_scope: closing bracket expected at '"
+                + scanner.getScopeIdentifier()
+                + "'");
         return 0;
       }
       return value;
@@ -181,14 +183,16 @@ public class DsnFile {
     }
   }
 
-  public static String read_string_scope(IJFlexScanner p_scanner) {
+  public static String readStringScope(IJFlexScanner scanner) {
     try {
-      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      String result = p_scanner.next_string();
-      Object next_token = p_scanner.next_token();
-      if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("DsnFile.read_string_scope: closing bracket expected at '"
-            + p_scanner.get_scope_identifier() + "'");
+      scanner.yybegin(SpecctraDsnStreamReader.NAME);
+      String result = scanner.nextString();
+      Object nextToken = scanner.nextToken();
+      if (nextToken != Keyword.CLOSED_BRACKET) {
+        FRLogger.warn(
+            "DsnFile.read_string_scope: closing bracket expected at '"
+                + scanner.getScopeIdentifier()
+                + "'");
       }
       return result;
     } catch (IOException e) {
@@ -197,15 +201,17 @@ public class DsnFile {
     }
   }
 
-  public static String[] read_string_list_scope(IJFlexScanner p_scanner) {
-    String[] result = p_scanner.next_string_list();
-    if (!p_scanner.next_closing_bracket()) {
+  public static String[] readStringListScope(IJFlexScanner scanner) {
+    String[] result = scanner.nextStringList();
+    if (!scanner.nextClosingBracket()) {
       return null;
     }
     return result;
   }
 
   public enum ReadResult {
-    OK, OUTLINE_MISSING, ERROR
+    OK,
+    OUTLINE_MISSING,
+    ERROR
   }
 }

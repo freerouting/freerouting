@@ -5,34 +5,30 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-/**
- * Describes functionality of a circle shape in the plane.
- */
+/** Describes functionality of a circle shape in the plane. */
 public class Circle implements ConvexShape, Serializable {
 
   public final IntPoint center;
   public final int radius;
 
-  /**
-   * Creates a new instance of Circle
-   */
-  public Circle(IntPoint p_center, int p_radius) {
-    center = p_center;
-    if (p_radius < 0) {
+  /** Creates a new instance of Circle. */
+  public Circle(IntPoint center, int radius) {
+    this.center = center;
+    if (radius < 0) {
       FRLogger.warn("Circle: unexpected negative radius");
-      radius = -p_radius;
+      this.radius = -radius;
     } else {
-      radius = p_radius;
+      this.radius = radius;
     }
   }
 
   @Override
-  public boolean is_empty() {
+  public boolean isEmpty() {
     return false;
   }
 
   @Override
-  public boolean is_bounded() {
+  public boolean isBounded() {
     return true;
   }
 
@@ -56,51 +52,51 @@ public class Circle implements ConvexShape, Serializable {
   }
 
   @Override
-  public FloatPoint centre_of_gravity() {
-    return center.to_float();
+  public FloatPoint centreOfGravity() {
+    return center.toFloat();
   }
 
   @Override
-  public boolean is_outside(Point p_point) {
-    FloatPoint fp = p_point.to_float();
-    return fp.distance_square(center.to_float()) > (double) radius * radius;
+  public boolean isOutside(Point point) {
+    FloatPoint fp = point.toFloat();
+    return fp.distanceSquare(center.toFloat()) > (double) radius * radius;
   }
 
   @Override
-  public boolean contains(Point p_point) {
-    return !is_outside(p_point);
+  public boolean contains(Point point) {
+    return !isOutside(point);
   }
 
   @Override
-  public boolean contains_inside(Point p_point) {
-    FloatPoint fp = p_point.to_float();
-    return fp.distance_square(center.to_float()) < (double) radius * radius;
+  public boolean contains(FloatPoint point) {
+    return point.distanceSquare(center.toFloat()) <= (double) radius * radius;
   }
 
   @Override
-  public boolean contains_on_border(Point p_point) {
-    FloatPoint fp = p_point.to_float();
-    return fp.distance_square(center.to_float()) == (double) radius * radius;
+  public boolean containsInside(Point point) {
+    FloatPoint fp = point.toFloat();
+    return fp.distanceSquare(center.toFloat()) < (double) radius * radius;
   }
 
   @Override
-  public boolean contains(FloatPoint p_point) {
-    return p_point.distance_square(center.to_float()) <= (double) radius * radius;
+  public boolean containsOnBorder(Point point) {
+    FloatPoint fp = point.toFloat();
+    return fp.distanceSquare(center.toFloat()) == (double) radius * radius;
   }
 
   @Override
-  public double distance(FloatPoint p_point) {
-    double d = p_point.distance(center.to_float()) - radius;
+  public double distance(FloatPoint point) {
+    double d = point.distance(center.toFloat()) - radius;
     return Math.max(d, 0.0);
   }
 
   @Override
-  public double smallest_radius() {
+  public double smallestRadius() {
     return radius;
   }
 
   @Override
-  public IntBox bounding_box() {
+  public IntBox boundingBox() {
     int llx = center.x - radius;
     int urx = center.x + radius;
     int lly = center.y - radius;
@@ -109,26 +105,26 @@ public class Circle implements ConvexShape, Serializable {
   }
 
   @Override
-  public IntOctagon bounding_octagon() {
+  public IntOctagon boundingOctagon() {
     int lx = center.x - radius;
     int rx = center.x + radius;
     int ly = center.y - radius;
     int uy = center.y + radius;
 
-    final double sqrt2_minus_1 = Math.sqrt(2) - 1;
-    final int ceil_corner_value = (int) Math.ceil(sqrt2_minus_1 * radius);
-    final int floor_corner_value = (int) Math.floor(sqrt2_minus_1 * radius);
+    final double sqrt2Minus1 = Math.sqrt(2) - 1;
+    final int ceilCornerValue = (int) Math.ceil(sqrt2Minus1 * radius);
+    final int floorCornerValue = (int) Math.floor(sqrt2Minus1 * radius);
 
-    int ulx = lx - (center.y + floor_corner_value);
-    int lrx = rx - (center.y - ceil_corner_value);
-    int llx = lx + (center.y - floor_corner_value);
-    int urx = rx + (center.y + ceil_corner_value);
+    int ulx = lx - (center.y + floorCornerValue);
+    int lrx = rx - (center.y - ceilCornerValue);
+    int llx = lx + (center.y - floorCornerValue);
+    int urx = rx + (center.y + ceilCornerValue);
     return new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);
   }
 
   @Override
-  public TileShape bounding_tile() {
-    return bounding_octagon();
+  public TileShape boundingTile() {
+    return boundingOctagon();
     // the following caused problems with the spring_over algorithm in routing.
     /* if (this.precalculated_bounding_tile == null)
     {
@@ -138,207 +134,209 @@ public class Circle implements ConvexShape, Serializable {
   }
 
   /**
-   * Creates a bounding tile shape around this circle, so that the length of the line segments of the tile is at most p_max_segment_length.
+   * Creates a bounding tile shape around this circle, so that the length of the line segments of
+   * the tile is at most p_max_segment_length.
    */
-  public TileShape bounding_tile(int p_max_segment_length) {
-    int quadrant_division_count = this.radius / p_max_segment_length + 1;
-    if (quadrant_division_count <= 2) {
-      return this.bounding_octagon();
+  public TileShape boundingTile(int maxSegmentLength) {
+    int quadrantDivisionCount = this.radius / maxSegmentLength + 1;
+    if (quadrantDivisionCount <= 2) {
+      return this.boundingOctagon();
     }
-    Line[] tangent_line_arr = new Line[quadrant_division_count * 4];
-    for (int i = 0; i < quadrant_division_count; i++) {
+    Line[] tangentLineArr = new Line[quadrantDivisionCount * 4];
+    for (int i = 0; i < quadrantDivisionCount; i++) {
       // calculate the tangential points in the first quadrant
-      Vector border_delta;
+      Vector borderDelta;
       if (i == 0) {
-        border_delta = new IntVector(this.radius, 0);
+        borderDelta = new IntVector(this.radius, 0);
       } else {
-        double curr_angle = i * Math.PI / (2.0 * quadrant_division_count);
-        int curr_x = (int) Math.ceil(Math.sin(curr_angle) * this.radius);
-        int curr_y = (int) Math.ceil(Math.cos(curr_angle) * this.radius);
-        border_delta = new IntVector(curr_x, curr_y);
+        double currAngle = i * Math.PI / (2.0 * quadrantDivisionCount);
+        int currX = (int) Math.ceil(Math.sin(currAngle) * this.radius);
+        int currY = (int) Math.ceil(Math.cos(currAngle) * this.radius);
+        borderDelta = new IntVector(currX, currY);
       }
-      Point curr_a = this.center.translate_by(border_delta);
-      Point curr_b = curr_a.turn_90_degree(1, this.center);
-      Direction curr_dir = Direction.get_instance(curr_b.difference_by(this.center));
-      Line curr_tangent = new Line(curr_a, curr_dir);
-      tangent_line_arr[quadrant_division_count + i] = curr_tangent;
-      tangent_line_arr[2 * quadrant_division_count + i] = curr_tangent.turn_90_degree(1, this.center);
-      tangent_line_arr[3 * quadrant_division_count + i] = curr_tangent.turn_90_degree(2, this.center);
-      tangent_line_arr[i] = curr_tangent.turn_90_degree(3, this.center);
+      Point currA = this.center.translateBy(borderDelta);
+      Point currB = currA.turn90Degree(1, this.center);
+      Direction currDir = Direction.getInstance(currB.differenceBy(this.center));
+      Line currTangent = new Line(currA, currDir);
+      tangentLineArr[quadrantDivisionCount + i] = currTangent;
+      tangentLineArr[2 * quadrantDivisionCount + i] = currTangent.turn90Degree(1, this.center);
+      tangentLineArr[3 * quadrantDivisionCount + i] = currTangent.turn90Degree(2, this.center);
+      tangentLineArr[i] = currTangent.turn90Degree(3, this.center);
     }
-    return TileShape.get_instance(tangent_line_arr);
+    return TileShape.getInstance(tangentLineArr);
   }
 
   @Override
-  public boolean is_contained_in(IntBox p_box) {
-    if (p_box.ll.x > center.x - radius) {
+  public boolean isContainedIn(IntBox box) {
+    if (box.ll.x > center.x - radius) {
       return false;
     }
-    if (p_box.ll.y > center.y - radius) {
+    if (box.ll.y > center.y - radius) {
       return false;
     }
-    if (p_box.ur.x < center.x + radius) {
+    if (box.ur.x < center.x + radius) {
       return false;
     }
-    return p_box.ur.y >= center.y + radius;
+    return box.ur.y >= center.y + radius;
   }
 
   @Override
-  public Circle turn_90_degree(int p_factor, IntPoint p_pole) {
-    IntPoint new_center = (IntPoint) center.turn_90_degree(p_factor, p_pole);
-    return new Circle(new_center, radius);
+  public Circle turn90Degree(int factor, IntPoint pole) {
+    IntPoint newCenter = (IntPoint) center.turn90Degree(factor, pole);
+    return new Circle(newCenter, radius);
   }
 
   @Override
-  public Circle rotate_approx(double p_angle, FloatPoint p_pole) {
-    IntPoint new_center = center.to_float().rotate(p_angle, p_pole).round();
-    return new Circle(new_center, radius);
+  public Circle rotateApprox(double angle, FloatPoint pole) {
+    IntPoint newCenter = center.toFloat().rotate(angle, pole).round();
+    return new Circle(newCenter, radius);
   }
 
   @Override
-  public Circle mirror_vertical(IntPoint p_pole) {
-    IntPoint new_center = (IntPoint) center.mirror_vertical(p_pole);
-    return new Circle(new_center, radius);
+  public Circle mirrorVertical(IntPoint pole) {
+    IntPoint newCenter = (IntPoint) center.mirrorVertical(pole);
+    return new Circle(newCenter, radius);
   }
 
   @Override
-  public Circle mirror_horizontal(IntPoint p_pole) {
-    IntPoint new_center = (IntPoint) center.mirror_horizontal(p_pole);
-    return new Circle(new_center, radius);
+  public Circle mirrorHorizontal(IntPoint pole) {
+    IntPoint newCenter = (IntPoint) center.mirrorHorizontal(pole);
+    return new Circle(newCenter, radius);
   }
 
   @Override
-  public double max_width() {
+  public double maxWidth() {
     return 2 * this.radius;
   }
 
   @Override
-  public double min_width() {
+  public double minWidth() {
     return 2 * this.radius;
   }
 
   @Override
-  public RegularTileShape bounding_shape(ShapeBoundingDirections p_dirs) {
-    return p_dirs.bounds(this);
+  public RegularTileShape boundingShape(ShapeBoundingDirections dirs) {
+    return dirs.bounds(this);
   }
 
   @Override
-  public Circle offset(double p_offset) {
-    double new_radius = this.radius + p_offset;
-    int r = (int) Math.round(new_radius);
+  public Circle offset(double offset) {
+    double newRadius = this.radius + offset;
+    int r = (int) Math.round(newRadius);
     return new Circle(this.center, r);
   }
 
   @Override
-  public Circle shrink(double p_offset) {
-    double new_radius = this.radius - p_offset;
-    int r = Math.max((int) Math.round(new_radius), 1);
+  public Circle shrink(double offset) {
+    double newRadius = this.radius - offset;
+    int r = Math.max((int) Math.round(newRadius), 1);
     return new Circle(this.center, r);
   }
 
   @Override
-  public Circle translate_by(Vector p_vector) {
-    if (p_vector.equals(Vector.ZERO)) {
+  public Circle translateBy(Vector vector) {
+    if (vector.equals(Vector.ZERO)) {
       return this;
     }
-    if (!(p_vector instanceof IntVector)) {
+    if (!(vector instanceof IntVector)) {
       FRLogger.warn("Circle.translate_by only implemented for IntVectors till now");
       return this;
     }
-    IntPoint new_center = (IntPoint) center.translate_by(p_vector);
-    return new Circle(new_center, radius);
+    IntPoint newCenter = (IntPoint) center.translateBy(vector);
+    return new Circle(newCenter, radius);
   }
 
   @Override
-  public FloatPoint nearest_point_approx(FloatPoint p_point) {
+  public FloatPoint nearestPointApprox(FloatPoint point) {
     FRLogger.warn("Circle.nearest_point_approx not yet implemented");
     return null;
   }
 
   @Override
-  public double border_distance(FloatPoint p_point) {
-    double d = p_point.distance(center.to_float()) - radius;
+  public double borderDistance(FloatPoint point) {
+    double d = point.distance(center.toFloat()) - radius;
     return Math.abs(d);
   }
 
   @Override
-  public Circle enlarge(double p_offset) {
-    if (p_offset == 0) {
+  public Circle enlarge(double offset) {
+    if (offset == 0) {
       return this;
     }
-    int new_radius = radius + (int) Math.round(p_offset);
-    return new Circle(center, new_radius);
+    int newRadius = radius + (int) Math.round(offset);
+    return new Circle(center, newRadius);
   }
 
   @Override
-  public boolean intersects(Shape p_other) {
-    return p_other.intersects(this);
+  public boolean intersects(Shape other) {
+    return other.intersects(this);
   }
 
   @Override
-  public Polyline[] cutout(Polyline p_polyline) {
+  public boolean intersects(Circle other) {
+    double radiusSumSquare = radius + other.radius;
+    radiusSumSquare *= radiusSumSquare;
+    return center.distanceSquare(other.center) <= radiusSumSquare;
+  }
+
+  @Override
+  public boolean intersects(IntBox box) {
+    return box.distance(center.toFloat()) <= radius;
+  }
+
+  @Override
+  public boolean intersects(IntOctagon oct) {
+    return oct.distance(center.toFloat()) <= radius;
+  }
+
+  @Override
+  public boolean intersects(Simplex simplex) {
+    return simplex.distance(center.toFloat()) <= radius;
+  }
+
+  @Override
+  public Polyline[] cutout(Polyline polyline) {
     FRLogger.warn("Circle.cutout not yet implemented");
     return null;
   }
 
   @Override
-  public boolean intersects(Circle p_other) {
-    double d_square = radius + p_other.radius;
-    d_square *= d_square;
-    return center.distance_square(p_other.center) <= d_square;
-  }
-
-  @Override
-  public boolean intersects(IntBox p_box) {
-    return p_box.distance(center.to_float()) <= radius;
-  }
-
-  @Override
-  public boolean intersects(IntOctagon p_oct) {
-    return p_oct.distance(center.to_float()) <= radius;
-  }
-
-  @Override
-  public boolean intersects(Simplex p_simplex) {
-    return p_simplex.distance(center.to_float()) <= radius;
-  }
-
-  @Override
-  public TileShape[] split_to_convex() {
+  public TileShape[] splitToConvex() {
     TileShape[] result = new TileShape[1];
-    result[0] = this.bounding_tile();
+    result[0] = this.boundingTile();
     return result;
   }
 
   @Override
-  public Circle get_border() {
+  public Circle getBorder() {
     return this;
   }
 
   @Override
-  public Shape[] get_holes() {
+  public Shape[] getHoles() {
     return new Shape[0];
   }
 
   @Override
-  public FloatPoint[] corner_approx_arr() {
+  public FloatPoint[] cornerApproxArr() {
     return new FloatPoint[0];
   }
 
   @Override
   public String toString() {
-    return to_string(Locale.ENGLISH);
+    return toString(Locale.ENGLISH);
   }
 
-  public String to_string(Locale p_locale) {
+  /** Returns a localized string representation of this circle. */
+  public String toString(Locale locale) {
     String result = "Circle: ";
     if (!center.equals(Point.ZERO)) {
-      String center_string = "center " + center;
-      result += center_string;
+      String centerString = "center " + center;
+      result += centerString;
     }
-    NumberFormat nf = NumberFormat.getInstance(p_locale);
-    String radius_string = "radius " + nf.format(radius);
-    result += radius_string;
+    NumberFormat nf = NumberFormat.getInstance(locale);
+    String radiusString = "radius " + nf.format(radius);
+    result += radiusString;
     return result;
   }
 

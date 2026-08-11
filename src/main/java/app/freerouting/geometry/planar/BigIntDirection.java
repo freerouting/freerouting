@@ -4,44 +4,43 @@ import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-/**
- * Implements the abstract class Direction as a tuple of infinite precision integers.
- */
+/** Implements the abstract class Direction as a tuple of infinite precision integers. */
 public class BigIntDirection extends Direction implements Serializable {
 
+  @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   final BigInteger x;
+
+  @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   final BigInteger y;
 
-  BigIntDirection(BigInteger p_x, BigInteger p_y) {
-    x = p_x;
-    y = p_y;
+  BigIntDirection(BigInteger x, BigInteger y) {
+    this.x = x;
+    this.y = y;
   }
 
-  /**
-   * creates a BigIntDirection from an IntDirection
-   */
-  BigIntDirection(IntDirection p_dir) {
-    x = BigInteger.valueOf(p_dir.x);
-    y = BigInteger.valueOf(p_dir.y);
+  /** Creates a BigIntDirection from an IntDirection. */
+  BigIntDirection(IntDirection dir) {
+    x = BigInteger.valueOf(dir.x);
+    y = BigInteger.valueOf(dir.y);
   }
 
   @Override
-  public boolean is_orthogonal() {
+  public boolean isOrthogonal() {
     return x.signum() == 0 || y.signum() == 0;
   }
 
   @Override
-  public boolean is_diagonal() {
+  public boolean isDiagonal() {
     return x.abs().equals(y.abs());
   }
 
   @Override
-  public Vector get_vector() {
+  public Vector getVector() {
     return new RationalVector(x, y, BigInteger.ONE);
   }
 
   @Override
-  public Direction turn_45_degree(int p_factor) {
+  public Direction turn45Degree(int factor) {
     FRLogger.warn("BigIntDirection: turn_45_degree not yet implemented");
     return this;
   }
@@ -52,26 +51,28 @@ public class BigIntDirection extends Direction implements Serializable {
   }
 
   /**
-   * Implements the Comparable interface. Returns 1, if this direction has a strict bigger angle with the positive x-axis than p_other_direction, 0, if this direction is equal to p_other_direction,
-   * and -1 otherwise. Throws an exception, if p_other_direction is not a Direction.
+   * Implements the Comparable interface. Returns 1, if this direction has a strict bigger angle
+   * with the positive x-axis than p_other_direction, 0, if this direction is equal to
+   * p_other_direction, and -1 otherwise. Throws an exception, if p_other_direction is not a
+   * Direction.
    */
   @Override
-  public int compareTo(Direction p_other_direction) {
-    return -p_other_direction.compareTo(this);
+  public int compareTo(Direction otherDirection) {
+    return -otherDirection.compareTo(this);
   }
 
   @Override
-  int compareTo(IntDirection p_other) {
-    BigIntDirection other = new BigIntDirection(p_other);
+  int compareTo(IntDirection otherDirection) {
+    BigIntDirection other = new BigIntDirection(otherDirection);
     return compareTo(other);
   }
 
   @Override
-  int compareTo(BigIntDirection p_other) {
+  int compareTo(BigIntDirection other) {
     int x1 = x.signum();
     int y1 = y.signum();
-    int x2 = p_other.x.signum();
-    int y2 = p_other.y.signum();
+    int x2 = other.x.signum();
+    int y2 = other.y.signum();
     if (y1 > 0) {
       if (y2 < 0) {
         return -1;
@@ -86,8 +87,7 @@ public class BigIntDirection extends Direction implements Serializable {
       if (y2 >= 0) {
         return 1;
       }
-    } else // y1 == 0
-    {
+    } else { // y1 == 0
       if (x1 > 0) {
         if (y2 != 0 || x2 < 0) {
           return -1;
@@ -107,9 +107,9 @@ public class BigIntDirection extends Direction implements Serializable {
     // now this direction and p_other are located in the same
     // open horizontal half plane
 
-    BigInteger tmp_1 = y.multiply(p_other.x);
-    BigInteger tmp_2 = x.multiply(p_other.y);
-    BigInteger determinant = tmp_1.subtract(tmp_2);
+    BigInteger tmp1 = y.multiply(other.x);
+    BigInteger tmp2 = x.multiply(other.y);
+    BigInteger determinant = tmp1.subtract(tmp2);
     return determinant.signum();
   }
 }

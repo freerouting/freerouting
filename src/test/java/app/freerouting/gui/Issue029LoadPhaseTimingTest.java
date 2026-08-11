@@ -1,19 +1,20 @@
 package app.freerouting.gui;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnTestFixtures;
-import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
-import org.junit.jupiter.api.Test;
-
 import java.io.InputStream;
 import java.util.UUID;
+import org.junit.jupiter.api.Test;
 
 class Issue029LoadPhaseTimingTest {
 
@@ -22,10 +23,10 @@ class Issue029LoadPhaseTimingTest {
     try (InputStream stream = DsnTestFixtures.openResource("Issue029-hw48na.dsn")) {
       long t0 = System.nanoTime();
       BoardReadResult result = DsnReader.readBoard(stream, null, null, "Issue029-hw48na.dsn");
+      assertNotNull(result);
       long t1 = System.nanoTime();
       System.out.printf("1 parse: %.2f ms%n", ms(t0, t1));
 
-      RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
       RoutingJob job = new RoutingJob(UUID.randomUUID());
       job.setDummyInputFile("Issue029-hw48na.dsn");
 
@@ -44,16 +45,17 @@ class Issue029LoadPhaseTimingTest {
       System.out.printf("3 settingsMerger.merge: %.2f ms%n", ms(t4, t5));
 
       long t6 = System.nanoTime();
+      RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
       new RatsNest(board);
       long t7 = System.nanoTime();
       System.out.printf("4 RatsNest: %.2f ms%n", ms(t6, t7));
 
       long t8 = System.nanoTime();
-      app.freerouting.geometry.planar.IntBox bbox = board.get_bounding_box();
-      for (app.freerouting.board.Item curr_item : board.get_items()) {
-        app.freerouting.geometry.planar.IntBox curr_bounding_box = curr_item.bounding_box();
-        if (curr_bounding_box.ur.x < Integer.MAX_VALUE) {
-          bbox = bbox.union(curr_bounding_box);
+      app.freerouting.geometry.planar.IntBox bbox = board.getBoundingBox();
+      for (app.freerouting.board.Item currItem : board.getItems()) {
+        app.freerouting.geometry.planar.IntBox currBoundingBox = currItem.boundingBox();
+        if (currBoundingBox.ur.x < Integer.MAX_VALUE) {
+          bbox = bbox.union(currBoundingBox);
         }
       }
       long t9 = System.nanoTime();
@@ -74,8 +76,9 @@ class Issue029LoadPhaseTimingTest {
       long t15 = System.nanoTime();
       System.out.printf("8 BoardStatistics with DRC+connections: %.2f ms%n", ms(t14, t15));
 
-      System.out.printf("Board: components=%d traces=%d items=%d%n",
-          board.components.count(), board.get_traces().size(), board.get_items().size());
+      System.out.printf(
+          "Board: components=%d traces=%d items=%d%n",
+          board.components.count(), board.getTraces().size(), board.getItems().size());
     }
   }
 

@@ -12,80 +12,89 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/** Displays nets whose routed lengths violate their rules. */
 public class WindowLengthViolations extends WindowObjectListWithFilter {
 
-  /**
-   * Creates a new instance of WindowLengthViolations
-   */
-  public WindowLengthViolations(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  /** Creates a new instance of WindowLengthViolations. */
+  public WindowLengthViolations(BoardFrame boardFrame) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
-    this.list_empty_message.setText(tm.getText("list_empty"));
+    this.listEmptyMessage.setText(tm.getText("listEmpty"));
   }
 
   @Override
-  protected void fill_list() {
-    RatsNest ratsnest = this.board_frame.board_panel.board_handling.get_ratsnest();
-    Nets net_list = this.board_frame.board_panel.board_handling.get_routing_board().rules.nets;
-    SortedSet<LengthViolation> length_violations = new TreeSet<>();
-    for (int net_index = 1; net_index <= net_list.max_net_no(); net_index++) {
-      double curr_violation_length = ratsnest.get_length_violation(net_index);
-      if (curr_violation_length != 0) {
-        LengthViolation curr_length_violation = new LengthViolation(net_list.get(net_index), curr_violation_length);
-        length_violations.add(curr_length_violation);
+  protected void fillList() {
+    RatsNest ratsnest = this.boardFrame.boardPanel.boardHandling.getRatsnest();
+    Nets netList = this.boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.nets;
+    SortedSet<LengthViolation> lengthViolations = new TreeSet<>();
+    for (int netIndex = 1; netIndex <= netList.maxNetNo(); netIndex++) {
+      double currViolationLength = ratsnest.getLengthViolation(netIndex);
+      if (currViolationLength != 0) {
+        LengthViolation currLengthViolation =
+            new LengthViolation(netList.get(netIndex), currViolationLength);
+        lengthViolations.add(currLengthViolation);
       }
     }
 
-    for (LengthViolation curr_violation : length_violations) {
-      this.add_to_list(curr_violation);
+    for (LengthViolation currViolation : lengthViolations) {
+      this.addToList(currViolation);
     }
-    this.list.setVisibleRowCount(Math.min(length_violations.size(), DEFAULT_TABLE_SIZE));
+    this.list.setVisibleRowCount(Math.min(lengthViolations.size(), DEFAULT_TABLE_SIZE));
   }
 
   @Override
-  protected void select_instances() {
-    List<Object> selected_violations = list.getSelectedValuesList();
-    if (selected_violations.isEmpty()) {
+  protected void selectInstances() {
+    List<Object> selectedViolations = list.getSelectedValuesList();
+    if (selectedViolations.isEmpty()) {
       return;
     }
-    Set<Item> selected_items = new TreeSet<>();
-    for (int i = 0; i < selected_violations.size(); i++) {
-      LengthViolation curr_violation = (LengthViolation) selected_violations.get(i);
-      selected_items.addAll(curr_violation.net.get_items());
+    Set<Item> selectedItems = new TreeSet<>();
+    for (int i = 0; i < selectedViolations.size(); i++) {
+      LengthViolation currViolation = (LengthViolation) selectedViolations.get(i);
+      selectedItems.addAll(currViolation.net.getItems());
     }
-    GuiBoardManager board_handling = board_frame.board_panel.board_handling;
-    board_handling.select_items(selected_items);
-    board_handling.zoom_selection();
+    GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
+    boardHandling.selectItems(selectedItems);
+    boardHandling.zoomSelection();
   }
 
   private class LengthViolation implements Comparable<LengthViolation> {
 
     final Net net;
-    final double violation_length;
+    final double violationLength;
 
-    LengthViolation(Net p_net, double p_violation_length) {
-      net = p_net;
-      violation_length = p_violation_length;
+    LengthViolation(Net net, double violationLength) {
+      this.net = net;
+      this.violationLength = violationLength;
     }
 
     @Override
-    public int compareTo(LengthViolation p_other) {
-      return this.net.name.compareToIgnoreCase(p_other.net.name);
+    public int compareTo(LengthViolation other) {
+      return this.net.name.compareToIgnoreCase(other.net.name);
     }
 
     @Override
     public String toString() {
-      CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
-      NetClass net_class = this.net.get_class();
-      float length = (float) coordinate_transform.board_to_user(this.net.get_trace_length());
-      if (violation_length > 0) {
-        return tm.getText("length_violation_max_message", this.net.name, String.valueOf(length),
-            String.valueOf((float) coordinate_transform.board_to_user(net_class.get_maximum_trace_length())));
+      CoordinateTransform coordinateTransform =
+          boardFrame.boardPanel.boardHandling.coordinateTransform;
+      NetClass netClass = this.net.getNetClass();
+      float length = (float) coordinateTransform.boardToUser(this.net.getTraceLength());
+      if (violationLength > 0) {
+        return tm.getText(
+            "length_violation_max_message",
+            this.net.name,
+            String.valueOf(length),
+            String.valueOf(
+                (float) coordinateTransform.boardToUser(netClass.getMaximumTraceLength())));
       }
-      return tm.getText("length_violation_min_message", this.net.name, String.valueOf(length),
-          String.valueOf((float) coordinate_transform.board_to_user(net_class.get_minimum_trace_length())));
+      return tm.getText(
+          "length_violation_min_message",
+          this.net.name,
+          String.valueOf(length),
+          String.valueOf(
+              (float) coordinateTransform.boardToUser(netClass.getMinimumTraceLength())));
     }
   }
 }

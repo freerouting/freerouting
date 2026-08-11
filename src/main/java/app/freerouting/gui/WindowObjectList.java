@@ -25,297 +25,309 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-/**
- * Abstract class for windows displaying a list of objects
- */
+/** Abstract class for windows displaying a list of objects. */
 public abstract class WindowObjectList extends BoardSavableSubWindow {
 
   protected static final int DEFAULT_TABLE_SIZE = 20;
-  protected final BoardFrame board_frame;
-  protected final JPanel south_panel;
-  /**
-   * The subwindows with information about selected object
-   */
+  protected final BoardFrame boardFrame;
+  protected final JPanel southPanel;
+
+  /** The subwindows with information about selected object. */
   protected final Collection<WindowObjectInfo> subwindows = new LinkedList<>();
 
-  protected final JPanel main_panel;
-  protected final JPanel center_panel;
-  protected JLabel list_empty_message;
+  protected final JPanel mainPanel;
+  protected final JPanel centerPanel;
+  protected JLabel listEmptyMessage;
   protected JList<Object> list;
-  private JScrollPane list_scroll_pane;
-  private DefaultListModel<Object> list_model;
+  private JScrollPane listScrollPane;
+  private DefaultListModel<Object> listModel;
 
-  /**
-   * Creates a new instance of ObjectListWindow
-   */
-  public WindowObjectList(BoardFrame p_board_frame) {
-    setLanguage(p_board_frame.get_locale());
-    this.board_frame = p_board_frame;
+  /** Creates a new instance of ObjectListWindow. */
+  protected WindowObjectList(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
+    this.boardFrame = boardFrame;
 
     // create main panel
-    this.main_panel = new JPanel();
-    main_panel.setLayout(new BorderLayout());
-    this.add(main_panel);
+    this.mainPanel = new JPanel();
+    mainPanel.setLayout(new BorderLayout());
+    this.add(mainPanel);
 
     // create center panel for list/empty message
-    this.center_panel = new JPanel(new BorderLayout());
-    main_panel.add(this.center_panel, BorderLayout.CENTER);
+    this.centerPanel = new JPanel(new BorderLayout());
+    mainPanel.add(this.centerPanel, BorderLayout.CENTER);
 
     // create a panel for adding buttons
-    this.south_panel = new JPanel();
-    south_panel.setLayout(new BorderLayout());
-    main_panel.add(south_panel, BorderLayout.SOUTH);
+    this.southPanel = new JPanel();
+    southPanel.setLayout(new BorderLayout());
+    mainPanel.add(southPanel, BorderLayout.SOUTH);
 
-    JPanel button_panel = new JPanel();
-    button_panel.setLayout(new BorderLayout());
-    this.south_panel.add(button_panel, BorderLayout.CENTER);
+    JPanel buttonPanel = new JPanel();
+    buttonPanel.setLayout(new BorderLayout());
+    this.southPanel.add(buttonPanel, BorderLayout.CENTER);
 
-    JPanel north_button_panel = new JPanel();
-    button_panel.add(north_button_panel, BorderLayout.NORTH);
+    JPanel northButtonPanel = new JPanel();
+    buttonPanel.add(northButtonPanel, BorderLayout.NORTH);
 
     if (showInfoButton()) {
-      JButton info_components_show_button = new JButton(tm.getText("info"));
-      info_components_show_button.setToolTipText(tm.getText("info_tooltip"));
-      ShowListener show_listener = new ShowListener();
-      info_components_show_button.addActionListener(show_listener);
-      info_components_show_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_show_button", info_components_show_button.getText()));
-      north_button_panel.add(info_components_show_button);
+      JButton infoComponentsShowButton = new JButton(tm.getText("info"));
+      infoComponentsShowButton.setToolTipText(tm.getText("info_tooltip"));
+      ShowListener showListener = new ShowListener();
+      infoComponentsShowButton.addActionListener(showListener);
+      infoComponentsShowButton.addActionListener(
+          _ ->
+              FRAnalytics.buttonClicked(
+                  "infoComponentsShowButton", infoComponentsShowButton.getText()));
+      northButtonPanel.add(infoComponentsShowButton);
     }
 
     if (showSelectButton()) {
-      JButton info_components_instance_button = new JButton(tm.getText("select"));
-      info_components_instance_button.setToolTipText(tm.getText("select_tooltip"));
-      SelectListener instance_listener = new SelectListener();
-      info_components_instance_button.addActionListener(instance_listener);
-      info_components_instance_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_instance_button", info_components_instance_button.getText()));
-      north_button_panel.add(info_components_instance_button);
+      JButton infoComponentsInstanceButton = new JButton(tm.getText("select"));
+      infoComponentsInstanceButton.setToolTipText(tm.getText("select_tooltip"));
+      SelectListener instanceListener = new SelectListener();
+      infoComponentsInstanceButton.addActionListener(instanceListener);
+      infoComponentsInstanceButton.addActionListener(
+          _ ->
+              FRAnalytics.buttonClicked(
+                  "infoComponentsInstanceButton", infoComponentsInstanceButton.getText()));
+      northButtonPanel.add(infoComponentsInstanceButton);
     }
 
-    JPanel south_button_panel = new JPanel();
-    button_panel.add(south_button_panel, BorderLayout.SOUTH);
+    JPanel southButtonPanel = new JPanel();
+    buttonPanel.add(southButtonPanel, BorderLayout.SOUTH);
 
     if (showInvertButton()) {
-      JButton info_components_invert_button = new JButton(tm.getText("invert"));
-      info_components_invert_button.setToolTipText(tm.getText("invert_tooltip"));
-      info_components_invert_button.addActionListener(new InvertListener());
-      info_components_invert_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_invert_button", info_components_invert_button.getText()));
-      south_button_panel.add(info_components_invert_button);
+      JButton infoComponentsInvertButton = new JButton(tm.getText("invert"));
+      infoComponentsInvertButton.setToolTipText(tm.getText("invert_tooltip"));
+      infoComponentsInvertButton.addActionListener(new InvertListener());
+      infoComponentsInvertButton.addActionListener(
+          _ ->
+              FRAnalytics.buttonClicked(
+                  "infoComponentsInvertButton", infoComponentsInvertButton.getText()));
+      southButtonPanel.add(infoComponentsInvertButton);
     }
 
     if (showRecalculateButton()) {
-      JButton info_components_recalculate_button = new JButton(tm.getText("recalculate"));
-      info_components_recalculate_button.setToolTipText(tm.getText("recalculate_tooltip"));
-      RecalculateListener recalculate_listener = new RecalculateListener();
-      info_components_recalculate_button.addActionListener(recalculate_listener);
-      info_components_recalculate_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_recalculate_button", info_components_recalculate_button.getText()));
-      south_button_panel.add(info_components_recalculate_button);
+      JButton infoComponentsRecalculateButton = new JButton(tm.getText("recalculate"));
+      infoComponentsRecalculateButton.setToolTipText(tm.getText("recalculate_tooltip"));
+      RecalculateListener recalculateListener = new RecalculateListener();
+      infoComponentsRecalculateButton.addActionListener(recalculateListener);
+      infoComponentsRecalculateButton.addActionListener(
+          _ ->
+              FRAnalytics.buttonClicked(
+                  "infoComponentsRecalculateButton", infoComponentsRecalculateButton.getText()));
+      southButtonPanel.add(infoComponentsRecalculateButton);
     }
 
-    this.list_empty_message = new JLabel(tm.getText("list_empty"));
-    this.list_empty_message.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    this.listEmptyMessage = new JLabel(tm.getText("listEmpty"));
+    this.listEmptyMessage.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
     // Dispose this window and all subwindows when closing the window.
-    this.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent evt) {
-        dispose();
-      }
-    });
+    this.addWindowListener(
+        new WindowAdapter() {
+          @Override
+          public void windowClosing(WindowEvent evt) {
+            dispose();
+          }
+        });
   }
 
+  /** Returns whether the information button should be displayed. */
   protected boolean showInfoButton() {
     return true;
   }
 
+  /** Returns whether the select button should be displayed. */
   protected boolean showSelectButton() {
     return true;
   }
 
+  /** Returns whether the invert button should be displayed. */
   protected boolean showInvertButton() {
     return true;
   }
 
+  /** Returns whether the recalculate button should be displayed. */
   protected boolean showRecalculateButton() {
     return true;
   }
 
   @Override
-  public void setVisible(boolean p_value) {
-    if (p_value) {
+  public void setVisible(boolean value) {
+    if (value) {
       recalculate();
     }
-    super.setVisible(p_value);
+    super.setVisible(value);
   }
 
+  /** Rebuilds the list contents and updates the list controls. */
   protected void recalculate() {
-    boolean first_time = (this.list == null);
-    if (first_time) {
-      this.list_model = new DefaultListModel<>();
-      this.list = new JList<>(this.list_model);
+    boolean firstTime = this.list == null;
+    if (firstTime) {
+      this.listModel = new DefaultListModel<>();
+      this.list = new JList<>(this.listModel);
       this.list.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     } else {
-      this.list_model.clear();
+      this.listModel.clear();
     }
 
-    this.fill_list();
+    this.fillList();
 
-    if (first_time) {
+    if (firstTime) {
       if (this.list.getVisibleRowCount() > 0) {
-        list_scroll_pane = new JScrollPane(this.list);
-        center_panel.add(list_scroll_pane, BorderLayout.CENTER);
+        listScrollPane = new JScrollPane(this.list);
+        centerPanel.add(listScrollPane, BorderLayout.CENTER);
       } else {
-        center_panel.add(list_empty_message, BorderLayout.CENTER);
+        centerPanel.add(listEmptyMessage, BorderLayout.CENTER);
       }
       this.pack();
 
-      this.list.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent evt) {
-          if (evt.getClickCount() > 1) {
-            select_instances();
-          }
-        }
-      });
+      this.list.addMouseListener(
+          new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+              if (evt.getClickCount() > 1) {
+                selectInstances();
+              }
+            }
+          });
     } else {
-      if (this.list_model.isEmpty()) {
-        if (list_scroll_pane != null) {
-          center_panel.remove(list_scroll_pane);
+      if (this.listModel.isEmpty()) {
+        if (listScrollPane != null) {
+          centerPanel.remove(listScrollPane);
         }
-        center_panel.add(list_empty_message, BorderLayout.CENTER);
+        centerPanel.add(listEmptyMessage, BorderLayout.CENTER);
       } else {
-        center_panel.remove(list_empty_message);
-        if (list_scroll_pane == null) {
-          list_scroll_pane = new JScrollPane(this.list);
+        centerPanel.remove(listEmptyMessage);
+        if (listScrollPane == null) {
+          listScrollPane = new JScrollPane(this.list);
         }
-        center_panel.add(list_scroll_pane, BorderLayout.CENTER);
+        centerPanel.add(listScrollPane, BorderLayout.CENTER);
       }
-      center_panel.revalidate();
-      center_panel.repaint();
+      centerPanel.revalidate();
+      centerPanel.repaint();
     }
   }
 
   @Override
   public void dispose() {
-    for (WindowObjectInfo curr_subwindow : this.subwindows) {
-      if (curr_subwindow != null) {
-        curr_subwindow.dispose();
+    for (WindowObjectInfo currSubwindow : this.subwindows) {
+      if (currSubwindow != null) {
+        currSubwindow.dispose();
       }
     }
     super.dispose();
   }
 
-  protected void add_to_list(Object p_object) {
-    this.list_model.addElement(p_object);
+  /**
+   * Adds an object to the displayed list.
+   *
+   * @param object the object to add
+   */
+  protected void addToList(Object object) {
+    this.listModel.addElement(object);
   }
 
-  /**
-   * Fills the list with the objects to display.
-   */
-  protected abstract void fill_list();
+  /** Fills the list with the objects to display. */
+  protected abstract void fillList();
 
-  protected abstract void select_instances();
+  /** Selects the board instances represented by the selected list entries. */
+  protected abstract void selectInstances();
 
-  /**
-   * Saves also the filter string to disk.
-   */
+  /** Saves also the filter string to disk. */
   @Override
-  public void save(ObjectOutputStream p_object_stream) {
-    int[] selected_indices;
+  public void save(ObjectOutputStream objectStream) {
+    int[] selectedIndices;
     if (this.list != null) {
-      selected_indices = this.list.getSelectedIndices();
+      selectedIndices = this.list.getSelectedIndices();
     } else {
-      selected_indices = new int[0];
+      selectedIndices = new int[0];
     }
     try {
-      p_object_stream.writeObject(selected_indices);
+      objectStream.writeObject(selectedIndices);
     } catch (IOException e) {
       FRLogger.error("WindowObjectList.save: save failed", e);
     }
-    super.save(p_object_stream);
+    super.save(objectStream);
   }
 
   @Override
-  public boolean read(ObjectInputStream p_object_stream) {
-    int[] saved_selected_indices;
+  public boolean read(ObjectInputStream objectStream) {
+    int[] savedSelectedIndices;
     try {
-      saved_selected_indices = (int[]) p_object_stream.readObject();
+      savedSelectedIndices = (int[]) objectStream.readObject();
     } catch (Exception e) {
       FRLogger.error("WindowObjectListWithFilter.read: read failed", e);
       return false;
     }
-    boolean result = super.read(p_object_stream);
-    if (this.list != null && saved_selected_indices.length > 0) {
-      this.list.setSelectedIndices(saved_selected_indices);
+    boolean result = super.read(objectStream);
+    if (this.list != null && savedSelectedIndices.length > 0) {
+      this.list.setSelectedIndices(savedSelectedIndices);
     }
     return result;
   }
 
-  /**
-   * Listens to the button for showing the selected padstacks
-   */
+  /** Listens to the button for showing the selected padstacks. */
   private class ShowListener implements ActionListener {
 
     private static final int WINDOW_OFFSET = 30;
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      List<Object> selected_objects = list.getSelectedValuesList();
-      if (selected_objects.isEmpty()) {
+    public void actionPerformed(ActionEvent evt) {
+      List<Object> selectedObjects = list.getSelectedValuesList();
+      if (selectedObjects.isEmpty()) {
         return;
       }
-      Collection<WindowObjectInfo.Printable> object_list = new LinkedList<>();
-      for (int i = 0; i < selected_objects.size(); i++) {
-        object_list.add((WindowObjectInfo.Printable) (selected_objects.get(i)));
+      Collection<WindowObjectInfo.Printable> objectList = new LinkedList<>();
+      for (int i = 0; i < selectedObjects.size(); i++) {
+        objectList.add((WindowObjectInfo.Printable) (selectedObjects.get(i)));
       }
-      CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
-      WindowObjectInfo new_window = WindowObjectInfo.display(tm.getText("window_title"), object_list, board_frame, coordinate_transform);
+      CoordinateTransform coordinateTransform =
+          boardFrame.boardPanel.boardHandling.coordinateTransform;
+      WindowObjectInfo newWindow =
+          WindowObjectInfo.display(
+              tm.getText("window_title"), objectList, boardFrame, coordinateTransform);
       Point loc = getLocation();
-      Point new_window_location = new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
-      new_window.setLocation(new_window_location);
-      subwindows.add(new_window);
+      Point newWindowLocation =
+          new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
+      newWindow.setLocation(newWindowLocation);
+      subwindows.add(newWindow);
     }
   }
 
-  /**
-   * Listens to the button for showing the selected incompletes
-   */
+  /** Listens to the button for showing the selected incompletes. */
   private class SelectListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      select_instances();
+    public void actionPerformed(ActionEvent evt) {
+      selectInstances();
     }
   }
 
-  /**
-   * Listens to the button for inverting the selection
-   */
+  /** Listens to the button for inverting the selection. */
   private class InvertListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      if (list_model == null) {
+    public void actionPerformed(ActionEvent evt) {
+      if (listModel == null) {
         return;
       }
-      int[] new_selected_indices = new int[list_model.getSize() - list.getSelectedIndices().length];
-      int curr_index = 0;
-      for (int i = 0; i < list_model.getSize(); i++) {
+      int[] newSelectedIndices = new int[listModel.getSize() - list.getSelectedIndices().length];
+      int currIndex = 0;
+      for (int i = 0; i < listModel.getSize(); i++) {
         if (!list.isSelectedIndex(i)) {
-          new_selected_indices[curr_index] = i;
-          ++curr_index;
+          newSelectedIndices[currIndex] = i;
+          ++currIndex;
         }
       }
-      list.setSelectedIndices(new_selected_indices);
+      list.setSelectedIndices(newSelectedIndices);
     }
   }
 
-  /**
-   * Listens to the button for recalculating the content of the window
-   */
+  /** Listens to the button for recalculating the content of the window. */
   private class RecalculateListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent evt) {
       recalculate();
     }
   }

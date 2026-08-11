@@ -9,50 +9,42 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
-/**
- * Startup window visible when the program is loading.
- */
-public class WindowMessage extends WindowBase {
+/** Startup window visible when the program is loading. */
+public final class WindowMessage extends WindowBase {
 
-  /**
-   * Creates a new instance of WindowMessage
-   */
-  private WindowMessage(String[] p_message_arr) {
+  /** Creates a new instance of WindowMessage. */
+  private WindowMessage(String[] messageArr) {
     super(300, 100);
 
-    final JPanel main_panel = new JPanel();
+    final JPanel mainPanel = new JPanel();
     final GridBagLayout gridbag = new GridBagLayout();
-    main_panel.setLayout(gridbag);
-    final GridBagConstraints gridbag_constraints = new GridBagConstraints();
-    gridbag_constraints.insets = new Insets(40, 40, 40, 40);
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    for (int i = 0; i < p_message_arr.length; i++) {
-      final JLabel message_label = new JLabel();
-      message_label.setText(p_message_arr[i]);
+    mainPanel.setLayout(gridbag);
+    final GridBagConstraints gridbagConstraints = new GridBagConstraints();
+    gridbagConstraints.insets = new Insets(40, 40, 40, 40);
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    for (int i = 0; i < messageArr.length; i++) {
+      final JLabel messageLabel = new JLabel();
+      messageLabel.setText(messageArr[i]);
 
-      gridbag.setConstraints(message_label, gridbag_constraints);
-      main_panel.add(message_label, gridbag_constraints);
+      gridbag.setConstraints(messageLabel, gridbagConstraints);
+      mainPanel.add(messageLabel, gridbagConstraints);
     }
-    this.add(main_panel);
+    this.add(mainPanel);
     this.pack();
     this.setLocation(500, 400);
     this.setVisible(true);
   }
 
-  /**
-   * Displays a window with the input message at the center of the screen.
-   */
-  public static WindowMessage show(String p_message) {
-    String[] message_arr = new String[1];
-    message_arr[0] = p_message;
-    return new WindowMessage(message_arr);
+  /** Displays a window with the input message at the center of the screen. */
+  public static WindowMessage show(String message) {
+    String[] messageArr = new String[1];
+    messageArr[0] = message;
+    return new WindowMessage(messageArr);
   }
 
-  /**
-   * Displays a window with the input messages at the center of the screen.
-   */
-  public static WindowMessage show(String[] p_messages) {
-    return new WindowMessage(p_messages);
+  /** Displays a window with the input messages at the center of the screen. */
+  public static WindowMessage show(String[] messages) {
+    return new WindowMessage(messages);
   }
 
   /**
@@ -63,7 +55,8 @@ public class WindowMessage extends WindowBase {
   }
 
   /**
-   * Calls a confirm dialog with a default option. Returns true, if the user confirmed the action or if message is null.
+   * Calls a confirm dialog with a default option. Returns true, if the user confirmed the action or
+   * if message is null.
    */
   public static boolean confirm(String message, int defaultOption) {
     if (message == null) {
@@ -71,15 +64,19 @@ public class WindowMessage extends WindowBase {
     }
     String yesOption = UIManager.getString("OptionPane.yesButtonText");
     String noOption = UIManager.getString("OptionPane.noButtonText");
-    Object[] options = {
-        yesOption,
-        noOption
-    };
-    JOptionPane optionPane = new JOptionPane(message, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null, options, options[defaultOption]);
+    Object[] options = {yesOption, noOption};
+    JOptionPane optionPane =
+        new JOptionPane(
+            message,
+            JOptionPane.QUESTION_MESSAGE,
+            JOptionPane.YES_NO_OPTION,
+            null,
+            options,
+            options[defaultOption]);
     optionPane.createDialog(null, "").setVisible(true);
-    String selected_option = (String) optionPane.getValue();
+    String selectedOption = (String) optionPane.getValue();
 
-    if (selected_option.equals(yesOption)) {
+    if (selectedOption.equals(yesOption)) {
       FRAnalytics.buttonClicked("dialog_yes", message);
       return true;
     } else {
@@ -88,10 +85,8 @@ public class WindowMessage extends WindowBase {
     }
   }
 
-  /**
-   * Calls a dialog with an ok-button.
-   */
-  public static void ok(String p_message) {
-    JOptionPane.showMessageDialog(null, p_message);
+  /** Calls a dialog with an ok-button. */
+  public static void ok(String message) {
+    JOptionPane.showMessageDialog(null, message);
   }
 }

@@ -49,9 +49,7 @@
   },
   "automatic_neckdown": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowRouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "8163745c531b96dec384c83b8407aeea887999e4222bb1c37921f2879511f596",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -255,9 +253,7 @@
   },
   "drag_components_enabled": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowRouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "ba35cef35815242e8b45c733b16fa027e3b443829f884b54fa70932cf4a4e83c",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -323,11 +319,9 @@
     ],
     "ui_role": "tooltip"
   },
-  "hilight_routing_obstacle": {
+  "highlight_routing_obstacle": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowRouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "023efecf9da6d1f40c1031d7e3c685c387f0e23f2e616bfd542eaaab41316263",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -337,11 +331,11 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "hilight_routing_obstacle_tooltip"
+      "highlight_routing_obstacle_tooltip"
     ],
     "ui_role": "label"
   },
-  "hilight_routing_obstacle_tooltip": {
+  "highlight_routing_obstacle_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.WindowRouteParameter"
@@ -355,7 +349,7 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "hilight_routing_obstacle"
+      "highlight_routing_obstacle"
     ],
     "ui_role": "tooltip"
   },
@@ -397,9 +391,7 @@
   },
   "keepout_outside_outline": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowRouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "b947a3146b03ee6d6dbc8255ce4e66b62e44f52760384a237c6bad3796593b50",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -569,9 +561,7 @@
   },
   "pull_tight_accuracy": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowRouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "b48d23c2190d4c8f5e56324e8ae0455a56b9f69fb8cea25e3a45387d2dbd1eef",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -631,9 +621,7 @@
   },
   "pull_tight_region": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowRouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "83b4ec8f5a48a583ec3f0eb4f9a41cb4daa65803b84e9956768515347f82ca1e",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -714,9 +702,7 @@
   },
   "push&shove_enabled": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowRouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "cf058a7dd9a921b89b93b4f026db723f37e3a03c91c79e2cf0c75533127d3886",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -858,9 +844,7 @@
   },
   "snap_angle": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowRouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "0de918a746baa0b120b53ed2d5fa785a80103d20a9c10cd619703147f6a5b791",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -944,9 +928,7 @@
   },
   "via_snap_to_smd_center": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowRouteParameter"
-    ],
+    "code_references": [],
     "english_hash": "80b1b9ef5c8773714c865b85993b9730627bcd50e113edc1d74cf4ba630597a7",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

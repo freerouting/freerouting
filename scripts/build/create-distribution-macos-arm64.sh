@@ -37,4 +37,3 @@ echo "> Creating the package"
  --java-options "-Dlog4j2.disableJndi=true"
 
 mv "freerouting-$APP_VERSION.dmg" "freerouting-$APP_VERSION-macos-arm64.dmg"
-

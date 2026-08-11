@@ -2,12 +2,12 @@
 
 ## Problem
 
-Freerouting crashes with an `OutOfMemoryError` after 4–6 days of continuous routing.  
+Freerouting crashes with an `OutOfMemoryError` after 4–6 days of continuous routing.
 Two distinct root causes were identified from the log and code review:
 
 ### Root Cause 1 – `BoardHistory` has no size cap (primary OOM cause)
 
-`BatchAutorouter.runBatchLoop()` calls `bh.add(this.board)` on **every routing pass**.  
+`BatchAutorouter.runBatchLoop()` calls `bh.add(this.board)` on **every routing pass**.
 `BoardHistory.add()` serialises the entire routing board to a `byte[]`
 (Java object serialisation, no compression) and stores it indefinitely.
 

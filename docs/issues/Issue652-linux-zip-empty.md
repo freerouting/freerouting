@@ -1,6 +1,6 @@
 # Issue 652 — Linux ZIP file only contains the license (v2.2.2)
 
-**GitHub Issue:** https://github.com/freerouting/freerouting/issues/652  
+**GitHub Issue:** https://github.com/freerouting/freerouting/issues/652
 **Status:** ✅ Fixed in `scripts/build/create-distribution-linux-x64.sh` and `create-distribution-SNAPSHOT-linux-x64.sh`
 
 ## Problem

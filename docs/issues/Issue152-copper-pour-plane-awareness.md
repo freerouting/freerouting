@@ -1,8 +1,8 @@
 # Issue 152 — Copper Pour / Power Plane Awareness
 
-**GitHub:** https://github.com/freerouting/freerouting/issues/152  
-**Status:** Partially fixed; core clearance-violation bug open  
-**Priority:** High  
+**GitHub:** https://github.com/freerouting/freerouting/issues/152
+**Status:** Partially fixed; core clearance-violation bug open
+**Priority:** High
 
 ---
 
@@ -36,11 +36,11 @@ Copper pours are represented as `board.ConductionArea` — a subclass of `Obstac
 
 ### How `Net.contains_plane` Gets Set (Two Paths)
 
-**Path A — `Structure.java` (reliable, fires for standard KiCad exports):**  
+**Path A — `Structure.java` (reliable, fires for standard KiCad exports):**
 When the DSN parser processes a `(plane <netname> ...)` scope inside `(structure ...)`, it calls `board.rules.nets.add(..., true)`. This sets `contains_plane = true` immediately. KiCad's `(plane ...)` declaration triggers this.
 
-**Path B — `DsnFile.adjustPlaneAutorouteSettings()` (heuristic fallback):**  
-Called from `DsnReader.readBoard()` only when the DSN file contains no `(autoroute ...)` scope. It scans `ConductionArea` items: if an area covers ≥ 50% of the board and lies on a non-outer signal layer with no wires, it marks the net's `contains_plane = true`. 
+**Path B — `DsnFile.adjustPlaneAutorouteSettings()` (heuristic fallback):**
+Called from `DsnReader.readBoard()` only when the DSN file contains no `(autoroute ...)` scope. It scans `ConductionArea` items: if an area covers ≥ 50% of the board and lies on a non-outer signal layer with no wires, it marks the net's `contains_plane = true`.
 
 *Note:* `LayerStructure.contains_plane(netName)` (used in `Network.java`) only looks at layers whose `is_signal == false`. For Issue093's 2-layer board where both layers are declared `(type signal)`, this always returns `false`. The correct value comes from Path A.
 

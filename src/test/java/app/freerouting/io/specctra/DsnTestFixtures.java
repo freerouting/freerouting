@@ -3,7 +3,6 @@ package app.freerouting.io.specctra;
 import app.freerouting.TestFixtures;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.io.BoardReadResult;
-
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,18 +10,17 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 
 /**
- * Utility methods for loading {@link RoutingBoard} instances from DSN fixture files
- * inside the {@code fixtures/} directory. Intended for use in unit tests only.
+ * Utility methods for loading {@link RoutingBoard} instances from DSN fixture files inside the
+ * {@code fixtures/} directory. Intended for use in unit tests only.
  */
 public final class DsnTestFixtures {
 
-  private DsnTestFixtures() {
-  }
+  private DsnTestFixtures() {}
 
   /**
-   * Opens a DSN fixture file from the {@code fixtures/} directory as a stream.
-   * Throws {@link UncheckedIOException} if the file cannot be found, so tests can
-   * call this without a {@code throws} clause.
+   * Opens a DSN fixture file from the {@code fixtures/} directory as a stream. Throws {@link
+   * UncheckedIOException} if the file cannot be found, so tests can call this without a {@code
+   * throws} clause.
    *
    * @param filename the filename (e.g. {@code "Issue143-rpi_splitter.dsn"})
    */

@@ -4,8 +4,8 @@ package app.freerouting.api.security;
  * Tri-state result returned by an {@link ApiKeyProvider} after validating an API key.
  *
  * <p>The {@link ApiKeyValidationService} evaluates providers in sequence and stops at the first
- * {@link #ACCESS_GRANTED} or {@link #ACCESS_DENIED} result. If all providers return
- * {@link #UNDECIDED} or {@link #PROVIDER_FAILED} access is ultimately denied.</p>
+ * {@link #ACCESS_GRANTED} or {@link #ACCESS_DENIED} result. If all providers return {@link
+ * #UNDECIDED} or {@link #PROVIDER_FAILED} access is ultimately denied.
  */
 public enum ApiKeyValidationResult {
 

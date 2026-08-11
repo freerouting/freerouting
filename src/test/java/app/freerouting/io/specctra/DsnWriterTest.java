@@ -1,15 +1,15 @@
 package app.freerouting.io.specctra;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import app.freerouting.Freerouting;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.settings.GlobalSettings;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class DsnWriterTest {
 
@@ -31,11 +31,11 @@ class DsnWriterTest {
   @Test
   void roundtripPreservesLayerCount() throws Exception {
     RoutingBoard original = DsnTestFixtures.loadBoard("Issue143-rpi_splitter.dsn");
-    int originalLayers = original.get_layer_count();
+    int originalLayers = original.getLayerCount();
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     DsnWriter.write(original, out, "roundtrip", false);
     RoutingBoard reloaded = DsnTestFixtures.loadBoard(out.toByteArray());
-    assertEquals(originalLayers, reloaded.get_layer_count());
+    assertEquals(originalLayers, reloaded.getLayerCount());
   }
 
   @Test
@@ -52,7 +52,7 @@ class DsnWriterTest {
     RoutingBoard board = DsnTestFixtures.loadBoard("Issue143-rpi_splitter.dsn");
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     DsnWriter.write(board, out, "flush-test", false);
-    assertTrue(out.size() > 0, "Output stream must contain data after write (flush must have occurred)");
+    assertTrue(
+        out.size() > 0, "Output stream must contain data after write (flush must have occurred)");
   }
 }
-

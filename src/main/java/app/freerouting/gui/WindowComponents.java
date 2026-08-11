@@ -10,63 +10,57 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Window displaying the components on the board.
- */
+/** Window displaying the components on the board. */
 public class WindowComponents extends WindowObjectListWithFilter {
 
-  /**
-   * Creates a new instance of ComponentsWindow
-   */
-  public WindowComponents(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  /** Creates a new instance of ComponentsWindow. */
+  public WindowComponents(BoardFrame boardFrame) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("components"));
   }
 
-  /**
-   * Fills the list with the board components.
-   */
+  /** Fills the list with the board components. */
   @Override
-  protected void fill_list() {
-    Components components = this.board_frame.board_panel.board_handling.get_routing_board().components;
-    Component[] sorted_arr = new Component[components.count()];
-    for (int i = 0; i < sorted_arr.length; i++) {
-      sorted_arr[i] = components.get(i + 1);
+  protected void fillList() {
+    Components components = this.boardFrame.boardPanel.boardHandling.getRoutingBoard().components;
+    Component[] sortedArr = new Component[components.count()];
+    for (int i = 0; i < sortedArr.length; i++) {
+      sortedArr[i] = components.get(i + 1);
     }
-    Arrays.sort(sorted_arr);
-    for (int i = 0; i < sorted_arr.length; i++) {
-      this.add_to_list(sorted_arr[i]);
+    Arrays.sort(sortedArr);
+    for (int i = 0; i < sortedArr.length; i++) {
+      this.addToList(sortedArr[i]);
     }
     this.list.setVisibleRowCount(Math.min(components.count(), DEFAULT_TABLE_SIZE));
   }
 
   @Override
-  protected void select_instances() {
-    List<Object> selected_components = list.getSelectedValuesList();
-    if (selected_components.isEmpty()) {
+  protected void selectInstances() {
+    List<Object> selectedComponents = list.getSelectedValuesList();
+    if (selectedComponents.isEmpty()) {
       return;
     }
-    RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-    Set<Item> selected_items = new TreeSet<>();
-    Collection<Item> board_items = routing_board.get_items();
-    for (Item curr_item : board_items) {
-      if (curr_item.get_component_no() > 0) {
-        Component curr_component = routing_board.components.get(curr_item.get_component_no());
-        boolean component_matches = false;
-        for (int i = 0; i < selected_components.size(); i++) {
-          if (curr_component == selected_components.get(i)) {
-            component_matches = true;
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+    Set<Item> selectedItems = new TreeSet<>();
+    Collection<Item> boardItems = routingBoard.getItems();
+    for (Item currItem : boardItems) {
+      if (currItem.getComponentNo() > 0) {
+        Component currComponent = routingBoard.components.get(currItem.getComponentNo());
+        boolean componentMatches = false;
+        for (int i = 0; i < selectedComponents.size(); i++) {
+          if (currComponent == selectedComponents.get(i)) {
+            componentMatches = true;
             break;
           }
         }
-        if (component_matches) {
-          selected_items.add(curr_item);
+        if (componentMatches) {
+          selectedItems.add(currItem);
         }
       }
     }
-    board_frame.board_panel.board_handling.select_items(selected_items);
-    board_frame.board_panel.board_handling.zoom_selection();
+    boardFrame.boardPanel.boardHandling.selectItems(selectedItems);
+    boardFrame.boardPanel.boardHandling.zoomSelection();
   }
 }

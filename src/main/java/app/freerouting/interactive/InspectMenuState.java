@@ -12,121 +12,115 @@ import java.awt.Color;
 import java.util.Set;
 
 /**
- * Class implementing the different functionality in the inspect menu,
- * especially
- * the different behaviour of the mouse button 1.
+ * Class implementing the different functionality in the inspect menu, especially the different
+ * behaviour of the mouse button 1.
  */
-public class InspectMenuState extends MenuState {
+public final class InspectMenuState extends MenuState {
 
-  private Item last_hovered_item = null;
-  private ClearanceViolation last_hovered_violation = null;
-  private String backup_message = null;
+  private Item lastHoveredItem;
+  private ClearanceViolation lastHoveredViolation;
+  private String backupMessage;
 
-  /**
-   * Creates a new instance of InspectMenuState
-   */
-  private InspectMenuState(GuiBoardManager p_board_handling) {
-    super(p_board_handling);
+  /** Creates a new instance of InspectMenuState. */
+  private InspectMenuState(GuiBoardManager boardHandling) {
+    super(boardHandling);
   }
 
-  /**
-   * Returns a new instance of InspectMenuState
-   */
-  public static InspectMenuState get_instance(GuiBoardManager p_board_handling) {
-    InspectMenuState new_state = new InspectMenuState(p_board_handling);
-    return new_state;
+  /** Returns a new instance of InspectMenuState. */
+  public static InspectMenuState getInstance(GuiBoardManager boardHandling) {
+    return new InspectMenuState(boardHandling);
   }
 
   @Override
-  public InteractiveState left_button_clicked(FloatPoint p_location) {
-    return select_items(p_location);
+  public InteractiveState leftButtonClicked(FloatPoint location) {
+    return selectItems(location);
   }
 
   @Override
-  public InteractiveState mouse_dragged(FloatPoint p_point) {
-    return InspectItemsInRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
+  public InteractiveState mouseDragged(FloatPoint point) {
+    return InspectItemsInRegionState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
   }
 
   @Override
-  public InteractiveState mouse_moved() {
-    super.mouse_moved();
+  public InteractiveState mouseMoved() {
+    super.mouseMoved();
 
-    FloatPoint current_position = hdlg.get_current_mouse_position();
-    if (current_position == null) {
+    FloatPoint currentPosition = hdlg.getCurrentMousePosition();
+    if (currentPosition == null) {
       return this;
     }
 
     // Check for clearance violations first (higher priority)
-    ClearanceViolation current_violation = null;
-    if (hdlg.clearance_violations != null && !hdlg.clearance_violations.list.isEmpty()) {
-      for (ClearanceViolation violation : hdlg.clearance_violations.list) {
-        if (violation.shape.contains(current_position)) {
-          current_violation = violation;
+    ClearanceViolation currentViolation = null;
+    if (hdlg.clearanceViolations != null && !hdlg.clearanceViolations.list.isEmpty()) {
+      for (ClearanceViolation violation : hdlg.clearanceViolations.list) {
+        if (violation.shape.contains(currentPosition)) {
+          currentViolation = violation;
           break;
         }
       }
     }
 
     // If we found a violation, handle it
-    if (current_violation != null) {
-      if (current_violation != last_hovered_violation) {
+    if (currentViolation != null) {
+      if (currentViolation != lastHoveredViolation) {
         // Backup message if entering from no violation
-        if (last_hovered_violation == null && last_hovered_item == null) {
-          backup_message = tm.getText("in_inspect_menu");
+        if (lastHoveredViolation == null && lastHoveredItem == null) {
+          backupMessage = tm.getText("in_inspect_menu");
         }
 
         // Clear previous item/violation
-        last_hovered_item = null;
-        last_hovered_violation = current_violation;
-        display_violation_info(current_violation);
+        lastHoveredItem = null;
+        lastHoveredViolation = currentViolation;
+        displayViolationInfo(currentViolation);
         hdlg.repaint();
       }
       return this;
-    } else if (last_hovered_violation != null) {
+    } else if (lastHoveredViolation != null) {
       // We left a violation
-      last_hovered_violation = null;
-      if (backup_message != null) {
-        hdlg.screen_messages.set_status_message(backup_message);
-        backup_message = null;
+      lastHoveredViolation = null;
+      if (backupMessage != null) {
+        hdlg.screenMessages.setStatusMessage(backupMessage);
+        backupMessage = null;
       }
       hdlg.repaint();
     }
 
     // If no violation, check for items
-    Set<Item> picked_items = hdlg.pick_items(current_position);
+    Set<Item> pickedItems = hdlg.pickItems(currentPosition);
 
     // Find the first relevant item (DrillItem or Trace)
-    Item current_item = null;
-    for (Item item : picked_items) {
+    Item currentItem = null;
+    for (Item item : pickedItems) {
       if (item instanceof DrillItem || item instanceof PolylineTrace) {
-        current_item = item;
+        currentItem = item;
         break;
       }
     }
 
     // Handle item change
-    if (current_item != last_hovered_item) {
+    if (currentItem != lastHoveredItem) {
       // Restore backup message if we left the previous item
-      if (last_hovered_item != null && current_item == null && backup_message != null) {
-        hdlg.screen_messages.set_status_message(backup_message);
-        backup_message = null;
+      if (lastHoveredItem != null && currentItem == null && backupMessage != null) {
+        hdlg.screenMessages.setStatusMessage(backupMessage);
+        backupMessage = null;
       }
 
       // Clear highlight on previous item
-      if (last_hovered_item != null) {
-        last_hovered_item = null;
+      if (lastHoveredItem != null) {
+        lastHoveredItem = null;
         hdlg.repaint();
       }
 
       // Set new item
-      if (current_item != null) {
+      if (currentItem != null) {
         // Backup current message if we're entering a new item from no item
-        if (last_hovered_item == null) {
-          backup_message = tm.getText("in_inspect_menu");
+        if (lastHoveredItem == null) {
+          backupMessage = tm.getText("in_inspect_menu");
         }
 
-        last_hovered_item = current_item;
-        display_item_info(current_item);
+        lastHoveredItem = currentItem;
+        displayItemInfo(currentItem);
         hdlg.repaint();
       }
     }
@@ -134,154 +128,166 @@ public class InspectMenuState extends MenuState {
     return this;
   }
 
-  private void display_item_info(Item item) {
+  private void displayItemInfo(Item item) {
     StringBuilder info = new StringBuilder();
 
     if (item instanceof Pin) {
       Pin pin = (Pin) item;
       info.append("Pin: ");
-      if (pin.get_component_no() > 0) {
-        info.append(hdlg.get_routing_board().components.get(pin.get_component_no()).name);
+      if (pin.getComponentNo() > 0) {
+        info.append(hdlg.getRoutingBoard().components.get(pin.getComponentNo()).name);
         info.append(" - ");
       }
-      info.append("Padstack: ").append(pin.get_padstack().name);
+      info.append("Padstack: ").append(pin.getPadstack().name);
       appendNetInfo(info, item);
     } else if (item instanceof Via) {
       Via via = (Via) item;
       info.append("Via: ");
-      info.append("Padstack: ").append(via.get_padstack().name);
-      info.append(" (L").append(via.get_padstack().from_layer());
-      info.append("-L").append(via.get_padstack().to_layer()).append(")");
+      info.append("Padstack: ").append(via.getPadstack().name);
+      info.append(" (L").append(via.getPadstack().fromLayer());
+      info.append("-L").append(via.getPadstack().toLayer()).append(")");
       appendNetInfo(info, item);
     } else if (item instanceof PolylineTrace) {
       PolylineTrace trace = (PolylineTrace) item;
       info.append("Trace: ");
-      info.append("ID ").append(trace.get_id_no());
-      info.append(", Layer: ").append(hdlg.get_routing_board().layer_structure.arr[trace.get_layer()].name);
-      info.append(", Width: ").append(2 * trace.get_half_width());
+      info.append("ID ").append(trace.getIdNo());
+      info.append(", Layer: ")
+          .append(hdlg.getRoutingBoard().layerStructure.arr[trace.getLayer()].name);
+      info.append(", Width: ").append(2 * trace.getHalfWidth());
 
       // Add segment count
-      int segment_count = trace.corner_count() - 1;
-      info.append(", Segments: ").append(segment_count);
+      int segmentCount = trace.cornerCount() - 1;
+      info.append(", Segments: ").append(segmentCount);
 
       // Add total length
-      double length = trace.get_length();
+      double length = trace.getLength();
       info.append(", Length: ").append(String.format("%.2f", length));
 
       appendNetInfo(info, item);
     }
 
-    hdlg.screen_messages.set_status_message(info.toString());
+    hdlg.screenMessages.setStatusMessage(info.toString());
   }
 
-  private void display_violation_info(ClearanceViolation violation) {
+  private void displayViolationInfo(ClearanceViolation violation) {
     StringBuilder info = new StringBuilder();
 
     info.append("CLEARANCE VIOLATION");
 
     // Add layer information
-    String layerName = hdlg.get_routing_board().layer_structure.arr[violation.layer].name;
+    String layerName = hdlg.getRoutingBoard().layerStructure.arr[violation.layer].name;
     info.append(" | Layer: ").append(layerName);
 
     // Add clearance information - convert from board units to display units
-    double expected_mm = violation.expected_clearance / 10000.0;
-    double actual_mm = violation.actual_clearance / 10000.0;
-    double violation_mm = expected_mm - actual_mm;
+    double expectedMm = violation.expectedClearance / 10000.0;
+    double actualMm = violation.actualClearance / 10000.0;
+    double violationMm = expectedMm - actualMm;
 
-    info.append(String.format(" | Required: %.4f mm", expected_mm));
-    info.append(String.format(", Actual: %.4f mm", actual_mm));
-    info.append(String.format(", Violation: %.4f mm", violation_mm));
+    info.append(String.format(" | Required: %.4f mm", expectedMm));
+    info.append(String.format(", Actual: %.4f mm", actualMm));
+    info.append(String.format(", Violation: %.4f mm", violationMm));
 
     // Add clearance class information
-    String clearanceClass1 = hdlg.get_routing_board().rules.clearance_matrix.get_name(violation.first_item.clearance_class_no());
-    String clearanceClass2 = hdlg.get_routing_board().rules.clearance_matrix.get_name(violation.second_item.clearance_class_no());
+    String clearanceClass1 =
+        hdlg.getRoutingBoard()
+            .rules
+            .clearanceMatrix
+            .getName(violation.firstItem.clearanceClassNo());
+    String clearanceClass2 =
+        hdlg.getRoutingBoard()
+            .rules
+            .clearanceMatrix
+            .getName(violation.secondItem.clearanceClassNo());
 
     info.append(" | Classes: ").append(clearanceClass1).append(" <-> ").append(clearanceClass2);
 
     // Add item information
     info.append(" | Between: ");
-    info.append(getItemDescription(violation.first_item));
+    info.append(getItemDescription(violation.firstItem));
     info.append(" and ");
-    info.append(getItemDescription(violation.second_item));
+    info.append(getItemDescription(violation.secondItem));
 
-    hdlg.screen_messages.set_status_message(info.toString());
+    hdlg.screenMessages.setStatusMessage(info.toString());
   }
 
   private String getItemDescription(Item item) {
     if (item instanceof Pin) {
       Pin pin = (Pin) item;
-      if (pin.get_component_no() > 0) {
-        return "Pin(" + hdlg.get_routing_board().components.get(pin.get_component_no()).name + ")";
+      if (pin.getComponentNo() > 0) {
+        return "Pin(" + hdlg.getRoutingBoard().components.get(pin.getComponentNo()).name + ")";
       }
       return "Pin";
     } else if (item instanceof Via) {
       return "Via";
     } else if (item instanceof PolylineTrace) {
-      return "Trace(ID:" + item.get_id_no() + ")";
+      return "Trace(ID:" + item.getIdNo() + ")";
     } else {
       return item.getClass().getSimpleName();
     }
   }
 
   private void appendNetInfo(StringBuilder info, Item item) {
-    if (item.net_count() > 0) {
+    if (item.netCount() > 0) {
       info.append(" | Net: ");
-      for (int i = 0; i < item.net_count(); i++) {
+      for (int i = 0; i < item.netCount(); i++) {
         if (i > 0) {
           info.append(", ");
         }
-        Net net = hdlg.get_routing_board().rules.nets.get(item.get_net_no(i));
+        Net net = hdlg.getRoutingBoard().rules.nets.get(item.getNetNo(i));
         info.append(net.name);
       }
     }
   }
 
   @Override
-  public void draw(java.awt.Graphics p_graphics) {
+  public void draw(java.awt.Graphics graphics) {
     // Draw the hovered clearance violation with highlight
-    if (last_hovered_violation != null && hdlg.graphics_context != null) {
-      Color violationColor = hdlg.graphics_context.get_violations_color();
-      double intensity = hdlg.graphics_context.get_layer_visibility(last_hovered_violation.layer);
+    if (lastHoveredViolation != null && hdlg.graphicsContext != null) {
+      Color violationColor = hdlg.graphicsContext.getViolationsColor();
+      double intensity = hdlg.graphicsContext.getLayerVisibility(lastHoveredViolation.layer);
 
       // Draw the violation area with increased brightness
-      hdlg.graphics_context.fill_area(last_hovered_violation.shape, p_graphics, violationColor, Math.min(1.0, intensity * 1.8));
+      hdlg.graphicsContext.fillArea(
+          lastHoveredViolation.shape, graphics, violationColor, Math.min(1.0, intensity * 1.8));
 
       // Draw a prominent circle around the violation
-      double draw_radius = hdlg.get_routing_board().rules.get_min_trace_half_width() * 8;
-      hdlg.graphics_context.draw_circle(last_hovered_violation.shape.centre_of_gravity(),
-                                        draw_radius,
-                                        0.15 * draw_radius,
-                                        violationColor,
-                                        p_graphics,
-                                        Math.min(1.0, intensity * 1.5));
+      double drawRadius = hdlg.getRoutingBoard().rules.getMinTraceHalfWidth() * 8;
+      hdlg.graphicsContext.drawCircle(
+          lastHoveredViolation.shape.centreOfGravity(),
+          drawRadius,
+          0.15 * drawRadius,
+          violationColor,
+          graphics,
+          Math.min(1.0, intensity * 1.5));
     }
 
     // Draw the hovered item with highlight
-    if (last_hovered_item != null && hdlg.graphics_context != null) {
-      Color[] highlight_colors = last_hovered_item.get_draw_colors(hdlg.graphics_context);
+    if (lastHoveredItem != null && hdlg.graphicsContext != null) {
+      Color[] highlightColors = lastHoveredItem.getDrawColors(hdlg.graphicsContext);
 
       // Increase intensity for highlight effect
-      double base_intensity = last_hovered_item.get_draw_intensity(hdlg.graphics_context);
-      double highlight_intensity = Math.min(1.0, base_intensity * 1.5);
+      double baseIntensity = lastHoveredItem.getDrawIntensity(hdlg.graphicsContext);
+      double highlightIntensity = Math.min(1.0, baseIntensity * 1.5);
 
       // Draw with increased brightness
-      last_hovered_item.draw(p_graphics, hdlg.graphics_context, highlight_colors, highlight_intensity);
+      lastHoveredItem.draw(graphics, hdlg.graphicsContext, highlightColors, highlightIntensity);
     }
   }
 
   @Override
-  public void display_default_message() {
-    if (last_hovered_item == null && last_hovered_violation == null) {
-      hdlg.screen_messages.set_status_message(tm.getText("in_inspect_menu"));
+  public void displayDefaultMessage() {
+    if (lastHoveredItem == null && lastHoveredViolation == null) {
+      hdlg.screenMessages.setStatusMessage(tm.getText("in_inspect_menu"));
     }
   }
 
   @Override
-  public String get_help_id() {
+  public String getHelpId() {
     return "MenuState_InspectMenuState";
   }
 
-  public Item get_last_hovered_item() {
-    return last_hovered_item;
+  /** Returns the item currently under the mouse pointer, if any. */
+  public Item getLastHoveredItem() {
+    return lastHoveredItem;
   }
 }

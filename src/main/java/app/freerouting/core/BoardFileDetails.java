@@ -15,42 +15,47 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.CRC32;
 
+/** Stores file data, metadata, and derived board statistics. */
 public class BoardFileDetails implements Serializable {
 
-  protected final transient List<BoardFileDetailsUpdatedEventListener> updatedEventListeners = new ArrayList<>();
+  protected final transient List<BoardFileDetailsUpdatedEventListener> updatedEventListeners =
+      new ArrayList<>();
+
   // The size of the file in bytes
   @SerializedName("size")
   public long size;
+
   // The CRC32 checksum of the data
   @SerializedName("crc32")
   public long crc32;
+
   // The format of the file
   @SerializedName("format")
   public FileFormat format = FileFormat.UNKNOWN;
+
   @SerializedName("statistics")
   public BoardStatistics statistics = new BoardStatistics();
+
   // The filename only without the path
   @SerializedName("filename")
   protected String filename = "";
+
   // The absolute path to the directory of the file
   @SerializedName("path")
   protected String directoryPath = "";
+
   protected transient byte[] dataBytes = new byte[0];
 
+  /** Creates empty file details. */
+  public BoardFileDetails() {}
 
-  public BoardFileDetails() {
-  }
-
-  /**
-   * Creates a new BoardDetails object from a file.
-   */
+  /** Creates a new BoardDetails object from a file. */
   public BoardFileDetails(File file) {
     this.setFilename(file.getAbsolutePath());
 
@@ -61,13 +66,12 @@ public class BoardFileDetails implements Serializable {
     }
   }
 
-  /**
-   * Creates a new BoardDetails object from a RoutingBoard object.
-   */
+  /** Creates a new BoardDetails object from a RoutingBoard object. */
   public BoardFileDetails(BasicBoard board) {
     this.statistics = new BoardStatistics(board);
   }
 
+  /** Calculates the CRC32 checksum of the supplied stream. */
   public static CRC32 calculateCrc32(InputStream inputStream) {
     CRC32 crc = new CRC32();
     try {
@@ -82,25 +86,22 @@ public class BoardFileDetails implements Serializable {
     return crc;
   }
 
-  /**
-   * Saves this object to a UTF-8 JSON file.
-   */
+  /** Saves this object to a UTF-8 JSON file. */
   public void saveAs(String filename) throws IOException {
-    try (Writer writer = Files.newBufferedWriter(Path.of(filename), StandardCharsets.UTF_8)) {
+    try (Writer writer = Files.newBufferedWriter(Path.of(filename))) {
       writer.write(this.toString());
     }
   }
 
   public String getAbsolutePath() {
-    return Path
-        .of(this.directoryPath, this.filename)
-        .toString();
+    return Path.of(this.directoryPath, this.filename).toString();
   }
 
   public ByteArrayInputStream getData() {
     return new ByteArrayInputStream(this.dataBytes);
   }
 
+  /** Replaces the file data and updates its metadata and statistics. */
   public void setData(byte[] data) {
     this.dataBytes = data;
     this.size = data.length;
@@ -117,26 +118,25 @@ public class BoardFileDetails implements Serializable {
     fireUpdatedEvent();
   }
 
-  /**
-   * Returns a JSON representation of this object.
-   */
+  /** Returns a JSON representation of this object. */
   public String toString() {
     return GsonProvider.GSON.toJson(this);
   }
 
+  /** Returns the file represented by these details, or {@code null} if no filename is set. */
   public File getFile() {
     if (!this.filename.isEmpty()) {
-      return new File(Path
-          .of(this.directoryPath, this.filename)
-          .toString());
+      return new File(Path.of(this.directoryPath, this.filename).toString());
     }
     return null;
   }
 
+  /** Returns the directory containing the file. */
   public String getDirectoryPath() {
     return this.directoryPath;
   }
 
+  /** Returns the filename without its directory. */
   public String getFilename() {
     return this.filename;
   }
@@ -153,15 +153,11 @@ public class BoardFileDetails implements Serializable {
       return;
     }
 
-    var path = Path
-        .of(filename)
-        .toAbsolutePath();
+    var path = Path.of(filename).toAbsolutePath();
 
     if (filename.contains(File.separator)) {
       // separate the filename into its absolute path and its filename only
-      this.directoryPath = path
-          .getParent()
-          .toString();
+      this.directoryPath = path.getParent().toString();
       // replace the redundant "\.\" with a simple "\"
       this.directoryPath = this.directoryPath.replace("\\.\\", "\\");
       // remove the "/", "\" from the end of the directory path
@@ -173,9 +169,7 @@ public class BoardFileDetails implements Serializable {
     }
 
     // set the filename only
-    this.filename = path
-        .getFileName()
-        .toString();
+    this.filename = path.getFileName().toString();
 
     if (this.format == FileFormat.UNKNOWN) {
       // try to read the file contents to determine the file format
@@ -213,6 +207,7 @@ public class BoardFileDetails implements Serializable {
     fireUpdatedEvent();
   }
 
+  /** Returns the filename without its final extension. */
   public String getFilenameWithoutExtension() {
     if (this.filename.contains(".")) {
       return this.filename.substring(0, this.filename.lastIndexOf('.'));
@@ -220,16 +215,16 @@ public class BoardFileDetails implements Serializable {
     return this.filename;
   }
 
+  /** Registers a listener for changes to these details. */
   public void addUpdatedEventListener(BoardFileDetailsUpdatedEventListener listener) {
     updatedEventListeners.add(listener);
   }
 
+  /** Notifies all registered listeners of an update. */
   public void fireUpdatedEvent() {
     BoardFileDetailsUpdatedEvent event = new BoardFileDetailsUpdatedEvent(this, this);
     for (BoardFileDetailsUpdatedEventListener listener : updatedEventListeners) {
       listener.onBoardFileDetailsUpdated(event);
     }
   }
-
 }
-

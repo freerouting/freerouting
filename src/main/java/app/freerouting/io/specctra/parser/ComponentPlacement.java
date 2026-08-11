@@ -4,83 +4,89 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 
-/**
- * Describes the placement data of a library component
- */
+/** Describes placement data for a library component. */
+@SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
 public class ComponentPlacement {
 
-  /**
-   * The name of the corresponding library component
-   */
-  public final String lib_name;
-  /**
-   * The list of ComponentLocations of the library component on the board.
-   */
+  /** The name of the corresponding library component. */
+  public final String libName;
+
+  /** The list of ComponentLocations of the library component on the board. */
   public final Collection<ComponentLocation> locations;
 
-  /**
-   * Creates a new instance of ComponentPlacement
-   */
-  public ComponentPlacement(String p_lib_name) {
-    lib_name = p_lib_name;
+  /** Creates a new instance of ComponentPlacement. */
+  public ComponentPlacement(String libName) {
+    this.libName = libName;
     locations = new LinkedList<>();
   }
 
-  /**
-   * The structure of an entry in the list locations.
-   */
+  /** The structure of an entry in the list locations. */
   public static class ComponentLocation {
 
     public final String name;
-    /**
-     * the x- and the y-coordinate of the location.
-     */
+
+    /** The x- and y-coordinates of the location. */
     public final double[] coor;
+
     /**
-     * True, if the component is placed at the component side. Else the component is placed at the solder side.
+     * True, if the component is placed at the component side. Else the component is placed at the
+     * solder side.
      */
-    public final boolean is_front;
-    /**
-     * The rotation of the component in degree.
-     */
+    public final boolean isFront;
+
+    /** The rotation of the component in degree. */
     public final double rotation;
-    /**
-     * If true, the component cannot be moved.
-     */
-    public final boolean position_fixed;
-    /**
-     * The entries of this map are of type ItemClearanceInfo, the keys are the pin names.
-     */
+
+    /** If true, the component cannot be moved. */
+    public final boolean positionFixed;
+
+    /** The entries of this map are of type ItemClearanceInfo, the keys are the pin names. */
+    @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
     public final Map<String, ItemClearanceInfo> pin_infos;
+
+    @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
     public final Map<String, ItemClearanceInfo> keepout_infos;
+
+    @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
     public final Map<String, ItemClearanceInfo> via_keepout_infos;
+
+    @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
     public final Map<String, ItemClearanceInfo> place_keepout_infos;
 
-    public final String part_number;
+    public final String partNumber;
 
-    ComponentLocation(String p_name, double[] p_coor, boolean p_is_front, double p_rotation, boolean p_position_fixed, Map<String, ItemClearanceInfo> p_pin_infos,
-        Map<String, ItemClearanceInfo> p_keepout_infos, Map<String, ItemClearanceInfo> p_via_keepout_infos, Map<String, ItemClearanceInfo> p_place_keepout_infos, String p_part_number) {
-      name = p_name;
-      coor = p_coor;
-      is_front = p_is_front;
-      rotation = p_rotation;
-      position_fixed = p_position_fixed;
-      pin_infos = p_pin_infos;
-      keepout_infos = p_keepout_infos;
-      via_keepout_infos = p_via_keepout_infos;
-      place_keepout_infos = p_place_keepout_infos;
-      part_number = p_part_number;
+    ComponentLocation(
+        String name,
+        double[] coor,
+        boolean isFront,
+        double rotation,
+        boolean positionFixed,
+        Map<String, ItemClearanceInfo> pinInfos,
+        Map<String, ItemClearanceInfo> keepoutInfos,
+        Map<String, ItemClearanceInfo> viaKeepoutInfos,
+        Map<String, ItemClearanceInfo> placeKeepoutInfos,
+        String partNumber) {
+      this.name = name;
+      this.coor = coor;
+      this.isFront = isFront;
+      this.rotation = rotation;
+      this.positionFixed = positionFixed;
+      pin_infos = pinInfos;
+      keepout_infos = keepoutInfos;
+      via_keepout_infos = viaKeepoutInfos;
+      place_keepout_infos = placeKeepoutInfos;
+      this.partNumber = partNumber;
     }
   }
 
   public static class ItemClearanceInfo {
 
     public final String name;
-    public final String clearance_class;
+    public final String clearanceClass;
 
-    ItemClearanceInfo(String p_name, String p_clearance_class) {
-      name = p_name;
-      clearance_class = p_clearance_class;
+    ItemClearanceInfo(String name, String clearanceClass) {
+      this.name = name;
+      this.clearanceClass = clearanceClass;
     }
   }
 }

@@ -3,9 +3,7 @@ package app.freerouting.core.scoring;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
-/**
- * Statistics of the clearance violations of a board.
- */
+/** Statistics of the clearance violations of a board. */
 public class BoardStatisticsClearanceViolations implements Serializable {
 
   @SerializedName("total_count")

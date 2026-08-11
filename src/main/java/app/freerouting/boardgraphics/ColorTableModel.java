@@ -6,22 +6,22 @@ import java.io.ObjectOutputStream;
 import java.util.Locale;
 import javax.swing.table.AbstractTableModel;
 
-/**
- * Abstract class to store colors used for drawing the board.
- */
+/** Abstract class to store colors used for drawing the board. */
 public abstract class ColorTableModel extends AbstractTableModel {
 
   protected final Object[][] data;
   protected final Locale locale;
 
-  protected ColorTableModel(int p_row_count, Locale p_locale) {
-    this.data = new Object[p_row_count][];
-    this.locale = p_locale;
+  /** ColorTableModel. */
+  protected ColorTableModel(int rowCount, Locale locale) {
+    this.data = new Object[rowCount][];
+    this.locale = locale;
   }
 
-  protected ColorTableModel(ObjectInputStream p_stream) throws IOException, ClassNotFoundException {
-    this.data = (Object[][]) p_stream.readObject();
-    this.locale = (Locale) p_stream.readObject();
+  /** ColorTableModel. */
+  protected ColorTableModel(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    this.data = (Object[][]) stream.readObject();
+    this.locale = (Locale) stream.readObject();
   }
 
   @Override
@@ -30,27 +30,29 @@ public abstract class ColorTableModel extends AbstractTableModel {
   }
 
   @Override
-  public Object getValueAt(int p_row, int p_col) {
-    return data[p_row][p_col];
+  public Object getValueAt(int row, int col) {
+    return data[row][col];
   }
 
   @Override
-  public void setValueAt(Object p_value, int p_row, int p_col) {
-    data[p_row][p_col] = p_value;
-    fireTableCellUpdated(p_row, p_col);
+  public void setValueAt(Object value, int row, int col) {
+    data[row][col] = value;
+    fireTableCellUpdated(row, col);
   }
 
   /**
-   * JTable uses this method to determine the default renderer/ editor for each cell. If we didn't implement this method, then the last column would contain text ("true"/"false"), rather than a check
-   * box.
+   * JTable uses this method to determine the default renderer/ editor for each cell. If we didn't
+   * implement this method, then the last column would contain text ("true"/"false"), rather than a
+   * check box.
    */
   @Override
-  public Class<?> getColumnClass(int p_c) {
-    return getValueAt(0, p_c).getClass();
+  public Class<?> getColumnClass(int c) {
+    return getValueAt(0, c).getClass();
   }
 
-  protected void write_object(ObjectOutputStream p_stream) throws IOException {
-    p_stream.writeObject(this.data);
-    p_stream.writeObject(this.locale);
+  /** WriteObject. */
+  protected void writeObject(ObjectOutputStream stream) throws IOException {
+    stream.writeObject(this.data);
+    stream.writeObject(this.locale);
   }
 }

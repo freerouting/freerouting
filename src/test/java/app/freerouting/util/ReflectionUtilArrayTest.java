@@ -6,14 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.settings.LayerSettings;
 import app.freerouting.settings.RouterSettings;
 import org.junit.jupiter.api.Test;
 
 class ReflectionUtilArrayTest {
 
   @Test
-  void testSetSimpleProperty() throws Exception {
+  void setSimpleProperty() throws Exception {
     RouterSettings settings = new RouterSettings();
     ReflectionUtil.setFieldValue(settings, "enabled", "false");
     assertFalse(settings.enabled);
@@ -23,7 +22,7 @@ class ReflectionUtilArrayTest {
   }
 
   @Test
-  void testSetNestedArrayPropertiesWhenNull() throws Exception {
+  void setNestedArrayPropertiesWhenNull() throws Exception {
     RouterSettings settings = new RouterSettings();
     // settings.layers is initially null
     ReflectionUtil.setFieldValue(settings, "layers.routable", "false,true");
@@ -35,7 +34,7 @@ class ReflectionUtilArrayTest {
   }
 
   @Test
-  void testSetNestedArrayPropertiesWhenInitialized() throws Exception {
+  void setNestedArrayPropertiesWhenInitialized() throws Exception {
     RouterSettings settings = new RouterSettings();
     settings.setLayerCount(2);
 
@@ -50,7 +49,7 @@ class ReflectionUtilArrayTest {
   }
 
   @Test
-  void testSerializedNameOnlyMatching() {
+  void serializedNameOnlyMatching() {
     RouterSettings settings = new RouterSettings();
     settings.setLayerCount(2);
 
@@ -63,10 +62,13 @@ class ReflectionUtilArrayTest {
     }
 
     // Should throw NoSuchFieldException because the Java field name is preferredDirectionHorizontal
-    // but the SerializedName annotation value is preferred_direction_horizontal, so only the annotation value must match.
-    assertThrows(NoSuchFieldException.class, () -> {
-      ReflectionUtil.setFieldValue(settings, "layers.preferredDirectionHorizontal", "true,false");
-    });
+    // but the SerializedName annotation value is preferred_direction_horizontal, so only the
+    // annotation value must match.
+    assertThrows(
+        NoSuchFieldException.class,
+        () ->
+            ReflectionUtil.setFieldValue(
+                settings, "layers.preferredDirectionHorizontal", "true,false"));
 
     // Similarly for routable - it matches because the SerializedName is "routable"
     try {
@@ -77,4 +79,3 @@ class ReflectionUtilArrayTest {
     }
   }
 }
-

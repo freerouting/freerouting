@@ -1,0 +1,3 @@
+# Valid Java identifiers that codespell misinterprets as English words.
+[codespell]
+ignore-words-list = currenty,ontext

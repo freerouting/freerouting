@@ -1,9 +1,7 @@
 {
   "horizontal_component_grid": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowMoveParameter"
-    ],
+    "code_references": [],
     "english_hash": "46770fb835efa616cedbba26236141a2c44c104a8ddff3e77ee4b20f61e93625",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -49,9 +47,7 @@
   },
   "vertical_component_grid": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowMoveParameter"
-    ],
+    "code_references": [],
     "english_hash": "7e76daaf4af052cc0dda13b6a0897b76bc35ecdbda0760252e92ef86f9f80969",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

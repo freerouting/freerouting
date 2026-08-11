@@ -6,29 +6,23 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
-/**
- * Handles the indenting of scopes while writing to an output text file.
- */
+/** Handles the indenting of scopes while writing to an output text file. */
 public class IndentFileWriter extends OutputStreamWriter {
 
   private static final String INDENT_STRING = "  ";
   private static final String BEGIN_SCOPE = "(";
   private static final String END_SCOPE = ")";
-  private int current_indent_level;
+  private int currentIndentLevel;
 
-  /**
-   * Creates a new instance of IndentFileWriter
-   */
-  public IndentFileWriter(OutputStream p_stream) {
-    super(p_stream, StandardCharsets.UTF_8);
+  /** Creates a new instance of IndentFileWriter. */
+  public IndentFileWriter(OutputStream stream) {
+    super(stream, StandardCharsets.UTF_8);
   }
 
-  /**
-   * Begins a new scope.
-   */
-  public void start_scope(boolean newLine) {
+  /** Begins a new scope. */
+  public void startScope(boolean newLine) {
     if (newLine) {
-      new_line();
+      newLine();
     }
 
     try {
@@ -36,19 +30,18 @@ public class IndentFileWriter extends OutputStreamWriter {
     } catch (IOException e) {
       FRLogger.error("IndentFileWriter.start_scope: unable to write to file", e);
     }
-    ++current_indent_level;
+    ++currentIndentLevel;
   }
 
-  public void start_scope() {
-    start_scope(true);
+  /** Begins a new scope on a new line. */
+  public void startScope() {
+    startScope(true);
   }
 
-  /**
-   * Closes the latest open scope.
-   */
-  public void end_scope() {
-    --current_indent_level;
-    new_line();
+  /** Closes the latest open scope. */
+  public void endScope() {
+    --currentIndentLevel;
+    newLine();
     try {
       write(END_SCOPE);
     } catch (IOException e) {
@@ -56,17 +49,15 @@ public class IndentFileWriter extends OutputStreamWriter {
     }
   }
 
-  /**
-   * Starts a new line inside a scope.
-   */
-  public void new_line() {
+  /** Starts a new line inside a scope. */
+  public void newLine() {
     try {
       write("\n");
-      for (int i = 0; i < current_indent_level; i++) {
+      for (int i = 0; i < currentIndentLevel; i++) {
         write(INDENT_STRING);
       }
     } catch (IOException e) {
-      FRLogger.error("IndentFileWriter.new_line: unable to write to file", e);
+      FRLogger.error("IndentFileWriter.newLine: unable to write to file", e);
     }
   }
 }

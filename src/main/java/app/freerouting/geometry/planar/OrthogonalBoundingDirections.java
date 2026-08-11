@@ -1,20 +1,16 @@
 package app.freerouting.geometry.planar;
 
 /**
- * Implements the abstract class ShapeDirections as the 4 orthogonal directions. The class is a singleton with the only instantiation INSTANCE.
+ * Implements the abstract class ShapeDirections as the 4 orthogonal directions. The class is a
+ * singleton with the only instantiation INSTANCE.
  */
-public class OrthogonalBoundingDirections implements ShapeBoundingDirections {
+public final class OrthogonalBoundingDirections implements ShapeBoundingDirections {
 
-  /**
-   * the one and only instantiation
-   */
+  /** The one and only instantiation. */
   public static final OrthogonalBoundingDirections INSTANCE = new OrthogonalBoundingDirections();
 
-  /**
-   * prevent instantiation
-   */
-  private OrthogonalBoundingDirections() {
-  }
+  /** Prevent instantiation. */
+  private OrthogonalBoundingDirections() {}
 
   @Override
   public int count() {
@@ -22,32 +18,32 @@ public class OrthogonalBoundingDirections implements ShapeBoundingDirections {
   }
 
   @Override
-  public RegularTileShape bounds(ConvexShape p_shape) {
-    return p_shape.bounding_shape(this);
+  public RegularTileShape bounds(ConvexShape shape) {
+    return shape.boundingShape(this);
   }
 
   @Override
-  public RegularTileShape bounds(IntBox p_box) {
-    return p_box;
+  public RegularTileShape bounds(IntBox box) {
+    return box;
   }
 
   @Override
-  public RegularTileShape bounds(IntOctagon p_oct) {
-    return p_oct.bounding_box();
+  public RegularTileShape bounds(IntOctagon oct) {
+    return oct.boundingBox();
   }
 
   @Override
-  public RegularTileShape bounds(Simplex p_simplex) {
-    return p_simplex.bounding_box();
+  public RegularTileShape bounds(Simplex simplex) {
+    return simplex.boundingBox();
   }
 
   @Override
-  public RegularTileShape bounds(Circle p_circle) {
-    return p_circle.bounding_box();
+  public RegularTileShape bounds(Circle circle) {
+    return circle.boundingBox();
   }
 
   @Override
-  public RegularTileShape bounds(PolygonShape p_polygon) {
-    return p_polygon.bounding_box();
+  public RegularTileShape bounds(PolygonShape polygon) {
+    return polygon.boundingBox();
   }
 }

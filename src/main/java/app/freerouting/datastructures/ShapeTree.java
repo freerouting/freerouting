@@ -7,246 +7,227 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 
 /**
- * Abstract binary search tree for shapes in the plane. The shapes are stored in the leafs of the tree. Objects to be stored in the tree must implement the interface ShapeTree.Storable.
+ * Abstract binary search tree for shapes in the plane. The shapes are stored in the leafs of the
+ * tree. Objects to be stored in the tree must implement the interface ShapeTree.Storable.
  */
 public abstract class ShapeTree {
 
-  /**
-   * the fixed directions for calculating bounding RegularTileShapes of shapes to store in this tree.
-   */
-  protected final ShapeBoundingDirections bounding_directions;
-  /**
-   * Root node - initially null
-   */
-  protected TreeNode root;
-  /**
-   * The number of entries stored in the tree
-   */
-  protected int leaf_count;
+  /** Fixed directions for calculating bounding regular tile shapes stored in this tree. */
+  protected final ShapeBoundingDirections boundingDirections;
 
-  /**
-   * Creates a new instance of ShapeTree
-   */
-  public ShapeTree(ShapeBoundingDirections p_directions) {
-    bounding_directions = p_directions;
+  /** Root node - initially null. */
+  protected TreeNode root;
+
+  /** The number of entries stored in the tree. */
+  protected int leafCount;
+
+  /** Creates a new instance of ShapeTree. */
+  protected ShapeTree(ShapeBoundingDirections directions) {
+    boundingDirections = directions;
     root = null;
-    leaf_count = 0;
+    leafCount = 0;
   }
 
-  /**
-   * Inserts all shapes of p_obj into the tree
-   */
-  public void insert(ShapeTree.Storable p_obj) {
-    int shape_count = p_obj.tree_shape_count(this);
-    if (shape_count <= 0) {
+  /** Inserts all shapes of obj into the tree. */
+  public void insert(ShapeTree.Storable obj) {
+    int shapeCount = obj.treeShapeCount(this);
+    if (shapeCount <= 0) {
       return;
     }
-    Leaf[] leaf_arr = new Leaf[shape_count];
-    for (int i = 0; i < shape_count; i++) {
-      leaf_arr[i] = insert(p_obj, i);
+    Leaf[] leafArr = new Leaf[shapeCount];
+    for (int i = 0; i < shapeCount; i++) {
+      leafArr[i] = insert(obj, i);
     }
-    p_obj.set_search_tree_entries(leaf_arr, this);
+    obj.setSearchTreeEntries(leafArr, this);
   }
 
-  /**
-   * Insert a shape - creates a new node with a bounding shape
-   */
-  protected Leaf insert(ShapeTree.Storable p_object, int p_index) {
-    Shape object_shape = p_object.get_tree_shape(this, p_index);
-    if (object_shape == null) {
+  /** Insert a shape - creates a new node with a bounding shape. */
+  protected Leaf insert(ShapeTree.Storable object, int index) {
+    Shape objectShape = object.getTreeShape(this, index);
+    if (objectShape == null) {
       return null;
     }
 
-    RegularTileShape bounding_shape = object_shape.bounding_shape(bounding_directions);
-    if (bounding_shape == null) {
+    RegularTileShape boundingShape = objectShape.boundingShape(boundingDirections);
+    if (boundingShape == null) {
       FRLogger.warn("ShapeTree.insert: bounding shape of TreeObject is null");
       return null;
     }
     // Construct a new KdLeaf and set it up
-    Leaf new_leaf = new Leaf(p_object, p_index, null, bounding_shape);
-    this.insert(new_leaf);
-    return new_leaf;
+    Leaf newLeaf = new Leaf(object, index, null, boundingShape);
+    this.insert(newLeaf);
+    return newLeaf;
   }
 
-  /**
-   * Inserts the leaves of this tree into an array.
-   */
-  public Leaf[] to_array() {
-    Leaf[] result = new Leaf[this.leaf_count];
+  abstract void insert(Leaf leaf);
+
+  abstract void removeLeaf(Leaf leaf);
+
+  /** Inserts the leaves of this tree into an array. */
+  public Leaf[] toArray() {
+    Leaf[] result = new Leaf[this.leafCount];
     if (result.length == 0) {
       return result;
     }
-    TreeNode curr_node = this.root;
-    int curr_index = 0;
+    TreeNode currNode = this.root;
+    int currIndex = 0;
     for (; ; ) {
-      // go down from curr_node to the left most leaf
-      while (curr_node instanceof InnerNode) {
-        curr_node = ((InnerNode) curr_node).first_child;
+      // go down from currNode to the left most leaf
+      while (currNode instanceof InnerNode) {
+        currNode = ((InnerNode) currNode).firstChild;
       }
-      result[curr_index] = (Leaf) curr_node;
+      result[currIndex] = (Leaf) currNode;
 
-      ++curr_index;
-      // go up until parent.second_child != curr_node, which means we came from first_child
-      InnerNode curr_parent = curr_node.parent;
-      while (curr_parent != null && curr_parent.second_child == curr_node) {
-        curr_node = curr_parent;
-        curr_parent = curr_node.parent;
+      ++currIndex;
+      // go up until parent.secondChild != currNode, which means we came from firstChild
+      InnerNode currParent = currNode.parent;
+      while (currParent != null && currParent.secondChild == currNode) {
+        currNode = currParent;
+        currParent = currNode.parent;
       }
-      if (curr_parent == null) {
+      if (currParent == null) {
         break;
       }
-      curr_node = curr_parent.second_child;
+      currNode = currParent.secondChild;
     }
     return result;
   }
 
-  abstract void insert(Leaf p_leaf);
-
-  abstract void remove_leaf(Leaf p_leaf);
-
-  /**
-   * removes all entries of p_obj in the tree.
-   */
-  public void remove(Leaf[] p_entries) {
-    if (p_entries == null) {
+  /** Removes all entries of obj in the tree. */
+  public void remove(Leaf[] entries) {
+    if (entries == null) {
       return;
     }
-    for (int i = 0; i < p_entries.length; i++) {
-      remove_leaf(p_entries[i]);
+    for (int i = 0; i < entries.length; i++) {
+      removeLeaf(entries[i]);
     }
   }
 
-  /**
-   * Returns the number of entries stored in the tree.
-   */
+  /** Returns the number of entries stored in the tree. */
   public int size() {
-    return leaf_count;
+    return leafCount;
   }
 
-  /**
-   * Outputs some statistic information about the tree.
-   */
-  public void statistics(String p_message) {
-    Leaf[] leaf_arr = this.to_array();
-    double cumulative_depth = 0;
-    int maximum_depth = 0;
-    for (int i = 0; i < leaf_arr.length; i++) {
-      if (leaf_arr[i] != null) {
-        int distance_to_root = leaf_arr[i].distance_to_root();
-        cumulative_depth += distance_to_root;
-        maximum_depth = Math.max(maximum_depth, distance_to_root);
+  /** Outputs some statistic information about the tree. */
+  public void statistics(String message) {
+    Leaf[] leafArr = this.toArray();
+    double cumulativeDepth = 0;
+    int maximumDepth = 0;
+    for (int i = 0; i < leafArr.length; i++) {
+      if (leafArr[i] != null) {
+        int distanceToRoot = leafArr[i].distanceToRoot();
+        cumulativeDepth += distanceToRoot;
+        maximumDepth = Math.max(maximumDepth, distanceToRoot);
       }
     }
-    double average_depth = cumulative_depth / leaf_arr.length;
+    double averageDepth = cumulativeDepth / leafArr.length;
     FRLogger.info(
-        "MinAreaTree: Entry count: " + leaf_arr.length + " log: " + Math.round(Math.log(leaf_arr.length)) + " Average depth: " + Math.round(average_depth) + " " + " Maximum depth: " + maximum_depth
-            + " " + p_message);
+        "MinAreaTree: Entry count: "
+            + leafArr.length
+            + " log: "
+            + Math.round(Math.log(leafArr.length))
+            + " Average depth: "
+            + Math.round(averageDepth)
+            + " "
+            + " Maximum depth: "
+            + maximumDepth
+            + " "
+            + message);
   }
 
-  /**
-   * Interface, which must be implemented by objects to be stored in a ShapeTree.
-   */
+  /** Interface, which must be implemented by objects to be stored in a ShapeTree. */
   public interface Storable extends Comparable<Object> {
 
-    /**
-     * Number of shapes of an object to store in p_shape_tree
-     */
-    int tree_shape_count(ShapeTree p_shape_tree);
+    /** Number of shapes of an object to store in shapeTree. */
+    int treeShapeCount(ShapeTree shapeTree);
 
     /**
-     * Get the Shape of this object with index p_index stored in the ShapeTree with index identification number p_tree_id_no
+     * Get the Shape of this object with index stored in the ShapeTree with index identification
+     * number treeIdNo.
      */
-    TileShape get_tree_shape(ShapeTree p_tree, int p_index);
+    TileShape getTreeShape(ShapeTree tree, int index);
 
     /**
-     * Stores the entries in the ShapeTrees of this object for better performance while for example deleting tree entries. Called only by insert methods of class ShapeTree.
+     * Stores the entries in the ShapeTrees of this object for better performance while for example
+     * deleting tree entries. Called only by insert methods of class ShapeTree.
      */
-    void set_search_tree_entries(Leaf[] p_entries, ShapeTree p_tree);
+    void setSearchTreeEntries(Leaf[] entries, ShapeTree tree);
   }
 
-  /**
-   * Information of a single object stored in a tree
-   */
+  /** Information of a single object stored in a tree. */
   public static class TreeEntry {
 
     public final ShapeTree.Storable object;
-    public final int shape_index_in_object;
+    public final int shapeIndexInObject;
 
-    public TreeEntry(ShapeTree.Storable p_object, int p_shape_index_in_object) {
-      object = p_object;
-      shape_index_in_object = p_shape_index_in_object;
+    /** Creates a tree entry for object and shapeIndexInObject. */
+    public TreeEntry(ShapeTree.Storable object, int shapeIndexInObject) {
+      this.object = object;
+      this.shapeIndexInObject = shapeIndexInObject;
     }
   }
 
   //////////////////////////////////////////////////////////
 
-  /**
-   * Common functionality of inner nodes and leaf nodes.
-   */
+  /** Common functionality of inner nodes and leaf nodes. */
   protected static class TreeNode {
 
-    public RegularTileShape bounding_shape;
+    public RegularTileShape boundingShape;
     InnerNode parent;
   }
 
   //////////////////////////////////////////////////////////
 
-  /**
-   * Description of an inner node of the tree, which implements a fork to its two children.
-   */
+  /** Description of an inner node of the tree, which implements a fork to its two children. */
   public static class InnerNode extends TreeNode {
 
-    public TreeNode first_child;
-    public TreeNode second_child;
+    public TreeNode firstChild;
+    public TreeNode secondChild;
 
-    public InnerNode(RegularTileShape p_bounding_shape, InnerNode p_parent) {
-      bounding_shape = p_bounding_shape;
-      parent = p_parent;
-      first_child = null;
-      second_child = null;
+    /** Creates an inner node with boundingShape and parent. */
+    public InnerNode(RegularTileShape boundingShape, InnerNode parent) {
+      this.boundingShape = boundingShape;
+      this.parent = parent;
+      firstChild = null;
+      secondChild = null;
     }
   }
 
   //////////////////////////////////////////////////////////
 
-  /**
-   * Description of a leaf of the Tree, where the geometric information is stored.
-   */
+  /** Description of a leaf of the Tree, where the geometric information is stored. */
   public static class Leaf extends TreeNode implements Comparable<Leaf> {
 
-    /**
-     * Actual object stored
-     */
+    /** Actual object stored. */
     public ShapeTree.Storable object;
-    /**
-     * index of the shape in the object
-     */
-    public int shape_index_in_object;
 
-    public Leaf(ShapeTree.Storable p_object, int p_index, InnerNode p_parent, RegularTileShape p_bounding_shape) {
-      bounding_shape = p_bounding_shape;
-      parent = p_parent;
-      object = p_object;
-      shape_index_in_object = p_index;
+    /** Index of the shape in the object. */
+    public int shapeIndexInObject;
+
+    /** Creates a leaf node for object at index with parent and boundingShape. */
+    public Leaf(
+        ShapeTree.Storable object, int index, InnerNode parent, RegularTileShape boundingShape) {
+      this.boundingShape = boundingShape;
+      this.parent = parent;
+      this.object = object;
+      this.shapeIndexInObject = index;
     }
 
     @Override
-    public int compareTo(Leaf p_other) {
-      int result = this.object.compareTo(p_other.object);
+    public int compareTo(Leaf other) {
+      int result = this.object.compareTo(other.object);
       if (result == 0) {
-        result = shape_index_in_object - p_other.shape_index_in_object;
+        result = shapeIndexInObject - other.shapeIndexInObject;
       }
       return result;
     }
 
-    /**
-     * Returns the number of nodes between this leaf and the croot of the tree.
-     */
-    public int distance_to_root() {
+    /** Returns the number of nodes between this leaf and the croot of the tree. */
+    public int distanceToRoot() {
       int result = 1;
-      InnerNode curr_parent = this.parent;
-      while (curr_parent.parent != null) {
-        curr_parent = curr_parent.parent;
+      InnerNode currParent = this.parent;
+      while (currParent.parent != null) {
+        currParent = currParent.parent;
         ++result;
       }
       return result;

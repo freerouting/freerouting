@@ -1,16 +1,18 @@
 package app.freerouting.io.specctra;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+
 import app.freerouting.Freerouting;
 import app.freerouting.io.BoardMetadata;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.settings.GlobalSettings;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.io.InputStream;
 import java.time.Duration;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class DsnReaderMetadataTest {
 
@@ -40,7 +42,8 @@ class DsnReaderMetadataTest {
 
   @Test
   void readMetadataCompletesWithinReasonableTimeOnLargeDsn() {
-    assertTimeoutPreemptively(Duration.ofSeconds(5),
+    assertTimeoutPreemptively(
+        Duration.ofSeconds(5),
         () -> DsnReader.readMetadata(DsnTestFixtures.openResource("Issue187-processor.Z80.dsn")));
   }
 

@@ -8,99 +8,124 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Class implementing functionality when the mouse is dragged on a routing board
- */
+/** Class implementing functionality when the mouse is dragged on a routing board. */
 public abstract class DragState extends InteractiveState {
 
-  protected FloatPoint previous_location;
-  protected boolean something_dragged;
-  protected boolean observers_activated;
+  protected FloatPoint previousLocation;
+  protected boolean somethingDragged;
+  protected boolean observersActivated;
 
-  /**
-   * Creates a new instance of DragState
-   */
-  protected DragState(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
-    previous_location = p_location;
+  /** Creates a new instance of DragState. */
+  protected DragState(
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
+    previousLocation = location;
   }
 
   /**
-   * Returns a new instance of this state, if an item to drag was found at the
-   * input location; null otherwise.
+   * Returns a new instance of this state, if an item to drag was found at the input location; null
+   * otherwise.
    */
-  public static DragState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
-    p_board_handling.display_layer_message();
-    Item item_to_move = null;
-    int try_count = 1;
-    if (p_board_handling.getInteractiveSettings().get_select_on_all_visible_layers()) {
-      try_count += p_board_handling.get_layer_count();
-    }
-    int curr_layer = p_board_handling.getInteractiveSettings().get_layer();
-    int pick_layer = curr_layer;
-    boolean item_found = false;
-
-    for (int i = 0; i < try_count; i++) {
-      if (i == 0
-          || pick_layer != curr_layer && (p_board_handling.graphics_context.get_layer_visibility(pick_layer)) > 0) {
-        Collection<Item> found_items = p_board_handling.get_routing_board().pick_items(p_location.round(), pick_layer,
-            p_board_handling.getInteractiveSettings().get_item_selection_filter());
-        for (Item curr_item : found_items) {
-          item_found = true;
-          if (curr_item instanceof Trace) {
-            continue; // traces are not moved
-          }
-          if (!p_board_handling.getInteractiveSettings().get_drag_components_enabled() && curr_item.get_component_no() != 0) {
-            continue;
-          }
-          item_to_move = curr_item;
-          if (curr_item instanceof DrillItem) {
-            break; // drill items are preferred
-          }
-        }
-        if (item_to_move != null) {
-          break;
-        }
-      }
-      // nothing found on settings.layer, try all visible layers
-      pick_layer = i;
-    }
+  public static DragState getInstance(
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    boardHandling.displayLayerMessage();
+    DragCandidate candidate = findItemToMove(location, boardHandling);
+    Item itemToMove = candidate.item();
+    boolean itemFound = candidate.itemFound();
     DragState result;
-    if (item_to_move != null) {
-      result = new DragItemState(item_to_move, p_location, p_parent_state, p_board_handling);
-    } else if (!item_found) {
-      result = new MakeSpaceState(p_location, p_parent_state, p_board_handling);
+    if (itemToMove != null) {
+      result = new DragItemState(itemToMove, location, parentState, boardHandling);
+    } else if (!itemFound) {
+      result = new MakeSpaceState(location, parentState, boardHandling);
     } else {
       result = null;
     }
     if (result != null) {
-      p_board_handling.hide_ratsnest();
+      boardHandling.hideRatsnest();
     }
     return result;
   }
 
-  public abstract InteractiveState move_to(FloatPoint p_to_location);
+  private static DragCandidate findItemToMove(FloatPoint location, GuiBoardManager boardHandling) {
+    int tryCount = 1;
+    if (boardHandling.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
+      tryCount += boardHandling.getLayerCount();
+    }
+    int currLayer = boardHandling.getInteractiveSettings().getLayer();
+    int pickLayer = currLayer;
+    boolean itemFound = false;
 
-  @Override
-  public InteractiveState mouse_dragged(FloatPoint p_point) {
-    InteractiveState result = this.move_to(p_point);
-    if (result != this) {
-      // an error occurred
-      Set<Integer> changed_nets = new TreeSet<>();
-      hdlg.get_routing_board().undo(changed_nets);
-      for (Integer changed_net : changed_nets) {
-        hdlg.update_ratsnest(changed_net);
+    for (int i = 0; i < tryCount; i++) {
+      if (i == 0
+          || pickLayer != currLayer
+              && (boardHandling.graphicsContext.getLayerVisibility(pickLayer)) > 0) {
+        Collection<Item> foundItems =
+            boardHandling
+                .getRoutingBoard()
+                .pickItems(
+                    location.round(),
+                    pickLayer,
+                    boardHandling.getInteractiveSettings().getItemSelectionFilter());
+        DragCandidate candidate = selectItemToMove(foundItems, boardHandling);
+        itemFound |= candidate.itemFound();
+        if (candidate.item() != null) {
+          return new DragCandidate(candidate.item(), itemFound);
+        }
+      }
+      // Nothing found on the settings layer; try all visible layers.
+      pickLayer = i;
+    }
+    return new DragCandidate(null, itemFound);
+  }
+
+  private static DragCandidate selectItemToMove(
+      Collection<Item> foundItems, GuiBoardManager boardHandling) {
+    Item itemToMove = null;
+    boolean itemFound = false;
+    for (Item currItem : foundItems) {
+      itemFound = true;
+      if (currItem instanceof Trace) {
+        continue; // traces are not moved
+      }
+      if (!boardHandling.getInteractiveSettings().getDragComponentsEnabled()
+          && currItem.getComponentNo() != 0) {
+        continue;
+      }
+      itemToMove = currItem;
+      if (currItem instanceof DrillItem) {
+        break; // drill items are preferred
       }
     }
-    if (this.something_dragged) {
+    return new DragCandidate(itemToMove, itemFound);
+  }
+
+  private record DragCandidate(Item item, boolean itemFound) {}
+
+  /**
+   * Moves the state-managed item or route to the given location.
+   *
+   * @param toLocation the destination location
+   * @return the resulting interaction state
+   */
+  public abstract InteractiveState moveTo(FloatPoint toLocation);
+
+  @Override
+  public InteractiveState mouseDragged(FloatPoint point) {
+    InteractiveState result = this.moveTo(point);
+    if (result != this) {
+      // an error occurred
+      Set<Integer> changedNets = new TreeSet<>();
+      hdlg.getRoutingBoard().undo(changedNets);
+      for (Integer changedNet : changedNets) {
+        hdlg.updateRatsnest(changedNet);
+      }
     }
+    if (this.somethingDragged) {}
     return result;
   }
 
   @Override
   public InteractiveState complete() {
-    return this.button_released();
+    return this.buttonReleased();
   }
-
 }

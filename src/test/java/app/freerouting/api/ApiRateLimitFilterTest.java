@@ -17,8 +17,10 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Tag("serial")
 class ApiRateLimitFilterTest {
 
   private Server apiServer;
@@ -41,7 +43,7 @@ class ApiRateLimitFilterTest {
     Freerouting.globalSettings.apiServerSettings.rateLimit.requestsPerWindow = 2;
     Freerouting.globalSettings.apiServerSettings.rateLimit.windowSeconds = 60;
 
-    apiServer = Freerouting.InitializeAPI(settings);
+    apiServer = Freerouting.initializeAPI(settings);
     waitForServerStarted(apiServer);
 
     int port = ((ServerConnector) apiServer.getConnectors()[0]).getLocalPort();
@@ -56,11 +58,12 @@ class ApiRateLimitFilterTest {
   }
 
   @Test
-  void apiRateLimit_blocksAfterConfiguredThreshold() throws Exception {
-    HttpRequest req = HttpRequest.newBuilder(baseUri.resolve("/v1/system/status"))
-        .GET()
-        .timeout(HTTP_TIMEOUT)
-        .build();
+  void apiRateLimitBlocksAfterConfiguredThreshold() throws Exception {
+    HttpRequest req =
+        HttpRequest.newBuilder(baseUri.resolve("/v1/system/status"))
+            .GET()
+            .timeout(HTTP_TIMEOUT)
+            .build();
 
     HttpResponse<String> r1 = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
     HttpResponse<String> r2 = httpClient.send(req, HttpResponse.BodyHandlers.ofString());

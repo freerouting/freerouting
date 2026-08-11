@@ -1,0 +1,19 @@
+---
+description: Freerouting formatting, line-ending, and quality-gate rules
+alwaysApply: true
+---
+
+# Quality Gates
+
+- Preserve the repository LF policy. Do not change `core.autocrlf` to solve an individual
+  file; inspect `.gitattributes` and the actual diff instead.
+- Do not run `spotlessApply` automatically. It formats all configured Java sources and
+  can create hundreds of unrelated changes. Use `spotlessCheck` for verification.
+- Never stage files automatically. Keep formatting-only changes separate from functional
+  changes and inspect `git diff --stat` and `git diff --check`.
+- Before handoff, run:
+  `gradlew.bat spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`
+  on Windows, or the equivalent `./gradlew` command elsewhere.
+- Run `python scripts/i18n/extract-context.py --check` when Java or translation sources
+  change.
+- Do not refactor or format `src_v19/`; it is a frozen compatibility reference.

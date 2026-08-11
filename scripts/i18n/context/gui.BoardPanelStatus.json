@@ -35,9 +35,7 @@
   },
   "current_layer": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardPanelStatus"
-    ],
+    "code_references": [],
     "english_hash": "f445d2cc503b3b1518f57c87e74f944938aa4a5b3f1d33e0143c129392aa2739",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

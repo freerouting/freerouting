@@ -6,38 +6,33 @@ import java.awt.event.ComponentEvent;
 import javax.swing.JLabel;
 
 /**
- * A JLabel that automatically handles text that is too long to display.
- * When text doesn't fit, it shows the beginning with ellipsis and sets a tooltip with the full text.
+ * A JLabel that automatically handles text that is too long to display. When text doesn't fit, it
+ * shows the beginning with ellipsis and sets a tooltip with the full text.
  */
 public class SmartLabel extends JLabel {
 
   private static final String ELLIPSIS = "...";
   private String fullText = "";
 
-  /**
-   * Creates a new SmartLabel with no text.
-   */
+  /** Creates a new SmartLabel with no text. */
   public SmartLabel() {
     super();
-    addComponentListener(new ComponentAdapter() {
-      @Override
-      public void componentResized(ComponentEvent e) {
-        updateDisplayedText();
-      }
-    });
+    addComponentListener(
+        new ComponentAdapter() {
+          @Override
+          public void componentResized(ComponentEvent e) {
+            updateDisplayedText();
+          }
+        });
   }
 
-  /**
-   * Creates a new SmartLabel with the specified text.
-   */
+  /** Creates a new SmartLabel with the specified text. */
   public SmartLabel(String text) {
     this();
     setText(text);
   }
 
-  /**
-   * Creates a new SmartLabel with the specified text and horizontal alignment.
-   */
+  /** Creates a new SmartLabel with the specified text and horizontal alignment. */
   public SmartLabel(String text, int horizontalAlignment) {
     this(text);
     setHorizontalAlignment(horizontalAlignment);
@@ -109,14 +104,12 @@ public class SmartLabel extends JLabel {
     }
   }
 
-  /**
-   * Escapes HTML special characters in the text.
-   */
+  /** Escapes HTML special characters in the text. */
   private String escapeHtml(String text) {
     return text.replace("&", "&amp;")
-               .replace("<", "&lt;")
-               .replace(">", "&gt;")
-               .replace("\"", "&quot;")
-               .replace("'", "&#x27;");
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace("\"", "&quot;")
+        .replace("'", "&#x27;");
   }
 }

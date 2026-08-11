@@ -1,8 +1,5 @@
 package app.freerouting.interactive;
 
-import app.freerouting.management.HeadlessBoardManager;
-import app.freerouting.management.BoardManager;
-
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.board.AngleRestriction;
@@ -23,7 +20,6 @@ import app.freerouting.board.Unit;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
-import app.freerouting.io.BoardReadResult;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -32,21 +28,22 @@ import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.ComboBoxLayer;
 import app.freerouting.interactive.commands.InteractiveCommand;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnWriter;
-import app.freerouting.io.specctra.parser.DsnFile;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.logger.TraceEvent;
 import app.freerouting.logger.TraceEventListener;
-import app.freerouting.util.TextManager;
+import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
+import app.freerouting.util.TextManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -71,43 +68,51 @@ import javax.swing.SwingUtilities;
  * Manages the routing board operations with a graphical user interface.
  *
  * <p>This class extends {@link HeadlessBoardManager} to provide GUI-specific functionality,
- * enabling visual interaction with the routing board. It serves as the central controller
- * for interactive routing operations, coordinating between:
+ * enabling visual interaction with the routing board. It serves as the central controller for
+ * interactive routing operations, coordinating between:
+ *
  * <ul>
- *   <li>User input and mouse interactions</li>
- *   <li>Board display and graphics rendering</li>
- *   <li>Interactive states and routing modes</li>
- *   <li>Autorouting and manual routing operations</li>
- *   <li>Design rule checking and violation display</li>
- *   <li>Undo/redo and board history management</li>
+ *   <li>User input and mouse interactions
+ *   <li>Board display and graphics rendering
+ *   <li>Interactive states and routing modes
+ *   <li>Autorouting and manual routing operations
+ *   <li>Design rule checking and violation display
+ *   <li>Undo/redo and board history management
  * </ul>
  *
  * <p><strong>Key Responsibilities:</strong>
+ *
  * <ul>
- *   <li><strong>State Management:</strong> Controls interactive states (routing, selecting, dragging, etc.)</li>
- *   <li><strong>Graphics Coordination:</strong> Manages coordinate transformations and display context</li>
- *   <li><strong>User Interaction:</strong> Handles mouse events and keyboard input</li>
- *   <li><strong>Visual Feedback:</strong> Displays rats nest, clearance violations, and trace feedback</li>
- *   <li><strong>Thread Management:</strong> Coordinates background operations (autorouting, optimization)</li>
- *   <li><strong>File Operations:</strong> Manages design loading, saving, and session file handling</li>
+ *   <li><strong>State Management:</strong> Controls interactive states (routing, selecting,
+ *       dragging, etc.)
+ *   <li><strong>Graphics Coordination:</strong> Manages coordinate transformations and display
+ *       context
+ *   <li><strong>User Interaction:</strong> Handles mouse events and keyboard input
+ *   <li><strong>Visual Feedback:</strong> Displays rats nest, clearance violations, and trace
+ *       feedback
+ *   <li><strong>Thread Management:</strong> Coordinates background operations (autorouting,
+ *       optimization)
+ *   <li><strong>File Operations:</strong> Manages design loading, saving, and session file handling
  * </ul>
  *
- * <p><strong>Interactive States:</strong>
- * The board manager uses a state pattern to handle different interaction modes:
+ * <p><strong>Interactive States:</strong> The board manager uses a state pattern to handle
+ * different interaction modes:
+ *
  * <ul>
- *   <li>RouteMenuState - Default selection and menu state</li>
- *   <li>RouteState - Interactive trace routing</li>
- *   <li>DragState - Moving items on the board</li>
- *   <li>SelectState - Selecting items for operations</li>
- *   <li>And various other specialized states</li>
+ *   <li>RouteMenuState - Default selection and menu state
+ *   <li>RouteState - Interactive trace routing
+ *   <li>DragState - Moving items on the board
+ *   <li>SelectState - Selecting items for operations
+ *   <li>And various other specialized states
  * </ul>
  *
- * <p><strong>Coordinate Systems:</strong>
- * This class manages transformations between multiple coordinate spaces:
+ * <p><strong>Coordinate Systems:</strong> This class manages transformations between multiple
+ * coordinate spaces:
+ *
  * <ul>
- *   <li>Screen coordinates (pixels on display)</li>
- *   <li>User coordinates (design units visible to user)</li>
- *   <li>Board coordinates (internal integer coordinates)</li>
+ *   <li>Screen coordinates (pixels on display)
+ *   <li>User coordinates (design units visible to user)
+ *   <li>Board coordinates (internal integer coordinates)
  * </ul>
  *
  * @see HeadlessBoardManager
@@ -118,12 +123,214 @@ import javax.swing.SwingUtilities;
 public class GuiBoardManager extends HeadlessBoardManager {
 
   /**
+   * The minimum interval in milliseconds between consecutive board panel repaints during background
+   * operations (autorouting, optimization).
+   *
+   * <p>This throttle mechanism prevents excessive repainting during intensive background
+   * operations, maintaining a maximum effective frame rate of 1 FPS (1000ms interval).
+   */
+  private static final long background_repaint_interval = 1000;
+
+  /**
+   * The minimum interval in milliseconds between consecutive board panel repaints during
+   * interactive operations (dragging, moving).
+   *
+   * <p>This throttle provides smoother visual feedback for interactive operations, targeting
+   * approximately 30 FPS.
+   */
+  private static final long interactive_repaint_interval = 33;
+
+  /**
+   * The timestamp of the most recent board panel repaint operation.
+   *
+   * <p>Used in conjunction with repaint_interval to implement repaint throttling. Tracked in
+   * milliseconds since epoch.
+   */
+  private static long last_repainted_time;
+
+  /**
+   * Manager for on-screen status and information messages.
+   *
+   * <p>Displays messages to the user including:
+   *
+   * <ul>
+   *   <li>Current operation status
+   *   <li>Error and warning counts
+   *   <li>Trace event information
+   *   <li>Interactive prompts and feedback
+   * </ul>
+   *
+   * @see ScreenMessages
+   */
+  public final ScreenMessages screenMessages;
+
+  /**
+   * Merger that consolidates router settings from multiple sources.
+   *
+   * <p>Combines settings from:
+   *
+   * <ul>
+   *   <li>Default application settings
+   *   <li>Design-specific settings from DSN files
+   *   <li>User preferences and overrides
+   * </ul>
+   *
+   * @see SettingsMerger
+   */
+  public final SettingsMerger settingsMerger;
+
+  /**
+   * The graphical panel component that displays and renders the routing board.
+   *
+   * <p>This panel handles the visual presentation of the board, providing:
+   *
+   * <ul>
+   *   <li>Rendering of board items (traces, vias, pins, etc.)
+   *   <li>Display of auxiliary information (rats nest, violations, etc.)
+   *   <li>Visual feedback during interactive operations
+   *   <li>Screen message display integration
+   * </ul>
+   *
+   * @see BoardPanel
+   */
+  private final BoardPanel panel;
+
+  /**
+   * Text manager for internationalized message strings.
+   *
+   * <p>Provides localized text for UI elements and messages based on the current locale setting.
+   */
+  private final TextManager tm;
+
+  /**
+   * Collection of listeners notified when the board's read-only state changes.
+   *
+   * <p>UI components register listeners to update their state (enabled/disabled) when the board
+   * becomes read-only (e.g., during autorouting or logfile playback).
+   */
+  private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
+
+  /**
+   * Global application settings container.
+   *
+   * <p>Provides access to application-wide configuration including locale, thread pool settings,
+   * and other global preferences.
+   */
+  private final GlobalSettings globalSettings;
+
+  /**
+   * Listener that responds to new log entries being added.
+   *
+   * <p>Updates the on-screen error and warning counters when errors or warnings are logged during
+   * operations.
+   */
+  private final LogEntries.LogEntryAddedListener logEntryAddedListener;
+
+  /**
+   * Listener that responds to trace events during routing operations.
+   *
+   * <p>Handles trace-level debugging events, displaying impacted items and points on the board for
+   * diagnostic purposes.
+   */
+  private final TraceEventListener traceEventListener;
+
+  /**
+   * The current locale for internationalized UI text and messages.
+   *
+   * <p>Determines the language used for all user-facing text elements.
+   */
+  private final Locale locale;
+
+  /**
+   * Graphics context managing visual display settings for the board.
+   *
+   * <p>Controls rendering aspects including:
+   *
+   * <ul>
+   *   <li>Layer visibility and transparency
+   *   <li>Color schemes for different item types
+   *   <li>Display modes and visual options
+   *   <li>Rendering quality and performance settings
+   * </ul>
+   *
+   * @see GraphicsContext
+   */
+  public GraphicsContext graphicsContext;
+
+  /**
+   * Coordinate transformer for converting between different coordinate systems.
+   *
+   * <p>Handles transformations between:
+   *
+   * <ul>
+   *   <li>Screen coordinates (pixels)
+   *   <li>User coordinates (design units: mm, mil, inch)
+   *   <li>Board coordinates (internal integer units)
+   * </ul>
+   *
+   * <p>Also manages zoom level, pan offset, and coordinate system scaling.
+   *
+   * @see CoordinateTransform
+   */
+  public CoordinateTransform coordinateTransform;
+
+  /**
+   * Manager for detecting and displaying clearance violations between board items.
+   *
+   * <p>Identifies and visualizes violations including:
+   *
+   * <ul>
+   *   <li>Trace-to-trace clearance violations
+   *   <li>Trace-to-via clearance violations
+   *   <li>Violations with component pads and keepout areas
+   * </ul>
+   *
+   * <p>Violations are displayed with visual indicators on the board.
+   *
+   * @see ClearanceViolations
+   */
+  public ClearanceViolations clearanceViolations;
+
+  /**
+   * The currently active interactive state controlling user interaction behavior.
+   *
+   * <p>The state pattern is used to handle different interaction modes:
+   *
+   * <ul>
+   *   <li>RouteMenuState - Selection and menu operations
+   *   <li>RouteState - Interactive trace routing
+   *   <li>DragState - Moving items
+   *   <li>SelectState - Item selection operations
+   *   <li>And various other specialized states
+   * </ul>
+   *
+   * <p>Each state handles mouse events and keyboard input differently based on the current
+   * operation mode.
+   *
+   * @see InteractiveState
+   */
+  InteractiveState interactiveState;
+
+  /**
+   * Flag to force immediate board panel repaint, bypassing the throttle mechanism.
+   *
+   * <p>Used when immediate visual feedback is required, such as:
+   *
+   * <ul>
+   *   <li>Reading and playing back logfiles
+   *   <li>Step-by-step operation execution
+   *   <li>User-requested manual refresh
+   * </ul>
+   */
+  boolean paintImmediately;
+
+  /**
    * The GUI-session singleton for interactive settings.
    *
-   * <p>This field holds the {@link InteractiveSettings} singleton that acts as the live
-   * {@link app.freerouting.settings.sources.GuiSettings} source (priority 50) for the
-   * {@link SettingsMerger} pipeline. It is initialised in {@link #create_board} and in
-   * {@link #loadFromSpecctraDsn} (when DSN reading bypasses {@code create_board}).
+   * <p>This field holds the {@link InteractiveSettings} singleton that acts as the live {@link
+   * app.freerouting.settings.sources.GuiSettings} source (priority 50) for the {@link
+   * SettingsMerger} pipeline. It is initialised in {@link #createBoard} and in {@link
+   * #loadFromSpecctraDsn} (when DSN reading bypasses {@code create_board}).
    *
    * <p>This field intentionally shadows the removed {@code interactiveSettings} field that
    * previously lived on {@link HeadlessBoardManager}; it is not accessible from headless code.
@@ -135,269 +342,79 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Direct reference to the {@link app.freerouting.gui.BoardFrame} that owns this manager.
    *
-   * <p>Set by {@link #setBoardFrame(app.freerouting.gui.BoardFrame)} immediately after
-   * construction (and after every {@link BoardPanel#reset_board_handling} call). Having a direct
-   * back-reference avoids walking the AWT component hierarchy to locate the frame.
+   * <p>Set by {@link #setBoardFrame(app.freerouting.gui.BoardFrame)} immediately after construction
+   * (and after every {@link BoardPanel#resetBoardHandling} call). Having a direct back-reference
+   * avoids walking the AWT component hierarchy to locate the frame.
    */
   private app.freerouting.gui.BoardFrame boardFrame;
-
-  /**
-   * The minimum interval in milliseconds between consecutive board panel repaints during
-   * background operations (autorouting, optimization).
-   *
-   * <p>This throttle mechanism prevents excessive repainting during intensive background
-   * operations, maintaining a maximum effective frame rate of 1 FPS (1000ms interval).
-   */
-  private static final long background_repaint_interval = 1000;
-
-  /**
-   * The minimum interval in milliseconds between consecutive board panel repaints during
-   * interactive operations (dragging, moving).
-   *
-   * <p>This throttle provides smoother visual feedback for interactive operations,
-   * targeting approximately 30 FPS.
-   */
-  private static final long interactive_repaint_interval = 33;
-
-  /**
-   * The timestamp of the most recent board panel repaint operation.
-   *
-   * <p>Used in conjunction with repaint_interval to implement repaint throttling.
-   * Tracked in milliseconds since epoch.
-   */
-  private static long last_repainted_time;
-
-  /**
-   * Manager for on-screen status and information messages.
-   *
-   * <p>Displays messages to the user including:
-   * <ul>
-   *   <li>Current operation status</li>
-   *   <li>Error and warning counts</li>
-   *   <li>Trace event information</li>
-   *   <li>Interactive prompts and feedback</li>
-   * </ul>
-   *
-   * @see ScreenMessages
-   */
-  public final ScreenMessages screen_messages;
-  /**
-   * Merger that consolidates router settings from multiple sources.
-   *
-   * <p>Combines settings from:
-   * <ul>
-   *   <li>Default application settings</li>
-   *   <li>Design-specific settings from DSN files</li>
-   *   <li>User preferences and overrides</li>
-   * </ul>
-   *
-   * @see SettingsMerger
-   */
-  public final SettingsMerger settingsMerger;
-
-  /**
-   * The graphical panel component that displays and renders the routing board.
-   *
-   * <p>This panel handles the visual presentation of the board, providing:
-   * <ul>
-   *   <li>Rendering of board items (traces, vias, pins, etc.)</li>
-   *   <li>Display of auxiliary information (rats nest, violations, etc.)</li>
-   *   <li>Visual feedback during interactive operations</li>
-   *   <li>Screen message display integration</li>
-   * </ul>
-   *
-   * @see BoardPanel
-   */
-  private final BoardPanel panel;
-
-  /**
-   * Text manager for internationalized message strings.
-   *
-   * <p>Provides localized text for UI elements and messages based on the
-   * current locale setting.
-   */
-  private final TextManager tm;
-
-  /**
-   * Collection of listeners notified when the board's read-only state changes.
-   *
-   * <p>UI components register listeners to update their state (enabled/disabled)
-   * when the board becomes read-only (e.g., during autorouting or logfile playback).
-   */
-  private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
-
-  /**
-   * Global application settings container.
-   *
-   * <p>Provides access to application-wide configuration including locale,
-   * thread pool settings, and other global preferences.
-   */
-  private final GlobalSettings globalSettings;
-
-  /**
-   * Listener that responds to new log entries being added.
-   *
-   * <p>Updates the on-screen error and warning counters when errors or
-   * warnings are logged during operations.
-   */
-  private final LogEntries.LogEntryAddedListener logEntryAddedListener;
-
-  /**
-   * Listener that responds to trace events during routing operations.
-   *
-   * <p>Handles trace-level debugging events, displaying impacted items and
-   * points on the board for diagnostic purposes.
-   */
-  private final TraceEventListener traceEventListener;
-  /**
-   * Graphics context managing visual display settings for the board.
-   *
-   * <p>Controls rendering aspects including:
-   * <ul>
-   *   <li>Layer visibility and transparency</li>
-   *   <li>Color schemes for different item types</li>
-   *   <li>Display modes and visual options</li>
-   *   <li>Rendering quality and performance settings</li>
-   * </ul>
-   *
-   * @see GraphicsContext
-   */
-  public GraphicsContext graphics_context;
-
-  /**
-   * Coordinate transformer for converting between different coordinate systems.
-   *
-   * <p>Handles transformations between:
-   * <ul>
-   *   <li>Screen coordinates (pixels)</li>
-   *   <li>User coordinates (design units: mm, mil, inch)</li>
-   *   <li>Board coordinates (internal integer units)</li>
-   * </ul>
-   *
-   * <p>Also manages zoom level, pan offset, and coordinate system scaling.
-   *
-   * @see CoordinateTransform
-   */
-  public CoordinateTransform coordinate_transform;
-
-  /**
-   * Manager for detecting and displaying clearance violations between board items.
-   *
-   * <p>Identifies and visualizes violations including:
-   * <ul>
-   *   <li>Trace-to-trace clearance violations</li>
-   *   <li>Trace-to-via clearance violations</li>
-   *   <li>Violations with component pads and keepout areas</li>
-   * </ul>
-   *
-   * <p>Violations are displayed with visual indicators on the board.
-   *
-   * @see ClearanceViolations
-   */
-  public ClearanceViolations clearance_violations;
-
-  /**
-   * The currently active interactive state controlling user interaction behavior.
-   *
-   * <p>The state pattern is used to handle different interaction modes:
-   * <ul>
-   *   <li>RouteMenuState - Selection and menu operations</li>
-   *   <li>RouteState - Interactive trace routing</li>
-   *   <li>DragState - Moving items</li>
-   *   <li>SelectState - Item selection operations</li>
-   *   <li>And various other specialized states</li>
-   * </ul>
-   *
-   * <p>Each state handles mouse events and keyboard input differently
-   * based on the current operation mode.
-   *
-   * @see InteractiveState
-   */
-  InteractiveState interactive_state;
-
-  /**
-   * Flag to force immediate board panel repaint, bypassing the throttle mechanism.
-   *
-   * <p>Used when immediate visual feedback is required, such as:
-   * <ul>
-   *   <li>Reading and playing back logfiles</li>
-   *   <li>Step-by-step operation execution</li>
-   *   <li>User-requested manual refresh</li>
-   * </ul>
-   */
-  boolean paint_immediately;
-  /**
-   * The current locale for internationalized UI text and messages.
-   *
-   * <p>Determines the language used for all user-facing text elements.
-   */
-  private Locale locale;
 
   /**
    * Number of threads to use for parallel routing operations.
    *
    * <p>Controls the thread pool size for autorouting and batch optimization tasks.
    */
-  private int num_threads;
+  private int numThreads;
 
   /**
    * Strategy for updating the board during batch operations.
    *
    * <p>Determines how and when the board is updated during autorouting:
+   *
    * <ul>
-   *   <li>Update frequency</li>
-   *   <li>Commit timing</li>
-   *   <li>Rollback behavior</li>
+   *   <li>Update frequency
+   *   <li>Commit timing
+   *   <li>Rollback behavior
    * </ul>
    *
    * @see BoardUpdateStrategy
    */
-  private BoardUpdateStrategy board_update_strategy;
+  private BoardUpdateStrategy boardUpdateStrategy;
 
   /**
    * The hybrid routing ratio configuration string.
    *
-   * <p>Defines the balance between different routing algorithms when
-   * using hybrid routing approaches.
+   * <p>Defines the balance between different routing algorithms when using hybrid routing
+   * approaches.
    */
-  private String hybrid_ratio;
+  private String hybridRatio;
 
   /**
    * Strategy for selecting which items to route during batch autorouting.
    *
    * <p>Controls the order and selection criteria for:
+   *
    * <ul>
-   *   <li>Net prioritization</li>
-   *   <li>Connection selection</li>
-   *   <li>Routing sequence optimization</li>
+   *   <li>Net prioritization
+   *   <li>Connection selection
+   *   <li>Routing sequence optimization
    * </ul>
    *
    * @see ItemSelectionStrategy
    */
-  private ItemSelectionStrategy item_selection_strategy;
+  private ItemSelectionStrategy itemSelectionStrategy;
 
   /**
    * Thread managing long-running interactive actions in the background.
    *
    * <p>Handles operations like:
+   *
    * <ul>
-   *   <li>Batch autorouting</li>
-   *   <li>Board optimization</li>
-   *   <li>Fanout generation</li>
+   *   <li>Batch autorouting
+   *   <li>Board optimization
+   *   <li>Fanout generation
    * </ul>
    *
    * <p>Allows the UI to remain responsive during lengthy operations.
    *
    * @see InteractiveActionThread
    */
-  private InteractiveActionThread interactive_action_thread;
+  private InteractiveActionThread interactiveActionThread;
 
   /**
    * Visual display manager for incomplete connections (air wires/rats nest).
    *
-   * <p>Shows unrouted connections between pins as straight lines, helping
-   * users understand routing requirements and progress. Recalculated after
-   * board changes.
+   * <p>Shows unrouted connections between pins as straight lines, helping users understand routing
+   * requirements and progress. Recalculated after board changes.
    *
    * @see RatsNest
    */
@@ -407,37 +424,82 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Flag indicating whether the board is in read-only mode.
    *
    * <p>Set to true when:
+   *
    * <ul>
-   *   <li>Processing logfiles</li>
-   *   <li>Running background autorouting</li>
-   *   <li>Performing batch operations</li>
+   *   <li>Processing logfiles
+   *   <li>Running background autorouting
+   *   <li>Performing batch operations
    * </ul>
    *
-   * <p>Prevents interactive modifications that could interfere with
-   * automated operations or corrupt the board state.
+   * <p>Prevents interactive modifications that could interfere with automated operations or corrupt
+   * the board state.
    */
-  private boolean board_is_read_only;
+  private boolean boardIsReadOnly;
 
   /**
    * The current position of the mouse cursor in board coordinates.
    *
    * <p>Updated continuously as the mouse moves, used for:
+   *
    * <ul>
-   *   <li>Snap-to-grid calculations</li>
-   *   <li>Interactive state processing</li>
-   *   <li>Visual feedback rendering</li>
+   *   <li>Snap-to-grid calculations
+   *   <li>Interactive state processing
+   *   <li>Visual feedback rendering
    * </ul>
    */
-  private FloatPoint current_mouse_position;
+  private FloatPoint currentMousePosition;
 
   /**
    * Array of points to highlight on the board for trace event visualization.
    *
-   * <p>When trace-level logging is active, these points indicate the
-   * locations affected by the current routing operation, providing
-   * visual debugging feedback.
+   * <p>When trace-level logging is active, these points indicate the locations affected by the
+   * current routing operation, providing visual debugging feedback.
    */
   private Point[] impactedPoints;
+
+  /**
+   * Creates a new GUI board manager for interactive routing operations.
+   *
+   * <p>Initializes all subsystems required for interactive board manipulation including:
+   *
+   * <ul>
+   *   <li>Graphics context and coordinate transformation
+   *   <li>Screen message display
+   *   <li>Event listeners for logging and tracing
+   *   <li>Initial interactive state (RouteMenuState)
+   *   <li>Text manager for internationalization
+   * </ul>
+   *
+   * <p>The constructor establishes connections between the board manager and the GUI panel, sets up
+   * event handling, and prepares the system for user interaction.
+   *
+   * @param panel the board panel component for visual display
+   * @param globalSettings application-wide configuration settings
+   * @param routingJob the routing job containing board and design data
+   * @param settingsMerger merger for consolidating settings from multiple sources
+   * @see HeadlessBoardManager#HeadlessBoardManager(RoutingJob)
+   */
+  public GuiBoardManager(
+      BoardPanel panel,
+      GlobalSettings globalSettings,
+      RoutingJob routingJob,
+      SettingsMerger settingsMerger) {
+    super(routingJob);
+    this.globalSettings = globalSettings;
+    this.settingsMerger = settingsMerger;
+    this.locale = globalSettings.currentLocale;
+    this.panel = panel;
+    this.screenMessages = panel.screenMessages;
+    this.setInteractiveState(RouteMenuState.getInstance(this));
+
+    this.tm = new TextManager(this.getClass(), globalSettings.currentLocale);
+
+    this.logEntryAddedListener = this::logEntryAdded;
+    FRLogger.getLogEntries().addLogEntryAddedListener(this.logEntryAddedListener);
+
+    this.traceEventListener = this::handleTraceEvent;
+    FRLogger.addTraceEventListener(this.traceEventListener);
+  }
 
   /**
    * Sets the owning {@link app.freerouting.gui.BoardFrame} for this manager.
@@ -453,63 +515,20 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
-   * Creates a new GUI board manager for interactive routing operations.
-   *
-   * <p>Initializes all subsystems required for interactive board manipulation including:
-   * <ul>
-   *   <li>Graphics context and coordinate transformation</li>
-   *   <li>Screen message display</li>
-   *   <li>Event listeners for logging and tracing</li>
-   *   <li>Initial interactive state (RouteMenuState)</li>
-   *   <li>Text manager for internationalization</li>
-   * </ul>
-   *
-   * <p>The constructor establishes connections between the board manager and the GUI panel,
-   * sets up event handling, and prepares the system for user interaction.
-   *
-   * @param p_panel the board panel component for visual display
-   * @param globalSettings application-wide configuration settings
-   * @param routingJob the routing job containing board and design data
-   * @param settingsMerger merger for consolidating settings from multiple sources
-   *
-   * @see HeadlessBoardManager#HeadlessBoardManager(RoutingJob)
-   */
-  public GuiBoardManager(BoardPanel p_panel, GlobalSettings globalSettings, RoutingJob routingJob, SettingsMerger settingsMerger) {
-    super(routingJob);
-    this.globalSettings = globalSettings;
-    this.settingsMerger = settingsMerger;
-    this.locale = globalSettings.currentLocale;
-    this.panel = p_panel;
-    this.screen_messages = p_panel.screen_messages;
-    this.set_interactive_state(RouteMenuState.get_instance(this));
-
-    this.tm = new TextManager(this.getClass(), globalSettings.currentLocale);
-
-    this.logEntryAddedListener = this::logEntryAdded;
-    FRLogger
-        .getLogEntries()
-        .addLogEntryAddedListener(this.logEntryAddedListener);
-
-    this.traceEventListener = this::handleTraceEvent;
-    FRLogger.addTraceEventListener(this.traceEventListener);
-  }
-
-  /**
    * Handles notification when a new log entry is added to the log system.
    *
-   * <p>This listener updates the on-screen error and warning counts displayed
-   * to the user. Only errors and warnings trigger UI updates to maintain
-   * performance during verbose logging.
+   * <p>This listener updates the on-screen error and warning counts displayed to the user. Only
+   * errors and warnings trigger UI updates to maintain performance during verbose logging.
    *
    * @param logEntry the newly added log entry
-   *
    * @see LogEntry
-   * @see ScreenMessages#set_error_and_warning_count(int, int)
+   * @see ScreenMessages#setErrorAndWarningCount(int, int)
    */
   private void logEntryAdded(LogEntry logEntry) {
-    if ((logEntry.getType() == LogEntryType.Error) || (logEntry.getType() == LogEntryType.Warning)) {
+    if ((logEntry.getType() == LogEntryType.Error)
+        || (logEntry.getType() == LogEntryType.Warning)) {
       LogEntries entries = FRLogger.getLogEntries();
-      screen_messages.set_error_and_warning_count(entries.getErrorCount(), entries.getWarningCount());
+      screenMessages.setErrorAndWarningCount(entries.getErrorCount(), entries.getWarningCount());
     }
   }
 
@@ -517,41 +536,42 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Handles trace-level debugging events during routing operations.
    *
    * <p>When trace logging is enabled, this method:
+   *
    * <ul>
-   *   <li>Displays trace messages on screen with operation details</li>
-   *   <li>Highlights impacted items and points on the board</li>
-   *   <li>Triggers board repaint to show visual feedback</li>
+   *   <li>Displays trace messages on screen with operation details
+   *   <li>Highlights impacted items and points on the board
+   *   <li>Triggers board repaint to show visual feedback
    * </ul>
    *
-   * <p>Execution is deferred to the Event Dispatch Thread using SwingUtilities
-   * to ensure thread-safe GUI updates.
+   * <p>Execution is deferred to the Event Dispatch Thread using SwingUtilities to ensure
+   * thread-safe GUI updates.
    *
    * @param event the trace event containing operation details and impacted locations
-   *
    * @see TraceEvent
-   * @see ScreenMessages#set_trace_message(String, String, String)
+   * @see ScreenMessages#setTraceMessage(String, String, String)
    */
   private void handleTraceEvent(TraceEvent event) {
     if (event == null) {
       return;
     }
-    SwingUtilities.invokeLater(() -> {
-      screen_messages.set_trace_message(event.getOperation(), event.getMessage(), event.getImpactedItems());
-      // Store the impacted points for drawing
-      impactedPoints = event.getImpactedPoints();
-      panel.repaint();
-    });
+    SwingUtilities.invokeLater(
+        () -> {
+          screenMessages.setTraceMessage(
+              event.getOperation(), event.getMessage(), event.getImpactedItems());
+          // Store the impacted points for drawing
+          impactedPoints = event.getImpactedPoints();
+          panel.repaint();
+        });
   }
 
   /**
    * Gets the current routing job containing board data and routing configuration.
    *
-   * <p>Interactive states use this to access job-specific router settings, design rules,
-   * and board structure. The routing job encapsulates all design-specific information
-   * needed for routing operations.
+   * <p>Interactive states use this to access job-specific router settings, design rules, and board
+   * structure. The routing job encapsulates all design-specific information needed for routing
+   * operations.
    *
    * @return the current routing job, or null if no job is loaded
-   *
    * @see RoutingJob
    */
   @Override
@@ -563,207 +583,206 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Returns whether the board is currently in read-only mode.
    *
    * <p>Read-only mode is enabled during operations that require exclusive board access:
+   *
    * <ul>
-   *   <li>Logfile playback</li>
-   *   <li>Background autorouting</li>
-   *   <li>Batch optimization operations</li>
+   *   <li>Logfile playback
+   *   <li>Background autorouting
+   *   <li>Batch optimization operations
    * </ul>
    *
    * <p>When true, user interactions that modify the board are disabled.
    *
    * @return true if the board is read-only, false if modifications are allowed
-   *
-   * @see #set_board_read_only(boolean)
+   * @see #setBoardReadOnly(boolean)
    */
-  public boolean is_board_read_only() {
-    return this.board_is_read_only;
+  public boolean isBoardReadOnly() {
+    return this.boardIsReadOnly;
   }
 
   /**
    * Sets the board's read-only state to prevent or allow user modifications.
    *
    * <p>This method:
+   *
    * <ul>
-   *   <li>Updates the internal read-only flag</li>
-   *   <li>Propagates the state to interactive settings</li>
-   *   <li>Notifies all registered listeners of the state change</li>
+   *   <li>Updates the internal read-only flag
+   *   <li>Propagates the state to interactive settings
+   *   <li>Notifies all registered listeners of the state change
    * </ul>
    *
-   * <p>Listeners typically update UI elements (buttons, menus) to reflect
-   * the board's modifiable state.
+   * <p>Listeners typically update UI elements (buttons, menus) to reflect the board's modifiable
+   * state.
    *
-   * @param p_value true to make board read-only, false to allow modifications
-   *
-   * @see #is_board_read_only()
+   * @param value true to make board read-only, false to allow modifications
+   * @see #isBoardReadOnly()
    */
-  public void set_board_read_only(boolean p_value) {
-    this.board_is_read_only = p_value;
-    this.interactiveSettings.set_read_only(p_value);
+  public void setBoardReadOnly(boolean value) {
+    this.boardIsReadOnly = value;
+    this.interactiveSettings.setReadOnly(value);
 
     // Raise an event to notify the observers that the board read only property
     // changed
-    this.readOnlyEventListeners.forEach(listener -> listener.accept(p_value));
+    this.readOnlyEventListeners.forEach(listener -> listener.accept(value));
   }
 
   /**
    * Returns the current locale for UI text internationalization.
    *
-   * <p>The locale determines the language used for all user-visible text
-   * including menus, messages, and tooltips.
+   * <p>The locale determines the language used for all user-visible text including menus, messages,
+   * and tooltips.
    *
    * @return the current locale setting
-   *
    * @see Locale
    */
-  public Locale get_locale() {
+  public Locale getLocale() {
     return this.locale;
   }
 
   /**
    * Returns the number of layers in the board design.
    *
-   * <p>Layer count includes all signal layers, power planes, and ground planes
-   * defined in the board structure. Returns 0 if no board is loaded.
+   * <p>Layer count includes all signal layers, power planes, and ground planes defined in the board
+   * structure. Returns 0 if no board is loaded.
    *
    * @return the number of board layers, or 0 if board is null
-   *
    * @see LayerStructure
    */
-  public int get_layer_count() {
+  public int getLayerCount() {
     if (board == null) {
       return 0;
     }
-    return board.get_layer_count();
+    return board.getLayerCount();
   }
 
   /**
    * Returns the current mouse cursor position in board coordinate space.
    *
    * <p>This position is:
+   *
    * <ul>
-   *   <li>Updated continuously as the mouse moves</li>
-   *   <li>Used by interactive states for operation placement</li>
-   *   <li>Affected by snap-to-grid settings</li>
-   *   <li>Transformed from screen coordinates through coordinate_transform</li>
+   *   <li>Updated continuously as the mouse moves
+   *   <li>Used by interactive states for operation placement
+   *   <li>Affected by snap-to-grid settings
+   *   <li>Transformed from screen coordinates through coordinateTransform
    * </ul>
    *
    * @return the current mouse position in board coordinates
-   *
    * @see FloatPoint
    * @see CoordinateTransform
    */
-  public FloatPoint get_current_mouse_position() {
-    return this.current_mouse_position;
+  public FloatPoint getCurrentMousePosition() {
+    return this.currentMousePosition;
   }
 
   /**
    * Sets whether conduction areas should be treated as obstacles during routing.
    *
    * <p>When conduction areas are ignored (p_value = true):
+   *
    * <ul>
-   *   <li>Traces can route through conduction areas of foreign nets</li>
-   *   <li>Useful for power planes and ground fills</li>
-   *   <li>Reduces routing complexity in filled areas</li>
+   *   <li>Traces can route through conduction areas of foreign nets
+   *   <li>Useful for power planes and ground fills
+   *   <li>Reduces routing complexity in filled areas
    * </ul>
    *
    * <p>When conduction areas are obstacles (p_value = false):
+   *
    * <ul>
-   *   <li>Foreign net traces must route around them</li>
-   *   <li>Provides stricter isolation between nets</li>
+   *   <li>Foreign net traces must route around them
+   *   <li>Provides stricter isolation between nets
    * </ul>
    *
    * <p>This setting is ignored if the board is read-only.
    *
-   * @param p_value true to ignore conduction areas, false to treat them as obstacles
-   *
-   * @see RoutingBoard#change_conduction_is_obstacle(boolean)
+   * @param value true to ignore conduction areas, false to treat them as obstacles
+   * @see RoutingBoard#changeConductionIsObstacle(boolean)
    */
-  public void set_ignore_conduction(boolean p_value) {
-    if (board_is_read_only) {
+  public void setIgnoreConduction(boolean value) {
+    if (boardIsReadOnly) {
       return;
     }
-    board.change_conduction_is_obstacle(!p_value);
+    board.changeConductionIsObstacle(!value);
   }
 
   /**
    * Sets the minimum distance from pin edges where traces can make their first turn.
    *
    * <p>This constraint controls trace exit geometry from pins:
+   *
    * <ul>
-   *   <li>Ensures traces extend straight from pins before turning</li>
-   *   <li>Improves manufacturing reliability near pads</li>
-   *   <li>Prevents acute angles at pin connections</li>
-   *   <li>Helps avoid solder mask and assembly issues</li>
+   *   <li>Ensures traces extend straight from pins before turning
+   *   <li>Improves manufacturing reliability near pads
+   *   <li>Prevents acute angles at pin connections
+   *   <li>Helps avoid solder mask and assembly issues
    * </ul>
    *
-   * <p>When this value changes, existing pin exit stubs that were shove-fixed
-   * are released (set to UNFIXED) to allow re-optimization with the new constraint.
-   * Only simple 2-corner exit traces are unfixed.
+   * <p>When this value changes, existing pin exit stubs that were shove-fixed are released (set to
+   * UNFIXED) to allow re-optimization with the new constraint. Only simple 2-corner exit traces are
+   * unfixed.
    *
    * <p>This setting is ignored if the board is read-only.
    *
-   * @param p_value the minimum edge-to-turn distance in user coordinate units
-   *
-   * @see BoardRules#set_pin_edge_to_turn_dist(double)
-   * @see Pin#has_trace_exit_restrictions()
+   * @param value the minimum edge-to-turn distance in user coordinate units
+   * @see BoardRules#setPinEdgeToTurnDist(double)
+   * @see Pin#hasTraceExitRestrictions()
    */
-  public void set_pin_edge_to_turn_dist(double p_value) {
-    if (board_is_read_only) {
+  public void setPinEdgeToTurnDist(double value) {
+    if (boardIsReadOnly) {
       return;
     }
-    double edge_to_turn_dist = this.coordinate_transform.user_to_board(p_value);
-    if (edge_to_turn_dist != board.rules.get_pin_edge_to_turn_dist()) {
+    double edgeToTurnDist = this.coordinateTransform.userToBoard(value);
+    if (edgeToTurnDist != board.rules.getPinEdgeToTurnDist()) {
       // unfix the pin exit stubs
-      Collection<Pin> pin_list = board.get_pins();
-      for (Pin curr_pin : pin_list) {
-        if (curr_pin.has_trace_exit_restrictions()) {
-          Collection<Item> contact_list = curr_pin.get_normal_contacts();
-          for (Item curr_contact : contact_list) {
-            if ((curr_contact instanceof PolylineTrace trace)
-                && curr_contact.get_fixed_state() == FixedState.SHOVE_FIXED) {
-              if (trace.corner_count() == 2) {
-                curr_contact.set_fixed_state(FixedState.UNFIXED);
+      Collection<Pin> pinList = board.getPins();
+      for (Pin currPin : pinList) {
+        if (currPin.hasTraceExitRestrictions()) {
+          Collection<Item> contactList = currPin.getNormalContacts();
+          for (Item currContact : contactList) {
+            if ((currContact instanceof PolylineTrace trace)
+                && currContact.getFixedState() == FixedState.SHOVE_FIXED) {
+              if (trace.cornerCount() == 2) {
+                currContact.setFixedState(FixedState.UNFIXED);
               }
             }
           }
         }
       }
     }
-    board.rules.set_pin_edge_to_turn_dist(edge_to_turn_dist);
+    board.rules.setPinEdgeToTurnDist(edgeToTurnDist);
   }
 
   /**
    * Changes the visibility and transparency of a specific board layer.
    *
    * <p>Layer visibility controls how prominently items on that layer are displayed:
+   *
    * <ul>
-   *   <li>Value of 1.0 - fully visible (opaque)</li>
-   *   <li>Value between 0 and 1 - partially transparent</li>
-   *   <li>Value of 0.0 - invisible (hidden)</li>
+   *   <li>Value of 1.0 - fully visible (opaque)
+   *   <li>Value between 0 and 1 - partially transparent
+   *   <li>Value of 0.0 - invisible (hidden)
    * </ul>
    *
-   * <p>If the currently active routing layer becomes invisible, the system
-   * automatically switches to the most visible layer to maintain usability.
+   * <p>If the currently active routing layer becomes invisible, the system automatically switches
+   * to the most visible layer to maintain usability.
    *
-   * @param p_layer the layer index to modify (0-based)
-   * @param p_value the visibility value between 0.0 (invisible) and 1.0 (fully visible)
-   *
-   * @see GraphicsContext#set_layer_visibility(int, double)
+   * @param layer the layer index to modify (0-based)
+   * @param value the visibility value between 0.0 (invisible) and 1.0 (fully visible)
+   * @see GraphicsContext#setLayerVisibility(int, double)
    */
-  public void set_layer_visibility(int p_layer, double p_value) {
-    if (p_layer >= 0 && p_layer < graphics_context.layer_count()) {
-      graphics_context.set_layer_visibility(p_layer, p_value);
-      if (p_value == 0 && interactiveSettings.get_layer() == p_layer) {
+  public void setLayerVisibility(int layer, double value) {
+    if (layer >= 0 && layer < graphicsContext.layerCount()) {
+      graphicsContext.setLayerVisibility(layer, value);
+      if (value == 0 && interactiveSettings.getLayer() == layer) {
         // change the current layer to the best visible layer, if it becomes invisible;
-        double best_visibility = 0;
-        int best_visible_layer = 0;
-        for (int i = 0; i < graphics_context.layer_count(); i++) {
-          if (graphics_context.get_layer_visibility(i) > best_visibility) {
-            best_visibility = graphics_context.get_layer_visibility(i);
-            best_visible_layer = i;
+        double bestVisibility = 0;
+        int bestVisibleLayer = 0;
+        for (int i = 0; i < graphicsContext.layerCount(); i++) {
+          if (graphicsContext.getLayerVisibility(i) > bestVisibility) {
+            bestVisibility = graphicsContext.getLayerVisibility(i);
+            bestVisibleLayer = i;
           }
         }
-        interactiveSettings.set_layer(best_visible_layer);
+        interactiveSettings.setLayer(bestVisibleLayer);
       }
     }
   }
@@ -773,27 +792,28 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>The trace half-width determines the thickness of traces created during interactive routing.
    * The value returned depends on the routing mode:
+   *
    * <ul>
-   *   <li><strong>Manual rule selection:</strong> Returns the manually configured trace width</li>
-   *   <li><strong>Automatic rule selection:</strong> Returns the trace width from the net's class rules</li>
+   *   <li><strong>Manual rule selection:</strong> Returns the manually configured trace width
+   *   <li><strong>Automatic rule selection:</strong> Returns the trace width from the net's class
+   *       rules
    * </ul>
    *
-   * <p>Half-width is used because traces expand equally on both sides of their centerline.
-   * The actual trace width is twice this value.
+   * <p>Half-width is used because traces expand equally on both sides of their centerline. The
+   * actual trace width is twice this value.
    *
-   * @param p_net_no the net number to get the trace width for
-   * @param p_layer the layer index where the trace will be placed
+   * @param netNo the net number to get the trace width for
+   * @param layer the layer index where the trace will be placed
    * @return the trace half-width in board units
-   *
-   * @see InteractiveSettings#manual_rule_selection
-   * @see BoardRules#get_trace_half_width(int, int)
+   * @see InteractiveSettings#manualRuleSelection
+   * @see BoardRules#getTraceHalfWidth(int, int)
    */
-  public int get_trace_halfwidth(int p_net_no, int p_layer) {
+  public int getTraceHalfwidth(int netNo, int layer) {
     int result;
-    if (interactiveSettings.get_manual_rule_selection()) {
-      result = interactiveSettings.manual_trace_half_width_arr[p_layer];
+    if (interactiveSettings.getManualRuleSelection()) {
+      result = interactiveSettings.manualTraceHalfWidthArr[layer];
     } else {
-      result = board.rules.get_trace_half_width(p_net_no, p_layer);
+      result = board.rules.getTraceHalfWidth(netNo, layer);
     }
     return result;
   }
@@ -801,63 +821,62 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Checks if the specified layer is active for interactive trace routing on the given net.
    *
-   * <p>Layer activity determines whether traces can be routed on a particular layer for a net.
-   * The behavior depends on the routing mode:
+   * <p>Layer activity determines whether traces can be routed on a particular layer for a net. The
+   * behavior depends on the routing mode:
+   *
    * <ul>
-   *   <li><strong>Manual rule selection:</strong> All layers are considered active</li>
-   *   <li><strong>Automatic rule selection:</strong> Layer activity is determined by the net class configuration</li>
+   *   <li><strong>Manual rule selection:</strong> All layers are considered active
+   *   <li><strong>Automatic rule selection:</strong> Layer activity is determined by the net class
+   *       configuration
    * </ul>
    *
    * <p>Returns true if the net or net class is not found (permissive default).
    *
-   * @param p_net_no the net number to check
-   * @param p_layer the layer index to check
+   * @param netNo the net number to check
+   * @param layer the layer index to check
    * @return true if the layer is active for routing this net, false otherwise
-   *
-   * @see NetClass#is_active_routing_layer(int)
+   * @see NetClass#isActiveRoutingLayer(int)
    */
-  public boolean is_active_routing_layer(int p_net_no, int p_layer) {
-    if (interactiveSettings.get_manual_rule_selection()) {
+  public boolean isActiveRoutingLayer(int netNo, int layer) {
+    if (interactiveSettings.getManualRuleSelection()) {
       return true;
     }
-    Net curr_net = this.board.rules.nets.get(p_net_no);
-    if (curr_net == null) {
+    Net currentNet = this.board.rules.nets.get(netNo);
+    if (currentNet == null) {
       return true;
     }
-    NetClass curr_net_class = curr_net.get_class();
-    if (curr_net_class == null) {
+    NetClass currNetClass = currentNet.getNetClass();
+    if (currNetClass == null) {
       return true;
     }
-    return curr_net_class.is_active_routing_layer(p_layer);
+    return currNetClass.isActiveRoutingLayer(layer);
   }
 
   /**
    * Gets the clearance class used in interactive routing for the specified net.
    *
-   * <p>The clearance class determines minimum spacing requirements between traces and other
-   * board objects. The value returned depends on the routing mode:
+   * <p>The clearance class determines minimum spacing requirements between traces and other board
+   * objects. The value returned depends on the routing mode:
+   *
    * <ul>
-   *   <li><strong>Manual rule selection:</strong> Returns the manually configured clearance class</li>
-   *   <li><strong>Automatic rule selection:</strong> Returns the clearance class from the net's class rules</li>
+   *   <li><strong>Manual rule selection:</strong> Returns the manually configured clearance class
+   *   <li><strong>Automatic rule selection:</strong> Returns the clearance class from the net's
+   *       class rules
    * </ul>
    *
    * <p>The clearance class is an index into the board's clearance matrix.
    *
-   * @param p_net_no the net number to get the clearance class for
+   * @param netNo the net number to get the clearance class for
    * @return the clearance class index
-   *
    * @see app.freerouting.rules.ClearanceMatrix
-   * @see NetClass#get_trace_clearance_class()
+   * @see NetClass#getTraceClearanceClass()
    */
-  public int get_trace_clearance_class(int p_net_no) {
+  public int getTraceClearanceClass(int netNo) {
     int result;
-    if (interactiveSettings.get_manual_rule_selection()) {
-      result = interactiveSettings.get_manual_trace_clearance_class();
+    if (interactiveSettings.getManualRuleSelection()) {
+      result = interactiveSettings.getManualTraceClearanceClass();
     } else {
-      result = board.rules.nets
-          .get(p_net_no)
-          .get_class()
-          .get_trace_clearance_class();
+      result = board.rules.nets.get(netNo).getNetClass().getTraceClearanceClass();
     }
     return result;
   }
@@ -865,173 +884,172 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Gets the via rule used in interactive routing for the specified net.
    *
-   * <p>The via rule defines which via types (padstacks) are allowed and their priority order
-   * for layer transitions. The value returned depends on the routing mode:
+   * <p>The via rule defines which via types (padstacks) are allowed and their priority order for
+   * layer transitions. The value returned depends on the routing mode:
+   *
    * <ul>
-   *   <li><strong>Manual rule selection:</strong> Returns the manually selected via rule if valid</li>
-   *   <li><strong>Automatic rule selection:</strong> Returns the via rule from the net's class rules</li>
+   *   <li><strong>Manual rule selection:</strong> Returns the manually selected via rule if valid
+   *   <li><strong>Automatic rule selection:</strong> Returns the via rule from the net's class
+   *       rules
    * </ul>
    *
    * <p>If manual selection is active but the index is invalid, falls back to the net class rule.
    *
-   * @param p_net_no the net number to get the via rule for
+   * @param netNo the net number to get the via rule for
    * @return the via rule defining allowed via types and priorities
-   *
    * @see ViaRule
-   * @see NetClass#get_via_rule()
+   * @see NetClass#getViaRule()
    */
-  public ViaRule get_via_rule(int p_net_no) {
+  public ViaRule getViaRule(int netNo) {
     ViaRule result = null;
-    if (interactiveSettings.get_manual_rule_selection()) {
-      result = board.rules.via_rules.get(this.interactiveSettings.get_manual_via_rule_index());
+    if (interactiveSettings.getManualRuleSelection()) {
+      result = board.rules.viaRules.get(this.interactiveSettings.getManualViaRuleIndex());
     }
     if (result == null) {
-      result = board.rules.nets
-          .get(p_net_no)
-          .get_class()
-          .get_via_rule();
+      result = board.rules.nets.get(netNo).getNetClass().getViaRule();
     }
     return result;
   }
 
   /**
-   * Changes the default trace half-width currently used in interactive routing on the specified layer.
+   * Changes the default trace half-width currently used in interactive routing on the specified
+   * layer.
    *
-   * <p>This sets the default trace width for nets that don't have specific width rules.
-   * The change affects future routing operations on the layer.
+   * <p>This sets the default trace width for nets that don't have specific width rules. The change
+   * affects future routing operations on the layer.
    *
    * <p>This operation is ignored if:
+   *
    * <ul>
-   *   <li>The board is in read-only mode</li>
-   *   <li>The layer index is out of valid range</li>
+   *   <li>The board is in read-only mode
+   *   <li>The layer index is out of valid range
    * </ul>
    *
-   * @param p_layer the layer index to set the default width for
-   * @param p_value the new default trace half-width in board units
-   *
-   * @see BoardRules#set_default_trace_half_width(int, int)
+   * @param layer the layer index to set the default width for
+   * @param value the new default trace half-width in board units
+   * @see BoardRules#setDefaultTraceHalfWidth(int, int)
    */
-  public void set_default_trace_halfwidth(int p_layer, int p_value) {
-    if (board_is_read_only) {
+  public void setDefaultTraceHalfwidth(int layer, int value) {
+    if (boardIsReadOnly) {
       return;
     }
-    if (p_layer >= 0 && p_layer <= board.get_layer_count()) {
-      board.rules.set_default_trace_half_width(p_layer, p_value);
+    if (layer >= 0 && layer <= board.getLayerCount()) {
+      board.rules.setDefaultTraceHalfWidth(layer, value);
     }
   }
 
   /**
    * Switches clearance compensation on or off for the search tree.
    *
-   * <p>Clearance compensation is a performance optimization technique where search tree
-   * shapes are pre-expanded by their clearance requirements. This:
+   * <p>Clearance compensation is a performance optimization technique where search tree shapes are
+   * pre-expanded by their clearance requirements. This:
+   *
    * <ul>
-   *   <li><strong>When enabled:</strong> Faster clearance checking but higher memory usage</li>
-   *   <li><strong>When disabled:</strong> Lower memory usage but slower clearance checks</li>
+   *   <li><strong>When enabled:</strong> Faster clearance checking but higher memory usage
+   *   <li><strong>When disabled:</strong> Lower memory usage but slower clearance checks
    * </ul>
    *
    * <p>This setting is ignored if the board is in read-only mode.
    *
-   * @param p_value true to enable clearance compensation, false to disable
-   *
-   * @see SearchTreeManager#set_clearance_compensation_used(boolean)
+   * @param value true to enable clearance compensation, false to disable
+   * @see SearchTreeManager#setClearanceCompensationUsed(boolean)
    */
-  public void set_clearance_compensation(boolean p_value) {
-    if (board_is_read_only) {
+  public void setClearanceCompensation(boolean value) {
+    if (boardIsReadOnly) {
       return;
     }
-    board.search_tree_manager.set_clearance_compensation_used(p_value);
+    board.searchTreeManager.setClearanceCompensationUsed(value);
   }
 
   /**
    * Changes the current snap angle restriction for interactive routing.
    *
    * <p>The snap angle determines which trace angles are allowed during routing:
+   *
    * <ul>
-   *   <li><strong>FORTYFIVE_DEGREE:</strong> Traces limited to 0°, 45°, 90°, 135°, etc.</li>
-   *   <li><strong>NINETY_DEGREE:</strong> Traces limited to 0°, 90°, 180°, 270° (orthogonal only)</li>
-   *   <li><strong>NONE:</strong> Any angle allowed (free-angle routing)</li>
+   *   <li><strong>FORTYFIVE_DEGREE:</strong> Traces limited to 0°, 45°, 90°, 135°, etc.
+   *   <li><strong>NINETY_DEGREE:</strong> Traces limited to 0°, 90°, 180°, 270° (orthogonal only)
+   *   <li><strong>NONE:</strong> Any angle allowed (free-angle routing)
    * </ul>
    *
    * <p>This setting is ignored if the board is in read-only mode.
    *
-   * @param p_snap_angle the angle restriction to apply
-   *
+   * @param snapAngle the angle restriction to apply
    * @see AngleRestriction
-   * @see BoardRules#set_trace_angle_restriction(AngleRestriction)
+   * @see BoardRules#setTraceAngleRestriction(AngleRestriction)
    */
-  public void set_current_snap_angle(AngleRestriction p_snap_angle) {
-    if (board_is_read_only) {
+  public void setCurrentSnapAngle(AngleRestriction snapAngle) {
+    if (boardIsReadOnly) {
       return;
     }
-    board.rules.set_trace_angle_restriction(p_snap_angle);
+    board.rules.setTraceAngleRestriction(snapAngle);
   }
 
   /**
    * Changes the current active layer for interactive routing.
    *
-   * <p>The current layer is where new traces and vias will be created during interactive
-   * routing operations. This method:
+   * <p>The current layer is where new traces and vias will be created during interactive routing
+   * operations. This method:
+   *
    * <ul>
-   *   <li>Clamps the layer index to valid range [0, layer_count - 1]</li>
-   *   <li>Updates the display to show the new active layer</li>
-   *   <li>Updates UI components to reflect the layer change</li>
+   *   <li>Clamps the layer index to valid range [0, layerCount - 1]
+   *   <li>Updates the display to show the new active layer
+   *   <li>Updates UI components to reflect the layer change
    * </ul>
    *
    * <p>This setting is ignored if the board is in read-only mode.
    *
-   * @param p_layer the layer index to make active (will be clamped to valid range)
-   *
-   * @see #set_layer(int)
+   * @param layer the layer index to make active (will be clamped to valid range)
+   * @see #setLayer(int)
    */
-  public void set_current_layer(int p_layer) {
-    if (board_is_read_only) {
+  public void setCurrentLayer(int layer) {
+    if (boardIsReadOnly) {
       return;
     }
-    int layer = Math.max(p_layer, 0);
-    layer = Math.min(layer, board.get_layer_count() - 1);
-    set_layer(layer);
+    layer = Math.max(layer, 0);
+    layer = Math.min(layer, board.getLayerCount() - 1);
+    setLayer(layer);
   }
 
   /**
    * Changes the current layer without saving the change to logfile.
    *
    * <p>This internal method performs the actual layer change operation:
+   *
    * <ul>
-   *   <li>Updates the screen message display with the layer name</li>
-   *   <li>Sets the layer in interactive settings</li>
-   *   <li>Updates the layer selector in the UI panel (for signal layers)</li>
-   *   <li>Makes the layer visible if it was hidden</li>
-   *   <li>Sets the layer as fully visible in the graphics context</li>
-   *   <li>Triggers a board repaint</li>
+   *   <li>Updates the screen message display with the layer name
+   *   <li>Sets the layer in interactive settings
+   *   <li>Updates the layer selector in the UI panel (for signal layers)
+   *   <li>Makes the layer visible if it was hidden
+   *   <li>Sets the layer as fully visible in the graphics context
+   *   <li>Triggers a board repaint
    * </ul>
    *
-   * <p><strong>Note:</strong> This is for internal use. External code should use
-   * {@link #set_current_layer(int)} which provides validation and logging.
+   * <p><strong>Note:</strong> This is for internal use. External code should use {@link
+   * #setCurrentLayer(int)} which provides validation and logging.
    *
-   * @param p_layer_no the layer index to switch to (assumed to be valid)
-   *
-   * @see #set_current_layer(int)
+   * @param layerNo the layer index to switch to (assumed to be valid)
+   * @see #setCurrentLayer(int)
    */
-  void set_layer(int p_layer_no) {
-    Layer curr_layer = board.layer_structure.arr[p_layer_no];
-    screen_messages.set_layer(curr_layer.name);
-    interactiveSettings.set_layer(p_layer_no);
+  void setLayer(int layerNo) {
+    Layer currLayer = board.layerStructure.arr[layerNo];
+    screenMessages.setLayer(currLayer.name);
+    interactiveSettings.setLayer(layerNo);
 
     // Change the selected layer in the select parameter window.
-    if ((!this.board_is_read_only) && (curr_layer.is_signal)) {
-      this.panel.set_selected_signal_layer(p_layer_no);
+    if ((!this.boardIsReadOnly) && (currLayer.isSignal)) {
+      this.panel.setSelectedSignalLayer(layerNo);
     }
 
     // make the layer visible, if it is invisible
-    if (graphics_context != null) {
-      if (graphics_context.get_layer_visibility(p_layer_no) == 0) {
-        graphics_context.set_layer_visibility(p_layer_no, 1);
-        if (panel != null && panel.board_frame != null) {
-          panel.board_frame.refresh_windows();
+    if (graphicsContext != null) {
+      if (graphicsContext.getLayerVisibility(layerNo) == 0) {
+        graphicsContext.setLayerVisibility(layerNo, 1);
+        if (panel != null && panel.boardFrame != null) {
+          panel.boardFrame.refreshWindows();
         }
       }
-      graphics_context.set_fully_visible_layer(p_layer_no);
+      graphicsContext.setFullyVisibleLayer(layerNo);
     }
     repaint();
   }
@@ -1040,50 +1058,52 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Updates the layer message display to show the current active layer name.
    *
    * <p>This method:
+   *
    * <ul>
-   *   <li>Clears the additional message field</li>
-   *   <li>Displays the current layer name in the layer message field</li>
+   *   <li>Clears the additional message field
+   *   <li>Displays the current layer name in the layer message field
    * </ul>
    *
    * <p>Useful for refreshing the display after layer-related operations.
    *
-   * @see ScreenMessages#set_layer(String)
+   * @see ScreenMessages#setLayer(String)
    */
-  public void display_layer_message() {
-    screen_messages.clear_add_field();
-    Layer curr_layer = board.layer_structure.arr[this.interactiveSettings.get_layer()];
-    screen_messages.set_layer(curr_layer.name);
+  public void displayLayerMessage() {
+    screenMessages.clearAddField();
+    Layer currLayer = board.layerStructure.arr[this.interactiveSettings.getLayer()];
+    screenMessages.setLayer(currLayer.name);
   }
 
   /**
    * Sets the manual trace half-width used in interactive routing for specified layers.
    *
    * <p>This method supports setting trace width for:
+   *
    * <ul>
-   *   <li><strong>All layers:</strong> When p_layer_no == {@link ComboBoxLayer#ALL_LAYER_INDEX}</li>
-   *   <li><strong>Inner layers only:</strong> When p_layer_no == {@link ComboBoxLayer#INNER_LAYER_INDEX}</li>
-   *   <li><strong>Single layer:</strong> When p_layer_no is a specific layer index</li>
+   *   <li><strong>All layers:</strong> When p_layer_no == {@link ComboBoxLayer#ALL_LAYER_INDEX}
+   *   <li><strong>Inner layers only:</strong> When p_layer_no == {@link
+   *       ComboBoxLayer#INNER_LAYER_INDEX}
+   *   <li><strong>Single layer:</strong> When p_layer_no is a specific layer index
    * </ul>
    *
    * <p>The manual trace width is only used when manual rule selection is active.
    *
-   * @param p_layer_no the layer index, or special index for all/inner layers
-   * @param p_value the trace half-width to set in board units
-   *
-   * @see InteractiveSettings#set_manual_trace_half_width(int, int)
+   * @param layerNo the layer index, or special index for all/inner layers
+   * @param value the trace half-width to set in board units
+   * @see InteractiveSettings#setManualTraceHalfWidth(int, int)
    * @see ComboBoxLayer
    */
-  public void set_manual_trace_half_width(int p_layer_no, int p_value) {
-    if (p_layer_no == ComboBoxLayer.ALL_LAYER_INDEX) {
-      for (int i = 0; i < interactiveSettings.get_layer_count(); i++) {
-        this.interactiveSettings.set_manual_trace_half_width(i, p_value);
+  public void setManualTraceHalfWidth(int layerNo, int value) {
+    if (layerNo == ComboBoxLayer.ALL_LAYER_INDEX) {
+      for (int i = 0; i < interactiveSettings.getLayerCount(); i++) {
+        this.interactiveSettings.setManualTraceHalfWidth(i, value);
       }
-    } else if (p_layer_no == ComboBoxLayer.INNER_LAYER_INDEX) {
-      for (int i = 1; i < interactiveSettings.get_layer_count() - 1; i++) {
-        this.interactiveSettings.set_manual_trace_half_width(i, p_value);
+    } else if (layerNo == ComboBoxLayer.INNER_LAYER_INDEX) {
+      for (int i = 1; i < interactiveSettings.getLayerCount() - 1; i++) {
+        this.interactiveSettings.setManualTraceHalfWidth(i, value);
       }
     } else {
-      this.interactiveSettings.set_manual_trace_half_width(p_layer_no, p_value);
+      this.interactiveSettings.setManualTraceHalfWidth(layerNo, value);
     }
   }
 
@@ -1091,23 +1111,23 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Changes the interactive selectability of a specific item type.
    *
    * <p>When an item type is set to non-selectable:
+   *
    * <ul>
-   *   <li>It cannot be picked or selected during interactive operations</li>
-   *   <li>If currently selected items become non-selectable, they are filtered out</li>
+   *   <li>It cannot be picked or selected during interactive operations
+   *   <li>If currently selected items become non-selectable, they are filtered out
    * </ul>
    *
    * <p>This is useful for focusing on specific types of objects during editing.
    *
-   * @param p_item_type the item type to make selectable or non-selectable
-   * @param p_value true to make the item type selectable, false to disable selection
-   *
+   * @param itemType the item type to make selectable or non-selectable
+   * @param value true to make the item type selectable, false to disable selection
    * @see ItemSelectionFilter.SelectableChoices
-   * @see InteractiveSettings#set_selectable(ItemSelectionFilter.SelectableChoices, boolean)
+   * @see InteractiveSettings#setSelectable(ItemSelectionFilter.SelectableChoices, boolean)
    */
-  public void set_selectable(ItemSelectionFilter.SelectableChoices p_item_type, boolean p_value) {
-    interactiveSettings.set_selectable(p_item_type, p_value);
-    if (!p_value && this.interactive_state instanceof InspectedItemState) {
-      set_interactive_state(((InspectedItemState) interactive_state).filter());
+  public void setSelectable(ItemSelectionFilter.SelectableChoices itemType, boolean value) {
+    interactiveSettings.setSelectable(itemType, value);
+    if (!value && this.interactiveState instanceof InspectedItemState) {
+      setInteractiveState(((InspectedItemState) interactiveState).filter());
     }
   }
 
@@ -1115,19 +1135,20 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Toggles the display of incomplete connections (rats nest) on the board.
    *
    * <p>The rats nest shows unrouted connections as straight lines between pins:
+   *
    * <ul>
-   *   <li><strong>If hidden or null:</strong> Creates and displays the rats nest</li>
-   *   <li><strong>If visible:</strong> Hides the rats nest</li>
+   *   <li><strong>If hidden or null:</strong> Creates and displays the rats nest
+   *   <li><strong>If visible:</strong> Hides the rats nest
    * </ul>
    *
    * <p>Triggers a board repaint to update the display.
    *
    * @see RatsNest
-   * @see #create_ratsnest()
+   * @see #createRatsnest()
    */
-  public void toggle_ratsnest() {
-    if (ratsnest == null || ratsnest.is_hidden()) {
-      create_ratsnest();
+  public void toggleRatsnest() {
+    if (ratsnest == null || ratsnest.isHidden()) {
+      createRatsnest();
     } else {
       ratsnest = null;
     }
@@ -1138,24 +1159,26 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Toggles the display of clearance violations on the board.
    *
    * <p>Clearance violations indicate locations where items are too close together:
+   *
    * <ul>
-   *   <li><strong>If not displayed:</strong> Calculates and displays all violations with count message</li>
-   *   <li><strong>If displayed:</strong> Hides the violations and clears the status message</li>
+   *   <li><strong>If not displayed:</strong> Calculates and displays all violations with count
+   *       message
+   *   <li><strong>If displayed:</strong> Hides the violations and clears the status message
    * </ul>
    *
    * <p>Triggers a board repaint to update the display.
    *
    * @see ClearanceViolations
    */
-  public void toggle_clearance_violations() {
-    if (clearance_violations == null) {
-      clearance_violations = new ClearanceViolations(this.board.get_items());
-      Integer violation_count = (clearance_violations.list.size() + 1) / 2;
-      String curr_message = violation_count + " " + tm.getText("clearance_violations_found");
-      screen_messages.set_status_message(curr_message);
+  public void toggleClearanceViolations() {
+    if (clearanceViolations == null) {
+      clearanceViolations = new ClearanceViolations(this.board.getItems());
+      Integer violationCount = (clearanceViolations.list.size() + 1) / 2;
+      String currMessage = violationCount + " " + tm.getText("clearance_violations_found");
+      screenMessages.setStatusMessage(currMessage);
     } else {
-      clearance_violations = null;
-      screen_messages.set_status_message("");
+      clearanceViolations = null;
+      screenMessages.setStatusMessage("");
     }
     repaint();
   }
@@ -1164,34 +1187,33 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Creates and displays the rats nest showing all incomplete connections.
    *
    * <p>This method:
+   *
    * <ul>
-   *   <li>Creates a new RatsNest object analyzing all incomplete connections</li>
-   *   <li>Counts incomplete connections and length violations</li>
-   *   <li>Displays a status message with connection statistics</li>
+   *   <li>Creates a new RatsNest object analyzing all incomplete connections
+   *   <li>Counts incomplete connections and length violations
+   *   <li>Displays a status message with connection statistics
    * </ul>
    *
    * <p>The rats nest shows unrouted connections as straight lines (air wires) between pins.
    *
    * @see RatsNest
-   * @see #toggle_ratsnest()
+   * @see #toggleRatsnest()
    */
-  public void create_ratsnest() {
+  public void createRatsnest() {
     ratsnest = new RatsNest(this.board);
     updateRatsnestStatusMessage();
   }
 
-  /**
-   * Attaches a rats nest built during background board loading and updates the status bar.
-   */
+  /** Attaches a rats nest built during background board loading and updates the status bar. */
   public void attachPreparedRatsNest(RatsNest preparedRatsNest) {
     this.ratsnest = preparedRatsNest;
     updateRatsnestStatusMessage();
   }
 
   /** Creates a rats nest only when one is not already present (for example after async load). */
-  public void create_ratsnestIfAbsent() {
+  public void createRatsnestIfAbsent() {
     if (ratsnest == null) {
-      create_ratsnest();
+      createRatsnest();
     } else {
       updateRatsnestStatusMessage();
     }
@@ -1201,34 +1223,34 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (ratsnest == null) {
       return;
     }
-    Integer incomplete_count = ratsnest.incomplete_count();
-    int length_violation_count = ratsnest.length_violation_count();
-    String curr_message;
-    if (length_violation_count == 0) {
-      curr_message = tm.getText("ratsnest_status_incomplete_only", Integer.toString(incomplete_count));
+    Integer incompleteCount = ratsnest.incompleteCount();
+    int lengthViolationCount = ratsnest.lengthViolationCount();
+    String currMessage;
+    if (lengthViolationCount == 0) {
+      currMessage =
+          tm.getText("ratsnest_status_incomplete_only", Integer.toString(incompleteCount));
     } else {
-      curr_message = tm.getText(
-          "ratsnest_status_with_length_violations",
-          Integer.toString(incomplete_count),
-          Integer.toString(length_violation_count));
+      currMessage =
+          tm.getText(
+              "ratsnest_status_with_length_violations",
+              Integer.toString(incompleteCount),
+              Integer.toString(lengthViolationCount));
     }
-    screen_messages.set_status_message(curr_message);
+    screenMessages.setStatusMessage(currMessage);
   }
 
   /**
    * Recalculates and updates the incomplete connections for the specified net.
    *
-   * <p>If the rats nest is currently displayed, this method recalculates the air wires
-   * for the given net and updates the display. Ignored if rats nest is not active or
-   * net number is invalid.
+   * <p>If the rats nest is currently displayed, this method recalculates the air wires for the
+   * given net and updates the display. Ignored if rats nest is not active or net number is invalid.
    *
-   * @param p_net_no the net number to recalculate connections for (must be > 0)
-   *
+   * @param netNo the net number to recalculate connections for (must be > 0)
    * @see RatsNest#recalculate(int, BasicBoard)
    */
-  void update_ratsnest(int p_net_no) {
-    if (ratsnest != null && p_net_no > 0) {
-      ratsnest.recalculate(p_net_no, this.board);
+  void updateRatsnest(int netNo) {
+    if (ratsnest != null && netNo > 0) {
+      ratsnest.recalculate(netNo, this.board);
       ratsnest.show();
     }
   }
@@ -1239,14 +1261,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>This optimized version recalculates connections only for items in the provided collection,
    * which is more efficient when only a subset of items has changed.
    *
-   * @param p_net_no the net number to recalculate connections for (must be > 0)
-   * @param p_item_list the collection of items to consider in the recalculation
-   *
+   * @param netNo the net number to recalculate connections for (must be > 0)
+   * @param itemList the collection of items to consider in the recalculation
    * @see RatsNest#recalculate(int, Collection, BasicBoard)
    */
-  void update_ratsnest(int p_net_no, Collection<Item> p_item_list) {
-    if (ratsnest != null && p_net_no > 0) {
-      ratsnest.recalculate(p_net_no, p_item_list, this.board);
+  void updateRatsnest(int netNo, Collection<Item> itemList) {
+    if (ratsnest != null && netNo > 0) {
+      ratsnest.recalculate(netNo, itemList, this.board);
       ratsnest.show();
     }
   }
@@ -1254,13 +1275,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Recalculates all incomplete connections if the rats nest is currently active.
    *
-   * <p>This full recalculation creates a new rats nest from scratch, analyzing all
-   * nets and items on the board. Used when significant board changes have occurred
-   * that affect multiple nets.
+   * <p>This full recalculation creates a new rats nest from scratch, analyzing all nets and items
+   * on the board. Used when significant board changes have occurred that affect multiple nets.
    *
    * @see RatsNest#RatsNest(BasicBoard)
    */
-  void update_ratsnest() {
+  void updateRatsnest() {
     if (ratsnest != null) {
       ratsnest = new RatsNest(this.board);
     }
@@ -1269,14 +1289,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Hides the rats nest display without destroying the data structure.
    *
-   * <p>The rats nest object is retained in memory but not rendered. This allows
-   * quick re-display without recalculation. Use {@link #toggle_ratsnest()} to
-   * show it again.
+   * <p>The rats nest object is retained in memory but not rendered. This allows quick re-display
+   * without recalculation. Use {@link #toggleRatsnest()} to show it again.
    *
    * @see RatsNest#hide()
-   * @see #toggle_ratsnest()
+   * @see #toggleRatsnest()
    */
-  public void hide_ratsnest() {
+  public void hideRatsnest() {
     if (ratsnest != null) {
       ratsnest.hide();
     }
@@ -1285,13 +1304,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Shows the rats nest display if it is currently active.
    *
-   * <p>Makes the rats nest visible on the board, displaying all incomplete connections
-   * as air wires. The rats nest object must already exist.
+   * <p>Makes the rats nest visible on the board, displaying all incomplete connections as air
+   * wires. The rats nest object must already exist.
    *
    * @see RatsNest#show()
-   * @see #hide_ratsnest()
+   * @see #hideRatsnest()
    */
-  public void show_ratsnest() {
+  public void showRatsnest() {
     if (ratsnest != null) {
       ratsnest.show();
     }
@@ -1300,34 +1319,33 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Removes the rats nest object, deallocating its data structure.
    *
-   * <p>This fully destroys the rats nest. Creating it again will require
-   * recalculation from scratch. Use {@link #hide_ratsnest()} if you want
-   * to preserve the data for quick re-display.
+   * <p>This fully destroys the rats nest. Creating it again will require recalculation from
+   * scratch. Use {@link #hideRatsnest()} if you want to preserve the data for quick re-display.
    *
-   * @see #get_ratsnest()
-   * @see #hide_ratsnest()
+   * @see #getRatsnest()
+   * @see #hideRatsnest()
    */
-  public void remove_ratsnest() {
+  public void removeRatsnest() {
     ratsnest = null;
   }
 
   /**
    * Returns the rats nest object containing incomplete connection information.
    *
-   * <p>If the rats nest doesn't exist, creates a new one by analyzing the board.
-   * The rats nest contains:
+   * <p>If the rats nest doesn't exist, creates a new one by analyzing the board. The rats nest
+   * contains:
+   *
    * <ul>
-   *   <li>All incomplete (unrouted) connections</li>
-   *   <li>Connection length information</li>
-   *   <li>Length violation data</li>
+   *   <li>All incomplete (unrouted) connections
+   *   <li>Connection length information
+   *   <li>Length violation data
    * </ul>
    *
    * @return the rats nest object with connection analysis
-   *
    * @see RatsNest
-   * @see #remove_ratsnest()
+   * @see #removeRatsnest()
    */
-  public RatsNest get_ratsnest() {
+  public RatsNest getRatsnest() {
     if (ratsnest == null) {
       ratsnest = new RatsNest(this.board);
     }
@@ -1337,16 +1355,16 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Recalculates length violations for all nets in the rats nest.
    *
-   * <p>Checks all incomplete connections against maximum length constraints and
-   * updates violation status. If violations changed and the rats nest is visible,
-   * triggers a board repaint to update the display.
+   * <p>Checks all incomplete connections against maximum length constraints and updates violation
+   * status. If violations changed and the rats nest is visible, triggers a board repaint to update
+   * the display.
    *
-   * @see RatsNest#recalculate_length_violations()
+   * @see RatsNest#recalculateLengthViolations()
    */
-  public void recalculate_length_violations() {
+  public void recalculateLengthViolations() {
     if (this.ratsnest != null) {
-      if (this.ratsnest.recalculate_length_violations()) {
-        if (!this.ratsnest.is_hidden()) {
+      if (this.ratsnest.recalculateLengthViolations()) {
+        if (!this.ratsnest.isHidden()) {
           this.repaint();
         }
       }
@@ -1356,23 +1374,23 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Sets the visibility filter for incomplete connections of the specified net.
    *
-   * <p>Controls whether the incomplete connections (air wires) for a specific net
-   * are displayed in the rats nest:
+   * <p>Controls whether the incomplete connections (air wires) for a specific net are displayed in
+   * the rats nest:
+   *
    * <ul>
-   *   <li><strong>true:</strong> Show incompletes for this net</li>
-   *   <li><strong>false:</strong> Hide incompletes for this net</li>
+   *   <li><strong>true:</strong> Show incompletes for this net
+   *   <li><strong>false:</strong> Hide incompletes for this net
    * </ul>
    *
    * <p>Useful for focusing on specific nets while hiding others for clarity.
    *
-   * @param p_net_no the net number to filter
-   * @param p_value true to show incompletes, false to hide them
-   *
-   * @see RatsNest#set_filter(int, boolean)
+   * @param netNo the net number to filter
+   * @param value true to show incompletes, false to hide them
+   * @see RatsNest#setFilter(int, boolean)
    */
-  public void set_incompletes_filter(int p_net_no, boolean p_value) {
+  public void setIncompletesFilter(int netNo, boolean value) {
     if (ratsnest != null) {
-      ratsnest.set_filter(p_net_no, p_value);
+      ratsnest.setFilter(netNo, value);
     }
   }
 
@@ -1380,57 +1398,68 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Creates the routing board with GUI-specific initialization.
    *
    * <p>This method extends the base board creation with GUI components:
+   *
    * <ol>
-   *   <li>Calls super to create the basic routing board structure</li>
-   *   <li>Initializes the coordinate transform for unit conversions</li>
-   *   <li>Creates the graphics context for visual rendering</li>
+   *   <li>Calls super to create the basic routing board structure
+   *   <li>Initializes the coordinate transform for unit conversions
+   *   <li>Creates the graphics context for visual rendering
    * </ol>
    *
    * <p>The coordinate transform handles conversions between:
+   *
    * <ul>
-   *   <li>User units (mm, mil, inch) for display</li>
-   *   <li>Board internal units for calculations</li>
-   *   <li>DSN file units for import/export</li>
+   *   <li>User units (mm, mil, inch) for display
+   *   <li>Board internal units for calculations
+   *   <li>DSN file units for import/export
    * </ul>
    *
-   * @param p_bounding_box the rectangular boundary of the board
-   * @param p_layer_structure the layer stack-up definition
-   * @param p_outline_shapes array of shapes defining the board outline
-   * @param p_outline_clearance_class_name clearance class name for the outline
-   * @param p_rules the board design rules and constraints
-   * @param p_board_communication communication interface for external integration
-   *
-   * @see HeadlessBoardManager#create_board
+   * @param boundingBox the rectangular boundary of the board
+   * @param layerStructure the layer stack-up definition
+   * @param outlineShapes array of shapes defining the board outline
+   * @param outlineClearanceClassName clearance class name for the outline
+   * @param rules the board design rules and constraints
+   * @param boardCommunication communication interface for external integration
+   * @see HeadlessBoardManager#createBoard
    * @see GraphicsContext
    * @see CoordinateTransform
    */
   @Override
-  public void create_board(IntBox p_bounding_box, LayerStructure p_layer_structure, PolylineShape[] p_outline_shapes,
-      String p_outline_clearance_class_name, BoardRules p_rules,
-      Communication p_board_communication) {
-    super.create_board(p_bounding_box, p_layer_structure, p_outline_shapes, p_outline_clearance_class_name, p_rules,
-        p_board_communication);
+  public void createBoard(
+      IntBox boundingBox,
+      LayerStructure layerStructure,
+      PolylineShape[] outlineShapes,
+      String outlineClearanceClassName,
+      BoardRules rules,
+      Communication boardCommunication) {
+    super.createBoard(
+        boundingBox,
+        layerStructure,
+        outlineShapes,
+        outlineClearanceClassName,
+        rules,
+        boardCommunication);
 
     // Reset and rebind the GUI-session singleton for the newly created board.
-    this.interactiveSettings = InteractiveSettings.reset(this.board, this.routingJob.routerSettings);
-    this.initialize_manual_trace_half_widths();
+    this.interactiveSettings =
+        InteractiveSettings.reset(this.board, this.routingJob.routerSettings);
+    this.initializeManualTraceHalfWidths();
 
     // create the interactive/GUI settings with default values
-    double unit_factor = p_board_communication.coordinate_transform.board_to_dsn(1);
-    this.coordinate_transform = new CoordinateTransform(1, p_board_communication.unit, unit_factor,
-        p_board_communication.unit);
+    double unitFactor = boardCommunication.coordinateTransform.boardToDsn(1);
+    this.coordinateTransform =
+        new CoordinateTransform(1, boardCommunication.unit, unitFactor, boardCommunication.unit);
 
     // create a graphics context for the board
-    Dimension panel_size = panel.getPreferredSize();
-    graphics_context = new GraphicsContext(p_bounding_box, panel_size, p_layer_structure, this.locale);
+    Dimension panelSize = panel.getPreferredSize();
+    graphicsContext = new GraphicsContext(boundingBox, panelSize, layerStructure, this.locale);
   }
 
   /**
    * Returns the GUI-session {@link InteractiveSettings} singleton.
    *
    * <p>The returned instance is also the live {@link app.freerouting.settings.sources.GuiSettings}
-   * source (priority 50) registered in the {@link SettingsMerger} pipeline. It is always
-   * non-null after a board has been created or loaded.
+   * source (priority 50) registered in the {@link SettingsMerger} pipeline. It is always non-null
+   * after a board has been created or loaded.
    *
    * @return the {@link InteractiveSettings} singleton; non-null after board initialisation
    */
@@ -1458,40 +1487,40 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   @Deprecated
   @Override
-  public InteractiveSettings get_settings() {
+  public InteractiveSettings getSettings() {
     return interactiveSettings;
   }
 
   /**
    * Initialises manual trace half-widths from the board's default net class rules.
    *
-   * <p>Copies the default trace width for each layer from the board's default net class into
-   * {@link InteractiveSettings#manual_trace_half_width_arr}. Must be called after the board is
-   * created or loaded.
+   * <p>Copies the default trace width for each layer from the board's default net class into {@link
+   * InteractiveSettings#manualTraceHalfWidthArr}. Must be called after the board is created or
+   * loaded.
    *
-   * @see InteractiveSettings#manual_trace_half_width_arr
-   * @see app.freerouting.rules.NetClass#get_trace_half_width(int)
+   * @see InteractiveSettings#manualTraceHalfWidthArr
+   * @see app.freerouting.rules.NetClass#getTraceHalfWidth(int)
    */
   @Override
-  public void initialize_manual_trace_half_widths() {
+  public void initializeManualTraceHalfWidths() {
     if (interactiveSettings == null || this.board == null) {
       return;
     }
-    for (int i = 0; i < interactiveSettings.get_layer_count(); i++) {
-      interactiveSettings.manual_trace_half_width_arr[i] =
-          this.board.rules.get_default_net_class().get_trace_half_width(i);
+    for (int i = 0; i < interactiveSettings.getLayerCount(); i++) {
+      interactiveSettings.manualTraceHalfWidthArr[i] =
+          this.board.rules.getDefaultNetClass().getTraceHalfWidth(i);
     }
   }
 
   /**
-   * Re-subscribes all permanent GUI subwindows as {@link java.beans.PropertyChangeListener}s on
-   * the current {@link InteractiveSettings} singleton and pushes the fresh settings values to their
+   * Re-subscribes all permanent GUI subwindows as {@link java.beans.PropertyChangeListener}s on the
+   * current {@link InteractiveSettings} singleton and pushes the fresh settings values to their
    * controls by calling {@code refresh()} on each window.
    *
-   * <p>Must be called after every design load (DSN or binary) once the new
-   * {@link InteractiveSettings} singleton has been bound to the new board, and after every
-   * {@link InteractiveSettings#reset(app.freerouting.board.RoutingBoard)} call since the old
-   * singleton (and its listener list) is discarded.
+   * <p>Must be called after every design load (DSN or binary) once the new {@link
+   * InteractiveSettings} singleton has been bound to the new board, and after every {@link
+   * InteractiveSettings#reset(app.freerouting.board.RoutingBoard)} call since the old singleton
+   * (and its listener list) is discarded.
    *
    * <p>This method is a no-op when {@code interactiveSettings} is {@code null} (headless mode) or
    * when there is no {@link app.freerouting.gui.BoardFrame} attached.
@@ -1507,14 +1536,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
 
     // Re-subscribe every permanent subwindow as a PropertyChangeListener.
     // The listener simply calls refresh() on the next EDT cycle to pull the new values.
-    for (app.freerouting.gui.BoardSavableSubWindow subwindow : boardFrame.getPermanentSubwindows()) {
+    for (app.freerouting.gui.BoardSavableSubWindow subwindow :
+        boardFrame.getPermanentSubwindows()) {
       if (subwindow == null) {
         continue;
       }
       // Capture the subwindow in a local effectively-final variable for the lambda.
       final app.freerouting.gui.BoardSavableSubWindow sw = subwindow;
-      interactiveSettings.addPropertyChangeListener(_ ->
-          javax.swing.SwingUtilities.invokeLater(sw::refresh));
+      interactiveSettings.addPropertyChangeListener(
+          _ -> javax.swing.SwingUtilities.invokeLater(sw::refresh));
       // Push current values immediately.
       subwindow.refresh();
     }
@@ -1524,59 +1554,65 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Changes the user unit for coordinate display and input.
    *
    * <p>Updates the unit used throughout the GUI for:
+   *
    * <ul>
-   *   <li>Coordinate display in status messages</li>
-   *   <li>Dimension entry in dialogs</li>
-   *   <li>Measurement displays</li>
+   *   <li>Coordinate display in status messages
+   *   <li>Dimension entry in dialogs
+   *   <li>Measurement displays
    * </ul>
    *
-   * <p>The coordinate transform is recreated to maintain correct scaling factors
-   * between user units and board internal units.
+   * <p>The coordinate transform is recreated to maintain correct scaling factors between user units
+   * and board internal units.
    *
-   * @param p_unit the new unit for user display (mm, mil, inch, etc.)
-   *
+   * @param unit the new unit for user display (mm, mil, inch, etc.)
    * @see Unit
    * @see CoordinateTransform
    */
-  public void change_user_unit(Unit p_unit) {
-    screen_messages.set_unit_label(p_unit.toString());
-    CoordinateTransform old_transform = this.coordinate_transform;
-    this.coordinate_transform = new CoordinateTransform(old_transform.user_unit_factor, p_unit,
-        old_transform.board_unit_factor, old_transform.board_unit);
+  public void changeUserUnit(Unit unit) {
+    screenMessages.setUnitLabel(unit.toString());
+    CoordinateTransform oldTransform = this.coordinateTransform;
+    this.coordinateTransform =
+        new CoordinateTransform(
+            oldTransform.userUnitFactor,
+            unit,
+            oldTransform.boardUnitFactor,
+            oldTransform.boardUnit);
   }
 
   /**
    * Requests a repaint of the board panel.
    *
-   * <p>Repaint behavior depends on the paint_immediately flag:
+   * <p>Repaint behavior depends on the paintImmediately flag:
+   *
    * <ul>
-   *   <li><strong>Immediate mode (paint_immediately=true):</strong> Forces synchronous repaint
-   *       (used during logfile playback)</li>
-   *   <li><strong>Throttled mode (paint_immediately=false):</strong> Respects minimum interval
-   *       between repaints to maintain responsive frame rate</li>
+   *   <li><strong>Immediate mode (paintImmediately=true):</strong> Forces synchronous repaint (used
+   *       during logfile playback)
+   *   <li><strong>Throttled mode (paintImmediately=false):</strong> Respects minimum interval
+   *       between repaints to maintain responsive frame rate
    * </ul>
    *
-   * <p>Throttling prevents excessive repainting during rapid board changes. The interval
-   * is adjusted dynamically based on whether the user is interactively dragging items.
+   * <p>Throttling prevents excessive repainting during rapid board changes. The interval is
+   * adjusted dynamically based on whether the user is interactively dragging items.
    *
    * @see #interactive_repaint_interval
    * @see #background_repaint_interval
-   * @see #paint_immediately
+   * @see #paintImmediately
    */
   public void repaint() {
-    if (this.paint_immediately) {
-      final Rectangle MAX_RECTANGLE = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
-      panel.paintImmediately(MAX_RECTANGLE);
+    if (this.paintImmediately) {
+      final Rectangle maxRectangle = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+      panel.paintImmediately(maxRectangle);
     } else {
       // Use shorter interval for interactive dragging to ensure smooth visual feedback
-      long effective_interval = isInInteractiveDrag() ? interactive_repaint_interval : background_repaint_interval;
-      if (last_repainted_time < System.currentTimeMillis() - effective_interval) {
+      long effectiveInterval =
+          isInInteractiveDrag() ? interactive_repaint_interval : background_repaint_interval;
+      if (last_repainted_time < System.currentTimeMillis() - effectiveInterval) {
         last_repainted_time = System.currentTimeMillis();
 
         // Use partial repaint if we have an update box (more efficient)
-        Rectangle update_rect = get_graphics_update_rectangle();
-        if (update_rect.width > 0 && update_rect.height > 0) {
-          panel.repaint(update_rect);
+        Rectangle updateRect = getGraphicsUpdateRectangle();
+        if (updateRect.width > 0 && updateRect.height > 0) {
+          panel.repaint(updateRect);
         } else {
           panel.repaint();
         }
@@ -1585,67 +1621,65 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
+   * Requests a repaint of a specific rectangular region of the board panel.
+   *
+   * <p>Partial repaint is more efficient than full repaint when only a small area has changed.
+   * Behavior depends on paintImmediately:
+   *
+   * <ul>
+   *   <li><strong>Immediate mode:</strong> Synchronous repaint of the rectangle
+   *   <li><strong>Normal mode:</strong> Asynchronous repaint request
+   * </ul>
+   *
+   * @param rectangle the rectangular region to repaint in screen coordinates
+   * @see #repaint()
+   */
+  public void repaint(Rectangle rectangle) {
+    if (this.paintImmediately) {
+      panel.paintImmediately(rectangle);
+    } else {
+      panel.repaint(rectangle);
+    }
+  }
+
+  /**
    * Checks if the current interactive state is an active drag operation.
    *
-   * <p>Used to determine repaint throttling behavior - interactive drags need
-   * higher frame rate for smooth visual feedback.
+   * <p>Used to determine repaint throttling behavior - interactive drags need higher frame rate for
+   * smooth visual feedback.
    *
    * @return true if currently in a drag state (DragState or its subclasses)
    */
   private boolean isInInteractiveDrag() {
-    return interactive_state instanceof DragState;
-  }
-
-  /**
-   * Requests a repaint of a specific rectangular region of the board panel.
-   *
-   * <p>Partial repaint is more efficient than full repaint when only a small area
-   * has changed. Behavior depends on paint_immediately:
-   * <ul>
-   *   <li><strong>Immediate mode:</strong> Synchronous repaint of the rectangle</li>
-   *   <li><strong>Normal mode:</strong> Asynchronous repaint request</li>
-   * </ul>
-   *
-   * @param p_rect the rectangular region to repaint in screen coordinates
-   *
-   * @see #repaint()
-   */
-  public void repaint(Rectangle p_rect) {
-    if (this.paint_immediately) {
-      panel.paintImmediately(p_rect);
-    } else {
-      panel.repaint(p_rect);
-    }
+    return interactiveState instanceof DragState;
   }
 
   /**
    * Returns the board panel component used for graphical display.
    *
-   * <p>The panel provides the visual interface for board rendering, user interaction,
-   * and screen message display.
+   * <p>The panel provides the visual interface for board rendering, user interaction, and screen
+   * message display.
    *
    * @return the BoardPanel instance managing board visualization
-   *
    * @see BoardPanel
    */
-  public BoardPanel get_panel() {
+  public BoardPanel getPanel() {
     return this.panel;
   }
 
   /**
    * Returns the popup menu for the current interactive state, if applicable.
    *
-   * <p>Different interactive states may provide different popup menus with
-   * context-specific actions. Some states do not use popup menus at all.
+   * <p>Different interactive states may provide different popup menus with context-specific
+   * actions. Some states do not use popup menus at all.
    *
    * @return the popup menu for the current state, or null if no menu is available
-   *
-   * @see InteractiveState#get_popup_menu()
+   * @see InteractiveState#getPopupMenu()
    */
-  public JPopupMenu get_current_popup_menu() {
+  public JPopupMenu getCurrentPopupMenu() {
     JPopupMenu result;
-    if (interactive_state != null) {
-      result = interactive_state.get_popup_menu();
+    if (interactiveState != null) {
+      result = interactiveState.getPopupMenu();
     } else {
       result = null;
     }
@@ -1656,90 +1690,90 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Renders the complete board display including all visual elements.
    *
    * <p>This method draws all board elements in layers:
+   *
    * <ol>
-   *   <li>The routing board (traces, vias, pads, etc.)</li>
-   *   <li>The rats nest (incomplete connections) if visible</li>
-   *   <li>Clearance violations if visible</li>
-   *   <li>Interactive state graphics (rubber-band lines, temporary items)</li>
-   *   <li>Interactive action thread graphics (autoroute progress)</li>
-   *   <li>Trace event indicators (debugging visualization)</li>
+   *   <li>The routing board (traces, vias, pads, etc.)
+   *   <li>The rats nest (incomplete connections) if visible
+   *   <li>Clearance violations if visible
+   *   <li>Interactive state graphics (rubber-band lines, temporary items)
+   *   <li>Interactive action thread graphics (autoroute progress)
+   *   <li>Trace event indicators (debugging visualization)
    * </ol>
    *
    * <p>Called automatically by the panel during repaint operations.
    *
-   * @param p_graphics the Graphics context for rendering
-   *
+   * @param graphics the Graphics context for rendering
    * @see RoutingBoard#draw(Graphics, GraphicsContext)
    * @see InteractiveState#draw(Graphics)
    */
-  public void draw(Graphics p_graphics) {
+  public void draw(Graphics graphics) {
     if (board == null) {
       return;
     }
-    board.draw(p_graphics, graphics_context);
+    board.draw(graphics, graphicsContext);
 
     if (ratsnest != null) {
-      ratsnest.draw(p_graphics, graphics_context);
+      ratsnest.draw(graphics, graphicsContext);
     }
-    if (clearance_violations != null) {
-      clearance_violations.draw(p_graphics, graphics_context);
+    if (clearanceViolations != null) {
+      clearanceViolations.draw(graphics, graphicsContext);
     }
-    if (interactive_state != null) {
-      interactive_state.draw(p_graphics);
+    if (interactiveState != null) {
+      interactiveState.draw(graphics);
     }
-    if (interactive_action_thread != null) {
-      interactive_action_thread.draw(p_graphics);
+    if (interactiveActionThread != null) {
+      interactiveActionThread.draw(graphics);
     }
 
     // Draw indicators for impacted points from trace events
     if (impactedPoints != null && impactedPoints.length > 0) {
-      drawImpactedPointsIndicators(p_graphics);
+      drawImpactedPointsIndicators(graphics);
     }
   }
 
   /**
    * Draws visual indicators (crosshairs and circles) at impacted points for trace debugging.
    *
-   * <p>When trace-level logging is active, this method visualizes the locations affected
-   * by routing operations. Each impacted point is marked with:
+   * <p>When trace-level logging is active, this method visualizes the locations affected by routing
+   * operations. Each impacted point is marked with:
+   *
    * <ul>
-   *   <li>An X-shaped crosshair (two diagonal lines)</li>
-   *   <li>A circle around the point</li>
+   *   <li>An X-shaped crosshair (two diagonal lines)
+   *   <li>A circle around the point
    * </ul>
    *
-   * <p>The indicator size is based on the default trace width, with a minimum size
-   * for visibility. This provides visual feedback for debugging routing algorithms.
+   * <p>The indicator size is based on the default trace width, with a minimum size for visibility.
+   * This provides visual feedback for debugging routing algorithms.
    *
-   * @param p_graphics the Graphics context for rendering
-   *
+   * @param graphics the Graphics context for rendering
    * @see #handleTraceEvent(TraceEvent)
    */
-  private void drawImpactedPointsIndicators(Graphics p_graphics) {
-    Color draw_color = graphics_context.get_hilight_color();
-    double draw_intensity = graphics_context.get_hilight_color_intensity();
-    int default_trace_half_width = board.rules.get_default_trace_half_width(0);
-    double radius = Math.max(5 * default_trace_half_width / 10, 500); // Minimum radius of 500
-    final double draw_width = 50.0;
+  private void drawImpactedPointsIndicators(Graphics graphics) {
+    Color drawColor = graphicsContext.getHighlightColor();
+    double drawIntensity = graphicsContext.getHighlightColorIntensity();
+    int defaultTraceHalfWidth = board.rules.getDefaultTraceHalfWidth(0);
+    double radius = Math.max(5 * defaultTraceHalfWidth / 10, 500); // Minimum radius of 500
+    final double drawWidth = 50.0;
 
     for (Point point : impactedPoints) {
       if (point != null) {
-        FloatPoint center = point.to_float();
+        FloatPoint center = point.toFloat();
 
         // Draw an X marker (crosshair)
-        FloatPoint[] draw_points = new FloatPoint[2];
+        FloatPoint[] drawPoints = new FloatPoint[2];
 
         // Draw first diagonal line (top-left to bottom-right)
-        draw_points[0] = new FloatPoint(center.x - radius, center.y - radius);
-        draw_points[1] = new FloatPoint(center.x + radius, center.y + radius);
-        graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
+        drawPoints[0] = new FloatPoint(center.x - radius, center.y - radius);
+        drawPoints[1] = new FloatPoint(center.x + radius, center.y + radius);
+        graphicsContext.draw(drawPoints, drawWidth, drawColor, graphics, drawIntensity);
 
         // Draw second diagonal line (top-right to bottom-left)
-        draw_points[0] = new FloatPoint(center.x + radius, center.y - radius);
-        draw_points[1] = new FloatPoint(center.x - radius, center.y + radius);
-        graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
+        drawPoints[0] = new FloatPoint(center.x + radius, center.y - radius);
+        drawPoints[1] = new FloatPoint(center.x - radius, center.y + radius);
+        graphicsContext.draw(drawPoints, drawWidth, drawColor, graphics, drawIntensity);
 
         // Draw a circle around the point
-        graphics_context.draw_circle(center, radius, draw_width, draw_color, p_graphics, draw_intensity);
+        graphicsContext.drawCircle(center, radius, drawWidth, drawColor, graphics, drawIntensity);
       }
     }
   }
@@ -1747,57 +1781,59 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Creates a snapshot of the current board state for undo functionality.
    *
-   * <p>Snapshots should be created before operations that users may want to reverse.
-   * This operation is ignored if the board is in read-only mode.
+   * <p>Snapshots should be created before operations that users may want to reverse. This operation
+   * is ignored if the board is in read-only mode.
    *
-   * @see RoutingBoard#generate_snapshot()
+   * @see RoutingBoard#generateSnapshot()
    * @see #undo()
    */
-  public void generate_snapshot() {
-    if (board_is_read_only) {
+  public void generateSnapshot() {
+    if (boardIsReadOnly) {
       return;
     }
-    board.generate_snapshot();
+    board.generateSnapshot();
   }
 
   /**
    * Restores the board to the state of the previous snapshot (undo operation).
    *
    * <p>This method:
+   *
    * <ul>
-   *   <li>Reverts board changes to the last snapshot</li>
-   *   <li>Updates the rats nest for all affected nets</li>
-   *   <li>Displays a status message indicating success or failure</li>
-   *   <li>Triggers a board repaint</li>
+   *   <li>Reverts board changes to the last snapshot
+   *   <li>Updates the rats nest for all affected nets
+   *   <li>Displays a status message indicating success or failure
+   *   <li>Triggers a board repaint
    * </ul>
    *
    * <p>The operation is ignored if:
+   *
    * <ul>
-   *   <li>The board is in read-only mode</li>
-   *   <li>The current state is not a MenuState (to prevent undo during active operations)</li>
+   *   <li>The board is in read-only mode
+   *   <li>The current state is not a MenuState (to prevent undo during active operations)
    * </ul>
    *
    * @see #redo()
-   * @see #generate_snapshot()
+   * @see #generateSnapshot()
    * @see RoutingBoard#undo(Set)
    */
   public void undo() {
-    if (board_is_read_only || !(interactive_state instanceof MenuState)) {
+    if (boardIsReadOnly || !(interactiveState instanceof MenuState)) {
       return;
     }
-    Set<Integer> changed_nets = new TreeSet<>();
-    if (board.undo(changed_nets)) {
-      for (Integer changed_net : changed_nets) {
-        this.update_ratsnest(changed_net);
+    Set<Integer> changedNets = new TreeSet<>();
+    if (board.undo(changedNets)) {
+      for (Integer changedNet : changedNets) {
+        this.updateRatsnest(changedNet);
       }
-      if (!changed_nets.isEmpty()) {
+      if (!changedNets.isEmpty()) {
         // reset the start pass number in the autorouter in case
         // a batch autorouter is undone.
         // Pass tracking is now handled locally in the router algorithms
       }
-      screen_messages.set_status_message(tm.getText("undo"));
+      screenMessages.setStatusMessage(tm.getText("undo"));
     } else {
-      screen_messages.set_status_message(tm.getText("no_more_undo_possible"));
+      screenMessages.setStatusMessage(tm.getText("no_more_undo_possible"));
     }
     repaint();
   }
@@ -1805,36 +1841,38 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Restores the board to the state before the last undo operation (redo operation).
    *
-   * <p>This method re-applies changes that were undone, moving forward in the undo/redo
-   * history. The process:
+   * <p>This method re-applies changes that were undone, moving forward in the undo/redo history.
+   * The process:
+   *
    * <ul>
-   *   <li>Restores board changes that were undone</li>
-   *   <li>Updates the rats nest for all affected nets</li>
-   *   <li>Displays a status message indicating success or failure</li>
-   *   <li>Triggers a board repaint</li>
+   *   <li>Restores board changes that were undone
+   *   <li>Updates the rats nest for all affected nets
+   *   <li>Displays a status message indicating success or failure
+   *   <li>Triggers a board repaint
    * </ul>
    *
    * <p>The operation is ignored if:
+   *
    * <ul>
-   *   <li>The board is in read-only mode</li>
-   *   <li>The current state is not a MenuState</li>
+   *   <li>The board is in read-only mode
+   *   <li>The current state is not a MenuState
    * </ul>
    *
    * @see #undo()
    * @see RoutingBoard#redo(Set)
    */
   public void redo() {
-    if (board_is_read_only || !(interactive_state instanceof MenuState)) {
+    if (boardIsReadOnly || !(interactiveState instanceof MenuState)) {
       return;
     }
-    Set<Integer> changed_nets = new TreeSet<>();
-    if (board.redo(changed_nets)) {
-      for (Integer changed_net : changed_nets) {
-        this.update_ratsnest(changed_net);
+    Set<Integer> changedNets = new TreeSet<>();
+    if (board.redo(changedNets)) {
+      for (Integer changedNet : changedNets) {
+        this.updateRatsnest(changedNet);
       }
-      screen_messages.set_status_message(tm.getText("redo"));
+      screenMessages.setStatusMessage(tm.getText("redo"));
     } else {
-      screen_messages.set_status_message(tm.getText("no_more_redo_possible"));
+      screenMessages.setStatusMessage(tm.getText("no_more_redo_possible"));
     }
     repaint();
   }
@@ -1843,31 +1881,32 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Handles left mouse button click events.
    *
    * <p>Behavior depends on board state:
+   *
    * <ul>
-   *   <li><strong>Read-only mode:</strong> Stops any running autorouter or optimizer</li>
+   *   <li><strong>Read-only mode:</strong> Stops any running autorouter or optimizer
    *   <li><strong>Interactive mode:</strong> Delegates to the current interactive state for
-   *       state-specific handling (e.g., starting routes, selecting items, placing vias)</li>
+   *       state-specific handling (e.g., starting routes, selecting items, placing vias)
    * </ul>
    *
-   * <p>The screen point is converted to board coordinates before being passed to the
-   * interactive state.
+   * <p>The screen point is converted to board coordinates before being passed to the interactive
+   * state.
    *
-   * @param p_point the mouse click location in screen coordinates
-   *
-   * @see InteractiveState#left_button_clicked(FloatPoint)
-   * @see #stop_autorouter_and_route_optimizer()
+   * @param point the mouse click location in screen coordinates
+   * @see InteractiveState#leftButtonClicked(FloatPoint)
+   * @see #stopAutorouterAndRouteOptimizer()
    */
-  public void left_button_clicked(Point2D p_point) {
-    if (board_is_read_only) {
+  public void leftButtonClicked(Point2D point) {
+    if (boardIsReadOnly) {
       // We are currently busy working on the board and the user clicked on the canvas
       // with the left mouse button.
-      this.stop_autorouter_and_route_optimizer();
+      this.stopAutorouterAndRouteOptimizer();
       return;
     }
-    if (interactive_state != null && graphics_context != null) {
-      FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-      InteractiveState return_state = execute_state_command(interactive_state.left_button_clicked_command(location));
-      apply_interactive_state_change(return_state, true, false);
+    if (interactiveState != null && graphicsContext != null) {
+      FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
+      InteractiveState returnState =
+          executeStateCommand(interactiveState.leftButtonClickedCommand(location));
+      applyInteractiveStateChange(returnState, true, false);
     }
   }
 
@@ -1875,43 +1914,40 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Handles mouse movement events, updating cursor position and providing hover information.
    *
    * <p>This method performs several tasks:
+   *
    * <ul>
-   *   <li>Updates the current mouse position (in both read-only and interactive modes)</li>
-   *   <li>Displays mouse coordinates in the status area</li>
-   *   <li>In interactive mode: delegates movement handling to the current state</li>
-   *   <li>Detects items under the cursor and displays tooltips with item information</li>
-   *   <li>Updates the display if the state changes</li>
+   *   <li>Updates the current mouse position (in both read-only and interactive modes)
+   *   <li>Displays mouse coordinates in the status area
+   *   <li>In interactive mode: delegates movement handling to the current state
+   *   <li>Detects items under the cursor and displays tooltips with item information
+   *   <li>Updates the display if the state changes
    * </ul>
    *
-   * <p><strong>Note:</strong> Automatic repaint is avoided here to maintain performance
-   * during interactive routing. States that need repainting should handle it explicitly.
+   * <p><strong>Note:</strong> Automatic repaint is avoided here to maintain performance during
+   * interactive routing. States that need repainting should handle it explicitly.
    *
-   * @param p_point the mouse position in screen coordinates
-   *
-   * @see InteractiveState#mouse_moved()
-   * @see #pick_items(FloatPoint)
+   * @param point the mouse position in screen coordinates
+   * @see InteractiveState#mouseMoved()
+   * @see #pickItems(FloatPoint)
    */
-  public void mouse_moved(Point2D p_point) {
-    if (interactive_state != null && graphics_context != null) {
-      this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
+  public void mouseMoved(Point2D point) {
+    if (interactiveState != null && graphicsContext != null) {
+      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(point);
 
       // Always update the mouse position display, even when board is read-only
-      FloatPoint mouse_position = coordinate_transform.board_to_user(this.current_mouse_position);
-      screen_messages.set_mouse_position(mouse_position);
+      FloatPoint mousePosition = coordinateTransform.boardToUser(this.currentMousePosition);
+      screenMessages.setMousePosition(mousePosition);
 
-      if (board_is_read_only) {
+      if (boardIsReadOnly) {
         // no interactive action when logfile is running, but mouse position is still updated
         return;
       }
 
-      InteractiveState return_state = execute_state_command(interactive_state.mouse_moved_command());
-      Set<Item> hover_item = pick_items(this.current_mouse_position);
-      if (hover_item.size() == 1) {
-        String hover_info = hover_item
-            .iterator()
-            .next()
-            .get_hover_info(locale);
-        this.panel.setToolTipText(hover_info);
+      InteractiveState returnState = executeStateCommand(interactiveState.mouseMovedCommand());
+      Set<Item> hoverItem = pickItems(this.currentMousePosition);
+      if (hoverItem.size() == 1) {
+        String hoverInfo = hoverItem.iterator().next().getHoverInfo(locale);
+        this.panel.setToolTipText(hoverInfo);
       } else {
         this.panel.setToolTipText(null);
       }
@@ -1919,177 +1955,171 @@ public class GuiBoardManager extends HeadlessBoardManager {
       // performance in interactive route.
       // If a repaint is necessary, it should be done in the individual mouse_moved
       // method of the class derived from InteractiveState
-      apply_interactive_state_change(return_state, true, false);
+      applyInteractiveStateChange(returnState, true, false);
     }
   }
 
   /**
    * Handles mouse button press events.
    *
-   * <p>Updates the current mouse position and delegates the event to the interactive
-   * state for state-specific handling (e.g., initiating drag operations, starting
-   * selection rectangles).
+   * <p>Updates the current mouse position and delegates the event to the interactive state for
+   * state-specific handling (e.g., initiating drag operations, starting selection rectangles).
    *
-   * @param p_point the mouse position in screen coordinates where the button was pressed
-   *
-   * @see InteractiveState#mouse_pressed(FloatPoint)
+   * @param point the mouse position in screen coordinates where the button was pressed
+   * @see InteractiveState#mousePressed(FloatPoint)
    */
-  public void mouse_pressed(Point2D p_point) {
-    if (interactive_state != null && graphics_context != null) {
-      this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
-      InteractiveState return_state = execute_state_command(interactive_state.mouse_pressed_command(this.current_mouse_position));
-      apply_interactive_state_change(return_state, false, false);
+  public void mousePressed(Point2D point) {
+    if (interactiveState != null && graphicsContext != null) {
+      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(point);
+      InteractiveState returnState =
+          executeStateCommand(interactiveState.mousePressedCommand(this.currentMousePosition));
+      applyInteractiveStateChange(returnState, false, false);
     }
   }
 
   /**
    * Handles mouse drag events (mouse moved while button pressed).
    *
-   * <p>Updates the current mouse position and delegates to the interactive state
-   * for state-specific drag handling (e.g., dragging items, drawing selection
-   * rectangles, extending routes).
+   * <p>Updates the current mouse position and delegates to the interactive state for state-specific
+   * drag handling (e.g., dragging items, drawing selection rectangles, extending routes).
    *
    * <p>If the state changes during the drag, triggers a repaint.
    *
-   * @param p_point the current mouse position in screen coordinates during the drag
-   *
-   * @see InteractiveState#mouse_dragged(FloatPoint)
+   * @param point the current mouse position in screen coordinates during the drag
+   * @see InteractiveState#mouseDragged(FloatPoint)
    */
-  public void mouse_dragged(Point2D p_point) {
-    if (interactive_state != null && graphics_context != null) {
-      this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
-      InteractiveState return_state = execute_state_command(interactive_state.mouse_dragged_command(this.current_mouse_position));
-      apply_interactive_state_change(return_state, true, false);
+  public void mouseDragged(Point2D point) {
+    if (interactiveState != null && graphicsContext != null) {
+      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(point);
+      InteractiveState returnState =
+          executeStateCommand(interactiveState.mouseDraggedCommand(this.currentMousePosition));
+      applyInteractiveStateChange(returnState, true, false);
     }
   }
 
   /**
    * Handles mouse button release events.
    *
-   * <p>Delegates to the interactive state to complete operations initiated by button
-   * press or drag (e.g., completing item moves, finalizing selection rectangles,
-   * finishing drag operations).
+   * <p>Delegates to the interactive state to complete operations initiated by button press or drag
+   * (e.g., completing item moves, finalizing selection rectangles, finishing drag operations).
    *
    * <p>If the state changes upon button release, triggers a repaint.
    *
-   * @see InteractiveState#button_released()
+   * @see InteractiveState#buttonReleased()
    */
-  public void button_released() {
-    if (interactive_state != null) {
-      InteractiveState return_state = execute_state_command(interactive_state.button_released_command());
-      apply_interactive_state_change(return_state, true, false);
+  public void buttonReleased() {
+    if (interactiveState != null) {
+      InteractiveState returnState = executeStateCommand(interactiveState.buttonReleasedCommand());
+      applyInteractiveStateChange(returnState, true, false);
     }
   }
 
   /**
    * Handles mouse wheel movement events for zoom and other scroll operations.
    *
-   * <p>Updates the current mouse position and delegates to the interactive state.
-   * Typically used for:
+   * <p>Updates the current mouse position and delegates to the interactive state. Typically used
+   * for:
+   *
    * <ul>
-   *   <li>Zooming in/out centered on the mouse position</li>
-   *   <li>Layer switching</li>
-   *   <li>State-specific scroll behaviors</li>
+   *   <li>Zooming in/out centered on the mouse position
+   *   <li>Layer switching
+   *   <li>State-specific scroll behaviors
    * </ul>
    *
-   * @param p_point the mouse position in screen coordinates during wheel movement
-   * @param p_rotation the wheel rotation amount (positive for up/away, negative for down/toward)
-   *
-   * @see InteractiveState#mouse_wheel_moved(int)
+   * @param point the mouse position in screen coordinates during wheel movement
+   * @param rotation the wheel rotation amount (positive for up/away, negative for down/toward)
+   * @see InteractiveState#mouseWheelMoved(int)
    */
-  public void mouse_wheel_moved(Point2D p_point, int p_rotation) {
-    if (interactive_state != null && graphics_context != null) {
-      this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
-      InteractiveState return_state = execute_state_command(interactive_state.mouse_wheel_moved_command(p_rotation));
-      apply_interactive_state_change(return_state, true, false);
+  public void mouseWheelMoved(Point2D point, int rotation) {
+    if (interactiveState != null && graphicsContext != null) {
+      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(point);
+      InteractiveState returnState =
+          executeStateCommand(interactiveState.mouseWheelMovedCommand(rotation));
+      applyInteractiveStateChange(returnState, true, false);
     }
   }
 
   /**
    * Handles keyboard input events for interactive commands.
    *
-   * <p>Delegates to the current interactive state to handle keyboard shortcuts and
-   * commands (e.g., 'ESC' to cancel, numeric keys for layer selection, letter keys
-   * for tool switching).
+   * <p>Delegates to the current interactive state to handle keyboard shortcuts and commands (e.g.,
+   * 'ESC' to cancel, numeric keys for layer selection, letter keys for tool switching).
    *
    * <p>If the state changes, updates the toolbar to reflect the new state.
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_key_char the character typed on the keyboard
-   *
-   * @see InteractiveState#key_typed(char)
+   * @param keyChar the character typed on the keyboard
+   * @see InteractiveState#keyTyped(char)
    */
-  public void key_typed_action(char p_key_char) {
-    if (board_is_read_only || interactive_state == null || graphics_context == null) {
+  public void keyTypedAction(char keyChar) {
+    if (boardIsReadOnly || interactiveState == null || graphicsContext == null) {
       // no interactive action when logfile is running or board graphics are not ready
       return;
     }
-    InteractiveState return_state = execute_state_command(interactive_state.key_typed_command(p_key_char));
-    apply_interactive_state_change(return_state, true, true);
+    InteractiveState returnState = executeStateCommand(interactiveState.keyTypedCommand(keyChar));
+    applyInteractiveStateChange(returnState, true, true);
   }
 
   /**
    * Completes the current interactive state and returns to its parent/return state.
    *
-   * <p>This typically finalizes the current operation and returns to a more general
-   * state (e.g., completing a route returns to route menu state).
+   * <p>This typically finalizes the current operation and returns to a more general state (e.g.,
+   * completing a route returns to route menu state).
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
    * @see InteractiveState#complete()
-   * @see #cancel_state()
+   * @see #cancelState()
    */
-  public void return_from_state() {
-    if (board_is_read_only) {
+  public void returnFromState() {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
 
-    InteractiveState new_state = execute_state_command(interactive_state.complete_command());
-    apply_interactive_state_change(new_state, true, false);
+    InteractiveState newState = executeStateCommand(interactiveState.completeCommand());
+    applyInteractiveStateChange(newState, true, false);
   }
 
   /**
    * Cancels the current interactive state, discarding any uncommitted changes.
    *
-   * <p>Returns to the parent state without completing or saving the current operation
-   * (e.g., canceling a route in progress removes any temporary routing without creating
-   * traces).
+   * <p>Returns to the parent state without completing or saving the current operation (e.g.,
+   * canceling a route in progress removes any temporary routing without creating traces).
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
    * @see InteractiveState#cancel()
-   * @see #return_from_state()
+   * @see #returnFromState()
    */
-  public void cancel_state() {
-    if (board_is_read_only) {
+  public void cancelState() {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
 
-    InteractiveState new_state = execute_state_command(interactive_state.cancel_command());
-    apply_interactive_state_change(new_state, true, false);
+    InteractiveState newState = executeStateCommand(interactiveState.cancelCommand());
+    applyInteractiveStateChange(newState, true, false);
   }
 
   /**
    * Requests a layer change in the current interactive state.
    *
-   * <p>Delegates the layer change request to the interactive state, which may accept
-   * or reject it based on the current operation (e.g., mid-route layer changes are
-   * allowed via vias, but other states may reject layer changes).
+   * <p>Delegates the layer change request to the interactive state, which may accept or reject it
+   * based on the current operation (e.g., mid-route layer changes are allowed via vias, but other
+   * states may reject layer changes).
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_new_layer the target layer index to change to
+   * @param newLayer the target layer index to change to
    * @return true if the layer change was successful, false if it failed
-   *
-   * @see InteractiveState#change_layer_action(int)
+   * @see InteractiveState#changeLayerAction(int)
    */
-  public boolean change_layer_action(int p_new_layer) {
+  public boolean changeLayerAction(int newLayer) {
     boolean result = true;
-    if (interactive_state != null && !board_is_read_only) {
-      result = interactive_state.change_layer_action(p_new_layer);
+    if (interactiveState != null && !boardIsReadOnly) {
+      result = interactiveState.changeLayerAction(newLayer);
     }
     return result;
   }
@@ -2097,29 +2127,29 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Sets the interactive state to InspectMenuState for item selection and inspection.
    *
-   * <p>InspectMenuState allows users to select and examine board items, view their
-   * properties, and perform operations on selected items.
+   * <p>InspectMenuState allows users to select and examine board items, view their properties, and
+   * perform operations on selected items.
    *
    * @see InspectMenuState
-   * @see #set_route_menu_state()
+   * @see #setRouteMenuState()
    */
-  public void set_inspect_menu_state() {
-    this.interactive_state = InspectMenuState.get_instance(this);
-    screen_messages.set_status_message(tm.getText("select_menu"));
+  public void setInspectMenuState() {
+    this.interactiveState = InspectMenuState.getInstance(this);
+    screenMessages.setStatusMessage(tm.getText("select_menu"));
   }
 
   /**
    * Sets the interactive state to RouteMenuState for routing operations.
    *
-   * <p>RouteMenuState is the default state, allowing users to start routing,
-   * select items, and access routing-related operations.
+   * <p>RouteMenuState is the default state, allowing users to start routing, select items, and
+   * access routing-related operations.
    *
    * @see RouteMenuState
-   * @see #set_inspect_menu_state()
+   * @see #setInspectMenuState()
    */
-  public void set_route_menu_state() {
-    this.interactive_state = RouteMenuState.get_instance(this);
-    screen_messages.set_status_message(tm.getText("route_menu"));
+  public void setRouteMenuState() {
+    this.interactiveState = RouteMenuState.getInstance(this);
+    screenMessages.setStatusMessage(tm.getText("route_menu"));
   }
 
   /**
@@ -2129,19 +2159,18 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * @see DragMenuState
    */
-  public void set_drag_menu_state() {
-    this.interactive_state = DragMenuState.get_instance(this);
-    screen_messages.set_status_message(tm.getText("drag_menu"));
+  public void setDragMenuState() {
+    this.interactiveState = DragMenuState.getInstance(this);
+    screenMessages.setStatusMessage(tm.getText("drag_menu"));
   }
 
   /**
    * Checks if the board has been modified since it was last saved or loaded.
    *
-   * <p>Uses CRC32 checksum comparison to detect changes. This allows prompting
-   * the user before closing or loading a new design if unsaved changes exist.
+   * <p>Uses CRC32 checksum comparison to detect changes. This allows prompting the user before
+   * closing or loading a new design if unsaved changes exist.
    *
    * @return true if the board has unsaved changes, false otherwise
-   *
    * @see #calculateCrc32()
    */
   public boolean isBoardChanged() {
@@ -2152,48 +2181,51 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Loads an existing board design from a binary input stream.
    *
    * <p>Deserializes the board and all associated data structures:
+   *
    * <ul>
-   *   <li>The routing board with all items</li>
-   *   <li>Interactive settings</li>
-   *   <li>Coordinate transform</li>
-   *   <li>Graphics context</li>
+   *   <li>The routing board with all items
+   *   <li>Interactive settings
+   *   <li>Coordinate transform
+   *   <li>Graphics context
    * </ul>
    *
-   * <p>After successful loading, updates the layer display and stores a checksum
-   * for change detection.
+   * <p>After successful loading, updates the layer display and stores a checksum for change
+   * detection.
    *
-   * @param p_design the input stream containing serialized board data
+   * @param design the input stream containing serialized board data
    * @return true if loading succeeded, false if an error occurred
-   *
    * @see #saveAsBinary(ObjectOutputStream)
    */
-  public boolean loadFromBinary(ObjectInputStream p_design) {
-    String inputFilename = (this.routingJob != null && this.routingJob.input != null)
-        ? this.routingJob.input.getFilename()
-        : null;
+  public boolean loadFromBinary(ObjectInputStream design) {
+    String inputFilename =
+        this.routingJob != null && this.routingJob.input != null
+            ? this.routingJob.input.getFilename()
+            : null;
     if (this.routingJob != null) {
-      this.routingJob.logInfo("Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
+      this.routingJob.logInfo(
+          "Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
     } else {
-      FRLogger.info("Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
+      FRLogger.info(
+          "Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
     }
 
     try {
-      board = (RoutingBoard) p_design.readObject();
-      interactiveSettings = (InteractiveSettings) p_design.readObject();
+      board = (RoutingBoard) design.readObject();
+      interactiveSettings = (InteractiveSettings) design.readObject();
       // Adopt the deserialized instance as the authoritative singleton so that subsequent
       // getOrCreate / getInteractiveSettings calls return the same object.
       InteractiveSettings.setInstance(interactiveSettings);
       // Register the singleton as the live GuiSettings source (priority 50) in the merger so
       // that every subsequent merge() call reflects the current interactive GUI state.
       this.settingsMerger.addOrReplaceSources(interactiveSettings);
-      coordinate_transform = (CoordinateTransform) p_design.readObject();
-      graphics_context = (GraphicsContext) p_design.readObject();
+      coordinateTransform = (CoordinateTransform) design.readObject();
+      graphicsContext = (GraphicsContext) design.readObject();
       originalBoardChecksum = calculateCrc32();
     } catch (Exception e) {
       routingJob.logError("Couldn't read design file", e);
       return false;
     }
-    screen_messages.set_layer(board.layer_structure.arr[interactiveSettings.get_layer()].name);
+    screenMessages.setLayer(board.layerStructure.arr[interactiveSettings.getLayer()].name);
     // Defer GUI refresh until surrounding load flow has recreated frame-managed subwindows.
     javax.swing.SwingUtilities.invokeLater(this::refreshGuiFromSettings);
     return true;
@@ -2202,33 +2234,33 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Writes the currently edited board design to a Specctra DSN format file.
    *
-   * <p>The DSN (Design) format is an industry-standard PCB interchange format that
-   * can be read by various PCB tools. The compatibility mode parameter controls
-   * the scope of information written:
+   * <p>The DSN (Design) format is an industry-standard PCB interchange format that can be read by
+   * various PCB tools. The compatibility mode parameter controls the scope of information written:
+   *
    * <ul>
-   *   <li><strong>Compatibility mode (true):</strong> Writes only standard DSN scopes for
-   *       maximum compatibility with other tools</li>
-   *   <li><strong>Full mode (false):</strong> Writes Freerouting-specific extensions and
-   *       additional information</li>
+   *   <li><strong>Compatibility mode (true):</strong> Writes only standard DSN scopes for maximum
+   *       compatibility with other tools
+   *   <li><strong>Full mode (false):</strong> Writes Freerouting-specific extensions and additional
+   *       information
    * </ul>
    *
    * <p>Updates the board checksum on successful save.
    *
-   * @param p_output_stream the stream to write the DSN data to
-   * @param p_design_name the name for the design
-   * @param p_compat_mode true for compatibility mode, false for full format
+   * @param outputStream the stream to write the DSN data to
+   * @param designName the name for the design
+   * @param compatMode true for compatibility mode, false for full format
    * @return true if save succeeded, false otherwise
-   *
    * @see DsnWriter#write
    */
-  public boolean saveAsSpecctraDesignDsn(OutputStream p_output_stream, String p_design_name, boolean p_compat_mode) {
-    if (board_is_read_only || p_output_stream == null) {
+  public boolean saveAsSpecctraDesignDsn(
+      OutputStream outputStream, String designName, boolean compatMode) {
+    if (boardIsReadOnly || outputStream == null) {
       return false;
     }
 
     boolean wasSaveSuccessful;
     try {
-      DsnWriter.write(get_routing_board(), p_output_stream, p_design_name, p_compat_mode);
+      DsnWriter.write(getRoutingBoard(), outputStream, designName, compatMode);
       wasSaveSuccessful = true;
     } catch (IOException e) {
       FRLogger.error("unable to write Specctra DSN file", e);
@@ -2245,18 +2277,16 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Writes a Specctra session (.SES) file containing routing results.
    *
-   * <p>The SES (Session) format records the routing solution, including all traces
-   * and vias created during routing. This file can be imported back into the
-   * original PCB design tool.
+   * <p>The SES (Session) format records the routing solution, including all traces and vias created
+   * during routing. This file can be imported back into the original PCB design tool.
    *
    * @param outputStream the stream to write the session data to
    * @param designName the name for the design
    * @return true if save succeeded, false otherwise
-   *
    * @see HeadlessBoardManager#saveAsSpecctraSessionSes
    */
   public boolean saveAsSpecctraSessionSes(OutputStream outputStream, String designName) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       return false;
     }
 
@@ -2266,42 +2296,43 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Converts a Specctra session file to an Eagle script (.SCR) format.
    *
-   * <p>This allows routing results to be imported into Autodesk Eagle PCB software
-   * by reading a .SES file and converting it to Eagle script commands.
+   * <p>This allows routing results to be imported into Autodesk Eagle PCB software by reading a
+   * .SES file and converting it to Eagle script commands.
    *
-   * @param p_input_stream the stream containing the .SES session data
-   * @param p_output_stream the stream to write the Eagle script to
+   * @param inputStream the stream containing the .SES session data
+   * @param outputStream the stream to write the Eagle script to
    * @return true if conversion succeeded, false otherwise
-   *
    * @see app.freerouting.io.specctra.parser.SessionToEagle
    */
-  public boolean saveSpecctraSessionSesAsEagleScriptScr(InputStream p_input_stream, OutputStream p_output_stream) {
-    if (board_is_read_only) {
+  public boolean saveSpecctraSessionSesAsEagleScriptScr(
+      InputStream inputStream, OutputStream outputStream) {
+    if (boardIsReadOnly) {
       return false;
     }
-    return app.freerouting.io.specctra.SesReader.saveSpecctraSessionSesAsEagleScriptScr(p_input_stream, p_output_stream, this.board);
+    return app.freerouting.io.specctra.SesReader.saveSpecctraSessionSesAsEagleScriptScr(
+        inputStream, outputStream, this.board);
   }
 
   /**
    * Applies a previously parsed board result and rebinds GUI interactive settings.
    *
-   * <p>Extends the base implementation by resetting and rebinding the
-   * {@link InteractiveSettings} singleton to the newly loaded board. DSN reading via
-   * {@link app.freerouting.io.specctra.DsnReader#readBoard} bypasses {@code create_board}
-   * and therefore does not initialise {@code interactiveSettings}; this override guarantees
-   * it is always valid and bound to the current board.
+   * <p>Extends the base implementation by resetting and rebinding the {@link InteractiveSettings}
+   * singleton to the newly loaded board. DSN reading via {@link
+   * app.freerouting.io.specctra.DsnReader#readBoard} bypasses {@code create_board} and therefore
+   * does not initialise {@code interactiveSettings}; this override guarantees it is always valid
+   * and bound to the current board.
    *
    * @param dsnResult the parsed board result to apply
    * @param inputFilename the source filename used for analytics and logging
    * @param analyticsFormat the analytics format label for the load event
    * @return the result of the load operation including success status and any warnings
-   *
    * @see HeadlessBoardManager#applyParsedBoardResult
    */
   @Override
-  public BoardReadResult applyParsedBoardResult(BoardReadResult dsnResult, String inputFilename,
-      String analyticsFormat) {
-    BoardReadResult result = super.applyParsedBoardResult(dsnResult, inputFilename, analyticsFormat);
+  public BoardReadResult applyParsedBoardResult(
+      BoardReadResult dsnResult, String inputFilename, String analyticsFormat) {
+    BoardReadResult result =
+        super.applyParsedBoardResult(dsnResult, inputFilename, analyticsFormat);
     setupGuiAfterBoardLoad(result);
     return result;
   }
@@ -2309,55 +2340,65 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Loads a board design from a Specctra DSN format file.
    *
-   * <p>Extends the base implementation by scheduling a GUI refresh after a successful load.
-   * Calling this method a second time (e.g. to open a new design in the same window)
-   * discards the previous {@link InteractiveSettings} instance and creates a fresh one
-   * via {@link InteractiveSettings#reset(RoutingBoard)}.
+   * <p>Extends the base implementation by scheduling a GUI refresh after a successful load. Calling
+   * this method a second time (e.g. to open a new design in the same window) discards the previous
+   * {@link InteractiveSettings} instance and creates a fresh one via {@link
+   * InteractiveSettings#reset(RoutingBoard)}.
    *
    * @param inputStream the stream containing the DSN data
    * @param boardObservers observers to be notified of board changes
    * @param identificationNumberGenerator generator for assigning unique IDs to board items
    * @return the result of the load operation including success status and any warnings
-   *
    * @see HeadlessBoardManager#loadFromSpecctraDsn
    */
   @Override
-  public BoardReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
+  public BoardReadResult loadFromSpecctraDsn(
+      InputStream inputStream,
+      BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
-    var result = super.loadFromSpecctraDsn(inputStream, boardObservers, identificationNumberGenerator);
+    var result =
+        super.loadFromSpecctraDsn(inputStream, boardObservers, identificationNumberGenerator);
     scheduleGuiRefreshAfterLoad(result);
     return result;
   }
 
   @Override
-  public BoardReadResult loadFromKiCadJson(InputStream inputStream, BoardObservers boardObservers,
+  public BoardReadResult loadFromKiCadJson(
+      InputStream inputStream,
+      BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
-    var result = super.loadFromKiCadJson(inputStream, boardObservers, identificationNumberGenerator);
+    var result =
+        super.loadFromKiCadJson(inputStream, boardObservers, identificationNumberGenerator);
     scheduleGuiRefreshAfterLoad(result);
     return result;
   }
 
   private void setupGuiAfterBoardLoad(BoardReadResult result) {
-    if (!(result instanceof BoardReadResult.Success || result instanceof BoardReadResult.OutlineMissing)
+    if (!(result instanceof BoardReadResult.Success
+            || result instanceof BoardReadResult.OutlineMissing)
         || this.board == null) {
       return;
     }
 
-    this.interactiveSettings = InteractiveSettings.reset(this.board, this.routingJob.routerSettings);
-    this.initialize_manual_trace_half_widths();
+    this.interactiveSettings =
+        InteractiveSettings.reset(this.board, this.routingJob.routerSettings);
+    this.initializeManualTraceHalfWidths();
     this.settingsMerger.addOrReplaceSources(this.interactiveSettings);
 
-    double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
-    this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
-        this.board.communication.unit);
-    Dimension panel_size = (panel != null) ? panel.getPreferredSize() : new Dimension(800, 600);
-    this.graphics_context = new GraphicsContext(this.board.bounding_box, panel_size,
-        this.board.layer_structure, this.locale);
-    this.set_layer(0);
+    double unitFactor = this.board.communication.coordinateTransform.boardToDsn(1);
+    this.coordinateTransform =
+        new CoordinateTransform(
+            1, this.board.communication.unit, unitFactor, this.board.communication.unit);
+    Dimension panelSize = panel != null ? panel.getPreferredSize() : new Dimension(800, 600);
+    this.graphicsContext =
+        new GraphicsContext(
+            this.board.boundingBox, panelSize, this.board.layerStructure, this.locale);
+    this.setLayer(0);
   }
 
   private void scheduleGuiRefreshAfterLoad(BoardReadResult result) {
-    if ((result instanceof BoardReadResult.Success || result instanceof BoardReadResult.OutlineMissing)
+    if ((result instanceof BoardReadResult.Success
+            || result instanceof BoardReadResult.OutlineMissing)
         && this.board != null) {
       javax.swing.SwingUtilities.invokeLater(this::refreshGuiFromSettings);
     }
@@ -2367,31 +2408,31 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Saves the currently edited board design to a binary format file.
    *
    * <p>Serializes all board data structures:
+   *
    * <ul>
-   *   <li>The routing board with all items</li>
-   *   <li>Interactive settings</li>
-   *   <li>Coordinate transform</li>
-   *   <li>Graphics context</li>
+   *   <li>The routing board with all items
+   *   <li>Interactive settings
+   *   <li>Coordinate transform
+   *   <li>Graphics context
    * </ul>
    *
    * <p>Updates the board checksum on successful save for change tracking.
    *
-   * @param p_object_stream the stream to write serialized data to
+   * @param objectStream the stream to write serialized data to
    * @return true if save succeeded, false if an error occurred
-   *
    * @see #loadFromBinary(ObjectInputStream)
    */
-  public boolean saveAsBinary(ObjectOutputStream p_object_stream) {
+  public boolean saveAsBinary(ObjectOutputStream objectStream) {
     boolean result = true;
     try {
-      p_object_stream.writeObject(board);
-      p_object_stream.writeObject(interactiveSettings);
-      p_object_stream.writeObject(coordinate_transform);
-      p_object_stream.writeObject(graphics_context);
+      objectStream.writeObject(board);
+      objectStream.writeObject(interactiveSettings);
+      objectStream.writeObject(coordinateTransform);
+      objectStream.writeObject(graphicsContext);
 
       originalBoardChecksum = calculateCrc32();
     } catch (Exception _) {
-      screen_messages.set_status_message(tm.getText("save_error"));
+      screenMessages.setStatusMessage(tm.getText("save_error"));
       result = false;
     }
     return result;
@@ -2400,174 +2441,171 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Closes all currently used files to ensure file buffers are written to disk.
    *
-   * <p>Currently a no-op placeholder method. File closing is handled elsewhere
-   * or by the Java runtime.
+   * <p>Currently a no-op placeholder method. File closing is handled elsewhere or by the Java
+   * runtime.
    */
-  public void close_files() {
-  }
+  public void closeFiles() {}
 
   /**
    * Initiates interactive routing starting from the specified location.
    *
-   * <p>Transitions to RouteState, which handles interactive trace routing.
-   * The starting location is converted from screen to board coordinates.
+   * <p>Transitions to RouteState, which handles interactive trace routing. The starting location is
+   * converted from screen to board coordinates.
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_point the starting position in screen coordinates
-   *
+   * @param point the starting position in screen coordinates
    * @see RouteState
    */
-  public void start_route(Point2D p_point) {
-    if (board_is_read_only) {
+  public void startRoute(Point2D point) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState new_state = RouteState.get_instance(location, this.interactive_state, this);
-    set_interactive_state(new_state);
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
+    InteractiveState newState = RouteState.getInstance(location, this.interactiveState, this);
+    setInteractiveState(newState);
   }
 
   /**
    * Selects board items at the specified screen location.
    *
-   * <p>Delegates to the current MenuState to handle item selection at the point.
-   * Multiple items at the same location may cycle through selection.
+   * <p>Delegates to the current MenuState to handle item selection at the point. Multiple items at
+   * the same location may cycle through selection.
    *
-   * <p>This operation requires the interactive state to be a MenuState and is
-   * ignored if the board is in read-only mode.
+   * <p>This operation requires the interactive state to be a MenuState and is ignored if the board
+   * is in read-only mode.
    *
-   * @param p_point the location in screen coordinates where items should be selected
-   *
-   * @see MenuState#select_items(FloatPoint)
+   * @param point the location in screen coordinates where items should be selected
+   * @see MenuState#selectItems(FloatPoint)
    */
-  public void select_items(Point2D p_point) {
-    if (board_is_read_only || !(this.interactive_state instanceof MenuState)) {
+  public void selectItems(Point2D point) {
+    if (boardIsReadOnly || !(this.interactiveState instanceof MenuState)) {
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState return_state = ((MenuState) interactive_state).select_items(location);
-    set_interactive_state(return_state);
-  }
-
-  /**
-   * Selects all board items within an interactively defined rectangular region.
-   *
-   * <p>Initiates a state where the user can drag to define a selection rectangle.
-   * All items within or intersecting the rectangle will be selected.
-   *
-   * <p>This operation requires the interactive state to be a MenuState and is
-   * ignored if the board is in read-only mode.
-   *
-   * @see MenuState
-   */
-  public void select_items_in_region() {
-    if (board_is_read_only || !(this.interactive_state instanceof MenuState)) {
-      return;
-    }
-    set_interactive_state(InspectItemsInRegionState.get_instance(this.interactive_state, this));
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
+    InteractiveState returnState = ((MenuState) interactiveState).selectItems(location);
+    setInteractiveState(returnState);
   }
 
   /**
    * Selects all items in the provided collection programmatically.
    *
    * <p>Behavior depends on the current interactive state:
+   *
    * <ul>
-   *   <li><strong>MenuState:</strong> Transitions to InspectedItemState with the items selected</li>
-   *   <li><strong>InspectedItemState:</strong> Adds the items to the existing selection</li>
+   *   <li><strong>MenuState:</strong> Transitions to InspectedItemState with the items selected
+   *   <li><strong>InspectedItemState:</strong> Adds the items to the existing selection
    * </ul>
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_items the collection of items to select
-   *
+   * @param items the collection of items to select
    * @see InspectedItemState
    */
-  public void select_items(Set<Item> p_items) {
-    if (board_is_read_only) {
+  public void selectItems(Set<Item> items) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    this.display_layer_message();
-    if (interactive_state instanceof MenuState) {
-      set_interactive_state(InspectedItemState.get_instance(p_items, interactive_state, this));
-    } else if (interactive_state instanceof InspectedItemState state) {
-      state.get_item_list().clear();
-      state.get_item_list().addAll(p_items);
+    this.displayLayerMessage();
+    if (interactiveState instanceof MenuState) {
+      setInteractiveState(InspectedItemState.getInstance(items, interactiveState, this));
+    } else if (interactiveState instanceof InspectedItemState state) {
+      state.getItemList().clear();
+      state.getItemList().addAll(items);
       repaint();
     }
   }
 
   /**
-   * Searches for a swappable pin at the specified location and prepares for pin swap.
+   * Selects all board items within an interactively defined rectangular region.
    *
-   * <p>Pin swapping allows rearranging equivalent pins within a component (e.g., swapping
-   * gates in a logic IC). If a swappable pin is found, initiates the pin swap operation.
+   * <p>Initiates a state where the user can drag to define a selection rectangle. All items within
+   * or intersecting the rectangle will be selected.
    *
-   * <p>This operation requires the interactive state to be a MenuState and is
-   * ignored if the board is in read-only mode.
+   * <p>This operation requires the interactive state to be a MenuState and is ignored if the board
+   * is in read-only mode.
    *
-   * @param p_location the location in screen coordinates to search for a swappable pin
-   *
-   * @see MenuState#swap_pin(FloatPoint)
+   * @see MenuState
    */
-  public void swap_pin(Point2D p_location) {
-    if (board_is_read_only || !(this.interactive_state instanceof MenuState)) {
+  public void selectItemsInRegion() {
+    if (boardIsReadOnly || !(this.interactiveState instanceof MenuState)) {
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_location);
-    InteractiveState return_state = ((MenuState) interactive_state).swap_pin(location);
-    set_interactive_state(return_state);
+    setInteractiveState(InspectItemsInRegionState.getInstance(this.interactiveState, this));
+  }
+
+  /**
+   * Searches for a swappable pin at the specified location and prepares for pin swap.
+   *
+   * <p>Pin swapping allows rearranging equivalent pins within a component (e.g., swapping gates in
+   * a logic IC). If a swappable pin is found, initiates the pin swap operation.
+   *
+   * <p>This operation requires the interactive state to be a MenuState and is ignored if the board
+   * is in read-only mode.
+   *
+   * @param location the location in screen coordinates to search for a swappable pin
+   * @see MenuState#swapPins(FloatPoint)
+   */
+  public void swapPins(Point2D location) {
+    if (boardIsReadOnly || !(this.interactiveState instanceof MenuState)) {
+      return;
+    }
+    FloatPoint boardLocation = graphicsContext.coordinateTransform.screenToBoard(location);
+    InteractiveState returnState = ((MenuState) interactiveState).swapPins(boardLocation);
+    setInteractiveState(returnState);
   }
 
   /**
    * Zooms the display to show all currently selected items.
    *
-   * <p>Calculates a bounding box around all selected items (with margins based on
-   * trace widths) and adjusts the view to frame them. Useful for quickly navigating
-   * to a selection.
+   * <p>Calculates a bounding box around all selected items (with margins based on trace widths) and
+   * adjusts the view to frame them. Useful for quickly navigating to a selection.
    *
    * <p>This operation requires the interactive state to be InspectedItemState.
    *
-   * @see BoardPanel#zoom_frame(Point2D, Point2D)
+   * @see BoardPanel#zoomFrame(Point2D, Point2D)
    */
-  public void zoom_selection() {
-    if (!(interactive_state instanceof InspectedItemState)) {
+  public void zoomSelection() {
+    if (!(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    IntBox bounding_box = this.board.get_bounding_box(((InspectedItemState) interactive_state).get_item_list());
-    bounding_box = bounding_box.offset(this.board.rules.get_max_trace_half_width());
-    Point2D lower_left = this.graphics_context.coordinate_transform.board_to_screen(bounding_box.ll.to_float());
-    Point2D upper_right = this.graphics_context.coordinate_transform.board_to_screen(bounding_box.ur.to_float());
-    this.panel.zoom_frame(lower_left, upper_right);
+    IntBox boundingBox =
+        this.board.getBoundingBox(((InspectedItemState) interactiveState).getItemList());
+    boundingBox = boundingBox.offset(this.board.rules.getMaxTraceHalfWidth());
+    Point2D lowerLeft =
+        this.graphicsContext.coordinateTransform.boardToScreen(boundingBox.ll.toFloat());
+    Point2D upperRight =
+        this.graphicsContext.coordinateTransform.boardToScreen(boundingBox.ur.toFloat());
+    this.panel.zoomFrame(lowerLeft, upperRight);
   }
 
   /**
    * Toggles the selection state of the item at the specified location.
    *
    * <p>Behavior:
+   *
    * <ul>
-   *   <li>If the item is already selected: removes it from the selection</li>
-   *   <li>If the item is not selected: adds it to the selection</li>
+   *   <li>If the item is already selected: removes it from the selection
+   *   <li>If the item is not selected: adds it to the selection
    * </ul>
    *
    * <p>This allows building up a multi-item selection by clicking items one at a time.
    *
-   * <p>This operation requires InspectedItemState and is ignored if the board
-   * is in read-only mode.
+   * <p>This operation requires InspectedItemState and is ignored if the board is in read-only mode.
    *
-   * @param p_point the location in screen coordinates to pick the item
-   *
-   * @see InspectedItemState#toggle_select(FloatPoint)
+   * @param point the location in screen coordinates to pick the item
+   * @see InspectedItemState#toggleSelect(FloatPoint)
    */
-  public void toggle_select_action(Point2D p_point) {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+  public void toggleSelectAction(Point2D point) {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState return_state = ((InspectedItemState) interactive_state).toggle_select(location);
-    if (return_state != this.interactive_state) {
-      set_interactive_state(return_state);
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
+    InteractiveState returnState = ((InspectedItemState) interactiveState).toggleSelect(location);
+    if (returnState != this.interactiveState) {
+      setInteractiveState(returnState);
       repaint();
     }
   }
@@ -2575,134 +2613,133 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Sets the fixed state of selected items to prevent them from being moved or modified.
    *
-   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode.
-   * The method is a placeholder for future functionality.
+   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
+   * is a placeholder for future functionality.
    */
-  public void fix_selected_items() {
+  public void fixSelectedItems() {
     // Editing disabled in inspection mode
   }
 
   /**
    * Removes the fixed state from selected items, allowing them to be moved or modified.
    *
-   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode.
-   * The method is a placeholder for future functionality.
+   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
+   * is a placeholder for future functionality.
    */
-  public void unfix_selected_items() {
+  public void unfixSelectedItems() {
     // Editing disabled in inspection mode
   }
 
   /**
    * Displays detailed information about the selected item in a text window.
    *
-   * <p>Shows properties such as net assignment, layer, clearance class, and other
-   * item-specific attributes in a dedicated info window.
+   * <p>Shows properties such as net assignment, layer, clearance class, and other item-specific
+   * attributes in a dedicated info window.
    *
-   * <p>This operation requires InspectedItemState and is ignored if the board
-   * is in read-only mode.
+   * <p>This operation requires InspectedItemState and is ignored if the board is in read-only mode.
    *
    * @see InspectedItemState#info()
    */
-  public void display_selected_item_info() {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+  public void displaySelectedItemInfo() {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    ((InspectedItemState) interactive_state).info();
+    ((InspectedItemState) interactiveState).info();
   }
 
   /**
    * Makes all selected items connectable and assigns them to a new net.
    *
-   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode.
-   * The method is a placeholder for future functionality.
+   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
+   * is a placeholder for future functionality.
    */
-  public void assign_selected_to_new_net() {
+  public void assignSelectedToNewNet() {
     // Editing disabled in inspection mode
   }
 
   /**
    * Assigns all selected items to a new group (e.g., creating a new component).
    *
-   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode.
-   * The method is a placeholder for future functionality.
+   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
+   * is a placeholder for future functionality.
    */
-  public void assign_selected_to_new_group() {
+  public void assignSelectedToNewGroup() {
     // Editing disabled in inspection mode
   }
 
   /**
    * Deletes all unfixed selected items from the board.
    *
-   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode.
-   * The method is a placeholder for future functionality.
+   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
+   * is a placeholder for future functionality.
    */
-  public void delete_selected_items() {
+  public void deleteSelectedItems() {
     // Editing disabled in inspection mode
   }
 
   /**
    * Deletes all unfixed selected traces and vias inside a rectangular region.
    *
-   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode.
-   * The method is a placeholder for future functionality.
+   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
+   * is a placeholder for future functionality.
    */
-  public void cutout_selected_items() {
+  public void cutoutSelectedItems() {
     // Editing disabled in inspection mode
   }
 
   /**
    * Assigns the specified clearance class to all selected items.
    *
-   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode.
-   * The method is a placeholder for future functionality.
+   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
+   * is a placeholder for future functionality.
    *
-   * @param p_cl_class_index the clearance class index to assign
+   * @param clearanceClassIndex the clearance class index to assign
    */
-  public void assign_clearance_classs_to_selected_items(int p_cl_class_index) {
+  public void assignClearanceClasssToSelectedItems(int clearanceClassIndex) {
     // Editing disabled in inspection mode
   }
 
   /**
    * Moves or rotates the selected items starting from the specified location.
    *
-   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode.
-   * The method is a placeholder for future functionality.
+   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
+   * is a placeholder for future functionality.
    *
-   * @param p_from_location the starting location for the move/rotate operation
+   * @param fromLocation the starting location for the move/rotate operation
    */
-  public void move_selected_items(Point2D p_from_location) {
+  public void moveSelectedItems(Point2D fromLocation) {
     // Editing disabled in inspection mode
   }
 
   /**
    * Copies all selected items to a new location.
    *
-   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode.
-   * The method is a placeholder for future functionality.
+   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
+   * is a placeholder for future functionality.
    *
-   * @param p_from_location the starting location for the copy operation
+   * @param fromLocation the starting location for the copy operation
    */
-  public void copy_selected_items(Point2D p_from_location) {
+  public void copySelectedItems(Point2D fromLocation) {
     // Editing disabled in inspection mode
   }
 
   /**
    * Optimizes the routing of selected items (pull-tight, smoothing).
    *
-   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode.
-   * The method is a placeholder for future functionality.
+   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
+   * is a placeholder for future functionality.
    */
-  public void optimize_selected_items() {
+  public void optimizeSelectedItems() {
     // Editing disabled in inspection mode
   }
 
   /**
    * Runs the autorouter on selected items only.
    *
-   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode.
-   * The method is a placeholder for future functionality.
+   * <p><strong>Note:</strong> This operation is currently disabled in inspection mode. The method
+   * is a placeholder for future functionality.
    */
-  public void autoroute_selected_items() {
+  public void autorouteSelectedItems() {
     // Editing disabled in inspection mode
   }
 
@@ -2710,315 +2747,299 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Starts the autorouter and route optimizer to process the entire board.
    *
    * <p>This method:
+   *
    * <ul>
-   *   <li>Creates a snapshot of the current board state (for undo)</li>
-   *   <li>Sets the board to read-only mode to prevent user modifications</li>
-   *   <li>Starts a background thread to run autorouting and optimization</li>
+   *   <li>Creates a snapshot of the current board state (for undo)
+   *   <li>Sets the board to read-only mode to prevent user modifications
+   *   <li>Starts a background thread to run autorouting and optimization
    * </ul>
    *
-   * <p>The operation runs in a separate thread (InteractiveActionThread), allowing
-   * the UI to remain responsive. The user can click to stop the operation.
+   * <p>The operation runs in a separate thread (InteractiveActionThread), allowing the UI to remain
+   * responsive. The user can click to stop the operation.
    *
    * @param job the routing job containing board and router configuration
    * @return the interactive action thread running the autorouter, or null if board is read-only
-   *
    * @see InteractiveActionThread
-   * @see #stop_autorouter_and_route_optimizer()
+   * @see #stopAutorouterAndRouteOptimizer()
    */
-  public InteractiveActionThread start_autorouter_and_route_optimizer(RoutingJob job) {
+  public InteractiveActionThread startAutorouterAndRouteOptimizer(RoutingJob job) {
     // The auto-router and route optimizer can only be started if the board is not
     // read only
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       return null;
     }
 
     // Generate a snapshot of the board before starting the autorouter
-    board.generate_snapshot();
+    board.generateSnapshot();
 
     // Start the auto-router and route optimizer
     // TODO: ideally we should only pass the board and the routerSettings to the
     // thread, and let the thread create the router and optimizer
-    this.interactive_action_thread = InteractiveActionThread.get_autorouter_and_route_optimizer_instance(this, job);
-    this.interactive_action_thread.start();
+    this.interactiveActionThread =
+        InteractiveActionThread.getAutorouterAndRouteOptimizerInstance(this, job);
+    this.interactiveActionThread.start();
 
-    return this.interactive_action_thread;
+    return this.interactiveActionThread;
   }
 
   /**
    * Stops the currently running autorouter and route optimizer.
    *
-   * <p>Requests the background thread to stop and restores the board to
-   * interactive mode (not read-only). The operation may not stop immediately
-   * if the router is in the middle of routing a connection.
+   * <p>Requests the background thread to stop and restores the board to interactive mode (not
+   * read-only). The operation may not stop immediately if the router is in the middle of routing a
+   * connection.
    *
-   * @see #start_autorouter_and_route_optimizer(RoutingJob)
+   * @see #startAutorouterAndRouteOptimizer(RoutingJob)
    * @see InteractiveActionThread#requestStop()
    */
-  public void stop_autorouter_and_route_optimizer() {
-    if (this.interactive_action_thread != null) {
+  public void stopAutorouterAndRouteOptimizer() {
+    if (this.interactiveActionThread != null) {
       // The left button is used to stop the interactive action thread.
-      this.interactive_action_thread.requestStop();
+      this.interactiveActionThread.requestStop();
     }
 
-    this.set_board_read_only(false);
+    this.setBoardReadOnly(false);
   }
 
   /**
    * Extends the selection to include all items belonging to the same nets as selected items.
    *
-   * <p>Useful for selecting all traces and vias of a net after selecting just one item
-   * on that net.
+   * <p>Useful for selecting all traces and vias of a net after selecting just one item on that net.
    *
-   * <p>This operation requires InspectedItemState and is ignored if the board
-   * is in read-only mode.
+   * <p>This operation requires InspectedItemState and is ignored if the board is in read-only mode.
    *
-   * @see InspectedItemState#extent_to_whole_nets()
+   * @see InspectedItemState#extentToWholeNets()
    */
-  public void extend_selection_to_whole_nets() {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+  public void extendSelectionToWholeNets() {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    set_interactive_state(((InspectedItemState) interactive_state).extent_to_whole_nets());
+    setInteractiveState(((InspectedItemState) interactiveState).extentToWholeNets());
   }
 
   /**
    * Extends the selection to include all items belonging to the same components as selected items.
    *
-   * <p>Useful for selecting an entire component (all pads, silkscreen, etc.) after
-   * selecting just one pad.
+   * <p>Useful for selecting an entire component (all pads, silkscreen, etc.) after selecting just
+   * one pad.
    *
-   * <p>This operation requires InspectedItemState and is ignored if the board
-   * is in read-only mode.
+   * <p>This operation requires InspectedItemState and is ignored if the board is in read-only mode.
    *
-   * @see InspectedItemState#extent_to_whole_components()
+   * @see InspectedItemState#extentToWholeComponents()
    */
-  public void extend_selection_to_whole_components() {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+  public void extendSelectionToWholeComponents() {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    set_interactive_state(((InspectedItemState) interactive_state).extent_to_whole_components());
+    setInteractiveState(((InspectedItemState) interactiveState).extentToWholeComponents());
   }
 
   /**
    * Extends the selection to include all items in the same connected sets as selected items.
    *
-   * <p>A connected set includes all items electrically connected, possibly spanning
-   * multiple nets through components.
+   * <p>A connected set includes all items electrically connected, possibly spanning multiple nets
+   * through components.
    *
-   * <p>This operation requires InspectedItemState and is ignored if the board
-   * is in read-only mode.
+   * <p>This operation requires InspectedItemState and is ignored if the board is in read-only mode.
    *
-   * @see InspectedItemState#extent_to_whole_connected_sets()
+   * @see InspectedItemState#extentToWholeConnectedSets()
    */
-  public void extend_selection_to_whole_connected_sets() {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+  public void extendSelectionToWholeConnectedSets() {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    set_interactive_state(((InspectedItemState) interactive_state).extent_to_whole_connected_sets());
+    setInteractiveState(((InspectedItemState) interactiveState).extentToWholeConnectedSets());
   }
 
   /**
    * Extends the selection to include all items in the same connections as selected items.
    *
-   * <p>A connection is a routed path between two pins on the same net, including
-   * all traces and vias in that path.
+   * <p>A connection is a routed path between two pins on the same net, including all traces and
+   * vias in that path.
    *
-   * <p>This operation requires InspectedItemState and is ignored if the board
-   * is in read-only mode.
+   * <p>This operation requires InspectedItemState and is ignored if the board is in read-only mode.
    *
-   * @see InspectedItemState#extent_to_whole_connections()
+   * @see InspectedItemState#extentToWholeConnections()
    */
-  public void extend_selection_to_whole_connections() {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+  public void extendSelectionToWholeConnections() {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    set_interactive_state(((InspectedItemState) interactive_state).extent_to_whole_connections());
+    setInteractiveState(((InspectedItemState) interactiveState).extentToWholeConnections());
   }
 
   /**
    * Toggles the display of clearance violations for selected items only.
    *
-   * <p>Shows or hides clearance violations specifically related to the currently
-   * selected items, allowing focused inspection of potential design rule violations.
+   * <p>Shows or hides clearance violations specifically related to the currently selected items,
+   * allowing focused inspection of potential design rule violations.
    *
-   * <p>This operation requires InspectedItemState and is ignored if the board
-   * is in read-only mode.
+   * <p>This operation requires InspectedItemState and is ignored if the board is in read-only mode.
    *
-   * @see InspectedItemState#toggle_clearance_violations()
+   * @see InspectedItemState#toggleClearanceViolations()
    */
-  public void toggle_selected_item_violations() {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+  public void toggleSelectedItemViolations() {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    ((InspectedItemState) interactive_state).toggle_clearance_violations();
+    ((InspectedItemState) interactiveState).toggleClearanceViolations();
   }
 
   /**
    * Rotates items being moved by 45 degrees.
    *
-   * <p>The rotation direction is determined by p_factor:
+   * <p>The rotation direction is determined by factor:
+   *
    * <ul>
-   *   <li>Positive factor: rotate counter-clockwise</li>
-   *   <li>Negative factor: rotate clockwise</li>
+   *   <li>Positive factor: rotate counter-clockwise
+   *   <li>Negative factor: rotate clockwise
    * </ul>
    *
-   * <p>This operation requires MoveItemState and is ignored if the board is
-   * in read-only mode.
+   * <p>This operation requires MoveItemState and is ignored if the board is in read-only mode.
    *
-   * @param p_factor the rotation direction and magnitude
-   *
-   * @see MoveItemState#turn_45_degree(int)
+   * @param factor the rotation direction and magnitude
+   * @see MoveItemState#turn45Degree(int)
    */
-  public void turn_45_degree(int p_factor) {
-    if (board_is_read_only || !(interactive_state instanceof MoveItemState)) {
+  public void turn45Degree(int factor) {
+    if (boardIsReadOnly || !(interactiveState instanceof MoveItemState)) {
       // no interactive action when logfile is running
       return;
     }
-    ((MoveItemState) interactive_state).turn_45_degree(p_factor);
+    ((MoveItemState) interactiveState).turn45Degree(factor);
   }
 
   /**
    * Flips components being moved to the opposite side of the board.
    *
-   * <p>Changes component placement from top to bottom side or vice versa,
-   * useful for component layout operations.
+   * <p>Changes component placement from top to bottom side or vice versa, useful for component
+   * layout operations.
    *
-   * <p>This operation requires MoveItemState and is ignored if the board is
-   * in read-only mode.
+   * <p>This operation requires MoveItemState and is ignored if the board is in read-only mode.
    *
-   * @see MoveItemState#change_placement_side()
+   * @see MoveItemState#changePlacementSide()
    */
-  public void change_placement_side() {
-    if (board_is_read_only || !(interactive_state instanceof MoveItemState)) {
+  public void changePlacementSide() {
+    if (boardIsReadOnly || !(interactiveState instanceof MoveItemState)) {
       // no interactive action when logfile is running
       return;
     }
-    ((MoveItemState) interactive_state).change_placement_side();
+    ((MoveItemState) interactiveState).changePlacementSide();
   }
 
   /**
    * Initiates interactive zoom region selection.
    *
-   * <p>Allows the user to drag a rectangle on the screen, then zooms the display
-   * to show that rectangular region.
+   * <p>Allows the user to drag a rectangle on the screen, then zooms the display to show that
+   * rectangular region.
    *
    * @see ZoomRegionState
    */
-  public void zoom_region() {
-    interactive_state = ZoomRegionState.get_instance(this.interactive_state, this);
+  public void zoomRegion() {
+    interactiveState = ZoomRegionState.getInstance(this.interactiveState, this);
   }
 
   /**
    * Starts interactive creation of a circular obstacle.
    *
-   * <p>Transitions to CircleConstructionState where the user can define the
-   * circle's center and radius. Circular obstacles are used for keepouts,
-   * mounting holes, or other circular restrictions.
+   * <p>Transitions to CircleConstructionState where the user can define the circle's center and
+   * radius. Circular obstacles are used for keepouts, mounting holes, or other circular
+   * restrictions.
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_point the starting position in screen coordinates for the circle center
-   *
+   * @param point the starting position in screen coordinates for the circle center
    * @see CircleConstructionState
    */
-  public void start_circle(Point2D p_point) {
-    if (board_is_read_only) {
+  public void startCircle(Point2D point) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    set_interactive_state(
-        CircleConstructionState.get_instance(location, this.interactive_state, this));
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
+    setInteractiveState(CircleConstructionState.getInstance(location, this.interactiveState, this));
   }
 
   /**
    * Starts interactive creation of a tile-shaped obstacle.
    *
-   * <p>Transitions to TileConstructionState where the user can define a rectangular
-   * or tile-shaped obstacle. Tiles are used for keepout areas, component outlines,
-   * or routing restrictions.
+   * <p>Transitions to TileConstructionState where the user can define a rectangular or tile-shaped
+   * obstacle. Tiles are used for keepout areas, component outlines, or routing restrictions.
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_point the starting position in screen coordinates for the tile
-   *
+   * @param point the starting position in screen coordinates for the tile
    * @see TileConstructionState
    */
-  public void start_tile(Point2D p_point) {
-    if (board_is_read_only) {
+  public void startTile(Point2D point) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    set_interactive_state(
-        TileConstructionState.get_instance(location, this.interactive_state, this));
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
+    setInteractiveState(TileConstructionState.getInstance(location, this.interactiveState, this));
   }
 
   /**
    * Starts interactive creation of a polygon-shaped obstacle.
    *
-   * <p>Transitions to PolygonShapeConstructionState where the user can define
-   * arbitrary polygon shapes by clicking corners. Used for complex keepout areas
-   * or irregular obstacles.
+   * <p>Transitions to PolygonShapeConstructionState where the user can define arbitrary polygon
+   * shapes by clicking corners. Used for complex keepout areas or irregular obstacles.
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_point the starting position in screen coordinates for the first corner
-   *
+   * @param point the starting position in screen coordinates for the first corner
    * @see PolygonShapeConstructionState
    */
-  public void start_polygonshape_item(Point2D p_point) {
-    if (board_is_read_only) {
+  public void startPolygonshapeItem(Point2D point) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    set_interactive_state(
-        PolygonShapeConstructionState.get_instance(location, this.interactive_state, this));
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
+    setInteractiveState(
+        PolygonShapeConstructionState.getInstance(location, this.interactiveState, this));
   }
 
   /**
    * Starts interactive addition of a hole to an existing obstacle shape.
    *
-   * <p>Transitions to HoleConstructionState where the user can define holes
-   * (cutouts) within existing obstacles. Useful for creating complex shapes
-   * with interior voids.
+   * <p>Transitions to HoleConstructionState where the user can define holes (cutouts) within
+   * existing obstacles. Useful for creating complex shapes with interior voids.
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_point the starting position in screen coordinates for the hole
-   *
+   * @param point the starting position in screen coordinates for the hole
    * @see HoleConstructionState
    */
-  public void start_adding_hole(Point2D p_point) {
-    if (board_is_read_only) {
+  public void startAddingHole(Point2D point) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState new_state = HoleConstructionState.get_instance(location, this.interactive_state, this);
-    set_interactive_state(new_state);
+    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
+    InteractiveState newState =
+        HoleConstructionState.getInstance(location, this.interactiveState, this);
+    setInteractiveState(newState);
   }
 
   /**
    * Returns the screen rectangle that requires repainting due to recent interactive actions.
    *
-   * <p>Calculates the minimal rectangular region on screen that needs to be updated,
-   * based on board items that have changed. The rectangle includes a margin for
-   * trace widths to ensure complete visual updates.
+   * <p>Calculates the minimal rectangular region on screen that needs to be updated, based on board
+   * items that have changed. The rectangle includes a margin for trace widths to ensure complete
+   * visual updates.
    *
    * @return the rectangle in screen coordinates that needs repainting
-   *
-   * @see RoutingBoard#get_graphics_update_box()
+   * @see RoutingBoard#getGraphicsUpdateBox()
    */
-  Rectangle get_graphics_update_rectangle() {
+  Rectangle getGraphicsUpdateRectangle() {
     Rectangle result;
-    IntBox update_box = board.get_graphics_update_box();
-    if (update_box == null || update_box.is_empty()) {
+    IntBox updateBox = board.getGraphicsUpdateBox();
+    if (updateBox == null || updateBox.isEmpty()) {
       result = new Rectangle(0, 0, 0, 0);
     } else {
-      IntBox offset_box = update_box.offset(board.get_max_trace_half_width());
-      result = graphics_context.coordinate_transform.board_to_screen(offset_box);
+      IntBox offsetBox = updateBox.offset(board.getMaxTraceHalfWidth());
+      result = graphicsContext.coordinateTransform.boardToScreen(offsetBox);
     }
     return result;
   }
@@ -3026,43 +3047,40 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Finds all board items at the specified location on the active layer.
    *
-   * <p>Uses the current item selection filter from interactive settings. If nothing
-   * is found on the active layer and select_on_all_visible_layers is enabled, searches
-   * all visible layers.
+   * <p>Uses the current item selection filter from interactive settings. If nothing is found on the
+   * active layer and selectOnAllVisibleLayers is enabled, searches all visible layers.
    *
-   * @param p_location the position in board coordinates to search
+   * @param location the position in board coordinates to search
    * @return a set of items at that location (may be empty)
-   *
-   * @see #pick_items(FloatPoint, ItemSelectionFilter)
-   * @see InteractiveSettings#item_selection_filter
+   * @see #pickItems(FloatPoint, ItemSelectionFilter)
+   * @see InteractiveSettings#itemSelectionFilter
    */
-  Set<Item> pick_items(FloatPoint p_location) {
-    return pick_items(p_location, interactiveSettings.get_item_selection_filter());
+  Set<Item> pickItems(FloatPoint location) {
+    return pickItems(location, interactiveSettings.getItemSelectionFilter());
   }
 
   /**
    * Finds all board items at the specified location with a custom item filter.
    *
-   * <p>Searches the active layer first. If nothing is found and select_on_all_visible_layers
-   * is enabled, expands the search to all visible layers (excluding the active layer).
-   * The item filter determines which item types are considered.
+   * <p>Searches the active layer first. If nothing is found and selectOnAllVisibleLayers is
+   * enabled, expands the search to all visible layers (excluding the active layer). The item filter
+   * determines which item types are considered.
    *
-   * @param p_location the position in board coordinates to search
-   * @param p_item_filter the filter defining which item types to include
+   * @param location the position in board coordinates to search
+   * @param itemFilter the filter defining which item types to include
    * @return a set of items matching the filter at that location (may be empty)
-   *
-   * @see RoutingBoard#pick_items(Point, int, ItemSelectionFilter)
+   * @see RoutingBoard#pickItems(Point, int, ItemSelectionFilter)
    * @see ItemSelectionFilter
    */
-  Set<Item> pick_items(FloatPoint p_location, ItemSelectionFilter p_item_filter) {
-    IntPoint location = p_location.round();
-    Set<Item> result = board.pick_items(location, interactiveSettings.get_layer(), p_item_filter);
-    if (result.isEmpty() && interactiveSettings.get_select_on_all_visible_layers()) {
-      for (int i = 0; i < graphics_context.layer_count(); i++) {
-        if (i == interactiveSettings.get_layer() || graphics_context.get_layer_visibility(i) <= 0) {
+  Set<Item> pickItems(FloatPoint point, ItemSelectionFilter itemFilter) {
+    IntPoint location = point.round();
+    Set<Item> result = board.pickItems(location, interactiveSettings.getLayer(), itemFilter);
+    if (result.isEmpty() && interactiveSettings.getSelectOnAllVisibleLayers()) {
+      for (int i = 0; i < graphicsContext.layerCount(); i++) {
+        if (i == interactiveSettings.getLayer() || graphicsContext.getLayerVisibility(i) <= 0) {
           continue;
         }
-        result.addAll(board.pick_items(location, i, p_item_filter));
+        result.addAll(board.pickItems(location, i, itemFilter));
       }
     }
     return result;
@@ -3071,35 +3089,52 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Programmatically moves the mouse cursor to the specified board location.
    *
-   * <p>Converts the board coordinates to screen coordinates and moves the system
-   * mouse cursor. Used by interactive states to provide visual feedback or guide
-   * user attention.
+   * <p>Converts the board coordinates to screen coordinates and moves the system mouse cursor. Used
+   * by interactive states to provide visual feedback or guide user attention.
    *
    * <p>This operation is ignored if the board is in read-only mode.
    *
-   * @param p_to_location the target position in board coordinates
-   *
-   * @see BoardPanel#move_mouse(Point2D)
+   * @param toLocation the target position in board coordinates
+   * @see BoardPanel#moveMouse(Point2D)
    */
-  void move_mouse(FloatPoint p_to_location) {
-    if (!board_is_read_only) {
-      panel.move_mouse(graphics_context.coordinate_transform.board_to_screen(p_to_location));
+  void moveMouse(FloatPoint toLocation) {
+    if (!boardIsReadOnly) {
+      panel.moveMouse(graphicsContext.coordinateTransform.boardToScreen(toLocation));
     }
   }
 
   /**
    * Returns the current interactive state (mode) of the board manager.
    *
-   * <p>The interactive state determines how user input is interpreted and
-   * what operations are available (e.g., select, route, drag, construct).
+   * <p>The interactive state determines how user input is interpreted and what operations are
+   * available (e.g., select, route, drag, construct).
    *
    * @return the current interactive state
-   *
    * @see InteractiveState
-   * @see #set_interactive_state(InteractiveState)
+   * @see #setInteractiveState(InteractiveState)
    */
-  public InteractiveState get_interactive_state() {
-    return this.interactive_state;
+  public InteractiveState getInteractiveState() {
+    return this.interactiveState;
+  }
+
+  /**
+   * Sets the current interactive state and updates the toolbar accordingly.
+   *
+   * <p>Transitions to a new interactive mode if the provided state is different from the current
+   * one. The toolbar is updated to reflect the new mode's available operations.
+   *
+   * <p>Toolbar update is skipped when the board is in read-only mode.
+   *
+   * @param state the new interactive state to activate
+   * @see InteractiveState#setToolbar()
+   */
+  public void setInteractiveState(InteractiveState state) {
+    if (state != null && state != interactiveState) {
+      this.interactiveState = state;
+      if (!this.boardIsReadOnly) {
+        state.setToolbar();
+      }
+    }
   }
 
   /**
@@ -3107,199 +3142,168 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>When the command is null, cannot execute, or returns null, the current state is kept.
    */
-  private InteractiveState execute_state_command(InteractiveCommand command) {
+  private InteractiveState executeStateCommand(InteractiveCommand command) {
     if (command == null || !command.canExecute()) {
-      return this.interactive_state;
+      return this.interactiveState;
     }
     InteractiveState nextState = command.execute();
-    return nextState != null ? nextState : this.interactive_state;
+    return nextState != null ? nextState : this.interactiveState;
   }
 
-  /**
-   * Applies a state transition and optional side effects in one place.
-   */
-  private void apply_interactive_state_change(InteractiveState nextState, boolean repaintAfterChange,
-      boolean updateToolbarSelection) {
-    if (nextState == null || nextState == this.interactive_state) {
+  /** Applies a state transition and optional side effects in one place. */
+  private void applyInteractiveStateChange(
+      InteractiveState nextState, boolean repaintAfterChange, boolean updateToolbarSelection) {
+    if (nextState == null || nextState == this.interactiveState) {
       return;
     }
-    set_interactive_state(nextState);
+    setInteractiveState(nextState);
     if (updateToolbarSelection) {
-      update_toolbar_selection_panel();
+      updateToolbarSelectionPanel();
     }
     if (repaintAfterChange) {
       repaint();
     }
   }
 
-  private void update_toolbar_selection_panel() {
-    if (panel != null && panel.board_frame != null) {
-      panel.board_frame.setToolbarModeSelectionPanelValue(get_interactive_state());
-    }
-  }
-
-  /**
-   * Sets the current interactive state and updates the toolbar accordingly.
-   *
-   * <p>Transitions to a new interactive mode if the provided state is different
-   * from the current one. The toolbar is updated to reflect the new mode's
-   * available operations.
-   *
-   * <p>Toolbar update is skipped when the board is in read-only mode.
-   *
-   * @param p_state the new interactive state to activate
-   *
-   * @see InteractiveState#set_toolbar()
-   */
-  public void set_interactive_state(InteractiveState p_state) {
-    if (p_state != null && p_state != interactive_state) {
-      this.interactive_state = p_state;
-      if (!this.board_is_read_only) {
-        p_state.set_toolbar();
-      }
+  private void updateToolbarSelectionPanel() {
+    if (panel != null && panel.boardFrame != null) {
+      panel.boardFrame.setToolbarModeSelectionPanelValue(getInteractiveState());
     }
   }
 
   /**
    * Adjusts the design bounds to encompass all board items, including those outside the outline.
    *
-   * <p>Recalculates the bounding box to include all items on the board, even if they
-   * extend beyond the board outline. This ensures the graphics context can properly
-   * display all content.
+   * <p>Recalculates the bounding box to include all items on the board, even if they extend beyond
+   * the board outline. This ensures the graphics context can properly display all content.
    *
    * <p>Useful after loading designs or when items have been placed outside normal bounds.
    *
-   * @see GraphicsContext#change_design_bounds(IntBox)
+   * @see GraphicsContext#changeDesignBounds(IntBox)
    */
-  public void adjust_design_bounds() {
-    IntBox new_bounding_box = this.board.get_bounding_box();
-    Collection<Item> board_items = this.board.get_items();
-    for (Item curr_item : board_items) {
-      IntBox curr_bounding_box = curr_item.bounding_box();
-      if (curr_bounding_box.ur.x < Integer.MAX_VALUE) {
-        new_bounding_box = new_bounding_box.union(curr_bounding_box);
+  public void adjustDesignBounds() {
+    IntBox newBoundingBox = this.board.getBoundingBox();
+    Collection<Item> boardItems = this.board.getItems();
+    for (Item currItem : boardItems) {
+      IntBox currBoundingBox = currItem.boundingBox();
+      if (currBoundingBox.ur.x < Integer.MAX_VALUE) {
+        newBoundingBox = newBoundingBox.union(currBoundingBox);
       }
     }
-    this.graphics_context.change_design_bounds(new_bounding_box);
+    this.graphicsContext.changeDesignBounds(newBoundingBox);
   }
 
   /**
    * Cleans up resources and prepares the board manager for garbage collection.
    *
    * <p>This method:
+   *
    * <ul>
-   *   <li>Removes event listeners to prevent memory leaks</li>
-   *   <li>Closes any open files</li>
-   *   <li>Nullifies all major object references to allow garbage collection</li>
+   *   <li>Removes event listeners to prevent memory leaks
+   *   <li>Closes any open files
+   *   <li>Nullifies all major object references to allow garbage collection
    * </ul>
    *
    * <p>Should be called when the board manager is no longer needed.
    */
   public void dispose() {
-    FRLogger
-        .getLogEntries()
-        .removeLogEntryAddedListener(this.logEntryAddedListener);
+    FRLogger.getLogEntries().removeLogEntryAddedListener(this.logEntryAddedListener);
     FRLogger.removeTraceEventListener(this.traceEventListener);
-    close_files();
-    graphics_context = null;
-    coordinate_transform = null;
+    closeFiles();
+    graphicsContext = null;
+    coordinateTransform = null;
     // Clear the instance field and the static singleton so that a subsequent
     // getOrCreate/reset call (e.g. when reopening the application) starts fresh.
     interactiveSettings = null;
     InteractiveSettings.resetForTesting();
-    interactive_state = null;
+    interactiveState = null;
     ratsnest = null;
-    clearance_violations = null;
+    clearanceViolations = null;
     board = null;
   }
 
   /**
    * Returns the board update strategy for batch operations.
    *
-   * <p>The update strategy controls how the board is updated during autorouting
-   * and optimization operations.
+   * <p>The update strategy controls how the board is updated during autorouting and optimization
+   * operations.
    *
    * @return the current board update strategy
-   *
    * @see BoardUpdateStrategy
    */
-  public BoardUpdateStrategy get_board_update_strategy() {
-    return board_update_strategy;
+  public BoardUpdateStrategy getBoardUpdateStrategy() {
+    return boardUpdateStrategy;
   }
 
   /**
    * Sets the board update strategy for batch operations.
    *
-   * @param p_board_update_strategy the new board update strategy
-   *
+   * @param boardUpdateStrategy the new board update strategy
    * @see BoardUpdateStrategy
    */
-  public void set_board_update_strategy(BoardUpdateStrategy p_board_update_strategy) {
-    board_update_strategy = p_board_update_strategy;
+  public void setBoardUpdateStrategy(BoardUpdateStrategy boardUpdateStrategy) {
+    this.boardUpdateStrategy = boardUpdateStrategy;
   }
 
   /**
    * Returns the hybrid routing ratio configuration.
    *
-   * <p>The hybrid ratio defines the balance between different routing algorithms
-   * when using hybrid routing approaches.
+   * <p>The hybrid ratio defines the balance between different routing algorithms when using hybrid
+   * routing approaches.
    *
    * @return the hybrid ratio string
    */
-  public String get_hybrid_ratio() {
-    return hybrid_ratio;
+  public String getHybridRatio() {
+    return hybridRatio;
   }
 
   /**
    * Sets the hybrid routing ratio configuration.
    *
-   * @param p_hybrid_ratio the hybrid ratio configuration string
+   * @param hybridRatio the hybrid ratio configuration string
    */
-  public void set_hybrid_ratio(String p_hybrid_ratio) {
-    hybrid_ratio = p_hybrid_ratio;
+  public void setHybridRatio(String hybridRatio) {
+    this.hybridRatio = hybridRatio;
   }
 
   /**
    * Returns the item selection strategy for batch autorouting.
    *
-   * <p>The strategy determines which items/nets are selected for routing and
-   * in what order during batch operations.
+   * <p>The strategy determines which items/nets are selected for routing and in what order during
+   * batch operations.
    *
    * @return the current item selection strategy
-   *
    * @see ItemSelectionStrategy
    */
-  public ItemSelectionStrategy get_item_selection_strategy() {
-    return item_selection_strategy;
+  public ItemSelectionStrategy getItemSelectionStrategy() {
+    return itemSelectionStrategy;
   }
 
   /**
    * Sets the item selection strategy for batch autorouting.
    *
-   * @param p_item_selection_strategy the new item selection strategy
-   *
+   * @param itemSelectionStrategy the new item selection strategy
    * @see ItemSelectionStrategy
    */
-  public void set_item_selection_strategy(ItemSelectionStrategy p_item_selection_strategy) {
-    item_selection_strategy = p_item_selection_strategy;
+  public void setItemSelectionStrategy(ItemSelectionStrategy itemSelectionStrategy) {
+    this.itemSelectionStrategy = itemSelectionStrategy;
   }
 
   /**
    * Returns the number of threads to use for parallel routing operations.
    *
-   * <p>If multi-threading is disabled in global settings, this method automatically
-   * returns 1 and logs an informational message. This ensures safe operation even
-   * if threading is misconfigured.
+   * <p>If multi-threading is disabled in global settings, this method automatically returns 1 and
+   * logs an informational message. This ensures safe operation even if threading is misconfigured.
    *
    * @return the effective number of threads (respecting global settings)
    */
-  public int get_num_threads() {
-    if ((num_threads > 1) && (!globalSettings.featureFlags.multiThreading)) {
+  public int getNumThreads() {
+    if ((numThreads > 1) && (!globalSettings.featureFlags.multiThreading)) {
       routingJob.logInfo("Multi-threading is disabled in the settings. Using single thread.");
-      num_threads = 1;
+      numThreads = 1;
     }
 
-    return num_threads;
+    return numThreads;
   }
 
   /**
@@ -3307,23 +3311,21 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>The actual number used may be limited by global settings and system capabilities.
    *
-   * @param p_value the number of threads to use (should be >= 1)
-   *
-   * @see #get_num_threads()
+   * @param value the number of threads to use (should be >= 1)
+   * @see #getNumThreads()
    */
-  public void set_num_threads(int p_value) {
-    num_threads = p_value;
+  public void setNumThreads(int value) {
+    numThreads = value;
   }
 
   /**
    * Registers a listener to be notified when the board's read-only state changes.
    *
-   * <p>Listeners are typically UI components that need to enable/disable controls
-   * based on whether the board is in read-only mode (e.g., during autorouting).
+   * <p>Listeners are typically UI components that need to enable/disable controls based on whether
+   * the board is in read-only mode (e.g., during autorouting).
    *
    * @param listener the consumer to notify with the new read-only state (true/false)
-   *
-   * @see #set_board_read_only(boolean)
+   * @see #setBoardReadOnly(boolean)
    */
   public void addReadOnlyEventListener(Consumer<Boolean> listener) {
     readOnlyEventListeners.add(listener);

@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Authentication service for the dedicated MCP server.
- * MCP authentication is controlled solely by {@code mcp_server.authentication.enabled} and is
- * independent of the REST API authentication setting.
+ * Authentication service for the dedicated MCP server. MCP authentication is controlled solely by
+ * {@code mcp_server.authentication.enabled} and is independent of the REST API authentication
+ * setting.
  */
-public class McpApiKeyValidationService {
+public final class McpApiKeyValidationService {
 
   private static McpApiKeyValidationService instance;
   private final List<ApiKeyProvider> providers;
@@ -23,12 +23,14 @@ public class McpApiKeyValidationService {
   private McpApiKeyValidationService() {
     this.providers = new ArrayList<>();
 
-    if (Freerouting.globalSettings == null || Freerouting.globalSettings.mcpServerSettings == null) {
+    if (Freerouting.globalSettings == null
+        || Freerouting.globalSettings.mcpServerSettings == null) {
       this.isEnabled = false;
       return;
     }
 
-    ApiAuthenticationSettings authSettings = Freerouting.globalSettings.mcpServerSettings.authentication;
+    ApiAuthenticationSettings authSettings =
+        Freerouting.globalSettings.mcpServerSettings.authentication;
     boolean mcpAuthEnabled = authSettings != null && Boolean.TRUE.equals(authSettings.isEnabled);
 
     this.isEnabled = mcpAuthEnabled;
@@ -44,20 +46,22 @@ public class McpApiKeyValidationService {
               && authSettings.googleSheets.googleApiKey != null
               && !authSettings.googleSheets.googleApiKey.isEmpty()) {
             try {
-              providers.add(new GoogleSheetsApiKeyProvider(
-                  authSettings.googleSheets.sheetUrl,
-                  authSettings.googleSheets.googleApiKey));
+              providers.add(
+                  new GoogleSheetsApiKeyProvider(
+                      authSettings.googleSheets.sheetUrl, authSettings.googleSheets.googleApiKey));
             } catch (Exception e) {
               FRLogger.error("Failed to initialize MCP Google Sheets API key provider.", null, e);
             }
           } else {
-            FRLogger.warn("MCP GoogleSheets provider configured but sheetUrl or googleApiKey is missing.");
+            FRLogger.warn(
+                "MCP GoogleSheets provider configured but sheetUrl or googleApiKey is missing.");
           }
         }
       }
     }
   }
 
+  /** Returns the singleton instance of McpApiKeyValidationService. */
   public static synchronized McpApiKeyValidationService getInstance() {
     if (instance == null) {
       instance = new McpApiKeyValidationService();
@@ -65,21 +69,31 @@ public class McpApiKeyValidationService {
     return instance;
   }
 
+  /** Resets the singleton instance for testing purposes. */
   public static synchronized void resetForTesting() {
     instance = null;
   }
 
+  /** Returns whether MCP API key authentication is enabled. */
   public boolean isAuthenticationEnabled() {
     return isEnabled;
   }
 
+  /**
+   * Validates the provided API key against configured providers.
+   *
+   * @param apiKey API key to validate
+   * @return {@code true} if valid or auth disabled; {@code false} otherwise
+   */
   public boolean validateApiKey(String apiKey) {
     if (!isEnabled) {
       return true;
     }
 
     if (providers.isEmpty()) {
-      FRLogger.warn("MCP authentication is enabled but no providers are correctly configured. Denying access.");
+      FRLogger.warn(
+          "MCP authentication is enabled but no providers are correctly configured. Denying"
+              + " access.");
       return false;
     }
 

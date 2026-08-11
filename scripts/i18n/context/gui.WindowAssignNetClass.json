@@ -1,9 +1,7 @@
 {
   "class_name": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowAssignNetClass"
-    ],
+    "code_references": [],
     "english_hash": "8b4592fb1e67923ba164be5a5093c47d4d7f14a2a90a8abb4652e46a9bd5970d",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -37,9 +35,7 @@
   },
   "net_name": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowAssignNetClass"
-    ],
+    "code_references": [],
     "english_hash": "b29049c4beee11e875e086a29e9b7c72897acb282632926705aff1b3f3554fe5",
     "grammatical_role": "fragment",
     "has_placeholders": false,

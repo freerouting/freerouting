@@ -1,0 +1,121 @@
+---
+# Freerouting OpenRewrite phases.
+#
+# Phase1Hygiene is a curated subset of org.openrewrite.staticanalysis.CommonStaticAnalysis:
+# the composite is NOT used directly because two of its ingredients are unsafe for this repo:
+#   - MethodNameCasing: renames package-private abstract method declarations but skips the
+#     public @Override implementations (widened access), leaving the code uncompilable.
+#     Method renaming belongs to the dedicated Phase 2 rename recipes instead.
+#   - WriteOctalValuesAsDecimal: rewrites intentional octal literals (e.g. fileMode 0775 in
+#     build.gradle) into unreadable decimals.
+#   - EmptyBlock: rewrites deliberately empty if-blocks (e.g. TODO placeholders in
+#     BaseController) into dangling condition statements, dropping null guards (NPE) and
+#     leaving confusing bare expressions like `job.thread.is_stop_auto_router_requested();`.
+#
+# Apply with: ./gradlew rewriteRun -Drewrite.activeRecipes=app.freerouting.Phase1Hygiene
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase1Hygiene
+displayName: Freerouting phase 1 hygiene
+description: Import/format-neutral static-analysis hygiene without identifier renames.
+recipeList:
+  - org.openrewrite.java.RemoveUnusedImports
+  - org.openrewrite.java.OrderImports
+  - org.openrewrite.staticanalysis.AbstractClassPublicConstructor
+  - org.openrewrite.staticanalysis.BooleanChecksNotInverted
+  - org.openrewrite.staticanalysis.CovariantEquals
+  - org.openrewrite.staticanalysis.EqualsAvoidsNull
+  - org.openrewrite.staticanalysis.ExplicitInitialization
+  - org.openrewrite.staticanalysis.FinalClass
+  - org.openrewrite.staticanalysis.FinalizePrivateFields
+  - org.openrewrite.staticanalysis.IndexOfShouldNotCompareGreaterThanZero
+  - org.openrewrite.staticanalysis.InlineVariable
+  - org.openrewrite.staticanalysis.LambdaBlockToExpression
+  - org.openrewrite.staticanalysis.ModifierOrder
+  - org.openrewrite.staticanalysis.MultipleVariableDeclarations
+  - org.openrewrite.staticanalysis.NeedBraces
+  - org.openrewrite.staticanalysis.NoDoubleBraceInitialization
+  - org.openrewrite.staticanalysis.NoValueOfOnStringType
+  - org.openrewrite.staticanalysis.ReplaceLambdaWithMethodReference
+  - org.openrewrite.staticanalysis.SimplifyBooleanExpression
+  - org.openrewrite.staticanalysis.SimplifyBooleanReturn
+  - org.openrewrite.staticanalysis.UnnecessaryParentheses
+  - org.openrewrite.staticanalysis.UpperCaseLiteralSuffixes
+  - org.openrewrite.staticanalysis.UseDiamondOperator
+  - org.openrewrite.staticanalysis.UseJavaStyleArrayDeclarations
+
+---
+# Phase 2a: instance fields (all visibilities). Test with: ./gradlew phase2aFieldsPost compileJava
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase2aFields
+displayName: Freerouting phase 2a — instance fields
+description: Rename non-constant instance fields to lowerCamelCase.
+recipeList:
+  - app.freerouting.rewrite.RenameInstanceFieldsToCamelCase:
+      includeTestSources: true
+
+---
+# Phase 2b: object-colliding methods. Test with: ./gradlew compileJava
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase2bObjectCollisions
+displayName: Freerouting phase 2b — object-colliding methods
+description: Rename domain methods that collide with java.lang.Object methods.
+recipeList:
+  - app.freerouting.rewrite.RenameObjectCollidingMethods
+
+---
+# Phase 2c: interface/enum method declarations. Test with: ./gradlew compileJava
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase2cInterfaceEnumMethods
+displayName: Freerouting phase 2c — interface/enum methods
+description: Rename snake_case interface and enum method declarations.
+recipeList:
+  - app.freerouting.rewrite.RenameNonClassMethodsToCamelCase:
+      includeTestSources: true
+
+---
+# Phase 2d: class method declarations. Test with: ./gradlew compileJava
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase2dClassMethods
+displayName: Freerouting phase 2d — class methods
+description: Rename snake_case methods in classes (requires renamePublicMethods).
+recipeList:
+  - org.openrewrite.staticanalysis.MethodNameCasing:
+      renamePublicMethods: true
+      includeTestSources: true
+
+---
+# Phase 2e: method and constructor parameters. Test with: ./gradlew phase2eMethodParameters
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase2eMethodParameters
+displayName: Freerouting phase 2e — method parameters
+description: Rename snake_case method and constructor parameters to lowerCamelCase.
+recipeList:
+  - app.freerouting.rewrite.RenameMethodParametersToCamelCase:
+      includeTestSources: true
+
+---
+# Phase 2f: local variables. Test with: ./gradlew phase2fLocalVariables
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase2fLocalVariables
+displayName: Freerouting phase 2f — local variables
+description: Rename snake_case local variables to lowerCamelCase.
+recipeList:
+  - org.openrewrite.staticanalysis.RenameLocalVariablesToCamelCase
+
+---
+# Phase 6: Language Polish. Run with: ./gradlew rewriteRun "-Drewrite.activeRecipes=app.freerouting.Phase6LanguagePolish"
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase6LanguagePolish
+displayName: Freerouting phase 6 — Language Polish
+description: Apply modern Java language idioms, pattern matching, collection factories, and API updates.
+recipeList:
+  - org.openrewrite.java.migrate.lang.UseStringIsEmptyRecipe
+  - org.openrewrite.java.migrate.lang.StringFormatted
+  - org.openrewrite.staticanalysis.InstanceOfPatternMatch
+  - org.openrewrite.java.migrate.lang.UseTextBlocks
+  - org.openrewrite.java.migrate.SwitchPatternMatching
+  - org.openrewrite.java.migrate.util.UseListOf
+  - org.openrewrite.java.migrate.util.UseSetOf
+  - org.openrewrite.java.migrate.util.UseMapOf
+  - org.openrewrite.java.migrate.net.JavaNetAPIs
+  - org.openrewrite.staticanalysis.UnnecessaryParentheses

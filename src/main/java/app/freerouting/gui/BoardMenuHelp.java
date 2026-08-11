@@ -1,26 +1,30 @@
 package app.freerouting.gui;
 
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+/** Creates the help menu for a board frame. */
 public class BoardMenuHelp extends JMenu {
 
-  protected final BoardFrame board_frame;
+  protected final BoardFrame boardFrame;
 
   /**
-   * Creates a new instance of BoardMenuHelpReduced Separated from BoardMenuHelp to avoid ClassNotFound exception when the library jh.jar is not found, which is only used in the extended help menu.
+   * Creates a new instance of BoardMenuHelpReduced Separated from BoardMenuHelp to avoid
+   * ClassNotFound exception when the library jh.jar is not found, which is only used in the
+   * extended help menu.
    */
-  public BoardMenuHelp(BoardFrame p_board_frame) {
-    this.board_frame = p_board_frame;
-    TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+  public BoardMenuHelp(BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
+    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
     this.setText(tm.getText("help"));
 
-    JMenuItem help_about_menuitem = new JMenuItem();
-    help_about_menuitem.setText(tm.getText("about"));
-    help_about_menuitem.addActionListener(_ -> board_frame.about_window.setVisible(true));
-    help_about_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("help_about_menuitem", help_about_menuitem.getText()));
-    this.add(help_about_menuitem);
+    JMenuItem helpAboutMenuitem = new JMenuItem();
+    helpAboutMenuitem.setText(tm.getText("about"));
+    helpAboutMenuitem.addActionListener(_ -> boardFrame.aboutWindow.setVisible(true));
+    helpAboutMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("helpAboutMenuitem", helpAboutMenuitem.getText()));
+    this.add(helpAboutMenuitem);
   }
 }

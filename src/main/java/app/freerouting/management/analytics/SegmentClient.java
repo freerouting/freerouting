@@ -16,20 +16,24 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-/**
- * A client for Segment's HTTP API.
- */
+/** Sends analytics payloads to Segment's HTTP API. */
 public class SegmentClient implements AnalyticsClient {
 
   private static final String SEGMENT_ENDPOINT = "https://api.segment.io/v1/";
-  private final String WRITE_KEY;
-  private final String LIBRARY_NAME = "freerouting";
-  private final String LIBRARY_VERSION;
+  private final String writeKey;
+  private final String libraryName = "freerouting";
+  private final String libraryVersion;
   private boolean enabled = true;
 
+  /**
+   * Creates a Segment analytics client.
+   *
+   * @param libraryVersion the Freerouting version included in each payload
+   * @param writeKey the Segment write key
+   */
   public SegmentClient(String libraryVersion, String writeKey) {
-    LIBRARY_VERSION = libraryVersion;
-    WRITE_KEY = writeKey;
+    this.libraryVersion = libraryVersion;
+    this.writeKey = writeKey;
   }
 
   private void sendPayloadAsync(String endpoint, Payload payload) throws IOException {
@@ -37,69 +41,78 @@ public class SegmentClient implements AnalyticsClient {
       return;
     }
 
-    new Thread(() ->
-    {
-      try {
-        // Serialize to JSON using GSON
-        String jsonPayload = GsonProvider.GSON.toJson(payload);
+    new Thread(
+            () -> {
+              try {
+                // Create and configure HTTP connection
+                URL url = new URI(endpoint).toURL();
 
-        // Create and configure HTTP connection
-        URL url = new URI(endpoint).toURL();
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json; utf-8");
+                connection.setRequestProperty(
+                    "Authorization",
+                    "Basic " + Base64.getEncoder().encodeToString((writeKey + ":").getBytes()));
+                connection.setDoOutput(true);
 
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json; utf-8");
-        connection.setRequestProperty("Authorization", "Basic " + Base64.getEncoder().encodeToString((WRITE_KEY + ":").getBytes()));
-        connection.setDoOutput(true);
+                // Write JSON payload to request
+                String jsonPayload = GsonProvider.GSON.toJson(payload);
+                try (OutputStream os = connection.getOutputStream()) {
+                  byte[] input = jsonPayload.getBytes(StandardCharsets.UTF_8);
+                  os.write(input, 0, input.length);
+                }
 
-        // Write JSON payload to request
-        try (OutputStream os = connection.getOutputStream()) {
-          byte[] input = jsonPayload.getBytes(StandardCharsets.UTF_8);
-          os.write(input, 0, input.length);
-        }
-
-        // Read the response
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
-          StringBuilder response = new StringBuilder();
-          String responseLine;
-          while ((responseLine = br.readLine()) != null) {
-            response.append(responseLine.trim());
-          }
-          // return response.toString();
-        }
-      } catch (Exception _) {
-        //FRLogger.error("Exception in SegmentClient.send_payload_async: " + e.getMessage(), e);
-      }
-    }).start();
+                // Read the response
+                try (BufferedReader br =
+                    new BufferedReader(
+                        new InputStreamReader(
+                            connection.getInputStream(), StandardCharsets.UTF_8))) {
+                  StringBuilder response = new StringBuilder();
+                  String responseLine;
+                  while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                  }
+                  // return response.toString();
+                }
+              } catch (Exception _) {
+                // FRLogger.error("Exception in SegmentClient.send_payload_async: " +
+                // e.getMessage(), e);
+              }
+            })
+        .start();
   }
 
+  @Override
   public void identify(String userId, String anonymousId, Traits traits) throws IOException {
     Payload payload = new Payload();
     payload.userId = userId;
     payload.anonymousId = anonymousId;
     payload.context = new Context();
     payload.context.library = new Library();
-    payload.context.library.name = LIBRARY_NAME;
-    payload.context.library.version = LIBRARY_VERSION;
+    payload.context.library.name = libraryName;
+    payload.context.library.version = libraryVersion;
     payload.traits = traits;
 
     sendPayloadAsync(SEGMENT_ENDPOINT + "identify", payload);
   }
 
-  public void track(String userId, String anonymousId, String event, Properties properties) throws IOException {
+  @Override
+  public void track(String userId, String anonymousId, String event, Properties properties)
+      throws IOException {
     Payload payload = new Payload();
     payload.userId = userId;
     payload.anonymousId = anonymousId;
     payload.context = new Context();
     payload.context.library = new Library();
-    payload.context.library.name = LIBRARY_NAME;
-    payload.context.library.version = LIBRARY_VERSION;
+    payload.context.library.name = libraryName;
+    payload.context.library.version = libraryVersion;
     payload.event = event;
     payload.properties = properties;
 
     sendPayloadAsync(SEGMENT_ENDPOINT + "track", payload);
   }
 
+  @Override
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
   }

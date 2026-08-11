@@ -6,7 +6,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
 
 - **Language:** Java 25
 - **Build System:** Gradle 9
-- **Key Dependencies:** 
+- **Key Dependencies:**
   - Jetty (embedded server)
   - Jersey (JAX-RS for API)
   - Log4j (logging)
@@ -21,10 +21,22 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
 - **Separation of Concerns:** The **UI/Visualizer** and the **Routing Engine** are distinct domains. Always maintain a strict boundary between visual representation and core algorithmic logic. UI concerns should not bleed into the geometric models.
 - **Module Boundary Enforcement:** Architectural package boundaries are enforced by ArchUnit tests in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java` and `src/test/java/app/freerouting/io/SpecctraPackageArchTest.java`. Keep strict rules green. For known legacy boundary debt, use frozen rules (`FreezingArchRule`) and never relax strict rules to hide regressions.
 - **Repository Package Boundaries:** Keep routing/data logic in `src/main/java/app/freerouting/{autoroute,board,geometry,drc,core,rules}`; keep UI/editor flow in `src/main/java/app/freerouting/{gui,interactive,boardgraphics}`; keep REST/API server concerns in `src/main/java/app/freerouting/{api,management}`; keep file-format I/O in `src/main/java/app/freerouting/io/{specctra,specctra/parser}` — the public entry points live in `io.specctra` and grammar internals in `io.specctra.parser`.
-- **Coding Standards:** Adhere strictly to Clean Code principles and standard Java naming conventions (e.g., CamelCase for classes/methods). Prioritize readability and maintainability without sacrificing the algorithmic performance. 
-- **Legacy Reference Implementation:** The source code of the original v1.9 implementation is available in the `src_v19/` directory. It serves as a reference and benchmark baseline that we can compare against when refactoring or optimizing routing logic. Use it to understand the original algorithmic decisions and to ensure that any new implementation maintains or improves upon the original performance and correctness. The source code should be modified only when more gradual trace logging is needed to understand the original algorithm's behavior in specific scenarios. Do not refactor or optimize the v1.9 code directly; instead, use it as a reference for the current development branch.
-- **Logging & Debugging:** Use the `FRLogger` class for logging. The method `trace(String method, String operation, String message, String impactedItems, Point[] impactedPoints)` should be used for detailed algorithmic steps, especially in routing logic, to facilitate debugging and performance analysis. Logs should be structured and informative, including impacted nets and impacted points in the routing process. These logs should be maintained in both the current implementation and the v1.9 reference to allow for side-by-side comparisons when analyzing routing behavior and performance. You can leave the trace log method calls in place in the v1.9 code and in the current code as well to help future developers understand the routing process and identify any regressions or improvements in the new implementation.
-  - For parity investigations, keep diagnostic payloads synchronized between current and v1.9. If current emits a debug marker (for example `[assign_raw]` with section/door identity), add the same marker fields to v1.9 before drawing conclusions from log diffs.
+- **Coding Standards:** Adhere strictly to Clean Code principles and standard Java naming conventions (e.g., CamelCase for classes/methods). Prioritize readability and maintainability without sacrificing the algorithmic performance.
+- **Formatting and quality gates:** Use the repository's pinned Spotless/Google Java Format
+  configuration and LF line-ending policy. Do not run `spotlessApply` as an automatic
+  cleanup step: it formats every configured Java source and can create hundreds of
+  unrelated changes. Prefer `spotlessCheck` and the Checkstyle tasks, and report any
+  failure before considering work ready. Never stage files automatically from an agent.
+  The frozen `src_v19/` tree is compiled for compatibility but is not current code to
+  refactor or Checkstyle.
+- **AI/contributor verification:** Before handoff, run
+  `./gradlew spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`
+  and `python scripts/i18n/extract-context.py --check` when applicable. On Windows use
+  `gradlew.bat`. If formatting is intentionally changed, isolate it in a dedicated
+  change and inspect `git diff --stat` plus `git diff --check`.
+- **Legacy Reference Implementation:** The source code of the original v1.9 implementation is available in the `src_v19/` directory. It remains a **historical reference** for understanding original algorithmic decisions and for optional deep-dive investigations. Do not refactor or optimize the v1.9 code directly; modify it only when additional trace logging is needed for a specific comparison. **It is no longer the primary routing-parity baseline for current development.**
+- **Logging & Debugging:** Use the `FRLogger` class for logging. The method `trace(String method, String operation, String message, String impactedItems, Point[] impactedPoints)` should be used for detailed algorithmic steps, especially in routing logic, to facilitate debugging and performance analysis. Logs should be structured and informative, including impacted nets and impacted points in the routing process. When comparing against a baseline build, keep diagnostic payloads synchronized between the WIP tree and that baseline before drawing conclusions from log diffs.
+  - For parity investigations, keep diagnostic payloads synchronized between WIP and the baseline under comparison. If WIP emits a debug marker (for example `[assign_raw]` with section/door identity), add the same marker fields to the baseline instrumentation before drawing conclusions from log diffs.
 - **`InteractiveSettings` / GUI Session State:** `InteractiveSettings` extends `GuiSettings` (which implements `SettingsSource` at priority 50) and is the **sole** live source of GUI state in the `SettingsMerger` pipeline. Key invariants:
   - It is a **singleton within a GUI session**. Always obtain it via `InteractiveSettings.getOrCreate(board)` and reset it on every board load with `InteractiveSettings.reset(board)`.
   - It must **never** be referenced from `HeadlessBoardManager` or any `api`/`management` code path. `HeadlessBoardManager.getInteractiveSettings()` always returns `null` by design.
@@ -37,15 +49,15 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
 
 - **Safety First:** Be *extremely careful* when modifying the routing algorithms. Even minor changes can lead to severe regressions in trace optimization, clearance violations, or routing completion rates.
 - **Regressions Prevention:** Before refactoring any core routing logic, you **must** verify your changes against the existing test suite to prevent trace regressions. Always run reproduction tests on actual PCB design files (`.dsn`) if an issue is reported (see `src/test/java/app/freerouting/fixtures/RoutingFixtureTest.java` and fixtures in `fixtures/`).
-- **Baseline Performance:** The original v1.9 implementation serves as a performance and correctness baseline. Any new implementation should aim to match or exceed the routing quality and efficiency of the v1.9 version. 
-  - To compare performance, use the script `scripts/tests/compare-versions.ps1` which runs both versions on a PCB design and outputs key metrics.
-  - TRACE level logs are written to `logs/` folder with `freerouting-v190.log` and `freerouting-current.log` filenames for easy comparison.
-  - Log files can become huge, so use the script's filtering capabilities to focus on specific nets (`-DebugFilterByNet` command line argument), limit routing passes (`max_passes`) or items (`max_items`) when analyzing performance differences between the two versions.
-  - Use PowerShell commands to extract and compare relevant log entries for specific nets or routing steps to identify where the new implementation may be diverging from the v1.9 baseline in terms of routing decisions, trace optimizations, or clearance handling.
-  - For deterministic parity work, locate the first meaningful mismatch in normalized routing streams (for example `RAW_SECTION` selection records) and treat that position as the investigation anchor for both versions.
+- **Baseline Performance:** The primary performance and correctness baseline for current development is stable **Freerouting v2.3.0** (already on par with, and slightly better than, historical v1.9). Any WIP / feature-branch implementation should match or exceed v2.3.0 routing quality on the agreed golden fixtures.
+  - Prefer a WIP-vs-v2.3.0 compare workflow (adapted from or replacing `scripts/tests/compare-versions.ps1`, which still targets v1.9 via `buildBothVersions` / `freerouting-v190.log`).
+  - When investigating regressions, compare clearance violations using `DesignRulesChecker.getAllClearanceViolations()` (do not trust `BoardStatistics.clearanceViolations.totalCount` alone — it is incomplete).
+  - TRACE logs for baseline comparisons should use clear WIP vs baseline filenames; keep files manageable with net filters (`-DebugFilterByNet`), `max_passes`, and `max_items` as needed.
+  - For deterministic parity work, locate the first meaningful mismatch in normalized routing streams (for example `RAW_SECTION` selection records) and treat that position as the investigation anchor.
   - Classify divergence before fixing: distinguish numeric-only drift from behavioral ordering/tie-break divergence by suppressing volatile values (for example `expansion_value` and `sorting_value`) and comparing decision continuity.
-  - Preferred remediation sequence: (1) synchronize instrumentation payloads in current and v1.9, (2) diff around the first normalized mismatch with stable identifiers (section, door, from_door, net), (3) apply the smallest possible ordering/tie-break fix in current (for example in `expand_to_door_section(...)` path), (4) rerun comparisons to confirm the mismatch moves later or disappears without introducing violations.
-  - Exit criteria for parity investigations: no new clearance violations, no regression in routing completion, and stable or improved compare-versions metrics across repeated runs and at least two `max_items` checkpoints.
+  - Preferred remediation sequence: (1) synchronize instrumentation payloads in WIP and baseline, (2) diff around the first normalized mismatch with stable identifiers (section, door, from_door, net), (3) apply the smallest possible ordering/tie-break fix in WIP, (4) rerun comparisons to confirm the mismatch moves later or disappears without introducing violations.
+  - Exit criteria for parity investigations: no new clearance violations (full DRC), no regression in routing completion vs v2.3.0, and stable or improved compare metrics across repeated runs and at least two `max_items` checkpoints.
+  - The v1.9 tree (`src_v19/`) may still be used for historical algorithm archaeology; it is not required for routine WIP gates. See also `docs/issues/soc-gui-separation-and-accessibility-plan.md` (D24).
 - **Algorithm Performance Metrics:** When optimizing routing algorithms, focus on key performance metrics such as:
   - **Clearance Violations:** (Critical priority) Ensure that no routing changes introduce new clearance violations.
   - **Routing Completion Rate:** (High priority) The percentage of successfully routed nets.
@@ -67,7 +79,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   - DSN fixture files live in `fixtures/`; reference them by filename (e.g., `"Issue508-DAC2020_bm01.dsn"`). The quickest fixture for smoke-checks is `Dac2020Bm01RoutingTest`.
   - Bound long-running routing tests with `TestingSettings.setMaxPasses(n)`, `setMaxItems(m)`, and `setJobTimeoutString("HH:MM:SS")` to keep CI fast.
 - **Issue Tracking:** Detailed per-issue specifications live in `docs/issues/`. Each file documents the problem, sub-issues (with ✅ when done), proposed/actual implementation, and acceptance criteria. Keep these files up-to-date as sub-issues are resolved so future agents have accurate context without re-reading the full conversation history.
-  - Architecture boundary debt is tracked in `docs/issues/Architecture-boundary-debt-tracker.md`. Update it whenever frozen ArchUnit baselines change or when a frozen rule is promoted to strict.
+  - Architecture boundary debt for the GUI/headless separation work is tracked in `docs/issues/soc-gui-separation-and-accessibility-plan.md` §12 (live freeze ledger). Update that section whenever frozen ArchUnit baselines change or when a frozen rule is promoted to strict.
   - Temporary analysis artifacts (draft GitHub replies, one-off log extracts, heap-dump notes) should be written to `logs/<IssueNNN>/` — this directory is git-ignored and will not clutter the repository.
 - **Licensing:** This project is open-source under the **GPLv3** license. Ensure all dependencies and contributions respect this license.
 

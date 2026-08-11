@@ -5,44 +5,49 @@ import java.io.Serializable;
 import java.math.BigInteger;
 
 /**
- * Implementation of points in the projective plane represented by 3 coordinates x, y, z, which are infinite precision integers. Two projective points (x1, y1, z1) and (x2, y2 z2) are equal, if they
- * are located on the same line through the zero point, that means, there exist a number r with x2 = r*x1, y2 = r*y1 and z2 = r*z1. The affine Point with rational coordinates represented by the
- * projective Point (x, y, z) is (x/z, y/z). The projective plane with integer coordinates contains in addition to the affine plane with rational coordinates the so-called line at infinity, which
+ * Implementation of points in the projective plane represented by 3 coordinates x, y, z, which are
+ * infinite precision integers. Two projective points (x1, y1, z1) and (x2, y2 z2) are equal, if
+ * they are located on the same line through the zero point, that means, there exist a number r with
+ * x2 = r*x1, y2 = r*y1 and z2 = r*z1. The affine Point with rational coordinates represented by the
+ * projective Point (x, y, z) is (x/z, y/z). The projective plane with integer coordinates contains
+ * in addition to the affine plane with rational coordinates the so-called line at infinity, which
  * consist of all projective points (x, y, z) with z = 0.
  */
 public class RationalPoint extends Point implements Serializable {
 
+  @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   final BigInteger x;
+
+  @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   final BigInteger y;
+
+  @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   final BigInteger z;
 
   /**
-   * creates a RationalPoint from 3 BigIntegers p_x, p_y and p_z. They represent the 2-dimensional point with the rational number Tuple ( p_x / p_z , p_y / p_z). Throws IllegalArgumentException if
-   * denominator p_z is <= 0
+   * Creates a RationalPoint from 3 BigIntegers p_x, p_y and p_z. They represent the 2-dimensional
+   * point with the rational number Tuple ( p_x / p_z , p_y / p_z). Throws IllegalArgumentException
+   * if denominator p_z is <= 0
    */
-  RationalPoint(BigInteger p_x, BigInteger p_y, BigInteger p_z) {
-    x = p_x;
-    y = p_y;
-    z = p_z;
-    if (p_z.signum() < 0) {
+  RationalPoint(BigInteger x, BigInteger y, BigInteger z) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    if (z.signum() < 0) {
       throw new IllegalArgumentException("RationalPoint: p_z is expected to be >= 0");
     }
   }
 
-  /**
-   * creates a RationalPoint from an IntPoint
-   */
-  RationalPoint(IntPoint p_point) {
-    x = BigInteger.valueOf(p_point.x);
-    y = BigInteger.valueOf(p_point.y);
+  /** Creates a RationalPoint from an IntPoint. */
+  RationalPoint(IntPoint point) {
+    x = BigInteger.valueOf(point.x);
+    y = BigInteger.valueOf(point.y);
     z = BigInteger.ONE;
   }
 
-  /**
-   * approximates the coordinates of this point by float coordinates
-   */
+  /** Approximates the coordinates of this point by float coordinates. */
   @Override
-  public FloatPoint to_float() {
+  public FloatPoint toFloat() {
     double xd = x.doubleValue();
     double yd = y.doubleValue();
     double zd = z.doubleValue();
@@ -57,29 +62,26 @@ public class RationalPoint extends Point implements Serializable {
     return new FloatPoint(xd, yd);
   }
 
-  /**
-   * returns true, if this RationalPoint is equal to p_ob
-   */
+  /** Returns true, if this RationalPoint is equal to p_ob. */
   @Override
-  public int get_id_no() {
+  public int getIdNo() {
     int result = x.hashCode();
     result = 31 * result + y.hashCode();
-    result = 31 * result + z.hashCode();
-    return result;
+    return 31 * result + z.hashCode();
   }
 
   @Override
-  public final boolean equals(Object p_ob) {
-    if (this == p_ob) {
+  public final boolean equals(Object ob) {
+    if (this == ob) {
       return true;
     }
-    if (p_ob == null) {
+    if (ob == null) {
       return false;
     }
-    if (getClass() != p_ob.getClass()) {
+    if (getClass() != ob.getClass()) {
       return false;
     }
-    RationalPoint other = (RationalPoint) p_ob;
+    RationalPoint other = (RationalPoint) ob;
     BigInteger det = BigIntAux.determinant(x, other.x, z, other.z);
     if (det.signum() != 0) {
       return false;
@@ -90,13 +92,13 @@ public class RationalPoint extends Point implements Serializable {
   }
 
   @Override
-  public boolean is_infinite() {
+  public boolean isInfinite() {
     return z.signum() == 0;
   }
 
   @Override
-  public IntBox surrounding_box() {
-    FloatPoint fp = to_float();
+  public IntBox surroundingBox() {
+    FloatPoint fp = toFloat();
     int llx = (int) Math.floor(fp.x);
     int lly = (int) Math.floor(fp.y);
     int urx = (int) Math.ceil(fp.x);
@@ -105,8 +107,8 @@ public class RationalPoint extends Point implements Serializable {
   }
 
   @Override
-  public IntOctagon surrounding_octagon() {
-    FloatPoint fp = to_float();
+  public IntOctagon surroundingOctagon() {
+    FloatPoint fp = toFloat();
     int lx = (int) Math.floor(fp.x);
     int ly = (int) Math.floor(fp.y);
     int rx = (int) Math.ceil(fp.x);
@@ -123,179 +125,178 @@ public class RationalPoint extends Point implements Serializable {
   }
 
   @Override
-  public boolean is_contained_in(IntBox p_box) {
-    BigInteger tmp = BigInteger.valueOf(p_box.ll.x).multiply(z);
+  public boolean isContainedIn(IntBox box) {
+    BigInteger tmp = BigInteger.valueOf(box.ll.x).multiply(z);
     if (x.compareTo(tmp) < 0) {
       return false;
     }
-    tmp = BigInteger.valueOf(p_box.ll.y).multiply(z);
+    tmp = BigInteger.valueOf(box.ll.y).multiply(z);
     if (y.compareTo(tmp) < 0) {
       return false;
     }
-    tmp = BigInteger.valueOf(p_box.ur.x).multiply(z);
+    tmp = BigInteger.valueOf(box.ur.x).multiply(z);
     if (x.compareTo(tmp) > 0) {
       return false;
     }
-    tmp = BigInteger.valueOf(p_box.ur.y).multiply(z);
+    tmp = BigInteger.valueOf(box.ur.y).multiply(z);
     return y.compareTo(tmp) <= 0;
   }
 
-  /**
-   * returns the translation of this point by p_vector
-   */
+  /** Returns the translation of this point by p_vector. */
   @Override
-  public Point translate_by(Vector p_vector) {
-    if (p_vector.equals(Vector.ZERO)) {
+  public Point translateBy(Vector vector) {
+    if (vector.equals(Vector.ZERO)) {
       return this;
     }
-    return p_vector.add_to(this);
+    return vector.addTo(this);
   }
 
   @Override
-  Point translate_by(IntVector p_vector) {
-    RationalVector vector = new RationalVector(p_vector);
-    return translate_by(vector);
+  Point translateBy(IntVector vector) {
+    RationalVector rationalVector = new RationalVector(vector);
+    return translateBy(rationalVector);
   }
 
   @Override
-  Point translate_by(RationalVector p_vector) {
+  Point translateBy(RationalVector vector) {
     BigInteger[] v1 = new BigInteger[3];
     v1[0] = x;
     v1[1] = y;
     v1[2] = z;
 
     BigInteger[] v2 = new BigInteger[3];
-    v2[0] = p_vector.x;
-    v2[1] = p_vector.y;
-    v2[2] = p_vector.z;
-    BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
+    v2[0] = vector.x;
+    v2[1] = vector.y;
+    v2[2] = vector.z;
+    BigInteger[] result = BigIntAux.addRationalCoordinates(v1, v2);
     return new RationalPoint(result[0], result[1], result[2]);
   }
 
-  /**
-   * returns the difference vector of this point and p_other
-   */
+  /** Returns the difference vector of this point and p_other. */
   @Override
-  public Vector difference_by(Point p_other) {
-    Vector tmp = p_other.difference_by(this);
+  public Vector differenceBy(Point other) {
+    Vector tmp = other.differenceBy(this);
     return tmp.negate();
   }
 
   @Override
-  Vector difference_by(IntPoint p_other) {
-    RationalPoint other = new RationalPoint(p_other);
-    return difference_by(other);
+  Vector differenceBy(IntPoint other) {
+    RationalPoint rationalOther = new RationalPoint(other);
+    return differenceBy(rationalOther);
   }
 
   @Override
-  Vector difference_by(RationalPoint p_other) {
+  Vector differenceBy(RationalPoint other) {
     BigInteger[] v1 = new BigInteger[3];
     v1[0] = x;
     v1[1] = y;
     v1[2] = z;
 
     BigInteger[] v2 = new BigInteger[3];
-    v2[0] = p_other.x.negate();
-    v2[1] = p_other.y.negate();
-    v2[2] = p_other.z;
-    BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
+    v2[0] = other.x.negate();
+    v2[1] = other.y.negate();
+    v2[2] = other.z;
+    BigInteger[] result = BigIntAux.addRationalCoordinates(v1, v2);
     return new RationalVector(result[0], result[1], result[2]);
   }
 
   /**
-   * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to p_2; Side.ON_THE_RIGHT, if this Point is on the right f the line from p_1 to p_2; and Side.COLLINEAR,
-   * if this Point is collinear with p_1 and p_2.
+   * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to
+   * p_2; Side.ON_THE_RIGHT, if this Point is on the right f the line from p_1 to p_2; and
+   * Side.COLLINEAR, if this Point is collinear with p_1 and p_2.
    */
   @Override
-  public Side side_of(Point p_1, Point p_2) {
-    Vector v1 = difference_by(p_1);
-    Vector v2 = p_2.difference_by(p_1);
-    return v1.side_of(v2);
+  public Side sideOf(Point p1, Point p2) {
+    Vector v1 = differenceBy(p1);
+    Vector v2 = p2.differenceBy(p1);
+    return v1.sideOf(v2);
   }
 
   @Override
-  public Side side_of(Line p_line) {
-    return side_of(p_line.a, p_line.b);
+  public Side sideOf(Line line) {
+    return sideOf(line.a, line.b);
   }
 
+  @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
   @Override
-  public Point perpendicular_projection(Line p_line) {
+  public Point perpendicularProjection(Line line) {
     // this function is at the moment only implemented for lines
     // consisting of IntPoints.
     // The general implementation is still missing.
-    IntVector v = (IntVector) p_line.b.difference_by(p_line.a);
+    IntVector v = (IntVector) line.b.differenceBy(line.a);
     BigInteger vxvx = BigInteger.valueOf((long) v.x * v.x);
     BigInteger vyvy = BigInteger.valueOf((long) v.y * v.y);
     BigInteger vxvy = BigInteger.valueOf((long) v.x * v.y);
     BigInteger denominator = vxvx.add(vyvy);
-    BigInteger det = BigInteger.valueOf(((IntPoint) p_line.a).determinant((IntPoint) p_line.b));
+    BigInteger det = BigInteger.valueOf(((IntPoint) line.a).determinant((IntPoint) line.b));
 
     BigInteger tmp1 = vxvx.multiply(x);
     BigInteger tmp2 = vxvy.multiply(y);
     tmp1 = tmp1.add(tmp2);
     tmp2 = det.multiply(BigInteger.valueOf(v.y));
     tmp2 = tmp2.multiply(z);
-    BigInteger proj_x = tmp1.add(tmp2);
+    BigInteger projX = tmp1.add(tmp2);
 
     tmp1 = vxvy.multiply(x);
     tmp2 = vyvy.multiply(y);
     tmp1 = tmp1.add(tmp2);
     tmp2 = det.multiply(BigInteger.valueOf(v.x));
     tmp2 = tmp2.multiply(z);
-    BigInteger proj_y = tmp1.add(tmp2);
+    BigInteger projY = tmp1.add(tmp2);
 
     int signum = denominator.signum();
     if (signum != 0) {
       if (signum < 0) {
         denominator = denominator.negate();
-        proj_x = proj_x.negate();
-        proj_y = proj_y.negate();
+        projX = projX.negate();
+        projY = projY.negate();
       }
-      if (proj_x.mod(denominator).signum() == 0 && proj_y.mod(denominator).signum() == 0) {
-        proj_x = proj_x.divide(denominator);
-        proj_y = proj_y.divide(denominator);
-        if (proj_x.abs().compareTo(Limits.CRIT_INT_BIG) <= 0 && proj_y.abs().compareTo(Limits.CRIT_INT_BIG) <= 0) {
-          return new IntPoint(proj_x.intValue(), proj_y.intValue());
+      if (projX.mod(denominator).signum() == 0 && projY.mod(denominator).signum() == 0) {
+        projX = projX.divide(denominator);
+        projY = projY.divide(denominator);
+        if (projX.abs().compareTo(Limits.CRIT_INT_BIG) <= 0
+            && projY.abs().compareTo(Limits.CRIT_INT_BIG) <= 0) {
+          return new IntPoint(projX.intValue(), projY.intValue());
         }
         denominator = BigInteger.ONE;
       }
     }
-    return new RationalPoint(proj_x, proj_y, denominator);
+    return new RationalPoint(projX, projY, denominator);
   }
 
   @Override
-  public int compare_x(Point p_other) {
-    return -p_other.compare_x(this);
+  public int compareX(Point other) {
+    return -other.compareX(this);
   }
 
   @Override
-  public int compare_y(Point p_other) {
-    return -p_other.compare_y(this);
-  }
-
-  @Override
-  int compare_x(RationalPoint p_other) {
-    BigInteger tmp1 = this.x.multiply(p_other.z);
-    BigInteger tmp2 = p_other.x.multiply(this.z);
+  int compareX(RationalPoint other) {
+    BigInteger tmp1 = this.x.multiply(other.z);
+    BigInteger tmp2 = other.x.multiply(this.z);
     return tmp1.compareTo(tmp2);
   }
 
   @Override
-  int compare_y(RationalPoint p_other) {
-    BigInteger tmp1 = this.y.multiply(p_other.z);
-    BigInteger tmp2 = p_other.y.multiply(this.z);
-    return tmp1.compareTo(tmp2);
-  }
-
-  @Override
-  int compare_x(IntPoint p_other) {
-    BigInteger tmp1 = this.z.multiply(BigInteger.valueOf(p_other.x));
+  int compareX(IntPoint other) {
+    BigInteger tmp1 = this.z.multiply(BigInteger.valueOf(other.x));
     return this.x.compareTo(tmp1);
   }
 
   @Override
-  int compare_y(IntPoint p_other) {
-    BigInteger tmp1 = this.z.multiply(BigInteger.valueOf(p_other.y));
+  public int compareY(Point other) {
+    return -other.compareY(this);
+  }
+
+  @Override
+  int compareY(RationalPoint other) {
+    BigInteger tmp1 = this.y.multiply(other.z);
+    BigInteger tmp2 = other.y.multiply(this.z);
+    return tmp1.compareTo(tmp2);
+  }
+
+  @Override
+  int compareY(IntPoint other) {
+    BigInteger tmp1 = this.z.multiply(BigInteger.valueOf(other.y));
     return this.y.compareTo(tmp1);
   }
 }

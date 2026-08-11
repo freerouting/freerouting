@@ -10,7 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class McpApiKeyValidationServiceTest {
+class McpApiKeyValidationServiceTest {
 
   @BeforeEach
   void setUp() {
@@ -25,7 +25,7 @@ public class McpApiKeyValidationServiceTest {
   }
 
   @Test
-  void testAuthenticationDisabledWhenMcpDisabled() {
+  void authenticationDisabledWhenMcpDisabled() {
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = true;
     Freerouting.globalSettings.mcpServerSettings.authentication.isEnabled = false;
     McpApiKeyValidationService service = McpApiKeyValidationService.getInstance();
@@ -35,7 +35,7 @@ public class McpApiKeyValidationServiceTest {
   }
 
   @Test
-  void testAuthenticationEnabledWhenOnlyMcpEnabled() {
+  void authenticationEnabledWhenOnlyMcpEnabled() {
     // MCP auth is independent of REST API auth; enabling only MCP auth is sufficient.
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
     Freerouting.globalSettings.mcpServerSettings.authentication.isEnabled = true;
@@ -45,7 +45,7 @@ public class McpApiKeyValidationServiceTest {
   }
 
   @Test
-  void testAuthenticationEnabledWhenBothEnabled() {
+  void authenticationEnabledWhenBothEnabled() {
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = true;
     Freerouting.globalSettings.mcpServerSettings.authentication.isEnabled = true;
     McpApiKeyValidationService service = McpApiKeyValidationService.getInstance();

@@ -19,77 +19,72 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 
+/** Assigns routing net classes to board nets. */
 public class WindowAssignNetClass extends BoardSavableSubWindow {
 
   private static final int TEXTFIELD_HEIGHT = 16;
   private static final int TEXTFIELD_WIDTH = 100;
-  private final BoardFrame board_frame;
-  private final JPanel main_panel;
-  private final JScrollPane scroll_pane;
+  private final BoardFrame boardFrame;
+  private final JPanel mainPanel;
+  private final JScrollPane scrollPane;
   private final AssignRuleTable table;
-  private final AssignRuleTableModel table_model;
+  private final AssignRuleTableModel tableModel;
 
-  private JComboBox<NetClass> net_rule_combo_box;
+  private JComboBox<NetClass> netRuleComboBox;
 
-  /**
-   * Creates a new instance of AssignNetRulesWindow
-   */
-  public WindowAssignNetClass(BoardFrame p_board_frame) {
-    setLanguage(p_board_frame.get_locale());
+  /** Creates a new instance of AssignNetRulesWindow. */
+  public WindowAssignNetClass(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
-    this.board_frame = p_board_frame;
+    this.boardFrame = boardFrame;
 
-    this.main_panel = new JPanel();
-    this.main_panel.setLayout(new BorderLayout());
+    this.mainPanel = new JPanel();
+    this.mainPanel.setLayout(new BorderLayout());
 
-    this.table_model = new AssignRuleTableModel();
-    this.table = new AssignRuleTable(this.table_model);
+    this.tableModel = new AssignRuleTableModel();
+    this.table = new AssignRuleTable(this.tableModel);
     this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    this.scroll_pane = new JScrollPane(this.table);
-    int table_height = TEXTFIELD_HEIGHT * Math.min(this.table_model.getRowCount(), 20);
-    int table_width = TEXTFIELD_WIDTH * this.table_model.getColumnCount();
-    this.table.setPreferredScrollableViewportSize(new Dimension(table_width, table_height));
-    this.main_panel.add(scroll_pane, BorderLayout.CENTER);
-    add_net_class_combo_box();
+    this.scrollPane = new JScrollPane(this.table);
+    int tableHeight = TEXTFIELD_HEIGHT * Math.min(this.tableModel.getRowCount(), 20);
+    int tableWidth = TEXTFIELD_WIDTH * this.tableModel.getColumnCount();
+    this.table.setPreferredScrollableViewportSize(new Dimension(tableWidth, tableHeight));
+    this.mainPanel.add(scrollPane, BorderLayout.CENTER);
+    addNetClassComboBox();
 
-    this.add(main_panel);
+    this.add(mainPanel);
     this.pack();
   }
 
-  private void add_net_class_combo_box() {
-    this.net_rule_combo_box = new JComboBox<>();
-    RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-    for (int i = 0; i < routing_board.rules.net_classes.count(); i++) {
-      net_rule_combo_box.addItem(routing_board.rules.net_classes.get(i));
+  private void addNetClassComboBox() {
+    this.netRuleComboBox = new JComboBox<>();
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+    for (int i = 0; i < routingBoard.rules.netClasses.count(); i++) {
+      netRuleComboBox.addItem(routingBoard.rules.netClasses.get(i));
     }
-    this.table
-        .getColumnModel()
-        .getColumn(1)
-        .setCellEditor(new DefaultCellEditor(net_rule_combo_box));
+    this.table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(netRuleComboBox));
   }
 
   @Override
   public void refresh() {
     // Reinsert the net class column.
-    for (int i = 0; i < table_model.getRowCount(); i++) {
-      table_model.setValueAt(((Net) table_model.getValueAt(i, 0)).get_class(), i, 1);
+    for (int i = 0; i < tableModel.getRowCount(); i++) {
+      tableModel.setValueAt(((Net) tableModel.getValueAt(i, 0)).getNetClass(), i, 1);
     }
 
     // Reinsert the net rule combobox because a rule may have  been added or deleted.
-    add_net_class_combo_box();
+    addNetClassComboBox();
   }
 
   private class AssignRuleTable extends JTable {
 
-    private final String[] column_tool_tips = {
-        tm.getText("net_name_tooltip"),
-        tm.getText("class_name_tooltip")
+    private final String[] columnToolTips = {
+      tm.getText("net_name_tooltip"), tm.getText("class_name_tooltip")
     };
 
-    public AssignRuleTable(AssignRuleTableModel p_table_model) {
-      super(p_table_model);
+    public AssignRuleTable(AssignRuleTableModel tableModel) {
+      super(tableModel);
     }
 
     // Implement table header tool tips.
@@ -100,56 +95,50 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
         public String getToolTipText(MouseEvent e) {
           Point p = e.getPoint();
           int index = columnModel.getColumnIndexAtX(p.x);
-          int realIndex = columnModel
-              .getColumn(index)
-              .getModelIndex();
-          return column_tool_tips[realIndex];
+          int realIndex = columnModel.getColumn(index).getModelIndex();
+          return columnToolTips[realIndex];
         }
       };
     }
   }
 
-  /**
-   * Table model of the net rule table.
-   */
+  /** Table model of the net rule table. */
   private class AssignRuleTableModel extends AbstractTableModel {
 
     private final Object[][] data;
-    private final String[] column_names;
+    private final String[] columnNames;
 
     public AssignRuleTableModel() {
-      column_names = new String[2];
+      columnNames = new String[2];
 
-      column_names[0] = tm.getText("net_name");
-      column_names[1] = tm.getText("class_name");
+      columnNames[0] = tm.getText("netName");
+      columnNames[1] = tm.getText("className");
 
-      BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
-      data = new Object[board_rules.nets.max_net_no()][];
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
+      data = new Object[boardRules.nets.maxNetNo()][];
       for (int i = 0; i < data.length; i++) {
-        this.data[i] = new Object[column_names.length];
+        this.data[i] = new Object[columnNames.length];
       }
-      set_values();
+      setValues();
     }
 
-    /**
-     * Calculates the values in this table
-     */
-    public void set_values() {
-      BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
-      Net[] sorted_arr = new Net[this.getRowCount()];
-      for (int i = 0; i < sorted_arr.length; i++) {
-        sorted_arr[i] = board_rules.nets.get(i + 1);
+    /** Calculates the values in this table. */
+    public void setValues() {
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
+      Net[] sortedArr = new Net[this.getRowCount()];
+      for (int i = 0; i < sortedArr.length; i++) {
+        sortedArr[i] = boardRules.nets.get(i + 1);
       }
-      Arrays.sort(sorted_arr);
+      Arrays.sort(sortedArr);
       for (int i = 0; i < data.length; i++) {
-        this.data[i][0] = sorted_arr[i];
-        this.data[i][1] = sorted_arr[i].get_class();
+        this.data[i][0] = sortedArr[i];
+        this.data[i][1] = sortedArr[i].getNetClass();
       }
     }
 
     @Override
-    public String getColumnName(int p_col) {
-      return column_names[p_col];
+    public String getColumnName(int col) {
+      return columnNames[col];
     }
 
     @Override
@@ -159,33 +148,33 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
 
     @Override
     public int getColumnCount() {
-      return column_names.length;
+      return columnNames.length;
     }
 
     @Override
-    public Object getValueAt(int p_row, int p_col) {
-      return data[p_row][p_col];
+    public Object getValueAt(int row, int col) {
+      return data[row][col];
     }
 
     @Override
-    public boolean isCellEditable(int p_row, int p_col) {
-      return p_col > 0;
+    public boolean isCellEditable(int row, int col) {
+      return col > 0;
     }
 
     @Override
-    public void setValueAt(Object p_value, int p_row, int p_col) {
-      if (p_col != 1 || !(p_value instanceof NetClass curr_net_rule)) {
+    public void setValueAt(Object value, int row, int col) {
+      if (col != 1 || !(value instanceof NetClass currNetRule)) {
         return;
       }
-      Object first_row_object = getValueAt(p_row, 0);
-      if (!(first_row_object instanceof Net curr_net)) {
+      Object firstRowObject = getValueAt(row, 0);
+      if (!(firstRowObject instanceof Net currentNet)) {
         FRLogger.warn("AssignNetRuLesVindow.setValueAt: Net expected");
         return;
       }
-      curr_net.set_class(curr_net_rule);
+      currentNet.setClass(currNetRule);
 
-      this.data[p_row][p_col] = p_value;
-      fireTableCellUpdated(p_row, p_col);
+      this.data[row][col] = value;
+      fireTableCellUpdated(row, col);
     }
   }
 }

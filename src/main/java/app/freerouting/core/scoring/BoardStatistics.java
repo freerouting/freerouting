@@ -30,61 +30,71 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Statistics of a board.
- */
+/** Statistics of a board. */
 public class BoardStatistics implements Serializable {
 
   @SerializedName("host")
   public String host;
+
   @SerializedName("unit")
   public String unit;
+
   @SerializedName("board")
   public BoardStatisticsBoard board = new BoardStatisticsBoard();
+
   @SerializedName("layers")
   public BoardStatisticsLayers layers = new BoardStatisticsLayers();
+
   @SerializedName("items")
   public BoardStatisticsItems items = new BoardStatisticsItems();
+
   @SerializedName("components")
   public BoardStatisticsComponents components = new BoardStatisticsComponents();
+
   @SerializedName("pads")
   public BoardStatisticsPads pads = new BoardStatisticsPads();
+
   @SerializedName("nets")
   public BoardStatisticsNets nets = new BoardStatisticsNets();
+
   @SerializedName("connections")
   public BoardStatisticsConnections connections = new BoardStatisticsConnections();
+
   @SerializedName("traces")
   public BoardStatisticsTraces traces = new BoardStatisticsTraces();
+
   @SerializedName("bends")
   public BoardStatisticsBends bends = new BoardStatisticsBends();
+
   @SerializedName("vias")
   public BoardStatisticsVias vias = new BoardStatisticsVias();
+
   @SerializedName("clearance_violations")
-  public BoardStatisticsClearanceViolations clearanceViolations = new BoardStatisticsClearanceViolations();
+  public BoardStatisticsClearanceViolations clearanceViolations =
+      new BoardStatisticsClearanceViolations();
+
   @SerializedName("fanout")
   public BoardStatisticsFanout fanout = new BoardStatisticsFanout();
 
-  public BoardStatistics() {
-  }
+  /** Creates empty board statistics. */
+  public BoardStatistics() {}
 
-  /**
-   * Creates a new BoardFileStatistics object from a RoutingBoard object.
-   */
+  /** Creates a new BoardFileStatistics object from a RoutingBoard object. */
   public BoardStatistics(BasicBoard board) {
     this(board, null, true);
   }
 
   /**
-   * Creates a new BoardFileStatistics object from a RoutingBoard object and
-   * defines the preferred unit for the statistics.
+   * Creates a new BoardFileStatistics object from a RoutingBoard object and defines the preferred
+   * unit for the statistics.
    */
   public BoardStatistics(BasicBoard board, Unit unit) {
     this(board, unit, true);
   }
 
   /**
-   * Creates a new BoardFileStatistics object from a RoutingBoard object,
-   * defines the preferred unit, and allows skipping the clearance checks.
+   * Creates a new BoardFileStatistics object from a RoutingBoard object, defines the preferred
+   * unit, and allows skipping the clearance checks.
    */
   public BoardStatistics(BasicBoard board, Unit unit, boolean includeClearanceViolations) {
     this(board, unit, includeClearanceViolations, true);
@@ -93,15 +103,17 @@ public class BoardStatistics implements Serializable {
   /**
    * Creates board statistics with optional clearance and connection (incomplete) analysis.
    *
-   * @param includeConnections when {@code false}, skips {@code calculateAllIncompletes()} —
-   *     use when a {@link app.freerouting.interactive.RatsNest} will be created immediately after load
+   * @param includeConnections when {@code false}, skips {@code calculateAllIncompletes()} — use
+   *     when a {@link app.freerouting.interactive.RatsNest} will be created immediately after load
    */
-  public BoardStatistics(BasicBoard board, Unit unit, boolean includeClearanceViolations,
-      boolean includeConnections) {
-    var bb = board.get_bounding_box();
+  public BoardStatistics(
+      BasicBoard board, Unit unit, boolean includeClearanceViolations, boolean includeConnections) {
+    final var bb = board.getBoundingBox();
 
-    this.host = board.communication.specctra_parser_info.host_cad + ","
-        + board.communication.specctra_parser_info.host_version;
+    this.host =
+        board.communication.specctraParserInfo.hostCad
+            + ","
+            + board.communication.specctraParserInfo.hostVersion;
     if ((host == null) || host.isEmpty()) {
       this.host = "Freerouting," + Constants.FREEROUTING_VERSION;
     }
@@ -110,15 +122,22 @@ public class BoardStatistics implements Serializable {
     this.unit = board.communication.unit.toString();
 
     // Board
-    this.board.boundingBox = new Rectangle2D.Float((float) bb.ur.x, (float) board.get_bounding_box().ur.y,
-        (float) board.get_bounding_box().ll.x, (float) board.get_bounding_box().ll.y);
-    this.board.size = new Rectangle2D.Float(0, 0,
-        Math.abs((float) board.get_bounding_box().ll.x - (float) board.get_bounding_box().ur.x),
-        Math.abs((float) board.get_bounding_box().ll.y - (float) board.get_bounding_box().ur.y));
+    this.board.boundingBox =
+        new Rectangle2D.Float(
+            (float) bb.ur.x,
+            (float) board.getBoundingBox().ur.y,
+            (float) board.getBoundingBox().ll.x,
+            (float) board.getBoundingBox().ll.y);
+    this.board.size =
+        new Rectangle2D.Float(
+            0,
+            0,
+            Math.abs((float) board.getBoundingBox().ll.x - (float) board.getBoundingBox().ur.x),
+            Math.abs((float) board.getBoundingBox().ll.y - (float) board.getBoundingBox().ur.y));
 
     // Layers
-    this.layers.totalCount = board.get_layer_count();
-    this.layers.signalCount = board.layer_structure.signal_layer_count();
+    this.layers.totalCount = board.getLayerCount();
+    this.layers.signalCount = board.layerStructure.signalLayerCount();
 
     // Items
     this.items.totalCount = 0;
@@ -129,24 +148,24 @@ public class BoardStatistics implements Serializable {
     this.items.pinCount = 0;
     this.items.componentOutlineCount = 0;
     this.items.otherCount = 0;
-    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
-    for (;;) {
-      Item curr_item = (Item) board.item_list.read_object(it);
-      if (curr_item == null) {
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
+    for (; ; ) {
+      Item currItem = (Item) board.itemList.readObject(it);
+      if (currItem == null) {
         break;
       }
       this.items.totalCount++;
-      if (curr_item instanceof Trace) {
+      if (currItem instanceof Trace) {
         this.items.traceCount++;
-      } else if (curr_item instanceof Via) {
+      } else if (currItem instanceof Via) {
         this.items.viaCount++;
-      } else if (curr_item instanceof ConductionArea) {
+      } else if (currItem instanceof ConductionArea) {
         this.items.conductionAreaCount++;
-      } else if (curr_item instanceof DrillItem) {
-        this.items.drillItemCount++;
-      } else if (curr_item instanceof Pin) {
+      } else if (currItem instanceof Pin) {
         this.items.pinCount++;
-      } else if (curr_item instanceof ComponentOutline) {
+      } else if (currItem instanceof DrillItem) {
+        this.items.drillItemCount++;
+      } else if (currItem instanceof ComponentOutline) {
         this.items.componentOutlineCount++;
       } else {
         this.items.otherCount++;
@@ -157,32 +176,26 @@ public class BoardStatistics implements Serializable {
     this.components.totalCount = board.components.count();
 
     // Pads
-    this.pads.totalCount = board
-        .get_pins()
-        .size();
+    this.pads.totalCount = board.getPins().size();
 
     // Nets
-    this.nets.totalCount = board.rules.nets.max_net_no();
-    this.nets.classCount = board.rules.net_classes.count();
+    this.nets.totalCount = board.rules.nets.maxNetNo();
+    this.nets.classCount = board.rules.netClasses.count();
 
     // Traces
-    this.traces.totalCount = board
-        .get_traces()
-        .size();
-    this.traces.totalLength = (float) board
-        .get_traces()
-        .stream()
-        .mapToDouble(trace -> trace.get_length())
-        .sum();
+    this.traces.totalCount = board.getTraces().size();
+    this.traces.totalLength =
+        (float) board.getTraces().stream().mapToDouble(Trace::getLength).sum();
     // Normalise trace length to millimetres so that calculateScore() uses a
     // physically meaningful cost regardless of DSN coordinate resolution.
     // Raw board units vary wildly: KiCad exports at 1e-6 mm/unit (1 nm), while
     // EAGLE/Benchmark DSNs use ~0.1 µm/unit.  Without normalisation the trace-cost
     // term in getNormalizedScore() is thousands of times larger than
-    // max_connections * unroutedNetPenalty for high-resolution boards, forcing the
+    // maxConnections * unroutedNetPenalty for high-resolution boards, forcing the
     // score to 0 even for a perfectly-routed, zero-violation layout.
-    double boardUnitToMmFactor = Unit.scale(1.0, board.communication.unit, Unit.MM)
-        / (board.communication.resolution > 0 ? board.communication.resolution : 1);
+    double boardUnitToMmFactor =
+        Unit.scale(1.0, board.communication.unit, Unit.MM)
+            / (board.communication.resolution > 0 ? board.communication.resolution : 1);
     this.traces.totalLengthMm = (float) (this.traces.totalLength * boardUnitToMmFactor);
     if (this.traces.totalCount > 0) {
       this.traces.averageLength = this.traces.totalLength / this.traces.totalCount;
@@ -193,19 +206,19 @@ public class BoardStatistics implements Serializable {
     this.traces.totalHorizontalLength = 0.0f;
     this.traces.totalVerticalLength = 0.0f;
     this.traces.totalAngledLength = 0.0f;
-    for (Trace trace : board.get_traces()) {
+    for (Trace trace : board.getTraces()) {
       // Calculate segments for this trace
       if (trace instanceof PolylineTrace polylineTrace) {
         Polyline polyline = polylineTrace.polyline();
-        int cornerCount = polyline.corner_count();
+        int cornerCount = polyline.cornerCount();
         // Number of segments is cornerCount - 1
         if (cornerCount > 1) {
           this.traces.totalSegmentCount += cornerCount - 1;
         }
 
         for (Line line : polyline.arr) {
-          FloatPoint a = line.a.to_float();
-          FloatPoint b = line.b.to_float();
+          FloatPoint a = line.a.toFloat();
+          FloatPoint b = line.b.toFloat();
           float length = (float) Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 
           if (a.x == b.x) {
@@ -220,23 +233,28 @@ public class BoardStatistics implements Serializable {
     }
 
     this.traces.totalWeightedLength = 0.0f;
-    int default_clearance_class = BoardRules.default_clearance_class();
-    Iterator<UndoableObjects.UndoableObjectNode> it2 = board.item_list.start_read_object();
-    for (;;) {
-      UndoableObjects.Storable curr_item = board.item_list.read_object(it2);
-      if (curr_item == null) {
+    int defaultClearanceClass = BoardRules.defaultClearanceClass();
+    Iterator<UndoableObjects.UndoableObjectNode> it2 = board.itemList.startReadObject();
+    for (; ; ) {
+      UndoableObjects.Storable currItem = board.itemList.readObject(it2);
+      if (currItem == null) {
         break;
       }
-      if (curr_item instanceof Trace curr_trace) {
-        FixedState fixed_state = curr_trace.get_fixed_state();
-        if (fixed_state == FixedState.UNFIXED || fixed_state == FixedState.SHOVE_FIXED) {
-          double weighted_trace_length = curr_trace.get_length() * (curr_trace.get_half_width() + board
-              .clearance_value(curr_trace.clearance_class_no(), default_clearance_class, curr_trace.get_layer()));
-          if (fixed_state == FixedState.SHOVE_FIXED) {
+      if (currItem instanceof Trace currTrace) {
+        FixedState fixedState = currTrace.getFixedState();
+        if (fixedState == FixedState.UNFIXED || fixedState == FixedState.SHOVE_FIXED) {
+          double weightedTraceLength =
+              currTrace.getLength()
+                  * (currTrace.getHalfWidth()
+                      + board.clearanceValue(
+                          currTrace.clearanceClassNo(),
+                          defaultClearanceClass,
+                          currTrace.getLayer()));
+          if (fixedState == FixedState.SHOVE_FIXED) {
             // to produce less violations with pin exit directions.
-            weighted_trace_length /= 2;
+            weightedTraceLength /= 2;
           }
-          this.traces.totalWeightedLength += (float) weighted_trace_length;
+          this.traces.totalWeightedLength += (float) weightedTraceLength;
         }
       }
     }
@@ -245,7 +263,7 @@ public class BoardStatistics implements Serializable {
     if (includeConnections) {
       var drc = new app.freerouting.drc.DesignRulesChecker(board, null);
       drc.calculateAllIncompletes();
-      this.connections.maximumCount = drc.max_connections;
+      this.connections.maximumCount = drc.maxConnections;
       this.connections.incompleteCount = drc.getIncompleteCount();
     }
 
@@ -254,11 +272,11 @@ public class BoardStatistics implements Serializable {
     this.bends.ninetyDegreeCount = 0;
     this.bends.fortyFiveDegreeCount = 0;
     this.bends.otherAngleCount = 0;
-    for (Trace trace : board.get_traces()) {
+    for (Trace trace : board.getTraces()) {
       if (trace instanceof PolylineTrace polylineTrace) {
         // Polyline traces can have bends between consecutive line segments
         Polyline polyline = polylineTrace.polyline();
-        int cornerCount = polyline.corner_count();
+        int cornerCount = polyline.cornerCount();
 
         // We have (cornerCount - 2) internal corners, each representing a potential
         // bend
@@ -269,15 +287,9 @@ public class BoardStatistics implements Serializable {
 
           // Now classify each bend by angle
           for (int i = 1; i < cornerCount - 1; i++) {
-            FloatPoint prev = polyline
-                .corner(i - 1)
-                .to_float();
-            FloatPoint curr = polyline
-                .corner(i)
-                .to_float();
-            FloatPoint next = polyline
-                .corner(i + 1)
-                .to_float();
+            FloatPoint prev = polyline.corner(i - 1).toFloat();
+            FloatPoint curr = polyline.corner(i).toFloat();
+            FloatPoint next = polyline.corner(i + 1).toFloat();
 
             // Calculate vectors for the two segments
             double dx1 = curr.x - prev.x;
@@ -305,16 +317,14 @@ public class BoardStatistics implements Serializable {
     }
 
     // Vias
-    this.vias.totalCount = board
-        .get_vias()
-        .size();
+    this.vias.totalCount = board.getVias().size();
     this.vias.throughHoleCount = 0;
     this.vias.blindCount = 0;
     this.vias.buriedCount = 0;
-    for (Via via : board.get_vias()) {
-      if ((via.first_layer() == 0) && (via.last_layer() == this.layers.totalCount - 1)) {
+    for (Via via : board.getVias()) {
+      if ((via.firstLayer() == 0) && (via.lastLayer() == this.layers.totalCount - 1)) {
         this.vias.throughHoleCount++;
-      } else if ((via.first_layer() == 0) || (via.last_layer() == this.layers.totalCount - 1)) {
+      } else if ((via.firstLayer() == 0) || (via.lastLayer() == this.layers.totalCount - 1)) {
         this.vias.blindCount++;
       } else {
         this.vias.buriedCount++;
@@ -340,32 +350,42 @@ public class BoardStatistics implements Serializable {
       this.unit = unit.toString();
 
       // Board
-      this.board.boundingBox = new Rectangle2D.Float((float) Unit.scale(this.board.boundingBox.x, fromUnit, toUnit),
-          (float) Unit.scale(this.board.boundingBox.y, fromUnit, toUnit),
-          (float) Unit.scale(this.board.boundingBox.width, fromUnit, toUnit),
-          (float) Unit.scale(this.board.boundingBox.height, fromUnit, toUnit));
-      this.board.size = new Rectangle2D.Float(0, 0, (float) Unit.scale(this.board.size.width, fromUnit, toUnit),
-          (float) Unit.scale(this.board.size.height, fromUnit, toUnit));
+      this.board.boundingBox =
+          new Rectangle2D.Float(
+              (float) Unit.scale(this.board.boundingBox.x, fromUnit, toUnit),
+              (float) Unit.scale(this.board.boundingBox.y, fromUnit, toUnit),
+              (float) Unit.scale(this.board.boundingBox.width, fromUnit, toUnit),
+              (float) Unit.scale(this.board.boundingBox.height, fromUnit, toUnit));
+      this.board.size =
+          new Rectangle2D.Float(
+              0,
+              0,
+              (float) Unit.scale(this.board.size.width, fromUnit, toUnit),
+              (float) Unit.scale(this.board.size.height, fromUnit, toUnit));
 
       // Traces
       this.traces.totalLength = (float) Unit.scale(this.traces.totalLength, fromUnit, toUnit);
-      this.traces.totalWeightedLength = (float) Unit.scale(this.traces.totalWeightedLength, fromUnit, toUnit);
+      this.traces.totalWeightedLength =
+          (float) Unit.scale(this.traces.totalWeightedLength, fromUnit, toUnit);
       this.traces.averageLength = (float) Unit.scale(this.traces.averageLength, fromUnit, toUnit);
-      this.traces.totalHorizontalLength = (float) Unit.scale(this.traces.totalHorizontalLength, fromUnit, toUnit);
-      this.traces.totalVerticalLength = (float) Unit.scale(this.traces.totalVerticalLength, fromUnit, toUnit);
-      this.traces.totalAngledLength = (float) Unit.scale(this.traces.totalAngledLength, fromUnit, toUnit);
+      this.traces.totalHorizontalLength =
+          (float) Unit.scale(this.traces.totalHorizontalLength, fromUnit, toUnit);
+      this.traces.totalVerticalLength =
+          (float) Unit.scale(this.traces.totalVerticalLength, fromUnit, toUnit);
+      this.traces.totalAngledLength =
+          (float) Unit.scale(this.traces.totalAngledLength, fromUnit, toUnit);
     }
 
     // Calculate fanout statistics
-    java.util.Collection<Pin> smdPins = board.get_smd_pins();
+    java.util.Collection<Pin> smdPins = board.getSmdPins();
     int total = 0;
     int escaped = 0;
     int alreadyConnected = 0;
     for (Pin pin : smdPins) {
-      if (pin.net_count() > 0) {
+      if (pin.netCount() > 0) {
         total++;
-        int netNo = pin.get_net_no(0);
-        if (pin.get_unconnected_set(netNo).isEmpty()) {
+        int netNo = pin.getNetNo(0);
+        if (pin.getUnconnectedSet(netNo).isEmpty()) {
           alreadyConnected++;
         }
         if (isPinEscaped(pin)) {
@@ -379,13 +399,11 @@ public class BoardStatistics implements Serializable {
   }
 
   /**
-   * Creates a new BoardFileStatistics object from a file. This method should be
-   * used only if the board object is not available, because the board object
-   * based method is more detailed.
+   * Creates a new BoardFileStatistics object from a file. This method should be used only if the
+   * board object is not available, because the board object based method is more detailed.
    *
-   * @param data   Binary data of the file.
-   * @param format Format of the file. Only SES and DSN formats are supported at
-   *               the moment.
+   * @param data Binary data of the file.
+   * @param format Format of the file. Only SES and DSN formats are supported at the moment.
    */
   public BoardStatistics(byte[] data, FileFormat format) {
     if (data == null || format == null) {
@@ -416,7 +434,6 @@ public class BoardStatistics implements Serializable {
           if (!layers.contains(layer)) {
             layers.add(layer);
           }
-
         }
       }
 
@@ -430,8 +447,8 @@ public class BoardStatistics implements Serializable {
       // read the content as text
       String content = new String(data, StandardCharsets.UTF_8);
       // extract the host from the DSN file without splitting the whole content by lines
-      String host_cad = null;
-      String host_version = null;
+      String hostCad = null;
+      String hostVersion = null;
       int parserIndex = content.indexOf("(parser");
       if (parserIndex != -1) {
         int searchLimit = content.indexOf(")", parserIndex);
@@ -441,28 +458,28 @@ public class BoardStatistics implements Serializable {
           searchLimit = Math.min(content.length(), searchLimit + 1);
         }
         String parserScope = content.substring(parserIndex, searchLimit);
-        int hcIdx = parserScope.indexOf("(host_cad");
+        int hcIdx = parserScope.indexOf("(hostCad");
         if (hcIdx != -1) {
           int hcEnd = parserScope.indexOf(")", hcIdx);
           if (hcEnd != -1) {
             String val = parserScope.substring(hcIdx + 9, hcEnd).trim();
-            host_cad = TextManager.removeQuotes(val);
+            hostCad = TextManager.removeQuotes(val);
           }
         }
-        int hvIdx = parserScope.indexOf("(host_version");
+        int hvIdx = parserScope.indexOf("(hostVersion");
         if (hvIdx != -1) {
           int hvEnd = parserScope.indexOf(")", hvIdx);
           if (hvEnd != -1) {
             String val = parserScope.substring(hvIdx + 13, hvEnd).trim();
-            host_version = TextManager.removeQuotes(val);
+            hostVersion = TextManager.removeQuotes(val);
           }
         }
       }
 
-      if ((host_cad != null) && (host_version != null)) {
-        this.host = host_cad + "," + host_version;
-      } else if (host_cad != null) {
-        this.host = host_cad;
+      if ((hostCad != null) && (hostVersion != null)) {
+        this.host = hostCad + "," + hostVersion;
+      } else if (hostCad != null) {
+        this.host = hostCad;
       }
 
       // get the number of layers and nets in the DSN file
@@ -475,7 +492,8 @@ public class BoardStatistics implements Serializable {
     } else if (format == FileFormat.KICAD_DESIGN_JSON) {
       try {
         String content = new String(data, StandardCharsets.UTF_8);
-        com.google.gson.JsonObject json = GsonProvider.GSON.fromJson(content, com.google.gson.JsonObject.class);
+        com.google.gson.JsonObject json =
+            GsonProvider.GSON.fromJson(content, com.google.gson.JsonObject.class);
         if (json != null) {
           if (json.has("layers")) {
             this.layers.totalCount = json.getAsJsonArray("layers").size();
@@ -505,16 +523,17 @@ public class BoardStatistics implements Serializable {
     }
   }
 
+  /** Returns whether a pin has a valid trace or via escape. */
   public static boolean isPinEscaped(Pin pin) {
-    java.util.Set<Item> contacts = pin.get_normal_contacts();
+    java.util.Set<Item> contacts = pin.getNormalContacts();
     for (Item contact : contacts) {
       if (contact instanceof Trace trace) {
-        if (trace.clearance_violations().isEmpty()) {
+        if (trace.clearanceViolations().isEmpty()) {
           return true;
         }
       } else if (contact instanceof Via via) {
-        if (via.clearance_violations().isEmpty()) {
-          java.util.Set<Item> viaContacts = via.get_normal_contacts();
+        if (via.clearanceViolations().isEmpty()) {
+          java.util.Set<Item> viaContacts = via.getNormalContacts();
           for (Item viaContact : viaContacts) {
             if (viaContact instanceof Trace || viaContact instanceof ConductionArea) {
               return true;
@@ -538,40 +557,42 @@ public class BoardStatistics implements Serializable {
     return count;
   }
 
-  /**
-   * Returns a JSON representation of this object.
-   */
+  /** Returns a JSON representation of this object. */
   public String toString() {
     return GsonProvider.GSON.toJson(this);
   }
 
   /**
-   * Calculates the score/cost of the board based on the given scoring settings.
-   * Higher score means better board.
+   * Calculates the score/cost of the board based on the given scoring settings. Higher score means
+   * better board.
    */
   public float calculateScore(ScoringSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
-    float penalties = this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
-        + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
-        + this.bends.totalCount * scoringSettings.bendPenalty;
+    float penalties =
+        this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
+            + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
+            + this.bends.totalCount * scoringSettings.bendPenalty;
     // Use the mm-normalised trace length so that the trace-cost term is comparable
     // to the unroutedNetPenalty regardless of the DSN internal coordinate resolution.
     // totalLength is in raw board units which vary wildly between DSN files
     // (e.g. 1 nm for KiCad at resolution 1e6, vs 0.1 µm for EAGLE/benchmark boards),
     // and would make the score collapse to 0 for high-resolution KiCad exports.
-    float traceLengthForCost = (this.traces.totalLengthMm != null)
-        ? this.traces.totalLengthMm
-        : this.traces.totalLength;
-    float costs = (float) (traceLengthForCost * scoringSettings.defaultPreferredDirectionTraceCost
-        + this.vias.totalCount * scoringSettings.viaCosts);
+    float traceLengthForCost =
+        this.traces.totalLengthMm != null ? this.traces.totalLengthMm : this.traces.totalLength;
+    float costs =
+        (float)
+            (traceLengthForCost * scoringSettings.defaultPreferredDirectionTraceCost
+                + this.vias.totalCount * scoringSettings.viaCosts);
 
     return maximumScore - penalties - costs;
   }
 
+  /** Returns the maximum score for the supplied scoring settings. */
   public float getMaximumScore(ScoringSettings scoringSettings) {
     return this.connections.maximumCount * scoringSettings.unroutedNetPenalty;
   }
 
+  /** Returns the score normalized to a range from zero to one thousand. */
   public float getNormalizedScore(ScoringSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
     if (maximumScore <= 0f) {
@@ -585,12 +606,15 @@ public class BoardStatistics implements Serializable {
     return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
   }
 
+  /** Statistics for surface-mount pin fanout. */
   public static class BoardStatisticsFanout implements Serializable {
     @SerializedName("total_smd_pins")
-    public int totalSmdPins = 0;
+    public int totalSmdPins;
+
     @SerializedName("pins_to_escape")
-    public int pinsToEscape = 0;
+    public int pinsToEscape;
+
     @SerializedName("escaped_count")
-    public int escapedCount = 0;
+    public int escapedCount;
   }
 }

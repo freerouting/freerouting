@@ -2,11 +2,9 @@ package app.freerouting.gui;
 
 import app.freerouting.board.LayerStructure;
 import app.freerouting.boardgraphics.ColorIntensityTable.ObjectNames;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
-
+import app.freerouting.util.TextManager;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -23,14 +21,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-/**
- * Combined visibility frame for board layers and board objects.
- */
+/** Combined visibility frame for board layers and board objects. */
 public class WindowVisibility extends BoardSavableSubWindow {
 
   protected static final int MAX_SLIDER_VALUE = 100;
@@ -40,65 +36,69 @@ public class WindowVisibility extends BoardSavableSubWindow {
   private static final int VALUE_FIELD_WIDTH = 44;
   private static final Dimension CONTENT_SIZE = new Dimension(500, 420);
 
-  protected final BoardPanel board_panel;
-  private final VisibilitySection layer_section;
-  private final VisibilitySection object_section;
-  protected boolean bulk_update_in_progress;
+  protected final BoardPanel boardPanel;
+  private final VisibilitySection layerSection;
+  private final VisibilitySection objectSection;
+  protected boolean bulkUpdateInProgress;
 
-  private static final java.util.Map<Locale, TextManager> text_manager_cache = new ConcurrentHashMap<>();
+  private static final java.util.Map<Locale, TextManager> text_manager_cache =
+      new ConcurrentHashMap<>();
 
-  public WindowVisibility(BoardFrame board_frame) {
-    this.board_panel = board_frame.board_panel;
-    setLanguage(board_frame.get_locale());
+  /** Creates a window for editing layer and object visibility. */
+  public WindowVisibility(BoardFrame boardFrame) {
+    this.boardPanel = boardFrame.boardPanel;
+    setLanguage(boardFrame.get_locale());
 
-    TextManager tm = new TextManager(WindowVisibility.class, board_frame.get_locale());
+    TextManager tm = new TextManager(WindowVisibility.class, boardFrame.get_locale());
     this.setTitle(tm.getText("title"));
 
-    LayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
-    String[] layer_messages = new String[layer_structure.arr.length];
-    for (int i = 0; i < layer_messages.length; i++) {
-      layer_messages[i] = layer_structure.arr[i].name;
+    LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
+    String[] layerMessages = new String[layerStructure.arr.length];
+    for (int i = 0; i < layerMessages.length; i++) {
+      layerMessages[i] = layerStructure.arr[i].name;
     }
 
-    String[] object_messages = new String[ObjectNames.values().length];
-    for (int i = 0; i < object_messages.length; i++) {
-      object_messages[i] = tm.getText(ObjectNames.values()[i].toString());
+    String[] objectMessages = new String[ObjectNames.values().length];
+    for (int i = 0; i < objectMessages.length; i++) {
+      objectMessages[i] = tm.getText(ObjectNames.values()[i].toString());
     }
 
-    this.layer_section = new VisibilitySection(
-        tm.getText("layer_section_title"),
-        layer_messages,
-        index -> get_board_handling().graphics_context.get_raw_layer_visibility(index),
-        (index, value) -> get_board_handling().set_layer_visibility(index, value)
-    );
-    this.object_section = new VisibilitySection(
-        tm.getText("object_section_title"),
-        object_messages,
-        index -> get_board_handling().graphics_context.color_intensity_table.get_value(index),
-        (index, value) -> get_board_handling().graphics_context.color_intensity_table.set_value(index, value)
-    );
+    this.layerSection =
+        new VisibilitySection(
+            tm.getText("layer_section_title"),
+            layerMessages,
+            index -> getBoardHandling().graphicsContext.getRawLayerVisibility(index),
+            (index, value) -> getBoardHandling().setLayerVisibility(index, value));
+    this.objectSection =
+        new VisibilitySection(
+            tm.getText("object_section_title"),
+            objectMessages,
+            index -> getBoardHandling().graphicsContext.colorIntensityTable.getValue(index),
+            (index, value) ->
+                getBoardHandling().graphicsContext.colorIntensityTable.setValue(index, value));
 
-    JPanel main_panel = new JPanel(new BorderLayout());
-    getContentPane().add(main_panel);
+    JPanel mainPanel = new JPanel(new BorderLayout());
+    getContentPane().add(mainPanel);
 
-    JPanel header_panel = new JPanel(new BorderLayout());
-    JLabel header_message = new JLabel(tm.getText("header_message"), JLabel.CENTER);
-    header_panel.add(header_message, BorderLayout.CENTER);
-    header_panel.add(new JSeparator(), BorderLayout.SOUTH);
-    main_panel.add(header_panel, BorderLayout.NORTH);
+    JPanel headerPanel = new JPanel(new BorderLayout());
+    JLabel headerMessage = new JLabel(tm.getText("headerMessage"), JLabel.CENTER);
+    headerPanel.add(headerMessage, BorderLayout.CENTER);
+    headerPanel.add(new JSeparator(), BorderLayout.SOUTH);
+    mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-    JPanel content_panel = new JPanel(new GridBagLayout());
-    JScrollPane scroll_pane = new JScrollPane(
-        content_panel,
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    scroll_pane.setPreferredSize(CONTENT_SIZE);
-    scroll_pane.getVerticalScrollBar().setUnitIncrement(24);
-    scroll_pane.getVerticalScrollBar().setBlockIncrement(72);
-    scroll_pane.getHorizontalScrollBar().setUnitIncrement(24);
-    main_panel.add(scroll_pane, BorderLayout.CENTER);
+    JPanel contentPanel = new JPanel(new GridBagLayout());
+    JScrollPane scrollPane =
+        new JScrollPane(
+            contentPanel,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setPreferredSize(CONTENT_SIZE);
+    scrollPane.getVerticalScrollBar().setUnitIncrement(24);
+    scrollPane.getVerticalScrollBar().setBlockIncrement(72);
+    scrollPane.getHorizontalScrollBar().setUnitIncrement(24);
+    mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-    bulk_update_in_progress = true;
+    bulkUpdateInProgress = true;
     try {
       GridBagConstraints constraints = new GridBagConstraints();
       constraints.insets = new Insets(4, 8, 4, 8);
@@ -106,130 +106,138 @@ public class WindowVisibility extends BoardSavableSubWindow {
       constraints.fill = GridBagConstraints.HORIZONTAL;
       constraints.weightx = 1.0;
 
-      content_panel.add(layer_section.create_panel(), constraints);
+      contentPanel.add(layerSection.createPanel(), constraints);
 
       constraints.fill = GridBagConstraints.BOTH;
       constraints.weighty = 0.0;
       constraints.insets = new Insets(6, 8, 6, 8);
-      content_panel.add(new JSeparator(), constraints);
+      contentPanel.add(new JSeparator(), constraints);
 
       constraints.fill = GridBagConstraints.HORIZONTAL;
       constraints.insets = new Insets(4, 8, 4, 8);
-      content_panel.add(object_section.create_panel(), constraints);
+      contentPanel.add(objectSection.createPanel(), constraints);
     } finally {
-      bulk_update_in_progress = false;
+      bulkUpdateInProgress = false;
     }
 
-    JPanel button_row_panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
-    TextManager visibility_tm = text_manager_cache.computeIfAbsent(
-        board_frame.get_locale(),
-        locale -> new TextManager(WindowVisibility.class, locale));
+    final JPanel buttonRowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
+    TextManager visibilityTm =
+        text_manager_cache.computeIfAbsent(
+            boardFrame.get_locale(), locale -> new TextManager(WindowVisibility.class, locale));
 
-    JButton reset_button = new JButton(visibility_tm.getText("reset_to_defaults"));
-    reset_button.setToolTipText(visibility_tm.getText("reset_to_defaults_tooltip"));
-    reset_button.addActionListener(_ -> {
-      reset_to_defaults();
-      board_panel.repaint();
-    });
-    reset_button.addActionListener(_ -> FRAnalytics.buttonClicked("visibility_reset_button", reset_button.getText()));
-    button_row_panel.add(reset_button);
+    JButton resetButton = new JButton(visibilityTm.getText("reset_to_defaults"));
+    resetButton.setToolTipText(visibilityTm.getText("reset_to_defaults_tooltip"));
+    resetButton.addActionListener(
+        _ -> {
+          resetToDefaults();
+          boardPanel.repaint();
+        });
+    resetButton.addActionListener(
+        _ -> FRAnalytics.buttonClicked("visibility_reset_button", resetButton.getText()));
+    buttonRowPanel.add(resetButton);
 
-    JPanel footer_panel = new JPanel(new BorderLayout());
-    footer_panel.setBorder(new javax.swing.border.EmptyBorder(8, 12, 8, 12));
-    footer_panel.add(new JSeparator(), BorderLayout.NORTH);
-    footer_panel.add(button_row_panel, BorderLayout.CENTER);
-    main_panel.add(footer_panel, BorderLayout.SOUTH);
+    JPanel footerPanel = new JPanel(new BorderLayout());
+    footerPanel.setBorder(new javax.swing.border.EmptyBorder(8, 12, 8, 12));
+    footerPanel.add(new JSeparator(), BorderLayout.NORTH);
+    footerPanel.add(buttonRowPanel, BorderLayout.CENTER);
+    mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
     this.pack();
     this.setResizable(false);
   }
 
+  /** Refreshes visibility controls from the current board state. */
   public void refresh() {
-    bulk_update_in_progress = true;
+    bulkUpdateInProgress = true;
     try {
-      layer_section.refresh();
-      object_section.refresh();
+      layerSection.refresh();
+      objectSection.refresh();
     } finally {
-      bulk_update_in_progress = false;
+      bulkUpdateInProgress = false;
     }
   }
 
-  protected GuiBoardManager get_board_handling() {
-    return board_panel.board_handling;
+  /** Returns the GUI board manager controlled by this window. */
+  protected GuiBoardManager getBoardHandling() {
+    return boardPanel.boardHandling;
   }
 
-  protected void reset_to_defaults() {
-    bulk_update_in_progress = true;
+  /** Restores all visibility controls to their default values. */
+  protected void resetToDefaults() {
+    bulkUpdateInProgress = true;
     try {
-      layer_section.reset_to_defaults();
-      object_section.reset_to_defaults();
+      layerSection.resetToDefaults();
+      objectSection.resetToDefaults();
     } finally {
-      bulk_update_in_progress = false;
+      bulkUpdateInProgress = false;
     }
   }
 
-  private int snap_to_step(int value) {
-    int snapped_value = Math.round((float) value / (float) SLIDER_STEP) * SLIDER_STEP;
-    return Math.max(0, Math.min(MAX_SLIDER_VALUE, snapped_value));
+  private int snapToStep(int value) {
+    int snappedValue = Math.round((float) value / (float) SLIDER_STEP) * SLIDER_STEP;
+    return Math.max(0, Math.min(MAX_SLIDER_VALUE, snappedValue));
   }
 
-  private void set_slider_text_value(JTextField value_field, int value) {
-    value_field.setText(value + "%");
+  private void setSliderTextValue(JTextField valueField, int value) {
+    valueField.setText(value + "%");
   }
 
   private final class SliderChangeListener implements ChangeListener {
     private final VisibilitySection section;
-    private final int slider_no;
+    private final int sliderNo;
 
-    private SliderChangeListener(VisibilitySection section, int slider_no) {
+    private SliderChangeListener(VisibilitySection section, int sliderNo) {
       this.section = section;
-      this.slider_no = slider_no;
+      this.sliderNo = sliderNo;
     }
 
     @Override
     public void stateChanged(ChangeEvent evt) {
-      int current_value = section.slider_arr[slider_no].getValue();
-      int snapped_value = snap_to_step(current_value);
+      int currentValue = section.sliderArr[sliderNo].getValue();
+      int snappedValue = snapToStep(currentValue);
 
-      if (current_value != snapped_value) {
-        section.slider_arr[slider_no].setValue(snapped_value);
+      if (currentValue != snappedValue) {
+        section.sliderArr[sliderNo].setValue(snappedValue);
         return;
       }
 
-      set_slider_text_value(section.value_arr[slider_no], current_value);
+      setSliderTextValue(section.valueArr[sliderNo], currentValue);
 
-      if (bulk_update_in_progress || section.slider_arr[slider_no].getValueIsAdjusting()) {
+      if (bulkUpdateInProgress || section.sliderArr[sliderNo].getValueIsAdjusting()) {
         return;
       }
 
-      section.set_changed_value(slider_no, ((double) snapped_value) / ((double) MAX_SLIDER_VALUE));
-      board_panel.repaint();
+      section.setChangedValue(sliderNo, ((double) snappedValue) / ((double) MAX_SLIDER_VALUE));
+      boardPanel.repaint();
     }
   }
 
   private final class VisibilitySection {
     private final String title;
-    private final String[] message_arr;
-    private final JSlider[] slider_arr;
-    private final JTextField[] value_arr;
-    private final int[] original_defaults;
-    private final boolean[] defaults_set;
-    private final IntToDoubleFunction current_value_supplier;
-    private final BiConsumer<Integer, Double> changed_value_consumer;
+    private final String[] messageArr;
+    private final JSlider[] sliderArr;
+    private final JTextField[] valueArr;
+    private final int[] originalDefaults;
+    private final boolean[] defaultsSet;
+    private final IntToDoubleFunction currentValueSupplier;
+    private final BiConsumer<Integer, Double> changedValueConsumer;
 
-    private VisibilitySection(String title, String[] message_arr, IntToDoubleFunction current_value_supplier,
-        BiConsumer<Integer, Double> changed_value_consumer) {
+    private VisibilitySection(
+        String title,
+        String[] messageArr,
+        IntToDoubleFunction currentValueSupplier,
+        BiConsumer<Integer, Double> changedValueConsumer) {
       this.title = title;
-      this.message_arr = message_arr;
-      this.current_value_supplier = current_value_supplier;
-      this.changed_value_consumer = changed_value_consumer;
-      this.slider_arr = new JSlider[message_arr.length];
-      this.value_arr = new JTextField[message_arr.length];
-      this.original_defaults = new int[message_arr.length];
-      this.defaults_set = new boolean[message_arr.length];
+      this.messageArr = messageArr;
+      this.currentValueSupplier = currentValueSupplier;
+      this.changedValueConsumer = changedValueConsumer;
+      this.sliderArr = new JSlider[messageArr.length];
+      this.valueArr = new JTextField[messageArr.length];
+      this.originalDefaults = new int[messageArr.length];
+      this.defaultsSet = new boolean[messageArr.length];
     }
 
-    private JPanel create_panel() {
+    private JPanel createPanel() {
       GridBagConstraints constraints = new GridBagConstraints();
       constraints.insets = new Insets(4, 8, 4, 8);
       constraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -238,79 +246,81 @@ public class WindowVisibility extends BoardSavableSubWindow {
 
       JPanel panel = new JPanel(new GridBagLayout());
 
-      JLabel section_title = new JLabel(title, JLabel.LEFT);
-      section_title.setFont(section_title.getFont().deriveFont(java.awt.Font.BOLD));
-      panel.add(section_title, constraints);
+      JLabel sectionTitle = new JLabel(title, JLabel.LEFT);
+      sectionTitle.setFont(sectionTitle.getFont().deriveFont(java.awt.Font.BOLD));
+      panel.add(sectionTitle, constraints);
 
-      for (int i = 0; i < message_arr.length; i++) {
-        add_row(panel, constraints, i);
+      for (int i = 0; i < messageArr.length; i++) {
+        addRow(panel, constraints, i);
       }
 
       return panel;
     }
 
-    private void add_row(JPanel panel, GridBagConstraints constraints, int index) {
-      JPanel row_panel = new JPanel(new BorderLayout(2, 0));
+    private void addRow(JPanel panel, GridBagConstraints constraints, int index) {
+      JPanel rowPanel = new JPanel(new BorderLayout(2, 0));
 
-      JLabel label = new JLabel(message_arr[index], JLabel.LEFT);
-      Dimension label_size = new Dimension(LABEL_WIDTH, label.getPreferredSize().height);
-      label.setPreferredSize(label_size);
-      row_panel.add(label, BorderLayout.WEST);
+      JLabel label = new JLabel(messageArr[index], JLabel.LEFT);
+      Dimension labelSize = new Dimension(LABEL_WIDTH, label.getPreferredSize().height);
+      label.setPreferredSize(labelSize);
+      rowPanel.add(label, BorderLayout.WEST);
 
-      slider_arr[index] = new JSlider(0, MAX_SLIDER_VALUE);
-      slider_arr[index].setMajorTickSpacing(SLIDER_STEP);
-      slider_arr[index].setMinorTickSpacing(SLIDER_STEP);
-      slider_arr[index].setPaintTicks(true);
-      slider_arr[index].setSnapToTicks(true);
-      Dimension slider_size = new Dimension(SLIDER_WIDTH, slider_arr[index].getPreferredSize().height);
-      slider_arr[index].setPreferredSize(slider_size);
-      slider_arr[index].addChangeListener(new SliderChangeListener(this, index));
-      row_panel.add(slider_arr[index], BorderLayout.CENTER);
+      sliderArr[index] = new JSlider(0, MAX_SLIDER_VALUE);
+      sliderArr[index].setMajorTickSpacing(SLIDER_STEP);
+      sliderArr[index].setMinorTickSpacing(SLIDER_STEP);
+      sliderArr[index].setPaintTicks(true);
+      sliderArr[index].setSnapToTicks(true);
+      Dimension sliderSize =
+          new Dimension(SLIDER_WIDTH, sliderArr[index].getPreferredSize().height);
+      sliderArr[index].setPreferredSize(sliderSize);
+      sliderArr[index].addChangeListener(new SliderChangeListener(this, index));
+      rowPanel.add(sliderArr[index], BorderLayout.CENTER);
 
-      value_arr[index] = new JTextField(5);
-      value_arr[index].setEditable(false);
-      value_arr[index].setHorizontalAlignment(JTextField.RIGHT);
-      Dimension value_size = new Dimension(VALUE_FIELD_WIDTH, value_arr[index].getPreferredSize().height);
-      value_arr[index].setPreferredSize(value_size);
-      row_panel.add(value_arr[index], BorderLayout.EAST);
+      valueArr[index] = new JTextField(5);
+      valueArr[index].setEditable(false);
+      valueArr[index].setHorizontalAlignment(JTextField.RIGHT);
+      Dimension valueSize =
+          new Dimension(VALUE_FIELD_WIDTH, valueArr[index].getPreferredSize().height);
+      valueArr[index].setPreferredSize(valueSize);
+      rowPanel.add(valueArr[index], BorderLayout.EAST);
 
-      panel.add(row_panel, constraints);
+      panel.add(rowPanel, constraints);
 
-      set_slider_value(index, current_value_supplier.applyAsDouble(index));
+      setSliderValue(index, currentValueSupplier.applyAsDouble(index));
     }
 
     private void refresh() {
-      for (int i = 0; i < message_arr.length; i++) {
-        set_slider_value(i, current_value_supplier.applyAsDouble(i));
+      for (int i = 0; i < messageArr.length; i++) {
+        setSliderValue(i, currentValueSupplier.applyAsDouble(i));
       }
     }
 
-    private void reset_to_defaults() {
-      for (int i = 0; i < message_arr.length; i++) {
-        if (defaults_set[i]) {
-          int original_val = original_defaults[i];
-          slider_arr[i].setValue(original_val);
-          set_slider_text_value(value_arr[i], original_val);
-          changed_value_consumer.accept(i, ((double) original_val) / ((double) MAX_SLIDER_VALUE));
+    private void resetToDefaults() {
+      for (int i = 0; i < messageArr.length; i++) {
+        if (defaultsSet[i]) {
+          int originalVal = originalDefaults[i];
+          sliderArr[i].setValue(originalVal);
+          setSliderTextValue(valueArr[i], originalVal);
+          changedValueConsumer.accept(i, ((double) originalVal) / ((double) MAX_SLIDER_VALUE));
         }
       }
     }
 
-    private void set_slider_value(int index, double value) {
+    private void setSliderValue(int index, double value) {
       int visibility = (int) Math.round(value * MAX_SLIDER_VALUE);
       visibility = Math.max(0, Math.min(MAX_SLIDER_VALUE, visibility));
 
-      if (!defaults_set[index]) {
-        original_defaults[index] = visibility;
-        defaults_set[index] = true;
+      if (!defaultsSet[index]) {
+        originalDefaults[index] = visibility;
+        defaultsSet[index] = true;
       }
 
-      slider_arr[index].setValue(visibility);
-      set_slider_text_value(value_arr[index], visibility);
+      sliderArr[index].setValue(visibility);
+      setSliderTextValue(valueArr[index], visibility);
     }
 
-    private void set_changed_value(int index, double value) {
-      changed_value_consumer.accept(index, value);
+    private void setChangedValue(int index, double value) {
+      changedValueConsumer.accept(index, value);
     }
   }
 }

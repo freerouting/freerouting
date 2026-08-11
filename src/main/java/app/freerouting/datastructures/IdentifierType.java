@@ -5,88 +5,83 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
-/**
- * Describes legal identifiers together with the character used for string quotes.
- */
+/** Describes legal identifiers together with the character used for string quotes. */
 public class IdentifierType {
 
-  private final String string_quote;
-  private final String[] reserved_chars;
+  private final String stringQuote;
+  private final String[] reservedChars;
 
   /**
-   * Defines the reserved characters and the string for quoting identifiers containing reserved characters for a new instance of Identifier.
+   * Defines the reserved characters and the string for quoting identifiers containing reserved
+   * characters for a new instance of Identifier.
    */
-  public IdentifierType(String[] p_reserved_chars, String p_string_quote) {
-    reserved_chars = p_reserved_chars;
-    string_quote = p_string_quote;
+  public IdentifierType(String[] reservedChars, String stringQuote) {
+    this.reservedChars = reservedChars;
+    this.stringQuote = stringQuote;
   }
 
-  /**
-   * Writes p_name after putting it into quotes, if it contains reserved characters or blanks.
-   */
-  public void write(String p_name, OutputStreamWriter p_file) {
+  /** Writes name after putting it into quotes, if it contains reserved characters or blanks. */
+  public void write(String name, OutputStreamWriter file) {
     // remove the double quotes from the identifiers
-    while ((p_name.length() > 2) && (p_name.charAt(0) == '"') && (p_name.charAt(p_name.length() - 1) == '"')) {
-      p_name = p_name.substring(1, p_name.length() - 2);
+    while ((name.length() > 2)
+        && (name.charAt(0) == '"')
+        && (name.charAt(name.length() - 1) == '"')) {
+      name = name.substring(1, name.length() - 2);
     }
 
     try {
       // if the name contains our quote character, we must remove it
-      if (p_name.contains(string_quote)) {
-        p_name = p_name.replace(string_quote, "");
+      if (name.contains(stringQuote)) {
+        name = name.replace(stringQuote, "");
       }
 
-      boolean need_quotes = false;
+      boolean needQuotes = false;
       // if the name contains a reserved character, we must put it into quotes
-      for (String reserved_char : reserved_chars) {
-        if (p_name.contains(reserved_char)) {
-          need_quotes = true;
+      for (String reservedChar : reservedChars) {
+        if (name.contains(reservedChar)) {
+          needQuotes = true;
           break;
         }
       }
 
       // if the name contains a non-ASCII character, we must put it into quotes
-      for (byte ch : p_name.getBytes(StandardCharsets.UTF_8)) {
+      for (byte ch : name.getBytes(StandardCharsets.UTF_8)) {
         if (ch <= 0) {
-          need_quotes = true;
+          needQuotes = true;
           break;
         }
       }
 
-      if (!need_quotes) {
-        if (p_name.matches("^-?\\d.*")) {
-          need_quotes = true;
+      if (!needQuotes) {
+        if (name.matches("^-?\\d.*")) {
+          needQuotes = true;
         }
       }
-      if (need_quotes) {
-        p_name = quote(p_name);
+      if (needQuotes) {
+        name = quote(name);
       }
-      p_file.write(p_name);
+      file.write(name);
     } catch (IOException _) {
       FRLogger.warn("IdentifierType.write: unable to write to file");
     }
   }
 
-  /**
-   * Looks, if p_string does not contain reserved characters or blanks.
-   */
-  private boolean is_legal(String p_string) {
-    if (p_string == null) {
+  /** Looks, if string does not contain reserved characters or blanks. */
+  private boolean isLegal(String string) {
+    if (string == null) {
       FRLogger.warn("IdentifierType.is_legal: p_string is null");
       return false;
     }
-    for (int i = 0; i < reserved_chars.length; i++) {
-      if (p_string.contains(reserved_chars[i])) {
+    for (int i = 0; i < reservedChars.length; i++) {
+      if (string.contains(reservedChars[i])) {
         return false;
       }
     }
     return true;
   }
 
-  /**
-   * Puts p_sting into quotes.
-   */
-  private String quote(String p_string) {
-    return string_quote + p_string + string_quote;
+  /** Puts string into quotes. */
+  private String quote(String string) {
+    return stringQuote + string + stringQuote;
   }
 }

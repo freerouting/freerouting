@@ -1,0 +1,19 @@
+extends: default
+
+rules:
+  line-length: disable
+  brackets: disable
+  comments:
+    min-spaces-from-content: 1
+  document-start: disable
+  truthy: disable
+
+ignore: |
+  src_v19/
+  fixtures/
+  integrations/
+  examples/
+  build/
+  logs/
+  tmp/
+  out/

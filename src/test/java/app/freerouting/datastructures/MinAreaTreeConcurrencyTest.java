@@ -23,34 +23,38 @@ import org.junit.jupiter.api.Test;
 class MinAreaTreeConcurrencyTest {
 
   @Test
-  void overlaps_concurrent_queries_do_not_corrupt_stack() throws Exception {
+  void overlapsConcurrentQueriesDoNotCorruptStack() throws Exception {
     RoutingBoard board = DsnTestFixtures.loadBoard("Issue508-DAC2020_bm01.dsn");
-    var tree = board.search_tree_manager.get_default_tree();
+    var tree = board.searchTreeManager.getDefaultTree();
     RegularTileShape queryShape =
-        board.get_bounding_box().bounding_shape(FortyfiveDegreeBoundingDirections.INSTANCE);
+        board.getBoundingBox().boundingShape(FortyfiveDegreeBoundingDirections.INSTANCE);
 
     ExecutorService pool = Executors.newFixedThreadPool(8);
     List<Future<?>> futures = new ArrayList<>();
     for (int thread = 0; thread < 8; thread++) {
-      futures.add(pool.submit(() -> {
-        for (int i = 0; i < 200; i++) {
-          tree.overlaps(queryShape);
-        }
-      }));
+      futures.add(
+          pool.submit(
+              () -> {
+                for (int i = 0; i < 200; i++) {
+                  tree.overlaps(queryShape);
+                }
+              }));
     }
     futures.add(pool.submit(() -> new BoardStatistics(board, null, false, false)));
 
-    assertDoesNotThrow(() -> {
-      for (Future<?> future : futures) {
-        future.get(2, TimeUnit.MINUTES);
-      }
-    });
+    assertDoesNotThrow(
+        () -> {
+          for (Future<?> future : futures) {
+            future.get(2, TimeUnit.MINUTES);
+          }
+        });
 
     pool.shutdown();
-    assertDoesNotThrow(() -> {
-      if (!pool.awaitTermination(1, TimeUnit.MINUTES)) {
-        pool.shutdownNow();
-      }
-    });
+    assertDoesNotThrow(
+        () -> {
+          if (!pool.awaitTermination(1, TimeUnit.MINUTES)) {
+            pool.shutdownNow();
+          }
+        });
   }
 }

@@ -11,44 +11,49 @@ import java.io.IOException;
 
 /**
  * JAX-RS request filter that validates API keys for protected endpoints.
- * <p>
- * This filter intercepts all incoming requests and validates the API key
- * provided in the {@code Authorization: Bearer} header. Certain endpoints are
- * excluded from validation and remain publicly
+ *
+ * <p>This filter intercepts all incoming requests and validates the API key provided in the {@code
+ * Authorization: Bearer} header. Certain endpoints are excluded from validation and remain publicly
  * accessible.
- * </p>
  *
  * <h2>Excluded Endpoints (Public Access)</h2>
- * The following endpoints do NOT require API key validation:
+ *
+ * <p>The following endpoints do NOT require API key validation:
+ *
  * <ul>
- * <li><b>/v1/system/*</b> - System monitoring and health check endpoints</li>
- * <li><b>/v1/analytics/*</b> - Analytics tracking endpoints</li>
- * <li><b>/dev/*</b> - Development and testing endpoints</li>
- * <li><b>/openapi/*</b> - OpenAPI specification endpoints</li>
- * <li><b>/swagger-ui</b> - Swagger UI documentation</li>
+ *   <li><b>/v1/system/*</b> - System monitoring and health check endpoints
+ *   <li><b>/v1/analytics/*</b> - Analytics tracking endpoints
+ *   <li><b>/dev/*</b> - Development and testing endpoints
+ *   <li><b>/openapi/*</b> - OpenAPI specification endpoints
+ *   <li><b>/swagger-ui</b> - Swagger UI documentation
  * </ul>
  *
  * <h2>Protected Endpoints</h2>
- * All other endpoints require a valid API key in the
- * {@code Authorization: Bearer <API_KEY>} header.
+ *
+ * <p>All other endpoints require a valid API key in the {@code Authorization: Bearer <API_KEY>}
+ * header.
  *
  * <h2>Error Responses</h2>
+ *
  * <ul>
- * <li><b>401 Unauthorized</b> - Missing or invalid API key</li>
+ *   <li><b>401 Unauthorized</b> - Missing or invalid API key
  * </ul>
  *
  * <h2>Configuration</h2>
- * Authentication is configured through the {@code apiServerSettings.authentication} block.
- * The relevant environment variables are:
+ *
+ * <p>Authentication is configured through the {@code apiServerSettings.authentication} block. The
+ * relevant environment variables are:
+ *
  * <ul>
  *   <li>{@code FREEROUTING__API_SERVER__AUTHENTICATION__ENABLED} — set to {@code false} for
- *       local/plugin deployments.</li>
- *   <li>{@code FREEROUTING__API_SERVER__AUTHENTICATION__PROVIDERS} — comma-separated provider
- *       list (e.g. {@code "GoogleSheets"}).</li>
- *   <li>{@code FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL}</li>
- *   <li>{@code FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY}</li>
+ *       local/plugin deployments.
+ *   <li>{@code FREEROUTING__API_SERVER__AUTHENTICATION__PROVIDERS} — comma-separated provider list
+ *       (e.g. {@code "GoogleSheets"}).
+ *   <li>{@code FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL}
+ *   <li>{@code FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY}
  * </ul>
- * If authentication is enabled but no providers are configured, all protected endpoints are
+ *
+ * <p>If authentication is enabled but no providers are configured, all protected endpoints are
  * denied access (fail-secure).
  *
  * @see ApiKeyProvider
@@ -61,16 +66,12 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final String BEARER_PREFIX = "Bearer ";
 
-  /**
-   * Gets the current API key service (for testing purposes).
-   */
+  /** Gets the current API key service (for testing purposes). */
   static ApiKeyValidationService getApiKeyService() {
     return ApiKeyValidationService.getInstance();
   }
 
-  /**
-   * Resets the provider initialization state (for testing purposes).
-   */
+  /** Resets the provider initialization state (for testing purposes). */
   static void resetForTesting() {
     ApiKeyValidationService.resetForTesting();
   }
@@ -94,7 +95,7 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
         || normalizedPath.startsWith("v1/analytics/")
         || normalizedPath.startsWith("dev/")
         || normalizedPath.startsWith("openapi/")
-        || normalizedPath.equals("swagger-ui")
+        || "swagger-ui".equals(normalizedPath)
         || normalizedPath.startsWith("swagger-ui/");
   }
 
@@ -129,8 +130,10 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
 
     // Validate API key
     if (apiKey == null || apiKey.isEmpty()) {
-      FRLogger.warn("API key validation failed: missing or invalid Authorization header for path " + path);
-      abortWithUnauthorized(requestContext,
+      FRLogger.warn(
+          "API key validation failed: missing or invalid Authorization header for path " + path);
+      abortWithUnauthorized(
+          requestContext,
           "Missing API key. Please provide a valid API key in the Authorization header using Bearer scheme (Authorization: Bearer <API_KEY>). You can apply for a free API key at https://www.freerouting.app.");
       return;
     }
@@ -150,18 +153,18 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
    * Aborts the request with a 401 Unauthorized response.
    *
    * @param requestContext The request context
-   * @param message        The error message
+   * @param message The error message
    */
   private void abortWithUnauthorized(ContainerRequestContext requestContext, String message) {
     // Build a JSON string directly — using a Map subtype (e.g. Collections$SingletonMap)
     // as the entity causes a "MessageBodyWriter not found" 500 error in Jersey because
     // the Gson provider does not register a writer for that internal JDK class.
     String jsonBody = "{\"error\":\"" + message.replace("\\", "\\\\").replace("\"", "\\\"") + "\"}";
-    Response response = Response
-        .status(Response.Status.UNAUTHORIZED)
-        .entity(jsonBody)
-        .type("application/json")
-        .build();
+    Response response =
+        Response.status(Response.Status.UNAUTHORIZED)
+            .entity(jsonBody)
+            .type("application/json")
+            .build();
     requestContext.abortWith(response);
   }
 }

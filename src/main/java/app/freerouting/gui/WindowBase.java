@@ -1,8 +1,8 @@
 package app.freerouting.gui;
 
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GraphicsConfiguration;
@@ -21,6 +21,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+/** Provides common behavior for Freerouting windows. */
 public class WindowBase extends JFrame {
 
   protected TextManager tm;
@@ -42,82 +43,95 @@ public class WindowBase extends JFrame {
     // Track the initial graphics configuration for per-monitor DPI change detection
     this.lastGraphicsConfig = getGraphicsConfiguration();
 
-    addComponentListener(new ComponentAdapter() {
-      @Override
-      public void componentMoved(ComponentEvent e) {
-        checkGraphicsConfigurationChanged();
-      }
+    addComponentListener(
+        new ComponentAdapter() {
+          @Override
+          public void componentMoved(ComponentEvent e) {
+            checkGraphicsConfigurationChanged();
+          }
 
-      @Override
-      public void componentResized(ComponentEvent e) {
-        checkGraphicsConfigurationChanged();
-      }
-    });
+          @Override
+          public void componentResized(ComponentEvent e) {
+            checkGraphicsConfigurationChanged();
+          }
+        });
 
-    addWindowFocusListener(new WindowFocusListener() {
-      @Override
-      public void windowGainedFocus(WindowEvent e) {
-        Window window = e.getWindow();
-        String className = window.getClass().getName();
-        String title = "";
-        if (window instanceof Frame frame) {
-          title = frame.getTitle();
-        }
-        if (window instanceof WindowBase base) {
-          base.gotFocusAt = Instant.now();
-        }
-        FRLogger.trace("Window '" + className + "' with title of '" + title + "' gained focus.");
+    addWindowFocusListener(
+        new WindowFocusListener() {
+          @Override
+          public void windowGainedFocus(WindowEvent e) {
+            Window window = e.getWindow();
+            String className = window.getClass().getName();
+            String title = "";
+            if (window instanceof Frame frame) {
+              title = frame.getTitle();
+            }
+            if (window instanceof WindowBase base) {
+              base.gotFocusAt = Instant.now();
+            }
+            FRLogger.trace(
+                "Window '" + className + "' with title of '" + title + "' gained focus.");
 
-        if (!Objects.equals(title, "")) {
-          FRAnalytics.setAppLocation(className, title);
-        }
-      }
-
-      @Override
-      public void windowLostFocus(WindowEvent e) {
-        Window window = e.getWindow();
-        String className = window.getClass().getName();
-        String title = "";
-        if (window instanceof Frame frame) {
-          title = frame.getTitle();
-        }
-        if (window instanceof WindowBase base) {
-          Instant gotFocusAt = base.gotFocusAt;
-          if (gotFocusAt != null) {
-            long gotFocusFor = Instant.now().getEpochSecond() - gotFocusAt.getEpochSecond();
-
-            if (gotFocusFor > 1) {
-              FRLogger.trace("Window '" + className + "' with title of '" + title + "' got the focus for " + gotFocusFor + " seconds.");
+            if (!Objects.equals(title, "")) {
+              FRAnalytics.setAppLocation(className, title);
             }
           }
-        }
 
-        FRLogger.trace("Window '" + className + "' with title of '" + title + "' lost focus.");
-      }
-    });
+          @Override
+          public void windowLostFocus(WindowEvent e) {
+            Window window = e.getWindow();
+            String className = window.getClass().getName();
+            String title = "";
+            if (window instanceof Frame frame) {
+              title = frame.getTitle();
+            }
+            if (window instanceof WindowBase base) {
+              Instant gotFocusAt = base.gotFocusAt;
+              if (gotFocusAt != null) {
+                long gotFocusFor = Instant.now().getEpochSecond() - gotFocusAt.getEpochSecond();
+
+                if (gotFocusFor > 1) {
+                  FRLogger.trace(
+                      "Window '"
+                          + className
+                          + "' with title of '"
+                          + title
+                          + "' got the focus for "
+                          + gotFocusFor
+                          + " seconds.");
+                }
+              }
+            }
+
+            FRLogger.trace("Window '" + className + "' with title of '" + title + "' lost focus.");
+          }
+        });
   }
 
   /**
-   * Checks whether the window has moved to a different display (GraphicsConfiguration).
-   * If so, triggers a re-layout so that font metrics and component sizes are
-   * recomputed for the new display's DPI scaling.
+   * Checks whether the window has moved to a different display (GraphicsConfiguration). If so,
+   * triggers a re-layout so that font metrics and component sizes are recomputed for the new
+   * display's DPI scaling.
    */
   private void checkGraphicsConfigurationChanged() {
     GraphicsConfiguration current = getGraphicsConfiguration();
     if (current != lastGraphicsConfig) {
       lastGraphicsConfig = current;
-      FRLogger.trace("Window '" + this.getClass().getName() + "' moved to a different display; re-laying out for new DPI scaling.");
-      SwingUtilities.invokeLater(() -> onGraphicsConfigurationChanged());
+      FRLogger.trace(
+          "Window '"
+              + this.getClass().getName()
+              + "' moved to a different display; re-laying out for new DPI scaling.");
+      SwingUtilities.invokeLater(this::onGraphicsConfigurationChanged);
     }
   }
 
   /**
    * Called when the window has been moved to a different display with a different
-   * GraphicsConfiguration (e.g. different DPI scaling). Subclasses may override
-   * to perform additional re-layout work such as pack() or refresh().
-   * <p>
-   * The default implementation revalidates and repaints the content pane so that
-   * component sizes and font metrics are recomputed for the new display.
+   * GraphicsConfiguration (e.g. different DPI scaling). Subclasses may override to perform
+   * additional re-layout work such as pack() or refresh().
+   *
+   * <p>The default implementation revalidates and repaints the content pane so that component sizes
+   * and font metrics are recomputed for the new display.
    */
   protected void onGraphicsConfigurationChanged() {
     if (getContentPane() != null) {
@@ -126,9 +140,7 @@ public class WindowBase extends JFrame {
     }
   }
 
-  /**
-   * Sets the language of the window and updates texts on it if needed.
-   */
+  /** Sets the language of the window and updates texts on it if needed. */
   public void setLanguage(Locale locale) {
     if (this.tm != null) {
       this.tm.setLocale(locale);
@@ -139,9 +151,11 @@ public class WindowBase extends JFrame {
   }
 
   /**
-   * Updates the language-specific texts in the window. It must be overridden in the inherited class.
+   * Updates the language-specific texts in the window. It must be overridden in the inherited
+   * class.
    */
   public void updateTexts() {
-    // This method must be overridden in the inherited class if there is at least one language-specific text in the window.
+    // This method must be overridden in the inherited class if there is at least one
+    // language-specific text in the window.
   }
 }

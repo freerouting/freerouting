@@ -26,17 +26,18 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
  * Sub-Issue 07 – Guard headless / API code paths against {@code interactiveSettings} usage.
  *
- * <p>Exercises the full REST-API routing pipeline: create session → enqueue job →
- * upload DSN input → start job → poll until terminal state. Asserts that the job
- * reaches a terminal state without any {@link NullPointerException} or
- * {@link IllegalStateException} originating from {@code interactiveSettings} being
- * {@code null} in the headless API code path.
+ * <p>Exercises the full REST-API routing pipeline: create session → enqueue job → upload DSN input
+ * → start job → poll until terminal state. Asserts that the job reaches a terminal state without
+ * any {@link NullPointerException} or {@link IllegalStateException} originating from {@code
+ * interactiveSettings} being {@code null} in the headless API code path.
  */
+@Tag("serial")
 class ApiRoutingTest {
 
   private static final int POLL_TIMEOUT_MS = 120_000;
@@ -46,10 +47,10 @@ class ApiRoutingTest {
   private static final String TEST_USER_ID = "00000000-0000-0000-0000-000000000001";
 
   /**
-   * Dummy bearer token sent in every request via the {@code Authorization} header.
-   * Authentication is explicitly disabled in this test's {@code setUp()} (no providers
-   * are configured), so the token value is irrelevant — it is kept only for documentation
-   * purposes and to satisfy any future filter that checks header presence.
+   * Dummy bearer token sent in every request via the {@code Authorization} header. Authentication
+   * is explicitly disabled in this test's {@code setUp()} (no providers are configured), so the
+   * token value is irrelevant — it is kept only for documentation purposes and to satisfy any
+   * future filter that checks header presence.
    */
   private static final String TEST_BEARER = "test-api-key";
 
@@ -65,8 +66,8 @@ class ApiRoutingTest {
     ApiServerSettings settings = new ApiServerSettings();
     settings.isEnabled = true;
     settings.isHttpAllowed = true;
-    settings.endpoints = new String[]{"http://127.0.0.1:0"};
-    settings.cors_origins = null; // No CORS needed for unit tests
+    settings.endpoints = new String[] {"http://127.0.0.1:0"};
+    settings.corsOrigins = null; // No CORS needed for unit tests
     // Disable authentication for this test: no providers are configured, so enabling
     // auth would deny every request. Real deployments have auth ON by default.
     // Must be set on both the local settings object AND globalSettings, because
@@ -74,7 +75,7 @@ class ApiRoutingTest {
     settings.authentication.isEnabled = false;
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
 
-    server = Freerouting.InitializeAPI(settings);
+    server = Freerouting.initializeAPI(settings);
     waitForServerStarted(server);
 
     int port = ((ServerConnector) server.getConnectors()[0]).getLocalPort();
@@ -90,32 +91,35 @@ class ApiRoutingTest {
   }
 
   /**
-   * Full routing workflow via the REST API using a small, real-world DSN file:
+   * Full routing workflow via the REST API using a small, real-world DSN file.
    *
    * <ol>
-   *   <li>POST {@code /v1/sessions/create} – obtain a session ID.</li>
-   *   <li>POST {@code /v1/jobs/enqueue} – create and enqueue a job.</li>
-   *   <li>POST {@code /v1/jobs/{id}/settings} – upload minimal router settings.</li>
-   *   <li>POST {@code /v1/jobs/{id}/input} – upload the Base64-encoded DSN file.</li>
-   *   <li>PUT {@code /v1/jobs/{id}/start} – transition to READY_TO_START.</li>
-   *   <li>Poll GET {@code /v1/jobs/{id}} – wait for terminal state.</li>
+   *   <li>POST {@code /v1/sessions/create} – obtain a session ID.
+   *   <li>POST {@code /v1/jobs/enqueue} – create and enqueue a job.
+   *   <li>POST {@code /v1/jobs/{id}/settings} – upload minimal router settings.
+   *   <li>POST {@code /v1/jobs/{id}/input} – upload the Base64-encoded DSN file.
+   *   <li>PUT {@code /v1/jobs/{id}/start} – transition to READY_TO_START.
+   *   <li>Poll GET {@code /v1/jobs/{id}} – wait for terminal state.
    * </ol>
    *
-   * <p>The test verifies that the entire pipeline completes without any NPE or
-   * {@code IllegalStateException} triggered by null {@code interactiveSettings} access in
-   * the headless routing engine.
+   * <p>The test verifies that the entire pipeline completes without any NPE or {@code
+   * IllegalStateException} triggered by null {@code interactiveSettings} access in the headless
+   * routing engine.
    */
   @Test
-  void apiRouting_completesWithoutInteractiveSettingsNpe() throws Exception {
+  void apiRoutingCompletesWithoutInteractiveSettingsNpe() throws Exception {
     // ── Step 1: Create a session ──────────────────────────────────────────────
-    HttpRequest createSessionReq = authenticatedRequest(baseUri.resolve("/v1/sessions/create"))
-        .POST(HttpRequest.BodyPublishers.noBody())
-        .timeout(Duration.ofSeconds(10))
-        .build();
+    HttpRequest createSessionReq =
+        authenticatedRequest(baseUri.resolve("/v1/sessions/create"))
+            .POST(HttpRequest.BodyPublishers.noBody())
+            .timeout(Duration.ofSeconds(10))
+            .build();
 
-    HttpResponse<String> createSessionResp = httpClient.send(
-        createSessionReq, HttpResponse.BodyHandlers.ofString());
-    assertEquals(200, createSessionResp.statusCode(),
+    HttpResponse<String> createSessionResp =
+        httpClient.send(createSessionReq, HttpResponse.BodyHandlers.ofString());
+    assertEquals(
+        200,
+        createSessionResp.statusCode(),
         "POST /v1/sessions/create must return HTTP 200. Body: " + createSessionResp.body());
 
     JsonObject sessionJson = JsonParser.parseString(createSessionResp.body()).getAsJsonObject();
@@ -124,14 +128,17 @@ class ApiRoutingTest {
 
     // ── Step 2: Enqueue a job ─────────────────────────────────────────────────
     String enqueueBody = "{\"session_id\":\"" + sessionId + "\"}";
-    HttpRequest enqueueReq = authenticatedRequest(baseUri.resolve("/v1/jobs/enqueue"))
-        .POST(HttpRequest.BodyPublishers.ofString(enqueueBody))
-        .timeout(Duration.ofSeconds(10))
-        .build();
+    HttpRequest enqueueReq =
+        authenticatedRequest(baseUri.resolve("/v1/jobs/enqueue"))
+            .POST(HttpRequest.BodyPublishers.ofString(enqueueBody))
+            .timeout(Duration.ofSeconds(10))
+            .build();
 
-    HttpResponse<String> enqueueResp = httpClient.send(
-        enqueueReq, HttpResponse.BodyHandlers.ofString());
-    assertEquals(200, enqueueResp.statusCode(),
+    HttpResponse<String> enqueueResp =
+        httpClient.send(enqueueReq, HttpResponse.BodyHandlers.ofString());
+    assertEquals(
+        200,
+        enqueueResp.statusCode(),
         "POST /v1/jobs/enqueue must return HTTP 200. Body: " + enqueueResp.body());
 
     JsonObject jobJson = JsonParser.parseString(enqueueResp.body()).getAsJsonObject();
@@ -140,14 +147,17 @@ class ApiRoutingTest {
 
     // ── Step 2b: Upload minimal router settings to keep the test fast ────────
     String settingsBody = "{\"max_passes\":5,\"job_timeout\":\"00:02:00\"}";
-    HttpRequest uploadSettingsReq = authenticatedRequest(baseUri.resolve("/v1/jobs/" + jobId + "/settings"))
-        .POST(HttpRequest.BodyPublishers.ofString(settingsBody))
-        .timeout(Duration.ofSeconds(10))
-        .build();
+    HttpRequest uploadSettingsReq =
+        authenticatedRequest(baseUri.resolve("/v1/jobs/" + jobId + "/settings"))
+            .POST(HttpRequest.BodyPublishers.ofString(settingsBody))
+            .timeout(Duration.ofSeconds(10))
+            .build();
 
-    HttpResponse<String> uploadSettingsResp = httpClient.send(
-        uploadSettingsReq, HttpResponse.BodyHandlers.ofString());
-    assertEquals(200, uploadSettingsResp.statusCode(),
+    HttpResponse<String> uploadSettingsResp =
+        httpClient.send(uploadSettingsReq, HttpResponse.BodyHandlers.ofString());
+    assertEquals(
+        200,
+        uploadSettingsResp.statusCode(),
         "POST /v1/jobs/{id}/settings must return HTTP 200. Body: " + uploadSettingsResp.body());
 
     // ── Step 3: Upload input DSN file ─────────────────────────────────────────
@@ -156,27 +166,32 @@ class ApiRoutingTest {
     byte[] dsnBytes = Files.readAllBytes(dsnFile);
     String dsnBase64 = Base64.getEncoder().encodeToString(dsnBytes);
 
-    String inputBody = "{\"data\":\"" + dsnBase64 + "\","
-        + "\"filename\":\"empty_board.dsn\"}";
-    HttpRequest uploadInputReq = authenticatedRequest(baseUri.resolve("/v1/jobs/" + jobId + "/input"))
-        .POST(HttpRequest.BodyPublishers.ofString(inputBody))
-        .timeout(Duration.ofSeconds(30))
-        .build();
+    String inputBody = "{\"data\":\"" + dsnBase64 + "\"," + "\"filename\":\"empty_board.dsn\"}";
+    HttpRequest uploadInputReq =
+        authenticatedRequest(baseUri.resolve("/v1/jobs/" + jobId + "/input"))
+            .POST(HttpRequest.BodyPublishers.ofString(inputBody))
+            .timeout(Duration.ofSeconds(30))
+            .build();
 
-    HttpResponse<String> uploadInputResp = httpClient.send(
-        uploadInputReq, HttpResponse.BodyHandlers.ofString());
-    assertEquals(200, uploadInputResp.statusCode(),
+    HttpResponse<String> uploadInputResp =
+        httpClient.send(uploadInputReq, HttpResponse.BodyHandlers.ofString());
+    assertEquals(
+        200,
+        uploadInputResp.statusCode(),
         "POST /v1/jobs/{id}/input must return HTTP 200. Body: " + uploadInputResp.body());
 
     // ── Step 4: Start the job ─────────────────────────────────────────────────
-    HttpRequest startReq = authenticatedRequest(baseUri.resolve("/v1/jobs/" + jobId + "/start"))
-        .PUT(HttpRequest.BodyPublishers.noBody())
-        .timeout(Duration.ofSeconds(10))
-        .build();
+    HttpRequest startReq =
+        authenticatedRequest(baseUri.resolve("/v1/jobs/" + jobId + "/start"))
+            .PUT(HttpRequest.BodyPublishers.noBody())
+            .timeout(Duration.ofSeconds(10))
+            .build();
 
-    HttpResponse<String> startResp = httpClient.send(
-        startReq, HttpResponse.BodyHandlers.ofString());
-    assertEquals(200, startResp.statusCode(),
+    HttpResponse<String> startResp =
+        httpClient.send(startReq, HttpResponse.BodyHandlers.ofString());
+    assertEquals(
+        200,
+        startResp.statusCode(),
         "PUT /v1/jobs/{id}/start must return HTTP 200. Body: " + startResp.body());
 
     // ── Step 5: Poll until terminal state ─────────────────────────────────────
@@ -186,13 +201,14 @@ class ApiRoutingTest {
     while (System.currentTimeMillis() < deadline) {
       Thread.sleep(POLL_INTERVAL_MS);
 
-      HttpRequest pollReq = authenticatedRequest(baseUri.resolve("/v1/jobs/" + jobId))
-          .GET()
-          .timeout(Duration.ofSeconds(5))
-          .build();
+      HttpRequest pollReq =
+          authenticatedRequest(baseUri.resolve("/v1/jobs/" + jobId))
+              .GET()
+              .timeout(Duration.ofSeconds(5))
+              .build();
 
-      HttpResponse<String> pollResp = httpClient.send(
-          pollReq, HttpResponse.BodyHandlers.ofString());
+      HttpResponse<String> pollResp =
+          httpClient.send(pollReq, HttpResponse.BodyHandlers.ofString());
 
       if (pollResp.statusCode() == 200) {
         JsonObject polledJob = JsonParser.parseString(pollResp.body()).getAsJsonObject();
@@ -208,16 +224,18 @@ class ApiRoutingTest {
       }
     }
 
-    assertNotNull(terminalState,
+    assertNotNull(
+        terminalState,
         "Routing job must reach a terminal state (COMPLETED/CANCELLED/TERMINATED/TIMED_OUT) within "
-            + (POLL_TIMEOUT_MS / 1000) + " seconds via the REST API");
+            + (POLL_TIMEOUT_MS / 1000)
+            + " seconds via the REST API");
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────────
 
   /**
-   * Returns an {@link HttpRequest.Builder} pre-populated with the authentication headers
-   * required by {@code ApiKeyValidationFilter} and {@code BaseController.AuthenticateUser()}.
+   * Returns an {@link HttpRequest.Builder} pre-populated with the authentication headers required
+   * by {@code ApiKeyValidationFilter} and {@code BaseController.AuthenticateUser()}.
    */
   private HttpRequest.Builder authenticatedRequest(URI uri) {
     return HttpRequest.newBuilder(uri)
@@ -243,4 +261,3 @@ class ApiRoutingTest {
     throw new IOException("Test file not found: " + filename);
   }
 }
-

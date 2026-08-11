@@ -1,86 +1,106 @@
 package app.freerouting.gui;
 
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-/**
- * Popup Menu used in the interactive select state.
- */
+/** Popup Menu used in the interactive select state. */
 class PopupMenuMain extends PopupMenuDisplay {
 
-  /**
-   * Creates a new instance of MainPopupMenu
-   */
-  PopupMenuMain(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+  /** Creates a new instance of MainPopupMenu. */
+  PopupMenuMain(BoardFrame boardFrame) {
+    super(boardFrame);
+    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
     // add the item for selecting items
 
-    JMenuItem popup_select_item_menuitem = new JMenuItem();
-    popup_select_item_menuitem.setText(tm.getText("select_item"));
-    popup_select_item_menuitem.addActionListener(_ -> board_panel.board_handling.select_items(board_panel.right_button_click_location));
-    popup_select_item_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_select_item_menuitem", popup_select_item_menuitem.getText()));
+    JMenuItem popupSelectItemMenuitem = new JMenuItem();
+    popupSelectItemMenuitem.setText(tm.getText("select_item"));
+    popupSelectItemMenuitem.addActionListener(
+        _ -> boardPanel.boardHandling.selectItems(boardPanel.rightButtonClickLocation));
+    popupSelectItemMenuitem.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "popupSelectItemMenuitem", popupSelectItemMenuitem.getText()));
 
-    this.add(popup_select_item_menuitem, 0);
+    this.add(popupSelectItemMenuitem, 0);
 
     // Insert the start route item.
 
-    JMenuItem popup_start_route_menuitem = new JMenuItem();
-    popup_start_route_menuitem.setText(tm.getText("start_route"));
-    popup_start_route_menuitem.addActionListener(_ -> board_panel.board_handling.start_route(board_panel.right_button_click_location));
-    popup_start_route_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_start_route_menuitem", popup_start_route_menuitem.getText()));
+    JMenuItem popupStartRouteMenuitem = new JMenuItem();
+    popupStartRouteMenuitem.setText(tm.getText("start_route"));
+    popupStartRouteMenuitem.addActionListener(
+        _ -> boardPanel.boardHandling.startRoute(boardPanel.rightButtonClickLocation));
+    popupStartRouteMenuitem.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "popupStartRouteMenuitem", popupStartRouteMenuitem.getText()));
 
-    this.add(popup_start_route_menuitem, 1);
+    this.add(popupStartRouteMenuitem, 1);
 
-    // Insert the create_obstacle_menu.
+    // Insert the createObstacleMenu.
 
-    JMenu create_obstacle_menu = new JMenu();
+    JMenu createObstacleMenu = new JMenu();
 
-    create_obstacle_menu.setText(tm.getText("create_keepout"));
+    createObstacleMenu.setText(tm.getText("create_keepout"));
 
-    JMenuItem popup_create_tile_menuitem = new JMenuItem();
-    popup_create_tile_menuitem.setText(tm.getText("tile"));
-    popup_create_tile_menuitem.addActionListener(_ -> board_panel.board_handling.start_tile(board_panel.right_button_click_location));
-    popup_create_tile_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_create_tile_menuitem", popup_create_tile_menuitem.getText()));
+    JMenuItem popupCreateTileMenuitem = new JMenuItem();
+    popupCreateTileMenuitem.setText(tm.getText("tile"));
+    popupCreateTileMenuitem.addActionListener(
+        _ -> boardPanel.boardHandling.startTile(boardPanel.rightButtonClickLocation));
+    popupCreateTileMenuitem.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "popupCreateTileMenuitem", popupCreateTileMenuitem.getText()));
 
-    create_obstacle_menu.add(popup_create_tile_menuitem);
+    createObstacleMenu.add(popupCreateTileMenuitem);
 
-    JMenuItem popup_create_circle_menuitem = new JMenuItem();
-    popup_create_circle_menuitem.setText(tm.getText("circle"));
-    popup_create_circle_menuitem.addActionListener(_ -> board_panel.board_handling.start_circle(board_panel.right_button_click_location));
-    popup_create_circle_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_create_circle_menuitem", popup_create_circle_menuitem.getText()));
+    JMenuItem popupCreateCircleMenuitem = new JMenuItem();
+    popupCreateCircleMenuitem.setText(tm.getText("circle"));
+    popupCreateCircleMenuitem.addActionListener(
+        _ -> boardPanel.boardHandling.startCircle(boardPanel.rightButtonClickLocation));
+    popupCreateCircleMenuitem.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "popupCreateCircleMenuitem", popupCreateCircleMenuitem.getText()));
 
-    create_obstacle_menu.add(popup_create_circle_menuitem);
+    createObstacleMenu.add(popupCreateCircleMenuitem);
 
-    JMenuItem popup_create_polygon_menuitem = new JMenuItem();
-    popup_create_polygon_menuitem.setText(tm.getText("polygon"));
-    popup_create_polygon_menuitem.addActionListener(_ -> board_panel.board_handling.start_polygonshape_item(board_panel.right_button_click_location));
-    popup_create_polygon_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_create_polygon_menuitem", popup_create_polygon_menuitem.getText()));
+    JMenuItem popupCreatePolygonMenuitem = new JMenuItem();
+    popupCreatePolygonMenuitem.setText(tm.getText("polygon"));
+    popupCreatePolygonMenuitem.addActionListener(
+        _ -> boardPanel.boardHandling.startPolygonshapeItem(boardPanel.rightButtonClickLocation));
+    popupCreatePolygonMenuitem.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "popupCreatePolygonMenuitem", popupCreatePolygonMenuitem.getText()));
 
-    create_obstacle_menu.add(popup_create_polygon_menuitem);
+    createObstacleMenu.add(popupCreatePolygonMenuitem);
 
-    JMenuItem popup_add_hole_menuitem = new JMenuItem();
-    popup_add_hole_menuitem.setText(tm.getText("hole"));
-    popup_add_hole_menuitem.addActionListener(_ -> board_panel.board_handling.start_adding_hole(board_panel.right_button_click_location));
-    popup_add_hole_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_add_hole_menuitem", popup_add_hole_menuitem.getText()));
+    JMenuItem popupAddHoleMenuitem = new JMenuItem();
+    popupAddHoleMenuitem.setText(tm.getText("hole"));
+    popupAddHoleMenuitem.addActionListener(
+        _ -> boardPanel.boardHandling.startAddingHole(boardPanel.rightButtonClickLocation));
+    popupAddHoleMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupAddHoleMenuitem", popupAddHoleMenuitem.getText()));
 
-    create_obstacle_menu.add(popup_add_hole_menuitem);
+    createObstacleMenu.add(popupAddHoleMenuitem);
 
-    this.add(create_obstacle_menu, 2);
+    this.add(createObstacleMenu, 2);
 
     // Insert the pin swap item.
 
-    if (board_panel.board_handling.get_routing_board().library.logical_parts.count() > 0) {
+    if (boardPanel.boardHandling.getRoutingBoard().library.logicalParts.count() > 0) {
       // the board contains swappable gates or pins
-      JMenuItem popup_swap_pin_menuitem = new JMenuItem();
-      popup_swap_pin_menuitem.setText(tm.getText("swap_pin"));
-      popup_swap_pin_menuitem.addActionListener(_ -> board_panel.board_handling.swap_pin(board_panel.right_button_click_location));
-      popup_swap_pin_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_swap_pin_menuitem", popup_swap_pin_menuitem.getText()));
+      JMenuItem popupSwapPinMenuitem = new JMenuItem();
+      popupSwapPinMenuitem.setText(tm.getText("swap_pin"));
+      popupSwapPinMenuitem.addActionListener(
+          _ -> boardPanel.boardHandling.swapPins(boardPanel.rightButtonClickLocation));
+      popupSwapPinMenuitem.addActionListener(
+          _ -> FRAnalytics.buttonClicked("popupSwapPinMenuitem", popupSwapPinMenuitem.getText()));
 
-      this.add(popup_swap_pin_menuitem, 3);
+      this.add(popupSwapPinMenuitem, 3);
     }
   }
 }

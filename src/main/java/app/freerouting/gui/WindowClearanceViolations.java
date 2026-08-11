@@ -23,78 +23,78 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/** Displays clearance violations detected on the current board. */
 public class WindowClearanceViolations extends WindowObjectListWithFilter {
 
-  /**
-   * Creates a new instance of clearance violations window
-   */
-  public WindowClearanceViolations(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  /** Creates a new instance of clearance violations window. */
+  public WindowClearanceViolations(BoardFrame boardFrame) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
-    this.list_empty_message.setText(tm.getText("list_empty_message"));
+    this.listEmptyMessage.setText(tm.getText("listEmptyMessage"));
   }
 
   @Override
-  protected void fill_list() {
-    GuiBoardManager board_handling = this.board_frame.board_panel.board_handling;
+  protected void fillList() {
+    GuiBoardManager boardHandling = this.boardFrame.boardPanel.boardHandling;
 
-    ClearanceViolations clearance_violations = new ClearanceViolations(board_handling
-        .get_routing_board()
-        .get_items());
-    SortedSet<ViolationInfo> sorted_set = new TreeSet<>();
-    for (ClearanceViolation curr_violation : clearance_violations.list) {
-      sorted_set.add(new ViolationInfo(curr_violation));
+    ClearanceViolations clearanceViolations =
+        new ClearanceViolations(boardHandling.getRoutingBoard().getItems());
+    SortedSet<ViolationInfo> sortedSet = new TreeSet<>();
+    for (ClearanceViolation currViolation : clearanceViolations.list) {
+      sortedSet.add(new ViolationInfo(currViolation));
     }
-    for (ViolationInfo curr_violation : sorted_set) {
-      this.add_to_list(curr_violation);
+    for (ViolationInfo currViolation : sortedSet) {
+      this.addToList(currViolation);
     }
-    this.list.setVisibleRowCount(Math.min(sorted_set.size(), DEFAULT_TABLE_SIZE));
+    this.list.setVisibleRowCount(Math.min(sortedSet.size(), DEFAULT_TABLE_SIZE));
 
-    if (clearance_violations.global_smallest_clearance != Double.MAX_VALUE) {
-      FRLogger.info("The smallest clearance on the board is %.4f mm.".formatted(clearance_violations.global_smallest_clearance / 10000.0));
+    if (clearanceViolations.globalSmallestClearance != Double.MAX_VALUE) {
+      FRLogger.info(
+          "The smallest clearance on the board is %.4f mm."
+              .formatted(clearanceViolations.globalSmallestClearance / 10000.0));
     }
   }
 
   @Override
-  protected void select_instances() {
-    List<Object> selected_violations = list.getSelectedValuesList();
-    if (selected_violations.isEmpty()) {
+  protected void selectInstances() {
+    List<Object> selectedViolations = list.getSelectedValuesList();
+    if (selectedViolations.isEmpty()) {
       return;
     }
-    Set<Item> selected_items = new TreeSet<>();
-    for (int i = 0; i < selected_violations.size(); i++) {
-      ClearanceViolation curr_violation = ((ViolationInfo) selected_violations.get(i)).violation;
-      selected_items.add(curr_violation.first_item);
-      selected_items.add(curr_violation.second_item);
+    Set<Item> selectedItems = new TreeSet<>();
+    for (int i = 0; i < selectedViolations.size(); i++) {
+      ClearanceViolation currViolation = ((ViolationInfo) selectedViolations.get(i)).violation;
+      selectedItems.add(currViolation.firstItem);
+      selectedItems.add(currViolation.secondItem);
     }
-    GuiBoardManager board_handling = board_frame.board_panel.board_handling;
-    board_handling.select_items(selected_items);
-    board_handling.toggle_selected_item_violations();
-    board_handling.zoom_selection();
+    GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
+    boardHandling.selectItems(selectedItems);
+    boardHandling.toggleSelectedItemViolations();
+    boardHandling.zoomSelection();
   }
 
-  private String item_info(Item p_item) {
+  private String itemInfo(Item item) {
     String result;
-    if (p_item instanceof Pin) {
+    if (item instanceof Pin) {
       result = tm.getText("pin");
-    } else if (p_item instanceof Via via) {
-      Net curr_net = p_item.board.rules.nets.get(via.get_net_no(0));
-      result = tm.getText("via_with_net_label", curr_net.name);
-    } else if (p_item instanceof Trace trace) {
-      Net curr_net = p_item.board.rules.nets.get(trace.get_net_no(0));
-      result = tm.getText("trace_with_net_label", curr_net.name);
-    } else if (p_item instanceof ConductionArea) {
-      result = tm.getText("conduction_area");
-    } else if (p_item instanceof ObstacleArea) {
-      result = tm.getText("keepout");
-    } else if (p_item instanceof ViaObstacleArea) {
+    } else if (item instanceof Via via) {
+      Net currentNet = item.board.rules.nets.get(via.getNetNo(0));
+      result = tm.getText("via_with_net_label", currentNet.name);
+    } else if (item instanceof Trace trace) {
+      Net currentNet = item.board.rules.nets.get(trace.getNetNo(0));
+      result = tm.getText("trace_with_net_label", currentNet.name);
+    } else if (item instanceof ConductionArea) {
+      result = tm.getText("conductionArea");
+    } else if (item instanceof ViaObstacleArea) {
       result = tm.getText("via_keepout");
-    } else if (p_item instanceof ComponentObstacleArea) {
+    } else if (item instanceof ComponentObstacleArea) {
       result = tm.getText("component_keepout");
-    } else if (p_item instanceof BoardOutline) {
-      result = tm.getText("board_outline");
+    } else if (item instanceof ObstacleArea) {
+      result = tm.getText("keepout");
+    } else if (item instanceof BoardOutline) {
+      result = tm.getText("boardOutline");
     } else {
       result = tm.getText("unknown");
     }
@@ -107,43 +107,44 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     public final FloatPoint location;
     public final double delta;
 
-    public ViolationInfo(ClearanceViolation p_violation) {
-      this.violation = p_violation;
-      FloatPoint board_location = p_violation.shape.centre_of_gravity();
-      this.location = board_frame.board_panel.board_handling.coordinate_transform.board_to_user(board_location);
-      this.delta = (p_violation.expected_clearance - p_violation.actual_clearance) / 10000.0;
+    public ViolationInfo(ClearanceViolation violation) {
+      this.violation = violation;
+      FloatPoint boardLocation = violation.shape.centreOfGravity();
+      this.location =
+          boardFrame.boardPanel.boardHandling.coordinateTransform.boardToUser(boardLocation);
+      this.delta = (violation.expectedClearance - violation.actualClearance) / 10000.0;
     }
 
     @Override
     public String toString() {
-      LayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
+      LayerStructure layerStructure =
+          boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure;
 
-      String clearance_violation_message_template = tm.getText(
+      return tm.getText(
           "clearance_violation_message_template",
           "%.4f".formatted(delta),
-          item_info(violation.first_item),
-          item_info(violation.second_item),
-          location.to_string(board_frame.get_locale()),
-          layer_structure.arr[violation.layer].name);
-      return clearance_violation_message_template;
+          itemInfo(violation.firstItem),
+          itemInfo(violation.secondItem),
+          location.toString(boardFrame.get_locale()),
+          layerStructure.arr[violation.layer].name);
     }
 
     @Override
-    public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-      this.violation.print_info(p_window, p_locale);
+    public void printInfo(ObjectInfoPanel window, Locale locale) {
+      this.violation.printInfo(window, locale);
     }
 
     @Override
-    public int compareTo(ViolationInfo p_other) {
-      if (this.delta > p_other.delta) {
+    public int compareTo(ViolationInfo other) {
+      if (this.delta > other.delta) {
         return -1;
-      } else if (this.delta < p_other.delta) {
+      } else if (this.delta < other.delta) {
         return +1;
       }
 
-      if (this.violation.layer < p_other.violation.layer) {
+      if (this.violation.layer < other.violation.layer) {
         return -1;
-      } else if (this.violation.layer > p_other.violation.layer) {
+      } else if (this.violation.layer > other.violation.layer) {
         return +1;
       }
 

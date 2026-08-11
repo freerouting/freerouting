@@ -3,30 +3,40 @@ package app.freerouting.settings;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
+/** Configuration for console and file logging. */
 public class LoggingSettings implements Serializable {
 
-    @SerializedName("console")
-    public final ConsoleLoggingSettings console = new ConsoleLoggingSettings();
+  /** Console logging configuration. */
+  @SerializedName("console")
+  public final ConsoleLoggingSettings console = new ConsoleLoggingSettings();
 
-    @SerializedName("file")
-    public final FileLoggingSettings file = new FileLoggingSettings();
+  /** File logging configuration. */
+  @SerializedName("file")
+  public final FileLoggingSettings file = new FileLoggingSettings();
 
-    public static class ConsoleLoggingSettings implements Serializable {
-        @SerializedName("enabled")
-        public boolean enabled = true;
+  /** Settings controlling console log output. */
+  public static class ConsoleLoggingSettings implements Serializable {
+    /** Whether console logging is enabled. */
+    @SerializedName("enabled")
+    public boolean enabled = true;
 
-        @SerializedName("level")
-        public String level = "INFO";
-    }
+    /** Minimum console log level. */
+    @SerializedName("level")
+    public String level = "INFO";
+  }
 
-    public static class FileLoggingSettings implements Serializable {
-        @SerializedName("enabled")
-        public boolean enabled = true;
+  /** Settings controlling file log output. */
+  public static class FileLoggingSettings implements Serializable {
+    /** Whether file logging is enabled. */
+    @SerializedName("enabled")
+    public boolean enabled = true;
 
-        @SerializedName("level")
-        public String level = "INFO";
+    /** Minimum file log level. */
+    @SerializedName("level")
+    public String level = "INFO";
 
-        @SerializedName("location")
-        public String location;
-    }
+    /** Path where log files are written. */
+    @SerializedName("location")
+    public String location;
+  }
 }

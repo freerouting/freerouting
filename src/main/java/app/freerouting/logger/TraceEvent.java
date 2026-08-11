@@ -13,7 +13,23 @@ public class TraceEvent {
   private final Point[] impactedPoints;
   private final Instant timestamp;
 
-  public TraceEvent(String method, String operation, String message, String impactedItems, Point[] impactedPoints, Instant timestamp) {
+  /**
+   * Creates a trace event payload for debug visualization.
+   *
+   * @param method the originating method name
+   * @param operation the operation type
+   * @param message the trace message
+   * @param impactedItems description of impacted board items
+   * @param impactedPoints optional geometry points involved in the operation
+   * @param timestamp when the event occurred
+   */
+  public TraceEvent(
+      String method,
+      String operation,
+      String message,
+      String impactedItems,
+      Point[] impactedPoints,
+      Instant timestamp) {
     this.method = method;
     this.operation = operation;
     this.message = message;
@@ -38,7 +54,9 @@ public class TraceEvent {
     return impactedItems;
   }
 
-  public Point[] getImpactedPoints() { return impactedPoints; }
+  public Point[] getImpactedPoints() {
+    return impactedPoints;
+  }
 
   public Instant getTimestamp() {
     return timestamp;

@@ -18,9 +18,9 @@ import org.junit.jupiter.api.Test;
 /**
  * Contract tests for the {@link BoardManager} interface (sub-issue 03).
  *
- * <p>Verifies the invariant: if {@link BoardManager#isInteractiveModeSupported()} then
- * {@link BoardManager#getInteractiveSettings()} must return a non-null value after board
- * initialisation; otherwise it must return {@code null}.
+ * <p>Verifies the invariant: if {@link BoardManager#isInteractiveModeSupported()} then {@link
+ * BoardManager#getInteractiveSettings()} must return a non-null value after board initialisation;
+ * otherwise it must return {@code null}.
  */
 class BoardManagerContractTest {
 
@@ -37,26 +37,28 @@ class BoardManagerContractTest {
   // ── Headless contract ─────────────────────────────────────────────────────
 
   @Test
-  void headlessManager_isInteractiveModeSupported_returnsFalse() {
+  void headlessManagerIsInteractiveModeSupportedReturnsFalse() {
     BoardManager manager = new HeadlessBoardManager(new RoutingJob());
-    assertFalse(manager.isInteractiveModeSupported(),
+    assertFalse(
+        manager.isInteractiveModeSupported(),
         "HeadlessBoardManager must report isInteractiveModeSupported() == false");
   }
 
   @Test
-  void headlessManager_getInteractiveSettings_returnsNull() throws FileNotFoundException {
+  void headlessManagerGetInteractiveSettingsReturnsNull() throws FileNotFoundException {
     var manager = new HeadlessBoardManager(new RoutingJob());
     manager.loadFromSpecctraDsn(
         new FileInputStream("fixtures/empty_board.dsn"),
         new BoardObserverAdaptor(),
         new ItemIdentificationNumberGenerator());
 
-    assertNull(manager.getInteractiveSettings(),
+    assertNull(
+        manager.getInteractiveSettings(),
         "HeadlessBoardManager.getInteractiveSettings() must return null");
   }
 
   @Test
-  void headlessManager_deprecated_getSettings_alsoReturnsNull() throws FileNotFoundException {
+  void headlessManagerDeprecatedGetSettingsAlsoReturnsNull() throws FileNotFoundException {
     var manager = new HeadlessBoardManager(new RoutingJob());
     manager.loadFromSpecctraDsn(
         new FileInputStream("fixtures/empty_board.dsn"),
@@ -64,28 +66,30 @@ class BoardManagerContractTest {
         new ItemIdentificationNumberGenerator());
 
     @SuppressWarnings("deprecation")
-    app.freerouting.settings.sources.GuiSettings settings = manager.get_settings();
-    assertNull(settings,
-        "Deprecated get_settings() must delegate to getInteractiveSettings() and return null in headless mode");
+    app.freerouting.settings.sources.GuiSettings settings = manager.getSettings();
+    assertNull(
+        settings,
+        "Deprecated get_settings() must delegate to getInteractiveSettings() and return null in "
+            + "headless mode");
   }
 
   // ── GUI contract (static, no Swing needed) ────────────────────────────────
 
   @Test
-  void guiBoardManager_overrides_isInteractiveModeSupported() throws Exception {
+  void guiBoardManagerOverridesIsInteractiveModeSupported() throws Exception {
     // Verify at the method level without instantiating Swing.
     var method = GuiBoardManager.class.getMethod("isInteractiveModeSupported");
     // The method must be declared on GuiBoardManager itself, not inherited from the default.
-    assertTrue(method.getDeclaringClass().equals(GuiBoardManager.class),
+    assertTrue(
+        method.getDeclaringClass().equals(GuiBoardManager.class),
         "GuiBoardManager must override isInteractiveModeSupported()");
   }
 
   @Test
-  void guiBoardManager_overrides_getInteractiveSettings() throws Exception {
+  void guiBoardManagerOverridesGetInteractiveSettings() throws Exception {
     var method = GuiBoardManager.class.getMethod("getInteractiveSettings");
-    assertTrue(method.getDeclaringClass().equals(GuiBoardManager.class),
+    assertTrue(
+        method.getDeclaringClass().equals(GuiBoardManager.class),
         "GuiBoardManager must override getInteractiveSettings()");
   }
 }
-
-

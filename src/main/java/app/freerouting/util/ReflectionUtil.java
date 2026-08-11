@@ -5,18 +5,27 @@ import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-public class ReflectionUtil {
+/** Utility methods for reflective field access and copying between settings objects. */
+public final class ReflectionUtil {
 
-  private ReflectionUtil() {
-  }
+  private ReflectionUtil() {}
 
+  /**
+   * Sets a nested field value on an object using a dot-separated property path.
+   *
+   * @param obj the target object
+   * @param propertyName path to the field (supports {@code .}, {@code :}, and {@code -} separators)
+   * @param newValue the value to assign
+   * @throws Exception if reflection fails or the field cannot be found
+   */
   public static void setFieldValue(Object obj, String propertyName, Object newValue)
       throws Exception {
     String[] propertyPath = propertyName.split("[.:\\-]");
     setPropertyRecursive(obj, propertyPath, 0, newValue);
   }
 
-  private static void setPropertyRecursive(Object currentObject, String[] propertyPath, int pathIndex, Object newValue)
+  private static void setPropertyRecursive(
+      Object currentObject, String[] propertyPath, int pathIndex, Object newValue)
       throws Exception {
     if (currentObject == null) {
       return;
@@ -36,7 +45,8 @@ public class ReflectionUtil {
     // Intermediate field - check if it is an array
     if (field.getType().isArray()) {
       Class<?> componentType = field.getType().getComponentType();
-      // We are navigating through an array. The next part of the path is a property of the array element.
+      // We are navigating through an array. The next part of the path is a property of the array
+      // element.
       // E.g., layers.routable
       // The newValue is expected to be a comma-separated list of values for each array element.
       String[] valTokens = newValue.toString().split(",");
@@ -71,21 +81,48 @@ public class ReflectionUtil {
     }
   }
 
-  private static Field getFieldByNameOrSerializedName(Class<?> clazz, String name) throws NoSuchFieldException {
+  private static Field getFieldByNameOrSerializedName(Class<?> clazz, String name)
+      throws NoSuchFieldException {
+    String camelName = snakeToLowerCamel(name);
     for (Field field : clazz.getDeclaredFields()) {
       SerializedName annotation = field.getAnnotation(SerializedName.class);
-      if (annotation != null && annotation.value().equals(name)) {
-        return field;
+      if (annotation != null) {
+        if (annotation.value().equals(name)) {
+          return field;
+        }
+        for (String alt : annotation.alternate()) {
+          if (alt.equals(name)) {
+            return field;
+          }
+        }
       }
-      if (field.getName().equals(name)) {
-        // Enforce that fields with a SerializedName must not be queried by their camelCase Java name
+      if (field.getName().equals(name) || field.getName().equals(camelName)) {
+        // Enforce that fields with a SerializedName must not be queried by their camelCase Java
+        // name
         if (annotation != null && !name.equals(name.toLowerCase())) {
           continue;
         }
         return field;
       }
     }
+    if (clazz.getSuperclass() != null && clazz.getSuperclass() != Object.class) {
+      return getFieldByNameOrSerializedName(clazz.getSuperclass(), name);
+    }
     throw new NoSuchFieldException("No field found with name or SerializedName: " + name);
+  }
+
+  private static String snakeToLowerCamel(String name) {
+    if (!name.contains("_")) {
+      return name;
+    }
+    String[] parts = name.split("_");
+    StringBuilder sb = new StringBuilder(parts[0].toLowerCase());
+    for (int i = 1; i < parts.length; i++) {
+      if (!parts[i].isEmpty()) {
+        sb.append(Character.toUpperCase(parts[i].charAt(0))).append(parts[i].substring(1));
+      }
+    }
+    return sb.toString();
   }
 
   private static Object convertValue(Class<?> targetType, Object value) {
@@ -103,13 +140,9 @@ public class ReflectionUtil {
     }
     if (targetType == boolean.class || targetType == Boolean.class) {
       // convert "0" and "1" into their boolean values
-      if ("0"
-          .equals(value
-              .toString())) {
+      if ("0".equals(value.toString())) {
         value = "false";
-      } else if ("1"
-          .equals(value
-              .toString())) {
+      } else if ("1".equals(value.toString())) {
         value = "true";
       }
 
@@ -134,8 +167,7 @@ public class ReflectionUtil {
   }
 
   /**
-   * Copy all non-null, and non-default fields from one object to another
-   * recursively
+   * Copy all non-null, and non-default fields from one object to another recursively.
    *
    * @param source The source object
    * @param target The target object
@@ -145,9 +177,7 @@ public class ReflectionUtil {
   public static int copyFields(Object source, Object target) {
     int numberOfFieldsChanged = 0;
 
-    for (Field field : source
-        .getClass()
-        .getDeclaredFields()) {
+    for (Field field : source.getClass().getDeclaredFields()) {
       try {
         // check if the field is static and skip it if it is
         if (Modifier.isStatic(field.getModifiers())) {
@@ -189,45 +219,27 @@ public class ReflectionUtil {
               field.set(target, sourceValue);
               numberOfFieldsChanged++;
             }
-          } else
-          // Check if the field is an enum
-          if (field
-              .getType()
-              .isEnum()) {
+          } else if (field.getType().isEnum()) {
             var enumType = (Class<Enum>) field.getType();
             var enumValue = Enum.valueOf(enumType, sourceValue.toString());
 
             // Copy the enum value
             field.set(target, enumValue);
             numberOfFieldsChanged++;
-          } else
-          // Check if the field is an array
-          if (field
-              .getType()
-              .isArray()) {
-
+          } else if (field.getType().isArray()) {
             // Is the array of primitive types or strings?
-            if (field
-                .getType()
-                .getComponentType()
-                .isPrimitive()
-                || field
-                    .getType()
-                    .getComponentType() == String.class) {
+            if (field.getType().getComponentType().isPrimitive()
+                || field.getType().getComponentType() == String.class) {
               // Only set the field if it is not null on the source object
               Object targetValue = field.get(target);
 
               int targetArrayLength = 0;
-              if (targetValue != null && targetValue
-                  .getClass()
-                  .isArray()) {
+              if (targetValue != null && targetValue.getClass().isArray()) {
                 targetArrayLength = java.lang.reflect.Array.getLength(targetValue);
               }
 
               int sourceArrayLength = 0;
-              if (sourceValue != null && sourceValue
-                  .getClass()
-                  .isArray()) {
+              if (sourceValue != null && sourceValue.getClass().isArray()) {
                 sourceArrayLength = java.lang.reflect.Array.getLength(sourceValue);
               }
 
@@ -244,7 +256,8 @@ public class ReflectionUtil {
               Class<?> componentType = field.getType().getComponentType();
 
               Object targetArrayObj = field.get(target);
-              int targetLength = targetArrayObj != null ? java.lang.reflect.Array.getLength(targetArrayObj) : 0;
+              int targetLength =
+                  targetArrayObj != null ? java.lang.reflect.Array.getLength(targetArrayObj) : 0;
 
               if (targetLength >= sourceArray.length) {
                 // Merge source elements into existing target elements
@@ -260,7 +273,9 @@ public class ReflectionUtil {
                 numberOfFieldsChanged += sourceArray.length;
               } else {
                 // Allocate a new target array of the specific component type
-                Object[] targetArray = (Object[]) java.lang.reflect.Array.newInstance(componentType, sourceArray.length);
+                Object[] targetArray =
+                    (Object[])
+                        java.lang.reflect.Array.newInstance(componentType, sourceArray.length);
                 for (int i = 0; i < sourceArray.length; i++) {
                   if (sourceArray[i] != null) {
                     Object targetElement = componentType.getDeclaredConstructor().newInstance();
@@ -276,10 +291,7 @@ public class ReflectionUtil {
             // The field is an object, so we need to copy its fields
             Object targetField = field.get(target);
             if (targetField == null) {
-              targetField = field
-                  .getType()
-                  .getDeclaredConstructor()
-                  .newInstance();
+              targetField = field.getType().getDeclaredConstructor().newInstance();
               field.set(target, targetField);
             }
             numberOfFieldsChanged += copyFields(sourceValue, targetField);
@@ -288,7 +300,6 @@ public class ReflectionUtil {
       } catch (Exception e) {
         FRLogger.error("Error copying fields", e);
       }
-
     }
 
     return numberOfFieldsChanged;
@@ -298,10 +309,7 @@ public class ReflectionUtil {
     Object result = null;
 
     try {
-      result = field
-          .getType()
-          .getConstructor()
-          .newInstance();
+      result = field.getType().getConstructor().newInstance();
     } catch (NoSuchMethodException _) {
       // The field does not have a default constructor, this can usually the case if
       // the type is a primitive type
@@ -315,19 +323,11 @@ public class ReflectionUtil {
         result = 0.0;
       } else if (field.getType() == boolean.class || field.getType() == Boolean.class) {
         result = false;
-      } else if (field
-          .getType()
-          .isArray()) {
+      } else if (field.getType().isArray()) {
         // create an empty array of the original type
-        result = java.lang.reflect.Array.newInstance(field
-            .getType()
-            .getComponentType(), 0);
-      } else if (field
-          .getType()
-          .isEnum()) {
-        result = field
-            .getType()
-            .getEnumConstants()[0];
+        result = java.lang.reflect.Array.newInstance(field.getType().getComponentType(), 0);
+      } else if (field.getType().isEnum()) {
+        result = field.getType().getEnumConstants()[0];
       } else if (Modifier.isTransient(field.getModifiers())) {
         result = null;
       } else {

@@ -1,9 +1,7 @@
 {
   "board_outline": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowClearanceViolations"
-    ],
+    "code_references": [],
     "english_hash": "e56ddcfd7b9687f1781d14f0d012e5ab15f8fff634b7081500e26693e1711b89",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -55,9 +53,7 @@
   },
   "conduction_area": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowClearanceViolations"
-    ],
+    "code_references": [],
     "english_hash": "e57aceacc7a093735755908aac52c910cb9589f68801e49b7e2f5e2ac4cb091c",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -87,9 +83,7 @@
   },
   "list_empty_message": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowClearanceViolations"
-    ],
+    "code_references": [],
     "english_hash": "64b94c74b84606f7284e0c460ff5b4e3a66c6a5632b3fc269059240e225ce0c9",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

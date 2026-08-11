@@ -5,70 +5,62 @@ import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.TileShape;
 
-/**
- * Used internally for marking changed areas on the board after shoving and optimizing items.
- */
+/** Used internally for marking changed areas on the board after shoving and optimizing items. */
 class ChangedArea {
 
-  final int layer_count;
+  final int layerCount;
   MutableOctagon[] arr;
 
-  public ChangedArea(int p_layer_count) {
-    layer_count = p_layer_count;
-    arr = new MutableOctagon[layer_count];
+  public ChangedArea(int layerCount) {
+    this.layerCount = layerCount;
+    arr = new MutableOctagon[layerCount];
     // initialise all octagons to empty
-    for (int i = 0; i < layer_count; i++) {
+    for (int i = 0; i < layerCount; i++) {
       arr[i] = new MutableOctagon();
-      arr[i].set_empty();
+      arr[i].setEmpty();
     }
   }
 
-  /**
-   * enlarges the octagon on p_layer, so that it contains p_point
-   */
-  public void join(FloatPoint p_point, int p_layer) {
-    MutableOctagon curr = arr[p_layer];
-    curr.lx = Math.min(p_point.x, curr.lx);
-    curr.ly = Math.min(p_point.y, curr.ly);
-    curr.rx = Math.max(curr.rx, p_point.x);
-    curr.uy = Math.max(curr.uy, p_point.y);
+  /** Enlarges the octagon on p_layer, so that it contains p_point. */
+  public void join(FloatPoint point, int layer) {
+    MutableOctagon curr = arr[layer];
+    curr.lx = Math.min(point.x, curr.lx);
+    curr.ly = Math.min(point.y, curr.ly);
+    curr.rx = Math.max(curr.rx, point.x);
+    curr.uy = Math.max(curr.uy, point.y);
 
-    double tmp = p_point.x - p_point.y;
+    double tmp = point.x - point.y;
     curr.ulx = Math.min(curr.ulx, tmp);
     curr.lrx = Math.max(curr.lrx, tmp);
 
-    tmp = p_point.x + p_point.y;
+    tmp = point.x + point.y;
     curr.llx = Math.min(curr.llx, tmp);
     curr.urx = Math.max(curr.urx, tmp);
   }
 
-  /**
-   * enlarges the octagon on p_layer, so that it contains p_shape
-   */
-  public void join(TileShape p_shape, int p_layer) {
-    if (p_shape == null) {
+  /** Enlarges the octagon on p_layer, so that it contains p_shape. */
+  public void join(TileShape shape, int layer) {
+    if (shape == null) {
       return;
     }
-    int corner_count = p_shape.border_line_count();
-    for (int i = 0; i < corner_count; i++) {
-      join(p_shape.corner_approx(i), p_layer);
+    int cornerCount = shape.borderLineCount();
+    for (int i = 0; i < cornerCount; i++) {
+      join(shape.cornerApprox(i), layer);
     }
   }
 
-  /**
-   * get the marking octagon on layer p_layer
-   */
-  public IntOctagon get_area(int p_layer) {
+  /** Get the marking octagon on layer p_layer. */
+  public IntOctagon getArea(int layer) {
 
-    return arr[p_layer].to_int();
+    return arr[layer].toInt();
   }
 
-  public IntBox surrounding_box() {
+  public IntBox surroundingBox() {
     int llx = Integer.MAX_VALUE;
     int lly = Integer.MAX_VALUE;
     int urx = Integer.MIN_VALUE;
     int ury = Integer.MIN_VALUE;
-    for (int i = 0; i < layer_count; i++) {
+    for (int i = 0; i < layerCount; i++) {
       MutableOctagon curr = arr[i];
       llx = Math.min(llx, (int) Math.floor(curr.lx));
       lly = Math.min(lly, (int) Math.floor(curr.ly));
@@ -81,16 +73,12 @@ class ChangedArea {
     return new IntBox(llx, lly, urx, ury);
   }
 
-  /**
-   * initializes the marking octagon on p_layer to empty
-   */
-  void set_empty(int p_layer) {
-    arr[p_layer].set_empty();
+  /** Initializes the marking octagon on p_layer to empty. */
+  void setEmpty(int layer) {
+    arr[layer].setEmpty();
   }
 
-  /**
-   * mutable octagon with double coordinates (see geometry.planar.IntOctagon)
-   */
+  /** Mutable octagon with double coordinates (see geometry.planar.IntOctagon). */
   private static class MutableOctagon {
 
     double lx;
@@ -102,7 +90,7 @@ class ChangedArea {
     double llx;
     double urx;
 
-    void set_empty() {
+    void setEmpty() {
       lx = Integer.MAX_VALUE;
       ly = Integer.MAX_VALUE;
       rx = Integer.MIN_VALUE;
@@ -113,14 +101,19 @@ class ChangedArea {
       urx = Integer.MIN_VALUE;
     }
 
-    /**
-     * calculates the smallest IntOctagon containing this octagon.
-     */
-    IntOctagon to_int() {
+    /** Calculates the smallest IntOctagon containing this octagon. */
+    IntOctagon toInt() {
       if (rx < lx || uy < ly || lrx < ulx || urx < llx) {
         return IntOctagon.EMPTY;
       }
-      return new IntOctagon((int) Math.floor(lx), (int) Math.floor(ly), (int) Math.ceil(rx), (int) Math.ceil(uy), (int) Math.floor(ulx), (int) Math.ceil(lrx), (int) Math.floor(llx),
+      return new IntOctagon(
+          (int) Math.floor(lx),
+          (int) Math.floor(ly),
+          (int) Math.ceil(rx),
+          (int) Math.ceil(uy),
+          (int) Math.floor(ulx),
+          (int) Math.ceil(lrx),
+          (int) Math.floor(llx),
           (int) Math.ceil(urx));
     }
   }

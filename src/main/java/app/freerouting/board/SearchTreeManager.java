@@ -10,72 +10,63 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * The SearchTreeManager manages the search trees used in the auto-router. It is
- * responsible for the creation of the search trees and the insertion and
- * removal of items from the trees. The
- * SearchTreeManager also provides functions to merge and change tree entries
- * for performance reasons.
+ * The SearchTreeManager manages the search trees used in the auto-router. It is responsible for the
+ * creation of the search trees and the insertion and removal of items from the trees. The
+ * SearchTreeManager also provides functions to merge and change tree entries for performance
+ * reasons.
  */
 public class SearchTreeManager {
 
-  private final Collection<ShapeSearchTree> compensated_search_trees;
+  private final Collection<ShapeSearchTree> compensatedSearchTrees;
   private final BasicBoard board;
-  private ShapeSearchTree default_tree;
-  private boolean clearance_compensation_used;
+  private ShapeSearchTree defaultTree;
+  private boolean clearanceCompensationUsed;
 
-  /**
-   * Creates a new instance of SearchTreeManager
-   */
-  public SearchTreeManager(BasicBoard p_board) {
-    board = p_board;
-    compensated_search_trees = new LinkedList<>();
-    default_tree = new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE, p_board, 0);
-    compensated_search_trees.add(default_tree);
-    this.clearance_compensation_used = false;
+  /** Creates a new instance of SearchTreeManager. */
+  public SearchTreeManager(BasicBoard board) {
+    this.board = board;
+    compensatedSearchTrees = new LinkedList<>();
+    defaultTree = new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE, board, 0);
+    compensatedSearchTrees.add(defaultTree);
+    this.clearanceCompensationUsed = false;
   }
 
-  /**
-   * Inserts the tree shapes of p_item into all active search trees.
-   */
-  public void insert(Item p_item) {
-    for (ShapeSearchTree curr_tree : compensated_search_trees) {
-      curr_tree.insert(p_item);
+  /** Inserts the tree shapes of p_item into all active search trees. */
+  public void insert(Item item) {
+    for (ShapeSearchTree currTree : compensatedSearchTrees) {
+      currTree.insert(item);
     }
-    p_item.set_on_the_board(true);
+    item.setOnTheBoard(true);
   }
 
-  /**
-   * Removes all entries of an item from the search trees.
-   */
-  public void remove(Item p_item) {
-    if (!p_item.is_on_the_board()) {
+  /** Removes all entries of an item from the search trees. */
+  public void remove(Item item) {
+    if (!item.isOnTheBoard()) {
       return;
     }
-    for (ShapeSearchTree curr_tree : compensated_search_trees) {
+    for (ShapeSearchTree currTree : compensatedSearchTrees) {
 
-      ShapeTree.Leaf[] curr_tree_entries = p_item.get_search_tree_entries(curr_tree);
+      ShapeTree.Leaf[] currTreeEntries = item.getSearchTreeEntries(currTree);
       {
-        if (curr_tree_entries != null) {
-          curr_tree.remove(curr_tree_entries);
+        if (currTreeEntries != null) {
+          currTree.remove(currTreeEntries);
         }
       }
     }
-    p_item.clear_search_tree_entries();
-    p_item.set_on_the_board(false);
+    item.clearSearchTreeEntries();
+    item.setOnTheBoard(false);
   }
 
-  /**
-   * Returns the default tree used in interactive routing.
-   */
-  public ShapeSearchTree get_default_tree() {
-    return default_tree;
+  /** Returns the default tree used in interactive routing. */
+  public ShapeSearchTree getDefaultTree() {
+    return defaultTree;
   }
 
-  boolean validate_entries(Item p_item) {
+  boolean validateEntries(Item item) {
     boolean result = true;
-    for (ShapeSearchTree curr_tree : compensated_search_trees) {
+    for (ShapeSearchTree currTree : compensatedSearchTrees) {
 
-      if (!curr_tree.validate_entries(p_item)) {
+      if (!currTree.validateEntries(item)) {
         result = false;
       }
     }
@@ -83,214 +74,209 @@ public class SearchTreeManager {
   }
 
   /**
-   * Returns, if clearance compensation is used for the default tree. This is
-   * normally the case, if there exist only the clearance classes null and default
-   * in the clearance matrix.
+   * Returns, if clearance compensation is used for the default tree. This is normally the case, if
+   * there exist only the clearance classes null and default in the clearance matrix.
    */
-  public boolean is_clearance_compensation_used() {
-    return this.clearance_compensation_used;
+  public boolean isClearanceCompensationUsed() {
+    return this.clearanceCompensationUsed;
   }
 
-  /**
-   * Sets the usage of clearance compensation to true or false.
-   */
-  public void set_clearance_compensation_used(boolean p_value) {
-    if (this.clearance_compensation_used == p_value) {
+  /** Sets the usage of clearance compensation to true or false. */
+  public void setClearanceCompensationUsed(boolean value) {
+    if (this.clearanceCompensationUsed == value) {
       return;
     }
 
-    this.clearance_compensation_used = p_value;
-    remove_all_board_items();
-    this.compensated_search_trees.clear();
-    int compensated_clearance_class_no;
-    if (p_value) {
-      compensated_clearance_class_no = 1;
+    this.clearanceCompensationUsed = value;
+    removeAllBoardItems();
+    this.compensatedSearchTrees.clear();
+    int compensatedClearanceClassNo;
+    if (value) {
+      compensatedClearanceClassNo = 1;
     } else {
-      compensated_clearance_class_no = 0;
+      compensatedClearanceClassNo = 0;
     }
-    default_tree = new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE, this.board,
-        compensated_clearance_class_no);
-    this.compensated_search_trees.add(default_tree);
-    insert_all_board_items();
+    defaultTree =
+        new ShapeSearchTree(
+            FortyfiveDegreeBoundingDirections.INSTANCE, this.board, compensatedClearanceClassNo);
+    this.compensatedSearchTrees.add(defaultTree);
+    insertAllBoardItems();
   }
 
-  /**
-   * Actions to be done, when a value in the clearance matrix is changed
-   * interactively.
-   */
-  public void clearance_value_changed() {
+  /** Actions to be done, when a value in the clearance matrix is changed interactively. */
+  public void clearanceValueChanged() {
     // delete all trees except the default tree
-    this.compensated_search_trees
-        .removeIf(t -> t.compensated_clearance_class_no != default_tree.compensated_clearance_class_no);
-    if (this.clearance_compensation_used) {
-      remove_all_board_items();
-      insert_all_board_items();
+    this.compensatedSearchTrees.removeIf(
+        t -> t.compensatedClearanceClassNo != defaultTree.compensatedClearanceClassNo);
+    if (this.clearanceCompensationUsed) {
+      removeAllBoardItems();
+      insertAllBoardItems();
     }
   }
 
-  /**
-   * Actions to be done, when a new clearance class is removed interactively.
-   */
-  public void clearance_class_removed(int p_no) {
-    Iterator<ShapeSearchTree> it = this.compensated_search_trees.iterator();
-    if (p_no == default_tree.compensated_clearance_class_no) {
+  /** Actions to be done, when a new clearance class is removed interactively. */
+  public void clearanceClassRemoved(int no) {
+    Iterator<ShapeSearchTree> it = this.compensatedSearchTrees.iterator();
+    if (no == defaultTree.compensatedClearanceClassNo) {
       FRLogger.warn("SearchtreeManager.clearance_class_removed: unable to remove default tree");
       return;
     }
     while (it.hasNext()) {
-      ShapeSearchTree curr_tree = it.next();
-      if (curr_tree.compensated_clearance_class_no == p_no) {
+      ShapeSearchTree currTree = it.next();
+      if (currTree.compensatedClearanceClassNo == no) {
         it.remove();
       }
     }
   }
 
   /**
-   * Returns the tree compensated for the clearance class with number
-   * p_clearance_class_no. Initialized the tree, if it is not yet allocated.
+   * Returns the tree compensated for the clearance class with number p_clearance_class_no.
+   * Initialized the tree, if it is not yet allocated.
    */
-  public ShapeSearchTree get_autoroute_tree(int p_clearance_class_no) {
-    for (ShapeSearchTree curr_tree : compensated_search_trees) {
-      if (curr_tree.compensated_clearance_class_no == p_clearance_class_no) {
-        return curr_tree;
+  public ShapeSearchTree getAutorouteTree(int clearanceClassNo) {
+    for (ShapeSearchTree currTree : compensatedSearchTrees) {
+      if (currTree.compensatedClearanceClassNo == clearanceClassNo) {
+        return currTree;
       }
     }
 
     // Create a new ShapeSearchTree object based on the board's settings
-    ShapeSearchTree curr_autoroute_tree;
-    if (this.board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
+    ShapeSearchTree currAutorouteTree;
+    if (this.board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
       // fast algorithm with 90 degree restriction
-      curr_autoroute_tree = new ShapeSearchTree90Degree(this.board, p_clearance_class_no);
-    } else if (this.board.rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE) {
+      currAutorouteTree = new ShapeSearchTree90Degree(this.board, clearanceClassNo);
+    } else if (this.board.rules.getTraceAngleRestriction() == AngleRestriction.FORTYFIVE_DEGREE) {
       // fast algorithm with 45 degree restriction
-      curr_autoroute_tree = new ShapeSearchTree45Degree(this.board, p_clearance_class_no);
+      currAutorouteTree = new ShapeSearchTree45Degree(this.board, clearanceClassNo);
     } else {
       // slow algorithm or no angle restriction
-      curr_autoroute_tree = new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE, this.board,
-          p_clearance_class_no);
+      currAutorouteTree =
+          new ShapeSearchTree(
+              FortyfiveDegreeBoundingDirections.INSTANCE, this.board, clearanceClassNo);
     }
-    this.compensated_search_trees.add(curr_autoroute_tree);
+    this.compensatedSearchTrees.add(currAutorouteTree);
 
-    Iterator<UndoableObjects.UndoableObjectNode> it = this.board.item_list.start_read_object();
-    for (;;) {
-      Item curr_item = (Item) this.board.item_list.read_object(it);
-      if (curr_item == null) {
+    Iterator<UndoableObjects.UndoableObjectNode> it = this.board.itemList.startReadObject();
+    for (; ; ) {
+      Item currItem = (Item) this.board.itemList.readObject(it);
+      if (currItem == null) {
         break;
       }
-      curr_autoroute_tree.insert(curr_item);
+      currAutorouteTree.insert(currItem);
     }
-    return curr_autoroute_tree;
+    return currAutorouteTree;
   }
-
-  // ********************************************************************************
 
   // The following functions are used internally for performance improvement.
 
-  // ********************************************************************************
-
-  /**
-   * Clears all compensated trees used in the autoroute algorithm apart from the
-   * default tree.
-   */
-  public void reset_compensated_trees() {
-    this.compensated_search_trees.removeIf(t -> t != default_tree);
+  /** Clears all compensated trees used in the autoroute algorithm apart from the default tree. */
+  public void resetCompensatedTrees() {
+    this.compensatedSearchTrees.removeIf(t -> t != defaultTree);
   }
 
   /**
-   * Reinsert all items into the search trees. Public because rule changes that affect
-   * precalculated tree shapes (e.g. the drill-hole clearance override, applied after the
-   * board is loaded) must refresh the shapes of already-inserted items.
+   * Reinsert all items into the search trees. Public because rule changes that affect precalculated
+   * tree shapes (e.g. the drill-hole clearance override, applied after the board is loaded) must
+   * refresh the shapes of already-inserted items.
    */
-  public void reinsert_tree_items() {
-    remove_all_board_items();
+  public void reinsertTreeItems() {
+    removeAllBoardItems();
     // Removing clears the tree entries but NOT the precalculated tree shapes cached on each
     // item; without dropping those, re-insertion silently reuses the stale shapes and rule
     // changes (e.g. the drill-hole clearance override) never reach the trees.
-    Iterator<UndoableObjects.UndoableObjectNode> it = this.board.item_list.start_read_object();
-    for (;;) {
-      Item curr_item = (Item) this.board.item_list.read_object(it);
-      if (curr_item == null) {
+    Iterator<UndoableObjects.UndoableObjectNode> it = this.board.itemList.startReadObject();
+    for (; ; ) {
+      Item currItem = (Item) this.board.itemList.readObject(it);
+      if (currItem == null) {
         break;
       }
-      curr_item.clear_derived_data();
+      currItem.clearDerivedData();
     }
-    insert_all_board_items();
+    insertAllBoardItems();
   }
 
-  private void remove_all_board_items() {
+  private void removeAllBoardItems() {
     if (this.board == null) {
       FRLogger.warn("SearchtreeManager.remove_all_board_items: app.freerouting.board is null");
       return;
     }
-    Iterator<UndoableObjects.UndoableObjectNode> it = this.board.item_list.start_read_object();
-    for (;;) {
-      Item curr_item = (Item) this.board.item_list.read_object(it);
-      if (curr_item == null) {
+    Iterator<UndoableObjects.UndoableObjectNode> it = this.board.itemList.startReadObject();
+    for (; ; ) {
+      Item currItem = (Item) this.board.itemList.readObject(it);
+      if (currItem == null) {
         break;
       }
-      this.remove(curr_item);
+      this.remove(currItem);
     }
   }
 
-  private void insert_all_board_items() {
+  private void insertAllBoardItems() {
     if (this.board == null) {
       FRLogger.warn("SearchtreeManager.insert_all_board_items: app.freerouting.board is null");
       return;
     }
-    Iterator<UndoableObjects.UndoableObjectNode> it = this.board.item_list.start_read_object();
-    for (;;) {
-      Item curr_item = (Item) this.board.item_list.read_object(it);
-      if (curr_item == null) {
+    Iterator<UndoableObjects.UndoableObjectNode> it = this.board.itemList.startReadObject();
+    for (; ; ) {
+      Item currItem = (Item) this.board.itemList.readObject(it);
+      if (currItem == null) {
         break;
       }
-      curr_item.clear_derived_data();
-      this.insert(curr_item);
+      currItem.clearDerivedData();
+      this.insert(currItem);
     }
   }
 
   /**
-   * Merges the tree entries from p_from_trace in front of p_to_trace. Special
-   * implementation for combine trace for performance reasons.
+   * Merges the tree entries from p_from_trace in front of p_to_trace. Special implementation for
+   * combine trace for performance reasons.
    */
-  void merge_entries_in_front(PolylineTrace p_from_trace, PolylineTrace p_to_trace, Polyline p_joined_polyline,
-      int p_from_entry_no, int p_to_entry_no) {
-    for (ShapeSearchTree curr_tree : compensated_search_trees) {
-      curr_tree.merge_entries_in_front(p_from_trace, p_to_trace, p_joined_polyline, p_from_entry_no, p_to_entry_no);
+  void mergeEntriesInFront(
+      PolylineTrace fromTrace,
+      PolylineTrace toTrace,
+      Polyline joinedPolyline,
+      int fromEntryNo,
+      int toEntryNo) {
+    for (ShapeSearchTree currTree : compensatedSearchTrees) {
+      currTree.mergeEntriesInFront(fromTrace, toTrace, joinedPolyline, fromEntryNo, toEntryNo);
     }
   }
 
   /**
-   * Merges the tree entries from p_from_trace to the end of p_to_trace. Special
-   * implementation for combine trace for performance reasons.
+   * Merges the tree entries from p_from_trace to the end of p_to_trace. Special implementation for
+   * combine trace for performance reasons.
    */
-  void merge_entries_at_end(PolylineTrace p_from_trace, PolylineTrace p_to_trace, Polyline p_joined_polyline,
-      int p_from_entry_no, int p_to_entry_no) {
-    for (ShapeSearchTree curr_tree : compensated_search_trees) {
-      curr_tree.merge_entries_at_end(p_from_trace, p_to_trace, p_joined_polyline, p_from_entry_no, p_to_entry_no);
+  void mergeEntriesAtEnd(
+      PolylineTrace fromTrace,
+      PolylineTrace toTrace,
+      Polyline joinedPolyline,
+      int fromEntryNo,
+      int toEntryNo) {
+    for (ShapeSearchTree currTree : compensatedSearchTrees) {
+      currTree.mergeEntriesAtEnd(fromTrace, toTrace, joinedPolyline, fromEntryNo, toEntryNo);
     }
   }
 
   /**
-   * Changes the tree entries from p_keep_at_start_count + 1 to new_shape_count -
-   * 1 - keep_at_end_count to p_changed_entries. Special implementation for
-   * change_trace for performance reasons
+   * Changes the tree entries from p_keep_at_start_count + 1 to newShapeCount - 1 - keepAtEndCount
+   * to p_changed_entries. Special implementation for change_trace for performance reasons
    */
-  void change_entries(PolylineTrace p_obj, Polyline p_new_polyline, int p_keep_at_start_count,
-      int p_keep_at_end_count) {
-    for (ShapeSearchTree curr_tree : compensated_search_trees) {
-      curr_tree.change_entries(p_obj, p_new_polyline, p_keep_at_start_count, p_keep_at_end_count);
+  void changeEntries(
+      PolylineTrace obj, Polyline newPolyline, int keepAtStartCount, int keepAtEndCount) {
+    for (ShapeSearchTree currTree : compensatedSearchTrees) {
+      currTree.changeEntries(obj, newPolyline, keepAtStartCount, keepAtEndCount);
     }
   }
 
   /**
-   * Transfers tree entries from p_from_trace to p_start and p_end_piece after a
-   * middle piece was cut out. Special implementation for
-   * ShapeTraceEntries.fast_cutout_trace for performance reasons.
+   * Transfers tree entries from p_from_trace to p_start and p_end_piece after a middle piece was
+   * cut out. Special implementation for ShapeTraceEntries.fast_cutout_trace for performance
+   * reasons.
    */
-  void reuse_entries_after_cutout(PolylineTrace p_from_trace, PolylineTrace p_start_piece, PolylineTrace p_end_piece) {
-    for (ShapeSearchTree curr_tree : compensated_search_trees) {
+  void reuseEntriesAfterCutout(
+      PolylineTrace fromTrace, PolylineTrace startPiece, PolylineTrace endPiece) {
+    for (ShapeSearchTree currTree : compensatedSearchTrees) {
 
-      curr_tree.reuse_entries_after_cutout(p_from_trace, p_start_piece, p_end_piece);
+      currTree.reuseEntriesAfterCutout(fromTrace, startPiece, endPiece);
     }
   }
 }

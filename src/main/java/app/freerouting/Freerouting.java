@@ -8,10 +8,10 @@ import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.drc.DesignRulesChecker;
-import app.freerouting.io.specctra.SesImportSummary;
-import app.freerouting.io.specctra.SesReader;
 import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.GuiManager;
+import app.freerouting.io.specctra.SesImportSummary;
+import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.BoardLoader;
 import app.freerouting.management.SessionManager;
@@ -57,31 +57,37 @@ import org.eclipse.jetty.server.handler.CrossOriginHandler;
 import org.eclipse.jetty.server.handler.PathMappingsHandler;
 import org.glassfish.jersey.servlet.ServletContainer;
 
-/* Entry point class of the application */
+/** Entry point for the Freerouting application. */
 public class Freerouting {
 
   public static final String WEB_URL = "https://www.freerouting.app";
-  public static final String VERSION_NUMBER_STRING = "v" + Constants.FREEROUTING_VERSION + " (build-date: "
-      + Constants.FREEROUTING_BUILD_DATE + ")";
+  public static final String VERSION_NUMBER_STRING =
+      "v"
+          + Constants.FREEROUTING_VERSION
+          + " (build-date: "
+          + Constants.FREEROUTING_BUILD_DATE
+          + ")";
   public static GlobalSettings globalSettings;
   public static String bridgeToken = java.util.UUID.randomUUID().toString();
   private static Server apiServer; // API server instance
   private static Server mcpServer; // MCP server instance
   private static java.io.PrintStream originalSystemOut;
 
-  private static boolean InitializeCLI(GlobalSettings globalSettings) {
+  private static boolean initializeCli(GlobalSettings globalSettings) {
     if ((globalSettings.initialInputFile == null) || (globalSettings.initialOutputFile == null)) {
       FRLogger.error(
-          "Both an input file and an output file must be specified with command line arguments if you are running in CLI mode.",
+          "Both an input file and an output file must be specified with command line arguments "
+              + "if you are running in CLI mode.",
           null);
       return false;
     }
 
     // Start a new Freerouting session
-    var cliSession = SessionManager
-        .getInstance()
-        .createSession(UUID.fromString(globalSettings.userProfileSettings.userId),
-            "Freerouting/" + globalSettings.version);
+    var cliSession =
+        SessionManager.getInstance()
+            .createSession(
+                UUID.fromString(globalSettings.userProfileSettings.userId),
+                "Freerouting/" + globalSettings.version);
 
     // Create a new routing job
     RoutingJob routingJob = new RoutingJob(cliSession.id);
@@ -90,13 +96,15 @@ public class Freerouting {
     DsnFileSettings inputFileSettings = null;
     try {
       routingJob.setInput(globalSettings.initialInputFile);
-      inputFileSettings = new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename());
+      inputFileSettings =
+          new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename());
     } catch (Exception e) {
       FRLogger.error("Couldn't load the input file '" + globalSettings.initialInputFile + "'", e);
     }
 
     if (routingJob.input == null) {
-      FRLogger.warn("Couldn't read the input file '" + globalSettings.initialInputFile + "', aborting.");
+      FRLogger.warn(
+          "Couldn't read the input file '" + globalSettings.initialInputFile + "', aborting.");
       return false;
     }
 
@@ -120,7 +128,8 @@ public class Freerouting {
     routingJob.state = RoutingJobState.READY_TO_START;
 
     // Wait for the RoutingJobScheduler to do its work
-    while ((routingJob.state != RoutingJobState.COMPLETED) && (routingJob.state != RoutingJobState.TERMINATED)) {
+    while ((routingJob.state != RoutingJobState.COMPLETED)
+        && (routingJob.state != RoutingJobState.TERMINATED)) {
       try {
         Thread.sleep(500);
       } catch (InterruptedException _) {
@@ -133,11 +142,10 @@ public class Freerouting {
     if (routingJob.state == RoutingJobState.COMPLETED) {
       try {
         Path outputFilePath = Path.of(globalSettings.initialOutputFile);
-        Files.write(outputFilePath, routingJob.output
-            .getData()
-            .readAllBytes());
+        Files.write(outputFilePath, routingJob.output.getData().readAllBytes());
       } catch (IOException e) {
-        FRLogger.error("Couldn't save the output file '" + globalSettings.initialOutputFile + "'", e);
+        FRLogger.error(
+            "Couldn't save the output file '" + globalSettings.initialOutputFile + "'", e);
       }
 
       // Print a sponsor/success-story message to stdout (not the log) once the
@@ -145,37 +153,43 @@ public class Freerouting {
       if ((globalSettings.statistics.jobsCompleted >= 5)
           && globalSettings.userProfileSettings.userEmail.isEmpty()) {
         String nl = System.lineSeparator();
-        System.out.println(
+        IO.println(
             nl
-            + "╔══════════════════════════════════════════════════════════════════╗" + nl
-            + "║           Thank you for using Freerouting!                       ║" + nl
-            + "║                                                                  ║" + nl
-            + "║  If you would like to support the project, please consider       ║" + nl
-            + "║  sponsoring me at https://github.com/sponsors/andrasfuchs        ║" + nl
-            + "║  Even a small monthly donation is greatly appreciated!           ║" + nl
-            + "╚══════════════════════════════════════════════════════════════════╝"
-        );
+                + "╔══════════════════════════════════════════════════════════════════╗"
+                + nl
+                + "║           Thank you for using Freerouting!                       ║"
+                + nl
+                + "║                                                                  ║"
+                + nl
+                + "║  If you would like to support the project, please consider       ║"
+                + nl
+                + "║  sponsoring me at https://github.com/sponsors/andrasfuchs        ║"
+                + nl
+                + "║  Even a small monthly donation is greatly appreciated!           ║"
+                + nl
+                + "╚══════════════════════════════════════════════════════════════════╝");
       }
     }
 
     return true;
   }
 
-  private static boolean InitializeDRC(GlobalSettings globalSettings) {
+  private static boolean initializeDrc(GlobalSettings globalSettings) {
     if (globalSettings.initialInputFile == null) {
       FRLogger.error("An input file must be specified with -de argument in DRC mode.", null);
       return false;
     }
 
     // Start a new Freerouting session
-    var drcSession = SessionManager
-        .getInstance()
-        .createSession(UUID.fromString(globalSettings.userProfileSettings.userId),
-            "Freerouting/" + globalSettings.version);
+    var drcSession =
+        SessionManager.getInstance()
+            .createSession(
+                UUID.fromString(globalSettings.userProfileSettings.userId),
+                "Freerouting/" + globalSettings.version);
 
     // Create a new routing job (but won't route it)
     RoutingJob drcJob = new RoutingJob(drcSession.id);
-    drcJob.drc = globalSettings.drc_report_file;
+    drcJob.drc = globalSettings.drcReportFile;
     try {
       FRLogger.info("Loading DSN file for DRC: " + globalSettings.initialInputFile);
       drcJob.setInput(globalSettings.initialInputFile);
@@ -191,27 +205,34 @@ public class Freerouting {
     }
 
     // Load session file if specified for DRC
-    if (globalSettings.design_session_filename != null) {
+    if (globalSettings.designSessionFilename != null) {
       try {
-        java.io.File sessionFile = new java.io.File(globalSettings.design_session_filename);
+        java.io.File sessionFile = new java.io.File(globalSettings.designSessionFilename);
         if (sessionFile.exists()) {
-          if (globalSettings.design_session_filename.toLowerCase().endsWith(".json")) {
-            FRLogger.info("Loading KiCad JSON session file for DRC: " + globalSettings.design_session_filename);
+          if (globalSettings.designSessionFilename.toLowerCase().endsWith(".json")) {
+            FRLogger.info(
+                "Loading KiCad JSON session file for DRC: " + globalSettings.designSessionFilename);
             try (java.io.FileReader jsonReader = new java.io.FileReader(sessionFile)) {
               app.freerouting.io.kicad.KiCadJsonReader.importSession(jsonReader, drcJob.board);
               FRLogger.info("KiCad JSON session file loaded for DRC successfully");
             }
           } else {
-            FRLogger.info("Loading SES file for DRC: " + globalSettings.design_session_filename);
+            FRLogger.info("Loading SES file for DRC: " + globalSettings.designSessionFilename);
             try (java.io.FileInputStream sesStream = new java.io.FileInputStream(sessionFile)) {
               SesImportSummary summary = SesReader.read(sesStream, drcJob.board);
-              FRLogger.info("SES file loaded for DRC: " + summary.wiresImported() + " wires, "
-                  + summary.viasImported() + " vias imported"
-                  + (summary.errorsEncountered() > 0 ? " (" + summary.errorsEncountered() + " errors)" : ""));
+              FRLogger.info(
+                  "SES file loaded for DRC: "
+                      + summary.wiresImported()
+                      + " wires, "
+                      + summary.viasImported()
+                      + " vias imported"
+                      + (summary.errorsEncountered() > 0
+                          ? " (" + summary.errorsEncountered() + " errors)"
+                          : ""));
             }
           }
         } else {
-          FRLogger.warn("Session file for DRC not found: " + globalSettings.design_session_filename);
+          FRLogger.warn("Session file for DRC not found: " + globalSettings.designSessionFilename);
         }
       } catch (Exception e) {
         FRLogger.error("Failed to load session file for DRC", e);
@@ -219,27 +240,29 @@ public class Freerouting {
     }
 
     // Run DRC check
-    DesignRulesChecker drcChecker = new DesignRulesChecker(drcJob.board, globalSettings.drcSettings);
+    DesignRulesChecker drcChecker =
+        new DesignRulesChecker(drcJob.board, globalSettings.drcSettings);
 
     // Determine coordinate unit (default to mm)
     String coordinateUnit = "mm";
 
     // Generate DRC report
     String sourceFileName = new File(globalSettings.initialInputFile).getName();
-    app.freerouting.drc.DrcReport report = drcChecker.generateReport(sourceFileName, coordinateUnit);
-    
+    app.freerouting.drc.DrcReport report =
+        drcChecker.generateReport(sourceFileName, coordinateUnit);
+
     // Calculate final quality score for DRC report
     try {
       var settingsMerger = globalSettings.settingsMergerProtype.clone();
       settingsMerger.addOrReplaceSources(
           new DsnFileSettings(drcJob.input.getData(), drcJob.input.getFilename()));
       var routerSettings = settingsMerger.merge();
-      var finalStats = drcJob.board.get_statistics();
-      report.quality_score = (double) finalStats.getNormalizedScore(routerSettings.scoring);
+      var finalStats = drcJob.board.getStatistics();
+      report.qualityScore = (double) finalStats.getNormalizedScore(routerSettings.scoring);
     } catch (Exception e) {
       FRLogger.warn("Failed to calculate quality score for DRC report: " + e.getMessage());
     }
-    
+
     String drcReportJson = app.freerouting.util.gson.GsonProvider.GSON.toJson(report);
 
     // Output the DRC report
@@ -262,7 +285,7 @@ public class Freerouting {
     return true;
   }
 
-  private static void ShutdownApplication() {
+  private static void shutdownApplication() {
     // Stop the API server
     try {
       if (apiServer != null) {
@@ -278,10 +301,18 @@ public class Freerouting {
     FRAnalytics.appClosed();
   }
 
-  public static Server InitializeAPI(ApiServerSettings apiServerSettings) {
+  /**
+   * Initializes and starts the API server.
+   *
+   * @param apiServerSettings settings used to configure the API server
+   * @return the initialized API server, or {@code null} if it could not be started
+   */
+  @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
+  public static Server initializeAPI(ApiServerSettings apiServerSettings) {
     // Check if there are any endpoints defined
     if (apiServerSettings.endpoints.length == 0) {
-      FRLogger.warn("Can't start API server, because no endpoints are defined in ApiServerSettings.");
+      FRLogger.warn(
+          "Can't start API server, because no endpoints are defined in ApiServerSettings.");
       return null;
     }
 
@@ -293,30 +324,33 @@ public class Freerouting {
       endpointUrl = endpointUrl.toLowerCase();
       String[] endpointParts = endpointUrl.split("://");
       String protocol = endpointParts[0];
-      String hostAndPort = endpointParts[1];
-      String[] hostAndPortParts = hostAndPort.split(":");
-      String host = hostAndPortParts[0];
-      int port = Integer.parseInt(hostAndPortParts[1]);
 
       // Check if the protocol is HTTP or HTTPS
       if (!"http".equals(protocol) && !"https".equals(protocol)) {
-        FRLogger.warn("Can't use the endpoint '%s' for the API server, because its protocol is not HTTP or HTTPS."
-            .formatted(endpointUrl));
+        FRLogger.warn(
+            "Can't use the endpoint '%s' for the API server, because its protocol is not HTTP "
+                + "or HTTPS.".formatted(endpointUrl));
         continue;
       }
 
       // Check if the http is allowed
       if (!apiServerSettings.isHttpAllowed && "http".equals(protocol)) {
         FRLogger.warn(
-            "Can't use the endpoint '%s' for the API server, because HTTP is not allowed.".formatted(endpointUrl));
+            "Can't use the endpoint '%s' for the API server, because HTTP is not allowed."
+                .formatted(endpointUrl));
         continue;
       }
 
       // Warn the user that HTTPS is not implemented yet
       if ("https".equals(protocol)) {
-        FRLogger.warn("HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
+        FRLogger.warn(
+            "HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
       }
 
+      String hostAndPort = endpointParts[1];
+      String[] hostAndPortParts = hostAndPort.split(":");
+      String host = hostAndPortParts[0];
+      int port = Integer.parseInt(hostAndPortParts[1]);
       ServerConnector connector = new ServerConnector(apiServer);
       connector.setHost(host);
       connector.setPort(port);
@@ -330,22 +364,23 @@ public class Freerouting {
     Handler apiHandler = context;
 
     // Configure CORS if origins are provided
-    if (apiServerSettings.cors_origins != null && !apiServerSettings.cors_origins.equals("")) {
-      String allowedOrigins = apiServerSettings.cors_origins;
+    if (apiServerSettings.corsOrigins != null && !"".equals(apiServerSettings.corsOrigins)) {
+      String allowedOrigins = apiServerSettings.corsOrigins;
 
       CrossOriginHandler corsHandler = new CrossOriginHandler();
       corsHandler.setAllowCredentials(true);
       corsHandler.setAllowedOriginPatterns(splitCommaSeparated(allowedOrigins));
       corsHandler.setAllowedMethods(Set.of("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
-      corsHandler.setAllowedHeaders(Set.of(
-          "X-Requested-With",
-          "Content-Type",
-          "Accept",
-          "Origin",
-          "Authorization",
-          "Freerouting-Profile-ID",
-          "Freerouting-Profile-Email",
-          "Freerouting-Environment-Host"));
+      corsHandler.setAllowedHeaders(
+          Set.of(
+              "X-Requested-With",
+              "Content-Type",
+              "Accept",
+              "Origin",
+              "Authorization",
+              "Freerouting-Profile-ID",
+              "Freerouting-Profile-Email",
+              "Freerouting-Environment-Host"));
       corsHandler.setHandler(context);
 
       PathMappingsHandler pathMappingsHandler = new PathMappingsHandler();
@@ -367,25 +402,44 @@ public class Freerouting {
     // Add Listeners
     context.addEventListener(new AppContextListener());
 
-    // Instead of apiServer.join(), start in a new thread
-    new Thread(() -> {
-      try {
-        apiServer.start();
-        apiServer.join(); // This will now run in the new thread
-      } catch (Exception e) {
-        FRLogger.error("Error starting or joining API server", e);
-        if (globalSettings != null) {
-          globalSettings.apiServerSettings.isRunning = false;
-        }
+    try {
+      apiServer.start();
+    } catch (Exception e) {
+      FRLogger.error("Error starting API server", e);
+      if (globalSettings != null) {
+        globalSettings.apiServerSettings.isRunning = false;
       }
-    }).start();
+      return null;
+    }
+
+    // Keep the caller responsive after the server has bound its connectors.
+    new Thread(
+            () -> {
+              try {
+                apiServer.join();
+              } catch (Exception e) {
+                FRLogger.error("Error joining API server", e);
+                if (globalSettings != null) {
+                  globalSettings.apiServerSettings.isRunning = false;
+                }
+              }
+            })
+        .start();
 
     return apiServer;
   }
 
-  public static Server InitializeMCP(McpServerSettings mcpServerSettings) {
+  /**
+   * Initializes and starts the MCP server.
+   *
+   * @param mcpServerSettings settings used to configure the MCP server
+   * @return the initialized MCP server, or {@code null} if it could not be started
+   */
+  @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
+  public static Server initializeMCP(McpServerSettings mcpServerSettings) {
     if (mcpServerSettings.endpoints.length == 0) {
-      FRLogger.warn("Can't start MCP server, because no endpoints are defined in McpServerSettings.");
+      FRLogger.warn(
+          "Can't start MCP server, because no endpoints are defined in McpServerSettings.");
       return null;
     }
 
@@ -395,27 +449,30 @@ public class Freerouting {
       endpointUrl = endpointUrl.toLowerCase();
       String[] endpointParts = endpointUrl.split("://");
       String protocol = endpointParts[0];
-      String hostAndPort = endpointParts[1];
-      String[] hostAndPortParts = hostAndPort.split(":");
-      String host = hostAndPortParts[0];
-      int port = Integer.parseInt(hostAndPortParts[1]);
 
       if (!"http".equals(protocol) && !"https".equals(protocol)) {
-        FRLogger.warn("Can't use the endpoint '%s' for the MCP server, because its protocol is not HTTP or HTTPS."
-            .formatted(endpointUrl));
+        FRLogger.warn(
+            "Can't use the endpoint '%s' for the MCP server, because its protocol is not HTTP "
+                + "or HTTPS.".formatted(endpointUrl));
         continue;
       }
 
       if (!mcpServerSettings.isHttpAllowed && "http".equals(protocol)) {
         FRLogger.warn(
-            "Can't use the endpoint '%s' for the MCP server, because HTTP is not allowed.".formatted(endpointUrl));
+            "Can't use the endpoint '%s' for the MCP server, because HTTP is not allowed."
+                .formatted(endpointUrl));
         continue;
       }
 
       if ("https".equals(protocol)) {
-        FRLogger.warn("HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
+        FRLogger.warn(
+            "HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
       }
 
+      String hostAndPort = endpointParts[1];
+      String[] hostAndPortParts = hostAndPort.split(":");
+      String host = hostAndPortParts[0];
+      int port = Integer.parseInt(hostAndPortParts[1]);
       ServerConnector connector = new ServerConnector(mcpServer);
       connector.setHost(host);
       connector.setPort(port);
@@ -427,22 +484,23 @@ public class Freerouting {
 
     Handler mcpHandler = context;
 
-    if (mcpServerSettings.cors_origins != null && !mcpServerSettings.cors_origins.equals("")) {
-      String allowedOrigins = mcpServerSettings.cors_origins;
+    if (mcpServerSettings.corsOrigins != null && !"".equals(mcpServerSettings.corsOrigins)) {
+      String allowedOrigins = mcpServerSettings.corsOrigins;
 
       CrossOriginHandler corsHandler = new CrossOriginHandler();
       corsHandler.setAllowCredentials(true);
       corsHandler.setAllowedOriginPatterns(splitCommaSeparated(allowedOrigins));
       corsHandler.setAllowedMethods(Set.of("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
-      corsHandler.setAllowedHeaders(Set.of(
-          "X-Requested-With",
-          "Content-Type",
-          "Accept",
-          "Origin",
-          "Authorization",
-          "Freerouting-Profile-ID",
-          "Freerouting-Profile-Email",
-          "Freerouting-Environment-Host"));
+      corsHandler.setAllowedHeaders(
+          Set.of(
+              "X-Requested-With",
+              "Content-Type",
+              "Accept",
+              "Origin",
+              "Authorization",
+              "Freerouting-Profile-ID",
+              "Freerouting-Profile-Email",
+              "Freerouting-Environment-Host"));
       corsHandler.setHandler(context);
 
       PathMappingsHandler pathMappingsHandler = new PathMappingsHandler();
@@ -462,114 +520,151 @@ public class Freerouting {
 
     context.addEventListener(new McpContextListener());
 
-    JakartaWebSocketServletContainerInitializer.configure(context, (servletContext, wsContainer) -> {
-      wsContainer.addEndpoint(McpWebSocketEndpoint.class);
-    });
+    JakartaWebSocketServletContainerInitializer.configure(
+        context,
+        (servletContext, wsContainer) -> wsContainer.addEndpoint(McpWebSocketEndpoint.class));
 
-    new Thread(() -> {
-      try {
-        mcpServer.start();
-        mcpServer.join();
-      } catch (Exception e) {
-        FRLogger.error("Error starting or joining MCP server", e);
-        if (globalSettings != null) {
-          globalSettings.mcpServerSettings.isRunning = false;
-        }
+    try {
+      mcpServer.start();
+    } catch (Exception e) {
+      FRLogger.error("Error starting MCP server", e);
+      if (globalSettings != null) {
+        globalSettings.mcpServerSettings.isRunning = false;
       }
-    }).start();
+      return null;
+    }
+
+    // Keep the caller responsive after the server has bound its connectors.
+    new Thread(
+            () -> {
+              try {
+                mcpServer.join();
+              } catch (Exception e) {
+                FRLogger.error("Error joining MCP server", e);
+                if (globalSettings != null) {
+                  globalSettings.mcpServerSettings.isRunning = false;
+                }
+              }
+            })
+        .start();
 
     return mcpServer;
   }
 
+  /**
+   * Starts the MCP standard-input/output bridge.
+   *
+   * @param originalOut stream receiving bridge output
+   * @param server MCP server whose local endpoint is used by the bridge
+   */
   public static void startMcpStdioBridge(java.io.PrintStream originalOut, Server server) {
-    Thread bridgeThread = new Thread(() -> {
-      try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(System.in, StandardCharsets.UTF_8))) {
-        int localPort = -1;
-        while (localPort <= 0) {
-          if (server != null && server.getConnectors().length > 0 && server.getConnectors()[0] instanceof ServerConnector connector) {
-            localPort = connector.getLocalPort();
-          }
-          if (localPort <= 0) {
-            try {
-              Thread.sleep(50);
-            } catch (InterruptedException _) {
-              Thread.currentThread().interrupt();
-              return;
-            }
-          }
-        }
+    Thread bridgeThread =
+        new Thread(
+            () -> {
+              try (java.io.BufferedReader reader =
+                  new java.io.BufferedReader(
+                      new java.io.InputStreamReader(System.in, StandardCharsets.UTF_8))) {
+                int localPort = -1;
+                while (localPort <= 0) {
+                  if (server != null
+                      && server.getConnectors().length > 0
+                      && server.getConnectors()[0] instanceof ServerConnector connector) {
+                    localPort = connector.getLocalPort();
+                  }
+                  if (localPort <= 0) {
+                    try {
+                      Thread.sleep(50);
+                    } catch (InterruptedException _) {
+                      Thread.currentThread().interrupt();
+                      return;
+                    }
+                  }
+                }
 
-        String resolvedProfileId = System.getenv("FREEROUTING_PROFILE_ID");
-        if (resolvedProfileId == null || resolvedProfileId.isBlank()) {
-          resolvedProfileId = System.getenv("FREEROUTING__PROFILE__ID");
-        }
-        if ((resolvedProfileId == null || resolvedProfileId.isBlank()) && globalSettings != null && globalSettings.userProfileSettings != null) {
-          resolvedProfileId = globalSettings.userProfileSettings.userId;
-        }
-        if (resolvedProfileId == null || resolvedProfileId.isBlank()) {
-          resolvedProfileId = "00000000-0000-0000-0000-000000000000";
-        }
+                String resolvedProfileId = System.getenv("FREEROUTING_PROFILE_ID");
+                if (resolvedProfileId == null || resolvedProfileId.isBlank()) {
+                  resolvedProfileId = System.getenv("FREEROUTING__PROFILE__ID");
+                }
+                if ((resolvedProfileId == null || resolvedProfileId.isBlank())
+                    && globalSettings != null
+                    && globalSettings.userProfileSettings != null) {
+                  resolvedProfileId = globalSettings.userProfileSettings.userId;
+                }
+                if (resolvedProfileId == null || resolvedProfileId.isBlank()) {
+                  resolvedProfileId = "00000000-0000-0000-0000-000000000000";
+                }
 
-        String resolvedProfileEmail = System.getenv("FREEROUTING_PROFILE_EMAIL");
-        if (resolvedProfileEmail == null || resolvedProfileEmail.isBlank()) {
-          resolvedProfileEmail = System.getenv("FREEROUTING__PROFILE__EMAIL");
-        }
-        if ((resolvedProfileEmail == null || resolvedProfileEmail.isBlank()) && globalSettings != null && globalSettings.userProfileSettings != null) {
-          resolvedProfileEmail = globalSettings.userProfileSettings.userEmail;
-        }
+                String resolvedProfileEmail = System.getenv("FREEROUTING_PROFILE_EMAIL");
+                if (resolvedProfileEmail == null || resolvedProfileEmail.isBlank()) {
+                  resolvedProfileEmail = System.getenv("FREEROUTING__PROFILE__EMAIL");
+                }
+                if ((resolvedProfileEmail == null || resolvedProfileEmail.isBlank())
+                    && globalSettings != null
+                    && globalSettings.userProfileSettings != null) {
+                  resolvedProfileEmail = globalSettings.userProfileSettings.userEmail;
+                }
 
-        String resolvedHost = System.getenv("FREEROUTING_ENVIRONMENT_HOST");
-        if (resolvedHost == null || resolvedHost.isBlank()) {
-          resolvedHost = System.getenv("FREEROUTING__ENVIRONMENT__HOST");
-        }
+                String resolvedHost = System.getenv("FREEROUTING_ENVIRONMENT_HOST");
+                if (resolvedHost == null || resolvedHost.isBlank()) {
+                  resolvedHost = System.getenv("FREEROUTING__ENVIRONMENT__HOST");
+                }
 
-        java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
-        java.net.URI targetUri = java.net.URI.create("http://127.0.0.1:" + localPort + "/v1/mcp");
+                java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
+                java.net.URI targetUri =
+                    java.net.URI.create("http://127.0.0.1:" + localPort + "/v1/mcp");
 
-        String line;
-        while ((line = reader.readLine()) != null) {
-          if (line.trim().isEmpty()) {
-            continue;
-          }
-          try {
-            java.net.http.HttpRequest.Builder reqBuilder = java.net.http.HttpRequest.newBuilder(targetUri)
-                .header("Content-Type", "application/json")
-                .header("X-Internal-Bridge-Token", bridgeToken)
-                .header("Freerouting-Profile-ID", resolvedProfileId);
+                String line;
+                while ((line = reader.readLine()) != null) {
+                  if (line.trim().isEmpty()) {
+                    continue;
+                  }
+                  try {
+                    java.net.http.HttpRequest.Builder reqBuilder =
+                        java.net.http.HttpRequest.newBuilder(targetUri)
+                            .header("Content-Type", "application/json")
+                            .header("X-Internal-Bridge-Token", bridgeToken)
+                            .header("Freerouting-Profile-ID", resolvedProfileId);
 
-            if (resolvedProfileEmail != null && !resolvedProfileEmail.isBlank()) {
-              reqBuilder.header("Freerouting-Profile-Email", resolvedProfileEmail);
-            }
-            if (resolvedHost != null && !resolvedHost.isBlank()) {
-              reqBuilder.header("Freerouting-Environment-Host", resolvedHost);
-            }
+                    if (resolvedProfileEmail != null && !resolvedProfileEmail.isBlank()) {
+                      reqBuilder.header("Freerouting-Profile-Email", resolvedProfileEmail);
+                    }
+                    if (resolvedHost != null && !resolvedHost.isBlank()) {
+                      reqBuilder.header("Freerouting-Environment-Host", resolvedHost);
+                    }
 
-            java.net.http.HttpRequest request = reqBuilder
-                .POST(java.net.http.HttpRequest.BodyPublishers.ofString(line, StandardCharsets.UTF_8))
-                .build();
+                    java.net.http.HttpRequest request =
+                        reqBuilder
+                            .POST(
+                                java.net.http.HttpRequest.BodyPublishers.ofString(
+                                    line, StandardCharsets.UTF_8))
+                            .build();
 
-            java.net.http.HttpResponse<String> response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
-            String responseBody = response.body();
-            if (responseBody != null) {
-              String singleLineResponse = responseBody.replace("\r", "").replace("\n", "");
-              originalOut.println(singleLineResponse);
-              originalOut.flush();
-            }
-          } catch (Exception e) {
-            FRLogger.error("Error in MCP stdio bridge request forwarding", e);
-          }
-        }
-        FRLogger.info("MCP stdio bridge detected EOF, shutting down application.");
-        System.exit(0);
-      } catch (IOException e) {
-        FRLogger.error("Error reading from System.in in MCP stdio bridge", e);
-        System.exit(1);
-      }
-    }, "mcp-stdio-bridge");
+                    java.net.http.HttpResponse<String> response =
+                        client.send(
+                            request,
+                            java.net.http.HttpResponse.BodyHandlers.ofString(
+                                StandardCharsets.UTF_8));
+                    String responseBody = response.body();
+                    if (responseBody != null) {
+                      String singleLineResponse = responseBody.replace("\r", "").replace("\n", "");
+                      originalOut.println(singleLineResponse);
+                      originalOut.flush();
+                    }
+                  } catch (Exception e) {
+                    FRLogger.error("Error in MCP stdio bridge request forwarding", e);
+                  }
+                }
+                FRLogger.info("MCP stdio bridge detected EOF, shutting down application.");
+                System.exit(0);
+              } catch (IOException e) {
+                FRLogger.error("Error reading from System.in in MCP stdio bridge", e);
+                System.exit(1);
+              }
+            },
+            "mcp-stdio-bridge");
     bridgeThread.setDaemon(true);
     bridgeThread.start();
   }
-
 
   private static Set<String> splitCommaSeparated(String value) {
     return Arrays.stream(value.split(","))
@@ -608,9 +703,9 @@ public class Freerouting {
   }
 
   /**
-   * The entry point of the Freerouting application
+   * The entry point of the Freerouting application.
    *
-   * @param args
+   * @param args command-line arguments
    */
   void main(String[] args) {
     originalSystemOut = System.out;
@@ -650,22 +745,17 @@ public class Freerouting {
       userdataPathSource = "environment variable FREEROUTING__USER_DATA_PATH";
     } else if (System.getenv("FREEROUTING__LOGGING__FILE__LOCATION") != null) {
       userdataPath = Path.of(System.getenv("FREEROUTING__LOGGING__FILE__LOCATION"));
-      userdataPathSource = "environment variable FREEROUTING__LOGGING__FILE__LOCATION (deprecated fallback)";
+      userdataPathSource =
+          "environment variable FREEROUTING__LOGGING__FILE__LOCATION (deprecated fallback)";
     }
     // 3, check if we need to override it with the "--user_data_path={directory}"
     // command line argument
-    if (args.length > 0 && Arrays
-        .stream(args)
-        .anyMatch(s -> s.startsWith("--user_data_path="))) {
-      var userDataPathArg = Arrays
-          .stream(args)
-          .filter(s -> s.startsWith("--user_data_path="))
-          .findFirst();
+    if (args.length > 0 && Arrays.stream(args).anyMatch(s -> s.startsWith("--user_data_path="))) {
+      var userDataPathArg =
+          Arrays.stream(args).filter(s -> s.startsWith("--user_data_path=")).findFirst();
 
       if (userDataPathArg.isPresent()) {
-        userdataPath = Path.of(userDataPathArg
-            .get()
-            .substring("--user_data_path=".length()));
+        userdataPath = Path.of(userDataPathArg.get().substring("--user_data_path=".length()));
         userdataPathSource = "CLI argument --user_data_path";
       }
     }
@@ -675,27 +765,39 @@ public class Freerouting {
     // initialised at this point.
     if (!userdataPath.toFile().exists()) {
       if (!userdataPath.toFile().mkdirs()) {
-        System.err.println("WARNING: Could not create user-data directory '" + userdataPath
-            + "' (source: " + userdataPathSource + "). "
-            + "Freerouting will attempt to create it when writing files. "
-            + "If this persists, check permissions for the specified path.");
+        System.err.println(
+            "WARNING: Could not create user-data directory '"
+                + userdataPath
+                + "' (source: "
+                + userdataPathSource
+                + "). "
+                + "Freerouting will attempt to create it when writing files. "
+                + "If this persists, check permissions for the specified path.");
       }
     } else {
       // Directory exists — proactively check read and write permissions so that
       // permission problems are surfaced immediately rather than at first I/O.
       if (!userdataPath.toFile().canRead()) {
-        System.err.println("WARNING: User-data directory '" + userdataPath
-            + "' (source: " + userdataPathSource + ") exists but is NOT READABLE. "
-            + "freerouting.json cannot be loaded. "
-            + "Check that the process has read permission on the directory. "
-            + "In Docker deployments, verify the volume mount and file ownership.");
+        System.err.println(
+            "WARNING: User-data directory '"
+                + userdataPath
+                + "' (source: "
+                + userdataPathSource
+                + ") exists but is NOT READABLE. "
+                + "freerouting.json cannot be loaded. "
+                + "Check that the process has read permission on the directory. "
+                + "In Docker deployments, verify the volume mount and file ownership.");
       }
       if (!userdataPath.toFile().canWrite()) {
-        System.err.println("WARNING: User-data directory '" + userdataPath
-            + "' (source: " + userdataPathSource + ") exists but is NOT WRITABLE. "
-            + "freerouting.json cannot be saved and settings won't be persisted. "
-            + "Check that the process has write permission on the directory. "
-            + "In Docker deployments, verify the volume mount and file ownership.");
+        System.err.println(
+            "WARNING: User-data directory '"
+                + userdataPath
+                + "' (source: "
+                + userdataPathSource
+                + ") exists but is NOT WRITABLE. "
+                + "freerouting.json cannot be saved and settings won't be persisted. "
+                + "Check that the process has write permission on the directory. "
+                + "In Docker deployments, verify the volume mount and file ownership.");
       }
     }
     // capture for later use once logging is available
@@ -714,15 +816,15 @@ public class Freerouting {
     boolean fileLoggingEnabled = true;
     boolean consoleLoggingEnabled = true;
     String fileLoggingLevel = "DEBUG";
-    String consoleLoggingLevel = "INFO";
-    String fileLoggingLocation = null;
-    String fileLoggingPattern = null;
 
     if (System.getenv("FREEROUTING__LOGGING__FILE__ENABLED") != null) {
-      fileLoggingEnabled = Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__FILE__ENABLED"));
+      fileLoggingEnabled =
+          Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__FILE__ENABLED"));
     }
+    String consoleLoggingLevel = "INFO";
     if (System.getenv("FREEROUTING__LOGGING__CONSOLE__ENABLED") != null) {
-      consoleLoggingEnabled = Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__CONSOLE__ENABLED"));
+      consoleLoggingEnabled =
+          Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__CONSOLE__ENABLED"));
     }
     if (System.getenv("FREEROUTING__LOGGING__FILE__LEVEL") != null) {
       fileLoggingLevel = System.getenv("FREEROUTING__LOGGING__FILE__LEVEL");
@@ -730,9 +832,11 @@ public class Freerouting {
     if (System.getenv("FREEROUTING__LOGGING__CONSOLE__LEVEL") != null) {
       consoleLoggingLevel = System.getenv("FREEROUTING__LOGGING__CONSOLE__LEVEL");
     }
+    String fileLoggingLocation = null;
     if (System.getenv("FREEROUTING__LOGGING__FILE__LOCATION") != null) {
       fileLoggingLocation = System.getenv("FREEROUTING__LOGGING__FILE__LOCATION");
     }
+    String fileLoggingPattern = null;
     if (System.getenv("FREEROUTING__LOGGING__FILE__PATTERN") != null) {
       fileLoggingPattern = System.getenv("FREEROUTING__LOGGING__FILE__PATTERN");
     }
@@ -740,9 +844,11 @@ public class Freerouting {
     if (args.length > 0) {
       for (String arg : args) {
         if (arg.startsWith("--logging.file.enabled=")) {
-          fileLoggingEnabled = Boolean.parseBoolean(arg.substring("--logging.file.enabled=".length()));
+          fileLoggingEnabled =
+              Boolean.parseBoolean(arg.substring("--logging.file.enabled=".length()));
         } else if (arg.startsWith("--logging.console.enabled=")) {
-          consoleLoggingEnabled = Boolean.parseBoolean(arg.substring("--logging.console.enabled=".length()));
+          consoleLoggingEnabled =
+              Boolean.parseBoolean(arg.substring("--logging.console.enabled=".length()));
         } else if (arg.startsWith("--logging.file.level=")) {
           fileLoggingLevel = arg.substring("--logging.file.level=".length());
         } else if (arg.startsWith("--logging.console.level=")) {
@@ -752,7 +858,8 @@ public class Freerouting {
         } else if (arg.startsWith("--logging.file.pattern=")) {
           fileLoggingPattern = arg.substring("--logging.file.pattern=".length());
         } else if (arg.startsWith("--debug.enable_detailed_logging=")) {
-          boolean detailed = Boolean.parseBoolean(arg.substring("--debug.enable_detailed_logging=".length()));
+          boolean detailed =
+              Boolean.parseBoolean(arg.substring("--debug.enable_detailed_logging=".length()));
           if (detailed) {
             fileLoggingLevel = "TRACE";
             FRLogger.granularTraceEnabled = true;
@@ -785,8 +892,10 @@ public class Freerouting {
     // javax.naming.Context at bootstrap and emits a noisy WARN for every lookup plugin.
     System.setProperty("log4j2.disableJndi", "true");
 
-    System.setProperty("log4j2.configurationFactory", "app.freerouting.logger.Log4j2ConfigurationFactory");
-    System.setProperty("freerouting.logging.console.enabled", String.valueOf(consoleLoggingEnabled));
+    System.setProperty(
+        "log4j2.configurationFactory", "app.freerouting.logger.Log4j2ConfigurationFactory");
+    System.setProperty(
+        "freerouting.logging.console.enabled", String.valueOf(consoleLoggingEnabled));
     System.setProperty("freerouting.logging.console.level", consoleLoggingLevel);
     System.setProperty("freerouting.logging.file.enabled", String.valueOf(fileLoggingEnabled));
     System.setProperty("freerouting.logging.file.level", fileLoggingLevel);
@@ -807,14 +916,21 @@ public class Freerouting {
 
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException
+    } catch (ClassNotFoundException
+        | InstantiationException
+        | UnsupportedLookAndFeelException
         | IllegalAccessException ex) {
       FRLogger.error(ex.getLocalizedMessage(), ex);
     }
 
     // Log system information
     FRLogger.info("Freerouting " + VERSION_NUMBER_STRING);
-    FRLogger.debug("[startup] user-data path : " + GlobalSettings.getUserDataPath() + "  (source: " + resolvedUserdataPathSource + ")");
+    FRLogger.debug(
+        "[startup] user-data path : "
+            + GlobalSettings.getUserDataPath()
+            + "  (source: "
+            + resolvedUserdataPathSource
+            + ")");
     FRLogger.debug("[startup] log file       : " + fileLoggingLocation);
     Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
 
@@ -824,19 +940,27 @@ public class Freerouting {
     } catch (NoSuchFileException _) {
       // Normal first-run condition — the file does not exist yet and will be
       // created below with default values.
-      FRLogger.debug("No freerouting.json found at '" + GlobalSettings.getConfigurationFilePath()
-          + "' — will create one with default settings.");
+      FRLogger.debug(
+          "No freerouting.json found at '"
+              + GlobalSettings.getConfigurationFilePath()
+              + "' — will create one with default settings.");
     } catch (AccessDeniedException e) {
-      FRLogger.warn("Cannot read freerouting.json at '"
-          + GlobalSettings.getConfigurationFilePath() + "': " + e.getReason()
-          + ". The file and/or its parent directory may have incorrect permissions. "
-          + "Check that the process has read access. "
-          + "In Docker deployments, verify the volume mount configuration. "
-          + "Freerouting will start with default settings.");
+      FRLogger.warn(
+          "Cannot read freerouting.json at '"
+              + GlobalSettings.getConfigurationFilePath()
+              + "': "
+              + e.getReason()
+              + ". The file and/or its parent directory may have incorrect permissions. "
+              + "Check that the process has read access. "
+              + "In Docker deployments, verify the volume mount configuration. "
+              + "Freerouting will start with default settings.");
     } catch (IOException e) {
-      FRLogger.warn("Failed to load freerouting.json from '"
-          + GlobalSettings.getConfigurationFilePath() + "': " + e.getMessage()
-          + ". Freerouting will start with default settings.");
+      FRLogger.warn(
+          "Failed to load freerouting.json from '"
+              + GlobalSettings.getConfigurationFilePath()
+              + "': "
+              + e.getMessage()
+              + ". Freerouting will start with default settings.");
     }
 
     // Detect stale logging.file.location in the loaded JSON.
@@ -849,12 +973,17 @@ public class Freerouting {
         && globalSettings.logging.file.location != null
         && !globalSettings.logging.file.location.isBlank()
         && !globalSettings.logging.file.location.equals(fileLoggingLocation)) {
-      FRLogger.warn("[startup] freerouting.json contains a stale 'logging.file.location' value: '"
-          + globalSettings.logging.file.location + "'. "
-          + "The actual log file is being written to '" + fileLoggingLocation + "' (as resolved at startup). "
-          + "The stale value will be corrected in freerouting.json on next save. "
-          + "If you see this in Docker, the old JSON was written by an earlier version that stored "
-          + "the host path; the fix is to delete freerouting.json so it is regenerated with the correct path.");
+      FRLogger.warn(
+          "[startup] freerouting.json contains a stale 'logging.file.location' value: '"
+              + globalSettings.logging.file.location
+              + "'. "
+              + "The actual log file is being written to '"
+              + fileLoggingLocation
+              + "' (as resolved at startup). "
+              + "The stale value will be corrected in freerouting.json on next save. "
+              + "If you see this in Docker, the old JSON was written by an earlier version that "
+              + "stored the host path; the fix is to delete freerouting.json so it is regenerated "
+              + "with the correct path.");
     }
     // Always keep the stored log path in sync with the resolved path so the JSON
     // self-heals and old images that do apply the stored path will get the right value.
@@ -870,16 +999,23 @@ public class Freerouting {
         && globalSettings != null
         && globalSettings.mcpServerSettings != null
         && Boolean.TRUE.equals(globalSettings.mcpServerSettings.isStdioMode)) {
-      FRLogger.warn("[startup] 'mcp_server.stdio=true' was found in freerouting.json but is being ignored. "
-          + "The stdio redirect must be requested before logging is initialised and therefore "
-          + "can only be set via the '--mcp_server.stdio=true' CLI argument or the "
-          + "'FREEROUTING__MCP_SERVER__STDIO=true' environment variable. "
-          + "The JSON setting has no effect and the MCP stdio transport will NOT work correctly.");
+      FRLogger.warn(
+          """
+          [startup] 'mcp_server.stdio=true' was found in freerouting.json but is being ignored. \
+          The stdio redirect must be requested before logging is initialised and therefore \
+          can only be set via the '--mcp_server.stdio=true' CLI argument or the \
+          'FREEROUTING__MCP_SERVER__STDIO=true' environment variable. \
+          The JSON setting has no effect and the MCP stdio transport will NOT work correctly.
+          """);
     }
 
-    if ((globalSettings == null) || !GlobalSettings.getReleaseSafeVersion().equals(globalSettings.version)) {
+    if ((globalSettings == null)
+        || !GlobalSettings.getReleaseSafeVersion().equals(globalSettings.version)) {
       // let's see if we can preserve the user ID
-      String userId = globalSettings == null ? UUID.randomUUID().toString() : globalSettings.userProfileSettings.userId;
+      String userId =
+          globalSettings == null
+              ? UUID.randomUUID().toString()
+              : globalSettings.userProfileSettings.userId;
 
       globalSettings = new GlobalSettings();
       globalSettings.userProfileSettings.userId = userId;
@@ -890,18 +1026,25 @@ public class Freerouting {
       // save the default values
       try {
         GlobalSettings.saveAsJson(globalSettings);
-        FRLogger.debug("Default settings saved to '" + GlobalSettings.getConfigurationFilePath() + "'.");
+        FRLogger.debug(
+            "Default settings saved to '" + GlobalSettings.getConfigurationFilePath() + "'.");
       } catch (AccessDeniedException e) {
-        FRLogger.warn("Cannot write freerouting.json to '"
-            + GlobalSettings.getConfigurationFilePath() + "': " + e.getReason()
-            + ". The directory and/or file may have incorrect permissions. "
-            + "Check that the process has write access. "
-            + "In Docker deployments, verify the volume mount configuration. "
-            + "Settings won't be persisted across restarts.");
+        FRLogger.warn(
+            "Cannot write freerouting.json to '"
+                + GlobalSettings.getConfigurationFilePath()
+                + "': "
+                + e.getReason()
+                + ". The directory and/or file may have incorrect permissions. "
+                + "Check that the process has write access. "
+                + "In Docker deployments, verify the volume mount configuration. "
+                + "Settings won't be persisted across restarts.");
       } catch (IOException e) {
-        FRLogger.warn("Failed to save freerouting.json to '"
-            + GlobalSettings.getConfigurationFilePath() + "': " + e.getMessage()
-            + ". Settings won't be persisted across restarts.");
+        FRLogger.warn(
+            "Failed to save freerouting.json to '"
+                + GlobalSettings.getConfigurationFilePath()
+                + "': "
+                + e.getMessage()
+                + ". Settings won't be persisted across restarts.");
       }
     }
 
@@ -915,34 +1058,39 @@ public class Freerouting {
     // if we don't have a GUI enabled then we must use the console as our output
     if ((!globalSettings.guiSettings.isEnabled) && (System.console() == null)) {
       FRLogger.warn(
-          "GUI is disabled and you don't have a console available, so the only feedback from Freerouting is in the log.");
+          "GUI is disabled and you don't have a console available, so the only feedback from "
+              + "Freerouting is in the log.");
     }
 
     // get environment parameters and save them in the settings
-    globalSettings.runtimeEnvironment.freeroutingVersion = Constants.FREEROUTING_VERSION + ","
-        + Constants.FREEROUTING_BUILD_DATE;
+    globalSettings.runtimeEnvironment.freeroutingVersion =
+        Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE;
     globalSettings.runtimeEnvironment.appStartedAt = Instant.now();
     globalSettings.runtimeEnvironment.commandLineArguments = String.join(" ", args);
-    globalSettings.runtimeEnvironment.architecture = System.getProperty("os.name") + ","
-        + System.getProperty("os.arch") + "," + System.getProperty("os.version");
-    globalSettings.runtimeEnvironment.java = System.getProperty("java.version") + ","
-        + System.getProperty("java.vendor");
-    globalSettings.runtimeEnvironment.systemLanguage = Locale
-        .getDefault()
-        .getLanguage() + "," + Locale.getDefault();
-    globalSettings.runtimeEnvironment.cpuCores = Runtime
-        .getRuntime()
-        .availableProcessors();
-    globalSettings.runtimeEnvironment.ram = (int) (Runtime
-        .getRuntime()
-        .maxMemory() / 1024 / 1024);
+    globalSettings.runtimeEnvironment.architecture =
+        System.getProperty("os.name")
+            + ","
+            + System.getProperty("os.arch")
+            + ","
+            + System.getProperty("os.version");
+    globalSettings.runtimeEnvironment.java =
+        System.getProperty("java.version") + "," + System.getProperty("java.vendor");
+    globalSettings.runtimeEnvironment.systemLanguage =
+        Locale.getDefault().getLanguage() + "," + Locale.getDefault();
+    globalSettings.runtimeEnvironment.cpuCores = Runtime.getRuntime().availableProcessors();
+    globalSettings.runtimeEnvironment.ram = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
     FRLogger.debug("Version: " + globalSettings.runtimeEnvironment.freeroutingVersion);
-    FRLogger.debug("Command line arguments: '" + globalSettings.runtimeEnvironment.commandLineArguments + "'");
+    FRLogger.debug(
+        "Command line arguments: '" + globalSettings.runtimeEnvironment.commandLineArguments + "'");
     FRLogger.debug("Architecture: " + globalSettings.runtimeEnvironment.architecture);
     FRLogger.debug("Java: " + globalSettings.runtimeEnvironment.java);
     FRLogger.debug("System Language: " + globalSettings.runtimeEnvironment.systemLanguage);
-    FRLogger.debug("Hardware: " + globalSettings.runtimeEnvironment.cpuCores + " CPU cores,"
-        + globalSettings.runtimeEnvironment.ram + " MB RAM");
+    FRLogger.debug(
+        "Hardware: "
+            + globalSettings.runtimeEnvironment.cpuCores
+            + " CPU cores,"
+            + globalSettings.runtimeEnvironment.ram
+            + " MB RAM");
     FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
 
     // parse the command line arguments (for the non-router settings)
@@ -976,7 +1124,8 @@ public class Freerouting {
         FRLogger.debug("Screen: " + width + "x" + height + ", " + dpi + " DPI");
       } catch (Exception _) {
         FRLogger.warn(
-            "Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.");
+            "Couldn't get screen resolution. If you are running in a headless environment, "
+                + "disable the GUI by setting gui.enabled to false.");
         globalSettings.guiSettings.isEnabled = false;
       }
     }
@@ -984,24 +1133,29 @@ public class Freerouting {
     boolean allowAnalytics = false;
 
     // initialize analytics
-    FRAnalytics.setAccessKey(Constants.FREEROUTING_VERSION, globalSettings.usageAndDiagnosticData.loggerKey);
+    FRAnalytics.setAccessKey(
+        Constants.FREEROUTING_VERSION, globalSettings.usageAndDiagnosticData.loggerKey);
 
     // this option allows us to disable analytics for some users (enabled for all if
     // it is set to 1, otherwise it is disabled for every Nth user)
     int analyticsModulo = 1;
-    String userIdString = globalSettings.userProfileSettings.userId.length() >= 4
-        ? globalSettings.userProfileSettings.userId.substring(0, 4)
-        : "0000";
+    String userIdString =
+        globalSettings.userProfileSettings.userId.length() >= 4
+            ? globalSettings.userProfileSettings.userId.substring(0, 4)
+            : "0000";
     int userIdValue = Integer.parseInt(userIdString, 16);
 
     // if the user has disabled analytics, we don't need to check the modulo
-    allowAnalytics = !globalSettings.usageAndDiagnosticData.disableAnalytics && (globalSettings.userProfileSettings.isTelemetryAllowed);
+    allowAnalytics =
+        !globalSettings.usageAndDiagnosticData.disableAnalytics
+            && (globalSettings.userProfileSettings.isTelemetryAllowed);
 
     if (!allowAnalytics) {
       FRLogger.debug("Analytics are disabled");
     }
     FRAnalytics.setEnabled(allowAnalytics);
-    FRAnalytics.setUserId(globalSettings.userProfileSettings.userId, globalSettings.userProfileSettings.userEmail);
+    FRAnalytics.setUserId(
+        globalSettings.userProfileSettings.userId, globalSettings.userProfileSettings.userEmail);
     FRAnalytics.identify();
     if (!globalSettings.userProfileSettings.userEmail.isBlank()) {
       FRAnalytics.refreshIdentity();
@@ -1009,51 +1163,66 @@ public class Freerouting {
     try {
       Thread.sleep(1000);
     } catch (Exception _) {
+      // Ignore interruption during the analytics startup delay.
     }
     FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
-    FRAnalytics.appStarted(Constants.FREEROUTING_VERSION, Constants.FREEROUTING_BUILD_DATE + " 00:00",
-        String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"),
-        System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"),
-        Locale.getDefault(), globalSettings.currentLocale,
-        globalSettings.runtimeEnvironment.cpuCores, globalSettings.runtimeEnvironment.ram,
-        globalSettings.runtimeEnvironment.host, width, height, dpi);
+    FRAnalytics.appStarted(
+        Constants.FREEROUTING_VERSION,
+        Constants.FREEROUTING_BUILD_DATE + " 00:00",
+        String.join(" ", args),
+        System.getProperty("os.name"),
+        System.getProperty("os.arch"),
+        System.getProperty("os.version"),
+        System.getProperty("java.version"),
+        System.getProperty("java.vendor"),
+        Locale.getDefault(),
+        globalSettings.currentLocale,
+        globalSettings.runtimeEnvironment.cpuCores,
+        globalSettings.runtimeEnvironment.ram,
+        globalSettings.runtimeEnvironment.host,
+        width,
+        height,
+        dpi);
 
     // check for new version
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
     new Thread(checker).start();
 
     // Check if the user requested help
-    if (globalSettings.show_help_option) {
+    if (globalSettings.showHelpOption) {
       TextManager ctm = new TextManager(Freerouting.class, globalSettings.currentLocale);
       IO.print(ctm.getText("command_line_help"));
       System.exit(0);
     }
 
     // Disable GUI and API if in DRC-only mode
-    if (globalSettings.drc_report_file != null) {
+    if (globalSettings.drcReportFile != null) {
       globalSettings.guiSettings.isEnabled = false;
       globalSettings.apiServerSettings.isEnabled = false;
       globalSettings.mcpServerSettings.isEnabled = false;
     }
 
     // Create the settings merger prototype based on the sources that will not change at runtime
-    globalSettings.settingsMergerProtype = new SettingsMerger(
-        new DefaultSettings(),
-        new JsonFileSettings(),
-        new CliSettings(args),
-        new EnvironmentVariablesSource());
+    globalSettings.settingsMergerProtype =
+        new SettingsMerger(
+            new DefaultSettings(),
+            new JsonFileSettings(),
+            new CliSettings(args),
+            new EnvironmentVariablesSource());
 
     // Initialize the API server
     if (globalSettings.apiServerSettings.isEnabled) {
-      apiServer = InitializeAPI(globalSettings.apiServerSettings);
+      apiServer = initializeAPI(globalSettings.apiServerSettings);
       globalSettings.apiServerSettings.isEnabled = apiServer != null;
       globalSettings.apiServerSettings.isRunning = apiServer != null;
 
       if (apiServer != null
           && (globalSettings.mcpServerSettings.targetApiBaseUrl == null
-          || globalSettings.mcpServerSettings.targetApiBaseUrl.isBlank()
-          || "http://127.0.0.1:37864".equals(globalSettings.mcpServerSettings.targetApiBaseUrl))) {
-        if (apiServer.getConnectors().length > 0 && apiServer.getConnectors()[0] instanceof ServerConnector connector) {
+              || globalSettings.mcpServerSettings.targetApiBaseUrl.isBlank()
+              || "http://127.0.0.1:37864"
+                  .equals(globalSettings.mcpServerSettings.targetApiBaseUrl))) {
+        if (apiServer.getConnectors().length > 0
+            && apiServer.getConnectors()[0] instanceof ServerConnector connector) {
           int port = connector.getLocalPort();
           if (port <= 0) {
             port = connector.getPort();
@@ -1064,7 +1233,7 @@ public class Freerouting {
     }
 
     if (globalSettings.mcpServerSettings.isEnabled) {
-      mcpServer = InitializeMCP(globalSettings.mcpServerSettings);
+      mcpServer = initializeMCP(globalSettings.mcpServerSettings);
       globalSettings.mcpServerSettings.isEnabled = mcpServer != null;
       globalSettings.mcpServerSettings.isRunning = mcpServer != null;
 
@@ -1075,7 +1244,7 @@ public class Freerouting {
 
     // Initialize the GUI
     if (globalSettings.guiSettings.isEnabled) {
-      if (!GuiManager.InitializeGUI(globalSettings)) {
+      if (!GuiManager.initializeGUI(globalSettings)) {
         FRLogger.error("Couldn't initialize the GUI", null);
         globalSettings.guiSettings.isEnabled = false;
       } else {
@@ -1088,15 +1257,17 @@ public class Freerouting {
     if (!globalSettings.guiSettings.isEnabled
         && !globalSettings.apiServerSettings.isRunning
         && !globalSettings.mcpServerSettings.isRunning) {
-      if (globalSettings.drc_report_file != null) {
-        cliResult = InitializeDRC(globalSettings);
+      if (globalSettings.drcReportFile != null) {
+        cliResult = initializeDrc(globalSettings);
       } else {
-        cliResult = InitializeCLI(globalSettings);
+        cliResult = initializeCli(globalSettings);
       }
     }
 
-    if ((!cliResult) && !globalSettings.apiServerSettings.isEnabled && !globalSettings.mcpServerSettings.isEnabled) {
-      ShutdownApplication();
+    if ((!cliResult)
+        && !globalSettings.apiServerSettings.isEnabled
+        && !globalSettings.mcpServerSettings.isEnabled) {
+      shutdownApplication();
       FRLogger.traceExit("MainApplication.main()");
       System.exit(1);
     }
@@ -1111,7 +1282,7 @@ public class Freerouting {
       }
     }
 
-    ShutdownApplication();
+    shutdownApplication();
 
     FRLogger.traceExit("MainApplication.main()");
     System.exit(0);
@@ -1142,7 +1313,7 @@ public class Freerouting {
       app.freerouting.board.BoardComparator.ComparisonResult result =
           app.freerouting.board.BoardComparator.compare(board1, board2, 1e-3);
 
-      System.out.println(result.report);
+      IO.println(result.report);
 
       if (result.areEqual) {
         FRLogger.info("SUCCESS: Boards are identical.");
@@ -1156,27 +1327,32 @@ public class Freerouting {
     }
   }
 
-  private static app.freerouting.board.RoutingBoard loadBoardFromFile(java.io.File file) throws Exception {
+  private static app.freerouting.board.RoutingBoard loadBoardFromFile(java.io.File file)
+      throws Exception {
     try (java.io.InputStream is = new java.io.FileInputStream(file)) {
       if (file.getName().toLowerCase().endsWith(".json")) {
-        try (java.io.Reader r = new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
-          app.freerouting.io.BoardReadResult readResult = app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
+        try (java.io.Reader r =
+            new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
+          app.freerouting.io.BoardReadResult readResult =
+              app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
           if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
             return (app.freerouting.board.RoutingBoard) success.board();
-          } else if (readResult instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+          } else if (readResult
+              instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
             return (app.freerouting.board.RoutingBoard) outlineMissing.board();
           }
         }
       } else {
-        app.freerouting.io.BoardReadResult readResult = app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
+        app.freerouting.io.BoardReadResult readResult =
+            app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
         if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
           return (app.freerouting.board.RoutingBoard) success.board();
-        } else if (readResult instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+        } else if (readResult
+            instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
           return (app.freerouting.board.RoutingBoard) outlineMissing.board();
         }
       }
     }
     return null;
   }
-
 }

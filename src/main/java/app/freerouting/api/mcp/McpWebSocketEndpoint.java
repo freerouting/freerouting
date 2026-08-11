@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * Lightweight WebSocket endpoint that mirrors MCP activity as push events.
- */
+/** Lightweight WebSocket endpoint that mirrors MCP activity as push events. */
 @ServerEndpoint(value = "/v1/mcp/ws", configurator = McpWebSocketConfigurator.class)
 public class McpWebSocketEndpoint {
 
@@ -25,6 +23,7 @@ public class McpWebSocketEndpoint {
   private static final String AUTHORIZATION_HEADER = "authorization";
   private static final String BEARER_PREFIX = "bearer ";
 
+  /** Called when a WebSocket connection opens; checks authorization and profile headers. */
   @OnOpen
   public void onOpen(Session session, EndpointConfig config) {
     Map<String, List<String>> headers = McpWebSocketConfigurator.getHeaders(config);
@@ -41,7 +40,8 @@ public class McpWebSocketEndpoint {
 
     String environmentHost = firstHeader(headers, ENVIRONMENT_HOST_HEADER);
     if (!isValidEnvironmentHost(environmentHost)) {
-      close(session, CloseReason.CloseCodes.VIOLATED_POLICY, "Invalid Freerouting-Environment-Host");
+      close(
+          session, CloseReason.CloseCodes.VIOLATED_POLICY, "Invalid Freerouting-Environment-Host");
       return;
     }
 
@@ -52,16 +52,19 @@ public class McpWebSocketEndpoint {
     McpRealtimeBridge.broadcast("mcp.websocket.connected", hello);
   }
 
+  /** Called when a WebSocket connection closes. */
   @OnClose
   public void onClose(Session session) {
     McpRealtimeBridge.removeWsClient(session);
   }
 
+  /** Called when a WebSocket error occurs. */
   @OnError
   public void onError(Session session, Throwable throwable) {
     McpRealtimeBridge.removeWsClient(session);
   }
 
+  /** Called when an incoming text message is received on the WebSocket. */
   @OnMessage
   public void onMessage(String message, Session session) {
     JsonObject payload = new JsonObject();
@@ -93,7 +96,8 @@ public class McpWebSocketEndpoint {
   private boolean hasProfile(Map<String, List<String>> headers) {
     String profileId = firstHeader(headers, PROFILE_ID_HEADER);
     String profileEmail = firstHeader(headers, PROFILE_EMAIL_HEADER);
-    return (profileId != null && !profileId.isBlank()) || (profileEmail != null && !profileEmail.isBlank());
+    return (profileId != null && !profileId.isBlank())
+        || (profileEmail != null && !profileEmail.isBlank());
   }
 
   private boolean isValidEnvironmentHost(String host) {
@@ -109,7 +113,7 @@ public class McpWebSocketEndpoint {
       if (entry.getKey() != null && entry.getKey().equalsIgnoreCase(name)) {
         List<String> values = entry.getValue();
         if (values != null && !values.isEmpty()) {
-          return values.get(0);
+          return values.getFirst();
         }
       }
     }

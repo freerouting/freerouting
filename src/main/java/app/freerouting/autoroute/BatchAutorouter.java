@@ -44,9 +44,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-/**
- * Handles the sequencing of the auto-router passes.
- */
+/** Handles the sequencing of the auto-router passes. */
 public class BatchAutorouter extends NamedAlgorithm {
 
   // The lowest rank of the board to be selected to go back to.
@@ -68,116 +66,140 @@ public class BatchAutorouter extends NamedAlgorithm {
   private static final int FANOUT_RECOVERY_STAGNATION_PASSES = 3;
   // Minimum score gain (on the 0–1000 normalized scale) that counts as a
   // meaningful improvement; gains smaller than this are treated as stagnation.
-  private static final float STAGNATION_SCORE_THRESHOLD = 0.5f;
+  private static final float STAGNATION_SCORE_THRESHOLD = 0.5F;
 
-  private final boolean remove_unconnected_vias;
-  private final AutorouteControl.ExpansionCostFactor[] trace_cost_arr;
-  private final boolean retain_autoroute_database;
-  private final int start_ripup_costs;
-  private final int trace_pull_tight_accuracy;
+  private final boolean removeUnconnectedVias;
+  private final AutorouteControl.ExpansionCostFactor[] traceCostArr;
+  private final boolean retainAutorouteDatabase;
+  private final int startRipupCosts;
+  private final int tracePullTightAccuracy;
   // Reusable collections to reduce memory churn (thread-safe as each thread has
   // its own BatchAutorouter instance)
-  private final List<Item> reusable_autoroute_item_list = new ArrayList<>();
-  private final Set<Item> reusable_handled_items = new TreeSet<>();
+  private final List<Item> reusableAutorouteItemList = new ArrayList<>();
+  private final Set<Item> reusableHandledItems = new TreeSet<>();
   protected RoutingJob job;
-  private int totalItemsRouted = 0;
-  private boolean fanoutTimedOut = false;
+  private int totalItemsRouted;
+  private boolean fanoutTimedOut;
 
   public boolean isFanoutTimedOut() {
     return this.fanoutTimedOut;
   }
-  /**
-   * Time when the routing session started.
-   */
+
+  /** Time when the routing session started. */
   private Random random;
-  /**
-   * Used to draw the airline of the current routed incomplete.
-   */
-  private FloatLine air_line;
-  /**
-   * Initial number of unrouted nets at the start of the routing session.
-   */
+
+  /** Used to draw the airline of the current routed incomplete. */
+  private FloatLine airLine;
+
+  /** Initial number of unrouted nets at the start of the routing session. */
   private int initialUnroutedCount;
-  /**
-   * Time when the routing session started.
-   */
+
+  /** Time when the routing session started. */
   private Instant sessionStartTime;
-  private long lastBoardUpdateTimestamp = 0;
 
-  private boolean isOptimizerAutorouter = false;
+  private long lastBoardUpdateTimestamp;
 
+  private boolean isOptimizerAutorouter;
+
+  /** Creates a BatchAutorouter for the given routing job. */
   public BatchAutorouter(RoutingJob job) {
-    this(job.thread, job.board, job.routerSettings, !job.routerSettings.isFanoutEnabled(), true,
-        job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
+    this(
+        job.thread,
+        job.board,
+        job.routerSettings,
+        !job.routerSettings.isFanoutEnabled(),
+        true,
+        job.routerSettings.getStartRipupCosts(),
+        job.routerSettings.tracePullTightAccuracy);
     this.job = job;
   }
 
-  public BatchAutorouter(StoppableThread p_thread, RoutingBoard board, RouterSettings settings,
-      boolean p_remove_unconnected_vias, boolean p_with_preferred_directions, int p_start_ripup_costs,
-      int p_pull_tight_accuracy) {
-    super(p_thread, board, settings);
+  /** Creates a new BatchAutorouter instance. */
+  public BatchAutorouter(
+      StoppableThread thread,
+      RoutingBoard board,
+      RouterSettings settings,
+      boolean removeUnconnectedVias,
+      boolean withPreferredDirections,
+      int startRipupCosts,
+      int pullTightAccuracy) {
+    super(thread, board, settings);
 
     this.random = new Random(0);
 
-    this.remove_unconnected_vias = p_remove_unconnected_vias;
-    if (p_with_preferred_directions) {
-      this.trace_cost_arr = this.settings.get_trace_cost_arr();
+    this.removeUnconnectedVias = removeUnconnectedVias;
+    if (withPreferredDirections) {
+      this.traceCostArr = this.settings.getTraceCostArr();
     } else {
       // remove preferred direction
-      this.trace_cost_arr = new AutorouteControl.ExpansionCostFactor[this.board.get_layer_count()];
-      for (int i = 0; i < this.trace_cost_arr.length; i++) {
-        double curr_min_cost = this.settings.get_preferred_direction_trace_costs(i);
-        this.trace_cost_arr[i] = new AutorouteControl.ExpansionCostFactor(curr_min_cost, curr_min_cost);
+      this.traceCostArr = new AutorouteControl.ExpansionCostFactor[this.board.getLayerCount()];
+      for (int i = 0; i < this.traceCostArr.length; i++) {
+        double currMinCost = this.settings.getPreferredDirectionTraceCosts(i);
+        this.traceCostArr[i] = new AutorouteControl.ExpansionCostFactor(currMinCost, currMinCost);
       }
     }
 
-    this.start_ripup_costs = p_start_ripup_costs;
-    this.trace_pull_tight_accuracy = p_pull_tight_accuracy;
-    this.retain_autoroute_database = false;
+    this.startRipupCosts = startRipupCosts;
+    this.tracePullTightAccuracy = pullTightAccuracy;
+    this.retainAutorouteDatabase = false;
   }
 
   /**
-   * Auto-routes ripup passes until the board is completed or the auto-router is
-   * stopped by the user, or if p_max_pass_count is exceeded. Is currently used in
-   * the optimize via batch pass. Returns the
-   * number of passes to complete the board or p_max_pass_count + 1, if the board
-   * is not completed.
+   * Auto-routes ripup passes until the board is completed or the auto-router is stopped by the
+   * user, or if p_max_pass_count is exceeded. Is currently used in the optimize via batch pass.
+   * Returns the number of passes to complete the board or p_max_pass_count + 1, if the board is not
+   * completed.
    */
-  public static int autoroute_passes_for_optimizing_item(RoutingJob job, int p_max_pass_count, int p_ripup_costs,
-      int trace_pull_tight_accuracy, boolean p_with_preferred_directions,
-      RoutingBoard updated_routing_board, RouterSettings routerSettings) {
-    BatchAutorouter router_instance = new BatchAutorouter(job.thread, updated_routing_board, routerSettings, true,
-        p_with_preferred_directions, p_ripup_costs, trace_pull_tight_accuracy);
-    router_instance.job = job;
-    router_instance.isOptimizerAutorouter = true;
+  public static int autoroutePassesForOptimizingItem(
+      RoutingJob job,
+      int maxPassCount,
+      int ripupCosts,
+      int tracePullTightAccuracy,
+      boolean withPreferredDirections,
+      RoutingBoard updatedRoutingBoard,
+      RouterSettings routerSettings) {
+    BatchAutorouter routerInstance =
+        new BatchAutorouter(
+            job.thread,
+            updatedRoutingBoard,
+            routerSettings,
+            true,
+            withPreferredDirections,
+            ripupCosts,
+            tracePullTightAccuracy);
+    routerInstance.job = job;
+    routerInstance.isOptimizerAutorouter = true;
 
-    boolean still_unrouted_items = true;
-    int curr_pass_no = 1;
-    while (still_unrouted_items && !job.thread.is_stop_auto_router_requested() && curr_pass_no <= p_max_pass_count) {
-      still_unrouted_items = router_instance.autoroute_pass(curr_pass_no);
-      if (still_unrouted_items && !job.thread.is_stop_auto_router_requested() && updated_routing_board == null) {
-      }
-      ++curr_pass_no;
+    boolean stillUnroutedItems = true;
+    int currPassNo = 1;
+    while (stillUnroutedItems
+        && !job.thread.isStopAutoRouterRequested()
+        && currPassNo <= maxPassCount) {
+      stillUnroutedItems = routerInstance.autoroutePass(currPassNo);
+      if (stillUnroutedItems
+          && !job.thread.isStopAutoRouterRequested()
+          && updatedRoutingBoard == null) {}
+      ++currPassNo;
     }
-    router_instance.remove_tails(Item.StopConnectionOption.NONE);
-    if (!still_unrouted_items) {
-      --curr_pass_no;
+    routerInstance.removeTails(Item.StopConnectionOption.NONE);
+    if (!stillUnroutedItems) {
+      --currPassNo;
     }
-    return curr_pass_no;
+    return currPassNo;
   }
 
   private static Point[] getImpactedPoints(Item item) {
     if (item instanceof Trace trace) {
-      return new Point[] { trace.first_corner(), trace.last_corner() };
+      return new Point[] {trace.firstCorner(), trace.lastCorner()};
     }
     if (item instanceof Via via) {
-      return new Point[] { via.get_center() };
+      return new Point[] {via.getCenter()};
     }
     if (item instanceof Pin pin) {
-      return new Point[] { pin.get_center() };
+      return new Point[] {pin.getCenter()};
     }
     if (item instanceof DrillItem drillItem) {
-      return new Point[] { drillItem.get_center() };
+      return new Point[] {drillItem.getCenter()};
     }
     return new Point[0];
   }
@@ -190,10 +212,9 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Auto-routes one ripup pass of all items of the board. Returns false, if the
-   * board is already completely routed.
+   * Auto-routes one ripup pass of all items of the board. Returns false, if the board is already
+   * completely routed.
    */
-
   private static float getAllocatedMemoryMbSnapshot(RoutingJob job) {
     if (job == null || job.resourceUsage == null) {
       return 0f;
@@ -240,7 +261,8 @@ public class BatchAutorouter extends NamedAlgorithm {
 
   private boolean shouldFireBoardUpdate() {
     long currentTime = System.currentTimeMillis();
-    if (currentTime - lastBoardUpdateTimestamp > 250) { // Limit updates to 4 times per second (250ms)
+    if (currentTime - lastBoardUpdateTimestamp
+        > 250) { // Limit updates to 4 times per second (250ms)
       lastBoardUpdateTimestamp = currentTime;
       return true;
     }
@@ -249,83 +271,91 @@ public class BatchAutorouter extends NamedAlgorithm {
 
   private List<Item> getAutorouteItems(RoutingBoard board) {
     // Reuse instance collections to reduce memory allocation
-    reusable_autoroute_item_list.clear();
-    reusable_handled_items.clear();
-    List<Item> autoroute_item_list = reusable_autoroute_item_list;
-    Set<Item> handled_items = reusable_handled_items;
-    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
-    for (;;) {
-      UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
-      if (curr_ob == null) {
+    reusableAutorouteItemList.clear();
+    reusableHandledItems.clear();
+    List<Item> autorouteItemList = reusableAutorouteItemList;
+    Set<Item> handledItems = reusableHandledItems;
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
+    for (; ; ) {
+      UndoableObjects.Storable currOb = board.itemList.readObject(it);
+      if (currOb == null) {
         break;
       }
-      if (curr_ob instanceof Connectable && curr_ob instanceof Item curr_item) {
+      if (currOb instanceof Connectable && currOb instanceof Item currItem) {
         // This is a connectable item, like PolylineTrace or Pin
-        if (!curr_item.is_routable()) {
-          if (!handled_items.contains(curr_item)) {
+        if (!currItem.isRoutable()) {
+          if (!handledItems.contains(currItem)) {
 
             // Let's go through all nets of this item
-            for (int i = 0; i < curr_item.net_count(); i++) {
-              int curr_net_no = curr_item.get_net_no(i);
-              Set<Item> connected_set = curr_item.get_connected_set(curr_net_no);
-              for (Item curr_connected_item : connected_set) {
-                if (curr_connected_item.net_count() <= 1) {
-                  handled_items.add(curr_connected_item);
+            for (int i = 0; i < currItem.netCount(); i++) {
+              int currNetNo = currItem.getNetNo(i);
+              Set<Item> connectedSet = currItem.getConnectedSet(currNetNo);
+              for (Item currConnectedItem : connectedSet) {
+                if (currConnectedItem.netCount() <= 1) {
+                  handledItems.add(currConnectedItem);
                 }
               }
-              int net_item_count = board.connectable_item_count(curr_net_no);
+              int netItemCount = board.connectableItemCount(currNetNo);
 
               // If the item is not connected to all other items of the net, we add it to the
               // auto-router's to-do list
-              if ((connected_set.size() < net_item_count) && (!curr_item.has_ignored_nets())) {
-                Net net = board.rules.nets.get(curr_net_no);
+              if ((connectedSet.size() < netItemCount) && (!currItem.hasIgnoredNets())) {
+                Net net = board.rules.nets.get(currNetNo);
                 // For plane nets: skip items whose connected set already contains a
                 // ConductionArea (copper pour). These items would immediately return
                 // CONNECTED_TO_PLANE in autoroute_item(), wasting time and causing
                 // spurious normalize_traces() failures on nearby stub geometry.
                 // Items not yet connected to the plane are still enqueued so they can
                 // be routed to the pour in this pass.
-                if (net != null && net.contains_plane()) {
-                  boolean alreadyConnectedToPlane = connected_set.stream()
-                      .anyMatch(connectedItem -> connectedItem instanceof ConductionArea);
+                if (net != null && net.containsPlane()) {
+                  boolean alreadyConnectedToPlane =
+                      connectedSet.stream().anyMatch(ConductionArea.class::isInstance);
                   if (alreadyConnectedToPlane) {
                     continue;
                   }
                 }
-                autoroute_item_list.add(curr_item);
-                String netName = (net != null) ? net.name : "net#" + curr_net_no;
-                FRLogger.debug("Queuing item for routing: " + curr_item.getClass().getSimpleName() + " on net '"
-                    + netName + "' (connected: " + connected_set.size() + "/" + net_item_count + ")");
+                autorouteItemList.add(currItem);
+                String netName = net != null ? net.name : "net#" + currNetNo;
+                FRLogger.debug(
+                    "Queuing item for routing: "
+                        + currItem.getClass().getSimpleName()
+                        + " on net '"
+                        + netName
+                        + "' (connected: "
+                        + connectedSet.size()
+                        + "/"
+                        + netItemCount
+                        + ")");
               }
             }
           }
         }
       }
     }
-    return autoroute_item_list;
+    return autorouteItemList;
   }
 
   /**
-   * Multi-threaded version of the router that routes one ripup pass of all items
-   * of the board. WARNING: this version is not working as intended yet. It is a
-   * work in progress.
-   * <p>
-   * Returns false if the board is already completely routed.
+   * Multi-threaded version of the router that routes one ripup pass of all items of the board.
+   * WARNING: this version is not working as intended yet. It is a work in progress.
+   *
+   * <p>Returns false if the board is already completely routed.
    */
-  private boolean autoroute_pass_multi_thread(int p_pass_no) {
+  private boolean autoroutePassMultiThread(int passNo) {
     try {
-      List<Item> autoroute_item_list = getAutorouteItems(this.board);
+      List<Item> autorouteItemList = getAutorouteItems(this.board);
 
       // If there are no items to route, we're done
-      if (autoroute_item_list.isEmpty()) {
-        this.air_line = null;
+      if (autorouteItemList.isEmpty()) {
+        this.airLine = null;
         return false;
       }
 
       boolean useSlowAlgorithm = false;
 
-      BatchAutorouterThread[] autorouterThreads = new BatchAutorouterThread[job.routerSettings.maxThreads];
-      BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
+      BatchAutorouterThread[] autorouterThreads =
+          new BatchAutorouterThread[job.routerSettings.maxThreads];
+      final BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
 
       // Prepare the threads
       for (int threadIndex = 0; threadIndex < job.routerSettings.maxThreads; threadIndex++) {
@@ -340,22 +370,32 @@ public class BatchAutorouter extends NamedAlgorithm {
         // shuffle the items to route
         shuffle(clonedAutorouteItemList, this.random);
 
-        autorouterThreads[threadIndex] = new BatchAutorouterThread(clonedBoard, clonedAutorouteItemList, p_pass_no,
-            job.routerSettings, this.start_ripup_costs,
-            this.trace_pull_tight_accuracy, this.remove_unconnected_vias, true);
-        autorouterThreads[threadIndex].setName("Router thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex));
+        autorouterThreads[threadIndex] =
+            new BatchAutorouterThread(
+                clonedBoard,
+                clonedAutorouteItemList,
+                passNo,
+                job.routerSettings,
+                this.startRipupCosts,
+                this.tracePullTightAccuracy,
+                this.removeUnconnectedVias,
+                true);
+        autorouterThreads[threadIndex].setName(
+            "Router thread #" + passNo + "." + threadIndexToLetter(threadIndex));
         autorouterThreads[threadIndex].setDaemon(true);
         autorouterThreads[threadIndex].setPriority(Thread.MIN_PRIORITY);
       }
 
       // Update the board on the GUI only based on the first thread
-      autorouterThreads[0].addBoardUpdatedEventListener(new BoardUpdatedEventListener() {
-        @Override
-        public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-          air_line = autorouterThreads[0].latest_air_line;
-          fireBoardUpdatedEvent(event.getBoardStatistics(), event.getRouterCounters(), event.getBoard());
-        }
-      });
+      autorouterThreads[0].addBoardUpdatedEventListener(
+          new BoardUpdatedEventListener() {
+            @Override
+            public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
+              airLine = autorouterThreads[0].latestAirLine;
+              fireBoardUpdatedEvent(
+                  event.getBoardStatistics(), event.getRouterCounters(), event.getBoard());
+            }
+          });
 
       // Start the threads
       for (int threadIndex = 0; threadIndex < job.routerSettings.maxThreads; threadIndex++) {
@@ -371,7 +411,12 @@ public class BatchAutorouter extends NamedAlgorithm {
         try {
           autorouterThread.join(TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
         } catch (InterruptedException e) {
-          job.logError("Autorouter thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex) + " was interrupted",
+          job.logError(
+              "Autorouter thread #"
+                  + passNo
+                  + "."
+                  + threadIndexToLetter(threadIndex)
+                  + " was interrupted",
               e);
           this.thread.requestStop();
           break;
@@ -380,15 +425,20 @@ public class BatchAutorouter extends NamedAlgorithm {
         bh.add(autorouterThread.getBoard());
 
         // calculate the new board score
-        BoardStatistics clonedBoardStatistics = autorouterThread
-            .getBoard()
-            .get_statistics();
-        float clonedBoardScore = clonedBoardStatistics.getNormalizedScore(job.routerSettings.scoring);
+        BoardStatistics clonedBoardStatistics = autorouterThread.getBoard().getStatistics();
+        float clonedBoardScore =
+            clonedBoardStatistics.getNormalizedScore(job.routerSettings.scoring);
 
-        job.logDebug("Router thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex) + " finished with score: "
-            + FRLogger.formatScore(clonedBoardScore,
-                clonedBoardStatistics.connections.incompleteCount,
-                clonedBoardStatistics.clearanceViolations.totalCount));
+        job.logDebug(
+            "Router thread #"
+                + passNo
+                + "."
+                + threadIndexToLetter(threadIndex)
+                + " finished with score: "
+                + FRLogger.formatScore(
+                    clonedBoardScore,
+                    clonedBoardStatistics.connections.incompleteCount,
+                    clonedBoardStatistics.clearanceViolations.totalCount));
 
         // Aggregate resource usage
         job.resourceUsage.cpuTimeUsed += autorouterThread.cpuTimeUsed;
@@ -400,7 +450,7 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       // Find the best thread
       for (int i = 0; i < job.routerSettings.maxThreads; i++) {
-        BoardStatistics stats = autorouterThreads[i].getBoard().get_statistics();
+        BoardStatistics stats = autorouterThreads[i].getBoard().getStatistics();
         float score = stats.getNormalizedScore(job.routerSettings.scoring);
         if (score > bestScore) {
           bestScore = score;
@@ -415,57 +465,59 @@ public class BatchAutorouter extends NamedAlgorithm {
       boolean anyProgress = bestThread.getRoutedCount() > 0 || bestThread.getFailedCount() > 0;
 
       // We are done with this pass
-      this.air_line = null;
+      this.airLine = null;
       return anyProgress;
     } catch (Exception e) {
       job.logError("Something went wrong during the auto-routing", e);
-      this.air_line = null;
+      this.airLine = null;
       return false;
     }
   }
 
   /**
-   * Auto-routes one ripup pass of all items of the board. Returns false, if the
-   * board is already completely routed.
+   * Auto-routes one ripup pass of all items of the board. Returns false, if the board is already
+   * completely routed.
    */
-  private boolean autoroute_pass(int p_pass_no) {
+  private boolean autoroutePass(int passNo) {
     long passStartTime = System.currentTimeMillis();
     try {
-      List<Item> autoroute_item_list = getAutorouteItems(this.board);
+      List<Item> autorouteItemList = getAutorouteItems(this.board);
 
       // If there are no items to route, we're done
-      if (autoroute_item_list.isEmpty()) {
-        this.air_line = null;
+      if (autorouteItemList.isEmpty()) {
+        this.airLine = null;
         return false;
       }
 
-      int items_to_go_count = autoroute_item_list.size();
-      int ripped_item_count = 0;
-      int not_routed = 0;
-      int routed = 0;
-      int skipped = 0;
-      BoardStatistics stats = board.get_statistics();
+      int itemsToGoCount = autorouteItemList.size();
+      final BoardStatistics stats = board.getStatistics();
       RouterCounters routerCounters = new RouterCounters();
       routerCounters.phase = "autoroute";
-      routerCounters.passCount = p_pass_no;
-      routerCounters.queuedToBeRoutedCount = items_to_go_count;
-      routerCounters.skippedCount = skipped;
-      routerCounters.rippedCount = ripped_item_count;
-      routerCounters.failedToBeRoutedCount = not_routed;
-      routerCounters.routedCount = routed;
+      routerCounters.passCount = passNo;
+      routerCounters.queuedToBeRoutedCount = itemsToGoCount;
+      routerCounters.skippedCount = 0;
+      routerCounters.rippedCount = 0;
+      routerCounters.failedToBeRoutedCount = 0;
+      routerCounters.routedCount = 0;
       DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
       tempDrc.calculateAllIncompletes();
       routerCounters.incompleteCount = tempDrc.getIncompleteCount();
 
       // Log incomplete details for debugging
       if (routerCounters.incompleteCount > 0) {
-        job.logDebug("Pass #" + p_pass_no + ": " + routerCounters.incompleteCount + " incompletes across "
-            + items_to_go_count + " items to route");
-        for (int netNo = 1; netNo <= board.rules.nets.max_net_no(); netNo++) {
+        job.logDebug(
+            "Pass #"
+                + passNo
+                + ": "
+                + routerCounters.incompleteCount
+                + " incompletes across "
+                + itemsToGoCount
+                + " items to route");
+        for (int netNo = 1; netNo <= board.rules.nets.maxNetNo(); netNo++) {
           int netIncompletes = tempDrc.getIncompleteCount(netNo);
           if (netIncompletes > 0) {
             Net net = board.rules.nets.get(netNo);
-            String netName = (net != null) ? net.name : "net#" + netNo;
+            String netName = net != null ? net.name : "net#" + netNo;
             job.logDebug("  Net '" + netName + "' has " + netIncompletes + " incomplete(s)");
           }
         }
@@ -477,24 +529,31 @@ public class BatchAutorouter extends NamedAlgorithm {
       // This prioritizes local connections which typically route faster
       // NOTE: Disabled in v2.3 because it negatively impacts convergence compared to
       // v1.9 (natural order)
-      // autoroute_item_list.sort(Comparator.comparingDouble(this::calculateItemDistance));
+      // autorouteItemList.sort(Comparator.comparingDouble(this::calculateItemDistance));
 
+      int rippedItemCount = 0;
+      int notRouted = 0;
+      int routed = 0;
+      int skipped = 0;
       // Let's go through all items to route
-      for (Item curr_item : autoroute_item_list) {
+      for (Item currItem : autorouteItemList) {
         // If the user requested to stop the auto-router, we stop it
-        if (this.thread.is_stop_auto_router_requested()) {
+        if (this.thread.isStopAutoRouterRequested()) {
           break;
         }
 
         // Let's go through all nets of this item
-        for (int i = 0; i < curr_item.net_count(); i++) {
+        for (int i = 0; i < currItem.netCount(); i++) {
           // If the user requested to stop the auto-router, we stop it
-          if (this.thread.is_stop_auto_router_requested()) {
+          if (this.thread.isStopAutoRouterRequested()) {
             break;
           }
 
-          if (this.settings.maxItems != null && this.settings.maxItems > 0 && this.totalItemsRouted >= this.settings.maxItems) {
-            job.logInfo("Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
+          if (this.settings.maxItems != null
+              && this.settings.maxItems > 0
+              && this.totalItemsRouted >= this.settings.maxItems) {
+            job.logInfo(
+                "Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
             // Call requestStop() (sets ALL) instead of request_stop_auto_router() (sets
             // AUTO_ROUTER_ONLY) so the optimization stage is also skipped.  maxItems is a
             // debugging/test ceiling meant to bound the entire routing job; running the
@@ -506,37 +565,46 @@ public class BatchAutorouter extends NamedAlgorithm {
           this.totalItemsRouted++;
 
           // We visually mark the area of the board, which is changed by the auto-router
-          board.start_marking_changed_area();
+          board.startMarkingChangedArea();
 
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           // Use a fresh set per item to mirror v1.9 behavior and avoid cross-item side effects.
-          SortedSet<Item> ripped_item_list = new TreeSet<>();
-          Map<Item, Integer> ripped_item_costs = new LinkedHashMap<>();
-          int netItemsBefore = board.get_connectable_items(curr_item.get_net_no(i)).size();
+          SortedSet<Item> rippedItemList = new TreeSet<>();
+          Map<Item, Integer> rippedItemCosts = new LinkedHashMap<>();
+          final int netItemsBefore = board.getConnectableItems(currItem.getNetNo(i)).size();
           PerformanceProfiler.start("autoroute_item");
-          var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, ripped_item_costs, p_pass_no);
+          var autorouterResult =
+              autorouteItem(
+                  currItem, currItem.getNetNo(i), rippedItemList, rippedItemCosts, passNo);
           PerformanceProfiler.end("autoroute_item");
-          if (!ripped_item_list.isEmpty()) {
-            for (Item rippedItem : ripped_item_list) {
+          if (!rippedItemList.isEmpty()) {
+            for (Item rippedItem : rippedItemList) {
               StringBuilder rippedNets = new StringBuilder();
-              for (int netIx = 0; netIx < rippedItem.net_count(); netIx++) {
+              for (int netIx = 0; netIx < rippedItem.netCount(); netIx++) {
                 if (netIx > 0) {
                   rippedNets.append('|');
                 }
-                rippedNets.append(rippedItem.get_net_no(netIx));
+                rippedNets.append(rippedItem.getNetNo(netIx));
               }
-              int ripupCost = ripped_item_costs.getOrDefault(rippedItem, -1);
+              int ripupCost = rippedItemCosts.getOrDefault(rippedItem, -1);
               FRLogger.trace(
                   "BatchAutorouter.autoroute_pass",
                   "compare_trace_ripped_item",
-                  "source_item=" + curr_item.get_id_no()
-                      + ", source_net=" + curr_item.get_net_no(i)
-                      + ", ripped_id=" + rippedItem.get_id_no()
-                      + ", ripped_type=" + rippedItem.getClass().getSimpleName()
-                      + ", ripped_net_count=" + rippedItem.net_count()
-                      + ", ripped_nets=" + rippedNets
-                      + ", ripup_cost=" + ripupCost,
-                  "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no(),
+                  "source_item="
+                      + currItem.getIdNo()
+                      + ", source_net="
+                      + currItem.getNetNo(i)
+                      + ", ripped_id="
+                      + rippedItem.getIdNo()
+                      + ", ripped_type="
+                      + rippedItem.getClass().getSimpleName()
+                      + ", ripped_net_count="
+                      + rippedItem.netCount()
+                      + ", ripped_nets="
+                      + rippedNets
+                      + ", ripupCost="
+                      + ripupCost,
+                  "Net #" + currItem.getNetNo(i) + ",Item #" + currItem.getIdNo(),
                   getImpactedPoints(rippedItem));
             }
           }
@@ -544,62 +612,91 @@ public class BatchAutorouter extends NamedAlgorithm {
             DesignRulesChecker innerDrc = new DesignRulesChecker(board, null);
             innerDrc.calculateAllIncompletes();
             int tempIncomp = innerDrc.getIncompleteCount();
-            int tempNetIncomp = innerDrc.getIncompleteCount(curr_item.get_net_no(i));
-            int netItemsAfter = board.get_connectable_items(curr_item.get_net_no(i)).size();
-            int maxItemId = board.communication.id_no_generator.max_generated_no();
+            int tempNetIncomp = innerDrc.getIncompleteCount(currItem.getNetNo(i));
+            int netItemsAfter = board.getConnectableItems(currItem.getNetNo(i)).size();
+            int maxItemId = board.communication.idNoGenerator.maxGeneratedNo();
             FRLogger.trace(
                 "BatchAutorouter.autoroute_pass",
                 "compare_trace_route_item",
-                "Routing " + curr_item.getClass().getSimpleName() + " -> result=" + autorouterResult.state
-                    + ", details=" + autorouterResult.details
-                    + ", incompletes=" + tempIncomp + ", netIncomplete=" + tempNetIncomp
-                    + ", ripped=" + ripped_item_list.size() + ", netItems="
-                    + netItemsBefore + "->" + netItemsAfter
-                    + ", maxItemId=" + maxItemId,
-                "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no() + ",Type="
-                    + curr_item.getClass().getSimpleName(),
-                getImpactedPoints(curr_item));
+                "Routing "
+                    + currItem.getClass().getSimpleName()
+                    + " -> result="
+                    + autorouterResult.state
+                    + ", details="
+                    + autorouterResult.details
+                    + ", incompletes="
+                    + tempIncomp
+                    + ", netIncomplete="
+                    + tempNetIncomp
+                    + ", ripped="
+                    + rippedItemList.size()
+                    + ", netItems="
+                    + netItemsBefore
+                    + "->"
+                    + netItemsAfter
+                    + ", maxItemId="
+                    + maxItemId,
+                "Net #"
+                    + currItem.getNetNo(i)
+                    + ",Item #"
+                    + currItem.getIdNo()
+                    + ",Type="
+                    + currItem.getClass().getSimpleName(),
+                getImpactedPoints(currItem));
           }
 
-          if (curr_item.get_net_no(i) == 94) {
+          if (currItem.getNetNo(i) == 94) {
             FRLogger.trace(
                 "BatchAutorouter.autoroute_pass",
                 "compare_trace_dump_net_items",
                 "Dump net 94 items",
                 "Net #94",
                 new Point[0]);
-            for (Item nItem : board.get_connectable_items(94)) {
-              if (nItem instanceof Trace) {
-                Trace t = (Trace) nItem;
+            for (Item netItem : board.getConnectableItems(94)) {
+              if (netItem instanceof Trace) {
+                Trace t = (Trace) netItem;
                 FRLogger.trace(
                     "BatchAutorouter.autoroute_pass",
                     "compare_trace_dump_net_item",
-                    "Trace layer=" + t.get_layer() + " corners=" + t.first_corner() + " to " + t.last_corner(),
-                    "Net #94,Item #" + t.get_id_no() + ",Type=Trace",
-                    new Point[] { t.first_corner(), t.last_corner() });
-              } else if (nItem instanceof Via) {
-                Via v = (Via) nItem;
+                    "Trace layer="
+                        + t.getLayer()
+                        + " corners="
+                        + t.firstCorner()
+                        + " to "
+                        + t.lastCorner(),
+                    "Net #94,Item #" + t.getIdNo() + ",Type=Trace",
+                    new Point[] {t.firstCorner(), t.lastCorner()});
+              } else if (netItem instanceof Via) {
+                Via v = (Via) netItem;
                 FRLogger.trace(
                     "BatchAutorouter.autoroute_pass",
                     "compare_trace_dump_net_item",
-                    "Via center=" + v.get_center(),
-                    "Net #94,Item #" + v.get_id_no() + ",Type=Via",
-                    new Point[] { v.get_center() });
-              } else if (nItem instanceof Pin) {
-                Pin p = (Pin) nItem;
+                    "Via center=" + v.getCenter(),
+                    "Net #94,Item #" + v.getIdNo() + ",Type=Via",
+                    new Point[] {v.getCenter()});
+              } else if (netItem instanceof Pin) {
+                Pin p = (Pin) netItem;
                 FRLogger.trace(
                     "BatchAutorouter.autoroute_pass",
                     "compare_trace_dump_net_item",
-                    "Pin center=" + p.get_center() + " name=" + p.name() + " comp=" + p.component_name(),
-                    "Net #94,Item #" + p.get_id_no() + ",Type=Pin",
-                    new Point[] { p.get_center() });
+                    "Pin center="
+                        + p.getCenter()
+                        + " name="
+                        + p.name()
+                        + " comp="
+                        + p.componentName(),
+                    "Net #94,Item #" + p.getIdNo() + ",Type=Pin",
+                    new Point[] {p.getCenter()});
               } else {
                 FRLogger.trace(
                     "BatchAutorouter.autoroute_pass",
                     "compare_trace_dump_net_item",
-                    "Item " + nItem.getClass().getSimpleName(),
-                    "Net #94,Item #" + nItem.get_id_no() + ",Type=" + nItem.getClass().getSimpleName(),
-                    getImpactedPoints(nItem));
+                    "Item " + netItem.getClass().getSimpleName(),
+                    "Net #94,Item #"
+                        + netItem.getIdNo()
+                        + ",Type="
+                        + netItem.getClass().getSimpleName(),
+                    getImpactedPoints(netItem));
               }
             }
           }
@@ -613,32 +710,43 @@ public class BatchAutorouter extends NamedAlgorithm {
             // The item doesn't need to be routed
             ++skipped;
           } else {
-            Net net = board.rules.nets.get(curr_item.get_net_no(i));
-            String netName = (net != null) ? net.name : "net#" + curr_item.get_net_no(i);
+            Net net = board.rules.nets.get(currItem.getNetNo(i));
+            String netName = net != null ? net.name : "net#" + currItem.getNetNo(i);
 
             // Record the failure
-            board.failureLog.recordFailure(curr_item, p_pass_no, autorouterResult.state, autorouterResult.details);
+            board.failureLog.recordFailure(
+                currItem, passNo, autorouterResult.state, autorouterResult.details);
 
             job.logDebug("Autorouter " + autorouterResult.details);
             // Log details when we're down to last few items or item has many failures
-            int failureCount = board.failureLog.getFailureCount(curr_item);
-            if (items_to_go_count <= 5 || failureCount >= 3) {
-              job.logDebug("Pass #" + p_pass_no + ": Failed to route " + curr_item.getClass().getSimpleName()
-                  + " on net '" + netName + "' (" + items_to_go_count + " items remaining, "
-                  + failureCount + " failures). State: " + autorouterResult.state);
+            int failureCount = board.failureLog.getFailureCount(currItem);
+            if (itemsToGoCount <= 5 || failureCount >= 3) {
+              job.logDebug(
+                  "Pass #"
+                      + passNo
+                      + ": Failed to route "
+                      + currItem.getClass().getSimpleName()
+                      + " on net '"
+                      + netName
+                      + "' ("
+                      + itemsToGoCount
+                      + " items remaining, "
+                      + failureCount
+                      + " failures). State: "
+                      + autorouterResult.state);
             }
-            ++not_routed;
+            ++notRouted;
           }
-          --items_to_go_count;
-          ripped_item_count += ripped_item_list.size();
+          --itemsToGoCount;
+          rippedItemCount += rippedItemList.size();
 
           if (shouldFireBoardUpdate()) {
-            BoardStatistics boardStatistics = board.get_statistics();
-            routerCounters.passCount = p_pass_no;
-            routerCounters.queuedToBeRoutedCount = items_to_go_count;
+            final BoardStatistics boardStatistics = board.getStatistics();
+            routerCounters.passCount = passNo;
+            routerCounters.queuedToBeRoutedCount = itemsToGoCount;
             routerCounters.skippedCount = skipped;
-            routerCounters.rippedCount = ripped_item_count;
-            routerCounters.failedToBeRoutedCount = not_routed;
+            routerCounters.rippedCount = rippedItemCount;
+            routerCounters.failedToBeRoutedCount = notRouted;
             routerCounters.routedCount = routed;
             routerCounters.incompleteCount = calculateIncompleteCount(board);
             this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
@@ -651,13 +759,13 @@ public class BatchAutorouter extends NamedAlgorithm {
           "BatchAutorouter.autoroute_pass",
           "compare_trace_remove_tails",
           "Incompletes before remove_tails=" + incompletesBefore,
-          "Autorouter pass #" + p_pass_no,
+          "Autorouter pass #" + passNo,
           new Point[0]);
 
-      if (this.remove_unconnected_vias) {
-        remove_tails(Item.StopConnectionOption.NONE);
+      if (this.removeUnconnectedVias) {
+        removeTails(Item.StopConnectionOption.NONE);
       } else {
-        remove_tails(Item.StopConnectionOption.FANOUT_VIA);
+        removeTails(Item.StopConnectionOption.FANOUT_VIA);
       }
 
       int incompletesAfter = calculateIncompleteCount(board);
@@ -665,30 +773,31 @@ public class BatchAutorouter extends NamedAlgorithm {
           "BatchAutorouter.autoroute_pass",
           "compare_trace_remove_tails",
           "Incompletes after remove_tails=" + incompletesAfter,
-          "Autorouter pass #" + p_pass_no,
+          "Autorouter pass #" + passNo,
           new Point[0]);
 
       // Fire final update for this pass
-      BoardStatistics boardStatistics = board.get_statistics();
-      routerCounters.passCount = p_pass_no;
-      routerCounters.queuedToBeRoutedCount = items_to_go_count;
+      final BoardStatistics boardStatistics = board.getStatistics();
+      routerCounters.passCount = passNo;
+      routerCounters.queuedToBeRoutedCount = itemsToGoCount;
       routerCounters.skippedCount = skipped;
-      routerCounters.rippedCount = ripped_item_count;
-      routerCounters.failedToBeRoutedCount = not_routed;
+      routerCounters.rippedCount = rippedItemCount;
+      routerCounters.failedToBeRoutedCount = notRouted;
       routerCounters.routedCount = routed;
       routerCounters.incompleteCount = calculateIncompleteCount(board);
       this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
 
       long passDuration = System.currentTimeMillis() - passStartTime;
-      int currentRipupCost = this.start_ripup_costs * p_pass_no;
-      PerformanceProfiler.recordPass(p_pass_no, routerCounters.incompleteCount, passDuration, currentRipupCost);
+      int currentRipupCost = this.startRipupCosts * passNo;
+      PerformanceProfiler.recordPass(
+          passNo, routerCounters.incompleteCount, passDuration, currentRipupCost);
 
       // We are done with this pass
-      this.air_line = null;
-      return routed > 0 || not_routed > 0;
+      this.airLine = null;
+      return routed > 0 || notRouted > 0;
     } catch (Exception e) {
       job.logError("Something went wrong during the auto-routing", e);
-      this.air_line = null;
+      this.airLine = null;
       return false;
     }
   }
@@ -714,12 +823,13 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Builds a human-readable summary of all unrouted connections on the current board,
-   * grouped by net. For each unrouted connection the component and pin names of both
-   * endpoints are listed so that the user can identify exactly which connections are
-   * missing and address them in their design.
+   * Builds a human-readable summary of all unrouted connections on the current board, grouped by
+   * net. For each unrouted connection the component and pin names of both endpoints are listed so
+   * that the user can identify exactly which connections are missing and address them in their
+   * design.
    *
    * <p>Example output:
+   *
    * <pre>
    *   Net 'GND' (1 unrouted connection):
    *     - J2-A1  ->  U1-1
@@ -729,53 +839,48 @@ public class BatchAutorouter extends NamedAlgorithm {
    *
    * @return a formatted, multi-line string describing every unrouted airline
    */
-
   @Override
   public NamedAlgorithmType getType() {
     return NamedAlgorithmType.ROUTER;
   }
 
-  /**
-   * Returns the initial number of unrouted nets at the start of the routing
-   * session.
-   */
+  /** Returns the initial number of unrouted nets at the start of the routing session. */
   public int getInitialUnroutedCount() {
     return this.initialUnroutedCount;
   }
 
-  /**
-   * Returns the time when the routing session started.
-   */
+  /** Returns the time when the routing session started. */
   public Instant getSessionStartTime() {
     return this.sessionStartTime;
   }
 
   /**
-   * Autoroutes ripup passes until the board is completed or the autorouter is
-   * stopped by the user. Returns true if the board is completed.
+   * Autoroutes ripup passes until the board is completed or the autorouter is stopped by the user.
+   * Returns true if the board is completed.
    */
   public boolean runBatchLoop() {
     boolean anyRoutable = false;
     for (int i = 0; i < this.settings.getLayerCount(); i++) {
-      if (this.settings.get_layer_active(i) && this.board.layer_structure.arr[i].is_signal) {
+      if (this.settings.getLayerActive(i) && this.board.layerStructure.arr[i].isSignal) {
         anyRoutable = true;
         break;
       }
     }
     if (!anyRoutable) {
       FRLogger.warn("Cannot start autorouter: all layers are disabled.");
-      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.CANCELLED, 0, this.board.get_hash()));
+      this.fireTaskStateChangedEvent(
+          new TaskStateChangedEvent(this, TaskState.CANCELLED, 0, this.board.getHash()));
       throw new IllegalArgumentException("Cannot start autorouter: all layers are disabled.");
     }
 
-    this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
+    this.fireTaskStateChangedEvent(
+        new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.getHash()));
 
     // Capture initial state for session summary
     this.sessionStartTime = Instant.now();
     this.initialUnroutedCount = calculateIncompleteCount(this.board);
 
-    boolean continueAutorouting = true;
-    BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
+    final BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
 
     // Record configuration for profiler
     if (this.settings.getLayerCount() > 0) {
@@ -783,74 +888,100 @@ public class BatchAutorouter extends NamedAlgorithm {
       double[] prefCosts = new double[layerCount];
       double[] againstCosts = new double[layerCount];
       for (int i = 0; i < layerCount; i++) {
-        prefCosts[i] = this.settings.get_preferred_direction_trace_costs(i);
-        againstCosts[i] = this.settings.get_against_preferred_direction_trace_costs(i);
+        prefCosts[i] = this.settings.getPreferredDirectionTraceCosts(i);
+        againstCosts[i] = this.settings.getAgainstPreferredDirectionTraceCosts(i);
       }
       PerformanceProfiler.recordConfiguration(
-          this.settings.get_via_costs(),
-          this.settings.get_plane_via_costs(),
-          prefCosts,
-          againstCosts);
+          this.settings.getViaCosts(), this.settings.getPlaneViaCosts(), prefCosts, againstCosts);
     }
 
-    job.logDebug("Checking fanout pre-pass. settings.fanout.enabled=" + this.settings.isFanoutEnabled() + ", smd_pins=" + this.board.get_smd_pins().size());
+    job.logDebug(
+        "Checking fanout pre-pass. settings.fanout.enabled="
+            + this.settings.isFanoutEnabled()
+            + ", smdPins="
+            + this.board.getSmdPins().size());
     // Run SMD fanout pre-pass when the board has SMD pins and fanout is enabled
     if (this.settings.isFanoutEnabled()) {
-      if (this.board.get_smd_pins().isEmpty()) {
+      if (this.board.getSmdPins().isEmpty()) {
         job.logInfo("Fanout stage is enabled but skipped because the board has no SMD pins.");
       } else {
-        float fanoutCpuSecondsStart = sampleCurrentThreadCpuSeconds();
-        float fanoutAllocatedMbStart = sampleCurrentThreadAllocatedMb();
+        final float fanoutCpuSecondsStart = sampleCurrentThreadCpuSeconds();
+        final float fanoutAllocatedMbStart = sampleCurrentThreadAllocatedMb();
         float fanoutPeakHeapMbAtStart = sampleHeapUsageMb();
-        final float[] fanoutPeakHeapMbObserved = new float[] { fanoutPeakHeapMbAtStart };
+        final float[] fanoutPeakHeapMbObserved = new float[] {fanoutPeakHeapMbAtStart};
         // Count pins that actually need fanout. BatchFanout only processes SMD pins that
         // belong to a net, so exclude netless pins from the total. Among net-connected
         // pins, count those that are already fully connected (empty unconnected set).
-         int netConnectedSmdPins = 0;
-         int alreadyConnectedAtStart = 0;
-         for (app.freerouting.board.Pin pin : this.board.get_smd_pins()) {
-           if (pin.net_count() > 0) {
-             netConnectedSmdPins++;
-             if (pin.get_unconnected_set(pin.get_net_no(0)).isEmpty()) {
-               alreadyConnectedAtStart++;
-             }
-           }
-         }
-         int pinsToFanout = netConnectedSmdPins - alreadyConnectedAtStart;
-         job.logInfo("Fanout stage started on board '" + this.board.get_hash() + "' with "
-             + pinsToFanout + " of " + this.board.get_smd_pins().size() + " SMD pins needing fanout ("
-             + alreadyConnectedAtStart + " already connected, "
-             + (this.board.get_smd_pins().size() - netConnectedSmdPins) + " netless).");
-        BatchFanout.FanoutRunSummary fanoutSummary = BatchFanout.fanout_board(this.board, this.settings, this.thread,
-            status -> {
-          fanoutPeakHeapMbObserved[0] = Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
-          RouterCounters fanoutCounters = new RouterCounters();
-          fanoutCounters.phase = "fanout";
-          fanoutCounters.passCount = status.passNo();
-          fanoutCounters.queuedToBeRoutedCount = status.pinsToGo();
-          fanoutCounters.routedCount = status.routedCount();
-          fanoutCounters.skippedCount = 0;
-          fanoutCounters.rippedCount = 0;
-          fanoutCounters.failedToBeRoutedCount = status.notRoutedCount() + status.insertErrorCount();
-          fanoutCounters.incompleteCount = status.boardStatistics().connections.incompleteCount;
-          fanoutCounters.fanoutExtraViasCount = status.extraViasThisPass();
-          this.fireBoardUpdatedEvent(status.boardStatistics(), fanoutCounters, this.board);
-
-          if (status.passCompleted()) {
-            String boardHash = this.board.get_hash();
-            String fanoutMessage = String.format(java.util.Locale.US,
-                "Fanout pass #%d on board '%s' completed in %.2f seconds with %d SMD pin%s fanouted, %d not routed, %d insert error%s, +%d extra via%s (%d SMD pin%s still to check in pass, ripup costs=%d).",
-                status.passNo(), boardHash,
-                status.passDurationMillis() / 1000.0,
-                status.routedCount(), status.routedCount() == 1 ? "" : "s",
-                status.notRoutedCount(),
-                status.insertErrorCount(), status.insertErrorCount() == 1 ? "" : "s",
-                status.extraViasThisPass(), status.extraViasThisPass() == 1 ? "" : "s",
-                status.pinsToGo(), status.pinsToGo() == 1 ? "" : "s",
-                status.ripupCosts());
-            job.logInfo(fanoutMessage);
+        int netConnectedSmdPins = 0;
+        int alreadyConnectedAtStart = 0;
+        for (app.freerouting.board.Pin pin : this.board.getSmdPins()) {
+          if (pin.netCount() > 0) {
+            netConnectedSmdPins++;
+            if (pin.getUnconnectedSet(pin.getNetNo(0)).isEmpty()) {
+              alreadyConnectedAtStart++;
+            }
           }
-        });
+        }
+        int pinsToFanout = netConnectedSmdPins - alreadyConnectedAtStart;
+        job.logInfo(
+            "Fanout stage started on board '"
+                + this.board.getHash()
+                + "' with "
+                + pinsToFanout
+                + " of "
+                + this.board.getSmdPins().size()
+                + " SMD pins needing fanout ("
+                + alreadyConnectedAtStart
+                + " already connected, "
+                + (this.board.getSmdPins().size() - netConnectedSmdPins)
+                + " netless).");
+        BatchFanout.FanoutRunSummary fanoutSummary =
+            BatchFanout.fanoutBoard(
+                this.board,
+                this.settings,
+                this.thread,
+                status -> {
+                  fanoutPeakHeapMbObserved[0] =
+                      Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
+                  RouterCounters fanoutCounters = new RouterCounters();
+                  fanoutCounters.phase = "fanout";
+                  fanoutCounters.passCount = status.passNo();
+                  fanoutCounters.queuedToBeRoutedCount = status.pinsToGo();
+                  fanoutCounters.routedCount = status.routedCount();
+                  fanoutCounters.skippedCount = 0;
+                  fanoutCounters.rippedCount = 0;
+                  fanoutCounters.failedToBeRoutedCount =
+                      status.notRoutedCount() + status.insertErrorCount();
+                  fanoutCounters.incompleteCount =
+                      status.boardStatistics().connections.incompleteCount;
+                  fanoutCounters.fanoutExtraViasCount = status.extraViasThisPass();
+                  this.fireBoardUpdatedEvent(status.boardStatistics(), fanoutCounters, this.board);
+
+                  if (status.passCompleted()) {
+                    String boardHash = this.board.getHash();
+                    String fanoutMessage =
+                        String.format(
+                            java.util.Locale.US,
+                            "Fanout pass #%d on board '%s' completed in %.2f seconds with "
+                                + "%d SMD pin%s fanouted, %d not routed, %d insert error%s, "
+                                + "+%d extra via%s (%d SMD pin%s still to check in pass, "
+                                + "ripup costs=%d).",
+                            status.passNo(),
+                            boardHash,
+                            status.passDurationMillis() / 1000.0,
+                            status.routedCount(),
+                            status.routedCount() == 1 ? "" : "s",
+                            status.notRoutedCount(),
+                            status.insertErrorCount(),
+                            status.insertErrorCount() == 1 ? "" : "s",
+                            status.extraViasThisPass(),
+                            status.extraViasThisPass() == 1 ? "" : "s",
+                            status.pinsToGo(),
+                            status.pinsToGo() == 1 ? "" : "s",
+                            status.ripupCosts());
+                    job.logInfo(fanoutMessage);
+                  }
+                });
         this.fanoutTimedOut = fanoutSummary.isTimedOut();
 
         float fanoutCpuSecondsEnd = sampleCurrentThreadCpuSeconds();
@@ -873,38 +1004,52 @@ public class BatchAutorouter extends NamedAlgorithm {
         float fanoutPeakHeapMb = Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
         fanoutPeakHeapMb = Math.max(fanoutPeakHeapMb, getPeakHeapMbSnapshot(job));
         BatchFanout.EscapeStatistics finalEscape = fanoutSummary.escapeStatistics();
-        String fanoutCompletionStatus = fanoutSummary.isTimedOut() ? "completed with timeout:"
-            : (this.thread.is_stop_auto_router_requested() ? "interrupted:" : "completed:");
-        String fanoutSummaryMessage = String.format(java.util.Locale.US,
-            "Fanout stage %s started with %d total SMD pins, completed in %.2f seconds, escaped pins: %d/%d (%.1f%%), using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
-            fanoutCompletionStatus,
-            finalEscape.totalSmdPins(),
-            fanoutSummary.totalDurationMillis() / 1000.0,
-            finalEscape.escapedCount(),
-            finalEscape.totalSmdPins(),
-            finalEscape.escapedPercentage(),
-            fanoutCpuSecondsUsed,
-            fanoutAllocatedMb / 1024.0f,
-            fanoutPeakHeapMb);
+        String fanoutCompletionStatus =
+            fanoutSummary.isTimedOut()
+                ? "completed with timeout:"
+                : (this.thread.isStopAutoRouterRequested() ? "interrupted:" : "completed:");
+        String fanoutSummaryMessage =
+            String.format(
+                java.util.Locale.US,
+                "Fanout stage %s started with %d total SMD pins, completed in %.2f seconds, "
+                    + "escaped pins: %d/%d (%.1f%%), using %.2f total CPU seconds, "
+                    + "%.2f GB total allocated, and %.1f MB peak heap usage.",
+                fanoutCompletionStatus,
+                finalEscape.totalSmdPins(),
+                fanoutSummary.totalDurationMillis() / 1000.0,
+                finalEscape.escapedCount(),
+                finalEscape.totalSmdPins(),
+                finalEscape.escapedPercentage(),
+                fanoutCpuSecondsUsed,
+                fanoutAllocatedMb / 1024.0f,
+                fanoutPeakHeapMb);
         job.logInfo(fanoutSummaryMessage);
       }
     }
 
     int currentUnrouted = calculateIncompleteCount(this.board);
-    boolean isRouterEnabled = this.settings.getRunRouter() && (this.settings.maxPasses == null || this.settings.maxPasses >= 0);
+    boolean isRouterEnabled =
+        this.settings.getRunRouter()
+            && (this.settings.maxPasses == null || this.settings.maxPasses >= 0);
     if (isRouterEnabled) {
-      job.logInfo("Auto-routing stage started on board '" + this.board.get_hash() + "' for "
-          + currentUnrouted + " unrouted item" + (currentUnrouted == 1 ? "" : "s") + ".");
+      job.logInfo(
+          "Auto-routing stage started on board '"
+              + this.board.getHash()
+              + "' for "
+              + currentUnrouted
+              + " unrouted item"
+              + (currentUnrouted == 1 ? "" : "s")
+              + ".");
     }
-    continueAutorouting = isRouterEnabled;
+    boolean continueAutorouting = isRouterEnabled;
 
     int currentPass = 1;
     int consecutiveNoImprovementPasses = 0;
     boolean fanoutRecoveryApplied = false;
-    float lastBestScore = Float.NEGATIVE_INFINITY;   // score at last board-restore or improvement
+    float lastBestScore = Float.NEGATIVE_INFINITY; // score at last board-restore or improvement
     float globalBestScore = Float.NEGATIVE_INFINITY; // best score seen across all passes
-    int passOfBestScore = 0;                         // pass where globalBestScore was achieved
-    int incompleteCountAtBestScore = 0;              // incomplete count when globalBestScore was recorded
+    int passOfBestScore = 0; // pass where globalBestScore was achieved
+    int incompleteCountAtBestScore = 0; // incomplete count when globalBestScore was recorded
     // Track board hashes that have already been routed. If the board does not change between
     // two consecutive passes (same hash at pass start), the router is making no progress and
     // would produce identical decisions with identical ripup budgets — stop immediately rather
@@ -912,24 +1057,28 @@ public class BatchAutorouter extends NamedAlgorithm {
     // the degenerate case where plane-net items repeatedly fail or are inserted+removed each
     // pass without updating the board state.
     Set<String> alreadyRoutedBoardHashes = new java.util.HashSet<>();
-    while (continueAutorouting && !this.thread.is_stop_auto_router_requested()) {
+    while (continueAutorouting && !this.thread.isStopAutoRouterRequested()) {
       if (job != null && job.state == RoutingJobState.TIMED_OUT) {
-        this.thread.request_stop_auto_router();
+        this.thread.requestStopAutoRouter();
       }
 
-      String currentBoardHash = this.board.get_hash();
+      String currentBoardHash = this.board.getHash();
 
-      // Same-hash stop disabled because ripup budgets and random seeds change per-pass, making progress possible in later passes.
+      // Same-hash stop disabled because ripup budgets and random seeds change per-pass, making
+      // progress possible in later passes.
       // if (alreadyRoutedBoardHashes.contains(currentBoardHash)) {
       //   job.logInfo("Board state has not changed since pass #" + (currentPass - 1)
-      //       + " (hash " + currentBoardHash + "). The auto-router cannot make further progress; stopping.");
+      //       + " (hash " + currentBoardHash + "). The auto-router cannot make further progress;
+      // stopping.");
       //   thread.request_stop_auto_router();
       //   break;
       // }
       // alreadyRoutedBoardHashes.add(currentBoardHash);
 
-      if (this.settings.maxPasses != null && this.settings.maxPasses > 0 && currentPass > this.settings.maxPasses) {
-        thread.request_stop_auto_router();
+      if (this.settings.maxPasses != null
+          && this.settings.maxPasses > 0
+          && currentPass > this.settings.maxPasses) {
+        thread.requestStopAutoRouter();
         break;
       }
 
@@ -940,19 +1089,25 @@ public class BatchAutorouter extends NamedAlgorithm {
       this.fireTaskStateChangedEvent(
           new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, currentBoardHash));
 
-      float boardScoreBefore = new BoardStatistics(this.board).getNormalizedScore(job.routerSettings.scoring);
+      float boardScoreBefore =
+          new BoardStatistics(this.board).getNormalizedScore(job.routerSettings.scoring);
       bh.add(this.board);
 
-      FRLogger.traceEntry("BatchAutorouter.autoroute_pass #" + currentPass + " on board '" + currentBoardHash + "'");
+      FRLogger.traceEntry(
+          "BatchAutorouter.autoroute_pass #"
+              + currentPass
+              + " on board '"
+              + currentBoardHash
+              + "'");
 
-      continueAutorouting = autoroute_pass(currentPass);
+      continueAutorouting = autoroutePass(currentPass);
 
       BoardStatistics boardStatisticsAfter = new BoardStatistics(this.board);
       float boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
 
-      if ((bh.size() >= STOP_AT_PASS_MINIMUM) || (this.thread.is_stop_auto_router_requested())) {
+      if ((bh.size() >= STOP_AT_PASS_MINIMUM) || (this.thread.isStopAutoRouterRequested())) {
         if (((currentPass % STOP_AT_PASS_MODULO == 0) && (currentPass >= STOP_AT_PASS_MINIMUM))
-            || (this.thread.is_stop_auto_router_requested())) {
+            || (this.thread.isStopAutoRouterRequested())) {
           // Check if the score improved compared to the previous passes, restore a
           // previous board if not. Use strict ">" so that equally-scored boards do NOT
           // trigger a restore — if every board has the same (possibly zero) score the old
@@ -961,50 +1116,67 @@ public class BatchAutorouter extends NamedAlgorithm {
           if (bh.getMaxScore() > boardScoreAfter) {
             var boardToRestore = bh.restoreBoard(MAXIMUM_TRIES_ON_THE_SAME_BOARD);
             if (boardToRestore == null) {
-              job.logInfo("The router was not able to improve the board, stopping the auto-router.");
-              thread.request_stop_auto_router();
+              job.logInfo(
+                  "The router was not able to improve the board, stopping the auto-router.");
+              thread.requestStopAutoRouter();
               break;
             }
 
             int boardToRestoreRank = bh.getRank(boardToRestore);
 
             if (boardToRestoreRank > BOARD_RANK_LIMIT) {
-              thread.request_stop_auto_router();
+              thread.requestStopAutoRouter();
               break;
             }
 
             this.board = boardToRestore;
-            var boardStatistics = this.board.get_statistics();
+            var boardStatistics = this.board.getStatistics();
             // Reset pass-local stagnation counter when restoring a previous board state
             consecutiveNoImprovementPasses = 0;
             boardStatisticsAfter = boardStatistics;
             boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
             lastBestScore = boardScoreAfter;
-            currentBoardHash = this.board.get_hash();
+            currentBoardHash = this.board.getHash();
             // Reset the same-hash set after a board restore: the restored board will be
             // routed with a higher ripup budget on subsequent passes, so earlier routing
             // decisions from the same hash may no longer apply.
             alreadyRoutedBoardHashes.clear();
             job.logDebug(
                 "Restoring an earlier board that has the score of "
-                    + FRLogger.formatScore(boardScoreAfter,
+                    + FRLogger.formatScore(
+                        boardScoreAfter,
                         boardStatisticsAfter.connections.incompleteCount,
                         boardStatisticsAfter.clearanceViolations.totalCount)
                     + ".");
           }
         }
       }
-      double autorouter_pass_duration = FRLogger
-          .traceExit("BatchAutorouter.autoroute_pass #" + currentPass + " on board '" + currentBoardHash + "'");
+      double autorouterPassDuration =
+          FRLogger.traceExit(
+              "BatchAutorouter.autoroute_pass #"
+                  + currentPass
+                  + " on board '"
+                  + currentBoardHash
+                  + "'");
 
-      String passCompletedMessage = String.format(java.util.Locale.US,
-          "Auto-routing pass #%d on board '%s' was completed in %.2f seconds with the score of %s",
-          currentPass, currentBoardHash, autorouter_pass_duration,
-          FRLogger.formatScore(boardScoreAfter, boardStatisticsAfter.connections.incompleteCount,
-              boardStatisticsAfter.clearanceViolations.totalCount));
+      String passCompletedMessage =
+          String.format(
+              java.util.Locale.US,
+              "Auto-routing pass #%d on board '%s' was completed in %.2f seconds with score %s",
+              currentPass,
+              currentBoardHash,
+              autorouterPassDuration,
+              FRLogger.formatScore(
+                  boardScoreAfter,
+                  boardStatisticsAfter.connections.incompleteCount,
+                  boardStatisticsAfter.clearanceViolations.totalCount));
       if (job.resourceUsage.cpuTimeUsed > 0) {
-        passCompletedMessage += String.format(java.util.Locale.US, ", using %.2f CPU seconds and the job allocated %.2f GB of memory so far.",
-            job.resourceUsage.cpuTimeUsed, job.resourceUsage.maxMemoryUsed / 1024.0f);
+        passCompletedMessage +=
+            String.format(
+                java.util.Locale.US,
+                ", using %.2f CPU seconds and the job allocated %.2f GB of memory so far.",
+                job.resourceUsage.cpuTimeUsed,
+                job.resourceUsage.maxMemoryUsed / 1024.0f);
       } else {
         passCompletedMessage += ".";
       }
@@ -1015,7 +1187,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       DesignRulesChecker tempDrc = new DesignRulesChecker(this.board, null);
       tempDrc.calculateAllIncompletes();
       StringBuilder perNetBreakdown = new StringBuilder();
-      for (int netNo = 1; netNo <= this.board.rules.nets.max_net_no(); netNo++) {
+      for (int netNo = 1; netNo <= this.board.rules.nets.maxNetNo(); netNo++) {
         int netIncomplete = tempDrc.getIncompleteCount(netNo);
         if (netIncomplete > 0) {
           FRLogger.trace(
@@ -1030,14 +1202,19 @@ public class BatchAutorouter extends NamedAlgorithm {
           perNetBreakdown.append(netNo).append('=').append(netIncomplete);
         }
       }
-      FRLogger.trace("BatchAutorouter.autoroute_pass", "compare_unrouted_breakdown",
-          "pass=" + currentPass
-              + ", total=" + tempDrc.getIncompleteCount()
-              + ", breakdown=" + perNetBreakdown,
+      FRLogger.trace(
+          "BatchAutorouter.autoroute_pass",
+          "compare_unrouted_breakdown",
+          "pass="
+              + currentPass
+              + ", total="
+              + tempDrc.getIncompleteCount()
+              + ", breakdown="
+              + perNetBreakdown,
           "",
           new Point[0]);
 
-      if (this.settings.save_intermediate_stages) {
+      if (Boolean.TRUE.equals(this.settings.saveIntermediateStages)) {
         fireBoardSnapshotEvent(this.board);
       }
 
@@ -1068,31 +1245,42 @@ public class BatchAutorouter extends NamedAlgorithm {
               && !fanoutRecoveryApplied
               && boardStatisticsAfter.connections.incompleteCount > 0
               && consecutiveNoImprovementPasses >= FANOUT_RECOVERY_STAGNATION_PASSES) {
-            int incompletesBeforeRecovery = boardStatisticsAfter.connections.incompleteCount;
-            remove_tails(Item.StopConnectionOption.NONE);
+            final int incompletesBeforeRecovery = boardStatisticsAfter.connections.incompleteCount;
+            removeTails(Item.StopConnectionOption.NONE);
             boardStatisticsAfter = new BoardStatistics(this.board);
             boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
             lastBestScore = boardScoreAfter;
             consecutiveNoImprovementPasses = 0;
             fanoutRecoveryApplied = true;
             alreadyRoutedBoardHashes.clear();
-            job.logDebug("Applied one-time fanout recovery cleanup (removed fanout tails/vias). "
-                + "Incompletes: " + incompletesBeforeRecovery + " -> "
-                + boardStatisticsAfter.connections.incompleteCount + ".");
+            job.logDebug(
+                "Applied one-time fanout recovery cleanup (removed fanout tails/vias). "
+                    + "Incompletes: "
+                    + incompletesBeforeRecovery
+                    + " -> "
+                    + boardStatisticsAfter.connections.incompleteCount
+                    + ".");
           }
 
           if (consecutiveNoImprovementPasses >= STAGNATION_PASS_LIMIT) {
             String report = buildUnroutedConnectionsReport();
-            job.logInfo("The router's score (" + FRLogger.defaultFloatFormat.format(boardScoreAfter)
-                + ") has not improved by more than " + STAGNATION_SCORE_THRESHOLD
-                + " points in the last " + STAGNATION_PASS_LIMIT + " passes ("
-                + boardStatisticsAfter.connections.incompleteCount + " item"
-                + (boardStatisticsAfter.connections.incompleteCount == 1 ? "" : "s")
-                + " still unconnected). Stopping the auto-router.\n"
-                + "The following connections could not be routed -- please review your design "
-                + "(e.g. check pad clearances, trace width rules, and available routing space):\n"
-                + report);
-            thread.request_stop_auto_router();
+            job.logInfo(
+                "The router's score ("
+                    + FRLogger.defaultFloatFormat.format(boardScoreAfter)
+                    + ") has not improved by more than "
+                    + STAGNATION_SCORE_THRESHOLD
+                    + " points in the last "
+                    + STAGNATION_PASS_LIMIT
+                    + " passes ("
+                    + boardStatisticsAfter.connections.incompleteCount
+                    + " item"
+                    + (boardStatisticsAfter.connections.incompleteCount == 1 ? "" : "s")
+                    + " still unconnected). Stopping the auto-router.\n"
+                    + "The following connections could not be routed -- please review your design "
+                    + "(e.g. check pad clearances, trace width rules, and available routing "
+                    + "space):\n"
+                    + report);
+            thread.requestStopAutoRouter();
             break;
           }
         }
@@ -1106,21 +1294,29 @@ public class BatchAutorouter extends NamedAlgorithm {
           incompleteCountAtBestScore = boardStatisticsAfter.connections.incompleteCount;
         } else if ((currentPass - passOfBestScore) >= STAGNATION_PASS_LIMIT) {
           String report = buildUnroutedConnectionsReport();
-          job.logInfo("The router's best score (" + FRLogger.defaultFloatFormat.format(globalBestScore)
-              + ") has not improved by more than " + STAGNATION_SCORE_THRESHOLD
-              + " points since pass #" + passOfBestScore
-              + ". Stopping the auto-router after " + currentPass + " passes ("
-              + incompleteCountAtBestScore + " item"
-              + (incompleteCountAtBestScore == 1 ? "" : "s")
-              + " still unconnected).\n"
-              + "The following connections could not be routed -- please review your design "
-              + "(e.g. check pad clearances, trace width rules, and available routing space):\n"
-              + report);
-          thread.request_stop_auto_router();
+          job.logInfo(
+              "The router's best score ("
+                  + FRLogger.defaultFloatFormat.format(globalBestScore)
+                  + ") has not improved by more than "
+                  + STAGNATION_SCORE_THRESHOLD
+                  + " points since pass #"
+                  + passOfBestScore
+                  + ". Stopping the auto-router after "
+                  + currentPass
+                  + " passes ("
+                  + incompleteCountAtBestScore
+                  + " item"
+                  + (incompleteCountAtBestScore == 1 ? "" : "s")
+                  + " still unconnected).\n"
+                  + "The following connections could not be routed -- please review your design "
+                  + "(e.g. check pad clearances, trace width rules, and available routing space):\n"
+                  + report);
+          thread.requestStopAutoRouter();
           break;
         }
 
-      } else if (boardStatisticsAfter.connections.incompleteCount == 0 && boardScoreAfter > STAGNATION_SCORE_THRESHOLD) {
+      } else if (boardStatisticsAfter.connections.incompleteCount == 0
+          && boardScoreAfter > STAGNATION_SCORE_THRESHOLD) {
         // Board is fully routed AND has a positive score (genuine success).
         // A fully-routed board with score == 0 (e.g. caused by clearance violations
         // from plane routing) must NOT reset the stagnation counter; it should keep
@@ -1130,7 +1326,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       }
 
       // check if there are still unrouted items
-      if (continueAutorouting && !this.thread.is_stop_auto_router_requested()) {
+      if (continueAutorouting && !this.thread.isStopAutoRouterRequested()) {
         currentPass++;
       }
     }
@@ -1138,7 +1334,8 @@ public class BatchAutorouter extends NamedAlgorithm {
     // Ensure we finish with the best board ever seen during this routing session.
     // When stagnation or the max-pass limit fires, the loop exits with the board from the last
     // completed pass, which may be worse than an earlier pass that was recorded in the history.
-    float currentFinalScore = new BoardStatistics(this.board).getNormalizedScore(job.routerSettings.scoring);
+    float currentFinalScore =
+        new BoardStatistics(this.board).getNormalizedScore(job.routerSettings.scoring);
     float bestHistoryScore = bh.getMaxScore();
     if (bestHistoryScore > currentFinalScore) {
       RoutingBoard bestBoard = bh.restoreBestBoard();
@@ -1146,24 +1343,32 @@ public class BatchAutorouter extends NamedAlgorithm {
         BoardStatistics currentStats = new BoardStatistics(this.board);
         this.board = bestBoard;
         BoardStatistics bestStats = new BoardStatistics(this.board);
-        job.logDebug("The final board state (score "
-            + FRLogger.formatScore(currentFinalScore,
-                currentStats.connections.incompleteCount,
-                currentStats.clearanceViolations.totalCount)
-            + ") is worse than the best board seen during routing (score "
-            + FRLogger.formatScore(bestStats.getNormalizedScore(job.routerSettings.scoring),
-                bestStats.connections.incompleteCount,
-                bestStats.clearanceViolations.totalCount)
-            + "). Restoring the best board as the final result.");
+        job.logDebug(
+            "The final board state (score "
+                + FRLogger.formatScore(
+                    currentFinalScore,
+                    currentStats.connections.incompleteCount,
+                    currentStats.clearanceViolations.totalCount)
+                + ") is worse than the best board seen during routing (score "
+                + FRLogger.formatScore(
+                    bestStats.getNormalizedScore(job.routerSettings.scoring),
+                    bestStats.connections.incompleteCount,
+                    bestStats.clearanceViolations.totalCount)
+                + "). Restoring the best board as the final result.");
       }
     }
 
     job.board = this.board;
 
-    boolean wasRouterRun = this.settings.getRunRouter() && (this.settings.maxPasses == null || this.settings.maxPasses >= 0);
-    if (wasRouterRun && !(this.remove_unconnected_vias || continueAutorouting || this.thread.is_stop_auto_router_requested())) {
+    boolean wasRouterRun =
+        this.settings.getRunRouter()
+            && (this.settings.maxPasses == null || this.settings.maxPasses >= 0);
+    if (wasRouterRun
+        && !(this.removeUnconnectedVias
+            || continueAutorouting
+            || this.thread.isStopAutoRouterRequested())) {
       // clean up the route if the board is completed and if fanout is used.
-      remove_tails(Item.StopConnectionOption.NONE);
+      removeTails(Item.StopConnectionOption.NONE);
     }
 
     bh.clear();
@@ -1172,19 +1377,22 @@ public class BatchAutorouter extends NamedAlgorithm {
     PerformanceProfiler.printResults();
     PerformanceProfiler.reset();
 
-    if (!this.thread.is_stop_auto_router_requested()) {
-      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED,
-          currentPass, this.board.get_hash()));
+    if (!this.thread.isStopAutoRouterRequested()) {
+      this.fireTaskStateChangedEvent(
+          new TaskStateChangedEvent(this, TaskState.FINISHED, currentPass, this.board.getHash()));
     } else {
       // Distinguish between a user-requested cancellation and a job timeout so that
       // API consumers can tell the two apart via TaskStateChangedEvent.
       boolean isTimedOut = (job != null) && (job.state == RoutingJobState.TIMED_OUT);
-      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this,
-          isTimedOut ? TaskState.TIMED_OUT : TaskState.CANCELLED,
-          currentPass, this.board.get_hash()));
+      this.fireTaskStateChangedEvent(
+          new TaskStateChangedEvent(
+              this,
+              isTimedOut ? TaskState.TIMED_OUT : TaskState.CANCELLED,
+              currentPass,
+              this.board.getHash()));
     }
 
-    return !this.thread.is_stop_auto_router_requested();
+    return !this.thread.isStopAutoRouterRequested();
   }
 
   private String buildUnroutedConnectionsReport() {
@@ -1200,17 +1408,23 @@ public class BatchAutorouter extends NamedAlgorithm {
     Map<String, List<String>> byNet = new LinkedHashMap<>();
     for (AirLine al : airlines) {
       String netName = al.net != null ? al.net.name : "(unknown net)";
-      String fromDesc = describeItem(al.from_item);
-      String toDesc   = describeItem(al.to_item);
-      byNet.computeIfAbsent(netName, k -> new ArrayList<>())
-           .add("    - " + fromDesc + "  ->  " + toDesc);
+      String fromDesc = describeItem(al.fromItem);
+      String toDesc = describeItem(al.toItem);
+      byNet
+          .computeIfAbsent(netName, k -> new ArrayList<>())
+          .add("    - " + fromDesc + "  ->  " + toDesc);
     }
 
     StringBuilder sb = new StringBuilder();
     for (Map.Entry<String, List<String>> entry : byNet.entrySet()) {
       int count = entry.getValue().size();
-      sb.append("  Net '").append(entry.getKey()).append("' (")
-        .append(count).append(" unrouted connection").append(count == 1 ? "" : "s").append("):\n");
+      sb.append("  Net '")
+          .append(entry.getKey())
+          .append("' (")
+          .append(count)
+          .append(" unrouted connection")
+          .append(count == 1 ? "" : "s")
+          .append("):\n");
       for (String line : entry.getValue()) {
         sb.append(line).append('\n');
       }
@@ -1219,23 +1433,23 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Returns a short, user-friendly description of a board item suitable for the
-   * stagnation report.  For pins the format is {@code ComponentName-PinName}
-   * (e.g. {@code J2-A3}); for all other item types a generic fallback is used.
+   * Returns a short, user-friendly description of a board item suitable for the stagnation report.
+   * For pins the format is {@code ComponentName-PinName} (e.g. {@code J2-A3}); for all other item
+   * types a generic fallback is used.
    */
   private String describeItem(Item item) {
     if (item instanceof Pin pin) {
       try {
-        app.freerouting.board.Component comp = board.components.get(pin.get_component_no());
+        app.freerouting.board.Component comp = board.components.get(pin.getComponentNo());
         if (comp != null) {
-          app.freerouting.core.Package pkg = comp.get_package();
+          app.freerouting.core.Package pkg = comp.getPackage();
           if (pkg != null) {
-            app.freerouting.core.Package.Pin pkgPin = pkg.get_pin(pin.pin_no);
+            app.freerouting.core.Package.Pin pkgPin = pkg.getPin(pin.pinNo);
             if (pkgPin != null) {
               return comp.name + "-" + pkgPin.name;
             }
           }
-          return comp.name + " (pin #" + pin.pin_no + ")";
+          return comp.name + " (pin #" + pin.pinNo + ")";
         }
       } catch (Exception e) {
         // fall through to generic
@@ -1244,415 +1458,449 @@ public class BatchAutorouter extends NamedAlgorithm {
     return item != null ? item.toString() : "(unknown)";
   }
 
-  private void remove_tails(Item.StopConnectionOption p_stop_connection_option) {
-    board.start_marking_changed_area();
-    board.remove_trace_tails(-1, p_stop_connection_option);
-    board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, this.trace_cost_arr, this.thread,
+  private void removeTails(Item.StopConnectionOption stopConnectionOption) {
+    board.startMarkingChangedArea();
+    board.removeTraceTails(-1, stopConnectionOption);
+    board.optChangedArea(
+        new int[0],
+        null,
+        this.tracePullTightAccuracy,
+        this.traceCostArr,
+        this.thread,
         TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
   }
 
   // Tries to route an item on a specific net. Returns true, if the item is
   // routed.
-  private AutorouteAttemptResult autoroute_item(Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list,
-      Map<Item, Integer> p_ripup_costs, int p_ripup_pass_no) {
+  private AutorouteAttemptResult autorouteItem(
+      Item item,
+      int routeNetNo,
+      SortedSet<Item> rippedItemList,
+      Map<Item, Integer> ripupCosts,
+      int ripupPassNo) {
     try {
-      boolean contains_plane = false;
+      boolean containsPlane = false;
 
       // Get the net
-      Net route_net = board.rules.nets.get(p_route_net_no);
-      if (route_net != null) {
-        contains_plane = route_net.contains_plane();
+      Net routeNet = board.rules.nets.get(routeNetNo);
+      if (routeNet != null) {
+        containsPlane = routeNet.containsPlane();
       }
 
       // Get the current via costs based on auto-router settings
-      int curr_via_costs;
-      if (contains_plane) {
-        curr_via_costs = this.settings.get_plane_via_costs();
+      int currViaCosts;
+      if (containsPlane) {
+        currViaCosts = this.settings.getPlaneViaCosts();
       } else {
-        curr_via_costs = this.settings.get_via_costs();
+        currViaCosts = this.settings.getViaCosts();
       }
 
       // Get and calculate the auto-router settings based on the board and net we are
       // working on
-      AutorouteControl autoroute_control = new AutorouteControl(this.board, p_route_net_no, settings, curr_via_costs,
-          this.trace_cost_arr);
-      autoroute_control.ripup_allowed = true;
-      autoroute_control.ripup_costs = this.start_ripup_costs * p_ripup_pass_no;
-      autoroute_control.remove_unconnected_vias = this.remove_unconnected_vias;
+      AutorouteControl autorouteControl =
+          new AutorouteControl(this.board, routeNetNo, settings, currViaCosts, this.traceCostArr);
+      autorouteControl.ripupAllowed = true;
+      autorouteControl.ripupCosts = this.startRipupCosts * ripupPassNo;
+      autorouteControl.removeUnconnectedVias = this.removeUnconnectedVias;
 
       // Check if the item is already routed
-      Set<Item> unconnected_set = p_item.get_unconnected_set(p_route_net_no);
-      if (unconnected_set.isEmpty()) {
+      Set<Item> unconnectedSet = item.getUnconnectedSet(routeNetNo);
+      if (unconnectedSet.isEmpty()) {
         return new AutorouteAttemptResult(AutorouteAttemptState.NO_UNCONNECTED_NETS);
       }
 
-      Set<Item> connected_set = p_item.get_connected_set(p_route_net_no);
-      Set<Item> route_start_set;
-      Set<Item> route_dest_set;
-      if (contains_plane) {
-        for (Item curr_item : connected_set) {
-          if (curr_item instanceof ConductionArea) {
+      Set<Item> connectedSet = item.getConnectedSet(routeNetNo);
+      Set<Item> routeStartSet;
+      Set<Item> routeDestSet;
+      if (containsPlane) {
+        for (Item currItem : connectedSet) {
+          if (currItem instanceof ConductionArea) {
             return new AutorouteAttemptResult(AutorouteAttemptState.CONNECTED_TO_PLANE);
           }
         }
       }
-      if (contains_plane) {
-        route_start_set = connected_set;
-        route_dest_set = unconnected_set;
+      if (containsPlane) {
+        routeStartSet = connectedSet;
+        routeDestSet = unconnectedSet;
       } else {
-        route_start_set = unconnected_set;
-        route_dest_set = connected_set;
+        routeStartSet = unconnectedSet;
+        routeDestSet = connectedSet;
       }
 
       // Calculate the shortest distance between the two sets of items
-      calc_airline(route_start_set, route_dest_set);
+      calcAirline(routeStartSet, routeDestSet);
 
       // Calculate the maximum time for this autoroute pass
-      double max_milliseconds = 100000 * Math.pow(2, p_ripup_pass_no - 1);
-      max_milliseconds = Math.min(max_milliseconds, Integer.MAX_VALUE);
-      TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
+      double maxMilliseconds = 100000 * Math.pow(2, ripupPassNo - 1);
+      maxMilliseconds = Math.min(maxMilliseconds, Integer.MAX_VALUE);
+      TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
 
       // Initialize the auto-router engine
-      AutorouteEngine autoroute_engine = board.init_autoroute(p_route_net_no,
-          autoroute_control.trace_clearance_class_no, this.thread, time_limit, this.retain_autoroute_database);
+      AutorouteEngine autorouteEngine =
+          board.initAutoroute(
+              routeNetNo,
+              autorouteControl.traceClearanceClassNo,
+              this.thread,
+              timeLimit,
+              this.retainAutorouteDatabase);
 
-      int maxItemIdBeforeRoute = board.communication.id_no_generator.max_generated_no();
+      int maxItemIdBeforeRoute = board.communication.idNoGenerator.maxGeneratedNo();
 
       byte[] strictDrcBoardSnapshot = this.settings.isStrictDrc() ? board.serialize(false) : null;
 
       // Do the auto-routing between the two sets of items
-      AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
-          autoroute_control, p_ripped_item_list, p_ripup_costs);
+      AutorouteAttemptResult autorouteResult =
+          autorouteEngine.autorouteConnection(
+              routeStartSet, routeDestSet, autorouteControl, rippedItemList, ripupCosts);
 
       // Update the changed area of the board
-      if (autoroute_result.state == AutorouteAttemptState.ROUTED) {
-        int maxItemIdBeforeOpt = board.communication.id_no_generator.max_generated_no();
-        FRLogger.trace("compare_trace_opt_changed_area_before net=" + p_route_net_no + ", maxItemId=" + maxItemIdBeforeOpt);
-        board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, autoroute_control.trace_costs,
-            this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
-        int maxItemIdAfterOpt = board.communication.id_no_generator.max_generated_no();
-        FRLogger.trace("compare_trace_opt_changed_area_after net=" + p_route_net_no + ", maxItemId=" + maxItemIdAfterOpt + ", delta=" + (maxItemIdAfterOpt - maxItemIdBeforeOpt));
+      if (autorouteResult.state == AutorouteAttemptState.ROUTED) {
+        int maxItemIdBeforeOpt = board.communication.idNoGenerator.maxGeneratedNo();
+        FRLogger.trace(
+            "compare_trace_opt_changed_area_before net="
+                + routeNetNo
+                + ", maxItemId="
+                + maxItemIdBeforeOpt);
+        board.optChangedArea(
+            new int[0],
+            null,
+            this.tracePullTightAccuracy,
+            autorouteControl.traceCosts,
+            this.thread,
+            TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+        int maxItemIdAfterOpt = board.communication.idNoGenerator.maxGeneratedNo();
+        FRLogger.trace(
+            "compare_trace_opt_changed_area_after net="
+                + routeNetNo
+                + ", maxItemId="
+                + maxItemIdAfterOpt
+                + ", delta="
+                + (maxItemIdAfterOpt - maxItemIdBeforeOpt));
       }
 
-      if ((autoroute_result.state == AutorouteAttemptState.FAILED
-          || autoroute_result.state == AutorouteAttemptState.INSERT_ERROR)
+      if ((autorouteResult.state == AutorouteAttemptState.FAILED
+              || autorouteResult.state == AutorouteAttemptState.INSERT_ERROR)
           && this.settings.getNeckWidthUm() > 0) {
-        AutorouteAttemptResult necked_result = retryConnectionNecked(p_route_net_no, autoroute_control,
-            curr_via_costs, route_start_set, route_dest_set, p_ripped_item_list, p_ripup_costs,
-            p_ripup_pass_no, time_limit);
-        if (necked_result != null) {
-          AutorouteAttemptResult strict_result = applyStrictDrcAfterRoute(p_route_net_no,
-              maxItemIdBeforeRoute, strictDrcBoardSnapshot);
-          if (strict_result != null) {
-            return strict_result;
+        AutorouteAttemptResult neckedResult =
+            retryConnectionNecked(
+                routeNetNo,
+                autorouteControl,
+                currViaCosts,
+                routeStartSet,
+                routeDestSet,
+                rippedItemList,
+                ripupCosts,
+                ripupPassNo,
+                timeLimit);
+        if (neckedResult != null) {
+          AutorouteAttemptResult strictResult =
+              applyStrictDrcAfterRoute(routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot);
+          if (strictResult != null) {
+            return strictResult;
           }
-          return necked_result;
+          return neckedResult;
         }
       }
 
-      if (autoroute_result.state == AutorouteAttemptState.ROUTED) {
-        AutorouteAttemptResult strict_result = applyStrictDrcAfterRoute(p_route_net_no,
-            maxItemIdBeforeRoute, strictDrcBoardSnapshot);
-        if (strict_result != null) {
-          return strict_result;
+      if (autorouteResult.state == AutorouteAttemptState.ROUTED) {
+        AutorouteAttemptResult strictResult =
+            applyStrictDrcAfterRoute(routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot);
+        if (strictResult != null) {
+          return strictResult;
         }
       }
 
-      return autoroute_result;
+      return autorouteResult;
     } catch (Exception e) {
       FRLogger.error("Error during routing passes", e);
       return new AutorouteAttemptResult(AutorouteAttemptState.FAILED);
     }
   }
 
-
   /**
    * Width-necking retry: when a connection failed at its net-class trace width and the
-   * neck_width_um setting is enabled, retry it ONCE with every layer's trace half-width
-   * clamped to the neck width. Fine-pitch pads whose pitch is below (class width +
-   * clearance) are unroutable at class width and fail as generic congestion; the operator
-   * supplies a legal manufacturable neck width (e.g. the project's densest net class).
-   * Returns the retry result when it routed, else null (keep the original failure).
+   * neck_width_um setting is enabled, retry it ONCE with every layer's trace half-width clamped to
+   * the neck width. Fine-pitch pads whose pitch is below (class width + clearance) are unroutable
+   * at class width and fail as generic congestion; the operator supplies a legal manufacturable
+   * neck width (e.g. the project's densest net class). Returns the retry result when it routed,
+   * else null (keep the original failure).
    */
-  private AutorouteAttemptResult retryConnectionNecked(int p_route_net_no,
-      AutorouteControl p_original_control, int p_via_costs, Set<Item> p_route_start_set,
-      Set<Item> p_route_dest_set, SortedSet<Item> p_ripped_item_list,
-      Map<Item, Integer> p_ripup_costs, int p_ripup_pass_no, TimeLimit p_time_limit) {
+  private AutorouteAttemptResult retryConnectionNecked(
+      int routeNetNo,
+      AutorouteControl originalControl,
+      int viaCosts,
+      Set<Item> routeStartSet,
+      Set<Item> routeDestSet,
+      SortedSet<Item> rippedItemList,
+      Map<Item, Integer> ripupCosts,
+      int ripupPassNo,
+      TimeLimit timeLimit) {
     int boardResolution = Math.max(1, board.communication.resolution);
-    int neck_width = (int) Math.round(app.freerouting.board.Unit.scale(
-        this.settings.getNeckWidthUm() * boardResolution, app.freerouting.board.Unit.UM,
-        board.communication.unit));
-    int neck_half_width = Math.max(1, neck_width / 2);
-    boolean narrower_somewhere = false;
-    for (int i = 0; i < p_original_control.layer_count; i++) {
-      if (p_original_control.layer_active[i]
-          && p_original_control.trace_half_width[i] > neck_half_width) {
-        narrower_somewhere = true;
+    int neckWidth =
+        (int)
+            Math.round(
+                app.freerouting.board.Unit.scale(
+                    this.settings.getNeckWidthUm() * boardResolution,
+                    app.freerouting.board.Unit.UM,
+                    board.communication.unit));
+    int neckHalfWidth = Math.max(1, neckWidth / 2);
+    boolean narrowerSomewhere = false;
+    for (int i = 0; i < originalControl.layerCount; i++) {
+      if (originalControl.layerActive[i] && originalControl.traceHalfWidth[i] > neckHalfWidth) {
+        narrowerSomewhere = true;
         break;
       }
     }
-    if (!narrower_somewhere) {
+    if (!narrowerSomewhere) {
       return null;
     }
-    AutorouteControl neck_control = new AutorouteControl(this.board, p_route_net_no, settings,
-        p_via_costs, this.trace_cost_arr);
-    neck_control.ripup_allowed = true;
-    neck_control.ripup_costs = this.start_ripup_costs * p_ripup_pass_no;
-    neck_control.remove_unconnected_vias = this.remove_unconnected_vias;
-    for (int i = 0; i < neck_control.layer_count; i++) {
-      int compensation = neck_control.compensated_trace_half_width[i] - neck_control.trace_half_width[i];
-      neck_control.trace_half_width[i] = Math.min(neck_control.trace_half_width[i], neck_half_width);
-      neck_control.compensated_trace_half_width[i] = neck_control.trace_half_width[i] + compensation;
+    AutorouteControl neckControl =
+        new AutorouteControl(this.board, routeNetNo, settings, viaCosts, this.traceCostArr);
+    neckControl.ripupAllowed = true;
+    neckControl.ripupCosts = this.startRipupCosts * ripupPassNo;
+    neckControl.removeUnconnectedVias = this.removeUnconnectedVias;
+    for (int i = 0; i < neckControl.layerCount; i++) {
+      int compensation = neckControl.compensatedTraceHalfWidth[i] - neckControl.traceHalfWidth[i];
+      neckControl.traceHalfWidth[i] = Math.min(neckControl.traceHalfWidth[i], neckHalfWidth);
+      neckControl.compensatedTraceHalfWidth[i] = neckControl.traceHalfWidth[i] + compensation;
     }
-    AutorouteEngine neck_engine = board.init_autoroute(p_route_net_no,
-        neck_control.trace_clearance_class_no, this.thread, p_time_limit, this.retain_autoroute_database);
-    AutorouteAttemptResult neck_result = neck_engine.autoroute_connection(p_route_start_set,
-        p_route_dest_set, neck_control, p_ripped_item_list, p_ripup_costs);
-    if (neck_result.state != AutorouteAttemptState.ROUTED) {
+    AutorouteEngine neckEngine =
+        board.initAutoroute(
+            routeNetNo,
+            neckControl.traceClearanceClassNo,
+            this.thread,
+            timeLimit,
+            this.retainAutorouteDatabase);
+    AutorouteAttemptResult neckResult =
+        neckEngine.autorouteConnection(
+            routeStartSet, routeDestSet, neckControl, rippedItemList, ripupCosts);
+    if (neckResult.state != AutorouteAttemptState.ROUTED) {
       return null;
     }
-    board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, neck_control.trace_costs,
-        this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
-    Net route_net = board.rules.nets.get(p_route_net_no);
-    FRLogger.info("Necked retry routed net '"
-        + (route_net != null ? route_net.name : "#" + p_route_net_no)
-        + "' at " + this.settings.getNeckWidthUm() + " um trace width.");
-    return neck_result;
+    board.optChangedArea(
+        new int[0],
+        null,
+        this.tracePullTightAccuracy,
+        neckControl.traceCosts,
+        this.thread,
+        TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+    Net routeNet = board.rules.nets.get(routeNetNo);
+    FRLogger.info(
+        "Necked retry routed net '"
+            + (routeNet != null ? routeNet.name : "#" + routeNetNo)
+            + "' at "
+            + this.settings.getNeckWidthUm()
+            + " um trace width.");
+    return neckResult;
   }
 
   /**
-   * When {@code strict_drc} rejects a routed connection, restore the board snapshot taken
-   * before {@link AutorouteEngine#autoroute_connection} so rip-up victims removed during
-   * routing are not left torn up.
+   * When {@code strict_drc} rejects a routed connection, restore the board snapshot taken before
+   * {@link AutorouteEngine#autorouteConnection} so rip-up victims removed during routing are not
+   * left torn up.
    */
-  private AutorouteAttemptResult applyStrictDrcAfterRoute(int p_route_net_no, int p_max_item_id_before,
-      byte[] p_board_snapshot_before_route) {
+  private AutorouteAttemptResult applyStrictDrcAfterRoute(
+      int routeNetNo, int maxItemIdBefore, byte[] boardSnapshotBeforeRoute) {
     if (!this.settings.isStrictDrc()) {
       return null;
     }
-    AutorouteAttemptResult rejection = enforceStrictDrc(board, p_route_net_no, p_max_item_id_before);
-    if (rejection != null && p_board_snapshot_before_route != null) {
-      this.board = (RoutingBoard) BasicBoard.deserialize(p_board_snapshot_before_route);
+    AutorouteAttemptResult rejection = enforceStrictDrc(board, routeNetNo, maxItemIdBefore);
+    if (rejection != null && boardSnapshotBeforeRoute != null) {
+      this.board = (RoutingBoard) BasicBoard.deserialize(boardSnapshotBeforeRoute);
     }
     return rejection;
   }
 
   /**
-   * Strict-DRC enforcement: if any trace/via inserted by the connection that just routed
-   * (item id above {@code p_max_item_id_before}) carries a clearance violation, rip the
-   * whole set of new items and report the connection FAILED, so the pass counts it as not
-   * routed and later passes (higher ripup costs) retry it. Returns null when the connection
-   * is clean and may be kept.
+   * Strict-DRC enforcement: if any trace/via inserted by the connection that just routed (item id
+   * above {@code p_max_item_id_before}) carries a clearance violation, rip the whole set of new
+   * items and report the connection FAILED, so the pass counts it as not routed and later passes
+   * (higher ripup costs) retry it. Returns null when the connection is clean and may be kept.
    */
-  static AutorouteAttemptResult enforceStrictDrc(app.freerouting.board.RoutingBoard board,
-      int p_route_net_no, int p_max_item_id_before) {
-    List<Item> new_items = new ArrayList<>();
-    boolean has_violation = false;
-    for (Item curr_item : board.get_connectable_items(p_route_net_no)) {
-      if (curr_item.get_id_no() <= p_max_item_id_before
-          || !(curr_item instanceof Trace || curr_item instanceof app.freerouting.board.Via)) {
+  static AutorouteAttemptResult enforceStrictDrc(
+      app.freerouting.board.RoutingBoard board, int routeNetNo, int maxItemIdBefore) {
+    List<Item> newItems = new ArrayList<>();
+    boolean hasViolation = false;
+    for (Item currItem : board.getConnectableItems(routeNetNo)) {
+      if (currItem.getIdNo() <= maxItemIdBefore
+          || !(currItem instanceof Trace || currItem instanceof app.freerouting.board.Via)) {
         continue;
       }
-      new_items.add(curr_item);
-      if (!has_violation && !curr_item.clearance_violations().isEmpty()) {
-        has_violation = true;
+      newItems.add(currItem);
+      if (!hasViolation && !currItem.clearanceViolations().isEmpty()) {
+        hasViolation = true;
       }
     }
-    if (!has_violation) {
+    if (!hasViolation) {
       return null;
     }
-    board.remove_items(new_items);
-    return new AutorouteAttemptResult(AutorouteAttemptState.FAILED,
-        "strict_drc: connection ripped because " + new_items.size()
+    board.removeItems(newItems);
+    return new AutorouteAttemptResult(
+        AutorouteAttemptState.FAILED,
+        "strict_drc: connection ripped because "
+            + newItems.size()
             + " new item(s) included clearance violations");
   }
 
   /**
-   * Returns the airline of the current autorouted connection or null, if no such
-   * airline exists
+   * Returns the airline of the current autorouted connection, or null if no such airline exists.
    */
-  public FloatLine get_air_line() {
-    if (this.air_line == null) {
+  public FloatLine getAirLine() {
+    if (this.airLine == null) {
       return null;
     }
-    if (this.air_line.a == null || this.air_line.b == null) {
+    if (this.airLine.a == null || this.airLine.b == null) {
       return null;
     }
-    return this.air_line;
+    return this.airLine;
   }
 
   // Calculates the shortest distance between two sets of items, specifically
   // between Pin and Via items (pins and vias are connectable DrillItems)
-  private void calc_airline(Collection<Item> p_from_items, Collection<Item> p_to_items) {
-    FloatPoint from_corner = null;
-    FloatPoint to_corner = null;
-    double min_distance = Double.MAX_VALUE;
-    for (Item curr_from_item : p_from_items) {
-      if (!(curr_from_item instanceof DrillItem)) {
+  private void calcAirline(Collection<Item> fromItems, Collection<Item> toItems) {
+    FloatPoint fromCorner = null;
+    FloatPoint toCorner = null;
+    double minDistance = Double.MAX_VALUE;
+    for (Item currFromItem : fromItems) {
+      if (!(currFromItem instanceof DrillItem)) {
         continue;
       }
-      FloatPoint curr_from_corner = ((DrillItem) curr_from_item).get_center().to_float();
+      FloatPoint currFromCorner = ((DrillItem) currFromItem).getCenter().toFloat();
 
-      for (Item curr_to_item : p_to_items) {
-        if (!(curr_to_item instanceof DrillItem)) {
+      for (Item currToItem : toItems) {
+        if (!(currToItem instanceof DrillItem)) {
           continue;
         }
-        FloatPoint curr_to_corner = ((DrillItem) curr_to_item).get_center().to_float();
-        double curr_distance = curr_from_corner.distance_square(curr_to_corner);
-        if (curr_distance < min_distance) {
-          min_distance = curr_distance;
-          from_corner = curr_from_corner;
-          to_corner = curr_to_corner;
+        FloatPoint currToCorner = ((DrillItem) currToItem).getCenter().toFloat();
+        double currDistance = currFromCorner.distanceSquare(currToCorner);
+        if (currDistance < minDistance) {
+          minDistance = currDistance;
+          fromCorner = currFromCorner;
+          toCorner = currToCorner;
         }
       }
     }
-    this.air_line = new FloatLine(from_corner, to_corner);
+    this.airLine = new FloatLine(fromCorner, toCorner);
   }
 
-  /**
-   * Finds the nearest point on a trace to the given point
-   */
-  private FloatPoint nearest_point_on_trace(PolylineTrace p_trace, FloatPoint p_point) {
-    double min_distance = Double.MAX_VALUE;
-    FloatPoint nearest_point = null;
+  /** Finds the nearest point on a trace to the given point. */
+  private FloatPoint nearestPointOnTrace(PolylineTrace trace, FloatPoint point) {
+    double minDistance = Double.MAX_VALUE;
+    FloatPoint nearestPoint = null;
 
     // Get endpoints
-    FloatPoint first_corner = p_trace
-        .first_corner()
-        .to_float();
-    FloatPoint last_corner = p_trace
-        .last_corner()
-        .to_float();
+    FloatPoint firstCorner = trace.firstCorner().toFloat();
+    FloatPoint lastCorner = trace.lastCorner().toFloat();
 
     // Check distance to endpoints first
-    double distance_to_first = p_point.distance(first_corner);
-    double distance_to_last = p_point.distance(last_corner);
+    double distanceToFirst = point.distance(firstCorner);
+    double distanceToLast = point.distance(lastCorner);
 
-    if (distance_to_first < min_distance) {
-      min_distance = distance_to_first;
-      nearest_point = first_corner;
+    if (distanceToFirst < minDistance) {
+      minDistance = distanceToFirst;
+      nearestPoint = firstCorner;
     }
 
-    if (distance_to_last < min_distance) {
-      min_distance = distance_to_last;
-      nearest_point = last_corner;
+    if (distanceToLast < minDistance) {
+      minDistance = distanceToLast;
+      nearestPoint = lastCorner;
     }
 
     // Check distances to line segments
-    for (int i = 0; i < p_trace.corner_count() - 1; i++) {
-      FloatPoint segment_start = p_trace
-          .polyline()
-          .corner_approx(i);
-      FloatPoint segment_end = p_trace
-          .polyline()
-          .corner_approx(i + 1);
-      FloatLine segment = new FloatLine(segment_start, segment_end);
+    for (int i = 0; i < trace.cornerCount() - 1; i++) {
+      FloatPoint segmentStart = trace.polyline().cornerApprox(i);
+      FloatPoint segmentEnd = trace.polyline().cornerApprox(i + 1);
+      FloatLine segment = new FloatLine(segmentStart, segmentEnd);
 
-      FloatPoint projection = segment.perpendicular_projection(p_point);
-      if (projection.is_contained_in_box(segment_start, segment_end, 0.01)) {
-        double distance = p_point.distance(projection);
-        if (distance < min_distance) {
-          min_distance = distance;
-          nearest_point = projection;
+      FloatPoint projection = segment.perpendicularProjection(point);
+      if (projection.isContainedInBox(segmentStart, segmentEnd, 0.01)) {
+        double distance = point.distance(projection);
+        if (distance < minDistance) {
+          minDistance = distance;
+          nearestPoint = projection;
         }
       }
     }
 
-    return nearest_point;
+    return nearestPoint;
   }
 
   /**
-   * Finds the closest points between two traces
+   * Finds the closest points between two traces.
    *
-   * @return an array with two FloatPoints: [point_on_first_trace,
-   *         point_on_second_trace]
+   * @return an array with two FloatPoints: [point_on_first_trace, point_on_second_trace]
    */
-  private FloatPoint[] find_closest_points_between_traces(PolylineTrace p_first_trace, PolylineTrace p_second_trace) {
-    double min_distance = Double.MAX_VALUE;
+  private FloatPoint[] findClosestPointsBetweenTraces(
+      PolylineTrace firstTrace, PolylineTrace secondTrace) {
+    double minDistance = Double.MAX_VALUE;
     FloatPoint[] result = new FloatPoint[2];
 
     // Check endpoints to endpoints
-    FloatPoint first_trace_start = p_first_trace
-        .first_corner()
-        .to_float();
-    FloatPoint first_trace_end = p_first_trace
-        .last_corner()
-        .to_float();
-    FloatPoint second_trace_start = p_second_trace
-        .first_corner()
-        .to_float();
-    FloatPoint second_trace_end = p_second_trace
-        .last_corner()
-        .to_float();
+    FloatPoint firstTraceStart = firstTrace.firstCorner().toFloat();
+    final FloatPoint firstTraceEnd = firstTrace.lastCorner().toFloat();
+    FloatPoint secondTraceStart = secondTrace.firstCorner().toFloat();
+    FloatPoint secondTraceEnd = secondTrace.lastCorner().toFloat();
 
     // Check all endpoint combinations
-    double distance = first_trace_start.distance(second_trace_start);
-    if (distance < min_distance) {
-      min_distance = distance;
-      result[0] = first_trace_start;
-      result[1] = second_trace_start;
+    double distance = firstTraceStart.distance(secondTraceStart);
+    if (distance < minDistance) {
+      minDistance = distance;
+      result[0] = firstTraceStart;
+      result[1] = secondTraceStart;
     }
 
-    distance = first_trace_start.distance(second_trace_end);
-    if (distance < min_distance) {
-      min_distance = distance;
-      result[0] = first_trace_start;
-      result[1] = second_trace_end;
+    distance = firstTraceStart.distance(secondTraceEnd);
+    if (distance < minDistance) {
+      minDistance = distance;
+      result[0] = firstTraceStart;
+      result[1] = secondTraceEnd;
     }
 
-    distance = first_trace_end.distance(second_trace_start);
-    if (distance < min_distance) {
-      min_distance = distance;
-      result[0] = first_trace_end;
-      result[1] = second_trace_start;
+    distance = firstTraceEnd.distance(secondTraceStart);
+    if (distance < minDistance) {
+      minDistance = distance;
+      result[0] = firstTraceEnd;
+      result[1] = secondTraceStart;
     }
 
-    distance = first_trace_end.distance(second_trace_end);
-    if (distance < min_distance) {
-      min_distance = distance;
-      result[0] = first_trace_end;
-      result[1] = second_trace_end;
+    distance = firstTraceEnd.distance(secondTraceEnd);
+    if (distance < minDistance) {
+      minDistance = distance;
+      result[0] = firstTraceEnd;
+      result[1] = secondTraceEnd;
     }
 
     // Check all segment combinations for closest points
-    for (int i = 0; i < p_first_trace.corner_count() - 1; i++) {
-      FloatPoint first_segment_start = p_first_trace
-          .polyline()
-          .corner_approx(i);
-      FloatPoint first_segment_end = p_first_trace
-          .polyline()
-          .corner_approx(i + 1);
-      FloatLine first_segment = new FloatLine(first_segment_start, first_segment_end);
+    for (int i = 0; i < firstTrace.cornerCount() - 1; i++) {
+      FloatPoint firstSegmentStart = firstTrace.polyline().cornerApprox(i);
+      FloatPoint firstSegmentEnd = firstTrace.polyline().cornerApprox(i + 1);
+      FloatLine firstSegment = new FloatLine(firstSegmentStart, firstSegmentEnd);
 
-      for (int j = 0; j < p_second_trace.corner_count() - 1; j++) {
-        FloatPoint second_segment_start = p_second_trace
-            .polyline()
-            .corner_approx(j);
-        FloatPoint second_segment_end = p_second_trace
-            .polyline()
-            .corner_approx(j + 1);
-        FloatLine second_segment = new FloatLine(second_segment_start, second_segment_end);
+      for (int j = 0; j < secondTrace.cornerCount() - 1; j++) {
+        FloatPoint secondSegmentStart = secondTrace.polyline().cornerApprox(j);
+        FloatPoint secondSegmentEnd = secondTrace.polyline().cornerApprox(j + 1);
+        FloatLine secondSegment = new FloatLine(secondSegmentStart, secondSegmentEnd);
 
         // Find closest points between these two line segments
-        FloatPoint point_on_first = first_segment.nearest_segment_point(second_segment_start);
-        FloatPoint point_on_second = second_segment.perpendicular_projection(point_on_first);
+        FloatPoint pointOnFirst = firstSegment.nearestSegmentPoint(secondSegmentStart);
+        FloatPoint pointOnSecond = secondSegment.perpendicularProjection(pointOnFirst);
 
         // Check if projection is on the segment
-        if (!point_on_second.is_contained_in_box(second_segment_start, second_segment_end, 0.01)) {
+        if (!pointOnSecond.isContainedInBox(secondSegmentStart, secondSegmentEnd, 0.01)) {
           // If not, use the nearest endpoint
-          double dist_to_start = point_on_first.distance(second_segment_start);
-          double dist_to_end = point_on_first.distance(second_segment_end);
-          point_on_second = dist_to_start < dist_to_end ? second_segment_start : second_segment_end;
+          double distToStart = pointOnFirst.distance(secondSegmentStart);
+          double distToEnd = pointOnFirst.distance(secondSegmentEnd);
+          pointOnSecond = distToStart < distToEnd ? secondSegmentStart : secondSegmentEnd;
         }
 
         // Recalculate the point on first segment based on the point on second segment
-        point_on_first = first_segment.nearest_segment_point(point_on_second);
+        pointOnFirst = firstSegment.nearestSegmentPoint(pointOnSecond);
 
-        distance = point_on_first.distance(point_on_second);
-        if (distance < min_distance) {
-          min_distance = distance;
-          result[0] = point_on_first;
-          result[1] = point_on_second;
+        distance = pointOnFirst.distance(pointOnSecond);
+        if (distance < minDistance) {
+          minDistance = distance;
+          result[0] = pointOnFirst;
+          result[1] = pointOnSecond;
         }
       }
     }
@@ -1661,13 +1909,13 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Return an uppercase one-letter, two-letter or three-letter string based on
-   * the thread index (0 = A, 1 = B, 2 = C, ..., 26 = AA, 27 = AB, ...).
+   * Return an uppercase one-letter, two-letter or three-letter string based on the thread index (0
+   * = A, 1 = B, 2 = C, ..., 26 = AA, 27 = AB, ...).
    *
-   * @param threadIndex
-   * @return
+   * @param threadIndex the thread index.
+   * @return the letter label for the thread index.
    */
-  private String ThreadIndexToLetter(int threadIndex) {
+  private String threadIndexToLetter(int threadIndex) {
     if (threadIndex < 0) {
       return "";
     }
@@ -1681,77 +1929,74 @@ public class BatchAutorouter extends NamedAlgorithm {
       int firstLetterIndex = threadIndex / (26 * 26);
       int secondLetterIndex = (threadIndex / 26) % 26;
       int thirdLetterIndex = threadIndex % 26;
-      return String.valueOf((char) ('A' + firstLetterIndex)) + (char) ('A' + secondLetterIndex)
+      return String.valueOf((char) ('A' + firstLetterIndex))
+          + (char) ('A' + secondLetterIndex)
           + (char) ('A' + thirdLetterIndex);
     }
   }
 
   /**
-   * Calculates the airline distance for an item to be routed.
-   * Returns the shortest distance from the item to any item in its incomplete
-   * connections.
+   * Calculates the airline distance for an item to be routed. Returns the shortest distance from
+   * the item to any item in its incomplete connections.
    *
-   * @param p_item The item to calculate distance for
-   * @return The shortest airline distance, or Double.MAX_VALUE if no connections
-   *         exist
+   * @param item The item to calculate distance for
+   * @return The shortest airline distance, or Double.MAX_VALUE if no connections exist
    */
-  private double calculateItemDistance(Item p_item) {
-    if (p_item.net_count() == 0) {
+  private double calculateItemDistance(Item item) {
+    if (item.netCount() == 0) {
       return Double.MAX_VALUE;
     }
 
     // Get the first net number (items typically have one net)
-    int net_no = p_item.get_net_no(0);
+    int netNo = item.getNetNo(0);
 
     // Get incomplete items for this net
-    Set<Item> unconnected_set = p_item.get_unconnected_set(net_no);
-    Set<Item> connected_set = p_item.get_connected_set(net_no);
+    Set<Item> unconnectedSet = item.getUnconnectedSet(netNo);
+    Set<Item> connectedSet = item.getConnectedSet(netNo);
 
-    if (unconnected_set.isEmpty()) {
+    if (unconnectedSet.isEmpty()) {
       return 0; // Already connected, prioritize
     }
 
     // Calculate minimum distance from connected items to unconnected items
-    return calculateMinDistance(connected_set.isEmpty() ? Set.of(p_item) : connected_set, unconnected_set);
+    return calculateMinDistance(
+        connectedSet.isEmpty() ? Set.of(item) : connectedSet, unconnectedSet);
   }
 
-  /**
-   * Helper method to calculate the minimum distance between two sets of items.
-   */
-  private double calculateMinDistance(Collection<Item> p_from_items, Collection<Item> p_to_items) {
-    double min_distance = Double.MAX_VALUE;
+  /** Helper method to calculate the minimum distance between two sets of items. */
+  private double calculateMinDistance(Collection<Item> fromItems, Collection<Item> toItems) {
+    double minDistance = Double.MAX_VALUE;
 
-    for (Item from_item : p_from_items) {
-      FloatPoint from_point = getItemReferencePoint(from_item);
-      if (from_point == null)
+    for (Item fromItem : fromItems) {
+      FloatPoint fromPoint = getItemReferencePoint(fromItem);
+      if (fromPoint == null) {
         continue;
+      }
 
-      for (Item to_item : p_to_items) {
-        FloatPoint to_point = getItemReferencePoint(to_item);
-        if (to_point == null)
+      for (Item toItem : toItems) {
+        FloatPoint toPoint = getItemReferencePoint(toItem);
+        if (toPoint == null) {
           continue;
+        }
 
-        double distance = from_point.distance(to_point);
-        if (distance < min_distance) {
-          min_distance = distance;
+        double distance = fromPoint.distance(toPoint);
+        if (distance < minDistance) {
+          minDistance = distance;
         }
       }
     }
 
-    return min_distance;
+    return minDistance;
   }
 
-  /**
-   * Gets a representative point for an item (center for DrillItems, midpoint for
-   * traces).
-   */
-  private FloatPoint getItemReferencePoint(Item p_item) {
-    if (p_item instanceof DrillItem drillItem) {
-      return drillItem.get_center().to_float();
-    } else if (p_item instanceof PolylineTrace trace) {
+  /** Gets a representative point for an item (center for DrillItems, midpoint for traces). */
+  private FloatPoint getItemReferencePoint(Item item) {
+    if (item instanceof DrillItem drillItem) {
+      return drillItem.getCenter().toFloat();
+    } else if (item instanceof PolylineTrace trace) {
       // Use the midpoint of the trace as a reference
-      FloatPoint first = trace.first_corner().to_float();
-      FloatPoint last = trace.last_corner().to_float();
+      FloatPoint first = trace.firstCorner().toFloat();
+      FloatPoint last = trace.lastCorner().toFloat();
       return new FloatPoint((first.x + last.x) / 2, (first.y + last.y) / 2);
     }
     return null;

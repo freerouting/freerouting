@@ -3,51 +3,50 @@ package app.freerouting.datastructures;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import org.junit.jupiter.api.Test;
 
 class IdentifierTypeTest {
 
   @Test
-  void testWrite() throws IOException {
-    String[] reserved_chars = {"(", ")", " ", "-"};
-    String string_quote = "\"";
-    IdentifierType identifierType = new IdentifierType(reserved_chars, string_quote);
+  void write() throws Exception {
+    String[] reservedChars = {"(", ")", " ", "-"};
+    String stringQuote = "\"";
+    IdentifierType identifierType = new IdentifierType(reservedChars, stringQuote);
 
     // Test with a numeric string
-    ByteArrayOutputStream baos_numeric = new ByteArrayOutputStream();
-    OutputStreamWriter osw_numeric = new OutputStreamWriter(baos_numeric);
-    identifierType.write("600", osw_numeric);
-    osw_numeric.flush();
-    assertEquals("\"600\"", baos_numeric.toString());
+    ByteArrayOutputStream baosNumeric = new ByteArrayOutputStream();
+    OutputStreamWriter oswNumeric = new OutputStreamWriter(baosNumeric);
+    identifierType.write("600", oswNumeric);
+    oswNumeric.flush();
+    assertEquals("\"600\"", baosNumeric.toString());
 
     // Test with a negative numeric string
-    ByteArrayOutputStream baos_neg_numeric = new ByteArrayOutputStream();
-    OutputStreamWriter osw_neg_numeric = new OutputStreamWriter(baos_neg_numeric);
-    identifierType.write("-600", osw_neg_numeric);
-    osw_neg_numeric.flush();
-    assertEquals("\"-600\"", baos_neg_numeric.toString());
+    ByteArrayOutputStream baosNegNumeric = new ByteArrayOutputStream();
+    OutputStreamWriter oswNegNumeric = new OutputStreamWriter(baosNegNumeric);
+    identifierType.write("-600", oswNegNumeric);
+    oswNegNumeric.flush();
+    assertEquals("\"-600\"", baosNegNumeric.toString());
 
     // Test with a normal string
-    ByteArrayOutputStream baos_normal = new ByteArrayOutputStream();
-    OutputStreamWriter osw_normal = new OutputStreamWriter(baos_normal);
-    identifierType.write("test", osw_normal);
-    osw_normal.flush();
-    assertEquals("test", baos_normal.toString());
+    ByteArrayOutputStream baosNormal = new ByteArrayOutputStream();
+    OutputStreamWriter oswNormal = new OutputStreamWriter(baosNormal);
+    identifierType.write("test", oswNormal);
+    oswNormal.flush();
+    assertEquals("test", baosNormal.toString());
 
     // Test with a string with reserved characters
-    ByteArrayOutputStream baos_reserved = new ByteArrayOutputStream();
-    OutputStreamWriter osw_reserved = new OutputStreamWriter(baos_reserved);
-    identifierType.write("test-with-reserved", osw_reserved);
-    osw_reserved.flush();
-    assertEquals("\"test-with-reserved\"", baos_reserved.toString());
+    ByteArrayOutputStream baosReserved = new ByteArrayOutputStream();
+    OutputStreamWriter oswReserved = new OutputStreamWriter(baosReserved);
+    identifierType.write("test-with-reserved", oswReserved);
+    oswReserved.flush();
+    assertEquals("\"test-with-reserved\"", baosReserved.toString());
 
     // Test with a string that starts with a number
-    ByteArrayOutputStream baos_start_with_number = new ByteArrayOutputStream();
-    OutputStreamWriter osw_start_with_number = new OutputStreamWriter(baos_start_with_number);
-    identifierType.write("600a", osw_start_with_number);
-    osw_start_with_number.flush();
-    assertEquals("\"600a\"", baos_start_with_number.toString());
+    ByteArrayOutputStream baosStartWithNumber = new ByteArrayOutputStream();
+    OutputStreamWriter oswStartWithNumber = new OutputStreamWriter(baosStartWithNumber);
+    identifierType.write("600a", oswStartWithNumber);
+    oswStartWithNumber.flush();
+    assertEquals("\"600a\"", baosStartWithNumber.toString());
   }
 }

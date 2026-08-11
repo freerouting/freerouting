@@ -12,18 +12,19 @@ class RoutableLayersSafetyCheckTest extends RoutingFixtureTest {
 
   @Test
   void testRoutingFailsWhenAllLayersDisabledCurrent() {
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn");
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm01.dsn");
     HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
     try {
-      boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
+      boardManager.loadFromSpecctraDsn(
+          job.input.getData(), null, new ItemIdentificationNumberGenerator());
     } catch (Exception e) {
       throw new RuntimeException("Failed to load DSN board", e);
     }
-    job.board = boardManager.get_routing_board();
+    job.board = boardManager.getRoutingBoard();
 
     // Disable all layers
     for (int i = 0; i < job.routerSettings.getLayerCount(); i++) {
-      job.routerSettings.set_layer_active(i, false);
+      job.routerSettings.setLayerActive(i, false);
     }
 
     BatchAutorouter router = new BatchAutorouter(job);
@@ -32,18 +33,19 @@ class RoutableLayersSafetyCheckTest extends RoutingFixtureTest {
 
   @Test
   void testRoutingFailsWhenAllLayersDisabledV19() {
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn");
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm01.dsn");
     HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
     try {
-      boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
+      boardManager.loadFromSpecctraDsn(
+          job.input.getData(), null, new ItemIdentificationNumberGenerator());
     } catch (Exception e) {
       throw new RuntimeException("Failed to load DSN board", e);
     }
-    job.board = boardManager.get_routing_board();
+    job.board = boardManager.getRoutingBoard();
 
     // Disable all layers
     for (int i = 0; i < job.routerSettings.getLayerCount(); i++) {
-      job.routerSettings.set_layer_active(i, false);
+      job.routerSettings.setLayerActive(i, false);
     }
 
     BatchAutorouterV19 routerV19 = new BatchAutorouterV19(job);

@@ -3,68 +3,68 @@ package app.freerouting.geometry.planar;
 import app.freerouting.datastructures.Signum;
 import java.io.Serializable;
 
-/**
- * Implements an abstract class Direction as an equivalence class of IntVector's.
- */
+/** Implements an abstract class Direction as an equivalence class of IntVector's. */
 public class IntDirection extends Direction implements Serializable {
 
+  @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   public final int x;
+
+  @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   public final int y;
 
-  IntDirection(int p_x, int p_y) {
-    x = p_x;
-    y = p_y;
+  IntDirection(int x, int y) {
+    this.x = x;
+    this.y = y;
   }
 
-  IntDirection(IntVector p_vector) {
-    x = p_vector.x;
-    y = p_vector.y;
+  IntDirection(IntVector vector) {
+    x = vector.x;
+    y = vector.y;
   }
 
   @Override
-  public boolean is_orthogonal() {
+  public boolean isOrthogonal() {
     return x == 0 || y == 0;
   }
 
   @Override
-  public boolean is_diagonal() {
+  public boolean isDiagonal() {
     return Math.abs(x) == Math.abs(y);
   }
 
   @Override
-  public Vector get_vector() {
+  public Vector getVector() {
     return new IntVector(x, y);
   }
 
   @Override
-  int compareTo(IntDirection p_other) {
+  int compareTo(IntDirection other) {
     if (y > 0) {
-      if (p_other.y < 0) {
+      if (other.y < 0) {
         return -1;
       }
-      if (p_other.y == 0) {
-        if (p_other.x > 0) {
+      if (other.y == 0) {
+        if (other.x > 0) {
           return 1;
         }
         return -1;
       }
     } else if (y < 0) {
-      if (p_other.y >= 0) {
+      if (other.y >= 0) {
         return 1;
       }
-    } else // y == 0
-    {
+    } else { // y == 0
       if (x > 0) {
-        if (p_other.y != 0 || p_other.x < 0) {
+        if (other.y != 0 || other.x < 0) {
           return -1;
         }
         return 0;
       }
       // x < 0
-      if (p_other.y > 0 || p_other.y == 0 && p_other.x > 0) {
+      if (other.y > 0 || other.y == 0 && other.x > 0) {
         return 1;
       }
-      if (p_other.y < 0) {
+      if (other.y < 0) {
         return -1;
       }
       return 0;
@@ -73,8 +73,24 @@ public class IntDirection extends Direction implements Serializable {
     // now this direction and p_other are located in the same
     // open horizontal half plane
 
-    double determinant = (double) p_other.x * y - (double) p_other.y * x;
-    return Signum.as_int(determinant);
+    double determinant = (double) other.x * y - (double) other.y * x;
+    return Signum.asInt(determinant);
+  }
+
+  /**
+   * Implements the Comparable interface. Returns 1, if this direction has a strict bigger angle
+   * with the positive x-axis than p_other_direction, 0, if this direction is equal to
+   * p_other_direction, and -1 otherwise. Throws an exception, if p_other_direction is not a
+   * Direction.
+   */
+  @Override
+  public int compareTo(Direction otherDirection) {
+    return -otherDirection.compareTo(this);
+  }
+
+  @Override
+  int compareTo(BigIntDirection other) {
+    return -other.compareTo(this);
   }
 
   @Override
@@ -83,66 +99,52 @@ public class IntDirection extends Direction implements Serializable {
   }
 
   @Override
-  public Direction turn_45_degree(int p_factor) {
-    int n = p_factor % 8;
-    int new_x;
-    int new_y;
+  public Direction turn45Degree(int factor) {
+    int n = factor % 8;
+    int newX;
+    int newY;
     switch (n) {
       case 0 -> { // 0 degree
-        new_x = x;
-        new_y = y;
+        newX = x;
+        newY = y;
       }
       case 1 -> { // 45 degree
-        new_x = x - y;
-        new_y = x + y;
+        newX = x - y;
+        newY = x + y;
       }
       case 2 -> { // 90 degree
-        new_x = -y;
-        new_y = x;
+        newX = -y;
+        newY = x;
       }
       case 3 -> { // 135 degree
-        new_x = -x - y;
-        new_y = x - y;
+        newX = -x - y;
+        newY = x - y;
       }
       case 4 -> { // 180 degree
-        new_x = -x;
-        new_y = -y;
+        newX = -x;
+        newY = -y;
       }
       case 5 -> { // 225 degree
-        new_x = y - x;
-        new_y = -x - y;
+        newX = y - x;
+        newY = -x - y;
       }
       case 6 -> { // 270 degree
-        new_x = y;
-        new_y = -x;
+        newX = y;
+        newY = -x;
       }
       case 7 -> { // 315 degree
-        new_x = x + y;
-        new_y = y - x;
+        newX = x + y;
+        newY = y - x;
       }
       default -> {
-        new_x = 0;
-        new_y = 0;
+        newX = 0;
+        newY = 0;
       }
     }
-    return new IntDirection(new_x, new_y);
+    return new IntDirection(newX, newY);
   }
 
-  /**
-   * Implements the Comparable interface. Returns 1, if this direction has a strict bigger angle with the positive x-axis than p_other_direction, 0, if this direction is equal to p_other_direction,
-   * and -1 otherwise. Throws an exception, if p_other_direction is not a Direction.
-   */
-  @Override
-  public int compareTo(Direction p_other_direction) {
-    return -p_other_direction.compareTo(this);
-  }
-
-  @Override
-  int compareTo(BigIntDirection p_other) {
-    return -p_other.compareTo(this);
-  }
-
-  final double determinant(IntDirection p_other) {
-    return (double) x * p_other.y - (double) y * p_other.x;
+  final double determinant(IntDirection other) {
+    return (double) x * other.y - (double) y * other.x;
   }
 }

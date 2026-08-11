@@ -7,13 +7,14 @@ import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.TimeLimit;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
@@ -26,286 +27,257 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import app.freerouting.core.ProgressThrottler;
-
-/**
- * Handles the sequencing of the auto-router passes.
- */
+/** Handles the sequencing of the auto-router passes. */
 public class BatchAutorouterThread extends StoppableThread {
 
   private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
 
-  protected final transient List<BoardUpdatedEventListener> boardUpdatedEventListeners = new ArrayList<>();
+  protected final transient List<BoardUpdatedEventListener> boardUpdatedEventListeners =
+      new ArrayList<>();
 
   private final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   private final RoutingBoard board;
-  private final boolean remove_unconnected_vias;
-  private final AutorouteControl.ExpansionCostFactor[] trace_cost_arr;
-  private final boolean retain_autoroute_database;
-  private final int start_ripup_costs;
-  private final int trace_pull_tight_accuracy;
+  private final boolean removeUnconnectedVias;
+  private final AutorouteControl.ExpansionCostFactor[] traceCostArr;
+  private final boolean retainAutorouteDatabase;
+  private final int startRipupCosts;
+  private final int tracePullTightAccuracy;
   private final RouterSettings settings;
   private final List<Item> autorouteItemList;
   private final int passNo;
 
-  public FloatLine latest_air_line;
-  public float cpuTimeUsed = 0.0f;
-  public float maxMemoryUsed = 0.0f;
-  private int routedCount = 0;
-  private int failedCount = 0;
+  public FloatLine latestAirLine;
+  public float cpuTimeUsed = 0.0F;
+  public float maxMemoryUsed = 0.0F;
+  private int routedCount;
+  private int failedCount;
 
-  public BatchAutorouterThread(RoutingBoard board, List<Item> autorouteItemList, int passNo,
-      RouterSettings routerSettings, int startRipupCosts, int tracePullTightAccuracy,
-      boolean p_remove_unconnected_vias, boolean p_with_preferred_directions) {
+  /** Constructs a BatchAutorouterThread for running an autorouting pass. */
+  public BatchAutorouterThread(
+      RoutingBoard board,
+      List<Item> autorouteItemList,
+      int passNo,
+      RouterSettings routerSettings,
+      int startRipupCosts,
+      int tracePullTightAccuracy,
+      boolean removeUnconnectedVias,
+      boolean withPreferredDirections) {
     this.board = board;
     this.settings = routerSettings;
     this.autorouteItemList = autorouteItemList;
     this.passNo = passNo;
 
-    this.remove_unconnected_vias = p_remove_unconnected_vias;
-    if (p_with_preferred_directions) {
-      this.trace_cost_arr = this.settings.get_trace_cost_arr();
+    this.removeUnconnectedVias = removeUnconnectedVias;
+    if (withPreferredDirections) {
+      this.traceCostArr = this.settings.getTraceCostArr();
     } else {
       // remove preferred direction
-      this.trace_cost_arr = new AutorouteControl.ExpansionCostFactor[this.board.get_layer_count()];
-      for (int i = 0; i < this.trace_cost_arr.length; i++) {
-        double curr_min_cost = this.settings.get_preferred_direction_trace_costs(i);
-        this.trace_cost_arr[i] = new AutorouteControl.ExpansionCostFactor(curr_min_cost, curr_min_cost);
+      this.traceCostArr = new AutorouteControl.ExpansionCostFactor[this.board.getLayerCount()];
+      for (int i = 0; i < this.traceCostArr.length; i++) {
+        double currMinCost = this.settings.getPreferredDirectionTraceCosts(i);
+        this.traceCostArr[i] = new AutorouteControl.ExpansionCostFactor(currMinCost, currMinCost);
       }
     }
 
-    this.start_ripup_costs = startRipupCosts;
-    this.trace_pull_tight_accuracy = tracePullTightAccuracy;
-    this.retain_autoroute_database = false;
+    this.startRipupCosts = startRipupCosts;
+    this.tracePullTightAccuracy = tracePullTightAccuracy;
+    this.retainAutorouteDatabase = false;
   }
 
   // Calculates the shortest distance between two sets of items, specifically
   // between Pin and Via items (pins and vias are connectable DrillItems)
-  private static FloatLine calc_airline(Collection<Item> p_from_items, Collection<Item> p_to_items) {
-    FloatPoint from_corner = null;
-    FloatPoint to_corner = null;
-    double min_distance = Double.MAX_VALUE;
-    for (Item curr_from_item : p_from_items) {
-      FloatPoint curr_from_corner;
-      if (curr_from_item instanceof DrillItem item) {
-        curr_from_corner = item
-            .get_center()
-            .to_float();
-      } else if (curr_from_item instanceof PolylineTrace from_trace) {
+  private static FloatLine calcAirline(Collection<Item> fromItems, Collection<Item> toItems) {
+    FloatPoint fromCorner = null;
+    FloatPoint toCorner = null;
+    double minDistance = Double.MAX_VALUE;
+    for (Item currFromItem : fromItems) {
+      FloatPoint currFromCorner;
+      if (currFromItem instanceof DrillItem item) {
+        currFromCorner = item.getCenter().toFloat();
+      } else if (currFromItem instanceof PolylineTrace fromTrace) {
         // Use trace endpoints as potential connection points
         continue; // We'll handle traces in the second loop for better efficiency
       } else {
         continue;
       }
 
-      for (Item curr_to_item : p_to_items) {
-        FloatPoint curr_to_corner;
-        if (curr_to_item instanceof DrillItem drillItem) {
-          curr_to_corner = drillItem
-              .get_center()
-              .to_float();
-        } else if (curr_to_item instanceof PolylineTrace to_trace) {
+      for (Item currToItem : toItems) {
+        FloatPoint currToCorner;
+        if (currToItem instanceof DrillItem drillItem) {
+          currToCorner = drillItem.getCenter().toFloat();
+        } else if (currToItem instanceof PolylineTrace toTrace) {
           // Find nearest point on trace to the from item point
-          curr_to_corner = nearest_point_on_trace(to_trace, curr_from_corner);
+          currToCorner = nearestPointOnTrace(toTrace, currFromCorner);
         } else {
           continue;
         }
 
-        double curr_distance = curr_from_corner.distance(curr_to_corner);
-        if (curr_distance < min_distance) {
-          min_distance = curr_distance;
-          from_corner = curr_from_corner;
-          to_corner = curr_to_corner;
+        double currDistance = currFromCorner.distance(currToCorner);
+        if (currDistance < minDistance) {
+          minDistance = currDistance;
+          fromCorner = currFromCorner;
+          toCorner = currToCorner;
         }
       }
     }
 
     // Check trace-to-trace and trace-to-drill connections
-    for (Item curr_from_item : p_from_items) {
-      if (!(curr_from_item instanceof PolylineTrace from_trace)) {
+    for (Item currFromItem : fromItems) {
+      if (!(currFromItem instanceof PolylineTrace fromTrace)) {
         continue;
       }
 
-      for (Item curr_to_item : p_to_items) {
-        FloatPoint curr_from_corner;
-        FloatPoint curr_to_corner;
+      for (Item currToItem : toItems) {
+        FloatPoint currFromCorner;
+        FloatPoint currToCorner;
 
-        if (curr_to_item instanceof DrillItem item) {
+        if (currToItem instanceof DrillItem item) {
           // Trace to drill item
-          curr_to_corner = item
-              .get_center()
-              .to_float();
-          curr_from_corner = nearest_point_on_trace(from_trace, curr_to_corner);
-        } else if (curr_to_item instanceof PolylineTrace to_trace) {
+          currToCorner = item.getCenter().toFloat();
+          currFromCorner = nearestPointOnTrace(fromTrace, currToCorner);
+        } else if (currToItem instanceof PolylineTrace toTrace) {
           // Trace to trace - find the closest points between the two traces
-          FloatPoint[] closest_points = find_closest_points_between_traces(from_trace, to_trace);
-          curr_from_corner = closest_points[0];
-          curr_to_corner = closest_points[1];
+          FloatPoint[] closestPoints = findClosestPointsBetweenTraces(fromTrace, toTrace);
+          currFromCorner = closestPoints[0];
+          currToCorner = closestPoints[1];
         } else {
           continue;
         }
 
-        double curr_distance = curr_from_corner.distance(curr_to_corner);
-        if (curr_distance < min_distance) {
-          min_distance = curr_distance;
-          from_corner = curr_from_corner;
-          to_corner = curr_to_corner;
+        double currDistance = currFromCorner.distance(currToCorner);
+        if (currDistance < minDistance) {
+          minDistance = currDistance;
+          fromCorner = currFromCorner;
+          toCorner = currToCorner;
         }
       }
     }
 
-    if (from_corner != null && to_corner != null) {
-      return new FloatLine(from_corner, to_corner);
+    if (fromCorner != null && toCorner != null) {
+      return new FloatLine(fromCorner, toCorner);
     } else {
       return null;
     }
   }
 
-  /**
-   * Finds the nearest point on a trace to the given point
-   */
-  private static FloatPoint nearest_point_on_trace(PolylineTrace p_trace, FloatPoint p_point) {
-    double min_distance = Double.MAX_VALUE;
-    FloatPoint nearest_point = null;
+  /** Finds the nearest point on a trace to the given point. */
+  private static FloatPoint nearestPointOnTrace(PolylineTrace trace, FloatPoint point) {
+    double minDistance = Double.MAX_VALUE;
+    FloatPoint nearestPoint = null;
 
     // Get endpoints
-    FloatPoint first_corner = p_trace
-        .first_corner()
-        .to_float();
-    FloatPoint last_corner = p_trace
-        .last_corner()
-        .to_float();
+    FloatPoint firstCorner = trace.firstCorner().toFloat();
+    FloatPoint lastCorner = trace.lastCorner().toFloat();
 
     // Check distance to endpoints first
-    double distance_to_first = p_point.distance(first_corner);
-    double distance_to_last = p_point.distance(last_corner);
+    double distanceToFirst = point.distance(firstCorner);
+    double distanceToLast = point.distance(lastCorner);
 
-    if (distance_to_first < min_distance) {
-      min_distance = distance_to_first;
-      nearest_point = first_corner;
+    if (distanceToFirst < minDistance) {
+      minDistance = distanceToFirst;
+      nearestPoint = firstCorner;
     }
 
-    if (distance_to_last < min_distance) {
-      min_distance = distance_to_last;
-      nearest_point = last_corner;
+    if (distanceToLast < minDistance) {
+      minDistance = distanceToLast;
+      nearestPoint = lastCorner;
     }
 
     // Check distances to line segments
-    for (int i = 0; i < p_trace.corner_count() - 1; i++) {
-      FloatPoint segment_start = p_trace
-          .polyline()
-          .corner_approx(i);
-      FloatPoint segment_end = p_trace
-          .polyline()
-          .corner_approx(i + 1);
-      FloatLine segment = new FloatLine(segment_start, segment_end);
+    for (int i = 0; i < trace.cornerCount() - 1; i++) {
+      FloatPoint segmentStart = trace.polyline().cornerApprox(i);
+      FloatPoint segmentEnd = trace.polyline().cornerApprox(i + 1);
+      FloatLine segment = new FloatLine(segmentStart, segmentEnd);
 
-      FloatPoint projection = segment.perpendicular_projection(p_point);
-      if (projection.is_contained_in_box(segment_start, segment_end, 0.01)) {
-        double distance = p_point.distance(projection);
-        if (distance < min_distance) {
-          min_distance = distance;
-          nearest_point = projection;
+      FloatPoint projection = segment.perpendicularProjection(point);
+      if (projection.isContainedInBox(segmentStart, segmentEnd, 0.01)) {
+        double distance = point.distance(projection);
+        if (distance < minDistance) {
+          minDistance = distance;
+          nearestPoint = projection;
         }
       }
     }
 
-    return nearest_point;
+    return nearestPoint;
   }
 
   /**
-   * Finds the closest points between two traces
+   * Finds the closest points between two traces.
    *
-   * @return an array with two FloatPoints: [point_on_first_trace,
-   *         point_on_second_trace]
+   * @return an array with two FloatPoints: [point_on_first_trace, point_on_second_trace]
    */
-  private static FloatPoint[] find_closest_points_between_traces(PolylineTrace p_first_trace,
-      PolylineTrace p_second_trace) {
-    double min_distance = Double.MAX_VALUE;
+  private static FloatPoint[] findClosestPointsBetweenTraces(
+      PolylineTrace firstTrace, PolylineTrace secondTrace) {
+    double minDistance = Double.MAX_VALUE;
     FloatPoint[] result = new FloatPoint[2];
 
     // Check endpoints to endpoints
-    FloatPoint first_trace_start = p_first_trace
-        .first_corner()
-        .to_float();
-    FloatPoint first_trace_end = p_first_trace
-        .last_corner()
-        .to_float();
-    FloatPoint second_trace_start = p_second_trace
-        .first_corner()
-        .to_float();
-    FloatPoint second_trace_end = p_second_trace
-        .last_corner()
-        .to_float();
+    FloatPoint firstTraceStart = firstTrace.firstCorner().toFloat();
+    final FloatPoint firstTraceEnd = firstTrace.lastCorner().toFloat();
+    FloatPoint secondTraceStart = secondTrace.firstCorner().toFloat();
+    FloatPoint secondTraceEnd = secondTrace.lastCorner().toFloat();
 
     // Check all endpoint combinations
-    double distance = first_trace_start.distance(second_trace_start);
-    if (distance < min_distance) {
-      min_distance = distance;
-      result[0] = first_trace_start;
-      result[1] = second_trace_start;
+    double distance = firstTraceStart.distance(secondTraceStart);
+    if (distance < minDistance) {
+      minDistance = distance;
+      result[0] = firstTraceStart;
+      result[1] = secondTraceStart;
     }
 
-    distance = first_trace_start.distance(second_trace_end);
-    if (distance < min_distance) {
-      min_distance = distance;
-      result[0] = first_trace_start;
-      result[1] = second_trace_end;
+    distance = firstTraceStart.distance(secondTraceEnd);
+    if (distance < minDistance) {
+      minDistance = distance;
+      result[0] = firstTraceStart;
+      result[1] = secondTraceEnd;
     }
 
-    distance = first_trace_end.distance(second_trace_start);
-    if (distance < min_distance) {
-      min_distance = distance;
-      result[0] = first_trace_end;
-      result[1] = second_trace_start;
+    distance = firstTraceEnd.distance(secondTraceStart);
+    if (distance < minDistance) {
+      minDistance = distance;
+      result[0] = firstTraceEnd;
+      result[1] = secondTraceStart;
     }
 
-    distance = first_trace_end.distance(second_trace_end);
-    if (distance < min_distance) {
-      min_distance = distance;
-      result[0] = first_trace_end;
-      result[1] = second_trace_end;
+    distance = firstTraceEnd.distance(secondTraceEnd);
+    if (distance < minDistance) {
+      minDistance = distance;
+      result[0] = firstTraceEnd;
+      result[1] = secondTraceEnd;
     }
 
     // Check all segment combinations for closest points
-    for (int i = 0; i < p_first_trace.corner_count() - 1; i++) {
-      FloatPoint first_segment_start = p_first_trace
-          .polyline()
-          .corner_approx(i);
-      FloatPoint first_segment_end = p_first_trace
-          .polyline()
-          .corner_approx(i + 1);
-      FloatLine first_segment = new FloatLine(first_segment_start, first_segment_end);
+    for (int i = 0; i < firstTrace.cornerCount() - 1; i++) {
+      FloatPoint firstSegmentStart = firstTrace.polyline().cornerApprox(i);
+      FloatPoint firstSegmentEnd = firstTrace.polyline().cornerApprox(i + 1);
+      FloatLine firstSegment = new FloatLine(firstSegmentStart, firstSegmentEnd);
 
-      for (int j = 0; j < p_second_trace.corner_count() - 1; j++) {
-        FloatPoint second_segment_start = p_second_trace
-            .polyline()
-            .corner_approx(j);
-        FloatPoint second_segment_end = p_second_trace
-            .polyline()
-            .corner_approx(j + 1);
-        FloatLine second_segment = new FloatLine(second_segment_start, second_segment_end);
+      for (int j = 0; j < secondTrace.cornerCount() - 1; j++) {
+        FloatPoint secondSegmentStart = secondTrace.polyline().cornerApprox(j);
+        FloatPoint secondSegmentEnd = secondTrace.polyline().cornerApprox(j + 1);
+        FloatLine secondSegment = new FloatLine(secondSegmentStart, secondSegmentEnd);
 
         // Find closest points between these two line segments
-        FloatPoint point_on_first = first_segment.nearest_segment_point(second_segment_start);
-        FloatPoint point_on_second = second_segment.perpendicular_projection(point_on_first);
+        FloatPoint pointOnFirst = firstSegment.nearestSegmentPoint(secondSegmentStart);
+        FloatPoint pointOnSecond = secondSegment.perpendicularProjection(pointOnFirst);
 
         // Check if projection is on the segment
-        if (!point_on_second.is_contained_in_box(second_segment_start, second_segment_end, 0.01)) {
+        if (!pointOnSecond.isContainedInBox(secondSegmentStart, secondSegmentEnd, 0.01)) {
           // If not, use the nearest endpoint
-          double dist_to_start = point_on_first.distance(second_segment_start);
-          double dist_to_end = point_on_first.distance(second_segment_end);
-          point_on_second = dist_to_start < dist_to_end ? second_segment_start : second_segment_end;
+          double distToStart = pointOnFirst.distance(secondSegmentStart);
+          double distToEnd = pointOnFirst.distance(secondSegmentEnd);
+          pointOnSecond = distToStart < distToEnd ? secondSegmentStart : secondSegmentEnd;
         }
 
         // Recalculate the point on first segment based on the point on second segment
-        point_on_first = first_segment.nearest_segment_point(point_on_second);
+        pointOnFirst = firstSegment.nearestSegmentPoint(pointOnSecond);
 
-        distance = point_on_first.distance(point_on_second);
-        if (distance < min_distance) {
-          min_distance = distance;
-          result[0] = point_on_first;
-          result[1] = point_on_second;
+        distance = pointOnFirst.distance(pointOnSecond);
+        if (distance < minDistance) {
+          minDistance = distance;
+          result[0] = pointOnFirst;
+          result[1] = pointOnSecond;
         }
       }
     }
@@ -314,20 +286,16 @@ public class BatchAutorouterThread extends StoppableThread {
   }
 
   private RoutingBoard autorouteItems() {
-    int items_to_go_count = autorouteItemList.size();
-    int ripped_item_count = 0;
-    int not_routed = 0;
-    int routed = 0;
-    int skipped = 0;
+    int itemsToGoCount = autorouteItemList.size();
 
-    BoardStatistics stats = board.get_statistics();
+    final BoardStatistics stats = board.getStatistics();
     RouterCounters routerCounters = new RouterCounters();
     routerCounters.passCount = passNo;
-    routerCounters.queuedToBeRoutedCount = items_to_go_count;
-    routerCounters.skippedCount = skipped;
-    routerCounters.rippedCount = ripped_item_count;
-    routerCounters.failedToBeRoutedCount = not_routed;
-    routerCounters.routedCount = routed;
+    routerCounters.queuedToBeRoutedCount = itemsToGoCount;
+    routerCounters.skippedCount = 0;
+    routerCounters.rippedCount = 0;
+    routerCounters.failedToBeRoutedCount = 0;
+    routerCounters.routedCount = 0;
     DesignRulesChecker drc = new DesignRulesChecker(board, null);
     drc.calculateAllIncompletes();
     routerCounters.incompleteCount = drc.getIncompleteCount();
@@ -335,43 +303,57 @@ public class BatchAutorouterThread extends StoppableThread {
     progressThrottler.reset();
     this.fireBoardUpdatedEvent(stats, routerCounters, board);
 
+    int rippedItemCount = 0;
+    int notRouted = 0;
+    int routed = 0;
+    int skipped = 0;
     // Let's go through all items to route
-    for (Item curr_item : autorouteItemList) {
+    for (Item currItem : autorouteItemList) {
       // If the user requested to stop the auto-router, we stop it
-      if (this.is_stop_auto_router_requested()) {
+      if (this.isStopAutoRouterRequested()) {
         break;
       }
 
       // Check if this item should be skipped due to repeated failures
-      if (this.board.failureLog.shouldSkip(curr_item)) {
-        Net net = board.rules.nets.get(curr_item.get_net_no(0));
-        String netName = (net != null) ? net.name : "net#" + curr_item.get_net_no(0);
-        FRLogger.debug("Skipping " + curr_item.getClass().getSimpleName() + " on net '" + netName
-            + "' - exceeded failure threshold (" + board.failureLog.getFailureCount(curr_item) + " failures)");
-        --items_to_go_count;
+      if (this.board.failureLog.shouldSkip(currItem)) {
+        Net net = board.rules.nets.get(currItem.getNetNo(0));
+        String netName = net != null ? net.name : "net#" + currItem.getNetNo(0);
+        FRLogger.debug(
+            "Skipping "
+                + currItem.getClass().getSimpleName()
+                + " on net '"
+                + netName
+                + "' - exceeded failure threshold ("
+                + board.failureLog.getFailureCount(currItem)
+                + " failures)");
+        --itemsToGoCount;
         continue;
       }
 
       // Let's go through all nets of this item
-      for (int i = 0; i < curr_item.net_count(); i++) {
+      for (int i = 0; i < currItem.netCount(); i++) {
         // If the user requested to stop the auto-router, we stop it
-        if (this.is_stop_auto_router_requested()) {
+        if (this.isStopAutoRouterRequested()) {
           break;
         }
 
-        if (this.settings.maxItems != null && this.settings.maxItems > 0 && (this.routedCount + this.failedCount) >= this.settings.maxItems) {
-          FRLogger.info("Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
-          this.request_stop_auto_router();
+        if (this.settings.maxItems != null
+            && this.settings.maxItems > 0
+            && (this.routedCount + this.failedCount) >= this.settings.maxItems) {
+          FRLogger.info(
+              "Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
+          this.requestStopAutoRouter();
           break;
         }
 
         // We visually mark the area of the board, which is changed by the auto-router
-        board.start_marking_changed_area();
+        board.startMarkingChangedArea();
 
         // Do the auto-routing step for this item (typically PolylineTrace or Pin)
-        SortedSet<Item> ripped_item_list = new TreeSet<>();
+        SortedSet<Item> rippedItemList = new TreeSet<>();
 
-        var autorouterResult = autoroute_item(board, curr_item, curr_item.get_net_no(i), ripped_item_list, passNo);
+        var autorouterResult =
+            autorouteItem(board, currItem, currItem.getNetNo(i), rippedItemList, passNo);
         if (autorouterResult.state == AutorouteAttemptState.ROUTED) {
           // The item was successfully routed
           ++routed;
@@ -382,34 +364,45 @@ public class BatchAutorouterThread extends StoppableThread {
           // The item doesn't need to be routed
           ++skipped;
         } else {
-          Net net = board.rules.nets.get(curr_item.get_net_no(i));
-          String netName = (net != null) ? net.name : "net#" + curr_item.get_net_no(i);
+          Net net = board.rules.nets.get(currItem.getNetNo(i));
+          String netName = net != null ? net.name : "net#" + currItem.getNetNo(i);
 
           // Record the failure
-          this.board.failureLog.recordFailure(curr_item, passNo, autorouterResult.state, autorouterResult.details);
+          this.board.failureLog.recordFailure(
+              currItem, passNo, autorouterResult.state, autorouterResult.details);
 
           FRLogger.debug("Autorouter " + autorouterResult.details);
           // Log details when we're down to last few items or item has many failures
-          int failureCount = board.failureLog.getFailureCount(curr_item);
-          if (items_to_go_count <= 5 || failureCount >= 3) {
-            FRLogger.debug("Pass #" + passNo + ": Failed to route " + curr_item.getClass().getSimpleName()
-                + " on net '" + netName + "' (" + items_to_go_count + " items remaining, "
-                + failureCount + " failures). State: " + autorouterResult.state);
+          int failureCount = board.failureLog.getFailureCount(currItem);
+          if (itemsToGoCount <= 5 || failureCount >= 3) {
+            FRLogger.debug(
+                "Pass #"
+                    + passNo
+                    + ": Failed to route "
+                    + currItem.getClass().getSimpleName()
+                    + " on net '"
+                    + netName
+                    + "' ("
+                    + itemsToGoCount
+                    + " items remaining, "
+                    + failureCount
+                    + " failures). State: "
+                    + autorouterResult.state);
           }
-          ++not_routed;
+          ++notRouted;
           this.failedCount++;
         }
-        --items_to_go_count;
-        ripped_item_count += ripped_item_list.size();
+        --itemsToGoCount;
+        rippedItemCount += rippedItemList.size();
 
         if (progressThrottler.shouldUpdate()) {
           PerformanceProfiler.start("stats_update");
-          BoardStatistics boardStatistics = board.get_statistics();
+          final BoardStatistics boardStatistics = board.getStatistics();
           routerCounters.passCount = passNo;
-          routerCounters.queuedToBeRoutedCount = items_to_go_count;
+          routerCounters.queuedToBeRoutedCount = itemsToGoCount;
           routerCounters.skippedCount = skipped;
-          routerCounters.rippedCount = ripped_item_count;
-          routerCounters.failedToBeRoutedCount = not_routed;
+          routerCounters.rippedCount = rippedItemCount;
+          routerCounters.failedToBeRoutedCount = notRouted;
           routerCounters.routedCount = routed;
           DesignRulesChecker drc2 = new DesignRulesChecker(board, null);
           drc2.calculateAllIncompletes();
@@ -420,169 +413,202 @@ public class BatchAutorouterThread extends StoppableThread {
       }
     }
 
-    if (this.remove_unconnected_vias) {
-      remove_tails(Item.StopConnectionOption.NONE);
+    if (this.removeUnconnectedVias) {
+      removeTails(Item.StopConnectionOption.NONE);
     } else {
-      remove_tails(Item.StopConnectionOption.FANOUT_VIA);
+      removeTails(Item.StopConnectionOption.FANOUT_VIA);
     }
 
-    BoardStatistics finalStats = board.get_statistics();
     routerCounters.passCount = passNo;
-    routerCounters.queuedToBeRoutedCount = items_to_go_count;
+    routerCounters.queuedToBeRoutedCount = itemsToGoCount;
     routerCounters.skippedCount = skipped;
-    routerCounters.rippedCount = ripped_item_count;
-    routerCounters.failedToBeRoutedCount = not_routed;
+    routerCounters.rippedCount = rippedItemCount;
+    routerCounters.failedToBeRoutedCount = notRouted;
     routerCounters.routedCount = routed;
     DesignRulesChecker drc3 = new DesignRulesChecker(board, null);
     drc3.calculateAllIncompletes();
     routerCounters.incompleteCount = drc3.getIncompleteCount();
-    this.fireBoardUpdatedEvent(finalStats, routerCounters, board);
+    this.fireBoardUpdatedEvent(board.getStatistics(), routerCounters, board);
 
     return this.board;
   }
 
   // Tries to route an item on a specific net. Returns true, if the item is
   // routed.
-  private AutorouteAttemptResult autoroute_item(RoutingBoard board, Item p_item, int p_route_net_no,
-      SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no) {
+  private AutorouteAttemptResult autorouteItem(
+      RoutingBoard board,
+      Item item,
+      int routeNetNo,
+      SortedSet<Item> rippedItemList,
+      int ripupPassNo) {
     try {
-      boolean contains_plane = false;
+      boolean containsPlane = false;
 
       // Get the net
-      Net route_net = board.rules.nets.get(p_route_net_no);
-      if (route_net != null) {
-        contains_plane = route_net.contains_plane();
+      Net routeNet = board.rules.nets.get(routeNetNo);
+      if (routeNet != null) {
+        containsPlane = routeNet.containsPlane();
       }
 
       // Get the current via costs based on auto-router settings
-      int curr_via_costs;
-      if (contains_plane) {
-        curr_via_costs = settings.get_plane_via_costs();
+      int currViaCosts;
+      if (containsPlane) {
+        currViaCosts = settings.getPlaneViaCosts();
       } else {
-        curr_via_costs = settings.get_via_costs();
+        currViaCosts = settings.getViaCosts();
       }
 
       // Get and calculate the auto-router settings based on the board and net we are
       // working on
-      AutorouteControl autoroute_control = new AutorouteControl(board, p_route_net_no, settings, curr_via_costs,
-          trace_cost_arr);
-      autoroute_control.ripup_allowed = true;
-      autoroute_control.ripup_costs = start_ripup_costs * p_ripup_pass_no;
-      autoroute_control.remove_unconnected_vias = remove_unconnected_vias;
+      AutorouteControl autorouteControl =
+          new AutorouteControl(board, routeNetNo, settings, currViaCosts, traceCostArr);
+      autorouteControl.ripupAllowed = true;
+      autorouteControl.ripupCosts = startRipupCosts * ripupPassNo;
+      autorouteControl.removeUnconnectedVias = removeUnconnectedVias;
 
       // Check if the item is already routed
-      Set<Item> unconnected_set = p_item.get_unconnected_set(p_route_net_no);
-      if (unconnected_set.isEmpty()) {
+      Set<Item> unconnectedSet = item.getUnconnectedSet(routeNetNo);
+      if (unconnectedSet.isEmpty()) {
         return new AutorouteAttemptResult(AutorouteAttemptState.NO_UNCONNECTED_NETS);
       }
 
-      Set<Item> connected_set = p_item.get_connected_set(p_route_net_no);
-      Set<Item> route_start_set;
-      Set<Item> route_dest_set;
-      if (contains_plane) {
-        for (Item curr_item : connected_set) {
-          if (curr_item instanceof ConductionArea) {
+      Set<Item> connectedSet = item.getConnectedSet(routeNetNo);
+      Set<Item> routeStartSet;
+      Set<Item> routeDestSet;
+      if (containsPlane) {
+        for (Item currItem : connectedSet) {
+          if (currItem instanceof ConductionArea) {
             return new AutorouteAttemptResult(AutorouteAttemptState.CONNECTED_TO_PLANE);
           }
         }
       }
-      if (contains_plane) {
-        route_start_set = connected_set;
-        route_dest_set = unconnected_set;
+      if (containsPlane) {
+        routeStartSet = connectedSet;
+        routeDestSet = unconnectedSet;
       } else {
-        route_start_set = unconnected_set;
-        route_dest_set = connected_set;
+        routeStartSet = unconnectedSet;
+        routeDestSet = connectedSet;
       }
 
       // Calculate the shortest distance between the two sets of items
-      this.latest_air_line = calc_airline(route_start_set, route_dest_set);
+      this.latestAirLine = calcAirline(routeStartSet, routeDestSet);
 
       // Calculate the maximum time for this autoroute pass
-      double max_milliseconds = 100000 * Math.pow(2, p_ripup_pass_no - 1);
-      max_milliseconds = Math.min(max_milliseconds, Integer.MAX_VALUE);
-      TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
+      double maxMilliseconds = 100000 * Math.pow(2, ripupPassNo - 1);
+      maxMilliseconds = Math.min(maxMilliseconds, Integer.MAX_VALUE);
+      TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
 
       // Initialize the auto-router engine
-      AutorouteEngine autoroute_engine = board.init_autoroute(p_route_net_no,
-          autoroute_control.trace_clearance_class_no, this, time_limit, this.retain_autoroute_database);
+      AutorouteEngine autorouteEngine =
+          board.initAutoroute(
+              routeNetNo,
+              autorouteControl.traceClearanceClassNo,
+              this,
+              timeLimit,
+              this.retainAutorouteDatabase);
 
       // Do the auto-routing between the two sets of items
-      AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
-          autoroute_control, p_ripped_item_list, null); // null: costs not needed by this thread
+      AutorouteAttemptResult autorouteResult =
+          autorouteEngine.autorouteConnection(
+              routeStartSet,
+              routeDestSet,
+              autorouteControl,
+              rippedItemList,
+              null); // null: costs not needed by this thread
 
       // Update the changed area of the board
-      if (autoroute_result.state == AutorouteAttemptState.ROUTED) {
-        board.opt_changed_area(new int[0], null, trace_pull_tight_accuracy, autoroute_control.trace_costs, this,
+      if (autorouteResult.state == AutorouteAttemptState.ROUTED) {
+        board.optChangedArea(
+            new int[0],
+            null,
+            tracePullTightAccuracy,
+            autorouteControl.traceCosts,
+            this,
             TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
       }
 
-      return autoroute_result;
+      return autorouteResult;
     } catch (Exception e) {
       FRLogger.error("Error during autoroute_item", e);
       return new AutorouteAttemptResult(AutorouteAttemptState.FAILED);
     }
   }
 
-  private void remove_tails(Item.StopConnectionOption p_stop_connection_option) {
-    FRLogger.trace("BatchAutorouterThread.remove_tails", "starting_tail_removal",
-        FRLogger.buildTracePayload("autoroute", "cleanup", "start",
-            "stop_option=" + p_stop_connection_option),
+  private void removeTails(Item.StopConnectionOption stopConnectionOption) {
+    FRLogger.trace(
+        "BatchAutorouterThread.remove_tails",
+        "starting_tail_removal",
+        FRLogger.buildTracePayload(
+            "autoroute", "cleanup", "start", "stop_option=" + stopConnectionOption),
         "",
         null);
-    board.start_marking_changed_area();
-    boolean tails_removed = board.remove_trace_tails(-1, p_stop_connection_option);
-    FRLogger.trace("BatchAutorouterThread.remove_tails", "tail_removal_complete",
-        FRLogger.buildTracePayload("autoroute", "cleanup", "complete",
-            "tails_removed=" + tails_removed
-                + " stop_option=" + p_stop_connection_option),
+    board.startMarkingChangedArea();
+    boolean tailsRemoved = board.removeTraceTails(-1, stopConnectionOption);
+    FRLogger.trace(
+        "BatchAutorouterThread.remove_tails",
+        "tail_removal_complete",
+        FRLogger.buildTracePayload(
+            "autoroute",
+            "cleanup",
+            "complete",
+            "tailsRemoved=" + tailsRemoved + " stop_option=" + stopConnectionOption),
         "",
         null);
-    board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, this.trace_cost_arr, this,
+    board.optChangedArea(
+        new int[0],
+        null,
+        this.tracePullTightAccuracy,
+        this.traceCostArr,
+        this,
         TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
   }
 
   @Override
-  protected void thread_action() {
+  protected void threadAction() {
     autorouteItems();
     captureStats();
   }
 
   private void captureStats() {
     try {
-      ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
       long id = this.threadId();
-      this.cpuTimeUsed = threadMXBean.getThreadCpuTime(id) / 1000.0f / 1000.0f / 1000.0f;
-      this.maxMemoryUsed = threadMXBean.getThreadAllocatedBytes(id) / (1024.0f * 1024.0f);
+      this.cpuTimeUsed = threadMxBean.getThreadCpuTime(id) / 1000.0f / 1000.0f / 1000.0f;
+      this.maxMemoryUsed = threadMxBean.getThreadAllocatedBytes(id) / (1024.0f * 1024.0f);
     } catch (Throwable t) {
       // java.management or jdk.management module may not be available in minimal JRE builds;
       // leave cpuTimeUsed and maxMemoryUsed at their zero-initialized defaults.
     }
   }
 
+  /** Registers a listener for board updated events. */
   public void addBoardUpdatedEventListener(BoardUpdatedEventListener listener) {
     boardUpdatedEventListeners.add(listener);
   }
 
   /**
-   * Fires a board updated event. This happens when the board has been updated,
-   * e.g. after a route has been added.
+   * Fires a board updated event. This happens when the board has been updated, e.g. after a route
+   * has been added.
    */
-  public void fireBoardUpdatedEvent(BoardStatistics boardStatistics, RouterCounters routerCounters,
-      RoutingBoard board) {
+  public void fireBoardUpdatedEvent(
+      BoardStatistics boardStatistics, RouterCounters routerCounters, RoutingBoard board) {
     BoardUpdatedEvent event = new BoardUpdatedEvent(this, boardStatistics, routerCounters, board);
     for (BoardUpdatedEventListener listener : boardUpdatedEventListeners) {
       listener.onBoardUpdatedEvent(event);
     }
   }
 
+  /** Returns the routing board being processed by this thread. */
   public RoutingBoard getBoard() {
     return board;
   }
 
+  /** Returns the count of successfully routed items in this pass. */
   public int getRoutedCount() {
     return routedCount;
   }
 
+  /** Returns the count of items that failed to route in this pass. */
   public int getFailedCount() {
     return failedCount;
   }

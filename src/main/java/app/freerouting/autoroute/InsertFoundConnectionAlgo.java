@@ -18,234 +18,372 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-/**
- * Inserts the traces and vias of the connection found by the autoroute algorithm.
- */
-public class InsertFoundConnectionAlgo {
+/** Inserts the traces and vias of the connection found by the autoroute algorithm. */
+public final class InsertFoundConnectionAlgo {
 
   private final RoutingBoard board;
   private final AutorouteControl ctrl;
-  private IntPoint last_corner;
-  private IntPoint first_corner;
+  private IntPoint lastCorner;
+  private IntPoint firstCorner;
 
-  /**
-   * Creates a new instance of InsertFoundConnectionAlgo
-   */
-  private InsertFoundConnectionAlgo(RoutingBoard p_board, AutorouteControl p_ctrl) {
-    this.board = p_board;
-    this.ctrl = p_ctrl;
+  /** Creates a new instance of InsertFoundConnectionAlgo. */
+  private InsertFoundConnectionAlgo(RoutingBoard board, AutorouteControl ctrl) {
+    this.board = board;
+    this.ctrl = ctrl;
   }
 
   /**
-   * Creates a new instance of InsertFoundConnectionAlgo . Returns null, if the insertion did not succeed.
+   * Creates a new instance of InsertFoundConnectionAlgo. Returns null if the insertion did not
+   * succeed.
    */
-  public static InsertFoundConnectionAlgo get_instance(LocateFoundConnectionAlgo p_connection, RoutingBoard p_board, AutorouteControl p_ctrl) {
-    if (p_connection == null || p_connection.connection_items == null) {
+  public static InsertFoundConnectionAlgo getInstance(
+      LocateFoundConnectionAlgo connection, RoutingBoard board, AutorouteControl ctrl) {
+    if (connection == null || connection.connectionItems == null) {
       return null;
     }
-    int curr_layer = p_connection.target_layer;
-    InsertFoundConnectionAlgo new_instance = new InsertFoundConnectionAlgo(p_board, p_ctrl);
-    for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : p_connection.connection_items) {
+    int currLayer = connection.targetLayer;
+    InsertFoundConnectionAlgo newInstance = new InsertFoundConnectionAlgo(board, ctrl);
+    for (LocateFoundConnectionAlgoAnyAngle.ResultItem currNewItem : connection.connectionItems) {
       if (true) {
-        Point startCorner = curr_new_item.corners.length > 0 ? curr_new_item.corners[0] : null;
-        Point endCorner = curr_new_item.corners.length > 0
-            ? curr_new_item.corners[curr_new_item.corners.length - 1]
-            : null;
-        FRLogger.trace("compare_trace_connection_item_raw net=" + p_ctrl.net_no
-            + ", item_layer=" + curr_new_item.layer
-            + ", corner_count=" + curr_new_item.corners.length
-            + ", start=" + formatPoint(startCorner)
-            + ", end=" + formatPoint(endCorner));
+        Point startCorner = currNewItem.corners.length > 0 ? currNewItem.corners[0] : null;
+        Point endCorner =
+            currNewItem.corners.length > 0
+                ? currNewItem.corners[currNewItem.corners.length - 1]
+                : null;
+        FRLogger.trace(
+            "compare_trace_connection_item_raw net="
+                + ctrl.netNo
+                + ", item_layer="
+                + currNewItem.layer
+                + ", cornerCount="
+                + currNewItem.corners.length
+                + ", start="
+                + formatPoint(startCorner)
+                + ", end="
+                + formatPoint(endCorner));
       }
-      if (!new_instance.insert_via(curr_new_item.corners[0], curr_layer, curr_new_item.layer)) {
+      if (!newInstance.insertVia(currNewItem.corners[0], currLayer, currNewItem.layer)) {
         return null;
       }
-      curr_layer = curr_new_item.layer;
-      if (!new_instance.insert_trace(curr_new_item)) {
+      currLayer = currNewItem.layer;
+      if (!newInstance.insertTrace(currNewItem)) {
         return null;
       }
     }
-    if (!new_instance.insert_via(new_instance.last_corner, curr_layer, p_connection.start_layer)) {
+    if (!newInstance.insertVia(newInstance.lastCorner, currLayer, connection.startLayer)) {
       return null;
     }
-    if (p_connection.target_item instanceof PolylineTrace to_trace) {
-      if (new_instance.first_corner != null) {
-        p_board.connect_to_trace(new_instance.first_corner, to_trace, p_ctrl.trace_half_width[p_connection.start_layer], p_ctrl.trace_clearance_class_no);
+    if (connection.targetItem instanceof PolylineTrace toTrace) {
+      if (newInstance.firstCorner != null) {
+        board.connectToTrace(
+            newInstance.firstCorner,
+            toTrace,
+            ctrl.traceHalfWidth[connection.startLayer],
+            ctrl.traceClearanceClassNo);
       } else {
-        FRLogger.warn("InsertFoundConnectionAlgo: first_corner is null for net #" + p_ctrl.net_no + ", skipping connect_to_trace for target item. This may indicate a degenerate route segment.");
+        FRLogger.warn(
+            "InsertFoundConnectionAlgo: firstCorner is null for net #"
+                + ctrl.netNo
+                + ", skipping connect_to_trace for target item. "
+                + "This may indicate a degenerate route segment.");
       }
     }
-    if (p_connection.start_item instanceof PolylineTrace to_trace) {
-      if (new_instance.last_corner != null) {
-        p_board.connect_to_trace(new_instance.last_corner, to_trace, p_ctrl.trace_half_width[p_connection.target_layer], p_ctrl.trace_clearance_class_no);
+    if (connection.startItem instanceof PolylineTrace toTrace) {
+      if (newInstance.lastCorner != null) {
+        board.connectToTrace(
+            newInstance.lastCorner,
+            toTrace,
+            ctrl.traceHalfWidth[connection.targetLayer],
+            ctrl.traceClearanceClassNo);
       } else {
-        FRLogger.warn("InsertFoundConnectionAlgo: last_corner is null for net #" + p_ctrl.net_no + ", skipping connect_to_trace for start item. This may indicate a degenerate route segment.");
+        FRLogger.warn(
+            "InsertFoundConnectionAlgo: lastCorner is null for net #"
+                + ctrl.netNo
+                + ", skipping connect_to_trace for start item. "
+                + "This may indicate a degenerate route segment.");
       }
     }
 
-    p_board.normalize_traces(p_ctrl.net_no);
+    board.normalizeTraces(ctrl.netNo);
 
-    return new_instance;
+    return newInstance;
   }
 
   /**
-   * Inserts the trace by shoving aside obstacle traces and vias. Returns false, that was not possible for the whole trace.
+   * Inserts the trace by shoving aside obstacle traces and vias. Returns false, that was not
+   * possible for the whole trace.
    */
-  private boolean insert_trace(LocateFoundConnectionAlgoAnyAngle.ResultItem p_trace) {
-    if (p_trace.corners.length == 1) {
+  private boolean insertTrace(LocateFoundConnectionAlgoAnyAngle.ResultItem trace) {
+    if (trace.corners.length == 1) {
       // Single-point trace: the start and end are the same location (already at the target).
-      // Set both first_corner and last_corner so that connect_to_trace is not called with null.
-      if (this.first_corner == null) {
-        this.first_corner = p_trace.corners[0];
+      // Set both firstCorner and lastCorner so that connect_to_trace is not called with null.
+      if (this.firstCorner == null) {
+        this.firstCorner = trace.corners[0];
       }
-      this.last_corner = p_trace.corners[0];
+      this.lastCorner = trace.corners[0];
       return true;
     }
-    boolean result = true;
 
     // switch off correcting connection to pin because it may get wrong in inserting the polygon
     // line for line.
-    double saved_edge_to_turn_dist = board.rules.get_pin_edge_to_turn_dist();
-    board.rules.set_pin_edge_to_turn_dist(-1);
+    final double savedEdgeToTurnDist = board.rules.getPinEdgeToTurnDist();
+    board.rules.setPinEdgeToTurnDist(-1);
 
     // Look for pins att the start and the end of p_trace in case that neckdown is necessary.
-    Pin start_pin = null;
-    Pin end_pin = null;
-    if (ctrl.with_neckdown) {
-      ItemSelectionFilter item_filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
-      Point curr_end_corner = p_trace.corners[0];
+    Pin startPin = null;
+    Pin endPin = null;
+    if (ctrl.withNeckdown) {
+      ItemSelectionFilter itemFilter =
+          new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
+      Point currEndCorner = trace.corners[0];
       for (int i = 0; i < 2; i++) {
-        Set<Item> picked_items = this.board.pick_items(curr_end_corner, p_trace.layer, item_filter);
-        for (Item curr_item : picked_items) {
-          Pin curr_pin = (Pin) curr_item;
-          if (curr_pin.contains_net(ctrl.net_no) && curr_pin
-              .get_center()
-              .equals(curr_end_corner)) {
+        Set<Item> pickedItems = this.board.pickItems(currEndCorner, trace.layer, itemFilter);
+        for (Item currItem : pickedItems) {
+          Pin currPin = (Pin) currItem;
+          if (currPin.containsNet(ctrl.netNo) && currPin.getCenter().equals(currEndCorner)) {
             if (i == 0) {
-              start_pin = curr_pin;
+              startPin = currPin;
             } else {
-              end_pin = curr_pin;
+              endPin = currPin;
             }
           }
         }
-        curr_end_corner = p_trace.corners[p_trace.corners.length - 1];
+        currEndCorner = trace.corners[trace.corners.length - 1];
       }
     }
-    int[] net_no_arr = new int[1];
-    net_no_arr[0] = ctrl.net_no;
+    int[] netNoArr = new int[1];
+    netNoArr[0] = ctrl.netNo;
 
-    int from_corner_no = 0;
-    for (int i = 1; i < p_trace.corners.length; i++) {
-      Point[] curr_corner_arr = Arrays.copyOfRange(p_trace.corners, from_corner_no, i + 1);
-      Polyline insert_polyline = new Polyline(curr_corner_arr);
-      int maxItemIdBeforeSeg = board.communication.id_no_generator.max_generated_no();
-      Point ok_point = board.insert_forced_trace_polyline(insert_polyline, ctrl.trace_half_width[p_trace.layer], p_trace.layer, net_no_arr, ctrl.trace_clearance_class_no,
-          ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
-      int maxItemIdAfterSeg = board.communication.id_no_generator.max_generated_no();
-      FRLogger.trace("compare_trace_insert_segment_ids net=" + ctrl.net_no + ", i=" + i
-          + ", maxItemIdBefore=" + maxItemIdBeforeSeg + ", maxItemIdAfter=" + maxItemIdAfterSeg
-          + ", delta=" + (maxItemIdAfterSeg - maxItemIdBeforeSeg));
-      boolean neckdown_inserted = false;
-      boolean micro_neckdown_inserted = false;
-      if (ok_point != null && ok_point != insert_polyline.last_corner() && ctrl.with_neckdown && curr_corner_arr.length == 2) {
-        neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr[1], p_trace.layer, start_pin, end_pin);
+    int fromCornerNo = 0;
+    boolean result = true;
+    for (int i = 1; i < trace.corners.length; i++) {
+      Point[] currCornerArr = Arrays.copyOfRange(trace.corners, fromCornerNo, i + 1);
+      Polyline insertPolyline = new Polyline(currCornerArr);
+      int maxItemIdBeforeSeg = board.communication.idNoGenerator.maxGeneratedNo();
+      Point okPoint =
+          board.insertForcedTracePolyline(
+              insertPolyline,
+              ctrl.traceHalfWidth[trace.layer],
+              trace.layer,
+              netNoArr,
+              ctrl.traceClearanceClassNo,
+              ctrl.maxShoveTraceRecursionDepth,
+              ctrl.maxShoveViaRecursionDepth,
+              ctrl.maxSpringOverRecursionDepth,
+              Integer.MAX_VALUE,
+              ctrl.pullTightAccuracy,
+              true,
+              null);
+      int maxItemIdAfterSeg = board.communication.idNoGenerator.maxGeneratedNo();
+      FRLogger.trace(
+          "compare_trace_insert_segment_ids net="
+              + ctrl.netNo
+              + ", i="
+              + i
+              + ", maxItemIdBefore="
+              + maxItemIdBeforeSeg
+              + ", maxItemIdAfter="
+              + maxItemIdAfterSeg
+              + ", delta="
+              + (maxItemIdAfterSeg - maxItemIdBeforeSeg));
+      boolean neckdownInserted = false;
+      boolean microNeckdownInserted = false;
+      if (okPoint != null
+          && okPoint != insertPolyline.lastCorner()
+          && ctrl.withNeckdown
+          && currCornerArr.length == 2) {
+        neckdownInserted = insertNeckdown(okPoint, currCornerArr[1], trace.layer, startPin, endPin);
       }
-      if (!neckdown_inserted && ok_point != insert_polyline.last_corner() && ctrl.is_fanout && curr_corner_arr.length == 2) {
-        micro_neckdown_inserted = insert_fanout_micro_neckdown(ok_point, curr_corner_arr[1], p_trace.layer,
-            net_no_arr, start_pin, end_pin);
+      if (!neckdownInserted
+          && okPoint != insertPolyline.lastCorner()
+          && ctrl.isFanout
+          && currCornerArr.length == 2) {
+        microNeckdownInserted =
+            insertFanoutMicroNeckdown(
+                okPoint, currCornerArr[1], trace.layer, netNoArr, startPin, endPin);
       }
-      if (ok_point == insert_polyline.last_corner() || neckdown_inserted || micro_neckdown_inserted) {
-        from_corner_no = i;
+      if (okPoint == insertPolyline.lastCorner() || neckdownInserted || microNeckdownInserted) {
+        fromCornerNo = i;
         if (true) {
           FRLogger.trace(
-              "compare_trace_insert_segment_raw net=" + ctrl.net_no + ", layer=" + p_trace.layer
-                  + ", i=" + i + ", from_corner_no=" + from_corner_no
-                  + ", decision=ADVANCE, neckdown=" + neckdown_inserted
-                  + ", micro_neckdown=" + micro_neckdown_inserted
-                  + ", ok_point=" + formatPoint(ok_point)
-                  + ", first=" + formatPoint(insert_polyline.first_corner())
-                  + ", last=" + formatPoint(insert_polyline.last_corner()));
+              "compare_trace_insert_segment_raw net="
+                  + ctrl.netNo
+                  + ", layer="
+                  + trace.layer
+                  + ", i="
+                  + i
+                  + ", fromCornerNo="
+                  + fromCornerNo
+                  + ", decision=ADVANCE, neckdown="
+                  + neckdownInserted
+                  + ", micro_neckdown="
+                  + microNeckdownInserted
+                  + ", okPoint="
+                  + formatPoint(okPoint)
+                  + ", first="
+                  + formatPoint(insertPolyline.firstCorner())
+                  + ", last="
+                  + formatPoint(insertPolyline.lastCorner()));
           FRLogger.trace(
               "InsertFoundConnectionAlgo.insert_trace",
               "compare_trace_insert_segment",
-              "net=" + ctrl.net_no + ", layer=" + p_trace.layer + ", i=" + i + ", from_corner_no="
-                  + from_corner_no + ", decision=ADVANCE, neckdown=" + neckdown_inserted
-                  + ", micro_neckdown=" + micro_neckdown_inserted
-                  + ", ok_point=" + ok_point + ", first=" + insert_polyline.first_corner()
-                  + ", last=" + insert_polyline.last_corner(),
-              "Net #" + ctrl.net_no,
+              "net="
+                  + ctrl.netNo
+                  + ", layer="
+                  + trace.layer
+                  + ", i="
+                  + i
+                  + ", fromCornerNo="
+                  + fromCornerNo
+                  + ", decision=ADVANCE, neckdown="
+                  + neckdownInserted
+                  + ", micro_neckdown="
+                  + microNeckdownInserted
+                  + ", okPoint="
+                  + okPoint
+                  + ", first="
+                  + insertPolyline.firstCorner()
+                  + ", last="
+                  + insertPolyline.lastCorner(),
+              "Net #" + ctrl.netNo,
               new Point[0]);
         }
-      } else if (ok_point == insert_polyline.first_corner() && i != p_trace.corners.length - 1) {
-        // if ok_point == insert_polyline.first_corner() the spring over may have failed.
+      } else if (okPoint == insertPolyline.firstCorner() && i != trace.corners.length - 1) {
+        // if okPoint == insertPolyline.first_corner() the spring over may have failed.
         // Spring over may correct the situation because an insertion, which is ok with clearance
         // compensation
         // may cause violations without clearance compensation.
         // In this case repeating the insertion with more distant corners may allow the spring_over
         // to correct the situation.
-        if (from_corner_no > 0) {
+        if (fromCornerNo > 0) {
           // p_trace.corners[i] may be inside the offset for the substitute trace around
           // a spring_over obstacle (if clearance compensation is off).
-          if (curr_corner_arr.length < 3) {
+          if (currCornerArr.length < 3) {
             // first correction
-            --from_corner_no;
+            --fromCornerNo;
           }
         }
         FRLogger.trace("InsertFoundConnectionAlgo: violation corrected");
         if (true) {
           FRLogger.trace(
-              "compare_trace_insert_segment_raw net=" + ctrl.net_no + ", layer=" + p_trace.layer
-                  + ", i=" + i + ", from_corner_no=" + from_corner_no
-                  + ", decision=VIOLATION_CORRECTED, neckdown=" + neckdown_inserted
-                  + ", ok_point=" + formatPoint(ok_point)
-                  + ", first=" + formatPoint(insert_polyline.first_corner())
-                  + ", last=" + formatPoint(insert_polyline.last_corner()));
+              "compare_trace_insert_segment_raw net="
+                  + ctrl.netNo
+                  + ", layer="
+                  + trace.layer
+                  + ", i="
+                  + i
+                  + ", fromCornerNo="
+                  + fromCornerNo
+                  + ", decision=VIOLATION_CORRECTED, neckdown="
+                  + neckdownInserted
+                  + ", okPoint="
+                  + formatPoint(okPoint)
+                  + ", first="
+                  + formatPoint(insertPolyline.firstCorner())
+                  + ", last="
+                  + formatPoint(insertPolyline.lastCorner()));
           FRLogger.trace(
               "InsertFoundConnectionAlgo.insert_trace",
               "compare_trace_insert_segment",
-              "net=" + ctrl.net_no + ", layer=" + p_trace.layer + ", i=" + i + ", from_corner_no="
-                  + from_corner_no + ", decision=VIOLATION_CORRECTED, neckdown=" + neckdown_inserted
-                  + ", ok_point=" + ok_point + ", first=" + insert_polyline.first_corner()
-                  + ", last=" + insert_polyline.last_corner(),
-              "Net #" + ctrl.net_no,
+              "net="
+                  + ctrl.netNo
+                  + ", layer="
+                  + trace.layer
+                  + ", i="
+                  + i
+                  + ", fromCornerNo="
+                  + fromCornerNo
+                  + ", decision=VIOLATION_CORRECTED, neckdown="
+                  + neckdownInserted
+                  + ", okPoint="
+                  + okPoint
+                  + ", first="
+                  + insertPolyline.firstCorner()
+                  + ", last="
+                  + insertPolyline.lastCorner(),
+              "Net #" + ctrl.netNo,
               new Point[0]);
         }
       } else {
-        FRLogger.debug("InsertFoundConnectionAlgo: insert trace failed for net #" + ctrl.net_no
-            + " at corner " + i + "/" + (p_trace.corners.length - 1)
-            + " on layer " + p_trace.layer
-            + ", trace width: " + ctrl.trace_half_width[p_trace.layer]
-            + ", from corner: " + from_corner_no
-            + ", ok_point: " + (ok_point != null ? ok_point.toString() : "null")
-            + ", target: " + insert_polyline.last_corner());
-        traceFanoutDiagnostic("trace_insert_failed",
-            "layer=" + p_trace.layer
-                + ", corner_index=" + i
-                + ", from_corner_index=" + from_corner_no
-                + ", trace_half_width=" + ctrl.trace_half_width[p_trace.layer]
-                + ", trace_clearance_class=" + ctrl.trace_clearance_class_no
-                + ", start_pin_clearance_class=" + (start_pin != null ? start_pin.clearance_class_no() : -1)
-                + ", end_pin_clearance_class=" + (end_pin != null ? end_pin.clearance_class_no() : -1)
-                + ", ok_point=" + formatPoint(ok_point)
-                + ", target=" + formatPoint(insert_polyline.last_corner()));
+        FRLogger.debug(
+            "InsertFoundConnectionAlgo: insert trace failed for net #"
+                + ctrl.netNo
+                + " at corner "
+                + i
+                + "/"
+                + (trace.corners.length - 1)
+                + " on layer "
+                + trace.layer
+                + ", trace width: "
+                + ctrl.traceHalfWidth[trace.layer]
+                + ", from corner: "
+                + fromCornerNo
+                + ", okPoint: "
+                + (okPoint != null ? okPoint.toString() : "null")
+                + ", target: "
+                + insertPolyline.lastCorner());
+        traceFanoutDiagnostic(
+            "trace_insert_failed",
+            "layer="
+                + trace.layer
+                + ", corner_index="
+                + i
+                + ", from_corner_index="
+                + fromCornerNo
+                + ", traceHalfWidth="
+                + ctrl.traceHalfWidth[trace.layer]
+                + ", traceClearanceClass="
+                + ctrl.traceClearanceClassNo
+                + ", start_pin_clearance_class="
+                + (startPin != null ? startPin.clearanceClassNo() : -1)
+                + ", end_pin_clearance_class="
+                + (endPin != null ? endPin.clearanceClassNo() : -1)
+                + ", okPoint="
+                + formatPoint(okPoint)
+                + ", target="
+                + formatPoint(insertPolyline.lastCorner()));
         if (true) {
           FRLogger.trace(
-              "compare_trace_insert_segment_raw net=" + ctrl.net_no + ", layer=" + p_trace.layer
-                  + ", i=" + i + ", from_corner_no=" + from_corner_no
-                  + ", decision=FAIL, neckdown=" + neckdown_inserted
-                  + ", micro_neckdown=" + micro_neckdown_inserted
-                  + ", ok_point=" + formatPoint(ok_point)
-                  + ", first=" + formatPoint(insert_polyline.first_corner())
-                  + ", last=" + formatPoint(insert_polyline.last_corner()));
+              "compare_trace_insert_segment_raw net="
+                  + ctrl.netNo
+                  + ", layer="
+                  + trace.layer
+                  + ", i="
+                  + i
+                  + ", fromCornerNo="
+                  + fromCornerNo
+                  + ", decision=FAIL, neckdown="
+                  + neckdownInserted
+                  + ", micro_neckdown="
+                  + microNeckdownInserted
+                  + ", okPoint="
+                  + formatPoint(okPoint)
+                  + ", first="
+                  + formatPoint(insertPolyline.firstCorner())
+                  + ", last="
+                  + formatPoint(insertPolyline.lastCorner()));
           FRLogger.trace(
               "InsertFoundConnectionAlgo.insert_trace",
               "compare_trace_insert_segment",
-              "net=" + ctrl.net_no + ", layer=" + p_trace.layer + ", i=" + i + ", from_corner_no="
-                  + from_corner_no + ", decision=FAIL, neckdown=" + neckdown_inserted
-                  + ", micro_neckdown=" + micro_neckdown_inserted
-                  + ", ok_point=" + ok_point + ", first=" + insert_polyline.first_corner()
-                  + ", last=" + insert_polyline.last_corner(),
-              "Net #" + ctrl.net_no,
+              "net="
+                  + ctrl.netNo
+                  + ", layer="
+                  + trace.layer
+                  + ", i="
+                  + i
+                  + ", fromCornerNo="
+                  + fromCornerNo
+                  + ", decision=FAIL, neckdown="
+                  + neckdownInserted
+                  + ", micro_neckdown="
+                  + microNeckdownInserted
+                  + ", okPoint="
+                  + okPoint
+                  + ", first="
+                  + insertPolyline.firstCorner()
+                  + ", last="
+                  + insertPolyline.lastCorner(),
+              "Net #" + ctrl.netNo,
               new Point[0]);
         }
         result = false;
@@ -254,18 +392,27 @@ public class InsertFoundConnectionAlgo {
     }
 
     int removedTraceStubs = 0;
-    for (int i = 0; i < p_trace.corners.length - 1; i++) {
-      Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
-      if (trace_stub != null) {
-        FRLogger.trace("compare_trace_stub_found net=" + ctrl.net_no
-            + ", corner_idx=" + i
-            + ", corner=" + p_trace.corners[i]
-            + ", stub_id=" + trace_stub.get_id_no()
-            + ", stub_first=" + trace_stub.first_corner()
-            + ", stub_last=" + trace_stub.last_corner()
-            + ", start_contacts=" + trace_stub.get_start_contacts().size()
-            + ", end_contacts=" + trace_stub.get_end_contacts().size());
-        board.remove_item(trace_stub);
+    for (int i = 0; i < trace.corners.length - 1; i++) {
+      Trace traceStub = board.getTraceTail(trace.corners[i], trace.layer, netNoArr);
+      if (traceStub != null) {
+        FRLogger.trace(
+            "compare_trace_stub_found net="
+                + ctrl.netNo
+                + ", corner_idx="
+                + i
+                + ", corner="
+                + trace.corners[i]
+                + ", stub_id="
+                + traceStub.getIdNo()
+                + ", stub_first="
+                + traceStub.firstCorner()
+                + ", stub_last="
+                + traceStub.lastCorner()
+                + ", startContacts="
+                + traceStub.getStartContacts().size()
+                + ", endContacts="
+                + traceStub.getEndContacts().size());
+        board.removeItem(traceStub);
         removedTraceStubs++;
       }
     }
@@ -273,234 +420,376 @@ public class InsertFoundConnectionAlgo {
     FRLogger.trace(
         "InsertFoundConnectionAlgo.insert_trace",
         "compare_trace_stub_cleanup",
-        "net=" + ctrl.net_no + ", layer=" + p_trace.layer + ", removed_stubs=" + removedTraceStubs
-            + ", trace_enabled=" + FRLogger.isTraceEnabled(),
-        "Net #" + ctrl.net_no,
+        "net="
+            + ctrl.netNo
+            + ", layer="
+            + trace.layer
+            + ", removed_stubs="
+            + removedTraceStubs
+            + ", trace_enabled="
+            + FRLogger.isTraceEnabled(),
+        "Net #" + ctrl.netNo,
         new Point[0]);
 
-    board.rules.set_pin_edge_to_turn_dist(saved_edge_to_turn_dist);
-    if (this.first_corner == null) {
-      this.first_corner = p_trace.corners[0];
+    board.rules.setPinEdgeToTurnDist(savedEdgeToTurnDist);
+    if (this.firstCorner == null) {
+      this.firstCorner = trace.corners[0];
     }
-    this.last_corner = p_trace.corners[p_trace.corners.length - 1];
+    this.lastCorner = trace.corners[trace.corners.length - 1];
     return result;
   }
 
-  private boolean insert_fanout_micro_neckdown(Point ok_point, Point target_point, int layer, int[] net_no_arr,
-      Pin start_pin, Pin end_pin) {
-    Point from_point = ok_point != null ? ok_point : target_point;
-    if (from_point == null || target_point == null || from_point.equals(target_point)) {
+  private boolean insertFanoutMicroNeckdown(
+      Point okPoint, Point targetPoint, int layer, int[] netNoArr, Pin startPin, Pin endPin) {
+    Point fromPoint = okPoint != null ? okPoint : targetPoint;
+    if (fromPoint == null || targetPoint == null || fromPoint.equals(targetPoint)) {
       return false;
     }
-    int base_half_width = ctrl.trace_half_width[layer];
-    LinkedHashSet<Integer> candidate_half_widths = new LinkedHashSet<>();
-    if (start_pin != null && start_pin.is_on_layer(layer)) {
-      candidate_half_widths.add(start_pin.get_trace_neckdown_halfwidth(layer));
+    int baseHalfWidth = ctrl.traceHalfWidth[layer];
+    LinkedHashSet<Integer> candidateHalfWidths = new LinkedHashSet<>();
+    if (startPin != null && startPin.isOnLayer(layer)) {
+      candidateHalfWidths.add(startPin.getTraceNeckdownHalfwidth(layer));
     }
-    if (end_pin != null && end_pin.is_on_layer(layer)) {
-      candidate_half_widths.add(end_pin.get_trace_neckdown_halfwidth(layer));
+    if (endPin != null && endPin.isOnLayer(layer)) {
+      candidateHalfWidths.add(endPin.getTraceNeckdownHalfwidth(layer));
     }
-    candidate_half_widths.add(Math.max(1, (base_half_width * 3) / 4));
-    candidate_half_widths.add(Math.max(1, (base_half_width * 3) / 5));
-    candidate_half_widths.add(Math.max(1, base_half_width / 2));
+    candidateHalfWidths.add(Math.max(1, (baseHalfWidth * 3) / 4));
+    candidateHalfWidths.add(Math.max(1, (baseHalfWidth * 3) / 5));
+    candidateHalfWidths.add(Math.max(1, baseHalfWidth / 2));
 
-    for (int candidate_half_width : candidate_half_widths) {
-      if (candidate_half_width <= 0 || candidate_half_width >= base_half_width) {
+    for (int candidateHalfWidth : candidateHalfWidths) {
+      if (candidateHalfWidth <= 0 || candidateHalfWidth >= baseHalfWidth) {
         continue;
       }
-      Point candidate_ok_point = board.insert_forced_trace_segment(from_point, target_point, candidate_half_width,
-          layer, net_no_arr, ctrl.trace_clearance_class_no, ctrl.max_shove_trace_recursion_depth,
-          ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE,
-          ctrl.pull_tight_accuracy, true, null);
-      if (candidate_ok_point == target_point) {
-        traceFanoutDiagnostic("trace_insert_micro_neckdown_success",
-            "layer=" + layer
-                + ", candidate_half_width=" + candidate_half_width
-                + ", base_half_width=" + base_half_width
-                + ", trace_clearance_class=" + ctrl.trace_clearance_class_no
-                + ", from=" + formatPoint(from_point)
-                + ", to=" + formatPoint(target_point));
+      Point candidateOkPoint =
+          board.insertForcedTraceSegment(
+              fromPoint,
+              targetPoint,
+              candidateHalfWidth,
+              layer,
+              netNoArr,
+              ctrl.traceClearanceClassNo,
+              ctrl.maxShoveTraceRecursionDepth,
+              ctrl.maxShoveViaRecursionDepth,
+              ctrl.maxSpringOverRecursionDepth,
+              Integer.MAX_VALUE,
+              ctrl.pullTightAccuracy,
+              true,
+              null);
+      if (candidateOkPoint == targetPoint) {
+        traceFanoutDiagnostic(
+            "trace_insert_micro_neckdown_success",
+            "layer="
+                + layer
+                + ", candidate_half_width="
+                + candidateHalfWidth
+                + ", baseHalfWidth="
+                + baseHalfWidth
+                + ", traceClearanceClass="
+                + ctrl.traceClearanceClassNo
+                + ", from="
+                + formatPoint(fromPoint)
+                + ", to="
+                + formatPoint(targetPoint));
         return true;
       }
     }
-    traceFanoutDiagnostic("trace_insert_micro_neckdown_failed",
-        "layer=" + layer
-            + ", base_half_width=" + base_half_width
-            + ", trace_clearance_class=" + ctrl.trace_clearance_class_no
-            + ", from=" + formatPoint(from_point)
-            + ", to=" + formatPoint(target_point));
+    traceFanoutDiagnostic(
+        "trace_insert_micro_neckdown_failed",
+        "layer="
+            + layer
+            + ", baseHalfWidth="
+            + baseHalfWidth
+            + ", traceClearanceClass="
+            + ctrl.traceClearanceClassNo
+            + ", from="
+            + formatPoint(fromPoint)
+            + ", to="
+            + formatPoint(targetPoint));
     return false;
   }
 
-  boolean insert_neckdown(Point p_from_corner, Point p_to_corner, int p_layer, Pin p_start_pin, Pin p_end_pin) {
-    if (p_start_pin != null) {
-      Point ok_point = try_neck_down(p_to_corner, p_from_corner, p_layer, p_start_pin, true);
-      if (ok_point == p_from_corner) {
+  boolean insertNeckdown(Point fromCorner, Point toCorner, int layer, Pin startPin, Pin endPin) {
+    if (startPin != null) {
+      Point okPoint = tryNeckDown(toCorner, fromCorner, layer, startPin, true);
+      if (okPoint == fromCorner) {
         return true;
       }
     }
-    if (p_end_pin != null) {
-      Point ok_point = try_neck_down(p_from_corner, p_to_corner, p_layer, p_end_pin, false);
-      return ok_point == p_to_corner;
+    if (endPin != null) {
+      Point okPoint = tryNeckDown(fromCorner, toCorner, layer, endPin, false);
+      return okPoint == toCorner;
     }
     return false;
   }
 
-  private Point try_neck_down(Point p_from_corner, Point p_to_corner, int p_layer, Pin p_pin, boolean p_at_start) {
-    if (!p_pin.is_on_layer(p_layer)) {
+  private Point tryNeckDown(Point fromCorner, Point toCorner, int layer, Pin pin, boolean atStart) {
+    if (!pin.isOnLayer(layer)) {
       return null;
     }
-    FloatPoint pin_center = p_pin
-        .get_center()
-        .to_float();
-    double curr_clearance = this.board.rules.clearance_matrix.get_value(ctrl.trace_clearance_class_no, p_pin.clearance_class_no(), p_layer, true);
-    double pin_neck_down_distance = 2 * (0.5 * p_pin.get_max_width(p_layer) + curr_clearance);
-    if (pin_center.distance(p_to_corner.to_float()) >= pin_neck_down_distance) {
-      return null;
-    }
-
-    int neck_down_halfwidth = p_pin.get_trace_neckdown_halfwidth(p_layer);
-    if (neck_down_halfwidth >= ctrl.trace_half_width[p_layer]) {
+    FloatPoint pinCenter = pin.getCenter().toFloat();
+    double currClearance =
+        this.board.rules.clearanceMatrix.getValue(
+            ctrl.traceClearanceClassNo, pin.clearanceClassNo(), layer, true);
+    double pinNeckDownDistance = 2 * (0.5 * pin.getMaxWidth(layer) + currClearance);
+    if (pinCenter.distance(toCorner.toFloat()) >= pinNeckDownDistance) {
       return null;
     }
 
-    FloatPoint float_from_corner = p_from_corner.to_float();
-    FloatPoint float_to_corner = p_to_corner.to_float();
-
-    final int TOLERANCE = 2;
-
-    int[] net_no_arr = new int[1];
-    net_no_arr[0] = ctrl.net_no;
-
-    double ok_length = board.check_trace_segment(p_from_corner, p_to_corner, p_layer, net_no_arr, ctrl.trace_half_width[p_layer], ctrl.trace_clearance_class_no, true);
-    if (ok_length >= Integer.MAX_VALUE) {
-      return p_from_corner;
+    int neckDownHalfwidth = pin.getTraceNeckdownHalfwidth(layer);
+    if (neckDownHalfwidth >= ctrl.traceHalfWidth[layer]) {
+      return null;
     }
-    ok_length -= TOLERANCE;
-    Point neck_down_end_point;
-    if (ok_length <= TOLERANCE) {
-      neck_down_end_point = p_from_corner;
+
+    final FloatPoint floatFromCorner = fromCorner.toFloat();
+    final FloatPoint floatToCorner = toCorner.toFloat();
+
+    final int tolerance = 2;
+
+    int[] netNoArr = new int[1];
+    netNoArr[0] = ctrl.netNo;
+
+    double okLength =
+        board.checkTraceSegment(
+            fromCorner,
+            toCorner,
+            layer,
+            netNoArr,
+            ctrl.traceHalfWidth[layer],
+            ctrl.traceClearanceClassNo,
+            true);
+    if (okLength >= Integer.MAX_VALUE) {
+      return fromCorner;
+    }
+    okLength -= tolerance;
+    Point neckDownEndPoint;
+    if (okLength <= tolerance) {
+      neckDownEndPoint = fromCorner;
     } else {
-      FloatPoint float_neck_down_end_point = float_from_corner.change_length(float_to_corner, ok_length);
-      neck_down_end_point = float_neck_down_end_point.round();
-      // add a corner in case  neck_down_end_point is not exactly on the line from p_from_corner to
+      FloatPoint floatNeckDownEndPoint = floatFromCorner.changeLength(floatToCorner, okLength);
+      neckDownEndPoint = floatNeckDownEndPoint.round();
+      // add a corner in case  neckDownEndPoint is not exactly on the line from p_from_corner to
       // p_to_corner
-      boolean horizontal_first = Math.abs(float_from_corner.x - float_neck_down_end_point.x) >= Math.abs(float_from_corner.y - float_neck_down_end_point.y);
-      IntPoint add_corner = LocateFoundConnectionAlgo
-          .calculate_additional_corner(float_from_corner, float_neck_down_end_point, horizontal_first, board.rules.get_trace_angle_restriction())
-          .round();
-      Point curr_ok_point = board.insert_forced_trace_segment(p_from_corner, add_corner, ctrl.trace_half_width[p_layer], p_layer, net_no_arr, ctrl.trace_clearance_class_no,
-          ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
-      if (curr_ok_point != add_corner) {
-        return p_from_corner;
+      boolean horizontalFirst =
+          Math.abs(floatFromCorner.x - floatNeckDownEndPoint.x)
+              >= Math.abs(floatFromCorner.y - floatNeckDownEndPoint.y);
+      IntPoint addCorner =
+          LocateFoundConnectionAlgo.calculateAdditionalCorner(
+                  floatFromCorner,
+                  floatNeckDownEndPoint,
+                  horizontalFirst,
+                  board.rules.getTraceAngleRestriction())
+              .round();
+      Point currOkPoint =
+          board.insertForcedTraceSegment(
+              fromCorner,
+              addCorner,
+              ctrl.traceHalfWidth[layer],
+              layer,
+              netNoArr,
+              ctrl.traceClearanceClassNo,
+              ctrl.maxShoveTraceRecursionDepth,
+              ctrl.maxShoveViaRecursionDepth,
+              ctrl.maxSpringOverRecursionDepth,
+              Integer.MAX_VALUE,
+              ctrl.pullTightAccuracy,
+              true,
+              null);
+      if (currOkPoint != addCorner) {
+        return fromCorner;
       }
-      curr_ok_point = board.insert_forced_trace_segment(add_corner, neck_down_end_point, ctrl.trace_half_width[p_layer], p_layer, net_no_arr, ctrl.trace_clearance_class_no,
-          ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
-      if (curr_ok_point != neck_down_end_point) {
-        return p_from_corner;
+      currOkPoint =
+          board.insertForcedTraceSegment(
+              addCorner,
+              neckDownEndPoint,
+              ctrl.traceHalfWidth[layer],
+              layer,
+              netNoArr,
+              ctrl.traceClearanceClassNo,
+              ctrl.maxShoveTraceRecursionDepth,
+              ctrl.maxShoveViaRecursionDepth,
+              ctrl.maxSpringOverRecursionDepth,
+              Integer.MAX_VALUE,
+              ctrl.pullTightAccuracy,
+              true,
+              null);
+      if (currOkPoint != neckDownEndPoint) {
+        return fromCorner;
       }
-      add_corner = LocateFoundConnectionAlgo
-          .calculate_additional_corner(float_neck_down_end_point, float_to_corner, !horizontal_first, board.rules.get_trace_angle_restriction())
-          .round();
-      if (!add_corner.equals(p_to_corner)) {
-        curr_ok_point = board.insert_forced_trace_segment(neck_down_end_point, add_corner, ctrl.trace_half_width[p_layer], p_layer, net_no_arr, ctrl.trace_clearance_class_no,
-            ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
-        if (curr_ok_point != add_corner) {
-          return p_from_corner;
+      addCorner =
+          LocateFoundConnectionAlgo.calculateAdditionalCorner(
+                  floatNeckDownEndPoint,
+                  floatToCorner,
+                  !horizontalFirst,
+                  board.rules.getTraceAngleRestriction())
+              .round();
+      if (!addCorner.equals(toCorner)) {
+        currOkPoint =
+            board.insertForcedTraceSegment(
+                neckDownEndPoint,
+                addCorner,
+                ctrl.traceHalfWidth[layer],
+                layer,
+                netNoArr,
+                ctrl.traceClearanceClassNo,
+                ctrl.maxShoveTraceRecursionDepth,
+                ctrl.maxShoveViaRecursionDepth,
+                ctrl.maxSpringOverRecursionDepth,
+                Integer.MAX_VALUE,
+                ctrl.pullTightAccuracy,
+                true,
+                null);
+        if (currOkPoint != addCorner) {
+          return fromCorner;
         }
-        neck_down_end_point = add_corner;
+        neckDownEndPoint = addCorner;
       }
     }
 
-    Point ok_point = board.insert_forced_trace_segment(neck_down_end_point, p_to_corner, neck_down_halfwidth, p_layer, net_no_arr, ctrl.trace_clearance_class_no, ctrl.max_shove_trace_recursion_depth,
-        ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
-    return ok_point;
+    return board.insertForcedTraceSegment(
+        neckDownEndPoint,
+        toCorner,
+        neckDownHalfwidth,
+        layer,
+        netNoArr,
+        ctrl.traceClearanceClassNo,
+        ctrl.maxShoveTraceRecursionDepth,
+        ctrl.maxShoveViaRecursionDepth,
+        ctrl.maxSpringOverRecursionDepth,
+        Integer.MAX_VALUE,
+        ctrl.pullTightAccuracy,
+        true,
+        null);
   }
 
   /**
-   * Searches the cheapest via masks containing p_from_layer and p_to_layer, so that a forced via is possible at p_location with this mask and inserts the via. Returns false, if no suitable via mask
-   * was found or if the algorithm failed.
+   * Searches the cheapest via masks containing p_from_layer and p_to_layer, so that a forced via is
+   * possible at p_location with this mask and inserts the via. Returns false, if no suitable via
+   * mask was found or if the algorithm failed.
    */
-  private boolean insert_via(Point p_location, int p_from_layer, int p_to_layer) {
-    if (p_from_layer == p_to_layer) {
+  private boolean insertVia(Point location, int inputFromLayer, int inputToLayer) {
+    if (inputFromLayer == inputToLayer) {
       return true; // no via necessary
     }
-    int from_layer;
-    int to_layer;
+    int fromLayer;
+    int toLayer;
     // sort the input layers
-    if (p_from_layer < p_to_layer) {
-      from_layer = p_from_layer;
-      to_layer = p_to_layer;
+    if (inputFromLayer < inputToLayer) {
+      fromLayer = inputFromLayer;
+      toLayer = inputToLayer;
     } else {
-      from_layer = p_to_layer;
-      to_layer = p_from_layer;
+      fromLayer = inputToLayer;
+      toLayer = inputFromLayer;
     }
-    int[] net_no_arr = new int[1];
-    net_no_arr[0] = ctrl.net_no;
-    ViaInfo via_info = null;
-    boolean found_suitable_span = false;
-    for (int i = 0; i < this.ctrl.via_rule.via_count(); i++) {
-      ViaInfo curr_via_info = this.ctrl.via_rule.get_via(i);
-      Padstack curr_via_padstack = curr_via_info.get_padstack();
-      if (curr_via_padstack.from_layer() > from_layer || curr_via_padstack.to_layer() < to_layer) {
+    int[] netNoArr = new int[1];
+    netNoArr[0] = ctrl.netNo;
+    ViaInfo viaInfo = null;
+    boolean foundSuitableSpan = false;
+    for (int i = 0; i < this.ctrl.viaRule.viaCount(); i++) {
+      ViaInfo currViaInfo = this.ctrl.viaRule.getVia(i);
+      Padstack currViaPadstack = currViaInfo.getPadstack();
+      if (currViaPadstack.fromLayer() > fromLayer || currViaPadstack.toLayer() < toLayer) {
         continue;
       }
-      found_suitable_span = true;
-      if (ForcedViaAlgo.check(curr_via_info, p_location, net_no_arr, this.ctrl.max_shove_trace_recursion_depth,
-          this.ctrl.max_shove_via_recursion_depth, this.board, this.ctrl.trace_half_width,
-          this.ctrl.trace_clearance_class_no)) {
-        via_info = curr_via_info;
+      foundSuitableSpan = true;
+      if (ForcedViaAlgo.check(
+          currViaInfo,
+          location,
+          netNoArr,
+          this.ctrl.maxShoveTraceRecursionDepth,
+          this.ctrl.maxShoveViaRecursionDepth,
+          this.board,
+          this.ctrl.traceHalfWidth,
+          this.ctrl.traceClearanceClassNo)) {
+        viaInfo = currViaInfo;
         break;
       }
     }
-    if (via_info == null) {
-      if (!found_suitable_span) {
-        FRLogger.debug("InsertFoundConnectionAlgo: via mask not found for net #" + ctrl.net_no + " covering layers " + from_layer + " to " + to_layer);
+    if (viaInfo == null) {
+      if (!foundSuitableSpan) {
+        FRLogger.debug(
+            "InsertFoundConnectionAlgo: via mask not found for net #"
+                + ctrl.netNo
+                + " covering layers "
+                + fromLayer
+                + " to "
+                + toLayer);
       } else {
-        FRLogger.debug("InsertFoundConnectionAlgo: via placement blocked by clearance/shove limits for net #" + ctrl.net_no);
+        FRLogger.debug(
+            "InsertFoundConnectionAlgo: via placement blocked by clearance/shove limits for net #"
+                + ctrl.netNo);
       }
-      traceFanoutDiagnostic("via_mask_not_found",
-          "from_layer=" + from_layer
-              + ", to_layer=" + to_layer
-              + ", location=" + formatPoint(p_location)
-              + ", trace_clearance_class=" + ctrl.trace_clearance_class_no
-              + ", via_clearance_class=" + ctrl.via_clearance_class
-              + ", trace_half_width_from=" + ctrl.trace_half_width[from_layer]
-              + ", trace_half_width_to=" + ctrl.trace_half_width[to_layer]);
+      traceFanoutDiagnostic(
+          "via_mask_not_found",
+          "fromLayer="
+              + fromLayer
+              + ", toLayer="
+              + toLayer
+              + ", location="
+              + formatPoint(location)
+              + ", traceClearanceClass="
+              + ctrl.traceClearanceClassNo
+              + ", viaClearanceClass="
+              + ctrl.viaClearanceClass
+              + ", trace_half_width_from="
+              + ctrl.traceHalfWidth[fromLayer]
+              + ", trace_half_width_to="
+              + ctrl.traceHalfWidth[toLayer]);
       return false;
     }
     // insert the via
-    if (!ForcedViaAlgo.insert(via_info, p_location, net_no_arr, this.ctrl.trace_clearance_class_no, this.ctrl.trace_half_width, this.ctrl.max_shove_trace_recursion_depth,
-        this.ctrl.max_shove_via_recursion_depth, this.board)) {
-      FRLogger.debug("InsertFoundConnectionAlgo: forced via failed for net #" + ctrl.net_no);
-      traceFanoutDiagnostic("forced_via_insert_failed",
-          "from_layer=" + from_layer
-              + ", to_layer=" + to_layer
-              + ", location=" + formatPoint(p_location)
-              + ", selected_via_clearance_class=" + via_info.get_clearance_class()
-              + ", selected_via_padstack=" + via_info.get_padstack().name
-              + ", trace_clearance_class=" + ctrl.trace_clearance_class_no
-              + ", trace_half_width_from=" + ctrl.trace_half_width[from_layer]
-              + ", trace_half_width_to=" + ctrl.trace_half_width[to_layer]);
+    if (!ForcedViaAlgo.insert(
+        viaInfo,
+        location,
+        netNoArr,
+        this.ctrl.traceClearanceClassNo,
+        this.ctrl.traceHalfWidth,
+        this.ctrl.maxShoveTraceRecursionDepth,
+        this.ctrl.maxShoveViaRecursionDepth,
+        this.board)) {
+      FRLogger.debug("InsertFoundConnectionAlgo: forced via failed for net #" + ctrl.netNo);
+      traceFanoutDiagnostic(
+          "forced_via_insert_failed",
+          "fromLayer="
+              + fromLayer
+              + ", toLayer="
+              + toLayer
+              + ", location="
+              + formatPoint(location)
+              + ", selected_via_clearance_class="
+              + viaInfo.getClearanceClass()
+              + ", selected_via_padstack="
+              + viaInfo.getPadstack().name
+              + ", traceClearanceClass="
+              + ctrl.traceClearanceClassNo
+              + ", trace_half_width_from="
+              + ctrl.traceHalfWidth[fromLayer]
+              + ", trace_half_width_to="
+              + ctrl.traceHalfWidth[toLayer]);
       return false;
     }
     return true;
   }
 
   private boolean shouldTraceFanoutDiagnostics() {
-    return ctrl.is_fanout
-        && ctrl.fanout_start_pin_name != null
-        && ctrl.fanout_start_pin_name.startsWith("U27-");
+    return ctrl.isFanout
+        && ctrl.fanoutStartPinName != null
+        && ctrl.fanoutStartPinName.startsWith("U27-");
   }
 
   private void traceFanoutDiagnostic(String event, String message) {
     if (!shouldTraceFanoutDiagnostics()) {
       return;
     }
-    FRLogger.trace("FANOUT_DIAG event=" + event
-        + ", pin=" + ctrl.fanout_start_pin_name
-        + ", net=" + ctrl.net_no
-        + ", " + message);
+    FRLogger.trace(
+        "FANOUT_DIAG event="
+            + event
+            + ", pin="
+            + ctrl.fanoutStartPinName
+            + ", net="
+            + ctrl.netNo
+            + ", "
+            + message);
   }
 
   private static String formatPoint(Point point) {

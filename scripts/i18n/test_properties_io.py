@@ -85,14 +85,14 @@ class PropertyEscapeTests(unittest.TestCase):
             path = Path(tmp) / "test_de.properties"
             path.write_text(
                 "confirm_cancel=Die Platine wurde geändert.\n"
-                "Möchten Sie wirklich beenden?\n"
+                "Möchten Sie wirklich beenden?\n"  # codespell:ignore
                 "confirm_exit_no=Nein\n",
                 encoding="utf-8",
             )
             props = load_properties(path)
             self.assertEqual(
                 props["confirm_cancel"],
-                "Die Platine wurde geändert.\nMöchten Sie wirklich beenden?",
+                "Die Platine wurde geändert.\nMöchten Sie wirklich beenden?",  # codespell:ignore
             )
 
     def test_write_properties_uses_escape_tokens_not_real_newlines(self) -> None:
@@ -100,7 +100,7 @@ class PropertyEscapeTests(unittest.TestCase):
             path = Path(tmp) / "test_de.properties"
             write_properties(path, {"confirm_cancel": "Line one\nLine two"})
             text = path.read_text(encoding="utf-8")
-            self.assertIn("\\n", text)
+            self.assertIn("\\n", text)  # codespell:ignore
             self.assertNotIn("Line one\nLine two", text)
 
     def test_sanitize_property_value_normalizes_tabs(self) -> None:

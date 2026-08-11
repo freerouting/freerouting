@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
@@ -29,35 +29,35 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JToggleButton;
 
-/**
- * Singleton class to manage the text resources for the application
- */
+/** Singleton class to manage the text resources for the application. */
 public class TextManager {
 
   // A key-value pair for Material Design icon names and their corresponding
   // Unicode characters
-  private final Map<String, Integer> iconMap = new HashMap<>() {
-    {
-      put("cog", 0xF0493);
-      put("auto-fix", 0xF0068);
-      put("cancel", 0xF073A);
-      put("delete-sweep", 0xF05E9);
-      put("undo", 0xF054C);
-      put("redo", 0xF044E);
-      put("spider-web", 0xF0BCA);
-      put("order-bool-ascending-variant", 0xF098F);
-      put("magnify-plus-cursor", 0xF0A63);
-      put("magnify-minus", 0xF034A);
-      put("alert", 0xF0026);
-      put("close-octagon", 0xF015C);
-      put("play", 0xF040A);
-      put("pause", 0xF03E4);
-      put("step-forward", 0xF04D7);
-      put("step-backward", 0xF04D5);
-      put("fast-forward", 0xF0211);
-      put("rewind", 0xF045F);
-    }
-  };
+  private final Map<String, Integer> iconMap;
+
+  {
+    iconMap = new HashMap<>();
+    iconMap.put("cog", 0xF0493);
+    iconMap.put("auto-fix", 0xF0068);
+    iconMap.put("cancel", 0xF073A);
+    iconMap.put("delete-sweep", 0xF05E9);
+    iconMap.put("undo", 0xF054C);
+    iconMap.put("redo", 0xF044E);
+    iconMap.put("spider-web", 0xF0BCA);
+    iconMap.put("order-bool-ascending-variant", 0xF098F);
+    iconMap.put("magnify-plus-cursor", 0xF0A63);
+    iconMap.put("magnify-minus", 0xF034A);
+    iconMap.put("alert", 0xF0026);
+    iconMap.put("close-octagon", 0xF015C);
+    iconMap.put("play", 0xF040A);
+    iconMap.put("pause", 0xF03E4);
+    iconMap.put("step-forward", 0xF04D7);
+    iconMap.put("step-backward", 0xF04D5);
+    iconMap.put("fast-forward", 0xF0211);
+    iconMap.put("rewind", 0xF045F);
+  }
+
   private static final Locale ENGLISH_LOCALE = Locale.forLanguageTag("en");
   private Locale currentLocale;
   private String currentBaseName;
@@ -67,14 +67,22 @@ public class TextManager {
   private ResourceBundle englishClassMessages;
   private Font materialDesignIcons;
 
+  /**
+   * Creates a text manager for the given base resource class and locale.
+   *
+   * @param baseClass the class whose resource bundle names the lookup hierarchy
+   * @param locale the locale for message lookup
+   */
   public TextManager(Class baseClass, Locale locale) {
     this.currentLocale = locale;
     loadResourceBundle(baseClass.getName());
 
     try {
       // Load the font
-      materialDesignIcons = Font.createFont(Font.TRUETYPE_FONT,
-          GlobalSettings.class.getResourceAsStream("/materialdesignicons-webfont.ttf"));
+      materialDesignIcons =
+          Font.createFont(
+              Font.TRUETYPE_FONT,
+              GlobalSettings.class.getResourceAsStream("/materialdesignicons-webfont.ttf"));
 
       // Register the font
       GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -84,16 +92,30 @@ public class TextManager {
     }
   }
 
+  /** Formats an instant using the default timestamp pattern. */
   public static String convertInstantToString(Instant instant) {
     return convertInstantToString(instant, "yyyyMMdd_HHmmss");
   }
 
+  /**
+   * Formats an instant using the given date-time pattern.
+   *
+   * @param instant the instant to format
+   * @param format the {@link DateTimeFormatter} pattern
+   * @return the formatted timestamp string
+   */
   public static String convertInstantToString(Instant instant, String format) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
     LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
     return localDateTime.format(formatter);
   }
 
+  /**
+   * Generates a random alphanumeric string of the requested length.
+   *
+   * @param length number of characters to generate
+   * @return the random string
+   */
   public static String generateRandomAlphanumericString(int length) {
     String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     StringBuilder randomString = new StringBuilder();
@@ -104,6 +126,12 @@ public class TextManager {
     return randomString.toString();
   }
 
+  /**
+   * Parses a human-readable timespan string into seconds.
+   *
+   * @param timespanString value in {@code HH:mm:ss}, {@code mm:ss}, or {@code ss} form
+   * @return duration in seconds, or {@code null} if parsing fails
+   */
   public static Long parseTimespanString(String timespanString) {
     try {
       // convert the string from "HH:mm:ss" or "mm:ss" or "ss" format to
@@ -117,6 +145,12 @@ public class TextManager {
     }
   }
 
+  /**
+   * Converts a colon-separated timespan into an ISO-8601 duration string.
+   *
+   * @param timespanString value in {@code HH:mm:ss}, {@code mm:ss}, or {@code ss} form
+   * @return ISO-8601 duration text suitable for {@link Duration#parse(String)}
+   */
   public static String convertFromTimespanToDurationFormat(String timespanString) {
     String[] parts = timespanString.split(":");
     StringBuilder durationString = new StringBuilder("PT");
@@ -130,44 +164,37 @@ public class TextManager {
           .append(parts[2])
           .append("S");
     } else if (parts.length == 2) {
-      durationString
-          .append(parts[0])
-          .append("M")
-          .append(parts[1])
-          .append("S");
+      durationString.append(parts[0]).append("M").append(parts[1]).append("S");
     } else if (parts.length == 1) {
-      durationString
-          .append(parts[0])
-          .append("S");
+      durationString.append(parts[0]).append("S");
     }
 
     return durationString.toString();
   }
 
   /**
-   * Shortens a string to a specified number of characters by replacing the middle
-   * part with dots
+   * Shortens a string to a specified number of characters by replacing the middle part with dots.
    *
-   * @param text               The text to shorten
-   * @param peakCharacterCount The number of characters to keep at the beginning
-   *                           and end of the text Example: shortenString("Not a
-   *                           a small text", 3) -> "Not...ext" shortenString("This
-   *                           is a long
-   *                           text", 5) -> "This ... text" shortenString("This is
-   *                           a long text", 10) -> "This is a long text"
+   * @param text The text to shorten
+   * @param peakCharacterCount The number of characters to keep at the beginning and end of the text
+   *     Example: shortenString("Not a a small text", 3) -> "Not...ext" shortenString("This is a
+   *     long text", 5) -> "This ... text" shortenString("This is a long text", 10) -> "This is a
+   *     long text"
    * @return The shortened text
    */
   public static String shortenString(String text, int peakCharacterCount) {
     String shortenedText = text;
     if (text.length() > peakCharacterCount * 2) {
-      shortenedText = shortenedText.substring(0, peakCharacterCount) + "..."
-          + text.substring(text.length() - peakCharacterCount);
+      shortenedText =
+          shortenedText.substring(0, peakCharacterCount)
+              + "..."
+              + text.substring(text.length() - peakCharacterCount);
     }
     return shortenedText;
   }
 
   /**
-   * Removes quotes from the beginning and end of a string
+   * Removes quotes from the beginning and end of a string.
    *
    * @param text The text to remove quotes from
    * @return The text without quotes
@@ -185,16 +212,17 @@ public class TextManager {
   }
 
   /**
-   * Decrypts a string using AES-256-CBC with a passphrase
+   * Decrypts a byte array using AES-256-CBC with a passphrase.
    *
-   * @param encodedText The text to encrypt
-   * @param passphrase  The passphrase to use for encryption
-   * @return The encrypted text
+   * @param encodedText The encrypted bytes
+   * @param passphrase The passphrase to use for decryption
+   * @return The decrypted bytes, or {@code null} on failure
    */
   public static byte[] decryptAes256Cbc(byte[] encodedText, String passphrase) {
     try {
       IvParameterSpec iv = new IvParameterSpec("freeroutingivpar".getBytes(StandardCharsets.UTF_8));
-      SecretKeySpec skeySpec = new SecretKeySpec(passphrase.getBytes(StandardCharsets.UTF_8), "AES");
+      SecretKeySpec skeySpec =
+          new SecretKeySpec(passphrase.getBytes(StandardCharsets.UTF_8), "AES");
 
       Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
       cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
@@ -209,10 +237,11 @@ public class TextManager {
   }
 
   /**
-   * Unescapes unicode characters in a string
+   * Unescapes unicode characters in a string.
    *
-   * @param text The text to unescape Example: unescapeUnicode("This is a
-   *             \\u0063haracter") -> "This is a character"
+   * @param text The text to unescape Example: unescapeUnicode("This is a \\u0063haracter") -> "This
+   *     is a character"
+   * @return the text with {@code \\uXXXX} sequences replaced by their characters
    */
   public static String unescapeUnicode(String text) {
     Pattern pattern = Pattern.compile("\\\\u(\\p{XDigit}{4})");
@@ -229,10 +258,17 @@ public class TextManager {
     return result.toString();
   }
 
+  /** Formats a long value as a fixed-width uppercase hexadecimal string. */
   public static String longToHexadecimalString(Long longValue) {
     return "0x%016X".formatted(longValue);
   }
 
+  /**
+   * Parses a hexadecimal or decimal string into an unsigned long value.
+   *
+   * @param hexString value with optional {@code 0x} prefix
+   * @return the parsed unsigned long
+   */
   public static Long hexadecimalStringToLong(String hexString) {
     if (hexString.startsWith("0x") || hexString.startsWith("0X")) {
       hexString = hexString.substring(2);
@@ -252,7 +288,9 @@ public class TextManager {
 
     if (defaultMessages == null && !isEnglishLocale()) {
       FRLogger.warn(
-          "There was a problem loading the resource bundle 'app.freerouting.Common' of locale '" + currentLocale + "'");
+          "There was a problem loading the resource bundle 'app.freerouting.Common' of locale '"
+              + currentLocale
+              + "'");
       defaultMessages = englishDefaultMessages;
     }
     if (classMessages == null && !isEnglishLocale()) {
@@ -272,7 +310,8 @@ public class TextManager {
     if (ENGLISH_LOCALE.equals(currentLocale)) {
       return true;
     }
-    return "en".equalsIgnoreCase(currentLocale.getLanguage()) && currentLocale.getCountry().isEmpty();
+    return "en".equalsIgnoreCase(currentLocale.getLanguage())
+        && currentLocale.getCountry().isEmpty();
   }
 
   private String getBundleString(ResourceBundle bundle, String key) {
@@ -282,6 +321,13 @@ public class TextManager {
     return null;
   }
 
+  /**
+   * Looks up and formats a localized message for the given key.
+   *
+   * @param key the resource bundle key
+   * @param args optional placeholder values
+   * @return the localized text, or the key if no message is found
+   */
   public String getText(String key, String... args) {
     String text = lookupMessage(key);
     if (text == null) {
@@ -309,6 +355,20 @@ public class TextManager {
   }
 
   private String lookupMessage(String key) {
+    String message = lookupMessageForKey(key);
+    if (message != null) {
+      return message;
+    }
+
+    String snakeCaseKey = toSnakeCase(key);
+    if (!snakeCaseKey.equals(key)) {
+      return lookupMessageForKey(snakeCaseKey);
+    }
+
+    return null;
+  }
+
+  private String lookupMessageForKey(String key) {
     String message = getBundleString(classMessages, key);
     if (message != null) {
       return message;
@@ -346,6 +406,12 @@ public class TextManager {
     }
 
     return null;
+  }
+
+  private static String toSnakeCase(String key) {
+    return key.replaceAll("([A-Z]+)([A-Z][a-z])", "$1_$2")
+        .replaceAll("([a-z\\d])([A-Z])", "$1_$2")
+        .toLowerCase(Locale.ROOT);
   }
 
   private String lookupParentClassMessage(String key, Locale locale) {
@@ -386,7 +452,8 @@ public class TextManager {
         text = text.replace(placeholder, new String(Character.toChars(codePoint)));
 
         Font originalFont = component.getFont();
-        component.setFont(materialDesignIcons.deriveFont(Font.PLAIN, originalFont.getSize() * 1.5f));
+        component.setFont(
+            materialDesignIcons.deriveFont(Font.PLAIN, originalFont.getSize() * 1.5f));
       } catch (Exception e) {
         FRLogger.error("There was a problem setting the icon for the component", e);
       }
@@ -395,7 +462,13 @@ public class TextManager {
     return text;
   }
 
-  // Add methods to set text for different GUI components
+  /**
+   * Sets localized text (and optional tooltip/icons) on a Swing component.
+   *
+   * @param component the target component
+   * @param key the resource bundle key
+   * @param args optional placeholder values
+   */
   public void setText(JComponent component, String key, String... args) {
     String text = getText(key, args);
     String tooltip = getText(key + "_tooltip", args);
@@ -407,38 +480,42 @@ public class TextManager {
     text = insertIcons(component, text);
 
     // Set the text for the component
-    if (component instanceof JButton button1) {
-      // Set the text for the button
-      button1.setText(text);
-      if (tooltip != null && !tooltip.isEmpty()) {
-        // Set the tooltip text for the component
-        component.setToolTipText(tooltip);
+    switch (component) {
+      case JButton button1 -> {
+        // Set the text for the button
+        button1.setText(text);
+        if (tooltip != null && !tooltip.isEmpty()) {
+          // Set the tooltip text for the component
+          component.setToolTipText(tooltip);
+        }
       }
-    } else if (component instanceof JToggleButton button) {
-      // Set the text for the toggle button
-      button.setText(text);
-      if (tooltip != null && !tooltip.isEmpty()) {
-        // Set the tooltip text for the component
-        component.setToolTipText(tooltip);
+      case JToggleButton button -> {
+        // Set the text for the toggle button
+        button.setText(text);
+        if (tooltip != null && !tooltip.isEmpty()) {
+          // Set the tooltip text for the component
+          component.setToolTipText(tooltip);
+        }
       }
-    } else if (component instanceof JLabel label) {
-      // Set the text for the toggle button
-      label.setText(text);
-      if (tooltip != null && !tooltip.isEmpty()) {
-        // Set the tooltip text for the component
-        component.setToolTipText(tooltip);
+      case JLabel label -> {
+        // Set the text for the toggle button
+        label.setText(text);
+        if (tooltip != null && !tooltip.isEmpty()) {
+          // Set the tooltip text for the component
+          component.setToolTipText(tooltip);
+        }
       }
-    } else if (component instanceof javax.swing.text.JTextComponent textComponent) {
-      textComponent.setText(text);
-      if (tooltip != null && !tooltip.isEmpty()) {
-        component.setToolTipText(tooltip);
+      case javax.swing.text.JTextComponent textComponent -> {
+        textComponent.setText(text);
+        if (tooltip != null && !tooltip.isEmpty()) {
+          component.setToolTipText(tooltip);
+        }
       }
-    } else {
-      // Handle other components like JLabel, JTextArea, etc.
-      String componentType = component
-          .getClass()
-          .getName();
-      FRLogger.warn("The component type '" + componentType + "' is not supported");
+      case null, default -> {
+        // Handle other components like JLabel, JTextArea, etc.
+        String componentType = component.getClass().getName();
+        FRLogger.warn("The component type '" + componentType + "' is not supported");
+      }
     }
 
     // Handle other components like JLabel, JTextArea, etc.
@@ -448,9 +525,9 @@ public class TextManager {
     return currentLocale;
   }
 
+  /** Switches the active locale and reloads the resource bundles. */
   public void setLocale(Locale locale) {
     this.currentLocale = locale;
     loadResourceBundle(currentBaseName);
   }
-
 }

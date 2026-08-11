@@ -16,14 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Interface for named algorithms, e.g. "Freerouting Classic Fast Auto-router v1.0" for auto-router, "Freerouting Classic Optimizer v1.0" for route-optimization.
+ * Interface for named algorithms, e.g. "Freerouting Classic Fast Auto-router v1.0" for auto-router,
+ * "Freerouting Classic Optimizer v1.0" for route-optimization.
  */
 public abstract class NamedAlgorithm implements Serializable {
 
   protected final transient StoppableThread thread;
-  protected final transient List<BoardSnapshotEventListener> boardSnapshotEventListeners = new ArrayList<>();
-  protected final transient List<BoardUpdatedEventListener> boardUpdatedEventListeners = new ArrayList<>();
-  protected final transient List<TaskStateChangedEventListener> taskStateChangedEventListeners = new ArrayList<>();
+  protected final transient List<BoardSnapshotEventListener> boardSnapshotEventListeners =
+      new ArrayList<>();
+  protected final transient List<BoardUpdatedEventListener> boardUpdatedEventListeners =
+      new ArrayList<>();
+  protected final transient List<TaskStateChangedEventListener> taskStateChangedEventListeners =
+      new ArrayList<>();
   protected final RouterSettings settings;
   // The routing board.
   // NOTE: Declared transient so that both Java object serialisation and Gson skip it.
@@ -32,6 +36,7 @@ public abstract class NamedAlgorithm implements Serializable {
   // board reference after deserialisation if needed.
   protected transient RoutingBoard board;
 
+  /** NamedAlgorithm. */
   protected NamedAlgorithm(StoppableThread thread, RoutingBoard board, RouterSettings settings) {
     this.thread = thread;
     this.board = board;
@@ -73,10 +78,12 @@ public abstract class NamedAlgorithm implements Serializable {
    */
   protected abstract NamedAlgorithmType getType();
 
+  /** Adds a listener for board snapshot events. */
   public void addBoardSnapshotEventListener(BoardSnapshotEventListener listener) {
     boardSnapshotEventListeners.add(listener);
   }
 
+  /** Fires a board snapshot event. */
   public void fireBoardSnapshotEvent(RoutingBoard board) {
     BoardSnapshotEvent event = new BoardSnapshotEvent(this, board);
     for (BoardSnapshotEventListener listener : boardSnapshotEventListeners) {
@@ -84,26 +91,31 @@ public abstract class NamedAlgorithm implements Serializable {
     }
   }
 
+  /** Adds a listener for board updated events. */
   public void addBoardUpdatedEventListener(BoardUpdatedEventListener listener) {
     boardUpdatedEventListeners.add(listener);
   }
 
   /**
-   * Fires a board updated event. This happens when the board has been updated, e.g. after a route has been added.
+   * Fires a board updated event. This happens when the board has been updated, e.g. after a route
+   * has been added.
    */
-  public void fireBoardUpdatedEvent(BoardStatistics boardStatistics, RouterCounters routerCounters, RoutingBoard board) {
+  public void fireBoardUpdatedEvent(
+      BoardStatistics boardStatistics, RouterCounters routerCounters, RoutingBoard board) {
     BoardUpdatedEvent event = new BoardUpdatedEvent(this, boardStatistics, routerCounters, board);
     for (BoardUpdatedEventListener listener : boardUpdatedEventListeners) {
       listener.onBoardUpdatedEvent(event);
     }
   }
 
+  /** Adds a listener for task state changed events. */
   public void addTaskStateChangedEventListener(TaskStateChangedEventListener listener) {
     taskStateChangedEventListeners.add(listener);
   }
 
   /**
-   * Fires a task state changed event. This happens when the state of the task changes, e.g. from running to stopped, or we start a new pass of the current process.
+   * Fires a task state changed event. This happens when the state of the task changes, e.g. from
+   * running to stopped, or we start a new pass of the current process.
    */
   public void fireTaskStateChangedEvent(TaskStateChangedEvent event) {
     for (TaskStateChangedEventListener listener : taskStateChangedEventListeners) {

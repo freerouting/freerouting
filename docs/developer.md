@@ -73,6 +73,70 @@ Supported locales: **source** `en`; **targets** `ar`, `bn`, `cs`, `de`, `es`, `f
 
 CI runs `python scripts/i18n/extract-context.py --check` on pull requests to ensure committed context metadata matches the English sources (no API key required).
 
+## Code Quality & Pre-commit Automation
+
+Freerouting uses **Spotless** (Google Java Style), **Checkstyle 13.9.0**, explicit LF
+line-ending rules, and **pre-commit** hooks. The Gradle quality checks are check-only:
+they fail when code is not ready rather than formatting unrelated files or staging
+changes automatically. The pre-commit hygiene hooks automatically repair trailing
+whitespace, final newlines, and LF line endings in files selected for the current
+commit.
+
+### Installing & Setting Up Pre-commit Hooks
+
+1. Install [pre-commit](https://pre-commit.com/):
+   ```bash
+   pip install pre-commit
+   ```
+
+2. Install the git hooks in your local workspace:
+   ```bash
+   pre-commit install
+   ```
+
+3. Run pre-commit checks manually across all files:
+   ```bash
+   pre-commit run --all-files
+   ```
+   The hygiene hooks may update files and then report that they changed. Review and
+   stage those small non-functional fixes, then rerun the command. CI remains
+   check-only and never modifies the pull request.
+
+### Gradle Code Quality Commands
+
+- **Run all verification checks (Spotless + Checkstyle 13.9.0 + Unit Tests)**:
+  ```bash
+  ./gradlew check
+  ```
+
+- **Check Java formatting without changing files**:
+  ```bash
+  ./gradlew spotlessCheck
+  ```
+
+- **Format all configured Java sources intentionally**:
+  ```bash
+  ./gradlew spotlessApply
+  ```
+  `spotlessApply` can modify hundreds of files. Use it only as a deliberate,
+  separately reviewed formatting operation, and inspect the resulting diff.
+
+- **Run Checkstyle on maintained sources independently**:
+  ```bash
+  ./gradlew checkstyleMain checkstyleTest checkstyleRewriteRecipes
+  ```
+
+- **Verify generated i18n context without rewriting it**:
+  ```bash
+  python scripts/i18n/extract-context.py --check
+  ```
+
+The frozen `src_v19/` compatibility source set is compiled for compatibility but is
+excluded from current Checkstyle enforcement. Java text-block formatting is owned by
+Spotless; the project-specific Checkstyle suppression is kept in
+`config/checkstyle/checkstyle-suppressions.xml` so updates to the upstream Google
+Checkstyle configuration do not overwrite it.
+
 ## How to create a new release
 
 Creating a release takes about half an hour if everything goes according to the plan. Usually it doesn't, so free up ~3 hours for this.
@@ -112,9 +176,9 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 * Check if Windows, Linux and macOS installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions) and if the Docker image was updated on [GHCR.io](https://github.com/freerouting/freerouting/pkgs/container/freerouting)
 * Publish the library to Maven Central
     * Use the [Gradle Maven plugin]([url](https://github.com/vanniktech/gradle-maven-publish-plugin)) and set the properties in `/.gradle/gradle.properties`
-      <img width="896" height="293" alt="image" src="https://github.com/user-attachments/assets/fa85332d-91d8-4715-924d-aa8b6f86c64c" />      
+      <img width="896" height="293" alt="image" src="https://github.com/user-attachments/assets/fa85332d-91d8-4715-924d-aa8b6f86c64c" />
     * Run the `./gradlew publishToMavenCentral --no-configuration-cache` command in the root folder to publish it to Maven Central
-    * Publish the deployment [on Maven Central Repository](https://central.sonatype.com/publishing) 
+    * Publish the deployment [on Maven Central Repository](https://central.sonatype.com/publishing)
 
 * Update the Docker image on Azure
     1. build docker image locally for Linux x64 (~2 mins)

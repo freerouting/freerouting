@@ -2,105 +2,119 @@ package app.freerouting.gui;
 
 import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.MoveItemState;
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+/** Provides actions for moving and rotating selected board items. */
 public class PopupMenuMove extends PopupMenuDisplay {
 
-  /**
-   * Creates a new instance of PopupMenuMove
-   */
-  public PopupMenuMove(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+  /** Creates a new instance of PopupMenuMove. */
+  public PopupMenuMove(BoardFrame boardFrame) {
+    super(boardFrame);
+    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
     // Add menu for turning the items by a multiple of 90 degree
 
-    JMenuItem rotate_menu = new JMenu();
-    rotate_menu.setText(tm.getText("turn"));
-    this.add(rotate_menu, 0);
+    JMenuItem rotateMenu = new JMenu();
+    rotateMenu.setText(tm.getText("turn"));
+    this.add(rotateMenu, 0);
 
-    JMenuItem popup_turn_90_menuitem = new JMenuItem();
-    popup_turn_90_menuitem.setText(tm.getText("90_degree"));
-    popup_turn_90_menuitem.addActionListener(_ -> turn_45_degree(2));
-    popup_turn_90_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_90_menuitem", popup_turn_90_menuitem.getText()));
-    rotate_menu.add(popup_turn_90_menuitem);
+    JMenuItem popupTurn90Menuitem = new JMenuItem();
+    popupTurn90Menuitem.setText(tm.getText("90_degree"));
+    popupTurn90Menuitem.addActionListener(_ -> turn45Degree(2));
+    popupTurn90Menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupTurn90Menuitem", popupTurn90Menuitem.getText()));
+    rotateMenu.add(popupTurn90Menuitem);
 
-    JMenuItem popup_turn_180_menuitem = new JMenuItem();
-    popup_turn_180_menuitem.setText(tm.getText("180_degree"));
-    popup_turn_180_menuitem.addActionListener(_ -> turn_45_degree(4));
-    popup_turn_180_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_180_menuitem", popup_turn_180_menuitem.getText()));
-    rotate_menu.add(popup_turn_180_menuitem);
+    JMenuItem popupTurn180Menuitem = new JMenuItem();
+    popupTurn180Menuitem.setText(tm.getText("180_degree"));
+    popupTurn180Menuitem.addActionListener(_ -> turn45Degree(4));
+    popupTurn180Menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupTurn180Menuitem", popupTurn180Menuitem.getText()));
+    rotateMenu.add(popupTurn180Menuitem);
 
-    JMenuItem popup_turn_270_menuitem = new JMenuItem();
-    popup_turn_270_menuitem.setText(tm.getText("-90_degree"));
-    popup_turn_270_menuitem.addActionListener(_ -> turn_45_degree(6));
-    popup_turn_270_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_270_menuitem", popup_turn_270_menuitem.getText()));
-    rotate_menu.add(popup_turn_270_menuitem);
+    JMenuItem popupTurn270Menuitem = new JMenuItem();
+    popupTurn270Menuitem.setText(tm.getText("-90_degree"));
+    popupTurn270Menuitem.addActionListener(_ -> turn45Degree(6));
+    popupTurn270Menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupTurn270Menuitem", popupTurn270Menuitem.getText()));
+    rotateMenu.add(popupTurn270Menuitem);
 
-    JMenuItem popup_turn_45_menuitem = new JMenuItem();
-    popup_turn_45_menuitem.setText(tm.getText("45_degree"));
-    popup_turn_45_menuitem.addActionListener(_ -> turn_45_degree(1));
-    popup_turn_45_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_45_menuitem", popup_turn_45_menuitem.getText()));
-    rotate_menu.add(popup_turn_45_menuitem);
+    JMenuItem popupTurn45Menuitem = new JMenuItem();
+    popupTurn45Menuitem.setText(tm.getText("45_degree"));
+    popupTurn45Menuitem.addActionListener(_ -> turn45Degree(1));
+    popupTurn45Menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupTurn45Menuitem", popupTurn45Menuitem.getText()));
+    rotateMenu.add(popupTurn45Menuitem);
 
-    JMenuItem popup_turn_135_menuitem = new JMenuItem();
-    popup_turn_135_menuitem.setText(tm.getText("135_degree"));
-    popup_turn_135_menuitem.addActionListener(_ -> turn_45_degree(3));
-    popup_turn_135_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_135_menuitem", popup_turn_135_menuitem.getText()));
-    rotate_menu.add(popup_turn_135_menuitem);
+    JMenuItem popupTurn135Menuitem = new JMenuItem();
+    popupTurn135Menuitem.setText(tm.getText("135_degree"));
+    popupTurn135Menuitem.addActionListener(_ -> turn45Degree(3));
+    popupTurn135Menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupTurn135Menuitem", popupTurn135Menuitem.getText()));
+    rotateMenu.add(popupTurn135Menuitem);
 
-    JMenuItem popup_turn_225_menuitem = new JMenuItem();
-    popup_turn_225_menuitem.setText(tm.getText("-135_degree"));
-    popup_turn_225_menuitem.addActionListener(_ -> turn_45_degree(5));
-    popup_turn_225_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_225_menuitem", popup_turn_225_menuitem.getText()));
-    rotate_menu.add(popup_turn_225_menuitem);
+    JMenuItem popupTurn225Menuitem = new JMenuItem();
+    popupTurn225Menuitem.setText(tm.getText("-135_degree"));
+    popupTurn225Menuitem.addActionListener(_ -> turn45Degree(5));
+    popupTurn225Menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupTurn225Menuitem", popupTurn225Menuitem.getText()));
+    rotateMenu.add(popupTurn225Menuitem);
 
-    JMenuItem popup_turn_315_menuitem = new JMenuItem();
-    popup_turn_315_menuitem.setText(tm.getText("-45_degree"));
-    popup_turn_315_menuitem.addActionListener(_ -> turn_45_degree(7));
-    popup_turn_315_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_315_menuitem", popup_turn_315_menuitem.getText()));
-    rotate_menu.add(popup_turn_315_menuitem);
+    JMenuItem popupTurn315Menuitem = new JMenuItem();
+    popupTurn315Menuitem.setText(tm.getText("-45_degree"));
+    popupTurn315Menuitem.addActionListener(_ -> turn45Degree(7));
+    popupTurn315Menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupTurn315Menuitem", popupTurn315Menuitem.getText()));
+    rotateMenu.add(popupTurn315Menuitem);
 
-    JMenuItem popup_change_side_menuitem = new JMenuItem();
-    popup_change_side_menuitem.setText(tm.getText("change_side"));
-    popup_change_side_menuitem.addActionListener(_ -> board_panel.board_handling.change_placement_side());
-    popup_change_side_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_change_side_menuitem", popup_change_side_menuitem.getText()));
+    JMenuItem popupChangeSideMenuitem = new JMenuItem();
+    popupChangeSideMenuitem.setText(tm.getText("change_side"));
+    popupChangeSideMenuitem.addActionListener(_ -> boardPanel.boardHandling.changePlacementSide());
+    popupChangeSideMenuitem.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "popupChangeSideMenuitem", popupChangeSideMenuitem.getText()));
 
-    this.add(popup_change_side_menuitem, 1);
+    this.add(popupChangeSideMenuitem, 1);
 
-    JMenuItem popup_reset_rotation_menuitem = new JMenuItem();
-    popup_reset_rotation_menuitem.setText(tm.getText("reset_rotation"));
-    popup_reset_rotation_menuitem.addActionListener(_ ->
-    {
-      InteractiveState interactive_state = board_panel.board_handling.get_interactive_state();
-      if (interactive_state instanceof MoveItemState state) {
-        state.reset_rotation();
-      }
-    });
-    popup_reset_rotation_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_reset_rotation_menuitem", popup_reset_rotation_menuitem.getText()));
+    JMenuItem popupResetRotationMenuitem = new JMenuItem();
+    popupResetRotationMenuitem.setText(tm.getText("reset_rotation"));
+    popupResetRotationMenuitem.addActionListener(
+        _ -> {
+          InteractiveState interactiveState = boardPanel.boardHandling.getInteractiveState();
+          if (interactiveState instanceof MoveItemState state) {
+            state.resetRotation();
+          }
+        });
+    popupResetRotationMenuitem.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "popupResetRotationMenuitem", popupResetRotationMenuitem.getText()));
 
-    this.add(popup_reset_rotation_menuitem, 2);
+    this.add(popupResetRotationMenuitem, 2);
 
-    JMenuItem popup_insert_menuitem = new JMenuItem();
-    popup_insert_menuitem.setText(tm.getText("insert"));
-    popup_insert_menuitem.addActionListener(_ -> board_panel.board_handling.return_from_state());
-    popup_insert_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_insert_menuitem", popup_insert_menuitem.getText()));
+    JMenuItem popupInsertMenuitem = new JMenuItem();
+    popupInsertMenuitem.setText(tm.getText("insert"));
+    popupInsertMenuitem.addActionListener(_ -> boardPanel.boardHandling.returnFromState());
+    popupInsertMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupInsertMenuitem", popupInsertMenuitem.getText()));
 
-    this.add(popup_insert_menuitem, 3);
+    this.add(popupInsertMenuitem, 3);
 
-    JMenuItem popup_cancel_menuitem = new JMenuItem();
-    popup_cancel_menuitem.setText(tm.getText("cancel"));
-    popup_cancel_menuitem.addActionListener(_ -> board_panel.board_handling.cancel_state());
-    popup_cancel_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_cancel_menuitem", popup_cancel_menuitem.getText()));
+    JMenuItem popupCancelMenuitem = new JMenuItem();
+    popupCancelMenuitem.setText(tm.getText("cancel"));
+    popupCancelMenuitem.addActionListener(_ -> boardPanel.boardHandling.cancelState());
+    popupCancelMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupCancelMenuitem", popupCancelMenuitem.getText()));
 
-    this.add(popup_cancel_menuitem, 4);
+    this.add(popupCancelMenuitem, 4);
   }
 
-  private void turn_45_degree(int p_factor) {
-    board_panel.board_handling.turn_45_degree(p_factor);
-    board_panel.move_mouse(board_panel.right_button_click_location);
+  private void turn45Degree(int factor) {
+    boardPanel.boardHandling.turn45Degree(factor);
+    boardPanel.moveMouse(boardPanel.rightButtonClickLocation);
   }
 }

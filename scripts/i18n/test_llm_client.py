@@ -43,7 +43,7 @@ class LlmClientGeminiTest(unittest.TestCase):
         self.assertEqual(result, '{"save": "Speichern"}')
 
         args, kwargs = mock_post.call_args
-        self.assertIn("/models/gemini-3.6-flash:generateContent", args[0])
+        self.assertIn("/models/gemini-3.6-flash:generateContent", args[0])  # codespell:ignore
         self.assertEqual(kwargs["headers"]["x-goog-api-key"], "test-key")
         generation_config = kwargs["json"]["generationConfig"]
         self.assertNotIn("temperature", generation_config)

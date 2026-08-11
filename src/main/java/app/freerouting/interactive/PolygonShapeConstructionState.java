@@ -7,77 +7,77 @@ import app.freerouting.geometry.planar.PolygonShape;
 import app.freerouting.rules.BoardRules;
 import java.util.Iterator;
 
-/**
- * Interactive state for constructing an obstacle with a polygon shape.
- */
-public class PolygonShapeConstructionState extends CornerItemConstructionState {
+/** Interactive state for constructing an obstacle with a polygon shape. */
+public final class PolygonShapeConstructionState extends CornerItemConstructionState {
 
-  /**
-   * Creates a new instance of PolygonShapeConstructionState
-   */
-  private PolygonShapeConstructionState(FloatPoint p_location, InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
-    this.add_corner(p_location);
+  /** Creates a new instance of PolygonShapeConstructionState. */
+  private PolygonShapeConstructionState(
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
+    this.addCorner(location);
   }
 
   /**
-   * Returns a new instance of this class If p_logfile != null; the creation of
-   * this item is stored in a logfile
+   * Returns a new instance of this class. The creation of this item is stored in a logfile when
+   * logging is enabled.
    */
-  public static PolygonShapeConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
-    return new PolygonShapeConstructionState(p_location, p_parent_state, p_board_handling);
+  public static PolygonShapeConstructionState getInstance(
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    return new PolygonShapeConstructionState(location, parentState, boardHandling);
   }
 
-  /**
-   * Inserts the polygon shape item into the board, if possible and returns to the
-   * main state
-   */
+  /** Inserts the polygon shape item into the board, if possible, and returns to the main state. */
   @Override
   public InteractiveState complete() {
-    add_corner_for_snap_angle();
-    int corner_count = corner_list.size();
-    boolean construction_succeeded = corner_count > 2;
-    if (construction_succeeded) {
-      IntPoint[] corner_arr = new IntPoint[corner_count];
-      Iterator<IntPoint> it = corner_list.iterator();
-      for (int i = 0; i < corner_count; i++) {
-        corner_arr[i] = it.next();
+    addCornerForSnapAngle();
+    int cornerCount = cornerList.size();
+    boolean constructionSucceeded = cornerCount > 2;
+    if (constructionSucceeded) {
+      IntPoint[] cornerArr = new IntPoint[cornerCount];
+      Iterator<IntPoint> it = cornerList.iterator();
+      for (int i = 0; i < cornerCount; i++) {
+        cornerArr[i] = it.next();
       }
-      PolygonShape obstacle_shape = new PolygonShape(corner_arr);
-      int cl_class = BoardRules.clearance_class_none();
-      if (obstacle_shape.split_to_convex() == null) {
+      PolygonShape obstacleShape = new PolygonShape(cornerArr);
+      int clClass = BoardRules.clearanceClassNone();
+      if (obstacleShape.splitToConvex() == null) {
         // shape is invalid, maybe it has selfintersections
-        construction_succeeded = false;
+        constructionSucceeded = false;
       } else {
-        construction_succeeded = hdlg.get_routing_board().check_shape(obstacle_shape, hdlg.getInteractiveSettings().get_layer(), new int[0],
-            cl_class);
+        constructionSucceeded =
+            hdlg.getRoutingBoard()
+                .checkShape(
+                    obstacleShape, hdlg.getInteractiveSettings().getLayer(), new int[0], clClass);
       }
-      if (construction_succeeded) {
-        this.observers_activated = !hdlg.get_routing_board().observers_active();
-        if (this.observers_activated) {
-          hdlg.get_routing_board().start_notify_observers();
+      if (constructionSucceeded) {
+        this.observersActivated = !hdlg.getRoutingBoard().observersActive();
+        if (this.observersActivated) {
+          hdlg.getRoutingBoard().startNotifyObservers();
         }
-        hdlg.get_routing_board().generate_snapshot();
-        hdlg.get_routing_board().insert_obstacle(obstacle_shape, hdlg.getInteractiveSettings().get_layer(), cl_class, FixedState.UNFIXED);
-        hdlg.get_routing_board().end_notify_observers();
-        if (this.observers_activated) {
-          hdlg.get_routing_board().end_notify_observers();
-          this.observers_activated = false;
+        hdlg.getRoutingBoard().generateSnapshot();
+        hdlg.getRoutingBoard()
+            .insertObstacle(
+                obstacleShape,
+                hdlg.getInteractiveSettings().getLayer(),
+                clClass,
+                FixedState.UNFIXED);
+        hdlg.getRoutingBoard().endNotifyObservers();
+        if (this.observersActivated) {
+          hdlg.getRoutingBoard().endNotifyObservers();
+          this.observersActivated = false;
         }
       }
     }
-    if (construction_succeeded) {
-      hdlg.screen_messages.set_status_message(tm.getText("keepout_successful_completed"));
+    if (constructionSucceeded) {
+      hdlg.screenMessages.setStatusMessage(tm.getText("keepout_successful_completed"));
     } else {
-      hdlg.screen_messages.set_status_message(tm.getText("keepout_cancelled_because_of_overlaps"));
+      hdlg.screenMessages.setStatusMessage(tm.getText("keepout_cancelled_because_of_overlaps"));
     }
-    return this.return_state;
+    return this.returnState;
   }
 
   @Override
-  public void display_default_message() {
-    hdlg.screen_messages.set_status_message(tm.getText("creating_polygonshape"));
+  public void displayDefaultMessage() {
+    hdlg.screenMessages.setStatusMessage(tm.getText("creating_polygonshape"));
   }
 }

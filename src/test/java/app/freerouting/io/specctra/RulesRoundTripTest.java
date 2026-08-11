@@ -1,18 +1,20 @@
 package app.freerouting.io.specctra;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import app.freerouting.Freerouting;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.settings.GlobalSettings;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RulesRoundTripTest {
 
@@ -43,7 +45,8 @@ class RulesRoundTripTest {
   @Test
   void invalidRulesFileReturnsFalse() throws Exception {
     RoutingBoard board = DsnTestFixtures.loadBoard("Issue029-hw48na.dsn");
-    InputStream garbage = new ByteArrayInputStream("not a rules file".getBytes(StandardCharsets.UTF_8));
+    InputStream garbage =
+        new ByteArrayInputStream("not a rules file".getBytes(StandardCharsets.UTF_8));
     boolean ok = RulesReader.read(garbage, "x", board);
     assertFalse(ok, "RulesReader.read must return false for garbage input");
   }
@@ -52,13 +55,14 @@ class RulesRoundTripTest {
   void readExistingRulesFixture() throws Exception {
     RoutingBoard board = DsnTestFixtures.loadBoard("Issue029-hw48na.dsn");
     InputStream in = DsnTestFixtures.openResource("Issue029-hw48na_valid.rules");
-    assertTrue(RulesReader.read(in, "hw48na", board),
+    assertTrue(
+        RulesReader.read(in, "hw48na", board),
         "RulesReader.read must return true for a known-valid rules fixture");
   }
 
   /**
-   * Loading Issue029-hw48na.dsn must complete quickly (not hang in an infinite loop) and expose
-   * at least one warning about the degenerate zero-length wire that is present in the file.
+   * Loading Issue029-hw48na.dsn must complete quickly (not hang in an infinite loop) and expose at
+   * least one warning about the degenerate zero-length wire that is present in the file.
    */
   @Test
   void loadingProducesWarningsForDegenerateWires() throws Exception {
@@ -66,8 +70,8 @@ class RulesRoundTripTest {
     BoardReadResult result = DsnReader.readBoard(stream, null, null);
 
     // Board must load successfully (or at least partially)
-    assertInstanceOf(BoardReadResult.Success.class, result,
-        "Expected a successful read; got: " + result);
+    assertInstanceOf(
+        BoardReadResult.Success.class, result, "Expected a successful read; got: " + result);
 
     BoardReadResult.Success success = (BoardReadResult.Success) result;
     assertNotNull(success.board(), "Board must not be null after a successful read");
@@ -75,9 +79,11 @@ class RulesRoundTripTest {
     // The DSN file contains at least one wire with duplicate/identical coordinates
     // (e.g. "path F.Cu 1066.8  42530 -100482  42530 -100482"). That wire must be
     // reported as a warning so the caller can diagnose the source file.
-    boolean hasDegenerateWireWarning = success.warnings().stream()
-        .anyMatch(w -> w.contains("degenerate wire") || w.contains("all corners identical"));
-    assertTrue(hasDegenerateWireWarning,
+    boolean hasDegenerateWireWarning =
+        success.warnings().stream()
+            .anyMatch(w -> w.contains("degenerate wire") || w.contains("all corners identical"));
+    assertTrue(
+        hasDegenerateWireWarning,
         "Expected a 'degenerate wire' warning; got: " + success.warnings());
   }
 }

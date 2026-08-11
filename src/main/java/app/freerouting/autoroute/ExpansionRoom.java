@@ -3,50 +3,33 @@ package app.freerouting.autoroute;
 import app.freerouting.geometry.planar.TileShape;
 import java.util.List;
 
+/** Interface representing a room in the expansion tree during maze routing. */
 public interface ExpansionRoom {
 
-  /**
-   * Adds p_door to the list of doors of this room.
-   */
-  void add_door(ExpansionDoor p_door);
+  /** Adds door to the list of doors of this room. */
+  void addDoor(ExpansionDoor door);
 
-  /**
-   * Returns the list of doors of this room to neighbour expansion rooms
-   */
-  List<ExpansionDoor> get_doors();
+  /** Returns the list of doors of this room to neighbour expansion rooms. */
+  List<ExpansionDoor> getDoors();
 
-  /**
-   * Removes all doors from this room.
-   */
-  void clear_doors();
+  /** Removes all doors from this room. */
+  void clearDoors();
 
-  /**
-   * Clears the autorouting info of all doors for routing the next connection.
-   */
-  void reset_doors();
+  /** Clears the autorouting info of all doors for routing the next connection. */
+  void resetDoors();
 
-  /**
-   * Checks, if this room has already a door to p_other
-   */
-  boolean door_exists(ExpansionRoom p_other);
+  /** Checks if this room already has a door to other. */
+  boolean doorExists(ExpansionRoom other);
 
-  /**
-   * Removes p_door from this room. Returns false, if p_room did not contain p_door.
-   */
-  boolean remove_door(ExpandableObject p_door);
+  /** Removes door from this room. Returns false if this room did not contain door. */
+  boolean removeDoor(ExpandableObject door);
 
-  /**
-   * Gets the shape of this room.
-   */
-  TileShape get_shape();
+  /** Gets the shape of this room. */
+  TileShape getShape();
 
-  /**
-   * Returns the layer of this expansion room.
-   */
-  int get_layer();
+  /** Returns the layer of this expansion room. */
+  int getLayer();
 
-  /**
-   * Returns a unique identification number for this expansion room.
-   */
-  int get_id_no();
-}
+  /** Returns a unique identification number for this expansion room. */
+  int getIdNo();
+}

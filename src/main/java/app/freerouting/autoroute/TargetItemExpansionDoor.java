@@ -5,72 +5,69 @@ import app.freerouting.board.ShapeSearchTree;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 
-/**
- * An expansion door leading to a start or destination item of the autoroute algorithm.
- */
+/** An expansion door leading to a start or destination item of the autoroute algorithm. */
 public class TargetItemExpansionDoor implements ExpandableObject {
 
   public final Item item;
-  public final int tree_entry_no;
+  public final int treeEntryNo;
   public final CompleteExpansionRoom room;
   private final TileShape shape;
-  private final MazeSearchElement maze_search_info;
+  private final MazeSearchElement mazeSearchInfo;
 
-  /**
-   * Creates a new instance of ItemExpansionInfo
-   */
-  public TargetItemExpansionDoor(Item p_item, int p_tree_entry_no, CompleteExpansionRoom p_room, ShapeSearchTree p_search_tree) {
-    item = p_item;
-    tree_entry_no = p_tree_entry_no;
-    room = p_room;
+  /** Creates a new instance of ItemExpansionInfo. */
+  public TargetItemExpansionDoor(
+      Item item, int treeEntryNo, CompleteExpansionRoom room, ShapeSearchTree searchTree) {
+    this.item = item;
+    this.treeEntryNo = treeEntryNo;
+    this.room = room;
     if (room == null) {
       this.shape = Simplex.EMPTY;
     } else {
-      TileShape item_shape = item.get_tree_shape(p_search_tree, tree_entry_no);
-      this.shape = item_shape.intersection(room.get_shape());
+      TileShape itemShape = item.getTreeShape(searchTree, treeEntryNo);
+      this.shape = itemShape.intersection(room.getShape());
     }
-    maze_search_info = new MazeSearchElement();
+    mazeSearchInfo = new MazeSearchElement();
   }
 
   @Override
-  public TileShape get_shape() {
+  public TileShape getShape() {
     return this.shape;
   }
 
   @Override
-  public int get_dimension() {
+  public int getDimension() {
     return 2;
   }
 
-  public boolean is_destination_door() {
-    ItemAutorouteInfo item_info = this.item.get_autoroute_info();
-    return !item_info.is_start_info();
+  /** Returns true if this door leads to a destination item rather than a start item. */
+  public boolean isDestinationDoor() {
+    ItemAutorouteInfo itemInfo = this.item.getAutorouteInfo();
+    return !itemInfo.isStartInfo();
   }
 
   @Override
-  public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
+  public CompleteExpansionRoom otherRoom(CompleteExpansionRoom room) {
     return null;
   }
 
   @Override
-  public MazeSearchElement get_maze_search_element(int p_no) {
-    return maze_search_info;
+  public MazeSearchElement getMazeSearchElement(int index) {
+    return mazeSearchInfo;
   }
 
   @Override
-  public int maze_search_element_count() {
+  public int mazeSearchElementCount() {
     return 1;
   }
 
   @Override
   public void reset() {
-    maze_search_info.reset();
+    mazeSearchInfo.reset();
   }
 
   @Override
-  public int get_id_no() {
+  public int getIdNo() {
     // Unique ID for a target door: hash of target item ID and room ID.
-    return 31 * item.get_id_no() + (room != null ? room.get_id_no() : 0);
+    return 31 * item.getIdNo() + (room != null ? room.getIdNo() : 0);
   }
 }
-

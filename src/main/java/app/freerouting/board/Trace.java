@@ -18,181 +18,176 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Class describing functionality required for traces in the plane.
- */
+/** Class describing functionality required for traces in the plane. */
 public abstract class Trace extends Item implements Connectable, Serializable {
 
-  private final int half_width; // half width of the trace pen
+  private final int halfWidth; // half width of the trace pen
   private int layer; // board layer of the trace
 
-  Trace(int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no,
-      FixedState p_fixed_state, BasicBoard p_board) {
-    super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
-    half_width = p_half_width;
-    p_layer = Math.max(p_layer, 0);
-    if (p_board != null) {
-      p_layer = Math.min(p_layer, p_board.get_layer_count() - 1);
+  Trace(
+      int layer,
+      int halfWidth,
+      int[] netNoArr,
+      int clearanceType,
+      int idNo,
+      int groupNo,
+      FixedState fixedState,
+      BasicBoard board) {
+    super(netNoArr, clearanceType, idNo, groupNo, fixedState, board);
+    this.halfWidth = halfWidth;
+    layer = Math.max(layer, 0);
+    if (board != null) {
+      layer = Math.min(layer, board.getLayerCount() - 1);
     }
-    layer = p_layer;
+    this.layer = layer;
   }
 
-  /**
-   * returns the first corner of the trace
-   */
-  public abstract Point first_corner();
+  /** Returns the first corner of the trace. */
+  public abstract Point firstCorner();
 
-  /**
-   * returns the last corner of the trace
-   */
-  public abstract Point last_corner();
+  /** Returns the last corner of the trace. */
+  public abstract Point lastCorner();
 
   @Override
-  public int first_layer() {
+  public int firstLayer() {
     return this.layer;
   }
 
   @Override
-  public int last_layer() {
+  public int lastLayer() {
     return this.layer;
   }
 
-  public int get_layer() {
+  public int getLayer() {
     return this.layer;
   }
 
-  public void set_layer(int p_layer) {
-    this.layer = p_layer;
+  public void setLayer(int layer) {
+    this.layer = layer;
   }
 
-  public int get_half_width() {
-    return half_width;
+  public int getHalfWidth() {
+    return halfWidth;
   }
 
-  /**
-   * Returns the length of this trace.
-   */
-  public abstract double get_length();
+  /** Returns the length of this trace. */
+  public abstract double getLength();
 
   /**
-   * Returns the half with enlarged by the clearance compensation value for the
-   * tree with id number p_tree_id_no Equals get_half_width(), if no clearance
-   * compensation is used in this tree.
+   * Returns the half with enlarged by the clearance compensation value for the tree with id number
+   * p_tree_id_no Equals get_half_width(), if no clearance compensation is used in this tree.
    */
-  public int get_compensated_half_width(ShapeSearchTree p_search_tree) {
-    return this.half_width + p_search_tree.clearance_compensation_value(clearance_class_no(), this.layer);
+  public int getCompensatedHalfWidth(ShapeSearchTree searchTree) {
+    return this.halfWidth + searchTree.clearanceCompensationValue(clearanceClassNo(), this.layer);
   }
 
   @Override
-  public boolean is_obstacle(Item p_other) {
-    if (p_other == this || p_other instanceof ViaObstacleArea || p_other instanceof ComponentObstacleArea) {
+  public boolean isObstacle(Item other) {
+    if (other == this
+        || other instanceof ViaObstacleArea
+        || other instanceof ComponentObstacleArea) {
       return false;
     }
-    if (p_other instanceof ConductionArea area && !area.get_is_obstacle()) {
+    if (other instanceof ConductionArea area && !area.getIsObstacle()) {
       return false;
     }
-    return !p_other.shares_net(this);
+    return !other.sharesNet(this);
   }
 
   /**
-   * Get a list of all items with a connection point on the layer of this trace
-   * equal to its first corner.
+   * Get a list of all items with a connection point on the layer of this trace equal to its first
+   * corner.
    */
-  public Set<Item> get_start_contacts() {
-    return get_normal_contacts(first_corner(), false);
+  public Set<Item> getStartContacts() {
+    return getNormalContacts(firstCorner(), false);
   }
 
   /**
-   * Get a list of all items with a connection point on the layer of this trace
-   * equal to its last corner.
+   * Get a list of all items with a connection point on the layer of this trace equal to its last
+   * corner.
    */
-  public Set<Item> get_end_contacts() {
-    return get_normal_contacts(last_corner(), false);
+  public Set<Item> getEndContacts() {
+    return getNormalContacts(lastCorner(), false);
   }
 
   @Override
-  public Point normal_contact_point(Item p_other) {
-    return p_other.normal_contact_point(this);
+  public Point normalContactPoint(Item other) {
+    return other.normalContactPoint(this);
   }
 
   @Override
-  public Set<Item> get_normal_contacts() {
-    Set<Item> result = new TreeSet<>();
-    Point start_corner = this.first_corner();
-    if (start_corner != null) {
-      result.addAll(get_normal_contacts(start_corner, false));
+  Point normalContactPoint(DrillItem drillItem) {
+    return drillItem.normalContactPoint(this);
+  }
+
+  @Override
+  Point normalContactPoint(Trace other) {
+    if (this.layer != other.layer) {
+      return null;
     }
-    Point end_corner = this.last_corner();
-    if (end_corner != null) {
-      result.addAll(get_normal_contacts(end_corner, false));
+    boolean contactAtFirstCorner =
+        this.firstCorner().equals(other.firstCorner())
+            || this.firstCorner().equals(other.lastCorner());
+    boolean contactAtLastCorner =
+        this.lastCorner().equals(other.firstCorner())
+            || this.lastCorner().equals(other.lastCorner());
+    Point result;
+    if (!(contactAtFirstCorner || contactAtLastCorner)
+        || contactAtFirstCorner && contactAtLastCorner) {
+      // no contact point or more than 1 contact point
+      result = null;
+    } else if (contactAtFirstCorner) {
+      result = this.firstCorner();
+    } else { // contact at last corner
+      result = this.lastCorner();
     }
     return result;
   }
 
   @Override
-  public boolean is_routable() {
-    return !is_user_fixed() && (this.net_count() > 0);
-  }
-
-  /**
-   * Returns true, if this trace is not contacted at its first or at its last
-   * point.
-   */
-  @Override
-  public boolean is_tail() {
-    Collection<Item> contact_list = this.get_start_contacts();
-    if (contact_list.isEmpty()) {
-      return true;
+  public Set<Item> getNormalContacts() {
+    Set<Item> result = new TreeSet<>();
+    Point startCorner = this.firstCorner();
+    if (startCorner != null) {
+      result.addAll(getNormalContacts(startCorner, false));
     }
-    contact_list = this.get_end_contacts();
-    return contact_list.isEmpty();
-  }
-
-  @Override
-  public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
-    return p_graphics_context.get_trace_colors(this.is_user_fixed());
-  }
-
-  @Override
-  public int get_draw_priority() {
-    return Drawable.MAX_DRAW_PRIORITY;
-  }
-
-  @Override
-  public double get_draw_intensity(GraphicsContext p_graphics_context) {
-    return p_graphics_context.get_trace_color_intensity();
+    Point endCorner = this.lastCorner();
+    if (endCorner != null) {
+      result.addAll(getNormalContacts(endCorner, false));
+    }
+    return result;
   }
 
   /**
-   * Get a list of all items having a connection point at p_point on the layer of
-   * this trace. If p_ignore_net is false, only contacts to items sharing a net
-   * with this trace are calculated. This is the
-   * normal case.
+   * Get a list of all items having a connection point at p_point on the layer of this trace. If
+   * p_ignore_net is false, only contacts to items sharing a net with this trace are calculated.
+   * This is the normal case.
    */
-  public Set<Item> get_normal_contacts(Point p_point, boolean p_ignore_net) {
-    if (p_point == null || !(p_point.equals(this.first_corner()) || p_point.equals(this.last_corner()))) {
+  public Set<Item> getNormalContacts(Point point, boolean ignoreNet) {
+    if (point == null || !(point.equals(this.firstCorner()) || point.equals(this.lastCorner()))) {
       return new TreeSet<>();
     }
-    TileShape search_shape = TileShape.get_instance(p_point);
-    Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, this.layer);
+    TileShape searchShape = TileShape.getInstance(point);
+    Set<SearchTreeObject> overlaps = board.overlappingObjects(searchShape, this.layer);
     Set<Item> result = new TreeSet<>();
-    for (SearchTreeObject curr_ob : overlaps) {
-      if (!(curr_ob instanceof Item curr_item)) {
+    for (SearchTreeObject currOb : overlaps) {
+      if (!(currOb instanceof Item currItem)) {
         continue;
       }
-      if (curr_item != this && curr_item.shares_layer(this) && (p_ignore_net || curr_item.shares_net(this))) {
-        if (curr_item instanceof Trace curr_trace) {
-          if (p_point.equals(curr_trace.first_corner()) ||
-              p_point.equals(curr_trace.last_corner())) {
-            result.add(curr_item);
+      if (currItem != this
+          && currItem.sharesLayer(this)
+          && (ignoreNet || currItem.sharesNet(this))) {
+        if (currItem instanceof Trace currTrace) {
+          if (point.equals(currTrace.firstCorner()) || point.equals(currTrace.lastCorner())) {
+            result.add(currItem);
           }
-        } else if (curr_item instanceof DrillItem curr_drill_item) {
-          if (p_point.equals(curr_drill_item.get_center())) {
-            result.add(curr_item);
+        } else if (currItem instanceof DrillItem currDrillItem) {
+          if (point.equals(currDrillItem.getCenter())) {
+            result.add(currItem);
           }
-        } else if (curr_item instanceof ConductionArea curr_area) {
-          if (curr_area.get_area().contains(p_point)) {
-            result.add(curr_item);
+        } else if (currItem instanceof ConductionArea currArea) {
+          if (currArea.getArea().contains(point)) {
+            result.add(currItem);
           }
         }
       }
@@ -201,63 +196,63 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   @Override
-  Point normal_contact_point(DrillItem p_drill_item) {
-    return p_drill_item.normal_contact_point(this);
+  public boolean isRoutable() {
+    return !isUserFixed() && (this.netCount() > 0);
+  }
+
+  /** Returns true, if this trace is not contacted at its first or at its last point. */
+  @Override
+  public boolean isTail() {
+    Collection<Item> contactList = this.getStartContacts();
+    if (contactList.isEmpty()) {
+      return true;
+    }
+    contactList = this.getEndContacts();
+    return contactList.isEmpty();
   }
 
   @Override
-  Point normal_contact_point(Trace p_other) {
-    if (this.layer != p_other.layer) {
-      return null;
-    }
-    boolean contact_at_first_corner = this.first_corner().equals(p_other.first_corner())
-        || this.first_corner().equals(p_other.last_corner());
-    boolean contact_at_last_corner = this.last_corner().equals(p_other.first_corner())
-        || this.last_corner().equals(p_other.last_corner());
-    Point result;
-    if (!(contact_at_first_corner || contact_at_last_corner) || contact_at_first_corner && contact_at_last_corner) {
-      // no contact point or more than 1 contact point
-      result = null;
-    } else if (contact_at_first_corner) {
-      result = this.first_corner();
-    } else // contact at last corner
-    {
-      result = this.last_corner();
-    }
-    return result;
+  public Color[] getDrawColors(GraphicsContext graphicsContext) {
+    return graphicsContext.getTraceColors(this.isUserFixed());
   }
 
   @Override
-  public boolean is_drillable(int p_net_no) {
-    return this.contains_net(p_net_no);
+  public int getDrawPriority() {
+    return Drawable.MAX_DRAW_PRIORITY;
+  }
+
+  @Override
+  public double getDrawIntensity(GraphicsContext graphicsContext) {
+    return graphicsContext.getTraceColorIntensity();
+  }
+
+  @Override
+  public boolean isDrillable(int netNo) {
+    return this.containsNet(netNo);
+  }
+
+  /** Looks, if this trace is connected to the same object at its start and its end point. */
+  @Override
+  public boolean isOverlap() {
+    Set<Item> startContacts = this.getStartContacts();
+    Set<Item> endContacts = this.getEndContacts();
+    return !Collections.disjoint(startContacts, endContacts);
   }
 
   /**
-   * looks, if this trace is connected to the same object at its start and its end
-   * point
+   * Returns true, if it is not allowed to change the location of this item by the push algorithm.
    */
   @Override
-  public boolean is_overlap() {
-    Set<Item> start_contacts = this.get_start_contacts();
-    Set<Item> end_contacts = this.get_end_contacts();
-    return !Collections.disjoint(start_contacts, end_contacts);
-  }
-
-  /**
-   * Returns true, if it is not allowed to change the location of this item by the
-   * push algorithm.
-   */
-  @Override
-  public boolean is_shove_fixed() {
-    if (super.is_shove_fixed()) {
+  public boolean isShoveFixed() {
+    if (super.isShoveFixed()) {
       return true;
     }
 
     // check, if the trace belongs to a net, which is not shovable.
     Nets nets = this.board.rules.nets;
-    for (int curr_net_no : this.net_no_arr) {
-      if (Nets.is_normal_net_no(curr_net_no)) {
-        if (nets.get(curr_net_no).get_class().is_shove_fixed()) {
+    for (int currNetNo : this.netNoArr) {
+      if (Nets.isNormalNetNo(currNetNo)) {
+        if (nets.get(currNetNo).getNetClass().isShoveFixed()) {
           return true;
         }
       }
@@ -265,15 +260,13 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return false;
   }
 
-  /**
-   * returns the endpoint of this trace with the shortest distance to p_from_point
-   */
-  public Point nearest_end_point(Point p_from_point) {
-    Point p1 = first_corner();
-    Point p2 = last_corner();
-    FloatPoint from_point = p_from_point.to_float();
-    double d1 = from_point.distance(p1.to_float());
-    double d2 = from_point.distance(p2.to_float());
+  /** Returns the endpoint of this trace with the shortest distance to p_from_point. */
+  public Point nearestEndPoint(Point fromPoint) {
+    Point p1 = firstCorner();
+    Point p2 = lastCorner();
+    FloatPoint fromPointFloat = fromPoint.toFloat();
+    double d1 = fromPointFloat.distance(p1.toFloat());
+    double d2 = fromPointFloat.distance(p2.toFloat());
     Point result;
     if (d1 < d2) {
       result = p1;
@@ -283,41 +276,60 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return result;
   }
 
-  /**
-   * Checks, if this trace can be reached by other items via more than one path
-   */
-  public boolean is_cycle() {
-    boolean debugNet49 = this.net_no_arr != null && this.net_no_arr.length > 0 && this.net_no_arr[0] == 49;
-    if (this.is_overlap()) {
+  /** Checks, if this trace can be reached by other items via more than one path. */
+  public boolean isCycle() {
+    boolean debugNet49 =
+        this.netNoArr != null && this.netNoArr.length > 0 && this.netNoArr[0] == 49;
+    if (this.isOverlap()) {
       if (debugNet49) {
-        FRLogger.trace("compare_trace_is_cycle_overlap net=49, id=" + this.get_id_no()
-            + ", first=" + this.first_corner() + ", last=" + this.last_corner()
-            + ", start_contacts=" + this.get_start_contacts().stream().map(i->i.get_id_no()+"").collect(java.util.stream.Collectors.joining(","))
-            + ", end_contacts=" + this.get_end_contacts().stream().map(i->i.get_id_no()+"").collect(java.util.stream.Collectors.joining(",")));
+        FRLogger.trace(
+            "compare_trace_is_cycle_overlap net=49, id="
+                + this.getIdNo()
+                + ", first="
+                + this.firstCorner()
+                + ", last="
+                + this.lastCorner()
+                + ", startContacts="
+                + this.getStartContacts().stream()
+                    .map(i -> i.getIdNo() + "")
+                    .collect(java.util.stream.Collectors.joining(","))
+                + ", endContacts="
+                + this.getEndContacts().stream()
+                    .map(i -> i.getIdNo() + "")
+                    .collect(java.util.stream.Collectors.joining(",")));
       }
       return true;
     }
-    Collection<Item> start_contacts = this.get_start_contacts();
+    Collection<Item> startContacts = this.getStartContacts();
     // a cycle exists if through expanding the start contact we reach
     // this trace again via an end contact
     // make sure, that all direct neighbours are
     // expanded from here, to block coming back to
     // this trace via a start contact.
-    Set<Item> visited_items = new TreeSet<>(start_contacts);
-    boolean ignore_areas = false;
-    if (this.net_no_arr.length > 0) {
-      Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
-      if (curr_net != null && curr_net.get_class() != null) {
-        ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();
+    Set<Item> visitedItems = new TreeSet<>(startContacts);
+    boolean ignoreAreas = false;
+    if (this.netNoArr.length > 0) {
+      Net currentNet = this.board.rules.nets.get(this.netNoArr[0]);
+      if (currentNet != null && currentNet.getNetClass() != null) {
+        ignoreAreas = currentNet.getNetClass().getIgnoreCyclesWithAreas();
       }
     }
-    for (Item curr_contact : start_contacts) {
-      if (curr_contact.is_cycle_recu(visited_items, this, this, ignore_areas)) {
+    for (Item currContact : startContacts) {
+      if (currContact.isCycleRecu(visitedItems, this, this, ignoreAreas)) {
         if (debugNet49) {
-          FRLogger.trace("compare_trace_is_cycle_dfs net=49, id=" + this.get_id_no()
-              + ", first=" + this.first_corner() + ", last=" + this.last_corner()
-              + ", start_contacts=" + start_contacts.stream().map(i->i.get_id_no()+"").collect(java.util.stream.Collectors.joining(","))
-              + ", found_via=" + curr_contact.get_id_no());
+          FRLogger.trace(
+              "compare_trace_is_cycle_dfs net=49, id="
+                  + this.getIdNo()
+                  + ", first="
+                  + this.firstCorner()
+                  + ", last="
+                  + this.lastCorner()
+                  + ", startContacts="
+                  + startContacts.stream()
+                      .map(i -> i.getIdNo() + "")
+                      .collect(java.util.stream.Collectors.joining(","))
+                  + ", found_via="
+                  + currContact.getIdNo());
         }
         return true;
       }
@@ -326,34 +338,34 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   @Override
-  public int shape_layer(int p_index) {
+  public int shapeLayer(int index) {
     return layer;
   }
 
   @Override
-  public Point[] get_ratsnest_corners() {
+  public Point[] getRatsnestCorners() {
     // Use only uncontacted endpoints of the trace.
     // Otherwise, the allocated memory in the calculation of the incompletes might
     // become very big.
-    int stub_count = 0;
-    boolean stub_at_start = false;
-    boolean stub_at_end = false;
-    if (get_start_contacts().isEmpty()) {
-      ++stub_count;
-      stub_at_start = true;
+    int stubCount = 0;
+    boolean stubAtStart = false;
+    boolean stubAtEnd = false;
+    if (getStartContacts().isEmpty()) {
+      ++stubCount;
+      stubAtStart = true;
     }
-    if (get_end_contacts().isEmpty()) {
-      ++stub_count;
-      stub_at_end = true;
+    if (getEndContacts().isEmpty()) {
+      ++stubCount;
+      stubAtEnd = true;
     }
-    Point[] result = new Point[stub_count];
-    int stub_no = 0;
-    if (stub_at_start) {
-      result[stub_no] = first_corner();
-      ++stub_no;
+    Point[] result = new Point[stubCount];
+    int stubNo = 0;
+    if (stubAtStart) {
+      result[stubNo] = firstCorner();
+      ++stubNo;
     }
-    if (stub_at_end) {
-      result[stub_no] = last_corner();
+    if (stubAtEnd) {
+      result[stubNo] = lastCorner();
     }
     for (int i = 0; i < result.length; i++) {
       if (result[i] == null) {
@@ -364,86 +376,87 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * checks, that the connection restrictions to the contact pins are satisfied.
-   * If p_at_start, the start of this trace is checked, else the end. Returns
-   * false, if a pin is at that end, where the
-   * connection is checked and the connection is not ok.
+   * Checks that the connection restrictions to the contact pins are satisfied.
+   *
+   * <p>If p_at_start, the start of this trace is checked, else the end. Returns false if a pin is
+   * at that end where the connection is checked and the connection is not ok.
    */
-  public abstract boolean check_connection_to_pin(boolean p_at_start);
+  public abstract boolean checkConnectionToPin(boolean atStart);
 
   @Override
-  public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
-    if (!this.is_selected_by_fixed_filter(p_filter)) {
+  public boolean isSelectedByFilter(ItemSelectionFilter filter) {
+    if (!this.isSelectedByFixedFilter(filter)) {
       return false;
     }
-    return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.TRACES);
+    return filter.isSelected(ItemSelectionFilter.SelectableChoices.TRACES);
   }
 
   /**
-   * Looks up touching pins at the first corner and the last corner of the trace.
-   * Used to avoid acid traps.
+   * Looks up touching pins at the first corner and the last corner of the trace. Used to avoid acid
+   * traps.
    */
-  Set<Pin> touching_pins_at_end_corners() {
+  Set<Pin> touchingPinsAtEndCorners() {
     Set<Pin> result = new TreeSet<>();
     if (this.board == null) {
       return result;
     }
-    Point curr_end_point = this.first_corner();
+    Point currEndPoint = this.firstCorner();
     for (int i = 0; i < 2; i++) {
-      IntOctagon curr_oct = curr_end_point.surrounding_octagon();
-      curr_oct = curr_oct.enlarge(this.half_width);
-      Set<Item> curr_overlaps = this.board.overlapping_items_with_clearance(curr_oct, this.layer, new int[0],
-          this.clearance_class_no());
-      for (Item curr_item : curr_overlaps) {
-        if ((curr_item instanceof Pin pin) && curr_item.shares_net(this)) {
+      IntOctagon currOct = currEndPoint.surroundingOctagon();
+      currOct = currOct.enlarge(this.halfWidth);
+      Set<Item> currOverlaps =
+          this.board.overlappingItemsWithClearance(
+              currOct, this.layer, new int[0], this.clearanceClassNo());
+      for (Item currItem : currOverlaps) {
+        if ((currItem instanceof Pin pin) && currItem.sharesNet(this)) {
           result.add(pin);
         }
       }
-      curr_end_point = this.last_corner();
+      currEndPoint = this.lastCorner();
     }
     return result;
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    p_window.append_bold(tm.getText("trace"));
-    p_window.append(" " + tm.getText("from") + " ");
-    p_window.append(this.first_corner().to_float());
-    p_window.append(" " + tm.getText("to") + " ");
-    p_window.append(this.last_corner().to_float());
-    p_window.append(" " + tm.getText("on_layer") + " ");
-    p_window.append(this.board.layer_structure.arr[this.layer].name);
-    p_window.append(", " + tm.getText("width") + " ");
-    p_window.append(2 * this.half_width);
-    p_window.append(", " + tm.getText("length") + " ");
-    p_window.append(this.get_length());
-    this.print_connectable_item_info(p_window, p_locale);
-    p_window.newline();
+    window.appendBold(tm.getText("trace"));
+    window.append(" " + tm.getText("from") + " ");
+    window.append(this.firstCorner().toFloat());
+    window.append(" " + tm.getText("to") + " ");
+    window.append(this.lastCorner().toFloat());
+    window.append(" " + tm.getText("on_layer") + " ");
+    window.append(this.board.layerStructure.arr[this.layer].name);
+    window.append(", " + tm.getText("width") + " ");
+    window.append(2 * this.halfWidth);
+    window.append(", " + tm.getText("length") + " ");
+    window.append(this.getLength());
+    this.printConnectableItemInfo(window, locale);
+    window.newline();
   }
 
   @Override
-  public String get_hover_info(Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public String getHoverInfo(Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    double mmResolution = this.board.communication.get_resolution(Unit.MM);
-    double widthInMm = (2 * this.half_width) / mmResolution;
-    double lengthInMm = this.get_length() / mmResolution;
+    double mmResolution = this.board.communication.getResolution(Unit.MM);
+    double widthInMm = (2 * this.halfWidth) / mmResolution;
+    double lengthInMm = this.getLength() / mmResolution;
 
-    String layer_name = this.board.layer_structure.arr[this.layer].name;
-    String widthStr = String.format(p_locale, "%.4f", widthInMm);
-    String lengthStr = String.format(p_locale, "%.4f", lengthInMm);
-    String connInfo = this.get_connectable_item_hover_info(p_locale);
+    String layerName = this.board.layerStructure.arr[this.layer].name;
+    String widthStr = String.format(locale, "%.4f", widthInMm);
+    String lengthStr = String.format(locale, "%.4f", lengthInMm);
+    String connInfo = this.getConnectableItemHoverInfo(locale);
 
-    return tm.getText("trace_hover_info", layer_name, widthStr, lengthStr, connInfo);
+    return tm.getText("trace_hover_info", layerName, widthStr, lengthStr, connInfo);
   }
 
   @Override
   public boolean validate() {
     boolean result = super.validate();
 
-    if (this.first_corner().equals(this.last_corner())) {
+    if (this.firstCorner().equals(this.lastCorner())) {
       FRLogger.warn("Trace.validate: first and last corner are equal");
       result = false;
     }
@@ -451,31 +464,29 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * looks, if this trace can be combined with other traces . Returns true, if
-   * something has been combined.
+   * Checks if this trace can be combined with other traces.
+   *
+   * <p>Returns true if something has been combined.
    */
   abstract boolean combine();
 
   /**
-   * Looks up traces intersecting with this trace and splits them at the
-   * intersection points. In case of an overlaps, the traces are split at their
-   * first and their last common point. Returns the
-   * pieces resulting from splitting. If nothing is split, the result will contain
-   * just this Trace. If p_clip_shape != null, the split may be restricted to
-   * p_clip_shape.
+   * Looks up traces intersecting with this trace and splits them at the intersection points. In
+   * case of an overlaps, the traces are split at their first and their last common point. Returns
+   * the pieces resulting from splitting. If nothing is split, the result will contain just this
+   * Trace. If p_clip_shape != null, the split may be restricted to p_clip_shape.
    */
-  public abstract Collection<PolylineTrace> split(IntOctagon p_clip_shape);
+  public abstract Collection<PolylineTrace> split(IntOctagon clipShape);
 
   /**
-   * Splits this trace into two at p_point. Returns the 2 pieces of the split
-   * trace, or null if nothing was split because for example p_point is not
-   * located on this trace.
+   * Splits this trace into two at p_point. Returns the 2 pieces of the split trace, or null if
+   * nothing was split because for example p_point is not located on this trace.
    */
-  public abstract Trace[] split(Point p_point);
+  public abstract Trace[] split(Point point);
 
   /**
-   * Tries to make this trace shorter according to its rules. Returns true if the
-   * geometry of the trace was changed.
+   * Tries to make this trace shorter according to its rules. Returns true if the geometry of the
+   * trace was changed.
    */
-  public abstract boolean pull_tight(PullTightAlgo p_pull_tight_algo);
+  public abstract boolean pullTight(PullTightAlgo pullTightAlgo);
 }

@@ -12,8 +12,8 @@ import org.eclipse.jetty.server.Server;
 /**
  * Shared helpers for tests that start embedded Jetty API/MCP servers.
  *
- * <p>Under {@code maxParallelForks > 1}, cold-start and HTTP calls can be slow enough that
- * short timeouts and {@code server.isStarted()} alone are flaky.
+ * <p>Under {@code maxParallelForks > 1}, cold-start and HTTP calls can be slow enough that short
+ * timeouts and {@code server.isStarted()} alone are flaky.
  */
 public final class EmbeddedServerTestSupport {
 
@@ -22,9 +22,9 @@ public final class EmbeddedServerTestSupport {
   private static final long STARTUP_TIMEOUT_MS = 30_000;
   private static final long STOP_TIMEOUT_MS = 15_000;
 
-  private EmbeddedServerTestSupport() {
-  }
+  private EmbeddedServerTestSupport() {}
 
+  /** Waits until Jetty reports the server as started. */
   public static void waitForServerStarted(Server server) throws InterruptedException {
     long deadline = System.currentTimeMillis() + STARTUP_TIMEOUT_MS;
     while (!server.isStarted()) {
@@ -38,14 +38,17 @@ public final class EmbeddedServerTestSupport {
     }
   }
 
+  /** Waits until the REST API status endpoint responds successfully. */
   public static void waitForApiServerReady(URI baseUri) throws Exception {
     waitForHttpOk(baseUri, "/v1/system/status");
   }
 
+  /** Waits until the MCP discovery endpoint responds successfully. */
   public static void waitForMcpServerReady(URI baseUri) throws Exception {
     waitForHttpOk(baseUri, "/.well-known/agent.json");
   }
 
+  /** Stops the embedded server and waits until it is fully stopped. */
   public static void stopServerGracefully(Server server) throws Exception {
     if (server == null || server.isStopped()) {
       return;
@@ -60,10 +63,8 @@ public final class EmbeddedServerTestSupport {
 
   private static void waitForHttpOk(URI baseUri, String path) throws Exception {
     HttpClient client = HttpClient.newHttpClient();
-    HttpRequest request = HttpRequest.newBuilder(baseUri.resolve(path))
-        .GET()
-        .timeout(Duration.ofSeconds(5))
-        .build();
+    HttpRequest request =
+        HttpRequest.newBuilder(baseUri.resolve(path)).GET().timeout(Duration.ofSeconds(5)).build();
 
     long deadline = System.currentTimeMillis() + STARTUP_TIMEOUT_MS;
     Exception lastFailure = null;

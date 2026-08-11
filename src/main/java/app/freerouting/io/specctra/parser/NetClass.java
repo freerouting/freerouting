@@ -7,146 +7,172 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Contains the information of a Specctra Class scope.
- */
+/** Contains the information of a Specctra Class scope. */
+@SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
 public class NetClass {
 
   public final String name;
-  public final String trace_clearance_class;
-  public final Collection<String> net_list;
+  public final String traceClearanceClass;
+  public final Collection<String> netList;
   public final Collection<Rule> rules;
-  public final Collection<Rule.LayerRule> layer_rules;
-  public final Collection<String> use_via;
-  public final Collection<String> use_layer;
-  public final String via_rule;
-  public final boolean shove_fixed;
-  public final boolean pull_tight;
-  public final double min_trace_length;
-  public final double max_trace_length;
+  public final Collection<Rule.LayerRule> layerRules;
+  public final Collection<String> useVia;
+  public final Collection<String> useLayer;
+  public final String viaRule;
+  public final boolean shoveFixed;
+  public final boolean pullTight;
+  public double minTraceLength;
+  public double maxTraceLength;
 
-  /**
-   * Creates a new instance of NetClass
-   */
-  public NetClass(String p_name, String p_trace_clearance_class, Collection<String> p_net_list, Collection<Rule> p_rules, Collection<Rule.LayerRule> p_layer_rules, Collection<String> p_use_via,
-      Collection<String> p_use_layer, String p_via_rule, boolean p_shove_fixed, boolean p_pull_tight, double p_min_trace_length, double p_max_trace_length) {
-    name = p_name;
-    trace_clearance_class = p_trace_clearance_class;
-    net_list = p_net_list;
-    rules = p_rules;
-    layer_rules = p_layer_rules;
-    use_via = p_use_via;
-    use_layer = p_use_layer;
-    via_rule = p_via_rule;
-    shove_fixed = p_shove_fixed;
-    pull_tight = p_pull_tight;
-    min_trace_length = p_min_trace_length;
-    max_trace_length = p_max_trace_length;
+  /** Creates a new instance of NetClass. */
+  public NetClass(
+      String name,
+      String traceClearanceClass,
+      Collection<String> netList,
+      Collection<Rule> rules,
+      Collection<Rule.LayerRule> layerRules,
+      Collection<String> useVia,
+      Collection<String> useLayer,
+      String viaRule,
+      boolean shoveFixed,
+      boolean pullTight,
+      double minTraceLength,
+      double maxTraceLength) {
+    this.name = name;
+    this.traceClearanceClass = traceClearanceClass;
+    this.netList = netList;
+    this.rules = rules;
+    this.layerRules = layerRules;
+    this.useVia = useVia;
+    this.useLayer = useLayer;
+    this.viaRule = viaRule;
+    this.shoveFixed = shoveFixed;
+    this.pullTight = pullTight;
+    this.minTraceLength = minTraceLength;
+    this.maxTraceLength = maxTraceLength;
   }
 
-  public static NetClass read_scope(IJFlexScanner p_scanner) {
+  public static NetClass readScope(IJFlexScanner scanner) {
 
     try {
       // read the class name
-      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      String class_name = p_scanner.next_string();
+      scanner.yybegin(SpecctraDsnStreamReader.NAME);
+      String className = scanner.nextString();
 
-      Collection<String> net_list = new LinkedList<>();
-      boolean rules_missing = false;
+      Collection<String> netList = new LinkedList<>();
+      boolean rulesMissing = false;
       // read the nets belonging to the class
-      String[] netsInTheClass = p_scanner.next_string_list();
-      net_list.addAll(List.of(netsInTheClass));
+      String[] netsInTheClass = scanner.nextStringList();
+      netList.addAll(List.of(netsInTheClass));
 
       Collection<Rule> rules = new LinkedList<>();
-      Collection<Rule.LayerRule> layer_rules = new LinkedList<>();
-      Collection<String> use_via = new LinkedList<>();
-      Collection<String> use_layer = new LinkedList<>();
-      String via_rule = null;
-      String trace_clearance_class = null;
-      boolean pull_tight = true;
-      boolean shove_fixed = false;
-      double min_trace_length = 0;
-      double max_trace_length = 0;
+      Collection<Rule.LayerRule> layerRules = new LinkedList<>();
+      Collection<String> useVia = new LinkedList<>();
+      Collection<String> useLayer = new LinkedList<>();
+      String viaRule = null;
+      String traceClearanceClass = null;
+      boolean pullTight = true;
+      boolean shoveFixed = false;
+      double minTraceLength = 0;
+      double maxTraceLength = 0;
 
-      Object next_token = p_scanner.next_token();
-      if (!rules_missing) {
-        Object prev_token = next_token;
+      Object nextToken = scanner.nextToken();
+      if (!rulesMissing) {
+        Object prevToken = nextToken;
         for (; ; ) {
-          next_token = p_scanner.next_token();
-          if (next_token == null) {
-            FRLogger.warn("NetClass.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+          nextToken = scanner.nextToken();
+          if (nextToken == null) {
+            FRLogger.warn(
+                "NetClass.read_scope: unexpected end of file at '"
+                    + scanner.getScopeIdentifier()
+                    + "'");
             return null;
           }
-          if (next_token == Keyword.CLOSED_BRACKET) {
+          if (nextToken == Keyword.CLOSED_BRACKET) {
             // end of scope
             break;
           }
-          if (prev_token == Keyword.OPEN_BRACKET) {
-            if (next_token == Keyword.RULE) {
-              rules.addAll(Rule.read_scope(p_scanner));
-            } else if (next_token == Keyword.LAYER_RULE) {
-              layer_rules.add(Rule.read_layer_rule_scope(p_scanner));
-            } else if (next_token == Keyword.VIA_RULE) {
-              via_rule = DsnFile.read_string_scope(p_scanner);
-            } else if (next_token == Keyword.CIRCUIT) {
-              Circuit.ReadScopeResult curr_rule = Circuit.read_scope(p_scanner);
-              if (curr_rule != null) {
-                max_trace_length = curr_rule.max_length;
-                min_trace_length = curr_rule.min_length;
-                use_via.addAll(curr_rule.use_via);
-                use_layer.addAll(curr_rule.use_layer);
+          if (prevToken == Keyword.OPEN_BRACKET) {
+            if (nextToken == Keyword.RULE) {
+              rules.addAll(Rule.readScope(scanner));
+            } else if (nextToken == Keyword.LAYER_RULE) {
+              layerRules.add(Rule.readLayerRuleScope(scanner));
+            } else if (nextToken == Keyword.VIA_RULE) {
+              viaRule = DsnFile.readStringScope(scanner);
+            } else if (nextToken == Keyword.CIRCUIT) {
+              Circuit.ReadScopeResult currRule = Circuit.readScope(scanner);
+              if (currRule != null) {
+                maxTraceLength = currRule.maxLength;
+                minTraceLength = currRule.minLength;
+                useVia.addAll(currRule.useVia);
+                useLayer.addAll(currRule.useLayer);
               }
-            } else if (next_token == Keyword.CLEARANCE_CLASS) {
-              trace_clearance_class = DsnFile.read_string_scope(p_scanner);
-              if (trace_clearance_class == null) {
+            } else if (nextToken == Keyword.CLEARANCE_CLASS) {
+              traceClearanceClass = DsnFile.readStringScope(scanner);
+              if (traceClearanceClass == null) {
                 return null;
               }
-            } else if (next_token == Keyword.SHOVE_FIXED) {
-              shove_fixed = DsnFile.read_on_off_scope(p_scanner);
-            } else if (next_token == Keyword.PULL_TIGHT) {
-              pull_tight = DsnFile.read_on_off_scope(p_scanner);
+            } else if (nextToken == Keyword.SHOVE_FIXED) {
+              shoveFixed = DsnFile.readOnOffScope(scanner);
+            } else if (nextToken == Keyword.PULL_TIGHT) {
+              pullTight = DsnFile.readOnOffScope(scanner);
             } else {
-              ScopeKeyword.skip_scope(p_scanner);
+              ScopeKeyword.skipScope(scanner);
             }
           }
-          prev_token = next_token;
+          prevToken = nextToken;
         }
       }
-      return new NetClass(class_name, trace_clearance_class, net_list, rules, layer_rules, use_via, use_layer, via_rule, shove_fixed, pull_tight, min_trace_length, max_trace_length);
+      return new NetClass(
+          className,
+          traceClearanceClass,
+          netList,
+          rules,
+          layerRules,
+          useVia,
+          useLayer,
+          viaRule,
+          shoveFixed,
+          pullTight,
+          minTraceLength,
+          maxTraceLength);
     } catch (IOException e) {
       FRLogger.error("NetClass.read_scope: IO error while scanning file", e);
       return null;
     }
   }
 
-  public static ClassClass read_class_class_scope(IJFlexScanner p_scanner) {
+  public static ClassClass readClassClassScope(IJFlexScanner scanner) {
     try {
       Collection<String> classes = new LinkedList<>();
       Collection<Rule> rules = new LinkedList<>();
-      Collection<Rule.LayerRule> layer_rules = new LinkedList<>();
-      Object prev_token = null;
+      Collection<Rule.LayerRule> layerRules = new LinkedList<>();
+      Object prevToken = null;
       for (; ; ) {
-        Object next_token = p_scanner.next_token();
-        if (next_token == null) {
-          FRLogger.warn("ClassClass.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+        Object nextToken = scanner.nextToken();
+        if (nextToken == null) {
+          FRLogger.warn(
+              "ClassClass.read_scope: unexpected end of file at '"
+                  + scanner.getScopeIdentifier()
+                  + "'");
           return null;
         }
-        if (next_token == Keyword.CLOSED_BRACKET) {
+        if (nextToken == Keyword.CLOSED_BRACKET) {
           // end of scope
           break;
         }
-        if (prev_token == Keyword.OPEN_BRACKET) {
-          if (next_token == Keyword.CLASSES) {
-            classes.addAll(Arrays.stream(DsnFile.read_string_list_scope(p_scanner)).toList());
-          } else if (next_token == Keyword.RULE) {
-            rules.addAll(Rule.read_scope(p_scanner));
-          } else if (next_token == Keyword.LAYER_RULE) {
-            layer_rules.add(Rule.read_layer_rule_scope(p_scanner));
+        if (prevToken == Keyword.OPEN_BRACKET) {
+          if (nextToken == Keyword.CLASSES) {
+            classes.addAll(Arrays.stream(DsnFile.readStringListScope(scanner)).toList());
+          } else if (nextToken == Keyword.RULE) {
+            rules.addAll(Rule.readScope(scanner));
+          } else if (nextToken == Keyword.LAYER_RULE) {
+            layerRules.add(Rule.readLayerRuleScope(scanner));
           }
         }
-        prev_token = next_token;
+        prevToken = nextToken;
       }
-      return new ClassClass(classes, rules, layer_rules);
+      return new ClassClass(classes, rules, layerRules);
     } catch (IOException e) {
       FRLogger.error("NetClass.read_scope: IO error while scanning file", e);
       return null;
@@ -155,14 +181,17 @@ public class NetClass {
 
   public static class ClassClass {
 
-    public final Collection<String> class_names;
+    public final Collection<String> classNames;
     public final Collection<Rule> rules;
-    public final Collection<Rule.LayerRule> layer_rules;
+    public final Collection<Rule.LayerRule> layerRules;
 
-    public ClassClass(Collection<String> p_class_names, Collection<Rule> p_rules, Collection<Rule.LayerRule> p_layer_rules) {
-      class_names = p_class_names;
-      rules = p_rules;
-      layer_rules = p_layer_rules;
+    public ClassClass(
+        Collection<String> classNames,
+        Collection<Rule> rules,
+        Collection<Rule.LayerRule> layerRules) {
+      this.classNames = classNames;
+      this.rules = rules;
+      this.layerRules = layerRules;
     }
   }
 }

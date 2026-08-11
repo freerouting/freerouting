@@ -1,61 +1,41 @@
 package app.freerouting.board;
 
-/**
- * Empty adaptor implementing the BoardObservers interface.
- */
+/** Empty adaptor implementing the BoardObservers interface. */
 public class BoardObserverAdaptor implements BoardObservers {
 
   private boolean active;
 
-  /**
-   * Tell the observers the deletion p_object.
-   */
+  /** Tell the observers the deletion p_object. */
   @Override
-  public void notify_deleted(Item p_item) {
-  }
+  public void notifyDeleted(Item item) {}
 
-  /**
-   * Notify the observers, that they can synchronize the changes on p_object.
-   */
+  /** Notify the observers, that they can synchronize the changes on p_object. */
   @Override
-  public void notify_changed(Item p_item) {
-  }
+  public void notifyChanged(Item item) {}
 
-  /**
-   * Enable the observers to synchronize the new created item.
-   */
+  /** Enable the observers to synchronize the new created item. */
   @Override
-  public void notify_new(Item p_item) {
-  }
+  public void notifyNew(Item item) {}
 
-  /**
-   * Enable the observers to synchronize the moved component.
-   */
+  /** Enable the observers to synchronize the moved component. */
   @Override
-  public void notify_moved(Component p_component) {
-  }
+  public void notifyMoved(Component component) {}
 
-  /**
-   * activate the observers
-   */
+  /** Activate the observers. */
   @Override
   public void activate() {
     active = true;
   }
 
-  /**
-   * Deactivate the observers.
-   */
+  /** Deactivate the observers. */
   @Override
   public void deactivate() {
     active = false;
   }
 
-  /**
-   * Returns, if the observer is activated.
-   */
+  /** Returns, if the observer is activated. */
   @Override
-  public boolean is_active() {
+  public boolean isActive() {
     return active;
   }
 }

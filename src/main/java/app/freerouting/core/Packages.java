@@ -5,88 +5,107 @@ import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 import java.util.Vector;
 
-/**
- * Describes a library of component packages.
- */
+/** Describes a library of component packages. */
 public class Packages implements Serializable {
 
-  final Padstacks padstack_list;
-  /**
-   * The array of packages in this object
-   */
-  private final Vector<Package> package_arr = new Vector<>();
+  final Padstacks padstackList;
+
+  /** The array of packages in this object. */
+  private final Vector<Package> packageArr = new Vector<>();
 
   /**
-   * Creates a new instance of Packages. p_padstack_list is the list of padstacks used for the pins of the packages in this data structure.
+   * Creates a new instance of Packages. p_padstack_list is the list of padstacks used for the pins
+   * of the packages in this data structure.
    */
-  public Packages(Padstacks p_padstack_list) {
-    this.padstack_list = p_padstack_list;
+  public Packages(Padstacks padstackList) {
+    this.padstackList = padstackList;
   }
 
   /**
    * Returns the package with the input name and the input side or null, if no such package exists.
    */
-  public Package get(String p_name, boolean p_is_front) {
-    if (p_name == null) {
+  public Package get(String name, boolean isFront) {
+    if (name == null) {
       return null;
     }
-    Package other_side_package = null;
-    for (Package curr_package : package_arr) {
-      if (curr_package != null && curr_package.name.equalsIgnoreCase(p_name)) {
-        if (curr_package.is_front == p_is_front) {
-          return curr_package;
+    Package otherSidePackage = null;
+    for (Package currPackage : packageArr) {
+      if (currPackage != null && currPackage.name.equalsIgnoreCase(name)) {
+        if (currPackage.isFront == isFront) {
+          return currPackage;
         }
-        other_side_package = curr_package;
+        otherSidePackage = currPackage;
       }
     }
-    String baseName = p_name.replaceAll("::\\d+$", "");
-    if (!baseName.equalsIgnoreCase(p_name)) {
-      for (Package curr_package : package_arr) {
-        if (curr_package != null && curr_package.name.equalsIgnoreCase(baseName)) {
-          if (curr_package.is_front == p_is_front) {
-            return curr_package;
+    String baseName = name.replaceAll("::\\d+$", "");
+    if (!baseName.equalsIgnoreCase(name)) {
+      for (Package currPackage : packageArr) {
+        if (currPackage != null && currPackage.name.equalsIgnoreCase(baseName)) {
+          if (currPackage.isFront == isFront) {
+            return currPackage;
           }
-          other_side_package = curr_package;
+          otherSidePackage = currPackage;
         }
       }
     }
-    return other_side_package;
+    return otherSidePackage;
   }
 
-  /**
-   * Returns the package with index p_package_no. Packages numbers are from 1 to package count.
-   */
-  public Package get(int p_package_no) {
-    Package result = package_arr.elementAt(p_package_no - 1);
-    if (result != null && result.no != p_package_no) {
+  /** Returns the package with the specified index. Package numbers start at 1. */
+  public Package get(int packageNo) {
+    Package result = packageArr.elementAt(packageNo - 1);
+    if (result != null && result.no != packageNo) {
       FRLogger.warn("Padstacks.get: inconsistent padstack number");
     }
     return result;
   }
 
-  /**
-   * Returns the count of packages in this object.
-   */
+  /** Returns the count of packages in this object. */
   public int count() {
-    return package_arr.size();
+    return packageArr.size();
   }
 
-  /**
-   * Appends a new package with the input data to this object.
-   */
-  public Package add(String p_name, Package.Pin[] p_pin_arr, Shape[] p_outline, double[] p_outline_widths, boolean[] p_outline_is_closed, Package.Keepout[] p_keepout_arr, Package.Keepout[] p_via_keepout_arr, Package.Keepout[] p_place_keepout_arr,
-      boolean p_is_front) {
-    Package new_package = new Package(p_name, package_arr.size() + 1, p_pin_arr, p_outline, p_outline_widths, p_outline_is_closed, p_keepout_arr, p_via_keepout_arr, p_place_keepout_arr, p_is_front, this);
-    package_arr.add(new_package);
-    return new_package;
+  /** Appends a new package with the specified data to this object. */
+  public Package add(
+      String name,
+      Package.Pin[] pinArr,
+      Shape[] outline,
+      double[] outlineWidths,
+      boolean[] outlineIsClosed,
+      Package.Keepout[] keepoutArr,
+      Package.Keepout[] viaKeepoutArr,
+      Package.Keepout[] placeKeepoutArr,
+      boolean isFront) {
+    Package newPackage =
+        new Package(
+            name,
+            packageArr.size() + 1,
+            pinArr,
+            outline,
+            outlineWidths,
+            outlineIsClosed,
+            keepoutArr,
+            viaKeepoutArr,
+            placeKeepoutArr,
+            isFront,
+            this);
+    packageArr.add(newPackage);
+    return newPackage;
   }
 
-  /**
-   * Appends a new package with pins p_pin_arr to this object. The package name is generated internally.
-   */
-  public Package add(Package.Pin[] p_pin_arr) {
-    String package_name = "Package#" + (package_arr.size() + 1);
+  /** Appends a new package with the specified pins. The package name is generated internally. */
+  public Package add(Package.Pin[] pinArr) {
+    String packageName = "Package#" + (packageArr.size() + 1);
 
-    return add(package_name, p_pin_arr, null, null, null, new Package.Keepout[0], new Package.Keepout[0], new Package.Keepout[0], true);
+    return add(
+        packageName,
+        pinArr,
+        null,
+        null,
+        null,
+        new Package.Keepout[0],
+        new Package.Keepout[0],
+        new Package.Keepout[0],
+        true);
   }
 }

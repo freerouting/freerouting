@@ -2,7 +2,7 @@
 
 This document provides a concise map of the current codebase for contributors and maintainers. It highlights the principal packages, the repository layout, and the fastest path to the code that owns a given behavior.
 
-For long-term structural recommendations, see [docs/CODE_STRUCTURE_RECOMMENDATIONS.md](docs/CODE_STRUCTURE_RECOMMENDATIONS.md).
+For long-term structural recommendations, see [docs/research/code_structure_recommendations.md](research/code_structure_recommendations.md). For the active GUI/headless separation plan and boundary-debt ledger, see [docs/issues/soc-gui-separation-and-accessibility-plan.md](issues/soc-gui-separation-and-accessibility-plan.md).
 
 ## System Overview
 
@@ -323,8 +323,9 @@ To maintain clarity and consistency across the codebase, user interfaces, logs, 
 1. [README.md](README.md) for the product overview.
 2. [docs/developer.md](docs/developer.md) for build, test, and release guidance.
 3. [docs/settings.md](docs/settings.md) for the settings merge model.
-4. [docs/CODE_STRUCTURE_RECOMMENDATIONS.md](docs/CODE_STRUCTURE_RECOMMENDATIONS.md) for longer-term structure guidance.
-5. This document again, using the package glossary above to jump directly to the relevant area.
+4. [docs/research/code_structure_recommendations.md](research/code_structure_recommendations.md) for longer-term structure guidance.
+5. [docs/issues/soc-gui-separation-and-accessibility-plan.md](issues/soc-gui-separation-and-accessibility-plan.md) for the GUI/headless separation plan and live boundary-debt ledger.
+6. This document again, using the package glossary above to jump directly to the relevant area.
 
 ## Practical Rules Of Thumb
 

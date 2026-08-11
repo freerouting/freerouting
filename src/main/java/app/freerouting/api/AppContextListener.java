@@ -1,7 +1,7 @@
 package app.freerouting.api;
 
-import app.freerouting.logger.FRLogger;
 import app.freerouting.api.security.ApiKeyValidationService;
+import app.freerouting.logger.FRLogger;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
@@ -14,11 +14,12 @@ import org.eclipse.jetty.server.Server;
  * Servlet context lifecycle listener that fires once when the Jetty server finishes starting.
  *
  * <p>On {@link #contextInitialized} it:
+ *
  * <ol>
- *   <li>Resolves the actual bound host and port from the first {@link NetworkConnector}.</li>
- *   <li>Logs an INFO message with the base URL and the Swagger UI link.</li>
- *   <li>Logs a WARN message if API authentication is disabled, reminding operators to
- *       enable it before exposing the server to a network.</li>
+ *   <li>Resolves the actual bound host and port from the first {@link NetworkConnector}.
+ *   <li>Logs an INFO message with the base URL and the Swagger UI link.
+ *   <li>Logs a WARN message if API authentication is disabled, reminding operators to enable it
+ *       before exposing the server to a network.
  * </ol>
  */
 @WebListener
@@ -32,7 +33,8 @@ public class AppContextListener implements ServletContextListener {
     // The supported API is to obtain the wrapping ServletContextHandler via its static helper
     // and then call getServer() on it.
     Server server = null;
-    ServletContextHandler contextHandler = ServletContextHandler.getServletContextHandler(sce.getServletContext());
+    ServletContextHandler contextHandler =
+        ServletContextHandler.getServletContextHandler(sce.getServletContext());
     if (contextHandler != null) {
       server = contextHandler.getServer();
     }
@@ -49,7 +51,10 @@ public class AppContextListener implements ServletContextListener {
           if (host == null) {
             host = "localhost"; // Default host if not specified
           }
-          int port = networkConnector.getPort();
+          int port = networkConnector.getLocalPort();
+          if (port <= 0) {
+            port = networkConnector.getPort();
+          }
 
           fullUrl = "http://" + host + ":" + port + sce.getServletContext().getContextPath();
           // Break after finding the first network connector for simplicity
@@ -57,16 +62,28 @@ public class AppContextListener implements ServletContextListener {
         }
       }
     } else {
-      FRLogger.debug("Could not retrieve Jetty Server instance from ServletContext; using default URL.");
+      FRLogger.debug(
+          "Could not retrieve Jetty Server instance from ServletContext; using default URL.");
     }
 
     // Eagerly initialize CPU load baseline measurement
     app.freerouting.api.v1.SystemControllerV1.getCpuLoad();
 
-    FRLogger.info("API web server started successfully at " + fullUrl + ". You can ping it at " + fullUrl + "/v1/system/status. Swagger UI is available at " + fullUrl + "/swagger-ui.");
+    FRLogger.info(
+        "API web server started successfully at "
+            + fullUrl
+            + ". You can ping it at "
+            + fullUrl
+            + "/v1/system/status. Swagger UI is available at "
+            + fullUrl
+            + "/swagger-ui.");
 
     if (!ApiKeyValidationService.getInstance().isAuthenticationEnabled()) {
-      FRLogger.warn("API server authentication is DISABLED. All API endpoints are accessible without an API key. Enable authentication in the configuration before exposing this server to a network.");
+      FRLogger.warn(
+          "API server authentication is DISABLED. All API endpoints are accessible without an"
+              + " API key."
+              + " Enable authentication in the configuration before exposing this server to a"
+              + " network.");
     }
   }
 

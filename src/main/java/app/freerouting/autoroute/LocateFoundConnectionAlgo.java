@@ -12,257 +12,301 @@ import app.freerouting.logger.FRLogger;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.SortedSet;
 
+/** Locates and constructs trace connection geometries from maze search backtrack paths. */
 public abstract class LocateFoundConnectionAlgo {
 
-  /**
-   * The new items implementing the found connection
-   */
-  public final Collection<ResultItem> connection_items;
-  /**
-   * The start item of the new routed connection
-   */
-  public final Item start_item;
-  /**
-   * The layer of the connection to the start item
-   */
-  public final int start_layer;
-  /**
-   * The destination item of the new routed connection
-   */
-  public final Item target_item;
-  /**
-   * The layer of the connection to the target item
-   */
-  public final int target_layer;
-  /**
-   * The array of backtrack doors from the destination to the start of a found connection of the maze search algorithm.
-   */
-  protected final BacktrackElement[] backtrack_array;
-  protected final AutorouteControl ctrl;
-  protected final AngleRestriction angle_restriction;
-  protected final TargetItemExpansionDoor start_door;
-  protected FloatPoint current_from_point;
-  protected FloatPoint previous_from_point;
-  protected int current_trace_layer;
-  protected int current_from_door_index;
-  protected int current_to_door_index;
-  protected int current_target_door_index;
-  protected TileShape current_target_shape;
+  /** The new items implementing the found connection. */
+  public final Collection<ResultItem> connectionItems;
+
+  /** The start item of the new routed connection. */
+  public final Item startItem;
+
+  /** The layer of the connection to the start item. */
+  public final int startLayer;
+
+  /** The destination item of the new routed connection. */
+  public final Item targetItem;
+
+  /** The layer of the connection to the target item. */
+  public final int targetLayer;
 
   /**
-   * Creates a new instance of LocateFoundConnectionAlgo
+   * The array of backtrack doors from the destination to the start of a found connection of the.
+   * maze search algorithm.
    */
-  protected LocateFoundConnectionAlgo(MazeSearchAlgo.Result p_maze_search_result, AutorouteControl p_ctrl, ShapeSearchTree p_search_tree, AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs) {
-    this.ctrl = p_ctrl;
-    this.angle_restriction = p_angle_restriction;
-    Collection<BacktrackElement> backtrack_list = backtrack(p_maze_search_result, p_ripped_item_list, p_ripup_costs, p_ctrl.net_no);
-    this.backtrack_array = new BacktrackElement[backtrack_list.size()];
-    Iterator<BacktrackElement> it = backtrack_list.iterator();
-    for (int i = 0; i < backtrack_array.length; i++) {
-      this.backtrack_array[i] = it.next();
+  protected final BacktrackElement[] backtrackArray;
+
+  protected final AutorouteControl ctrl;
+  protected final AngleRestriction angleRestriction;
+  protected final TargetItemExpansionDoor startDoor;
+  protected FloatPoint currentFromPoint;
+  protected FloatPoint previousFromPoint;
+  protected int currentTraceLayer;
+  protected int currentFromDoorIndex;
+  protected int currentToDoorIndex;
+  protected int currentTargetDoorIndex;
+  protected TileShape currentTargetShape;
+
+  /** Creates a new instance of LocateFoundConnectionAlgo. */
+  protected LocateFoundConnectionAlgo(
+      MazeSearchAlgo.Result mazeSearchResult,
+      AutorouteControl ctrl,
+      ShapeSearchTree searchTree,
+      AngleRestriction angleRestriction,
+      SortedSet<Item> rippedItemList,
+      Map<Item, Integer> ripupCosts) {
+    this.ctrl = ctrl;
+    this.angleRestriction = angleRestriction;
+    Collection<BacktrackElement> backtrackList =
+        backtrack(mazeSearchResult, rippedItemList, ripupCosts, ctrl.netNo);
+    this.backtrackArray = new BacktrackElement[backtrackList.size()];
+    Iterator<BacktrackElement> it = backtrackList.iterator();
+    for (int i = 0; i < backtrackArray.length; i++) {
+      this.backtrackArray[i] = it.next();
     }
-    if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
-      FRLogger.trace("compare_trace_backtrack_raw net=" + this.ctrl.net_no
-          + ", size=" + this.backtrack_array.length);
-      for (int i = 0; i < this.backtrack_array.length; i++) {
-        BacktrackElement element = this.backtrack_array[i];
-        String nextRoomType = element.next_room != null
-            ? element.next_room.getClass().getSimpleName()
-            : "null";
-        FRLogger.trace("compare_trace_backtrack_raw net=" + this.ctrl.net_no
-            + ", idx=" + i
-            + ", door_type=" + element.door.getClass().getSimpleName()
-            + ", section=" + element.section_no_of_door
-            + ", next_room_type=" + nextRoomType);
+    if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
+      FRLogger.trace(
+          "compare_trace_backtrack_raw net="
+              + this.ctrl.netNo
+              + ", size="
+              + this.backtrackArray.length);
+      for (int i = 0; i < this.backtrackArray.length; i++) {
+        BacktrackElement element = this.backtrackArray[i];
+        String nextRoomType =
+            element.nextRoom != null ? element.nextRoom.getClass().getSimpleName() : "null";
+        FRLogger.trace(
+            "compare_trace_backtrack_raw net="
+                + this.ctrl.netNo
+                + ", idx="
+                + i
+                + ", door_type="
+                + element.door.getClass().getSimpleName()
+                + ", section="
+                + element.sectionNoOfDoor
+                + ", next_room_type="
+                + nextRoomType);
       }
     }
-    this.connection_items = new LinkedList<>();
-    BacktrackElement start_info = this.backtrack_array[backtrack_array.length - 1];
-    if (!(start_info.door instanceof TargetItemExpansionDoor)) {
-      FRLogger.warn("LocateFoundConnectionAlgo: ItemExpansionDoor expected for start_info.door");
-      this.start_item = null;
-      this.start_layer = 0;
-      this.target_item = null;
-      this.target_layer = 0;
-      this.start_door = null;
+    this.connectionItems = new LinkedList<>();
+    BacktrackElement startInfo = this.backtrackArray[backtrackArray.length - 1];
+    if (!(startInfo.door instanceof TargetItemExpansionDoor)) {
+      FRLogger.warn("LocateFoundConnectionAlgo: ItemExpansionDoor expected for startInfo.door");
+      this.startItem = null;
+      this.startLayer = 0;
+      this.targetItem = null;
+      this.targetLayer = 0;
+      this.startDoor = null;
       return;
     }
-    this.start_door = (TargetItemExpansionDoor) start_info.door;
-    this.start_item = start_door.item;
-    this.start_layer = start_door.room.get_layer();
+    this.startDoor = (TargetItemExpansionDoor) startInfo.door;
+    this.startItem = startDoor.item;
+    this.startLayer = startDoor.room.getLayer();
 
-    this.current_from_door_index = 0;
-    boolean at_fanout_end = false;
-    if (p_maze_search_result.destination_door instanceof TargetItemExpansionDoor curr_destination_door) {
-      this.target_item = curr_destination_door.item;
-      this.target_layer = curr_destination_door.room.get_layer();
+    this.currentFromDoorIndex = 0;
+    boolean atFanoutEnd = false;
+    if (mazeSearchResult.destinationDoor instanceof TargetItemExpansionDoor currDestinationDoor) {
+      this.targetItem = currDestinationDoor.item;
+      this.targetLayer = currDestinationDoor.room.getLayer();
 
-      this.current_from_point = calculate_starting_point(curr_destination_door, p_search_tree);
-    } else if (p_maze_search_result.destination_door instanceof ExpansionDrill curr_drill) {
+      this.currentFromPoint = calculateStartingPoint(currDestinationDoor, searchTree);
+    } else if (mazeSearchResult.destinationDoor instanceof ExpansionDrill currDrill) {
       // may happen only in case of fanout
-      this.target_item = null;
-      this.current_from_point = curr_drill.location.to_float();
-      this.target_layer = curr_drill.first_layer + p_maze_search_result.section_no_of_door;
-      at_fanout_end = true;
+      this.targetItem = null;
+      this.currentFromPoint = currDrill.location.toFloat();
+      this.targetLayer = currDrill.firstLayer + mazeSearchResult.sectionNoOfDoor;
+      atFanoutEnd = true;
     } else {
-      FRLogger.warn("LocateFoundConnectionAlgo: unexpected type of destination_door");
-      this.target_item = null;
-      this.target_layer = 0;
+      FRLogger.warn("LocateFoundConnectionAlgo: unexpected type of destinationDoor");
+      this.targetItem = null;
+      this.targetLayer = 0;
       return;
     }
-    this.current_trace_layer = this.target_layer;
-    this.previous_from_point = this.current_from_point;
+    this.currentTraceLayer = this.targetLayer;
+    this.previousFromPoint = this.currentFromPoint;
 
-    boolean connection_done = false;
-    while (!connection_done) {
-      boolean layer_changed = false;
-      if (at_fanout_end) {
-        // do not increase this.current_target_door_index
-        layer_changed = true;
+    boolean connectionDone = false;
+    while (!connectionDone) {
+      boolean layerChanged = false;
+      if (atFanoutEnd) {
+        // do not increase this.currentTargetDoorIndex
+        layerChanged = true;
       } else {
-        this.current_target_door_index = this.current_from_door_index + 1;
-        while (current_target_door_index < this.backtrack_array.length && !layer_changed) {
-          if (this.backtrack_array[this.current_target_door_index].door instanceof ExpansionDrill) {
-            layer_changed = true;
+        this.currentTargetDoorIndex = this.currentFromDoorIndex + 1;
+        while (currentTargetDoorIndex < this.backtrackArray.length && !layerChanged) {
+          if (this.backtrackArray[this.currentTargetDoorIndex].door instanceof ExpansionDrill) {
+            layerChanged = true;
           } else {
-            ++this.current_target_door_index;
+            ++this.currentTargetDoorIndex;
           }
         }
       }
-      if (layer_changed) {
+      if (layerChanged) {
         // the next trace leads to a via
-        ExpansionDrill current_target_drill = (ExpansionDrill) this.backtrack_array[this.current_target_door_index].door;
-        this.current_target_shape = TileShape.get_instance(current_target_drill.location);
+        ExpansionDrill currentTargetDrill =
+            (ExpansionDrill) this.backtrackArray[this.currentTargetDoorIndex].door;
+        this.currentTargetShape = TileShape.getInstance(currentTargetDrill.location);
       } else {
         // the next trace leads to the final target
-        connection_done = true;
-        this.current_target_door_index = this.backtrack_array.length - 1;
-        TileShape target_shape = ((Connectable) start_item).get_trace_connection_shape(p_search_tree, start_door.tree_entry_no);
-        this.current_target_shape = target_shape.intersection(start_door.room.get_shape());
-        if (this.current_target_shape.dimension() >= 2) {
+        connectionDone = true;
+        this.currentTargetDoorIndex = this.backtrackArray.length - 1;
+        TileShape targetShape =
+            ((Connectable) startItem).getTraceConnectionShape(searchTree, startDoor.treeEntryNo);
+        this.currentTargetShape = targetShape.intersection(startDoor.room.getShape());
+        if (this.currentTargetShape.dimension() >= 2) {
           // the target is a conduction area, make a save connection
           // by shrinking the shape by the trace halfwidth.
-          double trace_half_width = this.ctrl.compensated_trace_half_width[start_door.room.get_layer()];
-          TileShape shrinked_shape = (TileShape) this.current_target_shape.offset(-trace_half_width);
-          if (!shrinked_shape.is_empty()) {
-            this.current_target_shape = shrinked_shape;
+          double traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[startDoor.room.getLayer()];
+          TileShape shrinkedShape = (TileShape) this.currentTargetShape.offset(-traceHalfWidth);
+          if (!shrinkedShape.isEmpty()) {
+            this.currentTargetShape = shrinkedShape;
           }
         }
       }
-      this.current_to_door_index = this.current_from_door_index + 1;
-      ResultItem next_trace = this.calculate_next_trace(layer_changed, at_fanout_end);
-      at_fanout_end = false;
-      this.connection_items.add(next_trace);
+      this.currentToDoorIndex = this.currentFromDoorIndex + 1;
+      ResultItem nextTrace = this.calculateNextTrace(layerChanged, atFanoutEnd);
+      atFanoutEnd = false;
+      this.connectionItems.add(nextTrace);
     }
   }
 
-  /**
-   * Returns a new Instance of LocateFoundConnectionAlgo or null, if p_destination_door is null.
-   */
-  public static LocateFoundConnectionAlgo get_instance(MazeSearchAlgo.Result p_maze_search_result, AutorouteControl p_ctrl, ShapeSearchTree p_search_tree, AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs) {
-    if (p_maze_search_result == null) {
+  /** Returns a new Instance of LocateFoundConnectionAlgo or null, if p_destination_door is null. */
+  public static LocateFoundConnectionAlgo getInstance(
+      MazeSearchAlgo.Result mazeSearchResult,
+      AutorouteControl ctrl,
+      ShapeSearchTree searchTree,
+      AngleRestriction angleRestriction,
+      SortedSet<Item> rippedItemList,
+      Map<Item, Integer> ripupCosts) {
+    if (mazeSearchResult == null) {
       return null;
     }
     LocateFoundConnectionAlgo result;
-    if (p_angle_restriction == AngleRestriction.NINETY_DEGREE || p_angle_restriction == AngleRestriction.FORTYFIVE_DEGREE) {
-      result = new LocateFoundConnectionAlgo45Degree(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list, p_ripup_costs);
+    if (angleRestriction == AngleRestriction.NINETY_DEGREE
+        || angleRestriction == AngleRestriction.FORTYFIVE_DEGREE) {
+      result =
+          new LocateFoundConnectionAlgo45Degree(
+              mazeSearchResult, ctrl, searchTree, angleRestriction, rippedItemList, ripupCosts);
     } else {
-      result = new LocateFoundConnectionAlgoAnyAngle(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list, p_ripup_costs);
+      result =
+          new LocateFoundConnectionAlgoAnyAngle(
+              mazeSearchResult, ctrl, searchTree, angleRestriction, rippedItemList, ripupCosts);
     }
     return result;
   }
 
   /**
-   * Calculates the starting point of the next trace on p_from_door.item. The implementation is not yet optimal for starting points on traces or areas.
+   * Calculates the starting point of the next trace on p_from_door.item. The implementation is not
+   * yet optimal for starting points on traces or areas.
    */
-  private static FloatPoint calculate_starting_point(TargetItemExpansionDoor p_from_door, ShapeSearchTree p_search_tree) {
-    TileShape connection_shape = ((Connectable) p_from_door.item).get_trace_connection_shape(p_search_tree, p_from_door.tree_entry_no);
-    connection_shape = connection_shape.intersection(p_from_door.room.get_shape());
-    return connection_shape.centre_of_gravity().round().to_float();
+  private static FloatPoint calculateStartingPoint(
+      TargetItemExpansionDoor fromDoor, ShapeSearchTree searchTree) {
+    TileShape connectionShape =
+        ((Connectable) fromDoor.item).getTraceConnectionShape(searchTree, fromDoor.treeEntryNo);
+    connectionShape = connectionShape.intersection(fromDoor.room.getShape());
+    return connectionShape.centreOfGravity().round().toFloat();
   }
 
   /**
-   * Creates a list of doors by backtracking from p_destination_door to the start door. Returns null, if p_destination_door is null.
+   * Creates a list of doors by backtracking from p_destination_door to the start door. Returns
+   * null, if p_destination_door is null.
    */
-  private static Collection<BacktrackElement> backtrack(MazeSearchAlgo.Result p_maze_search_result, SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs, int p_net_no) {
-    if (p_maze_search_result == null) {
+  private static Collection<BacktrackElement> backtrack(
+      MazeSearchAlgo.Result mazeSearchResult,
+      SortedSet<Item> rippedItemList,
+      Map<Item, Integer> ripupCosts,
+      int netNo) {
+    if (mazeSearchResult == null) {
       return null;
     }
     Collection<BacktrackElement> result = new LinkedList<>();
-    CompleteExpansionRoom curr_next_room = null;
-    ExpandableObject curr_backtrack_door = p_maze_search_result.destination_door;
-    MazeSearchElement curr_maze_search_element = curr_backtrack_door.get_maze_search_element(p_maze_search_result.section_no_of_door);
-    boolean debugBacktrack = (p_net_no == 98);
+    CompleteExpansionRoom currNextRoom = null;
+    ExpandableObject currBacktrackDoor = mazeSearchResult.destinationDoor;
+    MazeSearchElement currMazeSearchElement =
+        currBacktrackDoor.getMazeSearchElement(mazeSearchResult.sectionNoOfDoor);
+    boolean debugBacktrack = netNo == 98;
     if (debugBacktrack) {
-      String destType = curr_backtrack_door.getClass().getSimpleName();
-      FRLogger.trace("BACKTRACK_START net=" + p_net_no
-          + ", dest_type=" + destType
-          + ", dest_section=" + p_maze_search_result.section_no_of_door
-          + ", dest_room_ripped=" + curr_maze_search_element.room_ripped);
+      String destType = currBacktrackDoor.getClass().getSimpleName();
+      FRLogger.trace(
+          "BACKTRACK_START net="
+              + netNo
+              + ", dest_type="
+              + destType
+              + ", dest_section="
+              + mazeSearchResult.sectionNoOfDoor
+              + ", dest_room_ripped="
+              + currMazeSearchElement.roomRipped);
     }
-    if (curr_backtrack_door instanceof TargetItemExpansionDoor door) {
-      curr_next_room = door.room;
-    } else if (curr_backtrack_door instanceof ExpansionDrill curr_drill) {
-      curr_next_room = curr_drill.room_arr[curr_drill.first_layer + p_maze_search_result.section_no_of_door];
-      if (curr_maze_search_element.room_ripped) {
-        for (CompleteExpansionRoom tmp_room : curr_drill.room_arr) {
-          if (tmp_room instanceof ObstacleExpansionRoom room) {
-            p_ripped_item_list.add(room.get_item());
-            if (p_ripup_costs != null) {
-              p_ripup_costs.put(room.get_item(), curr_maze_search_element.ripup_cost);
+    if (currBacktrackDoor instanceof TargetItemExpansionDoor door) {
+      currNextRoom = door.room;
+    } else if (currBacktrackDoor instanceof ExpansionDrill currDrill) {
+      currNextRoom = currDrill.roomArr[currDrill.firstLayer + mazeSearchResult.sectionNoOfDoor];
+      if (currMazeSearchElement.roomRipped) {
+        for (CompleteExpansionRoom tmpRoom : currDrill.roomArr) {
+          if (tmpRoom instanceof ObstacleExpansionRoom room) {
+            rippedItemList.add(room.getItem());
+            if (ripupCosts != null) {
+              ripupCosts.put(room.getItem(), currMazeSearchElement.ripupCost);
             }
           }
         }
       }
     }
-    BacktrackElement curr_backtrack_element = new BacktrackElement(curr_backtrack_door, p_maze_search_result.section_no_of_door, curr_next_room);
+    BacktrackElement currBacktrackElement =
+        new BacktrackElement(currBacktrackDoor, mazeSearchResult.sectionNoOfDoor, currNextRoom);
     int step = 0;
     for (; ; ) {
-      result.add(curr_backtrack_element);
-      curr_backtrack_door = curr_maze_search_element.backtrack_door;
-      if (curr_backtrack_door == null) {
+      result.add(currBacktrackElement);
+      currBacktrackDoor = currMazeSearchElement.backtrackDoor;
+      if (currBacktrackDoor == null) {
         break;
       }
-      int curr_section_no = curr_maze_search_element.section_no_of_backtrack_door;
-      if (curr_section_no >= curr_backtrack_door.maze_search_element_count()) {
-        FRLogger.warn("LocateFoundConnectionAlgo: curr_section_no to big");
-        curr_section_no = curr_backtrack_door.maze_search_element_count() - 1;
+      int currSectionNo = currMazeSearchElement.sectionNoOfBacktrackDoor;
+      if (currSectionNo >= currBacktrackDoor.mazeSearchElementCount()) {
+        FRLogger.warn("LocateFoundConnectionAlgo: currSectionNo to big");
+        currSectionNo = currBacktrackDoor.mazeSearchElementCount() - 1;
       }
-      if (curr_backtrack_door instanceof ExpansionDrill curr_drill) {
-        curr_next_room = curr_drill.room_arr[curr_section_no];
+      if (currBacktrackDoor instanceof ExpansionDrill currDrill) {
+        currNextRoom = currDrill.roomArr[currSectionNo];
       } else {
-        curr_next_room = curr_backtrack_door.other_room(curr_next_room);
+        currNextRoom = currBacktrackDoor.otherRoom(currNextRoom);
       }
-      curr_maze_search_element = curr_backtrack_door.get_maze_search_element(curr_section_no);
-      curr_backtrack_element = new BacktrackElement(curr_backtrack_door, curr_section_no, curr_next_room);
+      currMazeSearchElement = currBacktrackDoor.getMazeSearchElement(currSectionNo);
+      currBacktrackElement = new BacktrackElement(currBacktrackDoor, currSectionNo, currNextRoom);
       if (debugBacktrack) {
-        String doorType = curr_backtrack_door.getClass().getSimpleName();
-        String nextRoomType = curr_next_room != null ? curr_next_room.getClass().getSimpleName() : "null";
+        String doorType = currBacktrackDoor.getClass().getSimpleName();
+        String nextRoomType =
+            currNextRoom != null ? currNextRoom.getClass().getSimpleName() : "null";
         int obstacleId = -1;
-        if (curr_next_room instanceof ObstacleExpansionRoom obst) {
-          obstacleId = obst.get_item().get_id_no();
+        if (currNextRoom instanceof ObstacleExpansionRoom obst) {
+          obstacleId = obst.getItem().getIdNo();
         }
-        FRLogger.trace("BACKTRACK_STEP net=" + p_net_no
-            + ", step=" + step
-            + ", door_type=" + doorType
-            + ", section=" + curr_section_no
-            + ", room_ripped=" + curr_maze_search_element.room_ripped
-            + ", ripup_cost=" + curr_maze_search_element.ripup_cost
-            + ", next_room_type=" + nextRoomType
-            + ", obstacle_id=" + obstacleId);
+        FRLogger.trace(
+            "BACKTRACK_STEP net="
+                + netNo
+                + ", step="
+                + step
+                + ", door_type="
+                + doorType
+                + ", section="
+                + currSectionNo
+                + ", roomRipped="
+                + currMazeSearchElement.roomRipped
+                + ", ripupCost="
+                + currMazeSearchElement.ripupCost
+                + ", next_room_type="
+                + nextRoomType
+                + ", obstacle_id="
+                + obstacleId);
       }
-      if (curr_maze_search_element.room_ripped) {
-        if (curr_next_room instanceof ObstacleExpansionRoom room) {
-          p_ripped_item_list.add(room.get_item());
-          if (p_ripup_costs != null) {
-            p_ripup_costs.put(room.get_item(), curr_maze_search_element.ripup_cost);
+      if (currMazeSearchElement.roomRipped) {
+        if (currNextRoom instanceof ObstacleExpansionRoom room) {
+          rippedItemList.add(room.getItem());
+          if (ripupCosts != null) {
+            ripupCosts.put(room.getItem(), currMazeSearchElement.ripupCost);
           }
         }
       }
@@ -271,55 +315,57 @@ public abstract class LocateFoundConnectionAlgo {
     return result;
   }
 
-  private static FloatPoint ninety_degree_corner(FloatPoint p_from_point, FloatPoint p_to_point, boolean p_horizontal_first) {
+  private static FloatPoint ninetyDegreeCorner(
+      FloatPoint fromPoint, FloatPoint toPoint, boolean horizontalFirst) {
     double x;
     double y;
-    if (p_horizontal_first) {
-      x = p_to_point.x;
-      y = p_from_point.y;
+    if (horizontalFirst) {
+      x = toPoint.x;
+      y = fromPoint.y;
     } else {
-      x = p_from_point.x;
-      y = p_to_point.y;
+      x = fromPoint.x;
+      y = toPoint.y;
     }
     return new FloatPoint(x, y);
   }
 
-  private static FloatPoint fortyfive_degree_corner(FloatPoint p_from_point, FloatPoint p_to_point, boolean p_horizontal_first) {
-    double abs_dx = Math.abs(p_to_point.x - p_from_point.x);
-    double abs_dy = Math.abs(p_to_point.y - p_from_point.y);
+  private static FloatPoint fortyfiveDegreeCorner(
+      FloatPoint fromPoint, FloatPoint toPoint, boolean horizontalFirst) {
+    double absDx = Math.abs(toPoint.x - fromPoint.x);
+    double absDy = Math.abs(toPoint.y - fromPoint.y);
     double x;
     double y;
 
-    if (abs_dx <= abs_dy) {
-      if (p_horizontal_first) {
-        x = p_to_point.x;
-        if (p_to_point.y >= p_from_point.y) {
-          y = p_from_point.y + abs_dx;
+    if (absDx <= absDy) {
+      if (horizontalFirst) {
+        x = toPoint.x;
+        if (toPoint.y >= fromPoint.y) {
+          y = fromPoint.y + absDx;
         } else {
-          y = p_from_point.y - abs_dx;
+          y = fromPoint.y - absDx;
         }
       } else {
-        x = p_from_point.x;
-        if (p_to_point.y > p_from_point.y) {
-          y = p_to_point.y - abs_dx;
+        x = fromPoint.x;
+        if (toPoint.y > fromPoint.y) {
+          y = toPoint.y - absDx;
         } else {
-          y = p_to_point.y + abs_dx;
+          y = toPoint.y + absDx;
         }
       }
     } else {
-      if (p_horizontal_first) {
-        y = p_from_point.y;
-        if (p_to_point.x > p_from_point.x) {
-          x = p_to_point.x - abs_dy;
+      if (horizontalFirst) {
+        y = fromPoint.y;
+        if (toPoint.x > fromPoint.x) {
+          x = toPoint.x - absDy;
         } else {
-          x = p_to_point.x + abs_dy;
+          x = toPoint.x + absDy;
         }
       } else {
-        y = p_to_point.y;
-        if (p_to_point.x > p_from_point.x) {
-          x = p_from_point.x + abs_dy;
+        y = toPoint.y;
+        if (toPoint.x > fromPoint.x) {
+          x = fromPoint.x + absDy;
         } else {
-          x = p_from_point.x - abs_dy;
+          x = fromPoint.x - absDy;
         }
       }
     }
@@ -327,163 +373,184 @@ public abstract class LocateFoundConnectionAlgo {
   }
 
   /**
-   * Calculates an additional corner, so that for the lines from p_from_point to the result corner and from the result corner to p_to_point p_angle_restriction is fulfilled.
+   * Calculates an additional corner, so that for the lines from p_from_point to the result corner
+   * and from the result corner to p_to_point p_angle_restriction is fulfilled.
    */
-  static FloatPoint calculate_additional_corner(FloatPoint p_from_point, FloatPoint p_to_point, boolean p_horizontal_first, AngleRestriction p_angle_restriction) {
+  static FloatPoint calculateAdditionalCorner(
+      FloatPoint fromPoint,
+      FloatPoint toPoint,
+      boolean horizontalFirst,
+      AngleRestriction angleRestriction) {
     FloatPoint result;
-    if (p_angle_restriction == AngleRestriction.NINETY_DEGREE) {
-      result = ninety_degree_corner(p_from_point, p_to_point, p_horizontal_first);
-    } else if (p_angle_restriction == AngleRestriction.FORTYFIVE_DEGREE) {
-      result = fortyfive_degree_corner(p_from_point, p_to_point, p_horizontal_first);
+    if (angleRestriction == AngleRestriction.NINETY_DEGREE) {
+      result = ninetyDegreeCorner(fromPoint, toPoint, horizontalFirst);
+    } else if (angleRestriction == AngleRestriction.FORTYFIVE_DEGREE) {
+      result = fortyfiveDegreeCorner(fromPoint, toPoint, horizontalFirst);
     } else {
-      result = p_to_point;
+      result = toPoint;
     }
     return result;
   }
 
   /**
-   * Calculates the next trace of the connection under construction. Returns null, if all traces are returned.
+   * Calculates the next trace of the connection under construction. Returns null, if all traces are
+   * returned.
    */
-  private ResultItem calculate_next_trace(boolean p_layer_changed, boolean p_at_fanout_end) {
-    Collection<FloatPoint> corner_list = new LinkedList<>();
-    corner_list.add(this.current_from_point);
-    if (!p_at_fanout_end) {
-      FloatPoint adjusted_start_corner = this.adjust_start_corner();
-      if (adjusted_start_corner != this.current_from_point) {
-        FloatPoint add_corner = calculate_additional_corner(this.current_from_point, adjusted_start_corner, true, this.angle_restriction);
-        corner_list.add(add_corner);
-        corner_list.add(adjusted_start_corner);
-        this.previous_from_point = this.current_from_point;
-        this.current_from_point = adjusted_start_corner;
+  private ResultItem calculateNextTrace(boolean layerChanged, boolean atFanoutEnd) {
+    Collection<FloatPoint> cornerList = new LinkedList<>();
+    cornerList.add(this.currentFromPoint);
+    if (!atFanoutEnd) {
+      FloatPoint adjustedStartCorner = this.adjustStartCorner();
+      if (adjustedStartCorner != this.currentFromPoint) {
+        FloatPoint addCorner =
+            calculateAdditionalCorner(
+                this.currentFromPoint, adjustedStartCorner, true, this.angleRestriction);
+        cornerList.add(addCorner);
+        cornerList.add(adjustedStartCorner);
+        this.previousFromPoint = this.currentFromPoint;
+        this.currentFromPoint = adjustedStartCorner;
       }
     }
-    FloatPoint prev_corner = this.current_from_point;
+    FloatPoint prevCorner = this.currentFromPoint;
     for (; ; ) {
-      Collection<FloatPoint> next_corners = calculate_next_trace_corners();
-      if (next_corners.isEmpty()) {
+      Collection<FloatPoint> nextCorners = calculateNextTraceCorners();
+      if (nextCorners.isEmpty()) {
         break;
       }
-      for (FloatPoint curr_next_corner : next_corners) {
-        if (curr_next_corner != prev_corner) {
-          corner_list.add(curr_next_corner);
-          this.previous_from_point = this.current_from_point;
-          this.current_from_point = curr_next_corner;
-          prev_corner = curr_next_corner;
+      for (FloatPoint currNextCorner : nextCorners) {
+        if (currNextCorner != prevCorner) {
+          cornerList.add(currNextCorner);
+          this.previousFromPoint = this.currentFromPoint;
+          this.currentFromPoint = currNextCorner;
+          prevCorner = currNextCorner;
         }
       }
     }
 
-    int next_layer = this.current_trace_layer;
-    if (p_layer_changed) {
-      this.current_from_door_index = this.current_target_door_index + 1;
-      CompleteExpansionRoom next_room = this.backtrack_array[this.current_from_door_index].next_room;
-      if (next_room != null) {
-        next_layer = next_room.get_layer();
+    int nextLayer = this.currentTraceLayer;
+    if (layerChanged) {
+      this.currentFromDoorIndex = this.currentTargetDoorIndex + 1;
+      CompleteExpansionRoom nextRoom = this.backtrackArray[this.currentFromDoorIndex].nextRoom;
+      if (nextRoom != null) {
+        nextLayer = nextRoom.getLayer();
       }
     }
 
     // Round the new trace corners to Integer.
-    Collection<IntPoint> rounded_corner_list = new LinkedList<>();
-    IntPoint prev_point = null;
-    for (FloatPoint corner : corner_list) {
-      IntPoint curr_point = corner.round();
-      if (!curr_point.equals(prev_point)) {
-        rounded_corner_list.add(curr_point);
-        prev_point = curr_point;
+    Collection<IntPoint> roundedCornerList = new LinkedList<>();
+    IntPoint prevPoint = null;
+    for (FloatPoint corner : cornerList) {
+      IntPoint currPoint = corner.round();
+      if (!currPoint.equals(prevPoint)) {
+        roundedCornerList.add(currPoint);
+        prevPoint = currPoint;
       }
     }
 
     // Construct the result item
-    IntPoint[] corner_arr = new IntPoint[rounded_corner_list.size()];
-    Iterator<IntPoint> it2 = rounded_corner_list.iterator();
-    for (int i = 0; i < corner_arr.length; i++) {
-      corner_arr[i] = it2.next();
+    IntPoint[] cornerArr = new IntPoint[roundedCornerList.size()];
+    Iterator<IntPoint> it2 = roundedCornerList.iterator();
+    for (int i = 0; i < cornerArr.length; i++) {
+      cornerArr[i] = it2.next();
     }
-    ResultItem result = new ResultItem(corner_arr, this.current_trace_layer);
-    if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
-      IntPoint first = corner_arr.length > 0 ? corner_arr[0] : null;
-      IntPoint last = corner_arr.length > 0 ? corner_arr[corner_arr.length - 1] : null;
-      FRLogger.trace("compare_trace_next_trace_raw net=" + this.ctrl.net_no
-          + ", trace_layer=" + this.current_trace_layer
-          + ", next_layer=" + next_layer
-          + ", corner_count=" + corner_arr.length
-          + ", first=" + first
-          + ", last=" + last
-          + ", from_door=" + this.current_from_door_index
-          + ", to_door=" + this.current_to_door_index
-          + ", target_door=" + this.current_target_door_index);
+    ResultItem result = new ResultItem(cornerArr, this.currentTraceLayer);
+    if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
+      IntPoint first = cornerArr.length > 0 ? cornerArr[0] : null;
+      IntPoint last = cornerArr.length > 0 ? cornerArr[cornerArr.length - 1] : null;
+      FRLogger.trace(
+          "compare_trace_next_trace_raw net="
+              + this.ctrl.netNo
+              + ", traceLayer="
+              + this.currentTraceLayer
+              + ", nextLayer="
+              + nextLayer
+              + ", cornerCount="
+              + cornerArr.length
+              + ", first="
+              + first
+              + ", last="
+              + last
+              + ", from_door="
+              + this.currentFromDoorIndex
+              + ", to_door="
+              + this.currentToDoorIndex
+              + ", target_door="
+              + this.currentTargetDoorIndex);
     }
-    this.current_trace_layer = next_layer;
+    this.currentTraceLayer = nextLayer;
     return result;
   }
 
   /**
-   * Returns the next list of corners for the construction of the trace in calculate_next_trace. If the result is empty, the trace is already completed.
+   * Returns the next list of corners for the construction of the trace in calculate_next_trace. If
+   * the result is empty, the trace is already completed.
    */
-  protected abstract Collection<FloatPoint> calculate_next_trace_corners();
+  protected abstract Collection<FloatPoint> calculateNextTraceCorners();
 
-  /**
-   * Test display of the baktrack rooms.
-   */
-  public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
-    for (int i = 0; i < backtrack_array.length; i++) {
-      CompleteExpansionRoom next_room = backtrack_array[i].next_room;
-      if (next_room != null) {
-        next_room.draw(p_graphics, p_graphics_context, 0.2);
+  /** Test display of the baktrack rooms. */
+  public void draw(Graphics graphics, GraphicsContext graphicsContext) {
+    for (int i = 0; i < backtrackArray.length; i++) {
+      CompleteExpansionRoom nextRoom = backtrackArray[i].nextRoom;
+      if (nextRoom != null) {
+        nextRoom.draw(graphics, graphicsContext, 0.2);
       }
-      ExpandableObject next_door = backtrack_array[i].door;
-      if (next_door instanceof ExpansionDrill drill) {
-        drill.draw(p_graphics, p_graphics_context, 0.2);
+      ExpandableObject nextDoor = backtrackArray[i].door;
+      if (nextDoor instanceof ExpansionDrill drill) {
+        drill.draw(graphics, graphicsContext, 0.2);
       }
     }
   }
 
   /**
-   * Adjusts the start corner, so that a trace starting at this corner is completely contained in the start room.
+   * Adjusts the start corner, so that a trace starting at this corner is completely contained in
+   * the start room.
    */
-  private FloatPoint adjust_start_corner() {
-    if (this.current_from_door_index < 0) {
-      return this.current_from_point;
+  private FloatPoint adjustStartCorner() {
+    if (this.currentFromDoorIndex < 0) {
+      return this.currentFromPoint;
     }
-    BacktrackElement curr_from_info = this.backtrack_array[this.current_from_door_index];
-    if (curr_from_info.next_room == null) {
-      return this.current_from_point;
+    BacktrackElement currFromInfo = this.backtrackArray[this.currentFromDoorIndex];
+    if (currFromInfo.nextRoom == null) {
+      return this.currentFromPoint;
     }
-    double trace_half_width = this.ctrl.compensated_trace_half_width[this.current_trace_layer];
-    TileShape shrinked_room_shape = (TileShape) curr_from_info.next_room.get_shape().offset(-trace_half_width);
-    if (shrinked_room_shape.is_empty() || shrinked_room_shape.contains(this.current_from_point)) {
-      return this.current_from_point;
+    double traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[this.currentTraceLayer];
+    TileShape shrinkedRoomShape =
+        (TileShape) currFromInfo.nextRoom.getShape().offset(-traceHalfWidth);
+    if (shrinkedRoomShape.isEmpty() || shrinkedRoomShape.contains(this.currentFromPoint)) {
+      return this.currentFromPoint;
     }
-    return shrinked_room_shape.nearest_point_approx(this.current_from_point).round().to_float();
+    return shrinkedRoomShape.nearestPointApprox(this.currentFromPoint).round().toFloat();
   }
 
   /**
-   * Type of a single item in the result list connection_items. Used to create a new PolylineTrace.
+   * Type of a single item in the result list connectionItems. Used to create a new PolylineTrace.
    */
   protected static class ResultItem {
 
     public final IntPoint[] corners;
     public final int layer;
 
-    public ResultItem(IntPoint[] p_corners, int p_layer) {
-      corners = p_corners;
-      layer = p_layer;
+    public ResultItem(IntPoint[] corners, int layer) {
+      this.corners = corners;
+      this.layer = layer;
     }
   }
 
   /**
-   * Type of the elements of the list returned by this.backtrack(). Next_room is the common room of the current door and the next door in the backtrack list.
+   * Type of the elements of the list returned by this.backtrack(). Next_room is the common room of
+   * the current door and the next door in the backtrack list.
    */
-  protected static class BacktrackElement {
+  protected static final class BacktrackElement {
 
     public final ExpandableObject door;
-    public final int section_no_of_door;
-    public final CompleteExpansionRoom next_room;
+    public final int sectionNoOfDoor;
+    public final CompleteExpansionRoom nextRoom;
 
-    private BacktrackElement(ExpandableObject p_door, int p_section_no_of_door, CompleteExpansionRoom p_room) {
-      door = p_door;
-      section_no_of_door = p_section_no_of_door;
-      next_room = p_room;
+    private BacktrackElement(
+        ExpandableObject door, int sectionNoOfDoor, CompleteExpansionRoom room) {
+      this.door = door;
+      this.sectionNoOfDoor = sectionNoOfDoor;
+      this.nextRoom = room;
     }
   }
 }

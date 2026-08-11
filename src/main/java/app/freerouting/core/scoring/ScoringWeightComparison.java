@@ -3,11 +3,11 @@ package app.freerouting.core.scoring;
 import app.freerouting.settings.ScoringSettings;
 
 /**
- * Evaluates and compares two {@link ScoringSettings} configurations against the same
- * {@link BoardStatistics}, producing a human-readable report and a structured
- * {@link Result}.
+ * Evaluates and compares two {@link ScoringSettings} configurations against the same {@link
+ * BoardStatistics}, producing a human-readable report and a structured {@link Result}.
  *
  * <h2>Typical usage</h2>
+ *
  * <pre>{@code
  * RouterScoringSettings current = settingsMerger.merge().scoring;
  *
@@ -33,15 +33,13 @@ public final class ScoringWeightComparison {
    * Evaluates {@code stats} under both weight configurations and returns a {@link Result} that
    * holds both breakdowns and the delta between them.
    *
-   * @param stats      board statistics to evaluate (lengths must be in mm)
-   * @param weightsA   first weight configuration  (labelled "A" / "baseline" in reports)
-   * @param weightsB   second weight configuration (labelled "B" / "candidate" in reports)
+   * @param stats board statistics to evaluate (lengths must be in mm)
+   * @param weightsA first weight configuration (labelled "A" / "baseline" in reports)
+   * @param weightsB second weight configuration (labelled "B" / "candidate" in reports)
    * @return a populated {@link Result}
    */
   public static Result compare(
-      BoardStatistics stats,
-      ScoringSettings weightsA,
-      ScoringSettings weightsB) {
+      BoardStatistics stats, ScoringSettings weightsA, ScoringSettings weightsB) {
 
     BoardScoreBreakdown breakdownA = BoardScoreBreakdown.of(stats, weightsA);
     BoardScoreBreakdown breakdownB = BoardScoreBreakdown.of(stats, weightsB);
@@ -98,9 +96,7 @@ public final class ScoringWeightComparison {
       this.viasCostDelta = b.viasCost - a.viasCost;
     }
 
-    /**
-     * Returns whether configuration B scores strictly higher than A on the normalised scale.
-     */
+    /** Returns whether configuration B scores strictly higher than A on the normalised scale. */
     public boolean isCandidateBetter() {
       return normalizedScoreDelta > 0;
     }
@@ -109,6 +105,7 @@ public final class ScoringWeightComparison {
      * Builds a multi-line, tabular comparison report suitable for logging.
      *
      * <p>Example output:
+     *
      * <pre>
      * ╔══ Scoring Weight Comparison ══════════════════════════════════════╗
      * ║ Board:  12 connections, 2 unrouted, 0 violations, 340 bends
@@ -132,50 +129,87 @@ public final class ScoringWeightComparison {
       BoardScoreBreakdown a = scoreA;
       BoardScoreBreakdown b = scoreB;
 
-      String header = String.format(
-          "%n╔══ Scoring Weight Comparison ══════════════════════════════════════╗"
-              + "%n║ Board:  %d connections, %d unrouted, %d violations, %d bends"
-              + "%n║         total trace %.1f mm, %d vias",
-          a.maxConnections, a.incompleteConnections,
-          a.clearanceViolations, a.bendCount,
-          a.totalTraceLengthMm, a.viaCount);
+      String header =
+          """
+              %n╔══ Scoring Weight Comparison ══════════════════════════════════════╗\
+              %n║ Board:  %d connections, %d unrouted, %d violations, %d bends\
+              %n║         total trace %.1f mm, %d vias\
+          """
+              .formatted(
+                  a.maxConnections,
+                  a.incompleteConnections,
+                  a.clearanceViolations,
+                  a.bendCount,
+                  a.totalTraceLengthMm,
+                  a.viaCount);
 
-      String tableHeader = String.format(
-          "%n╠══ Component breakdown ═════════════════════════════════════════════╣"
-              + "%n║ %-34s %12s  %12s  %10s",
-          "", "A (baseline)", "B (candidate)", "Delta");
+      String tableHeader =
+          """
+              %n╠══ Component breakdown ═════════════════════════════════════════════╣\
+              %n║ %-34s %12s  %12s  %10s\
+          """
+              .formatted("", "A (baseline)", "B (candidate)", "Delta");
 
-      String rows = String.format(
-          "%n║ %-34s %12.1f  %12.1f  %+10.1f"
-              + "%n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.0f → %.0f)"
-              + "%n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.0f → %.0f)"
-              + "%n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.1f → %.1f)"
-              + "%n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.2f → %.2f)"
-              + "%n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.0f → %.0f)",
-          "Maximum score",
-          a.maximumScore, b.maximumScore, b.maximumScore - a.maximumScore,
-          "Unrouted penalty",
-          a.unroutedConnectionsPenalty, b.unroutedConnectionsPenalty, unroutedPenaltyDelta,
-          a.weights.unroutedNetPenalty, b.weights.unroutedNetPenalty,
-          "Clearance penalty",
-          a.clearanceViolationsPenalty, b.clearanceViolationsPenalty, clearancePenaltyDelta,
-          a.weights.clearanceViolationPenalty, b.weights.clearanceViolationPenalty,
-          "Bend penalty",
-          a.bendsPenalty, b.bendsPenalty, bendsPenaltyDelta,
-          a.weights.bendPenalty, b.weights.bendPenalty,
-          "Trace length cost",
-          a.traceLengthCost, b.traceLengthCost, traceLengthCostDelta,
-          a.weights.defaultPreferredDirectionTraceCost, b.weights.defaultPreferredDirectionTraceCost,
-          "Via cost",
-          a.viasCost, b.viasCost, viasCostDelta,
-          (double) a.weights.viaCosts, (double) b.weights.viaCosts);
+      String rows =
+          """
+              %n║ %-34s %12.1f  %12.1f  %+10.1f\
+              %n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.0f → %.0f)\
+              %n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.0f → %.0f)\
+              %n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.1f → %.1f)\
+              %n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.2f → %.2f)\
+              %n║ %-34s %12.1f  %12.1f  %+10.1f   (w: %.0f → %.0f)\
+          """
+              .formatted(
+                  "Maximum score",
+                  a.maximumScore,
+                  b.maximumScore,
+                  b.maximumScore - a.maximumScore,
+                  "Unrouted penalty",
+                  a.unroutedConnectionsPenalty,
+                  b.unroutedConnectionsPenalty,
+                  unroutedPenaltyDelta,
+                  a.weights.unroutedNetPenalty,
+                  b.weights.unroutedNetPenalty,
+                  "Clearance penalty",
+                  a.clearanceViolationsPenalty,
+                  b.clearanceViolationsPenalty,
+                  clearancePenaltyDelta,
+                  a.weights.clearanceViolationPenalty,
+                  b.weights.clearanceViolationPenalty,
+                  "Bend penalty",
+                  a.bendsPenalty,
+                  b.bendsPenalty,
+                  bendsPenaltyDelta,
+                  a.weights.bendPenalty,
+                  b.weights.bendPenalty,
+                  "Trace length cost",
+                  a.traceLengthCost,
+                  b.traceLengthCost,
+                  traceLengthCostDelta,
+                  a.weights.defaultPreferredDirectionTraceCost,
+                  b.weights.defaultPreferredDirectionTraceCost,
+                  "Via cost",
+                  a.viasCost,
+                  b.viasCost,
+                  viasCostDelta,
+                  (double) a.weights.viaCosts,
+                  (double) b.weights.viaCosts);
 
-      String totalsAndScores = String.format(
-          "%n╠════════════════════════════════════════════════════════════════════╣"
-              + "%n║ %-34s %12.1f  %12.1f  %+10.1f"
-              + "%n║ %-34s %12.1f  %12.1f  %+10.1f",
-          "Raw score", a.rawScore, b.rawScore, rawScoreDelta,
-          "Normalised score (0–1000)", a.normalizedScore, b.normalizedScore, normalizedScoreDelta);
+      String totalsAndScores =
+          """
+              %n╠════════════════════════════════════════════════════════════════════╣\
+              %n║ %-34s %12.1f  %12.1f  %+10.1f\
+              %n║ %-34s %12.1f  %12.1f  %+10.1f\
+          """
+              .formatted(
+                  "Raw score",
+                  a.rawScore,
+                  b.rawScore,
+                  rawScoreDelta,
+                  "Normalised score (0–1000)",
+                  a.normalizedScore,
+                  b.normalizedScore,
+                  normalizedScoreDelta);
 
       String footer = "%n╚═══════════════════════════════════════════════════════════════════╝";
 
@@ -183,12 +217,16 @@ public final class ScoringWeightComparison {
       if (Math.abs(normalizedScoreDelta) < 0.01f) {
         verdict = "Verdict: A and B produce identical scores for this board.";
       } else if (isCandidateBetter()) {
-        verdict = String.format("Verdict: B (candidate) is better by %.1f normalised points.", normalizedScoreDelta);
+        verdict =
+            "Verdict: B (candidate) is better by %.1f normalised points."
+                .formatted(normalizedScoreDelta);
       } else {
-        verdict = String.format("Verdict: A (baseline) is better by %.1f normalised points.", -normalizedScoreDelta);
+        verdict =
+            "Verdict: A (baseline) is better by %.1f normalised points."
+                .formatted(-normalizedScoreDelta);
       }
 
-      return header + tableHeader + rows + totalsAndScores + String.format(footer) + "\n" + verdict;
+      return header + tableHeader + rows + totalsAndScores + footer.formatted() + "\n" + verdict;
     }
   }
 }

@@ -1,9 +1,9 @@
 # Issue 558: Copper-to-Edge Clearance Not Respected
 
-**GitHub Issue:** https://github.com/freerouting/freerouting/issues/558  
-**Fixture file:** `fixtures/Issue558-dev-board.dsn`  
-**Regression test:** `src/test/java/app/freerouting/fixtures/DevBoardClearanceRoutingTest.java`  
-**Status:** Partially mitigated — CLI override ✅ (`copperToEdgeClearanceUm`); DSN export gap remains upstream; **JSON/API path does not read KiCad edge clearance yet** (fix tracked in [`kicad-json-api-mode-improvement-tracker.md`](kicad-json-api-mode-improvement-tracker.md))  
+**GitHub Issue:** https://github.com/freerouting/freerouting/issues/558
+**Fixture file:** `fixtures/Issue558-dev-board.dsn`
+**Regression test:** `src/test/java/app/freerouting/fixtures/DevBoardClearanceRoutingTest.java`
+**Status:** Partially mitigated — CLI override ✅ (`copperToEdgeClearanceUm`); DSN export gap remains upstream; **JSON/API path does not read KiCad edge clearance yet** (fix tracked in [`kicad-json-api-mode-improvement-tracker.md`](kicad-json-api-mode-improvement-tracker.md))
 **Priority:** High (correctness; KiCad DRC fails on routes produced by freerouting)
 
 ---
@@ -285,7 +285,7 @@ rules (0.2 mm). The test would still pass, but now correctly because all item-pa
 are checked. This alone does **not** fix the root problem (traces routed at 0.2 mm from edge
 when 0.5 mm is required), but it is a necessary correctness improvement regardless.
 
-**Pros:** Low risk; makes the DRC complete.  
+**Pros:** Low risk; makes the DRC complete.
 **Cons:** Does not fix the routing behavior.
 
 ### Solution C — Request KiCad to export copper-to-edge clearance in DSN (upstream)
@@ -313,7 +313,7 @@ it, freerouting would automatically use the correct clearance class. No changes 
 parser would be needed; only `HeadlessBoardManager.create_board()` needs to handle the
 `outline_clearance_class_name` being non-null (which it already does).
 
-**Pros:** Clean, standards-compliant, zero freerouting change needed on the routing side.  
+**Pros:** Clean, standards-compliant, zero freerouting change needed on the routing side.
 **Cons:** Requires KiCad to implement and release; blocks the fix on an external project.
 
 ### Solution D — Support the clearance class via network class rule notation
@@ -337,14 +337,14 @@ Replace `board.get_outline().clearance_violation_count()` with
 This is the correct thing to do regardless of Issue 558: the current DRC is incomplete. It
 may cause the test to keep passing (correct) or start failing (revealing existing violations).
 
-**Affected file:** `src/main/java/app/freerouting/core/scoring/BoardStatistics.java`  
+**Affected file:** `src/main/java/app/freerouting/core/scoring/BoardStatistics.java`
 **Risk:** Very low. Does not change routing behavior.
 
 ### Step 2 — Add `copperToEdgeClearanceUm` to RouterSettings
 
 Add the nullable field. No routing impact until it is non-null; existing tests unaffected.
 
-**Affected file:** `src/main/java/app/freerouting/settings/RouterSettings.java`  
+**Affected file:** `src/main/java/app/freerouting/settings/RouterSettings.java`
 **Risk:** None (field is nullable, merger ignores null fields).
 
 ### Step 3 — Apply the edge clearance after board load
@@ -352,8 +352,8 @@ Add the nullable field. No routing impact until it is non-null; existing tests u
 In `HeadlessBoardManager` (after board construction), apply the `copperToEdgeClearanceUm`
 floor to the `BoardOutline`'s clearance class. This requires:
 
-a. `Item.change_clearance_class(int)` or a new `BoardOutline.setClearanceClassNo(int)` method.  
-b. Re-inserting the outline into the search tree after the change.  
+a. `Item.change_clearance_class(int)` or a new `BoardOutline.setClearanceClassNo(int)` method.
+b. Re-inserting the outline into the search tree after the change.
 c. Logic to append or update the "board_edge" clearance class in `ClearanceMatrix`.
 
 **Affected files:**
@@ -435,8 +435,8 @@ Tracker: [`kicad-json-api-mode-improvement-tracker.md`](kicad-json-api-mode-impr
 
 ## 11. Acceptance Criteria
 
-- [ ] `DevBoardClearanceRoutingTest` fails before the fix (Step 1+4 reveals that DRC was wrong) and passes after (Step 3+4 makes the router route correctly at 0.5mm from edge).  
-  *OR*  
+- [ ] `DevBoardClearanceRoutingTest` fails before the fix (Step 1+4 reveals that DRC was wrong) and passes after (Step 3+4 makes the router route correctly at 0.5mm from edge).
+  *OR*
   Test is updated per Step 4 and passes end-to-end with Step 3 applied.
 - [ ] No regressions in any existing routing fixture tests (`./gradlew test`).
 - [ ] `Dac2020Bm01RoutingTest` (quickest smoke test) passes with ≤ baseline clearance violations.
@@ -446,4 +446,3 @@ Tracker: [`kicad-json-api-mode-improvement-tracker.md`](kicad-json-api-mode-impr
 - [ ] JSON/API path reads KiCad edge clearance without CLI override.
 - [ ] KiCad DSN export includes edge clearance (upstream — Step 5 deferred).
 - [ ] The routing result for `Issue558-dev-board.dsn` with `copperToEdgeClearanceUm=500` produces zero edge-clearance violations AND zero incomplete connections.
-

@@ -8,39 +8,41 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * A Polygon is a list of points in the plane, where no 2 consecutive points may be equal and no 3 consecutive points collinear.
+ * A Polygon is a list of points in the plane, where no 2 consecutive points may be equal and no 3
+ * consecutive points collinear.
  */
 public class Polygon implements Serializable {
 
   private final Collection<Point> corners;
 
   /**
-   * Creates a polygon from p_point_arr. Multiple points and points, which are collinear with its previous and next point will be removed.
+   * Creates a polygon from p_point_arr. Multiple points and points, which are collinear with its
+   * previous and next point will be removed.
    */
-  public Polygon(Point[] p_point_arr) {
+  public Polygon(Point[] pointArr) {
     corners = new LinkedList<>();
-    if (p_point_arr.length == 0) {
+    if (pointArr.length == 0) {
       return;
     }
-    corners.addAll(Arrays.asList(p_point_arr));
+    corners.addAll(Arrays.asList(pointArr));
 
-    boolean corner_removed = true;
-    while (corner_removed) {
-      corner_removed = false;
+    boolean cornerRemoved = true;
+    while (cornerRemoved) {
+      cornerRemoved = false;
       // remove multiple points
 
       if (corners.isEmpty()) {
         return;
       }
       Iterator<Point> i = corners.iterator();
-      Point curr_ob = i.next();
+      Point currOb = i.next();
       while (i.hasNext()) {
-        Point next_ob = i.next();
-        if (next_ob.equals(curr_ob)) {
+        Point nextOb = i.next();
+        if (nextOb.equals(currOb)) {
           i.remove();
-          corner_removed = true;
+          cornerRemoved = true;
         } else {
-          curr_ob = next_ob;
+          currOb = nextOb;
         }
       }
 
@@ -48,19 +50,19 @@ public class Polygon implements Serializable {
       // and next point.
       i = corners.iterator();
       Point prev = i.next();
-      Iterator<Point> prev_i = corners.iterator();
+      Iterator<Point> prevI = corners.iterator();
       if (!i.hasNext()) {
         continue;
       }
       Point curr = i.next();
-      prev_i.next();
+      prevI.next();
       while (i.hasNext()) {
         Point next = i.next();
-        prev_i.next();
+        prevI.next();
 
-        if (curr.side_of(prev, next) == Side.COLLINEAR) {
-          prev_i.remove();
-          corner_removed = true;
+        if (curr.sideOf(prev, next) == Side.COLLINEAR) {
+          prevI.remove();
+          cornerRemoved = true;
           break;
         }
         prev = curr;
@@ -69,63 +71,60 @@ public class Polygon implements Serializable {
     }
   }
 
-  /**
-   * returns the array of corners of this polygon
-   */
-  public Point[] corner_array() {
-    int corner_count = corners.size();
-    Point[] result = new Point[corner_count];
+  /** Returns the array of corners of this polygon. */
+  public Point[] cornerArray() {
+    int cornerCount = corners.size();
+    Point[] result = new Point[cornerCount];
     Iterator<Point> it = corners.iterator();
-    for (int i = 0; i < corner_count; i++) {
+    for (int i = 0; i < cornerCount; i++) {
       result[i] = it.next();
     }
     return result;
   }
 
-  /**
-   * Reverts the order of the corners of this polygon.
-   */
-  public Polygon revert_corners() {
-    Point[] corner_arr = corner_array();
-    Point[] reverse_corner_arr = new Point[corner_arr.length];
-    for (int i = 0; i < corner_arr.length; i++) {
-      reverse_corner_arr[i] = corner_arr[corner_arr.length - i - 1];
+  /** Reverts the order of the corners of this polygon. */
+  public Polygon revertCorners() {
+    Point[] cornerArr = cornerArray();
+    Point[] reverseCornerArr = new Point[cornerArr.length];
+    for (int i = 0; i < cornerArr.length; i++) {
+      reverseCornerArr[i] = cornerArr[cornerArr.length - i - 1];
     }
-    return new Polygon(reverse_corner_arr);
+    return new Polygon(reverseCornerArr);
   }
 
   /**
-   * Returns the winding number of this polygon, treated as closed. It will be {@literal >} 0, if the corners are in counterclock sense, and {@literal <} 0, if the corners are in clockwise sense.
+   * Returns the winding number of this polygon, treated as closed. It will be {@literal >} 0, if
+   * the corners are in counterclock sense, and {@literal <} 0, if the corners are in clockwise
+   * sense.
    */
-  public int winding_number_after_closing() {
-    Point[] corner_arr = corner_array();
-    if (corner_arr.length < 2) {
+  public int windingNumberAfterClosing() {
+    Point[] cornerArr = cornerArray();
+    if (cornerArr.length < 2) {
       return 0;
     }
-    Vector first_side_vector = corner_arr[1].difference_by(corner_arr[0]);
-    Vector prev_side_vector = first_side_vector;
-    int corner_count = corner_arr.length;
+    Vector firstSideVector = cornerArr[1].differenceBy(cornerArr[0]);
+    Vector prevSideVector = firstSideVector;
+    int cornerCount = cornerArr.length;
     // Skip the last corner, if it is equal to the first corner.
-    if (corner_arr[0].equals(corner_arr[corner_count - 1])) {
-      --corner_count;
+    if (cornerArr[0].equals(cornerArr[cornerCount - 1])) {
+      --cornerCount;
     }
-    double angle_sum = 0;
-    for (int i = 1; i <= corner_count; i++) {
-      Vector next_side_vector;
-      if (i == corner_count - 1) {
-        next_side_vector = corner_arr[0].difference_by(corner_arr[i]);
-      } else if (i == corner_count) {
-        next_side_vector = first_side_vector;
-      } else {
-        next_side_vector = corner_arr[i + 1].difference_by(corner_arr[i]);
-      }
-      angle_sum += prev_side_vector.angle_approx(next_side_vector);
-      prev_side_vector = next_side_vector;
+    double angleSum = 0;
+    for (int i = 1; i < cornerCount - 1; i++) {
+      Vector nextSideVector = cornerArr[i + 1].differenceBy(cornerArr[i]);
+      angleSum += prevSideVector.angleApprox(nextSideVector);
+      prevSideVector = nextSideVector;
     }
-    angle_sum /= 2.0 * Math.PI;
-    if (Math.abs(angle_sum) < 0.5) {
+    if (cornerCount > 1) {
+      Vector nextSideVector = cornerArr[0].differenceBy(cornerArr[cornerCount - 1]);
+      angleSum += prevSideVector.angleApprox(nextSideVector);
+      prevSideVector = nextSideVector;
+    }
+    angleSum += prevSideVector.angleApprox(firstSideVector);
+    angleSum /= 2.0 * Math.PI;
+    if (Math.abs(angleSum) < 0.5) {
       FRLogger.warn("Polygon.winding_number_after_closing: winding number != 0 expected");
     }
-    return (int) Math.round(angle_sum);
+    return (int) Math.round(angleSum);
   }
 }

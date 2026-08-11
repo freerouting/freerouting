@@ -8,31 +8,29 @@ import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-public class MaxPassesSettingRoutingTest extends RoutingFixtureTest {
+class MaxPassesSettingRoutingTest extends RoutingFixtureTest {
 
   private RoutingJob job;
 
   @Test
-  public void test_Issue_522_Max_passes_setting_is_respected() {
+  void issue522MaxPassesSettingIsRespected() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setMaxPasses(2);
 
     // Get a routing job
-    job = GetRoutingJob("Issue026-J2_reference.dsn", testingSettings);
+    job = getRoutingJob("Issue026-J2_reference.dsn", testingSettings);
 
     // Run the job
-    RunRoutingJob(job);
+    runRoutingJob(job);
 
     // Verify that the maxPasses setting was respected
     assertEquals(2, job.getCurrentPass(), "The routing job should stop after 2 passes.");
   }
 
   @AfterEach
-  public void tearDown() {
+  void tearDown() {
     if (job != null) {
-      RoutingJobScheduler
-          .getInstance()
-          .clearJobs(job.sessionId.toString());
+      RoutingJobScheduler.getInstance().clearJobs(job.sessionId.toString());
     }
   }
 }

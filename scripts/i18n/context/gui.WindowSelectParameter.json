@@ -433,9 +433,7 @@
   },
   "current_layer": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowSelectParameter"
-    ],
+    "code_references": [],
     "english_hash": "7bb2049548c769da8fb2049f9964ca3998cd79e89298f0521b04e604fb979883",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

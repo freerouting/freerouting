@@ -1,8 +1,8 @@
 package app.freerouting.gui;
 
 import app.freerouting.boardgraphics.GraphicsContext;
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -23,100 +23,98 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
-/**
- * Window for changing the colors of board objects.
- */
+/** Window for changing the colors of board objects. */
 public class ColorManager extends BoardSavableSubWindow {
 
-  private final JTable layers_color_table;
-  private final JTable general_color_table;
+  private final JTable layersColorTable;
+  private final JTable generalColorTable;
 
-  /**
-   * Creates a new instance of ColorManager
-   */
-  public ColorManager(BoardFrame p_board_frame) {
-    setLanguage(p_board_frame.get_locale());
-    GraphicsContext graphics_context = p_board_frame.board_panel.board_handling.graphics_context;
+  /** Creates a new instance of ColorManager. */
+  public ColorManager(BoardFrame boardFrame) {
+    setLanguage(boardFrame.get_locale());
+    GraphicsContext graphicsContext = boardFrame.boardPanel.boardHandling.graphicsContext;
 
-    this.setTitle(tm.getText("color_manager"));
+    this.setTitle(tm.getText("colorManager"));
     final JPanel panel = new JPanel();
-    final int textfield_height = 20;
-    final int table_width = 1100;
-    final int item_color_table_height = graphics_context.item_color_table.getRowCount() * textfield_height;
+    final int textfieldHeight = 20;
+    final int tableWidth = 1100;
+    final int itemColorTableHeight = graphicsContext.itemColorTable.getRowCount() * textfieldHeight;
 
-    panel.setPreferredSize(new Dimension(10 + table_width, 90 + item_color_table_height));
+    panel.setPreferredSize(new Dimension(10 + tableWidth, 90 + itemColorTableHeight));
 
-    layers_color_table = new JTable(graphics_context.item_color_table);
-    layers_color_table.setPreferredScrollableViewportSize(new Dimension(table_width, item_color_table_height));
-    JScrollPane item_scroll_pane = init_color_table(layers_color_table, p_board_frame.get_locale());
-    panel.add(item_scroll_pane, BorderLayout.NORTH);
+    layersColorTable = new JTable(graphicsContext.itemColorTable);
+    layersColorTable.setPreferredScrollableViewportSize(
+        new Dimension(tableWidth, itemColorTableHeight));
+    JScrollPane itemScrollPane = initColorTable(layersColorTable, boardFrame.get_locale());
+    panel.add(itemScrollPane, BorderLayout.NORTH);
 
-    general_color_table = new JTable(graphics_context.other_color_table);
-    general_color_table.setPreferredScrollableViewportSize(new Dimension(table_width, textfield_height));
-    JScrollPane other_scroll_pane = init_color_table(general_color_table, p_board_frame.get_locale());
-    panel.add(other_scroll_pane, BorderLayout.SOUTH);
+    generalColorTable = new JTable(graphicsContext.otherColorTable);
+    generalColorTable.setPreferredScrollableViewportSize(
+        new Dimension(tableWidth, textfieldHeight));
+    JScrollPane otherScrollPane = initColorTable(generalColorTable, boardFrame.get_locale());
+    panel.add(otherScrollPane, BorderLayout.SOUTH);
     getContentPane().add(panel, BorderLayout.CENTER);
     this.pack();
     this.setResizable(false);
   }
 
-  /**
-   * Initializes p_color_table and return the created scroll_pane of the color table.
-   */
-  private static JScrollPane init_color_table(JTable p_color_table, Locale p_locale) {
+  /** Initializes p_color_table and return the created scrollPane of the color table. */
+  private static JScrollPane initColorTable(JTable colorTable, Locale locale) {
     // Create the scroll pane and add the table to it.
-    JScrollPane scroll_pane = new JScrollPane(p_color_table);
+    JScrollPane scrollPane = new JScrollPane(colorTable);
     // Set up renderer and editor for the Color columns.
-    p_color_table.setDefaultRenderer(Color.class, new ColorRenderer(true));
+    colorTable.setDefaultRenderer(Color.class, new ColorRenderer(true));
 
-    setUpColorEditor(p_color_table, p_locale);
-    return scroll_pane;
+    setUpColorEditor(colorTable, locale);
+    return scrollPane;
   }
 
   // Set up the editor for the Color cells.
-  private static void setUpColorEditor(JTable p_table, Locale p_locale) {
-    // First, set up the color_editor_button that brings up the dialog.
-    final JButton color_editor_button = new JButton("") {
-      @Override
-      public void setText(String s) {
-        // Button never shows text -- only color.
-      }
-    };
-    color_editor_button.setBackground(Color.white);
-    color_editor_button.setBorderPainted(false);
-    color_editor_button.setMargin(new Insets(0, 0, 0, 0));
+  private static void setUpColorEditor(JTable table, Locale locale) {
+    // First, set up the colorEditorButton that brings up the dialog.
+    final JButton colorEditorButton =
+        new JButton("") {
+          @Override
+          public void setText(String s) {
+            // Button never shows text -- only color.
+          }
+        };
+    colorEditorButton.setBackground(Color.white);
+    colorEditorButton.setBorderPainted(false);
+    colorEditorButton.setMargin(new Insets(0, 0, 0, 0));
 
-    // Now create an editor to encapsulate the color_editor_button, and
+    // Now create an editor to encapsulate the colorEditorButton, and
     // set it up as the editor for all Color cells.
-    final ColorEditor colorEditor = new ColorEditor(color_editor_button);
-    p_table.setDefaultEditor(Color.class, colorEditor);
+    final ColorEditor colorEditor = new ColorEditor(colorEditorButton);
+    table.setDefaultEditor(Color.class, colorEditor);
 
-    // Set up the dialog that the color_editor_button brings up.
+    // Set up the dialog that the colorEditorButton brings up.
     final JColorChooser colorChooser = new JColorChooser();
     ActionListener okListener = _ -> colorEditor.currentColor = colorChooser.getColor();
 
-    TextManager tm = new TextManager(ColorManager.class, p_locale);
-    final JDialog dialog = JColorChooser.createDialog(color_editor_button, tm.getText("pick_a_color"), true, colorChooser, okListener, null);
+    TextManager tm = new TextManager(ColorManager.class, locale);
+    final JDialog dialog =
+        JColorChooser.createDialog(
+            colorEditorButton, tm.getText("pick_a_color"), true, colorChooser, okListener, null);
 
     // Here's the code that brings up the dialog.
-    color_editor_button.addActionListener(_ ->
-    {
-      color_editor_button.setBackground(colorEditor.currentColor);
-      colorChooser.setColor(colorEditor.currentColor);
-      // Without the following line, the dialog comes up
-      // in the middle of the screen.
-      // dialog.setLocationRelativeTo(color_editor_button);
-      dialog.setVisible(true);
-    });
-    color_editor_button.addActionListener(_ -> FRAnalytics.buttonClicked("color_editor_button", color_editor_button.getText()));
+    colorEditorButton.addActionListener(
+        _ -> {
+          colorEditorButton.setBackground(colorEditor.currentColor);
+          colorChooser.setColor(colorEditor.currentColor);
+          // Without the following line, the dialog comes up
+          // in the middle of the screen.
+          // dialog.setLocationRelativeTo(colorEditorButton);
+          dialog.setVisible(true);
+        });
+    colorEditorButton.addActionListener(
+        _ -> FRAnalytics.buttonClicked("colorEditorButton", colorEditorButton.getText()));
   }
 
-  /**
-   * Reassigns the table model variables because they may have changed in p_graphics_context.
-   */
-  public void set_table_models(GraphicsContext p_graphics_context) {
-    this.layers_color_table.setModel(p_graphics_context.item_color_table);
-    this.general_color_table.setModel(p_graphics_context.other_color_table);
+  /** Reassigns the table model variables because they may have changed in p_graphics_context. */
+  public void setTableModels(GraphicsContext graphicsContext) {
+    this.layersColorTable.setModel(graphicsContext.itemColorTable);
+    this.generalColorTable.setModel(graphicsContext.otherColorTable);
   }
 
   private static class ColorRenderer extends JLabel implements TableCellRenderer {
@@ -125,24 +123,26 @@ public class ColorManager extends BoardSavableSubWindow {
     Border selectedBorder;
     boolean isBordered;
 
-    public ColorRenderer(boolean p_is_bordered) {
+    public ColorRenderer(boolean isBordered) {
       super();
-      this.isBordered = p_is_bordered;
+      this.isBordered = isBordered;
       setOpaque(true); // MUST do this for background to show up.
     }
 
     @Override
-    public Component getTableCellRendererComponent(JTable p_table, Object p_color, boolean p_is_selected, boolean p_has_focus, int p_row, int p_column) {
-      setBackground((Color) p_color);
+    public Component getTableCellRendererComponent(
+        JTable table, Object color, boolean isSelected, boolean hasFocus, int row, int column) {
+      setBackground((Color) color);
       if (isBordered) {
-        if (p_is_selected) {
+        if (isSelected) {
           if (selectedBorder == null) {
-            selectedBorder = BorderFactory.createMatteBorder(2, 5, 2, 5, p_table.getSelectionBackground());
+            selectedBorder =
+                BorderFactory.createMatteBorder(2, 5, 2, 5, table.getSelectionBackground());
           }
           setBorder(selectedBorder);
         } else {
           if (unselectedBorder == null) {
-            unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2, 5, p_table.getBackground());
+            unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2, 5, table.getBackground());
           }
           setBorder(unselectedBorder);
         }
@@ -152,7 +152,8 @@ public class ColorManager extends BoardSavableSubWindow {
   }
 
   /**
-   * The editor button that brings up the dialog. We extend DefaultCellEditor for convenience, even though it mean we have to create a dummy check box. Another approach would be to copy the
+   * The editor button that brings up the dialog. We extend DefaultCellEditor for convenience, even
+   * though it mean we have to create a dummy check box. Another approach would be to copy the
    * implementation of TableCellEditor methods from the source code for DefaultCellEditor.
    */
   private static class ColorEditor extends DefaultCellEditor {
@@ -180,7 +181,8 @@ public class ColorManager extends BoardSavableSubWindow {
     }
 
     @Override
-    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+    public Component getTableCellEditorComponent(
+        JTable table, Object value, boolean isSelected, int row, int column) {
       ((JButton) editorComponent).setText(value.toString());
       currentColor = (Color) value;
       return editorComponent;

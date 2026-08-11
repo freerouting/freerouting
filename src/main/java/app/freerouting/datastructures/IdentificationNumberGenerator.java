@@ -1,17 +1,11 @@
 package app.freerouting.datastructures;
 
-/**
- * Interface for creating unique identification number.
- */
+/** Interface for creating unique identification number. */
 public interface IdentificationNumberGenerator {
 
-  /**
-   * Create a new unique identification number.
-   */
-  int new_no();
+  /** Create a new unique identification number. */
+  int newNo();
 
-  /**
-   * Return the maximum generated id number so far.
-   */
-  int max_generated_no();
+  /** Return the maximum generated id number so far. */
+  int maxGeneratedNo();
 }

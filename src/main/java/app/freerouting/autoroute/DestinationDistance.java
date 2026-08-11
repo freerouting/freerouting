@@ -5,351 +5,387 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 
 /**
- * Calculation of a good lower bound for the distance between a new MazeExpansionElement and the destination set of the expansion.
+ * Calculation of a good lower bound for the distance between a new MazeExpansionElement and the
+ * destination set of the expansion.
  */
 public class DestinationDistance {
 
-  private final ExpansionCostFactor[] trace_costs;
-  private final boolean[] layer_active;
-  private final int layer_count;
-  private final int active_layer_count;
-  private final double min_cheap_via_cost;
-  double min_component_side_trace_cost;
-  double max_component_side_trace_cost;
-  double min_solder_side_trace_cost;
-  double max_solder_side_trace_cost;
-  double max_inner_side_trace_cost;
+  private final ExpansionCostFactor[] traceCosts;
+  private final boolean[] layerActive;
+  private final int layerCount;
+  private final int activeLayerCount;
+  private final double minCheapViaCost;
+  double minComponentSideTraceCost;
+  double maxComponentSideTraceCost;
+  double minSolderSideTraceCost;
+  double maxSolderSideTraceCost;
+  double maxInnerSideTraceCost;
   // minimum of the maximal trace costs on each inner layer
-  double min_component_inner_trace_cost;
-  // minimum of min_component_side_trace_cost and
-  // max_inner_side_trace_cost
-  double min_solder_inner_trace_cost;
-  // minimum of min_solder_side_trace_cost and max_inner_side_trace_cost
-  double min_component_solder_inner_trace_cost;
-  private double min_normal_via_cost;
-  // minimum of min_component_inner_trace_cost and
-  // min_solder_inner_trace_cost
-  private IntBox component_side_box = IntBox.EMPTY;
-  private IntBox solder_side_box = IntBox.EMPTY;
-  private IntBox inner_side_box = IntBox.EMPTY;
-  private boolean box_is_empty = true;
-  private boolean component_side_box_is_empty = true;
-  private boolean solder_side_box_is_empty = true;
-  private boolean inner_side_box_is_empty = true;
+  double minComponentInnerTraceCost;
+  // minimum of minComponentSideTraceCost and
+  // maxInnerSideTraceCost
+  double minSolderInnerTraceCost;
+  // minimum of minSolderSideTraceCost and maxInnerSideTraceCost
+  double minComponentSolderInnerTraceCost;
+  private double minNormalViaCost;
+  // minimum of minComponentInnerTraceCost and
+  // minSolderInnerTraceCost
+  private IntBox componentSideBox = IntBox.EMPTY;
+  private IntBox solderSideBox = IntBox.EMPTY;
+  private IntBox innerSideBox = IntBox.EMPTY;
+  private boolean boxIsEmpty = true;
+  private boolean componentSideBoxIsEmpty = true;
+  private boolean solderSideBoxIsEmpty = true;
+  private boolean innerSideBoxIsEmpty = true;
 
   /**
-   * Creates a new instance of DestinationDistance. p_trace_costs and p_layer_active are arrays of dimension layer_count.
+   * Creates a new instance of DestinationDistance. traceCosts and layerActive are arrays of
+   * dimension layerCount.
    */
-  public DestinationDistance(ExpansionCostFactor[] p_trace_costs, boolean[] p_layer_active, double p_min_normal_via_cost, double p_min_cheap_via_cost) {
-    trace_costs = p_trace_costs;
-    layer_active = p_layer_active;
-    layer_count = p_layer_active.length;
-    min_normal_via_cost = p_min_normal_via_cost;
-    min_cheap_via_cost = p_min_cheap_via_cost;
-    int curr_active_layer_count = 0;
-    for (int ind = 0; ind < layer_count; ind++) {
-      if (layer_active[ind]) {
-        ++curr_active_layer_count;
+  public DestinationDistance(
+      ExpansionCostFactor[] traceCosts,
+      boolean[] layerActive,
+      double minNormalViaCost,
+      double minCheapViaCost) {
+    this.traceCosts = traceCosts;
+    this.layerActive = layerActive;
+    this.layerCount = layerActive.length;
+    this.minNormalViaCost = minNormalViaCost;
+    this.minCheapViaCost = minCheapViaCost;
+    int currActiveLayerCount = 0;
+    for (int ind = 0; ind < layerCount; ind++) {
+      if (layerActive[ind]) {
+        ++currActiveLayerCount;
       }
     }
-    this.active_layer_count = curr_active_layer_count;
+    this.activeLayerCount = currActiveLayerCount;
 
-    if (layer_active[0]) {
-      if (trace_costs[0].horizontal < trace_costs[0].vertical) {
-        min_component_side_trace_cost = trace_costs[0].horizontal;
-        max_component_side_trace_cost = trace_costs[0].vertical;
+    if (layerActive[0]) {
+      if (traceCosts[0].horizontal < traceCosts[0].vertical) {
+        minComponentSideTraceCost = traceCosts[0].horizontal;
+        maxComponentSideTraceCost = traceCosts[0].vertical;
       } else {
-        min_component_side_trace_cost = trace_costs[0].vertical;
-        max_component_side_trace_cost = trace_costs[0].horizontal;
+        minComponentSideTraceCost = traceCosts[0].vertical;
+        maxComponentSideTraceCost = traceCosts[0].horizontal;
       }
     }
 
-    if (layer_active[layer_count - 1]) {
-      ExpansionCostFactor curr_trace_cost = trace_costs[layer_count - 1];
+    if (layerActive[layerCount - 1]) {
+      ExpansionCostFactor currTraceCost = traceCosts[layerCount - 1];
 
-      if (curr_trace_cost.horizontal < curr_trace_cost.vertical) {
-        min_solder_side_trace_cost = curr_trace_cost.horizontal;
-        max_solder_side_trace_cost = curr_trace_cost.vertical;
+      if (currTraceCost.horizontal < currTraceCost.vertical) {
+        minSolderSideTraceCost = currTraceCost.horizontal;
+        maxSolderSideTraceCost = currTraceCost.vertical;
       } else {
-        min_solder_side_trace_cost = curr_trace_cost.vertical;
-        max_solder_side_trace_cost = curr_trace_cost.horizontal;
+        minSolderSideTraceCost = currTraceCost.vertical;
+        maxSolderSideTraceCost = currTraceCost.horizontal;
       }
     }
 
     // Note: for inner layers we assume, that cost in preferred direction is 1
-    max_inner_side_trace_cost = Math.min(max_component_side_trace_cost, max_solder_side_trace_cost);
-    for (int ind2 = 1; ind2 < layer_count - 1; ind2++) {
-      if (!layer_active[ind2]) {
+    maxInnerSideTraceCost = Math.min(maxComponentSideTraceCost, maxSolderSideTraceCost);
+    for (int ind2 = 1; ind2 < layerCount - 1; ind2++) {
+      if (!layerActive[ind2]) {
         continue;
       }
-      double curr_max_cost = Math.max(trace_costs[ind2].horizontal, trace_costs[ind2].vertical);
+      double currMaxCost = Math.max(traceCosts[ind2].horizontal, traceCosts[ind2].vertical);
 
-      max_inner_side_trace_cost = Math.min(max_inner_side_trace_cost, curr_max_cost);
+      maxInnerSideTraceCost = Math.min(maxInnerSideTraceCost, currMaxCost);
     }
-    min_component_inner_trace_cost = Math.min(min_component_side_trace_cost, max_inner_side_trace_cost);
-    min_solder_inner_trace_cost = Math.min(min_solder_side_trace_cost, max_inner_side_trace_cost);
-    min_component_solder_inner_trace_cost = Math.min(min_component_inner_trace_cost, min_solder_inner_trace_cost);
+    minComponentInnerTraceCost = Math.min(minComponentSideTraceCost, maxInnerSideTraceCost);
+    minSolderInnerTraceCost = Math.min(minSolderSideTraceCost, maxInnerSideTraceCost);
+    minComponentSolderInnerTraceCost =
+        Math.min(minComponentInnerTraceCost, minSolderInnerTraceCost);
   }
 
-  public void join(IntBox p_box, int p_layer) {
-    if (p_layer == 0) {
-      component_side_box = component_side_box.union(p_box);
-      component_side_box_is_empty = false;
-    } else if (p_layer == layer_count - 1) {
-      solder_side_box = solder_side_box.union(p_box);
-      solder_side_box_is_empty = false;
+  /** Joins box to the bounding box of the specified layer. */
+  public void join(IntBox box, int layer) {
+    if (layer == 0) {
+      componentSideBox = componentSideBox.union(box);
+      componentSideBoxIsEmpty = false;
+    } else if (layer == layerCount - 1) {
+      solderSideBox = solderSideBox.union(box);
+      solderSideBoxIsEmpty = false;
     } else {
-      inner_side_box = inner_side_box.union(p_box);
-      inner_side_box_is_empty = false;
+      innerSideBox = innerSideBox.union(box);
+      innerSideBoxIsEmpty = false;
     }
-    box_is_empty = false;
+    boxIsEmpty = false;
   }
 
-  public double calculate(FloatPoint p_point, int p_layer) {
-    return calculate(p_point.bounding_box(), p_layer);
+  /** Calculates the lower bound distance from point on layer. */
+  public double calculate(FloatPoint point, int layer) {
+    return calculate(point.boundingBox(), layer);
   }
 
-  public double calculate(IntBox p_box, int p_layer) {
-    if (box_is_empty) {
+  /** Calculates the lower bound distance from box on layer. */
+  public double calculate(IntBox box, int layer) {
+    if (boxIsEmpty) {
       return Integer.MAX_VALUE;
     }
 
-    double component_side_delta_x;
-    double component_side_delta_y;
+    double componentSideDeltaX;
+    double componentSideDeltaY;
 
-    if (p_box.ll.x > component_side_box.ur.x) {
-      component_side_delta_x = p_box.ll.x - component_side_box.ur.x;
-    } else if (p_box.ur.x < component_side_box.ll.x) {
-      component_side_delta_x = component_side_box.ll.x - p_box.ur.x;
+    if (box.ll.x > componentSideBox.ur.x) {
+      componentSideDeltaX = box.ll.x - componentSideBox.ur.x;
+    } else if (box.ur.x < componentSideBox.ll.x) {
+      componentSideDeltaX = componentSideBox.ll.x - box.ur.x;
     } else {
-      component_side_delta_x = 0;
+      componentSideDeltaX = 0;
     }
 
-    if (p_box.ll.y > component_side_box.ur.y) {
-      component_side_delta_y = p_box.ll.y - component_side_box.ur.y;
-    } else if (p_box.ur.y < component_side_box.ll.y) {
-      component_side_delta_y = component_side_box.ll.y - p_box.ur.y;
+    if (box.ll.y > componentSideBox.ur.y) {
+      componentSideDeltaY = box.ll.y - componentSideBox.ur.y;
+    } else if (box.ur.y < componentSideBox.ll.y) {
+      componentSideDeltaY = componentSideBox.ll.y - box.ur.y;
     } else {
-      component_side_delta_y = 0;
+      componentSideDeltaY = 0;
     }
 
-    double solder_side_delta_x;
-    double solder_side_delta_y;
+    double solderSideDeltaX;
+    double solderSideDeltaY;
 
-    if (p_box.ll.x > solder_side_box.ur.x) {
-      solder_side_delta_x = p_box.ll.x - solder_side_box.ur.x;
-    } else if (p_box.ur.x < solder_side_box.ll.x) {
-      solder_side_delta_x = solder_side_box.ll.x - p_box.ur.x;
+    if (box.ll.x > solderSideBox.ur.x) {
+      solderSideDeltaX = box.ll.x - solderSideBox.ur.x;
+    } else if (box.ur.x < solderSideBox.ll.x) {
+      solderSideDeltaX = solderSideBox.ll.x - box.ur.x;
     } else {
-      solder_side_delta_x = 0;
+      solderSideDeltaX = 0;
     }
 
-    if (p_box.ll.y > solder_side_box.ur.y) {
-      solder_side_delta_y = p_box.ll.y - solder_side_box.ur.y;
-    } else if (p_box.ur.y < solder_side_box.ll.y) {
-      solder_side_delta_y = solder_side_box.ll.y - p_box.ur.y;
+    if (box.ll.y > solderSideBox.ur.y) {
+      solderSideDeltaY = box.ll.y - solderSideBox.ur.y;
+    } else if (box.ur.y < solderSideBox.ll.y) {
+      solderSideDeltaY = solderSideBox.ll.y - box.ur.y;
     } else {
-      solder_side_delta_y = 0;
+      solderSideDeltaY = 0;
     }
 
-    double inner_side_delta_x;
-    double inner_side_delta_y;
+    double innerSideDeltaX;
+    double innerSideDeltaY;
 
-    if (p_box.ll.x > inner_side_box.ur.x) {
-      inner_side_delta_x = p_box.ll.x - inner_side_box.ur.x;
-    } else if (p_box.ur.x < inner_side_box.ll.x) {
-      inner_side_delta_x = inner_side_box.ll.x - p_box.ur.x;
+    if (box.ll.x > innerSideBox.ur.x) {
+      innerSideDeltaX = box.ll.x - innerSideBox.ur.x;
+    } else if (box.ur.x < innerSideBox.ll.x) {
+      innerSideDeltaX = innerSideBox.ll.x - box.ur.x;
     } else {
-      inner_side_delta_x = 0;
+      innerSideDeltaX = 0;
     }
 
-    if (p_box.ll.y > inner_side_box.ur.y) {
-      inner_side_delta_y = p_box.ll.y - inner_side_box.ur.y;
-    } else if (p_box.ur.y < inner_side_box.ll.y) {
-      inner_side_delta_y = inner_side_box.ll.y - p_box.ur.y;
+    if (box.ll.y > innerSideBox.ur.y) {
+      innerSideDeltaY = box.ll.y - innerSideBox.ur.y;
+    } else if (box.ur.y < innerSideBox.ll.y) {
+      innerSideDeltaY = innerSideBox.ll.y - box.ur.y;
     } else {
-      inner_side_delta_y = 0;
+      innerSideDeltaY = 0;
     }
 
-    double component_side_max_delta;
-    double component_side_min_delta;
+    double componentSideMaxDelta;
+    double componentSideMinDelta;
 
-    if (component_side_delta_x > component_side_delta_y) {
-      component_side_max_delta = component_side_delta_x;
-      component_side_min_delta = component_side_delta_y;
+    if (componentSideDeltaX > componentSideDeltaY) {
+      componentSideMaxDelta = componentSideDeltaX;
+      componentSideMinDelta = componentSideDeltaY;
     } else {
-      component_side_max_delta = component_side_delta_y;
-      component_side_min_delta = component_side_delta_x;
+      componentSideMaxDelta = componentSideDeltaY;
+      componentSideMinDelta = componentSideDeltaX;
     }
 
-    double solder_side_max_delta;
-    double solder_side_min_delta;
+    double solderSideMaxDelta;
+    double solderSideMinDelta;
 
-    if (solder_side_delta_x > solder_side_delta_y) {
-      solder_side_max_delta = solder_side_delta_x;
-      solder_side_min_delta = solder_side_delta_y;
+    if (solderSideDeltaX > solderSideDeltaY) {
+      solderSideMaxDelta = solderSideDeltaX;
+      solderSideMinDelta = solderSideDeltaY;
     } else {
-      solder_side_max_delta = solder_side_delta_y;
-      solder_side_min_delta = solder_side_delta_x;
+      solderSideMaxDelta = solderSideDeltaY;
+      solderSideMinDelta = solderSideDeltaX;
     }
 
-    double inner_side_max_delta;
-    double inner_side_min_delta;
+    double innerSideMaxDelta;
+    double innerSideMinDelta;
 
-    if (inner_side_delta_x > inner_side_delta_y) {
-      inner_side_max_delta = inner_side_delta_x;
-      inner_side_min_delta = inner_side_delta_y;
+    if (innerSideDeltaX > innerSideDeltaY) {
+      innerSideMaxDelta = innerSideDeltaX;
+      innerSideMinDelta = innerSideDeltaY;
     } else {
-      inner_side_max_delta = inner_side_delta_y;
-      inner_side_min_delta = inner_side_delta_x;
+      innerSideMaxDelta = innerSideDeltaY;
+      innerSideMinDelta = innerSideDeltaX;
     }
 
     double result = Integer.MAX_VALUE;
 
-    if (p_layer == 0)
-    // calculate shortest distance to component side box
-    {
+    if (layer == 0) { // calculate shortest distance to component side box
       // calculate one layer distance
 
-      if (!component_side_box_is_empty) {
-        result = p_box.weighted_distance(component_side_box, trace_costs[0].horizontal, trace_costs[0].vertical);
+      if (!componentSideBoxIsEmpty) {
+        result =
+            box.weightedDistance(
+                componentSideBox, traceCosts[0].horizontal, traceCosts[0].vertical);
       }
 
-      if (active_layer_count <= 1) {
+      if (activeLayerCount <= 1) {
         return result;
       }
 
       // calculate two layer distance on component and solder side
 
-      double tmp_distance;
-      if (min_solder_side_trace_cost < min_component_side_trace_cost) {
-        tmp_distance = min_solder_side_trace_cost * solder_side_max_delta + min_component_side_trace_cost * solder_side_min_delta + min_normal_via_cost;
+      double tmpDistance;
+      if (minSolderSideTraceCost < minComponentSideTraceCost) {
+        tmpDistance =
+            minSolderSideTraceCost * solderSideMaxDelta
+                + minComponentSideTraceCost * solderSideMinDelta
+                + minNormalViaCost;
       } else {
-        tmp_distance = min_component_side_trace_cost * solder_side_max_delta + min_solder_side_trace_cost * solder_side_min_delta + min_normal_via_cost;
+        tmpDistance =
+            minComponentSideTraceCost * solderSideMaxDelta
+                + minSolderSideTraceCost * solderSideMinDelta
+                + minNormalViaCost;
       }
 
-      result = Math.min(result, tmp_distance);
+      result = Math.min(result, tmpDistance);
 
       // calculate two layer distance on component and solde side
       // with two vias
 
-      tmp_distance = component_side_max_delta + component_side_min_delta * min_component_inner_trace_cost + 2 * min_normal_via_cost;
+      tmpDistance =
+          componentSideMaxDelta
+              + componentSideMinDelta * minComponentInnerTraceCost
+              + 2 * minNormalViaCost;
 
-      result = Math.min(result, tmp_distance);
+      result = Math.min(result, tmpDistance);
 
-      if (active_layer_count == 2) {
+      if (activeLayerCount == 2) {
         return result;
       }
 
       // calculate two layer distance on component side and an inner side
 
-      tmp_distance = inner_side_max_delta + inner_side_min_delta * min_component_inner_trace_cost + min_normal_via_cost;
+      tmpDistance =
+          innerSideMaxDelta + innerSideMinDelta * minComponentInnerTraceCost + minNormalViaCost;
 
-      result = Math.min(result, tmp_distance);
+      result = Math.min(result, tmpDistance);
 
       // calculate three layer distance
 
-      tmp_distance = solder_side_max_delta + +min_component_solder_inner_trace_cost * solder_side_min_delta + 2 * min_normal_via_cost;
-      result = Math.min(result, tmp_distance);
+      tmpDistance =
+          solderSideMaxDelta
+              + +minComponentSolderInnerTraceCost * solderSideMinDelta
+              + 2 * minNormalViaCost;
+      result = Math.min(result, tmpDistance);
 
-      tmp_distance = component_side_max_delta + component_side_min_delta + 2 * min_normal_via_cost;
-      result = Math.min(result, tmp_distance);
+      tmpDistance = componentSideMaxDelta + componentSideMinDelta + 2 * minNormalViaCost;
+      result = Math.min(result, tmpDistance);
 
-      if (active_layer_count == 3) {
+      if (activeLayerCount == 3) {
         return result;
       }
 
-      tmp_distance = inner_side_max_delta + inner_side_min_delta + 2 * min_normal_via_cost;
+      tmpDistance = innerSideMaxDelta + innerSideMinDelta + 2 * minNormalViaCost;
 
-      result = Math.min(result, tmp_distance);
+      result = Math.min(result, tmpDistance);
 
       // calculate four layer distance
 
-      tmp_distance = solder_side_max_delta + solder_side_min_delta + 3 * min_normal_via_cost;
+      tmpDistance = solderSideMaxDelta + solderSideMinDelta + 3 * minNormalViaCost;
 
-      result = Math.min(result, tmp_distance);
-
-      return result;
+      return Math.min(result, tmpDistance);
     }
-    if (p_layer == layer_count - 1)
-    // calculate the shortest distance to solder side box
-    {
+    if (layer == layerCount - 1) { // calculate the shortest distance to solder side box
       // calculate one layer distance
 
-      if (!solder_side_box_is_empty) {
-        result = p_box.weighted_distance(solder_side_box, trace_costs[p_layer].horizontal, trace_costs[p_layer].vertical);
+      if (!solderSideBoxIsEmpty) {
+        result =
+            box.weightedDistance(
+                solderSideBox, traceCosts[layer].horizontal, traceCosts[layer].vertical);
       }
 
       // calculate two layer distance
-      double tmp_distance;
-      if (min_component_side_trace_cost < min_solder_side_trace_cost) {
-        tmp_distance = min_component_side_trace_cost * component_side_max_delta + min_solder_side_trace_cost * component_side_min_delta + min_normal_via_cost;
+      double tmpDistance;
+      if (minComponentSideTraceCost < minSolderSideTraceCost) {
+        tmpDistance =
+            minComponentSideTraceCost * componentSideMaxDelta
+                + minSolderSideTraceCost * componentSideMinDelta
+                + minNormalViaCost;
       } else {
-        tmp_distance = min_solder_side_trace_cost * component_side_max_delta + min_component_side_trace_cost * component_side_min_delta + min_normal_via_cost;
+        tmpDistance =
+            minSolderSideTraceCost * componentSideMaxDelta
+                + minComponentSideTraceCost * componentSideMinDelta
+                + minNormalViaCost;
       }
-      result = Math.min(result, tmp_distance);
-      tmp_distance = solder_side_max_delta + solder_side_min_delta * min_solder_inner_trace_cost + 2 * min_normal_via_cost;
-      result = Math.min(result, tmp_distance);
-      if (active_layer_count <= 2) {
+      result = Math.min(result, tmpDistance);
+      tmpDistance =
+          solderSideMaxDelta + solderSideMinDelta * minSolderInnerTraceCost + 2 * minNormalViaCost;
+      result = Math.min(result, tmpDistance);
+      if (activeLayerCount <= 2) {
         return result;
       }
-      tmp_distance = inner_side_min_delta * min_solder_inner_trace_cost + inner_side_max_delta + min_normal_via_cost;
-      result = Math.min(result, tmp_distance);
+      tmpDistance =
+          innerSideMinDelta * minSolderInnerTraceCost + innerSideMaxDelta + minNormalViaCost;
+      result = Math.min(result, tmpDistance);
 
       // calculate three layer distance
 
-      tmp_distance = component_side_max_delta + min_component_solder_inner_trace_cost * component_side_min_delta + 2 * min_normal_via_cost;
-      result = Math.min(result, tmp_distance);
-      tmp_distance = solder_side_max_delta + solder_side_min_delta + 2 * min_normal_via_cost;
-      result = Math.min(result, tmp_distance);
-      if (active_layer_count == 3) {
+      tmpDistance =
+          componentSideMaxDelta
+              + minComponentSolderInnerTraceCost * componentSideMinDelta
+              + 2 * minNormalViaCost;
+      result = Math.min(result, tmpDistance);
+      tmpDistance = solderSideMaxDelta + solderSideMinDelta + 2 * minNormalViaCost;
+      result = Math.min(result, tmpDistance);
+      if (activeLayerCount == 3) {
         return result;
       }
-      tmp_distance = inner_side_max_delta + inner_side_min_delta + 2 * min_normal_via_cost;
-      result = Math.min(result, tmp_distance);
+      tmpDistance = innerSideMaxDelta + innerSideMinDelta + 2 * minNormalViaCost;
+      result = Math.min(result, tmpDistance);
 
       // calculate four layer distance
 
-      tmp_distance = component_side_max_delta + component_side_min_delta + 3 * min_normal_via_cost;
-      result = Math.min(result, tmp_distance);
-      return result;
+      tmpDistance = componentSideMaxDelta + componentSideMinDelta + 3 * minNormalViaCost;
+      return Math.min(result, tmpDistance);
     }
 
     // calculate distance to inner layer box
 
     // calculate one layer distance
 
-    if (!inner_side_box_is_empty) {
-      result = p_box.weighted_distance(inner_side_box, trace_costs[p_layer].horizontal, trace_costs[p_layer].vertical);
+    if (!innerSideBoxIsEmpty) {
+      result =
+          box.weightedDistance(
+              innerSideBox, traceCosts[layer].horizontal, traceCosts[layer].vertical);
     }
 
     // calculate two layer distance
 
-    double tmp_distance = inner_side_max_delta + inner_side_min_delta + min_normal_via_cost;
+    double tmpDistance = innerSideMaxDelta + innerSideMinDelta + minNormalViaCost;
 
-    result = Math.min(result, tmp_distance);
-    tmp_distance = component_side_max_delta + component_side_min_delta * min_component_inner_trace_cost + min_normal_via_cost;
-    result = Math.min(result, tmp_distance);
-    tmp_distance = solder_side_max_delta + solder_side_min_delta * min_solder_inner_trace_cost + min_normal_via_cost;
-    result = Math.min(result, tmp_distance);
+    result = Math.min(result, tmpDistance);
+    tmpDistance =
+        componentSideMaxDelta
+            + componentSideMinDelta * minComponentInnerTraceCost
+            + minNormalViaCost;
+    result = Math.min(result, tmpDistance);
+    tmpDistance =
+        solderSideMaxDelta + solderSideMinDelta * minSolderInnerTraceCost + minNormalViaCost;
+    result = Math.min(result, tmpDistance);
 
     // calculate three layer distance
 
-    tmp_distance = component_side_max_delta + component_side_min_delta + 2 * min_normal_via_cost;
-    result = Math.min(result, tmp_distance);
-    tmp_distance = solder_side_max_delta + solder_side_min_delta + 2 * min_normal_via_cost;
-    result = Math.min(result, tmp_distance);
-
-    return result;
+    tmpDistance = componentSideMaxDelta + componentSideMinDelta + 2 * minNormalViaCost;
+    result = Math.min(result, tmpDistance);
+    tmpDistance = solderSideMaxDelta + solderSideMinDelta + 2 * minNormalViaCost;
+    return Math.min(result, tmpDistance);
   }
 
-  public double calculate_cheap_distance(IntBox p_box, int p_layer) {
-    double min_normal_via_cost_save = min_normal_via_cost;
+  /** Calculates cheap distance for box on layer using cheap via cost. */
+  public double calculateCheapDistance(IntBox box, int layer) {
+    double minNormalViaCostSave = minNormalViaCost;
 
-    min_normal_via_cost = min_cheap_via_cost;
-    double result = calculate(p_box, p_layer);
+    minNormalViaCost = minCheapViaCost;
+    double result = calculate(box, layer);
 
-    min_normal_via_cost = min_normal_via_cost_save;
+    minNormalViaCost = minNormalViaCostSave;
     return result;
   }
 }

@@ -11,25 +11,25 @@ class MazeListElementTest {
 
   @Test
   void compareToReturnsZeroForSameInstance() {
-    MazeListElement element = new MazeListElement(new TestDoor(1), 0, null, 0, 0.0, 1.0,
-        null, null, false, null, false);
+    MazeListElement element =
+        new MazeListElement(new TestDoor(1), 0, null, 0, 0.0, 1.0, null, null, false, null, false);
 
     assertEquals(0, compare(element, element));
   }
 
   @Test
   void compareToSortsBySortingValue() {
-    MazeListElement lowerCost = new MazeListElement(new TestDoor(1), 0, null, 0, 0.0, 1.0,
-        null, null, false, null, false);
-    MazeListElement higherCost = new MazeListElement(new TestDoor(2), 0, null, 0, 0.0, 2.0,
-        null, null, false, null, false);
+    MazeListElement lowerCost =
+        new MazeListElement(new TestDoor(1), 0, null, 0, 0.0, 1.0, null, null, false, null, false);
+    MazeListElement higherCost =
+        new MazeListElement(new TestDoor(2), 0, null, 0, 0.0, 2.0, null, null, false, null, false);
 
     SortedSet<MazeListElement> queue = new TreeSet<>();
     queue.add(higherCost);
     queue.add(lowerCost);
 
     MazeListElement first = queue.first();
-    assertSame(lowerCost, first, "Lower sorting_value must be expanded first");
+    assertSame(lowerCost, first, "Lower sortingValue must be expanded first");
   }
 
   private static final class TestDoor implements ExpandableObject {
@@ -40,27 +40,27 @@ class MazeListElementTest {
     }
 
     @Override
-    public app.freerouting.geometry.planar.TileShape get_shape() {
+    public app.freerouting.geometry.planar.TileShape getShape() {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public int get_dimension() {
+    public int getDimension() {
       return 1;
     }
 
     @Override
-    public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
+    public CompleteExpansionRoom otherRoom(CompleteExpansionRoom room) {
       return null;
     }
 
     @Override
-    public int maze_search_element_count() {
+    public int mazeSearchElementCount() {
       return 1;
     }
 
     @Override
-    public MazeSearchElement get_maze_search_element(int p_no) {
+    public MazeSearchElement getMazeSearchElement(int no) {
       throw new UnsupportedOperationException();
     }
 
@@ -70,7 +70,7 @@ class MazeListElementTest {
     }
 
     @Override
-    public int get_id_no() {
+    public int getIdNo() {
       return id;
     }
   }
@@ -79,4 +79,3 @@ class MazeListElementTest {
     return left.compareTo(right);
   }
 }
-

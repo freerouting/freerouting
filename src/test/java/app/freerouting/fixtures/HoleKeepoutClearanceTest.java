@@ -12,11 +12,11 @@ import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.Test;
 
 /**
- * KiCad exports NPTH holes as circular per-copper-layer package keepouts. With the
- * hole-clearance override active they must be assigned to the dedicated "hole_edge"
- * clearance class so copper keeps hole clearance from the hole boundary.
+ * KiCad exports NPTH holes as circular per-copper-layer package keepouts. With the hole-clearance
+ * override active they must be assigned to the dedicated "hole_edge" clearance class so copper
+ * keeps hole clearance from the hole boundary.
  */
-public class HoleKeepoutClearanceTest extends RoutingFixtureTest {
+class HoleKeepoutClearanceTest extends RoutingFixtureTest {
 
   @Test
   void npthKeepoutsGetHoleEdgeClearanceClass() {
@@ -27,31 +27,38 @@ public class HoleKeepoutClearanceTest extends RoutingFixtureTest {
     testingSettings.setRouterEnabled(false);
     testingSettings.setOptimizerEnabled(false);
     testingSettings.setJobTimeoutString("00:02:00");
-    RoutingJob job = GetRoutingJob("Issue230-CNH_Functional_Tester_1.dsn", testingSettings);
+    RoutingJob job = getRoutingJob("Issue230-CNH_Functional_Tester_1.dsn", testingSettings);
 
-    job = RunRoutingJob(job);
+    job = runRoutingJob(job);
 
-    var matrix = job.board.rules.clearance_matrix;
-    int holeEdgeClassNo = matrix.get_no("hole_edge");
+    var matrix = job.board.rules.clearanceMatrix;
+    int holeEdgeClassNo = matrix.getNo("hole_edge");
     assertTrue(holeEdgeClassNo > 0, "hole_edge clearance class must exist");
 
     int reclassified = 0;
-    for (Item item : job.board.get_items()) {
-      if (item.getClass() == ObstacleArea.class && item.get_component_no() > 0
-          && ((ObstacleArea) item).get_area() instanceof Circle) {
-        assertEquals(holeEdgeClassNo, item.clearance_class_no(),
+    for (Item item : job.board.getItems()) {
+      if (item.getClass() == ObstacleArea.class
+          && item.getComponentNo() > 0
+          && ((ObstacleArea) item).getArea() instanceof Circle) {
+        assertEquals(
+            holeEdgeClassNo,
+            item.clearanceClassNo(),
             "circular package keepout (NPTH hole) must use the hole_edge class");
         reclassified++;
       }
     }
     assertTrue(reclassified > 0, "fixture must contain NPTH keepout circles");
 
-    int expectedBoardUnits = (int) Math.round(Unit.scale(
-        250.0 * Math.max(1, job.board.communication.resolution),
-        Unit.UM,
-        job.board.communication.unit));
-    for (int layer = 0; layer < matrix.get_layer_count(); layer++) {
-      assertTrue(matrix.get_value(holeEdgeClassNo, 1, layer, false) >= expectedBoardUnits,
+    int expectedBoardUnits =
+        (int)
+            Math.round(
+                Unit.scale(
+                    250.0 * Math.max(1, job.board.communication.resolution),
+                    Unit.UM,
+                    job.board.communication.unit));
+    for (int layer = 0; layer < matrix.getLayerCount(); layer++) {
+      assertTrue(
+          matrix.getValue(holeEdgeClassNo, 1, layer, false) >= expectedBoardUnits,
           "hole_edge clearance must be at least the configured hole clearance");
     }
   }

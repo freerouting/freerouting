@@ -16,41 +16,41 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * A dialog window that displays general information about the Freerouting application,
- * including its description, version, warranty information, and hyperlinks to its homepage and issue tracker.
+ * A dialog window that displays general information about the Freerouting application, including
+ * its description, version, warranty information, and hyperlinks to its homepage and issue tracker.
  */
 public class WindowAbout extends BoardSavableSubWindow {
 
   /**
    * Creates and initializes a new "About" dialog window.
    *
-   * @param p_locale the locale to determine the language of the displayed texts.
-   * @param freerouting_version the version string of the Freerouting application.
+   * @param locale the locale to determine the language of the displayed texts.
+   * @param freeroutingVersion the version string of the Freerouting application.
    */
-  public WindowAbout(Locale p_locale, String freerouting_version) {
-    setLanguage(p_locale);
+  public WindowAbout(Locale locale, String freeroutingVersion) {
+    setLanguage(locale);
     this.setTitle(tm.getText("title"));
 
     // Initialize panel and layout in one step
-    final JPanel window_panel = new JPanel(new GridBagLayout());
-    this.add(window_panel);
+    final JPanel windowPanel = new JPanel(new GridBagLayout());
+    this.add(windowPanel);
 
-    GridBagConstraints gridbag_constraints = new GridBagConstraints();
-    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    GridBagConstraints gridbagConstraints = new GridBagConstraints();
+    gridbagConstraints.insets = new Insets(5, 10, 5, 10);
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
 
-    // Inlining the JLabels reduces variable clutter. 
+    // Inlining the JLabels reduces variable clutter.
     // Passing constraints directly into add() handles the GridBag setup automatically.
-    window_panel.add(new JLabel(tm.getText("description")), gridbag_constraints);
+    windowPanel.add(new JLabel(tm.getText("description")), gridbagConstraints);
 
-    String version_string = tm.getText("version") + " " + freerouting_version;
-    window_panel.add(new JLabel(version_string), gridbag_constraints);
+    String versionString = tm.getText("version") + " " + freeroutingVersion;
+    windowPanel.add(new JLabel(versionString), gridbagConstraints);
 
-    window_panel.add(new JLabel(tm.getText("warranty")), gridbag_constraints);
+    windowPanel.add(new JLabel(tm.getText("warranty")), gridbagConstraints);
 
     // Dynamically split and add the homepage/support panels
-    window_panel.add(createMixedTextPanel(tm.getText("homepage")), gridbag_constraints);
-    window_panel.add(createMixedTextPanel(tm.getText("support")), gridbag_constraints);
+    windowPanel.add(createMixedTextPanel(tm.getText("homepage")), gridbagConstraints);
+    windowPanel.add(createMixedTextPanel(tm.getText("support")), gridbagConstraints);
 
     this.setResizable(false);
     this.setMinimumSize(new Dimension(450, 220));
@@ -65,7 +65,7 @@ public class WindowAbout extends BoardSavableSubWindow {
    */
   private JPanel createMixedTextPanel(String fullText) {
     JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-    panel.setOpaque(false); 
+    panel.setOpaque(false);
 
     // Null safety check
     if (fullText == null || fullText.isEmpty()) {
@@ -96,24 +96,25 @@ public class WindowAbout extends BoardSavableSubWindow {
   private JLabel createHyperlinkLabel(String url) {
     final String urlText = url.trim();
     JLabel label = new JLabel("<html><a href=''>" + urlText + "</a></html>");
-    label.setToolTipText("Open " + urlText + " in your browser"); 
-    
+    label.setToolTipText("Open " + urlText + " in your browser");
+
     // Only format as a clickable link if the OS supports it
     if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
       label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      
-      label.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-          try {
-            Desktop.getDesktop().browse(new URI(urlText));
-          } catch (Exception ex) {
-            FRLogger.error("Could not open link: " + urlText, ex);
-          }
-        }
-      });
+
+      label.addMouseListener(
+          new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+              try {
+                Desktop.getDesktop().browse(new URI(urlText));
+              } catch (Exception ex) {
+                FRLogger.error("Could not open link: " + urlText, ex);
+              }
+            }
+          });
     }
-    
+
     return label;
   }
 }

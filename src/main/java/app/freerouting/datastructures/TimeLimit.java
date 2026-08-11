@@ -2,39 +2,31 @@ package app.freerouting.datastructures;
 
 import java.util.Date;
 
-/**
- * Class used to cancel a performance critical algorithm after a time limit is exceeded.
- */
+/** Class used to cancel a performance critical algorithm after a time limit is exceeded. */
 public class TimeLimit {
 
-  private final long time_stamp;
-  private int time_limit;
+  private final long timeStamp;
+  private int timeLimit;
 
-  /**
-   * Creates a new instance with a time limit of p_milli_seconds milliseconds
-   */
-  public TimeLimit(int p_milli_seconds) {
-    this.time_limit = p_milli_seconds;
-    this.time_stamp = new Date().getTime();
+  /** Creates a new instance with a time limit of milliSeconds milliseconds. */
+  public TimeLimit(int milliSeconds) {
+    this.timeLimit = milliSeconds;
+    this.timeStamp = new Date().getTime();
   }
 
-  /**
-   * Returns true, if the time limit provided in the constructor of this class is exceeded.
-   */
-  public boolean limit_exceeded() {
-    long curr_time = new Date().getTime();
-    return curr_time - this.time_stamp > this.time_limit;
+  /** Returns true, if the time limit provided in the constructor of this class is exceeded. */
+  public boolean limitExceeded() {
+    long currTime = new Date().getTime();
+    return currTime - this.timeStamp > this.timeLimit;
   }
 
-  /**
-   * Multiplies this TimeLimit by p_factor.
-   */
-  public void multiply(double p_factor) {
-    if (p_factor <= 0) {
+  /** Multiplies this TimeLimit by factor. */
+  public void multiply(double factor) {
+    if (factor <= 0) {
       return;
     }
-    double new_limit = p_factor * this.time_limit;
-    new_limit = Math.min(new_limit, Integer.MAX_VALUE);
-    this.time_limit = (int) new_limit;
+    double newLimit = factor * this.timeLimit;
+    newLimit = Math.min(newLimit, Integer.MAX_VALUE);
+    this.timeLimit = (int) newLimit;
   }
 }

@@ -1,5 +1,5 @@
 # Escape Congestion Zones & Fanout Redesign — Research & Plan
-> **Status:** Planning document — no code changes yet.  
+> **Status:** Planning document — no code changes yet.
 > **Author:** Antigravity (AI assistant), 2026-06-12
 
 ---
@@ -36,13 +36,13 @@ The key design question you raised — **rectangular zones vs heatmap** — has 
 ```
 sorted_components: TreeSet<Component>
   → Components ordered: most SMD pins → fewest SMD pins (biggest ICs first)
-  
+
   For each Component:
     smd_pins: TreeSet<Pin>
       → Pins ordered: farthest from component gravity center → closest (outer-ring first)
 ```
 
-**This is correct for a single isolated BGA** — outer rows first preserves inner escape channels.  
+**This is correct for a single isolated BGA** — outer rows first preserves inner escape channels.
 **It breaks down for adjacent dense components** — there's no cross-component spatial awareness. Two side-by-side QFPs each process their outermost pins first, pointing at each other, and they mutually block escape.
 
 ### 1.3 Key Gaps Identified in the Codebase
@@ -307,13 +307,13 @@ After initial stubs are placed, run a cleanup pass:
 > These are the key design decisions that need your input before implementation starts.
 
 ### Q1: Phase 1 Scope
-**Option A — Minimal (detection + logging only):**  
+**Option A — Minimal (detection + logging only):**
 Build `EscapeCongestionAnalyzer` that logs ECZ warnings before fanout. No GUI, no routing change. Safe to ship quickly.
 
-**Option B — Medium (detection + dead-pin fix + congestion-aware ordering):**  
+**Option B — Medium (detection + dead-pin fix + congestion-aware ordering):**
 Build analyzer AND apply the improved ordering AND add dead-pin detection. Routing changes, needs regression testing.
 
-**Option C — Full (detection + all improvements + visualization):**  
+**Option C — Full (detection + all improvements + visualization):**
 Build everything including heatmap and GUI overlay. Multi-week effort.
 
 ### Q2: Zone vs Heatmap for Phase 1
@@ -326,8 +326,8 @@ Build everything including heatmap and GUI overlay. Multi-week effort.
 
 This is actually a subtle correctness question:
 
-Current behavior: "farthest from component center" pins route first.  
-For a single BGA: this = outer row first = correct.  
+Current behavior: "farthest from component center" pins route first.
+For a single BGA: this = outer row first = correct.
 For two adjacent components: each routes its outermost pins toward the other, creating mutual blockage.
 
 **Should we change the ordering to "toward the nearest board edge, not toward the component center"?** This would naturally route pins toward the board perimeter rather than toward adjacent components.
@@ -349,7 +349,7 @@ For two adjacent components: each routes its outermost pins toward the other, cr
 ## 6. Phased Implementation Roadmap
 
 ### Phase 1: ECZ Detection & Logging
-**Effort:** 1–2 days | **Risk:** None  
+**Effort:** 1–2 days | **Risk:** None
 - New class `EscapeCongestionAnalyzer`
 - New record `EscapeCongestionZone`
 - Call from `BatchFanout.fanout_board()` before first pass
@@ -357,26 +357,26 @@ For two adjacent components: each routes its outermost pins toward the other, cr
 - Add zone info to `FanoutRunSummary`
 
 ### Phase 2: Dead-Pin Early Exit
-**Effort:** 1 day | **Risk:** Low  
+**Effort:** 1 day | **Risk:** Low
 - Detect permanently blocked pins after each pass
 - Skip in future passes
 - Log: "Pin X permanently blocked — skipping in future passes"
 - Fixes the "1 unrouted pin × 17 wasted passes" problem
 
 ### Phase 3: Congestion-Aware Pin Ordering
-**Effort:** 2–3 days | **Risk:** Medium (routing behavior change)  
+**Effort:** 2–3 days | **Risk:** Medium (routing behavior change)
 - Sort `sorted_components` by `zone_congestion_score DESC`
 - Regression test vs v1.9 baseline using `compare-versions.ps1`
 - Gate behind a `FanoutSettings.orderByCongestion` flag initially
 
 ### Phase 4: Visualization (GUI Overlay)
-**Effort:** 1 week | **Risk:** Low (no routing change)  
+**Effort:** 1 week | **Risk:** Low (no routing change)
 - Add heatmap or zone overlay to board canvas
 - Toggle in a "Fanout Analysis" panel
 - Show ECZ boundaries and severity colors
 
 ### Phase 5: Directional Escape Bias
-**Effort:** 1–2 weeks | **Risk:** High (core algorithm change)  
+**Effort:** 1–2 weeks | **Risk:** High (core algorithm change)
 - Build full RUDY heatmap
 - Extend `AutorouteControl` with directional cost hints
 - Modify `MazeSearchAlgo` to apply directional weights

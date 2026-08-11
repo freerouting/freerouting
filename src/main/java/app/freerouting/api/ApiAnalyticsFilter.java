@@ -14,34 +14,39 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * JAX-RS dual filter (request + response) that tracks API calls in analytics for
- * <strong>error responses (HTTP 4xx and 5xx)</strong>.
+ * JAX-RS dual filter (request + response) that tracks API calls in analytics for <strong>error
+ * responses (HTTP 4xx and 5xx)</strong>.
  *
  * <h2>Rationale</h2>
- * Successful responses (2xx) are already tracked with full request/response bodies directly
+ *
+ * <p>Successful responses (2xx) are already tracked with full request/response bodies directly
  * inside each controller method. This filter fills the remaining gap: early-return error paths
- * (invalid session, job not found, auth failures, etc.) that previously produced no analytics
- * event at all.
+ * (invalid session, job not found, auth failures, etc.) that previously produced no analytics event
+ * at all.
  *
  * <h2>Request phase</h2>
- * Captures the HTTP method, URI path, and caller {@code Freerouting-Profile-ID} UUID into
- * named request properties so they are available to the response phase filter, which has no
- * direct access to the original request URI.
+ *
+ * <p>Captures the HTTP method, URI path, and caller {@code Freerouting-Profile-ID} UUID into named
+ * request properties so they are available to the response phase filter, which has no direct access
+ * to the original request URI.
  *
  * <h2>Response phase</h2>
- * When the response status is &ge; 400, emits a single {@code "API Endpoint Called"} analytics
+ *
+ * <p>When the response status is &ge; 400, emits a single {@code "API Endpoint Called"} analytics
  * event carrying the HTTP method + path as {@code api_method}, an empty request body (the error
- * paths do not produce a meaningful request echo), and the serialised error entity as
- * {@code api_response}.
+ * paths do not produce a meaningful request echo), and the serialised error entity as {@code
+ * api_response}.
  *
  * <h2>Double-tracking guard</h2>
- * Responses with status below 400 are intentionally skipped — those paths delegate analytics to
+ *
+ * <p>Responses with status below 400 are intentionally skipped — those paths delegate analytics to
  * the individual controller methods, which include richer request/response payloads.
  *
  * <h2>Priority</h2>
- * Runs at {@link Priorities#USER} (5000), after the {@link app.freerouting.api.security.ApiKeyValidationFilter}
- * at {@link Priorities#AUTHENTICATION} (1000). This ensures that 401 Unauthorized responses
- * produced by the security filter are also captured.
+ *
+ * <p>Runs at {@link Priorities#USER} (5000), after the {@link
+ * app.freerouting.api.security.ApiKeyValidationFilter} at {@link Priorities#AUTHENTICATION} (1000).
+ * This ensures that 401 Unauthorized responses produced by the security filter are also captured.
  */
 @Provider
 @Priority(Priorities.USER)
@@ -63,7 +68,8 @@ public class ApiAnalyticsFilter implements ContainerRequestFilter, ContainerResp
     // canonical "METHOD v1/..." string used throughout FRAnalytics.
     requestContext.setProperty(PROP_METHOD, requestContext.getMethod());
     requestContext.setProperty(PROP_PATH, requestContext.getUriInfo().getPath(true));
-    AnalyticsRequestContext.setEnvironmentHost(requestContext.getHeaderString(ENVIRONMENT_HOST_HEADER));
+    AnalyticsRequestContext.setEnvironmentHost(
+        requestContext.getHeaderString(ENVIRONMENT_HOST_HEADER));
 
     // Resolve the caller's UUID from the standard profile header (mirrors
     // BaseController.AuthenticateUser() without throwing on failure).
@@ -82,36 +88,37 @@ public class ApiAnalyticsFilter implements ContainerRequestFilter, ContainerResp
   // -------------------------------------------------------------------------
 
   @Override
-  public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
+  public void filter(
+      ContainerRequestContext requestContext, ContainerResponseContext responseContext)
       throws IOException {
 
     try {
       int status = responseContext.getStatus();
 
-    // Only track error responses.  2xx / 3xx paths are already tracked by the
-    // individual controller methods with full request/response payloads.
-    if (status < 400) {
-      return;
-    }
+      // Only track error responses.  2xx / 3xx paths are already tracked by the
+      // individual controller methods with full request/response payloads.
+      if (status < 400) {
+        return;
+      }
 
-    String method = (String) requestContext.getProperty(PROP_METHOD);
-    String path = (String) requestContext.getProperty(PROP_PATH);
-    UUID userId = (UUID) requestContext.getProperty(PROP_USER_ID);
+      String method = (String) requestContext.getProperty(PROP_METHOD);
+      String path = (String) requestContext.getProperty(PROP_PATH);
+      UUID userId = (UUID) requestContext.getProperty(PROP_USER_ID);
 
-    // Guard: properties should always be set by the request phase, but handle
-    // the edge-case where a very early framework error bypasses our request filter.
-    if (method == null || path == null) {
-      return;
-    }
+      // Guard: properties should always be set by the request phase, but handle
+      // the edge-case where a very early framework error bypasses our request filter.
+      if (method == null || path == null) {
+        return;
+      }
 
-    // Canonical format: "GET v1/jobs/550e8400-..." (matches existing controller calls)
-    String apiMethod = method + " " + path;
+      // Canonical format: "GET v1/jobs/550e8400-..." (matches existing controller calls)
+      String apiMethod = method + " " + path;
 
-    // Serialise the error entity.  The ContainerResponseFilter runs before the
-    // MessageBodyWriter commits the entity to the wire, so getEntity() is still set.
-    String errorBody = serializeEntity(responseContext.getEntity());
+      // Serialise the error entity.  The ContainerResponseFilter runs before the
+      // MessageBodyWriter commits the entity to the wire, so getEntity() is still set.
+      String errorBody = serializeEntity(responseContext.getEntity());
 
-    FRAnalytics.apiEndpointCalled(apiMethod, "", errorBody, userId);
+      FRAnalytics.apiEndpointCalled(apiMethod, "", errorBody, userId);
     } finally {
       AnalyticsRequestContext.clear();
     }
@@ -135,5 +142,3 @@ public class ApiAnalyticsFilter implements ContainerRequestFilter, ContainerResp
     }
   }
 }
-
-

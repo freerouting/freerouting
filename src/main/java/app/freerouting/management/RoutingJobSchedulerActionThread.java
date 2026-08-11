@@ -20,25 +20,25 @@ import java.io.ByteArrayOutputStream;
 import java.lang.management.ManagementFactory;
 import java.time.Instant;
 
-/**
- * Used for running an action in a separate thread, that can be stopped by the
- * user. This typically represents an action that is triggered by job scheduler
- */
+/** Runs a stoppable routing action on behalf of the job scheduler. */
 public class RoutingJobSchedulerActionThread extends StoppableThread {
 
-  private final long MAX_TIMEOUT = 24 * 60 * 60; // 24 hours
-  private final int GRACE_PERIOD = 30; // 30 seconds
+  private static final long MAX_TIMEOUT = 24 * 60 * 60; // 24 hours
+  private static final int GRACE_PERIOD = 30; // 30 seconds
   RoutingJob job;
 
+  /**
+   * Creates a scheduler action thread for a routing job.
+   *
+   * @param job the job to execute
+   */
   public RoutingJobSchedulerActionThread(RoutingJob job) {
     this.job = job;
   }
 
   @Override
-  protected void thread_action() {
+  protected void threadAction() {
     job.startedAt = Instant.now();
-    boolean fanoutTimedOut = false;
-    boolean optimizerTimedOut = false;
     // Use ISO standard time format
     job.logInfo("Job '" + job.shortName + "' started at " + job.startedAt.toString() + ".");
 
@@ -54,46 +54,47 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     }
 
     // Start a new thread that will monitor the job thread
-    Thread monitorThread = new Thread(() -> {
-      while ((job != null) && (job.thread != null)) {
+    Thread monitorThread =
+        new Thread(
+            () -> {
+              while ((job != null) && (job.thread != null)) {
 
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
+                try {
+                  Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                  e.printStackTrace();
+                }
 
-        if (job.state == RoutingJobState.RUNNING || job.state == RoutingJobState.STOPPING) {
-          // Get the CPU time and memory usage of the job thread
-          this.monitorCpuAndMemoryUsage(job);
+                if (job.state == RoutingJobState.RUNNING || job.state == RoutingJobState.STOPPING) {
+                  // Get the CPU time and memory usage of the job thread
+                  this.monitorCpuAndMemoryUsage(job);
 
-          // Check for timeout
-          if (!Instant
-              .now()
-              .isBefore(job.timeoutAt)) {
+                  // Check for timeout
+                  if (!Instant.now().isBefore(job.timeoutAt)) {
 
-            // signal the job thread to stop, and wait gracefully for up to 30 seconds for
-            // it
-            job.thread.requestStop();
-            while ((job.state == RoutingJobState.RUNNING) && Instant
-                .now()
-                .isBefore(job.timeoutAt.plusSeconds(GRACE_PERIOD))) {
-              try {
-                Thread.sleep(1000);
-              } catch (InterruptedException e) {
-                e.printStackTrace();
+                    // signal the job thread to stop, and wait gracefully for up to 30 seconds for
+                    // it
+                    job.thread.requestStop();
+                    while ((job.state == RoutingJobState.RUNNING)
+                        && Instant.now().isBefore(job.timeoutAt.plusSeconds(GRACE_PERIOD))) {
+                      try {
+                        Thread.sleep(1000);
+                      } catch (InterruptedException e) {
+                        e.printStackTrace();
+                      }
+                    }
+                    job.state = RoutingJobState.TIMED_OUT;
+                  }
+                }
               }
-            }
-            job.state = RoutingJobState.TIMED_OUT;
-          }
-        }
-      }
-    });
+            });
     monitorThread.setDaemon(true);
     monitorThread.start();
 
     // start the routing task if needed
-    if (job.routerSettings.getRunRouter() && (job.routerSettings.maxPasses == null || job.routerSettings.maxPasses >= 0)) {
+    boolean fanoutTimedOut = false;
+    if (job.routerSettings.getRunRouter()
+        && (job.routerSettings.maxPasses == null || job.routerSettings.maxPasses >= 0)) {
       job.stage = RoutingStage.ROUTING;
 
       // Select router implementation based on algorithm setting
@@ -101,18 +102,20 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       String algorithm = job.routerSettings.algorithm;
 
       if (!RouterSettings.ALGORITHM_CURRENT.equals(algorithm)) {
-        job.logInfo("Unknown router algorithm '" + algorithm + "', using default (freerouting-router)");
+        job.logInfo(
+            "Unknown router algorithm '" + algorithm + "', using default (freerouting-router)");
       }
       // Always use standard BatchAutorouter
       router = new BatchAutorouter(job);
       BatchAutorouter batchRouter = (BatchAutorouter) router;
 
-      router.addBoardUpdatedEventListener(new BoardUpdatedEventListener() {
-        @Override
-        public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-          setJobOutput(job);
-        }
-      });
+      router.addBoardUpdatedEventListener(
+          new BoardUpdatedEventListener() {
+            @Override
+            public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
+              setJobOutput(job);
+            }
+          });
 
       // Call runBatchLoop
       batchRouter.runBatchLoop();
@@ -124,17 +127,23 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
 
       if (sessionStartTime != null) {
         Instant sessionEndTime = Instant.now();
-        long totalSeconds = java.time.Duration.between(sessionStartTime, sessionEndTime).getSeconds();
-        double totalTime = totalSeconds
-            + (java.time.Duration.between(sessionStartTime, sessionEndTime).getNano() / 1000000000.0);
+        long totalSeconds =
+            java.time.Duration.between(sessionStartTime, sessionEndTime).getSeconds();
+        double totalTime =
+            totalSeconds
+                + (java.time.Duration.between(sessionStartTime, sessionEndTime).getNano()
+                    / 1000000000.0);
 
-        var finalStats = job.board.get_statistics();
+        var finalStats = job.board.getStatistics();
 
         String completionStatus = "completed:";
         // Check for timeout explicitly because job.state might not be updated to
         // TIMED_OUT yet due to race conditions
-        boolean isTimedOut = (job.state == RoutingJobState.TIMED_OUT) ||
-            ((job.timeoutAt != null) && !Instant.now().isBefore(job.timeoutAt) && job.thread.isStopRequested());
+        boolean isTimedOut =
+            (job.state == RoutingJobState.TIMED_OUT)
+                || ((job.timeoutAt != null)
+                    && !Instant.now().isBefore(job.timeoutAt)
+                    && job.thread.isStopRequested());
 
         if (isTimedOut) {
           completionStatus = "completed with timeout:";
@@ -145,16 +154,22 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
           }
         }
 
-        String sessionSummary = String.format(java.util.Locale.US,
-            "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
-            completionStatus,
-            initialUnroutedCount,
-            totalTime,
-            FRLogger.formatScore(finalStats.getNormalizedScore(job.routerSettings.scoring),
-                finalStats.connections.incompleteCount, finalStats.clearanceViolations.totalCount),
-            job.resourceUsage.cpuTimeUsed,
-            job.resourceUsage.maxMemoryUsed / 1024.0f,
-            job.resourceUsage.peakMemoryUsed);
+        String sessionSummary =
+            String.format(
+                java.util.Locale.US,
+                "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, "
+                    + "final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, "
+                    + "and %.1f MB peak heap usage.",
+                completionStatus,
+                initialUnroutedCount,
+                totalTime,
+                FRLogger.formatScore(
+                    finalStats.getNormalizedScore(job.routerSettings.scoring),
+                    finalStats.connections.incompleteCount,
+                    finalStats.clearanceViolations.totalCount),
+                job.resourceUsage.cpuTimeUsed,
+                job.resourceUsage.maxMemoryUsed / 1024.0f,
+                job.resourceUsage.peakMemoryUsed);
 
         job.logInfo(sessionSummary);
       }
@@ -176,16 +191,18 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       job.stage = RoutingStage.IDLE;
     }
 
+    boolean optimizerTimedOut = false;
     if (job.routerSettings.getRunOptimizer()) {
       job.stage = RoutingStage.OPTIMIZATION;
       // start the optimizer task
       BatchOptimizer optimizer = new BatchOptimizer(job);
-      optimizer.addBoardUpdatedEventListener(new BoardUpdatedEventListener() {
-        @Override
-        public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-          setJobOutput(job);
-        }
-      });
+      optimizer.addBoardUpdatedEventListener(
+          new BoardUpdatedEventListener() {
+            @Override
+            public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
+              setJobOutput(job);
+            }
+          });
       optimizer.runBatchLoop();
       optimizerTimedOut = optimizer.isTimedOut();
       job.stage = RoutingStage.IDLE;
@@ -212,30 +229,40 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     if (optimizerTimedOut) {
       details.append(" (optimizer stage timed out)");
     }
-    job.logInfo("Job '" + job.shortName + "' finished with state: " + job.state.toString() + details.toString() +
-        " (elapsed: " + FRLogger.formatDuration(durationSec) + ", finished at UTC: " + job.finishedAt.toString() + ").");
+    job.logInfo(
+        "Job '"
+            + job.shortName
+            + "' finished with state: "
+            + job.state.toString()
+            + details.toString()
+            + " (elapsed: "
+            + FRLogger.formatDuration(durationSec)
+            + ", finished at UTC: "
+            + job.finishedAt.toString()
+            + ").");
   }
 
   private void monitorCpuAndMemoryUsage(RoutingJob job) {
     try {
       // Get the ThreadMXBean instance and cast it to com.sun.management.ThreadMXBean
-      ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      ThreadMXBean threadManagementBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
 
       // Get all live thread IDs
-      long[] threadIds = threadMXBean.getAllThreadIds();
+      long[] threadIds = threadManagementBean.getAllThreadIds();
 
       // Iterate through the thread IDs and get memory usage
       for (long threadId : threadIds) {
         if (threadId == job.thread.threadId()) {
           // CPU time and memory usage
-          float cpuTime = threadMXBean.getThreadCpuTime(threadId) / 1000.0f / 1000.0f / 1000.0f;
+          float cpuTime =
+              threadManagementBean.getThreadCpuTime(threadId) / 1000.0f / 1000.0f / 1000.0f;
 
           // Enable thread memory allocation measurement
-          threadMXBean.setThreadAllocatedMemoryEnabled(true);
+          threadManagementBean.setThreadAllocatedMemoryEnabled(true);
 
           // Get the thread's allocated memory in bytes
-          long allocatedMemory = threadMXBean.getThreadAllocatedBytes(threadId);
-          float allocatedMB = allocatedMemory / (1024.0f * 1024.0f);
+          long allocatedMemory = threadManagementBean.getThreadAllocatedBytes(threadId);
+          float allocatedMemoryMb = allocatedMemory / (1024.0f * 1024.0f);
 
           // Update the job's resource usage
           // Fix: Use assignment instead of accumulation for total time, as
@@ -247,18 +274,18 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
           // we track partials,
           // but here it tracks the monotonically increasing allocation of the main
           // thread.
-          job.resourceUsage.maxMemoryUsed = allocatedMB;
+          job.resourceUsage.maxMemoryUsed = allocatedMemoryMb;
         }
       }
 
       // Track peak heap memory usage across all threads
-      java.lang.management.MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
-      long heapUsed = memoryMXBean.getHeapMemoryUsage().getUsed();
-      float heapUsedMB = heapUsed / (1024.0f * 1024.0f);
+      java.lang.management.MemoryMXBean memoryManagementBean = ManagementFactory.getMemoryMXBean();
+      long heapUsed = memoryManagementBean.getHeapMemoryUsage().getUsed();
+      float heapUsedMb = heapUsed / (1024.0f * 1024.0f);
 
       // Update peak memory if current usage is higher
-      if (heapUsedMB > job.resourceUsage.peakMemoryUsed) {
-        job.resourceUsage.peakMemoryUsed = heapUsedMB;
+      if (heapUsedMb > job.resourceUsage.peakMemoryUsed) {
+        job.resourceUsage.peakMemoryUsed = heapUsedMb;
       }
     } catch (Throwable t) {
       // java.management or jdk.management module may not be available in minimal JRE builds;
@@ -270,7 +297,8 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     if (job.output == null) {
       job.output = new BoardFileDetails(job.board);
       job.output.addUpdatedEventListener(_ -> job.fireOutputUpdatedEvent());
-      String outputBaseName = (job.input != null) ? job.input.getFilenameWithoutExtension() : job.name;
+      String outputBaseName =
+          job.input != null ? job.input.getFilenameWithoutExtension() : job.name;
       if (job.input != null && job.input.format == FileFormat.KICAD_DESIGN_JSON) {
         job.output.format = FileFormat.KICAD_SESSION_JSON;
         job.output.setFilename(outputBaseName + ".json");
@@ -302,5 +330,4 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       }
     }
   }
-
 }

@@ -28,213 +28,213 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
-/**
- * Window for interactive editing of the clearance Matrix.
- */
+/** Window for interactive editing of the clearance Matrix. */
 public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
-  /**
-   * Characters, which are not allowed in the name of a clearance class.
-   */
-  private static final String[] reserved_name_chars = {
-      "(",
-      ")",
-      " ",
-      "_"
-  };
-  private final BoardFrame board_frame;
-  private final JPanel main_panel;
-  private final ComboBoxLayer rules_clearance_layer_combo_box;
-  private JPanel center_panel;
-  private JTable clearance_table;
-  private ClearanceTableModel clearance_table_model;
+  /** Characters, which are not allowed in the name of a clearance class. */
+  private static final String[] reserved_name_chars = {"(", ")", " ", "_"};
 
-  /**
-   * Creates a new instance of ClearanceMatrixWindow
-   */
-  public WindowClearanceMatrix(BoardFrame p_board_frame) {
-    this.board_frame = p_board_frame;
-    setLanguage(p_board_frame.get_locale());
+  private final BoardFrame boardFrame;
+  private final JPanel mainPanel;
+  private final ComboBoxLayer rulesClearanceLayerComboBox;
+  private JPanel centerPanel;
+  private JTable clearanceTable;
+  private ClearanceTableModel clearanceTableModel;
+
+  /** Creates a new instance of ClearanceMatrixWindow. */
+  public WindowClearanceMatrix(BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
-    this.main_panel = new JPanel();
-    main_panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-    main_panel.setLayout(new BorderLayout());
+    this.mainPanel = new JPanel();
+    mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    mainPanel.setLayout(new BorderLayout());
 
     // Add the layer combo box.
 
-    final JPanel north_panel = new JPanel();
-    north_panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-    JLabel layer_label = new JLabel(tm.getText("layer"));
-    layer_label.setToolTipText(tm.getText("layer_tooltip"));
-    north_panel.add(layer_label);
+    final JPanel northPanel = new JPanel();
+    northPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+    JLabel layerLabel = new JLabel(tm.getText("layer"));
+    layerLabel.setToolTipText(tm.getText("layer_tooltip"));
+    northPanel.add(layerLabel);
 
-    GuiBoardManager board_handling = board_frame.board_panel.board_handling;
-    rules_clearance_layer_combo_box = new ComboBoxLayer(board_handling.get_routing_board().layer_structure, p_board_frame.get_locale());
-    north_panel.add(this.rules_clearance_layer_combo_box);
-    rules_clearance_layer_combo_box.addActionListener(new ComboBoxListener());
-    rules_clearance_layer_combo_box.addActionListener(_ -> FRAnalytics.buttonClicked("rules_clearance_layer_combo_box", rules_clearance_layer_combo_box
-        .getSelectedItem()
-        .toString()));
+    GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
+    rulesClearanceLayerComboBox =
+        new ComboBoxLayer(boardHandling.getRoutingBoard().layerStructure, boardFrame.get_locale());
+    northPanel.add(this.rulesClearanceLayerComboBox);
+    rulesClearanceLayerComboBox.addActionListener(new ComboBoxListener());
+    rulesClearanceLayerComboBox.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rulesClearanceLayerComboBox",
+                rulesClearanceLayerComboBox.getSelectedItem().toString()));
 
-    main_panel.add(north_panel, BorderLayout.NORTH);
+    mainPanel.add(northPanel, BorderLayout.NORTH);
 
     // Add the clearance table.
 
-    this.center_panel = add_clearance_table(p_board_frame);
+    this.centerPanel = addClearanceTable(boardFrame);
 
-    main_panel.add(center_panel, BorderLayout.CENTER);
+    mainPanel.add(centerPanel, BorderLayout.CENTER);
 
     // Add panel with buttons.
 
-    JPanel south_panel = new JPanel();
-    south_panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-    south_panel.setLayout(new BorderLayout());
-    this.add(south_panel);
+    JPanel southPanel = new JPanel();
+    southPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    southPanel.setLayout(new BorderLayout());
+    this.add(southPanel);
 
-    final JButton rules_clearance_add_class_button = new JButton(tm.getText("add_class"));
-    rules_clearance_add_class_button.setToolTipText(tm.getText("add_class_tooltip"));
-    rules_clearance_add_class_button.addActionListener(new AddClassListener());
-    rules_clearance_add_class_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_clearance_add_class_button", rules_clearance_add_class_button.getText()));
-    south_panel.add(rules_clearance_add_class_button, BorderLayout.WEST);
+    final JButton rulesClearanceAddClassButton = new JButton(tm.getText("add_class"));
+    rulesClearanceAddClassButton.setToolTipText(tm.getText("add_class_tooltip"));
+    rulesClearanceAddClassButton.addActionListener(new AddClassListener());
+    rulesClearanceAddClassButton.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rulesClearanceAddClassButton", rulesClearanceAddClassButton.getText()));
+    southPanel.add(rulesClearanceAddClassButton, BorderLayout.WEST);
 
-    final JButton rules_clearance_prune_button = new JButton(tm.getText("prune"));
-    rules_clearance_prune_button.setToolTipText(tm.getText("prune_tooltip"));
-    rules_clearance_prune_button.addActionListener(new PruneListener());
-    rules_clearance_prune_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_clearance_prune_button", rules_clearance_prune_button.getText()));
-    south_panel.add(rules_clearance_prune_button, BorderLayout.EAST);
+    final JButton rulesClearancePruneButton = new JButton(tm.getText("prune"));
+    rulesClearancePruneButton.setToolTipText(tm.getText("prune_tooltip"));
+    rulesClearancePruneButton.addActionListener(new PruneListener());
+    rulesClearancePruneButton.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "rulesClearancePruneButton", rulesClearancePruneButton.getText()));
+    southPanel.add(rulesClearancePruneButton, BorderLayout.EAST);
 
-    main_panel.add(south_panel, BorderLayout.SOUTH);
+    mainPanel.add(southPanel, BorderLayout.SOUTH);
 
-    this.add(main_panel);
+    this.add(mainPanel);
     this.pack();
   }
 
-  /**
-   * Recalculates all displayed values
-   */
+  /** Recalculates all displayed values. */
   @Override
   public void refresh() {
-    BasicBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
-    if (this.clearance_table_model.getRowCount() != routing_board.rules.clearance_matrix.get_class_count()) {
-      this.adjust_clearance_table();
+    BasicBoard routingBoard = this.boardFrame.boardPanel.boardHandling.getRoutingBoard();
+    if (this.clearanceTableModel.getRowCount()
+        != routingBoard.rules.clearanceMatrix.getClassCount()) {
+      this.adjustClearanceTable();
     }
-    this.clearance_table_model.set_values(this.rules_clearance_layer_combo_box.get_selected_layer().index);
+    this.clearanceTableModel.setValues(this.rulesClearanceLayerComboBox.getSelectedLayer().index);
     this.repaint();
   }
 
-  private JPanel add_clearance_table(BoardFrame p_board_frame) {
-    this.clearance_table_model = new ClearanceTableModel(p_board_frame.board_panel.board_handling);
-    this.clearance_table = new JTable(clearance_table_model);
+  private JPanel addClearanceTable(BoardFrame boardFrame) {
+    this.clearanceTableModel = new ClearanceTableModel(boardFrame.boardPanel.boardHandling);
+    this.clearanceTable = new JTable(clearanceTableModel);
 
     // Put the clearance table into a scroll pane.
-    final int textfield_height = 16;
-    final int textfield_width = Math.max(6 * max_name_length(), 100);
-    int table_height = textfield_height * (this.clearance_table_model.getRowCount());
-    int table_width = textfield_width * this.clearance_table_model.getColumnCount();
-    this.clearance_table.setPreferredSize(new Dimension(table_width, table_height));
-    this.clearance_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+    final int textfieldHeight = 16;
+    final int textfieldWidth = Math.max(6 * maxNameLength(), 100);
+    int tableHeight = textfieldHeight * (this.clearanceTableModel.getRowCount());
+    int tableWidth = textfieldWidth * this.clearanceTableModel.getColumnCount();
+    this.clearanceTable.setPreferredSize(new Dimension(tableWidth, tableHeight));
+    this.clearanceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     // Put a panel around the table and the header before putting the table into the scroll pane,
     // because otherwise there seems to be a redisplay bug in horizontal scrolling.
-    JPanel scroll_panel = new JPanel();
-    scroll_panel.setLayout(new BorderLayout());
-    scroll_panel.add(this.clearance_table.getTableHeader(), BorderLayout.NORTH);
-    scroll_panel.add(this.clearance_table, BorderLayout.CENTER);
-    JScrollPane scroll_pane = new JScrollPane(scroll_panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    JPanel scrollPanel = new JPanel();
+    scrollPanel.setLayout(new BorderLayout());
+    scrollPanel.add(this.clearanceTable.getTableHeader(), BorderLayout.NORTH);
+    scrollPanel.add(this.clearanceTable, BorderLayout.CENTER);
+    JScrollPane scrollPane =
+        new JScrollPane(
+            scrollPanel,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-    final int scroll_bar_width = 20;
-    final int scroll_pane_height = textfield_height * this.clearance_table_model.getRowCount() + scroll_bar_width;
-    final int scroll_pane_width = Math.min(table_width + scroll_bar_width, 1200);
-    scroll_pane.setPreferredSize(new Dimension(scroll_pane_width, scroll_pane_height));
+    final int scrollBarWidth = 20;
+    final int scrollPaneHeight =
+        textfieldHeight * this.clearanceTableModel.getRowCount() + scrollBarWidth;
+    final int scrollPaneWidth = Math.min(tableWidth + scrollBarWidth, 1200);
+    scrollPane.setPreferredSize(new Dimension(scrollPaneWidth, scrollPaneHeight));
     // Change the background color of the header and the first column of the table.
-    Color header_background_color = new Color(220, 220, 255);
-    JTableHeader table_header = this.clearance_table.getTableHeader();
-    table_header.setBackground(header_background_color);
+    Color headerBackgroundColor = new Color(220, 220, 255);
+    JTableHeader tableHeader = this.clearanceTable.getTableHeader();
+    tableHeader.setBackground(headerBackgroundColor);
 
-    TableColumn first_column = this.clearance_table
-        .getColumnModel()
-        .getColumn(0);
-    DefaultTableCellRenderer first_column_renderer = new DefaultTableCellRenderer();
-    first_column_renderer.setBackground(header_background_color);
-    first_column.setCellRenderer(first_column_renderer);
+    TableColumn firstColumn = this.clearanceTable.getColumnModel().getColumn(0);
+    DefaultTableCellRenderer firstColumnRenderer = new DefaultTableCellRenderer();
+    firstColumnRenderer.setBackground(headerBackgroundColor);
+    firstColumn.setCellRenderer(firstColumnRenderer);
 
     final JPanel result = new JPanel();
     result.setLayout(new BorderLayout());
 
-    result.add(scroll_pane, BorderLayout.CENTER);
+    result.add(scrollPane, BorderLayout.CENTER);
 
     // add message for german localisation bug
-    if ("de"
-        .equalsIgnoreCase(p_board_frame
-            .get_locale()
-            .getLanguage())) {
+    if ("de".equalsIgnoreCase(boardFrame.get_locale().getLanguage())) {
       // Due to a Java system bug, the decimal comma in this table must be entered as a dot.
-      JLabel bug_label = new JLabel("Wegen eines Java-System-Bugs muss das Dezimalkomma in dieser Tabelle als Punkt eingegeben werden!");
-      result.add(bug_label, BorderLayout.SOUTH);
+      JLabel bugLabel =
+          new JLabel(
+              "Due to a Java system bug, the decimal comma in this table must be entered "
+                  + "as a dot!");
+      result.add(bugLabel, BorderLayout.SOUTH);
     }
     return result;
   }
 
-  /**
-   * Adds a new class to the clearance matrix.
-   */
-  private void add_class() {
-    String new_name;
+  /** Adds a new class to the clearance matrix. */
+  private void addClass() {
+    String newName;
     // Ask for the name of the new class.
     do {
-      new_name = JOptionPane.showInputDialog(tm.getText("new_name"));
-      if (new_name == null) {
+      newName = JOptionPane.showInputDialog(tm.getText("newName"));
+      if (newName == null) {
         return;
       }
-      new_name = new_name.trim();
-    } while (!is_legal_class_name(new_name));
+      newName = newName.trim();
+    } while (!isLegalClassName(newName));
 
-    final BasicBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
-    final ClearanceMatrix clearance_matrix = routing_board.rules.clearance_matrix;
+    final BasicBoard routingBoard = this.boardFrame.boardPanel.boardHandling.getRoutingBoard();
+    final ClearanceMatrix clearanceMatrix = routingBoard.rules.clearanceMatrix;
 
     // Check, if the name exists already.
-    boolean name_exists = false;
-    for (int i = 0; i < clearance_matrix.get_class_count(); i++) {
-      if (new_name.equals(clearance_matrix.get_name(i))) {
-        name_exists = true;
+    boolean nameExists = false;
+    for (int i = 0; i < clearanceMatrix.getClassCount(); i++) {
+      if (newName.equals(clearanceMatrix.getName(i))) {
+        nameExists = true;
         break;
       }
     }
-    if (name_exists) {
+    if (nameExists) {
       return;
     }
-    clearance_matrix.append_class(new_name);
+    clearanceMatrix.appendClass(newName);
 
-    // clearance compensation is only used, if there are only the clearance classes "default" and "null".
-    routing_board.search_tree_manager.set_clearance_compensation_used(false);
+    // clearance compensation is only used, if there are only the clearance classes "default" and
+    // "null".
+    routingBoard.searchTreeManager.setClearanceCompensationUsed(false);
 
-    adjust_clearance_table();
+    adjustClearanceTable();
   }
 
-  /**
-   * Removes clearance class, whose clearance values are all equal to a previous class.
-   */
-  private void prune_clearance_matrix() {
-    final BasicBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
-    ClearanceMatrix clearance_matrix = routing_board.rules.clearance_matrix;
-    for (int i = clearance_matrix.get_class_count() - 1; i >= 2; i--) {
-      for (int j = clearance_matrix.get_class_count() - 1; j >= 0; j--) {
+  /** Removes clearance class, whose clearance values are all equal to a previous class. */
+  private void pruneClearanceMatrix() {
+    final BasicBoard routingBoard = this.boardFrame.boardPanel.boardHandling.getRoutingBoard();
+    ClearanceMatrix clearanceMatrix = routingBoard.rules.clearanceMatrix;
+    for (int i = clearanceMatrix.getClassCount() - 1; i >= 2; i--) {
+      for (int j = clearanceMatrix.getClassCount() - 1; j >= 0; j--) {
         if (i == j) {
           continue;
         }
-        if (clearance_matrix.is_equal(i, j)) {
-          String message = tm.getText("confirm_remove_class_message", clearance_matrix.get_name(i));
-          int remove_clearance_class_dialog = JOptionPane.showConfirmDialog(this, message, null, JOptionPane.YES_NO_OPTION);
-          if (remove_clearance_class_dialog == JOptionPane.YES_OPTION) {
-            Collection<Item> board_items = routing_board.get_items();
-            routing_board.rules.change_clearance_class_no(i, j, board_items);
-            if (!routing_board.rules.remove_clearance_class(i, board_items)) {
-              FRLogger.warn("WindowClearanceMatrix.prune_clearance_matrix error removing clearance class");
+        if (clearanceMatrix.isEqual(i, j)) {
+          String message = tm.getText("confirm_remove_class_message", clearanceMatrix.getName(i));
+          int removeClearanceClassDialog =
+              JOptionPane.showConfirmDialog(this, message, null, JOptionPane.YES_NO_OPTION);
+          if (removeClearanceClassDialog == JOptionPane.YES_OPTION) {
+            Collection<Item> boardItems = routingBoard.getItems();
+            routingBoard.rules.changeClearanceClassNo(i, j, boardItems);
+            if (!routingBoard.rules.removeClearanceClass(i, boardItems)) {
+              FRLogger.warn(
+                  "WindowClearanceMatrix.prune_clearance_matrix error removing clearance class");
               return;
             }
-            routing_board.search_tree_manager.clearance_class_removed(i);
-            adjust_clearance_table();
+            routingBoard.searchTreeManager.clearanceClassRemoved(i);
+            adjustClearanceTable();
           }
           break;
         }
@@ -243,16 +243,17 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   }
 
   /**
-   * Adjusts the displayed window with the clearance table after the size of the clearance matrix has changed.
+   * Adjusts the displayed window with the clearance table after the size of the clearance matrix
+   * has changed.
    */
-  private void adjust_clearance_table() {
-    this.clearance_table_model = new ClearanceTableModel(this.board_frame.board_panel.board_handling);
-    this.clearance_table = new JTable(clearance_table_model);
-    this.main_panel.remove(this.center_panel);
-    this.center_panel = add_clearance_table(this.board_frame);
-    this.main_panel.add(this.center_panel, BorderLayout.CENTER);
+  private void adjustClearanceTable() {
+    this.clearanceTableModel = new ClearanceTableModel(this.boardFrame.boardPanel.boardHandling);
+    this.clearanceTable = new JTable(clearanceTableModel);
+    this.mainPanel.remove(this.centerPanel);
+    this.centerPanel = addClearanceTable(this.boardFrame);
+    this.mainPanel.add(this.centerPanel, BorderLayout.CENTER);
     this.pack();
-    this.board_frame.refresh_windows();
+    this.boardFrame.refreshWindows();
   }
 
   static boolean isLegalClassName(String value) {
@@ -281,34 +282,26 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     return null;
   }
 
-  static void applyClearanceValue(ClearanceMatrix matrix, int rowClassNo, int columnClassNo, int layerNo,
-      int boardValue) {
+  static void applyClearanceValue(
+      ClearanceMatrix matrix, int rowClassNo, int columnClassNo, int layerNo, int boardValue) {
     if (layerNo == ComboBoxLayer.ALL_LAYER_INDEX) {
-      matrix.set_value(rowClassNo, columnClassNo, boardValue);
-      matrix.set_value(columnClassNo, rowClassNo, boardValue);
+      matrix.setValue(rowClassNo, columnClassNo, boardValue);
+      matrix.setValue(columnClassNo, rowClassNo, boardValue);
     } else if (layerNo == ComboBoxLayer.INNER_LAYER_INDEX) {
-      matrix.set_inner_value(rowClassNo, columnClassNo, boardValue);
-      matrix.set_inner_value(columnClassNo, rowClassNo, boardValue);
+      matrix.setInnerValue(rowClassNo, columnClassNo, boardValue);
+      matrix.setInnerValue(columnClassNo, rowClassNo, boardValue);
     } else {
-      matrix.set_value(rowClassNo, columnClassNo, layerNo, boardValue);
-      matrix.set_value(columnClassNo, rowClassNo, layerNo, boardValue);
+      matrix.setValue(rowClassNo, columnClassNo, layerNo, boardValue);
+      matrix.setValue(columnClassNo, rowClassNo, layerNo, boardValue);
     }
   }
 
-  /**
-   * Returns true, if p_string is a legal class name.
-   */
-  private boolean is_legal_class_name(String p_string) {
-    return isLegalClassName(p_string);
-  }
-
-  private int max_name_length() {
+  private int maxNameLength() {
     int result = 1;
-    ClearanceMatrix clearance_matrix = board_frame.board_panel.board_handling.get_routing_board().rules.clearance_matrix;
-    for (int i = 0; i < clearance_matrix.get_class_count(); i++) {
-      result = Math.max(result, clearance_matrix
-          .get_name(i)
-          .length());
+    ClearanceMatrix clearanceMatrix =
+        boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.clearanceMatrix;
+    for (int i = 0; i < clearanceMatrix.getClassCount(); i++) {
+      result = Math.max(result, clearanceMatrix.getName(i).length());
     }
     return result;
   }
@@ -324,45 +317,43 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   private class AddClassListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      add_class();
+    public void actionPerformed(ActionEvent evt) {
+      addClass();
     }
   }
 
   private class PruneListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      prune_clearance_matrix();
+    public void actionPerformed(ActionEvent evt) {
+      pruneClearanceMatrix();
     }
   }
 
-  /**
-   * Table model of the clearance matrix.
-   */
+  /** Table model of the clearance matrix. */
   private class ClearanceTableModel extends AbstractTableModel implements Serializable {
 
     private final Object[][] data;
-    private final String[] column_names;
+    private final String[] columnNames;
 
-    public ClearanceTableModel(GuiBoardManager p_board_handling) {
-      ClearanceMatrix clearance_matrix = p_board_handling.get_routing_board().rules.clearance_matrix;
+    public ClearanceTableModel(GuiBoardManager boardHandling) {
+      ClearanceMatrix clearanceMatrix = boardHandling.getRoutingBoard().rules.clearanceMatrix;
 
-      column_names = new String[clearance_matrix.get_class_count() + 1];
-      column_names[0] = tm.getText("class");
+      columnNames = new String[clearanceMatrix.getClassCount() + 1];
+      columnNames[0] = tm.getText("class");
 
-      data = new Object[clearance_matrix.get_class_count()][];
-      for (int i = 0; i < clearance_matrix.get_class_count(); i++) {
-        this.column_names[i + 1] = clearance_matrix.get_name(i);
-        this.data[i] = new Object[clearance_matrix.get_class_count() + 1];
-        this.data[i][0] = clearance_matrix.get_name(i);
+      data = new Object[clearanceMatrix.getClassCount()][];
+      for (int i = 0; i < clearanceMatrix.getClassCount(); i++) {
+        this.columnNames[i + 1] = clearanceMatrix.getName(i);
+        this.data[i] = new Object[clearanceMatrix.getClassCount() + 1];
+        this.data[i][0] = clearanceMatrix.getName(i);
       }
-      this.set_values(0);
+      this.setValues(0);
     }
 
     @Override
-    public String getColumnName(int p_col) {
-      return column_names[p_col];
+    public String getColumnName(int col) {
+      return columnNames[col];
     }
 
     @Override
@@ -372,118 +363,137 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
     @Override
     public int getColumnCount() {
-      return column_names.length;
+      return columnNames.length;
     }
 
     @Override
-    public Object getValueAt(int p_row, int p_col) {
-      return data[p_row][p_col];
+    public Object getValueAt(int row, int col) {
+      return data[row][col];
     }
 
     @Override
-    public void setValueAt(Object p_value, int p_row, int p_col) {
-      Float parsedValue = parseClearanceTableValue(p_value);
+    public void setValueAt(Object value, int row, int col) {
+      Float parsedValue = parseClearanceTableValue(value);
       if (parsedValue == null) {
         return;
       }
-      Number number_value = parsedValue;
-      int curr_row = p_row;
-      int curr_column = p_col - 1;
+      Number numberValue = parsedValue;
+      int currRow = row;
+      int currColumn = col - 1;
 
       // check, if there are items on the board assigned to clearance class i or j.
 
-      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
-      UndoableObjects item_list = board_handling.get_routing_board().item_list;
-      boolean items_already_assigned_row = false;
-      boolean items_already_assigned_column = false;
-      Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
+      GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
+      UndoableObjects itemList = boardHandling.getRoutingBoard().itemList;
+      boolean itemsAlreadyAssignedRow = false;
+      boolean itemsAlreadyAssignedColumn = false;
+      Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
       for (; ; ) {
-        Item curr_item = (Item) item_list.read_object(it);
-        if (curr_item == null) {
+        Item currItem = (Item) itemList.readObject(it);
+        if (currItem == null) {
           break;
         }
-        int curr_item_class_no = curr_item.clearance_class_no();
-        if (curr_item_class_no == curr_row) {
-          items_already_assigned_row = true;
+        int currItemClassNo = currItem.clearanceClassNo();
+        if (currItemClassNo == currRow) {
+          itemsAlreadyAssignedRow = true;
         }
-        if (curr_item_class_no == curr_column) {
-          items_already_assigned_column = true;
+        if (currItemClassNo == currColumn) {
+          itemsAlreadyAssignedColumn = true;
         }
       }
-      ClearanceMatrix clearance_matrix = board_handling.get_routing_board().rules.clearance_matrix;
-      boolean items_already_assigned = items_already_assigned_row && items_already_assigned_column;
-      if (items_already_assigned) {
+      ClearanceMatrix clearanceMatrix = boardHandling.getRoutingBoard().rules.clearanceMatrix;
+      boolean itemsAlreadyAssigned = itemsAlreadyAssignedRow && itemsAlreadyAssignedColumn;
+      if (itemsAlreadyAssigned) {
         String message;
-        if (curr_row == curr_column) {
-          message = tm.getText("clearance_class_already_assigned_single", clearance_matrix.get_name(curr_row));
+        if (currRow == currColumn) {
+          message =
+              tm.getText(
+                  "clearance_class_already_assigned_single", clearanceMatrix.getName(currRow));
         } else {
-          message = tm.getText("clearance_class_already_assigned_pair", clearance_matrix.get_name(curr_row),
-              clearance_matrix.get_name(curr_column));
+          message =
+              tm.getText(
+                  "clearance_class_already_assigned_pair",
+                  clearanceMatrix.getName(currRow),
+                  clearanceMatrix.getName(currColumn));
         }
-        int clearance_class_already_assigned_dialog = JOptionPane.showConfirmDialog(board_frame.clearance_matrix_window, message, null, JOptionPane.YES_NO_OPTION);
-        if (clearance_class_already_assigned_dialog != JOptionPane.YES_OPTION) {
+        int clearanceClassAlreadyAssignedDialog =
+            JOptionPane.showConfirmDialog(
+                boardFrame.clearanceMatrixWindow, message, null, JOptionPane.YES_NO_OPTION);
+        if (clearanceClassAlreadyAssignedDialog != JOptionPane.YES_OPTION) {
           return;
         }
       }
 
-      this.data[p_row][p_col] = number_value;
-      this.data[p_col - 1][p_row + 1] = number_value;
-      fireTableCellUpdated(p_row, p_col);
-      fireTableCellUpdated(p_col - 1, p_row + 1);
+      this.data[row][col] = numberValue;
+      this.data[col - 1][row + 1] = numberValue;
+      fireTableCellUpdated(row, col);
+      fireTableCellUpdated(col - 1, row + 1);
 
-      int board_value = (int) Math.round(board_handling.coordinate_transform.user_to_board(number_value.doubleValue()));
-      int layer_no = rules_clearance_layer_combo_box.get_selected_layer().index;
-      applyClearanceValue(clearance_matrix, curr_row, curr_column, layer_no, board_value);
-      if (items_already_assigned) {
+      int boardValue =
+          (int)
+              Math.round(boardHandling.coordinateTransform.userToBoard(numberValue.doubleValue()));
+      int layerNo = rulesClearanceLayerComboBox.getSelectedLayer().index;
+      applyClearanceValue(clearanceMatrix, currRow, currColumn, layerNo, boardValue);
+      if (itemsAlreadyAssigned) {
         // force reinserting all item into the searck tree, because their tree shapes may have
         // changed
-        board_handling.get_routing_board().search_tree_manager.clearance_value_changed();
+        boardHandling.getRoutingBoard().searchTreeManager.clearanceValueChanged();
       }
     }
 
     @Override
-    public boolean isCellEditable(int p_row, int p_col) {
-      return p_row > 0 && p_col > 1;
+    public boolean isCellEditable(int row, int col) {
+      return row > 0 && col > 1;
     }
 
     @Override
-    public Class<?> getColumnClass(int p_col) {
-      if (p_col == 0) {
+    public Class<?> getColumnClass(int col) {
+      if (col == 0) {
         return String.class;
       }
       return Float.class;
     }
 
     /**
-     * Sets the values of this clearance table to the values of the clearance matrix on the input layer.
+     * Sets the values of this clearance table to the values of the clearance matrix on the input
+     * layer.
      */
-    private void set_values(int p_layer) {
-      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
-      ClearanceMatrix clearance_matrix = board_handling.get_routing_board().rules.clearance_matrix;
+    private void setValues(int layer) {
+      GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
+      ClearanceMatrix clearanceMatrix = boardHandling.getRoutingBoard().rules.clearanceMatrix;
 
-      for (int i = 0; i < clearance_matrix.get_class_count(); i++) {
-        for (int j = 0; j < clearance_matrix.get_class_count(); j++) {
-          if (p_layer == ComboBoxLayer.ALL_LAYER_INDEX) {
+      for (int i = 0; i < clearanceMatrix.getClassCount(); i++) {
+        for (int j = 0; j < clearanceMatrix.getClassCount(); j++) {
+          if (layer == ComboBoxLayer.ALL_LAYER_INDEX) {
             // all layers
 
-            if (clearance_matrix.is_layer_dependent(i, j)) {
+            if (clearanceMatrix.isLayerDependent(i, j)) {
               this.data[i][j + 1] = -1;
             } else {
-              float curr_table_value = (float) board_handling.coordinate_transform.board_to_user(clearance_matrix.get_value(i, j, 0, false));
-              this.data[i][j + 1] = curr_table_value;
+              float currTableValue =
+                  (float)
+                      boardHandling.coordinateTransform.boardToUser(
+                          clearanceMatrix.getValue(i, j, 0, false));
+              this.data[i][j + 1] = currTableValue;
             }
-          } else if (p_layer == ComboBoxLayer.INNER_LAYER_INDEX) {
+          } else if (layer == ComboBoxLayer.INNER_LAYER_INDEX) {
             // all layers
 
-            if (clearance_matrix.is_inner_layer_dependent(i, j)) {
+            if (clearanceMatrix.isInnerLayerDependent(i, j)) {
               this.data[i][j + 1] = -1;
             } else {
-              float curr_table_value = (float) board_handling.coordinate_transform.board_to_user(clearance_matrix.get_value(i, j, 1, false));
-              this.data[i][j + 1] = curr_table_value;
+              float currTableValue =
+                  (float)
+                      boardHandling.coordinateTransform.boardToUser(
+                          clearanceMatrix.getValue(i, j, 1, false));
+              this.data[i][j + 1] = currTableValue;
             }
           } else {
-            float curr_table_value = (float) board_handling.coordinate_transform.board_to_user(clearance_matrix.get_value(i, j, p_layer, false));
-            this.data[i][j + 1] = curr_table_value;
+            float currTableValue =
+                (float)
+                    boardHandling.coordinateTransform.boardToUser(
+                        clearanceMatrix.getValue(i, j, layer, false));
+            this.data[i][j + 1] = currTableValue;
           }
         }
       }

@@ -9,28 +9,32 @@ import app.freerouting.io.specctra.DsnReader;
 import java.io.ByteArrayInputStream;
 import org.junit.jupiter.api.Test;
 
-public class DrcViolationRoutingTest extends RoutingFixtureTest {
+class DrcViolationRoutingTest extends RoutingFixtureTest {
 
-  private void assertDrcOnLoadedBoard(String filename, int expectedUnconnected, int expectedViolations) throws Exception {
-    RoutingJob job = GetRoutingJob(filename, null);
+  private void assertDrcOnLoadedBoard(
+      String filename, int expectedUnconnected, int expectedViolations) throws Exception {
+    RoutingJob job = getRoutingJob(filename, null);
 
     // Read the board without routing it
     ByteArrayInputStream inputStream = new ByteArrayInputStream(job.input.getData().readAllBytes());
-    app.freerouting.io.BoardReadResult result = DsnReader.readBoard(inputStream, null, null, "test");
+    app.freerouting.io.BoardReadResult result =
+        DsnReader.readBoard(inputStream, null, null, "test");
     BasicBoard board = null;
-    if (result instanceof app.freerouting.io.BoardReadResult.Success s) {
-      board = s.board();
-    } else if (result instanceof app.freerouting.io.BoardReadResult.OutlineMissing o) {
-      board = o.board();
-    } else {
-      throw new RuntimeException("Failed to read board: " + result);
+    switch (result) {
+      case app.freerouting.io.BoardReadResult.Success s -> board = s.board();
+      case app.freerouting.io.BoardReadResult.OutlineMissing o -> board = o.board();
+      case null, default -> throw new RuntimeException("Failed to read board: " + result);
     }
 
     BoardStatistics stats = new BoardStatistics(board);
 
-    assertEquals(expectedUnconnected, stats.connections.incompleteCount,
+    assertEquals(
+        expectedUnconnected,
+        stats.connections.incompleteCount,
         "Mismatch in unconnected items for " + filename);
-    assertEquals(expectedViolations, stats.clearanceViolations.totalCount,
+    assertEquals(
+        expectedViolations,
+        stats.clearanceViolations.totalCount,
         "Mismatch in clearance violations for " + filename);
   }
 
@@ -45,17 +49,18 @@ public class DrcViolationRoutingTest extends RoutingFixtureTest {
   // actual geometric reality for these specific .dsn files.
 
   @Test
-  public void test_Issue_575_6_track_and_1_hole_clearance_violations() throws Exception {
-    assertDrcOnLoadedBoard("Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn", 3, 76);
+  void issue5756TrackAnd1HoleClearanceViolations() throws Exception {
+    assertDrcOnLoadedBoard(
+        "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn", 3, 76);
   }
 
   @Test
-  public void test_Issue_575_4_hole_clearance_violations() throws Exception {
+  void issue5754HoleClearanceViolations() throws Exception {
     assertDrcOnLoadedBoard("Issue575-drc_dev-board_4_hole_clearance_violations.dsn", 9, 2);
   }
 
   @Test
-  public void test_Issue_575_7_unconnected_items() throws Exception {
+  void issue5757UnconnectedItems() throws Exception {
     assertDrcOnLoadedBoard("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn", 145, 0);
   }
 }

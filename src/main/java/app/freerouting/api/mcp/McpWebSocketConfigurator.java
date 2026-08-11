@@ -1,8 +1,8 @@
 package app.freerouting.api.mcp;
 
-import jakarta.websocket.server.HandshakeRequest;
 import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.HandshakeResponse;
+import jakarta.websocket.server.HandshakeRequest;
 import jakarta.websocket.server.ServerEndpointConfig;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +16,11 @@ public class McpWebSocketConfigurator extends ServerEndpointConfig.Configurator 
 
   @Override
   public void modifyHandshake(
-      ServerEndpointConfig sec,
-      HandshakeRequest request,
-      HandshakeResponse response) {
+      ServerEndpointConfig sec, HandshakeRequest request, HandshakeResponse response) {
     sec.getUserProperties().put(HEADERS_PROPERTY, request.getHeaders());
   }
 
+  /** Retrieves handshake headers stored in the user properties of the given EndpointConfig. */
   @SuppressWarnings("unchecked")
   public static Map<String, List<String>> getHeaders(EndpointConfig config) {
     Object value = config.getUserProperties().get(HEADERS_PROPERTY);

@@ -8,89 +8,81 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Contains the lists of different ViaInfo's, which can be used in interactive and automatic routing.
+ * Contains the list of different via definitions that can be used in interactive and automatic
+ * routing.
  */
 public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
 
   private final List<ViaInfo> list = new LinkedList<>();
 
   /**
-   * Adds a via info consisting of padstack, clearance class and drill_to_smd_allowed. Return false, if the insertion failed, for example if the name existed already.
+   * Adds a via definition consisting of a padstack, clearance class, and drill-to-SMD setting.
+   * Returns false if the insertion failed, for example because the name already exists.
    */
-  public boolean add(ViaInfo p_via_info) {
-    if (name_exists(p_via_info.get_name())) {
+  public boolean add(ViaInfo viaInfo) {
+    if (nameExists(viaInfo.getName())) {
       return false;
     }
-    this.list.add(p_via_info);
+    this.list.add(viaInfo);
     return true;
   }
 
-  /**
-   * Returns the number of different vias, which can be used for routing.
-   */
+  /** Returns the number of different vias that can be used for routing. */
   public int count() {
     return this.list.size();
   }
 
-  /**
-   * Returns the p_no-th via af the via types, which can be used for routing.
-   */
-  public ViaInfo get(int p_no) {
-    assert p_no >= 0 && p_no < this.list.size();
-    return this.list.get(p_no);
+  /** Returns the via at the given index. */
+  public ViaInfo get(int index) {
+    assert index >= 0 && index < this.list.size();
+    return this.list.get(index);
   }
 
-  /**
-   * Returns the via info with name p_name, or null, if no such via exists.
-   */
-  public ViaInfo get(String p_name) {
-    for (ViaInfo curr_via : this.list) {
-      if (curr_via.get_name().equals(p_name)) {
-        return curr_via;
+  /** Returns the via definition with the given name, or null if no such via exists. */
+  public ViaInfo get(String name) {
+    for (ViaInfo currVia : this.list) {
+      if (currVia.getName().equals(name)) {
+        return currVia;
       }
     }
     return null;
   }
 
-  /**
-   * Returns true, if a via info with name p_name is already wyisting in the list.
-   */
-  public boolean name_exists(String p_name) {
-    for (ViaInfo curr_via : this.list) {
-      if (curr_via.get_name().equals(p_name)) {
+  /** Returns true if a via definition with the given name already exists. */
+  public boolean nameExists(String name) {
+    for (ViaInfo currVia : this.list) {
+      if (currVia.getName().equals(name)) {
         return true;
       }
     }
     return false;
   }
 
-  /**
-   * Removes p_via_info from this list. Returns false, if p_via_info was not contained in the list.
-   */
-  public boolean remove(ViaInfo p_via_info) {
-    return this.list.remove(p_via_info);
+  /** Removes {@code viaInfo} from this list. Returns false if it was not contained in the list. */
+  public boolean remove(ViaInfo viaInfo) {
+    return this.list.remove(viaInfo);
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    p_window.append_bold(tm.getText("vias") + ": ");
+    window.appendBold(tm.getText("vias") + ": ");
     int counter = 0;
-    boolean first_time = true;
-    final int max_vias_per_row = 5;
-    for (ViaInfo curr_via : this.list) {
-      if (first_time) {
-        first_time = false;
+    boolean firstTime = true;
+    final int maxViasPerRow = 5;
+    for (ViaInfo currVia : this.list) {
+      if (firstTime) {
+        firstTime = false;
       } else {
-        p_window.append(", ");
+        window.append(", ");
       }
       if (counter == 0) {
-        p_window.newline();
-        p_window.indent();
+        window.newline();
+        window.indent();
       }
-      p_window.append(curr_via.get_name(), tm.getText("via_info"), curr_via);
-      counter = (counter + 1) % max_vias_per_row;
+      window.append(currVia.getName(), tm.getText("viaInfo"), currVia);
+      counter = (counter + 1) % maxViasPerRow;
     }
   }
 }

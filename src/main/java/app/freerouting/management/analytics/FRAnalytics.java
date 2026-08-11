@@ -13,82 +13,131 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-/**
- * A class to manage analytics for the application.
- */
-public class FRAnalytics {
+/** Manages analytics identity, application events, and API usage events. */
+@SuppressWarnings("AbbreviationAsWordInName")
+public final class FRAnalytics {
 
-  private static final HashMap<String, String> appLocationTable = new HashMap<String, String>() {
-    {
-      put("app.freerouting.gui.BoardFrame", "app.freerouting.gui/Board");
-      put("app.freerouting.gui.WindowVisibility", "app.freerouting.gui/Appearance/Visibility");
-      put("app.freerouting.gui.ColorManager", "app.freerouting.gui/Appearance/Colors");
-      put("app.freerouting.gui.WindowDisplayMisc", "app.freerouting.gui/Appearance/Misc");
-      put("app.freerouting.gui.WindowSelectParameter", "app.freerouting.gui/Settings/Selection");
-      put("app.freerouting.gui.WindowRouteParameter", "app.freerouting.gui/Settings/Routing");
-      put("app.freerouting.gui.WindowAutorouteParameter", "app.freerouting.gui/Settings/Auto-router");
-      put("app.freerouting.gui.WindowAutorouteDetailParameter", "app.freerouting.gui/Settings/Auto-router/Details");
-      put("app.freerouting.gui.WindowMoveParameter", "app.freerouting.gui/Settings/Controls");
-      put("app.freerouting.gui.WindowClearanceMatrix", "app.freerouting.gui/Rules/ClearanceMatrix");
-      put("app.freerouting.gui.WindowVia", "app.freerouting.gui/Rules/Vias");
-      put("app.freerouting.gui.WindowNets", "app.freerouting.gui/Rules/Nets");
-      put("app.freerouting.gui.WindowNetClasses", "app.freerouting.gui/Rules/NetClasses");
-      put("app.freerouting.gui.WindowPackages", "app.freerouting.gui/Information/LibraryPackages");
-      put("app.freerouting.gui.WindowPadstacks", "app.freerouting.gui/Information/LibraryPadstacks");
-      put("app.freerouting.gui.WindowComponents", "app.freerouting.gui/Information/PlacedComponents");
-      put("app.freerouting.gui.WindowIncompletes", "app.freerouting.gui/Information/Incompletes");
-      put("app.freerouting.gui.WindowLengthViolations", "app.freerouting.gui/Information/LengthViolations");
-      put("app.freerouting.gui.WindowClearanceViolations", "app.freerouting.gui/Information/ClearanceViolations");
-      put("app.freerouting.gui.WindowUnconnectedRoute", "app.freerouting.gui/Information/UnconnectedRoutes");
-      put("app.freerouting.gui.WindowRouteStubs", "app.freerouting.gui/Information/RouteStubs");
+  private static final HashMap<String, String> appLocationTable;
 
-      put("app.freerouting.gui.WindowAbout", "app.freerouting.gui/Help/About");
-      put("select_button", "app.freerouting.gui/Board/Toolbar/Select");
-      put("route_button", "app.freerouting.gui/Board/Toolbar/Route");
-      put("drag_button", "app.freerouting.gui/Board/Toolbar/Drag");
-      put("autoroute_button", "app.freerouting.gui/Board/Toolbar/Autorouter");
-      put("undo_button", "app.freerouting.gui/Board/Toolbar/Undo");
-      put("redo_button", "app.freerouting.gui/Board/Toolbar/Redo");
-      put("incompletes_button", "app.freerouting.gui/Board/Toolbar/Incompletes");
-      put("violation_button", "app.freerouting.gui/Board/Toolbar/Violations");
-      put("display_all_button", "app.freerouting.gui/Board/Toolbar/ZoomAll");
-      put("display_region_button", "app.freerouting.gui/Board/Toolbar/ZoomRegion");
-      put("file_save_menuitem", "app.freerouting.gui/Board/Menu/File/Save");
-      put("file_save_and_exit_menuitem", "app.freerouting.gui/Board/Menu/File/SaveAndExit");
-      put("file_cancel_and_exit_menuitem", "app.freerouting.gui/Board/Menu/File/CancelAndExit");
-      put("file_save_as_menuitem", "app.freerouting.gui/Board/Menu/File/SaveAs");
-      put("file_write_logfile_menuitem", "app.freerouting.gui/Board/Menu/File/MacroRecording");
-      put("file_replay_logfile_menuitem", "app.freerouting.gui/Board/Menu/File/MacroPlayback");
-      put("file_save_settings_menuitem", "app.freerouting.gui/Board/Menu/File/SaveGUISettings");
-      put("file_write_session_file_menuitem", "app.freerouting.gui/Board/Menu/File/ExportAsSpecctra");
-      put("file_write_eagle_session_script_menuitem", "app.freerouting.gui/Board/Menu/File/ExportAsEagleScript");
-      put("display_visibility_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Visibility");
-      put("display_colors_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Colors");
-      put("display_miscellaneous_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Miscellaneous");
-      put("settings_selection_menuitem", "app.freerouting.gui/Board/Menu/Settings/Selection");
-      put("settings_routing_menuitem", "app.freerouting.gui/Board/Menu/Settings/Routing");
-      put("settings_autorouter_menuitem", "app.freerouting.gui/Board/Menu/Settings/AutoRouter");
-      put("settings_controls_menuitem", "app.freerouting.gui/Board/Menu/Settings/Controls");
-      put("rules_clearance_menuitem", "app.freerouting.gui/Board/Menu/Rules/ClearanceMatrix");
-      put("rules_vias_menuitem", "app.freerouting.gui/Board/Menu/Rules/Vias");
-      put("rules_nets_menuitem", "app.freerouting.gui/Board/Menu/Rules/Nets");
-      put("rules_net_class_menuitem", "app.freerouting.gui/Board/Menu/Rules/NetClasses");
-      put("info_packages_menuitem", "app.freerouting.gui/Board/Menu/Info/Packages");
-      put("info_padstacks_menuitem", "app.freerouting.gui/Board/Menu/Info/Padstacks");
-      put("info_components_menuitem", "app.freerouting.gui/Board/Menu/Info/Components");
-      put("info_incompletes_menuitem", "app.freerouting.gui/Board/Menu/Info/IncompleteRoutes");
-      put("info_length_violations_menuitem", "app.freerouting.gui/Board/Menu/Info/LengthViolations");
-      put("info_clearance_violations_menuitem", "app.freerouting.gui/Board/Menu/Info/ClearanceViolations");
-      put("info_unconnected_routes_menuitem", "app.freerouting.gui/Board/Menu/Info/UnconnectedRoutes");
-      put("info_route_stubs_menuitem", "app.freerouting.gui/Board/Menu/Info/RoutedStubs");
+  static {
+    appLocationTable = new HashMap<String, String>();
+    appLocationTable.put("app.freerouting.gui.BoardFrame", "app.freerouting.gui/Board");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowVisibility", "app.freerouting.gui/Appearance/Visibility");
+    appLocationTable.put(
+        "app.freerouting.gui.ColorManager", "app.freerouting.gui/Appearance/Colors");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowDisplayMisc", "app.freerouting.gui/Appearance/Misc");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowSelectParameter", "app.freerouting.gui/Settings/Selection");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowRouteParameter", "app.freerouting.gui/Settings/Routing");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowAutorouteParameter", "app.freerouting.gui/Settings/Auto-router");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowAutorouteDetailParameter",
+        "app.freerouting.gui/Settings/Auto-router/Details");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowMoveParameter", "app.freerouting.gui/Settings/Controls");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowClearanceMatrix", "app.freerouting.gui/Rules/ClearanceMatrix");
+    appLocationTable.put("app.freerouting.gui.WindowVia", "app.freerouting.gui/Rules/Vias");
+    appLocationTable.put("app.freerouting.gui.WindowNets", "app.freerouting.gui/Rules/Nets");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowNetClasses", "app.freerouting.gui/Rules/NetClasses");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowPackages", "app.freerouting.gui/Information/LibraryPackages");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowPadstacks", "app.freerouting.gui/Information/LibraryPadstacks");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowComponents", "app.freerouting.gui/Information/PlacedComponents");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowIncompletes", "app.freerouting.gui/Information/Incompletes");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowLengthViolations",
+        "app.freerouting.gui/Information/LengthViolations");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowClearanceViolations",
+        "app.freerouting.gui/Information/ClearanceViolations");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowUnconnectedRoute",
+        "app.freerouting.gui/Information/UnconnectedRoutes");
+    appLocationTable.put(
+        "app.freerouting.gui.WindowRouteStubs", "app.freerouting.gui/Information/RouteStubs");
 
-      put("other_delete_all_tracks_menuitem", "app.freerouting.gui/Board/Menu/Other/DeleteAllTracksAndVias");
-      put("help_about_menuitem", "app.freerouting.gui/Board/Menu/Help/About");
-    }
-  };
+    appLocationTable.put("app.freerouting.gui.WindowAbout", "app.freerouting.gui/Help/About");
+    appLocationTable.put("select_button", "app.freerouting.gui/Board/Toolbar/Select");
+    appLocationTable.put("route_button", "app.freerouting.gui/Board/Toolbar/Route");
+    appLocationTable.put("drag_button", "app.freerouting.gui/Board/Toolbar/Drag");
+    appLocationTable.put("autoroute_button", "app.freerouting.gui/Board/Toolbar/Autorouter");
+    appLocationTable.put("undo_button", "app.freerouting.gui/Board/Toolbar/Undo");
+    appLocationTable.put("redo_button", "app.freerouting.gui/Board/Toolbar/Redo");
+    appLocationTable.put("incompletes_button", "app.freerouting.gui/Board/Toolbar/Incompletes");
+    appLocationTable.put("violation_button", "app.freerouting.gui/Board/Toolbar/Violations");
+    appLocationTable.put("display_all_button", "app.freerouting.gui/Board/Toolbar/ZoomAll");
+    appLocationTable.put("display_region_button", "app.freerouting.gui/Board/Toolbar/ZoomRegion");
+    appLocationTable.put("file_save_menuitem", "app.freerouting.gui/Board/Menu/File/Save");
+    appLocationTable.put(
+        "file_save_and_exit_menuitem", "app.freerouting.gui/Board/Menu/File/SaveAndExit");
+    appLocationTable.put(
+        "file_cancel_and_exit_menuitem", "app.freerouting.gui/Board/Menu/File/CancelAndExit");
+    appLocationTable.put("fileSaveAsMenuitem", "app.freerouting.gui/Board/Menu/File/SaveAs");
+    appLocationTable.put(
+        "file_write_logfile_menuitem", "app.freerouting.gui/Board/Menu/File/MacroRecording");
+    appLocationTable.put(
+        "file_replay_logfile_menuitem", "app.freerouting.gui/Board/Menu/File/MacroPlayback");
+    appLocationTable.put(
+        "file_save_settings_menuitem", "app.freerouting.gui/Board/Menu/File/SaveGUISettings");
+    appLocationTable.put(
+        "file_write_session_file_menuitem", "app.freerouting.gui/Board/Menu/File/ExportAsSpecctra");
+    appLocationTable.put(
+        "file_write_eagle_session_script_menuitem",
+        "app.freerouting.gui/Board/Menu/File/ExportAsEagleScript");
+    appLocationTable.put(
+        "displayVisibilityMenuitem", "app.freerouting.gui/Board/Menu/Appearance/Visibility");
+    appLocationTable.put(
+        "displayColorsMenuitem", "app.freerouting.gui/Board/Menu/Appearance/Colors");
+    appLocationTable.put(
+        "displayMiscellaneousMenuitem", "app.freerouting.gui/Board/Menu/Appearance/Miscellaneous");
+    appLocationTable.put(
+        "settingsSelectionMenuitem", "app.freerouting.gui/Board/Menu/Settings/Selection");
+    appLocationTable.put(
+        "settingsRoutingMenuitem", "app.freerouting.gui/Board/Menu/Settings/Routing");
+    appLocationTable.put(
+        "settingsAutorouterMenuitem", "app.freerouting.gui/Board/Menu/Settings/AutoRouter");
+    appLocationTable.put(
+        "settingsControlsMenuitem", "app.freerouting.gui/Board/Menu/Settings/Controls");
+    appLocationTable.put(
+        "rulesClearanceMenuitem", "app.freerouting.gui/Board/Menu/Rules/ClearanceMatrix");
+    appLocationTable.put("rulesViasMenuitem", "app.freerouting.gui/Board/Menu/Rules/Vias");
+    appLocationTable.put("rulesNetsMenuitem", "app.freerouting.gui/Board/Menu/Rules/Nets");
+    appLocationTable.put(
+        "rulesNetClassMenuitem", "app.freerouting.gui/Board/Menu/Rules/NetClasses");
+    appLocationTable.put("infoPackagesMenuitem", "app.freerouting.gui/Board/Menu/Info/Packages");
+    appLocationTable.put("infoPadstacksMenuitem", "app.freerouting.gui/Board/Menu/Info/Padstacks");
+    appLocationTable.put(
+        "infoComponentsMenuitem", "app.freerouting.gui/Board/Menu/Info/Components");
+    appLocationTable.put(
+        "infoIncompletesMenuitem", "app.freerouting.gui/Board/Menu/Info/IncompleteRoutes");
+    appLocationTable.put(
+        "infoLengthViolationsMenuitem", "app.freerouting.gui/Board/Menu/Info/LengthViolations");
+    appLocationTable.put(
+        "infoClearanceViolationsMenuitem",
+        "app.freerouting.gui/Board/Menu/Info/ClearanceViolations");
+    appLocationTable.put(
+        "infoUnconnectedRoutesMenuitem", "app.freerouting.gui/Board/Menu/Info/UnconnectedRoutes");
+    appLocationTable.put(
+        "infoRouteStubsMenuitem", "app.freerouting.gui/Board/Menu/Info/RoutedStubs");
+
+    appLocationTable.put(
+        "otherDeleteAllTracksMenuitem",
+        "app.freerouting.gui/Board/Menu/Other/DeleteAllTracksAndVias");
+    appLocationTable.put("helpAboutMenuitem", "app.freerouting.gui/Board/Menu/Help/About");
+  }
+
   private static AnalyticsClient analytics;
-  private static String permanent_user_id;
-  private static String permanent_user_email;
+  private static String permanentUserId;
+  private static String permanentUserEmail;
   private static String appPreviousLocation = "";
   private static String appCurrentLocation = "";
   private static String appWindowTitle = "";
@@ -100,18 +149,29 @@ public class FRAnalytics {
   private static long routeOptimizerStartedAt;
   private static String sessionId;
 
-  private FRAnalytics() {
-  }
+  private FRAnalytics() {}
 
+  /**
+   * Configures the analytics client used for subsequent events.
+   *
+   * @param libraryVersion the Freerouting version reported to the backend
+   * @param key the analytics access key
+   */
   public static void setAccessKey(String libraryVersion, String key) {
     // analytics = new SegmentClient(libraryVersion, key);
     // analytics = new BigQueryClient(libraryVersion, key);
     analytics = new FreeroutingAnalyticsClient(libraryVersion, key);
   }
 
+  /**
+   * Sets the persistent identity used for GUI analytics events.
+   *
+   * @param userId the persistent user identifier
+   * @param userEmail the user's email address
+   */
   public static void setUserId(String userId, String userEmail) {
-    permanent_user_id = userId;
-    permanent_user_email = userEmail;
+    permanentUserId = userId;
+    permanentUserEmail = userEmail;
   }
 
   private static void identifyUser(String userId, Map<String, String> traits) {
@@ -144,7 +204,8 @@ public class FRAnalytics {
     }
   }
 
-  private static void trackAnonymousAction(String anonymousId, String action, Map<String, String> properties) {
+  private static void trackAnonymousAction(
+      String anonymousId, String action, Map<String, String> properties) {
     if (analytics == null) {
       return;
     }
@@ -155,11 +216,9 @@ public class FRAnalytics {
 
     try {
       Properties p = new Properties();
-      p.put("current_time_utc", Instant
-          .now()
-          .toString());
-      p.put("user_id", permanent_user_id);
-      p.put("user_email", permanent_user_email);
+      p.put("current_time_utc", Instant.now().toString());
+      p.put("user_id", permanentUserId);
+      p.put("user_email", permanentUserEmail);
       p.put("app_current_location", appCurrentLocation);
       p.put("app_previous_location", appPreviousLocation);
       p.put("app_window_title", appWindowTitle);
@@ -184,28 +243,27 @@ public class FRAnalytics {
     };
   }
 
+  /** Sends the current persistent identity traits to the analytics backend. */
   public static void identify() {
-    identifyAnonymous(permanent_user_id, buildIdentifyTraits());
+    identifyAnonymous(permanentUserId, buildIdentifyTraits());
   }
 
   /**
-   * Re-sends the current profile traits after the user updates email or consent settings.
-   * Keeps {@code first_seen} stable so returning users are not misclassified as new.
+   * Re-sends the current profile traits after the user updates email or consent settings. Keeps
+   * {@code first_seen} stable so returning users are not misclassified as new.
    */
   public static void refreshIdentity() {
-    identifyAnonymous(permanent_user_id, buildIdentifyTraits());
+    identifyAnonymous(permanentUserId, buildIdentifyTraits());
   }
 
   private static Map<String, String> buildIdentifyTraits() {
     Map<String, String> traits = new HashMap<>();
     traits.put("anonymous", "true");
-    traits.put("user_id", permanent_user_id);
-    traits.put("user_email", permanent_user_email);
+    traits.put("user_id", permanentUserId);
+    traits.put("user_email", permanentUserEmail);
     String firstSeen = globalSettings.statistics.startTime;
     if (firstSeen == null || firstSeen.isBlank()) {
-      firstSeen = Instant
-          .now()
-          .toString();
+      firstSeen = Instant.now().toString();
     }
     traits.put("first_seen", firstSeen);
     traits.put("client_version", globalSettings.version);
@@ -213,23 +271,33 @@ public class FRAnalytics {
     traits.put("os_version", System.getProperty("os.version"));
     traits.put("system_language", Locale.getDefault().toString());
     traits.put("gui_language", globalSettings.currentLocale.toString());
-    traits.put("allow_telemetry", Boolean.toString(globalSettings.userProfileSettings.isTelemetryAllowed));
-    traits.put("allow_contact", Boolean.toString(globalSettings.userProfileSettings.isContactAllowed));
+    traits.put(
+        "allow_telemetry", Boolean.toString(globalSettings.userProfileSettings.isTelemetryAllowed));
+    traits.put(
+        "allow_contact", Boolean.toString(globalSettings.userProfileSettings.isContactAllowed));
     return traits;
   }
 
   /**
-   * Emitted when the user saves profile settings. Uses explicit fields instead of serialising
-   * the full settings object.
+   * Emitted when the user saves profile settings. Uses explicit fields instead of serialising the
+   * full settings object.
    */
   public static void profileUpdated() {
     Map<String, String> properties = new HashMap<>();
-    properties.put("user_email", permanent_user_email);
-    properties.put("allow_contact", Boolean.toString(globalSettings.userProfileSettings.isContactAllowed));
-    properties.put("allow_telemetry", Boolean.toString(globalSettings.userProfileSettings.isTelemetryAllowed));
-    trackAnonymousAction(permanent_user_id, "Profile Updated", properties);
+    properties.put("user_email", permanentUserEmail);
+    properties.put(
+        "allow_contact", Boolean.toString(globalSettings.userProfileSettings.isContactAllowed));
+    properties.put(
+        "allow_telemetry", Boolean.toString(globalSettings.userProfileSettings.isTelemetryAllowed));
+    trackAnonymousAction(permanentUserId, "Profile Updated", properties);
   }
 
+  /**
+   * Records the current application window location.
+   *
+   * @param windowClassName the class name associated with the window
+   * @param windowTitle the visible window title
+   */
   public static void setAppLocation(String windowClassName, String windowTitle) {
     windowClassName = translateClassNameToUrl(windowClassName);
 
@@ -242,16 +310,22 @@ public class FRAnalytics {
     appWindowTitle = windowTitle;
 
     Properties p = new Properties();
-    trackAnonymousAction(permanent_user_id, "Window Changed", p);
+    trackAnonymousAction(permanentUserId, "Window Changed", p);
   }
 
+  /**
+   * Records a GUI button click.
+   *
+   * @param buttonClassName the class name associated with the button
+   * @param buttonText the visible button text
+   */
   public static void buttonClicked(String buttonClassName, String buttonText) {
     buttonClassName = translateClassNameToUrl(buttonClassName);
 
     Properties p = new Properties();
     p.put("button_name", buttonClassName);
     p.put("button_text", buttonText);
-    trackAnonymousAction(permanent_user_id, "Button Clicked", p);
+    trackAnonymousAction(permanentUserId, "Button Clicked", p);
   }
 
   private static String translateClassNameToUrl(String appLocation) {
@@ -262,6 +336,11 @@ public class FRAnalytics {
     }
   }
 
+  /**
+   * Enables or disables analytics delivery.
+   *
+   * @param enabled whether analytics events should be sent
+   */
   public static void setEnabled(boolean enabled) {
     if (analytics == null) {
       return;
@@ -270,14 +349,45 @@ public class FRAnalytics {
     analytics.setEnabled(enabled);
   }
 
-  public static void appStarted(String freeroutingVersion, String freeroutingBuildDate, String commandLineArguments,
-      String osName, String osArchitecture, String osVersion, String javaVersion,
-      String javaVendor, Locale systemLanguage, Locale guiLanguage, int cpuCoreCount, long ramAmount, String host,
-      int width, int height, int dpi) {
+  /**
+   * Records application startup metadata.
+   *
+   * @param freeroutingVersion the application version
+   * @param freeroutingBuildDate the application build date
+   * @param commandLineArguments the original command-line arguments
+   * @param osName the operating-system name
+   * @param osArchitecture the operating-system architecture
+   * @param osVersion the operating-system version
+   * @param javaVersion the Java runtime version
+   * @param javaVendor the Java runtime vendor
+   * @param systemLanguage the system locale
+   * @param guiLanguage the GUI locale
+   * @param cpuCoreCount the number of available CPU cores
+   * @param ramAmount the installed RAM amount
+   * @param host the host application identifier
+   * @param width the screen width
+   * @param height the screen height
+   * @param dpi the screen density
+   */
+  public static void appStarted(
+      String freeroutingVersion,
+      String freeroutingBuildDate,
+      String commandLineArguments,
+      String osName,
+      String osArchitecture,
+      String osVersion,
+      String javaVersion,
+      String javaVendor,
+      Locale systemLanguage,
+      Locale guiLanguage,
+      int cpuCoreCount,
+      long ramAmount,
+      String host,
+      int width,
+      int height,
+      int dpi) {
     sessionId = UUID.randomUUID().toString();
-    appStartedAt = Instant
-        .now()
-        .getEpochSecond();
+    appStartedAt = Instant.now().getEpochSecond();
 
     Map<String, String> properties = new HashMap<>();
     properties.put("session_id", sessionId);
@@ -297,14 +407,11 @@ public class FRAnalytics {
     properties.put("screen_width", Integer.toString(width));
     properties.put("screen_height", Integer.toString(height));
     properties.put("screen_dpi", Integer.toString(dpi));
-    trackAnonymousAction(permanent_user_id, "Application Started", properties);
+    trackAnonymousAction(permanentUserId, "Application Started", properties);
   }
 
+  /** Records application shutdown and the accumulated session statistics. */
   public static void appClosed() {
-    long appClosedAt = Instant
-        .now()
-        .getEpochSecond();
-
     Map<String, String> properties = new HashMap<>();
     if (sessionId != null) {
       properties.put("session_id", sessionId);
@@ -312,14 +419,18 @@ public class FRAnalytics {
     properties.put("session_count", String.valueOf(sessionCount));
     properties.put("total_autorouter_runtime", String.valueOf(totalAutorouterRuntime));
     properties.put("total_route_optimizer_runtime", String.valueOf(totalRouteOptimizerRuntime));
-    properties.put("application_runtime", String.valueOf(appClosedAt - appStartedAt));
-    properties.put("statistics_start_time", String.valueOf(globalSettings.statistics.startTime));
-    properties.put("statistics_end_time", String.valueOf(globalSettings.statistics.endTime));
-    properties.put("statistics_sessions_total", String.valueOf(globalSettings.statistics.sessionsTotal));
-    properties.put("statistics_jobs_started", String.valueOf(globalSettings.statistics.jobsStarted));
-    properties.put("statistics_jobs_completed", String.valueOf(globalSettings.statistics.jobsCompleted));
+    properties.put(
+        "application_runtime", String.valueOf(Instant.now().getEpochSecond() - appStartedAt));
+    properties.put("statistics_start_time", globalSettings.statistics.startTime);
+    properties.put("statistics_end_time", globalSettings.statistics.endTime);
+    properties.put(
+        "statistics_sessions_total", String.valueOf(globalSettings.statistics.sessionsTotal));
+    properties.put(
+        "statistics_jobs_started", String.valueOf(globalSettings.statistics.jobsStarted));
+    properties.put(
+        "statistics_jobs_completed", String.valueOf(globalSettings.statistics.jobsCompleted));
 
-    trackAnonymousAction(permanent_user_id, "Application Closed", properties);
+    trackAnonymousAction(permanentUserId, "Application Closed", properties);
     try {
       Thread.sleep(500);
     } catch (InterruptedException e) {
@@ -327,24 +438,34 @@ public class FRAnalytics {
     }
   }
 
+  /** Records the start of an autorouter session. */
   public static void autorouterStarted() {
-    autorouterStartedAt = Instant
-        .now()
-        .getEpochSecond();
+    autorouterStartedAt = Instant.now().getEpochSecond();
     sessionCount++;
 
     Map<String, String> properties = new HashMap<>();
     properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
     properties.put("session_count", String.valueOf(sessionCount));
 
-    trackAnonymousAction(permanent_user_id, "Auto-router Started", properties);
+    trackAnonymousAction(permanentUserId, "Auto-router Started", properties);
   }
 
-  public static void autorouterFinished(Integer netsTotal, Integer netsIncomplete, Integer clearanceViolations,
-      String boardHash, Float normalizedScore) {
-    long autorouterFinishedAt = Instant
-        .now()
-        .getEpochSecond();
+  /**
+   * Records the completion metrics of an autorouter session.
+   *
+   * @param netsTotal the total number of nets, or {@code null}
+   * @param netsIncomplete the number of incomplete nets, or {@code null}
+   * @param clearanceViolations the number of clearance violations, or {@code null}
+   * @param boardHash the resulting board hash, or {@code null}
+   * @param normalizedScore the resulting normalized score, or {@code null}
+   */
+  public static void autorouterFinished(
+      Integer netsTotal,
+      Integer netsIncomplete,
+      Integer clearanceViolations,
+      String boardHash,
+      Float normalizedScore) {
+    long autorouterFinishedAt = Instant.now().getEpochSecond();
     long autorouterRuntime = autorouterFinishedAt - autorouterStartedAt;
     totalAutorouterRuntime += autorouterRuntime;
 
@@ -358,7 +479,7 @@ public class FRAnalytics {
       properties.put("nets_incomplete", Integer.toString(netsIncomplete));
     }
     if (clearanceViolations != null) {
-      properties.put("clearance_violations", Integer.toString(clearanceViolations));
+      properties.put("clearanceViolations", Integer.toString(clearanceViolations));
     }
     if (boardHash != null) {
       properties.put("board_hash", boardHash);
@@ -367,24 +488,22 @@ public class FRAnalytics {
       properties.put("normalized_score", Float.toString(normalizedScore));
     }
 
-    trackAnonymousAction(permanent_user_id, "Auto-router Finished", properties);
+    trackAnonymousAction(permanentUserId, "Auto-router Finished", properties);
   }
 
+  /** Records the start of a route-optimizer session. */
   public static void routeOptimizerStarted() {
-    routeOptimizerStartedAt = Instant
-        .now()
-        .getEpochSecond();
+    routeOptimizerStartedAt = Instant.now().getEpochSecond();
 
     Map<String, String> properties = new HashMap<>();
     properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
     properties.put("session_count", String.valueOf(sessionCount));
-    trackAnonymousAction(permanent_user_id, "Route Optimizer Started", properties);
+    trackAnonymousAction(permanentUserId, "Route Optimizer Started", properties);
   }
 
+  /** Records the completion of a route-optimizer session. */
   public static void routeOptimizerFinished() {
-    long routeOptimizerFinishedAt = Instant
-        .now()
-        .getEpochSecond();
+    long routeOptimizerFinishedAt = Instant.now().getEpochSecond();
     long routeOptimizerRuntime = routeOptimizerFinishedAt - routeOptimizerStartedAt;
     totalRouteOptimizerRuntime += routeOptimizerRuntime;
 
@@ -393,37 +512,64 @@ public class FRAnalytics {
     properties.put("session_count", String.valueOf(sessionCount));
     properties.put("route_optimizer_runtime", String.valueOf(routeOptimizerRuntime));
 
-    trackAnonymousAction(permanent_user_id, "Route Optimizer Finished", properties);
+    trackAnonymousAction(permanentUserId, "Route Optimizer Finished", properties);
   }
 
+  /**
+   * Records that a board file was loaded.
+   *
+   * @param fileFormat the input file format
+   * @param fileDetails serialized file statistics
+   */
   public static void fileLoaded(String fileFormat, String fileDetails) {
     Map<String, String> properties = new HashMap<>();
     properties.put("file_format", fileFormat);
     properties.put("file_details", fileDetails);
 
-    trackAnonymousAction(permanent_user_id, "File Loaded", properties);
+    trackAnonymousAction(permanentUserId, "File Loaded", properties);
   }
 
-  public static void boardLoaded(String hostName, String hostVersion, int layerCount, int componentCount,
-      int netCount) {
+  /**
+   * Records board metadata after loading.
+   *
+   * @param hostName the source CAD host name
+   * @param hostVersion the source CAD host version
+   * @param layerCount the number of board layers
+   * @param componentCount the number of components
+   * @param netCount the number of nets
+   */
+  public static void boardLoaded(
+      String hostName, String hostVersion, int layerCount, int componentCount, int netCount) {
     Map<String, String> properties = new HashMap<>();
     properties.put("host_name", hostName);
-    properties.put("host_version", hostVersion);
-    properties.put("layer_count", Integer.toString(layerCount));
+    properties.put("hostVersion", hostVersion);
+    properties.put("layerCount", Integer.toString(layerCount));
     properties.put("component_count", Integer.toString(componentCount));
-    properties.put("net_count", Integer.toString(netCount));
+    properties.put("netCount", Integer.toString(netCount));
 
-    trackAnonymousAction(permanent_user_id, "Board Loaded", properties);
+    trackAnonymousAction(permanentUserId, "Board Loaded", properties);
   }
 
+  /**
+   * Records that a board file was saved.
+   *
+   * @param fileFormat the output file format
+   * @param fileDetails serialized file statistics
+   */
   public static void fileSaved(String fileFormat, String fileDetails) {
     Map<String, String> properties = new HashMap<>();
     properties.put("file_format", fileFormat);
     properties.put("file_details", fileDetails);
 
-    trackAnonymousAction(permanent_user_id, "File Saved", properties);
+    trackAnonymousAction(permanentUserId, "File Saved", properties);
   }
 
+  /**
+   * Records an exception raised by the application.
+   *
+   * @param localizedMessage the user-facing exception message
+   * @param e the exception
+   */
   public static void exceptionThrown(String localizedMessage, Throwable e) {
     StringBuilder sb = new StringBuilder();
     for (StackTraceElement ste : e.getStackTrace()) {
@@ -436,21 +582,29 @@ public class FRAnalytics {
     properties.put("exception_details", e.toString());
     properties.put("exception_stacktrace", sb.toString());
 
-    trackAnonymousAction(permanent_user_id, "Exception Thrown", properties);
+    trackAnonymousAction(permanentUserId, "Exception Thrown", properties);
   }
 
+  /**
+   * Records an API endpoint call without an explicit per-request identity.
+   *
+   * @param apiMethod the HTTP method and endpoint
+   * @param requestBody the serialized request body
+   * @param responseBody the serialized response body
+   */
   public static void apiEndpointCalled(String apiMethod, String requestBody, String responseBody) {
     apiEndpointCalled(apiMethod, requestBody, responseBody, null);
   }
 
   /**
-   * Tracks an API endpoint call, attributing it to the authenticated caller identified by
-   * {@code userId}. When {@code userId} is non-null it is used as both the {@code anonymous_id}
-   * sent to the analytics backend and the {@code user_id} property stored in BigQuery, so that
-   * API-originated events can be correlated per caller even in headless/API-only deployments
-   * where the static {@link #permanent_user_id} is never set.
+   * Tracks an API endpoint call, attributing it to the authenticated caller identified by {@code
+   * userId}. When {@code userId} is non-null it is used as both the {@code anonymous_id} sent to
+   * the analytics backend and the {@code user_id} property stored in BigQuery, so that
+   * API-originated events can be correlated per caller even in headless/API-only deployments where
+   * the static {@link #permanentUserId} is never set.
    */
-  public static void apiEndpointCalled(String apiMethod, String requestBody, String responseBody, UUID userId) {
+  public static void apiEndpointCalled(
+      String apiMethod, String requestBody, String responseBody, UUID userId) {
     Map<String, String> properties = new HashMap<>();
     properties.put("api_method", apiMethod);
     properties.put("api_request", requestBody);
@@ -461,11 +615,11 @@ public class FRAnalytics {
     }
 
     // Determine the effective identity: prefer the per-request caller UUID over the
-    // static permanent_user_id (which is always null in headless / API-only mode).
-    String effectiveUserId = (userId != null) ? userId.toString() : permanent_user_id;
+    // static permanentUserId (which is always null in headless / API-only mode).
+    String effectiveUserId = userId != null ? userId.toString() : permanentUserId;
 
     // Inject the resolved user_id into the properties map so that it overrides the
-    // null permanent_user_id that trackAnonymousAction would otherwise write.
+    // null permanentUserId that trackAnonymousAction would otherwise write.
     if (effectiveUserId != null) {
       properties.put("user_id", effectiveUserId);
     }
@@ -474,8 +628,21 @@ public class FRAnalytics {
   }
 
   /**
-   * Records one canonical API usage row for billing and quota analytics. Emitted by
-   * {@link app.freerouting.api.ApiUsageFilter} once per HTTP request/response cycle.
+   * Records one canonical API usage row for billing and quota analytics. Emitted by {@link
+   * app.freerouting.api.ApiUsageFilter} once per HTTP request/response cycle.
+   *
+   * @param httpMethod the HTTP method
+   * @param apiPath the request path
+   * @param apiRouteNormalized the normalized API route
+   * @param httpStatus the HTTP response status
+   * @param durationMs the request duration in milliseconds
+   * @param apiKeyHash the hashed API key, or {@code null}
+   * @param profileId the profile identifier, or {@code null}
+   * @param profileEmail the profile email, or {@code null}
+   * @param environmentHost the environment host, or {@code null}
+   * @param requestBytes the request size, or {@code null}
+   * @param responseBytes the response size, or {@code null}
+   * @param profileUuid the profile UUID, or {@code null}
    */
   public static void apiUsageRecorded(
       String httpMethod,
@@ -515,7 +682,7 @@ public class FRAnalytics {
       properties.put("response_bytes", Long.toString(responseBytes));
     }
 
-    String effectiveUserId = (profileUuid != null) ? profileUuid.toString() : profileId;
+    String effectiveUserId = profileUuid != null ? profileUuid.toString() : profileId;
     if (effectiveUserId != null) {
       properties.put("user_id", effectiveUserId);
     }

@@ -6,18 +6,19 @@ import com.google.gson.Strictness;
 import java.nio.file.Path;
 import java.time.Instant;
 
-public class GsonProvider {
+/** Shared Gson instance configured for Freerouting API and settings serialization. */
+public final class GsonProvider {
 
-  public static final Gson GSON = new GsonBuilder()
-      .setPrettyPrinting()
-      .disableHtmlEscaping()
-      .registerTypeAdapter(Instant.class, new InstantTypeAdapter())
-      .registerTypeAdapter(byte[].class, new ByteArrayToBase64TypeAdapter())
-      .registerTypeAdapter(Path.class, new PathTypeAdapter())
-      .registerTypeAdapterFactory(new RouterSettingsTypeAdapterFactory())
-      .setStrictness(Strictness.LENIENT)
-      .create();
+  public static final Gson GSON =
+      new GsonBuilder()
+          .setPrettyPrinting()
+          .disableHtmlEscaping()
+          .registerTypeAdapter(Instant.class, new InstantTypeAdapter())
+          .registerTypeAdapter(byte[].class, new ByteArrayToBase64TypeAdapter())
+          .registerTypeAdapter(Path.class, new PathTypeAdapter())
+          .registerTypeAdapterFactory(new RouterSettingsTypeAdapterFactory())
+          .setStrictness(Strictness.LENIENT)
+          .create();
 
-  private GsonProvider() {
-  }
+  private GsonProvider() {}
 }

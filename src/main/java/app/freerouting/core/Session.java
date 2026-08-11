@@ -5,17 +5,18 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.UUID;
 
-/**
- * Represents a user session that contains the jobs that will be processed by the router.
- */
+/** Represents a user session that contains the jobs that will be processed by the router. */
 public class Session implements Serializable {
 
   @SerializedName("id")
   public final UUID id = UUID.randomUUID();
+
   @SerializedName("user_id")
   public final UUID userId;
+
   @SerializedName("host")
   public final String host;
+
   public transient boolean isGuiSession;
 
   /**
@@ -34,7 +35,10 @@ public class Session implements Serializable {
 
     // check if the host value is valid (it must contain the host name and version separated by "/")
     if (host.split("/").length != 2) {
-      throw new IllegalArgumentException("Invalid host value: '" + host + "'. It must contain the host name and version separated by '/'.");
+      throw new IllegalArgumentException(
+          "Invalid host value: '"
+              + host
+              + "'. It must contain the host name and version separated by '/'.");
     }
   }
 

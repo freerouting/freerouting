@@ -15,152 +15,148 @@ import app.freerouting.geometry.planar.Shape;
 import java.util.Collection;
 import java.util.Iterator;
 
-/**
- * Interactive cutting a hole into an obstacle shape
- */
-public class HoleConstructionState extends CornerItemConstructionState {
+/** Interactive state for cutting a hole into an obstacle shape. */
+public final class HoleConstructionState extends CornerItemConstructionState {
 
-  private ObstacleArea item_to_modify;
+  private ObstacleArea itemToModify;
 
-  /**
-   * Creates a new instance of HoleConstructionState
-   */
-  private HoleConstructionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
+  /** Creates a new instance of HoleConstructionState. */
+  private HoleConstructionState(InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
   }
 
   /**
-   * Returns a new instance of this class or null, if that was not possible with
-   * the input parameters. If p_logfile != null, the construction of this hole is
-   * stored in a logfile.
+   * Returns a new instance of this class, or {@code null} if creation was not possible with the
+   * input parameters. If logging is enabled, the construction of this hole is stored in a log file.
    */
-  public static HoleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
-    HoleConstructionState new_instance = new HoleConstructionState(p_parent_state, p_board_handling);
-    if (!new_instance.start_ok(p_location)) {
-      new_instance = null;
+  public static HoleConstructionState getInstance(
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    HoleConstructionState newInstance = new HoleConstructionState(parentState, boardHandling);
+    if (!newInstance.startOk(location)) {
+      newInstance = null;
     }
-    return new_instance;
+    return newInstance;
   }
 
-  /**
-   * Looks for an obstacle area to modify Returns false, if it cannot find one.
-   */
-  private boolean start_ok(FloatPoint p_location) {
-    IntPoint pick_location = p_location.round();
-    ItemSelectionFilter.SelectableChoices[] selectable_choices = {
-        ItemSelectionFilter.SelectableChoices.KEEPOUT,
-        ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT,
-        ItemSelectionFilter.SelectableChoices.CONDUCTION
+  /** Looks for an obstacle area to modify. Returns false if it cannot find one. */
+  private boolean startOk(FloatPoint location) {
+    IntPoint pickLocation = location.round();
+    ItemSelectionFilter.SelectableChoices[] selectableChoices = {
+      ItemSelectionFilter.SelectableChoices.KEEPOUT,
+      ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT,
+      ItemSelectionFilter.SelectableChoices.CONDUCTION
     };
-    ItemSelectionFilter selection_filter = new ItemSelectionFilter(selectable_choices);
-    Collection<Item> found_items = hdlg.get_routing_board().pick_items(pick_location, hdlg.getInteractiveSettings().get_layer(),
-        selection_filter);
-    if (found_items.size() != 1) {
-      hdlg.screen_messages.set_status_message(tm.getText("no_item_found_for_adding_hole"));
+    ItemSelectionFilter selectionFilter = new ItemSelectionFilter(selectableChoices);
+    Collection<Item> foundItems =
+        hdlg.getRoutingBoard()
+            .pickItems(pickLocation, hdlg.getInteractiveSettings().getLayer(), selectionFilter);
+    if (foundItems.size() != 1) {
+      hdlg.screenMessages.setStatusMessage(tm.getText("no_item_found_for_adding_hole"));
       return false;
     }
-    Item found_item = found_items.iterator().next();
-    if (!(found_item instanceof ObstacleArea)) {
-      hdlg.screen_messages.set_status_message(tm.getText("no_obstacle_area_found_for_adding_hole"));
+    Item foundItem = foundItems.iterator().next();
+    if (!(foundItem instanceof ObstacleArea)) {
+      hdlg.screenMessages.setStatusMessage(tm.getText("no_obstacle_area_found_for_adding_hole"));
       return false;
     }
-    this.item_to_modify = (ObstacleArea) found_item;
-    if (item_to_modify.get_area() instanceof Circle) {
-      hdlg.screen_messages.set_status_message(tm.getText("adding_hole_to_circle_not_yet_implemented"));
+    this.itemToModify = (ObstacleArea) foundItem;
+    if (itemToModify.getArea() instanceof Circle) {
+      hdlg.screenMessages.setStatusMessage(tm.getText("adding_hole_to_circle_not_yet_implemented"));
       return false;
     }
-    if (item_to_modify.get_area() instanceof Circle) {
-      hdlg.screen_messages.set_status_message(tm.getText("adding_hole_to_circle_not_yet_implemented"));
+    if (itemToModify.getArea() instanceof Circle) {
+      hdlg.screenMessages.setStatusMessage(tm.getText("adding_hole_to_circle_not_yet_implemented"));
       return false;
     }
-    this.add_corner(p_location);
+    this.addCorner(location);
     return true;
   }
 
-  /**
-   * Adds a corner to the polygon of the hole under construction.
-   */
+  /** Adds a corner to the polygon of the hole under construction. */
   @Override
-  public InteractiveState left_button_clicked(FloatPoint p_next_corner) {
-    if (item_to_modify == null) {
-      return this.return_state;
+  public InteractiveState leftButtonClicked(FloatPoint nextCorner) {
+    if (itemToModify == null) {
+      return this.returnState;
     }
-    if (item_to_modify.get_area().contains(p_next_corner)) {
-      super.add_corner(p_next_corner);
+    if (itemToModify.getArea().contains(nextCorner)) {
+      super.addCorner(nextCorner);
       hdlg.repaint();
     }
     return this;
   }
 
   /**
-   * adds the just constructed hole to the item under modification, if that is
-   * possible without clearance violations
+   * Adds the just-constructed hole to the item under modification when possible without clearance
+   * violations.
    */
   @Override
   public InteractiveState complete() {
-    if (item_to_modify == null) {
-      return this.return_state;
+    if (itemToModify == null) {
+      return this.returnState;
     }
-    add_corner_for_snap_angle();
-    int corner_count = corner_list.size();
-    boolean construction_succeeded = corner_count > 2;
-    PolylineShape[] new_holes = null;
-    PolylineShape new_border = null;
-    if (construction_succeeded) {
-      Area obs_area = item_to_modify.get_area();
-      Shape[] old_holes = obs_area.get_holes();
-      new_border = (PolylineShape) obs_area.get_border();
-      if (new_border == null) {
-        construction_succeeded = false;
+    addCornerForSnapAngle();
+    int cornerCount = cornerList.size();
+    boolean constructionSucceeded = cornerCount > 2;
+    PolylineShape[] newHoles = null;
+    PolylineShape newBorder = null;
+    if (constructionSucceeded) {
+      Area obsArea = itemToModify.getArea();
+      Shape[] oldHoles = obsArea.getHoles();
+      newBorder = (PolylineShape) obsArea.getBorder();
+      if (newBorder == null) {
+        constructionSucceeded = false;
       } else {
-        new_holes = new PolylineShape[old_holes.length + 1];
-        for (int i = 0; i < old_holes.length; i++) {
-          new_holes[i] = (PolylineShape) old_holes[i];
-          if (new_holes[i] == null) {
-            construction_succeeded = false;
+        newHoles = new PolylineShape[oldHoles.length + 1];
+        for (int i = 0; i < oldHoles.length; i++) {
+          newHoles[i] = (PolylineShape) oldHoles[i];
+          if (newHoles[i] == null) {
+            constructionSucceeded = false;
             break;
           }
         }
       }
     }
-    if (construction_succeeded) {
-      IntPoint[] new_hole_corners = new IntPoint[corner_count];
-      Iterator<IntPoint> it = corner_list.iterator();
-      for (int i = 0; i < corner_count; i++) {
-        new_hole_corners[i] = it.next();
+    if (constructionSucceeded) {
+      IntPoint[] newHoleCorners = new IntPoint[cornerCount];
+      Iterator<IntPoint> it = cornerList.iterator();
+      for (int i = 0; i < cornerCount; i++) {
+        newHoleCorners[i] = it.next();
       }
-      new_holes[new_holes.length - 1] = new PolygonShape(new_hole_corners);
-      PolylineArea new_obs_area = new PolylineArea(new_border, new_holes);
+      newHoles[newHoles.length - 1] = new PolygonShape(newHoleCorners);
+      PolylineArea newObsArea = new PolylineArea(newBorder, newHoles);
 
-      if (new_obs_area.split_to_convex() == null) {
+      if (newObsArea.splitToConvex() == null) {
         // shape is invalid, maybe it has selfintersections
-        construction_succeeded = false;
+        constructionSucceeded = false;
       } else {
-        this.observers_activated = !hdlg.get_routing_board().observers_active();
-        if (this.observers_activated) {
-          hdlg.get_routing_board().start_notify_observers();
+        this.observersActivated = !hdlg.getRoutingBoard().observersActive();
+        if (this.observersActivated) {
+          hdlg.getRoutingBoard().startNotifyObservers();
         }
-        hdlg.get_routing_board().generate_snapshot();
-        hdlg.get_routing_board().remove_item(item_to_modify);
-        hdlg.get_routing_board().insert_obstacle(new_obs_area, item_to_modify.get_layer(),
-            item_to_modify.clearance_class_no(), FixedState.UNFIXED);
-        if (this.observers_activated) {
-          hdlg.get_routing_board().end_notify_observers();
-          this.observers_activated = false;
+        hdlg.getRoutingBoard().generateSnapshot();
+        hdlg.getRoutingBoard().removeItem(itemToModify);
+        hdlg.getRoutingBoard()
+            .insertObstacle(
+                newObsArea,
+                itemToModify.getLayer(),
+                itemToModify.clearanceClassNo(),
+                FixedState.UNFIXED);
+        if (this.observersActivated) {
+          hdlg.getRoutingBoard().endNotifyObservers();
+          this.observersActivated = false;
         }
       }
     }
-    if (construction_succeeded) {
-      hdlg.screen_messages.set_status_message(tm.getText("adding_hole_completed"));
+    if (constructionSucceeded) {
+      hdlg.screenMessages.setStatusMessage(tm.getText("adding_hole_completed"));
     } else {
-      hdlg.screen_messages.set_status_message(tm.getText("adding_hole_failed"));
+      hdlg.screenMessages.setStatusMessage(tm.getText("adding_hole_failed"));
     }
-    return this.return_state;
+    return this.returnState;
   }
 
   @Override
-  public void display_default_message() {
-    hdlg.screen_messages.set_status_message(tm.getText("adding_hole_to_obstacle_area"));
+  public void displayDefaultMessage() {
+    hdlg.screenMessages.setStatusMessage(tm.getText("adding_hole_to_obstacle_area"));
   }
 }

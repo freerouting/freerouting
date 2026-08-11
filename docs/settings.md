@@ -170,7 +170,7 @@ Configures the SMD-pin fanout pre-pass stage.
 - **`enabled`**: Enables or disables the built-in API server.
 - **`http_allowed`**: Allows or disallows HTTP connections to the API server.
 - **`endpoints`**: A list of endpoints that the API server will listen on. Each endpoint is specified as
-  `[protocol]://[host]:[port]`.  
+  `[protocol]://[host]:[port]`.
   When set via CLI or environment variable, provide a **comma-separated string** of endpoint URLs:
   - CLI: `--api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864`
   - Env var: `FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864`

@@ -1,47 +1,54 @@
 package app.freerouting.gui;
 
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+/** Provides display-related actions for the board context menu. */
 public class PopupMenuDisplay extends JPopupMenu {
 
-  protected final BoardPanel board_panel;
+  protected final BoardPanel boardPanel;
 
-  /**
-   * Creates a new instance of PopupMenuDisplay
-   */
-  public PopupMenuDisplay(BoardFrame p_board_frame) {
-    this.board_panel = p_board_frame.board_panel;
+  /** Creates a new instance of PopupMenuDisplay. */
+  public PopupMenuDisplay(BoardFrame boardFrame) {
+    this.boardPanel = boardFrame.boardPanel;
 
-    TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
-    JMenuItem popup_center_display_menuitem = new JMenuItem();
-    popup_center_display_menuitem.setText(tm.getText("center_display"));
-    popup_center_display_menuitem.addActionListener(_ -> board_panel.center_display(board_panel.right_button_click_location));
-    popup_center_display_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_center_display_menuitem", popup_center_display_menuitem.getText()));
+    JMenuItem popupCenterDisplayMenuitem = new JMenuItem();
+    popupCenterDisplayMenuitem.setText(tm.getText("center_display"));
+    popupCenterDisplayMenuitem.addActionListener(
+        _ -> boardPanel.centerDisplay(boardPanel.rightButtonClickLocation));
+    popupCenterDisplayMenuitem.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "popupCenterDisplayMenuitem", popupCenterDisplayMenuitem.getText()));
 
-    this.add(popup_center_display_menuitem);
+    this.add(popupCenterDisplayMenuitem);
 
-    JMenu zoom_menu = new JMenu();
-    zoom_menu.setText(tm.getText("zoom"));
+    JMenu zoomMenu = new JMenu();
+    zoomMenu.setText(tm.getText("zoom"));
 
-    JMenuItem popup_zoom_in_menuitem = new JMenuItem();
-    popup_zoom_in_menuitem.setText(tm.getText("zoom_in"));
-    popup_zoom_in_menuitem.addActionListener(_ -> board_panel.zoom_in(board_panel.right_button_click_location));
-    popup_zoom_in_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_zoom_in_menuitem", popup_zoom_in_menuitem.getText()));
+    JMenuItem popupZoomInMenuitem = new JMenuItem();
+    popupZoomInMenuitem.setText(tm.getText("zoom_in"));
+    popupZoomInMenuitem.addActionListener(
+        _ -> boardPanel.zoomIn(boardPanel.rightButtonClickLocation));
+    popupZoomInMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupZoomInMenuitem", popupZoomInMenuitem.getText()));
 
-    zoom_menu.add(popup_zoom_in_menuitem);
+    zoomMenu.add(popupZoomInMenuitem);
 
-    JMenuItem popup_zoom_out_menuitem = new JMenuItem();
-    popup_zoom_out_menuitem.setText(tm.getText("zoom_out"));
-    popup_zoom_out_menuitem.addActionListener(_ -> board_panel.zoom_out(board_panel.right_button_click_location));
-    popup_zoom_out_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_zoom_out_menuitem", popup_zoom_out_menuitem.getText()));
+    JMenuItem popupZoomOutMenuitem = new JMenuItem();
+    popupZoomOutMenuitem.setText(tm.getText("zoom_out"));
+    popupZoomOutMenuitem.addActionListener(
+        _ -> boardPanel.zoomOut(boardPanel.rightButtonClickLocation));
+    popupZoomOutMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupZoomOutMenuitem", popupZoomOutMenuitem.getText()));
 
-    zoom_menu.add(popup_zoom_out_menuitem);
+    zoomMenu.add(popupZoomOutMenuitem);
 
-    this.add(zoom_menu);
+    this.add(zoomMenu);
   }
 }

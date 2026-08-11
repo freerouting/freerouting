@@ -22,55 +22,55 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 
 ### Input and Output Files
 
-- **`-de [design input file]`**  
+- **`-de [design input file]`**
   Loads a design file at startup. The input can be:
     - Specctra board (`.dsn`)
     - Specctra session file (`.ses` - optional)
     - Freerouting design rules file (`.rules` - optional)
 
-  The DSN file is mandatory, while the SES and RULES files are optional.  
+  The DSN file is mandatory, while the SES and RULES files are optional.
   They can be provided in any order, separately or appended by the `+` sign (e.g. `-de myboard.dsn+myboard.ses+myboard.rules`).
 
-- **`-do [design output file]`**  
+- **`-do [design output file]`**
   Saves the routing results when the routing is finished. The output can be:
   - Specctra board (`.dsn`)
   - Specctra session file (`.ses`)
   - Eagle session script file (`.scr`)
-  
+
   The output format is determined by the file extension provided.
 
-- **`-di [design input directory]`**  
+- **`-di [design input directory]`**
   Sets the default folder for the open design dialogs when using the GUI.
 
-- **`-dr [design rules file]`**  
+- **`-dr [design rules file]`**
   Reads design rules from a previously saved `.rules` file.
 
-- **`-drc [design rules check json file]`**  
+- **`-drc [design rules check json file]`**
   Writes the design rules check report in KiCad JSON DRC schema format.
 
 ### Routing Parameters
 
-- **`-mp [number of passes]`**  
+- **`-mp [number of passes]`**
   Sets the upper limit for the number of autorouter passes to perform. More passes may result in better optimization but will take longer.
 
-- **`-mt [number of threads]`**  
+- **`-mt [number of threads]`**
   Sets the thread pool size for route optimization:
   - Default: One less than the number of logical processors on the system.
   - Set to `0` to disable route optimization.
   - Increasing the number may improve performance on multi-core systems.
 
-- **`-oit [percentage]`**  
+- **`-oit [percentage]`**
   Specifies the optimizer improvement threshold per pass:
   - Default: `0.1%`
   - The optimizer stops if the improvement falls below this threshold.
   - Setting `-oit 0` continues optimization until manually stopped or no further improvements are possible.
 
-- **`-inc [net class names]`**  
+- **`-inc [net class names]`**
   Lists net classes to ignore during autorouting:
   - Provide a comma-separated list (e.g., `-inc GND,VCC`).
   - The autorouter will not route nets belonging to these classes.
 
-- **`-im`**  
+- **`-im`**
   Enables saving of intermediate steps in a version-specific binary format:
   - Allows resuming interrupted optimizations from the last checkpoint.
   - Disabled by default.
@@ -78,18 +78,18 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 
 ### Optimization Strategies
 
-- **`-us [greedy | global | hybrid]`**  
+- **`-us [greedy | global | hybrid]`**
   Sets the board updating strategy for route optimization:
   - `greedy` (default): Accepts any immediate improvement.
   - `global`: Only accepts changes that result in a global optimum.
   - `hybrid`: Combines both strategies; requires `-hr` to specify the ratio.
 
-- **`-hr [m:n]`**  
+- **`-hr [m:n]`**
   Specifies the hybrid ratio when using the `hybrid` update strategy:
   - Format: `#_global_optimal_passes:#_prioritized_passes` (e.g., `1:1`).
   - Only effective with `-us hybrid`.
 
-- **`-is [sequential | random | prioritized]`**  
+- **`-is [sequential | random | prioritized]`**
   Sets the item selection strategy for route optimization:
   - `sequential`: Processes items in order.
   - `random`: Processes items in a random order.
@@ -97,7 +97,7 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 
 ### Language and Localization
 
-- **`-l [language code]`**  
+- **`-l [language code]`**
   Sets the language for the user interface:
   - Supported codes:
     - `en`: English
@@ -107,7 +107,7 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 
 ### Host Integration
 
-- **`-host [host_name host_version]`**  
+- **`-host [host_name host_version]`**
   Specifies the name and version of the host application if Freerouting is run as an external library or plugin.
 
 ### Debugging Options
@@ -131,12 +131,12 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 
 ### Miscellaneous Options
 
-- **`-dct [seconds]`**  
+- **`-dct [seconds]`**
   Sets the dialog confirmation timeout:
   - Specifies the number of seconds before dialogs proceed with the default action.
   - Default is `20` seconds.
 
-- **`-da`**  
+- **`-da`**
   Disables the collection of anonymous analytics data.
 
 - **`--logging.console.enabled=[true|false]`**

@@ -3,31 +3,29 @@ package app.freerouting.io.specctra.parser;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 
-/**
- * Class for reading place_control scopes from dsn-files.
- */
+/** Class for reading place_control scopes from dsn-files. */
+@SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
 public class PlaceControl extends ScopeKeyword {
 
-  /**
-   * Creates a new instance of PlaceControl
-   */
+  /** Creates a new instance of PlaceControl. */
   public PlaceControl() {
     super("place_control");
   }
 
-  /**
-   * Returns true, if rotate_first is read, else false.
-   */
-  static boolean read_flip_style_rotate_first(IJFlexScanner p_scanner) {
+  /** Returns true, if rotate_first is read, else false. */
+  static boolean readFlipStyleRotateFirst(IJFlexScanner scanner) {
     try {
       boolean result = false;
-      Object next_token = p_scanner.next_token();
-      if (next_token == ROTATE_FIRST) {
+      Object nextToken = scanner.nextToken();
+      if (nextToken == ROTATE_FIRST) {
         result = true;
       }
-      next_token = p_scanner.next_token();
-      if (next_token != CLOSED_BRACKET) {
-        FRLogger.warn("Structure.read_flip_style: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+      nextToken = scanner.nextToken();
+      if (nextToken != CLOSED_BRACKET) {
+        FRLogger.warn(
+            "Structure.read_flip_style: closing bracket expected at '"
+                + scanner.getScopeIdentifier()
+                + "'");
         return false;
       }
       return result;
@@ -37,37 +35,38 @@ public class PlaceControl extends ScopeKeyword {
     }
   }
 
-  /**
-   * Reads the flip_style
-   */
+  /** Reads the flip_style. */
   @Override
-  public boolean read_scope(ReadScopeParameter p_par) {
-    boolean flip_style_rotate_first = false;
-    Object next_token = null;
+  public boolean readScope(ReadScopeParameter par) {
+    boolean flipStyleRotateFirst = false;
+    Object nextToken = null;
     for (; ; ) {
-      Object prev_token = next_token;
+      Object prevToken = nextToken;
       try {
-        next_token = p_par.scanner.next_token();
+        nextToken = par.scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("PlaceControl.read_scope: IO error scanning file", e);
         return false;
       }
-      if (next_token == null) {
-        FRLogger.warn("PlaceControl.read_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
+      if (nextToken == null) {
+        FRLogger.warn(
+            "PlaceControl.read_scope: unexpected end of file at '"
+                + par.scanner.getScopeIdentifier()
+                + "'");
         return false;
       }
-      if (next_token == CLOSED_BRACKET) {
+      if (nextToken == CLOSED_BRACKET) {
         // end of scope
         break;
       }
-      if (prev_token == OPEN_BRACKET) {
-        if (next_token == FLIP_STYLE) {
-          flip_style_rotate_first = read_flip_style_rotate_first(p_par.scanner);
+      if (prevToken == OPEN_BRACKET) {
+        if (nextToken == FLIP_STYLE) {
+          flipStyleRotateFirst = readFlipStyleRotateFirst(par.scanner);
         }
       }
     }
-    if (flip_style_rotate_first) {
-      p_par.board_handling.get_routing_board().components.set_flip_style_rotate_first(true);
+    if (flipStyleRotateFirst) {
+      par.boardHandling.getRoutingBoard().components.setFlipStyleRotateFirst(true);
     }
     return true;
   }

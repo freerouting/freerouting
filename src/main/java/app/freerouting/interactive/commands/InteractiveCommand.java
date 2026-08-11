@@ -13,35 +13,24 @@ import java.util.function.Supplier;
 @FunctionalInterface
 public interface InteractiveCommand {
 
-  /**
-   * Executes the command and returns the next state.
-   */
+  /** Executes the command and returns the next state. */
   InteractiveState execute();
 
-  /**
-   * Allows pre-checking if the command should run. Defaults to true.
-   */
+  /** Allows pre-checking if the command should run. Defaults to true. */
   default boolean canExecute() {
     return true;
   }
 
-  /**
-   * Optional undo hook for future command-history integration.
-   */
-  default void undo() {
-  }
+  /** Optional undo hook for future command-history integration. */
+  default void undo() {}
 
-  /**
-   * Creates a command from a state-producing supplier.
-   */
+  /** Creates a command from a state-producing supplier. */
   static InteractiveCommand from(Supplier<InteractiveState> action) {
     Objects.requireNonNull(action, "action");
     return action::get;
   }
 
-  /**
-   * Creates a command that keeps the current state unchanged.
-   */
+  /** Creates a command that keeps the current state unchanged. */
   static InteractiveCommand noOp(InteractiveState state) {
     return () -> state;
   }

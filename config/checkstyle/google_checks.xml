@@ -52,6 +52,14 @@
     <property name="eachLine" value="true"/>
   </module>
 
+  <module name="RegexpSingleline">
+    <property name="id" value="noTrailingWhitespace"/>
+    <property name="format" value="\s+$"/>
+    <property name="minimum" value="0"/>
+    <property name="maximum" value="0"/>
+    <property name="message" value="Trailing whitespace is not allowed"/>
+  </module>
+
   <module name="LineLength">
     <property name="fileExtensions" value="java"/>
     <property name="max" value="100"/>
@@ -63,6 +71,11 @@
     <property name="checkFormat" value="LineLength"/>
     <property name="offCommentFormat" value='^.*"""\s*$'/>
     <property name="onCommentFormat" value='^\s*"""\s*(?:[,;]|.+)$'/>
+  </module>
+  <module name="SuppressWithPlainTextCommentFilter">
+    <property name="checkFormat" value="\.IndentationCheck$"/>
+    <property name="offCommentFormat" value='^""".?'/>
+    <property name="onCommentFormat" value='.'/>
   </module>
   <module name="TreeWalker">
     <module name="OuterTypeFilename"/>
@@ -77,7 +90,7 @@
     <module name="IllegalTokenText">
       <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL, TEXT_BLOCK_CONTENT"/>
       <property name="format"
-          value="\\u00(09|0(a|A)|0(b|B)|(0|1)(c|C)|(0|1)(d|D)|1(d|D)|1(e|E)|1(f|F)|22|27|5(C|c))|\\u1680|\\u3000|\\u20(00|0(a|A)|28|29|(2|5)(f|F))|\\(0(10|11|12|14|15|40|42|47)|134)"/>
+          value="\\u00(08|09|0(a|A)|0(c|C)|0(d|D)|20|22|27|5(C|c))|\\(0(10|11|12|14|15|40|42|47)|134)"/>
       <property name="message"
                value="Consider using special escape sequence instead of octal value or Unicode escaped value."/>
     </module>
@@ -102,7 +115,7 @@
                     INTERFACE_DEF, LAMBDA, LITERAL_CATCH,
                     LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_FOR, LITERAL_IF,
                     LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, METHOD_DEF,
-                    OBJBLOCK, STATIC_INIT, RECORD_DEF, COMPACT_CTOR_DEF"/>
+                    OBJBLOCK, STATIC_INIT, RECORD_DEF, COMPACT_CTOR_DEF, SWITCH_RULE"/>
     </module>
     <module name="LeftCurly">
       <property name="id" value="LeftCurlyNl"/>
@@ -132,8 +145,8 @@
       <property name="tokens"
                value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT,
                     INSTANCE_INIT, ANNOTATION_DEF, ENUM_DEF, INTERFACE_DEF, RECORD_DEF,
-                    COMPACT_CTOR_DEF, LITERAL_SWITCH, LITERAL_CASE, LITERAL_FINALLY,
-                    LITERAL_CATCH"/>
+                    COMPACT_CTOR_DEF, LITERAL_SWITCH, LITERAL_CASE, LITERAL_DEFAULT,
+                    LITERAL_FINALLY, LITERAL_CATCH"/>
     </module>
     <module name="SuppressionXpathSingleFilter">
       <!-- suppression is required till https://github.com/checkstyle/checkstyle/issues/7541 -->
@@ -147,10 +160,7 @@
     </module>
     <module name="WhitespaceAfter">
       <property name="tokens"
-               value="COMMA, SEMI, TYPECAST, LITERAL_IF, LITERAL_ELSE, LITERAL_RETURN,
-                    LITERAL_WHILE, LITERAL_DO, LITERAL_FOR, LITERAL_FINALLY, DO_WHILE, ELLIPSIS,
-                    LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_CATCH, LAMBDA,
-                    LITERAL_YIELD, LITERAL_CASE, LITERAL_WHEN, ANNOTATIONS"/>
+               value="COMMA, SEMI, TYPECAST, ELLIPSIS, LITERAL_YIELD, LITERAL_CASE, ANNOTATIONS"/>
     </module>
     <module name="WhitespaceAround">
       <property name="allowEmptyConstructors" value="true"/>
@@ -186,16 +196,24 @@
                                  | //SLIST[count(./*)=1][parent::LITERAL_CATCH and
                                  not(parent::LITERAL_CATCH/following-sibling::*)]"/>
     </module>
+    <module name="WhitespaceBeforeEmptyBody">
+      <property name="tokens"
+                value="CLASS_DEF, INTERFACE_DEF, RECORD_DEF, ENUM_DEF, ANNOTATION_DEF,
+                METHOD_DEF, LITERAL_WHILE, LITERAL_FOR, STATIC_INIT, LITERAL_NEW"/>
+    </module>
     <module name="RegexpSinglelineJava">
       <property name="format" value="\{[ ]+\}"/>
       <property name="message" value="Empty blocks should have no spaces. Empty blocks
                                    may only be represented as '{}' when not part of a
                                    multi-block statement (4.1.3)"/>
     </module>
+    <module name="SingleSpaceSeparator"/>
     <module name="OneStatementPerLine"/>
     <module name="MultipleVariableDeclarations"/>
     <module name="ArrayTypeStyle"/>
     <module name="JavadocLeadingAsteriskAlign"/>
+    <module name="JavadocMissingLeadingAsterisk"/>
+    <module name="JavadocContentLocation"/>
     <module name="MissingSwitchDefault"/>
     <module name="FallThrough"/>
     <module name="UpperEll"/>
@@ -253,12 +271,7 @@
       <message key="name.invalidPattern"
              value="Type name ''{0}'' must match pattern ''{1}''."/>
     </module>
-    <module name="MemberName">
-      <property name="format"
-        value="^(?![a-z]$)(?![a-z][A-Z])[a-z][a-zA-Z0-9]*(?:_[0-9]+)*$"/>
-      <message key="name.invalidPattern"
-             value="Member name ''{0}'' must match pattern ''{1}''."/>
-    </module>
+    <module name="GoogleNonConstantFieldName"/>
     <module name="ParameterName">
       <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
       <message key="name.invalidPattern"
@@ -274,10 +287,21 @@
       <message key="name.invalidPattern"
              value="Catch parameter name ''{0}'' must match pattern ''{1}''."/>
     </module>
+    <module name="RecordComponentName">
+      <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
+      <message key="name.invalidPattern"
+               value="Record component name ''{0}'' must match pattern ''{1}''."/>
+    </module>
     <module name="LocalVariableName">
       <property name="format" value="^(_|[a-z]([a-z0-9][a-zA-Z0-9]*)?)$"/>
       <message key="name.invalidPattern"
              value="Local variable name ''{0}'' must match pattern ''{1}''."/>
+    </module>
+    <module name="LocalFinalVariableName">
+      <property name="format" value="^(_|[a-z]([a-z0-9][a-zA-Z0-9]*)?)$"/>
+      <property name="tokens" value="VARIABLE_DEF, PARAMETER_DEF, RESOURCE"/>
+      <message key="name.invalidPattern"
+               value="Local final variable name ''{0}'' must match pattern ''{1}''."/>
     </module>
     <module name="PatternVariableName">
       <property name="format" value="^(_|[a-z]([a-z0-9][a-zA-Z0-9]*)?)$"/>
@@ -285,27 +309,22 @@
              value="Pattern variable name ''{0}'' must match pattern ''{1}''."/>
     </module>
     <module name="ClassTypeParameterName">
-      <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/>
+      <property name="format" value="(^[A-Z][0-9]?$)|(^[A-Z]T$)|(^([A-Z][a-z0-9]+)+T$)"/>
       <message key="name.invalidPattern"
              value="Class type name ''{0}'' must match pattern ''{1}''."/>
     </module>
-    <module name="RecordComponentName">
-      <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
-      <message key="name.invalidPattern"
-               value="Record component name ''{0}'' must match pattern ''{1}''."/>
-    </module>
     <module name="RecordTypeParameterName">
-      <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/>
+      <property name="format" value="(^[A-Z][0-9]?$)|(^[A-Z]T$)|(^([A-Z][a-z0-9]+)+T$)"/>
       <message key="name.invalidPattern"
                value="Record type name ''{0}'' must match pattern ''{1}''."/>
     </module>
     <module name="MethodTypeParameterName">
-      <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/>
+      <property name="format" value="(^[A-Z][0-9]?$)|(^[A-Z]T$)|(^([A-Z][a-z0-9]+)+T$)"/>
       <message key="name.invalidPattern"
              value="Method type name ''{0}'' must match pattern ''{1}''."/>
     </module>
     <module name="InterfaceTypeParameterName">
-      <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/>
+      <property name="format" value="(^[A-Z][0-9]?$)|(^[A-Z]T$)|(^([A-Z][a-z0-9]+)+T$)"/>
       <message key="name.invalidPattern"
              value="Interface type name ''{0}'' must match pattern ''{1}''."/>
     </module>
@@ -345,7 +364,6 @@
       <property name="sortImportsInGroupAlphabetically" value="true"/>
       <property name="separateLineBetweenGroups" value="true"/>
       <property name="customImportOrderRules" value="STATIC###THIRD_PARTY_PACKAGE"/>
-      <property name="tokens" value="IMPORT, STATIC_IMPORT, PACKAGE_DEF"/>
     </module>
     <module name="MethodParamPad">
       <property name="tokens"
@@ -373,23 +391,36 @@
                     RECORD_DEF, RECORD_PATTERN_DEF"/>
     </module>
     <module name="OperatorWrap">
+      <property name="id" value="OperatorWrapNL"/>
       <property name="option" value="NL"/>
       <property name="tokens"
                value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR,
                     LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR, METHOD_REF,
                     TYPE_EXTENSION_AND "/>
     </module>
+    <module name="OperatorWrap">
+      <property name="id" value="OperatorWrapEOL"/>
+      <property name="option" value="EOL"/>
+      <property name="tokens" value="LAMBDA"/>
+    </module>
     <module name="AnnotationLocation">
-      <property name="id" value="AnnotationLocationMostCases"/>
+      <property name="id" value="AnnotationLocationTypeAndPackageAndMembers"/>
       <property name="tokens"
-               value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF,
-                      RECORD_DEF, COMPACT_CTOR_DEF, PACKAGE_DEF"/>
+               value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, RECORD_DEF, ANNOTATION_DEF,
+                PACKAGE_DEF, ENUM_CONSTANT_DEF, ANNOTATION_FIELD_DEF"/>
+      <property name="allowSamelineSingleParameterlessAnnotation" value="false"/>
+    </module>
+    <module name="AnnotationLocation">
+      <property name="id" value="AnnotationLocationMethodsAndCtors"/>
+      <property name="tokens"
+               value="METHOD_DEF, CTOR_DEF, COMPACT_CTOR_DEF"/>
     </module>
     <module name="AnnotationLocation">
       <property name="id" value="AnnotationLocationVariables"/>
       <property name="tokens" value="VARIABLE_DEF"/>
       <property name="allowSamelineMultipleAnnotations" value="true"/>
     </module>
+    <module name="MissingOverrideOnRecordAccessor"/>
     <module name="NonEmptyAtclauseDescription"/>
     <module name="InvalidJavadocPosition"/>
     <module name="JavadocTagContinuationIndentation"/>
@@ -403,8 +434,8 @@
     <module name="RequireEmptyLineBeforeBlockTagGroup"/>
     <module name="AtclauseOrder">
       <property name="tagOrder" value="@param, @return, @throws, @deprecated"/>
-      <property name="target"
-               value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
+      <property name="target" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF,
+                                  VARIABLE_DEF, RECORD_DEF, COMPACT_CTOR_DEF"/>
     </module>
     <module name="JavadocMethod">
       <property name="accessModifiers" value="public"/>
@@ -450,9 +481,16 @@
     </module>
     <module name="SingleLineJavadoc"/>
     <module name="TodoComment">
+      <property name="id" value="TodoFormat"/>
       <property name="format" value="^[ \t]*(?!TODO:)(?i:TODO)\b:?"/>
       <message key="todo.match"
                value="''TODO:'' must be written in all caps and followed by a colon."/>
+    </module>
+    <module name="TodoComment">
+      <property name="id" value="BoxComments"/>
+      <property name="format" value="^[ \t]*([*=#])\1{8,}[ \t]*$"/>
+      <message key="todo.match"
+               value="Comment uses box-like repetitive character pattern."/>
     </module>
     <module name="EmptyCatchBlock">
       <property name="commentFormat" value="\w+"/>

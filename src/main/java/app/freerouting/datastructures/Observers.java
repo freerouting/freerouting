@@ -1,37 +1,23 @@
 package app.freerouting.datastructures;
 
-/**
- * Interface to observe changes on objects for synchronisation purposes.
- */
-public interface Observers<ObjectType> {
+/** Interface to observe changes on objects for synchronisation purposes. */
+public interface Observers<T> {
 
-  /**
-   * Tell the observers the deletion p_object.
-   */
-  void notify_deleted(ObjectType p_object);
+  /** Tell the observers about the deletion of object. */
+  void notifyDeleted(T object);
 
-  /**
-   * Notify the observers, that they can synchronize the changes on p_object.
-   */
-  void notify_changed(ObjectType p_object);
+  /** Notify the observers, that they can synchronize the changes on object. */
+  void notifyChanged(T object);
 
-  /**
-   * Enable the observers to synchronize the new created item.
-   */
-  void notify_new(ObjectType p_object);
+  /** Enable the observers to synchronize the new created item. */
+  void notifyNew(T object);
 
-  /**
-   * Starts notifying the observers
-   */
+  /** Starts notifying the observers. */
   void activate();
 
-  /**
-   * Ends notifying the observers
-   */
+  /** Ends notifying the observers. */
   void deactivate();
 
-  /**
-   * Returns, if the observer is activated.
-   */
-  boolean is_active();
+  /** Returns, if the observer is activated. */
+  boolean isActive();
 }

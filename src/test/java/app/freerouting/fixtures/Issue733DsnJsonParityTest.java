@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class Issue733DsnJsonParityTest {
+class Issue733DsnJsonParityTest {
 
   private File findFixtureFile(String filename) {
     Path testDirectory = Path.of(".").toAbsolutePath();
@@ -46,7 +46,7 @@ public class Issue733DsnJsonParityTest {
 
   private RoutingBoard loadJson(File file) throws Exception {
     try (InputStream is = new FileInputStream(file);
-         Reader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+        Reader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
       BoardReadResult result = KiCadJsonReader.readBoard(r, null, null);
       if (result instanceof BoardReadResult.Success success) {
         return (RoutingBoard) success.board();
@@ -59,7 +59,7 @@ public class Issue733DsnJsonParityTest {
 
   @Test
   @Disabled("Disabled due to known issue with DSN and JSON parity.")
-  void testDsnJsonInputParityKiCadInterf() throws Exception {
+  void dsnJsonInputParityKiCadInterf() throws Exception {
     File dsnFile = findFixtureFile("Issue733-kicad_interf_u_input_design.dsn");
     File jsonFile = findFixtureFile("Issue733-kicad_interf_u_input_design.json");
 
@@ -70,14 +70,14 @@ public class Issue733DsnJsonParityTest {
     RoutingBoard jsonBoard = loadJson(jsonFile);
 
     BoardComparator.ComparisonResult result = BoardComparator.compare(dsnBoard, jsonBoard, 1e-3);
-    System.out.println(result.report);
+    IO.println(result.report);
 
     assertTrue(result.areEqual, "Boards must be identical in representation:\n" + result.report);
   }
 
   @Test
   @Disabled("Disabled due to known issue with DSN and JSON parity.")
-  void testDsnJsonInputParityKiCadComplexHierarchy() throws Exception {
+  void dsnJsonInputParityKiCadComplexHierarchy() throws Exception {
     File dsnFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_design.dsn");
     File jsonFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_design.json");
 
@@ -88,13 +88,13 @@ public class Issue733DsnJsonParityTest {
     RoutingBoard jsonBoard = loadJson(jsonFile);
 
     BoardComparator.ComparisonResult result = BoardComparator.compare(dsnBoard, jsonBoard, 1e-3);
-    System.out.println(result.report);
+    IO.println(result.report);
 
     assertTrue(result.areEqual, "Boards must be identical in representation:\n" + result.report);
   }
 
   @Test
-  void testSesJsonOutputParityKiCadComplexHierarchy() throws Exception {
+  void sesJsonOutputParityKiCadComplexHierarchy() throws Exception {
     File dsnFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_design.dsn");
     File sesFile = findFixtureFile("Issue733-kicad_complex_hierarchy_output_session.ses");
     File jsonSessionFile = findFixtureFile("Issue733-kicad_complex_hierarchy_output_session.json");
@@ -111,14 +111,18 @@ public class Issue733DsnJsonParityTest {
 
     // Load board from DSN for JSON comparison
     RoutingBoard boardWithJson = loadDsn(dsnFile);
-    try (InputStreamReader jsonReader = new InputStreamReader(new FileInputStream(jsonSessionFile), StandardCharsets.UTF_8)) {
+    try (InputStreamReader jsonReader =
+        new InputStreamReader(new FileInputStream(jsonSessionFile), StandardCharsets.UTF_8)) {
       KiCadJsonReader.importSession(jsonReader, boardWithJson);
     }
 
     // Compare boards (SES is ground truth)
-    BoardComparator.ComparisonResult result = BoardComparator.compare(boardWithSes, boardWithJson, 1e-3);
-    System.out.println(result.report);
+    BoardComparator.ComparisonResult result =
+        BoardComparator.compare(boardWithSes, boardWithJson, 1e-3);
+    IO.println(result.report);
 
-    assertTrue(result.areEqual, "SES and JSON routed outputs must be identical in representation:\n" + result.report);
+    assertTrue(
+        result.areEqual,
+        "SES and JSON routed outputs must be identical in representation:\n" + result.report);
   }
 }

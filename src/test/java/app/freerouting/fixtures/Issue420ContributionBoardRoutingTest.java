@@ -18,10 +18,10 @@ import org.junit.jupiter.api.Test;
  * On boards with ~979 pins (and larger), enabling the post-route optimizer caused the JVM heap to
  * grow unboundedly, eventually triggering {@code java.lang.OutOfMemoryError: Java heap space} even
  * when large heaps (e.g., {@code -Xmx20g}) were configured. A secondary symptom was 100% CPU
- * utilisation with the GUI becoming unresponsive, indicating the optimizer was stuck in an
- * infinite (or near-infinite) allocation loop. MAT analysis confirmed that almost all heap was
- * unreachable (GC roots not releasing references), suggesting an object-retention leak inside the
- * optimizer rather than a simple allocation burst.
+ * utilisation with the GUI becoming unresponsive, indicating the optimizer was stuck in an infinite
+ * (or near-infinite) allocation loop. MAT analysis confirmed that almost all heap was unreachable
+ * (GC roots not releasing references), suggesting an object-retention leak inside the optimizer
+ * rather than a simple allocation burst.
  *
  * <p><b>Board characteristics:</b> ~979 pins / 1125 unrouted nets. One full routing pass on this
  * board takes approximately 3–4 minutes, so tests must use {@code maxItems} to limit scope to a
@@ -29,42 +29,43 @@ import org.junit.jupiter.api.Test;
  * optimizer code path responsible for the reported leak.
  *
  * <p><b>Acceptance Criteria:</b>
+ *
  * <ul>
  *   <li>The routing + optimization job must complete (or be cancelled/terminated by the timeout)
- *       without throwing {@link OutOfMemoryError}.</li>
- *   <li>The job must reach a terminal state within the allotted time.</li>
- *   <li>The resulting board must be non-null.</li>
- *   <li>The optimizer must not introduce new clearance violations.</li>
+ *       without throwing {@link OutOfMemoryError}.
+ *   <li>The job must reach a terminal state within the allotted time.
+ *   <li>The resulting board must be non-null.
+ *   <li>The optimizer must not introduce new clearance violations.
  * </ul>
  *
  * @see <a href="https://github.com/freerouting/freerouting/issues/420">GitHub Issue #420</a>
  */
-public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
+class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
 
   private static final String FIXTURE_FILE = "Issue420-contribution-board.dsn";
 
   /**
-   * Smoke-test: verifies that the contribution board can be loaded and routed for a small number
-   * of items without throwing an {@link OutOfMemoryError} or any other unexpected exception.
+   * Smoke-test: verifies that the contribution board can be loaded and routed for a small number of
+   * items without throwing an {@link OutOfMemoryError} or any other unexpected exception.
    *
    * <p>Uses {@code maxItems=100} so the test finishes within approximately 30–60 seconds even on
    * slow CI hardware, while still exercising the router on the large-board code path.
    */
   @Test
   @Tag("slow")
-  void routing_completesWithoutOutOfMemoryError() {
+  void routingCompletesWithoutOutOfMemoryError() {
     TestingSettings testSettings = new TestingSettings();
     testSettings.setMaxPasses(1);
     testSettings.setMaxItems(100);
     testSettings.setJobTimeoutString("00:02:00");
 
-    RoutingJob job = GetRoutingJob(FIXTURE_FILE, testSettings);
+    RoutingJob job = getRoutingJob(FIXTURE_FILE, testSettings);
     assertNotNull(job, "RoutingJob must not be null");
 
     // Disable the fanout phase to speed up the test
     job.routerSettings.fanout.enabled = false;
 
-    RoutingJob completed = RunRoutingJob(job);
+    RoutingJob completed = runRoutingJob(job);
 
     assertTrue(
         completed.state == RoutingJobState.COMPLETED
@@ -72,8 +73,8 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
             || completed.state == RoutingJobState.TERMINATED,
         "Routing job must reach a terminal state; actual state: " + completed.state);
 
-    assertNotNull(completed.board,
-        "RoutingJob.board must be non-null after a completed routing run");
+    assertNotNull(
+        completed.board, "RoutingJob.board must be non-null after a completed routing run");
   }
 
   /**
@@ -86,7 +87,7 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
    */
   @Test
   @Tag("slow")
-  void optimizer_completesWithoutOutOfMemoryError() {
+  void optimizerCompletesWithoutOutOfMemoryError() {
     // Route a limited number of items first so the optimizer has something to work with,
     // but the initial routing phase stays well under 1 minute.
     TestingSettings testSettings = new TestingSettings();
@@ -94,7 +95,7 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
     testSettings.setMaxItems(150);
     testSettings.setJobTimeoutString("00:05:00");
 
-    RoutingJob job = GetRoutingJob(FIXTURE_FILE, testSettings);
+    RoutingJob job = getRoutingJob(FIXTURE_FILE, testSettings);
     assertNotNull(job, "RoutingJob must not be null");
 
     // Disable the fanout phase to speed up the test
@@ -107,7 +108,7 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
     job.routerSettings.optimizer.maxPasses = 1;
     job.routerSettings.optimizer.maxThreads = 1;
 
-    RoutingJob completed = RunRoutingJob(job);
+    RoutingJob completed = runRoutingJob(job);
 
     assertTrue(
         completed.state == RoutingJobState.COMPLETED
@@ -115,19 +116,22 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
             || completed.state == RoutingJobState.TERMINATED,
         "Routing+optimizer job must reach a terminal state; actual state: " + completed.state);
 
-    assertNotNull(completed.board,
-        "RoutingJob.board must be non-null after routing+optimization run");
+    assertNotNull(
+        completed.board, "RoutingJob.board must be non-null after routing+optimization run");
 
     // The optimizer must not introduce clearance violations.
-    assertRoutingResult(completed, FIXTURE_FILE)
-        .exactClearanceViolations(0)
-        .check();
+    assertRoutingResult(completed, FIXTURE_FILE).exactClearanceViolations(0).check();
 
     Duration duration = completed.getDuration();
-    var statsAfter = GetBoardStatistics(completed);
-    IO.println("Issue420 optimizer test completed in "
-        + FRLogger.formatDuration(duration.toSeconds())
-        + " with " + statsAfter.connections.incompleteCount + " incomplete connections"
-        + " and " + statsAfter.clearanceViolations.totalCount + " clearance violations.");
+    var statsAfter = getBoardStatistics(completed);
+    IO.println(
+        "Issue420 optimizer test completed in "
+            + FRLogger.formatDuration(duration.toSeconds())
+            + " with "
+            + statsAfter.connections.incompleteCount
+            + " incomplete connections"
+            + " and "
+            + statsAfter.clearanceViolations.totalCount
+            + " clearance violations.");
   }
 }

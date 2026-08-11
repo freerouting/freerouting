@@ -9,9 +9,7 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.NetworkConnector;
 import org.eclipse.jetty.server.Server;
 
-/**
- * Servlet context listener for the dedicated MCP server.
- */
+/** Servlet context listener for the dedicated MCP server. */
 @WebListener
 public class McpContextListener implements ServletContextListener {
 
@@ -20,7 +18,8 @@ public class McpContextListener implements ServletContextListener {
     String fullUrl = "http://localhost:37964";
 
     Server server = null;
-    ServletContextHandler contextHandler = ServletContextHandler.getServletContextHandler(sce.getServletContext());
+    ServletContextHandler contextHandler =
+        ServletContextHandler.getServletContextHandler(sce.getServletContext());
     if (contextHandler != null) {
       server = contextHandler.getServer();
     }
@@ -36,19 +35,31 @@ public class McpContextListener implements ServletContextListener {
           if (host == null) {
             host = "localhost";
           }
-          int port = networkConnector.getPort();
+          int port = networkConnector.getLocalPort();
+          if (port <= 0) {
+            port = networkConnector.getPort();
+          }
           fullUrl = "http://" + host + ":" + port + sce.getServletContext().getContextPath();
           break;
         }
       }
     }
 
-    FRLogger.info("MCP server started successfully at " + fullUrl
-        + ". JSON-RPC endpoint: " + fullUrl + "/v1/mcp, SSE: " + fullUrl
-        + "/v1/mcp/events, WebSocket: " + fullUrl + "/v1/mcp/ws.");
+    FRLogger.info(
+        "MCP server started successfully at "
+            + fullUrl
+            + ". JSON-RPC endpoint: "
+            + fullUrl
+            + "/v1/mcp, SSE: "
+            + fullUrl
+            + "/v1/mcp/events, WebSocket: "
+            + fullUrl
+            + "/v1/mcp/ws.");
 
     if (!McpApiKeyValidationService.getInstance().isAuthenticationEnabled()) {
-      FRLogger.warn("MCP server authentication is DISABLED. Enable it before exposing MCP endpoints to a network.");
+      FRLogger.warn(
+          "MCP server authentication is DISABLED. Enable it before exposing MCP endpoints to a"
+              + " network.");
     }
   }
 

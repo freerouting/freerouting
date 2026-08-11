@@ -6,10 +6,21 @@ plugins {
     id 'jvm-test-suite'
     id 'signing'
     id 'maven-publish'
+    id 'checkstyle'
     id "com.vanniktech.maven.publish" version "0.37.0"
     id 'io.github.ben-manes.versions' version '0.59.0'
     id 'org.openrewrite.rewrite' version '7.38.0'
     id "com.diffplug.spotless" version "8.9.0"
+}
+
+checkstyle {
+    toolVersion = '13.9.0'
+    configFile = file('config/checkstyle/google_checks.xml')
+    configProperties = [
+            'org.checkstyle.google.suppressionfilter.config':
+                    file('config/checkstyle/checkstyle-suppressions.xml').absolutePath
+    ]
+    ignoreFailures = false
 }
 
 
@@ -23,6 +34,15 @@ java.toolchain {
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets {
+    rewriteRecipes {
+        java {
+            srcDirs = ['src/rewrite/java']
+        }
+    }
+}
+
 
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
@@ -65,7 +85,19 @@ testing {
 }
 
 tasks.named('check') {
-    dependsOn(testing.suites.integrationTest)
+    dependsOn(testing.suites.integrationTest, tasks.named('spotlessCheck'))
+}
+
+spotless {
+    lineEndings = 'UNIX'
+    java {
+        // Explicit targets: main + test only. Excludes src_v19 (reference baseline) and
+        // build/generated-src (VersionInfo.java regenerated on every build).
+        target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
+        removeUnusedImports()
+        // 1.28.0+ required for Java 25 (see diffplug/spotless#2468).
+        googleJavaFormat('1.28.0').reorderImports(true)
+    }
 }
 
 tasks.named("dependencyUpdates").configure {
@@ -175,12 +207,22 @@ dependencies {
     implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.53'
     implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.53'
 
-    // OpenRewrite:
+    // OpenRewrite (all versions verified current as of Aug 2026; rewrite-migrate-java
+    // transitively provides org.openrewrite:rewrite-gradle for the MigrateToGradle9 recipe):
     rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
     rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.41.0'
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
     rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.43.0'
-    rewrite 'org.openrewrite.recipe:rewrite-gradle:0.1.0'
+
+    rewriteRecipesImplementation 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
+    rewriteRecipesImplementation 'org.openrewrite:rewrite-java:8.88.0'
+    rewriteRecipesImplementation 'org.openrewrite:rewrite-core:8.88.0'
+    rewrite sourceSets.rewriteRecipes.output
+    testImplementation sourceSets.rewriteRecipes.output
+    testImplementation 'org.openrewrite:rewrite-java:8.88.0'
+    testImplementation 'org.openrewrite:rewrite-core:8.88.0'
+    testImplementation 'org.openrewrite:rewrite-java-25:8.88.0'
+
 
     // ArchUnit: package-architecture enforcement
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.5.0'
@@ -299,6 +341,8 @@ tasks.register('writeVersionInfo') {
         buildInfoCode.write(
                 """
             package app.freerouting.constants;
+
+            /** Build metadata constants. */
             public final class Constants {
               public static final String FREEROUTING_VERSION = \"${versionId}\";
               public static final String FREEROUTING_BUILD_DATE = \"${buildDateValue}\";
@@ -338,6 +382,12 @@ sourceSets {
     }
 }
 
+// The v1.9 source tree is a frozen compatibility baseline and is intentionally
+// excluded from current Checkstyle enforcement.
+tasks.matching { it.name == 'checkstyleV19' }.configureEach {
+    enabled = false
+}
+
 // V1.9 Version Info Generator
 tasks.register('writeVersionInfoV19') {
     def outputDir = layout.buildDirectory.dir("generated-src-v19/app/freerouting/constants")
@@ -354,6 +404,8 @@ tasks.register('writeVersionInfoV19') {
         buildInfoCode.write(
                 """
             package app.freerouting.constants;
+
+            /** Build metadata constants. */
             public final class Constants {
               public static final String FREEROUTING_VERSION = \"${versionId}\";
               public static final String FREEROUTING_BUILD_DATE = \"${buildDateValue}\";
@@ -457,11 +509,14 @@ tasks.register('installLocalGitHook', Copy) {
 }
 
 tasks.withType(Test).configureEach { Test task ->
-    // Separate JVMs per fork so static singletons (globalSettings, schedulers) stay isolated.
-    // Slow routing fixtures are memory-heavy; cap their parallelism to avoid OOM/timeouts under load.
-    maxParallelForks = task.name == 'testSlow'
-        ? Math.min(2, Math.max(1, Runtime.runtime.availableProcessors().intdiv(4)))
-        : (Runtime.runtime.availableProcessors().intdiv(2) ?: 1)
+    // Keep the established parallelism for independent tests. Tests tagged "serial" run through
+    // the dedicated testSerial task below because they start embedded servers or use substantial
+    // routing resources.
+    maxParallelForks = task.name == 'testSerial'
+        ? 1
+        : (task.name == 'testSlow'
+            ? Math.min(2, Math.max(1, Runtime.runtime.availableProcessors().intdiv(4)))
+            : (Runtime.runtime.availableProcessors().intdiv(2) ?: 1))
 
     // Absolute fixtures path so forked workers find DSN files even when user.dir is not the repo root.
     systemProperty 'freerouting.test.fixtures.dir', layout.projectDirectory.dir('fixtures').asFile.absolutePath
@@ -523,6 +578,7 @@ tasks.withType(Test).configureEach { Test task ->
 
 test {
     useJUnitPlatform {
+        excludeTags 'serial'
         // Daily runs skip slow tests unless explicitly requested.
         if (!includeSlowTests.get()) {
             excludeTags 'slow'
@@ -541,24 +597,112 @@ tasks.register('testSlow', Test) {
     }
 }
 
+tasks.register('testSerial', Test) {
+    group = 'verification'
+    description = 'Runs tests tagged with @Tag("serial") sequentially.'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    mustRunAfter(tasks.named('test'))
+    useJUnitPlatform {
+        includeTags 'serial'
+    }
+}
+
+tasks.named('check') {
+    dependsOn(tasks.named('testSerial'))
+}
+
 tasks.register('testAll') {
     group = 'verification'
-    description = 'Runs both fast/default tests and tests tagged with @Tag("slow").'
-    dependsOn(tasks.named('test'))
-    finalizedBy(tasks.named('testSlow'))
+    description = 'Runs default, serial-sensitive, and slow tests.'
+    dependsOn(tasks.named('test'), tasks.named('testSlow'), tasks.named('testSerial'))
 }
 
 tasks.named('testSlow') {
     mustRunAfter(tasks.named('test'))
 }
 
-rewrite {
-    // --- PHASE 1: Hygiene (Run first to reduce noise) ---
-    // activeRecipe("org.openrewrite.java.cleanup.RemoveUnusedImports")
-    // activeRecipe("org.openrewrite.java.cleanup.CommonStaticAnalysis")
-    // activeRecipe("org.openrewrite.java.format.AutoFormat")
+tasks.named('testSerial') {
+    mustRunAfter(tasks.named('testSlow'))
+}
 
-    // --- PHASE 2: Naming Convention (Your specific snake_case fix) ---
+rewrite {
+    // Fail fast on misspelled / nonexistent recipe names instead of silently skipping them.
+    failOnInvalidActiveRecipes = true
+
+    // Protect the v1.9 reference implementation (src_v19 source set) — it must stay unmodified.
+    exclusion("src_v19/**")
+    exclusion("**/src_v19/**")
+    exclusion("**/geometry/**")
+    exclusion("**/board/**")
+    exclusion("**/drc/**")
+    exclusion("**/autoroute/**")
+    exclusion("**/management/**")
+    exclusion("**/io/**")
+    exclusion("**/interactive/**")
+    exclusion("**/gui/**")
+
+
+tasks.register('phase2GenerateFieldMap', Exec) {
+    group = 'rewrite'
+    description = 'Generate field rename map before running rewriteRun'
+    def pkgs = System.getProperty('rewrite.targetPackages', '')
+    if (pkgs) {
+        def pkgList = pkgs.split(',').collect { it.trim() }
+        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/generate-field-rename-map.ps1', '-TargetPackages', pkgList.join(',')
+    } else {
+        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/generate-field-rename-map.ps1'
+    }
+}
+
+tasks.register('phase2FieldReferenceRenames', Exec) {
+    group = 'rewrite'
+    description = 'Apply cross-file field reference renames from build/field-renames.tsv'
+    def pkgs = System.getProperty('rewrite.targetPackages', '')
+    if (pkgs) {
+        def pkgList = pkgs.split(',').collect { it.trim() }
+        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/apply-field-reference-renames.ps1', '-TargetPackages', pkgList.join(',')
+    } else {
+        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/apply-field-reference-renames.ps1'
+    }
+}
+
+tasks.register('phase2aFieldsPost') {
+    group = 'rewrite'
+    description = 'Post-steps after Phase2aFields: field reference fallback + spotlessApply'
+    dependsOn(tasks.named('phase2FieldReferenceRenames'), tasks.named('spotlessApply'))
+}
+
+tasks.register('phase2fPost') {
+    group = 'rewrite'
+    description = 'Post-steps after Phase2fLocalVariables: spotlessApply only'
+    dependsOn(tasks.named('spotlessApply'))
+}
+
+tasks.register('phase2Naming') {
+    group = 'rewrite'
+    description = 'Phase 2 post-steps: field reference fallback + spotlessApply (run rewriteRun first)'
+    dependsOn(tasks.named('phase2FieldReferenceRenames'), tasks.named('spotlessApply'))
+}
+
+tasks.named('spotlessApply').configure { mustRunAfter(tasks.named('phase2FieldReferenceRenames')) }
+
+['rewriteRun', 'rewriteDryRun', 'rewriteDiscover'].each { taskName ->
+    tasks.matching { it.name == taskName }.configureEach {
+        dependsOn(tasks.named('compileRewriteRecipesJava'))
+    }
+}
+
+
+    // --- PHASE 1: Hygiene (run first to reduce noise) ---
+    // Curated composite in rewrite.yml: CommonStaticAnalysis minus MethodNameCasing
+    // (inconsistent renames across widened-access overrides) and WriteOctalValuesAsDecimal.
+    // activeRecipe("app.freerouting.Phase1Hygiene")
+    // Formatting guardrail: ./gradlew spotlessApply (enforced by spotlessCheck in check)
+
+    // --- PHASE 2: Naming Convention (snake_case -> camelCase) ---
+    // WARNING: renaming private fields breaks Java-serialization compatibility of saved
+    // .frb GUI session files (renamed fields deserialize to defaults).
     // activeRecipe("org.openrewrite.staticanalysis.RenameLocalVariablesToCamelCase")
     // activeRecipe("org.openrewrite.staticanalysis.RenamePrivateFieldsToCamelCase")
 
@@ -573,7 +717,9 @@ rewrite {
     // activeRecipe("org.openrewrite.java.migrate.UpgradeToJava25")
 
     // --- PHASE 6: Modern Java Features (Optional Polish) ---
-    // activeRecipe("org.openrewrite.java.cleanup.UsePrimitivePatterns")
+    // activeRecipe("org.openrewrite.staticanalysis.InstanceOfPatternMatch")
+    // activeRecipe("org.openrewrite.java.migrate.lang.UseTextBlocks")
+    // activeRecipe("org.openrewrite.java.migrate.SwitchPatternMatching")
 
     // --- Configuration ---
     checkstyleConfigFile = file("config/checkstyle/google_checks.xml")

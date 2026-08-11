@@ -11,64 +11,58 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Window displaying the library packages.
- */
+/** Window displaying the library packages. */
 public class WindowPackages extends WindowObjectListWithFilter {
 
-  /**
-   * Creates a new instance of PackagesWindow
-   */
-  public WindowPackages(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  /** Creates a new instance of PackagesWindow. */
+  public WindowPackages(BoardFrame boardFrame) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("packages"));
   }
 
-  /**
-   * Fills the list with the library packages.
-   */
+  /** Fills the list with the library packages. */
   @Override
-  protected void fill_list() {
-    Packages packages = this.board_frame.board_panel.board_handling.get_routing_board().library.packages;
-    Package[] sorted_arr = new Package[packages.count()];
-    for (int i = 0; i < sorted_arr.length; i++) {
-      sorted_arr[i] = packages.get(i + 1);
+  protected void fillList() {
+    Packages packages = this.boardFrame.boardPanel.boardHandling.getRoutingBoard().library.packages;
+    Package[] sortedArr = new Package[packages.count()];
+    for (int i = 0; i < sortedArr.length; i++) {
+      sortedArr[i] = packages.get(i + 1);
     }
-    Arrays.sort(sorted_arr);
-    for (int i = 0; i < sorted_arr.length; i++) {
-      this.add_to_list(sorted_arr[i]);
+    Arrays.sort(sortedArr);
+    for (int i = 0; i < sortedArr.length; i++) {
+      this.addToList(sortedArr[i]);
     }
     this.list.setVisibleRowCount(Math.min(packages.count(), DEFAULT_TABLE_SIZE));
   }
 
   @Override
-  protected void select_instances() {
-    List<Object> selected_packages = list.getSelectedValuesList();
-    if (selected_packages.isEmpty()) {
+  protected void selectInstances() {
+    List<Object> selectedPackages = list.getSelectedValuesList();
+    if (selectedPackages.isEmpty()) {
       return;
     }
-    RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-    Set<Item> board_instances = new TreeSet<>();
-    Collection<Item> board_items = routing_board.get_items();
-    for (Item curr_item : board_items) {
-      if (curr_item.get_component_no() > 0) {
-        Component curr_component = routing_board.components.get(curr_item.get_component_no());
-        Package curr_package = curr_component.get_package();
-        boolean package_matches = false;
-        for (int i = 0; i < selected_packages.size(); i++) {
-          if (curr_package == selected_packages.get(i)) {
-            package_matches = true;
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
+    Set<Item> boardInstances = new TreeSet<>();
+    Collection<Item> boardItems = routingBoard.getItems();
+    for (Item currItem : boardItems) {
+      if (currItem.getComponentNo() > 0) {
+        Component currComponent = routingBoard.components.get(currItem.getComponentNo());
+        Package currPackage = currComponent.getPackage();
+        boolean packageMatches = false;
+        for (int i = 0; i < selectedPackages.size(); i++) {
+          if (currPackage == selectedPackages.get(i)) {
+            packageMatches = true;
             break;
           }
         }
-        if (package_matches) {
-          board_instances.add(curr_item);
+        if (packageMatches) {
+          boardInstances.add(currItem);
         }
       }
     }
-    board_frame.board_panel.board_handling.select_items(board_instances);
-    board_frame.board_panel.board_handling.zoom_selection();
+    boardFrame.boardPanel.boardHandling.selectItems(boardInstances);
+    boardFrame.boardPanel.boardHandling.zoomSelection();
   }
 }

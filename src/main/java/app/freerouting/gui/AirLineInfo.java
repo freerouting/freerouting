@@ -5,35 +5,36 @@ import app.freerouting.drc.AirLine;
 import app.freerouting.util.TextManager;
 import java.util.Locale;
 
-/**
- * Wrapper class for displaying information about an AirLine in the
- * ObjectInfoPanel.
- */
+/** Wrapper class for displaying information about an AirLine in the ObjectInfoPanel. */
 public class AirLineInfo implements ObjectInfoPanel.Printable {
 
-    public final AirLine airline;
+  public final AirLine airline;
 
-    public AirLineInfo(AirLine p_airline) {
-        this.airline = p_airline;
-    }
+  /**
+   * Creates an information-panel adapter for an incomplete connection.
+   *
+   * @param airline the incomplete connection to display
+   */
+  public AirLineInfo(AirLine airline) {
+    this.airline = airline;
+  }
 
-    @Override
-    public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-        TextManager tm = new TextManager(AirLine.class, p_locale);
+  @Override
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(AirLine.class, locale);
 
-        p_window.append_bold(tm.getText("incomplete"));
-        p_window.append(" " + tm.getText("net") + " ");
-        p_window.append(airline.net.name);
-        p_window.append(" " + tm.getText("from") + " ", "Incomplete Start Item", airline.from_item);
-        p_window.append(airline.from_corner);
-        p_window.append(" " + tm.getText("to") + " ", "Incomplete End Item", airline.to_item);
-        p_window.append(airline.to_corner);
-        p_window.newline();
-    }
+    window.appendBold(tm.getText("incomplete"));
+    window.append(" " + tm.getText("net") + " ");
+    window.append(airline.net.name);
+    window.append(" " + tm.getText("from") + " ", "Incomplete Start Item", airline.fromItem);
+    window.append(airline.fromCorner);
+    window.append(" " + tm.getText("to") + " ", "Incomplete End Item", airline.toItem);
+    window.append(airline.toCorner);
+    window.newline();
+  }
 
-    @Override
-    public String toString() {
-        return this.airline.toString();
-    }
-
+  @Override
+  public String toString() {
+    return this.airline.toString();
+  }
 }

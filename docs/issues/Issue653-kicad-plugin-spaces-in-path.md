@@ -75,4 +75,3 @@ comment.  The OS-level fix (short 8.3 paths, or `GetShortPathName` via
 The release zips (`kicad-freerouting.zip`, `kicad-freerouting-2.2.0.zip`)
 must be regenerated from the updated `kicad-freerouting/` folder following
 the procedure in `docs/developer.md` before the next release.
-

@@ -1,9 +1,7 @@
 {
   "list_empty": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowObjectInfo"
-    ],
+    "code_references": [],
     "english_hash": "ba61eea246993d3ff552ff2645a632e9b743d05d0dd96a5cf93f3b472ab69c8a",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

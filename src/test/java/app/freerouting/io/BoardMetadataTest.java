@@ -1,20 +1,20 @@
 package app.freerouting.io;
 
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.Unit;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import app.freerouting.board.AngleRestriction;
+import app.freerouting.board.Unit;
+import org.junit.jupiter.api.Test;
 
 class BoardMetadataTest {
 
   @Test
   void recordCanBeConstructed() {
-    BoardMetadata meta = new BoardMetadata(
-        "KiCad", "8.0", 4, Unit.MM, 1000,
-        AngleRestriction.FORTYFIVE_DEGREE, null);
+    BoardMetadata meta =
+        new BoardMetadata(
+            "KiCad", "8.0", 4, Unit.MM, 1000, AngleRestriction.FORTYFIVE_DEGREE, null);
 
     assertEquals("KiCad", meta.hostCad());
     assertEquals("8.0", meta.hostVersion());
@@ -27,8 +27,10 @@ class BoardMetadataTest {
 
   @Test
   void recordEquality() {
-    BoardMetadata a = new BoardMetadata("EAGLE", "9.6", 2, Unit.MIL, 3937, AngleRestriction.NINETY_DEGREE, null);
-    BoardMetadata b = new BoardMetadata("EAGLE", "9.6", 2, Unit.MIL, 3937, AngleRestriction.NINETY_DEGREE, null);
+    BoardMetadata a =
+        new BoardMetadata("EAGLE", "9.6", 2, Unit.MIL, 3937, AngleRestriction.NINETY_DEGREE, null);
+    BoardMetadata b =
+        new BoardMetadata("EAGLE", "9.6", 2, Unit.MIL, 3937, AngleRestriction.NINETY_DEGREE, null);
 
     assertEquals(a, b);
     assertEquals(a.hashCode(), b.hashCode());
@@ -36,7 +38,9 @@ class BoardMetadataTest {
 
   @Test
   void toStringContainsFieldValues() {
-    BoardMetadata meta = new BoardMetadata("KiCad", "8.0", 4, Unit.MM, 1000, AngleRestriction.FORTYFIVE_DEGREE, null);
+    BoardMetadata meta =
+        new BoardMetadata(
+            "KiCad", "8.0", 4, Unit.MM, 1000, AngleRestriction.FORTYFIVE_DEGREE, null);
     String str = meta.toString();
 
     // Java record toString() includes the field names and values

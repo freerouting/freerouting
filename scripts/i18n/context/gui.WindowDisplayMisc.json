@@ -113,9 +113,7 @@
   },
   "layer_dimming": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowDisplayMisc"
-    ],
+    "code_references": [],
     "english_hash": "e2fe4793313f7f1505ee1fd98d4370119775ef36e5d1ab34b62e22987500ab57",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

@@ -2,7 +2,7 @@ function ConvertFrom-FrDuration {
     param([string]$durationStr)
     if (-not $durationStr) { return 0.0 }
     $durationStr = $durationStr.Trim()
-    
+
     $hours = 0.0
     $minutes = 0.0
     $seconds = 0.0
@@ -195,7 +195,7 @@ function Get-PhaseMetrics {
             $autorouter.initial_unrouted_count = [int]$matches[2]
             $autorouter.completion_reason = $matches[1].Trim()
             $autorouter.duration_seconds = ConvertFrom-FrDuration $matches[3]
-            
+
             $scoreParsed = ConvertFrom-FrScore $matches[4]
             $autorouter.final_score = $scoreParsed.Score
             $autorouter.final_unrouted = $scoreParsed.Unrouted
@@ -355,4 +355,3 @@ function Get-PhaseMetrics {
         timed_out = $logTimedOut
     }
 }
-

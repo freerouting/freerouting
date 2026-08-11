@@ -550,9 +550,7 @@
   },
   "contained_nets": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowNetClasses"
-    ],
+    "code_references": [],
     "english_hash": "3268ab83f93776dd20ae76324f6afa66309dde178f867d97fc4cbde2c9b76e1c",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

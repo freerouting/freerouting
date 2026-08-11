@@ -3,54 +3,50 @@ package app.freerouting.gui;
 import app.freerouting.board.Item;
 import app.freerouting.drc.AirLine;
 import app.freerouting.interactive.RatsNest;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+/** Displays incomplete connections on the current board. */
 public class WindowIncompletes extends WindowObjectListWithFilter {
 
-  /**
-   * Creates a new instance of IncompletesWindow
-   */
-  public WindowIncompletes(BoardFrame p_board_frame) {
-    super(p_board_frame);
-    setLanguage(p_board_frame.get_locale());
+  /** Creates a new instance of IncompletesWindow. */
+  public WindowIncompletes(BoardFrame boardFrame) {
+    super(boardFrame);
+    setLanguage(boardFrame.get_locale());
 
     this.setTitle(tm.getText("incompletes"));
-    this.list_empty_message.setText(tm.getText("route_completed"));
+    this.listEmptyMessage.setText(tm.getText("routeCompleted"));
   }
 
-  /**
-   * Fills the list with the board incompletes.
-   */
+  /** Fills the list with the board incompletes. */
   @Override
-  protected void fill_list() {
-    RatsNest ratsnest = board_frame.board_panel.board_handling.get_ratsnest();
-    AirLine[] sorted_arr = ratsnest.get_airlines();
+  protected void fillList() {
+    RatsNest ratsnest = boardFrame.boardPanel.boardHandling.getRatsnest();
+    AirLine[] sortedArr = ratsnest.getAirlines();
 
-    Arrays.sort(sorted_arr);
-    for (int i = 0; i < sorted_arr.length; i++) {
-      this.add_to_list(new AirLineInfo(sorted_arr[i]));
+    Arrays.sort(sortedArr);
+    for (int i = 0; i < sortedArr.length; i++) {
+      this.addToList(new AirLineInfo(sortedArr[i]));
     }
-    this.list.setVisibleRowCount(Math.min(sorted_arr.length, DEFAULT_TABLE_SIZE));
+    this.list.setVisibleRowCount(Math.min(sortedArr.length, DEFAULT_TABLE_SIZE));
   }
 
   @Override
-  protected void select_instances() {
-    List<Object> selected_incompletes = list.getSelectedValuesList();
-    if (selected_incompletes.isEmpty()) {
+  protected void selectInstances() {
+    List<Object> selectedIncompletes = list.getSelectedValuesList();
+    if (selectedIncompletes.isEmpty()) {
       return;
     }
-    Set<Item> selected_items = new TreeSet<>();
-    for (int i = 0; i < selected_incompletes.size(); i++) {
-      AirLineInfo curr_info = (AirLineInfo) selected_incompletes.get(i);
-      AirLine curr_airline = curr_info.airline;
-      selected_items.add(curr_airline.from_item);
-      selected_items.add(curr_airline.to_item);
+    Set<Item> selectedItems = new TreeSet<>();
+    for (int i = 0; i < selectedIncompletes.size(); i++) {
+      AirLineInfo currInfo = (AirLineInfo) selectedIncompletes.get(i);
+      AirLine currAirline = currInfo.airline;
+      selectedItems.add(currAirline.fromItem);
+      selectedItems.add(currAirline.toItem);
     }
-    board_frame.board_panel.board_handling.select_items(selected_items);
-    board_frame.board_panel.board_handling.zoom_selection();
+    boardFrame.boardPanel.boardHandling.selectItems(selectedItems);
+    boardFrame.boardPanel.boardHandling.zoomSelection();
   }
 }

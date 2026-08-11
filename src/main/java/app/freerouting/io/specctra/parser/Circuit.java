@@ -6,128 +6,138 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class Circuit {
+@SuppressWarnings({
+  "checkstyle:MissingJavadocMethod",
+  "checkstyle:MissingJavadocType",
+  "checkstyle:VariableDeclarationUsageDistance"
+})
+public final class Circuit {
 
-  private Circuit() {
-  }
+  private Circuit() {}
 
   /**
-   * Currently only the length matching rule is read from a circuit scope. If the scope does not contain a length matching rule, null is returned.
+   * Currently only the length matching rule is read from a circuit scope. If the scope does not
+   * contain a length matching rule, null is returned.
    */
-  public static ReadScopeResult read_scope(IJFlexScanner p_scanner) {
-    Object next_token = null;
-    double min_trace_length = 0;
-    double max_trace_length = 0;
-    Collection<String> use_via = new LinkedList<>();
-    Collection<String> use_layer = new LinkedList<>();
+  public static ReadScopeResult readScope(IJFlexScanner scanner) {
+    Object nextToken = null;
+    double minTraceLength = 0;
+    double maxTraceLength = 0;
+    Collection<String> useVia = new LinkedList<>();
+    Collection<String> useLayer = new LinkedList<>();
     for (; ; ) {
-      Object prev_token = next_token;
+      Object prevToken = nextToken;
       try {
-        next_token = p_scanner.next_token();
+        nextToken = scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("Circuit.read_scope: IO error scanning file", e);
         return null;
       }
-      if (next_token == null) {
-        FRLogger.warn("Circuit.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+      if (nextToken == null) {
+        FRLogger.warn(
+            "Circuit.read_scope: unexpected end of file at '" + scanner.getScopeIdentifier() + "'");
         return null;
       }
-      if (next_token == Keyword.CLOSED_BRACKET) {
+      if (nextToken == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
-      if (prev_token == Keyword.OPEN_BRACKET) {
-        if (next_token == Keyword.LENGTH) {
-          LengthMatchingRule length_rule = read_length_scope(p_scanner);
-          if (length_rule != null) {
-            min_trace_length = length_rule.min_length;
-            max_trace_length = length_rule.max_length;
+      if (prevToken == Keyword.OPEN_BRACKET) {
+        if (nextToken == Keyword.LENGTH) {
+          LengthMatchingRule lengthRule = readLengthScope(scanner);
+          if (lengthRule != null) {
+            minTraceLength = lengthRule.minLength;
+            maxTraceLength = lengthRule.maxLength;
           }
-        } else if (next_token == Keyword.USE_VIA) {
-          use_via.addAll(Structure.read_via_padstacks(p_scanner));
-        } else if (next_token == Keyword.USE_LAYER) {
-          use_layer.addAll(Arrays.stream(DsnFile.read_string_list_scope(p_scanner)).toList());
+        } else if (nextToken == Keyword.USE_VIA) {
+          useVia.addAll(Structure.readViaPadstacks(scanner));
+        } else if (nextToken == Keyword.USE_LAYER) {
+          useLayer.addAll(Arrays.stream(DsnFile.readStringListScope(scanner)).toList());
         } else {
-          ScopeKeyword.skip_scope(p_scanner);
+          ScopeKeyword.skipScope(scanner);
         }
       }
     }
-    return new ReadScopeResult(max_trace_length, min_trace_length, use_via, use_layer);
+    return new ReadScopeResult(maxTraceLength, minTraceLength, useVia, useLayer);
   }
 
-  static LengthMatchingRule read_length_scope(IJFlexScanner p_scanner) {
+  static LengthMatchingRule readLengthScope(IJFlexScanner scanner) {
     LengthMatchingRule result;
-    double[] length_arr = new double[2];
-    Object next_token = null;
+    double[] lengthArr = new double[2];
+    Object nextToken = null;
     for (int i = 0; i < 2; i++) {
       try {
-        next_token = p_scanner.next_token();
+        nextToken = scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("Circuit.read_length_scope: IO error scanning file", e);
         return null;
       }
-      if (next_token instanceof Double double1) {
-        length_arr[i] = double1;
-      } else if (next_token instanceof Integer integer) {
-        length_arr[i] = integer;
+      if (nextToken instanceof Double double1) {
+        lengthArr[i] = double1;
+      } else if (nextToken instanceof Integer integer) {
+        lengthArr[i] = integer;
       } else {
-        FRLogger.warn("Circuit.read_length_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "Circuit.read_length_scope: number expected at '" + scanner.getScopeIdentifier() + "'");
         return null;
       }
     }
-    result = new LengthMatchingRule(length_arr[0], length_arr[1]);
+    result = new LengthMatchingRule(lengthArr[0], lengthArr[1]);
     for (; ; ) {
-      Object prev_token = next_token;
+      Object prevToken = nextToken;
       try {
-        next_token = p_scanner.next_token();
+        nextToken = scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("Circuit.read_length_scope: IO error scanning file", e);
         return null;
       }
-      if (next_token == null) {
-        FRLogger.warn("Circuit.read_length_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+      if (nextToken == null) {
+        FRLogger.warn(
+            "Circuit.read_length_scope: unexpected end of file at '"
+                + scanner.getScopeIdentifier()
+                + "'");
         return null;
       }
-      if (next_token == Keyword.CLOSED_BRACKET) {
+      if (nextToken == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
-      if (prev_token == Keyword.OPEN_BRACKET) {
-        ScopeKeyword.skip_scope(p_scanner);
+      if (prevToken == Keyword.OPEN_BRACKET) {
+        ScopeKeyword.skipScope(scanner);
       }
     }
     return result;
   }
 
-  /**
-   * A max_length of -1 indicates that no maximum length is defined.
-   */
+  /** A maxLength of -1 indicates that no maximum length is defined. */
   public static class ReadScopeResult {
 
-    public final double max_length;
-    public final double min_length;
-    public final Collection<String> use_via;
-    public final Collection<String> use_layer;
+    public final double maxLength;
+    public final double minLength;
+    public final Collection<String> useVia;
+    public final Collection<String> useLayer;
 
-    public ReadScopeResult(double p_max_length, double p_min_length, Collection<String> p_use_via, Collection<String> p_use_layer) {
-      max_length = p_max_length;
-      min_length = p_min_length;
-      use_via = p_use_via;
-      use_layer = p_use_layer;
+    public ReadScopeResult(
+        double maxLength,
+        double minLength,
+        Collection<String> useVia,
+        Collection<String> useLayer) {
+      this.maxLength = maxLength;
+      this.minLength = minLength;
+      this.useVia = useVia;
+      this.useLayer = useLayer;
     }
   }
 
-  /**
-   * A max_length of -1 indicates that no maximum length is defined.
-   */
+  /** A maxLength of -1 indicates that no maximum length is defined. */
   private static class LengthMatchingRule {
 
-    public final double max_length;
-    public final double min_length;
+    public final double maxLength;
+    public final double minLength;
 
-    public LengthMatchingRule(double p_max_length, double p_min_length) {
-      max_length = p_max_length;
-      min_length = p_min_length;
+    public LengthMatchingRule(double maxLength, double minLength) {
+      this.maxLength = maxLength;
+      this.minLength = minLength;
     }
   }
 }

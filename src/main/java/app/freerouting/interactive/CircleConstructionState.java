@@ -12,115 +12,104 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPopupMenu;
 
-/**
- * Interactive creation of a circle obstacle
- */
-public class CircleConstructionState extends InteractiveState {
+/** Interactive creation of a circle obstacle. */
+public final class CircleConstructionState extends InteractiveState {
 
-  private final FloatPoint circle_center;
-  private double circle_radius = 0;
-  private boolean observers_activated;
+  private final FloatPoint circleCenter;
+  private double circleRadius = 0;
+  private boolean observersActivated;
 
-  /**
-   * Creates a new instance of CircleConstructionState
-   */
-  private CircleConstructionState(FloatPoint p_location, InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
-    super(p_parent_state, p_board_handling);
-    circle_center = p_location;
+  /** Creates a new instance of CircleConstructionState. */
+  private CircleConstructionState(
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
+    circleCenter = location;
   }
 
   /**
-   * Returns a new instance of this class. If p_logfile != null; the creation of
-   * this item is stored in a logfile
+   * Returns a new instance of this class. If logging is enabled, the creation of this item is
+   * stored in a log file.
    */
-  public static CircleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling) {
-    p_board_handling.remove_ratsnest(); // inserting a circle may change the connectivity.
-    return new CircleConstructionState(p_location, p_parent_state, p_board_handling);
+  public static CircleConstructionState getInstance(
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    boardHandling.removeRatsnest(); // inserting a circle may change the connectivity.
+    return new CircleConstructionState(location, parentState, boardHandling);
   }
 
   @Override
-  public InteractiveState left_button_clicked(FloatPoint p_location) {
+  public InteractiveState leftButtonClicked(FloatPoint location) {
     return this.complete();
   }
 
   @Override
-  public InteractiveState mouse_moved() {
-    super.mouse_moved();
+  public InteractiveState mouseMoved() {
+    super.mouseMoved();
     hdlg.repaint();
     return this;
   }
 
-  /**
-   * completes the circle construction state
-   */
+  /** Completes the circle construction state. */
   @Override
   public InteractiveState complete() {
-    IntPoint center = this.circle_center.round();
-    int radius = (int) Math.round(this.circle_radius);
-    int layer = hdlg.getInteractiveSettings().get_layer();
-    int cl_class;
-    RoutingBoard board = hdlg.get_routing_board();
-    cl_class = BoardRules.clearance_class_none();
-    boolean construction_succeeded = this.circle_radius > 0;
-    ConvexShape obstacle_shape = null;
-    if (construction_succeeded) {
+    IntPoint center = this.circleCenter.round();
+    int radius = (int) Math.round(this.circleRadius);
+    int layer = hdlg.getInteractiveSettings().getLayer();
+    int clClass;
+    RoutingBoard board = hdlg.getRoutingBoard();
+    clClass = BoardRules.clearanceClassNone();
+    boolean constructionSucceeded = this.circleRadius > 0;
+    ConvexShape obstacleShape = null;
+    if (constructionSucceeded) {
 
-      obstacle_shape = new Circle(center, radius);
-      if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-        obstacle_shape = obstacle_shape.bounding_box();
-      } else if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE) {
-        obstacle_shape = obstacle_shape.bounding_octagon();
+      obstacleShape = new Circle(center, radius);
+      if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
+          == AngleRestriction.NINETY_DEGREE) {
+        obstacleShape = obstacleShape.boundingBox();
+      } else if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
+          == AngleRestriction.FORTYFIVE_DEGREE) {
+        obstacleShape = obstacleShape.boundingOctagon();
       }
-      construction_succeeded = board.check_shape(obstacle_shape, layer, new int[0], cl_class);
+      constructionSucceeded = board.checkShape(obstacleShape, layer, new int[0], clClass);
     }
-    if (construction_succeeded) {
-      hdlg.screen_messages.set_status_message(tm.getText("keepout_successful_completed"));
+    if (constructionSucceeded) {
+      hdlg.screenMessages.setStatusMessage(tm.getText("keepout_successful_completed"));
 
       // insert the new shape as keepout
-      this.observers_activated = !hdlg.get_routing_board().observers_active();
-      if (this.observers_activated) {
-        hdlg.get_routing_board().start_notify_observers();
+      this.observersActivated = !hdlg.getRoutingBoard().observersActive();
+      if (this.observersActivated) {
+        hdlg.getRoutingBoard().startNotifyObservers();
       }
-      board.generate_snapshot();
-      board.insert_obstacle(obstacle_shape, layer, cl_class, FixedState.UNFIXED);
-      if (this.observers_activated) {
-        hdlg.get_routing_board().end_notify_observers();
-        this.observers_activated = false;
+      board.generateSnapshot();
+      board.insertObstacle(obstacleShape, layer, clClass, FixedState.UNFIXED);
+      if (this.observersActivated) {
+        hdlg.getRoutingBoard().endNotifyObservers();
+        this.observersActivated = false;
       }
     } else {
-      hdlg.screen_messages.set_status_message(tm.getText("keepout_cancelled_because_of_overlaps"));
+      hdlg.screenMessages.setStatusMessage(tm.getText("keepout_cancelled_because_of_overlaps"));
     }
     hdlg.repaint();
-    return this.return_state;
+    return this.returnState;
   }
 
-  /**
-   * Used when reading the next point from a logfile. Calls complete, because only
-   * 1 additional point is stored in the logfile.
-   */
-
-  /**
-   * draws the graphic construction aid for the circle
-   */
+  /** Draws the graphic construction aid for the circle. */
   @Override
-  public void draw(Graphics p_graphics) {
-    FloatPoint current_mouse_position = hdlg.get_current_mouse_position();
-    if (current_mouse_position == null) {
+  public void draw(Graphics graphics) {
+    FloatPoint currentMousePosition = hdlg.getCurrentMousePosition();
+    if (currentMousePosition == null) {
       return;
     }
-    this.circle_radius = circle_center.distance(current_mouse_position);
-    hdlg.graphics_context.draw_circle(circle_center, circle_radius, 300, Color.white, p_graphics, 1);
+    this.circleRadius = circleCenter.distance(currentMousePosition);
+    hdlg.graphicsContext.drawCircle(circleCenter, circleRadius, 300, Color.white, graphics, 1);
   }
 
   @Override
-  public JPopupMenu get_popup_menu() {
-    return hdlg.get_panel().popup_menu_insert_cancel;
+  public JPopupMenu getPopupMenu() {
+    return hdlg.getPanel().popupMenuInsertCancel;
   }
 
   @Override
-  public void display_default_message() {
-    hdlg.screen_messages.set_status_message(tm.getText("creating_circle"));
+  public void displayDefaultMessage() {
+    hdlg.screenMessages.setStatusMessage(tm.getText("creating_circle"));
   }
 }

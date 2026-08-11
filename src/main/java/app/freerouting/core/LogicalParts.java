@@ -5,53 +5,41 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Vector;
 
-/**
- * The logical parts contain information for gate swap and pin swap.
- */
+/** The logical parts contain information for gate swap and pin swap. */
 public class LogicalParts implements Serializable {
 
-  /**
-   * The array of logical parts
-   */
-  private final Vector<LogicalPart> part_arr = new Vector<>();
+  /** The array of logical parts. */
+  private final Vector<LogicalPart> partArr = new Vector<>();
 
-  /**
-   * Adds a logical part to the database.
-   */
-  public LogicalPart add(String p_name, LogicalPart.PartPin[] p_part_pin_arr) {
-    Arrays.sort(p_part_pin_arr);
-    LogicalPart new_part = new LogicalPart(p_name, part_arr.size() + 1, p_part_pin_arr);
-    part_arr.add(new_part);
-    return new_part;
+  /** Adds a logical part to the database. */
+  public LogicalPart add(String name, LogicalPart.PartPin[] partPinArr) {
+    Arrays.sort(partPinArr);
+    LogicalPart newPart = new LogicalPart(name, partArr.size() + 1, partPinArr);
+    partArr.add(newPart);
+    return newPart;
   }
 
-  /**
-   * Returns the logical part with the input name or null, if no such package exists.
-   */
-  public LogicalPart get(String p_name) {
-    for (LogicalPart curr_part : this.part_arr) {
-      if (curr_part != null && curr_part.name.equalsIgnoreCase(p_name)) {
-        return curr_part;
+  /** Returns the logical part with the input name or null, if no such package exists. */
+  public LogicalPart get(String name) {
+    for (LogicalPart currPart : this.partArr) {
+      if (currPart != null && currPart.name.equalsIgnoreCase(name)) {
+        return currPart;
       }
     }
     return null;
   }
 
-  /**
-   * Returns the logical part with index p_part_no. Part numbers are from 1 to part count.
-   */
-  public LogicalPart get(int p_part_no) {
-    LogicalPart result = part_arr.elementAt(p_part_no - 1);
-    if (result != null && result.no != p_part_no) {
+  /** Returns the logical part with the specified index. Part numbers start at 1. */
+  public LogicalPart get(int partNo) {
+    LogicalPart result = partArr.elementAt(partNo - 1);
+    if (result != null && result.no != partNo) {
       FRLogger.warn("LogicalParts.get: inconsistent part number");
     }
     return result;
   }
 
-  /**
-   * Returns the count of logical parts.
-   */
+  /** Returns the count of logical parts. */
   public int count() {
-    return part_arr.size();
+    return partArr.size();
   }
 }

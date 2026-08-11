@@ -6,105 +6,110 @@ import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.Locale;
 
-/**
- * Contains information for gate swap and pin swap for a single component.
- */
+/** Contains information for gate swap and pin swap for a single component. */
 public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
 
   public final String name;
   public final int no;
-  private final PartPin[] part_pin_arr;
+  private final PartPin[] partPinArr;
 
   /**
-   * Creates a new instance of LogicalPart. The part pins are sorted by pin_no. The pin_no's of the part pins must be the same number as in the components' library package.
+   * Creates a new instance of LogicalPart. The part pins are sorted by pinNo. The pinNo's of the
+   * part pins must be the same number as in the components' library package.
    */
-  public LogicalPart(String p_name, int p_no, PartPin[] p_part_pin_arr) {
-    name = p_name;
-    no = p_no;
-    part_pin_arr = p_part_pin_arr;
+  public LogicalPart(String name, int no, PartPin[] partPinArr) {
+    this.name = name;
+    this.no = no;
+    this.partPinArr = partPinArr;
   }
 
-  public int pin_count() {
-    return part_pin_arr.length;
+  /** Returns the number of pins in this logical part. */
+  public int pinCount() {
+    return partPinArr.length;
   }
 
-  /**
-   * Returns the pim with index p_no. Pin numbers are from 0 to pin_count - 1
-   */
-  public PartPin get_pin(int p_no) {
-    if (p_no < 0 || p_no >= part_pin_arr.length) {
+  /** Returns the pin with the specified index. Pin numbers range from 0 to pinCount - 1. */
+  public PartPin getPin(int no) {
+    if (no < 0 || no >= partPinArr.length) {
       FRLogger.warn("LogicalPart.get_pin: p_no out of range");
       return null;
     }
-    return part_pin_arr[p_no];
+    return partPinArr[no];
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+  public void printInfo(ObjectInfoPanel window, Locale locale) {
+    TextManager tm = new TextManager(this.getClass(), locale);
 
-    p_window.append_bold(tm.getText("logical_part_2") + " ");
-    p_window.append_bold(this.name);
-    for (int i = 0; i < this.part_pin_arr.length; i++) {
-      PartPin curr_pin = this.part_pin_arr[i];
-      p_window.newline();
-      p_window.indent();
-      p_window.append(tm.getText("pin") + " ");
-      p_window.append(curr_pin.pin_name);
-      p_window.append(", " + tm.getText("gate") + " ");
-      p_window.append(curr_pin.gate_name);
-      p_window.append(", " + tm.getText("swap_code") + " ");
-      int gate_swap_code = curr_pin.gate_swap_code;
-      p_window.append(String.valueOf(gate_swap_code));
-      p_window.append(", " + tm.getText("gate_pin") + " ");
-      p_window.append(curr_pin.gate_pin_name);
-      p_window.append(", " + tm.getText("swap_code") + " ");
-      int pin_swap_code = curr_pin.gate_pin_swap_code;
-      p_window.append(String.valueOf(pin_swap_code));
+    window.appendBold(tm.getText("logical_part_2") + " ");
+    window.appendBold(this.name);
+    for (int i = 0; i < this.partPinArr.length; i++) {
+      PartPin currPin = this.partPinArr[i];
+      window.newline();
+      window.indent();
+      window.append(tm.getText("pin") + " ");
+      window.append(currPin.pinName);
+      window.append(", " + tm.getText("gate") + " ");
+      window.append(currPin.gateName);
+      window.append(", " + tm.getText("swap_code") + " ");
+      int gateSwapCode = currPin.gateSwapCode;
+      window.append(String.valueOf(gateSwapCode));
+      window.append(", " + tm.getText("gate_pin") + " ");
+      window.append(currPin.gatePinName);
+      window.append(", " + tm.getText("swap_code") + " ");
+      int pinSwapCode = currPin.gatePinSwapCode;
+      window.append(String.valueOf(pinSwapCode));
     }
-    p_window.newline();
-    p_window.newline();
+    window.newline();
+    window.newline();
   }
 
+  /** Describes a pin belonging to a logical part. */
   public static class PartPin implements Comparable<PartPin>, Serializable {
 
-    /**
-     * The number of the part pin. Must be the same number as in the components library package.
-     */
-    public final int pin_no;
-    /**
-     * The name of the part pin. Must be the same name as in the components library package.
-     */
-    public final String pin_name;
-    /**
-     * The name of the gate this pin belongs to.
-     */
-    public final String gate_name;
-    /**
-     * The gate swap code. Gates with the same gate swap code can be swapped. Gates with swap code {@literal <}= 0 are not swappable.
-     */
-    public final int gate_swap_code;
-    /**
-     * The identifier of the pin in the gate.
-     */
-    public final String gate_pin_name;
-    /**
-     * The pin swap code of the gate. Pins with the same pin swap code can be swapped inside a gate. Pins with swap code {@literal <}= 0 are not swappable.
-     */
-    public final int gate_pin_swap_code;
+    /** The number of the part pin. Must be the same number as in the components library package. */
+    public final int pinNo;
 
-    public PartPin(int p_pin_no, String p_pin_name, String p_gate_name, int p_gate_swap_code, String p_gate_pin_name, int p_gate_pin_swap_code) {
-      pin_no = p_pin_no;
-      pin_name = p_pin_name;
-      gate_name = p_gate_name;
-      gate_swap_code = p_gate_swap_code;
-      gate_pin_name = p_gate_pin_name;
-      gate_pin_swap_code = p_gate_pin_swap_code;
+    /** The name of the part pin. Must be the same name as in the components library package. */
+    public final String pinName;
+
+    /** The name of the gate this pin belongs to. */
+    public final String gateName;
+
+    /**
+     * The gate swap code. Gates with the same gate swap code can be swapped. Gates with swap code
+     * {@literal <}= 0 are not swappable.
+     */
+    public final int gateSwapCode;
+
+    /** The identifier of the pin in the gate. */
+    public final String gatePinName;
+
+    /**
+     * The pin swap code of the gate. Pins with the same pin swap code can be swapped inside a gate.
+     * Pins with swap code {@literal <}= 0 are not swappable.
+     */
+    public final int gatePinSwapCode;
+
+    /** Creates a part pin with its gate and swap metadata. */
+    public PartPin(
+        int pinNo,
+        String pinName,
+        String gateName,
+        int gateSwapCode,
+        String gatePinName,
+        int gatePinSwapCode) {
+      this.pinNo = pinNo;
+      this.pinName = pinName;
+      this.gateName = gateName;
+      this.gateSwapCode = gateSwapCode;
+      this.gatePinName = gatePinName;
+      this.gatePinSwapCode = gatePinSwapCode;
     }
 
     @Override
-    public int compareTo(PartPin p_other) {
-      return this.pin_no - p_other.pin_no;
+    public int compareTo(PartPin other) {
+      return this.pinNo - other.pinNo;
     }
   }
 }

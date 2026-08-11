@@ -507,9 +507,7 @@
   },
   "selected_rule": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowVia"
-    ],
+    "code_references": [],
     "english_hash": "cc27c702f3ddae89324f5b548258bbf9ad91f3a198178a2c1d437bab5b88fd04",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -555,9 +553,7 @@
   },
   "via_rules": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowVia"
-    ],
+    "code_references": [],
     "english_hash": "d22f92aeef13fbece8835cde3abe23022f10a66106ada2b9507e0af2dd699f84",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

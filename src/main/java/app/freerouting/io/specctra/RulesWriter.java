@@ -3,50 +3,47 @@ package app.freerouting.io.specctra;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.core.Padstack;
 import app.freerouting.datastructures.IndentFileWriter;
-import app.freerouting.io.CoordinateTransform;
 import app.freerouting.io.specctra.parser.AutorouteSettings;
 import app.freerouting.io.specctra.parser.Library;
 import app.freerouting.io.specctra.parser.Network;
 import app.freerouting.io.specctra.parser.Rule;
 import app.freerouting.io.specctra.parser.Structure;
 import app.freerouting.io.specctra.parser.WriteScopeParameter;
-import app.freerouting.logger.FRLogger;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Writes board design rules to a Specctra {@code .rules} file without any
- * dependency on {@link app.freerouting.interactive.GuiBoardManager}.
+ * Writes board design rules to a Specctra {@code .rules} file without any dependency on {@link
+ * app.freerouting.interactive.GuiBoardManager}.
  *
- * <p>Replaces the write path previously found in
- * {@link app.freerouting.io.specctra.parser.RulesFile} (now an empty shell).
+ * <p>Replaces the write path previously found in {@link
+ * app.freerouting.io.specctra.parser.RulesFile} (now an empty shell).
  */
 public final class RulesWriter {
 
-  private RulesWriter() {
-  }
+  private RulesWriter() {}
 
   /**
    * Writes the design rules of {@code board} to {@code out} in Specctra rules format.
    *
    * <p>The stream is <em>not</em> closed by this method — the caller is responsible.
    *
-   * @param board      the board whose rules are written
-   * @param out        destination stream
+   * @param board the board whose rules are written
+   * @param out destination stream
    * @param designName the PCB design name written into the {@code (rules PCB ...)} header
    * @throws IOException if writing fails
    */
-  public static void write(BasicBoard board, OutputStream out, String designName) throws IOException {
+  public static void write(BasicBoard board, OutputStream out, String designName)
+      throws IOException {
     IndentFileWriter outputFile = new IndentFileWriter(out);
-    WriteScopeParameter par = new WriteScopeParameter(
-        board,
-        null,
-        outputFile,
-        board.communication.specctra_parser_info.string_quote,
-        board.communication.coordinate_transform,
-        false
-    );
+    WriteScopeParameter par =
+        new WriteScopeParameter(
+            board,
+            null,
+            outputFile,
+            board.communication.specctraParserInfo.stringQuote,
+            board.communication.coordinateTransform,
+            false);
     writeRules(par, designName);
     outputFile.flush();
   }
@@ -55,27 +52,27 @@ public final class RulesWriter {
   // Private helpers (migrated from RulesFile)
   // -------------------------------------------------------------------------
 
-  private static void writeRules(WriteScopeParameter p_par, String p_design_name) throws IOException {
-    p_par.file.start_scope();
-    p_par.file.write("rules PCB ");
-    p_par.file.write(p_design_name);
-    Structure.write_snap_angle(p_par.file, p_par.board.rules.get_trace_angle_restriction());
-    if (p_par.autoroute_settings != null) {
-      AutorouteSettings.write_scope(p_par.file, p_par.autoroute_settings,
-          p_par.board.layer_structure, p_par.identifier_type);
+  private static void writeRules(WriteScopeParameter par, String designName) throws IOException {
+    par.file.startScope();
+    par.file.write("rules PCB ");
+    par.file.write(designName);
+    Structure.writeSnapAngle(par.file, par.board.rules.getTraceAngleRestriction());
+    if (par.autorouteSettings != null) {
+      AutorouteSettings.writeScope(
+          par.file, par.autorouteSettings, par.board.layerStructure, par.identifierType);
     }
     // write the default rule using 0 as default layer
-    Rule.write_default_rule(p_par, 0);
+    Rule.writeDefaultRule(par, 0);
     // write the via padstacks
-    for (int i = 1; i <= p_par.board.library.padstacks.count(); i++) {
-      Padstack curr_padstack = p_par.board.library.padstacks.get(i);
-      if (p_par.board.library.get_via_padstack(curr_padstack.name) != null) {
-        Library.write_padstack_scope(p_par, curr_padstack);
+    for (int i = 1; i <= par.board.library.padstacks.count(); i++) {
+      Padstack currPadstack = par.board.library.padstacks.get(i);
+      if (par.board.library.getViaPadstack(currPadstack.name) != null) {
+        Library.writePadstackScope(par, currPadstack);
       }
     }
-    Network.write_via_infos(p_par.board.rules, p_par.file, p_par.identifier_type);
-    Network.write_via_rules(p_par.board.rules, p_par.file, p_par.identifier_type);
-    Network.write_net_classes(p_par);
-    p_par.file.end_scope();
+    Network.writeViaInfos(par.board.rules, par.file, par.identifierType);
+    Network.writeViaRules(par.board.rules, par.file, par.identifierType);
+    Network.writeNetClasses(par);
+    par.file.endScope();
   }
 }

@@ -1,28 +1,28 @@
 # Run fanout benchmarks in parallel
-$strats = @('inner_first', 'outer_first', 'distance_to_closest_on_net', 'surroundings_density', 'unsorted')
+$strategies = @('inner_first', 'outer_first', 'distance_to_closest_on_net', 'surroundings_density', 'unsorted')
 New-Item -ItemType Directory -Force -Path logs | Out-Null
 
 $projectRoot = (Get-Item .).FullName
 
 $jobs = @()
-foreach ($strat in $strats) {
-    Write-Host "Starting background job for strategy: $strat"
-    $logFile = Join-Path $projectRoot "logs/run-$strat.log"
+foreach ($strategy in $strategies) {
+    Write-Host "Starting background job for strategy: $strategy"
+    $logFile = Join-Path $projectRoot "logs/run-$strategy.log"
     $job = Start-Job -ScriptBlock {
-        param($strat, $logFile, $workDir)
+        param($strategy, $logFile, $workDir)
         Set-Location $workDir
         & java -jar build/libs/freerouting-current-executable.jar `
             -de scripts/benchmark/fixtures/KiCad_10_demos/CM5_MINIMA_3.dsn `
-            -do "logs/test_out-$strat.ses" `
+            -do "logs/test_out-$strategy.ses" `
             --router.fanout.enabled=true `
             --router.optimizer.enabled=false `
             --gui.enabled=false `
             --api_server.enabled=false `
             --router.max_passes=10 `
-            --router.fanout.pin_sorting_order=$strat `
+            --router.fanout.pin_sorting_order=$strategy `
             --logging.console.level=INFO `
             *>&1 | Out-File -FilePath $logFile -Encoding utf8
-    } -ArgumentList $strat, $logFile, $projectRoot
+    } -ArgumentList $strategy, $logFile, $projectRoot
     $jobs += $job
 }
 

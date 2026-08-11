@@ -15,17 +15,19 @@ import com.google.gson.JsonParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/** DesignRulesCheckerTest. */
 public class DesignRulesCheckerTest extends RoutingFixtureTest {
 
+  /** Resets global settings before each DRC test. */
   @BeforeEach
   protected void setUp() {
     Freerouting.globalSettings = new GlobalSettings();
   }
 
   @Test
-  void test_DrcReport_Structure() {
+  void testDrcReportStructure() {
     // Create a simple routing job with a DSN file
-    RoutingJob job = GetRoutingJob("Issue555-BBD_Mars-64.dsn");
+    RoutingJob job = getRoutingJob("Issue555-BBD_Mars-64.dsn");
 
     assertNotNull(job, "Job should not be null");
 
@@ -37,26 +39,31 @@ public class DesignRulesCheckerTest extends RoutingFixtureTest {
     assertNotNull(job.board, "Board should be loaded");
 
     // Create DRC checker
-    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board, Freerouting.globalSettings.drcSettings);
+    DesignRulesChecker drcChecker =
+        new DesignRulesChecker(job.board, Freerouting.globalSettings.drcSettings);
 
     // Generate report
     DrcReport report = drcChecker.generateReport("test.dsn", "mm");
 
     // Verify report structure
     assertNotNull(report, "Report should not be null");
-    assertEquals("https://schemas.kicad.org/drc.v1.json", report.$schema, "Schema should match KiCad format");
-    assertEquals("mm", report.coordinate_units, "Coordinate units should be mm");
+    assertEquals(
+        "https://schemas.kicad.org/drc.v1.json",
+        report.jsonSchema,
+        "Schema should match KiCad format");
+    assertEquals("mm", report.coordinateUnits, "Coordinate units should be mm");
     assertEquals("test.dsn", report.source, "Source should match");
     assertNotNull(report.violations, "Violations list should not be null");
-    assertNotNull(report.unconnected_items, "Unconnected items list should not be null");
-    assertNotNull(report.schematic_parity, "Schematic parity list should not be null");
-    assertTrue(report.freerouting_version.contains("Freerouting"), "Version should contain Freerouting");
+    assertNotNull(report.unconnectedItems, "Unconnected items list should not be null");
+    assertNotNull(report.schematicParity, "Schematic parity list should not be null");
+    assertTrue(
+        report.freeroutingVersion.contains("Freerouting"), "Version should contain Freerouting");
   }
 
   @Test
-  void test_DrcReport_JsonFormat() {
+  void testDrcReportJsonFormat() {
     // Create a simple routing job with a DSN file
-    RoutingJob job = GetRoutingJob("Issue555-BBD_Mars-64.dsn");
+    RoutingJob job = getRoutingJob("Issue555-BBD_Mars-64.dsn");
 
     assertNotNull(job, "Job should not be null");
 
@@ -65,7 +72,8 @@ public class DesignRulesCheckerTest extends RoutingFixtureTest {
     assertNotNull(job.board, "Board should be loaded");
 
     // Create DRC checker
-    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board, Freerouting.globalSettings.drcSettings);
+    DesignRulesChecker drcChecker =
+        new DesignRulesChecker(job.board, Freerouting.globalSettings.drcSettings);
 
     // Generate JSON report
     String jsonReport = drcChecker.generateReportJson("test.dsn", "mm");
@@ -75,16 +83,14 @@ public class DesignRulesCheckerTest extends RoutingFixtureTest {
     assertFalse(jsonReport.isEmpty(), "JSON report should not be empty");
 
     // Parse JSON to verify structure
-    JsonObject json = JsonParser
-        .parseString(jsonReport)
-        .getAsJsonObject();
+    JsonObject json = JsonParser.parseString(jsonReport).getAsJsonObject();
     assertTrue(json.has("$schema"), "JSON should have $schema field");
-    assertTrue(json.has("coordinate_units"), "JSON should have coordinate_units field");
+    assertTrue(json.has("coordinateUnits"), "JSON should have coordinateUnits field");
     assertTrue(json.has("date"), "JSON should have date field");
-    assertTrue(json.has("kicad_version"), "JSON should have kicad_version field");
+    assertTrue(json.has("kicadVersion"), "JSON should have kicadVersion field");
     assertTrue(json.has("source"), "JSON should have source field");
     assertTrue(json.has("violations"), "JSON should have violations field");
-    assertTrue(json.has("unconnected_items"), "JSON should have unconnected_items field");
-    assertTrue(json.has("schematic_parity"), "JSON should have schematic_parity field");
+    assertTrue(json.has("unconnectedItems"), "JSON should have unconnectedItems field");
+    assertTrue(json.has("schematicParity"), "JSON should have schematicParity field");
   }
 }

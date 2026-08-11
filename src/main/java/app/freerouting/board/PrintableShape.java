@@ -14,13 +14,12 @@ public abstract class PrintableShape {
 
   protected final Locale locale;
 
-  protected PrintableShape(Locale p_locale) {
-    this.locale = p_locale;
+  /** PrintableShape. */
+  protected PrintableShape(Locale locale) {
+    this.locale = locale;
   }
 
-  /**
-   * Returns text information about the PrintableShape.
-   */
+  /** Returns text information about the PrintableShape. */
   @Override
   public abstract String toString();
 
@@ -29,13 +28,11 @@ public abstract class PrintableShape {
     public final FloatPoint center;
     public final double radius;
 
-    /**
-     * Creates a Circle from the input coordinates.
-     */
-    public Circle(FloatPoint p_center, double p_radius, Locale p_locale) {
-      super(p_locale);
-      center = p_center;
-      radius = p_radius;
+    /** Creates a Circle from the input coordinates. */
+    public Circle(FloatPoint center, double radius, Locale locale) {
+      super(locale);
+      this.center = center;
+      this.radius = radius;
     }
 
     @Override
@@ -44,53 +41,63 @@ public abstract class PrintableShape {
 
       String result = tm.getText("circle") + ": ";
       if (center.x != 0 || center.y != 0) {
-        String center_string = tm.getText("center") + " =" + center.to_string(this.locale);
-        result += center_string;
+        String centerString = tm.getText("center") + " =" + center.toString(this.locale);
+        result += centerString;
       }
       NumberFormat nf = NumberFormat.getInstance(this.locale);
       nf.setMaximumFractionDigits(4);
-      String radius_string = tm.getText("radius") + " = " + nf.format((float) radius);
-      result += radius_string;
+      String radiusString = tm.getText("radius") + " = " + nf.format((float) radius);
+      result += radiusString;
       return result;
     }
   }
 
-  /**
-   * Creates a Polygon from the input coordinates.
-   */
+  /** Creates a Polygon from the input coordinates. */
   static class Rectangle extends PrintableShape {
 
-    public final FloatPoint lower_left;
-    public final FloatPoint upper_right;
+    public final FloatPoint lowerLeft;
+    public final FloatPoint upperRight;
 
-    public Rectangle(FloatPoint p_lower_left, FloatPoint p_upper_right, Locale p_locale) {
-      super(p_locale);
-      lower_left = p_lower_left;
-      upper_right = p_upper_right;
+    public Rectangle(FloatPoint lowerLeft, FloatPoint upperRight, Locale locale) {
+      super(locale);
+      this.lowerLeft = lowerLeft;
+      this.upperRight = upperRight;
     }
 
     @Override
     public String toString() {
       TextManager tm = new TextManager(this.getClass(), this.locale);
 
-      return tm.getText("rectangle") + ": " + tm.getText("lower_left") + " = " + lower_left.to_string(this.locale) + ", " + tm.getText("upper_right") + " = " + upper_right.to_string(this.locale);
+      return tm.getText("rectangle")
+          + ": "
+          + tm.getText("lowerLeft")
+          + " = "
+          + lowerLeft.toString(this.locale)
+          + ", "
+          + tm.getText("upperRight")
+          + " = "
+          + upperRight.toString(this.locale);
     }
   }
 
   static class Polygon extends PrintableShape {
 
-    public final FloatPoint[] corner_arr;
+    public final FloatPoint[] cornerArr;
 
-    public Polygon(FloatPoint[] p_corners, Locale p_locale) {
-      super(p_locale);
-      corner_arr = p_corners;
+    public Polygon(FloatPoint[] corners, Locale locale) {
+      super(locale);
+      cornerArr = corners;
     }
 
     @Override
     public String toString() {
       TextManager tm = new TextManager(this.getClass(), this.locale);
 
-      return tm.getText("polygon") + ": " + Arrays.stream(corner_arr).map(c -> c.to_string(this.locale)).collect(Collectors.joining(", "));
+      return tm.getText("polygon")
+          + ": "
+          + Arrays.stream(cornerArr)
+              .map(c -> c.toString(this.locale))
+              .collect(Collectors.joining(", "));
     }
   }
 }

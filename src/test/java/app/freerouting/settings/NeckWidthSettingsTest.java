@@ -10,7 +10,7 @@ class NeckWidthSettingsTest {
 
   @Test
   void cliFlagReachesRouterSettings() {
-    CliSettings cli = new CliSettings(new String[]{"--router.neck_width_um=250"});
+    CliSettings cli = new CliSettings(new String[] {"--router.neck_width_um=250"});
     assertEquals(250.0, cli.getSettings().getNeckWidthUm(), 1e-9);
   }
 
