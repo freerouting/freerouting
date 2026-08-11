@@ -128,7 +128,7 @@ class JsonFileSettingsTest {
   }
 
   @Test
-  void sourceNameIsFreroutingJson() {
+  void sourceNameIsFreeroutingJson() {
     JsonFileSettings sut = new JsonFileSettings(tempDir.resolve("irrelevant.json"));
     assertEquals("freerouting.json", sut.getSourceName());
   }
