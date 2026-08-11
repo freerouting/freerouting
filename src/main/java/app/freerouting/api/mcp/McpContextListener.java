@@ -35,7 +35,10 @@ public class McpContextListener implements ServletContextListener {
           if (host == null) {
             host = "localhost";
           }
-          int port = networkConnector.getPort();
+          int port = networkConnector.getLocalPort();
+          if (port <= 0) {
+            port = networkConnector.getPort();
+          }
           fullUrl = "http://" + host + ":" + port + sce.getServletContext().getContextPath();
           break;
         }

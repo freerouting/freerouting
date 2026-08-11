@@ -51,7 +51,10 @@ public class AppContextListener implements ServletContextListener {
           if (host == null) {
             host = "localhost"; // Default host if not specified
           }
-          int port = networkConnector.getPort();
+          int port = networkConnector.getLocalPort();
+          if (port <= 0) {
+            port = networkConnector.getPort();
+          }
 
           fullUrl = "http://" + host + ":" + port + sce.getServletContext().getContextPath();
           // Break after finding the first network connector for simplicity

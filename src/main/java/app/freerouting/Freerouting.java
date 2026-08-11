@@ -402,14 +402,23 @@ public class Freerouting {
     // Add Listeners
     context.addEventListener(new AppContextListener());
 
-    // Instead of apiServer.join(), start in a new thread
+    try {
+      apiServer.start();
+    } catch (Exception e) {
+      FRLogger.error("Error starting API server", e);
+      if (globalSettings != null) {
+        globalSettings.apiServerSettings.isRunning = false;
+      }
+      return null;
+    }
+
+    // Keep the caller responsive after the server has bound its connectors.
     new Thread(
             () -> {
               try {
-                apiServer.start();
-                apiServer.join(); // This will now run in the new thread
+                apiServer.join();
               } catch (Exception e) {
-                FRLogger.error("Error starting or joining API server", e);
+                FRLogger.error("Error joining API server", e);
                 if (globalSettings != null) {
                   globalSettings.apiServerSettings.isRunning = false;
                 }
@@ -515,13 +524,23 @@ public class Freerouting {
         context,
         (servletContext, wsContainer) -> wsContainer.addEndpoint(McpWebSocketEndpoint.class));
 
+    try {
+      mcpServer.start();
+    } catch (Exception e) {
+      FRLogger.error("Error starting MCP server", e);
+      if (globalSettings != null) {
+        globalSettings.mcpServerSettings.isRunning = false;
+      }
+      return null;
+    }
+
+    // Keep the caller responsive after the server has bound its connectors.
     new Thread(
             () -> {
               try {
-                mcpServer.start();
                 mcpServer.join();
               } catch (Exception e) {
-                FRLogger.error("Error starting or joining MCP server", e);
+                FRLogger.error("Error joining MCP server", e);
                 if (globalSettings != null) {
                   globalSettings.mcpServerSettings.isRunning = false;
                 }
