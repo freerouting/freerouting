@@ -308,8 +308,8 @@ def _collect_nets(board, data):
             try:
                 iterator = list(enumerate(nets))
                 debug_log("nets is directly iterable")
-            except TypeError as te:
-                debug_log(f"nets is not directly iterable: {te}")
+            except TypeError as exc:
+                debug_log(f"nets is not directly iterable: {exc}")
                 if hasattr(nets, "GetNetCount") and hasattr(nets, "GetNetItem"):
                     debug_log("Using GetNetCount/GetNetItem")
                     iterator = [(i, nets.GetNetItem(i)) for i in range(nets.GetNetCount())]

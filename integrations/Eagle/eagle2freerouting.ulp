@@ -96,7 +96,7 @@ string via_sig(int shape, int dia, int drill, int start, int end) {
 }
 
 string pad_sig (int shape, int dia, int drill, int elong, real angl) {
-// create a table of the thru hole pad types, using a signature string 26-01-13
+// create a table of the through hole pad types, using a signature string 26-01-13
 	string s, t; int count = 0;
 	sprintf(t, "%d:%d:%d:%d:%f", shape, dia, drill, elong, angl);
 	// check if this signature was already listed
@@ -140,24 +140,24 @@ string W_Circle(string lname, real dia) {
 string W_Quart(real x, real y, real rad, real rot) {
 // draws an offset rotated quart circle counterclockwise in 16 segments
 	string s, t; if (rad == 0) return t; // no rounded corners
-	real lx, ly, ang; rot *= PI/180; // to radians
+	real lx, ly, angle; rot *= PI/180; // to radians
 	for (int i=1; i <=16; i++) {
-		ang = PI * i / 32; // starting point (i=0) not drawn
-		lx = x * cos(rot) + rad * cos (ang + rot);
-		ly = y * sin(rot) + rad * sin (ang + rot);
+		angle = PI * i / 32; // starting point (i=0) not drawn
+		lx = x * cos(rot) + rad * cos (angle + rot);
+		ly = y * sin(rot) + rad * sin (angle + rot);
 		sprintf(s, " %f %f", lx, ly); t += s;
 	}
 	return t;
 }
 
 string W_Octagon(string lname, real dia, real rotate) {
-// draws a rotated octagon from 8 straight wire segements
+// draws a rotated octagon from 8 straight wire segments
 	string s, t;
-	real step = PI/4, rad = dia * 0.5411961, ang, dx, dy;
+	real step = PI/4, rad = dia * 0.5411961, angle, dx, dy;
 	sprintf (t, T3 + "(shape (polygon %s 0 ", lname);
 	for ( int i=0; i<8; i++) {
-		ang = step * i + PI/8 + rotate * PI/180;
-		dx = rad * cos(ang), dy = rad * sin(ang);
+		angle = step * i + PI/8 + rotate * PI/180;
+		dx = rad * cos(angle), dy = rad * sin(angle);
 		sprintf(s, " %f %f", dx, dy); t += s;
 	}
 	return t + "))\n";
@@ -181,8 +181,8 @@ string W_SMDpad(string lname, real dx, real dy, real rot, real rdness) {
 		if (rdness==0) {sprintf(s, " %f %f", tx, ty); t +=s;} //no rounded corners
 		else {
 			for (int j=0; j<=5+adj[k]; j++) {
-				real ang = j * PI/10 + k * PI/2 + rot;
-				real rx = crad * cos(ang), ry = crad * sin(ang);
+				real angle = j * PI/10 + k * PI/2 + rot;
+				real rx = crad * cos(angle), ry = crad * sin(angle);
 				sprintf(s, " %f %f", tx+rx, ty+ry); t +=s;
 			}
 		}
@@ -197,13 +197,13 @@ string W_Rect(string lname, real x, real y, real rotate) {
 		sprintf (t, T3 + "(shape (rect %s %f %f %f %f))\n", lname, -x/2, -y/2, x/2, y/2);
 		return t;
 	}
-	real step = PI/4, rad = sqrt(x*x + y*y)/2, ang[], dx, dy;
-	ang[0] = atan(y/x); ang[4] = ang[0];
-	ang[1]=PI-ang[0]; ang[2]=PI+ang[0]; ang[3]=2*PI-ang[0];
+	real step = PI/4, rad = sqrt(x*x + y*y)/2, angle[], dx, dy;
+	angle[0] = atan(y/x); angle[4] = angle[0];
+	angle[1]=PI-angle[0]; angle[2]=PI+angle[0]; angle[3]=2*PI-angle[0];
 	rotate *= PI/180;
 	sprintf (t, T3 + "(shape (polygon %s 0 ", lname);
 	for ( int i=0; i<5; i++) {
-		dx = rad * cos(ang[i]+rotate), dy = rad * sin(ang[i]+rotate);
+		dx = rad * cos(angle[i]+rotate), dy = rad * sin(angle[i]+rotate);
 		sprintf(s, "%f %f ", dx, dy); t += s;
 	}
 	return t + "))\n";
@@ -224,7 +224,7 @@ string W_Pshape(string lname, real dia, real elong, char offset, real r) {
 		lname, dia, sx, 0.0, ex, 0.0); return t;
 }
 
-// object boundery calculation routines when scanning the wire segment array
+// object boundary calculation routines when scanning the wire segment array
 
 real xmin, xmax, ymin, ymax;
 char b_status = false; // indicates if boundary calculation is on or not.
@@ -397,12 +397,12 @@ void get_designrules (void) {
 	}
 }
 
-real par_value(string parm) {
+real par_value(string param) {
 // convert parameter values of the dr_value string to current board units 15-01-2014.
 	string scale; int i;
 	while (dr_name[i]) {
-		if (parm == dr_name[i]) { // parameter name found
-			if (parm == "layerSetup") {layer_def = dr_value[i]; return 1;} // keep the string and exit
+		if (param == dr_name[i]) { // parameter name found
+			if (param == "layerSetup") {layer_def = dr_value[i]; return 1;} // keep the string and exit
 			scale = strupr(strsub(dr_value[i], strlen(dr_value[i])-2)); //look at last two characters
 			if (scale == "MM") return U2G * mm2u(strtod(dr_value[i])); //mm
 			if (scale == "IL") return U2G * mil2u(strtod(dr_value[i])); // mil
@@ -413,7 +413,7 @@ real par_value(string parm) {
 		}
 		i++;
 	}
-	ERROR("Can't find parameter " + parm);
+	ERROR("Can't find parameter " + param);
 	return -1;	 // no convertible value found, an error
 }
 
@@ -448,7 +448,7 @@ int layer_structure (string L) { // 18-01-13, updated 30-12-13 to mark single la
 		if (tbv[i]) via_sig(VIA_SHAPE_ROUND, vsize, dsize, B_layers[i], tbv[i]);
 		if (bbv[i]) via_sig(VIA_SHAPE_ROUND, vsize, dsize, bbv[i], B_layers[i]);
 	}
-	default_via_nbr = Vnum; // number of via defaults,needed to generate tru hole via pads later
+	default_via_nbr = Vnum; // number of via defaults,needed to generate through hole via pads later
 	// All default vias in V_list[]!
 	board(B) { // Get the layer names from the board definition
 		for (i=1; i<j; i++) {B.layers(L) {if (L.number == B_layers[i]) sprintf(L_names[i], "\"%d#%s\"", L.number, L.name);}}
@@ -836,7 +836,7 @@ string Padstack_d() {
 		t += W_SMDpad(lname, x, y, rotate, rdness);
 		t += last_line; i++;
 	}
-	i = 1; // process thru hole pads
+	i = 1; // process through hole pads
 	while (i<=Pnum) {
 		strsplit(pmem, P_list[i], ':'); offset = false; // Get pad elements
 		dia = strtol(pmem[1]) * U2G; rotate = strtod(pmem[4]); elong = strtod(pmem[3]);
