@@ -314,10 +314,10 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 
 ### Phase 4 — Core / management neutralization
 
-- [ ] Remove Swing file chooser / AWT UI types from `RoutingJob`; GUI owns picking.
-- [ ] Rename `SessionManager.getGuiSession` / `setGuiSession` → `getPrimarySession` / `setPrimarySession` (management UUID session only; **not** `gui.session`).
-- [ ] Ensure analytics/API do not depend on GUI session types.
-- [ ] Reduce circular loader↔manager delegation where practical.
+- [x] Remove Swing file chooser / AWT UI types from `RoutingJob`; GUI owns picking. (`showOpenDialog` moved → `gui.BoardMenuFile`; F1 −11, F2 −2 frozen violations removed.)
+- [x] Rename `SessionManager.getGuiSession` / `setGuiSession` → `getPrimarySession` / `setPrimarySession` (management UUID session only; **not** `gui.session`).
+- [x] Ensure analytics/API do not depend on GUI session types. (Verified clean — no `gui`/`interactive`/`boardgraphics` imports in `management`/`api`.)
+- [x] Reduce circular loader↔manager delegation where practical. (Verified **no circular delegation** exists — `BoardLoader` is a standalone static helper (BoardLoader → HeadlessBoardManager, unidirectional); nothing trivially safe to reduce.)
 
 ### Phase 5 — Compute vs presentation
 
@@ -524,13 +524,13 @@ These older items were marked FIXED before this initiative and are retained only
 
 | Freeze ID | Rule | Violation count (baseline) | Removal phase | Owner | Status |
 | --- | --- | --- | --- | --- | --- |
-| **F1** | pipeline/support → `javax.swing..` (ModuleBoundariesArchTest.pipelineMustNotDependOnSwing) | 27 | Phase 4 (RoutingJob file chooser, datastructures.FileFilter) + Phase 12 (util.TextManager, io.specctra.parser.SessionToEagle) | GUI SoC initiative | frozen, green |
-| **F2** | pipeline/support → `java.awt..` excluding `java.awt.geom..` (ModuleBoundariesArchTest.pipelineMustNotDependOnAwtUiTypes) | 95 | Phase 6 (board paint) + Phase 7 (autoroute diagnostics) + Phase 12 (util.TextManager fonts) | GUI SoC initiative | frozen, green |
+| **F1** | pipeline/support → `javax.swing..` (ModuleBoundariesArchTest.pipelineMustNotDependOnSwing) | 16 (was 27; −11 Phase 4) | Phase 4 (datastructures.FileFilter; RoutingJob file chooser ✅) + Phase 12 (util.TextManager, io.specctra.parser.SessionToEagle) | GUI SoC initiative | frozen, green |
+| **F2** | pipeline/support → `java.awt..` excluding `java.awt.geom..` (ModuleBoundariesArchTest.pipelineMustNotDependOnAwtUiTypes) | 93 (was 95; −2 Phase 4) | Phase 4 (RoutingJob file chooser ✅) + Phase 6 (board paint) + Phase 7 (autoroute diagnostics) + Phase 12 (util.TextManager fonts) | GUI SoC initiative | frozen, green |
 | **F3** | board/autoroute → `app.freerouting.boardgraphics..` (ModuleBoundariesArchTest.boardAndAutorouteMustNotDependOnBoardgraphics) | 145 | Phase 6 + Phase 10 (rendering inversion → gui.rendering) | GUI SoC initiative | frozen, green |
 
 > Added Phase 1 (2026-08-12). Frozen store: `src/test/resources/archunit_store/` (3 rule files + `stored.rules`);
-> `archunit.properties` keeps `allowStoreCreation=false` / `allowStoreUpdate=true`. Total frozen debt: **267**
-> violations. Strict (non-frozen) rules added in the same change: **R4** `guiSlicesMustBeFreeOfCycles`
+> `archunit.properties` keeps `allowStoreCreation=false` / `allowStoreUpdate=true`. Total frozen debt: **254**
+> violations (was 267; −13 after Phase 4 RoutingJob file-chooser removal). Strict (non-frozen) rules added in the same change: **R4** `guiSlicesMustBeFreeOfCycles`
 > (`allowEmptyShould(true)` — green until gui subpackages exist, must stay green after Phase 9) and **R5**
 > `pipelineMustNotDependOnGui` (green; closes the io/util gap). Baselines verified against the 2026-08-12 run
 > (`BUILD SUCCESSFUL in 38s`, gate = ModuleBoundariesArchTest + SpecctraPackageArchTest).

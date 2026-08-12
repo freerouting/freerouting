@@ -2,20 +2,23 @@ package app.freerouting.gui;
 
 import static app.freerouting.Freerouting.globalSettings;
 
-import app.freerouting.core.RoutingJob;
 import app.freerouting.gui.a11y.A11y;
 import app.freerouting.gui.a11y.GuiLocators;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /** Creates the file menu of a board frame. */
 public class BoardMenuFile extends JMenu {
@@ -39,8 +42,7 @@ public class BoardMenuFile extends JMenu {
         KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
     fileOpenMenuitem.addActionListener(
         _ -> {
-          File selectedFile =
-              RoutingJob.showOpenDialog(globalSettings.guiSettings.inputDirectory, boardFrame);
+          File selectedFile = showOpenDialog(globalSettings.guiSettings.inputDirectory, boardFrame);
 
           openEventListeners.forEach(listener -> listener.accept(selectedFile));
         });
@@ -109,5 +111,38 @@ public class BoardMenuFile extends JMenu {
    */
   public void addSaveAsEventListener(Consumer<File> listener) {
     saveAsEventListeners.add(listener);
+  }
+
+  /**
+   * Shows a file chooser for opening a design file (GUI layer owns file picking; SoC plan Phase 4).
+   *
+   * @param defaultDirectory the directory to open the chooser in; may be null
+   * @param parent the parent component for the modal dialog; may be null
+   * @return the selected file, or {@code null} if the user cancelled
+   */
+  private static File showOpenDialog(String defaultDirectory, Component parent) {
+    JFileChooser fileChooser = new JFileChooser(defaultDirectory);
+    fileChooser.setMinimumSize(new Dimension(500, 250));
+
+    // Add the file filter for SPECCTRA Design .DSN files
+    FileNameExtensionFilter dsnFilter =
+        new FileNameExtensionFilter("SPECCTRA Design file (*.dsn)", "dsn");
+    fileChooser.addChoosableFileFilter(dsnFilter);
+
+    // Add the file filter for Freerouting binary .FRB files
+    FileNameExtensionFilter frbFilter =
+        new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
+    fileChooser.addChoosableFileFilter(frbFilter);
+
+    // Add the file filter for KiCad JSON .JSON files
+    FileNameExtensionFilter jsonFilter =
+        new FileNameExtensionFilter("KiCad Design JSON file (*.json)", "json");
+    fileChooser.addChoosableFileFilter(jsonFilter);
+
+    // Set a file filter as the default one
+    fileChooser.setFileFilter(dsnFilter);
+
+    fileChooser.showOpenDialog(parent);
+    return fileChooser.getSelectedFile();
   }
 }

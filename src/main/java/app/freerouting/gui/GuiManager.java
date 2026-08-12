@@ -59,7 +59,7 @@ public class GuiManager {
             .createSession(
                 UUID.fromString(globalSettings.userProfileSettings.userId),
                 "Freerouting/" + globalSettings.version);
-    SessionManager.getInstance().setGuiSession(guiSession.getId());
+    SessionManager.getInstance().setPrimarySession(guiSession.getId());
     SessionManager.getInstance().setMonitoredSessionId(guiSession.getId());
 
     // Set default font for buttons and labels
@@ -344,7 +344,7 @@ public class GuiManager {
 
     InputStream inputStream = null;
     if ((routingJob == null) || (routingJob.input.getFile() == null)) {
-      routingJob = new RoutingJob(SessionManager.getInstance().getGuiSession().id);
+      routingJob = new RoutingJob(SessionManager.getInstance().getPrimarySession().id);
 
       routingJob.setDummyInputFile("tutorial_board.dsn");
       // Load an empty template file from the resources

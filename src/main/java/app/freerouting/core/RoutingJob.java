@@ -12,8 +12,6 @@ import app.freerouting.settings.DesignRulesCheckerSettings;
 import app.freerouting.settings.RouterSettings;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,8 +24,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /** Represents a job that needs to be processed by the router. */
 public class RoutingJob implements Serializable, Comparable<RoutingJob> {
@@ -145,33 +141,6 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         this.sessionId.toString().substring(0, 6).toUpperCase()
             + "\\"
             + this.id.toString().substring(0, 6).toUpperCase();
-  }
-
-  /** Shows a file chooser for opening a design file. */
-  public static File showOpenDialog(String defaultDirectory, Component parent) {
-    JFileChooser fileChooser = new JFileChooser(defaultDirectory);
-    fileChooser.setMinimumSize(new Dimension(500, 250));
-
-    // Add the file filter for SPECCTRA Design .DSN files
-    FileNameExtensionFilter dsnFilter =
-        new FileNameExtensionFilter("SPECCTRA Design file (*.dsn)", "dsn");
-    fileChooser.addChoosableFileFilter(dsnFilter);
-
-    // Add the file filter for Freerouting binary .FRB files
-    FileNameExtensionFilter frbFilter =
-        new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
-    fileChooser.addChoosableFileFilter(frbFilter);
-
-    // Add the file filter for KiCad JSON .JSON files
-    FileNameExtensionFilter jsonFilter =
-        new FileNameExtensionFilter("KiCad Design JSON file (*.json)", "json");
-    fileChooser.addChoosableFileFilter(jsonFilter);
-
-    // Set a file filter as the default one
-    fileChooser.setFileFilter(dsnFilter);
-
-    fileChooser.showOpenDialog(parent);
-    return fileChooser.getSelectedFile();
   }
 
   /** Detects the file format from its binary content. */

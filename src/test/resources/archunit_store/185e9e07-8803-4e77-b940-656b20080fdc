@@ -89,7 +89,5 @@ Method <app.freerouting.board.Via.getDrawColors(app.freerouting.boardgraphics.Gr
 Method <app.freerouting.board.Via.getDrawColors(app.freerouting.boardgraphics.GraphicsContext)> has return type <[Ljava.awt.Color;> in (Via.java:0)
 Method <app.freerouting.board.ViaObstacleArea.getDrawColors(app.freerouting.boardgraphics.GraphicsContext)> depends on component type <java.awt.Color> in (ViaObstacleArea.java:0)
 Method <app.freerouting.board.ViaObstacleArea.getDrawColors(app.freerouting.boardgraphics.GraphicsContext)> has return type <[Ljava.awt.Color;> in (ViaObstacleArea.java:0)
-Method <app.freerouting.core.RoutingJob.showOpenDialog(java.lang.String, java.awt.Component)> calls constructor <java.awt.Dimension.<init>(int, int)> in (RoutingJob.java:153)
-Method <app.freerouting.core.RoutingJob.showOpenDialog(java.lang.String, java.awt.Component)> has parameter of type <java.awt.Component> in (RoutingJob.java:0)
 Method <app.freerouting.util.TextManager.insertIcons(javax.swing.JComponent, java.lang.String)> calls method <java.awt.Font.deriveFont(int, float)> in (TextManager.java:456)
 Method <app.freerouting.util.TextManager.insertIcons(javax.swing.JComponent, java.lang.String)> calls method <java.awt.Font.getSize()> in (TextManager.java:456)

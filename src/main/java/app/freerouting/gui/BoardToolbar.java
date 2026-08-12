@@ -167,7 +167,7 @@ class BoardToolbar extends JPanel {
         _ -> {
           var routingJobs =
               RoutingJobScheduler.getInstance()
-                  .listJobs(SessionManager.getInstance().getGuiSession().id.toString());
+                  .listJobs(SessionManager.getInstance().getPrimarySession().id.toString());
           if (routingJobs.length == 0) {
             FRLogger.warn("No routing job found for the current session");
             return;

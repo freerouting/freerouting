@@ -201,7 +201,7 @@ public class BoardFrame extends WindowBase {
 
             javax.swing.SwingUtilities.invokeLater(
                 () -> {
-                  String sessionId = SessionManager.getInstance().getGuiSession().id.toString();
+                  String sessionId = SessionManager.getInstance().getPrimarySession().id.toString();
                   RoutingJobScheduler.getInstance().clearJobs(sessionId);
                   RoutingJobScheduler.getInstance().enqueueJob(routingJob);
 
@@ -1630,7 +1630,7 @@ public class BoardFrame extends WindowBase {
     }
 
     // Clear any existing jobs for this session (single board support)
-    String sessionId = SessionManager.getInstance().getGuiSession().id.toString();
+    String sessionId = SessionManager.getInstance().getPrimarySession().id.toString();
     RoutingJobScheduler.getInstance().clearJobs(sessionId);
 
     try {

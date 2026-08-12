@@ -77,7 +77,7 @@ public class SessionManagerTest {
   }
 
   @Test
-  void testGetAndSetGuiSession() {
+  void testGetAndSetPrimarySession() {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
     Session session =
@@ -85,11 +85,11 @@ public class SessionManagerTest {
 
     assertThrows(
         IllegalArgumentException.class,
-        sessionManager::getGuiSession,
+        sessionManager::getPrimarySession,
         "Getting GUI session without setting it should throw an exception.");
 
-    sessionManager.setGuiSession(session.id);
-    Session guiSession = sessionManager.getGuiSession();
+    sessionManager.setPrimarySession(session.id);
+    Session guiSession = sessionManager.getPrimarySession();
     assertEquals(session, guiSession, "Retrieved GUI session should match the set session.");
   }
 }
