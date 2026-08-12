@@ -163,6 +163,53 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     netClass.isIgnoredByAutorouter = ignoredByAutorouter;
   }
 
+  /**
+   * Parses and applies a trace-width edit for the given net class.
+   *
+   * <p>The {@code value} is a user-unit trace width (the full width, not a half width). It is
+   * converted to board units, rounded to the nearest integer half-width, and written to every
+   * signal layer of {@code netClass}. A value of {@code 0} stores a zero width (traces disallowed
+   * on the class's active layers) without altering the active-layer selection, which remains owned
+   * by the "on layer" dialog.
+   *
+   * @return {@code true} if the value was applied, {@code false} if it was rejected (null, non
+   *     numeric, or negative input).
+   */
+  static boolean applyTraceWidthValue(
+      NetClass netClass,
+      LayerStructure layerStructure,
+      CoordinateTransform coordinateTransform,
+      Object value) {
+    if (netClass == null || layerStructure == null || coordinateTransform == null) {
+      return false;
+    }
+
+    double widthValue;
+    if (value instanceof Number number) {
+      widthValue = number.doubleValue();
+    } else if (value instanceof String text) {
+      try {
+        widthValue = Double.parseDouble(text.trim());
+      } catch (NumberFormatException ex) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+
+    if (widthValue < 0) {
+      return false;
+    }
+
+    int halfWidth = (int) Math.round(coordinateTransform.userToBoard(0.5 * widthValue));
+    for (int i = 0; i < layerStructure.arr.length; i++) {
+      if (layerStructure.arr[i].isSignal) {
+        netClass.setTraceHalfWidth(i, halfWidth);
+      }
+    }
+    return true;
+  }
+
   @Override
   public void refresh() {
     this.clClassComboBox.removeAllItems();
@@ -629,7 +676,9 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     public void setValueAt(Object value, int row, int col) {
       RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
       BoardRules boardRules = routingBoard.rules;
-      if (col == ColumnName.ON_LAYER.ordinal() || col == ColumnName.TRACE_WIDTH.ordinal()) {
+      if (col == ColumnName.ON_LAYER.ordinal()) {
+        // Layer selection is owned by the LayerRules dialog (LayerRulesCellEditor); its edits must
+        // not be applied through the model.
         return;
       }
       Object netClassName = getValueAt(row, ColumnName.NAME.ordinal());
@@ -640,6 +689,24 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       NetClass netRule = boardRules.netClasses.get((String) netClassName);
       if (netRule == null) {
         FRLogger.warn("EditNetRuLesVindow.setValueAt: netRule not found");
+        return;
+      }
+
+      if (col == ColumnName.TRACE_WIDTH.ordinal()) {
+        boolean applied =
+            applyTraceWidthValue(
+                netRule,
+                routingBoard.layerStructure,
+                boardFrame.boardPanel.boardHandling.coordinateTransform,
+                value);
+        if (!applied) {
+          // Rejected edit (null, non-numeric, or negative input): refresh the cell so the stored
+          // value is re-displayed instead of leaving the rejected text visible.
+          fireTableCellUpdated(row, col);
+          return;
+        }
+        this.data[row][col] = value;
+        fireTableCellUpdated(row, col);
         return;
       }
 
