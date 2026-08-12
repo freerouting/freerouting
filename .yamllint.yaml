@@ -1,12 +1,30 @@
+# YAML linting configuration for Freerouting project
+# Used by pre-commit yamllint hook
+
 extends: default
 
 rules:
-  line-length: disable
+  line-length:
+    max: 240
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-mappings: true
+  braces:
+    max-spaces-inside: 1
+    min-spaces-inside: 0
+    max-spaces-inside-empty: -1
+    min-spaces-inside-empty: -1
   brackets: disable
   comments:
     min-spaces-from-content: 1
   document-start: disable
-  truthy: disable
+  truthy:
+    allowed-values: ['true', 'false', 'on', 'off']
+  trailing-spaces: enable
+  indentation:
+    spaces: 2
+    indent-sequences: consistent
+  quoted-strings:
+    required: false
 
 ignore: |
   src_v19/

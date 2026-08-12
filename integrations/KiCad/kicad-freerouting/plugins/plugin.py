@@ -45,23 +45,23 @@ def _setup_logger():
     try:
         LOG_DIR.mkdir(parents=True, exist_ok=True)
         log_file = LOG_DIR / "freerouting_kicad_plugin.log"
-        
+
         logger = logging.getLogger("freerouting")
         logger.setLevel(logging.DEBUG)
-        
+
         if not logger.handlers:
             fh = logging.FileHandler(log_file, mode='a', encoding='utf-8')
             fh.setLevel(logging.DEBUG)
-            
+
             formatter = logging.Formatter('%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s')
             fh.setFormatter(formatter)
             logger.addHandler(fh)
-            
+
             ch = logging.StreamHandler()
             ch.setLevel(logging.DEBUG)
             ch.setFormatter(formatter)
             logger.addHandler(ch)
-            
+
         logger.info("Logging configured successfully in plugin.py.")
         return logger
     except Exception as e:

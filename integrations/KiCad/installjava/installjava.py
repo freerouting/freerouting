@@ -59,7 +59,7 @@ def get_local_java_executable_path(os_name):
     java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-21.*.*+*-jre", "bin", "java")
     if os_name == "windows":
         java_exe_path += ".exe"
-        
+
     java_found_exes = sorted(
         [p for p in filter(lambda p: os.path.isfile(p), glob.glob(java_exe_path)) if re.search(r"jdk-21\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p)],
         reverse=True,
@@ -68,10 +68,10 @@ def get_local_java_executable_path(os_name):
 
     if len(java_found_exes) >= 1:
         java_exe_path = java_found_exes[0]
-        print(f"You already have a downloaded JRE ({java_exe_path}), we are going to use that.")        
+        print(f"You already have a downloaded JRE ({java_exe_path}), we are going to use that.")
     else:
         java_exe_path = ""
-        
+
     return java_exe_path
 
 def install_java_jre_21():
@@ -90,15 +90,15 @@ def install_java_jre_21():
         jre_version = "21.*.*+*"
         jre_url = None
         return local_java_exe
-        
+
     java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-{jre_version}-jre", "bin", "java")
     if os_name == "windows":
-        java_exe_path += ".exe"      
- 
+        java_exe_path += ".exe"
+
     if (local_java_exe >= java_exe_path):
         print(f"You already have the latest Java JRE ({jre_version})")
         return java_exe_path
- 
+
     if jre_url is None:
         raise FileNotFoundError("Couldn't find a downloaded JRE")
 
@@ -120,7 +120,7 @@ def install_java_jre_21():
     #java_version_command = f"{java_exe_path} -version"
     #result = subprocess.check_output(java_version_command, shell=True, stderr=subprocess.STDOUT)
     #print("Installed Java version:", result)
-    
+
     return java_exe_path
 
 if __name__ == "__main__":
@@ -128,3 +128,4 @@ if __name__ == "__main__":
         print(install_java_jre_21())
     else:
         print("This script needs to be run as administrator to install Java JRE 21.")
+

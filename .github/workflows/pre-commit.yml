@@ -1,37 +1,54 @@
-name: Pre-commit Code Quality Check
-
+---
+name: pre-commit
 on:
-  push:
-    branches: [ main, develop, modernize-codebase ]
   pull_request:
-    branches: [ main, develop ]
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-permissions:
-  contents: read
-
+    branches: [master]
+  push:
+    branches: [master]
 jobs:
   pre-commit:
-    name: Pre-commit Checks
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    env:
+      RAW_LOG: pre-commit.log
+      CS_XML: pre-commit.xml
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      # Project specific
+      - uses: actions/checkout@v7
+      - run: python -m pip install pre-commit
+      - name: Run pre-commit hooks
+        env:
+          SKIP: no-commit-to-branch
+        run: |
+          set -o pipefail
+          pre-commit gc
+          pre-commit run --show-diff-on-failure --color=always --all-files | tee ${RAW_LOG}
+      - uses: actions/cache/restore@v6
         with:
-          python-version: '3.x'
-
-      - name: Set up JDK 25
-        uses: actions/setup-java@v4
+          path: ~/.cache/pre-commit/
+          key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+      - name: Convert Raw Log to Checkstyle format (launch action)
+        uses: mdeweerd/logToCheckStyle@v2026.7.1
+        if: ${{ failure() }}
         with:
-          distribution: 'temurin'
-          java-version: '25'
-
-      - name: Run pre-commit
-        uses: pre-commit/action@v3.0.1
+          in: ${{ env.RAW_LOG }}
+          # out: ${{ env.CS_XML }}
+      - uses: actions/cache/save@v6
+        if: ${{ ! cancelled() }}
+        with:
+          path: ~/.cache/pre-commit/
+          key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+      - name: Provide log as artifact
+        uses: actions/upload-artifact@v7
+        if: ${{ ! cancelled() }}
+        with:
+          name: precommit-logs
+          path: |
+            ${{ env.RAW_LOG }}
+            ${{ env.CS_XML }}
+          retention-days: 2

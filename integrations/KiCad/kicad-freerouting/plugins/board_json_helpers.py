@@ -210,7 +210,7 @@ def _collect_net_classes(board, data):
     """Populate ``data["netClasses"]`` from the board's netclasses."""
     try:
         netclasses_dict = {}
-        
+
         # Try getting default netclass first
         default_nc = None
         design_settings = board.GetDesignSettings() if hasattr(board, "GetDesignSettings") else None
@@ -225,14 +225,14 @@ def _collect_net_classes(board, data):
                     break
         if default_nc:
             netclasses_dict[_to_str(default_nc.GetName())] = default_nc
-            
+
         # Get other netclasses
         netclasses = None
         if hasattr(board, "GetNetClasses"):
             netclasses = board.GetNetClasses()
         elif hasattr(board, "GetAllNetClasses"):
             netclasses = board.GetAllNetClasses()
-            
+
         if netclasses:
             if hasattr(netclasses, "NetClasses"):
                 for name, netclass in netclasses.NetClasses().items():
@@ -243,7 +243,7 @@ def _collect_net_classes(board, data):
             elif hasattr(netclasses, "values"):
                 for netclass in netclasses.values():
                     netclasses_dict[_to_str(netclass.GetName())] = netclass
-                    
+
         for name, netclass in netclasses_dict.items():
             nc_data = {
                 "name": _to_str(name),
@@ -267,7 +267,7 @@ def _collect_nets(board, data):
         debug_log(f"board type: {type(board)}")
         for attr in ["GetNetsByNetcode", "GetNetsByName", "GetNets", "GetNetInfoList"]:
             debug_log(f"board has {attr}: {hasattr(board, attr)}")
-            
+
         nets = None
         if hasattr(board, "GetNetsByNetcode"):
             nets = board.GetNetsByNetcode()
@@ -281,15 +281,15 @@ def _collect_nets(board, data):
         elif hasattr(board, "GetNetInfoList"):
             nets = board.GetNetInfoList()
             debug_log("Using board.GetNetInfoList()")
-            
+
         if not nets:
             debug_log("nets collection is None or empty!")
             return
-            
+
         debug_log(f"nets type: {type(nets)}")
         for attr in ["items", "values", "NetsByNetcode", "NetsByName", "GetNetCount", "GetNetItem"]:
             debug_log(f"nets object has {attr}: {hasattr(nets, attr)}")
-            
+
         net_list = []
         iterator = []
         if hasattr(nets, "items"):
@@ -308,15 +308,15 @@ def _collect_nets(board, data):
             try:
                 iterator = list(enumerate(nets))
                 debug_log("nets is directly iterable")
-            except TypeError as te:
-                debug_log(f"nets is not directly iterable: {te}")
+            except TypeError as exc:
+                debug_log(f"nets is not directly iterable: {exc}")
                 if hasattr(nets, "GetNetCount") and hasattr(nets, "GetNetItem"):
                     debug_log("Using GetNetCount/GetNetItem")
                     iterator = [(i, nets.GetNetItem(i)) for i in range(nets.GetNetCount())]
-                    
+
         iterator_list = list(iterator)
         debug_log(f"iterator length: {len(iterator_list)}")
-        
+
         for key, net in iterator_list:
             net_code = net.GetNetCode() if hasattr(net, "GetNetCode") else 0
             net_name = _to_str(net.GetNetname()) if hasattr(net, "GetNetname") else "unknown"
@@ -353,7 +353,7 @@ def _collect_clearance_rules(board, data):
         filename = board.GetFileName()
         debug_log(f"board file name: {filename}")
         rules_text = ""
-        
+
         # 1. Try reading custom rules from the .kicad_pcb file itself
         if filename and os.path.exists(filename):
             try:
@@ -369,7 +369,7 @@ def _collect_clearance_rules(board, data):
                         debug_log("No custom_rules section found in .kicad_pcb")
             except Exception as fe:
                 debug_log(f"Could not read custom rules from .kicad_pcb file: {fe}")
-                
+
         # 2. Fallback to .kicad_dru file
         if not rules_text and filename:
             dru_file = os.path.splitext(filename)[0] + ".kicad_dru"
@@ -381,7 +381,7 @@ def _collect_clearance_rules(board, data):
                         debug_log("Successfully read custom rules from .kicad_dru")
                 except Exception as de:
                     debug_log(f"Could not read .kicad_dru: {de}")
-                    
+
         # 3. Fallback to GetDesignSettings() properties
         if not rules_text:
             settings = board.GetDesignSettings() if hasattr(board, "GetDesignSettings") else None
@@ -397,30 +397,30 @@ def _collect_clearance_rules(board, data):
                             rules_text = val
                         debug_log(f"Read rules text using settings.{attr}")
                         break
-        
+
         if not rules_text:
             debug_log("No custom rules found in any source.")
             return
-            
+
         debug_log(f"Found rules text (length: {len(rules_text)}). Parsing...")
         rule_pattern = re.compile(r'\(rule\s+"([^"]+)"\s*(.*?)\)', re.DOTALL)
         clearance_pattern = re.compile(r'\(constraint\s+clearance\s+\(min\s+([\d.]+)(mm|mil|in|um)\)\)')
         condition_pattern = re.compile(r'A\.NetClass\s*==\s*\'([^\']+)\'.*?B\.NetClass\s*==\s*\'([^\']+)\'')
         condition_pattern_reverse = re.compile(r'B\.NetClass\s*==\s*\'([^\']+)\'.*?A\.NetClass\s*==\s*\'([^\']+)\'')
-        
+
         rules_found = 0
         for match in rule_pattern.finditer(rules_text):
             rule_name = match.group(1)
             rule_body = match.group(2)
             debug_log(f"Parsing rule: {rule_name}")
-            
+
             cl_match = clearance_pattern.search(rule_body)
             if not cl_match:
                 debug_log(f"No clearance constraint in rule {rule_name}")
                 continue
             val_str = cl_match.group(1)
             unit_str = cl_match.group(2)
-            
+
             val = float(val_str)
             if unit_str == "mil":
                 val = val * 0.0254
@@ -428,10 +428,10 @@ def _collect_clearance_rules(board, data):
                 val = val * 25.4
             elif unit_str == "um":
                 val = val / 1000.0
-                
+
             class_a = None
             class_b = None
-            
+
             cond_match = condition_pattern.search(rule_body)
             if cond_match:
                 class_a = cond_match.group(1)
@@ -441,7 +441,7 @@ def _collect_clearance_rules(board, data):
                 if cond_match_rev:
                     class_b = cond_match_rev.group(1)
                     class_a = cond_match_rev.group(2)
-                    
+
             debug_log(f"Rule {rule_name}: classA={class_a}, classB={class_b}, clearance={val}")
             if class_a and class_b:
                 data["clearanceRules"].append({
@@ -488,20 +488,20 @@ def _collect_components(board, data, layer_id_to_index):
                 dy = (pad_pos.y - pos.y) / 1e6
                 local_dx = dx * cos_rot - dy * sin_rot
                 local_dy = dx * sin_rot + dy * cos_rot
-                
+
                 shape_val = pad.GetShape() if hasattr(pad, "GetShape") else -1
                 shape_str = "rect"
                 if hasattr(pcbnew, "PAD_SHAPE_CIRCLE") and shape_val == pcbnew.PAD_SHAPE_CIRCLE:
                     shape_str = "circle"
                 elif hasattr(pcbnew, "PAD_SHAPE_OVAL") and shape_val == pcbnew.PAD_SHAPE_OVAL:
                     shape_str = "oval"
-                
+
                 drill_val = 0.0
                 if hasattr(pad, "GetDrillSize"):
                     drill_size = pad.GetDrillSize()
                     if hasattr(drill_size, "x"):
                         drill_val = drill_size.x / 1e6
-                
+
                 pad_layers = []
                 if hasattr(pad, "GetLayerSet"):
                     pad_layer_set = pad.GetLayerSet()
@@ -510,7 +510,7 @@ def _collect_components(board, data, layer_id_to_index):
                             pad_layers.append(_to_str(board.GetLayerName(layer_id)))
                 else:
                     pad_layers.append(_to_str(board.GetLayerName(pad.GetLayer())))
-                    
+
                 component["pads"].append({
                     "name": _to_str(pad.GetPadName()),
                     "netName": _to_str(pad_net.GetNetname()) if pad_net else "",
@@ -604,7 +604,7 @@ def _collect_conduction_areas(board, data, layer_id_to_index):
                             for pt_idx in range(poly.PointCount()):
                                 pt = poly.CPoint(pt_idx)
                                 points.append({"x": pt.x / 1e6, "y": pt.y / 1e6})
-                            
+
                             data["conductionAreas"].append({
                                 "id": zone_id,
                                 "netName": _to_str(net.GetNetname()) if net else "",

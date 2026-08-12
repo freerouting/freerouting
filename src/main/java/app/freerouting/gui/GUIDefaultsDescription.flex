@@ -4,7 +4,7 @@ package app.freerouting.gui;
 
 %class GUIDefaultsScanner
 %unicode
-%ignorecase 
+%ignorecase
 %function next_token
 %type Object
 /* %debug */
@@ -34,7 +34,7 @@ DecFloatLiteral = {Mantissa} {Exponent}?
 SpecChar = _
 
 
-Identifier = ({Letter}|{SpecChar})({Letter}|{Digit}|{SpecChar})* 
+Identifier = ({Letter}|{SpecChar})({Letter}|{Digit}|{SpecChar})*
 
 %%
 
@@ -122,16 +122,16 @@ Identifier = ({Letter}|{SpecChar})({Letter}|{Digit}|{SpecChar})*
 }
 
 <YYINITIAL> {
-  /* identifiers */ 
+  /* identifiers */
   {Identifier}                   { return yytext(); }
- 
+
   /* literals */
   {DecIntegerLiteral}            { return new Integer(yytext()); }
   {DecFloatLiteral}              { return new Double(yytext()); }
 
   /* comments */
   {Comment}                      { /* ignore */ }
- 
+
   /* whitespace */
   {WhiteSpace}                   { /* ignore */ }
 }
@@ -139,3 +139,4 @@ Identifier = ({Letter}|{SpecChar})({Letter}|{Digit}|{SpecChar})*
 /* error fallback */
 .|\n                             { throw new Error("Illegal character <"+
                                                     yytext()+">"); }
+

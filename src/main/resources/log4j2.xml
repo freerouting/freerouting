@@ -3,7 +3,7 @@
   This is a fallback configuration for log4j2.
   The actual logging configuration is built programmatically by Log4j2ConfigurationFactory
   based on system properties set in Freerouting.main() before logging initializes.
-  
+
   This file is only used if the ConfigurationFactory fails to load.
 -->
 <Configuration status="WARN">
@@ -12,10 +12,11 @@
       <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-6level %msg%n"/>
     </Console>
   </Appenders>
-  
+
   <Loggers>
     <Root level="INFO">
       <AppenderRef ref="Console"/>
     </Root>
   </Loggers>
 </Configuration>
+

@@ -1,3 +1,20 @@
+# Configuration for development tools
+# Note: This is a Java project, but we use some Python-based tools for linting
+
 [tool.codespell]
-skip = "*.dsn,*.ses,*.frb,*.png,*.jpg,*.svg,*.pdf,build,logs,.git,src_v19,fixtures,integrations,docs/reference,scripts/i18n,scripts/benchmark/fixtures,src/main/resources/app/freerouting/*_*.properties,.*"
-ignore-words-list = "autoroute,autorouter,autorouting,padstack,padstacks,netlist,netlists,freerouting"
+# The configuration must be kept here to ensure that
+# `codespell` can be run as a standalone program from the CLI
+# with the appropriate default options.
+
+skip = "*.dsn,*.ses,*.frb,*.png,*.jpg,*.svg,*.pdf,build,logs,.git,src_v19,fixtures,docs/reference,scripts/i18n,scripts/benchmark/fixtures,src/main/resources/app/freerouting/*_*.properties,.*,website,src/rewrite,config/checkstyle"
+
+check-hidden = true
+quiet-level = 2
+ignore-regex = '\\[fnrstv]'
+builtin = "clear,rare,informal,code,names"
+
+ignore-words-list = "autoroute,autorouter,autorouting,padstack,padstacks,netlist,netlists,freerouting,ws,stdio,thead,Cloneable,Deque,IAM,ro,currentY,onText,Jupyter"
+
+[tool.yamlfix]
+line_length = 80
+explicit_start = true
