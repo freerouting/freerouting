@@ -528,22 +528,50 @@ Set-Location "C:\Work\freerouting"
 .\gradlew.bat test --tests "app.freerouting.architecture.ModuleBoundariesArchTest" --tests "app.freerouting.io.SpecctraPackageArchTest"
 ```
 
-### 12.6 v2.3.0 golden metrics (fill in Phase 0/1)
+### 12.6 Golden metrics & baseline (v2.3.0 reference + current build = baseline)
 
 Record baseline numbers here (and/or in branch notes). Cheap Phase 7/8 smokes and Phase 5/6 full compares assert against these.
 
-> **Phase 0 (2026-08-12):** WIP branch baseline & inventories recorded in `logs/phase0/branch-notes.md`
-> (git-ignored): green ArchUnit + `Dac2020Bm01RoutingTest` + full default `test` suite
-> (`BUILD SUCCESSFUL in 2m 36s`); class counts gui=69 / interactive=37 / boardgraphics=10 (=116);
-> DSN coverage map (partial); known-leak snapshot. **Stable v2.3.0 golden numbers are not yet
-> captured** — pending Phase 0/1 tooling (R18: obtain/run the v2.3.0 artifact). Do not treat the table
-> below as populated until that compare run completes.
+> **Phase 0 (2026-08-12):** Golden metrics captured via `scripts/benchmark/run-benchmarks.ps1` on the
+> 20-fixture golden matrix. **current (branch `soc-gui-separation-and-accessibility`) ≡ v2.3.0** on routing
+> quality (avg score 915.1 both; identical unrouted + full-DRC violations on all 19 comparable fixtures),
+> with an improvement on `DAC2020_bm01` (current DRC 0 vs 2.3.0 2). `CM5_MINIMA_3` times out (~59 min) for
+> **both** builds → N/A. Full-DRC numbers below are the post-route re-check runs of the current binary on
+> each `.ses` output (aligns with D29 `DesignRulesChecker.getAllClearanceViolations()`).
 
-| Fixture | Metric | v2.3.0 value | Notes |
-| --- | --- | --- | --- |
-| *(populate during Phase 0/1)* | Completion / unrouted nets | | |
-| | Full-DRC violations (`DesignRulesChecker.getAllClearanceViolations()`) | | |
-| | SES sanity | | |
+| Fixture | v2.3.0 unrouted | current unrouted | v2.3.0 DRC viol | current DRC viol | Notes |
+| --- | --- | --- | --- | --- | --- |
+| DAC2020_bm01 | 4 | 4 | 2 | 0 | current fewer DRC violations |
+| DAC2020_bm02 | 0 | 0 | 4 | 4 | identical |
+| DAC2020_bm04 | 3 | 3 | 0 | 0 | identical |
+| DAC2020_bm05 | 23 | 23 | 0 | 0 | identical |
+| DAC2020_bm06 | 2 | 2 | 8 | 8 | identical |
+| DAC2020_bm07 | 3 | 3 | 0 | 0 | identical |
+| DAC2020_bm08 | 0 | 0 | 1 | 1 | identical |
+| DAC2020_bm09 | 1 | 1 | 0 | 0 | identical |
+| DAC2020_bm10 | 0 | 0 | 8 | 8 | identical |
+| DAC2020_bm11 | 2 | 2 | 0 | 0 | identical |
+| complex_hierarchy | 10 | 10 | 0 | 0 | identical |
+| ecc83-pp | 0 | 0 | 0 | 0 | identical |
+| ecc83-pp_v2 | 0 | 0 | 24 | 24 | identical |
+| interf_u | 0 | 0 | 62 | 62 | identical |
+| multichannel_mixer | 160 | 160 | 0 | 0 | identical |
+| multichannel_mixer-unrouted | 128 | 128 | 612 | 612 | identical |
+| pic_programmer | 0 | 0 | 1 | 1 | identical |
+| sonde xilinx | 0 | 0 | 0 | 0 | identical |
+| StickHub | 2 | 2 | 5 | 5 | identical |
+| CM5_MINIMA_3 | — | — | — | — | **timeout both (~59 min)**; N/A |
+
+SES sanity: all 19 comparable runs produced a `.ses` output that the current binary DRC-checked without
+load errors (2 warn/err per run is the normal baseline). Completion-unrouted parity + full-DRC delta = **0**
+vs v2.3.0 on all comparable fixtures (D28/D29 gates satisfied at the Phase 0/1 baseline).
+
+> **Baseline decision (2026-08-12):** the **current build** (branch `soc-gui-separation-and-accessibility`)
+> is now the **authoritative routing baseline** for this initiative, superseding v2.3.0 as the parity
+> reference (D24). Rationale: current ≡ v2.3.0 on all comparable fixtures and is strictly better on
+> `DAC2020_bm01` (full-DRC 0 vs 2). Phase 5/6 exit gates and Phase 7/8 cheap smokes therefore assert
+> **no regression below the current column above** (completion/unrouted + full-DRC). v2.3.0 remains the
+> secondary reference. AGENTS.md baseline policy (D24 draft) to be updated to match on sign-off.
 
 ## 13. Execution staffing plan (models, cost, kickoff prompts)
 
