@@ -8,7 +8,7 @@ plugins {
     id 'maven-publish'
     id 'checkstyle'
     id "com.vanniktech.maven.publish" version "0.37.0"
-    id 'io.github.ben-manes.versions' version '0.60.0'
+    id 'io.github.ben-manes.versions' version '0.61.0'
     id 'org.openrewrite.rewrite' version '7.38.0'
     id "com.diffplug.spotless" version "8.9.0"
 }
