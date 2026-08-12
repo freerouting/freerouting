@@ -101,9 +101,9 @@
 
 ## 6. Next actions
 
-1. **Phase 3 COMPLETE** (headless contracts) — `BoardManager` headless-only, `GuiSessionContract` created, R10 done, invariants preserved, all gates green.
-2. **Phase 4 — Core / management neutralization (next, GLM-5.2 xhigh):** remove Swing file chooser / AWT UI types from `RoutingJob` (GUI owns picking); rename `SessionManager.getGuiSession`/`setGuiSession` → `getPrimarySession`/`setPrimarySession` (management UUID session only, **not** `gui.session`); ensure analytics/API do not depend on GUI session types; reduce circular loader↔manager delegation where practical. Depends on Phases 1 & 3 (done). *K3→Flash/GLM handoff point.*
-3. Update §13.3 model-cols: Phase 3 done by K3; Phase 4 = GLM-5.2 (xhigh).
+1. **Phase 3 COMPLETE** (headless contracts) — `BoardManager` headless-only, `GuiSessionContract` created, R10 done, invariants preserved, all gates green. Committed `bf818255`.
+2. **Phase 4 — Core / management neutralization (next):** remove Swing file chooser / AWT UI types from `RoutingJob` (GUI owns picking); rename `SessionManager.getGuiSession`/`setGuiSession` → `getPrimarySession`/`setPrimarySession` (management UUID session only, **not** `gui.session`); ensure analytics/API do not depend on GUI session types; reduce circular loader↔manager delegation where trivially safe. Depends on Phases 1 & 3 (done). **Model: Flash (per user directive, 2026-08-12), subject to §13.4 rule-4 Flash guardrails — pre-approved mechanical plan (§13.3 Phase 4 prompt), STOP + hand off on any unlisted ambiguity; escalate to K3 on a 2× gate failure (rule 3).**
+3. Model policy update (user, 2026-08-12): prefer **Flash** over GLM-5.2 for GLM-assigned phases (cost). **Caveat:** Flash is NOT safe for the design/review/sign-off phases (Phase 6 commit-sequence review, Phase 12 sign-off) — keep those on GLM-5.2/K3. Flash remains the designated model for the mechanical moves (Phases 8/10). Assess Phases 7/11 when reached.
 
 ## 7. Artifacts
 
