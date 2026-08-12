@@ -532,6 +532,13 @@ Set-Location "C:\Work\freerouting"
 
 Record baseline numbers here (and/or in branch notes). Cheap Phase 7/8 smokes and Phase 5/6 full compares assert against these.
 
+> **Phase 0 (2026-08-12):** WIP branch baseline & inventories recorded in `logs/phase0/branch-notes.md`
+> (git-ignored): green ArchUnit + `Dac2020Bm01RoutingTest` + full default `test` suite
+> (`BUILD SUCCESSFUL in 2m 36s`); class counts gui=69 / interactive=37 / boardgraphics=10 (=116);
+> DSN coverage map (partial); known-leak snapshot. **Stable v2.3.0 golden numbers are not yet
+> captured** — pending Phase 0/1 tooling (R18: obtain/run the v2.3.0 artifact). Do not treat the table
+> below as populated until that compare run completes.
+
 | Fixture | Metric | v2.3.0 value | Notes |
 | --- | --- | --- | --- |
 | *(populate during Phase 0/1)* | Completion / unrouted nets | | |
