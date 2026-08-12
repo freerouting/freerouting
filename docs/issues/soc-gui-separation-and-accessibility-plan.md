@@ -1,6 +1,6 @@
 # GUI Separation and Accessibility Migration Plan
 
-> Status: **Ready to implement** (D1–D30 locked; M1=A / M4=B incorporated; implementation not started)
+> Status: **Ready to implement** (D1–D30 locked; M1=A / M4=B incorporated; execution staffing plan added in §13 on 2026-08-11; implementation not started)
 >
 > Scope: Separate GUI interaction and rendering from the headless routing pipeline, establish automated GUI accessibility coverage, and reorganize only the packages required for that separation.
 >
@@ -537,3 +537,245 @@ Record baseline numbers here (and/or in branch notes). Cheap Phase 7/8 smokes an
 | *(populate during Phase 0/1)* | Completion / unrouted nets | | |
 | | Full-DRC violations (`DesignRulesChecker.getAllClearanceViolations()`) | | |
 | | SES sanity | | |
+
+## 13. Execution staffing plan (models, cost, kickoff prompts)
+
+> Added 2026-08-11, before implementation start. Benchmark/pricing snapshot as of that date — re-verify model standings before each major phase; the model market moves faster than this plan.
+>
+> This section is **operational guidance, not a locked decision set**. D1–D30 remain the only locked decisions. If a named model version is unavailable when a phase starts, substitute per §13.4.
+
+### 13.1 Model evaluation findings (2026-08-11 snapshot)
+
+Sources: arena.ai Code Arena / WebDev leaderboard (567K votes, 2026-08-11), cursor.com/evals (CursorBench 3.2 — agentic, ambiguous multi-file tasks from real sessions; v3.2 added instruction-following + advanced tool-use problems), vendor docs (Moonshot, Z.AI, DeepSeek). llm-stats.com was inaccessible (bot check) — no data from it.
+
+| Model | Arena WebDev | CursorBench 3.2 (agentic) | Price $/M (in/out) | Context |
+| --- | --- | --- | --- | --- |
+| **Kimi K3** | **#2 overall — 1674** (above claude-opus-5-high) | Max 60.8 % / High 59.7 % | $3 / $15 | 1M |
+| **GLM-5.2** | #7 — 1588 | Max 55.0 % / High 51.5 % | $1.40 / $4.40 | 1M |
+| **DeepSeek V4 Flash** | #8 — 1585 (preliminary; statistically tied with GLM-5.2) | **not evaluated** (no public agentic evidence) | $0.14 / $0.28 | 1M |
+
+Findings:
+
+1. K3 leads GLM-5.2 by ~5 pts on the benchmark closest to this plan's demands (multi-file agentic work with instruction-following + tool use). K3 is the right primary.
+2. Reasoning effort scales scores materially within each family (K3: 50.5 % Low → 60.8 % Max; GLM-5.2: 51.5 % High → 55.0 % Max). Use xhigh/extra-high for all design and gate-sensitive phases.
+3. Flash ties GLM-5.2 on the arena at ~1/15th the cost, but has no CursorBench/agentic track record → mechanical, fully gated phases only; never Phase 6 or 9.
+4. Neither benchmark measures Java/EDA refactoring or 13-session constraint retention → Phase 1 doubles as a controlled trial (§13.4 rule 6).
+
+### 13.2 Cost model and totals
+
+Unit: **1 task-equivalent (TE)** ≈ 800K input + 40K output tokens ≈ one substantial agentic task with build/test loops (anchored to CursorBench: K3 Max ≈ 38K completion tokens ≈ $2.70/task).
+
+Cost per TE at list prices (no caching): **K3 $3.00 · GLM-5.2 $1.30 · Flash $0.12**.
+
+| Phase | TE (range) | Dominant work |
+| --- | --- | --- |
+| 0 Baseline | 4 (3–6) | test runs, golden-metric capture, inventories |
+| 1 Inventory + ArchUnit freeze | 8 (6–12) | whole-repo analysis, freeze baselines, facade sketch |
+| 2 A11y foundation | 12 (8–16) | new harness code, Gradle wiring, 3+ workflows, EN+hu |
+| 3 Headless contracts | 5 (3–7) | BoardManager API split |
+| 4 Core/mgmt neutralization | 3 (2–4) | RoutingJob Swing removal, SessionManager rename |
+| 5 Compute vs presentation | 6 (4–9) | façades + first full v2.3.0 parity gate |
+| 6 Rendering inversion | 15 (10–22) | highest risk; revertible commits; full parity gate |
+| 7 Autorouter diagnostics | 5 (3–7) | snapshot/event inversion; cheap smoke |
+| 8 Move to gui.interactive | 8 (6–12) | mechanical, voluminous; FQCN/i18n updates |
+| 9 Extract gui.session | 8 (6–12) | facade extraction; D27/D30 verification |
+| 10 Move to gui.rendering | 3 (2–5) | mechanical; ScreenTransform rename |
+| 11 A11y expansion + CI | 5 (3–7) | workflow replication; path filters |
+| 12 Final cleanup + docs | 3 (2–4) | strict ArchUnit, AGENTS.md D24, docs |
+| **Total** | **85 (60–120)** | |
+
+Scenario totals (expected / range):
+
+| Scenario | Expected | Range | Verdict |
+| --- | --- | --- | --- |
+| All Kimi K3 | $255 | $180–360 | Simplest; premium |
+| All GLM-5.2 | $110 | $78–156 | Risky on Phases 6/9 (weakest agentic evidence at the hardest work) |
+| All DeepSeek V4 Flash | $11 | $7–15 | Reference only — do not use; no agentic track record |
+| **Hybrid (§13.3)** | **$190** | **$135–270** | **Recommended: K3 on critical path, GLM medium phases, Flash mechanical** |
+
+Notes:
+
+- Prompt caching (long sessions on one repo) typically cuts effective input cost 30–50 %; totals above are conservative list-price figures.
+- Verification-heavy phases can exceed estimates; a failed parity-gate investigation adds 2–6 TE.
+- Even the premium scenario is cheap relative to the cost of one clearance-violation regression reaching a release. Optimize for gate discipline, not token spend.
+
+### 13.3 Per-phase assignments and kickoff prompts
+
+| Phase | Model | Est. cost |
+| --- | --- | --- |
+| 0 | GLM-5.2 (xhigh) | $5 |
+| 1 | **Kimi K3 (extra high)**; GLM-5.2 reviews freeze table + facade sketch | $24 |
+| 2 | K3: harness + Gradle wiring + workflow #1 (8 TE); GLM-5.2: workflows #2–3 + EN/hu + parity check (4 TE) | $29 |
+| 3 | **Kimi K3 (extra high)** | $15 |
+| 4 | GLM-5.2 (xhigh) | $4 |
+| 5 | **Kimi K3 (extra high)** (first full parity gate) | $18 |
+| 6 | **Kimi K3 (extra high) only**; GLM-5.2 pre-reviews commit slicing (~2 TE) | $48 |
+| 7 | GLM-5.2 (xhigh); escalate to K3 if cheap smoke fails twice | $7 |
+| 8 | **DeepSeek V4 Flash (extra high)** + full gate suite; K3 handles collision stops | $1 |
+| 9 | **Kimi K3 (extra high) only**; GLM-5.2 import-audit review (~2 TE) | $27 |
+| 10 | **DeepSeek V4 Flash (extra high)** + gates | $1 |
+| 11 | GLM-5.2 (xhigh) | $7 |
+| 12 | GLM-5.2 (xhigh); K3 final sign-off review (~1 TE) | $7 |
+| | **Total** | **≈ $190** |
+
+Kickoff prompts — pin the listed context at session start; the model must paste gate output verbatim and stop at the stated boundary:
+
+**Phase 0 (GLM-5.2 xhigh):**
+
+```text
+Read docs/issues/soc-gui-separation-and-accessibility-plan.md (§6 Phase 0, §12.6) and AGENTS.md. Execute Phase 0 only; no production edits.
+1) Record branch/HEAD/working-tree state in branch notes.
+2) Run: gradlew.bat test; the two ArchUnit classes; Dac2020Bm01RoutingTest. Paste results verbatim.
+3) Count classes in gui / interactive / boardgraphics.
+4) Build the DSN fixture coverage map (filename → owning test(s) → sole-coverage flag).
+5) Capture v2.3.0 golden metrics on the agreed fixture matrix: completion/unrouted nets, full-DRC violations via DesignRulesChecker.getAllClearanceViolations(), SES sanity. Record in §12.6.
+6) Snapshot known leaks (board/autoroute paint, RoutingJob Swing, BoardManager GUI API, SessionManager naming, GuiBoardManager→GraphicsContext/InteractiveState).
+7) Draft the AGENTS.md D24 baseline-policy update as a separate, reviewable diff.
+Stop at the Phase 0 boundary; do not begin Phase 1 inventories.
+```
+
+**Phase 1 (Kimi K3 extra high):**
+
+```text
+Pin: plan §1.1, §2 (D1–D30), §6 Phase 1, §12; AGENTS.md. Produce the Phase 1 inventory set, then the ArchUnit freeze layer:
+- Full pipeline↔GUI/AWT/Swing dependency inventory.
+- Classify interactive/boardgraphics types: state vs session vs facade vs renderer.
+- Simple-name collisions across gui/interactive/boardgraphics, incl. the three CoordinateTransform classes (board/boardgraphics/io) and the InteractiveCommand flattening (D11).
+- Confirm ratsnest compute call chain through drc.NetIncompletes/AirLine; list ObjectInfoPanel.Printable implementers.
+- MVP-workflow _hu bundle completeness check.
+- Phase 9 facade surface sketch (R19; home = gui.session per D30) + views-bootstrap plan.
+- Swing-test inventory with @Tag("gui") retag plan; worker→Swing mutation inventory (removal assigned to Phase 9).
+Then add ArchUnit rules (pipeline bans gui.**/Swing/AWT-UI with java.awt.geom whitelist; gui.** slice-cycle check) with frozen baselines: exact violation counts, owners, removal phases recorded in §12.4.
+Gates: run ModuleBoundariesArchTest + SpecctraPackageArchTest; paste output. No production refactors beyond ArchUnit test files and §12 updates.
+GLM-5.2 then reviews the freeze table and facade sketch before checkpoint 1 is declared.
+```
+
+**Phase 2 part A (Kimi K3 extra high):**
+
+```text
+Pin: plan §2 (D5/D7/D8/D9/D19/D22/D25), §6 Phase 2; AGENTS.md. Build the accessibility foundation core:
+- A11y contract doc (name/role/description/state/value; label-for; menu names).
+- Locator constants + shared registry (D22) — no private-field locators, no screen coordinates, no setVisible on top-level frames.
+- Pure-JDK AccessibleContext harness: EDT execution, tree walk, find-by-locator/role, action invoke, state asserts; failures report accessible path + role + locator; mutations assert EventQueue.isDispatchThread().
+- Gradle: @Tag("gui") + testGui (forced -Djava.awt.headless=true); test and testSlow exclude gui; testAll = test + testSlow + testGui (D25). Retag the Phase 1 inventoried Swing tests.
+- Product wiring: accessible names/roles + locator registration on MVP controls; implement MVP workflow #1 end-to-end.
+Gates: testGui green; test unchanged; spotlessCheck + checkstyle. Workflows #2–3 and EN/hu runs are a separate task (GLM-5.2).
+```
+
+**Phase 2 part B (GLM-5.2 xhigh):**
+
+```text
+Pin: plan §6 Phase 2, the a11y contract, and the harness/locator registry from part A. Replicate MVP workflows #2 and #3 (menu action; open/close parameter content; change setting; select layer; read status; cancel/stop route; open inspect/list — per plan), add sibling duplicate/empty accessible-name checks, run all MVP workflows in EN and hu (D19), and add the Hungarian resource-parity check for MVP bundles (document it in §7). Gates: testGui green in both locales; paste output. Do not modify the harness core without listing the change first.
+```
+
+**Phase 3 (Kimi K3 extra high):**
+
+```text
+Pin: plan §6 Phase 3, §2 (D12/D20); AGENTS.md BoardManager/InteractiveSettings invariants. Split headless vs GUI board contracts:
+- Headless BoardManager API with no GUI methods; GUI session contract separate.
+- Remove null-based getInteractiveSettings()/isInteractiveModeSupported() from the shared headless API (GUI-only access via GuiBoardManager).
+- Move initializeManualTraceHalfWidths to GUI-session-only (R10 default).
+- Preserve InteractiveSettings invariants exactly: singleton per GUI session via getOrCreate(board); reset(board) on every board load; getSettings() returns a live snapshot; merger priority 50; all fields private with PropertyChangeEvent-firing getters/setters.
+- Update contract tests.
+Gates: gradlew.bat test + ArchUnit classes; paste output. No package moves in this phase.
+```
+
+**Phase 4 (GLM-5.2 xhigh):**
+
+```text
+Pin: plan §6 Phase 4, §1.2 naming-collision warning; AGENTS.md. Neutralize core/management:
+- Remove the Swing file chooser and any AWT UI types from core.RoutingJob; the GUI layer owns file picking.
+- Rename SessionManager.getGuiSession/setGuiSession → getPrimarySession/setPrimarySession (D16). This is the management UUID session — do NOT touch anything related to the future gui.session package.
+- Verify analytics/api have no GUI-session type dependencies.
+- Reduce circular loader↔manager delegation only where trivially safe.
+Gates: gradlew.bat test + ArchUnit; paste output.
+```
+
+**Phase 5 (Kimi K3 extra high):**
+
+```text
+Pin: plan §6 Phase 5, §2 (D13/D14/D24/D28/D29); AGENTS.md parity methodology. Thin compute vs presentation:
+- Thin RatsNest to a GUI facade over drc incompletes (compute stays in drc.NetIncompletes/AirLine; D13). Optional rename R9 — default keep.
+- Thin ClearanceViolations similarly over drc.
+- Keep board.ObjectInfoPanel as the AWT-free interface (D14; accepted debt A1).
+- Headless tests: incompletes/violations computable without GUI classes; a11y tests for lists/counts.
+Exit gate (must pass before Phase 6): golden fixtures; clearance delta 0 vs §12.6 baseline using DesignRulesChecker.getAllClearanceViolations() (D29); full WIP-vs-v2.3.0 compare (D24/D28). If the compare diverges: sync instrumentation payloads first, then classify numeric drift vs behavioral ordering divergence, then apply the smallest tie-break fix. Record results in branch notes + §12.6.
+```
+
+**Phase 6 commit-sequence review (GLM-5.2 xhigh, read-only):**
+
+```text
+Pin: plan §6 Phase 6 and the current board paint call graph (read-only). Propose an independently revertible commit sequence: (1) neutral accessors for geometry/layer/net/type/visibility/selection; (2) GUI renderer + early offscreen BufferedImage smoke for major item families; (3) per-family removal of Drawable/Graphics/GraphicsContext/AWT Color paint APIs; (4) traversal + draw priority moved into the GUI renderer. Output a numbered commit list with rollback notes and per-commit gate commands. Do not edit code.
+```
+
+**Phase 6 execution (Kimi K3 extra high only):**
+
+```text
+Pin: plan §6 Phase 6, §2 (D15/D24/D28/D29), the approved commit sequence; AGENTS.md. Execute Phase 6 ONE commit at a time from the approved sequence; after each commit run test + ArchUnit + offscreen renderer smoke, paste output, and wait for go-ahead before the next commit. Constraints: no routing mutation behavior changes; headless load→route→DRC→SES must work without renderer init; java.awt.geom whitelist only in pipeline. Exit gate: full-DRC clearance delta 0 (D29) + no completion regression vs v2.3.0 (§12.6) + offscreen smokes green. Any gate failure → revert the current commit (commits are independent by construction) and diagnose before proceeding.
+```
+
+**Phase 7 (GLM-5.2 xhigh):**
+
+```text
+Pin: plan §6 Phase 7; AGENTS.md. Invert autorouter diagnostics: replace draw(Graphics, …) with neutral snapshots/events or GUI adapters; diagnostics opt-in; logging stays the headless path; no new AWT UI parameters in autoroute (ArchUnit). Cheap exit gate (D28): golden-fixture smoke = full DRC via DesignRulesChecker.getAllClearanceViolations() + completion/unrouted-net parity vs §12.6 goldens — no full version compare. Gates: test + ArchUnit + smoke; paste output. Two consecutive gate failures → escalate to Kimi K3 before continuing.
+```
+
+**Phase 8 (DeepSeek V4 Flash extra high):**
+
+```text
+Pin: plan §6 Phase 8, §2 (D11/D12), the Phase 1 collision inventory; AGENTS.md. Execute the approved mechanical move only:
+- Move interactive production + tests flat into gui.interactive (temporarily including GuiBoardManager + session cluster, D12); flatten interactive.commands implementations into gui.interactive sources — NO commands subpackage; the InteractiveCommand interface itself stays put until Phase 9 (D11/D30).
+- Resolve only the simple-name collisions listed in the Phase 1 inventory, using the pre-approved resolutions.
+- Update FQCN imports, i18n context (run extract-context), tests. No .frb shims. No behavior changes.
+Then run, pasting ALL output: testGui, ArchUnit classes, EnglishPropertiesParityTest + hu check, spotlessCheck, checkstyleMain/checkstyleTest, cheap smoke (full DRC + completion/unrouted-net parity vs §12.6, D28).
+If you encounter ANY collision or ambiguity not in the inventory: STOP, report, do not improvise renames (handoff to Kimi K3).
+```
+
+**Phase 9 (Kimi K3 extra high only):**
+
+```text
+Pin: plan §4.4, §6 Phase 9, §2 (D20/D21/D26/D27/D30), the Phase 1 facade sketch; AGENTS.md. Extract gui.session:
+- Move the §4.4 cluster (GuiBoardManager, InteractiveSettings — name unchanged, ScreenMessages, InteractiveActionThread, AutorouterAndRouteOptimizerThread) into gui.session.
+- Move/introduce the facade (pick the name from the R19 shortlist) + InteractiveCommand interface + state-handle types into gui.session / gui.session.api (D30); concrete states in gui.interactive implement them; gui views own initial-state bootstrap/registration.
+- Remove ALL gui.session → gui.interactive imports (not only concrete *State types); the gui.** slice-cycle check must pass; any temporary §12 freeze on that edge is removed by phase exit.
+- Keep the gui.session → gui.rendering edge (D26); eliminate the inventoried worker→Swing call sites (EDT-only Swing mutation).
+- Verify getPrimarySession/setPrimarySession callers remain correct (management UUID session — unrelated to gui.session).
+Gates: test + testGui + ArchUnit (incl. slice-cycle) + a11y MVP workflows; paste output.
+GLM-5.2 then runs an independent import audit of gui.session before checkpoint 10 is declared.
+```
+
+**Phase 10 (DeepSeek V4 Flash extra high):**
+
+```text
+Pin: plan §6 Phase 10, §2 (D10/D18/D26); AGENTS.md. Mechanical move only:
+- Move boardgraphics → gui.rendering; rename boardgraphics.CoordinateTransform → ScreenTransform (D18 — board.CoordinateTransform and io.CoordinateTransform stay UNCHANGED).
+- Update imports/i18n/tests; verify pipeline packages have ZERO imports of gui.rendering (gui.session → gui.rendering is allowed, D26).
+Gates: test, testGui, ArchUnit, offscreen renderer tests, spotlessCheck/checkstyle; paste output. Any unlisted ambiguity → STOP and report.
+```
+
+**Phase 11 (GLM-5.2 xhigh):**
+
+```text
+Pin: plan §6 Phase 11, §2 (D9/D19/D22/D25), the a11y contract; AGENTS.md. Expand accessibility coverage across major windows/menus (component-only, forced headless): state-change tests (layer, mode, enablement, progress, visibility, violation state), keyboard/menu alternatives + inspect lists for critical canvas actions (D9). Switch CI path filters to the final gui/interactive|session|rendering paths (R11). Verify invariants: default test never requires a display; testGui always headless; testAll includes testGui. Run MVP + new workflows in EN and hu; hu resource-parity check green. Gates: testGui + testAll; paste output.
+```
+
+**Phase 12 (GLM-5.2 xhigh; Kimi K3 sign-off review):**
+
+```text
+Pin: plan §6 Phase 12, §5, §11, §12; AGENTS.md. Final cleanup:
+- Remove transitional APIs/freezes/stale tests; promote frozen ArchUnit rules that reached zero to strict (same-checkpoint rule); §12.4 empty except accepted permanent debt A1–A3.
+- Finalize the AGENTS.md baseline policy (D24: v2.3.0 primary; v1.9/src_v19 historical reference only).
+- Update docs/architecture.md to match the final package map; update developer GUI-test docs.
+- Record accepted debt (ObjectInfoPanel shape A1; drc incompletes A2; session→rendering A3/D26).
+Full verification, pasting ALL output: spotlessCheck, checkstyleMain/checkstyleTest, extract-context --check, hu parity, gradlew.bat check, gradlew.bat testAll. Then verify §5 completion criteria item by item and the §11 sign-off list; produce the final report for the Kimi K3 sign-off review.
+```
+
+### 13.4 Operating rules for model use
+
+1. **Re-anchor every session.** Pin this plan (current phase checklist + §1.1 + D-table), AGENTS.md, and the §12 ledger into context; have the model restate the active constraints (especially D26/D27/D30 in Phases 8–10) before editing.
+2. **Gates are model-independent.** Every session ends with the phase's gate commands run and output pasted verbatim (§7 matrix). A model claiming success without gate output is a failure.
+3. **Tier escalation.** If a gate fails twice under the assigned model, escalate one tier (Flash → GLM-5.2 → K3) for diagnosis before continuing.
+4. **Flash guardrails.** Flash phases run only against a pre-approved mechanical plan; on any unlisted name collision or ambiguity the model must STOP and hand off — no improvised renames.
+5. **No cross-session memory assumptions.** Branch notes + §12.6 metrics + phase checkboxes are the shared memory; update them at every §8 checkpoint.
+6. **Phase 1 doubles as the model trial.** The collision-inventory/freeze-baseline work is the controlled comparison task: if K3 misses the three `CoordinateTransform` classes, skips test runs, or invents violation counts, swap the primary to GLM-5.2 before Phase 2.
+7. **Parity methodology is fixed** regardless of model: sync instrumentation payloads WIP↔v2.3.0 first, classify numeric-only drift vs behavioral ordering divergence, apply the smallest ordering/tie-break fix, rerun at two `max_items` checkpoints (AGENTS.md remediation sequence).
