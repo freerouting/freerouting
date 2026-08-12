@@ -579,6 +579,8 @@ tasks.withType(Test).configureEach { Test task ->
 test {
     useJUnitPlatform {
         excludeTags 'serial'
+        // GUI/accessibility tests run via the dedicated testGui task (D5/D25).
+        excludeTags 'gui'
         // Daily runs skip slow tests unless explicitly requested.
         if (!includeSlowTests.get()) {
             excludeTags 'slow'
@@ -608,14 +610,27 @@ tasks.register('testSerial', Test) {
     }
 }
 
+tasks.register('testGui', Test) {
+    group = 'verification'
+    description = 'Runs GUI/accessibility tests tagged with @Tag("gui"); component-only, forced headless (D5/D7/D25).'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    mustRunAfter(tasks.named('testSerial'))
+    // Component-only a11y tests must not require a display (D7).
+    systemProperty 'java.awt.headless', 'true'
+    useJUnitPlatform {
+        includeTags 'gui'
+    }
+}
+
 tasks.named('check') {
     dependsOn(tasks.named('testSerial'))
 }
 
 tasks.register('testAll') {
     group = 'verification'
-    description = 'Runs default, serial-sensitive, and slow tests.'
-    dependsOn(tasks.named('test'), tasks.named('testSlow'), tasks.named('testSerial'))
+    description = 'Runs default, serial-sensitive, slow, and GUI tests.'
+    dependsOn(tasks.named('test'), tasks.named('testSlow'), tasks.named('testSerial'), tasks.named('testGui'))
 }
 
 tasks.named('testSlow') {

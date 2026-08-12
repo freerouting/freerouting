@@ -1,6 +1,6 @@
 # GUI Separation and Accessibility Migration Plan
 
-> Status: **Ready to implement** (D1–D30 locked; M1=A / M4=B incorporated; execution staffing plan added in §13 on 2026-08-11; implementation not started)
+> Status: **In implementation** — Phases 0–2 complete (baseline, inventory + ArchUnit freeze, accessibility foundation); Phase 3 (headless contracts) is next. D1–D30 locked; M1=A / M4=B incorporated; execution staffing plan in §13 (added 2026-08-11).
 >
 > Scope: Separate GUI interaction and rendering from the headless routing pipeline, establish automated GUI accessibility coverage, and reorganize only the packages required for that separation.
 >
@@ -283,25 +283,25 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 
 ### Phase 2 — Accessibility foundation (component-only, pure JDK)
 
-- [ ] Document a11y contract (name/role/description/state/value; label-for; menu names).
-- [ ] Implement **locator constants + shared registry** (D22); harness finds by locator, not translated label.
-- [ ] Build harness: EDT execution, AccessibleContext walk, find by locator/role, invoke actions, assert states.
-- [ ] Harness asserts `EventQueue.isDispatchThread()` for workflow mutations/actions.
-- [ ] Failures include accessible path + role + locator.
-- [ ] No private-field locators; no screen coordinates; no `setVisible` on top-level frames.
-- [ ] Add `@Tag("gui")` and `testGui` task:
+- [x] Document a11y contract (name/role/description/state/value; label-for; menu names).
+- [x] Implement **locator constants + shared registry** (D22); harness finds by locator, not translated label.
+- [x] Build harness: EDT execution, AccessibleContext walk, find by locator/role, invoke actions, assert states.
+- [x] Harness asserts `EventQueue.isDispatchThread()` for workflow mutations/actions.
+- [x] Failures include accessible path + role + locator.
+- [x] No private-field locators; no screen coordinates; no `setVisible` on top-level frames.
+- [x] Add `@Tag("gui")` and `testGui` task:
   - default `test` excludes `gui` (like `slow`)
   - `testSlow` remains slow-only (does **not** include `gui`)
   - `testAll` runs `test` + `testSlow` + `testGui` (D25)
   - `testGui` sets `systemProperty 'java.awt.headless', 'true'`
   - retag inventoried Swing tests from Phase 1 so coverage is intentional
   - path-filtered CI may invoke `testGui` alone on GUI-related paths
-- [ ] Document component-only / forced-headless requirements and CI path filters (include legacy `interactive` / `boardgraphics` until moved).
-- [ ] Product work: accessible names/roles + locator registration on MVP controls.
-- [ ] ≥3 workflows: menu action, open/close parameter content, change setting, select layer, read status, cancel/stop route, open inspect/list.
-- [ ] Sibling duplicate/empty accessible-name and locator checks.
-- [ ] Run MVP workflows in English and Hungarian (`hu`, D19); locators stable across both.
-- [ ] Add/extend a **Hungarian resource-parity check** for bundles touched by MVP workflows (document in §7).
+- [x] Document component-only / forced-headless requirements and CI path filters (include legacy `interactive` / `boardgraphics` until moved).
+- [x] Product work: accessible names/roles + locator registration on MVP controls.
+- [x] ≥3 workflows: menu action, open/close parameter content, change setting, select layer, read status, cancel/stop route, open inspect/list.
+- [x] Sibling duplicate/empty accessible-name and locator checks.
+- [x] Run MVP workflows in English and Hungarian (`hu`, D19); locators stable across both.
+- [x] Add/extend a **Hungarian resource-parity check** for bundles touched by MVP workflows (document in §7).
 
 ### Phase 3 — Headless board contracts
 
@@ -404,7 +404,7 @@ Land as **independently revertible commits** on the long-lived branch:
 | `.\gradlew.bat test --tests "app.freerouting.architecture.ModuleBoundariesArchTest"` | Boundaries |
 | `.\gradlew.bat test --tests "app.freerouting.io.SpecctraPackageArchTest"` | Parser encapsulation |
 | `.\gradlew.bat test --tests "app.freerouting.i18n.EnglishPropertiesParityTest"` | English i18n ownership |
-| Hungarian resource-parity check (new / extended) | `hu` bundles for MVP + moved packages (D19) |
+| `.\\gradlew.bat test --tests "app.freerouting.i18n.HungarianResourceParityCheckTest"` | Hungarian resource parity for MVP bundles (D19) — `_hu` covers `_en` keys |
 | `.\gradlew.bat test --tests "app.freerouting.fixtures.Dac2020Bm01RoutingTest"` | Quick routing smoke |
 | `.\gradlew.bat spotlessCheck` | Formatting gate (do **not** auto-run `spotlessApply`) |
 | `.\gradlew.bat checkstyleMain checkstyleTest` | Style gates |

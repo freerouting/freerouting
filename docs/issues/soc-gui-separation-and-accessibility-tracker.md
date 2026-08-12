@@ -12,7 +12,7 @@
 | --- | --- | --- | --- |
 | **0** | Baseline | **~100%** | Green baseline + v2.3.0 golden metrics captured; only AGENTS.md D24 sign-off remains |
 | **1** | Inventory + ArchUnit freeze | **COMPLETE** | Inventory + collision + freeze layer (F1/F2/F3 frozen, R4/R5 strict) + §12.4 ledger + facade sketch done; reviewed & approved (Flash); exit gate green |
-| **2** | Accessibility foundation | Not started | |
+| **2** | Accessibility foundation | **COMPLETE** | Part A + part B done: a11y contract + GuiLocators/A11y registry + GuiA11yHarness + testGui wiring + workflows #1–3 (read status / select layer / menu action) + sibling checks + EN+hu + hu-parity; all gates green |
 | **3** | Headless contracts | Not started | |
 | **4** | Core / mgmt neutralization | Not started | |
 | **5** | Compute vs presentation | Not started | exits on full v2.3.0 parity |
@@ -29,8 +29,8 @@
 | CP | Content | Status |
 | --- | --- | --- |
 | 1 | Phase 0–1 inventory + ArchUnit freezes + v2.3.0 golden metrics + §12 ledger | ✅ done (Phase 0 + Phase 1 complete, exit gate green) |
-| 2 | `testGui` (forced headless) + harness + path-filter stub + Swing-test retags | pending |
-| 3 | MVP locators + ≥3 workflows (EN+hu) + hu resource check | pending |
+| 2 | `testGui` (forced headless) + harness + path-filter stub + Swing-test retags | ✅ done (Phase 2) |
+| 3 | MVP locators + ≥3 workflows (EN+hu) + hu resource check | ✅ done (Phase 2) |
 | 4 | Headless `BoardManager` split | pending (Phase 3) |
 | 5 | `RoutingJob` Swing removal + `getPrimarySession`/`setPrimarySession` | pending (Phase 4) |
 | 6 | Ratsnest/violations façade thinning + Phase 5 full v2.3.0 parity | pending |
@@ -89,13 +89,19 @@
 | 2026-08-12 | Phase 1 (K3): ArchUnit freeze layer added — F1 Swing=27, F2 AWT-UI=95, F3 boardgraphics=145 (frozen store created); R4 gui-slice-cycle + R5 pipeline→gui strict; §12.4 ledger populated. Gate `BUILD SUCCESSFUL in 38s`. |
 | 2026-08-12 | Phase 1 (K3): facade sketch (R19: EditorStateHandle/EditorStateKind in gui.session.api; InteractiveCommand retyped) + views-bootstrap plan written (`logs/phase1/facade-sketch.md`). Awaiting Flash review. |
 | 2026-08-12 | Phase 1 (Flash): review APPROVED — freeze layer (F1=27/F2=95/F3=145, R4/R5 strict) compliant with §1.1/§2/§12.1; facade sketch compliant with D26/D27/D30; R18 satisfied by run-benchmarks.ps1. F1 javadoc nit fixed. Exit gate forced re-run `BUILD SUCCESSFUL in 47s`. **Phase 1 COMPLETE.** |
+| 2026-08-12 | Phase 2 part A (K3): a11y contract (`docs/gui/accessibility-contract.md`), `gui.a11y` package (GuiLocators + A11y registry, D22), pure-JDK `GuiA11yHarness` (EDT exec, AccessibleContext walk, find-by-locator, action invoke, state asserts, rich failure paths, sibling-name audit; D8). |
+| 2026-08-12 | Phase 2 part A (K3): Gradle `testGui` task (forced `-Djava.awt.headless=true`, include `@Tag("gui")`), `test` excludes gui, `testAll` includes testGui (D5/D7/D25). Product wiring: BoardPanelStatus + ComboBoxLayer locators + accessible names (reused translated text; added `errors`/`warnings` EN+hu keys to fix a duplicate-name finding the harness would catch). |
+| 2026-08-12 | Phase 2 part A (K3): MVP workflow #1 `BoardPanelStatusA11yTest` (@Tag gui, headless) — 2 tests green. Gates: testGui ✓, spotlessCheck ✓, checkstyleMain/Test ✓, ArchUnit ✓, **full `test` ✓ (2m47s, unchanged)**. **Part A complete.** Part B (Flash): workflows #2–3 + EN/hu + hu-parity. |
+| 2026-08-12 | Phase 2 part B: workflows #2 `ComboBoxLayerA11yTest` (select layer / change setting) + #3 `MenuActionA11yTest` (menu action) added; sibling duplicate/empty checks exercised on all three workflows; EN+hu translation runs in every workflow (D19). Product wiring extended: `BoardMenuFile` menu locators + accessible names. |
+| 2026-08-12 | Phase 2 part B: Hungarian resource-parity check `HungarianResourceParityCheckTest` extended to cover `BoardMenuFile` (was BoardPanelStatus + Common); added `errors`/`warnings` EN+hu keys to `BoardPanelStatus`. Documented in plan §7 validation matrix. |
+| 2026-08-12 | Phase 2 part B: harness traversal fix — `A11y.flatten` (sibling-name audit) now skips Swing popup windows (`JPopupMenu` subclasses such as the combo's `BasicComboPopup`) whose LAF-internal scrollbar chrome produced a false empty-name finding; documented in contract §3. |
+| 2026-08-12 | Phase 2 part B: gates green — testGui ✓ (8 tests: 3 ComboBox + 3 BoardPanelStatus + 2 MenuAction, EN+hu), spotlessCheck ✓, checkstyleMain/Test ✓, ModuleBoundariesArchTest ✓ (13), HungarianResourceParityCheckTest ✓, **full `test` ✓ (2m13s, unchanged)**. **Phase 2 COMPLETE.** |
 
 ## 6. Next actions
 
-1. Record Phase 1 completion (done above). Phase 2 = **accessibility foundation** (next).
-2. **Phase 2 part A (K3)** — a11y contract, locator registry (D22), pure-JDK AccessibleContext harness, `@Tag("gui")` + `testGui` Gradle wiring (D5/D7/D25), MVP workflow #1. *Switch back to Kimi K3.*
-3. **Phase 2 part B (Flash)** — replicate workflows #2–3, sibling checks, EN+hu runs, hu resource-parity (D19).
-4. Update §13.3 model-cols for the Flash-substitution decision.
+1. **Phase 2 COMPLETE** (accessibility foundation) — workflows #1–3, sibling checks, EN+hu, hu-parity, all gates green.
+2. **Phase 3 — Headless contracts (next):** headless `BoardManager` API without GUI methods; separate GUI-session contract; remove `getInteractiveSettings()` / `isInteractiveModeSupported()` null-based API from shared headless path; prefer moving `initializeManualTraceHalfWidths` to GUI-session-only (R10); update contract tests. Depends on Phase 1 (done).
+3. Update §13.3 model-cols for the Flash-substitution decision.
 
 ## 7. Artifacts
 

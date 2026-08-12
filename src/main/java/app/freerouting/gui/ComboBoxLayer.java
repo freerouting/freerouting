@@ -1,6 +1,8 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.LayerStructure;
+import app.freerouting.gui.a11y.A11y;
+import app.freerouting.gui.a11y.GuiLocators;
 import app.freerouting.util.TextManager;
 import java.util.Locale;
 import javax.swing.DefaultComboBoxModel;
@@ -44,6 +46,10 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
     }
     this.setModel(new DefaultComboBoxModel<>(layerArr));
     this.setSelectedIndex(0);
+
+    // Accessibility (D22): stable locator + translated accessible name/description.
+    A11y.tag(this, GuiLocators.TOOLBAR_LAYER_SELECT);
+    A11y.describe(this, tm.getText("change_layer"), tm.getText("change_layer_tooltip"));
   }
 
   public Layer getSelectedLayer() {

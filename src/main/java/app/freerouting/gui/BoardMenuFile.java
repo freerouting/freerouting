@@ -3,6 +3,8 @@ package app.freerouting.gui;
 import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.core.RoutingJob;
+import app.freerouting.gui.a11y.A11y;
+import app.freerouting.gui.a11y.GuiLocators;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import java.awt.event.InputEvent;
@@ -76,6 +78,19 @@ public class BoardMenuFile extends JMenu {
         _ -> FRAnalytics.buttonClicked("fileExitMenuitem", fileExitMenuitem.getText()));
 
     add(fileExitMenuitem);
+
+    // Accessibility (D22): stable, locale-independent locators + translated accessible names so the
+    // a11y harness can find these controls by locator (never by translated label). Keys are the
+    // same
+    // ones used for the visible text, so no new resource-bundle keys are introduced.
+    A11y.tag(this, GuiLocators.MENU_FILE);
+    A11y.describe(this, tm.getText("file"), null);
+    A11y.tag(fileOpenMenuitem, GuiLocators.MENU_FILE_OPEN);
+    A11y.describe(fileOpenMenuitem, tm.getText("open"), null);
+    A11y.tag(fileSaveAsMenuitem, GuiLocators.MENU_FILE_SAVE_AS);
+    A11y.describe(fileSaveAsMenuitem, tm.getText("save_as"), null);
+    A11y.tag(fileExitMenuitem, GuiLocators.MENU_FILE_EXIT);
+    A11y.describe(fileExitMenuitem, tm.getText("exit"), null);
   }
 
   /**

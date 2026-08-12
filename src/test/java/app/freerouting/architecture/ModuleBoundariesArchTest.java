@@ -197,7 +197,8 @@ class ModuleBoundariesArchTest {
                 .dependOnClassesThat()
                 .resideInAnyPackage("javax.swing..")
                 .because(
-                    "pipeline/support packages must stay headless-safe and must not use Swing (D15)"))
+                    "pipeline/support packages must stay headless-safe and must not use Swing"
+                        + " (D15)"))
         .check(classes);
   }
 
@@ -243,7 +244,8 @@ class ModuleBoundariesArchTest {
 
   /**
    * R4 (strict): gui subpackages must be free of dependency cycles. Trivially green until Phases
-   * 8-10 introduce gui.interactive/gui.session/gui.rendering; must stay green after Phase 9 (D27/D30).
+   * 8-10 introduce gui.interactive/gui.session/gui.rendering; must stay green after Phase 9
+   * (D27/D30).
    */
   @Test
   void guiSlicesMustBeFreeOfCycles() {
@@ -257,8 +259,8 @@ class ModuleBoundariesArchTest {
   }
 
   /**
-   * R5 (strict): pipeline/support packages must not depend on the GUI layer. Currently green (io/util
-   * gap closed); complements the narrower existing rules.
+   * R5 (strict): pipeline/support packages must not depend on the GUI layer. Currently green
+   * (io/util gap closed); complements the narrower existing rules.
    */
   @Test
   void pipelineMustNotDependOnGui() {
