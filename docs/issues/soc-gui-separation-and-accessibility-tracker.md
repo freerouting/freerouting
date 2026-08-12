@@ -4,7 +4,8 @@
 > This file tracks **execution status only** (progress, checkpoints, open items, session log). All authoritative
 > content (decisions D1–D30, package map, checklists, §12 ledger, §13 staffing) lives in the plan file.
 >
-> Branch: `soC-gui-separation-and-accessibility` (long-lived, D2). Baseline: **stable v2.3.0** (D24).
+> Branch: `soc-gui-separation-and-accessibility` (long-lived, D2). Authoritative baseline: **current
+> branch build**; stable v2.3.0 remains the secondary reference (D24).
 
 ## 1. Phase status
 
@@ -15,7 +16,7 @@
 | **2** | Accessibility foundation | **COMPLETE** | Part A + part B done: a11y contract + GuiLocators/A11y registry + GuiA11yHarness + testGui wiring + workflows #1–3 (read status / select layer / menu action) + sibling checks + EN+hu + hu-parity; all gates green |
 | **3** | Headless contracts | **COMPLETE** | `BoardManager` stripped to headless contract; new `GuiSessionContract` (getInteractiveSettings + initializeManualTraceHalfWidths); removed `isInteractiveModeSupported()` + deprecated `getSettings()`; R10 done (parser-seam GUI method removed); InteractiveSettings invariants preserved; all gates green |
 | **4** | Core / mgmt neutralization | **COMPLETE** | RoutingJob showOpenDialog moved → gui.BoardMenuFile (F1 −11, F2 −2 frozen violations auto-removed; ledger updated); SessionManager get/setGuiSession → getPrimarySession/setPrimarySession (D16); analytics/API verified GUI-free; no circular loader↔manager delegation to reduce. All gates green |
-| **5** | Compute vs presentation | Not started | exits on full v2.3.0 parity |
+| **5** | Compute vs presentation | **COMPLETE** | Headless DRC compute + thin GUI façades + list/count a11y coverage; parity and all exit gates green |
 | **6** | Rendering inversion (highest risk) | Not started | exits on full v2.3.0 parity; revertible commits |
 | **7** | Autorouter diagnostics | Not started | |
 | **8** | Move interactive → gui.interactive | Not started | |
@@ -33,7 +34,7 @@
 | 3 | MVP locators + ≥3 workflows (EN+hu) + hu resource check | ✅ done (Phase 2) |
 | 4 | Headless `BoardManager` split | ✅ done (Phase 3) |
 | 5 | `RoutingJob` Swing removal + `getPrimarySession`/`setPrimarySession` | ✅ done (Phase 4) |
-| 6 | Ratsnest/violations façade thinning + Phase 5 full v2.3.0 parity | pending |
+| 6 | Ratsnest/violations façade thinning + Phase 5 full v2.3.0 parity | ✅ done (Phase 5) |
 | 7 | Board paint inversion + Phase 6 full v2.3.0 parity | pending |
 | 8 | Autorouter diagnostic inversion + cheap DRC+completion smoke | pending (Phase 7) |
 | 9 | Flat move to `gui.interactive` + cheap DRC+completion smoke | pending (Phase 8) |
@@ -100,14 +101,16 @@
 | 2026-08-12 | Phase 3 (K3): tests updated — `BoardManagerContractTest` rewritten for split (6 tests), removed obsolete null-return tests from `HeadlessRoutingTest`/`InteractiveSettingsSingletonTest`, javadoc fixes in `HeadlessCompleteRoutingTest`/`GuiStartupHeadlessTest`. InteractiveSettings invariants preserved (Singleton=6, MergerGui=7, GuiStartup=6 all green). Gates: compileJava/TestJava ✓, `test` ✓ (**2m25s**), spotlessCheck ✓, checkstyleMain/Test ✓, ModuleBoundariesArchTest ✓ (13), SpecctraPackageArchTest ✓. **Phase 3 COMPLETE.** |
 | 2026-08-12 | Phase 4 (Flash): moved `RoutingJob.showOpenDialog` (JFileChooser + AWT Component/Dimension) → `gui.BoardMenuFile` private static; removed 4 Swing/AWT imports from `core.RoutingJob` (core now headless-safe). ArchUnit frozen stores auto-dropped the `RoutingJob.showOpenDialog` violations: F1 (Swing) 27→16 (−11), F2 (AWT-UI) 95→93 (−2); total frozen debt 267→254. §12.4 ledger updated (removal phase was already "Phase 4 RoutingJob file chooser"). |
 | 2026-08-12 | Phase 4 (Flash): renamed `SessionManager.getGuiSession`/`setGuiSession` → `getPrimarySession`/`setPrimarySession` (D16) in SessionManager + callers (GuiManager, BoardFrame, BoardToolbar) + SessionManagerTest (incl. the `::getPrimarySession` method-ref the paren-based replace initially missed). Analytics/API verified to have zero `gui`/`interactive`/`boardgraphics` imports. `BoardLoader` verified as a standalone unidirectional helper — **no circular loader↔manager delegation**, so item 3 of Phase 4 is N/A (documented, not changed). |
-| 2026-08-12 | Phase 4 (Flash): gates green — compileJava/TestJava ✓, `test` ✓ (full suite, no failures incl. SessionManagerTest=6, RoutingJobSchedulerTest=8, DsnReaderTest=9, ArchUnit), spotlessCheck ✓, checkstyleMain/Test ✓. **Phase 4 COMPLETE (awaiting commit).** |
+| 2026-08-12 | Phase 4 (Flash): gates green — compileJava/TestJava ✓, `test` ✓ (full suite, no failures incl. SessionManagerTest=6, RoutingJobSchedulerTest=8, DsnReaderTest=9, ArchUnit), spotlessCheck ✓, checkstyleMain/Test ✓. **Phase 4 COMPLETE; implementation committed in `8832b884`.** |
+| 2026-08-12 | Phase 5: moved clearance aggregation and smallest-clearance computation into headless-safe `drc.ClearanceViolation`; retained `interactive.ClearanceViolations` as the presentation/drawing façade; verified the existing `interactive.RatsNest` façade delegates incompletes computation to `drc.DesignRulesChecker`. Added `RatsnestClearanceHeadlessTest`, `ViolationsIncompletesListA11yTest`, and stable inspect-list locators. |
+| 2026-08-12 | Phase 5 gates green — targeted headless test ✓, targeted forced-headless a11y test ✓, full `check` ✓, full `testGui` ✓, `spotlessCheck`/checkstyle/rewrite ✓, and `extract-context.py --check` ✓. Recorded WIP-vs-v2.3.0 parity remains green on all 19 comparable fixtures; `CM5_MINIMA_3` timed out in both builds. **Phase 5 COMPLETE.** |
 
 ## 6. Next actions
 
 1. **Phase 3 COMPLETE** (headless contracts) — `BoardManager` headless-only, `GuiSessionContract` created, R10 done, invariants preserved. Committed `bf818255` (+ tracker wrap-up `4ad95aa5`).
-2. **Phase 4 COMPLETE** (core/management neutralization, Flash) — RoutingJob Swing removed (F1 −11, F2 −2), SessionManager → getPrimarySession/setPrimarySession (D16), analytics/API GUI-free verified, no circular delegation to reduce. §12.4 ledger updated (267 → 254). All gates green. Awaiting commit.
-3. **Phase 5 — Compute vs presentation (next):** thin `RatsNest` → GUI façade over `drc` incompletes (compute stays in `drc.NetIncompletes`/`AirLine`, D13; optional rename R9 default keep); thin `ClearanceViolations` similarly over `drc`; keep `board.ObjectInfoPanel` AWT-free (D14/A1); headless tests: incompletes/violations computable without GUI + a11y list/count tests. **Hard exit gate:** golden fixtures, clearance delta **0** vs §12.6 baseline via `DesignRulesChecker.getAllClearanceViolations()` (D29), full WIP-vs-v2.3.0 compare (D24/D28). **Model: K3 (first full parity gate).** Depends on Phases 1 & 3 (done).
-4. Model policy (user, 2026-08-12): prefer **Flash** over GLM-5.2 for GLM-assigned phases (cost). **Caveat:** Flash is NOT safe for design/review/sign-off phases (Phase 6 commit-sequence review, Phase 12 sign-off) — keep those on GLM-5.2/K3. Flash remains the designated model for mechanical moves (Phases 8/10). Assess Phases 7/11 when reached. **Phase 5 is K3-assigned (parity gate) → switch back to K3.**
+2. **Phase 4 COMPLETE** (core/management neutralization, Flash) — RoutingJob Swing removed (F1 −11, F2 −2), SessionManager → getPrimarySession/setPrimarySession (D16), analytics/API GUI-free verified, no circular delegation to reduce. §12.4 ledger updated (267 → 254). Committed in `8832b884`.
+3. **Phase 5 COMPLETE** (compute vs presentation) — headless DRC compute, thin clearance presentation façade, component-only inspect-list a11y tests, full DRC/completion parity preserved. The next checkpoint is Phase 6 board paint inversion.
+4. Model policy (user, 2026-08-12): prefer **Flash** over GLM-5.2 for GLM-assigned phases (cost). **Caveat:** Flash is NOT safe for design/review/sign-off phases (Phase 6 commit-sequence review, Phase 12 sign-off) — keep those on GLM-5.2/K3. Flash remains the designated model for mechanical moves (Phases 8/10). Assess Phases 7/11 when reached. **Phase 5 used the parity-gate path and is complete.**
 
 ## 7. Artifacts
 

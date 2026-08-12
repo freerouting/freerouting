@@ -53,4 +53,14 @@ public final class GuiLocators {
   public static final String MENU_RULES = "menu.rules";
   public static final String MENU_INFO = "menu.info";
   public static final String MENU_HELP = "menu.help";
+
+  // ---- Inspect / list windows (Phase 5): ratsnest (incompletes) + violations lists ----
+  /** Clearance-violations list (WindowClearanceViolations). */
+  public static final String INSPECT_CLEARANCE_VIOLATIONS = "inspect.clearance_violations";
+
+  /** Incomplete-connections / ratsnest list (WindowIncompletes). */
+  public static final String INSPECT_INCOMPLETES = "inspect.incompletes";
+
+  /** Length-violations list (WindowLengthViolations). */
+  public static final String INSPECT_LENGTH_VIOLATIONS = "inspect.length_violations";
 }

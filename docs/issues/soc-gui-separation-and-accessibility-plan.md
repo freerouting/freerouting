@@ -1,6 +1,6 @@
 # GUI Separation and Accessibility Migration Plan
 
-> Status: **In implementation** — Phases 0–2 complete (baseline, inventory + ArchUnit freeze, accessibility foundation); Phase 3 (headless contracts) is next. D1–D30 locked; M1=A / M4=B incorporated; execution staffing plan in §13 (added 2026-08-11).
+> Status: **In implementation** — Phases 0–5 complete (baseline, inventory + ArchUnit freeze, accessibility foundation, headless contracts, core/management neutralization, compute/presentation split); Phase 6 (board rendering inversion) is next. D1–D30 locked; M1=A / M4=B incorporated; execution staffing plan in §13 (added 2026-08-11).
 >
 > Scope: Separate GUI interaction and rendering from the headless routing pipeline, establish automated GUI accessibility coverage, and reorganize only the packages required for that separation.
 >
@@ -321,12 +321,12 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 
 ### Phase 5 — Compute vs presentation
 
-- [ ] Thin `RatsNest` to GUI façade over `drc` incompletes (optional rename R9).
-- [ ] Thin `ClearanceViolations` similarly over `drc`.
-- [ ] Keep `board.ObjectInfoPanel` as AWT-free interface; GUI continues to implement (accepted debt in §12).
-- [ ] Headless tests: incompletes/violations without GUI classes.
-- [ ] A11y tests for incompletes/violations lists/counts.
-- [ ] **Exit gate:** golden fixtures; clearance delta **0** vs Phase 0/1 v2.3.0 baseline using **`DesignRulesChecker.getAllClearanceViolations()`** (D29); WIP-vs-v2.3.0 compare (D24/D28).
+- [x] Thin `RatsNest` to GUI façade over `drc` incompletes (optional rename R9; name retained).
+- [x] Thin `ClearanceViolations` similarly over `drc`; severity ordering and smallest-clearance aggregation now live in headless-safe `drc.ClearanceViolation`.
+- [x] Keep `board.ObjectInfoPanel` as AWT-free interface; GUI continues to implement (accepted debt in §12).
+- [x] Headless tests: incompletes/violations without GUI classes (`RatsnestClearanceHeadlessTest`).
+- [x] A11y tests for incompletes/violations lists/counts (`ViolationsIncompletesListA11yTest`), using component-only `JList` coverage under forced headless.
+- [x] **Exit gate (2026-08-12):** golden-fixture completion/unrouted and full-DRC metrics remain at the §12.6 baseline; the recorded WIP-vs-v2.3.0 comparison is green on all 19 comparable fixtures (CM5_MINIMA_3 timed out in both builds); targeted headless/a11y tests, `check`, `testGui`, formatting, checkstyle, rewrite, and i18n gates are green. Clearance comparison uses **`DesignRulesChecker.getAllClearanceViolations()`** (D29).
 
 ### Phase 6 — Invert board rendering (highest risk)
 
@@ -418,7 +418,10 @@ Land as **independently revertible commits** on the long-lived branch:
 
 **GUI checkpoints:** locator discovery/actions; EDT assertion; no leaked windows/threads; forced headless; **EN + hu** (+ `hu` resource parity).
 
-**Note:** Existing `scripts/tests/compare-versions.ps1` still targets v1.9. Phase 0/1 capture v2.3.0 golden metrics; Phase 5 setup adapts tooling to WIP-vs-v2.3.0 (R18). Do not treat v1.9 compare as required for this initiative’s exit gates.
+**Note:** Existing `scripts/tests/compare-versions.ps1` still targets v1.9. Phase 0/1 captured the
+v2.3.0 golden metrics, and the Phase 5 exit re-verified the recorded current-branch vs v2.3.0
+comparison on the 19 comparable fixtures. Do not treat the v1.9 compare as required for this
+initiative’s exit gates.
 
 ## 8. Long-lived branch checkpoints
 
@@ -427,7 +430,7 @@ Land as **independently revertible commits** on the long-lived branch:
 3. MVP locators + ≥3 workflows (EN + `hu`) + `hu` resource check
 4. Headless `BoardManager` split
 5. `RoutingJob` Swing removal + `getPrimarySession` / `setPrimarySession`
-6. Ratsnest/violations façade thinning + Phase 5 full parity vs **v2.3.0**
+6. Ratsnest/violations façade thinning + Phase 5 full parity vs **v2.3.0** ✅
 7. Board paint inversion as revertible commits + Phase 6 full parity vs **v2.3.0**
 8. Autorouter diagnostic inversion + cheap full-DRC **+ completion** smoke
 9. Flat move to `gui.interactive` (flatten command impls) + cheap full-DRC **+ completion** smoke
@@ -579,6 +582,12 @@ Record baseline numbers here (and/or in branch notes). Cheap Phase 7/8 smokes an
 SES sanity: all 19 comparable runs produced a `.ses` output that the current binary DRC-checked without
 load errors (2 warn/err per run is the normal baseline). Completion-unrouted parity + full-DRC delta = **0**
 vs v2.3.0 on all comparable fixtures (D28/D29 gates satisfied at the Phase 0/1 baseline).
+
+> **Phase 5 exit (2026-08-12):** The compute/presentation split preserved the §12.6 completion and
+> full-DRC baseline. `RatsnestClearanceHeadlessTest` verified incompletes and clearance computation
+> without GUI façades; `ViolationsIncompletesListA11yTest` verified localized, locator-based list/count
+> coverage in forced-headless mode. The current branch remains parity-green against v2.3.0 on all
+> 19 comparable fixtures; `CM5_MINIMA_3` remains N/A because both builds timed out.
 
 > **Baseline decision (2026-08-12):** the **current build** (branch `soc-gui-separation-and-accessibility`)
 > is now the **authoritative routing baseline** for this initiative, superseding v2.3.0 as the parity

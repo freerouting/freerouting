@@ -8,7 +8,14 @@ import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;
 
-/** Displays clearance violations between board items on the screen. */
+/**
+ * Displays clearance violations between board items on the screen.
+ *
+ * <p>This is a thin <em>presentation</em> façade (SoC plan Phase 5, D13): the violation compute
+ * lives in {@link ClearanceViolation#aggregateSortedBySeverity(Collection)} / {@link
+ * ClearanceViolation#smallestClearance(Collection)} (headless-safe), and this class only holds the
+ * resulting list plus the {@link #draw(Graphics, GraphicsContext) draw} routine.
+ */
 public class ClearanceViolations {
 
   /** The list of clearance violations. */
@@ -20,20 +27,8 @@ public class ClearanceViolations {
   /** Creates a new instance from the supplied board items. */
   public ClearanceViolations(Collection<Item> itemList) {
 
-    this.list = new LinkedList<>();
-    for (Item currItem : itemList) {
-      this.list.addAll(currItem.clearanceViolations());
-      if ((currItem.smallestClearance > 0)
-          && (currItem.smallestClearance < globalSmallestClearance)) {
-        globalSmallestClearance = currItem.smallestClearance;
-      }
-    }
-
-    this.list.sort(
-        (o1, o2) ->
-            -Double.compare(
-                o1.expectedClearance - o1.actualClearance,
-                o2.expectedClearance - o2.actualClearance));
+    this.list = new LinkedList<>(ClearanceViolation.aggregateSortedBySeverity(itemList));
+    this.globalSmallestClearance = ClearanceViolation.smallestClearance(itemList);
   }
 
   /** Draws each clearance violation using the supplied graphics context. */
