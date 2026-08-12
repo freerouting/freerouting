@@ -250,13 +250,13 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 
 ### Phase 0 — Baseline
 
-- [ ] Record branch / working tree / HEAD.
-- [ ] Run ArchUnit + `test` + quick routing fixture; capture results.
-- [ ] Inventory class counts: `gui`, `interactive`, `boardgraphics`.
-- [ ] **DSN fixture coverage map:** filename → owning test(s) → sole-coverage-for-a-path? (There are **no `.frb` fixtures** in the repo.)
-- [ ] **Capture stable v2.3.0 golden metrics** on the agreed fixture matrix (completion / unrouted-net count, full-DRC violation count via `DesignRulesChecker.getAllClearanceViolations()`, SES sanity). Record numbers in branch notes and **§12.6**.
-- [ ] Snapshot known leaks (board/autoroute paint, `RoutingJob` Swing, `BoardManager` GUI API, `SessionManager` GUI naming, `GuiBoardManager`→`GraphicsContext` / `InteractiveState`).
-- [ ] Start AGENTS.md baseline-policy draft update toward D24 (land fully by Phase 12 at latest; prefer with Phase 0/1).
+- [x] Record branch / working tree / HEAD.
+- [x] Run ArchUnit + `test` + quick routing fixture; capture results.
+- [x] Inventory class counts: `gui`, `interactive`, `boardgraphics`.
+- [x] **DSN fixture coverage map:** filename → owning test(s) → sole-coverage-for-a-path? (There are **no `.frb` fixtures** in the repo.)
+- [x] **Capture stable v2.3.0 golden metrics** on the agreed fixture matrix (completion / unrouted-net count, full-DRC violation count via `DesignRulesChecker.getAllClearanceViolations()`, SES sanity). Record numbers in branch notes and **§12.6**.
+- [x] Snapshot known leaks (board/autoroute paint, `RoutingJob` Swing, `BoardManager` GUI API, `SessionManager` GUI naming, `GuiBoardManager`→`GraphicsContext` / `InteractiveState`).
+- [x] Start AGENTS.md baseline-policy draft update toward D24 (land fully by Phase 12 at latest; prefer with Phase 0/1).
 
 ### Phase 1 — Inventory + ArchUnit freeze
 
