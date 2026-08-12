@@ -42,6 +42,8 @@ repos:
         args: ['--allow-multiple-documents']
       - id: mixed-line-ending
         name: Fix mixed line endings
+        exclude: \.(bat|cmd|ps1)$
+        args: ['--fix=lf']
       - id: check-merge-conflict
         name: Check for merge conflicts
       - id: check-case-conflict
@@ -65,7 +67,7 @@ repos:
     hooks:
       - id: codespell
         name: CodeSpell
-        exclude: ^(src_v19/|fixtures/|integrations/|docs/reference/|scripts/i18n/|scripts/benchmark/fixtures/|website/|src/rewrite/|config/checkstyle/|build/|\.gradle/|logs/|src/main/resources/app/freerouting/helpset/(de|es|fr)/|src_v19/main/resources/app/freerouting/helpset/(de|es|fr)/|find-mismatch3\.ps1$|compare_loop\.py$|.*\.(dsn|ses|frb|png|jpe?g|svg|pdf|flex|class|jar|brd|exe|dll|so)$|src/main/resources/app/freerouting/[^/]*_.*\.properties$)
+        exclude: ^(src_v19/|fixtures/|docs/reference/|scripts/i18n/|scripts/benchmark/fixtures/|website/|src/rewrite/|config/checkstyle/|build/|\.gradle/|logs/|src/main/resources/app/freerouting/helpset/(de|es|fr)/|src_v19/main/resources/app/freerouting/helpset/(de|es|fr)/|find-mismatch3\.ps1$|compare_loop\.py$|.*\.(dsn|ses|frb|png|jpe?g|svg|pdf|flex|class|jar|brd|exe|dll|so)$|src/main/resources/app/freerouting/[^/]*_.*\.properties$)
         additional_dependencies:
           - tomli
 
@@ -90,7 +92,7 @@ repos:
         stages: [manual]
       - id: extract-context
         name: Extract Context Metadata
-        entry: python scripts/i18n/extract-context.py
+        entry: python scripts/i18n/extract-context.py --check
         language: system
         pass_filenames: false
         files: |
