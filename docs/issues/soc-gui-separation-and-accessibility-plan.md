@@ -260,21 +260,26 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 
 ### Phase 1 — Inventory + ArchUnit freeze
 
-- [ ] Full dependency inventory (pipeline ↔ GUI / AWT UI / Swing).
-- [ ] Classify interactive/boardgraphics types (state vs session vs façade vs renderer).
-- [ ] **Simple-name collision check** across `gui`, `interactive`, `boardgraphics`, **and** cross-package same-name types touched by moves (at minimum the three `CoordinateTransform` classes in `board` / `boardgraphics` / `io`; flattening `InteractiveCommand`).
-- [ ] Confirm ratsnest compute call chain through `drc.NetIncompletes` / `AirLine`.
-- [ ] List `ObjectInfoPanel.Printable` implementers (awareness only).
-- [ ] Confirm MVP-workflow property bundles have complete `_hu` variants.
-- [ ] Sketch the Phase 9 interactive facade surface (R19) and confirm home package = `gui.session` (D30): methods `GuiBoardManager` needs without importing any `gui.interactive` type.
-- [ ] Plan views-layer bootstrap/registration of the initial interactive state (D30).
-- [ ] **Inventory existing tests that construct Swing / need EDT**; plan deliberate `@Tag("gui")` retags.
-- [ ] **Inventory worker-thread → Swing mutations**; assign removal to Phase 9 (or earlier if trivial).
-- [ ] ArchUnit rules + §12 freezes (including planned temporary freeze only if facade lands mid-Phase-9).
-- [ ] Add ArchUnit **`gui.**` slice-cycle** check (must stay green after Phase 9; may be frozen temporarily mid-phase only).
-- [ ] Forbid pipeline/support → gui/interactive/boardgraphics/future gui.interactive|session|rendering; ban Swing + AWT UI; allow `java.awt.geom..`.
-- [ ] Record freeze budget with owners/removal phases in §12.
-- [ ] Adapt or stub WIP-vs-v2.3.0 compare tooling (R18); do not depend on v1.9 `compare-versions.ps1` as the primary gate.
+> **Phase 1 COMPLETE (2026-08-12).** Inventory + collision check + type classification + ArchUnit freeze layer
+> (F1/F2/F3 frozen, R4/R5 strict) + §12.4 ledger + facade sketch (R19) + views-bootstrap plan all landed.
+> Exit gate green: `ModuleBoundariesArchTest` + `SpecctraPackageArchTest` (`BUILD SUCCESSFUL`). Reviewed and
+> approved (Flash review 2026-08-12). Details in `logs/phase1/branch-notes.md` + `logs/phase1/facade-sketch.md`.
+
+- [x] Full dependency inventory (pipeline ↔ GUI / AWT UI / Swing).
+- [x] Classify interactive/boardgraphics types (state vs session vs façade vs renderer).
+- [x] **Simple-name collision check** across `gui`, `interactive`, `boardgraphics`, **and** cross-package same-name types touched by moves (at minimum the three `CoordinateTransform` classes in `board` / `boardgraphics` / `io`; flattening `InteractiveCommand`).
+- [x] Confirm ratsnest compute call chain through `drc.NetIncompletes` / `AirLine`.
+- [x] List `ObjectInfoPanel.Printable` implementers (awareness only).
+- [x] Confirm MVP-workflow property bundles have complete `_hu` variants.
+- [x] Sketch the Phase 9 interactive facade surface (R19) and confirm home package = `gui.session` (D30): methods `GuiBoardManager` needs without importing any `gui.interactive` type.
+- [x] Plan views-layer bootstrap/registration of the initial interactive state (D30).
+- [x] **Inventory existing tests that construct Swing / need EDT**; plan deliberate `@Tag("gui")` retags.
+- [x] **Inventory worker-thread → Swing mutations**; assign removal to Phase 9 (or earlier if trivial).
+- [x] ArchUnit rules + §12 freezes (including planned temporary freeze only if facade lands mid-Phase-9).
+- [x] Add ArchUnit **`gui.**` slice-cycle** check (must stay green after Phase 9; may be frozen temporarily mid-phase only).
+- [x] Forbid pipeline/support → gui/interactive/boardgraphics/future gui.interactive|session|rendering; ban Swing + AWT UI; allow `java.awt.geom..`.
+- [x] Record freeze budget with owners/removal phases in §12.
+- [x] Adapt or stub WIP-vs-v2.3.0 compare tooling (R18); do not depend on v1.9 `compare-versions.ps1` as the primary gate.
 
 ### Phase 2 — Accessibility foundation (component-only, pure JDK)
 
@@ -519,7 +524,16 @@ These older items were marked FIXED before this initiative and are retained only
 
 | Freeze ID | Rule | Violation count (baseline) | Removal phase | Owner | Status |
 | --- | --- | --- | --- | --- | --- |
-| *(none yet — populate during Phase 1)* | | | | | |
+| **F1** | pipeline/support → `javax.swing..` (ModuleBoundariesArchTest.pipelineMustNotDependOnSwing) | 27 | Phase 4 (RoutingJob file chooser, datastructures.FileFilter) + Phase 12 (util.TextManager, io.specctra.parser.SessionToEagle) | GUI SoC initiative | frozen, green |
+| **F2** | pipeline/support → `java.awt..` excluding `java.awt.geom..` (ModuleBoundariesArchTest.pipelineMustNotDependOnAwtUiTypes) | 95 | Phase 6 (board paint) + Phase 7 (autoroute diagnostics) + Phase 12 (util.TextManager fonts) | GUI SoC initiative | frozen, green |
+| **F3** | board/autoroute → `app.freerouting.boardgraphics..` (ModuleBoundariesArchTest.boardAndAutorouteMustNotDependOnBoardgraphics) | 145 | Phase 6 + Phase 10 (rendering inversion → gui.rendering) | GUI SoC initiative | frozen, green |
+
+> Added Phase 1 (2026-08-12). Frozen store: `src/test/resources/archunit_store/` (3 rule files + `stored.rules`);
+> `archunit.properties` keeps `allowStoreCreation=false` / `allowStoreUpdate=true`. Total frozen debt: **267**
+> violations. Strict (non-frozen) rules added in the same change: **R4** `guiSlicesMustBeFreeOfCycles`
+> (`allowEmptyShould(true)` — green until gui subpackages exist, must stay green after Phase 9) and **R5**
+> `pipelineMustNotDependOnGui` (green; closes the io/util gap). Baselines verified against the 2026-08-12 run
+> (`BUILD SUCCESSFUL in 38s`, gate = ModuleBoundariesArchTest + SpecctraPackageArchTest).
 
 ### 12.5 Validation
 

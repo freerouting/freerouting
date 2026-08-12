@@ -11,7 +11,7 @@
 | Phase | Title | Status | Notes |
 | --- | --- | --- | --- |
 | **0** | Baseline | **~100%** | Green baseline + v2.3.0 golden metrics captured; only AGENTS.md D24 sign-off remains |
-| **1** | Inventory + ArchUnit freeze | Not started | |
+| **1** | Inventory + ArchUnit freeze | **COMPLETE** | Inventory + collision + freeze layer (F1/F2/F3 frozen, R4/R5 strict) + §12.4 ledger + facade sketch done; reviewed & approved (Flash); exit gate green |
 | **2** | Accessibility foundation | Not started | |
 | **3** | Headless contracts | Not started | |
 | **4** | Core / mgmt neutralization | Not started | |
@@ -28,7 +28,7 @@
 
 | CP | Content | Status |
 | --- | --- | --- |
-| 1 | Phase 0–1 inventory + ArchUnit freezes + v2.3.0 golden metrics + §12 ledger | 🔄 in progress (Phase 0 done; golden metrics captured; Phase 1 not started) |
+| 1 | Phase 0–1 inventory + ArchUnit freezes + v2.3.0 golden metrics + §12 ledger | ✅ done (Phase 0 + Phase 1 complete, exit gate green) |
 | 2 | `testGui` (forced headless) + harness + path-filter stub + Swing-test retags | pending |
 | 3 | MVP locators + ≥3 workflows (EN+hu) + hu resource check | pending |
 | 4 | Headless `BoardManager` split | pending (Phase 3) |
@@ -84,12 +84,18 @@
 | 2026-08-12 | Phase 0: class counts (116), DSN coverage map (partial), known-leak snapshot recorded. |
 | 2026-08-12 | Branch notes + AGENTS.md D24 draft proposal + §12.6 annotation created. |
 | 2026-08-12 | Phase 0: v2.3.0 golden metrics captured via `run-benchmarks.ps1` → §12.6 (current ≡ v2.3.0, avg 915.1; bm01 DRC improved; CM5_MINIMA_3 timeout both). |
+| 2026-08-12 | Phase 0: committed `efa3d353`; current build set as authoritative baseline (supersedes v2.3.0, D24). |
+| 2026-08-12 | Phase 1 (K3): inventory set (collision=only triple CoordinateTransform; types classified; ratsnest chain via drc confirmed; ObjectInfoPanel 13 impls; _hu parity complete; 0 Swing tests; worker→Swing=GuiBoardManager ×4). |
+| 2026-08-12 | Phase 1 (K3): ArchUnit freeze layer added — F1 Swing=27, F2 AWT-UI=95, F3 boardgraphics=145 (frozen store created); R4 gui-slice-cycle + R5 pipeline→gui strict; §12.4 ledger populated. Gate `BUILD SUCCESSFUL in 38s`. |
+| 2026-08-12 | Phase 1 (K3): facade sketch (R19: EditorStateHandle/EditorStateKind in gui.session.api; InteractiveCommand retyped) + views-bootstrap plan written (`logs/phase1/facade-sketch.md`). Awaiting Flash review. |
+| 2026-08-12 | Phase 1 (Flash): review APPROVED — freeze layer (F1=27/F2=95/F3=145, R4/R5 strict) compliant with §1.1/§2/§12.1; facade sketch compliant with D26/D27/D30; R18 satisfied by run-benchmarks.ps1. F1 javadoc nit fixed. Exit gate forced re-run `BUILD SUCCESSFUL in 47s`. **Phase 1 COMPLETE.** |
 
 ## 6. Next actions
 
-1. User sign-off on AGENTS.md D24 draft → finalize Phase 0.
-2. Begin **Phase 1** (inventory + ArchUnit freezes): simple-name collisions (three `CoordinateTransform`s, `InteractiveCommand` flatten), DSN sole-coverage finalization, facade sketch (R19), Swing-test/EDT inventories, ArchUnit rules + §12.4 freezes.
-3. Update §13.3 model-cols for the Flash-substitution decision.
+1. Record Phase 1 completion (done above). Phase 2 = **accessibility foundation** (next).
+2. **Phase 2 part A (K3)** — a11y contract, locator registry (D22), pure-JDK AccessibleContext harness, `@Tag("gui")` + `testGui` Gradle wiring (D5/D7/D25), MVP workflow #1. *Switch back to Kimi K3.*
+3. **Phase 2 part B (Flash)** — replicate workflows #2–3, sibling checks, EN+hu runs, hu resource-parity (D19).
+4. Update §13.3 model-cols for the Flash-substitution decision.
 
 ## 7. Artifacts
 
