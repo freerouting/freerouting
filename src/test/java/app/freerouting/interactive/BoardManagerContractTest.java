@@ -1,26 +1,30 @@
 package app.freerouting.interactive;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.board.BoardObserverAdaptor;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.management.BoardManager;
 import app.freerouting.management.HeadlessBoardManager;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Contract tests for the {@link BoardManager} interface (sub-issue 03).
+ * Contract tests for the headless {@link BoardManager} / GUI-session {@link GuiSessionContract}
+ * split (SoC plan Phase 3).
  *
- * <p>Verifies the invariant: if {@link BoardManager#isInteractiveModeSupported()} then {@link
- * BoardManager#getInteractiveSettings()} must return a non-null value after board initialisation;
- * otherwise it must return {@code null}.
+ * <p>Verifies the architectural invariant:
+ *
+ * <ul>
+ *   <li>The headless {@link BoardManager} interface exposes <em>no</em> GUI-session methods (no
+ *       null-based {@code getInteractiveSettings()} / {@code isInteractiveModeSupported()} / {@code
+ *       initializeManualTraceHalfWidths()}).
+ *   <li>{@link HeadlessBoardManager} does <em>not</em> implement {@link GuiSessionContract}, so
+ *       {@link InteractiveSettings} is unreachable in headless mode.
+ *   <li>{@link GuiBoardManager} implements {@link GuiSessionContract}, providing the GUI-session
+ *       accessor (never {@code null} after board initialisation).
+ * </ul>
  */
 class BoardManagerContractTest {
 
@@ -37,56 +41,64 @@ class BoardManagerContractTest {
   // ── Headless contract ─────────────────────────────────────────────────────
 
   @Test
-  void headlessManagerIsInteractiveModeSupportedReturnsFalse() {
-    BoardManager manager = new HeadlessBoardManager(new RoutingJob());
+  void headlessBoardManagerInterfaceHasNoGuiSessionMethods() {
+    // The headless BoardManager interface must not declare any GUI-session methods.
+    for (String guiMethod :
+        new String[] {
+          "getInteractiveSettings",
+          "isInteractiveModeSupported",
+          "getSettings",
+          "initializeManualTraceHalfWidths"
+        }) {
+      boolean declared =
+          java.util.Arrays.stream(BoardManager.class.getMethods())
+              .anyMatch(m -> m.getName().equals(guiMethod));
+      assertFalse(
+          declared,
+          "Headless BoardManager interface must not declare GUI-session method '"
+              + guiMethod
+              + "'");
+    }
+  }
+
+  @Test
+  void headlessManagerDoesNotImplementGuiSessionContract() {
+    HeadlessBoardManager manager = new HeadlessBoardManager(new RoutingJob());
     assertFalse(
-        manager.isInteractiveModeSupported(),
-        "HeadlessBoardManager must report isInteractiveModeSupported() == false");
+        manager instanceof GuiSessionContract,
+        "HeadlessBoardManager must not implement GuiSessionContract; InteractiveSettings must be "
+            + "unreachable in headless mode");
   }
 
-  @Test
-  void headlessManagerGetInteractiveSettingsReturnsNull() throws FileNotFoundException {
-    var manager = new HeadlessBoardManager(new RoutingJob());
-    manager.loadFromSpecctraDsn(
-        new FileInputStream("fixtures/empty_board.dsn"),
-        new BoardObserverAdaptor(),
-        new ItemIdentificationNumberGenerator());
-
-    assertNull(
-        manager.getInteractiveSettings(),
-        "HeadlessBoardManager.getInteractiveSettings() must return null");
-  }
+  // ── GUI-session contract ──────────────────────────────────────────────────
 
   @Test
-  void headlessManagerDeprecatedGetSettingsAlsoReturnsNull() throws FileNotFoundException {
-    var manager = new HeadlessBoardManager(new RoutingJob());
-    manager.loadFromSpecctraDsn(
-        new FileInputStream("fixtures/empty_board.dsn"),
-        new BoardObserverAdaptor(),
-        new ItemIdentificationNumberGenerator());
-
-    @SuppressWarnings("deprecation")
-    app.freerouting.settings.sources.GuiSettings settings = manager.getSettings();
-    assertNull(
-        settings,
-        "Deprecated get_settings() must delegate to getInteractiveSettings() and return null in "
-            + "headless mode");
-  }
-
-  // ── GUI contract (static, no Swing needed) ────────────────────────────────
-
-  @Test
-  void guiBoardManagerOverridesIsInteractiveModeSupported() throws Exception {
-    // Verify at the method level without instantiating Swing.
-    var method = GuiBoardManager.class.getMethod("isInteractiveModeSupported");
-    // The method must be declared on GuiBoardManager itself, not inherited from the default.
+  void guiSessionContractExposesInteractiveSettings() throws Exception {
+    // The GUI-session contract declares getInteractiveSettings() returning InteractiveSettings.
+    var method = GuiSessionContract.class.getMethod("getInteractiveSettings");
     assertTrue(
-        method.getDeclaringClass().equals(GuiBoardManager.class),
-        "GuiBoardManager must override isInteractiveModeSupported()");
+        method.getReturnType().equals(InteractiveSettings.class),
+        "GuiSessionContract.getInteractiveSettings() must return InteractiveSettings");
   }
 
   @Test
-  void guiBoardManagerOverridesGetInteractiveSettings() throws Exception {
+  void guiSessionContractExposesInitializeManualTraceHalfWidths() throws Exception {
+    // R10: manual trace half-width initialisation is a GUI-session-only operation.
+    var method = GuiSessionContract.class.getMethod("initializeManualTraceHalfWidths");
+    assertTrue(
+        method.getDeclaringClass().equals(GuiSessionContract.class),
+        "GuiSessionContract must declare initializeManualTraceHalfWidths()");
+  }
+
+  @Test
+  void guiBoardManagerImplementsGuiSessionContract() {
+    assertTrue(
+        GuiSessionContract.class.isAssignableFrom(GuiBoardManager.class),
+        "GuiBoardManager must implement GuiSessionContract");
+  }
+
+  @Test
+  void guiBoardManagerDeclaresGetInteractiveSettingsOverride() throws Exception {
     var method = GuiBoardManager.class.getMethod("getInteractiveSettings");
     assertTrue(
         method.getDeclaringClass().equals(GuiBoardManager.class),

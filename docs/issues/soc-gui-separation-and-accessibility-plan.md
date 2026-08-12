@@ -305,12 +305,12 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 
 ### Phase 3 — Headless board contracts
 
-- [ ] Headless board manager API without GUI methods.
-- [ ] GUI session contract separate from headless manager.
-- [ ] Remove null-based `getInteractiveSettings()` / `isInteractiveModeSupported()` from shared headless API.
-- [ ] Prefer moving `initializeManualTraceHalfWidths` to GUI-session-only (R10).
-- [ ] Preserve InteractiveSettings invariants (reset, live snapshot, merger priority).
-- [ ] Update contract tests accordingly.
+- [x] Headless board manager API without GUI methods.
+- [x] GUI session contract separate from headless manager.
+- [x] Remove null-based `getInteractiveSettings()` / `isInteractiveModeSupported()` from shared headless API.
+- [x] Prefer moving `initializeManualTraceHalfWidths` to GUI-session-only (R10).
+- [x] Preserve InteractiveSettings invariants (reset, live snapshot, merger priority).
+- [x] Update contract tests accordingly.
 
 ### Phase 4 — Core / management neutralization
 

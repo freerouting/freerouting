@@ -116,11 +116,12 @@ import javax.swing.SwingUtilities;
  * </ul>
  *
  * @see HeadlessBoardManager
+ * @see GuiSessionContract
  * @see InteractiveState
  * @see BoardPanel
  * @see GraphicsContext
  */
-public class GuiBoardManager extends HeadlessBoardManager {
+public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionContract {
 
   /**
    * The minimum interval in milliseconds between consecutive board panel repaints during background
@@ -1465,29 +1466,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   @Override
   public InteractiveSettings getInteractiveSettings() {
-    return interactiveSettings;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>Always returns {@code true} for {@link GuiBoardManager}: the GUI session guarantees a
-   * non-null {@link InteractiveSettings} singleton after board initialisation.
-   */
-  @Override
-  public boolean isInteractiveModeSupported() {
-    return true;
-  }
-
-  /**
-   * Returns the GUI-session {@link InteractiveSettings} singleton.
-   *
-   * @return the {@link InteractiveSettings} singleton; non-null after board initialisation
-   * @deprecated Use {@link #getInteractiveSettings()} instead.
-   */
-  @Deprecated
-  @Override
-  public InteractiveSettings getSettings() {
     return interactiveSettings;
   }
 

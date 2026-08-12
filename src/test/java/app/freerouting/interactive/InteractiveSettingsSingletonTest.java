@@ -3,7 +3,6 @@ package app.freerouting.interactive;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import app.freerouting.board.BoardObserverAdaptor;
@@ -116,20 +115,6 @@ class InteractiveSettingsSingletonTest {
         deserialized,
         InteractiveSettings.getOrCreate(board),
         "After setInstance the provided instance must be returned by getOrCreate");
-  }
-
-  @Test
-  void headlessBoardManagerGetSettingsReturnsNull() {
-    @SuppressWarnings("deprecation")
-    app.freerouting.settings.sources.GuiSettings settings = headlessManager.getSettings();
-    assertNull(settings, "HeadlessBoardManager.get_settings() must return null in headless mode");
-  }
-
-  @Test
-  void headlessBoardManagerGetInteractiveSettingsReturnsNull() {
-    assertNull(
-        headlessManager.getInteractiveSettings(),
-        "HeadlessBoardManager.getInteractiveSettings() must return null in headless mode");
   }
 
   @Test

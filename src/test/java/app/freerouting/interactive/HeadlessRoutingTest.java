@@ -2,15 +2,11 @@ package app.freerouting.interactive;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.BoardObserverAdaptor;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
-import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.settings.GlobalSettings;
@@ -20,7 +16,6 @@ import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.TestingSettings;
 import app.freerouting.util.TextManager;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -32,9 +27,10 @@ import org.junit.jupiter.api.Test;
  *
  * <p>Verifies that a full autoroute pass can complete in headless mode without encountering any
  * {@link NullPointerException} or {@link IllegalStateException} caused by {@code
- * interactiveSettings} being accessed. Also asserts that {@link
- * HeadlessBoardManager#getInteractiveSettings()} returns {@code null} throughout the routing
- * session, confirming that GUI-specific state never leaks into the headless code path.
+ * interactiveSettings} being accessed. The Phase-3 contract split makes GUI state statically
+ * unreachable in headless mode: {@link app.freerouting.management.HeadlessBoardManager} does not
+ * implement {@link GuiSessionContract}, so {@code InteractiveSettings} can never leak into the
+ * headless code path.
  */
 class HeadlessRoutingTest {
 
@@ -48,30 +44,6 @@ class HeadlessRoutingTest {
     synchronized (scheduler.jobs) {
       scheduler.jobs.clear();
     }
-  }
-
-  /**
-   * Verifies that {@link HeadlessBoardManager#getInteractiveSettings()} returns {@code null} after
-   * loading a DSN file in headless mode.
-   *
-   * <p>This guards against regressions where a code-path inside {@code loadFromSpecctraDsn} or its
-   * callees accidentally initialises {@code interactiveSettings} on a headless manager.
-   */
-  @Test
-  void headlessManagerGetInteractiveSettingsIsNullAfterDsnLoad() {
-    assertDoesNotThrow(
-        () -> {
-          var manager = new HeadlessBoardManager(new RoutingJob());
-          try (FileInputStream dsnInput = new FileInputStream("fixtures/empty_board.dsn")) {
-            manager.loadFromSpecctraDsn(
-                dsnInput, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
-          }
-
-          assertNull(
-              manager.getInteractiveSettings(),
-              "HeadlessBoardManager.getInteractiveSettings() must return null at all times in "
-                  + "headless mode");
-        });
   }
 
   /**

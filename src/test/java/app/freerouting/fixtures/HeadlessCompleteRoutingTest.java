@@ -24,7 +24,8 @@ import org.junit.jupiter.api.Test;
  * <p>Key assertions:
  *
  * <ul>
- *   <li>{@link HeadlessBoardManager#getInteractiveSettings()} returns {@code null} throughout.
+ *   <li>{@link HeadlessBoardManager} never touches GUI-session state (it does not implement {@code
+ *       app.freerouting.interactive.GuiSessionContract}).
  *   <li>The routing job reaches a terminal state (COMPLETED, CANCELLED, or TERMINATED).
  *   <li>The completed job's board is non-null, confirming the engine produced results.
  * </ul>

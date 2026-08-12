@@ -13,7 +13,7 @@
 | **0** | Baseline | **~100%** | Green baseline + v2.3.0 golden metrics captured; only AGENTS.md D24 sign-off remains |
 | **1** | Inventory + ArchUnit freeze | **COMPLETE** | Inventory + collision + freeze layer (F1/F2/F3 frozen, R4/R5 strict) + §12.4 ledger + facade sketch done; reviewed & approved (Flash); exit gate green |
 | **2** | Accessibility foundation | **COMPLETE** | Part A + part B done: a11y contract + GuiLocators/A11y registry + GuiA11yHarness + testGui wiring + workflows #1–3 (read status / select layer / menu action) + sibling checks + EN+hu + hu-parity; all gates green |
-| **3** | Headless contracts | Not started | |
+| **3** | Headless contracts | **COMPLETE** | `BoardManager` stripped to headless contract; new `GuiSessionContract` (getInteractiveSettings + initializeManualTraceHalfWidths); removed `isInteractiveModeSupported()` + deprecated `getSettings()`; R10 done (parser-seam GUI method removed); InteractiveSettings invariants preserved; all gates green |
 | **4** | Core / mgmt neutralization | Not started | |
 | **5** | Compute vs presentation | Not started | exits on full v2.3.0 parity |
 | **6** | Rendering inversion (highest risk) | Not started | exits on full v2.3.0 parity; revertible commits |
@@ -31,7 +31,7 @@
 | 1 | Phase 0–1 inventory + ArchUnit freezes + v2.3.0 golden metrics + §12 ledger | ✅ done (Phase 0 + Phase 1 complete, exit gate green) |
 | 2 | `testGui` (forced headless) + harness + path-filter stub + Swing-test retags | ✅ done (Phase 2) |
 | 3 | MVP locators + ≥3 workflows (EN+hu) + hu resource check | ✅ done (Phase 2) |
-| 4 | Headless `BoardManager` split | pending (Phase 3) |
+| 4 | Headless `BoardManager` split | ✅ done (Phase 3) |
 | 5 | `RoutingJob` Swing removal + `getPrimarySession`/`setPrimarySession` | pending (Phase 4) |
 | 6 | Ratsnest/violations façade thinning + Phase 5 full v2.3.0 parity | pending |
 | 7 | Board paint inversion + Phase 6 full v2.3.0 parity | pending |
@@ -95,13 +95,15 @@
 | 2026-08-12 | Phase 2 part B: workflows #2 `ComboBoxLayerA11yTest` (select layer / change setting) + #3 `MenuActionA11yTest` (menu action) added; sibling duplicate/empty checks exercised on all three workflows; EN+hu translation runs in every workflow (D19). Product wiring extended: `BoardMenuFile` menu locators + accessible names. |
 | 2026-08-12 | Phase 2 part B: Hungarian resource-parity check `HungarianResourceParityCheckTest` extended to cover `BoardMenuFile` (was BoardPanelStatus + Common); added `errors`/`warnings` EN+hu keys to `BoardPanelStatus`. Documented in plan §7 validation matrix. |
 | 2026-08-12 | Phase 2 part B: harness traversal fix — `A11y.flatten` (sibling-name audit) now skips Swing popup windows (`JPopupMenu` subclasses such as the combo's `BasicComboPopup`) whose LAF-internal scrollbar chrome produced a false empty-name finding; documented in contract §3. |
-| 2026-08-12 | Phase 2 part B: gates green — testGui ✓ (8 tests: 3 ComboBox + 3 BoardPanelStatus + 2 MenuAction, EN+hu), spotlessCheck ✓, checkstyleMain/Test ✓, ModuleBoundariesArchTest ✓ (13), HungarianResourceParityCheckTest ✓, **full `test` ✓ (2m13s, unchanged)**. **Phase 2 COMPLETE.** |
+| 2026-08-12 | Phase 2 part B: gates green — testGui ✓ (8 tests: 3 ComboBox + 3 BoardPanelStatus + 2 MenuAction, EN+hu), spotlessCheck ✓, checkstyleMain/Test ✓, ModuleBoundariesArchTest ✓ (13), HungarianResourceParityCheckTest ✓, **full `test` ✓ (2m13s, unchanged)**. **Phase 2 COMPLETE.** Committed `4e55d583`. |
+| 2026-08-12 | Phase 3 (K3): headless/GUI contract split. New `interactive/GuiSessionContract` (getInteractiveSettings + initializeManualTraceHalfWidths). `BoardManager` stripped to headless contract (getRoutingBoard/createBoard/getCurrentRoutingJob); removed null-based `getInteractiveSettings()`/`isInteractiveModeSupported()` + deprecated `getSettings()`. `HeadlessBoardManager` no longer implements GUI methods; `GuiBoardManager implements GuiSessionContract`. R10: removed `initializeManualTraceHalfWidths()` from `BoardParserCallback` + call in `Structure` + no-op in `MinimalBoardManager` (GUI-session-only). |
+| 2026-08-12 | Phase 3 (K3): tests updated — `BoardManagerContractTest` rewritten for split (6 tests), removed obsolete null-return tests from `HeadlessRoutingTest`/`InteractiveSettingsSingletonTest`, javadoc fixes in `HeadlessCompleteRoutingTest`/`GuiStartupHeadlessTest`. InteractiveSettings invariants preserved (Singleton=6, MergerGui=7, GuiStartup=6 all green). Gates: compileJava/TestJava ✓, `test` ✓ (**2m25s**), spotlessCheck ✓, checkstyleMain/Test ✓, ModuleBoundariesArchTest ✓ (13), SpecctraPackageArchTest ✓. **Phase 3 COMPLETE.** |
 
 ## 6. Next actions
 
-1. **Phase 2 COMPLETE** (accessibility foundation) — workflows #1–3, sibling checks, EN+hu, hu-parity, all gates green.
-2. **Phase 3 — Headless contracts (next):** headless `BoardManager` API without GUI methods; separate GUI-session contract; remove `getInteractiveSettings()` / `isInteractiveModeSupported()` null-based API from shared headless path; prefer moving `initializeManualTraceHalfWidths` to GUI-session-only (R10); update contract tests. Depends on Phase 1 (done).
-3. Update §13.3 model-cols for the Flash-substitution decision.
+1. **Phase 3 COMPLETE** (headless contracts) — `BoardManager` headless-only, `GuiSessionContract` created, R10 done, invariants preserved, all gates green.
+2. **Phase 4 — Core / management neutralization (next, GLM-5.2 xhigh):** remove Swing file chooser / AWT UI types from `RoutingJob` (GUI owns picking); rename `SessionManager.getGuiSession`/`setGuiSession` → `getPrimarySession`/`setPrimarySession` (management UUID session only, **not** `gui.session`); ensure analytics/API do not depend on GUI session types; reduce circular loader↔manager delegation where practical. Depends on Phases 1 & 3 (done). *K3→Flash/GLM handoff point.*
+3. Update §13.3 model-cols: Phase 3 done by K3; Phase 4 = GLM-5.2 (xhigh).
 
 ## 7. Artifacts
 

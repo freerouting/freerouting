@@ -23,7 +23,6 @@ import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.settings.sources.DefaultSettings;
-import app.freerouting.settings.sources.GuiSettings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -206,29 +205,6 @@ public class HeadlessBoardManager implements BoardManager {
    */
   public synchronized void replaceRoutingBoard(RoutingBoard newRoutingBoard) {
     this.board = newRoutingBoard;
-  }
-
-  /**
-   * Returns {@code null} in headless mode. GUI-specific interactive settings are not applicable
-   * outside of a GUI session. Use {@link
-   * app.freerouting.interactive.GuiBoardManager#getInteractiveSettings()} to obtain settings in GUI
-   * mode.
-   *
-   * @return {@code null} always in headless mode
-   */
-  @Override
-  public GuiSettings getInteractiveSettings() {
-    return null;
-  }
-
-  /**
-   * No-op in headless mode. Manual trace half-widths are managed by the GUI layer via {@link
-   * app.freerouting.interactive.InteractiveSettings}; this method has no effect when running
-   * without a GUI.
-   */
-  @Override
-  public void initializeManualTraceHalfWidths() {
-    // No-op: interactiveSettings is a GUI-only concern managed by GuiBoardManager.
   }
 
   /**
