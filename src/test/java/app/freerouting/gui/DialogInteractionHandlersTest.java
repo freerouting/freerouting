@@ -8,11 +8,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import app.freerouting.board.CoordinateTransform;
+import app.freerouting.board.Layer;
+import app.freerouting.board.LayerStructure;
+import app.freerouting.board.Unit;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.InteractiveSettings;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.NetClass;
 import app.freerouting.settings.RouterSettings;
+import java.util.Locale;
 import org.junit.jupiter.api.Test;
 
 class DialogInteractionHandlersTest {
@@ -122,5 +127,56 @@ class DialogInteractionHandlersTest {
     assertNotNull(parsedDouble);
     assertEquals(7.0f, parsedInteger);
     assertEquals(3.75f, parsedDouble);
+  }
+
+  @Test
+  void traceWidthEditParsesAndAppliesToSignalLayers() {
+    Layer[] layers =
+        new Layer[] {
+          new Layer("Top", true),
+          new Layer("Inner", true),
+          new Layer("Edge", false),
+          new Layer("Bottom", true)
+        };
+    LayerStructure layerStructure = new LayerStructure(layers);
+    ClearanceMatrix clearanceMatrix =
+        new ClearanceMatrix(1, layerStructure, new String[] {"default"});
+    NetClass netClass = new NetClass("default", layerStructure, clearanceMatrix, false);
+    CoordinateTransform coordinateTransform = new CoordinateTransform(1.0, Unit.UM, 1.0, Unit.UM);
+
+    // A 400 um full width must map to a 200 um half width on every signal layer.
+    assertTrue(
+        WindowNetClasses.applyTraceWidthValue(
+            netClass, layerStructure, coordinateTransform, "400.0000"));
+    assertEquals(200, netClass.getTraceHalfWidth(0));
+    assertEquals(200, netClass.getTraceHalfWidth(1));
+    assertEquals(200, netClass.getTraceHalfWidth(3));
+    // Non-signal layers must be left untouched.
+    assertEquals(0, netClass.getTraceHalfWidth(2));
+
+    // Numeric (non-String) input is accepted as well.
+    assertTrue(
+        WindowNetClasses.applyTraceWidthValue(
+            netClass, layerStructure, coordinateTransform, 200.0));
+    assertEquals(100, netClass.getTraceHalfWidth(0));
+
+    // Rejected inputs must not modify the stored width.
+    assertFalse(
+        WindowNetClasses.applyTraceWidthValue(
+            netClass, layerStructure, coordinateTransform, "not-a-number"));
+    assertFalse(
+        WindowNetClasses.applyTraceWidthValue(netClass, layerStructure, coordinateTransform, ""));
+    assertFalse(
+        WindowNetClasses.applyTraceWidthValue(netClass, layerStructure, coordinateTransform, -5));
+    assertFalse(
+        WindowNetClasses.applyTraceWidthValue(netClass, layerStructure, coordinateTransform, null));
+    assertFalse(
+        WindowNetClasses.applyTraceWidthValue(null, layerStructure, coordinateTransform, 100.0));
+    // The width set by the numeric input above (100) must be unchanged.
+    assertEquals(100, netClass.getTraceHalfWidth(0));
+
+    // The on-screen width is rendered to four decimal places and rounds half-up.
+    assertEquals("0.2001", String.format(Locale.ENGLISH, "%.4f", 0.20005));
+    assertEquals("0.2000", String.format(Locale.ENGLISH, "%.4f", 0.20004));
   }
 }
