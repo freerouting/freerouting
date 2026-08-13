@@ -1,6 +1,6 @@
 # GUI Separation and Accessibility Migration Plan
 
-> Status: **In implementation** — Phases 0–5 complete; Phase 6 rendering inversion is in progress with the renderer boundary and traversal checkpoints landed, while family paint-API removal and the full parity exit remain. D1–D30 locked; M1=A / M4=B incorporated; execution staffing plan in §13 (added 2026-08-11).
+> Status: **In implementation** — Phases 0–6 complete; Phase 7 autorouter diagnostic inversion is next. D1–D30 locked; M1=A / M4=B incorporated; execution staffing plan in §13 (added 2026-08-11).
 >
 > Scope: Separate GUI interaction and rendering from the headless routing pipeline, establish automated GUI accessibility coverage, and reorganize only the packages required for that separation.
 >
@@ -334,12 +334,12 @@ Land as **independently revertible commits** on the long-lived branch:
 
 1. [x] Add neutral accessors for geometry/layer/net/type/visibility/selection metadata (no paint removal yet). `BoardItemType` and `Item.getBoardItemType()` are now headless-safe, with characterization coverage.
 2. [x] Stand up GUI renderer + **early** offscreen `BufferedImage` smoke for major item types (must exist before mass paint deletion). `BoardRenderer` and `BoardRendererOffscreenTest` are in place.
-3. [ ] Remove `Drawable` / `Graphics` / `GraphicsContext` / AWT `Color` paint APIs from board (per family if needed). Main board rendering now uses renderer-owned strategies for traces, drill items, obstacles, component geometry, outlines, and conduction areas; compatibility `Item.draw` / `drawLayer` APIs remain for interactive overlay callers and are the next cleanup.
+3. [x] Remove `Drawable` / `Graphics` / `GraphicsContext` / AWT `Color` paint APIs from board (per family if needed). Main board rendering and interactive overlays now use renderer-owned strategies for traces, drill items, obstacles, component geometry, outlines, and conduction areas; the transitional `Item.draw` / `drawLayer` APIs and family implementations were removed.
 4. [x] Move traversal + draw priority fully into GUI renderer. Layer/virtual-layer ordering, culling, component fabrication labels, and family dispatch now live in `BoardRenderer`.
 5. [x] Headless load→route→DRC→SES without renderer init. Full `check` and targeted headless DRC/routing tests pass.
-6. [x] No routing mutation behavior changes in the validated smoke suite. The full WIP-vs-v2.3.0 comparison still remains an exit-gate task after family paint-API removal.
+6. [x] No routing mutation behavior changes in the validated smoke suite. The final full WIP-vs-v2.3.0 comparison completed with matching completion (5 unrouted items) and no current-build clearance violations.
 
-**Current checkpoint:** commits `06b3b688`, `7284615a`, `6b7e9ee1`, `4b4c936e`, `2b07f149`, and `c51f16cd` landed independently. Offscreen, full `check`, full `testGui`, ArchUnit, formatting, checkstyle, rewrite, i18n, headless DRC, and routing smoke gates are green. The Phase 6 exit gate is not yet closed until compatibility overlay paint APIs are removed and the WIP-vs-v2.3.0 parity comparison is rerun.
+**Current checkpoint:** commits `06b3b688`, `7284615a`, `6b7e9ee1`, `4b4c936e`, `2b07f149`, `c51f16cd`, `253ab59d`, and `006835f4` landed independently. Offscreen, full `check`, full `testGui`, ArchUnit, formatting, checkstyle, rewrite, i18n, headless DRC, routing smoke, and the final WIP-vs-v2.3.0 parity gates are green. The renderer no longer depends on `Item.draw` / `drawLayer`; interactive overlays route through the same family strategies as normal board painting.
 
 **Exit gate:** full-DRC clearance delta **0** (D29); no completion regression vs **v2.3.0** (D24/D28); offscreen renderer smokes green.
 
@@ -433,7 +433,7 @@ initiative’s exit gates.
 4. Headless `BoardManager` split
 5. `RoutingJob` Swing removal + `getPrimarySession` / `setPrimarySession`
 6. Ratsnest/violations façade thinning + Phase 5 full parity vs **v2.3.0** ✅
-7. Board paint inversion as revertible commits + Phase 6 full parity vs **v2.3.0**
+7. Board paint inversion as revertible commits + Phase 6 full parity vs **v2.3.0** ✅
 8. Autorouter diagnostic inversion + cheap full-DRC **+ completion** smoke
 9. Flat move to `gui.interactive` (flatten command impls) + cheap full-DRC **+ completion** smoke
 10. Extract `gui.session` + session-owned facade/`InteractiveCommand`; views bootstrap (D27/D30)
@@ -530,12 +530,12 @@ These older items were marked FIXED before this initiative and are retained only
 | Freeze ID | Rule | Violation count (baseline) | Removal phase | Owner | Status |
 | --- | --- | --- | --- | --- | --- |
 | **F1** | pipeline/support → `javax.swing..` (ModuleBoundariesArchTest.pipelineMustNotDependOnSwing) | 16 (was 27; −11 Phase 4) | Phase 4 (datastructures.FileFilter; RoutingJob file chooser ✅) + Phase 12 (util.TextManager, io.specctra.parser.SessionToEagle) | GUI SoC initiative | frozen, green |
-| **F2** | pipeline/support → `java.awt..` excluding `java.awt.geom..` (ModuleBoundariesArchTest.pipelineMustNotDependOnAwtUiTypes) | 77 (was 93; −16 Phase 6) | Phase 4 (RoutingJob file chooser ✅) + Phase 6 (remaining board item paint APIs) + Phase 7 (autoroute diagnostics) + Phase 12 (util.TextManager fonts) | GUI SoC initiative | frozen, green |
-| **F3** | board/autoroute → `app.freerouting.boardgraphics..` (ModuleBoundariesArchTest.boardAndAutorouteMustNotDependOnBoardgraphics) | 132 (was 145; −13 Phase 6) | Phase 6 (remaining item-family paint APIs) + Phase 10 (rendering inversion → gui.rendering) | GUI SoC initiative | frozen, green |
+| **F2** | pipeline/support → `java.awt..` excluding `java.awt.geom..` (ModuleBoundariesArchTest.pipelineMustNotDependOnAwtUiTypes) | 36 (was 77; −41 final Phase 6) | Phase 4 (RoutingJob file chooser ✅) + Phase 6 (remaining board item paint APIs) + Phase 7 (autoroute diagnostics) + Phase 12 (util.TextManager fonts) | GUI SoC initiative | frozen, green |
+| **F3** | board/autoroute → `app.freerouting.boardgraphics..` (ModuleBoundariesArchTest.boardAndAutorouteMustNotDependOnBoardgraphics) | 75 (was 132; −57 final Phase 6) | Phase 6 (remaining item-family paint APIs) + Phase 10 (rendering inversion → gui.rendering) | GUI SoC initiative | frozen, green |
 
 > Added Phase 1 (2026-08-12). Frozen store: `src/test/resources/archunit_store/` (3 rule files + `stored.rules`);
-> `archunit.properties` keeps `allowStoreCreation=false` / `allowStoreUpdate=true`. Total frozen debt: **225**
-> violations (was 254; −29 after Phase 6 board traversal removal). Strict (non-frozen) rules added in the same change: **R4** `guiSlicesMustBeFreeOfCycles`
+> `archunit.properties` keeps `allowStoreCreation=false` / `allowStoreUpdate=true`. Total frozen debt: **111**
+> violations (was 225; −114 after final Phase 6 paint API removal). Strict (non-frozen) rules added in the same change: **R4** `guiSlicesMustBeFreeOfCycles`
 > (`allowEmptyShould(true)` — green until gui subpackages exist, must stay green after Phase 9) and **R5**
 > `pipelineMustNotDependOnGui` (green; closes the io/util gap). Baselines verified against the 2026-08-12 run
 > (`BUILD SUCCESSFUL in 38s`, gate = ModuleBoundariesArchTest + SpecctraPackageArchTest).
@@ -596,10 +596,12 @@ vs v2.3.0 on all comparable fixtures (D28/D29 gates satisfied at the Phase 0/1 b
 > fabrication-label traversal, and direct family strategies landed in six independently revertible
 > commits (`06b3b688`, `7284615a`, `6b7e9ee1`, `4b4c936e`, `2b07f149`, `c51f16cd`). `BasicBoard`
 > no longer owns board traversal or imports boardgraphics/AWT rendering types; the ArchUnit freeze
-> records dropped 29 violations (F2 93→77, F3 145→132). Full `check`, full `testGui`, ArchUnit,
-> quality gates, headless DRC, and routing smoke are green. Compatibility `Item.draw` / `drawLayer`
-> APIs remain only as a transitional path for interactive overlays; they must be migrated and
-> removed before the WIP-vs-v2.3.0 comparison closes the Phase 6 exit gate.
+> records dropped 143 violations through the final Phase 6 checkpoint (F2 93→36, F3 145→75).
+> Full `check`, full `testGui`, ArchUnit, quality gates, headless DRC, and routing smoke are green.
+> Interactive overlay callers now use `BoardRenderer`; the transitional `Item.draw` / `drawLayer`
+> APIs and family implementations are removed. The final WIP-vs-v2.3.0 comparison on
+> `Issue508-DAC2020_bm01.dsn` completed with 5 unrouted items in both builds; the current build
+> reported 0 clearance violations versus 2 for v2.3.0.
 
 > **Baseline decision (2026-08-12):** the **current build** (branch `soc-gui-separation-and-accessibility`)
 > is now the **authoritative routing baseline** for this initiative, superseding v2.3.0 as the parity
