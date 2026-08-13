@@ -20,6 +20,7 @@ flowchart TD
     subgraph interfaces ["User Interfaces"]
         direction LR
         GUI["**gui + interactive**\nSwing desktop"]
+        RENDER["**boardgraphics**\nGUI-owned board renderer"]
         API["**api.v1**\nREST / HTTP"]
         MCP["**api.mcp + api.v1.McpControllerV1**\nMCP JSON-RPC + SSE + WS"]
     end
@@ -49,6 +50,7 @@ flowchart TD
     GEO -. foundation .-> RULES
 
     GUI --> MGMT
+    GUI --> RENDER --> BOARD
     API --> MGMT
     MCP --> API
     MGMT <--> CORE
@@ -80,7 +82,7 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Routing decisions, fanout, maze search, or optimization | `app.freerouting.autoroute` |
 | Nets, vias, clearance classes, or board rules | `app.freerouting.rules` |
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
-| GUI windows, panels, menus, or drawing | `app.freerouting.gui` and `app.freerouting.interactive` |
+| GUI windows, panels, menus, or drawing | `app.freerouting.gui`, `app.freerouting.interactive`, and `app.freerouting.boardgraphics` |
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
 | MCP server protocol bridge | `app.freerouting.api.mcp` and `app.freerouting.api.v1.McpControllerV1` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
@@ -168,7 +170,9 @@ Diagnostics and debugging utilities.
 
 ### `app.freerouting.boardgraphics`
 
-Low-level board rendering helpers used by the GUI.
+GUI-owned board rendering: layer/virtual-layer ordering, viewport culling, draw-priority traversal,
+component fabrication labels, and dispatch to board-item paint strategies. `BoardRenderer` is the
+GUI rendering entry point; `BasicBoard` remains headless and no longer owns board traversal.
 
 ### Notable Nested Packages
 
@@ -262,6 +266,11 @@ The interactive editor is split between `gui` and `interactive`.
 - `interactive` contains the state machine and board-handling logic behind those components.
 
 When diagnosing user interaction, rendering, or editor state, begin here.
+
+The GUI rendering path is intentionally one-way: `GuiBoardManager` invokes `boardgraphics.BoardRenderer`,
+which reads the headless board model and paints the current view. Board traversal and presentation
+ordering do not belong in `BasicBoard`; remaining item-family paint APIs are compatibility boundaries
+being removed incrementally under the GUI separation plan.
 
 ### API and Headless Path
 
