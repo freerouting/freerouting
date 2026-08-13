@@ -73,3 +73,22 @@ The routed-board canvas is a custom-painted component (no per-item `AccessibleCo
 provided through **critical keyboard/menu alternatives** plus **inspect/item lists** (e.g. incompletes and
 violation lists) rather than per-pixel accessible objects. Canvas-level a11y is intentionally shallow and is
 expanded in Phase 11.
+
+## 6. Component-only production seams
+
+Major frame-owned surfaces expose reusable component seams so accessibility tests do not construct a
+`JFrame` or invoke window visibility:
+
+- `BoardMenuBar.createComponentOnly(...)` builds translated top-level menus, stable menu-item
+  locators, and keyboard accelerators while reporting actions through a callback.
+- `BoardToolbar.createComponentOnly(...)` builds mode/unit controls and toolbar actions without a
+  board session; `setComponentOnlyEnabled(...)` applies the production enablement convention.
+- `WindowVisibility.createComponentOnly(...)` builds the layer/object visibility settings content
+  and emits slider state changes without constructing the top-level visibility window.
+
+These seams are production components, not test fixtures. Tests may assert action callbacks and
+accessible state on them, but must not replace them with private-field reflection or coordinate
+driving.
+
+Every component-only GUI test must leave no displayable top-level windows or GUI/routing worker
+threads. `GuiA11yHarness.requireNoLeakedGuiResources()` provides the shared post-workflow check.

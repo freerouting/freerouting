@@ -415,11 +415,25 @@ draw priority.
 
 ### Phase 11 — Accessibility expansion + path-filtered CI
 
-- [ ] Expand coverage across major windows/menus (still component-only).
-- [ ] State-change tests: layer, mode, enablement, progress, visibility, violation state.
-- [ ] Keyboard/menu alternatives + inspect lists for critical canvas actions.
-- [ ] Switch CI path filters to final `gui/interactive|session|rendering` (+ remaining `gui/**` as needed).
-- [ ] Default `test` never requires display; `testGui` always headless; `testAll` includes `testGui`.
+- [x] Expand coverage across major menus and reusable settings content (still component-only):
+  `BoardMenuBar`, `BoardToolbar`, `WindowVisibility`, and inspect/list workflows.
+- [x] State-change tests cover layer, mode, enablement, visibility, and violation/list state.
+  Progress-control coverage remains deferred because the existing progress surface is window-owned.
+- [x] Keyboard/menu alternatives plus inspect lists cover critical canvas actions.
+- [x] Add path-filtered GUI CI for final `gui/**` paths (including `interactive`, `session`, and
+  `rendering`) plus GUI tests/resources and build configuration.
+- [x] Preserve D25: default `test` never requires a display; `testGui` is forced headless;
+  `testAll` includes `testGui`; `check` does not implicitly include `testGui`.
+
+**Implementation checkpoint (2026-08-13, focused increment):** `BoardMenuBar` now tags the real
+top-level menus and provides a frame-free translated menu factory with stable item locators and
+accelerators. `BoardToolbar` exposes a frame-free mode/unit/action factory and deterministic
+enablement seam, while `WindowVisibility` exposes reusable layer/object slider content. New
+component-only tests exercise EN + `hu` locator stability, keyboard/action paths, mode/unit
+changes, enablement, visibility/reset, EDT execution, and no leaked displayable windows or named
+GUI/routing threads. `.github/workflows/gui-a11y.yml` runs forced-headless `testGui` and the
+Hungarian parity check on GUI-related paths. Full progress controls and direct construction of
+legacy top-level windows remain deliberately deferred to a later focused increment.
 
 ### Phase 12 — Final cleanup
 

@@ -6,6 +6,8 @@ import app.freerouting.Freerouting;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.gui.a11y.A11y;
+import app.freerouting.gui.a11y.GuiLocators;
 import app.freerouting.gui.session.EditorStateHandle;
 import app.freerouting.gui.session.EditorStateKind;
 import app.freerouting.gui.session.InteractiveActionThread;
@@ -25,6 +27,8 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.function.Consumer;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -114,6 +118,11 @@ class BoardToolbar extends JPanel {
       modeSelectionPanel =
           new SegmentedButtons(tm, tm.getText("mode_heading"), "route_button", "drag_button");
     }
+    A11y.tag(modeSelectionPanel, GuiLocators.TOOLBAR_MODE_SELECT);
+    A11y.describe(modeSelectionPanel, tm.getText("mode_heading"), null);
+    tagSegmentButton(modeSelectionPanel, "inspect_button", GuiLocators.TOOLBAR_MODE_INSPECT, null);
+    tagSegmentButton(modeSelectionPanel, "route_button", GuiLocators.TOOLBAR_MODE_ROUTE, null);
+    tagSegmentButton(modeSelectionPanel, "drag_button", GuiLocators.TOOLBAR_MODE_DRAG, null);
     modeSelectionPanel.addValueChangedEventListener(
         (String value) -> {
           switch (value) {
@@ -143,6 +152,7 @@ class BoardToolbar extends JPanel {
     // Add "Settings" button to the toolbar
     settingsButton = new JButton();
     tm.setText(settingsButton, "settingsButton");
+    tagToolbarButton(settingsButton, GuiLocators.TOOLBAR_SETTINGS);
     settingsButton.addActionListener(_ -> boardFrame.autorouteParameterWindow.setVisible(true));
     settingsButton.addActionListener(
         _ -> FRAnalytics.buttonClicked("settingsButton", settingsButton.getText()));
@@ -151,6 +161,7 @@ class BoardToolbar extends JPanel {
     // Add "Autoroute" button to the toolbar
     toolbarAutorouteButton = new JButton();
     tm.setText(toolbarAutorouteButton, "autoroute_button");
+    tagToolbarButton(toolbarAutorouteButton, GuiLocators.TOOLBAR_AUTOROUTE);
     toolbarAutorouteButton.setDefaultCapable(true);
     Font currentFont = toolbarAutorouteButton.getFont();
     Font boldFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
@@ -234,6 +245,7 @@ class BoardToolbar extends JPanel {
     // Add "Cancel" button to the toolbar
     cancelButton = new JButton();
     tm.setText(cancelButton, "cancelButton");
+    tagToolbarButton(cancelButton, GuiLocators.TOOLBAR_CANCEL);
     cancelButton.addActionListener(
         _ -> boardFrame.boardPanel.boardHandling.stopAutorouterAndRouteOptimizer());
     cancelButton.addActionListener(
@@ -244,6 +256,7 @@ class BoardToolbar extends JPanel {
     // Add "Delete All Tracks and Vias" button to the toolbar
     deleteAllTracksButton = new JButton();
     tm.setText(deleteAllTracksButton, "deleteAllTracksButton");
+    tagToolbarButton(deleteAllTracksButton, GuiLocators.TOOLBAR_DELETE_TRACKS);
     deleteAllTracksButton.addActionListener(
         _ -> {
           RoutingBoard board = boardFrame.boardPanel.boardHandling.getRoutingBoard();
@@ -280,6 +293,7 @@ class BoardToolbar extends JPanel {
 
     toolbarUndoButton = new JButton();
     tm.setText(toolbarUndoButton, "undo_button");
+    tagToolbarButton(toolbarUndoButton, GuiLocators.TOOLBAR_UNDO);
     toolbarUndoButton.addActionListener(
         _ -> {
           boardFrame.boardPanel.boardHandling.cancelState();
@@ -293,6 +307,7 @@ class BoardToolbar extends JPanel {
 
     toolbarRedoButton = new JButton();
     tm.setText(toolbarRedoButton, "redo_button");
+    tagToolbarButton(toolbarRedoButton, GuiLocators.TOOLBAR_REDO);
     toolbarRedoButton.addActionListener(_ -> boardFrame.boardPanel.boardHandling.redo());
     toolbarRedoButton.addActionListener(
         _ -> FRAnalytics.buttonClicked("toolbarRedoButton", toolbarRedoButton.getText()));
@@ -306,6 +321,7 @@ class BoardToolbar extends JPanel {
 
     toolbarIncompletesButton = new JButton();
     tm.setText(toolbarIncompletesButton, "incompletes_button");
+    tagToolbarButton(toolbarIncompletesButton, GuiLocators.TOOLBAR_INCOMPLETES);
     toolbarIncompletesButton.addActionListener(
         _ -> boardFrame.boardPanel.boardHandling.toggleRatsnest());
     toolbarIncompletesButton.addActionListener(
@@ -317,6 +333,7 @@ class BoardToolbar extends JPanel {
 
     toolbarViolationButton = new JButton();
     tm.setText(toolbarViolationButton, "violations_button");
+    tagToolbarButton(toolbarViolationButton, GuiLocators.TOOLBAR_VIOLATIONS);
     toolbarViolationButton.addActionListener(
         _ -> boardFrame.boardPanel.boardHandling.toggleClearanceViolations());
     toolbarViolationButton.addActionListener(
@@ -332,6 +349,7 @@ class BoardToolbar extends JPanel {
 
     toolbarDisplayRegionButton = new JButton();
     tm.setText(toolbarDisplayRegionButton, "display_region_button");
+    tagToolbarButton(toolbarDisplayRegionButton, GuiLocators.TOOLBAR_DISPLAY_REGION);
     toolbarDisplayRegionButton.addActionListener(
         _ -> boardFrame.boardPanel.boardHandling.zoomRegion());
     toolbarDisplayRegionButton.addActionListener(
@@ -342,6 +360,7 @@ class BoardToolbar extends JPanel {
 
     toolbarDisplayAllButton = new JButton();
     tm.setText(toolbarDisplayAllButton, "display_all_button");
+    tagToolbarButton(toolbarDisplayAllButton, GuiLocators.TOOLBAR_DISPLAY_ALL);
     toolbarDisplayAllButton.addActionListener(_ -> boardFrame.zoomAll());
     toolbarDisplayAllButton.addActionListener(
         _ ->
@@ -422,6 +441,12 @@ class BoardToolbar extends JPanel {
     unitSelectionPanel =
         new SegmentedButtons(
             tm, tm.getText("unit_heading"), "unit_mil", "unit_inch", "unit_mm", "unit_um");
+    A11y.tag(unitSelectionPanel, GuiLocators.TOOLBAR_UNIT_SELECT);
+    A11y.describe(unitSelectionPanel, tm.getText("unit_heading"), null);
+    tagSegmentButton(unitSelectionPanel, "unit_mil", GuiLocators.TOOLBAR_UNIT_MIL, tm);
+    tagSegmentButton(unitSelectionPanel, "unit_inch", GuiLocators.TOOLBAR_UNIT_INCH, tm);
+    tagSegmentButton(unitSelectionPanel, "unit_mm", GuiLocators.TOOLBAR_UNIT_MM, tm);
+    tagSegmentButton(unitSelectionPanel, "unit_um", GuiLocators.TOOLBAR_UNIT_UM, tm);
     unitSelectionPanel.addValueChangedEventListener(
         (String value) -> {
           switch (value) {
@@ -465,6 +490,152 @@ class BoardToolbar extends JPanel {
                 cancelButton.setEnabled(isBoardReadOnly);
               });
         });
+  }
+
+  /**
+   * Builds a component-only toolbar model for accessibility tests and headless embedders.
+   *
+   * <p>No board, frame, scheduler, or window is touched. Actions report their stable locator (or
+   * segmented-button value) to the supplied listener, which makes keyboard/action paths observable
+   * without coupling a test to GUI session state.
+   *
+   * @param locale locale for translated names and descriptions
+   * @param includeInspectMode whether the Inspect mode button is included
+   * @param actionListener receives the locator or value of an invoked control
+   * @return a reusable toolbar component
+   */
+  static JPanel createComponentOnly(
+      Locale locale, boolean includeInspectMode, Consumer<String> actionListener) {
+    final Consumer<String> listener = actionListener == null ? _ -> {} : actionListener;
+    TextManager tm = new TextManager(BoardToolbar.class, locale);
+    JPanel toolbar = new JPanel(new BorderLayout());
+    A11y.tag(toolbar, GuiLocators.TOOLBAR_ROOT);
+    A11y.describe(toolbar, tm.getText("toolbar_accessible_name"), null);
+
+    String[] modeValues =
+        includeInspectMode
+            ? new String[] {"inspect_button", "route_button", "drag_button"}
+            : new String[] {"route_button", "drag_button"};
+    SegmentedButtons mode = new SegmentedButtons(tm, tm.getText("mode_heading"), modeValues);
+    A11y.tag(mode, GuiLocators.TOOLBAR_MODE_SELECT);
+    A11y.describe(mode, tm.getText("mode_heading"), null);
+    tagSegmentButton(mode, "inspect_button", GuiLocators.TOOLBAR_MODE_INSPECT, tm);
+    tagSegmentButton(mode, "route_button", GuiLocators.TOOLBAR_MODE_ROUTE, tm);
+    tagSegmentButton(mode, "drag_button", GuiLocators.TOOLBAR_MODE_DRAG, tm);
+    mode.addValueChangedEventListener(listener);
+
+    JPanel west = new JPanel();
+    west.add(mode);
+    toolbar.add(west, BorderLayout.WEST);
+
+    JPanel center = new JPanel();
+    addComponentOnlyButton(center, tm, "settingsButton", GuiLocators.TOOLBAR_SETTINGS, listener);
+    addComponentOnlyButton(center, tm, "autoroute_button", GuiLocators.TOOLBAR_AUTOROUTE, listener);
+    addComponentOnlyButton(center, tm, "cancelButton", GuiLocators.TOOLBAR_CANCEL, listener);
+    addComponentOnlyButton(center, tm, "undo_button", GuiLocators.TOOLBAR_UNDO, listener);
+    addComponentOnlyButton(center, tm, "redo_button", GuiLocators.TOOLBAR_REDO, listener);
+    addComponentOnlyButton(
+        center, tm, "incompletes_button", GuiLocators.TOOLBAR_INCOMPLETES, listener);
+    addComponentOnlyButton(
+        center, tm, "violations_button", GuiLocators.TOOLBAR_VIOLATIONS, listener);
+    addComponentOnlyButton(
+        center, tm, "display_region_button", GuiLocators.TOOLBAR_DISPLAY_REGION, listener);
+    addComponentOnlyButton(
+        center, tm, "display_all_button", GuiLocators.TOOLBAR_DISPLAY_ALL, listener);
+    addComponentOnlyButton(
+        center, tm, "delete_all_tracks_button", GuiLocators.TOOLBAR_DELETE_TRACKS, listener);
+    toolbar.add(center, BorderLayout.CENTER);
+
+    String[] unitValues = {"unit_mil", "unit_inch", "unit_mm", "unit_um"};
+    SegmentedButtons units = new SegmentedButtons(tm, tm.getText("unit_heading"), unitValues);
+    A11y.tag(units, GuiLocators.TOOLBAR_UNIT_SELECT);
+    A11y.describe(units, tm.getText("unit_heading"), null);
+    tagSegmentButton(units, "unit_mil", GuiLocators.TOOLBAR_UNIT_MIL, tm);
+    tagSegmentButton(units, "unit_inch", GuiLocators.TOOLBAR_UNIT_INCH, tm);
+    tagSegmentButton(units, "unit_mm", GuiLocators.TOOLBAR_UNIT_MM, tm);
+    tagSegmentButton(units, "unit_um", GuiLocators.TOOLBAR_UNIT_UM, tm);
+    units.addValueChangedEventListener(listener);
+    JPanel east = new JPanel();
+    east.add(units);
+    toolbar.add(east, BorderLayout.EAST);
+    return toolbar;
+  }
+
+  /**
+   * Applies board-style enablement to every control in a component-only toolbar.
+   *
+   * <p>The cancel action follows the production toolbar convention and is enabled while the regular
+   * controls are disabled.
+   */
+  static void setComponentOnlyEnabled(Container toolbar, boolean enabled) {
+    String[] locators = {
+      GuiLocators.TOOLBAR_MODE_SELECT,
+      GuiLocators.TOOLBAR_MODE_INSPECT,
+      GuiLocators.TOOLBAR_MODE_ROUTE,
+      GuiLocators.TOOLBAR_MODE_DRAG,
+      GuiLocators.TOOLBAR_UNIT_SELECT,
+      GuiLocators.TOOLBAR_UNIT_MIL,
+      GuiLocators.TOOLBAR_UNIT_INCH,
+      GuiLocators.TOOLBAR_UNIT_MM,
+      GuiLocators.TOOLBAR_UNIT_UM,
+      GuiLocators.TOOLBAR_SETTINGS,
+      GuiLocators.TOOLBAR_AUTOROUTE,
+      GuiLocators.TOOLBAR_CANCEL,
+      GuiLocators.TOOLBAR_UNDO,
+      GuiLocators.TOOLBAR_REDO,
+      GuiLocators.TOOLBAR_INCOMPLETES,
+      GuiLocators.TOOLBAR_VIOLATIONS,
+      GuiLocators.TOOLBAR_DISPLAY_REGION,
+      GuiLocators.TOOLBAR_DISPLAY_ALL,
+      GuiLocators.TOOLBAR_DELETE_TRACKS
+    };
+    for (String locator : locators) {
+      Component component = A11y.findByLocator(toolbar, locator);
+      if (component != null) {
+        component.setEnabled(locator.equals(GuiLocators.TOOLBAR_CANCEL) ? !enabled : enabled);
+      }
+    }
+  }
+
+  private static void addComponentOnlyButton(
+      Container parent, TextManager tm, String textKey, String locator, Consumer<String> listener) {
+    JButton button = new JButton(tm.getText(textKey));
+    String tooltip = tm.getText(textKey + "_tooltip");
+    if (tooltip != null && !tooltip.isBlank() && !tooltip.equals("!" + textKey + "_tooltip!")) {
+      button.setToolTipText(tooltip);
+    }
+    A11y.tag(button, locator);
+    A11y.describe(
+        button,
+        button.getToolTipText() == null ? button.getText() : button.getToolTipText(),
+        button.getToolTipText());
+    button.addActionListener(_ -> listener.accept(locator));
+    parent.add(button);
+  }
+
+  private static void tagSegmentButton(
+      SegmentedButtons panel, String value, String locator, TextManager tm) {
+    var button = panel.getButtonForValue(value);
+    if (button == null) {
+      return;
+    }
+    String tooltip = tm == null ? button.getToolTipText() : tm.getText(value + "_tooltip");
+    A11y.tag(button, locator);
+    A11y.describe(
+        button,
+        tooltip == null || tooltip.isBlank() || tooltip.equals("!" + value + "_tooltip!")
+            ? button.getText()
+            : tooltip,
+        tooltip);
+  }
+
+  private static void tagToolbarButton(JButton button, String locator) {
+    A11y.tag(button, locator);
+    String accessibleName =
+        button.getToolTipText() == null || button.getToolTipText().isBlank()
+            ? button.getText()
+            : button.getToolTipText();
+    A11y.describe(button, accessibleName, button.getToolTipText());
   }
 
   private static void changeToolbarFontSize(JToolBar toolBar, float newSize) {

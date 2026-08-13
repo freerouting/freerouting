@@ -137,7 +137,10 @@ Planar geometry primitives and helper classes used throughout routing and board 
 
 ### `app.freerouting.gui`
 
-The Swing user interface: frames, dialogs, menus, panels, and rendering support.
+The Swing user interface: frames, dialogs, menus, panels, and rendering support. Accessibility
+coverage uses the frame-free component seams in `BoardMenuBar`, `BoardToolbar`, and
+`WindowVisibility`; these keep menu, toolbar, and settings workflows testable under forced
+headless mode without creating top-level windows.
 
 ### `app.freerouting.gui.interactive`
 
@@ -314,6 +317,9 @@ Tests follow the production layout where practical.
 - `src/test/java/app/freerouting/fixtures/` contains real-board regression tests that load DSN fixtures from `fixtures/`.
 - `src/test/java/app/freerouting/board/` contains focused tests for board helpers and board-item behavior.
 - Package-specific test directories such as `src/test/java/app/freerouting/gui/interactive/` contain unit tests for that package.
+- Component-only accessibility tests are tagged `@Tag("gui")` and run through `testGui`; the
+  path-filtered `.github/workflows/gui-a11y.yml` invokes that task when GUI production, tests,
+  resources, or GUI-test configuration changes.
 
 For routing regressions, fixture tests are usually the most informative starting point because they exercise file loading, routing, and scoring together.
 

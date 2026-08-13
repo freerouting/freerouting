@@ -3,6 +3,7 @@ package app.freerouting.gui.a11y;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
+import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -161,6 +162,23 @@ public final class GuiA11yHarness {
     }
   }
 
+  /** Asserts the component is not in the ENABLED accessible state. */
+  public static void requireDisabled(Component c, String locator) {
+    AccessibleContext ac = requireAccessibleContext(c, locator);
+    AccessibleStateSet states = ac.getAccessibleStateSet();
+    if (states.contains(AccessibleState.ENABLED)) {
+      throw new AssertionError(
+          "Component at "
+              + pathOf(c)
+              + " (locator '"
+              + locator
+              + "', role "
+              + ac.getAccessibleRole()
+              + ") is expected to be DISABLED but its state set is "
+              + states);
+    }
+  }
+
   /** Asserts the component has an AccessibleContext at all. */
   public static AccessibleContext requireAccessibleContext(Component c, String locator) {
     AccessibleContext ac = c.getAccessibleContext();
@@ -244,6 +262,30 @@ public final class GuiA11yHarness {
               + " (locator '"
               + locator
               + "') was refused or absent");
+    }
+  }
+
+  /**
+   * Verifies that component-only workflows did not create displayable windows or named GUI worker
+   * threads. The AWT event-dispatch thread and ordinary JDK daemon threads are expected.
+   */
+  public static void requireNoLeakedGuiResources() {
+    for (Window window : Window.getWindows()) {
+      if (window.isDisplayable()) {
+        throw new AssertionError(
+            "Component-only workflow leaked a displayable top-level window: "
+                + window.getClass().getName());
+      }
+    }
+    for (Thread thread : Thread.getAllStackTraces().keySet()) {
+      String name = thread.getName().toLowerCase();
+      if (thread.isAlive()
+          && (name.startsWith("gui-")
+              || name.startsWith("plane-fill")
+              || name.startsWith("routing-job"))) {
+        throw new AssertionError(
+            "Component-only workflow leaked a GUI/routing worker thread: " + thread.getName());
+      }
     }
   }
 

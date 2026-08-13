@@ -40,19 +40,78 @@ public final class GuiLocators {
   public static final String STATUS_UNIT = "status.unit";
 
   // ---- Toolbar ----
+  /** Root panel for the component-only toolbar seam. */
+  public static final String TOOLBAR_ROOT = "toolbar.root";
+
   /** Layer-selection combo box. */
   public static final String TOOLBAR_LAYER_SELECT = "toolbar.layer.select";
 
+  /** Mode-selection segmented button group. */
+  public static final String TOOLBAR_MODE_SELECT = "toolbar.mode.select";
+
+  /** Individual mode buttons. */
+  public static final String TOOLBAR_MODE_INSPECT = "toolbar.mode.inspect";
+
+  public static final String TOOLBAR_MODE_ROUTE = "toolbar.mode.route";
+  public static final String TOOLBAR_MODE_DRAG = "toolbar.mode.drag";
+
+  /** Unit-selection segmented button group. */
+  public static final String TOOLBAR_UNIT_SELECT = "toolbar.unit.select";
+
+  /** Individual unit buttons. */
+  public static final String TOOLBAR_UNIT_MIL = "toolbar.unit.mil";
+
+  public static final String TOOLBAR_UNIT_INCH = "toolbar.unit.inch";
+  public static final String TOOLBAR_UNIT_MM = "toolbar.unit.mm";
+  public static final String TOOLBAR_UNIT_UM = "toolbar.unit.um";
+
+  /** Common toolbar actions. */
+  public static final String TOOLBAR_SETTINGS = "toolbar.settings";
+
+  public static final String TOOLBAR_AUTOROUTE = "toolbar.autoroute";
+  public static final String TOOLBAR_CANCEL = "toolbar.cancel";
+  public static final String TOOLBAR_UNDO = "toolbar.undo";
+  public static final String TOOLBAR_REDO = "toolbar.redo";
+  public static final String TOOLBAR_INCOMPLETES = "toolbar.incompletes";
+  public static final String TOOLBAR_VIOLATIONS = "toolbar.violations";
+  public static final String TOOLBAR_DISPLAY_REGION = "toolbar.display.region";
+  public static final String TOOLBAR_DISPLAY_ALL = "toolbar.display.all";
+  public static final String TOOLBAR_DELETE_TRACKS = "toolbar.delete_tracks";
+
   // ---- Menus (wired in Phase 2 part B; declared now for a complete registry) ----
+  public static final String MENU_BAR = "menu.bar";
   public static final String MENU_FILE = "menu.file";
   public static final String MENU_FILE_OPEN = "menu.file.open";
   public static final String MENU_FILE_SAVE_AS = "menu.file.save_as";
   public static final String MENU_FILE_EXIT = "menu.file.exit";
   public static final String MENU_DISPLAY = "menu.display";
+  public static final String MENU_DISPLAY_VISIBILITY = "menu.display.visibility";
+  public static final String MENU_DISPLAY_COLORS = "menu.display.colors";
+  public static final String MENU_DISPLAY_MISCELLANEOUS = "menu.display.miscellaneous";
   public static final String MENU_PARAMETER = "menu.parameter";
+  public static final String MENU_PARAMETER_SELECT = "menu.parameter.select";
+  public static final String MENU_PARAMETER_ROUTE = "menu.parameter.route";
+  public static final String MENU_PARAMETER_AUTOROUTE = "menu.parameter.autoroute";
+  public static final String MENU_PARAMETER_MOVE = "menu.parameter.move";
   public static final String MENU_RULES = "menu.rules";
+  public static final String MENU_RULES_CLEARANCE_MATRIX = "menu.rules.clearance_matrix";
+  public static final String MENU_RULES_VIAS = "menu.rules.vias";
+  public static final String MENU_RULES_NETS = "menu.rules.nets";
+  public static final String MENU_RULES_NET_CLASSES = "menu.rules.net_classes";
   public static final String MENU_INFO = "menu.info";
+  public static final String MENU_INFO_INCOMPLETES = "menu.info.incompletes";
+  public static final String MENU_INFO_CLEARANCE_VIOLATIONS = "menu.info.clearance_violations";
+  public static final String MENU_OTHER = "menu.other";
   public static final String MENU_HELP = "menu.help";
+  public static final String MENU_HELP_ABOUT = "menu.help.about";
+  public static final String MENU_PROFILE = "menu.profile";
+
+  /** Component-only display/settings panel. */
+  public static final String DISPLAY_SETTINGS = "display.settings";
+
+  public static final String DISPLAY_LAYER_VISIBILITY = "display.layer.visibility";
+  public static final String DISPLAY_OBJECT_VISIBILITY = "display.object.visibility";
+  public static final String DISPLAY_RESET = "display.reset";
 
   // ---- Inspect / list windows (Phase 5): ratsnest (incompletes) + violations lists ----
   /** Clearance-violations list (WindowClearanceViolations). */

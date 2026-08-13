@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.gui.a11y.A11y;
 import app.freerouting.util.TextManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -50,6 +51,7 @@ public class SegmentedButtons extends JPanel {
 
     // Set an empty border as a margin around the component
     setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+    A11y.describe(this, heading, null);
 
     // Put the heading above the buttons, centered horizontally
     JLabel headingLabel =
@@ -214,6 +216,24 @@ public class SegmentedButtons extends JPanel {
   /** Returns the value currently selected by the user. */
   public String getSelectedValue() {
     return selectedValue;
+  }
+
+  /**
+   * Returns the toggle button associated with {@code value}.
+   *
+   * <p>The method is intentionally exposed so component factories can attach stable accessibility
+   * locators to the individual keyboard-operable controls without using private-field reflection.
+   *
+   * @param value the programmatic value supplied to the constructor
+   * @return the matching button, or {@code null} when no such value exists
+   */
+  public JToggleButton getButtonForValue(String value) {
+    for (Map.Entry<JToggleButton, String> entry : buttonValues.entrySet()) {
+      if (entry.getValue().equals(value)) {
+        return entry.getKey();
+      }
+    }
+    return null;
   }
 
   /**

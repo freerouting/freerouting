@@ -22,7 +22,7 @@
 | **8** | Move interactive → gui.interactive | **COMPLETE** | Flat production/test move, command flattening, i18n/resource FQCN migration, ArchUnit/docs rewiring, and cheap full-DRC/completion smoke are green |
 | **9** | Extract gui.session | **COMPLETE** | Session cluster and opaque state seam landed; strict session boundary and full gates are green |
 | **10** | Move former boardgraphics → gui.rendering | **COMPLETE** | Rendering tree, `ScreenTransform`, board paint inversion cleanup, i18n/resources, and strict F3 boundary are green |
-| **11** | A11y expansion + CI | Not started | |
+| **11** | A11y expansion + CI | **IN PROGRESS — focused increment** | Menu/toolbar/settings component seams, EN+hu state/action coverage, leak checks, and path-filtered GUI workflow landed; progress controls and legacy top-level window construction remain deferred |
 | **12** | Final cleanup + docs | Not started | |
 
 ## 2. Long-lived branch checkpoints (§8)
@@ -40,7 +40,7 @@
 | 9 | Flat move to `gui.interactive` + cheap DRC+completion smoke | ✅ done (Phase 8) — session cluster temporarily parked in `gui.interactive`; no `.frb` compatibility shim |
 | 10 | Extract `gui.session` + facade/`InteractiveCommand`; views bootstrap | ✅ done (Phase 9) — strict session boundary and GUI bootstrap are green |
 | 11 | Move to `gui.rendering` + `ScreenTransform` | ✅ done (Phase 10) — rendering tree/resources/tests moved; `ScreenTransform` renamed; F3 promoted to strict zero |
-| 12 | A11y expansion, final CI filters, docs, AGENTS.md D24, strict ArchUnit | pending (Phases 11–12) |
+| 12 | A11y expansion, final CI filters, docs, AGENTS.md D24, strict ArchUnit | ✅ focused Phase 11 increment landed; final Phase 11 breadth and Phase 12 remain |
 
 ## 3. Phase 0 — Baseline (execution record)
 
@@ -118,11 +118,13 @@
 | 2026-08-13 | Phase 9 gates: full `check`, forced-headless `testGui`, targeted session/interactive tests, Specctra package ArchUnit, strict session-boundary/slice ArchUnit, Spotless, Checkstyle, rewrite, and `extract-context.py --check` ✓. No production `gui.session → gui.interactive` imports remain. **Phase 9 COMPLETE.** |
 | 2026-08-13 | Phase 10: moved the former boardgraphics production/test/resource tree to `gui.rendering`; renamed only the graphics `CoordinateTransform` to `ScreenTransform`; preserved `board.CoordinateTransform` and `io.CoordinateTransform`; updated i18n context/parity aliases and documentation. |
 | 2026-08-13 | Phase 10 rendering inversion cleanup: removed `Drawable` plus board-model draw priority/color/intensity APIs and the unused conduction-area rendering transform cache field; `BoardRenderer` now owns `BoardItemType`/item-family dispatch for normal and overlay rendering. F3 was promoted from frozen to strict zero-dependency. |
+| 2026-08-13 | Phase 11 focused increment: tagged real `BoardMenuBar` top-level menus; added frame-free menu, toolbar, and visibility-settings component seams with stable locators and translated accessible names; added EN+hu action/state/leak coverage and expanded Hungarian bundle ownership. |
+| 2026-08-13 | Phase 11 CI: added path-filtered `.github/workflows/gui-a11y.yml` for final GUI paths plus legacy interactive paths, running forced-headless `testGui` and Hungarian resource parity. D25 task graph remains unchanged; progress controls and direct top-level-window coverage are deferred. |
 
 ## 6. Next actions
 
 1. **Phase 10 COMPLETE** — rendering moved to `gui.rendering`, `ScreenTransform` introduced, board-model paint APIs removed, strict F3 is green, and final verification is recorded below.
-2. **Phase 11** — expand accessibility workflows and CI filters.
+2. **Phase 11** — finish deferred progress-control and legacy-window content coverage in a later focused increment.
 3. **Phase 12** — complete final cleanup, documentation, AGENTS.md D24 sign-off, and strict ArchUnit promotion review.
 
 ## 7. Artifacts
