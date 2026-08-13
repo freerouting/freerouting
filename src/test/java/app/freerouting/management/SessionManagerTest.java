@@ -9,11 +9,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
 import app.freerouting.core.Session;
+import app.freerouting.settings.GlobalSettings;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /** SessionManagerTest. */
 public class SessionManagerTest {
+
+  @BeforeEach
+  void setUpGlobalSettings() {
+    Freerouting.globalSettings = new GlobalSettings();
+  }
 
   @Test
   void testGetInstance() {

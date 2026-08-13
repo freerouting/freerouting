@@ -256,7 +256,9 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 - [x] Record branch / working tree / HEAD.
 - [x] Run ArchUnit + `test` + quick routing fixture; capture results.
 - [x] Inventory class counts: `gui`, `interactive`, `boardgraphics`.
-- [x] **DSN fixture coverage map:** filename → owning test(s) → sole-coverage-for-a-path? (There are **no `.frb` fixtures** in the repo.)
+- [x] **DSN fixture coverage map:** filename → owning test(s) → sole-coverage-for-a-path? (There are
+  **no `.frb` fixtures** in the repo.) The finalized 147-file inventory is tracked in
+  [`soc-gui-separation-dsn-fixture-coverage.md`](soc-gui-separation-dsn-fixture-coverage.md).
 - [x] **Capture stable v2.3.0 golden metrics** on the agreed fixture matrix (completion / unrouted-net count, full-DRC violation count via `DesignRulesChecker.getAllClearanceViolations()`, SES sanity). Record numbers in branch notes and **§12.6**.
 - [x] Snapshot known leaks (board/autoroute paint, `RoutingJob` Swing, `BoardManager` GUI API, `SessionManager` GUI naming, `GuiBoardManager`→`GraphicsContext` / `InteractiveState`).
 - [x] Start AGENTS.md baseline-policy draft update toward D24 (land fully by Phase 12 at latest; prefer with Phase 0/1).
@@ -381,8 +383,8 @@ forced-headless GUI tests, i18n checks, Spotless, Checkstyle, and rewrite checks
 - [x] Temporary §12 freeze on `gui.session → gui.interactive` only while facade lands; **removed at phase exit**; `gui.**` slice-cycle check green.
 - [x] Ports for load / route start-stop / progress / board replace / settings.
 - [x] Eliminate inventoried worker→Swing call sites; EDT-only Swing mutation.
-- [ ] Confirm `getPrimarySession` / `setPrimarySession` callers remain correct (still management API).
-- [ ] A11y workflows still pass component-only under forced headless.
+- [x] Confirm `getPrimarySession` / `setPrimarySession` callers remain correct (still management API).
+- [x] A11y workflows still pass component-only under forced headless.
 
 **Implementation checkpoint (2026-08-13):** The session cluster now lives in `gui.session`, including the
 manager, settings, messages, action threads, session contract, and manager-owned ratsnest/clearance
@@ -398,10 +400,11 @@ immutable events through `GuiSessionPort`; the adapter schedules all presentatio
 and terminal cleanup—not a stop request—restores editability. `ScreenMessages` rejects off-EDT
 mutation, while board loading requests stop before replacement and ignores stale parse/paint
 completions. Focused session-port and worker-boundary ArchUnit tests, the required Spotless,
-Checkstyle, rewrite, i18n, and whitespace gates, forced-headless `testGui`, and targeted routing
-smoke are green. A concurrent full-`check` attempt hit the existing 30-second
-`Dac2020Bm01RoutingTest` fixture timeout; the focused routing test passed. The separate Phase 11
-progress-window accessibility increment remains deferred.
+Checkstyle, rewrite, i18n, and whitespace gates, forced-headless `testGui`, targeted routing
+smoke, and the full `check` task are green. A deterministic `GlobalSettings` setup was added to
+`SessionManagerTest`; its primary-session coverage confirms that `getPrimarySession` and
+`setPrimarySession` remain management APIs used only by `GuiManager`, `BoardFrame`, and
+`BoardToolbar`. The separate Phase 11 progress-window accessibility increment remains deferred.
 
 ### Phase 10 — Move to `gui.rendering`
 

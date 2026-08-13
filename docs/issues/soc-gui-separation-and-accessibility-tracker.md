@@ -53,7 +53,7 @@
   - `Dac2020Bm01RoutingTest` — PASS
   - **Full default `test` (fast) suite — `BUILD SUCCESSFUL in 2m 36s`, 0 failures** (result XMLs at 11:54)
 - [x] Class counts: `gui`=69, `interactive`=37, `gui.rendering`=10 → **116** (matches plan estimate)
-- [x] DSN fixture inventory: `fixtures/` has **139 files**; `getRoutingJob()` coverage map drafted (partial — see notes)
+- [x] DSN fixture inventory: `fixtures/` has **147 `.dsn` files**; complete filename → Java test path map in [`soc-gui-separation-dsn-fixture-coverage.md`](soc-gui-separation-dsn-fixture-coverage.md)
 - [x] Known-leak snapshot recorded (RoutingJob Swing; board/autoroute paint; gui.rendering Drawable/GraphicsContext; `SessionManager.getGuiSession`; `BoardManager.getInteractiveSettings()` null contract; GuiBoardManager→GraphicsContext D26)
 - [x] Branch notes: `logs/phase0/branch-notes.md` (git-ignored)
 - [x] §12.6 populated with v2.3.0 golden metrics (2026-08-12 benchmark run; current ≡ v2.3.0; bm01 DRC improved; CM5_MINIMA_3 timeout both)
@@ -62,7 +62,7 @@
 
 - [x] **v2.3.0 golden metrics** captured into §12.6 (2026-08-12 benchmark; current ≡ v2.3.0 on 19/19 comparable fixtures)
 - [ ] AGENTS.md D24 draft → **awaiting user sign-off** (proposal in branch notes; do NOT edit AGENTS.md without approval)
-- [ ] (Phase 1) Full DSN sole-coverage-for-a-path analysis finalization
+- [x] (Phase 1) Full DSN sole-coverage-for-a-path analysis finalization → [`soc-gui-separation-dsn-fixture-coverage.md`](soc-gui-separation-dsn-fixture-coverage.md)
 
 ## 4. Open decisions / staffing notes
 
@@ -122,6 +122,8 @@
 | 2026-08-13 | Phase 11 CI: added path-filtered `.github/workflows/gui-a11y.yml` for final GUI paths plus legacy interactive paths, running forced-headless `testGui` and Hungarian resource parity. D25 task graph remains unchanged; progress controls and direct top-level-window coverage are deferred. |
 | 2026-08-13 | Phase 9 follow-up: added session-owned load, route-control, progress, replacement, and detached-settings ports with load/run generations; routed worker presentation and terminal cleanup through the EDT adapter; added off-EDT `ScreenMessages` protection and worker-boundary ArchUnit coverage. Compile, focused session/architecture tests, quality gates, i18n, and whitespace checks are green. A concurrent full-`check` attempt hit the existing 30-second `Dac2020Bm01RoutingTest` fixture timeout; the focused routing test passed. |
 | 2026-08-13 | Phase 11 component increment: added reusable `ProgressPanel`/`ProgressSnapshot`/`ProgressLabels` seams with EDT-marshalled determinate/indeterminate progress, counters, cancellation, stable locators, and EN+hu tests; extracted frame-free `WindowMessage` content with locator coverage. Full progress-window integration and direct top-level window construction remain deferred. |
+| 2026-08-13 | Phase 9 final verification: confirmed all `getPrimarySession`/`setPrimarySession` production callers remain in GUI code (`GuiManager`, `BoardFrame`, `BoardToolbar`), made `SessionManagerTest` deterministic with explicit `GlobalSettings` setup, and passed the targeted test, forced-headless `testGui` (22/22), quality gates, i18n check, and full `check` (439 tests, 0 failures). |
+| 2026-08-13 | Phase 0/1 DSN coverage finalization: inventory updated to 147 fixture files; complete active/disabled/sole/unreferenced map recorded in [`soc-gui-separation-dsn-fixture-coverage.md`](soc-gui-separation-dsn-fixture-coverage.md). |
 
 ## 6. Next actions
 
