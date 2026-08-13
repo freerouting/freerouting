@@ -70,7 +70,7 @@ flowchart TD
 | `docs/` | User documentation, developer notes, issue analyses, and design references. |
 | `integrations/` | Packaging and integration assets for external PCB tool workflows. |
 | `scripts/` | Automation, benchmarking, and comparison scripts. |
-| `src_v19/` | The v1.9 reference tree, used for behavior comparison and parity checks. |
+| `src_v19/` | The v1.9 historical reference tree, used for optional algorithm archaeology; it is not the routine parity baseline. |
 
 ## Navigation Guide
 
@@ -97,13 +97,26 @@ Architectural boundaries are codified in `src/test/java/app/freerouting/architec
   - Core routing/model packages (`autoroute`, `board`, `rules`, `drc`, `geometry`) must not depend on GUI/editor or API packages.
   - API/management packages must not depend on `gui` or `gui.rendering`.
   - Headless paths (`api`, `management`, `core`) must not depend on `GuiBoardManager` or `InteractiveState`.
-- **Frozen boundaries (current debt, no further drift):**
+- **Strict boundaries (continued):**
   - `gui.interactive` concrete state classes should not be used outside the GUI layer.
   - `gui.session` owns the opaque editor-state handles, events, commands, manager, settings, messages,
     and action threads; it must not depend on `gui.interactive`.
-  - `io.specctra.parser` internals should not be depended on outside `io.specctra` public I/O entry points.
+  - `board` and `autoroute` must not depend on `gui.rendering`; rendering is GUI-owned.
+  - Pipeline/support packages must not depend on Swing or non-geometry AWT UI types.
+  - `io.specctra.parser` internals must not be depended on outside `io.specctra` public I/O entry points.
 
-Frozen boundaries use ArchUnit's `FreezingArchRule` with baselines stored in `src/test/resources/archunit_store/`.
+The only intentional GUI boundary exception is the documented D26 `gui.session` →
+`gui.rendering` dependency used by `GuiBoardManager` for its graphics context state. These
+boundaries are strict ArchUnit rules; no frozen violation store is required.
+
+## Accepted architectural debt
+
+- `board.ObjectInfoPanel` remains a presentation-shaped writer API; converting it to DTOs is
+  outside this initiative.
+- Incomplete-connection computation remains under `drc`; the package name is broader than
+  clearance checking by design.
+- `gui.session` may depend on `gui.rendering` for the `GuiBoardManager` graphics context (D26);
+  moving that state fully into views is outside this initiative.
 
 ## Package Glossary
 

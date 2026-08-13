@@ -17,9 +17,10 @@ import org.junit.jupiter.api.Test;
  * <p>Verifies the architectural invariant:
  *
  * <ul>
- *   <li>The headless {@link BoardManager} interface exposes <em>no</em> GUI-session methods (no
- *       null-based {@code getInteractiveSettings()} / {@code isInteractiveModeSupported()} / {@code
- *       initializeManualTraceHalfWidths()}).
+ *   <li>The headless {@link BoardManager} interface exposes <em>no</em> GUI-session methods,
+ *       including the former {@code getInteractiveSettings()}, {@code
+ *       isInteractiveModeSupported()}, {@code getSettings()}, and {@code
+ *       initializeManualTraceHalfWidths()} hooks.
  *   <li>{@link HeadlessBoardManager} does <em>not</em> implement {@link GuiSessionContract}, so
  *       {@link InteractiveSettings} is unreachable in headless mode.
  *   <li>{@link GuiBoardManager} implements {@link GuiSessionContract}, providing the GUI-session

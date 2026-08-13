@@ -1,7 +1,0 @@
-Constructor <app.freerouting.util.TextManager.<init>(java.lang.Class, java.util.Locale)> calls method <java.awt.Font.createFont(int, java.io.InputStream)> in (TextManager.java:83)
-Constructor <app.freerouting.util.TextManager.<init>(java.lang.Class, java.util.Locale)> calls method <java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment()> in (TextManager.java:88)
-Constructor <app.freerouting.util.TextManager.<init>(java.lang.Class, java.util.Locale)> calls method <java.awt.GraphicsEnvironment.registerFont(java.awt.Font)> in (TextManager.java:89)
-Constructor <app.freerouting.util.TextManager.<init>(java.lang.Class, java.util.Locale)> catches type <java.awt.FontFormatException> in (TextManager.java:82)
-Field <app.freerouting.util.TextManager.materialDesignIcons> has type <java.awt.Font> in (TextManager.java:0)
-Method <app.freerouting.util.TextManager.insertIcons(javax.swing.JComponent, java.lang.String)> calls method <java.awt.Font.deriveFont(int, float)> in (TextManager.java:456)
-Method <app.freerouting.util.TextManager.insertIcons(javax.swing.JComponent, java.lang.String)> calls method <java.awt.Font.getSize()> in (TextManager.java:456)

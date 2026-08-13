@@ -65,7 +65,7 @@ do not rename without updating `GuiLocators` and all referencing tests.
 
 MVP workflows run in **English (`en`)** and **Hungarian (`hu`)**. Locators are identical across locales; only
 the accessible name/description change. A Hungarian resource-parity check (`_hu` bundle keys match `_en`) backs
-this — see `scripts/i18n` and the `EnglishPropertiesParityTest`.
+this — see `scripts/i18n` and the `HungarianResourceParityCheckTest`.
 
 ## 5. Canvas / routing-area accessibility depth (D9)
 
@@ -85,10 +85,17 @@ Major frame-owned surfaces expose reusable component seams so accessibility test
   board session; `setComponentOnlyEnabled(...)` applies the production enablement convention.
 - `WindowVisibility.createComponentOnly(...)` builds the layer/object visibility settings content
   and emits slider state changes without constructing the top-level visibility window.
+- `ProgressPanel` provides a reusable status, phase, counter, progress-bar, and cancellation
+  surface; its EN + `hu` coverage is component-only.
+- `WindowMessage.createContent(...)` exposes the legacy loading-message content without constructing
+  its top-level window.
 
 These seams are production components, not test fixtures. Tests may assert action callbacks and
 accessible state on them, but must not replace them with private-field reflection or coordinate
 driving.
+
+Full progress-window integration and direct construction of legacy top-level windows remain
+deliberately deferred; any future coverage must preserve the component-only/headless contract.
 
 Every component-only GUI test must leave no displayable top-level windows or GUI/routing worker
 threads. `GuiA11yHarness.requireNoLeakedGuiResources()` provides the shared post-workflow check.

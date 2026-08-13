@@ -100,7 +100,7 @@ class BoardToolbar extends JPanel {
         .addDebugStateListener(
             isPaused -> SwingUtilities.invokeLater(this::updateDebugButtonsState));
 
-    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    GuiTextManager tm = new GuiTextManager(this.getClass(), boardFrame.get_locale());
 
     this.setLayout(new BorderLayout());
 
@@ -833,7 +833,7 @@ class BoardToolbar extends JPanel {
       return;
     }
 
-    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    GuiTextManager tm = new GuiTextManager(this.getClass(), boardFrame.get_locale());
     if (isShiftDown) {
       tm.setText(varsNextButton, "debug_fast_forward");
       tm.setText(varsPreviousButton, "debug_rewind");

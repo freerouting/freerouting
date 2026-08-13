@@ -40,6 +40,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private static final long DEFAULT_TIMEOUT_SECONDS = 0L;
   private static final long MAX_TIMEOUT_SECONDS = 86400L; // 24 hours
   private final GuiBoardManager boardHandling;
+  private GuiTextManager tm;
   private final JLabel[] layerNameArr;
   private final JLabel[] signalLayerNameArr;
   private final JCheckBox[] settingsAutorouterLayerActiveArr;
@@ -512,6 +513,17 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         .getCurrentRoutingJob()
         .routerSettings
         .addPropertyChangeListener(this::onSettingsChanged);
+  }
+
+  @Override
+  public void setLanguage(Locale locale) {
+    if (tm != null) {
+      tm.setLocale(locale);
+    }
+    super.setLanguage(locale);
+    if (tm == null) {
+      tm = new GuiTextManager(this.getClass(), locale);
+    }
   }
 
   static int normalizeIntInput(Object input, int oldValue, int minValue, int maxValue) {

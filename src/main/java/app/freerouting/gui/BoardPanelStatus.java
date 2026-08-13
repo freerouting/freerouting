@@ -2,7 +2,6 @@ package app.freerouting.gui;
 
 import app.freerouting.gui.a11y.A11y;
 import app.freerouting.gui.a11y.GuiLocators;
-import app.freerouting.util.TextManager;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -45,7 +44,7 @@ class BoardPanelStatus extends JPanel {
    * @param locale the locale to use for resource bundles
    */
   BoardPanelStatus(Locale locale) {
-    final TextManager tm = new TextManager(this.getClass(), locale);
+    final GuiTextManager tm = new GuiTextManager(this.getClass(), locale);
 
     setLayout(new BorderLayout());
 
@@ -146,7 +145,7 @@ class BoardPanelStatus extends JPanel {
    * reuse the already-translated visible text (no new resource-bundle keys, preserving cross-locale
    * parity).
    */
-  private void wireAccessibility(TextManager tm) {
+  private void wireAccessibility(GuiTextManager tm) {
     A11y.tag(statusMessage, GuiLocators.STATUS_MESSAGE);
     A11y.describe(statusMessage, statusMessage.getText(), null);
 

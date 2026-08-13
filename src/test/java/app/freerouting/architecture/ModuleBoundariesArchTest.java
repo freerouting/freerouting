@@ -8,7 +8,6 @@ import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.sli
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
-import com.tngtech.archunit.library.freeze.FreezingArchRule;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -18,7 +17,7 @@ import org.junit.jupiter.api.Test;
  *
  * <ul>
  *   <li>Strict boundaries already expected to hold.
- *   <li>Frozen boundaries that document current debt and prevent further drift.
+ *   <li>Strict boundaries that prevent architectural drift.
  * </ul>
  */
 class ModuleBoundariesArchTest {
@@ -178,48 +177,42 @@ class ModuleBoundariesArchTest {
 
   // ----------------------------------------------------------------------------------------------
   // SoC GUI separation & accessibility (plan §1.1 / §12). Added in Phase 1.
-  // Frozen rules carry an exact violation baseline (archunit_store); strict rules must stay green.
+  // Strict rules stay green as the GUI/headless separation evolves.
   // ----------------------------------------------------------------------------------------------
 
   /**
-   * F1 (frozen): pipeline/support packages must not depend on Swing. Owner: GUI SoC initiative.
-   * Removal: Phase 4 (RoutingJob file chooser, datastructures.FileFilter) + Phase 12 cleanup
-   * (util.TextManager, io).
+   * F1 (strict): pipeline/support packages must not depend on Swing. The text and file-conversion
+   * boundaries are enforced here so headless routing remains safe.
    */
   @Test
   void pipelineMustNotDependOnSwing() {
     JavaClasses classes = importMainClasses();
-    FreezingArchRule.freeze(
-            noClasses()
-                .that()
-                .resideInAnyPackage(PIPELINE_SUPPORT_PACKAGES)
-                .should()
-                .dependOnClassesThat()
-                .resideInAnyPackage("javax.swing..")
-                .because(
-                    "pipeline/support packages must stay headless-safe and must not use Swing"
-                        + " (D15)"))
+    noClasses()
+        .that()
+        .resideInAnyPackage(PIPELINE_SUPPORT_PACKAGES)
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage("javax.swing..")
+        .because("pipeline/support packages must stay headless-safe and must not use Swing (D15)")
         .check(classes);
   }
 
   /**
-   * F2 (frozen): pipeline/support packages must not depend on AWT UI types; only {@code
-   * java.awt.geom} is whitelisted. Owner: GUI SoC initiative. Removal: Phase 6 (board paint) +
-   * Phase 7 (autoroute diagnostics) + Phase 12 (util.TextManager fonts).
+   * F2 (strict): pipeline/support packages must not depend on AWT UI types; only {@code
+   * java.awt.geom} is whitelisted. Rendering and font concerns belong to the GUI layer.
    */
   @Test
   void pipelineMustNotDependOnAwtUiTypes() {
     JavaClasses classes = importMainClasses();
-    FreezingArchRule.freeze(
-            noClasses()
-                .that()
-                .resideInAnyPackage(PIPELINE_SUPPORT_PACKAGES)
-                .should()
-                .dependOnClassesThat(
-                    resideInAnyPackage("java.awt..").and(resideOutsideOfPackage("java.awt.geom..")))
-                .because(
-                    "only java.awt.geom is whitelisted in pipeline/support packages (D15); AWT UI"
-                        + " types are GUI concerns"))
+    noClasses()
+        .that()
+        .resideInAnyPackage(PIPELINE_SUPPORT_PACKAGES)
+        .should()
+        .dependOnClassesThat(
+            resideInAnyPackage("java.awt..").and(resideOutsideOfPackage("java.awt.geom..")))
+        .because(
+            "only java.awt.geom is whitelisted in pipeline/support packages (D15); AWT UI"
+                + " types are GUI concerns")
         .check(classes);
   }
 

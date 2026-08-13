@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
-import javax.swing.JFrame;
 
 /** Transforms a Specctra session file into an Eagle script file. */
 @SuppressWarnings({
@@ -22,7 +21,7 @@ import javax.swing.JFrame;
   "checkstyle:MissingJavadocType",
   "checkstyle:VariableDeclarationUsageDistance"
 })
-public class SessionToEagle extends JFrame {
+public class SessionToEagle {
 
   /** The function for scanning the session file. */
   private final IJFlexScanner scanner;

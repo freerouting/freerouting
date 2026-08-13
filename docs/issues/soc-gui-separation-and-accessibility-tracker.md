@@ -4,15 +4,15 @@
 > This file tracks **execution status only** (progress, checkpoints, open items, session log). All authoritative
 > content (decisions D1–D30, package map, checklists, §12 ledger, §13 staffing) lives in the plan file.
 >
-> Branch: `soc-gui-separation-and-accessibility` (long-lived, D2). Authoritative baseline: **current
-> branch build**; stable v2.3.0 remains the secondary reference (D24).
+> Branch: `soc-gui-separation-and-accessibility` (long-lived, D2). Authoritative baseline: stable
+> **v2.3.0**; the current branch is the initiative comparison snapshot (D24).
 
 ## 1. Phase status
 
 | Phase | Title | Status | Notes |
 | --- | --- | --- | --- |
-| **0** | Baseline | **~100%** | Green baseline + v2.3.0 golden metrics captured; only AGENTS.md D24 sign-off remains |
-| **1** | Inventory + ArchUnit freeze | **COMPLETE** | Inventory + collision + freeze layer (F1/F2 frozen; F3 later promoted to strict zero, R4/R5 strict) + §12.4 ledger + facade sketch done; reviewed & approved (Flash); exit gate green |
+| **0** | Baseline | **COMPLETE** | Green baseline + v2.3.0 golden metrics captured; D24 baseline policy signed off |
+| **1** | Inventory + ArchUnit boundary rules | **COMPLETE** | Inventory + collision + strict boundary rules + §12.4 ledger + facade sketch done; reviewed & approved (Flash); exit gate green |
 | **2** | Accessibility foundation | **COMPLETE** | Part A + part B done: a11y contract + GuiLocators/A11y registry + GuiA11yHarness + testGui wiring + workflows #1–3 (read status / select layer / menu action) + sibling checks + EN+hu + hu-parity; all gates green |
 | **3** | Headless contracts | **COMPLETE** | `BoardManager` stripped to headless contract; new `GuiSessionContract` (getInteractiveSettings + initializeManualTraceHalfWidths); removed `isInteractiveModeSupported()` + deprecated `getSettings()`; R10 done (parser-seam GUI method removed); InteractiveSettings invariants preserved; all gates green |
 | **4** | Core / mgmt neutralization | **COMPLETE** | RoutingJob showOpenDialog moved → gui.BoardMenuFile (F1 −11, F2 −2 frozen violations auto-removed; ledger updated); SessionManager get/setGuiSession → getPrimarySession/setPrimarySession (D16); analytics/API verified GUI-free; no circular loader↔manager delegation to reduce. All gates green |
@@ -22,14 +22,14 @@
 | **8** | Move interactive → gui.interactive | **COMPLETE** | Flat production/test move, command flattening, i18n/resource FQCN migration, ArchUnit/docs rewiring, and cheap full-DRC/completion smoke are green |
 | **9** | Extract gui.session | **COMPLETE** | Session cluster, lifecycle ports, generation checks, EDT-only worker presentation, strict session boundary, and full gates are green |
 | **10** | Move former boardgraphics → gui.rendering | **COMPLETE** | Rendering tree, `ScreenTransform`, board paint inversion cleanup, i18n/resources, and strict F3 boundary are green |
-| **11** | A11y expansion + CI | **IN PROGRESS — focused increment** | Menu/toolbar/settings seams plus reusable progress and WindowMessage content seams now have EN+hu component coverage; full progress-window integration and legacy top-level window construction remain deferred |
-| **12** | Final cleanup + docs | Not started | |
+| **11** | A11y expansion + CI | **COMPLETE — component-only scope** | Menu/toolbar/settings plus reusable progress and WindowMessage content seams have EN+hu component coverage; full progress-window integration and legacy top-level window construction remain deferred |
+| **12** | Final cleanup + docs | **COMPLETE** | Strict headless boundaries, documentation, accepted-debt ledger, final quality gates, and sign-off are green |
 
 ## 2. Long-lived branch checkpoints (§8)
 
 | CP | Content | Status |
 | --- | --- | --- |
-| 1 | Phase 0–1 inventory + ArchUnit freezes + v2.3.0 golden metrics + §12 ledger | ✅ done (Phase 0 + Phase 1 complete, exit gate green) |
+| 1 | Phase 0–1 inventory + strict ArchUnit boundaries + v2.3.0 golden metrics + §12 ledger | ✅ done (Phase 0 + Phase 1 complete, exit gate green) |
 | 2 | `testGui` (forced headless) + harness + path-filter stub + Swing-test retags | ✅ done (Phase 2) |
 | 3 | MVP locators + ≥3 workflows (EN+hu) + hu resource check | ✅ done (Phase 2) |
 | 4 | Headless `BoardManager` split | ✅ done (Phase 3) |
@@ -40,7 +40,7 @@
 | 9 | Flat move to `gui.interactive` + cheap DRC+completion smoke | ✅ done (Phase 8) — session cluster temporarily parked in `gui.interactive`; no `.frb` compatibility shim |
 | 10 | Extract `gui.session` + facade/`InteractiveCommand`; views bootstrap | ✅ done (Phase 9) — strict session boundary and GUI bootstrap are green |
 | 11 | Move to `gui.rendering` + `ScreenTransform` | ✅ done (Phase 10) — rendering tree/resources/tests moved; `ScreenTransform` renamed; F3 promoted to strict zero |
-| 12 | A11y expansion, final CI filters, docs, AGENTS.md D24, strict ArchUnit | ✅ focused Phase 11 increment landed; final Phase 11 breadth and Phase 12 remain |
+| 12 | A11y expansion, final CI filters, docs, AGENTS.md D24, strict ArchUnit | ✅ Phase 11 component-only scope complete; Phase 12 final cleanup green |
 
 ## 3. Phase 0 — Baseline (execution record)
 
@@ -61,7 +61,7 @@
 ### Pending for Phase 0 exit
 
 - [x] **v2.3.0 golden metrics** captured into §12.6 (2026-08-12 benchmark; current ≡ v2.3.0 on 19/19 comparable fixtures)
-- [ ] AGENTS.md D24 draft → **awaiting user sign-off** (proposal in branch notes; do NOT edit AGENTS.md without approval)
+- [x] AGENTS.md D24 baseline policy → user approved stable **v2.3.0** as primary; policy and plan are aligned
 - [x] (Phase 1) Full DSN sole-coverage-for-a-path analysis finalization → [`soc-gui-separation-dsn-fixture-coverage.md`](soc-gui-separation-dsn-fixture-coverage.md)
 
 ## 4. Open decisions / staffing notes
@@ -69,10 +69,12 @@
 - **Model substitution (user decision, 2026-08-12):** DeepSeek V4 Flash will execute all phases marked
   for **DeepSeek or GLM** in §13.3 (free on Cline). Kimi K3 remains primary for design/gate-sensitive phases
   (1, 3, 5, 6, 9). §13 staffing table to be updated to reflect this at next plan edit.
-- **Baseline decision (2026-08-12):** the **current build** (branch) is now the **authoritative parity
-  baseline**, superseding v2.3.0 (D24 rationale) — it ≡ v2.3.0 on all comparable fixtures and is strictly
-  better on `DAC2020_bm01` (full-DRC 0 vs 2). Recorded in plan §12.6. AGENTS.md D24 policy to match on sign-off.
-- R8–R14, R18, R19 — unresolved defaults as per plan §10 (R19 facade name chosen in Phase 1 sketch).
+- **Baseline decision (2026-08-13):** stable **v2.3.0** is the immutable primary parity baseline.
+  The current branch matches or exceeds it on the recorded golden fixtures and is retained as the
+  initiative comparison snapshot; its `DAC2020_bm01` improvement is not a baseline replacement.
+  Recorded in plan §12.6 and aligned with AGENTS.md D24 policy.
+- R8–R14, R18, R19 — accepted with the defaults recorded in plan §10 (R19 facade name is
+  `EditorStateController`).
 
 ## 5. Session log
 
@@ -124,11 +126,14 @@
 | 2026-08-13 | Phase 11 component increment: added reusable `ProgressPanel`/`ProgressSnapshot`/`ProgressLabels` seams with EDT-marshalled determinate/indeterminate progress, counters, cancellation, stable locators, and EN+hu tests; extracted frame-free `WindowMessage` content with locator coverage. Full progress-window integration and direct top-level window construction remain deferred. |
 | 2026-08-13 | Phase 9 final verification: confirmed all `getPrimarySession`/`setPrimarySession` production callers remain in GUI code (`GuiManager`, `BoardFrame`, `BoardToolbar`), made `SessionManagerTest` deterministic with explicit `GlobalSettings` setup, and passed the targeted test, forced-headless `testGui` (22/22), quality gates, i18n check, and full `check` (439 tests, 0 failures). |
 | 2026-08-13 | Phase 0/1 DSN coverage finalization: inventory updated to 147 fixture files; complete active/disabled/sole/unreferenced map recorded in [`soc-gui-separation-dsn-fixture-coverage.md`](soc-gui-separation-dsn-fixture-coverage.md). |
+| 2026-08-13 | Phase 12 boundary cleanup: split headless `util.TextManager` from GUI-only `GuiTextManager`, removed the unused `datastructures.FileFilter` and `SessionToEagle` JFrame inheritance, promoted F1/F2 to strict, and removed all obsolete ArchUnit freeze stores/configuration. |
+| 2026-08-13 | Phase 12 documentation: accepted v2.3.0 as the primary baseline, updated architecture/accessibility/developer-test guidance, and recorded component-only Phase 11 deferrals. |
+| 2026-08-13 | Phase 12 final gates: `check` passed (432 tests, 3 skipped); `testAll` passed (493 tests, 3 skipped, including 22 GUI and 20 slow tests); Spotless, Checkstyle, rewrite, i18n context, and whitespace checks passed. Phase 12 COMPLETE. |
 
 ## 6. Next actions
 
-1. **Phase 11** — decide whether full progress-window integration and direct top-level-window construction justify a separate GUI/display test increment.
-2. **Phase 12** — complete final cleanup, documentation, AGENTS.md D24 sign-off, and strict ArchUnit promotion review.
+1. **Phase 12** — complete final quality gates (`check`, `testAll`, i18n, and forced-headless GUI coverage) and final sign-off.
+2. **Deferred scope** — retain full progress-window integration and direct legacy top-level-window construction as explicit future work unless separately approved.
 
 ## 7. Artifacts
 

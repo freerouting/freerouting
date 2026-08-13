@@ -15,15 +15,13 @@ package app.freerouting.gui.session;
  * }</pre>
  *
  * <p>Splitting these methods off the shared {@code BoardManager} interface removes the previous
- * null-based GUI hooks ({@code getInteractiveSettings()} returning {@code null}, {@code
- * isInteractiveModeSupported()}) from the headless API. {@link
- * app.freerouting.management.HeadlessBoardManager} does not implement this contract, so headless
- * code can never reach {@link InteractiveSettings}.
+ * null-based GUI hooks ({@code getInteractiveSettings()} returning {@code null}) from the headless
+ * API. {@link app.freerouting.management.HeadlessBoardManager} does not implement this contract, so
+ * headless code can never reach {@link InteractiveSettings}.
  *
- * <p><strong>Note:</strong> this is the Phase-3 GUI-session contract. It is distinct from the
- * Phase-9 {@code gui.session} facade ({@code EditorStateHandle}/{@code EditorStateKind}); see the
- * SoC plan (D12/D20, R19). The {@code gui.session} package and {@code EditorState*} names are
- * reserved for that later work.
+ * <p><strong>Note:</strong> this contract is the GUI-only board-management surface. The same
+ * package also owns the Phase-9 session facade ({@code EditorStateHandle}/{@code EditorStateKind})
+ * and lifecycle ports; concrete editor states remain in {@code gui.interactive}.
  */
 public interface GuiSessionContract {
 
