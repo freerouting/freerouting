@@ -1,5 +1,7 @@
 package app.freerouting.gui;
 
+import app.freerouting.gui.a11y.A11y;
+import app.freerouting.gui.a11y.GuiLocators;
 import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,23 +18,41 @@ public final class WindowMessage extends WindowBase {
   private WindowMessage(String[] messageArr) {
     super(300, 100);
 
+    this.add(createContent(messageArr));
+    this.pack();
+    this.setLocation(500, 400);
+    this.setVisible(true);
+  }
+
+  /**
+   * Builds the message labels without constructing a top-level window.
+   *
+   * <p>The returned panel is the same content used by {@link #show(String)} and {@link
+   * #show(String[])}, making legacy window content testable in forced-headless component tests.
+   *
+   * @param messageArr messages to display
+   * @return a reusable message content panel
+   */
+  public static JPanel createContent(String[] messageArr) {
     final JPanel mainPanel = new JPanel();
     final GridBagLayout gridbag = new GridBagLayout();
     mainPanel.setLayout(gridbag);
+    A11y.tag(mainPanel, GuiLocators.WINDOW_MESSAGE_CONTENT);
+    A11y.describe(mainPanel, "Message content", null);
+
     final GridBagConstraints gridbagConstraints = new GridBagConstraints();
     gridbagConstraints.insets = new Insets(40, 40, 40, 40);
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     for (int i = 0; i < messageArr.length; i++) {
       final JLabel messageLabel = new JLabel();
       messageLabel.setText(messageArr[i]);
+      A11y.tag(messageLabel, GuiLocators.windowMessageLabel(i));
+      A11y.describe(messageLabel, messageArr[i], null);
 
       gridbag.setConstraints(messageLabel, gridbagConstraints);
       mainPanel.add(messageLabel, gridbagConstraints);
     }
-    this.add(mainPanel);
-    this.pack();
-    this.setLocation(500, 400);
-    this.setVisible(true);
+    return mainPanel;
   }
 
   /** Displays a window with the input message at the center of the screen. */

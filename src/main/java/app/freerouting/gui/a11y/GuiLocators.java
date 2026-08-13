@@ -122,4 +122,37 @@ public final class GuiLocators {
 
   /** Length-violations list (WindowLengthViolations). */
   public static final String INSPECT_LENGTH_VIOLATIONS = "inspect.length_violations";
+
+  // ---- Progress and legacy window content ----
+  /** Root panel for the reusable progress surface. */
+  public static final String PROGRESS_ROOT = "progress.root";
+
+  /** Current progress status text. */
+  public static final String PROGRESS_STATUS = "progress.status";
+
+  /** Current progress phase text. */
+  public static final String PROGRESS_PHASE = "progress.phase";
+
+  /** Completed/total counter text. */
+  public static final String PROGRESS_COUNTERS = "progress.counters";
+
+  /** Determinate or indeterminate progress bar. */
+  public static final String PROGRESS_BAR = "progress.bar";
+
+  /** Progress cancellation button. */
+  public static final String PROGRESS_CANCEL = "progress.cancel";
+
+  /** Root content panel extracted from WindowMessage. */
+  public static final String WINDOW_MESSAGE_CONTENT = "window.message.content";
+
+  /** Prefix used for labels in extracted WindowMessage content. */
+  public static final String WINDOW_MESSAGE_LABEL_PREFIX = "window.message.label";
+
+  /** Returns the stable locator for a message label at {@code index}. */
+  public static String windowMessageLabel(int index) {
+    if (index < 0) {
+      throw new IllegalArgumentException("Message label index must not be negative");
+    }
+    return WINDOW_MESSAGE_LABEL_PREFIX + "." + index;
+  }
 }

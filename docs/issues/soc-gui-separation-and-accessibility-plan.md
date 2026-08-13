@@ -426,7 +426,10 @@ draw priority.
 - [x] Expand coverage across major menus and reusable settings content (still component-only):
   `BoardMenuBar`, `BoardToolbar`, `WindowVisibility`, and inspect/list workflows.
 - [x] State-change tests cover layer, mode, enablement, visibility, and violation/list state.
-  Progress-control coverage remains deferred because the existing progress surface is window-owned.
+- [x] Add a reusable, component-only `ProgressPanel` seam with determinate/indeterminate progress,
+  counters, cancellation, EDT marshalling, and EN + `hu` accessibility coverage.
+- [x] Extract `WindowMessage` content into a frame-free component seam and cover its message labels
+  under forced headless; direct top-level window construction remains deferred.
 - [x] Keyboard/menu alternatives plus inspect lists cover critical canvas actions.
 - [x] Add path-filtered GUI CI for final `gui/**` paths (including `interactive`, `session`, and
   `rendering`) plus GUI tests/resources and build configuration.
@@ -440,8 +443,10 @@ enablement seam, while `WindowVisibility` exposes reusable layer/object slider c
 component-only tests exercise EN + `hu` locator stability, keyboard/action paths, mode/unit
 changes, enablement, visibility/reset, EDT execution, and no leaked displayable windows or named
 GUI/routing threads. `.github/workflows/gui-a11y.yml` runs forced-headless `testGui` and the
-Hungarian parity check on GUI-related paths. Full progress controls and direct construction of
-legacy top-level windows remain deliberately deferred to a later focused increment.
+Hungarian parity check on GUI-related paths. The reusable progress surface and extracted
+`WindowMessage` content now have EN + `hu` locator-driven coverage without constructing a
+top-level window. Full progress-window integration and direct construction of legacy top-level
+windows remain deliberately deferred.
 
 ### Phase 12 — Final cleanup
 
