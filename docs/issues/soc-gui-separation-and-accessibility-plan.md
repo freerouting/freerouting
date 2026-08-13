@@ -334,12 +334,12 @@ Land as **independently revertible commits** on the long-lived branch:
 
 1. [x] Add neutral accessors for geometry/layer/net/type/visibility/selection metadata (no paint removal yet). `BoardItemType` and `Item.getBoardItemType()` are now headless-safe, with characterization coverage.
 2. [x] Stand up GUI renderer + **early** offscreen `BufferedImage` smoke for major item types (must exist before mass paint deletion). `BoardRenderer` and `BoardRendererOffscreenTest` are in place.
-3. [ ] Remove `Drawable` / `Graphics` / `GraphicsContext` / AWT `Color` paint APIs from board (per family if needed). BasicBoard traversal and its boardgraphics/AWT dependency are removed; item-family paint APIs remain as the next Phase 6 increment.
+3. [ ] Remove `Drawable` / `Graphics` / `GraphicsContext` / AWT `Color` paint APIs from board (per family if needed). Main board rendering now uses renderer-owned strategies for traces, drill items, obstacles, component geometry, outlines, and conduction areas; compatibility `Item.draw` / `drawLayer` APIs remain for interactive overlay callers and are the next cleanup.
 4. [x] Move traversal + draw priority fully into GUI renderer. Layer/virtual-layer ordering, culling, component fabrication labels, and family dispatch now live in `BoardRenderer`.
 5. [x] Headless load→route→DRC→SES without renderer init. Full `check` and targeted headless DRC/routing tests pass.
 6. [x] No routing mutation behavior changes in the validated smoke suite. The full WIP-vs-v2.3.0 comparison still remains an exit-gate task after family paint-API removal.
 
-**Current checkpoint:** commits `06b3b688`, `7284615a`, `6b7e9ee1`, and `4b4c936e` landed independently. Offscreen, full `check`, full `testGui`, ArchUnit, formatting, checkstyle, rewrite, i18n, headless DRC, and routing smoke gates are green. The Phase 6 exit gate is not yet closed until the remaining item-family paint APIs are moved and the WIP-vs-v2.3.0 parity comparison is rerun.
+**Current checkpoint:** commits `06b3b688`, `7284615a`, `6b7e9ee1`, `4b4c936e`, `2b07f149`, and `c51f16cd` landed independently. Offscreen, full `check`, full `testGui`, ArchUnit, formatting, checkstyle, rewrite, i18n, headless DRC, and routing smoke gates are green. The Phase 6 exit gate is not yet closed until compatibility overlay paint APIs are removed and the WIP-vs-v2.3.0 parity comparison is rerun.
 
 **Exit gate:** full-DRC clearance delta **0** (D29); no completion regression vs **v2.3.0** (D24/D28); offscreen renderer smokes green.
 
@@ -593,13 +593,13 @@ vs v2.3.0 on all comparable fixtures (D28/D29 gates satisfied at the Phase 0/1 b
 
 > **Phase 6 implementation checkpoint (2026-08-13):** Neutral board-item metadata, the GUI-owned
 > `BoardRenderer`, forced-headless offscreen rendering, renderer-owned layer ordering/culling/
-> fabrication-label traversal, and family dispatch landed in four independently revertible commits
-> (`06b3b688`, `7284615a`, `6b7e9ee1`, `4b4c936e`). `BasicBoard` no longer owns board traversal or
-> imports boardgraphics/AWT rendering types; the ArchUnit freeze records dropped 29 violations
-> (F2 93→77, F3 145→132). Full `check`, full `testGui`, ArchUnit, quality gates, headless DRC,
-> and routing smoke are green. Item-family paint APIs still use the compatibility `Item.draw` /
-> `drawLayer` implementation, and the full WIP-vs-v2.3.0 comparison must be rerun after those APIs
-> are moved before Phase 6 can pass its exit gate.
+> fabrication-label traversal, and direct family strategies landed in six independently revertible
+> commits (`06b3b688`, `7284615a`, `6b7e9ee1`, `4b4c936e`, `2b07f149`, `c51f16cd`). `BasicBoard`
+> no longer owns board traversal or imports boardgraphics/AWT rendering types; the ArchUnit freeze
+> records dropped 29 violations (F2 93→77, F3 145→132). Full `check`, full `testGui`, ArchUnit,
+> quality gates, headless DRC, and routing smoke are green. Compatibility `Item.draw` / `drawLayer`
+> APIs remain only as a transitional path for interactive overlays; they must be migrated and
+> removed before the WIP-vs-v2.3.0 comparison closes the Phase 6 exit gate.
 
 > **Baseline decision (2026-08-12):** the **current build** (branch `soc-gui-separation-and-accessibility`)
 > is now the **authoritative routing baseline** for this initiative, superseding v2.3.0 as the parity

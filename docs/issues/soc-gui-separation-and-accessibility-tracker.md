@@ -17,7 +17,7 @@
 | **3** | Headless contracts | **COMPLETE** | `BoardManager` stripped to headless contract; new `GuiSessionContract` (getInteractiveSettings + initializeManualTraceHalfWidths); removed `isInteractiveModeSupported()` + deprecated `getSettings()`; R10 done (parser-seam GUI method removed); InteractiveSettings invariants preserved; all gates green |
 | **4** | Core / mgmt neutralization | **COMPLETE** | RoutingJob showOpenDialog moved → gui.BoardMenuFile (F1 −11, F2 −2 frozen violations auto-removed; ledger updated); SessionManager get/setGuiSession → getPrimarySession/setPrimarySession (D16); analytics/API verified GUI-free; no circular loader↔manager delegation to reduce. All gates green |
 | **5** | Compute vs presentation | **COMPLETE** | Headless DRC compute + thin GUI façades + list/count a11y coverage; parity and all exit gates green |
-| **6** | Rendering inversion (highest risk) | **IN PROGRESS** | Neutral metadata, GUI renderer, offscreen smoke, renderer-owned traversal, and BasicBoard boundary cleanup landed; item-family paint API removal and full v2.3.0 parity remain |
+| **6** | Rendering inversion (highest risk) | **IN PROGRESS** | Neutral metadata, GUI renderer, offscreen smoke, renderer-owned traversal, and direct strategies for all major board families landed; compatibility overlay paint APIs and full v2.3.0 parity remain |
 | **7** | Autorouter diagnostics | Not started | |
 | **8** | Move interactive → gui.interactive | Not started | |
 | **9** | Extract gui.session | Not started | D27/D30 hard gates |
@@ -35,7 +35,7 @@
 | 4 | Headless `BoardManager` split | ✅ done (Phase 3) |
 | 5 | `RoutingJob` Swing removal + `getPrimarySession`/`setPrimarySession` | ✅ done (Phase 4) |
 | 6 | Ratsnest/violations façade thinning + Phase 5 full v2.3.0 parity | ✅ done (Phase 5) |
-| 7 | Board paint inversion + Phase 6 full v2.3.0 parity | **in progress** — renderer/traversal checkpoints green; family paint APIs and full compare remain |
+| 7 | Board paint inversion + Phase 6 full v2.3.0 parity | **in progress** — renderer/family checkpoints green; compatibility overlay APIs and full compare remain |
 | 8 | Autorouter diagnostic inversion + cheap DRC+completion smoke | pending (Phase 7) |
 | 9 | Flat move to `gui.interactive` + cheap DRC+completion smoke | pending (Phase 8) |
 | 10 | Extract `gui.session` + facade/`InteractiveCommand`; views bootstrap | pending (Phase 9) |
@@ -107,13 +107,15 @@
 | 2026-08-13 | Phase 6 implementation: added neutral `BoardItemType` metadata and characterization coverage; introduced GUI-owned `BoardRenderer` with forced-headless `BufferedImage` smoke coverage. |
 | 2026-08-13 | Phase 6 traversal inversion: moved layer/virtual-layer ordering, draw priority, culling, fabrication labels, and item-family dispatch into `BoardRenderer`; removed board traversal and boardgraphics/AWT rendering dependencies from `BasicBoard`; `GuiBoardManager` now invokes the renderer directly. |
 | 2026-08-13 | Phase 6 gates: full `check`, full `testGui`, ArchUnit, Spotless, Checkstyle, rewrite, i18n, targeted headless DRC, and `Dac2020Bm01RoutingTest` ✓. ArchUnit frozen debt dropped from 254 to 225 (F2 93→77, F3 145→132). The phase remains in progress because item-family `draw`/`drawLayer` APIs and the full WIP-vs-v2.3.0 comparison are still outstanding. Commits: `06b3b688`, `7284615a`, `6b7e9ee1`, `4b4c936e`. |
+| 2026-08-13 | Phase 6 family strategies: moved trace, pin/via, obstacle, component, board-outline, and conduction-area paint operations into `BoardRenderer`; retained the detailed conduction-fill cache computation in `ConductionArea` and the compatibility item paint methods for interactive overlays. Commits: `2b07f149`, `c51f16cd`. |
+| 2026-08-13 | Phase 6 post-family gates: full `check`, full `testGui`, Spotless, Checkstyle, rewrite, i18n, targeted headless DRC, and routing smoke ✓. The remaining exit work is migrating overlay callers off `Item.draw`/`drawLayer` and rerunning the full WIP-vs-v2.3.0 comparison. |
 
 ## 6. Next actions
 
 1. **Phase 3 COMPLETE** (headless contracts) — `BoardManager` headless-only, `GuiSessionContract` created, R10 done, invariants preserved. Committed `bf818255` (+ tracker wrap-up `4ad95aa5`).
 2. **Phase 4 COMPLETE** (core/management neutralization, Flash) — RoutingJob Swing removed (F1 −11, F2 −2), SessionManager → getPrimarySession/setPrimarySession (D16), analytics/API GUI-free verified, no circular delegation to reduce. §12.4 ledger updated (267 → 254). Committed in `8832b884`.
 3. **Phase 5 COMPLETE** (compute vs presentation) — headless DRC compute, thin clearance presentation façade, component-only inspect-list a11y tests, full DRC/completion parity preserved.
-4. **Phase 6 IN PROGRESS** — next: move the remaining item-family paint implementations behind renderer-owned strategies, then rerun the full WIP-vs-v2.3.0 parity gate before declaring CP7 complete.
+4. **Phase 6 IN PROGRESS** — next: migrate interactive overlay callers off the compatibility `Item.draw`/`drawLayer` APIs, remove those transitional methods, then rerun the full WIP-vs-v2.3.0 parity gate before declaring CP7 complete.
 5. Model policy (user, 2026-08-12): prefer **Flash** over GLM-5.2 for GLM-assigned phases (cost). **Caveat:** Flash is NOT safe for design/review/sign-off phases (Phase 6 commit-sequence review, Phase 12 sign-off) — keep those on GLM-5.2/K3. Flash remains the designated model for mechanical moves (Phases 8/10). Assess Phases 7/11 when reached. **Phase 5 used the parity-gate path and is complete.**
 
 ## 7. Artifacts
