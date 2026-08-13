@@ -4,6 +4,7 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.board.BoardOutline;
 import app.freerouting.board.ComponentObstacleArea;
 import app.freerouting.board.ComponentOutline;
+import app.freerouting.board.ConductionArea;
 import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.ObstacleArea;
@@ -14,6 +15,7 @@ import app.freerouting.board.Via;
 import app.freerouting.board.ViaObstacleArea;
 import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.Circle;
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Shape;
@@ -156,7 +158,9 @@ public final class BoardRenderer {
           renderObstacleArea((ObstacleArea) item, step, graphics, graphicsContext);
       case BOARD_OUTLINE ->
           renderBoardOutline((BoardOutline) item, step, graphics, graphicsContext);
-      case CONDUCTION_AREA, OTHER -> renderPhysicalItem(item, step, graphics, graphicsContext);
+      case CONDUCTION_AREA ->
+          renderConductionArea((ConductionArea) item, step, graphics, graphicsContext);
+      case OTHER -> renderPhysicalItem(item, step, graphics, graphicsContext);
       default -> renderPhysicalItem(item, step, graphics, graphicsContext);
     }
   }
@@ -353,6 +357,71 @@ public final class BoardRenderer {
       closedDrawCorners[closedDrawCorners.length - 1] = drawCorners[0];
       graphicsContext.draw(closedDrawCorners, 100, color, graphics, 1);
     }
+  }
+
+  private static void renderConductionArea(
+      ConductionArea area, RenderStep step, Graphics graphics, GraphicsContext graphicsContext) {
+    if (step.virtual() || area.getLayer() != step.index()) {
+      return;
+    }
+    int layer = step.index();
+    double layerVisibility = graphicsContext.getLayerVisibility(layer);
+    if (layerVisibility <= 0) {
+      return;
+    }
+    Color color = graphicsContext.getTraceColors(true)[layer];
+    double intensity = graphicsContext.getConductionColorIntensity();
+    if (area.getIsFilled()) {
+      double fillOpacity = Math.min(layerVisibility * intensity * 2.5, 1.0);
+      double maxClearanceLookupBoard = 2000.0 * area.board.communication.getResolution(Unit.UM);
+      if (area.board.rules != null && area.board.rules.clearanceMatrix != null) {
+        double maxMatrixClearance =
+            area.board.rules.clearanceMatrix.maxValue(area.clearanceClassNo(), layer);
+        maxClearanceLookupBoard =
+            Math.max(
+                maxClearanceLookupBoard,
+                maxMatrixClearance + 100.0 * area.board.communication.getResolution(Unit.UM));
+      }
+      double clearanceScreenPx =
+          graphicsContext.coordinateTransform.boardToScreen(maxClearanceLookupBoard);
+      boolean useSimpleFill =
+          clearanceScreenPx < 15.0 || graphicsContext.isSimplifiedPlaneRendering();
+      if (useSimpleFill) {
+        graphicsContext.fillArea(area.getArea(), graphics, color, fillOpacity);
+      } else {
+        java.awt.geom.Area cachedFill = area.getDetailedFillArea(maxClearanceLookupBoard, layer);
+        if (cachedFill != null && !cachedFill.isEmpty()) {
+          var p0 = graphicsContext.coordinateTransform.boardToScreen(FloatPoint.ZERO);
+          var px = graphicsContext.coordinateTransform.boardToScreen(new FloatPoint(1, 0));
+          var py = graphicsContext.coordinateTransform.boardToScreen(new FloatPoint(0, 1));
+          var boardToScreen =
+              new java.awt.geom.AffineTransform(
+                  px.getX() - p0.getX(),
+                  px.getY() - p0.getY(),
+                  py.getX() - p0.getX(),
+                  py.getY() - p0.getY(),
+                  p0.getX(),
+                  p0.getY());
+          java.awt.geom.Area screenArea = cachedFill.createTransformedArea(boardToScreen);
+          java.awt.Graphics2D graphics2D = (java.awt.Graphics2D) graphics;
+          java.awt.Paint oldPaint = graphics2D.getPaint();
+          java.awt.Composite oldComposite = graphics2D.getComposite();
+          graphics2D.setColor(color);
+          graphics2D.setComposite(
+              java.awt.AlphaComposite.getInstance(
+                  java.awt.AlphaComposite.SRC_OVER, (float) fillOpacity));
+          graphics2D.setRenderingHint(
+              java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+          graphics2D.fill(screenArea);
+          graphics2D.setPaint(oldPaint);
+          graphics2D.setComposite(oldComposite);
+        }
+      }
+    }
+    double hatchPitch = 500.0 * area.board.communication.getResolution(Unit.UM);
+    graphicsContext.drawPlaneHatch(
+        area.getArea(), graphics, color, layerVisibility * intensity * 0.85, hatchPitch);
+    graphicsContext.drawBoundary(area.getArea(), 0.0, color, graphics, layerVisibility);
   }
 
   private static int virtualLayerFor(ComponentOutline outline) {

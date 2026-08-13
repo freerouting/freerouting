@@ -186,6 +186,17 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     ensureDetailedFillCache(maxClearanceLookupBoard, layerNo);
   }
 
+  /**
+   * Returns the cached detailed fill geometry for renderer-owned painting.
+   *
+   * <p>The cache remains owned by the conduction-area model because it depends on board revision
+   * and clearance geometry. The renderer owns the AWT paint operation that consumes this geometry.
+   */
+  public java.awt.geom.Area getDetailedFillArea(double maxClearanceLookupBoard, int layerNo) {
+    ensureDetailedFillCache(maxClearanceLookupBoard, layerNo);
+    return cachedBoardFillArea;
+  }
+
   private void ensureDetailedFillCache(double maxClearanceLookupBoard, int layerNo) {
     boolean boardChanged = this.board.getRevision() != cachedBoardRevision;
     if (cachedBoardFillArea != null && !boardChanged) {
