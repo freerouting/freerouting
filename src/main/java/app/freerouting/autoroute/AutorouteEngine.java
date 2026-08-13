@@ -6,7 +6,6 @@ import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
 import app.freerouting.board.ShapeSearchTree45Degree;
 import app.freerouting.board.ShapeSearchTree90Degree;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.IntBox;
@@ -14,7 +13,6 @@ import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -309,19 +307,19 @@ public class AutorouteEngine {
     board.clearAllItemTemporaryAutorouteData();
   }
 
-  /** Draws the shapes of the expansion rooms created so far. */
-  public void draw(Graphics graphics, GraphicsContext graphicsContext, double intensity) {
-    if (completeExpansionRooms == null) {
+  /** Emits optional diagnostics for the expansion rooms created so far. */
+  public void emitDiagnostics(AutorouteDiagnostic.Sink sink, double intensity) {
+    if (sink == null || intensity <= 0 || completeExpansionRooms == null) {
       return;
     }
     for (CompleteFreeSpaceExpansionRoom currRoom : completeExpansionRooms) {
-      currRoom.draw(graphics, graphicsContext, intensity);
+      currRoom.emitDiagnostic(sink, intensity);
     }
     Collection<Item> itemList = this.board.getItems();
     for (Item currItem : itemList) {
       ItemAutorouteInfo autorouteInfo = currItem.getAutorouteInfo();
       if (autorouteInfo != null) {
-        autorouteInfo.draw(graphics, graphicsContext, intensity);
+        autorouteInfo.emitDiagnostics(sink, intensity);
       }
     }
   }

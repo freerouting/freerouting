@@ -1,11 +1,8 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.SearchTreeObject;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -125,10 +122,12 @@ public class ExpansionDrill implements ExpandableObject {
     return 31 * (31 * location.getIdNo() + firstLayer) + lastLayer;
   }
 
-  /** Test draw of the shape of this drill. */
-  public void draw(Graphics graphics, GraphicsContext graphicsContext, double intensity) {
-    Color drawColor = graphicsContext.getHighlightColor();
-    graphicsContext.fillArea(this.shape, graphics, drawColor, intensity);
-    graphicsContext.drawBoundary(this.shape, 0, drawColor, graphics, 1);
+  /** Emits the shape of this drill for an optional diagnostic consumer. */
+  public void emitDiagnostic(AutorouteDiagnostic.Sink sink, double intensity) {
+    if (sink != null && intensity > 0) {
+      sink.accept(
+          new AutorouteDiagnostic(
+              AutorouteDiagnostic.Kind.EXPANSION_DRILL, this.shape, -1, intensity));
+    }
   }
 }

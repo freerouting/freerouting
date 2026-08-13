@@ -10,6 +10,7 @@ import app.freerouting.autoroute.MazeSearchAlgo;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.boardgraphics.AutorouteDiagnosticRenderer;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.TileShape;
 import java.awt.Graphics;
@@ -128,9 +129,10 @@ public final class ExpandTestState extends InteractiveState {
 
   @Override
   public void draw(Graphics graphics) {
-    autorouteEngine.draw(graphics, hdlg.graphicsContext, 0.1);
+    var diagnosticSink = AutorouteDiagnosticRenderer.createSink(graphics, hdlg.graphicsContext);
+    autorouteEngine.emitDiagnostics(diagnosticSink, 0.1);
     if (this.autorouteResult != null) {
-      this.autorouteResult.draw(graphics, hdlg.graphicsContext);
+      this.autorouteResult.emitDiagnostics(diagnosticSink, 0.2);
     }
   }
 

@@ -4,12 +4,9 @@ import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
 import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -150,13 +147,17 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     }
   }
 
-  /** Draws the shape of this room. */
+  /** Emits the shape of this room for an optional diagnostic consumer. */
   @Override
-  public void draw(Graphics graphics, GraphicsContext graphicsContext, double intensity) {
-    Color drawColor = graphicsContext.getTraceColors(false)[this.getLayer()];
-    double layerVisibility = graphicsContext.getLayerVisibility(this.getLayer());
-    graphicsContext.fillArea(this.getShape(), graphics, drawColor, intensity * layerVisibility);
-    graphicsContext.drawBoundary(this.getShape(), 0, drawColor, graphics, layerVisibility);
+  public void emitDiagnostic(AutorouteDiagnostic.Sink sink, double intensity) {
+    if (sink != null && intensity > 0) {
+      sink.accept(
+          new AutorouteDiagnostic(
+              AutorouteDiagnostic.Kind.FREE_SPACE_ROOM,
+              this.getShape(),
+              this.getLayer(),
+              intensity));
+    }
   }
 
   /** Check if this FreeSpaceExpansionRoom is valid. */
