@@ -108,6 +108,40 @@ public abstract class Item
     return idNo;
   }
 
+  /**
+   * Returns the neutral semantic category of this board item.
+   *
+   * <p>This accessor is intentionally independent of rendering APIs. It gives a future GUI renderer
+   * a stable dispatch key while keeping the item model usable by headless routing and DRC code.
+   */
+  public BoardItemType getBoardItemType() {
+    if (this instanceof Pin) {
+      return BoardItemType.PIN;
+    }
+    if (this instanceof Via) {
+      return BoardItemType.VIA;
+    }
+    if (this instanceof Trace) {
+      return BoardItemType.TRACE;
+    }
+    if (this instanceof ConductionArea) {
+      return BoardItemType.CONDUCTION_AREA;
+    }
+    if (this instanceof ComponentObstacleArea) {
+      return BoardItemType.COMPONENT_OBSTACLE_AREA;
+    }
+    if (this instanceof ObstacleArea) {
+      return BoardItemType.OBSTACLE_AREA;
+    }
+    if (this instanceof ComponentOutline) {
+      return BoardItemType.COMPONENT_OUTLINE;
+    }
+    if (this instanceof BoardOutline) {
+      return BoardItemType.BOARD_OUTLINE;
+    }
+    return BoardItemType.OTHER;
+  }
+
   /** Returns true if the net number array of this item contains p_net_no. */
   public boolean containsNet(int netNo) {
     if (netNo <= 0) {
