@@ -127,6 +127,9 @@ public abstract class Item
     if (this instanceof ConductionArea) {
       return BoardItemType.CONDUCTION_AREA;
     }
+    if (this instanceof ViaObstacleArea) {
+      return BoardItemType.VIA_OBSTACLE_AREA;
+    }
     if (this instanceof ComponentObstacleArea) {
       return BoardItemType.COMPONENT_OBSTACLE_AREA;
     }

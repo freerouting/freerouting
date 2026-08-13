@@ -53,6 +53,8 @@ class BoardItemRenderingMetadataTest {
         assertEquals(BoardItemType.TRACE, type);
       } else if (item instanceof ConductionArea) {
         assertEquals(BoardItemType.CONDUCTION_AREA, type);
+      } else if (item instanceof ViaObstacleArea) {
+        assertEquals(BoardItemType.VIA_OBSTACLE_AREA, type);
       } else if (item instanceof ComponentObstacleArea) {
         assertEquals(BoardItemType.COMPONENT_OBSTACLE_AREA, type);
       } else if (item instanceof ObstacleArea) {
