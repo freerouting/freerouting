@@ -17,6 +17,7 @@ import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.SearchTreeManager;
 import app.freerouting.board.Unit;
+import app.freerouting.boardgraphics.BoardRenderer;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
@@ -1688,7 +1689,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
     if (board == null) {
       return;
     }
-    board.draw(graphics, graphicsContext);
+    BoardRenderer.draw(board, graphics, graphicsContext);
 
     if (ratsnest != null) {
       ratsnest.draw(graphics, graphicsContext);

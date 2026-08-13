@@ -1,8 +1,6 @@
 package app.freerouting.board;
 
 import app.freerouting.autoroute.AutorouteControl;
-import app.freerouting.boardgraphics.BoardRenderer;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.BoardLibrary;
 import app.freerouting.core.Padstack;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
@@ -18,7 +16,6 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
-import java.awt.Graphics;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -1352,11 +1349,6 @@ public class BasicBoard implements Serializable {
   /** Returns the layer count of this board. */
   public int getLayerCount() {
     return layerStructure.arr.length;
-  }
-
-  /** Draws all board items through the GUI-owned board renderer. */
-  public void draw(Graphics graphics, GraphicsContext graphicsContext) {
-    BoardRenderer.draw(this, graphics, graphicsContext);
   }
 
   /**
