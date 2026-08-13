@@ -20,7 +20,7 @@
 | **6** | Rendering inversion (highest risk) | **COMPLETE** | Neutral metadata, GUI renderer, offscreen smoke, renderer-owned traversal, direct strategies for all major board families, compatibility overlay migration, and final v2.3.0 parity are green |
 | **7** | Autorouter diagnostics | **COMPLETE** | Headless `AutorouteDiagnostic` snapshots, opt-in GUI adapter, no autoroute AWT/gui.rendering dependencies, and cheap DRC/completion smoke are green |
 | **8** | Move interactive → gui.interactive | **COMPLETE** | Flat production/test move, command flattening, i18n/resource FQCN migration, ArchUnit/docs rewiring, and cheap full-DRC/completion smoke are green |
-| **9** | Extract gui.session | **COMPLETE** | Session cluster and opaque state seam landed; strict session boundary and full gates are green |
+| **9** | Extract gui.session | **COMPLETE** | Session cluster, lifecycle ports, generation checks, EDT-only worker presentation, strict session boundary, and full gates are green |
 | **10** | Move former boardgraphics → gui.rendering | **COMPLETE** | Rendering tree, `ScreenTransform`, board paint inversion cleanup, i18n/resources, and strict F3 boundary are green |
 | **11** | A11y expansion + CI | **IN PROGRESS — focused increment** | Menu/toolbar/settings component seams, EN+hu state/action coverage, leak checks, and path-filtered GUI workflow landed; progress controls and legacy top-level window construction remain deferred |
 | **12** | Final cleanup + docs | Not started | |
@@ -120,12 +120,12 @@
 | 2026-08-13 | Phase 10 rendering inversion cleanup: removed `Drawable` plus board-model draw priority/color/intensity APIs and the unused conduction-area rendering transform cache field; `BoardRenderer` now owns `BoardItemType`/item-family dispatch for normal and overlay rendering. F3 was promoted from frozen to strict zero-dependency. |
 | 2026-08-13 | Phase 11 focused increment: tagged real `BoardMenuBar` top-level menus; added frame-free menu, toolbar, and visibility-settings component seams with stable locators and translated accessible names; added EN+hu action/state/leak coverage and expanded Hungarian bundle ownership. |
 | 2026-08-13 | Phase 11 CI: added path-filtered `.github/workflows/gui-a11y.yml` for final GUI paths plus legacy interactive paths, running forced-headless `testGui` and Hungarian resource parity. D25 task graph remains unchanged; progress controls and direct top-level-window coverage are deferred. |
+| 2026-08-13 | Phase 9 follow-up: added session-owned load, route-control, progress, replacement, and detached-settings ports with load/run generations; routed worker presentation and terminal cleanup through the EDT adapter; added off-EDT `ScreenMessages` protection and worker-boundary ArchUnit coverage. Compile, focused session/architecture tests, quality gates, i18n, and whitespace checks are green. A concurrent full-`check` attempt hit the existing 30-second `Dac2020Bm01RoutingTest` fixture timeout; the focused routing test passed. |
 
 ## 6. Next actions
 
-1. **Phase 10 COMPLETE** — rendering moved to `gui.rendering`, `ScreenTransform` introduced, board-model paint APIs removed, strict F3 is green, and final verification is recorded below.
-2. **Phase 11** — finish deferred progress-control and legacy-window content coverage in a later focused increment.
-3. **Phase 12** — complete final cleanup, documentation, AGENTS.md D24 sign-off, and strict ArchUnit promotion review.
+1. **Phase 11** — finish deferred progress-control and legacy-window content coverage in a later focused increment.
+2. **Phase 12** — complete final cleanup, documentation, AGENTS.md D24 sign-off, and strict ArchUnit promotion review.
 
 ## 7. Artifacts
 

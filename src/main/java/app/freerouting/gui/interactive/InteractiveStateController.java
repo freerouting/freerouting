@@ -26,6 +26,7 @@ public final class InteractiveStateController implements EditorStateController {
   private final TextManager textManager;
   private InteractiveState currentState;
 
+  /** Creates the concrete editor-state controller for a board manager. */
   public InteractiveStateController(GuiBoardManager boardManager) {
     this.boardManager = boardManager;
     this.textManager = new TextManager(GuiBoardManager.class, boardManager.getLocale());

@@ -2,7 +2,9 @@ package app.freerouting.gui;
 
 import app.freerouting.core.RoutingJob;
 import app.freerouting.gui.interactive.InteractiveStateController;
+import app.freerouting.gui.session.EdtExecutor;
 import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.session.GuiSessionPortAdapter;
 import app.freerouting.gui.session.ScreenMessages;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
@@ -245,6 +247,9 @@ public class BoardPanel extends JPanel {
    */
   GuiBoardManager boardHandling;
 
+  /** Stable session port shared across manager replacement and asynchronous loads. */
+  private final GuiSessionPortAdapter sessionPort;
+
   /**
    * Screen location where the right mouse button was last clicked.
    *
@@ -329,6 +334,9 @@ public class BoardPanel extends JPanel {
     this.boardFrame = boardFrame;
     this.globalSettings = globalSettings;
     this.scrollPane = boardFrame.scrollPane;
+    this.sessionPort =
+        new GuiSessionPortAdapter(
+            () -> this.boardHandling, () -> this.boardFrame, EdtExecutor.swing());
     defaultInit(globalSettings, routingJob, settingsMerger);
   }
 
@@ -387,7 +395,8 @@ public class BoardPanel extends JPanel {
     addMouseWheelListener(
         evt -> boardHandling.mouseWheelMoved(evt.getPoint(), evt.getWheelRotation()));
 
-    boardHandling = new GuiBoardManager(this, globalSettings, routingJob, settingMerger);
+    boardHandling =
+        new GuiBoardManager(this, globalSettings, routingJob, settingMerger, sessionPort);
     installEditorStateController();
     boardHandling.setBoardFrame(this.boardFrame);
     setAutoscrolls(true);
@@ -429,7 +438,8 @@ public class BoardPanel extends JPanel {
       boardHandling.dispose();
     }
 
-    boardHandling = new GuiBoardManager(this, globalSettings, routingJob, settingsMerger);
+    boardHandling =
+        new GuiBoardManager(this, globalSettings, routingJob, settingsMerger, sessionPort);
     installEditorStateController();
     boardHandling.setBoardFrame(this.boardFrame);
   }

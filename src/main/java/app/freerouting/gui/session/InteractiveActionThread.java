@@ -46,7 +46,7 @@ import java.util.List;
  * <pre>{@code
  * InteractiveActionThread thread =
  *     InteractiveActionThread.get_autorouter_and_route_optimizer_instance(
- *         boardManager, routingJob);
+ *         sessionPort, generation, routingJob);
  * thread.addListener(myListener);
  * thread.start();
  * // Later, to stop:
@@ -71,7 +71,6 @@ import java.util.List;
  * </ul>
  *
  * @see StoppableThread
- * @see GuiBoardManager
  * @see ThreadActionListener
  * @see AutorouterAndRouteOptimizerThread
  */
@@ -90,7 +89,9 @@ public abstract class InteractiveActionThread extends StoppableThread {
    *   <li>Panel and frame references
    * </ul>
    */
-  public final GuiBoardManager boardManager;
+  protected final GuiSessionPort sessionPort;
+
+  protected final RunGeneration generation;
 
   /**
    * The routing job context orchestrating the routing process.
@@ -121,19 +122,19 @@ public abstract class InteractiveActionThread extends StoppableThread {
   protected List<ThreadActionListener> listeners = new ArrayList<>();
 
   /**
-   * Creates a new interactive action thread for the specified board manager and job.
+   * Creates a new interactive action thread for the specified session port and run.
    *
    * <p>Protected constructor ensures that instances are created only through the factory methods
    * which return properly configured subclass instances.
    *
-   * @param boardManager the GUI board manager this thread will operate on
+   * @param sessionPort the session port for domain and presentation callbacks
+   * @param generation the run generation used to reject stale callbacks
    * @param job the routing job context for this operation
-   * @see #getAutorouteInstance(GuiBoardManager, RoutingJob)
-   * @see #getAutorouterAndRouteOptimizerInstance(GuiBoardManager, RoutingJob)
-   * @see #getPullTightInstance(GuiBoardManager, RoutingJob)
    */
-  protected InteractiveActionThread(GuiBoardManager boardManager, RoutingJob job) {
-    this.boardManager = boardManager;
+  protected InteractiveActionThread(
+      GuiSessionPort sessionPort, RunGeneration generation, RoutingJob job) {
+    this.sessionPort = sessionPort;
+    this.generation = generation;
     this.routingJob = job;
   }
 
@@ -146,14 +147,15 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * <p>Originally intended for routing individual traces or small groups of connections
    * interactively, but has been superseded by the batch autorouter.
    *
-   * @param boardManager the GUI board manager
+   * @param sessionPort the session port for domain and presentation callbacks
+   * @param generation the run generation
    * @param job the routing job context
    * @return a configured (but currently non-functional) autoroute thread
    * @see AutorouteThread
    */
   public static InteractiveActionThread getAutorouteInstance(
-      GuiBoardManager boardManager, RoutingJob job) {
-    return new AutorouteThread(boardManager, job);
+      GuiSessionPort sessionPort, RunGeneration generation, RoutingJob job) {
+    return new AutorouteThread(sessionPort, generation, job);
   }
 
   /**
@@ -184,19 +186,20 @@ public abstract class InteractiveActionThread extends StoppableThread {
    *
    * <pre>{@code
    * var thread = InteractiveActionThread.get_autorouter_and_route_optimizer_instance(
-   *     boardManager, routingJob);
+   *     sessionPort, generation, routingJob);
    * thread.start();
    * }</pre>
    *
-   * @param boardManager the GUI board manager for display updates
+   * @param sessionPort the session port for domain and presentation callbacks
+   * @param generation the run generation
    * @param job the routing job containing configuration and board data
    * @return a configured batch autorouter and optimizer thread ready to start
    * @see AutorouterAndRouteOptimizerThread
    * @see GlobalSettings#saveAsJson(GlobalSettings)
    */
   public static InteractiveActionThread getAutorouterAndRouteOptimizerInstance(
-      GuiBoardManager boardManager, RoutingJob job) {
-    var routerThread = new AutorouterAndRouteOptimizerThread(boardManager, job);
+      GuiSessionPort sessionPort, RunGeneration generation, RoutingJob job) {
+    var routerThread = new AutorouterAndRouteOptimizerThread(sessionPort, generation, job);
     routerThread.addListener(
         new ThreadActionListener() {
           @Override
@@ -218,7 +221,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
             // address
             if ((globalSettings.statistics.jobsCompleted >= 5)
                 && globalSettings.userProfileSettings.userEmail.isEmpty()) {
-              boardManager.getPanel().boardFrame.menubar.showProfileDialog();
+              sessionPort.showProfileDialog();
             }
           }
         });
@@ -235,14 +238,15 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * <p>Pull-tight optimization was intended to straighten traces and remove unnecessary corners,
    * but is currently not available in the inspection mode.
    *
-   * @param boardManager the GUI board manager
+   * @param sessionPort the session port for domain and presentation callbacks
+   * @param generation the run generation
    * @param job the routing job context
    * @return a configured (but currently non-functional) pull-tight thread
    * @see PullTightThread
    */
   public static InteractiveActionThread getPullTightInstance(
-      GuiBoardManager boardManager, RoutingJob job) {
-    return new PullTightThread(boardManager, job);
+      GuiSessionPort sessionPort, RunGeneration generation, RoutingJob job) {
+    return new PullTightThread(sessionPort, generation, job);
   }
 
   /**
@@ -282,7 +286,6 @@ public abstract class InteractiveActionThread extends StoppableThread {
   @Override
   public void run() {
     threadAction();
-    boardManager.repaint();
   }
 
   /**
@@ -318,12 +321,12 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * <p>The {@code thread_action()} method does nothing, making this thread effectively a no-op when
    * created and started.
    *
-   * @see #getAutorouteInstance(GuiBoardManager, RoutingJob)
+   * @see #getAutorouteInstance(GuiSessionPort, RunGeneration, RoutingJob)
    */
   private static final class AutorouteThread extends InteractiveActionThread {
 
-    private AutorouteThread(GuiBoardManager boardHandling, RoutingJob job) {
-      super(boardHandling, job);
+    private AutorouteThread(GuiSessionPort sessionPort, RunGeneration generation, RoutingJob job) {
+      super(sessionPort, generation, job);
     }
 
     /**
@@ -354,12 +357,12 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * <p>However, the implementation has been disabled in the current inspection mode. The {@code
    * thread_action()} method does nothing.
    *
-   * @see #getPullTightInstance(GuiBoardManager, RoutingJob)
+   * @see #getPullTightInstance(GuiSessionPort, RunGeneration, RoutingJob)
    */
   private static final class PullTightThread extends InteractiveActionThread {
 
-    private PullTightThread(GuiBoardManager boardHandling, RoutingJob job) {
-      super(boardHandling, job);
+    private PullTightThread(GuiSessionPort sessionPort, RunGeneration generation, RoutingJob job) {
+      super(sessionPort, generation, job);
     }
 
     /**

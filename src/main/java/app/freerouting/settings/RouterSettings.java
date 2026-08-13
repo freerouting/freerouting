@@ -494,6 +494,7 @@ public class RouterSettings implements Serializable, Cloneable {
     }
     result.maxPasses = this.maxPasses;
     result.maxItems = this.maxItems;
+    result.saveIntermediateStages = this.saveIntermediateStages;
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
     result.holeClearanceUm = this.holeClearanceUm;
     result.neckWidthUm = this.neckWidthUm;

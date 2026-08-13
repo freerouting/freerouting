@@ -267,6 +267,28 @@ class ModuleBoundariesArchTest {
         .check(classes);
   }
 
+  /** Background session workers may publish events, but must not reach Swing or window owners. */
+  @Test
+  void guiSessionWorkersMustUseSessionPortsForPresentation() {
+    JavaClasses classes = importMainClasses();
+    noClasses()
+        .that()
+        .haveFullyQualifiedName("app.freerouting.gui.session.InteractiveActionThread")
+        .or()
+        .haveFullyQualifiedName("app.freerouting.gui.session.AutorouterAndRouteOptimizerThread")
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage(
+            "javax.swing..",
+            "app.freerouting.gui.BoardFrame",
+            "app.freerouting.gui.BoardPanel",
+            "app.freerouting.gui.session.GuiBoardManager")
+        .because(
+            "background workers must publish session events; only the EDT adapter may reach Swing"
+                + " or window-owned GUI state")
+        .check(classes);
+  }
+
   /**
    * R5 (strict): pipeline/support packages must not depend on the GUI layer. Currently green
    * (io/util gap closed); complements the narrower existing rules.

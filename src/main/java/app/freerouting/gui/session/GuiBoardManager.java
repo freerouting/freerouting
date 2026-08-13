@@ -399,6 +399,9 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
    */
   private InteractiveActionThread interactiveActionThread;
 
+  /** Session-owned boundary for worker lifecycle and presentation updates. */
+  private final GuiSessionPort sessionPort;
+
   /**
    * Visual display manager for incomplete connections (air wires/rats nest).
    *
@@ -473,6 +476,19 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
       GlobalSettings globalSettings,
       RoutingJob routingJob,
       SettingsMerger settingsMerger) {
+    this(panel, globalSettings, routingJob, settingsMerger, null);
+  }
+
+  /**
+   * Creates a manager with an explicit session port. The overload is used by {@link BoardPanel} so
+   * a board replacement/load port can survive manager replacement while stale workers are rejected.
+   */
+  public GuiBoardManager(
+      BoardPanel panel,
+      GlobalSettings globalSettings,
+      RoutingJob routingJob,
+      SettingsMerger settingsMerger,
+      GuiSessionPortAdapter sessionPort) {
     super(routingJob);
     this.globalSettings = globalSettings;
     this.settingsMerger = settingsMerger;
@@ -480,6 +496,10 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
     this.panel = panel;
     this.screenMessages = panel.screenMessages;
     this.tm = new TextManager(this.getClass(), globalSettings.currentLocale);
+    this.sessionPort =
+        sessionPort != null
+            ? sessionPort
+            : new GuiSessionPortAdapter(() -> this, () -> this.boardFrame, EdtExecutor.swing());
 
     this.logEntryAddedListener = this::logEntryAdded;
     FRLogger.getLogEntries().addLogEntryAddedListener(this.logEntryAddedListener);
@@ -541,7 +561,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
     if ((logEntry.getType() == LogEntryType.Error)
         || (logEntry.getType() == LogEntryType.Warning)) {
       LogEntries entries = FRLogger.getLogEntries();
-      screenMessages.setErrorAndWarningCount(entries.getErrorCount(), entries.getWarningCount());
+      sessionPort.publishLogCounts(entries.getErrorCount(), entries.getWarningCount());
     }
   }
 
@@ -2743,11 +2763,14 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
     // Generate a snapshot of the board before starting the autorouter
     board.generateSnapshot();
 
+    // Detach the worker from live GUI settings before it starts.
+    job.setSettings(sessionPort.settingsSnapshot().copy());
+    RunGeneration generation = sessionPort.beginRoute(job);
+
     // Start the auto-router and route optimizer
-    // TODO: ideally we should only pass the board and the routerSettings to the
-    // thread, and let the thread create the router and optimizer
     this.interactiveActionThread =
-        InteractiveActionThread.getAutorouterAndRouteOptimizerInstance(this, job);
+        InteractiveActionThread.getAutorouterAndRouteOptimizerInstance(
+            sessionPort, generation, job);
     this.interactiveActionThread.start();
 
     return this.interactiveActionThread;
@@ -2764,12 +2787,23 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
    * @see InteractiveActionThread#requestStop()
    */
   public void stopAutorouterAndRouteOptimizer() {
+    if (sessionPort instanceof GuiSessionPortAdapter adapter) {
+      adapter.requestStopCurrent();
+    } else {
+      requestStopFromSessionPort();
+    }
+  }
+
+  /** Requests the worker to stop without changing presentation state. */
+  void requestStopFromSessionPort() {
     if (this.interactiveActionThread != null) {
-      // The left button is used to stop the interactive action thread.
       this.interactiveActionThread.requestStop();
     }
+  }
 
-    this.setBoardReadOnly(false);
+  /** Returns the session-owned worker port. */
+  public GuiSessionPort getSessionPort() {
+    return sessionPort;
   }
 
   /**
@@ -3155,6 +3189,10 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
    * <p>Should be called when the board manager is no longer needed.
    */
   public void dispose() {
+    requestStopFromSessionPort();
+    if (sessionPort instanceof GuiSessionPortAdapter adapter) {
+      adapter.invalidateRun();
+    }
     FRLogger.getLogEntries().removeLogEntryAddedListener(this.logEntryAddedListener);
     FRLogger.removeTraceEventListener(this.traceEventListener);
     closeFiles();

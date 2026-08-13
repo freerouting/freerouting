@@ -5,6 +5,7 @@ import app.freerouting.core.RouterCounters;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
+import java.awt.EventQueue;
 import java.text.NumberFormat;
 import java.util.Locale;
 import javax.swing.JLabel;
@@ -63,12 +64,14 @@ public class ScreenMessages {
 
   /** Updates the displayed error and warning counts. */
   public void setErrorAndWarningCount(int errorsCount, int warningCount) {
+    requireEdt();
     errorLabel.setText(Integer.toString(errorsCount));
     warningLabel.setText(Integer.toString(warningCount));
   }
 
   /** Sets the message in the status field. */
   public void setStatusMessage(String message) {
+    requireEdt();
     if (!this.writeProtected) {
       statusField.setText(message);
     }
@@ -76,6 +79,7 @@ public class ScreenMessages {
 
   /** Displays the latest traced operation in the footer. */
   public void setTraceMessage(String operation, String message, String impactedItems) {
+    requireEdt();
     if (this.writeProtected) {
       return;
     }
@@ -89,6 +93,7 @@ public class ScreenMessages {
 
   /** Sets the displayed layer number on the screen. */
   public void setLayer(String layerName) {
+    requireEdt();
     if (!this.writeProtected) {
       layerField.setText(activeLayerString + layerName);
     }
@@ -96,6 +101,7 @@ public class ScreenMessages {
 
   /** Updates the footer with interactive autorouting progress. */
   public void setInteractiveAutorouteInfo(int found, int failed, int itemsToGo) {
+    requireEdt();
     addField.setText(tm.getText("interactive_autoroute_add", String.valueOf(itemsToGo)));
     layerField.setText(
         tm.getText("interactive_autoroute_layer", String.valueOf(found), String.valueOf(failed)));
@@ -103,6 +109,7 @@ public class ScreenMessages {
 
   /** Updates the footer with batch autorouting progress. */
   public void setBatchAutorouteInfo(RouterCounters routerCounters) {
+    requireEdt();
     int itemsToGo = routerCounters.queuedToBeRoutedCount;
     int routed = routerCounters.routedCount;
     int failed = routerCounters.failedToBeRoutedCount;
@@ -124,6 +131,7 @@ public class ScreenMessages {
 
   /** Updates the footer with post-route statistics. */
   public void setPostRouteInfo(int viaCount, double traceLength, Unit unit) {
+    requireEdt();
     addField.setText(tm.getText("post_route_add", String.valueOf(viaCount)));
     layerField.setText(
         tm.getText("post_route_layer", this.numberFormat.format(traceLength), unit.toString()));
@@ -131,6 +139,7 @@ public class ScreenMessages {
 
   /** Sets the displayed layer of the nearest target item in interactive routing. */
   public void setTargetLayer(String layerName) {
+    requireEdt();
     if (!(layerName.equals(prevTargetLayerName) || this.writeProtected)) {
       addField.setText(targetLayerString + layerName);
       prevTargetLayerName = layerName;
@@ -139,6 +148,7 @@ public class ScreenMessages {
 
   /** Updates the displayed mouse position. */
   public void setMousePosition(FloatPoint position) {
+    requireEdt();
     if (position == null || this.mousePosition == null || this.writeProtected) {
       return;
     }
@@ -147,6 +157,7 @@ public class ScreenMessages {
 
   /** Updates the displayed board unit label. */
   public void setUnitLabel(String unit) {
+    requireEdt();
     this.unitLabel.setText(unit);
   }
 
@@ -155,6 +166,7 @@ public class ScreenMessages {
    * target item.
    */
   public void clearAddField() {
+    requireEdt();
     if (!this.writeProtected) {
       addField.setText(EMPTY_STRING);
       prevTargetLayerName = EMPTY_STRING;
@@ -163,6 +175,7 @@ public class ScreenMessages {
 
   /** Clears the status field and the additional field. */
   public void clear() {
+    requireEdt();
     if (!this.writeProtected) {
       statusField.setText(EMPTY_STRING);
       clearAddField();
@@ -173,16 +186,24 @@ public class ScreenMessages {
 
   /** As long as writeProtected is set to true, the set functions in this class will do nothing. */
   public void setWriteProtected(boolean value) {
+    requireEdt();
     writeProtected = value;
   }
 
   /** Updates the displayed board score and routing counters. */
   public void setBoardScore(float score, int unroutedCount, int violationCount) {
+    requireEdt();
     scoreField.setText(
         tm.getText(
             "score",
             FRLogger.defaultFloatFormat.format(score),
             String.valueOf(unroutedCount),
             String.valueOf(violationCount)));
+  }
+
+  private static void requireEdt() {
+    if (!EventQueue.isDispatchThread()) {
+      throw new IllegalStateException("ScreenMessages must only be mutated on the EDT");
+    }
   }
 }

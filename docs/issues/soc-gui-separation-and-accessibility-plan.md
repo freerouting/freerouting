@@ -379,8 +379,8 @@ forced-headless GUI tests, i18n checks, Spotless, Checkstyle, and rewrite checks
 - [x] **Remove all `gui.session → gui.interactive` imports** (not only concrete `*State`) (D27/D30).
 - [x] Confirm `gui.session → gui.rendering` remains the allowed D26 edge (`GraphicsContext` ownership) — no forced decoupling.
 - [x] Temporary §12 freeze on `gui.session → gui.interactive` only while facade lands; **removed at phase exit**; `gui.**` slice-cycle check green.
-- [ ] Ports for load / route start-stop / progress / board replace / settings.
-- [ ] Eliminate inventoried worker→Swing call sites; EDT-only Swing mutation.
+- [x] Ports for load / route start-stop / progress / board replace / settings.
+- [x] Eliminate inventoried worker→Swing call sites; EDT-only Swing mutation.
 - [ ] Confirm `getPrimarySession` / `setPrimarySession` callers remain correct (still management API).
 - [ ] A11y workflows still pass component-only under forced headless.
 
@@ -390,10 +390,18 @@ facades. `EditorStateHandle`, `EditorStateKind`, `EditorEvent`, `InteractiveComm
 `EditorStateController` define the opaque inversion seam. `InteractiveStateController` is the concrete
 implementation in `gui.interactive`; `BoardPanel` registers it and bootstraps `RouteMenuState`.
 The session package has no production dependency on `gui.interactive`; the strict ArchUnit rule and
-GUI slice-cycle rule are green. Full `check`, forced-headless `testGui`, i18n context validation,
-Spotless, Checkstyle, rewrite checks, and targeted session/Specctra ArchUnit tests pass. The remaining
-Phase 9 follow-up is the broader worker-to-Swing/EDT cleanup and explicit load/progress port
-extraction; the composition seam is the supported boundary until that work is addressed.
+GUI slice-cycle rule are green.
+
+The Phase 9 follow-up is now complete: session-owned load, route-control, progress, replacement, and
+detached-settings ports use load/run generations to reject stale callbacks. Background workers publish
+immutable events through `GuiSessionPort`; the adapter schedules all presentation mutations on the EDT,
+and terminal cleanup—not a stop request—restores editability. `ScreenMessages` rejects off-EDT
+mutation, while board loading requests stop before replacement and ignores stale parse/paint
+completions. Focused session-port and worker-boundary ArchUnit tests, the required Spotless,
+Checkstyle, rewrite, i18n, and whitespace gates, forced-headless `testGui`, and targeted routing
+smoke are green. A concurrent full-`check` attempt hit the existing 30-second
+`Dac2020Bm01RoutingTest` fixture timeout; the focused routing test passed. The separate Phase 11
+progress-window accessibility increment remains deferred.
 
 ### Phase 10 — Move to `gui.rendering`
 
