@@ -3,6 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.Pin;
+import app.freerouting.boardgraphics.BoardRenderer;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import java.awt.Color;
@@ -109,9 +110,11 @@ public final class PinSwapState extends InteractiveState {
   public void draw(Graphics graphics) {
     Color highlightColor = hdlg.graphicsContext.getHighlightColor();
     double highligtColorIntensity = hdlg.graphicsContext.getHighlightColorIntensity();
-    fromPin.draw(graphics, hdlg.graphicsContext, highlightColor, 0.5 * highligtColorIntensity);
+    BoardRenderer.drawOverlayItem(
+        fromPin, graphics, hdlg.graphicsContext, highlightColor, 0.5 * highligtColorIntensity);
     for (Pin currPin : swappablePins) {
-      currPin.draw(graphics, hdlg.graphicsContext, highlightColor, highligtColorIntensity);
+      BoardRenderer.drawOverlayItem(
+          currPin, graphics, hdlg.graphicsContext, highlightColor, highligtColorIntensity);
     }
   }
 }

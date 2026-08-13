@@ -2,6 +2,7 @@ package app.freerouting.interactive;
 
 import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
+import app.freerouting.boardgraphics.BoardRenderer;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.WindowObjectInfo;
 import java.awt.Graphics;
@@ -224,7 +225,8 @@ public final class InspectedItemState extends InteractiveState {
     }
 
     for (Item currItem : itemList) {
-      currItem.draw(
+      BoardRenderer.drawOverlayItem(
+          currItem,
           graphics,
           hdlg.graphicsContext,
           hdlg.graphicsContext.getHighlightColor(),

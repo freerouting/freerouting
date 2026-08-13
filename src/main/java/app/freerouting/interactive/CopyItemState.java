@@ -6,6 +6,7 @@ import app.freerouting.board.Item;
 import app.freerouting.board.ObstacleArea;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Via;
+import app.freerouting.boardgraphics.BoardRenderer;
 import app.freerouting.core.Package;
 import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
@@ -242,7 +243,8 @@ public final class CopyItemState extends InteractiveState {
       return;
     }
     for (Item currItem : itemList) {
-      currItem.draw(
+      BoardRenderer.drawOverlayItem(
+          currItem,
           graphics,
           hdlg.graphicsContext,
           hdlg.graphicsContext.getHighlightColor(),

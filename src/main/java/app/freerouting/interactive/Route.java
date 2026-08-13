@@ -10,6 +10,7 @@ import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Unit;
+import app.freerouting.boardgraphics.BoardRenderer;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.boardgraphics.NetIncompletesGraphics;
 import app.freerouting.core.Padstack;
@@ -479,7 +480,8 @@ public class Route {
 
     // highlight the swappable pins and their incompletes
     for (SwapPinInfo currInfo : this.swapPinInfos) {
-      currInfo.pin.draw(graphics, graphicsContext, highlightColor, 0.3 * highlightColorIntensity);
+      BoardRenderer.drawOverlayItem(
+          currInfo.pin, graphics, graphicsContext, highlightColor, 0.3 * highlightColorIntensity);
       if (currInfo.incomplete != null) {
         // draw the swap pin incomplete
         FloatPoint[] drawPoints = new FloatPoint[2];
@@ -493,7 +495,8 @@ public class Route {
     // highlight the target set
     for (Item currItem : targetSet) {
       if (!(currItem instanceof ConductionArea)) {
-        currItem.draw(graphics, graphicsContext, highlightColor, highlightColorIntensity);
+        BoardRenderer.drawOverlayItem(
+            currItem, graphics, graphicsContext, highlightColor, highlightColorIntensity);
       }
     }
     FloatPoint fromCorner = this.prevCorner.toFloat();

@@ -5,6 +5,7 @@ import app.freerouting.board.Item;
 import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.Via;
+import app.freerouting.boardgraphics.BoardRenderer;
 import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.rules.Net;
@@ -263,14 +264,7 @@ public final class InspectMenuState extends MenuState {
 
     // Draw the hovered item with highlight
     if (lastHoveredItem != null && hdlg.graphicsContext != null) {
-      Color[] highlightColors = lastHoveredItem.getDrawColors(hdlg.graphicsContext);
-
-      // Increase intensity for highlight effect
-      double baseIntensity = lastHoveredItem.getDrawIntensity(hdlg.graphicsContext);
-      double highlightIntensity = Math.min(1.0, baseIntensity * 1.5);
-
-      // Draw with increased brightness
-      lastHoveredItem.draw(graphics, hdlg.graphicsContext, highlightColors, highlightIntensity);
+      BoardRenderer.drawHighlightedOverlayItem(lastHoveredItem, graphics, hdlg.graphicsContext);
     }
   }
 

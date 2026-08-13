@@ -7,6 +7,7 @@ import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Item;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.Via;
+import app.freerouting.boardgraphics.BoardRenderer;
 import app.freerouting.core.BoardLibrary;
 import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -445,7 +446,7 @@ public final class MoveItemState extends InteractiveState {
       return;
     }
     for (Item currItem : this.itemList) {
-      currItem.draw(graphics, hdlg.graphicsContext);
+      BoardRenderer.drawOverlayItem(currItem, graphics, hdlg.graphicsContext);
     }
     if (this.clearanceViolations != null) {
       Color drawColor = hdlg.graphicsContext.getViolationsColor();

@@ -81,6 +81,55 @@ public final class BoardRenderer {
     drawComponentPartNumbers(board, graphics, graphicsContext);
   }
 
+  /**
+   * Draws an interactive overlay item through the renderer boundary.
+   *
+   * <p>This compatibility overload centralizes the remaining custom-color overlay path so
+   * interactive states no longer call board paint APIs directly. The family-specific replacement
+   * can now be completed inside this class without changing interactive callers again.
+   */
+  public static void drawOverlayItem(
+      Item item, Graphics graphics, GraphicsContext graphicsContext) {
+    if (item != null && graphics != null && graphicsContext != null) {
+      item.draw(graphics, graphicsContext);
+    }
+  }
+
+  /** Draws an interactive overlay item with caller-supplied colors and intensity. */
+  public static void drawOverlayItem(
+      Item item,
+      Graphics graphics,
+      GraphicsContext graphicsContext,
+      Color color,
+      double intensity) {
+    if (item != null && graphics != null && graphicsContext != null) {
+      item.draw(graphics, graphicsContext, color, intensity);
+    }
+  }
+
+  /** Draws an interactive overlay item with per-layer colors and intensity. */
+  public static void drawOverlayItem(
+      Item item,
+      Graphics graphics,
+      GraphicsContext graphicsContext,
+      Color[] colors,
+      double intensity) {
+    if (item != null && graphics != null && graphicsContext != null) {
+      item.draw(graphics, graphicsContext, colors, intensity);
+    }
+  }
+
+  /** Draws an interactive overlay item with per-layer colors and intensity. */
+  public static void drawHighlightedOverlayItem(
+      Item item, Graphics graphics, GraphicsContext graphicsContext) {
+    if (item == null || graphics == null || graphicsContext == null) {
+      return;
+    }
+    Color[] colors = item.getDrawColors(graphicsContext);
+    double intensity = Math.min(1.0, item.getDrawIntensity(graphicsContext) * 1.5);
+    item.draw(graphics, graphicsContext, colors, intensity);
+  }
+
   private static BasicBoard.DominantSide determineDominantSide(
       BasicBoard board, int activeLayer, int activeVirtualLayer) {
     if (activeVirtualLayer != -1) {
