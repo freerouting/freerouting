@@ -14,10 +14,10 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Sub-Issue 08 – Integration tests: headless path is fully independent of {@link
- * app.freerouting.interactive.InteractiveSettings}.
+ * app.freerouting.gui.interactive.InteractiveSettings}.
  *
  * <p>Verifies that a complete routing job runs end-to-end in headless mode without ever accessing
- * {@link app.freerouting.interactive.InteractiveSettings}. This complements {@code
+ * {@link app.freerouting.gui.interactive.InteractiveSettings}. This complements {@code
  * GuiStartupHeadlessTest} (in the {@code interactive} package), which covers the GUI initialisation
  * invariants.
  *
@@ -25,12 +25,12 @@ import org.junit.jupiter.api.Test;
  *
  * <ul>
  *   <li>{@link HeadlessBoardManager} never touches GUI-session state (it does not implement {@code
- *       app.freerouting.interactive.GuiSessionContract}).
+ *       app.freerouting.gui.interactive.GuiSessionContract}).
  *   <li>The routing job reaches a terminal state (COMPLETED, CANCELLED, or TERMINATED).
  *   <li>The completed job's board is non-null, confirming the engine produced results.
  * </ul>
  *
- * @see app.freerouting.interactive.HeadlessBoardManager
+ * @see app.freerouting.gui.interactive.HeadlessBoardManager
  */
 class HeadlessCompleteRoutingTest extends RoutingFixtureTest {
 

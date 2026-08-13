@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import app.freerouting.gui.BoardFrame;
 import app.freerouting.gui.WindowClearanceViolations;
-import app.freerouting.interactive.InteractiveState;
+import app.freerouting.gui.interactive.InteractiveState;
 import app.freerouting.util.TextManager;
 import java.util.Locale;
 import org.junit.jupiter.api.Test;

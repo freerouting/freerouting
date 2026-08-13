@@ -13400,7 +13400,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
   },
   "interactive.GuiBoardManager.incomplete_connections_to_route": {
     "bundle": "interactive.GuiBoardManager",
@@ -13417,7 +13417,7 @@
     "related_keys": [
       "incompletes"
     ],
-    "java_class": "app.freerouting.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
   },
   "interactive.GuiBoardManager.incompletes": {
     "bundle": "interactive.GuiBoardManager",
@@ -13432,7 +13432,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
   },
   "interactive.GuiBoardManager.length_violations": {
     "bundle": "interactive.GuiBoardManager",
@@ -13447,7 +13447,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
   },
   "interactive.GuiBoardManager.undo": {
     "bundle": "interactive.GuiBoardManager",
@@ -13462,7 +13462,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
   },
   "interactive.GuiBoardManager.no_more_undo_possible": {
     "bundle": "interactive.GuiBoardManager",
@@ -13479,7 +13479,7 @@
     "related_keys": [
       "no_more_redo_possible"
     ],
-    "java_class": "app.freerouting.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
   },
   "interactive.GuiBoardManager.redo": {
     "bundle": "interactive.GuiBoardManager",
@@ -13494,7 +13494,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
   },
   "interactive.GuiBoardManager.no_more_redo_possible": {
     "bundle": "interactive.GuiBoardManager",
@@ -13511,7 +13511,7 @@
     "related_keys": [
       "no_more_undo_possible"
     ],
-    "java_class": "app.freerouting.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
   },
   "interactive.GuiBoardManager.select_menu": {
     "bundle": "interactive.GuiBoardManager",
@@ -13526,7 +13526,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
   },
   "interactive.GuiBoardManager.route_menu": {
     "bundle": "interactive.GuiBoardManager",
@@ -13541,7 +13541,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
   },
   "interactive.GuiBoardManager.drag_menu": {
     "bundle": "interactive.GuiBoardManager",
@@ -13556,7 +13556,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
   },
   "interactive.GuiBoardManager.save_error": {
     "bundle": "interactive.GuiBoardManager",
@@ -13571,7 +13571,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
   },
   "interactive.GuiBoardManager.dsn_reader_modal_title": {
     "bundle": "interactive.GuiBoardManager",
@@ -13586,7 +13586,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
   },
   "interactive.InteractiveState.adding_hole_completed": {
     "bundle": "interactive.InteractiveState",
@@ -13605,7 +13605,7 @@
       "adding_hole_to_circle_not_yet_implemented",
       "adding_hole_to_obstacle_area"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.adding_hole_failed": {
     "bundle": "interactive.InteractiveState",
@@ -13624,7 +13624,7 @@
       "adding_hole_to_circle_not_yet_implemented",
       "adding_hole_to_obstacle_area"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.adding_hole_to_circle_not_yet_implemented": {
     "bundle": "interactive.InteractiveState",
@@ -13641,7 +13641,7 @@
     "related_keys": [
       "adding_hole_to_obstacle_area"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.adding_hole_to_obstacle_area": {
     "bundle": "interactive.InteractiveState",
@@ -13658,7 +13658,7 @@
     "related_keys": [
       "adding_hole_to_circle_not_yet_implemented"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.all_connections_routed": {
     "bundle": "interactive.InteractiveState",
@@ -13675,7 +13675,7 @@
     "related_keys": [
       "all_items_inserted"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.all_items_inserted": {
     "bundle": "interactive.InteractiveState",
@@ -13692,7 +13692,7 @@
     "related_keys": [
       "all_connections_routed"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.autoroute": {
     "bundle": "interactive.InteractiveState",
@@ -13707,7 +13707,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.batch_autorouter": {
     "bundle": "interactive.InteractiveState",
@@ -13724,7 +13724,7 @@
     "related_keys": [
       "batch_optimizer"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.batch_optimizer": {
     "bundle": "interactive.InteractiveState",
@@ -13741,7 +13741,7 @@
     "related_keys": [
       "batch_autorouter"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.cannot_change_placement_side": {
     "bundle": "interactive.InteractiveState",
@@ -13756,7 +13756,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.clearance_violations_found": {
     "bundle": "interactive.InteractiveState",
@@ -13771,7 +13771,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.completed": {
     "bundle": "interactive.InteractiveState",
@@ -13786,7 +13786,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.connections_could_not_be_routed": {
     "bundle": "interactive.InteractiveState",
@@ -13804,7 +13804,7 @@
       "connections_found",
       "connections_not_found"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.connections_found": {
     "bundle": "interactive.InteractiveState",
@@ -13822,7 +13822,7 @@
       "connections_could_not_be_routed",
       "connections_not_found"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.connections_not_found": {
     "bundle": "interactive.InteractiveState",
@@ -13840,7 +13840,7 @@
       "connections_could_not_be_routed",
       "connections_found"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.creating_circle": {
     "bundle": "interactive.InteractiveState",
@@ -13858,7 +13858,7 @@
       "creating_polygonshape",
       "creating_tile"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.creating_polygonshape": {
     "bundle": "interactive.InteractiveState",
@@ -13876,7 +13876,7 @@
       "creating_circle",
       "creating_tile"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.creating_tile": {
     "bundle": "interactive.InteractiveState",
@@ -13894,7 +13894,7 @@
       "creating_circle",
       "creating_polygonshape"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.drag_left_mouse_button_to_create_region_to_display": {
     "bundle": "interactive.InteractiveState",
@@ -13912,7 +13912,7 @@
       "drag_left_mouse_button_to_select_cutout_rectangle",
       "drag_left_mouse_button_to_selects_items_in_region"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.drag_left_mouse_button_to_select_cutout_rectangle": {
     "bundle": "interactive.InteractiveState",
@@ -13929,7 +13929,7 @@
     "related_keys": [
       "drag_left_mouse_button_to_selects_items_in_region"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.drag_left_mouse_button_to_selects_items_in_region": {
     "bundle": "interactive.InteractiveState",
@@ -13947,7 +13947,7 @@
       "drag_left_mouse_button_to_create_region_to_display",
       "drag_left_mouse_button_to_select_cutout_rectangle"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.dragging_item": {
     "bundle": "interactive.InteractiveState",
@@ -13962,7 +13962,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.fanout": {
     "bundle": "interactive.InteractiveState",
@@ -13977,7 +13977,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.in_inspect_menu": {
     "bundle": "interactive.InteractiveState",
@@ -13995,7 +13995,7 @@
       "in_inspect_mode",
       "in_inspect_item_mode"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.in_inspect_mode": {
     "bundle": "interactive.InteractiveState",
@@ -14013,7 +14013,7 @@
       "in_inspect_menu",
       "in_inspect_item_mode"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.in_inspect_item_mode": {
     "bundle": "interactive.InteractiveState",
@@ -14031,7 +14031,7 @@
       "in_inspect_menu",
       "in_inspect_mode"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.is_not_active_for_the_current_net": {
     "bundle": "interactive.InteractiveState",
@@ -14046,7 +14046,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.move_completed": {
     "bundle": "interactive.InteractiveState",
@@ -14063,7 +14063,7 @@
     "related_keys": [
       "move_component_failed_because_no_item_selected"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.insertion_failed_because_of_obstacles": {
     "bundle": "interactive.InteractiveState",
@@ -14078,7 +14078,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.interrupted": {
     "bundle": "interactive.InteractiveState",
@@ -14093,7 +14093,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.keepout_cancelled_because_of_overlaps": {
     "bundle": "interactive.InteractiveState",
@@ -14110,7 +14110,7 @@
     "related_keys": [
       "keepout_successful_completed"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.keepout_successful_completed": {
     "bundle": "interactive.InteractiveState",
@@ -14127,7 +14127,7 @@
     "related_keys": [
       "keepout_cancelled_because_of_overlaps"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.layer_changed_to": {
     "bundle": "interactive.InteractiveState",
@@ -14145,7 +14145,7 @@
       "layer_not_changed_because_layer",
       "layer_not_changed_because_of_obstacle_on_layer"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.layer_not_changed_because_layer": {
     "bundle": "interactive.InteractiveState",
@@ -14162,7 +14162,7 @@
     "related_keys": [
       "layer_not_changed_because_of_obstacle_on_layer"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.layer_not_changed_because_of_obstacle_on_layer": {
     "bundle": "interactive.InteractiveState",
@@ -14179,7 +14179,7 @@
     "related_keys": [
       "layer_not_changed_because_layer"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.logfile": {
     "bundle": "interactive.InteractiveState",
@@ -14194,7 +14194,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.move_component_failed_because_no_item_selected": {
     "bundle": "interactive.InteractiveState",
@@ -14211,7 +14211,7 @@
     "related_keys": [
       "move_completed"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.new_net_created_from_selected_items": {
     "bundle": "interactive.InteractiveState",
@@ -14226,7 +14226,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.no_item_found_for_adding_hole": {
     "bundle": "interactive.InteractiveState",
@@ -14246,7 +14246,7 @@
       "no_swappable_pin_found",
       "nothing_selected"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.no_obstacle_area_found_for_adding_hole": {
     "bundle": "interactive.InteractiveState",
@@ -14266,7 +14266,7 @@
       "no_swappable_pin_found",
       "nothing_selected"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.no_pin_selected": {
     "bundle": "interactive.InteractiveState",
@@ -14286,7 +14286,7 @@
       "no_swappable_pin_found",
       "nothing_selected"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.no_swappable_pin_found": {
     "bundle": "interactive.InteractiveState",
@@ -14306,7 +14306,7 @@
       "no_pin_selected",
       "nothing_selected"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.nothing_selected": {
     "bundle": "interactive.InteractiveState",
@@ -14321,7 +14321,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.routeoptimizer_pass": {
     "bundle": "interactive.InteractiveState",
@@ -14336,7 +14336,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.picked_pin_expected": {
     "bundle": "interactive.InteractiveState",
@@ -14351,7 +14351,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.pin_not_swapped_because_it_is_already_connected": {
     "bundle": "interactive.InteractiveState",
@@ -14368,7 +14368,7 @@
     "related_keys": [
       "pin_not_swapped_because_second_pin_is_already_connected"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.pin_not_swapped_because_second_pin_is_already_connected": {
     "bundle": "interactive.InteractiveState",
@@ -14385,7 +14385,7 @@
     "related_keys": [
       "pin_not_swapped_because_it_is_already_connected"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.pin_swap_completed": {
     "bundle": "interactive.InteractiveState",
@@ -14404,7 +14404,7 @@
       "pin_not_swapped_because_second_pin_is_already_connected",
       "pin_to_swap_missing"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.pin_to_swap_missing": {
     "bundle": "interactive.InteractiveState",
@@ -14423,7 +14423,7 @@
       "pin_not_swapped_because_second_pin_is_already_connected",
       "pin_swap_completed"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.please_click_second_pin_with_the_left_mouse_button": {
     "bundle": "interactive.InteractiveState",
@@ -14441,7 +14441,7 @@
       "please_unfix_selected_items_before_moving",
       "please_unroute_or_extend_selection_before_moving"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.please_unfix_selected_items_before_moving": {
     "bundle": "interactive.InteractiveState",
@@ -14459,7 +14459,7 @@
       "please_click_second_pin_with_the_left_mouse_button",
       "please_unroute_or_extend_selection_before_moving"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.optimization": {
     "bundle": "interactive.InteractiveState",
@@ -14474,7 +14474,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.routing_net": {
     "bundle": "interactive.InteractiveState",
@@ -14489,7 +14489,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.please_unroute_or_extend_selection_before_moving": {
     "bundle": "interactive.InteractiveState",
@@ -14507,7 +14507,7 @@
       "please_click_second_pin_with_the_left_mouse_button",
       "please_unfix_selected_items_before_moving"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.pull_tight": {
     "bundle": "interactive.InteractiveState",
@@ -14522,7 +14522,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.some_items_are_fixed_and_could_therefore_not_be_removed": {
     "bundle": "interactive.InteractiveState",
@@ -14539,7 +14539,7 @@
     "related_keys": [
       "some_items_are_not_changed_because_they_are_already_connected"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.some_items_are_not_changed_because_they_are_already_connected": {
     "bundle": "interactive.InteractiveState",
@@ -14556,7 +14556,7 @@
     "related_keys": [
       "some_items_are_fixed_and_could_therefore_not_be_removed"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.some_items_cannot_be_moved_because_they_are_fixed": {
     "bundle": "interactive.InteractiveState",
@@ -14575,7 +14575,7 @@
       "some_items_are_not_changed_because_they_are_already_connected",
       "some_items_not_inserted_because_of_obstacles"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.some_items_not_inserted_because_of_obstacles": {
     "bundle": "interactive.InteractiveState",
@@ -14594,7 +14594,7 @@
       "some_items_are_not_changed_because_they_are_already_connected",
       "some_items_cannot_be_moved_because_they_are_fixed"
     ],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.stop_message": {
     "bundle": "interactive.InteractiveState",
@@ -14609,7 +14609,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.unable_to_reset_components_with_different_rotations": {
     "bundle": "interactive.InteractiveState",
@@ -14624,7 +14624,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.autorouter_started": {
     "bundle": "interactive.InteractiveState",
@@ -14641,7 +14641,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.InteractiveState.optimizer_started": {
     "bundle": "interactive.InteractiveState",
@@ -14658,7 +14658,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.InteractiveState"
+    "java_class": "app.freerouting.gui.interactive.InteractiveState"
   },
   "interactive.RatsNest.via": {
     "bundle": "interactive.RatsNest",
@@ -14673,7 +14673,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.interactive.RatsNest"
   },
   "interactive.RatsNest.trace": {
     "bundle": "interactive.RatsNest",
@@ -14688,7 +14688,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.interactive.RatsNest"
   },
   "interactive.RatsNest.conduction_area": {
     "bundle": "interactive.RatsNest",
@@ -14703,7 +14703,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.interactive.RatsNest"
   },
   "interactive.RatsNest.unknown": {
     "bundle": "interactive.RatsNest",
@@ -14718,7 +14718,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.interactive.RatsNest"
   },
   "interactive.RatsNest.incomplete": {
     "bundle": "interactive.RatsNest",
@@ -14733,7 +14733,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.interactive.RatsNest"
   },
   "interactive.RatsNest.net": {
     "bundle": "interactive.RatsNest",
@@ -14748,7 +14748,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.interactive.RatsNest"
   },
   "interactive.RatsNest.from": {
     "bundle": "interactive.RatsNest",
@@ -14763,7 +14763,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.interactive.RatsNest"
   },
   "interactive.RatsNest.to": {
     "bundle": "interactive.RatsNest",
@@ -14778,7 +14778,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.interactive.RatsNest"
   },
   "interactive.ScreenMessages.current_layer": {
     "bundle": "interactive.ScreenMessages",
@@ -14793,7 +14793,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   },
   "interactive.ScreenMessages.target_layer": {
     "bundle": "interactive.ScreenMessages",
@@ -14808,7 +14808,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   },
   "interactive.ScreenMessages.found": {
     "bundle": "interactive.ScreenMessages",
@@ -14823,7 +14823,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   },
   "interactive.ScreenMessages.failed": {
     "bundle": "interactive.ScreenMessages",
@@ -14838,7 +14838,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   },
   "interactive.ScreenMessages.to_route": {
     "bundle": "interactive.ScreenMessages",
@@ -14853,7 +14853,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   },
   "interactive.ScreenMessages.ripped": {
     "bundle": "interactive.ScreenMessages",
@@ -14868,7 +14868,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   },
   "interactive.ScreenMessages.connections_not_found": {
     "bundle": "interactive.ScreenMessages",
@@ -14883,7 +14883,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   },
   "interactive.ScreenMessages.routed": {
     "bundle": "interactive.ScreenMessages",
@@ -14898,7 +14898,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   },
   "interactive.ScreenMessages.fanout_pass": {
     "bundle": "interactive.ScreenMessages",
@@ -14913,7 +14913,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   },
   "interactive.ScreenMessages.components": {
     "bundle": "interactive.ScreenMessages",
@@ -14928,7 +14928,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   },
   "interactive.ScreenMessages.still": {
     "bundle": "interactive.ScreenMessages",
@@ -14943,7 +14943,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   },
   "interactive.ScreenMessages.via_count": {
     "bundle": "interactive.ScreenMessages",
@@ -14958,7 +14958,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   },
   "interactive.ScreenMessages.trace_length": {
     "bundle": "interactive.ScreenMessages",
@@ -14973,7 +14973,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   },
   "interactive.ScreenMessages.score": {
     "bundle": "interactive.ScreenMessages",
@@ -14991,6 +14991,6 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
   }
 }

@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.interactive.InteractiveSettings;
+import app.freerouting.gui.interactive.GuiBoardManager;
+import app.freerouting.gui.interactive.InteractiveSettings;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.NetClass;
 import app.freerouting.settings.RouterSettings;

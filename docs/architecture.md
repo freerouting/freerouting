@@ -19,7 +19,7 @@ flowchart TD
 
     subgraph interfaces ["User Interfaces"]
         direction LR
-        GUI["**gui + interactive**\nSwing desktop"]
+        GUI["**gui + gui.interactive**\nSwing desktop"]
         RENDER["**boardgraphics**\nGUI-owned board renderer"]
         API["**api.v1**\nREST / HTTP"]
         MCP["**api.mcp + api.v1.McpControllerV1**\nMCP JSON-RPC + SSE + WS"]
@@ -83,7 +83,7 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Routing decisions, fanout, maze search, or optimization | `app.freerouting.autoroute` |
 | Nets, vias, clearance classes, or board rules | `app.freerouting.rules` |
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
-| GUI windows, panels, menus, or drawing | `app.freerouting.gui`, `app.freerouting.interactive`, and `app.freerouting.boardgraphics` |
+| GUI windows, panels, menus, or drawing | `app.freerouting.gui`, `app.freerouting.gui.interactive`, and `app.freerouting.boardgraphics` |
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
 | MCP server protocol bridge | `app.freerouting.api.mcp` and `app.freerouting.api.v1.McpControllerV1` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
@@ -98,7 +98,7 @@ Architectural boundaries are codified in `src/test/java/app/freerouting/architec
   - API/management packages must not depend on `gui` or `boardgraphics`.
   - Headless paths (`api`, `management`, `core`) must not depend on `GuiBoardManager` or `InteractiveState`.
 - **Frozen boundaries (current debt, no further drift):**
-  - `interactive` state-machine classes should not be used outside `gui` + `interactive`.
+  - `gui.interactive` state-machine classes should not be used outside the GUI layer.
   - `io.specctra.parser` internals should not be depended on outside `io.specctra` public I/O entry points.
 
 Frozen boundaries use ArchUnit's `FreezingArchRule` with baselines stored in `src/test/resources/archunit_store/`.
@@ -137,9 +137,9 @@ Planar geometry primitives and helper classes used throughout routing and board 
 
 The Swing user interface: frames, dialogs, menus, panels, and rendering support.
 
-### `app.freerouting.interactive`
+### `app.freerouting.gui.interactive`
 
-The GUI-specific interactive editor state machine and GUI session state. This package bridges visual user actions and screen edits to board mutations.
+The GUI-specific interactive editor state machine and temporary GUI session state. This package bridges visual user actions and screen edits to board mutations. The session cluster moves to `gui.session` in Phase 9.
 
 ### `app.freerouting.api`
 
@@ -262,10 +262,10 @@ The optimizer changes the board more conservatively than the autorouter. Its job
 
 ### GUI and Interaction Path
 
-The interactive editor is split between `gui` and `interactive`.
+The interactive editor is split between `gui` and `gui.interactive`.
 
 - `gui` contains the visible application components.
-- `interactive` contains the state machine and board-handling logic behind those components.
+- `gui.interactive` contains the state machine and temporary board-handling logic behind those components.
 
 When diagnosing user interaction, rendering, or editor state, begin here.
 
@@ -299,7 +299,7 @@ Tests follow the production layout where practical.
 
 - `src/test/java/app/freerouting/fixtures/` contains real-board regression tests that load DSN fixtures from `fixtures/`.
 - `src/test/java/app/freerouting/board/` contains focused tests for board helpers and board-item behavior.
-- Package-specific test directories such as `src/test/java/app/freerouting/interactive/` contain unit tests for that package.
+- Package-specific test directories such as `src/test/java/app/freerouting/gui/interactive/` contain unit tests for that package.
 
 For routing regressions, fixture tests are usually the most informative starting point because they exercise file loading, routing, and scoring together.
 
@@ -342,7 +342,7 @@ To maintain clarity and consistency across the codebase, user interfaces, logs, 
 ## Practical Rules Of Thumb
 
 - Routing behavior usually starts in `board`, `autoroute`, `rules`, and `drc`.
-- User interaction usually starts in `gui` and `interactive`.
+- User interaction usually starts in `gui` and `gui.interactive`.
 - Server and job execution usually starts in `api` and `management`.
 - File parsing and export usually starts in `io`.
 - When in doubt, follow the data model first, then the orchestration layer, then the UI.

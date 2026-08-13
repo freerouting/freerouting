@@ -62,7 +62,7 @@ class ModuleBoundariesArchTest {
         .should()
         .dependOnClassesThat()
         .resideInAnyPackage(
-            "app.freerouting.gui..", "app.freerouting.interactive..", "app.freerouting.api..")
+            "app.freerouting.gui..", "app.freerouting.gui.interactive..", "app.freerouting.api..")
         .check(classes);
   }
 
@@ -78,7 +78,7 @@ class ModuleBoundariesArchTest {
         .dependOnClassesThat()
         .resideInAnyPackage(
             "app.freerouting.gui..",
-            "app.freerouting.interactive..",
+            "app.freerouting.gui.interactive..",
             "app.freerouting.api..",
             "app.freerouting.management..")
         .check(classes);
@@ -93,10 +93,10 @@ class ModuleBoundariesArchTest {
         .resideInAnyPackage("app.freerouting.api..", "app.freerouting.management..")
         .should()
         .dependOnClassesThat()
-        .haveFullyQualifiedName("app.freerouting.interactive.GuiBoardManager")
+        .haveFullyQualifiedName("app.freerouting.gui.interactive.GuiBoardManager")
         .orShould()
         .dependOnClassesThat()
-        .haveFullyQualifiedName("app.freerouting.interactive.InteractiveState")
+        .haveFullyQualifiedName("app.freerouting.gui.interactive.InteractiveState")
         .check(classes);
   }
 
@@ -110,7 +110,7 @@ class ModuleBoundariesArchTest {
             "app.freerouting.core..", "app.freerouting.board..", "app.freerouting.autoroute..")
         .should()
         .dependOnClassesThat()
-        .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.interactive..")
+        .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.gui.interactive..")
         .check(classes);
   }
 
@@ -136,10 +136,10 @@ class ModuleBoundariesArchTest {
         .resideInAPackage("app.freerouting.core..")
         .should()
         .dependOnClassesThat()
-        .haveFullyQualifiedName("app.freerouting.interactive.GuiBoardManager")
+        .haveFullyQualifiedName("app.freerouting.gui.interactive.GuiBoardManager")
         .orShould()
         .dependOnClassesThat()
-        .haveFullyQualifiedName("app.freerouting.interactive.InteractiveState")
+        .haveFullyQualifiedName("app.freerouting.gui.interactive.InteractiveState")
         .because("core services should stay headless-ready and not require GUI manager types")
         .check(classes);
   }
@@ -150,10 +150,10 @@ class ModuleBoundariesArchTest {
 
     noClasses()
         .that()
-        .resideOutsideOfPackages("app.freerouting.gui..", "app.freerouting.interactive..")
+        .resideOutsideOfPackages("app.freerouting.gui..", "app.freerouting.gui.interactive..")
         .should()
         .dependOnClassesThat()
-        .resideInAPackage("app.freerouting.interactive..")
+        .resideInAPackage("app.freerouting.gui.interactive..")
         .because(
             "interactive is a GUI-session state machine and should not leak to"
                 + " headless/service modules")

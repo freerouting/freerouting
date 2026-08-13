@@ -87,10 +87,10 @@ def _resolve_bundle_owners(java_file: Path, source: str) -> Set[str]:
     if (
         EXTENDS_INTERACTIVE_STATE_PATTERN.search(source)
         and INHERITED_TM_USAGE_PATTERN.search(source)
-        and current_class.startswith("app.freerouting.interactive.")
-        and current_class != "app.freerouting.interactive.InteractiveState"
+        and current_class.startswith("app.freerouting.gui.interactive.")
+        and current_class != "app.freerouting.gui.interactive.InteractiveState"
     ):
-        owners.add("app.freerouting.interactive.InteractiveState")
+        owners.add("app.freerouting.gui.interactive.InteractiveState")
 
     resolved: Set[str] = set()
     for owner in owners:

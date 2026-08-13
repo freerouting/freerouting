@@ -1,8 +1,8 @@
 package app.freerouting.gui;
 
 import app.freerouting.core.RoutingJob;
-import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.interactive.ScreenMessages;
+import app.freerouting.gui.interactive.GuiBoardManager;
+import app.freerouting.gui.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;

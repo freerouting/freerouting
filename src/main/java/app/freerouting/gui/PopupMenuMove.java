@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
-import app.freerouting.interactive.InteractiveState;
-import app.freerouting.interactive.MoveItemState;
+import app.freerouting.gui.interactive.InteractiveState;
+import app.freerouting.gui.interactive.MoveItemState;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import javax.swing.JMenu;

@@ -75,7 +75,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
 - **GUI vs Headless Guard:** Before calling any method that accesses `interactiveSettings`, always check `getInteractiveSettings() != null` or restrict the call to `GuiBoardManager` only. Shared `interactive`-package code (e.g., routing states like `RouteState`, `DragState`) may access `hdlg.interactiveSettings` directly — ensure those code paths are only reachable when `hdlg` is a `GuiBoardManager` instance.
 - **Test Placement Conventions:**
   - Issue-regression and full-pipeline tests → `src/test/java/app/freerouting/fixtures/` (extend `RoutingFixtureTest`).
-  - Unit/integration tests scoped to a specific package → place in the matching test package (e.g., tests for `app.freerouting.interactive` go in `src/test/java/app/freerouting/interactive/`).
+  - Unit/integration tests scoped to a specific package → place in the matching test package (e.g., tests for `app.freerouting.gui.interactive` go in `src/test/java/app/freerouting/interactive/`).
   - DSN fixture files live in `fixtures/`; reference them by filename (e.g., `"Issue508-DAC2020_bm01.dsn"`). The quickest fixture for smoke-checks is `Dac2020Bm01RoutingTest`.
   - Bound long-running routing tests with `TestingSettings.setMaxPasses(n)`, `setMaxItems(m)`, and `setJobTimeoutString("HH:MM:SS")` to keep CI fast.
 - **Issue Tracking:** Detailed per-issue specifications live in `docs/issues/`. Each file documents the problem, sub-issues (with ✅ when done), proposed/actual implementation, and acceptance criteria. Keep these files up-to-date as sub-issues are resolved so future agents have accurate context without re-reading the full conversation history.

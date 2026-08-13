@@ -55,7 +55,7 @@ import java.io.OutputStream;
  * <p><strong>Design Pattern:</strong> This class implements the {@link BoardManager} interface,
  * providing headless-specific implementations while maintaining compatibility with the broader
  * board management architecture. It can be used as a drop-in replacement for {@link
- * app.freerouting.interactive.GuiBoardManager} when GUI is not needed.
+ * app.freerouting.gui.interactive.GuiBoardManager} when GUI is not needed.
  *
  * <p><strong>Thread Safety:</strong> The {@link #replaceRoutingBoard(RoutingBoard)} method is
  * synchronized to allow thread-safe board replacement during multi-threaded routing operations.
@@ -72,7 +72,7 @@ import java.io.OutputStream;
  * }</pre>
  *
  * @see BoardManager
- * @see app.freerouting.interactive.GuiBoardManager
+ * @see app.freerouting.gui.interactive.GuiBoardManager
  * @see RoutingBoard
  * @see RoutingJob
  */
@@ -95,7 +95,7 @@ public class HeadlessBoardManager implements BoardManager {
    * <p>Typically used for logging, progress reporting, or coordinating with external systems.
    *
    * @see ThreadActionListener
-   * @see app.freerouting.interactive.InteractiveActionThread
+   * @see app.freerouting.gui.interactive.InteractiveActionThread
    */
   public ThreadActionListener autorouterListener;
 
@@ -234,7 +234,7 @@ public class HeadlessBoardManager implements BoardManager {
    * @param rules the board design rules and constraints
    * @param boardCommunication communication interface for external integration
    * @see RoutingBoard#RoutingBoard
-   * @see app.freerouting.interactive.InteractiveSettings
+   * @see app.freerouting.gui.interactive.InteractiveSettings
    */
   @Override
   public void createBoard(

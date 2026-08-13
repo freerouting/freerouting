@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.interactive.GuiBoardManager;
+import app.freerouting.gui.interactive.GuiBoardManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.util.TextManager;

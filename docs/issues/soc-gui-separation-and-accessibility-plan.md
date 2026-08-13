@@ -354,14 +354,19 @@ Land as **independently revertible commits** on the long-lived branch:
 
 ### Phase 8 — Move to `gui.interactive` (flat)
 
-- [ ] Resolve any simple-name collisions found in Phase 1 before/during move.
-- [ ] Move remaining interactive production + tests flat into `gui.interactive`.
-- [ ] **Flatten `interactive.commands` types into `gui.interactive` sources** (no `gui.interactive.commands` subpackage) (D11) — interface moves to `gui.session` in Phase 9 (D30).
-- [ ] Temporarily includes `GuiBoardManager` and session cluster.
-- [ ] Update i18n FQCNs / resources / ArchUnit / docs.
-- [ ] No `.frb` compat shims.
-- [ ] Run interactive tests, ArchUnit, i18n parity (+ `hu` check), MVP a11y, spotlessCheck, checkstyle.
-- [ ] **Cheap exit gate:** golden-fixture smoke = full DRC **and** completion/unrouted-net parity vs Phase 0 goldens (D28).
+- [x] Resolve any simple-name collisions found in Phase 1 before/during move; no new collision required a rename.
+- [x] Move remaining interactive production + tests flat into `gui.interactive`.
+- [x] **Flatten `interactive.commands` types into `gui.interactive` sources** (no `gui.interactive.commands` subpackage) (D11) — interface moves to `gui.session` in Phase 9 (D30).
+- [x] Temporarily includes `GuiBoardManager` and session cluster.
+- [x] Update i18n FQCNs / resources / ArchUnit / docs.
+- [x] No `.frb` compat shims; the intentional serialized FQCN change is documented by D3/D17.
+- [x] Run interactive tests, ArchUnit, i18n parity (+ `hu` check), MVP a11y, spotlessCheck, checkstyle.
+- [x] **Cheap exit gate:** golden-fixture smoke = full DRC **and** completion/unrouted-net parity vs Phase 0 goldens (D28).
+
+**Current checkpoint:** The former `interactive` package and its `commands` subpackage now live flat under
+`gui.interactive`, including the temporary session cluster and all package tests. Localized bundles and
+i18n context metadata follow the new FQCNs. Interactive tests, ArchUnit, full DRC/completion smoke,
+forced-headless GUI tests, i18n checks, Spotless, Checkstyle, and rewrite checks are green.
 
 ### Phase 9 — Extract `gui.session`
 

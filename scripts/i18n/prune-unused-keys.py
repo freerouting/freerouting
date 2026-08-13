@@ -30,7 +30,7 @@ ORPHAN_BUNDLES = {
     "app.freerouting.gui.WindowSnapshot",
     "app.freerouting.gui.WindowSnapshotSettings",
     "app.freerouting.gui.WindowNetSamples",
-    "app.freerouting.interactive.RatsNest",
+    "app.freerouting.gui.interactive.RatsNest",
 }
 
 # Unused keys safe to prune (verified not referenced from Java).
@@ -55,10 +55,10 @@ SAFE_UNUSED_KEYS: dict[str, set[str]] = {
         "list_empty_message", "maximum_allowed", "minimum_allowed", "net_count",
         "net_explanation", "title", "unknown",
     },
-    "app.freerouting.interactive.InteractiveState": {
+    "app.freerouting.gui.interactive.InteractiveState": {
         "batch_autorouter", "batch_optimizer", "stop_message",
     },
-    "app.freerouting.interactive.GuiBoardManager": {
+    "app.freerouting.gui.interactive.GuiBoardManager": {
         "incomplete_connections_to_route", "incompletes", "length_violations",
     },
 }

@@ -83,10 +83,10 @@ class EnglishPropertiesParityTest {
   private static final Pattern QUOTED_STRING_PATTERN = Pattern.compile("\"([^\"]+)\"");
   private static final Set<String> INTERACTIVE_STATE_BUNDLE_EXCEPTIONS =
       Set.of(
-          "app.freerouting.interactive.InteractiveState",
-          "app.freerouting.interactive.GuiBoardManager",
-          "app.freerouting.interactive.ScreenMessages",
-          "app.freerouting.interactive.RatsNest");
+          "app.freerouting.gui.interactive.InteractiveState",
+          "app.freerouting.gui.interactive.GuiBoardManager",
+          "app.freerouting.gui.interactive.ScreenMessages",
+          "app.freerouting.gui.interactive.RatsNest");
   private static final Map<String, String> BUNDLE_ALIASES =
       Map.ofEntries(
           Map.entry("app.freerouting.rules.NetClasses", "app.freerouting.gui.WindowNetClasses"),
@@ -97,8 +97,8 @@ class EnglishPropertiesParityTest {
               "app.freerouting.boardgraphics.OtherColorTableModel",
               "app.freerouting.boardgraphics.ColorTableModel"),
           Map.entry(
-              "app.freerouting.interactive.AutorouterAndRouteOptimizerThread",
-              "app.freerouting.interactive.InteractiveState"),
+              "app.freerouting.gui.interactive.AutorouterAndRouteOptimizerThread",
+              "app.freerouting.gui.interactive.InteractiveState"),
           Map.entry("app.freerouting.gui.AirLineInfo", "app.freerouting.drc.AirLine"),
           Map.entry("app.freerouting.gui.AirLine", "app.freerouting.drc.AirLine"),
           Map.entry("app.freerouting.gui.WindowRouteStubs", "app.freerouting.gui.CleanupWindows"),
@@ -502,7 +502,7 @@ class EnglishPropertiesParityTest {
 
     if (source.contains("protected final TextManager tm")
         && EXTENDS_INTERACTIVE_STATE_PATTERN.matcher(source).find()) {
-      variableToBundle.put("tm", "app.freerouting.interactive.InteractiveState");
+      variableToBundle.put("tm", "app.freerouting.gui.interactive.InteractiveState");
     }
 
     Map<String, String> canonicalized = new TreeMap<>();
@@ -524,10 +524,10 @@ class EnglishPropertiesParityTest {
 
   private static String canonicalizeBundle(String bundle) {
     String resolved = BUNDLE_ALIASES.getOrDefault(bundle, bundle);
-    if (resolved.startsWith("app.freerouting.interactive.")
+    if (resolved.startsWith("app.freerouting.gui.interactive.")
         && resolved.endsWith("State")
         && !INTERACTIVE_STATE_BUNDLE_EXCEPTIONS.contains(resolved)) {
-      return "app.freerouting.interactive.InteractiveState";
+      return "app.freerouting.gui.interactive.InteractiveState";
     }
     return resolved;
   }
@@ -562,9 +562,9 @@ class EnglishPropertiesParityTest {
 
     if (EXTENDS_INTERACTIVE_STATE_PATTERN.matcher(source).find()
         && INHERITED_TM_USAGE_PATTERN.matcher(source).find()
-        && currentClassName.startsWith("app.freerouting.interactive.")
-        && !"app.freerouting.interactive.InteractiveState".equals(currentClassName)) {
-      bundleOwners.add("app.freerouting.interactive.InteractiveState");
+        && currentClassName.startsWith("app.freerouting.gui.interactive.")
+        && !"app.freerouting.gui.interactive.InteractiveState".equals(currentClassName)) {
+      bundleOwners.add("app.freerouting.gui.interactive.InteractiveState");
     }
 
     Set<String> resolvedOwners = new LinkedHashSet<>();

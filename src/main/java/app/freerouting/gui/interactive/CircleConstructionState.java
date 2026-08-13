@@ -1,0 +1,115 @@
+package app.freerouting.gui.interactive;
+
+import app.freerouting.board.AngleRestriction;
+import app.freerouting.board.FixedState;
+import app.freerouting.board.RoutingBoard;
+import app.freerouting.geometry.planar.Circle;
+import app.freerouting.geometry.planar.ConvexShape;
+import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.rules.BoardRules;
+import java.awt.Color;
+import java.awt.Graphics;
+import javax.swing.JPopupMenu;
+
+/** Interactive creation of a circle obstacle. */
+public final class CircleConstructionState extends InteractiveState {
+
+  private final FloatPoint circleCenter;
+  private double circleRadius = 0;
+  private boolean observersActivated;
+
+  /** Creates a new instance of CircleConstructionState. */
+  private CircleConstructionState(
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    super(parentState, boardHandling);
+    circleCenter = location;
+  }
+
+  /**
+   * Returns a new instance of this class. If logging is enabled, the creation of this item is
+   * stored in a log file.
+   */
+  public static CircleConstructionState getInstance(
+      FloatPoint location, InteractiveState parentState, GuiBoardManager boardHandling) {
+    boardHandling.removeRatsnest(); // inserting a circle may change the connectivity.
+    return new CircleConstructionState(location, parentState, boardHandling);
+  }
+
+  @Override
+  public InteractiveState leftButtonClicked(FloatPoint location) {
+    return this.complete();
+  }
+
+  @Override
+  public InteractiveState mouseMoved() {
+    super.mouseMoved();
+    hdlg.repaint();
+    return this;
+  }
+
+  /** Completes the circle construction state. */
+  @Override
+  public InteractiveState complete() {
+    IntPoint center = this.circleCenter.round();
+    int radius = (int) Math.round(this.circleRadius);
+    int layer = hdlg.getInteractiveSettings().getLayer();
+    int clClass;
+    RoutingBoard board = hdlg.getRoutingBoard();
+    clClass = BoardRules.clearanceClassNone();
+    boolean constructionSucceeded = this.circleRadius > 0;
+    ConvexShape obstacleShape = null;
+    if (constructionSucceeded) {
+
+      obstacleShape = new Circle(center, radius);
+      if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
+          == AngleRestriction.NINETY_DEGREE) {
+        obstacleShape = obstacleShape.boundingBox();
+      } else if (hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
+          == AngleRestriction.FORTYFIVE_DEGREE) {
+        obstacleShape = obstacleShape.boundingOctagon();
+      }
+      constructionSucceeded = board.checkShape(obstacleShape, layer, new int[0], clClass);
+    }
+    if (constructionSucceeded) {
+      hdlg.screenMessages.setStatusMessage(tm.getText("keepout_successful_completed"));
+
+      // insert the new shape as keepout
+      this.observersActivated = !hdlg.getRoutingBoard().observersActive();
+      if (this.observersActivated) {
+        hdlg.getRoutingBoard().startNotifyObservers();
+      }
+      board.generateSnapshot();
+      board.insertObstacle(obstacleShape, layer, clClass, FixedState.UNFIXED);
+      if (this.observersActivated) {
+        hdlg.getRoutingBoard().endNotifyObservers();
+        this.observersActivated = false;
+      }
+    } else {
+      hdlg.screenMessages.setStatusMessage(tm.getText("keepout_cancelled_because_of_overlaps"));
+    }
+    hdlg.repaint();
+    return this.returnState;
+  }
+
+  /** Draws the graphic construction aid for the circle. */
+  @Override
+  public void draw(Graphics graphics) {
+    FloatPoint currentMousePosition = hdlg.getCurrentMousePosition();
+    if (currentMousePosition == null) {
+      return;
+    }
+    this.circleRadius = circleCenter.distance(currentMousePosition);
+    hdlg.graphicsContext.drawCircle(circleCenter, circleRadius, 300, Color.white, graphics, 1);
+  }
+
+  @Override
+  public JPopupMenu getPopupMenu() {
+    return hdlg.getPanel().popupMenuInsertCancel;
+  }
+
+  @Override
+  public void displayDefaultMessage() {
+    hdlg.screenMessages.setStatusMessage(tm.getText("creating_circle"));
+  }
+}

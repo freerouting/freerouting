@@ -56,7 +56,7 @@ Separate the "What" (Model) from the "How" (Algorithms).
 | `autoroute.algo` | pathfinding algorithms | `MazeSearchAlgo`, `InsertFoundConnectionAlgo`, `LocateFoundConnectionAlgo` |
 | `autoroute.model` | Routing-specific data structures | `ExpansionRoom`, `BoardHistory`, `ItemAutorouteInfo` |
 
-### 3.4. Interactive Module (`app.freerouting.interactive`)
+### 3.4. Interactive Module (`app.freerouting.gui.interactive`)
 **Current Content**: ~44 files, mostly "States" for the editor state machine and Managers.
 
 **Recommendation**:
