@@ -1,6 +1,7 @@
 package app.freerouting.board;
 
 import app.freerouting.autoroute.AutorouteControl;
+import app.freerouting.boardgraphics.BoardRenderer;
 import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.BoardLibrary;
@@ -1354,8 +1355,20 @@ public class BasicBoard implements Serializable {
     return layerStructure.arr.length;
   }
 
-  /** Draws all board items to the given graphics context. */
+  /** Draws all board items through the GUI-owned board renderer. */
   public void draw(Graphics graphics, GraphicsContext graphicsContext) {
+    BoardRenderer.draw(this, graphics, graphicsContext);
+  }
+
+  /**
+   * Compatibility entry point for the pre-Phase 6 board-owned traversal.
+   *
+   * <p>This method is temporary. The implementation remains here until the renderer has acquired
+   * the traversal and item-family strategies, allowing each migration step to be reverted
+   * independently without changing the GUI call path.
+   */
+  @Deprecated
+  public void drawLegacy(Graphics graphics, GraphicsContext graphicsContext) {
     if (graphicsContext == null) {
       return;
     }
