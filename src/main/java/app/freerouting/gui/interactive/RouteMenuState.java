@@ -1,6 +1,7 @@
 package app.freerouting.gui.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.gui.session.GuiBoardManager;
 
 /**
  * Class implementing the different functionality in the route menu, especially the different

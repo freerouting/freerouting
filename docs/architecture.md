@@ -19,7 +19,7 @@ flowchart TD
 
     subgraph interfaces ["User Interfaces"]
         direction LR
-        GUI["**gui + gui.interactive**\nSwing desktop"]
+        GUI["**gui + gui.session + gui.interactive**\nSwing desktop"]
         RENDER["**boardgraphics**\nGUI-owned board renderer"]
         API["**api.v1**\nREST / HTTP"]
         MCP["**api.mcp + api.v1.McpControllerV1**\nMCP JSON-RPC + SSE + WS"]
@@ -83,7 +83,7 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Routing decisions, fanout, maze search, or optimization | `app.freerouting.autoroute` |
 | Nets, vias, clearance classes, or board rules | `app.freerouting.rules` |
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
-| GUI windows, panels, menus, or drawing | `app.freerouting.gui`, `app.freerouting.gui.interactive`, and `app.freerouting.boardgraphics` |
+| GUI windows, panels, menus, editor state, or drawing | `app.freerouting.gui`, `app.freerouting.gui.session`, `app.freerouting.gui.interactive`, and `app.freerouting.boardgraphics` |
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
 | MCP server protocol bridge | `app.freerouting.api.mcp` and `app.freerouting.api.v1.McpControllerV1` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
@@ -98,7 +98,9 @@ Architectural boundaries are codified in `src/test/java/app/freerouting/architec
   - API/management packages must not depend on `gui` or `boardgraphics`.
   - Headless paths (`api`, `management`, `core`) must not depend on `GuiBoardManager` or `InteractiveState`.
 - **Frozen boundaries (current debt, no further drift):**
-  - `gui.interactive` state-machine classes should not be used outside the GUI layer.
+  - `gui.interactive` concrete state classes should not be used outside the GUI layer.
+  - `gui.session` owns the opaque editor-state handles, events, commands, manager, settings, messages,
+    and action threads; it must not depend on `gui.interactive`.
   - `io.specctra.parser` internals should not be depended on outside `io.specctra` public I/O entry points.
 
 Frozen boundaries use ArchUnit's `FreezingArchRule` with baselines stored in `src/test/resources/archunit_store/`.
@@ -139,7 +141,17 @@ The Swing user interface: frames, dialogs, menus, panels, and rendering support.
 
 ### `app.freerouting.gui.interactive`
 
-The GUI-specific interactive editor state machine and temporary GUI session state. This package bridges visual user actions and screen edits to board mutations. The session cluster moves to `gui.session` in Phase 9.
+Concrete GUI editor states and their controller implementation. States implement the session-owned
+opaque handle/command contracts; views register the controller and bootstrap the initial route-menu
+state.
+
+### `app.freerouting.gui.session`
+
+The GUI board session boundary: `GuiBoardManager`, `GuiSessionContract`, `InteractiveSettings`,
+`ScreenMessages`, action threads, ratsnest/violation presentation façades, opaque
+`EditorStateHandle`/`EditorStateKind`, `EditorEvent`, and `InteractiveCommand`. This package owns no
+concrete editor state and has no dependency on `gui.interactive`; GUI views perform initial-state
+registration.
 
 ### `app.freerouting.api`
 
@@ -262,10 +274,12 @@ The optimizer changes the board more conservatively than the autorouter. Its job
 
 ### GUI and Interaction Path
 
-The interactive editor is split between `gui` and `gui.interactive`.
+The interactive editor is split between `gui`, `gui.session`, and `gui.interactive`.
 
 - `gui` contains the visible application components.
-- `gui.interactive` contains the state machine and temporary board-handling logic behind those components.
+- `gui.session` contains the opaque session facade and board-session services.
+- `gui.interactive` contains the concrete state machine and its inverted controller.
+- Views construct the controller and bootstrap `RouteMenuState`; session code never names a concrete state.
 
 When diagnosing user interaction, rendering, or editor state, begin here.
 

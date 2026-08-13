@@ -8,6 +8,7 @@ import app.freerouting.board.Via;
 import app.freerouting.boardgraphics.BoardRenderer;
 import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.rules.Net;
 import java.awt.Color;
 import java.util.Set;

@@ -4,6 +4,7 @@ import app.freerouting.board.FixedState;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.PolygonShape;
+import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.rules.BoardRules;
 import java.util.Iterator;
 

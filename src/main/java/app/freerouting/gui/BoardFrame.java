@@ -9,10 +9,10 @@ import app.freerouting.board.Unit;
 import app.freerouting.boardgraphics.TutorialBoardPalette;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.gui.interactive.GuiBoardManager;
-import app.freerouting.gui.interactive.InteractiveState;
-import app.freerouting.gui.interactive.RatsNest;
-import app.freerouting.gui.interactive.ScreenMessages;
+import app.freerouting.gui.session.EditorStateHandle;
+import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.session.RatsNest;
+import app.freerouting.gui.session.ScreenMessages;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.FileFormat;
 import app.freerouting.io.kicad.KiCadJsonReader;
@@ -1048,7 +1048,7 @@ public class BoardFrame extends WindowBase {
     if (!deferHeavyWork) {
       boardPanel.boardHandling.createRatsnestIfAbsent();
     }
-    this.setToolbarModeSelectionPanelValue(boardPanel.boardHandling.getInteractiveState());
+    this.setToolbarModeSelectionPanelValue(boardPanel.boardHandling.getEditorState());
     this.setToolbarUnitSelectionPanelValue(boardPanel.boardHandling.coordinateTransform.userUnit);
     this.setVisible(true);
     if (isTextDsnOrJson) {
@@ -1567,8 +1567,8 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Sets the mode value on mode selection component of the toolbar. */
-  public void setToolbarModeSelectionPanelValue(InteractiveState interactiveState) {
-    this.toolbarPanel.setModeSelectionPanelValue(interactiveState);
+  public void setToolbarModeSelectionPanelValue(EditorStateHandle editorState) {
+    this.toolbarPanel.setModeSelectionPanelValue(editorState);
   }
 
   private void setToolbarUnitSelectionPanelValue(Unit unit) {

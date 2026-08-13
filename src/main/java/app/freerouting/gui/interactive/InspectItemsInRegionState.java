@@ -4,6 +4,7 @@ import app.freerouting.board.Item;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.gui.session.GuiBoardManager;
 import java.util.Set;
 import java.util.TreeSet;
 

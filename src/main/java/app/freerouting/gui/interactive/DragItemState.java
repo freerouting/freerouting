@@ -6,6 +6,7 @@ import app.freerouting.board.MoveComponent;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Vector;
+import app.freerouting.gui.session.GuiBoardManager;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;

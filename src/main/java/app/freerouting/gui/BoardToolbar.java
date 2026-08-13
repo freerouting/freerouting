@@ -6,11 +6,9 @@ import app.freerouting.Freerouting;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.gui.interactive.DragMenuState;
-import app.freerouting.gui.interactive.InspectMenuState;
-import app.freerouting.gui.interactive.InteractiveActionThread;
-import app.freerouting.gui.interactive.InteractiveState;
-import app.freerouting.gui.interactive.RouteMenuState;
+import app.freerouting.gui.session.EditorStateHandle;
+import app.freerouting.gui.session.EditorStateKind;
+import app.freerouting.gui.session.InteractiveActionThread;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
@@ -508,12 +506,15 @@ class BoardToolbar extends JPanel {
   }
 
   /** Sets the selected button in the menu button group. */
-  void setModeSelectionPanelValue(InteractiveState interactiveState) {
-    if (interactiveState instanceof RouteMenuState) {
+  void setModeSelectionPanelValue(EditorStateHandle editorState) {
+    if (editorState == null) {
+      return;
+    }
+    if (editorState.kind() == EditorStateKind.MENU || editorState.kind() == EditorStateKind.ROUTE) {
       this.modeSelectionPanel.setSelectedValue("route_button");
-    } else if (interactiveState instanceof DragMenuState) {
+    } else if (editorState.kind() == EditorStateKind.DRAG) {
       this.modeSelectionPanel.setSelectedValue("drag_button");
-    } else if (interactiveState instanceof InspectMenuState) {
+    } else if (editorState.kind() == EditorStateKind.INSPECT) {
       this.modeSelectionPanel.setSelectedValue("inspect_button");
     }
   }

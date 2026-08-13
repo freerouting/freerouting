@@ -13400,7 +13400,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.session.GuiBoardManager"
   },
   "interactive.GuiBoardManager.incomplete_connections_to_route": {
     "bundle": "interactive.GuiBoardManager",
@@ -13417,7 +13417,7 @@
     "related_keys": [
       "incompletes"
     ],
-    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.session.GuiBoardManager"
   },
   "interactive.GuiBoardManager.incompletes": {
     "bundle": "interactive.GuiBoardManager",
@@ -13432,7 +13432,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.session.GuiBoardManager"
   },
   "interactive.GuiBoardManager.length_violations": {
     "bundle": "interactive.GuiBoardManager",
@@ -13447,7 +13447,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.session.GuiBoardManager"
   },
   "interactive.GuiBoardManager.undo": {
     "bundle": "interactive.GuiBoardManager",
@@ -13462,7 +13462,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.session.GuiBoardManager"
   },
   "interactive.GuiBoardManager.no_more_undo_possible": {
     "bundle": "interactive.GuiBoardManager",
@@ -13479,7 +13479,7 @@
     "related_keys": [
       "no_more_redo_possible"
     ],
-    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.session.GuiBoardManager"
   },
   "interactive.GuiBoardManager.redo": {
     "bundle": "interactive.GuiBoardManager",
@@ -13494,7 +13494,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.session.GuiBoardManager"
   },
   "interactive.GuiBoardManager.no_more_redo_possible": {
     "bundle": "interactive.GuiBoardManager",
@@ -13511,7 +13511,7 @@
     "related_keys": [
       "no_more_undo_possible"
     ],
-    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.session.GuiBoardManager"
   },
   "interactive.GuiBoardManager.select_menu": {
     "bundle": "interactive.GuiBoardManager",
@@ -13526,7 +13526,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.session.GuiBoardManager"
   },
   "interactive.GuiBoardManager.route_menu": {
     "bundle": "interactive.GuiBoardManager",
@@ -13541,7 +13541,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.session.GuiBoardManager"
   },
   "interactive.GuiBoardManager.drag_menu": {
     "bundle": "interactive.GuiBoardManager",
@@ -13556,7 +13556,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.session.GuiBoardManager"
   },
   "interactive.GuiBoardManager.save_error": {
     "bundle": "interactive.GuiBoardManager",
@@ -13571,7 +13571,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.session.GuiBoardManager"
   },
   "interactive.GuiBoardManager.dsn_reader_modal_title": {
     "bundle": "interactive.GuiBoardManager",
@@ -13586,7 +13586,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.GuiBoardManager"
+    "java_class": "app.freerouting.gui.session.GuiBoardManager"
   },
   "interactive.InteractiveState.adding_hole_completed": {
     "bundle": "interactive.InteractiveState",
@@ -14673,7 +14673,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.session.RatsNest"
   },
   "interactive.RatsNest.trace": {
     "bundle": "interactive.RatsNest",
@@ -14688,7 +14688,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.session.RatsNest"
   },
   "interactive.RatsNest.conduction_area": {
     "bundle": "interactive.RatsNest",
@@ -14703,7 +14703,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.session.RatsNest"
   },
   "interactive.RatsNest.unknown": {
     "bundle": "interactive.RatsNest",
@@ -14718,7 +14718,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.session.RatsNest"
   },
   "interactive.RatsNest.incomplete": {
     "bundle": "interactive.RatsNest",
@@ -14733,7 +14733,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.session.RatsNest"
   },
   "interactive.RatsNest.net": {
     "bundle": "interactive.RatsNest",
@@ -14748,7 +14748,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.session.RatsNest"
   },
   "interactive.RatsNest.from": {
     "bundle": "interactive.RatsNest",
@@ -14763,7 +14763,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.session.RatsNest"
   },
   "interactive.RatsNest.to": {
     "bundle": "interactive.RatsNest",
@@ -14778,7 +14778,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.RatsNest"
+    "java_class": "app.freerouting.gui.session.RatsNest"
   },
   "interactive.ScreenMessages.current_layer": {
     "bundle": "interactive.ScreenMessages",
@@ -14793,7 +14793,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   },
   "interactive.ScreenMessages.target_layer": {
     "bundle": "interactive.ScreenMessages",
@@ -14808,7 +14808,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   },
   "interactive.ScreenMessages.found": {
     "bundle": "interactive.ScreenMessages",
@@ -14823,7 +14823,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   },
   "interactive.ScreenMessages.failed": {
     "bundle": "interactive.ScreenMessages",
@@ -14838,7 +14838,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   },
   "interactive.ScreenMessages.to_route": {
     "bundle": "interactive.ScreenMessages",
@@ -14853,7 +14853,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   },
   "interactive.ScreenMessages.ripped": {
     "bundle": "interactive.ScreenMessages",
@@ -14868,7 +14868,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   },
   "interactive.ScreenMessages.connections_not_found": {
     "bundle": "interactive.ScreenMessages",
@@ -14883,7 +14883,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   },
   "interactive.ScreenMessages.routed": {
     "bundle": "interactive.ScreenMessages",
@@ -14898,7 +14898,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   },
   "interactive.ScreenMessages.fanout_pass": {
     "bundle": "interactive.ScreenMessages",
@@ -14913,7 +14913,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   },
   "interactive.ScreenMessages.components": {
     "bundle": "interactive.ScreenMessages",
@@ -14928,7 +14928,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   },
   "interactive.ScreenMessages.still": {
     "bundle": "interactive.ScreenMessages",
@@ -14943,7 +14943,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   },
   "interactive.ScreenMessages.via_count": {
     "bundle": "interactive.ScreenMessages",
@@ -14958,7 +14958,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   },
   "interactive.ScreenMessages.trace_length": {
     "bundle": "interactive.ScreenMessages",
@@ -14973,7 +14973,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   },
   "interactive.ScreenMessages.score": {
     "bundle": "interactive.ScreenMessages",
@@ -14991,6 +14991,6 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.interactive.ScreenMessages"
+    "java_class": "app.freerouting.gui.session.ScreenMessages"
   }
 }

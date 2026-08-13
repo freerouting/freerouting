@@ -8,7 +8,7 @@ import app.freerouting.settings.SettingsSource;
  *
  * <p><strong>Important:</strong> in GUI mode, this class acts only as a <em>startup
  * placeholder</em>. As soon as a board is loaded (DSN or binary), {@code GuiBoardManager} replaces
- * this source with the {@link app.freerouting.gui.interactive.InteractiveSettings} singleton — a
+ * this source with the {@link app.freerouting.gui.session.InteractiveSettings} singleton — a
  * subclass of {@code GuiSettings} that overrides {@link #getSettings()} to return a <em>live
  * snapshot</em> built from current field values on every invocation. The {@link
  * app.freerouting.settings.SettingsMerger#addOrReplaceSources} method accepts subtype replacements,

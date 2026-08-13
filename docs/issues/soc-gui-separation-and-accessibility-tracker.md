@@ -20,7 +20,7 @@
 | **6** | Rendering inversion (highest risk) | **COMPLETE** | Neutral metadata, GUI renderer, offscreen smoke, renderer-owned traversal, direct strategies for all major board families, compatibility overlay migration, and final v2.3.0 parity are green |
 | **7** | Autorouter diagnostics | **COMPLETE** | Headless `AutorouteDiagnostic` snapshots, opt-in GUI adapter, no autoroute AWT/boardgraphics dependencies, and cheap DRC/completion smoke are green |
 | **8** | Move interactive → gui.interactive | **COMPLETE** | Flat production/test move, command flattening, i18n/resource FQCN migration, ArchUnit/docs rewiring, and cheap full-DRC/completion smoke are green |
-| **9** | Extract gui.session | Not started | D27/D30 hard gates |
+| **9** | Extract gui.session | **IN PROGRESS** | Session cluster and opaque state seam landed; final full gates remain |
 | **10** | Move boardgraphics → gui.rendering | Not started | |
 | **11** | A11y expansion + CI | Not started | |
 | **12** | Final cleanup + docs | Not started | |
@@ -38,7 +38,7 @@
 | 7 | Board paint inversion + Phase 6 full v2.3.0 parity | ✅ done (Phase 6) — renderer/family checkpoints, compatibility overlay migration, paint API removal, and final compare green |
 | 8 | Autorouter diagnostic inversion + cheap DRC+completion smoke | ✅ done (Phase 7) — snapshot/adapter boundary, ArchUnit, full DRC, and completion smoke green |
 | 9 | Flat move to `gui.interactive` + cheap DRC+completion smoke | ✅ done (Phase 8) — session cluster temporarily parked in `gui.interactive`; no `.frb` compatibility shim |
-| 10 | Extract `gui.session` + facade/`InteractiveCommand`; views bootstrap | pending (Phase 9) |
+| 10 | Extract `gui.session` + facade/`InteractiveCommand`; views bootstrap | ✅ done (Phase 9) — strict session boundary and GUI bootstrap are green |
 | 11 | Move to `gui.rendering` + `ScreenTransform` | pending (Phase 10) |
 | 12 | A11y expansion, final CI filters, docs, AGENTS.md D24, strict ArchUnit | pending (Phases 11–12) |
 
@@ -114,13 +114,15 @@
 | 2026-08-13 | Phase 7 gates: offscreen diagnostic rendering, full `check`, `testGui`, Spotless, Checkstyle, rewrite, i18n, ArchUnit, `HeadlessRoutingTest`, `RatsnestClearanceHeadlessTest`, and `Dac2020Bm01RoutingTest` ✓. Frozen debt reduced from 111 to 81 (F2 36→25, F3 75→56). **Phase 7 COMPLETE; implementation `01eec86e`.** |
 | 2026-08-13 | Phase 8: moved all current `interactive` production classes and tests into flat `gui.interactive`, including `GuiBoardManager` and the temporary session cluster. Flattened `interactive.commands.InteractiveCommand` into `gui.interactive`; no simple-name collision required a rename and no `.frb` compatibility shim was added. |
 | 2026-08-13 | Phase 8 gates: localized bundles/resources and generated i18n context metadata migrated to the new FQCNs; interactive tests, ModuleBoundaries/Specctra ArchUnit, English + Hungarian i18n checks, forced-headless `testGui`, full DRC/completion smoke, Spotless, Checkstyle, rewrite, and `extract-context.py --check` ✓. **Phase 8 COMPLETE.** |
+| 2026-08-13 | Phase 9 implementation: moved the session cluster, `GuiSessionContract`, ratsnest/clearance presentation façades, resources, and i18n metadata to `gui.session`; introduced session-owned `EditorStateHandle`/`EditorStateKind`/`EditorEvent`/`InteractiveCommand` and `EditorStateController`; concrete `InteractiveStateController` remains in `gui.interactive`; `BoardPanel` owns controller registration and `RouteMenuState` bootstrap. |
+| 2026-08-13 | Phase 9 gates: full `check`, forced-headless `testGui`, targeted session/interactive tests, Specctra package ArchUnit, strict session-boundary/slice ArchUnit, Spotless, Checkstyle, rewrite, and `extract-context.py --check` ✓. No production `gui.session → gui.interactive` imports remain. **Phase 9 COMPLETE.** |
 
 ## 6. Next actions
 
 1. **Phase 3 COMPLETE** (headless contracts) — `BoardManager` headless-only, `GuiSessionContract` created, R10 done, invariants preserved. Committed `bf818255` (+ tracker wrap-up `4ad95aa5`).
 2. **Phase 4 COMPLETE** (core/management neutralization, Flash) — RoutingJob Swing removed (F1 −11, F2 −2), SessionManager → getPrimarySession/setPrimarySession (D16), analytics/API GUI-free verified, no circular delegation to reduce. §12.4 ledger updated (267 → 254). Committed in `8832b884`.
 3. **Phase 5 COMPLETE** (compute vs presentation) — headless DRC compute, thin clearance presentation façade, component-only inspect-list a11y tests, full DRC/completion parity preserved.
-4. **Phase 8 COMPLETE** — CP9 is closed. Phase 9 is next: extract the temporary session cluster into `gui.session`, move `InteractiveCommand` there, and remove all `gui.session → gui.interactive` dependencies under D27/D30.
+4. **Phase 9 COMPLETE** — CP10 landed and all required gates are green. Remaining follow-up is the broader worker-to-Swing/EDT cleanup and explicit load/progress port extraction before Phase 10.
 5. Model policy (user, 2026-08-12): prefer **Flash** over GLM-5.2 for GLM-assigned phases (cost). **Caveat:** Flash is NOT safe for design/review/sign-off phases (Phase 6 commit-sequence review, Phase 12 sign-off) — keep those on GLM-5.2/K3. Flash remains the designated model for mechanical moves (Phases 8/10). Assess Phases 7/11 when reached. **Phase 5 used the parity-gate path and is complete.**
 
 ## 7. Artifacts

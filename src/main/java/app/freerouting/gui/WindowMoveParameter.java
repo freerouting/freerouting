@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
-import app.freerouting.gui.interactive.GuiBoardManager;
-import app.freerouting.gui.interactive.InteractiveSettings;
+import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.session.InteractiveSettings;
 import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

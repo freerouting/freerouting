@@ -12,6 +12,7 @@ import app.freerouting.geometry.planar.PolygonShape;
 import app.freerouting.geometry.planar.PolylineArea;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.Shape;
+import app.freerouting.gui.session.GuiBoardManager;
 import java.util.Collection;
 import java.util.Iterator;
 

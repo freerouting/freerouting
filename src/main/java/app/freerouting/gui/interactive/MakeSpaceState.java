@@ -4,6 +4,7 @@ import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.rules.Nets;
 import app.freerouting.rules.ViaRule;
 import java.awt.Graphics;

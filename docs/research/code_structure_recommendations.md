@@ -56,16 +56,18 @@ Separate the "What" (Model) from the "How" (Algorithms).
 | `autoroute.algo` | pathfinding algorithms | `MazeSearchAlgo`, `InsertFoundConnectionAlgo`, `LocateFoundConnectionAlgo` |
 | `autoroute.model` | Routing-specific data structures | `ExpansionRoom`, `BoardHistory`, `ItemAutorouteInfo` |
 
-### 3.4. Interactive Module (`app.freerouting.gui.interactive`)
-**Current Content**: ~44 files, mostly "States" for the editor state machine and Managers.
+### 3.4. GUI Interactive and Session Modules
+The former `app.freerouting.interactive` package is now split between two GUI-owned packages:
 
-**Recommendation**:
-
-| New Package | Description | Classes to Move (Examples) |
+| Package | Responsibility | Representative types |
 | :--- | :--- | :--- |
-| `interactive.states` | All state implementations | `DragState`, `RouteState`, `MenuState`, `InteractiveState` |
-| `interactive.managers` | Controllers/Managers | `GuiBoardManager`, `HeadlessBoardManager`, `Settings` |
-| `interactive.replay` | Replay functionality | `ActivityReplayFile...` |
+| `app.freerouting.gui.interactive` | Concrete editor states and their state-machine implementation | `InteractiveState`, `RouteState`, `InteractiveStateController` |
+| `app.freerouting.gui.session` | GUI board-session façade, settings/messages, action threads, and opaque state contracts | `GuiBoardManager`, `InteractiveSettings`, `EditorStateController`, `InteractiveCommand` |
+
+The session package must remain independent of concrete interactive states. Views register the concrete
+controller and bootstrap the initial state; future extractions should add narrow ports for loading,
+route lifecycle, progress reporting, board replacement, and settings rather than reintroducing
+state-specific dependencies.
 
 ---
 

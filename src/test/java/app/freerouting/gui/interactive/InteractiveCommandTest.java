@@ -5,13 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import app.freerouting.gui.session.EditorStateHandle;
+import app.freerouting.gui.session.InteractiveCommand;
 import org.junit.jupiter.api.Test;
 
 class InteractiveCommandTest {
 
   @Test
   void noOpReturnsProvidedState() {
-    InteractiveState state = mock(InteractiveState.class);
+    EditorStateHandle state = mock(InteractiveState.class);
 
     InteractiveCommand command = InteractiveCommand.noOp(state);
 
@@ -24,7 +26,7 @@ class InteractiveCommandTest {
     InteractiveCommand command =
         new InteractiveCommand() {
           @Override
-          public InteractiveState execute() {
+          public EditorStateHandle execute() {
             return null;
           }
 

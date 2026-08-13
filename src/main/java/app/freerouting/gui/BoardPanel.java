@@ -1,8 +1,9 @@
 package app.freerouting.gui;
 
 import app.freerouting.core.RoutingJob;
-import app.freerouting.gui.interactive.GuiBoardManager;
-import app.freerouting.gui.interactive.ScreenMessages;
+import app.freerouting.gui.interactive.InteractiveStateController;
+import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.session.ScreenMessages;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
@@ -387,6 +388,7 @@ public class BoardPanel extends JPanel {
         evt -> boardHandling.mouseWheelMoved(evt.getPoint(), evt.getWheelRotation()));
 
     boardHandling = new GuiBoardManager(this, globalSettings, routingJob, settingMerger);
+    installEditorStateController();
     boardHandling.setBoardFrame(this.boardFrame);
     setAutoscrolls(true);
     this.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
@@ -428,7 +430,15 @@ public class BoardPanel extends JPanel {
     }
 
     boardHandling = new GuiBoardManager(this, globalSettings, routingJob, settingsMerger);
+    installEditorStateController();
     boardHandling.setBoardFrame(this.boardFrame);
+  }
+
+  /** Registers the concrete state implementation and owns the initial route-menu bootstrap. */
+  private void installEditorStateController() {
+    InteractiveStateController controller = new InteractiveStateController(boardHandling);
+    boardHandling.setEditorStateController(controller);
+    controller.bootstrapInitialState();
   }
 
   /**

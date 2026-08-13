@@ -5,6 +5,8 @@ import app.freerouting.board.Item;
 import app.freerouting.boardgraphics.BoardRenderer;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.WindowObjectInfo;
+import app.freerouting.gui.session.ClearanceViolations;
+import app.freerouting.gui.session.GuiBoardManager;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Set;

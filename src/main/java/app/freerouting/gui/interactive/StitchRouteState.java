@@ -1,6 +1,7 @@
 package app.freerouting.gui.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.rules.NetClass;
 import java.awt.Color;

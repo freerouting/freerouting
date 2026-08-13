@@ -7,6 +7,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.session.InteractiveCommand;
 import java.util.Locale;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +26,7 @@ class InteractiveStateCommandAdapterTest {
 
     InteractiveCommand command = state.leftButtonClickedCommand(location);
 
-    InteractiveState result = command.execute();
+    InteractiveState result = (InteractiveState) command.execute();
 
     assertTrue(state.leftClickCalled);
     assertEquals(location, state.lastLeftClickLocation);
@@ -40,7 +42,7 @@ class InteractiveStateCommandAdapterTest {
     RecordingState nextState = new RecordingState(manager);
     state.cancelResult = nextState;
 
-    InteractiveState result = state.cancelCommand().execute();
+    InteractiveState result = (InteractiveState) state.cancelCommand().execute();
 
     assertTrue(state.cancelCalled);
     assertSame(nextState, result);

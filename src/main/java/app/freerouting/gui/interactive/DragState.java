@@ -4,6 +4,7 @@ import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.Trace;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.gui.session.GuiBoardManager;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;

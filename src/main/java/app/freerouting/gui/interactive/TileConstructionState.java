@@ -8,6 +8,7 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.rules.BoardRules;
 import java.util.Arrays;
 import java.util.Iterator;

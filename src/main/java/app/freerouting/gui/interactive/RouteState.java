@@ -14,6 +14,7 @@ import app.freerouting.board.Via;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.awt.Graphics;
@@ -402,7 +403,7 @@ public class RouteState extends InteractiveState {
         }
 
         if (connectedToPlane) {
-          hdlg.setInteractiveState(this.returnState);
+          hdlg.setEditorState(this.returnState);
           for (int currNetNo : this.route.netNoArr) {
             hdlg.updateRatsnest(currNetNo);
           }

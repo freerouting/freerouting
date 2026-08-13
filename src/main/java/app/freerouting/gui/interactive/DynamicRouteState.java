@@ -1,6 +1,7 @@
 package app.freerouting.gui.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.gui.session.GuiBoardManager;
 import javax.swing.JPopupMenu;
 
 /** State for dynamic interactive routing, which is routing while moving the mouse pointer. */

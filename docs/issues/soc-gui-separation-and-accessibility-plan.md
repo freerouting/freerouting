@@ -1,6 +1,6 @@
 # GUI Separation and Accessibility Migration Plan
 
-> Status: **In implementation** — Phases 0–6 complete; Phase 7 autorouter diagnostic inversion is next. D1–D30 locked; M1=A / M4=B incorporated; execution staffing plan in §13 (added 2026-08-11).
+> Status: **In implementation** — Phases 0–9 complete; Phase 10 rendering extraction is next. D1–D30 locked; M1=A / M4=B incorporated; execution staffing plan in §13 (added 2026-08-11).
 >
 > Scope: Separate GUI interaction and rendering from the headless routing pipeline, establish automated GUI accessibility coverage, and reorganize only the packages required for that separation.
 >
@@ -213,12 +213,14 @@ Move from temporary `gui.interactive` into `gui.session` at minimum:
 - `ScreenMessages`
 - `InteractiveActionThread`
 - `AutorouterAndRouteOptimizerThread`
+- `GuiSessionContract`
+- session-owned ratsnest/clearance presentation façades used by the manager
 
 Leave concrete editor states (`*State`) in `gui.interactive`.
 
 **Phase 9 must also** (D27 / D30):
 
-1. Move / introduce the narrow interactive facade/API (name TBD — R19) **and** the `InteractiveCommand` interface (+ any state-handle/token types the session passes around) into **`gui.session`** (or `gui.session.api`).
+1. Move / introduce the narrow interactive facade/API (`EditorStateController`, `EditorStateHandle`, `EditorStateKind`, `EditorEvent`) **and** the `InteractiveCommand` interface (+ any state-handle/token types the session passes around) into **`gui.session`**.
 2. Have concrete states in `gui.interactive` **implement** those session-owned interfaces (`gui.interactive → gui.session` only).
 3. Assign **initial-state bootstrap/registration** to the **`gui` views** layer (views may see both packages; session must not need a concrete `*State` to start).
 4. Ensure **no** `gui.session → gui.interactive` edge remains; ArchUnit `gui.**` slice-cycle check must pass.
@@ -370,16 +372,27 @@ forced-headless GUI tests, i18n checks, Spotless, Checkstyle, and rewrite checks
 
 ### Phase 9 — Extract `gui.session`
 
-- [ ] Extract §4.4 session cluster to `gui.session` (D20); keep `InteractiveSettings` name (D21).
-- [ ] Move/introduce facade + `InteractiveCommand` (+ handles) into `gui.session` / `gui.session.api` (D30); pick facade type name (R19).
-- [ ] Concrete states in `gui.interactive` implement session-owned interfaces; **views bootstrap** initial state.
-- [ ] **Remove all `gui.session → gui.interactive` imports** (not only concrete `*State`) (D27/D30).
-- [ ] Confirm `gui.session → gui.rendering` remains the allowed D26 edge (`GraphicsContext` ownership) — no forced decoupling.
-- [ ] Temporary §12 freeze on `gui.session → gui.interactive` only while facade lands; **must be gone by phase exit**; `gui.**` slice-cycle check green.
+- [x] Extract §4.4 session cluster to `gui.session` (D20); keep `InteractiveSettings` name (D21).
+- [x] Move/introduce facade + `InteractiveCommand` (+ handles) into `gui.session` / `gui.session.api` (D30); facade type is `EditorStateController` (R19).
+- [x] Concrete states in `gui.interactive` implement session-owned interfaces; **views bootstrap** initial state.
+- [x] **Remove all `gui.session → gui.interactive` imports** (not only concrete `*State`) (D27/D30).
+- [x] Confirm `gui.session → gui.rendering` remains the allowed D26 edge (`GraphicsContext` ownership) — no forced decoupling.
+- [x] Temporary §12 freeze on `gui.session → gui.interactive` only while facade lands; **removed at phase exit**; `gui.**` slice-cycle check green.
 - [ ] Ports for load / route start-stop / progress / board replace / settings.
 - [ ] Eliminate inventoried worker→Swing call sites; EDT-only Swing mutation.
 - [ ] Confirm `getPrimarySession` / `setPrimarySession` callers remain correct (still management API).
 - [ ] A11y workflows still pass component-only under forced headless.
+
+**Implementation checkpoint (2026-08-13):** The session cluster now lives in `gui.session`, including the
+manager, settings, messages, action threads, session contract, and manager-owned ratsnest/clearance
+facades. `EditorStateHandle`, `EditorStateKind`, `EditorEvent`, `InteractiveCommand`, and
+`EditorStateController` define the opaque inversion seam. `InteractiveStateController` is the concrete
+implementation in `gui.interactive`; `BoardPanel` registers it and bootstraps `RouteMenuState`.
+The session package has no production dependency on `gui.interactive`; the strict ArchUnit rule and
+GUI slice-cycle rule are green. Full `check`, forced-headless `testGui`, i18n context validation,
+Spotless, Checkstyle, rewrite checks, and targeted session/Specctra ArchUnit tests pass. The remaining
+Phase 9 follow-up is the broader worker-to-Swing/EDT cleanup and explicit load/progress port
+extraction; the composition seam is the supported boundary until that work is addressed.
 
 ### Phase 10 — Move to `gui.rendering`
 
@@ -483,7 +496,7 @@ D1–D30 are locked. Operational leftovers only:
 | **R13** | Eliminate `java.awt.geom` from pipeline | **Out of scope** | Future |
 | **R14** | Legacy `interactive.Settings` vs `InteractiveSettings` | Inventory Phase 1; merge/delete Phase 8/9 | Phase 1 / 8 / 9 |
 | **R18** | How to obtain/run stable v2.3.0 for parity | Prefer released v2.3.0 executable/artifact vs `v2.3.0` git tag checkout | Phase 0/1 tooling |
-| **R19** | Interactive facade type name | e.g. `InteractiveController` / `EditorStateHost` — pick in Phase 1 sketch | Phase 1 / 9 |
+| **R19** | Interactive facade type name | **`EditorStateController`** (session-owned interface; concrete `InteractiveStateController` in `gui.interactive`) | Phase 9 ✅ |
 
 ## 11. Final sign-off
 

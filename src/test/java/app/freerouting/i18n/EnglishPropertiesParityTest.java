@@ -84,9 +84,9 @@ class EnglishPropertiesParityTest {
   private static final Set<String> INTERACTIVE_STATE_BUNDLE_EXCEPTIONS =
       Set.of(
           "app.freerouting.gui.interactive.InteractiveState",
-          "app.freerouting.gui.interactive.GuiBoardManager",
-          "app.freerouting.gui.interactive.ScreenMessages",
-          "app.freerouting.gui.interactive.RatsNest");
+          "app.freerouting.gui.session.GuiBoardManager",
+          "app.freerouting.gui.session.ScreenMessages",
+          "app.freerouting.gui.session.RatsNest");
   private static final Map<String, String> BUNDLE_ALIASES =
       Map.ofEntries(
           Map.entry("app.freerouting.rules.NetClasses", "app.freerouting.gui.WindowNetClasses"),
@@ -97,7 +97,7 @@ class EnglishPropertiesParityTest {
               "app.freerouting.boardgraphics.OtherColorTableModel",
               "app.freerouting.boardgraphics.ColorTableModel"),
           Map.entry(
-              "app.freerouting.gui.interactive.AutorouterAndRouteOptimizerThread",
+              "app.freerouting.gui.session.AutorouterAndRouteOptimizerThread",
               "app.freerouting.gui.interactive.InteractiveState"),
           Map.entry("app.freerouting.gui.AirLineInfo", "app.freerouting.drc.AirLine"),
           Map.entry("app.freerouting.gui.AirLine", "app.freerouting.drc.AirLine"),

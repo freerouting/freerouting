@@ -13,6 +13,7 @@ import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
+import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import java.awt.Graphics;
 import java.util.Collection;

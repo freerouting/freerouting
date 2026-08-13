@@ -1,6 +1,7 @@
 package app.freerouting.gui.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.gui.session.GuiBoardManager;
 import java.awt.geom.Point2D;
 
 /** Class for interactive zooming to a rectangle. */

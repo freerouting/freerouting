@@ -14,6 +14,7 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
+import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.awt.Color;

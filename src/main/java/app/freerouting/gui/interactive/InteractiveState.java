@@ -2,6 +2,10 @@ package app.freerouting.gui.interactive;
 
 import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.gui.session.EditorStateHandle;
+import app.freerouting.gui.session.EditorStateKind;
+import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.session.InteractiveCommand;
 import app.freerouting.util.TextManager;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -9,7 +13,7 @@ import java.awt.geom.Point2D;
 import javax.swing.JPopupMenu;
 
 /** Common base class of all interaction states with the graphical interface. */
-public class InteractiveState {
+public class InteractiveState implements EditorStateHandle {
 
   /** Provides board settings access to derived classes. */
   protected final GuiBoardManager hdlg;
@@ -26,6 +30,46 @@ public class InteractiveState {
     this.hdlg = boardHandling;
 
     this.tm = new TextManager(InteractiveState.class, boardHandling.getLocale());
+  }
+
+  @Override
+  public EditorStateKind kind() {
+    if (this instanceof RouteState) {
+      return EditorStateKind.ROUTE;
+    }
+    if (this instanceof InspectMenuState || this instanceof InspectedItemState) {
+      return EditorStateKind.INSPECT;
+    }
+    if (this instanceof DragMenuState) {
+      return EditorStateKind.DRAG;
+    }
+    if (this instanceof MenuState) {
+      return EditorStateKind.MENU;
+    }
+    if (this instanceof DragState || this instanceof MoveItemState) {
+      return EditorStateKind.DRAG;
+    }
+    if (this instanceof ZoomRegionState) {
+      return EditorStateKind.ZOOM;
+    }
+    if (this instanceof ExpandTestState) {
+      return EditorStateKind.EXPAND;
+    }
+    if (this instanceof CircleConstructionState
+        || this instanceof CornerItemConstructionState
+        || this instanceof CutoutRouteState
+        || this instanceof HoleConstructionState
+        || this instanceof PolygonShapeConstructionState
+        || this instanceof SelectRegionState
+        || this instanceof TileConstructionState) {
+      return EditorStateKind.CONSTRUCT;
+    }
+    return EditorStateKind.UNKNOWN;
+  }
+
+  @Override
+  public boolean hasSelection() {
+    return this instanceof InspectedItemState;
   }
 
   /** Provides the default draw function to be overridden in derived classes. */

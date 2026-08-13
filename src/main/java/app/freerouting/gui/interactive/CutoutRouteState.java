@@ -7,6 +7,7 @@ import app.freerouting.boardgraphics.BoardRenderer;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.gui.session.GuiBoardManager;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;

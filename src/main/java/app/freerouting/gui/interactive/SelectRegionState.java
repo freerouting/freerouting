@@ -1,6 +1,7 @@
 package app.freerouting.gui.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.gui.session.GuiBoardManager;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;

@@ -2,8 +2,8 @@ package app.freerouting.gui;
 
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Item;
-import app.freerouting.gui.interactive.GuiBoardManager;
-import app.freerouting.gui.interactive.RatsNest;
+import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.session.RatsNest;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.Nets;

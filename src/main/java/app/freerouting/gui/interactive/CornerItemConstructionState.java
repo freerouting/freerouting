@@ -3,6 +3,7 @@ package app.freerouting.gui.interactive;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.gui.session.GuiBoardManager;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Iterator;

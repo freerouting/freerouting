@@ -13,6 +13,7 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.boardgraphics.AutorouteDiagnosticRenderer;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.gui.session.GuiBoardManager;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Set;

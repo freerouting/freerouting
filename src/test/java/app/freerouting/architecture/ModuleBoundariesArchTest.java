@@ -93,7 +93,7 @@ class ModuleBoundariesArchTest {
         .resideInAnyPackage("app.freerouting.api..", "app.freerouting.management..")
         .should()
         .dependOnClassesThat()
-        .haveFullyQualifiedName("app.freerouting.gui.interactive.GuiBoardManager")
+        .haveFullyQualifiedName("app.freerouting.gui.session.GuiBoardManager")
         .orShould()
         .dependOnClassesThat()
         .haveFullyQualifiedName("app.freerouting.gui.interactive.InteractiveState")
@@ -136,7 +136,7 @@ class ModuleBoundariesArchTest {
         .resideInAPackage("app.freerouting.core..")
         .should()
         .dependOnClassesThat()
-        .haveFullyQualifiedName("app.freerouting.gui.interactive.GuiBoardManager")
+        .haveFullyQualifiedName("app.freerouting.gui.session.GuiBoardManager")
         .orShould()
         .dependOnClassesThat()
         .haveFullyQualifiedName("app.freerouting.gui.interactive.InteractiveState")
@@ -255,6 +255,20 @@ class ModuleBoundariesArchTest {
         .should()
         .beFreeOfCycles()
         .allowEmptyShould(true) // gui has no subpackages until Phases 8-10; stays green until then
+        .check(classes);
+  }
+
+  /** D27/D30: the session facade must never name concrete interactive states. */
+  @Test
+  void guiSessionMustNotDependOnConcreteInteractiveStates() {
+    JavaClasses classes = importMainClasses();
+    noClasses()
+        .that()
+        .resideInAnyPackage("app.freerouting.gui.session..")
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage("app.freerouting.gui.interactive..")
+        .because("session owns opaque handles; views bootstrap concrete states (D27/D30)")
         .check(classes);
   }
 
