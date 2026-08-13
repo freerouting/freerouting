@@ -11,7 +11,6 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -167,36 +166,6 @@ public class ComponentOutline extends Item implements Serializable {
   @Override
   public int getDrawPriority() {
     return Drawable.MIDDLE_DRAW_PRIORITY;
-  }
-
-  @Override
-  public void draw(
-      Graphics g, GraphicsContext graphicsContext, Color[] colorArr, double intensity) {
-    if (graphicsContext == null || intensity <= 0) {
-      return;
-    }
-    int virtualLayerIdx;
-    if (this.isCourtyard) {
-      virtualLayerIdx = this.isFront ? 2 : 3;
-    } else if (this.isFabrication) {
-      virtualLayerIdx = this.isFront ? 4 : 5;
-    } else {
-      virtualLayerIdx = this.isFront ? 0 : 1;
-    }
-    double virtualVisibility = graphicsContext.getVirtualLayerVisibility(virtualLayerIdx);
-    if (virtualVisibility <= 0) {
-      return;
-    }
-
-    Color color = colorArr[this.getLayer()];
-    double drawIntensity = virtualVisibility * intensity;
-
-    if (this.isCourtyard || this.isClosed) {
-      double drawWidth = Math.min(this.board.communication.getResolution(Unit.MIL), 100);
-      graphicsContext.drawBoundary(this.getArea(), drawWidth, color, g, drawIntensity);
-    } else {
-      graphicsContext.fillArea(this.getArea(), g, color, drawIntensity);
-    }
   }
 
   @Override

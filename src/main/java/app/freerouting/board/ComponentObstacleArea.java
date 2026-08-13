@@ -5,7 +5,6 @@ import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.util.TextManager;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.util.Locale;
 
 /** Describes areas of the board, where components are not allowed. */
@@ -100,25 +99,6 @@ public class ComponentObstacleArea extends ObstacleArea {
   @Override
   public double getDrawIntensity(GraphicsContext graphicsContext) {
     return graphicsContext.getComponentOutlineColorIntensity();
-  }
-
-  @Override
-  public void draw(
-      Graphics g, GraphicsContext graphicsContext, Color[] colorArr, double intensity) {
-    if (graphicsContext == null || intensity <= 0) {
-      return;
-    }
-    int virtualLayerIdx = this.isFront() ? 2 : 3;
-    double virtualVisibility = graphicsContext.getVirtualLayerVisibility(virtualLayerIdx);
-    if (virtualVisibility <= 0) {
-      return;
-    }
-
-    Color color = colorArr[this.getLayer()];
-    double drawIntensity = virtualVisibility * intensity;
-
-    double drawWidth = Math.min(this.board.communication.getResolution(Unit.MIL), 100);
-    graphicsContext.drawBoundary(this.getArea(), drawWidth, color, g, drawIntensity);
   }
 
   @Override

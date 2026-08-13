@@ -3,6 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.ShapeTraceEntries;
+import app.freerouting.boardgraphics.BoardRenderer;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -101,7 +102,8 @@ public final class CutoutRouteState extends SelectRegionState {
 
     for (PolylineTrace currTrace : this.traceList) {
 
-      currTrace.draw(
+      BoardRenderer.drawOverlayItem(
+          currTrace,
           graphics,
           hdlg.graphicsContext,
           hdlg.graphicsContext.getHighlightColor(),

@@ -2,7 +2,6 @@ package app.freerouting.board;
 
 import app.freerouting.autoroute.ItemAutorouteInfo;
 import app.freerouting.boardgraphics.Drawable;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.UndoableObjects;
@@ -18,12 +17,9 @@ import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
 import app.freerouting.util.TextManager;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -771,42 +767,6 @@ public abstract class Item
    */
   public Point[] getRatsnestCorners() {
     return new Point[0];
-  }
-
-  @Override
-  public void draw(Graphics g, GraphicsContext graphicsContext, Color color, double intensity) {
-    Color[] colorArr = new Color[board.getLayerCount()];
-    Arrays.fill(colorArr, color);
-    draw(g, graphicsContext, colorArr, intensity);
-  }
-
-  /**
-   * Draws this item with its draw colors from p_graphics_context. p_layer_visibility[i] is expected
-   * between 0 and 1 for each layer i.
-   */
-  public void draw(Graphics g, GraphicsContext graphicsContext) {
-    Color[] layerColors = getDrawColors(graphicsContext);
-    draw(g, graphicsContext, layerColors, getDrawIntensity(graphicsContext));
-  }
-
-  /** Draws this item on a specific layer only, with its draw colors from p_graphics_context. */
-  public void drawLayer(Graphics g, GraphicsContext graphicsContext, int layerNo) {
-    if (this.isOnLayer(layerNo)) {
-      Color[] layerColors = getDrawColors(graphicsContext);
-      drawLayer(g, graphicsContext, layerColors, getDrawIntensity(graphicsContext), layerNo);
-    }
-  }
-
-  /** Draws this item on a specific layer only. */
-  public void drawLayer(
-      Graphics g,
-      GraphicsContext graphicsContext,
-      Color[] colorArr,
-      double intensity,
-      int layerNo) {
-    if (this.isOnLayer(layerNo)) {
-      draw(g, graphicsContext, colorArr, intensity);
-    }
   }
 
   /** Test function checking the item for inconsistencies. */

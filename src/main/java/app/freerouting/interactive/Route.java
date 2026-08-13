@@ -465,8 +465,12 @@ public class Route {
   /** Highlights the targets and draws the incomplete. */
   public void draw(Graphics graphics, GraphicsContext graphicsContext) {
     if (this.highlightShoveFailingObstacle && this.shoveFailingObstacle != null) {
-      this.shoveFailingObstacle.draw(
-          graphics, graphicsContext, graphicsContext.getViolationsColor(), 1);
+      BoardRenderer.drawOverlayItem(
+          this.shoveFailingObstacle,
+          graphics,
+          graphicsContext,
+          graphicsContext.getViolationsColor(),
+          1);
     }
     if (targetSet == null || netNoArr.length < 1) {
       return;

@@ -13,7 +13,6 @@ import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -210,21 +209,6 @@ public class BoardOutline extends Item implements Serializable {
       this.keepoutLines = new TileShape[0];
     }
     return this.keepoutLines;
-  }
-
-  @Override
-  public void draw(
-      Graphics g, GraphicsContext graphicsContext, Color[] colorArr, double intensity) {
-    if (graphicsContext == null || intensity <= 0) {
-      return;
-    }
-    for (PolylineShape currShape : this.shapes) {
-      FloatPoint[] drawCorners = currShape.cornerApproxArr();
-      FloatPoint[] closedDrawCorners = new FloatPoint[drawCorners.length + 1];
-      System.arraycopy(drawCorners, 0, closedDrawCorners, 0, drawCorners.length);
-      closedDrawCorners[closedDrawCorners.length - 1] = drawCorners[0];
-      graphicsContext.draw(closedDrawCorners, HALF_WIDTH, colorArr[0], g, intensity);
-    }
   }
 
   @Override
