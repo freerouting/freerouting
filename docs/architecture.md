@@ -51,6 +51,7 @@ flowchart TD
 
     GUI --> MGMT
     GUI --> RENDER --> BOARD
+    RENDER --> AR
     API --> MGMT
     MCP --> API
     MGMT <--> CORE
@@ -171,8 +172,9 @@ Diagnostics and debugging utilities.
 ### `app.freerouting.boardgraphics`
 
 GUI-owned board rendering: layer/virtual-layer ordering, viewport culling, draw-priority traversal,
-component fabrication labels, and dispatch to board-item paint strategies. `BoardRenderer` is the
-GUI rendering entry point; `BasicBoard` remains headless and no longer owns board traversal.
+component fabrication labels, dispatch to board-item paint strategies, and adaptation of opt-in
+headless autorouter diagnostic snapshots. `BoardRenderer` and `AutorouteDiagnosticRenderer` are the
+GUI rendering entry points; `BasicBoard` and `autoroute` remain headless and do not own GUI painting.
 
 ### Notable Nested Packages
 
@@ -268,9 +270,10 @@ The interactive editor is split between `gui` and `interactive`.
 When diagnosing user interaction, rendering, or editor state, begin here.
 
 The GUI rendering path is intentionally one-way: `GuiBoardManager` invokes `boardgraphics.BoardRenderer`,
-which reads the headless board model and paints the current view. Board traversal and presentation
-ordering do not belong in `BasicBoard`; remaining item-family paint APIs are compatibility boundaries
-being removed incrementally under the GUI separation plan.
+which reads the headless board model and paints the current view. The opt-in expansion-test view
+passes headless `AutorouteDiagnostic` snapshots to `AutorouteDiagnosticRenderer`; normal autorouting
+does not collect snapshots. Board traversal and presentation ordering do not belong in `BasicBoard`,
+and autoroute does not import AWT or `boardgraphics`.
 
 ### API and Headless Path
 

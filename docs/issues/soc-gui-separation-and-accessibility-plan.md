@@ -345,10 +345,12 @@ Land as **independently revertible commits** on the long-lived branch:
 
 ### Phase 7 — Autorouter diagnostics
 
-- [ ] Replace `draw(Graphics, …)` with neutral snapshots/events or GUI adapters.
-- [ ] Diagnostics opt-in; logging remains headless path.
-- [ ] ArchUnit: no new AWT UI parameters in `autoroute`.
-- [ ] **Cheap exit gate:** golden-fixture smoke = full DRC **and** completion/unrouted-net parity vs Phase 0 goldens (D28) — no full v2.3.0 version compare.
+- [x] Replace `draw(Graphics, …)` with neutral snapshots/events or GUI adapters. Autoroute now emits `AutorouteDiagnostic` snapshots; `AutorouteDiagnosticRenderer` owns GUI painting.
+- [x] Diagnostics opt-in; logging remains headless path. Snapshot emission only occurs when a sink is supplied, and autoroute no longer imports AWT or `boardgraphics`.
+- [x] ArchUnit: no new AWT UI parameters in `autoroute`. The frozen stores dropped to F2=25 and F3=56.
+- [x] **Cheap exit gate:** golden-fixture smoke = full DRC **and** completion/unrouted-net parity vs Phase 0 goldens (D28) — targeted headless routing/DRC and full `check` passed; no full v2.3.0 version compare was required.
+
+**Current checkpoint:** `01eec86e` replaces autorouter diagnostic drawing with headless-safe snapshots and a GUI-owned renderer adapter. `ExpandTestState` remains the opt-in caller; normal routing and logging do not collect or render snapshots. Offscreen diagnostic rendering, full `check`, `testGui`, formatting, checkstyle, rewrite, i18n, ArchUnit, headless DRC, and completion smoke are green.
 
 ### Phase 8 — Move to `gui.interactive` (flat)
 
@@ -530,12 +532,12 @@ These older items were marked FIXED before this initiative and are retained only
 | Freeze ID | Rule | Violation count (baseline) | Removal phase | Owner | Status |
 | --- | --- | --- | --- | --- | --- |
 | **F1** | pipeline/support → `javax.swing..` (ModuleBoundariesArchTest.pipelineMustNotDependOnSwing) | 16 (was 27; −11 Phase 4) | Phase 4 (datastructures.FileFilter; RoutingJob file chooser ✅) + Phase 12 (util.TextManager, io.specctra.parser.SessionToEagle) | GUI SoC initiative | frozen, green |
-| **F2** | pipeline/support → `java.awt..` excluding `java.awt.geom..` (ModuleBoundariesArchTest.pipelineMustNotDependOnAwtUiTypes) | 36 (was 77; −41 final Phase 6) | Phase 4 (RoutingJob file chooser ✅) + Phase 6 (remaining board item paint APIs) + Phase 7 (autoroute diagnostics) + Phase 12 (util.TextManager fonts) | GUI SoC initiative | frozen, green |
-| **F3** | board/autoroute → `app.freerouting.boardgraphics..` (ModuleBoundariesArchTest.boardAndAutorouteMustNotDependOnBoardgraphics) | 75 (was 132; −57 final Phase 6) | Phase 6 (remaining item-family paint APIs) + Phase 10 (rendering inversion → gui.rendering) | GUI SoC initiative | frozen, green |
+| **F2** | pipeline/support → `java.awt..` excluding `java.awt.geom..` (ModuleBoundariesArchTest.pipelineMustNotDependOnAwtUiTypes) | 25 (was 36; −11 Phase 7) | Phase 4 (RoutingJob file chooser ✅) + Phase 6 (remaining board item paint APIs) + Phase 7 (autoroute diagnostics ✅) + Phase 12 (util.TextManager fonts) | GUI SoC initiative | frozen, green |
+| **F3** | board/autoroute → `app.freerouting.boardgraphics..` (ModuleBoundariesArchTest.boardAndAutorouteMustNotDependOnBoardgraphics) | 56 (was 75; −19 Phase 7) | Phase 6 (remaining item-family paint APIs) + Phase 7 (autoroute diagnostics ✅) + Phase 10 (rendering inversion → gui.rendering) | GUI SoC initiative | frozen, green |
 
 > Added Phase 1 (2026-08-12). Frozen store: `src/test/resources/archunit_store/` (3 rule files + `stored.rules`);
-> `archunit.properties` keeps `allowStoreCreation=false` / `allowStoreUpdate=true`. Total frozen debt: **111**
-> violations (was 225; −114 after final Phase 6 paint API removal). Strict (non-frozen) rules added in the same change: **R4** `guiSlicesMustBeFreeOfCycles`
+> `archunit.properties` keeps `allowStoreCreation=false` / `allowStoreUpdate=true`. Total frozen debt: **81**
+> violations (was 111; −30 in Phase 7). Strict (non-frozen) rules added in the same change: **R4** `guiSlicesMustBeFreeOfCycles`
 > (`allowEmptyShould(true)` — green until gui subpackages exist, must stay green after Phase 9) and **R5**
 > `pipelineMustNotDependOnGui` (green; closes the io/util gap). Baselines verified against the 2026-08-12 run
 > (`BUILD SUCCESSFUL in 38s`, gate = ModuleBoundariesArchTest + SpecctraPackageArchTest).
