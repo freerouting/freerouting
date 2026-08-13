@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
  * <p>This test deliberately imports only {@code drc}/{@code board}/{@code io} types; the absence of
  * a GUI dependency is also enforced architecturally by the module-boundary ArchUnit rules (the
  * pipeline/support packages must not depend on {@code gui}/{@code interactive}/{@code
- * boardgraphics}).
+ * gui.rendering}).
  */
 class RatsnestClearanceHeadlessTest {
 

@@ -1,4 +1,4 @@
-package app.freerouting.boardgraphics;
+package app.freerouting.gui.rendering;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

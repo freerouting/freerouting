@@ -1,4 +1,4 @@
-package app.freerouting.boardgraphics;
+package app.freerouting.gui.rendering;
 
 import app.freerouting.board.LayerStructure;
 import app.freerouting.util.TextManager;

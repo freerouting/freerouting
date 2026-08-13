@@ -1,7 +1,5 @@
 package app.freerouting.board;
 
-import app.freerouting.boardgraphics.Drawable;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -10,7 +8,6 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
-import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -132,40 +129,6 @@ public class ComponentOutline extends Item implements Serializable {
   @Override
   protected TileShape[] calculateTreeShapes(ShapeSearchTree searchTree) {
     return new TileShape[0];
-  }
-
-  @Override
-  public double getDrawIntensity(GraphicsContext graphicsContext) {
-    return graphicsContext.getComponentOutlineColorIntensity();
-  }
-
-  @Override
-  public Color[] getDrawColors(GraphicsContext graphicsContext) {
-    Color[] colorArr = new Color[this.board.layerStructure.arr.length];
-    Color frontDrawColor;
-    Color backDrawColor;
-    if (this.isCourtyard) {
-      frontDrawColor = graphicsContext.otherColorTable.getCourtyardColor(true);
-      backDrawColor = graphicsContext.otherColorTable.getCourtyardColor(false);
-    } else if (this.isFabrication) {
-      frontDrawColor = graphicsContext.otherColorTable.getFabColor(true);
-      backDrawColor = graphicsContext.otherColorTable.getFabColor(false);
-    } else {
-      frontDrawColor = graphicsContext.otherColorTable.getSilkscreenColor(true);
-      backDrawColor = graphicsContext.otherColorTable.getSilkscreenColor(false);
-    }
-    for (int i = 0; i < colorArr.length - 1; i++) {
-      colorArr[i] = frontDrawColor;
-    }
-    if (colorArr.length > 1) {
-      colorArr[colorArr.length - 1] = backDrawColor;
-    }
-    return colorArr;
-  }
-
-  @Override
-  public int getDrawPriority() {
-    return Drawable.MIDDLE_DRAW_PRIORITY;
   }
 
   @Override

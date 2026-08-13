@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
-import app.freerouting.boardgraphics.CoordinateTransform;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.gui.rendering.ScreenTransform;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.GridBagConstraints;
@@ -279,8 +279,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      CoordinateTransform coordinateTransform =
-          panel.boardHandling.graphicsContext.coordinateTransform;
+      ScreenTransform coordinateTransform = panel.boardHandling.graphicsContext.coordinateTransform;
       coordinateTransform.setRotation(0);
       panel.repaint();
     }
@@ -290,8 +289,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      CoordinateTransform coordinateTransform =
-          panel.boardHandling.graphicsContext.coordinateTransform;
+      ScreenTransform coordinateTransform = panel.boardHandling.graphicsContext.coordinateTransform;
       coordinateTransform.setRotation(0.5 * Math.PI);
       panel.repaint();
     }
@@ -301,8 +299,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      CoordinateTransform coordinateTransform =
-          panel.boardHandling.graphicsContext.coordinateTransform;
+      ScreenTransform coordinateTransform = panel.boardHandling.graphicsContext.coordinateTransform;
       coordinateTransform.setRotation(Math.PI);
       panel.repaint();
     }
@@ -312,8 +309,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      CoordinateTransform coordinateTransform =
-          panel.boardHandling.graphicsContext.coordinateTransform;
+      ScreenTransform coordinateTransform = panel.boardHandling.graphicsContext.coordinateTransform;
       coordinateTransform.setRotation(1.5 * Math.PI);
       panel.repaint();
     }
@@ -323,8 +319,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      CoordinateTransform coordinateTransform =
-          panel.boardHandling.graphicsContext.coordinateTransform;
+      ScreenTransform coordinateTransform = panel.boardHandling.graphicsContext.coordinateTransform;
       if (!(coordinateTransform.isMirrorLeftRight() || coordinateTransform.isMirrorTopBottom())) {
         return; // mirroring already switched off
       }
@@ -341,8 +336,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      CoordinateTransform coordinateTransform =
-          panel.boardHandling.graphicsContext.coordinateTransform;
+      ScreenTransform coordinateTransform = panel.boardHandling.graphicsContext.coordinateTransform;
       if (coordinateTransform.isMirrorLeftRight()) {
         return; // already mirrored
       }
@@ -359,8 +353,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      CoordinateTransform coordinateTransform =
-          panel.boardHandling.graphicsContext.coordinateTransform;
+      ScreenTransform coordinateTransform = panel.boardHandling.graphicsContext.coordinateTransform;
       if (coordinateTransform.isMirrorTopBottom()) {
         return; // already mirrored
       }

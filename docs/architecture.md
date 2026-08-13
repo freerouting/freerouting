@@ -20,7 +20,7 @@ flowchart TD
     subgraph interfaces ["User Interfaces"]
         direction LR
         GUI["**gui + gui.session + gui.interactive**\nSwing desktop"]
-        RENDER["**boardgraphics**\nGUI-owned board renderer"]
+        RENDER["**gui.rendering**\nGUI-owned board renderer"]
         API["**api.v1**\nREST / HTTP"]
         MCP["**api.mcp + api.v1.McpControllerV1**\nMCP JSON-RPC + SSE + WS"]
     end
@@ -83,7 +83,7 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Routing decisions, fanout, maze search, or optimization | `app.freerouting.autoroute` |
 | Nets, vias, clearance classes, or board rules | `app.freerouting.rules` |
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
-| GUI windows, panels, menus, editor state, or drawing | `app.freerouting.gui`, `app.freerouting.gui.session`, `app.freerouting.gui.interactive`, and `app.freerouting.boardgraphics` |
+| GUI windows, panels, menus, editor state, or drawing | `app.freerouting.gui`, `app.freerouting.gui.session`, `app.freerouting.gui.interactive`, and `app.freerouting.gui.rendering` |
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
 | MCP server protocol bridge | `app.freerouting.api.mcp` and `app.freerouting.api.v1.McpControllerV1` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
@@ -95,7 +95,7 @@ Architectural boundaries are codified in `src/test/java/app/freerouting/architec
 
 - **Strict boundaries (must pass):**
   - Core routing/model packages (`autoroute`, `board`, `rules`, `drc`, `geometry`) must not depend on GUI/editor or API packages.
-  - API/management packages must not depend on `gui` or `boardgraphics`.
+  - API/management packages must not depend on `gui` or `gui.rendering`.
   - Headless paths (`api`, `management`, `core`) must not depend on `GuiBoardManager` or `InteractiveState`.
 - **Frozen boundaries (current debt, no further drift):**
   - `gui.interactive` concrete state classes should not be used outside the GUI layer.
@@ -181,7 +181,7 @@ Logging helpers and the `FRLogger` entry point.
 
 Diagnostics and debugging utilities.
 
-### `app.freerouting.boardgraphics`
+### `app.freerouting.gui.rendering`
 
 GUI-owned board rendering: layer/virtual-layer ordering, viewport culling, draw-priority traversal,
 component fabrication labels, dispatch to board-item paint strategies, and adaptation of opt-in
@@ -283,11 +283,11 @@ The interactive editor is split between `gui`, `gui.session`, and `gui.interacti
 
 When diagnosing user interaction, rendering, or editor state, begin here.
 
-The GUI rendering path is intentionally one-way: `GuiBoardManager` invokes `boardgraphics.BoardRenderer`,
+The GUI rendering path is intentionally one-way: `GuiBoardManager` invokes `gui.rendering.BoardRenderer`,
 which reads the headless board model and paints the current view. The opt-in expansion-test view
 passes headless `AutorouteDiagnostic` snapshots to `AutorouteDiagnosticRenderer`; normal autorouting
 does not collect snapshots. Board traversal and presentation ordering do not belong in `BasicBoard`,
-and autoroute does not import AWT or `boardgraphics`.
+and autoroute does not import AWT or `gui.rendering`.
 
 ### API and Headless Path
 

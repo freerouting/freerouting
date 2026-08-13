@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.LayerStructure;
-import app.freerouting.boardgraphics.ColorIntensityTable.ObjectNames;
+import app.freerouting.gui.rendering.ColorIntensityTable.ObjectNames;
 import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;

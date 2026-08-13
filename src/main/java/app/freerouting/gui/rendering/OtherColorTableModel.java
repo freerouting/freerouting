@@ -1,4 +1,4 @@
-package app.freerouting.boardgraphics;
+package app.freerouting.gui.rendering;
 
 import app.freerouting.util.TextManager;
 import java.awt.Color;

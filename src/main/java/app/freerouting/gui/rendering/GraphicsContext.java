@@ -1,4 +1,4 @@
-package app.freerouting.boardgraphics;
+package app.freerouting.gui.rendering;
 
 import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.Area;
@@ -41,7 +41,7 @@ public class GraphicsContext implements Serializable {
   public transient ItemColorTableModel itemColorTable;
   public transient OtherColorTableModel otherColorTable;
   public ColorIntensityTable colorIntensityTable;
-  public CoordinateTransform coordinateTransform;
+  public ScreenTransform coordinateTransform;
 
   /** Layer visibility per board layer, where 0 is invisible and 1 is fully visible. */
   private double[] layerVisibilityArr;
@@ -68,7 +68,7 @@ public class GraphicsContext implements Serializable {
   /** Creates a graphics context for the given board bounds and layer structure. */
   public GraphicsContext(
       IntBox designBounds, Dimension panelBounds, LayerStructure layerStructure, Locale locale) {
-    coordinateTransform = new CoordinateTransform(designBounds, panelBounds);
+    coordinateTransform = new ScreenTransform(designBounds, panelBounds);
     itemColorTable = new ItemColorTableModel(layerStructure, locale);
     otherColorTable = new OtherColorTableModel(locale);
     colorIntensityTable = new ColorIntensityTable();
@@ -84,7 +84,7 @@ public class GraphicsContext implements Serializable {
 
   /** Copy constructor. */
   public GraphicsContext(GraphicsContext graphicsContext) {
-    this.coordinateTransform = new CoordinateTransform(graphicsContext.coordinateTransform);
+    this.coordinateTransform = new ScreenTransform(graphicsContext.coordinateTransform);
     this.itemColorTable = new ItemColorTableModel(graphicsContext.itemColorTable);
     this.otherColorTable = new OtherColorTableModel(graphicsContext.otherColorTable);
     this.colorIntensityTable = new ColorIntensityTable(graphicsContext.colorIntensityTable);
@@ -195,7 +195,7 @@ public class GraphicsContext implements Serializable {
       return;
     }
     Dimension screenBounds = this.coordinateTransform.screenBounds;
-    this.coordinateTransform = new CoordinateTransform(newDesignBounds, screenBounds);
+    this.coordinateTransform = new ScreenTransform(newDesignBounds, screenBounds);
   }
 
   /** Changes the size of the panel to {@code newBounds}. */
@@ -204,7 +204,7 @@ public class GraphicsContext implements Serializable {
       return;
     }
     IntBox designBox = coordinateTransform.designBox;
-    CoordinateTransform updatedTransform = new CoordinateTransform(designBox, newBounds);
+    ScreenTransform updatedTransform = new ScreenTransform(designBox, newBounds);
     updatedTransform.setMirrorLeftRight(coordinateTransform.isMirrorLeftRight());
     updatedTransform.setMirrorTopBottom(coordinateTransform.isMirrorTopBottom());
     updatedTransform.setRotation(coordinateTransform.getRotation());

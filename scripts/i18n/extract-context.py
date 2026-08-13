@@ -135,9 +135,9 @@ def get_java_class_for_bundle(bundle_name: str) -> Optional[str]:
 
 def human_readable_bundle_desc(bundle_name: str) -> str:
     area_map = {
+        "gui.rendering.": "board graphics/colors",
         "gui.": "GUI (graphical user interface)",
         "interactive.": "interactive routing session",
-        "boardgraphics.": "board graphics/colors",
         "rules.": "design rules",
         "Common": "shared/common strings",
     }

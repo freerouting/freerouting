@@ -1,6 +1,5 @@
 package app.freerouting.board;
 
-import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -386,11 +385,6 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     super.clearDerivedData();
     this.precalculatedFirstLayer = -1;
     this.precalculatedLastLayer = -1;
-  }
-
-  @Override
-  public int getDrawPriority() {
-    return Drawable.MIDDLE_DRAW_PRIORITY;
   }
 
   /** Auxiliary class used in the method move_by. */

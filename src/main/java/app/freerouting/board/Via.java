@@ -2,7 +2,6 @@ package app.freerouting.board;
 
 import app.freerouting.autoroute.ExpansionDrill;
 import app.freerouting.autoroute.ItemAutorouteInfo;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
@@ -11,7 +10,6 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
-import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -231,34 +229,6 @@ public class Via extends DrillItem implements Serializable {
       return false;
     }
     return filter.isSelected(ItemSelectionFilter.SelectableChoices.VIAS);
-  }
-
-  @Override
-  public Color[] getDrawColors(GraphicsContext graphicsContext) {
-    Color[] result;
-    if (this.netCount() == 0) {
-      // display unconnected vias as obstacles
-      result = graphicsContext.getObstacleColors();
-    } else {
-      result = graphicsContext.getTraceColors(this.isUserFixed());
-    }
-    return result;
-  }
-
-  @Override
-  public double getDrawIntensity(GraphicsContext graphicsContext) {
-    double result;
-    if (this.netCount() == 0) {
-      // display unconnected vias as obstacles
-      result = graphicsContext.getObstacleColorIntensity();
-
-    } else if (this.firstLayer() >= this.lastLayer()) {
-      // display vias with only one layer as pins
-      result = graphicsContext.getPinColorIntensity();
-    } else {
-      result = graphicsContext.getViaColorIntensity();
-    }
-    return result;
   }
 
   @Override

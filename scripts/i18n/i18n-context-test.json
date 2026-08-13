@@ -1,6 +1,6 @@
 {
-  "boardgraphics.ColorTableModel.LAYER": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.LAYER": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "LAYER",
     "english_value": "Layer",
@@ -12,10 +12,10 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.TRACES": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.TRACES": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "TRACES",
     "english_value": "Traces",
@@ -27,10 +27,10 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.FIXED_TRACES": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.FIXED_TRACES": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "FIXED_TRACES",
     "english_value": "Fixed Traces",
@@ -44,10 +44,10 @@
     "related_keys": [
       "FIXED_VIAS"
     ],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.VIAS": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.VIAS": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "VIAS",
     "english_value": "Vias",
@@ -59,10 +59,10 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.FIXED_VIAS": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.FIXED_VIAS": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "FIXED_VIAS",
     "english_value": "Fixed Vias",
@@ -76,10 +76,10 @@
     "related_keys": [
       "FIXED_TRACES"
     ],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.PINS": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.PINS": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "PINS",
     "english_value": "Pins",
@@ -91,10 +91,10 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.CONDUCTION_AREAS": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.CONDUCTION_AREAS": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "CONDUCTION_AREAS",
     "english_value": "Conduction",
@@ -106,10 +106,10 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.KEEPOUTS": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.KEEPOUTS": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "KEEPOUTS",
     "english_value": "Obstacles",
@@ -121,10 +121,10 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.VIA_KEEPOUTS": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.VIA_KEEPOUTS": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "VIA_KEEPOUTS",
     "english_value": "Via Obstacles",
@@ -138,10 +138,10 @@
     "related_keys": [
       "VIAS"
     ],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.PLACE_KEEPOUTS": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.PLACE_KEEPOUTS": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "PLACE_KEEPOUTS",
     "english_value": "Place Obstacles",
@@ -153,10 +153,10 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.BACKGROUND": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.BACKGROUND": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "BACKGROUND",
     "english_value": "Background",
@@ -168,10 +168,10 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.HIGHLIGHT": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.HIGHLIGHT": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "HIGHLIGHT",
     "english_value": "Highlight",
@@ -183,10 +183,10 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.INCOMPLETES": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.INCOMPLETES": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "INCOMPLETES",
     "english_value": "Incompletes",
@@ -198,10 +198,10 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.VIOLATIONS": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.VIOLATIONS": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "VIOLATIONS",
     "english_value": "Violations",
@@ -213,10 +213,10 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.OUTLINE": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.OUTLINE": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "OUTLINE",
     "english_value": "Outline",
@@ -228,10 +228,10 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.COMPONENT_FRONT": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.COMPONENT_FRONT": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "COMPONENT_FRONT",
     "english_value": "Comp. Outline Front",
@@ -245,10 +245,10 @@
     "related_keys": [
       "COMPONENT_BACK"
     ],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.COMPONENT_BACK": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.COMPONENT_BACK": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "COMPONENT_BACK",
     "english_value": "Comp. Outline Back",
@@ -262,10 +262,10 @@
     "related_keys": [
       "COMPONENT_FRONT"
     ],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
-  "boardgraphics.ColorTableModel.LENGTH_MATCHING_AREA": {
-    "bundle": "boardgraphics.ColorTableModel",
+  "gui.rendering.ColorTableModel.LENGTH_MATCHING_AREA": {
+    "bundle": "gui.rendering.ColorTableModel",
     "bundle_desc": "board graphics/colors",
     "key": "LENGTH_MATCHING_AREA",
     "english_value": "Length Matching",
@@ -277,7 +277,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.boardgraphics.ColorTableModel"
+    "java_class": "app.freerouting.gui.rendering.ColorTableModel"
   },
   "Common.add_corner": {
     "bundle": "Common",

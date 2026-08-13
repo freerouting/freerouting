@@ -123,7 +123,7 @@ class ModuleBoundariesArchTest {
         .resideInAnyPackage("app.freerouting.api..", "app.freerouting.management..")
         .should()
         .dependOnClassesThat()
-        .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.boardgraphics..")
+        .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.gui.rendering..")
         .check(classes);
   }
 
@@ -223,22 +223,17 @@ class ModuleBoundariesArchTest {
         .check(classes);
   }
 
-  /**
-   * F3 (frozen): board/autoroute must not depend on boardgraphics (rendering). Owner: GUI SoC
-   * initiative. Removal: Phase 6/10 (board rendering inversion; move to gui.rendering).
-   */
+  /** F3 (strict): pipeline code must not depend on GUI rendering. */
   @Test
-  void boardAndAutorouteMustNotDependOnBoardgraphics() {
+  void boardAndAutorouteMustNotDependOnGuiRendering() {
     JavaClasses classes = importMainClasses();
-    FreezingArchRule.freeze(
-            noClasses()
-                .that()
-                .resideInAnyPackage("app.freerouting.board..", "app.freerouting.autoroute..")
-                .should()
-                .dependOnClassesThat()
-                .resideInAnyPackage("app.freerouting.boardgraphics..")
-                .because(
-                    "domain must not paint; rendering is inverted into the GUI layer (Phase 6/10)"))
+    noClasses()
+        .that()
+        .resideInAnyPackage("app.freerouting.board..", "app.freerouting.autoroute..")
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage("app.freerouting.gui.rendering..")
+        .because("domain must not paint; rendering is owned by the GUI layer (D10/D26)")
         .check(classes);
   }
 

@@ -1,4 +1,4 @@
-package app.freerouting.boardgraphics;
+package app.freerouting.gui.rendering;
 
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -9,7 +9,7 @@ import java.awt.geom.Point2D;
 import java.io.Serializable;
 
 /** Transformation function between the board and the screen coordinate systems. */
-public class CoordinateTransform implements Serializable {
+public class ScreenTransform implements Serializable {
 
   final IntBox designBox;
   final IntBox designBoxWithOffset;
@@ -28,7 +28,7 @@ public class CoordinateTransform implements Serializable {
   private double rotation = 0;
 
   /** Creates a coordinate transform for the given design bounds and panel size. */
-  public CoordinateTransform(IntBox designBox, Dimension panelBounds) {
+  public ScreenTransform(IntBox designBox, Dimension panelBounds) {
     this.screenBounds = panelBounds;
     this.designBox = designBox;
     this.rotationPole = designBox.centreOfGravity();
@@ -53,7 +53,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** Copy constructor. */
-  public CoordinateTransform(CoordinateTransform coordinateTransform) {
+  public ScreenTransform(ScreenTransform coordinateTransform) {
     this.screenBounds = new Dimension(coordinateTransform.screenBounds);
     this.designBox = new IntBox(coordinateTransform.designBox.ll, coordinateTransform.designBox.ur);
     this.rotationPole =
@@ -223,7 +223,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** Returns whether the zoom-invariant transform state matches {@code other}. */
-  public boolean isZoomInvariantStateEqual(CoordinateTransform other) {
+  public boolean isZoomInvariantStateEqual(ScreenTransform other) {
     if (other == null) {
       return false;
     }
@@ -234,7 +234,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /** Returns whether the full transform state matches {@code other}. */
-  public boolean isSameTransformState(CoordinateTransform other) {
+  public boolean isSameTransformState(ScreenTransform other) {
     if (other == null) {
       return false;
     }

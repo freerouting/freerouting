@@ -2,9 +2,9 @@ package app.freerouting.gui.interactive;
 
 import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
-import app.freerouting.boardgraphics.BoardRenderer;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.WindowObjectInfo;
+import app.freerouting.gui.rendering.BoardRenderer;
 import app.freerouting.gui.session.ClearanceViolations;
 import app.freerouting.gui.session.GuiBoardManager;
 import java.awt.Graphics;

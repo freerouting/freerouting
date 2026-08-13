@@ -1,4 +1,4 @@
-package app.freerouting.boardgraphics;
+package app.freerouting.gui.rendering;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.BoardOutline;
@@ -50,13 +50,13 @@ public final class BoardRenderer {
     List<Item> allItems = new ArrayList<>(board.getItems());
 
     @SuppressWarnings("unchecked")
-    List<Item>[] itemsByPriority = (List<Item>[]) new List[Drawable.MAX_DRAW_PRIORITY + 1];
-    for (int priority = 0; priority <= Drawable.MAX_DRAW_PRIORITY; priority++) {
+    List<Item>[] itemsByPriority = (List<Item>[]) new List[MAX_DRAW_PRIORITY + 1];
+    for (int priority = 0; priority <= MAX_DRAW_PRIORITY; priority++) {
       itemsByPriority[priority] = new ArrayList<>();
     }
     for (Item item : allItems) {
-      int priority = item.getDrawPriority();
-      if (priority >= 0 && priority <= Drawable.MAX_DRAW_PRIORITY) {
+      int priority = drawPriority(item);
+      if (priority >= 0 && priority <= MAX_DRAW_PRIORITY) {
         itemsByPriority[priority].add(item);
       }
     }
@@ -64,9 +64,7 @@ public final class BoardRenderer {
     java.awt.Rectangle clipRect = graphics.getClipBounds();
     IntBox clipBox =
         clipRect != null ? graphicsContext.coordinateTransform.screenToBoard(clipRect) : null;
-    for (int priority = Drawable.MIN_DRAW_PRIORITY;
-        priority <= Drawable.MAX_DRAW_PRIORITY;
-        priority++) {
+    for (int priority = MIN_DRAW_PRIORITY; priority <= MAX_DRAW_PRIORITY; priority++) {
       for (RenderStep step : drawSteps) {
         for (Item item : itemsByPriority[priority]) {
           if (clipBox != null && !clipBox.intersects(item.boundingBox())) {
@@ -93,8 +91,8 @@ public final class BoardRenderer {
           item,
           graphics,
           graphicsContext,
-          item.getDrawColors(graphicsContext),
-          item.getDrawIntensity(graphicsContext));
+          drawColors(item, graphicsContext),
+          drawIntensity(item, graphicsContext));
     }
   }
 
@@ -136,9 +134,114 @@ public final class BoardRenderer {
     if (item == null || graphics == null || graphicsContext == null) {
       return;
     }
-    Color[] colors = item.getDrawColors(graphicsContext);
-    double intensity = Math.min(1.0, item.getDrawIntensity(graphicsContext) * 1.5);
+    Color[] colors = drawColors(item, graphicsContext);
+    double intensity = Math.min(1.0, drawIntensity(item, graphicsContext) * 1.5);
     drawOverlayItem(item, graphics, graphicsContext, colors, intensity);
+  }
+
+  private static final int MIN_DRAW_PRIORITY = 1;
+  private static final int MAX_DRAW_PRIORITY = 3;
+
+  /** Returns the renderer-owned draw priority for an item family. */
+  private static int drawPriority(Item item) {
+    return switch (item.getBoardItemType()) {
+      case BOARD_OUTLINE, COMPONENT_OUTLINE, TRACE, PIN, VIA -> MAX_DRAW_PRIORITY;
+      default -> MIN_DRAW_PRIORITY;
+    };
+  }
+
+  /** Returns the renderer-owned colors for an item family. */
+  private static Color[] drawColors(Item item, GraphicsContext graphicsContext) {
+    return switch (item.getBoardItemType()) {
+      case BOARD_OUTLINE -> {
+        Color[] colors = new Color[item.board.getLayerCount()];
+        java.util.Arrays.fill(colors, graphicsContext.getOutlineColor());
+        yield colors;
+      }
+      case COMPONENT_OUTLINE -> componentOutlineColors((ComponentOutline) item, graphicsContext);
+      case COMPONENT_OBSTACLE_AREA ->
+          componentObstacleColors((ComponentObstacleArea) item, graphicsContext);
+      case TRACE -> graphicsContext.getTraceColors(item.isUserFixed());
+      case PIN -> {
+        Pin pin = (Pin) item;
+        if (pin.netCount() == 0) {
+          yield graphicsContext.getObstacleColors();
+        }
+        yield pin.firstLayer() != pin.lastLayer()
+            ? graphicsContext.getTraceColors(pin.isUserFixed())
+            : graphicsContext.getPinColors();
+      }
+      case VIA -> {
+        Via via = (Via) item;
+        yield via.netCount() == 0
+            ? graphicsContext.getObstacleColors()
+            : graphicsContext.getTraceColors(via.isUserFixed());
+      }
+      case VIA_OBSTACLE_AREA -> graphicsContext.getViaObstacleColors();
+      case CONDUCTION_AREA -> graphicsContext.getTraceColors(true);
+      case OBSTACLE_AREA -> graphicsContext.getObstacleColors();
+      default -> new Color[item.board.getLayerCount()];
+    };
+  }
+
+  private static Color[] componentOutlineColors(
+      ComponentOutline outline, GraphicsContext graphicsContext) {
+    Color frontColor;
+    Color backColor;
+    if (outline.isCourtyard()) {
+      frontColor = graphicsContext.otherColorTable.getCourtyardColor(true);
+      backColor = graphicsContext.otherColorTable.getCourtyardColor(false);
+    } else if (outline.isFabrication()) {
+      frontColor = graphicsContext.otherColorTable.getFabColor(true);
+      backColor = graphicsContext.otherColorTable.getFabColor(false);
+    } else {
+      frontColor = graphicsContext.otherColorTable.getSilkscreenColor(true);
+      backColor = graphicsContext.otherColorTable.getSilkscreenColor(false);
+    }
+    return frontBackColors(outline.board.getLayerCount(), frontColor, backColor);
+  }
+
+  private static Color[] componentObstacleColors(
+      ComponentObstacleArea area, GraphicsContext graphicsContext) {
+    return frontBackColors(
+        area.board.getLayerCount(),
+        graphicsContext.otherColorTable.getCourtyardColor(true),
+        graphicsContext.otherColorTable.getCourtyardColor(false));
+  }
+
+  private static Color[] frontBackColors(int layerCount, Color frontColor, Color backColor) {
+    Color[] colors = new Color[layerCount];
+    for (int layer = 0; layer < colors.length - 1; layer++) {
+      colors[layer] = frontColor;
+    }
+    if (colors.length > 0) {
+      colors[colors.length - 1] = backColor;
+    }
+    return colors;
+  }
+
+  /** Returns the renderer-owned intensity for an item family. */
+  private static double drawIntensity(Item item, GraphicsContext graphicsContext) {
+    return switch (item.getBoardItemType()) {
+      case BOARD_OUTLINE -> 1;
+      case COMPONENT_OUTLINE, COMPONENT_OBSTACLE_AREA ->
+          graphicsContext.getComponentOutlineColorIntensity();
+      case TRACE -> graphicsContext.getTraceColorIntensity();
+      case PIN -> graphicsContext.getPinColorIntensity();
+      case VIA -> {
+        Via via = (Via) item;
+        if (via.netCount() == 0) {
+          yield graphicsContext.getObstacleColorIntensity();
+        }
+        yield via.firstLayer() >= via.lastLayer()
+            ? graphicsContext.getPinColorIntensity()
+            : graphicsContext.getViaColorIntensity();
+      }
+      case CONDUCTION_AREA -> graphicsContext.getConductionColorIntensity();
+      case VIA_OBSTACLE_AREA -> graphicsContext.getViaObstacleColorIntensity();
+      case OBSTACLE_AREA -> graphicsContext.getObstacleColorIntensity();
+      default -> 0;
+    };
   }
 
   private static BasicBoard.DominantSide determineDominantSide(

@@ -1,7 +1,5 @@
 package app.freerouting.board;
 
-import app.freerouting.boardgraphics.Drawable;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -11,7 +9,6 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
-import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -257,21 +254,6 @@ public class ObstacleArea extends Item implements Serializable {
       return false;
     }
     return filter.isSelected(ItemSelectionFilter.SelectableChoices.KEEPOUT);
-  }
-
-  @Override
-  public Color[] getDrawColors(GraphicsContext graphicsContext) {
-    return graphicsContext.getObstacleColors();
-  }
-
-  @Override
-  public double getDrawIntensity(GraphicsContext graphicsContext) {
-    return graphicsContext.getObstacleColorIntensity();
-  }
-
-  @Override
-  public int getDrawPriority() {
-    return Drawable.MIN_DRAW_PRIORITY;
   }
 
   @Override

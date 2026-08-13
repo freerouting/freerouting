@@ -91,11 +91,11 @@ class EnglishPropertiesParityTest {
       Map.ofEntries(
           Map.entry("app.freerouting.rules.NetClasses", "app.freerouting.gui.WindowNetClasses"),
           Map.entry(
-              "app.freerouting.boardgraphics.ItemColorTableModel",
-              "app.freerouting.boardgraphics.ColorTableModel"),
+              "app.freerouting.gui.rendering.ItemColorTableModel",
+              "app.freerouting.gui.rendering.ColorTableModel"),
           Map.entry(
-              "app.freerouting.boardgraphics.OtherColorTableModel",
-              "app.freerouting.boardgraphics.ColorTableModel"),
+              "app.freerouting.gui.rendering.OtherColorTableModel",
+              "app.freerouting.gui.rendering.ColorTableModel"),
           Map.entry(
               "app.freerouting.gui.session.AutorouterAndRouteOptimizerThread",
               "app.freerouting.gui.interactive.InteractiveState"),

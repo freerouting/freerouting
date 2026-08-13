@@ -1,9 +1,9 @@
 package app.freerouting.gui;
 
 import app.freerouting.Freerouting;
-import app.freerouting.boardgraphics.TutorialBoardPalette;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.gui.rendering.TutorialBoardPalette;
 import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.gui.session.InteractiveActionThread;
 import app.freerouting.io.FileFormat;

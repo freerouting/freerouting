@@ -1,6 +1,5 @@
 package app.freerouting.board;
 
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -11,7 +10,6 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
-import java.awt.Color;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
@@ -34,8 +32,6 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     this.clearDerivedData();
   }
 
-  private transient java.awt.geom.Area cachedFillArea;
-  private transient app.freerouting.boardgraphics.CoordinateTransform cachedFillTransform;
   private transient int cachedBoardRevision = -1;
   private transient java.awt.geom.Area cachedBoardFillArea;
 
@@ -73,8 +69,6 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   @Override
   public void clearDerivedData() {
     super.clearDerivedData();
-    this.cachedFillArea = null;
-    this.cachedFillTransform = null;
     this.cachedBoardRevision = -1;
     this.cachedBoardFillArea = null;
   }
@@ -409,16 +403,6 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       return false;
     }
     return filter.isSelected(ItemSelectionFilter.SelectableChoices.CONDUCTION);
-  }
-
-  @Override
-  public Color[] getDrawColors(GraphicsContext graphicsContext) {
-    return graphicsContext.getTraceColors(true);
-  }
-
-  @Override
-  public double getDrawIntensity(GraphicsContext graphicsContext) {
-    return graphicsContext.getConductionColorIntensity();
   }
 
   @Override

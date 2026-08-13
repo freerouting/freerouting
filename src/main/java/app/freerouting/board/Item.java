@@ -1,7 +1,6 @@
 package app.freerouting.board;
 
 import app.freerouting.autoroute.ItemAutorouteInfo;
-import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.UndoableObjects;
@@ -29,11 +28,7 @@ import java.util.TreeSet;
 
 /** Basic class of the items on a board. */
 public abstract class Item
-    implements Drawable,
-        SearchTreeObject,
-        ObjectInfoPanel.Printable,
-        UndoableObjects.Storable,
-        Serializable {
+    implements SearchTreeObject, ObjectInfoPanel.Printable, UndoableObjects.Storable, Serializable {
 
   private static final double PROTECT_FANOUT_LENGTH = 400;
   private final int idNo;

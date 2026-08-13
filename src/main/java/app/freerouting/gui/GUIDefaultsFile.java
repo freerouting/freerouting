@@ -1,8 +1,8 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.ItemSelectionFilter;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.IndentFileWriter;
+import app.freerouting.gui.rendering.GraphicsContext;
 import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import java.awt.Color;

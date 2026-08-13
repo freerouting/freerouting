@@ -1,8 +1,8 @@
 package app.freerouting.gui.session;
 
 import app.freerouting.board.Item;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.drc.ClearanceViolation;
+import app.freerouting.gui.rendering.GraphicsContext;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Collection;

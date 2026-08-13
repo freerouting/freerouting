@@ -230,7 +230,8 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 ## 5. Completion criteria (measurable)
 
 - Pipeline/support packages (`board`, `rules`, `autoroute`, `drc`, `geometry`, `datastructures`, `settings`, `logger`, `debug`, `util`, `io`, `core`, `management`, `api`) have no `gui.**`, no Swing, no AWT UI dependencies (geom whitelist only).
-- No production sources under `app.freerouting.interactive` or `app.freerouting.boardgraphics`.
+- No production sources remain under `app.freerouting.interactive`; rendering sources live under
+  `app.freerouting.gui.rendering`.
 - `gui.interactive` = concrete editor states; `gui.session` = GUI session façade + owned command/facade APIs; `gui.rendering` = rendering.
 - `gui.session` does not import any `gui.interactive` type (facade + `InteractiveCommand` owned by session — D27/D30); views bootstrap initial state.
 - ArchUnit: `gui.**` slices are cycle-free.
@@ -396,10 +397,21 @@ extraction; the composition seam is the supported boundary until that work is ad
 
 ### Phase 10 — Move to `gui.rendering`
 
-- [ ] Move `boardgraphics` → `gui.rendering`.
-- [ ] Rename graphics `CoordinateTransform` → `ScreenTransform` (D18).
-- [ ] Confirm **pipeline** has zero imports of rendering package (session→rendering is allowed — D26).
-- [ ] Offscreen renderer tests green; headless routing green.
+- [x] Move the former `boardgraphics` production/test/resource tree → `gui.rendering`.
+- [x] Rename graphics `CoordinateTransform` → `ScreenTransform` (D18); `board.CoordinateTransform`
+  and `io.CoordinateTransform` remain unchanged.
+- [x] Confirm **pipeline** has zero imports of rendering package (session→rendering is allowed —
+  D26). The final rendering inversion also removed `Drawable` and all draw-color, draw-intensity,
+  and draw-priority methods from board model classes; `BoardRenderer` owns the
+  `BoardItemType`/item-family dispatch.
+- [x] Offscreen renderer tests and headless routing are green.
+
+**Implementation checkpoint (2026-08-13):** Rendering sources, tests, localized resources, context
+metadata, and parity aliases now use `app.freerouting.gui.rendering`. `ScreenTransform` is the only
+graphics transform rename; the board and I/O transforms were not changed. F3 was promoted from a
+freeze to a strict zero-dependency rule after the board model lost its rendering APIs. Renderer-owned
+dispatch preserves normal board and overlay rendering behavior, including colors, intensity, and
+draw priority.
 
 ### Phase 11 — Accessibility expansion + path-filtered CI
 
@@ -545,17 +557,19 @@ These older items were marked FIXED before this initiative and are retained only
 | A2 | Incomplete-connection compute lives under `drc` (name broader than clearances) | Explicit D13; document in architecture glossary | GUI SoC initiative |
 | A3 | `gui.session` may depend on `gui.rendering` (`GraphicsContext` on `GuiBoardManager`) | Explicit D26; full view-owned graphics out of scope | GUI SoC initiative |
 
-### 12.4 Active ArchUnit freezes (fill in Phase 1)
+### 12.4 Active ArchUnit freezes
 
 | Freeze ID | Rule | Violation count (baseline) | Removal phase | Owner | Status |
 | --- | --- | --- | --- | --- | --- |
 | **F1** | pipeline/support → `javax.swing..` (ModuleBoundariesArchTest.pipelineMustNotDependOnSwing) | 16 (was 27; −11 Phase 4) | Phase 4 (datastructures.FileFilter; RoutingJob file chooser ✅) + Phase 12 (util.TextManager, io.specctra.parser.SessionToEagle) | GUI SoC initiative | frozen, green |
 | **F2** | pipeline/support → `java.awt..` excluding `java.awt.geom..` (ModuleBoundariesArchTest.pipelineMustNotDependOnAwtUiTypes) | 25 (was 36; −11 Phase 7) | Phase 4 (RoutingJob file chooser ✅) + Phase 6 (remaining board item paint APIs) + Phase 7 (autoroute diagnostics ✅) + Phase 12 (util.TextManager fonts) | GUI SoC initiative | frozen, green |
-| **F3** | board/autoroute → `app.freerouting.boardgraphics..` (ModuleBoundariesArchTest.boardAndAutorouteMustNotDependOnBoardgraphics) | 56 (was 75; −19 Phase 7) | Phase 6 (remaining item-family paint APIs) + Phase 7 (autoroute diagnostics ✅) + Phase 10 (rendering inversion → gui.rendering) | GUI SoC initiative | frozen, green |
+| **F3** | board/autoroute → `app.freerouting.gui.rendering..` (ModuleBoundariesArchTest.boardAndAutorouteMustNotDependOnGuiRendering) | 0 | Phase 10 (rendering inversion ✅) | GUI SoC initiative | promoted to strict, green |
 
-> Added Phase 1 (2026-08-12). Frozen store: `src/test/resources/archunit_store/` (3 rule files + `stored.rules`);
-> `archunit.properties` keeps `allowStoreCreation=false` / `allowStoreUpdate=true`. Total frozen debt: **81**
-> violations (was 111; −30 in Phase 7). Strict (non-frozen) rules added in the same change: **R4** `guiSlicesMustBeFreeOfCycles`
+> Added Phase 1 (2026-08-12). Frozen store: `src/test/resources/archunit_store/` (F1/F2 rule files +
+> `stored.rules`); `archunit.properties` keeps `allowStoreCreation=false` /
+> `allowStoreUpdate=true`. F3 reached zero in Phase 10 and was promoted to strict; the obsolete F3
+> store was removed. Remaining frozen debt is F1/F2 only. Strict (non-frozen) rules include **R4**
+> `guiSlicesMustBeFreeOfCycles`
 > (`allowEmptyShould(true)` — green until gui subpackages exist, must stay green after Phase 9) and **R5**
 > `pipelineMustNotDependOnGui` (green; closes the io/util gap). Baselines verified against the 2026-08-12 run
 > (`BUILD SUCCESSFUL in 38s`, gate = ModuleBoundariesArchTest + SpecctraPackageArchTest).

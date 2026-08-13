@@ -1,6 +1,5 @@
 package app.freerouting.board;
 
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.LogicalPart;
 import app.freerouting.core.Package;
 import app.freerouting.core.Padstack;
@@ -17,7 +16,6 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
-import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -428,27 +426,6 @@ public class Pin extends DrillItem implements Serializable {
       return false;
     }
     return filter.isSelected(ItemSelectionFilter.SelectableChoices.PINS);
-  }
-
-  @Override
-  public Color[] getDrawColors(GraphicsContext graphicsContext) {
-    Color[] result;
-    if (this.netCount() > 0) {
-      if (firstLayer() != lastLayer()) {
-        result = graphicsContext.getTraceColors(this.isUserFixed());
-      } else {
-        result = graphicsContext.getPinColors();
-      }
-    } else {
-      // display unconnected pins as obstacles
-      result = graphicsContext.getObstacleColors();
-    }
-    return result;
-  }
-
-  @Override
-  public double getDrawIntensity(GraphicsContext graphicsContext) {
-    return graphicsContext.getPinColorIntensity();
   }
 
   /** Swaps the nets of this pin and p_other. Returns false on error. */

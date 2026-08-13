@@ -2,12 +2,12 @@ package app.freerouting.gui.session;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
-import app.freerouting.boardgraphics.GraphicsContext;
-import app.freerouting.boardgraphics.NetIncompletesGraphics;
 import app.freerouting.drc.AirLine;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.drc.NetIncompletes;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.gui.rendering.GraphicsContext;
+import app.freerouting.gui.rendering.NetIncompletesGraphics;
 import app.freerouting.logger.FRLogger;
 import java.awt.Graphics;
 import java.util.Collection;
