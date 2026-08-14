@@ -64,9 +64,16 @@ public class BatchAutorouter extends NamedAlgorithm {
   private static final int STAGNATION_PASS_LIMIT = 10;
   // Number of no-improvement passes before attempting a one-time fanout-tail cleanup.
   private static final int FANOUT_RECOVERY_STAGNATION_PASSES = 3;
+  // Progress statistics are informational only; avoid rebuilding the expensive snapshot for
+  // every item while keeping the GUI reasonably current on large boards.
+  private static final int PROGRESS_STATISTICS_ITEM_INTERVAL = 10;
   // Minimum score gain (on the 0–1000 normalized scale) that counts as a
   // meaningful improvement; gains smaller than this are treated as stagnation.
   private static final float STAGNATION_SCORE_THRESHOLD = 0.5F;
+  private static final boolean BENCHMARK_PROFILE_ENABLED =
+      Boolean.getBoolean("freerouting.benchmark.profile");
+  private static final boolean BENCHMARK_RETAIN_AUTOROUTE_DATABASE =
+      Boolean.getBoolean("freerouting.benchmark.retain_autoroute_database");
 
   private final boolean removeUnconnectedVias;
   private final AutorouteControl.ExpansionCostFactor[] traceCostArr;
@@ -100,6 +107,18 @@ public class BatchAutorouter extends NamedAlgorithm {
   private long lastBoardUpdateTimestamp;
 
   private boolean isOptimizerAutorouter;
+  private long profileItemSelectionNanos;
+  private long profileIntermediateStatisticsNanos;
+  private long profileBoardStatisticsNanos;
+  private long profileIncompleteDrcNanos;
+  private long profileAutorouteItemNanos;
+  private long profileMazeSearchNanos;
+  private long profileOptChangedAreaNanos;
+  private long profileTailRemovalNanos;
+  private int profileRouteItemCount;
+  private int profilePlaneItemCount;
+  private BoardStatistics progressStatistics;
+  private int progressItemsSinceStatistics;
 
   /** Creates a BatchAutorouter for the given routing job. */
   public BatchAutorouter(RoutingJob job) {
@@ -141,7 +160,9 @@ public class BatchAutorouter extends NamedAlgorithm {
 
     this.startRipupCosts = startRipupCosts;
     this.tracePullTightAccuracy = pullTightAccuracy;
-    this.retainAutorouteDatabase = false;
+    // Retained state is deliberately opt-in for bounded benchmark experiments only. The default
+    // remains the fresh-engine behavior used by production routing and parity comparisons.
+    this.retainAutorouteDatabase = BENCHMARK_RETAIN_AUTOROUTE_DATABASE;
   }
 
   /**
@@ -257,6 +278,10 @@ public class BatchAutorouter extends NamedAlgorithm {
     } catch (Throwable t) {
       return 0f;
     }
+  }
+
+  private static double nanosToMillis(long nanos) {
+    return nanos / 1_000_000.0;
   }
 
   private boolean shouldFireBoardUpdate() {
@@ -480,8 +505,24 @@ public class BatchAutorouter extends NamedAlgorithm {
    */
   private boolean autoroutePass(int passNo) {
     long passStartTime = System.currentTimeMillis();
+    if (BENCHMARK_PROFILE_ENABLED) {
+      this.profileItemSelectionNanos = 0;
+      this.profileIntermediateStatisticsNanos = 0;
+      this.profileBoardStatisticsNanos = 0;
+      this.profileIncompleteDrcNanos = 0;
+      this.profileAutorouteItemNanos = 0;
+      this.profileMazeSearchNanos = 0;
+      this.profileOptChangedAreaNanos = 0;
+      this.profileTailRemovalNanos = 0;
+      this.profileRouteItemCount = 0;
+      this.profilePlaneItemCount = 0;
+    }
     try {
+      long itemSelectionStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
       List<Item> autorouteItemList = getAutorouteItems(this.board);
+      if (BENCHMARK_PROFILE_ENABLED) {
+        this.profileItemSelectionNanos += System.nanoTime() - itemSelectionStart;
+      }
 
       // If there are no items to route, we're done
       if (autorouteItemList.isEmpty()) {
@@ -490,7 +531,16 @@ public class BatchAutorouter extends NamedAlgorithm {
       }
 
       int itemsToGoCount = autorouteItemList.size();
-      final BoardStatistics stats = board.getStatistics();
+      long statisticsStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
+      // Clearance DRC is quadratic on large boards and is not needed for an intermediate UI
+      // update. The final pass statistics below still use board.getStatistics() unchanged.
+      long initialProgressStatisticsStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
+      this.progressStatistics = new BoardStatistics(board, null, false);
+      this.progressItemsSinceStatistics = 0;
+      final BoardStatistics stats = this.progressStatistics;
+      if (BENCHMARK_PROFILE_ENABLED) {
+        this.profileBoardStatisticsNanos += System.nanoTime() - initialProgressStatisticsStart;
+      }
       RouterCounters routerCounters = new RouterCounters();
       routerCounters.phase = "autoroute";
       routerCounters.passCount = passNo;
@@ -502,6 +552,9 @@ public class BatchAutorouter extends NamedAlgorithm {
       DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
       tempDrc.calculateAllIncompletes();
       routerCounters.incompleteCount = tempDrc.getIncompleteCount();
+      if (BENCHMARK_PROFILE_ENABLED) {
+        this.profileIntermediateStatisticsNanos += System.nanoTime() - statisticsStart;
+      }
 
       // Log incomplete details for debugging
       if (routerCounters.incompleteCount > 0) {
@@ -572,11 +625,22 @@ public class BatchAutorouter extends NamedAlgorithm {
           SortedSet<Item> rippedItemList = new TreeSet<>();
           Map<Item, Integer> rippedItemCosts = new LinkedHashMap<>();
           final int netItemsBefore = board.getConnectableItems(currItem.getNetNo(i)).size();
+          if (BENCHMARK_PROFILE_ENABLED) {
+            this.profileRouteItemCount++;
+            Net routeNet = board.rules.nets.get(currItem.getNetNo(i));
+            if (routeNet != null && routeNet.containsPlane()) {
+              this.profilePlaneItemCount++;
+            }
+          }
+          long routeItemStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
           PerformanceProfiler.start("autoroute_item");
           var autorouterResult =
               autorouteItem(
                   currItem, currItem.getNetNo(i), rippedItemList, rippedItemCosts, passNo);
           PerformanceProfiler.end("autoroute_item");
+          if (BENCHMARK_PROFILE_ENABLED) {
+            this.profileAutorouteItemNanos += System.nanoTime() - routeItemStart;
+          }
           if (!rippedItemList.isEmpty()) {
             for (Item rippedItem : rippedItemList) {
               StringBuilder rippedNets = new StringBuilder();
@@ -740,8 +804,21 @@ public class BatchAutorouter extends NamedAlgorithm {
           --itemsToGoCount;
           rippedItemCount += rippedItemList.size();
 
+          // Progress events can fire several times while one item is being routed. Recompute the
+          // expensive non-clearance statistics once per completed item and reuse them between
+          // events; this does not participate in routing decisions or final statistics.
+          this.progressItemsSinceStatistics++;
+          if (this.progressItemsSinceStatistics >= PROGRESS_STATISTICS_ITEM_INTERVAL) {
+            long progressStatisticsStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
+            this.progressStatistics = new BoardStatistics(this.board, null, false);
+            this.progressItemsSinceStatistics = 0;
+            if (BENCHMARK_PROFILE_ENABLED) {
+              this.profileBoardStatisticsNanos += System.nanoTime() - progressStatisticsStart;
+            }
+          }
+
           if (shouldFireBoardUpdate()) {
-            final BoardStatistics boardStatistics = board.getStatistics();
+            final BoardStatistics boardStatistics = this.progressStatistics;
             routerCounters.passCount = passNo;
             routerCounters.queuedToBeRoutedCount = itemsToGoCount;
             routerCounters.skippedCount = skipped;
@@ -777,7 +854,15 @@ public class BatchAutorouter extends NamedAlgorithm {
           new Point[0]);
 
       // Fire final update for this pass
+      long finalStatisticsStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
+      long finalBoardStatisticsStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
       final BoardStatistics boardStatistics = board.getStatistics();
+      if (BENCHMARK_PROFILE_ENABLED) {
+        this.profileBoardStatisticsNanos += System.nanoTime() - finalBoardStatisticsStart;
+      }
+      if (BENCHMARK_PROFILE_ENABLED) {
+        this.profileIntermediateStatisticsNanos += System.nanoTime() - finalStatisticsStart;
+      }
       routerCounters.passCount = passNo;
       routerCounters.queuedToBeRoutedCount = itemsToGoCount;
       routerCounters.skippedCount = skipped;
@@ -791,6 +876,33 @@ public class BatchAutorouter extends NamedAlgorithm {
       int currentRipupCost = this.startRipupCosts * passNo;
       PerformanceProfiler.recordPass(
           passNo, routerCounters.incompleteCount, passDuration, currentRipupCost);
+      if (BENCHMARK_PROFILE_ENABLED) {
+        FRLogger.info(
+            "BENCHMARK_PROFILE pass="
+                + passNo
+                + ", items="
+                + this.profileRouteItemCount
+                + ", plane_items="
+                + this.profilePlaneItemCount
+                + ", selection_ms="
+                + nanosToMillis(this.profileItemSelectionNanos)
+                + ", autoroute_item_ms="
+                + nanosToMillis(this.profileAutorouteItemNanos)
+                + ", maze_search_ms="
+                + nanosToMillis(this.profileMazeSearchNanos)
+                + ", opt_changed_area_ms="
+                + nanosToMillis(this.profileOptChangedAreaNanos)
+                + ", tail_removal_ms="
+                + nanosToMillis(this.profileTailRemovalNanos)
+                + ", statistics_ms="
+                + nanosToMillis(this.profileIntermediateStatisticsNanos)
+                + ", retain_database="
+                + this.retainAutorouteDatabase
+                + ", board_statistics_ms="
+                + nanosToMillis(this.profileBoardStatisticsNanos)
+                + ", incomplete_drc_ms="
+                + nanosToMillis(this.profileIncompleteDrcNanos));
+      }
 
       // We are done with this pass
       this.airLine = null;
@@ -1459,8 +1571,10 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   private void removeTails(Item.StopConnectionOption stopConnectionOption) {
+    long tailRemovalStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
     board.startMarkingChangedArea();
     board.removeTraceTails(-1, stopConnectionOption);
+    long pullTightStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
     board.optChangedArea(
         new int[0],
         null,
@@ -1468,6 +1582,10 @@ public class BatchAutorouter extends NamedAlgorithm {
         this.traceCostArr,
         this.thread,
         TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+    if (BENCHMARK_PROFILE_ENABLED) {
+      this.profileTailRemovalNanos += System.nanoTime() - tailRemovalStart;
+      this.profileOptChangedAreaNanos += System.nanoTime() - pullTightStart;
+    }
   }
 
   // Tries to route an item on a specific net. Returns true, if the item is
@@ -1549,9 +1667,13 @@ public class BatchAutorouter extends NamedAlgorithm {
       byte[] strictDrcBoardSnapshot = this.settings.isStrictDrc() ? board.serialize(false) : null;
 
       // Do the auto-routing between the two sets of items
+      long mazeSearchStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
       AutorouteAttemptResult autorouteResult =
           autorouteEngine.autorouteConnection(
               routeStartSet, routeDestSet, autorouteControl, rippedItemList, ripupCosts);
+      if (BENCHMARK_PROFILE_ENABLED) {
+        this.profileMazeSearchNanos += System.nanoTime() - mazeSearchStart;
+      }
 
       // Update the changed area of the board
       if (autorouteResult.state == AutorouteAttemptState.ROUTED) {
@@ -1561,6 +1683,7 @@ public class BatchAutorouter extends NamedAlgorithm {
                 + routeNetNo
                 + ", maxItemId="
                 + maxItemIdBeforeOpt);
+        long pullTightStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
         board.optChangedArea(
             new int[0],
             null,
@@ -1568,6 +1691,9 @@ public class BatchAutorouter extends NamedAlgorithm {
             autorouteControl.traceCosts,
             this.thread,
             TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+        if (BENCHMARK_PROFILE_ENABLED) {
+          this.profileOptChangedAreaNanos += System.nanoTime() - pullTightStart;
+        }
         int maxItemIdAfterOpt = board.communication.idNoGenerator.maxGeneratedNo();
         FRLogger.trace(
             "compare_trace_opt_changed_area_after net="
@@ -1671,12 +1797,17 @@ public class BatchAutorouter extends NamedAlgorithm {
             this.thread,
             timeLimit,
             this.retainAutorouteDatabase);
+    long neckMazeSearchStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
     AutorouteAttemptResult neckResult =
         neckEngine.autorouteConnection(
             routeStartSet, routeDestSet, neckControl, rippedItemList, ripupCosts);
+    if (BENCHMARK_PROFILE_ENABLED) {
+      this.profileMazeSearchNanos += System.nanoTime() - neckMazeSearchStart;
+    }
     if (neckResult.state != AutorouteAttemptState.ROUTED) {
       return null;
     }
+    long neckPullTightStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
     board.optChangedArea(
         new int[0],
         null,
@@ -1684,6 +1815,9 @@ public class BatchAutorouter extends NamedAlgorithm {
         neckControl.traceCosts,
         this.thread,
         TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+    if (BENCHMARK_PROFILE_ENABLED) {
+      this.profileOptChangedAreaNanos += System.nanoTime() - neckPullTightStart;
+    }
     Net routeNet = board.rules.nets.get(routeNetNo);
     FRLogger.info(
         "Necked retry routed net '"
@@ -2003,8 +2137,12 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   private int calculateIncompleteCount(RoutingBoard board) {
+    long drcStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
     DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
     tempDrc.calculateAllIncompletes();
+    if (BENCHMARK_PROFILE_ENABLED) {
+      this.profileIncompleteDrcNanos += System.nanoTime() - drcStart;
+    }
     return tempDrc.getIncompleteCount();
   }
 }

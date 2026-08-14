@@ -119,9 +119,6 @@ public class AutorouteEngine {
       AutorouteControl ctrl,
       SortedSet<Item> rippedItemList,
       Map<Item, Integer> ripupCosts) {
-    String sourceItems = String.join(", ", startSet.stream().map(Item::toString).toList());
-    String targetItems = String.join(", ", destSet.stream().map(Item::toString).toList());
-
     MazeSearchAlgo mazeSearchAlgo;
     try {
       mazeSearchAlgo = MazeSearchAlgo.getInstance(startSet, destSet, this, ctrl);
@@ -135,9 +132,7 @@ public class AutorouteEngine {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
-              + sourceItems
-              + " and "
-              + targetItems
+              + describeConnection(startSet, destSet)
               + ", because the maze search algorithm could not be created.");
     }
 
@@ -199,16 +194,14 @@ public class AutorouteEngine {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
-              + sourceItems
-              + " and "
-              + targetItems
+              + describeConnection(startSet, destSet)
               + ", because no connection was found between their nets.");
     }
 
     if (autorouteResult == null) {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
-          "Failed to route connection between " + sourceItems + " and " + targetItems + ".");
+          "Failed to route connection between " + describeConnection(startSet, destSet) + ".");
     }
 
     if (!ctrl.layerActive[autorouteResult.startLayer]
@@ -216,9 +209,7 @@ public class AutorouteEngine {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
-              + sourceItems
-              + " and "
-              + targetItems
+              + describeConnection(startSet, destSet)
               + ", because some of their layers are disabled.");
     }
 
@@ -226,7 +217,7 @@ public class AutorouteEngine {
       FRLogger.debug("AutorouteEngine.autoroute_connection: result_items != null expected");
       return new AutorouteAttemptResult(
           AutorouteAttemptState.SKIPPED,
-          "No new connections were made between " + sourceItems + " and " + targetItems + ".");
+          "No new connections were made between " + describeConnection(startSet, destSet) + ".");
     }
 
     // Delete the ripped connections.
@@ -267,13 +258,17 @@ public class AutorouteEngine {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
-              + sourceItems
-              + " and "
-              + targetItems
+              + describeConnection(startSet, destSet)
               + ", because the new connection could not be inserted.");
     }
 
     return new AutorouteAttemptResult(AutorouteAttemptState.ROUTED);
+  }
+
+  private static String describeConnection(Set<Item> startSet, Set<Item> destSet) {
+    return String.join(", ", startSet.stream().map(Item::toString).toList())
+        + " and "
+        + String.join(", ", destSet.stream().map(Item::toString).toList());
   }
 
   /** Returns the net number of the current connection to route. */

@@ -12,12 +12,29 @@ param(
     [string]  $LogLevel       = "INFO",
     [bool]    $FanoutEnabled  = $true,
     [bool]    $RouterEnabled  = $true,
+    [bool]    $OptimizerEnabled = $true,
+    [int]     $MaxItems       = 0,
+    [int]     $TimeoutGraceSeconds = 45,
+    [int]     $DrcTimeoutSeconds = 300,
+    [switch]  $Profile,
+    [switch]  $RetainAutorouteDatabase,
+    [switch]  $Cm5FirstPass,
     [switch]  $Force,
     [switch]  $ReportOnly,
     [switch]  $SkipWebsiteUpdate,
     [string]  $FilterFixture  = "*",
     [string]  $FilterBinary   = "*"
 )
+
+if ($Cm5FirstPass) {
+    $MaxPasses = 1
+    if ($MaxItems -le 0) {
+        $MaxItems = 100
+    }
+    $OptimizerEnabled = $false
+    $Profile = $true
+    $FilterFixture = "CM5_MINIMA_3.dsn"
+}
 
 # 1. Force Pager cat
 $env:PAGER = "cat"
@@ -60,7 +77,8 @@ if ($ReportOnly) {
 }
 
 # Discover files
-$binaries = @(Get-ChildItem $BinariesDir -Filter "*.jar" | Where-Object { $_.Name -like $FilterBinary })
+$allBinaries = @(Get-ChildItem $BinariesDir -Filter "*.jar")
+$binaries = @($allBinaries | Where-Object { $_.Name -like $FilterBinary })
 $fixtures = @(Get-ChildItem $FixturesDir -Recurse -Filter "*.dsn" | Where-Object {
     $_.Name -like $FilterFixture -and (Test-IsActiveBenchmarkFixtureFile $_)
 })
@@ -74,11 +92,15 @@ if ($fixtures.Count -eq 0) {
     exit 1
 }
 
-# Identify current binary for DRC check (use current jar)
-$binaryCurrent = $binaries | Where-Object { $_.Name -match "current" } | Select-Object -First 1
+# Identify the explicit current binary for every DRC check. Historical route binaries must never
+# silently become the DRC implementation used for comparison metrics.
+$binaryCurrent = $allBinaries |
+    Where-Object { $_.Name -match "current" } |
+    Sort-Object LastWriteTime -Descending |
+    Select-Object -First 1
 if (-not $binaryCurrent) {
-    $binaryCurrent = $binaries | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-    Write-Warning "freerouting-current.jar not found. Using $($binaryCurrent.Name) for post-route DRC checks."
+    Write-Error "freerouting-current.jar is required for comparable post-route DRC checks."
+    exit 1
 }
 
 # Gathers system info
@@ -101,9 +123,14 @@ $settingsObj = [PSCustomObject]@{
     log_level         = $LogLevel
     fanout_enabled    = $FanoutEnabled
     router_enabled    = $RouterEnabled
-    optimizer_enabled = $true
+    optimizer_enabled = $OptimizerEnabled
+    max_items         = $MaxItems
     fanout_timeout    = "00:15:00"
     optimizer_timeout = "00:10:00"
+    timeout_grace_period_seconds = $TimeoutGraceSeconds
+    drc_timeout_seconds = $DrcTimeoutSeconds
+    profile_enabled = $Profile.IsPresent
+    retain_autoroute_database = $RetainAutorouteDatabase.IsPresent
 }
 
 # CLI Probe Cache
@@ -209,8 +236,39 @@ foreach ($binary in $binaries) {
 
         if ($isCached) {
             Write-Output "[$runIdx/$totalCombinations] $verLabel x $fixtureGroup/$($fixture.Name) (Cache Hit)"
-            Write-Output "  -> [SKIP] Cache hit found"
-            continue
+            $cachedRun = $cache[$cacheKey]
+            $cachedOutputPath = $null
+            if ($cachedRun.output_file) {
+                $cachedOutputPath = [string]$cachedRun.output_file
+                if (-not [System.IO.Path]::IsPathRooted($cachedOutputPath)) {
+                    $cachedOutputPath = Join-Path $OutputsDir $cachedOutputPath
+                }
+            } elseif ($cachedRun.log_file) {
+                $cachedLogName = [System.IO.Path]::GetFileName([string]$cachedRun.log_file)
+                $cachedOutputPath = Join-Path $OutputsDir ($cachedLogName -replace '\.log$', '.ses')
+            }
+
+            if ($cachedOutputPath -and (Test-Path $cachedOutputPath)) {
+                $cachedSesFile = Get-Item $cachedOutputPath
+                $cachedBaseName = [System.IO.Path]::GetFileNameWithoutExtension($cachedSesFile.Name)
+                Write-Output "  -> Refreshing DRC with $($binaryCurrent.Name)"
+                $cachedDrc = Invoke-DrcCheck `
+                    $binaryCurrent `
+                    $fixture `
+                    $cachedSesFile `
+                    $OutputsDir `
+                    $cachedBaseName `
+                    $DrcTimeoutSeconds
+                $cachedRun.drc = $cachedDrc
+                $cachedRun.output_file = $cachedSesFile.FullName
+                $cachedRun.drc_refresh_at = (Get-Date -UFormat "%Y-%m-%dT%H:%M:%SZ")
+                $cache[$cacheKey] = $cachedRun
+                Save-BenchmarksJson $rawJson $cache $JsonPath
+                continue
+            }
+
+            Write-Warning "Cached route output is missing; rerunning route before DRC refresh."
+            $isCached = $false
         }
 
         Write-Output "[$runIdx/$totalCombinations] $verLabel x $fixtureGroup/$($fixture.Name) (ETA: $etaStr)"
@@ -229,10 +287,20 @@ foreach ($binary in $binaries) {
 
         # Invoke DRC using current version on outputs
         Write-Output "  -> Running DRC check..."
-        $drcResult = Invoke-DrcCheck $binaryCurrent $fixture $runResult.OutputFile $OutputsDir $baseName
+        $drcResult = Invoke-DrcCheck `
+            $binaryCurrent `
+            $fixture `
+            (Get-Item $runResult.OutputFile -ErrorAction SilentlyContinue) `
+            $OutputsDir `
+            $baseName `
+            $DrcTimeoutSeconds
 
         # Parse metrics from logs
-        $logMetrics = Get-PhaseMetrics $runResult.LogFile $verLabel
+        $logMetrics = Get-PhaseMetrics $runResult.LogFile $verLabel $runResult.TimedOut
+        $routingCompletionPct = $null
+        if (($logMetrics.autorouter.initial_unrouted_count -ne $null) -and ($logMetrics.autorouter.final_unrouted -ne $null) -and ($logMetrics.autorouter.initial_unrouted_count -gt 0)) {
+            $routingCompletionPct = [math]::Round((100.0 * ($logMetrics.autorouter.initial_unrouted_count - $logMetrics.autorouter.final_unrouted) / $logMetrics.autorouter.initial_unrouted_count), 1)
+        }
 
         # Build run record
         $runObj = [PSCustomObject]@{
@@ -272,7 +340,7 @@ foreach ($binary in $binaries) {
                 total_nets             = $fixtureMeta.net_count
                 initial_unrouted       = $logMetrics.autorouter.initial_unrouted_count
                 final_unrouted         = $logMetrics.autorouter.final_unrouted
-                routing_completion_pct = if ($logMetrics.autorouter.initial_unrouted_count -gt 0) { [math]::Round(100.0 * ($logMetrics.autorouter.initial_unrouted_count - $logMetrics.autorouter.final_unrouted) / $logMetrics.autorouter.initial_unrouted_count, 1) } else { 100.0 }
+                routing_completion_pct = $routingCompletionPct
                 clearance_violations   = $logMetrics.autorouter.final_violations
                 quality_score          = $logMetrics.autorouter.final_score
                 total_cpu_seconds      = [double]$logMetrics.autorouter.cpu_seconds + [double]$logMetrics.fanout.cpu_seconds + [double]$logMetrics.optimizer.cpu_seconds
@@ -287,6 +355,8 @@ foreach ($binary in $binaries) {
                 load_error  = $logMetrics.load_error
                 exceptions  = $logMetrics.exceptions
                 timed_out   = $logMetrics.timed_out
+                metric_source = $logMetrics.metric_source
+                last_checkpoint = $logMetrics.last_checkpoint
             }
             exit      = [PSCustomObject]@{
                 code         = $runResult.ExitCode
@@ -295,6 +365,7 @@ foreach ($binary in $binaries) {
                 timed_out    = $runResult.TimedOut
             }
             log_file  = $runResult.LogFile
+            output_file = $runResult.OutputFile
         }
 
         # Update cache
@@ -308,7 +379,7 @@ foreach ($binary in $binaries) {
         $completedPendingTimeEstimated += $thisEstimate
         $actualTimeSpent += $runResult.WallClockSeconds
 
-        Write-Output "  -> Done! [Unrouted: $($runObj.quality.final_unrouted) (DRC: $($runObj.drc.final_unrouted)), Violations: $($runObj.quality.clearance_violations) (DRC: $($runObj.drc.final_violations)), Score: $($runObj.quality.quality_score) (DRC: $($runObj.drc.final_quality_score))]"
+        Write-Output "  -> Done! [Unrouted: $($runObj.quality.final_unrouted) (DRC: $($runObj.drc.final_unrouted)), Clearance: $($runObj.drc.clearance_violations), Dangling: $($runObj.drc.dangling_tracks) tracks/$($runObj.drc.dangling_vias) vias, Score: $($runObj.quality.quality_score) (DRC: $($runObj.drc.final_quality_score))]"
     }
 }
 
