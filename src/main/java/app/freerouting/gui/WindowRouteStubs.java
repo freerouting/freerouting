@@ -6,7 +6,7 @@ import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.interactive.GuiBoardManager;
+import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.rules.Net;
 import app.freerouting.util.TextManager;
 import java.util.Collection;

@@ -1,8 +1,6 @@
 package app.freerouting.board;
 
 import app.freerouting.autoroute.ItemAutorouteInfo;
-import app.freerouting.boardgraphics.Drawable;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.UndoableObjects;
@@ -18,12 +16,9 @@ import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
 import app.freerouting.util.TextManager;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,11 +28,7 @@ import java.util.TreeSet;
 
 /** Basic class of the items on a board. */
 public abstract class Item
-    implements Drawable,
-        SearchTreeObject,
-        ObjectInfoPanel.Printable,
-        UndoableObjects.Storable,
-        Serializable {
+    implements SearchTreeObject, ObjectInfoPanel.Printable, UndoableObjects.Storable, Serializable {
 
   private static final double PROTECT_FANOUT_LENGTH = 400;
   private final int idNo;
@@ -106,6 +97,43 @@ public abstract class Item
   /** Returns the unique identification number of this item. */
   public int getIdNo() {
     return idNo;
+  }
+
+  /**
+   * Returns the neutral semantic category of this board item.
+   *
+   * <p>This accessor is intentionally independent of rendering APIs. It gives a future GUI renderer
+   * a stable dispatch key while keeping the item model usable by headless routing and DRC code.
+   */
+  public BoardItemType getBoardItemType() {
+    if (this instanceof Pin) {
+      return BoardItemType.PIN;
+    }
+    if (this instanceof Via) {
+      return BoardItemType.VIA;
+    }
+    if (this instanceof Trace) {
+      return BoardItemType.TRACE;
+    }
+    if (this instanceof ConductionArea) {
+      return BoardItemType.CONDUCTION_AREA;
+    }
+    if (this instanceof ViaObstacleArea) {
+      return BoardItemType.VIA_OBSTACLE_AREA;
+    }
+    if (this instanceof ComponentObstacleArea) {
+      return BoardItemType.COMPONENT_OBSTACLE_AREA;
+    }
+    if (this instanceof ObstacleArea) {
+      return BoardItemType.OBSTACLE_AREA;
+    }
+    if (this instanceof ComponentOutline) {
+      return BoardItemType.COMPONENT_OUTLINE;
+    }
+    if (this instanceof BoardOutline) {
+      return BoardItemType.BOARD_OUTLINE;
+    }
+    return BoardItemType.OTHER;
   }
 
   /** Returns true if the net number array of this item contains p_net_no. */
@@ -734,42 +762,6 @@ public abstract class Item
    */
   public Point[] getRatsnestCorners() {
     return new Point[0];
-  }
-
-  @Override
-  public void draw(Graphics g, GraphicsContext graphicsContext, Color color, double intensity) {
-    Color[] colorArr = new Color[board.getLayerCount()];
-    Arrays.fill(colorArr, color);
-    draw(g, graphicsContext, colorArr, intensity);
-  }
-
-  /**
-   * Draws this item with its draw colors from p_graphics_context. p_layer_visibility[i] is expected
-   * between 0 and 1 for each layer i.
-   */
-  public void draw(Graphics g, GraphicsContext graphicsContext) {
-    Color[] layerColors = getDrawColors(graphicsContext);
-    draw(g, graphicsContext, layerColors, getDrawIntensity(graphicsContext));
-  }
-
-  /** Draws this item on a specific layer only, with its draw colors from p_graphics_context. */
-  public void drawLayer(Graphics g, GraphicsContext graphicsContext, int layerNo) {
-    if (this.isOnLayer(layerNo)) {
-      Color[] layerColors = getDrawColors(graphicsContext);
-      drawLayer(g, graphicsContext, layerColors, getDrawIntensity(graphicsContext), layerNo);
-    }
-  }
-
-  /** Draws this item on a specific layer only. */
-  public void drawLayer(
-      Graphics g,
-      GraphicsContext graphicsContext,
-      Color[] colorArr,
-      double intensity,
-      int layerNo) {
-    if (this.isOnLayer(layerNo)) {
-      draw(g, graphicsContext, colorArr, intensity);
-    }
   }
 
   /** Test function checking the item for inconsistencies. */

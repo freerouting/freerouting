@@ -126,8 +126,8 @@ def get_java_class_for_bundle(bundle_name: str) -> Optional[str]:
     if java_path.exists():
         return full_class
     known_aliases = {
-        "gui.AirLine": "app.freerouting.interactive.RatsNest",
-        "drc.AirLine": "app.freerouting.interactive.RatsNest",
+        "gui.AirLine": "app.freerouting.gui.session.RatsNest",
+        "drc.AirLine": "app.freerouting.gui.session.RatsNest",
         "rules.NetClasses": "app.freerouting.gui.WindowNetClasses",
     }
     return known_aliases.get(bundle_name)
@@ -135,9 +135,9 @@ def get_java_class_for_bundle(bundle_name: str) -> Optional[str]:
 
 def human_readable_bundle_desc(bundle_name: str) -> str:
     area_map = {
+        "gui.rendering.": "board graphics/colors",
         "gui.": "GUI (graphical user interface)",
         "interactive.": "interactive routing session",
-        "boardgraphics.": "board graphics/colors",
         "rules.": "design rules",
         "Common": "shared/common strings",
     }

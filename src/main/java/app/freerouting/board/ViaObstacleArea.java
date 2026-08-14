@@ -1,10 +1,8 @@
 package app.freerouting.board;
 
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.util.TextManager;
-import java.awt.Color;
 import java.util.Locale;
 
 /** Describes Areas on the board, where vias are not allowed. */
@@ -116,15 +114,5 @@ public class ViaObstacleArea extends ObstacleArea {
     this.printClearanceInfo(window, locale);
     this.printClearanceViolationInfo(window, locale);
     window.newline();
-  }
-
-  @Override
-  public Color[] getDrawColors(GraphicsContext graphicsContext) {
-    return graphicsContext.getViaObstacleColors();
-  }
-
-  @Override
-  public double getDrawIntensity(GraphicsContext graphicsContext) {
-    return graphicsContext.getViaObstacleColorIntensity();
   }
 }

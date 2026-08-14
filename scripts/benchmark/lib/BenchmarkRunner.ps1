@@ -51,7 +51,15 @@ function Invoke-BenchmarkRun {
         "-Xmx$($Settings.heap_max)",
         "-Xms256m",
         "-XX:+HeapDumpOnOutOfMemoryError",
-        "-XX:HeapDumpPath=`"$LogsDir`"",
+        "-XX:HeapDumpPath=`"$LogsDir`""
+    )
+    if ($Settings.profile_enabled) {
+        $jvmArgs += "-Dfreerouting.benchmark.profile=true"
+    }
+    if ($Settings.retain_autoroute_database) {
+        $jvmArgs += "-Dfreerouting.benchmark.retain_autoroute_database=true"
+    }
+    $jvmArgs += @(
         "-jar", ('"{0}"' -f $Binary.FullName),
         "-de", ('"{0}"' -f $Fixture.FullName)
     )
@@ -72,6 +80,9 @@ function Invoke-BenchmarkRun {
     }
     if ($Settings.optimizer_timeout) {
         $jvmArgs += "--router.optimizer.timeout=`"$($Settings.optimizer_timeout)`""
+    }
+    if ($Settings.max_items -and [int]$Settings.max_items -gt 0) {
+        $jvmArgs += "--router.max_items=$($Settings.max_items)"
     }
 
     # Logging flags
@@ -110,6 +121,11 @@ function Invoke-BenchmarkRun {
     # Parse max time to milliseconds
     $maxTs = [timespan]::Parse($Settings.max_time)
     $timeoutMs = $maxTs.TotalMilliseconds
+    $gracePeriodSeconds = if ($Settings.timeout_grace_period_seconds -ne $null) {
+        [int]$Settings.timeout_grace_period_seconds
+    } else {
+        45
+    }
 
     # Wait for completion with timeout while printing log lines dynamically
     $lastLineCount = 0
@@ -159,21 +175,33 @@ function Invoke-BenchmarkRun {
         } catch {}
     }
 
-    $endTime = Get-Date
-
     # Stop memory sampler
     Stop-Job $memJob -ErrorAction SilentlyContinue
     Remove-Job $memJob -ErrorAction SilentlyContinue
 
+    if (-not $completed -and $process.HasExited) {
+        $completed = $true
+    }
     $timedOut = -not $completed
     if ($timedOut) {
-        # Force terminate hung process
-        try {
-            $process.Kill()
-        } catch {}
+        # Give Freerouting's internal timeout monitor time to request a graceful stop and
+        # write its final checkpoint before force termination.
+        $graceDeadline = (Get-Date).AddSeconds($gracePeriodSeconds)
+        while (-not $process.HasExited -and (Get-Date) -lt $graceDeadline) {
+            Start-Sleep -Milliseconds $sleepIntervalMs
+        }
+        if (-not $process.HasExited) {
+            try {
+                $process.Kill()
+                $process.WaitForExit(5000)
+            } catch {}
+        }
     }
+    $endTime = Get-Date
 
-    # Copy/merge stdout to logFile
+    # The file logger is canonical for current versions. Appending stdout to it duplicates every
+    # INFO line because console logging is enabled for live progress output. Keep stdout separate
+    # unless file logging produced no content at all.
     if ($isV19) {
         if (Test-Path $stdoutFile) {
             Move-Item -Path $stdoutFile -Destination $logFile -Force -ErrorAction SilentlyContinue
@@ -181,11 +209,13 @@ function Invoke-BenchmarkRun {
     } else {
         if (Test-Path $stdoutFile) {
             try {
-                $stdoutLines = Get-Content $stdoutFile -ErrorAction SilentlyContinue
-                if ($stdoutLines) {
-                    $stdoutLines | Add-Content $logFile -ErrorAction SilentlyContinue
+                $logHasContent =
+                    (Test-Path $logFile) -and ((Get-Item $logFile -ErrorAction SilentlyContinue).Length -gt 0)
+                if (-not $logHasContent) {
+                    Move-Item -Path $stdoutFile -Destination $logFile -Force -ErrorAction SilentlyContinue
+                } else {
+                    Remove-Item $stdoutFile -Force -ErrorAction SilentlyContinue
                 }
-                Remove-Item $stdoutFile -Force -ErrorAction SilentlyContinue
             } catch {}
         }
     }

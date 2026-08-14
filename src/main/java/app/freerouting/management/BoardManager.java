@@ -7,49 +7,43 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.rules.BoardRules;
-import app.freerouting.settings.sources.GuiSettings;
 
 /**
  * Interface defining core board management operations for PCB routing applications.
  *
- * <p>This interface establishes the contract for managing routing boards in both interactive
- * (GUI-based) and headless (batch/automated) modes. Implementations must provide functionality for
- * board creation, configuration, and access to board state.
+ * <p>This interface is the <strong>headless</strong> contract for managing routing boards. It is
+ * deliberately free of GUI-session operations so that the routing pipeline can be driven without
+ * any GUI classes (SoC plan Phase 3). Implementations must provide functionality for board
+ * creation, configuration, and access to board state.
  *
  * <p><strong>GUI / Headless duality:</strong>
  *
  * <ul>
- *   <li>In <em>GUI mode</em> ({@link app.freerouting.interactive.GuiBoardManager}) the {@link
- *       app.freerouting.interactive.InteractiveSettings} singleton is always non-null and also acts
- *       as the {@link app.freerouting.settings.sources.GuiSettings} source (priority 65) registered
- *       in the {@link app.freerouting.settings.SettingsMerger} pipeline. Use {@link
- *       #getInteractiveSettings()} to obtain it.
+ *   <li>In <em>GUI mode</em> ({@link app.freerouting.gui.session.GuiBoardManager}) the manager also
+ *       implements the {@link app.freerouting.gui.session.GuiSessionContract}, which exposes the
+ *       GUI-session singleton {@link app.freerouting.gui.session.InteractiveSettings} (the live
+ *       {@code GuiSettings} source at SettingsMerger priority 50).
  *   <li>In <em>headless mode</em> ({@link app.freerouting.management.HeadlessBoardManager}) there
- *       is no GUI; therefore {@link #getInteractiveSettings()} returns {@code null} and {@link
- *       #isInteractiveModeSupported()} returns {@code false}.
+ *       is no GUI; the manager does <em>not</em> implement {@code GuiSessionContract}, so {@code
+ *       InteractiveSettings} is unreachable. To detect GUI mode, use {@code manager instanceof
+ *       app.freerouting.gui.session.GuiSessionContract}.
  * </ul>
- *
- * <p><strong>Settings pipeline (GUI mode only):</strong>
- *
- * <pre>
- * InteractiveSettings  →  GuiSettings.getSettings()  →  SettingsMerger  →  RouterSettings
- * </pre>
  *
  * <p><strong>Primary Responsibilities:</strong>
  *
  * <ul>
  *   <li><strong>Board Lifecycle:</strong> Create and initialize routing boards
- *   <li><strong>Configuration:</strong> Manage interactive settings and routing parameters
+ *   <li><strong>Configuration:</strong> Manage routing parameters
  *   <li><strong>State Access:</strong> Provide access to board and job state
- *   <li><strong>Coordination:</strong> Bridge between UI/automation and routing engine
+ *   <li><strong>Coordination:</strong> Bridge between automation and the routing engine
  * </ul>
  *
  * <p><strong>Implementation Classes:</strong>
  *
  * <ul>
- *   <li><strong>{@link app.freerouting.interactive.GuiBoardManager}:</strong> Full-featured
+ *   <li><strong>{@link app.freerouting.gui.session.GuiBoardManager}:</strong> Full-featured
  *       implementation with graphical user interface support, handling user interaction, display
- *       updates, and visual feedback
+ *       updates, and visual feedback; also implements {@code GuiSessionContract}
  *   <li><strong>{@link app.freerouting.management.HeadlessBoardManager}:</strong> Lightweight
  *       implementation for batch processing, command-line tools, and automated routing without GUI
  *       overhead
@@ -60,25 +54,25 @@ import app.freerouting.settings.sources.GuiSettings;
  * <pre>{@code
  * // Create appropriate manager based on mode
  * BoardManager manager = isGuiMode
- *     ? new app.freerouting.interactive.GuiBoardManager(panel, settings, job, merger)
+ *     ? new app.freerouting.gui.session.GuiBoardManager(panel, settings, job, merger)
  *     : new app.freerouting.management.HeadlessBoardManager(job);
  *
  * // Initialize board from design file
  * manager.loadFromSpecctraDsn(inputStream, observers, idGenerator);
  *
  * // Access board for routing operations
- * RoutingBoard board = manager.get_routing_board();
+ * RoutingBoard board = manager.getRoutingBoard();
  *
  * // Access interactive settings only when in GUI mode
- * if (manager.isInteractiveModeSupported()) {
- *     InteractiveSettings settings = manager.getInteractiveSettings();
+ * if (manager instanceof app.freerouting.gui.session.GuiSessionContract gui) {
+ *     InteractiveSettings settings = gui.getInteractiveSettings();
  * }
  * }</pre>
  *
- * @see app.freerouting.interactive.GuiBoardManager
+ * @see app.freerouting.gui.session.GuiBoardManager
+ * @see app.freerouting.gui.session.GuiSessionContract
  * @see app.freerouting.management.HeadlessBoardManager
  * @see RoutingBoard
- * @see app.freerouting.interactive.InteractiveSettings
  */
 public interface BoardManager {
 
@@ -101,30 +95,6 @@ public interface BoardManager {
    * @see RoutingBoard
    */
   RoutingBoard getRoutingBoard();
-
-  /**
-   * Initializes manual trace half-widths from the board's default net class rules.
-   *
-   * <p>This method synchronizes the interactive settings' manual trace width array with the default
-   * trace widths defined in the board's design rules. This ensures that manual routing operations
-   * use appropriate trace widths when manual rule selection is active.
-   *
-   * <p><strong>When to Call:</strong>
-   *
-   * <ul>
-   *   <li>After loading a board from a design file
-   *   <li>After creating a new board programmatically
-   *   <li>When switching between boards
-   *   <li>After modifying default net class trace widths
-   * </ul>
-   *
-   * <p>The method copies trace half-widths for each layer from the default net class to the manual
-   * trace width settings array.
-   *
-   * @see app.freerouting.interactive.InteractiveSettings#manualTraceHalfWidthArr
-   * @see app.freerouting.rules.NetClass#getTraceHalfWidth(int)
-   */
-  void initializeManualTraceHalfWidths();
 
   /**
    * Creates and initializes a new routing board with the specified parameters.
@@ -174,46 +144,6 @@ public interface BoardManager {
       String outlineClearanceClassName,
       BoardRules rules,
       Communication boardCommunication);
-
-  /**
-   * Returns the interactive GUI settings singleton, or {@code null} when running headless.
-   *
-   * <p>The returned {@link app.freerouting.interactive.InteractiveSettings} instance is also the
-   * {@link app.freerouting.settings.sources.GuiSettings} source registered in the {@link
-   * app.freerouting.settings.SettingsMerger} at priority 65. Callers must not cache this reference;
-   * always obtain it through this accessor.
-   *
-   * <p>Check {@link #isInteractiveModeSupported()} before calling if you are unsure which
-   * implementation is in use.
-   *
-   * @return the singleton {@link app.freerouting.interactive.InteractiveSettings}, or {@code null}
-   *     in headless mode
-   */
-  GuiSettings getInteractiveSettings();
-
-  /**
-   * Returns {@code true} if this manager runs with an active GUI and therefore guarantees that
-   * {@link #getInteractiveSettings()} returns a non-null value after board initialisation.
-   *
-   * <p>Defaults to {@code false}. Only {@link app.freerouting.interactive.GuiBoardManager}
-   * overrides this to {@code true}.
-   *
-   * @return {@code true} when a GUI is active; {@code false} in headless mode
-   */
-  default boolean isInteractiveModeSupported() {
-    return false;
-  }
-
-  /**
-   * Returns the interactive settings that control routing behavior and user preferences.
-   *
-   * @return the interactive settings instance, or {@code null} if not initialized / headless
-   * @deprecated Use {@link #getInteractiveSettings()} instead.
-   */
-  @Deprecated
-  default GuiSettings getSettings() {
-    return getInteractiveSettings();
-  }
 
   /**
    * Returns the current routing job context associated with this board manager.

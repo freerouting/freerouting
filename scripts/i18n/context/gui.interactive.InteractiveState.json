@@ -1,0 +1,1129 @@
+{
+  "adding_hole_completed": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.HoleConstructionState"
+    ],
+    "english_hash": "510300f50e840ea7696a7a5b0b498b9d9420f27158a7ec690bdc23d8b64d260f",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "adding_hole_failed",
+      "adding_hole_to_circle_not_yet_implemented",
+      "adding_hole_to_obstacle_area"
+    ],
+    "ui_role": "label"
+  },
+  "adding_hole_failed": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.HoleConstructionState"
+    ],
+    "english_hash": "af8a7db626377fdb0d9402e5160b50f4f49292337935408c8cb6628ae3d92f18",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "adding_hole_completed",
+      "adding_hole_to_circle_not_yet_implemented",
+      "adding_hole_to_obstacle_area"
+    ],
+    "ui_role": "label"
+  },
+  "adding_hole_to_circle_not_yet_implemented": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.HoleConstructionState"
+    ],
+    "english_hash": "ed144461eec94a5b033af4af629347770a5ac5aeb4509bd877aff98a325360d9",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "adding_hole_to_obstacle_area"
+    ],
+    "ui_role": "label"
+  },
+  "adding_hole_to_obstacle_area": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.HoleConstructionState"
+    ],
+    "english_hash": "ea70fe805b2018a74058ef55434c24387859132604dcf94896d69d794fb3f997",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "adding_hole_to_circle_not_yet_implemented"
+    ],
+    "ui_role": "label"
+  },
+  "all_connections_routed": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "b6121870bc75c263b515b23cce773aa9786b279bbf454e80cbb4b9669213b7c1",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "all_items_inserted"
+    ],
+    "ui_role": "label"
+  },
+  "all_items_inserted": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "e3e3ea0876833d9b20f4715310f950da58a67f65dc2b46b299a3919198e8bc2d",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "all_connections_routed"
+    ],
+    "ui_role": "label"
+  },
+  "autoroute": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "bf9ff1c98768e31ea2aaa4a56e0812fd6bc9838f144b1670dd4edcc1b4ba1795",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "autoroute_end_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "10221213ff69fc47c8b2c9c231fae32ec777836acd085c5d2919af572df8d5b4",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{incomplete_count}}",
+      "{{status}}"
+    ],
+    "related_keys": [
+      "autoroute",
+      "autorouter_started"
+    ],
+    "ui_role": "message"
+  },
+  "autorouter_started": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "6195cd585765f305ad6efcca1ba6558b3fde1f9ab894bcc6a74a3a79df1c7db6",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{autorouter_pass_number}}"
+    ],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "batch_autorouter_start_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "cbb0ef68477a2aea62a79d7f5eb950f1b05bbfc7af235eda20ac399334d0973e",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "batch_optimizer_start_message"
+    ],
+    "ui_role": "message"
+  },
+  "batch_optimizer_start_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "4048473a525db0b20cd66676e238fc463f9e7d21c5e4f9e201e0bd5b39910ec7",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "batch_autorouter_start_message"
+    ],
+    "ui_role": "message"
+  },
+  "cannot_change_placement_side": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.MoveItemState"
+    ],
+    "english_hash": "c69e3f834fc7c3d620cf6246a7d08edbf0b41d055695848f5a7224898e41110a",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "clearance_violations_found": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.InspectedItemState"
+    ],
+    "english_hash": "7082f980b02dd4faec00af651512a250c0694b3b3435d9b65455c6163b8c5ed0",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "completed": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "4ddb3e96801a1ee2b77dc5247c0db478d5f97a93b90e7cdb09f5f51d43764b08",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "connections_could_not_be_routed": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "b6fe069a309aef497b14ebb05d6819184b3e65754c1752f94b2e595bb05be707",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "connections_found",
+      "connections_not_found"
+    ],
+    "ui_role": "label"
+  },
+  "connections_found": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "2e55b8eca8951bf30e5b97870e34e0b877674fc310921b4a5f7118c0f625c4d1",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "connections_could_not_be_routed",
+      "connections_not_found"
+    ],
+    "ui_role": "label"
+  },
+  "connections_not_found": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "bfaf27d36e4fb326d43a7ab13d98bc76c52b5753382f0c9749032d6b17e7ca57",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "connections_could_not_be_routed",
+      "connections_found"
+    ],
+    "ui_role": "label"
+  },
+  "creating_circle": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.CircleConstructionState"
+    ],
+    "english_hash": "0ddc8b81a40dd0f04914e14f75f488cc0319fa426d06a7c908cb58e0cdeacdb8",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "creating_polygonshape",
+      "creating_tile"
+    ],
+    "ui_role": "label"
+  },
+  "creating_polygonshape": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.PolygonShapeConstructionState"
+    ],
+    "english_hash": "83a031ad69b0d3b4e5719675a22e8fd663896568284b6ffbf418feb79aa226f3",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "creating_circle",
+      "creating_tile"
+    ],
+    "ui_role": "label"
+  },
+  "creating_tile": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.TileConstructionState"
+    ],
+    "english_hash": "26c82d50af2aab44478fd661042ed209e06e1fa4b85366da1a0772a65f16c70a",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "creating_circle",
+      "creating_polygonshape"
+    ],
+    "ui_role": "label"
+  },
+  "drag_left_mouse_button_to_create_region_to_display": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.ZoomRegionState"
+    ],
+    "english_hash": "4c14999b9e6439d08a0d8db9e53149570c5a6647a192c0d6cce9dae56fca7827",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "drag_left_mouse_button_to_select_cutout_rectangle",
+      "drag_left_mouse_button_to_select_items_in_region"
+    ],
+    "ui_role": "label"
+  },
+  "drag_left_mouse_button_to_select_cutout_rectangle": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.CutoutRouteState"
+    ],
+    "english_hash": "c9b412e0ea750cdabdf301ef7eb1bcac54d547dd640a8fd7c645d2fc2870c3ff",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "drag_left_mouse_button_to_select_items_in_region"
+    ],
+    "ui_role": "label"
+  },
+  "drag_left_mouse_button_to_select_items_in_region": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.InspectItemsInRegionState"
+    ],
+    "english_hash": "7fe8030b5144ed2605ac6a20cbce5b7464e696e8c35c91159972d8a1acf47637",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "drag_left_mouse_button_to_select_cutout_rectangle"
+    ],
+    "ui_role": "label"
+  },
+  "dragging_item": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.DragItemState"
+    ],
+    "english_hash": "326d095528f2e803a285079d366c5f2fc35b531c9d040f6a51935de726ebd67d",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "fanout": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "8bba9a0486305191091918b01196c19ce96395dddff7175e61543b83c091f1a4",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "in_inspect_item_mode": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.InspectedItemState"
+    ],
+    "english_hash": "f16f9ead063a0165e871ec65495c93ece1b58edc7078356fb4331c48d883b064",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "in_inspect_menu",
+      "in_inspect_mode"
+    ],
+    "ui_role": "label"
+  },
+  "in_inspect_menu": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.InspectMenuState"
+    ],
+    "english_hash": "a2b01557b71f6892cd7e6ccf4af100b43a112d835828c68a6952645789a8186f",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "in_inspect_item_mode",
+      "in_inspect_mode"
+    ],
+    "ui_role": "label"
+  },
+  "in_inspect_mode": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.MenuState"
+    ],
+    "english_hash": "d619e9f0881ff4adc84d6616487b4183e0e9fa4102a6a9ea6cd22220f9be1f08",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "in_inspect_item_mode",
+      "in_inspect_menu"
+    ],
+    "ui_role": "label"
+  },
+  "insertion_failed_because_of_obstacles": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.MoveItemState"
+    ],
+    "english_hash": "44972d33f4b7aa21b7e8ceb2cbd7750ca810213c14c18781617dc39b3bee746d",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "interrupted": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "132d124d6bb3d811116f98aa03bc474f5783517d4c82635c031745912e62e1c8",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "keepout_cancelled_because_of_overlaps": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.CircleConstructionState",
+      "app.freerouting.gui.interactive.PolygonShapeConstructionState",
+      "app.freerouting.gui.interactive.TileConstructionState"
+    ],
+    "english_hash": "b093ab1de76bdbf8fd80d108e1fcf3f23e3bbe486992e3a8ad5fc36fc3dcee47",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "keepout_successful_completed"
+    ],
+    "ui_role": "label"
+  },
+  "keepout_successful_completed": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.CircleConstructionState",
+      "app.freerouting.gui.interactive.PolygonShapeConstructionState",
+      "app.freerouting.gui.interactive.TileConstructionState"
+    ],
+    "english_hash": "c7f6e064202ae089e29166db50d82ec7fba2ca29a755b70fe4764cc9f623d118",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "keepout_cancelled_because_of_overlaps"
+    ],
+    "ui_role": "label"
+  },
+  "layer_changed_to_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.RouteState"
+    ],
+    "english_hash": "2d54b43fa7a696f23f519f0563e949b8d3e05faf0311ea98b968510d1c7f2e54",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{layer}}"
+    ],
+    "related_keys": [
+      "layer_not_changed_inactive_net_message",
+      "layer_not_changed_obstacle_message"
+    ],
+    "ui_role": "message"
+  },
+  "layer_not_changed_inactive_net_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.RouteState"
+    ],
+    "english_hash": "827caa4ab04f4e3230c86a14f3531af4855d6b1a53e4880153c3938dc3e39dd9",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{layer}}"
+    ],
+    "related_keys": [
+      "layer_not_changed_obstacle_message"
+    ],
+    "ui_role": "message"
+  },
+  "layer_not_changed_obstacle_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.RouteState"
+    ],
+    "english_hash": "67ffed676dcb89bbccdd6ad53e0ba25bf4df68994596cd6e8f5d816ea1fe8f16",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{layer}}"
+    ],
+    "related_keys": [
+      "layer_not_changed_inactive_net_message"
+    ],
+    "ui_role": "message"
+  },
+  "logfile": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "a5e1b5fbabd03ec5e170b6106c5abceb4dc2bfaca7b2a9dc342a386361343fdf",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "move_completed": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.MoveItemState"
+    ],
+    "english_hash": "76ab6dad01ce997d389a97aaf6dde003e065df838d1fb40890a6b86f29f3c62a",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "move_component_failed_because_no_item_selected"
+    ],
+    "ui_role": "label"
+  },
+  "move_component_failed_because_no_item_selected": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.MoveItemState"
+    ],
+    "english_hash": "2d801ce36df7e83e5b49ecd86af3bfd9d31d3212f040e43b50133fd639d9142d",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "move_completed"
+    ],
+    "ui_role": "label"
+  },
+  "new_net_created_from_selected_items": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "be93046000f18490d38114414884fec7277b7c2a3c8e81dfc183086b2cab1db5",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "no_item_found_for_adding_hole": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.HoleConstructionState"
+    ],
+    "english_hash": "99b55521e585032020163299b57530e57a37108423ac602566d5a70c69887b26",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "no_obstacle_area_found_for_adding_hole",
+      "no_pin_selected",
+      "no_swappable_pin_found",
+      "nothing_selected"
+    ],
+    "ui_role": "label"
+  },
+  "no_obstacle_area_found_for_adding_hole": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.HoleConstructionState"
+    ],
+    "english_hash": "0f299ddb6df725d22cd304953fcb25acacb76182fa1838d1eeb2d7bf115010e2",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "no_item_found_for_adding_hole",
+      "no_pin_selected",
+      "no_swappable_pin_found",
+      "nothing_selected"
+    ],
+    "ui_role": "label"
+  },
+  "no_pin_selected": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.MenuState",
+      "app.freerouting.gui.interactive.PinSwapState"
+    ],
+    "english_hash": "835bd097a5112c45b584fb1841a5a1735c38375ae389cdb035a99bdaebf0634d",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "no_item_found_for_adding_hole",
+      "no_obstacle_area_found_for_adding_hole",
+      "no_swappable_pin_found",
+      "nothing_selected"
+    ],
+    "ui_role": "label"
+  },
+  "no_swappable_pin_found": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.PinSwapState"
+    ],
+    "english_hash": "c5ce40d016ddc29c920ca09daf812ccb7bcae2beafb7277cbe5609dd1206aa13",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "no_item_found_for_adding_hole",
+      "no_obstacle_area_found_for_adding_hole",
+      "no_pin_selected",
+      "nothing_selected"
+    ],
+    "ui_role": "label"
+  },
+  "nothing_selected": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.InspectItemsInRegionState"
+    ],
+    "english_hash": "f8c104249eb21c8bd8367a1639df071789a12a505fb9a82cab4a6d5815c902c0",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "optimization": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "72244ea575fa305ddd200ad4d9137fdcec07faf4a71ac44239d3df448ae82c50",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "optimization_end_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "30e39af15e875ea2f2cfa75b1cdf44556c6ea42daa29450de800e7d3b6779308",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{status}}"
+    ],
+    "related_keys": [
+      "optimization"
+    ],
+    "ui_role": "message"
+  },
+  "optimizer_started": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "f1ad500a4e613e602e02cb0a234ad7b154b30e2923980a2b1b2ee3776c762ded",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{optimizer_pass_number}}"
+    ],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "picked_pin_expected": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.PinSwapState"
+    ],
+    "english_hash": "bb93b0cb3e40de3a41a9024cc9aadfb0b0ac14e808d2b5be1984150cf871d1c2",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "pin_not_swapped_because_it_is_already_connected": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.PinSwapState"
+    ],
+    "english_hash": "095922bd889ee422cd738198cee9101c32610af80aa85b34bae008e6a875d867",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "pin_not_swapped_because_second_pin_is_already_connected"
+    ],
+    "ui_role": "label"
+  },
+  "pin_not_swapped_because_second_pin_is_already_connected": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.PinSwapState"
+    ],
+    "english_hash": "06c28e5f6a4ccd33dc8ecb5a272cf4d0c525574ad507d41f1073e056592b1de0",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "pin_not_swapped_because_it_is_already_connected"
+    ],
+    "ui_role": "label"
+  },
+  "pin_swap_completed": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.PinSwapState"
+    ],
+    "english_hash": "28600457c18ca6424fa989bad4a37038153985c28ecfdd653c3690c171411003",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "pin_not_swapped_because_it_is_already_connected",
+      "pin_not_swapped_because_second_pin_is_already_connected",
+      "pin_to_swap_missing"
+    ],
+    "ui_role": "label"
+  },
+  "pin_to_swap_missing": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.PinSwapState"
+    ],
+    "english_hash": "e425eb234b8145d38c9206313be2c0c81ce832723a813400f51c9bd2c821b7c4",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "pin_not_swapped_because_it_is_already_connected",
+      "pin_not_swapped_because_second_pin_is_already_connected",
+      "pin_swap_completed"
+    ],
+    "ui_role": "label"
+  },
+  "please_click_second_pin_with_the_left_mouse_button": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.PinSwapState"
+    ],
+    "english_hash": "d136bb22a7a8ddcb2acac04642981b4ee295926a14830629b27cb7f91a65d372",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": 30,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "please_unfix_selected_items_before_moving",
+      "please_unroute_or_extend_selection_before_moving"
+    ],
+    "ui_role": "button_label"
+  },
+  "please_unfix_selected_items_before_moving": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.MoveItemState"
+    ],
+    "english_hash": "3ed0ffc643886f7ca29b48fbaf8bc89511151bc123dfbe38cced3ae6e5e7169c",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "please_click_second_pin_with_the_left_mouse_button",
+      "please_unroute_or_extend_selection_before_moving"
+    ],
+    "ui_role": "label"
+  },
+  "please_unroute_or_extend_selection_before_moving": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.MoveItemState"
+    ],
+    "english_hash": "f8b100cf17d469e735fcf3714973b123a9c57f6599cbabda686d8a3e3d53f7e8",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "please_click_second_pin_with_the_left_mouse_button",
+      "please_unfix_selected_items_before_moving"
+    ],
+    "ui_role": "label"
+  },
+  "pull_tight": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "a528f9c55bb7a4737a982a23a1f558f8b9109fea83d0d692c001817705145466",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "routeoptimizer_pass": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "69ed7b9dd25c4f42b99cb0b03e93487658d71d4f2f8b21d42a34b796447e8008",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "routing_net_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.RouteState"
+    ],
+    "english_hash": "8cb659b7c0c026bb623e3b621120afbd5f40cc9de12d3978d28e16fb81f5230e",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{net}}"
+    ],
+    "related_keys": [],
+    "ui_role": "message"
+  },
+  "some_items_are_fixed_and_could_therefore_not_be_removed": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "45278290420b49cbaeead6b619a357478606ed76079a1cced15171445bc7cab1",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "some_items_are_not_changed_because_they_are_already_connected"
+    ],
+    "ui_role": "label"
+  },
+  "some_items_are_not_changed_because_they_are_already_connected": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "8457a77257e2c28c005de1d21e27caf0c9f9d710251ece58b9e58474d3e70b66",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "some_items_are_fixed_and_could_therefore_not_be_removed"
+    ],
+    "ui_role": "label"
+  },
+  "some_items_cannot_be_moved_because_they_are_fixed": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.MoveItemState"
+    ],
+    "english_hash": "681c6b355187979b5c2d35d3b2351cb81fc1454c4be5e7a788677e198d52da19",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "some_items_are_fixed_and_could_therefore_not_be_removed",
+      "some_items_are_not_changed_because_they_are_already_connected",
+      "some_items_not_inserted_because_of_obstacles"
+    ],
+    "ui_role": "label"
+  },
+  "some_items_not_inserted_because_of_obstacles": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.CopyItemState"
+    ],
+    "english_hash": "0158f98f5e45ab948f3c0a79bdd06f116238e48bc2694242dc9809c94c2ab3ba",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "some_items_are_fixed_and_could_therefore_not_be_removed",
+      "some_items_are_not_changed_because_they_are_already_connected",
+      "some_items_cannot_be_moved_because_they_are_fixed"
+    ],
+    "ui_role": "label"
+  },
+  "text_manager_fallback_class_probe": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "d744596dd95ef3025723683c57586318c3f7869678264dde4c16fa4f2e161184",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "unable_to_reset_components_with_different_rotations": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.interactive.MoveItemState"
+    ],
+    "english_hash": "945485c8368105119b79177b415fdc70ac707df26f548f33557b5d88c7edee26",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  }
+}

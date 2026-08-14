@@ -4,12 +4,10 @@ import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
 import app.freerouting.board.ShapeSearchTree;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
-import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -487,16 +485,19 @@ public abstract class LocateFoundConnectionAlgo {
    */
   protected abstract Collection<FloatPoint> calculateNextTraceCorners();
 
-  /** Test display of the baktrack rooms. */
-  public void draw(Graphics graphics, GraphicsContext graphicsContext) {
+  /** Emits optional diagnostics for the backtrack rooms. */
+  public void emitDiagnostics(AutorouteDiagnostic.Sink sink, double intensity) {
+    if (sink == null || intensity <= 0) {
+      return;
+    }
     for (int i = 0; i < backtrackArray.length; i++) {
       CompleteExpansionRoom nextRoom = backtrackArray[i].nextRoom;
       if (nextRoom != null) {
-        nextRoom.draw(graphics, graphicsContext, 0.2);
+        nextRoom.emitDiagnostic(sink, intensity);
       }
       ExpandableObject nextDoor = backtrackArray[i].door;
       if (nextDoor instanceof ExpansionDrill drill) {
-        drill.draw(graphics, graphicsContext, 0.2);
+        drill.emitDiagnostic(sink, intensity);
       }
     }
   }

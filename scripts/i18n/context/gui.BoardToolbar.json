@@ -335,6 +335,22 @@
     ],
     "ui_role": "tooltip"
   },
+  "toolbar_accessible_name": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardToolbar"
+    ],
+    "english_hash": "c4a6df82406a11de3a0e405e7e750ac6168abe7924351ca8491dfa18dce6b242",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardToolbar",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
   "undo_button_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],

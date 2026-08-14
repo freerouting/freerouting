@@ -9,7 +9,7 @@ function Get-BenchmarkCacheKey {
     $fixtureHash = (Get-FileHash $Fixture.FullName -Algorithm SHA256).Hash
 
     # Form settings string
-    $settingsStr = "$($Settings.max_passes)|$($Settings.max_time)|$($Settings.max_threads)|$($Settings.heap_max)|$($Settings.log_level)|$($Settings.fanout_enabled)|$($Settings.router_enabled)|$($Settings.optimizer_enabled)"
+    $settingsStr = "$($Settings.max_passes)|$($Settings.max_time)|$($Settings.max_threads)|$($Settings.heap_max)|$($Settings.log_level)|$($Settings.fanout_enabled)|$($Settings.router_enabled)|$($Settings.optimizer_enabled)|$($Settings.max_items)|$($Settings.fanout_timeout)|$($Settings.optimizer_timeout)"
 
     # Compute hash of settings string
     $hasher = [System.Security.Cryptography.SHA256]::Create()

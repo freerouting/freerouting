@@ -195,7 +195,9 @@
   },
   "header_message": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [],
+    "code_references": [
+      "app.freerouting.gui.WindowVisibility"
+    ],
     "english_hash": "bb1f82e8d01282b8231f3a81e4f2c230ef557ff76f656441003dacfe59afcfcc",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -220,8 +222,28 @@
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
-    "related_keys": [],
+    "related_keys": [
+      "layer_visibility_control"
+    ],
     "ui_role": "dialog_title"
+  },
+  "layer_visibility_control": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowVisibility"
+    ],
+    "english_hash": "65bd2dee8a70964614b81829665f93aab9684b56ae63a21790058fad50a362ac",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowVisibility",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "layer_section_title"
+    ],
+    "ui_role": "label"
   },
   "object_section_title": {
     "bundle_desc": "GUI (graphical user interface)",
@@ -236,12 +258,34 @@
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
-    "related_keys": [],
+    "related_keys": [
+      "object_visibility_control"
+    ],
     "ui_role": "dialog_title"
+  },
+  "object_visibility_control": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowVisibility"
+    ],
+    "english_hash": "cd226c9594e8e4f2e15b0e227556bdc49424c1f6caf4b36d83d1faedce6f27fb",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowVisibility",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "object_section_title"
+    ],
+    "ui_role": "label"
   },
   "reset_to_defaults": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [],
+    "code_references": [
+      "app.freerouting.gui.WindowVisibility"
+    ],
     "english_hash": "0953e0d5167d771d81c95db0e1393dac062bb8965b7515d26e720613d9a95b34",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -257,7 +301,9 @@
   },
   "reset_to_defaults_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [],
+    "code_references": [
+      "app.freerouting.gui.WindowVisibility"
+    ],
     "english_hash": "2ecebc9acde9a1108c524052ed84607289f7785160d70c91514386c752cee84d",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

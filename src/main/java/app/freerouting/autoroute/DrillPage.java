@@ -4,13 +4,11 @@ import app.freerouting.board.Item;
 import app.freerouting.board.Pin;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.ShapeSearchTree;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineArea;
 import app.freerouting.geometry.planar.TileShape;
-import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -167,13 +165,13 @@ class DrillPage implements ExpandableObject {
     this.drills = null;
   }
 
-  /** Test draw of the drills on this page. */
-  public void draw(Graphics graphics, GraphicsContext graphicsContext, double intensity) {
-    if (true) {
+  /** Emits optional diagnostics for the drills on this page. */
+  public void emitDiagnostics(AutorouteDiagnostic.Sink sink, double intensity) {
+    if (sink == null || intensity <= 0 || drills == null) {
       return;
     }
     for (ExpansionDrill currDrill : drills) {
-      currDrill.draw(graphics, graphicsContext, intensity);
+      currDrill.emitDiagnostic(sink, intensity);
     }
   }
 

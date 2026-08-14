@@ -1,7 +1,5 @@
 package app.freerouting.board;
 
-import app.freerouting.boardgraphics.Drawable;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -12,12 +10,9 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Locale;
 
 /** Class describing a board outline. */
@@ -153,16 +148,6 @@ public class BoardOutline extends Item implements Serializable {
     keepoutLines = null;
   }
 
-  @Override
-  public double getDrawIntensity(GraphicsContext graphicsContext) {
-    return 1;
-  }
-
-  @Override
-  public int getDrawPriority() {
-    return Drawable.MAX_DRAW_PRIORITY;
-  }
-
   /** ShapeCount. */
   public int shapeCount() {
     return this.shapes.length;
@@ -185,14 +170,6 @@ public class BoardOutline extends Item implements Serializable {
     return filter.isSelected(ItemSelectionFilter.SelectableChoices.BOARD_OUTLINE);
   }
 
-  @Override
-  public Color[] getDrawColors(GraphicsContext graphicsContext) {
-    Color[] colorArr = new Color[this.board.layerStructure.arr.length];
-    Color drawColor = graphicsContext.getOutlineColor();
-    Arrays.fill(colorArr, drawColor);
-    return colorArr;
-  }
-
   /**
    * The board shape outside the outline curves, where a keepout will be generated The outline
    * curves are holes of the keepoutArea.
@@ -210,21 +187,6 @@ public class BoardOutline extends Item implements Serializable {
       this.keepoutLines = new TileShape[0];
     }
     return this.keepoutLines;
-  }
-
-  @Override
-  public void draw(
-      Graphics g, GraphicsContext graphicsContext, Color[] colorArr, double intensity) {
-    if (graphicsContext == null || intensity <= 0) {
-      return;
-    }
-    for (PolylineShape currShape : this.shapes) {
-      FloatPoint[] drawCorners = currShape.cornerApproxArr();
-      FloatPoint[] closedDrawCorners = new FloatPoint[drawCorners.length + 1];
-      System.arraycopy(drawCorners, 0, closedDrawCorners, 0, drawCorners.length);
-      closedDrawCorners[closedDrawCorners.length - 1] = drawCorners[0];
-      graphicsContext.draw(closedDrawCorners, HALF_WIDTH, colorArr[0], g, intensity);
-    }
   }
 
   @Override

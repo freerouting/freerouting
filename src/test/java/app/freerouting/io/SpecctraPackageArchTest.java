@@ -36,7 +36,7 @@ class SpecctraPackageArchTest {
         .should()
         .dependOnClassesThat()
         .resideInAnyPackage(
-            "app.freerouting.interactive..",
+            "app.freerouting.gui.interactive..",
             "app.freerouting.gui..",
             "app.freerouting.management..",
             "app.freerouting.api..")

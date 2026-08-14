@@ -6,7 +6,7 @@ import app.freerouting.board.Item;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.ObjectInfoPanel.Printable;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.interactive.GuiBoardManager;
+import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;

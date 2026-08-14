@@ -1,6 +1,7 @@
 package app.freerouting.gui;
 
-import app.freerouting.util.TextManager;
+import app.freerouting.gui.a11y.A11y;
+import app.freerouting.gui.a11y.GuiLocators;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -43,7 +44,7 @@ class BoardPanelStatus extends JPanel {
    * @param locale the locale to use for resource bundles
    */
   BoardPanelStatus(Locale locale) {
-    final TextManager tm = new TextManager(this.getClass(), locale);
+    final GuiTextManager tm = new GuiTextManager(this.getClass(), locale);
 
     setLayout(new BorderLayout());
 
@@ -134,6 +135,36 @@ class BoardPanelStatus extends JPanel {
     rightMessagePanel.add(cursorPanel, BorderLayout.EAST);
 
     add(rightMessagePanel, BorderLayout.EAST);
+
+    wireAccessibility(tm);
+  }
+
+  /**
+   * Registers stable, locale-independent locators (D22) and accessible names on the status-bar
+   * controls so assistive technology and the a11y test harness can resolve them. Accessible names
+   * reuse the already-translated visible text (no new resource-bundle keys, preserving cross-locale
+   * parity).
+   */
+  private void wireAccessibility(GuiTextManager tm) {
+    A11y.tag(statusMessage, GuiLocators.STATUS_MESSAGE);
+    A11y.describe(statusMessage, statusMessage.getText(), null);
+
+    A11y.tag(additionalMessage, GuiLocators.STATUS_ADDITIONAL_MESSAGE);
+    A11y.describe(additionalMessage, additionalMessage.getText(), null);
+
+    A11y.tag(currentLayer, GuiLocators.STATUS_CURRENT_LAYER);
+    A11y.describe(currentLayer, currentLayer.getText(), null);
+
+    A11y.tag(currentBoardScore, GuiLocators.STATUS_BOARD_SCORE);
+    A11y.describe(currentBoardScore, currentBoardScore.getText(), null);
+
+    A11y.tag(mousePosition, GuiLocators.STATUS_MOUSE_POSITION);
+    A11y.tag(unitLabel, GuiLocators.STATUS_UNIT);
+
+    A11y.tag(errorLabel, GuiLocators.STATUS_ERROR_COUNT);
+    A11y.describe(errorLabel, tm.getText("errors"), null);
+    A11y.tag(warningLabel, GuiLocators.STATUS_WARNING_COUNT);
+    A11y.describe(warningLabel, tm.getText("warnings"), null);
   }
 
   /** Adds mouse listeners for error and warning labels to handle click events. */

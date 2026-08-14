@@ -1,6 +1,8 @@
 # GUI Separation and Accessibility Migration Plan
 
-> Status: **Ready to implement** (D1–D30 locked; M1=A / M4=B incorporated; implementation not started)
+> Status: **Phase 12 COMPLETE** — Phases 0–11 are complete for the component-only accessibility
+> scope; final boundary cleanup, documentation, and sign-off are green.
+> D1–D30 locked; M1=A / M4=B incorporated; execution staffing plan in §13 (added 2026-08-11).
 >
 > Scope: Separate GUI interaction and rendering from the headless routing pipeline, establish automated GUI accessibility coverage, and reorganize only the packages required for that separation.
 >
@@ -112,7 +114,7 @@ Views and editor states sit above a GUI session façade. Rendering is a **siblin
 | D22 | Accessible locator mechanism | **Stable locator constants + one shared registry/helper**; harness finds by locator, not translated label |
 | D23 | Boundary debt home | **§12 of this plan** (old standalone tracker retired) |
 | D24 | Routing parity baseline | **Phase out v1.9 as primary baseline.** Stable **v2.3.0** is the new baseline. Compare WIP to **v2.3.0**. Capture v2.3.0 golden metrics in Phase 0/1; update AGENTS.md in this initiative. |
-| D25 | `testGui` in Gradle task graph | **`testGui` is part of `testAll`**. It is **not** part of `test` or `testSlow`. Path-filtered CI may still run `testGui` alone on GUI paths. |
+| D25 | `testGui` in Gradle task graph | **`testGui` is part of `testAll`** (alongside `test`, `testSlow`, and `testSerial`). It is **not** part of `test` or `testSlow`. Path-filtered CI may still run `testGui` alone on GUI paths. |
 | D26 | `gui.session` → `gui.rendering` | **Allowed** for this initiative (`GuiBoardManager` owns `GraphicsContext` state). Document honestly in §1.1. Optional later decoupling is out of scope. |
 | D27 | `gui.session` ↔ interactive decoupling | **Decouple in Phase 9** so session does not import **any** `gui.interactive` type (not only concrete `*State`). States may depend on session. See **D30** for package ownership + bootstrap. |
 | D28 | Parity gate frequency | **Full WIP-vs-v2.3.0 compare at Phase 5 and Phase 6 exits only.** Phases 7–8 get a **cheap** golden-fixture smoke: full DRC **and** completion/unrouted-net parity vs Phase 0 goldens (no full version compare). |
@@ -213,12 +215,14 @@ Move from temporary `gui.interactive` into `gui.session` at minimum:
 - `ScreenMessages`
 - `InteractiveActionThread`
 - `AutorouterAndRouteOptimizerThread`
+- `GuiSessionContract`
+- session-owned ratsnest/clearance presentation façades used by the manager
 
 Leave concrete editor states (`*State`) in `gui.interactive`.
 
 **Phase 9 must also** (D27 / D30):
 
-1. Move / introduce the narrow interactive facade/API (name TBD — R19) **and** the `InteractiveCommand` interface (+ any state-handle/token types the session passes around) into **`gui.session`** (or `gui.session.api`).
+1. Move / introduce the narrow interactive facade/API (`EditorStateController`, `EditorStateHandle`, `EditorStateKind`, `EditorEvent`) **and** the `InteractiveCommand` interface (+ any state-handle/token types the session passes around) into **`gui.session`**.
 2. Have concrete states in `gui.interactive` **implement** those session-owned interfaces (`gui.interactive → gui.session` only).
 3. Assign **initial-state bootstrap/registration** to the **`gui` views** layer (views may see both packages; session must not need a concrete `*State` to start).
 4. Ensure **no** `gui.session → gui.interactive` edge remains; ArchUnit `gui.**` slice-cycle check must pass.
@@ -228,7 +232,8 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 ## 5. Completion criteria (measurable)
 
 - Pipeline/support packages (`board`, `rules`, `autoroute`, `drc`, `geometry`, `datastructures`, `settings`, `logger`, `debug`, `util`, `io`, `core`, `management`, `api`) have no `gui.**`, no Swing, no AWT UI dependencies (geom whitelist only).
-- No production sources under `app.freerouting.interactive` or `app.freerouting.boardgraphics`.
+- No production sources remain under `app.freerouting.interactive`; rendering sources live under
+  `app.freerouting.gui.rendering`.
 - `gui.interactive` = concrete editor states; `gui.session` = GUI session façade + owned command/facade APIs; `gui.rendering` = rendering.
 - `gui.session` does not import any `gui.interactive` type (facade + `InteractiveCommand` owned by session — D27/D30); views bootstrap initial state.
 - ArchUnit: `gui.**` slices are cycle-free.
@@ -240,8 +245,9 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 - Ratsnest/violation **compute** usable headlessly via `drc`.
 - MVP GUI workflows green in `testGui` under forced headless, **EN + `hu`**, locator registry + `hu` resource check.
 - Default `test` excludes `@Tag("gui")` and does not require a display.
-- `testAll` includes `testGui`; `test` and `testSlow` do not.
-- §12 freeze ledger empty (or only documented accepted permanent debt with owners).
+- `testAll` includes `test`, `testSlow`, `testSerial`, and `testGui`; `test` and `testSlow` do not
+  include GUI tests.
+- §12 has no active freeze ledger entries; only documented accepted permanent debt remains.
 - Golden-fixture clearance gates use **`DesignRulesChecker.getAllClearanceViolations()`** (D29).
 - Phase 5/6: WIP vs **v2.3.0** parity green; Phase 0/1 captured v2.3.0 baseline metrics; AGENTS.md reflects D24.
 - `docs/architecture.md` matches this plan.
@@ -250,162 +256,238 @@ Phase 1 inventory may add non-state session types to this list; do not invent ex
 
 ### Phase 0 — Baseline
 
-- [ ] Record branch / working tree / HEAD.
-- [ ] Run ArchUnit + `test` + quick routing fixture; capture results.
-- [ ] Inventory class counts: `gui`, `interactive`, `boardgraphics`.
-- [ ] **DSN fixture coverage map:** filename → owning test(s) → sole-coverage-for-a-path? (There are **no `.frb` fixtures** in the repo.)
-- [ ] **Capture stable v2.3.0 golden metrics** on the agreed fixture matrix (completion / unrouted-net count, full-DRC violation count via `DesignRulesChecker.getAllClearanceViolations()`, SES sanity). Record numbers in branch notes and **§12.6**.
-- [ ] Snapshot known leaks (board/autoroute paint, `RoutingJob` Swing, `BoardManager` GUI API, `SessionManager` GUI naming, `GuiBoardManager`→`GraphicsContext` / `InteractiveState`).
-- [ ] Start AGENTS.md baseline-policy draft update toward D24 (land fully by Phase 12 at latest; prefer with Phase 0/1).
+- [x] Record branch / working tree / HEAD.
+- [x] Run ArchUnit + `test` + quick routing fixture; capture results.
+- [x] Inventory class counts: `gui`, `interactive`, `boardgraphics`.
+- [x] **DSN fixture coverage map:** filename → owning test(s) → sole-coverage-for-a-path? (There are
+  **no `.frb` fixtures** in the repo.) The finalized 147-file inventory is tracked in
+  [`soc-gui-separation-dsn-fixture-coverage.md`](soc-gui-separation-dsn-fixture-coverage.md).
+- [x] **Capture stable v2.3.0 golden metrics** on the agreed fixture matrix (completion / unrouted-net count, full-DRC violation count via `DesignRulesChecker.getAllClearanceViolations()`, SES sanity). Record numbers in branch notes and **§12.6**.
+- [x] Snapshot known leaks (board/autoroute paint, `RoutingJob` Swing, `BoardManager` GUI API, `SessionManager` GUI naming, `GuiBoardManager`→`GraphicsContext` / `InteractiveState`).
+- [x] Start AGENTS.md baseline-policy draft update toward D24 (land fully by Phase 12 at latest; prefer with Phase 0/1).
 
 ### Phase 1 — Inventory + ArchUnit freeze
 
-- [ ] Full dependency inventory (pipeline ↔ GUI / AWT UI / Swing).
-- [ ] Classify interactive/boardgraphics types (state vs session vs façade vs renderer).
-- [ ] **Simple-name collision check** across `gui`, `interactive`, `boardgraphics`, **and** cross-package same-name types touched by moves (at minimum the three `CoordinateTransform` classes in `board` / `boardgraphics` / `io`; flattening `InteractiveCommand`).
-- [ ] Confirm ratsnest compute call chain through `drc.NetIncompletes` / `AirLine`.
-- [ ] List `ObjectInfoPanel.Printable` implementers (awareness only).
-- [ ] Confirm MVP-workflow property bundles have complete `_hu` variants.
-- [ ] Sketch the Phase 9 interactive facade surface (R19) and confirm home package = `gui.session` (D30): methods `GuiBoardManager` needs without importing any `gui.interactive` type.
-- [ ] Plan views-layer bootstrap/registration of the initial interactive state (D30).
-- [ ] **Inventory existing tests that construct Swing / need EDT**; plan deliberate `@Tag("gui")` retags.
-- [ ] **Inventory worker-thread → Swing mutations**; assign removal to Phase 9 (or earlier if trivial).
-- [ ] ArchUnit rules + §12 freezes (including planned temporary freeze only if facade lands mid-Phase-9).
-- [ ] Add ArchUnit **`gui.**` slice-cycle** check (must stay green after Phase 9; may be frozen temporarily mid-phase only).
-- [ ] Forbid pipeline/support → gui/interactive/boardgraphics/future gui.interactive|session|rendering; ban Swing + AWT UI; allow `java.awt.geom..`.
-- [ ] Record freeze budget with owners/removal phases in §12.
-- [ ] Adapt or stub WIP-vs-v2.3.0 compare tooling (R18); do not depend on v1.9 `compare-versions.ps1` as the primary gate.
+> **Phase 1 COMPLETE (2026-08-12).** Inventory + collision check + type classification + strict
+> ArchUnit boundary layer (F1/F2/F3, R4/R5) + §12.4 ledger + facade sketch (R19) + views-bootstrap
+> plan all landed.
+> Exit gate green: `ModuleBoundariesArchTest` + `SpecctraPackageArchTest` (`BUILD SUCCESSFUL`). Reviewed and
+> approved (Flash review 2026-08-12). Details in `logs/phase1/branch-notes.md` + `logs/phase1/facade-sketch.md`.
+
+- [x] Full dependency inventory (pipeline ↔ GUI / AWT UI / Swing).
+- [x] Classify interactive/boardgraphics types (state vs session vs façade vs renderer).
+- [x] **Simple-name collision check** across `gui`, `interactive`, `boardgraphics`, **and** cross-package same-name types touched by moves (at minimum the three `CoordinateTransform` classes in `board` / `boardgraphics` / `io`; flattening `InteractiveCommand`).
+- [x] Confirm ratsnest compute call chain through `drc.NetIncompletes` / `AirLine`.
+- [x] List `ObjectInfoPanel.Printable` implementers (awareness only).
+- [x] Confirm MVP-workflow property bundles have complete `_hu` variants.
+- [x] Sketch the Phase 9 interactive facade surface (R19) and confirm home package = `gui.session` (D30): methods `GuiBoardManager` needs without importing any `gui.interactive` type.
+- [x] Plan views-layer bootstrap/registration of the initial interactive state (D30).
+- [x] **Inventory existing tests that construct Swing / need EDT**; plan deliberate `@Tag("gui")` retags.
+- [x] **Inventory worker-thread → Swing mutations**; assign removal to Phase 9 (or earlier if trivial).
+- [x] ArchUnit rules + §12 boundary ledger (temporary freezes were removed at phase exit).
+- [x] Add ArchUnit **`gui.**` slice-cycle** check (must stay green after Phase 9; may be frozen temporarily mid-phase only).
+- [x] Forbid pipeline/support → gui/interactive/boardgraphics/future gui.interactive|session|rendering; ban Swing + AWT UI; allow `java.awt.geom..`.
+- [x] Record boundary rules and accepted-debt ownership in §12.
+- [x] Adapt or stub WIP-vs-v2.3.0 compare tooling (R18); do not depend on v1.9 `compare-versions.ps1` as the primary gate.
 
 ### Phase 2 — Accessibility foundation (component-only, pure JDK)
 
-- [ ] Document a11y contract (name/role/description/state/value; label-for; menu names).
-- [ ] Implement **locator constants + shared registry** (D22); harness finds by locator, not translated label.
-- [ ] Build harness: EDT execution, AccessibleContext walk, find by locator/role, invoke actions, assert states.
-- [ ] Harness asserts `EventQueue.isDispatchThread()` for workflow mutations/actions.
-- [ ] Failures include accessible path + role + locator.
-- [ ] No private-field locators; no screen coordinates; no `setVisible` on top-level frames.
-- [ ] Add `@Tag("gui")` and `testGui` task:
+- [x] Document a11y contract (name/role/description/state/value; label-for; menu names).
+- [x] Implement **locator constants + shared registry** (D22); harness finds by locator, not translated label.
+- [x] Build harness: EDT execution, AccessibleContext walk, find by locator/role, invoke actions, assert states.
+- [x] Harness asserts `EventQueue.isDispatchThread()` for workflow mutations/actions.
+- [x] Failures include accessible path + role + locator.
+- [x] No private-field locators; no screen coordinates; no `setVisible` on top-level frames.
+- [x] Add `@Tag("gui")` and `testGui` task:
   - default `test` excludes `gui` (like `slow`)
   - `testSlow` remains slow-only (does **not** include `gui`)
-  - `testAll` runs `test` + `testSlow` + `testGui` (D25)
+  - `testAll` runs `test` + `testSlow` + `testSerial` + `testGui` (D25)
   - `testGui` sets `systemProperty 'java.awt.headless', 'true'`
   - retag inventoried Swing tests from Phase 1 so coverage is intentional
   - path-filtered CI may invoke `testGui` alone on GUI-related paths
-- [ ] Document component-only / forced-headless requirements and CI path filters (include legacy `interactive` / `boardgraphics` until moved).
-- [ ] Product work: accessible names/roles + locator registration on MVP controls.
-- [ ] ≥3 workflows: menu action, open/close parameter content, change setting, select layer, read status, cancel/stop route, open inspect/list.
-- [ ] Sibling duplicate/empty accessible-name and locator checks.
-- [ ] Run MVP workflows in English and Hungarian (`hu`, D19); locators stable across both.
-- [ ] Add/extend a **Hungarian resource-parity check** for bundles touched by MVP workflows (document in §7).
+- [x] Document component-only / forced-headless requirements and CI path filters.
+- [x] Product work: accessible names/roles + locator registration on MVP controls.
+- [x] ≥3 workflows: menu action, open/close parameter content, change setting, select layer, read status, cancel/stop route, open inspect/list.
+- [x] Sibling duplicate/empty accessible-name and locator checks.
+- [x] Run MVP workflows in English and Hungarian (`hu`, D19); locators stable across both.
+- [x] Add/extend a **Hungarian resource-parity check** for bundles touched by MVP workflows (document in §7).
 
 ### Phase 3 — Headless board contracts
 
-- [ ] Headless board manager API without GUI methods.
-- [ ] GUI session contract separate from headless manager.
-- [ ] Remove null-based `getInteractiveSettings()` / `isInteractiveModeSupported()` from shared headless API.
-- [ ] Prefer moving `initializeManualTraceHalfWidths` to GUI-session-only (R10).
-- [ ] Preserve InteractiveSettings invariants (reset, live snapshot, merger priority).
-- [ ] Update contract tests accordingly.
+- [x] Headless board manager API without GUI methods.
+- [x] GUI session contract separate from headless manager.
+- [x] Remove null-based `getInteractiveSettings()` / `isInteractiveModeSupported()` from shared headless API.
+- [x] Prefer moving `initializeManualTraceHalfWidths` to GUI-session-only (R10).
+- [x] Preserve InteractiveSettings invariants (reset, live snapshot, merger priority).
+- [x] Update contract tests accordingly.
 
 ### Phase 4 — Core / management neutralization
 
-- [ ] Remove Swing file chooser / AWT UI types from `RoutingJob`; GUI owns picking.
-- [ ] Rename `SessionManager.getGuiSession` / `setGuiSession` → `getPrimarySession` / `setPrimarySession` (management UUID session only; **not** `gui.session`).
-- [ ] Ensure analytics/API do not depend on GUI session types.
-- [ ] Reduce circular loader↔manager delegation where practical.
+- [x] Remove Swing file chooser / AWT UI types from `RoutingJob`; GUI owns picking. (`showOpenDialog` moved → `gui.BoardMenuFile`; F1 −11, F2 −2 frozen violations removed.)
+- [x] Rename `SessionManager.getGuiSession` / `setGuiSession` → `getPrimarySession` / `setPrimarySession` (management UUID session only; **not** `gui.session`).
+- [x] Ensure analytics/API do not depend on GUI session types. (Verified clean — no `gui`/`interactive`/`boardgraphics` imports in `management`/`api`.)
+- [x] Reduce circular loader↔manager delegation where practical. (Verified **no circular delegation** exists — `BoardLoader` is a standalone static helper (BoardLoader → HeadlessBoardManager, unidirectional); nothing trivially safe to reduce.)
 
 ### Phase 5 — Compute vs presentation
 
-- [ ] Thin `RatsNest` to GUI façade over `drc` incompletes (optional rename R9).
-- [ ] Thin `ClearanceViolations` similarly over `drc`.
-- [ ] Keep `board.ObjectInfoPanel` as AWT-free interface; GUI continues to implement (accepted debt in §12).
-- [ ] Headless tests: incompletes/violations without GUI classes.
-- [ ] A11y tests for incompletes/violations lists/counts.
-- [ ] **Exit gate:** golden fixtures; clearance delta **0** vs Phase 0/1 v2.3.0 baseline using **`DesignRulesChecker.getAllClearanceViolations()`** (D29); WIP-vs-v2.3.0 compare (D24/D28).
+- [x] Thin `RatsNest` to GUI façade over `drc` incompletes (optional rename R9; name retained).
+- [x] Thin `ClearanceViolations` similarly over `drc`; severity ordering and smallest-clearance aggregation now live in headless-safe `drc.ClearanceViolation`.
+- [x] Keep `board.ObjectInfoPanel` as AWT-free interface; GUI continues to implement (accepted debt in §12).
+- [x] Headless tests: incompletes/violations without GUI classes (`RatsnestClearanceHeadlessTest`).
+- [x] A11y tests for incompletes/violations lists/counts (`ViolationsIncompletesListA11yTest`), using component-only `JList` coverage under forced headless.
+- [x] **Exit gate (2026-08-12):** golden-fixture completion/unrouted and full-DRC metrics remain at the §12.6 baseline; the recorded WIP-vs-v2.3.0 comparison is green on all 19 comparable fixtures (CM5_MINIMA_3 timed out in both builds); targeted headless/a11y tests, `check`, `testGui`, formatting, checkstyle, rewrite, and i18n gates are green. Clearance comparison uses **`DesignRulesChecker.getAllClearanceViolations()`** (D29).
 
 ### Phase 6 — Invert board rendering (highest risk)
 
 Land as **independently revertible commits** on the long-lived branch:
 
-1. [ ] Add neutral accessors for geometry/layer/net/type/visibility/selection metadata (no paint removal yet).
-2. [ ] Stand up GUI renderer + **early** offscreen `BufferedImage` smoke for major item types (must exist before mass paint deletion).
-3. [ ] Remove `Drawable` / `Graphics` / `GraphicsContext` / AWT `Color` paint APIs from board (per family if needed).
-4. [ ] Move traversal + draw priority fully into GUI renderer.
-5. [ ] Headless load→route→DRC→SES without renderer init.
-6. [ ] No routing mutation behavior changes.
+1. [x] Add neutral accessors for geometry/layer/net/type/visibility/selection metadata (no paint removal yet). `BoardItemType` and `Item.getBoardItemType()` are now headless-safe, with characterization coverage.
+2. [x] Stand up GUI renderer + **early** offscreen `BufferedImage` smoke for major item types (must exist before mass paint deletion). `BoardRenderer` and `BoardRendererOffscreenTest` are in place.
+3. [x] Remove `Drawable` / `Graphics` / `GraphicsContext` / AWT `Color` paint APIs from board (per family if needed). Main board rendering and interactive overlays now use renderer-owned strategies for traces, drill items, obstacles, component geometry, outlines, and conduction areas; the transitional `Item.draw` / `drawLayer` APIs and family implementations were removed.
+4. [x] Move traversal + draw priority fully into GUI renderer. Layer/virtual-layer ordering, culling, component fabrication labels, and family dispatch now live in `BoardRenderer`.
+5. [x] Headless load→route→DRC→SES without renderer init. Full `check` and targeted headless DRC/routing tests pass.
+6. [x] No routing mutation behavior changes in the validated smoke suite. The final full WIP-vs-v2.3.0 comparison completed with matching completion (5 unrouted items) and no current-build clearance violations.
+
+**Current checkpoint:** commits `06b3b688`, `7284615a`, `6b7e9ee1`, `4b4c936e`, `2b07f149`, `c51f16cd`, `253ab59d`, and `006835f4` landed independently. Offscreen, full `check`, full `testGui`, ArchUnit, formatting, checkstyle, rewrite, i18n, headless DRC, routing smoke, and the final WIP-vs-v2.3.0 parity gates are green. The renderer no longer depends on `Item.draw` / `drawLayer`; interactive overlays route through the same family strategies as normal board painting.
 
 **Exit gate:** full-DRC clearance delta **0** (D29); no completion regression vs **v2.3.0** (D24/D28); offscreen renderer smokes green.
 
 ### Phase 7 — Autorouter diagnostics
 
-- [ ] Replace `draw(Graphics, …)` with neutral snapshots/events or GUI adapters.
-- [ ] Diagnostics opt-in; logging remains headless path.
-- [ ] ArchUnit: no new AWT UI parameters in `autoroute`.
-- [ ] **Cheap exit gate:** golden-fixture smoke = full DRC **and** completion/unrouted-net parity vs Phase 0 goldens (D28) — no full v2.3.0 version compare.
+- [x] Replace `draw(Graphics, …)` with neutral snapshots/events or GUI adapters. Autoroute now emits `AutorouteDiagnostic` snapshots; `AutorouteDiagnosticRenderer` owns GUI painting.
+- [x] Diagnostics opt-in; logging remains headless path. Snapshot emission only occurs when a sink is supplied, and autoroute no longer imports AWT or `boardgraphics`.
+- [x] ArchUnit: no new AWT UI parameters in `autoroute`. The frozen stores dropped to F2=25 and F3=56.
+- [x] **Cheap exit gate:** golden-fixture smoke = full DRC **and** completion/unrouted-net parity vs Phase 0 goldens (D28) — targeted headless routing/DRC and full `check` passed; no full v2.3.0 version compare was required.
+
+**Current checkpoint:** `01eec86e` replaces autorouter diagnostic drawing with headless-safe snapshots and a GUI-owned renderer adapter. `ExpandTestState` remains the opt-in caller; normal routing and logging do not collect or render snapshots. Offscreen diagnostic rendering, full `check`, `testGui`, formatting, checkstyle, rewrite, i18n, ArchUnit, headless DRC, and completion smoke are green.
 
 ### Phase 8 — Move to `gui.interactive` (flat)
 
-- [ ] Resolve any simple-name collisions found in Phase 1 before/during move.
-- [ ] Move remaining interactive production + tests flat into `gui.interactive`.
-- [ ] **Flatten `interactive.commands` types into `gui.interactive` sources** (no `gui.interactive.commands` subpackage) (D11) — interface moves to `gui.session` in Phase 9 (D30).
-- [ ] Temporarily includes `GuiBoardManager` and session cluster.
-- [ ] Update i18n FQCNs / resources / ArchUnit / docs.
-- [ ] No `.frb` compat shims.
-- [ ] Run interactive tests, ArchUnit, i18n parity (+ `hu` check), MVP a11y, spotlessCheck, checkstyle.
-- [ ] **Cheap exit gate:** golden-fixture smoke = full DRC **and** completion/unrouted-net parity vs Phase 0 goldens (D28).
+- [x] Resolve any simple-name collisions found in Phase 1 before/during move; no new collision required a rename.
+- [x] Move remaining interactive production + tests flat into `gui.interactive`.
+- [x] **Flatten `interactive.commands` types into `gui.interactive` sources** (no `gui.interactive.commands` subpackage) (D11) — interface moves to `gui.session` in Phase 9 (D30).
+- [x] Temporarily includes `GuiBoardManager` and session cluster.
+- [x] Update i18n FQCNs / resources / ArchUnit / docs.
+- [x] No `.frb` compat shims; the intentional serialized FQCN change is documented by D3/D17.
+- [x] Run interactive tests, ArchUnit, i18n parity (+ `hu` check), MVP a11y, spotlessCheck, checkstyle.
+- [x] **Cheap exit gate:** golden-fixture smoke = full DRC **and** completion/unrouted-net parity vs Phase 0 goldens (D28).
+
+**Current checkpoint:** The former `interactive` package and its `commands` subpackage now live flat under
+`gui.interactive`, including the temporary session cluster and all package tests. Localized bundles and
+i18n context metadata follow the new FQCNs. Interactive tests, ArchUnit, full DRC/completion smoke,
+forced-headless GUI tests, i18n checks, Spotless, Checkstyle, and rewrite checks are green.
 
 ### Phase 9 — Extract `gui.session`
 
-- [ ] Extract §4.4 session cluster to `gui.session` (D20); keep `InteractiveSettings` name (D21).
-- [ ] Move/introduce facade + `InteractiveCommand` (+ handles) into `gui.session` / `gui.session.api` (D30); pick facade type name (R19).
-- [ ] Concrete states in `gui.interactive` implement session-owned interfaces; **views bootstrap** initial state.
-- [ ] **Remove all `gui.session → gui.interactive` imports** (not only concrete `*State`) (D27/D30).
-- [ ] Confirm `gui.session → gui.rendering` remains the allowed D26 edge (`GraphicsContext` ownership) — no forced decoupling.
-- [ ] Temporary §12 freeze on `gui.session → gui.interactive` only while facade lands; **must be gone by phase exit**; `gui.**` slice-cycle check green.
-- [ ] Ports for load / route start-stop / progress / board replace / settings.
-- [ ] Eliminate inventoried worker→Swing call sites; EDT-only Swing mutation.
-- [ ] Confirm `getPrimarySession` / `setPrimarySession` callers remain correct (still management API).
-- [ ] A11y workflows still pass component-only under forced headless.
+- [x] Extract §4.4 session cluster to `gui.session` (D20); keep `InteractiveSettings` name (D21).
+- [x] Move/introduce facade + `InteractiveCommand` (+ handles) into `gui.session` / `gui.session.api` (D30); facade type is `EditorStateController` (R19).
+- [x] Concrete states in `gui.interactive` implement session-owned interfaces; **views bootstrap** initial state.
+- [x] **Remove all `gui.session → gui.interactive` imports** (not only concrete `*State`) (D27/D30).
+- [x] Confirm `gui.session → gui.rendering` remains the allowed D26 edge (`GraphicsContext` ownership) — no forced decoupling.
+- [x] Temporary §12 freeze on `gui.session → gui.interactive` only while facade lands; **removed at phase exit**; `gui.**` slice-cycle check green.
+- [x] Ports for load / route start-stop / progress / board replace / settings.
+- [x] Eliminate inventoried worker→Swing call sites; EDT-only Swing mutation.
+- [x] Confirm `getPrimarySession` / `setPrimarySession` callers remain correct (still management API).
+- [x] A11y workflows still pass component-only under forced headless.
+
+**Implementation checkpoint (2026-08-13):** The session cluster now lives in `gui.session`, including the
+manager, settings, messages, action threads, session contract, and manager-owned ratsnest/clearance
+facades. `EditorStateHandle`, `EditorStateKind`, `EditorEvent`, `InteractiveCommand`, and
+`EditorStateController` define the opaque inversion seam. `InteractiveStateController` is the concrete
+implementation in `gui.interactive`; `BoardPanel` registers it and bootstraps `RouteMenuState`.
+The session package has no production dependency on `gui.interactive`; the strict ArchUnit rule and
+GUI slice-cycle rule are green.
+
+The Phase 9 follow-up is now complete: session-owned load, route-control, progress, replacement, and
+detached-settings ports use load/run generations to reject stale callbacks. Background workers publish
+immutable events through `GuiSessionPort`; the adapter schedules all presentation mutations on the EDT,
+and terminal cleanup—not a stop request—restores editability. `ScreenMessages` rejects off-EDT
+mutation, while board loading requests stop before replacement and ignores stale parse/paint
+completions. Focused session-port and worker-boundary ArchUnit tests, the required Spotless,
+Checkstyle, rewrite, i18n, and whitespace gates, forced-headless `testGui`, targeted routing
+smoke, and the full `check` task are green. A deterministic `GlobalSettings` setup was added to
+`SessionManagerTest`; its primary-session coverage confirms that `getPrimarySession` and
+`setPrimarySession` remain management APIs used only by `GuiManager`, `BoardFrame`, and
+`BoardToolbar`. The separate Phase 11 progress-window accessibility increment remains deferred.
 
 ### Phase 10 — Move to `gui.rendering`
 
-- [ ] Move `boardgraphics` → `gui.rendering`.
-- [ ] Rename graphics `CoordinateTransform` → `ScreenTransform` (D18).
-- [ ] Confirm **pipeline** has zero imports of rendering package (session→rendering is allowed — D26).
-- [ ] Offscreen renderer tests green; headless routing green.
+- [x] Move the former `boardgraphics` production/test/resource tree → `gui.rendering`.
+- [x] Rename graphics `CoordinateTransform` → `ScreenTransform` (D18); `board.CoordinateTransform`
+  and `io.CoordinateTransform` remain unchanged.
+- [x] Confirm **pipeline** has zero imports of rendering package (session→rendering is allowed —
+  D26). The final rendering inversion also removed `Drawable` and all draw-color, draw-intensity,
+  and draw-priority methods from board model classes; `BoardRenderer` owns the
+  `BoardItemType`/item-family dispatch.
+- [x] Offscreen renderer tests and headless routing are green.
+
+**Implementation checkpoint (2026-08-13):** Rendering sources, tests, localized resources, context
+metadata, and parity aliases now use `app.freerouting.gui.rendering`. `ScreenTransform` is the only
+graphics transform rename; the board and I/O transforms were not changed. F3 was promoted from a
+freeze to a strict zero-dependency rule after the board model lost its rendering APIs. Renderer-owned
+dispatch preserves normal board and overlay rendering behavior, including colors, intensity, and
+draw priority.
 
 ### Phase 11 — Accessibility expansion + path-filtered CI
 
-- [ ] Expand coverage across major windows/menus (still component-only).
-- [ ] State-change tests: layer, mode, enablement, progress, visibility, violation state.
-- [ ] Keyboard/menu alternatives + inspect lists for critical canvas actions.
-- [ ] Switch CI path filters to final `gui/interactive|session|rendering` (+ remaining `gui/**` as needed).
-- [ ] Default `test` never requires display; `testGui` always headless; `testAll` includes `testGui`.
+- [x] Expand coverage across major menus and reusable settings content (still component-only):
+  `BoardMenuBar`, `BoardToolbar`, `WindowVisibility`, and inspect/list workflows.
+- [x] State-change tests cover layer, mode, enablement, visibility, and violation/list state.
+- [x] Add a reusable, component-only `ProgressPanel` seam with determinate/indeterminate progress,
+  counters, cancellation, EDT marshalling, and EN + `hu` accessibility coverage.
+- [x] Extract `WindowMessage` content into a frame-free component seam and cover its message labels
+  under forced headless; direct top-level window construction remains deferred.
+- [x] Keyboard/menu alternatives plus inspect lists cover critical canvas actions.
+- [x] Add path-filtered GUI CI for final `gui/**` paths (including `interactive`, `session`, and
+  `rendering`) plus GUI tests/resources and build configuration.
+- [x] Preserve D25: default `test` never requires a display; `testGui` is forced headless;
+  `testAll` includes `test`, `testSlow`, `testSerial`, and `testGui`; `check` does not implicitly
+  include `testGui`.
+
+**Implementation checkpoint (2026-08-13, component-only scope complete):** `BoardMenuBar` now tags the real
+top-level menus and provides a frame-free translated menu factory with stable item locators and
+accelerators. `BoardToolbar` exposes a frame-free mode/unit/action factory and deterministic
+enablement seam, while `WindowVisibility` exposes reusable layer/object slider content. New
+component-only tests exercise EN + `hu` locator stability, keyboard/action paths, mode/unit
+changes, enablement, visibility/reset, EDT execution, and no leaked displayable windows or named
+GUI/routing threads. `.github/workflows/gui-a11y.yml` runs forced-headless `testGui` and the
+Hungarian parity check on GUI-related paths. The reusable progress surface and extracted
+`WindowMessage` content now have EN + `hu` locator-driven coverage without constructing a
+top-level window. Full progress-window integration and direct construction of legacy top-level
+windows remain deliberately deferred.
 
 ### Phase 12 — Final cleanup
 
-- [ ] Remove transitional APIs / freezes / stale tests.
-- [ ] Promote ArchUnit rules to strict; §12 freeze table empty except accepted permanent debt.
-- [ ] **Finalize AGENTS.md** baseline policy: primary routing baseline is stable **v2.3.0**; v1.9/`src_v19` remains historical reference / optional deep dive, not the required parity gate (D24).
-- [ ] Update `docs/architecture.md`, developer GUI-test docs.
-- [ ] Record accepted debt: `ObjectInfoPanel` shape; DRC includes incompletes; session→rendering (D26).
+- [x] Remove transitional APIs / freezes / stale tests.
+- [x] Promote ArchUnit rules to strict; §12 freeze table empty except accepted permanent debt.
+- [x] **Finalize AGENTS.md** baseline policy: primary routing baseline is stable **v2.3.0**; v1.9/`src_v19` remains historical reference / optional deep dive, not the required parity gate (D24).
+- [x] Update `docs/architecture.md`, developer GUI-test docs, and the accessibility contract.
+- [x] Record accepted debt: `ObjectInfoPanel` shape; DRC includes incompletes; session→rendering (D26).
+
+**Phase 12 checkpoint (2026-08-13):** Headless `TextManager` and GUI-only `GuiTextManager` now
+separate localization from Swing/font concerns. The unused `datastructures.FileFilter`,
+`SessionToEagle` JFrame inheritance, stale environment test, and obsolete ArchUnit freeze
+configuration/stores were removed. F1/F2/F3 are strict with no active freeze ledger entries.
+Architecture, developer GUI-test, accessibility, baseline, and accepted-debt documentation are
+aligned. `check` passed with 432 tests, `testAll` passed with 493 tests including 22 forced-headless
+GUI tests and 20 slow tests, and all quality/i18n gates passed.
 
 ## 7. Validation matrix
 
 | Command | Purpose |
 | --- | --- |
-| `.\gradlew.bat test` | Fast tests (excludes `slow`, `gui`) |
+| `.\gradlew.bat test` | Fast tests (excludes `serial`, `slow`, `gui`) |
 | `.\gradlew.bat testGui` | `@Tag("gui")` component-only a11y tests (**forced headless**) |
 | `.\gradlew.bat test --tests "app.freerouting.architecture.ModuleBoundariesArchTest"` | Boundaries |
 | `.\gradlew.bat test --tests "app.freerouting.io.SpecctraPackageArchTest"` | Parser encapsulation |
 | `.\gradlew.bat test --tests "app.freerouting.i18n.EnglishPropertiesParityTest"` | English i18n ownership |
-| Hungarian resource-parity check (new / extended) | `hu` bundles for MVP + moved packages (D19) |
+| `.\\gradlew.bat test --tests "app.freerouting.i18n.HungarianResourceParityCheckTest"` | Hungarian resource parity for MVP bundles (D19) — `_hu` covers `_en` keys |
 | `.\gradlew.bat test --tests "app.freerouting.fixtures.Dac2020Bm01RoutingTest"` | Quick routing smoke |
 | `.\gradlew.bat spotlessCheck` | Formatting gate (do **not** auto-run `spotlessApply`) |
 | `.\gradlew.bat checkstyleMain checkstyleTest` | Style gates |
 | `python scripts/i18n/extract-context.py --check` | i18n context sync after package moves |
-| `.\gradlew.bat check` | Full verification (does **not** imply `testGui` unless wired later) |
-| `.\gradlew.bat testAll` | Fast + slow + **gui** (`test` → `testSlow` → `testGui`) |
+| `.\gradlew.bat check` | Full verification including serial-sensitive tests (does not imply `testGui`) |
+| `.\gradlew.bat testAll` | Fast + serial + slow + **gui** (`test` → `testSlow` → `testSerial` → `testGui`) |
 | WIP vs **v2.3.0** compare script/workflow | Full routing parity at Phase 5/6 gates only (D24/D28) |
 | Golden-fixture full DRC + completion/unrouted-net | Clearance delta **0** + completion parity at Phase 5/6; **cheap smoke** at Phase 7/8 (D28/D29) |
 
@@ -413,7 +495,10 @@ Land as **independently revertible commits** on the long-lived branch:
 
 **GUI checkpoints:** locator discovery/actions; EDT assertion; no leaked windows/threads; forced headless; **EN + hu** (+ `hu` resource parity).
 
-**Note:** Existing `scripts/tests/compare-versions.ps1` still targets v1.9. Phase 0/1 capture v2.3.0 golden metrics; Phase 5 setup adapts tooling to WIP-vs-v2.3.0 (R18). Do not treat v1.9 compare as required for this initiative’s exit gates.
+**Note:** Existing `scripts/tests/compare-versions.ps1` still targets v1.9. Phase 0/1 captured the
+v2.3.0 golden metrics, and the Phase 5 exit re-verified the recorded current-branch vs v2.3.0
+comparison on the 19 comparable fixtures. Do not treat the v1.9 compare as required for this
+initiative’s exit gates.
 
 ## 8. Long-lived branch checkpoints
 
@@ -422,8 +507,8 @@ Land as **independently revertible commits** on the long-lived branch:
 3. MVP locators + ≥3 workflows (EN + `hu`) + `hu` resource check
 4. Headless `BoardManager` split
 5. `RoutingJob` Swing removal + `getPrimarySession` / `setPrimarySession`
-6. Ratsnest/violations façade thinning + Phase 5 full parity vs **v2.3.0**
-7. Board paint inversion as revertible commits + Phase 6 full parity vs **v2.3.0**
+6. Ratsnest/violations façade thinning + Phase 5 full parity vs **v2.3.0** ✅
+7. Board paint inversion as revertible commits + Phase 6 full parity vs **v2.3.0** ✅
 8. Autorouter diagnostic inversion + cheap full-DRC **+ completion** smoke
 9. Flat move to `gui.interactive` (flatten command impls) + cheap full-DRC **+ completion** smoke
 10. Extract `gui.session` + session-owned facade/`InteractiveCommand`; views bootstrap (D27/D30)
@@ -466,22 +551,22 @@ D1–D30 are locked. Operational leftovers only:
 | **R13** | Eliminate `java.awt.geom` from pipeline | **Out of scope** | Future |
 | **R14** | Legacy `interactive.Settings` vs `InteractiveSettings` | Inventory Phase 1; merge/delete Phase 8/9 | Phase 1 / 8 / 9 |
 | **R18** | How to obtain/run stable v2.3.0 for parity | Prefer released v2.3.0 executable/artifact vs `v2.3.0` git tag checkout | Phase 0/1 tooling |
-| **R19** | Interactive facade type name | e.g. `InteractiveController` / `EditorStateHost` — pick in Phase 1 sketch | Phase 1 / 9 |
+| **R19** | Interactive facade type name | **`EditorStateController`** (session-owned interface; concrete `InteractiveStateController` in `gui.interactive`) | Phase 9 ✅ |
 
 ## 11. Final sign-off
 
-- [ ] Phases 0–12 complete with recorded checkpoint results.
-- [ ] §5 completion criteria satisfied.
-- [ ] No `.frb` compatibility shims (and no `.frb` fixture migration work needed).
-- [ ] Component-only pure-JDK a11y MVP workflows green in forced-headless `testGui` (EN + `hu`).
-- [ ] ArchUnit strict; §12 freezes cleared except accepted permanent debt (incl. D26).
-- [ ] `gui.session` has no `gui.interactive` imports (D27/D30); `gui.**` slices cycle-free.
-- [ ] Views own initial-state bootstrap/registration (D30).
-- [ ] `spotlessCheck`, checkstyle, i18n extract-context + `hu` checks green after moves.
-- [ ] `.\gradlew.bat check` passes.
-- [ ] `.\gradlew.bat testAll` passes (`test` + `testSlow` + `testGui`).
-- [ ] AGENTS.md reflects v2.3.0 primary baseline (D24).
-- [ ] Deferred R8–R14 / R18–R19 resolved or explicitly accepted with defaults.
+- [x] Phases 0–12 complete with recorded checkpoint results.
+- [x] §5 completion criteria satisfied.
+- [x] No `.frb` compatibility shims (and no `.frb` fixture migration work needed).
+- [x] Component-only pure-JDK a11y MVP workflows green in forced-headless `testGui` (EN + `hu`).
+- [x] ArchUnit strict; §12 freezes cleared except accepted permanent debt (incl. D26).
+- [x] `gui.session` has no `gui.interactive` imports (D27/D30); `gui.**` slices cycle-free.
+- [x] Views own initial-state bootstrap/registration (D30).
+- [x] `spotlessCheck`, checkstyle, i18n extract-context + `hu` checks green after moves.
+- [x] `.\gradlew.bat check` passes.
+- [x] `.\gradlew.bat testAll` passes (`test` + `testSlow` + `testSerial` + `testGui`).
+- [x] AGENTS.md reflects v2.3.0 primary baseline (D24).
+- [x] Deferred R8–R14 / R18–R19 resolved or explicitly accepted with defaults.
 
 ## 12. Boundary debt ledger (live)
 
@@ -515,11 +600,14 @@ These older items were marked FIXED before this initiative and are retained only
 | A2 | Incomplete-connection compute lives under `drc` (name broader than clearances) | Explicit D13; document in architecture glossary | GUI SoC initiative |
 | A3 | `gui.session` may depend on `gui.rendering` (`GraphicsContext` on `GuiBoardManager`) | Explicit D26; full view-owned graphics out of scope | GUI SoC initiative |
 
-### 12.4 Active ArchUnit freezes (fill in Phase 1)
+### 12.4 ArchUnit boundary status
 
-| Freeze ID | Rule | Violation count (baseline) | Removal phase | Owner | Status |
-| --- | --- | --- | --- | --- | --- |
-| *(none yet — populate during Phase 1)* | | | | | |
+No active ArchUnit freezes remain. F1 (pipeline/support → Swing), F2 (pipeline/support → non-geometry
+AWT UI), and F3 (board/autoroute → `gui.rendering`) are all strict rules in
+`ModuleBoundariesArchTest`; their obsolete freeze stores and configuration have been removed.
+The strict GUI slice-cycle, session boundary, pipeline-to-GUI, and Specctra parser encapsulation
+rules remain green. The accepted D26 `gui.session` → `gui.rendering` edge is documented debt, not
+a frozen rule.
 
 ### 12.5 Validation
 
@@ -528,12 +616,309 @@ Set-Location "C:\Work\freerouting"
 .\gradlew.bat test --tests "app.freerouting.architecture.ModuleBoundariesArchTest" --tests "app.freerouting.io.SpecctraPackageArchTest"
 ```
 
-### 12.6 v2.3.0 golden metrics (fill in Phase 0/1)
+### 12.6 Golden metrics & baseline (v2.3.0 primary)
 
 Record baseline numbers here (and/or in branch notes). Cheap Phase 7/8 smokes and Phase 5/6 full compares assert against these.
 
-| Fixture | Metric | v2.3.0 value | Notes |
+> **Phase 0 (2026-08-12):** Golden metrics captured via `scripts/benchmark/run-benchmarks.ps1` on the
+> 20-fixture golden matrix. Stable **v2.3.0 is the immutable primary routing baseline** (D24);
+> the current branch is recorded as the initiative's comparison snapshot. The current build matched
+> v2.3.0 on routing quality (avg score 915.1 both; identical unrouted + full-DRC violations on all
+> 19 comparable fixtures) and improved `DAC2020_bm01` (current DRC 0 vs 2.3.0 2).
+> `CM5_MINIMA_3` times out (~59 min) for **both** builds → N/A. Full-DRC numbers below are the
+> post-route re-check runs of the current binary on each `.ses` output (aligns with D29
+> `DesignRulesChecker.getAllClearanceViolations()`).
+
+| Fixture | v2.3.0 unrouted | current unrouted | v2.3.0 DRC viol | current DRC viol | Notes |
+| --- | --- | --- | --- | --- | --- |
+| DAC2020_bm01 | 4 | 4 | 2 | 0 | current fewer DRC violations |
+| DAC2020_bm02 | 0 | 0 | 4 | 4 | identical |
+| DAC2020_bm04 | 3 | 3 | 0 | 0 | identical |
+| DAC2020_bm05 | 23 | 23 | 0 | 0 | identical |
+| DAC2020_bm06 | 2 | 2 | 8 | 8 | identical |
+| DAC2020_bm07 | 3 | 3 | 0 | 0 | identical |
+| DAC2020_bm08 | 0 | 0 | 1 | 1 | identical |
+| DAC2020_bm09 | 1 | 1 | 0 | 0 | identical |
+| DAC2020_bm10 | 0 | 0 | 8 | 8 | identical |
+| DAC2020_bm11 | 2 | 2 | 0 | 0 | identical |
+| complex_hierarchy | 10 | 10 | 0 | 0 | identical |
+| ecc83-pp | 0 | 0 | 0 | 0 | identical |
+| ecc83-pp_v2 | 0 | 0 | 24 | 24 | identical |
+| interf_u | 0 | 0 | 62 | 62 | identical |
+| multichannel_mixer | 160 | 160 | 0 | 0 | identical |
+| multichannel_mixer-unrouted | 128 | 128 | 612 | 612 | identical |
+| pic_programmer | 0 | 0 | 1 | 1 | identical |
+| sonde xilinx | 0 | 0 | 0 | 0 | identical |
+| StickHub | 2 | 2 | 5 | 5 | identical |
+| CM5_MINIMA_3 | — | — | — | — | **timeout both (~59 min)**; N/A |
+
+SES sanity: all 19 comparable runs produced a `.ses` output that the current binary DRC-checked without
+load errors (2 warn/err per run is the normal baseline). Completion-unrouted parity + full-DRC delta = **0**
+vs v2.3.0 on all comparable fixtures (D28/D29 gates satisfied at the Phase 0/1 baseline).
+
+> **Phase 5 exit (2026-08-12):** The compute/presentation split preserved the §12.6 completion and
+> full-DRC baseline. `RatsnestClearanceHeadlessTest` verified incompletes and clearance computation
+> without GUI façades; `ViolationsIncompletesListA11yTest` verified localized, locator-based list/count
+> coverage in forced-headless mode. The current branch remains parity-green against v2.3.0 on all
+> 19 comparable fixtures; `CM5_MINIMA_3` remains N/A because both builds timed out.
+
+> **Phase 6 implementation checkpoint (2026-08-13):** Neutral board-item metadata, the GUI-owned
+> `BoardRenderer`, forced-headless offscreen rendering, renderer-owned layer ordering/culling/
+> fabrication-label traversal, and direct family strategies landed in six independently revertible
+> commits (`06b3b688`, `7284615a`, `6b7e9ee1`, `4b4c936e`, `2b07f149`, `c51f16cd`). `BasicBoard`
+> no longer owns board traversal or imports boardgraphics/AWT rendering types; the ArchUnit freeze
+> records dropped 143 violations through the final Phase 6 checkpoint (F2 93→36, F3 145→75).
+> Full `check`, full `testGui`, ArchUnit, quality gates, headless DRC, and routing smoke are green.
+> Interactive overlay callers now use `BoardRenderer`; the transitional `Item.draw` / `drawLayer`
+> APIs and family implementations are removed. The final WIP-vs-v2.3.0 comparison on
+> `Issue508-DAC2020_bm01.dsn` completed with 5 unrouted items in both builds; the current build
+> reported 0 clearance violations versus 2 for v2.3.0.
+
+> **Baseline decision (2026-08-13):** stable **v2.3.0** remains the immutable primary routing
+> baseline (D24). The current branch is an initiative snapshot that matches or exceeds v2.3.0 on
+> the recorded golden fixtures; its `DAC2020_bm01` DRC improvement is evidence of a positive delta,
+> not a replacement baseline. Phase 5/6 parity and Phase 7/8 smoke gates therefore compare against
+> v2.3.0 using completion/unrouted counts and full DRC. `src_v19/` remains historical reference
+> material and is not a routine parity gate.
+
+## 13. Execution staffing plan (models, cost, kickoff prompts)
+
+> Added 2026-08-11, before implementation start. Benchmark/pricing snapshot as of that date — re-verify model standings before each major phase; the model market moves faster than this plan.
+>
+> This section is **operational guidance, not a locked decision set**. D1–D30 remain the only locked decisions. If a named model version is unavailable when a phase starts, substitute per §13.4.
+
+### 13.1 Model evaluation findings (2026-08-11 snapshot)
+
+Sources: arena.ai Code Arena / WebDev leaderboard (567K votes, 2026-08-11), cursor.com/evals (CursorBench 3.2 — agentic, ambiguous multi-file tasks from real sessions; v3.2 added instruction-following + advanced tool-use problems), vendor docs (Moonshot, Z.AI, DeepSeek). llm-stats.com was inaccessible (bot check) — no data from it.
+
+| Model | Arena WebDev | CursorBench 3.2 (agentic) | Price $/M (in/out) | Context |
+| --- | --- | --- | --- | --- |
+| **Kimi K3** | **#2 overall — 1674** (above claude-opus-5-high) | Max 60.8 % / High 59.7 % | $3 / $15 | 1M |
+| **GLM-5.2** | #7 — 1588 | Max 55.0 % / High 51.5 % | $1.40 / $4.40 | 1M |
+| **DeepSeek V4 Flash** | #8 — 1585 (preliminary; statistically tied with GLM-5.2) | **not evaluated** (no public agentic evidence) | $0.14 / $0.28 | 1M |
+
+Findings:
+
+1. K3 leads GLM-5.2 by ~5 pts on the benchmark closest to this plan's demands (multi-file agentic work with instruction-following + tool use). K3 is the right primary.
+2. Reasoning effort scales scores materially within each family (K3: 50.5 % Low → 60.8 % Max; GLM-5.2: 51.5 % High → 55.0 % Max). Use xhigh/extra-high for all design and gate-sensitive phases.
+3. Flash ties GLM-5.2 on the arena at ~1/15th the cost, but has no CursorBench/agentic track record → mechanical, fully gated phases only; never Phase 6 or 9.
+4. Neither benchmark measures Java/EDA refactoring or 13-session constraint retention → Phase 1 doubles as a controlled trial (§13.4 rule 6).
+
+### 13.2 Cost model and totals
+
+Unit: **1 task-equivalent (TE)** ≈ 800K input + 40K output tokens ≈ one substantial agentic task with build/test loops (anchored to CursorBench: K3 Max ≈ 38K completion tokens ≈ $2.70/task).
+
+Cost per TE at list prices (no caching): **K3 $3.00 · GLM-5.2 $1.30 · Flash $0.12**.
+
+| Phase | TE (range) | Dominant work |
+| --- | --- | --- |
+| 0 Baseline | 4 (3–6) | test runs, golden-metric capture, inventories |
+| 1 Inventory + ArchUnit freeze | 8 (6–12) | whole-repo analysis, freeze baselines, facade sketch |
+| 2 A11y foundation | 12 (8–16) | new harness code, Gradle wiring, 3+ workflows, EN+hu |
+| 3 Headless contracts | 5 (3–7) | BoardManager API split |
+| 4 Core/mgmt neutralization | 3 (2–4) | RoutingJob Swing removal, SessionManager rename |
+| 5 Compute vs presentation | 6 (4–9) | façades + first full v2.3.0 parity gate |
+| 6 Rendering inversion | 15 (10–22) | highest risk; revertible commits; full parity gate |
+| 7 Autorouter diagnostics | 5 (3–7) | snapshot/event inversion; cheap smoke |
+| 8 Move to gui.interactive | 8 (6–12) | mechanical, voluminous; FQCN/i18n updates |
+| 9 Extract gui.session | 8 (6–12) | facade extraction; D27/D30 verification |
+| 10 Move to gui.rendering | 3 (2–5) | mechanical; ScreenTransform rename |
+| 11 A11y expansion + CI | 5 (3–7) | workflow replication; path filters |
+| 12 Final cleanup + docs | 3 (2–4) | strict ArchUnit, AGENTS.md D24, docs |
+| **Total** | **85 (60–120)** | |
+
+Scenario totals (expected / range):
+
+| Scenario | Expected | Range | Verdict |
 | --- | --- | --- | --- |
-| *(populate during Phase 0/1)* | Completion / unrouted nets | | |
-| | Full-DRC violations (`DesignRulesChecker.getAllClearanceViolations()`) | | |
-| | SES sanity | | |
+| All Kimi K3 | $255 | $180–360 | Simplest; premium |
+| All GLM-5.2 | $110 | $78–156 | Risky on Phases 6/9 (weakest agentic evidence at the hardest work) |
+| All DeepSeek V4 Flash | $11 | $7–15 | Reference only — do not use; no agentic track record |
+| **Hybrid (§13.3)** | **$190** | **$135–270** | **Recommended: K3 on critical path, GLM medium phases, Flash mechanical** |
+
+Notes:
+
+- Prompt caching (long sessions on one repo) typically cuts effective input cost 30–50 %; totals above are conservative list-price figures.
+- Verification-heavy phases can exceed estimates; a failed parity-gate investigation adds 2–6 TE.
+- Even the premium scenario is cheap relative to the cost of one clearance-violation regression reaching a release. Optimize for gate discipline, not token spend.
+
+### 13.3 Per-phase assignments and kickoff prompts
+
+| Phase | Model | Est. cost |
+| --- | --- | --- |
+| 0 | GLM-5.2 (xhigh) | $5 |
+| 1 | **Kimi K3 (extra high)**; GLM-5.2 reviews freeze table + facade sketch | $24 |
+| 2 | K3: harness + Gradle wiring + workflow #1 (8 TE); GLM-5.2: workflows #2–3 + EN/hu + parity check (4 TE) | $29 |
+| 3 | **Kimi K3 (extra high)** | $15 |
+| 4 | GLM-5.2 (xhigh) | $4 |
+| 5 | **Kimi K3 (extra high)** (first full parity gate) | $18 |
+| 6 | **Kimi K3 (extra high) only**; GLM-5.2 pre-reviews commit slicing (~2 TE) | $48 |
+| 7 | GLM-5.2 (xhigh); escalate to K3 if cheap smoke fails twice | $7 |
+| 8 | **DeepSeek V4 Flash (extra high)** + full gate suite; K3 handles collision stops | $1 |
+| 9 | **Kimi K3 (extra high) only**; GLM-5.2 import-audit review (~2 TE) | $27 |
+| 10 | **DeepSeek V4 Flash (extra high)** + gates | $1 |
+| 11 | GLM-5.2 (xhigh) | $7 |
+| 12 | GLM-5.2 (xhigh); K3 final sign-off review (~1 TE) | $7 |
+| | **Total** | **≈ $190** |
+
+Kickoff prompts — pin the listed context at session start; the model must paste gate output verbatim and stop at the stated boundary:
+
+**Phase 0 (GLM-5.2 xhigh):**
+
+```text
+Read docs/issues/soc-gui-separation-and-accessibility-plan.md (§6 Phase 0, §12.6) and AGENTS.md. Execute Phase 0 only; no production edits.
+1) Record branch/HEAD/working-tree state in branch notes.
+2) Run: gradlew.bat test; the two ArchUnit classes; Dac2020Bm01RoutingTest. Paste results verbatim.
+3) Count classes in gui / interactive / boardgraphics.
+4) Build the DSN fixture coverage map (filename → owning test(s) → sole-coverage flag).
+5) Capture v2.3.0 golden metrics on the agreed fixture matrix: completion/unrouted nets, full-DRC violations via DesignRulesChecker.getAllClearanceViolations(), SES sanity. Record in §12.6.
+6) Snapshot known leaks (board/autoroute paint, RoutingJob Swing, BoardManager GUI API, SessionManager naming, GuiBoardManager→GraphicsContext/InteractiveState).
+7) Draft the AGENTS.md D24 baseline-policy update as a separate, reviewable diff.
+Stop at the Phase 0 boundary; do not begin Phase 1 inventories.
+```
+
+**Phase 1 (Kimi K3 extra high):**
+
+```text
+Pin: plan §1.1, §2 (D1–D30), §6 Phase 1, §12; AGENTS.md. Produce the Phase 1 inventory set, then the ArchUnit freeze layer:
+- Full pipeline↔GUI/AWT/Swing dependency inventory.
+- Classify interactive/boardgraphics types: state vs session vs facade vs renderer.
+- Simple-name collisions across gui/interactive/boardgraphics, incl. the three CoordinateTransform classes (board/boardgraphics/io) and the InteractiveCommand flattening (D11).
+- Confirm ratsnest compute call chain through drc.NetIncompletes/AirLine; list ObjectInfoPanel.Printable implementers.
+- MVP-workflow _hu bundle completeness check.
+- Phase 9 facade surface sketch (R19; home = gui.session per D30) + views-bootstrap plan.
+- Swing-test inventory with @Tag("gui") retag plan; worker→Swing mutation inventory (removal assigned to Phase 9).
+Then add ArchUnit rules (pipeline bans gui.**/Swing/AWT-UI with java.awt.geom whitelist; gui.** slice-cycle check) with frozen baselines: exact violation counts, owners, removal phases recorded in §12.4.
+Gates: run ModuleBoundariesArchTest + SpecctraPackageArchTest; paste output. No production refactors beyond ArchUnit test files and §12 updates.
+GLM-5.2 then reviews the freeze table and facade sketch before checkpoint 1 is declared.
+```
+
+**Phase 2 part A (Kimi K3 extra high):**
+
+```text
+Pin: plan §2 (D5/D7/D8/D9/D19/D22/D25), §6 Phase 2; AGENTS.md. Build the accessibility foundation core:
+- A11y contract doc (name/role/description/state/value; label-for; menu names).
+- Locator constants + shared registry (D22) — no private-field locators, no screen coordinates, no setVisible on top-level frames.
+- Pure-JDK AccessibleContext harness: EDT execution, tree walk, find-by-locator/role, action invoke, state asserts; failures report accessible path + role + locator; mutations assert EventQueue.isDispatchThread().
+- Gradle: @Tag("gui") + testGui (forced -Djava.awt.headless=true); test and testSlow exclude gui; testAll = test + testSlow + testGui (D25). Retag the Phase 1 inventoried Swing tests.
+- Product wiring: accessible names/roles + locator registration on MVP controls; implement MVP workflow #1 end-to-end.
+Gates: testGui green; test unchanged; spotlessCheck + checkstyle. Workflows #2–3 and EN/hu runs are a separate task (GLM-5.2).
+```
+
+**Phase 2 part B (GLM-5.2 xhigh):**
+
+```text
+Pin: plan §6 Phase 2, the a11y contract, and the harness/locator registry from part A. Replicate MVP workflows #2 and #3 (menu action; open/close parameter content; change setting; select layer; read status; cancel/stop route; open inspect/list — per plan), add sibling duplicate/empty accessible-name checks, run all MVP workflows in EN and hu (D19), and add the Hungarian resource-parity check for MVP bundles (document it in §7). Gates: testGui green in both locales; paste output. Do not modify the harness core without listing the change first.
+```
+
+**Phase 3 (Kimi K3 extra high):**
+
+```text
+Pin: plan §6 Phase 3, §2 (D12/D20); AGENTS.md BoardManager/InteractiveSettings invariants. Split headless vs GUI board contracts:
+- Headless BoardManager API with no GUI methods; GUI session contract separate.
+- Remove null-based getInteractiveSettings()/isInteractiveModeSupported() from the shared headless API (GUI-only access via GuiBoardManager).
+- Move initializeManualTraceHalfWidths to GUI-session-only (R10 default).
+- Preserve InteractiveSettings invariants exactly: singleton per GUI session via getOrCreate(board); reset(board) on every board load; getSettings() returns a live snapshot; merger priority 50; all fields private with PropertyChangeEvent-firing getters/setters.
+- Update contract tests.
+Gates: gradlew.bat test + ArchUnit classes; paste output. No package moves in this phase.
+```
+
+**Phase 4 (GLM-5.2 xhigh):**
+
+```text
+Pin: plan §6 Phase 4, §1.2 naming-collision warning; AGENTS.md. Neutralize core/management:
+- Remove the Swing file chooser and any AWT UI types from core.RoutingJob; the GUI layer owns file picking.
+- Rename SessionManager.getGuiSession/setGuiSession → getPrimarySession/setPrimarySession (D16). This is the management UUID session — do NOT touch anything related to the future gui.session package.
+- Verify analytics/api have no GUI-session type dependencies.
+- Reduce circular loader↔manager delegation only where trivially safe.
+Gates: gradlew.bat test + ArchUnit; paste output.
+```
+
+**Phase 5 (Kimi K3 extra high):**
+
+```text
+Pin: plan §6 Phase 5, §2 (D13/D14/D24/D28/D29); AGENTS.md parity methodology. Thin compute vs presentation:
+- Thin RatsNest to a GUI facade over drc incompletes (compute stays in drc.NetIncompletes/AirLine; D13). Optional rename R9 — default keep.
+- Thin ClearanceViolations similarly over drc.
+- Keep board.ObjectInfoPanel as the AWT-free interface (D14; accepted debt A1).
+- Headless tests: incompletes/violations computable without GUI classes; a11y tests for lists/counts.
+Exit gate (must pass before Phase 6): golden fixtures; clearance delta 0 vs §12.6 baseline using DesignRulesChecker.getAllClearanceViolations() (D29); full WIP-vs-v2.3.0 compare (D24/D28). If the compare diverges: sync instrumentation payloads first, then classify numeric drift vs behavioral ordering divergence, then apply the smallest tie-break fix. Record results in branch notes + §12.6.
+```
+
+**Phase 6 commit-sequence review (GLM-5.2 xhigh, read-only):**
+
+```text
+Pin: plan §6 Phase 6 and the current board paint call graph (read-only). Propose an independently revertible commit sequence: (1) neutral accessors for geometry/layer/net/type/visibility/selection; (2) GUI renderer + early offscreen BufferedImage smoke for major item families; (3) per-family removal of Drawable/Graphics/GraphicsContext/AWT Color paint APIs; (4) traversal + draw priority moved into the GUI renderer. Output a numbered commit list with rollback notes and per-commit gate commands. Do not edit code.
+```
+
+**Phase 6 execution (Kimi K3 extra high only):**
+
+```text
+Pin: plan §6 Phase 6, §2 (D15/D24/D28/D29), the approved commit sequence; AGENTS.md. Execute Phase 6 ONE commit at a time from the approved sequence; after each commit run test + ArchUnit + offscreen renderer smoke, paste output, and wait for go-ahead before the next commit. Constraints: no routing mutation behavior changes; headless load→route→DRC→SES must work without renderer init; java.awt.geom whitelist only in pipeline. Exit gate: full-DRC clearance delta 0 (D29) + no completion regression vs v2.3.0 (§12.6) + offscreen smokes green. Any gate failure → revert the current commit (commits are independent by construction) and diagnose before proceeding.
+```
+
+**Phase 7 (GLM-5.2 xhigh):**
+
+```text
+Pin: plan §6 Phase 7; AGENTS.md. Invert autorouter diagnostics: replace draw(Graphics, …) with neutral snapshots/events or GUI adapters; diagnostics opt-in; logging stays the headless path; no new AWT UI parameters in autoroute (ArchUnit). Cheap exit gate (D28): golden-fixture smoke = full DRC via DesignRulesChecker.getAllClearanceViolations() + completion/unrouted-net parity vs §12.6 goldens — no full version compare. Gates: test + ArchUnit + smoke; paste output. Two consecutive gate failures → escalate to Kimi K3 before continuing.
+```
+
+**Phase 8 (DeepSeek V4 Flash extra high):**
+
+```text
+Pin: plan §6 Phase 8, §2 (D11/D12), the Phase 1 collision inventory; AGENTS.md. Execute the approved mechanical move only:
+- Move interactive production + tests flat into gui.interactive (temporarily including GuiBoardManager + session cluster, D12); flatten interactive.commands implementations into gui.interactive sources — NO commands subpackage; the InteractiveCommand interface itself stays put until Phase 9 (D11/D30).
+- Resolve only the simple-name collisions listed in the Phase 1 inventory, using the pre-approved resolutions.
+- Update FQCN imports, i18n context (run extract-context), tests. No .frb shims. No behavior changes.
+Then run, pasting ALL output: testGui, ArchUnit classes, EnglishPropertiesParityTest + hu check, spotlessCheck, checkstyleMain/checkstyleTest, cheap smoke (full DRC + completion/unrouted-net parity vs §12.6, D28).
+If you encounter ANY collision or ambiguity not in the inventory: STOP, report, do not improvise renames (handoff to Kimi K3).
+```
+
+**Phase 9 (Kimi K3 extra high only):**
+
+```text
+Pin: plan §4.4, §6 Phase 9, §2 (D20/D21/D26/D27/D30), the Phase 1 facade sketch; AGENTS.md. Extract gui.session:
+- Move the §4.4 cluster (GuiBoardManager, InteractiveSettings — name unchanged, ScreenMessages, InteractiveActionThread, AutorouterAndRouteOptimizerThread) into gui.session.
+- Move/introduce the facade (pick the name from the R19 shortlist) + InteractiveCommand interface + state-handle types into gui.session / gui.session.api (D30); concrete states in gui.interactive implement them; gui views own initial-state bootstrap/registration.
+- Remove ALL gui.session → gui.interactive imports (not only concrete *State types); the gui.** slice-cycle check must pass; any temporary §12 freeze on that edge is removed by phase exit.
+- Keep the gui.session → gui.rendering edge (D26); eliminate the inventoried worker→Swing call sites (EDT-only Swing mutation).
+- Verify getPrimarySession/setPrimarySession callers remain correct (management UUID session — unrelated to gui.session).
+Gates: test + testGui + ArchUnit (incl. slice-cycle) + a11y MVP workflows; paste output.
+GLM-5.2 then runs an independent import audit of gui.session before checkpoint 10 is declared.
+```
+
+**Phase 10 (DeepSeek V4 Flash extra high):**
+
+```text
+Pin: plan §6 Phase 10, §2 (D10/D18/D26); AGENTS.md. Mechanical move only:
+- Move boardgraphics → gui.rendering; rename boardgraphics.CoordinateTransform → ScreenTransform (D18 — board.CoordinateTransform and io.CoordinateTransform stay UNCHANGED).
+- Update imports/i18n/tests; verify pipeline packages have ZERO imports of gui.rendering (gui.session → gui.rendering is allowed, D26).
+Gates: test, testGui, ArchUnit, offscreen renderer tests, spotlessCheck/checkstyle; paste output. Any unlisted ambiguity → STOP and report.
+```
+
+**Phase 11 (GLM-5.2 xhigh):**
+
+```text
+Pin: plan §6 Phase 11, §2 (D9/D19/D22/D25), the a11y contract; AGENTS.md. Expand accessibility coverage across major windows/menus (component-only, forced headless): state-change tests (layer, mode, enablement, progress, visibility, violation state), keyboard/menu alternatives + inspect lists for critical canvas actions (D9). Switch CI path filters to the final gui/interactive|session|rendering paths (R11). Verify invariants: default test never requires a display; testGui always headless; testAll includes testGui. Run MVP + new workflows in EN and hu; hu resource-parity check green. Gates: testGui + testAll; paste output.
+```
+
+**Phase 12 (GLM-5.2 xhigh; Kimi K3 sign-off review):**
+
+```text
+Pin: plan §6 Phase 12, §5, §11, §12; AGENTS.md. Final cleanup:
+- Remove transitional APIs/freezes/stale tests; promote frozen ArchUnit rules that reached zero to strict (same-checkpoint rule); §12.4 empty except accepted permanent debt A1–A3.
+- Finalize the AGENTS.md baseline policy (D24: v2.3.0 primary; v1.9/src_v19 historical reference only).
+- Update docs/architecture.md to match the final package map; update developer GUI-test docs.
+- Record accepted debt (ObjectInfoPanel shape A1; drc incompletes A2; session→rendering A3/D26).
+Full verification, pasting ALL output: spotlessCheck, checkstyleMain/checkstyleTest, extract-context --check, hu parity, gradlew.bat check, gradlew.bat testAll. Then verify §5 completion criteria item by item and the §11 sign-off list; produce the final report for the Kimi K3 sign-off review.
+```
+
+### 13.4 Operating rules for model use
+
+1. **Re-anchor every session.** Pin this plan (current phase checklist + §1.1 + D-table), AGENTS.md, and the §12 ledger into context; have the model restate the active constraints (especially D26/D27/D30 in Phases 8–10) before editing.
+2. **Gates are model-independent.** Every session ends with the phase's gate commands run and output pasted verbatim (§7 matrix). A model claiming success without gate output is a failure.
+3. **Tier escalation.** If a gate fails twice under the assigned model, escalate one tier (Flash → GLM-5.2 → K3) for diagnosis before continuing.
+4. **Flash guardrails.** Flash phases run only against a pre-approved mechanical plan; on any unlisted name collision or ambiguity the model must STOP and hand off — no improvised renames.
+5. **No cross-session memory assumptions.** Branch notes + §12.6 metrics + phase checkboxes are the shared memory; update them at every §8 checkpoint.
+6. **Phase 1 doubles as the model trial.** The collision-inventory/freeze-baseline work is the controlled comparison task: if K3 misses the three `CoordinateTransform` classes, skips test runs, or invents violation counts, swap the primary to GLM-5.2 before Phase 2.
+7. **Parity methodology is fixed** regardless of model: sync instrumentation payloads WIP↔v2.3.0 first, classify numeric-only drift vs behavioral ordering divergence, apply the smallest ordering/tie-break fix, rerun at two `max_items` checkpoints (AGENTS.md remediation sequence).

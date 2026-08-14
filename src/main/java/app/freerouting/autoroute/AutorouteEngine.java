@@ -6,7 +6,6 @@ import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
 import app.freerouting.board.ShapeSearchTree45Degree;
 import app.freerouting.board.ShapeSearchTree90Degree;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.IntBox;
@@ -14,7 +13,6 @@ import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -121,9 +119,6 @@ public class AutorouteEngine {
       AutorouteControl ctrl,
       SortedSet<Item> rippedItemList,
       Map<Item, Integer> ripupCosts) {
-    String sourceItems = String.join(", ", startSet.stream().map(Item::toString).toList());
-    String targetItems = String.join(", ", destSet.stream().map(Item::toString).toList());
-
     MazeSearchAlgo mazeSearchAlgo;
     try {
       mazeSearchAlgo = MazeSearchAlgo.getInstance(startSet, destSet, this, ctrl);
@@ -137,9 +132,7 @@ public class AutorouteEngine {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
-              + sourceItems
-              + " and "
-              + targetItems
+              + describeConnection(startSet, destSet)
               + ", because the maze search algorithm could not be created.");
     }
 
@@ -201,16 +194,14 @@ public class AutorouteEngine {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
-              + sourceItems
-              + " and "
-              + targetItems
+              + describeConnection(startSet, destSet)
               + ", because no connection was found between their nets.");
     }
 
     if (autorouteResult == null) {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
-          "Failed to route connection between " + sourceItems + " and " + targetItems + ".");
+          "Failed to route connection between " + describeConnection(startSet, destSet) + ".");
     }
 
     if (!ctrl.layerActive[autorouteResult.startLayer]
@@ -218,9 +209,7 @@ public class AutorouteEngine {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
-              + sourceItems
-              + " and "
-              + targetItems
+              + describeConnection(startSet, destSet)
               + ", because some of their layers are disabled.");
     }
 
@@ -228,7 +217,7 @@ public class AutorouteEngine {
       FRLogger.debug("AutorouteEngine.autoroute_connection: result_items != null expected");
       return new AutorouteAttemptResult(
           AutorouteAttemptState.SKIPPED,
-          "No new connections were made between " + sourceItems + " and " + targetItems + ".");
+          "No new connections were made between " + describeConnection(startSet, destSet) + ".");
     }
 
     // Delete the ripped connections.
@@ -269,13 +258,17 @@ public class AutorouteEngine {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
-              + sourceItems
-              + " and "
-              + targetItems
+              + describeConnection(startSet, destSet)
               + ", because the new connection could not be inserted.");
     }
 
     return new AutorouteAttemptResult(AutorouteAttemptState.ROUTED);
+  }
+
+  private static String describeConnection(Set<Item> startSet, Set<Item> destSet) {
+    return String.join(", ", startSet.stream().map(Item::toString).toList())
+        + " and "
+        + String.join(", ", destSet.stream().map(Item::toString).toList());
   }
 
   /** Returns the net number of the current connection to route. */
@@ -309,19 +302,19 @@ public class AutorouteEngine {
     board.clearAllItemTemporaryAutorouteData();
   }
 
-  /** Draws the shapes of the expansion rooms created so far. */
-  public void draw(Graphics graphics, GraphicsContext graphicsContext, double intensity) {
-    if (completeExpansionRooms == null) {
+  /** Emits optional diagnostics for the expansion rooms created so far. */
+  public void emitDiagnostics(AutorouteDiagnostic.Sink sink, double intensity) {
+    if (sink == null || intensity <= 0 || completeExpansionRooms == null) {
       return;
     }
     for (CompleteFreeSpaceExpansionRoom currRoom : completeExpansionRooms) {
-      currRoom.draw(graphics, graphicsContext, intensity);
+      currRoom.emitDiagnostic(sink, intensity);
     }
     Collection<Item> itemList = this.board.getItems();
     for (Item currItem : itemList) {
       ItemAutorouteInfo autorouteInfo = currItem.getAutorouteInfo();
       if (autorouteInfo != null) {
-        autorouteInfo.draw(graphics, graphicsContext, intensity);
+        autorouteInfo.emitDiagnostics(sink, intensity);
       }
     }
   }

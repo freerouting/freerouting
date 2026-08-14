@@ -1,7 +1,5 @@
 package app.freerouting.board;
 
-import app.freerouting.boardgraphics.Drawable;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -11,8 +9,6 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -21,9 +17,6 @@ import java.util.Locale;
 
 /** An item on the board with a relativeArea shape, for example keepout, conduction relativeArea. */
 public class ObstacleArea extends Item implements Serializable {
-
-  /** For debugging the division into tree shapes. */
-  private static final boolean display_tree_shapes = false;
 
   /**
    * The name of this ObstacleArea, which is null, if the ObstacleArea does not belong to a
@@ -261,38 +254,6 @@ public class ObstacleArea extends Item implements Serializable {
       return false;
     }
     return filter.isSelected(ItemSelectionFilter.SelectableChoices.KEEPOUT);
-  }
-
-  @Override
-  public Color[] getDrawColors(GraphicsContext graphicsContext) {
-    return graphicsContext.getObstacleColors();
-  }
-
-  @Override
-  public double getDrawIntensity(GraphicsContext graphicsContext) {
-    return graphicsContext.getObstacleColorIntensity();
-  }
-
-  @Override
-  public int getDrawPriority() {
-    return Drawable.MIN_DRAW_PRIORITY;
-  }
-
-  @Override
-  public void draw(
-      Graphics g, GraphicsContext graphicsContext, Color[] colorArr, double intensity) {
-    if (graphicsContext == null || intensity <= 0) {
-      return;
-    }
-    Color color = colorArr[this.layer];
-    double drawIntensity = graphicsContext.getLayerVisibility(this.layer) * intensity;
-    graphicsContext.fillArea(this.getArea(), g, color, drawIntensity);
-    if (drawIntensity > 0 && display_tree_shapes) {
-      ShapeSearchTree defaultTree = this.board.searchTreeManager.getDefaultTree();
-      for (int i = 0; i < this.treeShapeCount(defaultTree); i++) {
-        graphicsContext.drawBoundary(this.getTreeShape(defaultTree, i), 1, Color.white, g, 1);
-      }
-    }
   }
 
   @Override

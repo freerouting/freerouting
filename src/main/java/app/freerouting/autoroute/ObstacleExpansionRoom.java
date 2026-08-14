@@ -4,10 +4,7 @@ import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.TileShape;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -149,12 +146,13 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
     this.doorsCalculated = value;
   }
 
-  /** Draws the shape of this room. */
+  /** Emits the shape of this room for an optional diagnostic consumer. */
   @Override
-  public void draw(Graphics graphics, GraphicsContext graphicsContext, double intensity) {
-    Color drawColor = Color.WHITE;
-    double layerVisibility = graphicsContext.getLayerVisibility(this.getLayer());
-    graphicsContext.fillArea(this.getShape(), graphics, drawColor, intensity * layerVisibility);
-    graphicsContext.drawBoundary(this.getShape(), 0, drawColor, graphics, layerVisibility);
+  public void emitDiagnostic(AutorouteDiagnostic.Sink sink, double intensity) {
+    if (sink != null && intensity > 0) {
+      sink.accept(
+          new AutorouteDiagnostic(
+              AutorouteDiagnostic.Kind.OBSTACLE_ROOM, this.getShape(), this.getLayer(), intensity));
+    }
   }
 }

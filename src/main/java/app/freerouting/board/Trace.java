@@ -1,7 +1,5 @@
 package app.freerouting.board;
 
-import app.freerouting.boardgraphics.Drawable;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.Point;
@@ -10,7 +8,6 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
 import app.freerouting.util.TextManager;
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -209,21 +206,6 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     }
     contactList = this.getEndContacts();
     return contactList.isEmpty();
-  }
-
-  @Override
-  public Color[] getDrawColors(GraphicsContext graphicsContext) {
-    return graphicsContext.getTraceColors(this.isUserFixed());
-  }
-
-  @Override
-  public int getDrawPriority() {
-    return Drawable.MAX_DRAW_PRIORITY;
-  }
-
-  @Override
-  public double getDrawIntensity(GraphicsContext graphicsContext) {
-    return graphicsContext.getTraceColorIntensity();
   }
 
   @Override

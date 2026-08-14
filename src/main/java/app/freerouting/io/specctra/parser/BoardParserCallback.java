@@ -36,12 +36,6 @@ interface BoardParserCallback {
       Communication boardCommunication);
 
   /**
-   * Called after board creation to populate per-layer manual trace widths from the default net
-   * class. Implementations that have no interactive settings may provide a no-op body.
-   */
-  void initializeManualTraceHalfWidths();
-
-  /**
    * Returns the active {@link RoutingJob} associated with this parse context, or {@code null} when
    * operating in isolation (e.g. pure DSN-reader mode without a routing job).
    */

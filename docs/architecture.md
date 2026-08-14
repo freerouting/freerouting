@@ -19,7 +19,8 @@ flowchart TD
 
     subgraph interfaces ["User Interfaces"]
         direction LR
-        GUI["**gui + interactive**\nSwing desktop"]
+        GUI["**gui + gui.session + gui.interactive**\nSwing desktop"]
+        RENDER["**gui.rendering**\nGUI-owned board renderer"]
         API["**api.v1**\nREST / HTTP"]
         MCP["**api.mcp + api.v1.McpControllerV1**\nMCP JSON-RPC + SSE + WS"]
     end
@@ -49,6 +50,8 @@ flowchart TD
     GEO -. foundation .-> RULES
 
     GUI --> MGMT
+    GUI --> RENDER --> BOARD
+    RENDER --> AR
     API --> MGMT
     MCP --> API
     MGMT <--> CORE
@@ -67,7 +70,7 @@ flowchart TD
 | `docs/` | User documentation, developer notes, issue analyses, and design references. |
 | `integrations/` | Packaging and integration assets for external PCB tool workflows. |
 | `scripts/` | Automation, benchmarking, and comparison scripts. |
-| `src_v19/` | The v1.9 reference tree, used for behavior comparison and parity checks. |
+| `src_v19/` | The v1.9 historical reference tree, used for optional algorithm archaeology; it is not the routine parity baseline. |
 
 ## Navigation Guide
 
@@ -80,7 +83,7 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Routing decisions, fanout, maze search, or optimization | `app.freerouting.autoroute` |
 | Nets, vias, clearance classes, or board rules | `app.freerouting.rules` |
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
-| GUI windows, panels, menus, or drawing | `app.freerouting.gui` and `app.freerouting.interactive` |
+| GUI windows, panels, menus, editor state, or drawing | `app.freerouting.gui`, `app.freerouting.gui.session`, `app.freerouting.gui.interactive`, and `app.freerouting.gui.rendering` |
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
 | MCP server protocol bridge | `app.freerouting.api.mcp` and `app.freerouting.api.v1.McpControllerV1` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
@@ -92,13 +95,28 @@ Architectural boundaries are codified in `src/test/java/app/freerouting/architec
 
 - **Strict boundaries (must pass):**
   - Core routing/model packages (`autoroute`, `board`, `rules`, `drc`, `geometry`) must not depend on GUI/editor or API packages.
-  - API/management packages must not depend on `gui` or `boardgraphics`.
+  - API/management packages must not depend on `gui` or `gui.rendering`.
   - Headless paths (`api`, `management`, `core`) must not depend on `GuiBoardManager` or `InteractiveState`.
-- **Frozen boundaries (current debt, no further drift):**
-  - `interactive` state-machine classes should not be used outside `gui` + `interactive`.
-  - `io.specctra.parser` internals should not be depended on outside `io.specctra` public I/O entry points.
+- **Strict boundaries (continued):**
+  - `gui.interactive` concrete state classes should not be used outside the GUI layer.
+  - `gui.session` owns the opaque editor-state handles, events, commands, manager, settings, messages,
+    and action threads; it must not depend on `gui.interactive`.
+  - `board` and `autoroute` must not depend on `gui.rendering`; rendering is GUI-owned.
+  - Pipeline/support packages must not depend on Swing or non-geometry AWT UI types.
+  - `io.specctra.parser` internals must not be depended on outside `io.specctra` public I/O entry points.
 
-Frozen boundaries use ArchUnit's `FreezingArchRule` with baselines stored in `src/test/resources/archunit_store/`.
+The only intentional GUI boundary exception is the documented D26 `gui.session` →
+`gui.rendering` dependency used by `GuiBoardManager` for its graphics context state. These
+boundaries are strict ArchUnit rules; no frozen violation store is required.
+
+## Accepted architectural debt
+
+- `board.ObjectInfoPanel` remains a presentation-shaped writer API; converting it to DTOs is
+  outside this initiative.
+- Incomplete-connection computation remains under `drc`; the package name is broader than
+  clearance checking by design.
+- `gui.session` may depend on `gui.rendering` for the `GuiBoardManager` graphics context (D26);
+  moving that state fully into views is outside this initiative.
 
 ## Package Glossary
 
@@ -132,11 +150,24 @@ Planar geometry primitives and helper classes used throughout routing and board 
 
 ### `app.freerouting.gui`
 
-The Swing user interface: frames, dialogs, menus, panels, and rendering support.
+The Swing user interface: frames, dialogs, menus, panels, and rendering support. Accessibility
+coverage uses the frame-free component seams in `BoardMenuBar`, `BoardToolbar`, and
+`WindowVisibility`; these keep menu, toolbar, and settings workflows testable under forced
+headless mode without creating top-level windows.
 
-### `app.freerouting.interactive`
+### `app.freerouting.gui.interactive`
 
-The GUI-specific interactive editor state machine and GUI session state. This package bridges visual user actions and screen edits to board mutations.
+Concrete GUI editor states and their controller implementation. States implement the session-owned
+opaque handle/command contracts; views register the controller and bootstrap the initial route-menu
+state.
+
+### `app.freerouting.gui.session`
+
+The GUI board session boundary: `GuiBoardManager`, `GuiSessionContract`, `InteractiveSettings`,
+`ScreenMessages`, action threads, ratsnest/violation presentation façades, opaque
+`EditorStateHandle`/`EditorStateKind`, `EditorEvent`, and `InteractiveCommand`. This package owns no
+concrete editor state and has no dependency on `gui.interactive`; GUI views perform initial-state
+registration.
 
 ### `app.freerouting.api`
 
@@ -166,9 +197,12 @@ Logging helpers and the `FRLogger` entry point.
 
 Diagnostics and debugging utilities.
 
-### `app.freerouting.boardgraphics`
+### `app.freerouting.gui.rendering`
 
-Low-level board rendering helpers used by the GUI.
+GUI-owned board rendering: layer/virtual-layer ordering, viewport culling, draw-priority traversal,
+component fabrication labels, dispatch to board-item paint strategies, and adaptation of opt-in
+headless autorouter diagnostic snapshots. `BoardRenderer` and `AutorouteDiagnosticRenderer` are the
+GUI rendering entry points; `BasicBoard` and `autoroute` remain headless and do not own GUI painting.
 
 ### Notable Nested Packages
 
@@ -256,12 +290,20 @@ The optimizer changes the board more conservatively than the autorouter. Its job
 
 ### GUI and Interaction Path
 
-The interactive editor is split between `gui` and `interactive`.
+The interactive editor is split between `gui`, `gui.session`, and `gui.interactive`.
 
 - `gui` contains the visible application components.
-- `interactive` contains the state machine and board-handling logic behind those components.
+- `gui.session` contains the opaque session facade and board-session services.
+- `gui.interactive` contains the concrete state machine and its inverted controller.
+- Views construct the controller and bootstrap `RouteMenuState`; session code never names a concrete state.
 
 When diagnosing user interaction, rendering, or editor state, begin here.
+
+The GUI rendering path is intentionally one-way: `GuiBoardManager` invokes `gui.rendering.BoardRenderer`,
+which reads the headless board model and paints the current view. The opt-in expansion-test view
+passes headless `AutorouteDiagnostic` snapshots to `AutorouteDiagnosticRenderer`; normal autorouting
+does not collect snapshots. Board traversal and presentation ordering do not belong in `BasicBoard`,
+and autoroute does not import AWT or `gui.rendering`.
 
 ### API and Headless Path
 
@@ -287,7 +329,10 @@ Tests follow the production layout where practical.
 
 - `src/test/java/app/freerouting/fixtures/` contains real-board regression tests that load DSN fixtures from `fixtures/`.
 - `src/test/java/app/freerouting/board/` contains focused tests for board helpers and board-item behavior.
-- Package-specific test directories such as `src/test/java/app/freerouting/interactive/` contain unit tests for that package.
+- Package-specific test directories such as `src/test/java/app/freerouting/gui/interactive/` contain unit tests for that package.
+- Component-only accessibility tests are tagged `@Tag("gui")` and run through `testGui`; the
+  path-filtered `.github/workflows/gui-a11y.yml` invokes that task when GUI production, tests,
+  resources, or GUI-test configuration changes.
 
 For routing regressions, fixture tests are usually the most informative starting point because they exercise file loading, routing, and scoring together.
 
@@ -330,7 +375,7 @@ To maintain clarity and consistency across the codebase, user interfaces, logs, 
 ## Practical Rules Of Thumb
 
 - Routing behavior usually starts in `board`, `autoroute`, `rules`, and `drc`.
-- User interaction usually starts in `gui` and `interactive`.
+- User interaction usually starts in `gui` and `gui.interactive`.
 - Server and job execution usually starts in `api` and `management`.
 - File parsing and export usually starts in `io`.
 - When in doubt, follow the data model first, then the orchestration layer, then the UI.

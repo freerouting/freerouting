@@ -1,11 +1,11 @@
 package app.freerouting.gui;
 
 import app.freerouting.Freerouting;
-import app.freerouting.boardgraphics.TutorialBoardPalette;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.interactive.InteractiveActionThread;
+import app.freerouting.gui.rendering.TutorialBoardPalette;
+import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.session.InteractiveActionThread;
 import app.freerouting.io.FileFormat;
 import app.freerouting.io.specctra.RulesReader;
 import app.freerouting.io.specctra.SesImportSummary;
@@ -59,7 +59,7 @@ public class GuiManager {
             .createSession(
                 UUID.fromString(globalSettings.userProfileSettings.userId),
                 "Freerouting/" + globalSettings.version);
-    SessionManager.getInstance().setGuiSession(guiSession.getId());
+    SessionManager.getInstance().setPrimarySession(guiSession.getId());
     SessionManager.getInstance().setMonitoredSessionId(guiSession.getId());
 
     // Set default font for buttons and labels
@@ -344,7 +344,7 @@ public class GuiManager {
 
     InputStream inputStream = null;
     if ((routingJob == null) || (routingJob.input.getFile() == null)) {
-      routingJob = new RoutingJob(SessionManager.getInstance().getGuiSession().id);
+      routingJob = new RoutingJob(SessionManager.getInstance().getPrimarySession().id);
 
       routingJob.setDummyInputFile("tutorial_board.dsn");
       // Load an empty template file from the resources

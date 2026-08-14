@@ -1,10 +1,8 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.TileShape;
-import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -107,12 +105,15 @@ public class DrillPageArray {
     }
   }
 
-  /** Test draw of all drills. */
-  public void draw(Graphics graphics, GraphicsContext graphicsContext, double intensity) {
+  /** Emits optional diagnostics for all drills. */
+  public void emitDiagnostics(AutorouteDiagnostic.Sink sink, double intensity) {
+    if (sink == null || intensity <= 0) {
+      return;
+    }
     for (int j = 0; j < pageArr.length; j++) {
       DrillPage[] currRow = pageArr[j];
       for (int i = 0; i < currRow.length; i++) {
-        currRow[i].draw(graphics, graphicsContext, intensity);
+        currRow[i].emitDiagnostics(sink, intensity);
       }
     }
   }

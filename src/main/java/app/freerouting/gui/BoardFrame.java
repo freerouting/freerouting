@@ -6,13 +6,15 @@ import app.freerouting.board.BoardObservers;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
-import app.freerouting.boardgraphics.TutorialBoardPalette;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.interactive.InteractiveState;
-import app.freerouting.interactive.RatsNest;
-import app.freerouting.interactive.ScreenMessages;
+import app.freerouting.gui.rendering.TutorialBoardPalette;
+import app.freerouting.gui.session.BoardReplacement;
+import app.freerouting.gui.session.EditorStateHandle;
+import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.session.LoadGeneration;
+import app.freerouting.gui.session.RatsNest;
+import app.freerouting.gui.session.ScreenMessages;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.FileFormat;
 import app.freerouting.io.kicad.KiCadJsonReader;
@@ -201,7 +203,7 @@ public class BoardFrame extends WindowBase {
 
             javax.swing.SwingUtilities.invokeLater(
                 () -> {
-                  String sessionId = SessionManager.getInstance().getGuiSession().id.toString();
+                  String sessionId = SessionManager.getInstance().getPrimarySession().id.toString();
                   RoutingJobScheduler.getInstance().clearJobs(sessionId);
                   RoutingJobScheduler.getInstance().enqueueJob(routingJob);
 
@@ -428,9 +430,10 @@ public class BoardFrame extends WindowBase {
       this.updateTexts();
       return;
     }
+    LoadGeneration generation = boardPanel.boardHandling.getSessionPort().beginBoardLoad();
     this.routingJob = job;
     boardPanel.resetBoardHandling(job);
-    boardPanel.boardHandling.replaceRoutingBoard(board);
+    boardPanel.boardHandling.getSessionPort().replaceBoard(new BoardReplacement(generation, board));
 
     // Close other child windows
     for (int i = 0; i < this.permanentSubwindows.length; i++) {
@@ -496,6 +499,7 @@ public class BoardFrame extends WindowBase {
    * work.
    */
   private void loadFromBytesAsync(byte[] fileContent, FileFormat format, RoutingJob job) {
+    LoadGeneration generation = boardPanel.boardHandling.getSessionPort().beginBoardLoad();
     ensureGeneralSettingsVisibleDuringLoad();
 
     String filename = job.input != null ? job.input.getFilename() : null;
@@ -523,8 +527,14 @@ public class BoardFrame extends WindowBase {
               javax.swing.SwingUtilities.invokeLater(
                   () ->
                       finishLoadFromParseResult(
-                          readResult, fileContent, format, job, loadingWindow));
+                          readResult, fileContent, format, job, loadingWindow, generation));
             });
+  }
+
+  private boolean isCurrentLoad(LoadGeneration generation) {
+    return boardPanel != null
+        && boardPanel.boardHandling != null
+        && boardPanel.boardHandling.getSessionPort().isCurrent(generation);
   }
 
   private static BoardReadResult parseBoardFromBytes(
@@ -595,7 +605,12 @@ public class BoardFrame extends WindowBase {
       byte[] fileContent,
       FileFormat format,
       RoutingJob routingJob,
-      WindowMessage loadingWindow) {
+      WindowMessage loadingWindow,
+      LoadGeneration generation) {
+    if (!isCurrentLoad(generation)) {
+      loadingWindow.dispose();
+      return;
+    }
     long attachStart = System.nanoTime();
     boolean scheduleInitialPaint = false;
     try {
@@ -625,9 +640,14 @@ public class BoardFrame extends WindowBase {
     }
 
     if (scheduleInitialPaint) {
-      scheduleInitialBoardPaint(loadingWindow, format, readResult);
+      scheduleInitialBoardPaint(loadingWindow, format, readResult, generation);
     } else {
-      javax.swing.SwingUtilities.invokeLater(() -> completeHeavyGuiAfterLoad(format, readResult));
+      javax.swing.SwingUtilities.invokeLater(
+          () -> {
+            if (isCurrentLoad(generation)) {
+              completeHeavyGuiAfterLoad(format, readResult, generation);
+            }
+          });
     }
   }
 
@@ -636,7 +656,14 @@ public class BoardFrame extends WindowBase {
    * detailed plane geometry on a background thread before a full-quality repaint.
    */
   private void scheduleInitialBoardPaint(
-      WindowMessage loadingWindow, FileFormat format, BoardReadResult readResult) {
+      WindowMessage loadingWindow,
+      FileFormat format,
+      BoardReadResult readResult,
+      LoadGeneration generation) {
+    if (!isCurrentLoad(generation)) {
+      loadingWindow.dispose();
+      return;
+    }
     var graphicsContext = boardPanel.boardHandling.graphicsContext;
     String renderingStatus = tm.getText("rendering_board");
     boardPanel.showRenderingOverlay(renderingStatus);
@@ -645,6 +672,10 @@ public class BoardFrame extends WindowBase {
 
     javax.swing.SwingUtilities.invokeLater(
         () -> {
+          if (!isCurrentLoad(generation)) {
+            loadingWindow.dispose();
+            return;
+          }
           boardPanel.paintImmediately(0, 0, boardPanel.getWidth(), boardPanel.getHeight());
 
           javax.swing.SwingUtilities.invokeLater(
@@ -663,14 +694,18 @@ public class BoardFrame extends WindowBase {
                   graphicsContext.setSimplifiedPlaneRendering(false);
                   this.updateTexts();
                 }
-                schedulePlaneFillCacheWarm();
+                schedulePlaneFillCacheWarm(generation);
                 javax.swing.SwingUtilities.invokeLater(
-                    () -> completeHeavyGuiAfterLoad(format, readResult));
+                    () -> {
+                      if (isCurrentLoad(generation)) {
+                        completeHeavyGuiAfterLoad(format, readResult, generation);
+                      }
+                    });
               });
         });
   }
 
-  private void schedulePlaneFillCacheWarm() {
+  private void schedulePlaneFillCacheWarm(LoadGeneration generation) {
     GuiBoardManager boardHandling = boardPanel.boardHandling;
     if (boardHandling == null) {
       return;
@@ -696,7 +731,8 @@ public class BoardFrame extends WindowBase {
               javax.swing.SwingUtilities.invokeLater(
                   () -> {
                     GuiBoardManager currentBoardHandling = boardPanel.boardHandling;
-                    if (currentBoardHandling != null
+                    if (isCurrentLoad(generation)
+                        && currentBoardHandling != null
                         && currentBoardHandling.getRoutingBoard() == board) {
                       boardPanel.repaint();
                     }
@@ -777,6 +813,7 @@ public class BoardFrame extends WindowBase {
    * @return {@code true} when the tutorial board was attached and initial paint was scheduled
    */
   private boolean restoreTutorialBoardAfterFailedLoad(WindowMessage loadingWindow) {
+    LoadGeneration generation = boardPanel.boardHandling.getSessionPort().beginBoardLoad();
     refreshLogCountsInToolbar();
     try (InputStream tutorialStream =
         BoardFrame.class.getClassLoader().getResourceAsStream(TUTORIAL_BOARD_FILENAME)) {
@@ -820,7 +857,7 @@ public class BoardFrame extends WindowBase {
       applyTutorialBoardPalette();
       updateGui(FileFormat.DSN, tutorialResult, new Point(0, 0), null, true);
       scheduleBackgroundRatsNestBuild();
-      scheduleInitialBoardPaint(loadingWindow, FileFormat.DSN, tutorialResult);
+      scheduleInitialBoardPaint(loadingWindow, FileFormat.DSN, tutorialResult, generation);
       refreshLogCountsInToolbar();
       return true;
     } catch (IOException e) {
@@ -865,7 +902,11 @@ public class BoardFrame extends WindowBase {
             });
   }
 
-  private void completeHeavyGuiAfterLoad(FileFormat format, BoardReadResult readResult) {
+  private void completeHeavyGuiAfterLoad(
+      FileFormat format, BoardReadResult readResult, LoadGeneration generation) {
+    if (!isCurrentLoad(generation)) {
+      return;
+    }
     if (!(readResult instanceof BoardReadResult.Success)) {
       return;
     }
@@ -908,6 +949,7 @@ public class BoardFrame extends WindowBase {
    */
   boolean load(
       InputStream inputStream, FileFormat format, JTextField messageField, RoutingJob routingJob) {
+    boardPanel.boardHandling.getSessionPort().beginBoardLoad();
     Point viewportPosition = null;
     BoardReadResult readResult = null;
 
@@ -1048,7 +1090,7 @@ public class BoardFrame extends WindowBase {
     if (!deferHeavyWork) {
       boardPanel.boardHandling.createRatsnestIfAbsent();
     }
-    this.setToolbarModeSelectionPanelValue(boardPanel.boardHandling.getInteractiveState());
+    this.setToolbarModeSelectionPanelValue(boardPanel.boardHandling.getEditorState());
     this.setToolbarUnitSelectionPanelValue(boardPanel.boardHandling.coordinateTransform.userUnit);
     this.setVisible(true);
     if (isTextDsnOrJson) {
@@ -1567,8 +1609,8 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Sets the mode value on mode selection component of the toolbar. */
-  public void setToolbarModeSelectionPanelValue(InteractiveState interactiveState) {
-    this.toolbarPanel.setModeSelectionPanelValue(interactiveState);
+  public void setToolbarModeSelectionPanelValue(EditorStateHandle editorState) {
+    this.toolbarPanel.setModeSelectionPanelValue(editorState);
   }
 
   private void setToolbarUnitSelectionPanelValue(Unit unit) {
@@ -1630,7 +1672,7 @@ public class BoardFrame extends WindowBase {
     }
 
     // Clear any existing jobs for this session (single board support)
-    String sessionId = SessionManager.getInstance().getGuiSession().id.toString();
+    String sessionId = SessionManager.getInstance().getPrimarySession().id.toString();
     RoutingJobScheduler.getInstance().clearJobs(sessionId);
 
     try {

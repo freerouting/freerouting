@@ -21,7 +21,7 @@ import java.util.Collection;
 
 /**
  * Reads a Specctra {@code .rules} file and applies the parsed rules directly to a {@link
- * BasicBoard}, without any dependency on {@link app.freerouting.interactive.GuiBoardManager}.
+ * BasicBoard}, without any dependency on {@link app.freerouting.gui.session.GuiBoardManager}.
  *
  * <p>Replaces the read path previously found in {@link
  * app.freerouting.io.specctra.parser.RulesFile} (now an empty shell).

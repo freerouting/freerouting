@@ -38,19 +38,19 @@ function ConvertFrom-FrScore {
     $scoreStr = $scoreStr.Trim().TrimEnd('.', ',')
 
     # Pattern: 500.00 (2 unrouted and 1 violation)
-    if ($scoreStr -match '^([\d.]+)\s*\(\s*(\d+)\s+unrouted\s+and\s+(\d+)\s+violations?\s*\)') {
-        $score = [double]$matches[1]
+    if ($scoreStr -match '^([\d.,]+)\s*\(\s*(\d+)\s+unrouted\s+and\s+(\d+)\s+violations?\s*\)') {
+        $score = [double]$matches[1].Replace(',', '.')
         $unrouted = [int]$matches[2]
         $violations = [int]$matches[3]
     }
     # Pattern: 0.00 (3 unrouted)
-    elseif ($scoreStr -match '^([\d.]+)\s*\(\s*(\d+)\s+unrouted\s*\)') {
-        $score = [double]$matches[1]
+    elseif ($scoreStr -match '^([\d.,]+)\s*\(\s*(\d+)\s+unrouted\s*\)') {
+        $score = [double]$matches[1].Replace(',', '.')
         $unrouted = [int]$matches[2]
     }
     # Pattern: 987.65
-    elseif ($scoreStr -match '^([\d.]+)$') {
-        $score = [double]$matches[1]
+    elseif ($scoreStr -match '^([\d.,]+)$') {
+        $score = [double]$matches[1].Replace(',', '.')
     }
 
     return [PSCustomObject]@{
@@ -61,7 +61,11 @@ function ConvertFrom-FrScore {
 }
 
 function Get-PhaseMetrics {
-    param([string]$LogPath, [string]$VersionLabel)
+    param(
+        [string]$LogPath,
+        [string]$VersionLabel,
+        [bool]$ProcessTimedOut = $false
+    )
 
     $fanout = @{
         log_found = $false
@@ -113,10 +117,21 @@ function Get-PhaseMetrics {
             error_count = 0
             load_error = $false
             exceptions = @()
+            timed_out = $ProcessTimedOut
+            metric_source = "none"
+            last_checkpoint = $null
         }
     }
 
-    $lines = Get-Content $LogPath
+    # Current and legacy benchmark runs can write the same line to the file logger and stdout.
+    # Parse each exact line once so fallback durations and warning counts remain meaningful.
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $seenLines = [System.Collections.Generic.HashSet[string]]::new()
+    foreach ($line in (Get-Content $LogPath)) {
+        if ($seenLines.Add([string]$line)) {
+            [void]$lines.Add([string]$line)
+        }
+    }
 
     # 1. Warn / Error count
     $logTimedOut = $false
@@ -209,12 +224,22 @@ function Get-PhaseMetrics {
         }
     }
 
+    # Capture the initial count even when the process is terminated before a session summary.
+    foreach ($line in $lines) {
+        if ($autorouter.initial_unrouted_count -eq $null -and
+            $line -match 'Auto-routing (?:stage|phase|session) started .*?for (\d+) unrouted (?:nets|items)') {
+            $autorouter.initial_unrouted_count = [int]$matches[1]
+            $autorouter.log_found = $true
+        }
+    }
+
     # Autorouter passes completed + fallback duration sum
     $maxPass = 0
     $passDurationSum = 0.0
     $lastPassScore = $null
     $lastPassUnrouted = $null
     $lastPassViolations = $null
+    $lastCheckpoint = $null
     foreach ($line in $lines) {
         if ($line -match 'Auto-rout(?:er|ing) pass #(\d+) on board') {
             $passNum = [int]$matches[1]
@@ -226,11 +251,22 @@ function Get-PhaseMetrics {
                 $passDurationSum += [double]$matches[1]
             }
             # Extract final score from the pass line for fallback
-            if ($line -match 'score of ([\d.,]+(?:\s*\([^)]*\))?)') {
+            if ($line -match 'score(?: of)?\s+([\d.,]+(?:\s*\([^)]*\))?)') {
                 $parsed = ConvertFrom-FrScore $matches[1]
                 $lastPassScore = $parsed.Score
                 $lastPassUnrouted = $parsed.Unrouted
                 $lastPassViolations = $parsed.Violations
+                $lastCheckpoint = [PSCustomObject]@{
+                    pass_number = $passNum
+                    duration_seconds = if ($line -match 'completed in ([\d.]+) seconds') {
+                        [double]$matches[1]
+                    } else {
+                        $null
+                    }
+                    score = $parsed.Score
+                    unrouted = $parsed.Unrouted
+                    violations = $parsed.Violations
+                }
             }
         }
     }
@@ -284,7 +320,7 @@ function Get-PhaseMetrics {
                 if ($matches[3]) {
                     $autorouter.final_unrouted = [int]$matches[3]
                 } else {
-                    $autorouter.final_unrouted = 0
+                    $autorouter.final_unrouted = $null
                 }
                 $autorouter.final_violations = 0
             }
@@ -296,10 +332,14 @@ function Get-PhaseMetrics {
         $autorouter.duration_seconds = [math]::Round($passDurationSum, 2)
     }
     # Fallback final score from last pass line
+    $metricSource = "none"
     if ($autorouter.log_found -and $autorouter.final_score -eq $null -and $lastPassScore -ne $null) {
         $autorouter.final_score = $lastPassScore
         $autorouter.final_unrouted = $lastPassUnrouted
         $autorouter.final_violations = $lastPassViolations
+        $metricSource = "last_checkpoint"
+    } elseif ($autorouter.final_score -ne $null) {
+        $metricSource = "final_summary"
     }
 
     if (-not $optimizer.log_found) {
@@ -352,6 +392,8 @@ function Get-PhaseMetrics {
         error_count = $errorCount
         load_error = $loadError
         exceptions = ($exceptions | Sort-Object)
-        timed_out = $logTimedOut
+        timed_out = ($logTimedOut -or $ProcessTimedOut)
+        metric_source = $metricSource
+        last_checkpoint = $lastCheckpoint
     }
 }

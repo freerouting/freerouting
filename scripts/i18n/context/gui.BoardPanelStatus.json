@@ -63,12 +63,44 @@
     "related_keys": [],
     "ui_role": "label"
   },
+  "errors": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardPanelStatus"
+    ],
+    "english_hash": "cb702378f31507efa79a2a2c6046050bc9f578f149c88e3c0a3d9532ab4b5300",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardPanelStatus",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
   "status_line": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.BoardPanelStatus"
     ],
     "english_hash": "9cac2f2c41edbdbc4eb4746b2fdf4e9279ecaae3a7bd4b78391c087589cef712",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardPanelStatus",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "warnings": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardPanelStatus"
+    ],
+    "english_hash": "0e04cd10f9afd7e546e176b34b56a243d8c741198aa0bfee27d7661a370dc043",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,

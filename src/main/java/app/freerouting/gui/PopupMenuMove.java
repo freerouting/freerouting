@@ -1,7 +1,5 @@
 package app.freerouting.gui;
 
-import app.freerouting.interactive.InteractiveState;
-import app.freerouting.interactive.MoveItemState;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
@@ -82,13 +80,7 @@ public class PopupMenuMove extends PopupMenuDisplay {
 
     JMenuItem popupResetRotationMenuitem = new JMenuItem();
     popupResetRotationMenuitem.setText(tm.getText("reset_rotation"));
-    popupResetRotationMenuitem.addActionListener(
-        _ -> {
-          InteractiveState interactiveState = boardPanel.boardHandling.getInteractiveState();
-          if (interactiveState instanceof MoveItemState state) {
-            state.resetRotation();
-          }
-        });
+    popupResetRotationMenuitem.addActionListener(_ -> boardPanel.boardHandling.resetRotation());
     popupResetRotationMenuitem.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(

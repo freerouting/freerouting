@@ -1075,8 +1075,6 @@ public class Structure extends ScopeKeyword {
     }
     insertMissingPowerPlanes(boardConstructionInfo.layerInfo, par.netlist, board);
 
-    par.boardHandling.initializeManualTraceHalfWidths();
-
     // Apply DSN autoroute settings to the current routing job if they were parsed
     if (par.autorouteSettings != null) {
       // Get the current routing job from the board manager

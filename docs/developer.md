@@ -40,6 +40,21 @@ gradlew executableJar
 
 ![image](https://user-images.githubusercontent.com/910321/143483981-5f1f8473-098e-4cf2-997b-a34d14346853.png)
 
+### GUI and Accessibility Tests
+
+GUI accessibility tests are tagged `@Tag("gui")` and use reusable component seams under forced
+headless mode:
+
+```powershell
+.\gradlew.bat testGui
+```
+
+`testGui` must not construct `JFrame`/`JDialog` instances, use screen coordinates, or require a
+display. Build and test the component directly, perform Swing mutations on the EDT, and use the
+stable locators from `GuiLocators`. The default `test` and `testSlow` tasks exclude GUI tests;
+`testSerial` runs serial-sensitive tests; `testAll` runs `test`, `testSlow`, `testSerial`, and
+`testGui`. The `check` task includes `testSerial` but does not implicitly run `testGui`.
+
 #### Generated Executables
 
 All four .jar files will be generated in the `build\libs` subfolder. You would typically run the `freerouting-current-executable.jar` file.

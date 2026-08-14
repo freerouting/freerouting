@@ -1,10 +1,6 @@
 package app.freerouting.board;
 
-import app.freerouting.boardgraphics.ColorIntensityTable;
-import app.freerouting.boardgraphics.Drawable;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.Padstack;
-import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -13,8 +9,6 @@ import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
@@ -391,142 +385,6 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     super.clearDerivedData();
     this.precalculatedFirstLayer = -1;
     this.precalculatedLastLayer = -1;
-  }
-
-  @Override
-  public int getDrawPriority() {
-    return Drawable.MIDDLE_DRAW_PRIORITY;
-  }
-
-  @Override
-  public void drawLayer(
-      Graphics g,
-      GraphicsContext graphicsContext,
-      Color[] colorArr,
-      double intensity,
-      int layerNo) {
-    if (graphicsContext == null || intensity <= 0) {
-      return;
-    }
-    int fromLayer = firstLayer();
-    int toLayer = lastLayer();
-    if (layerNo < fromLayer || layerNo > toLayer) {
-      return;
-    }
-
-    // Determine if this is the last physical layer step drawn (for through-hole drill hole
-    // rendering)
-    boolean isLastPhysicalLayer = false;
-    if (this instanceof Pin && fromLayer != toLayer) {
-      int lastPhysicalLayer;
-      int activeLayer = graphicsContext.getFullyVisibleLayer();
-      if (activeLayer != -1) {
-        lastPhysicalLayer = activeLayer;
-      } else {
-        int activeVirtual = graphicsContext.getFullyVisibleVirtualLayer();
-        boolean isBack = false;
-        if (activeVirtual != -1) {
-          isBack =
-              activeVirtual % 2
-                  != 0; // odd indices are Back (B.Silkscreen=1, B.Courtyard=3, B.Fab=5)
-        }
-        int layerCount = board.getLayerCount();
-        lastPhysicalLayer = isBack ? (layerCount - 1) : 0;
-      }
-      if (layerNo == lastPhysicalLayer) {
-        isLastPhysicalLayer = true;
-      }
-    }
-
-    double visibilityFactor = 0;
-    for (int i = fromLayer; i <= toLayer; i++) {
-      visibilityFactor += graphicsContext.getLayerVisibility(i);
-    }
-
-    if (visibilityFactor >= 0.001) {
-      double currIntensity = intensity;
-      if (!(this instanceof Pin)) {
-        currIntensity = currIntensity / Math.max(visibilityFactor, 1);
-      }
-      Shape currShape = this.getShape(layerNo - fromLayer);
-      if (currShape != null) {
-        double layerVis = graphicsContext.getLayerVisibility(layerNo);
-        if (layerVis > 0.001) {
-          Color color = colorArr[layerNo];
-          double layerIntensity = this instanceof Pin ? intensity : intensity * layerVis;
-          graphicsContext.fillArea(currShape, g, color, layerIntensity);
-        }
-      }
-    }
-
-    // Render drill hole for through-hole pins only (not vias)
-    if (isLastPhysicalLayer) {
-      Padstack padstack = getPadstack();
-      if (padstack != null) {
-        double drillRadius = padstack.getDrillRadius();
-        if (drillRadius > 0) {
-          Color drillColor = graphicsContext.otherColorTable.getDrillHoleColor();
-          double drillIntensity =
-              graphicsContext.colorIntensityTable.getValue(
-                  ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
-          IntPoint centerPoint = getCenter().toFloat().round();
-          Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
-          graphicsContext.fillCircle(drillCircle, g, drillColor, drillIntensity);
-        }
-      }
-    }
-  }
-
-  @Override
-  public void draw(
-      Graphics g, GraphicsContext graphicsContext, Color[] colorArr, double intensity) {
-    if (graphicsContext == null || intensity <= 0) {
-      return;
-    }
-    int fromLayer = firstLayer();
-    int toLayer = lastLayer();
-    // Decrease the drawing intensity for items with many layers.
-    double visibilityFactor = 0;
-    for (int i = fromLayer; i <= toLayer; i++) {
-      visibilityFactor += graphicsContext.getLayerVisibility(i);
-    }
-
-    if (visibilityFactor >= 0.001) {
-      double currIntensity = intensity;
-      if (!(this instanceof Pin)) {
-        currIntensity = currIntensity / Math.max(visibilityFactor, 1);
-      }
-      for (int i = 0; i <= toLayer - fromLayer; i++) {
-        Shape currShape = this.getShape(i);
-        if (currShape == null) {
-          continue;
-        }
-        double layerVis = graphicsContext.getLayerVisibility(fromLayer + i);
-        if (layerVis <= 0.001) {
-          continue;
-        }
-        Color color = colorArr[fromLayer + i];
-        double layerIntensity = this instanceof Pin ? intensity : intensity * layerVis;
-        graphicsContext.fillArea(currShape, g, color, layerIntensity);
-      }
-    }
-
-    // Render drill hole for through-hole pins only (not vias)
-    if (this instanceof Pin && fromLayer != toLayer) {
-      Padstack padstack = getPadstack();
-      if (padstack != null) {
-        double drillRadius = padstack.getDrillRadius();
-        if (drillRadius > 0) {
-          Color drillColor = graphicsContext.otherColorTable.getDrillHoleColor();
-          double drillIntensity =
-              graphicsContext.colorIntensityTable.getValue(
-                  ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
-          IntPoint centerPoint = getCenter().toFloat().round();
-          Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
-          graphicsContext.fillCircle(drillCircle, g, drillColor, drillIntensity);
-        }
-      }
-    }
   }
 
   /** Auxiliary class used in the method move_by. */

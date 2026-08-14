@@ -1,0 +1,56 @@
+name: GUI accessibility tests
+
+on:
+  pull_request:
+    paths:
+      - 'src/main/java/app/freerouting/gui/**'
+      - 'src/test/java/app/freerouting/gui/**'
+      - 'src/main/resources/app/freerouting/gui/**'
+      - 'src/main/resources/app/freerouting/Common*.properties'
+      - 'src/test/resources/**'
+      - 'scripts/i18n/**'
+      - 'docs/gui/**'
+      - 'build.gradle'
+      - 'gradle/**'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - '.github/workflows/gui-a11y.yml'
+
+jobs:
+  test-gui:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-14, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+          cache: 'gradle'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Make gradlew executable
+        if: runner.os != 'Windows'
+        run: chmod +x gradlew
+      - name: Run forced-headless GUI tests
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            ./gradlew.bat testGui
+          else
+            ./gradlew testGui
+          fi
+      - name: Verify Hungarian resource parity
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            ./gradlew.bat test --tests "app.freerouting.i18n.HungarianResourceParityCheckTest"
+          else
+            ./gradlew test --tests "app.freerouting.i18n.HungarianResourceParityCheckTest"
+          fi

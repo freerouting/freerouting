@@ -9,11 +9,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
 import app.freerouting.core.Session;
+import app.freerouting.settings.GlobalSettings;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /** SessionManagerTest. */
 public class SessionManagerTest {
+
+  @BeforeEach
+  void setUpGlobalSettings() {
+    Freerouting.globalSettings = new GlobalSettings();
+  }
 
   @Test
   void testGetInstance() {
@@ -77,7 +84,7 @@ public class SessionManagerTest {
   }
 
   @Test
-  void testGetAndSetGuiSession() {
+  void testGetAndSetPrimarySession() {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
     Session session =
@@ -85,11 +92,11 @@ public class SessionManagerTest {
 
     assertThrows(
         IllegalArgumentException.class,
-        sessionManager::getGuiSession,
+        sessionManager::getPrimarySession,
         "Getting GUI session without setting it should throw an exception.");
 
-    sessionManager.setGuiSession(session.id);
-    Session guiSession = sessionManager.getGuiSession();
+    sessionManager.setPrimarySession(session.id);
+    Session guiSession = sessionManager.getPrimarySession();
     assertEquals(session, guiSession, "Retrieved GUI session should match the set session.");
   }
 }

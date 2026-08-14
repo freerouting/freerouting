@@ -1,11 +1,8 @@
 package app.freerouting.board;
 
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.util.TextManager;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.util.Locale;
 
 /** Describes areas of the board, where components are not allowed. */
@@ -82,43 +79,6 @@ public class ComponentObstacleArea extends ObstacleArea {
   public boolean isFront() {
     Component component = board.components.get(this.getComponentNo());
     return component == null || component.placedOnFront();
-  }
-
-  @Override
-  public Color[] getDrawColors(GraphicsContext graphicsContext) {
-    Color[] colorArr = new Color[this.board.layerStructure.arr.length];
-    Color frontDrawColor = graphicsContext.otherColorTable.getCourtyardColor(true);
-    for (int i = 0; i < colorArr.length - 1; i++) {
-      colorArr[i] = frontDrawColor;
-    }
-    if (colorArr.length > 1) {
-      colorArr[colorArr.length - 1] = graphicsContext.otherColorTable.getCourtyardColor(false);
-    }
-    return colorArr;
-  }
-
-  @Override
-  public double getDrawIntensity(GraphicsContext graphicsContext) {
-    return graphicsContext.getComponentOutlineColorIntensity();
-  }
-
-  @Override
-  public void draw(
-      Graphics g, GraphicsContext graphicsContext, Color[] colorArr, double intensity) {
-    if (graphicsContext == null || intensity <= 0) {
-      return;
-    }
-    int virtualLayerIdx = this.isFront() ? 2 : 3;
-    double virtualVisibility = graphicsContext.getVirtualLayerVisibility(virtualLayerIdx);
-    if (virtualVisibility <= 0) {
-      return;
-    }
-
-    Color color = colorArr[this.getLayer()];
-    double drawIntensity = virtualVisibility * intensity;
-
-    double drawWidth = Math.min(this.board.communication.getResolution(Unit.MIL), 100);
-    graphicsContext.drawBoundary(this.getArea(), drawWidth, color, g, drawIntensity);
   }
 
   @Override

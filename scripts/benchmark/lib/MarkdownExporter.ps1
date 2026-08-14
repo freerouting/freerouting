@@ -180,7 +180,11 @@ function Export-MarkdownReport {
         }
     }
 
-    $maxAvgScore = ($versionStats.Values | Where-Object { $_.AvgScore -ne $null } | Measure-Object -Property AvgScore -Maximum).Maximum
+    $avgScoreStats = @($versionStats.Values | Where-Object { $_.AvgScore -ne $null })
+    $maxAvgScore = $null
+    if ($avgScoreStats.Count -gt 0) {
+        $maxAvgScore = ($avgScoreStats | Measure-Object -Property AvgScore -Maximum).Maximum
+    }
 
     $summaryHeaders = @("Version", "Fixture Count", "Failures", "Non-perfect", "Avg. Score")
     $summaryAlignments = @("L", "R", "R", "R", "R")
@@ -282,15 +286,28 @@ function Export-MarkdownReport {
                 $oPass = "{0,3}" -f $optimizerPassesVal
                 $passes = "$fPass+$rPass+$oPass"
 
-                $unroutedVal = if ($run.drc.final_unrouted -ne $null) { $run.drc.final_unrouted } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { 0 }
-                $violationsVal = if ($run.drc.final_violations -ne $null) { $run.drc.final_violations } elseif ($run.quality.clearance_violations -ne $null) { $run.quality.clearance_violations } else { 0 }
+                $hasCheckpointMetrics = $run.log_analysis.metric_source -and $run.log_analysis.metric_source -ne "none"
+                $unroutedVal = if ($run.drc.final_unrouted -ne $null) {
+                    $run.drc.final_unrouted
+                } elseif ($hasCheckpointMetrics -and $run.quality.final_unrouted -ne $null) {
+                    $run.quality.final_unrouted
+                } else {
+                    $null
+                }
+                $violationsVal = if ($run.drc.summary_violations -ne $null) {
+                    $run.drc.summary_violations
+                } elseif ($hasCheckpointMetrics -and $run.quality.clearance_violations -ne $null) {
+                    $run.quality.clearance_violations
+                } else {
+                    $null
+                }
                 $scoreVal = if ($run.drc.final_quality_score -ne $null) { $run.drc.final_quality_score } elseif ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { $null }
 
                 # Compute unrouted cell string
-                $unroutedStr = "$unroutedVal"
+                $unroutedStr = if ($unroutedVal -ne $null) { "$unroutedVal" } else { "N/A" }
 
                 # Compute violations cell string
-                $violationsStr = "$violationsVal"
+                $violationsStr = if ($violationsVal -ne $null) { "$violationsVal" } else { "N/A" }
 
                 # Compute score cell string
                 $scoreStr = if ($scoreVal -ne $null) { $scoreVal.ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
@@ -374,7 +391,7 @@ function Export-MarkdownReport {
     [System.IO.File]::WriteAllText($MdPath, $sb.ToString(), [System.Text.UTF8Encoding]::new($false))
 
     # --- 3. CSV Export ---
-    $csvHeaders = "fixture_group,fixture_name,version,run_mode,fanout_success,router_passes,drc_unrouted,drc_violations,drc_score,wall_time,cpu_time,peak_heap_mb,warn_count,error_count"
+    $csvHeaders = "fixture_group,fixture_name,version,run_mode,fanout_success,router_passes,drc_unrouted,drc_raw_violations,drc_clearance_violations,drc_summary_violations,drc_track_dangling,drc_via_dangling,drc_unconnected_items,drc_unconnected_findings,drc_score,drc_binary_version,drc_binary_sha256,drc_report_file,wall_time,cpu_time,peak_heap_mb,warn_count,error_count"
     $csvLines = @($csvHeaders)
     foreach ($run in $runs) {
         $fanoutSuccess = ""
@@ -384,7 +401,13 @@ function Export-MarkdownReport {
         $passes = if ($run.phases.autorouter.passes_completed -ne $null) { $run.phases.autorouter.passes_completed } else { "" }
 
         $drcUnrouted = if ($run.drc.final_unrouted -ne $null) { $run.drc.final_unrouted } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { "" }
-        $drcViolations = if ($run.drc.final_violations -ne $null) { $run.drc.final_violations } elseif ($run.quality.clearance_violations -ne $null) { $run.quality.clearance_violations } else { "" }
+        $drcRawViolations = if ($run.drc.final_violations -ne $null) { $run.drc.final_violations } else { "" }
+        $drcClearanceViolations = if ($run.drc.clearance_violations -ne $null) { $run.drc.clearance_violations } else { "" }
+        $drcSummaryViolations = if ($run.drc.summary_violations -ne $null) { $run.drc.summary_violations } else { "" }
+        $drcTrackDangling = if ($run.drc.dangling_tracks -ne $null) { $run.drc.dangling_tracks } else { "" }
+        $drcViaDangling = if ($run.drc.dangling_vias -ne $null) { $run.drc.dangling_vias } else { "" }
+        $drcUnconnectedItems = if ($run.drc.unconnected_items -ne $null) { $run.drc.unconnected_items } else { "" }
+        $drcUnconnectedFindings = if ($run.drc.unconnected_findings -ne $null) { $run.drc.unconnected_findings } else { "" }
         $drcScore = if ($run.drc.final_quality_score -ne $null) { $run.drc.final_quality_score } elseif ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { "" }
 
         $wall = if ($run.quality.wall_clock_seconds -ne $null) { $run.quality.wall_clock_seconds } else { "" }
@@ -393,7 +416,7 @@ function Export-MarkdownReport {
         $warns = if ($run.log_analysis.warn_count -ne $null) { $run.log_analysis.warn_count } else { "0" }
         $errs = if ($run.log_analysis.error_count -ne $null) { $run.log_analysis.error_count } else { "0" }
 
-        $line = "$($run.fixture.group),$($run.fixture.filename),$($run.binary.version_label),$($run.run_mode),$fanoutSuccess,$passes,$drcUnrouted,$drcViolations,$drcScore,$wall,$cpu,$heap,$warns,$errs"
+        $line = "$($run.fixture.group),$($run.fixture.filename),$($run.binary.version_label),$($run.run_mode),$fanoutSuccess,$passes,$drcUnrouted,$drcRawViolations,$drcClearanceViolations,$drcSummaryViolations,$drcTrackDangling,$drcViaDangling,$drcUnconnectedItems,$drcUnconnectedFindings,$drcScore,$($run.drc.drc_binary_version),$($run.drc.drc_binary_sha256),$($run.drc.report_file),$wall,$cpu,$heap,$warns,$errs"
         $csvLines += $line
     }
     [System.IO.File]::WriteAllLines($CsvPath, $csvLines, [System.Text.UTF8Encoding]::new($false))

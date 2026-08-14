@@ -1,6 +1,5 @@
 package app.freerouting.board;
 
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -11,9 +10,6 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.geom.Point2D;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
@@ -21,15 +17,7 @@ import java.util.TreeSet;
 /** A ObstacleArea, which can be electrically connected to other items. */
 public class ConductionArea extends ObstacleArea implements Connectable {
 
-  private static final double PLANE_FILL_SCALE = 2.5;
   private static final double PLANE_HATCH_OPACITY = 0.85;
-
-  /**
-   * When the on-screen size of a typical clearance gap is below this threshold (pixels), plane
-   * pours are drawn as solid fills. The previous 1.5 px cutoff never triggered at zoom-to-fit,
-   * forcing expensive clearance CSG on the first paint of large copper pours.
-   */
-  private static final double PLANE_SIMPLE_FILL_MAX_CLEARANCE_SCREEN_PX = 15.0;
 
   private boolean isObstacle;
   private boolean isFilled = true;
@@ -44,8 +32,6 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     this.clearDerivedData();
   }
 
-  private transient java.awt.geom.Area cachedFillArea;
-  private transient app.freerouting.boardgraphics.CoordinateTransform cachedFillTransform;
   private transient int cachedBoardRevision = -1;
   private transient java.awt.geom.Area cachedBoardFillArea;
 
@@ -83,89 +69,8 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   @Override
   public void clearDerivedData() {
     super.clearDerivedData();
-    this.cachedFillArea = null;
-    this.cachedFillTransform = null;
     this.cachedBoardRevision = -1;
     this.cachedBoardFillArea = null;
-  }
-
-  @Override
-  public void draw(
-      Graphics g, GraphicsContext graphicsContext, Color[] colorArr, double intensity) {
-    if (graphicsContext == null || intensity <= 0) {
-      return;
-    }
-    int layerNo = this.getLayer();
-    double layerVis = graphicsContext.getLayerVisibility(layerNo);
-    if (layerVis <= 0) {
-      return;
-    }
-
-    Color color = colorArr[layerNo];
-    if (this.isFilled) {
-      double fillOpacity = Math.min(layerVis * intensity * PLANE_FILL_SCALE, 1.0);
-
-      double maxClearanceLookupBoard = 2000.0 * this.board.communication.getResolution(Unit.UM);
-      if (this.board.rules != null && this.board.rules.clearanceMatrix != null) {
-        double maxMatrixClearance =
-            this.board.rules.clearanceMatrix.maxValue(this.clearanceClassNo(), layerNo);
-        maxClearanceLookupBoard =
-            Math.max(
-                maxClearanceLookupBoard,
-                maxMatrixClearance + 100.0 * this.board.communication.getResolution(Unit.UM));
-      }
-      double clearanceScreenPx =
-          graphicsContext.coordinateTransform.boardToScreen(maxClearanceLookupBoard);
-      boolean useSimpleFill =
-          clearanceScreenPx < PLANE_SIMPLE_FILL_MAX_CLEARANCE_SCREEN_PX
-              || graphicsContext.isSimplifiedPlaneRendering();
-
-      if (useSimpleFill) {
-        graphicsContext.fillArea(this.getArea(), g, color, fillOpacity);
-      } else {
-        ensureDetailedFillCache(maxClearanceLookupBoard, layerNo);
-
-        if (cachedBoardFillArea != null && !cachedBoardFillArea.isEmpty()) {
-          Point2D p0 = graphicsContext.coordinateTransform.boardToScreen(FloatPoint.ZERO);
-          Point2D px = graphicsContext.coordinateTransform.boardToScreen(new FloatPoint(1, 0));
-          Point2D py = graphicsContext.coordinateTransform.boardToScreen(new FloatPoint(0, 1));
-
-          double m00 = px.getX() - p0.getX();
-          double m10 = px.getY() - p0.getY();
-          double m01 = py.getX() - p0.getX();
-          double m11 = py.getY() - p0.getY();
-          double m02 = p0.getX();
-          double m12 = p0.getY();
-
-          java.awt.geom.AffineTransform boardToScreen =
-              new java.awt.geom.AffineTransform(m00, m10, m01, m11, m02, m12);
-          java.awt.geom.Area screenArea = cachedBoardFillArea.createTransformedArea(boardToScreen);
-
-          java.awt.Graphics2D g2 = (java.awt.Graphics2D) g;
-          java.awt.Paint oldPaint = g2.getPaint();
-          java.awt.Composite oldComposite = g2.getComposite();
-
-          g2.setColor(color);
-          g2.setComposite(
-              java.awt.AlphaComposite.getInstance(
-                  java.awt.AlphaComposite.SRC_OVER, (float) fillOpacity));
-          g2.setRenderingHint(
-              java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
-          g2.fill(screenArea);
-
-          g2.setPaint(oldPaint);
-          g2.setComposite(oldComposite);
-        }
-      }
-    }
-
-    // Hatch border (0.5 mm in board units)
-    double hatchPitch = 500.0 * this.board.communication.getResolution(Unit.UM);
-    graphicsContext.drawPlaneHatch(
-        this.getArea(), g, color, layerVis * intensity * PLANE_HATCH_OPACITY, hatchPitch);
-
-    // Border outline
-    graphicsContext.drawBoundary(this.getArea(), 0.0, color, g, layerVis);
   }
 
   /** Pre-computes detailed plane-fill geometry off the EDT so zoom-in paints stay responsive. */
@@ -184,6 +89,17 @@ public class ConductionArea extends ObstacleArea implements Connectable {
               maxMatrixClearance + 100.0 * this.board.communication.getResolution(Unit.UM));
     }
     ensureDetailedFillCache(maxClearanceLookupBoard, layerNo);
+  }
+
+  /**
+   * Returns the cached detailed fill geometry for renderer-owned painting.
+   *
+   * <p>The cache remains owned by the conduction-area model because it depends on board revision
+   * and clearance geometry. The renderer owns the AWT paint operation that consumes this geometry.
+   */
+  public java.awt.geom.Area getDetailedFillArea(double maxClearanceLookupBoard, int layerNo) {
+    ensureDetailedFillCache(maxClearanceLookupBoard, layerNo);
+    return cachedBoardFillArea;
   }
 
   private void ensureDetailedFillCache(double maxClearanceLookupBoard, int layerNo) {
@@ -487,16 +403,6 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       return false;
     }
     return filter.isSelected(ItemSelectionFilter.SelectableChoices.CONDUCTION);
-  }
-
-  @Override
-  public Color[] getDrawColors(GraphicsContext graphicsContext) {
-    return graphicsContext.getTraceColors(true);
-  }
-
-  @Override
-  public double getDrawIntensity(GraphicsContext graphicsContext) {
-    return graphicsContext.getConductionColorIntensity();
   }
 
   @Override

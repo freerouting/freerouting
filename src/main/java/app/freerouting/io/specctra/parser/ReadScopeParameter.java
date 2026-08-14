@@ -168,11 +168,6 @@ public class ReadScopeParameter {
     }
 
     @Override
-    public void initializeManualTraceHalfWidths() {
-      // no-op: no InteractiveSettings in headless shim
-    }
-
-    @Override
     public RoutingJob getCurrentRoutingJob() {
       return null;
     }

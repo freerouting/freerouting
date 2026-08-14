@@ -83,8 +83,21 @@ function Update-BenchmarksHtml {
             $optimizerPasses = if ($run.phases.optimizer.passes_completed -ne $null) { $run.phases.optimizer.passes_completed } else { 0 }
             $passes = "$fanoutPasses+$routerPasses+$optimizerPasses"
 
-            $unrouted = if ($run.drc.final_unrouted -ne $null) { $run.drc.final_unrouted } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { 0 }
-            $violations = if ($run.drc.final_violations -ne $null) { $run.drc.final_violations } elseif ($run.quality.clearance_violations -ne $null) { $run.quality.clearance_violations } else { 0 }
+            $hasCheckpointMetrics = $run.log_analysis.metric_source -and $run.log_analysis.metric_source -ne "none"
+            $unrouted = if ($run.drc.final_unrouted -ne $null) {
+                $run.drc.final_unrouted
+            } elseif ($hasCheckpointMetrics -and $run.quality.final_unrouted -ne $null) {
+                $run.quality.final_unrouted
+            } else {
+                "N/A"
+            }
+            $violations = if ($run.drc.summary_violations -ne $null) {
+                $run.drc.summary_violations
+            } elseif ($hasCheckpointMetrics -and $run.quality.clearance_violations -ne $null) {
+                $run.quality.clearance_violations
+            } else {
+                "N/A"
+            }
             $scoreVal = if ($run.drc.final_quality_score -ne $null) { $run.drc.final_quality_score } elseif ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { $null }
             $score = if ($scoreVal -ne $null) { $scoreVal.ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
             $heap = if ($run.quality.peak_heap_mb -ne $null) { [math]::Round($run.quality.peak_heap_mb).ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }

@@ -1,6 +1,5 @@
 package app.freerouting.board;
 
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.geometry.planar.Direction;
@@ -17,8 +16,6 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -110,19 +107,6 @@ public class PolylineTrace extends Trace implements Serializable {
   public IntBox boundingBox() {
     IntBox result = this.lines.boundingBox();
     return result.offset(this.getHalfWidth());
-  }
-
-  @Override
-  public void draw(
-      Graphics g, GraphicsContext graphicsContext, Color[] colorArr, double intensity) {
-    if (graphicsContext == null) {
-      return;
-    }
-    int layer = this.getLayer();
-    Color color = colorArr[layer];
-    double displayWidth = getHalfWidth();
-    intensity = intensity * graphicsContext.getLayerVisibility(layer);
-    graphicsContext.draw(lines.cornerApproxArr(), displayWidth, color, g, intensity);
   }
 
   /** Returns the polyline of this trace. */

@@ -1,8 +1,10 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.LayerStructure;
-import app.freerouting.boardgraphics.ColorIntensityTable.ObjectNames;
-import app.freerouting.interactive.GuiBoardManager;
+import app.freerouting.gui.a11y.A11y;
+import app.freerouting.gui.a11y.GuiLocators;
+import app.freerouting.gui.rendering.ColorIntensityTable.ObjectNames;
+import app.freerouting.gui.session.GuiBoardManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import java.awt.BorderLayout;
@@ -144,6 +146,68 @@ public class WindowVisibility extends BoardSavableSubWindow {
 
     this.pack();
     this.setResizable(false);
+  }
+
+  /**
+   * Creates the reusable visibility-settings content without constructing this top-level window.
+   *
+   * <p>The panel mirrors the two stateful controls in the full visibility window and is
+   * deliberately independent of {@link BoardFrame}. It is suitable for forced-headless
+   * accessibility coverage and for future embedded settings surfaces.
+   *
+   * @param locale locale for translated labels and descriptions
+   * @param changeListener receives {@code "layer"} or {@code "object"} and the new percentage
+   * @return a component-only visibility settings panel
+   */
+  public static JPanel createComponentOnly(
+      Locale locale, BiConsumer<String, Integer> changeListener) {
+    TextManager tm = new TextManager(WindowVisibility.class, locale);
+    JPanel panel = new JPanel(new BorderLayout(8, 8));
+    A11y.tag(panel, GuiLocators.DISPLAY_SETTINGS);
+    A11y.describe(panel, tm.getText("title"), null);
+
+    final JPanel controls = new JPanel(new GridBagLayout());
+    GridBagConstraints constraints = new GridBagConstraints();
+    constraints.gridx = 0;
+    constraints.gridy = GridBagConstraints.RELATIVE;
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+    constraints.weightx = 1.0;
+    constraints.insets = new Insets(4, 8, 4, 8);
+
+    JLabel layerLabel = new JLabel(tm.getText("layer_section_title"));
+    JSlider layerSlider = new JSlider(0, MAX_SLIDER_VALUE, MAX_SLIDER_VALUE);
+    A11y.tag(layerSlider, GuiLocators.DISPLAY_LAYER_VISIBILITY);
+    A11y.describe(
+        layerSlider, tm.getText("layer_visibility_control"), tm.getText("header_message"));
+    layerLabel.setLabelFor(layerSlider);
+    controls.add(layerLabel, constraints);
+    controls.add(layerSlider, constraints);
+
+    JLabel objectLabel = new JLabel(tm.getText("object_section_title"));
+    JSlider objectSlider = new JSlider(0, MAX_SLIDER_VALUE, MAX_SLIDER_VALUE);
+    A11y.tag(objectSlider, GuiLocators.DISPLAY_OBJECT_VISIBILITY);
+    A11y.describe(
+        objectSlider, tm.getText("object_visibility_control"), tm.getText("header_message"));
+    objectLabel.setLabelFor(objectSlider);
+    controls.add(objectLabel, constraints);
+    controls.add(objectSlider, constraints);
+
+    BiConsumer<String, Integer> listener = changeListener == null ? (_, _) -> {} : changeListener;
+    layerSlider.addChangeListener(_ -> listener.accept("layer", layerSlider.getValue()));
+    objectSlider.addChangeListener(_ -> listener.accept("object", objectSlider.getValue()));
+    panel.add(controls, BorderLayout.CENTER);
+
+    JButton resetButton = new JButton(tm.getText("reset_to_defaults"));
+    resetButton.setToolTipText(tm.getText("reset_to_defaults_tooltip"));
+    A11y.tag(resetButton, GuiLocators.DISPLAY_RESET);
+    A11y.describe(resetButton, resetButton.getText(), resetButton.getToolTipText());
+    resetButton.addActionListener(
+        _ -> {
+          layerSlider.setValue(MAX_SLIDER_VALUE);
+          objectSlider.setValue(MAX_SLIDER_VALUE);
+        });
+    panel.add(resetButton, BorderLayout.SOUTH);
+    return panel;
   }
 
   /** Refreshes visibility controls from the current board state. */

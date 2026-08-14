@@ -113,12 +113,12 @@ public final class SessionManager {
   }
 
   /**
-   * Returns the GUI session.
+   * Returns the primary (GUI) session.
    *
-   * @return the registered GUI session
-   * @throws IllegalArgumentException if no GUI session is registered
+   * @return the registered primary session
+   * @throws IllegalArgumentException if no primary session is registered
    */
-  public Session getGuiSession() throws IllegalArgumentException {
+  public Session getPrimarySession() throws IllegalArgumentException {
     for (Session session : sessions.values()) {
       if (session.isGuiSession) {
         return session;
@@ -129,13 +129,13 @@ public final class SessionManager {
   }
 
   /**
-   * Sets the session as a GUI session.
+   * Sets the session as the primary session.
    *
-   * @param sessionId the identifier of the session to mark as the GUI session
-   * @throws IllegalArgumentException if another GUI session exists, the session does not exist, or
-   *     the session host is not a valid Freerouting GUI host
+   * @param sessionId the identifier of the session to mark as the primary session
+   * @throws IllegalArgumentException if another primary session exists, the session does not exist,
+   *     or the session host is not a valid Freerouting GUI host
    */
-  public void setGuiSession(UUID sessionId) throws IllegalArgumentException {
+  public void setPrimarySession(UUID sessionId) throws IllegalArgumentException {
     // Check if there are any other GUI sessions and if so, throw an exception because only one GUI
     // session is allowed
     for (Session session : sessions.values()) {

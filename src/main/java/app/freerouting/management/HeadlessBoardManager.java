@@ -23,7 +23,6 @@ import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.settings.sources.DefaultSettings;
-import app.freerouting.settings.sources.GuiSettings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -56,7 +55,7 @@ import java.io.OutputStream;
  * <p><strong>Design Pattern:</strong> This class implements the {@link BoardManager} interface,
  * providing headless-specific implementations while maintaining compatibility with the broader
  * board management architecture. It can be used as a drop-in replacement for {@link
- * app.freerouting.interactive.GuiBoardManager} when GUI is not needed.
+ * app.freerouting.gui.session.GuiBoardManager} when GUI is not needed.
  *
  * <p><strong>Thread Safety:</strong> The {@link #replaceRoutingBoard(RoutingBoard)} method is
  * synchronized to allow thread-safe board replacement during multi-threaded routing operations.
@@ -73,7 +72,7 @@ import java.io.OutputStream;
  * }</pre>
  *
  * @see BoardManager
- * @see app.freerouting.interactive.GuiBoardManager
+ * @see app.freerouting.gui.session.GuiBoardManager
  * @see RoutingBoard
  * @see RoutingJob
  */
@@ -96,7 +95,7 @@ public class HeadlessBoardManager implements BoardManager {
    * <p>Typically used for logging, progress reporting, or coordinating with external systems.
    *
    * @see ThreadActionListener
-   * @see app.freerouting.interactive.InteractiveActionThread
+   * @see app.freerouting.gui.session.InteractiveActionThread
    */
   public ThreadActionListener autorouterListener;
 
@@ -209,29 +208,6 @@ public class HeadlessBoardManager implements BoardManager {
   }
 
   /**
-   * Returns {@code null} in headless mode. GUI-specific interactive settings are not applicable
-   * outside of a GUI session. Use {@link
-   * app.freerouting.interactive.GuiBoardManager#getInteractiveSettings()} to obtain settings in GUI
-   * mode.
-   *
-   * @return {@code null} always in headless mode
-   */
-  @Override
-  public GuiSettings getInteractiveSettings() {
-    return null;
-  }
-
-  /**
-   * No-op in headless mode. Manual trace half-widths are managed by the GUI layer via {@link
-   * app.freerouting.interactive.InteractiveSettings}; this method has no effect when running
-   * without a GUI.
-   */
-  @Override
-  public void initializeManualTraceHalfWidths() {
-    // No-op: interactiveSettings is a GUI-only concern managed by GuiBoardManager.
-  }
-
-  /**
    * Creates and initializes a new routing board with the specified parameters.
    *
    * <p>This method constructs a new {@link RoutingBoard} from scratch with:
@@ -258,7 +234,7 @@ public class HeadlessBoardManager implements BoardManager {
    * @param rules the board design rules and constraints
    * @param boardCommunication communication interface for external integration
    * @see RoutingBoard#RoutingBoard
-   * @see app.freerouting.interactive.InteractiveSettings
+   * @see app.freerouting.gui.session.InteractiveSettings
    */
   @Override
   public void createBoard(
