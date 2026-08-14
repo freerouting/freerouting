@@ -1,5 +1,5 @@
 # Freerouting Nightly Benchmarks Report
-Generated on: 2026-08-13 01:10:11
+Generated on: 2026-08-14 00:14:52
 System: AMD Ryzen 5 3600 6-Core Processor (6 Cores, 31.9 GB RAM)
 
 This report lists the latest benchmark run results for each Freerouting version and fixture combination.
@@ -11,7 +11,7 @@ This report lists the latest benchmark run results for each Freerouting version 
 | 1.9.0                                |            20 |        1 |          19 |      902.9 |
 | 2.2.4                                |            20 |        2 |          19 |      891.5 |
 | 2.3.0                                |            20 |        2 |          20 |  **915.1** |
-| soc-gui-separation-and-accessibility |            20 |        2 |          19 |      914.8 |
+| soc-gui-separation-and-accessibility |            20 |        2 |          19 |      915.1 |
 
 
 ## Group: [DAC2020_boards](../fixtures/DAC2020_boards)
@@ -25,7 +25,7 @@ Size: 30.5 kB · Layers: 2 · Nets: 99 · Components: 20 · Dimensions: 101.6 x 
 | 1.9.0                                | GUI  |  186/ 212 ( 87.7%) |       6.40 |      53.46 |  1169.60 |   1229.46 |  20+ 10+ 18 |        0 |          0 |  1000 |       229 |     1336.5 |   42 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |      89.24 |      N/A |     89.24 |   0+ 18+  4 |        0 |          0 |  1000 |      1709 |       76.4 |   16 / 0 |       |
 | 2.3.0                                | CLI  |  186/ 187 ( 99.5%) |       3.78 |     250.87 |    10.19 |    264.84 |   4+ 21+  1 |        4 |          2 |   979 |       920 |     1168.6 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |  186/ 187 ( 99.5%) |       3.65 |     305.51 |     8.85 |    318.01 |   4+ 22+  1 |        5 |          1 |   974 |       977 |     1382.9 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |  186/ 187 ( 99.5%) |       4.07 |     440.91 |    13.40 |    458.38 |   4+ 36+  1 |        4 |         20 |   979 |      1175 |     1932.4 |    4 / 0 |       |
 
 
 ### Fixture: [DAC2020_bm02.dsn](../fixtures/DAC2020_boards/DAC2020_bm02.dsn)
@@ -37,7 +37,7 @@ Size: 79.7 kB · Layers: 2 · Nets: 34 · Components: 13 · Dimensions: 50.8 x 2
 | 1.9.0                                | GUI  |   37/  45 ( 82.2%) |       1.80 |       0.51 |    34.75 |     37.06 |  20+  4+ 13 |        0 |          0 |  1000 |       157 |       34.2 |    0 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |       2.17 |     5.82 |      7.99 |   0+  6+  1 |        0 |          0 |  1000 |      1573 |        0.9 |   16 / 0 |       |
 | 2.3.0                                | CLI  |   38/  38 (100.0%) |       1.32 |       2.27 |     0.04 |      3.63 |   7+  2+  0 |        0 |          4 |  1000 |       456 |        7.2 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |   38/  38 (100.0%) |       1.25 |       2.15 |     0.04 |      3.44 |   7+  2+  0 |        0 |          4 |  1000 |       528 |        7.8 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |   38/  38 (100.0%) |       1.44 |       2.47 |     0.04 |      3.95 |   7+  2+  0 |        0 |          4 |  1000 |       496 |        6.7 |    2 / 0 |       |
 
 
 ### Fixture: [DAC2020_bm04.dsn](../fixtures/DAC2020_boards/DAC2020_bm04.dsn)
@@ -49,7 +49,7 @@ Size: 27 kB · Layers: 16 · Nets: 80 · Components: 16 · Dimensions: 43.9 x 35
 | 1.9.0                                | GUI  |  159/ 198 ( 80.3%) |       6.75 |      96.40 |  1711.05 |   1814.20 |  20+ 24+  3 |        2 |          0 |   986 |       293 |     1366.5 |    2 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |      92.00 |    25.60 |    117.60 |   0+ 18+  2 |        2 |          0 |   986 |      1951 |       67.6 |   16 / 0 |       |
 | 2.3.0                                | CLI  |  157/ 192 ( 81.8%) |       6.05 |     533.42 |    20.19 |    559.66 |   4+ 22+  1 |        3 |          0 |   979 |      1754 |     2433.6 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |  157/ 192 ( 81.8%) |       5.87 |     537.42 |    19.38 |    562.67 |   4+ 22+  1 |        3 |          0 |   979 |      1782 |     2430.7 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |  157/ 192 ( 81.8%) |       5.30 |     578.19 |    19.13 |    602.62 |   4+ 22+  1 |        3 |          0 |   979 |      1544 |     2430.7 |    2 / 0 |       |
 
 
 ### Fixture: [DAC2020_bm05.dsn](../fixtures/DAC2020_boards/DAC2020_bm05.dsn)
@@ -61,7 +61,7 @@ Size: 16.8 kB · Layers: 2 · Nets: 54 · Components: 9 · Dimensions: 40 x 41 m
 | 1.9.0                                | GUI  |   88/ 138 ( 63.8%) |       5.30 |      82.58 |  1713.05 |   1800.93 |  20+ 33+  4 |       37 |          0 |   589 |       164 |     2184.8 |   42 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |      69.51 |     3.74 |     73.25 |   0+ 22+  2 |       37 |          0 |   570 |      1666 |       62.3 |   16 / 0 |       |
 | 2.3.0                                | CLI  |  119/ 138 ( 86.2%) |       3.44 |     134.01 |     3.81 |    141.26 |   7+ 18+  1 |       22 |          0 |   785 |       705 |      687.8 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |  119/ 138 ( 86.2%) |       3.57 |     140.63 |     4.06 |    148.26 |   7+ 18+  1 |       22 |          0 |   785 |       728 |      693.8 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |  119/ 138 ( 86.2%) |       3.84 |     134.76 |     3.63 |    142.23 |   7+ 18+  1 |       22 |          0 |   785 |       640 |      686.9 |    2 / 0 |       |
 
 
 ### Fixture: [DAC2020_bm06.dsn](../fixtures/DAC2020_boards/DAC2020_bm06.dsn)
@@ -73,7 +73,7 @@ Size: 22.9 kB · Layers: 2 · Nets: 38 · Components: 13 · Dimensions: 55 x 28 
 | 1.9.0                                | GUI  |  106/ 126 ( 84.1%) |       2.22 |       4.60 |  1370.63 |   1377.45 |  20+ 23+  5 |        8 |          8 |   892 |       155 |     1497.2 |    5 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |      17.31 |     7.84 |     25.15 |   0+ 18+  2 |        8 |          8 |   882 |      1611 |       12.6 |   16 / 0 |       |
 | 2.3.0                                | CLI  |  113/ 124 ( 91.1%) |       2.14 |      25.87 |     5.68 |     33.69 |   5+ 18+  1 |        2 |          8 |   963 |       627 |      199.6 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |  113/ 124 ( 91.1%) |       2.13 |      27.12 |     5.72 |     34.97 |   5+ 18+  1 |        2 |          8 |   963 |       675 |      204.3 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |  113/ 124 ( 91.1%) |       1.89 |      27.03 |     5.69 |     34.61 |   5+ 18+  1 |        2 |          8 |   963 |       653 |      204.8 |    2 / 0 |       |
 
 
 ### Fixture: [DAC2020_bm07.dsn](../fixtures/DAC2020_boards/DAC2020_bm07.dsn)
@@ -85,7 +85,7 @@ Size: 14.9 kB · Layers: 2 · Nets: 52 · Components: 13 · Dimensions: 22 x 60 
 | 1.9.0                                | GUI  |   85/  87 ( 97.7%) |       1.14 |       2.99 |    36.00 |     40.13 |   2+  5+ 10 |        0 |          0 |  1000 |       159 |       35.3 |    0 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |       4.02 |    40.50 |     44.52 |   0+  9+  3 |        0 |          0 |  1000 |      1574 |        2.1 |   16 / 0 |       |
 | 2.3.0                                | CLI  |   85/  85 (100.0%) |       1.36 |      13.05 |     3.20 |     17.61 |   4+ 22+  1 |        3 |          0 |   965 |       548 |      103.7 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |   85/  85 (100.0%) |       1.39 |      13.31 |     3.21 |     17.91 |   4+ 22+  1 |        3 |          0 |   965 |       678 |      102.2 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |   85/  85 (100.0%) |       1.37 |      12.42 |     2.99 |     16.78 |   4+ 22+  1 |        3 |          0 |   965 |       581 |      100.8 |    2 / 0 |       |
 
 
 ### Fixture: [DAC2020_bm08.dsn](../fixtures/DAC2020_boards/DAC2020_bm08.dsn)
@@ -97,7 +97,7 @@ Size: 5.5 kB · Layers: 2 · Nets: 15 · Components: 4 · Dimensions: 20.5 x 13.
 | 1.9.0                                | GUI  |   30/  36 ( 83.3%) |       0.47 |       0.00 |     0.69 |      1.16 |   2+  0+  2 |        0 |          0 |  1000 |       133 |        0.5 |    0 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |       0.59 |     2.64 |      3.23 |   0+  2+  2 |        0 |          0 |  1000 |      1481 |        0.0 |   16 / 0 |       |
 | 2.3.0                                | CLI  |   30/  36 ( 83.3%) |       0.51 |       0.74 |     0.01 |      1.26 |   2+  2+  0 |        0 |          1 |  1000 |       185 |        0.9 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |   30/  36 ( 83.3%) |       0.48 |       0.71 |     0.01 |      1.20 |   2+  2+  0 |        0 |          1 |  1000 |       491 |        0.9 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |   30/  36 ( 83.3%) |       0.48 |       0.71 |     0.02 |      1.21 |   2+  2+  0 |        0 |          1 |  1000 |       185 |        0.9 |    2 / 0 |       |
 
 
 ### Fixture: [DAC2020_bm09.dsn](../fixtures/DAC2020_boards/DAC2020_bm09.dsn)
@@ -109,7 +109,7 @@ Size: 25.1 kB · Layers: 16 · Nets: 70 · Components: 13 · Dimensions: 56.4 x 
 | 1.9.0                                | GUI  |                N/A |       0.00 |       5.17 |    10.90 |     16.07 |   0+  2+  2 |        1 |          0 |   991 |       125 |        5.3 |    0 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |       6.28 |    18.10 |     24.38 |   0+  2+  2 |        2 |          0 |   983 |      1539 |        2.0 |   16 / 0 |       |
 | 2.3.0                                | CLI  |                N/A |        N/A |      15.00 |     0.04 |     15.04 |   0+ 18+  0 |        1 |          0 |   991 |       429 |       48.8 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |                N/A |        N/A |      14.74 |     0.05 |     14.79 |   0+ 18+  0 |        1 |          0 |   991 |       465 |       45.1 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |                N/A |        N/A |      13.30 |     0.03 |     13.33 |   0+ 18+  0 |        1 |          0 |   991 |       393 |       46.4 |    2 / 0 |       |
 
 
 ### Fixture: [DAC2020_bm10.dsn](../fixtures/DAC2020_boards/DAC2020_bm10.dsn)
@@ -121,7 +121,7 @@ Size: 31.3 kB · Layers: 4 · Nets: 63 · Components: 21 · Dimensions: 86 x 71.
 | 1.9.0                                | GUI  |  243/ 283 ( 85.9%) |       7.64 |      12.33 |   369.70 |    389.67 |  20+  3+  5 |        0 |          0 |  1000 |       438 |      298.7 |    7 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |      28.31 |      N/A |     28.31 |   0+  6+  3 |        0 |          0 |  1000 |      2007 |       20.1 |   16 / 0 |       |
 | 2.3.0                                | CLI  |  242/ 245 ( 98.8%) |       9.73 |      71.86 |     0.24 |     81.83 |  12+  4+  0 |        0 |          8 |  1000 |       784 |      425.7 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |  242/ 245 ( 98.8%) |       9.06 |      72.02 |     0.21 |     81.29 |  12+  4+  0 |        0 |          8 |  1000 |       880 |      427.4 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |  242/ 245 ( 98.8%) |       9.48 |      64.88 |     0.20 |     74.56 |  12+  4+  0 |        0 |          8 |  1000 |       822 |      410.5 |    2 / 0 |       |
 
 
 ### Fixture: [DAC2020_bm11.dsn](../fixtures/DAC2020_boards/DAC2020_bm11.dsn)
@@ -133,7 +133,7 @@ Size: 26.2 kB · Layers: 4 · Nets: 35 · Components: 21 · Dimensions: 58 x 59.
 | 1.9.0                                | GUI  |  142/ 193 ( 73.6%) |      10.56 |       6.77 |  1768.08 |   1785.41 |  20+ 25+  9 |        6 |          0 |   919 |       320 |     1620.1 |    2 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |      16.87 |    20.26 |     37.13 |   0+ 18+  2 |        7 |          0 |   900 |      1678 |       11.5 |   16 / 0 |       |
 | 2.3.0                                | CLI  |  154/ 157 ( 98.1%) |       3.18 |      84.85 |    10.44 |     98.47 |   3+ 18+  1 |        2 |          0 |   987 |       754 |      494.0 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |  154/ 157 ( 98.1%) |       3.14 |      85.45 |    10.37 |     98.96 |   3+ 18+  1 |        2 |          0 |   987 |       735 |      497.5 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |  154/ 157 ( 98.1%) |       3.04 |      79.97 |     9.69 |     92.70 |   3+ 18+  1 |        2 |          0 |   987 |       771 |      498.5 |    2 / 0 |       |
 
 
 ## Group: [KiCad_10_demos](../fixtures/KiCad_10_demos)
@@ -147,7 +147,7 @@ Size: 146.8 kB · Layers: 6 · Nets: 220 · Components: 51 · Dimensions: 61.2 x
 | 1.9.0                                | GUI  |  294/ 593 ( 49.6%) |      43.87 |      17.62 |   218.79 |    280.28 |  20+  5+  3 |        4 |         29 |   971 |       247 |      139.9 |   23 / 0 |           |
 | 2.2.4                                | CLI  |                N/A |        N/A |     175.07 |      N/A |    175.07 |   0+ 20+  2 |        6 |         29 |   954 |      2018 |       85.8 |   16 / 0 |           |
 | 2.3.0                                | CLI  |  460/ 589 ( 78.1%) |      52.70 |    3516.58 |      N/A |   3569.28 |   5+  1+  0 |       31 |         57 |   896 |      1433 |       65.2 |    2 / 0 | TIMEOUT,  |
-| soc-gui-separation-and-accessibility | CLI  |  460/ 589 ( 78.1%) |      54.42 |        N/A |      N/A |     54.42 |   5+  0+  0 |        0 |          0 |   N/A |       387 |       65.0 |    2 / 0 | TIMEOUT   |
+| soc-gui-separation-and-accessibility | CLI  |  460/ 589 ( 78.1%) |      49.51 |    3515.00 |      N/A |   3564.51 |   5+  1+  0 |        0 |          0 |   N/A |      1423 |       64.8 |    2 / 0 | TIMEOUT   |
 
 
 ### Fixture: [complex_hierarchy.dsn](../fixtures/KiCad_10_demos/complex_hierarchy.dsn)
@@ -159,7 +159,7 @@ Size: 53.3 kB · Layers: 2 · Nets: 52 · Components: 21 · Dimensions: 100.7 x 
 | 1.9.0                                | GUI  |                N/A |       0.00 |       7.28 |    67.02 |     74.30 |   0+ 27+  2 |        6 |          0 |   938 |        92 |       52.3 |    2 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |       5.78 |     9.96 |     15.74 |   0+  7+  2 |        8 |          0 |   912 |      1585 |        2.4 |   16 / 0 |       |
 | 2.3.0                                | CLI  |                N/A |        N/A |      15.78 |     1.47 |     17.25 |   0+ 18+  1 |        9 |          0 |   911 |       547 |       70.9 |    4 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |                N/A |        N/A |      14.08 |     1.32 |     15.40 |   0+ 18+  1 |        9 |          0 |   911 |       614 |       73.5 |    4 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |                N/A |        N/A |      13.96 |     1.34 |     15.30 |   0+ 18+  1 |        9 |          0 |   911 |       611 |       69.1 |    4 / 0 |       |
 
 
 ### Fixture: [ecc83-pp.dsn](../fixtures/KiCad_10_demos/ecc83-pp.dsn)
@@ -171,7 +171,7 @@ Size: 34.8 kB · Layers: 2 · Nets: 13 · Components: 9 · Dimensions: 52.1 x 46
 | 1.9.0                                | GUI  |                N/A |       0.00 |       0.27 |     0.41 |      0.68 |   0+  1+  2 |        0 |          0 |  1000 |        78 |        0.2 |    0 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |       0.34 |     1.90 |      2.24 |   0+  2+  2 |        0 |          0 |  1000 |      1586 |        0.0 |   16 / 0 |       |
 | 2.3.0                                | CLI  |                N/A |        N/A |       0.44 |     0.02 |      0.46 |   0+  2+  0 |        0 |          0 |  1000 |       103 |        0.0 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |                N/A |        N/A |       0.37 |     0.01 |      0.38 |   0+  2+  0 |        0 |          0 |  1000 |       103 |        0.0 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |                N/A |        N/A |       0.35 |     0.01 |      0.36 |   0+  2+  0 |        0 |          0 |  1000 |       103 |        0.0 |    2 / 0 |       |
 
 
 ### Fixture: [ecc83-pp_v2.dsn](../fixtures/KiCad_10_demos/ecc83-pp_v2.dsn)
@@ -183,7 +183,7 @@ Size: 38.2 kB · Layers: 2 · Nets: 13 · Components: 9 · Dimensions: 48.3 x 41
 | 1.9.0                                | GUI  |                N/A |       0.00 |       0.33 |     0.69 |      1.02 |   0+  1+  2 |        0 |         24 |   771 |       143 |        1.2 |   14 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |       0.46 |     3.12 |      3.58 |   0+  2+  2 |        0 |         24 |   771 |      1686 |        0.0 |   16 / 0 |       |
 | 2.3.0                                | CLI  |                N/A |        N/A |       0.49 |     0.75 |      1.24 |   0+  2+  1 |        0 |         24 |   771 |       659 |        3.1 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |                N/A |        N/A |       0.50 |     0.76 |      1.26 |   0+  2+  1 |        0 |         24 |   771 |       632 |        3.1 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |                N/A |        N/A |       0.47 |     0.73 |      1.20 |   0+  2+  1 |        0 |         24 |   771 |       675 |        3.1 |    2 / 0 |       |
 
 
 ### Fixture: [interf_u.dsn](../fixtures/KiCad_10_demos/interf_u.dsn)
@@ -195,7 +195,7 @@ Size: 67.6 kB · Layers: 2 · Nets: 173 · Components: 19 · Dimensions: 115.6 x
 | 1.9.0                                | GUI  |   27/  62 ( 43.5%) |       1.26 |      38.83 |   214.73 |    254.82 |  20+ 28+  9 |        0 |         62 |   938 |       121 |      178.9 |   13 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |      30.51 |    37.30 |     67.81 |   0+ 21+  2 |        2 |         62 |   928 |      1642 |       20.5 |   16 / 0 |       |
 | 2.3.0                                | CLI  |   26/  62 ( 41.9%) |       1.17 |      70.14 |   121.26 |    192.57 |   7+ 19+  1 |        0 |         62 |   938 |       744 |      979.5 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |   26/  62 ( 41.9%) |       1.00 |      68.66 |   118.63 |    188.29 |   7+ 19+  1 |        0 |         62 |   938 |       683 |      978.4 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |   26/  62 ( 41.9%) |       1.04 |      65.98 |   109.37 |    176.39 |   7+ 19+  1 |        0 |         62 |   938 |       622 |      981.4 |    2 / 0 |       |
 
 
 ### Fixture: [multichannel_mixer.dsn](../fixtures/KiCad_10_demos/multichannel_mixer.dsn)
@@ -207,7 +207,7 @@ Size: 49.2 kB · Layers: 2 · Nets: 80 · Components: 15 · Dimensions: 110 x 11
 | 1.9.0                                | GUI  |   13/ 192 (  6.8%) |       0.51 |       7.40 |     0.67 |      8.58 |   1+  2+  2 |       75 |          0 |   212 |       265 |        6.8 |    0 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |      67.52 |     1.46 |     68.98 |   0+ 18+  2 |       75 |          0 |   202 |      1318 |       59.5 |   16 / 0 |       |
 | 2.3.0                                | CLI  |   28/ 192 ( 14.6%) |       0.68 |      94.44 |     1.15 |     96.27 |   2+ 18+  1 |       75 |          0 |   212 |       422 |      283.3 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |   28/ 192 ( 14.6%) |       0.66 |      90.85 |     1.03 |     92.54 |   2+ 18+  1 |       75 |          0 |   212 |       444 |      281.8 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |   28/ 192 ( 14.6%) |       0.62 |      83.54 |     0.99 |     85.15 |   2+ 18+  1 |       75 |          0 |   212 |       499 |      280.6 |    2 / 0 |       |
 
 
 ### Fixture: [multichannel_mixer-unrouted.dsn](../fixtures/KiCad_10_demos/multichannel_mixer-unrouted.dsn)
@@ -219,7 +219,7 @@ Size: 62 kB · Layers: 2 · Nets: 224 · Components: 15 · Dimensions: 110 x 111
 | 1.9.0                                | GUI  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+  0+  0 |        0 |          0 |   N/A |         0 |        0.0 |    2 / 0 | LOAD ERROR |
 | 2.2.4                                | CLI  |                N/A |        N/A |      16.92 |     3.24 |     20.16 |   0+  2+  2 |       59 |        614 |     0 |      1124 |       10.4 |   22 / 0 |            |
 | 2.3.0                                | CLI  |   25/ 192 ( 13.0%) |       1.00 |     366.73 |     3.07 |    370.80 |   2+ 18+  1 |       59 |        612 |     0 |       592 |     1621.5 |    8 / 0 |            |
-| soc-gui-separation-and-accessibility | CLI  |   25/ 192 ( 13.0%) |       0.93 |     355.33 |     2.93 |    359.19 |   2+ 18+  1 |       59 |        612 |     0 |       581 |     1585.6 |    8 / 0 |            |
+| soc-gui-separation-and-accessibility | CLI  |   25/ 192 ( 13.0%) |       0.91 |     296.95 |     2.78 |    300.64 |   2+ 18+  1 |       59 |        612 |     0 |       701 |     1411.8 |    8 / 0 |            |
 
 
 ### Fixture: [pic_programmer.dsn](../fixtures/KiCad_10_demos/pic_programmer.dsn)
@@ -231,7 +231,7 @@ Size: 104.2 kB · Layers: 2 · Nets: 111 · Components: 29 · Dimensions: 160 x 
 | 1.9.0                                | GUI  |    1/   2 ( 50.0%) |       0.31 |       1.85 |     4.88 |      7.04 |  20+  2+  2 |        2 |          1 |   959 |       166 |        3.5 |    0 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |       2.33 |    15.86 |     18.19 |   0+  2+  2 |        2 |          1 |   983 |      1537 |        0.8 |   16 / 0 |       |
 | 2.3.0                                | CLI  |    2/   2 (100.0%) |       0.34 |       3.34 |     0.03 |      3.71 |   2+  2+  0 |        0 |          1 |   998 |       425 |        7.6 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |    2/   2 (100.0%) |       0.22 |       3.25 |     0.03 |      3.50 |   2+  2+  0 |        0 |          1 |   998 |       378 |        8.0 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |    2/   2 (100.0%) |       0.22 |       3.07 |     0.03 |      3.32 |   2+  2+  0 |        0 |          1 |   998 |       414 |        8.7 |    2 / 0 |       |
 
 
 ### Fixture: [sonde xilinx.dsn](../fixtures/KiCad_10_demos/sonde xilinx.dsn)
@@ -243,7 +243,7 @@ Size: 30.8 kB · Layers: 2 · Nets: 42 · Components: 10 · Dimensions: 80.4 x 4
 | 1.9.0                                | GUI  |   19/  34 ( 55.9%) |       0.38 |       0.49 |     4.47 |      5.34 |   1+  1+  4 |        0 |          0 |  1000 |       163 |        2.4 |   66 / 0 |                                   |
 | 2.2.4                                | CLI  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+  0+  0 |        0 |          0 |   N/A |         0 |        0.0 |   12 / 6 | LOAD ERROR, FileNotFoundException |
 | 2.3.0                                | CLI  |   21/  34 ( 61.8%) |       0.55 |       1.75 |     8.59 |     10.89 |   3+  2+  1 |        0 |          0 |  1000 |       697 |       55.6 |    2 / 0 |                                   |
-| soc-gui-separation-and-accessibility | CLI  |   21/  34 ( 61.8%) |       0.48 |       1.56 |     7.79 |      9.83 |   3+  2+  1 |        0 |          0 |  1000 |       533 |       55.9 |    2 / 0 |                                   |
+| soc-gui-separation-and-accessibility | CLI  |   21/  34 ( 61.8%) |       0.48 |       1.58 |     7.62 |      9.68 |   3+  2+  1 |        0 |          0 |  1000 |       380 |       56.0 |    2 / 0 |                                   |
 
 
 ### Fixture: [StickHub.dsn](../fixtures/KiCad_10_demos/StickHub.dsn)
@@ -255,6 +255,6 @@ Size: 83.4 kB · Layers: 2 · Nets: 47 · Components: 58 · Dimensions: 16.5 x 4
 | 1.9.0                                | GUI  |  167/ 273 ( 61.2%) |      20.06 |      13.82 |   734.68 |    768.56 |  20+ 29+  9 |        2 |          2 |   990 |       208 |      518.1 |   44 / 0 |       |
 | 2.2.4                                | CLI  |                N/A |        N/A |      17.95 |    31.90 |     49.85 |   0+ 18+  2 |        5 |          2 |   977 |      1623 |       10.3 |   16 / 0 |       |
 | 2.3.0                                | CLI  |  267/ 273 ( 97.8%) |      27.00 |     262.75 |    20.93 |    310.68 |  20+ 29+  1 |        2 |          5 |   990 |       569 |      860.9 |    2 / 0 |       |
-| soc-gui-separation-and-accessibility | CLI  |  267/ 273 ( 97.8%) |      25.54 |     255.17 |    20.17 |    300.88 |  20+ 29+  1 |        2 |          5 |   990 |       565 |      865.1 |    2 / 0 |       |
+| soc-gui-separation-and-accessibility | CLI  |  267/ 273 ( 97.8%) |      25.39 |     239.50 |    18.95 |    283.84 |  20+ 29+  1 |        2 |          5 |   990 |       624 |      862.8 |    2 / 0 |       |
 
 
