@@ -1,270 +1,481 @@
-# Long-Term Naming and Package Refactoring Plan
+# Naming and Package Refactoring Plan
 
-Status: plan for a separate branch. The current branch should remain
-behaviorally unchanged apart from resolving the benchmark gate below.
+Status: **complete and ready to implement.** No further product decisions are
+required.
 
-The `.frb` format is rarely used and is primarily an internal testing format.
-Backward compatibility for `.frb` files is therefore not a requirement for
-these renames. Direct class and package moves are acceptable; in-repository
-tests and fixtures must simply be updated as part of each migration.
+Epic branch: `refactor/naming-and-packages`. Each phase is its own branch,
+PR’d **into the epic**, not into `master`. Merge the epic to `master` only
+when every phase is done.
 
-## Benchmark gate
+This is a naming and packaging campaign. Do not change routing, DRC, or
+scoring *behavior* except the locked Q1 seed/precedence fix. Do not modify
+`src_v19/`. Do not run `spotlessApply`. Do not auto-stage files. Preserve LF.
 
-The benchmark commit `88e5a5e8` (`Update nightly benchmark results`) reports:
+IntelliJ (or equivalent) performs Java type/method/package renames. An LLM
+updates docs, ArchUnit strings, resource-bundle paths, leftover greps, and
+quality-gate interpretation. Do not chat-rewrite `Item` or other central
+types.
 
-- 20 fixtures for both the current branch and v2.3.0.
-- Two reported failures for both versions.
-- An aggregate average score of `915.1` for both versions.
-- Matching routing results on most fixtures.
+---
 
-This is not sufficient to declare the branch regression-free. On
-`DAC2020_bm01.dsn`, the latest current-branch run reports 4 unrouted nets and
-20 DRC violations, while v2.3.0 reports 4 unrouted nets and 2 DRC violations.
-The same current run's internal quality record reports zero violations, so the
-result is also a measurement inconsistency. The comprehensive DRC result is
-the authoritative signal for this project. The benchmark should therefore be
-investigated before merging or beginning behavior-sensitive renames.
+## Locked decisions
 
-The `CM5_MINIMA_3.dsn` result is a timeout for both versions and is not a
-comparable improvement: the current result has incomplete `N/A` quality
-fields. This is a baseline limitation rather than evidence of a current-branch
-improvement.
+| ID | Decision |
+|---|---|
+| D1 | Breaking `.frb` Java-serialization compatibility is acceptable. Keep save/load *code*; no `resolveClass` shims. |
+| D2 | `gui.workspace.WorkspaceSettings extends GuiSettingsSource`. `settings.GuiSettings` → `GuiApplicationSettings`. Accessor `WorkspaceContract.getWorkspaceSettings()`. |
+| D3 | **Session** = API/job session. **Primary session** = the one session the desktop may drive. **Workspace** = the desktop editor surface bound to that primary session (`gui.workspace`). |
+| D4 | Keep the `BoardManager` family and the `Batch*` family. `GuiBoardManager` stays (it *hosts* the workspace). |
+| D5 | Moderate packages: MCP controller, analytics, `gui.workspace`, `io.kicad` DRC DTOs, `core.library`, `i18n` + `Common_*.properties`, `management.jobs`, `management.sessions`. |
+| D6 | Underscore / `p_` cleanup for all of `src/main/java` and `src/test/java` (not `src_v19/`), sliced; autoroute/shove last. |
+| D7 | KiCad DRC DTOs → `io.kicad` as `KiCadDrcReport` / `KiCadDrcViolation` / `KiCadDrcViolationItem` / `KiCadDrcPosition`. Different type from `KiCadBoardJson`; same `KiCad` prefix. |
+| D8 | User-facing wire names: publish the new name now, drop the old name in the **next minor**. Internal Java names have no window. Python client (same owner) updates in that window. |
+| D9 | Do not wait for the `DAC2020_bm01.dsn` DRC discrepancy. |
+| Q1 | Merge JSON/DSN/env/CLI (and other sources below 65) **seed** workspace settings at load. After the user changes a control, live `WorkspaceSettings` **wins**. GUI source priority **65** (above CLI 60, below API 70). Fix stale “priority 50” docs. |
+| Q4 | `SessionManager` → `management.sessions`. |
+| Q5 | Keep `core.Package` when moving to `core.library`. |
+| Q6 | Move `Common_*.properties` with `TextManager` into `i18n`. Per-class bundles still move with their classes. |
+| Q7 | Epic `refactor/naming-and-packages`; stacked phase branches; epic → `master` at the end. |
+| Q8 | `WorkspaceContract`. Keep `GuiBoardManager`. |
 
-## Recommendation scale
+---
 
-- **Critical** — affects a central domain concept or a public/API contract;
-  schedule as a dedicated migration.
-- **High** — materially improves architectural clarity; suitable for a
-  dedicated refactoring series.
-- **Medium** — useful clarity improvement, but not a prerequisite for
-  maintainability.
-- **Low** — cleanup or compatibility-shell removal after a migration window.
-- **Keep** — the current name is already a good long-term fit.
+## Glossary
 
-## Class and type proposals
-
-| Current type | Recommended long-term name | Reason | Importance | Main risk |
-|---|---|---|---|---|
-| `app.freerouting.board.BasicBoard` | `BoardModel` | This is the mutable board container for items, rules, libraries, spatial indexes, serialization, and board mutations. “Basic” understates its role. | Critical | High: central inheritance and in-repo serialization |
-| `app.freerouting.settings.RouterSettings` | `RoutingPipelineSettings` | The type configures fanout, autorouting, optimization, scoring, limits, DRC behavior, layers, and resources; “Router” is narrower than its actual scope. | Critical | Critical: reflection, JSON, and API contracts |
-| `app.freerouting.drc.DesignRulesChecker` | Split into `ClearanceViolationChecker`, `ConnectivityAnalyzer`, and `KicadDrcReportBuilder` | The current class checks clearances, connectivity, length constraints, dangling items, and external report generation. A single replacement name would hide the mixed responsibilities. | Critical | High: broad call-site and test migration |
-| `app.freerouting.autoroute.BatchAutorouter` | `AutoroutePipelineCoordinator` | The class coordinates fanout, autoroute passes, stagnation detection, board restoration, scoring, telemetry, and cleanup. “Batch” is an implementation-era term. | Critical | High: central routing orchestration |
-| `app.freerouting.gui.session.AutorouterAndRouteOptimizerThread` | `GuiRoutingPipelineTask` | It runs the GUI-facing routing pipeline, publishes progress, collects metrics, optimizes routes, and writes output. The current name is long and exposes an implementation detail. | High | High: thread lifecycle and session ports |
-| `app.freerouting.management.RoutingJobSchedulerActionThread` | `RoutingJobExecutionTask` | “ActionThread” is a legacy concurrency detail; the meaningful responsibility is executing and monitoring one routing job. | High | Medium-high: scheduler integrations |
-| `app.freerouting.management.HeadlessBoardManager` | `HeadlessBoardLifecycleService` | The class loads and creates boards, applies settings, validates state, computes checksums, and writes output. “Manager” does not describe the lifecycle boundary. | High | High: API and GUI inheritance |
-| `app.freerouting.gui.session.GuiBoardManager` | `GuiBoardSession` | The class owns the active GUI board session, live settings, editor-state binding, board replacement, and GUI-specific lifecycle. | High | High: session and serialization references |
-| `app.freerouting.gui.GuiManager` | `GuiApplicationBootstrap` | Its primary responsibility is desktop startup and application-level GUI wiring, not generic resource management. | High | Medium: startup and integration references |
-| `app.freerouting.gui.session.InteractiveSettings` | `GuiSessionSettings` | It is the live GUI-session settings source, including active layer, selection, grids, route mode, and interactive options. “Interactive” alone is easy to confuse with routing mode. | High | High: singleton and settings-merger integration |
-| `app.freerouting.settings.GuiSettings` | `GuiApplicationSettings` | This type is application GUI configuration, not router settings. The new name distinguishes it from the source type below. | High | Medium: settings and API references |
-| `app.freerouting.settings.sources.GuiSettings` | `GuiRouterSettingsSource` | This type is a `SettingsMerger` source for router settings, not general GUI application configuration. | High | Medium: source registration and imports |
-| `app.freerouting.gui.interactive.Settings` | Remove, or temporarily use `LegacyInteractiveSettings` | It duplicates the newer live settings concept and has no meaningful production role. Removal is preferable after confirming compatibility consumers. | Low | Low: verify external consumers |
-| `app.freerouting.gui.interactive.InteractiveState` | `EditorInteractionState` | This is the base class for editor state-machine states handling pointer/key events, transitions, and commands. | Medium | High: many concrete states inherit it |
-| `app.freerouting.gui.interactive.InteractiveStateController` | `EditorStateMachine` | It stores the current state, dispatches events, performs transitions, and bootstraps editor commands. | Medium | Medium: state registration and tests |
-| `app.freerouting.autoroute.BatchOptimizer` | `RouteOptimizationStage` | It optimizes one routing job's board; it is not a general batch processor. | High | Medium-high: pipeline wiring |
-| `app.freerouting.autoroute.BatchFanout` | `SmdFanoutStage` | It performs SMD-pin escape/fanout work and reports fanout statistics. | Medium | Medium: stage and diagnostic references |
-| `app.freerouting.autoroute.NamedAlgorithm` | `RoutingStage` or `RoutingStageDefinition` | The type carries more than a name: it participates in stage context, board/settings access, and event handling. Confirm the exact abstraction before choosing between the two names. | Medium | Medium: inheritance contract |
-| `app.freerouting.board.Item` | `BoardItem` | The class is the common board-model base for pins, vias, traces, areas, obstacles, and outlines. “Item” is too generic outside a narrow local context. | High | High: central model inheritance |
-| `app.freerouting.board.ShapeSearchTree` | `BoardSpatialIndex` | It is a clearance-aware spatial index over board geometry, not a reusable generic tree abstraction. | High | High: routing performance and many call sites |
-| `app.freerouting.board.SearchTreeManager` | `BoardSpatialIndexManager` | It manages default and compensated spatial indexes, reinsertion, and invalidation. | Medium-high | Medium-high: board infrastructure |
-| `app.freerouting.rules.BoardRules` | `BoardRuleSet` | The class aggregates clearance, net, net-class, via, width, angle, and conduction rules. “RuleSet” better communicates an aggregate value. | Medium-high | Medium-high: serialized board state |
-| `app.freerouting.rules.Nets` | `NetRegistry` | It is an indexed lookup/factory registry by number, name, and subnet, rather than merely a plural collection. | Medium | Medium: public domain API |
-| `app.freerouting.drc.NetIncompletes` | `NetConnectivityAnalysis` | “Incompletes” is awkward; the type computes and stores ratsnest connections and related net-quality data. | High | Medium: DRC and GUI consumers |
-| `app.freerouting.drc.AirLine` | `UnroutedConnection` | “AirLine” is historical terminology for a straight-line connection between two board items. | Medium-high | Medium: localized resources and GUI |
-| `app.freerouting.core.scoring.BoardStatistics` | `BoardRoutingMetrics` | The type combines routing completion, DRC, scoring, fanout, and quality measurements. “Statistics” is too generic. | Medium-high | High: serialized and benchmark-facing |
-| `app.freerouting.drc.DrcReport` | `KicadDrcReport` | This is a KiCad JSON report DTO, not the general internal DRC result. | High | Medium-high: JSON/report consumers |
-| `app.freerouting.drc.DrcViolation` | `KicadDrcViolation` | Prefixing the external schema type separates it from internal violation concepts. | High | Medium-high: JSON/report contract |
-| `app.freerouting.drc.DrcViolationItem` | `KicadDrcViolationItem` | Same schema clarification as `KicadDrcViolation`. | High | Medium-high: JSON/report contract |
-| `app.freerouting.drc.DrcPosition` | `KicadDrcPosition` | Makes the external report schema role explicit. | Medium | Medium: JSON/report contract |
-| `app.freerouting.io.specctra.parser.DsnFile` | `SpecctraDsnParserSupport` | Public DSN entry points are `DsnReader` and `DsnWriter`; this type is parser support and legacy helpers rather than the main file abstraction. | High | Medium: parser compatibility |
-| `app.freerouting.io.specctra.parser.RulesFile` | Remove | It is an empty compatibility shell; `RulesReader` and `RulesWriter` are the real entry points. | Low | Low: in-repository references |
-| `app.freerouting.io.specctra.parser.SpecctraSesFileWriter` | Remove | It is a deprecated wrapper around `SesWriter`. | Low | Low: in-repository references |
-| `app.freerouting.io.specctra.parser.SesFileReader` | Remove | It is a deprecated wrapper around `SesReader`. | Low | Low: in-repository references |
-
-### Duplicate type names to resolve early
-
-The two `GuiSettings` classes are the most urgent naming collision because
-they represent different concepts in adjacent configuration paths. Rename
-them directly and update imports and settings-merger registration:
-
-1. `settings.GuiSettings` → `GuiApplicationSettings`
-2. `settings.sources.GuiSettings` → `GuiRouterSettingsSource`
-3. `gui.session.InteractiveSettings` → `GuiSessionSettings`
-
-Other duplicate concepts deserve a later, scoped pass:
-
-- `rules.NetClass` versus `io.specctra.parser.NetClass`
-  (`RoutingNetClass` versus `SpecctraNetClassScope`)
-- `board.Unit` versus `io.specctra.parser.Unit`
-  (`BoardUnit` versus `SpecctraUnitScope`)
-- singular/plural collection pairs such as `Net`/`Nets`,
-  `NetClass`/`NetClasses`, and `ViaInfo`/`ViaInfos`
-
-These should not be renamed by broad text replacement. Their names are often
-part of format-parser vocabulary or active board-model code.
-
-## Variable and local-name proposals
-
-`currTrace` is a valid first target, but a blanket replacement is not always
-the best result. Use the most specific name that describes the role:
-
-| Current pattern | Preferred replacement | When to use it |
+| Term | Meaning | Code |
 |---|---|---|
-| `currTrace` | `currentTrace` | A loop or state machine genuinely tracks the current trace |
-| `currTrace` in pull-tight replacement logic | `traceToAdjust` | The variable identifies the trace being modified, not merely the current iteration |
-| `currTrace` in a pattern match | `trace` | The surrounding scope already makes “current” obvious |
-| `currItem` | `currentItem` | The item is the current loop/state value |
-| `currLayer` | `currentLayer` | The layer is the current iteration/state value |
-| `currNetNo` | `currentNetNumber` | The value is a net number rather than a net object |
-| `currTraceInfo` | `traceInfo` or `currentTraceInfo` | Use `traceInfo` for a collection element and `currentTraceInfo` for state |
-| `currTraceCount` | `traceCount` | The count is not itself an iterated trace |
-| `currDoor` | `currentDoor` | The current expansion-door iteration is important to the algorithm |
-| `currShape` | `currentShape` | The shape is stateful or compared across iterations |
+| **Session** | API/job container (caller, host, queued jobs). HTTP `/v1/sessions`. | `core.Session`, `management.sessions.SessionManager`, `api.v1.SessionControllerV1` |
+| **Primary session** | The one session the desktop may show and drive. At most one. | `Session.isPrimary` (today `isGuiSession`, `transient`) |
+| **Workspace** | Desktop editor surface bound to the primary session. | Package `gui.workspace` (today `gui.session`) |
 
-Also replace legacy underscore names at normal API boundaries, for example
-`get_locale()` → `getLocale()` and
-`last_repainted_time` → `lastRepaintedTime`. Preserve deprecated forwarding
-methods where external integrations may depend on the existing spelling.
+Do not put `Session` in GUI type names. Do not name the GUI package
+`gui.editor` (that fights `gui.interactive`).
 
-Do not expand standard domain abbreviations such as API, MCP, DSN, SES, DRC,
-EDT, or SMD merely for stylistic reasons.
+---
 
-## Package proposals
+## End-state map (source of truth)
 
-| Current package | Recommended direction | Reason | Importance | Main risk |
-|---|---|---|---|---|
-| `app.freerouting.api.v1.McpControllerV1` | Move the class to `app.freerouting.api.mcp.McpControllerV1` | MCP has its own server, authentication, rate limiting, SSE/WebSocket, and tool registry. Keeping its controller under REST `v1` is misleading. HTTP routes do not need to change. | High | Medium: registrations, imports, ArchUnit/docs |
-| `app.freerouting.management` | Introduce `app.freerouting.orchestration` with `board`, `jobs`, and `sessions` subpackages | “Management” combines board lifecycle, session lifecycle, scheduling, and service coordination. Role-based packages expose the actual boundaries. | High | Medium-high: public Java API and ArchUnit rules |
-| `app.freerouting.management.analytics` | `app.freerouting.analytics` | Analytics is an independent integration/service concern, not board management. | Medium | Medium: public analytics classes |
-| `app.freerouting.core` | Split into `jobs`, `sessions`, `scoring`, and `board.library` by responsibility | `core` currently mixes jobs, sessions, scoring, board-library data, counters, and lifecycle support. | High | High: central model and public APIs |
-| `app.freerouting.autoroute` | Retain the root; add `autoroute.batch`, `autoroute.search`, and `autoroute.optimization` | The package currently combines orchestration, search state, routing algorithms, optimizer code, and diagnostics. | Medium-high | Medium-high: algorithm imports and ArchUnit |
-| `app.freerouting.board` | Introduce subpackages incrementally, beginning with isolated spatial and algorithm code | Board entities, spatial indexes, mutation algorithms, and model state are tightly coupled. | Medium-high | Very high: model coupling and performance |
-| `app.freerouting.gui` | Retain existing `session`, `interactive`, `rendering`, and `a11y`; later consider `windows`, `menus`, `panels`, and `components` | The existing boundaries are meaningful and enforced, but the root package is crowded. | Medium-high | High: class-based i18n and GUI serialization |
-| `app.freerouting.util.TextManager` | `app.freerouting.i18n.TextManager` | Localization is a domain service, not a generic utility. | Medium-high | Very high: resource-bundle lookup uses class names |
-| `app.freerouting.util.gson` | `app.freerouting.serialization.gson` | Gson providers/adapters are serialization infrastructure, not generic utilities. | Medium | Medium: adapter registration and imports |
-| `app.freerouting.drc` | Keep for now; consider `drc.clearance`, `drc.connectivity`, and `drc.reporting` after responsibility extraction | The package is broad, but the current architecture intentionally keeps DRC concerns together while accepted debt is tracked. | Low-medium | Medium-high: API and localized resources |
-| `app.freerouting.settings` and `app.freerouting.settings.sources` | Keep | These packages already describe a coherent layered configuration subsystem. | Keep | Low |
-| `app.freerouting.io`, `io.specctra`, `io.specctra.parser`, and `io.kicad` | Keep | Format boundaries are clear, and parser encapsulation is explicitly protected. | Keep | High if changed: public I/O entry points |
-| `app.freerouting.geometry.planar` | Keep | “Planar” accurately describes the 2D geometry foundation and leaves room for future geometry domains. | Keep | Very high: serialized geometry and API consumers |
-| `app.freerouting.rules` | Keep | Nets, net classes, clearance matrices, and via rules form a cohesive domain. | Keep | High: serialized board state |
-| `app.freerouting.datastructures`, `logger`, and `debug` | Keep | These names are already recognizable and are used by current architectural boundaries. | Keep | Low-medium |
+### Types
 
-## Recommended actions before merging the current branch
+| Current FQCN | New FQCN / action |
+|---|---|
+| `settings.GuiSettings` | `settings.GuiApplicationSettings` |
+| `settings.sources.GuiSettings` | `settings.sources.GuiSettingsSource` |
+| `gui.session.InteractiveSettings` | `gui.workspace.WorkspaceSettings` **extends** `GuiSettingsSource` |
+| `gui.session.GuiSessionContract` | `gui.workspace.WorkspaceContract` |
+| `gui.session.GuiSessionPort` | `gui.workspace.WorkspacePort` |
+| `gui.session.GuiSessionPortAdapter` | `gui.workspace.WorkspacePortAdapter` |
+| `gui.session.SessionGeneration` | `gui.workspace.WorkspaceGeneration` |
+| `gui.interactive.Settings` | **Delete** (no remaining imports) |
+| `io.specctra.parser.RulesFile` | **Delete** |
+| `io.specctra.parser.SpecctraSesFileWriter` | **Delete** |
+| `io.specctra.parser.SesFileReader` | **Delete** |
+| `drc.DrcReport` | `io.kicad.KiCadDrcReport` |
+| `drc.DrcViolation` | `io.kicad.KiCadDrcViolation` |
+| `drc.DrcViolationItem` | `io.kicad.KiCadDrcViolationItem` |
+| `drc.DrcPosition` | `io.kicad.KiCadDrcPosition` |
+| `api.v1.McpControllerV1` | `api.mcp.McpControllerV1` (HTTP paths unchanged) |
+| `core.Session.isGuiSession` | `isPrimary` |
+| `WorkspaceContract.getInteractiveSettings()` | `getWorkspaceSettings()` |
 
-These are the only items I recommend completing on the current branch. The
-actual naming and package changes should wait for the separate refactoring
-branch.
+Keep: `GuiBoardManager`, `HeadlessBoardManager`, `BoardManager`,
+`BatchAutorouter` / `BatchOptimizer` / `BatchFanout` / `BatchAutorouterV19`,
+`RouterSettings`, `BasicBoard`, `Item`, `ShapeSearchTree`,
+`DesignRulesChecker`, `AirLine`, `NamedAlgorithm`, `InteractiveState`,
+`core.Package`.
 
-1. **Resolve the `DAC2020_bm01.dsn` benchmark discrepancy.**
-   Reproduce the latest current-branch and v2.3.0 runs with identical settings.
-   Compare the complete result from
-   `DesignRulesChecker.getAllClearanceViolations()` with the benchmark's
-   internal quality field. Determine whether the 20 violations are real or
-   caused by the benchmark/DRC measurement path. Do not merge while a real
-   increase from 2 to 20 remains unexplained.
-2. **Record the CM5 timeout as a baseline limitation.**
-   Both versions time out on `CM5_MINIMA_3.dsn`; the current result has
-   incomplete fields. Ensure the benchmark report does not present this as a
-   current-branch improvement, and either document it as accepted baseline
-   debt or rerun it with a comparable bounded configuration.
-3. **Run the final repository gates from the merge candidate.**
-   On Windows, run:
-   `gradlew.bat spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`,
-   followed by the required test suite (`check` or the project's agreed
-   merge-equivalent). Run `testGui` if GUI sources or accessibility tests are
-   included in the merge candidate.
-4. **Verify the intended diff and generated benchmark assets.**
-   Confirm that the benchmark JAR, benchmark data, and website changes in
-   `88e5a5e8` are intentional, that no temporary logs or unrelated generated
-   files are present, and that `git diff --check` is clean.
-5. **Keep the merge candidate behavior-neutral.**
-   Do not begin the class/package renames or broad local-variable cleanup
-   before merging. The new planning document is documentation only.
+`GlobalSettings.guiSettings`: keep the **Java field name** and
+`@SerializedName("gui")`. Only the field’s *type* becomes
+`GuiApplicationSettings`.
 
-The current branch is merge-ready only after item 1 is resolved and item 3
-passes. Item 2 may remain accepted baseline debt if it is explicitly recorded
-and the result is not interpreted as a regression-free success.
+### Packages
 
-## Separate-branch implementation plan
+| From | To | Contents |
+|---|---|---|
+| `gui.session` | `gui.workspace` | Entire package (~31 production types) + tests + `ScreenMessages_*.properties` + `GuiBoardManager_*.properties` |
+| `management.analytics` | `app.freerouting.analytics` | Client, BigQuery, DTOs |
+| `util.TextManager` | `i18n.TextManager` | Class only; no `TextManager_*.properties` exist |
+| `app.freerouting.Common_*.properties` | `app.freerouting.i18n.Common_*.properties` | Update hard-coded bundle `"app.freerouting.Common"` → `"app.freerouting.i18n.Common"` |
+| *(new)* `core.library` | `BoardLibrary`, `Package`, `Packages`, `Padstack`, `Padstacks`, `LogicalPart`, `LogicalParts` |
+| *(new)* `management.jobs` | `RoutingJobScheduler`, `RoutingJobSchedulerActionThread`, `ThreadActionListener` |
+| *(new)* `management.sessions` | `SessionManager` |
+| `management` root | stays | `BoardManager`, `HeadlessBoardManager`, `BoardLoader` |
 
-### Phase A — low-risk identifier cleanup
+Leave in `core`: `Session`, `RoutingJob*`, `StoppableThread`, `RouterCounters`,
+`BoardFileDetails`, `ProgressThrottler`, `core.scoring`, `core.events`.
 
-- Rename `currTrace` to `currentTrace` where it represents the current
-  iteration value.
-- Use role-specific names such as `traceToAdjust`, `traceInfo`, or `trace`
-  where those are more accurate.
-- Rename `currItem`, `currLayer`, `currDoor`, and similar locals.
-- Convert legacy underscore identifiers such as `get_locale()` and
-  `last_repainted_time` at internal call sites.
-- Keep standard abbreviations such as API, MCP, DSN, SES, DRC, EDT, and SMD.
+### Settings priority ladder (after Q1)
 
-### Phase B — duplicate settings and low-risk type cleanup
+| Priority | Source | Class |
+|---|---|---|
+| 0 | Defaults | `DefaultSettings` |
+| 10 | JSON file | `JsonFileSettings` |
+| 20 | DSN | `DsnFileSettings` |
+| 30 | SES | `SesFileSettings` |
+| 40 | RULES | `RulesFileSettings` |
+| 55 | Environment | `EnvironmentVariablesSource` |
+| 60 | CLI | `CliSettings` |
+| **65** | Live workspace / GUI placeholder | `GuiSettingsSource` / `WorkspaceSettings` |
+| 70 | REST API | `ApiSettings` |
 
-- Rename `settings.GuiSettings` to `GuiApplicationSettings`.
-- Rename `settings.sources.GuiSettings` to `GuiRouterSettingsSource`.
-- Rename `gui.session.InteractiveSettings` to `GuiSessionSettings`.
-- Remove unused `gui.interactive.Settings` after confirming there are no
-  required in-repository consumers.
-- Remove `RulesFile`, `SpecctraSesFileWriter`, and `SesFileReader`.
-- Rename KiCad report DTOs with an explicit `Kicad` prefix.
+**Seed-then-live:** at board load, `merge()` sources 0–60, copy the result
+into `WorkspaceSettings` (`setSettings` **and** live overlay fields
+`tracePullTightAccuracy`, `automaticNeckdown` when the merged values are
+non-null). After a GUI edit, priority 65 beats CLI/env. API jobs do not
+register this source.
 
-Because `.frb` compatibility is not required, these can be direct moves and
-renames. Update internal tests and fixtures in the same commit.
+---
 
-### Phase C — DRC responsibility extraction
+## What must not change (wire / behavior)
 
-- Extract clearance checking into `ClearanceViolationChecker`.
-- Extract connectivity/incomplete-net analysis into `ConnectivityAnalyzer`.
-- Extract KiCad JSON construction into `KicadDrcReportBuilder`.
-- Replace `NetIncompletes` with `NetConnectivityAnalysis`.
-- Replace `AirLine` with `UnroutedConnection`.
-- Preserve the existing DRC behavior and validate with full clearance
-  violation checks, not only `BoardStatistics`.
+- HTTP paths, including `/v1/jobs/{jobId}/drc` and `/v1/mcp`.
+- JSON keys (`@SerializedName`), `freerouting.json` `gui` block, `--router.*`,
+  `FREEROUTING__ROUTER__*`.
+- KiCad DRC JSON field names (KiCad’s `drc.v1.json` schema).
+- Routing/DRC/scoring results, except Q1 seeding of live overlay fields.
+- `src_v19/`.
 
-### Phase D — orchestration and GUI role names
+OpenAPI schema *title* for the DRC report: publish **`KiCadDrcReport`** in
+this minor; changelog that `DrcReport` as a schema name goes away in the
+**next minor**. Do not freeze the old title.
 
-- Rename `BatchAutorouter` to `AutoroutePipelineCoordinator`.
-- Rename `BatchOptimizer` and `BatchFanout` to explicit routing-stage names.
-- Rename the GUI routing thread and scheduler action thread to task/pipeline
-  names that do not expose thread implementation details.
-- Rename `HeadlessBoardManager`, `GuiBoardManager`, and `GuiManager` to
-  lifecycle/session/bootstrap names.
-- Update `docs/architecture.md` as orchestration boundaries change.
+---
 
-### Phase E — central model and settings names
+## Tooling and git
 
-- Rename `BasicBoard` to `BoardModel`.
-- Rename `Item` to `BoardItem`.
-- Rename `ShapeSearchTree` and `SearchTreeManager` to spatial-index names.
-- Rename `BoardRules` to `BoardRuleSet` and `Nets` to `NetRegistry`.
-- Rename `RouterSettings` to `RoutingPipelineSettings`.
-- Treat these as separate, reviewable migrations because they affect a large
-  portion of the routing pipeline and public Java-facing code.
+### IntelliJ
 
-### Phase F — package restructuring
+Rename class, move class, rename method/parameter. Turn **off** “search for
+text occurrences” on package moves unless docs/properties are in scope for
+that commit.
 
-1. Move `McpControllerV1` from `api.v1` to `api.mcp`; retain REST controllers
-   in `api.v1`.
-2. Split `management` into role-based orchestration packages.
-3. Move analytics out of `management.analytics`.
-4. Split `core` into jobs, sessions, scoring, and board-library packages.
-5. Add focused `autoroute` subpackages.
-6. Add isolated `board` subpackages for spatial and algorithm code.
-7. Move `TextManager` to `i18n` and Gson infrastructure to
-   `serialization.gson`.
-8. Defer broad GUI, geometry, and format-package moves unless a concrete
-   responsibility boundary justifies them.
+### LLM / human after the IDE step
 
-### Validation gates for each phase
+Move `*.properties` to match `Class.getName()`. Update ArchUnit FQCNs and
+package prefixes. Update AGENTS.md, `docs/architecture.md`, `docs/settings.md`,
+API/MCP docs. Leftover-name grep. Quality gates.
 
-- Compile and run the focused unit tests.
-- Run relevant architecture tests and update ArchUnit rules.
-- Run `spotlessCheck`, Checkstyle, and `git diff --check`.
-- Run `python scripts/i18n/extract-context.py --check` when Java or
-  translation sources change.
-- Run relevant routing fixtures and compare unrouted nets, full DRC
-  violations, and completion against the stable v2.3.0 baseline.
-- Do not modify `src_v19/`; it is a frozen compatibility reference.
-- Preserve class-based localization resources when moving GUI, DRC, or utility
-  classes.
-- Update architecture documentation, API registrations, and public
-  Java-facing documentation with each move.
+### Branches
+
+| Branch | Merges into |
+|---|---|
+| `refactor/naming-and-packages` | `master` at the end |
+| `refactor/naming-phase-1-gui-settings` | epic |
+| `refactor/naming-phase-2-workspace` | epic |
+| `refactor/naming-phase-3-kicad-mcp` | epic |
+| `refactor/naming-phase-4-packages` | epic |
+| `refactor/naming-phase-5-curr` | epic |
+| `refactor/naming-phase-6-identifiers` | epic (may be several PRs) |
+
+Create each phase branch from the **epic** (after the previous phase has
+merged). Do not branch phases from stale `master`.
+
+### Quality gates (every phase, Windows)
+
+```
+gradlew.bat spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes
+gradlew.bat test --tests app.freerouting.architecture.ModuleBoundariesArchTest --tests app.freerouting.io.SpecctraPackageArchTest
+```
+
+Plus the phase-specific tests listed below. When Java or translation sources
+change: `python scripts/i18n/extract-context.py --check`. When GUI packages
+move: `gradlew.bat testGui` if that task is part of the merge candidate.
+Routing-adjacent slices: `Issue508Test_BM01_first_2_nets`. Inspect
+`git diff --stat` and `git diff --check`. Never `spotlessApply`.
+
+Leftover grep (exclude `src_v19/` and historical `docs/issues/` write-ups
+unless the issue file states a live invariant):
+
+```
+rg -n "InteractiveSettings|GuiSessionContract|isGuiSession|gui\.session|settings\.sources\.GuiSettings[^.S]|drc\.DrcReport|api\.v1\.McpControllerV1|util\.TextManager|app\.freerouting\.Common" --glob "!src_v19/**"
+```
+
+Narrow the pattern to the names that phase removed.
+
+---
+
+## Docs that must stay in sync
+
+Update in the **same phase** that changes the name:
+
+| File | Why |
+|---|---|
+| `AGENTS.md` | `InteractiveSettings` singleton, merger priority 50, `GuiSettings` subtype, `gui.session` |
+| `docs/architecture.md` | Package glossary, mermaid (`api.v1.McpControllerV1`, `management`, `core`) |
+| `docs/settings.md` | Priority table row 50 → 65; class names |
+| `docs/API/API_v1.md` / `docs/API/MCP.md` | MCP controller package; DRC schema title |
+| `docs/issues/soc-gui-separation-and-accessibility-plan.md` | Live invariants that name `InteractiveSettings` / `gui.session` / priority 50 |
+| This plan | Already the spec; do not leave it contradicting the code |
+
+Issue archaeology under `docs/issues/` may keep old names as history.
+Contributor *invariants* in AGENTS.md and the SoC plan § that are still
+normative must be rewritten.
+
+---
+
+## ArchUnit (must edit when packages move)
+
+`ModuleBoundariesArchTest`:
+
+- `app.freerouting.gui.session.GuiBoardManager` → `app.freerouting.gui.workspace.GuiBoardManager` (two tests).
+- `resideInAnyPackage("app.freerouting.gui.session..")` → `gui.workspace..` (`guiSessionMustNotDependOnConcreteInteractiveStates`).
+- Worker FQCNs: `gui.session.InteractiveActionThread` and
+  `gui.session.AutorouterAndRouteOptimizerThread` → `gui.workspace.*`.
+- `PIPELINE_SUPPORT_PACKAGES`: add `"app.freerouting.i18n.."` when `TextManager`
+  moves (board/rules already call it). Do **not** add `analytics` to the
+  pipeline list.
+- After analytics moves out of `management`, extend the
+  “api/management must not depend on gui” tests to also name
+  `"app.freerouting.analytics.."`.
+- `management.jobs` / `management.sessions` / `core.library` stay inside
+  existing `management..` / `core..` prefixes — no rule change required
+  beyond imports.
+
+`SpecctraPackageArchTest`: no FQCN change expected; still forbids GUI/management
+imports from `io.specctra`.
+
+---
+
+## Phase runbooks
+
+### Phase 1 — Q1 seed + GuiSettings split + dead shells
+
+Branch: `refactor/naming-phase-1-gui-settings`
+
+**1a. Q1 (first commit on the epic / this branch)**
+
+- Keep `GuiSettingsSource` / current class priority **65**.
+- Override `setSettings(RouterSettings)` on the live GUI source (today
+  `InteractiveSettings`, later `WorkspaceSettings`) so non-null
+  `tracePullTightAccuracy` and `automaticNeckdown` copy onto the live
+  fields. Today `setSettings` only stores the snapshot on the superclass
+  and `getSettings()` overlays constructor defaults (500 / true), which
+  can ignore CLI.
+- At board load, keep copying `merger.merge()` into the live source (already
+  `BoardFrame.attachParsedBoard` → `interactiveSettings.setSettings(mergedSettings)`).
+- Extend `SettingsMergerGuiIntegrationTest`: CLI sets
+  `tracePullTightAccuracy` to a non-default; after bind+merge, GUI shows
+  that value; after `setTracePullTightAccuracy`, merge uses the GUI value
+  and not CLI.
+- Rewrite docs/comments/AGENTS.md/settings.md from priority **50 → 65**.
+  Do not change 55/60/70.
+
+**1b. Renames (IDE)**
+
+- `settings.GuiSettings` → `GuiApplicationSettings` (keep field
+  `GlobalSettings.guiSettings` and JSON `"gui"`).
+- `settings.sources.GuiSettings` → `GuiSettingsSource`.
+- `InteractiveSettings` still extends the source type; do **not** rename it
+  yet (Phase 2).
+
+**1c. Deletes**
+
+- `gui.interactive.Settings`
+- `io.specctra.parser.RulesFile`
+- `io.specctra.parser.SpecctraSesFileWriter`
+- `io.specctra.parser.SesFileReader`
+
+Grep for remaining references (including `@deprecated` javadoc links).
+Update `SettingsMerger` javadoc (`GuiSettings` → `GuiSettingsSource`,
+priority 65).
+
+**Tests:** `SettingsMergerGuiIntegrationTest`, `JsonFileSettingsTest` if it
+touches `GuiSettings`, `GuiStartupHeadlessTest`, architecture tests.
+
+**Not in this phase:** `gui.session` package move, `WorkspaceSettings`.
+
+---
+
+### Phase 2 — workspace package + WorkspaceSettings + primary session
+
+Branch: `refactor/naming-phase-2-workspace`
+
+IDE move entire `app.freerouting.gui.session` → `app.freerouting.gui.workspace`.
+Then rename:
+
+- `InteractiveSettings` → `WorkspaceSettings`
+- `GuiSessionContract` → `WorkspaceContract`
+- `getInteractiveSettings` → `getWorkspaceSettings` (contract, `GuiBoardManager`, all call sites)
+- `GuiSessionPort` / `GuiSessionPortAdapter` → `WorkspacePort` / `WorkspacePortAdapter`
+- `SessionGeneration` → `WorkspaceGeneration` (`LoadGeneration` / `RunGeneration` keep names)
+- `Session.isGuiSession` → `isPrimary`
+- `SessionManager` user-visible messages: “GUI session” → “primary session”
+  (`getPrimarySession` / `setPrimarySession` already exist)
+
+Keep `GuiBoardManager`, `InteractiveActionThread`,
+`AutorouterAndRouteOptimizerThread`, `InteractiveCommand`, `EditorState*`.
+
+**Resources:** move
+
+- `src/main/resources/app/freerouting/gui/session/GuiBoardManager_*.properties`
+- `src/main/resources/app/freerouting/gui/session/ScreenMessages_*.properties`
+
+to `.../gui/workspace/` (class names unchanged, package path must match
+`Class.getName()`).
+
+**Tests:** move `src/test/java/app/freerouting/gui/session/` →
+`gui/workspace/` and rename test classes that contain `InteractiveSettings`
+or `GuiSession` (`InteractiveSettingsSingletonTest` →
+`WorkspaceSettingsSingletonTest`, `InteractiveSettingsPropertyChangeTest`,
+`GuiSessionPortTest` → `WorkspacePortTest`, `SettingsMergerGuiIntegrationTest`
+stays or becomes `WorkspaceSettingsMergerTest`).
+
+**ArchUnit:** all `gui.session` strings listed above.
+
+**Docs:** AGENTS.md InteractiveSettings section → WorkspaceSettings;
+`gui.session` → `gui.workspace`; architecture mermaid/glossary; SoC plan
+live invariants.
+
+**Mocks:** `SessionControllerMocked` JSON `isGuiSession` is internal; update
+to `isPrimary` or drop the field (it is `transient` and not API JSON).
+
+**Gates:** architecture tests, session/workspace tests, `testGui`,
+`extract-context.py --check`.
+
+---
+
+### Phase 3 — KiCad DRC DTOs + MCP controller
+
+Branch: `refactor/naming-phase-3-kicad-mcp`
+
+Move/rename in `io.kicad` (beside `KiCadBoardJson`, no `io.kicad.drc`
+subpackage):
+
+- `DrcReport` → `KiCadDrcReport`
+- `DrcViolation` → `KiCadDrcViolation`
+- `DrcViolationItem` → `KiCadDrcViolationItem`
+- `DrcPosition` → `KiCadDrcPosition`
+
+Keep every `@SerializedName` value. `DesignRulesChecker.generateReport`
+return type becomes `KiCadDrcReport`. `drc` keeps `DesignRulesChecker`,
+`ClearanceViolation`, `NetIncompletes`, `AirLine`.
+
+OpenAPI: schema title **`KiCadDrcReport`** (explicit `@Schema(name = "KiCadDrcReport")`
+on the type if Swagger infers the simple name). Changelog: old schema name
+`DrcReport` removed next minor. HTTP path unchanged.
+
+Move `api.v1.McpControllerV1` → `api.mcp.McpControllerV1`. Update
+`McpApplication`, `OpenApiResource`, `McpEndpointsTest` reflection FQCN.
+HTTP `/v1/mcp` unchanged.
+
+**Docs:** `docs/architecture.md` MCP node; `docs/API/MCP.md`; `docs/API/API_v1.md`.
+
+**Tests:** `DesignRulesCheckerTest`, `UnconnectedItemsReproductionTest`,
+`McpEndpointsTest`, `Freerouting` DRC CLI path.
+
+**Python client:** schedule the schema-title follow-up in this minor so the
+next minor can drop `DrcReport`.
+
+---
+
+### Phase 4 — remaining package splits
+
+Branch: `refactor/naming-phase-4-packages`
+
+Do as **one PR if the diff stays reviewable**, otherwise split in this order:
+
+1. `management.analytics` → `app.freerouting.analytics` (update ArchUnit GUI
+   isolation to include `analytics..`).
+2. `core.library` move of the seven library types; keep `Package` name;
+   move any `Package_*.properties` / `Padstack_*.properties` /
+   `LogicalPart_*.properties` with the classes (`TextManager(this.getClass())`).
+3. `TextManager` → `i18n.TextManager`; move `Common_*.properties` to
+   `src/main/resources/app/freerouting/i18n/`; change both
+   `loadBundle("app.freerouting.Common", …)` strings and the error message
+   that names the bundle. i18n tests / `EnglishPropertiesParityTest` if they
+   hard-code `app.freerouting.Common`.
+4. `management.jobs` and `management.sessions`; move
+   `RoutingJobSchedulerTest` → `management.jobs` (or keep test package
+   mirroring production), `SessionManagerTest` → `management.sessions`.
+   `PowerPlaneValidationTest` stays unless it only exists for board manager.
+
+**ArchUnit:** add `i18n..` to `PIPELINE_SUPPORT_PACKAGES`.
+
+**Docs:** architecture glossary (`core` / `management` / new `analytics` /
+`i18n`).
+
+---
+
+### Phase 5 — `curr*` locals
+
+Branch: `refactor/naming-phase-5-curr`
+
+IDE structural search, **one top-level package per commit** if the diff is
+large (`board`, then `autoroute`, then `gui`, then the rest).
+
+| Pattern | Replacement | When |
+|---|---|---|
+| `currTrace` | `currentTrace` | Loop/state current trace |
+| `currTrace` | `traceToAdjust` | Pull-tight target |
+| `currTrace` | `trace` | Scope already says current |
+| `currItem` / `currLayer` / `currDoor` / `currShape` | `currentItem` / `currentLayer` / `currentDoor` / `currentShape` | |
+| `currNetNo` | `currentNetNumber` | Net number, not `Net` |
+| `currTraceInfo` | `traceInfo` or `currentTraceInfo` | |
+| `currTraceCount` | `traceCount` | |
+
+No type/package renames in this phase. Smoke
+`Issue508Test_BM01_first_2_nets` after `board`/`autoroute` slices.
+
+---
+
+### Phase 6 — underscore and `p_` identifiers
+
+Branch: `refactor/naming-phase-6-identifiers` (or several PRs on that branch)
+
+End state: no `snake_case` Java identifiers and no `p_` parameter prefixes in
+`src/main/java` and `src/test/java`.
+
+Slices:
+
+1. GUI, settings, API, management/analytics/i18n (example: `get_locale()` →
+   `getLocale()`, `last_repainted_time` → `lastRepaintedTime`).
+2. `drc`, `rules`, `io`, `core`.
+3. `board` non-algorithm types.
+4. **Last:** `autoroute` and shove/pull-tight/via algorithms. Review as
+   routing-sensitive even when behavior-neutral. Smoke BM01.
+
+Do not expand API, MCP, DSN, SES, DRC, EDT, SMD. Do not rename JSON/CLI
+keys. Do not mix with type/package PRs.
+
+---
+
+## Explicitly out of this campaign
+
+`RouterSettings`, `BasicBoard`, `Item`, `ShapeSearchTree`,
+`SearchTreeManager`, `DesignRulesChecker` split, `AirLine`, `NetIncompletes`,
+`BoardStatistics`, `BoardRules`/`Nets`, `NamedAlgorithm`, `Batch*` family,
+`GuiManager`, `InteractiveState`, parser `NetClass`/`Unit` homonyms,
+`management` → `orchestration`, `board`/`autoroute` subpackages, GUI
+windows/menus packages, DRC *behavior* extraction.
+
+---
+
+## Compatibility and collisions (implementer notes)
+
+- `.frb` FQCNs will break (D1). No shims.
+- `SettingsMerger.addOrReplaceSources` replaces by exact class **or**
+  existing class `isAssignableFrom` new class. `WorkspaceSettings` must
+  remain a subclass of `GuiSettingsSource` so it still replaces the
+  placeholder.
+- `NamedAlgorithm` must never be renamed to `RoutingStage` (`core.RoutingStage`
+  enum already exists).
+- `KiCadBoardJson` = board interchange JSON. `KiCadDrcReport` = KiCad DRC
+  report schema. Same prefix, different classes.
+- Class-based i18n: `new TextManager(this.getClass(), locale)` loads
+  `class.getName()` bundles. Moving a class without its `*.properties` looks
+  like a successful compile and a missing UI string.
+
+---
+
+## Campaign done when
+
+- Every row in the end-state map is applied.
+- Grep for old names is clean outside `src_v19/` and historical issue notes.
+- ArchUnit green with `gui.workspace`, `i18n`, `analytics`.
+- AGENTS.md, architecture, settings docs match the glossary and priority 65.
+- Q1 tests prove CLI/env seed then GUI override.
+- OpenAPI shows `KiCadDrcReport`; `/v1/mcp` and `/v1/jobs/{id}/drc` unchanged.
+- `spotlessCheck`, Checkstyle, `git diff --check`, `extract-context.py --check`
+  green on the epic.
+- Epic PR to `master` lists D8: drop schema name `DrcReport` in the **next
+  minor**; Python client follow-up owned by the same maintainer.
