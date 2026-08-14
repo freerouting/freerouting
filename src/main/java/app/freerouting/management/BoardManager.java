@@ -22,7 +22,7 @@ import app.freerouting.rules.BoardRules;
  *   <li>In <em>GUI mode</em> ({@link app.freerouting.gui.session.GuiBoardManager}) the manager also
  *       implements the {@link app.freerouting.gui.session.GuiSessionContract}, which exposes the
  *       GUI-session singleton {@link app.freerouting.gui.session.InteractiveSettings} (the live
- *       {@code GuiSettings} source at SettingsMerger priority 50).
+ *       {@code GuiSettingsSource} source at SettingsMerger priority 65).
  *   <li>In <em>headless mode</em> ({@link app.freerouting.management.HeadlessBoardManager}) there
  *       is no GUI; the manager does <em>not</em> implement {@code GuiSessionContract}, so {@code
  *       InteractiveSettings} is unreachable. To detect GUI mode, use {@code manager instanceof

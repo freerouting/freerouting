@@ -35,8 +35,7 @@ import java.util.Set;
  * <p>This class has no dependency on {@code BoardManager}, {@code RoutingJob}, or any GUI class. It
  * operates purely on the board's data model.
  *
- * <p>Replaces the write path previously found in {@link
- * app.freerouting.io.specctra.parser.SpecctraSesFileWriter} (now {@link Deprecated}).
+ * <p>This class is the public write entry point for Specctra session files.
  */
 public final class SesWriter {
 
@@ -68,7 +67,7 @@ public final class SesWriter {
   }
 
   // ---------------------------------------------------------------------------
-  // Private helpers (migrated from SpecctraSesFileWriter)
+  // Private helpers for session-file writing.
   // ---------------------------------------------------------------------------
 
   private static void writeSessionScope(

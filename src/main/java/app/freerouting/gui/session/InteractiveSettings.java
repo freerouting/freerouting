@@ -4,7 +4,7 @@ import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
-import app.freerouting.settings.sources.GuiSettings;
+import app.freerouting.settings.sources.GuiSettingsSource;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -15,13 +15,14 @@ import java.util.Arrays;
 /**
  * Contains the values of the interactive/GUI settings of the board handling.
  *
- * <p>This class is the concrete {@link GuiSettings} source (priority 50) supplied to the {@link
- * app.freerouting.settings.SettingsMerger}. Any field mutation is therefore visible to the router
- * settings pipeline on the next {@code merge()} call.
+ * <p>This class is the concrete {@link GuiSettingsSource} source (priority 65) supplied to the
+ * {@link app.freerouting.settings.SettingsMerger}. Any field mutation is therefore visible to the
+ * router settings pipeline on the next {@code merge()} call.
  *
- * <p>In GUI mode this class acts as the concrete {@link GuiSettings} source at priority 50 in the
- * {@link app.freerouting.settings.SettingsMerger} pipeline. Use {@link #getOrCreate(RoutingBoard)}
- * to obtain the singleton instance; never construct it directly from GUI code.
+ * <p>In GUI mode this class acts as the concrete {@link GuiSettingsSource} source at priority 65 in
+ * the {@link app.freerouting.settings.SettingsMerger} pipeline. Use {@link
+ * #getOrCreate(RoutingBoard)} to obtain the singleton instance; never construct it directly from
+ * GUI code.
  *
  * <p><strong>Singleton contract:</strong> exactly one instance exists for the lifetime of a GUI
  * session. Use {@link #getOrCreate(RoutingBoard)} to obtain it. In headless mode the instance is
@@ -34,10 +35,10 @@ import java.util.Arrays;
  * controls) in their {@code propertyChange} callback. Use {@link #addPropertyChangeListener} /
  * {@link #removePropertyChangeListener} to subscribe.
  *
- * @see GuiSettings
+ * @see GuiSettingsSource
  * @see app.freerouting.settings.SettingsMerger
  */
-public class InteractiveSettings extends GuiSettings implements Serializable {
+public class InteractiveSettings extends GuiSettingsSource implements Serializable {
 
   // -------------------------------------------------------------------------
   // Named property keys – use these constants everywhere to avoid typos.
@@ -336,11 +337,35 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   // -------------------------------------------------------------------------
 
   /**
+   * Stores a merged settings snapshot and seeds the live GUI-controlled fields from it.
+   *
+   * <p>The snapshot is populated before the live source is registered in the merger. Copying the
+   * non-null values here prevents the constructor defaults from masking CLI, environment, or file
+   * settings on the first subsequent merge. Later user edits continue to win because {@link
+   * #getSettings()} overlays these live fields on the stored snapshot.
+   *
+   * @param settings the merged settings snapshot, or {@code null}
+   */
+  @Override
+  public void setSettings(RouterSettings settings) {
+    super.setSettings(settings);
+    if (settings == null) {
+      return;
+    }
+    if (settings.tracePullTightAccuracy != null) {
+      this.tracePullTightAccuracy = settings.tracePullTightAccuracy;
+    }
+    if (settings.automaticNeckdown != null) {
+      this.automaticNeckdown = settings.automaticNeckdown;
+    }
+  }
+
+  /**
    * Returns a live {@link RouterSettings} snapshot built from the current field values of this
    * instance.
    *
    * <p>This override ensures that the {@link app.freerouting.settings.SettingsMerger} always reads
-   * up-to-date GUI state at priority 50 rather than a stale static snapshot. It is called on every
+   * up-to-date GUI state at priority 65 rather than a stale static snapshot. It is called on every
    * {@code merge()} invocation (e.g. when the user starts the autorouter, saves settings, or the
    * toolbar rebuilds settings).
    *

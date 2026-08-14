@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 /** Settings controlling the graphical user interface session. */
-public class GuiSettings implements Serializable {
+public class GuiApplicationSettings implements Serializable {
 
   /** Whether the GUI should be enabled. */
   @SerializedName("enabled")

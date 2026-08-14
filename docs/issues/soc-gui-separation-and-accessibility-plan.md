@@ -211,7 +211,7 @@ Unlisted pipeline/support packages above are intentionally **headless-safe** and
 Move from temporary `gui.interactive` into `gui.session` at minimum:
 
 - `GuiBoardManager`
-- `InteractiveSettings` (remains `GuiSettings` subtype for merger priority)
+- `InteractiveSettings` (remains `GuiSettingsSource` subtype at merger priority 65)
 - `ScreenMessages`
 - `InteractiveActionThread`
 - `AutorouterAndRouteOptimizerThread`
@@ -818,7 +818,7 @@ Pin: plan §6 Phase 3, §2 (D12/D20); AGENTS.md BoardManager/InteractiveSettings
 - Headless BoardManager API with no GUI methods; GUI session contract separate.
 - Remove null-based getInteractiveSettings()/isInteractiveModeSupported() from the shared headless API (GUI-only access via GuiBoardManager).
 - Move initializeManualTraceHalfWidths to GUI-session-only (R10 default).
-- Preserve InteractiveSettings invariants exactly: singleton per GUI session via getOrCreate(board); reset(board) on every board load; getSettings() returns a live snapshot; merger priority 50; all fields private with PropertyChangeEvent-firing getters/setters.
+- Preserve InteractiveSettings invariants exactly: singleton per GUI session via getOrCreate(board); reset(board) on every board load; getSettings() returns a live snapshot; merger priority 65; all fields private with PropertyChangeEvent-firing getters/setters.
 - Update contract tests.
 Gates: gradlew.bat test + ArchUnit classes; paste output. No package moves in this phase.
 ```

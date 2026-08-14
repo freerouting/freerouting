@@ -34,7 +34,7 @@ public class GlobalSettings implements Serializable {
   public final UserProfileSettings userProfileSettings = new UserProfileSettings();
 
   @SerializedName("gui")
-  public final GuiSettings guiSettings = new GuiSettings();
+  public final GuiApplicationSettings guiSettings = new GuiApplicationSettings();
 
   /**
    * Legacy router settings bridge retained for JSON serialization and compatibility.
@@ -150,17 +150,6 @@ public class GlobalSettings implements Serializable {
   }
 
   /**
-   * Returns the resolved absolute path of the {@code freerouting.json} configuration file.
-   *
-   * <p>This path is derived from {@link #getUserDataPath()} and is updated atomically whenever
-   * {@link #setUserDataPath(Path)} is called (before the lock is engaged). Use this accessor for
-   * logging, diagnostics, or tests that need to verify where the configuration file is written.
-   */
-  public static Path getConfigurationFilePath() {
-    return configurationFilePath;
-  }
-
-  /**
    * Sets the persistent user-data directory unless the path has already been locked.
    *
    * @param userDataPath directory to use for persistent settings
@@ -170,6 +159,17 @@ public class GlobalSettings implements Serializable {
       GlobalSettings.userDataPath = userDataPath;
       GlobalSettings.configurationFilePath = userDataPath.resolve("freerouting.json");
     }
+  }
+
+  /**
+   * Returns the resolved absolute path of the {@code freerouting.json} configuration file.
+   *
+   * <p>This path is derived from {@link #getUserDataPath()} and is updated atomically whenever
+   * {@link #setUserDataPath(Path)} is called (before the lock is engaged). Use this accessor for
+   * logging, diagnostics, or tests that need to verify where the configuration file is written.
+   */
+  public static Path getConfigurationFilePath() {
+    return configurationFilePath;
   }
 
   /**

@@ -265,9 +265,9 @@ Settings are resolved by the `SettingsMerger` class, which collects all active `
 | 20 | DSN file metadata | `DsnFileSettings` |
 | 30 | SES file metadata | `SesFileSettings` |
 | 40 | RULES file overrides | `RulesFileSettings` |
-| 50 | GUI (interactive user changes) | `GuiSettings` |
 | 55 | Environment variables (`FREEROUTING__ROUTER__*`) | `EnvironmentVariablesSource` |
 | 60 | CLI arguments (`--router.*`) | `CliSettings` |
+| 65 | GUI (interactive user changes) | `GuiSettingsSource` / `InteractiveSettings` |
 | 70 | REST API caller — highest priority | `ApiSettings` |
 
 If a setting is not defined in any source, the hardcoded default from `DefaultSettings` is used.

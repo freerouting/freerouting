@@ -18,7 +18,7 @@ import app.freerouting.rules.NetClasses;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DsnFileSettings;
-import app.freerouting.settings.sources.GuiSettings;
+import app.freerouting.settings.sources.GuiSettingsSource;
 import app.freerouting.util.TextManager;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -110,7 +110,7 @@ public class GuiManager {
       var settingsMerger = globalSettings.settingsMergerProtype.clone();
       settingsMerger.addOrReplaceSources(
           new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()),
-          new GuiSettings(routingJob.routerSettings));
+          new GuiSettingsSource(routingJob.routerSettings));
       routingJob.routerSettings = settingsMerger.merge();
       guiSession.addJob(routingJob);
 
@@ -319,7 +319,7 @@ public class GuiManager {
       // we didn't have any input file passed as a parameter
       // we load a blank board
       var settingsMerger = globalSettings.settingsMergerProtype.clone();
-      settingsMerger.addOrReplaceSources(new GuiSettings(null));
+      settingsMerger.addOrReplaceSources(new GuiSettingsSource(null));
 
       final BoardFrame newFrame = createBoardFrame(null, null, globalSettings, settingsMerger);
       if (newFrame == null) {

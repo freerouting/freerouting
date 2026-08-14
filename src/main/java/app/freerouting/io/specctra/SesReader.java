@@ -24,8 +24,7 @@ import java.io.OutputStream;
  *
  * <p>This class has no dependency on {@code BoardManager}, {@code RoutingJob}, or any GUI class.
  *
- * <p>Replaces the read path previously found in {@link
- * app.freerouting.io.specctra.parser.SesFileReader} (now {@link Deprecated}).
+ * <p>This class is the public read entry point for Specctra session files.
  */
 public final class SesReader {
 
@@ -68,7 +67,7 @@ public final class SesReader {
 
     IJFlexScanner scanner = new SpecctraDsnStreamReader(in);
 
-    // SES files use the same scale factor as SpecctraSesFileWriter: dsn_to_board(1) / resolution
+    // SES files use the DSN-to-board scale factor: dsn_to_board(1) / resolution
     double scaleFactor =
         board.communication.coordinateTransform.dsnToBoard(1) / board.communication.resolution;
 
@@ -91,7 +90,7 @@ public final class SesReader {
   }
 
   // ---------------------------------------------------------------------------
-  // Private parse helpers (migrated from SesFileReader)
+  // Private helpers for session-file parsing.
   // ---------------------------------------------------------------------------
 
   /**

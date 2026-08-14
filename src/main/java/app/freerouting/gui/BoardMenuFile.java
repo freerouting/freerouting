@@ -96,24 +96,6 @@ public class BoardMenuFile extends JMenu {
   }
 
   /**
-   * Registers a listener notified when a file is selected for opening.
-   *
-   * @param listener the listener to register
-   */
-  public void addOpenEventListener(Consumer<File> listener) {
-    openEventListeners.add(listener);
-  }
-
-  /**
-   * Registers a listener notified when a file is selected for saving.
-   *
-   * @param listener the listener to register
-   */
-  public void addSaveAsEventListener(Consumer<File> listener) {
-    saveAsEventListeners.add(listener);
-  }
-
-  /**
    * Shows a file chooser for opening a design file (GUI layer owns file picking; SoC plan Phase 4).
    *
    * @param defaultDirectory the directory to open the chooser in; may be null
@@ -144,5 +126,23 @@ public class BoardMenuFile extends JMenu {
 
     fileChooser.showOpenDialog(parent);
     return fileChooser.getSelectedFile();
+  }
+
+  /**
+   * Registers a listener notified when a file is selected for opening.
+   *
+   * @param listener the listener to register
+   */
+  public void addOpenEventListener(Consumer<File> listener) {
+    openEventListeners.add(listener);
+  }
+
+  /**
+   * Registers a listener notified when a file is selected for saving.
+   *
+   * @param listener the listener to register
+   */
+  public void addSaveAsEventListener(Consumer<File> listener) {
+    saveAsEventListeners.add(listener);
   }
 }

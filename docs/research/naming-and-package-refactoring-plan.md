@@ -200,11 +200,11 @@ Update in the **same phase** that changes the name:
 
 | File | Why |
 |---|---|
-| `AGENTS.md` | `InteractiveSettings` singleton, merger priority 50, `GuiSettings` subtype, `gui.session` |
+| `AGENTS.md` | `InteractiveSettings` singleton, merger priority 65, `GuiSettingsSource` subtype, `gui.session` |
 | `docs/architecture.md` | Package glossary, mermaid (`api.v1.McpControllerV1`, `management`, `core`) |
 | `docs/settings.md` | Priority table row 50 → 65; class names |
 | `docs/API/API_v1.md` / `docs/API/MCP.md` | MCP controller package; DRC schema title |
-| `docs/issues/soc-gui-separation-and-accessibility-plan.md` | Live invariants that name `InteractiveSettings` / `gui.session` / priority 50 |
+| `docs/issues/soc-gui-separation-and-accessibility-plan.md` | Live invariants that name `InteractiveSettings` / `gui.session` / priority 65 |
 | This plan | Already the spec; do not leave it contradicting the code |
 
 Issue archaeology under `docs/issues/` may keep old names as history.
@@ -241,6 +241,14 @@ imports from `io.specctra`.
 ### Phase 1 — Q1 seed + GuiSettings split + dead shells
 
 Branch: `refactor/naming-phase-1-gui-settings`
+
+**Progress checklist**
+
+- [x] Implement Q1 seed-then-live settings precedence at GUI priority 65.
+- [x] Rename `GuiSettings` types and remove the four dead compatibility shells.
+- [x] Update references, Javadocs, architecture strings, and normative documentation.
+- [x] Add/extend settings integration tests and run the Phase 1 quality gates.
+- [ ] Create the phase branch from the epic and merge the reviewed Phase 1 PR into the epic.
 
 **1a. Q1 (first commit on the epic / this branch)**
 
@@ -280,7 +288,7 @@ Update `SettingsMerger` javadoc (`GuiSettings` → `GuiSettingsSource`,
 priority 65).
 
 **Tests:** `SettingsMergerGuiIntegrationTest`, `JsonFileSettingsTest` if it
-touches `GuiSettings`, `GuiStartupHeadlessTest`, architecture tests.
+touches `GuiApplicationSettings`, `GuiStartupHeadlessTest`, architecture tests.
 
 **Not in this phase:** `gui.session` package move, `WorkspaceSettings`.
 
@@ -289,6 +297,16 @@ touches `GuiSettings`, `GuiStartupHeadlessTest`, architecture tests.
 ### Phase 2 — workspace package + WorkspaceSettings + primary session
 
 Branch: `refactor/naming-phase-2-workspace`
+
+**Progress checklist**
+
+- [ ] Create the phase branch from the updated epic.
+- [ ] Move `gui.session` to `gui.workspace` and apply the workspace type/accessor renames.
+- [ ] Rename `InteractiveSettings` to `WorkspaceSettings` while preserving the GUI settings invariants.
+- [ ] Move matching resources and tests; update mocks and ArchUnit references.
+- [ ] Update AGENTS.md, architecture, and SoC documentation.
+- [ ] Run workspace/session tests, architecture tests, `testGui`, and the i18n context check.
+- [ ] Review and merge the Phase 2 PR into the epic.
 
 IDE move entire `app.freerouting.gui.session` → `app.freerouting.gui.workspace`.
 Then rename:
@@ -338,6 +356,16 @@ to `isPrimary` or drop the field (it is `transient` and not API JSON).
 
 Branch: `refactor/naming-phase-3-kicad-mcp`
 
+**Progress checklist**
+
+- [ ] Create the phase branch from the updated epic.
+- [ ] Move and rename the KiCad DRC DTOs while preserving all wire field names.
+- [ ] Update `DesignRulesChecker`, OpenAPI schema naming, and the MCP controller package.
+- [ ] Preserve `/v1/mcp` and `/v1/jobs/{jobId}/drc` paths and document the schema-title transition.
+- [ ] Update DRC, MCP, CLI, and reflection-based tests.
+- [ ] Schedule the Python client follow-up for the next minor release.
+- [ ] Run Phase 3 quality gates and merge the PR into the epic.
+
 Move/rename in `io.kicad` (beside `KiCadBoardJson`, no `io.kicad.drc`
 subpackage):
 
@@ -372,6 +400,16 @@ next minor can drop `DrcReport`.
 
 Branch: `refactor/naming-phase-4-packages`
 
+**Progress checklist**
+
+- [ ] Create the phase branch from the updated epic.
+- [ ] Move analytics to `app.freerouting.analytics` and update GUI-isolation rules.
+- [ ] Move library types/resources to `core.library`, keeping `Package` unchanged.
+- [ ] Move `TextManager` and common bundles to `i18n`; update bundle lookups and parity tests.
+- [ ] Move job and session management types/tests to their new packages.
+- [ ] Update ArchUnit rules, architecture documentation, and package-local tests.
+- [ ] Run Phase 4 quality gates and merge the PR into the epic.
+
 Do as **one PR if the diff stays reviewable**, otherwise split in this order:
 
 1. `management.analytics` → `app.freerouting.analytics` (update ArchUnit GUI
@@ -400,6 +438,15 @@ Do as **one PR if the diff stays reviewable**, otherwise split in this order:
 
 Branch: `refactor/naming-phase-5-curr`
 
+**Progress checklist**
+
+- [ ] Create the phase branch from the updated epic.
+- [ ] Rename `curr*` locals in the `board` package and run the BM01 smoke test.
+- [ ] Rename `curr*` locals in `autoroute` and run the BM01 smoke test.
+- [ ] Rename `curr*` locals in `gui`.
+- [ ] Rename remaining `curr*` locals without changing types or packages.
+- [ ] Review routing-sensitive diffs, run quality gates, and merge the PR into the epic.
+
 IDE structural search, **one top-level package per commit** if the diff is
 large (`board`, then `autoroute`, then `gui`, then the rest).
 
@@ -421,6 +468,17 @@ No type/package renames in this phase. Smoke
 ### Phase 6 — underscore and `p_` identifiers
 
 Branch: `refactor/naming-phase-6-identifiers` (or several PRs on that branch)
+
+**Progress checklist**
+
+- [ ] Create the phase branch from the updated epic.
+- [ ] Convert identifiers in GUI, settings, API, analytics, management, and i18n.
+- [ ] Convert identifiers in `drc`, `rules`, `io`, and `core`.
+- [ ] Convert non-algorithm `board` identifiers.
+- [ ] Last, convert `autoroute` and shove/pull-tight/via algorithm identifiers.
+- [ ] Verify no snake_case Java identifiers or `p_` parameters remain outside `src_v19/`.
+- [ ] Preserve acronyms, wire names, CLI/JSON keys, and behavior; run BM01 and all gates.
+- [ ] Review and merge the Phase 6 PR(s) into the epic.
 
 End state: no `snake_case` Java identifiers and no `p_` parameter prefixes in
 `src/main/java` and `src/test/java`.

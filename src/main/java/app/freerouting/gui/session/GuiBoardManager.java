@@ -43,6 +43,7 @@ import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
+import app.freerouting.settings.sources.GuiSettingsSource;
 import app.freerouting.util.TextManager;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -242,6 +243,9 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
    */
   private final Locale locale;
 
+  /** Session-owned boundary for worker lifecycle and presentation updates. */
+  private final GuiSessionPort sessionPort;
+
   /**
    * Graphics context managing visual display settings for the board.
    *
@@ -293,14 +297,6 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
   public ClearanceViolations clearanceViolations;
 
   /**
-   * Concrete editor-state orchestration registered by the GUI views.
-   *
-   * <p>The session owns only this interface and opaque handles. The implementation is supplied by
-   * {@code gui.interactive} after the view has constructed the manager.
-   */
-  private EditorStateController editorStateController;
-
-  /**
    * Flag to force immediate board panel repaint, bypassing the throttle mechanism.
    *
    * <p>Used when immediate visual feedback is required, such as:
@@ -314,12 +310,20 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
   boolean paintImmediately;
 
   /**
+   * Concrete editor-state orchestration registered by the GUI views.
+   *
+   * <p>The session owns only this interface and opaque handles. The implementation is supplied by
+   * {@code gui.interactive} after the view has constructed the manager.
+   */
+  private EditorStateController editorStateController;
+
+  /**
    * The GUI-session singleton for interactive settings.
    *
    * <p>This field holds the {@link InteractiveSettings} singleton that acts as the live {@link
-   * app.freerouting.settings.sources.GuiSettings} source (priority 50) for the {@link
-   * SettingsMerger} pipeline. It is initialised in {@link #createBoard} and in {@link
-   * #loadFromSpecctraDsn} (when DSN reading bypasses {@code create_board}).
+   * GuiSettingsSource} source (priority 65) for the {@link SettingsMerger} pipeline. It is
+   * initialised in {@link #createBoard} and in {@link #loadFromSpecctraDsn} (when DSN reading
+   * bypasses {@code create_board}).
    *
    * <p>This field intentionally shadows the removed {@code interactiveSettings} field that
    * previously lived on {@link HeadlessBoardManager}; it is not accessible from headless code.
@@ -398,9 +402,6 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
    * @see InteractiveActionThread
    */
   private InteractiveActionThread interactiveActionThread;
-
-  /** Session-owned boundary for worker lifecycle and presentation updates. */
-  private final GuiSessionPort sessionPort;
 
   /**
    * Visual display manager for incomplete connections (air wires/rats nest).
@@ -1490,9 +1491,9 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
   /**
    * Returns the GUI-session {@link InteractiveSettings} singleton.
    *
-   * <p>The returned instance is also the live {@link app.freerouting.settings.sources.GuiSettings}
-   * source (priority 50) registered in the {@link SettingsMerger} pipeline. It is always non-null
-   * after a board has been created or loaded.
+   * <p>The returned instance is also the live {@link GuiSettingsSource} source (priority 65)
+   * registered in the {@link SettingsMerger} pipeline. It is always non-null after a board has been
+   * created or loaded.
    *
    * @return the {@link InteractiveSettings} singleton; non-null after board initialisation
    */
@@ -2218,7 +2219,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements GuiSessionC
       // Adopt the deserialized instance as the authoritative singleton so that subsequent
       // getOrCreate / getInteractiveSettings calls return the same object.
       InteractiveSettings.setInstance(interactiveSettings);
-      // Register the singleton as the live GuiSettings source (priority 50) in the merger so
+      // Register the singleton as the live GuiSettingsSource source (priority 65) in the merger so
       // that every subsequent merge() call reflects the current interactive GUI state.
       this.settingsMerger.addOrReplaceSources(interactiveSettings);
       coordinateTransform = (CoordinateTransform) design.readObject();

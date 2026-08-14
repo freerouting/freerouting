@@ -12,7 +12,7 @@ import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
-import app.freerouting.settings.sources.GuiSettings;
+import app.freerouting.settings.sources.GuiSettingsSource;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -128,18 +128,19 @@ class GuiStartupHeadlessTest {
   // ── Invariant 3: SettingsMerger sees current InteractiveSettings values ───
 
   /**
-   * When the {@link InteractiveSettings} singleton is registered as the live {@link GuiSettings}
-   * source (priority 50), a subsequent {@link SettingsMerger#merge()} call must reflect the current
-   * singleton state.
+   * When the {@link InteractiveSettings} singleton is registered as the live {@link
+   * GuiSettingsSource} source (priority 65), a subsequent {@link SettingsMerger#merge()} call must
+   * reflect the current singleton state.
    *
    * <p>This mirrors the requirement from Sub-Issue 06 that the GUI session's {@code
-   * InteractiveSettings} is always the authoritative priority-50 source.
+   * InteractiveSettings} is always the authoritative priority-65 source.
    */
   @Test
   void settingsMergerReflectsInteractiveSettingsAfterRegistration() {
-    // Build a merger with Default at priority 0 and the InteractiveSettings singleton at 50.
+    // Build a merger with Default at priority 0 and the InteractiveSettings singleton at 65.
     SettingsMerger merger = new SettingsMerger(new DefaultSettings());
-    merger.addOrReplaceSources(settings); // InteractiveSettings IS-A GuiSettings (priority 50)
+    merger.addOrReplaceSources(
+        settings); // InteractiveSettings IS-A GuiSettingsSource (priority 65)
 
     RouterSettings merged = merger.merge();
     assertNotNull(merged, "SettingsMerger.merge() must return non-null RouterSettings");

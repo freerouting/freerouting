@@ -11,8 +11,9 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsMerger;
+import app.freerouting.settings.sources.CliSettings;
 import app.freerouting.settings.sources.DefaultSettings;
-import app.freerouting.settings.sources.GuiSettings;
+import app.freerouting.settings.sources.GuiSettingsSource;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -21,10 +22,11 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Integration tests for Sub-Issue 06: verifies that the {@link InteractiveSettings} singleton, once
- * registered as the live {@link GuiSettings} source (priority 50) in the {@link SettingsMerger},
- * causes subsequent {@link SettingsMerger#merge()} calls to reflect the current GUI state.
+ * registered as the live {@link GuiSettingsSource} source (priority 65) in the {@link
+ * SettingsMerger}, causes subsequent {@link SettingsMerger#merge()} calls to reflect the current
+ * GUI state.
  *
- * <p>Also verifies the fall-back behaviour: when no {@code GuiSettings} source is registered
+ * <p>Also verifies the fall-back behaviour: when no {@code GuiSettingsSource} source is registered
  * (headless mode), the merger resolves router-specific fields from lower-priority defaults.
  *
  * @see InteractiveSettings#getSettings()
@@ -71,7 +73,7 @@ class SettingsMergerGuiIntegrationTest {
   void mergeUsesLiveInteractiveSettingsValues() {
     InteractiveSettings interactiveSettings = InteractiveSettings.getOrCreate(board);
 
-    // Build a merger with default + the live InteractiveSettings source at priority 50.
+    // Build a merger with default + the live InteractiveSettings source at priority 65.
     SettingsMerger merger = new SettingsMerger(new DefaultSettings(), interactiveSettings);
 
     // Change tracePullTightAccuracy via the setter (fires PropertyChangeEvent).
@@ -106,15 +108,16 @@ class SettingsMergerGuiIntegrationTest {
 
   /**
    * Verifies that the {@link InteractiveSettings} singleton <em>replaces</em> a plain {@link
-   * GuiSettings} placeholder that was added first. This mirrors the startup sequence in {@code
-   * GuiManager} (placeholder) → {@code GuiBoardManager.loadFromSpecctraDsn} (live singleton).
+   * GuiSettingsSource} placeholder that was added first. This mirrors the startup sequence in
+   * {@code GuiManager} (placeholder) → {@code GuiBoardManager.loadFromSpecctraDsn} (live
+   * singleton).
    */
   @Test
   void addOrReplaceSourcesInteractiveSettingsReplacesGuiSettingsPlaceholder() {
     SettingsMerger merger = new SettingsMerger(new DefaultSettings());
 
-    // Add a plain (static-snapshot) GuiSettings placeholder, as GuiManager does at startup.
-    merger.addOrReplaceSources(new GuiSettings(null));
+    // Add a plain (static-snapshot) GuiSettingsSource placeholder, as GuiManager does at startup.
+    merger.addOrReplaceSources(new GuiSettingsSource(null));
 
     // After board load, register the live singleton — it must replace the placeholder.
     InteractiveSettings interactiveSettings = InteractiveSettings.getOrCreate(board);
@@ -125,11 +128,11 @@ class SettingsMergerGuiIntegrationTest {
     assertEquals(
         999,
         merged.tracePullTightAccuracy,
-        "InteractiveSettings must have replaced the plain GuiSettings placeholder");
+        "InteractiveSettings must have replaced the plain GuiSettingsSource placeholder");
   }
 
   /**
-   * In headless mode (no {@code GuiSettings} source registered), the merger falls back to
+   * In headless mode (no {@code GuiSettingsSource} source registered), the merger falls back to
    * lower-priority defaults for all fields — including those that {@code InteractiveSettings} would
    * otherwise supply.
    *
@@ -137,14 +140,14 @@ class SettingsMergerGuiIntegrationTest {
    *
    * <blockquote>
    *
-   * "in headless mode (no {@code GuiSettings} registered), merger falls back to lower-priority
-   * defaults."
+   * "in headless mode (no {@code GuiSettingsSource} registered), merger falls back to
+   * lower-priority defaults."
    *
    * </blockquote>
    */
   @Test
   void mergeWithNoGuiSourceUsesDefaults() {
-    // Merger with only defaults — no GuiSettings / InteractiveSettings registered.
+    // Merger with only defaults — no GuiSettingsSource / InteractiveSettings registered.
     SettingsMerger merger = new SettingsMerger(new DefaultSettings());
     RouterSettings merged = merger.merge();
 
@@ -152,7 +155,7 @@ class SettingsMergerGuiIntegrationTest {
     assertEquals(
         500,
         merged.tracePullTightAccuracy,
-        "Without a GuiSettings source, defaults must supply tracePullTightAccuracy");
+        "Without a GuiSettingsSource, defaults must supply tracePullTightAccuracy");
   }
 
   /**
@@ -181,6 +184,36 @@ class SettingsMergerGuiIntegrationTest {
     assertTrue(
         merged.automaticNeckdown,
         "InteractiveSettings.automaticNeckdown=true must be reflected by merge()");
+  }
+
+  /**
+   * Verifies Q1 seed-then-live behaviour for a GUI-controlled field. The CLI value is copied into
+   * the live source when the board-load snapshot is set, then a later GUI edit wins over CLI at
+   * priority 65.
+   */
+  @Test
+  void setSettingsSeedsLiveFieldsThenGuiEditOverridesCli() {
+    String[] cliArgs = {"--router.trace_pull_tight_accuracy=321"};
+    SettingsMerger loadMerger = new SettingsMerger(new DefaultSettings(), new CliSettings(cliArgs));
+    RouterSettings seededSettings = loadMerger.merge();
+    assertEquals(321, seededSettings.tracePullTightAccuracy);
+
+    InteractiveSettings interactiveSettings = InteractiveSettings.getOrCreate(board);
+    interactiveSettings.setSettings(seededSettings);
+    assertEquals(
+        321,
+        interactiveSettings.getTracePullTightAccuracy(),
+        "Board-load settings must seed the live GUI field");
+
+    SettingsMerger runMerger =
+        new SettingsMerger(new DefaultSettings(), new CliSettings(cliArgs), interactiveSettings);
+    assertEquals(321, runMerger.merge().tracePullTightAccuracy);
+
+    interactiveSettings.setTracePullTightAccuracy(654);
+    assertEquals(
+        654,
+        runMerger.merge().tracePullTightAccuracy,
+        "A later GUI edit must override the CLI seed");
   }
 
   /**
@@ -213,7 +246,7 @@ class SettingsMergerGuiIntegrationTest {
         new app.freerouting.settings.sources.CliSettings(
             new String[] {"--router.layers.routable=false,true"});
 
-    // Merger setup: defaults (0), GuiSettings (65), CliSettings (60)
+    // Merger setup: defaults (0), GuiSettingsSource (65), CliSettings (60)
     SettingsMerger merger =
         new SettingsMerger(new DefaultSettings(), cliSource, interactiveSettings);
 

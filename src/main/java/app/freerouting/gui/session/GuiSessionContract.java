@@ -1,5 +1,7 @@
 package app.freerouting.gui.session;
 
+import app.freerouting.settings.sources.GuiSettingsSource;
+
 /**
  * GUI-session contract for board management (SoC plan Phase 3).
  *
@@ -28,10 +30,10 @@ public interface GuiSessionContract {
   /**
    * Returns the live GUI-session {@link InteractiveSettings} singleton.
    *
-   * <p>The returned instance is also the {@link app.freerouting.settings.sources.GuiSettings}
-   * source (priority 50) registered in the {@link app.freerouting.settings.SettingsMerger}
-   * pipeline. It is always non-null after a board has been created or loaded in GUI mode. Callers
-   * must not cache it beyond the current session; always obtain it through this accessor.
+   * <p>The returned instance is also the {@link GuiSettingsSource} source (priority 65) registered
+   * in the {@link app.freerouting.settings.SettingsMerger} pipeline. It is always non-null after a
+   * board has been created or loaded in GUI mode. Callers must not cache it beyond the current
+   * session; always obtain it through this accessor.
    *
    * @return the {@link InteractiveSettings} singleton; non-null after board initialisation
    */

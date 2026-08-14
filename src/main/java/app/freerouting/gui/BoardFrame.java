@@ -71,18 +71,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 /** Graphical frame containing the Menu, Toolbar, Canvas and Status bar. */
 public class BoardFrame extends WindowBase {
 
-  private static final String TUTORIAL_BOARD_FILENAME = "tutorial_board.dsn";
-
-  public static volatile BoardFrame activeFrame;
-
   /** The windows above stored in an array. */
   static final int SUBWINDOW_COUNT = 24;
 
   static final String GUI_DEFAULTS_FILE_NAME = "gui_defaults.par";
   static final String GUI_DEFAULTS_FILE_BACKUP_NAME = "gui_defaults.par.bak";
-
-  /** The current routing job (design) being edited. */
-  public RoutingJob routingJob;
+  private static final String TUTORIAL_BOARD_FILENAME = "tutorial_board.dsn";
+  public static volatile BoardFrame activeFrame;
 
   /** The menubar of this frame. */
   public final BoardMenuBar menubar;
@@ -111,6 +106,9 @@ public class BoardFrame extends WindowBase {
   private final List<Consumer<RoutingBoard>> boardSavedEventListeners = new ArrayList<>();
   private final BoardObservers boardObservers;
   private final String freeroutingVersion;
+
+  /** The current routing job (design) being edited. */
+  public RoutingJob routingJob;
 
   /** The panel with the graphical representation of the board. */
   BoardPanel boardPanel;
@@ -421,6 +419,36 @@ public class BoardFrame extends WindowBase {
     this.pack();
   }
 
+  private static BoardReadResult parseBoardFromBytes(
+      byte[] fileContent, FileFormat format, String filename) {
+    try (InputStream inputStream = new ByteArrayInputStream(fileContent)) {
+      if (format == FileFormat.DSN) {
+        return DsnReader.readBoard(
+            inputStream, null, new ItemIdentificationNumberGenerator(), filename);
+      }
+      if (format == FileFormat.KICAD_DESIGN_JSON) {
+        try (java.io.Reader reader =
+            new java.io.InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+          return KiCadJsonReader.readBoard(reader, null, new ItemIdentificationNumberGenerator());
+        }
+      }
+      throw new IllegalArgumentException("Unsupported format for async load: " + format);
+    } catch (Exception e) {
+      FRLogger.error("Failed to parse board file", e);
+      return new BoardReadResult.IoError(new IOException("Failed to parse board file", e));
+    }
+  }
+
+  private static boolean canAttachParsedBoard(BoardReadResult readResult) {
+    if (readResult instanceof BoardReadResult.Success) {
+      return true;
+    }
+    if (readResult instanceof BoardReadResult.OutlineMissing outlineMissing) {
+      return outlineMissing.board() != null;
+    }
+    return false;
+  }
+
   /**
    * Loads a RoutingBoard natively (e.g. from an API session) without file transfer overhead,
    * rendering it instantly in the GUI for real-time monitoring.
@@ -535,26 +563,6 @@ public class BoardFrame extends WindowBase {
     return boardPanel != null
         && boardPanel.boardHandling != null
         && boardPanel.boardHandling.getSessionPort().isCurrent(generation);
-  }
-
-  private static BoardReadResult parseBoardFromBytes(
-      byte[] fileContent, FileFormat format, String filename) {
-    try (InputStream inputStream = new ByteArrayInputStream(fileContent)) {
-      if (format == FileFormat.DSN) {
-        return DsnReader.readBoard(
-            inputStream, null, new ItemIdentificationNumberGenerator(), filename);
-      }
-      if (format == FileFormat.KICAD_DESIGN_JSON) {
-        try (java.io.Reader reader =
-            new java.io.InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-          return KiCadJsonReader.readBoard(reader, null, new ItemIdentificationNumberGenerator());
-        }
-      }
-      throw new IllegalArgumentException("Unsupported format for async load: " + format);
-    } catch (Exception e) {
-      FRLogger.error("Failed to parse board file", e);
-      return new BoardReadResult.IoError(new IOException("Failed to parse board file", e));
-    }
   }
 
   private void ensureGeneralSettingsVisibleDuringLoad() {
@@ -782,16 +790,6 @@ public class BoardFrame extends WindowBase {
     }
 
     return readResult instanceof BoardReadResult.OutlineMissing;
-  }
-
-  private static boolean canAttachParsedBoard(BoardReadResult readResult) {
-    if (readResult instanceof BoardReadResult.Success) {
-      return true;
-    }
-    if (readResult instanceof BoardReadResult.OutlineMissing outlineMissing) {
-      return outlineMissing.board() != null;
-    }
-    return false;
   }
 
   private void showBoardLoadError(BoardReadResult readResult) {

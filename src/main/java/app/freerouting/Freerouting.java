@@ -702,6 +702,74 @@ public class Freerouting {
     return folderPath.resolve(filename).normalize().toAbsolutePath();
   }
 
+  private static boolean compareBoardFiles(String file1Path, String file2Path) {
+    FRLogger.info("Starting comparison of board files: " + file1Path + " and " + file2Path);
+    try {
+      java.io.File file1 = new java.io.File(file1Path);
+      java.io.File file2 = new java.io.File(file2Path);
+      if (!file1.exists()) {
+        FRLogger.error("Comparison file 1 does not exist: " + file1Path, null);
+        return false;
+      }
+      if (!file2.exists()) {
+        FRLogger.error("Comparison file 2 does not exist: " + file2Path, null);
+        return false;
+      }
+
+      app.freerouting.board.RoutingBoard board1 = loadBoardFromFile(file1);
+      app.freerouting.board.RoutingBoard board2 = loadBoardFromFile(file2);
+
+      if (board1 == null || board2 == null) {
+        FRLogger.error("Failed to load one or both boards for comparison.", null);
+        return false;
+      }
+
+      app.freerouting.board.BoardComparator.ComparisonResult result =
+          app.freerouting.board.BoardComparator.compare(board1, board2, 1e-3);
+
+      IO.println(result.report);
+
+      if (result.areEqual) {
+        FRLogger.info("SUCCESS: Boards are identical.");
+      } else {
+        FRLogger.warn("WARNING: Differences detected between the loaded boards.");
+      }
+      return result.areEqual;
+    } catch (Exception e) {
+      FRLogger.error("Error during board files comparison: " + e.getMessage(), e);
+      return false;
+    }
+  }
+
+  private static app.freerouting.board.RoutingBoard loadBoardFromFile(java.io.File file)
+      throws Exception {
+    try (java.io.InputStream is = new java.io.FileInputStream(file)) {
+      if (file.getName().toLowerCase().endsWith(".json")) {
+        try (java.io.Reader r =
+            new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
+          app.freerouting.io.BoardReadResult readResult =
+              app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
+          if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
+            return (app.freerouting.board.RoutingBoard) success.board();
+          } else if (readResult
+              instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+            return (app.freerouting.board.RoutingBoard) outlineMissing.board();
+          }
+        }
+      } else {
+        app.freerouting.io.BoardReadResult readResult =
+            app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
+        if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
+          return (app.freerouting.board.RoutingBoard) success.board();
+        } else if (readResult
+            instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+          return (app.freerouting.board.RoutingBoard) outlineMissing.board();
+        }
+      }
+    }
+    return null;
+  }
+
   /**
    * The entry point of the Freerouting application.
    *
@@ -1286,73 +1354,5 @@ public class Freerouting {
 
     FRLogger.traceExit("MainApplication.main()");
     System.exit(0);
-  }
-
-  private static boolean compareBoardFiles(String file1Path, String file2Path) {
-    FRLogger.info("Starting comparison of board files: " + file1Path + " and " + file2Path);
-    try {
-      java.io.File file1 = new java.io.File(file1Path);
-      java.io.File file2 = new java.io.File(file2Path);
-      if (!file1.exists()) {
-        FRLogger.error("Comparison file 1 does not exist: " + file1Path, null);
-        return false;
-      }
-      if (!file2.exists()) {
-        FRLogger.error("Comparison file 2 does not exist: " + file2Path, null);
-        return false;
-      }
-
-      app.freerouting.board.RoutingBoard board1 = loadBoardFromFile(file1);
-      app.freerouting.board.RoutingBoard board2 = loadBoardFromFile(file2);
-
-      if (board1 == null || board2 == null) {
-        FRLogger.error("Failed to load one or both boards for comparison.", null);
-        return false;
-      }
-
-      app.freerouting.board.BoardComparator.ComparisonResult result =
-          app.freerouting.board.BoardComparator.compare(board1, board2, 1e-3);
-
-      IO.println(result.report);
-
-      if (result.areEqual) {
-        FRLogger.info("SUCCESS: Boards are identical.");
-      } else {
-        FRLogger.warn("WARNING: Differences detected between the loaded boards.");
-      }
-      return result.areEqual;
-    } catch (Exception e) {
-      FRLogger.error("Error during board files comparison: " + e.getMessage(), e);
-      return false;
-    }
-  }
-
-  private static app.freerouting.board.RoutingBoard loadBoardFromFile(java.io.File file)
-      throws Exception {
-    try (java.io.InputStream is = new java.io.FileInputStream(file)) {
-      if (file.getName().toLowerCase().endsWith(".json")) {
-        try (java.io.Reader r =
-            new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
-          app.freerouting.io.BoardReadResult readResult =
-              app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
-          if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
-            return (app.freerouting.board.RoutingBoard) success.board();
-          } else if (readResult
-              instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
-            return (app.freerouting.board.RoutingBoard) outlineMissing.board();
-          }
-        }
-      } else {
-        app.freerouting.io.BoardReadResult readResult =
-            app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
-        if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
-          return (app.freerouting.board.RoutingBoard) success.board();
-        } else if (readResult
-            instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
-          return (app.freerouting.board.RoutingBoard) outlineMissing.board();
-        }
-      }
-    }
-    return null;
   }
 }

@@ -23,8 +23,7 @@ import java.util.Collection;
  * Reads a Specctra {@code .rules} file and applies the parsed rules directly to a {@link
  * BasicBoard}, without any dependency on {@link app.freerouting.gui.session.GuiBoardManager}.
  *
- * <p>Replaces the read path previously found in {@link
- * app.freerouting.io.specctra.parser.RulesFile} (now an empty shell).
+ * <p>This class is the public read entry point for Specctra rules files.
  */
 public final class RulesReader {
 
@@ -144,7 +143,7 @@ public final class RulesReader {
   }
 
   // -------------------------------------------------------------------------
-  // Private helpers (migrated from RulesFile)
+  // Private helpers for rules-file parsing.
   // -------------------------------------------------------------------------
 
   private static void applyRules(Collection<Rule> rules, BasicBoard board, String layerName) {
