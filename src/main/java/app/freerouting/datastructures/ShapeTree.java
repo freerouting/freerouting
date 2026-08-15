@@ -5,6 +5,8 @@ import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.ShapeBoundingDirections;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Abstract binary search tree for shapes in the plane. The shapes are stored in the leafs of the
@@ -21,6 +23,9 @@ public abstract class ShapeTree {
   /** The number of entries stored in the tree. */
   protected int leafCount;
 
+  /** Protects the tree structure and the state of Leaves reachable from the tree. */
+  private final ReentrantReadWriteLock treeLock = new ReentrantReadWriteLock();
+
   /** Creates a new instance of ShapeTree. */
   protected ShapeTree(ShapeBoundingDirections directions) {
     boundingDirections = directions;
@@ -28,35 +33,57 @@ public abstract class ShapeTree {
     leafCount = 0;
   }
 
+  /** Returns the read lock used by this tree hierarchy. */
+  protected final Lock readLock() {
+    return treeLock.readLock();
+  }
+
+  /** Returns the write lock used by this tree hierarchy. */
+  protected final Lock writeLock() {
+    return treeLock.writeLock();
+  }
+
   /** Inserts all shapes of obj into the tree. */
   public void insert(ShapeTree.Storable obj) {
-    int shapeCount = obj.treeShapeCount(this);
-    if (shapeCount <= 0) {
-      return;
+    Lock lock = writeLock();
+    lock.lock();
+    try {
+      int shapeCount = obj.treeShapeCount(this);
+      if (shapeCount <= 0) {
+        return;
+      }
+      Leaf[] leafArr = new Leaf[shapeCount];
+      for (int i = 0; i < shapeCount; i++) {
+        leafArr[i] = insert(obj, i);
+      }
+      obj.setSearchTreeEntries(leafArr, this);
+    } finally {
+      lock.unlock();
     }
-    Leaf[] leafArr = new Leaf[shapeCount];
-    for (int i = 0; i < shapeCount; i++) {
-      leafArr[i] = insert(obj, i);
-    }
-    obj.setSearchTreeEntries(leafArr, this);
   }
 
   /** Insert a shape - creates a new node with a bounding shape. */
   protected Leaf insert(ShapeTree.Storable object, int index) {
-    Shape objectShape = object.getTreeShape(this, index);
-    if (objectShape == null) {
-      return null;
-    }
+    Lock lock = writeLock();
+    lock.lock();
+    try {
+      Shape objectShape = object.getTreeShape(this, index);
+      if (objectShape == null) {
+        return null;
+      }
 
-    RegularTileShape boundingShape = objectShape.boundingShape(boundingDirections);
-    if (boundingShape == null) {
-      FRLogger.warn("ShapeTree.insert: bounding shape of TreeObject is null");
-      return null;
+      RegularTileShape boundingShape = objectShape.boundingShape(boundingDirections);
+      if (boundingShape == null) {
+        FRLogger.warn("ShapeTree.insert: bounding shape of TreeObject is null");
+        return null;
+      }
+      // Construct a new KdLeaf and set it up
+      Leaf newLeaf = new Leaf(object, index, null, boundingShape);
+      this.insert(newLeaf);
+      return newLeaf;
+    } finally {
+      lock.unlock();
     }
-    // Construct a new KdLeaf and set it up
-    Leaf newLeaf = new Leaf(object, index, null, boundingShape);
-    this.insert(newLeaf);
-    return newLeaf;
   }
 
   abstract void insert(Leaf leaf);
@@ -65,6 +92,17 @@ public abstract class ShapeTree {
 
   /** Inserts the leaves of this tree into an array. */
   public Leaf[] toArray() {
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      return toArrayUnlocked();
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  /** Inserts the leaves of this tree into an array while the read lock is already held. */
+  private Leaf[] toArrayUnlocked() {
     Leaf[] result = new Leaf[this.leafCount];
     if (result.length == 0) {
       return result;
@@ -95,44 +133,62 @@ public abstract class ShapeTree {
 
   /** Removes all entries of obj in the tree. */
   public void remove(Leaf[] entries) {
-    if (entries == null) {
-      return;
-    }
-    for (int i = 0; i < entries.length; i++) {
-      removeLeaf(entries[i]);
+    Lock lock = writeLock();
+    lock.lock();
+    try {
+      if (entries == null) {
+        return;
+      }
+      for (int i = 0; i < entries.length; i++) {
+        removeLeaf(entries[i]);
+      }
+    } finally {
+      lock.unlock();
     }
   }
 
   /** Returns the number of entries stored in the tree. */
   public int size() {
-    return leafCount;
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      return leafCount;
+    } finally {
+      lock.unlock();
+    }
   }
 
   /** Outputs some statistic information about the tree. */
   public void statistics(String message) {
-    Leaf[] leafArr = this.toArray();
-    double cumulativeDepth = 0;
-    int maximumDepth = 0;
-    for (int i = 0; i < leafArr.length; i++) {
-      if (leafArr[i] != null) {
-        int distanceToRoot = leafArr[i].distanceToRoot();
-        cumulativeDepth += distanceToRoot;
-        maximumDepth = Math.max(maximumDepth, distanceToRoot);
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      Leaf[] leafArr = this.toArrayUnlocked();
+      double cumulativeDepth = 0;
+      int maximumDepth = 0;
+      for (int i = 0; i < leafArr.length; i++) {
+        if (leafArr[i] != null) {
+          int distanceToRoot = leafArr[i].distanceToRoot();
+          cumulativeDepth += distanceToRoot;
+          maximumDepth = Math.max(maximumDepth, distanceToRoot);
+        }
       }
+      double averageDepth = cumulativeDepth / leafArr.length;
+      FRLogger.info(
+          "MinAreaTree: Entry count: "
+              + leafArr.length
+              + " log: "
+              + Math.round(Math.log(leafArr.length))
+              + " Average depth: "
+              + Math.round(averageDepth)
+              + " "
+              + " Maximum depth: "
+              + maximumDepth
+              + " "
+              + message);
+    } finally {
+      lock.unlock();
     }
-    double averageDepth = cumulativeDepth / leafArr.length;
-    FRLogger.info(
-        "MinAreaTree: Entry count: "
-            + leafArr.length
-            + " log: "
-            + Math.round(Math.log(leafArr.length))
-            + " Average depth: "
-            + Math.round(averageDepth)
-            + " "
-            + " Maximum depth: "
-            + maximumDepth
-            + " "
-            + message);
   }
 
   /** Interface, which must be implemented by objects to be stored in a ShapeTree. */

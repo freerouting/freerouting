@@ -14,6 +14,7 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.concurrent.locks.Lock;
 
 /**
  * A special simple ShapeSearchtree, where the shapes are of class IntOctagon. It is used in the
@@ -90,6 +91,20 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
    */
   @Override
   public Collection<IncompleteFreeSpaceExpansionRoom> completeShape(
+      IncompleteFreeSpaceExpansionRoom room,
+      int netNo,
+      SearchTreeObject ignoreObject,
+      TileShape ignoreShape) {
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      return completeShapeUnlocked(room, netNo, ignoreObject, ignoreShape);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  private Collection<IncompleteFreeSpaceExpansionRoom> completeShapeUnlocked(
       IncompleteFreeSpaceExpansionRoom room,
       int netNo,
       SearchTreeObject ignoreObject,

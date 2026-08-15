@@ -5,6 +5,7 @@ import app.freerouting.geometry.planar.ShapeBoundingDirections;
 import app.freerouting.logger.FRLogger;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.locks.Lock;
 
 /**
  * Binary search tree for shapes in the plane. The shapes are stored in the leaves of the tree. The
@@ -23,6 +24,17 @@ public class MinAreaTree extends ShapeTree {
 
   /** Calculates the objects in this tree, which overlap with shape. */
   public Set<Leaf> overlaps(RegularTileShape shape) {
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      return overlapsUnlocked(shape);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  /** Calculates overlaps while the read lock is already held by the caller. */
+  protected final Set<Leaf> overlapsUnlocked(RegularTileShape shape) {
     Set<Leaf> foundOverlaps = new TreeSet<>();
     if (this.root == null) {
       return foundOverlaps;
@@ -49,6 +61,17 @@ public class MinAreaTree extends ShapeTree {
 
   @Override
   void insert(Leaf leaf) {
+    Lock lock = writeLock();
+    lock.lock();
+    try {
+      insertUnlocked(leaf);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  /** Inserts a leaf while the write lock is already held. */
+  private void insertUnlocked(Leaf leaf) {
     ++this.leafCount;
 
     // Tree is empty - just insert the new leaf
@@ -117,14 +140,28 @@ public class MinAreaTree extends ShapeTree {
   /** Removes an entry from this tree. */
   @Override
   public void removeLeaf(Leaf leaf) {
+    Lock lock = writeLock();
+    lock.lock();
+    try {
+      removeLeafUnlocked(leaf);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  /** Removes a leaf while the write lock is already held. */
+  private void removeLeafUnlocked(Leaf leaf) {
     if (leaf == null) {
+      return;
+    }
+    if (leaf.parent == null && root != leaf) {
       return;
     }
     // remove the leaf node
     InnerNode parent = leaf.parent;
-    leaf.boundingShape = null;
+    // Keep payload fields valid for callers that retained this Leaf from an earlier query; only
+    // structural ownership is cleared by detaching the leaf.
     leaf.parent = null;
-    leaf.object = null;
     --this.leafCount;
     if (parent == null) {
       // tree gets empty
