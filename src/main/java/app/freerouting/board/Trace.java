@@ -167,24 +167,24 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     TileShape searchShape = TileShape.getInstance(point);
     Set<SearchTreeObject> overlaps = board.overlappingObjects(searchShape, this.layer);
     Set<Item> result = new TreeSet<>();
-    for (SearchTreeObject currOb : overlaps) {
-      if (!(currOb instanceof Item currItem)) {
+    for (SearchTreeObject currentOb : overlaps) {
+      if (!(currentOb instanceof Item currentItem)) {
         continue;
       }
-      if (currItem != this
-          && currItem.sharesLayer(this)
-          && (ignoreNet || currItem.sharesNet(this))) {
-        if (currItem instanceof Trace currTrace) {
-          if (point.equals(currTrace.firstCorner()) || point.equals(currTrace.lastCorner())) {
-            result.add(currItem);
+      if (currentItem != this
+          && currentItem.sharesLayer(this)
+          && (ignoreNet || currentItem.sharesNet(this))) {
+        if (currentItem instanceof Trace currentTrace) {
+          if (point.equals(currentTrace.firstCorner()) || point.equals(currentTrace.lastCorner())) {
+            result.add(currentItem);
           }
-        } else if (currItem instanceof DrillItem currDrillItem) {
-          if (point.equals(currDrillItem.getCenter())) {
-            result.add(currItem);
+        } else if (currentItem instanceof DrillItem currentDrillItem) {
+          if (point.equals(currentDrillItem.getCenter())) {
+            result.add(currentItem);
           }
-        } else if (currItem instanceof ConductionArea currArea) {
-          if (currArea.getArea().contains(point)) {
-            result.add(currItem);
+        } else if (currentItem instanceof ConductionArea currentArea) {
+          if (currentArea.getArea().contains(point)) {
+            result.add(currentItem);
           }
         }
       }
@@ -232,9 +232,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
 
     // check, if the trace belongs to a net, which is not shovable.
     Nets nets = this.board.rules.nets;
-    for (int currNetNo : this.netNoArr) {
-      if (Nets.isNormalNetNo(currNetNo)) {
-        if (nets.get(currNetNo).getNetClass().isShoveFixed()) {
+    for (int currentNetNo : this.netNoArr) {
+      if (Nets.isNormalNetNo(currentNetNo)) {
+        if (nets.get(currentNetNo).getNetClass().isShoveFixed()) {
           return true;
         }
       }
@@ -296,8 +296,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
         ignoreAreas = currentNet.getNetClass().getIgnoreCyclesWithAreas();
       }
     }
-    for (Item currContact : startContacts) {
-      if (currContact.isCycleRecu(visitedItems, this, this, ignoreAreas)) {
+    for (Item currentContact : startContacts) {
+      if (currentContact.isCycleRecu(visitedItems, this, this, ignoreAreas)) {
         if (debugNet49) {
           FRLogger.trace(
               "compare_trace_is_cycle_dfs net=49, id="
@@ -311,7 +311,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
                       .map(i -> i.getIdNo() + "")
                       .collect(java.util.stream.Collectors.joining(","))
                   + ", found_via="
-                  + currContact.getIdNo());
+                  + currentContact.getIdNo());
         }
         return true;
       }
@@ -382,19 +382,19 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     if (this.board == null) {
       return result;
     }
-    Point currEndPoint = this.firstCorner();
+    Point currentEndPoint = this.firstCorner();
     for (int i = 0; i < 2; i++) {
-      IntOctagon currOct = currEndPoint.surroundingOctagon();
-      currOct = currOct.enlarge(this.halfWidth);
-      Set<Item> currOverlaps =
+      IntOctagon currentOct = currentEndPoint.surroundingOctagon();
+      currentOct = currentOct.enlarge(this.halfWidth);
+      Set<Item> currentOverlaps =
           this.board.overlappingItemsWithClearance(
-              currOct, this.layer, new int[0], this.clearanceClassNo());
-      for (Item currItem : currOverlaps) {
-        if ((currItem instanceof Pin pin) && currItem.sharesNet(this)) {
+              currentOct, this.layer, new int[0], this.clearanceClassNo());
+      for (Item currentItem : currentOverlaps) {
+        if ((currentItem instanceof Pin pin) && currentItem.sharesNet(this)) {
           result.add(pin);
         }
       }
-      currEndPoint = this.lastCorner();
+      currentEndPoint = this.lastCorner();
     }
     return result;
   }

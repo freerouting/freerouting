@@ -72,9 +72,9 @@ public class Components implements Serializable {
 
   /** Returns the component with the input name or null, if no such component exists. */
   public Component get(String name) {
-    for (Component curr : componentArr) {
-      if (curr.name.equals(name)) {
-        return curr;
+    for (Component current : componentArr) {
+      if (current.name.equals(name)) {
+        return current;
       }
     }
     return null;
@@ -132,14 +132,14 @@ public class Components implements Serializable {
   private void restoreComponentArrFromUndoList(BoardObservers observers) {
     Iterator<UndoableObjects.UndoableObjectNode> it = this.undoList.startReadObject();
     for (; ; ) {
-      Component currComponent = (Component) this.undoList.readObject(it);
-      if (currComponent == null) {
+      Component currentComponent = (Component) this.undoList.readObject(it);
+      if (currentComponent == null) {
         break;
       }
-      this.componentArr.setElementAt(currComponent, currComponent.no - 1);
+      this.componentArr.setElementAt(currentComponent, currentComponent.no - 1);
 
       if (observers != null) {
-        observers.notifyMoved(currComponent);
+        observers.notifyMoved(currentComponent);
       }
     }
   }
@@ -149,9 +149,9 @@ public class Components implements Serializable {
    * the undo algorithm of the board.
    */
   public void move(int componentNo, app.freerouting.geometry.planar.Vector vector) {
-    Component currComponent = this.get(componentNo);
-    this.undoList.saveForUndo(currComponent);
-    currComponent.translateBy(vector);
+    Component currentComponent = this.get(componentNo);
+    this.undoList.saveForUndo(currentComponent);
+    currentComponent.translateBy(vector);
   }
 
   /**
@@ -159,9 +159,9 @@ public class Components implements Serializable {
    * contrary to Component.turn_90_degree with the undo algorithm of the board.
    */
   public void turn90Degree(int componentNo, int factor, IntPoint pole) {
-    Component currComponent = this.get(componentNo);
-    this.undoList.saveForUndo(currComponent);
-    currComponent.turn90Degree(factor, pole);
+    Component currentComponent = this.get(componentNo);
+    this.undoList.saveForUndo(currentComponent);
+    currentComponent.turn90Degree(factor, pole);
   }
 
   /**
@@ -169,9 +169,9 @@ public class Components implements Serializable {
    * contrary to Component.rotate with the undo algorithm of the board.
    */
   public void rotate(int componentNo, double rotationInDegree, IntPoint pole) {
-    Component currComponent = this.get(componentNo);
-    this.undoList.saveForUndo(currComponent);
-    currComponent.rotate(rotationInDegree, pole, flipStyleRotateFirst);
+    Component currentComponent = this.get(componentNo);
+    this.undoList.saveForUndo(currentComponent);
+    currentComponent.rotate(rotationInDegree, pole, flipStyleRotateFirst);
   }
 
   /**
@@ -180,9 +180,9 @@ public class Components implements Serializable {
    * board.
    */
   public void changeSide(int componentNo, IntPoint pole) {
-    Component currComponent = this.get(componentNo);
-    this.undoList.saveForUndo(currComponent);
-    currComponent.changeSide(pole);
+    Component currentComponent = this.get(componentNo);
+    this.undoList.saveForUndo(currentComponent);
+    currentComponent.changeSide(pole);
   }
 
   /**

@@ -28,12 +28,12 @@ public class CalcFromSide {
     FloatPoint intersection = null;
     boolean borderIntersectionFound = false;
     // calculate the edgeNo of p_shape, where p_polyline enters
-    for (int currNo = no; currNo > 0; currNo--) {
-      LineSegment currSeg = new LineSegment(polyline, currNo);
-      int[] intersections = currSeg.borderIntersections(shape);
+    for (int currentNo = no; currentNo > 0; currentNo--) {
+      LineSegment currentSeg = new LineSegment(polyline, currentNo);
+      int[] intersections = currentSeg.borderIntersections(shape);
       if (intersections.length > 0) {
         fromsideNo = intersections[0];
-        intersection = currSeg.getLine().intersectionApprox(shape.borderLine(fromsideNo));
+        intersection = currentSeg.getLine().intersectionApprox(shape.borderLine(fromsideNo));
         borderIntersectionFound = true;
         break;
       }
@@ -47,13 +47,13 @@ public class CalcFromSide {
       double minDist = Double.MAX_VALUE;
       int edgeCount = shape.borderLineCount();
       for (int i = 0; i < edgeCount; i++) {
-        Line currLine = shape.borderLine(i);
-        FloatPoint currIntersection = checkLine.intersectionApprox(currLine);
-        double currDist = Math.abs(currIntersection.distance(fromPoint));
-        if (currDist < minDist) {
+        Line currentLine = shape.borderLine(i);
+        FloatPoint currentIntersection = checkLine.intersectionApprox(currentLine);
+        double currentDistance = Math.abs(currentIntersection.distance(fromPoint));
+        if (currentDistance < minDist) {
           fromsideNo = i;
-          intersection = currIntersection;
-          minDist = currDist;
+          intersection = currentIntersection;
+          minDist = currentDistance;
         }
       }
     }
@@ -96,9 +96,9 @@ public class CalcFromSide {
       }
       Side nextSide = checkLine.sideOf(nextCorner);
       if (prevSide != nextSide) {
-        FloatPoint currIntersection = shape.borderLine(i - 1).intersectionApprox(checkLine);
-        if (currIntersection.distanceSquare(startCorner)
-            < currIntersection.distanceSquare(endCorner)) {
+        FloatPoint currentIntersection = shape.borderLine(i - 1).intersectionApprox(checkLine);
+        if (currentIntersection.distanceSquare(startCorner)
+            < currentIntersection.distanceSquare(endCorner)) {
           frontSideNo = i - 1;
           break;
         }

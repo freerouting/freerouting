@@ -117,12 +117,12 @@ public class Via extends DrillItem implements Serializable {
       for (int i = 0; i < this.precalculatedShapes.length; i++) {
         int padstackLayer = i + this.firstLayer();
         Vector translateVector = getCenter().differenceBy(Point.ZERO);
-        Shape currShape = padstack.getShape(padstackLayer);
+        Shape currentShape = padstack.getShape(padstackLayer);
 
-        if (currShape == null) {
+        if (currentShape == null) {
           this.precalculatedShapes[i] = null;
         } else {
-          this.precalculatedShapes[i] = (Shape) currShape.translateBy(translateVector);
+          this.precalculatedShapes[i] = (Shape) currentShape.translateBy(translateVector);
         }
       }
     }
@@ -168,13 +168,13 @@ public class Via extends DrillItem implements Serializable {
       return true;
     }
     Iterator<Item> it = contactList.iterator();
-    Item currContactItem = it.next();
-    int firstContactFirstLayer = currContactItem.firstLayer();
-    int firstContactLastLayer = currContactItem.lastLayer();
+    Item currentContactItem = it.next();
+    int firstContactFirstLayer = currentContactItem.firstLayer();
+    int firstContactLastLayer = currentContactItem.lastLayer();
     while (it.hasNext()) {
-      currContactItem = it.next();
-      if (currContactItem.firstLayer() != firstContactFirstLayer
-          || currContactItem.lastLayer() != firstContactLastLayer) {
+      currentContactItem = it.next();
+      if (currentContactItem.firstLayer() != firstContactFirstLayer
+          || currentContactItem.lastLayer() != firstContactLastLayer) {
         return false;
       }
     }
@@ -199,9 +199,10 @@ public class Via extends DrillItem implements Serializable {
   public ExpansionDrill getAutorouteDrillInfo(ShapeSearchTree autorouteTree) {
     if (this.autorouteDrillInfo == null) {
       ItemAutorouteInfo viaAutorouteInfo = this.getAutorouteInfo();
-      TileShape currDrillShape = TileShape.getInstance(this.getCenter());
+      TileShape currentDrillShape = TileShape.getInstance(this.getCenter());
       this.autorouteDrillInfo =
-          new ExpansionDrill(currDrillShape, this.getCenter(), this.firstLayer(), this.lastLayer());
+          new ExpansionDrill(
+              currentDrillShape, this.getCenter(), this.firstLayer(), this.lastLayer());
       int viaLayerCount = this.lastLayer() - this.firstLayer() + 1;
       for (int i = 0; i < viaLayerCount; i++) {
         this.autorouteDrillInfo.roomArr[i] = viaAutorouteInfo.getExpansionRoom(i, autorouteTree);

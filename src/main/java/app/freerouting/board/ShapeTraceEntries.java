@@ -60,8 +60,8 @@ public class ShapeTraceEntries {
     BasicBoard board = trace.board;
     ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
     if (searchTree.isClearanceCompensationUsed()) {
-      double currOffset = trace.getCompensatedHalfWidth(searchTree) + c_offset_add;
-      offsetShape = shape.offset(currOffset);
+      double currentOffset = trace.getCompensatedHalfWidth(searchTree) + c_offset_add;
+      offsetShape = shape.offset(currentOffset);
     } else {
       // enlarge the shape in 2 steps  for symmetry reasons
       double clOffset =
@@ -141,10 +141,10 @@ public class ShapeTraceEntries {
     if (netNos1.length != netNos2.length) {
       return false;
     }
-    for (int currNetNo1 : netNos1) {
+    for (int currentNetNo1 : netNos1) {
       boolean netNoFound = false;
-      for (int currNetNo2 : netNos2) {
-        if (currNetNo1 == currNetNo2) {
+      for (int currentNetNo2 : netNos2) {
+        if (currentNetNo1 == currentNetNo2) {
           netNoFound = true;
           break;
         }
@@ -162,40 +162,40 @@ public class ShapeTraceEntries {
    * copperSharingAllowed, overlaps with traces or pads of the own net are allowed.
    */
   boolean storeItems(Collection<Item> itemList, boolean isPadCheck, boolean copperSharingAllowed) {
-    for (Item currItem : itemList) {
-      if (!isPadCheck && currItem instanceof ViaObstacleArea
-          || currItem instanceof ComponentObstacleArea) {
+    for (Item currentItem : itemList) {
+      if (!isPadCheck && currentItem instanceof ViaObstacleArea
+          || currentItem instanceof ComponentObstacleArea) {
         continue;
       }
-      boolean containsOwnNet = currItem.sharesNetNo(this.ownNetNos);
-      if (currItem instanceof ConductionArea area && (containsOwnNet || !area.getIsObstacle())) {
+      boolean containsOwnNet = currentItem.sharesNetNo(this.ownNetNos);
+      if (currentItem instanceof ConductionArea area && (containsOwnNet || !area.getIsObstacle())) {
         continue;
       }
-      if (currItem.isShoveFixed() && !containsOwnNet) {
-        this.foundObstacle = currItem;
+      if (currentItem.isShoveFixed() && !containsOwnNet) {
+        this.foundObstacle = currentItem;
         return false;
       }
-      if (currItem instanceof Via via) {
+      if (currentItem instanceof Via via) {
         if (isPadCheck || !containsOwnNet) {
           shoveViaList.add(via);
         }
-      } else if (currItem instanceof PolylineTrace currTrace) {
+      } else if (currentItem instanceof PolylineTrace currentTrace) {
 
-        if (!storeTrace(currTrace)) {
+        if (!storeTrace(currentTrace)) {
           return false;
         }
       } else {
         if (containsOwnNet) {
           if (!copperSharingAllowed) {
-            this.foundObstacle = currItem;
+            this.foundObstacle = currentItem;
             return false;
           }
-          if (isPadCheck && !((currItem instanceof Pin pin) && pin.drillAllowed())) {
-            this.foundObstacle = currItem;
+          if (isPadCheck && !((currentItem instanceof Pin pin) && pin.drillAllowed())) {
+            this.foundObstacle = currentItem;
             return false;
           }
         } else {
-          this.foundObstacle = currItem;
+          this.foundObstacle = currentItem;
           return false;
         }
       }
@@ -215,17 +215,17 @@ public class ShapeTraceEntries {
     if (entries == null) {
       return null;
     }
-    PolylineTrace currTrace = entries[0].trace;
+    PolylineTrace currentTrace = entries[0].trace;
     TileShape offsetShape;
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     if (searchTree.isClearanceCompensationUsed()) {
-      double currOffset = currTrace.getCompensatedHalfWidth(searchTree) + c_offset_add;
-      offsetShape = (TileShape) shape.offset(currOffset);
+      double currentOffset = currentTrace.getCompensatedHalfWidth(searchTree) + c_offset_add;
+      offsetShape = (TileShape) shape.offset(currentOffset);
     } else {
       // enlarge the shape in 2 steps  for symmetry reasons
-      offsetShape = (TileShape) shape.offset(currTrace.getHalfWidth());
+      offsetShape = (TileShape) shape.offset(currentTrace.getHalfWidth());
       double clOffset =
-          board.clearanceValue(currTrace.clearanceClassNo(), clClass, layer) + c_offset_add;
+          board.clearanceValue(currentTrace.clearanceClassNo(), clClass, layer) + c_offset_add;
       offsetShape = (TileShape) offsetShape.offset(clOffset);
     }
     int edgeCount = shape.borderLineCount();
@@ -240,13 +240,13 @@ public class ShapeTraceEntries {
     pieceLines[pieceLines.length - 1] = entries[1].trace.polyline().arr[entries[1].traceLineNo];
     // fill the interior lines of pieceLines with the appropriate edge
     // lines of the offset shape
-    int currEdgeNo = entries[0].edgeNo % edgeCount;
+    int currentEdgeNo = entries[0].edgeNo % edgeCount;
     for (int i = 1; i < pieceLines.length - 1; i++) {
-      pieceLines[i] = offsetShape.borderLine(currEdgeNo);
-      if (currEdgeNo == edgeCount - 1) {
-        currEdgeNo = 0;
+      pieceLines[i] = offsetShape.borderLine(currentEdgeNo);
+      if (currentEdgeNo == edgeCount - 1) {
+        currentEdgeNo = 0;
       } else {
-        ++currEdgeNo;
+        ++currentEdgeNo;
       }
     }
     Polyline piecePolyline = new Polyline(pieceLines);
@@ -257,9 +257,9 @@ public class ShapeTraceEntries {
     return new PolylineTrace(
         piecePolyline,
         this.layer,
-        currTrace.getHalfWidth(),
-        currTrace.netNoArr,
-        currTrace.clearanceClassNo(),
+        currentTrace.getHalfWidth(),
+        currentTrace.netNoArr,
+        currentTrace.clearanceClassNo(),
         0,
         0,
         FixedState.UNFIXED,
@@ -289,8 +289,8 @@ public class ShapeTraceEntries {
    * ignored
    */
   void cutoutTraces(Collection<Item> itemList) {
-    for (Item currItem : itemList) {
-      if (currItem instanceof PolylineTrace trace && !currItem.sharesNetNo(this.ownNetNos)) {
+    for (Item currentItem : itemList) {
+      if (currentItem instanceof PolylineTrace trace && !currentItem.sharesNetNo(this.ownNetNos)) {
         cutoutTrace(trace, this.shape, this.clClass);
       }
     }
@@ -309,8 +309,8 @@ public class ShapeTraceEntries {
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     TileShape offsetShape;
     if (searchTree.isClearanceCompensationUsed()) {
-      double currOffset = trace.getCompensatedHalfWidth(searchTree) + c_offset_add;
-      offsetShape = (TileShape) shape.offset(currOffset);
+      double currentOffset = trace.getCompensatedHalfWidth(searchTree) + c_offset_add;
+      offsetShape = (TileShape) shape.offset(currentOffset);
     } else {
       // enlarge the shape in 2 steps  for symmetry reasons
       double clOffset =
@@ -427,18 +427,18 @@ public class ShapeTraceEntries {
     if (this.fromSide != null && this.fromSide.no >= 0) {
       return; // from side is already legal
     }
-    EntryPoint currNode = this.listAnchor;
-    int currFromsideNo = 0;
-    FloatPoint currEntryApprox = null;
-    while (currNode != null) {
-      if (currNode.trace.sharesNetNo(this.ownNetNos)) {
-        currFromsideNo = currNode.edgeNo;
-        currEntryApprox = currNode.entryApprox;
+    EntryPoint currentNode = this.listAnchor;
+    int currentFromsideNo = 0;
+    FloatPoint currentEntryApprox = null;
+    while (currentNode != null) {
+      if (currentNode.trace.sharesNetNo(this.ownNetNos)) {
+        currentFromsideNo = currentNode.edgeNo;
+        currentEntryApprox = currentNode.entryApprox;
         break;
       }
-      currNode = currNode.next;
+      currentNode = currentNode.next;
     }
-    this.fromSide = new CalcFromSide(currFromsideNo, currEntryApprox);
+    this.fromSide = new CalcFromSide(currentFromsideNo, currentEntryApprox);
   }
 
   /** Resorts the intersection points according to fromSideNo and removes redundant points. */
@@ -469,34 +469,34 @@ public class ShapeTraceEntries {
     }
     // search the first intersection point between the side middle
     // and compareCorner2
-    EntryPoint curr = listAnchor;
+    EntryPoint current = listAnchor;
     EntryPoint prev = null;
 
-    while (curr != null) {
-      if (curr.edgeNo > this.fromSide.no) {
+    while (current != null) {
+      if (current.edgeNo > this.fromSide.no) {
         break;
       }
-      if (curr.edgeNo == fromSide.no) {
+      if (current.edgeNo == fromSide.no) {
         if (fromSide.borderIntersection != null) {
-          FloatPoint currProjection =
-              curr.entryApprox.projectionApprox(shape.borderLine(fromSide.no));
-          if (currProjection.distanceSquare(compareCorner1) >= fromPointDist
-              && currProjection.distanceSquare(fromPointProjection)
-                  <= currProjection.distanceSquare(compareCorner1)) {
+          FloatPoint currentProjection =
+              current.entryApprox.projectionApprox(shape.borderLine(fromSide.no));
+          if (currentProjection.distanceSquare(compareCorner1) >= fromPointDist
+              && currentProjection.distanceSquare(fromPointProjection)
+                  <= currentProjection.distanceSquare(compareCorner1)) {
             break;
           }
         } else {
-          if (curr.entryApprox.distanceSquare(compareCorner2)
-              <= curr.entryApprox.distanceSquare(compareCorner1)) {
+          if (current.entryApprox.distanceSquare(compareCorner2)
+              <= current.entryApprox.distanceSquare(compareCorner1)) {
             break;
           }
         }
       }
-      prev = curr;
-      curr = prev.next;
+      prev = current;
+      current = prev.next;
     }
-    if (curr != null && curr != listAnchor) {
-      rotateEntryListAroundAnchor(curr, edgeCount);
+    if (current != null && current != listAnchor) {
+      rotateEntryListAroundAnchor(current, edgeCount);
     }
     // remove intersections between two other intersections of the same
     // connected set, so that only first and last intersection is kept.
@@ -506,34 +506,34 @@ public class ShapeTraceEntries {
     prev = listAnchor;
     int[] prevNetNos = prev.trace.netNoArr;
 
-    curr = listAnchor.next;
-    int[] currNetNos;
+    current = listAnchor.next;
+    int[] currentNetNos;
     EntryPoint next;
 
-    if (curr != null) {
-      currNetNos = curr.trace.netNoArr;
-      next = curr.next;
+    if (current != null) {
+      currentNetNos = current.trace.netNoArr;
+      next = current.next;
     } else {
       next = null;
-      currNetNos = new int[0];
+      currentNetNos = new int[0];
     }
     EntryPoint beforePrev = null;
     while (next != null) {
       int[] nextNetNos = next.trace.netNoArr;
-      if (netNosEqual(prevNetNos, currNetNos) && netNosEqual(currNetNos, nextNetNos)) {
+      if (netNosEqual(prevNetNos, currentNetNos) && netNosEqual(currentNetNos, nextNetNos)) {
         prev.next = next;
       } else {
         beforePrev = prev;
-        prev = curr;
-        prevNetNos = currNetNos;
+        prev = current;
+        prevNetNos = currentNetNos;
       }
-      currNetNos = nextNetNos;
-      curr = next;
-      next = curr.next;
+      currentNetNos = nextNetNos;
+      current = next;
+      next = current.next;
     }
 
     // remove nodes of own net at start and end of the list
-    if (curr != null && netNosEqual(currNetNos, ownNetNos)) {
+    if (current != null && netNosEqual(currentNetNos, ownNetNos)) {
       prev.next = null;
       if (netNosEqual(prevNetNos, ownNetNos)) {
         if (beforePrev != null) {
@@ -691,12 +691,12 @@ public class ShapeTraceEntries {
 
     // recalculate maxStackLevel;
     maxStackLevel = 0;
-    EntryPoint curr = listAnchor;
-    while (curr != null) {
-      if (curr.stackLevel > maxStackLevel) {
-        maxStackLevel = curr.stackLevel;
+    EntryPoint current = listAnchor;
+    while (current != null) {
+      if (current.stackLevel > maxStackLevel) {
+        maxStackLevel = current.stackLevel;
       }
-      curr = curr.next;
+      current = current.next;
     }
     --tracePieceCount;
     if (first.trace.netsEqual(this.ownNetNos)) {
@@ -709,14 +709,14 @@ public class ShapeTraceEntries {
   private void insertEntryPoint(
       PolylineTrace trace, int traceLineNo, int edgeNo, FloatPoint entryApprox) {
     EntryPoint newEntry = new EntryPoint(trace, traceLineNo, edgeNo, entryApprox);
-    EntryPoint currPrev = null;
-    EntryPoint currNext = listAnchor;
+    EntryPoint currentPrev = null;
+    EntryPoint currentNext = listAnchor;
     // insert the new entry into the sorted list
-    while (currNext != null) {
-      if (currNext.edgeNo > newEntry.edgeNo) {
+    while (currentNext != null) {
+      if (currentNext.edgeNo > newEntry.edgeNo) {
         break;
       }
-      if (currNext.edgeNo == newEntry.edgeNo) {
+      if (currentNext.edgeNo == newEntry.edgeNo) {
         FloatPoint prevCorner = shape.cornerApprox(edgeNo);
         FloatPoint nextCorner;
         if (edgeNo == shape.borderLineCount() - 1) {
@@ -727,16 +727,16 @@ public class ShapeTraceEntries {
         // than the projection of the line from prevCorner to
         // next.entryApprox onto the same line.
         if (prevCorner.scalarProduct(entryApprox, nextCorner)
-            <= prevCorner.scalarProduct(currNext.entryApprox, nextCorner)) {
+            <= prevCorner.scalarProduct(currentNext.entryApprox, nextCorner)) {
           break;
         }
       }
-      currPrev = currNext;
-      currNext = currNext.next;
+      currentPrev = currentNext;
+      currentNext = currentNext.next;
     }
-    newEntry.next = currNext;
-    if (currPrev != null) {
-      currPrev.next = newEntry;
+    newEntry.next = currentNext;
+    if (currentPrev != null) {
+      currentPrev.next = newEntry;
     } else {
       listAnchor = newEntry;
     }
@@ -744,20 +744,20 @@ public class ShapeTraceEntries {
 
   /** Rotates the entry list so that newAnchor becomes the list head. */
   private void rotateEntryListAroundAnchor(EntryPoint newAnchor, int edgeCount) {
-    EntryPoint curr = newAnchor;
+    EntryPoint current = newAnchor;
     EntryPoint prev = null;
-    while (curr != null) {
-      prev = curr;
-      curr = prev.next;
+    while (current != null) {
+      prev = current;
+      current = prev.next;
     }
     prev.next = listAnchor;
-    curr = listAnchor;
-    while (curr != newAnchor) {
-      // add edgeCount to curr.side to differentiate points
+    current = listAnchor;
+    while (current != newAnchor) {
+      // add edgeCount to current.side to differentiate points
       // before and after the middle of fromSide
-      curr.edgeNo += edgeCount;
-      prev = curr;
-      curr = prev.next;
+      current.edgeNo += edgeCount;
+      prev = current;
+      current = prev.next;
     }
     prev.next = null;
     listAnchor = newAnchor;

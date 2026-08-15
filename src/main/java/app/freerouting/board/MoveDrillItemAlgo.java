@@ -39,8 +39,8 @@ public final class MoveDrillItemAlgo {
 
     // Check, that p_drillitem is only connected to traces.
     Collection<Item> contactList = drillItem.getNormalContacts();
-    for (Item currContact : contactList) {
-      if (!(currContact instanceof Trace || currContact instanceof ConductionArea)) {
+    for (Item currentContact : contactList) {
+      if (!(currentContact instanceof Trace || currentContact instanceof ConductionArea)) {
         return false;
       }
     }
@@ -57,24 +57,26 @@ public final class MoveDrillItemAlgo {
       attachAllowed = via.attachAllowed;
     }
     ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
-    for (int currLayer = drillItem.firstLayer(); currLayer <= drillItem.lastLayer(); currLayer++) {
-      int currInd = currLayer - drillItem.firstLayer();
-      TileShape currShape = drillItem.getTreeShape(searchTree, currInd);
-      if (currShape == null) {
+    for (int currentLayer = drillItem.firstLayer();
+        currentLayer <= drillItem.lastLayer();
+        currentLayer++) {
+      int currentInd = currentLayer - drillItem.firstLayer();
+      TileShape currentShape = drillItem.getTreeShape(searchTree, currentInd);
+      if (currentShape == null) {
         continue;
       }
-      ConvexShape newShape = (ConvexShape) currShape.translateBy(vector);
-      TileShape currTileShape;
+      ConvexShape newShape = (ConvexShape) currentShape.translateBy(vector);
+      TileShape currentTileShape;
       if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
-        currTileShape = newShape.boundingBox();
+        currentTileShape = newShape.boundingBox();
       } else {
-        currTileShape = newShape.boundingOctagon();
+        currentTileShape = newShape.boundingOctagon();
       }
-      CalcFromSide fromSide = new CalcFromSide(drillItem.getCenter(), currTileShape);
+      CalcFromSide fromSide = new CalcFromSide(drillItem.getCenter(), currentTileShape);
       if (forcedPadAlgo.checkForcedPad(
-              currTileShape,
+              currentTileShape,
               fromSide,
-              currLayer,
+              currentLayer,
               drillItem.netNoArr,
               drillItem.clearanceClassNo(),
               attachAllowed,
@@ -114,27 +116,29 @@ public final class MoveDrillItemAlgo {
     Collection<Item> ignoreItems = new LinkedList<>();
     ignoreItems.add(drillItem);
     ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
-    for (int currLayer = drillItem.firstLayer(); currLayer <= drillItem.lastLayer(); currLayer++) {
-      int currInd = currLayer - drillItem.firstLayer();
-      TileShape currShape = drillItem.getTreeShape(searchTree, currInd);
-      if (currShape == null) {
+    for (int currentLayer = drillItem.firstLayer();
+        currentLayer <= drillItem.lastLayer();
+        currentLayer++) {
+      int currentInd = currentLayer - drillItem.firstLayer();
+      TileShape currentShape = drillItem.getTreeShape(searchTree, currentInd);
+      if (currentShape == null) {
         continue;
       }
-      ConvexShape newShape = (ConvexShape) currShape.translateBy(vector);
-      TileShape currTileShape;
+      ConvexShape newShape = (ConvexShape) currentShape.translateBy(vector);
+      TileShape currentTileShape;
       if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
-        currTileShape = newShape.boundingBox();
+        currentTileShape = newShape.boundingBox();
       } else {
-        currTileShape = newShape.boundingOctagon();
+        currentTileShape = newShape.boundingOctagon();
       }
       if (tidyRegion != null) {
-        tidyRegion = tidyRegion.union(currTileShape.boundingOctagon());
+        tidyRegion = tidyRegion.union(currentTileShape.boundingOctagon());
       }
-      CalcFromSide fromSide = new CalcFromSide(drillItem.getCenter(), currTileShape);
+      CalcFromSide fromSide = new CalcFromSide(drillItem.getCenter(), currentTileShape);
       if (!forcedPadAlgo.forcedPad(
-          currTileShape,
+          currentTileShape,
           fromSide,
-          currLayer,
+          currentLayer,
           drillItem.netNoArr,
           drillItem.clearanceClassNo(),
           attachAllowed,
@@ -143,9 +147,9 @@ public final class MoveDrillItemAlgo {
           maxViaRecursionDepth)) {
         return false;
       }
-      IntBox currBoundingBox = currShape.boundingBox();
+      IntBox currentBoundingBox = currentShape.boundingBox();
       for (int j = 0; j < 4; j++) {
-        board.joinChangedArea(currBoundingBox.cornerApprox(j), currLayer);
+        board.joinChangedArea(currentBoundingBox.cornerApprox(j), currentLayer);
       }
     }
     drillItem.moveBy(vector);
@@ -183,20 +187,21 @@ public final class MoveDrillItemAlgo {
       return true;
     }
     double shapeRadius = 0.5 * obstacleShape.boundingBox().minWidth();
-    for (Via currVia : shapeEntries.shoveViaList) {
-      if (currVia.sharesNetNo(netNoArr)) {
+    for (Via currentVia : shapeEntries.shoveViaList) {
+      if (currentVia.sharesNetNo(netNoArr)) {
         continue;
       }
       if (maxViaRecursionDepth <= 0) {
         return true;
       }
       IntPoint[] tryViaCenters =
-          tryShoveViaPoints(obstacleShape, layer, currVia, clType, true, board);
+          tryShoveViaPoints(obstacleShape, layer, currentVia, clType, true, board);
       IntPoint newViaCenter = null;
-      double maxDist = 0.5 * currVia.getShapeOnLayer(layer).boundingBox().maxWidth() + shapeRadius;
+      double maxDist =
+          0.5 * currentVia.getShapeOnLayer(layer).boundingBox().maxWidth() + shapeRadius;
       double maxDistSquare = maxDist * maxDist;
-      IntPoint currViaCenter = (IntPoint) currVia.getCenter();
-      FloatPoint checkViaCenter = currViaCenter.toFloat();
+      IntPoint currentViaCenter = (IntPoint) currentVia.getCenter();
+      FloatPoint checkViaCenter = currentViaCenter.toFloat();
       Vector relCoor = null;
       for (int i = 0; i < tryViaCenters.length; i++) {
         if (i == 0 || checkViaCenter.distanceSquare(tryViaCenters[i].toFloat()) <= maxDistSquare) {
@@ -204,11 +209,11 @@ public final class MoveDrillItemAlgo {
           if (ignoreItems != null) {
             localIgnoreItems.addAll(ignoreItems);
           }
-          relCoor = tryViaCenters[i].differenceBy(currViaCenter);
+          relCoor = tryViaCenters[i].differenceBy(currentViaCenter);
           // No time limit here because the item database is already changed.
           boolean shoveOk =
               check(
-                  currVia,
+                  currentVia,
                   relCoor,
                   maxRecursionDepth,
                   maxViaRecursionDepth - 1,
@@ -224,7 +229,7 @@ public final class MoveDrillItemAlgo {
       if (newViaCenter == null) {
         continue;
       }
-      if (!insert(currVia, relCoor, maxRecursionDepth, maxViaRecursionDepth - 1, null, board)) {
+      if (!insert(currentVia, relCoor, maxRecursionDepth, maxViaRecursionDepth - 1, null, board)) {
         return false;
       }
     }
@@ -244,15 +249,15 @@ public final class MoveDrillItemAlgo {
       boolean extendedCheck,
       RoutingBoard board) {
     ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
-    TileShape currViaShape = via.getTreeShapeOnLayer(searchTree, layer);
-    if (currViaShape == null) {
+    TileShape currentViaShape = via.getTreeShapeOnLayer(searchTree, layer);
+    if (currentViaShape == null) {
       return new IntPoint[0];
     }
     boolean isIntOctagon = obstacleShape.isIntOctagon();
     double clearanceValue = board.clearanceValue(clClassNo, via.clearanceClassNo(), layer);
     double shoveDistance;
     if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE || isIntOctagon) {
-      shoveDistance = 0.5 * currViaShape.boundingBox().maxWidth();
+      shoveDistance = 0.5 * currentViaShape.boundingBox().maxWidth();
       if (!searchTree.isClearanceCompensationUsed()) {
         shoveDistance += clearanceValue;
       }
@@ -260,7 +265,8 @@ public final class MoveDrillItemAlgo {
       // a different algorithm is used for calculating the new via centers
       shoveDistance = 0;
       if (!searchTree.isClearanceCompensationUsed()) {
-        // enlarge p_obstacle_shape and currViaShape by half of the clearance value to synchronize
+        // enlarge p_obstacle_shape and currentViaShape by half of the clearance value to
+        // synchronize
         // with the check algorithm in ShapeSearchTree.overlapping_tree_entries_with_clearance
         shoveDistance += 0.5 * clearanceValue;
       }
@@ -270,36 +276,36 @@ public final class MoveDrillItemAlgo {
     // shoving.
     shoveDistance += 2;
 
-    IntPoint currViaCenter = (IntPoint) via.getCenter();
+    IntPoint currentViaCenter = (IntPoint) via.getCenter();
     IntPoint[] tryViaCenters;
     int tryCount = 1;
     if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
-      IntBox currOffsetBox = obstacleShape.boundingBox().offset(shoveDistance);
+      IntBox currentOffsetBox = obstacleShape.boundingBox().offset(shoveDistance);
       if (extendedCheck) {
         tryCount = 2;
       }
-      tryViaCenters = currOffsetBox.nearestBorderProjections(currViaCenter, tryCount);
+      tryViaCenters = currentOffsetBox.nearestBorderProjections(currentViaCenter, tryCount);
     } else if (isIntOctagon) {
-      IntOctagon currOffsetOctagon = obstacleShape.boundingOctagon().enlarge(shoveDistance);
+      IntOctagon currentOffsetOctagon = obstacleShape.boundingOctagon().enlarge(shoveDistance);
       if (extendedCheck) {
         tryCount = 4;
       }
 
-      tryViaCenters = currOffsetOctagon.nearestBorderProjections(currViaCenter, tryCount);
+      tryViaCenters = currentOffsetOctagon.nearestBorderProjections(currentViaCenter, tryCount);
     } else {
-      TileShape currOffsetShape = (TileShape) obstacleShape.enlarge(shoveDistance);
+      TileShape currentOffsetShape = (TileShape) obstacleShape.enlarge(shoveDistance);
       if (!searchTree.isClearanceCompensationUsed()) {
-        currViaShape = (TileShape) currViaShape.enlarge(0.5 * clearanceValue);
+        currentViaShape = (TileShape) currentViaShape.enlarge(0.5 * clearanceValue);
       }
       if (extendedCheck) {
         tryCount = 4;
       }
       FloatPoint[] shoveDeltas =
-          currOffsetShape.nearestRelativeOutsideLocations(currViaShape, tryCount);
+          currentOffsetShape.nearestRelativeOutsideLocations(currentViaShape, tryCount);
       tryViaCenters = new IntPoint[shoveDeltas.length];
       for (int i = 0; i < tryViaCenters.length; i++) {
-        Vector currDelta = shoveDeltas[i].round().differenceBy(Point.ZERO);
-        tryViaCenters[i] = (IntPoint) currViaCenter.translateBy(currDelta);
+        Vector currentDelta = shoveDeltas[i].round().differenceBy(Point.ZERO);
+        tryViaCenters[i] = (IntPoint) currentViaCenter.translateBy(currentDelta);
       }
     }
     return tryViaCenters;

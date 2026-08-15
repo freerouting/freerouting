@@ -44,25 +44,25 @@ public final class OptViaAlgo {
         return false;
       }
       Iterator<Item> it = contacts.iterator();
-      Item currItem = it.next();
-      if (currItem.isShoveFixed() || !(currItem instanceof PolylineTrace)) {
-        if (currItem instanceof ConductionArea) {
+      Item currentItem = it.next();
+      if (currentItem.isShoveFixed() || !(currentItem instanceof PolylineTrace)) {
+        if (currentItem instanceof ConductionArea) {
           isPlaneOrFanoutVia = true;
         } else {
           return false;
         }
       } else {
-        firstTrace = (PolylineTrace) currItem;
+        firstTrace = (PolylineTrace) currentItem;
       }
-      currItem = it.next();
-      if (currItem.isShoveFixed() || !(currItem instanceof PolylineTrace)) {
-        if (currItem instanceof ConductionArea) {
+      currentItem = it.next();
+      if (currentItem.isShoveFixed() || !(currentItem instanceof PolylineTrace)) {
+        if (currentItem instanceof ConductionArea) {
           isPlaneOrFanoutVia = true;
         } else {
           return false;
         }
       } else {
-        secondTrace = (PolylineTrace) currItem;
+        secondTrace = (PolylineTrace) currentItem;
       }
     }
     if (isPlaneOrFanoutVia) {
@@ -132,18 +132,18 @@ public final class OptViaAlgo {
     ItemSelectionFilter filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
     Collection<Item> pickedItems = board.pickItems(newLocation, firstTrace.getLayer(), filter);
-    for (Item currItem : pickedItems) {
-      ((PolylineTrace) currItem).pullTight(true, tracePullTightAccuracy, null);
+    for (Item currentItem : pickedItems) {
+      ((PolylineTrace) currentItem).pullTight(true, tracePullTightAccuracy, null);
     }
     pickedItems = board.pickItems(newLocation, secondTrace.getLayer(), filter);
-    for (Item currItem : pickedItems) {
-      ((PolylineTrace) currItem).pullTight(true, tracePullTightAccuracy, null);
+    for (Item currentItem : pickedItems) {
+      ((PolylineTrace) currentItem).pullTight(true, tracePullTightAccuracy, null);
     }
     filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.VIAS);
     pickedItems = board.pickItems(newLocation, firstTrace.getLayer(), filter);
-    for (Item currItem : pickedItems) {
+    for (Item currentItem : pickedItems) {
       optViaLocation(
-          board, (Via) currItem, traceCostArr, tracePullTightAccuracy, maxRecursionDepth - 1);
+          board, (Via) currentItem, traceCostArr, tracePullTightAccuracy, maxRecursionDepth - 1);
       break;
     }
     return true;
@@ -162,14 +162,14 @@ public final class OptViaAlgo {
     }
     ConductionArea contactPlane = null;
     PolylineTrace contactTrace = null;
-    for (Item currContact : contactList) {
-      if (currContact instanceof ConductionArea area) {
+    for (Item currentContact : contactList) {
+      if (currentContact instanceof ConductionArea area) {
         if (contactPlane != null) {
           return false;
         }
         contactPlane = area;
-      } else if (currContact instanceof PolylineTrace trace) {
-        if (currContact.isShoveFixed() || contactTrace != null) {
+      } else if (currentContact instanceof PolylineTrace trace) {
+        if (currentContact.isShoveFixed() || contactTrace != null) {
           return false;
         }
         contactTrace = trace;
@@ -221,8 +221,8 @@ public final class OptViaAlgo {
       FloatPoint floatViaCenter = viaCenter.toFloat();
       FloatPoint floatPrevCorner = prevCorner.toFloat();
       if (floatCheckCorner.scalarProduct(floatViaCenter, floatPrevCorner) != 0) {
-        FloatLine currLine = new FloatLine(floatCheckCorner, floatPrevCorner);
-        Point projection = currLine.perpendicularProjection(floatViaCenter).round();
+        FloatLine currentLine = new FloatLine(floatCheckCorner, floatPrevCorner);
+        Point projection = currentLine.perpendicularProjection(floatViaCenter).round();
         Vector diffVector = projection.differenceBy(viaCenter);
         boolean projectionOk = true;
         AngleRestriction angleRestriction = board.rules.getTraceAngleRestriction();
@@ -260,8 +260,8 @@ public final class OptViaAlgo {
       Collection<Item> pickedItems =
           board.pickItems(newViaLocation, contactPlane.getLayer(), filter);
       boolean contactOk = false;
-      for (Item currItem : pickedItems) {
-        if (currItem == contactPlane) {
+      for (Item currentItem : pickedItems) {
+        if (currentItem == contactPlane) {
           contactOk = true;
           break;
         }
@@ -278,8 +278,8 @@ public final class OptViaAlgo {
     ItemSelectionFilter filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
     Collection<Item> pickedItems = board.pickItems(newViaLocation, contactTrace.getLayer(), filter);
-    for (Item currItem : pickedItems) {
-      ((PolylineTrace) currItem).pullTight(true, tracePullTightAccuracy, null);
+    for (Item currentItem : pickedItems) {
+      ((PolylineTrace) currentItem).pullTight(true, tracePullTightAccuracy, null);
     }
     if (newViaLocation.equals(checkCorner)) {
       optPlaneOrFanoutVia(board, via, tracePullTightAccuracy, maxRecursionDepth - 1);
@@ -337,21 +337,21 @@ public final class OptViaAlgo {
 
     okLength = Math.min(okLength, floatFromLocation.distance(floatToLocation));
 
-    double currLength = okLength / 2;
+    double currentLength = okLength / 2;
 
     okLength = 0;
     Point result = null;
 
-    while (currLength >= minLength) {
+    while (currentLength >= minLength) {
       Point checkPoint =
-          floatFromLocation.changeLength(floatToLocation, okLength + currLength).round();
+          floatFromLocation.changeLength(floatToLocation, okLength + currentLength).round();
 
       delta = checkPoint.differenceBy(fromLocation);
       if (MoveDrillItemAlgo.check(via, delta, 0, 0, null, board, null)) {
-        okLength += currLength;
+        okLength += currentLength;
         result = checkPoint;
       }
-      currLength /= 2;
+      currentLength /= 2;
     }
     return result;
   }
@@ -468,14 +468,14 @@ public final class OptViaAlgo {
     }
     Point result;
 
-    double currWeightedDistance1 =
+    double currentWeightedDistance1 =
         floatViaLocation.weightedDistance(
             floatFirstTraceFromCorner, firstTraceCosts.horizontal, firstTraceCosts.vertical);
-    double currWeightedDistance2 =
+    double currentWeightedDistance2 =
         floatViaLocation.weightedDistance(
             floatFirstTraceFromCorner, secondTraceCosts.horizontal, secondTraceCosts.vertical);
 
-    if (currWeightedDistance1 > currWeightedDistance2) {
+    if (currentWeightedDistance1 > currentWeightedDistance2) {
       // try to move the via in direction of p_first_trace_from_corner
       result =
           repositionVia(
@@ -490,14 +490,14 @@ public final class OptViaAlgo {
       }
     }
 
-    currWeightedDistance1 =
+    currentWeightedDistance1 =
         floatViaLocation.weightedDistance(
             floatSecondTraceFromCorner, secondTraceCosts.horizontal, secondTraceCosts.vertical);
-    currWeightedDistance2 =
+    currentWeightedDistance2 =
         floatViaLocation.weightedDistance(
             floatSecondTraceFromCorner, firstTraceCosts.horizontal, firstTraceCosts.vertical);
 
-    if (currWeightedDistance1 > currWeightedDistance2) {
+    if (currentWeightedDistance1 > currentWeightedDistance2) {
       // try to move the via in direction of p_second_trace_from_corner
       result =
           repositionVia(
@@ -531,14 +531,14 @@ public final class OptViaAlgo {
         toPoint2 = roundedSecondTraceFromCorner;
         floatToPoint2 = floatSecondTraceFromCorner;
       }
-      currWeightedDistance1 =
+      currentWeightedDistance1 =
           floatToPoint1.weightedDistance(
               floatToPoint2, firstTraceCosts.horizontal, firstTraceCosts.vertical);
-      currWeightedDistance2 =
+      currentWeightedDistance2 =
           floatToPoint1.weightedDistance(
               floatToPoint2, secondTraceCosts.horizontal, secondTraceCosts.vertical);
 
-      if (currWeightedDistance1 > currWeightedDistance2) {
+      if (currentWeightedDistance1 > currentWeightedDistance2) {
         // try moving the via first into the direction of toPoint1
         result =
             repositionVia(
@@ -570,17 +570,17 @@ public final class OptViaAlgo {
       FloatPoint floatCheckLocation =
           new FloatPoint(floatViaLocation.x, floatFirstTraceFromCorner.y);
 
-      currWeightedDistance1 =
+      currentWeightedDistance1 =
           floatViaLocation.weightedDistance(
               floatFirstTraceFromCorner, firstTraceCosts.horizontal, firstTraceCosts.vertical);
-      currWeightedDistance2 =
+      currentWeightedDistance2 =
           floatViaLocation.weightedDistance(
               floatCheckLocation, secondTraceCosts.horizontal, secondTraceCosts.vertical);
-      double currWeightedDistance3 =
+      double currentWeightedDistance3 =
           floatCheckLocation.weightedDistance(
               floatFirstTraceFromCorner, firstTraceCosts.horizontal, firstTraceCosts.vertical);
 
-      if (currWeightedDistance1 > currWeightedDistance2 + currWeightedDistance3) {
+      if (currentWeightedDistance1 > currentWeightedDistance2 + currentWeightedDistance3) {
         IntPoint checkLocation = floatCheckLocation.round();
         boolean checkOk =
             repositionVia(
@@ -601,14 +601,14 @@ public final class OptViaAlgo {
 
       floatCheckLocation = new FloatPoint(floatFirstTraceFromCorner.x, floatViaLocation.y);
 
-      currWeightedDistance2 =
+      currentWeightedDistance2 =
           floatViaLocation.weightedDistance(
               floatCheckLocation, secondTraceCosts.horizontal, secondTraceCosts.vertical);
-      currWeightedDistance3 =
+      currentWeightedDistance3 =
           floatCheckLocation.weightedDistance(
               floatFirstTraceFromCorner, firstTraceCosts.horizontal, firstTraceCosts.vertical);
 
-      if (currWeightedDistance1 > currWeightedDistance2 + currWeightedDistance3) {
+      if (currentWeightedDistance1 > currentWeightedDistance2 + currentWeightedDistance3) {
         IntPoint checkLocation = floatCheckLocation.round();
         boolean checkOk =
             repositionVia(
@@ -632,17 +632,17 @@ public final class OptViaAlgo {
       FloatPoint floatCheckLocation =
           new FloatPoint(floatViaLocation.x, floatSecondTraceFromCorner.y);
 
-      currWeightedDistance1 =
+      currentWeightedDistance1 =
           floatViaLocation.weightedDistance(
               floatSecondTraceFromCorner, secondTraceCosts.horizontal, secondTraceCosts.vertical);
-      currWeightedDistance2 =
+      currentWeightedDistance2 =
           floatViaLocation.weightedDistance(
               floatCheckLocation, firstTraceCosts.horizontal, firstTraceCosts.vertical);
-      double currWeightedDistance3 =
+      double currentWeightedDistance3 =
           floatCheckLocation.weightedDistance(
               floatSecondTraceFromCorner, secondTraceCosts.horizontal, secondTraceCosts.vertical);
 
-      if (currWeightedDistance1 > currWeightedDistance2 + currWeightedDistance3) {
+      if (currentWeightedDistance1 > currentWeightedDistance2 + currentWeightedDistance3) {
         IntPoint checkLocation = floatCheckLocation.round();
         boolean checkOk =
             repositionVia(
@@ -663,14 +663,14 @@ public final class OptViaAlgo {
 
       floatCheckLocation = new FloatPoint(floatSecondTraceFromCorner.x, floatViaLocation.y);
 
-      currWeightedDistance2 =
+      currentWeightedDistance2 =
           floatViaLocation.weightedDistance(
               floatCheckLocation, firstTraceCosts.horizontal, firstTraceCosts.vertical);
-      currWeightedDistance3 =
+      currentWeightedDistance3 =
           floatCheckLocation.weightedDistance(
               floatSecondTraceFromCorner, secondTraceCosts.horizontal, secondTraceCosts.vertical);
 
-      if (currWeightedDistance1 > currWeightedDistance2 + currWeightedDistance3) {
+      if (currentWeightedDistance1 > currentWeightedDistance2 + currentWeightedDistance3) {
         IntPoint checkLocation = floatCheckLocation.round();
         boolean checkOk =
             repositionVia(

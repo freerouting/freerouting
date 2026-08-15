@@ -45,13 +45,13 @@ class PullTightAlgo90 extends PullTightAlgo {
     checkLines[3] = polyline.arr[4];
     Polyline checkPolyline = new Polyline(checkLines);
     if (checkPolyline.arr.length != 4
-        || currClipShape != null && !currClipShape.contains(checkPolyline.cornerApprox(1))) {
+        || currentClipShape != null && !currentClipShape.contains(checkPolyline.cornerApprox(1))) {
       return polyline;
     }
     for (int i = 0; i < 2; i++) {
-      TileShape shapeToCheck = checkPolyline.offsetShape(currHalfWidth, i);
+      TileShape shapeToCheck = checkPolyline.offsetShape(currentHalfWidth, i);
       if (!board.checkTraceShape(
-          shapeToCheck, currLayer, currNetNoArr, currClType, this.contactPins)) {
+          shapeToCheck, currentLayer, currentNetNoArr, currentClType, this.contactPins)) {
         return polyline;
       }
     }
@@ -77,7 +77,7 @@ class PullTightAlgo90 extends PullTightAlgo {
     for (int i = 5; i <= polyline.arr.length; i++) {
       boolean skipLines = false;
       boolean inClipShape =
-          currClipShape == null || currClipShape.contains(polyline.cornerApprox(i - 3));
+          currentClipShape == null || currentClipShape.contains(polyline.cornerApprox(i - 3));
       if (inClipShape) {
         checkLines[0] = newLines[newLineIndex - 1];
         checkLines[1] = newLines[newLineIndex];
@@ -91,18 +91,19 @@ class PullTightAlgo90 extends PullTightAlgo {
         Polyline checkPolyline = new Polyline(checkLines);
         skipLines =
             checkPolyline.arr.length == 4
-                && (currClipShape == null || currClipShape.contains(checkPolyline.cornerApprox(1)));
+                && (currentClipShape == null
+                    || currentClipShape.contains(checkPolyline.cornerApprox(1)));
         if (skipLines) {
-          TileShape shapeToCheck = checkPolyline.offsetShape(currHalfWidth, 0);
+          TileShape shapeToCheck = checkPolyline.offsetShape(currentHalfWidth, 0);
           skipLines =
               board.checkTraceShape(
-                  shapeToCheck, currLayer, currNetNoArr, currClType, this.contactPins);
+                  shapeToCheck, currentLayer, currentNetNoArr, currentClType, this.contactPins);
         }
         if (skipLines) {
-          TileShape shapeToCheck = checkPolyline.offsetShape(currHalfWidth, 1);
+          TileShape shapeToCheck = checkPolyline.offsetShape(currentHalfWidth, 1);
           skipLines =
               board.checkTraceShape(
-                  shapeToCheck, currLayer, currNetNoArr, currClType, this.contactPins);
+                  shapeToCheck, currentLayer, currentNetNoArr, currentClType, this.contactPins);
         }
       }
       if (skipLines) {
@@ -111,9 +112,9 @@ class PullTightAlgo90 extends PullTightAlgo {
         }
         if (board.changedArea != null) {
           FloatPoint newCorner = checkLines[1].intersectionApprox(checkLines[2]);
-          board.changedArea.join(newCorner, currLayer);
+          board.changedArea.join(newCorner, currentLayer);
           FloatPoint skippedCorner = polyline.arr[i - 2].intersectionApprox(polyline.arr[i - 3]);
-          board.changedArea.join(skippedCorner, currLayer);
+          board.changedArea.join(skippedCorner, currentLayer);
         }
         polylineChanged = true;
         ++i;

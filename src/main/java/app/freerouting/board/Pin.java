@@ -97,17 +97,17 @@ public class Pin extends DrillItem implements Serializable {
       Padstack padstack = getPadstack();
       int fromLayer = padstack.fromLayer();
       int toLayer = padstack.toLayer();
-      Shape currShape = null;
+      Shape currentShape = null;
       for (int i = 0; i < toLayer - fromLayer + 1; i++) {
-        currShape = this.getShape(i);
-        if (currShape != null) {
+        currentShape = this.getShape(i);
+        if (currentShape != null) {
           break;
         }
       }
-      if (currShape == null) {
+      if (currentShape == null) {
         FRLogger.warn("Pin: At least 1 shape != null expected");
-      } else if (!currShape.containsInside(pinCenter)) {
-        pinCenter = currShape.centreOfGravity().round();
+      } else if (!currentShape.containsInside(pinCenter)) {
+        pinCenter = currentShape.centreOfGravity().round();
       }
       this.setCenter(pinCenter);
     }
@@ -127,14 +127,14 @@ public class Pin extends DrillItem implements Serializable {
 
   @Override
   public Item copy(int idNo) {
-    int[] currNetNoArr = new int[this.netCount()];
-    for (int i = 0; i < currNetNoArr.length; i++) {
-      currNetNoArr[i] = getNetNo(i);
+    int[] currentNetNoArr = new int[this.netCount()];
+    for (int i = 0; i < currentNetNoArr.length; i++) {
+      currentNetNoArr[i] = getNetNo(i);
     }
     return new Pin(
         getComponentNo(),
         this.pinNo,
-        currNetNoArr,
+        currentNetNoArr,
         clearanceClassNo(),
         idNo,
         getFixedState(),
@@ -195,27 +195,28 @@ public class Pin extends DrillItem implements Serializable {
 
         int padstackLayer = getPadstackLayer(shapeIndex);
 
-        ConvexShape currShape = padstack.getShape(padstackLayer);
-        if (currShape == null) {
+        ConvexShape currentShape = padstack.getShape(padstackLayer);
+        if (currentShape == null) {
           continue;
         }
         double pinRotation = packagePin.rotationInDegree;
         if (pinRotation % 90 == 0) {
           int pinNinetyDegreeFactor = ((int) pinRotation) / 90;
           if (pinNinetyDegreeFactor != 0) {
-            currShape = (ConvexShape) currShape.turn90Degree(pinNinetyDegreeFactor, Point.ZERO);
+            currentShape =
+                (ConvexShape) currentShape.turn90Degree(pinNinetyDegreeFactor, Point.ZERO);
           }
         } else {
-          currShape =
-              (ConvexShape) currShape.rotateApprox(Math.toRadians(pinRotation), FloatPoint.ZERO);
+          currentShape =
+              (ConvexShape) currentShape.rotateApprox(Math.toRadians(pinRotation), FloatPoint.ZERO);
         }
 
         if (mirrorOnYaxis) {
-          currShape = (ConvexShape) currShape.mirrorVertical(Point.ZERO);
+          currentShape = (ConvexShape) currentShape.mirrorVertical(Point.ZERO);
         }
 
         // translate the shape first relative to the component
-        ConvexShape translatedShape = (ConvexShape) currShape.translateBy(relLocation);
+        ConvexShape translatedShape = (ConvexShape) currentShape.translateBy(relLocation);
 
         if (componentRotation % 90 == 0) {
           int componentNinetyDegreeFactor = ((int) componentRotation) / 90;
@@ -279,15 +280,15 @@ public class Pin extends DrillItem implements Serializable {
     if (component == null) {
       return result;
     }
-    Shape currShape = this.getShape(layer - this.firstLayer());
-    if (!(currShape instanceof TileShape padShape)) {
+    Shape currentShape = this.getShape(layer - this.firstLayer());
+    if (!(currentShape instanceof TileShape padShape)) {
       return result;
     }
     double componentRotation = component.getRotationInDegree();
     Point pinCenter = this.getCenter();
     FloatPoint centerApprox = pinCenter.toFloat();
 
-    for (Direction currPadstackExitDirection : padstackExitDirections) {
+    for (Direction currentPadstackExitDirection : padstackExitDirections) {
 
       Package libPackage = component.getPackage();
       if (libPackage == null) {
@@ -297,29 +298,29 @@ public class Pin extends DrillItem implements Serializable {
       if (packagePin == null) {
         continue;
       }
-      double currRotationInDegree = componentRotation + packagePin.rotationInDegree;
-      Direction currExitDirection;
-      if (currRotationInDegree % 45 == 0) {
-        int fortyfiveDegreeFactor = ((int) currRotationInDegree) / 45;
-        currExitDirection = currPadstackExitDirection.turn45Degree(fortyfiveDegreeFactor);
+      double currentRotationInDegree = componentRotation + packagePin.rotationInDegree;
+      Direction currentExitDirection;
+      if (currentRotationInDegree % 45 == 0) {
+        int fortyfiveDegreeFactor = ((int) currentRotationInDegree) / 45;
+        currentExitDirection = currentPadstackExitDirection.turn45Degree(fortyfiveDegreeFactor);
       } else {
-        double currAngleInRadian =
-            Math.toRadians(currRotationInDegree) + currPadstackExitDirection.angleApprox();
-        currExitDirection = Direction.getInstanceApprox(currAngleInRadian);
+        double currentAngleInRadian =
+            Math.toRadians(currentRotationInDegree) + currentPadstackExitDirection.angleApprox();
+        currentExitDirection = Direction.getInstanceApprox(currentAngleInRadian);
       }
-      // calculate the minimum line length from the pin center into currExitDirection
+      // calculate the minimum line length from the pin center into currentExitDirection
       int intersectingBorderLineNo =
-          padShape.intersectingBorderLineNo(pinCenter, currExitDirection);
+          padShape.intersectingBorderLineNo(pinCenter, currentExitDirection);
       if (intersectingBorderLineNo < 0) {
         FRLogger.warn("Pin.get_trace_exit_restrictions: border line not found");
         continue;
       }
-      Line currExitLine = new Line(pinCenter, currExitDirection);
+      Line currentExitLine = new Line(pinCenter, currentExitDirection);
       FloatPoint nearestBorderPoint =
-          currExitLine.intersectionApprox(padShape.borderLine(intersectingBorderLineNo));
-      TraceExitRestriction currExitRestriction =
-          new TraceExitRestriction(currExitDirection, centerApprox.distance(nearestBorderPoint));
-      result.add(currExitRestriction);
+          currentExitLine.intersectionApprox(padShape.borderLine(intersectingBorderLineNo));
+      TraceExitRestriction currentExitRestriction =
+          new TraceExitRestriction(currentExitDirection, centerApprox.distance(nearestBorderPoint));
+      result.add(currentExitRestriction);
     }
     return result;
   }
@@ -327,8 +328,8 @@ public class Pin extends DrillItem implements Serializable {
   /** Returns true, if this pin has exit restrictions on some kayer. */
   public boolean hasTraceExitRestrictions() {
     for (int i = this.firstLayer(); i <= this.lastLayer(); i++) {
-      Collection<TraceExitRestriction> currExitRestrictions = getTraceExitRestrictions(i);
-      if (!currExitRestrictions.isEmpty()) {
+      Collection<TraceExitRestriction> currentExitRestrictions = getTraceExitRestrictions(i);
+      if (!currentExitRestrictions.isEmpty()) {
         return true;
       }
     }
@@ -405,13 +406,13 @@ public class Pin extends DrillItem implements Serializable {
       if (i == this.pinNo) {
         continue;
       }
-      LogicalPart.PartPin currPartPin = logicalPart.getPin(i);
-      if (currPartPin != null
-          && currPartPin.gatePinSwapCode == thisPartPin.gatePinSwapCode
-          && currPartPin.gateName.equals(thisPartPin.gateName)) {
-        Pin currSwappeblePin = this.board.getPin(this.getComponentNo(), currPartPin.pinNo);
-        if (currSwappeblePin != null) {
-          result.add(currSwappeblePin);
+      LogicalPart.PartPin currentPartPin = logicalPart.getPin(i);
+      if (currentPartPin != null
+          && currentPartPin.gatePinSwapCode == thisPartPin.gatePinSwapCode
+          && currentPartPin.gateName.equals(thisPartPin.gateName)) {
+        Pin currentSwappeblePin = this.board.getPin(this.getComponentNo(), currentPartPin.pinNo);
+        if (currentSwappeblePin != null) {
+          result.add(currentSwappeblePin);
         } else {
           FRLogger.warn("Pin.get_swappable_pins: swappable pin not found");
         }
@@ -592,35 +593,35 @@ public class Pin extends DrillItem implements Serializable {
     Direction pinExitDirection = null;
     final double tolerance = 1;
     Point pinCenter = this.getCenter();
-    for (Pin.TraceExitRestriction currExitRestriction : traceExitRestrictions) {
-      int currIntersectingBorderLineNo =
-          offsetPinShape.intersectingBorderLineNo(pinCenter, currExitRestriction.direction);
-      Line currPinExitRay = new Line(pinCenter, currExitRestriction.direction);
-      FloatPoint currExitCorner =
-          currPinExitRay.intersectionApprox(
-              offsetPinShape.borderLine(currIntersectingBorderLineNo));
-      double currExitCornerDistance = currExitCorner.distanceSquare(traceEntryLocationApprox);
+    for (Pin.TraceExitRestriction currentExitRestriction : traceExitRestrictions) {
+      int currentIntersectingBorderLineNo =
+          offsetPinShape.intersectingBorderLineNo(pinCenter, currentExitRestriction.direction);
+      Line currentPinExitRay = new Line(pinCenter, currentExitRestriction.direction);
+      FloatPoint currentExitCorner =
+          currentPinExitRay.intersectionApprox(
+              offsetPinShape.borderLine(currentIntersectingBorderLineNo));
+      double currentExitCornerDistance = currentExitCorner.distanceSquare(traceEntryLocationApprox);
       boolean newNearestCornerFound = false;
-      if (currExitCornerDistance + tolerance < minExitCornerDistance) {
+      if (currentExitCornerDistance + tolerance < minExitCornerDistance) {
         newNearestCornerFound = true;
-      } else if (currExitCornerDistance < minExitCornerDistance + tolerance) {
+      } else if (currentExitCornerDistance < minExitCornerDistance + tolerance) {
         // the distances are near equal, compare to the previous corners of p_trace_polyline
         for (int i = 1; i < tracePolyline.cornerCount(); i++) {
-          FloatPoint currTraceCorner = tracePolyline.cornerApprox(i);
-          double currTraceCornerDistance = currTraceCorner.distanceSquare(currExitCorner);
-          double oldTraceCornerDistance = currTraceCorner.distanceSquare(nearestExitCorner);
-          if (currTraceCornerDistance + tolerance < oldTraceCornerDistance) {
+          FloatPoint currentTraceCorner = tracePolyline.cornerApprox(i);
+          double currentTraceCornerDistance = currentTraceCorner.distanceSquare(currentExitCorner);
+          double oldTraceCornerDistance = currentTraceCorner.distanceSquare(nearestExitCorner);
+          if (currentTraceCornerDistance + tolerance < oldTraceCornerDistance) {
             newNearestCornerFound = true;
             break;
-          } else if (currTraceCornerDistance > oldTraceCornerDistance + tolerance) {
+          } else if (currentTraceCornerDistance > oldTraceCornerDistance + tolerance) {
             break;
           }
         }
       }
       if (newNearestCornerFound) {
-        minExitCornerDistance = currExitCornerDistance;
-        pinExitDirection = currExitRestriction.direction;
-        nearestExitCorner = currExitCorner;
+        minExitCornerDistance = currentExitCornerDistance;
+        pinExitDirection = currentExitRestriction.direction;
+        nearestExitCorner = currentExitCorner;
       }
     }
     return pinExitDirection;
@@ -651,17 +652,17 @@ public class Pin extends DrillItem implements Serializable {
     // calculate the nearest legal pin exit point to traceEntryLocationApprox
     double minExitCornerDistance = Double.MAX_VALUE;
     FloatPoint nearestExitCorner = null;
-    for (Pin.TraceExitRestriction currExitRestriction : traceExitRestrictions) {
-      int currIntersectingBorderLineNo =
-          offsetPinShape.intersectingBorderLineNo(pinCenter, currExitRestriction.direction);
-      Line currPinExitRay = new Line(pinCenter, currExitRestriction.direction);
-      FloatPoint currExitCorner =
-          currPinExitRay.intersectionApprox(
-              offsetPinShape.borderLine(currIntersectingBorderLineNo));
-      double currExitCornerDistance = currExitCorner.distanceSquare(fromPoint);
-      if (currExitCornerDistance < minExitCornerDistance) {
-        minExitCornerDistance = currExitCornerDistance;
-        nearestExitCorner = currExitCorner;
+    for (Pin.TraceExitRestriction currentExitRestriction : traceExitRestrictions) {
+      int currentIntersectingBorderLineNo =
+          offsetPinShape.intersectingBorderLineNo(pinCenter, currentExitRestriction.direction);
+      Line currentPinExitRay = new Line(pinCenter, currentExitRestriction.direction);
+      FloatPoint currentExitCorner =
+          currentPinExitRay.intersectionApprox(
+              offsetPinShape.borderLine(currentIntersectingBorderLineNo));
+      double currentExitCornerDistance = currentExitCorner.distanceSquare(fromPoint);
+      if (currentExitCornerDistance < minExitCornerDistance) {
+        minExitCornerDistance = currentExitCornerDistance;
+        nearestExitCorner = currentExitCorner;
       }
     }
     return nearestExitCorner;

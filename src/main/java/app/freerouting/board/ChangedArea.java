@@ -23,19 +23,19 @@ class ChangedArea {
 
   /** Enlarges the octagon on p_layer, so that it contains p_point. */
   public void join(FloatPoint point, int layer) {
-    MutableOctagon curr = arr[layer];
-    curr.lx = Math.min(point.x, curr.lx);
-    curr.ly = Math.min(point.y, curr.ly);
-    curr.rx = Math.max(curr.rx, point.x);
-    curr.uy = Math.max(curr.uy, point.y);
+    MutableOctagon current = arr[layer];
+    current.lx = Math.min(point.x, current.lx);
+    current.ly = Math.min(point.y, current.ly);
+    current.rx = Math.max(current.rx, point.x);
+    current.uy = Math.max(current.uy, point.y);
 
     double tmp = point.x - point.y;
-    curr.ulx = Math.min(curr.ulx, tmp);
-    curr.lrx = Math.max(curr.lrx, tmp);
+    current.ulx = Math.min(current.ulx, tmp);
+    current.lrx = Math.max(current.lrx, tmp);
 
     tmp = point.x + point.y;
-    curr.llx = Math.min(curr.llx, tmp);
-    curr.urx = Math.max(curr.urx, tmp);
+    current.llx = Math.min(current.llx, tmp);
+    current.urx = Math.max(current.urx, tmp);
   }
 
   /** Enlarges the octagon on p_layer, so that it contains p_shape. */
@@ -61,11 +61,11 @@ class ChangedArea {
     int urx = Integer.MIN_VALUE;
     int ury = Integer.MIN_VALUE;
     for (int i = 0; i < layerCount; i++) {
-      MutableOctagon curr = arr[i];
-      llx = Math.min(llx, (int) Math.floor(curr.lx));
-      lly = Math.min(lly, (int) Math.floor(curr.ly));
-      urx = Math.max(urx, (int) Math.ceil(curr.rx));
-      ury = Math.max(ury, (int) Math.ceil(curr.uy));
+      MutableOctagon current = arr[i];
+      llx = Math.min(llx, (int) Math.floor(current.lx));
+      lly = Math.min(lly, (int) Math.floor(current.ly));
+      urx = Math.max(urx, (int) Math.ceil(current.rx));
+      ury = Math.max(ury, (int) Math.ceil(current.uy));
     }
     if (llx > urx || lly > ury) {
       return IntBox.EMPTY;

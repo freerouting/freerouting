@@ -22,56 +22,56 @@ class CalcShapeAndFromSide {
    */
   CalcShapeAndFromSide(PolylineTrace trace, int index, boolean orthogonal, boolean inShoveCheck) {
     ShapeSearchTree searchTree = trace.board.searchTreeManager.getDefaultTree();
-    TileShape currShape = trace.getTreeShape(searchTree, index);
-    CalcFromSide currFromSide = null;
+    TileShape currentShape = trace.getTreeShape(searchTree, index);
+    CalcFromSide currentFromSide = null;
     boolean cutOffAtStart = false;
     boolean cutOffAtEnd = false;
     if (orthogonal) {
-      currShape = currShape.boundingBox();
+      currentShape = currentShape.boundingBox();
     } else {
       // prevent dog ears at the start and the end of the substitute trace
-      currShape = currShape.toSimplex();
+      currentShape = currentShape.toSimplex();
       Line endCutline = calcCutlineAtEnd(index, trace);
       if (endCutline != null) {
         TileShape cutPlane = TileShape.getInstance(endCutline);
-        TileShape tmpShape = currShape.intersection(cutPlane);
-        if (tmpShape != currShape && !tmpShape.isEmpty()) {
-          currShape = tmpShape.toSimplex();
+        TileShape tmpShape = currentShape.intersection(cutPlane);
+        if (tmpShape != currentShape && !tmpShape.isEmpty()) {
+          currentShape = tmpShape.toSimplex();
           cutOffAtEnd = true;
         }
       }
       Line startCutline = calcCutlineAtStart(index, trace);
       if (startCutline != null) {
         TileShape cutPlane = TileShape.getInstance(startCutline);
-        TileShape tmpShape = currShape.intersection(cutPlane);
-        if (tmpShape != currShape && !tmpShape.isEmpty()) {
-          currShape = tmpShape.toSimplex();
+        TileShape tmpShape = currentShape.intersection(cutPlane);
+        if (tmpShape != currentShape && !tmpShape.isEmpty()) {
+          currentShape = tmpShape.toSimplex();
           cutOffAtStart = true;
         }
       }
       int fromSideNo = -1;
-      Line currCutLine = null;
+      Line currentCutLine = null;
       if (cutOffAtStart) {
-        currCutLine = startCutline;
-        fromSideNo = currShape.borderLineIndex(currCutLine);
+        currentCutLine = startCutline;
+        fromSideNo = currentShape.borderLineIndex(currentCutLine);
       }
       if (fromSideNo < 0 && cutOffAtEnd) {
-        currCutLine = endCutline;
-        fromSideNo = currShape.borderLineIndex(currCutLine);
+        currentCutLine = endCutline;
+        fromSideNo = currentShape.borderLineIndex(currentCutLine);
       }
       if (fromSideNo >= 0) {
         FloatPoint borderIntersection =
-            currCutLine.intersectionApprox(currShape.borderLine(fromSideNo));
-        currFromSide = new CalcFromSide(fromSideNo, borderIntersection);
+            currentCutLine.intersectionApprox(currentShape.borderLine(fromSideNo));
+        currentFromSide = new CalcFromSide(fromSideNo, borderIntersection);
       }
     }
-    if (currFromSide == null && !inShoveCheck) {
+    if (currentFromSide == null && !inShoveCheck) {
       // In p_in_shove_check, using this calculation may produce an undesired stackLevel > 1 in
       // ShapeTraceEntries.
-      currFromSide = new CalcFromSide(trace.polyline(), index, currShape);
+      currentFromSide = new CalcFromSide(trace.polyline(), index, currentShape);
     }
-    this.shape = currShape;
-    this.fromSide = currFromSide;
+    this.shape = currentShape;
+    this.fromSide = currentFromSide;
   }
 
   private static Line calcCutlineAtEnd(int index, PolylineTrace trace) {
@@ -83,13 +83,13 @@ class CalcShapeAndFromSide {
                 .distance(traceLines.cornerApprox(index + 1))
             < trace.getCompensatedHalfWidth(searchTree)) {
 
-      Line currLine = traceLines.arr[traceLines.arr.length - 1];
+      Line currentLine = traceLines.arr[traceLines.arr.length - 1];
       FloatPoint is = traceLines.cornerApprox(traceLines.arr.length - 3);
       Line cutLine;
-      if (currLine.sideOf(is) == Side.ON_THE_LEFT) {
-        cutLine = currLine.opposite();
+      if (currentLine.sideOf(is) == Side.ON_THE_LEFT) {
+        cutLine = currentLine.opposite();
       } else {
-        cutLine = currLine;
+        cutLine = currentLine;
       }
       return cutLine;
     }
@@ -102,13 +102,13 @@ class CalcShapeAndFromSide {
     if (index == 0
         || traceLines.cornerApprox(0).distance(traceLines.cornerApprox(index))
             < trace.getCompensatedHalfWidth(searchTree)) {
-      Line currLine = traceLines.arr[0];
+      Line currentLine = traceLines.arr[0];
       FloatPoint is = traceLines.cornerApprox(1);
       Line cutLine;
-      if (currLine.sideOf(is) == Side.ON_THE_LEFT) {
-        cutLine = currLine.opposite();
+      if (currentLine.sideOf(is) == Side.ON_THE_LEFT) {
+        cutLine = currentLine.opposite();
       } else {
-        cutLine = currLine;
+        cutLine = currentLine;
       }
       return cutLine;
     }

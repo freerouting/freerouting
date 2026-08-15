@@ -127,25 +127,25 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
       Set<SearchTreeObject> overlaps = this.board.overlappingObjects(inflatedBbox, layerNo);
       for (SearchTreeObject ob : overlaps) {
-        if (!(ob instanceof Item currItem) || currItem == this) {
+        if (!(ob instanceof Item currentItem) || currentItem == this) {
           continue;
         }
-        if (!currItem.sharesLayer(this)) {
+        if (!currentItem.sharesLayer(this)) {
           continue;
         }
 
-        if (currItem instanceof Trace || currItem instanceof ConductionArea) {
-          if (currItem.sharesNet(this)) {
+        if (currentItem instanceof Trace || currentItem instanceof ConductionArea) {
+          if (currentItem.sharesNet(this)) {
             continue;
           }
         }
 
         int clClass1 = this.clearanceClassNo();
-        int clClass2 = currItem.clearanceClassNo();
+        int clClass2 = currentItem.clearanceClassNo();
         double clearanceDist = this.board.clearanceValue(clClass1, clClass2, layerNo);
 
-        if (currItem.sharesNet(this)) {
-          if (currItem instanceof DrillItem drillItem) {
+        if (currentItem.sharesNet(this)) {
+          if (currentItem instanceof DrillItem drillItem) {
             FloatPoint center = drillItem.getCenter().toFloat();
             Shape shape = drillItem.getShapeOnLayer(layerNo);
             if (shape == null) {
@@ -185,7 +185,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
             sameNetSpokesList.add(spokes);
           }
         } else {
-          if (currItem instanceof DrillItem drillItem) {
+          if (currentItem instanceof DrillItem drillItem) {
             Shape shape = drillItem.getShapeOnLayer(layerNo);
             if (shape != null) {
               Shape enlargedShape = shape.enlarge(clearanceDist);
@@ -195,10 +195,10 @@ public class ConductionArea extends ObstacleArea implements Connectable {
               }
             }
           } else {
-            int shapeCount = currItem.tileShapeCount();
+            int shapeCount = currentItem.tileShapeCount();
             for (int i = 0; i < shapeCount; i++) {
-              if (currItem.shapeLayer(i) == layerNo) {
-                TileShape tileShape = currItem.getTileShape(i);
+              if (currentItem.shapeLayer(i) == layerNo) {
+                TileShape tileShape = currentItem.getTileShape(i);
                 if (tileShape != null) {
                   Shape enlargedShape = tileShape.enlarge(clearanceDist);
                   java.awt.geom.Area clearanceAwt = getAwtAreaFromShapeInBoardUnits(enlargedShape);
@@ -325,21 +325,21 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   public Set<Item> getNormalContacts() {
     Set<Item> result = new TreeSet<>();
     for (int i = 0; i < tileShapeCount(); i++) {
-      TileShape currShape = getTileShape(i);
-      Set<SearchTreeObject> overlaps = board.overlappingObjects(currShape, getLayer());
-      for (SearchTreeObject currOb : overlaps) {
-        if (!(currOb instanceof Item currItem)) {
+      TileShape currentShape = getTileShape(i);
+      Set<SearchTreeObject> overlaps = board.overlappingObjects(currentShape, getLayer());
+      for (SearchTreeObject currentOb : overlaps) {
+        if (!(currentOb instanceof Item currentItem)) {
           continue;
         }
-        if (currItem != this && currItem.sharesNet(this) && currItem.sharesLayer(this)) {
-          if (currItem instanceof Trace currTrace) {
-            if (currShape.contains(currTrace.firstCorner())
-                || currShape.contains(currTrace.lastCorner())) {
-              result.add(currItem);
+        if (currentItem != this && currentItem.sharesNet(this) && currentItem.sharesLayer(this)) {
+          if (currentItem instanceof Trace currentTrace) {
+            if (currentShape.contains(currentTrace.firstCorner())
+                || currentShape.contains(currentTrace.lastCorner())) {
+              result.add(currentItem);
             }
-          } else if (currItem instanceof DrillItem currDrillItem) {
-            if (currShape.contains(currDrillItem.getCenter())) {
-              result.add(currItem);
+          } else if (currentItem instanceof DrillItem currentDrillItem) {
+            if (currentShape.contains(currentDrillItem.getCenter())) {
+              result.add(currentItem);
             }
           }
         }

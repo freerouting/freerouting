@@ -63,9 +63,9 @@ public class ItemSelectionFilter implements Serializable {
   /** Filters a collection of items with this filter. */
   public Set<Item> filter(Set<Item> items) {
     Set<Item> result = new TreeSet<>();
-    for (Item currItem : items) {
-      if (currItem.isSelectedByFilter(this)) {
-        result.add(currItem);
+    for (Item currentItem : items) {
+      if (currentItem.isSelectedByFilter(this)) {
+        result.add(currentItem);
       }
     }
     return result;

@@ -365,39 +365,39 @@ public abstract class Item
     }
     ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
     for (int i = 0; i < tileShapeCount(); i++) {
-      TileShape currTileShape = getTileShape(i);
-      Collection<TreeEntry> currOverlappingItems =
+      TileShape currentTileShape = getTileShape(i);
+      Collection<TreeEntry> currentOverlappingItems =
           defaultTree.overlappingTreeEntriesWithClearance(
-              currTileShape, shapeLayer(i), new int[0], clearanceClass);
-      for (TreeEntry currentEntry : currOverlappingItems) {
-        if (!(currentEntry.object instanceof Item currItem) || currentEntry.object == this) {
+              currentTileShape, shapeLayer(i), new int[0], clearanceClass);
+      for (TreeEntry currentEntry : currentOverlappingItems) {
+        if (!(currentEntry.object instanceof Item currentItem) || currentEntry.object == this) {
           continue;
         }
-        boolean isObstacle = currItem.isObstacle(this);
-        if (isObstacle && this instanceof Trace thisTrace && currItem instanceof Trace) {
+        boolean isObstacle = currentItem.isObstacle(this);
+        if (isObstacle && this instanceof Trace thisTrace && currentItem instanceof Trace) {
           // Look, if both traces are connected to the same tie pin.
           // In this case they are allowed to overlap without sharing a net.
           Point contactPoint = thisTrace.firstCorner();
           boolean contactFound = false;
-          Collection<Item> currContacts = thisTrace.getNormalContacts(contactPoint, true);
+          Collection<Item> currentContacts = thisTrace.getNormalContacts(contactPoint, true);
           {
-            if (currContacts.contains(currItem)) {
+            if (currentContacts.contains(currentItem)) {
               contactFound = true;
             }
           }
           if (!contactFound) {
             contactPoint = thisTrace.lastCorner();
-            currContacts = thisTrace.getNormalContacts(contactPoint, true);
+            currentContacts = thisTrace.getNormalContacts(contactPoint, true);
             {
-              if (currContacts.contains(currItem)) {
+              if (currentContacts.contains(currentItem)) {
                 contactFound = true;
               }
             }
           }
           if (contactFound) {
-            for (Item currContact : currContacts) {
-              if (currContact instanceof Pin) {
-                if (currContact.sharesNet(this) && currContact.sharesNet(currItem)) {
+            for (Item currentContact : currentContacts) {
+              if (currentContact instanceof Pin) {
+                if (currentContact.sharesNet(this) && currentContact.sharesNet(currentItem)) {
                   isObstacle = false;
                   break;
                 }
@@ -408,8 +408,8 @@ public abstract class Item
 
         if (isObstacle) {
           // Get the two shapes the clearance is calculated between
-          TileShape shape1 = currTileShape;
-          TileShape shape2 = currItem.getTreeShape(defaultTree, currentEntry.shapeIndexInObject);
+          TileShape shape1 = currentTileShape;
+          TileShape shape2 = currentItem.getTreeShape(defaultTree, currentEntry.shapeIndexInObject);
           if (shape1 == null || shape2 == null) {
             FRLogger.warn("Item.clearanceViolations: unexpected null shape");
             continue;
@@ -418,7 +418,7 @@ public abstract class Item
           // Calculate the expected minimum clearance between these two shapes
           double minimumClearance =
               board.rules.clearanceMatrix.getValue(
-                  currItem.clearanceClass, this.clearanceClass, shapeLayer(i), false);
+                  currentItem.clearanceClass, this.clearanceClass, shapeLayer(i), false);
 
           double actualClearance = 0;
 
@@ -440,10 +440,15 @@ public abstract class Item
 
           TileShape intersection = enlargedShape1.intersection(enlargedShape2);
           if (intersection.dimension() == 2) {
-            ClearanceViolation currViolation =
+            ClearanceViolation currentViolation =
                 new ClearanceViolation(
-                    this, currItem, intersection, shapeLayer(i), minimumClearance, actualClearance);
-            result.add(currViolation);
+                    this,
+                    currentItem,
+                    intersection,
+                    shapeLayer(i),
+                    minimumClearance,
+                    actualClearance);
+            result.add(currentViolation);
           }
         }
       }
@@ -479,12 +484,14 @@ public abstract class Item
     for (int i = 0; i < this.tileShapeCount(); i++) {
       Collection<SearchTreeObject> overlappingItems =
           board.overlappingObjects(getTileShape(i), shapeLayer(i));
-      for (SearchTreeObject currOb : overlappingItems) {
-        if (!(currOb instanceof Item currItem)) {
+      for (SearchTreeObject currentOb : overlappingItems) {
+        if (!(currentOb instanceof Item currentItem)) {
           continue;
         }
-        if (currItem != this && currItem instanceof Connectable && currItem.sharesNet(this)) {
-          result.add(currItem);
+        if (currentItem != this
+            && currentItem instanceof Connectable
+            && currentItem.sharesNet(this)) {
+          result.add(currentItem);
         }
       }
     }
@@ -506,12 +513,14 @@ public abstract class Item
       }
       Collection<SearchTreeObject> overlappingItems =
           board.overlappingObjects(getTileShape(i), layer);
-      for (SearchTreeObject currOb : overlappingItems) {
-        if (!(currOb instanceof Item currItem)) {
+      for (SearchTreeObject currentOb : overlappingItems) {
+        if (!(currentOb instanceof Item currentItem)) {
           continue;
         }
-        if (currItem != this && currItem instanceof Connectable && currItem.sharesNet(this)) {
-          result.add(currItem);
+        if (currentItem != this
+            && currentItem instanceof Connectable
+            && currentItem.sharesNet(this)) {
+          result.add(currentItem);
         }
       }
     }
@@ -590,17 +599,17 @@ public abstract class Item
     if (contactList == null) {
       return;
     }
-    for (Item currContact : contactList) {
+    for (Item currentContact : contactList) {
       if (stopAtPlane
-          && currContact instanceof ConductionArea
-          && currContact.getComponentNo() <= 0) {
+          && currentContact instanceof ConductionArea
+          && currentContact.getComponentNo() <= 0) {
         continue;
       }
-      if (netNo > 0 && !currContact.containsNet(netNo)) {
+      if (netNo > 0 && !currentContact.containsNet(netNo)) {
         continue;
       }
-      if (result.add(currContact)) {
-        currContact.getConnectedSetRecu(result, netNo, stopAtPlane);
+      if (result.add(currentContact)) {
+        currentContact.getConnectedSetRecu(result, netNo, stopAtPlane);
       }
     }
   }
@@ -623,15 +632,15 @@ public abstract class Item
     if (contactList == null) {
       return false;
     }
-    for (Item currContact : contactList) {
-      if (currContact == comeFromItem) {
+    for (Item currentContact : contactList) {
+      if (currentContact == comeFromItem) {
         continue;
       }
-      if (currContact == searchItem) {
+      if (currentContact == searchItem) {
         return true;
       }
-      if (visitedItems.add(currContact)) {
-        if (currContact.isCycleRecu(visitedItems, searchItem, this, ignoreAreas)) {
+      if (visitedItems.add(currentContact)) {
+        if (currentContact.isCycleRecu(visitedItems, searchItem, this, ignoreAreas)) {
           return true;
         }
       }
@@ -652,8 +661,8 @@ public abstract class Item
     if (netNo > 0) {
       result.addAll(board.getConnectableItems(netNo));
     } else {
-      for (int currNetNo : this.netNoArr) {
-        result.addAll(board.getConnectableItems(currNetNo));
+      for (int currentNetNo : this.netNoArr) {
+        result.addAll(board.getConnectableItems(currentNetNo));
       }
     }
     result.removeAll(this.getConnectedSet(netNo));
@@ -676,13 +685,13 @@ public abstract class Item
     if (this.isRoutable()) {
       result.add(this);
     }
-    for (Item currItem : contacts) {
-      Point prevContactPoint = this.normalContactPoint(currItem);
+    for (Item currentItem : contacts) {
+      Point prevContactPoint = this.normalContactPoint(currentItem);
       if (prevContactPoint == null) {
         // no unique contact point
         continue;
       }
-      int prevContactLayer = this.firstCommonLayer(currItem);
+      int prevContactLayer = this.firstCommonLayer(currentItem);
       if (this instanceof Trace startTrace) {
         // Check, that there is only 1 contact at this location.
         // Only for pins and vias items of more than 1 connection
@@ -692,25 +701,25 @@ public abstract class Item
           continue;
         }
       }
-      // Search from currItem along the contacts
+      // Search from currentItem along the contacts
       // until the next fork or nonroute item.
       for (; ; ) {
-        if (!currItem.isRoutable()) {
+        if (!currentItem.isRoutable()) {
           // connection ends
           break;
         }
-        if (currItem instanceof Via) {
+        if (currentItem instanceof Via) {
           if (stopOption == StopConnectionOption.VIA) {
             break;
           }
           if (stopOption == StopConnectionOption.FANOUT_VIA) {
-            if (currItem.isFanoutVia(result)) {
+            if (currentItem.isFanoutVia(result)) {
               break;
             }
           }
         }
-        result.add(currItem);
-        Collection<Item> currObContacts = currItem.getNormalContacts();
+        result.add(currentItem);
+        Collection<Item> currentObContacts = currentItem.getNormalContacts();
         // filter the contacts at the previous contact point,
         // because we were already there.
         // If then there is not exactly 1 new contact left, there is
@@ -719,10 +728,10 @@ public abstract class Item
         int nextContactLayer = -1;
         Item nextContact = null;
         boolean forkFound = false;
-        for (Item tmpContact : currObContacts) {
-          int tmpContactLayer = currItem.firstCommonLayer(tmpContact);
+        for (Item tmpContact : currentObContacts) {
+          int tmpContactLayer = currentItem.firstCommonLayer(tmpContact);
           if (tmpContactLayer >= 0) {
-            Point tmpContactPoint = currItem.normalContactPoint(tmpContact);
+            Point tmpContactPoint = currentItem.normalContactPoint(tmpContact);
             if (tmpContactPoint == null) {
               // no unique contact point
               forkFound = true;
@@ -743,7 +752,7 @@ public abstract class Item
         if (nextContact == null || forkFound) {
           break;
         }
-        currItem = nextContact;
+        currentItem = nextContact;
         prevContactPoint = nextContactPoint;
         prevContactLayer = nextContactLayer;
       }
@@ -768,8 +777,8 @@ public abstract class Item
   public boolean validate() {
     boolean result = board.searchTreeManager.validateEntries(this);
     for (int i = 0; i < this.tileShapeCount(); i++) {
-      TileShape currShape = this.getTileShape(i);
-      if (currShape.isEmpty()) {
+      TileShape currentShape = this.getTileShape(i);
+      if (currentShape.isEmpty()) {
         FRLogger.warn("Item.validate: shape is empty");
         result = false;
       }
@@ -1161,8 +1170,8 @@ public abstract class Item
     if (this.netNoArr.length != netNoArr.length) {
       return false;
     }
-    for (int currNetNo : netNoArr) {
-      if (!this.containsNet(currNetNo)) {
+    for (int currentNetNo : netNoArr) {
+      if (!this.containsNet(currentNetNo)) {
         return false;
       }
     }
@@ -1175,20 +1184,20 @@ public abstract class Item
    */
   boolean isFanoutVia(Set<Item> ignoreItems) {
     Collection<Item> contactList = this.getNormalContacts();
-    for (Item currContact : contactList) {
-      if (currContact instanceof Pin
-          && currContact.firstLayer() == currContact.lastLayer()
-          && currContact.getNormalContacts().size() <= 1) {
+    for (Item currentContact : contactList) {
+      if (currentContact instanceof Pin
+          && currentContact.firstLayer() == currentContact.lastLayer()
+          && currentContact.getNormalContacts().size() <= 1) {
         return true;
       }
-      if (currContact instanceof Trace currTrace) {
-        if (ignoreItems != null && ignoreItems.contains(currContact)) {
+      if (currentContact instanceof Trace currentTrace) {
+        if (ignoreItems != null && ignoreItems.contains(currentContact)) {
           continue;
         }
-        if (currTrace.getLength() >= PROTECT_FANOUT_LENGTH * currTrace.getHalfWidth()) {
+        if (currentTrace.getLength() >= PROTECT_FANOUT_LENGTH * currentTrace.getHalfWidth()) {
           continue;
         }
-        Collection<Item> traceContactList = currTrace.getNormalContacts();
+        Collection<Item> traceContactList = currentTrace.getNormalContacts();
         for (Item tmpContact : traceContactList) {
           if (tmpContact instanceof Pin
               && tmpContact.firstLayer() == tmpContact.lastLayer()

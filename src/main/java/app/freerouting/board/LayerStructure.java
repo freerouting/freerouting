@@ -76,7 +76,7 @@ public class LayerStructure implements Serializable {
 
   /** Gets the layer number of the p_signal_layer_no-th signal layer in this layer structure. */
   public int getLayerNo(int signalLayerNo) {
-    Layer currSignalLayer = getSignalLayer(signalLayerNo);
-    return getNo(currSignalLayer);
+    Layer currentSignalLayer = getSignalLayer(signalLayerNo);
+    return getNo(currentSignalLayer);
   }
 }

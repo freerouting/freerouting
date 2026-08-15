@@ -82,8 +82,8 @@ public class BoardOutline extends Item implements Serializable {
   @Override
   public IntBox boundingBox() {
     IntBox result = IntBox.EMPTY;
-    for (PolylineShape currShape : this.shapes) {
-      result = result.union(currShape.boundingBox());
+    for (PolylineShape currentShape : this.shapes) {
+      result = result.union(currentShape.boundingBox());
     }
     return result;
   }
@@ -105,8 +105,8 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void translateBy(Vector vector) {
-    for (PolylineShape currShape : this.shapes) {
-      currShape = currShape.translateBy(vector);
+    for (PolylineShape currentShape : this.shapes) {
+      currentShape = currentShape.translateBy(vector);
     }
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.translateBy(vector);
@@ -116,8 +116,8 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void turn90Degree(int factor, IntPoint pole) {
-    for (PolylineShape currShape : this.shapes) {
-      currShape = currShape.turn90Degree(factor, pole);
+    for (PolylineShape currentShape : this.shapes) {
+      currentShape = currentShape.turn90Degree(factor, pole);
     }
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.turn90Degree(factor, pole);
@@ -128,8 +128,8 @@ public class BoardOutline extends Item implements Serializable {
   @Override
   public void rotateApprox(double angleInDegree, FloatPoint pole) {
     double angle = Math.toRadians(angleInDegree);
-    for (PolylineShape currShape : this.shapes) {
-      currShape = currShape.rotateApprox(angle, pole);
+    for (PolylineShape currentShape : this.shapes) {
+      currentShape = currentShape.rotateApprox(angle, pole);
     }
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.rotateApprox(angle, pole);
@@ -139,8 +139,8 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void changePlacementSide(IntPoint pole) {
-    for (PolylineShape currShape : this.shapes) {
-      currShape = currShape.mirrorVertical(pole);
+    for (PolylineShape currentShape : this.shapes) {
+      currentShape = currentShape.mirrorVertical(pole);
     }
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.mirrorVertical(pole);
@@ -239,8 +239,8 @@ public class BoardOutline extends Item implements Serializable {
   /** Returns the sum of the lines of all outline polygons. */
   public int lineCount() {
     int result = 0;
-    for (PolylineShape currShape : this.shapes) {
-      result += currShape.borderLineCount();
+    for (PolylineShape currentShape : this.shapes) {
+      result += currentShape.borderLineCount();
     }
     return result;
   }

@@ -47,28 +47,28 @@ public class MoveComponent {
       itemGroupList.add(item);
     }
     Collection<FloatPoint> itemCenters = new LinkedList<>();
-    for (Item currItem : itemGroupList) {
-      boolean currItemMovable =
-          !currItem.isUserFixed()
-              && ((currItem instanceof DrillItem)
-                  || (currItem instanceof ObstacleArea)
-                  || (currItem instanceof ComponentOutline));
-      if (!currItemMovable) {
+    for (Item currentItem : itemGroupList) {
+      boolean currentItemMovable =
+          !currentItem.isUserFixed()
+              && ((currentItem instanceof DrillItem)
+                  || (currentItem instanceof ObstacleArea)
+                  || (currentItem instanceof ComponentOutline));
+      if (!currentItemMovable) {
         // MoveItemGroup currently only implemented for DrillItems
         allItemsMovable = false;
         itemGroupArr = new SortedItem[0];
         return;
       }
-      if (currItem instanceof DrillItem drillItem) {
+      if (currentItem instanceof DrillItem drillItem) {
         itemCenters.add(drillItem.getCenter().toFloat());
       }
     }
     // calculate the gravity point of all item centers
     double gravityX = 0;
     double gravityY = 0;
-    for (FloatPoint currCenter : itemCenters) {
-      gravityX += currCenter.x;
-      gravityY += currCenter.y;
+    for (FloatPoint currentCenter : itemCenters) {
+      gravityX += currentCenter.x;
+      gravityY += currentCenter.y;
     }
     gravityX /= itemCenters.size();
     gravityY /= itemCenters.size();
@@ -76,16 +76,16 @@ public class MoveComponent {
     itemGroupArr = new SortedItem[itemGroupList.size()];
     Iterator<Item> it = itemGroupList.iterator();
     for (int i = 0; i < itemGroupArr.length; i++) {
-      Item currItem = it.next();
+      Item currentItem = it.next();
       Point itemCenter;
-      if (currItem instanceof DrillItem drillItem) {
+      if (currentItem instanceof DrillItem drillItem) {
         itemCenter = drillItem.getCenter();
       } else {
-        itemCenter = currItem.boundingBox().centreOfGravity().round();
+        itemCenter = currentItem.boundingBox().centreOfGravity().round();
       }
       Vector compareVector = gravityPoint.differenceBy(itemCenter);
-      double currProjection = compareVector.scalarProduct(translateVector);
-      itemGroupArr[i] = new SortedItem(currItem, currProjection);
+      double currentProjection = compareVector.scalarProduct(translateVector);
+      itemGroupArr[i] = new SortedItem(currentItem, currentProjection);
     }
     // sort the items, in the direction of p_translate_vector, so that
     // the items in front come first.
@@ -104,14 +104,14 @@ public class MoveComponent {
     Collection<Item> ignoreItems = new LinkedList<>();
     for (int i = 0; i < itemGroupArr.length; i++) {
       boolean moveOk;
-      if (itemGroupArr[i].item instanceof DrillItem currDrillItem) {
-        if (this.translateVector.lengthApprox() >= currDrillItem.minWidth()) {
+      if (itemGroupArr[i].item instanceof DrillItem currentDrillItem) {
+        if (this.translateVector.lengthApprox() >= currentDrillItem.minWidth()) {
           // a clearance violation with a connecting trace may occur
           moveOk = false;
         } else {
           moveOk =
               MoveDrillItemAlgo.check(
-                  currDrillItem,
+                  currentDrillItem,
                   this.translateVector,
                   this.maxRecursionDepth,
                   this.maxViaRecursionDepth,
@@ -145,10 +145,10 @@ public class MoveComponent {
       board.communication.observers.notifyMoved(this.component);
     }
     for (int i = 0; i < itemGroupArr.length; i++) {
-      if (itemGroupArr[i].item instanceof DrillItem currDrillItem) {
+      if (itemGroupArr[i].item instanceof DrillItem currentDrillItem) {
         boolean moveOk =
             board.moveDrillItem(
-                currDrillItem,
+                currentDrillItem,
                 this.translateVector,
                 this.maxRecursionDepth,
                 this.maxViaRecursionDepth,

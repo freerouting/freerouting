@@ -32,28 +32,29 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
    */
   private static boolean obstacleSegmentTouchesInside(
       IntOctagon obstacleShape, int obstacleBorderLineNo, IntOctagon roomShape) {
-    int currBorderLineNo = obstacleBorderLineNo;
-    int currObstacleCornerX = obstacleShape.cornerX(obstacleBorderLineNo);
-    int currObstacleCornerY = obstacleShape.cornerY(obstacleBorderLineNo);
+    int currentBorderLineNo = obstacleBorderLineNo;
+    int currentObstacleCornerX = obstacleShape.cornerX(obstacleBorderLineNo);
+    int currentObstacleCornerY = obstacleShape.cornerY(obstacleBorderLineNo);
     for (int j = 0; j < 5; j++) {
 
-      if (roomShape.sideOfBorderLine(currObstacleCornerX, currObstacleCornerY, currBorderLineNo)
+      if (roomShape.sideOfBorderLine(
+              currentObstacleCornerX, currentObstacleCornerY, currentBorderLineNo)
           != Side.ON_THE_LEFT) {
         return false;
       }
-      currBorderLineNo = (currBorderLineNo + 1) % 8;
+      currentBorderLineNo = (currentBorderLineNo + 1) % 8;
     }
 
     int nextObstacleBorderLineNo = (obstacleBorderLineNo + 1) % 8;
     int nextObstacleCornerX = obstacleShape.cornerX(nextObstacleBorderLineNo);
     int nextObstacleCornerY = obstacleShape.cornerY(nextObstacleBorderLineNo);
-    currBorderLineNo = (obstacleBorderLineNo + 5) % 8;
+    currentBorderLineNo = (obstacleBorderLineNo + 5) % 8;
     for (int j = 0; j < 3; j++) {
-      if (roomShape.sideOfBorderLine(nextObstacleCornerX, nextObstacleCornerY, currBorderLineNo)
+      if (roomShape.sideOfBorderLine(nextObstacleCornerX, nextObstacleCornerY, currentBorderLineNo)
           != Side.ON_THE_LEFT) {
         return false;
       }
-      currBorderLineNo = (currBorderLineNo + 1) % 8;
+      currentBorderLineNo = (currentBorderLineNo + 1) % 8;
     }
     return true;
   }
@@ -143,22 +144,22 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     result.add(new IncompleteFreeSpaceExpansionRoom(startShape, roomLayer, shapeToBeContained));
     ArrayStack<TreeNode> nodeStack = new ArrayStack<>(10000);
     nodeStack.push(this.root);
-    TreeNode currNode;
+    TreeNode currentNode;
 
     for (; ; ) {
-      currNode = nodeStack.pop();
-      if (currNode == null) {
+      currentNode = nodeStack.pop();
+      if (currentNode == null) {
         break;
       }
-      if (currNode.boundingShape.intersects(boundingShape)) {
-        if (currNode instanceof Leaf currLeaf) {
-          SearchTreeObject currObject = (SearchTreeObject) currLeaf.object;
-          boolean isObstacle = currObject.isTraceObstacle(netNo);
+      if (currentNode.boundingShape.intersects(boundingShape)) {
+        if (currentNode instanceof Leaf currentLeaf) {
+          SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
+          boolean isObstacle = currentObject.isTraceObstacle(netNo);
 
-          int shapeIndex = currLeaf.shapeIndexInObject;
-          int objectLayer = currObject.shapeLayer(shapeIndex);
+          int shapeIndex = currentLeaf.shapeIndexInObject;
+          int objectLayer = currentObject.shapeLayer(shapeIndex);
           boolean sameLayer = objectLayer == roomLayer;
-          boolean ignoredObject = currObject == ignoreObject;
+          boolean ignoredObject = currentObject == ignoreObject;
           if (debugAnchor) {
             traceCompleteShapeFilter(
                 debugStep,
@@ -169,24 +170,26 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 isObstacle,
                 sameLayer,
                 ignoredObject,
-                currObject);
+                currentObject);
           }
           if (isObstacle && sameLayer && !ignoredObject) {
 
-            IntOctagon currObjectShape =
-                currObject.getTreeShape(this, shapeIndex).boundingOctagon();
+            IntOctagon currentObjectShape =
+                currentObject.getTreeShape(this, shapeIndex).boundingOctagon();
             if (debugAnchor) {
-              traceCompleteShapeCandidate(debugStep, netNo, roomLayer, currObject, currObjectShape);
+              traceCompleteShapeCandidate(
+                  debugStep, netNo, roomLayer, currentObject, currentObjectShape);
             }
             Collection<IncompleteFreeSpaceExpansionRoom> newResult = new LinkedList<>();
             IntOctagon newBoundingShape = IntOctagon.EMPTY;
             boolean hadRoomsBeforeObstacle = !result.isEmpty();
-            for (IncompleteFreeSpaceExpansionRoom currRoom : result) {
-              IntOctagon currShape = (IntOctagon) currRoom.getShape();
-              boolean overlaps = currShape.overlaps(currObjectShape);
+            for (IncompleteFreeSpaceExpansionRoom currentRoom : result) {
+              IntOctagon currentShape = (IntOctagon) currentRoom.getShape();
+              boolean overlaps = currentShape.overlaps(currentObjectShape);
               if (overlaps) {
-                if (currObject instanceof CompleteFreeSpaceExpansionRoom && ignoreShape != null) {
-                  IntOctagon intersection = currShape.intersection(currObjectShape);
+                if (currentObject instanceof CompleteFreeSpaceExpansionRoom
+                    && ignoreShape != null) {
+                  IntOctagon intersection = currentShape.intersection(currentObjectShape);
                   if (ignoreShape.contains(intersection)) {
                     if (debugAnchor) {
                       traceCompleteShapeDecision(
@@ -195,14 +198,14 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                           roomLayer,
                           "SKIP_BY_IGNORE_SHAPE",
                           overlaps,
-                          currShape,
-                          currObjectShape);
+                          currentShape,
+                          currentObjectShape);
                     }
                     // ignore also all objects, whose intersection is contained in the
                     // 2-dim overlap-door with the fromRoom.
-                    if (!ignoreShape.contains(currShape)) {
-                      newResult.add(currRoom);
-                      newBoundingShape = newBoundingShape.union(currShape.boundingBox());
+                    if (!ignoreShape.contains(currentShape)) {
+                      newResult.add(currentRoom);
+                      newBoundingShape = newBoundingShape.union(currentShape.boundingBox());
                     }
                     continue;
                   }
@@ -214,11 +217,11 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                       roomLayer,
                       "RESTRAIN",
                       overlaps,
-                      currShape,
-                      currObjectShape);
+                      currentShape,
+                      currentObjectShape);
                 }
                 Collection<IncompleteFreeSpaceExpansionRoom> newRestrainedShapes =
-                    restrainShape(currRoom, currObjectShape);
+                    restrainShape(currentRoom, currentObjectShape);
                 newResult.addAll(newRestrainedShapes);
 
                 for (IncompleteFreeSpaceExpansionRoom tmpShape : newResult) {
@@ -232,11 +235,11 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                       roomLayer,
                       "KEEP_NON_OVERLAP",
                       overlaps,
-                      currShape,
-                      currObjectShape);
+                      currentShape,
+                      currentObjectShape);
                 }
-                newResult.add(currRoom);
-                newBoundingShape = newBoundingShape.union(currShape.boundingBox());
+                newResult.add(currentRoom);
+                newBoundingShape = newBoundingShape.union(currentShape.boundingBox());
               }
             }
             if (hadRoomsBeforeObstacle && newResult.isEmpty()) {
@@ -248,11 +251,11 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                       + ", contained="
                       + describeBounds(shapeToBeContained.boundingBox())
                       + ", obstacle_type="
-                      + currObject.getClass().getSimpleName()
+                      + currentObject.getClass().getSimpleName()
                       + ", obstacle_id="
-                      + obstacleId(currObject)
+                      + obstacleId(currentObject)
                       + ", obstacle_bounds="
-                      + describeBounds(currObjectShape.boundingBox()));
+                      + describeBounds(currentObjectShape.boundingBox()));
             }
             result = newResult;
             boundingShape = newBoundingShape;
@@ -261,8 +264,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             debugStep++;
           }
         } else {
-          nodeStack.push(((InnerNode) currNode).firstChild);
-          nodeStack.push(((InnerNode) currNode).secondChild);
+          nodeStack.push(((InnerNode) currentNode).firstChild);
+          nodeStack.push(((InnerNode) currentNode).secondChild);
         }
       }
     }
@@ -284,9 +287,9 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       Collection<IncompleteFreeSpaceExpansionRoom> roomList, IntBox boardBoundingBox) {
     Collection<IncompleteFreeSpaceExpansionRoom> result =
         super.divideLargeRoom(roomList, boardBoundingBox);
-    for (IncompleteFreeSpaceExpansionRoom currRoom : result) {
-      currRoom.setShape(currRoom.getShape().boundingOctagon());
-      currRoom.setContainedShape(currRoom.getContainedShape().boundingOctagon());
+    for (IncompleteFreeSpaceExpansionRoom currentRoom : result) {
+      currentRoom.setShape(currentRoom.getShape().boundingOctagon());
+      currentRoom.setContainedShape(currentRoom.getContainedShape().boundingOctagon());
     }
     return result;
   }
@@ -345,10 +348,11 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     int restrainingLineNo = -1;
 
     for (int obstacleLineNo = 0; obstacleLineNo < 8; obstacleLineNo++) {
-      double currDistance = signedLineDistance(obstacleShape, obstacleLineNo, shapeToBeContained);
-      if (currDistance > cutLineDistance) {
+      double currentDistance =
+          signedLineDistance(obstacleShape, obstacleLineNo, shapeToBeContained);
+      if (currentDistance > cutLineDistance) {
         if (obstacleSegmentTouchesInside(obstacleShape, obstacleLineNo, roomShape)) {
-          cutLineDistance = currDistance;
+          cutLineDistance = currentDistance;
           restrainingLineNo = obstacleLineNo;
         }
       }
@@ -373,9 +377,9 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     restrainingLineNo = -1;
     for (int obstacleLineNo = 0; obstacleLineNo < 8; obstacleLineNo++) {
       if (obstacleSegmentTouchesInside(obstacleShape, obstacleLineNo, roomShape)) {
-        Line currLine = obstacleShape.borderLine(obstacleLineNo);
-        if (shapeToBeContained.sideOf(currLine) == Side.COLLINEAR) {
-          // currLine intersects with the interior of p_shape_to_be_contained
+        Line currentLine = obstacleShape.borderLine(obstacleLineNo);
+        if (shapeToBeContained.sideOf(currentLine) == Side.COLLINEAR) {
+          // currentLine intersects with the interior of p_shape_to_be_contained
           restrainingLineNo = obstacleLineNo;
           break;
         }
@@ -485,16 +489,16 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     }
     TileShape[] result = new TileShape[drillItem.tileShapeCount()];
     for (int i = 0; i < result.length; i++) {
-      Shape currShape = drillItem.getShape(i);
-      if (currShape == null) {
-        currShape = drillHoleObstacle(drillItem);
+      Shape currentShape = drillItem.getShape(i);
+      if (currentShape == null) {
+        currentShape = drillHoleObstacle(drillItem);
       }
-      if (currShape == null) {
+      if (currentShape == null) {
         result[i] = null;
       } else {
-        TileShape currTileShape = currShape.boundingOctagon();
-        if (currTileShape.isIntBox()) {
-          currTileShape = currShape.boundingBox();
+        TileShape currentTileShape = currentShape.boundingOctagon();
+        if (currentTileShape.isIntBox()) {
+          currentTileShape = currentShape.boundingBox();
 
           // To avoid small corner cutoffs when taking the offset as an octagon.
           // That may complicate the room division in the maze expand algorithm unnecessary.
@@ -502,9 +506,9 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
         int offsetWidth =
             this.clearanceCompensationValue(drillItem.clearanceClassNo(), drillItem.shapeLayer(i));
-        offsetWidth += drillHoleClearanceDelta(drillItem, currShape, drillItem.shapeLayer(i));
-        currTileShape = (TileShape) currTileShape.offset(offsetWidth);
-        result[i] = currTileShape.boundingOctagon();
+        offsetWidth += drillHoleClearanceDelta(drillItem, currentShape, drillItem.shapeLayer(i));
+        currentTileShape = (TileShape) currentTileShape.offset(offsetWidth);
+        result[i] = currentTileShape.boundingOctagon();
       }
     }
     return result;

@@ -139,33 +139,33 @@ public final class ForcedViaAlgo {
     Padstack viaPadstack = viaInfo.getPadstack();
     Shape holeShape = holeCheckShape(viaPadstack, location, board);
     for (int i = viaPadstack.fromLayer(); i <= viaPadstack.toLayer(); i++) {
-      Shape currPadShape = viaPadstack.getShape(i);
-      int currClearanceClass = viaInfo.getClearanceClass();
-      if (currPadShape == null) {
+      Shape currentPadShape = viaPadstack.getShape(i);
+      int currentClearanceClass = viaInfo.getClearanceClass();
+      if (currentPadShape == null) {
         if (holeShape == null) {
           continue;
         }
         // The drill hole itself must keep hole clearance from copper on this layer.
-        currPadShape = holeShape;
-        currClearanceClass = 0;
+        currentPadShape = holeShape;
+        currentClearanceClass = 0;
       } else {
-        currPadShape = (Shape) currPadShape.translateBy(translateVector);
+        currentPadShape = (Shape) currentPadShape.translateBy(translateVector);
       }
       TileShape tileShape;
       if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
-        tileShape = currPadShape.boundingBox();
+        tileShape = currentPadShape.boundingBox();
       } else {
-        tileShape = currPadShape.boundingOctagon();
+        tileShape = currentPadShape.boundingOctagon();
       }
       CalcFromSide fromSide =
           forcedPadAlgo.calcFromSide(
-              tileShape, location, i, calcFromSideOffset, currClearanceClass);
+              tileShape, location, i, calcFromSideOffset, currentClearanceClass);
       if (forcedPadAlgo.checkForcedPad(
               tileShape,
               fromSide,
               i,
               netNoArr,
-              currClearanceClass,
+              currentClearanceClass,
               viaInfo.attachSmdAllowed(),
               null,
               maxRecursionDepth,
@@ -176,7 +176,7 @@ public final class ForcedViaAlgo {
         board.setShoveFailingLayer(i);
         return false;
       }
-      if (currClearanceClass != 0 && holeShape != null) {
+      if (currentClearanceClass != 0 && holeShape != null) {
         // The drill hole must ALSO keep hole clearance from other-net copper on layers where
         // the pad exists — the pad check above only enforces the (smaller) copper clearance.
         TileShape holeTile;
@@ -257,16 +257,16 @@ public final class ForcedViaAlgo {
     Padstack viaPadstack = viaInfo.getPadstack();
     Shape holeShape = holeCheckShape(viaPadstack, location, board);
     for (int i = viaPadstack.fromLayer(); i <= viaPadstack.toLayer(); i++) {
-      Shape currPadShape = viaPadstack.getShape(i);
-      int currClearanceClass = viaInfo.getClearanceClass();
-      if (currPadShape == null) {
+      Shape currentPadShape = viaPadstack.getShape(i);
+      int currentClearanceClass = viaInfo.getClearanceClass();
+      if (currentPadShape == null) {
         if (holeShape == null) {
           continue;
         }
-        currPadShape = holeShape;
-        currClearanceClass = 0;
+        currentPadShape = holeShape;
+        currentClearanceClass = 0;
       } else {
-        currPadShape = (Shape) currPadShape.translateBy(translateVector);
+        currentPadShape = (Shape) currentPadShape.translateBy(translateVector);
       }
       TileShape tileShape;
       Circle startTraceCircle;
@@ -277,25 +277,25 @@ public final class ForcedViaAlgo {
       }
       TileShape startTraceShape = null;
       if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
-        tileShape = currPadShape.boundingBox();
+        tileShape = currentPadShape.boundingBox();
         if (startTraceCircle != null) {
           startTraceShape = startTraceCircle.boundingBox();
         }
       } else {
-        tileShape = currPadShape.boundingOctagon();
+        tileShape = currentPadShape.boundingOctagon();
         if (startTraceCircle != null) {
           startTraceShape = startTraceCircle.boundingOctagon();
         }
       }
       CalcFromSide fromSide =
           forcedPadAlgo.calcFromSide(
-              tileShape, location, i, calcFromSideOffset, currClearanceClass);
+              tileShape, location, i, calcFromSideOffset, currentClearanceClass);
       if (!forcedPadAlgo.forcedPad(
           tileShape,
           fromSide,
           i,
           netNoArr,
-          currClearanceClass,
+          currentClearanceClass,
           viaInfo.attachSmdAllowed(),
           null,
           maxRecursionDepth,
@@ -303,7 +303,7 @@ public final class ForcedViaAlgo {
         board.setShoveFailingLayer(i);
         return false;
       }
-      if (currClearanceClass != 0 && holeShape != null) {
+      if (currentClearanceClass != 0 && holeShape != null) {
         TileShape holeTile;
         if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
           holeTile = holeShape.boundingBox();
@@ -410,8 +410,8 @@ public final class ForcedViaAlgo {
         } else {
           fromSideNo = 2 * i;
         }
-        FloatPoint currBorderPoint = new FloatPoint(borderX, borderY);
-        return new CalcFromSide(fromSideNo, currBorderPoint);
+        FloatPoint currentBorderPoint = new FloatPoint(borderX, borderY);
+        return new CalcFromSide(fromSideNo, currentBorderPoint);
       }
     }
     if (is90Degree) {
@@ -449,8 +449,8 @@ public final class ForcedViaAlgo {
       if (roomShape.contains(checkPoint)) {
 
         int fromSideNo = 2 * i + 1;
-        FloatPoint currBorderPoint = new FloatPoint(borderX, borderY);
-        return new CalcFromSide(fromSideNo, currBorderPoint);
+        FloatPoint currentBorderPoint = new FloatPoint(borderX, borderY);
+        return new CalcFromSide(fromSideNo, currentBorderPoint);
       }
     }
     return null;

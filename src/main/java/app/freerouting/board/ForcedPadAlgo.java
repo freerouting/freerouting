@@ -34,10 +34,10 @@ public class ForcedPadAlgo {
     FloatPoint offsetProjection = shapeCenterFloat.projectionApprox(borderLine);
     // Make sure, that direction restrictions are retained.
     Line[] lineArr = new Line[3];
-    Direction currDir = borderLine.direction();
-    lineArr[0] = new Line(shapeCenter, currDir);
-    lineArr[1] = new Line(shapeCenter, currDir.turn45Degree(2));
-    lineArr[2] = new Line(offsetProjection.round(), currDir);
+    Direction currentDirection = borderLine.direction();
+    lineArr[0] = new Line(shapeCenter, currentDirection);
+    lineArr[1] = new Line(shapeCenter, currentDirection.turn45Degree(2));
+    lineArr[2] = new Line(offsetProjection.round(), currentDirection);
     Polyline checkLine = new Polyline(lineArr);
     return checkLine.offsetShape(1, 0);
   }
@@ -240,22 +240,23 @@ public class ForcedPadAlgo {
 
     // check, if the obstacle vias can be shoved
 
-    for (Via currShoveVia : shapeEntries.shoveViaList) {
+    for (Via currentShoveVia : shapeEntries.shoveViaList) {
       if (maxViaRecursionDepth <= 0) {
-        this.board.setShoveFailingObstacle(currShoveVia);
+        this.board.setShoveFailingObstacle(currentShoveVia);
         return CheckDrillResult.NOT_DRILLABLE;
       }
       IntPoint[] newViaCenter =
-          MoveDrillItemAlgo.tryShoveViaPoints(padShape, layer, currShoveVia, clType, false, board);
+          MoveDrillItemAlgo.tryShoveViaPoints(
+              padShape, layer, currentShoveVia, clType, false, board);
 
       if (newViaCenter.length == 0) {
-        this.board.setShoveFailingObstacle(currShoveVia);
+        this.board.setShoveFailingObstacle(currentShoveVia);
         return CheckDrillResult.NOT_DRILLABLE;
       }
-      Vector delta = newViaCenter[0].differenceBy(currShoveVia.getCenter());
+      Vector delta = newViaCenter[0].differenceBy(currentShoveVia.getCenter());
       Collection<Item> checkIgnoreItems = new LinkedList<>();
       if (!MoveDrillItemAlgo.check(
-          currShoveVia,
+          currentShoveVia,
           delta,
           maxRecursionDepth,
           maxViaRecursionDepth - 1,
@@ -267,8 +268,8 @@ public class ForcedPadAlgo {
     }
     CheckDrillResult result = CheckDrillResult.DRILLABLE;
     if (copperSharingAllowed) {
-      for (Item currObstacle : obstacles) {
-        if (currObstacle instanceof Pin) {
+      for (Item currentObstacle : obstacles) {
+        if (currentObstacle instanceof Pin) {
           result = CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD;
           break;
         }
@@ -289,31 +290,31 @@ public class ForcedPadAlgo {
     ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(board);
     boolean isOrthogonalMode = padShape instanceof IntBox;
     for (; ; ) {
-      PolylineTrace currSubstituteTrace = shapeEntries.nextSubstituteTracePiece();
-      if (currSubstituteTrace == null) {
+      PolylineTrace currentSubstituteTrace = shapeEntries.nextSubstituteTracePiece();
+      if (currentSubstituteTrace == null) {
         break;
       }
-      for (int i = 0; i < currSubstituteTrace.tileShapeCount(); i++) {
-        Line currLine = currSubstituteTrace.polyline().arr[i + 1];
-        Direction currDir = currLine.direction();
+      for (int i = 0; i < currentSubstituteTrace.tileShapeCount(); i++) {
+        Line currentLine = currentSubstituteTrace.polyline().arr[i + 1];
+        Direction currentDirection = currentLine.direction();
         boolean isInFront;
         if (checkOnlyFront) {
           isInFront =
               inFrontOfPad(
-                  currLine, padShape, fromSide.no, currSubstituteTrace.getHalfWidth(), true);
+                  currentLine, padShape, fromSide.no, currentSubstituteTrace.getHalfWidth(), true);
         } else {
           isInFront = true;
         }
         if (isInFront) {
-          CalcShapeAndFromSide curr =
-              new CalcShapeAndFromSide(currSubstituteTrace, i, isOrthogonalMode, true);
+          CalcShapeAndFromSide current =
+              new CalcShapeAndFromSide(currentSubstituteTrace, i, isOrthogonalMode, true);
           if (!shoveTraceAlgo.check(
-              curr.shape,
-              curr.fromSide,
-              currDir,
+              current.shape,
+              current.fromSide,
+              currentDirection,
               layer,
-              currSubstituteTrace.netNoArr,
-              currSubstituteTrace.clearanceClassNo(),
+              currentSubstituteTrace.netNoArr,
+              currentSubstituteTrace.clearanceClassNo(),
               maxRecursionDepth - 1,
               maxViaRecursionDepth,
               0,
@@ -390,23 +391,23 @@ public class ForcedPadAlgo {
     boolean isOrthogonalMode = padShape instanceof IntBox;
     ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(this.board);
     for (; ; ) {
-      PolylineTrace currSubstituteTrace = shapeEntries.nextSubstituteTracePiece();
-      if (currSubstituteTrace == null) {
+      PolylineTrace currentSubstituteTrace = shapeEntries.nextSubstituteTracePiece();
+      if (currentSubstituteTrace == null) {
         break;
       }
-      if (currSubstituteTrace.firstCorner().equals(currSubstituteTrace.lastCorner())) {
+      if (currentSubstituteTrace.firstCorner().equals(currentSubstituteTrace.lastCorner())) {
         continue;
       }
-      int[] currNetNoArr = currSubstituteTrace.netNoArr;
-      for (int i = 0; i < currSubstituteTrace.tileShapeCount(); i++) {
-        CalcShapeAndFromSide curr =
-            new CalcShapeAndFromSide(currSubstituteTrace, i, isOrthogonalMode, false);
+      int[] currentNetNoArr = currentSubstituteTrace.netNoArr;
+      for (int i = 0; i < currentSubstituteTrace.tileShapeCount(); i++) {
+        CalcShapeAndFromSide current =
+            new CalcShapeAndFromSide(currentSubstituteTrace, i, isOrthogonalMode, false);
         if (!shoveTraceAlgo.insert(
-            curr.shape,
-            curr.fromSide,
+            current.shape,
+            current.fromSide,
             layer,
-            currNetNoArr,
-            currSubstituteTrace.clearanceClassNo(),
+            currentNetNoArr,
+            currentSubstituteTrace.clearanceClassNo(),
             ignoreItems,
             maxRecursionDepth - 1,
             maxViaRecursionDepth,
@@ -414,16 +415,16 @@ public class ForcedPadAlgo {
           return false;
         }
       }
-      for (int i = 0; i < currSubstituteTrace.cornerCount(); i++) {
-        board.joinChangedArea(currSubstituteTrace.polyline().cornerApprox(i), layer);
+      for (int i = 0; i < currentSubstituteTrace.cornerCount(); i++) {
+        board.joinChangedArea(currentSubstituteTrace.polyline().cornerApprox(i), layer);
       }
       Point[] endCorners = null;
       if (!tailsExistBefore) {
         endCorners = new Point[2];
-        endCorners[0] = currSubstituteTrace.firstCorner();
-        endCorners[1] = currSubstituteTrace.lastCorner();
+        endCorners[0] = currentSubstituteTrace.firstCorner();
+        endCorners[1] = currentSubstituteTrace.lastCorner();
       }
-      board.insertItem(currSubstituteTrace);
+      board.insertItem(currentSubstituteTrace);
       IntOctagon optArea;
       if (board.changedArea != null) {
         optArea = board.changedArea.getArea(layer);
@@ -432,18 +433,18 @@ public class ForcedPadAlgo {
       }
 
       try {
-        currSubstituteTrace.normalize(optArea);
+        currentSubstituteTrace.normalize(optArea);
       } catch (Exception e) {
         FRLogger.error("Couldn't normalize trace.", e);
       }
 
       if (!tailsExistBefore) {
         for (int i = 0; i < 2; i++) {
-          Trace tail = board.getTraceTail(endCorners[i], layer, currNetNoArr);
+          Trace tail = board.getTraceTail(endCorners[i], layer, currentNetNoArr);
           if (tail != null) {
             board.removeItems(tail.getConnectionItems(Item.StopConnectionOption.VIA));
-            for (int currNetNo : currNetNoArr) {
-              board.combineTraces(currNetNo);
+            for (int currentNetNo : currentNetNoArr) {
+              board.combineTraces(currentNetNo);
             }
           }
         }

@@ -85,13 +85,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     // Invalidate the free space expansion rooms touching a shape of item.
     int shapeCount = item.treeShapeCount(this.autorouteEngine.autorouteSearchTree);
     for (int i = 0; i < shapeCount; i++) {
-      TileShape currShape = item.getTreeShape(this.autorouteEngine.autorouteSearchTree, i);
-      this.autorouteEngine.invalidateDrillPages(currShape);
-      int currLayer = item.shapeLayer(i);
+      TileShape currentShape = item.getTreeShape(this.autorouteEngine.autorouteSearchTree, i);
+      this.autorouteEngine.invalidateDrillPages(currentShape);
+      int currentLayer = item.shapeLayer(i);
       Collection<SearchTreeObject> overlaps =
-          this.autorouteEngine.autorouteSearchTree.overlappingObjects(currShape, currLayer);
-      for (SearchTreeObject currObject : overlaps) {
-        if (currObject instanceof CompleteFreeSpaceExpansionRoom room) {
+          this.autorouteEngine.autorouteSearchTree.overlappingObjects(currentShape, currentLayer);
+      for (SearchTreeObject currentObject : overlaps) {
+        if (currentObject instanceof CompleteFreeSpaceExpansionRoom room) {
           this.autorouteEngine.removeCompleteExpansionRoom(room);
         }
       }
@@ -117,26 +117,26 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     startMarkingChangedArea();
     Set<Integer> changedNets = new TreeSet<>();
-    for (Item currItem : itemList) {
-      if (currItem.isDeletionForbidden() || currItem.isUserFixed()) {
+    for (Item currentItem : itemList) {
+      if (currentItem.isDeletionForbidden() || currentItem.isUserFixed()) {
         // We are not allowed to delete this item.
         result = false;
       } else {
-        for (int i = 0; i < currItem.tileShapeCount(); i++) {
-          TileShape currShape = currItem.getTileShape(i);
-          changedArea.join(currShape, currItem.shapeLayer(i));
+        for (int i = 0; i < currentItem.tileShapeCount(); i++) {
+          TileShape currentShape = currentItem.getTileShape(i);
+          changedArea.join(currentShape, currentItem.shapeLayer(i));
           if (calculateTidyRegion) {
-            tidyRegion = tidyRegion.union(currShape.boundingOctagon());
+            tidyRegion = tidyRegion.union(currentShape.boundingOctagon());
           }
         }
-        removeItem(currItem);
-        for (int i = 0; i < currItem.netCount(); i++) {
-          changedNets.add(currItem.getNetNo(i));
+        removeItem(currentItem);
+        for (int i = 0; i < currentItem.netCount(); i++) {
+          changedNets.add(currentItem.getNetNo(i));
         }
       }
     }
-    for (Integer currNetNo : changedNets) {
-      this.combineTraces(currNetNo);
+    for (Integer currentNetNo : changedNets) {
+      this.combineTraces(currentNetNo);
     }
     if (calculateTidyRegion) {
       tidyRegion = tidyRegion.enlarge(tidyWidth);
@@ -246,10 +246,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (fromPoint.equals(toPoint)) {
       return 0;
     }
-    Polyline currPolyline = new Polyline(fromPoint, toPoint);
-    LineSegment currLineSegment = new LineSegment(currPolyline, 1);
+    Polyline currentPolyline = new Polyline(fromPoint, toPoint);
+    LineSegment currentLineSegment = new LineSegment(currentPolyline, 1);
     return checkTraceSegment(
-        currLineSegment, layer, netNoArr, traceHalfWidth, clClassNo, onlyNotShovableObstacles);
+        currentLineSegment, layer, netNoArr, traceHalfWidth, clClassNo, onlyNotShovableObstacles);
   }
 
   /**
@@ -279,31 +279,35 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     Collection<TreeEntry> obstacleEntries =
         defaultTree.overlappingTreeEntriesWithClearance(shapeToCheck, layer, netNoArr, clClassNo);
 
-    for (TreeEntry currObstacleEntry : obstacleEntries) {
+    for (TreeEntry currentObstacleEntry : obstacleEntries) {
 
-      if (!(currObstacleEntry.object instanceof Item currObstacle)) {
+      if (!(currentObstacleEntry.object instanceof Item currentObstacle)) {
         continue;
       }
-      if (onlyNotShovableObstacles && currObstacle.isRoutable() && !currObstacle.isShoveFixed()) {
+      if (onlyNotShovableObstacles
+          && currentObstacle.isRoutable()
+          && !currentObstacle.isShoveFixed()) {
         continue;
       }
-      TileShape currObstacleShape =
-          currObstacleEntry.object.getTreeShape(defaultTree, currObstacleEntry.shapeIndexInObject);
-      TileShape currOffsetShape;
+      TileShape currentObstacleShape =
+          currentObstacleEntry.object.getTreeShape(
+              defaultTree, currentObstacleEntry.shapeIndexInObject);
+      TileShape currentOffsetShape;
       FloatPoint nearestObstaclePoint;
       double shortenValue;
       if (defaultTree.isClearanceCompensationUsed()) {
-        currOffsetShape = shapeToCheck;
+        currentOffsetShape = shapeToCheck;
         shortenValue =
             traceHalfWidth
                 + rules.clearanceMatrix.clearanceCompensationValue(
-                    currObstacle.clearanceClassNo(), layer);
+                    currentObstacle.clearanceClassNo(), layer);
       } else {
-        int clearanceValue = this.clearanceValue(currObstacle.clearanceClassNo(), clClassNo, layer);
-        currOffsetShape = (TileShape) shapeToCheck.offset(clearanceValue);
+        int clearanceValue =
+            this.clearanceValue(currentObstacle.clearanceClassNo(), clClassNo, layer);
+        currentOffsetShape = (TileShape) shapeToCheck.offset(clearanceValue);
         shortenValue = traceHalfWidth + clearanceValue;
       }
-      TileShape intersection = currObstacleShape.intersection(currOffsetShape);
+      TileShape intersection = currentObstacleShape.intersection(currentOffsetShape);
       if (intersection.isEmpty()) {
         continue;
       }
@@ -351,15 +355,15 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       Set<Item> obstacles =
           this.overlappingItemsWithClearance(
               movedShape, item.shapeLayer(i), item.netNoArr, item.clearanceClassNo());
-      for (Item currItem : obstacles) {
+      for (Item currentItem : obstacles) {
         if (ignoreItems != null) {
-          if (!ignoreItems.contains(currItem)) {
-            if (currItem.isObstacle(item)) {
+          if (!ignoreItems.contains(currentItem)) {
+            if (currentItem.isObstacle(item)) {
               return false;
             }
           }
-        } else if (currItem != item) {
-          if (currItem.isObstacle(item)) {
+        } else if (currentItem != item) {
+          if (currentItem.isObstacle(item)) {
             return false;
           }
         }
@@ -373,13 +377,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     int[] netNoArr = new int[1];
     netNoArr[0] = newNetNo;
     for (int i = 0; i < item.tileShapeCount(); i++) {
-      TileShape currShape = item.getTileShape(i);
+      TileShape currentShape = item.getTileShape(i);
       Set<Item> obstacles =
           this.overlappingItemsWithClearance(
-              currShape, item.shapeLayer(i), netNoArr, item.clearanceClassNo());
-      for (SearchTreeObject currOb : obstacles) {
-        if (currOb != item
-            && currOb instanceof Connectable connectable
+              currentShape, item.shapeLayer(i), netNoArr, item.clearanceClassNo());
+      for (SearchTreeObject currentOb : obstacles) {
+        if (currentOb != item
+            && currentOb instanceof Connectable connectable
             && !connectable.containsNet(newNetNo)) {
           return false;
         }
@@ -404,9 +408,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     clearShoveFailingObstacle();
     // unfix the connected shove fixed traces.
     Collection<Item> contactList = drillItem.getNormalContacts();
-    for (Item currContact : contactList) {
-      if (currContact.getFixedState() == FixedState.SHOVE_FIXED) {
-        currContact.setFixedState(FixedState.UNFIXED);
+    for (Item currentContact : contactList) {
+      if (currentContact.getFixedState() == FixedState.SHOVE_FIXED) {
+        currentContact.setFixedState(FixedState.UNFIXED);
       }
     }
 
@@ -451,35 +455,35 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     double minDist = Integer.MAX_VALUE;
     Item nearestItem = null;
     Set<Item> ignoreSet = null;
-    for (Item currItem : foundItems) {
-      if (!currItem.isConnectable()) {
+    for (Item currentItem : foundItems) {
+      if (!currentItem.isConnectable()) {
         continue;
       }
       boolean candidateFound = false;
-      double currDist = 0;
-      if (currItem instanceof PolylineTrace currTrace) {
-        if (layer < 0 || currTrace.getLayer() == layer) {
+      double currentDistance = 0;
+      if (currentItem instanceof PolylineTrace currentTrace) {
+        if (layer < 0 || currentTrace.getLayer() == layer) {
           if (nearestItem instanceof DrillItem) {
             continue; // prefer drill items
           }
-          int traceRadius = currTrace.getHalfWidth();
-          currDist = currTrace.polyline().distance(pickLocation);
-          if (currDist < minDist && currDist <= traceRadius) {
+          int traceRadius = currentTrace.getHalfWidth();
+          currentDistance = currentTrace.polyline().distance(pickLocation);
+          if (currentDistance < minDist && currentDistance <= traceRadius) {
             candidateFound = true;
           }
         }
-      } else if (currItem instanceof DrillItem currDrillItem) {
-        if (layer < 0 || currDrillItem.isOnLayer(layer)) {
-          FloatPoint drillItemCenter = currDrillItem.getCenter().toFloat();
-          currDist = drillItemCenter.distance(pickLocation);
-          if (currDist < minDist || nearestItem instanceof Trace) {
+      } else if (currentItem instanceof DrillItem currentDrillItem) {
+        if (layer < 0 || currentDrillItem.isOnLayer(layer)) {
+          FloatPoint drillItemCenter = currentDrillItem.getCenter().toFloat();
+          currentDistance = drillItemCenter.distance(pickLocation);
+          if (currentDistance < minDist || nearestItem instanceof Trace) {
             candidateFound = true;
           }
         }
-      } else if (currItem instanceof ConductionArea currArea) {
-        if ((layer < 0 || currArea.getLayer() == layer) && nearestItem == null) {
+      } else if (currentItem instanceof ConductionArea currentArea) {
+        if ((layer < 0 || currentArea.getLayer() == layer) && nearestItem == null) {
           candidateFound = true;
-          currDist = Integer.MAX_VALUE;
+          currentDistance = Integer.MAX_VALUE;
         }
       }
       if (candidateFound) {
@@ -488,12 +492,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             // calculated here to avoid unnecessary calculations for performance reasoss.
             ignoreSet = fromItem.getConnectedSet(-1);
           }
-          if (ignoreSet.contains(currItem)) {
+          if (ignoreSet.contains(currentItem)) {
             continue;
           }
         }
-        minDist = currDist;
-        nearestItem = currItem;
+        minDist = currentDistance;
+        nearestItem = currentItem;
       }
     }
     return nearestItem;
@@ -617,15 +621,15 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     boolean orthogonalMode = rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE;
     ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(this);
     for (int i = 0; i < traceShapes.length; i++) {
-      TileShape currTraceShape = traceShapes[i];
+      TileShape currentTraceShape = traceShapes[i];
       if (orthogonalMode) {
-        currTraceShape = currTraceShape.boundingBox();
+        currentTraceShape = currentTraceShape.boundingBox();
       }
-      CalcFromSide fromSide = new CalcFromSide(polyline, i + 1, currTraceShape);
+      CalcFromSide fromSide = new CalcFromSide(polyline, i + 1, currentTraceShape);
 
       boolean checkShoveOk =
           shoveTraceAlgo.check(
-              currTraceShape,
+              currentTraceShape,
               fromSide,
               null,
               layer,
@@ -701,13 +705,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               + communication.idNoGenerator.maxGeneratedNo());
     }
     if (pickedItems.size() == 1) {
-      Trace currPickedTrace = (Trace) pickedItems.iterator().next();
-      if (currPickedTrace.netsEqual(netNoArr)
-          && currPickedTrace.getHalfWidth() == halfWidth
-          && currPickedTrace.clearanceClassNo() == clearanceClassNo
-          && (currPickedTrace instanceof PolylineTrace)) {
+      Trace currentPickedTrace = (Trace) pickedItems.iterator().next();
+      if (currentPickedTrace.netsEqual(netNoArr)
+          && currentPickedTrace.getHalfWidth() == halfWidth
+          && currentPickedTrace.clearanceClassNo() == clearanceClassNo
+          && (currentPickedTrace instanceof PolylineTrace)) {
         // can combine with the picked trace
-        pickedTrace = currPickedTrace;
+        pickedTrace = currentPickedTrace;
       }
     }
     ShapeSearchTree searchTree = searchTreeManager.getDefaultTree();
@@ -755,19 +759,19 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     boolean orthogonalMode = rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE;
     int idBeforeShoveLoop = communication.idNoGenerator.maxGeneratedNo();
     for (int i = 0; i < traceShapes.length; i++) {
-      TileShape currTraceShape = traceShapes[i];
+      TileShape currentTraceShape = traceShapes[i];
       if (orthogonalMode) {
-        currTraceShape = currTraceShape.boundingBox();
+        currentTraceShape = currentTraceShape.boundingBox();
       }
       CalcFromSide fromSide =
           new CalcFromSide(
               combinedPolyline,
               combinedPolyline.cornerCount() - traceShapes.length - 1 + i,
-              currTraceShape);
+              currentTraceShape);
       if (withCheck) {
         boolean checkShoveOk =
             shoveTraceAlgo.check(
-                currTraceShape,
+                currentTraceShape,
                 fromSide,
                 null,
                 layer,
@@ -785,7 +789,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       int idBeforeShove = communication.idNoGenerator.maxGeneratedNo();
       boolean insertOk =
           shoveTraceAlgo.insert(
-              currTraceShape,
+              currentTraceShape,
               fromSide,
               layer,
               netNoArr,
@@ -854,20 +858,20 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         newPolyline =
             newPolyline.shorten(
                 newPolyline.arr.length - (traceShapes.length - lastShapeNo - 1), sampleWidth);
-        Point currLastCorner = newPolyline.lastCorner();
-        if (!(currLastCorner instanceof IntPoint)) {
+        Point currentLastCorner = newPolyline.lastCorner();
+        if (!(currentLastCorner instanceof IntPoint)) {
           FRLogger.trace("RoutingBoard.insert_forced_trace_polyline: IntPoint expected");
           if (netNoArr != null && netNoArr.length > 0 && netNoArr[0] == 94) {
             FRLogger.trace(
                 "RoutingBoard.insert_forced_trace_polyline",
                 "compare_trace_insert_forced_fail",
-                "currLastCorner is not an IntPoint",
+                "currentLastCorner is not an IntPoint",
                 "Net #" + netNoArr[0] + ",Layer #" + layer,
                 new Point[] {fromCorner, toCorner});
           }
           return fromCorner;
         }
-        newCorner = currLastCorner;
+        newCorner = currentLastCorner;
         if (pickedTrace == null) {
           combinedPolyline = newPolyline;
         } else {
@@ -1018,10 +1022,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         // optimizing
         ItemSelectionFilter itemFilter =
             new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
-        Set<Item> currPickedItems = this.pickItems(newCorner, layer, itemFilter);
+        Set<Item> currentPickedItems = this.pickItems(newCorner, layer, itemFilter);
         newTrace = null;
-        if (!currPickedItems.isEmpty()) {
-          Item foundTrace = currPickedItems.iterator().next();
+        if (!currentPickedItems.isEmpty()) {
+          Item foundTrace = currentPickedItems.iterator().next();
           if (foundTrace instanceof PolylineTrace trace) {
             newTrace = trace;
           }
@@ -1124,11 +1128,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     Set<Item> routeStartSet = item.getConnectedSet(routeNetNo);
     Net routeNet = rules.nets.get(routeNetNo);
     if (routeNet != null && routeNet.containsPlane()) {
-      for (Item currItem : routeStartSet) {
-        if (currItem instanceof ConductionArea) {
+      for (Item currentItem : routeStartSet) {
+        if (currentItem instanceof ConductionArea) {
           return new AutorouteAttemptResult(
               AutorouteAttemptState.CONNECTED_TO_PLANE,
-              "The item '" + currItem + "' is connected to a plane.");
+              "The item '" + currentItem + "' is connected to a plane.");
         }
       }
     }
@@ -1138,7 +1142,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           AutorouteAttemptState.ALREADY_CONNECTED, "The item '" + item + "' is already connected.");
     }
     SortedSet<Item> rippedItemList = new TreeSet<>();
-    AutorouteEngine currAutorouteEngine =
+    AutorouteEngine currentAutorouteEngine =
         initAutoroute(
             item.getNetNo(0),
             ctrlSettings.traceClearanceClassNo,
@@ -1146,7 +1150,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             timeLimit,
             false);
     AutorouteAttemptResult result =
-        currAutorouteEngine.autorouteConnection(
+        currentAutorouteEngine.autorouteConnection(
             routeStartSet,
             routeDestSet,
             ctrlSettings,
@@ -1183,8 +1187,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     int pinNetNo = pin.getNetNo(0);
     int pinLayer = pin.firstLayer();
     Set<Item> pinConnectedSet = pin.getConnectedSet(pinNetNo);
-    for (Item currItem : pinConnectedSet) {
-      if (currItem.firstLayer() != pinLayer || currItem.lastLayer() != pinLayer) {
+    for (Item currentItem : pinConnectedSet) {
+      if (currentItem.firstLayer() != pinLayer || currentItem.lastLayer() != pinLayer) {
         return new AutorouteAttemptResult(
             AutorouteAttemptState.ALREADY_CONNECTED, "The pin '" + pin + "' is already connected.");
       }
@@ -1251,7 +1255,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       ctrlSettings.ripupCosts = ripupCosts;
     }
     SortedSet<Item> rippedItemList = new TreeSet<>();
-    AutorouteEngine currAutorouteEngine =
+    AutorouteEngine currentAutorouteEngine =
         initAutoroute(
             pinNetNo, ctrlSettings.traceClearanceClassNo, stoppableThread, timeLimit, false);
 
@@ -1261,7 +1265,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         // 1. Try to route to the closest target first
         Item closestTarget = sortedUnconnectedList.get(0);
         result =
-            currAutorouteEngine.autorouteConnection(
+            currentAutorouteEngine.autorouteConnection(
                 pinConnectedSet,
                 Set.of(closestTarget),
                 ctrlSettings,
@@ -1274,7 +1278,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             && result.state != AutorouteAttemptState.ALREADY_CONNECTED
             && sortedUnconnectedList.size() > 1) {
           result =
-              currAutorouteEngine.autorouteConnection(
+              currentAutorouteEngine.autorouteConnection(
                   pinConnectedSet, unconnectedSet, ctrlSettings, rippedItemList, null);
         }
       }
@@ -1282,7 +1286,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       // For large nets (e.g. power/ground/buses), route to the entire unconnected set at once to
       // avoid CPU thrashing
       result =
-          currAutorouteEngine.autorouteConnection(
+          currentAutorouteEngine.autorouteConnection(
               pinConnectedSet, unconnectedSet, ctrlSettings, rippedItemList, null);
     }
     if (result == null) {
@@ -1363,10 +1367,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * Trace with net number exceptNetNo are ignored.
    */
   public boolean containsTraceTails(Collection<Item> items, int[] exceptNetNoArr) {
-    for (Item currOb : items) {
-      if (currOb instanceof Trace currTrace) {
-        if (!currTrace.netsEqual(exceptNetNoArr)) {
-          if (currTrace.isTail()) {
+    for (Item currentOb : items) {
+      if (currentOb instanceof Trace currentTrace) {
+        if (!currentTrace.netsEqual(exceptNetNoArr)) {
+          if (currentTrace.isTail()) {
             return true;
           }
         }
@@ -1382,40 +1386,40 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   public boolean removeTraceTails(int netNo, Item.StopConnectionOption stopConnectionOption) {
     SortedSet<Item> stubSet = new TreeSet<>();
     Collection<Item> boardItems = this.getItems();
-    for (Item currItem : boardItems) {
-      if (!currItem.isRoutable()) {
+    for (Item currentItem : boardItems) {
+      if (!currentItem.isRoutable()) {
         continue;
       }
-      if (currItem.netCount() != 1) {
+      if (currentItem.netCount() != 1) {
         continue;
       }
-      if (netNo > 0 && currItem.getNetNo(0) != netNo) {
+      if (netNo > 0 && currentItem.getNetNo(0) != netNo) {
         continue;
       }
-      if (currItem.isTail()) {
-        if (currItem instanceof Via) {
+      if (currentItem.isTail()) {
+        if (currentItem instanceof Via) {
           if (stopConnectionOption == Item.StopConnectionOption.VIA) {
             continue;
           }
           if (stopConnectionOption == Item.StopConnectionOption.FANOUT_VIA) {
-            if (currItem.isFanoutVia(null)) {
+            if (currentItem.isFanoutVia(null)) {
               continue;
             }
           }
         }
-        stubSet.add(currItem);
+        stubSet.add(currentItem);
       }
     }
     SortedSet<Item> stubConnections = new TreeSet<>();
-    for (Item currItem : stubSet) {
-      int itemContactCount = currItem.getNormalContacts().size();
+    for (Item currentItem : stubSet) {
+      int itemContactCount = currentItem.getNormalContacts().size();
       if (itemContactCount == 1) {
-        stubConnections.addAll(currItem.getConnectionItems(stopConnectionOption));
+        stubConnections.addAll(currentItem.getConnectionItems(stopConnectionOption));
       } else {
         // the connected items are no stubs for example if a via is only connected on 1
         // layer,
         // but to several traces.
-        stubConnections.add(currItem);
+        stubConnections.add(currentItem);
       }
     }
     if (stubConnections.isEmpty()) {
@@ -1430,11 +1434,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   public void clearAllItemTemporaryAutorouteData() {
     Iterator<UndoableObjects.UndoableObjectNode> it = this.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      currItem.clearAutorouteInfo();
+      currentItem.clearAutorouteInfo();
     }
   }
 
@@ -1447,14 +1451,14 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     // Change the isObstacle property of all conduction areas of the board.
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      if (currItem instanceof ConductionArea currConductionArea) {
-        Layer currLayer = layerStructure.arr[currConductionArea.getLayer()];
-        if (currLayer.isSignal && currConductionArea.getIsObstacle() != value) {
-          currConductionArea.setIsObstacle(value);
+      if (currentItem instanceof ConductionArea currentConductionArea) {
+        Layer currentLayer = layerStructure.arr[currentConductionArea.getLayer()];
+        if (currentLayer.isSignal && currentConductionArea.getIsObstacle() != value) {
+          currentConductionArea.setIsObstacle(value);
           somethingChanged = true;
         }
       }
@@ -1477,20 +1481,21 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       somethingChanged = false;
       Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
       for (; ; ) {
-        UndoableObjects.Storable currOb = itemList.readObject(it);
-        if (currOb == null) {
+        UndoableObjects.Storable currentOb = itemList.readObject(it);
+        if (currentOb == null) {
           break;
         }
-        Item currItem = (Item) currOb;
-        if (currItem.netNoArr.length <= 1 || currItem.getFixedState() == FixedState.SYSTEM_FIXED) {
+        Item currentItem = (Item) currentOb;
+        if (currentItem.netNoArr.length <= 1
+            || currentItem.getFixedState() == FixedState.SYSTEM_FIXED) {
           continue;
         }
-        if (currOb instanceof Via) {
-          Collection<Item> contacts = currItem.getNormalContacts();
-          for (int currNetNo : currItem.netNoArr) {
-            for (Item currContact : contacts) {
-              if (!currContact.containsNet(currNetNo)) {
-                currItem.removeFromNet(currNetNo);
+        if (currentOb instanceof Via) {
+          Collection<Item> contacts = currentItem.getNormalContacts();
+          for (int currentNetNo : currentItem.netNoArr) {
+            for (Item currentContact : contacts) {
+              if (!currentContact.containsNet(currentNetNo)) {
+                currentItem.removeFromNet(currentNetNo);
                 somethingChanged = true;
                 break;
               }
@@ -1500,25 +1505,26 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             }
           }
 
-        } else if (currOb instanceof Trace currTrace) {
-          Collection<Item> contacts = currTrace.getStartContacts();
+        } else if (currentOb instanceof Trace currentTrace) {
+          Collection<Item> contacts = currentTrace.getStartContacts();
           for (int i = 0; i < 2; i++) {
-            for (int currNetNo : currItem.netNoArr) {
+            for (int currentNetNo : currentItem.netNoArr) {
               boolean pinFound = false;
-              for (Item currContact : contacts) {
-                if (currContact instanceof Pin) {
+              for (Item currentContact : contacts) {
+                if (currentContact instanceof Pin) {
                   pinFound = true;
-                  if (!currContact.containsNet(currNetNo)) {
-                    currItem.removeFromNet(currNetNo);
+                  if (!currentContact.containsNet(currentNetNo)) {
+                    currentItem.removeFromNet(currentNetNo);
                     somethingChanged = true;
                     break;
                   }
                 }
               }
               if (!pinFound) { // at tie pins traces may have different nets
-                for (Item currContact : contacts) {
-                  if (!(currContact instanceof Pin) && !currContact.containsNet(currNetNo)) {
-                    currItem.removeFromNet(currNetNo);
+                for (Item currentContact : contacts) {
+                  if (!(currentContact instanceof Pin)
+                      && !currentContact.containsNet(currentNetNo)) {
+                    currentItem.removeFromNet(currentNetNo);
                     somethingChanged = true;
                     break;
                   }
@@ -1528,7 +1534,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             if (somethingChanged) {
               break;
             }
-            contacts = currTrace.getEndContacts();
+            contacts = currentTrace.getEndContacts();
           }
           if (somethingChanged) {
             break;

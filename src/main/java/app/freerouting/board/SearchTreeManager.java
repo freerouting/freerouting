@@ -33,8 +33,8 @@ public class SearchTreeManager {
 
   /** Inserts the tree shapes of p_item into all active search trees. */
   public void insert(Item item) {
-    for (ShapeSearchTree currTree : compensatedSearchTrees) {
-      currTree.insert(item);
+    for (ShapeSearchTree currentTree : compensatedSearchTrees) {
+      currentTree.insert(item);
     }
     item.setOnTheBoard(true);
   }
@@ -44,12 +44,12 @@ public class SearchTreeManager {
     if (!item.isOnTheBoard()) {
       return;
     }
-    for (ShapeSearchTree currTree : compensatedSearchTrees) {
+    for (ShapeSearchTree currentTree : compensatedSearchTrees) {
 
-      ShapeTree.Leaf[] currTreeEntries = item.getSearchTreeEntries(currTree);
+      ShapeTree.Leaf[] currentTreeEntries = item.getSearchTreeEntries(currentTree);
       {
-        if (currTreeEntries != null) {
-          currTree.remove(currTreeEntries);
+        if (currentTreeEntries != null) {
+          currentTree.remove(currentTreeEntries);
         }
       }
     }
@@ -64,9 +64,9 @@ public class SearchTreeManager {
 
   boolean validateEntries(Item item) {
     boolean result = true;
-    for (ShapeSearchTree currTree : compensatedSearchTrees) {
+    for (ShapeSearchTree currentTree : compensatedSearchTrees) {
 
-      if (!currTree.validateEntries(item)) {
+      if (!currentTree.validateEntries(item)) {
         result = false;
       }
     }
@@ -122,8 +122,8 @@ public class SearchTreeManager {
       return;
     }
     while (it.hasNext()) {
-      ShapeSearchTree currTree = it.next();
-      if (currTree.compensatedClearanceClassNo == no) {
+      ShapeSearchTree currentTree = it.next();
+      if (currentTree.compensatedClearanceClassNo == no) {
         it.remove();
       }
     }
@@ -134,37 +134,37 @@ public class SearchTreeManager {
    * Initialized the tree, if it is not yet allocated.
    */
   public ShapeSearchTree getAutorouteTree(int clearanceClassNo) {
-    for (ShapeSearchTree currTree : compensatedSearchTrees) {
-      if (currTree.compensatedClearanceClassNo == clearanceClassNo) {
-        return currTree;
+    for (ShapeSearchTree currentTree : compensatedSearchTrees) {
+      if (currentTree.compensatedClearanceClassNo == clearanceClassNo) {
+        return currentTree;
       }
     }
 
     // Create a new ShapeSearchTree object based on the board's settings
-    ShapeSearchTree currAutorouteTree;
+    ShapeSearchTree currentAutorouteTree;
     if (this.board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
       // fast algorithm with 90 degree restriction
-      currAutorouteTree = new ShapeSearchTree90Degree(this.board, clearanceClassNo);
+      currentAutorouteTree = new ShapeSearchTree90Degree(this.board, clearanceClassNo);
     } else if (this.board.rules.getTraceAngleRestriction() == AngleRestriction.FORTYFIVE_DEGREE) {
       // fast algorithm with 45 degree restriction
-      currAutorouteTree = new ShapeSearchTree45Degree(this.board, clearanceClassNo);
+      currentAutorouteTree = new ShapeSearchTree45Degree(this.board, clearanceClassNo);
     } else {
       // slow algorithm or no angle restriction
-      currAutorouteTree =
+      currentAutorouteTree =
           new ShapeSearchTree(
               FortyfiveDegreeBoundingDirections.INSTANCE, this.board, clearanceClassNo);
     }
-    this.compensatedSearchTrees.add(currAutorouteTree);
+    this.compensatedSearchTrees.add(currentAutorouteTree);
 
     Iterator<UndoableObjects.UndoableObjectNode> it = this.board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) this.board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) this.board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      currAutorouteTree.insert(currItem);
+      currentAutorouteTree.insert(currentItem);
     }
-    return currAutorouteTree;
+    return currentAutorouteTree;
   }
 
   // The following functions are used internally for performance improvement.
@@ -186,11 +186,11 @@ public class SearchTreeManager {
     // changes (e.g. the drill-hole clearance override) never reach the trees.
     Iterator<UndoableObjects.UndoableObjectNode> it = this.board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) this.board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) this.board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      currItem.clearDerivedData();
+      currentItem.clearDerivedData();
     }
     insertAllBoardItems();
   }
@@ -202,11 +202,11 @@ public class SearchTreeManager {
     }
     Iterator<UndoableObjects.UndoableObjectNode> it = this.board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) this.board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) this.board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      this.remove(currItem);
+      this.remove(currentItem);
     }
   }
 
@@ -217,12 +217,12 @@ public class SearchTreeManager {
     }
     Iterator<UndoableObjects.UndoableObjectNode> it = this.board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) this.board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) this.board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      currItem.clearDerivedData();
-      this.insert(currItem);
+      currentItem.clearDerivedData();
+      this.insert(currentItem);
     }
   }
 
@@ -236,8 +236,8 @@ public class SearchTreeManager {
       Polyline joinedPolyline,
       int fromEntryNo,
       int toEntryNo) {
-    for (ShapeSearchTree currTree : compensatedSearchTrees) {
-      currTree.mergeEntriesInFront(fromTrace, toTrace, joinedPolyline, fromEntryNo, toEntryNo);
+    for (ShapeSearchTree currentTree : compensatedSearchTrees) {
+      currentTree.mergeEntriesInFront(fromTrace, toTrace, joinedPolyline, fromEntryNo, toEntryNo);
     }
   }
 
@@ -251,8 +251,8 @@ public class SearchTreeManager {
       Polyline joinedPolyline,
       int fromEntryNo,
       int toEntryNo) {
-    for (ShapeSearchTree currTree : compensatedSearchTrees) {
-      currTree.mergeEntriesAtEnd(fromTrace, toTrace, joinedPolyline, fromEntryNo, toEntryNo);
+    for (ShapeSearchTree currentTree : compensatedSearchTrees) {
+      currentTree.mergeEntriesAtEnd(fromTrace, toTrace, joinedPolyline, fromEntryNo, toEntryNo);
     }
   }
 
@@ -262,8 +262,8 @@ public class SearchTreeManager {
    */
   void changeEntries(
       PolylineTrace obj, Polyline newPolyline, int keepAtStartCount, int keepAtEndCount) {
-    for (ShapeSearchTree currTree : compensatedSearchTrees) {
-      currTree.changeEntries(obj, newPolyline, keepAtStartCount, keepAtEndCount);
+    for (ShapeSearchTree currentTree : compensatedSearchTrees) {
+      currentTree.changeEntries(obj, newPolyline, keepAtStartCount, keepAtEndCount);
     }
   }
 
@@ -274,9 +274,9 @@ public class SearchTreeManager {
    */
   void reuseEntriesAfterCutout(
       PolylineTrace fromTrace, PolylineTrace startPiece, PolylineTrace endPiece) {
-    for (ShapeSearchTree currTree : compensatedSearchTrees) {
+    for (ShapeSearchTree currentTree : compensatedSearchTrees) {
 
-      currTree.reuseEntriesAfterCutout(fromTrace, startPiece, endPiece);
+      currentTree.reuseEntriesAfterCutout(fromTrace, startPiece, endPiece);
     }
   }
 }
