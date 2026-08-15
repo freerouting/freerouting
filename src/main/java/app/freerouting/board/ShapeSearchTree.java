@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.locks.Lock;
 
 /**
  * Elementary geometric search functions making direct use of the MinAreaTree in the package
@@ -110,6 +111,17 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   void changeEntries(
       PolylineTrace obj, Polyline newPolyline, int keepAtStartCount, int keepAtEndCount) {
+    Lock lock = writeLock();
+    lock.lock();
+    try {
+      changeEntriesUnlocked(obj, newPolyline, keepAtStartCount, keepAtEndCount);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  private void changeEntriesUnlocked(
+      PolylineTrace obj, Polyline newPolyline, int keepAtStartCount, int keepAtEndCount) {
     // calculate the shapes of p_new_polyline from keepAtStartCount to
     // newShapeCount - keepAtEndCount - 1;
     int compensatedHalfWidth =
@@ -159,6 +171,21 @@ public class ShapeSearchTree extends MinAreaTree {
    * combine trace for performance reasons.
    */
   void mergeEntriesInFront(
+      PolylineTrace fromTrace,
+      PolylineTrace toTrace,
+      Polyline joinedPolyline,
+      int fromEntryNo,
+      int toEntryNo) {
+    Lock lock = writeLock();
+    lock.lock();
+    try {
+      mergeEntriesInFrontUnlocked(fromTrace, toTrace, joinedPolyline, fromEntryNo, toEntryNo);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  private void mergeEntriesInFrontUnlocked(
       PolylineTrace fromTrace,
       PolylineTrace toTrace,
       Polyline joinedPolyline,
@@ -238,6 +265,21 @@ public class ShapeSearchTree extends MinAreaTree {
       Polyline joinedPolyline,
       int fromEntryNo,
       int toEntryNo) {
+    Lock lock = writeLock();
+    lock.lock();
+    try {
+      mergeEntriesAtEndUnlocked(fromTrace, toTrace, joinedPolyline, fromEntryNo, toEntryNo);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  private void mergeEntriesAtEndUnlocked(
+      PolylineTrace fromTrace,
+      PolylineTrace toTrace,
+      Polyline joinedPolyline,
+      int fromEntryNo,
+      int toEntryNo) {
     boolean changeOrder = fromTrace.lastCorner().equals(toTrace.lastCorner());
     Leaf[] fromTraceEntries = fromTrace.getSearchTreeEntries(this);
     Leaf[] toTraceEntries = toTrace.getSearchTreeEntries(this);
@@ -306,6 +348,17 @@ public class ShapeSearchTree extends MinAreaTree {
    * reasons.
    */
   void reuseEntriesAfterCutout(
+      PolylineTrace fromTrace, PolylineTrace startPiece, PolylineTrace endPiece) {
+    Lock lock = writeLock();
+    lock.lock();
+    try {
+      reuseEntriesAfterCutoutUnlocked(fromTrace, startPiece, endPiece);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  private void reuseEntriesAfterCutoutUnlocked(
       PolylineTrace fromTrace, PolylineTrace startPiece, PolylineTrace endPiece) {
     Leaf[] startPieceLeafArr = new Leaf[startPiece.polyline().arr.length - 2];
     Leaf[] fromTraceEntries = fromTrace.getSearchTreeEntries(this);
@@ -379,6 +432,17 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   public void overlappingTreeEntries(
       ConvexShape shape, int layer, int[] ignoreNetNos, Collection<TreeEntry> treeEntries) {
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      overlappingTreeEntriesUnlocked(shape, layer, ignoreNetNos, treeEntries);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  private void overlappingTreeEntriesUnlocked(
+      ConvexShape shape, int layer, int[] ignoreNetNos, Collection<TreeEntry> treeEntries) {
     if (shape == null) {
       return;
     }
@@ -391,7 +455,7 @@ public class ShapeSearchTree extends MinAreaTree {
       FRLogger.warn("ShapeSearchTree.overlaps: p_shape not bounded");
       return;
     }
-    Collection<Leaf> tmpList = this.overlaps(bounds);
+    Collection<Leaf> tmpList = this.overlapsUnlocked(bounds);
     boolean is45Degree = shape instanceof IntOctagon;
 
     for (Leaf currentLeaf : tmpList) {
@@ -436,6 +500,38 @@ public class ShapeSearchTree extends MinAreaTree {
       int[] ignoreNetNos,
       int clType,
       Collection<TreeEntry> obstacleEntries) {
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      overlappingTreeEntriesWithClearanceUnlocked(
+          shape, layer, ignoreNetNos, clType, obstacleEntries);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  /**
+   * Returns all objects of class TreeEntry, which overlap with p_shape on layer p_layer inclusive
+   * clearance. p_clearance_class is the index in the clearance matrix, which describes the required
+   * clearance restrictions to other items. If p_layer {@literal <} 0, the layer is ignored.
+   */
+  public Collection<TreeEntry> overlappingTreeEntriesWithClearance(
+      ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClass) {
+    Collection<TreeEntry> result = new LinkedList<>();
+    if (this.isClearanceCompensationUsed()) {
+      this.overlappingTreeEntries(shape, layer, ignoreNetNos, result);
+    } else {
+      this.overlappingTreeEntriesWithClearance(shape, layer, ignoreNetNos, clearanceClass, result);
+    }
+    return result;
+  }
+
+  private void overlappingTreeEntriesWithClearanceUnlocked(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      int clType,
+      Collection<TreeEntry> obstacleEntries) {
     if (shape == null) {
       return;
     }
@@ -455,7 +551,7 @@ public class ShapeSearchTree extends MinAreaTree {
     // a factor less than sqr2 has evtl. be added because
     // enlarging is not symmetric.
     RegularTileShape offsetBounds = (RegularTileShape) bounds.offset(maxClearance);
-    Collection<Leaf> tmpList = overlaps(offsetBounds);
+    Collection<Leaf> tmpList = overlapsUnlocked(offsetBounds);
     // sort the found items by its clearances tp p_cl_type on layer p_layer
     Set<EntrySortedByClearance> sortedItems = new TreeSet<>();
 
@@ -494,22 +590,6 @@ public class ShapeSearchTree extends MinAreaTree {
         obstacleEntries.add(new TreeEntry(tmpEntry.leaf.object, tmpEntry.leaf.shapeIndexInObject));
       }
     }
-  }
-
-  /**
-   * Returns all objects of class TreeEntry, which overlap with p_shape on layer p_layer inclusive
-   * clearance. p_clearance_class is the index in the clearance matrix, which describes the required
-   * clearance restrictions to other items. If p_layer {@literal <} 0, the layer is ignored.
-   */
-  public Collection<TreeEntry> overlappingTreeEntriesWithClearance(
-      ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClass) {
-    Collection<TreeEntry> result = new LinkedList<>();
-    if (this.isClearanceCompensationUsed()) {
-      this.overlappingTreeEntries(shape, layer, ignoreNetNos, result);
-    } else {
-      this.overlappingTreeEntriesWithClearance(shape, layer, ignoreNetNos, clearanceClass, result);
-    }
-    return result;
   }
 
   /**
@@ -566,6 +646,20 @@ public class ShapeSearchTree extends MinAreaTree {
    * whose intersection with the shape of p_room is contained in p_ignore_shape, are ignored.
    */
   public Collection<IncompleteFreeSpaceExpansionRoom> completeShape(
+      IncompleteFreeSpaceExpansionRoom room,
+      int netNo,
+      SearchTreeObject ignoreObject,
+      TileShape ignoreShape) {
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      return completeShapeUnlocked(room, netNo, ignoreObject, ignoreShape);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  private Collection<IncompleteFreeSpaceExpansionRoom> completeShapeUnlocked(
       IncompleteFreeSpaceExpansionRoom room,
       int netNo,
       SearchTreeObject ignoreObject,
@@ -802,6 +896,16 @@ public class ShapeSearchTree extends MinAreaTree {
    * find a connection for a different net.
    */
   public void reduceTraceShapeAtTiePin(Pin tiePin, PolylineTrace trace) {
+    Lock lock = writeLock();
+    lock.lock();
+    try {
+      reduceTraceShapeAtTiePinUnlocked(tiePin, trace);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  private void reduceTraceShapeAtTiePinUnlocked(Pin tiePin, PolylineTrace trace) {
     TileShape pinShape = tiePin.getTreeShapeOnLayer(this, trace.getLayer());
     FloatPoint compareCorner;
     int traceShapeNo;
@@ -837,6 +941,16 @@ public class ShapeSearchTree extends MinAreaTree {
    * the tree.
    */
   void changeItemShape(Item item, int shapeNo, TileShape newShape) {
+    Lock lock = writeLock();
+    lock.lock();
+    try {
+      changeItemShapeUnlocked(item, shapeNo, newShape);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  private void changeItemShapeUnlocked(Item item, int shapeNo, TileShape newShape) {
     Leaf[] oldEntries = item.getSearchTreeEntries(this);
     Leaf[] newLeafArr = new Leaf[oldEntries.length];
     TileShape[] newPrecalculatedTreeShapes = new TileShape[oldEntries.length];
@@ -1102,15 +1216,24 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   boolean validateEntries(Item item) {
-    Leaf[] currTreeEntries = item.getSearchTreeEntries(this);
-    for (int i = 0; i < currTreeEntries.length; i++) {
-      Leaf currLeaf = currTreeEntries[i];
-      if (currLeaf.shapeIndexInObject != i) {
-        FRLogger.warn("tree entry inconsistent for Item");
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      Leaf[] currTreeEntries = item.getSearchTreeEntries(this);
+      if (currTreeEntries == null) {
         return false;
       }
+      for (int i = 0; i < currTreeEntries.length; i++) {
+        Leaf currLeaf = currTreeEntries[i];
+        if (currLeaf == null || currLeaf.shapeIndexInObject != i) {
+          FRLogger.warn("tree entry inconsistent for Item");
+          return false;
+        }
+      }
+      return true;
+    } finally {
+      lock.unlock();
     }
-    return true;
   }
 
   /** Created for sorting Items according to their clearance to p_cl_type on layer p_layer. */
