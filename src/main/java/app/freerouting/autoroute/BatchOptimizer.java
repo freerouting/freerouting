@@ -307,10 +307,11 @@ public class BatchOptimizer extends NamedAlgorithm {
         routeImproved =
             (float)
                 (boardStatisticsBefore.items.viaCount != 0
-                        && boardStatisticsBefore.traces.totalLength != 0
+                        && boardStatisticsBefore.traces.totalWeightedLength != 0
                     ? 1.0
                         - ((((float) result.viaCount() / boardStatisticsBefore.items.viaCount)
-                                + (result.traceLength() / boardStatisticsBefore.traces.totalLength))
+                                + (result.traceLength()
+                                    / boardStatisticsBefore.traces.totalWeightedLength))
                             / 2)
                     : 0);
       } else {
@@ -455,7 +456,7 @@ public class BatchOptimizer extends NamedAlgorithm {
             boardStatisticsBefore.items.viaCount,
             boardStatisticsAfter.items.viaCount,
             this.minCumulativeTraceLength,
-            boardStatisticsAfter.traces.totalLength,
+            boardStatisticsAfter.traces.totalWeightedLength,
             routerCountersBefore.incompleteCount,
             routerCountersAfter.incompleteCount);
     boolean routeImproved = !this.thread.isStopRequested() && result.improved();
