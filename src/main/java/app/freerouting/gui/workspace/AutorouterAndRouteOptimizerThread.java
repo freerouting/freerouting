@@ -724,13 +724,13 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
           String optMessage = tm.getText("batch_optimizer_start_message");
           sessionPort.publishProgress(RouteProgress.status(generation, optMessage));
           this.batchOptimizer.runBatchLoop();
-          String currMessage;
+          String currentMessage;
           if (this.isStopRequested()) {
-            currMessage = tm.getText("interrupted");
+            currentMessage = tm.getText("interrupted");
           } else {
-            currMessage = tm.getText("completed");
+            currentMessage = tm.getText("completed");
           }
-          String endMessage = tm.getText("optimization_end_message", currMessage);
+          String endMessage = tm.getText("optimization_end_message", currentMessage);
           sessionPort.publishProgress(RouteProgress.status(generation, endMessage));
         }
 
@@ -896,16 +896,16 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
   public void draw(Graphics graphics) {
     // Cast to access get_air_line() which exists on both BatchAutorouter and
     // BatchAutorouterV19
-    FloatLine currAirLine = null;
+    FloatLine currentAirLine = null;
     if (batchAutorouter instanceof BatchAutorouter) {
-      currAirLine = ((BatchAutorouter) batchAutorouter).getAirLine();
+      currentAirLine = ((BatchAutorouter) batchAutorouter).getAirLine();
     } else if (batchAutorouter instanceof BatchAutorouterV19) {
-      currAirLine = ((BatchAutorouterV19) batchAutorouter).getAirLine();
+      currentAirLine = ((BatchAutorouterV19) batchAutorouter).getAirLine();
     }
-    if (currAirLine != null) {
+    if (currentAirLine != null) {
       FloatPoint[] drawLine = new FloatPoint[2];
-      drawLine[0] = currAirLine.a;
-      drawLine[1] = currAirLine.b;
+      drawLine[0] = currentAirLine.a;
+      drawLine[1] = currentAirLine.b;
       // draw the incomplete
       Color drawColor = this.sessionPort.graphicsContext().getIncompleteColor();
       double drawWidth =

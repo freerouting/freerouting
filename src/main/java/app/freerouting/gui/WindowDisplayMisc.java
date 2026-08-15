@@ -251,12 +251,12 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     appearanceMiscHorizontalMirrorCheckbox.setSelected(
         panel.boardHandling.graphicsContext.coordinateTransform.isMirrorTopBottom());
 
-    int currSliderValue =
+    int currentSliderValue =
         (int)
             Math.round(
                 MAX_SLIDER_VALUE
                     * (1 - panel.boardHandling.graphicsContext.getAutoLayerDimFactor()));
-    autoLayerDimSlider.setValue(currSliderValue);
+    autoLayerDimSlider.setValue(currentSliderValue);
   }
 
   private class SmallCursorListener implements ActionListener {

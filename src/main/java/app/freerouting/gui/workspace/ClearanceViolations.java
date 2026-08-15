@@ -34,13 +34,13 @@ public class ClearanceViolations {
   /** Draws each clearance violation using the supplied graphics context. */
   public void draw(Graphics graphics, GraphicsContext graphicsContext) {
     Color drawColor = graphicsContext.getViolationsColor();
-    for (ClearanceViolation currViolation : list) {
-      double intensity = graphicsContext.getLayerVisibility(currViolation.layer);
-      graphicsContext.fillArea(currViolation.shape, graphics, drawColor, intensity);
+    for (ClearanceViolation currentViolation : list) {
+      double intensity = graphicsContext.getLayerVisibility(currentViolation.layer);
+      graphicsContext.fillArea(currentViolation.shape, graphics, drawColor, intensity);
       // draw a circle around the violation.
-      double drawRadius = currViolation.firstItem.board.rules.getMinTraceHalfWidth() * 5;
+      double drawRadius = currentViolation.firstItem.board.rules.getMinTraceHalfWidth() * 5;
       graphicsContext.drawCircle(
-          currViolation.shape.centreOfGravity(),
+          currentViolation.shape.centreOfGravity(),
           drawRadius,
           0.1 * drawRadius,
           drawColor,

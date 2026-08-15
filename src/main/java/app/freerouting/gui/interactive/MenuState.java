@@ -67,25 +67,26 @@ public class MenuState extends InteractiveState {
   /** Action to be taken when a key shortcut is pressed. */
   @Override
   public InteractiveState keyTyped(char keyChar) {
-    InteractiveState currReturnState = this;
+    InteractiveState currentReturnState = this;
     switch (keyChar) {
       case 'b' -> hdlg.redo();
-      case 'd' -> currReturnState = DragMenuState.getInstance(hdlg);
+      case 'd' -> currentReturnState = DragMenuState.getInstance(hdlg);
       case 'e' ->
-          currReturnState = ExpandTestState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
+          currentReturnState =
+              ExpandTestState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
       case 'g' -> hdlg.toggleRatsnest();
-      case 'i' -> currReturnState = this.selectItems(hdlg.getCurrentMousePosition());
+      case 'i' -> currentReturnState = this.selectItems(hdlg.getCurrentMousePosition());
       case 'p' -> {
         hdlg.getWorkspaceSettings().setPushEnabled(!hdlg.getWorkspaceSettings().getPushEnabled());
         hdlg.getPanel().boardFrame.refreshWindows();
       }
-      case 'r' -> currReturnState = RouteMenuState.getInstance(hdlg);
-      case 's' -> currReturnState = InspectMenuState.getInstance(hdlg);
+      case 'r' -> currentReturnState = RouteMenuState.getInstance(hdlg);
+      case 's' -> currentReturnState = InspectMenuState.getInstance(hdlg);
       case 't' ->
-          currReturnState = RouteState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
+          currentReturnState = RouteState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
       case 'u' -> hdlg.undo();
       case 'v' -> hdlg.toggleClearanceViolations();
-      case 'w' -> currReturnState = swapPins(hdlg.getCurrentMousePosition());
+      case 'w' -> currentReturnState = swapPins(hdlg.getCurrentMousePosition());
       case '+' -> {
         // increase the current layer to the next signal layer
         LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
@@ -111,9 +112,9 @@ public class MenuState extends InteractiveState {
           hdlg.setCurrentLayer(currentLayerNo);
         }
       }
-      default -> currReturnState = super.keyTyped(keyChar);
+      default -> currentReturnState = super.keyTyped(keyChar);
     }
-    return currReturnState;
+    return currentReturnState;
   }
 
   /** Do nothing on complete. */

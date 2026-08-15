@@ -45,18 +45,18 @@ public class WindowComponents extends WindowObjectListWithFilter {
     RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
     Set<Item> selectedItems = new TreeSet<>();
     Collection<Item> boardItems = routingBoard.getItems();
-    for (Item currItem : boardItems) {
-      if (currItem.getComponentNo() > 0) {
-        Component currComponent = routingBoard.components.get(currItem.getComponentNo());
+    for (Item currentItem : boardItems) {
+      if (currentItem.getComponentNo() > 0) {
+        Component currentComponent = routingBoard.components.get(currentItem.getComponentNo());
         boolean componentMatches = false;
         for (int i = 0; i < selectedComponents.size(); i++) {
-          if (currComponent == selectedComponents.get(i)) {
+          if (currentComponent == selectedComponents.get(i)) {
             componentMatches = true;
             break;
           }
         }
         if (componentMatches) {
-          selectedItems.add(currItem);
+          selectedItems.add(currentItem);
         }
       }
     }

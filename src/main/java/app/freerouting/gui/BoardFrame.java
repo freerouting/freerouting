@@ -1409,11 +1409,11 @@ public class BoardFrame extends WindowBase {
   Point absolutePanelLocation() {
     int x = this.scrollPane.getX();
     int y = this.scrollPane.getY();
-    Container currParent = this.scrollPane.getParent();
-    while (currParent != null) {
-      x += currParent.getX();
-      y += currParent.getY();
-      currParent = currParent.getParent();
+    Container currentParent = this.scrollPane.getParent();
+    while (currentParent != null) {
+      x += currentParent.getX();
+      y += currentParent.getY();
+      currentParent = currentParent.getParent();
     }
     return new Point(x, y);
   }
@@ -1444,9 +1444,9 @@ public class BoardFrame extends WindowBase {
         this.permanentSubwindows[i] = null;
       }
     }
-    for (BoardTemporarySubWindow currSubwindow : this.temporarySubwindows) {
-      if (currSubwindow != null) {
-        currSubwindow.boardFrameDisposed();
+    for (BoardTemporarySubWindow currentSubwindow : this.temporarySubwindows) {
+      if (currentSubwindow != null) {
+        currentSubwindow.boardFrameDisposed();
       }
     }
     if (boardPanel.boardHandling != null) {
@@ -1846,9 +1846,9 @@ public class BoardFrame extends WindowBase {
           permanentSubwindows[i].parentIconified();
         }
       }
-      for (BoardSubWindow currSubwindow : temporarySubwindows) {
-        if (currSubwindow != null) {
-          currSubwindow.parentIconified();
+      for (BoardSubWindow currentSubwindow : temporarySubwindows) {
+        if (currentSubwindow != null) {
+          currentSubwindow.parentIconified();
         }
       }
     }
@@ -1860,9 +1860,9 @@ public class BoardFrame extends WindowBase {
           permanentSubwindow.parentDeiconified();
         }
       }
-      for (BoardSubWindow currSubwindow : temporarySubwindows) {
-        if (currSubwindow != null) {
-          currSubwindow.parentDeiconified();
+      for (BoardSubWindow currentSubwindow : temporarySubwindows) {
+        if (currentSubwindow != null) {
+          currentSubwindow.parentDeiconified();
         }
       }
     }

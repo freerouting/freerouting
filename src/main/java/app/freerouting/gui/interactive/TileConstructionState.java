@@ -100,10 +100,10 @@ public final class TileConstructionState extends CornerItemConstructionState {
       return;
     }
     IntPoint lastCorner = cornerArr[newLength - 1];
-    IntPoint currCorner = cornerArr[newLength - 2];
+    IntPoint currentCorner = cornerArr[newLength - 2];
     while (newLength > 2) {
       IntPoint prevCorner = cornerArr[newLength - 3];
-      Side lastCornerSide = lastCorner.sideOf(prevCorner, currCorner);
+      Side lastCornerSide = lastCorner.sideOf(prevCorner, currentCorner);
       if (lastCornerSide == Side.ON_THE_LEFT) {
         // side is ok, nothing to skip
         break;
@@ -130,7 +130,7 @@ public final class TileConstructionState extends CornerItemConstructionState {
           cornerArr[newLength - 2] = new IntPoint(lastCorner.x, prevCorner.y);
         }
       }
-      currCorner = prevCorner;
+      currentCorner = prevCorner;
     }
     if (newLength < cornerArr.length) {
       // something skipped, update cornerList

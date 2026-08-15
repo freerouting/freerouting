@@ -100,8 +100,8 @@ public class WindowManualRules extends BoardSavableSubWindow {
     numberFormat.setMaximumFractionDigits(7);
     this.traceWidthField = new JFormattedTextField(numberFormat);
     this.traceWidthField.setColumns(7);
-    int currHalfWidth = this.boardHandling.getWorkspaceSettings().getManualTraceHalfWidth(0);
-    this.setTraceWidthField(currHalfWidth);
+    int currentHalfWidth = this.boardHandling.getWorkspaceSettings().getManualTraceHalfWidth(0);
+    this.setTraceWidthField(currentHalfWidth);
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(traceWidthField, gridbagConstraints);
     mainPanel.add(traceWidthField);
@@ -173,7 +173,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
 
   /** Sets the selected layer to p_layer. */
   private void setSelectedLayer(ComboBoxLayer.Layer layer) {
-    int currHalfWidth;
+    int currentHalfWidth;
     if (layer.index == ComboBoxLayer.ALL_LAYER_INDEX) {
       // check if the half width is layer_dependent.
       boolean traceWidthsLayerDependent = false;
@@ -186,9 +186,9 @@ public class WindowManualRules extends BoardSavableSubWindow {
         }
       }
       if (traceWidthsLayerDependent) {
-        currHalfWidth = -1;
+        currentHalfWidth = -1;
       } else {
-        currHalfWidth = firstHalfWidth;
+        currentHalfWidth = firstHalfWidth;
       }
     } else if (layer.index == ComboBoxLayer.INNER_LAYER_INDEX) {
       // check if the half width is layer_dependent on the inner layers.
@@ -202,15 +202,15 @@ public class WindowManualRules extends BoardSavableSubWindow {
         }
       }
       if (traceWidthsLayerDependent) {
-        currHalfWidth = -1;
+        currentHalfWidth = -1;
       } else {
-        currHalfWidth = firstHalfWidth;
+        currentHalfWidth = firstHalfWidth;
       }
     } else {
-      currHalfWidth =
+      currentHalfWidth =
           this.boardHandling.getWorkspaceSettings().getManualTraceHalfWidth(layer.index);
     }
-    setTraceWidthField(currHalfWidth);
+    setTraceWidthField(currentHalfWidth);
   }
 
   private class LayerComboBoxListener implements ActionListener {

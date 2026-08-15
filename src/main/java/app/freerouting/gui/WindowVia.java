@@ -163,8 +163,8 @@ public class WindowVia extends BoardSavableSubWindow {
 
     // fill the list
     BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
-    for (ViaRule currRule : boardRules.viaRules) {
-      this.ruleListModel.addElement(currRule);
+    for (ViaRule currentRule : boardRules.viaRules) {
+      this.ruleListModel.addElement(currentRule);
     }
 
     // Add buttons to edit the via rules.
@@ -218,17 +218,17 @@ public class WindowVia extends BoardSavableSubWindow {
     // reinsert the elements in the rule list
     this.ruleListModel.removeAllElements();
     BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
-    for (ViaRule currRule : boardRules.viaRules) {
-      this.ruleListModel.addElement(currRule);
+    for (ViaRule currentRule : boardRules.viaRules) {
+      this.ruleListModel.addElement(currentRule);
     }
 
     // Dispose all subwindows because they may be no longer up-to-date.
     Iterator<JFrame> it = this.subwindows.iterator();
     while (it.hasNext()) {
-      JFrame currSubwindow = it.next();
-      if (currSubwindow != null) {
+      JFrame currentSubwindow = it.next();
+      if (currentSubwindow != null) {
 
-        currSubwindow.dispose();
+        currentSubwindow.dispose();
       }
       it.remove();
     }
@@ -236,9 +236,9 @@ public class WindowVia extends BoardSavableSubWindow {
 
   @Override
   public void dispose() {
-    for (JFrame currSubwindow : this.subwindows) {
-      if (currSubwindow != null) {
-        currSubwindow.dispose();
+    for (JFrame currentSubwindow : this.subwindows) {
+      if (currentSubwindow != null) {
+        currentSubwindow.dispose();
       }
     }
     if (boardFrame.editViasWindow != null) {

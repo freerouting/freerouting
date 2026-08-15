@@ -768,14 +768,14 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
     if (edgeToTurnDist != board.rules.getPinEdgeToTurnDist()) {
       // unfix the pin exit stubs
       Collection<Pin> pinList = board.getPins();
-      for (Pin currPin : pinList) {
-        if (currPin.hasTraceExitRestrictions()) {
-          Collection<Item> contactList = currPin.getNormalContacts();
-          for (Item currContact : contactList) {
-            if ((currContact instanceof PolylineTrace trace)
-                && currContact.getFixedState() == FixedState.SHOVE_FIXED) {
+      for (Pin currentPin : pinList) {
+        if (currentPin.hasTraceExitRestrictions()) {
+          Collection<Item> contactList = currentPin.getNormalContacts();
+          for (Item currentContact : contactList) {
+            if ((currentContact instanceof PolylineTrace trace)
+                && currentContact.getFixedState() == FixedState.SHOVE_FIXED) {
               if (trace.cornerCount() == 2) {
-                currContact.setFixedState(FixedState.UNFIXED);
+                currentContact.setFixedState(FixedState.UNFIXED);
               }
             }
           }
@@ -879,11 +879,11 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
     if (currentNet == null) {
       return true;
     }
-    NetClass currNetClass = currentNet.getNetClass();
-    if (currNetClass == null) {
+    NetClass currentNetClass = currentNet.getNetClass();
+    if (currentNetClass == null) {
       return true;
     }
-    return currNetClass.isActiveRoutingLayer(layer);
+    return currentNetClass.isActiveRoutingLayer(layer);
   }
 
   /**
@@ -1066,12 +1066,12 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #setCurrentLayer(int)
    */
   public void setLayer(int layerNo) {
-    Layer currLayer = board.layerStructure.arr[layerNo];
-    screenMessages.setLayer(currLayer.name);
+    Layer currentLayer = board.layerStructure.arr[layerNo];
+    screenMessages.setLayer(currentLayer.name);
     workspaceSettings.setLayer(layerNo);
 
     // Change the selected layer in the select parameter window.
-    if ((!this.boardIsReadOnly) && (currLayer.isSignal)) {
+    if ((!this.boardIsReadOnly) && (currentLayer.isSignal)) {
       this.panel.setSelectedSignalLayer(layerNo);
     }
 
@@ -1104,8 +1104,8 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    */
   public void displayLayerMessage() {
     screenMessages.clearAddField();
-    Layer currLayer = board.layerStructure.arr[this.workspaceSettings.getLayer()];
-    screenMessages.setLayer(currLayer.name);
+    Layer currentLayer = board.layerStructure.arr[this.workspaceSettings.getLayer()];
+    screenMessages.setLayer(currentLayer.name);
   }
 
   /**
@@ -1208,8 +1208,8 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
     if (clearanceViolations == null) {
       clearanceViolations = new ClearanceViolations(this.board.getItems());
       Integer violationCount = (clearanceViolations.list.size() + 1) / 2;
-      String currMessage = violationCount + " " + tm.getText("clearance_violations_found");
-      screenMessages.setStatusMessage(currMessage);
+      String currentMessage = violationCount + " " + tm.getText("clearance_violations_found");
+      screenMessages.setStatusMessage(currentMessage);
     } else {
       clearanceViolations = null;
       screenMessages.setStatusMessage("");
@@ -1259,18 +1259,18 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
     }
     Integer incompleteCount = ratsnest.incompleteCount();
     int lengthViolationCount = ratsnest.lengthViolationCount();
-    String currMessage;
+    String currentMessage;
     if (lengthViolationCount == 0) {
-      currMessage =
+      currentMessage =
           tm.getText("ratsnest_status_incomplete_only", Integer.toString(incompleteCount));
     } else {
-      currMessage =
+      currentMessage =
           tm.getText(
               "ratsnest_status_with_length_violations",
               Integer.toString(incompleteCount),
               Integer.toString(lengthViolationCount));
     }
-    screenMessages.setStatusMessage(currMessage);
+    screenMessages.setStatusMessage(currentMessage);
   }
 
   /**
@@ -3165,10 +3165,10 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
   public void adjustDesignBounds() {
     IntBox newBoundingBox = this.board.getBoundingBox();
     Collection<Item> boardItems = this.board.getItems();
-    for (Item currItem : boardItems) {
-      IntBox currBoundingBox = currItem.boundingBox();
-      if (currBoundingBox.ur.x < Integer.MAX_VALUE) {
-        newBoundingBox = newBoundingBox.union(currBoundingBox);
+    for (Item currentItem : boardItems) {
+      IntBox currentBoundingBox = currentItem.boundingBox();
+      if (currentBoundingBox.ur.x < Integer.MAX_VALUE) {
+        newBoundingBox = newBoundingBox.union(currentBoundingBox);
       }
     }
     this.graphicsContext.changeDesignBounds(newBoundingBox);

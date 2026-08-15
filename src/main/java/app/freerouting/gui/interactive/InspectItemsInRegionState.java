@@ -66,10 +66,10 @@ public final class InspectItemsInRegionState extends SelectRegionState {
     if (hdlg.getWorkspaceSettings().getSelectOnAllVisibleLayers()) {
       // remove items, which are not visible
       Set<Item> visibleItems = new TreeSet<>();
-      for (Item currItem : foundItems) {
-        for (int i = currItem.firstLayer(); i <= currItem.lastLayer(); i++) {
+      for (Item currentItem : foundItems) {
+        for (int i = currentItem.firstLayer(); i <= currentItem.lastLayer(); i++) {
           if (hdlg.graphicsContext.getLayerVisibility(i) > 0) {
-            visibleItems.add(currItem);
+            visibleItems.add(currentItem);
             break;
           }
         }

@@ -30,16 +30,16 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     Nets netList = this.boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.nets;
     SortedSet<LengthViolation> lengthViolations = new TreeSet<>();
     for (int netIndex = 1; netIndex <= netList.maxNetNo(); netIndex++) {
-      double currViolationLength = ratsnest.getLengthViolation(netIndex);
-      if (currViolationLength != 0) {
-        LengthViolation currLengthViolation =
-            new LengthViolation(netList.get(netIndex), currViolationLength);
-        lengthViolations.add(currLengthViolation);
+      double currentViolationLength = ratsnest.getLengthViolation(netIndex);
+      if (currentViolationLength != 0) {
+        LengthViolation currentLengthViolation =
+            new LengthViolation(netList.get(netIndex), currentViolationLength);
+        lengthViolations.add(currentLengthViolation);
       }
     }
 
-    for (LengthViolation currViolation : lengthViolations) {
-      this.addToList(currViolation);
+    for (LengthViolation currentViolation : lengthViolations) {
+      this.addToList(currentViolation);
     }
     this.list.setVisibleRowCount(Math.min(lengthViolations.size(), DEFAULT_TABLE_SIZE));
   }
@@ -52,8 +52,8 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     }
     Set<Item> selectedItems = new TreeSet<>();
     for (int i = 0; i < selectedViolations.size(); i++) {
-      LengthViolation currViolation = (LengthViolation) selectedViolations.get(i);
-      selectedItems.addAll(currViolation.net.getItems());
+      LengthViolation currentViolation = (LengthViolation) selectedViolations.get(i);
+      selectedItems.addAll(currentViolation.net.getItems());
     }
     GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
     boardHandling.selectItems(selectedItems);

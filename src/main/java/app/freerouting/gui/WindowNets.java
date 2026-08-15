@@ -83,11 +83,11 @@ public class WindowNets extends WindowObjectListWithFilter {
     infoScrollPane.setPreferredSize(new Dimension(150, 80));
     this.centerPanel.add(infoScrollPane, BorderLayout.SOUTH);
 
-    JPanel currButtonPanel = new JPanel();
-    this.southPanel.add(currButtonPanel, BorderLayout.NORTH);
+    JPanel currentButtonPanel = new JPanel();
+    this.southPanel.add(currentButtonPanel, BorderLayout.NORTH);
 
     final JButton rulesNetsAssignClassButton = new JButton(tm.getText("assign_class"));
-    currButtonPanel.add(rulesNetsAssignClassButton);
+    currentButtonPanel.add(rulesNetsAssignClassButton);
     rulesNetsAssignClassButton.setToolTipText(tm.getText("assign_class_tooltip"));
     rulesNetsAssignClassButton.addActionListener(new AssignClassListener());
     rulesNetsAssignClassButton.addActionListener(
@@ -230,16 +230,16 @@ public class WindowNets extends WindowObjectListWithFilter {
     RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
     Set<Item> selectedItems = new TreeSet<>();
     Collection<Item> boardItems = routingBoard.getItems();
-    for (Item currItem : boardItems) {
+    for (Item currentItem : boardItems) {
       boolean itemMatches = false;
-      for (int currNetNo : selectedNetNumbers) {
-        if (currItem.containsNet(currNetNo)) {
+      for (int currentNetNo : selectedNetNumbers) {
+        if (currentItem.containsNet(currentNetNo)) {
           itemMatches = true;
           break;
         }
       }
       if (itemMatches) {
-        selectedItems.add(currItem);
+        selectedItems.add(currentItem);
       }
     }
     boardFrame.boardPanel.boardHandling.selectItems(selectedItems);

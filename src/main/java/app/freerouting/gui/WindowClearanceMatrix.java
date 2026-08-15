@@ -378,8 +378,8 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
         return;
       }
       Number numberValue = parsedValue;
-      int currRow = row;
-      int currColumn = col - 1;
+      int currentRow = row;
+      int currentColumn = col - 1;
 
       // check, if there are items on the board assigned to clearance class i or j.
 
@@ -389,15 +389,15 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
       boolean itemsAlreadyAssignedColumn = false;
       Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
       for (; ; ) {
-        Item currItem = (Item) itemList.readObject(it);
-        if (currItem == null) {
+        Item currentItem = (Item) itemList.readObject(it);
+        if (currentItem == null) {
           break;
         }
-        int currItemClassNo = currItem.clearanceClassNo();
-        if (currItemClassNo == currRow) {
+        int currentItemClassNo = currentItem.clearanceClassNo();
+        if (currentItemClassNo == currentRow) {
           itemsAlreadyAssignedRow = true;
         }
-        if (currItemClassNo == currColumn) {
+        if (currentItemClassNo == currentColumn) {
           itemsAlreadyAssignedColumn = true;
         }
       }
@@ -405,16 +405,16 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
       boolean itemsAlreadyAssigned = itemsAlreadyAssignedRow && itemsAlreadyAssignedColumn;
       if (itemsAlreadyAssigned) {
         String message;
-        if (currRow == currColumn) {
+        if (currentRow == currentColumn) {
           message =
               tm.getText(
-                  "clearance_class_already_assigned_single", clearanceMatrix.getName(currRow));
+                  "clearance_class_already_assigned_single", clearanceMatrix.getName(currentRow));
         } else {
           message =
               tm.getText(
                   "clearance_class_already_assigned_pair",
-                  clearanceMatrix.getName(currRow),
-                  clearanceMatrix.getName(currColumn));
+                  clearanceMatrix.getName(currentRow),
+                  clearanceMatrix.getName(currentColumn));
         }
         int clearanceClassAlreadyAssignedDialog =
             JOptionPane.showConfirmDialog(
@@ -433,7 +433,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
           (int)
               Math.round(boardHandling.coordinateTransform.userToBoard(numberValue.doubleValue()));
       int layerNo = rulesClearanceLayerComboBox.getSelectedLayer().index;
-      applyClearanceValue(clearanceMatrix, currRow, currColumn, layerNo, boardValue);
+      applyClearanceValue(clearanceMatrix, currentRow, currentColumn, layerNo, boardValue);
       if (itemsAlreadyAssigned) {
         // force reinserting all item into the searck tree, because their tree shapes may have
         // changed
@@ -470,11 +470,11 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
             if (clearanceMatrix.isLayerDependent(i, j)) {
               this.data[i][j + 1] = -1;
             } else {
-              float currTableValue =
+              float currentTableValue =
                   (float)
                       boardHandling.coordinateTransform.boardToUser(
                           clearanceMatrix.getValue(i, j, 0, false));
-              this.data[i][j + 1] = currTableValue;
+              this.data[i][j + 1] = currentTableValue;
             }
           } else if (layer == ComboBoxLayer.INNER_LAYER_INDEX) {
             // all layers
@@ -482,18 +482,18 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
             if (clearanceMatrix.isInnerLayerDependent(i, j)) {
               this.data[i][j + 1] = -1;
             } else {
-              float currTableValue =
+              float currentTableValue =
                   (float)
                       boardHandling.coordinateTransform.boardToUser(
                           clearanceMatrix.getValue(i, j, 1, false));
-              this.data[i][j + 1] = currTableValue;
+              this.data[i][j + 1] = currentTableValue;
             }
           } else {
-            float currTableValue =
+            float currentTableValue =
                 (float)
                     boardHandling.coordinateTransform.boardToUser(
                         clearanceMatrix.getValue(i, j, layer, false));
-            this.data[i][j + 1] = currTableValue;
+            this.data[i][j + 1] = currentTableValue;
           }
         }
       }

@@ -235,18 +235,18 @@ public class RouteState extends InteractiveState {
       netNumberList.add(pin.getNetNo(i));
     }
     Set<Item> contacts = pin.getNormalContacts();
-    for (Item currContact : contacts) {
-      if (currContact.firstLayer() <= layer && currContact.lastLayer() >= layer) {
-        for (int i = 0; i < currContact.netCount(); i++) {
-          netNumberList.remove(currContact.getNetNo(i));
+    for (Item currentContact : contacts) {
+      if (currentContact.firstLayer() <= layer && currentContact.lastLayer() >= layer) {
+        for (int i = 0; i < currentContact.netCount(); i++) {
+          netNumberList.remove(currentContact.getNetNo(i));
         }
       }
     }
     int[] result = new int[netNumberList.size()];
-    int currInd = 0;
-    for (Integer currNetNumber : netNumberList) {
-      result[currInd] = currNetNumber;
-      ++currInd;
+    int currentInd = 0;
+    for (Integer currentNetNumber : netNumberList) {
+      result[currentInd] = currentNetNumber;
+      ++currentInd;
     }
     return result;
   }
@@ -254,7 +254,7 @@ public class RouteState extends InteractiveState {
   /** Action to be taken when a key is pressed (Shortcut). */
   @Override
   public InteractiveState keyTyped(char keyChar) {
-    InteractiveState currReturnState = this;
+    InteractiveState currentReturnState = this;
     if (Character.isDigit(keyChar)) {
       // Change to the signal layer selected by the numeric key.
       LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
@@ -291,9 +291,9 @@ public class RouteState extends InteractiveState {
       }
 
     } else {
-      currReturnState = super.keyTyped(keyChar);
+      currentReturnState = super.keyTyped(keyChar);
     }
-    return currReturnState;
+    return currentReturnState;
   }
 
   /**
@@ -315,8 +315,8 @@ public class RouteState extends InteractiveState {
     if (routeCompleted) {
       result = this.returnState;
       hdlg.screenMessages.clear();
-      for (int currNetNo : this.route.netNoArr) {
-        hdlg.updateRatsnest(currNetNo);
+      for (int currentNetNo : this.route.netNoArr) {
+        hdlg.updateRatsnest(currentNetNo);
       }
     } else {
       result = this;
@@ -349,8 +349,8 @@ public class RouteState extends InteractiveState {
       this.observersActivated = false;
     }
     hdlg.screenMessages.clear();
-    for (int currNetNo : this.route.netNoArr) {
-      hdlg.updateRatsnest(currNetNo);
+    for (int currentNetNo : this.route.netNoArr) {
+      hdlg.updateRatsnest(currentNetNo);
     }
     return this.returnState;
   }
@@ -374,9 +374,9 @@ public class RouteState extends InteractiveState {
         Collection<Item> pickedItems =
             hdlg.getRoutingBoard().pickItems(route.getLastCorner(), oldLayer, selectionFilter);
         Via newVia = null;
-        for (Item currVia : pickedItems) {
-          if (currVia.sharesNetNo(route.netNoArr)) {
-            newVia = (Via) currVia;
+        for (Item currentVia : pickedItems) {
+          if (currentVia.sharesNetNo(route.netNoArr)) {
+            newVia = (Via) currentVia;
             break;
           }
         }
@@ -391,9 +391,9 @@ public class RouteState extends InteractiveState {
             toLayer = oldLayer - 1;
           }
           Collection<Item> contacts = newVia.getNormalContacts();
-          for (Item currItem : contacts) {
-            if (currItem instanceof ConductionArea currArea) {
-              if (currArea.getLayer() >= fromLayer && currArea.getLayer() <= toLayer) {
+          for (Item currentItem : contacts) {
+            if (currentItem instanceof ConductionArea currentArea) {
+              if (currentArea.getLayer() >= fromLayer && currentArea.getLayer() <= toLayer) {
                 connectedToPlane = true;
                 break;
               }
@@ -403,8 +403,8 @@ public class RouteState extends InteractiveState {
 
         if (connectedToPlane) {
           hdlg.setEditorState(this.returnState);
-          for (int currNetNo : this.route.netNoArr) {
-            hdlg.updateRatsnest(currNetNo);
+          for (int currentNetNo : this.route.netNoArr) {
+            hdlg.updateRatsnest(currentNetNo);
           }
         } else {
           hdlg.setLayer(newLayer);

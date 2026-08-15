@@ -50,9 +50,9 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
 
     this.add(popupCancelMenuitem, 2);
 
-    Layer currLayer =
+    Layer currentLayer =
         layerStructure.arr[boardPanel.boardHandling.getWorkspaceSettings().getLayer()];
-    disableLayerItem(layerStructure.getSignalLayerNo(currLayer));
+    disableLayerItem(layerStructure.getSignalLayerNo(currentLayer));
   }
 
   /** Disables the p_no-th item in the changeLayerMenu. */

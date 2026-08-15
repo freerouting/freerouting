@@ -45,8 +45,8 @@ public class CornerItemConstructionState extends InteractiveState {
   @Override
   public InteractiveState mouseMoved() {
     super.mouseMoved();
-    IntPoint currMousePos = hdlg.getCurrentMousePosition().round();
-    this.snappedMousePosition = this.snap(currMousePos).toFloat();
+    IntPoint currentMousePos = hdlg.getCurrentMousePosition().round();
+    this.snappedMousePosition = this.snap(currentMousePos).toFloat();
     hdlg.repaint();
     return this;
   }

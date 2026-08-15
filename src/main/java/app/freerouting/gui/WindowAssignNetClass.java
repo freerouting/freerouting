@@ -163,7 +163,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
 
     @Override
     public void setValueAt(Object value, int row, int col) {
-      if (col != 1 || !(value instanceof NetClass currNetRule)) {
+      if (col != 1 || !(value instanceof NetClass currentNetRule)) {
         return;
       }
       Object firstRowObject = getValueAt(row, 0);
@@ -171,7 +171,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
         FRLogger.warn("AssignNetRuLesVindow.setValueAt: Net expected");
         return;
       }
-      currentNet.setClass(currNetRule);
+      currentNet.setClass(currentNetRule);
 
       this.data[row][col] = value;
       fireTableCellUpdated(row, col);

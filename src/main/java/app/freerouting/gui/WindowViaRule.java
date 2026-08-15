@@ -139,19 +139,19 @@ public class WindowViaRule extends WindowBase {
       if (possibleValues.length == 0) {
         return;
       }
-      int currIndex = 0;
+      int currentIndex = 0;
       for (int i = 0; i < viaList.count(); i++) {
-        ViaInfo currVia = viaList.get(i);
-        if (!viaRule.contains(currVia)) {
-          if (currIndex >= possibleValues.length) {
+        ViaInfo currentVia = viaList.get(i);
+        if (!viaRule.contains(currentVia)) {
+          if (currentIndex >= possibleValues.length) {
             FRLogger.warn("ViaRuleWindow.AppendListener.actionPerformed: index inconsistent");
             break;
           }
-          possibleValues[currIndex] = currVia;
-          ++currIndex;
+          possibleValues[currentIndex] = currentVia;
+          ++currentIndex;
         }
       }
-      assert (currIndex == possibleValues.length);
+      assert (currentIndex == possibleValues.length);
       Object selectedValue =
           JOptionPane.showInputDialog(
               null,

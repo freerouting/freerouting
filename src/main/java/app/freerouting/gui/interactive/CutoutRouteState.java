@@ -44,8 +44,8 @@ public final class CutoutRouteState extends SelectRegionState {
     // filter items, which cannot be cutout
     Collection<PolylineTrace> traceList = new LinkedList<>();
 
-    for (Item currItem : itemList) {
-      if (!currItem.isUserFixed() && currItem instanceof PolylineTrace trace) {
+    for (Item currentItem : itemList) {
+      if (!currentItem.isUserFixed() && currentItem instanceof PolylineTrace trace) {
         traceList.add(trace);
       }
     }
@@ -83,10 +83,10 @@ public final class CutoutRouteState extends SelectRegionState {
 
     Set<Integer> changedNets = new TreeSet<>();
 
-    for (PolylineTrace currTrace : this.traceList) {
-      ShapeTraceEntries.cutoutTrace(currTrace, cutBox, 0);
-      for (int i = 0; i < currTrace.netCount(); i++) {
-        changedNets.add(currTrace.getNetNo(i));
+    for (PolylineTrace currentTrace : this.traceList) {
+      ShapeTraceEntries.cutoutTrace(currentTrace, cutBox, 0);
+      for (int i = 0; i < currentTrace.netCount(); i++) {
+        changedNets.add(currentTrace.getNetNo(i));
       }
     }
 
@@ -101,10 +101,10 @@ public final class CutoutRouteState extends SelectRegionState {
       return;
     }
 
-    for (PolylineTrace currTrace : this.traceList) {
+    for (PolylineTrace currentTrace : this.traceList) {
 
       BoardRenderer.drawOverlayItem(
-          currTrace,
+          currentTrace,
           graphics,
           hdlg.graphicsContext,
           hdlg.graphicsContext.getHighlightColor(),

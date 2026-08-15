@@ -42,11 +42,11 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     ClearanceViolations clearanceViolations =
         new ClearanceViolations(boardHandling.getRoutingBoard().getItems());
     SortedSet<ViolationInfo> sortedSet = new TreeSet<>();
-    for (ClearanceViolation currViolation : clearanceViolations.list) {
-      sortedSet.add(new ViolationInfo(currViolation));
+    for (ClearanceViolation currentViolation : clearanceViolations.list) {
+      sortedSet.add(new ViolationInfo(currentViolation));
     }
-    for (ViolationInfo currViolation : sortedSet) {
-      this.addToList(currViolation);
+    for (ViolationInfo currentViolation : sortedSet) {
+      this.addToList(currentViolation);
     }
     this.list.setVisibleRowCount(Math.min(sortedSet.size(), DEFAULT_TABLE_SIZE));
 
@@ -65,9 +65,9 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     }
     Set<Item> selectedItems = new TreeSet<>();
     for (int i = 0; i < selectedViolations.size(); i++) {
-      ClearanceViolation currViolation = ((ViolationInfo) selectedViolations.get(i)).violation;
-      selectedItems.add(currViolation.firstItem);
-      selectedItems.add(currViolation.secondItem);
+      ClearanceViolation currentViolation = ((ViolationInfo) selectedViolations.get(i)).violation;
+      selectedItems.add(currentViolation.firstItem);
+      selectedItems.add(currentViolation.secondItem);
     }
     GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
     boardHandling.selectItems(selectedItems);

@@ -557,20 +557,20 @@ public class BoardPanel extends JPanel {
     if (evt.getButton() == 1) {
       boardHandling.leftButtonClicked(evt.getPoint());
     } else if (evt.getButton() == 3) {
-      JPopupMenu currMenu = boardHandling.getCurrentPopupMenu();
-      if (currMenu != null) {
-        int currX = evt.getX();
-        int currY = evt.getY();
+      JPopupMenu currentMenu = boardHandling.getCurrentPopupMenu();
+      if (currentMenu != null) {
+        int currentX = evt.getX();
+        int currentY = evt.getY();
         if (false) {
-          int dx = currMenu.getWidth();
+          int dx = currentMenu.getWidth();
           if (dx <= 0) {
             // force the width to be calculated
-            currMenu.show(this, currX, currY);
-            dx = currMenu.getWidth();
+            currentMenu.show(this, currentX, currentY);
+            dx = currentMenu.getWidth();
           }
-          currX -= dx;
+          currentX -= dx;
         }
-        currMenu.show(this, currX, currY);
+        currentMenu.show(this, currentX, currentY);
       }
       rightButtonClickLocation = evt.getPoint();
     }

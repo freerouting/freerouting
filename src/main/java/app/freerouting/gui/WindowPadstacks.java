@@ -55,15 +55,15 @@ public class WindowPadstacks extends WindowObjectListWithFilter {
     Set<Item> boardInstances = new TreeSet<>();
     Iterator<UndoableObjects.UndoableObjectNode> it = routingBoard.itemList.startReadObject();
     for (; ; ) {
-      UndoableObjects.Storable currObject = routingBoard.itemList.readObject(it);
-      if (currObject == null) {
+      UndoableObjects.Storable currentObject = routingBoard.itemList.readObject(it);
+      if (currentObject == null) {
         break;
       }
-      if (currObject instanceof DrillItem item) {
-        Padstack currPadstack = item.getPadstack();
-        for (Padstack currSelectedPadstack : padstackList) {
-          if (currPadstack == currSelectedPadstack) {
-            boardInstances.add((Item) currObject);
+      if (currentObject instanceof DrillItem item) {
+        Padstack currentPadstack = item.getPadstack();
+        for (Padstack currentSelectedPadstack : padstackList) {
+          if (currentPadstack == currentSelectedPadstack) {
+            boardInstances.add((Item) currentObject);
             break;
           }
         }

@@ -101,13 +101,13 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
     Integer viaCount = 0;
     Integer traceCount = 0;
     double cumulativeTraceLength = 0;
-    for (WindowObjectInfo.Printable currObject : itemList) {
-      currObject.printInfo(newInstance, boardFrame.get_locale());
-      if (currObject instanceof Pin) {
+    for (WindowObjectInfo.Printable currentObject : itemList) {
+      currentObject.printInfo(newInstance, boardFrame.get_locale());
+      if (currentObject instanceof Pin) {
         ++pinCount;
-      } else if (currObject instanceof Via) {
+      } else if (currentObject instanceof Via) {
         ++viaCount;
-      } else if (currObject instanceof Trace trace) {
+      } else if (currentObject instanceof Trace trace) {
         ++traceCount;
         cumulativeTraceLength += trace.getLength();
       }
@@ -173,8 +173,8 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
     if (objectList.isEmpty()) {
       newWindow.append(newWindow.tm.getText("listEmpty"));
     }
-    for (Printable currObject : objectList) {
-      currObject.printInfo(newWindow, boardFrame.get_locale());
+    for (Printable currentObject : objectList) {
+      currentObject.printInfo(newWindow, boardFrame.get_locale());
     }
     newWindow.pack();
     Dimension size = newWindow.getSize();
@@ -340,9 +340,9 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
 
   @Override
   public void dispose() {
-    for (WindowObjectInfo currSubwindow : this.subwindows) {
-      if (currSubwindow != null) {
-        currSubwindow.dispose();
+    for (WindowObjectInfo currentSubwindow : this.subwindows) {
+      if (currentSubwindow != null) {
+        currentSubwindow.dispose();
       }
     }
     super.dispose();

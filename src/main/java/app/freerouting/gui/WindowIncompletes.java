@@ -41,10 +41,10 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
     }
     Set<Item> selectedItems = new TreeSet<>();
     for (int i = 0; i < selectedIncompletes.size(); i++) {
-      AirLineInfo currInfo = (AirLineInfo) selectedIncompletes.get(i);
-      AirLine currAirline = currInfo.airline;
-      selectedItems.add(currAirline.fromItem);
-      selectedItems.add(currAirline.toItem);
+      AirLineInfo currentInfo = (AirLineInfo) selectedIncompletes.get(i);
+      AirLine currentAirline = currentInfo.airline;
+      selectedItems.add(currentAirline.fromItem);
+      selectedItems.add(currentAirline.toItem);
     }
     boardFrame.boardPanel.boardHandling.selectItems(selectedItems);
     boardFrame.boardPanel.boardHandling.zoomSelection();

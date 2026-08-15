@@ -52,13 +52,13 @@ public abstract class DragState extends InteractiveState {
     if (boardHandling.getWorkspaceSettings().getSelectOnAllVisibleLayers()) {
       tryCount += boardHandling.getLayerCount();
     }
-    int currLayer = boardHandling.getWorkspaceSettings().getLayer();
-    int pickLayer = currLayer;
+    int currentLayer = boardHandling.getWorkspaceSettings().getLayer();
+    int pickLayer = currentLayer;
     boolean itemFound = false;
 
     for (int i = 0; i < tryCount; i++) {
       if (i == 0
-          || pickLayer != currLayer
+          || pickLayer != currentLayer
               && (boardHandling.graphicsContext.getLayerVisibility(pickLayer)) > 0) {
         Collection<Item> foundItems =
             boardHandling
@@ -83,17 +83,17 @@ public abstract class DragState extends InteractiveState {
       Collection<Item> foundItems, GuiBoardManager boardHandling) {
     Item itemToMove = null;
     boolean itemFound = false;
-    for (Item currItem : foundItems) {
+    for (Item currentItem : foundItems) {
       itemFound = true;
-      if (currItem instanceof Trace) {
+      if (currentItem instanceof Trace) {
         continue; // traces are not moved
       }
       if (!boardHandling.getWorkspaceSettings().getDragComponentsEnabled()
-          && currItem.getComponentNo() != 0) {
+          && currentItem.getComponentNo() != 0) {
         continue;
       }
-      itemToMove = currItem;
-      if (currItem instanceof DrillItem) {
+      itemToMove = currentItem;
+      if (currentItem instanceof DrillItem) {
         break; // drill items are preferred
       }
     }

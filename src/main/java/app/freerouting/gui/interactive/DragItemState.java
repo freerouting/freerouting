@@ -112,13 +112,13 @@ public class DragItemState extends DragState {
         Collection<Item> movedItems =
             hdlg.getRoutingBoard().getComponentItems(itemToMove.getComponentNo());
         Set<Integer> changedNets = new TreeSet<>();
-        for (Item currMovedItem : movedItems) {
-          for (int i = 0; i < currMovedItem.netCount(); i++) {
-            changedNets.add(currMovedItem.getNetNo(i));
+        for (Item currentMovedItem : movedItems) {
+          for (int i = 0; i < currentMovedItem.netCount(); i++) {
+            changedNets.add(currentMovedItem.getNetNo(i));
           }
         }
-        for (Integer currNetNo : changedNets) {
-          hdlg.updateRatsnest(currNetNo);
+        for (Integer currentNetNo : changedNets) {
+          hdlg.updateRatsnest(currentNetNo);
         }
       }
     } else {

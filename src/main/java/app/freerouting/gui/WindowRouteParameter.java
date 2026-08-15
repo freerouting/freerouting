@@ -794,8 +794,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       Collection<Trace> traceList = guiBoardManager.getRoutingBoard().getTraces();
       boolean freeAngleTracesFound = false;
-      for (Trace currTrace : traceList) {
-        if (currTrace instanceof PolylineTrace trace) {
+      for (Trace currentTrace : traceList) {
+        if (currentTrace instanceof PolylineTrace trace) {
           if (!trace.polyline().isOrthogonal()) {
             freeAngleTracesFound = true;
             break;
@@ -803,8 +803,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         }
       }
       if (freeAngleTracesFound) {
-        String currMessage = tm.getText("change_snap_angle_90");
-        if (!WindowMessage.confirm(currMessage)) {
+        String currentMessage = tm.getText("change_snap_angle_90");
+        if (!WindowMessage.confirm(currentMessage)) {
           refresh();
           return;
         }
@@ -823,8 +823,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       Collection<Trace> traceList = guiBoardManager.getRoutingBoard().getTraces();
       boolean freeAngleTracesFound = false;
-      for (Trace currTrace : traceList) {
-        if (currTrace instanceof PolylineTrace trace) {
+      for (Trace currentTrace : traceList) {
+        if (currentTrace instanceof PolylineTrace trace) {
           if (!trace.polyline().isMultipleOf45Degree()) {
             freeAngleTracesFound = true;
             break;
@@ -832,8 +832,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         }
       }
       if (freeAngleTracesFound) {
-        String currMessage = tm.getText("change_snap_angle_45");
-        if (!WindowMessage.confirm(currMessage)) {
+        String currentMessage = tm.getText("change_snap_angle_45");
+        if (!WindowMessage.confirm(currentMessage)) {
           refresh();
           return;
         }

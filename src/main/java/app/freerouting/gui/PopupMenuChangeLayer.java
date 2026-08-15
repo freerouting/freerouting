@@ -22,13 +22,13 @@ class PopupMenuChangeLayer extends JMenu {
 
     this.setText(tm.getText("change_layer"));
     this.setToolTipText(tm.getText("change_layer_tooltip"));
-    int currSignalLayerNo = 0;
+    int currentSignalLayerNo = 0;
     for (int i = 0; i < layerStructure.arr.length; i++) {
       if (layerStructure.arr[i].isSignal) {
-        this.itemArr[currSignalLayerNo] = new LayermenuItem(i);
-        this.itemArr[currSignalLayerNo].setText(layerStructure.arr[i].name);
-        this.add(this.itemArr[currSignalLayerNo]);
-        ++currSignalLayerNo;
+        this.itemArr[currentSignalLayerNo] = new LayermenuItem(i);
+        this.itemArr[currentSignalLayerNo].setText(layerStructure.arr[i].name);
+        this.add(this.itemArr[currentSignalLayerNo]);
+        ++currentSignalLayerNo;
       }
     }
   }

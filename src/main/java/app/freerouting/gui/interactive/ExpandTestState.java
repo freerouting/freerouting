@@ -93,13 +93,13 @@ public final class ExpandTestState extends InteractiveState {
           }
         }
       } else {
-        int currCount = 0;
+        int currentCount = 0;
         IncompleteFreeSpaceExpansionRoom nextRoom =
             this.autorouteEngine.getFirstIncompleteExpansionRoom();
-        while (nextRoom != null && currCount < maxCount) {
+        while (nextRoom != null && currentCount < maxCount) {
           completeExpansionRoom(nextRoom);
           nextRoom = this.autorouteEngine.getFirstIncompleteExpansionRoom();
-          ++currCount;
+          ++currentCount;
         }
       }
       result = this;
@@ -144,12 +144,12 @@ public final class ExpandTestState extends InteractiveState {
     Collection<Item> foundItems = board.pickItems(location.round(), layer, null);
     Item routeItem = null;
     int routeNetNo = 0;
-    for (Item currOb : foundItems) {
-      if (currOb instanceof Connectable) {
-        Item currItem = currOb;
-        if (currItem.netCount() == 1 && currItem.getNetNo(0) > 0) {
-          routeItem = currItem;
-          routeNetNo = currItem.getNetNo(0);
+    for (Item currentOb : foundItems) {
+      if (currentOb instanceof Connectable) {
+        Item currentItem = currentOb;
+        if (currentItem.netCount() == 1 && currentItem.getNetNo(0) > 0) {
+          routeItem = currentItem;
+          routeNetNo = currentItem.getNetNo(0);
           break;
         }
       }
@@ -200,8 +200,9 @@ public final class ExpandTestState extends InteractiveState {
               null);
       hdlg.getRoutingBoard().generateSnapshot();
       SortedSet<Item> rippedConnections = new TreeSet<>();
-      for (Item currRippedItem : rippedItemList) {
-        rippedConnections.addAll(currRippedItem.getConnectionItems(Item.StopConnectionOption.VIA));
+      for (Item currentRippedItem : rippedItemList) {
+        rippedConnections.addAll(
+            currentRippedItem.getConnectionItems(Item.StopConnectionOption.VIA));
       }
       hdlg.getRoutingBoard().removeItems(rippedConnections);
       InsertFoundConnectionAlgo.getInstance(

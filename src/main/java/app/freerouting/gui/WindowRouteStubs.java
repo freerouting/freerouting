@@ -37,30 +37,30 @@ public class WindowRouteStubs extends CleanupWindows {
     SortedSet<RouteStubInfo> routeStubInfoSet = new TreeSet<>();
 
     Collection<Item> boardItems = routingBoard.getItems();
-    for (Item currItem : boardItems) {
-      if (!(currItem instanceof Trace || currItem instanceof Via)) {
+    for (Item currentItem : boardItems) {
+      if (!(currentItem instanceof Trace || currentItem instanceof Via)) {
         continue;
       }
-      if (currItem.netCount() != 1) {
+      if (currentItem.netCount() != 1) {
         continue;
       }
 
       FloatPoint stubLocation;
       int stubLayer;
-      if (currItem instanceof Via via) {
-        Collection<Item> contactList = currItem.getAllContacts();
+      if (currentItem instanceof Via via) {
+        Collection<Item> contactList = currentItem.getAllContacts();
         if (contactList.isEmpty()) {
-          stubLayer = currItem.firstLayer();
+          stubLayer = currentItem.firstLayer();
         } else {
           Iterator<Item> it = contactList.iterator();
-          Item currContactItem = it.next();
-          int firstContactFirstLayer = currContactItem.firstLayer();
-          int firstContactLastLayer = currContactItem.lastLayer();
+          Item currentContactItem = it.next();
+          int firstContactFirstLayer = currentContactItem.firstLayer();
+          int firstContactLastLayer = currentContactItem.lastLayer();
           boolean allContactsOnOneLayer = true;
           while (it.hasNext()) {
-            currContactItem = it.next();
-            if (currContactItem.firstLayer() != firstContactFirstLayer
-                || currContactItem.lastLayer() != firstContactLastLayer) {
+            currentContactItem = it.next();
+            if (currentContactItem.firstLayer() != firstContactFirstLayer
+                || currentContactItem.lastLayer() != firstContactLastLayer) {
               allContactsOnOneLayer = false;
               break;
             }
@@ -68,8 +68,8 @@ public class WindowRouteStubs extends CleanupWindows {
           if (!allContactsOnOneLayer) {
             continue;
           }
-          if (currItem.firstLayer() >= firstContactFirstLayer
-              && currItem.lastLayer() <= firstContactFirstLayer) {
+          if (currentItem.firstLayer() >= firstContactFirstLayer
+              && currentItem.lastLayer() <= firstContactFirstLayer) {
             stubLayer = firstContactFirstLayer;
           } else {
             stubLayer = firstContactLastLayer;
@@ -77,22 +77,22 @@ public class WindowRouteStubs extends CleanupWindows {
         }
         stubLocation = via.getCenter().toFloat();
       } else {
-        Trace currTrace = (Trace) currItem;
-        if (currTrace.getStartContacts().isEmpty()) {
-          stubLocation = currTrace.firstCorner().toFloat();
-        } else if (currTrace.getEndContacts().isEmpty()) {
-          stubLocation = currTrace.lastCorner().toFloat();
+        Trace currentTrace = (Trace) currentItem;
+        if (currentTrace.getStartContacts().isEmpty()) {
+          stubLocation = currentTrace.firstCorner().toFloat();
+        } else if (currentTrace.getEndContacts().isEmpty()) {
+          stubLocation = currentTrace.lastCorner().toFloat();
         } else {
           continue;
         }
-        stubLayer = currTrace.getLayer();
+        stubLayer = currentTrace.getLayer();
       }
-      RouteStubInfo currRouteStubInfo = new RouteStubInfo(currItem, stubLocation, stubLayer);
-      routeStubInfoSet.add(currRouteStubInfo);
+      RouteStubInfo currentRouteStubInfo = new RouteStubInfo(currentItem, stubLocation, stubLayer);
+      routeStubInfoSet.add(currentRouteStubInfo);
     }
 
-    for (RouteStubInfo currInfo : routeStubInfoSet) {
-      this.addToList(currInfo);
+    for (RouteStubInfo currentInfo : routeStubInfoSet) {
+      this.addToList(currentInfo);
     }
     this.list.setVisibleRowCount(Math.min(routeStubInfoSet.size(), DEFAULT_TABLE_SIZE));
   }

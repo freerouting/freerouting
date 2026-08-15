@@ -142,12 +142,12 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
     // 1. Signal Layers
     for (int i = 0; i < layerCount; i++) {
-      Layer currLayer = layerStructure.arr[i];
-      final int layerNo = layerStructure.getNo(currLayer);
+      Layer currentLayer = layerStructure.arr[i];
+      final int layerNo = layerStructure.getNo(currentLayer);
 
       // Eye visibility toggle
       JCheckBox eyeCb = new JCheckBox();
-      eyeCb.setToolTipText(tm.getText("layer_eye_tooltip", currLayer.name));
+      eyeCb.setToolTipText(tm.getText("layer_eye_tooltip", currentLayer.name));
       eyeCb.setSelected(gc.getRawLayerVisibility(i) > 0.0);
       eyeCb.addActionListener(new LayerEyeListener(i));
       settingsSelectLayerEyeArr[i] = eyeCb;
@@ -157,11 +157,11 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       final JLabel swatch = createSwatch(traceColor);
 
       // Active layer selection button
-      JToggleButton btn = new JToggleButton(currLayer.name);
-      btn.setToolTipText(tm.getText("layer_button_tooltip", currLayer.name));
+      JToggleButton btn = new JToggleButton(currentLayer.name);
+      btn.setToolTipText(tm.getText("layer_button_tooltip", currentLayer.name));
       btn.setEnabled(true);
       btn.setMargin(new Insets(2, 5, 2, 5));
-      if (!currLayer.isSignal) {
+      if (!currentLayer.isSignal) {
         btn.setToolTipText(tm.getText("disabled_layer_tooltip"));
       }
       btn.addActionListener(new CurrentLayerListener(i, layerNo));

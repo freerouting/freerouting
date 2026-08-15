@@ -210,9 +210,9 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
 
   @Override
   public void dispose() {
-    for (WindowObjectInfo currSubwindow : this.subwindows) {
-      if (currSubwindow != null) {
-        currSubwindow.dispose();
+    for (WindowObjectInfo currentSubwindow : this.subwindows) {
+      if (currentSubwindow != null) {
+        currentSubwindow.dispose();
       }
     }
     super.dispose();
@@ -312,11 +312,11 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
         return;
       }
       int[] newSelectedIndices = new int[listModel.getSize() - list.getSelectedIndices().length];
-      int currIndex = 0;
+      int currentIndex = 0;
       for (int i = 0; i < listModel.getSize(); i++) {
         if (!list.isSelectedIndex(i)) {
-          newSelectedIndices[currIndex] = i;
-          ++currIndex;
+          newSelectedIndices[currentIndex] = i;
+          ++currentIndex;
         }
       }
       list.setSelectedIndices(newSelectedIndices);

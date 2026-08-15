@@ -107,13 +107,13 @@ public class GraphicsContext implements Serializable {
   }
 
   static void setTranslucency(Graphics2D g2, double factor) {
-    AlphaComposite currAlphaComposite;
+    AlphaComposite currentAlphaComposite;
     if (factor >= 0) {
-      currAlphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) factor);
+      currentAlphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) factor);
     } else {
-      currAlphaComposite = AlphaComposite.getInstance(AlphaComposite.DST_OVER, (float) -factor);
+      currentAlphaComposite = AlphaComposite.getInstance(AlphaComposite.DST_OVER, (float) -factor);
     }
-    g2.setComposite(currAlphaComposite);
+    g2.setComposite(currentAlphaComposite);
   }
 
   private static void restoreGraphics2dState(
@@ -324,10 +324,10 @@ public class GraphicsContext implements Serializable {
       System.arraycopy(drawCorners, 0, closedDrawCorners, 0, drawCorners.length);
       closedDrawCorners[closedDrawCorners.length - 1] = drawCorners[0];
       this.draw(closedDrawCorners, drawHalfWidth, color, g, translucencyFactor);
-    } else if (shape instanceof Circle currCircle) {
+    } else if (shape instanceof Circle currentCircle) {
       this.drawCircle(
-          currCircle.center.toFloat(),
-          currCircle.radius,
+          currentCircle.center.toFloat(),
+          currentCircle.radius,
           drawHalfWidth,
           color,
           g,
@@ -571,21 +571,21 @@ public class GraphicsContext implements Serializable {
       return;
     }
     GeneralPath drawPath = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
-    for (Ellipse currEllipse : ellipseArr) {
-      Point2D center = coordinateTransform.boardToScreen(currEllipse.center);
-      double biggerRadius = coordinateTransform.boardToScreen(currEllipse.biggerRadius);
+    for (Ellipse currentEllipse : ellipseArr) {
+      Point2D center = coordinateTransform.boardToScreen(currentEllipse.center);
+      double biggerRadius = coordinateTransform.boardToScreen(currentEllipse.biggerRadius);
       if (!pointNearRectangle(
           center.getX(), center.getY(), g.getClip().getBounds(), biggerRadius)) {
         continue;
       }
-      double smallerRadius = coordinateTransform.boardToScreen(currEllipse.smallerRadius);
+      double smallerRadius = coordinateTransform.boardToScreen(currentEllipse.smallerRadius);
       Ellipse2D drawEllipse =
           new Ellipse2D.Double(
               center.getX() - biggerRadius,
               center.getY() - smallerRadius,
               2 * biggerRadius,
               2 * smallerRadius);
-      double rotation = coordinateTransform.boardToScreenAngle(currEllipse.rotation);
+      double rotation = coordinateTransform.boardToScreenAngle(currentEllipse.rotation);
       AffineTransform affineTransform = new AffineTransform();
       affineTransform.rotate(rotation, center.getX(), center.getY());
       java.awt.Shape rotatedEllipse = affineTransform.createTransformedShape(drawEllipse);
@@ -620,9 +620,9 @@ public class GraphicsContext implements Serializable {
     Graphics2D g2 = (Graphics2D) g;
     Polygon drawPolygon = new Polygon();
     for (int i = 0; i < points.length; i++) {
-      Point2D currCorner = coordinateTransform.boardToScreen(points[i]);
+      Point2D currentCorner = coordinateTransform.boardToScreen(points[i]);
       drawPolygon.addPoint(
-          (int) Math.round(currCorner.getX()), (int) Math.round(currCorner.getY()));
+          (int) Math.round(currentCorner.getX()), (int) Math.round(currentCorner.getY()));
     }
     g2.setColor(color);
     setTranslucency(g2, translucencyFactor);
@@ -642,11 +642,11 @@ public class GraphicsContext implements Serializable {
     GeneralPath drawPath = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
     for (int j = 0; j < pointLists.length; j++) {
       Polygon drawPolygon = new Polygon();
-      FloatPoint[] currPointList = pointLists[j];
-      for (int i = 0; i < currPointList.length; i++) {
-        Point2D currCorner = coordinateTransform.boardToScreen(currPointList[i]);
+      FloatPoint[] currentPointList = pointLists[j];
+      for (int i = 0; i < currentPointList.length; i++) {
+        Point2D currentCorner = coordinateTransform.boardToScreen(currentPointList[i]);
         drawPolygon.addPoint(
-            (int) Math.round(currCorner.getX()), (int) Math.round(currCorner.getY()));
+            (int) Math.round(currentCorner.getX()), (int) Math.round(currentCorner.getY()));
       }
       drawPath.append(drawPolygon, false);
     }
@@ -679,19 +679,19 @@ public class GraphicsContext implements Serializable {
 
       FloatPoint[][] drawPolygons = new FloatPoint[holes.length + 1][];
       for (int j = 0; j < drawPolygons.length; j++) {
-        PolylineShape currDrawShape;
+        PolylineShape currentDrawShape;
         if (j == 0) {
-          currDrawShape = border;
+          currentDrawShape = border;
         } else {
-          currDrawShape = (PolylineShape) holes[j - 1];
+          currentDrawShape = (PolylineShape) holes[j - 1];
         }
-        drawPolygons[j] = new FloatPoint[currDrawShape.borderLineCount() + 1];
-        FloatPoint[] currDrawPolygon = drawPolygons[j];
-        for (int i = 0; i < currDrawPolygon.length - 1; i++) {
-          currDrawPolygon[i] = currDrawShape.cornerApprox(i);
+        drawPolygons[j] = new FloatPoint[currentDrawShape.borderLineCount() + 1];
+        FloatPoint[] currentDrawPolygon = drawPolygons[j];
+        for (int i = 0; i < currentDrawPolygon.length - 1; i++) {
+          currentDrawPolygon[i] = currentDrawShape.cornerApprox(i);
         }
         // close the polygon
-        currDrawPolygon[currDrawPolygon.length - 1] = currDrawPolygon[0];
+        currentDrawPolygon[currentDrawPolygon.length - 1] = currentDrawPolygon[0];
       }
       fillArea(drawPolygons, g, color, translucencyFactor);
     }
@@ -699,9 +699,9 @@ public class GraphicsContext implements Serializable {
       TileShape[] tiles = area.splitToConvex();
       for (int i = 0; i < tiles.length; i++) {
         FloatPoint[] corners = new FloatPoint[tiles[i].borderLineCount() + 1];
-        TileShape currTile = tiles[i];
+        TileShape currentTile = tiles[i];
         for (int j = 0; j < corners.length - 1; j++) {
-          corners[j] = currTile.cornerApprox(j);
+          corners[j] = currentTile.cornerApprox(j);
         }
         corners[corners.length - 1] = corners[0];
         draw(corners, 1, Color.white, g, 0.7);

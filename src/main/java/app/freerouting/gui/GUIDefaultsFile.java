@@ -93,19 +93,19 @@ public final class GUIDefaultsFile {
   private static boolean skipScope(GUIDefaultsScanner scanner) {
     int openBrackedCount = 1;
     while (openBrackedCount > 0) {
-      Object currToken;
+      Object currentToken;
       try {
-        currToken = scanner.nextToken();
+        currentToken = scanner.nextToken();
       } catch (Exception e) {
         FRLogger.error("GUIDefaultsFile.skip_scope: Error while scanning file", e);
         return false;
       }
-      if (currToken == null) {
+      if (currentToken == null) {
         return false; // end of file
       }
-      if (currToken == Keyword.OPEN_BRACKET) {
+      if (currentToken == Keyword.OPEN_BRACKET) {
         ++openBrackedCount;
-      } else if (currToken == Keyword.CLOSED_BRACKET) {
+      } else if (currentToken == Keyword.CLOSED_BRACKET) {
         --openBrackedCount;
       }
     }
@@ -256,41 +256,41 @@ public final class GUIDefaultsFile {
         return false;
       }
     }
-    JFrame currFrame;
+    JFrame currentFrame;
     switch (frame) {
-      case BOARD_FRAME -> currFrame = this.boardFrame;
-      case COLOR_MANAGER -> currFrame = this.boardFrame.colorManager;
-      case OBJECT_VISIBILITY, LAYER_VISIBILITY -> currFrame = this.boardFrame.visibilityWindow;
-      case DISPLAY_MISCELLANEOUS -> currFrame = this.boardFrame.displayMiscWindow;
+      case BOARD_FRAME -> currentFrame = this.boardFrame;
+      case COLOR_MANAGER -> currentFrame = this.boardFrame.colorManager;
+      case OBJECT_VISIBILITY, LAYER_VISIBILITY -> currentFrame = this.boardFrame.visibilityWindow;
+      case DISPLAY_MISCELLANEOUS -> currentFrame = this.boardFrame.displayMiscWindow;
 
-      case SELECT_PARAMETER -> currFrame = this.boardFrame.selectParameterWindow;
-      case ROUTE_PARAMETER -> currFrame = this.boardFrame.routeParameterWindow;
-      case MANUAL_RULES -> currFrame = this.boardFrame.routeParameterWindow.manualRuleWindow;
-      case MOVE_PARAMETER -> currFrame = this.boardFrame.moveParameterWindow;
-      case CLEARANCE_MATRIX -> currFrame = this.boardFrame.clearanceMatrixWindow;
-      case VIA_RULES -> currFrame = this.boardFrame.viaWindow;
-      case EDIT_VIAS -> currFrame = this.boardFrame.editViasWindow;
-      case EDIT_NET_RULES -> currFrame = this.boardFrame.editNetRulesWindow;
-      case ASSIGN_NET_RULES -> currFrame = this.boardFrame.assignNetClassesWindow;
-      case PADSTACK_INFO -> currFrame = this.boardFrame.padstacksWindow;
-      case PACKAGE_INFO -> currFrame = this.boardFrame.packagesWindow;
-      case COMPONENT_INFO -> currFrame = this.boardFrame.componentsWindow;
-      case NET_INFO -> currFrame = this.boardFrame.netInfoWindow;
-      case INCOMPLETES_INFO -> currFrame = this.boardFrame.incompletesWindow;
-      case VIOLATIONS_INFO -> currFrame = this.boardFrame.clearanceViolationsWindow;
+      case SELECT_PARAMETER -> currentFrame = this.boardFrame.selectParameterWindow;
+      case ROUTE_PARAMETER -> currentFrame = this.boardFrame.routeParameterWindow;
+      case MANUAL_RULES -> currentFrame = this.boardFrame.routeParameterWindow.manualRuleWindow;
+      case MOVE_PARAMETER -> currentFrame = this.boardFrame.moveParameterWindow;
+      case CLEARANCE_MATRIX -> currentFrame = this.boardFrame.clearanceMatrixWindow;
+      case VIA_RULES -> currentFrame = this.boardFrame.viaWindow;
+      case EDIT_VIAS -> currentFrame = this.boardFrame.editViasWindow;
+      case EDIT_NET_RULES -> currentFrame = this.boardFrame.editNetRulesWindow;
+      case ASSIGN_NET_RULES -> currentFrame = this.boardFrame.assignNetClassesWindow;
+      case PADSTACK_INFO -> currentFrame = this.boardFrame.padstacksWindow;
+      case PACKAGE_INFO -> currentFrame = this.boardFrame.packagesWindow;
+      case COMPONENT_INFO -> currentFrame = this.boardFrame.componentsWindow;
+      case NET_INFO -> currentFrame = this.boardFrame.netInfoWindow;
+      case INCOMPLETES_INFO -> currentFrame = this.boardFrame.incompletesWindow;
+      case VIOLATIONS_INFO -> currentFrame = this.boardFrame.clearanceViolationsWindow;
       default -> {
         FRLogger.warn("GUIDefaultsFile.read_frame_scope: unknown frame");
         return false;
       }
     }
-    if (currFrame != null) {
-      currFrame.setVisible(isVisible);
+    if (currentFrame != null) {
+      currentFrame.setVisible(isVisible);
       if (frame == Keyword.BOARD_FRAME) {
-        currFrame.setBounds(bounds);
+        currentFrame.setBounds(bounds);
       } else {
         // Set only the location.
         // Do not change the size of the frame because it depends on the layer count.
-        currFrame.setLocation(bounds.getLocation());
+        currentFrame.setLocation(bounds.getLocation());
       }
     }
     return true;
@@ -439,11 +439,11 @@ public final class GUIDefaultsFile {
       return false;
     }
     this.boardHandling.graphicsContext.setTraceColorIntensity(intensity);
-    Color[] currColors = readColorArray();
-    if (currColors.length < 1) {
+    Color[] currentColors = readColorArray();
+    if (currentColors.length < 1) {
       return false;
     }
-    this.boardHandling.graphicsContext.itemColorTable.setTraceColors(currColors, fixed);
+    this.boardHandling.graphicsContext.itemColorTable.setTraceColors(currentColors, fixed);
     return true;
   }
 
@@ -453,11 +453,11 @@ public final class GUIDefaultsFile {
       return false;
     }
     this.boardHandling.graphicsContext.setViaColorIntensity(intensity);
-    Color[] currColors = readColorArray();
-    if (currColors.length < 1) {
+    Color[] currentColors = readColorArray();
+    if (currentColors.length < 1) {
       return false;
     }
-    this.boardHandling.graphicsContext.itemColorTable.setViaColors(currColors, fixed);
+    this.boardHandling.graphicsContext.itemColorTable.setViaColors(currentColors, fixed);
     return true;
   }
 
@@ -467,11 +467,11 @@ public final class GUIDefaultsFile {
       return false;
     }
     this.boardHandling.graphicsContext.setPinColorIntensity(intensity);
-    Color[] currColors = readColorArray();
-    if (currColors.length < 1) {
+    Color[] currentColors = readColorArray();
+    if (currentColors.length < 1) {
       return false;
     }
-    this.boardHandling.graphicsContext.itemColorTable.setPinColors(currColors);
+    this.boardHandling.graphicsContext.itemColorTable.setPinColors(currentColors);
     return true;
   }
 
@@ -481,11 +481,11 @@ public final class GUIDefaultsFile {
       return false;
     }
     this.boardHandling.graphicsContext.setConductionColorIntensity(intensity);
-    Color[] currColors = readColorArray();
-    if (currColors.length < 1) {
+    Color[] currentColors = readColorArray();
+    if (currentColors.length < 1) {
       return false;
     }
-    this.boardHandling.graphicsContext.itemColorTable.setConductionColors(currColors);
+    this.boardHandling.graphicsContext.itemColorTable.setConductionColors(currentColors);
     return true;
   }
 
@@ -495,11 +495,11 @@ public final class GUIDefaultsFile {
       return false;
     }
     this.boardHandling.graphicsContext.setObstacleColorIntensity(intensity);
-    Color[] currColors = readColorArray();
-    if (currColors.length < 1) {
+    Color[] currentColors = readColorArray();
+    if (currentColors.length < 1) {
       return false;
     }
-    this.boardHandling.graphicsContext.itemColorTable.setKeepoutColors(currColors);
+    this.boardHandling.graphicsContext.itemColorTable.setKeepoutColors(currentColors);
     return true;
   }
 
@@ -509,21 +509,21 @@ public final class GUIDefaultsFile {
       return false;
     }
     this.boardHandling.graphicsContext.setViaObstacleColorIntensity(intensity);
-    Color[] currColors = readColorArray();
-    if (currColors.length < 1) {
+    Color[] currentColors = readColorArray();
+    if (currentColors.length < 1) {
       return false;
     }
-    this.boardHandling.graphicsContext.itemColorTable.setViaKeepoutColors(currColors);
+    this.boardHandling.graphicsContext.itemColorTable.setViaKeepoutColors(currentColors);
     return true;
   }
 
   private boolean readBackgroundColor() throws IOException {
-    Color currColor = readColor();
-    if (currColor == null) {
+    Color currentColor = readColor();
+    if (currentColor == null) {
       return false;
     }
-    this.boardHandling.graphicsContext.otherColorTable.setBackgroundColor(currColor);
-    this.boardFrame.setBoardBackground(currColor);
+    this.boardHandling.graphicsContext.otherColorTable.setBackgroundColor(currentColor);
+    this.boardFrame.setBoardBackground(currentColor);
     Object nextToken = this.scanner.nextToken();
     if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_background_color: closing bracket expected");
@@ -538,11 +538,11 @@ public final class GUIDefaultsFile {
       return false;
     }
     this.boardHandling.graphicsContext.setHighlightColorIntensity(intensity);
-    Color currColor = readColor();
-    if (currColor == null) {
+    Color currentColor = readColor();
+    if (currentColor == null) {
       return false;
     }
-    this.boardHandling.graphicsContext.otherColorTable.setHighlightColor(currColor);
+    this.boardHandling.graphicsContext.otherColorTable.setHighlightColor(currentColor);
     Object nextToken = this.scanner.nextToken();
     if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_higlight_color: closing bracket expected");
@@ -557,11 +557,11 @@ public final class GUIDefaultsFile {
       return false;
     }
     this.boardHandling.graphicsContext.setIncompleteColorIntensity(intensity);
-    Color currColor = readColor();
-    if (currColor == null) {
+    Color currentColor = readColor();
+    if (currentColor == null) {
       return false;
     }
-    this.boardHandling.graphicsContext.otherColorTable.setIncompleteColor(currColor);
+    this.boardHandling.graphicsContext.otherColorTable.setIncompleteColor(currentColor);
     Object nextToken = this.scanner.nextToken();
     if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_incompletes_color: closing bracket expected");
@@ -576,11 +576,11 @@ public final class GUIDefaultsFile {
       return false;
     }
     this.boardHandling.graphicsContext.setLengthMatchingAreaColorIntensity(intensity);
-    Color currColor = readColor();
-    if (currColor == null) {
+    Color currentColor = readColor();
+    if (currentColor == null) {
       return false;
     }
-    this.boardHandling.graphicsContext.otherColorTable.setLengthMatchingAreaColor(currColor);
+    this.boardHandling.graphicsContext.otherColorTable.setLengthMatchingAreaColor(currentColor);
     Object nextToken = this.scanner.nextToken();
     if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_length_matching_color: closing bracket expected");
@@ -590,11 +590,11 @@ public final class GUIDefaultsFile {
   }
 
   private boolean readViolationsColor() throws IOException {
-    Color currColor = readColor();
-    if (currColor == null) {
+    Color currentColor = readColor();
+    if (currentColor == null) {
       return false;
     }
-    this.boardHandling.graphicsContext.otherColorTable.setViolationsColor(currColor);
+    this.boardHandling.graphicsContext.otherColorTable.setViolationsColor(currentColor);
     Object nextToken = this.scanner.nextToken();
     if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_violations_color: closing bracket expected");
@@ -604,11 +604,11 @@ public final class GUIDefaultsFile {
   }
 
   private boolean readOutlineColor() throws IOException {
-    Color currColor = readColor();
-    if (currColor == null) {
+    Color currentColor = readColor();
+    if (currentColor == null) {
       return false;
     }
-    this.boardHandling.graphicsContext.otherColorTable.setOutlineColor(currColor);
+    this.boardHandling.graphicsContext.otherColorTable.setOutlineColor(currentColor);
     Object nextToken = this.scanner.nextToken();
     if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_outline_color: closing bracket expected");
@@ -618,11 +618,11 @@ public final class GUIDefaultsFile {
   }
 
   private boolean readComponentColor(boolean front) throws IOException {
-    Color currColor = readColor();
-    if (currColor == null) {
+    Color currentColor = readColor();
+    if (currentColor == null) {
       return false;
     }
-    this.boardHandling.graphicsContext.otherColorTable.setComponentColor(currColor, front);
+    this.boardHandling.graphicsContext.otherColorTable.setComponentColor(currentColor, front);
     Object nextToken = this.scanner.nextToken();
     if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_component_color: closing bracket expected");
@@ -669,11 +669,11 @@ public final class GUIDefaultsFile {
   private Color[] readColorArray() throws IOException {
     Collection<Color> colorList = new LinkedList<>();
     for (; ; ) {
-      Color currColor = readColor();
-      if (currColor == null) {
+      Color currentColor = readColor();
+      if (currentColor == null) {
         break;
       }
-      colorList.add(currColor);
+      colorList.add(currentColor);
     }
     Color[] result = new Color[colorList.size()];
     Iterator<Color> it = colorList.iterator();

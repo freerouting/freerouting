@@ -56,10 +56,10 @@ class Issue029LoadPhaseTimingTest {
 
       long t8 = System.nanoTime();
       app.freerouting.geometry.planar.IntBox bbox = board.getBoundingBox();
-      for (app.freerouting.board.Item currItem : board.getItems()) {
-        app.freerouting.geometry.planar.IntBox currBoundingBox = currItem.boundingBox();
-        if (currBoundingBox.ur.x < Integer.MAX_VALUE) {
-          bbox = bbox.union(currBoundingBox);
+      for (app.freerouting.board.Item currentItem : board.getItems()) {
+        app.freerouting.geometry.planar.IntBox currentBoundingBox = currentItem.boundingBox();
+        if (currentBoundingBox.ur.x < Integer.MAX_VALUE) {
+          bbox = bbox.union(currentBoundingBox);
         }
       }
       long t9 = System.nanoTime();

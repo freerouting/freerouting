@@ -75,17 +75,17 @@ public final class InspectedItemState extends InteractiveState {
   public InteractiveState extentToWholeNets() {
 
     // collect all net numbers of the selected items
-    Set<Integer> currNetNoSet = new TreeSet<>();
-    for (Item currItem : itemList) {
-      if (currItem instanceof Connectable) {
-        for (int i = 0; i < currItem.netCount(); i++) {
-          currNetNoSet.add(currItem.getNetNo(i));
+    Set<Integer> currentNetNoSet = new TreeSet<>();
+    for (Item currentItem : itemList) {
+      if (currentItem instanceof Connectable) {
+        for (int i = 0; i < currentItem.netCount(); i++) {
+          currentNetNoSet.add(currentItem.getNetNo(i));
         }
       }
     }
     Set<Item> newSelectedItems = new TreeSet<>();
-    for (int currNetNo : currNetNoSet) {
-      newSelectedItems.addAll(hdlg.getRoutingBoard().getConnectableItems(currNetNo));
+    for (int currentNetNo : currentNetNoSet) {
+      newSelectedItems.addAll(hdlg.getRoutingBoard().getConnectableItems(currentNetNo));
     }
     this.itemList = newSelectedItems;
     if (newSelectedItems.isEmpty()) {
@@ -100,15 +100,15 @@ public final class InspectedItemState extends InteractiveState {
   public InteractiveState extentToWholeComponents() {
 
     // collect all group numbers of the selected items
-    Set<Integer> currGroupNoSet = new TreeSet<>();
-    for (Item currItem : itemList) {
-      if (currItem.getComponentNo() > 0) {
-        currGroupNoSet.add(currItem.getComponentNo());
+    Set<Integer> currentGroupNoSet = new TreeSet<>();
+    for (Item currentItem : itemList) {
+      if (currentItem.getComponentNo() > 0) {
+        currentGroupNoSet.add(currentItem.getComponentNo());
       }
     }
     Set<Item> newSelectedItems = new TreeSet<>(itemList);
-    for (int currGroupNo : currGroupNoSet) {
-      newSelectedItems.addAll(hdlg.getRoutingBoard().getComponentItems(currGroupNo));
+    for (int currentGroupNo : currentGroupNoSet) {
+      newSelectedItems.addAll(hdlg.getRoutingBoard().getComponentItems(currentGroupNo));
     }
     if (newSelectedItems.isEmpty()) {
       return this.returnState;
@@ -121,9 +121,9 @@ public final class InspectedItemState extends InteractiveState {
   /** Select also all items belonging to any connected set of the current selected items. */
   public InteractiveState extentToWholeConnectedSets() {
     Set<Item> newSelectedItems = new TreeSet<>();
-    for (Item currItem : this.itemList) {
-      if (currItem instanceof Connectable) {
-        newSelectedItems.addAll(currItem.getConnectedSet(-1));
+    for (Item currentItem : this.itemList) {
+      if (currentItem instanceof Connectable) {
+        newSelectedItems.addAll(currentItem.getConnectedSet(-1));
       }
     }
     if (newSelectedItems.isEmpty()) {
@@ -138,9 +138,9 @@ public final class InspectedItemState extends InteractiveState {
   /** Select also all items belonging to any connection of the current selected items. */
   public InteractiveState extentToWholeConnections() {
     Set<Item> newSelectedItems = new TreeSet<>();
-    for (Item currItem : this.itemList) {
-      if (currItem instanceof Connectable) {
-        newSelectedItems.addAll(currItem.getConnectionItems());
+    for (Item currentItem : this.itemList) {
+      if (currentItem instanceof Connectable) {
+        newSelectedItems.addAll(currentItem.getConnectionItems());
       }
     }
     if (newSelectedItems.isEmpty()) {
@@ -185,8 +185,8 @@ public final class InspectedItemState extends InteractiveState {
     if (clearanceViolations == null) {
       clearanceViolations = new ClearanceViolations(this.itemList);
       Integer violationCount = clearanceViolations.list.size();
-      String currMessage = violationCount + " " + tm.getText("clearance_violations_found");
-      hdlg.screenMessages.setStatusMessage(currMessage);
+      String currentMessage = violationCount + " " + tm.getText("clearance_violations_found");
+      hdlg.screenMessages.setStatusMessage(currentMessage);
     } else {
       clearanceViolations = null;
       hdlg.screenMessages.setStatusMessage("");
@@ -226,9 +226,9 @@ public final class InspectedItemState extends InteractiveState {
       return;
     }
 
-    for (Item currItem : itemList) {
+    for (Item currentItem : itemList) {
       BoardRenderer.drawOverlayItem(
-          currItem,
+          currentItem,
           graphics,
           hdlg.graphicsContext,
           hdlg.graphicsContext.getHighlightColor(),
