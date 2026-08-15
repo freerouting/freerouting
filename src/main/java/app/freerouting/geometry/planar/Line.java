@@ -55,20 +55,25 @@ public class Line implements Comparable<Line>, Serializable {
   }
 
   @Override
-  public final boolean equals(Object ob) {
-    if (this == ob) {
+  public final boolean equals(Object other) {
+    if (this == other) {
       return true;
     }
-    if (ob == null) {
+    if (other == null) {
       return false;
     }
-    if (!(ob instanceof Line other)) {
+    if (!(other instanceof Line otherLine)) {
       return false;
     }
-    if (sideOf(other.a) != Side.COLLINEAR) {
+    if (sideOf(otherLine.a) != Side.COLLINEAR) {
       return false;
     }
-    return direction().equals(other.direction());
+    if (sideOf(otherLine.b) != Side.COLLINEAR) {
+      return false;
+    }
+    Vector dir1 = b.differenceBy(a);
+    Vector dir2 = otherLine.b.differenceBy(otherLine.a);
+    return dir1.projection(dir2) == Signum.POSITIVE;
   }
 
   /**

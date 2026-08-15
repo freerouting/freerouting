@@ -42,17 +42,17 @@ public class Network extends ScopeKeyword {
     super("network");
   }
 
-  public static void writeScope(WriteScopeParameter par) throws IOException {
-    par.file.startScope();
-    par.file.write("network");
-    Collection<Pin> boardPins = par.board.getPins();
-    for (int i = 1; i <= par.board.rules.nets.maxNetNumber(); i++) {
-      Net.writeScope(par, par.board.rules.nets.get(i), boardPins);
+  public static void writeScope(WriteScopeParameter scopeParameter) throws IOException {
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("network");
+    Collection<Pin> boardPins = scopeParameter.board.getPins();
+    for (int i = 1; i <= scopeParameter.board.rules.nets.maxNetNumber(); i++) {
+      Net.writeScope(scopeParameter, scopeParameter.board.rules.nets.get(i), boardPins);
     }
-    writeViaInfos(par.board.rules, par.file, par.identifierType);
-    writeViaRules(par.board.rules, par.file, par.identifierType);
-    writeNetClasses(par);
-    par.file.endScope();
+    writeViaInfos(scopeParameter.board.rules, scopeParameter.file, scopeParameter.identifierType);
+    writeViaRules(scopeParameter.board.rules, scopeParameter.file, scopeParameter.identifierType);
+    writeNetClasses(scopeParameter);
+    scopeParameter.file.endScope();
   }
 
   public static void writeViaInfos(
@@ -89,100 +89,103 @@ public class Network extends ScopeKeyword {
     }
   }
 
-  public static void writeNetClasses(WriteScopeParameter par) throws IOException {
-    for (int i = 0; i < par.board.rules.netClasses.count(); i++) {
-      writeNetClass(par.board.rules.netClasses.get(i), par);
+  public static void writeNetClasses(WriteScopeParameter scopeParameter) throws IOException {
+    for (int i = 0; i < scopeParameter.board.rules.netClasses.count(); i++) {
+      writeNetClass(scopeParameter.board.rules.netClasses.get(i), scopeParameter);
     }
   }
 
-  public static void writeNetClass(app.freerouting.rules.NetClass netClass, WriteScopeParameter par)
+  public static void writeNetClass(
+      app.freerouting.rules.NetClass netClass, WriteScopeParameter scopeParameter)
       throws IOException {
-    par.file.startScope();
-    par.file.write("class ");
-    par.identifierType.write(netClass.getName(), par.file);
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("class ");
+    scopeParameter.identifierType.write(netClass.getName(), scopeParameter.file);
     final int netsPerRow = 8;
     int netCounter = 0;
-    for (int i = 1; i <= par.board.rules.nets.maxNetNumber(); i++) {
-      if (par.board.rules.nets.get(i).getNetClass() == netClass) {
+    for (int i = 1; i <= scopeParameter.board.rules.nets.maxNetNumber(); i++) {
+      if (scopeParameter.board.rules.nets.get(i).getNetClass() == netClass) {
         if (netCounter % netsPerRow == 0) {
-          par.file.newLine();
+          scopeParameter.file.newLine();
         } else {
-          par.file.write(" ");
+          scopeParameter.file.write(" ");
         }
-        par.identifierType.write(par.board.rules.nets.get(i).name, par.file);
+        scopeParameter.identifierType.write(
+            scopeParameter.board.rules.nets.get(i).name, scopeParameter.file);
         ++netCounter;
       }
     }
 
     // write the trace clearance class
     Rule.writeItemClearanceClass(
-        par.board.rules.clearanceMatrix.getName(netClass.getTraceClearanceClass()),
-        par.file,
-        par.identifierType);
+        scopeParameter.board.rules.clearanceMatrix.getName(netClass.getTraceClearanceClass()),
+        scopeParameter.file,
+        scopeParameter.identifierType);
 
     if (netClass.getViaRule() != null) {
       // write the via rule
-      par.file.newLine();
-      par.file.write("(viaRule ");
-      par.identifierType.write(netClass.getViaRule().name, par.file);
-      par.file.write(")");
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(viaRule ");
+      scopeParameter.identifierType.write(netClass.getViaRule().name, scopeParameter.file);
+      scopeParameter.file.write(")");
     }
 
     // write the rules, if they are different from the default rule.
-    Rule.writeScope(netClass, par);
+    Rule.writeScope(netClass, scopeParameter);
 
-    writeCircuit(netClass, par);
+    writeCircuit(netClass, scopeParameter);
 
     if (!netClass.getPullTight()) {
-      par.file.newLine();
-      par.file.write("(pullTight off)");
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(pullTight off)");
     }
 
     if (netClass.isShoveFixed()) {
-      par.file.newLine();
-      par.file.write("(shoveFixed on)");
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(shoveFixed on)");
     }
 
-    par.file.endScope();
+    scopeParameter.file.endScope();
   }
 
-  private static void writeCircuit(app.freerouting.rules.NetClass netClass, WriteScopeParameter par)
+  private static void writeCircuit(
+      app.freerouting.rules.NetClass netClass, WriteScopeParameter scopeParameter)
       throws IOException {
     final double minTraceLength = netClass.getMinimumTraceLength();
     final double maxTraceLength = netClass.getMaximumTraceLength();
-    par.file.startScope();
-    par.file.write("circuit ");
-    par.file.newLine();
-    par.file.write("(useLayer");
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("circuit ");
+    scopeParameter.file.newLine();
+    scopeParameter.file.write("(useLayer");
     int layerCount = netClass.layerCount();
     for (int i = 0; i < layerCount; i++) {
       if (netClass.isActiveRoutingLayer(i)) {
-        par.file.write(" ");
-        par.file.write(par.board.layerStructure.arr[i].name);
+        scopeParameter.file.write(" ");
+        scopeParameter.file.write(scopeParameter.board.layerStructure.arr[i].name);
       }
     }
-    par.file.write(")");
+    scopeParameter.file.write(")");
     if (minTraceLength > 0 || maxTraceLength > 0) {
-      par.file.newLine();
-      par.file.write("(length ");
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(length ");
       double transformedMaxLength;
       if (maxTraceLength <= 0) {
         transformedMaxLength = -1;
       } else {
-        transformedMaxLength = par.coordinateTransform.boardToDsn(maxTraceLength);
+        transformedMaxLength = scopeParameter.coordinateTransform.boardToDsn(maxTraceLength);
       }
-      par.file.write(String.valueOf(transformedMaxLength));
-      par.file.write(" ");
+      scopeParameter.file.write(String.valueOf(transformedMaxLength));
+      scopeParameter.file.write(" ");
       double transformedMinLength;
       if (minTraceLength <= 0) {
         transformedMinLength = 0;
       } else {
-        transformedMinLength = par.coordinateTransform.boardToDsn(minTraceLength);
+        transformedMinLength = scopeParameter.coordinateTransform.boardToDsn(minTraceLength);
       }
-      par.file.write(String.valueOf(transformedMinLength));
-      par.file.write(")");
+      scopeParameter.file.write(String.valueOf(transformedMinLength));
+      scopeParameter.file.write(")");
     }
-    par.file.endScope();
+    scopeParameter.file.endScope();
   }
 
   /** Creates a sequence of subnets with 2 pins from pinList. */
@@ -416,15 +419,16 @@ public class Network extends ScopeKeyword {
     return ruleOk;
   }
 
-  private static void insertNetClasses(Collection<NetClass> netClasses, ReadScopeParameter par) {
-    BasicBoard routingBoard = par.boardHandling.getRoutingBoard();
+  private static void insertNetClasses(
+      Collection<NetClass> netClasses, ReadScopeParameter scopeParameter) {
+    BasicBoard routingBoard = scopeParameter.boardHandling.getRoutingBoard();
     for (NetClass currentClass : netClasses) {
       insertNetClass(
           currentClass,
-          par.layerStructure,
+          scopeParameter.layerStructure,
           routingBoard,
-          par.coordinateTransform,
-          par.viaAtSmdAllowed);
+          scopeParameter.coordinateTransform,
+          scopeParameter.viaAtSmdAllowed);
     }
   }
 
@@ -538,10 +542,10 @@ public class Network extends ScopeKeyword {
   }
 
   private static void insertClassPairs(
-      Collection<NetClass.ClassClass> classClasses, ReadScopeParameter par) {
+      Collection<NetClass.ClassClass> classClasses, ReadScopeParameter scopeParameter) {
     for (NetClass.ClassClass currentClassClass : classClasses) {
       Iterator<String> it1 = currentClassClass.classNames.iterator();
-      BasicBoard routingBoard = par.boardHandling.getRoutingBoard();
+      BasicBoard routingBoard = scopeParameter.boardHandling.getRoutingBoard();
       while (it1.hasNext()) {
         String firstName = it1.next();
         app.freerouting.rules.NetClass firstClass =
@@ -562,7 +566,7 @@ public class Network extends ScopeKeyword {
                   firstClass,
                   secondClass,
                   routingBoard,
-                  par.coordinateTransform);
+                  scopeParameter.coordinateTransform);
             }
           }
         }
@@ -824,10 +828,10 @@ public class Network extends ScopeKeyword {
     return result;
   }
 
-  private static void insertComponents(ReadScopeParameter par) {
-    for (ComponentPlacement nextLibComponent : par.placementList) {
+  private static void insertComponents(ReadScopeParameter scopeParameter) {
+    for (ComponentPlacement nextLibComponent : scopeParameter.placementList) {
       for (ComponentPlacement.ComponentLocation nextComponent : nextLibComponent.locations) {
-        insertComponent(nextComponent, nextLibComponent.libName, par);
+        insertComponent(nextComponent, nextLibComponent.libName, scopeParameter);
       }
     }
   }
@@ -836,10 +840,11 @@ public class Network extends ScopeKeyword {
    * Create the part library on the board. Can be called after the components are inserted. Returns
    * false, if an error occurred.
    */
-  private static boolean insertLogicalParts(ReadScopeParameter par) {
-    BasicBoard routingBoard = par.boardHandling.getRoutingBoard();
-    for (PartLibrary.LogicalPart nextPart : par.logicalParts) {
-      Package libPackage = searchLibPackage(nextPart.name, par.logicalPartMappings, routingBoard);
+  private static boolean insertLogicalParts(ReadScopeParameter scopeParameter) {
+    BasicBoard routingBoard = scopeParameter.boardHandling.getRoutingBoard();
+    for (PartLibrary.LogicalPart nextPart : scopeParameter.logicalParts) {
+      Package libPackage =
+          searchLibPackage(nextPart.name, scopeParameter.logicalPartMappings, routingBoard);
       if (libPackage == null) {
         return false;
       }
@@ -867,7 +872,7 @@ public class Network extends ScopeKeyword {
       routingBoard.library.logicalParts.add(nextPart.name, boardPartPins);
     }
 
-    for (PartLibrary.LogicalPartMapping nextMapping : par.logicalPartMappings) {
+    for (PartLibrary.LogicalPartMapping nextMapping : scopeParameter.logicalPartMappings) {
       LogicalPart currentLogicalPart = routingBoard.library.logicalParts.get(nextMapping.name);
       {
         if (currentLogicalPart == null) {
@@ -925,21 +930,23 @@ public class Network extends ScopeKeyword {
 
   /** Inserts all board components belonging to the input library component. */
   private static void insertComponent(
-      ComponentPlacement.ComponentLocation location, String libKey, ReadScopeParameter par) {
-    RoutingBoard routingBoard = par.boardHandling.getRoutingBoard();
+      ComponentPlacement.ComponentLocation location,
+      String libKey,
+      ReadScopeParameter scopeParameter) {
+    RoutingBoard routingBoard = scopeParameter.boardHandling.getRoutingBoard();
     Package currentFrontPackage = routingBoard.library.packages.get(libKey, true);
     Package currentBackPackage = routingBoard.library.packages.get(libKey, false);
     if (currentFrontPackage == null || currentBackPackage == null) {
       FRLogger.warn(
           "Network.insert_component: component package not found at '"
-              + par.scanner.getScopeIdentifier()
+              + scopeParameter.scanner.getScopeIdentifier()
               + "'");
       return;
     }
 
     IntPoint componentLocation;
     if (location.coor != null) {
-      componentLocation = par.coordinateTransform.dsnToBoard(location.coor).round();
+      componentLocation = scopeParameter.coordinateTransform.dsnToBoard(location.coor).round();
     } else {
       componentLocation = null;
     }
@@ -973,11 +980,11 @@ public class Network extends ScopeKeyword {
       if (currentPadstack == null) {
         FRLogger.warn(
             "Network.insert_component: pin padstack not found at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return;
       }
-      Collection<Net> pinNets = par.netlist.getNets(location.name, currentPin.name);
+      Collection<Net> pinNets = scopeParameter.netlist.getNets(location.name, currentPin.name);
       Collection<Integer> pinNetNumbers = new LinkedList<>();
       for (Net currentPinNet : pinNets) {
         app.freerouting.rules.Net currentBoardNet =
@@ -985,7 +992,7 @@ public class Network extends ScopeKeyword {
         if (currentBoardNet == null) {
           FRLogger.warn(
               "Network.insert_component: board net not found at '"
-                  + par.scanner.getScopeIdentifier()
+                  + scopeParameter.scanner.getScopeIdentifier()
                   + "'");
         } else {
           pinNetNumbers.add(currentBoardNet.netNumber);
@@ -1046,7 +1053,7 @@ public class Network extends ScopeKeyword {
         if (layer >= routingBoard.getLayerCount()) {
           FRLogger.warn(
               "Network.insert_component: keepout layer is to big at '"
-                  + par.scanner.getScopeIdentifier()
+                  + scopeParameter.scanner.getScopeIdentifier()
                   + "'");
           continue;
         }
@@ -1195,7 +1202,7 @@ public class Network extends ScopeKeyword {
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter par) {
+  public boolean readScope(ReadScopeParameter scopeParameter) {
     Collection<NetClass> classes = new LinkedList<>();
     Collection<NetClass.ClassClass> classClassList = new LinkedList<>();
     Collection<ViaInfo> viaInfos = new LinkedList<>();
@@ -1204,7 +1211,7 @@ public class Network extends ScopeKeyword {
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = par.scanner.nextToken();
+        nextToken = scopeParameter.scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("Network.read_scope: IO error scanning file", e);
         return false;
@@ -1212,7 +1219,7 @@ public class Network extends ScopeKeyword {
       if (nextToken == null) {
         FRLogger.warn(
             "Network.read_scope: unexpected end of file at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -1223,58 +1230,60 @@ public class Network extends ScopeKeyword {
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == Keyword.NET) {
           readNetScope(
-              par.scanner,
-              par.netlist,
-              par.boardHandling.getRoutingBoard(),
-              par.coordinateTransform,
-              par.layerStructure);
+              scopeParameter.scanner,
+              scopeParameter.netlist,
+              scopeParameter.boardHandling.getRoutingBoard(),
+              scopeParameter.coordinateTransform,
+              scopeParameter.layerStructure);
         } else if (nextToken == Keyword.VIA) {
-          ViaInfo currentViaInfo = readViaInfo(par.scanner, par.boardHandling.getRoutingBoard());
+          ViaInfo currentViaInfo =
+              readViaInfo(scopeParameter.scanner, scopeParameter.boardHandling.getRoutingBoard());
           if (currentViaInfo == null) {
             return false;
           }
           viaInfos.add(currentViaInfo);
         } else if (nextToken == Keyword.VIA_RULE) {
           Collection<String> currentViaRule =
-              readViaRule(par.scanner, par.boardHandling.getRoutingBoard());
+              readViaRule(scopeParameter.scanner, scopeParameter.boardHandling.getRoutingBoard());
           if (currentViaRule == null) {
             return false;
           }
           viaRules.add(currentViaRule);
         } else if (nextToken == Keyword.CLASS) {
-          NetClass currentClass = NetClass.readScope(par.scanner);
+          NetClass currentClass = NetClass.readScope(scopeParameter.scanner);
           if (currentClass == null) {
             return false;
           }
           classes.add(currentClass);
         } else if (nextToken == Keyword.CLASS_CLASS) {
-          NetClass.ClassClass currentClassClass = NetClass.readClassClassScope(par.scanner);
+          NetClass.ClassClass currentClassClass =
+              NetClass.readClassClassScope(scopeParameter.scanner);
           if (currentClassClass == null) {
             return false;
           }
           classClassList.add(currentClassClass);
         } else {
-          skipScope(par.scanner);
+          skipScope(scopeParameter.scanner);
         }
       }
     }
 
     // Add any vias defined in the Netclasses to the list of vias to be instantiated
     for (NetClass n : classes) {
-      if (par.viaPadstackNames != null) {
-        par.viaPadstackNames.addAll(n.useVia);
+      if (scopeParameter.viaPadstackNames != null) {
+        scopeParameter.viaPadstackNames.addAll(n.useVia);
       } else {
-        par.viaPadstackNames = n.useVia;
+        scopeParameter.viaPadstackNames = n.useVia;
       }
     }
 
-    RoutingBoard board = par.boardHandling.getRoutingBoard();
+    RoutingBoard board = scopeParameter.boardHandling.getRoutingBoard();
 
     // Set the via padstacks after network parsing, so that named vias from both structure and
     // network DSN sections are properly instantiated .
-    if (par.viaPadstackNames != null) {
-      Padstack[] viaPadstacks = new Padstack[par.viaPadstackNames.size()];
-      Iterator<String> it = par.viaPadstackNames.iterator();
+    if (scopeParameter.viaPadstackNames != null) {
+      Padstack[] viaPadstacks = new Padstack[scopeParameter.viaPadstackNames.size()];
+      Iterator<String> it = scopeParameter.viaPadstackNames.iterator();
       int foundPadstackCount = 0;
       for (int i = 0; i < viaPadstacks.length; i++) {
         String currentPadstackName = it.next();
@@ -1289,7 +1298,7 @@ public class Network extends ScopeKeyword {
               "Library.read_scope: via padstack with name '"
                   + currentPadstackName
                   + " not found at '"
-                  + par.scanner.getScopeIdentifier()
+                  + scopeParameter.scanner.getScopeIdentifier()
                   + "'");
         }
       }
@@ -1302,12 +1311,13 @@ public class Network extends ScopeKeyword {
       board.library.setViaPadstacks(viaPadstacks);
     }
 
-    insertViaInfos(viaInfos, par.boardHandling.getRoutingBoard(), par.viaAtSmdAllowed);
-    insertViaRules(viaRules, par.boardHandling.getRoutingBoard());
-    insertNetClasses(classes, par);
-    insertClassPairs(classClassList, par);
-    insertComponents(par);
-    insertLogicalParts(par);
+    insertViaInfos(
+        viaInfos, scopeParameter.boardHandling.getRoutingBoard(), scopeParameter.viaAtSmdAllowed);
+    insertViaRules(viaRules, scopeParameter.boardHandling.getRoutingBoard());
+    insertNetClasses(classes, scopeParameter);
+    insertClassPairs(classClassList, scopeParameter);
+    insertComponents(scopeParameter);
+    insertLogicalParts(scopeParameter);
     return true;
   }
 

@@ -14,17 +14,17 @@ public class Plane extends ScopeKeyword {
     super("plane");
   }
 
-  public static void writeScope(WriteScopeParameter par, ConductionArea conduction)
+  public static void writeScope(WriteScopeParameter scopeParameter, ConductionArea conduction)
       throws IOException {
     int netCount = conduction.netCount();
     if (netCount != 1) {
       FRLogger.warn("Plane.write_scope: unexpected net count at '" + conduction.name + "'");
       return;
     }
-    final String netName = par.board.rules.nets.get(conduction.getNetNumber(0)).name;
+    final String netName = scopeParameter.board.rules.nets.get(conduction.getNetNumber(0)).name;
     Area currentArea = conduction.getArea();
     int layerIndex = conduction.getLayer();
-    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerIndex];
+    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.arr[layerIndex];
     final Layer planeLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
@@ -35,45 +35,49 @@ public class Plane extends ScopeKeyword {
       boundaryShape = currentArea.getBorder();
       holes = currentArea.getHoles();
     }
-    par.file.startScope();
-    par.file.write("plane ");
-    par.identifierType.write(netName, par.file);
-    Shape dsnShape = par.coordinateTransform.boardToDsn(boundaryShape, planeLayer);
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("plane ");
+    scopeParameter.identifierType.write(netName, scopeParameter.file);
+    Shape dsnShape = scopeParameter.coordinateTransform.boardToDsn(boundaryShape, planeLayer);
     if (dsnShape != null) {
-      dsnShape.writeScope(par.file, par.identifierType);
+      dsnShape.writeScope(scopeParameter.file, scopeParameter.identifierType);
     }
     for (int i = 0; i < holes.length; i++) {
-      Shape dsnHole = par.coordinateTransform.boardToDsn(holes[i], planeLayer);
-      dsnHole.writeHoleScope(par.file, par.identifierType);
+      Shape dsnHole = scopeParameter.coordinateTransform.boardToDsn(holes[i], planeLayer);
+      dsnHole.writeHoleScope(scopeParameter.file, scopeParameter.identifierType);
     }
-    par.file.endScope();
+    scopeParameter.file.endScope();
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter par) {
+  public boolean readScope(ReadScopeParameter scopeParameter) {
     // read the net name
     String netName;
-    boolean skipWindowScopes = "allegro".equalsIgnoreCase(par.hostCad);
+    boolean skipWindowScopes = "allegro".equalsIgnoreCase(scopeParameter.hostCad);
     // Cadence Allegro cutouts the pins on power planes, which leads to performance problems
     // when dividing a conduction area into convex pieces.
     Shape.ReadAreaScopeResult conductionArea;
     try {
-      Object nextToken = par.scanner.nextToken();
+      Object nextToken = scopeParameter.scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
-            "Plane.read_scope: String expected at '" + par.scanner.getScopeIdentifier() + "'");
+            "Plane.read_scope: String expected at '"
+                + scopeParameter.scanner.getScopeIdentifier()
+                + "'");
         return false;
       }
       netName = (String) nextToken;
-      par.scanner.setScopeIdentifier(netName);
-      conductionArea = Shape.readAreaScope(par.scanner, par.layerStructure, skipWindowScopes);
+      scopeParameter.scanner.setScopeIdentifier(netName);
+      conductionArea =
+          Shape.readAreaScope(
+              scopeParameter.scanner, scopeParameter.layerStructure, skipWindowScopes);
     } catch (IOException e) {
       FRLogger.error("Plane.read_scope: IO error scanning file", e);
       return false;
     }
     ReadScopeParameter.PlaneInfo planeInfo =
         new ReadScopeParameter.PlaneInfo(conductionArea, netName);
-    par.planeList.add(planeInfo);
+    scopeParameter.planeList.add(planeInfo);
     return true;
   }
 }

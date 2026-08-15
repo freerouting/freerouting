@@ -24,18 +24,18 @@ public class IntVector extends Vector implements Serializable {
 
   /** Returns true, if this IntVector is equal to ob. */
   @Override
-  public final boolean equals(Object ob) {
-    if (this == ob) {
+  public final boolean equals(Object other) {
+    if (this == other) {
       return true;
     }
-    if (ob == null) {
+    if (other == null) {
       return false;
     }
-    if (getClass() != ob.getClass()) {
+    if (getClass() != other.getClass()) {
       return false;
     }
-    IntVector other = (IntVector) ob;
-    return x == other.x && y == other.y;
+    IntVector otherVector = (IntVector) other;
+    return x == otherVector.x && y == otherVector.y;
   }
 
   /** Returns true, if both coordinates of this vector are 0. */

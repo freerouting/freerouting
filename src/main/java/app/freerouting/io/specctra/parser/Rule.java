@@ -117,92 +117,95 @@ public abstract class Rule {
     return new WidthRule(value);
   }
 
-  public static void writeScope(NetClass netClass, WriteScopeParameter par) throws IOException {
-    par.file.startScope();
-    par.file.write("rule");
+  public static void writeScope(NetClass netClass, WriteScopeParameter scopeParameter)
+      throws IOException {
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("rule");
 
     // write the trace width
     int defaultTraceHalfWidth = netClass.getTraceHalfWidth(0);
-    double traceWidth = 2 * par.coordinateTransform.boardToDsn(defaultTraceHalfWidth);
-    par.file.newLine();
-    par.file.write("(width ");
-    par.file.write(String.valueOf(traceWidth));
-    par.file.write(")");
-    par.file.endScope();
-    for (int i = 1; i < par.board.layerStructure.arr.length; i++) {
+    double traceWidth = 2 * scopeParameter.coordinateTransform.boardToDsn(defaultTraceHalfWidth);
+    scopeParameter.file.newLine();
+    scopeParameter.file.write("(width ");
+    scopeParameter.file.write(String.valueOf(traceWidth));
+    scopeParameter.file.write(")");
+    scopeParameter.file.endScope();
+    for (int i = 1; i < scopeParameter.board.layerStructure.arr.length; i++) {
       if (netClass.getTraceHalfWidth(i) != defaultTraceHalfWidth) {
-        writeLayerRule(netClass, i, par);
+        writeLayerRule(netClass, i, scopeParameter);
       }
     }
   }
 
-  private static void writeLayerRule(NetClass netClass, int layerIndex, WriteScopeParameter par)
-      throws IOException {
-    par.file.startScope();
-    par.file.write("layer_rule ");
+  private static void writeLayerRule(
+      NetClass netClass, int layerIndex, WriteScopeParameter scopeParameter) throws IOException {
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("layer_rule ");
 
-    Layer currentBoardLayer = par.board.layerStructure.arr[layerIndex];
+    Layer currentBoardLayer = scopeParameter.board.layerStructure.arr[layerIndex];
 
-    par.file.write(currentBoardLayer.name);
-    par.file.startScope();
-    par.file.write("rule ");
+    scopeParameter.file.write(currentBoardLayer.name);
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("rule ");
 
     int currentTraceHalfWidth = netClass.getTraceHalfWidth(layerIndex);
 
     // write the trace width
-    double traceWidth = 2 * par.coordinateTransform.boardToDsn(currentTraceHalfWidth);
-    par.file.newLine();
-    par.file.write("(width ");
-    par.file.write(String.valueOf(traceWidth));
-    par.file.write(") ");
-    par.file.endScope();
-    par.file.endScope();
+    double traceWidth = 2 * scopeParameter.coordinateTransform.boardToDsn(currentTraceHalfWidth);
+    scopeParameter.file.newLine();
+    scopeParameter.file.write("(width ");
+    scopeParameter.file.write(String.valueOf(traceWidth));
+    scopeParameter.file.write(") ");
+    scopeParameter.file.endScope();
+    scopeParameter.file.endScope();
   }
 
   /** Writes the default rule as a scope to an output dsn-file. */
-  public static void writeDefaultRule(WriteScopeParameter par, int layer) throws IOException {
-    par.file.startScope();
-    par.file.write("rule");
+  public static void writeDefaultRule(WriteScopeParameter scopeParameter, int layer)
+      throws IOException {
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("rule");
     // write the trace width
     double traceWidth =
         2
-            * par.coordinateTransform.boardToDsn(
-                par.board.rules.getDefaultNetClass().getTraceHalfWidth(0));
-    par.file.newLine();
-    par.file.write("(width ");
-    par.file.write(String.valueOf(traceWidth));
-    par.file.write(")");
+            * scopeParameter.coordinateTransform.boardToDsn(
+                scopeParameter.board.rules.getDefaultNetClass().getTraceHalfWidth(0));
+    scopeParameter.file.newLine();
+    scopeParameter.file.write("(width ");
+    scopeParameter.file.write(String.valueOf(traceWidth));
+    scopeParameter.file.write(")");
     // write the default clearance rule
     int defaultClNo = BoardRules.defaultClearanceClass();
     int defaultBoardClearance =
-        par.board.rules.clearanceMatrix.getValue(defaultClNo, defaultClNo, layer, false);
-    double defaultClearance = par.coordinateTransform.boardToDsn(defaultBoardClearance);
-    par.file.newLine();
+        scopeParameter.board.rules.clearanceMatrix.getValue(defaultClNo, defaultClNo, layer, false);
+    double defaultClearance = scopeParameter.coordinateTransform.boardToDsn(defaultBoardClearance);
+    scopeParameter.file.newLine();
     // write the default clearance
-    par.file.write("(clearance ");
-    par.file.write(String.valueOf(defaultClearance));
-    par.file.write(")");
+    scopeParameter.file.write("(clearance ");
+    scopeParameter.file.write(String.valueOf(defaultClearance));
+    scopeParameter.file.write(")");
     // write the smd_to_turn_gap
     double smdToTurnDist =
-        par.coordinateTransform.boardToDsn(par.board.rules.getPinEdgeToTurnDist());
-    par.file.newLine();
-    par.file.write("(clearance ");
-    par.file.write(String.valueOf(smdToTurnDist));
-    par.file.write(" (type smd_to_turn_gap))");
+        scopeParameter.coordinateTransform.boardToDsn(
+            scopeParameter.board.rules.getPinEdgeToTurnDist());
+    scopeParameter.file.newLine();
+    scopeParameter.file.write("(clearance ");
+    scopeParameter.file.write(String.valueOf(smdToTurnDist));
+    scopeParameter.file.write(" (type smd_to_turn_gap))");
 
     // write the named clearance rules from the clearance matrix
-    writeNamedClearanceRules(par, layer);
-    // write_non_default_clearance_rules(par, layer, defaultBoardClearance);
+    writeNamedClearanceRules(scopeParameter, layer);
+    // write_non_default_clearance_rules(scopeParameter, layer, defaultBoardClearance);
 
-    par.file.endScope();
+    scopeParameter.file.endScope();
   }
 
   /** Write the clearance rules, which are different from the default clearance. */
   private static void writeNonDefaultClearanceRules(
-      WriteScopeParameter par, int layer, int defaultClearance) throws IOException {
+      WriteScopeParameter scopeParameter, int layer, int defaultClearance) throws IOException {
 
-    ClearanceMatrix clMatrix = par.board.rules.clearanceMatrix;
-    int clCount = par.board.rules.clearanceMatrix.getClassCount();
+    ClearanceMatrix clMatrix = scopeParameter.board.rules.clearanceMatrix;
+    int clCount = scopeParameter.board.rules.clearanceMatrix.getClassCount();
 
     for (int i = 1; i <= clCount; i++) {
       for (int j = i; j < clCount; j++) {
@@ -212,25 +215,26 @@ public abstract class Rule {
           continue;
         }
 
-        double currentClearance = par.coordinateTransform.boardToDsn(currentBoardClearance);
-        par.file.newLine();
-        par.file.write("(clearance ");
-        par.file.write(String.valueOf(currentClearance));
-        par.file.write(" (type ");
-        par.identifierType.write(clMatrix.getName(i), par.file);
-        par.file.write(DsnFile.CLASS_CLEARANCE_SEPARATOR);
-        par.identifierType.write(clMatrix.getName(j), par.file);
-        par.file.write("))");
+        double currentClearance =
+            scopeParameter.coordinateTransform.boardToDsn(currentBoardClearance);
+        scopeParameter.file.newLine();
+        scopeParameter.file.write("(clearance ");
+        scopeParameter.file.write(String.valueOf(currentClearance));
+        scopeParameter.file.write(" (type ");
+        scopeParameter.identifierType.write(clMatrix.getName(i), scopeParameter.file);
+        scopeParameter.file.write(DsnFile.CLASS_CLEARANCE_SEPARATOR);
+        scopeParameter.identifierType.write(clMatrix.getName(j), scopeParameter.file);
+        scopeParameter.file.write("))");
       }
     }
   }
 
   /** Write the clearance rules for the named classes in the clearance matrix. */
-  private static void writeNamedClearanceRules(WriteScopeParameter par, int layer)
+  private static void writeNamedClearanceRules(WriteScopeParameter scopeParameter, int layer)
       throws IOException {
 
-    ClearanceMatrix clMatrix = par.board.rules.clearanceMatrix;
-    int clCount = par.board.rules.clearanceMatrix.getClassCount();
+    ClearanceMatrix clMatrix = scopeParameter.board.rules.clearanceMatrix;
+    int clCount = scopeParameter.board.rules.clearanceMatrix.getClassCount();
 
     for (int i = 1; i < clCount; i++) {
       if (Objects.equals(clMatrix.getName(i), "default")) {
@@ -238,14 +242,15 @@ public abstract class Rule {
       }
 
       int currentBoardClearance = clMatrix.getValue(i, i, layer, false);
-      double currentClearance = par.coordinateTransform.boardToDsn(currentBoardClearance);
+      double currentClearance =
+          scopeParameter.coordinateTransform.boardToDsn(currentBoardClearance);
 
-      par.file.newLine();
-      par.file.write("(clearance ");
-      par.file.write(String.valueOf(currentClearance));
-      par.file.write(" (type ");
-      par.identifierType.write(clMatrix.getName(i), par.file);
-      par.file.write("))");
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(clearance ");
+      scopeParameter.file.write(String.valueOf(currentClearance));
+      scopeParameter.file.write(" (type ");
+      scopeParameter.identifierType.write(clMatrix.getName(i), scopeParameter.file);
+      scopeParameter.file.write("))");
     }
   }
 

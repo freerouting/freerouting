@@ -45,22 +45,22 @@ public class Layer {
   }
 
   /** Writes a layer scope in the structure scope. */
-  public static void writeScope(WriteScopeParameter par, int layerIndex, boolean writeRule)
-      throws IOException {
-    par.file.startScope();
-    par.file.write("layer ");
-    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerIndex];
-    par.identifierType.write(boardLayer.name, par.file);
-    par.file.newLine();
-    par.file.write("(type ");
+  public static void writeScope(
+      WriteScopeParameter scopeParameter, int layerIndex, boolean writeRule) throws IOException {
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("layer ");
+    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.arr[layerIndex];
+    scopeParameter.identifierType.write(boardLayer.name, scopeParameter.file);
+    scopeParameter.file.newLine();
+    scopeParameter.file.write("(type ");
     if (boardLayer.isSignal) {
-      par.file.write("signal)");
+      scopeParameter.file.write("signal)");
     } else {
-      par.file.write("power)");
+      scopeParameter.file.write("power)");
     }
     if (writeRule) {
-      Rule.writeDefaultRule(par, layerIndex);
+      Rule.writeDefaultRule(scopeParameter, layerIndex);
     }
-    par.file.endScope();
+    scopeParameter.file.endScope();
   }
 }

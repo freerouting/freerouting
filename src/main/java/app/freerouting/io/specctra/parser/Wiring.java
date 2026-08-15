@@ -44,123 +44,127 @@ public class Wiring extends ScopeKeyword {
     super("wiring");
   }
 
-  public static void writeScope(WriteScopeParameter par) throws IOException {
-    par.file.startScope();
-    par.file.write("wiring");
+  public static void writeScope(WriteScopeParameter scopeParameter) throws IOException {
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("wiring");
     // write the wires
-    Collection<Trace> boardWires = par.board.getTraces();
+    Collection<Trace> boardWires = scopeParameter.board.getTraces();
     for (Trace currentBoardWire : boardWires) {
-      writeWireScope(par, currentBoardWire);
+      writeWireScope(scopeParameter, currentBoardWire);
     }
-    Collection<Via> boardVias = par.board.getVias();
+    Collection<Via> boardVias = scopeParameter.board.getVias();
     for (Via currentVia : boardVias) {
-      writeViaScope(par, currentVia);
+      writeViaScope(scopeParameter, currentVia);
     }
     // write the conduction areas
-    Iterator<UndoableObjects.UndoableObjectNode> it2 = par.board.itemList.startReadObject();
+    Iterator<UndoableObjects.UndoableObjectNode> it2 =
+        scopeParameter.board.itemList.startReadObject();
     for (; ; ) {
-      Object currentObject = par.board.itemList.readObject(it2);
+      Object currentObject = scopeParameter.board.itemList.readObject(it2);
       if (currentObject == null) {
         break;
       }
       if (!(currentObject instanceof ConductionArea currentArea)) {
         continue;
       }
-      if (!par.board.layerStructure.arr[currentArea.getLayer()].isSignal) {
+      if (!scopeParameter.board.layerStructure.arr[currentArea.getLayer()].isSignal) {
         // This conduction areas arw written in the structure scope.
         continue;
       }
-      writeConductionAreaScope(par, (ConductionArea) currentObject);
+      writeConductionAreaScope(scopeParameter, (ConductionArea) currentObject);
     }
-    par.file.endScope();
+    scopeParameter.file.endScope();
   }
 
-  private static void writeViaScope(WriteScopeParameter par, Via via) throws IOException {
+  private static void writeViaScope(WriteScopeParameter scopeParameter, Via via)
+      throws IOException {
     final Padstack viaPadstack = via.getPadstack();
     FloatPoint viaLocation = via.getCenter().toFloat();
-    final double[] viaCoor = par.coordinateTransform.boardToDsn(viaLocation);
+    final double[] viaCoor = scopeParameter.coordinateTransform.boardToDsn(viaLocation);
     int netNumber;
     app.freerouting.rules.Net viaNet;
     if (via.netCount() > 0) {
       netNumber = via.getNetNumber(0);
-      viaNet = par.board.rules.nets.get(netNumber);
+      viaNet = scopeParameter.board.rules.nets.get(netNumber);
     } else {
       netNumber = 0;
       viaNet = null;
     }
-    par.file.startScope();
-    par.file.write("via ");
-    par.identifierType.write(viaPadstack.name, par.file);
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("via ");
+    scopeParameter.identifierType.write(viaPadstack.name, scopeParameter.file);
     for (int i = 0; i < viaCoor.length; i++) {
-      par.file.write(" ");
-      par.file.write(String.valueOf(viaCoor[i]));
+      scopeParameter.file.write(" ");
+      scopeParameter.file.write(String.valueOf(viaCoor[i]));
     }
     if (viaNet != null) {
-      writeNet(viaNet, par.file, par.identifierType);
+      writeNet(viaNet, scopeParameter.file, scopeParameter.identifierType);
     }
     Rule.writeItemClearanceClass(
-        par.board.rules.clearanceMatrix.getName(via.clearanceClassIndex()),
-        par.file,
-        par.identifierType);
-    writeFixedState(par.file, via.getFixedState());
-    par.file.endScope();
+        scopeParameter.board.rules.clearanceMatrix.getName(via.clearanceClassIndex()),
+        scopeParameter.file,
+        scopeParameter.identifierType);
+    writeFixedState(scopeParameter.file, via.getFixedState());
+    scopeParameter.file.endScope();
   }
 
-  private static void writeWireScope(WriteScopeParameter par, Trace wire) throws IOException {
+  private static void writeWireScope(WriteScopeParameter scopeParameter, Trace wire)
+      throws IOException {
     if (!(wire instanceof PolylineTrace currentWire)) {
       FRLogger.warn("Wiring.write_wire_scope: trace type not yet implemented");
       return;
     }
     int layerIndex = currentWire.getLayer();
-    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerIndex];
+    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.arr[layerIndex];
     final Layer currentLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
-    final double wireWidth = par.coordinateTransform.boardToDsn(2 * currentWire.getHalfWidth());
+    final double wireWidth =
+        scopeParameter.coordinateTransform.boardToDsn(2 * currentWire.getHalfWidth());
     app.freerouting.rules.Net wireNet = null;
     if (currentWire.netCount() > 0) {
-      wireNet = par.board.rules.nets.get(currentWire.getNetNumber(0));
+      wireNet = scopeParameter.board.rules.nets.get(currentWire.getNetNumber(0));
     }
     if (wireNet == null) {
       FRLogger.warn("Wiring.write_wire_scope: net not found");
       return;
     }
-    par.file.startScope();
-    par.file.write("wire");
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("wire");
 
-    if (par.compatMode) {
+    if (scopeParameter.compatMode) {
       Point[] cornerArr = currentWire.polyline().cornerArr();
       FloatPoint[] floatCornerArr = new FloatPoint[cornerArr.length];
       for (int i = 0; i < cornerArr.length; i++) {
         floatCornerArr[i] = cornerArr[i].toFloat();
       }
-      double[] coors = par.coordinateTransform.boardToDsn(floatCornerArr);
+      double[] coors = scopeParameter.coordinateTransform.boardToDsn(floatCornerArr);
       PolygonPath currentPath = new PolygonPath(currentLayer, wireWidth, coors);
-      currentPath.writeScope(par.file, par.identifierType);
+      currentPath.writeScope(scopeParameter.file, scopeParameter.identifierType);
     } else {
-      double[] coors = par.coordinateTransform.boardToDsn(currentWire.polyline().arr);
+      double[] coors = scopeParameter.coordinateTransform.boardToDsn(currentWire.polyline().arr);
       PolylinePath currentPath = new PolylinePath(currentLayer, wireWidth, coors);
-      currentPath.writeScope(par.file, par.identifierType);
+      currentPath.writeScope(scopeParameter.file, scopeParameter.identifierType);
     }
-    writeNet(wireNet, par.file, par.identifierType);
+    writeNet(wireNet, scopeParameter.file, scopeParameter.identifierType);
     Rule.writeItemClearanceClass(
-        par.board.rules.clearanceMatrix.getName(wire.clearanceClassIndex()),
-        par.file,
-        par.identifierType);
-    writeFixedState(par.file, currentWire.getFixedState());
-    par.file.endScope();
+        scopeParameter.board.rules.clearanceMatrix.getName(wire.clearanceClassIndex()),
+        scopeParameter.file,
+        scopeParameter.identifierType);
+    writeFixedState(scopeParameter.file, currentWire.getFixedState());
+    scopeParameter.file.endScope();
   }
 
   private static void writeConductionAreaScope(
-      WriteScopeParameter par, ConductionArea conductionArea) throws IOException {
+      WriteScopeParameter scopeParameter, ConductionArea conductionArea) throws IOException {
     int netCount = conductionArea.netCount();
     if (netCount != 1) {
       FRLogger.warn("Plane.write_scope: unexpected net count");
       return;
     }
     final app.freerouting.rules.Net currentNet =
-        par.board.rules.nets.get(conductionArea.getNetNumber(0));
+        scopeParameter.board.rules.nets.get(conductionArea.getNetNumber(0));
     Area currentArea = conductionArea.getArea();
     int layerIndex = conductionArea.getLayer();
-    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerIndex];
+    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.arr[layerIndex];
     final Layer conductionLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
@@ -171,22 +175,22 @@ public class Wiring extends ScopeKeyword {
       boundaryShape = currentArea.getBorder();
       holes = currentArea.getHoles();
     }
-    par.file.startScope();
-    par.file.write("wire ");
-    Shape dsnShape = par.coordinateTransform.boardToDsn(boundaryShape, conductionLayer);
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("wire ");
+    Shape dsnShape = scopeParameter.coordinateTransform.boardToDsn(boundaryShape, conductionLayer);
     if (dsnShape != null) {
-      dsnShape.writeScope(par.file, par.identifierType);
+      dsnShape.writeScope(scopeParameter.file, scopeParameter.identifierType);
     }
     for (int i = 0; i < holes.length; i++) {
-      Shape dsnHole = par.coordinateTransform.boardToDsn(holes[i], conductionLayer);
-      dsnHole.writeHoleScope(par.file, par.identifierType);
+      Shape dsnHole = scopeParameter.coordinateTransform.boardToDsn(holes[i], conductionLayer);
+      dsnHole.writeHoleScope(scopeParameter.file, scopeParameter.identifierType);
     }
-    writeNet(currentNet, par.file, par.identifierType);
+    writeNet(currentNet, scopeParameter.file, scopeParameter.identifierType);
     Rule.writeItemClearanceClass(
-        par.board.rules.clearanceMatrix.getName(conductionArea.clearanceClassIndex()),
-        par.file,
-        par.identifierType);
-    par.file.endScope();
+        scopeParameter.board.rules.clearanceMatrix.getName(conductionArea.clearanceClassIndex()),
+        scopeParameter.file,
+        scopeParameter.identifierType);
+    scopeParameter.file.endScope();
   }
 
   private static void writeNet(
@@ -298,23 +302,23 @@ public class Wiring extends ScopeKeyword {
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter par) {
+  public boolean readScope(ReadScopeParameter scopeParameter) {
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = par.scanner.nextToken();
+        nextToken = scopeParameter.scanner.nextToken();
       } catch (IOException _) {
         FRLogger.warn(
             "Wiring.read_scope: IO error scanning file at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
       if (nextToken == null) {
         FRLogger.warn(
             "Wiring.read_scope: unexpected end of file at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -325,29 +329,29 @@ public class Wiring extends ScopeKeyword {
       boolean readOk = true;
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == WIRE) {
-          readWireScope(par);
+          readWireScope(scopeParameter);
         } else if (nextToken == VIA) {
-          readOk = readViaScope(par);
+          readOk = readViaScope(scopeParameter);
         } else {
-          skipScope(par.scanner);
+          skipScope(scopeParameter.scanner);
         }
       }
       if (!readOk) {
         return false;
       }
     }
-    RoutingBoard board = par.boardHandling.getRoutingBoard();
+    RoutingBoard board = scopeParameter.boardHandling.getRoutingBoard();
     try {
       board.normalizeAllTraces();
     } catch (Exception e) {
       String msg = "Wiring: normalization of traces failed";
       FRLogger.debug(msg);
-      par.warnings.add(msg);
+      scopeParameter.warnings.add(msg);
     }
     return true;
   }
 
-  private Item readWireScope(ReadScopeParameter par) {
+  private Item readWireScope(ReadScopeParameter scopeParameter) {
     Net.Id netId = null;
     String clearanceClassName = null;
     FixedState fixed = FixedState.UNFIXED;
@@ -358,7 +362,7 @@ public class Wiring extends ScopeKeyword {
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = par.scanner.nextToken();
+        nextToken = scopeParameter.scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("Wiring.read_wire_scope: IO error scanning file", e);
         return null;
@@ -366,7 +370,7 @@ public class Wiring extends ScopeKeyword {
       if (nextToken == null) {
         FRLogger.warn(
             "Wiring.read_wire_scope: unexpected end of file at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -376,24 +380,27 @@ public class Wiring extends ScopeKeyword {
       }
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == POLYGON_PATH) {
-          path = Shape.readPolygonPathScope(par.scanner, par.layerStructure);
+          path = Shape.readPolygonPathScope(scopeParameter.scanner, scopeParameter.layerStructure);
         } else if (nextToken == POLYLINE_PATH) {
-          path = Shape.readPolylinePathScope(par.scanner, par.layerStructure);
+          path = Shape.readPolylinePathScope(scopeParameter.scanner, scopeParameter.layerStructure);
         } else if (nextToken == RECTANGLE) {
 
-          borderShape = Shape.readRectangleScope(par.scanner, par.layerStructure);
+          borderShape =
+              Shape.readRectangleScope(scopeParameter.scanner, scopeParameter.layerStructure);
         } else if (nextToken == POLYGON) {
 
-          borderShape = Shape.readPolygonScope(par.scanner, par.layerStructure);
+          borderShape =
+              Shape.readPolygonScope(scopeParameter.scanner, scopeParameter.layerStructure);
         } else if (nextToken == CIRCLE) {
 
-          borderShape = Shape.readCircleScope(par.scanner, par.layerStructure);
+          borderShape =
+              Shape.readCircleScope(scopeParameter.scanner, scopeParameter.layerStructure);
         } else if (nextToken == WINDOW) {
-          Shape holeShape = Shape.readScope(par.scanner, par.layerStructure);
+          Shape holeShape = Shape.readScope(scopeParameter.scanner, scopeParameter.layerStructure);
           holeList.add(holeShape);
           // overread the closing bracket
           try {
-            nextToken = par.scanner.nextToken();
+            nextToken = scopeParameter.scanner.nextToken();
           } catch (IOException e) {
             FRLogger.error("Wiring.read_wire_scope: IO error scanning file", e);
             return null;
@@ -401,28 +408,29 @@ public class Wiring extends ScopeKeyword {
           if (nextToken != CLOSED_BRACKET) {
             FRLogger.warn(
                 "Wiring.read_wire_scope: closing bracket expected at '"
-                    + par.scanner.getScopeIdentifier()
+                    + scopeParameter.scanner.getScopeIdentifier()
                     + "'");
             return null;
           }
         } else if (nextToken == NET) {
-          netId = readNetId(par.scanner);
+          netId = readNetId(scopeParameter.scanner);
         } else if (nextToken == CLEARANCE_CLASS) {
-          clearanceClassName = DsnFile.readStringScope(par.scanner);
+          clearanceClassName = DsnFile.readStringScope(scopeParameter.scanner);
         } else if (nextToken == TYPE) {
-          fixed = calcFixed(par.scanner);
+          fixed = calcFixed(scopeParameter.scanner);
         } else {
-          skipScope(par.scanner);
+          skipScope(scopeParameter.scanner);
         }
       }
     }
     if (path == null && borderShape == null) {
-      String msg = "Wiring: wire has no shape at '" + par.scanner.getScopeIdentifier() + "'";
+      String msg =
+          "Wiring: wire has no shape at '" + scopeParameter.scanner.getScopeIdentifier() + "'";
       FRLogger.warn(msg);
-      par.warnings.add(msg);
+      scopeParameter.warnings.add(msg);
       return null;
     }
-    RoutingBoard board = par.boardHandling.getRoutingBoard();
+    RoutingBoard board = scopeParameter.boardHandling.getRoutingBoard();
 
     NetClass netClass = board.rules.getDefaultNetClass();
     Collection<app.freerouting.rules.Net> foundNets = getSubnets(netId, board.rules);
@@ -441,7 +449,7 @@ public class Wiring extends ScopeKeyword {
     int halfWidth;
     if (path != null) {
       layerIndex = path.layer.no;
-      halfWidth = (int) Math.round(par.coordinateTransform.dsnToBoard(path.width / 2));
+      halfWidth = (int) Math.round(scopeParameter.coordinateTransform.dsnToBoard(path.width / 2));
     } else {
       layerIndex = borderShape.layer.no;
       halfWidth = 0;
@@ -452,10 +460,10 @@ public class Wiring extends ScopeKeyword {
           "Wiring: wire ignored — unknown layer '"
               + layerName
               + "' at '"
-              + par.scanner.getScopeIdentifier()
+              + scopeParameter.scanner.getScopeIdentifier()
               + "'";
       FRLogger.warn(msg);
-      par.warnings.add(msg);
+      scopeParameter.warnings.add(msg);
       return null;
     }
 
@@ -470,7 +478,7 @@ public class Wiring extends ScopeKeyword {
       Collection<Shape> area = new LinkedList<>();
       area.add(borderShape);
       area.addAll(holeList);
-      Area conductionArea = Shape.transformAreaToBoard(area, par.coordinateTransform);
+      Area conductionArea = Shape.transformAreaToBoard(area, scopeParameter.coordinateTransform);
       result =
           board.insertConductionArea(
               conductionArea, layerIndex, netNumbers, clearanceClassIndex, false, fixed);
@@ -484,7 +492,7 @@ public class Wiring extends ScopeKeyword {
       for (int i = 0; i < cornerArr.length; i++) {
         currentPoint[0] = path.coordinateArr[2 * i];
         currentPoint[1] = path.coordinateArr[2 * i + 1];
-        FloatPoint currentCorner = par.coordinateTransform.dsnToBoard(currentPoint);
+        FloatPoint currentCorner = scopeParameter.coordinateTransform.dsnToBoard(currentPoint);
         if (!boundingBox.contains(currentCorner)) {
           String msg =
               "Wiring: wire corner ("
@@ -492,10 +500,10 @@ public class Wiring extends ScopeKeyword {
                   + ","
                   + (int) currentPoint[1]
                   + ") is outside board bounds at '"
-                  + par.scanner.getScopeIdentifier()
+                  + scopeParameter.scanner.getScopeIdentifier()
                   + "'";
           FRLogger.warn(msg);
-          par.warnings.add(msg);
+          scopeParameter.warnings.add(msg);
           return null;
         }
         cornerArr[i] = currentCorner.round();
@@ -531,7 +539,7 @@ public class Wiring extends ScopeKeyword {
                 + path.layer.name
                 + "'. This is likely a DSN export issue in your EDA tool.";
         FRLogger.debug(msg);
-        par.warnings.add(msg);
+        scopeParameter.warnings.add(msg);
       }
     } else if (path instanceof PolylinePath) {
       if (clearanceClassIndex < 0) {
@@ -543,10 +551,10 @@ public class Wiring extends ScopeKeyword {
       for (int i = 0; i < lineArr.length; i++) {
         currentPoint[0] = path.coordinateArr[4 * i];
         currentPoint[1] = path.coordinateArr[4 * i + 1];
-        FloatPoint currentA = par.coordinateTransform.dsnToBoard(currentPoint);
+        FloatPoint currentA = scopeParameter.coordinateTransform.dsnToBoard(currentPoint);
         currentPoint[0] = path.coordinateArr[4 * i + 2];
         currentPoint[1] = path.coordinateArr[4 * i + 3];
-        FloatPoint currentB = par.coordinateTransform.dsnToBoard(currentPoint);
+        FloatPoint currentB = scopeParameter.coordinateTransform.dsnToBoard(currentPoint);
         lineArr[i] = new Line(currentA.round(), currentB.round());
       }
       Polyline tracePolyline = new Polyline(lineArr);
@@ -556,7 +564,7 @@ public class Wiring extends ScopeKeyword {
     } else {
       FRLogger.warn(
           "Wiring.read_wire_scope: unexpected Path subclass at '"
-              + par.scanner.getScopeIdentifier()
+              + scopeParameter.scanner.getScopeIdentifier()
               + "'");
       return null;
     }
@@ -588,23 +596,23 @@ public class Wiring extends ScopeKeyword {
     }
   }
 
-  private boolean readViaScope(ReadScopeParameter par) {
+  private boolean readViaScope(ReadScopeParameter scopeParameter) {
     try {
       FixedState fixed = FixedState.UNFIXED;
       // read the padstack name
-      Object nextToken = par.scanner.nextToken();
+      Object nextToken = scopeParameter.scanner.nextToken();
       if (!(nextToken instanceof String padstackName)) {
         FRLogger.warn(
             "Wiring.read_via_scope: padstack name expected at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
-      par.scanner.setScopeIdentifier(padstackName);
+      scopeParameter.scanner.setScopeIdentifier(padstackName);
       // read the location
       double[] location = new double[2];
       for (int i = 0; i < 2; i++) {
-        nextToken = par.scanner.nextToken();
+        nextToken = scopeParameter.scanner.nextToken();
         if (nextToken instanceof Double double1) {
           location[i] = double1;
         } else if (nextToken instanceof Integer integer) {
@@ -612,7 +620,7 @@ public class Wiring extends ScopeKeyword {
         } else {
           FRLogger.warn(
               "Wiring.read_via_scope: number expected at '"
-                  + par.scanner.getScopeIdentifier()
+                  + scopeParameter.scanner.getScopeIdentifier()
                   + "'");
           return false;
         }
@@ -621,11 +629,11 @@ public class Wiring extends ScopeKeyword {
       String clearanceClassName = null;
       for (; ; ) {
         Object prevToken = nextToken;
-        nextToken = par.scanner.nextToken();
+        nextToken = scopeParameter.scanner.nextToken();
         if (nextToken == null) {
           FRLogger.warn(
               "Wiring.read_via_scope: unexpected end of file at '"
-                  + par.scanner.getScopeIdentifier()
+                  + scopeParameter.scanner.getScopeIdentifier()
                   + "'");
           return false;
         }
@@ -635,17 +643,17 @@ public class Wiring extends ScopeKeyword {
         }
         if (prevToken == OPEN_BRACKET) {
           if (nextToken == NET) {
-            netId = readNetId(par.scanner);
+            netId = readNetId(scopeParameter.scanner);
           } else if (nextToken == CLEARANCE_CLASS) {
-            clearanceClassName = DsnFile.readStringScope(par.scanner);
+            clearanceClassName = DsnFile.readStringScope(scopeParameter.scanner);
           } else if (nextToken == TYPE) {
-            fixed = calcFixed(par.scanner);
+            fixed = calcFixed(scopeParameter.scanner);
           } else {
-            skipScope(par.scanner);
+            skipScope(scopeParameter.scanner);
           }
         }
       }
-      RoutingBoard board = par.boardHandling.getRoutingBoard();
+      RoutingBoard board = scopeParameter.boardHandling.getRoutingBoard();
       String cleanedName = padstackName != null ? padstackName.replaceAll("\\.\\d+", "") : null;
       Padstack currentPadstack = board.library.padstacks.get(cleanedName);
       if (currentPadstack == null) {
@@ -653,10 +661,10 @@ public class Wiring extends ScopeKeyword {
             "Wiring: via padstack '"
                 + padstackName
                 + "' not found at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'";
         FRLogger.warn(msg);
-        par.warnings.add(msg);
+        scopeParameter.warnings.add(msg);
         return false;
       }
       NetClass netClass = board.rules.getDefaultNetClass();
@@ -666,10 +674,10 @@ public class Wiring extends ScopeKeyword {
             "Wiring: via net '"
                 + netId.name
                 + "' not found at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'";
         FRLogger.warn(msg);
-        par.warnings.add(msg);
+        scopeParameter.warnings.add(msg);
       }
       int[] netNumbers = new int[foundNets.size()];
       int currentIndex = 0;
@@ -685,14 +693,14 @@ public class Wiring extends ScopeKeyword {
         clearanceClassIndex =
             netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.VIA);
       }
-      IntPoint boardLocation = par.coordinateTransform.dsnToBoard(location).round();
+      IntPoint boardLocation = scopeParameter.coordinateTransform.dsnToBoard(location).round();
       if (viaExists(boardLocation, currentPadstack, netNumbers, board)) {
         String msg =
             "Wiring: duplicate via skipped at (" + boardLocation.x + ", " + boardLocation.y + ")";
         FRLogger.warn(msg);
-        par.warnings.add(msg);
+        scopeParameter.warnings.add(msg);
       } else {
-        boolean attachAllowed = par.viaAtSmdAllowed && currentPadstack.attachAllowed;
+        boolean attachAllowed = scopeParameter.viaAtSmdAllowed && currentPadstack.attachAllowed;
         board.insertVia(
             currentPadstack, boardLocation, netNumbers, clearanceClassIndex, fixed, attachAllowed);
       }

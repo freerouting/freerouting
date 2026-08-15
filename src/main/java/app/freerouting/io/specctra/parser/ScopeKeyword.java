@@ -42,12 +42,12 @@ public class ScopeKeyword extends Keyword {
   }
 
   /** Reads the next scope of this keyword from dsn file. */
-  public boolean readScope(ReadScopeParameter par) {
+  public boolean readScope(ReadScopeParameter scopeParameter) {
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = par.scanner.nextToken();
+        nextToken = scopeParameter.scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("ScopeKeyword.read_scope: IO error scanning file", e);
         return false;
@@ -67,12 +67,12 @@ public class ScopeKeyword extends Keyword {
         if (nextToken instanceof ScopeKeyword keyword) {
           // read the next scope, which is the "structure" part of the DSN file
           nextScope = keyword;
-          if (!nextScope.readScope(par)) {
+          if (!nextScope.readScope(scopeParameter)) {
             return false;
           }
         } else {
           // skip unknown scope
-          skipScope(par.scanner);
+          skipScope(scopeParameter.scanner);
         }
       }
     }

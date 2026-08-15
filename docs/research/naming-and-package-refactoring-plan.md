@@ -540,11 +540,11 @@ Branch: `refactor/naming-phase-9-parameters`
 
 **Progress checklist**
 
-- [ ] Specctra scope parameter: `WriteScopeParameter par` → `WriteScopeParameter scopeParameter`.
-- [ ] Object equality: `public boolean equals(Object obj)` → `public boolean equals(Object other)`.
-- [ ] Geometry parameters: `Point p` → `Point point`, `Line l` → `Line line`, `TileShape s` → `TileShape shape`.
-- [ ] Single letter & index parameters: `int no` → `int index` / `int pinNumber` / `int cornerIndex`.
-- [ ] Run full test suite and quality gates.
+- [x] Specctra scope parameter: `WriteScopeParameter par` → `WriteScopeParameter scopeParameter` and `ReadScopeParameter par` → `ReadScopeParameter scopeParameter`.
+- [x] Object equality: `public boolean equals(Object obj)` → `public boolean equals(Object other)`.
+- [x] Geometry parameters: `Point p` → `Point point`, `Line l` → `Line line`, `TileShape s` → `TileShape shape`.
+- [x] Single letter & index parameters: `int no` → `int index` / `int pinNumber` / `int cornerIndex`.
+- [x] Run full test suite and quality gates.
 
 ---
 

@@ -30,18 +30,18 @@ public class IntPoint extends Point implements Serializable {
 
   /** Returns true, if this IntPoint is equal to ob. */
   @Override
-  public final boolean equals(Object ob) {
-    if (this == ob) {
+  public final boolean equals(Object other) {
+    if (this == other) {
       return true;
     }
-    if (ob == null) {
+    if (other == null) {
       return false;
     }
-    if (getClass() != ob.getClass()) {
+    if (getClass() != other.getClass()) {
       return false;
     }
-    IntPoint other = (IntPoint) ob;
-    return x == other.x && y == other.y;
+    IntPoint otherPoint = (IntPoint) other;
+    return x == otherPoint.x && y == otherPoint.y;
   }
 
   @Override

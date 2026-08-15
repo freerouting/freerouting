@@ -124,19 +124,19 @@ public final class DsnReader {
     // -----------------------------------------------------------------------
     // Parse the body — board is constructed inside ReadScopeParameter's shim
     // -----------------------------------------------------------------------
-    ReadScopeParameter par = new ReadScopeParameter(scanner, observers, idGenerator);
-    boolean readOk = Keyword.PCB_SCOPE.readScope(par);
+    ReadScopeParameter scopeParameter = new ReadScopeParameter(scanner, observers, idGenerator);
+    boolean readOk = Keyword.PCB_SCOPE.readScope(scopeParameter);
 
-    BasicBoard board = par.getBoard();
+    BasicBoard board = scopeParameter.getBoard();
 
     closeQuietly(inputStream);
 
     if (readOk) {
       // Apply power-plane autoroute settings if the DSN had no (autoroute ...) scope
-      if (par.autorouteSettings == null) {
+      if (scopeParameter.autorouteSettings == null) {
         DsnFile.adjustPlaneAutorouteSettings(board);
       }
-      List<String> warnings = par.getWarnings();
+      List<String> warnings = scopeParameter.getWarnings();
       if (!warnings.isEmpty()) {
         FRLogger.warn(
             "DSN file '"
@@ -146,8 +146,8 @@ public final class DsnReader {
                 + " warning(s).");
       }
       return new BoardReadResult.Success(board, null, warnings);
-    } else if (!par.boardOutlineOk) {
-      List<String> warnings = par.getWarnings();
+    } else if (!scopeParameter.boardOutlineOk) {
+      List<String> warnings = scopeParameter.getWarnings();
       if (!warnings.isEmpty()) {
         FRLogger.warn(
             "DSN file '"
@@ -220,7 +220,7 @@ public final class DsnReader {
     // We stop reading (and close the stream) as soon as (structure ...) ends,
     // skipping all subsequent heavy scopes.
     // -----------------------------------------------------------------------
-    ReadScopeParameter par = new ReadScopeParameter(scanner, observers, idGenerator);
+    ReadScopeParameter scopeParameter = new ReadScopeParameter(scanner, observers, idGenerator);
     Object nextToken = null;
     outer:
     for (; ; ) {
@@ -236,16 +236,18 @@ public final class DsnReader {
       }
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.PARSER_SCOPE) {
-          // Populates par.hostCad, par.hostVersion, par.stringQuote
-          Keyword.PARSER_SCOPE.readScope(par);
+          // Populates scopeParameter.hostCad, scopeParameter.hostVersion,
+          // scopeParameter.stringQuote
+          Keyword.PARSER_SCOPE.readScope(scopeParameter);
         } else if (nextToken == Keyword.RESOLUTION_SCOPE) {
-          // Populates par.unit, par.resolution
-          Keyword.RESOLUTION_SCOPE.readScope(par);
+          // Populates scopeParameter.unit, scopeParameter.resolution
+          Keyword.RESOLUTION_SCOPE.readScope(scopeParameter);
         } else if (nextToken == Keyword.STRUCTURE_SCOPE) {
-          // Populates par.layerStructure, par.snapAngle, par.autorouteSettings
+          // Populates scopeParameter.layerStructure, scopeParameter.snapAngle,
+          // scopeParameter.autorouteSettings
           // and creates the board via MinimalBoardManager (if a valid boundary exists).
           // Return value is ignored — we extract whatever was populated.
-          Keyword.STRUCTURE_SCOPE.readScope(par);
+          Keyword.STRUCTURE_SCOPE.readScope(scopeParameter);
           break outer; // stop here — skip library, placement, network, wiring
         } else {
           ScopeKeyword.skipScope(scanner);
@@ -259,23 +261,24 @@ public final class DsnReader {
     // Build BoardMetadata from the parsed fields.
     // -----------------------------------------------------------------------
     int layerCount = 0;
-    if (par.layerStructure != null) {
-      layerCount = par.layerStructure.arr.length;
-    } else if (par.getBoard() != null) {
-      layerCount = par.getBoard().getLayerCount();
+    if (scopeParameter.layerStructure != null) {
+      layerCount = scopeParameter.layerStructure.arr.length;
+    } else if (scopeParameter.getBoard() != null) {
+      layerCount = scopeParameter.getBoard().getLayerCount();
     }
 
     BoardMetadata metadata =
         new BoardMetadata(
-            par.hostCad,
-            par.hostVersion,
+            scopeParameter.hostCad,
+            scopeParameter.hostVersion,
             layerCount,
-            par.unit,
-            par.resolution,
-            par.snapAngle,
-            par.autorouteSettings);
+            scopeParameter.unit,
+            scopeParameter.resolution,
+            scopeParameter.snapAngle,
+            scopeParameter.autorouteSettings);
 
-    return new BoardReadResult.Success(par.getBoard(), metadata, par.getWarnings());
+    return new BoardReadResult.Success(
+        scopeParameter.getBoard(), metadata, scopeParameter.getWarnings());
   }
 
   // -------------------------------------------------------------------------

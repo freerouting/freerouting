@@ -32,67 +32,69 @@ public class Library extends ScopeKeyword {
     super("library");
   }
 
-  public static void writeScope(WriteScopeParameter par) throws IOException {
-    par.file.startScope();
-    par.file.write("library");
+  public static void writeScope(WriteScopeParameter scopeParameter) throws IOException {
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("library");
 
-    if (par.board.library.packages != null) {
-      for (int i = 1; i <= par.board.library.packages.count(); i++) {
-        Package.writeScope(par, par.board.library.packages.get(i));
+    if (scopeParameter.board.library.packages != null) {
+      for (int i = 1; i <= scopeParameter.board.library.packages.count(); i++) {
+        Package.writeScope(scopeParameter, scopeParameter.board.library.packages.get(i));
       }
     }
 
-    if (par.board.library.padstacks != null) {
-      for (int i = 1; i <= par.board.library.padstacks.count(); i++) {
-        writePadstackScope(par, par.board.library.padstacks.get(i));
+    if (scopeParameter.board.library.padstacks != null) {
+      for (int i = 1; i <= scopeParameter.board.library.padstacks.count(); i++) {
+        writePadstackScope(scopeParameter, scopeParameter.board.library.padstacks.get(i));
       }
     }
 
-    par.file.endScope();
+    scopeParameter.file.endScope();
   }
 
-  public static void writePadstackScope(WriteScopeParameter par, Padstack padstack)
+  public static void writePadstackScope(WriteScopeParameter scopeParameter, Padstack padstack)
       throws IOException {
     // search the layer range of the padstack
     int firstLayerNo = 0;
-    while (firstLayerNo < par.board.getLayerCount() && padstack.getShape(firstLayerNo) == null) {
+    while (firstLayerNo < scopeParameter.board.getLayerCount()
+        && padstack.getShape(firstLayerNo) == null) {
       ++firstLayerNo;
     }
-    int lastLayerNo = par.board.getLayerCount() - 1;
+    int lastLayerNo = scopeParameter.board.getLayerCount() - 1;
     while (lastLayerNo >= 0 && padstack.getShape(lastLayerNo) == null) {
       --lastLayerNo;
     }
-    if (firstLayerNo >= par.board.getLayerCount() || lastLayerNo < 0) {
+    if (firstLayerNo >= scopeParameter.board.getLayerCount() || lastLayerNo < 0) {
       FRLogger.warn(
           "Library.write_padstack_scope: padstack shape not found at '" + padstack.name + "'");
       return;
     }
 
-    par.file.startScope();
-    par.file.write("padstack ");
-    par.identifierType.write(padstack.name, par.file);
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("padstack ");
+    scopeParameter.identifierType.write(padstack.name, scopeParameter.file);
     for (int i = firstLayerNo; i <= lastLayerNo; i++) {
       app.freerouting.geometry.planar.Shape currentBoardShape = padstack.getShape(i);
       if (currentBoardShape == null) {
         continue;
       }
-      app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[i];
+      app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.arr[i];
       final Layer currentLayer = new Layer(boardLayer.name, i, boardLayer.isSignal);
-      Shape currentShape = par.coordinateTransform.boardToDsnRel(currentBoardShape, currentLayer);
-      par.file.startScope();
-      par.file.write("shape");
-      currentShape.writeScope(par.file, par.identifierType);
-      par.file.endScope();
+      Shape currentShape =
+          scopeParameter.coordinateTransform.boardToDsnRel(currentBoardShape, currentLayer);
+      scopeParameter.file.startScope();
+      scopeParameter.file.write("shape");
+      currentShape.writeScope(scopeParameter.file, scopeParameter.identifierType);
+      scopeParameter.file.endScope();
     }
     if (!padstack.attachAllowed) {
-      par.file.newLine();
-      par.file.write("(attach off)");
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(attach off)");
     }
     if (padstack.placedAbsolute) {
-      par.file.newLine();
-      par.file.write("(absolute on)");
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(absolute on)");
     }
-    par.file.endScope();
+    scopeParameter.file.endScope();
   }
 
   public static boolean readPadstackScope(
@@ -256,15 +258,16 @@ public class Library extends ScopeKeyword {
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter par) {
-    RoutingBoard board = par.boardHandling.getRoutingBoard();
-    board.library.padstacks = new Padstacks(par.boardHandling.getRoutingBoard().layerStructure);
+  public boolean readScope(ReadScopeParameter scopeParameter) {
+    RoutingBoard board = scopeParameter.boardHandling.getRoutingBoard();
+    board.library.padstacks =
+        new Padstacks(scopeParameter.boardHandling.getRoutingBoard().layerStructure);
     Collection<Package> packageList = new LinkedList<>();
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = par.scanner.nextToken();
+        nextToken = scopeParameter.scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("Library.read_scope: IO error scanning file", e);
         return false;
@@ -272,7 +275,7 @@ public class Library extends ScopeKeyword {
       if (nextToken == null) {
         FRLogger.warn(
             "Library.read_scope: unexpected end of file at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -283,17 +286,21 @@ public class Library extends ScopeKeyword {
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == Keyword.PADSTACK) {
           if (!readPadstackScope(
-              par.scanner, par.layerStructure, par.coordinateTransform, board.library.padstacks)) {
+              scopeParameter.scanner,
+              scopeParameter.layerStructure,
+              scopeParameter.coordinateTransform,
+              board.library.padstacks)) {
             return false;
           }
         } else if (nextToken == Keyword.IMAGE) {
-          Package currentPackage = Package.readScope(par.scanner, par.layerStructure);
+          Package currentPackage =
+              Package.readScope(scopeParameter.scanner, scopeParameter.layerStructure);
           if (currentPackage == null) {
             return false;
           }
           packageList.add(currentPackage);
         } else {
-          skipScope(par.scanner);
+          skipScope(scopeParameter.scanner);
         }
       }
     }
@@ -305,8 +312,10 @@ public class Library extends ScopeKeyword {
           new app.freerouting.core.library.Package.Pin[currentPackage.pinInfoArr.length];
       for (int i = 0; i < pinArr.length; i++) {
         Package.PinInfo pinInfo = currentPackage.pinInfoArr[i];
-        int relX = (int) Math.round(par.coordinateTransform.dsnToBoard(pinInfo.relCoor[0]));
-        int relY = (int) Math.round(par.coordinateTransform.dsnToBoard(pinInfo.relCoor[1]));
+        int relX =
+            (int) Math.round(scopeParameter.coordinateTransform.dsnToBoard(pinInfo.relCoor[0]));
+        int relY =
+            (int) Math.round(scopeParameter.coordinateTransform.dsnToBoard(pinInfo.relCoor[1]));
         Vector relCoor = new IntVector(relX, relY);
         String cleanedLookupName =
             pinInfo.padstackName != null ? pinInfo.padstackName.replaceAll("\\.\\d+", "") : null;
@@ -318,7 +327,7 @@ public class Library extends ScopeKeyword {
                   + "' (cleaned: '"
                   + cleanedLookupName
                   + "') not found at '"
-                  + par.scanner.getScopeIdentifier()
+                  + scopeParameter.scanner.getScopeIdentifier()
                   + "'");
           return false;
         }
@@ -335,7 +344,7 @@ public class Library extends ScopeKeyword {
       for (int i = 0; i < outlineArr.length; i++) {
         Shape currentShape = it3.next();
         if (currentShape != null) {
-          outlineArr[i] = currentShape.transformToBoardRel(par.coordinateTransform);
+          outlineArr[i] = currentShape.transformToBoardRel(scopeParameter.coordinateTransform);
           if (currentShape instanceof Path path) {
             outlineWidths[i] = path.width;
             double[] coords = path.coordinateArr;
@@ -350,7 +359,7 @@ public class Library extends ScopeKeyword {
         } else {
           FRLogger.warn(
               "Library.read_scope: outline shape is null at '"
-                  + par.scanner.getScopeIdentifier()
+                  + scopeParameter.scanner.getScopeIdentifier()
                   + "'");
         }
       }
@@ -364,7 +373,8 @@ public class Library extends ScopeKeyword {
         Shape.ReadAreaScopeResult currentKeepout = it2.next();
         final Layer currentLayer = currentKeepout.shapeList.iterator().next().layer;
         Area currentArea =
-            Shape.transformAreaToBoardRel(currentKeepout.shapeList, par.coordinateTransform);
+            Shape.transformAreaToBoardRel(
+                currentKeepout.shapeList, scopeParameter.coordinateTransform);
         keepoutArr[i] =
             new app.freerouting.core.library.Package.Keepout(
                 currentKeepout.areaName, currentArea, currentLayer.no);
@@ -376,7 +386,8 @@ public class Library extends ScopeKeyword {
         Shape.ReadAreaScopeResult currentKeepout = it2.next();
         final Layer currentLayer = (currentKeepout.shapeList.iterator().next()).layer;
         Area currentArea =
-            Shape.transformAreaToBoardRel(currentKeepout.shapeList, par.coordinateTransform);
+            Shape.transformAreaToBoardRel(
+                currentKeepout.shapeList, scopeParameter.coordinateTransform);
         viaKeepoutArr[i] =
             new app.freerouting.core.library.Package.Keepout(
                 currentKeepout.areaName, currentArea, currentLayer.no);
@@ -388,7 +399,8 @@ public class Library extends ScopeKeyword {
         Shape.ReadAreaScopeResult currentKeepout = it2.next();
         final Layer currentLayer = (currentKeepout.shapeList.iterator().next()).layer;
         Area currentArea =
-            Shape.transformAreaToBoardRel(currentKeepout.shapeList, par.coordinateTransform);
+            Shape.transformAreaToBoardRel(
+                currentKeepout.shapeList, scopeParameter.coordinateTransform);
         placeKeepoutArr[i] =
             new app.freerouting.core.library.Package.Keepout(
                 currentKeepout.areaName, currentArea, currentLayer.no);

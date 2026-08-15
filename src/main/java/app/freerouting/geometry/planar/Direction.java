@@ -80,27 +80,27 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
 
   /** Returns true, if ob is a Direction and this Direction and ob point into the same direction. */
   @Override
-  public final boolean equals(Object obj) {
-    if (obj == this) {
+  public final boolean equals(Object other) {
+    if (other == this) {
       return true;
     }
-    if (obj == null || getClass() != obj.getClass()) {
+    if (other == null || getClass() != other.getClass()) {
       return false;
     }
-    Direction other = (Direction) obj;
-    if (this == other) {
+    Direction otherDirection = (Direction) other;
+    if (this == otherDirection) {
       return true;
     }
     if (other == null) {
       return false;
     }
 
-    if (this.sideOf(other) != Side.COLLINEAR) {
+    if (this.sideOf(otherDirection) != Side.COLLINEAR) {
       return false;
     }
     // check, that dir and other_dir do not point into opposite directions
     Vector thisVector = getVector();
-    Vector otherVector = other.getVector();
+    Vector otherVector = otherDirection.getVector();
     return thisVector.projection(otherVector) == Signum.POSITIVE;
   }
 

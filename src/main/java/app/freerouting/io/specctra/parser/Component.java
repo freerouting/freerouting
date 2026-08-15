@@ -51,40 +51,42 @@ public class Component extends ScopeKeyword {
     return componentPlacement;
   }
 
-  public static void writeScope(WriteScopeParameter par, app.freerouting.board.Component component)
+  public static void writeScope(
+      WriteScopeParameter scopeParameter, app.freerouting.board.Component component)
       throws IOException {
-    par.file.startScope();
-    par.file.write("place ");
-    par.file.newLine();
-    par.identifierType.write(component.name, par.file);
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("place ");
+    scopeParameter.file.newLine();
+    scopeParameter.identifierType.write(component.name, scopeParameter.file);
     if (component.isPlaced()) {
-      double[] coor = par.coordinateTransform.boardToDsn(component.getLocation().toFloat());
+      double[] coor =
+          scopeParameter.coordinateTransform.boardToDsn(component.getLocation().toFloat());
       for (int i = 0; i < coor.length; i++) {
-        par.file.write(" ");
-        par.file.write(String.valueOf(coor[i]));
+        scopeParameter.file.write(" ");
+        scopeParameter.file.write(String.valueOf(coor[i]));
       }
       if (component.placedOnFront()) {
-        par.file.write(" front ");
+        scopeParameter.file.write(" front ");
       } else {
-        par.file.write(" back ");
+        scopeParameter.file.write(" back ");
       }
       int rotation = (int) Math.round(component.getRotationInDegree());
-      par.file.write(String.valueOf(rotation));
+      scopeParameter.file.write(String.valueOf(rotation));
     }
     if (component.positionFixed) {
-      par.file.newLine();
-      par.file.write(" (lock_type position)");
+      scopeParameter.file.newLine();
+      scopeParameter.file.write(" (lock_type position)");
     }
     int pinCount = component.getPackage().pinCount();
     for (int i = 0; i < pinCount; i++) {
-      writePinInfo(par, component, i);
+      writePinInfo(scopeParameter, component, i);
     }
-    writeKeepoutInfos(par, component);
-    par.file.endScope();
+    writeKeepoutInfos(scopeParameter, component);
+    scopeParameter.file.endScope();
   }
 
   private static void writePinInfo(
-      WriteScopeParameter par, app.freerouting.board.Component component, int pinNo)
+      WriteScopeParameter scopeParameter, app.freerouting.board.Component component, int pinNo)
       throws IOException {
     if (!component.isPlaced()) {
       return;
@@ -94,29 +96,30 @@ public class Component extends ScopeKeyword {
       FRLogger.warn("Component.write_pin_info: package pin not found at '" + component.name + "'");
       return;
     }
-    Pin componentPin = par.board.getPin(component.no, pinNo);
+    Pin componentPin = scopeParameter.board.getPin(component.no, pinNo);
     if (componentPin == null) {
       FRLogger.warn(
           "Component.write_pin_info: component pin not found at '" + component.name + "'");
       return;
     }
     String clClassName =
-        par.board.rules.clearanceMatrix.getName(componentPin.clearanceClassIndex());
+        scopeParameter.board.rules.clearanceMatrix.getName(componentPin.clearanceClassIndex());
     if (clClassName == null) {
       FRLogger.warn(
           "Component.write_pin_info: clearance class  name not found at '" + component.name + "'");
       return;
     }
-    par.file.newLine();
-    par.file.write("(pin ");
-    par.identifierType.write(packagePin.name, par.file);
-    par.file.write(" (clearanceClass ");
-    par.identifierType.write(clClassName, par.file);
-    par.file.write("))");
+    scopeParameter.file.newLine();
+    scopeParameter.file.write("(pin ");
+    scopeParameter.identifierType.write(packagePin.name, scopeParameter.file);
+    scopeParameter.file.write(" (clearanceClass ");
+    scopeParameter.identifierType.write(clClassName, scopeParameter.file);
+    scopeParameter.file.write("))");
   }
 
   private static void writeKeepoutInfos(
-      WriteScopeParameter par, app.freerouting.board.Component component) throws IOException {
+      WriteScopeParameter scopeParameter, app.freerouting.board.Component component)
+      throws IOException {
     if (!component.isPlaced()) {
       return;
     }
@@ -135,12 +138,14 @@ public class Component extends ScopeKeyword {
       }
       for (int i = 0; i < currentKeepoutArr.length; i++) {
         Package.Keepout currentKeepout = currentKeepoutArr[i];
-        ObstacleArea currentObstacleArea = getKeepout(par.board, component.no, currentKeepout.name);
+        ObstacleArea currentObstacleArea =
+            getKeepout(scopeParameter.board, component.no, currentKeepout.name);
         if (currentObstacleArea == null || currentObstacleArea.clearanceClassIndex() == 0) {
           continue;
         }
         String clClassName =
-            par.board.rules.clearanceMatrix.getName(currentObstacleArea.clearanceClassIndex());
+            scopeParameter.board.rules.clearanceMatrix.getName(
+                currentObstacleArea.clearanceClassIndex());
         if (clClassName == null) {
           FRLogger.warn(
               "Component.write_keepout_infos: clearance class name not found at '"
@@ -148,12 +153,12 @@ public class Component extends ScopeKeyword {
                   + "'");
           return;
         }
-        par.file.newLine();
-        par.file.write(keepoutType);
-        par.identifierType.write(currentKeepout.name, par.file);
-        par.file.write(" (clearanceClass ");
-        par.identifierType.write(clClassName, par.file);
-        par.file.write("))");
+        scopeParameter.file.newLine();
+        scopeParameter.file.write(keepoutType);
+        scopeParameter.identifierType.write(currentKeepout.name, scopeParameter.file);
+        scopeParameter.file.write(" (clearanceClass ");
+        scopeParameter.identifierType.write(clClassName, scopeParameter.file);
+        scopeParameter.file.write("))");
       }
     }
   }
@@ -354,13 +359,13 @@ public class Component extends ScopeKeyword {
 
   /** Overwrites the function read_scope in ScopeKeyword. */
   @Override
-  public boolean readScope(ReadScopeParameter par) {
+  public boolean readScope(ReadScopeParameter scopeParameter) {
     try {
-      ComponentPlacement componentPlacement = readScope(par.scanner);
+      ComponentPlacement componentPlacement = readScope(scopeParameter.scanner);
       if (componentPlacement == null) {
         return false;
       }
-      par.placementList.add(componentPlacement);
+      scopeParameter.placementList.add(componentPlacement);
     } catch (IOException e) {
       FRLogger.error("Component.read_scope: IO error scanning file", e);
       return false;

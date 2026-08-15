@@ -71,23 +71,22 @@ public class RationalPoint extends Point implements Serializable {
   }
 
   @Override
-  public final boolean equals(Object ob) {
-    if (this == ob) {
+  public final boolean equals(Object other) {
+    if (this == other) {
       return true;
     }
-    if (ob == null) {
+    if (other == null) {
       return false;
     }
-    if (getClass() != ob.getClass()) {
+    if (getClass() != other.getClass()) {
       return false;
     }
-    RationalPoint other = (RationalPoint) ob;
-    BigInteger det = BigIntAux.determinant(x, other.x, z, other.z);
+    RationalPoint otherPoint = (RationalPoint) other;
+    BigInteger det = BigIntAux.determinant(x, otherPoint.x, z, otherPoint.z);
     if (det.signum() != 0) {
       return false;
     }
-    det = BigIntAux.determinant(y, other.y, z, other.z);
-
+    det = BigIntAux.determinant(y, otherPoint.y, z, otherPoint.z);
     return det.signum() == 0;
   }
 
