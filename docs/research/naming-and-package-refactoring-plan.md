@@ -77,6 +77,13 @@ Do not put `Session` in GUI type names. Do not name the GUI package
 | `api.v1.McpControllerV1` | `api.mcp.McpControllerV1` (HTTP paths unchanged) |
 | `core.Session.isGuiSession` | `isPrimary` |
 | `WorkspaceContract.getInteractiveSettings()` | `getWorkspaceSettings()` |
+| `board.CalcFromSide` | `board.ShapeEntrySide` |
+| `board.CalcShapeAndFromSide` | `board.ShapeAndEntrySide` |
+| `board.ForcedPadAlgo` | `board.ForcedPadRouter` |
+| `board.ForcedViaAlgo` | `board.ForcedViaInserter` |
+| `board.MoveDrillItemAlgo` | `board.DrillItemMover` |
+| `board.OptViaAlgo` | `board.ViaOptimizer` |
+| `gui.GUIDefaultsFile` | `gui.GuiDefaultsFile` |
 
 Keep: `GuiBoardManager`, `HeadlessBoardManager`, `BoardManager`,
 `BatchAutorouter` / `BatchOptimizer` / `BatchFanout` / `BatchAutorouterV19`,
@@ -492,6 +499,52 @@ Slices:
 
 Do not expand API, MCP, DSN, SES, DRC, EDT, SMD. Do not rename JSON/CLI
 keys. Do not mix with type/package PRs.
+
+---
+
+### Phase 7 — Functional class renames
+
+Branch: `refactor/naming-phase-7-classes`
+
+**Progress checklist**
+
+- [ ] Rename `CalcFromSide` → `ShapeEntrySide`.
+- [ ] Rename `CalcShapeAndFromSide` → `ShapeAndEntrySide`.
+- [ ] Rename `ForcedPadAlgo` → `ForcedPadRouter`.
+- [ ] Rename `ForcedViaAlgo` → `ForcedViaInserter`.
+- [ ] Rename `MoveDrillItemAlgo` → `DrillItemMover`.
+- [ ] Rename `OptViaAlgo` → `ViaOptimizer`.
+- [ ] Rename `GUIDefaultsFile` → `GuiDefaultsFile`.
+- [ ] Run quality gates and verify BM01 test suite.
+
+---
+
+### Phase 8 — Net, layer, and clearance abbreviation expansion
+
+Branch: `refactor/naming-phase-8-abbreviations`
+
+**Progress checklist**
+
+- [ ] Expand `netNo` / `currentNetNo` → `netNumber`, `netNoArr` → `netNumbers`.
+- [ ] Expand `layerNo` / `currentLayerNo` → `layerIndex` (0-based) and `layerNumber` (1-based / display).
+- [ ] Expand `clearanceClassNo` → `clearanceClassIndex`.
+- [ ] Expand `currentOb` → `currentObject` / `currentObstacle`.
+- [ ] Update getters/methods: `getNetNo()` → `getNetNumber()`, `maxNetNo()` → `maxNetNumber()`, `containsNet(int netNumber)`.
+- [ ] Run quality gates and verify full unit test suite.
+
+---
+
+### Phase 9 — Parameter naming polish
+
+Branch: `refactor/naming-phase-9-parameters`
+
+**Progress checklist**
+
+- [ ] Specctra scope parameter: `WriteScopeParameter par` → `WriteScopeParameter scopeParameter`.
+- [ ] Object equality: `public boolean equals(Object obj)` → `public boolean equals(Object other)`.
+- [ ] Geometry parameters: `Point p` → `Point point`, `Line l` → `Line line`, `TileShape s` → `TileShape shape`.
+- [ ] Single letter & index parameters: `int no` → `int index` / `int pinNumber` / `int cornerIndex`.
+- [ ] Run full test suite and quality gates.
 
 ---
 
