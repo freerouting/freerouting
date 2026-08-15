@@ -33,11 +33,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BooleanSupplier;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
@@ -53,6 +57,28 @@ public class GuiManager {
    */
   // CHECKSTYLE.SUPPRESS: AbbreviationAsWordInName for +1 lines
   public static boolean initializeGUI(GlobalSettings globalSettings) {
+    return invokeOnEdt(() -> initializeGuiOnEdt(globalSettings));
+  }
+
+  /** Runs a GUI initializer synchronously on Swing's event dispatch thread. */
+  static boolean invokeOnEdt(BooleanSupplier initializer) {
+    if (SwingUtilities.isEventDispatchThread()) {
+      return initializer.getAsBoolean();
+    }
+
+    AtomicBoolean initialized = new AtomicBoolean();
+    try {
+      SwingUtilities.invokeAndWait(() -> initialized.set(initializer.getAsBoolean()));
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      FRLogger.error("Interrupted while initializing the GUI", e);
+    } catch (InvocationTargetException e) {
+      FRLogger.error("GUI initialization failed", e.getCause());
+    }
+    return initialized.get();
+  }
+
+  private static boolean initializeGuiOnEdt(GlobalSettings globalSettings) {
     // Start a new Freerouting session
     var guiSession =
         SessionManager.getInstance()
