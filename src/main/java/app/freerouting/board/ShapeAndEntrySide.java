@@ -10,20 +10,20 @@ import app.freerouting.geometry.planar.TileShape;
  * Used in the shove algorithm to calculate the fromside for pushing and to cut off dog ears of the
  * trace shape.
  */
-class CalcShapeAndFromSide {
+class ShapeAndEntrySide {
 
   final TileShape shape;
-  final CalcFromSide fromSide;
+  final ShapeEntrySide fromSide;
 
   /**
    * Used in the shove algorithm to calculate the fromside for pushing and to cut off dog ears of
    * the trace shape. In the check shove functions, inShoveCheck is expected to be true. In the
    * actual shove functions inShoveCheck is expected to be false.
    */
-  CalcShapeAndFromSide(PolylineTrace trace, int index, boolean orthogonal, boolean inShoveCheck) {
+  ShapeAndEntrySide(PolylineTrace trace, int index, boolean orthogonal, boolean inShoveCheck) {
     ShapeSearchTree searchTree = trace.board.searchTreeManager.getDefaultTree();
     TileShape currentShape = trace.getTreeShape(searchTree, index);
-    CalcFromSide currentFromSide = null;
+    ShapeEntrySide currentFromSide = null;
     boolean cutOffAtStart = false;
     boolean cutOffAtEnd = false;
     if (orthogonal) {
@@ -62,13 +62,13 @@ class CalcShapeAndFromSide {
       if (fromSideNo >= 0) {
         FloatPoint borderIntersection =
             currentCutLine.intersectionApprox(currentShape.borderLine(fromSideNo));
-        currentFromSide = new CalcFromSide(fromSideNo, borderIntersection);
+        currentFromSide = new ShapeEntrySide(fromSideNo, borderIntersection);
       }
     }
     if (currentFromSide == null && !inShoveCheck) {
       // In inShoveCheck, using this calculation may produce an undesired stackLevel > 1 in
       // ShapeTraceEntries.
-      currentFromSide = new CalcFromSide(trace.polyline(), index, currentShape);
+      currentFromSide = new ShapeEntrySide(trace.polyline(), index, currentShape);
     }
     this.shape = currentShape;
     this.fromSide = currentFromSide;

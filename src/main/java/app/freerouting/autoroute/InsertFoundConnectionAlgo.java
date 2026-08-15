@@ -1,6 +1,6 @@
 package app.freerouting.autoroute;
 
-import app.freerouting.board.ForcedViaAlgo;
+import app.freerouting.board.ForcedViaInserter;
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.Pin;
@@ -704,7 +704,7 @@ public final class InsertFoundConnectionAlgo {
         continue;
       }
       foundSuitableSpan = true;
-      if (ForcedViaAlgo.check(
+      if (ForcedViaInserter.check(
           currentViaInfo,
           location,
           netNoArr,
@@ -750,7 +750,7 @@ public final class InsertFoundConnectionAlgo {
       return false;
     }
     // insert the via
-    if (!ForcedViaAlgo.insert(
+    if (!ForcedViaInserter.insert(
         viaInfo,
         location,
         netNoArr,

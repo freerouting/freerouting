@@ -920,7 +920,7 @@ public class BoardFrame extends WindowBase {
         defaultsFileFound = false;
       }
       if (defaultsFileFound) {
-        boolean readOk = GUIDefaultsFile.read(this, boardPanel.boardHandling, inputStream);
+        boolean readOk = GuiDefaultsFile.read(this, boardPanel.boardHandling, inputStream);
         if (!readOk) {
           screenMessages.setStatusMessage(tm.getText("error_gui_defaults_read_failed"));
         }
@@ -1107,7 +1107,7 @@ public class BoardFrame extends WindowBase {
         }
 
         if (defaultsFileFound) {
-          boolean readOk = GUIDefaultsFile.read(this, boardPanel.boardHandling, inputStream);
+          boolean readOk = GuiDefaultsFile.read(this, boardPanel.boardHandling, inputStream);
           if (!readOk) {
             screenMessages.setStatusMessage(tm.getText("error_gui_defaults_read_failed"));
           }

@@ -3,8 +3,8 @@ package app.freerouting.autoroute;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.FixedState;
-import app.freerouting.board.ForcedPadAlgo;
-import app.freerouting.board.ForcedViaAlgo;
+import app.freerouting.board.ForcedPadRouter;
+import app.freerouting.board.ForcedViaInserter;
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.Pin;
@@ -1268,12 +1268,12 @@ public class MazeSearchAlgo {
       for (; ; ) {
         TileShape currentRoomShape =
             currentDrill.roomArr[currentLayer - currentDrill.firstLayer].getShape();
-        ForcedPadAlgo.CheckDrillResult drillResult =
+        ForcedPadRouter.CheckDrillResult drillResult =
             checkLayerWithAnyMatchingVia(currentDrill, currentLayer, currentRoomShape, netNoArr);
-        if (drillResult == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+        if (drillResult == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
           viaLowerBound = currentLayer + 1;
           break;
-        } else if (drillResult == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
+        } else if (drillResult == ForcedPadRouter.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
           if (currentLayer == 0) {
             smdAttachedOnComponentSide = true;
           } else if (currentLayer == ctrl.layerCount - 1) {
@@ -1297,12 +1297,12 @@ public class MazeSearchAlgo {
         }
         TileShape currentRoomShape =
             currentDrill.roomArr[currentLayer - currentDrill.firstLayer].getShape();
-        ForcedPadAlgo.CheckDrillResult drillResult =
+        ForcedPadRouter.CheckDrillResult drillResult =
             checkLayerWithAnyMatchingVia(currentDrill, currentLayer, currentRoomShape, netNoArr);
-        if (drillResult == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+        if (drillResult == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
           viaUpperBound = currentLayer - 1;
           break;
-        } else if (drillResult == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
+        } else if (drillResult == ForcedPadRouter.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
           if (currentLayer == ctrl.layerCount - 1) {
             smdAttachedOnSolderSide = true;
           }
@@ -1377,7 +1377,7 @@ public class MazeSearchAlgo {
     }
   }
 
-  private ForcedPadAlgo.CheckDrillResult checkLayerWithAnyMatchingVia(
+  private ForcedPadRouter.CheckDrillResult checkLayerWithAnyMatchingVia(
       ExpansionDrill drill, int layer, TileShape roomShape, int[] netNoArr) {
     boolean drillableWithAttachSmd = false;
     for (int i = 0; i < this.ctrl.viaRule.viaCount(); i++) {
@@ -1389,8 +1389,8 @@ public class MazeSearchAlgo {
       ConvexShape viaShape = viaPadstack.getShape(layer);
       double viaRadius = viaShape == null ? 0 : 0.5 * viaShape.maxWidth();
       double requiredRadius = Math.max(viaRadius, this.ctrl.traceHalfWidth[layer]);
-      ForcedPadAlgo.CheckDrillResult result =
-          ForcedViaAlgo.checkLayer(
+      ForcedPadRouter.CheckDrillResult result =
+          ForcedViaInserter.checkLayer(
               requiredRadius,
               viaInfo.getClearanceClass(),
               viaInfo.attachSmdAllowed(),
@@ -1403,16 +1403,16 @@ public class MazeSearchAlgo {
               this.autorouteEngine.board,
               this.ctrl.traceHalfWidth[layer],
               this.ctrl.traceClearanceClassNo);
-      if (result == ForcedPadAlgo.CheckDrillResult.DRILLABLE) {
+      if (result == ForcedPadRouter.CheckDrillResult.DRILLABLE) {
         return result;
       }
-      if (result == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
+      if (result == ForcedPadRouter.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
         drillableWithAttachSmd = true;
       }
     }
     return drillableWithAttachSmd
-        ? ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD
-        : ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
+        ? ForcedPadRouter.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD
+        : ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE;
   }
 
   /** Initializes the maze search algorithm. Returns false if the initialisation failed. */

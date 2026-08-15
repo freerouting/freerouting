@@ -508,14 +508,14 @@ Branch: `refactor/naming-phase-7-classes`
 
 **Progress checklist**
 
-- [ ] Rename `CalcFromSide` → `ShapeEntrySide`.
-- [ ] Rename `CalcShapeAndFromSide` → `ShapeAndEntrySide`.
-- [ ] Rename `ForcedPadAlgo` → `ForcedPadRouter`.
-- [ ] Rename `ForcedViaAlgo` → `ForcedViaInserter`.
-- [ ] Rename `MoveDrillItemAlgo` → `DrillItemMover`.
-- [ ] Rename `OptViaAlgo` → `ViaOptimizer`.
-- [ ] Rename `GUIDefaultsFile` → `GuiDefaultsFile`.
-- [ ] Run quality gates and verify BM01 test suite.
+- [x] Rename `CalcFromSide` → `ShapeEntrySide`.
+- [x] Rename `CalcShapeAndFromSide` → `ShapeAndEntrySide`.
+- [x] Rename `ForcedPadAlgo` → `ForcedPadRouter`.
+- [x] Rename `ForcedViaAlgo` → `ForcedViaInserter`.
+- [x] Rename `MoveDrillItemAlgo` → `DrillItemMover`.
+- [x] Rename `OptViaAlgo` → `ViaOptimizer`.
+- [x] Rename `GUIDefaultsFile` → `GuiDefaultsFile` and `GUIDefaultsScanner` → `GuiDefaultsScanner`.
+- [x] Run quality gates and verify BM01 test suite.
 
 ---
 

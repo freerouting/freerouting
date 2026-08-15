@@ -147,7 +147,7 @@ public abstract class PullTightAlgo {
               break; // because items may be removed
             }
           } else if (currentOb instanceof Via via && traceCostArr != null) {
-            if (OptViaAlgo.optViaLocation(
+            if (ViaOptimizer.optViaLocation(
                 this.board, via, traceCostArr, this.minTranslateDist, 10)) {
               somethingChanged = true;
             }

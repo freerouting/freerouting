@@ -110,7 +110,7 @@ public class MoveComponent {
           moveOk = false;
         } else {
           moveOk =
-              MoveDrillItemAlgo.check(
+              DrillItemMover.check(
                   currentDrillItem,
                   this.translateVector,
                   this.maxRecursionDepth,

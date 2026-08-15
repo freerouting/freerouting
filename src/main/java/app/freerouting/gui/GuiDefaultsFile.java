@@ -17,21 +17,21 @@ import javax.swing.JFrame;
 
 /** Description of a text file, where the board independent interactive settings are stored. */
 @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
-public final class GUIDefaultsFile {
+public final class GuiDefaultsFile {
 
   private final BoardFrame boardFrame;
   private final GuiBoardManager boardHandling;
 
   /** Used, when reading a defaults file, null otherwise. */
-  private final GUIDefaultsScanner scanner;
+  private final GuiDefaultsScanner scanner;
 
   /** Used, when writing a defaults file; null otherwise. */
   private final IndentFileWriter outFile;
 
-  private GUIDefaultsFile(
+  private GuiDefaultsFile(
       BoardFrame boardFrame,
       GuiBoardManager boardHandling,
-      GUIDefaultsScanner scanner,
+      GuiDefaultsScanner scanner,
       IndentFileWriter outputFile) {
     this.boardFrame = boardFrame;
     this.boardHandling = boardHandling;
@@ -50,7 +50,7 @@ public final class GUIDefaultsFile {
 
     IndentFileWriter outputFile = new IndentFileWriter(outputStream);
 
-    GUIDefaultsFile result = new GUIDefaultsFile(boardFrame, boardHandling, null, outputFile);
+    GuiDefaultsFile result = new GuiDefaultsFile(boardFrame, boardHandling, null, outputFile);
     try {
       result.writeDefaultsScope();
     } catch (IOException _) {
@@ -76,8 +76,8 @@ public final class GUIDefaultsFile {
     if (inputStream == null) {
       return false;
     }
-    GUIDefaultsScanner scanner = new GUIDefaultsScanner(inputStream);
-    GUIDefaultsFile newInstance = new GUIDefaultsFile(boardFrame, boardHandling, scanner, null);
+    GuiDefaultsScanner scanner = new GuiDefaultsScanner(inputStream);
+    GuiDefaultsFile newInstance = new GuiDefaultsFile(boardFrame, boardHandling, scanner, null);
     boolean result;
     try {
       result = newInstance.readDefaultsScope();
@@ -89,7 +89,7 @@ public final class GUIDefaultsFile {
   }
 
   /** Skips the current scope. Returns false, if no legal scope was found. */
-  private static boolean skipScope(GUIDefaultsScanner scanner) {
+  private static boolean skipScope(GuiDefaultsScanner scanner) {
     int openBrackedCount = 1;
     while (openBrackedCount > 0) {
       Object currentToken;

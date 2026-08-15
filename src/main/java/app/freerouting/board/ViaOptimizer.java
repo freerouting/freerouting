@@ -13,9 +13,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /** Contains functions for optimizing and improving via locations. */
-public final class OptViaAlgo {
+public final class ViaOptimizer {
 
-  private OptViaAlgo() {}
+  private ViaOptimizer() {}
 
   /**
    * Optimizes the location of a via connected to at most 2 traces according to the trace costs on
@@ -125,7 +125,7 @@ public final class OptViaAlgo {
       return false;
     }
     Vector delta = newLocation.differenceBy(viaCenter);
-    if (!MoveDrillItemAlgo.insert(via, delta, 9, 9, null, board)) {
+    if (!DrillItemMover.insert(via, delta, 9, 9, null, board)) {
       FRLogger.warn("OptViaAlgo.opt_via_location: move via failed");
       return false;
     }
@@ -233,7 +233,7 @@ public final class OptViaAlgo {
           projectionOk = false;
         }
         if (projectionOk) {
-          if (MoveDrillItemAlgo.check(via, diffVector, 0, 0, null, board, null)) {
+          if (DrillItemMover.check(via, diffVector, 0, 0, null, board, null)) {
             double okLength =
                 board.checkTraceSegment(
                     viaCenter,
@@ -271,7 +271,7 @@ public final class OptViaAlgo {
       }
     }
     Vector diffVector = newViaLocation.differenceBy(viaCenter);
-    if (!MoveDrillItemAlgo.insert(via, diffVector, 9, 9, null, board)) {
+    if (!DrillItemMover.insert(via, diffVector, 9, 9, null, board)) {
       FRLogger.warn("OptViaAlgo.opt_plane_or_fanout_via: move via failed");
       return false;
     }
@@ -327,7 +327,7 @@ public final class OptViaAlgo {
     }
     Point newToLocation = newFloatToLocation.round();
     Vector delta = newToLocation.differenceBy(fromLocation);
-    boolean checkOk = MoveDrillItemAlgo.check(via, delta, 0, 0, null, board, null);
+    boolean checkOk = DrillItemMover.check(via, delta, 0, 0, null, board, null);
 
     if (checkOk) {
       return newToLocation;
@@ -347,7 +347,7 @@ public final class OptViaAlgo {
           floatFromLocation.changeLength(floatToLocation, okLength + currentLength).round();
 
       delta = checkPoint.differenceBy(fromLocation);
-      if (MoveDrillItemAlgo.check(via, delta, 0, 0, null, board, null)) {
+      if (DrillItemMover.check(via, delta, 0, 0, null, board, null)) {
         okLength += currentLength;
         result = checkPoint;
       }
@@ -411,7 +411,7 @@ public final class OptViaAlgo {
     if (okLength < Integer.MAX_VALUE) {
       return false;
     }
-    return MoveDrillItemAlgo.check(via, delta, 0, 0, null, board, null);
+    return DrillItemMover.check(via, delta, 0, 0, null, board, null);
   }
 
   /**

@@ -13,9 +13,9 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /** Contains internal auxiliary functions of class RoutingBoard for shoving vias and pins. */
-public final class MoveDrillItemAlgo {
+public final class DrillItemMover {
 
-  private MoveDrillItemAlgo() {}
+  private DrillItemMover() {}
 
   /**
    * Checks, if drillItem can be translated by vector by shoving obstacle traces and vias aside, so
@@ -51,7 +51,7 @@ public final class MoveDrillItemAlgo {
       effectiveIgnoreItems = ignoreItems;
     }
     effectiveIgnoreItems.add(drillItem);
-    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(board);
+    ForcedPadRouter forcedPadRouter = new ForcedPadRouter(board);
     boolean attachAllowed = false;
     if (drillItem instanceof Via via) {
       attachAllowed = via.attachAllowed;
@@ -72,8 +72,8 @@ public final class MoveDrillItemAlgo {
       } else {
         currentTileShape = newShape.boundingOctagon();
       }
-      CalcFromSide fromSide = new CalcFromSide(drillItem.getCenter(), currentTileShape);
-      if (forcedPadAlgo.checkForcedPad(
+      ShapeEntrySide fromSide = new ShapeEntrySide(drillItem.getCenter(), currentTileShape);
+      if (forcedPadRouter.checkForcedPad(
               currentTileShape,
               fromSide,
               currentLayer,
@@ -85,7 +85,7 @@ public final class MoveDrillItemAlgo {
               maxViaRecursionDepth,
               true,
               timeLimit)
-          == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+          == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
         return false;
       }
     }
@@ -112,7 +112,7 @@ public final class MoveDrillItemAlgo {
     if (drillItem instanceof Via via) {
       attachAllowed = via.attachAllowed;
     }
-    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(board);
+    ForcedPadRouter forcedPadRouter = new ForcedPadRouter(board);
     Collection<Item> ignoreItems = new LinkedList<>();
     ignoreItems.add(drillItem);
     ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
@@ -134,8 +134,8 @@ public final class MoveDrillItemAlgo {
       if (tidyRegion != null) {
         tidyRegion = tidyRegion.union(currentTileShape.boundingOctagon());
       }
-      CalcFromSide fromSide = new CalcFromSide(drillItem.getCenter(), currentTileShape);
-      if (!forcedPadAlgo.forcedPad(
+      ShapeEntrySide fromSide = new ShapeEntrySide(drillItem.getCenter(), currentTileShape);
+      if (!forcedPadRouter.forcedPad(
           currentTileShape,
           fromSide,
           currentLayer,
@@ -162,7 +162,7 @@ public final class MoveDrillItemAlgo {
    */
   static boolean shoveVias(
       TileShape obstacleShape,
-      CalcFromSide fromSide,
+      ShapeEntrySide fromSide,
       int layer,
       int[] netNoArr,
       int clType,

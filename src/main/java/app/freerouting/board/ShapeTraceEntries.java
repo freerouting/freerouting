@@ -20,7 +20,7 @@ public class ShapeTraceEntries {
   private final int[] ownNetNos;
   private final int clClass;
   private final RoutingBoard board;
-  private CalcFromSide fromSide;
+  private ShapeEntrySide fromSide;
   private EntryPoint listAnchor;
   private int tracePieceCount;
   private int maxStackLevel;
@@ -36,7 +36,7 @@ public class ShapeTraceEntries {
       int layer,
       int[] ownNetNos,
       int clType,
-      CalcFromSide fromSide,
+      ShapeEntrySide fromSide,
       RoutingBoard board) {
     this.shape = shape;
     this.layer = layer;
@@ -438,7 +438,7 @@ public class ShapeTraceEntries {
       }
       currentNode = currentNode.next;
     }
-    this.fromSide = new CalcFromSide(currentFromsideNo, currentEntryApprox);
+    this.fromSide = new ShapeEntrySide(currentFromsideNo, currentEntryApprox);
   }
 
   /** Resorts the intersection points according to fromSideNo and removes redundant points. */
@@ -464,7 +464,7 @@ public class ShapeTraceEntries {
           fromSide.borderIntersection.projectionApprox(shape.borderLine(fromSide.no));
       fromPointDist = fromPointProjection.distanceSquare(compareCorner1);
       if (fromPointDist >= compareCorner1.distanceSquare(compareCorner2)) {
-        fromSide = new CalcFromSide(fromSide.no, null);
+        fromSide = new ShapeEntrySide(fromSide.no, null);
       }
     }
     // search the first intersection point between the side middle

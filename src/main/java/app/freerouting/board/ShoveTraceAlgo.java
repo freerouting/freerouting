@@ -63,7 +63,7 @@ public class ShoveTraceAlgo {
     if (!traceShape.isContainedIn(board.getBoundingBox())) {
       return 0;
     }
-    CalcFromSide fromSide = new CalcFromSide(lineSegment, traceShape, shoveToTheLeft);
+    ShapeEntrySide fromSide = new ShapeEntrySide(lineSegment, traceShape, shoveToTheLeft);
     ShapeTraceEntries shapeEntries =
         new ShapeTraceEntries(traceShape, layer, netNoArr, clType, fromSide, board);
     Collection<Item> obstacles =
@@ -96,7 +96,7 @@ public class ShoveTraceAlgo {
       if (maxViaRecursionDepth > 0) {
 
         IntPoint[] newViaCenter =
-            MoveDrillItemAlgo.tryShoveViaPoints(
+            DrillItemMover.tryShoveViaPoints(
                 traceShape, layer, currentShoveVia, clType, false, board);
 
         if (newViaCenter.length == 0) {
@@ -105,7 +105,7 @@ public class ShoveTraceAlgo {
         Vector delta = newViaCenter[0].differenceBy(currentShoveVia.getCenter());
         Collection<Item> ignoreItems = new LinkedList<>();
         shoveViaOk =
-            MoveDrillItemAlgo.check(
+            DrillItemMover.check(
                 currentShoveVia,
                 delta,
                 maxRecursionDepth,
@@ -205,7 +205,7 @@ public class ShoveTraceAlgo {
    */
   public boolean check(
       TileShape traceShape,
-      CalcFromSide fromSide,
+      ShapeEntrySide fromSide,
       Direction dir,
       int layer,
       int[] netNoArr,
@@ -294,8 +294,7 @@ public class ShoveTraceAlgo {
       }
       FloatPoint currentShoveViaCenter = currentShoveVia.getCenter().toFloat();
       IntPoint[] tryViaCenters =
-          MoveDrillItemAlgo.tryShoveViaPoints(
-              traceShape, layer, currentShoveVia, clType, true, board);
+          DrillItemMover.tryShoveViaPoints(traceShape, layer, currentShoveVia, clType, true, board);
 
       double maxDist =
           0.5 * currentShoveVia.getShapeOnLayer(layer).boundingBox().maxWidth() + shapeRadius;
@@ -306,7 +305,7 @@ public class ShoveTraceAlgo {
             || currentShoveViaCenter.distanceSquare(tryViaCenters[i].toFloat()) <= maxDistSquare) {
           Vector delta = tryViaCenters[i].differenceBy(currentShoveVia.getCenter());
           Collection<Item> ignoreItems = new LinkedList<>();
-          if (MoveDrillItemAlgo.check(
+          if (DrillItemMover.check(
               currentShoveVia,
               delta,
               maxRecursionDepth,
@@ -363,8 +362,8 @@ public class ShoveTraceAlgo {
         Direction currentDirection = currentSubstituteTrace.polyline().arr[i + 1].direction();
         boolean isInFront = dir == null || dir.equals(currentDirection);
         if (isInFront) {
-          CalcShapeAndFromSide current =
-              new CalcShapeAndFromSide(currentSubstituteTrace, i, isOrthogonalMode, true);
+          ShapeAndEntrySide current =
+              new ShapeAndEntrySide(currentSubstituteTrace, i, isOrthogonalMode, true);
           if (!this.check(
               current.shape,
               current.fromSide,
@@ -390,7 +389,7 @@ public class ShoveTraceAlgo {
    */
   public boolean insert(
       TileShape traceShape,
-      CalcFromSide fromSide,
+      ShapeEntrySide fromSide,
       int layer,
       int[] netNoArr,
       int clType,
@@ -406,7 +405,7 @@ public class ShoveTraceAlgo {
       this.board.setShoveFailingObstacle(board.getOutline());
       return false;
     }
-    if (!MoveDrillItemAlgo.shoveVias(
+    if (!DrillItemMover.shoveVias(
         traceShape,
         fromSide,
         layer,
@@ -515,8 +514,8 @@ public class ShoveTraceAlgo {
       }
       int[] currentNetNoArr = currentSubstituteTrace.netNoArr;
       for (int i = 0; i < currentSubstituteTrace.tileShapeCount(); i++) {
-        CalcShapeAndFromSide current =
-            new CalcShapeAndFromSide(currentSubstituteTrace, i, isOrthogonalMode, false);
+        ShapeAndEntrySide current =
+            new ShapeAndEntrySide(currentSubstituteTrace, i, isOrthogonalMode, false);
         if (!this.insert(
             current.shape,
             current.fromSide,

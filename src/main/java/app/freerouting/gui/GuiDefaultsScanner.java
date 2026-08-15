@@ -12,7 +12,7 @@ import java.io.Reader;
  * 09:07 from the specification file <tt>C:/Dokumente und Einstellungen/alfons/Eigene
  * Dateien/router/sources/app.freerouting.gui/GUIDefaultsDescription.flex</tt>
  */
-class GUIDefaultsScanner {
+class GuiDefaultsScanner {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
@@ -952,7 +952,7 @@ class GUIDefaultsScanner {
    *
    * @param in the java.io.Reader to read input from.
    */
-  GUIDefaultsScanner(Reader in) {
+  GuiDefaultsScanner(Reader in) {
     this.zzReader = in;
   }
 
@@ -961,7 +961,7 @@ class GUIDefaultsScanner {
    *
    * @param in the java.io.Inputstream to read input from.
    */
-  GUIDefaultsScanner(InputStream in) {
+  GuiDefaultsScanner(InputStream in) {
     this(new InputStreamReader(in));
   }
 
@@ -1289,187 +1289,187 @@ class GUIDefaultsScanner {
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 11:
           {
-            return GUIDefaultsFile.Keyword.NONE;
+            return GuiDefaultsFile.Keyword.NONE;
           }
         case 85:
           break;
         case 52:
           {
-            return GUIDefaultsFile.Keyword.EDIT_NET_RULES;
+            return GuiDefaultsFile.Keyword.EDIT_NET_RULES;
           }
         case 86:
           break;
         case 44:
           {
-            return GUIDefaultsFile.Keyword.PACKAGE_INFO;
+            return GuiDefaultsFile.Keyword.PACKAGE_INFO;
           }
         case 87:
           break;
         case 34:
           {
-            return GUIDefaultsFile.Keyword.FIXED_VIAS;
+            return GuiDefaultsFile.Keyword.FIXED_VIAS;
           }
         case 88:
           break;
         case 60:
           {
-            return GUIDefaultsFile.Keyword.VIOLATIONS_INFO;
+            return GuiDefaultsFile.Keyword.VIOLATIONS_INFO;
           }
         case 89:
           break;
         case 70:
           {
-            return GUIDefaultsFile.Keyword.FORTYFIVE_DEGREE;
+            return GuiDefaultsFile.Keyword.FORTYFIVE_DEGREE;
           }
         case 90:
           break;
         case 54:
           {
-            return GUIDefaultsFile.Keyword.MOVE_PARAMETER;
+            return GuiDefaultsFile.Keyword.MOVE_PARAMETER;
           }
         case 91:
           break;
         case 76:
           {
-            return GUIDefaultsFile.Keyword.DISPLAY_MISCELLANEOUS;
+            return GuiDefaultsFile.Keyword.DISPLAY_MISCELLANEOUS;
           }
         case 92:
           break;
         case 53:
           {
-            return GUIDefaultsFile.Keyword.RULE_SELECTION;
+            return GuiDefaultsFile.Keyword.RULE_SELECTION;
           }
         case 93:
           break;
         case 41:
           {
-            return GUIDefaultsFile.Keyword.MANUAL_RULES;
+            return GuiDefaultsFile.Keyword.MANUAL_RULES;
           }
         case 94:
           break;
         case 17:
           {
-            return GUIDefaultsFile.Keyword.VISIBLE;
+            return GuiDefaultsFile.Keyword.VISIBLE;
           }
         case 95:
           break;
         case 12:
           {
-            return GUIDefaultsFile.Keyword.PINS;
+            return GuiDefaultsFile.Keyword.PINS;
           }
         case 96:
           break;
         case 56:
           {
-            return GUIDefaultsFile.Keyword.COMPONENT_BACK;
+            return GuiDefaultsFile.Keyword.COMPONENT_BACK;
           }
         case 97:
           break;
         case 40:
           {
-            return GUIDefaultsFile.Keyword.GUI_DEFAULTS;
+            return GuiDefaultsFile.Keyword.GUI_DEFAULTS;
           }
         case 98:
           break;
         case 15:
           {
-            return GUIDefaultsFile.Keyword.TRACES;
+            return GuiDefaultsFile.Keyword.TRACES;
           }
         case 99:
           break;
         case 73:
           {
-            return GUIDefaultsFile.Keyword.PULL_TIGHT_REGION;
+            return GuiDefaultsFile.Keyword.PULL_TIGHT_REGION;
           }
         case 100:
           break;
         case 26:
           {
-            return GUIDefaultsFile.Keyword.VIA_RULES;
+            return GuiDefaultsFile.Keyword.VIA_RULES;
           }
         case 101:
           break;
         case 77:
           {
-            return GUIDefaultsFile.Keyword.VIA_SNAP_TO_SMD_CENTER;
+            return GuiDefaultsFile.Keyword.VIA_SNAP_TO_SMD_CENTER;
           }
         case 102:
           break;
         case 38:
           {
-            return GUIDefaultsFile.Keyword.BOARD_FRAME;
+            return GuiDefaultsFile.Keyword.BOARD_FRAME;
           }
         case 103:
           break;
         case 61:
           {
-            return GUIDefaultsFile.Keyword.ROUTE_PARAMETER;
+            return GuiDefaultsFile.Keyword.ROUTE_PARAMETER;
           }
         case 104:
           break;
         case 29:
           {
-            return GUIDefaultsFile.Keyword.PARAMETER;
+            return GuiDefaultsFile.Keyword.PARAMETER;
           }
         case 105:
           break;
         case 33:
           {
-            return GUIDefaultsFile.Keyword.CONDUCTION;
+            return GuiDefaultsFile.Keyword.CONDUCTION;
           }
         case 106:
           break;
         case 48:
           {
-            return GUIDefaultsFile.Keyword.OBJECT_COLORS;
+            return GuiDefaultsFile.Keyword.OBJECT_COLORS;
           }
         case 107:
           break;
         case 28:
           {
-            return GUIDefaultsFile.Keyword.STITCHING;
+            return GuiDefaultsFile.Keyword.STITCHING;
           }
         case 108:
           break;
         case 66:
           {
-            return GUIDefaultsFile.Keyword.SELECT_PARAMETER;
+            return GuiDefaultsFile.Keyword.SELECT_PARAMETER;
           }
         case 109:
           break;
         case 72:
           {
-            return GUIDefaultsFile.Keyword.OBJECT_VISIBILITY;
+            return GuiDefaultsFile.Keyword.OBJECT_VISIBILITY;
           }
         case 110:
           break;
         case 74:
           {
-            return GUIDefaultsFile.Keyword.PULL_TIGHT_ACCURACY;
+            return GuiDefaultsFile.Keyword.PULL_TIGHT_ACCURACY;
           }
         case 111:
           break;
         case 58:
           {
-            return GUIDefaultsFile.Keyword.DISPLAY_REGION;
+            return GuiDefaultsFile.Keyword.DISPLAY_REGION;
           }
         case 112:
           break;
         case 71:
           {
-            return GUIDefaultsFile.Keyword.INTERACTIVE_STATE;
+            return GuiDefaultsFile.Keyword.INTERACTIVE_STATE;
           }
         case 113:
           break;
         case 39:
           {
-            return GUIDefaultsFile.Keyword.NOT_VISIBLE;
+            return GuiDefaultsFile.Keyword.NOT_VISIBLE;
           }
         case 114:
           break;
         case 20:
           {
-            return GUIDefaultsFile.Keyword.DYNAMIC;
+            return GuiDefaultsFile.Keyword.DYNAMIC;
           }
         case 115:
           break;
@@ -1478,55 +1478,55 @@ class GUIDefaultsScanner {
           break;
         case 31:
           {
-            return GUIDefaultsFile.Keyword.BACKGROUND;
+            return GuiDefaultsFile.Keyword.BACKGROUND;
           }
         case 117:
           break;
         case 64:
           {
-            return GUIDefaultsFile.Keyword.LAYER_VISIBILITY;
+            return GuiDefaultsFile.Keyword.LAYER_VISIBILITY;
           }
         case 118:
           break;
         case 43:
           {
-            return GUIDefaultsFile.Keyword.FIXED_TRACES;
+            return GuiDefaultsFile.Keyword.FIXED_TRACES;
           }
         case 119:
           break;
         case 51:
           {
-            return GUIDefaultsFile.Keyword.PADSTACK_INFO;
+            return GuiDefaultsFile.Keyword.PADSTACK_INFO;
           }
         case 120:
           break;
         case 22:
           {
-            return GUIDefaultsFile.Keyword.HIGHLIGHT;
+            return GuiDefaultsFile.Keyword.HIGHLIGHT;
           }
         case 121:
           break;
         case 14:
           {
-            return GUIDefaultsFile.Keyword.BOUNDS;
+            return GuiDefaultsFile.Keyword.BOUNDS;
           }
         case 122:
           break;
         case 82:
           {
-            return GUIDefaultsFile.Keyword.DRAG_COMPONENTS_ENABLED;
+            return GuiDefaultsFile.Keyword.DRAG_COMPONENTS_ENABLED;
           }
         case 123:
           break;
         case 75:
           {
-            return GUIDefaultsFile.Keyword.MANUAL_RULE_SETTINGS;
+            return GuiDefaultsFile.Keyword.MANUAL_RULE_SETTINGS;
           }
         case 124:
           break;
         case 10:
           {
-            return GUIDefaultsFile.Keyword.VIAS;
+            return GuiDefaultsFile.Keyword.VIAS;
           }
         case 125:
           break;
@@ -1538,121 +1538,121 @@ class GUIDefaultsScanner {
           break;
         case 55:
           {
-            return GUIDefaultsFile.Keyword.COMPONENT_INFO;
+            return GuiDefaultsFile.Keyword.COMPONENT_INFO;
           }
         case 127:
           break;
         case 32:
           {
-            return GUIDefaultsFile.Keyword.ROUTE_MODE;
+            return GuiDefaultsFile.Keyword.ROUTE_MODE;
           }
         case 128:
           break;
         case 50:
           {
-            return GUIDefaultsFile.Keyword.COLOR_MANAGER;
+            return GuiDefaultsFile.Keyword.COLOR_MANAGER;
           }
         case 129:
           break;
         case 30:
           {
-            return GUIDefaultsFile.Keyword.VIOLATIONS;
+            return GuiDefaultsFile.Keyword.VIOLATIONS;
           }
         case 130:
           break;
         case 67:
           {
-            return GUIDefaultsFile.Keyword.SELECTABLE_ITEMS;
+            return GuiDefaultsFile.Keyword.SELECTABLE_ITEMS;
           }
         case 131:
           break;
         case 19:
           {
-            return GUIDefaultsFile.Keyword.OUTLINE;
+            return GuiDefaultsFile.Keyword.OUTLINE;
           }
         case 132:
           break;
         case 42:
           {
-            return GUIDefaultsFile.Keyword.CURRENT_ONLY;
+            return GuiDefaultsFile.Keyword.CURRENT_ONLY;
           }
         case 133:
           break;
         case 9:
           {
-            return GUIDefaultsFile.Keyword.OFF;
+            return GuiDefaultsFile.Keyword.OFF;
           }
         case 134:
           break;
         case 45:
           {
-            return GUIDefaultsFile.Keyword.SHOVE_ENABLED;
+            return GuiDefaultsFile.Keyword.SHOVE_ENABLED;
           }
         case 135:
           break;
         case 63:
           {
-            return GUIDefaultsFile.Keyword.ASSIGN_NET_RULES;
+            return GuiDefaultsFile.Keyword.ASSIGN_NET_RULES;
           }
         case 136:
           break;
         case 25:
           {
-            return GUIDefaultsFile.Keyword.EDIT_VIAS;
+            return GuiDefaultsFile.Keyword.EDIT_VIAS;
           }
         case 137:
           break;
         case 81:
           {
-            return GUIDefaultsFile.Keyword.IGNORE_CONDUCTION_AREAS;
+            return GuiDefaultsFile.Keyword.IGNORE_CONDUCTION_AREAS;
           }
         case 138:
           break;
         case 5:
           {
-            return GUIDefaultsFile.Keyword.OPEN_BRACKET;
+            return GuiDefaultsFile.Keyword.OPEN_BRACKET;
           }
         case 139:
           break;
         case 36:
           {
-            return GUIDefaultsFile.Keyword.VIA_KEEPOUT;
+            return GuiDefaultsFile.Keyword.VIA_KEEPOUT;
           }
         case 140:
           break;
         case 8:
           {
-            return GUIDefaultsFile.Keyword.ON;
+            return GuiDefaultsFile.Keyword.ON;
           }
         case 141:
           break;
         case 16:
           {
-            return GUIDefaultsFile.Keyword.COLORS;
+            return GuiDefaultsFile.Keyword.COLORS;
           }
         case 142:
           break;
         case 68:
           {
-            return GUIDefaultsFile.Keyword.SELECTION_LAYERS;
+            return GuiDefaultsFile.Keyword.SELECTION_LAYERS;
           }
         case 143:
           break;
         case 46:
           {
-            return GUIDefaultsFile.Keyword.NINETY_DEGREE;
+            return GuiDefaultsFile.Keyword.NINETY_DEGREE;
           }
         case 144:
           break;
         case 23:
           {
-            return GUIDefaultsFile.Keyword.WINDOWS;
+            return GuiDefaultsFile.Keyword.WINDOWS;
           }
         case 145:
           break;
         case 57:
           {
-            return GUIDefaultsFile.Keyword.COMPONENT_GRID;
+            return GuiDefaultsFile.Keyword.COMPONENT_GRID;
           }
         case 146:
           break;
@@ -1664,61 +1664,61 @@ class GUIDefaultsScanner {
           break;
         case 69:
           {
-            return GUIDefaultsFile.Keyword.CLEARANCE_MATRIX;
+            return GuiDefaultsFile.Keyword.CLEARANCE_MATRIX;
           }
         case 148:
           break;
         case 65:
           {
-            return GUIDefaultsFile.Keyword.INCOMPLETES_INFO;
+            return GuiDefaultsFile.Keyword.INCOMPLETES_INFO;
           }
         case 149:
           break;
         case 62:
           {
-            return GUIDefaultsFile.Keyword.COMPONENT_FRONT;
+            return GuiDefaultsFile.Keyword.COMPONENT_FRONT;
           }
         case 150:
           break;
         case 18:
           {
-            return GUIDefaultsFile.Keyword.UNFIXED;
+            return GuiDefaultsFile.Keyword.UNFIXED;
           }
         case 151:
           break;
         case 59:
           {
-            return GUIDefaultsFile.Keyword.LENGTH_MATCHING;
+            return GuiDefaultsFile.Keyword.LENGTH_MATCHING;
           }
         case 152:
           break;
         case 80:
           {
-            return GUIDefaultsFile.Keyword.AUTOMATIC_LAYER_DIMMING;
+            return GuiDefaultsFile.Keyword.AUTOMATIC_LAYER_DIMMING;
           }
         case 153:
           break;
         case 79:
           {
-            return GUIDefaultsFile.Keyword.PUSH_AND_SHOVE_ENABLED;
+            return GuiDefaultsFile.Keyword.PUSH_AND_SHOVE_ENABLED;
           }
         case 154:
           break;
         case 24:
           {
-            return GUIDefaultsFile.Keyword.NET_INFO;
+            return GuiDefaultsFile.Keyword.NET_INFO;
           }
         case 155:
           break;
         case 78:
           {
-            return GUIDefaultsFile.Keyword.CLEARANCE_COMPENSATION;
+            return GuiDefaultsFile.Keyword.CLEARANCE_COMPENSATION;
           }
         case 156:
           break;
         case 47:
           {
-            return GUIDefaultsFile.Keyword.ROUTE_DETAILS;
+            return GuiDefaultsFile.Keyword.ROUTE_DETAILS;
           }
         case 157:
           break;
@@ -1731,19 +1731,19 @@ class GUIDefaultsScanner {
           break;
         case 83:
           {
-            return GUIDefaultsFile.Keyword.HIGHLIGHT_ROUTING_OBSTACLE;
+            return GuiDefaultsFile.Keyword.HIGHLIGHT_ROUTING_OBSTACLE;
           }
         case 159:
           break;
         case 35:
           {
-            return GUIDefaultsFile.Keyword.ALL_VISIBLE;
+            return GuiDefaultsFile.Keyword.ALL_VISIBLE;
           }
         case 160:
           break;
         case 6:
           {
-            return GUIDefaultsFile.Keyword.CLOSED_BRACKET;
+            return GuiDefaultsFile.Keyword.CLOSED_BRACKET;
           }
         case 161:
           break;
@@ -1755,19 +1755,19 @@ class GUIDefaultsScanner {
           break;
         case 37:
           {
-            return GUIDefaultsFile.Keyword.INCOMPLETES;
+            return GuiDefaultsFile.Keyword.INCOMPLETES;
           }
         case 163:
           break;
         case 49:
           {
-            return GUIDefaultsFile.Keyword.CURRENT_LAYER;
+            return GuiDefaultsFile.Keyword.CURRENT_LAYER;
           }
         case 164:
           break;
         case 21:
           {
-            return GUIDefaultsFile.Keyword.KEEPOUT;
+            return GuiDefaultsFile.Keyword.KEEPOUT;
           }
         case 165:
           break;
@@ -1779,7 +1779,7 @@ class GUIDefaultsScanner {
           break;
         case 13:
           {
-            return GUIDefaultsFile.Keyword.FIXED;
+            return GuiDefaultsFile.Keyword.FIXED;
           }
         case 167:
           break;

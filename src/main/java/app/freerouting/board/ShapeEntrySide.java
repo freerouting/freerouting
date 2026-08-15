@@ -11,9 +11,9 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 
 /** CalcFromSide. */
-public class CalcFromSide {
+public class ShapeEntrySide {
 
-  public static final CalcFromSide NOT_CALCULATED = new CalcFromSide(-1, null);
+  public static final ShapeEntrySide NOT_CALCULATED = new ShapeEntrySide(-1, null);
   final int no;
   FloatPoint borderIntersection;
 
@@ -23,7 +23,7 @@ public class CalcFromSide {
    * <p>Used in the push trace algorithm to determine the shove direction. no is expected between 1
    * and polyline.lineCount - 2 inclusive.
    */
-  CalcFromSide(Polyline polyline, int no, TileShape shape) {
+  ShapeEntrySide(Polyline polyline, int no, TileShape shape) {
     int fromsideNo = -1;
     FloatPoint intersection = null;
     boolean borderIntersectionFound = false;
@@ -65,7 +65,7 @@ public class CalcFromSide {
    * Calculates the nearest border side of shape to fromPoint. Used in the shove_drill_item
    * algorithm to determine the shove direction.
    */
-  CalcFromSide(Point fromPoint, TileShape shape) {
+  ShapeEntrySide(Point fromPoint, TileShape shape) {
     Point borderProjection = shape.nearestBorderPoint(fromPoint);
     this.no = shape.containsOnBorderLineNo(borderProjection);
     if (this.no < 0) {
@@ -78,7 +78,7 @@ public class CalcFromSide {
    * Calculates the Side of shape at the start of lineSegment. If shoveToTheLeft, the fromSideNo is
    * decremented by 2, else it is increased by 2.
    */
-  CalcFromSide(LineSegment lineSegment, TileShape shape, boolean shoveToTheLeft) {
+  ShapeEntrySide(LineSegment lineSegment, TileShape shape, boolean shoveToTheLeft) {
     FloatPoint startCorner = lineSegment.startPointApprox();
     FloatPoint endCorner = lineSegment.endPointApprox();
     int borderLineCount = shape.borderLineCount();
@@ -154,7 +154,7 @@ public class CalcFromSide {
   }
 
   /** Values already calculated. Just create an instance from them. */
-  CalcFromSide(int no, FloatPoint borderIntersection) {
+  ShapeEntrySide(int no, FloatPoint borderIntersection) {
     this.no = no;
     this.borderIntersection = borderIntersection;
   }

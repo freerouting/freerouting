@@ -424,7 +424,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       calculateTidyRegion = false;
     }
     startMarkingChangedArea();
-    if (!MoveDrillItemAlgo.insert(
+    if (!DrillItemMover.insert(
         drillItem, vector, maxRecursionDepth, maxViaRecursionDepth, tidyRegion, this)) {
       return false;
     }
@@ -522,7 +522,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     clearShoveFailingObstacle();
     this.startMarkingChangedArea();
     boolean result =
-        ForcedViaAlgo.insert(
+        ForcedViaInserter.insert(
             viaInfo,
             location,
             netNoArr,
@@ -625,7 +625,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       if (orthogonalMode) {
         currentTraceShape = currentTraceShape.boundingBox();
       }
-      CalcFromSide fromSide = new CalcFromSide(polyline, i + 1, currentTraceShape);
+      ShapeEntrySide fromSide = new ShapeEntrySide(polyline, i + 1, currentTraceShape);
 
       boolean checkShoveOk =
           shoveTraceAlgo.check(
@@ -763,8 +763,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       if (orthogonalMode) {
         currentTraceShape = currentTraceShape.boundingBox();
       }
-      CalcFromSide fromSide =
-          new CalcFromSide(
+      ShapeEntrySide fromSide =
+          new ShapeEntrySide(
               combinedPolyline,
               combinedPolyline.cornerCount() - traceShapes.length - 1 + i,
               currentTraceShape);
@@ -887,7 +887,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           lastTraceShape = lastTraceShape.boundingBox();
         }
       }
-      CalcFromSide fromSide = new CalcFromSide(combinedPolyline, shapeIndex, lastTraceShape);
+      ShapeEntrySide fromSide = new ShapeEntrySide(combinedPolyline, shapeIndex, lastTraceShape);
       boolean checkShoveOk =
           shoveTraceAlgo.check(
               lastTraceShape,

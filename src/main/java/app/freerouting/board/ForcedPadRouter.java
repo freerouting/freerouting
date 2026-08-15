@@ -19,12 +19,12 @@ import java.util.LinkedList;
  * Class with functions for checking and inserting pads with eventually shoving aside obstacle
  * traces.
  */
-public class ForcedPadAlgo {
+public class ForcedPadRouter {
 
   private final RoutingBoard board;
 
   /** Creates a new instance of ForcedPadAlgo. */
-  public ForcedPadAlgo(RoutingBoard board) {
+  public ForcedPadRouter(RoutingBoard board) {
     this.board = board;
   }
 
@@ -209,7 +209,7 @@ public class ForcedPadAlgo {
    */
   public CheckDrillResult checkForcedPad(
       TileShape padShape,
-      CalcFromSide fromSide,
+      ShapeEntrySide fromSide,
       int layer,
       int[] netNoArr,
       int clType,
@@ -246,8 +246,7 @@ public class ForcedPadAlgo {
         return CheckDrillResult.NOT_DRILLABLE;
       }
       IntPoint[] newViaCenter =
-          MoveDrillItemAlgo.tryShoveViaPoints(
-              padShape, layer, currentShoveVia, clType, false, board);
+          DrillItemMover.tryShoveViaPoints(padShape, layer, currentShoveVia, clType, false, board);
 
       if (newViaCenter.length == 0) {
         this.board.setShoveFailingObstacle(currentShoveVia);
@@ -255,7 +254,7 @@ public class ForcedPadAlgo {
       }
       Vector delta = newViaCenter[0].differenceBy(currentShoveVia.getCenter());
       Collection<Item> checkIgnoreItems = new LinkedList<>();
-      if (!MoveDrillItemAlgo.check(
+      if (!DrillItemMover.check(
           currentShoveVia,
           delta,
           maxRecursionDepth,
@@ -306,8 +305,8 @@ public class ForcedPadAlgo {
           isInFront = true;
         }
         if (isInFront) {
-          CalcShapeAndFromSide current =
-              new CalcShapeAndFromSide(currentSubstituteTrace, i, isOrthogonalMode, true);
+          ShapeAndEntrySide current =
+              new ShapeAndEntrySide(currentSubstituteTrace, i, isOrthogonalMode, true);
           if (!shoveTraceAlgo.check(
               current.shape,
               current.fromSide,
@@ -334,7 +333,7 @@ public class ForcedPadAlgo {
    */
   boolean forcedPad(
       TileShape padShape,
-      CalcFromSide fromSide,
+      ShapeEntrySide fromSide,
       int layer,
       int[] netNoArr,
       int clType,
@@ -350,7 +349,7 @@ public class ForcedPadAlgo {
       this.board.setShoveFailingObstacle(board.getOutline());
       return false;
     }
-    if (!MoveDrillItemAlgo.shoveVias(
+    if (!DrillItemMover.shoveVias(
         padShape,
         fromSide,
         layer,
@@ -400,8 +399,8 @@ public class ForcedPadAlgo {
       }
       int[] currentNetNoArr = currentSubstituteTrace.netNoArr;
       for (int i = 0; i < currentSubstituteTrace.tileShapeCount(); i++) {
-        CalcShapeAndFromSide current =
-            new CalcShapeAndFromSide(currentSubstituteTrace, i, isOrthogonalMode, false);
+        ShapeAndEntrySide current =
+            new ShapeAndEntrySide(currentSubstituteTrace, i, isOrthogonalMode, false);
         if (!shoveTraceAlgo.insert(
             current.shape,
             current.fromSide,
@@ -457,7 +456,7 @@ public class ForcedPadAlgo {
    * Looks for a side of shape, so that a trace line from the shape center to the nearest point on
    * this side does not conflict with any obstacles.
    */
-  CalcFromSide calcFromSide(
+  ShapeEntrySide calcFromSide(
       TileShape shape, Point shapeCenter, int layer, int offset, int clClass) {
     int[] emptyArr = new int[0];
     TileShape offsetShape = (TileShape) shape.offset(offset);
@@ -466,7 +465,7 @@ public class ForcedPadAlgo {
           calcCheckShapeForFromSide(shape, shapeCenter, offsetShape.borderLine(i));
 
       if (board.checkTraceShape(checkShape, layer, emptyArr, clClass, null)) {
-        return new CalcFromSide(i, null);
+        return new ShapeEntrySide(i, null);
       }
     }
     // try second check without clearance
@@ -474,10 +473,10 @@ public class ForcedPadAlgo {
       TileShape checkShape =
           calcCheckShapeForFromSide(shape, shapeCenter, offsetShape.borderLine(i));
       if (board.checkTraceShape(checkShape, layer, emptyArr, 0, null)) {
-        return new CalcFromSide(i, null);
+        return new ShapeEntrySide(i, null);
       }
     }
-    return CalcFromSide.NOT_CALCULATED;
+    return ShapeEntrySide.NOT_CALCULATED;
   }
 
   /** CheckDrillResult. */

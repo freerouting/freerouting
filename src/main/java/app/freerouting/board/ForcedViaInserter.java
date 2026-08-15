@@ -15,15 +15,15 @@ import app.freerouting.geometry.planar.Vector;
 import app.freerouting.rules.ViaInfo;
 
 /** Class with static functions for checking and inserting forced vias. */
-public final class ForcedViaAlgo {
+public final class ForcedViaInserter {
 
-  private ForcedViaAlgo() {}
+  private ForcedViaInserter() {}
 
   /**
    * Checks, if a Via is possible at the input layer after evtl. shoving aside obstacle traces.
    * roomShape is used for calculating the fromSide.
    */
-  public static ForcedPadAlgo.CheckDrillResult checkLayer(
+  public static ForcedPadRouter.CheckDrillResult checkLayer(
       double viaRadius,
       int clClass,
       boolean attachSmdAllowed,
@@ -37,10 +37,10 @@ public final class ForcedViaAlgo {
       int traceHalfWidth,
       int traceClearanceClass) {
     if (viaRadius <= 0) {
-      return ForcedPadAlgo.CheckDrillResult.DRILLABLE;
+      return ForcedPadRouter.CheckDrillResult.DRILLABLE;
     }
     if (!(location instanceof IntPoint)) {
-      return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
+      return ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE;
     }
     IntPoint intLocation = (IntPoint) location;
     ConvexShape viaShape = new Circle(intLocation, (int) Math.ceil(viaRadius));
@@ -60,16 +60,16 @@ public final class ForcedViaAlgo {
       is90Degree = false;
     }
 
-    CalcFromSide fromSide =
+    ShapeEntrySide fromSide =
         calculateFromSide(
             location.toFloat(), tileShape, roomShape.toSimplex(), checkRadius, is90Degree);
     if (fromSide == null) {
-      return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
+      return ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE;
     }
 
-    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(board);
-    ForcedPadAlgo.CheckDrillResult viaResult =
-        forcedPadAlgo.checkForcedPad(
+    ForcedPadRouter forcedPadRouter = new ForcedPadRouter(board);
+    ForcedPadRouter.CheckDrillResult viaResult =
+        forcedPadRouter.checkForcedPad(
             tileShape,
             fromSide,
             layer,
@@ -81,7 +81,7 @@ public final class ForcedViaAlgo {
             maxViaRecursionDepth,
             false,
             null);
-    if (viaResult == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+    if (viaResult == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
       return viaResult;
     }
 
@@ -97,8 +97,8 @@ public final class ForcedViaAlgo {
       startTraceShape = startTraceCircle.boundingOctagon();
     }
 
-    ForcedPadAlgo.CheckDrillResult traceResult =
-        forcedPadAlgo.checkForcedPad(
+    ForcedPadRouter.CheckDrillResult traceResult =
+        forcedPadRouter.checkForcedPad(
             startTraceShape,
             fromSide,
             layer,
@@ -110,14 +110,14 @@ public final class ForcedViaAlgo {
             maxViaRecursionDepth,
             false,
             null);
-    if (traceResult == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+    if (traceResult == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
       return traceResult;
     }
-    if (viaResult == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD
-        || traceResult == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
-      return ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD;
+    if (viaResult == ForcedPadRouter.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD
+        || traceResult == ForcedPadRouter.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
+      return ForcedPadRouter.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD;
     }
-    return ForcedPadAlgo.CheckDrillResult.DRILLABLE;
+    return ForcedPadRouter.CheckDrillResult.DRILLABLE;
   }
 
   /**
@@ -135,7 +135,7 @@ public final class ForcedViaAlgo {
       int traceClearanceClassNo) {
     Vector translateVector = location.differenceBy(Point.ZERO);
     int calcFromSideOffset = board.getMinTraceHalfWidth();
-    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(board);
+    ForcedPadRouter forcedPadRouter = new ForcedPadRouter(board);
     Padstack viaPadstack = viaInfo.getPadstack();
     Shape holeShape = holeCheckShape(viaPadstack, location, board);
     for (int i = viaPadstack.fromLayer(); i <= viaPadstack.toLayer(); i++) {
@@ -157,10 +157,10 @@ public final class ForcedViaAlgo {
       } else {
         tileShape = currentPadShape.boundingOctagon();
       }
-      CalcFromSide fromSide =
-          forcedPadAlgo.calcFromSide(
+      ShapeEntrySide fromSide =
+          forcedPadRouter.calcFromSide(
               tileShape, location, i, calcFromSideOffset, currentClearanceClass);
-      if (forcedPadAlgo.checkForcedPad(
+      if (forcedPadRouter.checkForcedPad(
               tileShape,
               fromSide,
               i,
@@ -172,7 +172,7 @@ public final class ForcedViaAlgo {
               maxViaRecursionDepth,
               false,
               null)
-          == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+          == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
         board.setShoveFailingLayer(i);
         return false;
       }
@@ -185,7 +185,7 @@ public final class ForcedViaAlgo {
         } else {
           holeTile = holeShape.boundingOctagon();
         }
-        if (forcedPadAlgo.checkForcedPad(
+        if (forcedPadRouter.checkForcedPad(
                 holeTile,
                 fromSide,
                 i,
@@ -197,7 +197,7 @@ public final class ForcedViaAlgo {
                 maxViaRecursionDepth,
                 false,
                 null)
-            == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+            == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
           board.setShoveFailingLayer(i);
           return false;
         }
@@ -214,7 +214,7 @@ public final class ForcedViaAlgo {
         } else {
           startTraceShape = startTraceCircle.boundingOctagon();
         }
-        if (forcedPadAlgo.checkForcedPad(
+        if (forcedPadRouter.checkForcedPad(
                 startTraceShape,
                 fromSide,
                 i,
@@ -226,7 +226,7 @@ public final class ForcedViaAlgo {
                 maxViaRecursionDepth,
                 false,
                 null)
-            == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+            == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
           board.setShoveFailingLayer(i);
           return false;
         }
@@ -253,7 +253,7 @@ public final class ForcedViaAlgo {
       RoutingBoard board) {
     Vector translateVector = location.differenceBy(Point.ZERO);
     int calcFromSideOffset = board.getMinTraceHalfWidth();
-    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(board);
+    ForcedPadRouter forcedPadRouter = new ForcedPadRouter(board);
     Padstack viaPadstack = viaInfo.getPadstack();
     Shape holeShape = holeCheckShape(viaPadstack, location, board);
     for (int i = viaPadstack.fromLayer(); i <= viaPadstack.toLayer(); i++) {
@@ -287,10 +287,10 @@ public final class ForcedViaAlgo {
           startTraceShape = startTraceCircle.boundingOctagon();
         }
       }
-      CalcFromSide fromSide =
-          forcedPadAlgo.calcFromSide(
+      ShapeEntrySide fromSide =
+          forcedPadRouter.calcFromSide(
               tileShape, location, i, calcFromSideOffset, currentClearanceClass);
-      if (!forcedPadAlgo.forcedPad(
+      if (!forcedPadRouter.forcedPad(
           tileShape,
           fromSide,
           i,
@@ -310,7 +310,7 @@ public final class ForcedViaAlgo {
         } else {
           holeTile = holeShape.boundingOctagon();
         }
-        if (!forcedPadAlgo.forcedPad(
+        if (!forcedPadRouter.forcedPad(
             holeTile,
             fromSide,
             i,
@@ -326,7 +326,7 @@ public final class ForcedViaAlgo {
       }
       if (startTraceShape != null) {
         // necessary in case startTraceShape is bigger than tileShape
-        if (!forcedPadAlgo.forcedPad(
+        if (!forcedPadRouter.forcedPad(
             startTraceShape,
             fromSide,
             i,
@@ -370,7 +370,7 @@ public final class ForcedViaAlgo {
     return new Circle(center, (int) Math.ceil(drillRadius + holeClearance + 10));
   }
 
-  private static CalcFromSide calculateFromSide(
+  private static ShapeEntrySide calculateFromSide(
       FloatPoint viaLocation,
       TileShape viaShape,
       Simplex roomShape,
@@ -411,7 +411,7 @@ public final class ForcedViaAlgo {
           fromSideNo = 2 * i;
         }
         FloatPoint currentBorderPoint = new FloatPoint(borderX, borderY);
-        return new CalcFromSide(fromSideNo, currentBorderPoint);
+        return new ShapeEntrySide(fromSideNo, currentBorderPoint);
       }
     }
     if (is90Degree) {
@@ -450,7 +450,7 @@ public final class ForcedViaAlgo {
 
         int fromSideNo = 2 * i + 1;
         FloatPoint currentBorderPoint = new FloatPoint(borderX, borderY);
-        return new CalcFromSide(fromSideNo, currentBorderPoint);
+        return new ShapeEntrySide(fromSideNo, currentBorderPoint);
       }
     }
     return null;
