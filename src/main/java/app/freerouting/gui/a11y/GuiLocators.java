@@ -145,6 +145,19 @@ public final class GuiLocators {
   /** Root content panel extracted from WindowMessage. */
   public static final String WINDOW_MESSAGE_CONTENT = "window.message.content";
 
+  // ---- User settings ----
+  /** Root component for the User Settings content surface. */
+  public static final String USER_SETTINGS_ROOT = "user_settings.root";
+
+  /** Email input in the User Settings surface. */
+  public static final String USER_SETTINGS_EMAIL = "user_settings.email";
+
+  /** Save control in the User Settings surface. */
+  public static final String USER_SETTINGS_SAVE = "user_settings.save";
+
+  /** Sponsorship control in the User Settings surface. */
+  public static final String USER_SETTINGS_SPONSOR = "user_settings.sponsor";
+
   /** Prefix used for labels in extracted WindowMessage content. */
   public static final String WINDOW_MESSAGE_LABEL_PREFIX = "window.message.label";
 
