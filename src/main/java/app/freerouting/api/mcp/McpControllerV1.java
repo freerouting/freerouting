@@ -1,10 +1,8 @@
-package app.freerouting.api.v1;
+package app.freerouting.api.mcp;
 
 import app.freerouting.Freerouting;
 import app.freerouting.api.BaseController;
 import app.freerouting.api.CorrelationIdFilter;
-import app.freerouting.api.mcp.McpRealtimeBridge;
-import app.freerouting.api.mcp.OpenApiMcpToolRegistry;
 import app.freerouting.constants.Constants;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
@@ -55,6 +53,66 @@ public class McpControllerV1 extends BaseController {
   @Context private Application application;
 
   @Context private HttpHeaders headers;
+
+  private static String resolvePath(String rawPath, JsonObject pathArgs) {
+    String resolved = rawPath;
+    for (Map.Entry<String, JsonElement> entry : pathArgs.entrySet()) {
+      String placeholder = "{" + entry.getKey() + "}";
+      String encoded =
+          URLEncoder.encode(entry.getValue().getAsString(), StandardCharsets.UTF_8)
+              .replace("+", "%20");
+      resolved = resolved.replace(placeholder, encoded);
+    }
+    return resolved;
+  }
+
+  private static boolean requiresBody(String method) {
+    return "POST".equalsIgnoreCase(method)
+        || "PUT".equalsIgnoreCase(method)
+        || "PATCH".equalsIgnoreCase(method);
+  }
+
+  private static JsonObject getObject(JsonObject parent, String key) {
+    if (parent == null || !parent.has(key) || !parent.get(key).isJsonObject()) {
+      return new JsonObject();
+    }
+    return parent.getAsJsonObject(key);
+  }
+
+  private static JsonElement tryParseJson(String body) {
+    try {
+      return JsonParser.parseString(body);
+    } catch (Exception e) {
+      JsonObject wrapped = new JsonObject();
+      wrapped.addProperty("text", body);
+      return wrapped;
+    }
+  }
+
+  private static JsonObject success(JsonElement id, JsonObject result) {
+    JsonObject response = new JsonObject();
+    response.addProperty("jsonrpc", JSONRPC_VERSION);
+    response.add("id", id == null ? nullId() : id);
+    response.add("result", result);
+    return response;
+  }
+
+  private static JsonObject error(JsonElement id, int code, String message) {
+    JsonObject response = new JsonObject();
+    response.addProperty("jsonrpc", JSONRPC_VERSION);
+    response.add("id", id == null ? nullId() : id);
+
+    JsonObject err = new JsonObject();
+    err.addProperty("code", code);
+    err.addProperty("message", message);
+
+    response.add("error", err);
+    return response;
+  }
+
+  private static JsonElement nullId() {
+    return JsonParser.parseString("null");
+  }
 
   /**
    * Main MCP JSON-RPC endpoint handling tools/list, tools/call, and initialize requests.
@@ -411,62 +469,6 @@ public class McpControllerV1 extends BaseController {
     return result;
   }
 
-  private static String resolvePath(String rawPath, JsonObject pathArgs) {
-    String resolved = rawPath;
-    for (Map.Entry<String, JsonElement> entry : pathArgs.entrySet()) {
-      String placeholder = "{" + entry.getKey() + "}";
-      String encoded =
-          URLEncoder.encode(entry.getValue().getAsString(), StandardCharsets.UTF_8)
-              .replace("+", "%20");
-      resolved = resolved.replace(placeholder, encoded);
-    }
-    return resolved;
-  }
-
-  private static boolean requiresBody(String method) {
-    return "POST".equalsIgnoreCase(method)
-        || "PUT".equalsIgnoreCase(method)
-        || "PATCH".equalsIgnoreCase(method);
-  }
-
-  private static JsonObject getObject(JsonObject parent, String key) {
-    if (parent == null || !parent.has(key) || !parent.get(key).isJsonObject()) {
-      return new JsonObject();
-    }
-    return parent.getAsJsonObject(key);
-  }
-
-  private static JsonElement tryParseJson(String body) {
-    try {
-      return JsonParser.parseString(body);
-    } catch (Exception e) {
-      JsonObject wrapped = new JsonObject();
-      wrapped.addProperty("text", body);
-      return wrapped;
-    }
-  }
-
-  private static JsonObject success(JsonElement id, JsonObject result) {
-    JsonObject response = new JsonObject();
-    response.addProperty("jsonrpc", JSONRPC_VERSION);
-    response.add("id", id == null ? nullId() : id);
-    response.add("result", result);
-    return response;
-  }
-
-  private static JsonObject error(JsonElement id, int code, String message) {
-    JsonObject response = new JsonObject();
-    response.addProperty("jsonrpc", JSONRPC_VERSION);
-    response.add("id", id == null ? nullId() : id);
-
-    JsonObject err = new JsonObject();
-    err.addProperty("code", code);
-    err.addProperty("message", message);
-
-    response.add("error", err);
-    return response;
-  }
-
   private JsonObject handleCustomToolCall(
       JsonElement id, String toolName, JsonObject arguments, String correlationId) {
     JsonObject textObj = new JsonObject();
@@ -602,9 +604,5 @@ public class McpControllerV1 extends BaseController {
     McpRealtimeBridge.broadcast("mcp.tool.called", eventPayload);
 
     return success(id, result);
-  }
-
-  private static JsonElement nullId() {
-    return JsonParser.parseString("null");
   }
 }

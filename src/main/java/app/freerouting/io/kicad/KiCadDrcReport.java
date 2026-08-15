@@ -1,6 +1,7 @@
-package app.freerouting.drc;
+package app.freerouting.io.kicad;
 
 import com.google.gson.annotations.SerializedName;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,7 +11,10 @@ import java.util.List;
  * Represents a complete DRC report in KiCad's JSON schema format. Based on
  * https://schemas.kicad.org/drc.v1.json
  */
-public class DrcReport {
+@Schema(
+    name = "KiCadDrcReport",
+    description = "Represents a complete DRC report in KiCad's JSON schema format")
+public class KiCadDrcReport {
 
   /** JSON schema URL. */
   @SerializedName("$schema")
@@ -38,11 +42,11 @@ public class DrcReport {
 
   /** List of unconnected items (empty for now). */
   @SerializedName("unconnectedItems")
-  public final List<DrcViolation> unconnectedItems;
+  public final List<KiCadDrcViolation> unconnectedItems;
 
   /** List of violations found. */
   @SerializedName("violations")
-  public final List<DrcViolation> violations;
+  public final List<KiCadDrcViolation> violations;
 
   /** Schematic parity issues (empty for now). */
   @SerializedName("schematicParity")
@@ -59,7 +63,7 @@ public class DrcReport {
    * @param source source file name
    * @param version Freerouting version string
    */
-  public DrcReport(String coordinateUnits, String source, String version) {
+  public KiCadDrcReport(String coordinateUnits, String source, String version) {
     this.coordinateUnits = coordinateUnits;
     this.source = source;
     this.freeroutingVersion = version;
@@ -70,12 +74,12 @@ public class DrcReport {
   }
 
   /** Adds a violation to the report. */
-  public void addViolation(DrcViolation violation) {
+  public void addViolation(KiCadDrcViolation violation) {
     this.violations.add(violation);
   }
 
   /** Adds an unconnected item to the report. */
-  public void addUnconnectedItem(DrcViolation item) {
+  public void addUnconnectedItem(KiCadDrcViolation item) {
     this.unconnectedItems.add(item);
   }
 }

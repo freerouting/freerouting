@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import app.freerouting.Freerouting;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.fixtures.RoutingFixtureTest;
+import app.freerouting.io.kicad.KiCadDrcReport;
 import app.freerouting.management.BoardLoader;
 import app.freerouting.settings.GlobalSettings;
 import com.google.gson.JsonObject;
@@ -43,7 +44,7 @@ public class DesignRulesCheckerTest extends RoutingFixtureTest {
         new DesignRulesChecker(job.board, Freerouting.globalSettings.drcSettings);
 
     // Generate report
-    DrcReport report = drcChecker.generateReport("test.dsn", "mm");
+    KiCadDrcReport report = drcChecker.generateReport("test.dsn", "mm");
 
     // Verify report structure
     assertNotNull(report, "Report should not be null");

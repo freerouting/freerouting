@@ -1,10 +1,10 @@
-package app.freerouting.drc;
+package app.freerouting.io.kicad;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /** Represents a single DRC violation, matching KiCad's JSON schema. */
-public class DrcViolation {
+public class KiCadDrcViolation {
 
   /** Human-readable description of the violation. */
   @SerializedName("description")
@@ -12,7 +12,7 @@ public class DrcViolation {
 
   /** Items involved in the violation. */
   @SerializedName("items")
-  public final List<DrcViolationItem> items;
+  public final List<KiCadDrcViolationItem> items;
 
   /** Severity of the violation ("error", "warning", "ignore"). */
   @SerializedName("severity")
@@ -41,8 +41,8 @@ public class DrcViolation {
    * @param severity severity level
    * @param items involved board items
    */
-  public DrcViolation(
-      String type, String description, String severity, List<DrcViolationItem> items) {
+  public KiCadDrcViolation(
+      String type, String description, String severity, List<KiCadDrcViolationItem> items) {
     this.type = type;
     this.description = description;
     this.severity = severity;

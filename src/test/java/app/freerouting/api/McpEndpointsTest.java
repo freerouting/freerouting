@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
 import app.freerouting.api.mcp.McpApiKeyValidationService;
+import app.freerouting.api.mcp.McpControllerV1;
 import app.freerouting.api.security.ApiKeyValidationService;
 import app.freerouting.logger.AllowErrorLogs;
 import app.freerouting.settings.ApiServerSettings;
@@ -40,6 +41,16 @@ class McpEndpointsTest {
   private Server mcpServer;
   private URI mcpBaseUri;
   private HttpClient httpClient;
+
+  private static boolean containsTool(JsonArray tools, String toolName) {
+    for (int i = 0; i < tools.size(); i++) {
+      JsonObject item = tools.get(i).getAsJsonObject();
+      if (toolName.equals(item.get("name").getAsString())) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   @BeforeEach
   void setUp() throws Exception {
@@ -324,8 +335,7 @@ class McpEndpointsTest {
             authenticatedMcpRequest(initializeRequest), HttpResponse.BodyHandlers.ofString());
     assertEquals(200, response.statusCode());
 
-    java.lang.reflect.Field field =
-        app.freerouting.api.v1.McpControllerV1.class.getDeclaredField("detectedClientInfo");
+    java.lang.reflect.Field field = McpControllerV1.class.getDeclaredField("detectedClientInfo");
     field.setAccessible(true);
     String detected = (String) field.get(null);
     assertEquals("ClaudeDesktop/4.6.1", detected);
@@ -492,15 +502,5 @@ class McpEndpointsTest {
         .header("Freerouting-Profile-ID", TEST_USER_ID)
         .header("Freerouting-Environment-Host", "test/1.0")
         .build();
-  }
-
-  private static boolean containsTool(JsonArray tools, String toolName) {
-    for (int i = 0; i < tools.size(); i++) {
-      JsonObject item = tools.get(i).getAsJsonObject();
-      if (toolName.equals(item.get("name").getAsString())) {
-        return true;
-      }
-    }
-    return false;
   }
 }

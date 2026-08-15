@@ -136,7 +136,7 @@ register this source.
 - `src_v19/`.
 
 OpenAPI schema *title* for the DRC report: publish **`KiCadDrcReport`** in
-this minor; changelog that `DrcReport` as a schema name goes away in the
+this minor; changelog that old schema name `DrcReport` goes away in the
 **next minor**. Do not freeze the old title.
 
 ---
@@ -357,13 +357,13 @@ Branch: `refactor/naming-phase-3-kicad-mcp`
 
 **Progress checklist**
 
-- [ ] Create the phase branch from the updated epic.
-- [ ] Move and rename the KiCad DRC DTOs while preserving all wire field names.
-- [ ] Update `DesignRulesChecker`, OpenAPI schema naming, and the MCP controller package.
-- [ ] Preserve `/v1/mcp` and `/v1/jobs/{jobId}/drc` paths and document the schema-title transition.
-- [ ] Update DRC, MCP, CLI, and reflection-based tests.
-- [ ] Schedule the Python client follow-up for the next minor release.
-- [ ] Run Phase 3 quality gates and merge the PR into the epic.
+- [x] Create the phase branch from the updated epic.
+- [x] Move and rename the KiCad DRC DTOs while preserving all wire field names.
+- [x] Update `DesignRulesChecker`, OpenAPI schema naming, and the MCP controller package.
+- [x] Preserve `/v1/mcp` and `/v1/jobs/{jobId}/drc` paths and document the schema-title transition.
+- [x] Update DRC, MCP, CLI, and reflection-based tests.
+- [x] Schedule the Python client follow-up for the next minor release.
+- [x] Run Phase 3 quality gates and merge the PR into the epic.
 
 Move/rename in `io.kicad` (beside `KiCadBoardJson`, no `io.kicad.drc`
 subpackage):
@@ -379,7 +379,7 @@ return type becomes `KiCadDrcReport`. `drc` keeps `DesignRulesChecker`,
 
 OpenAPI: schema title **`KiCadDrcReport`** (explicit `@Schema(name = "KiCadDrcReport")`
 on the type if Swagger infers the simple name). Changelog: old schema name
-`DrcReport` removed next minor. HTTP path unchanged.
+`KiCadDrcReport` removed next minor. HTTP path unchanged.
 
 Move `api.v1.McpControllerV1` → `api.mcp.McpControllerV1`. Update
 `McpApplication`, `OpenApiResource`, `McpEndpointsTest` reflection FQCN.
@@ -391,7 +391,7 @@ HTTP `/v1/mcp` unchanged.
 `McpEndpointsTest`, `Freerouting` DRC CLI path.
 
 **Python client:** schedule the schema-title follow-up in this minor so the
-next minor can drop `DrcReport`.
+next minor can drop `KiCadDrcReport`.
 
 ---
 
@@ -534,5 +534,5 @@ windows/menus packages, DRC *behavior* extraction.
 - OpenAPI shows `KiCadDrcReport`; `/v1/mcp` and `/v1/jobs/{id}/drc` unchanged.
 - `spotlessCheck`, Checkstyle, `git diff --check`, `extract-context.py --check`
   green on the epic.
-- Epic PR to `master` lists D8: drop schema name `DrcReport` in the **next
+- Epic PR to `master` lists D8: drop old schema name `DrcReport` in the **next
   minor**; Python client follow-up owned by the same maintainer.

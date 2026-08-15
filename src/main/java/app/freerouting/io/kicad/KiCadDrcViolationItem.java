@@ -1,9 +1,9 @@
-package app.freerouting.drc;
+package app.freerouting.io.kicad;
 
 import com.google.gson.annotations.SerializedName;
 
 /** Represents a single item involved in a DRC violation, matching KiCad's JSON schema. */
-public class DrcViolationItem {
+public class KiCadDrcViolationItem {
 
   /** Human-readable description of the item. */
   @SerializedName("description")
@@ -11,7 +11,7 @@ public class DrcViolationItem {
 
   /** Position of the item. */
   @SerializedName("pos")
-  public final DrcPosition pos;
+  public final KiCadDrcPosition pos;
 
   /** Unique identifier of the item. */
   @SerializedName("uuid")
@@ -24,7 +24,7 @@ public class DrcViolationItem {
    * @param pos item position in report coordinates
    * @param uuid unique item identifier
    */
-  public DrcViolationItem(String description, DrcPosition pos, String uuid) {
+  public KiCadDrcViolationItem(String description, KiCadDrcPosition pos, String uuid) {
     this.description = description;
     this.pos = pos;
     this.uuid = uuid;

@@ -9,7 +9,7 @@ import app.freerouting.io.specctra.DsnReader;
 import java.io.ByteArrayInputStream;
 import org.junit.jupiter.api.Test;
 
-class DrcViolationRoutingTest extends RoutingFixtureTest {
+class KiCadDrcViolationRoutingTest extends RoutingFixtureTest {
 
   private void assertDrcOnLoadedBoard(
       String filename, int expectedUnconnected, int expectedViolations) throws Exception {

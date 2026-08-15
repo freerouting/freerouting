@@ -13,6 +13,7 @@ import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.fixtures.RoutingFixtureTest;
+import app.freerouting.io.kicad.KiCadDrcReport;
 import app.freerouting.management.BoardLoader;
 import app.freerouting.settings.DesignRulesCheckerSettings;
 import app.freerouting.settings.GlobalSettings;
@@ -166,7 +167,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
           "DRC should detect track " + trackId + " as a dangling track");
     }
 
-    DrcReport report = drc.generateReport(TEST_BOARD, "mm");
+    KiCadDrcReport report = drc.generateReport(TEST_BOARD, "mm");
 
     assertNotNull(report, "DRC report should not be null");
     assertNotNull(report.violations, "Violations list should not be null");

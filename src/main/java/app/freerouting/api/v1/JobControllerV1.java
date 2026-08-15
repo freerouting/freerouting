@@ -10,6 +10,7 @@ import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.io.FileFormat;
+import app.freerouting.io.kicad.KiCadDrcReport;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.BoardLoader;
 import app.freerouting.management.HeadlessBoardManager;
@@ -1337,7 +1338,10 @@ public class JobControllerV1 extends BaseController {
         @ApiResponse(
             responseCode = "200",
             description = "DRC report generated successfully",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = KiCadDrcReport.class))),
         @ApiResponse(responseCode = "404", description = "Job not found"),
         @ApiResponse(responseCode = "400", description = "Invalid session or failed to load board"),
         @ApiResponse(responseCode = "500", description = "Failed to load board for DRC check")

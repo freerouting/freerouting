@@ -10,6 +10,10 @@ import app.freerouting.board.Unit;
 import app.freerouting.board.Via;
 import app.freerouting.constants.Constants;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.io.kicad.KiCadDrcPosition;
+import app.freerouting.io.kicad.KiCadDrcReport;
+import app.freerouting.io.kicad.KiCadDrcViolation;
+import app.freerouting.io.kicad.KiCadDrcViolationItem;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.DesignRulesCheckerSettings;
@@ -203,9 +207,10 @@ public class DesignRulesChecker {
    * @param coordinateUnit Unit for coordinates (e.g., "mm", "mil")
    * @return DRC report in KiCad JSON format
    */
-  public DrcReport generateReport(String sourceFile, String coordinateUnit) {
-    DrcReport report =
-        new DrcReport(coordinateUnit, sourceFile, "Freerouting " + Constants.FREEROUTING_VERSION);
+  public KiCadDrcReport generateReport(String sourceFile, String coordinateUnit) {
+    KiCadDrcReport report =
+        new KiCadDrcReport(
+            coordinateUnit, sourceFile, "Freerouting " + Constants.FREEROUTING_VERSION);
 
     // Get all clearance violations
     Collection<ClearanceViolation> violations = getAllClearanceViolations();
@@ -224,8 +229,8 @@ public class DesignRulesChecker {
 
     // Convert internal violations to DRC report format
     for (ClearanceViolation violation : violations) {
-      DrcViolation drcViolation = convertToDrcViolation(violation, coordinateUnit);
-      report.addViolation(drcViolation);
+      KiCadDrcViolation kiCadDrcViolation = convertToDrcViolation(violation, coordinateUnit);
+      report.addViolation(kiCadDrcViolation);
 
       FRLogger.trace(
           "DesignRulesChecker.generateReport",
@@ -262,12 +267,12 @@ public class DesignRulesChecker {
 
     // Convert unconnected items to DRC report format
     for (UnconnectedItems unconnectedItem : unconnectedItems) {
-      DrcViolation drcViolation = convertToDrcViolation(unconnectedItem, coordinateUnit);
+      KiCadDrcViolation kiCadDrcViolation = convertToDrcViolation(unconnectedItem, coordinateUnit);
       if ("track_dangling".equals(unconnectedItem.type)
           || "via_dangling".equals(unconnectedItem.type)) {
-        report.addViolation(drcViolation);
+        report.addViolation(kiCadDrcViolation);
       } else {
-        report.addUnconnectedItem(drcViolation);
+        report.addUnconnectedItem(kiCadDrcViolation);
       }
     }
 
@@ -291,8 +296,9 @@ public class DesignRulesChecker {
    * @param coordinateUnit Unit for coordinates
    * @return DRC violation in report format
    */
-  private DrcViolation convertToDrcViolation(ClearanceViolation violation, String coordinateUnit) {
-    List<DrcViolationItem> items = new ArrayList<>();
+  private KiCadDrcViolation convertToDrcViolation(
+      ClearanceViolation violation, String coordinateUnit) {
+    List<KiCadDrcViolationItem> items = new ArrayList<>();
 
     // Create items for first and second objects
     String firstItemDesc = getItemDescription(violation.firstItem);
@@ -300,13 +306,13 @@ public class DesignRulesChecker {
 
     // Position is the center of gravity of the violation shape
     var firstItemCenterOfGravity = violation.firstItem.boundingBox().centreOfGravity();
-    DrcPosition firstItemPos =
-        new DrcPosition(
+    KiCadDrcPosition firstItemPos =
+        new KiCadDrcPosition(
             convertCoordinate(firstItemCenterOfGravity.x, coordinateUnit),
             convertCoordinate(firstItemCenterOfGravity.y, coordinateUnit));
     var secondItemCenterOfGravity = violation.secondItem.boundingBox().centreOfGravity();
-    DrcPosition secondItemPos =
-        new DrcPosition(
+    KiCadDrcPosition secondItemPos =
+        new KiCadDrcPosition(
             convertCoordinate(secondItemCenterOfGravity.x, coordinateUnit),
             convertCoordinate(secondItemCenterOfGravity.y, coordinateUnit));
 
@@ -314,8 +320,8 @@ public class DesignRulesChecker {
     String firstUuid = String.valueOf(violation.firstItem.getIdNo());
     String secondUuid = String.valueOf(violation.secondItem.getIdNo());
 
-    items.add(new DrcViolationItem(firstItemDesc, firstItemPos, firstUuid));
-    items.add(new DrcViolationItem(secondItemDesc, secondItemPos, secondUuid));
+    items.add(new KiCadDrcViolationItem(firstItemDesc, firstItemPos, firstUuid));
+    items.add(new KiCadDrcViolationItem(secondItemDesc, secondItemPos, secondUuid));
 
     // Determine violation type
     String type = "clearance";
@@ -347,12 +353,12 @@ public class DesignRulesChecker {
                   coordinateUnit);
     }
 
-    return new DrcViolation(type, description, "error", items);
+    return new KiCadDrcViolation(type, description, "error", items);
   }
 
-  private DrcViolation convertToDrcViolation(
+  private KiCadDrcViolation convertToDrcViolation(
       UnconnectedItems unconnectedItems, String coordinateUnit) {
-    List<DrcViolationItem> items = new ArrayList<>();
+    List<KiCadDrcViolationItem> items = new ArrayList<>();
 
     String description;
 
@@ -370,13 +376,13 @@ public class DesignRulesChecker {
       }
 
       var itemCenterOfGravity = item.boundingBox().centreOfGravity();
-      DrcPosition itemPos =
-          new DrcPosition(
+      KiCadDrcPosition itemPos =
+          new KiCadDrcPosition(
               convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
               convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
 
       String uuid = String.valueOf(item.getIdNo());
-      items.add(new DrcViolationItem(itemDesc, itemPos, uuid));
+      items.add(new KiCadDrcViolationItem(itemDesc, itemPos, uuid));
 
       description =
           switch (unconnectedItems.type) {
@@ -385,7 +391,7 @@ public class DesignRulesChecker {
             default -> "Unconnected item: " + itemDesc;
           };
 
-      return new DrcViolation(unconnectedItems.type, description, "warning", items);
+      return new KiCadDrcViolation(unconnectedItems.type, description, "warning", items);
     }
 
     // Create items for all items from the unconnected net
@@ -393,12 +399,12 @@ public class DesignRulesChecker {
     for (Item item : unconnectedItems.allItems) {
       String itemDesc = getItemDescription(item);
       var itemCenterOfGravity = item.boundingBox().centreOfGravity();
-      DrcPosition itemPos =
-          new DrcPosition(
+      KiCadDrcPosition itemPos =
+          new KiCadDrcPosition(
               convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
               convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
       String uuid = String.valueOf(item.getIdNo());
-      items.add(new DrcViolationItem(itemDesc, itemPos, uuid));
+      items.add(new KiCadDrcViolationItem(itemDesc, itemPos, uuid));
     }
 
     // Create violation description using the first two representative items
@@ -412,7 +418,7 @@ public class DesignRulesChecker {
       description = "Unconnected item: %s".formatted(fromItemDesc);
     }
 
-    return new DrcViolation(unconnectedItems.type, description, "warning", items);
+    return new KiCadDrcViolation(unconnectedItems.type, description, "warning", items);
   }
 
   private boolean isHole(Item item) {
@@ -804,7 +810,7 @@ public class DesignRulesChecker {
    * @return JSON string of the DRC report
    */
   public String generateReportJson(String sourceFile, String coordinateUnit) {
-    DrcReport report = generateReport(sourceFile, coordinateUnit);
+    KiCadDrcReport report = generateReport(sourceFile, coordinateUnit);
     return GsonProvider.GSON.toJson(report);
   }
 }

@@ -10,6 +10,7 @@ import app.freerouting.core.RoutingJobState;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.GuiManager;
+import app.freerouting.io.kicad.KiCadDrcReport;
 import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
@@ -248,8 +249,7 @@ public class Freerouting {
 
     // Generate DRC report
     String sourceFileName = new File(globalSettings.initialInputFile).getName();
-    app.freerouting.drc.DrcReport report =
-        drcChecker.generateReport(sourceFileName, coordinateUnit);
+    KiCadDrcReport report = drcChecker.generateReport(sourceFileName, coordinateUnit);
 
     // Calculate final quality score for DRC report
     try {

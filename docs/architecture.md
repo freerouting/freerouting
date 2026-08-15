@@ -22,7 +22,7 @@ flowchart TD
         GUI["**gui + gui.workspace + gui.interactive**\nSwing desktop"]
         RENDER["**gui.rendering**\nGUI-owned board renderer"]
         API["**api.v1**\nREST / HTTP"]
-        MCP["**api.mcp + api.v1.McpControllerV1**\nMCP JSON-RPC + SSE + WS"]
+        MCP["**api.mcp**\nMCP JSON-RPC + SSE + WS"]
     end
 
     subgraph services ["Shared Services"]
@@ -85,7 +85,7 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
 | GUI windows, panels, menus, editor state, or drawing | `app.freerouting.gui`, `app.freerouting.gui.workspace`, `app.freerouting.gui.interactive`, and `app.freerouting.gui.rendering` |
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
-| MCP server protocol bridge | `app.freerouting.api.mcp` and `app.freerouting.api.v1.McpControllerV1` |
+| MCP server protocol bridge | `app.freerouting.api.mcp` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
 | Geometry, shapes, points, and planar math | `app.freerouting.geometry.planar` |
 

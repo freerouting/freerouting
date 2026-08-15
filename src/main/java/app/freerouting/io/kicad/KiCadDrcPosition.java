@@ -1,9 +1,9 @@
-package app.freerouting.drc;
+package app.freerouting.io.kicad;
 
 import com.google.gson.annotations.SerializedName;
 
 /** Represents a position in the DRC report, matching KiCad's JSON schema. */
-public class DrcPosition {
+public class KiCadDrcPosition {
 
   /** X coordinate in the coordinate units specified in the report. */
   @SerializedName("x")
@@ -19,7 +19,7 @@ public class DrcPosition {
    * @param coordX the X coordinate
    * @param coordY the Y coordinate
    */
-  public DrcPosition(double coordX, double coordY) {
+  public KiCadDrcPosition(double coordX, double coordY) {
     this.coordX = coordX;
     this.coordY = coordY;
   }
