@@ -40,9 +40,9 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
 
   /** Returns the via definition with the given name, or null if no such via exists. */
   public ViaInfo get(String name) {
-    for (ViaInfo currVia : this.list) {
-      if (currVia.getName().equals(name)) {
-        return currVia;
+    for (ViaInfo currentVia : this.list) {
+      if (currentVia.getName().equals(name)) {
+        return currentVia;
       }
     }
     return null;
@@ -50,8 +50,8 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
 
   /** Returns true if a via definition with the given name already exists. */
   public boolean nameExists(String name) {
-    for (ViaInfo currVia : this.list) {
-      if (currVia.getName().equals(name)) {
+    for (ViaInfo currentVia : this.list) {
+      if (currentVia.getName().equals(name)) {
         return true;
       }
     }
@@ -71,7 +71,7 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
     int counter = 0;
     boolean firstTime = true;
     final int maxViasPerRow = 5;
-    for (ViaInfo currVia : this.list) {
+    for (ViaInfo currentVia : this.list) {
       if (firstTime) {
         firstTime = false;
       } else {
@@ -81,7 +81,7 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
         window.newline();
         window.indent();
       }
-      window.append(currVia.getName(), tm.getText("viaInfo"), currVia);
+      window.append(currentVia.getName(), tm.getText("viaInfo"), currentVia);
       counter = (counter + 1) % maxViasPerRow;
     }
   }

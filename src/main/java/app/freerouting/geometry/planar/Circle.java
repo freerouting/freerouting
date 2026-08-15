@@ -149,19 +149,19 @@ public class Circle implements ConvexShape, Serializable {
       if (i == 0) {
         borderDelta = new IntVector(this.radius, 0);
       } else {
-        double currAngle = i * Math.PI / (2.0 * quadrantDivisionCount);
-        int currX = (int) Math.ceil(Math.sin(currAngle) * this.radius);
-        int currY = (int) Math.ceil(Math.cos(currAngle) * this.radius);
-        borderDelta = new IntVector(currX, currY);
+        double currentAngle = i * Math.PI / (2.0 * quadrantDivisionCount);
+        int currentX = (int) Math.ceil(Math.sin(currentAngle) * this.radius);
+        int currentY = (int) Math.ceil(Math.cos(currentAngle) * this.radius);
+        borderDelta = new IntVector(currentX, currentY);
       }
-      Point currA = this.center.translateBy(borderDelta);
-      Point currB = currA.turn90Degree(1, this.center);
-      Direction currDir = Direction.getInstance(currB.differenceBy(this.center));
-      Line currTangent = new Line(currA, currDir);
-      tangentLineArr[quadrantDivisionCount + i] = currTangent;
-      tangentLineArr[2 * quadrantDivisionCount + i] = currTangent.turn90Degree(1, this.center);
-      tangentLineArr[3 * quadrantDivisionCount + i] = currTangent.turn90Degree(2, this.center);
-      tangentLineArr[i] = currTangent.turn90Degree(3, this.center);
+      Point currentA = this.center.translateBy(borderDelta);
+      Point currentB = currentA.turn90Degree(1, this.center);
+      Direction currentDirection = Direction.getInstance(currentB.differenceBy(this.center));
+      Line currentTangent = new Line(currentA, currentDirection);
+      tangentLineArr[quadrantDivisionCount + i] = currentTangent;
+      tangentLineArr[2 * quadrantDivisionCount + i] = currentTangent.turn90Degree(1, this.center);
+      tangentLineArr[3 * quadrantDivisionCount + i] = currentTangent.turn90Degree(2, this.center);
+      tangentLineArr[i] = currentTangent.turn90Degree(3, this.center);
     }
     return TileShape.getInstance(tangentLineArr);
   }

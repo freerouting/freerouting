@@ -34,9 +34,9 @@ public class Net {
     // write the pins scope
     par.file.startScope();
     par.file.write("pins");
-    for (app.freerouting.board.Pin currPin : pinList) {
-      if (currPin.containsNet(net.netNumber)) {
-        writePin(par, currPin);
+    for (app.freerouting.board.Pin currentPin : pinList) {
+      if (currentPin.containsNet(net.netNumber)) {
+        writePin(par, currentPin);
       }
     }
     par.file.endScope();
@@ -55,18 +55,18 @@ public class Net {
 
   public static void writePin(WriteScopeParameter par, app.freerouting.board.Pin pin)
       throws IOException {
-    Component currComponent = par.board.components.get(pin.getComponentNo());
-    if (currComponent == null) {
-      FRLogger.warn("Net.write_scope: component not found at '" + currComponent.name + "'");
+    Component currentComponent = par.board.components.get(pin.getComponentNo());
+    if (currentComponent == null) {
+      FRLogger.warn("Net.write_scope: component not found at '" + currentComponent.name + "'");
       return;
     }
-    Package.Pin libPin = currComponent.getPackage().getPin(pin.getIndexInPackage());
+    Package.Pin libPin = currentComponent.getPackage().getPin(pin.getIndexInPackage());
     if (libPin == null) {
-      FRLogger.warn("Net.write_scope:  pin number out of range at '" + currComponent.name + "'");
+      FRLogger.warn("Net.write_scope:  pin number out of range at '" + currentComponent.name + "'");
       return;
     }
     par.file.newLine();
-    par.identifierType.write(currComponent.name, par.file);
+    par.identifierType.write(currentComponent.name, par.file);
     par.file.write("-");
     par.identifierType.write(libPin.name, par.file);
   }

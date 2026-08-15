@@ -54,9 +54,9 @@ public class BoardLibrary implements Serializable {
     if (this.viaPadstacks == null) {
       return null;
     }
-    for (Padstack currPadstack : this.viaPadstacks) {
-      if (currPadstack.name.equals(name)) {
-        return currPadstack;
+    for (Padstack currentPadstack : this.viaPadstacks) {
+      if (currentPadstack.name.equals(name)) {
+        return currentPadstack;
       }
     }
     return null;
@@ -116,9 +116,10 @@ public class BoardLibrary implements Serializable {
     }
     int newFromLayer = layerCount - viaPadstack.toLayer() - 1;
     int newToLayer = layerCount - viaPadstack.fromLayer() - 1;
-    for (Padstack currViaPadstack : viaPadstacks) {
-      if (currViaPadstack.fromLayer() == newFromLayer && currViaPadstack.toLayer() == newToLayer) {
-        return currViaPadstack;
+    for (Padstack currentViaPadstack : viaPadstacks) {
+      if (currentViaPadstack.fromLayer() == newFromLayer
+          && currentViaPadstack.toLayer() == newToLayer) {
+        return currentViaPadstack;
       }
     }
     return null;
@@ -128,20 +129,20 @@ public class BoardLibrary implements Serializable {
   public boolean isUsed(Padstack padstack, BasicBoard board) {
     Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      UndoableObjects.Storable currItem = board.itemList.readObject(it);
-      if (currItem == null) {
+      UndoableObjects.Storable currentItem = board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      if (currItem instanceof DrillItem item) {
+      if (currentItem instanceof DrillItem item) {
         if (item.getPadstack() == padstack) {
           return true;
         }
       }
     }
     for (int i = 1; i <= this.packages.count(); i++) {
-      Package currPackage = this.packages.get(i);
-      for (int j = 0; j < currPackage.pinCount(); j++) {
-        if (currPackage.getPin(j).padstackNo == padstack.no) {
+      Package currentPackage = this.packages.get(i);
+      for (int j = 0; j < currentPackage.pinCount(); j++) {
+        if (currentPackage.getPin(j).padstackNo == padstack.no) {
           return true;
         }
       }

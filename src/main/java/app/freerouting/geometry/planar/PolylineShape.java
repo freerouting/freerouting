@@ -109,9 +109,9 @@ public abstract class PolylineShape implements Shape, Serializable {
     double result = 0;
     FloatPoint prevCorner = cornerApprox(cornerCount - 1);
     for (int i = 0; i < cornerCount; i++) {
-      FloatPoint currCorner = cornerApprox(i);
-      result += currCorner.distance(prevCorner);
-      prevCorner = currCorner;
+      FloatPoint currentCorner = cornerApprox(i);
+      result += currentCorner.distance(prevCorner);
+      prevCorner = currentCorner;
     }
     return result;
   }
@@ -123,9 +123,9 @@ public abstract class PolylineShape implements Shape, Serializable {
     double x = 0;
     double y = 0;
     for (int i = 0; i < cornerCount; i++) {
-      FloatPoint currPoint = cornerApprox(i);
-      x += currPoint.x;
-      y += currPoint.y;
+      FloatPoint currentPoint = cornerApprox(i);
+      x += currentPoint.x;
+      y += currentPoint.y;
     }
     x /= cornerCount;
     y /= cornerCount;
@@ -147,9 +147,9 @@ public abstract class PolylineShape implements Shape, Serializable {
     int cornerCount = borderLineCount();
     int result = 0;
     for (int i = 1; i < cornerCount; i++) {
-      FloatPoint currCorner = cornerApprox(i);
-      if (currCorner.sideOf(fromPoint, leftMostCorner) == Side.ON_THE_LEFT) {
-        leftMostCorner = currCorner;
+      FloatPoint currentCorner = cornerApprox(i);
+      if (currentCorner.sideOf(fromPoint, leftMostCorner) == Side.ON_THE_LEFT) {
+        leftMostCorner = currentCorner;
         result = i;
       }
     }
@@ -165,9 +165,9 @@ public abstract class PolylineShape implements Shape, Serializable {
     int cornerCount = borderLineCount();
     int result = 0;
     for (int i = 1; i < cornerCount; i++) {
-      FloatPoint currCorner = cornerApprox(i);
-      if (currCorner.sideOf(fromPoint, rightMostCorner) == Side.ON_THE_RIGHT) {
-        rightMostCorner = currCorner;
+      FloatPoint currentCorner = cornerApprox(i);
+      if (currentCorner.sideOf(fromPoint, rightMostCorner) == Side.ON_THE_RIGHT) {
+        rightMostCorner = currentCorner;
         result = i;
       }
     }
@@ -188,12 +188,12 @@ public abstract class PolylineShape implements Shape, Serializable {
     FloatPoint rightMostCorner = cornerApprox(0);
     int cornerCount = borderLineCount();
     for (int i = 1; i < cornerCount; i++) {
-      FloatPoint currCorner = cornerApprox(i);
-      if (currCorner.sideOf(fromPoint, rightMostCorner) == Side.ON_THE_RIGHT) {
-        rightMostCorner = currCorner;
+      FloatPoint currentCorner = cornerApprox(i);
+      if (currentCorner.sideOf(fromPoint, rightMostCorner) == Side.ON_THE_RIGHT) {
+        rightMostCorner = currentCorner;
       }
-      if (currCorner.sideOf(fromPoint, leftMostCorner) == Side.ON_THE_LEFT) {
-        leftMostCorner = currCorner;
+      if (currentCorner.sideOf(fromPoint, leftMostCorner) == Side.ON_THE_LEFT) {
+        leftMostCorner = currentCorner;
       }
     }
     return new FloatLine(leftMostCorner, rightMostCorner);
@@ -250,9 +250,9 @@ public abstract class PolylineShape implements Shape, Serializable {
     Point result = this.corner(0);
     int cornerCount = this.borderLineCount();
     for (int i = 1; i < cornerCount; i++) {
-      Point currCorner = this.corner(i);
-      if (currCorner.sideOf(fromPoint, result) == Side.ON_THE_LEFT) {
-        result = currCorner;
+      Point currentCorner = this.corner(i);
+      if (currentCorner.sideOf(fromPoint, result) == Side.ON_THE_LEFT) {
+        result = currentCorner;
       }
     }
     return result;
@@ -266,9 +266,9 @@ public abstract class PolylineShape implements Shape, Serializable {
     Point result = this.corner(0);
     int cornerCount = this.borderLineCount();
     for (int i = 1; i < cornerCount; i++) {
-      Point currCorner = this.corner(i);
-      if (currCorner.sideOf(fromPoint, result) == Side.ON_THE_RIGHT) {
-        result = currCorner;
+      Point currentCorner = this.corner(i);
+      if (currentCorner.sideOf(fromPoint, result) == Side.ON_THE_RIGHT) {
+        result = currentCorner;
       }
     }
     return result;

@@ -341,39 +341,40 @@ public class LineSegment implements Serializable {
     result[0] = startPoint;
     double det = (double) dx * (double) dy;
     boolean changeXfirst = toTheRight && det > 0 || !toTheRight && det < 0;
-    int currIndex = 0;
+    int currentIndex = 0;
 
     int prevLinePointX = startPoint.x;
     int prevLinePointY = startPoint.y;
     for (int i = 1; i < stairCount; i++) {
-      int currLinePointX;
-      int currLinePointY;
+      int currentLinePointX;
+      int currentLinePointY;
       if (functionOfX) {
-        currLinePointX = startPoint.x + i * stairWidth;
-        currLinePointY = (int) Math.round(this.getLine().functionValueApprox(currLinePointX));
+        currentLinePointX = startPoint.x + i * stairWidth;
+        currentLinePointY = (int) Math.round(this.getLine().functionValueApprox(currentLinePointX));
       } else {
-        currLinePointY = startPoint.y + i * stairWidth;
-        currLinePointX = (int) Math.round(this.getLine().functionInYValueApprox(currLinePointY));
+        currentLinePointY = startPoint.y + i * stairWidth;
+        currentLinePointX =
+            (int) Math.round(this.getLine().functionInYValueApprox(currentLinePointY));
       }
-      ++currIndex;
+      ++currentIndex;
       if (changeXfirst) {
-        result[currIndex] = new IntPoint(currLinePointX, prevLinePointY);
+        result[currentIndex] = new IntPoint(currentLinePointX, prevLinePointY);
       } else {
-        result[currIndex] = new IntPoint(prevLinePointX, currLinePointY);
+        result[currentIndex] = new IntPoint(prevLinePointX, currentLinePointY);
       }
-      ++currIndex;
-      result[currIndex] = new IntPoint(currLinePointX, currLinePointY);
-      prevLinePointX = currLinePointX;
-      prevLinePointY = currLinePointY;
+      ++currentIndex;
+      result[currentIndex] = new IntPoint(currentLinePointX, currentLinePointY);
+      prevLinePointX = currentLinePointX;
+      prevLinePointY = currentLinePointY;
     }
-    ++currIndex;
+    ++currentIndex;
     if (changeXfirst) {
-      result[currIndex] = new IntPoint(endPoint.x, prevLinePointY);
+      result[currentIndex] = new IntPoint(endPoint.x, prevLinePointY);
     } else {
-      result[currIndex] = new IntPoint(prevLinePointX, endPoint.y);
+      result[currentIndex] = new IntPoint(prevLinePointX, endPoint.y);
     }
-    ++currIndex;
-    result[currIndex] = endPoint;
+    ++currentIndex;
+    result[currentIndex] = endPoint;
     return result;
   }
 
@@ -417,59 +418,59 @@ public class LineSegment implements Serializable {
     IntPoint[] result = new IntPoint[2 * stairCount + 1];
     result[0] = startPoint;
     IntPoint prevLinePoint = startPoint;
-    int currIndex = 0;
+    int currentIndex = 0;
     for (int i = 1; i <= stairCount; i++) {
-      IntPoint currLinePoint;
-      int currX;
-      int currY;
+      IntPoint currentLinePoint;
+      int currentX;
+      int currentY;
       if (i == stairCount) {
-        currLinePoint = endPoint;
+        currentLinePoint = endPoint;
       } else {
         if (functionOfX) {
-          currX = startPoint.x + i * stairWidth;
-          currY = (int) Math.round(this.getLine().functionValueApprox(currX));
+          currentX = startPoint.x + i * stairWidth;
+          currentY = (int) Math.round(this.getLine().functionValueApprox(currentX));
         } else {
-          currY = startPoint.y + i * stairWidth;
-          currX = (int) Math.round(this.getLine().functionValueApprox(currY));
+          currentY = startPoint.y + i * stairWidth;
+          currentX = (int) Math.round(this.getLine().functionValueApprox(currentY));
         }
-        currLinePoint = new IntPoint(currX, currY);
+        currentLinePoint = new IntPoint(currentX, currentY);
       }
       if (functionOfX) {
         boolean diagonalFirst = toTheRight && det < 0 || !toTheRight && det > 0;
 
         if (diagonalFirst) {
-          currX =
+          currentX =
               prevLinePoint.x
-                  + Signum.asInt(stairWidth) * Math.abs(currLinePoint.y - prevLinePoint.y);
-          currY = currLinePoint.y;
+                  + Signum.asInt(stairWidth) * Math.abs(currentLinePoint.y - prevLinePoint.y);
+          currentY = currentLinePoint.y;
         } else {
           // horizontal first
-          currX =
-              currLinePoint.x
-                  - Signum.asInt(stairWidth) * Math.abs(currLinePoint.y - prevLinePoint.y);
-          currY = prevLinePoint.y;
+          currentX =
+              currentLinePoint.x
+                  - Signum.asInt(stairWidth) * Math.abs(currentLinePoint.y - prevLinePoint.y);
+          currentY = prevLinePoint.y;
         }
       } else {
         // function of y
         boolean diagonalFirst = toTheRight && det > 0 || !toTheRight && det < 0;
 
         if (diagonalFirst) {
-          currX = currLinePoint.x;
-          currY =
+          currentX = currentLinePoint.x;
+          currentY =
               prevLinePoint.y
-                  + Signum.asInt(stairWidth) * Math.abs(currLinePoint.x - prevLinePoint.x);
+                  + Signum.asInt(stairWidth) * Math.abs(currentLinePoint.x - prevLinePoint.x);
         } else {
-          currX = prevLinePoint.x;
-          currY =
-              currLinePoint.y
-                  - Signum.asInt(stairWidth) * Math.abs(currLinePoint.x - prevLinePoint.x);
+          currentX = prevLinePoint.x;
+          currentY =
+              currentLinePoint.y
+                  - Signum.asInt(stairWidth) * Math.abs(currentLinePoint.x - prevLinePoint.x);
         }
       }
-      ++currIndex;
-      result[currIndex] = new IntPoint(currX, currY);
-      ++currIndex;
-      result[currIndex] = currLinePoint;
-      prevLinePoint = currLinePoint;
+      ++currentIndex;
+      result[currentIndex] = new IntPoint(currentX, currentY);
+      ++currentIndex;
+      result[currentIndex] = currentLinePoint;
+      prevLinePoint = currentLinePoint;
     }
     return result;
   }
@@ -489,7 +490,7 @@ public class LineSegment implements Serializable {
 
     int edgeCount = shape.borderLineCount();
     Line prevLine = shape.borderLine(edgeCount - 1);
-    Line currLine = shape.borderLine(0);
+    Line currentLine = shape.borderLine(0);
     int[] result = new int[2];
     Point[] intersection = new Point[2];
     int intersectionCount = 0;
@@ -504,8 +505,8 @@ public class LineSegment implements Serializable {
         nextLine = shape.borderLine(edgeLineNo + 1);
       }
 
-      Side startPointSide = currLine.sideOf(lineStart);
-      Side endPointSide = currLine.sideOf(lineEnd);
+      Side startPointSide = currentLine.sideOf(lineStart);
+      Side endPointSide = currentLine.sideOf(lineEnd);
       if (startPointSide == Side.ON_THE_LEFT && endPointSide == Side.ON_THE_LEFT) {
         // both endpoints are outside the borderLine,
         // no intersection possible
@@ -513,7 +514,7 @@ public class LineSegment implements Serializable {
       }
 
       if (startPointSide == Side.COLLINEAR) {
-        // the start is on currLine, check that the end point is inside
+        // the start is on currentLine, check that the end point is inside
         // the halfplane, because touches count only, if the interior
         // is entered
         if (endPointSide != Side.ON_THE_RIGHT) {
@@ -522,7 +523,7 @@ public class LineSegment implements Serializable {
       }
 
       if (endPointSide == Side.COLLINEAR) {
-        // the end is on currLine, check that the start point is inside
+        // the end is on currentLine, check that the start point is inside
         // the halfplane, because touches count only, if the interior
         // is entered
         if (startPointSide != Side.ON_THE_RIGHT) {
@@ -531,12 +532,12 @@ public class LineSegment implements Serializable {
       }
 
       if (startPointSide != Side.ON_THE_RIGHT || endPointSide != Side.ON_THE_RIGHT) {
-        // not both points are inside the halplane defined by currLine
-        Point is = this.middle.intersection(currLine);
+        // not both points are inside the halplane defined by currentLine
+        Point is = this.middle.intersection(currentLine);
         Side prevLineSideOfIs = prevLine.sideOf(is);
         Side nextLineSideOfIs = nextLine.sideOf(is);
         if (prevLineSideOfIs != Side.ON_THE_LEFT && nextLineSideOfIs != Side.ON_THE_LEFT) {
-          // this line segment intersects currLine between the
+          // this line segment intersects currentLine between the
           // previous and the next corner of p_simplex
 
           if (prevLineSideOfIs == Side.COLLINEAR) {
@@ -613,8 +614,8 @@ public class LineSegment implements Serializable {
         }
       }
 
-      prevLine = currLine;
-      currLine = nextLine;
+      prevLine = currentLine;
+      currentLine = nextLine;
     }
 
     if (intersectionCount == 0) {
@@ -625,8 +626,8 @@ public class LineSegment implements Serializable {
       // assure the correct order
       FloatPoint is0 = intersection[0].toFloat();
       FloatPoint is1 = intersection[1].toFloat();
-      FloatPoint currStart = lineStart.toFloat();
-      if (currStart.distanceSquare(is1) < currStart.distanceSquare(is0)) {
+      FloatPoint currentStart = lineStart.toFloat();
+      if (currentStart.distanceSquare(is1) < currentStart.distanceSquare(is0)) {
         // swap the result points
         int tmp = result[0];
         result[0] = result[1];

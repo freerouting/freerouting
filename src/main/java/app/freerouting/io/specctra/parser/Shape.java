@@ -182,19 +182,19 @@ public abstract class Shape {
               + "'");
       return null;
     }
-    if (nextToken instanceof String currName) {
-      scanner.setScopeIdentifier(currName);
-      if (!currName.isEmpty()) {
-        areaName = currName;
+    if (nextToken instanceof String currentName) {
+      scanner.setScopeIdentifier(currentName);
+      if (!currentName.isEmpty()) {
+        areaName = currentName;
       }
     }
-    Shape currShape = Shape.readScope(scanner, layerStructure);
-    if (currShape == null) {
+    Shape currentShape = Shape.readScope(scanner, layerStructure);
+    if (currentShape == null) {
       FRLogger.warn(
           "Shape.read_area_scope: could not read shape at '" + scanner.getScopeIdentifier() + "'");
       resultOk = false;
     }
-    shapeList.add(currShape);
+    shapeList.add(currentShape);
     nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
@@ -408,13 +408,13 @@ public abstract class Shape {
       // fill the coordinates
       Object nextToken;
       double[] circleCoor = new double[3];
-      int currIndex = 0;
+      int currentIndex = 0;
       for (; ; ) {
         nextToken = scanner.nextToken();
         if (nextToken == Keyword.CLOSED_BRACKET) {
           break;
         }
-        if (currIndex > 2) {
+        if (currentIndex > 2) {
           FRLogger.warn(
               "Shape.read_circle_scope: closed bracket expected at '"
                   + scanner.getScopeIdentifier()
@@ -422,15 +422,15 @@ public abstract class Shape {
           return null;
         }
         if (nextToken instanceof Double double1) {
-          circleCoor[currIndex] = double1;
+          circleCoor[currentIndex] = double1;
         } else if (nextToken instanceof Integer integer) {
-          circleCoor[currIndex] = integer;
+          circleCoor[currentIndex] = integer;
         } else {
           FRLogger.warn(
               "Shape.read_circle_scope: number expected at '" + scanner.getScopeIdentifier() + "'");
           return null;
         }
-        ++currIndex;
+        ++currentIndex;
       }
 
       if (circleLayer == null) {

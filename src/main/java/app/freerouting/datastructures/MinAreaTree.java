@@ -29,18 +29,18 @@ public class MinAreaTree extends ShapeTree {
     }
     ArrayStack<TreeNode> nodeStack = new ArrayStack<>(10000);
     nodeStack.push(this.root);
-    TreeNode currNode;
+    TreeNode currentNode;
     for (; ; ) {
-      currNode = nodeStack.pop();
-      if (currNode == null) {
+      currentNode = nodeStack.pop();
+      if (currentNode == null) {
         break;
       }
-      if (currNode.boundingShape.intersects(shape)) {
-        if (currNode instanceof Leaf leaf) {
+      if (currentNode.boundingShape.intersects(shape)) {
+        if (currentNode instanceof Leaf leaf) {
           foundOverlaps.add(leaf);
         } else {
-          nodeStack.push(((InnerNode) currNode).firstChild);
-          nodeStack.push(((InnerNode) currNode).secondChild);
+          nodeStack.push(((InnerNode) currentNode).firstChild);
+          nodeStack.push(((InnerNode) currentNode).secondChild);
         }
       }
     }
@@ -62,15 +62,15 @@ public class MinAreaTree extends ShapeTree {
 
     // Construct a new node - whenever a leaf is added so is a new node
     RegularTileShape newBounds = leaf.boundingShape.union(leafToReplace.boundingShape);
-    InnerNode currParent = leafToReplace.parent;
-    InnerNode newNode = new InnerNode(newBounds, currParent);
+    InnerNode currentParent = leafToReplace.parent;
+    InnerNode newNode = new InnerNode(newBounds, currentParent);
 
     if (leafToReplace.parent != null) {
       // Replace the pointer from the parent to the leaf with our new node
-      if (leafToReplace == currParent.firstChild) {
-        currParent.firstChild = newNode;
+      if (leafToReplace == currentParent.firstChild) {
+        currentParent.firstChild = newNode;
       } else {
-        currParent.secondChild = newNode;
+        currentParent.secondChild = newNode;
       }
     }
     // Update the parent pointers of the old leaf and new leaf to point to new node
@@ -86,29 +86,30 @@ public class MinAreaTree extends ShapeTree {
     }
   }
 
-  private Leaf positionLocate(TreeNode currNode, Leaf leafToInsert) {
-    TreeNode node = currNode;
+  private Leaf positionLocate(TreeNode currentNode, Leaf leafToInsert) {
+    TreeNode node = currentNode;
 
     while (!(node instanceof Leaf)) {
-      InnerNode currInnerNode = (InnerNode) node;
-      currInnerNode.boundingShape = leafToInsert.boundingShape.union(currInnerNode.boundingShape);
+      InnerNode currentInnerNode = (InnerNode) node;
+      currentInnerNode.boundingShape =
+          leafToInsert.boundingShape.union(currentInnerNode.boundingShape);
 
       // Choose the child, so that the area increase of that child after taking the union
       // with the shape of leafToInsert is minimal.
 
-      RegularTileShape firstChildShape = currInnerNode.firstChild.boundingShape;
+      RegularTileShape firstChildShape = currentInnerNode.firstChild.boundingShape;
       RegularTileShape unionWithFirstChildShape = leafToInsert.boundingShape.union(firstChildShape);
       double firstAreaIncrease = unionWithFirstChildShape.area() - firstChildShape.area();
 
-      RegularTileShape secondChildShape = currInnerNode.secondChild.boundingShape;
+      RegularTileShape secondChildShape = currentInnerNode.secondChild.boundingShape;
       RegularTileShape unionWithSecondChildShape =
           leafToInsert.boundingShape.union(secondChildShape);
       double secondAreaIncrease = unionWithSecondChildShape.area() - secondChildShape.area();
 
       if (firstAreaIncrease <= secondAreaIncrease) {
-        node = currInnerNode.firstChild;
+        node = currentInnerNode.firstChild;
       } else {
-        node = currInnerNode.secondChild;
+        node = currentInnerNode.secondChild;
       }
     }
     return (Leaf) node;

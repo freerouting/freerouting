@@ -113,11 +113,11 @@ public class Parser extends ScopeKeyword {
       file.write(")");
     }
     if (parserInfo.constants != null) {
-      for (String[] currConstant : parserInfo.constants) {
+      for (String[] currentConstant : parserInfo.constants) {
         file.newLine();
         file.write("(constant ");
-        for (int i = 0; i < currConstant.length; i++) {
-          identifierType.write(currConstant[i], file);
+        for (int i = 0; i < currentConstant.length; i++) {
+          identifierType.write(currentConstant[i], file);
           file.write(" ");
         }
         file.write(")");
@@ -200,9 +200,9 @@ public class Parser extends ScopeKeyword {
         } else if (nextToken == HOST_VERSION) {
           par.hostVersion = DsnFile.readStringScope(par.scanner);
         } else if (nextToken == CONSTANT) {
-          String[] currConstant = readConstant(par);
-          if (currConstant != null) {
-            par.constants.add(currConstant);
+          String[] currentConstant = readConstant(par);
+          if (currentConstant != null) {
+            par.constants.add(currentConstant);
           }
         } else if (nextToken == WRITE_RESOLUTION) {
           par.writeResolution = readWriteSolution(par);

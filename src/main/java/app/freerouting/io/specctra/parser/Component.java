@@ -119,27 +119,27 @@ public class Component extends ScopeKeyword {
     if (!component.isPlaced()) {
       return;
     }
-    Package.Keepout[] currKeepoutArr;
+    Package.Keepout[] currentKeepoutArr;
     String keepoutType;
     for (int j = 0; j < 3; j++) {
       if (j == 0) {
-        currKeepoutArr = component.getPackage().keepoutArr;
+        currentKeepoutArr = component.getPackage().keepoutArr;
         keepoutType = "(keepout ";
       } else if (j == 1) {
-        currKeepoutArr = component.getPackage().viaKeepoutArr;
+        currentKeepoutArr = component.getPackage().viaKeepoutArr;
         keepoutType = "(via_keepout ";
       } else {
-        currKeepoutArr = component.getPackage().placeKeepoutArr;
+        currentKeepoutArr = component.getPackage().placeKeepoutArr;
         keepoutType = "(place_keepout ";
       }
-      for (int i = 0; i < currKeepoutArr.length; i++) {
-        Package.Keepout currKeepout = currKeepoutArr[i];
-        ObstacleArea currObstacleArea = getKeepout(par.board, component.no, currKeepout.name);
-        if (currObstacleArea == null || currObstacleArea.clearanceClassNo() == 0) {
+      for (int i = 0; i < currentKeepoutArr.length; i++) {
+        Package.Keepout currentKeepout = currentKeepoutArr[i];
+        ObstacleArea currentObstacleArea = getKeepout(par.board, component.no, currentKeepout.name);
+        if (currentObstacleArea == null || currentObstacleArea.clearanceClassNo() == 0) {
           continue;
         }
         String clClassName =
-            par.board.rules.clearanceMatrix.getName(currObstacleArea.clearanceClassNo());
+            par.board.rules.clearanceMatrix.getName(currentObstacleArea.clearanceClassNo());
         if (clClassName == null) {
           FRLogger.warn(
               "Component.write_keepout_infos: clearance class name not found at '"
@@ -149,7 +149,7 @@ public class Component extends ScopeKeyword {
         }
         par.file.newLine();
         par.file.write(keepoutType);
-        par.identifierType.write(currKeepout.name, par.file);
+        par.identifierType.write(currentKeepout.name, par.file);
         par.file.write(" (clearanceClass ");
         par.identifierType.write(clClassName, par.file);
         par.file.write("))");
@@ -160,13 +160,14 @@ public class Component extends ScopeKeyword {
   private static ObstacleArea getKeepout(BasicBoard board, int componentNo, String name) {
     Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      if (currItem.getComponentNo() == componentNo && currItem instanceof ObstacleArea currArea) {
-        if (currArea.name != null && currArea.name.equals(name)) {
-          return currArea;
+      if (currentItem.getComponentNo() == componentNo
+          && currentItem instanceof ObstacleArea currentArea) {
+        if (currentArea.name != null && currentArea.name.equals(name)) {
+          return currentArea;
         }
       }
     }
@@ -244,29 +245,29 @@ public class Component extends ScopeKeyword {
         if (nextToken == LOCK_TYPE) {
           positionFixed = readLockType(scanner);
         } else if (nextToken == PIN) {
-          ComponentPlacement.ItemClearanceInfo currPinInfo = readItemClearanceInfo(scanner);
-          if (currPinInfo == null) {
+          ComponentPlacement.ItemClearanceInfo currentPinInfo = readItemClearanceInfo(scanner);
+          if (currentPinInfo == null) {
             return null;
           }
-          pinInfos.put(currPinInfo.name, currPinInfo);
+          pinInfos.put(currentPinInfo.name, currentPinInfo);
         } else if (nextToken == KEEPOUT) {
-          ComponentPlacement.ItemClearanceInfo currKeepoutInfo = readItemClearanceInfo(scanner);
-          if (currKeepoutInfo == null) {
+          ComponentPlacement.ItemClearanceInfo currentKeepoutInfo = readItemClearanceInfo(scanner);
+          if (currentKeepoutInfo == null) {
             return null;
           }
-          keepoutInfos.put(currKeepoutInfo.name, currKeepoutInfo);
+          keepoutInfos.put(currentKeepoutInfo.name, currentKeepoutInfo);
         } else if (nextToken == VIA_KEEPOUT) {
-          ComponentPlacement.ItemClearanceInfo currKeepoutInfo = readItemClearanceInfo(scanner);
-          if (currKeepoutInfo == null) {
+          ComponentPlacement.ItemClearanceInfo currentKeepoutInfo = readItemClearanceInfo(scanner);
+          if (currentKeepoutInfo == null) {
             return null;
           }
-          viaKeepoutInfos.put(currKeepoutInfo.name, currKeepoutInfo);
+          viaKeepoutInfos.put(currentKeepoutInfo.name, currentKeepoutInfo);
         } else if (nextToken == PLACE_KEEPOUT) {
-          ComponentPlacement.ItemClearanceInfo currKeepoutInfo = readItemClearanceInfo(scanner);
-          if (currKeepoutInfo == null) {
+          ComponentPlacement.ItemClearanceInfo currentKeepoutInfo = readItemClearanceInfo(scanner);
+          if (currentKeepoutInfo == null) {
             return null;
           }
-          placeKeepoutInfos.put(currKeepoutInfo.name, currKeepoutInfo);
+          placeKeepoutInfos.put(currentKeepoutInfo.name, currentKeepoutInfo);
         } else if (nextToken == Keyword.PN
             || (nextToken instanceof String && "PN".equalsIgnoreCase((String) nextToken))) {
           partNumber = DsnFile.readStringScope(scanner);

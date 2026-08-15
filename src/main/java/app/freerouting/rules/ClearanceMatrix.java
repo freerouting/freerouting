@@ -98,8 +98,8 @@ public class ClearanceMatrix implements Serializable {
 
   /** Sets the value of an entry in the clearance matrix to {@code value}. */
   public void setValue(int classI, int classJ, int layer, int value) {
-    Row currRow = row[classJ];
-    MatrixEntry currentEntry = currRow.column[classI];
+    Row currentRow = row[classJ];
+    MatrixEntry currentEntry = currentRow.column[classI];
 
     // assure, that the clearance value is positive and even, and round it up, if it is odd
     // NOTE: why does it need to be even?
@@ -113,7 +113,7 @@ public class ClearanceMatrix implements Serializable {
     }
 
     currentEntry.layer[layer] = value;
-    currRow.maxValue[layer] = Math.max(currRow.maxValue[layer], value);
+    currentRow.maxValue[layer] = Math.max(currentRow.maxValue[layer], value);
     this.maxValueOnLayer[layer] = Math.max(this.maxValueOnLayer[layer], value);
   }
 
@@ -289,13 +289,13 @@ public class ClearanceMatrix implements Serializable {
 
     // append a matrix entry to each old row
     for (int i = 0; i < oldClassCount; i++) {
-      Row currOldRow = this.row[i];
-      newRow[i] = new Row(currOldRow.name);
-      Row currNewRow = newRow[i];
-      currNewRow.maxValue = currOldRow.maxValue;
-      System.arraycopy(currOldRow.column, 0, currNewRow.column, 0, oldClassCount);
+      Row currentOldRow = this.row[i];
+      newRow[i] = new Row(currentOldRow.name);
+      Row currentNewRow = newRow[i];
+      currentNewRow.maxValue = currentOldRow.maxValue;
+      System.arraycopy(currentOldRow.column, 0, currentNewRow.column, 0, oldClassCount);
 
-      currNewRow.column[oldClassCount] = new MatrixEntry();
+      currentNewRow.column[oldClassCount] = new MatrixEntry();
     }
 
     // append the new row
@@ -334,16 +334,16 @@ public class ClearanceMatrix implements Serializable {
       if (i == index) {
         continue;
       }
-      Row currOldRow = this.row[i];
-      newRow[newRowIndex] = new Row(currOldRow.name);
-      Row currNewRow = newRow[newRowIndex];
+      Row currentOldRow = this.row[i];
+      newRow[newRowIndex] = new Row(currentOldRow.name);
+      Row currentNewRow = newRow[newRowIndex];
 
       int newColumnIndex = 0;
       for (int j = 0; j < oldClassCount; j++) {
         if (j == index) {
           continue;
         }
-        currNewRow.column[newColumnIndex] = currOldRow.column[j];
+        currentNewRow.column[newColumnIndex] = currentOldRow.column[j];
         ++newColumnIndex;
       }
       ++newRowIndex;
@@ -399,8 +399,8 @@ public class ClearanceMatrix implements Serializable {
         window.indent();
         window.append(" " + tm.getText("to_class") + " ");
         window.append(row[i].name);
-        MatrixEntry currColumn = this.column[i];
-        if (currColumn.isLayerDependent()) {
+        MatrixEntry currentColumn = this.column[i];
+        if (currentColumn.isLayerDependent()) {
           window.append(" " + tm.getText("on_layer") + " ");
           for (int j = 0; j < layerStructure.arr.length; j++) {
             window.newline();
@@ -408,11 +408,11 @@ public class ClearanceMatrix implements Serializable {
             window.indent();
             window.append(layerStructure.arr[j].name);
             window.append(" = ");
-            window.append(currColumn.layer[j]);
+            window.append(currentColumn.layer[j]);
           }
         } else {
           window.append(" = ");
-          window.append(currColumn.layer[0]);
+          window.append(currentColumn.layer[0]);
         }
       }
     }

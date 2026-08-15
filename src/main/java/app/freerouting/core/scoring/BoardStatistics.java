@@ -151,22 +151,22 @@ public class BoardStatistics implements Serializable {
     this.items.otherCount = 0;
     Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
       this.items.totalCount++;
-      if (currItem instanceof Trace) {
+      if (currentItem instanceof Trace) {
         this.items.traceCount++;
-      } else if (currItem instanceof Via) {
+      } else if (currentItem instanceof Via) {
         this.items.viaCount++;
-      } else if (currItem instanceof ConductionArea) {
+      } else if (currentItem instanceof ConductionArea) {
         this.items.conductionAreaCount++;
-      } else if (currItem instanceof Pin) {
+      } else if (currentItem instanceof Pin) {
         this.items.pinCount++;
-      } else if (currItem instanceof DrillItem) {
+      } else if (currentItem instanceof DrillItem) {
         this.items.drillItemCount++;
-      } else if (currItem instanceof ComponentOutline) {
+      } else if (currentItem instanceof ComponentOutline) {
         this.items.componentOutlineCount++;
       } else {
         this.items.otherCount++;
@@ -237,20 +237,20 @@ public class BoardStatistics implements Serializable {
     int defaultClearanceClass = BoardRules.defaultClearanceClass();
     Iterator<UndoableObjects.UndoableObjectNode> it2 = board.itemList.startReadObject();
     for (; ; ) {
-      UndoableObjects.Storable currItem = board.itemList.readObject(it2);
-      if (currItem == null) {
+      UndoableObjects.Storable currentItem = board.itemList.readObject(it2);
+      if (currentItem == null) {
         break;
       }
-      if (currItem instanceof Trace currTrace) {
-        FixedState fixedState = currTrace.getFixedState();
+      if (currentItem instanceof Trace currentTrace) {
+        FixedState fixedState = currentTrace.getFixedState();
         if (fixedState == FixedState.UNFIXED || fixedState == FixedState.SHOVE_FIXED) {
           double weightedTraceLength =
-              currTrace.getLength()
-                  * (currTrace.getHalfWidth()
+              currentTrace.getLength()
+                  * (currentTrace.getHalfWidth()
                       + board.clearanceValue(
-                          currTrace.clearanceClassNo(),
+                          currentTrace.clearanceClassNo(),
                           defaultClearanceClass,
-                          currTrace.getLayer()));
+                          currentTrace.getLayer()));
           if (fixedState == FixedState.SHOVE_FIXED) {
             // to produce less violations with pin exit directions.
             weightedTraceLength /= 2;
@@ -289,14 +289,14 @@ public class BoardStatistics implements Serializable {
           // Now classify each bend by angle
           for (int i = 1; i < cornerCount - 1; i++) {
             FloatPoint prev = polyline.corner(i - 1).toFloat();
-            FloatPoint curr = polyline.corner(i).toFloat();
+            FloatPoint current = polyline.corner(i).toFloat();
             FloatPoint next = polyline.corner(i + 1).toFloat();
 
             // Calculate vectors for the two segments
-            double dx1 = curr.x - prev.x;
-            double dy1 = curr.y - prev.y;
-            double dx2 = next.x - curr.x;
-            double dy2 = next.y - curr.y;
+            double dx1 = current.x - prev.x;
+            double dy1 = current.y - prev.y;
+            double dx2 = next.x - current.x;
+            double dy2 = next.y - current.y;
 
             // Calculate the angle between the two segments
             double angle = Math.abs(Math.toDegrees(Math.atan2(dy2, dx2) - Math.atan2(dy1, dx1)));

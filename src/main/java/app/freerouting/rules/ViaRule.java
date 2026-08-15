@@ -53,8 +53,8 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
 
   /** Returns true if {@code viaInfo} is contained in the via list of this rule. */
   public boolean contains(ViaInfo viaInfo) {
-    for (ViaInfo currInfo : this.list) {
-      if (viaInfo == currInfo) {
+    for (ViaInfo currentInfo : this.list) {
+      if (viaInfo == currentInfo) {
         return true;
       }
     }
@@ -63,8 +63,8 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
 
   /** Returns true if this rule contains a via with the given padstack. */
   public boolean containsPadstack(Padstack padstack) {
-    for (ViaInfo currInfo : this.list) {
-      if (currInfo.getPadstack() == padstack) {
+    for (ViaInfo currentInfo : this.list) {
+      if (currentInfo.getPadstack() == padstack) {
         return true;
       }
     }
@@ -76,10 +76,10 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
    * via exists.
    */
   public ViaInfo getLayerRange(int fromLayer, int toLayer) {
-    for (ViaInfo currInfo : this.list) {
-      if (currInfo.getPadstack().fromLayer() == fromLayer
-          && currInfo.getPadstack().toLayer() == toLayer) {
-        return currInfo;
+    for (ViaInfo currentInfo : this.list) {
+      if (currentInfo.getPadstack().fromLayer() == fromLayer
+          && currentInfo.getPadstack().toLayer() == toLayer) {
+        return currentInfo;
       }
     }
     return null;
@@ -113,7 +113,7 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
     int counter = 0;
     boolean firstTime = true;
     final int maxViasPerRow = 5;
-    for (ViaInfo currVia : this.list) {
+    for (ViaInfo currentVia : this.list) {
       if (firstTime) {
         firstTime = false;
       } else {
@@ -123,7 +123,7 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
         window.newline();
         window.indent();
       }
-      window.append(currVia.getName(), tm.getText("viaInfo"), currVia);
+      window.append(currentVia.getName(), tm.getText("viaInfo"), currentVia);
       counter = (counter + 1) % maxViasPerRow;
     }
   }

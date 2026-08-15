@@ -48,10 +48,10 @@ public class PlanarDelaunayTriangulation {
   /** Creates a new instance of PlanarDelaunayTriangulation from objectList. */
   public PlanarDelaunayTriangulation(Collection<PlanarDelaunayTriangulation.Storable> objectList) {
     List<Corner> cornerList = new LinkedList<>();
-    for (PlanarDelaunayTriangulation.Storable currObject : objectList) {
-      Point[] currCorners = currObject.getTriangulationCorners();
-      for (Point currCorner : currCorners) {
-        cornerList.add(new Corner(currObject, currCorner));
+    for (PlanarDelaunayTriangulation.Storable currentObject : objectList) {
+      Point[] currentCorners = currentObject.getTriangulationCorners();
+      for (Point currentCorner : currentCorners) {
+        cornerList.add(new Corner(currentObject, currentCorner));
       }
     }
 
@@ -78,8 +78,8 @@ public class PlanarDelaunayTriangulation {
 
     // Set the left triangle of the edge lines to startTriangle.
     // The right triangles remains null.
-    for (Edge currEdge : edgeLines) {
-      currEdge.setLeftTriangle(startTriangle);
+    for (Edge currentEdge : edgeLines) {
+      currentEdge.setLeftTriangle(startTriangle);
     }
 
     // Initialize the search graph.
@@ -89,33 +89,33 @@ public class PlanarDelaunayTriangulation {
 
     // Insert the corners in the corner list into the search graph.
 
-    for (Corner currCorner : cornerList) {
-      Triangle triangleToSplit = this.searchGraph.positionLocate(currCorner);
-      this.split(triangleToSplit, currCorner);
+    for (Corner currentCorner : cornerList) {
+      Triangle triangleToSplit = this.searchGraph.positionLocate(currentCorner);
+      this.split(triangleToSplit, currentCorner);
     }
   }
 
   /** Returns all edge lines of the result of the Delaunay Triangulation. */
   public Collection<ResultEdge> getEdgeLines() {
     Collection<ResultEdge> result = new LinkedList<>();
-    for (Edge currEdge : this.degenerateEdges) {
+    for (Edge currentEdge : this.degenerateEdges) {
       result.add(
           new ResultEdge(
-              currEdge.startCorner.coor,
-              currEdge.startCorner.object,
-              currEdge.endCorner.coor,
-              currEdge.endCorner.object));
+              currentEdge.startCorner.coor,
+              currentEdge.startCorner.object,
+              currentEdge.endCorner.coor,
+              currentEdge.endCorner.object));
     }
     if (this.searchGraph.anchor != null) {
       Set<Edge> resultEdges = new TreeSet<>();
       this.searchGraph.anchor.getLeafEdges(resultEdges);
-      for (Edge currEdge : resultEdges) {
+      for (Edge currentEdge : resultEdges) {
         result.add(
             new ResultEdge(
-                currEdge.startCorner.coor,
-                currEdge.startCorner.object,
-                currEdge.endCorner.coor,
-                currEdge.endCorner.object));
+                currentEdge.startCorner.coor,
+                currentEdge.startCorner.object,
+                currentEdge.endCorner.coor,
+                currentEdge.endCorner.object));
       }
     }
     return result;
@@ -134,22 +134,22 @@ public class PlanarDelaunayTriangulation {
 
     Edge containingEdge = null;
     for (int i = 0; i < 3; i++) {
-      Edge currEdge = triangle.edgeLines[i];
-      Side currSide;
-      if (currEdge.leftTriangle == triangle) {
-        currSide = corner.sideOf(currEdge.startCorner, currEdge.endCorner);
+      Edge currentEdge = triangle.edgeLines[i];
+      Side currentSide;
+      if (currentEdge.leftTriangle == triangle) {
+        currentSide = corner.sideOf(currentEdge.startCorner, currentEdge.endCorner);
       } else {
-        currSide = corner.sideOf(currEdge.endCorner, currEdge.startCorner);
+        currentSide = corner.sideOf(currentEdge.endCorner, currentEdge.startCorner);
       }
-      if (currSide == Side.ON_THE_RIGHT) {
+      if (currentSide == Side.ON_THE_RIGHT) {
         // corner is outside this triangle
         FRLogger.warn("PlanarDelaunayTriangulation.split: p_corner is outside");
         return false;
-      } else if (currSide == Side.COLLINEAR) {
+      } else if (currentSide == Side.COLLINEAR) {
         if (containingEdge != null) {
           // corner is equal to a corner of this triangle
 
-          Corner commonCorner = currEdge.commonCorner(containingEdge);
+          Corner commonCorner = currentEdge.commonCorner(containingEdge);
           if (commonCorner == null) {
             FRLogger.warn("PlanarDelaunayTriangulation.split: common corner expected");
             return false;
@@ -160,7 +160,7 @@ public class PlanarDelaunayTriangulation {
           this.degenerateEdges.add(new Edge(corner, commonCorner));
           return true;
         }
-        containingEdge = currEdge;
+        containingEdge = currentEdge;
       }
     }
 
@@ -174,8 +174,8 @@ public class PlanarDelaunayTriangulation {
         return false;
       }
 
-      for (Triangle currTriangle : newTriangles) {
-        this.searchGraph.insert(currTriangle, triangle);
+      for (Triangle currentTriangle : newTriangles) {
+        this.searchGraph.insert(currentTriangle, triangle);
       }
 
       for (int i = 0; i < 3; i++) {
@@ -201,15 +201,15 @@ public class PlanarDelaunayTriangulation {
       this.searchGraph.insert(newTriangles[3], neighbourToSplit);
 
       for (int i = 0; i < 3; i++) {
-        Edge currEdge = triangle.edgeLines[i];
-        if (currEdge != containingEdge) {
-          legalizeEdge(corner, currEdge);
+        Edge currentEdge = triangle.edgeLines[i];
+        if (currentEdge != containingEdge) {
+          legalizeEdge(corner, currentEdge);
         }
       }
       for (int i = 0; i < 3; i++) {
-        Edge currEdge = neighbourToSplit.edgeLines[i];
-        if (currEdge != containingEdge) {
-          legalizeEdge(corner, currEdge);
+        Edge currentEdge = neighbourToSplit.edgeLines[i];
+        if (currentEdge != containingEdge) {
+          legalizeEdge(corner, currentEdge);
         }
       }
     }
@@ -244,9 +244,9 @@ public class PlanarDelaunayTriangulation {
 
     // Call this function recursively for the other edge lines of triangleToChange.
     for (int i = 0; i < 3; i++) {
-      Edge currEdge = triangleToChange.edgeLines[i];
-      if (currEdge != edge) {
-        legalizeEdge(corner, currEdge);
+      Edge currentEdge = triangleToChange.edgeLines[i];
+      if (currentEdge != edge) {
+        legalizeEdge(corner, currentEdge);
       }
     }
     return true;
@@ -361,8 +361,8 @@ public class PlanarDelaunayTriangulation {
       if (this.anchor.children.isEmpty()) {
         return this.anchor;
       }
-      for (Triangle currChild : this.anchor.children) {
-        Triangle result = positionLocateReku(corner, currChild);
+      for (Triangle currentChild : this.anchor.children) {
+        Triangle result = positionLocateReku(corner, currentChild);
         if (result != null) {
           return result;
         }
@@ -380,8 +380,8 @@ public class PlanarDelaunayTriangulation {
       if (triangle.isLeaf()) {
         return triangle;
       }
-      for (Triangle currChild : triangle.children) {
-        Triangle result = positionLocateReku(corner, currChild);
+      for (Triangle currentChild : triangle.children) {
+        Triangle result = positionLocateReku(corner, currentChild);
         if (result != null) {
           return result;
         }
@@ -519,11 +519,11 @@ public class PlanarDelaunayTriangulation {
 
       // Create the left triangle of the flipped edge.
 
-      Edge[] currEdgeLines = new Edge[3];
-      currEdgeLines[0] = flippedEdge;
-      currEdgeLines[1] = leftPrevEdge;
-      currEdgeLines[2] = rightNextEdge;
-      Triangle newLeftTriangle = new Triangle(currEdgeLines, firstParent);
+      Edge[] currentEdgeLines = new Edge[3];
+      currentEdgeLines[0] = flippedEdge;
+      currentEdgeLines[1] = leftPrevEdge;
+      currentEdgeLines[2] = rightNextEdge;
+      Triangle newLeftTriangle = new Triangle(currentEdgeLines, firstParent);
       flippedEdge.leftTriangle = newLeftTriangle;
       if (leftPrevEdge.leftTriangle == this.leftTriangle) {
         leftPrevEdge.leftTriangle = newLeftTriangle;
@@ -538,11 +538,11 @@ public class PlanarDelaunayTriangulation {
 
       // Create the right triangle of the flipped edge.
 
-      currEdgeLines = new Edge[3];
-      currEdgeLines[0] = flippedEdge;
-      currEdgeLines[1] = rightPrevEdge;
-      currEdgeLines[2] = leftNextEdge;
-      Triangle newRightTriangle = new Triangle(currEdgeLines, firstParent);
+      currentEdgeLines = new Edge[3];
+      currentEdgeLines[0] = flippedEdge;
+      currentEdgeLines[1] = rightPrevEdge;
+      currentEdgeLines[2] = leftNextEdge;
+      Triangle newRightTriangle = new Triangle(currentEdgeLines, firstParent);
       flippedEdge.rightTriangle = newRightTriangle;
       if (rightPrevEdge.leftTriangle == this.rightTriangle) {
         rightPrevEdge.leftTriangle = newRightTriangle;
@@ -649,12 +649,12 @@ public class PlanarDelaunayTriangulation {
         FRLogger.warn("Triangle.get_corner: p_no out of range");
         return null;
       }
-      Edge currEdge = edgeLines[no];
+      Edge currentEdge = edgeLines[no];
       Corner result;
-      if (currEdge.leftTriangle == this) {
-        result = currEdge.startCorner;
-      } else if (currEdge.rightTriangle == this) {
-        result = currEdge.endCorner;
+      if (currentEdge.leftTriangle == this) {
+        result = currentEdge.startCorner;
+      } else if (currentEdge.rightTriangle == this) {
+        result = currentEdge.endCorner;
       } else {
         FRLogger.warn("Triangle.get_corner: inconsistent edge lines");
         result = null;
@@ -695,16 +695,16 @@ public class PlanarDelaunayTriangulation {
         return false;
       }
       for (int i = 0; i < 3; i++) {
-        Edge currEdge = this.edgeLines[i];
-        Side currSide = corner.sideOf(currEdge.startCorner, currEdge.endCorner);
+        Edge currentEdge = this.edgeLines[i];
+        Side currentSide = corner.sideOf(currentEdge.startCorner, currentEdge.endCorner);
         if (this.isOnTheLeftOfEdgeLine[i]) {
-          // checking currEdge.leftTriangle == this instead will not work, if this triangle is an
+          // checking currentEdge.leftTriangle == this instead will not work, if this triangle is an
           // inner node.
-          if (currSide == Side.ON_THE_RIGHT) {
+          if (currentSide == Side.ON_THE_RIGHT) {
             return false;
           }
         } else {
-          if (currSide == Side.ON_THE_LEFT) {
+          if (currentSide == Side.ON_THE_LEFT) {
             return false;
           }
         }
@@ -716,17 +716,17 @@ public class PlanarDelaunayTriangulation {
     public void getLeafEdges(Set<Edge> resultEdges) {
       if (this.isLeaf()) {
         for (int i = 0; i < 3; i++) {
-          Edge currEdge = this.edgeLines[i];
-          if (currEdge.startCorner.object != null && currEdge.endCorner.object != null) {
+          Edge currentEdge = this.edgeLines[i];
+          if (currentEdge.startCorner.object != null && currentEdge.endCorner.object != null) {
             // Skip edges containing a bounding corner.
-            resultEdges.add(currEdge);
+            resultEdges.add(currentEdge);
           }
         }
 
       } else {
-        for (Triangle currChild : this.children) {
-          if (currChild.firstParent == this) { // to prevent traversing nodes more than once
-            currChild.getLeafEdges(resultEdges);
+        for (Triangle currentChild : this.children) {
+          if (currentChild.firstParent == this) { // to prevent traversing nodes more than once
+            currentChild.getLeafEdges(resultEdges);
           }
         }
       }
@@ -745,48 +745,48 @@ public class PlanarDelaunayTriangulation {
       final Triangle[] newTriangles = new Triangle[3];
 
       // construct the 3 new triangles.
-      Edge[] currEdgeLines = new Edge[3];
+      Edge[] currentEdgeLines = new Edge[3];
 
-      currEdgeLines[0] = this.edgeLines[0];
-      currEdgeLines[1] = new Edge(this.getCorner(1), corner);
-      currEdgeLines[2] = new Edge(corner, this.getCorner(0));
-      newTriangles[0] = new Triangle(currEdgeLines, this);
+      currentEdgeLines[0] = this.edgeLines[0];
+      currentEdgeLines[1] = new Edge(this.getCorner(1), corner);
+      currentEdgeLines[2] = new Edge(corner, this.getCorner(0));
+      newTriangles[0] = new Triangle(currentEdgeLines, this);
 
-      currEdgeLines = new Edge[3];
-      currEdgeLines[0] = this.edgeLines[1];
-      currEdgeLines[1] = new Edge(this.getCorner(2), corner);
-      currEdgeLines[2] = newTriangles[0].edgeLines[1];
-      newTriangles[1] = new Triangle(currEdgeLines, this);
+      currentEdgeLines = new Edge[3];
+      currentEdgeLines[0] = this.edgeLines[1];
+      currentEdgeLines[1] = new Edge(this.getCorner(2), corner);
+      currentEdgeLines[2] = newTriangles[0].edgeLines[1];
+      newTriangles[1] = new Triangle(currentEdgeLines, this);
 
-      currEdgeLines = new Edge[3];
-      currEdgeLines[0] = this.edgeLines[2];
-      currEdgeLines[1] = newTriangles[0].edgeLines[2];
-      currEdgeLines[2] = newTriangles[1].edgeLines[1];
-      newTriangles[2] = new Triangle(currEdgeLines, this);
+      currentEdgeLines = new Edge[3];
+      currentEdgeLines[0] = this.edgeLines[2];
+      currentEdgeLines[1] = newTriangles[0].edgeLines[2];
+      currentEdgeLines[2] = newTriangles[1].edgeLines[1];
+      newTriangles[2] = new Triangle(currentEdgeLines, this);
 
       // Set the new neighbour triangles of the edge lines.
 
       for (int i = 0; i < 3; i++) {
-        Edge currEdge = newTriangles[i].edgeLines[0];
-        if (currEdge.getLeftTriangle() == this) {
-          currEdge.setLeftTriangle(newTriangles[i]);
+        Edge currentEdge = newTriangles[i].edgeLines[0];
+        if (currentEdge.getLeftTriangle() == this) {
+          currentEdge.setLeftTriangle(newTriangles[i]);
         } else {
-          currEdge.setRightTriangle(newTriangles[i]);
+          currentEdge.setRightTriangle(newTriangles[i]);
         }
         // The other neighbour triangle remains valid.
       }
 
-      Edge currEdge = newTriangles[0].edgeLines[1];
-      currEdge.setLeftTriangle(newTriangles[0]);
-      currEdge.setRightTriangle(newTriangles[1]);
+      Edge currentEdge = newTriangles[0].edgeLines[1];
+      currentEdge.setLeftTriangle(newTriangles[0]);
+      currentEdge.setRightTriangle(newTriangles[1]);
 
-      currEdge = newTriangles[1].edgeLines[1];
-      currEdge.setLeftTriangle(newTriangles[1]);
-      currEdge.setRightTriangle(newTriangles[2]);
+      currentEdge = newTriangles[1].edgeLines[1];
+      currentEdge.setLeftTriangle(newTriangles[1]);
+      currentEdge.setRightTriangle(newTriangles[2]);
 
-      currEdge = newTriangles[2].edgeLines[1];
-      currEdge.setLeftTriangle(newTriangles[0]);
-      currEdge.setRightTriangle(newTriangles[2]);
+      currentEdge = newTriangles[2].edgeLines[1];
+      currentEdge.setLeftTriangle(newTriangles[0]);
+      currentEdge.setRightTriangle(newTriangles[2]);
       return newTriangles;
     }
 
@@ -804,15 +804,15 @@ public class PlanarDelaunayTriangulation {
       Edge touchingEdge = null;
       Edge otherTouchingEdge = null;
       for (int i = 0; i < 3; i++) {
-        Edge currEdge = this.edgeLines[i];
-        if (corner.sideOf(currEdge.startCorner, currEdge.endCorner) == Side.COLLINEAR) {
+        Edge currentEdge = this.edgeLines[i];
+        if (corner.sideOf(currentEdge.startCorner, currentEdge.endCorner) == Side.COLLINEAR) {
           thisTouchingEdgeNo = i;
-          touchingEdge = currEdge;
+          touchingEdge = currentEdge;
         }
-        currEdge = neighbourToSplit.edgeLines[i];
-        if (corner.sideOf(currEdge.startCorner, currEdge.endCorner) == Side.COLLINEAR) {
+        currentEdge = neighbourToSplit.edgeLines[i];
+        if (corner.sideOf(currentEdge.startCorner, currentEdge.endCorner) == Side.COLLINEAR) {
           neighbourTouchingEdgeNo = i;
-          otherTouchingEdge = currEdge;
+          otherTouchingEdge = currentEdge;
         }
       }
       if (thisTouchingEdgeNo < 0 || neighbourTouchingEdgeNo < 0) {
@@ -849,11 +849,11 @@ public class PlanarDelaunayTriangulation {
       } else {
         thisSplittingEdge = new Edge(corner, prevEdge.endCorner);
       }
-      Edge[] currEdgeLines = new Edge[3];
-      currEdgeLines[0] = prevEdge;
-      currEdgeLines[1] = firstCommonNewEdge;
-      currEdgeLines[2] = thisSplittingEdge;
-      newTriangles[0] = new Triangle(currEdgeLines, this);
+      Edge[] currentEdgeLines = new Edge[3];
+      currentEdgeLines[0] = prevEdge;
+      currentEdgeLines[1] = firstCommonNewEdge;
+      currentEdgeLines[2] = thisSplittingEdge;
+      newTriangles[0] = new Triangle(currentEdgeLines, this);
       if (this == prevEdge.leftTriangle) {
         prevEdge.setLeftTriangle(newTriangles[0]);
       } else {
@@ -865,11 +865,11 @@ public class PlanarDelaunayTriangulation {
       // Construct the second split triangle of this triangle.
 
       final Edge nextEdge = this.edgeLines[(thisTouchingEdgeNo + 1) % 3];
-      currEdgeLines = new Edge[3];
-      currEdgeLines[0] = thisSplittingEdge;
-      currEdgeLines[1] = secondCommonNewEdge;
-      currEdgeLines[2] = nextEdge;
-      newTriangles[1] = new Triangle(currEdgeLines, this);
+      currentEdgeLines = new Edge[3];
+      currentEdgeLines[0] = thisSplittingEdge;
+      currentEdgeLines[1] = secondCommonNewEdge;
+      currentEdgeLines[2] = nextEdge;
+      newTriangles[1] = new Triangle(currentEdgeLines, this);
       thisSplittingEdge.setRightTriangle(newTriangles[1]);
       secondCommonNewEdge.setLeftTriangle(newTriangles[1]);
       if (this == nextEdge.leftTriangle) {
@@ -888,11 +888,11 @@ public class PlanarDelaunayTriangulation {
       } else {
         neighbourSplittingEdge = new Edge(neighbourNextEdge.startCorner, corner);
       }
-      currEdgeLines = new Edge[3];
-      currEdgeLines[0] = neighbourSplittingEdge;
-      currEdgeLines[1] = firstCommonNewEdge;
-      currEdgeLines[2] = neighbourNextEdge;
-      newTriangles[2] = new Triangle(currEdgeLines, neighbourToSplit);
+      currentEdgeLines = new Edge[3];
+      currentEdgeLines[0] = neighbourSplittingEdge;
+      currentEdgeLines[1] = firstCommonNewEdge;
+      currentEdgeLines[2] = neighbourNextEdge;
+      newTriangles[2] = new Triangle(currentEdgeLines, neighbourToSplit);
       neighbourSplittingEdge.setLeftTriangle(newTriangles[2]);
       firstCommonNewEdge.setRightTriangle(newTriangles[2]);
       if (neighbourToSplit == neighbourNextEdge.leftTriangle) {
@@ -903,11 +903,11 @@ public class PlanarDelaunayTriangulation {
 
       // construct the second split triangle of neighbourToSplit
       prevEdge = neighbourToSplit.edgeLines[(neighbourTouchingEdgeNo + 2) % 3];
-      currEdgeLines = new Edge[3];
-      currEdgeLines[0] = prevEdge;
-      currEdgeLines[1] = secondCommonNewEdge;
-      currEdgeLines[2] = neighbourSplittingEdge;
-      newTriangles[3] = new Triangle(currEdgeLines, neighbourToSplit);
+      currentEdgeLines = new Edge[3];
+      currentEdgeLines[0] = prevEdge;
+      currentEdgeLines[1] = secondCommonNewEdge;
+      currentEdgeLines[2] = neighbourSplittingEdge;
+      newTriangles[3] = new Triangle(currentEdgeLines, neighbourToSplit);
       if (neighbourToSplit == prevEdge.leftTriangle) {
         prevEdge.setLeftTriangle(newTriangles[3]);
       } else {
@@ -925,8 +925,8 @@ public class PlanarDelaunayTriangulation {
       if (this.isLeaf()) {
         Edge prevEdge = this.edgeLines[2];
         for (int i = 0; i < 3; i++) {
-          Edge currEdge = this.edgeLines[i];
-          if (!currEdge.validate()) {
+          Edge currentEdge = this.edgeLines[i];
+          if (!currentEdge.validate()) {
             result = false;
           }
           // Check, if the ens corner of the previous line equals to the start corner of this line.
@@ -936,25 +936,25 @@ public class PlanarDelaunayTriangulation {
           } else {
             prevEndCorner = prevEdge.startCorner;
           }
-          Corner currStartCorner;
-          if (currEdge.leftTriangle == this) {
-            currStartCorner = currEdge.startCorner;
-          } else if (currEdge.rightTriangle == this) {
-            currStartCorner = currEdge.endCorner;
+          Corner currentStartCorner;
+          if (currentEdge.leftTriangle == this) {
+            currentStartCorner = currentEdge.startCorner;
+          } else if (currentEdge.rightTriangle == this) {
+            currentStartCorner = currentEdge.endCorner;
           } else {
             FRLogger.warn("Triangle.validate: edge inconsistent");
             return false;
           }
-          if (currStartCorner != prevEndCorner) {
+          if (currentStartCorner != prevEndCorner) {
             FRLogger.warn("Triangle.validate: corner inconsistent");
             result = false;
           }
-          prevEdge = currEdge;
+          prevEdge = currentEdge;
         }
       } else {
-        for (Triangle currChild : this.children) {
-          if (currChild.firstParent == this) { // to avoid traversing nodes more than once.
-            currChild.validate();
+        for (Triangle currentChild : this.children) {
+          if (currentChild.firstParent == this) { // to avoid traversing nodes more than once.
+            currentChild.validate();
           }
         }
       }

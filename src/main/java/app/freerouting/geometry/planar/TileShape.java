@@ -127,12 +127,12 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     double result = 0;
     int cornerCount = borderLineCount();
     FloatPoint prevCorner = cornerApprox(cornerCount - 2);
-    FloatPoint currCorner = cornerApprox(cornerCount - 1);
+    FloatPoint currentCorner = cornerApprox(cornerCount - 1);
     for (int i = 0; i < cornerCount; i++) {
       FloatPoint nextCorner = cornerApprox(i);
-      result += currCorner.x * (nextCorner.y - prevCorner.y);
-      prevCorner = currCorner;
-      currCorner = nextCorner;
+      result += currentCorner.x * (nextCorner.y - prevCorner.y);
+      prevCorner = currentCorner;
+      currentCorner = nextCorner;
     }
     return 0.5 * Math.abs(result);
   }
@@ -220,11 +220,11 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     }
     Side result = Side.ON_THE_RIGHT; // point is inside
     for (int i = 0; i < lineCount; i++) {
-      Side currSide = borderLine(i).sideOf(point, tolerance);
-      if (currSide == Side.ON_THE_LEFT) {
+      Side currentSide = borderLine(i).sideOf(point, tolerance);
+      if (currentSide == Side.ON_THE_LEFT) {
         return Side.ON_THE_LEFT; // point is outside
-      } else if (currSide == Side.COLLINEAR) {
-        result = currSide;
+      } else if (currentSide == Side.COLLINEAR) {
+        result = currentSide;
       }
     }
     return result;
@@ -265,8 +265,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
    */
   public boolean containsApprox(TileShape other) {
     FloatPoint[] corners = other.cornerApproxArr();
-    for (FloatPoint currCorner : corners) {
-      if (!this.contains(currCorner)) {
+    for (FloatPoint currentCorner : corners) {
+      if (!this.contains(currentCorner)) {
         return false;
       }
     }
@@ -329,10 +329,10 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
 
     // calculate the distance to the nearest corner first
     for (int i = 0; i < lineCount; i++) {
-      FloatPoint currCornerF = cornerApprox(i);
-      double currDist = currCornerF.distanceSquare(fromPointF);
-      if (currDist < minDist) {
-        minDist = currDist;
+      FloatPoint currentCornerF = cornerApprox(i);
+      double currentDistance = currentCornerF.distanceSquare(fromPointF);
+      if (currentDistance < minDist) {
+        minDist = currentDistance;
         minDistInd = i;
       }
     }
@@ -340,22 +340,23 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     Point nearestPoint = corner(minDistInd);
 
     int prevInd = lineCount - 2;
-    int currInd = lineCount - 1;
+    int currentInd = lineCount - 1;
 
     for (int nextInd = 0; nextInd < lineCount; nextInd++) {
-      Point projection = borderLine(currInd).perpendicularProjection(fromPoint);
-      if ((!cornerIsBounded(currInd) || borderLine(prevInd).sideOf(projection) == Side.ON_THE_RIGHT)
+      Point projection = borderLine(currentInd).perpendicularProjection(fromPoint);
+      if ((!cornerIsBounded(currentInd)
+              || borderLine(prevInd).sideOf(projection) == Side.ON_THE_RIGHT)
           && (!cornerIsBounded(nextInd)
               || borderLine(nextInd).sideOf(projection) == Side.ON_THE_RIGHT)) {
         FloatPoint projectionF = projection.toFloat();
-        double currDist = projectionF.distanceSquare(fromPointF);
-        if (currDist < minDist) {
-          minDist = currDist;
+        double currentDistance = projectionF.distanceSquare(fromPointF);
+        if (currentDistance < minDist) {
+          minDist = currentDistance;
           nearestPoint = projection;
         }
       }
-      prevInd = currInd;
-      currInd = nextInd;
+      prevInd = currentInd;
+      currentInd = nextInd;
     }
     return nearestPoint;
   }
@@ -400,16 +401,16 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     // calculate the distances to the nearest corners first
     for (int i = 0; i < lineCount; i++) {
       if (cornerIsBounded(i)) {
-        FloatPoint currCorner = cornerApprox(i);
-        double currDist = currCorner.distanceSquare(fromPoint);
+        FloatPoint currentCorner = cornerApprox(i);
+        double currentDistance = currentCorner.distanceSquare(fromPoint);
         for (int j = 0; j < resultCount; j++) {
-          if (currDist < minDists[j]) {
+          if (currentDistance < minDists[j]) {
             for (int k = j + 1; k < resultCount; k++) {
               minDists[k] = minDists[k - 1];
               nearestPoints[k] = nearestPoints[k - 1];
             }
-            minDists[j] = currDist;
-            nearestPoints[j] = currCorner;
+            minDists[j] = currentDistance;
+            nearestPoints[j] = currentCorner;
             break;
           }
         }
@@ -417,28 +418,29 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     }
 
     int prevInd = lineCount - 2;
-    int currInd = lineCount - 1;
+    int currentInd = lineCount - 1;
 
     for (int nextInd = 0; nextInd < lineCount; nextInd++) {
-      FloatPoint projection = fromPoint.projectionApprox(borderLine(currInd));
-      if ((!cornerIsBounded(currInd) || borderLine(prevInd).sideOf(projection) == Side.ON_THE_RIGHT)
+      FloatPoint projection = fromPoint.projectionApprox(borderLine(currentInd));
+      if ((!cornerIsBounded(currentInd)
+              || borderLine(prevInd).sideOf(projection) == Side.ON_THE_RIGHT)
           && (!cornerIsBounded(nextInd)
               || borderLine(nextInd).sideOf(projection) == Side.ON_THE_RIGHT)) {
-        double currDist = projection.distanceSquare(fromPoint);
+        double currentDistance = projection.distanceSquare(fromPoint);
         for (int j = 0; j < resultCount; j++) {
-          if (currDist < minDists[j]) {
+          if (currentDistance < minDists[j]) {
             for (int k = j + 1; k < resultCount; k++) {
               minDists[k] = minDists[k - 1];
               nearestPoints[k] = nearestPoints[k - 1];
             }
-            minDists[j] = currDist;
+            minDists[j] = currentDistance;
             nearestPoints[j] = projection;
             break;
           }
         }
       }
-      prevInd = currInd;
-      currInd = nextInd;
+      prevInd = currentInd;
+      currentInd = nextInd;
     }
     return nearestPoints;
   }
@@ -450,9 +452,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     int cornerCount = borderLineCount();
     double minDist = Double.MIN_VALUE;
     for (int i = 0; i < cornerCount; i++) {
-      double currDist = cornerApprox(i).distance(fromPointF);
-      if (currDist < minDist) {
-        minDist = currDist;
+      double currentDistance = cornerApprox(i).distance(fromPointF);
+      if (currentDistance < minDist) {
+        minDist = currentDistance;
         result = i;
       }
     }
@@ -489,37 +491,37 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     double[] minDists = new double[resultCount];
     Arrays.fill(minDists, Double.MAX_VALUE);
 
-    int currInd = lineCount - 1;
+    int currentInd = lineCount - 1;
 
     int otherLineCount = shape.borderLineCount();
 
     for (int nextInd = 0; nextInd < lineCount; nextInd++) {
-      double currMaxDist = 0;
-      FloatPoint currTranslateCoor = FloatPoint.ZERO;
+      double currentMaxDist = 0;
+      FloatPoint currentTranslateCoor = FloatPoint.ZERO;
       for (int cornerNo = 0; cornerNo < otherLineCount; cornerNo++) {
-        FloatPoint currCorner = shape.cornerApprox(cornerNo);
-        if (borderLine(currInd).sideOf(currCorner) == Side.ON_THE_RIGHT) {
-          FloatPoint projection = currCorner.projectionApprox(borderLine(currInd));
-          double currDist = projection.distanceSquare(currCorner);
-          if (currDist > currMaxDist) {
-            currMaxDist = currDist;
-            currTranslateCoor = projection.subtract(currCorner);
+        FloatPoint currentCorner = shape.cornerApprox(cornerNo);
+        if (borderLine(currentInd).sideOf(currentCorner) == Side.ON_THE_RIGHT) {
+          FloatPoint projection = currentCorner.projectionApprox(borderLine(currentInd));
+          double currentDistance = projection.distanceSquare(currentCorner);
+          if (currentDistance > currentMaxDist) {
+            currentMaxDist = currentDistance;
+            currentTranslateCoor = projection.subtract(currentCorner);
           }
         }
       }
 
       for (int j = 0; j < resultCount; j++) {
-        if (currMaxDist < minDists[j]) {
+        if (currentMaxDist < minDists[j]) {
           for (int k = j + 1; k < resultCount; k++) {
             minDists[k] = minDists[k - 1];
             translateCoors[k] = translateCoors[k - 1];
           }
-          minDists[j] = currMaxDist;
-          translateCoors[j] = currTranslateCoor;
+          minDists[j] = currentMaxDist;
+          translateCoors[j] = currentTranslateCoor;
           break;
         }
       }
-      currInd = nextInd;
+      currentInd = nextInd;
     }
     return translateCoors;
   }
@@ -553,12 +555,12 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     double maxDistance2 = -1;
     FloatPoint gravityPoint = this.centreOfGravity();
     for (int i = 0; i < borderLineCount(); i++) {
-      double currDistance = Math.abs(borderLine(i).signedDistance(gravityPoint));
-      if (currDistance > maxDistance) {
+      double currentDistance = Math.abs(borderLine(i).signedDistance(gravityPoint));
+      if (currentDistance > maxDistance) {
         maxDistance2 = maxDistance;
-        maxDistance = currDistance;
-      } else if (currDistance > maxDistance2) {
-        maxDistance2 = currDistance;
+        maxDistance = currentDistance;
+      } else if (currentDistance > maxDistance2) {
+        maxDistance2 = currentDistance;
       }
     }
     return maxDistance + maxDistance2;
@@ -576,10 +578,10 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     int sideNo2 = -1;
     Direction dir2 = null;
     for (int i = 0; i < other.borderLineCount(); i++) {
-      Direction currDir = other.borderLine(i).direction();
-      if (currDir.compareTo(Direction.LEFT) >= 0) {
+      Direction currentDirection = other.borderLine(i).direction();
+      if (currentDirection.compareTo(Direction.LEFT) >= 0) {
         sideNo2 = i;
-        dir2 = currDir.opposite();
+        dir2 = currentDirection.opposite();
         break;
       }
     }
@@ -620,17 +622,17 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   public double distanceToTheLeft(Line line) {
     double result = Integer.MAX_VALUE;
     for (int i = 0; i < this.borderLineCount(); i++) {
-      FloatPoint currCorner = this.cornerApprox(i);
-      Side lineSide = line.sideOf(currCorner, 1);
+      FloatPoint currentCorner = this.cornerApprox(i);
+      Side lineSide = line.sideOf(currentCorner, 1);
       if (lineSide == Side.COLLINEAR) {
         lineSide = line.sideOf(this.corner(i));
       }
       if (lineSide == Side.ON_THE_RIGHT) {
-        // currPoint would be outside the result shape
+        // currentPoint would be outside the result shape
         result = -1;
         break;
       }
-      result = Math.min(result, line.signedDistance(currCorner));
+      result = Math.min(result, line.signedDistance(currentCorner));
     }
     return result;
   }
@@ -644,10 +646,10 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     boolean onTheLeft = false;
     boolean onTheRight = false;
     for (int i = 0; i < this.borderLineCount(); i++) {
-      Side currSide = line.sideOf(this.corner(i));
-      if (currSide == Side.ON_THE_LEFT) {
+      Side currentSide = line.sideOf(this.corner(i));
+      if (currentSide == Side.ON_THE_LEFT) {
         onTheRight = true;
-      } else if (currSide == Side.ON_THE_RIGHT) {
+      } else if (currentSide == Side.ON_THE_RIGHT) {
         onTheLeft = true;
       }
       if (onTheLeft && onTheRight) {
@@ -688,9 +690,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     if (polygonCorners.length >= 3) {
       result = getInstance(polygonCorners);
     } else if (polygonCorners.length == 2) {
-      Polyline currPolyline = new Polyline(polygonCorners);
-      LineSegment currSegment = new LineSegment(currPolyline, 0);
-      result = currSegment.toSimplex();
+      Polyline currentPolyline = new Polyline(polygonCorners);
+      LineSegment currentSegment = new LineSegment(currentPolyline, 0);
+      result = currentSegment.toSimplex();
     } else if (polygonCorners.length == 1) {
       result = getInstance(polygonCorners[0]);
     } else {
@@ -732,19 +734,19 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     int result = -1;
     double minDistance = Float.MAX_VALUE;
     for (int i = 0; i < this.borderLineCount(); i++) {
-      Line currBorderLine = this.borderLine(i);
-      FloatPoint currIntersection = currBorderLine.intersectionApprox(intersectionLine);
-      if (currIntersection.x >= Integer.MAX_VALUE) {
+      Line currentBorderLine = this.borderLine(i);
+      FloatPoint currentIntersection = currentBorderLine.intersectionApprox(intersectionLine);
+      if (currentIntersection.x >= Integer.MAX_VALUE) {
         continue; // lines are parallel
       }
-      double currDistance = currIntersection.distanceSquare(fromPoint);
-      if (currDistance < minDistance) {
+      double currentDistance = currentIntersection.distanceSquare(fromPoint);
+      if (currentDistance < minDistance) {
         boolean directionOk =
-            currBorderLine.sideOf(secondLinePoint) == Side.ON_THE_LEFT
-                || secondLinePoint.distanceSquare(currIntersection) < currDistance;
+            currentBorderLine.sideOf(secondLinePoint) == Side.ON_THE_LEFT
+                || secondLinePoint.distanceSquare(currentIntersection) < currentDistance;
         if (directionOk) {
           result = i;
-          minDistance = currDistance;
+          minDistance = currentDistance;
         }
       }
     }
@@ -776,41 +778,42 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       return result;
     }
     Collection<Polyline> pieces = new LinkedList<>();
-    int currIntersectionNo = 0;
-    int[] currIntersectionTuple = intersectionNo[currIntersectionNo];
+    int currentIntersectionNo = 0;
+    int[] currentIntersectionTuple = intersectionNo[currentIntersectionNo];
     Point firstIntersection =
-        polyline.arr[currIntersectionTuple[0]].intersection(
-            this.borderLine(currIntersectionTuple[1]));
+        polyline.arr[currentIntersectionTuple[0]].intersection(
+            this.borderLine(currentIntersectionTuple[1]));
     if (!firstCornerIsInside) {
       // calculate outside piece at start
       if (!firstCorner.equals(firstIntersection)) {
         // otherwise skip 1 point outside polyline at the start
-        int currPolylineIntersectionNo = currIntersectionTuple[0];
-        Line[] currLines = new Line[currPolylineIntersectionNo + 2];
-        System.arraycopy(polyline.arr, 0, currLines, 0, currPolylineIntersectionNo + 1);
+        int currentPolylineIntersectionNo = currentIntersectionTuple[0];
+        Line[] currentLines = new Line[currentPolylineIntersectionNo + 2];
+        System.arraycopy(polyline.arr, 0, currentLines, 0, currentPolylineIntersectionNo + 1);
         // close the polyline piece with the intersected edge line.
-        currLines[currPolylineIntersectionNo + 1] = this.borderLine(currIntersectionTuple[1]);
-        Polyline currPiece = new Polyline(currLines);
-        if (!currPiece.isEmpty()) {
-          pieces.add(currPiece);
+        currentLines[currentPolylineIntersectionNo + 1] =
+            this.borderLine(currentIntersectionTuple[1]);
+        Polyline currentPiece = new Polyline(currentLines);
+        if (!currentPiece.isEmpty()) {
+          pieces.add(currentPiece);
         }
       }
-      ++currIntersectionNo;
+      ++currentIntersectionNo;
     }
-    while (currIntersectionNo < intersectionNo.length - 1) {
+    while (currentIntersectionNo < intersectionNo.length - 1) {
       // calculate the next outside polyline piece
-      currIntersectionTuple = intersectionNo[currIntersectionNo];
-      int[] nextIntersectionTuple = intersectionNo[currIntersectionNo + 1];
-      int currIntersectionNoOfPolyline = currIntersectionTuple[0];
+      currentIntersectionTuple = intersectionNo[currentIntersectionNo];
+      int[] nextIntersectionTuple = intersectionNo[currentIntersectionNo + 1];
+      int currentIntersectionNoOfPolyline = currentIntersectionTuple[0];
       int nextIntersectionNoOfPolyline = nextIntersectionTuple[0];
       // check that at least 1 corner of p_polyline with number
-      // between currIntersectionNoOfPolyline and
+      // between currentIntersectionNoOfPolyline and
       // nextIntersectionNoOfPolyline
       // is not contained in this shape. Otherwise, the part of p_polyline
       // between this intersections is completely contained in the border
       // and can be ignored
       boolean insertPiece = false;
-      for (int i = currIntersectionNoOfPolyline + 1; i < nextIntersectionNoOfPolyline; i++) {
+      for (int i = currentIntersectionNoOfPolyline + 1; i < nextIntersectionNoOfPolyline; i++) {
         if (this.isOutside(polyline.corner(i))) {
           insertPiece = true;
           break;
@@ -818,30 +821,34 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       }
 
       if (insertPiece) {
-        Line[] currLines =
-            new Line[nextIntersectionNoOfPolyline - currIntersectionNoOfPolyline + 3];
-        currLines[0] = this.borderLine(currIntersectionTuple[1]);
+        Line[] currentLines =
+            new Line[nextIntersectionNoOfPolyline - currentIntersectionNoOfPolyline + 3];
+        currentLines[0] = this.borderLine(currentIntersectionTuple[1]);
         System.arraycopy(
-            polyline.arr, currIntersectionNoOfPolyline, currLines, 1, currLines.length - 2);
-        currLines[currLines.length - 1] = this.borderLine(nextIntersectionTuple[1]);
-        Polyline currPiece = new Polyline(currLines);
-        if (!currPiece.isEmpty()) {
-          pieces.add(currPiece);
+            polyline.arr,
+            currentIntersectionNoOfPolyline,
+            currentLines,
+            1,
+            currentLines.length - 2);
+        currentLines[currentLines.length - 1] = this.borderLine(nextIntersectionTuple[1]);
+        Polyline currentPiece = new Polyline(currentLines);
+        if (!currentPiece.isEmpty()) {
+          pieces.add(currentPiece);
         }
       }
-      currIntersectionNo += 2;
+      currentIntersectionNo += 2;
     }
-    if (currIntersectionNo <= intersectionNo.length - 1) {
+    if (currentIntersectionNo <= intersectionNo.length - 1) {
       // calculate outside piece at end
-      currIntersectionTuple = intersectionNo[currIntersectionNo];
-      int currPolylineIntersectionNo = currIntersectionTuple[0];
-      Line[] currLines = new Line[polyline.arr.length - currPolylineIntersectionNo + 1];
-      currLines[0] = this.borderLine(currIntersectionTuple[1]);
+      currentIntersectionTuple = intersectionNo[currentIntersectionNo];
+      int currentPolylineIntersectionNo = currentIntersectionTuple[0];
+      Line[] currentLines = new Line[polyline.arr.length - currentPolylineIntersectionNo + 1];
+      currentLines[0] = this.borderLine(currentIntersectionTuple[1]);
       System.arraycopy(
-          polyline.arr, currPolylineIntersectionNo, currLines, 1, currLines.length - 1);
-      Polyline currPiece = new Polyline(currLines);
-      if (!currPiece.isEmpty()) {
-        pieces.add(currPiece);
+          polyline.arr, currentPolylineIntersectionNo, currentLines, 1, currentLines.length - 1);
+      Polyline currentPiece = new Polyline(currentLines);
+      if (!currentPiece.isEmpty()) {
+        pieces.add(currentPiece);
       }
     }
     Polyline[] result = new Polyline[pieces.size()];
@@ -864,10 +871,10 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     int prevIntersectionLineNo = -1;
     int prevIntersectionEdgeNo = -1;
     for (int lineNo = 1; lineNo < polyline.arr.length - 1; lineNo++) {
-      LineSegment currLineSeg = new LineSegment(polyline, lineNo);
-      int[] currIntersections = currLineSeg.borderIntersections(this);
-      for (int i = 0; i < currIntersections.length; i++) {
-        int edgeNo = currIntersections[i];
+      LineSegment currentLineSeg = new LineSegment(polyline, lineNo);
+      int[] currentIntersections = currentLineSeg.borderIntersections(this);
+      for (int i = 0; i < currentIntersections.length; i++) {
+        int edgeNo = currentIntersections[i];
         if (lineNo != prevIntersectionLineNo || edgeNo != prevIntersectionEdgeNo) {
           result[intersectionCount][0] = lineNo;
           result[intersectionCount][1] = edgeNo;
@@ -900,9 +907,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     TileShape[] sectionBoxes = this.boundingBox().divideIntoSections(maxSectionWidth);
     Collection<TileShape> sectionList = new LinkedList<>();
     for (int i = 0; i < sectionBoxes.length; i++) {
-      TileShape currSection = this.intersectionWithSimplify(sectionBoxes[i]);
-      if (currSection.dimension() == 2) {
-        sectionList.add(currSection);
+      TileShape currentSection = this.intersectionWithSimplify(sectionBoxes[i]);
+      if (currentSection.dimension() == 2) {
+        sectionList.add(currentSection);
       }
     }
     TileShape[] result = new TileShape[sectionList.size()];
@@ -930,14 +937,14 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     Side[] borderLineSideOfStartPointArr = new Side[this.borderLineCount()];
     Side[] borderLineSideOfEndPointArr = new Side[borderLineSideOfStartPointArr.length];
     for (int i = 0; i < borderLineSideOfStartPointArr.length; i++) {
-      Line currBorderLine = this.borderLine(i);
-      Side borderLineSideOfStartPoint = currBorderLine.sideOf(floatStartPoint, 1);
+      Line currentBorderLine = this.borderLine(i);
+      Side borderLineSideOfStartPoint = currentBorderLine.sideOf(floatStartPoint, 1);
       if (borderLineSideOfStartPoint == Side.COLLINEAR) {
-        borderLineSideOfStartPoint = currBorderLine.sideOf(startPoint);
+        borderLineSideOfStartPoint = currentBorderLine.sideOf(startPoint);
       }
-      Side borderLineSideOfEndPoint = currBorderLine.sideOf(floatEndPoint, 1);
+      Side borderLineSideOfEndPoint = currentBorderLine.sideOf(floatEndPoint, 1);
       if (borderLineSideOfEndPoint == Side.COLLINEAR) {
-        borderLineSideOfEndPoint = currBorderLine.sideOf(endPoint);
+        borderLineSideOfEndPoint = currentBorderLine.sideOf(endPoint);
       }
       if (borderLineSideOfStartPoint != Side.ON_THE_RIGHT
           && borderLineSideOfEndPoint != Side.ON_THE_RIGHT) {

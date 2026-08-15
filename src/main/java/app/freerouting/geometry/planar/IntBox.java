@@ -686,25 +686,25 @@ public class IntBox extends RegularTileShape implements Serializable {
     int sectionLengthX = (int) Math.ceil(length / xcount);
     int sectionLengthY = (int) Math.ceil(height / ycount);
     IntBox[] result = new IntBox[xcount * ycount];
-    int currIndex = 0;
+    int currentIndex = 0;
     for (int j = 0; j < ycount; j++) {
-      int currLly = this.ll.y + j * sectionLengthY;
-      int currUry;
+      int currentLly = this.ll.y + j * sectionLengthY;
+      int currentUry;
       if (j == (ycount - 1)) {
-        currUry = this.ur.y;
+        currentUry = this.ur.y;
       } else {
-        currUry = currLly + sectionLengthY;
+        currentUry = currentLly + sectionLengthY;
       }
       for (int i = 0; i < xcount; i++) {
-        int currLlx = this.ll.x + i * sectionLengthX;
-        int currUrx;
+        int currentLlx = this.ll.x + i * sectionLengthX;
+        int currentUrx;
         if (i == (xcount - 1)) {
-          currUrx = this.ur.x;
+          currentUrx = this.ur.x;
         } else {
-          currUrx = currLlx + sectionLengthX;
+          currentUrx = currentLlx + sectionLengthX;
         }
-        result[currIndex] = new IntBox(currLlx, currLly, currUrx, currUry);
-        ++currIndex;
+        result[currentIndex] = new IntBox(currentLlx, currentLly, currentUrx, currentUry);
+        ++currentIndex;
       }
     }
     return result;

@@ -173,13 +173,13 @@ public class NetIncompletes {
         triangulation.getEdgeLines();
     SortedSet<Edge> sortedEdges = new TreeSet<>();
 
-    for (PlanarDelaunayTriangulation.ResultEdge currLine : triangulationLines) {
+    for (PlanarDelaunayTriangulation.ResultEdge currentLine : triangulationLines) {
       Edge newEdge =
           new Edge(
-              (NetItem) currLine.startObject,
-              currLine.startPoint.toFloat(),
-              (NetItem) currLine.endObject,
-              currLine.endPoint.toFloat());
+              (NetItem) currentLine.startObject,
+              currentLine.startPoint.toFloat(),
+              (NetItem) currentLine.endObject,
+              currentLine.endPoint.toFloat());
       sortedEdges.add(newEdge);
     }
 
@@ -188,20 +188,20 @@ public class NetIncompletes {
     // connected set
     // or whose connected sets have already an airline.
     Net currentNet = board.rules.nets.get(netNo);
-    for (Edge currEdge : sortedEdges) {
-      if (currEdge.fromItem.connectedSet == currEdge.toItem.connectedSet) {
+    for (Edge currentEdge : sortedEdges) {
+      if (currentEdge.fromItem.connectedSet == currentEdge.toItem.connectedSet) {
         continue; // airline exists already
       }
 
       this.incompletes.add(
           new AirLine(
               currentNet,
-              currEdge.fromItem.item,
-              currEdge.fromCorner,
-              currEdge.toItem.item,
-              currEdge.toCorner));
+              currentEdge.fromItem.item,
+              currentEdge.fromCorner,
+              currentEdge.toItem.item,
+              currentEdge.toCorner));
       joinConnectedSets(
-          groupedNetItems, currEdge.fromItem.connectedSet, currEdge.toItem.connectedSet);
+          groupedNetItems, currentEdge.fromItem.connectedSet, currentEdge.toItem.connectedSet);
     }
 
     FRLogger.trace(
@@ -297,18 +297,18 @@ public class NetIncompletes {
 
     while (!uniqueItems.isEmpty()) {
       Item startItem = uniqueItems.iterator().next();
-      Collection<Item> currConnectedSet = startItem.getConnectedSet(this.net.netNumber);
+      Collection<Item> currentConnectedSet = startItem.getConnectedSet(this.net.netNumber);
 
       // Prevent ConcurrentModificationException by creating a list of items to remove
       Collection<Item> itemsInComponent = new ArrayList<>();
-      for (Item itemInSet : currConnectedSet) {
+      for (Item itemInSet : currentConnectedSet) {
         if (uniqueItems.contains(itemInSet)) {
           itemsInComponent.add(itemInSet);
         }
       }
 
-      for (Item currItem : itemsInComponent) {
-        result.add(new NetItem(currItem, currConnectedSet));
+      for (Item currentItem : itemsInComponent) {
+        result.add(new NetItem(currentItem, currentConnectedSet));
       }
       uniqueItems.removeAll(itemsInComponent);
     }
@@ -328,10 +328,10 @@ public class NetIncompletes {
   private void joinConnectedSets(
       NetItem[] netItems, Collection<Item> fromConnectedSet, Collection<Item> toConnectedSet) {
     for (int i = 0; i < netItems.length; i++) {
-      NetItem currItem = netItems[i];
-      if (currItem.connectedSet == fromConnectedSet) {
-        toConnectedSet.add(currItem.item);
-        currItem.connectedSet = toConnectedSet;
+      NetItem currentItem = netItems[i];
+      if (currentItem.connectedSet == fromConnectedSet) {
+        toConnectedSet.add(currentItem.item);
+        currentItem.connectedSet = toConnectedSet;
       }
     }
   }

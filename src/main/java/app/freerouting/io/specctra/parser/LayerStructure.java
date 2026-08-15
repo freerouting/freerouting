@@ -46,8 +46,8 @@ public class LayerStructure {
 
   public int signalLayerCount() {
     int result = 0;
-    for (Layer currLayer : arr) {
-      if (currLayer.isSignal) {
+    for (Layer currentLayer : arr) {
+      if (currentLayer.isSignal) {
         ++result;
       }
     }
@@ -57,9 +57,9 @@ public class LayerStructure {
   /** Returns, if the net with name p_net_name contains a power plane. */
   public boolean containsPlane(String netName) {
 
-    for (Layer currLayer : arr) {
-      if (!currLayer.isSignal) {
-        if (currLayer.netNames.contains(netName)) {
+    for (Layer currentLayer : arr) {
+      if (!currentLayer.isSignal) {
+        if (currentLayer.netNames.contains(netName)) {
           return true;
         }
       }

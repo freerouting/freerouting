@@ -55,34 +55,34 @@ public final class RulesReader {
     IJFlexScanner scanner = new SpecctraDsnStreamReader(in);
     try {
       // Validate the "(rules PCB <name>" header
-      Object currToken = scanner.nextToken();
-      if (currToken != Keyword.OPEN_BRACKET) {
+      Object currentToken = scanner.nextToken();
+      if (currentToken != Keyword.OPEN_BRACKET) {
         FRLogger.warn(
             "RulesReader.read: open bracket expected at '" + scanner.getScopeIdentifier() + "'");
         return false;
       }
-      currToken = scanner.nextToken();
-      if (currToken != Keyword.RULES) {
+      currentToken = scanner.nextToken();
+      if (currentToken != Keyword.RULES) {
         FRLogger.warn(
             "RulesReader.read: keyword 'rules' expected at '" + scanner.getScopeIdentifier() + "'");
         return false;
       }
-      currToken = scanner.nextToken();
-      if (currToken != Keyword.PCB_SCOPE) {
+      currentToken = scanner.nextToken();
+      if (currentToken != Keyword.PCB_SCOPE) {
         FRLogger.warn(
             "RulesReader.read: keyword 'pcb' expected at '" + scanner.getScopeIdentifier() + "'");
         return false;
       }
       scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      currToken = scanner.nextToken();
-      if (!(currToken instanceof String) || !currToken.equals(designName)) {
+      currentToken = scanner.nextToken();
+      if (!(currentToken instanceof String) || !currentToken.equals(designName)) {
         FRLogger.warn(
             "RulesReader.read: designName not matching at '"
                 + scanner.getScopeIdentifier()
                 + "' (expected '"
                 + designName
                 + "', got '"
-                + currToken
+                + currentToken
                 + "')");
         // non-fatal: continue reading
       }

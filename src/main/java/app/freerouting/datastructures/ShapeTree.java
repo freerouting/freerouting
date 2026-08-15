@@ -69,26 +69,26 @@ public abstract class ShapeTree {
     if (result.length == 0) {
       return result;
     }
-    TreeNode currNode = this.root;
-    int currIndex = 0;
+    TreeNode currentNode = this.root;
+    int currentIndex = 0;
     for (; ; ) {
-      // go down from currNode to the left most leaf
-      while (currNode instanceof InnerNode) {
-        currNode = ((InnerNode) currNode).firstChild;
+      // go down from currentNode to the left most leaf
+      while (currentNode instanceof InnerNode) {
+        currentNode = ((InnerNode) currentNode).firstChild;
       }
-      result[currIndex] = (Leaf) currNode;
+      result[currentIndex] = (Leaf) currentNode;
 
-      ++currIndex;
-      // go up until parent.secondChild != currNode, which means we came from firstChild
-      InnerNode currParent = currNode.parent;
-      while (currParent != null && currParent.secondChild == currNode) {
-        currNode = currParent;
-        currParent = currNode.parent;
+      ++currentIndex;
+      // go up until parent.secondChild != currentNode, which means we came from firstChild
+      InnerNode currentParent = currentNode.parent;
+      while (currentParent != null && currentParent.secondChild == currentNode) {
+        currentNode = currentParent;
+        currentParent = currentNode.parent;
       }
-      if (currParent == null) {
+      if (currentParent == null) {
         break;
       }
-      currNode = currParent.secondChild;
+      currentNode = currentParent.secondChild;
     }
     return result;
   }
@@ -225,9 +225,9 @@ public abstract class ShapeTree {
     /** Returns the number of nodes between this leaf and the croot of the tree. */
     public int distanceToRoot() {
       int result = 1;
-      InnerNode currParent = this.parent;
-      while (currParent.parent != null) {
-        currParent = currParent.parent;
+      InnerNode currentParent = this.parent;
+      while (currentParent.parent != null) {
+        currentParent = currentParent.parent;
         ++result;
       }
       return result;

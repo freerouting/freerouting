@@ -29,22 +29,22 @@ public class Packages implements Serializable {
       return null;
     }
     Package otherSidePackage = null;
-    for (Package currPackage : packageArr) {
-      if (currPackage != null && currPackage.name.equalsIgnoreCase(name)) {
-        if (currPackage.isFront == isFront) {
-          return currPackage;
+    for (Package currentPackage : packageArr) {
+      if (currentPackage != null && currentPackage.name.equalsIgnoreCase(name)) {
+        if (currentPackage.isFront == isFront) {
+          return currentPackage;
         }
-        otherSidePackage = currPackage;
+        otherSidePackage = currentPackage;
       }
     }
     String baseName = name.replaceAll("::\\d+$", "");
     if (!baseName.equalsIgnoreCase(name)) {
-      for (Package currPackage : packageArr) {
-        if (currPackage != null && currPackage.name.equalsIgnoreCase(baseName)) {
-          if (currPackage.isFront == isFront) {
-            return currPackage;
+      for (Package currentPackage : packageArr) {
+        if (currentPackage != null && currentPackage.name.equalsIgnoreCase(baseName)) {
+          if (currentPackage.isFront == isFront) {
+            return currentPackage;
           }
-          otherSidePackage = currPackage;
+          otherSidePackage = currentPackage;
         }
       }
     }

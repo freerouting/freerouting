@@ -22,18 +22,18 @@ public class Plane extends ScopeKeyword {
       return;
     }
     final String netName = par.board.rules.nets.get(conduction.getNetNo(0)).name;
-    Area currArea = conduction.getArea();
+    Area currentArea = conduction.getArea();
     int layerNo = conduction.getLayer();
     app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerNo];
     final Layer planeLayer = new Layer(boardLayer.name, layerNo, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
-    if (currArea instanceof app.freerouting.geometry.planar.Shape shape) {
+    if (currentArea instanceof app.freerouting.geometry.planar.Shape shape) {
       boundaryShape = shape;
       holes = new app.freerouting.geometry.planar.Shape[0];
     } else {
-      boundaryShape = currArea.getBorder();
-      holes = currArea.getHoles();
+      boundaryShape = currentArea.getBorder();
+      holes = currentArea.getHoles();
     }
     par.file.startScope();
     par.file.write("plane ");

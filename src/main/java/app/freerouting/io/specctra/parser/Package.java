@@ -94,9 +94,9 @@ public class Package {
           } else if (nextToken == Keyword.SIDE) {
             isFront = readPlacementSide(scanner);
           } else if (nextToken == Keyword.OUTLINE) {
-            Shape currShape = Shape.readScope(scanner, layerStructure);
-            if (currShape != null) {
-              outline.add(currShape);
+            Shape currentShape = Shape.readScope(scanner, layerStructure);
+            if (currentShape != null) {
+              outline.add(currentShape);
             }
             // overread closing bracket
             nextToken = scanner.nextToken();
@@ -165,19 +165,19 @@ public class Package {
     }
     // write the pins of the package
     for (int i = 0; i < boardPackage.pinCount(); i++) {
-      app.freerouting.core.library.Package.Pin currPin = boardPackage.getPin(i);
+      app.freerouting.core.library.Package.Pin currentPin = boardPackage.getPin(i);
       par.file.newLine();
       par.file.write("(pin ");
-      Padstack currPadstack = par.board.library.padstacks.get(currPin.padstackNo);
-      par.identifierType.write(currPadstack.name, par.file);
+      Padstack currentPadstack = par.board.library.padstacks.get(currentPin.padstackNo);
+      par.identifierType.write(currentPadstack.name, par.file);
       par.file.write(" ");
-      par.identifierType.write(currPin.name, par.file);
-      double[] relCoor = par.coordinateTransform.boardToDsn(currPin.relativeLocation);
+      par.identifierType.write(currentPin.name, par.file);
+      double[] relCoor = par.coordinateTransform.boardToDsn(currentPin.relativeLocation);
       for (int j = 0; j < relCoor.length; j++) {
         par.file.write(" ");
         par.file.write(String.valueOf(relCoor[j]));
       }
-      int rotation = (int) Math.round(currPin.rotationInDegree);
+      int rotation = (int) Math.round(currentPin.rotationInDegree);
       if (rotation != 0) {
         par.file.write("(rotate ");
         par.file.write(String.valueOf(rotation));
@@ -197,9 +197,9 @@ public class Package {
       for (int i = 0; i < boardPackage.outline.length; i++) {
         par.file.startScope();
         par.file.write("outline");
-        Shape currOutline =
+        Shape currentOutline =
             par.coordinateTransform.boardToDsnRel(boardPackage.outline[i], Layer.SIGNAL);
-        currOutline.writeScope(par.file, par.identifierType);
+        currentOutline.writeScope(par.file, par.identifierType);
         par.file.endScope();
       }
     }
@@ -357,17 +357,17 @@ public class Package {
     Collection<Item> boardItems = par.board.getItems();
     boolean componentFound = false;
     for (int i = 1; i <= par.board.components.count(); i++) {
-      app.freerouting.board.Component currComponent = par.board.components.get(i);
-      if (currComponent.getPackage() == boardPackage) {
+      app.freerouting.board.Component currentComponent = par.board.components.get(i);
+      if (currentComponent.getPackage() == boardPackage) {
         // check, if not all items of the component are deleted
         boolean undeletedItemFound = false;
-        for (Item currItem : boardItems) {
-          if (currItem.getComponentNo() == currComponent.no) {
+        for (Item currentItem : boardItems) {
+          if (currentItem.getComponentNo() == currentComponent.no) {
             undeletedItemFound = true;
             break;
           }
         }
-        if (undeletedItemFound || !currComponent.isPlaced()) {
+        if (undeletedItemFound || !currentComponent.isPlaced()) {
           if (!componentFound) {
             // write the scope header
             par.file.startScope();
@@ -375,7 +375,7 @@ public class Package {
             par.identifierType.write(boardPackage.name, par.file);
             componentFound = true;
           }
-          Component.writeScope(par, currComponent);
+          Component.writeScope(par, currentComponent);
         }
       }
     }

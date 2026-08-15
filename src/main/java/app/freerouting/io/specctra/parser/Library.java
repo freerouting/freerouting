@@ -72,16 +72,16 @@ public class Library extends ScopeKeyword {
     par.file.write("padstack ");
     par.identifierType.write(padstack.name, par.file);
     for (int i = firstLayerNo; i <= lastLayerNo; i++) {
-      app.freerouting.geometry.planar.Shape currBoardShape = padstack.getShape(i);
-      if (currBoardShape == null) {
+      app.freerouting.geometry.planar.Shape currentBoardShape = padstack.getShape(i);
+      if (currentBoardShape == null) {
         continue;
       }
       app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[i];
-      final Layer currLayer = new Layer(boardLayer.name, i, boardLayer.isSignal);
-      Shape currShape = par.coordinateTransform.boardToDsnRel(currBoardShape, currLayer);
+      final Layer currentLayer = new Layer(boardLayer.name, i, boardLayer.isSignal);
+      Shape currentShape = par.coordinateTransform.boardToDsnRel(currentBoardShape, currentLayer);
       par.file.startScope();
       par.file.write("shape");
-      currShape.writeScope(par.file, par.identifierType);
+      currentShape.writeScope(par.file, par.identifierType);
       par.file.endScope();
     }
     if (!padstack.attachAllowed) {
@@ -122,17 +122,17 @@ public class Library extends ScopeKeyword {
         nextToken = scanner.nextToken();
         if (prevToken == Keyword.OPEN_BRACKET) {
           if (nextToken == Keyword.SHAPE) {
-            Shape currShape = Shape.readScope(scanner, layerStructure);
-            if (currShape != null) {
-              shapeList.add(currShape);
+            Shape currentShape = Shape.readScope(scanner, layerStructure);
+            if (currentShape != null) {
+              shapeList.add(currentShape);
             }
             // overread the closing bracket and unknown scopes.
-            Object currNextToken = scanner.nextToken();
-            while (currNextToken == Keyword.OPEN_BRACKET) {
+            Object currentNextToken = scanner.nextToken();
+            while (currentNextToken == Keyword.OPEN_BRACKET) {
               ScopeKeyword.skipScope(scanner);
-              currNextToken = scanner.nextToken();
+              currentNextToken = scanner.nextToken();
             }
-            if (currNextToken != Keyword.CLOSED_BRACKET) {
+            if (currentNextToken != Keyword.CLOSED_BRACKET) {
               FRLogger.warn(
                   "Library.read_padstack_scope: closing bracket expected at '"
                       + scanner.getScopeIdentifier()
@@ -165,16 +165,16 @@ public class Library extends ScopeKeyword {
     }
     ConvexShape[] padstackShapes = new ConvexShape[layerStructure.arr.length];
     for (Shape padShape : shapeList) {
-      app.freerouting.geometry.planar.Shape currShape =
+      app.freerouting.geometry.planar.Shape currentShape =
           padShape.transformToBoardRel(coordinateTransform);
       ConvexShape convexShape;
-      if (currShape instanceof ConvexShape shape1) {
+      if (currentShape instanceof ConvexShape shape1) {
         convexShape = shape1;
       } else {
-        if (currShape instanceof PolygonShape shape) {
-          currShape = shape.convexHull();
+        if (currentShape instanceof PolygonShape shape) {
+          currentShape = shape.convexHull();
         }
-        TileShape[] convexShapes = currShape.splitToConvex();
+        TileShape[] convexShapes = currentShape.splitToConvex();
         if (convexShapes.length != 1) {
           FRLogger.warn(
               "Library.read_padstack_scope: convex shape expected at '"
@@ -287,11 +287,11 @@ public class Library extends ScopeKeyword {
             return false;
           }
         } else if (nextToken == Keyword.IMAGE) {
-          Package currPackage = Package.readScope(par.scanner, par.layerStructure);
-          if (currPackage == null) {
+          Package currentPackage = Package.readScope(par.scanner, par.layerStructure);
+          if (currentPackage == null) {
             return false;
           }
-          packageList.add(currPackage);
+          packageList.add(currentPackage);
         } else {
           skipScope(par.scanner);
         }
@@ -300,11 +300,11 @@ public class Library extends ScopeKeyword {
 
     // Create the library packages on the board
     board.library.packages = new Packages(board.library.padstacks);
-    for (Package currPackage : packageList) {
+    for (Package currentPackage : packageList) {
       app.freerouting.core.library.Package.Pin[] pinArr =
-          new app.freerouting.core.library.Package.Pin[currPackage.pinInfoArr.length];
+          new app.freerouting.core.library.Package.Pin[currentPackage.pinInfoArr.length];
       for (int i = 0; i < pinArr.length; i++) {
-        Package.PinInfo pinInfo = currPackage.pinInfoArr[i];
+        Package.PinInfo pinInfo = currentPackage.pinInfoArr[i];
         int relX = (int) Math.round(par.coordinateTransform.dsnToBoard(pinInfo.relCoor[0]));
         int relY = (int) Math.round(par.coordinateTransform.dsnToBoard(pinInfo.relCoor[1]));
         Vector relCoor = new IntVector(relX, relY);
@@ -327,16 +327,16 @@ public class Library extends ScopeKeyword {
                 pinInfo.pinName, boardPadstack.no, relCoor, pinInfo.rotation);
       }
       app.freerouting.geometry.planar.Shape[] outlineArr =
-          new app.freerouting.geometry.planar.Shape[currPackage.outline.size()];
-      double[] outlineWidths = new double[currPackage.outline.size()];
-      boolean[] outlineIsClosed = new boolean[currPackage.outline.size()];
+          new app.freerouting.geometry.planar.Shape[currentPackage.outline.size()];
+      double[] outlineWidths = new double[currentPackage.outline.size()];
+      boolean[] outlineIsClosed = new boolean[currentPackage.outline.size()];
 
-      Iterator<Shape> it3 = currPackage.outline.iterator();
+      Iterator<Shape> it3 = currentPackage.outline.iterator();
       for (int i = 0; i < outlineArr.length; i++) {
-        Shape currShape = it3.next();
-        if (currShape != null) {
-          outlineArr[i] = currShape.transformToBoardRel(par.coordinateTransform);
-          if (currShape instanceof Path path) {
+        Shape currentShape = it3.next();
+        if (currentShape != null) {
+          outlineArr[i] = currentShape.transformToBoardRel(par.coordinateTransform);
+          if (currentShape instanceof Path path) {
             outlineWidths[i] = path.width;
             double[] coords = path.coordinateArr;
             if (coords.length >= 4) {
@@ -354,53 +354,53 @@ public class Library extends ScopeKeyword {
                   + "'");
         }
       }
-      generateMissingKeepoutNames("keepout_", currPackage.keepouts);
-      generateMissingKeepoutNames("via_keepout_", currPackage.viaKeepouts);
-      generateMissingKeepoutNames("place_keepout_", currPackage.placeKeepouts);
+      generateMissingKeepoutNames("keepout_", currentPackage.keepouts);
+      generateMissingKeepoutNames("via_keepout_", currentPackage.viaKeepouts);
+      generateMissingKeepoutNames("place_keepout_", currentPackage.placeKeepouts);
       app.freerouting.core.library.Package.Keepout[] keepoutArr =
-          new app.freerouting.core.library.Package.Keepout[currPackage.keepouts.size()];
-      Iterator<Shape.ReadAreaScopeResult> it2 = currPackage.keepouts.iterator();
+          new app.freerouting.core.library.Package.Keepout[currentPackage.keepouts.size()];
+      Iterator<Shape.ReadAreaScopeResult> it2 = currentPackage.keepouts.iterator();
       for (int i = 0; i < keepoutArr.length; i++) {
-        Shape.ReadAreaScopeResult currKeepout = it2.next();
-        final Layer currLayer = currKeepout.shapeList.iterator().next().layer;
-        Area currArea =
-            Shape.transformAreaToBoardRel(currKeepout.shapeList, par.coordinateTransform);
+        Shape.ReadAreaScopeResult currentKeepout = it2.next();
+        final Layer currentLayer = currentKeepout.shapeList.iterator().next().layer;
+        Area currentArea =
+            Shape.transformAreaToBoardRel(currentKeepout.shapeList, par.coordinateTransform);
         keepoutArr[i] =
             new app.freerouting.core.library.Package.Keepout(
-                currKeepout.areaName, currArea, currLayer.no);
+                currentKeepout.areaName, currentArea, currentLayer.no);
       }
       app.freerouting.core.library.Package.Keepout[] viaKeepoutArr =
-          new app.freerouting.core.library.Package.Keepout[currPackage.viaKeepouts.size()];
-      it2 = currPackage.viaKeepouts.iterator();
+          new app.freerouting.core.library.Package.Keepout[currentPackage.viaKeepouts.size()];
+      it2 = currentPackage.viaKeepouts.iterator();
       for (int i = 0; i < viaKeepoutArr.length; i++) {
-        Shape.ReadAreaScopeResult currKeepout = it2.next();
-        final Layer currLayer = (currKeepout.shapeList.iterator().next()).layer;
-        Area currArea =
-            Shape.transformAreaToBoardRel(currKeepout.shapeList, par.coordinateTransform);
+        Shape.ReadAreaScopeResult currentKeepout = it2.next();
+        final Layer currentLayer = (currentKeepout.shapeList.iterator().next()).layer;
+        Area currentArea =
+            Shape.transformAreaToBoardRel(currentKeepout.shapeList, par.coordinateTransform);
         viaKeepoutArr[i] =
             new app.freerouting.core.library.Package.Keepout(
-                currKeepout.areaName, currArea, currLayer.no);
+                currentKeepout.areaName, currentArea, currentLayer.no);
       }
       app.freerouting.core.library.Package.Keepout[] placeKeepoutArr =
-          new app.freerouting.core.library.Package.Keepout[currPackage.placeKeepouts.size()];
-      it2 = currPackage.placeKeepouts.iterator();
+          new app.freerouting.core.library.Package.Keepout[currentPackage.placeKeepouts.size()];
+      it2 = currentPackage.placeKeepouts.iterator();
       for (int i = 0; i < placeKeepoutArr.length; i++) {
-        Shape.ReadAreaScopeResult currKeepout = it2.next();
-        final Layer currLayer = (currKeepout.shapeList.iterator().next()).layer;
-        Area currArea =
-            Shape.transformAreaToBoardRel(currKeepout.shapeList, par.coordinateTransform);
+        Shape.ReadAreaScopeResult currentKeepout = it2.next();
+        final Layer currentLayer = (currentKeepout.shapeList.iterator().next()).layer;
+        Area currentArea =
+            Shape.transformAreaToBoardRel(currentKeepout.shapeList, par.coordinateTransform);
         placeKeepoutArr[i] =
             new app.freerouting.core.library.Package.Keepout(
-                currKeepout.areaName, currArea, currLayer.no);
+                currentKeepout.areaName, currentArea, currentLayer.no);
       }
       String basePackageName =
-          currPackage.name != null ? currPackage.name.replaceAll("::\\d+$", "") : "Package";
+          currentPackage.name != null ? currentPackage.name.replaceAll("::\\d+$", "") : "Package";
       int suffix = 0;
       while (true) {
         String testName = suffix == 0 ? basePackageName : basePackageName + "::" + suffix;
         try {
           app.freerouting.core.library.Package existingPkg =
-              board.library.packages.get(testName, currPackage.isFront);
+              board.library.packages.get(testName, currentPackage.isFront);
           if (existingPkg == null || !existingPkg.name.equalsIgnoreCase(testName)) {
             board.library.packages.add(
                 testName,
@@ -411,7 +411,7 @@ public class Library extends ScopeKeyword {
                 keepoutArr,
                 viaKeepoutArr,
                 placeKeepoutArr,
-                currPackage.isFront);
+                currentPackage.isFront);
             break;
           } else {
             if (arePackagePinsIdentical(existingPkg, pinArr)) {
@@ -421,7 +421,7 @@ public class Library extends ScopeKeyword {
         } catch (Exception e) {
           FRLogger.error("Library.read_scope package deduplication error, falling back", e);
           board.library.packages.add(
-              currPackage.name,
+              currentPackage.name,
               pinArr,
               outlineArr,
               outlineWidths,
@@ -429,7 +429,7 @@ public class Library extends ScopeKeyword {
               keepoutArr,
               viaKeepoutArr,
               placeKeepoutArr,
-              currPackage.isFront);
+              currentPackage.isFront);
           break;
         }
         suffix++;
@@ -441,8 +441,8 @@ public class Library extends ScopeKeyword {
   private void generateMissingKeepoutNames(
       String keepoutType, Collection<Shape.ReadAreaScopeResult> keepoutList) {
     boolean allNamesExisting = true;
-    for (Shape.ReadAreaScopeResult currKeepout : keepoutList) {
-      if (currKeepout.areaName == null) {
+    for (Shape.ReadAreaScopeResult currentKeepout : keepoutList) {
+      if (currentKeepout.areaName == null) {
         allNamesExisting = false;
         break;
       }
@@ -451,10 +451,10 @@ public class Library extends ScopeKeyword {
       return;
     }
     // generate names
-    int currNameIndex = 1;
-    for (Shape.ReadAreaScopeResult currKeepout : keepoutList) {
-      currKeepout.areaName = keepoutType + currNameIndex;
-      ++currNameIndex;
+    int currentNameIndex = 1;
+    for (Shape.ReadAreaScopeResult currentKeepout : keepoutList) {
+      currentKeepout.areaName = keepoutType + currentNameIndex;
+      ++currentNameIndex;
     }
   }
 }

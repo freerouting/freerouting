@@ -44,15 +44,15 @@ public class FloatPoint implements Serializable {
     double llx = Integer.MAX_VALUE;
     double urx = Integer.MIN_VALUE;
     for (int i = 0; i < pointArr.length; i++) {
-      FloatPoint curr = pointArr[i];
-      lx = Math.min(lx, curr.x);
-      ly = Math.min(ly, curr.y);
-      rx = Math.max(rx, curr.x);
-      uy = Math.max(uy, curr.y);
-      double tmp = curr.x - curr.y;
+      FloatPoint current = pointArr[i];
+      lx = Math.min(lx, current.x);
+      ly = Math.min(ly, current.y);
+      rx = Math.max(rx, current.x);
+      uy = Math.max(uy, current.y);
+      double tmp = current.x - current.y;
       ulx = Math.min(ulx, tmp);
       lrx = Math.max(lrx, tmp);
-      tmp = curr.x + curr.y;
+      tmp = current.x + current.y;
       llx = Math.min(llx, tmp);
       urx = Math.max(urx, tmp);
     }

@@ -83,8 +83,8 @@ public class Circle extends Shape {
     identifierType.write(this.layer.name, file);
     for (int i = 0; i < coor.length; i++) {
       file.write(" ");
-      int currCoor = (int) Math.round(coor[i]);
-      file.write(String.valueOf(currCoor));
+      int currentCoor = (int) Math.round(coor[i]);
+      file.write(String.valueOf(currentCoor));
     }
     file.write(")");
   }

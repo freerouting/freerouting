@@ -103,8 +103,8 @@ class RatsnestClearanceHeadlessTest {
     // Verify the list is sorted by severity (expected - actual, descending).
     for (int i = 1; i < aggregated.size(); i++) {
       double prev = aggregated.get(i - 1).expectedClearance - aggregated.get(i - 1).actualClearance;
-      double curr = aggregated.get(i).expectedClearance - aggregated.get(i).actualClearance;
-      assertTrue(prev >= curr, "aggregated violations must be sorted by severity, descending");
+      double current = aggregated.get(i).expectedClearance - aggregated.get(i).actualClearance;
+      assertTrue(prev >= current, "aggregated violations must be sorted by severity, descending");
     }
 
     double smallest = ClearanceViolation.smallestClearance(board.getItems());

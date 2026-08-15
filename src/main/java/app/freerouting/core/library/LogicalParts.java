@@ -21,9 +21,9 @@ public class LogicalParts implements Serializable {
 
   /** Returns the logical part with the input name or null, if no such package exists. */
   public LogicalPart get(String name) {
-    for (LogicalPart currPart : this.partArr) {
-      if (currPart != null && currPart.name.equalsIgnoreCase(name)) {
-        return currPart;
+    for (LogicalPart currentPart : this.partArr) {
+      if (currentPart != null && currentPart.name.equalsIgnoreCase(name)) {
+        return currentPart;
       }
     }
     return null;

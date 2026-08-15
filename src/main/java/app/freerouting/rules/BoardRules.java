@@ -175,22 +175,22 @@ public class BoardRules implements Serializable {
     int defaultViaClClass =
         netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.VIA);
     for (int i = 0; i < this.viaInfos.count(); i++) {
-      ViaInfo currViaInfo = this.viaInfos.get(i);
-      if (currViaInfo.getClearanceClass() == defaultViaClClass) {
-        Padstack currPadstack = currViaInfo.getPadstack();
-        int currFromLayer = currPadstack.fromLayer();
-        int currToLayer = currPadstack.toLayer();
-        ViaInfo existingVia = defaultRule.getLayerRange(currFromLayer, currToLayer);
+      ViaInfo currentViaInfo = this.viaInfos.get(i);
+      if (currentViaInfo.getClearanceClass() == defaultViaClClass) {
+        Padstack currentPadstack = currentViaInfo.getPadstack();
+        int currentFromLayer = currentPadstack.fromLayer();
+        int currentToLayer = currentPadstack.toLayer();
+        ViaInfo existingVia = defaultRule.getLayerRange(currentFromLayer, currentToLayer);
         if (existingVia != null) {
-          ConvexShape newShape = currPadstack.getShape(currFromLayer);
-          ConvexShape existingShape = existingVia.getPadstack().getShape(currFromLayer);
+          ConvexShape newShape = currentPadstack.getShape(currentFromLayer);
+          ConvexShape existingShape = existingVia.getPadstack().getShape(currentFromLayer);
           if (newShape.maxWidth() < existingShape.maxWidth()) {
             // The via with the smallest pad shape is preferred
             defaultRule.removeVia(existingVia);
-            defaultRule.appendVia(currViaInfo);
+            defaultRule.appendVia(currentViaInfo);
           }
         } else {
-          defaultRule.appendVia(currViaInfo);
+          defaultRule.appendVia(currentViaInfo);
         }
       }
     }
@@ -248,9 +248,9 @@ public class BoardRules implements Serializable {
 
   /** Returns the via rule with the given name, or null if no such rule exists. */
   public ViaRule getViaRule(String name) {
-    for (ViaRule currRule : viaRules) {
-      if (currRule.name.equals(name)) {
-        return currRule;
+    for (ViaRule currentRule : viaRules) {
+      if (currentRule.name.equals(name)) {
+        return currentRule;
       }
     }
     return null;
@@ -268,22 +268,22 @@ public class BoardRules implements Serializable {
     }
 
     for (int i = 0; i < this.netClasses.count(); i++) {
-      NetClass currNetClass = this.netClasses.get(i);
-      if (currNetClass.getTraceClearanceClass() == fromNo) {
-        currNetClass.setTraceClearanceClass(toNo);
+      NetClass currentNetClass = this.netClasses.get(i);
+      if (currentNetClass.getTraceClearanceClass() == fromNo) {
+        currentNetClass.setTraceClearanceClass(toNo);
       }
-      for (DefaultItemClearanceClasses.ItemClass currItemClass :
+      for (DefaultItemClearanceClasses.ItemClass currentItemClass :
           DefaultItemClearanceClasses.ItemClass.values()) {
-        if (currNetClass.defaultItemClearanceClasses.get(currItemClass) == fromNo) {
-          currNetClass.defaultItemClearanceClasses.set(currItemClass, toNo);
+        if (currentNetClass.defaultItemClearanceClasses.get(currentItemClass) == fromNo) {
+          currentNetClass.defaultItemClearanceClasses.set(currentItemClass, toNo);
         }
       }
     }
 
     for (int i = 0; i < this.viaInfos.count(); i++) {
-      ViaInfo currVia = this.viaInfos.get(i);
-      if (currVia.getClearanceClass() == fromNo) {
-        currVia.setClearanceClass(toNo);
+      ViaInfo currentVia = this.viaInfos.get(i);
+      if (currentVia.getClearanceClass() == fromNo) {
+        currentVia.setClearanceClass(toNo);
       }
     }
   }
@@ -293,55 +293,55 @@ public class BoardRules implements Serializable {
    * because there were still items assigned to this class.
    */
   public boolean removeClearanceClass(int index, Collection<Item> boardItems) {
-    for (Item currItem : boardItems) {
-      if (currItem.clearanceClassNo() == index) {
+    for (Item currentItem : boardItems) {
+      if (currentItem.clearanceClassNo() == index) {
         return false;
       }
     }
     for (int i = 0; i < this.netClasses.count(); i++) {
-      NetClass currNetClass = this.netClasses.get(i);
-      if (currNetClass.getTraceClearanceClass() == index) {
+      NetClass currentNetClass = this.netClasses.get(i);
+      if (currentNetClass.getTraceClearanceClass() == index) {
         return false;
       }
-      for (DefaultItemClearanceClasses.ItemClass currItemClass :
+      for (DefaultItemClearanceClasses.ItemClass currentItemClass :
           DefaultItemClearanceClasses.ItemClass.values()) {
-        if (currNetClass.defaultItemClearanceClasses.get(currItemClass) == index) {
+        if (currentNetClass.defaultItemClearanceClasses.get(currentItemClass) == index) {
           return false;
         }
       }
     }
 
     for (int i = 0; i < this.viaInfos.count(); i++) {
-      ViaInfo currVia = this.viaInfos.get(i);
-      if (currVia.getClearanceClass() == index) {
+      ViaInfo currentVia = this.viaInfos.get(i);
+      if (currentVia.getClearanceClass() == index) {
         return false;
       }
     }
 
-    for (Item currItem : boardItems) {
-      if (currItem.clearanceClassNo() > index) {
-        currItem.setClearanceClassNo(currItem.clearanceClassNo() - 1);
+    for (Item currentItem : boardItems) {
+      if (currentItem.clearanceClassNo() > index) {
+        currentItem.setClearanceClassNo(currentItem.clearanceClassNo() - 1);
       }
     }
 
     for (int i = 0; i < this.netClasses.count(); i++) {
-      NetClass currNetClass = this.netClasses.get(i);
-      if (currNetClass.getTraceClearanceClass() > index) {
-        currNetClass.setTraceClearanceClass(currNetClass.getTraceClearanceClass() - 1);
+      NetClass currentNetClass = this.netClasses.get(i);
+      if (currentNetClass.getTraceClearanceClass() > index) {
+        currentNetClass.setTraceClearanceClass(currentNetClass.getTraceClearanceClass() - 1);
       }
-      for (DefaultItemClearanceClasses.ItemClass currItemClass :
+      for (DefaultItemClearanceClasses.ItemClass currentItemClass :
           DefaultItemClearanceClasses.ItemClass.values()) {
-        int currClassNo = currNetClass.defaultItemClearanceClasses.get(currItemClass);
-        if (currClassNo > index) {
-          currNetClass.defaultItemClearanceClasses.set(currItemClass, currClassNo - 1);
+        int currentClassNo = currentNetClass.defaultItemClearanceClasses.get(currentItemClass);
+        if (currentClassNo > index) {
+          currentNetClass.defaultItemClearanceClasses.set(currentItemClass, currentClassNo - 1);
         }
       }
     }
 
     for (int i = 0; i < this.viaInfos.count(); i++) {
-      ViaInfo currVia = this.viaInfos.get(i);
-      if (currVia.getClearanceClass() > index) {
-        currVia.setClearanceClass(currVia.getClearanceClass() - 1);
+      ViaInfo currentVia = this.viaInfos.get(i);
+      if (currentVia.getClearanceClass() > index) {
+        currentVia.setClearanceClass(currentVia.getClearanceClass() - 1);
       }
     }
     this.clearanceMatrix.removeClass(index);
@@ -414,10 +414,10 @@ public class BoardRules implements Serializable {
       return 0;
     }
     Padstack viaPadstack = defaultViaRule.getVia(0).getPadstack();
-    ConvexShape currShape = viaPadstack.getShape(viaPadstack.fromLayer());
-    double result = currShape.maxWidth();
-    currShape = viaPadstack.getShape(viaPadstack.toLayer());
-    return Math.max(result, currShape.maxWidth());
+    ConvexShape currentShape = viaPadstack.getShape(viaPadstack.fromLayer());
+    double result = currentShape.maxWidth();
+    currentShape = viaPadstack.getShape(viaPadstack.toLayer());
+    return Math.max(result, currentShape.maxWidth());
   }
 
   /** Writes an instance of this class to a file. */

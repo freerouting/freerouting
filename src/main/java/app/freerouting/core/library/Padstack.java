@@ -170,24 +170,24 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
     if (layer < 0 || layer >= shapes.length) {
       return result;
     }
-    ConvexShape currShape = shapes[layer];
-    if (currShape == null) {
+    ConvexShape currentShape = shapes[layer];
+    if (currentShape == null) {
       return result;
     }
-    if (!(currShape instanceof IntBox || currShape instanceof IntOctagon)) {
+    if (!(currentShape instanceof IntBox || currentShape instanceof IntOctagon)) {
       return result;
     }
-    IntBox currBox = currShape.boundingBox();
+    IntBox currentBox = currentShape.boundingBox();
 
     boolean allDirs =
-        Math.max(currBox.width(), currBox.height())
-            < factor * Math.min(currBox.width(), currBox.height());
+        Math.max(currentBox.width(), currentBox.height())
+            < factor * Math.min(currentBox.width(), currentBox.height());
 
-    if (allDirs || currBox.width() >= currBox.height()) {
+    if (allDirs || currentBox.width() >= currentBox.height()) {
       result.add(Direction.RIGHT);
       result.add(Direction.LEFT);
     }
-    if (allDirs || currBox.width() <= currBox.height()) {
+    if (allDirs || currentBox.width() <= currentBox.height()) {
       result.add(Direction.UP);
       result.add(Direction.DOWN);
     }

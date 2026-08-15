@@ -334,12 +334,12 @@ public class RouterSettings implements Serializable, Cloneable {
       scoring.defaultUndesiredDirectionTraceCost = 1.0;
     }
 
-    boolean currPreferredDirectionIsHorizontal = horizontalWidth < verticalWidth;
+    boolean currentPreferredDirectionIsHorizontal = horizontalWidth < verticalWidth;
     boolean initializeTraceCosts = !Boolean.TRUE.equals(boardSpecificTraceCostsApplied);
 
     for (int i = 0; i < layerCount; i++) {
       if (board.layerStructure.arr[i].isSignal) {
-        currPreferredDirectionIsHorizontal = !currPreferredDirectionIsHorizontal;
+        currentPreferredDirectionIsHorizontal = !currentPreferredDirectionIsHorizontal;
       }
       if (!board.layerStructure.arr[i].isSignal) {
         layers[i].routable = false;
@@ -351,13 +351,13 @@ public class RouterSettings implements Serializable, Cloneable {
             scoring != null && scoring.defaultBendCost != null ? scoring.defaultBendCost : 0.0;
       }
       if (layers[i].preferredDirectionHorizontal == null) {
-        layers[i].preferredDirectionHorizontal = currPreferredDirectionIsHorizontal;
+        layers[i].preferredDirectionHorizontal = currentPreferredDirectionIsHorizontal;
       }
 
       if (initializeTraceCosts) {
         scoring.preferredDirectionTraceCost[i] = scoring.defaultPreferredDirectionTraceCost;
         scoring.undesiredDirectionTraceCost[i] = scoring.defaultUndesiredDirectionTraceCost;
-        if (currPreferredDirectionIsHorizontal) {
+        if (currentPreferredDirectionIsHorizontal) {
           scoring.undesiredDirectionTraceCost[i] += horizontalAddCostsAgainstPreferredDir;
         } else {
           scoring.undesiredDirectionTraceCost[i] += verticalAddCostsAgainstPreferredDir;

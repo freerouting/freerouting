@@ -22,9 +22,9 @@ public class NetClasses implements Serializable {
 
   /** Returns the net class with the given name, or null if no such class exists. */
   public NetClass get(String name) {
-    for (NetClass currClass : this.classArr) {
-      if (currClass.getName().equals(name)) {
-        return currClass;
+    for (NetClass currentClass : this.classArr) {
+      if (currentClass.getName().equals(name)) {
+        return currentClass;
       }
     }
     return null;
@@ -58,18 +58,18 @@ public class NetClasses implements Serializable {
    * class was found.
    */
   public NetClass find(int traceHalfWidth, int traceClearanceClass, ViaRule viaRule) {
-    for (NetClass currClass : this.classArr) {
-      if (currClass.getTraceClearanceClass() == traceClearanceClass
-          && currClass.getViaRule() == viaRule) {
+    for (NetClass currentClass : this.classArr) {
+      if (currentClass.getTraceClearanceClass() == traceClearanceClass
+          && currentClass.getViaRule() == viaRule) {
         boolean traceWidthsEqual = true;
-        for (int i = 0; i < currClass.layerCount(); i++) {
-          if (currClass.getTraceHalfWidth(i) != traceHalfWidth) {
+        for (int i = 0; i < currentClass.layerCount(); i++) {
+          if (currentClass.getTraceHalfWidth(i) != traceHalfWidth) {
             traceWidthsEqual = false;
             break;
           }
         }
         if (traceWidthsEqual) {
-          return currClass;
+          return currentClass;
         }
       }
     }
@@ -82,19 +82,19 @@ public class NetClasses implements Serializable {
    * whose via rule equals {@code viaRule}. Returns null if no such net class was found.
    */
   public NetClass find(int[] traceHalfWidthArr, int traceClearanceClass, ViaRule viaRule) {
-    for (NetClass currClass : this.classArr) {
-      if (currClass.getTraceClearanceClass() == traceClearanceClass
-          && currClass.getViaRule() == viaRule
-          && traceHalfWidthArr.length == currClass.layerCount()) {
+    for (NetClass currentClass : this.classArr) {
+      if (currentClass.getTraceClearanceClass() == traceClearanceClass
+          && currentClass.getViaRule() == viaRule
+          && traceHalfWidthArr.length == currentClass.layerCount()) {
         boolean traceWidthsEqual = true;
-        for (int i = 0; i < currClass.layerCount(); i++) {
-          if (currClass.getTraceHalfWidth(i) != traceHalfWidthArr[i]) {
+        for (int i = 0; i < currentClass.layerCount(); i++) {
+          if (currentClass.getTraceHalfWidth(i) != traceHalfWidthArr[i]) {
             traceWidthsEqual = false;
             break;
           }
         }
         if (traceWidthsEqual) {
-          return currClass;
+          return currentClass;
         }
       }
     }

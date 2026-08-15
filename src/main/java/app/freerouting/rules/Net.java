@@ -77,13 +77,13 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     BasicBoard board = this.netList.getBoard();
     Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      if (currItem instanceof Connectable) {
-        if (currItem.containsNet(this.netNumber) && !currItem.isRoutable()) {
-          result.add(currItem);
+      if (currentItem instanceof Connectable) {
+        if (currentItem.containsNet(this.netNumber) && !currentItem.isRoutable()) {
+          result.add(currentItem);
         }
       }
     }
@@ -96,12 +96,12 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     BasicBoard board = this.netList.getBoard();
     Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      if (currItem instanceof Pin pin) {
-        if (currItem.containsNet(this.netNumber)) {
+      if (currentItem instanceof Pin pin) {
+        if (currentItem.containsNet(this.netNumber)) {
           result.add(pin);
         }
       }
@@ -115,12 +115,12 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     BasicBoard board = this.netList.getBoard();
     Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      if (currItem.containsNet(this.netNumber)) {
-        result.add(currItem);
+      if (currentItem.containsNet(this.netNumber)) {
+        result.add(currentItem);
       }
     }
     return result;
@@ -130,9 +130,9 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   public double getTraceLength() {
     double cumulativeTraceLength = 0;
     Collection<Item> netItems = netList.getBoard().getConnectableItems(this.netNumber);
-    for (Item currItem : netItems) {
+    for (Item currentItem : netItems) {
 
-      if (currItem instanceof Trace trace) {
+      if (currentItem instanceof Trace trace) {
         cumulativeTraceLength += trace.getLength();
       }
     }
@@ -143,8 +143,8 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   public int getViaCount() {
     int result = 0;
     Collection<Item> netItems = netList.getBoard().getConnectableItems(this.netNumber);
-    for (Item currItem : netItems) {
-      if (currItem instanceof Via) {
+    for (Item currentItem : netItems) {
+      if (currentItem instanceof Via) {
         ++result;
       }
     }

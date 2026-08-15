@@ -35,14 +35,14 @@ public class Polygon implements Serializable {
         return;
       }
       Iterator<Point> i = corners.iterator();
-      Point currOb = i.next();
+      Point currentOb = i.next();
       while (i.hasNext()) {
         Point nextOb = i.next();
-        if (nextOb.equals(currOb)) {
+        if (nextOb.equals(currentOb)) {
           i.remove();
           cornerRemoved = true;
         } else {
-          currOb = nextOb;
+          currentOb = nextOb;
         }
       }
 
@@ -54,19 +54,19 @@ public class Polygon implements Serializable {
       if (!i.hasNext()) {
         continue;
       }
-      Point curr = i.next();
+      Point current = i.next();
       prevI.next();
       while (i.hasNext()) {
         Point next = i.next();
         prevI.next();
 
-        if (curr.sideOf(prev, next) == Side.COLLINEAR) {
+        if (current.sideOf(prev, next) == Side.COLLINEAR) {
           prevI.remove();
           cornerRemoved = true;
           break;
         }
-        prev = curr;
-        curr = next;
+        prev = current;
+        current = next;
       }
     }
   }

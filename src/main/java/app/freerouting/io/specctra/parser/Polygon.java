@@ -26,11 +26,11 @@ public class Polygon extends Shape {
   public app.freerouting.geometry.planar.Shape transformToBoard(
       CoordinateTransform coordinateTransform) {
     IntPoint[] cornerArr = new IntPoint[coor.length / 2];
-    double[] currPoint = new double[2];
+    double[] currentPoint = new double[2];
     for (int i = 0; i < cornerArr.length; i++) {
-      currPoint[0] = coor[2 * i];
-      currPoint[1] = coor[2 * i + 1];
-      cornerArr[i] = coordinateTransform.dsnToBoard(currPoint).round();
+      currentPoint[0] = coor[2 * i];
+      currentPoint[1] = coor[2 * i + 1];
+      cornerArr[i] = coordinateTransform.dsnToBoard(currentPoint).round();
     }
     return new PolygonShape(cornerArr);
   }
@@ -43,9 +43,9 @@ public class Polygon extends Shape {
     }
     IntPoint[] cornerArr = new IntPoint[coor.length / 2];
     for (int i = 0; i < cornerArr.length; i++) {
-      int currX = (int) Math.round(coordinateTransform.dsnToBoard(coor[2 * i]));
-      int currY = (int) Math.round(coordinateTransform.dsnToBoard(coor[2 * i + 1]));
-      cornerArr[i] = new IntPoint(currX, currY);
+      int currentX = (int) Math.round(coordinateTransform.dsnToBoard(coor[2 * i]));
+      int currentY = (int) Math.round(coordinateTransform.dsnToBoard(coor[2 * i + 1]));
+      cornerArr[i] = new IntPoint(currentX, currentY);
     }
     return new PolygonShape(cornerArr);
   }
@@ -100,11 +100,11 @@ public class Polygon extends Shape {
     int cornerCount = coor.length / 2;
     for (int i = 0; i < cornerCount; i++) {
       file.newLine();
-      int currCoor = (int) Math.round(coor[2 * i]);
-      file.write(String.valueOf(currCoor));
+      int currentCoor = (int) Math.round(coor[2 * i]);
+      file.write(String.valueOf(currentCoor));
       file.write(" ");
-      currCoor = (int) Math.round(coor[2 * i + 1]);
-      file.write(String.valueOf(currCoor));
+      currentCoor = (int) Math.round(coor[2 * i + 1]);
+      file.write(String.valueOf(currentCoor));
     }
     file.endScope();
   }

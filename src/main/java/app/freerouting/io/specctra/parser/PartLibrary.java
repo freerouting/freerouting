@@ -32,17 +32,17 @@ public class PartLibrary extends ScopeKeyword {
     // write the logical part mappings
 
     for (int i = 1; i <= logicalParts.count(); i++) {
-      app.freerouting.core.library.LogicalPart currPart = logicalParts.get(i);
+      app.freerouting.core.library.LogicalPart currentPart = logicalParts.get(i);
       par.file.startScope();
       par.file.write("logical_part_mapping ");
-      par.identifierType.write(currPart.name, par.file);
+      par.identifierType.write(currentPart.name, par.file);
       par.file.newLine();
       par.file.write("(comp");
       for (int j = 1; j <= par.board.components.count(); j++) {
-        Component currComponent = par.board.components.get(j);
-        if (currComponent.getLogicalPart() == currPart) {
+        Component currentComponent = par.board.components.get(j);
+        if (currentComponent.getLogicalPart() == currentPart) {
           par.file.write(" ");
-          par.file.write(currComponent.name);
+          par.file.write(currentComponent.name);
         }
       }
       par.file.write(")");
@@ -52,26 +52,26 @@ public class PartLibrary extends ScopeKeyword {
     // write the logical parts.
 
     for (int i = 1; i <= logicalParts.count(); i++) {
-      app.freerouting.core.library.LogicalPart currPart = logicalParts.get(i);
+      app.freerouting.core.library.LogicalPart currentPart = logicalParts.get(i);
 
       par.file.startScope();
       par.file.write("logicalPart ");
-      par.identifierType.write(currPart.name, par.file);
+      par.identifierType.write(currentPart.name, par.file);
       par.file.newLine();
-      for (int j = 0; j < currPart.pinCount(); j++) {
+      for (int j = 0; j < currentPart.pinCount(); j++) {
         par.file.newLine();
-        app.freerouting.core.library.LogicalPart.PartPin currPin = currPart.getPin(j);
+        app.freerouting.core.library.LogicalPart.PartPin currentPin = currentPart.getPin(j);
         par.file.write("(pin ");
-        par.identifierType.write(currPin.pinName, par.file);
+        par.identifierType.write(currentPin.pinName, par.file);
         par.file.write(" 0 ");
-        par.identifierType.write(currPin.gateName, par.file);
+        par.identifierType.write(currentPin.gateName, par.file);
         par.file.write(" ");
-        final int gateSwapCode = currPin.gateSwapCode;
+        final int gateSwapCode = currentPin.gateSwapCode;
         par.file.write(String.valueOf(gateSwapCode));
         par.file.write(" ");
-        par.identifierType.write(currPin.gatePinName, par.file);
+        par.identifierType.write(currentPin.gatePinName, par.file);
         par.file.write(" ");
-        int gatePinSwapCode = currPin.gatePinSwapCode;
+        int gatePinSwapCode = currentPin.gatePinSwapCode;
         par.file.write(String.valueOf(gatePinSwapCode));
         par.file.write(")");
       }
@@ -220,11 +220,11 @@ public class PartLibrary extends ScopeKeyword {
       boolean readOk = true;
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == PIN) {
-          PartPin currPartPin = readPartPin(scanner);
-          if (currPartPin == null) {
+          PartPin currentPartPin = readPartPin(scanner);
+          if (currentPartPin == null) {
             return null;
           }
-          partPins.add(currPartPin);
+          partPins.add(currentPartPin);
         } else {
           skipScope(scanner);
         }

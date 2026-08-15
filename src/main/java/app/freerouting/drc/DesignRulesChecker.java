@@ -549,13 +549,13 @@ public class DesignRulesChecker {
     java.util.Iterator<app.freerouting.datastructures.UndoableObjects.UndoableObjectNode> it =
         board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      if (currItem instanceof app.freerouting.board.Connectable) {
-        for (int i = 0; i < currItem.netCount(); i++) {
-          netItemLists.get(currItem.getNetNo(i) - 1).add(currItem);
+      if (currentItem instanceof app.freerouting.board.Connectable) {
+        for (int i = 0; i < currentItem.netCount(); i++) {
+          netItemLists.get(currentItem.getNetNo(i) - 1).add(currentItem);
         }
       }
     }
@@ -778,12 +778,12 @@ public class DesignRulesChecker {
     }
     int count = getIncompleteCount();
     AirLine[] result = new AirLine[count];
-    int currIndex = 0;
+    int currentIndex = 0;
     for (int i = 0; i < netIncompletes.length; i++) {
-      Collection<AirLine> currList = netIncompletes[i].incompletes;
-      for (AirLine currLine : currList) {
-        result[currIndex] = currLine;
-        ++currIndex;
+      Collection<AirLine> currentList = netIncompletes[i].incompletes;
+      for (AirLine currentLine : currentList) {
+        result[currentIndex] = currentLine;
+        ++currentIndex;
       }
     }
     return result;

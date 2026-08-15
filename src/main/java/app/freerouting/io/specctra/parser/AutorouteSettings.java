@@ -208,10 +208,10 @@ public final class AutorouteSettings {
     file.write(")");
     file.newLine();
     for (int i = 0; i < layerStructure.arr.length; i++) {
-      final Layer currLayer = layerStructure.arr[i];
+      final Layer currentLayer = layerStructure.arr[i];
       file.startScope();
       file.write("layer_rule ");
-      identifierType.write(currLayer.name, file);
+      identifierType.write(currentLayer.name, file);
       file.newLine();
       file.write("(active ");
       if (settings.getLayerActive(i)) {

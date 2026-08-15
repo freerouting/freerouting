@@ -87,44 +87,44 @@ public class Structure extends ScopeKeyword {
   }
 
   private static void writeConductionAreas(WriteScopeParameter par) throws IOException {
-    Storable currOb;
+    Storable currentOb;
     Iterator<UndoableObjects.UndoableObjectNode> it = par.board.itemList.startReadObject();
     for (; ; ) {
-      currOb = par.board.itemList.readObject(it);
-      if (currOb == null) {
+      currentOb = par.board.itemList.readObject(it);
+      if (currentOb == null) {
         break;
       }
-      if (!(currOb instanceof ConductionArea currArea)) {
+      if (!(currentOb instanceof ConductionArea currentArea)) {
         continue;
       }
-      if (par.board.layerStructure.arr[currArea.getLayer()].isSignal) {
+      if (par.board.layerStructure.arr[currentArea.getLayer()].isSignal) {
         // These conduction areas are written in the wiring scope.
         continue;
       }
-      Plane.writeScope(par, currArea);
+      Plane.writeScope(par, currentArea);
     }
   }
 
   private static void writeKeepouts(WriteScopeParameter par) throws IOException {
-    Storable currOb;
+    Storable currentOb;
     Iterator<UndoableObjects.UndoableObjectNode> it = par.board.itemList.startReadObject();
     for (; ; ) {
-      currOb = par.board.itemList.readObject(it);
-      if (currOb == null) {
+      currentOb = par.board.itemList.readObject(it);
+      if (currentOb == null) {
         break;
       }
-      if (!(currOb instanceof ObstacleArea currKeepout)) {
+      if (!(currentOb instanceof ObstacleArea currentKeepout)) {
         continue;
       }
-      if (currKeepout.getComponentNo() != 0) {
+      if (currentKeepout.getComponentNo() != 0) {
         // keepouts belonging to a component are not written individually.
         continue;
       }
-      if (currKeepout instanceof ConductionArea) {
+      if (currentKeepout instanceof ConductionArea) {
         // conduction area will be written later.
         continue;
       }
-      writeKeepoutScope(par, currKeepout);
+      writeKeepoutScope(par, currentKeepout);
     }
   }
 
@@ -138,22 +138,22 @@ public class Structure extends ScopeKeyword {
     boundingRectangle.writeScope(par.file, par.identifierType);
     par.file.endScope();
     // lookup the outline in the board
-    Storable currOb;
+    Storable currentOb;
     Iterator<UndoableObjects.UndoableObjectNode> it = par.board.itemList.startReadObject();
     for (; ; ) {
-      currOb = par.board.itemList.readObject(it);
-      if (currOb == null) {
+      currentOb = par.board.itemList.readObject(it);
+      if (currentOb == null) {
         break;
       }
-      if (currOb instanceof BoardOutline) {
+      if (currentOb instanceof BoardOutline) {
         break;
       }
     }
-    if (currOb == null) {
+    if (currentOb == null) {
       FRLogger.warn("Structure.write_scope: board outline not found");
       return;
     }
-    BoardOutline outline = (BoardOutline) currOb;
+    BoardOutline outline = (BoardOutline) currentOb;
 
     // write the outline
     for (int i = 0; i < outline.shapeCount(); i++) {
@@ -186,10 +186,10 @@ public class Structure extends ScopeKeyword {
     file.newLine();
     file.write("(via");
     for (int i = 0; i < library.viaPadstackCount(); i++) {
-      Padstack currPadstack = library.getViaPadstack(i);
-      if (currPadstack != null) {
+      Padstack currentPadstack = library.getViaPadstack(i);
+      if (currentPadstack != null) {
         file.write(" ");
-        identifierType.write(currPadstack.name, file);
+        identifierType.write(currentPadstack.name, file);
       } else {
         FRLogger.warn("Structure.write_via_padstacks: padstack is null");
       }
@@ -261,7 +261,7 @@ public class Structure extends ScopeKeyword {
 
   private static boolean readBoundaryScope(
       IJFlexScanner scanner, BoardConstructionInfo boardConstructionInfo) {
-    Shape currShape = Shape.readScope(scanner, null);
+    Shape currentShape = Shape.readScope(scanner, null);
     try {
       Object prevToken = null;
       for (; ; ) {
@@ -283,12 +283,12 @@ public class Structure extends ScopeKeyword {
       FRLogger.error("Structure.read_boundary_scope: IO error scanning file", e);
       return false;
     }
-    if (currShape == null) {
+    if (currentShape == null) {
       FRLogger.warn(
           "Structure.read_boundary_scope: shape is null at '" + scanner.getScopeIdentifier() + "'");
       return true;
     }
-    addBoundaryShape(boardConstructionInfo, currShape);
+    addBoundaryShape(boardConstructionInfo, currentShape);
     return true;
   }
 
@@ -361,8 +361,8 @@ public class Structure extends ScopeKeyword {
             return false;
           }
         } else if (nextToken == Keyword.RULE) {
-          Collection<Rule> currRules = Rule.readScope(scanner);
-          boardConstructionInfo.layerDependentRules.add(new LayerRule(layerString, currRules));
+          Collection<Rule> currentRules = Rule.readScope(scanner);
+          boardConstructionInfo.layerDependentRules.add(new LayerRule(layerString, currentRules));
         } else if (nextToken == Keyword.USE_NET) {
           for (; ; ) {
             scanner.yybegin(SpecctraDsnStreamReader.NAME);
@@ -385,9 +385,9 @@ public class Structure extends ScopeKeyword {
         nextToken = scanner.nextToken();
       }
       if (layerOk) {
-        final Layer currLayer =
+        final Layer currentLayer =
             new Layer(layerString, boardConstructionInfo.foundLayerCount, isSignal, netNames);
-        boardConstructionInfo.layerInfo.add(currLayer);
+        boardConstructionInfo.layerInfo.add(currentLayer);
         ++boardConstructionInfo.foundLayerCount;
       }
     } catch (IOException e) {
@@ -515,32 +515,34 @@ public class Structure extends ScopeKeyword {
   private static void insertMissingPowerPlanes(
       Collection<Layer> layerInfo, NetList netlist, BasicBoard board) {
     Collection<ConductionArea> conductionAreas = board.getConductionAreas();
-    for (Layer currLayer : layerInfo) {
-      if (currLayer.isSignal) {
+    for (Layer currentLayer : layerInfo) {
+      if (currentLayer.isSignal) {
         continue;
       }
       boolean conductionAreaFound = false;
-      for (ConductionArea currConductionArea : conductionAreas) {
-        if (currConductionArea.getLayer() == currLayer.no) {
+      for (ConductionArea currentConductionArea : conductionAreas) {
+        if (currentConductionArea.getLayer() == currentLayer.no) {
           conductionAreaFound = true;
           break;
         }
       }
-      if (!conductionAreaFound && !currLayer.netNames.isEmpty()) {
-        String currNetName = currLayer.netNames.iterator().next();
-        Net.Id currNetId = new Net.Id(currNetName, 1);
-        if (!netlist.contains(currNetId)) {
-          Net newNet = netlist.addNet(currNetId);
+      if (!conductionAreaFound && !currentLayer.netNames.isEmpty()) {
+        String currentNetName = currentLayer.netNames.iterator().next();
+        Net.Id currentNetId = new Net.Id(currentNetName, 1);
+        if (!netlist.contains(currentNetId)) {
+          Net newNet = netlist.addNet(currentNetId);
           if (newNet != null) {
             board.rules.nets.add(newNet.id.name, newNet.id.subnetNumber, true);
           }
         }
         final app.freerouting.rules.Net currentNet =
-            board.rules.nets.get(currNetId.name, currNetId.subnetNumber);
+            board.rules.nets.get(currentNetId.name, currentNetId.subnetNumber);
         {
           if (currentNet == null) {
             FRLogger.warn(
-                "Structure.insert_missing_power_planes: net not found at '" + currNetId.name + "'");
+                "Structure.insert_missing_power_planes: net not found at '"
+                    + currentNetId.name
+                    + "'");
             continue;
           }
         }
@@ -548,7 +550,7 @@ public class Structure extends ScopeKeyword {
         netNumbers[0] = currentNet.netNumber;
         board.insertConductionArea(
             board.boundingBox,
-            currLayer.no,
+            currentLayer.no,
             netNumbers,
             BoardRules.clearanceClassNone(),
             false,
@@ -568,17 +570,17 @@ public class Structure extends ScopeKeyword {
       shapeArr[i] = new OutlineShape(it.next());
     }
     for (int i = 0; i < shapeArr.length; i++) {
-      OutlineShape currShape = shapeArr[i];
+      OutlineShape currentShape = shapeArr[i];
       for (int j = 0; j < shapeArr.length; j++) {
         // check if shapeArr[j] may be contained in shapeArr[i]
         OutlineShape otherShape = shapeArr[j];
         if (i == j || otherShape.isHole) {
           continue;
         }
-        if (!otherShape.boundingBox.contains(currShape.boundingBox)) {
+        if (!otherShape.boundingBox.contains(currentShape.boundingBox)) {
           continue;
         }
-        currShape.isHole = otherShape.containsAllCorners(currShape);
+        currentShape.isHole = otherShape.containsAllCorners(currentShape);
       }
     }
     Collection<PolylineShape> holeList = new LinkedList<>();
@@ -599,16 +601,17 @@ public class Structure extends ScopeKeyword {
       ReadScopeParameter par, BoardConstructionInfo boardConstructionInfo, BoardRules boardRules) {
     boolean smdToTurnGapFound = false;
     // update the clearance matrix
-    for (Rule currOb : boardConstructionInfo.defaultRules) {
-      if (currOb instanceof Rule.ClearanceRule currRule) {
-        if (setClearanceRule(currRule, -1, par.coordinateTransform, boardRules, par.stringQuote)) {
+    for (Rule currentOb : boardConstructionInfo.defaultRules) {
+      if (currentOb instanceof Rule.ClearanceRule currentRule) {
+        if (setClearanceRule(
+            currentRule, -1, par.coordinateTransform, boardRules, par.stringQuote)) {
           smdToTurnGapFound = true;
         }
       }
     }
     // update width rules
-    for (Object currOb : boardConstructionInfo.defaultRules) {
-      if (currOb instanceof Rule.WidthRule rule) {
+    for (Object currentOb : boardConstructionInfo.defaultRules) {
+      if (currentOb instanceof Rule.WidthRule rule) {
         final double wireWidth = rule.value;
         int traceHalfwidth = (int) Math.round(par.coordinateTransform.dsnToBoard(wireWidth) / 2);
         FRLogger.debug(
@@ -627,13 +630,14 @@ public class Structure extends ScopeKeyword {
       if (layerNo < 0) {
         continue;
       }
-      for (Rule currOb : layerRule.rule) {
-        if (currOb instanceof Rule.WidthRule rule) {
+      for (Rule currentOb : layerRule.rule) {
+        if (currentOb instanceof Rule.WidthRule rule) {
           final double wireWidth = rule.value;
           int traceHalfwidth = (int) Math.round(par.coordinateTransform.dsnToBoard(wireWidth) / 2);
           boardRules.setDefaultTraceHalfWidth(layerNo, traceHalfwidth);
-        } else if (currOb instanceof Rule.ClearanceRule currRule) {
-          setClearanceRule(currRule, layerNo, par.coordinateTransform, boardRules, par.stringQuote);
+        } else if (currentOb instanceof Rule.ClearanceRule currentRule) {
+          setClearanceRule(
+              currentRule, layerNo, par.coordinateTransform, boardRules, par.stringQuote);
         }
       }
     }
@@ -653,26 +657,26 @@ public class Structure extends ScopeKeyword {
       BoardRules boardRules,
       String stringQuote) {
     boolean result = false;
-    int currClearance = (int) Math.round(coordinateTransform.dsnToBoard(rule.value));
+    int currentClearance = (int) Math.round(coordinateTransform.dsnToBoard(rule.value));
     if (rule.clearanceClassPairs.isEmpty()) {
       if (layerNo < 0) {
-        boardRules.clearanceMatrix.setDefaultValue(currClearance);
+        boardRules.clearanceMatrix.setDefaultValue(currentClearance);
         FRLogger.debug(
             "Set DEFAULT clearance (all layers): "
-                + currClearance
+                + currentClearance
                 + " ("
-                + (currClearance / 40000.0)
+                + (currentClearance / 40000.0)
                 + " mm) from DSN value "
                 + rule.value);
       } else {
-        boardRules.clearanceMatrix.setDefaultValue(layerNo, currClearance);
+        boardRules.clearanceMatrix.setDefaultValue(layerNo, currentClearance);
         FRLogger.debug(
             "Set DEFAULT clearance (layer "
                 + layerNo
                 + "): "
-                + currClearance
+                + currentClearance
                 + " ("
-                + (currClearance / 40000.0)
+                + (currentClearance / 40000.0)
                 + " mm) from DSN value "
                 + rule.value);
       }
@@ -682,92 +686,92 @@ public class Structure extends ScopeKeyword {
       createDefaultClearanceClasses(boardRules);
     }
 
-    for (String currString : rule.clearanceClassPairs) {
-      if ("smd_to_turn_gap".equalsIgnoreCase(currString)) {
-        boardRules.setPinEdgeToTurnDist(currClearance);
+    for (String currentString : rule.clearanceClassPairs) {
+      if ("smd_to_turn_gap".equalsIgnoreCase(currentString)) {
+        boardRules.setPinEdgeToTurnDist(currentClearance);
         result = true;
         continue;
       }
-      String[] currPair = new String[2];
+      String[] currentPair = new String[2];
       if (rule.clearanceClassPairs.size() == 2) {
         Iterator<String> iterator = rule.clearanceClassPairs.iterator();
-        currPair[0] = iterator.next();
-        currPair[1] = iterator.next();
-        for (int i = 0; i < currPair.length; i++) {
-          currPair[i] = currPair[i].replaceAll("[\"]", "");
-          if (currPair[1].startsWith("_")) {
-            currPair[1] = currPair[1].substring(1);
+        currentPair[0] = iterator.next();
+        currentPair[1] = iterator.next();
+        for (int i = 0; i < currentPair.length; i++) {
+          currentPair[i] = currentPair[i].replaceAll("[\"]", "");
+          if (currentPair[1].startsWith("_")) {
+            currentPair[1] = currentPair[1].substring(1);
           }
         }
-      } else if (currString.startsWith(stringQuote)) {
+      } else if (currentString.startsWith(stringQuote)) {
         // split at the second occurrence of p_string_quote
-        currString = currString.substring(stringQuote.length());
-        currPair = currString.split(stringQuote, 2);
-        if (currPair.length != 2 || !currPair[1].startsWith("_")) {
-          FRLogger.warn("Structure.set_clearance_rule: '_' expected at '" + currString + "'");
+        currentString = currentString.substring(stringQuote.length());
+        currentPair = currentString.split(stringQuote, 2);
+        if (currentPair.length != 2 || !currentPair[1].startsWith("_")) {
+          FRLogger.warn("Structure.set_clearance_rule: '_' expected at '" + currentString + "'");
           FRLogger.warn(
               "You probably get this error because your clearance rule name has spaces or "
                   + "special characters in its name. Please change them first, and try again.");
           continue;
         }
-        currPair[1] = currPair[1].substring(1);
+        currentPair[1] = currentPair[1].substring(1);
       } else {
-        currPair = currString.split("_", 2);
-        if (currPair.length != 2) {
+        currentPair = currentString.split("_", 2);
+        if (currentPair.length != 2) {
           // pairs with more than 1 underline like smd_via_same_net are not implemented
           continue;
         }
       }
 
       int firstClassNo;
-      if ("wire".equals(currPair[0])) {
+      if ("wire".equals(currentPair[0])) {
         firstClassNo = 1; // default class
       } else {
-        firstClassNo = boardRules.clearanceMatrix.getNo(currPair[0]);
+        firstClassNo = boardRules.clearanceMatrix.getNo(currentPair[0]);
       }
       if (firstClassNo < 0) {
-        firstClassNo = appendClearanceClass(boardRules, currPair[0]);
+        firstClassNo = appendClearanceClass(boardRules, currentPair[0]);
       }
       int secondClassNo;
-      if ("wire".equals(currPair[1])) {
+      if ("wire".equals(currentPair[1])) {
         secondClassNo = 1; // default class
       } else {
-        secondClassNo = boardRules.clearanceMatrix.getNo(currPair[1]);
+        secondClassNo = boardRules.clearanceMatrix.getNo(currentPair[1]);
       }
       if (secondClassNo < 0) {
-        secondClassNo = appendClearanceClass(boardRules, currPair[1]);
+        secondClassNo = appendClearanceClass(boardRules, currentPair[1]);
       }
       if (layerNo < 0) {
-        boardRules.clearanceMatrix.setValue(firstClassNo, secondClassNo, currClearance);
-        boardRules.clearanceMatrix.setValue(secondClassNo, firstClassNo, currClearance);
+        boardRules.clearanceMatrix.setValue(firstClassNo, secondClassNo, currentClearance);
+        boardRules.clearanceMatrix.setValue(secondClassNo, firstClassNo, currentClearance);
         FRLogger.debug(
             "Set clearance (all layers): "
-                + currPair[0]
+                + currentPair[0]
                 + "_"
-                + currPair[1]
+                + currentPair[1]
                 + " = "
-                + currClearance
+                + currentClearance
                 + " ("
-                + (currClearance / 40000.0)
+                + (currentClearance / 40000.0)
                 + " mm), classes ["
                 + firstClassNo
                 + ","
                 + secondClassNo
                 + "]");
       } else {
-        boardRules.clearanceMatrix.setValue(firstClassNo, secondClassNo, layerNo, currClearance);
-        boardRules.clearanceMatrix.setValue(secondClassNo, firstClassNo, layerNo, currClearance);
+        boardRules.clearanceMatrix.setValue(firstClassNo, secondClassNo, layerNo, currentClearance);
+        boardRules.clearanceMatrix.setValue(secondClassNo, firstClassNo, layerNo, currentClearance);
         FRLogger.debug(
             "Set clearance (layer "
                 + layerNo
                 + "): "
-                + currPair[0]
+                + currentPair[0]
                 + "_"
-                + currPair[1]
+                + currentPair[1]
                 + " = "
-                + currClearance
+                + currentClearance
                 + " ("
-                + (currClearance / 40000.0)
+                + (currentClearance / 40000.0)
                 + " mm), classes ["
                 + firstClassNo
                 + ","
@@ -779,8 +783,8 @@ public class Structure extends ScopeKeyword {
   }
 
   static boolean containsWireClearancePair(Collection<String> clearancePairs) {
-    for (String currPair : clearancePairs) {
-      if (currPair.startsWith("wire_") || currPair.endsWith("_wire")) {
+    for (String currentPair : clearancePairs) {
+      if (currentPair.startsWith("wire_") || currentPair.endsWith("_wire")) {
         return true;
       }
     }
@@ -849,16 +853,16 @@ public class Structure extends ScopeKeyword {
       FRLogger.warn("Structure.insert_keepout: board not initialized");
       return false;
     }
-    final Layer currLayer = (area.shapeList.iterator().next()).layer;
-    if (currLayer == Layer.SIGNAL) {
+    final Layer currentLayer = (area.shapeList.iterator().next()).layer;
+    if (currentLayer == Layer.SIGNAL) {
       for (int i = 0; i < board.getLayerCount(); i++) {
         if (par.layerStructure.arr[i].isSignal) {
           insertKeepout(board, keepoutArea, i, area.clearanceClassName, keepoutType, fixedState);
         }
       }
-    } else if (currLayer.no >= 0) {
+    } else if (currentLayer.no >= 0) {
       insertKeepout(
-          board, keepoutArea, currLayer.no, area.clearanceClassName, keepoutType, fixedState);
+          board, keepoutArea, currentLayer.no, area.clearanceClassName, keepoutType, fixedState);
     } else {
       FRLogger.warn(
           "Structure.insert_keepout: unknown layer name at '"
@@ -1007,20 +1011,20 @@ public class Structure extends ScopeKeyword {
     }
 
     // insert the keepouts
-    for (Shape.ReadAreaScopeResult currArea : keepoutList) {
-      if (!insertKeepout(currArea, par, KeepoutType.keepout, FixedState.SYSTEM_FIXED)) {
+    for (Shape.ReadAreaScopeResult currentArea : keepoutList) {
+      if (!insertKeepout(currentArea, par, KeepoutType.keepout, FixedState.SYSTEM_FIXED)) {
         return false;
       }
     }
 
-    for (Shape.ReadAreaScopeResult currArea : viaKeepoutList) {
-      if (!insertKeepout(currArea, par, KeepoutType.via_keepout, FixedState.SYSTEM_FIXED)) {
+    for (Shape.ReadAreaScopeResult currentArea : viaKeepoutList) {
+      if (!insertKeepout(currentArea, par, KeepoutType.via_keepout, FixedState.SYSTEM_FIXED)) {
         return false;
       }
     }
 
-    for (Shape.ReadAreaScopeResult currArea : placeKeepoutList) {
-      if (!insertKeepout(currArea, par, KeepoutType.place_keepout, FixedState.SYSTEM_FIXED)) {
+    for (Shape.ReadAreaScopeResult currentArea : placeKeepoutList) {
+      if (!insertKeepout(currentArea, par, KeepoutType.place_keepout, FixedState.SYSTEM_FIXED)) {
         return false;
       }
     }
@@ -1042,8 +1046,8 @@ public class Structure extends ScopeKeyword {
       }
       Area planeArea =
           Shape.transformAreaToBoard(planeInfo.area.shapeList, par.coordinateTransform);
-      final Layer currLayer = (planeInfo.area.shapeList.iterator().next()).layer;
-      if (currLayer.no >= 0) {
+      final Layer currentLayer = (planeInfo.area.shapeList.iterator().next()).layer;
+      if (currentLayer.no >= 0) {
         int clearanceClassNo;
         if (planeInfo.area.clearanceClassName != null) {
           clearanceClassNo = board.rules.clearanceMatrix.getNo(planeInfo.area.clearanceClassName);
@@ -1064,7 +1068,12 @@ public class Structure extends ScopeKeyword {
         int[] netNumbers = new int[1];
         netNumbers[0] = currentNet.netNumber;
         board.insertConductionArea(
-            planeArea, currLayer.no, netNumbers, clearanceClassNo, false, FixedState.SYSTEM_FIXED);
+            planeArea,
+            currentLayer.no,
+            netNumbers,
+            clearanceClassNo,
+            false,
+            FixedState.SYSTEM_FIXED);
       } else {
         FRLogger.warn(
             "Plane.read_scope: unexpected layer name at '"
@@ -1120,15 +1129,15 @@ public class Structure extends ScopeKeyword {
     app.freerouting.board.Layer[] boardLayerArr = new app.freerouting.board.Layer[layerCount];
     Iterator<Layer> it = boardConstructionInfo.layerInfo.iterator();
     for (int i = 0; i < layerCount; i++) {
-      final Layer currLayer = it.next();
-      if (currLayer.no < 0 || currLayer.no >= layerCount) {
+      final Layer currentLayer = it.next();
+      if (currentLayer.no < 0 || currentLayer.no >= layerCount) {
         FRLogger.warn(
             "Structure.create_board: illegal layer number at '"
                 + par.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
-      boardLayerArr[i] = new app.freerouting.board.Layer(currLayer.name, currLayer.isSignal);
+      boardLayerArr[i] = new app.freerouting.board.Layer(currentLayer.name, currentLayer.isSignal);
     }
     final app.freerouting.board.LayerStructure boardLayerStructure =
         new app.freerouting.board.LayerStructure(boardLayerArr);
@@ -1158,28 +1167,28 @@ public class Structure extends ScopeKeyword {
     bounds = bounds.offset(1000);
 
     Collection<PolylineShape> boardOutlineShapes = new LinkedList<>();
-    for (Shape currShape : boardConstructionInfo.outlineShapes) {
-      if (currShape instanceof PolygonPath currPath) {
-        if (currPath.width != 0) {
+    for (Shape currentShape : boardConstructionInfo.outlineShapes) {
+      if (currentShape instanceof PolygonPath currentPath) {
+        if (currentPath.width != 0) {
           // set the width to 0, because the offset function used in transform_to_board is
           // not
           // implemented
           // for shapes, which are not convex.
-          currShape = new PolygonPath(currPath.layer, 0, currPath.coordinateArr);
+          currentShape = new PolygonPath(currentPath.layer, 0, currentPath.coordinateArr);
         }
       }
-      PolylineShape currBoardShape =
-          (PolylineShape) currShape.transformToBoard(par.coordinateTransform);
-      if (currBoardShape.dimension() > 0) {
-        boardOutlineShapes.add(currBoardShape);
+      PolylineShape currentBoardShape =
+          (PolylineShape) currentShape.transformToBoard(par.coordinateTransform);
+      if (currentBoardShape.dimension() > 0) {
+        boardOutlineShapes.add(currentBoardShape);
       }
     }
     if (boardOutlineShapes.isEmpty()) {
       // construct an outline from the boundingShape, if the outline is missing.
-      PolylineShape currBoardShape =
+      PolylineShape currentBoardShape =
           (PolylineShape)
               boardConstructionInfo.boundingShape.transformToBoard(par.coordinateTransform);
-      boardOutlineShapes.add(currBoardShape);
+      boardOutlineShapes.add(currentBoardShape);
     }
     final Collection<PolylineShape> holeShapes = separateHoles(boardOutlineShapes);
     ClearanceMatrix clearanceMatrix = ClearanceMatrix.getDefaultInstance(boardLayerStructure, 0);
@@ -1225,9 +1234,9 @@ public class Structure extends ScopeKeyword {
     BasicBoard board = par.boardHandling.getRoutingBoard();
 
     // Insert the holes in the board outline as keepouts.
-    for (PolylineShape currOutlineHole : holeShapes) {
+    for (PolylineShape currentOutlineHole : holeShapes) {
       for (int i = 0; i < boardLayerStructure.arr.length; i++) {
-        board.insertObstacle(currOutlineHole, i, 0, FixedState.SYSTEM_FIXED);
+        board.insertObstacle(currentOutlineHole, i, 0, FixedState.SYSTEM_FIXED);
       }
     }
 
@@ -1285,10 +1294,10 @@ public class Structure extends ScopeKeyword {
       }
       int cornerCount = otherShape.shape.borderLineCount();
       for (int i = 0; i < cornerCount; i++) {
-        Point currCorner = otherShape.shape.corner(i);
+        Point currentCorner = otherShape.shape.corner(i);
         boolean isContained = false;
         for (int j = 0; j < this.convexShapes.length; j++) {
-          if (this.convexShapes[j].contains(currCorner)) {
+          if (this.convexShapes[j].contains(currentCorner)) {
             isContained = true;
             break;
           }

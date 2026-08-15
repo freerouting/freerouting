@@ -176,9 +176,9 @@ public class FloatLine {
     }
     FloatPoint projectedA;
     if (lineSegment.a.scalarProduct(lineSegment.b, this.a) < 0) {
-      FloatLine currPerpendicularLine =
+      FloatLine currentPerpendicularLine =
           new FloatLine(lineSegment.a, lineSegment.b.turn90Degree(1, lineSegment.a));
-      projectedA = currPerpendicularLine.intersection(this);
+      projectedA = currentPerpendicularLine.intersection(this);
       if (projectedA == null
           || Math.abs(projectedA.x) >= Limits.CRIT_INT
           || Math.abs(projectedA.y) >= Limits.CRIT_INT) {
@@ -191,9 +191,9 @@ public class FloatLine {
     FloatPoint projectedB;
 
     if (lineSegment.b.scalarProduct(lineSegment.a, this.b) < 0) {
-      FloatLine currPerpendicularLine =
+      FloatLine currentPerpendicularLine =
           new FloatLine(lineSegment.b, lineSegment.a.turn90Degree(1, lineSegment.b));
-      projectedB = currPerpendicularLine.intersection(this);
+      projectedB = currentPerpendicularLine.intersection(this);
       if (projectedB == null
           || Math.abs(projectedB.x) >= Limits.CRIT_INT
           || Math.abs(projectedB.y) >= Limits.CRIT_INT) {
@@ -260,19 +260,19 @@ public class FloatLine {
     double sectionLength = lineLength / count;
     double dx = b.x - a.x;
     double dy = b.y - a.y;
-    FloatPoint currA = this.a;
+    FloatPoint currentA = this.a;
     for (int i = 0; i < count; i++) {
-      FloatPoint currB;
+      FloatPoint currentB;
       if (i == count - 1) {
-        currB = this.b;
+        currentB = this.b;
       } else {
         double currentDistance = (i + 1) * sectionLength;
         double currentX = a.x + (dx * currentDistance) / lineLength;
         double currentY = a.y + (dy * currentDistance) / lineLength;
-        currB = new FloatPoint(currentX, currentY);
+        currentB = new FloatPoint(currentX, currentY);
       }
-      result[i] = new FloatLine(currA, currB);
-      currA = currB;
+      result[i] = new FloatLine(currentA, currentB);
+      currentA = currentB;
     }
     return result;
   }

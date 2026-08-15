@@ -23,9 +23,9 @@ public class Padstacks implements Serializable {
 
   /** Returns the padstack with the input name or null, if no such padstack exists. */
   public Padstack get(String name) {
-    for (Padstack currPadstack : padstackArr) {
-      if (currPadstack != null && currPadstack.name.equalsIgnoreCase(name)) {
-        return currPadstack;
+    for (Padstack currentPadstack : padstackArr) {
+      if (currentPadstack != null && currentPadstack.name.equalsIgnoreCase(name)) {
+        return currentPadstack;
       }
     }
     return null;

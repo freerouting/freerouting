@@ -46,11 +46,11 @@ public class PolygonPath extends Path {
     int cornerCount = coordinateArr.length / 2;
     for (int i = 0; i < cornerCount; i++) {
       file.newLine();
-      int currCoor = (int) Math.round(coordinateArr[2 * i]);
-      file.write(String.valueOf(currCoor));
+      int currentCoor = (int) Math.round(coordinateArr[2 * i]);
+      file.write(String.valueOf(currentCoor));
       file.write(" ");
-      currCoor = (int) Math.round(coordinateArr[2 * i + 1]);
-      file.write(String.valueOf(currCoor));
+      currentCoor = (int) Math.round(coordinateArr[2 * i + 1]);
+      file.write(String.valueOf(currentCoor));
     }
     file.endScope();
   }
@@ -59,11 +59,11 @@ public class PolygonPath extends Path {
   public app.freerouting.geometry.planar.Shape transformToBoard(
       CoordinateTransform coordinateTransform) {
     FloatPoint[] cornerArr = new FloatPoint[this.coordinateArr.length / 2];
-    double[] currPoint = new double[2];
+    double[] currentPoint = new double[2];
     for (int i = 0; i < cornerArr.length; i++) {
-      currPoint[0] = this.coordinateArr[2 * i];
-      currPoint[1] = this.coordinateArr[2 * i + 1];
-      cornerArr[i] = coordinateTransform.dsnToBoard(currPoint);
+      currentPoint[0] = this.coordinateArr[2 * i];
+      currentPoint[1] = this.coordinateArr[2 * i + 1];
+      cornerArr[i] = coordinateTransform.dsnToBoard(currentPoint);
     }
     final double offset = coordinateTransform.dsnToBoard(this.width) / 2;
     if (cornerArr.length <= 2) {
@@ -85,11 +85,11 @@ public class PolygonPath extends Path {
   public app.freerouting.geometry.planar.Shape transformToBoardRel(
       CoordinateTransform coordinateTransform) {
     FloatPoint[] cornerArr = new FloatPoint[this.coordinateArr.length / 2];
-    double[] currPoint = new double[2];
+    double[] currentPoint = new double[2];
     for (int i = 0; i < cornerArr.length; i++) {
-      currPoint[0] = this.coordinateArr[2 * i];
-      currPoint[1] = this.coordinateArr[2 * i + 1];
-      cornerArr[i] = coordinateTransform.dsnToBoardRel(currPoint);
+      currentPoint[0] = this.coordinateArr[2 * i];
+      currentPoint[1] = this.coordinateArr[2 * i + 1];
+      cornerArr[i] = coordinateTransform.dsnToBoardRel(currentPoint);
     }
     final double offset = coordinateTransform.dsnToBoard(this.width) / 2;
     if (cornerArr.length <= 2) {

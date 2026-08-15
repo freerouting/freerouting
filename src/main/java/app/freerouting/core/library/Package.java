@@ -109,18 +109,18 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
     window.appendBold(tm.getText("package") + " ");
     window.appendBold(this.name);
     for (int i = 0; i < this.pinArr.length; i++) {
-      Pin currPin = this.pinArr[i];
+      Pin currentPin = this.pinArr[i];
       window.newline();
       window.indent();
       window.append(tm.getText("pin") + " ");
-      window.append(currPin.name);
+      window.append(currentPin.name);
       window.append(", " + tm.getText("padstack") + " ");
-      Padstack currPadstack = this.packageList.padstackList.get(currPin.padstackNo);
-      window.append(currPadstack.name, tm.getText("padstack_info"), currPadstack);
+      Padstack currentPadstack = this.packageList.padstackList.get(currentPin.padstackNo);
+      window.append(currentPadstack.name, tm.getText("padstack_info"), currentPadstack);
       window.append(" " + tm.getText("at") + " ");
-      window.append(currPin.relativeLocation.toFloat());
+      window.append(currentPin.relativeLocation.toFloat());
       window.append(", " + tm.getText("rotation") + " ");
-      window.appendWithoutTransforming(currPin.rotationInDegree);
+      window.appendWithoutTransforming(currentPin.rotationInDegree);
     }
     window.newline();
   }

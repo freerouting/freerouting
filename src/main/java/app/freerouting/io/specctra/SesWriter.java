@@ -124,12 +124,12 @@ public final class SesWriter {
     Collection<Item> boardItems = board.getItems();
     boolean componentFound = false;
     for (int i = 1; i <= board.components.count(); i++) {
-      app.freerouting.board.Component currComponent = board.components.get(i);
-      if (currComponent.getPackage() == pkg) {
+      app.freerouting.board.Component currentComponent = board.components.get(i);
+      if (currentComponent.getPackage() == pkg) {
         // check that not all items of the component are deleted
         boolean undeletedItemFound = false;
-        for (Item currItem : boardItems) {
-          if (currItem.getComponentNo() == currComponent.no) {
+        for (Item currentItem : boardItems) {
+          if (currentItem.getComponentNo() == currentComponent.no) {
             undeletedItemFound = true;
             break;
           }
@@ -141,7 +141,7 @@ public final class SesWriter {
             identifierType.write(pkg.name, file);
             componentFound = true;
           }
-          writeComponent(board, identifierType, coordinateTransform, file, currComponent);
+          writeComponent(board, identifierType, coordinateTransform, file, currentComponent);
         }
       }
     }
@@ -185,16 +185,17 @@ public final class SesWriter {
     file.startScope();
     file.write("was_is");
     Collection<Pin> boardPins = board.getPins();
-    for (Pin currPin : boardPins) {
-      Pin swappedWith = currPin.getChangedTo();
-      if (currPin.getChangedTo() != currPin) {
+    for (Pin currentPin : boardPins) {
+      Pin swappedWith = currentPin.getChangedTo();
+      if (currentPin.getChangedTo() != currentPin) {
         file.newLine();
         file.write("(pins ");
-        app.freerouting.board.Component currCmp = board.components.get(currPin.getComponentNo());
-        if (currCmp != null) {
-          identifierType.write(currCmp.name, file);
+        app.freerouting.board.Component currentCmp =
+            board.components.get(currentPin.getComponentNo());
+        if (currentCmp != null) {
+          identifierType.write(currentCmp.name, file);
           file.write("-");
-          Package.Pin packagePin = currCmp.getPackage().getPin(currPin.getIndexInPackage());
+          Package.Pin packagePin = currentCmp.getPackage().getPin(currentPin.getIndexInPackage());
           identifierType.write(packagePin.name, file);
         } else {
           FRLogger.warn("SesWriter.writeWasIs: component not found");
@@ -292,16 +293,16 @@ public final class SesWriter {
     file.write("padstack ");
     identifierType.write(padstack.name, file);
     for (int i = firstLayerNo; i <= lastLayerNo; i++) {
-      app.freerouting.geometry.planar.Shape currBoardShape = padstack.getShape(i);
-      if (currBoardShape == null) {
+      app.freerouting.geometry.planar.Shape currentBoardShape = padstack.getShape(i);
+      if (currentBoardShape == null) {
         continue;
       }
       app.freerouting.board.Layer boardLayer = board.layerStructure.arr[i];
-      Layer currLayer = new Layer(boardLayer.name, i, boardLayer.isSignal);
-      Shape currShape = coordinateTransform.boardToDsnRel(currBoardShape, currLayer);
+      Layer currentLayer = new Layer(boardLayer.name, i, boardLayer.isSignal);
+      Shape currentShape = coordinateTransform.boardToDsnRel(currentBoardShape, currentLayer);
       file.startScope();
       file.write("shape");
-      currShape.writeScopeInt(file, identifierType);
+      currentShape.writeScopeInt(file, identifierType);
       file.endScope();
     }
     if (!padstack.attachAllowed) {
@@ -334,15 +335,15 @@ public final class SesWriter {
       throws IOException {
     Collection<Item> netItems = board.getConnectableItems(netNo);
     boolean headerWritten = false;
-    for (Item currItem : netItems) {
-      if (currItem.getFixedState() == FixedState.SYSTEM_FIXED) {
+    for (Item currentItem : netItems) {
+      if (currentItem.getFixedState() == FixedState.SYSTEM_FIXED) {
         continue;
       }
-      boolean isWire = currItem instanceof PolylineTrace;
-      boolean isVia = currItem instanceof Via;
+      boolean isWire = currentItem instanceof PolylineTrace;
+      boolean isVia = currentItem instanceof Via;
       boolean isConductionArea =
-          currItem instanceof ConductionArea
-              && board.layerStructure.arr[currItem.firstLayer()].isSignal;
+          currentItem instanceof ConductionArea
+              && board.layerStructure.arr[currentItem.firstLayer()].isSignal;
       if (!headerWritten && (isWire || isVia || isConductionArea)) {
         file.startScope();
         file.write("net ");
@@ -355,12 +356,12 @@ public final class SesWriter {
         headerWritten = true;
       }
       if (isWire) {
-        writeWire((PolylineTrace) currItem, board, identifierType, coordinateTransform, file);
+        writeWire((PolylineTrace) currentItem, board, identifierType, coordinateTransform, file);
       } else if (isVia) {
-        writeVia((Via) currItem, board, identifierType, coordinateTransform, file);
+        writeVia((Via) currentItem, board, identifierType, coordinateTransform, file);
       } else if (isConductionArea) {
         writeConductionArea(
-            (ConductionArea) currItem, board, identifierType, coordinateTransform, file);
+            (ConductionArea) currentItem, board, identifierType, coordinateTransform, file);
       }
     }
     if (headerWritten) {
@@ -392,16 +393,16 @@ public final class SesWriter {
           cornerPoint = snapped;
         }
       }
-      double[] currFloatCoors = coordinateTransform.boardToDsn(cornerPoint);
-      int[] currCoors = new int[2];
-      currCoors[0] = (int) Math.round(currFloatCoors[0]);
-      currCoors[1] = (int) Math.round(currFloatCoors[1]);
-      if (i == 0 || (currCoors[0] != prevCoors[0] || currCoors[1] != prevCoors[1])) {
-        coors[cornerIndex] = currCoors[0];
+      double[] currentFloatCoors = coordinateTransform.boardToDsn(cornerPoint);
+      int[] currentCoors = new int[2];
+      currentCoors[0] = (int) Math.round(currentFloatCoors[0]);
+      currentCoors[1] = (int) Math.round(currentFloatCoors[1]);
+      if (i == 0 || (currentCoors[0] != prevCoors[0] || currentCoors[1] != prevCoors[1])) {
+        coors[cornerIndex] = currentCoors[0];
         ++cornerIndex;
-        coors[cornerIndex] = currCoors[1];
+        coors[cornerIndex] = currentCoors[1];
         ++cornerIndex;
-        prevCoors = currCoors;
+        prevCoors = currentCoors;
       }
     }
     if (cornerIndex < coors.length) {
@@ -521,18 +522,18 @@ public final class SesWriter {
       FRLogger.warn("SesWriter.writeConductionArea: unexpected net count");
       return;
     }
-    Area currArea = conductionArea.getArea();
+    Area currentArea = conductionArea.getArea();
     int layerNo = conductionArea.getLayer();
     app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerNo];
     final Layer conductionLayer = new Layer(boardLayer.name, layerNo, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
-    if (currArea instanceof app.freerouting.geometry.planar.Shape shape) {
+    if (currentArea instanceof app.freerouting.geometry.planar.Shape shape) {
       boundaryShape = shape;
       holes = new app.freerouting.geometry.planar.Shape[0];
     } else {
-      boundaryShape = currArea.getBorder();
-      holes = currArea.getHoles();
+      boundaryShape = currentArea.getBorder();
+      holes = currentArea.getHoles();
     }
     file.startScope();
     file.write("wire ");

@@ -438,12 +438,12 @@ Branch: `refactor/naming-phase-5-curr`
 
 **Progress checklist**
 
-- [ ] Create the phase branch from the updated epic.
-- [ ] Rename `curr*` locals in the `board` package and run the BM01 smoke test.
-- [ ] Rename `curr*` locals in `autoroute` and run the BM01 smoke test.
-- [ ] Rename `curr*` locals in `gui`.
-- [ ] Rename remaining `curr*` locals without changing types or packages.
-- [ ] Review routing-sensitive diffs, run quality gates, and merge the PR into the epic.
+- [x] Create the phase branch from the updated epic.
+- [x] Rename `curr*` locals in the `board` package and run the BM01 smoke test.
+- [x] Rename `curr*` locals in `autoroute` and run the BM01 smoke test.
+- [x] Rename `curr*` locals in `gui`.
+- [x] Rename remaining `curr*` locals without changing types or packages.
+- [x] Review routing-sensitive diffs, run quality gates, and merge the PR into the epic.
 
 IDE structural search, **one top-level package per commit** if the diff is
 large (`board`, then `autoroute`, then `gui`, then the rest).

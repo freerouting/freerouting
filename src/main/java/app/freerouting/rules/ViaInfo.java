@@ -92,9 +92,9 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
     window.append(tm.getText("padstack") + " ");
     window.append(this.padstack.name, tm.getText("padstack_info"), this.padstack);
     window.append(", " + tm.getText("clearanceClass") + " ");
-    String currName = boardRules.clearanceMatrix.getName(this.clearanceClass);
+    String currentName = boardRules.clearanceMatrix.getName(this.clearanceClass);
     window.append(
-        currName,
+        currentName,
         tm.getText("clearance_class_2"),
         boardRules.clearanceMatrix.getRow(this.clearanceClass));
     window.append(", " + tm.getText("attach_smd") + " ");

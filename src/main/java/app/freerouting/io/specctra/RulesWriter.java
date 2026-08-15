@@ -64,9 +64,9 @@ public final class RulesWriter {
     Rule.writeDefaultRule(par, 0);
     // write the via padstacks
     for (int i = 1; i <= par.board.library.padstacks.count(); i++) {
-      Padstack currPadstack = par.board.library.padstacks.get(i);
-      if (par.board.library.getViaPadstack(currPadstack.name) != null) {
-        Library.writePadstackScope(par, currPadstack);
+      Padstack currentPadstack = par.board.library.padstacks.get(i);
+      if (par.board.library.getViaPadstack(currentPadstack.name) != null) {
+        Library.writePadstackScope(par, currentPadstack);
       }
     }
     Network.writeViaInfos(par.board.rules, par.file, par.identifierType);

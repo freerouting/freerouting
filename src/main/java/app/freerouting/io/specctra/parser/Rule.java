@@ -45,19 +45,19 @@ public abstract class Rule {
 
       if (prevToken == Keyword.OPEN_BRACKET) {
         // every rule starts with a "("
-        Rule currRule = null;
+        Rule currentRule = null;
         if (currentToken == Keyword.WIDTH) {
           // this is a "(width" rule
-          currRule = readWidthRule(scanner);
+          currentRule = readWidthRule(scanner);
         } else if (currentToken == Keyword.CLEARANCE) {
           // this is a "(clear" rule
-          currRule = readClearanceRule(scanner);
+          currentRule = readClearanceRule(scanner);
         } else {
           ScopeKeyword.skipScope(scanner);
         }
 
-        if (currRule != null) {
-          result.add(currRule);
+        if (currentRule != null) {
+          result.add(currentRule);
         }
       }
     }
@@ -141,16 +141,16 @@ public abstract class Rule {
     par.file.startScope();
     par.file.write("layer_rule ");
 
-    Layer currBoardLayer = par.board.layerStructure.arr[layerNo];
+    Layer currentBoardLayer = par.board.layerStructure.arr[layerNo];
 
-    par.file.write(currBoardLayer.name);
+    par.file.write(currentBoardLayer.name);
     par.file.startScope();
     par.file.write("rule ");
 
-    int currTraceHalfWidth = netClass.getTraceHalfWidth(layerNo);
+    int currentTraceHalfWidth = netClass.getTraceHalfWidth(layerNo);
 
     // write the trace width
-    double traceWidth = 2 * par.coordinateTransform.boardToDsn(currTraceHalfWidth);
+    double traceWidth = 2 * par.coordinateTransform.boardToDsn(currentTraceHalfWidth);
     par.file.newLine();
     par.file.write("(width ");
     par.file.write(String.valueOf(traceWidth));
@@ -206,16 +206,16 @@ public abstract class Rule {
 
     for (int i = 1; i <= clCount; i++) {
       for (int j = i; j < clCount; j++) {
-        int currBoardClearance = clMatrix.getValue(i, j, layer, false);
+        int currentBoardClearance = clMatrix.getValue(i, j, layer, false);
 
-        if (currBoardClearance == defaultClearance) {
+        if (currentBoardClearance == defaultClearance) {
           continue;
         }
 
-        double currClearance = par.coordinateTransform.boardToDsn(currBoardClearance);
+        double currentClearance = par.coordinateTransform.boardToDsn(currentBoardClearance);
         par.file.newLine();
         par.file.write("(clearance ");
-        par.file.write(String.valueOf(currClearance));
+        par.file.write(String.valueOf(currentClearance));
         par.file.write(" (type ");
         par.identifierType.write(clMatrix.getName(i), par.file);
         par.file.write(DsnFile.CLASS_CLEARANCE_SEPARATOR);
@@ -237,12 +237,12 @@ public abstract class Rule {
         continue;
       }
 
-      int currBoardClearance = clMatrix.getValue(i, i, layer, false);
-      double currClearance = par.coordinateTransform.boardToDsn(currBoardClearance);
+      int currentBoardClearance = clMatrix.getValue(i, i, layer, false);
+      double currentClearance = par.coordinateTransform.boardToDsn(currentBoardClearance);
 
       par.file.newLine();
       par.file.write("(clearance ");
-      par.file.write(String.valueOf(currClearance));
+      par.file.write(String.valueOf(currentClearance));
       par.file.write(" (type ");
       par.identifierType.write(clMatrix.getName(i), par.file);
       par.file.write("))");

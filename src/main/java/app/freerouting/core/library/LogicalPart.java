@@ -44,20 +44,20 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
     window.appendBold(tm.getText("logical_part_2") + " ");
     window.appendBold(this.name);
     for (int i = 0; i < this.partPinArr.length; i++) {
-      PartPin currPin = this.partPinArr[i];
+      PartPin currentPin = this.partPinArr[i];
       window.newline();
       window.indent();
       window.append(tm.getText("pin") + " ");
-      window.append(currPin.pinName);
+      window.append(currentPin.pinName);
       window.append(", " + tm.getText("gate") + " ");
-      window.append(currPin.gateName);
+      window.append(currentPin.gateName);
       window.append(", " + tm.getText("swap_code") + " ");
-      int gateSwapCode = currPin.gateSwapCode;
+      int gateSwapCode = currentPin.gateSwapCode;
       window.append(String.valueOf(gateSwapCode));
       window.append(", " + tm.getText("gate_pin") + " ");
-      window.append(currPin.gatePinName);
+      window.append(currentPin.gatePinName);
       window.append(", " + tm.getText("swap_code") + " ");
-      int pinSwapCode = currPin.gatePinSwapCode;
+      int pinSwapCode = currentPin.gatePinSwapCode;
       window.append(String.valueOf(pinSwapCode));
     }
     window.newline();

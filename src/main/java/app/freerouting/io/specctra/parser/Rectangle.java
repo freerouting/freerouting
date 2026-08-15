@@ -59,13 +59,13 @@ public class Rectangle extends Shape {
   @Override
   public app.freerouting.geometry.planar.Shape transformToBoard(
       CoordinateTransform coordinateTransform) {
-    double[] currPoint = new double[2];
-    currPoint[0] = Math.min(coor[0], coor[2]);
-    currPoint[1] = Math.min(coor[1], coor[3]);
-    FloatPoint lowerLeft = coordinateTransform.dsnToBoard(currPoint);
-    currPoint[0] = Math.max(coor[0], coor[2]);
-    currPoint[1] = Math.max(coor[1], coor[3]);
-    FloatPoint upperRight = coordinateTransform.dsnToBoard(currPoint);
+    double[] currentPoint = new double[2];
+    currentPoint[0] = Math.min(coor[0], coor[2]);
+    currentPoint[1] = Math.min(coor[1], coor[3]);
+    FloatPoint lowerLeft = coordinateTransform.dsnToBoard(currentPoint);
+    currentPoint[0] = Math.max(coor[0], coor[2]);
+    currentPoint[1] = Math.max(coor[1], coor[3]);
+    FloatPoint upperRight = coordinateTransform.dsnToBoard(currentPoint);
     return new IntBox(lowerLeft.round(), upperRight.round());
   }
 
@@ -89,8 +89,8 @@ public class Rectangle extends Shape {
     identifier.write(this.layer.name, file);
     for (int i = 0; i < coor.length; i++) {
       file.write(" ");
-      int currCoor = (int) Math.round(coor[i]);
-      file.write(String.valueOf(currCoor));
+      int currentCoor = (int) Math.round(coor[i]);
+      file.write(String.valueOf(currentCoor));
     }
     file.write(")");
   }
