@@ -66,7 +66,7 @@ public class RouteState extends InteractiveState {
     } else {
       routeNetNoArr = new int[netCount];
       for (int i = 0; i < netCount; i++) {
-        routeNetNoArr[i] = pickedItem.getNetNo(i);
+        routeNetNoArr[i] = pickedItem.getNetNumber(i);
       }
     }
     if (routeNetNoArr.length == 0) {
@@ -98,7 +98,7 @@ public class RouteState extends InteractiveState {
           location = nearestPoint.round();
         }
         if (!routingBoard.connectToTrace(
-            location, pickedTrace, pickedTrace.getHalfWidth(), pickedTrace.clearanceClassNo())) {
+            location, pickedTrace, pickedTrace.getHalfWidth(), pickedTrace.clearanceClassIndex())) {
           startOk = false;
         }
       }
@@ -108,7 +108,7 @@ public class RouteState extends InteractiveState {
         System.arraycopy(traceHalfWidths, 0, newTraceHalfWidths, 0, traceHalfWidths.length);
         newTraceHalfWidths[pickedTrace.getLayer()] = pickedTrace.getHalfWidth();
         traceHalfWidths = newTraceHalfWidths;
-        traceClearanceClass = pickedTrace.clearanceClassNo();
+        traceClearanceClass = pickedTrace.clearanceClassIndex();
       }
     } else if (pickedItem instanceof DrillItem drillItem) {
       Point center = drillItem.getCenter();
@@ -212,13 +212,13 @@ public class RouteState extends InteractiveState {
     return pickedItem;
   }
 
-  private static Item pickRoutingItem(IntPoint location, int layerNo, GuiBoardManager hdlg) {
+  private static Item pickRoutingItem(IntPoint location, int layerIndex, GuiBoardManager hdlg) {
 
-    if (layerNo == hdlg.getWorkspaceSettings().getLayer()
-        || (hdlg.graphicsContext.getLayerVisibility(layerNo) <= 0)) {
+    if (layerIndex == hdlg.getWorkspaceSettings().getLayer()
+        || (hdlg.graphicsContext.getLayerVisibility(layerIndex) <= 0)) {
       return null;
     }
-    Item pickedItem = hdlg.getRoutingBoard().pickNearestRoutingItem(location, layerNo, null);
+    Item pickedItem = hdlg.getRoutingBoard().pickNearestRoutingItem(location, layerIndex, null);
     if (pickedItem != null) {
       hdlg.setLayer(pickedItem.firstLayer());
     }
@@ -232,13 +232,13 @@ public class RouteState extends InteractiveState {
   static int[] getRouteNetNumbersAtTiePin(Pin pin, int layer) {
     Set<Integer> netNumberList = new TreeSet<>();
     for (int i = 0; i < pin.netCount(); i++) {
-      netNumberList.add(pin.getNetNo(i));
+      netNumberList.add(pin.getNetNumber(i));
     }
     Set<Item> contacts = pin.getNormalContacts();
     for (Item currentContact : contacts) {
       if (currentContact.firstLayer() <= layer && currentContact.lastLayer() >= layer) {
         for (int i = 0; i < currentContact.netCount(); i++) {
-          netNumberList.remove(currentContact.getNetNo(i));
+          netNumberList.remove(currentContact.getNetNumber(i));
         }
       }
     }
@@ -271,23 +271,23 @@ public class RouteState extends InteractiveState {
     } else if (keyChar == '+') {
       // change to the next signal layer
       LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
-      int currentLayerNo = hdlg.getWorkspaceSettings().getLayer();
+      int currentLayerIndex = hdlg.getWorkspaceSettings().getLayer();
       do {
-        ++currentLayerNo;
-      } while (currentLayerNo < layerStructure.arr.length
-          && !layerStructure.arr[currentLayerNo].isSignal);
-      if (currentLayerNo < layerStructure.arr.length) {
-        changeLayerAction(currentLayerNo);
+        ++currentLayerIndex;
+      } while (currentLayerIndex < layerStructure.arr.length
+          && !layerStructure.arr[currentLayerIndex].isSignal);
+      if (currentLayerIndex < layerStructure.arr.length) {
+        changeLayerAction(currentLayerIndex);
       }
     } else if (keyChar == '-') {
       // change to the previous signal layer
       LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
-      int currentLayerNo = hdlg.getWorkspaceSettings().getLayer();
+      int currentLayerIndex = hdlg.getWorkspaceSettings().getLayer();
       do {
-        --currentLayerNo;
-      } while (currentLayerNo >= 0 && !layerStructure.arr[currentLayerNo].isSignal);
-      if (currentLayerNo >= 0) {
-        changeLayerAction(currentLayerNo);
+        --currentLayerIndex;
+      } while (currentLayerIndex >= 0 && !layerStructure.arr[currentLayerIndex].isSignal);
+      if (currentLayerIndex >= 0) {
+        changeLayerAction(currentLayerIndex);
       }
 
     } else {
@@ -315,8 +315,8 @@ public class RouteState extends InteractiveState {
     if (routeCompleted) {
       result = this.returnState;
       hdlg.screenMessages.clear();
-      for (int currentNetNo : this.route.netNoArr) {
-        hdlg.updateRatsnest(currentNetNo);
+      for (int currentNetNumber : this.route.netNumbers) {
+        hdlg.updateRatsnest(currentNetNumber);
       }
     } else {
       result = this;
@@ -331,7 +331,7 @@ public class RouteState extends InteractiveState {
     Trace tail =
         hdlg.getRoutingBoard()
             .getTraceTail(
-                route.getLastCorner(), hdlg.getWorkspaceSettings().getLayer(), route.netNoArr);
+                route.getLastCorner(), hdlg.getWorkspaceSettings().getLayer(), route.netNumbers);
     if (tail != null) {
       Collection<Item> removeItems = tail.getConnectionItems(Item.StopConnectionOption.VIA);
       if (hdlg.getWorkspaceSettings().getPushEnabled()) {
@@ -349,8 +349,8 @@ public class RouteState extends InteractiveState {
       this.observersActivated = false;
     }
     hdlg.screenMessages.clear();
-    for (int currentNetNo : this.route.netNoArr) {
-      hdlg.updateRatsnest(currentNetNo);
+    for (int currentNetNumber : this.route.netNumbers) {
+      hdlg.updateRatsnest(currentNetNumber);
     }
     return this.returnState;
   }
@@ -375,7 +375,7 @@ public class RouteState extends InteractiveState {
             hdlg.getRoutingBoard().pickItems(route.getLastCorner(), oldLayer, selectionFilter);
         Via newVia = null;
         for (Item currentVia : pickedItems) {
-          if (currentVia.sharesNetNo(route.netNoArr)) {
+          if (currentVia.sharesNetNo(route.netNumbers)) {
             newVia = (Via) currentVia;
             break;
           }
@@ -403,8 +403,8 @@ public class RouteState extends InteractiveState {
 
         if (connectedToPlane) {
           hdlg.setEditorState(this.returnState);
-          for (int currentNetNo : this.route.netNoArr) {
-            hdlg.updateRatsnest(currentNetNo);
+          for (int currentNetNumber : this.route.netNumbers) {
+            hdlg.updateRatsnest(currentNetNumber);
           }
         } else {
           hdlg.setLayer(newLayer);
@@ -443,7 +443,7 @@ public class RouteState extends InteractiveState {
   @Override
   public void displayDefaultMessage() {
     if (route != null) {
-      Net currentNet = hdlg.getRoutingBoard().rules.nets.get(route.netNoArr[0]);
+      Net currentNet = hdlg.getRoutingBoard().rules.nets.get(route.netNumbers[0]);
       hdlg.screenMessages.setStatusMessage(tm.getText("routing_net_message", currentNet.name));
     }
   }

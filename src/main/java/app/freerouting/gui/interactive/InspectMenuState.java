@@ -194,12 +194,12 @@ public final class InspectMenuState extends MenuState {
         hdlg.getRoutingBoard()
             .rules
             .clearanceMatrix
-            .getName(violation.firstItem.clearanceClassNo());
+            .getName(violation.firstItem.clearanceClassIndex());
     String clearanceClass2 =
         hdlg.getRoutingBoard()
             .rules
             .clearanceMatrix
-            .getName(violation.secondItem.clearanceClassNo());
+            .getName(violation.secondItem.clearanceClassIndex());
 
     info.append(" | Classes: ").append(clearanceClass1).append(" <-> ").append(clearanceClass2);
 
@@ -235,7 +235,7 @@ public final class InspectMenuState extends MenuState {
         if (i > 0) {
           info.append(", ");
         }
-        Net net = hdlg.getRoutingBoard().rules.nets.get(item.getNetNo(i));
+        Net net = hdlg.getRoutingBoard().rules.nets.get(item.getNetNumber(i));
         info.append(net.name);
       }
     }

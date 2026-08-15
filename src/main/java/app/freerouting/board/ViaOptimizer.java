@@ -112,12 +112,12 @@ public final class ViaOptimizer {
             board,
             via,
             firstTrace.getHalfWidth(),
-            firstTrace.clearanceClassNo(),
+            firstTrace.clearanceClassIndex(),
             firstTrace.getLayer(),
             firstLayerTraceCosts,
             firstTraceFromCorner,
             secondTrace.getHalfWidth(),
-            secondTrace.clearanceClassNo(),
+            secondTrace.clearanceClassIndex(),
             secondTrace.getLayer(),
             secondLayerTraceCosts,
             secondTraceFromCorner);
@@ -204,7 +204,7 @@ public final class ViaOptimizer {
     IntPoint roundedCheckCorner = checkCorner.toFloat().round();
     int traceHalfWidth = contactTrace.getHalfWidth();
     int traceLayer = contactTrace.getLayer();
-    int traceClClassNo = contactTrace.clearanceClassNo();
+    int traceClClassNo = contactTrace.clearanceClassIndex();
     Point newViaLocation =
         repositionVia(board, via, roundedCheckCorner, traceHalfWidth, traceLayer, traceClClassNo);
     if (newViaLocation == null && tracePolyline.cornerCount() >= 3) {
@@ -239,7 +239,7 @@ public final class ViaOptimizer {
                     viaCenter,
                     projection,
                     traceLayer,
-                    via.netNoArr,
+                    via.netNumbers,
                     traceHalfWidth,
                     traceClClassNo,
                     false);
@@ -310,7 +310,7 @@ public final class ViaOptimizer {
             fromLocation,
             toLocation,
             traceLayer,
-            via.netNoArr,
+            via.netNumbers,
             traceHalfWidth,
             traceClClass,
             false);
@@ -388,11 +388,17 @@ public final class ViaOptimizer {
       return false;
     }
 
-    int[] netNoArr = via.netNoArr;
+    int[] netNumbers = via.netNumbers;
 
     double okLength =
         board.checkTraceSegment(
-            fromLocation, toLocation, traceLayer1, netNoArr, traceHalfWidth1, traceClClass1, false);
+            fromLocation,
+            toLocation,
+            traceLayer1,
+            netNumbers,
+            traceHalfWidth1,
+            traceClClass1,
+            false);
 
     if (okLength < Integer.MAX_VALUE) {
       return false;
@@ -403,7 +409,7 @@ public final class ViaOptimizer {
             toLocation,
             connectLocation,
             traceLayer2,
-            netNoArr,
+            netNumbers,
             traceHalfWidth2,
             traceClClass2,
             false);

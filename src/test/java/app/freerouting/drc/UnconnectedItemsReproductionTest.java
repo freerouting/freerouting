@@ -67,7 +67,9 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
 
     // Both traces are on the same net
     assertEquals(
-        trace1.getNetNo(0), trace2.getNetNo(0), "Traces 2402 and 2411 must belong to the same net");
+        trace1.getNetNumber(0),
+        trace2.getNetNumber(0),
+        "Traces 2402 and 2411 must belong to the same net");
 
     // Trace 2402 is genuinely dangling: the board-model connectivity check
     // confirms neither endpoint has a contact. The DRC must report this.

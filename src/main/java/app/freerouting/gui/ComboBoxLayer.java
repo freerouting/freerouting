@@ -33,15 +33,15 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
 
     this.layerArr = new Layer[itemCount];
     this.layerArr[0] = new Layer(tm.getText("all"), ALL_LAYER_INDEX);
-    int currentLayerNo = 0;
+    int currentLayerIndex = 0;
     if (addInnerLayerItem) {
       this.layerArr[1] = new Layer(tm.getText("inner"), INNER_LAYER_INDEX);
-      ++currentLayerNo;
+      ++currentLayerIndex;
     }
     for (int i = 0; i < signalLayerCount; i++) {
-      ++currentLayerNo;
+      ++currentLayerIndex;
       app.freerouting.board.Layer currentSignalLayer = layerStructure.getSignalLayer(i);
-      layerArr[currentLayerNo] =
+      layerArr[currentLayerIndex] =
           new Layer(currentSignalLayer.name, layerStructure.getNo(currentSignalLayer));
     }
     this.setModel(new DefaultComboBoxModel<>(layerArr));

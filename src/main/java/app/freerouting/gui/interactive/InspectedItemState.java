@@ -79,13 +79,13 @@ public final class InspectedItemState extends InteractiveState {
     for (Item currentItem : itemList) {
       if (currentItem instanceof Connectable) {
         for (int i = 0; i < currentItem.netCount(); i++) {
-          currentNetNoSet.add(currentItem.getNetNo(i));
+          currentNetNoSet.add(currentItem.getNetNumber(i));
         }
       }
     }
     Set<Item> newSelectedItems = new TreeSet<>();
-    for (int currentNetNo : currentNetNoSet) {
-      newSelectedItems.addAll(hdlg.getRoutingBoard().getConnectableItems(currentNetNo));
+    for (int currentNetNumber : currentNetNoSet) {
+      newSelectedItems.addAll(hdlg.getRoutingBoard().getConnectableItems(currentNetNumber));
     }
     this.itemList = newSelectedItems;
     if (newSelectedItems.isEmpty()) {

@@ -53,7 +53,7 @@ public class PolylineTraceSplitTest {
   void testSplitDoesNotRemoveValidSegments() {
     BasicBoard board = createTestBoard();
     int layerIndex = 0;
-    int netNo = 98; // Net #98 (DCD) from the bug report
+    int netNumber = 98; // Net #98 (DCD) from the bug report
     int clearanceClass = 1;
     int halfWidth = 1000;
 
@@ -70,7 +70,7 @@ public class PolylineTraceSplitTest {
             polyline1,
             layerIndex,
             halfWidth,
-            new int[] {netNo},
+            new int[] {netNumber},
             clearanceClass,
             360,
             0,
@@ -88,7 +88,7 @@ public class PolylineTraceSplitTest {
             polyline2,
             layerIndex,
             halfWidth,
-            new int[] {netNo},
+            new int[] {netNumber},
             clearanceClass,
             361,
             0,
@@ -105,7 +105,7 @@ public class PolylineTraceSplitTest {
     PolylineTrace combinedTrace = null;
     for (Item item : board.getItems()) {
       if (item instanceof PolylineTrace trace) {
-        if (trace.containsNet(netNo) && trace.isOnTheBoard()) {
+        if (trace.containsNet(netNumber) && trace.isOnTheBoard()) {
           combinedTrace = trace;
           break;
         }
@@ -141,7 +141,7 @@ public class PolylineTraceSplitTest {
             polyline3,
             layerIndex,
             halfWidth,
-            new int[] {netNo},
+            new int[] {netNumber},
             clearanceClass,
             362,
             0,
@@ -189,7 +189,7 @@ public class PolylineTraceSplitTest {
     int tracesNearP1 = 0;
     for (Item item : board.getItems()) {
       if (item instanceof PolylineTrace trace) {
-        if (trace.containsNet(netNo) && trace.isOnTheBoard()) {
+        if (trace.containsNet(netNumber) && trace.isOnTheBoard()) {
           double distToP1First = trace.firstCorner().toFloat().distance(p1.toFloat());
           double distToP1Last = trace.lastCorner().toFloat().distance(p1.toFloat());
           if (distToP1First < 100000 || distToP1Last < 100000) {
@@ -212,7 +212,7 @@ public class PolylineTraceSplitTest {
   void testSplitPreservesNonOverlappingSegments() {
     BasicBoard board = createTestBoard();
     int layerIndex = 0;
-    int netNo = 1;
+    int netNumber = 1;
     int clearanceClass = 1;
     int halfWidth = 1000;
 
@@ -228,7 +228,7 @@ public class PolylineTraceSplitTest {
             polyline1,
             layerIndex,
             halfWidth,
-            new int[] {netNo},
+            new int[] {netNumber},
             clearanceClass,
             1,
             0,
@@ -246,7 +246,7 @@ public class PolylineTraceSplitTest {
             polyline2,
             layerIndex,
             halfWidth,
-            new int[] {netNo},
+            new int[] {netNumber},
             clearanceClass,
             2,
             0,
@@ -292,7 +292,7 @@ public class PolylineTraceSplitTest {
   void testCycleDetectionDuringOverlap() {
     BasicBoard board = createTestBoard();
     int layerIndex = 0;
-    int netNo = 1;
+    int netNumber = 1;
     int clearanceClass = 1;
     int halfWidth = 1000;
 
@@ -307,7 +307,7 @@ public class PolylineTraceSplitTest {
             polyline1,
             layerIndex,
             halfWidth,
-            new int[] {netNo},
+            new int[] {netNumber},
             clearanceClass,
             1,
             0,
@@ -322,7 +322,7 @@ public class PolylineTraceSplitTest {
             polyline2,
             layerIndex,
             halfWidth,
-            new int[] {netNo},
+            new int[] {netNumber},
             clearanceClass,
             2,
             0,

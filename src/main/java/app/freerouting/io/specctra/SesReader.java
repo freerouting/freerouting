@@ -230,8 +230,8 @@ public final class SesReader {
       ScopeKeyword.skipScope(this.scanner);
       return;
     }
-    int netNo = net.netNumber;
-    int[] netNoArr = new int[] {netNo};
+    int netNumber = net.netNumber;
+    int[] netNumbers = new int[] {netNumber};
 
     for (; ; ) {
       final Object prevToken = nextToken;
@@ -245,11 +245,11 @@ public final class SesReader {
 
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.WIRE) {
-          if (!processWireScope(netNoArr)) {
+          if (!processWireScope(netNumbers)) {
             errorsEncountered++;
           }
         } else if (nextToken == Keyword.VIA) {
-          if (!processViaScope(netNoArr)) {
+          if (!processViaScope(netNumbers)) {
             errorsEncountered++;
           }
         } else {
@@ -267,7 +267,7 @@ public final class SesReader {
    * @return {@code true} if the wire was successfully imported; {@code false} on a parse or
    *     geometry error (the caller increments {@link #errorsEncountered})
    */
-  private boolean processWireScope(int[] netNoArr) throws IOException {
+  private boolean processWireScope(int[] netNumbers) throws IOException {
     PolygonPath wirePath = null;
     Object nextToken = null;
     for (; ; ) {
@@ -298,7 +298,7 @@ public final class SesReader {
     }
 
     try {
-      int layerNo = wirePath.layer.no;
+      int layerIndex = wirePath.layer.no;
       int[] boardCoordinates = new int[wirePath.coordinateArr.length];
       for (int i = 0; i < wirePath.coordinateArr.length; i++) {
         boardCoordinates[i] =
@@ -321,7 +321,7 @@ public final class SesReader {
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
 
       board.insertTrace(
-          polyline, layerNo, halfWidth, netNoArr, clearanceClass, FixedState.USER_FIXED);
+          polyline, layerIndex, halfWidth, netNumbers, clearanceClass, FixedState.USER_FIXED);
 
       wiresImported++;
       return true;
@@ -338,7 +338,7 @@ public final class SesReader {
    * @return {@code true} if the via was successfully imported; {@code false} on a parse or geometry
    *     error (the caller increments {@link #errorsEncountered})
    */
-  private boolean processViaScope(int[] netNoArr) throws IOException {
+  private boolean processViaScope(int[] netNumbers) throws IOException {
     Object nextToken = this.scanner.nextToken();
     if (!(nextToken instanceof String padstackName)) {
       FRLogger.warn(
@@ -400,7 +400,7 @@ public final class SesReader {
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA);
 
       board.insertVia(
-          viaPadstack, viaLocation, netNoArr, clearanceClass, FixedState.USER_FIXED, true);
+          viaPadstack, viaLocation, netNumbers, clearanceClass, FixedState.USER_FIXED, true);
 
       viasImported++;
       return true;

@@ -21,11 +21,11 @@ public class Plane extends ScopeKeyword {
       FRLogger.warn("Plane.write_scope: unexpected net count at '" + conduction.name + "'");
       return;
     }
-    final String netName = par.board.rules.nets.get(conduction.getNetNo(0)).name;
+    final String netName = par.board.rules.nets.get(conduction.getNetNumber(0)).name;
     Area currentArea = conduction.getArea();
-    int layerNo = conduction.getLayer();
-    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerNo];
-    final Layer planeLayer = new Layer(boardLayer.name, layerNo, boardLayer.isSignal);
+    int layerIndex = conduction.getLayer();
+    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerIndex];
+    final Layer planeLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
     if (currentArea instanceof app.freerouting.geometry.planar.Shape shape) {

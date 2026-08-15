@@ -29,7 +29,7 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     RatsNest ratsnest = this.boardFrame.boardPanel.boardHandling.getRatsnest();
     Nets netList = this.boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.nets;
     SortedSet<LengthViolation> lengthViolations = new TreeSet<>();
-    for (int netIndex = 1; netIndex <= netList.maxNetNo(); netIndex++) {
+    for (int netIndex = 1; netIndex <= netList.maxNetNumber(); netIndex++) {
       double currentViolationLength = ratsnest.getLengthViolation(netIndex);
       if (currentViolationLength != 0) {
         LengthViolation currentLengthViolation =

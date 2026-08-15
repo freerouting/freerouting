@@ -35,13 +35,13 @@ public class PolylineTrace extends Trace implements Serializable {
       Polyline polyline,
       int layer,
       int halfWidth,
-      int[] netNoArr,
+      int[] netNumbers,
       int clearanceType,
       int idNo,
       int groupNo,
       FixedState fixedState,
       BasicBoard board) {
-    super(layer, halfWidth, netNoArr, clearanceType, idNo, groupNo, fixedState, board);
+    super(layer, halfWidth, netNumbers, clearanceType, idNo, groupNo, fixedState, board);
     if (polyline.arr.length < 3) {
       FRLogger.warn("PolylineTrace: polyline.arr.length >= 3 expected");
     }
@@ -50,16 +50,16 @@ public class PolylineTrace extends Trace implements Serializable {
 
   @Override
   public Item copy(int idNo) {
-    int[] currentNetNoArr = new int[this.netCount()];
-    for (int i = 0; i < currentNetNoArr.length; i++) {
-      currentNetNoArr[i] = getNetNo(i);
+    int[] currentNetNumbers = new int[this.netCount()];
+    for (int i = 0; i < currentNetNumbers.length; i++) {
+      currentNetNumbers[i] = getNetNumber(i);
     }
     return new PolylineTrace(
         lines,
         getLayer(),
         getHalfWidth(),
-        currentNetNoArr,
-        clearanceClassNo(),
+        currentNetNumbers,
+        clearanceClassIndex(),
         idNo,
         getComponentNo(),
         getFixedState(),
@@ -185,7 +185,7 @@ public class PolylineTrace extends Trace implements Serializable {
    */
   private boolean combineAtStart(boolean ignoreAreas) {
     boolean debugNet49 =
-        this.netNoArr != null && this.netNoArr.length > 0 && this.netNoArr[0] == 49;
+        this.netNumbers != null && this.netNumbers.length > 0 && this.netNumbers[0] == 49;
     Point startCorner = firstCorner();
     Collection<Item> contacts = getNormalContacts(startCorner, false);
     if (ignoreAreas) {
@@ -221,8 +221,8 @@ public class PolylineTrace extends Trace implements Serializable {
     PolylineTrace otherTrace = null;
     boolean traceFound = false;
     boolean reverseOrder = false;
-    for (Item currentOb : contacts) {
-      if (currentOb instanceof PolylineTrace trace) {
+    for (Item currentObject : contacts) {
+      if (currentObject instanceof PolylineTrace trace) {
         otherTrace = trace;
         if (otherTrace.getLayer() == getLayer()
             && otherTrace.netsEqual(this)
@@ -331,7 +331,7 @@ public class PolylineTrace extends Trace implements Serializable {
    */
   private boolean combineAtEnd(boolean ignoreAreas) {
     boolean debugNet49 =
-        this.netNoArr != null && this.netNoArr.length > 0 && this.netNoArr[0] == 49;
+        this.netNumbers != null && this.netNumbers.length > 0 && this.netNumbers[0] == 49;
     Point endCorner = lastCorner();
     Collection<Item> contacts = getNormalContacts(endCorner, false);
     if (ignoreAreas) {
@@ -367,8 +367,8 @@ public class PolylineTrace extends Trace implements Serializable {
     PolylineTrace otherTrace = null;
     boolean traceFound = false;
     boolean reverseOrder = false;
-    for (Item currentOb : contacts) {
-      if (currentOb instanceof PolylineTrace trace) {
+    for (Item currentObject : contacts) {
+      if (currentObject instanceof PolylineTrace trace) {
         otherTrace = trace;
         if (otherTrace.getLayer() == getLayer()
             && otherTrace.netsEqual(this)
@@ -517,7 +517,7 @@ public class PolylineTrace extends Trace implements Serializable {
           Collection<PolylineTrace> splitPieces = new LinkedList<>();
 
           boolean debugNet49 =
-              this.netNoArr != null && this.netNoArr.length > 0 && this.netNoArr[0] == 49;
+              this.netNumbers != null && this.netNumbers.length > 0 && this.netNumbers[0] == 49;
           if (debugNet49 && intersectingLines.length > 0) {
             FRLogger.trace(
                 "compare_trace_split_found_trace net=49, this_id="
@@ -552,7 +552,7 @@ public class PolylineTrace extends Trace implements Serializable {
                 for (int k = 0; k < 2; k++) {
                   if (currentSplitPieces[k] != null) {
                     foundTraceSplit = true;
-                    if (this.netNoArr.length > 0 && this.netNoArr[0] == 94) {
+                    if (this.netNumbers.length > 0 && this.netNumbers[0] == 94) {
                       FRLogger.trace(
                           "PolylineTrace.split",
                           "compare_trace_found_trace_split",
@@ -561,7 +561,7 @@ public class PolylineTrace extends Trace implements Serializable {
                               + " with intersection "
                               + intersectingLines[j],
                           "Net #"
-                              + this.netNoArr[0]
+                              + this.netNumbers[0]
                               + ",Trace #"
                               + foundTrace.getIdNo()
                               + ",Layer #"
@@ -615,7 +615,9 @@ public class PolylineTrace extends Trace implements Serializable {
               while (it2.hasNext()) {
                 PolylineTrace currentPiece = it2.next();
                 boolean debugThis =
-                    this.netNoArr != null && this.netNoArr.length > 0 && this.netNoArr[0] == 49;
+                    this.netNumbers != null
+                        && this.netNumbers.length > 0
+                        && this.netNumbers[0] == 49;
                 Point pieceFirst =
                     debugThis && currentPiece.isOnTheBoard() ? currentPiece.firstCorner() : null;
                 Point pieceLast =
@@ -654,8 +656,8 @@ public class PolylineTrace extends Trace implements Serializable {
           }
         } else if (!this.isUserFixed() && (foundItem instanceof ConductionArea)) {
           boolean ignoreAreas = false;
-          if (this.netNoArr.length > 0) {
-            Net currentNet = this.board.rules.nets.get(this.netNoArr[0]);
+          if (this.netNumbers.length > 0) {
+            Net currentNet = this.board.rules.nets.get(this.netNumbers[0]);
             if (currentNet != null && currentNet.getNetClass() != null) {
               ignoreAreas = currentNet.getNetClass().getIgnoreCyclesWithAreas();
             }
@@ -739,16 +741,16 @@ public class PolylineTrace extends Trace implements Serializable {
             splitPolylines[0],
             getLayer(),
             getHalfWidth(),
-            netNoArr,
-            clearanceClassNo(),
+            netNumbers,
+            clearanceClassIndex(),
             getFixedState());
     result[1] =
         board.insertTraceWithoutCleaning(
             splitPolylines[1],
             getLayer(),
             getHalfWidth(),
-            netNoArr,
-            clearanceClassNo(),
+            netNumbers,
+            clearanceClassIndex(),
             getFixedState());
     return result;
   }
@@ -819,15 +821,15 @@ public class PolylineTrace extends Trace implements Serializable {
               + ") reached for trace #"
               + this.getIdNo()
               + " on net "
-              + (this.netCount() > 0 ? this.netNoArr[0] : -1)
+              + (this.netCount() > 0 ? this.netNumbers[0] : -1)
               + " — stopping recursion, trace kept as-is.");
       return false;
     }
 
     boolean debugNet49 =
-        this.netNoArr != null
-            && this.netNoArr.length > 0
-            && this.netNoArr[0] == 49
+        this.netNumbers != null
+            && this.netNumbers.length > 0
+            && this.netNumbers[0] == 49
             && normalizationDepth == 0;
 
     boolean observersActivated = false;
@@ -892,7 +894,7 @@ public class PolylineTrace extends Trace implements Serializable {
             board.removeItem(currentSplitTrace);
             result = true;
           } else {
-            int netNo = currentSplitTrace.netCount() > 0 ? currentSplitTrace.netNoArr[0] : -1;
+            int netNumber = currentSplitTrace.netCount() > 0 ? currentSplitTrace.netNumbers[0] : -1;
             // A degenerate user-fixed trace (first==last corner) cannot be removed because
             // deletion is forbidden. This is expected for boards with malformed DSN geometry
             // (e.g. bad EDA export). The user was already warned at load time; suppress here.
@@ -900,7 +902,7 @@ public class PolylineTrace extends Trace implements Serializable {
                 "PolylineTrace.normalize: skipping removal of degenerate user-fixed trace #"
                     + currentSplitTrace.getIdNo()
                     + " on net "
-                    + netNo
+                    + netNumber
                     + " (first==last corner)");
           }
         } else if (traceCombined) {
@@ -934,8 +936,8 @@ public class PolylineTrace extends Trace implements Serializable {
     if (pullTightAlgo.onlyNetNoArr.length > 0 && !this.netsEqual(pullTightAlgo.onlyNetNoArr)) {
       return false;
     }
-    if (this.netNoArr.length > 0) {
-      if (!this.board.rules.nets.get(this.netNoArr[0]).getNetClass().getPullTight()) {
+    if (this.netNumbers.length > 0) {
+      if (!this.board.rules.nets.get(this.netNumbers[0]).getNetClass().getPullTight()) {
         return false;
       }
     }
@@ -944,8 +946,8 @@ public class PolylineTrace extends Trace implements Serializable {
             lines,
             getLayer(),
             getHalfWidth(),
-            netNoArr,
-            clearanceClassNo(),
+            netNumbers,
+            clearanceClassIndex(),
             this.touchingPinsAtEndCorners());
     if (newLines != lines) {
       change(newLines);
@@ -985,7 +987,7 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     int[] optNetNoArr;
     if (ownNetOnly) {
-      optNetNoArr = this.netNoArr;
+      optNetNoArr = this.netNumbers;
     } else {
       optNetNoArr = new int[0];
     }
@@ -1010,7 +1012,7 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     int[] optNetNoArr;
     if (ownNetOnly) {
-      optNetNoArr = this.netNoArr;
+      optNetNoArr = this.netNumbers;
     } else {
       optNetNoArr = new int[0];
     }
@@ -1182,7 +1184,7 @@ public class PolylineTrace extends Trace implements Serializable {
     double endLineLength = endCorner.toFloat().distance(prevEndCorner.toFloat());
     double currentClearance =
         board.clearanceValue(
-            this.clearanceClassNo(), contactPin.clearanceClassNo(), this.getLayer());
+            this.clearanceClassIndex(), contactPin.clearanceClassIndex(), this.getLayer());
     double addWidth = Math.max(edgeToTurnDist, currentClearance + 1);
     double preserveLength = matchingExitRestriction.minLength + this.getHalfWidth() + addWidth;
     return preserveLength <= endLineLength;
@@ -1231,7 +1233,7 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     double currentClearance =
         board.clearanceValue(
-            this.clearanceClassNo(), contactPin.clearanceClassNo(), this.getLayer());
+            this.clearanceClassIndex(), contactPin.clearanceClassIndex(), this.getLayer());
     double addWidth = Math.max(edgeToTurnDist, currentClearance + 1);
     TileShape offsetPinShape =
         (TileShape) ((TileShape) pinShape).offset(this.getHalfWidth() + addWidth);
@@ -1321,8 +1323,8 @@ public class PolylineTrace extends Trace implements Serializable {
         borderPolyline,
         this.getLayer(),
         this.getHalfWidth(),
-        this.netNoArr,
-        this.clearanceClassNo())) {
+        this.netNumbers,
+        this.clearanceClassIndex())) {
       return false;
     }
 
@@ -1351,8 +1353,8 @@ public class PolylineTrace extends Trace implements Serializable {
         exitLineSegment,
         this.getLayer(),
         this.getHalfWidth(),
-        this.netNoArr,
-        this.clearanceClassNo(),
+        this.netNumbers,
+        this.clearanceClassIndex(),
         FixedState.SHOVE_FIXED);
     return true;
   }

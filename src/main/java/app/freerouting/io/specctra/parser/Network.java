@@ -46,7 +46,7 @@ public class Network extends ScopeKeyword {
     par.file.startScope();
     par.file.write("network");
     Collection<Pin> boardPins = par.board.getPins();
-    for (int i = 1; i <= par.board.rules.nets.maxNetNo(); i++) {
+    for (int i = 1; i <= par.board.rules.nets.maxNetNumber(); i++) {
       Net.writeScope(par, par.board.rules.nets.get(i), boardPins);
     }
     writeViaInfos(par.board.rules, par.file, par.identifierType);
@@ -102,7 +102,7 @@ public class Network extends ScopeKeyword {
     par.identifierType.write(netClass.getName(), par.file);
     final int netsPerRow = 8;
     int netCounter = 0;
-    for (int i = 1; i <= par.board.rules.nets.maxNetNo(); i++) {
+    for (int i = 1; i <= par.board.rules.nets.maxNetNumber(); i++) {
       if (par.board.rules.nets.get(i).getNetClass() == netClass) {
         if (netCounter % netsPerRow == 0) {
           par.file.newLine();
@@ -494,8 +494,8 @@ public class Network extends ScopeKeyword {
 
     for (Rule.LayerRule currentLayerRule : netClass.layerRules) {
       for (String currentLayerName : currentLayerRule.layerNames) {
-        int layerNo = board.layerStructure.getNo(currentLayerName);
-        if (layerNo < 0) {
+        int layerIndex = board.layerStructure.getNo(currentLayerName);
+        if (layerIndex < 0) {
           FRLogger.warn(
               "Network.insert_net_class: layer not found at '" + boardNetClass.getName() + "'");
           continue;
@@ -503,10 +503,10 @@ public class Network extends ScopeKeyword {
         for (Rule currentRule : currentLayerRule.rules) {
           if (currentRule instanceof Rule.WidthRule rule1) {
             int traceHalfwidth = (int) Math.round(coordinateTransform.dsnToBoard(rule1.value / 2));
-            boardNetClass.setTraceHalfWidth(layerNo, traceHalfwidth);
+            boardNetClass.setTraceHalfWidth(layerIndex, traceHalfwidth);
           } else if (currentRule instanceof Rule.ClearanceRule rule) {
             addClearanceRule(
-                board.rules.clearanceMatrix, boardNetClass, rule, layerNo, coordinateTransform);
+                board.rules.clearanceMatrix, boardNetClass, rule, layerIndex, coordinateTransform);
             clearanceRuleFound = true;
           } else {
             FRLogger.warn(
@@ -591,8 +591,8 @@ public class Network extends ScopeKeyword {
     }
     for (Rule.LayerRule currentLayerRule : classClass.layerRules) {
       for (String currentLayerName : currentLayerRule.layerNames) {
-        int layerNo = board.layerStructure.getNo(currentLayerName);
-        if (layerNo < 0) {
+        int layerIndex = board.layerStructure.getNo(currentLayerName);
+        if (layerIndex < 0) {
           FRLogger.warn(
               "Network.insert_class_pair_info: layer not found at '" + currentLayerName + "'");
           continue;
@@ -604,7 +604,7 @@ public class Network extends ScopeKeyword {
                 firstClass,
                 secondClass,
                 rule,
-                layerNo,
+                layerIndex,
                 coordinateTransform);
           } else {
             FRLogger.warn("Network.insert_class_pair_info: unexpected layer rule type");
@@ -619,7 +619,7 @@ public class Network extends ScopeKeyword {
       app.freerouting.rules.NetClass firstClass,
       app.freerouting.rules.NetClass secondClass,
       Rule.ClearanceRule clearanceRule,
-      int layerNo,
+      int layerIndex,
       CoordinateTransform coordinateTransform) {
     int currentClearance = (int) Math.round(coordinateTransform.dsnToBoard(clearanceRule.value));
     final String firstClassName = firstClass.getName();
@@ -635,12 +635,12 @@ public class Network extends ScopeKeyword {
       secondClassNo = clearanceMatrix.getNo(secondClassName);
     }
     if (clearanceRule.clearanceClassPairs.isEmpty()) {
-      if (layerNo < 0) {
+      if (layerIndex < 0) {
         clearanceMatrix.setValue(firstClassNo, secondClassNo, currentClearance);
         clearanceMatrix.setValue(secondClassNo, firstClassNo, currentClearance);
       } else {
-        clearanceMatrix.setValue(firstClassNo, secondClassNo, layerNo, currentClearance);
-        clearanceMatrix.setValue(secondClassNo, firstClassNo, layerNo, currentClearance);
+        clearanceMatrix.setValue(firstClassNo, secondClassNo, layerIndex, currentClearance);
+        clearanceMatrix.setValue(secondClassNo, firstClassNo, layerIndex, currentClearance);
       }
     } else {
       for (String currentString : clearanceRule.clearanceClassPairs) {
@@ -659,14 +659,14 @@ public class Network extends ScopeKeyword {
             currentFirstClassNo = getClearanceClass(clearanceMatrix, secondClass, currentPair[0]);
             currentSecondClassNo = getClearanceClass(clearanceMatrix, firstClass, currentPair[1]);
           }
-          if (layerNo < 0) {
+          if (layerIndex < 0) {
             clearanceMatrix.setValue(currentFirstClassNo, currentSecondClassNo, currentClearance);
             clearanceMatrix.setValue(currentSecondClassNo, currentFirstClassNo, currentClearance);
           } else {
             clearanceMatrix.setValue(
-                currentFirstClassNo, currentSecondClassNo, layerNo, currentClearance);
+                currentFirstClassNo, currentSecondClassNo, layerIndex, currentClearance);
             clearanceMatrix.setValue(
-                currentSecondClassNo, currentFirstClassNo, layerNo, currentClearance);
+                currentSecondClassNo, currentFirstClassNo, layerIndex, currentClearance);
           }
         }
       }
@@ -726,7 +726,7 @@ public class Network extends ScopeKeyword {
       ClearanceMatrix clearanceMatrix,
       app.freerouting.rules.NetClass netClass,
       Rule.ClearanceRule rule,
-      int layerNo,
+      int layerIndex,
       CoordinateTransform coordinateTransform) {
     int currentClearance = (int) Math.round(coordinateTransform.dsnToBoard(rule.value));
     final String className = netClass.getName();
@@ -749,10 +749,10 @@ public class Network extends ScopeKeyword {
     }
     netClass.setTraceClearanceClass(classNo);
     if (rule.clearanceClassPairs.isEmpty()) {
-      if (layerNo < 0) {
+      if (layerIndex < 0) {
         clearanceMatrix.setValue(classNo, classNo, currentClearance);
       } else {
-        clearanceMatrix.setValue(classNo, classNo, layerNo, currentClearance);
+        clearanceMatrix.setValue(classNo, classNo, layerIndex, currentClearance);
       }
       return;
     }
@@ -768,12 +768,12 @@ public class Network extends ScopeKeyword {
       int firstClassNo = getClearanceClass(clearanceMatrix, netClass, currentPair[0]);
       int secondClassNo = getClearanceClass(clearanceMatrix, netClass, currentPair[1]);
 
-      if (layerNo < 0) {
+      if (layerIndex < 0) {
         clearanceMatrix.setValue(firstClassNo, secondClassNo, currentClearance);
         clearanceMatrix.setValue(secondClassNo, firstClassNo, currentClearance);
       } else {
-        clearanceMatrix.setValue(firstClassNo, secondClassNo, layerNo, currentClearance);
-        clearanceMatrix.setValue(secondClassNo, firstClassNo, layerNo, currentClearance);
+        clearanceMatrix.setValue(firstClassNo, secondClassNo, layerIndex, currentClearance);
+        clearanceMatrix.setValue(secondClassNo, firstClassNo, layerIndex, currentClearance);
       }
     }
   }
@@ -978,7 +978,7 @@ public class Network extends ScopeKeyword {
         return;
       }
       Collection<Net> pinNets = par.netlist.getNets(location.name, currentPin.name);
-      Collection<Integer> netNumbers = new LinkedList<>();
+      Collection<Integer> pinNetNumbers = new LinkedList<>();
       for (Net currentPinNet : pinNets) {
         app.freerouting.rules.Net currentBoardNet =
             routingBoard.rules.nets.get(currentPinNet.id.name, currentPinNet.id.subnetNumber);
@@ -988,19 +988,19 @@ public class Network extends ScopeKeyword {
                   + par.scanner.getScopeIdentifier()
                   + "'");
         } else {
-          netNumbers.add(currentBoardNet.netNumber);
+          pinNetNumbers.add(currentBoardNet.netNumber);
         }
       }
-      int[] netNoArr = new int[netNumbers.size()];
+      int[] netNumberArray = new int[pinNetNumbers.size()];
       int netIndex = 0;
-      for (Integer currentNetNo : netNumbers) {
-        netNoArr[netIndex] = currentNetNo;
+      for (Integer currentNetNumber : pinNetNumbers) {
+        netNumberArray[netIndex] = currentNetNumber;
         ++netIndex;
       }
       app.freerouting.rules.NetClass netClass;
       app.freerouting.rules.Net boardNet;
-      if (netNoArr.length > 0) {
-        boardNet = routingBoard.rules.nets.get(netNoArr[0]);
+      if (netNumberArray.length > 0) {
+        boardNet = routingBoard.rules.nets.get(netNumberArray[0]);
       } else {
         boardNet = null;
       }
@@ -1023,7 +1023,7 @@ public class Network extends ScopeKeyword {
               netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.PIN);
         }
       }
-      routingBoard.insertPin(newComponent.no, i, netNoArr, clearanceClass, fixedState);
+      routingBoard.insertPin(newComponent.no, i, netNumberArray, clearanceClass, fixedState);
     }
 
     // insert the keepouts belonging to the package (k = 1 for via keepouts)
@@ -1422,8 +1422,8 @@ public class Network extends ScopeKeyword {
                   + "'");
           return false;
         }
-        for (Rule currentOb : netRules) {
-          if (currentOb instanceof Rule.WidthRule rule) {
+        for (Rule currentObject : netRules) {
+          if (currentObject instanceof Rule.WidthRule rule) {
             app.freerouting.rules.NetClass defaultNetRule = board.rules.getDefaultNetClass();
             final double wireWidth = rule.value;
             int traceHalfwidth = (int) Math.round(coordinateTransform.dsnToBoard(wireWidth) / 2);

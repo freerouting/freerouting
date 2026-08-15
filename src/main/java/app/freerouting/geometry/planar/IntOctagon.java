@@ -798,15 +798,15 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   }
 
   @Override
-  public Side compare(RegularTileShape other, int edgeNo) {
-    Side result = other.compare(this, edgeNo);
+  public Side compare(RegularTileShape other, int edgeIndex) {
+    Side result = other.compare(this, edgeIndex);
     return result.negate();
   }
 
   @Override
-  public Side compare(IntOctagon other, int edgeNo) {
+  public Side compare(IntOctagon other, int edgeIndex) {
     Side result;
-    switch (edgeNo) {
+    switch (edgeIndex) {
       case 0 -> {
         // compare the lower edge line
         if (bottomY > other.bottomY) {
@@ -887,14 +887,14 @@ public class IntOctagon extends RegularTileShape implements Serializable {
           result = Side.COLLINEAR;
         }
       }
-      default -> throw new IllegalArgumentException("IntBox.compare: edgeNo out of range");
+      default -> throw new IllegalArgumentException("IntBox.compare: edgeIndex out of range");
     }
     return result;
   }
 
   @Override
-  public Side compare(IntBox other, int edgeNo) {
-    return compare(other.toIntOctagon(), edgeNo);
+  public Side compare(IntBox other, int edgeIndex) {
+    return compare(other.toIntOctagon(), edgeIndex);
   }
 
   @Override

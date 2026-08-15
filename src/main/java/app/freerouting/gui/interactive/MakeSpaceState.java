@@ -30,7 +30,7 @@ public class MakeSpaceState extends DragState {
       layerActiveArr[i] = true;
     }
     int[] routeNetNoArr = new int[1];
-    routeNetNoArr[0] = Nets.hidden_net_no;
+    routeNetNoArr[0] = Nets.hidden_net_number;
     route =
         new Route(
             location.round(),
@@ -78,7 +78,7 @@ public class MakeSpaceState extends DragState {
 
   @Override
   public InteractiveState buttonReleased() {
-    int deleteNetNo = Nets.hidden_net_no;
+    int deleteNetNo = Nets.hidden_net_number;
     BasicBoard board = hdlg.getRoutingBoard();
     board.removeItems(board.getConnectableItems(deleteNetNo));
     if (this.observersActivated) {

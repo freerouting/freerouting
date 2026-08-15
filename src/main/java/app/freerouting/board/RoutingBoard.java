@@ -131,12 +131,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         }
         removeItem(currentItem);
         for (int i = 0; i < currentItem.netCount(); i++) {
-          changedNets.add(currentItem.getNetNo(i));
+          changedNets.add(currentItem.getNetNumber(i));
         }
       }
     }
-    for (Integer currentNetNo : changedNets) {
-      this.combineTraces(currentNetNo);
+    for (Integer currentNetNumber : changedNets) {
+      this.combineTraces(currentNetNumber);
     }
     if (calculateTidyRegion) {
       tidyRegion = tidyRegion.enlarge(tidyWidth);
@@ -175,11 +175,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Optimizes the route in the internally marked area. If netNo {@literal >} 0, only traces with
-   * net number netNo are optimized. If clipShape != null the optimizing is restricted to clipShape.
-   * traceCostArr is used for optimizing vias and may be null. If stoppableThread != null, the
-   * algorithm can be requested to be stopped. If timeLimit {@literal >} 0; the algorithm will be
-   * stopped after timeLimit Milliseconds.
+   * Optimizes the route in the internally marked area. If netNumber {@literal >} 0, only traces
+   * with net number netNumber are optimized. If clipShape != null the optimizing is restricted to
+   * clipShape. traceCostArr is used for optimizing vias and may be null. If stoppableThread !=
+   * null, the algorithm can be requested to be stopped. If timeLimit {@literal >} 0; the algorithm
+   * will be stopped after timeLimit Milliseconds.
    */
   public void optChangedArea(
       int[] onlyNetNoArr,
@@ -193,12 +193,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Optimizes the route in the internally marked area. If netNo {@literal >} 0, only traces with
-   * net number netNo are optimized. If clipShape != null the optimizing is restricted to clipShape.
-   * traceCostArr is used for optimizing vias and may be null. If stoppableThread != null, the
-   * algorithm can be requested to be stopped. If timeLimit {@literal >} 0; the algorithm will be
-   * stopped after timeLimit Milliseconds. If keepPoint != null, traces on layer keepPointLayer
-   * containing keepPoint will also contain this point after optimizing.
+   * Optimizes the route in the internally marked area. If netNumber {@literal >} 0, only traces
+   * with net number netNumber are optimized. If clipShape != null the optimizing is restricted to
+   * clipShape. traceCostArr is used for optimizing vias and may be null. If stoppableThread !=
+   * null, the algorithm can be requested to be stopped. If timeLimit {@literal >} 0; the algorithm
+   * will be stopped after timeLimit Milliseconds. If keepPoint != null, traces on layer
+   * keepPointLayer containing keepPoint will also contain this point after optimizing.
    */
   public void optChangedArea(
       int[] onlyNetNoArr,
@@ -239,7 +239,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       Point fromPoint,
       Point toPoint,
       int layer,
-      int[] netNoArr,
+      int[] netNumbers,
       int traceHalfWidth,
       int clClassNo,
       boolean onlyNotShovableObstacles) {
@@ -249,7 +249,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     Polyline currentPolyline = new Polyline(fromPoint, toPoint);
     LineSegment currentLineSegment = new LineSegment(currentPolyline, 1);
     return checkTraceSegment(
-        currentLineSegment, layer, netNoArr, traceHalfWidth, clClassNo, onlyNotShovableObstacles);
+        currentLineSegment, layer, netNumbers, traceHalfWidth, clClassNo, onlyNotShovableObstacles);
   }
 
   /**
@@ -261,7 +261,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   public double checkTraceSegment(
       LineSegment lineSegment,
       int layer,
-      int[] netNoArr,
+      int[] netNumbers,
       int traceHalfWidth,
       int clClassNo,
       boolean onlyNotShovableObstacles) {
@@ -277,7 +277,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     ShapeSearchTree defaultTree = this.searchTreeManager.getDefaultTree();
 
     Collection<TreeEntry> obstacleEntries =
-        defaultTree.overlappingTreeEntriesWithClearance(shapeToCheck, layer, netNoArr, clClassNo);
+        defaultTree.overlappingTreeEntriesWithClearance(shapeToCheck, layer, netNumbers, clClassNo);
 
     for (TreeEntry currentObstacleEntry : obstacleEntries) {
 
@@ -300,10 +300,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         shortenValue =
             traceHalfWidth
                 + rules.clearanceMatrix.clearanceCompensationValue(
-                    currentObstacle.clearanceClassNo(), layer);
+                    currentObstacle.clearanceClassIndex(), layer);
       } else {
         int clearanceValue =
-            this.clearanceValue(currentObstacle.clearanceClassNo(), clClassNo, layer);
+            this.clearanceValue(currentObstacle.clearanceClassIndex(), clClassNo, layer);
         currentOffsetShape = (TileShape) shapeToCheck.offset(clearanceValue);
         shortenValue = traceHalfWidth + clearanceValue;
       }
@@ -332,7 +332,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * Checks, if item can be translated by vector without producing overlaps or clearance violations.
    */
   public boolean checkMoveItem(Item item, Vector vector, Collection<Item> ignoreItems) {
-    int netCount = item.netNoArr.length;
+    int netCount = item.netNumbers.length;
     if (netCount > 1) {
       return false; // not yet implemented
     }
@@ -354,7 +354,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       }
       Set<Item> obstacles =
           this.overlappingItemsWithClearance(
-              movedShape, item.shapeLayer(i), item.netNoArr, item.clearanceClassNo());
+              movedShape, item.shapeLayer(i), item.netNumbers, item.clearanceClassIndex());
       for (Item currentItem : obstacles) {
         if (ignoreItems != null) {
           if (!ignoreItems.contains(currentItem)) {
@@ -374,16 +374,16 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   /** Checks, if the net number of item can be changed without producing clearance violations. */
   public boolean checkChangeNet(Item item, int newNetNo) {
-    int[] netNoArr = new int[1];
-    netNoArr[0] = newNetNo;
+    int[] netNumbers = new int[1];
+    netNumbers[0] = newNetNo;
     for (int i = 0; i < item.tileShapeCount(); i++) {
       TileShape currentShape = item.getTileShape(i);
       Set<Item> obstacles =
           this.overlappingItemsWithClearance(
-              currentShape, item.shapeLayer(i), netNoArr, item.clearanceClassNo());
-      for (SearchTreeObject currentOb : obstacles) {
-        if (currentOb != item
-            && currentOb instanceof Connectable connectable
+              currentShape, item.shapeLayer(i), netNumbers, item.clearanceClassIndex());
+      for (SearchTreeObject currentObject : obstacles) {
+        if (currentObject != item
+            && currentObject instanceof Connectable connectable
             && !connectable.containsNet(newNetNo)) {
           return false;
         }
@@ -433,8 +433,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     int[] optNetNoArr;
     if (maxRecursionDepth <= 0) {
-      int[] netNoArr = drillItem.netNoArr;
-      optNetNoArr = netNoArr;
+      int[] netNumbers = drillItem.netNumbers;
+      optNetNoArr = netNumbers;
     } else {
       optNetNoArr = new int[0];
     }
@@ -443,8 +443,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Checks, if there is an item nearby sharing a net with netNoArr, from where a routing can start,
-   * or where the routing can connect to. If fromItem != null, items, which are connected to
+   * Checks, if there is an item nearby sharing a net with netNumbers, from where a routing can
+   * start, or where the routing can connect to. If fromItem != null, items, which are connected to
    * fromItem, are ignored. Returns null, if no item is found, If layer {@literal <} 0, the layer is
    * ignored
    */
@@ -511,8 +511,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   public boolean forcedVia(
       ViaInfo viaInfo,
       Point location,
-      int[] netNoArr,
-      int traceClearanceClassNo,
+      int[] netNumbers,
+      int traceClearanceClassIndex,
       int[] tracePenHalfwidthArr,
       int maxRecursionDepth,
       int maxViaRecursionDepth,
@@ -525,8 +525,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         ForcedViaInserter.insert(
             viaInfo,
             location,
-            netNoArr,
-            traceClearanceClassNo,
+            netNumbers,
+            traceClearanceClassIndex,
             tracePenHalfwidthArr,
             maxRecursionDepth,
             maxViaRecursionDepth,
@@ -540,7 +540,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       }
       int[] optNetNoArr;
       if (maxRecursionDepth <= 0) {
-        optNetNoArr = netNoArr;
+        optNetNoArr = netNumbers;
       } else {
         optNetNoArr = new int[0];
       }
@@ -562,8 +562,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       Point toCorner,
       int halfWidth,
       int layer,
-      int[] netNoArr,
-      int clearanceClassNo,
+      int[] netNumbers,
+      int clearanceClassIndex,
       int maxRecursionDepth,
       int maxViaRecursionDepth,
       int maxSpringOverRecursionDepth,
@@ -580,8 +580,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             insertPolyline,
             halfWidth,
             layer,
-            netNoArr,
-            clearanceClassNo,
+            netNumbers,
+            clearanceClassIndex,
             maxRecursionDepth,
             maxViaRecursionDepth,
             maxSpringOverRecursionDepth,
@@ -608,14 +608,14 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       Polyline polyline,
       int halfWidth,
       int layer,
-      int[] netNoArr,
-      int clearanceClassNo,
+      int[] netNumbers,
+      int clearanceClassIndex,
       int maxRecursionDepth,
       int maxViaRecursionDepth,
       int maxSpringOverRecursionDepth) {
     ShapeSearchTree searchTree = searchTreeManager.getDefaultTree();
     int compensatedHalfWidth =
-        halfWidth + searchTree.clearanceCompensationValue(clearanceClassNo, layer);
+        halfWidth + searchTree.clearanceCompensationValue(clearanceClassIndex, layer);
     TileShape[] traceShapes =
         polyline.offsetShapes(compensatedHalfWidth, 0, polyline.arr.length - 1);
     boolean orthogonalMode = rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE;
@@ -633,8 +633,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               fromSide,
               null,
               layer,
-              netNoArr,
-              clearanceClassNo,
+              netNumbers,
+              clearanceClassIndex,
               maxRecursionDepth,
               maxViaRecursionDepth,
               maxSpringOverRecursionDepth,
@@ -656,8 +656,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       Polyline polyline,
       int halfWidth,
       int layer,
-      int[] netNoArr,
-      int clearanceClassNo,
+      int[] netNumbers,
+      int clearanceClassIndex,
       int maxRecursionDepth,
       int maxViaRecursionDepth,
       int maxSpringOverRecursionDepth,
@@ -691,10 +691,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     ItemSelectionFilter filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
     Set<Item> pickedItems = this.pickItems(fromCorner, layer, filter);
-    if (netNoArr != null && netNoArr.length > 0) {
+    if (netNumbers != null && netNumbers.length > 0) {
       FRLogger.trace(
           "compare_trace_insert_forced_sub net="
-              + netNoArr[0]
+              + netNumbers[0]
               + ", step=start, pickedSize="
               + pickedItems.size()
               + ", from="
@@ -706,9 +706,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     if (pickedItems.size() == 1) {
       Trace currentPickedTrace = (Trace) pickedItems.iterator().next();
-      if (currentPickedTrace.netsEqual(netNoArr)
+      if (currentPickedTrace.netsEqual(netNumbers)
           && currentPickedTrace.getHalfWidth() == halfWidth
-          && currentPickedTrace.clearanceClassNo() == clearanceClassNo
+          && currentPickedTrace.clearanceClassIndex() == clearanceClassIndex
           && (currentPickedTrace instanceof PolylineTrace)) {
         // can combine with the picked trace
         pickedTrace = currentPickedTrace;
@@ -716,18 +716,18 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     ShapeSearchTree searchTree = searchTreeManager.getDefaultTree();
     int compensatedHalfWidth =
-        halfWidth + searchTree.clearanceCompensationValue(clearanceClassNo, layer);
+        halfWidth + searchTree.clearanceCompensationValue(clearanceClassIndex, layer);
     ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(this);
     Polyline newPolyline =
         shoveTraceAlgo.springOverObstacles(
-            polyline, compensatedHalfWidth, layer, netNoArr, clearanceClassNo, null);
+            polyline, compensatedHalfWidth, layer, netNumbers, clearanceClassIndex, null);
     if (newPolyline == null) {
-      if (netNoArr != null && netNoArr.length > 0 && netNoArr[0] == 94) {
+      if (netNumbers != null && netNumbers.length > 0 && netNumbers[0] == 94) {
         FRLogger.trace(
             "RoutingBoard.insert_forced_trace_polyline",
             "compare_trace_insert_forced_fail",
             "spring_over_obstacles returned null",
-            "Net #" + netNoArr[0] + ",Layer #" + layer,
+            "Net #" + netNumbers[0] + ",Layer #" + layer,
             new Point[] {fromCorner, toCorner});
       }
       return fromCorner;
@@ -740,12 +740,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       combinedPolyline = newPolyline.combine(combineTrace.polyline());
     }
     if (combinedPolyline.arr.length < 3) {
-      if (netNoArr != null && netNoArr.length > 0 && netNoArr[0] == 94) {
+      if (netNumbers != null && netNumbers.length > 0 && netNumbers[0] == 94) {
         FRLogger.trace(
             "RoutingBoard.insert_forced_trace_polyline",
             "compare_trace_insert_forced_fail",
             "combinedPolyline.arr.length < 3",
-            "Net #" + netNoArr[0] + ",Layer #" + layer,
+            "Net #" + netNumbers[0] + ",Layer #" + layer,
             new Point[] {fromCorner, toCorner});
       }
       return fromCorner;
@@ -775,8 +775,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
                 fromSide,
                 null,
                 layer,
-                netNoArr,
-                clearanceClassNo,
+                netNumbers,
+                clearanceClassIndex,
                 maxRecursionDepth,
                 maxViaRecursionDepth,
                 maxSpringOverRecursionDepth,
@@ -792,17 +792,17 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               currentTraceShape,
               fromSide,
               layer,
-              netNoArr,
-              clearanceClassNo,
+              netNumbers,
+              clearanceClassIndex,
               null,
               maxRecursionDepth,
               maxViaRecursionDepth,
               maxSpringOverRecursionDepth);
       int idAfterShove = communication.idNoGenerator.maxGeneratedNo();
-      if (netNoArr != null && netNoArr.length > 0) {
+      if (netNumbers != null && netNumbers.length > 0) {
         FRLogger.trace(
             "compare_trace_shove_shape net="
-                + netNoArr[0]
+                + netNumbers[0]
                 + ", shapeIdx="
                 + i
                 + ", idBefore="
@@ -817,10 +817,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       }
     }
     Point newCorner = toCorner;
-    if (netNoArr != null && netNoArr.length > 0) {
+    if (netNumbers != null && netNumbers.length > 0) {
       FRLogger.trace(
           "compare_trace_insert_forced_sub net="
-              + netNoArr[0]
+              + netNumbers[0]
               + ", step=after_shove_loop, shoveLoopDelta="
               + (communication.idNoGenerator.maxGeneratedNo() - idBeforeShoveLoop)
               + ", lastShapeNo="
@@ -843,12 +843,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       double lastSegmentLength = lastCorner.distance(prevLastCorner);
       if (lastSegmentLength > 100 * sampleWidth) {
         // to many cycles to sample
-        if (netNoArr != null && netNoArr.length > 0 && netNoArr[0] == 94) {
+        if (netNumbers != null && netNumbers.length > 0 && netNumbers[0] == 94) {
           FRLogger.trace(
               "RoutingBoard.insert_forced_trace_polyline",
               "compare_trace_insert_forced_fail",
               "too many cycles to sample",
-              "Net #" + netNoArr[0] + ",Layer #" + layer,
+              "Net #" + netNumbers[0] + ",Layer #" + layer,
               new Point[] {fromCorner, toCorner});
         }
         return fromCorner;
@@ -861,12 +861,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         Point currentLastCorner = newPolyline.lastCorner();
         if (!(currentLastCorner instanceof IntPoint)) {
           FRLogger.trace("RoutingBoard.insert_forced_trace_polyline: IntPoint expected");
-          if (netNoArr != null && netNoArr.length > 0 && netNoArr[0] == 94) {
+          if (netNumbers != null && netNumbers.length > 0 && netNumbers[0] == 94) {
             FRLogger.trace(
                 "RoutingBoard.insert_forced_trace_polyline",
                 "compare_trace_insert_forced_fail",
                 "currentLastCorner is not an IntPoint",
-                "Net #" + netNoArr[0] + ",Layer #" + layer,
+                "Net #" + netNumbers[0] + ",Layer #" + layer,
                 new Point[] {fromCorner, toCorner});
           }
           return fromCorner;
@@ -894,27 +894,27 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               fromSide,
               null,
               layer,
-              netNoArr,
-              clearanceClassNo,
+              netNumbers,
+              clearanceClassIndex,
               maxRecursionDepth,
               maxViaRecursionDepth,
               maxSpringOverRecursionDepth,
               timeLimit);
       if (!checkShoveOk) {
-        if (netNoArr != null && netNoArr.length > 0 && netNoArr[0] == 94) {
+        if (netNumbers != null && netNumbers.length > 0 && netNumbers[0] == 94) {
           Item shoveFailingObstacle = this.getShoveFailingObstacle();
           FRLogger.trace(
               "RoutingBoard.insert_forced_trace_polyline",
               "compare_trace_insert_forced_fail",
               "checkShoveOk returned false",
-              "Net #" + netNoArr[0] + ",Layer #" + layer,
+              "Net #" + netNumbers[0] + ",Layer #" + layer,
               new Point[] {fromCorner, toCorner});
           FRLogger.trace(
               "RoutingBoard.insert_forced_trace_polyline",
               "compare_trace_insert_forced_obstacle",
               "failing obstacle=" + shoveFailingObstacle,
               "Net #"
-                  + netNoArr[0]
+                  + netNumbers[0]
                   + ",Layer #"
                   + layer
                   + ",Obstacle="
@@ -932,8 +932,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               lastTraceShape,
               fromSide,
               layer,
-              netNoArr,
-              clearanceClassNo,
+              netNumbers,
+              clearanceClassIndex,
               null,
               maxRecursionDepth,
               maxViaRecursionDepth,
@@ -950,14 +950,14 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     int idBeforeInsert = communication.idNoGenerator.maxGeneratedNo();
     PolylineTrace newTrace =
         insertTraceWithoutCleaning(
-            newPolyline, layer, halfWidth, netNoArr, clearanceClassNo, FixedState.UNFIXED);
+            newPolyline, layer, halfWidth, netNumbers, clearanceClassIndex, FixedState.UNFIXED);
     int idAfterInsert = communication.idNoGenerator.maxGeneratedNo();
     boolean combineResult = newTrace.combine();
     int idAfterCombine = communication.idNoGenerator.maxGeneratedNo();
-    if (netNoArr != null && netNoArr.length > 0) {
+    if (netNumbers != null && netNumbers.length > 0) {
       FRLogger.trace(
           "compare_trace_insert_forced_sub net="
-              + netNoArr[0]
+              + netNumbers[0]
               + ", step=insert_and_combine"
               + ", insertDelta="
               + (idAfterInsert - idBeforeInsert)
@@ -975,7 +975,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     int[] optNetNoArr;
     if (maxRecursionDepth <= 0) {
-      optNetNoArr = netNoArr;
+      optNetNoArr = netNumbers;
     } else {
       optNetNoArr = new int[0];
     }
@@ -989,10 +989,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       int idBeforeNorm = communication.idNoGenerator.maxGeneratedNo();
       boolean normalizeResult = newTrace != null && newTrace.normalize(changedArea.getArea(layer));
       int idAfterNorm = communication.idNoGenerator.maxGeneratedNo();
-      if (netNoArr != null && netNoArr.length > 0) {
+      if (netNumbers != null && netNumbers.length > 0) {
         FRLogger.trace(
             "compare_trace_insert_forced_sub net="
-                + netNoArr[0]
+                + netNumbers[0]
                 + ", step=normalize, result="
                 + normalizeResult
                 + ", idBefore="
@@ -1007,10 +1007,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         int idBeforeSplit = communication.idNoGenerator.maxGeneratedNo();
         pullTightAlgo.splitTracesAtKeepPoint();
         int idAfterSplit = communication.idNoGenerator.maxGeneratedNo();
-        if (netNoArr != null && netNoArr.length > 0) {
+        if (netNumbers != null && netNumbers.length > 0) {
           FRLogger.trace(
               "compare_trace_insert_forced_sub net="
-                  + netNoArr[0]
+                  + netNumbers[0]
                   + ", step=split_at_keep, idBefore="
                   + idBeforeSplit
                   + ", idAfter="
@@ -1042,13 +1042,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
     // To avoid, that a separate handling for moving backwards in the own trace line
     // becomes necessary, pull tight is called here.
-    if (netNoArr != null && netNoArr.length > 0) {
+    if (netNumbers != null && netNumbers.length > 0) {
       ItemSelectionFilter dbgFilter =
           new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
       Set<Item> dbgBefore = this.pickItems(newCorner, layer, dbgFilter);
       FRLogger.trace(
           "compare_trace_insert_forced_sub net="
-              + netNoArr[0]
+              + netNumbers[0]
               + ", step=before_pull_tight, pickedAtEndCorner="
               + dbgBefore.size()
               + ", new_trace_null="
@@ -1059,13 +1059,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (tidyWidth > 0 && newTrace != null) {
       newTrace.pullTight(pullTightAlgo);
     }
-    if (netNoArr != null && netNoArr.length > 0) {
+    if (netNumbers != null && netNumbers.length > 0) {
       ItemSelectionFilter dbgFilter =
           new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
       Set<Item> dbgAfter = this.pickItems(newCorner, layer, dbgFilter);
       FRLogger.trace(
           "compare_trace_insert_forced_sub net="
-              + netNoArr[0]
+              + netNumbers[0]
               + ", step=after_pull_tight, pickedAtEndCorner="
               + dbgAfter.size()
               + ", newCorner="
@@ -1079,19 +1079,19 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * auto-route database is retained and maintained after the algorithm for performance reasons.
    */
   public AutorouteEngine initAutoroute(
-      int netNo,
-      int traceClearanceClassNo,
+      int netNumber,
+      int traceClearanceClassIndex,
       Stoppable stoppableThread,
       TimeLimit timeLimit,
       boolean retainAutorouteDatabase) {
     if (this.autorouteEngine == null
         || !retainAutorouteDatabase
         || this.autorouteEngine.autorouteSearchTree.compensatedClearanceClassNo
-            != traceClearanceClassNo) {
+            != traceClearanceClassIndex) {
       this.autorouteEngine =
-          new AutorouteEngine(this, traceClearanceClassNo, retainAutorouteDatabase);
+          new AutorouteEngine(this, traceClearanceClassIndex, retainAutorouteDatabase);
     }
-    this.autorouteEngine.initConnection(netNo, stoppableThread, timeLimit);
+    this.autorouteEngine.initConnection(netNumber, stoppableThread, timeLimit);
     return this.autorouteEngine;
   }
 
@@ -1120,7 +1120,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (item.netCount() > 1) {
       FRLogger.warn("RoutingBoard.autoroute: netCount > 1 not yet implemented");
     }
-    int routeNetNo = item.getNetNo(0);
+    int routeNetNo = item.getNetNumber(0);
     AutorouteControl ctrlSettings =
         new AutorouteControl(
             this, routeNetNo, routerSettings, viaCosts, routerSettings.getTraceCostArr());
@@ -1144,8 +1144,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     SortedSet<Item> rippedItemList = new TreeSet<>();
     AutorouteEngine currentAutorouteEngine =
         initAutoroute(
-            item.getNetNo(0),
-            ctrlSettings.traceClearanceClassNo,
+            item.getNetNumber(0),
+            ctrlSettings.traceClearanceClassIndex,
             stoppableThread,
             timeLimit,
             false);
@@ -1184,7 +1184,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.ALREADY_CONNECTED, "The pin '" + pin + "' is already connected.");
     }
-    int pinNetNo = pin.getNetNo(0);
+    int pinNetNo = pin.getNetNumber(0);
     int pinLayer = pin.firstLayer();
     Set<Item> pinConnectedSet = pin.getConnectedSet(pinNetNo);
     for (Item currentItem : pinConnectedSet) {
@@ -1257,7 +1257,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     SortedSet<Item> rippedItemList = new TreeSet<>();
     AutorouteEngine currentAutorouteEngine =
         initAutoroute(
-            pinNetNo, ctrlSettings.traceClearanceClassNo, stoppableThread, timeLimit, false);
+            pinNetNo, ctrlSettings.traceClearanceClassIndex, stoppableThread, timeLimit, false);
 
     AutorouteAttemptResult result = null;
     if (sortedUnconnectedList.size() <= 4) {
@@ -1332,7 +1332,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     int traceLayer = toTrace.getLayer();
     if (!this.checkPolylineTrace(
-        connectionLine, traceLayer, penHalfWidth, toTrace.netNoArr, clType)) {
+        connectionLine, traceLayer, penHalfWidth, toTrace.netNumbers, clType)) {
       return false;
     }
     if (this.changedArea != null) {
@@ -1342,19 +1342,19 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
 
     this.insertTrace(
-        connectionLine, traceLayer, penHalfWidth, toTrace.netNoArr, clType, FixedState.UNFIXED);
+        connectionLine, traceLayer, penHalfWidth, toTrace.netNumbers, clType, FixedState.UNFIXED);
 
     Point firstCorner = toTrace.firstCorner();
     Point lastCorner = toTrace.lastCorner();
-    int[] netNoArr = toTrace.netNoArr;
+    int[] netNumbers = toTrace.netNumbers;
     if (!fromPoint.equals(firstCorner)) {
-      Trace tail = this.getTraceTail(firstCorner, traceLayer, netNoArr);
+      Trace tail = this.getTraceTail(firstCorner, traceLayer, netNumbers);
       if (tail != null && !tail.isUserFixed()) {
         this.removeItem(tail);
       }
     }
     if (!fromPoint.equals(lastCorner)) {
-      Trace tail = this.getTraceTail(lastCorner, traceLayer, netNoArr);
+      Trace tail = this.getTraceTail(lastCorner, traceLayer, netNumbers);
       if (tail != null && !tail.isUserFixed()) {
         this.removeItem(tail);
       }
@@ -1367,8 +1367,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * Trace with net number exceptNetNo are ignored.
    */
   public boolean containsTraceTails(Collection<Item> items, int[] exceptNetNoArr) {
-    for (Item currentOb : items) {
-      if (currentOb instanceof Trace currentTrace) {
+    for (Item currentObject : items) {
+      if (currentObject instanceof Trace currentTrace) {
         if (!currentTrace.netsEqual(exceptNetNoArr)) {
           if (currentTrace.isTail()) {
             return true;
@@ -1380,10 +1380,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Removes all trace tails of the input net. If netNo {@literal <}= 0, the tails of all nets are
-   * removed. Returns true, if something was removed.
+   * Removes all trace tails of the input net. If netNumber {@literal <}= 0, the tails of all nets
+   * are removed. Returns true, if something was removed.
    */
-  public boolean removeTraceTails(int netNo, Item.StopConnectionOption stopConnectionOption) {
+  public boolean removeTraceTails(int netNumber, Item.StopConnectionOption stopConnectionOption) {
     SortedSet<Item> stubSet = new TreeSet<>();
     Collection<Item> boardItems = this.getItems();
     for (Item currentItem : boardItems) {
@@ -1393,7 +1393,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       if (currentItem.netCount() != 1) {
         continue;
       }
-      if (netNo > 0 && currentItem.getNetNo(0) != netNo) {
+      if (netNumber > 0 && currentItem.getNetNumber(0) != netNumber) {
         continue;
       }
       if (currentItem.isTail()) {
@@ -1426,7 +1426,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       return false;
     }
     this.removeItems(stubConnections);
-    this.combineTraces(netNo);
+    this.combineTraces(netNumber);
     return true;
   }
 
@@ -1481,21 +1481,21 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       somethingChanged = false;
       Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
       for (; ; ) {
-        UndoableObjects.Storable currentOb = itemList.readObject(it);
-        if (currentOb == null) {
+        UndoableObjects.Storable currentObject = itemList.readObject(it);
+        if (currentObject == null) {
           break;
         }
-        Item currentItem = (Item) currentOb;
-        if (currentItem.netNoArr.length <= 1
+        Item currentItem = (Item) currentObject;
+        if (currentItem.netNumbers.length <= 1
             || currentItem.getFixedState() == FixedState.SYSTEM_FIXED) {
           continue;
         }
-        if (currentOb instanceof Via) {
+        if (currentObject instanceof Via) {
           Collection<Item> contacts = currentItem.getNormalContacts();
-          for (int currentNetNo : currentItem.netNoArr) {
+          for (int currentNetNumber : currentItem.netNumbers) {
             for (Item currentContact : contacts) {
-              if (!currentContact.containsNet(currentNetNo)) {
-                currentItem.removeFromNet(currentNetNo);
+              if (!currentContact.containsNet(currentNetNumber)) {
+                currentItem.removeFromNet(currentNetNumber);
                 somethingChanged = true;
                 break;
               }
@@ -1505,16 +1505,16 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             }
           }
 
-        } else if (currentOb instanceof Trace currentTrace) {
+        } else if (currentObject instanceof Trace currentTrace) {
           Collection<Item> contacts = currentTrace.getStartContacts();
           for (int i = 0; i < 2; i++) {
-            for (int currentNetNo : currentItem.netNoArr) {
+            for (int currentNetNumber : currentItem.netNumbers) {
               boolean pinFound = false;
               for (Item currentContact : contacts) {
                 if (currentContact instanceof Pin) {
                   pinFound = true;
-                  if (!currentContact.containsNet(currentNetNo)) {
-                    currentItem.removeFromNet(currentNetNo);
+                  if (!currentContact.containsNet(currentNetNumber)) {
+                    currentItem.removeFromNet(currentNetNumber);
                     somethingChanged = true;
                     break;
                   }
@@ -1523,8 +1523,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               if (!pinFound) { // at tie pins traces may have different nets
                 for (Item currentContact : contacts) {
                   if (!(currentContact instanceof Pin)
-                      && !currentContact.containsNet(currentNetNo)) {
-                    currentItem.removeFromNet(currentNetNo);
+                      && !currentContact.containsNet(currentNetNumber)) {
+                    currentItem.removeFromNet(currentNetNumber);
                     somethingChanged = true;
                     break;
                   }

@@ -211,7 +211,7 @@ public class ForcedPadRouter {
       TileShape padShape,
       ShapeEntrySide fromSide,
       int layer,
-      int[] netNoArr,
+      int[] netNumbers,
       int clType,
       boolean copperSharingAllowed,
       Collection<Item> ignoreItems,
@@ -225,7 +225,7 @@ public class ForcedPadRouter {
     }
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(padShape, layer, netNoArr, clType, fromSide, board);
+        new ShapeTraceEntries(padShape, layer, netNumbers, clType, fromSide, board);
     Collection<Item> obstacles =
         searchTree.overlappingItemsWithClearance(padShape, layer, new int[0], clType);
 
@@ -312,8 +312,8 @@ public class ForcedPadRouter {
               current.fromSide,
               currentDirection,
               layer,
-              currentSubstituteTrace.netNoArr,
-              currentSubstituteTrace.clearanceClassNo(),
+              currentSubstituteTrace.netNumbers,
+              currentSubstituteTrace.clearanceClassIndex(),
               maxRecursionDepth - 1,
               maxViaRecursionDepth,
               0,
@@ -335,7 +335,7 @@ public class ForcedPadRouter {
       TileShape padShape,
       ShapeEntrySide fromSide,
       int layer,
-      int[] netNoArr,
+      int[] netNumbers,
       int clType,
       boolean copperSharingAllowed,
       Collection<Item> ignoreItems,
@@ -353,7 +353,7 @@ public class ForcedPadRouter {
         padShape,
         fromSide,
         layer,
-        netNoArr,
+        netNumbers,
         clType,
         ignoreItems,
         maxRecursionDepth,
@@ -364,7 +364,7 @@ public class ForcedPadRouter {
     }
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(padShape, layer, netNoArr, clType, fromSide, board);
+        new ShapeTraceEntries(padShape, layer, netNumbers, clType, fromSide, board);
     Collection<Item> obstacles =
         searchTree.overlappingItemsWithClearance(padShape, layer, new int[0], clType);
     if (ignoreItems != null) {
@@ -385,7 +385,7 @@ public class ForcedPadRouter {
       this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
       return false;
     }
-    boolean tailsExistBefore = board.containsTraceTails(obstacles, netNoArr);
+    boolean tailsExistBefore = board.containsTraceTails(obstacles, netNumbers);
     shapeEntries.cutoutTraces(obstacles);
     boolean isOrthogonalMode = padShape instanceof IntBox;
     ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(this.board);
@@ -397,7 +397,7 @@ public class ForcedPadRouter {
       if (currentSubstituteTrace.firstCorner().equals(currentSubstituteTrace.lastCorner())) {
         continue;
       }
-      int[] currentNetNoArr = currentSubstituteTrace.netNoArr;
+      int[] currentNetNumbers = currentSubstituteTrace.netNumbers;
       for (int i = 0; i < currentSubstituteTrace.tileShapeCount(); i++) {
         ShapeAndEntrySide current =
             new ShapeAndEntrySide(currentSubstituteTrace, i, isOrthogonalMode, false);
@@ -405,8 +405,8 @@ public class ForcedPadRouter {
             current.shape,
             current.fromSide,
             layer,
-            currentNetNoArr,
-            currentSubstituteTrace.clearanceClassNo(),
+            currentNetNumbers,
+            currentSubstituteTrace.clearanceClassIndex(),
             ignoreItems,
             maxRecursionDepth - 1,
             maxViaRecursionDepth,
@@ -439,11 +439,11 @@ public class ForcedPadRouter {
 
       if (!tailsExistBefore) {
         for (int i = 0; i < 2; i++) {
-          Trace tail = board.getTraceTail(endCorners[i], layer, currentNetNoArr);
+          Trace tail = board.getTraceTail(endCorners[i], layer, currentNetNumbers);
           if (tail != null) {
             board.removeItems(tail.getConnectionItems(Item.StopConnectionOption.VIA));
-            for (int currentNetNo : currentNetNoArr) {
-              board.combineTraces(currentNetNo);
+            for (int currentNetNumber : currentNetNumbers) {
+              board.combineTraces(currentNetNumber);
             }
           }
         }

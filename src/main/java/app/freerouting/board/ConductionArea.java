@@ -42,7 +42,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       Vector translation,
       double rotationInDegree,
       boolean sideChanged,
-      int[] netNoArr,
+      int[] netNumbers,
       int clearanceClass,
       int idNo,
       int groupNo,
@@ -56,7 +56,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         translation,
         rotationInDegree,
         sideChanged,
-        netNoArr,
+        netNumbers,
         clearanceClass,
         idNo,
         groupNo,
@@ -78,17 +78,17 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     if (!this.isFilled) {
       return;
     }
-    int layerNo = this.getLayer();
+    int layerIndex = this.getLayer();
     double maxClearanceLookupBoard = 2000.0 * this.board.communication.getResolution(Unit.UM);
     if (this.board.rules != null && this.board.rules.clearanceMatrix != null) {
       double maxMatrixClearance =
-          this.board.rules.clearanceMatrix.maxValue(this.clearanceClassNo(), layerNo);
+          this.board.rules.clearanceMatrix.maxValue(this.clearanceClassIndex(), layerIndex);
       maxClearanceLookupBoard =
           Math.max(
               maxClearanceLookupBoard,
               maxMatrixClearance + 100.0 * this.board.communication.getResolution(Unit.UM));
     }
-    ensureDetailedFillCache(maxClearanceLookupBoard, layerNo);
+    ensureDetailedFillCache(maxClearanceLookupBoard, layerIndex);
   }
 
   /**
@@ -97,12 +97,12 @@ public class ConductionArea extends ObstacleArea implements Connectable {
    * <p>The cache remains owned by the conduction-area model because it depends on board revision
    * and clearance geometry. The renderer owns the AWT paint operation that consumes this geometry.
    */
-  public java.awt.geom.Area getDetailedFillArea(double maxClearanceLookupBoard, int layerNo) {
-    ensureDetailedFillCache(maxClearanceLookupBoard, layerNo);
+  public java.awt.geom.Area getDetailedFillArea(double maxClearanceLookupBoard, int layerIndex) {
+    ensureDetailedFillCache(maxClearanceLookupBoard, layerIndex);
     return cachedBoardFillArea;
   }
 
-  private void ensureDetailedFillCache(double maxClearanceLookupBoard, int layerNo) {
+  private void ensureDetailedFillCache(double maxClearanceLookupBoard, int layerIndex) {
     boolean boardChanged = this.board.getRevision() != cachedBoardRevision;
     if (cachedBoardFillArea != null && !boardChanged) {
       return;
@@ -125,7 +125,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       java.util.List<java.awt.geom.Area> sameNetClearances = new java.util.ArrayList<>();
       java.util.List<java.awt.geom.Area> sameNetSpokesList = new java.util.ArrayList<>();
 
-      Set<SearchTreeObject> overlaps = this.board.overlappingObjects(inflatedBbox, layerNo);
+      Set<SearchTreeObject> overlaps = this.board.overlappingObjects(inflatedBbox, layerIndex);
       for (SearchTreeObject ob : overlaps) {
         if (!(ob instanceof Item currentItem) || currentItem == this) {
           continue;
@@ -140,14 +140,14 @@ public class ConductionArea extends ObstacleArea implements Connectable {
           }
         }
 
-        int clClass1 = this.clearanceClassNo();
-        int clClass2 = currentItem.clearanceClassNo();
-        double clearanceDist = this.board.clearanceValue(clClass1, clClass2, layerNo);
+        int clClass1 = this.clearanceClassIndex();
+        int clClass2 = currentItem.clearanceClassIndex();
+        double clearanceDist = this.board.clearanceValue(clClass1, clClass2, layerIndex);
 
         if (currentItem.sharesNet(this)) {
           if (currentItem instanceof DrillItem drillItem) {
             FloatPoint center = drillItem.getCenter().toFloat();
-            Shape shape = drillItem.getShapeOnLayer(layerNo);
+            Shape shape = drillItem.getShapeOnLayer(layerIndex);
             if (shape == null) {
               continue;
             }
@@ -186,7 +186,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
           }
         } else {
           if (currentItem instanceof DrillItem drillItem) {
-            Shape shape = drillItem.getShapeOnLayer(layerNo);
+            Shape shape = drillItem.getShapeOnLayer(layerIndex);
             if (shape != null) {
               Shape enlargedShape = shape.enlarge(clearanceDist);
               java.awt.geom.Area clearanceAwt = getAwtAreaFromShapeInBoardUnits(enlargedShape);
@@ -197,7 +197,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
           } else {
             int shapeCount = currentItem.tileShapeCount();
             for (int i = 0; i < shapeCount; i++) {
-              if (currentItem.shapeLayer(i) == layerNo) {
+              if (currentItem.shapeLayer(i) == layerIndex) {
                 TileShape tileShape = currentItem.getTileShape(i);
                 if (tileShape != null) {
                   Shape enlargedShape = tileShape.enlarge(clearanceDist);
@@ -311,8 +311,8 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         getTranslation(),
         getRotationInDegree(),
         getSideChanged(),
-        netNoArr,
-        clearanceClassNo(),
+        netNumbers,
+        clearanceClassIndex(),
         idNo,
         getComponentNo(),
         this.name,
@@ -327,8 +327,8 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     for (int i = 0; i < tileShapeCount(); i++) {
       TileShape currentShape = getTileShape(i);
       Set<SearchTreeObject> overlaps = board.overlappingObjects(currentShape, getLayer());
-      for (SearchTreeObject currentOb : overlaps) {
-        if (!(currentOb instanceof Item currentItem)) {
+      for (SearchTreeObject currentObject : overlaps) {
+        if (!(currentObject instanceof Item currentItem)) {
           continue;
         }
         if (currentItem != this && currentItem.sharesNet(this) && currentItem.sharesLayer(this)) {
@@ -388,13 +388,13 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   @Override
-  public boolean isTraceObstacle(int netNo) {
-    return this.isObstacle && !this.containsNet(netNo);
+  public boolean isTraceObstacle(int netNumber) {
+    return this.isObstacle && !this.containsNet(netNumber);
   }
 
   @Override
-  public boolean isDrillable(int netNo) {
-    return !this.isObstacle || this.containsNet(netNo);
+  public boolean isDrillable(int netNumber) {
+    return !this.isObstacle || this.containsNet(netNumber);
   }
 
   @Override

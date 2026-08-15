@@ -420,16 +420,16 @@ public class MazeSearchAlgo {
 
     // Complete the neighbour rooms to make sure, that the
     // doors of this room will not change later on.
-    int layerNo = listElement.nextRoom.getLayer();
+    int layerIndex = listElement.nextRoom.getLayer();
 
-    boolean layerActive = ctrl.layerActive[layerNo];
+    boolean layerActive = ctrl.layerActive[layerIndex];
     if (!layerActive) {
-      if (autorouteEngine.board.layerStructure.arr[layerNo].isSignal) {
+      if (autorouteEngine.board.layerStructure.arr[layerIndex].isSignal) {
         return true;
       }
     }
 
-    double halfWidth = ctrl.compensatedTraceHalfWidth[layerNo];
+    double halfWidth = ctrl.compensatedTraceHalfWidth[layerIndex];
     boolean currentDoorIsSmall = false;
     if (listElement.door instanceof ExpansionDoor currentDoor) {
       double halfWidthAdd = halfWidth + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
@@ -450,9 +450,9 @@ public class MazeSearchAlgo {
     FRLogger.trace(
         "ROOM_COMPLETE_SYNC"
             + ", net="
-            + ctrl.netNo
+            + ctrl.netNumber
             + ", layer="
-            + layerNo
+            + layerIndex
             + ", from_section="
             + listElement.sectionNoOfDoor
             + ", backtrack_section="
@@ -472,7 +472,7 @@ public class MazeSearchAlgo {
       // try evtl. neckdown at a start pin
       Item startItem = door.item;
       if (startItem instanceof Pin pin) {
-        double neckdownHalfWidth = pin.getTraceNeckdownHalfwidth(layerNo);
+        double neckdownHalfWidth = pin.getTraceNeckdownHalfwidth(layerIndex);
         if (neckdownHalfWidth > 0) {
           halfWidth = Math.min(halfWidth, neckdownHalfWidth);
         }
@@ -508,9 +508,9 @@ public class MazeSearchAlgo {
       Point drillLocation = drill.location;
       ItemSelectionFilter filter =
           new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.CONDUCTION);
-      Set<Item> pickedItems = autorouteEngine.board.pickItems(drillLocation, layerNo, filter);
+      Set<Item> pickedItems = autorouteEngine.board.pickItems(drillLocation, layerIndex, filter);
       for (Item currentItem : pickedItems) {
-        if (!currentItem.containsNet(ctrl.netNo)) {
+        if (!currentItem.containsNet(ctrl.netNumber)) {
           return true;
         }
       }
@@ -594,7 +594,7 @@ public class MazeSearchAlgo {
             + ", nextRoom="
             + describeRoom(listElement.nextRoom)
             + ", net="
-            + ctrl.netNo);
+            + ctrl.netNumber);
     for (int doorIndex = 0; doorIndex < roomDoorsSnapshot.size(); doorIndex++) {
       ExpansionDoor candidateDoor = roomDoorsSnapshot.get(doorIndex);
       FRLogger.trace(
@@ -611,7 +611,7 @@ public class MazeSearchAlgo {
               + ", candidate="
               + describeExpandable(candidateDoor)
               + ", net="
-              + ctrl.netNo);
+              + ctrl.netNumber);
     }
 
     for (ExpansionDoor toDoor : roomDoorsSnapshot) {
@@ -696,8 +696,8 @@ public class MazeSearchAlgo {
       FloatPoint connectionPoint = targetShape.nearestPointApprox(shapeEntryMiddle);
       if (!nextRoomIsThick) {
         // check the line from shapeEntryMiddle to the nearest point.
-        int[] currentNetNoArr = new int[1];
-        currentNetNoArr[0] = this.ctrl.netNo;
+        int[] currentNetNumbers = new int[1];
+        currentNetNumbers[0] = this.ctrl.netNumber;
         int currentLayer = listElement.nextRoom.getLayer();
         IntPoint[] checkPoints = new IntPoint[2];
         checkPoints[0] = shapeEntryMiddle.round();
@@ -709,8 +709,8 @@ public class MazeSearchAlgo {
                   checkPolyline,
                   ctrl.traceHalfWidth[currentLayer],
                   currentLayer,
-                  currentNetNoArr,
-                  ctrl.traceClearanceClassNo,
+                  currentNetNumbers,
+                  ctrl.traceClearanceClassIndex,
                   ctrl.maxShoveTraceRecursionDepth,
                   ctrl.maxShoveViaRecursionDepth,
                   ctrl.maxSpringOverRecursionDepth);
@@ -846,7 +846,7 @@ public class MazeSearchAlgo {
               + ", from_door_bounds="
               + describeExpandableBounds(fromElement.door)
               + ", net="
-              + ctrl.netNo);
+              + ctrl.netNumber);
       FRLogger.trace(
           "MazeSearchAlgo.expand_to_door_section",
           "skip_assign_raw",
@@ -863,7 +863,7 @@ public class MazeSearchAlgo {
               + ", adjustment="
               + adjustment,
           "Net #"
-              + ctrl.netNo
+              + ctrl.netNumber
               + ", door="
               + describeExpandable(door)
               + ", door_bounds="
@@ -957,7 +957,7 @@ public class MazeSearchAlgo {
             + ", from_door_bounds="
             + describeExpandableBounds(fromElement.door)
             + ", net="
-            + ctrl.netNo);
+            + ctrl.netNumber);
     FRLogger.trace(
         "MazeSearchAlgo.expand_to_door_section",
         "assign_raw",
@@ -978,7 +978,7 @@ public class MazeSearchAlgo {
             + ", sortingValue="
             + sortingValue,
         "Net #"
-            + ctrl.netNo
+            + ctrl.netNumber
             + ", door="
             + describeExpandable(door)
             + ", door_bounds="
@@ -1000,7 +1000,7 @@ public class MazeSearchAlgo {
 
   private String fanoutDiagnosticLabel() {
     return ctrl.fanoutStartPinName == null
-        ? "fanout-pin(net=" + ctrl.netNo + ")"
+        ? "fanout-pin(net=" + ctrl.netNumber + ")"
         : ctrl.fanoutStartPinName;
   }
 
@@ -1014,7 +1014,7 @@ public class MazeSearchAlgo {
             + ", pin="
             + fanoutDiagnosticLabel()
             + ", net="
-            + ctrl.netNo
+            + ctrl.netNumber
             + ", "
             + message);
   }
@@ -1194,7 +1194,7 @@ public class MazeSearchAlgo {
                   + ", pin="
                   + fanoutDiagnosticLabel()
                   + ", net="
-                  + ctrl.netNo
+                  + ctrl.netNumber
                   + ", drillLocation="
                   + currentDrill.location
                   + ", expansion_room_id="
@@ -1250,15 +1250,15 @@ public class MazeSearchAlgo {
       }
       Padstack currentObstaclePadstack = ((Via) currentObstacleItem).getPadstack();
       if (!this.ctrl.viaRule.containsPadstack(currentObstaclePadstack)
-          || currentObstacleItem.clearanceClassNo() != this.ctrl.viaClearanceClass) {
+          || currentObstacleItem.clearanceClassIndex() != this.ctrl.viaClearanceClass) {
         return;
       }
       viaLowerBound = currentObstaclePadstack.fromLayer();
       viaUpperBound = currentObstaclePadstack.toLayer();
       roomRipped = true;
     } else {
-      int[] netNoArr = new int[1];
-      netNoArr[0] = ctrl.netNo;
+      int[] netNumbers = new int[1];
+      netNumbers[0] = ctrl.netNumber;
 
       roomRipped = false;
       int viaLowerLimit = Math.max(currentDrill.firstLayer, ctrl.viaLowerBound);
@@ -1269,7 +1269,7 @@ public class MazeSearchAlgo {
         TileShape currentRoomShape =
             currentDrill.roomArr[currentLayer - currentDrill.firstLayer].getShape();
         ForcedPadRouter.CheckDrillResult drillResult =
-            checkLayerWithAnyMatchingVia(currentDrill, currentLayer, currentRoomShape, netNoArr);
+            checkLayerWithAnyMatchingVia(currentDrill, currentLayer, currentRoomShape, netNumbers);
         if (drillResult == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
           viaLowerBound = currentLayer + 1;
           break;
@@ -1298,7 +1298,7 @@ public class MazeSearchAlgo {
         TileShape currentRoomShape =
             currentDrill.roomArr[currentLayer - currentDrill.firstLayer].getShape();
         ForcedPadRouter.CheckDrillResult drillResult =
-            checkLayerWithAnyMatchingVia(currentDrill, currentLayer, currentRoomShape, netNoArr);
+            checkLayerWithAnyMatchingVia(currentDrill, currentLayer, currentRoomShape, netNumbers);
         if (drillResult == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
           viaUpperBound = currentLayer - 1;
           break;
@@ -1378,7 +1378,7 @@ public class MazeSearchAlgo {
   }
 
   private ForcedPadRouter.CheckDrillResult checkLayerWithAnyMatchingVia(
-      ExpansionDrill drill, int layer, TileShape roomShape, int[] netNoArr) {
+      ExpansionDrill drill, int layer, TileShape roomShape, int[] netNumbers) {
     boolean drillableWithAttachSmd = false;
     for (int i = 0; i < this.ctrl.viaRule.viaCount(); i++) {
       ViaInfo viaInfo = this.ctrl.viaRule.getVia(i);
@@ -1397,12 +1397,12 @@ public class MazeSearchAlgo {
               roomShape,
               drill.location,
               layer,
-              netNoArr,
+              netNumbers,
               this.ctrl.maxShoveTraceRecursionDepth,
               0,
               this.autorouteEngine.board,
               this.ctrl.traceHalfWidth[layer],
-              this.ctrl.traceClearanceClassNo);
+              this.ctrl.traceClearanceClassIndex);
       if (result == ForcedPadRouter.CheckDrillResult.DRILLABLE) {
         return result;
       }
@@ -1417,8 +1417,8 @@ public class MazeSearchAlgo {
 
   /** Initializes the maze search algorithm. Returns false if the initialisation failed. */
   private boolean init(Set<Item> startItems, Set<Item> destinationItems) {
-    reduceTraceShapesAtTiePins(startItems, this.ctrl.netNo, this.searchTree);
-    reduceTraceShapesAtTiePins(destinationItems, this.ctrl.netNo, this.searchTree);
+    reduceTraceShapesAtTiePins(startItems, this.ctrl.netNumber, this.searchTree);
+    reduceTraceShapesAtTiePins(destinationItems, this.ctrl.netNumber, this.searchTree);
     // process the destination items
     boolean destinationOk = false;
     for (Item currentItem : destinationItems) {
@@ -1559,7 +1559,8 @@ public class MazeSearchAlgo {
     if (obstacleItem instanceof Trace trace) {
       obstacleHalfWidth =
           trace.getHalfWidth()
-              + this.searchTree.clearanceCompensationValue(obstacleItem.clearanceClassNo(), layer);
+              + this.searchTree.clearanceCompensationValue(
+                  obstacleItem.clearanceClassIndex(), layer);
 
     } else if (obstacleItem instanceof Via via) {
       TileShape viaShape = via.getTreeShapeOnLayer(this.searchTree, layer);
@@ -1689,13 +1690,13 @@ public class MazeSearchAlgo {
     if (obstacleItem instanceof app.freerouting.board.Item obstacleBoardItem) {
       int[] nets = new int[obstacleBoardItem.netCount()];
       for (int i = 0; i < nets.length; i++) {
-        nets[i] = obstacleBoardItem.getNetNo(i);
+        nets[i] = obstacleBoardItem.getNetNumber(i);
       }
       obstacleNets = java.util.Arrays.toString(nets);
     }
     FRLogger.trace(
         "CHECK_RIPUP net="
-            + ctrl.netNo
+            + ctrl.netNumber
             + ", obstacle_id="
             + (obstacleItem instanceof app.freerouting.board.Item obstItem
                 ? obstItem.getIdNo()
@@ -1854,7 +1855,7 @@ public class MazeSearchAlgo {
     Polyline checkPolyline = new Polyline(lineArr);
     TileShape checkShape = checkPolyline.offsetShape(checkRadius, 0);
     int[] ignoreNetNos = new int[1];
-    ignoreNetNos[0] = this.ctrl.netNo;
+    ignoreNetNos[0] = this.ctrl.netNumber;
     Set<SearchTreeObject> overlappingObjects = new TreeSet<>();
     this.autorouteEngine.autorouteSearchTree.overlappingObjects(
         checkShape, currentLayer, ignoreNetNos, overlappingObjects);

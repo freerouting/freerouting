@@ -42,17 +42,17 @@ class PopupMenuChangeLayer extends JMenu {
 
   private class LayermenuItem extends JMenuItem {
 
-    private final int layerNo;
+    private final int layerIndex;
 
-    LayermenuItem(int layerNo) {
-      this.layerNo = layerNo;
+    LayermenuItem(int layerIndex) {
+      this.layerIndex = layerIndex;
       addActionListener(
           _ -> {
             final BoardPanel boardPanel = boardFrame.boardPanel;
-            if (boardPanel.boardHandling.changeLayerAction(layerNo)) {
+            if (boardPanel.boardHandling.changeLayerAction(layerIndex)) {
               TextManager tm = new TextManager(PopupMenuChangeLayer.class, boardFrame.getLocale());
               String layerName =
-                  boardPanel.boardHandling.getRoutingBoard().layerStructure.arr[layerNo].name;
+                  boardPanel.boardHandling.getRoutingBoard().layerStructure.arr[layerIndex].name;
               boardPanel.screenMessages.setStatusMessage(
                   tm.getText("layer_changed_to_message", layerName));
             }

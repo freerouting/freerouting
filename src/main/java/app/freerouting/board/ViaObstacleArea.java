@@ -15,7 +15,7 @@ public class ViaObstacleArea extends ObstacleArea {
       Vector translation,
       double rotationInDegree,
       boolean sideChanged,
-      int[] netNoArr,
+      int[] netNumbers,
       int clearanceType,
       int idNo,
       int groupNo,
@@ -28,7 +28,7 @@ public class ViaObstacleArea extends ObstacleArea {
         translation,
         rotationInDegree,
         sideChanged,
-        netNoArr,
+        netNumbers,
         clearanceType,
         idNo,
         groupNo,
@@ -67,8 +67,8 @@ public class ViaObstacleArea extends ObstacleArea {
 
   @Override
   public Item copy(int idNo) {
-    int[] copiedNetNos = new int[netNoArr.length];
-    System.arraycopy(netNoArr, 0, copiedNetNos, 0, netNoArr.length);
+    int[] copiedNetNos = new int[netNumbers.length];
+    System.arraycopy(netNumbers, 0, copiedNetNos, 0, netNumbers.length);
     return new ViaObstacleArea(
         getRelativeArea(),
         getLayer(),
@@ -76,7 +76,7 @@ public class ViaObstacleArea extends ObstacleArea {
         getRotationInDegree(),
         getSideChanged(),
         copiedNetNos,
-        clearanceClassNo(),
+        clearanceClassIndex(),
         idNo,
         getComponentNo(),
         this.name,
@@ -93,7 +93,7 @@ public class ViaObstacleArea extends ObstacleArea {
   }
 
   @Override
-  public boolean isTraceObstacle(int netNo) {
+  public boolean isTraceObstacle(int netNumber) {
     return false;
   }
 

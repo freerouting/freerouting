@@ -136,18 +136,18 @@ public abstract class Rule {
     }
   }
 
-  private static void writeLayerRule(NetClass netClass, int layerNo, WriteScopeParameter par)
+  private static void writeLayerRule(NetClass netClass, int layerIndex, WriteScopeParameter par)
       throws IOException {
     par.file.startScope();
     par.file.write("layer_rule ");
 
-    Layer currentBoardLayer = par.board.layerStructure.arr[layerNo];
+    Layer currentBoardLayer = par.board.layerStructure.arr[layerIndex];
 
     par.file.write(currentBoardLayer.name);
     par.file.startScope();
     par.file.write("rule ");
 
-    int currentTraceHalfWidth = netClass.getTraceHalfWidth(layerNo);
+    int currentTraceHalfWidth = netClass.getTraceHalfWidth(layerIndex);
 
     // write the trace width
     double traceWidth = 2 * par.coordinateTransform.boardToDsn(currentTraceHalfWidth);

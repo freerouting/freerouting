@@ -363,10 +363,10 @@ public final class BoardRenderer {
     if (step.virtual()) {
       return;
     }
-    int layerNo = step.index();
+    int layerIndex = step.index();
     int fromLayer = drillItem.firstLayer();
     int toLayer = drillItem.lastLayer();
-    if (layerNo < fromLayer || layerNo > toLayer) {
+    if (layerIndex < fromLayer || layerIndex > toLayer) {
       return;
     }
 
@@ -385,7 +385,7 @@ public final class BoardRenderer {
         boolean isBack = activeVirtual != -1 && activeVirtual % 2 != 0;
         lastPhysicalLayer = isBack ? drillItem.board.getLayerCount() - 1 : 0;
       }
-      isLastPhysicalLayer = layerNo == lastPhysicalLayer;
+      isLastPhysicalLayer = layerIndex == lastPhysicalLayer;
     }
 
     double visibilityFactor = 0;
@@ -393,11 +393,11 @@ public final class BoardRenderer {
       visibilityFactor += graphicsContext.getLayerVisibility(layer);
     }
     if (visibilityFactor >= 0.001) {
-      double layerVisibility = graphicsContext.getLayerVisibility(layerNo);
-      Shape shape = drillItem.getShape(layerNo - fromLayer);
+      double layerVisibility = graphicsContext.getLayerVisibility(layerIndex);
+      Shape shape = drillItem.getShape(layerIndex - fromLayer);
       if (shape != null && layerVisibility > 0.001) {
         double layerIntensity = drillItem instanceof Pin ? intensity : intensity * layerVisibility;
-        graphicsContext.fillArea(shape, graphics, colors[layerNo], layerIntensity);
+        graphicsContext.fillArea(shape, graphics, colors[layerIndex], layerIntensity);
       }
     }
 
@@ -584,7 +584,7 @@ public final class BoardRenderer {
       double maxClearanceLookupBoard = 2000.0 * area.board.communication.getResolution(Unit.UM);
       if (area.board.rules != null && area.board.rules.clearanceMatrix != null) {
         double maxMatrixClearance =
-            area.board.rules.clearanceMatrix.maxValue(area.clearanceClassNo(), layer);
+            area.board.rules.clearanceMatrix.maxValue(area.clearanceClassIndex(), layer);
         maxClearanceLookupBoard =
             Math.max(
                 maxClearanceLookupBoard,

@@ -115,10 +115,10 @@ public class UndoableObjects implements Serializable {
 
     if (currentDeleteList != null) {
       if (objectNode.level < this.stackLevel) {
-        // add currentOb to the current delete list to make Undo possible.
+        // add currentObject to the current delete list to make Undo possible.
         currentDeleteList.add(objectNode);
       } else if (objectNode.undoObject != null) {
-        // add currentOb.undoObject to the current delete list to make Undo possible.
+        // add currentObject.undoObject to the current delete list to make Undo possible.
 
         currentDeleteList.add(objectNode.undoObject);
       }

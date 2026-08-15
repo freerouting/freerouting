@@ -35,14 +35,14 @@ public class Polygon implements Serializable {
         return;
       }
       Iterator<Point> i = corners.iterator();
-      Point currentOb = i.next();
+      Point currentObject = i.next();
       while (i.hasNext()) {
         Point nextOb = i.next();
-        if (nextOb.equals(currentOb)) {
+        if (nextOb.equals(currentObject)) {
           i.remove();
           cornerRemoved = true;
         } else {
-          currentOb = nextOb;
+          currentObject = nextOb;
         }
       }
 

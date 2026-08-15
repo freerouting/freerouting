@@ -106,7 +106,7 @@ public class DragItemState extends DragState {
       // Update the incompletes for the nets of the moved items.
       if (itemToMove.getComponentNo() == 0) {
         for (int i = 0; i < itemToMove.netCount(); i++) {
-          hdlg.updateRatsnest(itemToMove.getNetNo(i));
+          hdlg.updateRatsnest(itemToMove.getNetNumber(i));
         }
       } else {
         Collection<Item> movedItems =
@@ -114,11 +114,11 @@ public class DragItemState extends DragState {
         Set<Integer> changedNets = new TreeSet<>();
         for (Item currentMovedItem : movedItems) {
           for (int i = 0; i < currentMovedItem.netCount(); i++) {
-            changedNets.add(currentMovedItem.getNetNo(i));
+            changedNets.add(currentMovedItem.getNetNumber(i));
           }
         }
-        for (Integer currentNetNo : changedNets) {
-          hdlg.updateRatsnest(currentNetNo);
+        for (Integer currentNetNumber : changedNets) {
+          hdlg.updateRatsnest(currentNetNumber);
         }
       }
     } else {

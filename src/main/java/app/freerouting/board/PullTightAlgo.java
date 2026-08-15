@@ -42,7 +42,7 @@ public abstract class PullTightAlgo {
   private final int keepPointLayer;
   protected int currentLayer;
   protected int currentHalfWidth;
-  protected int[] currentNetNoArr;
+  protected int[] currentNetNumbers;
   protected int currentClType;
   protected IntOctagon currentClipShape;
   protected Set<Pin> contactPins;
@@ -132,11 +132,11 @@ public abstract class PullTightAlgo {
         // search in the ShapeSearchTree for all overlapping traces
         // with clipShape on layer i
         Collection<SearchTreeObject> items = board.overlappingObjects(changedRegion, i);
-        for (SearchTreeObject currentOb : items) {
+        for (SearchTreeObject currentObject : items) {
           if (this.isStopRequested()) {
             return;
           }
-          if (currentOb instanceof PolylineTrace currentTrace) {
+          if (currentObject instanceof PolylineTrace currentTrace) {
             if (currentTrace.pullTight(this)) {
               somethingChanged = true;
               if (this.splitTracesAtKeepPoint()) {
@@ -146,7 +146,7 @@ public abstract class PullTightAlgo {
               somethingChanged = true;
               break; // because items may be removed
             }
-          } else if (currentOb instanceof Via via && traceCostArr != null) {
+          } else if (currentObject instanceof Via via && traceCostArr != null) {
             if (ViaOptimizer.optViaLocation(
                 this.board, via, traceCostArr, this.minTranslateDist, 10)) {
               somethingChanged = true;
@@ -165,13 +165,13 @@ public abstract class PullTightAlgo {
       Polyline polyline,
       int layer,
       int halfWidth,
-      int[] netNoArr,
+      int[] netNumbers,
       int clType,
       Set<Pin> contactPins) {
     currentLayer = layer;
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     currentHalfWidth = halfWidth + searchTree.clearanceCompensationValue(clType, layer);
-    currentNetNoArr = netNoArr;
+    currentNetNumbers = netNumbers;
     currentClType = clType;
     this.contactPins = contactPins;
     return pullTight(polyline);
@@ -289,7 +289,7 @@ public abstract class PullTightAlgo {
         TileShape shapeToCheck = tmp.offsetShape(currentHalfWidth, 0);
         checkOk =
             board.checkTraceShape(
-                shapeToCheck, currentLayer, currentNetNoArr, currentClType, this.contactPins);
+                shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
       }
       deltaDist /= 2;
       if (checkOk) {
@@ -352,13 +352,13 @@ public abstract class PullTightAlgo {
             TileShape shapeToCheck = tmp.offsetShape(currentHalfWidth, i - 2);
             checkOk =
                 board.checkTraceShape(
-                    shapeToCheck, currentLayer, currentNetNoArr, currentClType, this.contactPins);
+                    shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
           }
           if (checkOk && (i < currentPolyline.arr.length - 2)) {
             TileShape shapeToCheck = tmp.offsetShape(currentHalfWidth, i - 1);
             checkOk =
                 board.checkTraceShape(
-                    shapeToCheck, currentLayer, currentNetNoArr, currentClType, this.contactPins);
+                    shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
           }
         }
         if (checkOk) {
@@ -381,8 +381,8 @@ public abstract class PullTightAlgo {
     }
     currentLayer = trace.getLayer();
     currentHalfWidth = trace.getHalfWidth();
-    currentNetNoArr = trace.netNoArr;
-    currentClType = trace.clearanceClassNo();
+    currentNetNumbers = trace.netNumbers;
+    currentClType = trace.clearanceClassIndex();
     return smoothenEndCornersAtTrace1(trace);
   }
 
@@ -404,7 +404,7 @@ public abstract class PullTightAlgo {
       Polyline adjustedPolyline = smoothenEndCornersAtTrace2(currentTrace);
       if (adjustedPolyline != null) {
         int traceLayer = currentTrace.getLayer();
-        int currentClClass = currentTrace.clearanceClassNo();
+        int currentClClass = currentTrace.clearanceClassIndex();
         FixedState currentFixedState = currentTrace.getFixedState();
         board.removeItem(currentTrace);
         PolylineTrace adjInsTrace =
@@ -412,7 +412,7 @@ public abstract class PullTightAlgo {
                 adjustedPolyline,
                 traceLayer,
                 currentHalfWidth,
-                currentTrace.netNoArr,
+                currentTrace.netNumbers,
                 currentClClass,
                 currentFixedState);
         if (adjInsTrace != null) {
@@ -420,16 +420,16 @@ public abstract class PullTightAlgo {
           connectionToTraceImproved = true;
           board.removeItem(currentTrace);
           currentTrace = adjInsTrace;
-          for (int currentNetNo : currentTrace.netNoArr) {
-            board.splitTraces(adjustedPolyline.firstCorner(), traceLayer, currentNetNo);
-            board.splitTraces(adjustedPolyline.lastCorner(), traceLayer, currentNetNo);
+          for (int currentNetNumber : currentTrace.netNumbers) {
+            board.splitTraces(adjustedPolyline.firstCorner(), traceLayer, currentNetNumber);
+            board.splitTraces(adjustedPolyline.lastCorner(), traceLayer, currentNetNumber);
 
             try {
-              board.normalizeTraces(currentNetNo);
+              board.normalizeTraces(currentNetNumber);
             } catch (Exception e) {
               FRLogger.error(
                   "The normalization of net '"
-                      + board.rules.nets.get(currentNetNo).name
+                      + board.rules.nets.get(currentNetNumber).name
                       + "' failed.",
                   e);
             }
@@ -498,10 +498,15 @@ public abstract class PullTightAlgo {
     ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(this.board);
     Polyline newPolyline =
         shoveTraceAlgo.springOverObstacles(
-            polyline, currentHalfWidth, currentLayer, currentNetNoArr, currentClType, contactPins);
+            polyline,
+            currentHalfWidth,
+            currentLayer,
+            currentNetNumbers,
+            currentClType,
+            contactPins);
     if (newPolyline != null && newPolyline != polyline) {
       if (this.board.checkPolylineTrace(
-          newPolyline, currentLayer, currentHalfWidth, currentNetNoArr, currentClType)) {
+          newPolyline, currentLayer, currentHalfWidth, currentNetNumbers, currentClType)) {
         result = newPolyline;
       }
     }

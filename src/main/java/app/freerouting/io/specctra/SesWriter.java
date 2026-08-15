@@ -320,20 +320,20 @@ public final class SesWriter {
       throws IOException {
     file.startScope();
     file.write("network_out ");
-    for (int i = 1; i <= board.rules.nets.maxNetNo(); i++) {
+    for (int i = 1; i <= board.rules.nets.maxNetNumber(); i++) {
       writeNet(i, board, identifierType, coordinateTransform, file);
     }
     file.endScope();
   }
 
   private static void writeNet(
-      int netNo,
+      int netNumber,
       BasicBoard board,
       IdentifierType identifierType,
       CoordinateTransform coordinateTransform,
       IndentFileWriter file)
       throws IOException {
-    Collection<Item> netItems = board.getConnectableItems(netNo);
+    Collection<Item> netItems = board.getConnectableItems(netNumber);
     boolean headerWritten = false;
     for (Item currentItem : netItems) {
       if (currentItem.getFixedState() == FixedState.SYSTEM_FIXED) {
@@ -347,7 +347,7 @@ public final class SesWriter {
       if (!headerWritten && (isWire || isVia || isConductionArea)) {
         file.startScope();
         file.write("net ");
-        Net currentNet = board.rules.nets.get(netNo);
+        Net currentNet = board.rules.nets.get(netNumber);
         if (currentNet == null) {
           FRLogger.warn("SesWriter.writeNet: net not found");
         } else {
@@ -376,8 +376,8 @@ public final class SesWriter {
       CoordinateTransform coordinateTransform,
       IndentFileWriter file)
       throws IOException {
-    int layerNo = wire.getLayer();
-    final app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerNo];
+    int layerIndex = wire.getLayer();
+    final app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerIndex];
     final int wireWidth = (int) Math.round(coordinateTransform.boardToDsn(2 * wire.getHalfWidth()));
     file.startScope();
     file.write("wire");
@@ -523,9 +523,9 @@ public final class SesWriter {
       return;
     }
     Area currentArea = conductionArea.getArea();
-    int layerNo = conductionArea.getLayer();
-    app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerNo];
-    final Layer conductionLayer = new Layer(boardLayer.name, layerNo, boardLayer.isSignal);
+    int layerIndex = conductionArea.getLayer();
+    app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerIndex];
+    final Layer conductionLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
     if (currentArea instanceof app.freerouting.geometry.planar.Shape shape) {

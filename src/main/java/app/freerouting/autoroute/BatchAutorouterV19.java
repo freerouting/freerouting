@@ -286,26 +286,26 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       Set<Item> handledItems = new TreeSet<>();
       Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
       for (; ; ) {
-        UndoableObjects.Storable currentOb = board.itemList.readObject(it);
-        if (currentOb == null) {
+        UndoableObjects.Storable currentObject = board.itemList.readObject(it);
+        if (currentObject == null) {
           break;
         }
-        if (currentOb instanceof Connectable && currentOb instanceof Item) {
+        if (currentObject instanceof Connectable && currentObject instanceof Item) {
           // This is a connectable item, like PolylineTrace or Pin
-          Item currentItem = (Item) currentOb;
+          Item currentItem = (Item) currentObject;
           if (!currentItem.isRoutable()) {
             if (!handledItems.contains(currentItem)) {
 
               // Let's go through all nets of this item
               for (int i = 0; i < currentItem.netCount(); ++i) {
-                int currentNetNo = currentItem.getNetNo(i);
-                Set<Item> connectedSet = currentItem.getConnectedSet(currentNetNo);
+                int currentNetNumber = currentItem.getNetNumber(i);
+                Set<Item> connectedSet = currentItem.getConnectedSet(currentNetNumber);
                 for (Item currentConnectedItem : connectedSet) {
                   if (currentConnectedItem.netCount() <= 1) {
                     handledItems.add(currentConnectedItem);
                   }
                 }
-                int netItemCount = board.connectableItemCount(currentNetNo);
+                int netItemCount = board.connectableItemCount(currentNetNumber);
 
                 // If the item is not connected to all other items of the net, we add it to the
                 // auto-router's to-do list
@@ -350,7 +350,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           SortedSet<Item> rippedItemList = new TreeSet<>();
-          if (autorouteItem(currentItem, currentItem.getNetNo(i), rippedItemList, passNo)) {
+          if (autorouteItem(currentItem, currentItem.getNetNumber(i), rippedItemList, passNo)) {
             ++routed;
           } else {
             ++notFound;
@@ -468,7 +468,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       AutorouteEngine autorouteEngine =
           board.initAutoroute(
               routeNetNo,
-              autorouteControl.traceClearanceClassNo,
+              autorouteControl.traceClearanceClassIndex,
               this.thread,
               timeLimit,
               this.retainAutorouteDatabase);

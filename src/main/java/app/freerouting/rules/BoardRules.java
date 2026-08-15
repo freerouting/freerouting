@@ -262,7 +262,7 @@ public class BoardRules implements Serializable {
    */
   public void changeClearanceClassNo(int fromNo, int toNo, Collection<Item> boardItems) {
     for (Item currentItem : boardItems) {
-      if (currentItem.clearanceClassNo() == fromNo) {
+      if (currentItem.clearanceClassIndex() == fromNo) {
         currentItem.setClearanceClassNo(toNo);
       }
     }
@@ -294,7 +294,7 @@ public class BoardRules implements Serializable {
    */
   public boolean removeClearanceClass(int index, Collection<Item> boardItems) {
     for (Item currentItem : boardItems) {
-      if (currentItem.clearanceClassNo() == index) {
+      if (currentItem.clearanceClassIndex() == index) {
         return false;
       }
     }
@@ -319,8 +319,8 @@ public class BoardRules implements Serializable {
     }
 
     for (Item currentItem : boardItems) {
-      if (currentItem.clearanceClassNo() > index) {
-        currentItem.setClearanceClassNo(currentItem.clearanceClassNo() - 1);
+      if (currentItem.clearanceClassIndex() > index) {
+        currentItem.setClearanceClassNo(currentItem.clearanceClassIndex() - 1);
       }
     }
 

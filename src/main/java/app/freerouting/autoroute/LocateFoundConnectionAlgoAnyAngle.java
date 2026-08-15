@@ -325,10 +325,10 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
     if (resultCorner != null && resultCorner != this.currentFromPoint) {
       result.add(resultCorner);
     }
-    if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
+    if (this.ctrl.netNumber == 33 || this.ctrl.netNumber == 66 || this.ctrl.netNumber == 67) {
       FRLogger.trace(
           "compare_trace_next_corners_raw net="
-              + this.ctrl.netNo
+              + this.ctrl.netNumber
               + ", layer="
               + this.currentTraceLayer
               + ", from_door="

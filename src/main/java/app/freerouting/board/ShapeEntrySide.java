@@ -27,7 +27,7 @@ public class ShapeEntrySide {
     int fromsideNo = -1;
     FloatPoint intersection = null;
     boolean borderIntersectionFound = false;
-    // calculate the edgeNo of shape, where polyline enters
+    // calculate the edgeIndex of shape, where polyline enters
     for (int currentNo = no; currentNo > 0; currentNo--) {
       LineSegment currentSeg = new LineSegment(polyline, currentNo);
       int[] intersections = currentSeg.borderIntersections(shape);
@@ -75,8 +75,8 @@ public class ShapeEntrySide {
   }
 
   /**
-   * Calculates the Side of shape at the start of lineSegment. If shoveToTheLeft, the fromSideNo is
-   * decremented by 2, else it is increased by 2.
+   * Calculates the Side of shape at the start of lineSegment. If shoveToTheLeft, the fromSideIndex
+   * is decremented by 2, else it is increased by 2.
    */
   ShapeEntrySide(LineSegment lineSegment, TileShape shape, boolean shoveToTheLeft) {
     FloatPoint startCorner = lineSegment.startPointApprox();

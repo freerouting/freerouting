@@ -43,13 +43,13 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   /** DrillItem. */
   protected DrillItem(
       Point center,
-      int[] netNoArr,
+      int[] netNumbers,
       int clearanceType,
       int idNo,
       int groupNo,
       FixedState fixedState,
       BasicBoard board) {
-    super(netNoArr, clearanceType, idNo, groupNo, fixedState, board);
+    super(netNumbers, clearanceType, idNo, groupNo, fixedState, board);
     this.center = center;
   }
 
@@ -99,7 +99,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
             new TraceInfo(
                 currentTrace.getLayer(),
                 currentTrace.getHalfWidth(),
-                currentTrace.clearanceClassNo());
+                currentTrace.clearanceClassIndex());
         contactTraceInfo.add(currentTraceInfo);
       }
     }
@@ -133,7 +133,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
           connectPoints,
           currentTraceInfo.layer,
           currentTraceInfo.halfWidth,
-          this.netNoArr,
+          this.netNumbers,
           currentTraceInfo.clearanceType,
           FixedState.UNFIXED);
     }
@@ -271,8 +271,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     TileShape searchShape = TileShape.getInstance(drillCenter);
     Set<SearchTreeObject> overlaps = board.overlappingObjects(searchShape, -1);
     Set<Item> result = new TreeSet<>();
-    for (SearchTreeObject currentOb : overlaps) {
-      if (!(currentOb instanceof Item currentItem)) {
+    for (SearchTreeObject currentObject : overlaps) {
+      if (!(currentObject instanceof Item currentItem)) {
         continue;
       }
       if (currentItem != this && currentItem.sharesNet(this) && currentItem.sharesLayer(this)) {

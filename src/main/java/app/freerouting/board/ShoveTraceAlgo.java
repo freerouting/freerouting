@@ -40,7 +40,7 @@ public class ShoveTraceAlgo {
       LineSegment lineSegment,
       boolean shoveToTheLeft,
       int layer,
-      int[] netNoArr,
+      int[] netNumbers,
       int traceHalfWidth,
       int clType,
       int maxRecursionDepth,
@@ -65,7 +65,7 @@ public class ShoveTraceAlgo {
     }
     ShapeEntrySide fromSide = new ShapeEntrySide(lineSegment, traceShape, shoveToTheLeft);
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(traceShape, layer, netNoArr, clType, fromSide, board);
+        new ShapeTraceEntries(traceShape, layer, netNumbers, clType, fromSide, board);
     Collection<Item> obstacles =
         searchTree.overlappingItemsWithClearance(traceShape, layer, new int[0], clType);
     boolean obstaclesShovable = shapeEntries.storeItems(obstacles, false, true);
@@ -89,7 +89,7 @@ public class ShoveTraceAlgo {
     // check, if the obstacle vias can be shoved
 
     for (Via currentShoveVia : shapeEntries.shoveViaList) {
-      if (currentShoveVia.sharesNetNo(netNoArr)) {
+      if (currentShoveVia.sharesNetNo(netNumbers)) {
         continue;
       }
       boolean shoveViaOk = false;
@@ -124,7 +124,7 @@ public class ShoveTraceAlgo {
         double currentOkLength = projection - viaRadius - traceHalfWidth;
         if (!searchTree.isClearanceCompensationUsed()) {
           currentOkLength -=
-              clMatrix.getValue(clType, currentShoveVia.clearanceClassNo(), layer, true);
+              clMatrix.getValue(clType, currentShoveVia.clearanceClassIndex(), layer, true);
         }
         if (currentOkLength <= 0) {
           return 0;
@@ -161,9 +161,9 @@ public class ShoveTraceAlgo {
                   currentLineSegment,
                   shoveToTheLeft,
                   layer,
-                  currentSubstituteTrace.netNoArr,
+                  currentSubstituteTrace.netNumbers,
                   currentSubstituteTrace.getHalfWidth(),
-                  currentSubstituteTrace.clearanceClassNo(),
+                  currentSubstituteTrace.clearanceClassIndex(),
                   maxRecursionDepth - 1,
                   maxViaRecursionDepth);
           if (shoveOkLength < Integer.MAX_VALUE) {
@@ -182,10 +182,11 @@ public class ShoveTraceAlgo {
             if (searchTree.isClearanceCompensationUsed()) {
               currentOkLength -=
                   searchTree.clearanceCompensationValue(
-                      currentSubstituteTrace.clearanceClassNo(), layer);
+                      currentSubstituteTrace.clearanceClassIndex(), layer);
             } else {
               currentOkLength -=
-                  clMatrix.getValue(clType, currentSubstituteTrace.clearanceClassNo(), layer, true);
+                  clMatrix.getValue(
+                      clType, currentSubstituteTrace.clearanceClassIndex(), layer, true);
             }
             if (currentOkLength <= 0) {
               return 0;
@@ -208,7 +209,7 @@ public class ShoveTraceAlgo {
       ShapeEntrySide fromSide,
       Direction dir,
       int layer,
-      int[] netNoArr,
+      int[] netNumbers,
       int clType,
       int maxRecursionDepth,
       int maxViaRecursionDepth,
@@ -227,11 +228,11 @@ public class ShoveTraceAlgo {
       return false;
     }
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(traceShape, layer, netNoArr, clType, fromSide, board);
+        new ShapeTraceEntries(traceShape, layer, netNumbers, clType, fromSide, board);
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     Collection<Item> obstacles =
         searchTree.overlappingItemsWithClearance(traceShape, layer, new int[0], clType);
-    obstacles.removeAll(getIgnoreItemsAtTiePins(traceShape, layer, netNoArr));
+    obstacles.removeAll(getIgnoreItemsAtTiePins(traceShape, layer, netNumbers));
     boolean obstaclesShovable = shapeEntries.storeItems(obstacles, false, true);
     if (!obstaclesShovable) {
       this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
@@ -239,12 +240,12 @@ public class ShoveTraceAlgo {
     }
     int tracePieceCount = shapeEntries.substituteTraceCount();
 
-    if (netNoArr != null && netNoArr.length > 0 && !obstacles.isEmpty()) {
+    if (netNumbers != null && netNumbers.length > 0 && !obstacles.isEmpty()) {
       StringBuilder obstacleLog = new StringBuilder();
       obstacleLog
           .append(tracePieceCount > 0 ? "[shove_check_obstacles]" : "[shove_check_obstacles_zero]")
           .append(" net=")
-          .append(netNoArr[0])
+          .append(netNumbers[0])
           .append(", shape_bb=")
           .append(traceShape.boundingBox())
           .append(", tracePieceCount=")
@@ -264,7 +265,7 @@ public class ShoveTraceAlgo {
         if (obs instanceof PolylineTrace pt) {
           obstacleLog
               .append(",nets=")
-              .append(java.util.Arrays.toString(pt.netNoArr))
+              .append(java.util.Arrays.toString(pt.netNumbers))
               .append(",fc=")
               .append(pt.firstCorner())
               .append(",lc=")
@@ -285,7 +286,7 @@ public class ShoveTraceAlgo {
     // check, if the obstacle vias can be shoved
 
     for (Via currentShoveVia : shapeEntries.shoveViaList) {
-      if (currentShoveVia.sharesNetNo(netNoArr)) {
+      if (currentShoveVia.sharesNetNo(netNumbers)) {
         continue;
       }
       if (maxViaRecursionDepth <= 0) {
@@ -343,8 +344,8 @@ public class ShoveTraceAlgo {
                 currentSubstituteTrace.polyline(),
                 currentSubstituteTrace.getCompensatedHalfWidth(searchTree),
                 layer,
-                currentSubstituteTrace.netNoArr,
-                currentSubstituteTrace.clearanceClassNo(),
+                currentSubstituteTrace.netNumbers,
+                currentSubstituteTrace.clearanceClassIndex(),
                 false,
                 maxSpringOverRecursionDepth,
                 null);
@@ -369,8 +370,8 @@ public class ShoveTraceAlgo {
               current.fromSide,
               currentDirection,
               layer,
-              currentSubstituteTrace.netNoArr,
-              currentSubstituteTrace.clearanceClassNo(),
+              currentSubstituteTrace.netNumbers,
+              currentSubstituteTrace.clearanceClassIndex(),
               maxRecursionDepth - 1,
               maxViaRecursionDepth,
               maxSpringOverRecursionDepth,
@@ -391,7 +392,7 @@ public class ShoveTraceAlgo {
       TileShape traceShape,
       ShapeEntrySide fromSide,
       int layer,
-      int[] netNoArr,
+      int[] netNumbers,
       int clType,
       Collection<Item> ignoreItems,
       int maxRecursionDepth,
@@ -409,7 +410,7 @@ public class ShoveTraceAlgo {
         traceShape,
         fromSide,
         layer,
-        netNoArr,
+        netNumbers,
         clType,
         ignoreItems,
         maxRecursionDepth,
@@ -419,11 +420,11 @@ public class ShoveTraceAlgo {
       return false;
     }
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(traceShape, layer, netNoArr, clType, fromSide, board);
+        new ShapeTraceEntries(traceShape, layer, netNumbers, clType, fromSide, board);
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     Collection<Item> obstacles =
         searchTree.overlappingItemsWithClearance(traceShape, layer, new int[0], clType);
-    obstacles.removeAll(getIgnoreItemsAtTiePins(traceShape, layer, netNoArr));
+    obstacles.removeAll(getIgnoreItemsAtTiePins(traceShape, layer, netNumbers));
     boolean obstaclesShovable = shapeEntries.storeItems(obstacles, false, true);
     if (!shapeEntries.shoveViaList.isEmpty()) {
       obstaclesShovable = false;
@@ -435,13 +436,13 @@ public class ShoveTraceAlgo {
       return false;
     }
     int tracePieceCount = shapeEntries.substituteTraceCount();
-    if (netNoArr != null && netNoArr.length > 0 && !obstacles.isEmpty()) {
+    if (netNumbers != null && netNumbers.length > 0 && !obstacles.isEmpty()) {
       StringBuilder obstacleLog = new StringBuilder();
       obstacleLog
           .append(
               tracePieceCount > 0 ? "[shove_insert_obstacles]" : "[shove_insert_obstacles_zero]")
           .append(" net=")
-          .append(netNoArr[0])
+          .append(netNumbers[0])
           .append(", shape_bb=")
           .append(traceShape.boundingBox())
           .append(", tracePieceCount=")
@@ -461,7 +462,7 @@ public class ShoveTraceAlgo {
         if (obs instanceof PolylineTrace pt) {
           obstacleLog
               .append(",nets=")
-              .append(java.util.Arrays.toString(pt.netNoArr))
+              .append(java.util.Arrays.toString(pt.netNumbers))
               .append(",fc=")
               .append(pt.firstCorner())
               .append(",lc=")
@@ -479,7 +480,7 @@ public class ShoveTraceAlgo {
       this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
       return false;
     }
-    boolean tailsExistBefore = board.containsTraceTails(obstacles, netNoArr);
+    boolean tailsExistBefore = board.containsTraceTails(obstacles, netNumbers);
     shapeEntries.cutoutTraces(obstacles);
     boolean isOrthogonalMode = traceShape instanceof IntBox;
     for (; ; ) {
@@ -496,8 +497,8 @@ public class ShoveTraceAlgo {
                 currentSubstituteTrace.polyline(),
                 currentSubstituteTrace.getCompensatedHalfWidth(searchTree),
                 layer,
-                currentSubstituteTrace.netNoArr,
-                currentSubstituteTrace.clearanceClassNo(),
+                currentSubstituteTrace.netNumbers,
+                currentSubstituteTrace.clearanceClassIndex(),
                 false,
                 maxSpringOverRecursionDepth,
                 null);
@@ -512,7 +513,7 @@ public class ShoveTraceAlgo {
           currentSubstituteTrace.change(newPolyline);
         }
       }
-      int[] currentNetNoArr = currentSubstituteTrace.netNoArr;
+      int[] currentNetNumbers = currentSubstituteTrace.netNumbers;
       for (int i = 0; i < currentSubstituteTrace.tileShapeCount(); i++) {
         ShapeAndEntrySide current =
             new ShapeAndEntrySide(currentSubstituteTrace, i, isOrthogonalMode, false);
@@ -520,8 +521,8 @@ public class ShoveTraceAlgo {
             current.shape,
             current.fromSide,
             layer,
-            currentNetNoArr,
-            currentSubstituteTrace.clearanceClassNo(),
+            currentNetNumbers,
+            currentSubstituteTrace.clearanceClassIndex(),
             ignoreItems,
             maxRecursionDepth - 1,
             maxViaRecursionDepth,
@@ -548,11 +549,11 @@ public class ShoveTraceAlgo {
 
       if (!tailsExistBefore) {
         for (int i = 0; i < 2; i++) {
-          Trace tail = board.getTraceTail(endCorners[i], layer, currentNetNoArr);
+          Trace tail = board.getTraceTail(endCorners[i], layer, currentNetNumbers);
           if (tail != null) {
             board.removeItems(tail.getConnectionItems(Item.StopConnectionOption.VIA));
-            for (int currentNetNo : currentNetNoArr) {
-              board.combineTraces(currentNetNo);
+            for (int currentNetNumber : currentNetNumbers) {
+              board.combineTraces(currentNetNumber);
             }
           }
         }
@@ -561,12 +562,12 @@ public class ShoveTraceAlgo {
     return true;
   }
 
-  Collection<Item> getIgnoreItemsAtTiePins(TileShape traceShape, int layer, int[] netNoArr) {
+  Collection<Item> getIgnoreItemsAtTiePins(TileShape traceShape, int layer, int[] netNumbers) {
     Collection<SearchTreeObject> overlaps = this.board.overlappingObjects(traceShape, layer);
     Set<Item> result = new TreeSet<>();
     for (SearchTreeObject currentObject : overlaps) {
       if (currentObject instanceof Pin currentPin) {
-        if (currentPin.sharesNetNo(netNoArr)) {
+        if (currentPin.sharesNetNo(netNumbers)) {
           result.addAll(currentPin.getAllContacts(layer));
         }
       }
@@ -584,7 +585,7 @@ public class ShoveTraceAlgo {
       Polyline polyline,
       int halfWidth,
       int layer,
-      int[] netNoArr,
+      int[] netNumbers,
       int clType,
       boolean overConnectedPins,
       int recursionDepth,
@@ -594,7 +595,7 @@ public class ShoveTraceAlgo {
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     int[] checkNetNoArr;
     if (contactPins == null) {
-      checkNetNoArr = netNoArr;
+      checkNetNoArr = netNumbers;
     } else {
       checkNetNoArr = new int[0];
     }
@@ -604,7 +605,7 @@ public class ShoveTraceAlgo {
           searchTree.overlappingItemsWithClearance(currentShape, layer, checkNetNoArr, clType);
       for (Item currentItem : obstacles) {
         boolean isObstacle;
-        if (currentItem.sharesNetNo(netNoArr)) {
+        if (currentItem.sharesNetNo(netNumbers)) {
           // to avoid acid traps
           isObstacle =
               currentItem instanceof Pin
@@ -621,7 +622,7 @@ public class ShoveTraceAlgo {
             // check for a shove fixed trace exit stub, which has to be ignored at a tie pin.
             Collection<Item> currentContacts = currentItem.getNormalContacts();
             for (Item currentContact : currentContacts) {
-              if (currentContact.sharesNetNo(netNoArr)) {
+              if (currentContact.sharesNetNo(netNumbers)) {
                 isObstacle = false;
               }
             }
@@ -704,7 +705,7 @@ public class ShoveTraceAlgo {
       // enlarge the shape in 2 steps  for symmetry reasons
       int offset = halfWidth + 1;
       double halfClOffset =
-          0.5 * board.clearanceValue(foundObstacle.clearanceClassNo(), clType, layer);
+          0.5 * board.clearanceValue(foundObstacle.clearanceClassIndex(), clType, layer);
       offsetShape = (TileShape) obstacleShape.enlarge(offset + halfClOffset);
       offsetShape = (TileShape) offsetShape.enlarge(halfClOffset);
     }
@@ -779,7 +780,7 @@ public class ShoveTraceAlgo {
         result,
         halfWidth,
         layer,
-        netNoArr,
+        netNumbers,
         clType,
         overConnectedPins,
         recursionDepth - 1,
@@ -797,7 +798,7 @@ public class ShoveTraceAlgo {
       Polyline polyline,
       int halfWidth,
       int layer,
-      int[] netNoArr,
+      int[] netNumbers,
       int clType,
       Set<Pin> contactPins) {
     final int maxSpringOverRecursionDepth = 20;
@@ -806,7 +807,7 @@ public class ShoveTraceAlgo {
             polyline,
             halfWidth,
             layer,
-            netNoArr,
+            netNumbers,
             clType,
             true,
             maxSpringOverRecursionDepth,
@@ -820,7 +821,7 @@ public class ShoveTraceAlgo {
             polyline.reverse(),
             halfWidth,
             layer,
-            netNoArr,
+            netNumbers,
             clType,
             true,
             maxSpringOverRecursionDepth,

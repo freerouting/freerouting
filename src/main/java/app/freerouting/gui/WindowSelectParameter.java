@@ -143,7 +143,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     // 1. Signal Layers
     for (int i = 0; i < layerCount; i++) {
       Layer currentLayer = layerStructure.arr[i];
-      final int layerNo = layerStructure.getNo(currentLayer);
+      final int layerIndex = layerStructure.getNo(currentLayer);
 
       // Eye visibility toggle
       JCheckBox eyeCb = new JCheckBox();
@@ -164,7 +164,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       if (!currentLayer.isSignal) {
         btn.setToolTipText(tm.getText("disabled_layer_tooltip"));
       }
-      btn.addActionListener(new CurrentLayerListener(i, layerNo));
+      btn.addActionListener(new CurrentLayerListener(i, layerIndex));
       btn.addActionListener(_ -> FRAnalytics.buttonClicked("settingsSelectLayerNameArr", null));
       settingsSelectLayerNameArr[i] = btn;
       layerSelectionGroup.add(btn);
@@ -319,17 +319,17 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
   private class CurrentLayerListener implements ActionListener {
     public final int signalLayerNo;
-    public final int layerNo;
+    public final int layerIndex;
 
-    public CurrentLayerListener(int signalLayerNo, int layerNo) {
+    public CurrentLayerListener(int signalLayerNo, int layerIndex) {
       this.signalLayerNo = signalLayerNo;
-      this.layerNo = layerNo;
+      this.layerIndex = layerIndex;
     }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
       if (settingsSelectLayerNameArr[signalLayerNo].isSelected()) {
-        boardHandling.setCurrentLayer(layerNo);
+        boardHandling.setCurrentLayer(layerIndex);
       } else {
         boardHandling.graphicsContext.setFullyVisibleLayer(-1);
       }

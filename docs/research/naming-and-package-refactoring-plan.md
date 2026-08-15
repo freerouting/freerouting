@@ -525,12 +525,12 @@ Branch: `refactor/naming-phase-8-abbreviations`
 
 **Progress checklist**
 
-- [ ] Expand `netNo` / `currentNetNo` → `netNumber`, `netNoArr` → `netNumbers`.
-- [ ] Expand `layerNo` / `currentLayerNo` → `layerIndex` (0-based) and `layerNumber` (1-based / display).
-- [ ] Expand `clearanceClassNo` → `clearanceClassIndex`.
-- [ ] Expand `currentOb` → `currentObject` / `currentObstacle`.
-- [ ] Update getters/methods: `getNetNo()` → `getNetNumber()`, `maxNetNo()` → `maxNetNumber()`, `containsNet(int netNumber)`.
-- [ ] Run quality gates and verify full unit test suite.
+- [x] Expand `netNo` / `currentNetNo` → `netNumber`, `netNoArr` → `netNumbers`.
+- [x] Expand `layerNo` / `currentLayerNo` → `layerIndex` (0-based) and `layerNumber` (1-based / display).
+- [x] Expand `clearanceClassNo` → `clearanceClassIndex`.
+- [x] Expand `currentOb` → `currentObject` / `currentObstacle`.
+- [x] Update getters/methods: `getNetNo()` → `getNetNumber()`, `maxNetNo()` → `maxNetNumber()`, `containsNet(int netNumber)`.
+- [x] Run quality gates and verify full unit test suite.
 
 ---
 

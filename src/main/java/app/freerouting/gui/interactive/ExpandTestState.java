@@ -144,12 +144,12 @@ public final class ExpandTestState extends InteractiveState {
     Collection<Item> foundItems = board.pickItems(location.round(), layer, null);
     Item routeItem = null;
     int routeNetNo = 0;
-    for (Item currentOb : foundItems) {
-      if (currentOb instanceof Connectable) {
-        Item currentItem = currentOb;
-        if (currentItem.netCount() == 1 && currentItem.getNetNo(0) > 0) {
+    for (Item currentObject : foundItems) {
+      if (currentObject instanceof Connectable) {
+        Item currentItem = currentObject;
+        if (currentItem.netCount() == 1 && currentItem.getNetNumber(0) > 0) {
           routeItem = currentItem;
-          routeNetNo = currentItem.getNetNo(0);
+          routeNetNo = currentItem.getNetNumber(0);
           break;
         }
       }
@@ -165,7 +165,7 @@ public final class ExpandTestState extends InteractiveState {
             * hdlg.getCurrentRoutingJob().routerSettings.getStartRipupCosts();
     this.controlSettings.viasAllowed = false;
     this.autorouteEngine =
-        new AutorouteEngine(board, this.controlSettings.traceClearanceClassNo, false);
+        new AutorouteEngine(board, this.controlSettings.traceClearanceClassIndex, false);
     this.autorouteEngine.initConnection(routeNetNo, null, null);
     if (routeItem == null) {
       // create an expansion room in the empty space

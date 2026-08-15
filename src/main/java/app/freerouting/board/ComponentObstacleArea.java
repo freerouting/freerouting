@@ -47,7 +47,7 @@ public class ComponentObstacleArea extends ObstacleArea {
         getTranslation(),
         getRotationInDegree(),
         getSideChanged(),
-        clearanceClassNo(),
+        clearanceClassIndex(),
         idNo,
         getComponentNo(),
         this.name,
@@ -63,7 +63,7 @@ public class ComponentObstacleArea extends ObstacleArea {
   }
 
   @Override
-  public boolean isTraceObstacle(int netNo) {
+  public boolean isTraceObstacle(int netNumber) {
     return false;
   }
 

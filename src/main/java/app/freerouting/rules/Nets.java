@@ -13,10 +13,10 @@ import java.util.Vector;
 public class Nets implements Serializable {
 
   /** The maximum legal net number for nets. */
-  public static final int max_legal_net_no = 9999999;
+  public static final int max_legal_net_number = 9999999;
 
   /** The auxiliary net number for internal use. */
-  public static final int hidden_net_no = 10000001;
+  public static final int hidden_net_number = 10000001;
 
   /** The list of electrical nets on the board. */
   private final Vector<Net> netArr;
@@ -29,12 +29,12 @@ public class Nets implements Serializable {
   }
 
   /** Returns false if {@code netNumber} belongs to an internally used special-purpose net. */
-  public static boolean isNormalNetNo(int netNumber) {
-    return netNumber > 0 && netNumber <= max_legal_net_no;
+  public static boolean isNormalNetNumber(int netNumber) {
+    return netNumber > 0 && netNumber <= max_legal_net_number;
   }
 
   /** Returns the biggest net number on the board. */
-  public int maxNetNo() {
+  public int maxNetNumber() {
     return netArr.size();
   }
 
@@ -68,7 +68,7 @@ public class Nets implements Serializable {
     }
     Net result = netArr.elementAt(netNumber - 1);
     if (result != null && result.netNumber != netNumber) {
-      FRLogger.warn("Nets.get: inconsistent netNo");
+      FRLogger.warn("Nets.get: inconsistent netNumber");
     }
     return result;
   }
@@ -87,7 +87,7 @@ public class Nets implements Serializable {
    */
   public Net add(String name, int subnetNumber, boolean containsPlane) {
     int newNetNo = netArr.size() + 1;
-    if (newNetNo >= max_legal_net_no) {
+    if (newNetNo >= max_legal_net_number) {
       FRLogger.warn("Nets.add_net: maxNetNo out of range");
     }
     Net newNet = new Net(name, subnetNumber, newNetNo, this, containsPlane);

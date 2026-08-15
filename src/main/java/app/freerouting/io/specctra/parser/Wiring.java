@@ -59,18 +59,18 @@ public class Wiring extends ScopeKeyword {
     // write the conduction areas
     Iterator<UndoableObjects.UndoableObjectNode> it2 = par.board.itemList.startReadObject();
     for (; ; ) {
-      Object currentOb = par.board.itemList.readObject(it2);
-      if (currentOb == null) {
+      Object currentObject = par.board.itemList.readObject(it2);
+      if (currentObject == null) {
         break;
       }
-      if (!(currentOb instanceof ConductionArea currentArea)) {
+      if (!(currentObject instanceof ConductionArea currentArea)) {
         continue;
       }
       if (!par.board.layerStructure.arr[currentArea.getLayer()].isSignal) {
         // This conduction areas arw written in the structure scope.
         continue;
       }
-      writeConductionAreaScope(par, (ConductionArea) currentOb);
+      writeConductionAreaScope(par, (ConductionArea) currentObject);
     }
     par.file.endScope();
   }
@@ -79,13 +79,13 @@ public class Wiring extends ScopeKeyword {
     final Padstack viaPadstack = via.getPadstack();
     FloatPoint viaLocation = via.getCenter().toFloat();
     final double[] viaCoor = par.coordinateTransform.boardToDsn(viaLocation);
-    int netNo;
+    int netNumber;
     app.freerouting.rules.Net viaNet;
     if (via.netCount() > 0) {
-      netNo = via.getNetNo(0);
-      viaNet = par.board.rules.nets.get(netNo);
+      netNumber = via.getNetNumber(0);
+      viaNet = par.board.rules.nets.get(netNumber);
     } else {
-      netNo = 0;
+      netNumber = 0;
       viaNet = null;
     }
     par.file.startScope();
@@ -99,7 +99,7 @@ public class Wiring extends ScopeKeyword {
       writeNet(viaNet, par.file, par.identifierType);
     }
     Rule.writeItemClearanceClass(
-        par.board.rules.clearanceMatrix.getName(via.clearanceClassNo()),
+        par.board.rules.clearanceMatrix.getName(via.clearanceClassIndex()),
         par.file,
         par.identifierType);
     writeFixedState(par.file, via.getFixedState());
@@ -111,13 +111,13 @@ public class Wiring extends ScopeKeyword {
       FRLogger.warn("Wiring.write_wire_scope: trace type not yet implemented");
       return;
     }
-    int layerNo = currentWire.getLayer();
-    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerNo];
-    final Layer currentLayer = new Layer(boardLayer.name, layerNo, boardLayer.isSignal);
+    int layerIndex = currentWire.getLayer();
+    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerIndex];
+    final Layer currentLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     final double wireWidth = par.coordinateTransform.boardToDsn(2 * currentWire.getHalfWidth());
     app.freerouting.rules.Net wireNet = null;
     if (currentWire.netCount() > 0) {
-      wireNet = par.board.rules.nets.get(currentWire.getNetNo(0));
+      wireNet = par.board.rules.nets.get(currentWire.getNetNumber(0));
     }
     if (wireNet == null) {
       FRLogger.warn("Wiring.write_wire_scope: net not found");
@@ -142,7 +142,7 @@ public class Wiring extends ScopeKeyword {
     }
     writeNet(wireNet, par.file, par.identifierType);
     Rule.writeItemClearanceClass(
-        par.board.rules.clearanceMatrix.getName(wire.clearanceClassNo()),
+        par.board.rules.clearanceMatrix.getName(wire.clearanceClassIndex()),
         par.file,
         par.identifierType);
     writeFixedState(par.file, currentWire.getFixedState());
@@ -157,11 +157,11 @@ public class Wiring extends ScopeKeyword {
       return;
     }
     final app.freerouting.rules.Net currentNet =
-        par.board.rules.nets.get(conductionArea.getNetNo(0));
+        par.board.rules.nets.get(conductionArea.getNetNumber(0));
     Area currentArea = conductionArea.getArea();
-    int layerNo = conductionArea.getLayer();
-    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerNo];
-    final Layer conductionLayer = new Layer(boardLayer.name, layerNo, boardLayer.isSignal);
+    int layerIndex = conductionArea.getLayer();
+    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerIndex];
+    final Layer conductionLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
     if (currentArea instanceof app.freerouting.geometry.planar.Shape shape) {
@@ -183,7 +183,7 @@ public class Wiring extends ScopeKeyword {
     }
     writeNet(currentNet, par.file, par.identifierType);
     Rule.writeItemClearanceClass(
-        par.board.rules.clearanceMatrix.getName(conductionArea.clearanceClassNo()),
+        par.board.rules.clearanceMatrix.getName(conductionArea.clearanceClassIndex()),
         par.file,
         par.identifierType);
     par.file.endScope();
@@ -230,7 +230,7 @@ public class Wiring extends ScopeKeyword {
   }
 
   private static boolean viaExists(
-      IntPoint location, Padstack padstack, int[] netNoArr, BasicBoard board) {
+      IntPoint location, Padstack padstack, int[] netNumbers, BasicBoard board) {
     ItemSelectionFilter filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.VIAS);
     int fromLayer = padstack.fromLayer();
@@ -238,7 +238,7 @@ public class Wiring extends ScopeKeyword {
     Collection<Item> pickedItems = board.pickItems(location, padstack.fromLayer(), filter);
     for (Item currentItem : pickedItems) {
       final Via currentVia = (Via) currentItem;
-      if (currentVia.netsEqual(netNoArr)
+      if (currentVia.netsEqual(netNumbers)
           && currentVia.getCenter().equals(location)
           && currentVia.firstLayer() == fromLayer
           && currentVia.lastLayer() == toLayer) {
@@ -426,27 +426,27 @@ public class Wiring extends ScopeKeyword {
 
     NetClass netClass = board.rules.getDefaultNetClass();
     Collection<app.freerouting.rules.Net> foundNets = getSubnets(netId, board.rules);
-    int[] netNoArr = new int[foundNets.size()];
+    int[] netNumbers = new int[foundNets.size()];
     int currentIndex = 0;
     for (app.freerouting.rules.Net currentNet : foundNets) {
-      netNoArr[currentIndex] = currentNet.netNumber;
+      netNumbers[currentIndex] = currentNet.netNumber;
       netClass = currentNet.getNetClass();
       ++currentIndex;
     }
-    int clearanceClassNo = -1;
+    int clearanceClassIndex = -1;
     if (clearanceClassName != null) {
-      clearanceClassNo = board.rules.clearanceMatrix.getNo(clearanceClassName);
+      clearanceClassIndex = board.rules.clearanceMatrix.getNo(clearanceClassName);
     }
-    int layerNo;
+    int layerIndex;
     int halfWidth;
     if (path != null) {
-      layerNo = path.layer.no;
+      layerIndex = path.layer.no;
       halfWidth = (int) Math.round(par.coordinateTransform.dsnToBoard(path.width / 2));
     } else {
-      layerNo = borderShape.layer.no;
+      layerIndex = borderShape.layer.no;
       halfWidth = 0;
     }
-    if (layerNo < 0 || layerNo >= board.getLayerCount()) {
+    if (layerIndex < 0 || layerIndex >= board.getLayerCount()) {
       String layerName = path != null ? path.layer.name : borderShape.layer.name;
       String msg =
           "Wiring: wire ignored — unknown layer '"
@@ -463,8 +463,8 @@ public class Wiring extends ScopeKeyword {
 
     Item result = null;
     if (borderShape != null) {
-      if (clearanceClassNo < 0) {
-        clearanceClassNo =
+      if (clearanceClassIndex < 0) {
+        clearanceClassIndex =
             netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.AREA);
       }
       Collection<Shape> area = new LinkedList<>();
@@ -473,10 +473,10 @@ public class Wiring extends ScopeKeyword {
       Area conductionArea = Shape.transformAreaToBoard(area, par.coordinateTransform);
       result =
           board.insertConductionArea(
-              conductionArea, layerNo, netNoArr, clearanceClassNo, false, fixed);
+              conductionArea, layerIndex, netNumbers, clearanceClassIndex, false, fixed);
     } else if (path instanceof PolygonPath) {
-      if (clearanceClassNo < 0) {
-        clearanceClassNo =
+      if (clearanceClassIndex < 0) {
+        clearanceClassIndex =
             netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.TRACE);
       }
       IntPoint[] cornerArr = new IntPoint[path.coordinateArr.length / 2];
@@ -522,7 +522,7 @@ public class Wiring extends ScopeKeyword {
         // Traces are not yet normalized here because cycles may be removed premature.
         result =
             board.insertTraceWithoutCleaning(
-                tracePolyline, layerNo, halfWidth, netNoArr, clearanceClassNo, fixed);
+                tracePolyline, layerIndex, halfWidth, netNumbers, clearanceClassIndex, fixed);
       } else {
         String msg =
             "Wiring: degenerate wire trace skipped (all "
@@ -534,8 +534,8 @@ public class Wiring extends ScopeKeyword {
         par.warnings.add(msg);
       }
     } else if (path instanceof PolylinePath) {
-      if (clearanceClassNo < 0) {
-        clearanceClassNo =
+      if (clearanceClassIndex < 0) {
+        clearanceClassIndex =
             netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.TRACE);
       }
       Line[] lineArr = new Line[path.coordinateArr.length / 4];
@@ -552,7 +552,7 @@ public class Wiring extends ScopeKeyword {
       Polyline tracePolyline = new Polyline(lineArr);
       result =
           board.insertTraceWithoutCleaning(
-              tracePolyline, layerNo, halfWidth, netNoArr, clearanceClassNo, fixed);
+              tracePolyline, layerIndex, halfWidth, netNumbers, clearanceClassIndex, fixed);
     } else {
       FRLogger.warn(
           "Wiring.read_wire_scope: unexpected Path subclass at '"
@@ -579,7 +579,7 @@ public class Wiring extends ScopeKeyword {
     int correctedNetNo = 0;
     for (Item currentContact : contacts) {
       if (currentContact.netCount() == 1) {
-        correctedNetNo = currentContact.getNetNo(0);
+        correctedNetNo = currentContact.getNetNumber(0);
         break;
       }
     }
@@ -671,22 +671,22 @@ public class Wiring extends ScopeKeyword {
         FRLogger.warn(msg);
         par.warnings.add(msg);
       }
-      int[] netNoArr = new int[foundNets.size()];
+      int[] netNumbers = new int[foundNets.size()];
       int currentIndex = 0;
       for (app.freerouting.rules.Net currentNet : foundNets) {
-        netNoArr[currentIndex] = currentNet.netNumber;
+        netNumbers[currentIndex] = currentNet.netNumber;
         netClass = currentNet.getNetClass();
       }
-      int clearanceClassNo = -1;
+      int clearanceClassIndex = -1;
       if (clearanceClassName != null) {
-        clearanceClassNo = board.rules.clearanceMatrix.getNo(clearanceClassName);
+        clearanceClassIndex = board.rules.clearanceMatrix.getNo(clearanceClassName);
       }
-      if (clearanceClassNo < 0) {
-        clearanceClassNo =
+      if (clearanceClassIndex < 0) {
+        clearanceClassIndex =
             netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.VIA);
       }
       IntPoint boardLocation = par.coordinateTransform.dsnToBoard(location).round();
-      if (viaExists(boardLocation, currentPadstack, netNoArr, board)) {
+      if (viaExists(boardLocation, currentPadstack, netNumbers, board)) {
         String msg =
             "Wiring: duplicate via skipped at (" + boardLocation.x + ", " + boardLocation.y + ")";
         FRLogger.warn(msg);
@@ -694,7 +694,7 @@ public class Wiring extends ScopeKeyword {
       } else {
         boolean attachAllowed = par.viaAtSmdAllowed && currentPadstack.attachAllowed;
         board.insertVia(
-            currentPadstack, boardLocation, netNoArr, clearanceClassNo, fixed, attachAllowed);
+            currentPadstack, boardLocation, netNumbers, clearanceClassIndex, fixed, attachAllowed);
       }
       return true;
     } catch (IOException e) {

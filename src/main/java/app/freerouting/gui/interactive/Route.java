@@ -47,7 +47,7 @@ public class Route {
   private static final int PULL_TIGHT_TIME_LIMIT = 2000;
 
   /** The net numbers used for routing. */
-  final int[] netNoArr;
+  final int[] netNumbers;
 
   private final Item startItem;
   private final Set<Item> targetSet;
@@ -84,11 +84,11 @@ public class Route {
    */
   public Route(
       Point startCorner,
-      int layerNo,
+      int layerIndex,
       int[] penHalfWidthArr,
       boolean[] layerActiveArr,
-      int[] netNoArr,
-      int clearanceClassNo,
+      int[] netNumbers,
+      int clearanceClassIndex,
       ViaRule viaRuleValue,
       boolean pushEnabled,
       int traceTidyWidthValue,
@@ -101,7 +101,7 @@ public class Route {
       boolean snapToSmdCenter,
       boolean highlightShoveFailingObstacleValue) {
     board = routingBoard;
-    layer = layerNo;
+    layer = layerIndex;
     if (pushEnabled) {
       maxShoveTraceRecursionDepth = 20;
       maxShoveViaRecursionDepth = 8;
@@ -114,10 +114,10 @@ public class Route {
     traceTidyWidth = traceTidyWidthValue;
     pullTightAccuracy = pullTightAccuracyValue;
     prevCorner = startCorner;
-    this.netNoArr = netNoArr;
+    this.netNumbers = netNumbers;
     this.penHalfWidthArr = penHalfWidthArr;
     this.layerActive = layerActiveArr;
-    this.clearanceClass = clearanceClassNo;
+    this.clearanceClass = clearanceClassIndex;
     this.viaRule = viaRuleValue;
     this.startItem = startItem;
     this.targetSet = targetSetValue;
@@ -184,7 +184,7 @@ public class Route {
             currentCorner,
             penHalfWidthArr[layer],
             layer,
-            netNoArr,
+            netNumbers,
             clearanceClass,
             maxShoveTraceRecursionDepth,
             maxShoveViaRecursionDepth,
@@ -228,14 +228,14 @@ public class Route {
     }
     int[] optNetNoArr;
     if (maxShoveTraceRecursionDepth <= 0) {
-      optNetNoArr = netNoArr;
+      optNetNoArr = netNumbers;
     } else {
       optNetNoArr = new int[0];
     }
     if (routeCompleted) {
       this.board.reduceNetsOfRouteItems();
-      for (int currentNetNo : this.netNoArr) {
-        this.board.combineTraces(currentNetNo);
+      for (int currentNetNumber : this.netNumbers) {
+        this.board.combineTraces(currentNetNumber);
       }
     } else {
       calcNearestTargetPoint(this.prevCorner.toFloat());
@@ -294,7 +294,7 @@ public class Route {
           board.forcedVia(
               currentViaInfo,
               this.prevCorner,
-              this.netNoArr,
+              this.netNumbers,
               clearanceClass,
               penHalfWidthArr,
               maxShoveTraceRecursionDepth,
@@ -316,14 +316,14 @@ public class Route {
   }
 
   /** Snaps to the center of an SMD pin on the specified layer when it belongs to this net. */
-  private boolean snapToSmdCenter(int layerNo) {
+  private boolean snapToSmdCenter(int layerIndex) {
     ItemSelectionFilter selectionFilter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
-    Collection<Item> pickedItems = board.pickItems(this.prevCorner, layerNo, selectionFilter);
+    Collection<Item> pickedItems = board.pickItems(this.prevCorner, layerIndex, selectionFilter);
     Pin foundSmdPin = null;
     for (Item currentItem : pickedItems) {
-      if (currentItem instanceof Pin currentPin && currentItem.sharesNetNo(this.netNoArr)) {
-        if (currentPin.firstLayer() == layerNo && currentPin.lastLayer() == layerNo) {
+      if (currentItem instanceof Pin currentPin && currentItem.sharesNetNo(this.netNumbers)) {
+        if (currentPin.firstLayer() == layerIndex && currentPin.lastLayer() == layerIndex) {
           foundSmdPin = currentPin;
           break;
         }
@@ -351,7 +351,7 @@ public class Route {
     if (nearestTargetItem != null && targetSet != null && !targetSet.contains(nearestTargetItem)) {
       nearestTargetItem = null;
     }
-    if (nearestTargetItem == null || !nearestTargetItem.sharesNetNo(this.netNoArr)) {
+    if (nearestTargetItem == null || !nearestTargetItem.sharesNetNo(this.netNumbers)) {
       return false;
     }
     boolean routeCompleted = false;
@@ -389,7 +389,7 @@ public class Route {
                 toCorner,
                 penHalfWidthArr[layer],
                 this.layer,
-                netNoArr,
+                netNumbers,
                 clearanceClass,
                 maxShoveTraceRecursionDepth,
                 maxShoveViaRecursionDepth,
@@ -472,10 +472,10 @@ public class Route {
           graphicsContext.getViolationsColor(),
           1);
     }
-    if (targetSet == null || netNoArr.length < 1) {
+    if (targetSet == null || netNumbers.length < 1) {
       return;
     }
-    Net currentNet = board.rules.nets.get(netNoArr[0]);
+    Net currentNet = board.rules.nets.get(netNumbers[0]);
     if (currentNet == null) {
       return;
     }
@@ -621,12 +621,12 @@ public class Route {
     if (targetSet == null) {
       return;
     }
-    for (Item currentOb : targetSet) {
-      if (currentOb instanceof DrillItem item) {
+    for (Item currentObject : targetSet) {
+      if (currentObject instanceof DrillItem item) {
         Point currentPoint = item.getCenter();
-        targetPoints.add(new TargetPoint(currentPoint.toFloat(), currentOb));
-      } else if (currentOb instanceof Trace || currentOb instanceof ConductionArea) {
-        targetTracesAndAreas.add(currentOb);
+        targetPoints.add(new TargetPoint(currentPoint.toFloat(), currentObject));
+      } else if (currentObject instanceof Trace || currentObject instanceof ConductionArea) {
+        targetTracesAndAreas.add(currentObject);
       }
     }
   }
@@ -637,11 +637,11 @@ public class Route {
   }
 
   /** Returns whether routing is enabled on the specified layer. */
-  public boolean isLayerActive(int layerNo) {
-    if (layerNo < 0 || layerNo >= layerActive.length) {
+  public boolean isLayerActive(int layerIndex) {
+    if (layerIndex < 0 || layerIndex >= layerActive.length) {
       return false;
     }
-    return layerActive[layerNo];
+    return layerActive[layerIndex];
   }
 
   /** Calculates the nearest target point used to draw the incomplete connection. */
@@ -715,7 +715,7 @@ public class Route {
     FloatPoint pinCenter = startPin.getCenter().toFloat();
     double currentClearance =
         this.board.rules.clearanceMatrix.getValue(
-            this.clearanceClass, startPin.clearanceClassNo(), this.layer, true);
+            this.clearanceClass, startPin.clearanceClassIndex(), this.layer, true);
     double pinNeckDownDistance = 2 * (0.5 * startPin.getMaxWidth(this.layer) + currentClearance);
     if (pinCenter.distance(this.prevCorner.toFloat()) >= pinNeckDownDistance) {
       return this.prevCorner;
@@ -741,7 +741,7 @@ public class Route {
         toCorner,
         neckDownHalfwidth,
         layer,
-        netNoArr,
+        netNumbers,
         clearanceClass,
         maxShoveTraceRecursionDepth,
         maxShoveViaRecursionDepth,
@@ -767,7 +767,7 @@ public class Route {
     FloatPoint pinCenter = targetPin.getCenter().toFloat();
     double currentClearance =
         this.board.rules.clearanceMatrix.getValue(
-            this.clearanceClass, targetPin.clearanceClassNo(), this.layer, true);
+            this.clearanceClass, targetPin.clearanceClassIndex(), this.layer, true);
     double pinNeckDownDistance = 2 * (0.5 * targetPin.getMaxWidth(this.layer) + currentClearance);
     if (pinCenter.distance(fromCorner.toFloat()) >= pinNeckDownDistance) {
       return fromCorner;
@@ -782,7 +782,7 @@ public class Route {
         toCorner,
         neckDownHalfwidth,
         layer,
-        netNoArr,
+        netNumbers,
         clearanceClass,
         maxShoveTraceRecursionDepth,
         maxShoveViaRecursionDepth,
@@ -819,7 +819,7 @@ public class Route {
       FloatPoint pinCenter = pinValue.getCenter().toFloat();
       double minDist = Double.MAX_VALUE;
       FloatPoint nearestPoint = null;
-      Collection<Item> netItems = board.getConnectableItems(pinValue.getNetNo(0));
+      Collection<Item> netItems = board.getConnectableItems(pinValue.getNetNumber(0));
       for (Item currentItem : netItems) {
         if (currentItem == this.pin || !(currentItem instanceof DrillItem)) {
           continue;

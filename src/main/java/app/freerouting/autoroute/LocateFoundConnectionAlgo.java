@@ -60,16 +60,16 @@ public abstract class LocateFoundConnectionAlgo {
     this.ctrl = ctrl;
     this.angleRestriction = angleRestriction;
     Collection<BacktrackElement> backtrackList =
-        backtrack(mazeSearchResult, rippedItemList, ripupCosts, ctrl.netNo);
+        backtrack(mazeSearchResult, rippedItemList, ripupCosts, ctrl.netNumber);
     this.backtrackArray = new BacktrackElement[backtrackList.size()];
     Iterator<BacktrackElement> it = backtrackList.iterator();
     for (int i = 0; i < backtrackArray.length; i++) {
       this.backtrackArray[i] = it.next();
     }
-    if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
+    if (this.ctrl.netNumber == 33 || this.ctrl.netNumber == 66 || this.ctrl.netNumber == 67) {
       FRLogger.trace(
           "compare_trace_backtrack_raw net="
-              + this.ctrl.netNo
+              + this.ctrl.netNumber
               + ", size="
               + this.backtrackArray.length);
       for (int i = 0; i < this.backtrackArray.length; i++) {
@@ -78,7 +78,7 @@ public abstract class LocateFoundConnectionAlgo {
             element.nextRoom != null ? element.nextRoom.getClass().getSimpleName() : "null";
         FRLogger.trace(
             "compare_trace_backtrack_raw net="
-                + this.ctrl.netNo
+                + this.ctrl.netNumber
                 + ", idx="
                 + i
                 + ", door_type="
@@ -217,7 +217,7 @@ public abstract class LocateFoundConnectionAlgo {
       MazeSearchAlgo.Result mazeSearchResult,
       SortedSet<Item> rippedItemList,
       Map<Item, Integer> ripupCosts,
-      int netNo) {
+      int netNumber) {
     if (mazeSearchResult == null) {
       return null;
     }
@@ -226,12 +226,12 @@ public abstract class LocateFoundConnectionAlgo {
     ExpandableObject currentBacktrackDoor = mazeSearchResult.destinationDoor;
     MazeSearchElement currentMazeSearchElement =
         currentBacktrackDoor.getMazeSearchElement(mazeSearchResult.sectionNoOfDoor);
-    boolean debugBacktrack = netNo == 98;
+    boolean debugBacktrack = netNumber == 98;
     if (debugBacktrack) {
       String destType = currentBacktrackDoor.getClass().getSimpleName();
       FRLogger.trace(
           "BACKTRACK_START net="
-              + netNo
+              + netNumber
               + ", dest_type="
               + destType
               + ", dest_section="
@@ -288,7 +288,7 @@ public abstract class LocateFoundConnectionAlgo {
         }
         FRLogger.trace(
             "BACKTRACK_STEP net="
-                + netNo
+                + netNumber
                 + ", step="
                 + step
                 + ", door_type="
@@ -456,12 +456,12 @@ public abstract class LocateFoundConnectionAlgo {
       cornerArr[i] = it2.next();
     }
     ResultItem result = new ResultItem(cornerArr, this.currentTraceLayer);
-    if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
+    if (this.ctrl.netNumber == 33 || this.ctrl.netNumber == 66 || this.ctrl.netNumber == 67) {
       IntPoint first = cornerArr.length > 0 ? cornerArr[0] : null;
       IntPoint last = cornerArr.length > 0 ? cornerArr[cornerArr.length - 1] : null;
       FRLogger.trace(
           "compare_trace_next_trace_raw net="
-              + this.ctrl.netNo
+              + this.ctrl.netNumber
               + ", traceLayer="
               + this.currentTraceLayer
               + ", nextLayer="

@@ -72,7 +72,7 @@ public final class MoveItemState extends InteractiveState {
       // work.
       Item copiedItem = currentItem.copy(0);
       for (int i = 0; i < currentItem.netCount(); i++) {
-        addToNetItemsList(copiedItem, currentItem.getNetNo(i));
+        addToNetItemsList(copiedItem, currentItem.getNetNumber(i));
       }
       this.itemList.add(copiedItem);
     }
@@ -193,17 +193,17 @@ public final class MoveItemState extends InteractiveState {
         boardHandling);
   }
 
-  private void addToNetItemsList(Item item, int netNo) {
+  private void addToNetItemsList(Item item, int netNumber) {
     for (NetItems currentItems : this.netItemsList) {
-      if (currentItems.netNo == netNo) {
-        // list for netNo exists already
+      if (currentItems.netNumber == netNumber) {
+        // list for netNumber exists already
         currentItems.items.add(item);
         return;
       }
     }
-    Collection<Item> newItemList = hdlg.getRoutingBoard().getConnectableItems(netNo);
+    Collection<Item> newItemList = hdlg.getRoutingBoard().getConnectableItems(netNumber);
     newItemList.add(item);
-    NetItems newNetItems = new NetItems(netNo, newItemList);
+    NetItems newNetItems = new NetItems(netNumber, newItemList);
     this.netItemsList.add(newNetItems);
   }
 
@@ -238,7 +238,7 @@ public final class MoveItemState extends InteractiveState {
     }
 
     for (NetItems currentNetItems : this.netItemsList) {
-      this.hdlg.updateRatsnest(currentNetItems.netNo);
+      this.hdlg.updateRatsnest(currentNetItems.netNumber);
     }
     hdlg.screenMessages.setStatusMessage(tm.getText("move_completed"));
     hdlg.repaint();
@@ -249,7 +249,7 @@ public final class MoveItemState extends InteractiveState {
   public InteractiveState cancel() {
     hdlg.getRoutingBoard().undo(null);
     for (NetItems currentNetItems : this.netItemsList) {
-      this.hdlg.updateRatsnest(currentNetItems.netNo);
+      this.hdlg.updateRatsnest(currentNetItems.netNumber);
     }
     return this.returnState;
   }
@@ -283,7 +283,7 @@ public final class MoveItemState extends InteractiveState {
       }
       previousPosition = currentPosition;
       for (NetItems currentNetItems : this.netItemsList) {
-        this.hdlg.updateRatsnest(currentNetItems.netNo, currentNetItems.items);
+        this.hdlg.updateRatsnest(currentNetItems.netNumber, currentNetItems.items);
       }
       hdlg.repaint();
     }
@@ -318,7 +318,7 @@ public final class MoveItemState extends InteractiveState {
       this.clearanceViolations.addAll(currentItem.clearanceViolations());
     }
     for (NetItems currentNetItems : this.netItemsList) {
-      this.hdlg.updateRatsnest(currentNetItems.netNo, currentNetItems.items);
+      this.hdlg.updateRatsnest(currentNetItems.netNumber, currentNetItems.items);
     }
     hdlg.repaint();
   }
@@ -339,7 +339,7 @@ public final class MoveItemState extends InteractiveState {
       this.clearanceViolations.addAll(currentItem.clearanceViolations());
     }
     for (NetItems currentNetItems : this.netItemsList) {
-      this.hdlg.updateRatsnest(currentNetItems.netNo, currentNetItems.items);
+      this.hdlg.updateRatsnest(currentNetItems.netNumber, currentNetItems.items);
     }
     hdlg.repaint();
   }
@@ -388,7 +388,7 @@ public final class MoveItemState extends InteractiveState {
       this.clearanceViolations.addAll(currentItem.clearanceViolations());
     }
     for (NetItems currentNetItems : this.netItemsList) {
-      this.hdlg.updateRatsnest(currentNetItems.netNo, currentNetItems.items);
+      this.hdlg.updateRatsnest(currentNetItems.netNumber, currentNetItems.items);
     }
     hdlg.repaint();
   }
@@ -460,11 +460,11 @@ public final class MoveItemState extends InteractiveState {
 
   private static class NetItems {
 
-    final int netNo;
+    final int netNumber;
     final Collection<Item> items;
 
-    NetItems(int netNo, Collection<Item> items) {
-      this.netNo = netNo;
+    NetItems(int netNumber, Collection<Item> items) {
+      this.netNumber = netNumber;
       this.items = items;
     }
   }

@@ -49,20 +49,20 @@ class ShapeAndEntrySide {
           cutOffAtStart = true;
         }
       }
-      int fromSideNo = -1;
+      int fromSideIndex = -1;
       Line currentCutLine = null;
       if (cutOffAtStart) {
         currentCutLine = startCutline;
-        fromSideNo = currentShape.borderLineIndex(currentCutLine);
+        fromSideIndex = currentShape.borderLineIndex(currentCutLine);
       }
-      if (fromSideNo < 0 && cutOffAtEnd) {
+      if (fromSideIndex < 0 && cutOffAtEnd) {
         currentCutLine = endCutline;
-        fromSideNo = currentShape.borderLineIndex(currentCutLine);
+        fromSideIndex = currentShape.borderLineIndex(currentCutLine);
       }
-      if (fromSideNo >= 0) {
+      if (fromSideIndex >= 0) {
         FloatPoint borderIntersection =
-            currentCutLine.intersectionApprox(currentShape.borderLine(fromSideNo));
-        currentFromSide = new ShapeEntrySide(fromSideNo, borderIntersection);
+            currentCutLine.intersectionApprox(currentShape.borderLine(fromSideIndex));
+        currentFromSide = new ShapeEntrySide(fromSideIndex, borderIntersection);
       }
     }
     if (currentFromSide == null && !inShoveCheck) {

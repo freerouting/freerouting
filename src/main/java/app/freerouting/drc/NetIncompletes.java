@@ -50,22 +50,22 @@ public class NetIncompletes {
    * Creates a new instance of NetIncompletes. Calculates the incomplete connections (ratsnest) for
    * the given net items.
    *
-   * @param netNo The net number.
+   * @param netNumber The net number.
    * @param netItems The collection of items belonging to this net.
    * @param board The board context.
    */
-  public NetIncompletes(int netNo, Collection<Item> netItems, BasicBoard board) {
+  public NetIncompletes(int netNumber, Collection<Item> netItems, BasicBoard board) {
     this.drawMarkerRadius = board.rules.getMinTraceHalfWidth() * 2;
     this.incompletes = new LinkedList<>();
-    this.net = board.rules.nets.get(netNo);
+    this.net = board.rules.nets.get(netNumber);
 
-    String netLabel = "Net #" + netNo + (net != null ? " (" + net.name + ")" : "");
+    String netLabel = "Net #" + netNumber + (net != null ? " (" + net.name + ")" : "");
 
     FRLogger.trace(
         "NetIncompletes.<init>",
         "start_calculation",
         "Starting incomplete calculation: net="
-            + netNo
+            + netNumber
             + ", name="
             + (net != null ? net.name : "null")
             + ", total_items_in_collection="
@@ -187,7 +187,7 @@ public class NetIncompletes {
     // the same
     // connected set
     // or whose connected sets have already an airline.
-    Net currentNet = board.rules.nets.get(netNo);
+    Net currentNet = board.rules.nets.get(netNumber);
     for (Edge currentEdge : sortedEdges) {
       if (currentEdge.fromItem.connectedSet == currentEdge.toItem.connectedSet) {
         continue; // airline exists already

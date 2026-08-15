@@ -115,7 +115,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
       columnNames[1] = tm.getText("className");
 
       BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
-      data = new Object[boardRules.nets.maxNetNo()][];
+      data = new Object[boardRules.nets.maxNetNumber()][];
       for (int i = 0; i < data.length; i++) {
         this.data[i] = new Object[columnNames.length];
       }

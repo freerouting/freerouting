@@ -497,8 +497,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     for (int nextInd = 0; nextInd < lineCount; nextInd++) {
       double currentMaxDist = 0;
       FloatPoint currentTranslateCoor = FloatPoint.ZERO;
-      for (int cornerNo = 0; cornerNo < otherLineCount; cornerNo++) {
-        FloatPoint currentCorner = shape.cornerApprox(cornerNo);
+      for (int cornerIndex = 0; cornerIndex < otherLineCount; cornerIndex++) {
+        FloatPoint currentCorner = shape.cornerApprox(cornerIndex);
         if (borderLine(currentInd).sideOf(currentCorner) == Side.ON_THE_RIGHT) {
           FloatPoint projection = currentCorner.projectionApprox(borderLine(currentInd));
           double currentDistance = projection.distanceSquare(currentCorner);
@@ -872,13 +872,13 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       LineSegment currentLineSeg = new LineSegment(polyline, lineNo);
       int[] currentIntersections = currentLineSeg.borderIntersections(this);
       for (int i = 0; i < currentIntersections.length; i++) {
-        int edgeNo = currentIntersections[i];
-        if (lineNo != prevIntersectionLineNo || edgeNo != prevIntersectionEdgeNo) {
+        int edgeIndex = currentIntersections[i];
+        if (lineNo != prevIntersectionLineNo || edgeIndex != prevIntersectionEdgeNo) {
           result[intersectionCount][0] = lineNo;
-          result[intersectionCount][1] = edgeNo;
+          result[intersectionCount][1] = edgeIndex;
           ++intersectionCount;
           prevIntersectionLineNo = lineNo;
-          prevIntersectionEdgeNo = edgeNo;
+          prevIntersectionEdgeNo = edgeIndex;
         }
       }
     }

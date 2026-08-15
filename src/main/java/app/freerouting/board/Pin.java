@@ -46,12 +46,12 @@ public class Pin extends DrillItem implements Serializable {
   Pin(
       int componentNo,
       int pinNo,
-      int[] netNoArr,
+      int[] netNumbers,
       int clearanceType,
       int idNo,
       FixedState fixedState,
       BasicBoard board) {
-    super(null, netNoArr, clearanceType, idNo, componentNo, fixedState, board);
+    super(null, netNumbers, clearanceType, idNo, componentNo, fixedState, board);
 
     this.pinNo = pinNo;
   }
@@ -127,15 +127,15 @@ public class Pin extends DrillItem implements Serializable {
 
   @Override
   public Item copy(int idNo) {
-    int[] currentNetNoArr = new int[this.netCount()];
-    for (int i = 0; i < currentNetNoArr.length; i++) {
-      currentNetNoArr[i] = getNetNo(i);
+    int[] currentNetNumbers = new int[this.netCount()];
+    for (int i = 0; i < currentNetNumbers.length; i++) {
+      currentNetNumbers[i] = getNetNumber(i);
     }
     return new Pin(
         getComponentNo(),
         this.pinNo,
-        currentNetNoArr,
-        clearanceClassNo(),
+        currentNetNumbers,
+        clearanceClassIndex(),
         idNo,
         getFixedState(),
         board);
@@ -437,13 +437,13 @@ public class Pin extends DrillItem implements Serializable {
     }
     int thisNetNo;
     if (this.netCount() > 0) {
-      thisNetNo = this.getNetNo(0);
+      thisNetNo = this.getNetNumber(0);
     } else {
       thisNetNo = 0;
     }
     int otherNetNo;
     if (other.netCount() > 0) {
-      otherNetNo = other.getNetNo(0);
+      otherNetNo = other.getNetNumber(0);
     } else {
       otherNetNo = 0;
     }

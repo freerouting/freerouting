@@ -43,7 +43,7 @@ public final class MazeShoveTraceAlgo {
     // only traces with the same halfwidth and the same clearance class can be
     // shoved.
     if (obstacleTrace.getHalfWidth() != ctrl.traceHalfWidth[traceLayer]
-        || obstacleTrace.clearanceClassNo() != ctrl.traceClearanceClassNo) {
+        || obstacleTrace.clearanceClassIndex() != ctrl.traceClearanceClassIndex) {
       return true;
     }
     double compensatedTraceHalfWidth = ctrl.compensatedTraceHalfWidth[traceLayer];
@@ -168,16 +168,16 @@ public final class MazeShoveTraceAlgo {
       }
     }
     int traceHalfWidth = ctrl.traceHalfWidth[traceLayer];
-    int[] netNoArr = new int[1];
-    netNoArr[0] = ctrl.netNo;
+    int[] netNumbers = new int[1];
+    netNumbers[0] = ctrl.netNumber;
 
     double shoveWidth =
         board.checkTraceSegment(
             shoveLineSegment,
             traceLayer,
-            netNoArr,
+            netNumbers,
             traceHalfWidth,
-            ctrl.traceClearanceClassNo,
+            ctrl.traceClearanceClassIndex,
             true);
     boolean segmentShortened = false;
     if (shoveWidth < Integer.MAX_VALUE) {
@@ -201,9 +201,9 @@ public final class MazeShoveTraceAlgo {
               shoveLineSegment,
               shoveToTheLeft,
               traceLayer,
-              netNoArr,
+              netNumbers,
               traceHalfWidth,
-              ctrl.traceClearanceClassNo,
+              ctrl.traceClearanceClassIndex,
               ctrl.maxShoveTraceRecursionDepth,
               ctrl.maxShoveViaRecursionDepth);
 

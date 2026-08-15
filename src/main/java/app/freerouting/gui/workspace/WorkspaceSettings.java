@@ -404,15 +404,15 @@ public class WorkspaceSettings extends GuiSettingsSource implements Serializable
   /**
    * Sets the current active layer index and fires {@link #PROP_LAYER}.
    *
-   * @param layerNo the new layer index
+   * @param layerIndex the new layer index
    */
-  public void setLayer(int layerNo) {
+  public void setLayer(int layerIndex) {
     if (readOnly) {
       return;
     }
     int old = this.layer;
-    layer = layerNo;
-    pcs.firePropertyChange(PROP_LAYER, old, layerNo);
+    layer = layerIndex;
+    pcs.firePropertyChange(PROP_LAYER, old, layerIndex);
   }
 
   /** Returns the trace pull tight accuracy. */
@@ -631,12 +631,12 @@ public class WorkspaceSettings extends GuiSettingsSource implements Serializable
   }
 
   /** Returns the trace half-width in manual routing mode on the specified layer. */
-  public int getManualTraceHalfWidth(int layerNo) {
-    if (layerNo < 0 || layerNo >= this.manualTraceHalfWidthArr.length) {
+  public int getManualTraceHalfWidth(int layerIndex) {
+    if (layerIndex < 0 || layerIndex >= this.manualTraceHalfWidthArr.length) {
       FRLogger.warn("WorkspaceSettings.get_manual_trace_half_width layer number out of range");
       return 0;
     }
-    return this.manualTraceHalfWidthArr[layerNo];
+    return this.manualTraceHalfWidthArr[layerIndex];
   }
 
   /** Route mode: stitching or dynamic. Fires {@link #PROP_IS_STITCH_ROUTE}. */
@@ -679,12 +679,12 @@ public class WorkspaceSettings extends GuiSettingsSource implements Serializable
    * Sets the manual trace half width used in interactive routing. Fires {@link
    * #PROP_MANUAL_TRACE_HALF_WIDTH}.
    */
-  public void setManualTraceHalfWidth(int layerNo, int value) {
+  public void setManualTraceHalfWidth(int layerIndex, int value) {
     if (readOnly) {
       return;
     }
-    int old = manualTraceHalfWidthArr[layerNo];
-    manualTraceHalfWidthArr[layerNo] = value;
+    int old = manualTraceHalfWidthArr[layerIndex];
+    manualTraceHalfWidthArr[layerIndex] = value;
     pcs.firePropertyChange(PROP_MANUAL_TRACE_HALF_WIDTH, old, value);
   }
 

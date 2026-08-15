@@ -25,8 +25,8 @@ public class DynamicRouteState extends RouteState {
       hdlg.getRoutingBoard().endNotifyObservers();
       this.observersActivated = false;
     }
-    for (int currentNetNo : this.route.netNoArr) {
-      hdlg.updateRatsnest(currentNetNo);
+    for (int currentNetNumber : this.route.netNumbers) {
+      hdlg.updateRatsnest(currentNetNumber);
     }
     return this.returnState;
   }

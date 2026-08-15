@@ -30,7 +30,7 @@ public final class ForcedViaInserter {
       TileShape roomShape,
       Point location,
       int layer,
-      int[] netNoArr,
+      int[] netNumbers,
       int maxRecursionDepth,
       int maxViaRecursionDepth,
       RoutingBoard board,
@@ -73,7 +73,7 @@ public final class ForcedViaInserter {
             tileShape,
             fromSide,
             layer,
-            netNoArr,
+            netNumbers,
             clClass,
             attachSmdAllowed,
             null,
@@ -102,7 +102,7 @@ public final class ForcedViaInserter {
             startTraceShape,
             fromSide,
             layer,
-            netNoArr,
+            netNumbers,
             traceClearanceClass,
             true,
             null,
@@ -127,12 +127,12 @@ public final class ForcedViaInserter {
   public static boolean check(
       ViaInfo viaInfo,
       Point location,
-      int[] netNoArr,
+      int[] netNumbers,
       int maxRecursionDepth,
       int maxViaRecursionDepth,
       RoutingBoard board,
       int[] tracePenHalfwidthArr,
-      int traceClearanceClassNo) {
+      int traceClearanceClassIndex) {
     Vector translateVector = location.differenceBy(Point.ZERO);
     int calcFromSideOffset = board.getMinTraceHalfWidth();
     ForcedPadRouter forcedPadRouter = new ForcedPadRouter(board);
@@ -164,7 +164,7 @@ public final class ForcedViaInserter {
               tileShape,
               fromSide,
               i,
-              netNoArr,
+              netNumbers,
               currentClearanceClass,
               viaInfo.attachSmdAllowed(),
               null,
@@ -189,7 +189,7 @@ public final class ForcedViaInserter {
                 holeTile,
                 fromSide,
                 i,
-                netNoArr,
+                netNumbers,
                 0,
                 viaInfo.attachSmdAllowed(),
                 null,
@@ -218,8 +218,8 @@ public final class ForcedViaInserter {
                 startTraceShape,
                 fromSide,
                 i,
-                netNoArr,
-                traceClearanceClassNo,
+                netNumbers,
+                traceClearanceClassIndex,
                 true,
                 null,
                 maxRecursionDepth,
@@ -238,15 +238,15 @@ public final class ForcedViaInserter {
   /**
    * Shoves aside traces, so that a via with the input parameters can be inserted without clearance
    * violations. If the shove failed, the database may be damaged, so that an undo becomes
-   * necessary. traceClearanceClassNo and tracePenHalfwidthArr is provided to make space for
+   * necessary. traceClearanceClassIndex and tracePenHalfwidthArr is provided to make space for
    * starting a trace in case the trace width is bigger than the via shape. Returns false, if the
    * forced via failed.
    */
   public static boolean insert(
       ViaInfo viaInfo,
       Point location,
-      int[] netNoArr,
-      int traceClearanceClassNo,
+      int[] netNumbers,
+      int traceClearanceClassIndex,
       int[] tracePenHalfwidthArr,
       int maxRecursionDepth,
       int maxViaRecursionDepth,
@@ -294,7 +294,7 @@ public final class ForcedViaInserter {
           tileShape,
           fromSide,
           i,
-          netNoArr,
+          netNumbers,
           currentClearanceClass,
           viaInfo.attachSmdAllowed(),
           null,
@@ -314,7 +314,7 @@ public final class ForcedViaInserter {
             holeTile,
             fromSide,
             i,
-            netNoArr,
+            netNumbers,
             0,
             viaInfo.attachSmdAllowed(),
             null,
@@ -330,8 +330,8 @@ public final class ForcedViaInserter {
             startTraceShape,
             fromSide,
             i,
-            netNoArr,
-            traceClearanceClassNo,
+            netNumbers,
+            traceClearanceClassIndex,
             true,
             null,
             maxRecursionDepth,
@@ -344,7 +344,7 @@ public final class ForcedViaInserter {
     board.insertVia(
         viaPadstack,
         location,
-        netNoArr,
+        netNumbers,
         viaInfo.getClearanceClass(),
         FixedState.UNFIXED,
         viaInfo.attachSmdAllowed());
@@ -404,14 +404,14 @@ public final class ForcedViaInserter {
         }
       }
       if (roomShape.contains(checkPoint)) {
-        int fromSideNo;
+        int fromSideIndex;
         if (is90Degree) {
-          fromSideNo = i;
+          fromSideIndex = i;
         } else {
-          fromSideNo = 2 * i;
+          fromSideIndex = 2 * i;
         }
         FloatPoint currentBorderPoint = new FloatPoint(borderX, borderY);
-        return new ShapeEntrySide(fromSideNo, currentBorderPoint);
+        return new ShapeEntrySide(fromSideIndex, currentBorderPoint);
       }
     }
     if (is90Degree) {
@@ -448,9 +448,9 @@ public final class ForcedViaInserter {
       }
       if (roomShape.contains(checkPoint)) {
 
-        int fromSideNo = 2 * i + 1;
+        int fromSideIndex = 2 * i + 1;
         FloatPoint currentBorderPoint = new FloatPoint(borderX, borderY);
-        return new ShapeEntrySide(fromSideNo, currentBorderPoint);
+        return new ShapeEntrySide(fromSideIndex, currentBorderPoint);
       }
     }
     return null;

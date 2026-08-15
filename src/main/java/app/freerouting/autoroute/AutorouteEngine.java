@@ -49,7 +49,7 @@ public class AutorouteEngine {
   Stoppable stoppableThread;
 
   /** The net number used for routing in this autoroute algorithm. */
-  private int netNo;
+  private int netNumber;
 
   /** To stop the expansion algorithm after a time limit is exceeded. */
   private TimeLimit timeLimit;
@@ -67,11 +67,12 @@ public class AutorouteEngine {
    * Creates a new instance of BoardAutorouteEngine. If maintainDatabase, the autorouter database.
    * is maintained after a connection is completed for performance reasons.
    */
-  public AutorouteEngine(RoutingBoard board, int traceClearanceClassNo, boolean maintainDatabase) {
+  public AutorouteEngine(
+      RoutingBoard board, int traceClearanceClassIndex, boolean maintainDatabase) {
     this.board = board;
     this.maintainDatabase = maintainDatabase;
-    this.netNo = -1;
-    this.autorouteSearchTree = board.searchTreeManager.getAutorouteTree(traceClearanceClassNo);
+    this.netNumber = -1;
+    this.autorouteSearchTree = board.searchTreeManager.getAutorouteTree(traceClearanceClassIndex);
     int maxDrillPageWidth = (int) (5 * board.rules.getDefaultViaDiameter());
     maxDrillPageWidth = Math.max(maxDrillPageWidth, 10000);
     this.drillPageArray = new DrillPageArray(this.board, maxDrillPageWidth);
@@ -79,9 +80,9 @@ public class AutorouteEngine {
   }
 
   /** Initializes a connection search for the specified net number. */
-  public void initConnection(int netNo, Stoppable stoppableThread, TimeLimit timeLimit) {
+  public void initConnection(int netNumber, Stoppable stoppableThread, TimeLimit timeLimit) {
     if (this.maintainDatabase) {
-      if (netNo != this.netNo) {
+      if (netNumber != this.netNumber) {
         if (this.completeExpansionRooms != null) {
           // invalidate the net dependent complete free space expansion rooms.
           Collection<CompleteFreeSpaceExpansionRoom> roomsToRemove = new ArrayList<>();
@@ -94,16 +95,16 @@ public class AutorouteEngine {
             this.removeCompleteExpansionRoom(currentRoom);
           }
         }
-        // invalidate the neighbour rooms of the items of netNo
+        // invalidate the neighbour rooms of the items of netNumber
         Collection<Item> itemList = this.board.getItems();
         for (Item currentItem : itemList) {
-          if (currentItem.containsNet(netNo)) {
+          if (currentItem.containsNet(netNumber)) {
             this.board.additionalUpdateAfterChange(currentItem);
           }
         }
       }
     }
-    this.netNo = netNo;
+    this.netNumber = netNumber;
     this.stoppableThread = stoppableThread;
     this.timeLimit = timeLimit;
   }
@@ -147,14 +148,14 @@ public class AutorouteEngine {
     }
 
     if (searchResult != null) {
-      if (ctrl.netNo == 33 || ctrl.netNo == 66 || ctrl.netNo == 67) {
+      if (ctrl.netNumber == 33 || ctrl.netNumber == 66 || ctrl.netNumber == 67) {
         String destinationType =
             searchResult.destinationDoor != null
                 ? searchResult.destinationDoor.getClass().getSimpleName()
                 : "null";
         FRLogger.trace(
             "compare_trace_maze_result_raw net="
-                + ctrl.netNo
+                + ctrl.netNumber
                 + ", section="
                 + searchResult.sectionNoOfDoor
                 + ", destination_type="
@@ -233,7 +234,7 @@ public class AutorouteEngine {
     for (Item currentRippedItem : rippedItemList) {
       rippedConnections.addAll(currentRippedItem.getConnectionItems(stopConnectionOption));
       for (int i = 0; i < currentRippedItem.netCount(); i++) {
-        changedNets.add(currentRippedItem.getNetNo(i));
+        changedNets.add(currentRippedItem.getNetNumber(i));
       }
     }
 
@@ -245,8 +246,8 @@ public class AutorouteEngine {
 
     board.removeItems(rippedConnections);
 
-    for (int currentNetNo : changedNets) {
-      this.board.removeTraceTails(currentNetNo, stopConnectionOption);
+    for (int currentNetNumber : changedNets) {
+      this.board.removeTraceTails(currentNetNumber, stopConnectionOption);
     }
     InsertFoundConnectionAlgo insertFoundConnectionAlgo =
         InsertFoundConnectionAlgo.getInstance(autorouteResult, board, ctrl);
@@ -272,8 +273,8 @@ public class AutorouteEngine {
   }
 
   /** Returns the net number of the current connection to route. */
-  public int getNetNo() {
-    return this.netNo;
+  public int getNetNumber() {
+    return this.netNumber;
   }
 
   /** Returns if the user has stopped the autorouter. */
@@ -421,7 +422,7 @@ public class AutorouteEngine {
       FRLogger.trace(
           "COMPLETE_ROOM input"
               + ", net="
-              + this.netNo
+              + this.netNumber
               + ", layer="
               + room.getLayer()
               + ", room_bounds="
@@ -433,13 +434,13 @@ public class AutorouteEngine {
               + ", ignoreObject="
               + (ignoreObject == null ? "null" : ignoreObject.getClass().getSimpleName()));
       Collection<IncompleteFreeSpaceExpansionRoom> completedShapes =
-          this.autorouteSearchTree.completeShape(room, this.netNo, ignoreObject, fromDoorShape);
+          this.autorouteSearchTree.completeShape(room, this.netNumber, ignoreObject, fromDoorShape);
       int initialCandidateIndex = 0;
       for (IncompleteFreeSpaceExpansionRoom initialCandidate : completedShapes) {
         FRLogger.trace(
             "COMPLETE_ROOM initial_candidate"
                 + ", net="
-                + this.netNo
+                + this.netNumber
                 + ", layer="
                 + initialCandidate.getLayer()
                 + ", index="
@@ -463,7 +464,7 @@ public class AutorouteEngine {
           FRLogger.trace(
               "COMPLETE_ROOM first_candidate"
                   + ", net="
-                  + this.netNo
+                  + this.netNumber
                   + ", layer="
                   + currentIncompleteRoom.getLayer()
                   + ", incomplete_bounds="
@@ -481,12 +482,12 @@ public class AutorouteEngine {
           // have to be recalculated.
           Collection<IncompleteFreeSpaceExpansionRoom> currentCompletedShapes =
               this.autorouteSearchTree.completeShape(
-                  currentIncompleteRoom, this.netNo, ignoreObject, fromDoorShape);
+                  currentIncompleteRoom, this.netNumber, ignoreObject, fromDoorShape);
           for (IncompleteFreeSpaceExpansionRoom tmpRoom : currentCompletedShapes) {
             FRLogger.trace(
                 "COMPLETE_ROOM recalc_candidate"
                     + ", net="
-                    + this.netNo
+                    + this.netNumber
                     + ", layer="
                     + tmpRoom.getLayer()
                     + ", incomplete_bounds="
@@ -522,7 +523,7 @@ public class AutorouteEngine {
     FRLogger.trace(
         "COMPLETE_ROOM added"
             + ", net="
-            + this.netNo
+            + this.netNumber
             + ", layer="
             + completedRoom.getLayer()
             + ", bounds="

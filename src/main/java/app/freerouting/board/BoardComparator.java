@@ -294,7 +294,7 @@ public class BoardComparator {
       }
       String netName1 = "";
       if (pt1.netCount() > 0) {
-        Net net = board1.rules.nets.get(pt1.getNetNo(0));
+        Net net = board1.rules.nets.get(pt1.getNetNumber(0));
         if (net != null) {
           netName1 = net.name;
         }
@@ -315,7 +315,7 @@ public class BoardComparator {
         }
         String netName2 = "";
         if (pt2.netCount() > 0) {
-          Net net = board2.rules.nets.get(pt2.getNetNo(0));
+          Net net = board2.rules.nets.get(pt2.getNetNumber(0));
           if (net != null) {
             netName2 = net.name;
           }
@@ -352,7 +352,7 @@ public class BoardComparator {
         if (t2 instanceof PolylineTrace pt2) {
           String netName2 = "";
           if (pt2.netCount() > 0) {
-            Net net = board2.rules.nets.get(pt2.getNetNo(0));
+            Net net = board2.rules.nets.get(pt2.getNetNumber(0));
             if (net != null) {
               netName2 = net.name;
             }
@@ -387,7 +387,7 @@ public class BoardComparator {
     for (Via v1 : vias1) {
       String netName1 = "";
       if (v1.netCount() > 0) {
-        Net net = board1.rules.nets.get(v1.getNetNo(0));
+        Net net = board1.rules.nets.get(v1.getNetNumber(0));
         if (net != null) {
           netName1 = net.name;
         }
@@ -424,7 +424,7 @@ public class BoardComparator {
         }
         String netName2 = "";
         if (v2.netCount() > 0) {
-          Net net = board2.rules.nets.get(v2.getNetNo(0));
+          Net net = board2.rules.nets.get(v2.getNetNumber(0));
           if (net != null) {
             netName2 = net.name;
           }
@@ -471,7 +471,7 @@ public class BoardComparator {
         Via v2 = vias2.get(i);
         String netName2 = "";
         if (v2.netCount() > 0) {
-          Net net = board2.rules.nets.get(v2.getNetNo(0));
+          Net net = board2.rules.nets.get(v2.getNetNumber(0));
           if (net != null) {
             netName2 = net.name;
           }
@@ -651,7 +651,7 @@ public class BoardComparator {
 
   private static Map<String, Net> buildNetMap(RoutingBoard board) {
     Map<String, Net> map = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    for (int i = 1; i <= board.rules.nets.maxNetNo(); i++) {
+    for (int i = 1; i <= board.rules.nets.maxNetNumber(); i++) {
       Net net = board.rules.nets.get(i);
       if (net != null) {
         map.put(net.name, net);

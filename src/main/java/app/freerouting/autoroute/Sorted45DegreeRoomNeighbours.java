@@ -42,10 +42,13 @@ public final class Sorted45DegreeRoomNeighbours {
   /** Calculates room neighbours. */
   public static CompleteExpansionRoom calculate(
       ExpansionRoom room, AutorouteEngine autorouteEngine) {
-    int netNo = autorouteEngine.getNetNo();
+    int netNumber = autorouteEngine.getNetNumber();
     Sorted45DegreeRoomNeighbours roomNeighbours =
         Sorted45DegreeRoomNeighbours.calculateNeighbours(
-            room, netNo, autorouteEngine.autorouteSearchTree, autorouteEngine.generateRoomIdNo());
+            room,
+            netNumber,
+            autorouteEngine.autorouteSearchTree,
+            autorouteEngine.generateRoomIdNo());
     if (roomNeighbours == null) {
       return null;
     }
@@ -53,7 +56,7 @@ public final class Sorted45DegreeRoomNeighbours {
     // Check, that each side of the room shape has at least one touching neighbour.
     // Otherwise, improve the room shape by enlarging.
     boolean edgeRemoved =
-        roomNeighbours.tryRemoveEdgeLine(netNo, autorouteEngine.autorouteSearchTree);
+        roomNeighbours.tryRemoveEdgeLine(netNumber, autorouteEngine.autorouteSearchTree);
     CompleteExpansionRoom result = roomNeighbours.completedRoom;
     if (edgeRemoved) {
       autorouteEngine.removeAllDoors(result);
@@ -78,7 +81,7 @@ public final class Sorted45DegreeRoomNeighbours {
    * boundary of the room shape.
    */
   private static Sorted45DegreeRoomNeighbours calculateNeighbours(
-      ExpansionRoom room, int netNo, ShapeSearchTree autorouteSearchTree, int roomIdNo) {
+      ExpansionRoom room, int netNumber, ShapeSearchTree autorouteSearchTree, int roomIdNo) {
     TileShape roomShape = room.getShape();
     CompleteExpansionRoom completedRoom;
     if (room instanceof IncompleteFreeSpaceExpansionRoom) {
@@ -116,8 +119,8 @@ public final class Sorted45DegreeRoomNeighbours {
         continue;
       }
       if ((completedRoom instanceof CompleteFreeSpaceExpansionRoom fsRoom)
-          && !currentObject.isTraceObstacle(netNo)) {
-        fsRoom.calculateTargetDoors(currentEntry, netNo, autorouteSearchTree);
+          && !currentObject.isTraceObstacle(netNumber)) {
+        fsRoom.calculateTargetDoors(currentEntry, netNumber, autorouteSearchTree);
         continue;
       }
       TileShape currentShape =
@@ -238,9 +241,9 @@ public final class Sorted45DegreeRoomNeighbours {
     }
   }
 
-  /** Calculates an incomplete room for each edge side from fromSideNo to toSideNo. */
+  /** Calculates an incomplete room for each edge side from fromSideIndex to toSideIndex. */
   private void calculateEdgeIncompleteRoomsOfObstacleExpansionRoom(
-      int fromSideNo, int toSideNo, AutorouteEngine autorouteEngine) {
+      int fromSideIndex, int toSideIndex, AutorouteEngine autorouteEngine) {
     if (!(this.fromRoom instanceof ObstacleExpansionRoom)) {
       FRLogger.warn(
           "Sorted45DegreeRoomNeighbours.calculate_side_incomplete_rooms_of_obstacle_expansion_room:"
@@ -248,10 +251,10 @@ public final class Sorted45DegreeRoomNeighbours {
       return;
     }
     IntOctagon boardBoundingOct = autorouteEngine.board.getBoundingBox().boundingOctagon();
-    IntPoint currentCorner = this.roomShape.corner(fromSideNo);
-    int currentSideNo = fromSideNo;
+    IntPoint currentCorner = this.roomShape.corner(fromSideIndex);
+    int currentSideIndex = fromSideIndex;
     for (; ; ) {
-      int nextSideNo = (currentSideNo + 1) % 8;
+      int nextSideNo = (currentSideIndex + 1) % 8;
       IntPoint nextCorner = this.roomShape.corner(nextSideNo);
       if (!currentCorner.equals(nextCorner)) {
         int lx = boardBoundingOct.leftX;
@@ -262,7 +265,7 @@ public final class Sorted45DegreeRoomNeighbours {
         int lrx = boardBoundingOct.lowerRightDiagonalX;
         int llx = boardBoundingOct.lowerLeftDiagonalX;
         int urx = boardBoundingOct.upperRightDiagonalX;
-        switch (currentSideNo) {
+        switch (currentSideIndex) {
           case 0 -> uy = this.roomShape.bottomY;
           case 1 -> ulx = this.roomShape.lowerRightDiagonalX;
           case 2 -> lx = this.roomShape.rightX;
@@ -274,16 +277,16 @@ public final class Sorted45DegreeRoomNeighbours {
           default -> {
             FRLogger.warn(
                 "SortedOrthoganelRoomNeighbours.calculate_edge_incomplete_rooms_of_obstacle_"
-                    + "expansion_room: currentSideNo illegal");
+                    + "expansion_room: currentSideIndex illegal");
             return;
           }
         }
         insertIncompleteRoom(autorouteEngine, lx, ly, rx, uy, ulx, lrx, llx, urx);
       }
-      if (currentSideNo == toSideNo) {
+      if (currentSideIndex == toSideIndex) {
         break;
       }
-      currentSideNo = nextSideNo;
+      currentSideIndex = nextSideNo;
     }
   }
 
@@ -291,7 +294,7 @@ public final class Sorted45DegreeRoomNeighbours {
    * Check, that each side of the room shape has at least one touching neighbour. Otherwise, the
    * room shape will be improved the by enlarging. Returns true, if the room shape was changed.
    */
-  private boolean tryRemoveEdgeLine(int netNo, ShapeSearchTree autorouteSearchTree) {
+  private boolean tryRemoveEdgeLine(int netNumber, ShapeSearchTree autorouteSearchTree) {
     if (!(this.fromRoom instanceof IncompleteFreeSpaceExpansionRoom currentIncompleteRoom)) {
       return false;
     }
@@ -321,7 +324,7 @@ public final class Sorted45DegreeRoomNeighbours {
       FRLogger.trace(
           "ROOM_EDGE_REMOVE start"
               + ", net="
-              + netNo
+              + netNumber
               + ", layer="
               + currentIncompleteRoom.getLayer()
               + ", room_bounds="
@@ -332,7 +335,7 @@ public final class Sorted45DegreeRoomNeighbours {
       FRLogger.trace(
           "ROOM_EDGE_REMOVE enlarged"
               + ", net="
-              + netNo
+              + netNumber
               + ", layer="
               + currentIncompleteRoom.getLayer()
               + ", enlarged_bounds="
@@ -340,7 +343,7 @@ public final class Sorted45DegreeRoomNeighbours {
       FRLogger.trace(
           "ROOM_EDGE_REMOVE contained"
               + ", net="
-              + netNo
+              + netNumber
               + ", layer="
               + currentIncompleteRoom.getLayer()
               + ", type="
@@ -376,11 +379,11 @@ public final class Sorted45DegreeRoomNeighbours {
               currentIncompleteRoom.getLayer(),
               currentIncompleteRoom.getContainedShape());
       Collection<IncompleteFreeSpaceExpansionRoom> newRooms =
-          autorouteSearchTree.completeShape(enlargedRoom, netNo, ignoreObject, ignoreShape);
+          autorouteSearchTree.completeShape(enlargedRoom, netNumber, ignoreObject, ignoreShape);
       FRLogger.trace(
           "ROOM_EDGE_REMOVE complete_shape"
               + ", net="
-              + netNo
+              + netNumber
               + ", layer="
               + currentIncompleteRoom.getLayer()
               + ", candidate_count="
@@ -392,7 +395,7 @@ public final class Sorted45DegreeRoomNeighbours {
           FRLogger.trace(
               "ROOM_EDGE_REMOVE applied"
                   + ", net="
-                  + netNo
+                  + netNumber
                   + ", layer="
                   + currentIncompleteRoom.getLayer()
                   + ", old_bounds="
@@ -445,9 +448,9 @@ public final class Sorted45DegreeRoomNeighbours {
       SortedRoomNeighbour prevNeighbour,
       SortedRoomNeighbour nextNeighbour,
       AutorouteEngine autorouteEngine) {
-    int fromSideNo = prevNeighbour.lastTouchingSide;
-    int toSideNo = nextNeighbour.firstTouchingSide;
-    if (fromSideNo == toSideNo && prevNeighbour != nextNeighbour) {
+    int fromSideIndex = prevNeighbour.lastTouchingSide;
+    int toSideIndex = nextNeighbour.firstTouchingSide;
+    if (fromSideIndex == toSideIndex && prevNeighbour != nextNeighbour) {
       // no return in case of only 1 neighbour.
       return;
     }
@@ -463,7 +466,7 @@ public final class Sorted45DegreeRoomNeighbours {
     int lrx = boardBoundingOct.lowerRightDiagonalX;
     int llx = boardBoundingOct.lowerLeftDiagonalX;
     int urx = boardBoundingOct.upperRightDiagonalX;
-    switch (fromSideNo) {
+    switch (fromSideIndex) {
       case 0 -> {
         uy = this.roomShape.bottomY;
         ulx = prevNeighbour.intersection.lowerRightDiagonalX;
@@ -511,7 +514,7 @@ public final class Sorted45DegreeRoomNeighbours {
     llx = boardBoundingOct.lowerLeftDiagonalX;
     urx = boardBoundingOct.upperRightDiagonalX;
 
-    switch (toSideNo) {
+    switch (toSideIndex) {
       case 0 -> {
         uy = this.roomShape.bottomY;
         urx = nextNeighbour.intersection.lowerLeftDiagonalX;
@@ -550,11 +553,11 @@ public final class Sorted45DegreeRoomNeighbours {
 
     // Insert the new incomplete rooms on the intermediate free sides of the obstacle expansion
     // room.
-    int currentFromSideNo = (fromSideNo + 1) % 8;
-    if (currentFromSideNo == toSideNo) {
+    int currentFromSideNo = (fromSideIndex + 1) % 8;
+    if (currentFromSideNo == toSideIndex) {
       return;
     }
-    int currentToSideNo = (toSideNo + 7) % 8;
+    int currentToSideNo = (toSideIndex + 7) % 8;
     this.calculateEdgeIncompleteRoomsOfObstacleExpansionRoom(
         currentFromSideNo, currentToSideNo, autorouteEngine);
   }
@@ -842,25 +845,25 @@ public final class Sorted45DegreeRoomNeighbours {
 
       int nextSideNo = this.firstTouchingSide;
       for (; ; ) {
-        int currentSideNo = nextSideNo;
+        int currentSideIndex = nextSideNo;
         nextSideNo = (nextSideNo + 1) % 8;
-        if (!edgeInteriorTouchesObstacle[currentSideNo]) {
+        if (!edgeInteriorTouchesObstacle[currentSideIndex]) {
           boolean touchOnlyAtCorner = false;
-          if (currentSideNo == this.firstTouchingSide) {
-            if (intersection.corner(currentSideNo).equals(roomShape.corner(nextSideNo))) {
+          if (currentSideIndex == this.firstTouchingSide) {
+            if (intersection.corner(currentSideIndex).equals(roomShape.corner(nextSideNo))) {
               touchOnlyAtCorner = true;
             }
           }
-          if (currentSideNo == this.lastTouchingSide) {
-            if (intersection.corner(nextSideNo).equals(roomShape.corner(currentSideNo))) {
+          if (currentSideIndex == this.lastTouchingSide) {
+            if (intersection.corner(nextSideNo).equals(roomShape.corner(currentSideIndex))) {
               touchOnlyAtCorner = true;
             }
           }
           if (!touchOnlyAtCorner) {
-            edgeInteriorTouchesObstacle[currentSideNo] = true;
+            edgeInteriorTouchesObstacle[currentSideIndex] = true;
           }
         }
-        if (currentSideNo == this.lastTouchingSide) {
+        if (currentSideIndex == this.lastTouchingSide) {
           break;
         }
       }

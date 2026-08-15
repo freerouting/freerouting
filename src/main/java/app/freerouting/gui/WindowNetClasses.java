@@ -370,7 +370,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
       NetClass netRule = boardRules.netClasses.get((String) netClassName);
       // Check, if netRule is used in a net of the net list
-      for (int i = 1; i < boardRules.nets.maxNetNo(); i++) {
+      for (int i = 1; i < boardRules.nets.maxNetNumber(); i++) {
         Net currentNet = boardRules.nets.get(i);
         if (currentNet.getNetClass() == netRule) {
           boardFrame.screenMessages.setStatusMessage(
@@ -415,7 +415,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       for (Item currentItem : boardItems) {
         boolean itemMatches = false;
         for (int i = 0; i < currentItem.netCount(); i++) {
-          NetClass currentNetClass = nets.get(currentItem.getNetNo(i)).getNetClass();
+          NetClass currentNetClass = nets.get(currentItem.getNetNumber(i)).getNetClass();
           if (currentNetClass == null) {
             continue;
           }
@@ -454,7 +454,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
             boardRules.netClasses.get(
                 (String) table.getValueAt(selectedRows[i], ColumnName.NAME.ordinal()));
       }
-      int maxNetNo = boardRules.nets.maxNetNo();
+      int maxNetNo = boardRules.nets.maxNetNumber();
       for (int i = 1; i <= maxNetNo; i++) {
         boardHandling.setIncompletesFilter(i, true);
         NetClass currentNetClass = boardRules.nets.get(i).getNetClass();
@@ -486,7 +486,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
                 (String) table.getValueAt(selectedRows[i], ColumnName.NAME.ordinal()));
       }
       Collection<Printable> containedNets = new LinkedList<>();
-      int maxNetNo = boardRules.nets.maxNetNo();
+      int maxNetNo = boardRules.nets.maxNetNumber();
       for (int i = 1; i <= maxNetNo; i++) {
         Net currentNet = boardRules.nets.get(i);
         NetClass currentNetClass = currentNet.getNetClass();

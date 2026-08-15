@@ -197,7 +197,7 @@ public class WindowNets extends WindowObjectListWithFilter {
   protected void fillList() {
     Nets nets = this.boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.nets;
     List<Net> netList = new java.util.ArrayList<>();
-    for (int i = 0; i < nets.maxNetNo(); i++) {
+    for (int i = 0; i < nets.maxNetNumber(); i++) {
       Net net = nets.get(i + 1);
       if (net != null) {
         netList.add(net);
@@ -232,8 +232,8 @@ public class WindowNets extends WindowObjectListWithFilter {
     Collection<Item> boardItems = routingBoard.getItems();
     for (Item currentItem : boardItems) {
       boolean itemMatches = false;
-      for (int currentNetNo : selectedNetNumbers) {
-        if (currentItem.containsNet(currentNetNo)) {
+      for (int currentNetNumber : selectedNetNumbers) {
+        if (currentItem.containsNet(currentNetNumber)) {
           itemMatches = true;
           break;
         }

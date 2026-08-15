@@ -137,16 +137,16 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   }
 
   static void applyClearanceValue(
-      ClearanceMatrix matrix, int rowClassNo, int columnClassNo, int layerNo, int boardValue) {
-    if (layerNo == ComboBoxLayer.ALL_LAYER_INDEX) {
+      ClearanceMatrix matrix, int rowClassNo, int columnClassNo, int layerIndex, int boardValue) {
+    if (layerIndex == ComboBoxLayer.ALL_LAYER_INDEX) {
       matrix.setValue(rowClassNo, columnClassNo, boardValue);
       matrix.setValue(columnClassNo, rowClassNo, boardValue);
-    } else if (layerNo == ComboBoxLayer.INNER_LAYER_INDEX) {
+    } else if (layerIndex == ComboBoxLayer.INNER_LAYER_INDEX) {
       matrix.setInnerValue(rowClassNo, columnClassNo, boardValue);
       matrix.setInnerValue(columnClassNo, rowClassNo, boardValue);
     } else {
-      matrix.setValue(rowClassNo, columnClassNo, layerNo, boardValue);
-      matrix.setValue(columnClassNo, rowClassNo, layerNo, boardValue);
+      matrix.setValue(rowClassNo, columnClassNo, layerIndex, boardValue);
+      matrix.setValue(columnClassNo, rowClassNo, layerIndex, boardValue);
     }
   }
 
@@ -393,7 +393,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
         if (currentItem == null) {
           break;
         }
-        int currentItemClassNo = currentItem.clearanceClassNo();
+        int currentItemClassNo = currentItem.clearanceClassIndex();
         if (currentItemClassNo == currentRow) {
           itemsAlreadyAssignedRow = true;
         }
@@ -432,8 +432,8 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
       int boardValue =
           (int)
               Math.round(boardHandling.coordinateTransform.userToBoard(numberValue.doubleValue()));
-      int layerNo = rulesClearanceLayerComboBox.getSelectedLayer().index;
-      applyClearanceValue(clearanceMatrix, currentRow, currentColumn, layerNo, boardValue);
+      int layerIndex = rulesClearanceLayerComboBox.getSelectedLayer().index;
+      applyClearanceValue(clearanceMatrix, currentRow, currentColumn, layerIndex, boardValue);
       if (itemsAlreadyAssigned) {
         // force reinserting all item into the searck tree, because their tree shapes may have
         // changed

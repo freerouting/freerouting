@@ -88,17 +88,17 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Return the clearance compensation value of clearanceClassNo to the clearance compensation class
-   * of this search tree with on layer layer. Returns 0, if no clearance compensation is used for
-   * this tree.
+   * Return the clearance compensation value of clearanceClassIndex to the clearance compensation
+   * class of this search tree with on layer layer. Returns 0, if no clearance compensation is used
+   * for this tree.
    */
-  public int clearanceCompensationValue(int clearanceClassNo, int layer) {
-    if (clearanceClassNo <= 0) {
+  public int clearanceCompensationValue(int clearanceClassIndex, int layer) {
+    if (clearanceClassIndex <= 0) {
       return 0;
     }
     int result =
         board.rules.clearanceMatrix.getValue(
-                clearanceClassNo, this.compensatedClearanceClassNo, layer, false)
+                clearanceClassIndex, this.compensatedClearanceClassNo, layer, false)
             - board.rules.clearanceMatrix.clearanceCompensationValue(
                 this.compensatedClearanceClassNo, layer);
     return Math.max(result, 0);
@@ -114,7 +114,7 @@ public class ShapeSearchTree extends MinAreaTree {
     // newShapeCount - keepAtEndCount - 1;
     int compensatedHalfWidth =
         obj.getHalfWidth()
-            + this.clearanceCompensationValue(obj.clearanceClassNo(), obj.getLayer());
+            + this.clearanceCompensationValue(obj.clearanceClassIndex(), obj.getLayer());
     TileShape[] changedShapes =
         this.offsetShapes(
             newPolyline,
@@ -183,7 +183,8 @@ public class ShapeSearchTree extends MinAreaTree {
         this.offsetShapes(
             joinedPolyline,
             toTrace.getHalfWidth()
-                + this.clearanceCompensationValue(toTrace.clearanceClassNo(), toTrace.getLayer()),
+                + this.clearanceCompensationValue(
+                    toTrace.clearanceClassIndex(), toTrace.getLayer()),
             fromEntryNo,
             toEntryNo);
     int newShapeCount = fromTraceEntries.length + linkShapes.length + toTraceEntries.length - 2;
@@ -257,7 +258,8 @@ public class ShapeSearchTree extends MinAreaTree {
         this.offsetShapes(
             joinedPolyline,
             toTrace.getHalfWidth()
-                + this.clearanceCompensationValue(toTrace.clearanceClassNo(), toTrace.getLayer()),
+                + this.clearanceCompensationValue(
+                    toTrace.clearanceClassIndex(), toTrace.getLayer()),
             fromEntryNo,
             toEntryNo);
     int newShapeCount = fromTraceEntries.length + linkShapes.length + toTraceEntries.length - 2;
@@ -424,10 +426,10 @@ public class ShapeSearchTree extends MinAreaTree {
 
   /**
    * Looks up all entries in the search tree, so that inserting an item with shape shape, net number
-   * netNo, clearance type clType and layer layer would produce a clearance violation, and puts them
-   * into the set obstacleEntries. The elements in obstacleEntries are of type TreeEntry. if layer <
-   * 0, the layer is ignored. Used only internally, because the clearance compensation is not taken
-   * into account.
+   * netNumber, clearance type clType and layer layer would produce a clearance violation, and puts
+   * them into the set obstacleEntries. The elements in obstacleEntries are of type TreeEntry. if
+   * layer < 0, the layer is ignored. Used only internally, because the clearance compensation is
+   * not taken into account.
    */
   void overlappingTreeEntriesWithClearance(
       ConvexShape shape,
@@ -471,7 +473,7 @@ public class ShapeSearchTree extends MinAreaTree {
       }
       if (!ignoreItem) {
         int currentClearance =
-            clMatrix.getValue(clType, currentItem.clearanceClassNo(), layer, true);
+            clMatrix.getValue(clType, currentItem.clearanceClassIndex(), layer, true);
         EntrySortedByClearance sortedOb = new EntrySortedByClearance(currentLeaf, currentClearance);
         sortedItems.add(sortedOb);
       }
@@ -566,7 +568,7 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   public Collection<IncompleteFreeSpaceExpansionRoom> completeShape(
       IncompleteFreeSpaceExpansionRoom room,
-      int netNo,
+      int netNumber,
       SearchTreeObject ignoreObject,
       TileShape ignoreShape) {
     if (room.getContainedShape() == null) {
@@ -618,7 +620,7 @@ public class ShapeSearchTree extends MinAreaTree {
     for (Leaf currentLeaf : overlappingLeaves) {
       SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
       int shapeIndex = currentLeaf.shapeIndexInObject;
-      if (currentObject.isTraceObstacle(netNo)
+      if (currentObject.isTraceObstacle(netNumber)
           && currentObject.shapeLayer(shapeIndex) == roomLayer
           && currentObject != ignoreObject) {
 
@@ -638,7 +640,7 @@ public class ShapeSearchTree extends MinAreaTree {
             FRLogger.trace(
                 "COMPLETE_SHAPE_DECISION"
                     + ", net="
-                    + netNo
+                    + netNumber
                     + ", layer="
                     + roomLayer
                     + ", action="
@@ -878,7 +880,8 @@ public class ShapeSearchTree extends MinAreaTree {
           currentTileShape = currentShape.boundingTile();
         }
         int offsetWidth =
-            this.clearanceCompensationValue(drillItem.clearanceClassNo(), drillItem.shapeLayer(i));
+            this.clearanceCompensationValue(
+                drillItem.clearanceClassIndex(), drillItem.shapeLayer(i));
         offsetWidth += drillHoleClearanceDelta(drillItem, currentShape, drillItem.shapeLayer(i));
         if (currentTileShape == null) {
           FRLogger.warn("ShapeSearchTree.calculate_tree_shapes: shape is null");
@@ -909,7 +912,8 @@ public class ShapeSearchTree extends MinAreaTree {
     for (int i = 0; i < convexShapes.length; i++) {
       TileShape currentConvexShape = convexShapes[i];
       int offsetWidth =
-          this.clearanceCompensationValue(obstacleArea.clearanceClassNo(), obstacleArea.getLayer());
+          this.clearanceCompensationValue(
+              obstacleArea.clearanceClassIndex(), obstacleArea.getLayer());
       currentConvexShape = (TileShape) currentConvexShape.enlarge(offsetWidth);
       TileShape[] currentTreeShapes = currentConvexShape.divideIntoSections(maxTreeShapeWidth);
       treeShapeList.addAll(Arrays.asList(currentTreeShapes));
@@ -933,11 +937,11 @@ public class ShapeSearchTree extends MinAreaTree {
         return new TileShape[0];
       }
       Collection<TileShape> treeShapeList = new LinkedList<>();
-      for (int layerNo = 0; layerNo < this.board.layerStructure.arr.length; layerNo++) {
+      for (int layerIndex = 0; layerIndex < this.board.layerStructure.arr.length; layerIndex++) {
         for (int i = 0; i < convexShapes.length; i++) {
           TileShape currentConvexShape = convexShapes[i];
           int offsetWidth =
-              this.clearanceCompensationValue(boardOutline.clearanceClassNo(), layerNo);
+              this.clearanceCompensationValue(boardOutline.clearanceClassIndex(), layerIndex);
           currentConvexShape = (TileShape) currentConvexShape.enlarge(offsetWidth);
           treeShapeList.add(currentConvexShape);
         }
@@ -953,7 +957,7 @@ public class ShapeSearchTree extends MinAreaTree {
       int halfWidth = boardOutline.getHalfWidth();
       Line[] currentLineArr = new Line[3];
       int currentNo = 0;
-      for (int layerNo = 0; layerNo < this.board.layerStructure.arr.length; layerNo++) {
+      for (int layerIndex = 0; layerIndex < this.board.layerStructure.arr.length; layerIndex++) {
         for (int shapeNo = 0; shapeNo < boardOutline.shapeCount(); shapeNo++) {
           PolylineShape currentOutlineShape = boardOutline.getShape(shapeNo);
           int borderLineCount = currentOutlineShape.borderLineCount();
@@ -963,7 +967,7 @@ public class ShapeSearchTree extends MinAreaTree {
             currentLineArr[2] = currentOutlineShape.borderLine((i + 1) % borderLineCount);
             Polyline tmpPolyline = new Polyline(currentLineArr);
             int cmpValue =
-                this.clearanceCompensationValue(boardOutline.clearanceClassNo(), layerNo);
+                this.clearanceCompensationValue(boardOutline.clearanceClassIndex(), layerIndex);
             result[currentNo] = tmpPolyline.offsetShape(halfWidth + cmpValue, 0);
             ++currentNo;
             currentLineArr[0] = currentLineArr[1];
@@ -980,7 +984,7 @@ public class ShapeSearchTree extends MinAreaTree {
     }
     int offsetWidth =
         trace.getHalfWidth()
-            + this.clearanceCompensationValue(trace.clearanceClassNo(), trace.getLayer());
+            + this.clearanceCompensationValue(trace.clearanceClassIndex(), trace.getLayer());
     TileShape[] result = new TileShape[trace.tileShapeCount()];
     for (int i = 0; i < result.length; i++) {
       result[i] = this.offsetShape(trace.polyline(), offsetWidth, i);
@@ -1046,7 +1050,7 @@ public class ShapeSearchTree extends MinAreaTree {
             : BoardRules.defaultClearanceClass();
     int copperClearance =
         this.board.rules.clearanceMatrix.getValue(
-            drillItem.clearanceClassNo(), clearanceClass, layer, false);
+            drillItem.clearanceClassIndex(), clearanceClass, layer, false);
     return Math.max(
         0,
         (int)

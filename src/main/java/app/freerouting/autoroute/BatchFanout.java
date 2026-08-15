@@ -63,8 +63,8 @@ public final class BatchFanout {
         // A pin is already connected if all items in its connected set are on the pin's layer
         // and its unconnected set is empty — same logic as RoutingBoard.fanout().
         app.freerouting.board.Pin boardPin = pin.boardPin;
-        int netNo = boardPin.getNetNo(0);
-        if (boardPin.getUnconnectedSet(netNo).isEmpty()) {
+        int netNumber = boardPin.getNetNumber(0);
+        if (boardPin.getUnconnectedSet(netNumber).isEmpty()) {
           alreadyConnected++;
         }
       }
@@ -228,10 +228,10 @@ public final class BatchFanout {
         final TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
         String fullPinName =
             currentComponent.boardComponent.name + "-" + currentPin.boardPin.name();
-        int netNo = currentPin.boardPin.getNetNo(0);
-        int targetCount = currentPin.boardPin.getUnconnectedSet(netNo).size();
+        int netNumber = currentPin.boardPin.getNetNumber(0);
+        int targetCount = currentPin.boardPin.getUnconnectedSet(netNumber).size();
 
-        app.freerouting.rules.Net net = this.routingBoard.rules.nets.get(netNo);
+        app.freerouting.rules.Net net = this.routingBoard.rules.nets.get(netNumber);
         if (net != null) {
           app.freerouting.rules.NetClass netClass = net.getNetClass();
           app.freerouting.rules.ViaRule viaRule = netClass != null ? netClass.getViaRule() : null;
@@ -260,7 +260,7 @@ public final class BatchFanout {
             "pin="
                 + fullPinName
                 + ", net="
-                + netNo
+                + netNumber
                 + ", targetCount="
                 + targetCount
                 + ", center="
@@ -289,7 +289,7 @@ public final class BatchFanout {
                 "pin="
                     + fullPinName
                     + ", net="
-                    + netNo
+                    + netNumber
                     + ", durationMs="
                     + pinDurationMs
                     + ", targetCount="
@@ -305,7 +305,7 @@ public final class BatchFanout {
                 "pin="
                     + fullPinName
                     + ", net="
-                    + netNo
+                    + netNumber
                     + ", targetCount="
                     + targetCount
                     + ", detail="
@@ -322,7 +322,7 @@ public final class BatchFanout {
                 "pin="
                     + fullPinName
                     + ", net="
-                    + netNo
+                    + netNumber
                     + ", targetCount="
                     + targetCount
                     + ", durationMs="
@@ -343,7 +343,7 @@ public final class BatchFanout {
                 "pin="
                     + fullPinName
                     + ", net="
-                    + netNo
+                    + netNumber
                     + ", detail="
                     + (currentResult.details == null || currentResult.details.isEmpty()
                         ? "no detail"
@@ -355,7 +355,7 @@ public final class BatchFanout {
             FRLogger.trace(
                 "BatchFanout.fanout_pass",
                 "pin_no_unconnected_nets",
-                "pin=" + fullPinName + ", net=" + netNo + ", detail=" + currentResult.details,
+                "pin=" + fullPinName + ", net=" + netNumber + ", detail=" + currentResult.details,
                 fullPinName,
                 new app.freerouting.geometry.planar.Point[] {currentPin.boardPin.getCenter()});
           }
@@ -366,7 +366,7 @@ public final class BatchFanout {
                 "pin="
                     + fullPinName
                     + ", net="
-                    + netNo
+                    + netNumber
                     + ", state="
                     + currentResult.state
                     + ", detail="
@@ -705,10 +705,10 @@ public final class BatchFanout {
 
         // distanceToClosestOnNet calculation
         double minDistance = Double.MAX_VALUE;
-        int netNo = boardPin.netCount() > 0 ? boardPin.getNetNo(0) : 0;
-        if (netNo > 0) {
+        int netNumber = boardPin.netCount() > 0 ? boardPin.getNetNumber(0) : 0;
+        if (netNumber > 0) {
           for (app.freerouting.board.Pin otherPin : routingBoard.getPins()) {
-            if (otherPin != boardPin && otherPin.containsNet(netNo)) {
+            if (otherPin != boardPin && otherPin.containsNet(netNumber)) {
               double dist = pinLocation.distance(otherPin.getCenter().toFloat());
               if (dist < minDistance) {
                 minDistance = dist;

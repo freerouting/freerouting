@@ -355,14 +355,14 @@ public class WindowVia extends BoardSavableSubWindow {
           new PadstackInputPanel(startLayer, endLayer, defaultRadius);
       JOptionPane.showMessageDialog(
           boardFrame, padstackInputPanel, tm.getText("adjust_circles"), JOptionPane.PLAIN_MESSAGE);
-      int fromLayerNo = pcb.layerStructure.getNo(startLayer);
-      int toLayerNo = pcb.layerStructure.getNo(endLayer);
+      int fromLayerIndex = pcb.layerStructure.getNo(startLayer);
+      int toLayerIndex = pcb.layerStructure.getNo(endLayer);
       ConvexShape[] padstackShapes = new ConvexShape[pcb.layerStructure.arr.length];
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
       boolean shapeExists = false;
-      for (int i = fromLayerNo; i <= toLayerNo; i++) {
-        Object input = padstackInputPanel.circleRadius[i - fromLayerNo].getValue();
+      for (int i = fromLayerIndex; i <= toLayerIndex; i++) {
+        Object input = padstackInputPanel.circleRadius[i - fromLayerIndex].getValue();
         double radius = defaultRadius;
         if (input instanceof Number number) {
           radius = number.doubleValue();
@@ -394,14 +394,14 @@ public class WindowVia extends BoardSavableSubWindow {
 
       LayerStructure layerStructure =
           boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure;
-      int fromLayerNo = layerStructure.getNo(fromLayer);
-      int toLayerNo = layerStructure.getNo(toLayer);
-      int layerCount = toLayerNo - fromLayerNo + 1;
+      int fromLayerIndex = layerStructure.getNo(fromLayer);
+      int toLayerIndex = layerStructure.getNo(toLayer);
+      int layerCount = toLayerIndex - fromLayerIndex + 1;
       layerNames = new JLabel[layerCount];
       circleRadius = new JFormattedTextField[layerCount];
       for (int i = 0; i < layerCount; i++) {
         String labelString =
-            tm.getText("radius_on_layer_label", layerStructure.arr[fromLayerNo + i].name);
+            tm.getText("radius_on_layer_label", layerStructure.arr[fromLayerIndex + i].name);
         layerNames[i] = new JLabel(labelString);
         NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
         numberFormat.setMaximumFractionDigits(7);

@@ -24,13 +24,13 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   Trace(
       int layer,
       int halfWidth,
-      int[] netNoArr,
+      int[] netNumbers,
       int clearanceType,
       int idNo,
       int groupNo,
       FixedState fixedState,
       BasicBoard board) {
-    super(netNoArr, clearanceType, idNo, groupNo, fixedState, board);
+    super(netNumbers, clearanceType, idNo, groupNo, fixedState, board);
     this.halfWidth = halfWidth;
     layer = Math.max(layer, 0);
     if (board != null) {
@@ -75,7 +75,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * treeIdNo Equals get_half_width(), if no clearance compensation is used in this tree.
    */
   public int getCompensatedHalfWidth(ShapeSearchTree searchTree) {
-    return this.halfWidth + searchTree.clearanceCompensationValue(clearanceClassNo(), this.layer);
+    return this.halfWidth
+        + searchTree.clearanceCompensationValue(clearanceClassIndex(), this.layer);
   }
 
   @Override
@@ -167,8 +168,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     TileShape searchShape = TileShape.getInstance(point);
     Set<SearchTreeObject> overlaps = board.overlappingObjects(searchShape, this.layer);
     Set<Item> result = new TreeSet<>();
-    for (SearchTreeObject currentOb : overlaps) {
-      if (!(currentOb instanceof Item currentItem)) {
+    for (SearchTreeObject currentObject : overlaps) {
+      if (!(currentObject instanceof Item currentItem)) {
         continue;
       }
       if (currentItem != this
@@ -209,8 +210,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   @Override
-  public boolean isDrillable(int netNo) {
-    return this.containsNet(netNo);
+  public boolean isDrillable(int netNumber) {
+    return this.containsNet(netNumber);
   }
 
   /** Looks, if this trace is connected to the same object at its start and its end point. */
@@ -232,9 +233,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
 
     // check, if the trace belongs to a net, which is not shovable.
     Nets nets = this.board.rules.nets;
-    for (int currentNetNo : this.netNoArr) {
-      if (Nets.isNormalNetNo(currentNetNo)) {
-        if (nets.get(currentNetNo).getNetClass().isShoveFixed()) {
+    for (int currentNetNumber : this.netNumbers) {
+      if (Nets.isNormalNetNumber(currentNetNumber)) {
+        if (nets.get(currentNetNumber).getNetClass().isShoveFixed()) {
           return true;
         }
       }
@@ -261,7 +262,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   /** Checks, if this trace can be reached by other items via more than one path. */
   public boolean isCycle() {
     boolean debugNet49 =
-        this.netNoArr != null && this.netNoArr.length > 0 && this.netNoArr[0] == 49;
+        this.netNumbers != null && this.netNumbers.length > 0 && this.netNumbers[0] == 49;
     if (this.isOverlap()) {
       if (debugNet49) {
         FRLogger.trace(
@@ -290,8 +291,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     // this trace via a start contact.
     Set<Item> visitedItems = new TreeSet<>(startContacts);
     boolean ignoreAreas = false;
-    if (this.netNoArr.length > 0) {
-      Net currentNet = this.board.rules.nets.get(this.netNoArr[0]);
+    if (this.netNumbers.length > 0) {
+      Net currentNet = this.board.rules.nets.get(this.netNumbers[0]);
       if (currentNet != null && currentNet.getNetClass() != null) {
         ignoreAreas = currentNet.getNetClass().getIgnoreCyclesWithAreas();
       }
@@ -388,7 +389,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       currentOct = currentOct.enlarge(this.halfWidth);
       Set<Item> currentOverlaps =
           this.board.overlappingItemsWithClearance(
-              currentOct, this.layer, new int[0], this.clearanceClassNo());
+              currentOct, this.layer, new int[0], this.clearanceClassIndex());
       for (Item currentItem : currentOverlaps) {
         if ((currentItem instanceof Pin pin) && currentItem.sharesNet(this)) {
           result.add(pin);

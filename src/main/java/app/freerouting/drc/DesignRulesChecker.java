@@ -95,14 +95,14 @@ public class DesignRulesChecker {
     java.util.Map<Integer, List<Item>> itemsByNet = new java.util.HashMap<>();
     for (Item item : board.getItems()) {
       if (item instanceof app.freerouting.board.Connectable && item.netCount() > 0) {
-        int netNo = item.getNetNo(0);
-        itemsByNet.computeIfAbsent(netNo, k -> new ArrayList<>()).add(item);
+        int netNumber = item.getNetNumber(0);
+        itemsByNet.computeIfAbsent(netNumber, k -> new ArrayList<>()).add(item);
       }
     }
 
     // For each net, find truly unconnected items
     for (java.util.Map.Entry<Integer, List<Item>> entry : itemsByNet.entrySet()) {
-      int netNo = entry.getKey();
+      int netNumber = entry.getKey();
       List<Item> netItems = entry.getValue();
 
       if (netItems.size() <= 1) {
@@ -119,7 +119,7 @@ public class DesignRulesChecker {
         }
 
         // Get the connected set for this item
-        Collection<Item> connectedSet = item.getConnectedSet(netNo);
+        Collection<Item> connectedSet = item.getConnectedSet(netNumber);
         java.util.Set<Item> setItems = new java.util.HashSet<>(connectedSet);
 
         // Only add items that are actually in this net
@@ -453,7 +453,7 @@ public class DesignRulesChecker {
 
     // Add net information
     if (item.netCount() > 0) {
-      String netName = board.rules.nets.get(item.getNetNo(0)).name;
+      String netName = board.rules.nets.get(item.getNetNumber(0)).name;
       desc.append(" [").append(netName).append("]");
     }
 
@@ -472,7 +472,7 @@ public class DesignRulesChecker {
 
     // Add net information
     if (item.netCount() > 0) {
-      String netName = board.rules.nets.get(item.getNetNo(0)).name;
+      String netName = board.rules.nets.get(item.getNetNumber(0)).name;
       desc.append(" [").append(netName).append("]");
     }
 
@@ -540,7 +540,7 @@ public class DesignRulesChecker {
    * may have multiple connections with some connections completed while others remain incomplete.
    */
   public void calculateAllIncompletes() {
-    int maxNetNo = board.rules.nets.maxNetNo();
+    int maxNetNo = board.rules.nets.maxNetNumber();
     // Create the net item lists at once for performance reasons.
     java.util.Vector<Collection<Item>> netItemLists = new java.util.Vector<>(maxNetNo);
     for (int i = 0; i < maxNetNo; i++) {
@@ -555,7 +555,7 @@ public class DesignRulesChecker {
       }
       if (currentItem instanceof app.freerouting.board.Connectable) {
         for (int i = 0; i < currentItem.netCount(); i++) {
-          netItemLists.get(currentItem.getNetNo(i) - 1).add(currentItem);
+          netItemLists.get(currentItem.getNetNumber(i) - 1).add(currentItem);
         }
       }
     }
@@ -592,20 +592,20 @@ public class DesignRulesChecker {
         new Point[0]);
 
     int[] focusNets = new int[] {98, 99};
-    for (int netNo : focusNets) {
-      if (netNo >= 1 && netNo <= netItemLists.size()) {
-        int netItemsCount = netItemLists.get(netNo - 1).size();
-        Net net = board.rules.nets.get(netNo);
+    for (int netNumber : focusNets) {
+      if (netNumber >= 1 && netNumber <= netItemLists.size()) {
+        int netItemsCount = netItemLists.get(netNumber - 1).size();
+        Net net = board.rules.nets.get(netNumber);
         String netName = net != null ? net.name : "unknown";
         FRLogger.trace(
             "DesignRulesChecker.calculateAllIncompletes",
             "netItemCount",
-            "Net item count: net=" + netNo + ", name=" + netName + ", items=" + netItemsCount,
-            "Net #" + netNo + " (" + netName + ")",
+            "Net item count: net=" + netNumber + ", name=" + netName + ", items=" + netItemsCount,
+            "Net #" + netNumber + " (" + netName + ")",
             new Point[0]);
 
         // Let's validate all the polyline traces for this net
-        var netItems = netItemLists.get(netNo - 1);
+        var netItems = netItemLists.get(netNumber - 1);
         for (Item item : netItems) {
           if (item instanceof PolylineTrace trace) {
             // trace.validateAndLogPolylineIntegrity();
@@ -616,46 +616,46 @@ public class DesignRulesChecker {
 
     this.netIncompletes = new NetIncompletes[maxNetNo];
     for (int i = 0; i < netIncompletes.length; i++) {
-      // netNo is 1-based, index is 0-based
-      int netNo = i + 1;
-      netIncompletes[i] = new NetIncompletes(netNo, netItemLists.get(i), board);
+      // netNumber is 1-based, index is 0-based
+      int netNumber = i + 1;
+      netIncompletes[i] = new NetIncompletes(netNumber, netItemLists.get(i), board);
     }
   }
 
   /**
    * Recalculates the incomplete connections (airlines) for the specified net.
    *
-   * @param netNo The number of the net to recalculate.
+   * @param netNumber The number of the net to recalculate.
    */
-  public void recalculateNetIncompletes(int netNo) {
+  public void recalculateNetIncompletes(int netNumber) {
     if (netIncompletes == null) {
       calculateAllIncompletes();
       return;
     }
-    if (netNo >= 1 && netNo <= netIncompletes.length) {
-      Collection<Item> itemList = board.getConnectableItems(netNo);
-      netIncompletes[netNo - 1] = new NetIncompletes(netNo, itemList, board);
+    if (netNumber >= 1 && netNumber <= netIncompletes.length) {
+      Collection<Item> itemList = board.getConnectableItems(netNumber);
+      netIncompletes[netNumber - 1] = new NetIncompletes(netNumber, itemList, board);
     }
   }
 
   /**
    * Recalculates the incomplete connections for the specified net using a provided list of items.
    *
-   * @param netNo The number of the net to recalculate.
+   * @param netNumber The number of the net to recalculate.
    * @param itemList The collection of items belonging to the net.
    */
-  public void recalculateNetIncompletes(int netNo, Collection<Item> itemList) {
+  public void recalculateNetIncompletes(int netNumber, Collection<Item> itemList) {
     if (netIncompletes == null) {
       calculateAllIncompletes(); // Initialize if not already done, though this might be expensive
       // if we only
       // want one net. catch-22.
       // But effectively we need the array initialized.
     }
-    if (netNo >= 1 && netNo <= netIncompletes.length) {
+    if (netNumber >= 1 && netNumber <= netIncompletes.length) {
       // copy itemList, because it will be changed inside the constructor of
       // NetIncompletes
       Collection<Item> items = new java.util.LinkedList<>(itemList);
-      netIncompletes[netNo - 1] = new NetIncompletes(netNo, items, board);
+      netIncompletes[netNumber - 1] = new NetIncompletes(netNumber, items, board);
     }
   }
 
@@ -705,23 +705,28 @@ public class DesignRulesChecker {
   }
 
   /** Returns the number of incomplete connections for a specific net. */
-  public int getIncompleteCount(int netNo) {
+  public int getIncompleteCount(int netNumber) {
     if (netIncompletes == null) {
       calculateAllIncompletes();
     }
-    if (netNo <= 0 || netNo > netIncompletes.length) {
+    if (netNumber <= 0 || netNumber > netIncompletes.length) {
       return 0;
     }
 
-    int result = netIncompletes[netNo - 1].count();
-    Net net = board.rules.nets.get(netNo);
+    int result = netIncompletes[netNumber - 1].count();
+    Net net = board.rules.nets.get(netNumber);
     String netName = net != null ? net.name : "unknown";
 
     FRLogger.trace(
         "DesignRulesChecker.getIncompleteCount",
         "net_incomplete_count",
-        "Net incomplete count: net=" + netNo + ", name=" + netName + ", incompleteCount=" + result,
-        "Net #" + netNo + " (" + netName + ")",
+        "Net incomplete count: net="
+            + netNumber
+            + ", name="
+            + netName
+            + ", incompleteCount="
+            + result,
+        "Net #" + netNumber + " (" + netName + ")",
         new Point[0]);
 
     return result;
@@ -742,14 +747,14 @@ public class DesignRulesChecker {
   }
 
   /** Returns the magnitude of the length violation for the specified net. */
-  public double getLengthViolation(int netNo) {
+  public double getLengthViolation(int netNumber) {
     if (netIncompletes == null) {
       calculateAllIncompletes();
     }
-    if (netNo <= 0 || netNo > netIncompletes.length) {
+    if (netNumber <= 0 || netNumber > netIncompletes.length) {
       return 0;
     }
-    return netIncompletes[netNo - 1].getLengthViolation();
+    return netIncompletes[netNumber - 1].getLengthViolation();
   }
 
   /**
@@ -792,14 +797,14 @@ public class DesignRulesChecker {
   /**
    * Gets the NetIncompletes object for a specific net. Useful for drawing or detailed inspection.
    */
-  public NetIncompletes getNetIncompletes(int netNo) {
+  public NetIncompletes getNetIncompletes(int netNumber) {
     if (netIncompletes == null) {
       calculateAllIncompletes();
     }
-    if (netNo <= 0 || netNo > netIncompletes.length) {
+    if (netNumber <= 0 || netNumber > netIncompletes.length) {
       return null;
     }
-    return netIncompletes[netNo - 1];
+    return netIncompletes[netNumber - 1];
   }
 
   /**

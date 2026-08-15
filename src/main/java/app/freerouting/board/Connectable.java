@@ -6,11 +6,11 @@ import java.util.Set;
 /** Functionality required for items, which can be electrical connected to other items. */
 public interface Connectable {
 
-  /** Returns true if this item belongs to the net with number netNo. */
-  boolean containsNet(int netNo);
+  /** Returns true if this item belongs to the net with number netNumber. */
+  boolean containsNet(int netNumber);
 
-  /** Returns true if the net number array of this and netNoArr have a common number. */
-  boolean sharesNetNo(int[] netNoArr);
+  /** Returns true if the net number array of this and netNumbers have a common number. */
+  boolean sharesNetNo(int[] netNumbers);
 
   /** Returns a list of all connectable items overlapping and sharing a net with this item. */
   Set<Item> getAllContacts();
@@ -29,10 +29,11 @@ public interface Connectable {
   Set<Item> getNormalContacts();
 
   /**
-   * Returns all connectable items of the net with number netNo, which can be reached recursively
-   * from this item via normal contacts. if netNo {@literal <}= 0, the net number is ignored.
+   * Returns all connectable items of the net with number netNumber, which can be reached
+   * recursively from this item via normal contacts. if netNumber {@literal <}= 0, the net number is
+   * ignored.
    */
-  Set<Item> getConnectedSet(int netNo);
+  Set<Item> getConnectedSet(int netNumber);
 
   /**
    * Returns for each convex shape of a connectable item the subshape of points, where traces can be

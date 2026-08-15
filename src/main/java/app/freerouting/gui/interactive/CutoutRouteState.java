@@ -86,7 +86,7 @@ public final class CutoutRouteState extends SelectRegionState {
     for (PolylineTrace currentTrace : this.traceList) {
       ShapeTraceEntries.cutoutTrace(currentTrace, cutBox, 0);
       for (int i = 0; i < currentTrace.netCount(); i++) {
-        changedNets.add(currentTrace.getNetNo(i));
+        changedNets.add(currentTrace.getNetNumber(i));
       }
     }
 

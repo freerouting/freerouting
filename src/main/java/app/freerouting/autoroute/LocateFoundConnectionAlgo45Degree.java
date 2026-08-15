@@ -99,10 +99,10 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
     Collection<FloatPoint> result = new LinkedList<>();
 
     if (this.currentToDoorIndex > this.currentTargetDoorIndex) {
-      if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
+      if (this.ctrl.netNumber == 33 || this.ctrl.netNumber == 66 || this.ctrl.netNumber == 67) {
         FRLogger.trace(
             "compare_trace_next_corners_raw net="
-                + this.ctrl.netNo
+                + this.ctrl.netNumber
                 + ", mode=45, branch=NO_MORE_DOORS"
                 + ", layer="
                 + this.currentTraceLayer
@@ -142,10 +142,10 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
     }
 
     TileShape shrinkedRoomShape = (TileShape) roomShape.offset(-shrinkOffset);
-    if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
+    if (this.ctrl.netNumber == 33 || this.ctrl.netNumber == 66 || this.ctrl.netNumber == 67) {
       FRLogger.trace(
           "compare_trace_room_shrink_raw net="
-              + this.ctrl.netNo
+              + this.ctrl.netNumber
               + ", mode=45"
               + ", layer="
               + this.currentTraceLayer
@@ -196,10 +196,10 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       result.add(addCorner);
       result.add(nearestPoint);
       ++this.currentToDoorIndex;
-      if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
+      if (this.ctrl.netNumber == 33 || this.ctrl.netNumber == 66 || this.ctrl.netNumber == 67) {
         FRLogger.trace(
             "compare_trace_next_corners_raw net="
-                + this.ctrl.netNo
+                + this.ctrl.netNumber
                 + ", mode=45, branch=TARGET_DOOR"
                 + ", layer="
                 + this.currentTraceLayer
@@ -268,10 +268,10 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
             this.currentFromPoint, nearestToDoorPoint, horizontalFirst, this.angleRestriction));
     result.add(nearestToDoorPoint);
     ++this.currentToDoorIndex;
-    if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
+    if (this.ctrl.netNumber == 33 || this.ctrl.netNumber == 66 || this.ctrl.netNumber == 67) {
       FRLogger.trace(
           "compare_trace_next_corners_raw net="
-              + this.ctrl.netNo
+              + this.ctrl.netNumber
               + ", mode=45, branch=EXPANSION_DOOR"
               + ", layer="
               + this.currentTraceLayer

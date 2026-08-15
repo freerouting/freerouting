@@ -73,24 +73,24 @@ public final class PinSwapState extends InteractiveState {
               + "belonging to more than one net.");
       return this.cancel();
     }
-    int fromNetNo;
+    int fromNetNumber;
     if (this.fromPin.netCount() > 0) {
-      fromNetNo = this.fromPin.getNetNo(0);
+      fromNetNumber = this.fromPin.getNetNumber(0);
     } else {
-      fromNetNo = -1;
+      fromNetNumber = -1;
     }
-    int toNetNo;
+    int toNetNumber;
     if (this.toPin.netCount() > 0) {
-      toNetNo = this.toPin.getNetNo(0);
+      toNetNumber = this.toPin.getNetNumber(0);
     } else {
-      toNetNo = -1;
+      toNetNumber = -1;
     }
-    if (!hdlg.getRoutingBoard().checkChangeNet(this.fromPin, toNetNo)) {
+    if (!hdlg.getRoutingBoard().checkChangeNet(this.fromPin, toNetNumber)) {
       hdlg.screenMessages.setStatusMessage(
           tm.getText("pin_not_swapped_because_it_is_already_connected"));
       return this.cancel();
     }
-    if (!hdlg.getRoutingBoard().checkChangeNet(this.toPin, fromNetNo)) {
+    if (!hdlg.getRoutingBoard().checkChangeNet(this.toPin, fromNetNumber)) {
       hdlg.screenMessages.setStatusMessage(
           tm.getText("pin_not_swapped_because_second_pin_is_already_connected"));
       return this.cancel();
@@ -98,10 +98,10 @@ public final class PinSwapState extends InteractiveState {
     hdlg.getRoutingBoard().generateSnapshot();
     this.fromPin.swap(this.toPin);
     for (int i = 0; i < this.fromPin.netCount(); i++) {
-      hdlg.updateRatsnest(this.fromPin.getNetNo(i));
+      hdlg.updateRatsnest(this.fromPin.getNetNumber(i));
     }
     for (int i = 0; i < this.toPin.netCount(); i++) {
-      hdlg.updateRatsnest(this.toPin.getNetNo(i));
+      hdlg.updateRatsnest(this.toPin.getNetNumber(i));
     }
     hdlg.screenMessages.setStatusMessage(tm.getText("pin_swap_completed"));
     return this.returnState;

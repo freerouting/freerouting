@@ -80,10 +80,10 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     if (item instanceof Pin) {
       result = tm.getText("pin");
     } else if (item instanceof Via via) {
-      Net currentNet = item.board.rules.nets.get(via.getNetNo(0));
+      Net currentNet = item.board.rules.nets.get(via.getNetNumber(0));
       result = tm.getText("via_with_net_label", currentNet.name);
     } else if (item instanceof Trace trace) {
-      Net currentNet = item.board.rules.nets.get(trace.getNetNo(0));
+      Net currentNet = item.board.rules.nets.get(trace.getNetNumber(0));
       result = tm.getText("trace_with_net_label", currentNet.name);
     } else if (item instanceof ConductionArea) {
       result = tm.getText("conductionArea");

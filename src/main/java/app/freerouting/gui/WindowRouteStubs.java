@@ -118,15 +118,15 @@ public class WindowRouteStubs extends CleanupWindows {
     private final Item stubItem;
     private final Net net;
     private final FloatPoint location;
-    private final int layerNo;
+    private final int layerIndex;
 
-    public RouteStubInfo(Item stub, FloatPoint location, int layerNo) {
+    public RouteStubInfo(Item stub, FloatPoint location, int layerIndex) {
       GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
       this.stubItem = stub;
       this.location = boardHandling.coordinateTransform.boardToUser(location);
-      this.layerNo = layerNo;
-      int netNo = stub.getNetNo(0);
-      this.net = boardHandling.getRoutingBoard().rules.nets.get(netNo);
+      this.layerIndex = layerIndex;
+      int netNumber = stub.getNetNumber(0);
+      this.net = boardHandling.getRoutingBoard().rules.nets.get(netNumber);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class WindowRouteStubs extends CleanupWindows {
         itemString = tm.getText("via");
       }
       String layerName =
-          boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure.arr[layerNo].name;
+          boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure.arr[layerIndex].name;
       return tm.getText(
           "route_stub_row_message",
           itemString,
@@ -157,7 +157,7 @@ public class WindowRouteStubs extends CleanupWindows {
         result = Signum.asInt(this.location.y - other.location.y);
       }
       if (result == 0) {
-        result = this.layerNo - other.layerNo;
+        result = this.layerIndex - other.layerIndex;
       }
       return result;
     }

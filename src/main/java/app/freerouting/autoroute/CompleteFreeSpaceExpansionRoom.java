@@ -72,12 +72,12 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   }
 
   @Override
-  public boolean isObstacle(int netNo) {
+  public boolean isObstacle(int netNumber) {
     return true;
   }
 
   @Override
-  public boolean isTraceObstacle(int netNo) {
+  public boolean isTraceObstacle(int netNumber) {
     return true;
   }
 
@@ -128,11 +128,11 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
 
   /** Calculates the doors to the start and destination items of the autoroute algorithm. */
   public void calculateTargetDoors(
-      ShapeTree.TreeEntry ownNetObject, int netNo, ShapeSearchTree autorouteSearchTree) {
+      ShapeTree.TreeEntry ownNetObject, int netNumber, ShapeSearchTree autorouteSearchTree) {
     this.setNetDependent();
 
     if (ownNetObject.object instanceof Connectable currentObject) {
-      if (currentObject.containsNet(netNo)) {
+      if (currentObject.containsNet(netNumber)) {
         TileShape currentConnectionShape =
             currentObject.getTraceConnectionShape(
                 autorouteSearchTree, ownNetObject.shapeIndexInObject);
@@ -164,16 +164,16 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   public boolean validate(AutorouteEngine autorouteEngine) {
     boolean result = true;
     Collection<ShapeTree.TreeEntry> overlappingObjects = new LinkedList<>();
-    int[] netNoArr = new int[1];
-    netNoArr[0] = autorouteEngine.getNetNo();
+    int[] netNumbers = new int[1];
+    netNumbers[0] = autorouteEngine.getNetNumber();
     autorouteEngine.autorouteSearchTree.overlappingTreeEntries(
-        this.getShape(), this.getLayer(), netNoArr, overlappingObjects);
+        this.getShape(), this.getLayer(), netNumbers, overlappingObjects);
     for (ShapeTree.TreeEntry currentEntry : overlappingObjects) {
       if (currentEntry.object == this) {
         continue;
       }
       SearchTreeObject currentObject = (SearchTreeObject) currentEntry.object;
-      if (!currentObject.isTraceObstacle(autorouteEngine.getNetNo())) {
+      if (!currentObject.isTraceObstacle(autorouteEngine.getNetNumber())) {
         continue;
       }
       if (currentObject.shapeLayer(currentEntry.shapeIndexInObject) != getLayer()) {

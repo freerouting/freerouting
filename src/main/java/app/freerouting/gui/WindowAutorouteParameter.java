@@ -862,18 +862,18 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public LayerActiveListener(int layerNo) {
-      signalLayerNo = layerNo;
+    public LayerActiveListener(int layerIndex) {
+      signalLayerNo = layerIndex;
     }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      int currentLayerNo = this.signalLayerNo;
+      int currentLayerIndex = this.signalLayerNo;
       boardHandling
           .getCurrentRoutingJob()
           .routerSettings
           .setLayerActive(
-              currentLayerNo, settingsAutorouterLayerActiveArr[this.signalLayerNo].isSelected());
+              currentLayerIndex, settingsAutorouterLayerActiveArr[this.signalLayerNo].isSelected());
     }
   }
 
@@ -881,19 +881,19 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public PreferredDirectionListener(int layerNo) {
-      signalLayerNo = layerNo;
+    public PreferredDirectionListener(int layerIndex) {
+      signalLayerNo = layerIndex;
     }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      int currentLayerNo =
+      int currentLayerIndex =
           boardHandling.getRoutingBoard().layerStructure.getLayerNo(this.signalLayerNo);
       boardHandling
           .getCurrentRoutingJob()
           .routerSettings
           .setPreferredDirectionIsHorizontal(
-              currentLayerNo,
+              currentLayerIndex,
               settingsAutorouterComboBoxArr.get(signalLayerNo).getSelectedItem() == horizontal);
     }
   }
@@ -1282,8 +1282,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public PreferredDirectionTraceCostKeyListener(int layerNo) {
-      this.signalLayerNo = layerNo;
+    public PreferredDirectionTraceCostKeyListener(int layerIndex) {
+      this.signalLayerNo = layerIndex;
     }
 
     @Override
@@ -1296,20 +1296,20 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public PreferredDirectionTraceCostFocusListener(int layerNo) {
-      this.signalLayerNo = layerNo;
+    public PreferredDirectionTraceCostFocusListener(int layerIndex) {
+      this.signalLayerNo = layerIndex;
     }
 
     @Override
     public void focusLost(FocusEvent evt) {
       if (!preferredDirectionTraceCostsInputCompleted[this.signalLayerNo]) {
-        int currentLayerNo =
+        int currentLayerIndex =
             boardHandling.getRoutingBoard().layerStructure.getLayerNo(this.signalLayerNo);
         double oldValue =
             boardHandling
                 .getCurrentRoutingJob()
                 .routerSettings
-                .getPreferredDirectionTraceCosts(currentLayerNo);
+                .getPreferredDirectionTraceCosts(currentLayerIndex);
 
         try {
           preferredDirectionTraceCostArr[this.signalLayerNo].commitEdit();
@@ -1334,7 +1334,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         boardHandling
             .getCurrentRoutingJob()
             .routerSettings
-            .setPreferredDirectionTraceCosts(currentLayerNo, inputValue);
+            .setPreferredDirectionTraceCosts(currentLayerIndex, inputValue);
         preferredDirectionTraceCostArr[this.signalLayerNo].setValue(inputValue);
         preferredDirectionTraceCostsInputCompleted[this.signalLayerNo] = true;
       }
@@ -1348,8 +1348,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public AgainstPreferredDirectionTraceCostKeyListener(int layerNo) {
-      this.signalLayerNo = layerNo;
+    public AgainstPreferredDirectionTraceCostKeyListener(int layerIndex) {
+      this.signalLayerNo = layerIndex;
     }
 
     @Override
@@ -1362,20 +1362,20 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public AgainstPreferredDirectionTraceCostFocusListener(int layerNo) {
-      this.signalLayerNo = layerNo;
+    public AgainstPreferredDirectionTraceCostFocusListener(int layerIndex) {
+      this.signalLayerNo = layerIndex;
     }
 
     @Override
     public void focusLost(FocusEvent evt) {
       if (!againstPreferredDirectionTraceCostsInputCompleted[this.signalLayerNo]) {
-        int currentLayerNo =
+        int currentLayerIndex =
             boardHandling.getRoutingBoard().layerStructure.getLayerNo(this.signalLayerNo);
         double oldValue =
             boardHandling
                 .getCurrentRoutingJob()
                 .routerSettings
-                .getAgainstPreferredDirectionTraceCosts(currentLayerNo);
+                .getAgainstPreferredDirectionTraceCosts(currentLayerIndex);
 
         try {
           againstPreferredDirectionTraceCostArr[this.signalLayerNo].commitEdit();
@@ -1400,7 +1400,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         boardHandling
             .getCurrentRoutingJob()
             .routerSettings
-            .setAgainstPreferredDirectionTraceCosts(currentLayerNo, inputValue);
+            .setAgainstPreferredDirectionTraceCosts(currentLayerIndex, inputValue);
         againstPreferredDirectionTraceCostArr[this.signalLayerNo].setValue(inputValue);
         againstPreferredDirectionTraceCostsInputCompleted[this.signalLayerNo] = true;
       }
@@ -1414,8 +1414,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public BendCostKeyListener(int layerNo) {
-      this.signalLayerNo = layerNo;
+    public BendCostKeyListener(int layerIndex) {
+      this.signalLayerNo = layerIndex;
     }
 
     @Override
@@ -1428,18 +1428,18 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     private final int signalLayerNo;
 
-    public BendCostFocusListener(int layerNo) {
-      this.signalLayerNo = layerNo;
+    public BendCostFocusListener(int layerIndex) {
+      this.signalLayerNo = layerIndex;
     }
 
     @Override
     public void focusLost(FocusEvent evt) {
       if (!bendCostsInputCompleted[this.signalLayerNo]) {
         // Save the value when focus is lost
-        int currentLayerNo =
+        int currentLayerIndex =
             boardHandling.getRoutingBoard().layerStructure.getLayerNo(this.signalLayerNo);
         double oldValue =
-            boardHandling.getCurrentRoutingJob().routerSettings.getBendCost(currentLayerNo);
+            boardHandling.getCurrentRoutingJob().routerSettings.getBendCost(currentLayerIndex);
 
         // Commit the edit to ensure getValue() returns the typed value
         try {
@@ -1461,7 +1461,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         } else {
           inputValue = oldValue;
         }
-        boardHandling.getCurrentRoutingJob().routerSettings.setBendCost(currentLayerNo, inputValue);
+        boardHandling
+            .getCurrentRoutingJob()
+            .routerSettings
+            .setBendCost(currentLayerIndex, inputValue);
         bendCostArr[this.signalLayerNo].setValue(inputValue);
         bendCostsInputCompleted[this.signalLayerNo] = true;
       }

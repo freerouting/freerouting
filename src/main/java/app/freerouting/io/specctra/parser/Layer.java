@@ -45,11 +45,11 @@ public class Layer {
   }
 
   /** Writes a layer scope in the structure scope. */
-  public static void writeScope(WriteScopeParameter par, int layerNo, boolean writeRule)
+  public static void writeScope(WriteScopeParameter par, int layerIndex, boolean writeRule)
       throws IOException {
     par.file.startScope();
     par.file.write("layer ");
-    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerNo];
+    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerIndex];
     par.identifierType.write(boardLayer.name, par.file);
     par.file.newLine();
     par.file.write("(type ");
@@ -59,7 +59,7 @@ public class Layer {
       par.file.write("power)");
     }
     if (writeRule) {
-      Rule.writeDefaultRule(par, layerNo);
+      Rule.writeDefaultRule(par, layerIndex);
     }
     par.file.endScope();
   }

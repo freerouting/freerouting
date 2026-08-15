@@ -88,15 +88,15 @@ public abstract class Shape {
         return null;
       }
 
-      int layerNo = layerStructure.getNo(layerName);
-      if (layerNo < 0 || layerNo >= layerStructure.arr.length) {
+      int layerIndex = layerStructure.getNo(layerName);
+      if (layerIndex < 0 || layerIndex >= layerStructure.arr.length) {
         FRLogger.warn(
             "Shape.read_circle_scope: layer with name '"
                 + layerName
                 + "' not found in layer structure.");
         return null;
       } else {
-        layer = layerStructure.arr[layerNo];
+        layer = layerStructure.arr[layerIndex];
       }
     }
 
@@ -325,8 +325,8 @@ public abstract class Shape {
                   + "'");
           return null;
         }
-        int layerNo = layerStructure.getNo((String) nextToken);
-        if (layerNo < 0 || layerNo >= layerStructure.arr.length) {
+        int layerIndex = layerStructure.getNo((String) nextToken);
+        if (layerIndex < 0 || layerIndex >= layerStructure.arr.length) {
           FRLogger.warn(
               "Shape.read_polygon_scope: layer name '"
                   + nextToken
@@ -335,7 +335,7 @@ public abstract class Shape {
                   + "'");
           layerOk = false;
         } else {
-          polygonLayer = layerStructure.arr[layerNo];
+          polygonLayer = layerStructure.arr[layerIndex];
         }
       }
 

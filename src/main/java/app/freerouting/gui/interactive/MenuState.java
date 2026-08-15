@@ -90,26 +90,26 @@ public class MenuState extends InteractiveState {
       case '+' -> {
         // increase the current layer to the next signal layer
         LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
-        int currentLayerNo = hdlg.getWorkspaceSettings().getLayer();
+        int currentLayerIndex = hdlg.getWorkspaceSettings().getLayer();
         do {
-          ++currentLayerNo;
-        } while (currentLayerNo < layerStructure.arr.length
-            && !layerStructure.arr[currentLayerNo].isSignal);
+          ++currentLayerIndex;
+        } while (currentLayerIndex < layerStructure.arr.length
+            && !layerStructure.arr[currentLayerIndex].isSignal);
 
-        if (currentLayerNo < layerStructure.arr.length) {
-          hdlg.setCurrentLayer(currentLayerNo);
+        if (currentLayerIndex < layerStructure.arr.length) {
+          hdlg.setCurrentLayer(currentLayerIndex);
         }
       }
       case '-' -> {
         // decrease the current layer to the previous signal layer
         LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
-        int currentLayerNo = hdlg.getWorkspaceSettings().getLayer();
+        int currentLayerIndex = hdlg.getWorkspaceSettings().getLayer();
         do {
-          --currentLayerNo;
-        } while (currentLayerNo >= 0 && !layerStructure.arr[currentLayerNo].isSignal);
+          --currentLayerIndex;
+        } while (currentLayerIndex >= 0 && !layerStructure.arr[currentLayerIndex].isSignal);
 
-        if (currentLayerNo >= 0) {
-          hdlg.setCurrentLayer(currentLayerNo);
+        if (currentLayerIndex >= 0) {
+          hdlg.setCurrentLayer(currentLayerIndex);
         }
       }
       default -> currentReturnState = super.keyTyped(keyChar);

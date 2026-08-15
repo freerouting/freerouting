@@ -45,7 +45,7 @@ public class AutorouteControl {
   final ViaCost[] addViaCosts;
 
   /** The currently used clearance class for traces in the autoroute algorithm. */
-  public int traceClearanceClassNo;
+  public int traceClearanceClassIndex;
 
   /** True, if layer change by inserting of vias is allowed. */
   public boolean viasAllowed;
@@ -79,7 +79,7 @@ public class AutorouteControl {
   public ViaRule viaRule;
 
   /** The currently used net number in the autoroute algorithm. */
-  int netNo;
+  int netNumber;
 
   /** The currently used clearance class for vias in the autoroute algorithm. */
   int viaClearanceClass;
@@ -114,20 +114,20 @@ public class AutorouteControl {
   double minCheapViaCost;
 
   /** Creates a new instance of AutorouteControl for the input net. */
-  public AutorouteControl(RoutingBoard board, int netNo, RouterSettings settings) {
+  public AutorouteControl(RoutingBoard board, int netNumber, RouterSettings settings) {
     this(board, settings, settings.getTraceCostArr());
-    initNet(netNo, board, settings.getViaCosts());
+    initNet(netNumber, board, settings.getViaCosts());
   }
 
   /** Creates a new instance of AutorouteControl for the input net. */
   public AutorouteControl(
       RoutingBoard board,
-      int netNo,
+      int netNumber,
       RouterSettings settings,
       int viaCosts,
       ExpansionCostFactor[] traceCostArr) {
     this(board, settings, traceCostArr);
-    initNet(netNo, board, viaCosts);
+    initNet(netNumber, board, viaCosts);
   }
 
   /** Creates a new instance of AutorouteControl. */
@@ -186,8 +186,8 @@ public class AutorouteControl {
     ripupPassNo = 1;
   }
 
-  private static boolean isPureSmdNet(RoutingBoard board, int netNo) {
-    Collection<Item> netItems = board.getConnectableItems(netNo);
+  private static boolean isPureSmdNet(RoutingBoard board, int netNumber) {
+    Collection<Item> netItems = board.getConnectableItems(netNumber);
     if (netItems.isEmpty()) {
       return false;
     }
@@ -201,37 +201,37 @@ public class AutorouteControl {
     return true;
   }
 
-  private void initNet(int netNo, RoutingBoard board, int viaCosts) {
-    this.netNo = netNo;
-    Net currentNet = board.rules.nets.get(netNo);
+  private void initNet(int netNumber, RoutingBoard board, int viaCosts) {
+    this.netNumber = netNumber;
+    Net currentNet = board.rules.nets.get(netNumber);
     NetClass currentNetClass;
     if (currentNet != null) {
       currentNetClass = currentNet.getNetClass();
-      traceClearanceClassNo = currentNetClass.getTraceClearanceClass();
+      traceClearanceClassIndex = currentNetClass.getTraceClearanceClass();
       viaRule = currentNetClass.getViaRule();
     } else {
-      traceClearanceClassNo = 1;
+      traceClearanceClassIndex = 1;
       viaRule = board.rules.viaRules.firstElement();
       currentNetClass = null;
     }
     for (int i = 0; i < layerCount; i++) {
-      if (netNo > 0) {
-        traceHalfWidth[i] = board.rules.getTraceHalfWidth(netNo, i);
+      if (netNumber > 0) {
+        traceHalfWidth[i] = board.rules.getTraceHalfWidth(netNumber, i);
       } else {
         traceHalfWidth[i] = board.rules.getTraceHalfWidth(1, i);
       }
       compensatedTraceHalfWidth[i] =
           traceHalfWidth[i]
-              + board.rules.clearanceMatrix.clearanceCompensationValue(traceClearanceClassNo, i);
+              + board.rules.clearanceMatrix.clearanceCompensationValue(traceClearanceClassIndex, i);
       if (currentNetClass != null && !currentNetClass.isActiveRoutingLayer(i)) {
         layerActive[i] = false;
       }
     }
-    rebuildViaInfo(board, viaCosts, netNo);
+    rebuildViaInfo(board, viaCosts, netNumber);
   }
 
   /** Rebuilds via info masks and costs for the specified board, via costs, and net. */
-  public void rebuildViaInfo(RoutingBoard board, int viaCosts, int netNo) {
+  public void rebuildViaInfo(RoutingBoard board, int viaCosts, int netNumber) {
     if (viaRule.viaCount() > 0) {
       this.viaClearanceClass = viaRule.getVia(0).getClearanceClass();
     } else {
@@ -260,7 +260,7 @@ public class AutorouteControl {
       viaInfoArr[i] = new ViaMask(fromLayer, toLayer, currentVia.attachSmdAllowed());
     }
 
-    boolean pureSmdNet = isPureSmdNet(board, netNo);
+    boolean pureSmdNet = isPureSmdNet(board, netNumber);
     if (!this.attachSmdAllowed && layerCount > 1 && pureSmdNet) {
       // Pure SMD nets must still be able to escape their component layer, even if the DSN marks
       // every padstack as attach-off. This only relaxes the routing gate for same-net fanout;

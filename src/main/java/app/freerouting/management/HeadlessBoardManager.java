@@ -451,7 +451,7 @@ public class HeadlessBoardManager implements BoardManager {
     }
     int reclassified = 0;
     for (app.freerouting.board.ObstacleArea keepout : holeKeepouts) {
-      if (keepout.clearanceClassNo() != holeEdgeClassNo) {
+      if (keepout.clearanceClassIndex() != holeEdgeClassNo) {
         keepout.setClearanceClassNo(holeEdgeClassNo);
         keepout.clearDerivedData();
         reclassified++;
@@ -494,7 +494,7 @@ public class HeadlessBoardManager implements BoardManager {
             .getDefaultNetClass()
             .defaultItemClearanceClasses
             .get(DefaultItemClearanceClasses.ItemClass.AREA);
-    boolean usesFallbackOutlineClass = outline.clearanceClassNo() == defaultAreaClassNo;
+    boolean usesFallbackOutlineClass = outline.clearanceClassIndex() == defaultAreaClassNo;
     boolean usesDefaultEdgeClearanceValue =
         Math.abs(configuredClearanceUm - DefaultSettings.DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM)
             < 1e-9;
@@ -775,7 +775,7 @@ public class HeadlessBoardManager implements BoardManager {
                     loadedBoard.communication.specctraParserInfo.hostVersion,
                     loadedBoard.getLayerCount(),
                     loadedBoard.components.count(),
-                    loadedBoard.rules.nets.maxNetNo());
+                    loadedBoard.rules.nets.maxNetNumber());
                 manager.originalBoardChecksum = manager.calculateCrc32ForBoard(loadedBoard);
                 compareCounterpartBoardIfPresent(loadedBoard, inputFilename);
               } catch (Exception e) {
@@ -903,12 +903,12 @@ public class HeadlessBoardManager implements BoardManager {
   String getConductionAreaNetNames(app.freerouting.board.ConductionArea ca) {
     java.util.List<String> names = new java.util.ArrayList<>();
     for (int i = 0; i < ca.netCount(); i++) {
-      int netNo = ca.getNetNo(i);
-      app.freerouting.rules.Net net = this.board.rules.nets.get(netNo);
+      int netNumber = ca.getNetNumber(i);
+      app.freerouting.rules.Net net = this.board.rules.nets.get(netNumber);
       if (net != null) {
         names.add(net.name);
       } else {
-        names.add(String.valueOf(netNo));
+        names.add(String.valueOf(netNumber));
       }
     }
     return String.join(", ", names);
@@ -925,11 +925,11 @@ public class HeadlessBoardManager implements BoardManager {
     for (int i = 0; i < this.board.getLayerCount(); i++) {
       app.freerouting.board.Layer layer = this.board.layerStructure.arr[i];
       if (!layer.isSignal) {
-        final int layerNo = i;
+        final int layerIndex = i;
 
         // 1. Check for signal wires/traces
         long traceCount =
-            this.board.getTraces().stream().filter(trace -> trace.getLayer() == layerNo).count();
+            this.board.getTraces().stream().filter(trace -> trace.getLayer() == layerIndex).count();
         if (traceCount > 0) {
           validationFailed = true;
           violations.add(
@@ -943,7 +943,7 @@ public class HeadlessBoardManager implements BoardManager {
         // 2. Check for at least one conduction area
         java.util.List<app.freerouting.board.ConductionArea> layerAreas =
             this.board.getConductionAreas().stream()
-                .filter(ca -> ca.getLayer() == layerNo)
+                .filter(ca -> ca.getLayer() == layerIndex)
                 .toList();
         if (layerAreas.isEmpty()) {
           validationFailed = true;

@@ -140,7 +140,7 @@ public final class HoleConstructionState extends CornerItemConstructionState {
             .insertObstacle(
                 newObsArea,
                 itemToModify.getLayer(),
-                itemToModify.clearanceClassNo(),
+                itemToModify.clearanceClassIndex(),
                 FixedState.UNFIXED);
         if (this.observersActivated) {
           hdlg.getRoutingBoard().endNotifyObservers();

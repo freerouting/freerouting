@@ -67,8 +67,8 @@ class RatsnestClearanceHeadlessTest {
 
     // Per-net query must also be headless-reachable.
     int sumPerNet = 0;
-    for (int netNo = 1; netNo <= board.rules.nets.maxNetNo(); netNo++) {
-      sumPerNet += drc.getIncompleteCount(netNo);
+    for (int netNumber = 1; netNumber <= board.rules.nets.maxNetNumber(); netNumber++) {
+      sumPerNet += drc.getIncompleteCount(netNumber);
     }
     assertEquals(EXPECTED_UNCONNECTED, sumPerNet, "per-net incomplete counts must sum to total");
   }

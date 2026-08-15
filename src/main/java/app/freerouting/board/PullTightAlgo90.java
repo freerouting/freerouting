@@ -51,7 +51,7 @@ class PullTightAlgo90 extends PullTightAlgo {
     for (int i = 0; i < 2; i++) {
       TileShape shapeToCheck = checkPolyline.offsetShape(currentHalfWidth, i);
       if (!board.checkTraceShape(
-          shapeToCheck, currentLayer, currentNetNoArr, currentClType, this.contactPins)) {
+          shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins)) {
         return polyline;
       }
     }
@@ -95,13 +95,13 @@ class PullTightAlgo90 extends PullTightAlgo {
           TileShape shapeToCheck = checkPolyline.offsetShape(currentHalfWidth, 0);
           skipLines =
               board.checkTraceShape(
-                  shapeToCheck, currentLayer, currentNetNoArr, currentClType, this.contactPins);
+                  shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
         }
         if (skipLines) {
           TileShape shapeToCheck = checkPolyline.offsetShape(currentHalfWidth, 1);
           skipLines =
               board.checkTraceShape(
-                  shapeToCheck, currentLayer, currentNetNoArr, currentClType, this.contactPins);
+                  shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
         }
       }
       if (skipLines) {

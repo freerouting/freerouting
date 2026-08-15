@@ -527,11 +527,11 @@ public class SessionToEagle {
     return true;
   }
 
-  private String getEagleLayerString(int layerNo) {
-    if (layerNo < 0 || layerNo >= specctraLayerStructure.arr.length) {
+  private String getEagleLayerString(int layerIndex) {
+    if (layerIndex < 0 || layerIndex >= specctraLayerStructure.arr.length) {
       return "0";
     }
-    String[] namePieces = this.specctraLayerStructure.arr[layerNo].name.split("#", 2);
+    String[] namePieces = this.specctraLayerStructure.arr[layerIndex].name.split("#", 2);
     return namePieces[0];
   }
 
@@ -587,8 +587,8 @@ public class SessionToEagle {
   }
 
   private void writePinSwap(Pin pin1, Pin pin2) throws IOException {
-    int layerNo = Math.max(pin1.firstLayer(), pin2.firstLayer());
-    String layerName = board.layerStructure.arr[layerNo].name;
+    int layerIndex = Math.max(pin1.firstLayer(), pin2.firstLayer());
+    String layerName = board.layerStructure.arr[layerIndex].name;
 
     this.outFile.write("CHANGE LAYER ");
     this.outFile.write(layerName);

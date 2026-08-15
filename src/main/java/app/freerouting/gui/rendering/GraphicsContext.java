@@ -895,9 +895,9 @@ public class GraphicsContext implements Serializable {
   }
 
   /** Sets the layer, which will be excluded from automatic layer dimming. */
-  public void setFullyVisibleLayer(int layerNo) {
-    fullyVisibleLayer = layerNo;
-    if (layerNo != -1) {
+  public void setFullyVisibleLayer(int layerIndex) {
+    fullyVisibleLayer = layerIndex;
+    if (layerIndex != -1) {
       fullyVisibleVirtualLayer = -1;
     }
   }
@@ -987,29 +987,29 @@ public class GraphicsContext implements Serializable {
    * Gets the visibility factor of the input layer. The result is between 0 and 1. If the result is
    * 0, the layer is invisible, if the result is 1, the layer is fully visible.
    */
-  public double getLayerVisibility(int layerNo) {
+  public double getLayerVisibility(int layerIndex) {
     double result;
     if (fullyVisibleVirtualLayer != -1) {
-      result = this.autoLayerDimFactor * layerVisibilityArr[layerNo];
-    } else if (layerNo == this.fullyVisibleLayer) {
-      result = layerVisibilityArr[layerNo];
+      result = this.autoLayerDimFactor * layerVisibilityArr[layerIndex];
+    } else if (layerIndex == this.fullyVisibleLayer) {
+      result = layerVisibilityArr[layerIndex];
     } else {
-      result = this.autoLayerDimFactor * layerVisibilityArr[layerNo];
+      result = this.autoLayerDimFactor * layerVisibilityArr[layerIndex];
     }
     return result;
   }
 
   /** Gets the visibility factor of the input layer without the automatic layer dimming. */
-  public double getRawLayerVisibility(int layerNo) {
-    return layerVisibilityArr[layerNo];
+  public double getRawLayerVisibility(int layerIndex) {
+    return layerVisibilityArr[layerIndex];
   }
 
   /**
    * Gets the visibility factor of the input layer. The value is expected between 0 and 1. If the
    * value is 0, the layer is invisible, if the value is 1, the layer is fully visible.
    */
-  public void setLayerVisibility(int layerNo, double value) {
-    layerVisibilityArr[layerNo] = Math.max(0, Math.min(value, 1));
+  public void setLayerVisibility(int layerIndex, double value) {
+    layerVisibilityArr[layerIndex] = Math.max(0, Math.min(value, 1));
   }
 
   public void setLayerVisibilityArr(double[] layerVisibilityArr) {

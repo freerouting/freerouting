@@ -42,7 +42,7 @@ public abstract class Item
   protected int componentNo;
 
   /** The nets, to which this item belongs. */
-  int[] netNoArr;
+  int[] netNumbers;
 
   /** The index in the clearance matrix describing the required spacing to other items. */
   private int clearanceClass;
@@ -59,17 +59,17 @@ public abstract class Item
   private transient ItemAutorouteInfo autorouteInfo;
 
   Item(
-      int[] netNoArr,
+      int[] netNumbers,
       int clearanceType,
       int idNo,
       int componentNo,
       FixedState fixedState,
       BasicBoard board) {
-    if (netNoArr == null) {
-      this.netNoArr = new int[0];
+    if (netNumbers == null) {
+      this.netNumbers = new int[0];
     } else {
-      this.netNoArr = new int[netNoArr.length];
-      System.arraycopy(netNoArr, 0, this.netNoArr, 0, netNoArr.length);
+      this.netNumbers = new int[netNumbers.length];
+      System.arraycopy(netNumbers, 0, this.netNumbers, 0, netNumbers.length);
     }
     clearanceClass = clearanceType;
     this.componentNo = componentNo;
@@ -136,13 +136,13 @@ public abstract class Item
     return BoardItemType.OTHER;
   }
 
-  /** Returns true if the net number array of this item contains netNo. */
-  public boolean containsNet(int netNo) {
-    if (netNo <= 0) {
+  /** Returns true if the net number array of this item contains netNumber. */
+  public boolean containsNet(int netNumber) {
+    if (netNumber <= 0) {
       return false;
     }
-    for (int i = 0; i < netNoArr.length; i++) {
-      if (netNoArr[i] == netNo) {
+    for (int i = 0; i < netNumbers.length; i++) {
+      if (netNumbers[i] == netNumber) {
         return true;
       }
     }
@@ -150,28 +150,28 @@ public abstract class Item
   }
 
   @Override
-  public boolean isObstacle(int netNo) {
-    return !containsNet(netNo);
+  public boolean isObstacle(int netNumber) {
+    return !containsNet(netNumber);
   }
 
   /** Returns, if this item in not allowed to overlap with other. */
   public abstract boolean isObstacle(Item other);
 
   @Override
-  public boolean isTraceObstacle(int netNo) {
-    return !containsNet(netNo);
+  public boolean isTraceObstacle(int netNumber) {
+    return !containsNet(netNumber);
   }
 
   /** Returns true if the net number arrays of this and other have a common number. */
   public boolean sharesNet(Item other) {
-    return this.sharesNetNo(other.netNoArr);
+    return this.sharesNetNo(other.netNumbers);
   }
 
-  /** Returns true if the net number array of this and netNoArr have a common number. */
-  public boolean sharesNetNo(int[] netNoArr) {
-    for (int i = 0; i < this.netNoArr.length; i++) {
-      for (int j = 0; j < netNoArr.length; j++) {
-        if (this.netNoArr[i] == netNoArr[j]) {
+  /** Returns true if the net number array of this and netNumbers have a common number. */
+  public boolean sharesNetNo(int[] netNumbers) {
+    for (int i = 0; i < this.netNumbers.length; i++) {
+      for (int j = 0; j < netNumbers.length; j++) {
+        if (this.netNumbers[i] == netNumbers[j]) {
           return true;
         }
       }
@@ -481,8 +481,8 @@ public abstract class Item
     for (int i = 0; i < this.tileShapeCount(); i++) {
       Collection<SearchTreeObject> overlappingItems =
           board.overlappingObjects(getTileShape(i), shapeLayer(i));
-      for (SearchTreeObject currentOb : overlappingItems) {
-        if (!(currentOb instanceof Item currentItem)) {
+      for (SearchTreeObject currentObject : overlappingItems) {
+        if (!(currentObject instanceof Item currentItem)) {
           continue;
         }
         if (currentItem != this
@@ -510,8 +510,8 @@ public abstract class Item
       }
       Collection<SearchTreeObject> overlappingItems =
           board.overlappingObjects(getTileShape(i), layer);
-      for (SearchTreeObject currentOb : overlappingItems) {
-        if (!(currentOb instanceof Item currentItem)) {
+      for (SearchTreeObject currentObject : overlappingItems) {
+        if (!(currentObject instanceof Item currentItem)) {
           continue;
         }
         if (currentItem != this
@@ -566,32 +566,32 @@ public abstract class Item
   }
 
   /**
-   * Returns the set of all Connectable items of the net with number netNo which can be reached
-   * recursively via normal contacts from this item. If netNo {@literal <}= 0, the net number is
+   * Returns the set of all Connectable items of the net with number netNumber which can be reached
+   * recursively via normal contacts from this item. If netNumber {@literal <}= 0, the net number is
    * ignored.
    */
-  public Set<Item> getConnectedSet(int netNo) {
-    return getConnectedSet(netNo, false);
+  public Set<Item> getConnectedSet(int netNumber) {
+    return getConnectedSet(netNumber, false);
   }
 
   /**
-   * Returns the set of all Connectable items of the net with number netNo which can be reached
-   * recursively via normal contacts from this item. If netNo {@literal <}= 0, the net number is
+   * Returns the set of all Connectable items of the net with number netNumber which can be reached
+   * recursively via normal contacts from this item. If netNumber {@literal <}= 0, the net number is
    * ignored. If stopAtPlane, the recursive algorithm stops, when a conduction area is reached,
    * which does not belong to a component.
    */
-  public Set<Item> getConnectedSet(int netNo, boolean stopAtPlane) {
+  public Set<Item> getConnectedSet(int netNumber, boolean stopAtPlane) {
     Set<Item> result = new TreeSet<>();
-    if (netNo > 0 && !this.containsNet(netNo)) {
+    if (netNumber > 0 && !this.containsNet(netNumber)) {
       return result;
     }
     result.add(this);
-    getConnectedSetRecu(result, netNo, stopAtPlane);
+    getConnectedSetRecu(result, netNumber, stopAtPlane);
     return result;
   }
 
   /** Recursive part of get_connected_set. */
-  private void getConnectedSetRecu(Set<Item> result, int netNo, boolean stopAtPlane) {
+  private void getConnectedSetRecu(Set<Item> result, int netNumber, boolean stopAtPlane) {
     Collection<Item> contactList = getNormalContacts();
     if (contactList == null) {
       return;
@@ -602,11 +602,11 @@ public abstract class Item
           && currentContact.getComponentNo() <= 0) {
         continue;
       }
-      if (netNo > 0 && !currentContact.containsNet(netNo)) {
+      if (netNumber > 0 && !currentContact.containsNet(netNumber)) {
         continue;
       }
       if (result.add(currentContact)) {
-        currentContact.getConnectedSetRecu(result, netNo, stopAtPlane);
+        currentContact.getConnectedSetRecu(result, netNumber, stopAtPlane);
       }
     }
   }
@@ -646,23 +646,23 @@ public abstract class Item
   }
 
   /**
-   * Returns the set of all Connectable items belonging to the net with number netNo, which are not
-   * in the connected set of this item. If netNo {@literal <}= 0, the net numbers contained in this
-   * items are used instead of netNo.
+   * Returns the set of all Connectable items belonging to the net with number netNumber, which are
+   * not in the connected set of this item. If netNumber {@literal <}= 0, the net numbers contained
+   * in this items are used instead of netNumber.
    */
-  public Set<Item> getUnconnectedSet(int netNo) {
+  public Set<Item> getUnconnectedSet(int netNumber) {
     Set<Item> result = new TreeSet<>();
-    if (netNo > 0 && !this.containsNet(netNo)) {
+    if (netNumber > 0 && !this.containsNet(netNumber)) {
       return result;
     }
-    if (netNo > 0) {
-      result.addAll(board.getConnectableItems(netNo));
+    if (netNumber > 0) {
+      result.addAll(board.getConnectableItems(netNumber));
     } else {
-      for (int currentNetNo : this.netNoArr) {
-        result.addAll(board.getConnectableItems(currentNetNo));
+      for (int currentNetNumber : this.netNumbers) {
+        result.addAll(board.getConnectableItems(currentNetNumber));
       }
     }
-    result.removeAll(this.getConnectedSet(netNo));
+    result.removeAll(this.getConnectedSet(netNumber));
     return result;
   }
 
@@ -826,7 +826,7 @@ public abstract class Item
   }
 
   /** Returns false, if this item is an obstacle for vias with the input net number. */
-  public boolean isDrillable(int netNo) {
+  public boolean isDrillable(int netNumber) {
     return false;
   }
 
@@ -849,12 +849,12 @@ public abstract class Item
 
   /** Returns the count of nets this item belongs to. */
   public int netCount() {
-    return netNoArr.length;
+    return netNumbers.length;
   }
 
   /** Returns the no-th net number of this item for 0 {@literal <=} no {@literal <} netCount(). */
-  public int getNetNo(int no) {
-    return netNoArr[no];
+  public int getNetNumber(int no) {
+    return netNumbers[no];
   }
 
   /** Return the component number of this item or 0, if it does not belong to a component. */
@@ -863,27 +863,31 @@ public abstract class Item
   }
 
   /**
-   * Removes netNo from the net number array. Returns false, if netNo was not contained in this
-   * array.
+   * Removes netNumber from the net number array. Returns false, if netNumber was not contained in
+   * this array.
    */
-  public boolean removeFromNet(int netNo) {
+  public boolean removeFromNet(int netNumber) {
     int foundIndex = -1;
-    for (int i = 0; i < this.netNoArr.length; i++) {
-      if (this.netNoArr[i] == netNo) {
+    for (int i = 0; i < this.netNumbers.length; i++) {
+      if (this.netNumbers[i] == netNumber) {
         foundIndex = i;
       }
     }
     if (foundIndex < 0) {
       return false;
     }
-    int[] newNetNoArr = new int[this.netNoArr.length - 1];
-    System.arraycopy(this.netNoArr, 0, newNetNoArr, 0, foundIndex);
+    int[] newNetNoArr = new int[this.netNumbers.length - 1];
+    System.arraycopy(this.netNumbers, 0, newNetNoArr, 0, foundIndex);
     if (foundIndex < newNetNoArr.length) {
       // copy remaining elements if present
       System.arraycopy(
-          this.netNoArr, foundIndex + 1, newNetNoArr, foundIndex, newNetNoArr.length - foundIndex);
+          this.netNumbers,
+          foundIndex + 1,
+          newNetNoArr,
+          foundIndex,
+          newNetNoArr.length - foundIndex);
     }
-    this.netNoArr = newNetNoArr;
+    this.netNumbers = newNetNoArr;
     return true;
   }
 
@@ -891,7 +895,7 @@ public abstract class Item
    * Returns the index in the clearance matrix describing the required spacing of this item to other
    * items.
    */
-  public int clearanceClassNo() {
+  public int clearanceClassIndex() {
     return clearanceClass;
   }
 
@@ -928,27 +932,27 @@ public abstract class Item
   }
 
   /**
-   * Makes this item connectable and assigns it to the input net. If netNo {@literal <} 0, the net
-   * items net number will be removed and the item will no longer be connectable.
+   * Makes this item connectable and assigns it to the input net. If netNumber {@literal <} 0, the
+   * net items net number will be removed and the item will no longer be connectable.
    */
-  public void assignNetNo(int netNo) {
-    if (!Nets.isNormalNetNo(netNo)) {
+  public void assignNetNo(int netNumber) {
+    if (!Nets.isNormalNetNumber(netNumber)) {
       return;
     }
-    if (netNo > board.rules.nets.maxNetNo()) {
-      FRLogger.warn("Item.assign_net_no: netNo to big");
+    if (netNumber > board.rules.nets.maxNetNumber()) {
+      FRLogger.warn("Item.assign_net_no: netNumber to big");
       return;
     }
     board.itemList.saveForUndo(this);
-    if (netNo <= 0) {
-      netNoArr = new int[0];
+    if (netNumber <= 0) {
+      netNumbers = new int[0];
     } else {
-      if (netNoArr.length == 0) {
-        netNoArr = new int[1];
-      } else if (netNoArr.length > 1) {
+      if (netNumbers.length == 0) {
+        netNumbers = new int[1];
+      } else if (netNumbers.length > 1) {
         FRLogger.warn("Item.assign_net_no: unexpected netCount > 1");
       }
-      netNoArr[0] = netNo;
+      netNumbers[0] = netNumber;
     }
   }
 
@@ -1056,7 +1060,7 @@ public abstract class Item
       if (i > 0) {
         sb.append("<br>");
       }
-      Net currentNet = board.rules.nets.get(this.getNetNo(i));
+      Net currentNet = board.rules.nets.get(this.getNetNumber(i));
       sb.append(tm.getText("net_hover_info", currentNet.name));
     }
     return sb.toString();
@@ -1068,7 +1072,7 @@ public abstract class Item
 
     for (int i = 0; i < this.netCount(); i++) {
       window.append(", " + tm.getText("net") + " ");
-      Net currentNet = board.rules.nets.get(this.getNetNo(i));
+      Net currentNet = board.rules.nets.get(this.getNetNumber(i));
       window.append(currentNet.name, tm.getText("net_info"), currentNet);
     }
   }
@@ -1146,8 +1150,8 @@ public abstract class Item
 
   /** Checks, if all nets of this items are normal. */
   public boolean netsNormal() {
-    for (int i = 0; i < this.netNoArr.length; i++) {
-      if (!Nets.isNormalNetNo(this.netNoArr[i])) {
+    for (int i = 0; i < this.netNumbers.length; i++) {
+      if (!Nets.isNormalNetNumber(this.netNumbers[i])) {
         return false;
       }
     }
@@ -1156,16 +1160,16 @@ public abstract class Item
 
   /** Checks, if this item and other contain exactly the same net numbers. */
   public boolean netsEqual(Item other) {
-    return netsEqual(other.netNoArr);
+    return netsEqual(other.netNumbers);
   }
 
-  /** Checks, if this item contains exactly the nets in netNoArr. */
-  public boolean netsEqual(int[] netNoArr) {
-    if (this.netNoArr.length != netNoArr.length) {
+  /** Checks, if this item contains exactly the nets in netNumbers. */
+  public boolean netsEqual(int[] netNumbers) {
+    if (this.netNumbers.length != netNumbers.length) {
       return false;
     }
-    for (int currentNetNo : netNoArr) {
-      if (!this.containsNet(currentNetNo)) {
+    for (int currentNetNumber : netNumbers) {
+      if (!this.containsNet(currentNetNumber)) {
         return false;
       }
     }
@@ -1217,8 +1221,8 @@ public abstract class Item
    * @return true, if this item has at least one net that must be ignored
    */
   public boolean hasIgnoredNets() {
-    for (int netNo : this.netNoArr) {
-      Net net = this.board.rules.nets.get(netNo);
+    for (int netNumber : this.netNumbers) {
+      Net net = this.board.rules.nets.get(netNumber);
       if (net.getNetClass().isIgnoredByAutorouter) {
         return true;
       }
@@ -1244,8 +1248,8 @@ public abstract class Item
   /** GetAllNets. */
   public List<Net> getAllNets() {
     List<Net> nets = new ArrayList<>();
-    for (int netNo : this.netNoArr) {
-      Net net = board.rules.nets.get(netNo);
+    for (int netNumber : this.netNumbers) {
+      Net net = board.rules.nets.get(netNumber);
       if (net != null) {
         nets.add(net);
       }

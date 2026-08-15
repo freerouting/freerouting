@@ -414,7 +414,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // remove the items to be re-routed
     routingBoard.removeItems(rippedConnections);
     for (int i = 0; i < item.netCount(); i++) {
-      routingBoard.combineTraces(item.getNetNo(i));
+      routingBoard.combineTraces(item.getNetNumber(i));
     }
 
     // calculate the ripup costs

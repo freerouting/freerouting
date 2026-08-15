@@ -631,18 +631,18 @@ public final class KiCadJsonReader {
         for (int padIndex = 0; padIndex < comp.pads.size(); padIndex++) {
           KiCadBoardJson.PadJson pad = comp.pads.get(padIndex);
           Net targetNet = boardRules.nets.get(pad.netName, 1);
-          int netNo = targetNet != null ? targetNet.netNumber : 0;
-          int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
+          int netNumber = targetNet != null ? targetNet.netNumber : 0;
+          int[] netNumbers = netNumber > 0 ? new int[] {netNumber} : new int[0];
           board.insertPin(
-              boardComp.no, padIndex, netNoArr, outlineClearanceNo, FixedState.SYSTEM_FIXED);
+              boardComp.no, padIndex, netNumbers, outlineClearanceNo, FixedState.SYSTEM_FIXED);
         }
       }
 
       // 10. Load conduction areas (copper pours)
       for (KiCadBoardJson.ConductionAreaJson zone : boardJson.conductionAreas) {
         Net targetNet = boardRules.nets.get(zone.netName, 1);
-        int netNo = targetNet != null ? targetNet.netNumber : 0;
-        int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
+        int netNumber = targetNet != null ? targetNet.netNumber : 0;
+        int[] netNumbers = netNumber > 0 ? new int[] {netNumber} : new int[0];
 
         // Build Area path polygon
         Point[] zonePoints = new Point[zone.polygon.size()];
@@ -654,14 +654,14 @@ public final class KiCadJsonReader {
         }
         Area zoneArea = new PolygonShape(zonePoints);
         board.insertConductionArea(
-            zoneArea, zone.layerIndex, netNoArr, 1, zone.isObstacle, FixedState.USER_FIXED);
+            zoneArea, zone.layerIndex, netNumbers, 1, zone.isObstacle, FixedState.USER_FIXED);
       }
 
       // 11. Load traces and vias (existing wiring)
       for (KiCadBoardJson.TraceJson tr : boardJson.traces) {
         Net targetNet = boardRules.nets.get(tr.netName, 1);
-        int netNo = targetNet != null ? targetNet.netNumber : 0;
-        int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
+        int netNumber = targetNet != null ? targetNet.netNumber : 0;
+        int[] netNumbers = netNumber > 0 ? new int[] {netNumber} : new int[0];
         int traceHalfWidth = (int) Math.round(tr.width * scaleFactor / 2.0);
 
         Point[] points = new Point[tr.points.size()];
@@ -672,13 +672,13 @@ public final class KiCadJsonReader {
                   (int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
         }
         board.insertTrace(
-            points, tr.layerIndex, traceHalfWidth, netNoArr, 1, FixedState.USER_FIXED);
+            points, tr.layerIndex, traceHalfWidth, netNumbers, 1, FixedState.USER_FIXED);
       }
 
       for (KiCadBoardJson.ViaJson vj : boardJson.vias) {
         Net targetNet = boardRules.nets.get(vj.netName, 1);
-        int netNo = targetNet != null ? targetNet.netNumber : 0;
-        int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
+        int netNumber = targetNet != null ? targetNet.netNumber : 0;
+        int[] netNumbers = netNumber > 0 ? new int[] {netNumber} : new int[0];
 
         IntPoint center =
             new IntPoint(
@@ -707,7 +707,7 @@ public final class KiCadJsonReader {
         if (viaPadstack == null) {
           viaPadstack = padstacks.add(viaPadstackName, shapeArr, true, false);
         }
-        board.insertVia(viaPadstack, center, netNoArr, 1, FixedState.USER_FIXED, true);
+        board.insertVia(viaPadstack, center, netNumbers, 1, FixedState.USER_FIXED, true);
       }
 
       long endTime = System.nanoTime();
@@ -771,8 +771,8 @@ public final class KiCadJsonReader {
     if (boardJson.conductionAreas != null) {
       for (KiCadBoardJson.ConductionAreaJson zone : boardJson.conductionAreas) {
         Net targetNet = board.rules.nets.get(zone.netName, 1);
-        int netNo = targetNet != null ? targetNet.netNumber : 0;
-        int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
+        int netNumber = targetNet != null ? targetNet.netNumber : 0;
+        int[] netNumbers = netNumber > 0 ? new int[] {netNumber} : new int[0];
 
         Point[] zonePoints = new Point[zone.polygon.size()];
         for (int i = 0; i < zone.polygon.size(); i++) {
@@ -783,7 +783,7 @@ public final class KiCadJsonReader {
         }
         Area zoneArea = new PolygonShape(zonePoints);
         board.insertConductionArea(
-            zoneArea, zone.layerIndex, netNoArr, 1, zone.isObstacle, FixedState.USER_FIXED);
+            zoneArea, zone.layerIndex, netNumbers, 1, zone.isObstacle, FixedState.USER_FIXED);
       }
     }
 
@@ -791,8 +791,8 @@ public final class KiCadJsonReader {
     if (boardJson.traces != null) {
       for (KiCadBoardJson.TraceJson tr : boardJson.traces) {
         Net targetNet = board.rules.nets.get(tr.netName, 1);
-        int netNo = targetNet != null ? targetNet.netNumber : 0;
-        int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
+        int netNumber = targetNet != null ? targetNet.netNumber : 0;
+        int[] netNumbers = netNumber > 0 ? new int[] {netNumber} : new int[0];
         int traceHalfWidth = (int) Math.round(tr.width * scaleFactor / 2.0);
 
         Point[] points = new Point[tr.points.size()];
@@ -803,7 +803,7 @@ public final class KiCadJsonReader {
                   (int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
         }
         board.insertTrace(
-            points, tr.layerIndex, traceHalfWidth, netNoArr, 1, FixedState.USER_FIXED);
+            points, tr.layerIndex, traceHalfWidth, netNumbers, 1, FixedState.USER_FIXED);
       }
     }
 
@@ -812,8 +812,8 @@ public final class KiCadJsonReader {
       int layerCount = board.getLayerCount();
       for (KiCadBoardJson.ViaJson vj : boardJson.vias) {
         Net targetNet = board.rules.nets.get(vj.netName, 1);
-        int netNo = targetNet != null ? targetNet.netNumber : 0;
-        int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
+        int netNumber = targetNet != null ? targetNet.netNumber : 0;
+        int[] netNumbers = netNumber > 0 ? new int[] {netNumber} : new int[0];
 
         IntPoint center =
             new IntPoint(
@@ -843,7 +843,7 @@ public final class KiCadJsonReader {
         if (viaPadstack == null) {
           viaPadstack = board.library.padstacks.add(viaPadstackName, shapeArr, true, false);
         }
-        board.insertVia(viaPadstack, center, netNoArr, 1, FixedState.USER_FIXED, true);
+        board.insertVia(viaPadstack, center, netNumbers, 1, FixedState.USER_FIXED, true);
       }
     }
   }
@@ -943,7 +943,7 @@ public final class KiCadJsonReader {
       KiCadBoardJson.NetClassJson source,
       int layerCount,
       double scaleFactor,
-      int clearanceClassNo) {
+      int clearanceClassIndex) {
     if (source.traceWidth > 0) {
       int traceHalfWidth = (int) Math.round(source.traceWidth * scaleFactor / 2.0);
       for (int layer = 0; layer < layerCount; layer++) {
@@ -951,7 +951,7 @@ public final class KiCadJsonReader {
       }
     }
     if (source.clearance > 0) {
-      target.setTraceClearanceClass(clearanceClassNo);
+      target.setTraceClearanceClass(clearanceClassIndex);
     }
   }
 

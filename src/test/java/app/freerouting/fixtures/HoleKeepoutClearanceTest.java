@@ -42,7 +42,7 @@ class HoleKeepoutClearanceTest extends RoutingFixtureTest {
           && ((ObstacleArea) item).getArea() instanceof Circle) {
         assertEquals(
             holeEdgeClassNo,
-            item.clearanceClassNo(),
+            item.clearanceClassIndex(),
             "circular package keepout (NPTH hole) must use the hole_edge class");
         reclassified++;
       }

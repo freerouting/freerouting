@@ -53,8 +53,8 @@ public class ExpansionDrill implements ExpandableObject {
       CompleteExpansionRoom foundRoom = null;
       Iterator<SearchTreeObject> it = overlaps.iterator();
       while (it.hasNext()) {
-        SearchTreeObject currentOb = it.next();
-        if (!(currentOb instanceof CompleteExpansionRoom currentRoom)) {
+        SearchTreeObject currentObject = it.next();
+        if (!(currentObject instanceof CompleteExpansionRoom currentRoom)) {
           it.remove();
           continue;
         }

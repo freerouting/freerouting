@@ -51,16 +51,20 @@ public final class SortedRoomNeighbours {
    */
   public static CompleteExpansionRoom calculate(
       ExpansionRoom room, AutorouteEngine autorouteEngine) {
-    int netNo = autorouteEngine.getNetNo();
+    int netNumber = autorouteEngine.getNetNumber();
 
     SortedRoomNeighbours roomNeighbours =
         calculateNeighbours(
-            room, netNo, autorouteEngine.autorouteSearchTree, autorouteEngine.generateRoomIdNo());
+            room,
+            netNumber,
+            autorouteEngine.autorouteSearchTree,
+            autorouteEngine.generateRoomIdNo());
 
     // Check, that each side of the room shape has at least one touching neighbour.
     // Otherwise, improve the room shape by enlarging.
 
-    boolean edgeRemoved = roomNeighbours.tryRemoveEdge(netNo, autorouteEngine.autorouteSearchTree);
+    boolean edgeRemoved =
+        roomNeighbours.tryRemoveEdge(netNumber, autorouteEngine.autorouteSearchTree);
     CompleteExpansionRoom result = roomNeighbours.completedRoom;
     if (edgeRemoved) {
       autorouteEngine.removeAllDoors(result);
@@ -117,7 +121,7 @@ public final class SortedRoomNeighbours {
     }
     for (ShapeTree.TreeEntry currentEntry : ownNetObjects) {
       if (currentEntry.object instanceof Connectable currentObject) {
-        if (currentObject.containsNet(autorouteEngine.getNetNo())) {
+        if (currentObject.containsNet(autorouteEngine.getNetNumber())) {
           TileShape currentConnectionShape =
               currentObject.getTraceConnectionShape(
                   autorouteEngine.autorouteSearchTree, currentEntry.shapeIndexInObject);
@@ -138,7 +142,7 @@ public final class SortedRoomNeighbours {
   }
 
   private static SortedRoomNeighbours calculateNeighbours(
-      ExpansionRoom room, int netNo, ShapeSearchTree autorouteSearchTree, int roomIdNo) {
+      ExpansionRoom room, int netNumber, ShapeSearchTree autorouteSearchTree, int roomIdNo) {
     TileShape roomShape = room.getShape();
     CompleteExpansionRoom completedRoom;
     if (room instanceof IncompleteFreeSpaceExpansionRoom) {
@@ -174,7 +178,7 @@ public final class SortedRoomNeighbours {
         continue;
       }
       if ((room instanceof IncompleteFreeSpaceExpansionRoom)
-          && !currentObject.isTraceObstacle(netNo)) {
+          && !currentObject.isTraceObstacle(netNumber)) {
         // delay processing the target doors until the room shape will not change anymore
         result.ownNetObjects.add(currentEntry);
         continue;
@@ -366,7 +370,7 @@ public final class SortedRoomNeighbours {
    * Checks that each side of the room shape has at least one touching neighbour. Otherwise, the
    * room shape will be improved by enlarging. Returns true if the room shape was changed.
    */
-  private boolean tryRemoveEdge(int netNo, ShapeSearchTree autorouteSearchTree) {
+  private boolean tryRemoveEdge(int netNumber, ShapeSearchTree autorouteSearchTree) {
     if (!(this.fromRoom instanceof IncompleteFreeSpaceExpansionRoom currentIncompleteRoom)) {
       return false;
     }
@@ -402,7 +406,7 @@ public final class SortedRoomNeighbours {
       FRLogger.trace(
           "ROOM_EDGE_REMOVE start"
               + ", net="
-              + netNo
+              + netNumber
               + ", layer="
               + currentIncompleteRoom.getLayer()
               + ", removeEdge="
@@ -416,11 +420,11 @@ public final class SortedRoomNeighbours {
               currentIncompleteRoom.getLayer(),
               currentIncompleteRoom.getContainedShape());
       Collection<IncompleteFreeSpaceExpansionRoom> newRooms =
-          autorouteSearchTree.completeShape(enlargedRoom, netNo, null, null);
+          autorouteSearchTree.completeShape(enlargedRoom, netNumber, null, null);
       FRLogger.trace(
           "ROOM_EDGE_REMOVE complete_shape"
               + ", net="
-              + netNo
+              + netNumber
               + ", layer="
               + currentIncompleteRoom.getLayer()
               + ", removeEdge="
@@ -443,7 +447,7 @@ public final class SortedRoomNeighbours {
         FRLogger.trace(
             "ROOM_EDGE_REMOVE applied"
                 + ", net="
-                + netNo
+                + netNumber
                 + ", layer="
                 + currentIncompleteRoom.getLayer()
                 + ", removeEdge="

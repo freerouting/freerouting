@@ -130,12 +130,12 @@ public class SearchTreeManager {
   }
 
   /**
-   * Returns the tree compensated for the clearance class with number clearanceClassNo. Initialized
-   * the tree, if it is not yet allocated.
+   * Returns the tree compensated for the clearance class with number clearanceClassIndex.
+   * Initialized the tree, if it is not yet allocated.
    */
-  public ShapeSearchTree getAutorouteTree(int clearanceClassNo) {
+  public ShapeSearchTree getAutorouteTree(int clearanceClassIndex) {
     for (ShapeSearchTree currentTree : compensatedSearchTrees) {
-      if (currentTree.compensatedClearanceClassNo == clearanceClassNo) {
+      if (currentTree.compensatedClearanceClassNo == clearanceClassIndex) {
         return currentTree;
       }
     }
@@ -144,15 +144,15 @@ public class SearchTreeManager {
     ShapeSearchTree currentAutorouteTree;
     if (this.board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
       // fast algorithm with 90 degree restriction
-      currentAutorouteTree = new ShapeSearchTree90Degree(this.board, clearanceClassNo);
+      currentAutorouteTree = new ShapeSearchTree90Degree(this.board, clearanceClassIndex);
     } else if (this.board.rules.getTraceAngleRestriction() == AngleRestriction.FORTYFIVE_DEGREE) {
       // fast algorithm with 45 degree restriction
-      currentAutorouteTree = new ShapeSearchTree45Degree(this.board, clearanceClassNo);
+      currentAutorouteTree = new ShapeSearchTree45Degree(this.board, clearanceClassIndex);
     } else {
       // slow algorithm or no angle restriction
       currentAutorouteTree =
           new ShapeSearchTree(
-              FortyfiveDegreeBoundingDirections.INSTANCE, this.board, clearanceClassNo);
+              FortyfiveDegreeBoundingDirections.INSTANCE, this.board, clearanceClassIndex);
     }
     this.compensatedSearchTrees.add(currentAutorouteTree);
 

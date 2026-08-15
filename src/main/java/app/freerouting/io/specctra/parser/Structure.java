@@ -87,14 +87,14 @@ public class Structure extends ScopeKeyword {
   }
 
   private static void writeConductionAreas(WriteScopeParameter par) throws IOException {
-    Storable currentOb;
+    Storable currentObject;
     Iterator<UndoableObjects.UndoableObjectNode> it = par.board.itemList.startReadObject();
     for (; ; ) {
-      currentOb = par.board.itemList.readObject(it);
-      if (currentOb == null) {
+      currentObject = par.board.itemList.readObject(it);
+      if (currentObject == null) {
         break;
       }
-      if (!(currentOb instanceof ConductionArea currentArea)) {
+      if (!(currentObject instanceof ConductionArea currentArea)) {
         continue;
       }
       if (par.board.layerStructure.arr[currentArea.getLayer()].isSignal) {
@@ -106,14 +106,14 @@ public class Structure extends ScopeKeyword {
   }
 
   private static void writeKeepouts(WriteScopeParameter par) throws IOException {
-    Storable currentOb;
+    Storable currentObject;
     Iterator<UndoableObjects.UndoableObjectNode> it = par.board.itemList.startReadObject();
     for (; ; ) {
-      currentOb = par.board.itemList.readObject(it);
-      if (currentOb == null) {
+      currentObject = par.board.itemList.readObject(it);
+      if (currentObject == null) {
         break;
       }
-      if (!(currentOb instanceof ObstacleArea currentKeepout)) {
+      if (!(currentObject instanceof ObstacleArea currentKeepout)) {
         continue;
       }
       if (currentKeepout.getComponentNo() != 0) {
@@ -138,22 +138,22 @@ public class Structure extends ScopeKeyword {
     boundingRectangle.writeScope(par.file, par.identifierType);
     par.file.endScope();
     // lookup the outline in the board
-    Storable currentOb;
+    Storable currentObject;
     Iterator<UndoableObjects.UndoableObjectNode> it = par.board.itemList.startReadObject();
     for (; ; ) {
-      currentOb = par.board.itemList.readObject(it);
-      if (currentOb == null) {
+      currentObject = par.board.itemList.readObject(it);
+      if (currentObject == null) {
         break;
       }
-      if (currentOb instanceof BoardOutline) {
+      if (currentObject instanceof BoardOutline) {
         break;
       }
     }
-    if (currentOb == null) {
+    if (currentObject == null) {
       FRLogger.warn("Structure.write_scope: board outline not found");
       return;
     }
-    BoardOutline outline = (BoardOutline) currentOb;
+    BoardOutline outline = (BoardOutline) currentObject;
 
     // write the outline
     for (int i = 0; i < outline.shapeCount(); i++) {
@@ -221,9 +221,9 @@ public class Structure extends ScopeKeyword {
   private static void writeKeepoutScope(WriteScopeParameter par, ObstacleArea keepout)
       throws IOException {
     Area keepoutArea = keepout.getArea();
-    int layerNo = keepout.getLayer();
-    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerNo];
-    final Layer keepoutLayer = new Layer(boardLayer.name, layerNo, boardLayer.isSignal);
+    int layerIndex = keepout.getLayer();
+    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerIndex];
+    final Layer keepoutLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
     if (keepoutArea instanceof app.freerouting.geometry.planar.Shape shape) {
@@ -248,9 +248,9 @@ public class Structure extends ScopeKeyword {
       dsnHole.writeHoleScope(par.file, par.identifierType);
     }
     // write clearance class if it's defined for this keepout area.
-    if (keepout.clearanceClassNo() > 0) {
+    if (keepout.clearanceClassIndex() > 0) {
       // skip it if it's the default clearance class.
-      String clearanceName = par.board.rules.clearanceMatrix.getName(keepout.clearanceClassNo());
+      String clearanceName = par.board.rules.clearanceMatrix.getName(keepout.clearanceClassIndex());
 
       if (!"default".equals(clearanceName)) {
         Rule.writeItemClearanceClass(clearanceName, par.file, par.identifierType);
@@ -601,8 +601,8 @@ public class Structure extends ScopeKeyword {
       ReadScopeParameter par, BoardConstructionInfo boardConstructionInfo, BoardRules boardRules) {
     boolean smdToTurnGapFound = false;
     // update the clearance matrix
-    for (Rule currentOb : boardConstructionInfo.defaultRules) {
-      if (currentOb instanceof Rule.ClearanceRule currentRule) {
+    for (Rule currentObject : boardConstructionInfo.defaultRules) {
+      if (currentObject instanceof Rule.ClearanceRule currentRule) {
         if (setClearanceRule(
             currentRule, -1, par.coordinateTransform, boardRules, par.stringQuote)) {
           smdToTurnGapFound = true;
@@ -610,8 +610,8 @@ public class Structure extends ScopeKeyword {
       }
     }
     // update width rules
-    for (Object currentOb : boardConstructionInfo.defaultRules) {
-      if (currentOb instanceof Rule.WidthRule rule) {
+    for (Object currentObject : boardConstructionInfo.defaultRules) {
+      if (currentObject instanceof Rule.WidthRule rule) {
         final double wireWidth = rule.value;
         int traceHalfwidth = (int) Math.round(par.coordinateTransform.dsnToBoard(wireWidth) / 2);
         FRLogger.debug(
@@ -626,18 +626,18 @@ public class Structure extends ScopeKeyword {
       }
     }
     for (LayerRule layerRule : boardConstructionInfo.layerDependentRules) {
-      int layerNo = par.layerStructure.getNo(layerRule.layerName);
-      if (layerNo < 0) {
+      int layerIndex = par.layerStructure.getNo(layerRule.layerName);
+      if (layerIndex < 0) {
         continue;
       }
-      for (Rule currentOb : layerRule.rule) {
-        if (currentOb instanceof Rule.WidthRule rule) {
+      for (Rule currentObject : layerRule.rule) {
+        if (currentObject instanceof Rule.WidthRule rule) {
           final double wireWidth = rule.value;
           int traceHalfwidth = (int) Math.round(par.coordinateTransform.dsnToBoard(wireWidth) / 2);
-          boardRules.setDefaultTraceHalfWidth(layerNo, traceHalfwidth);
-        } else if (currentOb instanceof Rule.ClearanceRule currentRule) {
+          boardRules.setDefaultTraceHalfWidth(layerIndex, traceHalfwidth);
+        } else if (currentObject instanceof Rule.ClearanceRule currentRule) {
           setClearanceRule(
-              currentRule, layerNo, par.coordinateTransform, boardRules, par.stringQuote);
+              currentRule, layerIndex, par.coordinateTransform, boardRules, par.stringQuote);
         }
       }
     }
@@ -647,19 +647,19 @@ public class Structure extends ScopeKeyword {
   }
 
   /**
-   * Converts a dsn clearance rule into a board clearance rule. If layerNo is negative, the rule is
-   * set on all layers. Returns true, if the string smd_to_turn_gap was found.
+   * Converts a dsn clearance rule into a board clearance rule. If layerIndex is negative, the rule
+   * is set on all layers. Returns true, if the string smd_to_turn_gap was found.
    */
   public static boolean setClearanceRule(
       Rule.ClearanceRule rule,
-      int layerNo,
+      int layerIndex,
       CoordinateTransform coordinateTransform,
       BoardRules boardRules,
       String stringQuote) {
     boolean result = false;
     int currentClearance = (int) Math.round(coordinateTransform.dsnToBoard(rule.value));
     if (rule.clearanceClassPairs.isEmpty()) {
-      if (layerNo < 0) {
+      if (layerIndex < 0) {
         boardRules.clearanceMatrix.setDefaultValue(currentClearance);
         FRLogger.debug(
             "Set DEFAULT clearance (all layers): "
@@ -669,10 +669,10 @@ public class Structure extends ScopeKeyword {
                 + " mm) from DSN value "
                 + rule.value);
       } else {
-        boardRules.clearanceMatrix.setDefaultValue(layerNo, currentClearance);
+        boardRules.clearanceMatrix.setDefaultValue(layerIndex, currentClearance);
         FRLogger.debug(
             "Set DEFAULT clearance (layer "
-                + layerNo
+                + layerIndex
                 + "): "
                 + currentClearance
                 + " ("
@@ -741,7 +741,7 @@ public class Structure extends ScopeKeyword {
       if (secondClassNo < 0) {
         secondClassNo = appendClearanceClass(boardRules, currentPair[1]);
       }
-      if (layerNo < 0) {
+      if (layerIndex < 0) {
         boardRules.clearanceMatrix.setValue(firstClassNo, secondClassNo, currentClearance);
         boardRules.clearanceMatrix.setValue(secondClassNo, firstClassNo, currentClearance);
         FRLogger.debug(
@@ -759,11 +759,13 @@ public class Structure extends ScopeKeyword {
                 + secondClassNo
                 + "]");
       } else {
-        boardRules.clearanceMatrix.setValue(firstClassNo, secondClassNo, layerNo, currentClearance);
-        boardRules.clearanceMatrix.setValue(secondClassNo, firstClassNo, layerNo, currentClearance);
+        boardRules.clearanceMatrix.setValue(
+            firstClassNo, secondClassNo, layerIndex, currentClearance);
+        boardRules.clearanceMatrix.setValue(
+            secondClassNo, firstClassNo, layerIndex, currentClearance);
         FRLogger.debug(
             "Set clearance (layer "
-                + layerNo
+                + layerIndex
                 + "): "
                 + currentPair[0]
                 + "_"
@@ -881,28 +883,28 @@ public class Structure extends ScopeKeyword {
       String clearanceClassName,
       KeepoutType keepoutType,
       FixedState fixedState) {
-    int clearanceClassNo;
+    int clearanceClassIndex;
     if (clearanceClassName == null) {
-      clearanceClassNo =
+      clearanceClassIndex =
           board
               .rules
               .getDefaultNetClass()
               .defaultItemClearanceClasses
               .get(DefaultItemClearanceClasses.ItemClass.AREA);
     } else {
-      clearanceClassNo = board.rules.clearanceMatrix.getNo(clearanceClassName);
-      if (clearanceClassNo < 0) {
+      clearanceClassIndex = board.rules.clearanceMatrix.getNo(clearanceClassName);
+      if (clearanceClassIndex < 0) {
         FRLogger.warn(
             "Keepout.insert_keepout: clearance class not found at '" + clearanceClassName + "'");
-        clearanceClassNo = BoardRules.clearanceClassNone();
+        clearanceClassIndex = BoardRules.clearanceClassNone();
       }
     }
     if (keepoutType == KeepoutType.via_keepout) {
-      board.insertViaObstacle(area, layer, clearanceClassNo, fixedState);
+      board.insertViaObstacle(area, layer, clearanceClassIndex, fixedState);
     } else if (keepoutType == KeepoutType.place_keepout) {
-      board.insertComponentObstacle(area, layer, clearanceClassNo, fixedState);
+      board.insertComponentObstacle(area, layer, clearanceClassIndex, fixedState);
     } else {
-      board.insertObstacle(area, layer, clearanceClassNo, fixedState);
+      board.insertObstacle(area, layer, clearanceClassIndex, fixedState);
     }
   }
 
@@ -1048,18 +1050,19 @@ public class Structure extends ScopeKeyword {
           Shape.transformAreaToBoard(planeInfo.area.shapeList, par.coordinateTransform);
       final Layer currentLayer = (planeInfo.area.shapeList.iterator().next()).layer;
       if (currentLayer.no >= 0) {
-        int clearanceClassNo;
+        int clearanceClassIndex;
         if (planeInfo.area.clearanceClassName != null) {
-          clearanceClassNo = board.rules.clearanceMatrix.getNo(planeInfo.area.clearanceClassName);
-          if (clearanceClassNo < 0) {
+          clearanceClassIndex =
+              board.rules.clearanceMatrix.getNo(planeInfo.area.clearanceClassName);
+          if (clearanceClassIndex < 0) {
             FRLogger.warn(
                 "Structure.read_scope: clearance class not found at '"
                     + par.scanner.getScopeIdentifier()
                     + "'");
-            clearanceClassNo = BoardRules.clearanceClassNone();
+            clearanceClassIndex = BoardRules.clearanceClassNone();
           }
         } else {
-          clearanceClassNo =
+          clearanceClassIndex =
               currentNet
                   .getNetClass()
                   .defaultItemClearanceClasses
@@ -1071,7 +1074,7 @@ public class Structure extends ScopeKeyword {
             planeArea,
             currentLayer.no,
             netNumbers,
-            clearanceClassNo,
+            clearanceClassIndex,
             false,
             FixedState.SYSTEM_FIXED);
       } else {

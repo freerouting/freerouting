@@ -100,7 +100,8 @@ public class Component extends ScopeKeyword {
           "Component.write_pin_info: component pin not found at '" + component.name + "'");
       return;
     }
-    String clClassName = par.board.rules.clearanceMatrix.getName(componentPin.clearanceClassNo());
+    String clClassName =
+        par.board.rules.clearanceMatrix.getName(componentPin.clearanceClassIndex());
     if (clClassName == null) {
       FRLogger.warn(
           "Component.write_pin_info: clearance class  name not found at '" + component.name + "'");
@@ -135,11 +136,11 @@ public class Component extends ScopeKeyword {
       for (int i = 0; i < currentKeepoutArr.length; i++) {
         Package.Keepout currentKeepout = currentKeepoutArr[i];
         ObstacleArea currentObstacleArea = getKeepout(par.board, component.no, currentKeepout.name);
-        if (currentObstacleArea == null || currentObstacleArea.clearanceClassNo() == 0) {
+        if (currentObstacleArea == null || currentObstacleArea.clearanceClassIndex() == 0) {
           continue;
         }
         String clClassName =
-            par.board.rules.clearanceMatrix.getName(currentObstacleArea.clearanceClassNo());
+            par.board.rules.clearanceMatrix.getName(currentObstacleArea.clearanceClassIndex());
         if (clClassName == null) {
           FRLogger.warn(
               "Component.write_keepout_infos: clearance class name not found at '"

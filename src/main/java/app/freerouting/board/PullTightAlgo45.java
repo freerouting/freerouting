@@ -72,21 +72,21 @@ class PullTightAlgo45 extends PullTightAlgo {
     newCorners[0] = currentCorner[0];
     Point[] currentCheckPoints = new Point[2];
     Point newCorner = null;
-    int cornerNo = 3;
-    while (cornerNo < polyline.arr.length - 1) {
-      currentCorner[3] = polyline.corner(cornerNo);
+    int cornerIndex = 3;
+    while (cornerIndex < polyline.arr.length - 1) {
+      currentCorner[3] = polyline.corner(cornerIndex);
       if (!(currentCorner[3] instanceof IntPoint)) {
         return polyline;
       }
       if (currentCorner[1].equals(currentCorner[2])
-          || cornerNo < polyline.arr.length - 2
+          || cornerIndex < polyline.arr.length - 2
               && currentCorner[3].sideOf(currentCorner[1], currentCorner[2]) == Side.COLLINEAR) {
         // corners in the middle af a line can be skipped
-        ++cornerNo;
+        ++cornerIndex;
         currentCorner[2] = currentCorner[3];
         currentCornerInClipShape[2] = currentCornerInClipShape[3];
-        if (cornerNo < polyline.arr.length - 1) {
-          currentCorner[3] = polyline.corner(cornerNo);
+        if (cornerIndex < polyline.arr.length - 1) {
+          currentCorner[3] = polyline.corner(cornerIndex);
           if (!(currentCorner[3] instanceof IntPoint)) {
             return polyline;
           }
@@ -112,7 +112,7 @@ class PullTightAlgo45 extends PullTightAlgo {
           if (checkPolyline.arr.length == 3) {
             TileShape shapeToCheck = checkPolyline.offsetShape(currentHalfWidth, 0);
             if (board.checkTraceShape(
-                shapeToCheck, currentLayer, currentNetNoArr, currentClType, this.contactPins)) {
+                shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins)) {
               currentCheckPoints[1] = currentCorner[3];
               if (currentCheckPoints[0].equals(currentCheckPoints[1])) {
                 cornerRemoved = true;
@@ -124,7 +124,7 @@ class PullTightAlgo45 extends PullTightAlgo {
                       board.checkTraceShape(
                           shapeToCheck,
                           currentLayer,
-                          currentNetNoArr,
+                          currentNetNumbers,
                           currentClType,
                           this.contactPins);
                 } else {
@@ -155,7 +155,7 @@ class PullTightAlgo45 extends PullTightAlgo {
           if (checkPolyline.arr.length == 3) {
             TileShape shapeToCheck = checkPolyline.offsetShape(currentHalfWidth, 0);
             if (board.checkTraceShape(
-                shapeToCheck, currentLayer, currentNetNoArr, currentClType, this.contactPins)) {
+                shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins)) {
               currentCheckPoints[1] = currentCorner[2];
               checkPolyline = new Polyline(currentCheckPoints);
               if (checkPolyline.arr.length == 3) {
@@ -164,7 +164,7 @@ class PullTightAlgo45 extends PullTightAlgo {
                     board.checkTraceShape(
                         shapeToCheck,
                         currentLayer,
-                        currentNetNoArr,
+                        currentNetNumbers,
                         currentClType,
                         this.contactPins);
               } else {
@@ -196,7 +196,7 @@ class PullTightAlgo45 extends PullTightAlgo {
       }
       currentCorner[2] = currentCorner[3];
       currentCornerInClipShape[2] = currentCornerInClipShape[3];
-      ++cornerNo;
+      ++cornerIndex;
     }
     if (!polylineChanged) {
       return polyline;
@@ -412,7 +412,7 @@ class PullTightAlgo45 extends PullTightAlgo {
           TileShape shapeToCheck = tmp.offsetShape(currentHalfWidth, 0);
           checkOk =
               board.checkTraceShape(
-                  shapeToCheck, currentLayer, currentNetNoArr, currentClType, this.contactPins);
+                  shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
         }
         deltaDist /= 2;
         if (checkOk) {

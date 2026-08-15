@@ -139,8 +139,8 @@ public final class CopyItemState extends InteractiveState {
     RoutingBoard board = hdlg.getRoutingBoard();
     if (layerChanged) {
       // create new via padstacks
-      for (Item currentOb : itemList) {
-        if (currentOb instanceof Via currentVia) {
+      for (Item currentObject : itemList) {
+        if (currentObject instanceof Via currentVia) {
           Padstack newPadstack =
               changePadstackLayers(currentVia.getPadstack(), currentLayer, board, padstackPairs);
           currentVia.setPadstack(newPadstack);

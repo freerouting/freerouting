@@ -180,7 +180,7 @@ public class BoardStatistics implements Serializable {
     this.pads.totalCount = board.getPins().size();
 
     // Nets
-    this.nets.totalCount = board.rules.nets.maxNetNo();
+    this.nets.totalCount = board.rules.nets.maxNetNumber();
     this.nets.classCount = board.rules.netClasses.count();
 
     // Traces
@@ -248,7 +248,7 @@ public class BoardStatistics implements Serializable {
               currentTrace.getLength()
                   * (currentTrace.getHalfWidth()
                       + board.clearanceValue(
-                          currentTrace.clearanceClassNo(),
+                          currentTrace.clearanceClassIndex(),
                           defaultClearanceClass,
                           currentTrace.getLayer()));
           if (fixedState == FixedState.SHOVE_FIXED) {
@@ -385,8 +385,8 @@ public class BoardStatistics implements Serializable {
     for (Pin pin : smdPins) {
       if (pin.netCount() > 0) {
         total++;
-        int netNo = pin.getNetNo(0);
-        if (pin.getUnconnectedSet(netNo).isEmpty()) {
+        int netNumber = pin.getNetNumber(0);
+        if (pin.getUnconnectedSet(netNumber).isEmpty()) {
           alreadyConnected++;
         }
         if (isPinEscaped(pin)) {

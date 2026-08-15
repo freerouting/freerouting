@@ -836,18 +836,18 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * <p>Half-width is used because traces expand equally on both sides of their centerline. The
    * actual trace width is twice this value.
    *
-   * @param netNo the net number to get the trace width for
+   * @param netNumber the net number to get the trace width for
    * @param layer the layer index where the trace will be placed
    * @return the trace half-width in board units
    * @see WorkspaceSettings#manualRuleSelection
    * @see BoardRules#getTraceHalfWidth(int, int)
    */
-  public int getTraceHalfwidth(int netNo, int layer) {
+  public int getTraceHalfwidth(int netNumber, int layer) {
     int result;
     if (workspaceSettings.getManualRuleSelection()) {
       result = workspaceSettings.manualTraceHalfWidthArr[layer];
     } else {
-      result = board.rules.getTraceHalfWidth(netNo, layer);
+      result = board.rules.getTraceHalfWidth(netNumber, layer);
     }
     return result;
   }
@@ -866,16 +866,16 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    *
    * <p>Returns true if the net or net class is not found (permissive default).
    *
-   * @param netNo the net number to check
+   * @param netNumber the net number to check
    * @param layer the layer index to check
    * @return true if the layer is active for routing this net, false otherwise
    * @see NetClass#isActiveRoutingLayer(int)
    */
-  public boolean isActiveRoutingLayer(int netNo, int layer) {
+  public boolean isActiveRoutingLayer(int netNumber, int layer) {
     if (workspaceSettings.getManualRuleSelection()) {
       return true;
     }
-    Net currentNet = this.board.rules.nets.get(netNo);
+    Net currentNet = this.board.rules.nets.get(netNumber);
     if (currentNet == null) {
       return true;
     }
@@ -900,17 +900,17 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    *
    * <p>The clearance class is an index into the board's clearance matrix.
    *
-   * @param netNo the net number to get the clearance class for
+   * @param netNumber the net number to get the clearance class for
    * @return the clearance class index
    * @see app.freerouting.rules.ClearanceMatrix
    * @see NetClass#getTraceClearanceClass()
    */
-  public int getTraceClearanceClass(int netNo) {
+  public int getTraceClearanceClass(int netNumber) {
     int result;
     if (workspaceSettings.getManualRuleSelection()) {
       result = workspaceSettings.getManualTraceClearanceClass();
     } else {
-      result = board.rules.nets.get(netNo).getNetClass().getTraceClearanceClass();
+      result = board.rules.nets.get(netNumber).getNetClass().getTraceClearanceClass();
     }
     return result;
   }
@@ -929,18 +929,18 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    *
    * <p>If manual selection is active but the index is invalid, falls back to the net class rule.
    *
-   * @param netNo the net number to get the via rule for
+   * @param netNumber the net number to get the via rule for
    * @return the via rule defining allowed via types and priorities
    * @see ViaRule
    * @see NetClass#getViaRule()
    */
-  public ViaRule getViaRule(int netNo) {
+  public ViaRule getViaRule(int netNumber) {
     ViaRule result = null;
     if (workspaceSettings.getManualRuleSelection()) {
       result = board.rules.viaRules.get(this.workspaceSettings.getManualViaRuleIndex());
     }
     if (result == null) {
-      result = board.rules.nets.get(netNo).getNetClass().getViaRule();
+      result = board.rules.nets.get(netNumber).getNetClass().getViaRule();
     }
     return result;
   }
@@ -1062,28 +1062,28 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * <p><strong>Note:</strong> This is for internal use. External code should use {@link
    * #setCurrentLayer(int)} which provides validation and logging.
    *
-   * @param layerNo the layer index to switch to (assumed to be valid)
+   * @param layerIndex the layer index to switch to (assumed to be valid)
    * @see #setCurrentLayer(int)
    */
-  public void setLayer(int layerNo) {
-    Layer currentLayer = board.layerStructure.arr[layerNo];
+  public void setLayer(int layerIndex) {
+    Layer currentLayer = board.layerStructure.arr[layerIndex];
     screenMessages.setLayer(currentLayer.name);
-    workspaceSettings.setLayer(layerNo);
+    workspaceSettings.setLayer(layerIndex);
 
     // Change the selected layer in the select parameter window.
     if ((!this.boardIsReadOnly) && (currentLayer.isSignal)) {
-      this.panel.setSelectedSignalLayer(layerNo);
+      this.panel.setSelectedSignalLayer(layerIndex);
     }
 
     // make the layer visible, if it is invisible
     if (graphicsContext != null) {
-      if (graphicsContext.getLayerVisibility(layerNo) == 0) {
-        graphicsContext.setLayerVisibility(layerNo, 1);
+      if (graphicsContext.getLayerVisibility(layerIndex) == 0) {
+        graphicsContext.setLayerVisibility(layerIndex, 1);
         if (panel != null && panel.boardFrame != null) {
           panel.boardFrame.refreshWindows();
         }
       }
-      graphicsContext.setFullyVisibleLayer(layerNo);
+      graphicsContext.setFullyVisibleLayer(layerIndex);
     }
     repaint();
   }
@@ -1114,30 +1114,30 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * <p>This method supports setting trace width for:
    *
    * <ul>
-   *   <li><strong>All layers:</strong> When layerNo == {@link ComboBoxLayer#ALL_LAYER_INDEX}
-   *   <li><strong>Inner layers only:</strong> When layerNo == {@link
+   *   <li><strong>All layers:</strong> When layerIndex == {@link ComboBoxLayer#ALL_LAYER_INDEX}
+   *   <li><strong>Inner layers only:</strong> When layerIndex == {@link
    *       ComboBoxLayer#INNER_LAYER_INDEX}
-   *   <li><strong>Single layer:</strong> When layerNo is a specific layer index
+   *   <li><strong>Single layer:</strong> When layerIndex is a specific layer index
    * </ul>
    *
    * <p>The manual trace width is only used when manual rule selection is active.
    *
-   * @param layerNo the layer index, or special index for all/inner layers
+   * @param layerIndex the layer index, or special index for all/inner layers
    * @param value the trace half-width to set in board units
    * @see WorkspaceSettings#setManualTraceHalfWidth(int, int)
    * @see ComboBoxLayer
    */
-  public void setManualTraceHalfWidth(int layerNo, int value) {
-    if (layerNo == ComboBoxLayer.ALL_LAYER_INDEX) {
+  public void setManualTraceHalfWidth(int layerIndex, int value) {
+    if (layerIndex == ComboBoxLayer.ALL_LAYER_INDEX) {
       for (int i = 0; i < workspaceSettings.getLayerCount(); i++) {
         this.workspaceSettings.setManualTraceHalfWidth(i, value);
       }
-    } else if (layerNo == ComboBoxLayer.INNER_LAYER_INDEX) {
+    } else if (layerIndex == ComboBoxLayer.INNER_LAYER_INDEX) {
       for (int i = 1; i < workspaceSettings.getLayerCount() - 1; i++) {
         this.workspaceSettings.setManualTraceHalfWidth(i, value);
       }
     } else {
-      this.workspaceSettings.setManualTraceHalfWidth(layerNo, value);
+      this.workspaceSettings.setManualTraceHalfWidth(layerIndex, value);
     }
   }
 
@@ -1279,12 +1279,12 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * <p>If the rats nest is currently displayed, this method recalculates the air wires for the
    * given net and updates the display. Ignored if rats nest is not active or net number is invalid.
    *
-   * @param netNo the net number to recalculate connections for (must be > 0)
+   * @param netNumber the net number to recalculate connections for (must be > 0)
    * @see RatsNest#recalculate(int, BasicBoard)
    */
-  public void updateRatsnest(int netNo) {
-    if (ratsnest != null && netNo > 0) {
-      ratsnest.recalculate(netNo, this.board);
+  public void updateRatsnest(int netNumber) {
+    if (ratsnest != null && netNumber > 0) {
+      ratsnest.recalculate(netNumber, this.board);
       ratsnest.show();
     }
   }
@@ -1295,13 +1295,13 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * <p>This optimized version recalculates connections only for items in the provided collection,
    * which is more efficient when only a subset of items has changed.
    *
-   * @param netNo the net number to recalculate connections for (must be > 0)
+   * @param netNumber the net number to recalculate connections for (must be > 0)
    * @param itemList the collection of items to consider in the recalculation
    * @see RatsNest#recalculate(int, Collection, BasicBoard)
    */
-  public void updateRatsnest(int netNo, Collection<Item> itemList) {
-    if (ratsnest != null && netNo > 0) {
-      ratsnest.recalculate(netNo, itemList, this.board);
+  public void updateRatsnest(int netNumber, Collection<Item> itemList) {
+    if (ratsnest != null && netNumber > 0) {
+      ratsnest.recalculate(netNumber, itemList, this.board);
       ratsnest.show();
     }
   }
@@ -1418,13 +1418,13 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    *
    * <p>Useful for focusing on specific nets while hiding others for clarity.
    *
-   * @param netNo the net number to filter
+   * @param netNumber the net number to filter
    * @param value true to show incompletes, false to hide them
    * @see RatsNest#setFilter(int, boolean)
    */
-  public void setIncompletesFilter(int netNo, boolean value) {
+  public void setIncompletesFilter(int netNumber, boolean value) {
     if (ratsnest != null) {
-      ratsnest.setFilter(netNo, value);
+      ratsnest.setFilter(netNumber, value);
     }
   }
 

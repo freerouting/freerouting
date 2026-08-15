@@ -317,8 +317,8 @@ public class BatchAutorouterThread extends StoppableThread {
 
       // Check if this item should be skipped due to repeated failures
       if (this.board.failureLog.shouldSkip(currentItem)) {
-        Net net = board.rules.nets.get(currentItem.getNetNo(0));
-        String netName = net != null ? net.name : "net#" + currentItem.getNetNo(0);
+        Net net = board.rules.nets.get(currentItem.getNetNumber(0));
+        String netName = net != null ? net.name : "net#" + currentItem.getNetNumber(0);
         FRLogger.debug(
             "Skipping "
                 + currentItem.getClass().getSimpleName()
@@ -354,7 +354,7 @@ public class BatchAutorouterThread extends StoppableThread {
         SortedSet<Item> rippedItemList = new TreeSet<>();
 
         var autorouterResult =
-            autorouteItem(board, currentItem, currentItem.getNetNo(i), rippedItemList, passNo);
+            autorouteItem(board, currentItem, currentItem.getNetNumber(i), rippedItemList, passNo);
         if (autorouterResult.state == AutorouteAttemptState.ROUTED) {
           // The item was successfully routed
           ++routed;
@@ -365,8 +365,8 @@ public class BatchAutorouterThread extends StoppableThread {
           // The item doesn't need to be routed
           ++skipped;
         } else {
-          Net net = board.rules.nets.get(currentItem.getNetNo(i));
-          String netName = net != null ? net.name : "net#" + currentItem.getNetNo(i);
+          Net net = board.rules.nets.get(currentItem.getNetNumber(i));
+          String netName = net != null ? net.name : "net#" + currentItem.getNetNumber(i);
 
           // Record the failure
           this.board.failureLog.recordFailure(
@@ -503,7 +503,7 @@ public class BatchAutorouterThread extends StoppableThread {
       AutorouteEngine autorouteEngine =
           board.initAutoroute(
               routeNetNo,
-              autorouteControl.traceClearanceClassNo,
+              autorouteControl.traceClearanceClassIndex,
               this,
               timeLimit,
               this.retainAutorouteDatabase);

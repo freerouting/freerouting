@@ -25,7 +25,7 @@ class DrillPage implements ExpandableObject {
   private Collection<ExpansionDrill> drills;
 
   /** The number of the net, for which the drills are calculated. */
-  private int netNo = -1;
+  private int netNumber = -1;
 
   /** Creates a new instance of DrillPage. */
   public DrillPage(IntBox shape, RoutingBoard board) {
@@ -56,8 +56,8 @@ class DrillPage implements ExpandableObject {
 
   /** Returns the drills on this page. If attachSmd, drilling to smd pins is allowed. */
   public Collection<ExpansionDrill> getDrills(AutorouteEngine autorouteEngine, boolean attachSmd) {
-    if (this.drills == null || autorouteEngine.getNetNo() != this.netNo) {
-      this.netNo = autorouteEngine.getNetNo();
+    if (this.drills == null || autorouteEngine.getNetNumber() != this.netNumber) {
+      this.netNumber = autorouteEngine.getNetNumber();
       this.drills = new LinkedList<>();
       ShapeSearchTree searchTree = autorouteEngine.autorouteSearchTree;
       Collection<TreeEntry> overlaps = new LinkedList<>();
@@ -69,7 +69,7 @@ class DrillPage implements ExpandableObject {
         if (!(currentEntry.object instanceof Item currentItem)) {
           continue;
         }
-        if (currentItem.isDrillable(this.netNo)) {
+        if (currentItem.isDrillable(this.netNumber)) {
           continue;
         }
         if (currentItem instanceof Pin pin) {
@@ -183,7 +183,7 @@ class DrillPage implements ExpandableObject {
 
   @Override
   public int getIdNo() {
-    // Stable hash of shape and netNo
-    return 31 * shape.getIdNo() + netNo;
+    // Stable hash of shape and netNumber
+    return 31 * shape.getIdNo() + netNumber;
   }
 }

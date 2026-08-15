@@ -90,7 +90,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
   @Override
   public Collection<IncompleteFreeSpaceExpansionRoom> completeShape(
       IncompleteFreeSpaceExpansionRoom room,
-      int netNo,
+      int netNumber,
       SearchTreeObject ignoreObject,
       TileShape ignoreShape) {
     TileShape containedRaw = room.getContainedShape();
@@ -136,7 +136,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
     IntOctagon boundingShape = startShape;
     int roomLayer = room.getLayer();
-    boolean debugAnchor = isCompleteShapeDebugAnchor(netNo, roomLayer, startShape);
+    boolean debugAnchor = isCompleteShapeDebugAnchor(netNumber, roomLayer, startShape);
     int debugStep = 0;
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
     result.add(new IncompleteFreeSpaceExpansionRoom(startShape, roomLayer, shapeToBeContained));
@@ -152,7 +152,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       if (currentNode.boundingShape.intersects(boundingShape)) {
         if (currentNode instanceof Leaf currentLeaf) {
           SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
-          boolean isObstacle = currentObject.isTraceObstacle(netNo);
+          boolean isObstacle = currentObject.isTraceObstacle(netNumber);
 
           int shapeIndex = currentLeaf.shapeIndexInObject;
           int objectLayer = currentObject.shapeLayer(shapeIndex);
@@ -161,7 +161,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
           if (debugAnchor) {
             traceCompleteShapeFilter(
                 debugStep,
-                netNo,
+                netNumber,
                 roomLayer,
                 shapeIndex,
                 objectLayer,
@@ -176,7 +176,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 currentObject.getTreeShape(this, shapeIndex).boundingOctagon();
             if (debugAnchor) {
               traceCompleteShapeCandidate(
-                  debugStep, netNo, roomLayer, currentObject, currentObjectShape);
+                  debugStep, netNumber, roomLayer, currentObject, currentObjectShape);
             }
             Collection<IncompleteFreeSpaceExpansionRoom> newResult = new LinkedList<>();
             IntOctagon newBoundingShape = IntOctagon.EMPTY;
@@ -192,7 +192,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                     if (debugAnchor) {
                       traceCompleteShapeDecision(
                           debugStep,
-                          netNo,
+                          netNumber,
                           roomLayer,
                           "SKIP_BY_IGNORE_SHAPE",
                           overlaps,
@@ -211,7 +211,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 if (debugAnchor) {
                   traceCompleteShapeDecision(
                       debugStep,
-                      netNo,
+                      netNumber,
                       roomLayer,
                       "RESTRAIN",
                       overlaps,
@@ -229,7 +229,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 if (debugAnchor) {
                   traceCompleteShapeDecision(
                       debugStep,
-                      netNo,
+                      netNumber,
                       roomLayer,
                       "KEEP_NON_OVERLAP",
                       overlaps,
@@ -243,7 +243,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             if (hadRoomsBeforeObstacle && newResult.isEmpty()) {
               FRLogger.trace(
                   "COMPLETE_SHAPE_BLOCKED net="
-                      + netNo
+                      + netNumber
                       + ", layer="
                       + roomLayer
                       + ", contained="
@@ -503,7 +503,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
         }
 
         int offsetWidth =
-            this.clearanceCompensationValue(drillItem.clearanceClassNo(), drillItem.shapeLayer(i));
+            this.clearanceCompensationValue(
+                drillItem.clearanceClassIndex(), drillItem.shapeLayer(i));
         offsetWidth += drillHoleClearanceDelta(drillItem, currentShape, drillItem.shapeLayer(i));
         currentTileShape = (TileShape) currentTileShape.offset(offsetWidth);
         result[i] = currentTileShape.boundingOctagon();
@@ -539,8 +540,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
   }
 
   private static boolean isCompleteShapeDebugAnchor(
-      int netNo, int roomLayer, IntOctagon startShape) {
-    return netNo == 77
+      int netNumber, int roomLayer, IntOctagon startShape) {
+    return netNumber == 77
         && roomLayer == 0
         && startShape.leftX == 1762393
         && startShape.bottomY == -1080137
@@ -550,7 +551,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
   private static void traceCompleteShapeFilter(
       int step,
-      int netNo,
+      int netNumber,
       int roomLayer,
       int shapeIndex,
       int objectLayer,
@@ -563,7 +564,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             + ", step="
             + step
             + ", net="
-            + netNo
+            + netNumber
             + ", layer="
             + roomLayer
             + ", shapeIndex="
@@ -587,13 +588,13 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
   }
 
   private static void traceCompleteShapeCandidate(
-      int step, int netNo, int roomLayer, SearchTreeObject object, IntOctagon obstacleShape) {
+      int step, int netNumber, int roomLayer, SearchTreeObject object, IntOctagon obstacleShape) {
     FRLogger.trace(
         "COMPLETE_SHAPE_OBS candidate"
             + ", step="
             + step
             + ", net="
-            + netNo
+            + netNumber
             + ", layer="
             + roomLayer
             + ", obstacle="
@@ -608,7 +609,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
   private static void traceCompleteShapeDecision(
       int step,
-      int netNo,
+      int netNumber,
       int roomLayer,
       String action,
       boolean overlap,
@@ -619,7 +620,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             + ", step="
             + step
             + ", net="
-            + netNo
+            + netNumber
             + ", layer="
             + roomLayer
             + ", action="
@@ -637,6 +638,6 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
   }
 
   private static String obstacleNets(SearchTreeObject object) {
-    return object instanceof Item item ? java.util.Arrays.toString(item.netNoArr) : "[]";
+    return object instanceof Item item ? java.util.Arrays.toString(item.netNumbers) : "[]";
   }
 }

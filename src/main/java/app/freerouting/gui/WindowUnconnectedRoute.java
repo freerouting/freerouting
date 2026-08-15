@@ -57,7 +57,7 @@ public class WindowUnconnectedRoute extends CleanupWindows {
       if (!terminalItemFound) {
         // We have found unconnected route
         if (currentItem.netCount() == 1) {
-          Net currentNet = routingBoard.rules.nets.get(currentItem.getNetNo(0));
+          Net currentNet = routingBoard.rules.nets.get(currentItem.getNetNumber(0));
           if (currentNet != null) {
             UnconnectedRouteInfo currentUnconnectedRouteInfo =
                 new UnconnectedRouteInfo(currentNet, currentConnectedSet);

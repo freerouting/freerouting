@@ -117,19 +117,19 @@ public final class FRLogger {
    * Formats labels for one or more net numbers.
    *
    * @param board the board containing net definitions
-   * @param netNoArr array of net numbers
+   * @param netNumbers array of net numbers
    * @return a comma-separated net label string
    */
-  public static String formatNetLabel(BasicBoard board, int[] netNoArr) {
-    if (netNoArr == null || netNoArr.length == 0) {
+  public static String formatNetLabel(BasicBoard board, int[] netNumbers) {
+    if (netNumbers == null || netNumbers.length == 0) {
       return "No net";
     }
     StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < netNoArr.length; i++) {
+    for (int i = 0; i < netNumbers.length; i++) {
       if (i > 0) {
         sb.append(", ");
       }
-      sb.append(formatNetLabel(board, netNoArr[i]));
+      sb.append(formatNetLabel(board, netNumbers[i]));
     }
     return sb.toString();
   }
@@ -138,17 +138,17 @@ public final class FRLogger {
    * Formats a label for a single net number.
    *
    * @param board the board containing net definitions
-   * @param netNo the net number
+   * @param netNumber the net number
    * @return the net label string
    */
-  public static String formatNetLabel(BasicBoard board, int netNo) {
+  public static String formatNetLabel(BasicBoard board, int netNumber) {
     if (board == null || board.rules == null || board.rules.nets == null) {
-      return "Net #" + netNo + " (Unknown)";
+      return "Net #" + netNumber + " (Unknown)";
     }
-    if (netNo <= board.rules.nets.maxNetNo()) {
-      return board.rules.nets.get(netNo).toString();
+    if (netNumber <= board.rules.nets.maxNetNumber()) {
+      return board.rules.nets.get(netNumber).toString();
     }
-    return "Net #" + netNo + " (Unknown)";
+    return "Net #" + netNumber + " (Unknown)";
   }
 
   /**

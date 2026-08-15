@@ -71,12 +71,14 @@ public final class DsnFile {
       }
     }
     for (ConductionArea currentConductionArea : conductionAreaList) {
-      int layerNo = currentConductionArea.getLayer();
-      if (layerContainsWiresArr[layerNo]) {
+      int layerIndex = currentConductionArea.getLayer();
+      if (layerContainsWiresArr[layerIndex]) {
         continue;
       }
-      final app.freerouting.board.Layer currentLayer = routingBoard.layerStructure.arr[layerNo];
-      if (!currentLayer.isSignal || layerNo == 0 || layerNo == boardLayerStructure.arr.length - 1) {
+      final app.freerouting.board.Layer currentLayer = routingBoard.layerStructure.arr[layerIndex];
+      if (!currentLayer.isSignal
+          || layerIndex == 0
+          || layerIndex == boardLayerStructure.arr.length - 1) {
         continue;
       }
       TileShape[] convexPieces = currentConductionArea.getArea().splitToConvex();
@@ -88,11 +90,11 @@ public final class DsnFile {
         continue;
       }
       for (int i = 0; i < currentConductionArea.netCount(); i++) {
-        final Net currentNet = routingBoard.rules.nets.get(currentConductionArea.getNetNo(i));
+        final Net currentNet = routingBoard.rules.nets.get(currentConductionArea.getNetNumber(i));
         currentNet.setContainsPlane(true);
         nothingChanged = false;
       }
-      changedLayerArr[layerNo] = true;
+      changedLayerArr[layerIndex] = true;
       if (currentConductionArea.getFixedState().ordinal() < FixedState.USER_FIXED.ordinal()) {
         currentConductionArea.setFixedState(FixedState.USER_FIXED);
       }

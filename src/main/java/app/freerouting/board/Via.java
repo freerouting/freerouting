@@ -50,14 +50,14 @@ public class Via extends DrillItem implements Serializable {
   public Via(
       Padstack padstack,
       Point center,
-      int[] netNoArr,
+      int[] netNumbers,
       int clearanceType,
       int idNo,
       int groupNo,
       FixedState fixedState,
       boolean attachAllowed,
       BasicBoard board) {
-    super(center, netNoArr, clearanceType, idNo, groupNo, fixedState, board);
+    super(center, netNumbers, clearanceType, idNo, groupNo, fixedState, board);
     this.padstack = padstack;
     this.attachAllowed = attachAllowed;
   }
@@ -68,8 +68,8 @@ public class Via extends DrillItem implements Serializable {
         new Via(
             padstack,
             getCenter(),
-            netNoArr,
-            clearanceClassNo(),
+            netNumbers,
+            clearanceClassIndex(),
             idNo,
             getComponentNo(),
             getFixedState(),

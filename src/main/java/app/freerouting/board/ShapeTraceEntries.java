@@ -65,7 +65,8 @@ public class ShapeTraceEntries {
     } else {
       // enlarge the shape in 2 steps  for symmetry reasons
       double clOffset =
-          board.clearanceValue(trace.clearanceClassNo(), clClass, trace.getLayer()) + c_offset_add;
+          board.clearanceValue(trace.clearanceClassIndex(), clClass, trace.getLayer())
+              + c_offset_add;
       offsetShape = shape.offset(trace.getHalfWidth());
       offsetShape = offsetShape.offset(clOffset);
     }
@@ -86,8 +87,8 @@ public class ShapeTraceEntries {
             pieces[i],
             trace.getLayer(),
             trace.getHalfWidth(),
-            trace.netNoArr,
-            trace.clearanceClassNo(),
+            trace.netNumbers,
+            trace.clearanceClassIndex(),
             FixedState.UNFIXED);
       }
     }
@@ -103,8 +104,8 @@ public class ShapeTraceEntries {
             startPiece,
             trace.getLayer(),
             trace.getHalfWidth(),
-            trace.netNoArr,
-            trace.clearanceClassNo(),
+            trace.netNumbers,
+            trace.clearanceClassIndex(),
             0,
             0,
             FixedState.UNFIXED,
@@ -118,8 +119,8 @@ public class ShapeTraceEntries {
             endPiece,
             trace.getLayer(),
             trace.getHalfWidth(),
-            trace.netNoArr,
-            trace.clearanceClassNo(),
+            trace.netNumbers,
+            trace.clearanceClassIndex(),
             0,
             0,
             FixedState.UNFIXED,
@@ -225,11 +226,11 @@ public class ShapeTraceEntries {
       // enlarge the shape in 2 steps  for symmetry reasons
       offsetShape = (TileShape) shape.offset(currentTrace.getHalfWidth());
       double clOffset =
-          board.clearanceValue(currentTrace.clearanceClassNo(), clClass, layer) + c_offset_add;
+          board.clearanceValue(currentTrace.clearanceClassIndex(), clClass, layer) + c_offset_add;
       offsetShape = (TileShape) offsetShape.offset(clOffset);
     }
     int edgeCount = shape.borderLineCount();
-    int edgeDiff = entries[1].edgeNo - entries[0].edgeNo;
+    int edgeDiff = entries[1].edgeIndex - entries[0].edgeIndex;
 
     // calculate the polyline of the substitute trace
 
@@ -240,7 +241,7 @@ public class ShapeTraceEntries {
     pieceLines[pieceLines.length - 1] = entries[1].trace.polyline().arr[entries[1].traceLineNo];
     // fill the interior lines of pieceLines with the appropriate edge
     // lines of the offset shape
-    int currentEdgeNo = entries[0].edgeNo % edgeCount;
+    int currentEdgeNo = entries[0].edgeIndex % edgeCount;
     for (int i = 1; i < pieceLines.length - 1; i++) {
       pieceLines[i] = offsetShape.borderLine(currentEdgeNo);
       if (currentEdgeNo == edgeCount - 1) {
@@ -258,8 +259,8 @@ public class ShapeTraceEntries {
         piecePolyline,
         this.layer,
         currentTrace.getHalfWidth(),
-        currentTrace.netNoArr,
-        currentTrace.clearanceClassNo(),
+        currentTrace.netNumbers,
+        currentTrace.clearanceClassIndex(),
         0,
         0,
         FixedState.UNFIXED,
@@ -314,7 +315,7 @@ public class ShapeTraceEntries {
     } else {
       // enlarge the shape in 2 steps  for symmetry reasons
       double clOffset =
-          board.clearanceValue(trace.clearanceClassNo(), this.clClass, trace.getLayer())
+          board.clearanceValue(trace.clearanceClassIndex(), this.clClass, trace.getLayer())
               + c_offset_add;
       offsetShape = (TileShape) shape.offset(trace.getHalfWidth());
       offsetShape = (TileShape) offsetShape.offset(clOffset);
@@ -362,7 +363,7 @@ public class ShapeTraceEntries {
 
               if (contactItem.isShoveFixed()
                   || contactTrace.getHalfWidth() != trace.getHalfWidth()
-                  || contactItem.clearanceClassNo() != contactTrace.clearanceClassNo()) {
+                  || contactItem.clearanceClassIndex() != contactTrace.clearanceClassIndex()) {
                 if (offsetShape.containsInside(endCorner)) {
                   this.foundObstacle = contactItem;
                   return false;
@@ -375,9 +376,10 @@ public class ShapeTraceEntries {
                   viaShape.smallestRadius() - trace.getCompensatedHalfWidth(searchTree);
               if (!searchTree.isClearanceCompensationUsed()) {
                 int viaClearance =
-                    board.clearanceValue(contactItem.clearanceClassNo(), this.clClass, this.layer);
+                    board.clearanceValue(
+                        contactItem.clearanceClassIndex(), this.clClass, this.layer);
                 int traceClearance =
-                    board.clearanceValue(trace.clearanceClassNo(), this.clClass, this.layer);
+                    board.clearanceValue(trace.clearanceClassIndex(), this.clClass, this.layer);
                 if (traceClearance > viaClearance) {
                   viaTraceDiff += viaClearance - traceClearance;
                 }
@@ -432,7 +434,7 @@ public class ShapeTraceEntries {
     FloatPoint currentEntryApprox = null;
     while (currentNode != null) {
       if (currentNode.trace.sharesNetNo(this.ownNetNos)) {
-        currentFromsideNo = currentNode.edgeNo;
+        currentFromsideNo = currentNode.edgeIndex;
         currentEntryApprox = currentNode.entryApprox;
         break;
       }
@@ -441,7 +443,7 @@ public class ShapeTraceEntries {
     this.fromSide = new ShapeEntrySide(currentFromsideNo, currentEntryApprox);
   }
 
-  /** Resorts the intersection points according to fromSideNo and removes redundant points. */
+  /** Resorts the intersection points according to fromSideIndex and removes redundant points. */
   private void resort() {
     int edgeCount = this.shape.borderLineCount();
     if (this.fromSide.no < 0 || fromSide.no >= edgeCount) {
@@ -473,10 +475,10 @@ public class ShapeTraceEntries {
     EntryPoint prev = null;
 
     while (current != null) {
-      if (current.edgeNo > this.fromSide.no) {
+      if (current.edgeIndex > this.fromSide.no) {
         break;
       }
-      if (current.edgeNo == fromSide.no) {
+      if (current.edgeIndex == fromSide.no) {
         if (fromSide.borderIntersection != null) {
           FloatPoint currentProjection =
               current.entryApprox.projectionApprox(shape.borderLine(fromSide.no));
@@ -504,36 +506,37 @@ public class ShapeTraceEntries {
       return;
     }
     prev = listAnchor;
-    int[] prevNetNos = prev.trace.netNoArr;
+    int[] prevNetNos = prev.trace.netNumbers;
 
     current = listAnchor.next;
-    int[] currentNetNos;
+    int[] currentNetNumbers;
     EntryPoint next;
 
     if (current != null) {
-      currentNetNos = current.trace.netNoArr;
+      currentNetNumbers = current.trace.netNumbers;
       next = current.next;
     } else {
       next = null;
-      currentNetNos = new int[0];
+      currentNetNumbers = new int[0];
     }
     EntryPoint beforePrev = null;
     while (next != null) {
-      int[] nextNetNos = next.trace.netNoArr;
-      if (netNosEqual(prevNetNos, currentNetNos) && netNosEqual(currentNetNos, nextNetNos)) {
+      int[] nextNetNos = next.trace.netNumbers;
+      if (netNosEqual(prevNetNos, currentNetNumbers)
+          && netNosEqual(currentNetNumbers, nextNetNos)) {
         prev.next = next;
       } else {
         beforePrev = prev;
         prev = current;
-        prevNetNos = currentNetNos;
+        prevNetNos = currentNetNumbers;
       }
-      currentNetNos = nextNetNos;
+      currentNetNumbers = nextNetNos;
       current = next;
       next = current.next;
     }
 
     // remove nodes of own net at start and end of the list
-    if (current != null && netNosEqual(currentNetNos, ownNetNos)) {
+    if (current != null && netNosEqual(currentNetNumbers, ownNetNos)) {
       prev.next = null;
       if (netNosEqual(prevNetNos, ownNetNos)) {
         if (beforePrev != null) {
@@ -558,9 +561,9 @@ public class ShapeTraceEntries {
       return true;
     }
     EntryPoint currentEntry = listAnchor;
-    int[] currentNetNos = currentEntry.trace.netNoArr;
+    int[] currentNetNumbers = currentEntry.trace.netNumbers;
     int currentLevel;
-    if (netNosEqual(currentNetNos, this.ownNetNos)) {
+    if (netNosEqual(currentNetNumbers, this.ownNetNos)) {
       // ignore own net when calculating the stack level
       currentLevel = 0;
     } else {
@@ -589,8 +592,8 @@ public class ShapeTraceEntries {
 
       while (checkEntry != null) {
         ++nextIndex;
-        int[] checkNetNos = checkEntry.trace.netNoArr;
-        if (netNosEqual(checkNetNos, currentNetNos)) {
+        int[] checkNetNos = checkEntry.trace.netNumbers;
+        if (netNosEqual(checkNetNos, currentNetNumbers)) {
           indexOfLastOccurrenceOfSet = nextIndex;
           lastOwnEntry = checkEntry;
           checkEntry.stackLevel = currentEntry.stackLevel;
@@ -625,7 +628,7 @@ public class ShapeTraceEntries {
             }
           }
         }
-        currentNetNos = nextEntry.trace.netNoArr;
+        currentNetNumbers = nextEntry.trace.netNumbers;
         // remove all entries between currentEntry and nextEntry, because
         // they are irrelevant;
         checkEntry = currentEntry.next;
@@ -707,22 +710,22 @@ public class ShapeTraceEntries {
   }
 
   private void insertEntryPoint(
-      PolylineTrace trace, int traceLineNo, int edgeNo, FloatPoint entryApprox) {
-    EntryPoint newEntry = new EntryPoint(trace, traceLineNo, edgeNo, entryApprox);
+      PolylineTrace trace, int traceLineNo, int edgeIndex, FloatPoint entryApprox) {
+    EntryPoint newEntry = new EntryPoint(trace, traceLineNo, edgeIndex, entryApprox);
     EntryPoint currentPrev = null;
     EntryPoint currentNext = listAnchor;
     // insert the new entry into the sorted list
     while (currentNext != null) {
-      if (currentNext.edgeNo > newEntry.edgeNo) {
+      if (currentNext.edgeIndex > newEntry.edgeIndex) {
         break;
       }
-      if (currentNext.edgeNo == newEntry.edgeNo) {
-        FloatPoint prevCorner = shape.cornerApprox(edgeNo);
+      if (currentNext.edgeIndex == newEntry.edgeIndex) {
+        FloatPoint prevCorner = shape.cornerApprox(edgeIndex);
         FloatPoint nextCorner;
-        if (edgeNo == shape.borderLineCount() - 1) {
+        if (edgeIndex == shape.borderLineCount() - 1) {
           nextCorner = shape.cornerApprox(0);
         } else {
-          nextCorner = shape.cornerApprox(newEntry.edgeNo + 1);
+          nextCorner = shape.cornerApprox(newEntry.edgeIndex + 1);
         }
         // than the projection of the line from prevCorner to
         // next.entryApprox onto the same line.
@@ -755,7 +758,7 @@ public class ShapeTraceEntries {
     while (current != newAnchor) {
       // add edgeCount to current.side to differentiate points
       // before and after the middle of fromSide
-      current.edgeNo += edgeCount;
+      current.edgeIndex += edgeCount;
       prev = current;
       current = prev.next;
     }
@@ -772,13 +775,13 @@ public class ShapeTraceEntries {
     final PolylineTrace trace;
     final int traceLineNo;
     final FloatPoint entryApprox;
-    int edgeNo;
+    int edgeIndex;
     int stackLevel;
     EntryPoint next;
 
-    EntryPoint(PolylineTrace trace, int traceLineNo, int edgeNo, FloatPoint entryApprox) {
+    EntryPoint(PolylineTrace trace, int traceLineNo, int edgeIndex, FloatPoint entryApprox) {
       this.trace = trace;
-      this.edgeNo = edgeNo;
+      this.edgeIndex = edgeIndex;
       this.traceLineNo = traceLineNo;
       this.entryApprox = entryApprox;
       stackLevel = -1; // not yet calculated

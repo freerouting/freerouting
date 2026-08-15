@@ -40,17 +40,21 @@ public final class SortedOrthogonalRoomNeighbours {
   /** Calculates the completed expansion room for orthogonal routing. */
   public static CompleteExpansionRoom calculate(
       ExpansionRoom room, AutorouteEngine autorouteEngine) {
-    int netNo = autorouteEngine.getNetNo();
+    int netNumber = autorouteEngine.getNetNumber();
     SortedOrthogonalRoomNeighbours roomNeighbours =
         SortedOrthogonalRoomNeighbours.calculateNeighbours(
-            room, netNo, autorouteEngine.autorouteSearchTree, autorouteEngine.generateRoomIdNo());
+            room,
+            netNumber,
+            autorouteEngine.autorouteSearchTree,
+            autorouteEngine.generateRoomIdNo());
     if (roomNeighbours == null) {
       return null;
     }
 
     // Check, that each side of the room shape has at least one touching neighbour.
     // Otherwise, improve the room shape by enlarging.
-    boolean edgeRemoved = roomNeighbours.tryRemoveEdge(netNo, autorouteEngine.autorouteSearchTree);
+    boolean edgeRemoved =
+        roomNeighbours.tryRemoveEdge(netNumber, autorouteEngine.autorouteSearchTree);
     CompleteExpansionRoom result = roomNeighbours.completedRoom;
     if (edgeRemoved) {
       autorouteEngine.removeAllDoors(result);
@@ -106,7 +110,7 @@ public final class SortedOrthogonalRoomNeighbours {
    * boundary of the room shape.
    */
   private static SortedOrthogonalRoomNeighbours calculateNeighbours(
-      ExpansionRoom room, int netNo, ShapeSearchTree autorouteSearchTree, int roomIdNo) {
+      ExpansionRoom room, int netNumber, ShapeSearchTree autorouteSearchTree, int roomIdNo) {
     TileShape roomShape = room.getShape();
     if (!(roomShape instanceof IntBox roomBox)) {
       FRLogger.warn("SortedOrthogonalRoomNeighbours.calculate: IntBox expected for roomShape");
@@ -146,8 +150,8 @@ public final class SortedOrthogonalRoomNeighbours {
         continue;
       }
       if ((completedRoom instanceof CompleteFreeSpaceExpansionRoom fsRoom)
-          && !currentObject.isTraceObstacle(netNo)) {
-        fsRoom.calculateTargetDoors(currentEntry, netNo, autorouteSearchTree);
+          && !currentObject.isTraceObstacle(netNumber)) {
+        fsRoom.calculateTargetDoors(currentEntry, netNumber, autorouteSearchTree);
         continue;
       }
       TileShape currentShape =
@@ -418,7 +422,7 @@ public final class SortedOrthogonalRoomNeighbours {
    * Checks that each side of the room shape has at least one touching neighbour. Otherwise, the
    * room shape will be improved by enlarging. Returns true if the room shape was changed.
    */
-  private boolean tryRemoveEdge(int netNo, ShapeSearchTree autorouteSearchTree) {
+  private boolean tryRemoveEdge(int netNumber, ShapeSearchTree autorouteSearchTree) {
     if (!(this.fromRoom instanceof IncompleteFreeSpaceExpansionRoom currentIncompleteRoom)) {
       return false;
     }
@@ -443,7 +447,7 @@ public final class SortedOrthogonalRoomNeighbours {
       FRLogger.trace(
           "ROOM_EDGE_REMOVE start"
               + ", net="
-              + netNo
+              + netNumber
               + ", layer="
               + currentIncompleteRoom.getLayer()
               + ", removeEdge="
@@ -470,7 +474,7 @@ public final class SortedOrthogonalRoomNeighbours {
               FRLogger.trace(
                   "ROOM_EDGE_REMOVE ignore_candidate"
                       + ", net="
-                      + netNo
+                      + netNumber
                       + ", layer="
                       + currentIncompleteRoom.getLayer()
                       + ", removeEdge="
@@ -488,7 +492,7 @@ public final class SortedOrthogonalRoomNeighbours {
                 FRLogger.trace(
                     "ROOM_EDGE_REMOVE ignore_selected"
                         + ", net="
-                        + netNo
+                        + netNumber
                         + ", layer="
                         + currentIncompleteRoom.getLayer()
                         + ", removeEdge="
@@ -503,7 +507,7 @@ public final class SortedOrthogonalRoomNeighbours {
                 FRLogger.trace(
                     "ROOM_EDGE_REMOVE ignore_tie"
                         + ", net="
-                        + netNo
+                        + netNumber
                         + ", layer="
                         + currentIncompleteRoom.getLayer()
                         + ", removeEdge="
@@ -522,7 +526,7 @@ public final class SortedOrthogonalRoomNeighbours {
       FRLogger.trace(
           "ROOM_EDGE_REMOVE ignore_summary"
               + ", net="
-              + netNo
+              + netNumber
               + ", layer="
               + currentIncompleteRoom.getLayer()
               + ", removeEdge="
@@ -541,11 +545,11 @@ public final class SortedOrthogonalRoomNeighbours {
               currentIncompleteRoom.getLayer(),
               currentIncompleteRoom.getContainedShape());
       Collection<IncompleteFreeSpaceExpansionRoom> newRooms =
-          autorouteSearchTree.completeShape(enlargedRoom, netNo, ignoreObject, ignoreShape);
+          autorouteSearchTree.completeShape(enlargedRoom, netNumber, ignoreObject, ignoreShape);
       FRLogger.trace(
           "ROOM_EDGE_REMOVE complete_shape"
               + ", net="
-              + netNo
+              + netNumber
               + ", layer="
               + currentIncompleteRoom.getLayer()
               + ", removeEdge="
@@ -561,7 +565,7 @@ public final class SortedOrthogonalRoomNeighbours {
           FRLogger.trace(
               "ROOM_EDGE_REMOVE applied"
                   + ", net="
-                  + netNo
+                  + netNumber
                   + ", layer="
                   + currentIncompleteRoom.getLayer()
                   + ", removeEdge="

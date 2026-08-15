@@ -150,10 +150,10 @@ public final class RulesReader {
     if (rules == null) {
       return;
     }
-    int layerNo = -1;
+    int layerIndex = -1;
     if (layerName != null) {
-      layerNo = board.layerStructure.getNo(layerName);
-      if (layerNo < 0) {
+      layerIndex = board.layerStructure.getNo(layerName);
+      if (layerIndex < 0) {
         FRLogger.warn("RulesReader.applyRules: layer not found: '" + layerName + "'");
       }
     }
@@ -162,14 +162,14 @@ public final class RulesReader {
     for (Rule rule : rules) {
       if (rule instanceof Rule.WidthRule widthRule) {
         int traceHalfwidth = (int) Math.round(coordinateTransform.dsnToBoard(widthRule.value) / 2);
-        if (layerNo < 0) {
+        if (layerIndex < 0) {
           board.rules.setDefaultTraceHalfWidths(traceHalfwidth);
         } else {
-          board.rules.setDefaultTraceHalfWidth(layerNo, traceHalfwidth);
+          board.rules.setDefaultTraceHalfWidth(layerIndex, traceHalfwidth);
         }
       } else if (rule instanceof Rule.ClearanceRule clearanceRule) {
         Structure.setClearanceRule(
-            clearanceRule, layerNo, coordinateTransform, board.rules, stringQuote);
+            clearanceRule, layerIndex, coordinateTransform, board.rules, stringQuote);
       }
     }
   }

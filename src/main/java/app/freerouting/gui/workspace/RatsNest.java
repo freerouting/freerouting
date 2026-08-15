@@ -106,7 +106,7 @@ public class RatsNest {
     this.drc = new DesignRulesChecker(board, null);
     this.drc.calculateAllIncompletes();
 
-    int maxNetNo = board.rules.nets.maxNetNo();
+    int maxNetNo = board.rules.nets.maxNetNumber();
     this.isFiltered = new boolean[maxNetNo];
     for (int i = 0; i < maxNetNo; i++) {
       isFiltered[i] = false;
@@ -128,12 +128,12 @@ public class RatsNest {
    * <p>The recalculation determines which items on the net are electrically connected and which
    * require routing, updating the airline display accordingly.
    *
-   * @param netNo the net number to recalculate (must be valid)
+   * @param netNumber the net number to recalculate (must be valid)
    * @param board the board containing the items (provided for context)
    * @see DesignRulesChecker#recalculateNetIncompletes(int)
    */
-  public void recalculate(int netNo, BasicBoard board) {
-    drc.recalculateNetIncompletes(netNo);
+  public void recalculate(int netNumber, BasicBoard board) {
+    drc.recalculateNetIncompletes(netNumber);
   }
 
   /**
@@ -151,13 +151,13 @@ public class RatsNest {
    * <p>The item collection should include all items on the net that may have changed connectivity
    * status.
    *
-   * @param netNo the net number to recalculate
+   * @param netNumber the net number to recalculate
    * @param itemList the collection of items to analyze for this net
    * @param board the board context (provided for completeness)
    * @see DesignRulesChecker#recalculateNetIncompletes(int, Collection)
    */
-  public void recalculate(int netNo, Collection<Item> itemList, BasicBoard board) {
-    drc.recalculateNetIncompletes(netNo, itemList);
+  public void recalculate(int netNumber, Collection<Item> itemList, BasicBoard board) {
+    drc.recalculateNetIncompletes(netNumber, itemList);
   }
 
   /**
@@ -182,13 +182,13 @@ public class RatsNest {
   public int incompleteCount() {
     int result = drc.getIncompleteCount();
     StringBuilder perNet = new StringBuilder();
-    for (int netNo = 1; netNo <= this.isFiltered.length; netNo++) {
-      int netIncomplete = drc.getIncompleteCount(netNo);
+    for (int netNumber = 1; netNumber <= this.isFiltered.length; netNumber++) {
+      int netIncomplete = drc.getIncompleteCount(netNumber);
       if (netIncomplete > 0) {
         if (!perNet.isEmpty()) {
           perNet.append(',');
         }
-        perNet.append(netNo).append('=').append(netIncomplete);
+        perNet.append(netNumber).append('=').append(netIncomplete);
       }
     }
     FRLogger.trace(
@@ -220,18 +220,18 @@ public class RatsNest {
    *   <li>Validating that critical nets are fully routed
    * </ul>
    *
-   * @param netNo the net number to check
+   * @param netNumber the net number to check
    * @return the count of airlines for this net, or 0 if fully connected
    * @see #incompleteCount()
    * @see DesignRulesChecker#getIncompleteCount(int)
    */
-  public int incompleteCount(int netNo) {
-    int result = drc.getIncompleteCount(netNo);
+  public int incompleteCount(int netNumber) {
+    int result = drc.getIncompleteCount(netNumber);
     FRLogger.trace(
         "RatsNest.incompleteCount",
         "net_incomplete_count",
-        "RatsNest net=" + netNo + " incompleteCount=" + result,
-        "Net #" + netNo,
+        "RatsNest net=" + netNumber + " incompleteCount=" + result,
+        "Net #" + netNumber,
         new Point[0]);
     return result;
   }
@@ -282,13 +282,13 @@ public class RatsNest {
    * <p><strong>Example:</strong> A return value of +50 means the trace is 50 units longer than the
    * maximum allowed length.
    *
-   * @param netNo the net number to check
+   * @param netNumber the net number to check
    * @return positive if too long, negative if too short, 0 if valid or unrestricted
    * @see #lengthViolationCount()
    * @see DesignRulesChecker#getLengthViolation(int)
    */
-  public double getLengthViolation(int netNo) {
-    return drc.getLengthViolation(netNo);
+  public double getLengthViolation(int netNumber) {
+    return drc.getLengthViolation(netNumber);
   }
 
   /**
@@ -407,16 +407,16 @@ public class RatsNest {
    * <p>If the net number is out of valid range (less than 1 or greater than the maximum net
    * number), the operation is silently ignored.
    *
-   * @param netNo the net number to filter (1-based indexing)
+   * @param netNumber the net number to filter (1-based indexing)
    * @param value true to hide the net's airlines, false to show them
    * @see #isHidden()
    * @see #draw(Graphics, GraphicsContext)
    */
-  public void setFilter(int netNo, boolean value) {
-    if (netNo < 1 || netNo > isFiltered.length) {
+  public void setFilter(int netNumber, boolean value) {
+    if (netNumber < 1 || netNumber > isFiltered.length) {
       return;
     }
-    isFiltered[netNo - 1] = value;
+    isFiltered[netNumber - 1] = value;
   }
 
   /**

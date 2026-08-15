@@ -61,11 +61,11 @@ public class PowerPlaneValidationTest {
 
     // Add net
     Net gndNet = board.rules.nets.add("GND", 1, true);
-    int[] netNoArr = new int[] {gndNet.netNumber};
+    int[] netNumbers = new int[] {gndNet.netNumber};
 
     // Add a conduction area to GND layer (layer index 1)
     Area area = TileShape.getInstance(100, 100, 10000, 10000);
-    board.insertConductionArea(area, 1, netNoArr, 0, false, FixedState.UNFIXED);
+    board.insertConductionArea(area, 1, netNumbers, 0, false, FixedState.UNFIXED);
 
     HeadlessBoardManager manager = new HeadlessBoardManager(null);
     manager.board = board;
@@ -84,16 +84,16 @@ public class PowerPlaneValidationTest {
 
     // Add net
     Net gndNet = board.rules.nets.add("GND", 1, true);
-    int[] netNoArr = new int[] {gndNet.netNumber};
+    int[] netNumbers = new int[] {gndNet.netNumber};
 
     // Add conduction area so that "at least one conduction area" check passes
     Area area = TileShape.getInstance(100, 100, 10000, 10000);
-    board.insertConductionArea(area, 1, netNoArr, 0, false, FixedState.UNFIXED);
+    board.insertConductionArea(area, 1, netNumbers, 0, false, FixedState.UNFIXED);
 
     // Insert trace on GND layer (layer index 1) using direct PolylineTrace constructor
     Polyline polyline = new Polyline(new IntPoint(500, 500), new IntPoint(1000, 1000));
     PolylineTrace trace =
-        new PolylineTrace(polyline, 1, 10, netNoArr, 0, 0, 0, FixedState.UNFIXED, board);
+        new PolylineTrace(polyline, 1, 10, netNumbers, 0, 0, 0, FixedState.UNFIXED, board);
     board.insertItem(trace);
 
     HeadlessBoardManager manager = new HeadlessBoardManager(null);
