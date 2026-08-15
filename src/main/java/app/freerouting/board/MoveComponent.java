@@ -87,7 +87,7 @@ public class MoveComponent {
       double currentProjection = compareVector.scalarProduct(translateVector);
       itemGroupArr[i] = new SortedItem(currentItem, currentProjection);
     }
-    // sort the items, in the direction of p_translate_vector, so that
+    // sort the items, in the direction of translateVector, so that
     // the items in front come first.
     Arrays.sort(itemGroupArr);
   }

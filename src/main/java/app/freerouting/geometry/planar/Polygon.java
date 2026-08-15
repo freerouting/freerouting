@@ -16,7 +16,7 @@ public class Polygon implements Serializable {
   private final Collection<Point> corners;
 
   /**
-   * Creates a polygon from p_point_arr. Multiple points and points, which are collinear with its
+   * Creates a polygon from pointArr. Multiple points and points, which are collinear with its
    * previous and next point will be removed.
    */
   public Polygon(Point[] pointArr) {

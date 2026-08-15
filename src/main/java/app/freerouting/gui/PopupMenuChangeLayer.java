@@ -18,7 +18,7 @@ class PopupMenuChangeLayer extends JMenu {
     LayerStructure layerStructure =
         boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure;
     this.itemArr = new LayermenuItem[layerStructure.signalLayerCount()];
-    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     this.setText(tm.getText("change_layer"));
     this.setToolTipText(tm.getText("change_layer_tooltip"));
@@ -33,7 +33,7 @@ class PopupMenuChangeLayer extends JMenu {
     }
   }
 
-  /** Disables the item with index p_no and enables all other items. */
+  /** Disables the item with index no and enables all other items. */
   void disableItem(int no) {
     for (int i = 0; i < itemArr.length; i++) {
       this.itemArr[i].setEnabled(i != no);
@@ -50,7 +50,7 @@ class PopupMenuChangeLayer extends JMenu {
           _ -> {
             final BoardPanel boardPanel = boardFrame.boardPanel;
             if (boardPanel.boardHandling.changeLayerAction(layerNo)) {
-              TextManager tm = new TextManager(PopupMenuChangeLayer.class, boardFrame.get_locale());
+              TextManager tm = new TextManager(PopupMenuChangeLayer.class, boardFrame.getLocale());
               String layerName =
                   boardPanel.boardHandling.getRoutingBoard().layerStructure.arr[layerNo].name;
               boardPanel.screenMessages.setStatusMessage(

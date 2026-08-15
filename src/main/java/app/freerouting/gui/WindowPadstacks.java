@@ -20,7 +20,7 @@ public class WindowPadstacks extends WindowObjectListWithFilter {
   /** Creates a new instance of PadstacksWindow. */
   public WindowPadstacks(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("padstacks"));
   }

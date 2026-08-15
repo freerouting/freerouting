@@ -119,8 +119,8 @@ public class MazeSearchAlgo {
   }
 
   /**
-   * Initializes a new instance of MazeSearchAlgo for searching a connection between p_start_items
-   * and p_destination_items. Returns null, if the initialisation failed.
+   * Initializes a new instance of MazeSearchAlgo for searching a connection between startItems and
+   * destinationItems. Returns null, if the initialisation failed.
    */
   public static MazeSearchAlgo getInstance(
       Set<Item> startItems,
@@ -196,7 +196,7 @@ public class MazeSearchAlgo {
   }
 
   /**
-   * Returns the perpendicular projection of p_from_segment onto p_to_segment. Returns null, if the
+   * Returns the perpendicular projection of fromSegment onto toSegment. Returns null, if the
    * projection is empty.
    */
   private static FloatLine segmentProjection(FloatLine fromSegment, FloatLine toSegment) {
@@ -489,7 +489,7 @@ public class MazeSearchAlgo {
       } else if (!listElement.alreadyChecked
           && listElement.door.getDimension() == 1
           && !currentDoorIsSmall) {
-        // The algorithm below works only, if p_location is on the border of p_room_shape.
+        // The algorithm below works only, if location is on the border of roomShape.
         // That is only the case for 1 dimensional doors.
         // For small doors the check is done in check_leaving_via below.
 
@@ -695,7 +695,7 @@ public class MazeSearchAlgo {
       }
       FloatPoint connectionPoint = targetShape.nearestPointApprox(shapeEntryMiddle);
       if (!nextRoomIsThick) {
-        // check the line from p_shape_entry_middle to the nearest point.
+        // check the line from shapeEntryMiddle to the nearest point.
         int[] currentNetNoArr = new int[1];
         currentNetNoArr[0] = this.ctrl.netNo;
         int currentLayer = listElement.nextRoom.getLayer();
@@ -752,8 +752,8 @@ public class MazeSearchAlgo {
             && lineSections.length == 1
             && toDoor.firstRoom instanceof CompleteFreeSpaceExpansionRoom
             && toDoor.secondRoom instanceof CompleteFreeSpaceExpansionRoom) {
-          // check entering the p_to_door at an acute corner of the shape of
-          // p_list_element.nextRoom
+          // check entering the toDoor at an acute corner of the shape of
+          // listElement.nextRoom
           FloatPoint shapeEntryMiddle = newShapeEntry.a.middlePoint(newShapeEntry.b);
           TileShape roomShape = listElement.nextRoom.getShape();
           if (roomShape.minWidth() < 2 * halfWidth) {
@@ -770,7 +770,7 @@ public class MazeSearchAlgo {
         if (toDoor.dimension == 1
             && i == 0
             && lineSections[0].b.distanceSquare(lineSections[0].a) < 1) {
-          // p_to_door is small belonging to a via or thin room
+          // toDoor is small belonging to a via or thin room
           continue;
         }
         newShapeEntry = segmentProjection(listElement.shapeEntry, lineSections[i]);
@@ -786,7 +786,7 @@ public class MazeSearchAlgo {
     return somethingExpanded;
   }
 
-  /** Checks, if the width p_door is big enough for a trace with width p_trace_width. */
+  /** Checks, if the width door is big enough for a trace with width traceWidth. */
   private boolean doorIsSmall(ExpansionDoor door, double traceWidth) {
     if (door.dimension == 1
         || door.firstRoom instanceof CompleteFreeSpaceExpansionRoom
@@ -1814,9 +1814,8 @@ public class MazeSearchAlgo {
   }
 
   /**
-   * Checks, if the next room can be entered if the door of p_list_element is small. If
-   * p_ignore_item != null, p_ignore_item and all other items directly connected to p_ignore_item
-   * are ignored in the check.
+   * Checks, if the next room can be entered if the door of listElement is small. If ignoreItem !=
+   * null, ignoreItem and all other items directly connected to ignoreItem are ignored in the check.
    */
   private boolean enterThroughSmallDoor(MazeListElement listElement, Item ignoreItem) {
     if (listElement.door.getDimension() != 1) {

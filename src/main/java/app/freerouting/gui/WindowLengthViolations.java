@@ -18,7 +18,7 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
   /** Creates a new instance of WindowLengthViolations. */
   public WindowLengthViolations(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
     this.listEmptyMessage.setText(tm.getText("listEmpty"));

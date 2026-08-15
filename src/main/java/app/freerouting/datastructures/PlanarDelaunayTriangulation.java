@@ -122,10 +122,10 @@ public class PlanarDelaunayTriangulation {
   }
 
   /**
-   * Splits p_triangle into 3 new triangles at p_corner, if p_corner lies in the interior. If
-   * p_corner lies on the border, p_triangle and the corresponding neighbour are split into 2 new
-   * triangles each at p_corner. If p_corner lies outside this triangle or on a corner, nothing is
-   * split. In this case the function returns false.
+   * Splits triangle into 3 new triangles at corner, if corner lies in the interior. If corner lies
+   * on the border, triangle and the corresponding neighbour are split into 2 new triangles each at
+   * corner. If corner lies outside this triangle or on a corner, nothing is split. In this case the
+   * function returns false.
    */
   private boolean split(Triangle triangle, Corner corner) {
 
@@ -143,7 +143,7 @@ public class PlanarDelaunayTriangulation {
       }
       if (currentSide == Side.ON_THE_RIGHT) {
         // corner is outside this triangle
-        FRLogger.warn("PlanarDelaunayTriangulation.split: p_corner is outside");
+        FRLogger.warn("PlanarDelaunayTriangulation.split: corner is outside");
         return false;
       } else if (currentSide == Side.COLLINEAR) {
         if (containingEdge != null) {
@@ -315,9 +315,9 @@ public class PlanarDelaunayTriangulation {
     }
 
     /**
-     * The function returns Side.ON_THE_LEFT, if this corner is on the left of the line from p_1 to
-     * p_2; Side.ON_THE_RIGHT, if this corner is on the right of the line from p_1 to p_2; and
-     * Side.COLLINEAR, if this corner is collinear with p_1 and p_2.
+     * The function returns Side.ON_THE_LEFT, if this corner is on the left of the line from 1 to 2;
+     * Side.ON_THE_RIGHT, if this corner is on the right of the line from 1 to 2; and
+     * Side.COLLINEAR, if this corner is collinear with 1 and 2.
      */
     public Side sideOf(Corner p1, Corner p2) {
       return this.coor.sideOf(p1.coor, p2.coor);
@@ -646,7 +646,7 @@ public class PlanarDelaunayTriangulation {
     /** Gets the corner with index no. */
     public Corner getCorner(int no) {
       if (no < 0 || no >= 3) {
-        FRLogger.warn("Triangle.get_corner: p_no out of range");
+        FRLogger.warn("Triangle.get_corner: no out of range");
         return null;
       }
       Edge currentEdge = edgeLines[no];
@@ -675,7 +675,7 @@ public class PlanarDelaunayTriangulation {
         }
       }
       if (edgeLineNo < 0) {
-        FRLogger.warn("Triangle.opposite_corner: p_edge_line not found");
+        FRLogger.warn("Triangle.opposite_corner: edgeLine not found");
         return null;
       }
       Edge nextEdge = this.edgeLines[(edgeLineNo + 1) % 3];

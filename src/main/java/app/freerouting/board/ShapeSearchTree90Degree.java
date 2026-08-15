@@ -24,12 +24,11 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
   }
 
   /**
-   * Calculates a new incomplete room with a maximal TileShape contained in the shape of p_room,
-   * which may overlap only with items of the input net on the input layer.
-   * p_room.get_contained_shape() will be contained in the shape of the result room. If that is not
-   * possible, several rooms are returned with shapes, which intersect with
-   * p_room.get_contained_shape(). The result room is not yet complete, because its doors are not
-   * yet calculated.
+   * Calculates a new incomplete room with a maximal TileShape contained in the shape of room, which
+   * may overlap only with items of the input net on the input layer. room.get_contained_shape()
+   * will be contained in the shape of the result room. If that is not possible, several rooms are
+   * returned with shapes, which intersect with room.get_contained_shape(). The result room is not
+   * yet complete, because its doors are not yet calculated.
    */
   @Override
   public Collection<IncompleteFreeSpaceExpansionRoom> completeShape(
@@ -38,7 +37,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
       SearchTreeObject ignoreObject,
       TileShape ignoreShape) {
     if (!(room.getContainedShape() instanceof IntBox shapeToBeContained)) {
-      FRLogger.warn("BoxShapeSearchTree.complete_shape: unexpected p_shape_to_be_contained");
+      FRLogger.warn("BoxShapeSearchTree.complete_shape: unexpected shapeToBeContained");
       return new LinkedList<>();
     }
     if (this.root == null) {
@@ -47,7 +46,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     IntBox startShape = board.getBoundingBox();
     if (room.getShape() != null) {
       if (!(room.getShape() instanceof IntBox)) {
-        FRLogger.warn("BoxShapeSearchTree.complete_shape: p_start_shape of type IntBox expected");
+        FRLogger.warn("BoxShapeSearchTree.complete_shape: startShape of type IntBox expected");
         return new LinkedList<>();
       }
       startShape = ((IntBox) room.getShape()).intersection(startShape);
@@ -187,25 +186,25 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
   }
 
   /**
-   * Restrains the shape of p_incomplete_room to a box shape, which does not intersect with the
-   * interior of p_obstacle_shape. p_incomplete_room.get_contained_shape() must be contained in the
-   * shape of the result room.
+   * Restrains the shape of incompleteRoom to a box shape, which does not intersect with the
+   * interior of obstacleShape. incompleteRoom.get_contained_shape() must be contained in the shape
+   * of the result room.
    */
   private Collection<IncompleteFreeSpaceExpansionRoom> restrainShape(
       IncompleteFreeSpaceExpansionRoom incompleteRoom, IntBox obstacleShape) {
-    // Search the edge line of p_obstacle_shape, so that p_shape_to_be_contained
+    // Search the edge line of obstacleShape, so that shapeToBeContained
     // are on the right side of this line, and that the line segment
-    // intersects with the interior of p_shape.
+    // intersects with the interior of shape.
     // If there are more than 1 such lines take the line which is
     // furthest away from the shapeToBeContained
-    // Then intersect p_shape with the halfplane defined by the
+    // Then intersect shape with the halfplane defined by the
     // opposite of this line.
 
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
 
     TileShape containedShape = incompleteRoom.getContainedShape();
     if (containedShape == null || containedShape.isEmpty()) {
-      FRLogger.trace("BoxShapeSearchTree.restrain_shape: p_shape_to_be_contained is empty");
+      FRLogger.trace("BoxShapeSearchTree.restrain_shape: shapeToBeContained is empty");
       return result;
     }
     IntBox roomShape = incompleteRoom.getShape().boundingBox();
@@ -218,7 +217,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
         && roomShape.ur.y > obstacleShape.ll.y
         && roomShape.ll.y < obstacleShape.ur.y) {
       // The right line segment of the obstacleShape intersects the interior of
-      // p_shape
+      // shape
       int currentDistance = shapeToBeContained.ll.x - obstacleShape.ur.x;
       if (currentDistance > cutLineDistance) {
         cutLineDistance = currentDistance;
@@ -231,7 +230,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
         && roomShape.ur.y > obstacleShape.ll.y
         && roomShape.ll.y < obstacleShape.ur.y) {
       // The left line segment of the obstacleShape intersects the interior of
-      // p_shape
+      // shape
       int currentDistance = obstacleShape.ll.x - shapeToBeContained.ur.x;
       if (currentDistance > cutLineDistance) {
         cutLineDistance = currentDistance;
@@ -244,7 +243,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
         && roomShape.ur.x > obstacleShape.ll.x
         && roomShape.ll.x < obstacleShape.ur.x) {
       // The lower line segment of the obstacleShape intersects the interior of
-      // p_shape
+      // shape
       int currentDistance = obstacleShape.ll.y - shapeToBeContained.ur.y;
       if (currentDistance > cutLineDistance) {
         cutLineDistance = currentDistance;
@@ -257,7 +256,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
         && roomShape.ur.x > obstacleShape.ll.x
         && roomShape.ll.x < obstacleShape.ur.x) {
       // The upper line segment of the obstacleShape intersects the interior of
-      // p_shape
+      // shape
       int currentDistance = shapeToBeContained.ll.y - obstacleShape.ur.y;
       if (currentDistance > cutLineDistance) {
         cutLineDistance = currentDistance;
@@ -273,7 +272,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     }
 
     // Now shapeToBeContained intersects with the obstacleShape.
-    // shapeToBeContained and p_shape evtl. need to be divided in two.
+    // shapeToBeContained and shape evtl. need to be divided in two.
     IntBox is = shapeToBeContained.intersection(obstacleShape);
     if (is.isEmpty()) {
       FRLogger.warn(

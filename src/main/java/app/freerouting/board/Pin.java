@@ -40,8 +40,8 @@ public class Pin extends DrillItem implements Serializable {
   private transient Shape[] precalculatedShapes;
 
   /**
-   * Creates a new instance of Pin with the input parameters. (p_to_layer - p_from_layer + 1) shapes
-   * must be provided. p_pin_no is the number of the pin in its component (starting with 0).
+   * Creates a new instance of Pin with the input parameters. (toLayer - fromLayer + 1) shapes must
+   * be provided. pinNo is the number of the pin in its component (starting with 0).
    */
   Pin(
       int componentNo,
@@ -239,7 +239,7 @@ public class Pin extends DrillItem implements Serializable {
     return this.precalculatedShapes[index];
   }
 
-  /** Returns the layer of the padstack shape corresponding to the shape with index p_index. */
+  /** Returns the layer of the padstack shape corresponding to the shape with index index. */
   int getPadstackLayer(int index) {
     Padstack padstack = getPadstack();
     Component component = board.components.get(this.getComponentNo());
@@ -253,7 +253,7 @@ public class Pin extends DrillItem implements Serializable {
   }
 
   /**
-   * Calculates the allowed trace exit directions of the shape of this padstack on layer p_layer
+   * Calculates the allowed trace exit directions of the shape of this padstack on layer layer
    * together with the minimal trace line lengths into their directions. Currently implemented only
    * for box shapes, where traces are allowed to exit the pad only on the small sides.
    */
@@ -429,7 +429,7 @@ public class Pin extends DrillItem implements Serializable {
     return filter.isSelected(ItemSelectionFilter.SelectableChoices.PINS);
   }
 
-  /** Swaps the nets of this pin and p_other. Returns false on error. */
+  /** Swaps the nets of this pin and other. Returns false on error. */
   public boolean swap(Pin other) {
     if (this.netCount() > 1 || other.netCount() > 1) {
       FRLogger.warn("Pin.swap not yet implemented for pins belonging to more than 1 net ");
@@ -483,7 +483,7 @@ public class Pin extends DrillItem implements Serializable {
     return result;
   }
 
-  /** Returns the smallest width of the pin shape on layer p_layer. */
+  /** Returns the smallest width of the pin shape on layer layer. */
   public double getMinWidth(int layer) {
     int padstackLayer = getPadstackLayer(layer - this.firstLayer());
     Shape padstackShape = this.getPadstack().getShape(padstackLayer);
@@ -500,7 +500,7 @@ public class Pin extends DrillItem implements Serializable {
   }
 
   /**
-   * Returns the neckdown half width for traces on p_layer. The neckdown width is used, when the pin
+   * Returns the neckdown half width for traces on layer. The neckdown width is used, when the pin
    * width is smaller than the trace width to enter or leave the pin with a trace.
    */
   public int getTraceNeckdownHalfwidth(int layer) {
@@ -508,7 +508,7 @@ public class Pin extends DrillItem implements Serializable {
     return (int) result;
   }
 
-  /** Returns the largest width of the pin shape on layer p_layer. */
+  /** Returns the largest width of the pin shape on layer layer. */
   public double getMaxWidth(int layer) {
     int padstackLayer = getPadstackLayer(layer - this.firstLayer());
     Shape padstackShape = this.getPadstack().getShape(padstackLayer);
@@ -558,9 +558,8 @@ public class Pin extends DrillItem implements Serializable {
   }
 
   /**
-   * Calculates the nearest exit restriction direction for changing p_trace_polyline.
-   * p_trace_polyline is assumed to start at the pin center. Returns null, if there is no matching
-   * exit restrictions.
+   * Calculates the nearest exit restriction direction for changing tracePolyline. tracePolyline is
+   * assumed to start at the pin center. Returns null, if there is no matching exit restrictions.
    */
   Direction calcNearestExitRestrictionDirection(
       Polyline tracePolyline, int traceHalfWidth, int layer) {
@@ -605,7 +604,7 @@ public class Pin extends DrillItem implements Serializable {
       if (currentExitCornerDistance + tolerance < minExitCornerDistance) {
         newNearestCornerFound = true;
       } else if (currentExitCornerDistance < minExitCornerDistance + tolerance) {
-        // the distances are near equal, compare to the previous corners of p_trace_polyline
+        // the distances are near equal, compare to the previous corners of tracePolyline
         for (int i = 1; i < tracePolyline.cornerCount(); i++) {
           FloatPoint currentTraceCorner = tracePolyline.cornerApprox(i);
           double currentTraceCornerDistance = currentTraceCorner.distanceSquare(currentExitCorner);
@@ -628,7 +627,7 @@ public class Pin extends DrillItem implements Serializable {
   }
 
   /**
-   * Calculates the nearest trace exit point of the pin on p_layer. Returns null, if the pin has no
+   * Calculates the nearest trace exit point of the pin on layer. Returns null, if the pin has no
    * trace exit restrictions.
    */
   public FloatPoint nearestTraceExitCorner(FloatPoint fromPoint, int traceHalfWidth, int layer) {

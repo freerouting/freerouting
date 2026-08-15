@@ -19,8 +19,8 @@ public final class OptViaAlgo {
 
   /**
    * Optimizes the location of a via connected to at most 2 traces according to the trace costs on
-   * the layers of the connected traces If p_trace_cost_arr == null, the horizontal and vertical
-   * trace costs will be set to 1. Returns false, if the via was not changed.
+   * the layers of the connected traces If traceCostArr == null, the horizontal and vertical trace
+   * costs will be set to 1. Returns false, if the via was not changed.
    */
   public static boolean optViaLocation(
       RoutingBoard board,
@@ -288,7 +288,7 @@ public final class OptViaAlgo {
   }
 
   /**
-   * Tries to move the via into the direction of p_to_location as far as possible Return the new
+   * Tries to move the via into the direction of toLocation as far as possible Return the new
    * location of the via, or null, if no move was possible.
    */
   private static Point repositionVia(
@@ -371,7 +371,7 @@ public final class OptViaAlgo {
     Point fromLocation = via.getCenter();
 
     if (fromLocation.equals(toLocation)) {
-      FRLogger.trace("OptViaAlgo.reposition_via: fromLocation equal p_to_location");
+      FRLogger.trace("OptViaAlgo.reposition_via: fromLocation equal toLocation");
       return false;
     }
 
@@ -476,7 +476,7 @@ public final class OptViaAlgo {
             floatFirstTraceFromCorner, secondTraceCosts.horizontal, secondTraceCosts.vertical);
 
     if (currentWeightedDistance1 > currentWeightedDistance2) {
-      // try to move the via in direction of p_first_trace_from_corner
+      // try to move the via in direction of firstTraceFromCorner
       result =
           repositionVia(
               board,
@@ -498,7 +498,7 @@ public final class OptViaAlgo {
             floatSecondTraceFromCorner, firstTraceCosts.horizontal, firstTraceCosts.vertical);
 
     if (currentWeightedDistance1 > currentWeightedDistance2) {
-      // try to move the via in direction of p_second_trace_from_corner
+      // try to move the via in direction of secondTraceFromCorner
       result =
           repositionVia(
               board,

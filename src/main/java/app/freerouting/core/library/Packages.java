@@ -14,8 +14,8 @@ public class Packages implements Serializable {
   private final Vector<Package> packageArr = new Vector<>();
 
   /**
-   * Creates a new instance of Packages. p_padstack_list is the list of padstacks used for the pins
-   * of the packages in this data structure.
+   * Creates a new instance of Packages. padstackList is the list of padstacks used for the pins of
+   * the packages in this data structure.
    */
   public Packages(Padstacks padstackList) {
     this.padstackList = padstackList;

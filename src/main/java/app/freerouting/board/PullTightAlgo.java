@@ -69,9 +69,9 @@ public abstract class PullTightAlgo {
   }
 
   /**
-   * Returns a new instance of PullTightAlgo. If p_only_net_no > 0, only traces with net number
-   * p_not_no are optimized. If p_stoppable_thread != null, the algorithm can be requested to be
-   * stopped. If p_time_limit > 0; the algorithm will be stopped after p_time_limit Milliseconds.
+   * Returns a new instance of PullTightAlgo. If onlyNetNo > 0, only traces with net number notNo
+   * are optimized. If stoppableThread != null, the algorithm can be requested to be stopped. If
+   * timeLimit > 0; the algorithm will be stopped after timeLimit Milliseconds.
    */
   static PullTightAlgo getInstance(
       RoutingBoard board,
@@ -103,9 +103,9 @@ public abstract class PullTightAlgo {
   }
 
   /**
-   * Function for optimizing the route in an internal marked area. If p_clip_shape != null, the
-   * optimizing area is restricted to p_clip_shape. p_trace_cost_arr is used for optimizing vias and
-   * may be null.
+   * Function for optimizing the route in an internal marked area. If clipShape != null, the
+   * optimizing area is restricted to clipShape. traceCostArr is used for optimizing vias and may be
+   * null.
    */
   void optChangedArea(ExpansionCostFactor[] traceCostArr) {
     if (board.changedArea == null) {
@@ -158,8 +158,8 @@ public abstract class PullTightAlgo {
   }
 
   /**
-   * Function for optimizing a single trace polygon p_contact_pins are the pins at the end corners
-   * of p_polyline. Other pins are regarded as obstacles, even if they are of the own net.
+   * Function for optimizing a single trace polygon contactPins are the pins at the end corners of
+   * polyline. Other pins are regarded as obstacles, even if they are of the own net.
    */
   Polyline pullTight(
       Polyline polyline,
@@ -199,7 +199,7 @@ public abstract class PullTightAlgo {
     return timeLimitExceeded;
   }
 
-  /** Tries to shorten p_polyline by relocating its lines. */
+  /** Tries to shorten polyline by relocating its lines. */
   Polyline repositionLines(Polyline polyline) {
     if (polyline.arr.length < 5) {
       return polyline;
@@ -218,8 +218,7 @@ public abstract class PullTightAlgo {
   }
 
   /**
-   * Tries to reposition the line with index p_no to make the polyline consisting of p_line_arr
-   * shorter.
+   * Tries to reposition the line with index no to make the polyline consisting of lineArr shorter.
    */
   protected Line repositionLine(Line[] lineArr, int no) {
     if (lineArr.length - no < 3) {

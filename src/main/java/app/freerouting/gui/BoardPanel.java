@@ -809,7 +809,7 @@ public class BoardPanel extends JPanel {
    * <ol>
    *   <li>Scales the panel size by the zoom factor
    *   <li>Adjusts the coordinate transform in the graphics context
-   *   <li>Repositions the viewport to keep p_location fixed on screen
+   *   <li>Repositions the viewport to keep location fixed on screen
    *   <li>Returns the adjusted cursor position after zoom
    * </ol>
    *
@@ -882,7 +882,7 @@ public class BoardPanel extends JPanel {
   /**
    * Sets the viewport center to the specified point with boundary adjustments.
    *
-   * <p>Attempts to center the viewport on p_point, but adjusts if the point is near the panel edges
+   * <p>Attempts to center the viewport on point, but adjusts if the point is near the panel edges
    * to keep the viewport within valid bounds. Returns the adjustment vector representing how much
    * the requested center had to be shifted.
    *

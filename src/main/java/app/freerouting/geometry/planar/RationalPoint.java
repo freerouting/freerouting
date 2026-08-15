@@ -25,16 +25,16 @@ public class RationalPoint extends Point implements Serializable {
   final BigInteger z;
 
   /**
-   * Creates a RationalPoint from 3 BigIntegers p_x, p_y and p_z. They represent the 2-dimensional
-   * point with the rational number Tuple ( p_x / p_z , p_y / p_z). Throws IllegalArgumentException
-   * if denominator p_z is <= 0
+   * Creates a RationalPoint from 3 BigIntegers x, y and z. They represent the 2-dimensional point
+   * with the rational number Tuple ( x / z , y / z). Throws IllegalArgumentException if denominator
+   * z is <= 0
    */
   RationalPoint(BigInteger x, BigInteger y, BigInteger z) {
     this.x = x;
     this.y = y;
     this.z = z;
     if (z.signum() < 0) {
-      throw new IllegalArgumentException("RationalPoint: p_z is expected to be >= 0");
+      throw new IllegalArgumentException("RationalPoint: z is expected to be >= 0");
     }
   }
 
@@ -62,7 +62,7 @@ public class RationalPoint extends Point implements Serializable {
     return new FloatPoint(xd, yd);
   }
 
-  /** Returns true, if this RationalPoint is equal to p_ob. */
+  /** Returns true, if this RationalPoint is equal to ob. */
   @Override
   public int getIdNo() {
     int result = x.hashCode();
@@ -142,7 +142,7 @@ public class RationalPoint extends Point implements Serializable {
     return y.compareTo(tmp) <= 0;
   }
 
-  /** Returns the translation of this point by p_vector. */
+  /** Returns the translation of this point by vector. */
   @Override
   public Point translateBy(Vector vector) {
     if (vector.equals(Vector.ZERO)) {
@@ -172,7 +172,7 @@ public class RationalPoint extends Point implements Serializable {
     return new RationalPoint(result[0], result[1], result[2]);
   }
 
-  /** Returns the difference vector of this point and p_other. */
+  /** Returns the difference vector of this point and other. */
   @Override
   public Vector differenceBy(Point other) {
     Vector tmp = other.differenceBy(this);
@@ -201,9 +201,9 @@ public class RationalPoint extends Point implements Serializable {
   }
 
   /**
-   * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to
-   * p_2; Side.ON_THE_RIGHT, if this Point is on the right f the line from p_1 to p_2; and
-   * Side.COLLINEAR, if this Point is collinear with p_1 and p_2.
+   * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from 1 to 2;
+   * Side.ON_THE_RIGHT, if this Point is on the right f the line from 1 to 2; and Side.COLLINEAR, if
+   * this Point is collinear with 1 and 2.
    */
   @Override
   public Side sideOf(Point p1, Point p2) {

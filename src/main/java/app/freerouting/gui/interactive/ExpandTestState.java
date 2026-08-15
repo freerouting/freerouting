@@ -80,7 +80,7 @@ public final class ExpandTestState extends InteractiveState {
       result = this;
       // hdlg.get_routing_board().autoroute_data().validate();
     } else if (Character.isDigit(keyChar)) {
-      // next 10^p_key_char expansions
+      // next 10^keyChar expansions
       int d = Character.digit(keyChar, 10);
       final int maxCount = (int) Math.pow(10, d);
       if (inAutoroute) {

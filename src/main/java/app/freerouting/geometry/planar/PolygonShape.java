@@ -99,7 +99,7 @@ public class PolygonShape extends PolylineShape {
   @Override
   public Point corner(int no) {
     if (no < 0 || no >= corners.length) {
-      FRLogger.warn("PolygonShape.corner: p_no out of range");
+      FRLogger.warn("PolygonShape.corner: no out of range");
       return null;
     }
     return corners[no];
@@ -454,7 +454,7 @@ public class PolygonShape extends PolylineShape {
   @Override
   public Line borderLine(int no) {
     if (no < 0 || no >= corners.length) {
-      FRLogger.warn("PolygonShape.edge_line: p_no out of range");
+      FRLogger.warn("PolygonShape.edge_line: no out of range");
       return null;
     }
     Point nextCorner;
@@ -590,7 +590,7 @@ public class PolygonShape extends PolylineShape {
       return null;
     }
 
-    // construct the result pieces from p_polygon and the division point
+    // construct the result pieces from polygon and the division point
     int cornerCount = d.cornerNoAfterProjection - concaveCornerNo;
 
     if (cornerCount < 0) {

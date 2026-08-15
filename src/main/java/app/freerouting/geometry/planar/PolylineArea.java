@@ -163,7 +163,7 @@ public class PolylineArea implements Area, Serializable {
    * Splits this polygon shape with holes into convex pieces. The result is not exact, because
    * rounded intersections of lines are used in the result pieces. It can be made exact, if
    * Polylines are returned instead of Polygons, so that no intersection points are needed in the
-   * result. If p_stoppable_thread != null, this function can be interrupted.
+   * result. If stoppableThread != null, this function can be interrupted.
    */
   public TileShape[] splitToConvex(Stoppable stoppableThread) {
     if (precalculatedConvexPieces == null) {

@@ -39,7 +39,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
 
   /** Creates a new instance of ViaTablePanel. */
   public WindowEditVias(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
     this.setTitle(tm.getText("title"));
 
     this.boardFrame = boardFrame;

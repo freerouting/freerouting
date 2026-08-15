@@ -435,7 +435,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       // Check if the item is already routed
       Set<Item> unconnectedSet = item.getUnconnectedSet(routeNetNo);
       if (unconnectedSet.isEmpty()) {
-        return true; // p_item is already routed.
+        return true; // item is already routed.
       }
 
       Set<Item> connectedSet = item.getConnectedSet(routeNetNo);

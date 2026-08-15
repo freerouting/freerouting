@@ -23,7 +23,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
       changeLayerMenu = null;
     }
 
-    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     JMenuItem popupInsertMenuitem = new JMenuItem();
     popupInsertMenuitem.setText(tm.getText("insert"));
@@ -55,7 +55,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
     disableLayerItem(layerStructure.getSignalLayerNo(currentLayer));
   }
 
-  /** Disables the p_no-th item in the changeLayerMenu. */
+  /** Disables the no-th item in the changeLayerMenu. */
   void disableLayerItem(int no) {
     if (this.changeLayerMenu != null) {
       this.changeLayerMenu.disableItem(no);

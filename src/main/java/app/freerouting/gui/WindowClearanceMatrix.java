@@ -44,7 +44,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   /** Creates a new instance of ClearanceMatrixWindow. */
   public WindowClearanceMatrix(BoardFrame boardFrame) {
     this.boardFrame = boardFrame;
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 
@@ -62,7 +62,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
     GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
     rulesClearanceLayerComboBox =
-        new ComboBoxLayer(boardHandling.getRoutingBoard().layerStructure, boardFrame.get_locale());
+        new ComboBoxLayer(boardHandling.getRoutingBoard().layerStructure, boardFrame.getLocale());
     northPanel.add(this.rulesClearanceLayerComboBox);
     rulesClearanceLayerComboBox.addActionListener(new ComboBoxListener());
     rulesClearanceLayerComboBox.addActionListener(
@@ -206,7 +206,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     result.add(scrollPane, BorderLayout.CENTER);
 
     // add message for german localisation bug
-    if ("de".equalsIgnoreCase(boardFrame.get_locale().getLanguage())) {
+    if ("de".equalsIgnoreCase(boardFrame.getLocale().getLanguage())) {
       // Due to a Java system bug, the decimal comma in this table must be entered as a dot.
       JLabel bugLabel =
           new JLabel(

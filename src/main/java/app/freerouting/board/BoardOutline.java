@@ -69,7 +69,7 @@ public class BoardOutline extends Item implements Serializable {
       result = 0;
     }
     if (result < 0 || result >= this.board.layerStructure.arr.length) {
-      FRLogger.warn("BoardOutline.shapeLayer: p_index out of range");
+      FRLogger.warn("BoardOutline.shapeLayer: index out of range");
     }
     return result;
   }
@@ -156,7 +156,7 @@ public class BoardOutline extends Item implements Serializable {
   /** Get shape. */
   public PolylineShape getShape(int index) {
     if (index < 0 || index >= this.shapes.length) {
-      FRLogger.warn("BoardOutline.get_shape: p_index out of range");
+      FRLogger.warn("BoardOutline.get_shape: index out of range");
       return null;
     }
     return this.shapes[index];
@@ -221,7 +221,7 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   /**
-   * Makes the area outside this Outline to Keepout, if p_value = true. Reinserts this Outline into
+   * Makes the area outside this Outline to Keepout, if value = true. Reinserts this Outline into
    * the search trees, if the value changes.
    */
   public void generateKeepoutOutside(boolean value) {

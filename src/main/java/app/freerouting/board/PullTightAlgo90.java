@@ -33,7 +33,7 @@ class PullTightAlgo90 extends PullTightAlgo {
     return newResult;
   }
 
-  /** Tries to skip the second corner of p_polyline. Return p_polyline, if nothing was changed. */
+  /** Tries to skip the second corner of polyline. Return polyline, if nothing was changed. */
   private Polyline trySkipSecondCorner(Polyline polyline) {
     if (polyline.arr.length < 5) {
       return polyline;
@@ -63,9 +63,7 @@ class PullTightAlgo90 extends PullTightAlgo {
     return new Polyline(newLines);
   }
 
-  /**
-   * Tries to reduce the amount of corners of p_polyline. Return p_polyline, if nothing was changed.
-   */
+  /** Tries to reduce the amount of corners of polyline. Return polyline, if nothing was changed. */
   private Polyline trySkipCorners(Polyline polyline) {
     Line[] newLines = new Line[polyline.arr.length];
     newLines[0] = polyline.arr[0];
@@ -127,7 +125,7 @@ class PullTightAlgo90 extends PullTightAlgo {
       return polyline;
     }
     if (secondLastCornerSkipped) {
-      // The second last corner of p_polyline was skipped
+      // The second last corner of polyline was skipped
       ++newLineIndex;
       newLines[newLineIndex] = polyline.arr[polyline.arr.length - 1];
       ++newLineIndex;

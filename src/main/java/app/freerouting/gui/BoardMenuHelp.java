@@ -17,7 +17,7 @@ public class BoardMenuHelp extends JMenu {
    */
   public BoardMenuHelp(BoardFrame boardFrame) {
     this.boardFrame = boardFrame;
-    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.getLocale());
     this.setText(tm.getText("help"));
 
     JMenuItem helpAboutMenuitem = new JMenuItem();

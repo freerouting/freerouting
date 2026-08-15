@@ -80,7 +80,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
   /** Creates a new instance of WindowAutorouteParameter. */
   public WindowAutorouteParameter(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.boardHandling = boardFrame.boardPanel.boardHandling;
     this.setTitle(tm.getText("title"));
@@ -257,7 +257,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(viaCostLabel, gridbagConstraints);
     mainPanel.add(viaCostLabel);
 
-    NumberFormat numberFormat = NumberFormat.getIntegerInstance(boardFrame.get_locale());
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance(boardFrame.getLocale());
     this.viaCostField = new JFormattedTextField(numberFormat);
     this.viaCostField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
     this.viaCostField.setColumns(3);
@@ -457,7 +457,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     preferredDirectionTraceCostsInputCompleted = new boolean[signalLayerCount];
     againstPreferredDirectionTraceCostsInputCompleted = new boolean[signalLayerCount];
     bendCostsInputCompleted = new boolean[signalLayerCount];
-    numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+    numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
     numberFormat.setMaximumFractionDigits(2);
     final int textFieldLength = 3;
     NumberFormat floatNumberFormat = new DecimalFormat("0.0");

@@ -17,7 +17,7 @@ public class WindowPackages extends WindowObjectListWithFilter {
   /** Creates a new instance of PackagesWindow. */
   public WindowPackages(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("packages"));
   }

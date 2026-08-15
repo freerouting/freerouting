@@ -36,9 +36,9 @@ public class WindowManualRules extends BoardSavableSubWindow {
 
   /** Creates a new instance of TraceWidthWindow. */
   public WindowManualRules(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
     this.boardHandling = boardFrame.boardPanel.boardHandling;
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 
@@ -96,7 +96,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     gridbagConstraints.gridwidth = 2;
     gridbag.setConstraints(widthLabel, gridbagConstraints);
     mainPanel.add(widthLabel);
-    NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+    NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
     numberFormat.setMaximumFractionDigits(7);
     this.traceWidthField = new JFormattedTextField(numberFormat);
     this.traceWidthField.setColumns(7);
@@ -115,7 +115,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
 
     settingsRoutingManualRuleSelectionLayerComboBox =
         new ComboBoxLayer(
-            this.boardHandling.getRoutingBoard().layerStructure, boardFrame.get_locale());
+            this.boardHandling.getRoutingBoard().layerStructure, boardFrame.getLocale());
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(
         this.settingsRoutingManualRuleSelectionLayerComboBox, gridbagConstraints);
@@ -171,7 +171,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     }
   }
 
-  /** Sets the selected layer to p_layer. */
+  /** Sets the selected layer to layer. */
   private void setSelectedLayer(ComboBoxLayer.Layer layer) {
     int currentHalfWidth;
     if (layer.index == ComboBoxLayer.ALL_LAYER_INDEX) {

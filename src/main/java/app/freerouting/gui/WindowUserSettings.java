@@ -46,7 +46,7 @@ public final class WindowUserSettings extends WindowBase {
   private WindowUserSettings(BoardFrame boardFrame) {
     super(480, 355);
 
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     JDialog profileDialog = new JDialog((Frame) null, "User Settings", true);
     profileDialog.setTitle(tm.getText("title"));

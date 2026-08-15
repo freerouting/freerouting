@@ -40,8 +40,7 @@ public final class GUIDefaultsFile {
   }
 
   /**
-   * Writes the GUI setting of p_board_frame as default to p_file. Returns false, if an error
-   * occurred.
+   * Writes the GUI setting of boardFrame as default to file. Returns false, if an error occurred.
    */
   public static boolean write(
       BoardFrame boardFrame, GuiBoardManager boardHandling, OutputStream outputStream) {
@@ -69,7 +68,7 @@ public final class GUIDefaultsFile {
   }
 
   /**
-   * Reads the GUI setting of p_board_frame from file. Returns false, if an error occurred while
+   * Reads the GUI setting of boardFrame from file. Returns false, if an error occurred while
    * reading the file.
    */
   public static boolean read(

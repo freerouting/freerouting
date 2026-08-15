@@ -33,8 +33,8 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
   }
 
   /**
-   * Calculates the left most corner of the shape of p_to_info.door seen from the center of the
-   * common room with the previous door.
+   * Calculates the left most corner of the shape of toInfo.door seen from the center of the common
+   * room with the previous door.
    */
   private static FloatPoint calcDoorLeftCorner(BacktrackElement toInfo) {
     CompleteExpansionRoom fromRoom = toInfo.door.otherRoom(toInfo.nextRoom);
@@ -45,8 +45,8 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
   }
 
   /**
-   * Calculates the right most corner of the shape of p_to_info.door seen from the center of the
-   * common room with the previous door.
+   * Calculates the right most corner of the shape of toInfo.door seen from the center of the common
+   * room with the previous door.
    */
   private static FloatPoint calcDoorRightCorner(BacktrackElement toInfo) {
     CompleteExpansionRoom fromRoom = toInfo.door.otherRoom(toInfo.nextRoom);
@@ -352,11 +352,11 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
   }
 
   /**
-   * Calculates as first line the left side tangent from p_from_corner to the circle with center
-   * p_to_corner and radius p_dist. As second line the right side tangent from p_to_corner to the
-   * circle with center p_next_corner and radius 2 * p_dist is constructed. The second line is than
-   * translated by the distance p_dist to the left. Returned is the intersection of the first and
-   * the second line.
+   * Calculates as first line the left side tangent from fromCorner to the circle with center
+   * toCorner and radius dist. As second line the right side tangent from toCorner to the circle
+   * with center nextCorner and radius 2 * dist is constructed. The second line is than translated
+   * by the distance dist to the left. Returned is the intersection of the first and the second
+   * line.
    */
   private FloatPoint rightTurnNextCorner(
       FloatPoint fromCorner, double dist, FloatPoint toCorner, FloatPoint nextCorner) {
@@ -379,11 +379,10 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
   }
 
   /**
-   * Calculates as first line the right side tangent from p_from_corner to the circle with center
-   * p_to_corner and radius p_dist. As second line the left side tangent from p_to_corner to the
-   * circle with center p_next_corner and radius 2 * p_dist is constructed. The second line is than
-   * translated by the distance p_dist to the right. Returned is the intersection of the first and
-   * the second line.
+   * Calculates as first line the right side tangent from fromCorner to the circle with center
+   * toCorner and radius dist. As second line the left side tangent from toCorner to the circle with
+   * center nextCorner and radius 2 * dist is constructed. The second line is than translated by the
+   * distance dist to the right. Returned is the intersection of the first and the second line.
    */
   private FloatPoint leftTurnNextCorner(
       FloatPoint fromCorner, double dist, FloatPoint toCorner, FloatPoint nextCorner) {
@@ -406,9 +405,8 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
   }
 
   /**
-   * Calculates the right tangential line from p_from_point and the left tangential line from
-   * p_to_point to the circle with center p_center and radius p_dist. Returns the intersection of
-   * the 2 lines.
+   * Calculates the right tangential line from fromPoint and the left tangential line from toPoint
+   * to the circle with center center and radius dist. Returns the intersection of the 2 lines.
    */
   private FloatPoint rightLeftTangentialPoint(
       FloatPoint fromPoint, FloatPoint toPoint, FloatPoint center, double dist) {
@@ -430,9 +428,8 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
   }
 
   /**
-   * Calculates the left tangential line from p_from_point and the right tangential line from
-   * p_to_point to the circle with center p_center and radius p_dist. Returns the intersection of
-   * the 2 lines.
+   * Calculates the left tangential line from fromPoint and the right tangential line from toPoint
+   * to the circle with center center and radius dist. Returns the intersection of the 2 lines.
    */
   private FloatPoint leftRightTangentialPoint(
       FloatPoint fromPoint, FloatPoint toPoint, FloatPoint center, double dist) {

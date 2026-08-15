@@ -560,7 +560,7 @@ public class Structure extends ScopeKeyword {
   }
 
   /**
-   * Calculates shapes in p_outline_shapes, which are holes in the outline and returns them in the
+   * Calculates shapes in outlineShapes, which are holes in the outline and returns them in the
    * result list.
    */
   private static Collection<PolylineShape> separateHoles(Collection<PolylineShape> outlineShapes) {
@@ -647,8 +647,8 @@ public class Structure extends ScopeKeyword {
   }
 
   /**
-   * Converts a dsn clearance rule into a board clearance rule. If p_layer_no is negative, the rule
-   * is set on all layers. Returns true, if the string smd_to_turn_gap was found.
+   * Converts a dsn clearance rule into a board clearance rule. If layerNo is negative, the rule is
+   * set on all layers. Returns true, if the string smd_to_turn_gap was found.
    */
   public static boolean setClearanceRule(
       Rule.ClearanceRule rule,
@@ -704,7 +704,7 @@ public class Structure extends ScopeKeyword {
           }
         }
       } else if (currentString.startsWith(stringQuote)) {
-        // split at the second occurrence of p_string_quote
+        // split at the second occurrence of stringQuote
         currentString = currentString.substring(stringQuote.length());
         currentPair = currentString.split(stringQuote, 2);
         if (currentPair.length != 2 || !currentPair[1].startsWith("_")) {
@@ -1286,7 +1286,7 @@ public class Structure extends ScopeKeyword {
       isHole = false;
     }
 
-    /** Returns true, if this shape contains all corners of p_other_shape. */
+    /** Returns true, if this shape contains all corners of otherShape. */
     private boolean containsAllCorners(OutlineShape otherShape) {
       if (this.convexShapes == null) {
         // calculation of the convex shapes failed

@@ -172,7 +172,7 @@ public abstract class LocateFoundConnectionAlgo {
     }
   }
 
-  /** Returns a new Instance of LocateFoundConnectionAlgo or null, if p_destination_door is null. */
+  /** Returns a new Instance of LocateFoundConnectionAlgo or null, if destinationDoor is null. */
   public static LocateFoundConnectionAlgo getInstance(
       MazeSearchAlgo.Result mazeSearchResult,
       AutorouteControl ctrl,
@@ -198,8 +198,8 @@ public abstract class LocateFoundConnectionAlgo {
   }
 
   /**
-   * Calculates the starting point of the next trace on p_from_door.item. The implementation is not
-   * yet optimal for starting points on traces or areas.
+   * Calculates the starting point of the next trace on fromDoor.item. The implementation is not yet
+   * optimal for starting points on traces or areas.
    */
   private static FloatPoint calculateStartingPoint(
       TargetItemExpansionDoor fromDoor, ShapeSearchTree searchTree) {
@@ -210,8 +210,8 @@ public abstract class LocateFoundConnectionAlgo {
   }
 
   /**
-   * Creates a list of doors by backtracking from p_destination_door to the start door. Returns
-   * null, if p_destination_door is null.
+   * Creates a list of doors by backtracking from destinationDoor to the start door. Returns null,
+   * if destinationDoor is null.
    */
   private static Collection<BacktrackElement> backtrack(
       MazeSearchAlgo.Result mazeSearchResult,
@@ -375,8 +375,8 @@ public abstract class LocateFoundConnectionAlgo {
   }
 
   /**
-   * Calculates an additional corner, so that for the lines from p_from_point to the result corner
-   * and from the result corner to p_to_point p_angle_restriction is fulfilled.
+   * Calculates an additional corner, so that for the lines from fromPoint to the result corner and
+   * from the result corner to toPoint angleRestriction is fulfilled.
    */
   static FloatPoint calculateAdditionalCorner(
       FloatPoint fromPoint,

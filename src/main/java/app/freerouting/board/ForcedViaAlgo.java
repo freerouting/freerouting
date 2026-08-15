@@ -21,7 +21,7 @@ public final class ForcedViaAlgo {
 
   /**
    * Checks, if a Via is possible at the input layer after evtl. shoving aside obstacle traces.
-   * p_room_shape is used for calculating the fromSide.
+   * roomShape is used for calculating the fromSide.
    */
   public static ForcedPadAlgo.CheckDrillResult checkLayer(
       double viaRadius,
@@ -238,9 +238,9 @@ public final class ForcedViaAlgo {
   /**
    * Shoves aside traces, so that a via with the input parameters can be inserted without clearance
    * violations. If the shove failed, the database may be damaged, so that an undo becomes
-   * necessary. p_trace_clearance_class_no and p_trace_pen_halfwidth_arr is provided to make space
-   * for starting a trace in case the trace width is bigger than the via shape. Returns false, if
-   * the forced via failed.
+   * necessary. traceClearanceClassNo and tracePenHalfwidthArr is provided to make space for
+   * starting a trace in case the trace width is bigger than the via shape. Returns false, if the
+   * forced via failed.
    */
   public static boolean insert(
       ViaInfo viaInfo,

@@ -19,7 +19,7 @@ public class ComboBoxClearance extends JComboBox<ComboBoxClearance.ClearanceClas
     this.setSelectedIndex(1);
   }
 
-  /** Adjusts this combo box to p_new_clearance_matrix. */
+  /** Adjusts this combo box to newClearanceMatrix. */
   public void adjust(ClearanceMatrix newClearanceMatrix) {
     final int oldIndex = this.getSelectedClassIndex();
     this.classArr = new ClearanceClass[newClearanceMatrix.getClassCount()];

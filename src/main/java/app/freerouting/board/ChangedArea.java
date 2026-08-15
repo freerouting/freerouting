@@ -21,7 +21,7 @@ class ChangedArea {
     }
   }
 
-  /** Enlarges the octagon on p_layer, so that it contains p_point. */
+  /** Enlarges the octagon on layer, so that it contains point. */
   public void join(FloatPoint point, int layer) {
     MutableOctagon current = arr[layer];
     current.lx = Math.min(point.x, current.lx);
@@ -38,7 +38,7 @@ class ChangedArea {
     current.urx = Math.max(current.urx, tmp);
   }
 
-  /** Enlarges the octagon on p_layer, so that it contains p_shape. */
+  /** Enlarges the octagon on layer, so that it contains shape. */
   public void join(TileShape shape, int layer) {
     if (shape == null) {
       return;
@@ -49,7 +49,7 @@ class ChangedArea {
     }
   }
 
-  /** Get the marking octagon on layer p_layer. */
+  /** Get the marking octagon on layer layer. */
   public IntOctagon getArea(int layer) {
 
     return arr[layer].toInt();
@@ -73,7 +73,7 @@ class ChangedArea {
     return new IntBox(llx, lly, urx, ury);
   }
 
-  /** Initializes the marking octagon on p_layer to empty. */
+  /** Initializes the marking octagon on layer to empty. */
   void setEmpty(int layer) {
     arr[layer].setEmpty();
   }

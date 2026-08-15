@@ -14,7 +14,7 @@ class PopupMenuCornerItemConstruction extends JPopupMenu {
   PopupMenuCornerItemConstruction(BoardFrame boardFrame) {
     this.boardPanel = boardFrame.boardPanel;
 
-    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     JMenuItem popupAddCornerMenuitem = new JMenuItem();
     popupAddCornerMenuitem.setText(tm.getText("addCorner"));

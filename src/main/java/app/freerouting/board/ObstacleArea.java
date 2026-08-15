@@ -35,7 +35,7 @@ public class ObstacleArea extends Item implements Serializable {
   private boolean sideChanged;
 
   /**
-   * Creates a new relativeArea item which may belong to several nets. p_name is null, if the
+   * Creates a new relativeArea item which may belong to several nets. name is null, if the
    * ObstacleArea does not belong to a component.
    */
   ObstacleArea(
@@ -61,8 +61,8 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   /**
-   * Creates a new relativeArea item without net. p_name is null, if the ObstacleArea does not
-   * belong to a component.
+   * Creates a new relativeArea item without net. name is null, if the ObstacleArea does not belong
+   * to a component.
    */
   ObstacleArea(
       Area area,
@@ -192,7 +192,7 @@ public class ObstacleArea extends Item implements Serializable {
   public TileShape getTileShape(int no) {
     TileShape[] tileShapes = this.splitToConvex();
     if (tileShapes == null || no < 0 || no >= tileShapes.length) {
-      FRLogger.warn("ConvexObstacle.get_tile_shape: p_no out of range");
+      FRLogger.warn("ConvexObstacle.get_tile_shape: no out of range");
       return null;
     }
     return tileShapes[no];

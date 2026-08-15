@@ -24,7 +24,7 @@ import java.util.TreeSet;
 
 /**
  * To calculate the neighbour rooms of an expansion room. The neighbour rooms will be sorted in
- * counterclock sense around the border of the shape of p_room. Overlapping neighbours containing an
+ * counterclock sense around the border of the shape of room. Overlapping neighbours containing an
  * item may be stored in an unordered list.
  */
 public final class SortedRoomNeighbours {
@@ -530,7 +530,7 @@ public final class SortedRoomNeighbours {
               TileShape cutHalfPlane = TileShape.getInstance(cutLine);
               ((CompleteFreeSpaceExpansionRoom) this.completedRoom)
                   .setShape(this.completedRoom.getShape().intersection(cutHalfPlane));
-              // Otherwise p_room.containedShape would no longer be contained
+              // Otherwise room.containedShape would no longer be contained
               // in the shape after cutting of the corner.
               cornerCutOff = incompleteRoom.getContainedShape().sideOf(cutLine) == Side.ON_THE_LEFT;
               if (cornerCutOff) {

@@ -262,7 +262,7 @@ public class Route {
       return true;
     }
     if (toLayer < 0 || toLayer >= this.layerActive.length) {
-      FRLogger.warn("Route.change_layer: p_to_layer out of range");
+      FRLogger.warn("Route.change_layer: toLayer out of range");
       return false;
     }
     if (!this.layerActive[toLayer]) {
@@ -815,7 +815,7 @@ public class Route {
       if (pinValue.isConnected() || pinValue.netCount() != 1) {
         return;
       }
-      // calculate the incomplete of p_pin
+      // calculate the incomplete of pin
       FloatPoint pinCenter = pinValue.getCenter().toFloat();
       double minDist = Double.MAX_VALUE;
       FloatPoint nearestPoint = null;

@@ -29,7 +29,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
   /** Creates a new instance of clearance violations window. */
   public WindowClearanceViolations(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
     this.listEmptyMessage.setText(tm.getText("listEmptyMessage"));
@@ -125,7 +125,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
           "%.4f".formatted(delta),
           itemInfo(violation.firstItem),
           itemInfo(violation.secondItem),
-          location.toString(boardFrame.get_locale()),
+          location.toString(boardFrame.getLocale()),
           layerStructure.arr[violation.layer].name);
     }
 

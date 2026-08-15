@@ -35,7 +35,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
   /** Creates a new instance of DisplayMiscWindow. */
   public WindowDisplayMisc(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.panel = boardFrame.boardPanel;
     this.setTitle(tm.getText("title"));

@@ -80,7 +80,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.guiBoardManager = boardFrame.boardPanel.boardHandling;
     this.manualRuleWindow = new WindowManualRules(boardFrame);
 
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 
@@ -317,7 +317,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(pinExitEdgeToTurnLabel, gridbagConstraints);
     mainPanel.add(pinExitEdgeToTurnLabel);
 
-    NumberFormat numberFormat = NumberFormat.getNumberInstance(boardFrame.get_locale());
+    NumberFormat numberFormat = NumberFormat.getNumberInstance(boardFrame.getLocale());
     numberFormat.setMaximumFractionDigits(3);
     numberFormat.setGroupingUsed(false);
     this.edgeToTurnDistField = new JFormattedTextField(numberFormat);
@@ -346,7 +346,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     mainPanel.add(pullTightRegionLabel);
     gridbagConstraints.insets = new Insets(1, 10, 1, 10);
 
-    NumberFormat userUnitFormat = NumberFormat.getNumberInstance(boardFrame.get_locale());
+    NumberFormat userUnitFormat = NumberFormat.getNumberInstance(boardFrame.getLocale());
     userUnitFormat.setMaximumFractionDigits(3);
     userUnitFormat.setGroupingUsed(false);
 
@@ -391,7 +391,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(clearanceCompensationCheckBox, gridbagConstraints);
     mainPanel.add(clearanceCompensationCheckBox, gridbagConstraints);
 
-    NumberFormat compFormat = NumberFormat.getNumberInstance(boardFrame.get_locale());
+    NumberFormat compFormat = NumberFormat.getNumberInstance(boardFrame.getLocale());
     compFormat.setMaximumFractionDigits(3);
     compFormat.setGroupingUsed(false);
 

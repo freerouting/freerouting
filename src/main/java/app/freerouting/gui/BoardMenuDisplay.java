@@ -14,7 +14,7 @@ public final class BoardMenuDisplay extends JMenu {
   /** Creates a new instance of BoardDisplayMenu. */
   private BoardMenuDisplay(BoardFrame boardFrame) {
     this.boardFrame = boardFrame;
-    tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    tm = new TextManager(this.getClass(), boardFrame.getLocale());
   }
 
   /** Returns a new display menu for the board frame. */

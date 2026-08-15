@@ -312,7 +312,7 @@ public class GraphicsContext implements Serializable {
     g2.draw(rectangle);
   }
 
-  /** Draws the boundary of p_shape. */
+  /** Draws the boundary of shape. */
   public void drawBoundary(
       Shape shape, double drawHalfWidth, Color color, Graphics g, double translucencyFactor) {
     if (shape instanceof PolylineShape) {
@@ -335,7 +335,7 @@ public class GraphicsContext implements Serializable {
     }
   }
 
-  /** Draws the boundary of p_area. */
+  /** Draws the boundary of area. */
   public void drawBoundary(
       Area area, double drawHalfWidth, Color color, Graphics g, double translucencyFactor) {
     drawBoundary(area.getBorder(), drawHalfWidth, color, g, translucencyFactor);
@@ -598,7 +598,7 @@ public class GraphicsContext implements Serializable {
     g2.fill(drawPath);
   }
 
-  /** Checks, if the distance of the point with coordinates p_x, p_y to p_rect is at most p_dist. */
+  /** Checks, if the distance of the point with coordinates x, y to rect is at most dist. */
   private boolean pointNearRectangle(double x, double y, Rectangle rect, double dist) {
     if (x < rect.x - dist) {
       return false;
@@ -612,7 +612,7 @@ public class GraphicsContext implements Serializable {
     return y <= rect.y + rect.height + dist;
   }
 
-  /** Fill the interior of the polygon shape represented by p_points. */
+  /** Fill the interior of the polygon shape represented by points. */
   public void fillShape(FloatPoint[] points, Graphics g, Color color, double translucencyFactor) {
     if (color == null) {
       return;

@@ -26,8 +26,8 @@ public class Simplex extends TileShape implements Serializable {
   private transient IntOctagon precalculatedBoundingOctagon;
 
   /**
-   * Constructs a Simplex from the directed lines in p_line_arr. The simplex will not be normalized.
-   * To get a normalized simplex use TileShape.get_instance
+   * Constructs a Simplex from the directed lines in lineArr. The simplex will not be normalized. To
+   * get a normalized simplex use TileShape.get_instance
    */
   public Simplex(Line[] lineArr) {
     arr = lineArr;
@@ -79,17 +79,17 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   /**
-   * Returns true, if the determinant of the direction of index p_no -1 and the direction of index
-   * p_no is {@literal >} 0.
+   * Returns true, if the determinant of the direction of index no -1 and the direction of index no
+   * is {@literal >} 0.
    */
   @Override
   public boolean cornerIsBounded(int cornerIndex) {
     int no;
     if (cornerIndex < 0) {
-      FRLogger.warn("corner: p_no is < 0");
+      FRLogger.warn("corner: no is < 0");
       no = 0;
     } else if (cornerIndex >= arr.length) {
-      FRLogger.warn("corner: p_index must be less than arr.length - 1");
+      FRLogger.warn("corner: index must be less than arr.length - 1");
       no = arr.length - 1;
     } else {
       no = cornerIndex;
@@ -132,18 +132,17 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   /**
-   * Returns the intersection of the p_no -1-th with the p_no-th line of this simplex. If the
-   * simplex is not bounded at this corner, the coordinates of the result will be set to
-   * Integer.MAX_VALUE.
+   * Returns the intersection of the no -1-th with the no-th line of this simplex. If the simplex is
+   * not bounded at this corner, the coordinates of the result will be set to Integer.MAX_VALUE.
    */
   @Override
   public Point corner(int cornerIndex) {
     int no;
     if (cornerIndex < 0) {
-      FRLogger.warn("Simplex.corner: p_no is < 0");
+      FRLogger.warn("Simplex.corner: no is < 0");
       no = 0;
     } else if (cornerIndex >= arr.length) {
-      FRLogger.warn("Simplex.corner: p_no must be less than arr.length - 1");
+      FRLogger.warn("Simplex.corner: no must be less than arr.length - 1");
       no = arr.length - 1;
     } else {
       no = cornerIndex;
@@ -166,7 +165,7 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   /**
-   * Returns an approximation of the intersection of the p_no -1-th with the p_no-th line of this
+   * Returns an approximation of the intersection of the no -1-th with the no-th line of this
    * simplex by a FloatPoint. If the simplex is not bounded at this corner, the coordinates of the
    * result will be set to Integer.MAX_VALUE.
    */
@@ -177,10 +176,10 @@ public class Simplex extends TileShape implements Serializable {
     }
     int no;
     if (cornerIndex < 0) {
-      FRLogger.warn("Simplex.corner_approx: p_no is < 0");
+      FRLogger.warn("Simplex.corner_approx: no is < 0");
       no = 0;
     } else if (cornerIndex >= arr.length) {
-      FRLogger.warn("Simplex.corner_approx: p_no must be less than arr.length - 1");
+      FRLogger.warn("Simplex.corner_approx: no must be less than arr.length - 1");
       no = arr.length - 1;
     } else {
       no = cornerIndex;
@@ -224,8 +223,7 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   /**
-   * Returns the p_no-th edge line of this simplex. The edge lines are sorted in ascending
-   * direction.
+   * Returns the no-th edge line of this simplex. The edge lines are sorted in ascending direction.
    */
   @Override
   public Line borderLine(int edgeIndex) {
@@ -235,10 +233,10 @@ public class Simplex extends TileShape implements Serializable {
     }
     int no;
     if (edgeIndex < 0) {
-      FRLogger.warn("Simplex.edge_line : p_no is < 0");
+      FRLogger.warn("Simplex.edge_line : no is < 0");
       no = 0;
     } else if (edgeIndex >= arr.length) {
-      FRLogger.warn("Simplex.edge_line: p_no must be less than arr.length - 1");
+      FRLogger.warn("Simplex.edge_line: no must be less than arr.length - 1");
       no = arr.length - 1;
     } else {
       no = edgeIndex;
@@ -449,7 +447,7 @@ public class Simplex extends TileShape implements Serializable {
     return result.normalize();
   }
 
-  /** Returns the simplex that results from translating its lines by p_vector. */
+  /** Returns the simplex that results from translating its lines by vector. */
   @Override
   public Simplex translateBy(Vector vector) {
     if (vector.equals(Vector.ZERO)) {
@@ -549,7 +547,7 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   /**
-   * Returns the simplex offsetted by p_with. If p_width {@literal >} 0, the offset is to the outer,
+   * Returns the simplex offsetted by with. If width {@literal >} 0, the offset is to the outer,
    * else to the inner.
    */
   @Override
@@ -569,8 +567,8 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   /**
-   * Returns this simplex enlarged by p_offset. The result simplex is intersected with the by
-   * p_offset enlarged bounding octagon of this simplex
+   * Returns this simplex enlarged by offset. The result simplex is intersected with the by offset
+   * enlarged bounding octagon of this simplex
    */
   @Override
   public Simplex enlarge(double offset) {
@@ -587,8 +585,8 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   /**
-   * Returns the number of the rightmost corner seen from p_from_point No other point of this
-   * simplex may be to the right of the line from p_from_point to the result corner.
+   * Returns the number of the rightmost corner seen from fromPoint No other point of this simplex
+   * may be to the right of the line from fromPoint to the result corner.
    */
   public int indexOfRightMostCorner(Point fromPoint) {
     Point pole = fromPoint;
@@ -604,7 +602,7 @@ public class Simplex extends TileShape implements Serializable {
     return result;
   }
 
-  /** Returns the intersection of p_box with this simplex. */
+  /** Returns the intersection of box with this simplex. */
   @Override
   public Simplex intersection(IntBox box) {
     return intersection(box.toSimplex());
@@ -615,7 +613,7 @@ public class Simplex extends TileShape implements Serializable {
     return intersection(other.toSimplex());
   }
 
-  /** Returns the intersection of this simplex and p_other. */
+  /** Returns the intersection of this simplex and other. */
   @Override
   public Simplex intersection(Simplex other) {
     if (this.isEmpty() || other.isEmpty()) {
@@ -629,7 +627,7 @@ public class Simplex extends TileShape implements Serializable {
     return result.removeRedundantLines();
   }
 
-  /** Returns the intersection of this simplex and the shape p_other. */
+  /** Returns the intersection of this simplex and the shape other. */
   @Override
   public TileShape intersection(TileShape other) {
     return other.intersection(this);
@@ -661,7 +659,7 @@ public class Simplex extends TileShape implements Serializable {
     return circle.intersects(this);
   }
 
-  /** Returns the edge number if p_line is a border line of this simplex, otherwise -1. */
+  /** Returns the edge number if line is a border line of this simplex, otherwise -1. */
   @Override
   public int borderLineIndex(Line line) {
     for (int i = 0; i < arr.length; i++) {
@@ -673,7 +671,7 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   /**
-   * Enlarges the simplex by removing the edge line with index p_no. The result simplex may get
+   * Enlarges the simplex by removing the edge line with index no. The result simplex may get
    * unbounded.
    */
   public Simplex removeBorderLine(int no) {
@@ -697,7 +695,7 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   /**
-   * Cuts this simplex out of p_outer_simplex. Divides the resulting shape into simplices along the
+   * Cuts this simplex out of outerSimplex. Divides the resulting shape into simplices along the
    * minimal distance lines from the vertices of the inner simplex to the outer simplex; Returns the
    * convex pieces constructed by this division.
    */
@@ -710,7 +708,7 @@ public class Simplex extends TileShape implements Serializable {
     }
     Simplex innerSimplex = this.intersection(outerSimplex);
     if (innerSimplex.dimension() < 2) {
-      // nothing to cutout from p_outer_simplex
+      // nothing to cutout from outerSimplex
       Simplex[] result = new Simplex[1];
       result[0] = outerSimplex;
       return result;
@@ -749,7 +747,7 @@ public class Simplex extends TileShape implements Serializable {
           if (currentDirection.determinant(prevDir) > 0) {
 
             // the previous division line may intersect
-            //  currentDivisionLines[0] inside p_divide_simplex
+            //  currentDivisionLines[0] inside divideSimplex
             mergePrevDivisionLine = true;
           }
         }
@@ -802,7 +800,7 @@ public class Simplex extends TileShape implements Serializable {
         if (lastCurrDir.determinant(prevDir) > 0) {
 
           // the previous division line may intersect
-          //  the last current division line inside p_divide_simplex
+          //  the last current division line inside divideSimplex
           mergePrevDivisionLine = true;
         }
       }

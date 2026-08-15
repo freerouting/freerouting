@@ -13,8 +13,8 @@ public class ColorIntensityTable implements Serializable {
   private transient boolean missingSerializedDataLogged;
 
   /**
-   * Creates a new instance of ColorIntensityTable. The elements of p_intensities are expected
-   * between 0 and 1.
+   * Creates a new instance of ColorIntensityTable. The elements of intensities are expected between
+   * 0 and 1.
    */
   public ColorIntensityTable() {
     arr = new double[ObjectNames.values().length];
@@ -40,7 +40,7 @@ public class ColorIntensityTable implements Serializable {
   /** Returns the intensity value for the given object type index. */
   public double getValue(int no) {
     if (no < 0 || no >= ObjectNames.values().length) {
-      FRLogger.warn("ColorIntensityTable.get_value: p_no out of range");
+      FRLogger.warn("ColorIntensityTable.get_value: no out of range");
       return 0;
     }
     if (no >= arr.length) {
@@ -53,7 +53,7 @@ public class ColorIntensityTable implements Serializable {
   /** Sets the intensity value for the given object type index. */
   public void setValue(int no, double value) {
     if (no < 0 || no >= ObjectNames.values().length) {
-      FRLogger.warn("ColorIntensityTable.set_value: p_no out of range");
+      FRLogger.warn("ColorIntensityTable.set_value: no out of range");
       return;
     }
     if (no >= arr.length) {
@@ -66,7 +66,7 @@ public class ColorIntensityTable implements Serializable {
   private void logMissingSerializedDataOnce(String methodName, int no) {
     if (!missingSerializedDataLogged) {
       FRLogger.warn(
-          "ColorIntensityTable." + methodName + ": p_no " + no + " missing in serialized data");
+          "ColorIntensityTable." + methodName + ": no " + no + " missing in serialized data");
       missingSerializedDataLogged = true;
     }
   }

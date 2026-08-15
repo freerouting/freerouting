@@ -352,7 +352,7 @@ public class BatchOptimizer extends NamedAlgorithm {
   }
 
   /**
-   * Try to improve the route by re-routing the connections containing p_item.
+   * Try to improve the route by re-routing the connections containing item.
    *
    * @param item the item to be re-routed
    * @param withPreferredDirections if true, the preferred directions are used for the traces

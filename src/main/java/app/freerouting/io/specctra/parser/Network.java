@@ -185,7 +185,7 @@ public class Network extends ScopeKeyword {
     par.file.endScope();
   }
 
-  /** Creates a sequence of subnets with 2 pins from p_pin_list. */
+  /** Creates a sequence of subnets with 2 pins from pinList. */
   private static Collection<Collection<Net.Pin>> createOrderedSubnets(Collection<Net.Pin> pinList) {
     Collection<Collection<Net.Pin>> result = new LinkedList<>();
     if (pinList.isEmpty()) {
@@ -779,8 +779,8 @@ public class Network extends ScopeKeyword {
   }
 
   /**
-   * Gets the number of the clearance class with name combined of p_net_class_name and
-   * p_item_class_name. Creates a new class, if that class is not yet existing.
+   * Gets the number of the clearance class with name combined of netClassName and itemClassName.
+   * Creates a new class, if that class is not yet existing.
    */
   private static int getClearanceClass(
       ClearanceMatrix clearanceMatrix,
@@ -803,7 +803,7 @@ public class Network extends ScopeKeyword {
           "Network.get_clearance_class: clearance class not found at '" + netClassName + "'");
       return result;
     }
-    // initialize the clearance values of p_new_class_name from p_net_class_name
+    // initialize the clearance values of newClassName from netClassName
     for (int i = 1; i < clearanceMatrix.getClassCount(); i++) {
 
       for (int j = 0; j < clearanceMatrix.getLayerCount(); j++) {
@@ -892,8 +892,8 @@ public class Network extends ScopeKeyword {
   }
 
   /**
-   * Calculates the library package belonging to the logical part with name p_part_name. Returns
-   * null, if the package was not found.
+   * Calculates the library package belonging to the logical part with name partName. Returns null,
+   * if the package was not found.
    */
   private static Package searchLibPackage(
       String partName,

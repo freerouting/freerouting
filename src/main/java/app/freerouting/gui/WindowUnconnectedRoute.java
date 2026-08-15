@@ -22,9 +22,9 @@ public class WindowUnconnectedRoute extends CleanupWindows {
   /** Creates a new instance of WindowUnconnectedRoute. */
   public WindowUnconnectedRoute(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
-    this.tm = new TextManager(CleanupWindows.class, boardFrame.get_locale());
+    this.tm = new TextManager(CleanupWindows.class, boardFrame.getLocale());
 
     this.setTitle(tm.getText("unconnected_route"));
     this.listEmptyMessage.setText(tm.getText("no_unconnected_route_found"));

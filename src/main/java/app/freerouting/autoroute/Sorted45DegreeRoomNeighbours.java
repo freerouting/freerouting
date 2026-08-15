@@ -74,7 +74,7 @@ public final class Sorted45DegreeRoomNeighbours {
   }
 
   /**
-   * Calculates all touching neighbours of p_room and sorts them in counterclock sense around the
+   * Calculates all touching neighbours of room and sorts them in counterclock sense around the
    * boundary of the room shape.
    */
   private static Sorted45DegreeRoomNeighbours calculateNeighbours(
@@ -238,7 +238,7 @@ public final class Sorted45DegreeRoomNeighbours {
     }
   }
 
-  /** Calculates an incomplete room for each edge side from p_from_side_no to p_to_side_no. */
+  /** Calculates an incomplete room for each edge side from fromSideNo to toSideNo. */
   private void calculateEdgeIncompleteRoomsOfObstacleExpansionRoom(
       int fromSideNo, int toSideNo, AutorouteEngine autorouteEngine) {
     if (!(this.fromRoom instanceof ObstacleExpansionRoom)) {
@@ -453,7 +453,7 @@ public final class Sorted45DegreeRoomNeighbours {
     }
     IntOctagon boardBoundingOct = autorouteEngine.board.boundingBox.boundingOctagon();
 
-    // insert the new incomplete room from p_prev_neighbour to the next corner of the room shape.
+    // insert the new incomplete room from prevNeighbour to the next corner of the room shape.
 
     int lx = boardBoundingOct.leftX;
     int ly = boardBoundingOct.bottomY;
@@ -500,7 +500,7 @@ public final class Sorted45DegreeRoomNeighbours {
     }
     insertIncompleteRoom(autorouteEngine, lx, ly, rx, uy, ulx, lrx, llx, urx);
 
-    // insert the new incomplete room from p_prev_neighbour to the next corner of the room shape.
+    // insert the new incomplete room from prevNeighbour to the next corner of the room shape.
 
     lx = boardBoundingOct.leftX;
     ly = boardBoundingOct.bottomY;
@@ -879,7 +879,7 @@ public final class Sorted45DegreeRoomNeighbours {
         return -1;
       }
 
-      // now the first touch of this and p_other is at the same side
+      // now the first touch of this and other is at the same side
       IntOctagon is1 = this.intersection;
       IntOctagon is2 = other.intersection;
       int cmpValue;
@@ -900,7 +900,7 @@ public final class Sorted45DegreeRoomNeighbours {
       }
 
       if (cmpValue == 0) {
-        // The first touching points of this neighbour and p_other with the room shape are equal.
+        // The first touching points of this neighbour and other with the room shape are equal.
         // Compare the last touching points.
         int thisTouchingSideDiff = (this.lastTouchingSide - this.firstTouchingSide + 8) % 8;
         int otherTouchingSideDiff = (other.lastTouchingSide - other.firstTouchingSide + 8) % 8;
@@ -910,7 +910,7 @@ public final class Sorted45DegreeRoomNeighbours {
         if (thisTouchingSideDiff < otherTouchingSideDiff) {
           return -1;
         }
-        // now the last touch of this and p_other is at the same side
+        // now the last touch of this and other is at the same side
         switch (lastTouchingSide) {
           case 0 -> cmpValue = is1.corner(1).x - is2.corner(1).x;
           case 1 -> cmpValue = is1.corner(2).x - is2.corner(2).x;

@@ -31,7 +31,7 @@ public class SearchTreeManager {
     this.clearanceCompensationUsed = false;
   }
 
-  /** Inserts the tree shapes of p_item into all active search trees. */
+  /** Inserts the tree shapes of item into all active search trees. */
   public void insert(Item item) {
     for (ShapeSearchTree currentTree : compensatedSearchTrees) {
       currentTree.insert(item);
@@ -130,8 +130,8 @@ public class SearchTreeManager {
   }
 
   /**
-   * Returns the tree compensated for the clearance class with number p_clearance_class_no.
-   * Initialized the tree, if it is not yet allocated.
+   * Returns the tree compensated for the clearance class with number clearanceClassNo. Initialized
+   * the tree, if it is not yet allocated.
    */
   public ShapeSearchTree getAutorouteTree(int clearanceClassNo) {
     for (ShapeSearchTree currentTree : compensatedSearchTrees) {
@@ -227,8 +227,8 @@ public class SearchTreeManager {
   }
 
   /**
-   * Merges the tree entries from p_from_trace in front of p_to_trace. Special implementation for
-   * combine trace for performance reasons.
+   * Merges the tree entries from fromTrace in front of toTrace. Special implementation for combine
+   * trace for performance reasons.
    */
   void mergeEntriesInFront(
       PolylineTrace fromTrace,
@@ -242,7 +242,7 @@ public class SearchTreeManager {
   }
 
   /**
-   * Merges the tree entries from p_from_trace to the end of p_to_trace. Special implementation for
+   * Merges the tree entries from fromTrace to the end of toTrace. Special implementation for
    * combine trace for performance reasons.
    */
   void mergeEntriesAtEnd(
@@ -257,8 +257,8 @@ public class SearchTreeManager {
   }
 
   /**
-   * Changes the tree entries from p_keep_at_start_count + 1 to newShapeCount - 1 - keepAtEndCount
-   * to p_changed_entries. Special implementation for change_trace for performance reasons
+   * Changes the tree entries from keepAtStartCount + 1 to newShapeCount - 1 - keepAtEndCount to
+   * changedEntries. Special implementation for change_trace for performance reasons
    */
   void changeEntries(
       PolylineTrace obj, Polyline newPolyline, int keepAtStartCount, int keepAtEndCount) {
@@ -268,9 +268,8 @@ public class SearchTreeManager {
   }
 
   /**
-   * Transfers tree entries from p_from_trace to p_start and p_end_piece after a middle piece was
-   * cut out. Special implementation for ShapeTraceEntries.fast_cutout_trace for performance
-   * reasons.
+   * Transfers tree entries from fromTrace to start and endPiece after a middle piece was cut out.
+   * Special implementation for ShapeTraceEntries.fast_cutout_trace for performance reasons.
    */
   void reuseEntriesAfterCutout(
       PolylineTrace fromTrace, PolylineTrace startPiece, PolylineTrace endPiece) {

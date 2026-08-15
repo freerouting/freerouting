@@ -30,7 +30,7 @@ public class BoardMenuFile extends JMenu {
 
   /** Creates a new instance of BoardFileMenu. */
   public BoardMenuFile(BoardFrame boardFrame) {
-    tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     setText(tm.getText("file"));
 

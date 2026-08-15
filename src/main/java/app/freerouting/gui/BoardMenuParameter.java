@@ -14,7 +14,7 @@ public final class BoardMenuParameter extends JMenu {
   /** Creates a new instance of BoardSelectMenu. */
   private BoardMenuParameter(BoardFrame boardFrame) {
     this.boardFrame = boardFrame;
-    tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    tm = new TextManager(this.getClass(), boardFrame.getLocale());
   }
 
   /** Returns a new windows menu for the board frame. */

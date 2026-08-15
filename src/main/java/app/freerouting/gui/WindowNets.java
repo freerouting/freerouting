@@ -51,7 +51,7 @@ public class WindowNets extends WindowObjectListWithFilter {
   /** Creates a new instance of NetsWindow. */
   public WindowNets(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 
@@ -186,7 +186,7 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
     for (Object obj : selectedNets) {
       if (obj instanceof Net net) {
-        net.printInfo(this.infoPane, boardFrame.get_locale());
+        net.printInfo(this.infoPane, boardFrame.getLocale());
       }
     }
     this.infoPane.setCaretPosition(0);
@@ -284,7 +284,7 @@ public class WindowNets extends WindowObjectListWithFilter {
 
     public NetInfoTextPane() {
       this.setEditable(false);
-      this.numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+      this.numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
       this.numberFormat.setMaximumFractionDigits(4);
 
       StyledDocument document = this.getStyledDocument();
@@ -334,7 +334,7 @@ public class WindowNets extends WindowObjectListWithFilter {
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
       FloatPoint transformedPoint = coordinateTransform.boardToUser(point);
-      return append(transformedPoint.toString(boardFrame.get_locale()));
+      return append(transformedPoint.toString(boardFrame.getLocale()));
     }
 
     @Override

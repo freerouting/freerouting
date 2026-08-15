@@ -13,9 +13,8 @@ public class Rectangle extends Shape {
   public final double[] coor;
 
   /**
-   * Creates a new instance of Rectangle p_coor is an array of dimension 4 and contains the
-   * rectangle coordinates in the following order: lower left x, lower left y, upper right x, upper
-   * right y.
+   * Creates a new instance of Rectangle coor is an array of dimension 4 and contains the rectangle
+   * coordinates in the following order: lower left x, lower left y, upper right x, upper right y.
    */
   public Rectangle(Layer layer, double[] coor) {
     super(layer);
@@ -27,7 +26,7 @@ public class Rectangle extends Shape {
     return this;
   }
 
-  /** Creates the smallest rectangle containing this rectangle and p_other. */
+  /** Creates the smallest rectangle containing this rectangle and other. */
   public Rectangle union(Rectangle other) {
     double[] resultCoor = new double[4];
     resultCoor[0] = Math.min(this.coor[0], other.coor[0]);

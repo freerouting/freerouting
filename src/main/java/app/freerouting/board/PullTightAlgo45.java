@@ -44,9 +44,7 @@ class PullTightAlgo45 extends PullTightAlgo {
     return AngleRestriction.FORTYFIVE_DEGREE;
   }
 
-  /**
-   * Tries to reduce the amount of corners of p_polyline. Return p_polyline, if nothing was changed.
-   */
+  /** Tries to reduce the amount of corners of polyline. Return polyline, if nothing was changed. */
   private Polyline reduceCorners(Polyline polyline) {
     if (polyline.arr.length <= 4) {
       return polyline;
@@ -211,7 +209,7 @@ class PullTightAlgo45 extends PullTightAlgo {
   }
 
   /**
-   * Smoothens the 90 degree corners of p_polyline to 45 degree by cutting of the 90 degree corner.
+   * Smoothens the 90 degree corners of polyline to 45 degree by cutting of the 90 degree corner.
    * The cutting of is so small, that no check is needed
    */
   private Polyline smoothenCorners(Polyline polyline) {
@@ -257,7 +255,7 @@ class PullTightAlgo45 extends PullTightAlgo {
   }
 
   /**
-   * Adds a line at p_no to smoothen a 90 degree corner between p_line_1 and p_line_2 to 45 degree.
+   * Adds a line at no to smoothen a 90 degree corner between line1 and line2 to 45 degree.
    *
    * <p>The distance of the new line to the corner will be so small that no clearance check is
    * necessary.
@@ -358,7 +356,7 @@ class PullTightAlgo45 extends PullTightAlgo {
   }
 
   /**
-   * Adds a line at p_no to smoothen a 90 degree corner between p_line_1 and p_line_2 to 45 degree.
+   * Adds a line at no to smoothen a 90 degree corner between line1 and line2 to 45 degree.
    *
    * <p>The distance of the new line to the corner will be so big that a clearance check is
    * necessary.

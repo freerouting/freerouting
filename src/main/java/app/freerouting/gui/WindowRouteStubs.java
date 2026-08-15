@@ -22,9 +22,9 @@ public class WindowRouteStubs extends CleanupWindows {
   /** Creates a new instance of WindowRouteStubs. */
   public WindowRouteStubs(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
-    this.tm = new TextManager(CleanupWindows.class, boardFrame.get_locale());
+    this.tm = new TextManager(CleanupWindows.class, boardFrame.getLocale());
 
     this.setTitle(tm.getText("route_stubs"));
     this.listEmptyMessage.setText(tm.getText("no_route_stubs_found"));
@@ -143,7 +143,7 @@ public class WindowRouteStubs extends CleanupWindows {
           "route_stub_row_message",
           itemString,
           this.net.name,
-          this.location.toString(boardFrame.get_locale()),
+          this.location.toString(boardFrame.getLocale()),
           layerName);
     }
 

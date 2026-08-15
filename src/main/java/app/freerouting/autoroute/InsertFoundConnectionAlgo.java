@@ -139,7 +139,7 @@ public final class InsertFoundConnectionAlgo {
     final double savedEdgeToTurnDist = board.rules.getPinEdgeToTurnDist();
     board.rules.setPinEdgeToTurnDist(-1);
 
-    // Look for pins att the start and the end of p_trace in case that neckdown is necessary.
+    // Look for pins att the start and the end of trace in case that neckdown is necessary.
     Pin startPin = null;
     Pin endPin = null;
     if (ctrl.withNeckdown) {
@@ -268,7 +268,7 @@ public final class InsertFoundConnectionAlgo {
         // In this case repeating the insertion with more distant corners may allow the spring_over
         // to correct the situation.
         if (fromCornerNo > 0) {
-          // p_trace.corners[i] may be inside the offset for the substitute trace around
+          // trace.corners[i] may be inside the offset for the substitute trace around
           // a spring_over obstacle (if clearance compensation is off).
           if (currentCornerArr.length < 3) {
             // first correction
@@ -580,8 +580,8 @@ public final class InsertFoundConnectionAlgo {
     } else {
       FloatPoint floatNeckDownEndPoint = floatFromCorner.changeLength(floatToCorner, okLength);
       neckDownEndPoint = floatNeckDownEndPoint.round();
-      // add a corner in case  neckDownEndPoint is not exactly on the line from p_from_corner to
-      // p_to_corner
+      // add a corner in case  neckDownEndPoint is not exactly on the line from fromCorner to
+      // toCorner
       boolean horizontalFirst =
           Math.abs(floatFromCorner.x - floatNeckDownEndPoint.x)
               >= Math.abs(floatFromCorner.y - floatNeckDownEndPoint.y);
@@ -675,9 +675,9 @@ public final class InsertFoundConnectionAlgo {
   }
 
   /**
-   * Searches the cheapest via masks containing p_from_layer and p_to_layer, so that a forced via is
-   * possible at p_location with this mask and inserts the via. Returns false, if no suitable via
-   * mask was found or if the algorithm failed.
+   * Searches the cheapest via masks containing fromLayer and toLayer, so that a forced via is
+   * possible at location with this mask and inserts the via. Returns false, if no suitable via mask
+   * was found or if the algorithm failed.
    */
   private boolean insertVia(Point location, int inputFromLayer, int inputToLayer) {
     if (inputFromLayer == inputToLayer) {

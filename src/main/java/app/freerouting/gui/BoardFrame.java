@@ -1587,8 +1587,7 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Returns the locale used for language-dependent output. */
-  // CHECKSTYLE.SUPPRESS: MethodName for +1 lines
-  public Locale get_locale() {
+  public Locale getLocale() {
     return this.locale;
   }
 

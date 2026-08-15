@@ -136,7 +136,7 @@ public abstract class Item
     return BoardItemType.OTHER;
   }
 
-  /** Returns true if the net number array of this item contains p_net_no. */
+  /** Returns true if the net number array of this item contains netNo. */
   public boolean containsNet(int netNo) {
     if (netNo <= 0) {
       return false;
@@ -154,7 +154,7 @@ public abstract class Item
     return !containsNet(netNo);
   }
 
-  /** Returns, if this item in not allowed to overlap with p_other. */
+  /** Returns, if this item in not allowed to overlap with other. */
   public abstract boolean isObstacle(Item other);
 
   @Override
@@ -162,12 +162,12 @@ public abstract class Item
     return !containsNet(netNo);
   }
 
-  /** Returns true if the net number arrays of this and p_other have a common number. */
+  /** Returns true if the net number arrays of this and other have a common number. */
   public boolean sharesNet(Item other) {
     return this.sharesNetNo(other.netNoArr);
   }
 
-  /** Returns true if the net number array of this and p_net_no_arr have a common number. */
+  /** Returns true if the net number array of this and netNoArr have a common number. */
   public boolean sharesNetNo(int[] netNoArr) {
     for (int i = 0; i < this.netNoArr.length; i++) {
       for (int j = 0; j < netNoArr.length; j++) {
@@ -182,7 +182,7 @@ public abstract class Item
   /** Returns the number of shapes of this item after decomposition into convex polygonal shapes. */
   public abstract int tileShapeCount();
 
-  /** Returns the p_index-th shape of this item after decomposition into convex polygonal shapes. */
+  /** Returns the index-th shape of this item after decomposition into convex polygonal shapes. */
   public TileShape getTileShape(int index) {
     if (this.board == null) {
       FRLogger.warn("Item.get_tile_shape: app.freerouting.board is null");
@@ -228,7 +228,7 @@ public abstract class Item
     return precalculatedTreeShapes;
   }
 
-  /** Calculates the tree shapes for this item for p_search_tree. */
+  /** Calculates the tree shapes for this item for searchTree. */
   protected abstract TileShape[] calculateTreeShapes(ShapeSearchTree searchTree);
 
   /** Returns false, if this item is deleted oor not inserted into the board. */
@@ -241,8 +241,8 @@ public abstract class Item
   }
 
   /**
-   * Creates a copy of this item with id number p_id_no. If p_id_no {@literal <}= 0, the idNo of the
-   * new item is generated internally
+   * Creates a copy of this item with id number idNo. If idNo {@literal <}= 0, the idNo of the new
+   * item is generated internally
    */
   public abstract Item copy(int idNo);
 
@@ -256,7 +256,7 @@ public abstract class Item
     return dup;
   }
 
-  /** Returns true, if the layer range of this item contains p_layer. */
+  /** Returns true, if the layer range of this item contains layer. */
   public abstract boolean isOnLayer(int layer);
 
   /** Returns the number of the first layer containing geometry of this item. */
@@ -268,30 +268,27 @@ public abstract class Item
   /** Write this item to an output stream. */
   public abstract boolean write(ObjectOutputStream stream);
 
-  /** Translates the shapes of this item by p_vector. Does not move the item in the board. */
+  /** Translates the shapes of this item by vector. Does not move the item in the board. */
   public abstract void translateBy(Vector vector);
 
   /**
-   * Turns this Item by p_factor times 90 degree around p_pole. Does not update the item in the
-   * board.
+   * Turns this Item by factor times 90 degree around pole. Does not update the item in the board.
    */
   public abstract void turn90Degree(int factor, IntPoint pole);
 
-  /**
-   * Rotates this Item by p_angle_in_degree around p_pole. Does not update the item in the board.
-   */
+  /** Rotates this Item by angleInDegree around pole. Does not update the item in the board. */
   public abstract void rotateApprox(double angleInDegree, FloatPoint pole);
 
   /**
-   * Changes the placement side of this Item and mirrors it at the vertical line through p_pole.
-   * Does not update the item in the board.
+   * Changes the placement side of this Item and mirrors it at the vertical line through pole. Does
+   * not update the item in the board.
    */
   public abstract void changePlacementSide(IntPoint pole);
 
   /** Returns a box containing the geometry of this item. */
   public abstract IntBox boundingBox();
 
-  /** Translates this item by p_vector in the board. */
+  /** Translates this item by vector in the board. */
   public void moveBy(Vector vector) {
     board.itemList.saveForUndo(this);
     board.searchTreeManager.remove(this);
@@ -304,7 +301,7 @@ public abstract class Item
     }
   }
 
-  /** Returns true, if some shapes of this item and p_other are on the same layer. */
+  /** Returns true, if some shapes of this item and other are on the same layer. */
   public boolean sharesLayer(Item other) {
     int maxFirstLayer = Math.max(this.firstLayer(), other.firstLayer());
     int minLastLayer = Math.min(this.lastLayer(), other.lastLayer());
@@ -312,7 +309,7 @@ public abstract class Item
   }
 
   /**
-   * Returns the first layer, where both this item and p_other have a shape. Returns -1, if such a
+   * Returns the first layer, where both this item and other have a shape. Returns -1, if such a
    * layer does not exist.
    */
   public int firstCommonLayer(Item other) {
@@ -325,7 +322,7 @@ public abstract class Item
   }
 
   /**
-   * Returns the last layer, where both this item and p_other have a shape. Returns -1, if such a
+   * Returns the last layer, where both this item and other have a shape. Returns -1, if such a
    * layer does not exist.
    */
   public int lastCommonLayer(Item other) {
@@ -551,7 +548,7 @@ public abstract class Item
   }
 
   /**
-   * Returns the contact point, if this item and p_other are Connectable and have a unique normal
+   * Returns the contact point, if this item and other are Connectable and have a unique normal
    * contact. Returns null otherwise
    */
   public Point normalContactPoint(Item other) {
@@ -569,8 +566,8 @@ public abstract class Item
   }
 
   /**
-   * Returns the set of all Connectable items of the net with number p_net_no which can be reached
-   * recursively via normal contacts from this item. If p_net_no {@literal <}= 0, the net number is
+   * Returns the set of all Connectable items of the net with number netNo which can be reached
+   * recursively via normal contacts from this item. If netNo {@literal <}= 0, the net number is
    * ignored.
    */
   public Set<Item> getConnectedSet(int netNo) {
@@ -578,9 +575,9 @@ public abstract class Item
   }
 
   /**
-   * Returns the set of all Connectable items of the net with number p_net_no which can be reached
-   * recursively via normal contacts from this item. If p_net_no {@literal <}= 0, the net number is
-   * ignored. If p_stop_at_plane, the recursive algorithm stops, when a conduction area is reached,
+   * Returns the set of all Connectable items of the net with number netNo which can be reached
+   * recursively via normal contacts from this item. If netNo {@literal <}= 0, the net number is
+   * ignored. If stopAtPlane, the recursive algorithm stops, when a conduction area is reached,
    * which does not belong to a component.
    */
   public Set<Item> getConnectedSet(int netNo, boolean stopAtPlane) {
@@ -620,7 +617,7 @@ public abstract class Item
   }
 
   /**
-   * Recursive part of Trace.is_cycle. If p_ignore_areas is true, cycles where conduction areas are
+   * Recursive part of Trace.is_cycle. If ignoreAreas is true, cycles where conduction areas are
    * involved are ignored.
    */
   boolean isCycleRecu(
@@ -649,9 +646,9 @@ public abstract class Item
   }
 
   /**
-   * Returns the set of all Connectable items belonging to the net with number p_net_no, which are
-   * not in the connected set of this item. If p_net_no {@literal <}= 0, the net numbers contained
-   * in this items are used instead of p_net_no.
+   * Returns the set of all Connectable items belonging to the net with number netNo, which are not
+   * in the connected set of this item. If netNo {@literal <}= 0, the net numbers contained in this
+   * items are used instead of netNo.
    */
   public Set<Item> getUnconnectedSet(int netNo) {
     Set<Item> result = new TreeSet<>();
@@ -675,9 +672,9 @@ public abstract class Item
   }
 
   /**
-   * Returns all traces and vias from this item until the next fork or terminal item. If
-   * p_stop_option == StopConnectionOption.FANOUT_VIA, the algorithm will stop at the next fanout
-   * via, If p_stop_option == StopConnectionOption.VIA, the algorithm will stop at any via.
+   * Returns all traces and vias from this item until the next fork or terminal item. If stopOption
+   * == StopConnectionOption.FANOUT_VIA, the algorithm will stop at the next fanout via, If
+   * stopOption == StopConnectionOption.VIA, the algorithm will stop at any via.
    */
   public Set<Item> getConnectionItems(StopConnectionOption stopOption) {
     Set<Item> contacts = this.getNormalContacts();
@@ -787,8 +784,8 @@ public abstract class Item
   }
 
   /**
-   * Returns for this item the layer of the shape with index p_index. If p_id_no {@literal <}= 0, it
-   * will be generated internally.
+   * Returns for this item the layer of the shape with index index. If idNo {@literal <}= 0, it will
+   * be generated internally.
    */
   @Override
   public abstract int shapeLayer(int index);
@@ -855,9 +852,7 @@ public abstract class Item
     return netNoArr.length;
   }
 
-  /**
-   * Returns the p_no-th net number of this item for 0 {@literal <=} p_no {@literal <} netCount().
-   */
+  /** Returns the no-th net number of this item for 0 {@literal <=} no {@literal <} netCount(). */
   public int getNetNo(int no) {
     return netNoArr[no];
   }
@@ -868,8 +863,8 @@ public abstract class Item
   }
 
   /**
-   * Removes p_net_no from the net number array. Returns false, if p_net_no was not contained in
-   * this array.
+   * Removes netNo from the net number array. Returns false, if netNo was not contained in this
+   * array.
    */
   public boolean removeFromNet(int netNo) {
     int foundIndex = -1;
@@ -906,7 +901,7 @@ public abstract class Item
    */
   public void setClearanceClassNo(int index) {
     if (index < 0 || index >= this.board.rules.clearanceMatrix.getClassCount()) {
-      FRLogger.warn("Item.set_clearance_class_no: p_index out of range");
+      FRLogger.warn("Item.set_clearance_class_no: index out of range");
       return;
     }
     clearanceClass = index;
@@ -915,7 +910,7 @@ public abstract class Item
   /** Changes the clearance class of this item and updates the search tree. */
   public void changeClearanceClass(int index) {
     if (index < 0 || index >= this.board.rules.clearanceMatrix.getClassCount()) {
-      FRLogger.warn("Item.set_clearance_class_no: p_index out of range");
+      FRLogger.warn("Item.set_clearance_class_no: index out of range");
       return;
     }
     clearanceClass = index;
@@ -933,15 +928,15 @@ public abstract class Item
   }
 
   /**
-   * Makes this item connectable and assigns it to the input net. If p_net_no {@literal <} 0, the
-   * net items net number will be removed and the item will no longer be connectable.
+   * Makes this item connectable and assigns it to the input net. If netNo {@literal <} 0, the net
+   * items net number will be removed and the item will no longer be connectable.
    */
   public void assignNetNo(int netNo) {
     if (!Nets.isNormalNetNo(netNo)) {
       return;
     }
     if (netNo > board.rules.nets.maxNetNo()) {
-      FRLogger.warn("Item.assign_net_no: p_net_no to big");
+      FRLogger.warn("Item.assign_net_no: netNo to big");
       return;
     }
     board.itemList.saveForUndo(this);
@@ -957,7 +952,7 @@ public abstract class Item
     }
   }
 
-  /** Returns true, if p_item is contained in the input filter. */
+  /** Returns true, if item is contained in the input filter. */
   public abstract boolean isSelectedByFilter(ItemSelectionFilter filter);
 
   /** Internally used for implementing the function is_selected_by_filter. */
@@ -971,7 +966,7 @@ public abstract class Item
     return result;
   }
 
-  /** Sets the item tree entries for the tree with identification number p_tree_no. */
+  /** Sets the item tree entries for the tree with identification number treeNo. */
   @Override
   public void setSearchTreeEntries(ShapeTree.Leaf[] treeEntries, ShapeTree tree) {
     if (this.board == null) {
@@ -984,8 +979,8 @@ public abstract class Item
   }
 
   /**
-   * Returns the tree entries for the tree with identification number p_tree_no, or null, if for
-   * this tree no entries of this item are inserted.
+   * Returns the tree entries for the tree with identification number treeNo, or null, if for this
+   * tree no entries of this item are inserted.
    */
   public ShapeTree.Leaf[] getSearchTreeEntries(ShapeSearchTree tree) {
     if (this.searchTreesInfo == null) {
@@ -995,8 +990,7 @@ public abstract class Item
   }
 
   /**
-   * Sets the precalculated tree shapes tree entries for the tree with identification number
-   * p_tree_no.
+   * Sets the precalculated tree shapes tree entries for the tree with identification number treeNo.
    */
   protected void setPrecalculatedTreeShapes(TileShape[] shapes, ShapeSearchTree tree) {
     if (this.board == null) {
@@ -1160,12 +1154,12 @@ public abstract class Item
     return true;
   }
 
-  /** Checks, if this item and p_other contain exactly the same net numbers. */
+  /** Checks, if this item and other contain exactly the same net numbers. */
   public boolean netsEqual(Item other) {
     return netsEqual(other.netNoArr);
   }
 
-  /** Checks, if this item contains exactly the nets in p_net_no_arr. */
+  /** Checks, if this item contains exactly the nets in netNoArr. */
   public boolean netsEqual(int[] netNoArr) {
     if (this.netNoArr.length != netNoArr.length) {
       return false;
@@ -1180,7 +1174,7 @@ public abstract class Item
 
   /**
    * Returns true, if the via is directly ob by a trace connected to a nearby SMD-pin. If
-   * p_ignore_items != null, contact traces in P-ignoreItems are ignored.
+   * ignoreItems != null, contact traces in P-ignoreItems are ignored.
    */
   boolean isFanoutVia(Set<Item> ignoreItems) {
     Collection<Item> contactList = this.getNormalContacts();

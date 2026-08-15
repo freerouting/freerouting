@@ -34,7 +34,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
 
   /** Creates a new instance of AssignNetRulesWindow. */
   public WindowAssignNetClass(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 

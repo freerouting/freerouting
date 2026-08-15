@@ -15,7 +15,7 @@ public enum Unit implements Serializable {
     this.micrometers = micrometers;
   }
 
-  /** Scales p_value from p_from_unit to p_to_unit. */
+  /** Scales value from fromUnit to toUnit. */
   public static double scale(double value, Unit fromUnit, Unit toUnit) {
     return value * fromUnit.micrometers / toUnit.micrometers;
   }

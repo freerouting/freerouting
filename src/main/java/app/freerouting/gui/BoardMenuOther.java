@@ -15,7 +15,7 @@ public final class BoardMenuOther extends JMenu {
   /** Creates a new instance of BoardMenuOther. */
   private BoardMenuOther(BoardFrame boardFrame) {
     this.boardFrame = boardFrame;
-    tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    tm = new TextManager(this.getClass(), boardFrame.getLocale());
   }
 
   /** Returns a new other menu for the board frame. */

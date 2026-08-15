@@ -44,7 +44,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
 
   /** Creates a new instance of ObjectListWindow. */
   protected WindowObjectList(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
     this.boardFrame = boardFrame;
 
     // create main panel

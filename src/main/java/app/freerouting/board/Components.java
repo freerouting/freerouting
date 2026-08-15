@@ -23,8 +23,8 @@ public class Components implements Serializable {
 
   /**
    * Inserts a component into the list. The items of the component have to be inserted separately
-   * into the board. If p_on_front is false, the component will be placed on the back side, and
-   * p_package_back is used instead of p_package_front.
+   * into the board. If onFront is false, the component will be placed on the back side, and
+   * packageBack is used instead of packageFront.
    */
   public Component add(
       String name,
@@ -54,7 +54,7 @@ public class Components implements Serializable {
 
   /**
    * Adds a component to this object. The items of the component have to be inserted separately into
-   * the board. If p_on_front is false, the component will be placed on the back side. The component
+   * the board. If onFront is false, the component will be placed on the back side. The component
    * name is generated internally.
    */
   public Component add(Point location, double rotation, boolean onFront, Package componentPackage) {
@@ -145,8 +145,8 @@ public class Components implements Serializable {
   }
 
   /**
-   * Moves the component with number p_component_no. Works contrary to Component.translate_by with
-   * the undo algorithm of the board.
+   * Moves the component with number componentNo. Works contrary to Component.translate_by with the
+   * undo algorithm of the board.
    */
   public void move(int componentNo, app.freerouting.geometry.planar.Vector vector) {
     Component currentComponent = this.get(componentNo);
@@ -155,7 +155,7 @@ public class Components implements Serializable {
   }
 
   /**
-   * Turns the component with number p_component_no by p_factor times 90 degree around p_pole. Works
+   * Turns the component with number componentNo by factor times 90 degree around pole. Works
    * contrary to Component.turn_90_degree with the undo algorithm of the board.
    */
   public void turn90Degree(int componentNo, int factor, IntPoint pole) {
@@ -165,8 +165,8 @@ public class Components implements Serializable {
   }
 
   /**
-   * Rotates the component with number p_component_no by p_rotation_in_degree around p_pole. Works
-   * contrary to Component.rotate with the undo algorithm of the board.
+   * Rotates the component with number componentNo by rotationInDegree around pole. Works contrary
+   * to Component.rotate with the undo algorithm of the board.
    */
   public void rotate(int componentNo, double rotationInDegree, IntPoint pole) {
     Component currentComponent = this.get(componentNo);
@@ -175,8 +175,8 @@ public class Components implements Serializable {
   }
 
   /**
-   * Changes the placement side of the component with number p_component_no and mirrors it at the
-   * vertical line through p_pole. Works contrary to Component.change_side the undo algorithm of the
+   * Changes the placement side of the component with number componentNo and mirrors it at the
+   * vertical line through pole. Works contrary to Component.change_side the undo algorithm of the
    * board.
    */
   public void changeSide(int componentNo, IntPoint pole) {

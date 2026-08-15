@@ -67,7 +67,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
   /** Creates a new instance of NetClassesWindow. */
   public WindowNetClasses(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 
@@ -212,7 +212,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     this.centerPanel.add(scrollPane, BorderLayout.CENTER);
 
     // add message for german localisation bug
-    if ("de".equalsIgnoreCase(boardFrame.get_locale().getLanguage())) {
+    if ("de".equalsIgnoreCase(boardFrame.getLocale().getLanguage())) {
       // Due to a Java system bug, the decimal comma in this table must be entered as a dot.
       JLabel bugLabel =
           new JLabel(

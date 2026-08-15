@@ -73,7 +73,7 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
   /** Returns the pin with the input number from this package. */
   public Pin getPin(int no) {
     if (no < 0 || no >= pinArr.length) {
-      FRLogger.warn("Package.get_pin: p_no out of range");
+      FRLogger.warn("Package.get_pin: no out of range");
       return null;
     }
     return pinArr[no];

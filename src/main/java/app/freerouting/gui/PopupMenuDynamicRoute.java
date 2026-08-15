@@ -15,7 +15,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
   PopupMenuDynamicRoute(BoardFrame boardFrame) {
     super(boardFrame);
 
-    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     final LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
 
@@ -47,7 +47,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
     disableLayerItem(layerStructure.getSignalLayerNo(currentLayer));
   }
 
-  /** Disables the p_no-th item in the changeLayerMenu. */
+  /** Disables the no-th item in the changeLayerMenu. */
   void disableLayerItem(int no) {
     if (this.changeLayerMenu != null) {
       this.changeLayerMenu.disableItem(no);

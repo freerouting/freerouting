@@ -6,10 +6,10 @@ import java.util.Set;
 /** Functionality required for items, which can be electrical connected to other items. */
 public interface Connectable {
 
-  /** Returns true if this item belongs to the net with number p_net_no. */
+  /** Returns true if this item belongs to the net with number netNo. */
   boolean containsNet(int netNo);
 
-  /** Returns true if the net number array of this and p_net_no_arr have a common number. */
+  /** Returns true if the net number array of this and netNoArr have a common number. */
   boolean sharesNetNo(int[] netNoArr);
 
   /** Returns a list of all connectable items overlapping and sharing a net with this item. */
@@ -29,8 +29,8 @@ public interface Connectable {
   Set<Item> getNormalContacts();
 
   /**
-   * Returns all connectable items of the net with number p_net_no, which can be reached recursively
-   * from this item via normal contacts. if p_net_no {@literal <}= 0, the net number is ignored.
+   * Returns all connectable items of the net with number netNo, which can be reached recursively
+   * from this item via normal contacts. if netNo {@literal <}= 0, the net number is ignored.
    */
   Set<Item> getConnectedSet(int netNo);
 

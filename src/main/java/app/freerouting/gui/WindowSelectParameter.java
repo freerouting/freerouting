@@ -49,7 +49,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     this.boardHandling = boardFrame.boardPanel.boardHandling;
     final GraphicsContext gc = this.boardHandling.graphicsContext;
 
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 

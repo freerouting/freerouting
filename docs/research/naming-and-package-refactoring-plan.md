@@ -469,14 +469,14 @@ Branch: `refactor/naming-phase-6-identifiers` (or several PRs on that branch)
 
 **Progress checklist**
 
-- [ ] Create the phase branch from the updated epic.
-- [ ] Convert identifiers in GUI, settings, API, analytics, management, and i18n.
-- [ ] Convert identifiers in `drc`, `rules`, `io`, and `core`.
-- [ ] Convert non-algorithm `board` identifiers.
-- [ ] Last, convert `autoroute` and shove/pull-tight/via algorithm identifiers.
-- [ ] Verify no snake_case Java identifiers or `p_` parameters remain outside `src_v19/`.
-- [ ] Preserve acronyms, wire names, CLI/JSON keys, and behavior; run BM01 and all gates.
-- [ ] Review and merge the Phase 6 PR(s) into the epic.
+- [x] Create the phase branch from the updated epic.
+- [x] Convert identifiers in GUI, settings, API, analytics, management, and i18n.
+- [x] Convert identifiers in `drc`, `rules`, `io`, and `core`.
+- [x] Convert non-algorithm `board` identifiers.
+- [x] Last, convert `autoroute` and shove/pull-tight/via algorithm identifiers.
+- [x] Verify no snake_case Java identifiers or `p_` parameters remain outside `src_v19/`.
+- [x] Preserve acronyms, wire names, CLI/JSON keys, and behavior; run BM01 and all gates.
+- [x] Review and merge the Phase 6 PR(s) into the epic.
 
 End state: no `snake_case` Java identifiers and no `p_` parameter prefixes in
 `src/main/java` and `src/test/java`.

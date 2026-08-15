@@ -11,7 +11,7 @@ public class PopupMenuMove extends PopupMenuDisplay {
   /** Creates a new instance of PopupMenuMove. */
   public PopupMenuMove(BoardFrame boardFrame) {
     super(boardFrame);
-    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     // Add menu for turning the items by a multiple of 90 degree
 

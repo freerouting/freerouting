@@ -72,7 +72,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
 
   /**
    * Returns the half with enlarged by the clearance compensation value for the tree with id number
-   * p_tree_id_no Equals get_half_width(), if no clearance compensation is used in this tree.
+   * treeIdNo Equals get_half_width(), if no clearance compensation is used in this tree.
    */
   public int getCompensatedHalfWidth(ShapeSearchTree searchTree) {
     return this.halfWidth + searchTree.clearanceCompensationValue(clearanceClassNo(), this.layer);
@@ -156,9 +156,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * Get a list of all items having a connection point at p_point on the layer of this trace. If
-   * p_ignore_net is false, only contacts to items sharing a net with this trace are calculated.
-   * This is the normal case.
+   * Get a list of all items having a connection point at point on the layer of this trace. If
+   * ignoreNet is false, only contacts to items sharing a net with this trace are calculated. This
+   * is the normal case.
    */
   public Set<Item> getNormalContacts(Point point, boolean ignoreNet) {
     if (point == null || !(point.equals(this.firstCorner()) || point.equals(this.lastCorner()))) {
@@ -242,7 +242,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return false;
   }
 
-  /** Returns the endpoint of this trace with the shortest distance to p_from_point. */
+  /** Returns the endpoint of this trace with the shortest distance to fromPoint. */
   public Point nearestEndPoint(Point fromPoint) {
     Point p1 = firstCorner();
     Point p2 = lastCorner();
@@ -360,8 +360,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   /**
    * Checks that the connection restrictions to the contact pins are satisfied.
    *
-   * <p>If p_at_start, the start of this trace is checked, else the end. Returns false if a pin is
-   * at that end where the connection is checked and the connection is not ok.
+   * <p>If atStart, the start of this trace is checked, else the end. Returns false if a pin is at
+   * that end where the connection is checked and the connection is not ok.
    */
   public abstract boolean checkConnectionToPin(boolean atStart);
 
@@ -456,13 +456,13 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * Looks up traces intersecting with this trace and splits them at the intersection points. In
    * case of an overlaps, the traces are split at their first and their last common point. Returns
    * the pieces resulting from splitting. If nothing is split, the result will contain just this
-   * Trace. If p_clip_shape != null, the split may be restricted to p_clip_shape.
+   * Trace. If clipShape != null, the split may be restricted to clipShape.
    */
   public abstract Collection<PolylineTrace> split(IntOctagon clipShape);
 
   /**
-   * Splits this trace into two at p_point. Returns the 2 pieces of the split trace, or null if
-   * nothing was split because for example p_point is not located on this trace.
+   * Splits this trace into two at point. Returns the 2 pieces of the split trace, or null if
+   * nothing was split because for example point is not located on this trace.
    */
   public abstract Trace[] split(Point point);
 

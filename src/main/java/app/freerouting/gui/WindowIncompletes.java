@@ -14,7 +14,7 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
   /** Creates a new instance of IncompletesWindow. */
   public WindowIncompletes(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("incompletes"));
     this.listEmptyMessage.setText(tm.getText("routeCompleted"));

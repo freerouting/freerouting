@@ -351,7 +351,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   @Override
   public TileShape getTraceConnectionShape(ShapeSearchTree searchTree, int index) {
     if (index < 0 || index >= this.treeShapeCount(searchTree)) {
-      FRLogger.warn("ConductionArea.get_trace_connection_shape p_index out of range");
+      FRLogger.warn("ConductionArea.get_trace_connection_shape index out of range");
       return null;
     }
     return this.getTreeShape(searchTree, index);

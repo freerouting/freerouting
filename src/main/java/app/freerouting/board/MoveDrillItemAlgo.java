@@ -18,8 +18,8 @@ public final class MoveDrillItemAlgo {
   private MoveDrillItemAlgo() {}
 
   /**
-   * Checks, if p_drill_item can be translated by p_vector by shoving obstacle traces and vias
-   * aside, so that no clearance violations occur.
+   * Checks, if drillItem can be translated by vector by shoving obstacle traces and vias aside, so
+   * that no clearance violations occur.
    */
   public static boolean check(
       DrillItem drillItem,
@@ -37,7 +37,7 @@ public final class MoveDrillItemAlgo {
       return false;
     }
 
-    // Check, that p_drillitem is only connected to traces.
+    // Check, that drillitem is only connected to traces.
     Collection<Item> contactList = drillItem.getNormalContacts();
     for (Item currentContact : contactList) {
       if (!(currentContact instanceof Trace || currentContact instanceof ConductionArea)) {
@@ -93,9 +93,9 @@ public final class MoveDrillItemAlgo {
   }
 
   /**
-   * Translates p_drill_item by p_vector by shoving obstacle traces and vias aside, so that no
-   * clearance violations occur. If p_tidy_region != null, it will be joined by the bounding
-   * octagons of the translated shapes.
+   * Translates drillItem by vector by shoving obstacle traces and vias aside, so that no clearance
+   * violations occur. If tidyRegion != null, it will be joined by the bounding octagons of the
+   * translated shapes.
    */
   static boolean insert(
       DrillItem drillItem,
@@ -157,8 +157,8 @@ public final class MoveDrillItemAlgo {
   }
 
   /**
-   * Shoves vias out of p_obstacle_shape. Returns false, if the database is damaged, so that an undo
-   * is necessary afterwards.
+   * Shoves vias out of obstacleShape. Returns false, if the database is damaged, so that an undo is
+   * necessary afterwards.
    */
   static boolean shoveVias(
       TileShape obstacleShape,
@@ -237,9 +237,9 @@ public final class MoveDrillItemAlgo {
   }
 
   /**
-   * Calculates possible new location for a via to shove outside p_obstacle_shape. if
-   * p_extended_check is true, more than 1 possible new locations are calculated. The function is
-   * used here and in ShoveTraceAlgo.check.
+   * Calculates possible new location for a via to shove outside obstacleShape. if extendedCheck is
+   * true, more than 1 possible new locations are calculated. The function is used here and in
+   * ShoveTraceAlgo.check.
    */
   static IntPoint[] tryShoveViaPoints(
       TileShape obstacleShape,
@@ -265,7 +265,7 @@ public final class MoveDrillItemAlgo {
       // a different algorithm is used for calculating the new via centers
       shoveDistance = 0;
       if (!searchTree.isClearanceCompensationUsed()) {
-        // enlarge p_obstacle_shape and currentViaShape by half of the clearance value to
+        // enlarge obstacleShape and currentViaShape by half of the clearance value to
         // synchronize
         // with the check algorithm in ShapeSearchTree.overlapping_tree_entries_with_clearance
         shoveDistance += 0.5 * clearanceValue;

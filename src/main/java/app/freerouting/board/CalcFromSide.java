@@ -18,16 +18,16 @@ public class CalcFromSide {
   FloatPoint borderIntersection;
 
   /**
-   * Calculates the number of the edge line of p_shape where p_polyline enters.
+   * Calculates the number of the edge line of shape where polyline enters.
    *
-   * <p>Used in the push trace algorithm to determine the shove direction. p_no is expected between
-   * 1 and p_polyline.lineCount - 2 inclusive.
+   * <p>Used in the push trace algorithm to determine the shove direction. no is expected between 1
+   * and polyline.lineCount - 2 inclusive.
    */
   CalcFromSide(Polyline polyline, int no, TileShape shape) {
     int fromsideNo = -1;
     FloatPoint intersection = null;
     boolean borderIntersectionFound = false;
-    // calculate the edgeNo of p_shape, where p_polyline enters
+    // calculate the edgeNo of shape, where polyline enters
     for (int currentNo = no; currentNo > 0; currentNo--) {
       LineSegment currentSeg = new LineSegment(polyline, currentNo);
       int[] intersections = currentSeg.borderIntersections(shape);
@@ -39,9 +39,9 @@ public class CalcFromSide {
       }
     }
     if (!borderIntersectionFound) {
-      // The first corner of p_polyline is inside p_shape.
-      // Calculate the nearest intersection point of p_polyline.arr[1]
-      // with the border of p_shape to the first corner of p_polyline
+      // The first corner of polyline is inside shape.
+      // Calculate the nearest intersection point of polyline.arr[1]
+      // with the border of shape to the first corner of polyline
       FloatPoint fromPoint = polyline.cornerApprox(0);
       Line checkLine = polyline.arr[1];
       double minDist = Double.MAX_VALUE;
@@ -62,7 +62,7 @@ public class CalcFromSide {
   }
 
   /**
-   * Calculates the nearest border side of p_shape to p_from_point. Used in the shove_drill_item
+   * Calculates the nearest border side of shape to fromPoint. Used in the shove_drill_item
    * algorithm to determine the shove direction.
    */
   CalcFromSide(Point fromPoint, TileShape shape) {
@@ -75,8 +75,8 @@ public class CalcFromSide {
   }
 
   /**
-   * Calculates the Side of p_shape at the start of p_line_segment. If p_shove_to_the_left, the
-   * fromSideNo is decremented by 2, else it is increased by 2.
+   * Calculates the Side of shape at the start of lineSegment. If shoveToTheLeft, the fromSideNo is
+   * decremented by 2, else it is increased by 2.
    */
   CalcFromSide(LineSegment lineSegment, TileShape shape, boolean shoveToTheLeft) {
     FloatPoint startCorner = lineSegment.startPointApprox();

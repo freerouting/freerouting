@@ -125,7 +125,7 @@ public class BoardRules implements Serializable {
   /** Changes the default trace half-width used for routing on all layers to the input value. */
   public void setDefaultTraceHalfWidths(int value) {
     if (value <= 0) {
-      FRLogger.warn("BoardRules.set_trace_half_widths: p_value out of range");
+      FRLogger.warn("BoardRules.set_trace_half_widths: value out of range");
       return;
     }
     this.getDefaultNetClass().setTraceHalfWidth(value);

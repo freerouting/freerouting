@@ -47,9 +47,9 @@ public class WindowVisibility extends BoardSavableSubWindow {
   /** Creates a window for editing layer and object visibility. */
   public WindowVisibility(BoardFrame boardFrame) {
     this.boardPanel = boardFrame.boardPanel;
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
-    TextManager tm = new TextManager(WindowVisibility.class, boardFrame.get_locale());
+    TextManager tm = new TextManager(WindowVisibility.class, boardFrame.getLocale());
     this.setTitle(tm.getText("title"));
 
     LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
@@ -123,7 +123,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
     final JPanel buttonRowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
     TextManager visibilityTm =
         text_manager_cache.computeIfAbsent(
-            boardFrame.get_locale(), locale -> new TextManager(WindowVisibility.class, locale));
+            boardFrame.getLocale(), locale -> new TextManager(WindowVisibility.class, locale));
 
     JButton resetButton = new JButton(visibilityTm.getText("reset_to_defaults"));
     resetButton.setToolTipText(visibilityTm.getText("reset_to_defaults_tooltip"));

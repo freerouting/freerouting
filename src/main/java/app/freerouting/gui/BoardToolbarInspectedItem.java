@@ -17,7 +17,7 @@ class BoardToolbarInspectedItem extends JToolBar {
   BoardToolbarInspectedItem(BoardFrame boardFrame) {
     this.boardFrame = boardFrame;
 
-    this.tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    this.tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     JButton toolbarCancelButton = new JButton();
     toolbarCancelButton.setText(tm.getText("cancel"));

@@ -9,8 +9,8 @@ import java.util.Locale;
 public class ComponentObstacleArea extends ObstacleArea {
 
   /**
-   * Creates a new instance of ComponentObstacleArea If p_is_obstacle is false, the new instance is
-   * not regarded as obstacle and used only for displaying on the screen.
+   * Creates a new instance of ComponentObstacleArea If isObstacle is false, the new instance is not
+   * regarded as obstacle and used only for displaying on the screen.
    */
   ComponentObstacleArea(
       Area area,

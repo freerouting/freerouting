@@ -200,7 +200,7 @@ public class ShoveTraceAlgo {
   }
 
   /**
-   * Checks if a shove with the input parameters is possible without clearance violations p_dir is
+   * Checks if a shove with the input parameters is possible without clearance violations dir is
    * used internally to prevent the check from bouncing back. Returns false, if the shove failed.
    */
   public boolean check(
@@ -219,7 +219,7 @@ public class ShoveTraceAlgo {
     }
 
     if (traceShape.isEmpty()) {
-      FRLogger.warn("ShoveTraceAux.check: p_trace_shape is empty");
+      FRLogger.warn("ShoveTraceAux.check: traceShape is empty");
       return true;
     }
     if (!traceShape.isContainedIn(board.getBoundingBox())) {
@@ -399,7 +399,7 @@ public class ShoveTraceAlgo {
       int maxViaRecursionDepth,
       int maxSpringOverRecursionDepth) {
     if (traceShape.isEmpty()) {
-      FRLogger.warn("ShoveTraceAux.insert: p_trace_shape is empty");
+      FRLogger.warn("ShoveTraceAux.insert: traceShape is empty");
       return true;
     }
     if (!traceShape.isContainedIn(board.getBoundingBox())) {
@@ -576,10 +576,10 @@ public class ShoveTraceAlgo {
   }
 
   /**
-   * Checks, if there are obstacle in the way of p_polyline and tries to wrap the polyline trace
+   * Checks, if there are obstacle in the way of polyline and tries to wrap the polyline trace
    * around these obstacles in counterclock sense. Returns null, if that is not possible. Returns
-   * p_polyline, if there were no obstacles If p_contact_pins != null, all pins not contained in
-   * p_contact_pins are regarded as obstacles, even if they are of the own net.
+   * polyline, if there were no obstacles If contactPins != null, all pins not contained in
+   * contactPins are regarded as obstacles, even if they are of the own net.
    */
   private Polyline springOver(
       Polyline polyline,
@@ -672,7 +672,7 @@ public class ShoveTraceAlgo {
     }
     boolean trySpringOver = true;
     if (!overConnectedPins) {
-      // Check if the obstacle has a trace contact on p_layer
+      // Check if the obstacle has a trace contact on layer
       Collection<Item> contactsOnLayer = foundObstacle.getAllContacts(layer);
       for (Item currentContact : contactsOnLayer) {
         if (currentContact instanceof Trace) {
@@ -788,11 +788,11 @@ public class ShoveTraceAlgo {
   }
 
   /**
-   * Checks, if there are obstacle in the way of p_polyline and tries to wrap the polyline trace
-   * around these obstacles. Returns null, if that is not possible. Returns p_polyline, if there
-   * were no obstacles This function looks contrary to the previous function for the shortest way
-   * around the obstacles. If p_contact_pins != null, all pins not contained in p_contact_pins are
-   * regarded as obstacles, even if they are of the own net.
+   * Checks, if there are obstacle in the way of polyline and tries to wrap the polyline trace
+   * around these obstacles. Returns null, if that is not possible. Returns polyline, if there were
+   * no obstacles This function looks contrary to the previous function for the shortest way around
+   * the obstacles. If contactPins != null, all pins not contained in contactPins are regarded as
+   * obstacles, even if they are of the own net.
    */
   Polyline springOverObstacles(
       Polyline polyline,

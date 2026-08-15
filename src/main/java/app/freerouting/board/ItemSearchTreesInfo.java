@@ -19,8 +19,8 @@ class ItemSearchTreesInfo {
   }
 
   /**
-   * Returns the tree entries for the tree with identification number p_tree_no, or null, if for
-   * this tree no entries of this item are inserted.
+   * Returns the tree entries for the tree with identification number treeNo, or null, if for this
+   * tree no entries of this item are inserted.
    */
   public ShapeTree.Leaf[] getTreeEntries(ShapeTree tree) {
     for (SearchTreeInfo currentTreeInfo : this.treeList) {
@@ -31,7 +31,7 @@ class ItemSearchTreesInfo {
     return null;
   }
 
-  /** Sets the item tree entries for the tree with identification number p_tree_no. */
+  /** Sets the item tree entries for the tree with identification number treeNo. */
   public void setTreeEntries(ShapeTree.Leaf[] treeEntries, ShapeTree tree) {
     for (SearchTreeInfo currentTreeInfo : this.treeList) {
       if (currentTreeInfo.tree == tree) {
@@ -45,8 +45,8 @@ class ItemSearchTreesInfo {
   }
 
   /**
-   * Returns the precalculated tiles shapes for the tree with identification number p_tree_no, or
-   * null, if the tile shapes of this tree are not yet precalculated.
+   * Returns the precalculated tiles shapes for the tree with identification number treeNo, or null,
+   * if the tile shapes of this tree are not yet precalculated.
    */
   public TileShape[] getPrecalculatedTreeShapes(ShapeTree tree) {
     for (SearchTreeInfo currentTreeInfo : this.treeList) {
@@ -57,7 +57,7 @@ class ItemSearchTreesInfo {
     return null;
   }
 
-  /** Sets the item tree entries for the tree with identification number p_tree_no. */
+  /** Sets the item tree entries for the tree with identification number treeNo. */
   public void setPrecalculatedTreeShapes(TileShape[] tileShapes, ShapeTree tree) {
     for (SearchTreeInfo currentTreeInfo : this.treeList) {
       if (currentTreeInfo.tree == tree) {

@@ -350,7 +350,7 @@ public class Package {
     return result;
   }
 
-  /** Writes the placements of p_package to a Specctra dsn-file. */
+  /** Writes the placements of package to a Specctra dsn-file. */
   public static void writePlacementScope(
       WriteScopeParameter par, app.freerouting.core.library.Package boardPackage)
       throws IOException {

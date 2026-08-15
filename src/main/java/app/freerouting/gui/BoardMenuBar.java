@@ -56,7 +56,7 @@ public class BoardMenuBar extends JMenuBar {
     add(helpMenu);
 
     // Create the Profile button
-    TextManager tm = new TextManager(BoardFrame.class, boardFrame.get_locale());
+    TextManager tm = new TextManager(BoardFrame.class, boardFrame.getLocale());
     JButton profileButton = new JButton(tm.getText("user_settings_button"));
     A11y.tag(profileButton, GuiLocators.MENU_PROFILE);
     A11y.describe(profileButton, profileButton.getText(), null);

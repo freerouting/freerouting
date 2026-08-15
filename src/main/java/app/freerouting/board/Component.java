@@ -47,7 +47,7 @@ public class Component
   private boolean onFront;
 
   /**
-   * Creates a new instance of Component with the input parameters. If p_on_front is false, the
+   * Creates a new instance of Component with the input parameters. If onFront is false, the
    * component will be placed on the back side.
    */
   Component(
@@ -97,7 +97,7 @@ public class Component
   }
 
   /**
-   * Translates the location of this Component by p_p_vector. The Pins in the board must be moved
+   * Translates the location of this Component by pVector. The Pins in the board must be moved
    * separately.
    */
   public void translateBy(Vector vector) {
@@ -106,7 +106,7 @@ public class Component
     }
   }
 
-  /** Turns this component by p_factor times 90 degree around p_pole. */
+  /** Turns this component by factor times 90 degree around pole. */
   public void turn90Degree(int factor, IntPoint pole) {
     if (factor == 0) {
       return;
@@ -123,7 +123,7 @@ public class Component
     }
   }
 
-  /** Rotates this component by p_angle_in_degree around p_pole. */
+  /** Rotates this component by angleInDegree around pole. */
   public void rotate(double angleInDegree, IntPoint pole, boolean flipStyleRotateFirst) {
     if (angleInDegree == 0) {
       return;
@@ -147,8 +147,7 @@ public class Component
   }
 
   /**
-   * Changes the placement side of this component and mirrors it at the vertical line through
-   * p_pole.
+   * Changes the placement side of this component and mirrors it at the vertical line through pole.
    */
   public void changeSide(IntPoint pole) {
     this.onFront = !this.onFront;

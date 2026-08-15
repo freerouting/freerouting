@@ -88,7 +88,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     if (no == 3) {
       return new IntPoint(ll.x, ur.y);
     }
-    throw new IllegalArgumentException("IntBox.corner: p_no out of range");
+    throw new IllegalArgumentException("IntBox.corner: no out of range");
   }
 
   @Override
@@ -105,7 +105,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     return 2;
   }
 
-  /** Checks, if p_point is located in the interior of this box. */
+  /** Checks, if point is located in the interior of this box. */
   public boolean containsInside(IntPoint point) {
     return point.x > this.ll.x && point.x < this.ur.x && point.y > this.ll.y && point.y < this.ur.y;
   }
@@ -120,7 +120,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     return this;
   }
 
-  /** Calculates the nearest point of this box to p_from_point. */
+  /** Calculates the nearest point of this box to fromPoint. */
   public FloatPoint nearestPoint(FloatPoint fromPoint) {
     double x;
     if (fromPoint.x <= ll.x) {
@@ -144,9 +144,9 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Calculates the sorted p_max_result_points nearest points on the border of this box. p_point is
+   * Calculates the sorted maxResultPoints nearest points on the border of this box. point is
    * assumed to be located in the interior of this nox. The function is only implemented for
-   * p_max_result_points {@literal <}= 2;
+   * maxResultPoints {@literal <}= 2;
    */
   public IntPoint[] nearestBorderProjections(IntPoint point, int maxResultPoints) {
     if (maxResultPoints <= 0) {
@@ -209,13 +209,13 @@ public class IntBox extends RegularTileShape implements Serializable {
     return result;
   }
 
-  /** Calculates distance of this box to p_from_point. */
+  /** Calculates distance of this box to fromPoint. */
   @Override
   public double distance(FloatPoint fromPoint) {
     return fromPoint.distance(nearestPoint(fromPoint));
   }
 
-  /** Computes the weighted distance to the box p_other. */
+  /** Computes the weighted distance to the box other. */
   public double weightedDistance(IntBox other, double horizontalWeight, double verticalWeight) {
     double result;
 
@@ -358,7 +358,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     return other.intersects(this);
   }
 
-  /** Returns true, if this box intersects with p_other and the intersection is 2-dimensional. */
+  /** Returns true, if this box intersects with other and the intersection is 2-dimensional. */
   public boolean overlaps(IntBox other) {
     if (other.ll.x >= this.ur.x) {
       return false;
@@ -383,8 +383,8 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Enlarges the box by p_offset. Contrary to the offset() method the result is an IntOctagon, not
-   * an IntBox.
+   * Enlarges the box by offset. Contrary to the offset() method the result is an IntOctagon, not an
+   * IntBox.
    */
   @Override
   public IntOctagon enlarge(double offset) {
@@ -452,7 +452,7 @@ public class IntBox extends RegularTileShape implements Serializable {
         bx = ll.x;
         by = -1;
       }
-      default -> throw new IllegalArgumentException("IntBox.edge_line: p_no out of range");
+      default -> throw new IllegalArgumentException("IntBox.edge_line: no out of range");
     }
     return new Line(ax, ay, bx, by);
   }
@@ -464,8 +464,8 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Returns the box offsetted by p_dist. If p_dist {@literal >} 0, the offset is to the outside,
-   * else to the inside.
+   * Returns the box offsetted by dist. If dist {@literal >} 0, the offset is to the outside, else
+   * to the inside.
    */
   @Override
   public IntBox offset(double dist) {
@@ -479,8 +479,8 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Returns the box, where the horizontal boundary is offsetted by p_dist. If p_dist {@literal >}
-   * 0, the offset is to the outside, else to the inside.
+   * Returns the box, where the horizontal boundary is offsetted by dist. If dist {@literal >} 0,
+   * the offset is to the outside, else to the inside.
    */
   public IntBox horizontalOffset(double dist) {
     if (dist == 0 || isEmpty()) {
@@ -493,8 +493,8 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Returns the box, where the vertical boundary is offsetted by p_dist. If p_dist {@literal >} 0,
-   * the offset is to the outside, else to the inside.
+   * Returns the box, where the vertical boundary is offsetted by dist. If dist {@literal >} 0, the
+   * offset is to the outside, else to the inside.
    */
   public IntBox verticalOffset(double dist) {
     if (dist == 0 || isEmpty()) {
@@ -581,7 +581,7 @@ public class IntBox extends RegularTileShape implements Serializable {
           result = Side.COLLINEAR;
         }
       }
-      default -> throw new IllegalArgumentException("IntBox.compare: p_edge_no out of range");
+      default -> throw new IllegalArgumentException("IntBox.compare: edgeNo out of range");
     }
     return result;
   }
@@ -626,7 +626,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     return other.contains(toIntOctagon());
   }
 
-  /** Return true, if p_other is contained in the interior of this box. */
+  /** Return true, if other is contained in the interior of this box. */
   public boolean containsInInterior(IntBox other) {
     if (other.isEmpty()) {
       return true;
@@ -634,7 +634,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     return other.ll.x > ll.x && other.ll.y > ll.y && other.ur.x < ur.x && other.ur.y < ur.y;
   }
 
-  /** Calculates the part of p_from_box, which has minimal distance to this box. */
+  /** Calculates the part of fromBox, which has minimal distance to this box. */
   public IntBox nearestPart(IntBox fromBox) {
     int llX;
 
@@ -671,7 +671,7 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Divides this box into sections with width and height at most p_max_section_width of about equal
+   * Divides this box into sections with width and height at most maxSectionWidth of about equal
    * size.
    */
   @Override

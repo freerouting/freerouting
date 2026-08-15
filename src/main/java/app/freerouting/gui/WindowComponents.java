@@ -16,7 +16,7 @@ public class WindowComponents extends WindowObjectListWithFilter {
   /** Creates a new instance of ComponentsWindow. */
   public WindowComponents(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("components"));
   }

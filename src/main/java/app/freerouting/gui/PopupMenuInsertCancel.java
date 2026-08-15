@@ -14,7 +14,7 @@ class PopupMenuInsertCancel extends JPopupMenu {
   PopupMenuInsertCancel(BoardFrame boardFrame) {
     this.boardPanel = boardFrame.boardPanel;
 
-    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     JMenuItem popupInsertMenuitem = new JMenuItem();
     popupInsertMenuitem.setText(tm.getText("insert"));

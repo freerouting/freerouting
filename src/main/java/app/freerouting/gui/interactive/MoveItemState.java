@@ -68,7 +68,7 @@ public final class MoveItemState extends InteractiveState {
     this.itemList = new TreeSet<>();
 
     for (Item currentItem : itemList) {
-      // Copy the items in p_item_list, because otherwise the undo algorithm will not
+      // Copy the items in itemList, because otherwise the undo algorithm will not
       // work.
       Item copiedItem = currentItem.copy(0);
       for (int i = 0; i < currentItem.netCount(); i++) {
@@ -95,7 +95,7 @@ public final class MoveItemState extends InteractiveState {
           tm.getText("move_component_failed_because_no_item_selected"));
       return null;
     }
-    // extend p_item_list to full components
+    // extend itemList to full components
     Set<Item> allItems = new TreeSet<>();
     Set<Component> componentList = new TreeSet<>();
     BasicBoard routingBoard = boardHandling.getRoutingBoard();
@@ -196,7 +196,7 @@ public final class MoveItemState extends InteractiveState {
   private void addToNetItemsList(Item item, int netNo) {
     for (NetItems currentItems : this.netItemsList) {
       if (currentItems.netNo == netNo) {
-        // list for p_net_no exists already
+        // list for netNo exists already
         currentItems.items.add(item);
         return;
       }

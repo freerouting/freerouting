@@ -127,7 +127,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   /** Gets the shape of this padstack on the specified layer. */
   public ConvexShape getShape(int layer) {
     if (layer < 0 || layer >= shapes.length) {
-      FRLogger.warn("Padstack.get_layer p_layer out of range");
+      FRLogger.warn("Padstack.get_layer layer out of range");
       return null;
     }
     return shapes[layer];

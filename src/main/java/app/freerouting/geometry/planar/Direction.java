@@ -42,9 +42,7 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
     return vector.toNormalizedDirection();
   }
 
-  /**
-   * Calculates the direction from p_from to p_to. If p_from and p_to are equal, null is returned.
-   */
+  /** Calculates the direction from from to to. If from and to are equal, null is returned. */
   public static Direction getInstance(Point from, Point to) {
     if (from.equals(to)) {
       return null;
@@ -52,7 +50,7 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
     return getInstance(to.differenceBy(from));
   }
 
-  /** Creates a Direction whose angle with the x-axis is nearly equal to p_angle. */
+  /** Creates a Direction whose angle with the x-axis is nearly equal to angle. */
   public static Direction getInstanceApprox(double angle) {
     final double scaleFactor = 10000;
     int x = (int) Math.round(Math.cos(angle) * scaleFactor);
@@ -74,15 +72,13 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
     return isOrthogonal() || isDiagonal();
   }
 
-  /** Turns the direction by p_factor times 45 degree. */
+  /** Turns the direction by factor times 45 degree. */
   public abstract Direction turn45Degree(int factor);
 
   /** Returns the opposite direction of this direction. */
   public abstract Direction opposite();
 
-  /**
-   * Returns true, if p_ob is a Direction and this Direction and p_ob point into the same direction.
-   */
+  /** Returns true, if ob is a Direction and this Direction and ob point into the same direction. */
   @Override
   public final boolean equals(Object obj) {
     if (obj == this) {
@@ -109,7 +105,7 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
   }
 
   /**
-   * Let L be the line from the Zero Vector to p_other.get_vector(). The function returns
+   * Let L be the line from the Zero Vector to other.get_vector(). The function returns
    * Side.ON_THE_LEFT, if this.get_vector() is on the left of L Side.ON_THE_RIGHT, if
    * this.get_vector() is on the right of L and Side.COLLINEAR, if this.get_vector() is collinear
    * with L.
@@ -120,14 +116,14 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
 
   /**
    * The function returns Signum.POSITIVE, if the scalar product of a vector representing this
-   * direction and a vector representing p_other is {@literal >} 0, Signum.NEGATIVE, if the scalar
+   * direction and a vector representing other is {@literal >} 0, Signum.NEGATIVE, if the scalar
    * product is {@literal <} 0, and Signum.ZERO, if the scalar product is equal 0.
    */
   public Signum projection(Direction other) {
     return this.getVector().projection(other.getVector());
   }
 
-  /** Calculates an approximation of the direction in the middle of this direction and p_other. */
+  /** Calculates an approximation of the direction in the middle of this direction and other. */
   public Direction middleApprox(Direction other) {
     FloatPoint v1 = getVector().toFloat();
     FloatPoint v2 = other.getVector().toFloat();
@@ -141,8 +137,8 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
   }
 
   /**
-   * Returns 1, if the angle between p_1 and this direction is bigger the angle between p_2 and this
-   * direction, 0, if p_1 is equal to p_2, * and -1 otherwise.
+   * Returns 1, if the angle between 1 and this direction is bigger the angle between 2 and this
+   * direction, 0, if 1 is equal to 2, * and -1 otherwise.
    */
   public int compareFrom(Direction p1, Direction p2) {
     int result;

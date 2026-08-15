@@ -53,7 +53,7 @@ public class WindowVia extends BoardSavableSubWindow {
 
   /** Creates a new instance of ViaWindow. */
   public WindowVia(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 
@@ -336,7 +336,7 @@ public class WindowVia extends BoardSavableSubWindow {
 
       JPanel defaultRadiusInputPanel = new JPanel();
       defaultRadiusInputPanel.add(new JLabel(tm.getText("prompt_default_radius")));
-      NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+      NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
       numberFormat.setMaximumFractionDigits(7);
       JFormattedTextField defaultRadiusInputField = new JFormattedTextField(numberFormat);
       defaultRadiusInputField.setColumns(7);
@@ -403,7 +403,7 @@ public class WindowVia extends BoardSavableSubWindow {
         String labelString =
             tm.getText("radius_on_layer_label", layerStructure.arr[fromLayerNo + i].name);
         layerNames[i] = new JLabel(labelString);
-        NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+        NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
         numberFormat.setMaximumFractionDigits(7);
         circleRadius[i] = new JFormattedTextField(numberFormat);
         circleRadius[i].setColumns(7);

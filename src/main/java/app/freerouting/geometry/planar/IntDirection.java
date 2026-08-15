@@ -70,7 +70,7 @@ public class IntDirection extends Direction implements Serializable {
       return 0;
     }
 
-    // now this direction and p_other are located in the same
+    // now this direction and other are located in the same
     // open horizontal half plane
 
     double determinant = (double) other.x * y - (double) other.y * x;
@@ -79,9 +79,8 @@ public class IntDirection extends Direction implements Serializable {
 
   /**
    * Implements the Comparable interface. Returns 1, if this direction has a strict bigger angle
-   * with the positive x-axis than p_other_direction, 0, if this direction is equal to
-   * p_other_direction, and -1 otherwise. Throws an exception, if p_other_direction is not a
-   * Direction.
+   * with the positive x-axis than otherDirection, 0, if this direction is equal to otherDirection,
+   * and -1 otherwise. Throws an exception, if otherDirection is not a Direction.
    */
   @Override
   public int compareTo(Direction otherDirection) {

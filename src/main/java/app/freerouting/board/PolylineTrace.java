@@ -43,7 +43,7 @@ public class PolylineTrace extends Trace implements Serializable {
       BasicBoard board) {
     super(layer, halfWidth, netNoArr, clearanceType, idNo, groupNo, fixedState, board);
     if (polyline.arr.length < 3) {
-      FRLogger.warn("PolylineTrace: p_polyline.arr.length >= 3 expected");
+      FRLogger.warn("PolylineTrace: polyline.arr.length >= 3 expected");
     }
     lines = polyline;
   }
@@ -66,7 +66,7 @@ public class PolylineTrace extends Trace implements Serializable {
         board);
   }
 
-  /** Checks, if this trace is on layer p_layer. */
+  /** Checks, if this trace is on layer layer. */
   @Override
   public boolean isOnLayer(int layer) {
     return getLayer() == layer;
@@ -456,8 +456,7 @@ public class PolylineTrace extends Trace implements Serializable {
    * Looks up traces intersecting with this trace and splits them at the intersection points. In
    * case of an overlaps, the traces are split at their first and their last common point. Returns
    * the pieces resulting from splitting. Found cycles are removed. If nothing is split, the result
-   * will contain just this Trace. If p_clip_shape != null, the split may be restricted to
-   * p_clip_shape.
+   * will contain just this Trace. If clipShape != null, the split may be restricted to clipShape.
    */
   @Override
   public Collection<PolylineTrace> split(IntOctagon clipShape) {
@@ -686,9 +685,9 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Splits this trace into two at p_point. Returns the 2 pieces of the split trace, or null if
-   * nothing was split because for example p_point is not located on a line segment of the
-   * p_polyline of this trace.
+   * Splits this trace into two at point. Returns the 2 pieces of the split trace, or null if
+   * nothing was split because for example point is not located on a line segment of the polyline of
+   * this trace.
    */
   @Override
   public Trace[] split(Point point) {
@@ -707,9 +706,9 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Splits this trace at the line with number p_line_no into two by inserting p_endline as
-   * concluding line of the first split piece and as the start line of the second split piece.
-   * Returns the 2 pieces of the split trace, or null, if nothing was split.
+   * Splits this trace at the line with number lineNo into two by inserting endline as concluding
+   * line of the first split piece and as the start line of the second split piece. Returns the 2
+   * pieces of the split trace, or null, if nothing was split.
    */
   private PolylineTrace[] split(int lineNo, Line newEndLine) {
     if (!this.isOnTheBoard()) {
@@ -755,10 +754,10 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Checks, if the intersection of the p_line_no-th line of this trace with p_line is inside the
-   * pad of a pin. In this case the trace will be split only, if the intersection is at the center
-   * of the pin. Extending the function to vias led to broken connection problems when the
-   * autorouter connected to a trace.
+   * Checks, if the intersection of the lineNo-th line of this trace with line is inside the pad of
+   * a pin. In this case the trace will be split only, if the intersection is at the center of the
+   * pin. Extending the function to vias led to broken connection problems when the autorouter
+   * connected to a trace.
    */
   private boolean splitInsideDrillPadProhibited(int lineNo, Line line) {
     if (this.board == null) {
@@ -788,7 +787,7 @@ public class PolylineTrace extends Trace implements Serializable {
 
   /**
    * Splits this trace and overlapping traces, and combines this trace. Returns true, if something
-   * was changed. If p_clip_shape != null, splitting is restricted to p_clip_shape.
+   * was changed. If clipShape != null, splitting is restricted to clipShape.
    *
    * @param clipShape the shape to clip the trace to
    * @return true, if something was changed
@@ -1031,7 +1030,7 @@ public class PolylineTrace extends Trace implements Serializable {
   @Override
   public TileShape getTraceConnectionShape(ShapeSearchTree searchTree, int index) {
     if (index < 0 || index >= this.tileShapeCount()) {
-      FRLogger.warn("PolylineTrace.get_trace_connection_shape p_index out of range");
+      FRLogger.warn("PolylineTrace.get_trace_connection_shape index out of range");
       return null;
     }
     LineSegment currentLineSegment = new LineSegment(this.lines, index + 1);
@@ -1048,7 +1047,7 @@ public class PolylineTrace extends Trace implements Serializable {
     return true;
   }
 
-  /** Changes the geometry of this trace to p_new_polyline. */
+  /** Changes the geometry of this trace to newPolyline. */
   void change(Polyline newPolyline) {
     if (!this.isOnTheBoard()) {
       // Just change the polyline of this trace.
@@ -1068,7 +1067,7 @@ public class PolylineTrace extends Trace implements Serializable {
     // for performance reasons there is some effort to reuse
     // ShapeTree entries of the old trace in the changed trace
 
-    // look for the first line in p_new_polyline different from
+    // look for the first line in newPolyline different from
     // the lines of the existing trace
     int lastIndex = Math.min(newPolyline.arr.length, lines.arr.length);
     int indexOfFirstDifferentLine = lastIndex;
@@ -1081,7 +1080,7 @@ public class PolylineTrace extends Trace implements Serializable {
     if (indexOfFirstDifferentLine == lastIndex) {
       return; // both polylines are equal, no change necessary
     }
-    // look for the last line in p_new_polyline different from
+    // look for the last line in newPolyline different from
     // the lines of the existing trace
     int indexOfLastDifferentLine = -1;
     for (int i = 1; i <= lastIndex; i++) {
@@ -1121,8 +1120,8 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Checks that the connection restrictions to the contact pins are satisfied.
    *
-   * <p>If p_at_start, the start of this trace is checked, else the end. Returns false if a pin is
-   * at that end where the connection is checked and the connection is not ok.
+   * <p>If atStart, the start of this trace is checked, else the end. Returns false if a pin is at
+   * that end where the connection is checked and the connection is not ok.
    */
   @Override
   public boolean checkConnectionToPin(boolean atStart) {
@@ -1190,7 +1189,7 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Tries to correct a connection restriction of this trace. If p_at_start, the start of the trace
+   * Tries to correct a connection restriction of this trace. If atStart, the start of the trace
    * polygon is corrected, else the end. Returns true, if this trace was changed.
    */
   public boolean correctConnectionToPin(boolean atStart, AngleRestriction angleRestriction) {
@@ -1270,7 +1269,7 @@ public class PolylineTrace extends Trace implements Serializable {
         newNearestCornerFound = true;
       } else if (currentExitCornerDistance < minExitCornerDistance + tolerance) {
         // the distances are near equal, compare to the previous corners of
-        // p_trace_polyline
+        // tracePolyline
         for (int i = 1; i < tracePolyline.cornerCount(); i++) {
           FloatPoint currentTraceCorner = tracePolyline.cornerApprox(i);
           double currentTraceCornerDistance = currentTraceCorner.distanceSquare(currentExitCorner);
@@ -1360,8 +1359,8 @@ public class PolylineTrace extends Trace implements Serializable {
 
   /**
    * Looks, if another pin connection restriction fits better than the current connection
-   * restriction and changes this trace in this case. If p_at_start, the start of the trace polygon
-   * is changed, else the end. Returns true, if this trace was changed.
+   * restriction and changes this trace in this case. If atStart, the start of the trace polygon is
+   * changed, else the end. Returns true, if this trace was changed.
    */
   public boolean swapConnectionToPin(boolean atStart) {
     Polyline tracePolyline;

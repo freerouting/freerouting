@@ -49,7 +49,7 @@ public class BoardLibrary implements Serializable {
     return this.viaPadstacks.get(no);
   }
 
-  /** Gets the via padstack with name p_name, or null, if no such padstack exists. */
+  /** Gets the via padstack with name name, or null, if no such padstack exists. */
   public Padstack getViaPadstack(String name) {
     if (this.viaPadstacks == null) {
       return null;

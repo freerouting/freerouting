@@ -31,7 +31,7 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
   /** Returns the pin with the specified index. Pin numbers range from 0 to pinCount - 1. */
   public PartPin getPin(int no) {
     if (no < 0 || no >= partPinArr.length) {
-      FRLogger.warn("LogicalPart.get_pin: p_no out of range");
+      FRLogger.warn("LogicalPart.get_pin: no out of range");
       return null;
     }
     return partPinArr[no];

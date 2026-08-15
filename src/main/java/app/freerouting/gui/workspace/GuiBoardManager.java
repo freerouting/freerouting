@@ -711,7 +711,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
   /**
    * Sets whether conduction areas should be treated as obstacles during routing.
    *
-   * <p>When conduction areas are ignored (p_value = true):
+   * <p>When conduction areas are ignored (value = true):
    *
    * <ul>
    *   <li>Traces can route through conduction areas of foreign nets
@@ -719,7 +719,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    *   <li>Reduces routing complexity in filled areas
    * </ul>
    *
-   * <p>When conduction areas are obstacles (p_value = false):
+   * <p>When conduction areas are obstacles (value = false):
    *
    * <ul>
    *   <li>Foreign net traces must route around them
@@ -1114,10 +1114,10 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * <p>This method supports setting trace width for:
    *
    * <ul>
-   *   <li><strong>All layers:</strong> When p_layer_no == {@link ComboBoxLayer#ALL_LAYER_INDEX}
-   *   <li><strong>Inner layers only:</strong> When p_layer_no == {@link
+   *   <li><strong>All layers:</strong> When layerNo == {@link ComboBoxLayer#ALL_LAYER_INDEX}
+   *   <li><strong>Inner layers only:</strong> When layerNo == {@link
    *       ComboBoxLayer#INNER_LAYER_INDEX}
-   *   <li><strong>Single layer:</strong> When p_layer_no is a specific layer index
+   *   <li><strong>Single layer:</strong> When layerNo is a specific layer index
    * </ul>
    *
    * <p>The manual trace width is only used when manual rule selection is active.

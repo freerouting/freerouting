@@ -11,7 +11,7 @@ class PopupMenuMain extends PopupMenuDisplay {
   /** Creates a new instance of MainPopupMenu. */
   PopupMenuMain(BoardFrame boardFrame) {
     super(boardFrame);
-    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     // add the item for selecting items
 

@@ -65,7 +65,7 @@ public final class MazeShoveTraceAlgo {
     final Collection<ExpansionDoor> roomDoors = obstacleRoom.getDoors();
     // The side of the trace line seen from the doors to expand.
     // Used to determine, if a door is on the right side to put it into the
-    // p_door_list.
+    // doorList.
     LineSegment shoveLineSegment;
     if (fromDoor.dimension == 2) {
       // shove from a link door into the direction of the other link door.
@@ -212,7 +212,7 @@ public final class MazeShoveTraceAlgo {
       }
     }
 
-    // Put the doors on this side of the room into p_to_door_list with
+    // Put the doors on this side of the room into toDoorList with
     if (segmentShortened) {
       shoveWidth = Math.min(shoveWidth, fromCorner.distance(toCorner));
     }
@@ -254,7 +254,7 @@ public final class MazeShoveTraceAlgo {
       } else if (!segmentIstPoint) {
         // now currentDoor is 1-dimensional
 
-        // check, that currentDoor is on the same borderLine as p_from_door.
+        // check, that currentDoor is on the same borderLine as fromDoor.
         FloatLine currentDoorSegment = currentDoorShape.diagonalCornerSegment();
         if (currentDoorSegment == null) {
           FRLogger.trace("MazeShoveTraceAlgo.check_shove_trace_line: door shape is empty");
@@ -311,7 +311,7 @@ public final class MazeShoveTraceAlgo {
   }
 
   /**
-   * Check if the endpoints of p_trace and p_from_item are matching, so that the shove can continue
+   * Check if the endpoints of trace and fromItem are matching, so that the shove can continue
    * through a link door.
    */
   private static boolean endPointsMatching(PolylineTrace trace, Item fromItem) {

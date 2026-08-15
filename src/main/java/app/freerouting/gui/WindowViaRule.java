@@ -39,7 +39,7 @@ public class WindowViaRule extends WindowBase {
     this.viaRule = viaRule;
     this.viaList = viaList;
 
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title") + " " + viaRule.name);
 
@@ -119,7 +119,7 @@ public class WindowViaRule extends WindowBase {
     this.setVisible(true);
   }
 
-  /** Swaps the position of the vias with index p_1 and p_2. */
+  /** Swaps the position of the vias with index 1 and 2. */
   private void swapPosition(int p1, int p2) {
     ViaInfo via1 = this.ruleListModel.get(p1);
     ViaInfo via2 = this.ruleListModel.get(p2);

@@ -21,7 +21,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
   /** Creates a new instance of ObjectListWindowWithFilter. */
   protected WindowObjectListWithFilter(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.inputPanel = new JPanel();
     this.southPanel.add(inputPanel, BorderLayout.SOUTH);
@@ -54,7 +54,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
             });
   }
 
-  /** Adds p_object to the list only if its name matches the filter. */
+  /** Adds object to the list only if its name matches the filter. */
   @Override
   protected void addToList(Object object) {
     String currentFilterString = this.filterString.getText().trim();

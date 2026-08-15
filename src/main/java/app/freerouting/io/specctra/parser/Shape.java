@@ -27,7 +27,7 @@ public abstract class Shape {
   }
 
   /**
-   * Reads shape scope from a Specctra dsn file. If p_layer_structure == null, only Layer.PCB and
+   * Reads shape scope from a Specctra dsn file. If layerStructure == null, only Layer.PCB and
    * Layer.Signal are expected, no individual layers.
    */
   public static Shape readScope(IJFlexScanner scanner, LayerStructure layerStructure) {
@@ -84,7 +84,7 @@ public abstract class Shape {
       layer = Layer.SIGNAL;
     } else {
       if (layerStructure == null) {
-        FRLogger.warn("Shape.read_circle_scope: p_layer_structure != null expected");
+        FRLogger.warn("Shape.read_circle_scope: layerStructure != null expected");
         return null;
       }
 
@@ -251,8 +251,8 @@ public abstract class Shape {
   }
 
   /**
-   * Reads a rectangle scope from a Specctra dsn file. If p_layer_structure == null, only Layer.PCB
-   * and Layer.Signal are expected, no individual layers.
+   * Reads a rectangle scope from a Specctra dsn file. If layerStructure == null, only Layer.PCB and
+   * Layer.Signal are expected, no individual layers.
    */
   public static Rectangle readRectangleScope(IJFlexScanner scanner, LayerStructure layerStructure) {
     try {
@@ -298,7 +298,7 @@ public abstract class Shape {
   }
 
   /**
-   * Reads a closed polygon scope from a Specctra dsn file. If p_layer_structure == null, only
+   * Reads a closed polygon scope from a Specctra dsn file. If layerStructure == null, only
    * Layer.PCB and Layer.Signal are expected, no individual layers.
    */
   public static Polygon readPolygonScope(IJFlexScanner scanner, LayerStructure layerStructure) {
@@ -517,13 +517,13 @@ public abstract class Shape {
 
   /**
    * Transforms a shape with holes to the board coordinate system. The first shape in the Collection
-   * p_area is the border, the other shapes are holes of the area.
+   * area is the border, the other shapes are holes of the area.
    */
   public static Area transformAreaToBoard(
       Collection<Shape> area, CoordinateTransform coordinateTransform) {
     int holeCount = area.size() - 1;
     if (holeCount <= -1) {
-      FRLogger.warn("Shape.transform_area_to_board: p_area.size() > 0 expected");
+      FRLogger.warn("Shape.transform_area_to_board: area.size() > 0 expected");
       return null;
     }
     Iterator<Shape> it = area.iterator();
@@ -556,13 +556,13 @@ public abstract class Shape {
 
   /**
    * Transforms the relative coordinates of a shape with holes to the board coordinate system. The
-   * first shape in the Collection p_area is the border, the other shapes are holes of the area.
+   * first shape in the Collection area is the border, the other shapes are holes of the area.
    */
   public static Area transformAreaToBoardRel(
       Collection<Shape> area, CoordinateTransform coordinateTransform) {
     int holeCount = area.size() - 1;
     if (holeCount <= -1) {
-      FRLogger.warn("Shape.transform_area_to_board_rel: p_area.size() > 0 expected");
+      FRLogger.warn("Shape.transform_area_to_board_rel: area.size() > 0 expected");
       return null;
     }
     Iterator<Shape> it = area.iterator();

@@ -135,7 +135,7 @@ public class Circle implements ConvexShape, Serializable {
 
   /**
    * Creates a bounding tile shape around this circle, so that the length of the line segments of
-   * the tile is at most p_max_segment_length.
+   * the tile is at most maxSegmentLength.
    */
   public TileShape boundingTile(int maxSegmentLength) {
     int quadrantDivisionCount = this.radius / maxSegmentLength + 1;

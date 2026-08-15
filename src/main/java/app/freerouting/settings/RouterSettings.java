@@ -623,7 +623,7 @@ public class RouterSettings implements Serializable, Cloneable {
   public void setLayerActive(int layer, boolean value) {
     if (layer < 0 || layer >= this.getLayerCount()) {
       FRLogger.warn(
-          "AutorouteSettings.set_layer_active: p_layer="
+          "AutorouteSettings.set_layer_active: layer="
               + layer
               + " out of range [0.."
               + (this.getLayerCount() - 1)
@@ -645,7 +645,7 @@ public class RouterSettings implements Serializable, Cloneable {
   public boolean getLayerActive(int layer) {
     if (layer < 0 || layer >= this.getLayerCount()) {
       FRLogger.warn(
-          "AutorouteSettings.get_layer_active: p_layer="
+          "AutorouteSettings.get_layer_active: layer="
               + layer
               + " out of range [0.."
               + (this.getLayerCount() - 1)
@@ -666,7 +666,7 @@ public class RouterSettings implements Serializable, Cloneable {
    */
   public void setBendCost(int layer, double value) {
     if (layer < 0 || layer >= this.getLayerCount()) {
-      FRLogger.warn("RouterSettings.set_bend_cost: p_layer out of range");
+      FRLogger.warn("RouterSettings.set_bend_cost: layer out of range");
       return;
     }
     if (layers[layer] == null) {
@@ -683,7 +683,7 @@ public class RouterSettings implements Serializable, Cloneable {
    */
   public double getBendCost(int layer) {
     if (layer < 0 || layer >= this.getLayerCount()) {
-      FRLogger.warn("RouterSettings.get_bend_cost: p_layer out of range");
+      FRLogger.warn("RouterSettings.get_bend_cost: layer out of range");
       return 0.0;
     }
     if (layers[layer] == null || layers[layer].bendCost == null) {
@@ -703,7 +703,7 @@ public class RouterSettings implements Serializable, Cloneable {
   public void setPreferredDirectionIsHorizontal(int layer, boolean value) {
     if (layer < 0 || layer >= this.getLayerCount()) {
       FRLogger.warn(
-          "AutorouteSettings.set_preferred_direction_is_horizontal: p_layer="
+          "AutorouteSettings.set_preferred_direction_is_horizontal: layer="
               + layer
               + " out of range [0.."
               + (this.getLayerCount() - 1)
@@ -725,7 +725,7 @@ public class RouterSettings implements Serializable, Cloneable {
   public boolean getPreferredDirectionIsHorizontal(int layer) {
     if (layer < 0 || layer >= this.getLayerCount()) {
       FRLogger.warn(
-          "AutorouteSettings.get_preferred_direction_is_horizontal: p_layer="
+          "AutorouteSettings.get_preferred_direction_is_horizontal: layer="
               + layer
               + " out of range [0.."
               + (this.getLayerCount() - 1)
@@ -748,7 +748,7 @@ public class RouterSettings implements Serializable, Cloneable {
    */
   public void setPreferredDirectionTraceCosts(int layer, double value) {
     if (layer < 0 || layer >= this.getLayerCount()) {
-      FRLogger.warn("AutorouteSettings.set_preferred_direction_trace_costs: p_layer out of range");
+      FRLogger.warn("AutorouteSettings.set_preferred_direction_trace_costs: layer out of range");
       return;
     }
     if (scoring == null) {
@@ -770,7 +770,7 @@ public class RouterSettings implements Serializable, Cloneable {
    */
   public double getPreferredDirectionTraceCosts(int layer) {
     if (layer < 0 || layer >= this.getLayerCount()) {
-      FRLogger.warn("AutorouteSettings.get_preferred_direction_trace_costs: p_layer out of range");
+      FRLogger.warn("AutorouteSettings.get_preferred_direction_trace_costs: layer out of range");
       return 0;
     }
     if (scoring == null
@@ -790,7 +790,7 @@ public class RouterSettings implements Serializable, Cloneable {
   public double getAgainstPreferredDirectionTraceCosts(int layer) {
     if (layer < 0 || layer >= this.getLayerCount()) {
       FRLogger.warn(
-          "AutorouteSettings.get_against_preferred_direction_trace_costs: p_layer out of range");
+          "AutorouteSettings.get_against_preferred_direction_trace_costs: layer out of range");
       return 0;
     }
     if (scoring == null
@@ -809,7 +809,7 @@ public class RouterSettings implements Serializable, Cloneable {
    */
   public double getHorizontalTraceCosts(int layer) {
     if (layer < 0 || layer >= this.getLayerCount()) {
-      FRLogger.warn("AutorouteSettings.get_preferred_direction_trace_costs: p_layer out of range");
+      FRLogger.warn("AutorouteSettings.get_preferred_direction_trace_costs: layer out of range");
       return 0;
     }
     double result;
@@ -830,7 +830,7 @@ public class RouterSettings implements Serializable, Cloneable {
   public void setAgainstPreferredDirectionTraceCosts(int layer, double value) {
     if (layer < 0 || layer >= this.getLayerCount()) {
       FRLogger.warn(
-          "AutorouteSettings.set_against_preferred_direction_trace_costs: p_layer out of range");
+          "AutorouteSettings.set_against_preferred_direction_trace_costs: layer out of range");
       return;
     }
     if (scoring == null) {
@@ -853,7 +853,7 @@ public class RouterSettings implements Serializable, Cloneable {
   public double getVerticalTraceCosts(int layer) {
     if (layer < 0 || layer >= this.getLayerCount()) {
       FRLogger.warn(
-          "AutorouteSettings.get_against_preferred_direction_trace_costs: p_layer out of range");
+          "AutorouteSettings.get_against_preferred_direction_trace_costs: layer out of range");
       return 0;
     }
     double result;

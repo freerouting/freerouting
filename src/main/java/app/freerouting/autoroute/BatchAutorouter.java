@@ -164,9 +164,8 @@ public class BatchAutorouter extends NamedAlgorithm {
 
   /**
    * Auto-routes ripup passes until the board is completed or the auto-router is stopped by the
-   * user, or if p_max_pass_count is exceeded. Is currently used in the optimize via batch pass.
-   * Returns the number of passes to complete the board or p_max_pass_count + 1, if the board is not
-   * completed.
+   * user, or if maxPassCount is exceeded. Is currently used in the optimize via batch pass. Returns
+   * the number of passes to complete the board or maxPassCount + 1, if the board is not completed.
    */
   public static int autoroutePassesForOptimizingItem(
       RoutingJob job,
@@ -283,9 +282,9 @@ public class BatchAutorouter extends NamedAlgorithm {
 
   /**
    * Strict-DRC enforcement: if any trace/via inserted by the connection that just routed (item id
-   * above {@code p_max_item_id_before}) carries a clearance violation, rip the whole set of new
-   * items and report the connection FAILED, so the pass counts it as not routed and later passes
-   * (higher ripup costs) retry it. Returns null when the connection is clean and may be kept.
+   * above {@code maxItemIdBefore}) carries a clearance violation, rip the whole set of new items
+   * and report the connection FAILED, so the pass counts it as not routed and later passes (higher
+   * ripup costs) retry it. Returns null when the connection is clean and may be kept.
    */
   static AutorouteAttemptResult enforceStrictDrc(
       app.freerouting.board.RoutingBoard board, int routeNetNo, int maxItemIdBefore) {

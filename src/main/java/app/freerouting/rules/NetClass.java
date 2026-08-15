@@ -93,7 +93,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   /** Gets the trace half-width used for routing on the input layer. */
   public int getTraceHalfWidth(int layer) {
     if (layer < 0 || layer >= traceHalfWidthArr.length) {
-      FRLogger.warn(" NetClass.get_trace_half_width: p_layer out of range");
+      FRLogger.warn(" NetClass.get_trace_half_width: layer out of range");
       return 0;
     }
     return traceHalfWidthArr[layer];

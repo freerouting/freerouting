@@ -27,8 +27,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
   }
 
   /**
-   * Checks, if the border line segment with index p_obstacle_border_line_no intersects with the
-   * inside of p_room_shape.
+   * Checks, if the border line segment with index obstacleBorderLineNo intersects with the inside
+   * of roomShape.
    */
   private static boolean obstacleSegmentTouchesInside(
       IntOctagon obstacleShape, int obstacleBorderLineNo, IntOctagon roomShape) {
@@ -74,20 +74,18 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       case 5 -> 0.5 * (obstacleShape.upperLeftDiagonalX - containedShape.lowerRightDiagonalX);
       case 7 -> 0.5 * (obstacleShape.lowerLeftDiagonalX - containedShape.upperRightDiagonalX);
       default -> {
-        FRLogger.warn(
-            "ShapeSearchTree45Degree.signed_line_distance: p_obstacleLineNo out of range");
+        FRLogger.warn("ShapeSearchTree45Degree.signed_line_distance: obstacleLineNo out of range");
         yield 0;
       }
     };
   }
 
   /**
-   * Calculates a new incomplete room with a maximal TileShape contained in the shape of p_room,
-   * which may overlap only with items of the input net on the input layer.
-   * p_room.get_contained_shape() will be contained in the shape of the result room. If that is not
-   * possible, several rooms are returned with shapes, which intersect with
-   * p_room.get_contained_shape(). The result room is not yet complete, because its doors are not
-   * yet calculated.
+   * Calculates a new incomplete room with a maximal TileShape contained in the shape of room, which
+   * may overlap only with items of the input net on the input layer. room.get_contained_shape()
+   * will be contained in the shape of the result room. If that is not possible, several rooms are
+   * returned with shapes, which intersect with room.get_contained_shape(). The result room is not
+   * yet complete, because its doors are not yet calculated.
    */
   @Override
   public Collection<IncompleteFreeSpaceExpansionRoom> completeShape(
@@ -130,7 +128,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     if (room.getShape() != null) {
       if (!(room.getShape() instanceof IntOctagon)) {
         FRLogger.warn(
-            "ShapeSearchTree45Degree.complete_shape: p_start_shape of type IntOctagon expected");
+            "ShapeSearchTree45Degree.complete_shape: startShape of type IntOctagon expected");
         return new LinkedList<>();
       }
       startShape = room.getShape().boundingOctagon().intersection(startShape);
@@ -295,25 +293,25 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
   }
 
   /**
-   * Restrains the shape of p_incomplete_room to an octagon shape, which does not intersect with the
-   * interior of p_obstacle_shape. p_incomplete_room.get_contained_shape() must be contained in the
-   * shape of the result room.
+   * Restrains the shape of incompleteRoom to an octagon shape, which does not intersect with the
+   * interior of obstacleShape. incompleteRoom.get_contained_shape() must be contained in the shape
+   * of the result room.
    */
   private Collection<IncompleteFreeSpaceExpansionRoom> restrainShape(
       IncompleteFreeSpaceExpansionRoom incompleteRoom, IntOctagon obstacleShape) {
-    // Search the edge line of p_obstacle_shape, so that p_shape_to_be_contained
+    // Search the edge line of obstacleShape, so that shapeToBeContained
     // are on the right side of this line, and that the line segment
-    // intersects with the interior of p_shape.
+    // intersects with the interior of shape.
     // If there are more than 1 such lines take the line which is
     // furthest away from the shapeToBeContained
-    // Then intersect p_shape with the halfplane defined by the
+    // Then intersect shape with the halfplane defined by the
     // opposite of this line.
 
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
 
     TileShape containedShape = incompleteRoom.getContainedShape();
     if (containedShape == null || containedShape.isEmpty()) {
-      FRLogger.debug("ShapeSearchTree45Degree.restrain_shape: p_shape_to_be_contained is empty");
+      FRLogger.debug("ShapeSearchTree45Degree.restrain_shape: shapeToBeContained is empty");
       return result;
     }
     IntOctagon shapeToBeContained;
@@ -366,11 +364,11 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       return result;
     }
 
-    // There is no cut line, so that all p_shape_to_be_contained is
+    // There is no cut line, so that all shapeToBeContained is
     // completely on the right side of that line. Search a cut line, so that
-    // at least part of p_shape_to_be_contained is on the right side.
+    // at least part of shapeToBeContained is on the right side.
     if (shapeToBeContained.dimension() < 1) {
-      // There is already a completed expansion room around p_shape_to_be_contained.
+      // There is already a completed expansion room around shapeToBeContained.
       return result;
     }
 
@@ -379,14 +377,14 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       if (obstacleSegmentTouchesInside(obstacleShape, obstacleLineNo, roomShape)) {
         Line currentLine = obstacleShape.borderLine(obstacleLineNo);
         if (shapeToBeContained.sideOf(currentLine) == Side.COLLINEAR) {
-          // currentLine intersects with the interior of p_shape_to_be_contained
+          // currentLine intersects with the interior of shapeToBeContained
           restrainingLineNo = obstacleLineNo;
           break;
         }
       }
     }
     if (restrainingLineNo < 0) {
-      // cut line not found, parts or the whole of p_shape may be already
+      // cut line not found, parts or the whole of shape may be already
       // occupied from somewhere else.
       return result;
     }
@@ -415,8 +413,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
   }
 
   /**
-   * Intersects p_room_shape with the half plane defined by the outside of the borderline with index
-   * p_obstacleLineNo of p_obstacle_shape.
+   * Intersects roomShape with the half plane defined by the outside of the borderline with index
+   * obstacleLineNo of obstacleShape.
    */
   IntOctagon calcOutsideRestrainedShape(
       IntOctagon obstacleShape, int obstacleLineNo, IntOctagon roomShape) {
@@ -441,7 +439,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       default ->
           FRLogger.warn(
               "ShapeSearchTree45Degree.calc_outside_restrained_shape:"
-                  + " p_obstacleLineNo out of range");
+                  + " obstacleLineNo out of range");
     }
 
     IntOctagon result = new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);
@@ -449,8 +447,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
   }
 
   /**
-   * Intersects p_room_shape with the half plane defined by the inside of the borderline with index
-   * p_obstacleLineNo of p_obstacle_shape.
+   * Intersects roomShape with the half plane defined by the inside of the borderline with index
+   * obstacleLineNo of obstacleShape.
    */
   IntOctagon calcInsideRestrainedShape(
       IntOctagon obstacleShape, int obstacleLineNo, IntOctagon roomShape) {
@@ -475,7 +473,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       default ->
           FRLogger.warn(
               "ShapeSearchTree45Degree.calc_inside_restrained_shape:"
-                  + " p_obstacleLineNo out of range");
+                  + " obstacleLineNo out of range");
     }
 
     IntOctagon result = new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);

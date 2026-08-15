@@ -31,7 +31,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
   /** Creates a new instance of WindowMoveParameter. */
   public WindowMoveParameter(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
     this.boardHandling = boardFrame.boardPanel.boardHandling;
 
     this.setTitle(tm.getText("title"));
@@ -53,7 +53,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(horizontalGridLabel, gridbagConstraints);
     mainPanel.add(horizontalGridLabel);
 
-    NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+    NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
     numberFormat.setMaximumFractionDigits(7);
     this.horizontalGridField = new JFormattedTextField(numberFormat);
     this.horizontalGridField.setColumns(5);

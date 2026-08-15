@@ -67,7 +67,7 @@ public class ClearanceMatrix implements Serializable {
   /** Gets the name of the clearance class with the input number. */
   public String getName(int clearanceClass) {
     if (clearanceClass < 0 || clearanceClass >= row.length) {
-      FRLogger.warn("ClearanceMatrix.get_name: p_cl_class out of range");
+      FRLogger.warn("ClearanceMatrix.get_name: clClass out of range");
       return null;
     }
     return row[clearanceClass].name;
@@ -253,7 +253,7 @@ public class ClearanceMatrix implements Serializable {
   /** Returns the row with the given index. */
   public Row getRow(int index) {
     if (index < 0 || index >= this.row.length) {
-      FRLogger.warn("ClearanceMatrix.get_row: p_no out of range");
+      FRLogger.warn("ClearanceMatrix.get_row: no out of range");
       return null;
     }
     return this.row[index];

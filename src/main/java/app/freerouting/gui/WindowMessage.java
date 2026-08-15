@@ -68,7 +68,7 @@ public final class WindowMessage extends WindowBase {
   }
 
   /**
-   * Calls a confirm dialog. Returns true, if the user confirmed the action or if p_message is null.
+   * Calls a confirm dialog. Returns true, if the user confirmed the action or if message is null.
    */
   public static boolean confirm(String message) {
     return confirm(message, JOptionPane.YES_OPTION);

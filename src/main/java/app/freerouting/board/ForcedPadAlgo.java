@@ -42,7 +42,7 @@ public class ForcedPadAlgo {
     return checkLine.offsetShape(1, 0);
   }
 
-  /** Checks, if p_line is in front of p_pad_shape when shoving from p_from_side. */
+  /** Checks, if line is in front of padShape when shoving from fromSide. */
   private static boolean inFrontOfPad(
       Line line, TileShape padShape, int fromSide, int width, boolean withSides) {
     if (!padShape.isIntOctagon()) {
@@ -192,7 +192,7 @@ public class ForcedPadAlgo {
         }
       }
       default -> {
-        FRLogger.warn("ForcedPadAlgo.in_front_of_pad: p_from_side out of range");
+        FRLogger.warn("ForcedPadAlgo.in_front_of_pad: fromSide out of range");
         result = true;
       }
     }
@@ -203,9 +203,9 @@ public class ForcedPadAlgo {
   /**
    * Checks, if possible obstacle traces can be shoved aside, so that a pad with the input
    * parameters can be inserted without clearance violations. Returns false, if the check failed. If
-   * p_ignore_items != null, items in this list are not checked, If p_check_only_front only trace
-   * obstacles in the direction from p_from_side are checked for performance reasons. This is the
-   * cave when moving drill_items
+   * ignoreItems != null, items in this list are not checked, If checkOnlyFront only trace obstacles
+   * in the direction from fromSide are checked for performance reasons. This is the cave when
+   * moving drill_items
    */
   public CheckDrillResult checkForcedPad(
       TileShape padShape,
@@ -343,7 +343,7 @@ public class ForcedPadAlgo {
       int maxRecursionDepth,
       int maxViaRecursionDepth) {
     if (padShape.isEmpty()) {
-      FRLogger.warn("ShoveTraceAux.forced_pad: p_pad_shape is empty");
+      FRLogger.warn("ShoveTraceAux.forced_pad: padShape is empty");
       return true;
     }
     if (!padShape.isContainedIn(board.getBoundingBox())) {
@@ -454,7 +454,7 @@ public class ForcedPadAlgo {
   }
 
   /**
-   * Looks for a side of p_shape, so that a trace line from the shape center to the nearest point on
+   * Looks for a side of shape, so that a trace line from the shape center to the nearest point on
    * this side does not conflict with any obstacles.
    */
   CalcFromSide calcFromSide(

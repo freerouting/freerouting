@@ -17,8 +17,8 @@ class CalcShapeAndFromSide {
 
   /**
    * Used in the shove algorithm to calculate the fromside for pushing and to cut off dog ears of
-   * the trace shape. In the check shove functions, p_in_shove_check is expected to be true. In the
-   * actual shove functions p_in_shove_check is expected to be false.
+   * the trace shape. In the check shove functions, inShoveCheck is expected to be true. In the
+   * actual shove functions inShoveCheck is expected to be false.
    */
   CalcShapeAndFromSide(PolylineTrace trace, int index, boolean orthogonal, boolean inShoveCheck) {
     ShapeSearchTree searchTree = trace.board.searchTreeManager.getDefaultTree();
@@ -66,7 +66,7 @@ class CalcShapeAndFromSide {
       }
     }
     if (currentFromSide == null && !inShoveCheck) {
-      // In p_in_shove_check, using this calculation may produce an undesired stackLevel > 1 in
+      // In inShoveCheck, using this calculation may produce an undesired stackLevel > 1 in
       // ShapeTraceEntries.
       currentFromSide = new CalcFromSide(trace.polyline(), index, currentShape);
     }

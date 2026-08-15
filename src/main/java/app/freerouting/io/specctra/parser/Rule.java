@@ -192,7 +192,7 @@ public abstract class Rule {
 
     // write the named clearance rules from the clearance matrix
     writeNamedClearanceRules(par, layer);
-    // write_non_default_clearance_rules(p_par, p_layer, defaultBoardClearance);
+    // write_non_default_clearance_rules(par, layer, defaultBoardClearance);
 
     par.file.endScope();
   }
