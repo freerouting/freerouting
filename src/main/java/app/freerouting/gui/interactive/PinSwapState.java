@@ -5,7 +5,7 @@ import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.Pin;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.rendering.BoardRenderer;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import java.awt.Color;
 import java.awt.Graphics;

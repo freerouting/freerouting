@@ -13,7 +13,7 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.gui.rendering.BoardRenderer;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import java.awt.Graphics;
 import java.util.Collection;
@@ -42,7 +42,7 @@ public final class CopyItemState extends InteractiveState {
     this.itemList = new LinkedList<>();
 
     startPosition = location.round();
-    currentLayer = boardHandling.getInteractiveSettings().getLayer();
+    currentLayer = boardHandling.getWorkspaceSettings().getLayer();
     layerChanged = false;
     currentPosition = startPosition;
     previousPosition = currentPosition;

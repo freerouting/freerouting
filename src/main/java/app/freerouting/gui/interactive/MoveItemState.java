@@ -14,7 +14,7 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.gui.rendering.BoardRenderer;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.awt.Color;
@@ -108,8 +108,8 @@ public final class MoveItemState extends InteractiveState {
           return null;
         }
         if (gridSnapComponent == null
-            && (boardHandling.getInteractiveSettings().getHorizontalComponentGrid() > 0
-                || boardHandling.getInteractiveSettings().getVerticalComponentGrid() > 0)) {
+            && (boardHandling.getWorkspaceSettings().getHorizontalComponentGrid() > 0
+                || boardHandling.getWorkspaceSettings().getVerticalComponentGrid() > 0)) {
           gridSnapComponent = currComponent;
         }
         if (!componentList.contains(currComponent)) {
@@ -255,7 +255,7 @@ public final class MoveItemState extends InteractiveState {
 
   @Override
   public InteractiveState mouseWheelMoved(int rotation) {
-    if (hdlg.getInteractiveSettings().getZoomWithWheel()) {
+    if (hdlg.getWorkspaceSettings().getZoomWithWheel()) {
       super.mouseWheelMoved(rotation);
     } else {
       this.rotate(-rotation);
@@ -294,8 +294,8 @@ public final class MoveItemState extends InteractiveState {
         newComponentLocation
             .toFloat()
             .roundToGrid(
-                hdlg.getInteractiveSettings().getHorizontalComponentGrid(),
-                hdlg.getInteractiveSettings().getVerticalComponentGrid());
+                hdlg.getWorkspaceSettings().getHorizontalComponentGrid(),
+                hdlg.getWorkspaceSettings().getVerticalComponentGrid());
     Vector adjustment = roundedComponentLocation.differenceBy(newComponentLocation);
     Vector result = vector.add(adjustment);
     this.currentPosition = this.previousPosition.translateBy(result).toFloat().round();
@@ -424,8 +424,8 @@ public final class MoveItemState extends InteractiveState {
       case '*' -> turn90Degree(2);
       case '-' -> turn90Degree(3);
       case '/' -> changePlacementSide();
-      case 'r' -> hdlg.getInteractiveSettings().setZoomWithWheel(false);
-      case 'z' -> hdlg.getInteractiveSettings().setZoomWithWheel(true);
+      case 'r' -> hdlg.getWorkspaceSettings().setZoomWithWheel(false);
+      case 'z' -> hdlg.getWorkspaceSettings().setZoomWithWheel(true);
       default -> currReturnState = super.keyTyped(keyChar);
     }
     return currReturnState;

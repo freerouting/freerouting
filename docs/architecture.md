@@ -19,7 +19,7 @@ flowchart TD
 
     subgraph interfaces ["User Interfaces"]
         direction LR
-        GUI["**gui + gui.session + gui.interactive**\nSwing desktop"]
+        GUI["**gui + gui.workspace + gui.interactive**\nSwing desktop"]
         RENDER["**gui.rendering**\nGUI-owned board renderer"]
         API["**api.v1**\nREST / HTTP"]
         MCP["**api.mcp + api.v1.McpControllerV1**\nMCP JSON-RPC + SSE + WS"]
@@ -83,7 +83,7 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Routing decisions, fanout, maze search, or optimization | `app.freerouting.autoroute` |
 | Nets, vias, clearance classes, or board rules | `app.freerouting.rules` |
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
-| GUI windows, panels, menus, editor state, or drawing | `app.freerouting.gui`, `app.freerouting.gui.session`, `app.freerouting.gui.interactive`, and `app.freerouting.gui.rendering` |
+| GUI windows, panels, menus, editor state, or drawing | `app.freerouting.gui`, `app.freerouting.gui.workspace`, `app.freerouting.gui.interactive`, and `app.freerouting.gui.rendering` |
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
 | MCP server protocol bridge | `app.freerouting.api.mcp` and `app.freerouting.api.v1.McpControllerV1` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
@@ -99,13 +99,13 @@ Architectural boundaries are codified in `src/test/java/app/freerouting/architec
   - Headless paths (`api`, `management`, `core`) must not depend on `GuiBoardManager` or `InteractiveState`.
 - **Strict boundaries (continued):**
   - `gui.interactive` concrete state classes should not be used outside the GUI layer.
-  - `gui.session` owns the opaque editor-state handles, events, commands, manager, settings, messages,
+  - `gui.workspace` owns the opaque editor-state handles, events, commands, manager, settings, messages,
     and action threads; it must not depend on `gui.interactive`.
   - `board` and `autoroute` must not depend on `gui.rendering`; rendering is GUI-owned.
   - Pipeline/support packages must not depend on Swing or non-geometry AWT UI types.
   - `io.specctra.parser` internals must not be depended on outside `io.specctra` public I/O entry points.
 
-The only intentional GUI boundary exception is the documented D26 `gui.session` →
+The only intentional GUI boundary exception is the documented D26 `gui.workspace` →
 `gui.rendering` dependency used by `GuiBoardManager` for its graphics context state. These
 boundaries are strict ArchUnit rules; no frozen violation store is required.
 
@@ -115,7 +115,7 @@ boundaries are strict ArchUnit rules; no frozen violation store is required.
   outside this initiative.
 - Incomplete-connection computation remains under `drc`; the package name is broader than
   clearance checking by design.
-- `gui.session` may depend on `gui.rendering` for the `GuiBoardManager` graphics context (D26);
+- `gui.workspace` may depend on `gui.rendering` for the `GuiBoardManager` graphics context (D26);
   moving that state fully into views is outside this initiative.
 
 ## Package Glossary
@@ -157,13 +157,13 @@ headless mode without creating top-level windows.
 
 ### `app.freerouting.gui.interactive`
 
-Concrete GUI editor states and their controller implementation. States implement the session-owned
+Concrete GUI editor states and their controller implementation. States implement the workspace-owned
 opaque handle/command contracts; views register the controller and bootstrap the initial route-menu
 state.
 
-### `app.freerouting.gui.session`
+### `app.freerouting.gui.workspace`
 
-The GUI board session boundary: `GuiBoardManager`, `GuiSessionContract`, `InteractiveSettings`,
+The GUI board workspace boundary: `GuiBoardManager`, `WorkspaceContract`, `WorkspaceSettings`,
 `ScreenMessages`, action threads, ratsnest/violation presentation façades, opaque
 `EditorStateHandle`/`EditorStateKind`, `EditorEvent`, and `InteractiveCommand`. This package owns no
 concrete editor state and has no dependency on `gui.interactive`; GUI views perform initial-state
@@ -183,7 +183,7 @@ Shared application data such as routing jobs, sessions, scoring, and statistics.
 
 ### `app.freerouting.settings`
 
-Runtime configuration objects and settings sources that define application and routing behavior.
+Application configuration, defaults, and the priority-based `SettingsMerger`.
 
 ### `app.freerouting.datastructures`
 
@@ -290,12 +290,12 @@ The optimizer changes the board more conservatively than the autorouter. Its job
 
 ### GUI and Interaction Path
 
-The interactive editor is split between `gui`, `gui.session`, and `gui.interactive`.
+The interactive editor is split between `gui`, `gui.workspace`, and `gui.interactive`.
 
 - `gui` contains the visible application components.
-- `gui.session` contains the opaque session facade and board-session services.
+- `gui.workspace` contains the opaque workspace facade and board-workspace services.
 - `gui.interactive` contains the concrete state machine and its inverted controller.
-- Views construct the controller and bootstrap `RouteMenuState`; session code never names a concrete state.
+- Views construct the controller and bootstrap `RouteMenuState`; workspace code never names a concrete state.
 
 When diagnosing user interaction, rendering, or editor state, begin here.
 

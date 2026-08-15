@@ -3,7 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.ClearanceMatrix;
@@ -108,6 +108,46 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
     this.add(mainPanel);
     this.pack();
+  }
+
+  static boolean isLegalClassName(String value) {
+    if (value == null || value.isEmpty()) {
+      return false;
+    }
+    for (String reservedNameChar : reserved_name_chars) {
+      if (value.contains(reservedNameChar)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  static Float parseClearanceTableValue(Object value) {
+    if (value instanceof Number number) {
+      return number.floatValue();
+    }
+    if (value instanceof String stringValue) {
+      try {
+        return Float.parseFloat(stringValue);
+      } catch (Exception e) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  static void applyClearanceValue(
+      ClearanceMatrix matrix, int rowClassNo, int columnClassNo, int layerNo, int boardValue) {
+    if (layerNo == ComboBoxLayer.ALL_LAYER_INDEX) {
+      matrix.setValue(rowClassNo, columnClassNo, boardValue);
+      matrix.setValue(columnClassNo, rowClassNo, boardValue);
+    } else if (layerNo == ComboBoxLayer.INNER_LAYER_INDEX) {
+      matrix.setInnerValue(rowClassNo, columnClassNo, boardValue);
+      matrix.setInnerValue(columnClassNo, rowClassNo, boardValue);
+    } else {
+      matrix.setValue(rowClassNo, columnClassNo, layerNo, boardValue);
+      matrix.setValue(columnClassNo, rowClassNo, layerNo, boardValue);
+    }
   }
 
   /** Recalculates all displayed values. */
@@ -254,46 +294,6 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     this.mainPanel.add(this.centerPanel, BorderLayout.CENTER);
     this.pack();
     this.boardFrame.refreshWindows();
-  }
-
-  static boolean isLegalClassName(String value) {
-    if (value == null || value.isEmpty()) {
-      return false;
-    }
-    for (String reservedNameChar : reserved_name_chars) {
-      if (value.contains(reservedNameChar)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  static Float parseClearanceTableValue(Object value) {
-    if (value instanceof Number number) {
-      return number.floatValue();
-    }
-    if (value instanceof String stringValue) {
-      try {
-        return Float.parseFloat(stringValue);
-      } catch (Exception e) {
-        return null;
-      }
-    }
-    return null;
-  }
-
-  static void applyClearanceValue(
-      ClearanceMatrix matrix, int rowClassNo, int columnClassNo, int layerNo, int boardValue) {
-    if (layerNo == ComboBoxLayer.ALL_LAYER_INDEX) {
-      matrix.setValue(rowClassNo, columnClassNo, boardValue);
-      matrix.setValue(columnClassNo, rowClassNo, boardValue);
-    } else if (layerNo == ComboBoxLayer.INNER_LAYER_INDEX) {
-      matrix.setInnerValue(rowClassNo, columnClassNo, boardValue);
-      matrix.setInnerValue(columnClassNo, rowClassNo, boardValue);
-    } else {
-      matrix.setValue(rowClassNo, columnClassNo, layerNo, boardValue);
-      matrix.setValue(columnClassNo, rowClassNo, layerNo, boardValue);
-    }
   }
 
   private int maxNameLength() {

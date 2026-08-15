@@ -4,8 +4,8 @@ import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.gui.rendering.GraphicsContext;
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.InteractiveSettings;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.Color;
@@ -25,18 +25,6 @@ import javax.swing.JToggleButton;
 /** Window for the handling of the interactive selection parameters. */
 public class WindowSelectParameter extends BoardSavableSubWindow {
 
-  private final BoardFrame boardFrame;
-  private final GuiBoardManager boardHandling;
-  private final JToggleButton[] settingsSelectLayerNameArr;
-  private final JCheckBox[] settingsSelectLayerEyeArr;
-
-  private final JToggleButton[] settingsVirtualLayerNameArr;
-  private final JCheckBox[] settingsVirtualLayerEyeArr;
-
-  private final JCheckBox[] settingsSelectItemSelectionChoices;
-  private final JToggleButton settingsSelectAllVisibleButton;
-  private final JToggleButton settingsSelectCurrentOnlyButton;
-
   /**
    * Resource-bundle keys for the six virtual layers, in order: F.Silk, B.Silk, F.CY, B.CY, F.Fab,.
    * B.Fab
@@ -44,6 +32,16 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   private static final String[] VIRTUAL_LAYER_KEYS = {
     "F_Silkscreen", "B_Silkscreen", "F_Courtyard", "B_Courtyard", "F_Fab", "B_Fab"
   };
+
+  private final BoardFrame boardFrame;
+  private final GuiBoardManager boardHandling;
+  private final JToggleButton[] settingsSelectLayerNameArr;
+  private final JCheckBox[] settingsSelectLayerEyeArr;
+  private final JToggleButton[] settingsVirtualLayerNameArr;
+  private final JCheckBox[] settingsVirtualLayerEyeArr;
+  private final JCheckBox[] settingsSelectItemSelectionChoices;
+  private final JToggleButton settingsSelectAllVisibleButton;
+  private final JToggleButton settingsSelectCurrentOnlyButton;
 
   /** Creates a new instance of SelectWindow. */
   public WindowSelectParameter(BoardFrame boardFrame) {
@@ -247,8 +245,8 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     this.pack();
     this.setResizable(false);
 
-    // Subscribe to the InteractiveSettings singleton so this window stays in sync.
-    InteractiveSettings is = this.boardHandling.getInteractiveSettings();
+    // Subscribe to the WorkspaceSettings singleton so this window stays in sync.
+    WorkspaceSettings is = this.boardHandling.getWorkspaceSettings();
     if (is != null) {
       is.addPropertyChangeListener(_ -> javax.swing.SwingUtilities.invokeLater(this::refresh));
     }
@@ -271,7 +269,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   /** Refreshes the displayed values in this window. */
   @Override
   public void refresh() {
-    InteractiveSettings is = this.boardHandling.getInteractiveSettings();
+    WorkspaceSettings is = this.boardHandling.getWorkspaceSettings();
     if (is.getSelectOnAllVisibleLayers()) {
       settingsSelectAllVisibleButton.setSelected(true);
     } else {
@@ -392,14 +390,14 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   private class AllVisibleListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent evt) {
-      boardHandling.getInteractiveSettings().setSelectOnAllVisibleLayers(true);
+      boardHandling.getWorkspaceSettings().setSelectOnAllVisibleLayers(true);
     }
   }
 
   private class CurrentOnlyListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent evt) {
-      boardHandling.getInteractiveSettings().setSelectOnAllVisibleLayers(false);
+      boardHandling.getWorkspaceSettings().setSelectOnAllVisibleLayers(false);
     }
   }
 

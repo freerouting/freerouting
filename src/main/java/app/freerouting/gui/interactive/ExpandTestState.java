@@ -13,7 +13,7 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.gui.rendering.AutorouteDiagnosticRenderer;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Set;
@@ -140,7 +140,7 @@ public final class ExpandTestState extends InteractiveState {
   private void init(FloatPoint location) {
     // look if an autoroute can be started at the input location
     RoutingBoard board = hdlg.getRoutingBoard();
-    int layer = hdlg.getInteractiveSettings().getLayer();
+    int layer = hdlg.getWorkspaceSettings().getLayer();
     Collection<Item> foundItems = board.pickItems(location.round(), layer, null);
     Item routeItem = null;
     int routeNetNo = 0;

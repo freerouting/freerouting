@@ -4,7 +4,7 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.util.TextManager;

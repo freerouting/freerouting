@@ -8,7 +8,7 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.rules.BoardRules;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -61,7 +61,7 @@ public final class TileConstructionState extends CornerItemConstructionState {
       edgeLines[cornerCount - 1] = new Line(prevCorner, firstCorner);
       TileShape obstacleShape = TileShape.getInstance(edgeLines);
       RoutingBoard board = hdlg.getRoutingBoard();
-      int layer = hdlg.getInteractiveSettings().getLayer();
+      int layer = hdlg.getWorkspaceSettings().getLayer();
       int clClass = BoardRules.clearanceClassNone();
 
       constructionSucceeded = board.checkShape(obstacleShape, layer, new int[0], clClass);

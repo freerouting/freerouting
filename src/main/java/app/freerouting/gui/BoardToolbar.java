@@ -8,9 +8,9 @@ import app.freerouting.board.Unit;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.gui.a11y.A11y;
 import app.freerouting.gui.a11y.GuiLocators;
-import app.freerouting.gui.session.EditorStateHandle;
-import app.freerouting.gui.session.EditorStateKind;
-import app.freerouting.gui.session.InteractiveActionThread;
+import app.freerouting.gui.workspace.EditorStateHandle;
+import app.freerouting.gui.workspace.EditorStateKind;
+import app.freerouting.gui.workspace.InteractiveActionThread;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
@@ -191,7 +191,7 @@ class BoardToolbar extends JPanel {
           if (merger != null) {
             var mergedSettings = merger.merge();
             guiRoutingJob.setSettings(mergedSettings);
-            var interactiveSettings = boardFrame.boardPanel.boardHandling.getInteractiveSettings();
+            var interactiveSettings = boardFrame.boardPanel.boardHandling.getWorkspaceSettings();
             if (interactiveSettings != null) {
               interactiveSettings.setSettings(guiRoutingJob.routerSettings);
             }

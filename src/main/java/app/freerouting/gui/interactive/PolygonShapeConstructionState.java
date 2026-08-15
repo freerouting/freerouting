@@ -4,7 +4,7 @@ import app.freerouting.board.FixedState;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.PolygonShape;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.rules.BoardRules;
 import java.util.Iterator;
 
@@ -48,7 +48,7 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
         constructionSucceeded =
             hdlg.getRoutingBoard()
                 .checkShape(
-                    obstacleShape, hdlg.getInteractiveSettings().getLayer(), new int[0], clClass);
+                    obstacleShape, hdlg.getWorkspaceSettings().getLayer(), new int[0], clClass);
       }
       if (constructionSucceeded) {
         this.observersActivated = !hdlg.getRoutingBoard().observersActive();
@@ -58,10 +58,7 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
         hdlg.getRoutingBoard().generateSnapshot();
         hdlg.getRoutingBoard()
             .insertObstacle(
-                obstacleShape,
-                hdlg.getInteractiveSettings().getLayer(),
-                clClass,
-                FixedState.UNFIXED);
+                obstacleShape, hdlg.getWorkspaceSettings().getLayer(), clClass, FixedState.UNFIXED);
         hdlg.getRoutingBoard().endNotifyObservers();
         if (this.observersActivated) {
           hdlg.getRoutingBoard().endNotifyObservers();

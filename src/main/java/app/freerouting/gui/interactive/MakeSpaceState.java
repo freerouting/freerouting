@@ -4,7 +4,7 @@ import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.rules.Nets;
 import app.freerouting.rules.ViaRule;
 import java.awt.Graphics;
@@ -34,22 +34,22 @@ public class MakeSpaceState extends DragState {
     route =
         new Route(
             location.round(),
-            hdlg.getInteractiveSettings().getLayer(),
+            hdlg.getWorkspaceSettings().getLayer(),
             shoveTraceWidthArr,
             layerActiveArr,
             routeNetNoArr,
             0,
             ViaRule.EMPTY,
             true,
-            hdlg.getInteractiveSettings().getTracePullTightRegionWidth(),
-            hdlg.getInteractiveSettings().getTracePullTightAccuracy(),
+            hdlg.getWorkspaceSettings().getTracePullTightRegionWidth(),
+            hdlg.getWorkspaceSettings().getTracePullTightAccuracy(),
             null,
             null,
             hdlg.getRoutingBoard(),
             false,
             false,
             false,
-            hdlg.getInteractiveSettings().getHighlightRoutingObstacle());
+            hdlg.getWorkspaceSettings().getHighlightRoutingObstacle());
   }
 
   @Override

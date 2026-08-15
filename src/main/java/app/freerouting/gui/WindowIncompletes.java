@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.Item;
 import app.freerouting.drc.AirLine;
-import app.freerouting.gui.session.RatsNest;
+import app.freerouting.gui.workspace.RatsNest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;

@@ -4,7 +4,7 @@ import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.Trace;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
@@ -49,10 +49,10 @@ public abstract class DragState extends InteractiveState {
 
   private static DragCandidate findItemToMove(FloatPoint location, GuiBoardManager boardHandling) {
     int tryCount = 1;
-    if (boardHandling.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
+    if (boardHandling.getWorkspaceSettings().getSelectOnAllVisibleLayers()) {
       tryCount += boardHandling.getLayerCount();
     }
-    int currLayer = boardHandling.getInteractiveSettings().getLayer();
+    int currLayer = boardHandling.getWorkspaceSettings().getLayer();
     int pickLayer = currLayer;
     boolean itemFound = false;
 
@@ -66,7 +66,7 @@ public abstract class DragState extends InteractiveState {
                 .pickItems(
                     location.round(),
                     pickLayer,
-                    boardHandling.getInteractiveSettings().getItemSelectionFilter());
+                    boardHandling.getWorkspaceSettings().getItemSelectionFilter());
         DragCandidate candidate = selectItemToMove(foundItems, boardHandling);
         itemFound |= candidate.itemFound();
         if (candidate.item() != null) {
@@ -88,7 +88,7 @@ public abstract class DragState extends InteractiveState {
       if (currItem instanceof Trace) {
         continue; // traces are not moved
       }
-      if (!boardHandling.getInteractiveSettings().getDragComponentsEnabled()
+      if (!boardHandling.getWorkspaceSettings().getDragComponentsEnabled()
           && currItem.getComponentNo() != 0) {
         continue;
       }
@@ -99,8 +99,6 @@ public abstract class DragState extends InteractiveState {
     }
     return new DragCandidate(itemToMove, itemFound);
   }
-
-  private record DragCandidate(Item item, boolean itemFound) {}
 
   /**
    * Moves the state-managed item or route to the given location.
@@ -129,4 +127,6 @@ public abstract class DragState extends InteractiveState {
   public InteractiveState complete() {
     return this.buttonReleased();
   }
+
+  private record DragCandidate(Item item, boolean itemFound) {}
 }

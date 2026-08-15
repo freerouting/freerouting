@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.util.TextManager;
@@ -40,7 +40,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private static final long DEFAULT_TIMEOUT_SECONDS = 0L;
   private static final long MAX_TIMEOUT_SECONDS = 86400L; // 24 hours
   private final GuiBoardManager boardHandling;
-  private GuiTextManager tm;
   private final JLabel[] layerNameArr;
   private final JLabel[] signalLayerNameArr;
   private final JCheckBox[] settingsAutorouterLayerActiveArr;
@@ -70,6 +69,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final boolean[] preferredDirectionTraceCostsInputCompleted;
   private final boolean[] againstPreferredDirectionTraceCostsInputCompleted;
   private final boolean[] bendCostsInputCompleted;
+  private GuiTextManager tm;
   private boolean viaCostInputCompleted = true;
   private boolean planeViaCostInputCompleted = true;
   private boolean startRipupCostInputCompleted = true;
@@ -515,17 +515,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         .addPropertyChangeListener(this::onSettingsChanged);
   }
 
-  @Override
-  public void setLanguage(Locale locale) {
-    if (tm != null) {
-      tm.setLocale(locale);
-    }
-    super.setLanguage(locale);
-    if (tm == null) {
-      tm = new GuiTextManager(this.getClass(), locale);
-    }
-  }
-
   static int normalizeIntInput(Object input, int oldValue, int minValue, int maxValue) {
     if (!(input instanceof Number number)) {
       return oldValue;
@@ -573,6 +562,17 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
   static void applyAlgorithmSelection(RouterSettings settings, boolean useV19) {
     settings.setAlgorithm(useV19 ? RouterSettings.ALGORITHM_V19 : RouterSettings.ALGORITHM_CURRENT);
+  }
+
+  @Override
+  public void setLanguage(Locale locale) {
+    if (tm != null) {
+      tm.setLocale(locale);
+    }
+    super.setLanguage(locale);
+    if (tm == null) {
+      tm = new GuiTextManager(this.getClass(), locale);
+    }
   }
 
   /** Handle property change events from RouterSettings to update GUI controls. */

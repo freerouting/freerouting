@@ -40,9 +40,9 @@ import java.util.List;
  *   <li>RULES file settings (priority 40) — explicit routing-rule overrides
  *   <li>Environment variables (priority 55) — {@code FREEROUTING__ROUTER__*} env vars
  *   <li>CLI settings (priority 60) — {@code --router.*} command-line arguments
- *   <li>GUI settings (priority 65) — {@code InteractiveSettings} (a {@code GuiSettingsSource}
+ *   <li>GUI settings (priority 65) — {@code WorkspaceSettings} (a {@code GuiSettingsSource}
  *       subclass) in GUI mode; a plain {@code GuiSettingsSource} placeholder before board load;
- *       absent in headless mode. The concrete {@code InteractiveSettings} singleton is registered
+ *       absent in headless mode. The concrete {@code WorkspaceSettings} singleton is registered
  *       here by {@code GuiBoardManager} immediately after each board load so that every subsequent
  *       {@link #merge()} call reflects the live user-controlled state.
  *   <li>API settings (priority 70) — highest priority, supplied by a REST API caller
@@ -94,9 +94,9 @@ public class SettingsMerger implements Cloneable {
    * <ol>
    *   <li>The existing and new sources are the same class (exact match).
    *   <li>The existing source's class is a supertype of the new source's class — i.e. the new
-   *       source is a more-specific subclass. This allows, for example, an {@code
-   *       InteractiveSettings} instance (a {@code GuiSettingsSource} subclass) to replace a plain
-   *       {@code GuiSettingsSource} placeholder that was registered at startup before the board was
+   *       source is a more-specific subclass. This allows, for example, a {@code WorkspaceSettings}
+   *       instance (a {@code GuiSettingsSource} subclass) to replace a plain {@code
+   *       GuiSettingsSource} placeholder that was registered at startup before the board was
    *       loaded.
    * </ol>
    *
@@ -110,7 +110,7 @@ public class SettingsMerger implements Cloneable {
       for (int i = 0; i < sources.size(); i++) {
         SettingsSource existingSource = sources.get(i);
         // Replace if same class OR if the existing class is a supertype of the new class
-        // (allows a concrete subclass such as InteractiveSettings to replace a base-class
+        // (allows a concrete subclass such as WorkspaceSettings to replace a base-class
         // placeholder such as sources.GuiSettingsSource that was registered before board load).
         if (existingSource.getClass().equals(newSource.getClass())
             || existingSource.getClass().isAssignableFrom(newSource.getClass())) {

@@ -45,7 +45,7 @@ public class PopupMenuCopy extends PopupMenuDisplay {
     this.add(popupCopyDoneMenuitem, 1);
 
     Layer currLayer =
-        layerStructure.arr[boardPanel.boardHandling.getInteractiveSettings().getLayer()];
+        layerStructure.arr[boardPanel.boardHandling.getWorkspaceSettings().getLayer()];
     disableLayerItem(layerStructure.getSignalLayerNo(currLayer));
   }
 

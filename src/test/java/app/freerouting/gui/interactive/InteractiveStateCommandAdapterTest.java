@@ -7,8 +7,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.InteractiveCommand;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.InteractiveCommand;
 import java.util.Locale;
 import org.junit.jupiter.api.Test;
 

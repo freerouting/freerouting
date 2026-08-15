@@ -20,6 +20,13 @@ public final class SessionManager {
   private static final Map<String, Session> sessions = new HashMap<>();
   private volatile UUID monitoredSessionId;
 
+  private SessionManager() {}
+
+  /** Returns the process-wide session manager. */
+  public static SessionManager getInstance() {
+    return instance;
+  }
+
   /** Returns the identifier of the session currently monitored by the GUI. */
   public UUID getMonitoredSessionId() {
     return this.monitoredSessionId;
@@ -32,13 +39,6 @@ public final class SessionManager {
    */
   public void setMonitoredSessionId(UUID sessionId) {
     this.monitoredSessionId = sessionId;
-  }
-
-  private SessionManager() {}
-
-  /** Returns the process-wide session manager. */
-  public static SessionManager getInstance() {
-    return instance;
   }
 
   /**
@@ -113,19 +113,19 @@ public final class SessionManager {
   }
 
   /**
-   * Returns the primary (GUI) session.
+   * Returns the primary session.
    *
    * @return the registered primary session
    * @throws IllegalArgumentException if no primary session is registered
    */
   public Session getPrimarySession() throws IllegalArgumentException {
     for (Session session : sessions.values()) {
-      if (session.isGuiSession) {
+      if (session.isPrimary) {
         return session;
       }
     }
 
-    throw new IllegalArgumentException("There is no GUI session.");
+    throw new IllegalArgumentException("There is no primary session.");
   }
 
   /**
@@ -136,17 +136,17 @@ public final class SessionManager {
    *     or the session host is not a valid Freerouting GUI host
    */
   public void setPrimarySession(UUID sessionId) throws IllegalArgumentException {
-    // Check if there are any other GUI sessions and if so, throw an exception because only one GUI
-    // session is allowed
+    // Check if there are any other primary sessions and if so, throw an exception because only one
+    // primary session is allowed
     for (Session session : sessions.values()) {
-      if (session.isGuiSession) {
-        throw new IllegalArgumentException("There is already a GUI session.");
+      if (session.isPrimary) {
+        throw new IllegalArgumentException("There is already a primary session.");
       }
     }
 
     Session session = sessions.get(sessionId.toString());
     if (session != null) {
-      session.isGuiSession = true;
+      session.isPrimary = true;
     } else {
       throw new IllegalArgumentException("Session with id " + sessionId + " does not exist.");
     }
@@ -157,7 +157,7 @@ public final class SessionManager {
               + sessionId
               + " and host "
               + session.host
-              + " is not a valid GUI session. GUI sessions must have the prefix "
+              + " is not a valid primary session. Primary sessions must have the prefix "
               + "'Freerouting/' for their host value.");
     }
   }

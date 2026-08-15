@@ -6,7 +6,7 @@ import app.freerouting.board.MoveComponent;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Vector;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
@@ -85,8 +85,8 @@ public class DragItemState extends DragState {
         this.somethingDragged = true;
       }
       if (!moveComponent.insert(
-          hdlg.getInteractiveSettings().getTracePullTightRegionWidth(),
-          hdlg.getInteractiveSettings().getTracePullTightAccuracy())) {
+          hdlg.getWorkspaceSettings().getTracePullTightRegionWidth(),
+          hdlg.getWorkspaceSettings().getTracePullTightAccuracy())) {
         // an insert error occurred, end the drag state
         return this.returnState;
       }

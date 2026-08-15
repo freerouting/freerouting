@@ -5,7 +5,7 @@ import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.Pin;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.Set;
@@ -76,8 +76,7 @@ public class MenuState extends InteractiveState {
       case 'g' -> hdlg.toggleRatsnest();
       case 'i' -> currReturnState = this.selectItems(hdlg.getCurrentMousePosition());
       case 'p' -> {
-        hdlg.getInteractiveSettings()
-            .setPushEnabled(!hdlg.getInteractiveSettings().getPushEnabled());
+        hdlg.getWorkspaceSettings().setPushEnabled(!hdlg.getWorkspaceSettings().getPushEnabled());
         hdlg.getPanel().boardFrame.refreshWindows();
       }
       case 'r' -> currReturnState = RouteMenuState.getInstance(hdlg);
@@ -90,7 +89,7 @@ public class MenuState extends InteractiveState {
       case '+' -> {
         // increase the current layer to the next signal layer
         LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
-        int currentLayerNo = hdlg.getInteractiveSettings().getLayer();
+        int currentLayerNo = hdlg.getWorkspaceSettings().getLayer();
         do {
           ++currentLayerNo;
         } while (currentLayerNo < layerStructure.arr.length
@@ -103,7 +102,7 @@ public class MenuState extends InteractiveState {
       case '-' -> {
         // decrease the current layer to the previous signal layer
         LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
-        int currentLayerNo = hdlg.getInteractiveSettings().getLayer();
+        int currentLayerNo = hdlg.getWorkspaceSettings().getLayer();
         do {
           --currentLayerNo;
         } while (currentLayerNo >= 0 && !layerStructure.arr[currentLayerNo].isSignal);

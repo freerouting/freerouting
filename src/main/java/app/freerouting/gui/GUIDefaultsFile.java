@@ -3,7 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.gui.rendering.GraphicsContext;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -899,7 +899,7 @@ public final class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_selection_layer_scop: closing bracket expected");
       return false;
     }
-    this.boardHandling.getInteractiveSettings().setSelectOnAllVisibleLayers(selectOnAllLayers);
+    this.boardHandling.getWorkspaceSettings().setSelectOnAllVisibleLayers(selectOnAllLayers);
     return true;
   }
 
@@ -919,7 +919,7 @@ public final class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_shove_enabled_scope: closing bracket expected");
       return false;
     }
-    this.boardHandling.getInteractiveSettings().setPushEnabled(shoveEnabled);
+    this.boardHandling.getWorkspaceSettings().setPushEnabled(shoveEnabled);
     return true;
   }
 
@@ -939,7 +939,7 @@ public final class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_drag_components_enabled_scope: closing bracket expected");
       return false;
     }
-    this.boardHandling.getInteractiveSettings().setDragComponentsEnabled(dragComponentsEnabled);
+    this.boardHandling.getWorkspaceSettings().setDragComponentsEnabled(dragComponentsEnabled);
     return true;
   }
 
@@ -967,7 +967,7 @@ public final class GUIDefaultsFile {
     outFile.startScope();
     outFile.write("shoveEnabled ");
     outFile.newLine();
-    if (this.boardHandling.getInteractiveSettings().getPushEnabled()) {
+    if (this.boardHandling.getWorkspaceSettings().getPushEnabled()) {
       outFile.write("on");
     } else {
       outFile.write("off");
@@ -979,7 +979,7 @@ public final class GUIDefaultsFile {
     outFile.startScope();
     outFile.write("dragComponentsEnabled ");
     outFile.newLine();
-    if (this.boardHandling.getInteractiveSettings().getDragComponentsEnabled()) {
+    if (this.boardHandling.getWorkspaceSettings().getDragComponentsEnabled()) {
       outFile.write("on");
     } else {
       outFile.write("off");
@@ -1003,7 +1003,7 @@ public final class GUIDefaultsFile {
     outFile.startScope();
     outFile.write("selection_layers ");
     outFile.newLine();
-    if (this.boardHandling.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
+    if (this.boardHandling.getWorkspaceSettings().getSelectOnAllVisibleLayers()) {
       outFile.write("all_visible");
     } else {
       outFile.write("current_only");
@@ -1027,7 +1027,7 @@ public final class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_selection_layer_scope: closing bracket expected");
       return false;
     }
-    this.boardHandling.getInteractiveSettings().setStitchRoute(isStitchMode);
+    this.boardHandling.getWorkspaceSettings().setStitchRoute(isStitchMode);
     return true;
   }
 
@@ -1035,7 +1035,7 @@ public final class GUIDefaultsFile {
     outFile.startScope();
     outFile.write("route_mode ");
     outFile.newLine();
-    if (this.boardHandling.getInteractiveSettings().getIsStitchRoute()) {
+    if (this.boardHandling.getWorkspaceSettings().getIsStitchRoute()) {
       outFile.write("stitching");
     } else {
       outFile.write("dynamic");
@@ -1055,7 +1055,7 @@ public final class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_pull_tight_region_scope: closing bracket expected");
       return false;
     }
-    this.boardHandling.getInteractiveSettings().setCurrentPullTightRegionWidth(pullTightRegion);
+    this.boardHandling.getWorkspaceSettings().setCurrentPullTightRegionWidth(pullTightRegion);
     return true;
   }
 
@@ -1063,8 +1063,7 @@ public final class GUIDefaultsFile {
     outFile.startScope();
     outFile.write("pullTightRegion ");
     outFile.newLine();
-    int pullTightRegion =
-        this.boardHandling.getInteractiveSettings().getTracePullTightRegionWidth();
+    int pullTightRegion = this.boardHandling.getWorkspaceSettings().getTracePullTightRegionWidth();
     outFile.write(String.valueOf(pullTightRegion));
     outFile.endScope();
   }
@@ -1081,7 +1080,7 @@ public final class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_pull_tight_accuracy_scope: closing bracket expected");
       return false;
     }
-    this.boardHandling.getInteractiveSettings().setTracePullTightAccuracy(pullTightAccuracy);
+    this.boardHandling.getWorkspaceSettings().setTracePullTightAccuracy(pullTightAccuracy);
     return true;
   }
 
@@ -1089,7 +1088,7 @@ public final class GUIDefaultsFile {
     outFile.startScope();
     outFile.write("pullTightAccuracy ");
     outFile.newLine();
-    int pullTightAccuracy = this.boardHandling.getInteractiveSettings().getTracePullTightAccuracy();
+    int pullTightAccuracy = this.boardHandling.getWorkspaceSettings().getTracePullTightAccuracy();
     outFile.write(String.valueOf(pullTightAccuracy));
     outFile.endScope();
   }
@@ -1140,7 +1139,7 @@ public final class GUIDefaultsFile {
           "GUIDefaultsFile.read_highlight_routing_obstacle_scope: closing bracket expected");
       return false;
     }
-    this.boardHandling.getInteractiveSettings().setHighlightRoutingObstacle(highlightObstacle);
+    this.boardHandling.getWorkspaceSettings().setHighlightRoutingObstacle(highlightObstacle);
     return true;
   }
 
@@ -1148,7 +1147,7 @@ public final class GUIDefaultsFile {
     outFile.startScope();
     outFile.write("highlightRoutingObstacle ");
     outFile.newLine();
-    if (this.boardHandling.getInteractiveSettings().getHighlightRoutingObstacle()) {
+    if (this.boardHandling.getWorkspaceSettings().getHighlightRoutingObstacle()) {
       outFile.write("on");
     } else {
       outFile.write("off");
@@ -1204,7 +1203,7 @@ public final class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_via_snap_to_smd_center_scope: closing bracket expected");
       return false;
     }
-    this.boardHandling.getInteractiveSettings().setViaSnapToSmdCenter(snap);
+    this.boardHandling.getWorkspaceSettings().setViaSnapToSmdCenter(snap);
     return true;
   }
 
@@ -1212,7 +1211,7 @@ public final class GUIDefaultsFile {
     outFile.startScope();
     outFile.write("viaSnapToSmdCenter ");
     outFile.newLine();
-    if (this.boardHandling.getInteractiveSettings().getViaSnapToSmdCenter()) {
+    if (this.boardHandling.getWorkspaceSettings().getViaSnapToSmdCenter()) {
       outFile.write("on");
     } else {
       outFile.write("off");
@@ -1222,7 +1221,7 @@ public final class GUIDefaultsFile {
 
   private boolean readSelectableItemScope() throws IOException {
     ItemSelectionFilter itemSelectionFilter =
-        this.boardHandling.getInteractiveSettings().getItemSelectionFilter();
+        this.boardHandling.getWorkspaceSettings().getItemSelectionFilter();
     itemSelectionFilter.deselectAll();
     for (; ; ) {
       Object nextToken = this.scanner.nextToken();
@@ -1258,7 +1257,7 @@ public final class GUIDefaultsFile {
     outFile.write("selectable_items ");
     outFile.newLine();
     ItemSelectionFilter itemSelectionFilter =
-        this.boardHandling.getInteractiveSettings().getItemSelectionFilter();
+        this.boardHandling.getWorkspaceSettings().getItemSelectionFilter();
     ItemSelectionFilter.SelectableChoices[] selectableChoices =
         ItemSelectionFilter.SelectableChoices.values();
     for (int i = 0; i < selectableChoices.length; i++) {

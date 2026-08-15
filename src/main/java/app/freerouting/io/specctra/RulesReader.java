@@ -21,7 +21,7 @@ import java.util.Collection;
 
 /**
  * Reads a Specctra {@code .rules} file and applies the parsed rules directly to a {@link
- * BasicBoard}, without any dependency on {@link app.freerouting.gui.session.GuiBoardManager}.
+ * BasicBoard}, without any dependency on {@link app.freerouting.gui.workspace.GuiBoardManager}.
  *
  * <p>This class is the public read entry point for Specctra rules files.
  */

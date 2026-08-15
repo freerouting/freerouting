@@ -51,7 +51,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
     this.add(popupCancelMenuitem, 2);
 
     Layer currLayer =
-        layerStructure.arr[boardPanel.boardHandling.getInteractiveSettings().getLayer()];
+        layerStructure.arr[boardPanel.boardHandling.getWorkspaceSettings().getLayer()];
     disableLayerItem(layerStructure.getSignalLayerNo(currLayer));
   }
 

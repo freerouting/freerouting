@@ -104,7 +104,8 @@ public class BoardStatistics implements Serializable {
    * Creates board statistics with optional clearance and connection (incomplete) analysis.
    *
    * @param includeConnections when {@code false}, skips {@code calculateAllIncompletes()} — use
-   *     when a {@link app.freerouting.gui.session.RatsNest} will be created immediately after load
+   *     when a {@link app.freerouting.gui.workspace.RatsNest} will be created immediately after
+   *     load
    */
   public BoardStatistics(
       BasicBoard board, Unit unit, boolean includeClearanceViolations, boolean includeConnections) {

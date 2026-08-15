@@ -5,8 +5,8 @@ import app.freerouting.board.Item;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.WindowObjectInfo;
 import app.freerouting.gui.rendering.BoardRenderer;
-import app.freerouting.gui.session.ClearanceViolations;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.ClearanceViolations;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Set;
@@ -196,7 +196,7 @@ public final class InspectedItemState extends InteractiveState {
 
   /** Removes items not selected by the current interactive filter from the selected item list. */
   public InteractiveState filter() {
-    itemList = hdlg.getInteractiveSettings().getItemSelectionFilter().filter(itemList);
+    itemList = hdlg.getWorkspaceSettings().getItemSelectionFilter().filter(itemList);
     InteractiveState result = this;
     if (itemList.isEmpty()) {
       result = this.returnState;

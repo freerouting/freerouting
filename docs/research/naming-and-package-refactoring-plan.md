@@ -45,7 +45,7 @@ types.
 | Term | Meaning | Code |
 |---|---|---|
 | **Session** | API/job container (caller, host, queued jobs). HTTP `/v1/sessions`. | `core.Session`, `management.sessions.SessionManager`, `api.v1.SessionControllerV1` |
-| **Primary session** | The one session the desktop may show and drive. At most one. | `Session.isPrimary` (today `isGuiSession`, `transient`) |
+| **Primary session** | The one session the desktop may show and drive. At most one. | `Session.isPrimary` (today `isPrimary`, `transient`) |
 | **Workspace** | Desktop editor surface bound to the primary session. | Package `gui.workspace` (today `gui.session`) |
 
 Do not put `Session` in GUI type names. Do not name the GUI package
@@ -200,11 +200,11 @@ Update in the **same phase** that changes the name:
 
 | File | Why |
 |---|---|
-| `AGENTS.md` | `InteractiveSettings` singleton, merger priority 65, `GuiSettingsSource` subtype, `gui.session` |
+| `AGENTS.md` | `WorkspaceSettings` singleton, merger priority 65, `GuiSettingsSource` subtype, `gui.session` |
 | `docs/architecture.md` | Package glossary, mermaid (`api.v1.McpControllerV1`, `management`, `core`) |
 | `docs/settings.md` | Priority table row 50 → 65; class names |
 | `docs/API/API_v1.md` / `docs/API/MCP.md` | MCP controller package; DRC schema title |
-| `docs/issues/soc-gui-separation-and-accessibility-plan.md` | Live invariants that name `InteractiveSettings` / `gui.session` / priority 65 |
+| `docs/issues/soc-gui-separation-and-accessibility-plan.md` | Live invariants that name `WorkspaceSettings` / `gui.session` / priority 65 |
 | This plan | Already the spec; do not leave it contradicting the code |
 
 Issue archaeology under `docs/issues/` may keep old names as history.
@@ -254,14 +254,14 @@ Branch: `refactor/naming-phase-1-gui-settings`
 
 - Keep `GuiSettingsSource` / current class priority **65**.
 - Override `setSettings(RouterSettings)` on the live GUI source (today
-  `InteractiveSettings`, later `WorkspaceSettings`) so non-null
+  `WorkspaceSettings`, later `WorkspaceSettings`) so non-null
   `tracePullTightAccuracy` and `automaticNeckdown` copy onto the live
   fields. Today `setSettings` only stores the snapshot on the superclass
   and `getSettings()` overlays constructor defaults (500 / true), which
   can ignore CLI.
 - At board load, keep copying `merger.merge()` into the live source (already
-  `BoardFrame.attachParsedBoard` → `interactiveSettings.setSettings(mergedSettings)`).
-- Extend `SettingsMergerGuiIntegrationTest`: CLI sets
+  `BoardFrame.attachParsedBoard` → `workspaceSettings.setSettings(mergedSettings)`).
+- Extend `WorkspaceSettingsMergerTest`: CLI sets
   `tracePullTightAccuracy` to a non-default; after bind+merge, GUI shows
   that value; after `setTracePullTightAccuracy`, merge uses the GUI value
   and not CLI.
@@ -273,7 +273,7 @@ Branch: `refactor/naming-phase-1-gui-settings`
 - `settings.GuiSettings` → `GuiApplicationSettings` (keep field
   `GlobalSettings.guiSettings` and JSON `"gui"`).
 - `settings.sources.GuiSettings` → `GuiSettingsSource`.
-- `InteractiveSettings` still extends the source type; do **not** rename it
+- `WorkspaceSettings` still extends the source type; do **not** rename it
   yet (Phase 2).
 
 **1c. Deletes**
@@ -287,7 +287,7 @@ Grep for remaining references (including `@deprecated` javadoc links).
 Update `SettingsMerger` javadoc (`GuiSettings` → `GuiSettingsSource`,
 priority 65).
 
-**Tests:** `SettingsMergerGuiIntegrationTest`, `JsonFileSettingsTest` if it
+**Tests:** `WorkspaceSettingsMergerTest`, `JsonFileSettingsTest` if it
 touches `GuiApplicationSettings`, `GuiStartupHeadlessTest`, architecture tests.
 
 **Not in this phase:** `gui.session` package move, `WorkspaceSettings`.
@@ -300,13 +300,12 @@ Branch: `refactor/naming-phase-2-workspace`
 
 **Progress checklist**
 
-- [ ] Create the phase branch from the updated epic.
-- [ ] Move `gui.session` to `gui.workspace` and apply the workspace type/accessor renames.
-- [ ] Rename `InteractiveSettings` to `WorkspaceSettings` while preserving the GUI settings invariants.
-- [ ] Move matching resources and tests; update mocks and ArchUnit references.
-- [ ] Update AGENTS.md, architecture, and SoC documentation.
-- [ ] Run workspace/session tests, architecture tests, `testGui`, and the i18n context check.
-- [ ] Review and merge the Phase 2 PR into the epic.
+- [x] Move `gui.session` to `gui.workspace` and apply the workspace type/accessor renames.
+- [x] Rename `InteractiveSettings` to `WorkspaceSettings` while preserving the GUI settings invariants.
+- [x] Move matching resources and tests; update mocks and ArchUnit references.
+- [x] Update AGENTS.md, architecture, and SoC documentation.
+- [x] Run workspace/session tests, architecture tests, `testGui`, and the i18n context check.
+- [ ] Review and merge the Phase 2 changes into the epic.
 
 IDE move entire `app.freerouting.gui.session` → `app.freerouting.gui.workspace`.
 Then rename:
@@ -334,7 +333,7 @@ to `.../gui/workspace/` (class names unchanged, package path must match
 **Tests:** move `src/test/java/app/freerouting/gui/session/` →
 `gui/workspace/` and rename test classes that contain `InteractiveSettings`
 or `GuiSession` (`InteractiveSettingsSingletonTest` →
-`WorkspaceSettingsSingletonTest`, `InteractiveSettingsPropertyChangeTest`,
+`WorkspaceSettingsSingletonTest`, `InteractiveSettingsPropertyChangeTest` → `WorkspaceSettingsPropertyChangeTest`,
 `GuiSessionPortTest` → `WorkspacePortTest`, `SettingsMergerGuiIntegrationTest`
 stays or becomes `WorkspaceSettingsMergerTest`).
 

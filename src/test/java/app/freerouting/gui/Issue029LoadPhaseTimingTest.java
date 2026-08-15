@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.gui.session.RatsNest;
+import app.freerouting.gui.workspace.RatsNest;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnTestFixtures;
@@ -17,6 +17,10 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class Issue029LoadPhaseTimingTest {
+
+  private static double ms(long start, long end) {
+    return (end - start) / 1_000_000.0;
+  }
 
   @Test
   void profileAllPhases() throws Exception {
@@ -80,9 +84,5 @@ class Issue029LoadPhaseTimingTest {
           "Board: components=%d traces=%d items=%d%n",
           board.components.count(), board.getTraces().size(), board.getItems().size());
     }
-  }
-
-  private static double ms(long start, long end) {
-    return (end - start) / 1_000_000.0;
   }
 }

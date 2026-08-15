@@ -79,7 +79,7 @@ public class SessionControllerMocked {
             "id": "8c6b2f64-b6db-4fb6-9a2f-17610acad966",
             "userId": "d0071163-7ba3-46b3-b3af-bc2ebfd4d1a0",
             "host": "KiCad/8.0.1",
-            "isGuiSession": false
+            "isPrimary": false
         }
         """)
         .build();
@@ -116,7 +116,7 @@ public class SessionControllerMocked {
              "id": "8c6b2f64-b6db-4fb6-9a2f-17610acad966",
              "userId": "d0071163-7ba3-46b3-b3af-bc2ebfd4d1a0",
              "host": "Postman/11.14",
-             "isGuiSession": false
+             "isPrimary": false
         }
         """)
         .build();

@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.ViaRule;
@@ -100,7 +100,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     numberFormat.setMaximumFractionDigits(7);
     this.traceWidthField = new JFormattedTextField(numberFormat);
     this.traceWidthField.setColumns(7);
-    int currHalfWidth = this.boardHandling.getInteractiveSettings().getManualTraceHalfWidth(0);
+    int currHalfWidth = this.boardHandling.getWorkspaceSettings().getManualTraceHalfWidth(0);
     this.setTraceWidthField(currHalfWidth);
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(traceWidthField, gridbagConstraints);
@@ -147,11 +147,11 @@ public class WindowManualRules extends BoardSavableSubWindow {
       this.settingsRoutingManualRuleSelectionClearanceComboBox.adjust(clearanceMatrix);
     }
     this.settingsRoutingManualRuleSelectionClearanceComboBox.setSelectedIndex(
-        boardHandling.getInteractiveSettings().getManualTraceClearanceClass());
-    int viaRuleIndex = boardHandling.getInteractiveSettings().getManualViaRuleIndex();
+        boardHandling.getWorkspaceSettings().getManualTraceClearanceClass());
+    int viaRuleIndex = boardHandling.getWorkspaceSettings().getManualViaRuleIndex();
     if (viaRuleIndex < this.settingsRoutingManualRuleSelectionViaRuleComboBox.getItemCount()) {
       this.settingsRoutingManualRuleSelectionViaRuleComboBox.setSelectedIndex(
-          boardHandling.getInteractiveSettings().getManualViaRuleIndex());
+          boardHandling.getWorkspaceSettings().getManualViaRuleIndex());
     }
     this.setSelectedLayer(this.settingsRoutingManualRuleSelectionLayerComboBox.getSelectedLayer());
     this.repaint();
@@ -177,9 +177,9 @@ public class WindowManualRules extends BoardSavableSubWindow {
     if (layer.index == ComboBoxLayer.ALL_LAYER_INDEX) {
       // check if the half width is layer_dependent.
       boolean traceWidthsLayerDependent = false;
-      int firstHalfWidth = this.boardHandling.getInteractiveSettings().getManualTraceHalfWidth(0);
+      int firstHalfWidth = this.boardHandling.getWorkspaceSettings().getManualTraceHalfWidth(0);
       for (int i = 1; i < this.boardHandling.getLayerCount(); i++) {
-        if (this.boardHandling.getInteractiveSettings().getManualTraceHalfWidth(i)
+        if (this.boardHandling.getWorkspaceSettings().getManualTraceHalfWidth(i)
             != firstHalfWidth) {
           traceWidthsLayerDependent = true;
           break;
@@ -193,9 +193,9 @@ public class WindowManualRules extends BoardSavableSubWindow {
     } else if (layer.index == ComboBoxLayer.INNER_LAYER_INDEX) {
       // check if the half width is layer_dependent on the inner layers.
       boolean traceWidthsLayerDependent = false;
-      int firstHalfWidth = this.boardHandling.getInteractiveSettings().getManualTraceHalfWidth(1);
+      int firstHalfWidth = this.boardHandling.getWorkspaceSettings().getManualTraceHalfWidth(1);
       for (int i = 2; i < this.boardHandling.getLayerCount() - 1; i++) {
-        if (this.boardHandling.getInteractiveSettings().getManualTraceHalfWidth(i)
+        if (this.boardHandling.getWorkspaceSettings().getManualTraceHalfWidth(i)
             != firstHalfWidth) {
           traceWidthsLayerDependent = true;
           break;
@@ -208,7 +208,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
       }
     } else {
       currHalfWidth =
-          this.boardHandling.getInteractiveSettings().getManualTraceHalfWidth(layer.index);
+          this.boardHandling.getWorkspaceSettings().getManualTraceHalfWidth(layer.index);
     }
     setTraceWidthField(currHalfWidth);
   }
@@ -228,7 +228,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent evt) {
       int newIndex = settingsRoutingManualRuleSelectionClearanceComboBox.getSelectedClassIndex();
-      boardHandling.getInteractiveSettings().setManualTraceClearanceClass(newIndex);
+      boardHandling.getWorkspaceSettings().setManualTraceClearanceClass(newIndex);
     }
   }
 
@@ -237,7 +237,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent evt) {
       int newIndex = settingsRoutingManualRuleSelectionViaRuleComboBox.getSelectedIndex();
-      boardHandling.getInteractiveSettings().setManualViaRuleIndex(newIndex);
+      boardHandling.getWorkspaceSettings().setManualViaRuleIndex(newIndex);
     }
   }
 

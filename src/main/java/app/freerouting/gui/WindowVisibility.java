@@ -4,7 +4,7 @@ import app.freerouting.board.LayerStructure;
 import app.freerouting.gui.a11y.A11y;
 import app.freerouting.gui.a11y.GuiLocators;
 import app.freerouting.gui.rendering.ColorIntensityTable.ObjectNames;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import java.awt.BorderLayout;
@@ -37,14 +37,12 @@ public class WindowVisibility extends BoardSavableSubWindow {
   private static final int LABEL_WIDTH = 160;
   private static final int VALUE_FIELD_WIDTH = 44;
   private static final Dimension CONTENT_SIZE = new Dimension(500, 420);
-
+  private static final java.util.Map<Locale, TextManager> text_manager_cache =
+      new ConcurrentHashMap<>();
   protected final BoardPanel boardPanel;
   private final VisibilitySection layerSection;
   private final VisibilitySection objectSection;
   protected boolean bulkUpdateInProgress;
-
-  private static final java.util.Map<Locale, TextManager> text_manager_cache =
-      new ConcurrentHashMap<>();
 
   /** Creates a window for editing layer and object visibility. */
   public WindowVisibility(BoardFrame boardFrame) {

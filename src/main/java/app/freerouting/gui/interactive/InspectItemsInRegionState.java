@@ -4,7 +4,7 @@ import app.freerouting.board.Item;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -34,6 +34,16 @@ public final class InspectItemsInRegionState extends SelectRegionState {
     return newInstance;
   }
 
+  private static IntBox createSelectionBox(FloatPoint firstCorner, FloatPoint secondCorner) {
+    IntPoint firstPoint = firstCorner.round();
+    IntPoint secondPoint = secondCorner.round();
+    return new IntBox(
+        Math.min(firstPoint.x, secondPoint.x),
+        Math.min(firstPoint.y, secondPoint.y),
+        Math.max(firstPoint.x, secondPoint.x),
+        Math.max(firstPoint.y, secondPoint.y));
+  }
+
   @Override
   public InteractiveState complete() {
     if (!hdlg.isBoardReadOnly()) {
@@ -47,13 +57,13 @@ public final class InspectItemsInRegionState extends SelectRegionState {
   /** Selects all items in the rectangle defined by corner1 and corner2. */
   private void selectAllInRegion() {
     int selectLayer;
-    if (hdlg.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
+    if (hdlg.getWorkspaceSettings().getSelectOnAllVisibleLayers()) {
       selectLayer = -1;
     } else {
-      selectLayer = hdlg.getInteractiveSettings().getLayer();
+      selectLayer = hdlg.getWorkspaceSettings().getLayer();
     }
     Set<Item> foundItems = findItems(selectLayer);
-    if (hdlg.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
+    if (hdlg.getWorkspaceSettings().getSelectOnAllVisibleLayers()) {
       // remove items, which are not visible
       Set<Item> visibleItems = new TreeSet<>();
       for (Item currItem : foundItems) {
@@ -78,18 +88,8 @@ public final class InspectItemsInRegionState extends SelectRegionState {
     }
   }
 
-  private static IntBox createSelectionBox(FloatPoint firstCorner, FloatPoint secondCorner) {
-    IntPoint firstPoint = firstCorner.round();
-    IntPoint secondPoint = secondCorner.round();
-    return new IntBox(
-        Math.min(firstPoint.x, secondPoint.x),
-        Math.min(firstPoint.y, secondPoint.y),
-        Math.max(firstPoint.x, secondPoint.x),
-        Math.max(firstPoint.y, secondPoint.y));
-  }
-
   private Set<Item> findItems(int selectLayer) {
-    return hdlg.getInteractiveSettings()
+    return hdlg.getWorkspaceSettings()
         .getItemSelectionFilter()
         .filter(
             hdlg.getRoutingBoard()

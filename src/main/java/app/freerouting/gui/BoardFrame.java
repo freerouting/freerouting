@@ -9,12 +9,12 @@ import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.gui.rendering.TutorialBoardPalette;
-import app.freerouting.gui.session.BoardReplacement;
-import app.freerouting.gui.session.EditorStateHandle;
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.LoadGeneration;
-import app.freerouting.gui.session.RatsNest;
-import app.freerouting.gui.session.ScreenMessages;
+import app.freerouting.gui.workspace.BoardReplacement;
+import app.freerouting.gui.workspace.EditorStateHandle;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.LoadGeneration;
+import app.freerouting.gui.workspace.RatsNest;
+import app.freerouting.gui.workspace.ScreenMessages;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.FileFormat;
 import app.freerouting.io.kicad.KiCadJsonReader;
@@ -479,7 +479,7 @@ public class BoardFrame extends WindowBase {
     if (this.settingsMerger != null) {
       var mergedSettings = this.settingsMerger.merge();
       this.routingJob.setSettings(mergedSettings);
-      var interactiveSettings = boardPanel.boardHandling.getInteractiveSettings();
+      var interactiveSettings = boardPanel.boardHandling.getWorkspaceSettings();
       if (interactiveSettings != null) {
         interactiveSettings.setSettings(this.routingJob.routerSettings);
       }
@@ -778,7 +778,7 @@ public class BoardFrame extends WindowBase {
         }
         mergedSettings.applyBoardSpecificOptimizations(board);
         this.routingJob.setSettings(mergedSettings);
-        var interactiveSettings = boardPanel.boardHandling.getInteractiveSettings();
+        var interactiveSettings = boardPanel.boardHandling.getWorkspaceSettings();
         if (interactiveSettings != null) {
           interactiveSettings.setSettings(mergedSettings);
         }
@@ -987,7 +987,7 @@ public class BoardFrame extends WindowBase {
         if (this.settingsMerger != null) {
           var mergedSettings = this.settingsMerger.merge();
           this.routingJob.setSettings(mergedSettings);
-          var interactiveSettings = boardPanel.boardHandling.getInteractiveSettings();
+          var interactiveSettings = boardPanel.boardHandling.getWorkspaceSettings();
           if (interactiveSettings != null) {
             interactiveSettings.setSettings(this.routingJob.routerSettings);
           }

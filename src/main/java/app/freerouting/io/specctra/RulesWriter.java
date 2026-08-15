@@ -14,7 +14,7 @@ import java.io.OutputStream;
 
 /**
  * Writes board design rules to a Specctra {@code .rules} file without any dependency on {@link
- * app.freerouting.gui.session.GuiBoardManager}.
+ * app.freerouting.gui.workspace.GuiBoardManager}.
  *
  * <p>This class is the public write entry point for Specctra rules files.
  */

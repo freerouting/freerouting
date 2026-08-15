@@ -13,6 +13,7 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.io.specctra.DsnReader;
@@ -55,7 +56,7 @@ import java.io.OutputStream;
  * <p><strong>Design Pattern:</strong> This class implements the {@link BoardManager} interface,
  * providing headless-specific implementations while maintaining compatibility with the broader
  * board management architecture. It can be used as a drop-in replacement for {@link
- * app.freerouting.gui.session.GuiBoardManager} when GUI is not needed.
+ * app.freerouting.gui.workspace.GuiBoardManager} when GUI is not needed.
  *
  * <p><strong>Thread Safety:</strong> The {@link #replaceRoutingBoard(RoutingBoard)} method is
  * synchronized to allow thread-safe board replacement during multi-threaded routing operations.
@@ -72,7 +73,7 @@ import java.io.OutputStream;
  * }</pre>
  *
  * @see BoardManager
- * @see app.freerouting.gui.session.GuiBoardManager
+ * @see app.freerouting.gui.workspace.GuiBoardManager
  * @see RoutingBoard
  * @see RoutingJob
  */
@@ -95,7 +96,7 @@ public class HeadlessBoardManager implements BoardManager {
    * <p>Typically used for logging, progress reporting, or coordinating with external systems.
    *
    * @see ThreadActionListener
-   * @see app.freerouting.gui.session.InteractiveActionThread
+   * @see app.freerouting.gui.workspace.InteractiveActionThread
    */
   public ThreadActionListener autorouterListener;
 
@@ -166,6 +167,73 @@ public class HeadlessBoardManager implements BoardManager {
     this.routingJob = routingJob;
   }
 
+  private static void compareCounterpartBoardIfPresent(RoutingBoard board, String inputFilename) {
+    if (inputFilename == null) {
+      return;
+    }
+    String counterpartPath = null;
+    if (inputFilename.toLowerCase().endsWith(".dsn")) {
+      counterpartPath = inputFilename.substring(0, inputFilename.length() - 4) + ".json";
+    } else if (inputFilename.toLowerCase().endsWith(".json")) {
+      counterpartPath = inputFilename.substring(0, inputFilename.length() - 5) + ".dsn";
+    }
+    if (counterpartPath == null) {
+      return;
+    }
+    java.io.File counterpartFile = new java.io.File(counterpartPath);
+    if (!counterpartFile.exists()) {
+      return;
+    }
+    RoutingBoard counterpartBoard = loadBoardFromFileForComparison(counterpartFile);
+    if (counterpartBoard == null) {
+      return;
+    }
+    app.freerouting.board.BoardComparator.ComparisonResult comparison =
+        app.freerouting.board.BoardComparator.compare(board, counterpartBoard, 1e-3);
+    if (comparison.areEqual) {
+      FRLogger.debug(
+          "Counterpart comparison: The loaded board and its counterpart '"
+              + counterpartFile.getName()
+              + "' are identical in representation.");
+    } else {
+      FRLogger.warn(
+          "Counterpart comparison: Differences detected between loaded board and counterpart '"
+              + counterpartFile.getName()
+              + "'.");
+      FRLogger.debug(comparison.report);
+    }
+  }
+
+  private static RoutingBoard loadBoardFromFileForComparison(java.io.File file) {
+    try (java.io.InputStream is = new java.io.FileInputStream(file)) {
+      if (file.getName().toLowerCase().endsWith(".json")) {
+        try (java.io.Reader r =
+            new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
+          app.freerouting.io.BoardReadResult readResult =
+              app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
+          if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
+            return (RoutingBoard) success.board();
+          } else if (readResult
+              instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+            return (RoutingBoard) outlineMissing.board();
+          }
+        }
+      } else {
+        app.freerouting.io.BoardReadResult readResult =
+            app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
+        if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
+          return (RoutingBoard) success.board();
+        } else if (readResult
+            instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+          return (RoutingBoard) outlineMissing.board();
+        }
+      }
+    } catch (Exception e) {
+      FRLogger.error("Failed to load counterpart board: " + e.getMessage(), e);
+    }
+    return null;
+  }
+
   /**
    * Returns the routing board managed by this instance.
    *
@@ -234,7 +302,7 @@ public class HeadlessBoardManager implements BoardManager {
    * @param rules the board design rules and constraints
    * @param boardCommunication communication interface for external integration
    * @see RoutingBoard#RoutingBoard
-   * @see app.freerouting.gui.session.InteractiveSettings
+   * @see WorkspaceSettings
    */
   @Override
   public void createBoard(
@@ -715,43 +783,6 @@ public class HeadlessBoardManager implements BoardManager {
             });
   }
 
-  private static void compareCounterpartBoardIfPresent(RoutingBoard board, String inputFilename) {
-    if (inputFilename == null) {
-      return;
-    }
-    String counterpartPath = null;
-    if (inputFilename.toLowerCase().endsWith(".dsn")) {
-      counterpartPath = inputFilename.substring(0, inputFilename.length() - 4) + ".json";
-    } else if (inputFilename.toLowerCase().endsWith(".json")) {
-      counterpartPath = inputFilename.substring(0, inputFilename.length() - 5) + ".dsn";
-    }
-    if (counterpartPath == null) {
-      return;
-    }
-    java.io.File counterpartFile = new java.io.File(counterpartPath);
-    if (!counterpartFile.exists()) {
-      return;
-    }
-    RoutingBoard counterpartBoard = loadBoardFromFileForComparison(counterpartFile);
-    if (counterpartBoard == null) {
-      return;
-    }
-    app.freerouting.board.BoardComparator.ComparisonResult comparison =
-        app.freerouting.board.BoardComparator.compare(board, counterpartBoard, 1e-3);
-    if (comparison.areEqual) {
-      FRLogger.debug(
-          "Counterpart comparison: The loaded board and its counterpart '"
-              + counterpartFile.getName()
-              + "' are identical in representation.");
-    } else {
-      FRLogger.warn(
-          "Counterpart comparison: Differences detected between loaded board and counterpart '"
-              + counterpartFile.getName()
-              + "'.");
-      FRLogger.debug(comparison.report);
-    }
-  }
-
   /**
    * Loads a board design from a KiCad JSON format file/stream.
    *
@@ -846,36 +877,6 @@ public class HeadlessBoardManager implements BoardManager {
     }
 
     return wasSaveSuccessful;
-  }
-
-  private static RoutingBoard loadBoardFromFileForComparison(java.io.File file) {
-    try (java.io.InputStream is = new java.io.FileInputStream(file)) {
-      if (file.getName().toLowerCase().endsWith(".json")) {
-        try (java.io.Reader r =
-            new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
-          app.freerouting.io.BoardReadResult readResult =
-              app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
-          if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
-            return (RoutingBoard) success.board();
-          } else if (readResult
-              instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
-            return (RoutingBoard) outlineMissing.board();
-          }
-        }
-      } else {
-        app.freerouting.io.BoardReadResult readResult =
-            app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
-        if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
-          return (RoutingBoard) success.board();
-        } else if (readResult
-            instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
-          return (RoutingBoard) outlineMissing.board();
-        }
-      }
-    } catch (Exception e) {
-      FRLogger.error("Failed to load counterpart board: " + e.getMessage(), e);
-    }
-    return null;
   }
 
   boolean conductionAreasOverlap(
