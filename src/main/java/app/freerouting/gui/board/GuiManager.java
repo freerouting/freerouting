@@ -22,7 +22,6 @@ import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.GuiSettingsSource;
 import app.freerouting.util.TextManager;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,11 +33,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BooleanSupplier;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
@@ -54,17 +57,44 @@ public class GuiManager {
    */
   // CHECKSTYLE.SUPPRESS: AbbreviationAsWordInName for +1 lines
   public static boolean initializeGUI(GlobalSettings globalSettings) {
-    if (!EventQueue.isDispatchThread()) {
-      final boolean[] result = new boolean[1];
-      try {
-        EventQueue.invokeAndWait(() -> result[0] = initializeGUI(globalSettings));
-      } catch (Exception e) {
-        FRLogger.error("Failed to initialize GUI on EDT", e);
-        return false;
-      }
-      return result[0];
+    return invokeOnEdt(() -> initializeGuiOnEdt(globalSettings));
+  }
+
+  /**
+   * Runs a GUI initializer synchronously on Swing's event dispatch thread.
+   *
+   * @param initializer the initialization action returning {@code true} on success
+   * @return {@code true} if initialization succeeded, {@code false} otherwise
+   */
+  static boolean invokeOnEdt(BooleanSupplier initializer) {
+    if (initializer == null) {
+      return false;
     }
 
+    if (SwingUtilities.isEventDispatchThread()) {
+      try {
+        return initializer.getAsBoolean();
+      } catch (Exception e) {
+        FRLogger.error("GUI initialization failed on EDT", e);
+        return false;
+      }
+    }
+
+    AtomicBoolean initialized = new AtomicBoolean();
+    try {
+      SwingUtilities.invokeAndWait(() -> initialized.set(initializer.getAsBoolean()));
+    } catch (InterruptedException e) {
+      FRLogger.error("Interrupted while initializing the GUI", e);
+      Thread.currentThread().interrupt();
+      return false;
+    } catch (InvocationTargetException e) {
+      FRLogger.error("GUI initialization failed", e.getCause());
+      return false;
+    }
+    return initialized.get();
+  }
+
+  private static boolean initializeGuiOnEdt(GlobalSettings globalSettings) {
     // Start a new Freerouting session
     var guiSession =
         SessionManager.getInstance()
