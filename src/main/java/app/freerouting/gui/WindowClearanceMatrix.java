@@ -1,11 +1,11 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.ClearanceMatrix;
 import java.awt.BorderLayout;
 import java.awt.Color;

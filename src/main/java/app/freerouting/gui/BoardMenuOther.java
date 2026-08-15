@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;

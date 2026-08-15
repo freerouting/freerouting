@@ -2,6 +2,7 @@ package app.freerouting.api.v1;
 
 import static app.freerouting.util.gson.GsonProvider.GSON;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.api.BaseController;
 import app.freerouting.api.dto.BoardFilePayload;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
@@ -14,9 +15,8 @@ import app.freerouting.io.kicad.KiCadDrcReport;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.BoardLoader;
 import app.freerouting.management.HeadlessBoardManager;
-import app.freerouting.management.RoutingJobScheduler;
-import app.freerouting.management.SessionManager;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.jobs.RoutingJobScheduler;
+import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
@@ -347,10 +347,9 @@ public class JobControllerV1 extends BaseController {
   /**
    * Cancels the routing job with the given ID.
    *
-   * <p>Delegates to {@link app.freerouting.management.RoutingJobScheduler#cancelJob(RoutingJob)}.
-   * The job state is set to {@code CANCELLED}; any in-progress routing pass is interrupted. The
-   * partially-completed output (if any) is still accessible via {@code GET /v1/jobs/{jobId}/output}
-   * after cancellation.
+   * <p>Delegates to {@link RoutingJobScheduler#cancelJob(RoutingJob)}. The job state is set to
+   * {@code CANCELLED}; any in-progress routing pass is interrupted. The partially-completed output
+   * (if any) is still accessible via {@code GET /v1/jobs/{jobId}/output} after cancellation.
    */
   @Operation(
       summary = "Cancel routing job",

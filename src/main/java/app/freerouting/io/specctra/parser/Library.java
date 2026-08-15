@@ -1,9 +1,9 @@
 package app.freerouting.io.specctra.parser;
 
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.core.Packages;
-import app.freerouting.core.Padstack;
-import app.freerouting.core.Padstacks;
+import app.freerouting.core.library.Packages;
+import app.freerouting.core.library.Padstack;
+import app.freerouting.core.library.Padstacks;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.IntVector;
@@ -220,6 +220,41 @@ public class Library extends ScopeKeyword {
     return true;
   }
 
+  private static boolean arePackagePinsIdentical(
+      app.freerouting.core.library.Package pkg1, app.freerouting.core.library.Package.Pin[] p2) {
+    if (pkg1 == null || p2 == null) {
+      return (pkg1 == null) == (p2 == null);
+    }
+    if (pkg1.pinCount() != p2.length) {
+      return false;
+    }
+    for (int i = 0; i < p2.length; i++) {
+      app.freerouting.core.library.Package.Pin pin1 = pkg1.getPin(i);
+      app.freerouting.core.library.Package.Pin pin2 = p2[i];
+      if (pin1 == null || pin2 == null) {
+        if (pin1 != pin2) {
+          return false;
+        }
+        continue;
+      }
+      if (!pin1.name.equals(pin2.name)) {
+        return false;
+      }
+      if (pin1.padstackNo != pin2.padstackNo) {
+        return false;
+      }
+      app.freerouting.geometry.planar.FloatPoint loc1 = pin1.relativeLocation.toFloat();
+      app.freerouting.geometry.planar.FloatPoint loc2 = pin2.relativeLocation.toFloat();
+      if (Math.abs(loc1.x - loc2.x) > 0.001 || Math.abs(loc1.y - loc2.y) > 0.001) {
+        return false;
+      }
+      if (Math.abs(pin1.rotationInDegree - pin2.rotationInDegree) > 0.001) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   @Override
   public boolean readScope(ReadScopeParameter par) {
     RoutingBoard board = par.boardHandling.getRoutingBoard();
@@ -266,8 +301,8 @@ public class Library extends ScopeKeyword {
     // Create the library packages on the board
     board.library.packages = new Packages(board.library.padstacks);
     for (Package currPackage : packageList) {
-      app.freerouting.core.Package.Pin[] pinArr =
-          new app.freerouting.core.Package.Pin[currPackage.pinInfoArr.length];
+      app.freerouting.core.library.Package.Pin[] pinArr =
+          new app.freerouting.core.library.Package.Pin[currPackage.pinInfoArr.length];
       for (int i = 0; i < pinArr.length; i++) {
         Package.PinInfo pinInfo = currPackage.pinInfoArr[i];
         int relX = (int) Math.round(par.coordinateTransform.dsnToBoard(pinInfo.relCoor[0]));
@@ -288,7 +323,7 @@ public class Library extends ScopeKeyword {
           return false;
         }
         pinArr[i] =
-            new app.freerouting.core.Package.Pin(
+            new app.freerouting.core.library.Package.Pin(
                 pinInfo.pinName, boardPadstack.no, relCoor, pinInfo.rotation);
       }
       app.freerouting.geometry.planar.Shape[] outlineArr =
@@ -322,8 +357,8 @@ public class Library extends ScopeKeyword {
       generateMissingKeepoutNames("keepout_", currPackage.keepouts);
       generateMissingKeepoutNames("via_keepout_", currPackage.viaKeepouts);
       generateMissingKeepoutNames("place_keepout_", currPackage.placeKeepouts);
-      app.freerouting.core.Package.Keepout[] keepoutArr =
-          new app.freerouting.core.Package.Keepout[currPackage.keepouts.size()];
+      app.freerouting.core.library.Package.Keepout[] keepoutArr =
+          new app.freerouting.core.library.Package.Keepout[currPackage.keepouts.size()];
       Iterator<Shape.ReadAreaScopeResult> it2 = currPackage.keepouts.iterator();
       for (int i = 0; i < keepoutArr.length; i++) {
         Shape.ReadAreaScopeResult currKeepout = it2.next();
@@ -331,10 +366,11 @@ public class Library extends ScopeKeyword {
         Area currArea =
             Shape.transformAreaToBoardRel(currKeepout.shapeList, par.coordinateTransform);
         keepoutArr[i] =
-            new app.freerouting.core.Package.Keepout(currKeepout.areaName, currArea, currLayer.no);
+            new app.freerouting.core.library.Package.Keepout(
+                currKeepout.areaName, currArea, currLayer.no);
       }
-      app.freerouting.core.Package.Keepout[] viaKeepoutArr =
-          new app.freerouting.core.Package.Keepout[currPackage.viaKeepouts.size()];
+      app.freerouting.core.library.Package.Keepout[] viaKeepoutArr =
+          new app.freerouting.core.library.Package.Keepout[currPackage.viaKeepouts.size()];
       it2 = currPackage.viaKeepouts.iterator();
       for (int i = 0; i < viaKeepoutArr.length; i++) {
         Shape.ReadAreaScopeResult currKeepout = it2.next();
@@ -342,10 +378,11 @@ public class Library extends ScopeKeyword {
         Area currArea =
             Shape.transformAreaToBoardRel(currKeepout.shapeList, par.coordinateTransform);
         viaKeepoutArr[i] =
-            new app.freerouting.core.Package.Keepout(currKeepout.areaName, currArea, currLayer.no);
+            new app.freerouting.core.library.Package.Keepout(
+                currKeepout.areaName, currArea, currLayer.no);
       }
-      app.freerouting.core.Package.Keepout[] placeKeepoutArr =
-          new app.freerouting.core.Package.Keepout[currPackage.placeKeepouts.size()];
+      app.freerouting.core.library.Package.Keepout[] placeKeepoutArr =
+          new app.freerouting.core.library.Package.Keepout[currPackage.placeKeepouts.size()];
       it2 = currPackage.placeKeepouts.iterator();
       for (int i = 0; i < placeKeepoutArr.length; i++) {
         Shape.ReadAreaScopeResult currKeepout = it2.next();
@@ -353,7 +390,8 @@ public class Library extends ScopeKeyword {
         Area currArea =
             Shape.transformAreaToBoardRel(currKeepout.shapeList, par.coordinateTransform);
         placeKeepoutArr[i] =
-            new app.freerouting.core.Package.Keepout(currKeepout.areaName, currArea, currLayer.no);
+            new app.freerouting.core.library.Package.Keepout(
+                currKeepout.areaName, currArea, currLayer.no);
       }
       String basePackageName =
           currPackage.name != null ? currPackage.name.replaceAll("::\\d+$", "") : "Package";
@@ -361,7 +399,7 @@ public class Library extends ScopeKeyword {
       while (true) {
         String testName = suffix == 0 ? basePackageName : basePackageName + "::" + suffix;
         try {
-          app.freerouting.core.Package existingPkg =
+          app.freerouting.core.library.Package existingPkg =
               board.library.packages.get(testName, currPackage.isFront);
           if (existingPkg == null || !existingPkg.name.equalsIgnoreCase(testName)) {
             board.library.packages.add(
@@ -418,40 +456,5 @@ public class Library extends ScopeKeyword {
       currKeepout.areaName = keepoutType + currNameIndex;
       ++currNameIndex;
     }
-  }
-
-  private static boolean arePackagePinsIdentical(
-      app.freerouting.core.Package pkg1, app.freerouting.core.Package.Pin[] p2) {
-    if (pkg1 == null || p2 == null) {
-      return (pkg1 == null) == (p2 == null);
-    }
-    if (pkg1.pinCount() != p2.length) {
-      return false;
-    }
-    for (int i = 0; i < p2.length; i++) {
-      app.freerouting.core.Package.Pin pin1 = pkg1.getPin(i);
-      app.freerouting.core.Package.Pin pin2 = p2[i];
-      if (pin1 == null || pin2 == null) {
-        if (pin1 != pin2) {
-          return false;
-        }
-        continue;
-      }
-      if (!pin1.name.equals(pin2.name)) {
-        return false;
-      }
-      if (pin1.padstackNo != pin2.padstackNo) {
-        return false;
-      }
-      app.freerouting.geometry.planar.FloatPoint loc1 = pin1.relativeLocation.toFloat();
-      app.freerouting.geometry.planar.FloatPoint loc2 = pin2.relativeLocation.toFloat();
-      if (Math.abs(loc1.x - loc2.x) > 0.001 || Math.abs(loc1.y - loc2.y) > 0.001) {
-        return false;
-      }
-      if (Math.abs(pin1.rotationInDegree - pin2.rotationInDegree) > 0.001) {
-        return false;
-      }
-    }
-    return true;
   }
 }

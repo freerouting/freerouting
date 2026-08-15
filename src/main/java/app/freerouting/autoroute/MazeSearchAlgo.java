@@ -13,7 +13,7 @@ import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -230,6 +230,94 @@ public class MazeSearchAlgo {
       result = secondProjection;
     }
     return result;
+  }
+
+  private static String describeExpandable(ExpandableObject door) {
+    if (door == null) {
+      return "null";
+    }
+    String sectionCount = safeMazeSectionCount(door);
+    if (door instanceof TargetItemExpansionDoor targetDoor) {
+      return "TargetItemExpansionDoor"
+          + "/item="
+          + targetDoor.item.getIdNo()
+          + "/tree_entry="
+          + targetDoor.treeEntryNo
+          + "/dim="
+          + door.getDimension()
+          + "/sections="
+          + sectionCount;
+    }
+    if (door instanceof ExpansionDrill drill) {
+      return "ExpansionDrill"
+          + "/location="
+          + drill.location
+          + "/layers="
+          + drill.firstLayer
+          + "-"
+          + drill.lastLayer
+          + "/dim="
+          + door.getDimension()
+          + "/sections="
+          + sectionCount;
+    }
+    IntBox bounds = door.getShape().boundingBox();
+    return door.getClass().getSimpleName()
+        + "/bounds=[("
+        + bounds.ll.x
+        + ","
+        + bounds.ll.y
+        + ")..("
+        + bounds.ur.x
+        + ","
+        + bounds.ur.y
+        + ")]"
+        + "/dim="
+        + door.getDimension()
+        + "/sections="
+        + sectionCount;
+  }
+
+  private static String safeMazeSectionCount(ExpandableObject door) {
+    try {
+      return Integer.toString(door.mazeSearchElementCount());
+    } catch (RuntimeException e) {
+      return "uninitialized";
+    }
+  }
+
+  private static String describeExpandableBounds(ExpandableObject door) {
+    if (door == null) {
+      return "null";
+    }
+    IntBox bounds = door.getShape().boundingBox();
+    return "[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]";
+  }
+
+  private static String describeRoom(CompleteExpansionRoom room) {
+    if (room == null) {
+      return "null";
+    }
+    IntBox bounds = room.getShape().boundingBox();
+    return room.getClass().getSimpleName()
+        + "/layer="
+        + room.getLayer()
+        + "/bounds=[("
+        + bounds.ll.x
+        + ","
+        + bounds.ll.y
+        + ")..("
+        + bounds.ur.x
+        + ","
+        + bounds.ur.y
+        + ")]";
+  }
+
+  private static Point[] toImpactedPoints(FloatLine shapeEntry) {
+    if (shapeEntry == null) {
+      return null;
+    }
+    return new Point[] {shapeEntry.a.round(), shapeEntry.b.round()};
   }
 
   /**
@@ -902,94 +990,6 @@ public class MazeSearchAlgo {
         toImpactedPoints(shapeEntry));
     this.mazeExpansionList.add(newElement);
     return true;
-  }
-
-  private static String describeExpandable(ExpandableObject door) {
-    if (door == null) {
-      return "null";
-    }
-    String sectionCount = safeMazeSectionCount(door);
-    if (door instanceof TargetItemExpansionDoor targetDoor) {
-      return "TargetItemExpansionDoor"
-          + "/item="
-          + targetDoor.item.getIdNo()
-          + "/tree_entry="
-          + targetDoor.treeEntryNo
-          + "/dim="
-          + door.getDimension()
-          + "/sections="
-          + sectionCount;
-    }
-    if (door instanceof ExpansionDrill drill) {
-      return "ExpansionDrill"
-          + "/location="
-          + drill.location
-          + "/layers="
-          + drill.firstLayer
-          + "-"
-          + drill.lastLayer
-          + "/dim="
-          + door.getDimension()
-          + "/sections="
-          + sectionCount;
-    }
-    IntBox bounds = door.getShape().boundingBox();
-    return door.getClass().getSimpleName()
-        + "/bounds=[("
-        + bounds.ll.x
-        + ","
-        + bounds.ll.y
-        + ")..("
-        + bounds.ur.x
-        + ","
-        + bounds.ur.y
-        + ")]"
-        + "/dim="
-        + door.getDimension()
-        + "/sections="
-        + sectionCount;
-  }
-
-  private static String safeMazeSectionCount(ExpandableObject door) {
-    try {
-      return Integer.toString(door.mazeSearchElementCount());
-    } catch (RuntimeException e) {
-      return "uninitialized";
-    }
-  }
-
-  private static String describeExpandableBounds(ExpandableObject door) {
-    if (door == null) {
-      return "null";
-    }
-    IntBox bounds = door.getShape().boundingBox();
-    return "[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]";
-  }
-
-  private static String describeRoom(CompleteExpansionRoom room) {
-    if (room == null) {
-      return "null";
-    }
-    IntBox bounds = room.getShape().boundingBox();
-    return room.getClass().getSimpleName()
-        + "/layer="
-        + room.getLayer()
-        + "/bounds=[("
-        + bounds.ll.x
-        + ","
-        + bounds.ll.y
-        + ")..("
-        + bounds.ur.x
-        + ","
-        + bounds.ur.y
-        + ")]";
-  }
-
-  private static Point[] toImpactedPoints(FloatLine shapeEntry) {
-    if (shapeEntry == null) {
-      return null;
-    }
-    return new Point[] {shapeEntry.a.round(), shapeEntry.b.round()};
   }
 
   private boolean shouldTraceFanoutDiagnostics() {

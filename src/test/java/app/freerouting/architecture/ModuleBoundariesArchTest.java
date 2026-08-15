@@ -38,7 +38,8 @@ class ModuleBoundariesArchTest {
     "app.freerouting.debug..",
     "app.freerouting.util..",
     "app.freerouting.io..",
-    "app.freerouting.core.."
+    "app.freerouting.core..",
+    "app.freerouting.analytics.."
   };
 
   private JavaClasses importMainClasses() {
@@ -79,7 +80,8 @@ class ModuleBoundariesArchTest {
             "app.freerouting.gui..",
             "app.freerouting.gui.interactive..",
             "app.freerouting.api..",
-            "app.freerouting.management..")
+            "app.freerouting.management..",
+            "app.freerouting.analytics..")
         .check(classes);
   }
 
@@ -89,7 +91,8 @@ class ModuleBoundariesArchTest {
 
     noClasses()
         .that()
-        .resideInAnyPackage("app.freerouting.api..", "app.freerouting.management..")
+        .resideInAnyPackage(
+            "app.freerouting.api..", "app.freerouting.management..", "app.freerouting.analytics..")
         .should()
         .dependOnClassesThat()
         .haveFullyQualifiedName("app.freerouting.gui.workspace.GuiBoardManager")
@@ -119,7 +122,8 @@ class ModuleBoundariesArchTest {
 
     noClasses()
         .that()
-        .resideInAnyPackage("app.freerouting.api..", "app.freerouting.management..")
+        .resideInAnyPackage(
+            "app.freerouting.api..", "app.freerouting.management..", "app.freerouting.analytics..")
         .should()
         .dependOnClassesThat()
         .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.gui.rendering..")

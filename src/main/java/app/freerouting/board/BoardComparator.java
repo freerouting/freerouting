@@ -1,5 +1,7 @@
 package app.freerouting.board;
 
+import app.freerouting.core.library.Package;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
@@ -20,18 +22,6 @@ import java.util.TreeSet;
 
 /** BoardComparator. */
 public class BoardComparator {
-
-  /** Type. */
-  public static class ComparisonResult {
-    public final boolean areEqual;
-    public final String report;
-
-    /** ComparisonResult. */
-    public ComparisonResult(boolean areEqual, String report) {
-      this.areEqual = areEqual;
-      this.report = report;
-    }
-  }
 
   /** Compares two routing boards for parity. */
   public static ComparisonResult compare(
@@ -402,7 +392,7 @@ public class BoardComparator {
           netName1 = net.name;
         }
       }
-      app.freerouting.core.Padstack pad1 = v1.getPadstack();
+      Padstack pad1 = v1.getPadstack();
       int firstLayer1 = 0;
       while (firstLayer1 < board1.getLayerCount() && pad1.getShape(firstLayer1) == null) {
         firstLayer1++;
@@ -442,7 +432,7 @@ public class BoardComparator {
         if (!netName1.equalsIgnoreCase(netName2)) {
           continue;
         }
-        app.freerouting.core.Padstack pad2 = v2.getPadstack();
+        Padstack pad2 = v2.getPadstack();
         int firstLayer2 = 0;
         while (firstLayer2 < board2.getLayerCount() && pad2.getShape(firstLayer2) == null) {
           firstLayer2++;
@@ -673,7 +663,7 @@ public class BoardComparator {
   private static Set<String> collectPadstackNames(RoutingBoard board) {
     Set<String> names = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
     for (int i = 1; i <= board.library.padstacks.count(); i++) {
-      app.freerouting.core.Padstack padstack = board.library.padstacks.get(i);
+      Padstack padstack = board.library.padstacks.get(i);
       if (padstack != null) {
         names.add(padstack.name);
       }
@@ -684,7 +674,7 @@ public class BoardComparator {
   private static Set<String> collectPackageKeys(RoutingBoard board) {
     Set<String> keys = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
     for (int i = 1; i <= board.library.packages.count(); i++) {
-      app.freerouting.core.Package pkg = board.library.packages.get(i);
+      Package pkg = board.library.packages.get(i);
       if (pkg != null) {
         keys.add(packageKey(pkg));
       }
@@ -692,7 +682,7 @@ public class BoardComparator {
     return keys;
   }
 
-  private static String packageKey(app.freerouting.core.Package pkg) {
+  private static String packageKey(Package pkg) {
     return pkg.name + (pkg.isFront ? ":front" : ":back");
   }
 
@@ -742,5 +732,17 @@ public class BoardComparator {
       }
     }
     return forwardMatch || reverseMatch;
+  }
+
+  /** Type. */
+  public static class ComparisonResult {
+    public final boolean areEqual;
+    public final String report;
+
+    /** ComparisonResult. */
+    public ComparisonResult(boolean areEqual, String report) {
+      this.areEqual = areEqual;
+      this.report = report;
+    }
   }
 }

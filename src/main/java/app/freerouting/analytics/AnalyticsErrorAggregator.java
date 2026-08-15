@@ -1,4 +1,4 @@
-package app.freerouting.management.analytics;
+package app.freerouting.analytics;
 
 import app.freerouting.logger.FRLogger;
 import java.util.Comparator;

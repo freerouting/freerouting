@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
@@ -7,7 +8,6 @@ import app.freerouting.gui.rendering.GraphicsContext;
 import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;

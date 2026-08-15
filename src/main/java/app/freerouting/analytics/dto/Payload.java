@@ -1,4 +1,4 @@
-package app.freerouting.management.analytics.dto;
+package app.freerouting.analytics.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

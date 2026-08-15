@@ -1,11 +1,11 @@
-package app.freerouting.management.analytics;
+package app.freerouting.analytics;
 
+import app.freerouting.analytics.dto.Context;
+import app.freerouting.analytics.dto.Library;
+import app.freerouting.analytics.dto.Payload;
+import app.freerouting.analytics.dto.Properties;
+import app.freerouting.analytics.dto.Traits;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.dto.Context;
-import app.freerouting.management.analytics.dto.Library;
-import app.freerouting.management.analytics.dto.Payload;
-import app.freerouting.management.analytics.dto.Properties;
-import app.freerouting.management.analytics.dto.Traits;
 import app.freerouting.util.TextManager;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
@@ -70,6 +70,23 @@ public class BigQueryClient implements AnalyticsClient {
   // -------------------------------------------------------------------------
 
   /**
+   * Creates a BigQuery analytics client.
+   *
+   * @param libraryVersion the Freerouting version included in each payload
+   * @param serviceAccountKey the full JSON content of the service-account key
+   */
+  public BigQueryClient(String libraryVersion, String serviceAccountKey) {
+    this.libraryVersion = libraryVersion;
+    // Enable TLS protocols
+    System.setProperty("https.protocols", "TLSv1.2,TLSv1.3");
+    bigQuery = createBigQueryService(serviceAccountKey.getBytes());
+  }
+
+  // -------------------------------------------------------------------------
+  // Constructor (package-visible for tests; prefer getInstance() in production)
+  // -------------------------------------------------------------------------
+
+  /**
    * Returns the shared {@link BigQueryClient} for the given service-account key, creating (or
    * recreating) it if necessary.
    *
@@ -105,23 +122,6 @@ public class BigQueryClient implements AnalyticsClient {
   }
 
   // -------------------------------------------------------------------------
-  // Constructor (package-visible for tests; prefer getInstance() in production)
-  // -------------------------------------------------------------------------
-
-  /**
-   * Creates a BigQuery analytics client.
-   *
-   * @param libraryVersion the Freerouting version included in each payload
-   * @param serviceAccountKey the full JSON content of the service-account key
-   */
-  public BigQueryClient(String libraryVersion, String serviceAccountKey) {
-    this.libraryVersion = libraryVersion;
-    // Enable TLS protocols
-    System.setProperty("https.protocols", "TLSv1.2,TLSv1.3");
-    bigQuery = createBigQueryService(serviceAccountKey.getBytes());
-  }
-
-  // -------------------------------------------------------------------------
   // GCP helpers
   // -------------------------------------------------------------------------
 
@@ -141,6 +141,10 @@ public class BigQueryClient implements AnalyticsClient {
   // -------------------------------------------------------------------------
   // AnalyticsClient implementation
   // -------------------------------------------------------------------------
+
+  private static boolean isTraitOnlyTable(String tableName) {
+    return "identifies".equals(tableName) || "user_snapshots".equals(tableName);
+  }
 
   @Override
   public void identify(String userId, String anonymousId, Traits traits) throws IOException {
@@ -204,14 +208,14 @@ public class BigQueryClient implements AnalyticsClient {
     sendPayloadAsync(payload);
   }
 
+  // -------------------------------------------------------------------------
+  // Async send
+  // -------------------------------------------------------------------------
+
   @Override
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
   }
-
-  // -------------------------------------------------------------------------
-  // Async send
-  // -------------------------------------------------------------------------
 
   private void sendPayloadAsync(Payload payload) {
     if (!enabled) {
@@ -307,9 +311,5 @@ public class BigQueryClient implements AnalyticsClient {
     }
 
     return fields;
-  }
-
-  private static boolean isTraitOnlyTable(String tableName) {
-    return "identifies".equals(tableName) || "user_snapshots".equals(tableName);
   }
 }

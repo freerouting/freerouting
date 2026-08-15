@@ -1,4 +1,4 @@
-package app.freerouting.management.analytics.dto;
+package app.freerouting.analytics.dto;
 
 /** Identifies the client library that emitted an analytics event. */
 public class Library {

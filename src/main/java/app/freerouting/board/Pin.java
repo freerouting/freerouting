@@ -1,8 +1,8 @@
 package app.freerouting.board;
 
-import app.freerouting.core.LogicalPart;
-import app.freerouting.core.Package;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.LogicalPart;
+import app.freerouting.core.library.Package;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.FloatPoint;

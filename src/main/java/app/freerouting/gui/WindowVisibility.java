@@ -1,11 +1,11 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.gui.a11y.A11y;
 import app.freerouting.gui.a11y.GuiLocators;
 import app.freerouting.gui.rendering.ColorIntensityTable.ObjectNames;
 import app.freerouting.gui.workspace.GuiBoardManager;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import java.awt.BorderLayout;
 import java.awt.Dimension;

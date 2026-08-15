@@ -11,10 +11,10 @@ import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
-import app.freerouting.core.Package;
-import app.freerouting.core.Packages;
-import app.freerouting.core.Padstack;
-import app.freerouting.core.Padstacks;
+import app.freerouting.core.library.Package;
+import app.freerouting.core.library.Packages;
+import app.freerouting.core.library.Padstack;
+import app.freerouting.core.library.Padstacks;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Circle;
@@ -848,38 +848,6 @@ public final class KiCadJsonReader {
     }
   }
 
-  /** Helper class to trace bounding outer box. */
-  private static class PointOutline {
-    private final List<FloatPoint> points = new ArrayList<>();
-
-    /** Adds a point to the outline. */
-    public void addPoint(FloatPoint pt) {
-      points.add(pt);
-    }
-
-    /** Returns the integer bounding box of the outline points. */
-    public IntBox boundingBox() {
-      if (points.isEmpty()) {
-        return IntBox.EMPTY;
-      }
-      double minX = Double.MAX_VALUE;
-      double minY = Double.MAX_VALUE;
-      double maxX = -Double.MAX_VALUE;
-      double maxY = -Double.MAX_VALUE;
-      for (FloatPoint pt : points) {
-        minX = Math.min(minX, pt.x);
-        minY = Math.min(minY, pt.y);
-        maxX = Math.max(maxX, pt.x);
-        maxY = Math.max(maxY, pt.y);
-      }
-      return new IntBox(
-          (int) Math.round(minX),
-          (int) Math.round(minY),
-          (int) Math.round(maxX),
-          (int) Math.round(maxY));
-    }
-  }
-
   private static String getDescriptivePadstackName(
       KiCadBoardJson.PadJson pad, Layer[] boardLayers, int layerCount) {
     String shapeStr = "Round";
@@ -1001,5 +969,37 @@ public final class KiCadJsonReader {
       }
     }
     return 1;
+  }
+
+  /** Helper class to trace bounding outer box. */
+  private static class PointOutline {
+    private final List<FloatPoint> points = new ArrayList<>();
+
+    /** Adds a point to the outline. */
+    public void addPoint(FloatPoint pt) {
+      points.add(pt);
+    }
+
+    /** Returns the integer bounding box of the outline points. */
+    public IntBox boundingBox() {
+      if (points.isEmpty()) {
+        return IntBox.EMPTY;
+      }
+      double minX = Double.MAX_VALUE;
+      double minY = Double.MAX_VALUE;
+      double maxX = -Double.MAX_VALUE;
+      double maxY = -Double.MAX_VALUE;
+      for (FloatPoint pt : points) {
+        minX = Math.min(minX, pt.x);
+        minY = Math.min(minY, pt.y);
+        maxX = Math.max(maxX, pt.x);
+        maxY = Math.max(maxY, pt.y);
+      }
+      return new IntBox(
+          (int) Math.round(minX),
+          (int) Math.round(minY),
+          (int) Math.round(maxX),
+          (int) Math.round(maxY));
+    }
   }
 }

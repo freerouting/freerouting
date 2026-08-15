@@ -4,7 +4,7 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.board.ObstacleArea;
 import app.freerouting.board.Pin;
-import app.freerouting.core.Package;
+import app.freerouting.core.library.Package;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;

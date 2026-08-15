@@ -1,4 +1,4 @@
-package app.freerouting.management;
+package app.freerouting.management.jobs;
 
 /** Receives lifecycle notifications from an autorouter thread. */
 public interface ThreadActionListener {

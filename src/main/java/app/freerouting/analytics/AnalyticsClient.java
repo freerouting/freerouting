@@ -1,7 +1,7 @@
-package app.freerouting.management.analytics;
+package app.freerouting.analytics;
 
-import app.freerouting.management.analytics.dto.Properties;
-import app.freerouting.management.analytics.dto.Traits;
+import app.freerouting.analytics.dto.Properties;
+import app.freerouting.analytics.dto.Traits;
 import java.io.IOException;
 
 /** Sends analytics identity and event payloads to a telemetry backend. */

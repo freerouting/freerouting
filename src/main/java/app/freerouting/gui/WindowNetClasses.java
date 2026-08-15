@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Item;
@@ -8,7 +9,6 @@ import app.freerouting.board.ObjectInfoPanel.Printable;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;

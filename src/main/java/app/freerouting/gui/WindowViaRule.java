@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaInfos;
 import app.freerouting.rules.ViaRule;

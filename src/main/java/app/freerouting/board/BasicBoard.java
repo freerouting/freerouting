@@ -1,8 +1,8 @@
 package app.freerouting.board;
 
 import app.freerouting.autoroute.AutorouteControl;
-import app.freerouting.core.BoardLibrary;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.BoardLibrary;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.Area;

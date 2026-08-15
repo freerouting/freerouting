@@ -1,4 +1,4 @@
-package app.freerouting.management;
+package app.freerouting.management.jobs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -10,6 +10,7 @@ import app.freerouting.Freerouting;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
+import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.GlobalSettings;
 import java.util.LinkedList;
 import java.util.UUID;

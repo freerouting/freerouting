@@ -1,10 +1,10 @@
-package app.freerouting.management.analytics;
+package app.freerouting.analytics;
 
 import static app.freerouting.Freerouting.globalSettings;
 
+import app.freerouting.analytics.dto.Properties;
+import app.freerouting.analytics.dto.Traits;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.dto.Properties;
-import app.freerouting.management.analytics.dto.Traits;
 import app.freerouting.util.gson.GsonProvider;
 import java.time.Instant;
 import java.util.HashMap;
@@ -18,6 +18,19 @@ import java.util.UUID;
 public final class FRAnalytics {
 
   private static final HashMap<String, String> appLocationTable;
+  private static AnalyticsClient analytics;
+  private static String permanentUserId;
+  private static String permanentUserEmail;
+  private static String appPreviousLocation = "";
+  private static String appCurrentLocation = "";
+  private static String appWindowTitle = "";
+  private static long appStartedAt;
+  private static int sessionCount;
+  private static long totalAutorouterRuntime;
+  private static long totalRouteOptimizerRuntime;
+  private static long autorouterStartedAt;
+  private static long routeOptimizerStartedAt;
+  private static String sessionId;
 
   static {
     appLocationTable = new HashMap<String, String>();
@@ -134,20 +147,6 @@ public final class FRAnalytics {
         "app.freerouting.gui/Board/Menu/Other/DeleteAllTracksAndVias");
     appLocationTable.put("helpAboutMenuitem", "app.freerouting.gui/Board/Menu/Help/About");
   }
-
-  private static AnalyticsClient analytics;
-  private static String permanentUserId;
-  private static String permanentUserEmail;
-  private static String appPreviousLocation = "";
-  private static String appCurrentLocation = "";
-  private static String appWindowTitle = "";
-  private static long appStartedAt;
-  private static int sessionCount;
-  private static long totalAutorouterRuntime;
-  private static long totalRouteOptimizerRuntime;
-  private static long autorouterStartedAt;
-  private static long routeOptimizerStartedAt;
-  private static String sessionId;
 
   private FRAnalytics() {}
 

@@ -1,4 +1,4 @@
-package app.freerouting.management.analytics.dto;
+package app.freerouting.analytics.dto;
 
 /** Describes the context associated with an analytics event. */
 public class Context {

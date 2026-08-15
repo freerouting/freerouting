@@ -1,6 +1,6 @@
 package app.freerouting.core;
 
-import app.freerouting.management.RoutingJobScheduler;
+import app.freerouting.management.jobs.RoutingJobScheduler;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.UUID;

@@ -1,7 +1,7 @@
 package app.freerouting.rules;
 
 import app.freerouting.board.ObjectInfoPanel;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.Locale;

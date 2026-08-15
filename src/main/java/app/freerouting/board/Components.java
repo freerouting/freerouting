@@ -1,6 +1,6 @@
 package app.freerouting.board;
 
-import app.freerouting.core.Package;
+import app.freerouting.core.library.Package;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;

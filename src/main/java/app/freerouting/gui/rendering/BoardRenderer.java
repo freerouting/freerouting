@@ -13,7 +13,7 @@ import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.Unit;
 import app.freerouting.board.Via;
 import app.freerouting.board.ViaObstacleArea;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -32,6 +32,9 @@ import java.util.List;
  * dispatch to renderer-owned item-family strategies.
  */
 public final class BoardRenderer {
+
+  private static final int MIN_DRAW_PRIORITY = 1;
+  private static final int MAX_DRAW_PRIORITY = 3;
 
   private BoardRenderer() {}
 
@@ -138,9 +141,6 @@ public final class BoardRenderer {
     double intensity = Math.min(1.0, drawIntensity(item, graphicsContext) * 1.5);
     drawOverlayItem(item, graphics, graphicsContext, colors, intensity);
   }
-
-  private static final int MIN_DRAW_PRIORITY = 1;
-  private static final int MAX_DRAW_PRIORITY = 3;
 
   /** Returns the renderer-owned draw priority for an item family. */
   private static int drawPriority(Item item) {

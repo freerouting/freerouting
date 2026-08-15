@@ -2,8 +2,8 @@ package app.freerouting.gui;
 
 import static app.freerouting.Freerouting.globalSettings;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.GlobalSettings;
 import java.awt.Color;
 import java.awt.Desktop;

@@ -3,7 +3,7 @@ package app.freerouting.autoroute;
 import app.freerouting.board.Item;
 import app.freerouting.board.Pin;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
@@ -75,14 +75,14 @@ public class AutorouteControl {
   /** Normally true, if the autorouter contains no fanout pass. */
   public boolean removeUnconnectedVias;
 
+  /** The possible (partial) vias, which can be used by the autorouter. */
+  public ViaRule viaRule;
+
   /** The currently used net number in the autoroute algorithm. */
   int netNo;
 
   /** The currently used clearance class for vias in the autoroute algorithm. */
   int viaClearanceClass;
-
-  /** The possible (partial) vias, which can be used by the autorouter. */
-  public ViaRule viaRule;
 
   /** The array of possible via ranges used by the autorouter. */
   ViaMask[] viaInfoArr;
@@ -186,6 +186,21 @@ public class AutorouteControl {
     ripupPassNo = 1;
   }
 
+  private static boolean isPureSmdNet(RoutingBoard board, int netNo) {
+    Collection<Item> netItems = board.getConnectableItems(netNo);
+    if (netItems.isEmpty()) {
+      return false;
+    }
+
+    for (Item item : netItems) {
+      if (!(item instanceof Pin pin) || pin.firstLayer() != pin.lastLayer()) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   private void initNet(int netNo, RoutingBoard board, int viaCosts) {
     this.netNo = netNo;
     Net currentNet = board.rules.nets.get(netNo);
@@ -266,21 +281,6 @@ public class AutorouteControl {
     }
     minNormalViaCost = viaCosts * viaCostFactor;
     minCheapViaCost = 0.8 * minNormalViaCost;
-  }
-
-  private static boolean isPureSmdNet(RoutingBoard board, int netNo) {
-    Collection<Item> netItems = board.getConnectableItems(netNo);
-    if (netItems.isEmpty()) {
-      return false;
-    }
-
-    for (Item item : netItems) {
-      if (!(item instanceof Pin pin) || pin.firstLayer() != pin.lastLayer()) {
-        return false;
-      }
-    }
-
-    return true;
   }
 
   /** Horizontal and vertical costs for traces on a board layer. */

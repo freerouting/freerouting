@@ -1,7 +1,7 @@
 package app.freerouting.io.specctra.parser;
 
 import app.freerouting.board.Component;
-import app.freerouting.core.Package;
+import app.freerouting.core.library.Package;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;

@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Item;
 import app.freerouting.board.ObjectInfoPanel;
@@ -10,7 +11,6 @@ import app.freerouting.board.Via;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;

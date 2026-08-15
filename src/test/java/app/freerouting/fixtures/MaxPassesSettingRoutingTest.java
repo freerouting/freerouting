@@ -3,7 +3,7 @@ package app.freerouting.fixtures;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import app.freerouting.core.RoutingJob;
-import app.freerouting.management.RoutingJobScheduler;
+import app.freerouting.management.jobs.RoutingJobScheduler;
 import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

@@ -7,7 +7,7 @@ import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Trace;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
@@ -107,6 +107,16 @@ public final class InsertFoundConnectionAlgo {
     board.normalizeTraces(ctrl.netNo);
 
     return newInstance;
+  }
+
+  private static String formatPoint(Point point) {
+    if (point == null) {
+      return "null";
+    }
+    if (point instanceof IntPoint intPoint) {
+      return "(" + intPoint.x + "," + intPoint.y + ")";
+    }
+    return point.toString();
   }
 
   /**
@@ -790,15 +800,5 @@ public final class InsertFoundConnectionAlgo {
             + ctrl.netNo
             + ", "
             + message);
-  }
-
-  private static String formatPoint(Point point) {
-    if (point == null) {
-      return "null";
-    }
-    if (point instanceof IntPoint intPoint) {
-      return "(" + intPoint.x + "," + intPoint.y + ")";
-    }
-    return point.toString();
   }
 }

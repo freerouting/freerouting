@@ -9,7 +9,7 @@ import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.datastructures.UndoableObjects;

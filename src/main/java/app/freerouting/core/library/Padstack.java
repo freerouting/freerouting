@@ -1,4 +1,4 @@
-package app.freerouting.core;
+package app.freerouting.core.library;
 
 import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.geometry.planar.ConvexShape;
@@ -29,6 +29,9 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
 
   private final ConvexShape[] shapes;
 
+  /** Pointer to the padstack list containing this padstack. */
+  private final Padstacks padstackList;
+
   /**
    * True for padstacks whose copper-layer shapes were synthesized from the drill radius because the
    * source padstack had no copper at all (non-plated holes). Such shapes exist only so the hole
@@ -36,9 +39,6 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
    * re-exported).
    */
   public boolean holeOnly;
-
-  /** Pointer to the padstack list containing this padstack. */
-  private final Padstacks padstackList;
 
   /** Cached drill radius to avoid repeated regex parsing on every render call. */
   private Double cachedDrillRadius;

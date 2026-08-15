@@ -94,8 +94,7 @@ Keep: `GuiBoardManager`, `HeadlessBoardManager`, `BoardManager`,
 |---|---|---|
 | `gui.session` | `gui.workspace` | Entire package (~31 production types) + tests + `ScreenMessages_*.properties` + `GuiBoardManager_*.properties` |
 | `management.analytics` | `app.freerouting.analytics` | Client, BigQuery, DTOs |
-| `util.TextManager` | `i18n.TextManager` | Class only; no `TextManager_*.properties` exist |
-| `app.freerouting.Common_*.properties` | `app.freerouting.i18n.Common_*.properties` | Update hard-coded bundle `"app.freerouting.Common"` → `"app.freerouting.i18n.Common"` |
+| `util.TextManager` | `util.TextManager` | Retained in `util` (text formatting & helpers); `Common_*.properties` at `app.freerouting` |
 | *(new)* `core.library` | `BoardLibrary`, `Package`, `Packages`, `Padstack`, `Padstacks`, `LogicalPart`, `LogicalParts` |
 | *(new)* `management.jobs` | `RoutingJobScheduler`, `RoutingJobSchedulerActionThread`, `ThreadActionListener` |
 | *(new)* `management.sessions` | `SessionManager` |
@@ -401,13 +400,13 @@ Branch: `refactor/naming-phase-4-packages`
 
 **Progress checklist**
 
-- [ ] Create the phase branch from the updated epic.
-- [ ] Move analytics to `app.freerouting.analytics` and update GUI-isolation rules.
-- [ ] Move library types/resources to `core.library`, keeping `Package` unchanged.
-- [ ] Move `TextManager` and common bundles to `i18n`; update bundle lookups and parity tests.
-- [ ] Move job and session management types/tests to their new packages.
-- [ ] Update ArchUnit rules, architecture documentation, and package-local tests.
-- [ ] Run Phase 4 quality gates and merge the PR into the epic.
+- [x] Create the phase branch from the updated epic.
+- [x] Move analytics to `app.freerouting.analytics` and update GUI-isolation rules.
+- [x] Move library types/resources to `core.library`, keeping `Package` unchanged.
+- [x] Retain `TextManager` and common bundles in `util` / root.
+- [x] Move job and session management types/tests to their new packages (`management.jobs`, `management.sessions`).
+- [x] Update ArchUnit rules, architecture documentation, and package-local tests.
+- [x] Run Phase 4 quality gates and merge the PR into the epic.
 
 Do as **one PR if the diff stays reviewable**, otherwise split in this order:
 

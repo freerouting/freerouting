@@ -1,4 +1,4 @@
-package app.freerouting.management;
+package app.freerouting.management.jobs;
 
 import app.freerouting.Freerouting;
 import app.freerouting.autoroute.BatchAutorouter;
@@ -13,6 +13,7 @@ import app.freerouting.core.RoutingStage;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.util.TextManager;
 import com.sun.management.ThreadMXBean;

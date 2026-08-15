@@ -7,7 +7,7 @@ import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Item;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.Via;
-import app.freerouting.core.BoardLibrary;
+import app.freerouting.core.library.BoardLibrary;
 import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;

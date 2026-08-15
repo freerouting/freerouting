@@ -1,4 +1,4 @@
-package app.freerouting.management;
+package app.freerouting.management.sessions;
 
 import static app.freerouting.Freerouting.globalSettings;
 

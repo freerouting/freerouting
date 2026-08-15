@@ -1,7 +1,7 @@
 package app.freerouting.io.specctra;
 
 import app.freerouting.board.BasicBoard;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.io.specctra.parser.AutorouteSettings;
 import app.freerouting.io.specctra.parser.Library;

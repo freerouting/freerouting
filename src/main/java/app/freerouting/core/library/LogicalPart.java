@@ -1,4 +1,4 @@
-package app.freerouting.core;
+package app.freerouting.core.library;
 
 import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.logger.FRLogger;

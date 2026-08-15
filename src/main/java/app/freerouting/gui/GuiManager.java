@@ -1,6 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.Freerouting;
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.gui.rendering.TutorialBoardPalette;
@@ -11,9 +12,8 @@ import app.freerouting.io.specctra.RulesReader;
 import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.SessionManager;
-import app.freerouting.management.ThreadActionListener;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.jobs.ThreadActionListener;
+import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.rules.NetClasses;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;

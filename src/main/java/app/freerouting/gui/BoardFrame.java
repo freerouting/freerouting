@@ -1,6 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.Freerouting;
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
@@ -24,9 +25,8 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
-import app.freerouting.management.RoutingJobScheduler;
-import app.freerouting.management.SessionManager;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.jobs.RoutingJobScheduler;
+import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DsnFileSettings;

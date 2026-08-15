@@ -27,7 +27,8 @@ flowchart TD
 
     subgraph services ["Shared Services"]
         direction LR
-        MGMT["**management**\nScheduler · analytics"]
+        MGMT["**management**\nScheduler · sessions"]
+        ANALYTICS["**analytics**\nMetrics · telemetry"]
         CORE["**core**\nJobs · sessions · stats"]
         CFG["**settings**\nConfig merging"]
     end
@@ -173,13 +174,17 @@ registration.
 
 HTTP API controllers, filters, and server-facing request handling. The concrete REST endpoints live in `api.v1`, MCP server infrastructure lives in `api.mcp`, supporting DTOs are in `api.dto`, authentication in `api.security`, and developer-only mocks in `api.dev`.
 
+### `app.freerouting.analytics`
+
+Analytics telemetry and metrics dispatch (`FRAnalytics`, `BigQueryClient`, `SegmentClient`, and event DTOs).
+
 ### `app.freerouting.management`
 
-Headless board management (using `BoardManager` and `HeadlessBoardManager`), session management, job scheduling, analytics, Gson adapters, and service-layer coordination. The analytics code lives in `management.analytics`, and the JSON helpers live in `util.gson`.
+Headless board management (using `BoardManager` and `HeadlessBoardManager`), board loading (`BoardLoader`), job scheduling (`management.jobs`), and session lifecycle management (`management.sessions`).
 
 ### `app.freerouting.core`
 
-Shared application data such as routing jobs, sessions, scoring, and statistics. The board statistics helpers live in `core.scoring`.
+Shared application data such as routing jobs, sessions, scoring (`core.scoring`), and board library definitions (`core.library`).
 
 ### `app.freerouting.settings`
 

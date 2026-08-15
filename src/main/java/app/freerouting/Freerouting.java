@@ -1,5 +1,6 @@
 package app.freerouting;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.api.AppContextListener;
 import app.freerouting.api.mcp.McpApplication;
 import app.freerouting.api.mcp.McpContextListener;
@@ -15,8 +16,7 @@ import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.BoardLoader;
-import app.freerouting.management.SessionManager;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.McpServerSettings;

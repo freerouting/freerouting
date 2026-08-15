@@ -1,10 +1,10 @@
-package app.freerouting.management.analytics;
+package app.freerouting.analytics;
 
-import app.freerouting.management.analytics.dto.Context;
-import app.freerouting.management.analytics.dto.Library;
-import app.freerouting.management.analytics.dto.Payload;
-import app.freerouting.management.analytics.dto.Properties;
-import app.freerouting.management.analytics.dto.Traits;
+import app.freerouting.analytics.dto.Context;
+import app.freerouting.analytics.dto.Library;
+import app.freerouting.analytics.dto.Payload;
+import app.freerouting.analytics.dto.Properties;
+import app.freerouting.analytics.dto.Traits;
 import app.freerouting.util.gson.GsonProvider;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,6 +34,28 @@ public class FreeroutingAnalyticsClient implements AnalyticsClient {
   public FreeroutingAnalyticsClient(String libraryVersion, String key) {
     this.libraryVersion = libraryVersion;
     this.writeKey = key;
+  }
+
+  /**
+   * Safely reads the body from {@link HttpURLConnection#getErrorStream()}. Returns an empty string
+   * if the error stream is null or unreadable.
+   */
+  private static String readErrorBody(HttpURLConnection connection) {
+    if (connection.getErrorStream() == null) {
+      return "";
+    }
+    try (BufferedReader br =
+        new BufferedReader(
+            new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
+      StringBuilder sb = new StringBuilder();
+      String line;
+      while ((line = br.readLine()) != null) {
+        sb.append(line.trim());
+      }
+      return sb.toString();
+    } catch (Exception ignored) {
+      return "";
+    }
   }
 
   private void sendPayloadAsync(String endpoint, Payload payload) throws IOException {
@@ -101,28 +123,6 @@ public class FreeroutingAnalyticsClient implements AnalyticsClient {
               }
             })
         .start();
-  }
-
-  /**
-   * Safely reads the body from {@link HttpURLConnection#getErrorStream()}. Returns an empty string
-   * if the error stream is null or unreadable.
-   */
-  private static String readErrorBody(HttpURLConnection connection) {
-    if (connection.getErrorStream() == null) {
-      return "";
-    }
-    try (BufferedReader br =
-        new BufferedReader(
-            new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
-      StringBuilder sb = new StringBuilder();
-      String line;
-      while ((line = br.readLine()) != null) {
-        sb.append(line.trim());
-      }
-      return sb.toString();
-    } catch (Exception ignored) {
-      return "";
-    }
   }
 
   @Override

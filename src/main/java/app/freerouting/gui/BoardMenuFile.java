@@ -2,9 +2,9 @@ package app.freerouting.gui;
 
 import static app.freerouting.Freerouting.globalSettings;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.gui.a11y.A11y;
 import app.freerouting.gui.a11y.GuiLocators;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import java.awt.Component;
 import java.awt.Dimension;

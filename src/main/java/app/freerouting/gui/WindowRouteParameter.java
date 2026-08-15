@@ -1,12 +1,12 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BoardOutline;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.Trace;
 import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.gui.workspace.WorkspaceSettings;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;

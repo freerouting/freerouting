@@ -7,7 +7,7 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Unit;
 import app.freerouting.board.Via;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;

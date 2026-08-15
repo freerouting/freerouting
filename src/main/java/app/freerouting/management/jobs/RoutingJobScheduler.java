@@ -1,4 +1,4 @@
-package app.freerouting.management;
+package app.freerouting.management.jobs;
 
 import static app.freerouting.Freerouting.globalSettings;
 
@@ -11,6 +11,8 @@ import app.freerouting.io.FileFormat;
 import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.HeadlessBoardManager;
+import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.sources.ApiSettings;
 import app.freerouting.settings.sources.DsnFileSettings;

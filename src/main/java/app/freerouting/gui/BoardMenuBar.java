@@ -1,8 +1,8 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.gui.a11y.A11y;
 import app.freerouting.gui.a11y.GuiLocators;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.FeatureFlagsSettings;
 import app.freerouting.util.TextManager;
 import java.awt.event.ActionEvent;

@@ -1,6 +1,6 @@
 package app.freerouting.api;
 
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.analytics.FRAnalytics;
 import jakarta.annotation.Priority;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
@@ -48,6 +48,58 @@ public class ApiUsageFilter implements ContainerRequestFilter, ContainerResponse
   private static final String BEARER_PREFIX = "Bearer ";
   private static final String PROFILE_ID_HEADER = "Freerouting-Profile-ID";
   private static final String PROFILE_EMAIL_HEADER = "Freerouting-Profile-Email";
+
+  static String hashBearerToken(String authorizationHeader) {
+    if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)) {
+      return null;
+    }
+    String token = authorizationHeader.substring(BEARER_PREFIX.length()).trim();
+    if (token.isEmpty()) {
+      return null;
+    }
+    return sha256Hex(token);
+  }
+
+  static String sha256Hex(String value) {
+    try {
+      MessageDigest digest = MessageDigest.getInstance("SHA-256");
+      byte[] hash = digest.digest(value.getBytes(StandardCharsets.UTF_8));
+      return HexFormat.of().formatHex(hash);
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalStateException("SHA-256 not available", e);
+    }
+  }
+
+  private static UUID parseProfileUuid(String profileId) {
+    if (profileId == null) {
+      return null;
+    }
+    try {
+      return UUID.fromString(profileId);
+    } catch (IllegalArgumentException _) {
+      return null;
+    }
+  }
+
+  private static String trimToNull(String value) {
+    if (value == null) {
+      return null;
+    }
+    String trimmed = value.trim();
+    return trimmed.isEmpty() ? null : trimmed;
+  }
+
+  private static Long parseContentLength(String contentLengthHeader) {
+    if (contentLengthHeader == null || contentLengthHeader.isBlank()) {
+      return null;
+    }
+    try {
+      long value = Long.parseLong(contentLengthHeader.trim());
+      return value >= 0 ? value : null;
+    } catch (NumberFormatException _) {
+      return null;
+    }
+  }
 
   @Override
   public void filter(ContainerRequestContext requestContext) throws IOException {
@@ -112,57 +164,5 @@ public class ApiUsageFilter implements ContainerRequestFilter, ContainerResponse
         requestBytes,
         responseBytes,
         profileUuid);
-  }
-
-  static String hashBearerToken(String authorizationHeader) {
-    if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)) {
-      return null;
-    }
-    String token = authorizationHeader.substring(BEARER_PREFIX.length()).trim();
-    if (token.isEmpty()) {
-      return null;
-    }
-    return sha256Hex(token);
-  }
-
-  static String sha256Hex(String value) {
-    try {
-      MessageDigest digest = MessageDigest.getInstance("SHA-256");
-      byte[] hash = digest.digest(value.getBytes(StandardCharsets.UTF_8));
-      return HexFormat.of().formatHex(hash);
-    } catch (NoSuchAlgorithmException e) {
-      throw new IllegalStateException("SHA-256 not available", e);
-    }
-  }
-
-  private static UUID parseProfileUuid(String profileId) {
-    if (profileId == null) {
-      return null;
-    }
-    try {
-      return UUID.fromString(profileId);
-    } catch (IllegalArgumentException _) {
-      return null;
-    }
-  }
-
-  private static String trimToNull(String value) {
-    if (value == null) {
-      return null;
-    }
-    String trimmed = value.trim();
-    return trimmed.isEmpty() ? null : trimmed;
-  }
-
-  private static Long parseContentLength(String contentLengthHeader) {
-    if (contentLengthHeader == null || contentLengthHeader.isBlank()) {
-      return null;
-    }
-    try {
-      long value = Long.parseLong(contentLengthHeader.trim());
-      return value >= 0 ? value : null;
-    } catch (NumberFormatException _) {
-      return null;
-    }
   }
 }

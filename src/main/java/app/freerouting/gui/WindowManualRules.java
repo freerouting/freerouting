@@ -1,8 +1,8 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.gui.workspace.GuiBoardManager;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.ViaRule;
 import java.awt.GridBagConstraints;

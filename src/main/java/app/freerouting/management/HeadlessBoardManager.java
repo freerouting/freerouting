@@ -2,6 +2,7 @@ package app.freerouting.management;
 
 import static app.freerouting.util.gson.GsonProvider.GSON;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
@@ -20,7 +21,7 @@ import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.jobs.ThreadActionListener;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.settings.sources.DefaultSettings;

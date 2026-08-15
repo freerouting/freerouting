@@ -1,7 +1,7 @@
 package app.freerouting.board;
 
-import app.freerouting.core.LogicalPart;
-import app.freerouting.core.Package;
+import app.freerouting.core.library.LogicalPart;
+import app.freerouting.core.library.Package;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
@@ -32,6 +32,8 @@ public class Component
   /** The library package of the component if it is placed on the solder side. */
   private final Package libPackageBack;
 
+  private final String partNumber;
+
   /** The location of the component. */
   private Point location;
 
@@ -43,8 +45,6 @@ public class Component
 
   /** If false, the component will be placed on the back side of the board. */
   private boolean onFront;
-
-  private final String partNumber;
 
   /**
    * Creates a new instance of Component with the input parameters. If p_on_front is false, the

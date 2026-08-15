@@ -1,14 +1,14 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.core.BoardLibrary;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.BoardLibrary;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaInfos;

@@ -1,11 +1,11 @@
 package app.freerouting.api.mcp;
 
 import app.freerouting.Freerouting;
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.api.BaseController;
 import app.freerouting.api.CorrelationIdFilter;
 import app.freerouting.constants.Constants;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.gson.GsonProvider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

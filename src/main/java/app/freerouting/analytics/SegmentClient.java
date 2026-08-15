@@ -1,10 +1,10 @@
-package app.freerouting.management.analytics;
+package app.freerouting.analytics;
 
-import app.freerouting.management.analytics.dto.Context;
-import app.freerouting.management.analytics.dto.Library;
-import app.freerouting.management.analytics.dto.Payload;
-import app.freerouting.management.analytics.dto.Properties;
-import app.freerouting.management.analytics.dto.Traits;
+import app.freerouting.analytics.dto.Context;
+import app.freerouting.analytics.dto.Library;
+import app.freerouting.analytics.dto.Payload;
+import app.freerouting.analytics.dto.Properties;
+import app.freerouting.analytics.dto.Traits;
 import app.freerouting.util.gson.GsonProvider;
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -3,7 +3,7 @@ package app.freerouting.io.specctra.parser;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Pin;
 import app.freerouting.board.Unit;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.IntBox;

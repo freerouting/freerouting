@@ -2,6 +2,7 @@ package app.freerouting.gui.workspace;
 
 import static app.freerouting.Freerouting.globalSettings;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.autoroute.BatchAutorouter;
 import app.freerouting.autoroute.BatchAutorouterV19;
 import app.freerouting.autoroute.BatchOptimizer;
@@ -22,8 +23,8 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.io.FileFormat;
 import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.ThreadActionListener;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.jobs.RoutingJobSchedulerActionThread;
+import app.freerouting.management.jobs.ThreadActionListener;
 import app.freerouting.util.TextManager;
 import com.sun.management.ThreadMXBean;
 import java.awt.Color;
@@ -820,7 +821,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
   /**
    * Samples CPU time, total allocated memory, and peak heap usage for the current routing job
    * thread and updates {@code routingJob.resourceUsage}. Mirrors the implementation in {@link
-   * app.freerouting.management.RoutingJobSchedulerActionThread}.
+   * RoutingJobSchedulerActionThread}.
    */
   private void monitorCpuAndMemoryUsage(app.freerouting.core.RoutingJob job) {
     try {

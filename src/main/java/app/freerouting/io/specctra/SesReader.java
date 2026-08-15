@@ -2,7 +2,7 @@ package app.freerouting.io.specctra;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.FixedState;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.io.specctra.parser.IJFlexScanner;
@@ -92,6 +92,21 @@ public final class SesReader {
   // ---------------------------------------------------------------------------
   // Private helpers for session-file parsing.
   // ---------------------------------------------------------------------------
+
+  private static void closeQuietly(InputStream stream) {
+    try {
+      stream.close();
+    } catch (IOException _) {
+      // ignore — nothing useful to do here
+    }
+  }
+
+  /** Transforms a Specctra session file into an Eagle script file. */
+  public static boolean saveSpecctraSessionSesAsEagleScriptScr(
+      InputStream inputStream, OutputStream outputStream, BasicBoard board) {
+    return app.freerouting.io.specctra.parser.SessionToEagle.getInstance(
+        inputStream, outputStream, board);
+  }
 
   /**
    * Processes the outermost scope of the session file.
@@ -244,6 +259,8 @@ public final class SesReader {
     }
   }
 
+  // ---------------------------------------------------------------------------
+
   /**
    * Processes a {@code (wire ...)} scope and inserts the trace into the board.
    *
@@ -392,22 +409,5 @@ public final class SesReader {
       FRLogger.warn("SesReader.processViaScope: failed to import via — " + e.getMessage());
       return false;
     }
-  }
-
-  // ---------------------------------------------------------------------------
-
-  private static void closeQuietly(InputStream stream) {
-    try {
-      stream.close();
-    } catch (IOException _) {
-      // ignore — nothing useful to do here
-    }
-  }
-
-  /** Transforms a Specctra session file into an Eagle script file. */
-  public static boolean saveSpecctraSessionSesAsEagleScriptScr(
-      InputStream inputStream, OutputStream outputStream, BasicBoard board) {
-    return app.freerouting.io.specctra.parser.SessionToEagle.getInstance(
-        inputStream, outputStream, board);
   }
 }

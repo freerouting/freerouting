@@ -5,7 +5,7 @@ import static app.freerouting.Freerouting.globalSettings;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.ThreadActionListener;
+import app.freerouting.management.jobs.ThreadActionListener;
 import app.freerouting.settings.GlobalSettings;
 import java.awt.Graphics;
 import java.io.IOException;
