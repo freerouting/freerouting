@@ -96,8 +96,9 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       // remove preferred direction
       this.traceCostArr = new AutorouteControl.ExpansionCostFactor[this.board.getLayerCount()];
       for (int i = 0; i < this.traceCostArr.length; i++) {
-        double currMinCost = this.settings.getPreferredDirectionTraceCosts(i);
-        this.traceCostArr[i] = new AutorouteControl.ExpansionCostFactor(currMinCost, currMinCost);
+        double currentMinCost = this.settings.getPreferredDirectionTraceCosts(i);
+        this.traceCostArr[i] =
+            new AutorouteControl.ExpansionCostFactor(currentMinCost, currentMinCost);
       }
     }
 
@@ -285,31 +286,31 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       Set<Item> handledItems = new TreeSet<>();
       Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
       for (; ; ) {
-        UndoableObjects.Storable currOb = board.itemList.readObject(it);
-        if (currOb == null) {
+        UndoableObjects.Storable currentOb = board.itemList.readObject(it);
+        if (currentOb == null) {
           break;
         }
-        if (currOb instanceof Connectable && currOb instanceof Item) {
+        if (currentOb instanceof Connectable && currentOb instanceof Item) {
           // This is a connectable item, like PolylineTrace or Pin
-          Item currItem = (Item) currOb;
-          if (!currItem.isRoutable()) {
-            if (!handledItems.contains(currItem)) {
+          Item currentItem = (Item) currentOb;
+          if (!currentItem.isRoutable()) {
+            if (!handledItems.contains(currentItem)) {
 
               // Let's go through all nets of this item
-              for (int i = 0; i < currItem.netCount(); ++i) {
-                int currNetNo = currItem.getNetNo(i);
-                Set<Item> connectedSet = currItem.getConnectedSet(currNetNo);
-                for (Item currConnectedItem : connectedSet) {
-                  if (currConnectedItem.netCount() <= 1) {
-                    handledItems.add(currConnectedItem);
+              for (int i = 0; i < currentItem.netCount(); ++i) {
+                int currentNetNo = currentItem.getNetNo(i);
+                Set<Item> connectedSet = currentItem.getConnectedSet(currentNetNo);
+                for (Item currentConnectedItem : connectedSet) {
+                  if (currentConnectedItem.netCount() <= 1) {
+                    handledItems.add(currentConnectedItem);
                   }
                 }
-                int netItemCount = board.connectableItemCount(currNetNo);
+                int netItemCount = board.connectableItemCount(currentNetNo);
 
                 // If the item is not connected to all other items of the net, we add it to the
                 // auto-router's to-do list
-                if ((connectedSet.size() < netItemCount) && (!currItem.hasIgnoredNets())) {
-                  autorouteItemList.add(currItem);
+                if ((connectedSet.size() < netItemCount) && (!currentItem.hasIgnoredNets())) {
+                  autorouteItemList.add(currentItem);
                 }
               }
             }
@@ -331,14 +332,14 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       job.logDebug("V1.9 Pass #" + passNo + ": " + itemsToGoCount + " items to route");
 
       // Let's go through all items to route (v1.9: natural order, no sorting)
-      for (Item currItem : autorouteItemList) {
+      for (Item currentItem : autorouteItemList) {
         // If the user requested to stop the auto-router, we stop it
         if (this.thread.isStopAutoRouterRequested()) {
           break;
         }
 
         // Let's go through all nets of this item
-        for (int i = 0; i < currItem.netCount(); ++i) {
+        for (int i = 0; i < currentItem.netCount(); ++i) {
           // If the user requested to stop the auto-router, we stop it
           if (this.thread.isStopAutoRouterRequested()) {
             break;
@@ -349,7 +350,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           SortedSet<Item> rippedItemList = new TreeSet<>();
-          if (autorouteItem(currItem, currItem.getNetNo(i), rippedItemList, passNo)) {
+          if (autorouteItem(currentItem, currentItem.getNetNo(i), rippedItemList, passNo)) {
             ++routed;
           } else {
             ++notFound;
@@ -415,17 +416,18 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       }
 
       // Get the current via costs based on auto-router settings
-      int currViaCosts;
+      int currentViaCosts;
       if (containsPlane) {
-        currViaCosts = this.settings.getPlaneViaCosts();
+        currentViaCosts = this.settings.getPlaneViaCosts();
       } else {
-        currViaCosts = this.settings.getViaCosts();
+        currentViaCosts = this.settings.getViaCosts();
       }
 
       // Get and calculate the auto-router settings based on the board and net we are
       // working on
       AutorouteControl autorouteControl =
-          new AutorouteControl(this.board, routeNetNo, settings, currViaCosts, this.traceCostArr);
+          new AutorouteControl(
+              this.board, routeNetNo, settings, currentViaCosts, this.traceCostArr);
       autorouteControl.ripupAllowed = true;
       autorouteControl.ripupCosts = this.startRipupCosts * ripupPassNo;
       autorouteControl.removeUnconnectedVias = this.removeUnconnectedVias;
@@ -440,8 +442,8 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       Set<Item> routeStartSet;
       Set<Item> routeDestSet;
       if (containsPlane) {
-        for (Item currItem : connectedSet) {
-          if (currItem instanceof ConductionArea) {
+        for (Item currentItem : connectedSet) {
+          if (currentItem instanceof ConductionArea) {
             return true; // already connected to plane
           }
         }
@@ -523,21 +525,21 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
     FloatPoint fromCorner = null;
     FloatPoint toCorner = null;
     double minDistance = Double.MAX_VALUE;
-    for (Item currFromItem : fromItems) {
-      if (!(currFromItem instanceof DrillItem)) {
+    for (Item currentFromItem : fromItems) {
+      if (!(currentFromItem instanceof DrillItem)) {
         continue;
       }
-      FloatPoint currFromCorner = ((DrillItem) currFromItem).getCenter().toFloat();
-      for (Item currToItem : toItems) {
-        if (!(currToItem instanceof DrillItem)) {
+      FloatPoint currentFromCorner = ((DrillItem) currentFromItem).getCenter().toFloat();
+      for (Item currentToItem : toItems) {
+        if (!(currentToItem instanceof DrillItem)) {
           continue;
         }
-        FloatPoint currToCorner = ((DrillItem) currToItem).getCenter().toFloat();
-        double currDistance = currFromCorner.distanceSquare(currToCorner);
-        if (currDistance < minDistance) {
-          minDistance = currDistance;
-          fromCorner = currFromCorner;
-          toCorner = currToCorner;
+        FloatPoint currentToCorner = ((DrillItem) currentToItem).getCenter().toFloat();
+        double currentDistance = currentFromCorner.distanceSquare(currentToCorner);
+        if (currentDistance < minDistance) {
+          minDistance = currentDistance;
+          fromCorner = currentFromCorner;
+          toCorner = currentToCorner;
         }
       }
     }

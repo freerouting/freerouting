@@ -39,9 +39,9 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
   private static FloatPoint calcDoorLeftCorner(BacktrackElement toInfo) {
     CompleteExpansionRoom fromRoom = toInfo.door.otherRoom(toInfo.nextRoom);
     FloatPoint pole = fromRoom.getShape().centreOfGravity();
-    TileShape currToDoorShape = toInfo.door.getShape();
-    int leftMostCornerNo = currToDoorShape.indexOfLeftMostCorner(pole);
-    return currToDoorShape.cornerApprox(leftMostCornerNo);
+    TileShape currentToDoorShape = toInfo.door.getShape();
+    int leftMostCornerNo = currentToDoorShape.indexOfLeftMostCorner(pole);
+    return currentToDoorShape.cornerApprox(leftMostCornerNo);
   }
 
   /**
@@ -51,9 +51,9 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
   private static FloatPoint calcDoorRightCorner(BacktrackElement toInfo) {
     CompleteExpansionRoom fromRoom = toInfo.door.otherRoom(toInfo.nextRoom);
     FloatPoint pole = fromRoom.getShape().centreOfGravity();
-    TileShape currToDoorShape = toInfo.door.getShape();
-    int rightMostCornerNo = currToDoorShape.indexOfRightMostCorner(pole);
-    return currToDoorShape.cornerApprox(rightMostCornerNo);
+    TileShape currentToDoorShape = toInfo.door.getShape();
+    int rightMostCornerNo = currentToDoorShape.indexOfRightMostCorner(pole);
+    return currentToDoorShape.cornerApprox(rightMostCornerNo);
   }
 
   /**
@@ -77,9 +77,9 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
     double traceHalfwidthMax = traceHalfwidthExact + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
     final double traceHalfwidthMiddle = traceHalfwidthExact + cTolerance;
 
-    BacktrackElement currToInfo = this.backtrackArray[this.currentToDoorIndex];
-    FloatPoint doorLeftCorner = calcDoorLeftCorner(currToInfo);
-    FloatPoint doorRightCorner = calcDoorRightCorner(currToInfo);
+    BacktrackElement currentToInfo = this.backtrackArray[this.currentToDoorIndex];
+    FloatPoint doorLeftCorner = calcDoorLeftCorner(currentToInfo);
+    FloatPoint doorRightCorner = calcDoorRightCorner(currentToInfo);
     if (this.currentFromPoint.sideOf(doorLeftCorner, doorRightCorner) != Side.ON_THE_RIGHT) {
       // the door is already crossed at this.fromPoint
       if (this.currentFromPoint.scalarProduct(this.previousFromPoint, doorLeftCorner) >= 0) {
@@ -109,7 +109,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
     int newDoorInd = this.currentToDoorIndex;
     int leftInd = newDoorInd;
     int rightInd = newDoorInd;
-    int currDoorInd = this.currentToDoorIndex + 1;
+    int currentDoorInd = this.currentToDoorIndex + 1;
     FloatPoint resultCorner = null;
 
     // construct a maximum length straight line through the doors
@@ -151,11 +151,11 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
         }
         break;
       }
-      if (currDoorInd >= this.currentTargetDoorIndex) {
+      if (currentDoorInd >= this.currentTargetDoorIndex) {
         endOfTrace = true;
         break;
       }
-      BacktrackElement nextToInfo = this.backtrackArray[currDoorInd];
+      BacktrackElement nextToInfo = this.backtrackArray[currentDoorInd];
       FloatPoint nextLeftCorner = calcDoorLeftCorner(nextToInfo);
       FloatPoint nextRightCorner = calcDoorRightCorner(nextToInfo);
       if (this.currentFromPoint.sideOf(nextLeftCorner, nextRightCorner) != Side.ON_THE_RIGHT) {
@@ -205,10 +205,10 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
       boolean visabilityRangeGetsSmallerOnTheRightSide = doorRightCorner == null;
       if (doorRightCorner != null
           && nextRightCorner.sideOf(this.currentFromPoint, doorRightCorner) != Side.ON_THE_RIGHT) {
-        FloatPoint currTangentialPoint =
+        FloatPoint currentTangentialPoint =
             this.currentFromPoint.leftTangentialPoint(nextRightCorner, traceHalfwidthMax);
-        if (currTangentialPoint != null) {
-          FloatLine checkLine = new FloatLine(this.currentFromPoint, currTangentialPoint);
+        if (currentTangentialPoint != null) {
+          FloatLine checkLine = new FloatLine(this.currentFromPoint, currentTangentialPoint);
           if (checkLine.segmentDistance(doorRightCorner) >= traceHalfwidthMax) {
             visabilityRangeGetsSmallerOnTheRightSide = true;
           }
@@ -217,15 +217,15 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
       if (visabilityRangeGetsSmallerOnTheRightSide) {
         // The visibility range gets smaller on the right side.
         doorRightCorner = nextRightCorner;
-        rightInd = currDoorInd;
+        rightInd = currentDoorInd;
       }
       boolean visabilityRangeGetsSmallerOnTheLeftSide = doorLeftCorner == null;
       if (doorLeftCorner != null
           && nextLeftCorner.sideOf(this.currentFromPoint, doorLeftCorner) != Side.ON_THE_LEFT) {
-        FloatPoint currTangentialPoint =
+        FloatPoint currentTangentialPoint =
             this.currentFromPoint.rightTangentialPoint(nextLeftCorner, traceHalfwidthMax);
-        if (currTangentialPoint != null) {
-          FloatLine checkLine = new FloatLine(this.currentFromPoint, currTangentialPoint);
+        if (currentTangentialPoint != null) {
+          FloatLine checkLine = new FloatLine(this.currentFromPoint, currentTangentialPoint);
           if (checkLine.segmentDistance(doorLeftCorner) >= traceHalfwidthMax) {
             visabilityRangeGetsSmallerOnTheLeftSide = true;
           }
@@ -234,9 +234,9 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
       if (visabilityRangeGetsSmallerOnTheLeftSide) {
         // The visibility range gets smaller on the left side.
         doorLeftCorner = nextLeftCorner;
-        leftInd = currDoorInd;
+        leftInd = currentDoorInd;
       }
-      ++currDoorInd;
+      ++currentDoorInd;
     }
 
     if (endOfTrace) {
@@ -250,11 +250,11 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
         FloatPoint targetRightCorner =
             this.currentTargetShape.cornerApprox(
                 this.currentTargetShape.indexOfRightMostCorner(this.currentFromPoint));
-        FloatPoint currCorner =
+        FloatPoint currentCorner =
             rightLeftTangentialPoint(
                 this.currentFromPoint, targetRightCorner, doorLeftCorner, traceHalfwidthMax);
-        if (currCorner != null) {
-          resultCorner = currCorner;
+        if (currentCorner != null) {
+          resultCorner = currentCorner;
           endOfTrace = false;
         }
       } else if (rightTangentPoint != null
@@ -264,11 +264,11 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
             this.currentTargetShape.cornerApprox(
                 this.currentTargetShape.indexOfLeftMostCorner(this.currentFromPoint));
         newDoorInd = rightInd + 1;
-        FloatPoint currCorner =
+        FloatPoint currentCorner =
             leftRightTangentialPoint(
                 this.currentFromPoint, targetLeftCorner, doorRightCorner, traceHalfwidthMax);
-        if (currCorner != null) {
-          resultCorner = currCorner;
+        if (currentCorner != null) {
+          resultCorner = currentCorner;
           endOfTrace = false;
         }
       }
@@ -285,31 +285,33 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
     FloatPoint correctedResult = null;
     int correctedDoorInd = 0;
     for (int i = checkFromDoorIndex; i < newDoorInd; i++) {
-      FloatPoint currLeftCorner = calcDoorLeftCorner(this.backtrackArray[i]);
-      double currDist = checkLine.segmentDistance(currLeftCorner);
-      if (Math.abs(currDist) < traceHalfwidthMiddle) {
-        FloatPoint currCorrectedResult =
-            rightLeftTangentialPoint(checkLine.a, checkLine.b, currLeftCorner, traceHalfwidthMax);
-        if (currCorrectedResult != null) {
+      FloatPoint currentLeftCorner = calcDoorLeftCorner(this.backtrackArray[i]);
+      double currentDistance = checkLine.segmentDistance(currentLeftCorner);
+      if (Math.abs(currentDistance) < traceHalfwidthMiddle) {
+        FloatPoint currentCorrectedResult =
+            rightLeftTangentialPoint(
+                checkLine.a, checkLine.b, currentLeftCorner, traceHalfwidthMax);
+        if (currentCorrectedResult != null) {
           if (correctedResult == null
-              || currCorrectedResult.sideOf(this.currentFromPoint, correctedResult)
+              || currentCorrectedResult.sideOf(this.currentFromPoint, correctedResult)
                   == Side.ON_THE_RIGHT) {
             correctedDoorInd = i;
-            correctedResult = currCorrectedResult;
+            correctedResult = currentCorrectedResult;
           }
         }
       }
-      FloatPoint currRightCorner = calcDoorRightCorner(this.backtrackArray[i]);
-      currDist = checkLine.segmentDistance(currRightCorner);
-      if (Math.abs(currDist) < traceHalfwidthMiddle) {
-        FloatPoint currCorrectedResult =
-            leftRightTangentialPoint(checkLine.a, checkLine.b, currRightCorner, traceHalfwidthMax);
-        if (currCorrectedResult != null) {
+      FloatPoint currentRightCorner = calcDoorRightCorner(this.backtrackArray[i]);
+      currentDistance = checkLine.segmentDistance(currentRightCorner);
+      if (Math.abs(currentDistance) < traceHalfwidthMiddle) {
+        FloatPoint currentCorrectedResult =
+            leftRightTangentialPoint(
+                checkLine.a, checkLine.b, currentRightCorner, traceHalfwidthMax);
+        if (currentCorrectedResult != null) {
           if (correctedResult == null
-              || currCorrectedResult.sideOf(this.currentFromPoint, correctedResult)
+              || currentCorrectedResult.sideOf(this.currentFromPoint, correctedResult)
                   == Side.ON_THE_LEFT) {
             correctedDoorInd = i;
-            correctedResult = currCorrectedResult;
+            correctedResult = currentCorrectedResult;
           }
         }
       }
@@ -358,20 +360,20 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
    */
   private FloatPoint rightTurnNextCorner(
       FloatPoint fromCorner, double dist, FloatPoint toCorner, FloatPoint nextCorner) {
-    FloatPoint currTangentialPoint = fromCorner.leftTangentialPoint(toCorner, dist);
-    if (currTangentialPoint == null) {
+    FloatPoint currentTangentialPoint = fromCorner.leftTangentialPoint(toCorner, dist);
+    if (currentTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo.right_turn_next_corner: left tangential point is null");
       return fromCorner;
     }
-    final FloatLine firstLine = new FloatLine(fromCorner, currTangentialPoint);
-    currTangentialPoint = toCorner.rightTangentialPoint(nextCorner, 2 * dist + cTolerance);
-    if (currTangentialPoint == null) {
+    final FloatLine firstLine = new FloatLine(fromCorner, currentTangentialPoint);
+    currentTangentialPoint = toCorner.rightTangentialPoint(nextCorner, 2 * dist + cTolerance);
+    if (currentTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo.right_turn_next_corner: right tangential point is null");
       return fromCorner;
     }
-    FloatLine secondLine = new FloatLine(toCorner, currTangentialPoint);
+    FloatLine secondLine = new FloatLine(toCorner, currentTangentialPoint);
     secondLine = secondLine.translate(dist);
     return firstLine.intersection(secondLine);
   }
@@ -385,20 +387,20 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
    */
   private FloatPoint leftTurnNextCorner(
       FloatPoint fromCorner, double dist, FloatPoint toCorner, FloatPoint nextCorner) {
-    FloatPoint currTangentialPoint = fromCorner.rightTangentialPoint(toCorner, dist);
-    if (currTangentialPoint == null) {
+    FloatPoint currentTangentialPoint = fromCorner.rightTangentialPoint(toCorner, dist);
+    if (currentTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo.left_turn_next_corner: right tangential point is null");
       return fromCorner;
     }
-    final FloatLine firstLine = new FloatLine(fromCorner, currTangentialPoint);
-    currTangentialPoint = toCorner.leftTangentialPoint(nextCorner, 2 * dist + cTolerance);
-    if (currTangentialPoint == null) {
+    final FloatLine firstLine = new FloatLine(fromCorner, currentTangentialPoint);
+    currentTangentialPoint = toCorner.leftTangentialPoint(nextCorner, 2 * dist + cTolerance);
+    if (currentTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo.left_turn_next_corner: left tangential point is null");
       return fromCorner;
     }
-    FloatLine secondLine = new FloatLine(toCorner, currTangentialPoint);
+    FloatLine secondLine = new FloatLine(toCorner, currentTangentialPoint);
     secondLine = secondLine.translate(-dist);
     return firstLine.intersection(secondLine);
   }
@@ -410,20 +412,20 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
    */
   private FloatPoint rightLeftTangentialPoint(
       FloatPoint fromPoint, FloatPoint toPoint, FloatPoint center, double dist) {
-    FloatPoint currTangentialPoint = fromPoint.rightTangentialPoint(center, dist);
-    if (currTangentialPoint == null) {
+    FloatPoint currentTangentialPoint = fromPoint.rightTangentialPoint(center, dist);
+    if (currentTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo. right_left_tangential_point: right tangential point is null");
       return null;
     }
-    FloatLine firstLine = new FloatLine(fromPoint, currTangentialPoint);
-    currTangentialPoint = toPoint.leftTangentialPoint(center, dist);
-    if (currTangentialPoint == null) {
+    FloatLine firstLine = new FloatLine(fromPoint, currentTangentialPoint);
+    currentTangentialPoint = toPoint.leftTangentialPoint(center, dist);
+    if (currentTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo. right_left_tangential_point: left tangential point is null");
       return null;
     }
-    FloatLine secondLine = new FloatLine(toPoint, currTangentialPoint);
+    FloatLine secondLine = new FloatLine(toPoint, currentTangentialPoint);
     return firstLine.intersection(secondLine);
   }
 
@@ -434,20 +436,20 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
    */
   private FloatPoint leftRightTangentialPoint(
       FloatPoint fromPoint, FloatPoint toPoint, FloatPoint center, double dist) {
-    FloatPoint currTangentialPoint = fromPoint.leftTangentialPoint(center, dist);
-    if (currTangentialPoint == null) {
+    FloatPoint currentTangentialPoint = fromPoint.leftTangentialPoint(center, dist);
+    if (currentTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo. left_right_tangential_point: left tangential point is null");
       return null;
     }
-    FloatLine firstLine = new FloatLine(fromPoint, currTangentialPoint);
-    currTangentialPoint = toPoint.rightTangentialPoint(center, dist);
-    if (currTangentialPoint == null) {
+    FloatLine firstLine = new FloatLine(fromPoint, currentTangentialPoint);
+    currentTangentialPoint = toPoint.rightTangentialPoint(center, dist);
+    if (currentTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo. left_right_tangential_point: right tangential point is null");
       return null;
     }
-    FloatLine secondLine = new FloatLine(toPoint, currTangentialPoint);
+    FloatLine secondLine = new FloatLine(toPoint, currentTangentialPoint);
     return firstLine.intersection(secondLine);
   }
 }

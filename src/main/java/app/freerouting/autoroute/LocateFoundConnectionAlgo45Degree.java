@@ -118,15 +118,15 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       return result;
     }
 
-    BacktrackElement currFromInfo = this.backtrackArray[this.currentToDoorIndex - 1];
+    BacktrackElement currentFromInfo = this.backtrackArray[this.currentToDoorIndex - 1];
 
-    if (currFromInfo.nextRoom == null) {
+    if (currentFromInfo.nextRoom == null) {
       FRLogger.warn(
           "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: nextRoom is null");
       return result;
     }
 
-    TileShape roomShape = currFromInfo.nextRoom.getShape();
+    TileShape roomShape = currentFromInfo.nextRoom.getShape();
 
     int traceHalfwidth = this.ctrl.compensatedTraceHalfWidth[this.currentTraceLayer];
     int traceHalfwidthAdd =
@@ -134,7 +134,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
             + AutorouteEngine
                 .TRACE_WIDTH_TOLERANCE; // add some tolerance for free space expansion rooms.
     int shrinkOffset;
-    if (currFromInfo.nextRoom instanceof ObstacleExpansionRoom) {
+    if (currentFromInfo.nextRoom instanceof ObstacleExpansionRoom) {
 
       shrinkOffset = traceHalfwidth;
     } else {
@@ -156,7 +156,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
               + ", target_door="
               + this.currentTargetDoorIndex
               + ", next_room_type="
-              + currFromInfo.nextRoom.getClass().getSimpleName()
+              + currentFromInfo.nextRoom.getClass().getSimpleName()
               + ", shrinkOffset="
               + shrinkOffset
               + ", room_empty="
@@ -170,7 +170,8 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       // enter the shrunk room shape by a 45-degree angle first
       FloatPoint nearestRoomPoint = shrinkedRoomShape.nearestPointApprox(this.currentFromPoint);
       boolean horizontalFirst =
-          calcHorizontalFirstFromDoor(currFromInfo.door, this.currentFromPoint, nearestRoomPoint);
+          calcHorizontalFirstFromDoor(
+              currentFromInfo.door, this.currentFromPoint, nearestRoomPoint);
       nearestRoomPoint = roundToInteger(nearestRoomPoint);
       result.add(
           calculateAdditionalCorner(
@@ -218,35 +219,35 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       return result;
     }
 
-    BacktrackElement currToInfo = this.backtrackArray[this.currentToDoorIndex];
-    if (!(currToInfo.door instanceof ExpansionDoor currToDoor)) {
+    BacktrackElement currentToInfo = this.backtrackArray[this.currentToDoorIndex];
+    if (!(currentToInfo.door instanceof ExpansionDoor currentToDoor)) {
       FRLogger.warn(
           "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: ExpansionDoor expected");
       return result;
     }
 
     FloatPoint nearestToDoorPoint;
-    if (currToDoor.dimension == 2) {
+    if (currentToDoor.dimension == 2) {
       // May not happen in free angle routing mode because then corners are cut off.
-      TileShape toDoorShape = currToDoor.getShape();
+      TileShape toDoorShape = currentToDoor.getShape();
 
       TileShape shrinkedToDoorShape = (TileShape) toDoorShape.shrink(shrinkOffset);
       nearestToDoorPoint = shrinkedToDoorShape.nearestPointApprox(this.currentFromPoint);
       nearestToDoorPoint = roundToInteger(nearestToDoorPoint);
     } else {
-      FloatLine[] lineSections = currToDoor.getSectionSegments(traceHalfwidth);
-      if (currToInfo.sectionNoOfDoor >= lineSections.length) {
+      FloatLine[] lineSections = currentToDoor.getSectionSegments(traceHalfwidth);
+      if (currentToInfo.sectionNoOfDoor >= lineSections.length) {
         FRLogger.warn(
             "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: "
                 + "lineSections inconsistent");
         return result;
       }
-      FloatLine currLineSection = lineSections[currToInfo.sectionNoOfDoor];
-      nearestToDoorPoint = currLineSection.nearestSegmentPoint(this.currentFromPoint);
+      FloatLine currentLineSection = lineSections[currentToInfo.sectionNoOfDoor];
+      nearestToDoorPoint = currentLineSection.nearestSegmentPoint(this.currentFromPoint);
 
       boolean nearestToDoorPointOk = true;
-      if (currToInfo.nextRoom != null) {
-        Simplex nextRoomShape = currToInfo.nextRoom.getShape().toSimplex();
+      if (currentToInfo.nextRoom != null) {
+        Simplex nextRoomShape = currentToInfo.nextRoom.getShape().toSimplex();
         // with IntBox or IntOctagon the next calculation will not work, because they have
         // border lines of length 0.
         FloatPoint[] nearestPoints = nextRoomShape.nearestBorderPointsApprox(nearestToDoorPoint, 2);
@@ -256,12 +257,12 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       }
       if (!nearestToDoorPointOk) {
         // may be the room has an acute (45 degree) angle at a corner of the door
-        nearestToDoorPoint = currLineSection.a.middlePoint(currLineSection.b);
+        nearestToDoorPoint = currentLineSection.a.middlePoint(currentLineSection.b);
       }
     }
     nearestToDoorPoint = roundToInteger(nearestToDoorPoint);
     boolean horizontalFirst =
-        calcHorizontalFirstToDoor(currToInfo.door, this.currentFromPoint, nearestToDoorPoint);
+        calcHorizontalFirstToDoor(currentToInfo.door, this.currentFromPoint, nearestToDoorPoint);
     result.add(
         calculateAdditionalCorner(
             this.currentFromPoint, nearestToDoorPoint, horizontalFirst, this.angleRestriction));

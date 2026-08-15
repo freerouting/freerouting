@@ -44,10 +44,10 @@ class DrillPage implements ExpandableObject {
   private static Point calcPinCenterInDrill(TileShape drillShape, int layer, RoutingBoard board) {
     Collection<Item> overlappingItems = board.overlappingItems(drillShape, layer);
     Point result = null;
-    for (Item currItem : overlappingItems) {
-      if (currItem instanceof Pin currPin) {
-        if (currPin.drillAllowed() && drillShape.containsInside(currPin.getCenter())) {
-          result = currPin.getCenter();
+    for (Item currentItem : overlappingItems) {
+      if (currentItem instanceof Pin currentPin) {
+        if (currentPin.drillAllowed() && drillShape.containsInside(currentPin.getCenter())) {
+          result = currentPin.getCenter();
         }
       }
     }
@@ -66,28 +66,28 @@ class DrillPage implements ExpandableObject {
       // drills on top of existing vias are used in the ripup algorithm
       TileShape prevObstacleShape = IntBox.EMPTY;
       for (TreeEntry currentEntry : overlaps) {
-        if (!(currentEntry.object instanceof Item currItem)) {
+        if (!(currentEntry.object instanceof Item currentItem)) {
           continue;
         }
-        if (currItem.isDrillable(this.netNo)) {
+        if (currentItem.isDrillable(this.netNo)) {
           continue;
         }
-        if (currItem instanceof Pin pin) {
+        if (currentItem instanceof Pin pin) {
           if (attachSmd && pin.drillAllowed()) {
             continue;
           }
         }
-        TileShape currObstacleShape =
-            currItem.getTreeShape(searchTree, currentEntry.shapeIndexInObject);
-        if (!prevObstacleShape.contains(currObstacleShape)) {
+        TileShape currentObstacleShape =
+            currentItem.getTreeShape(searchTree, currentEntry.shapeIndexInObject);
+        if (!prevObstacleShape.contains(currentObstacleShape)) {
           // Checked to avoid multiple cutout for example for vias with the same shape on all
           // layers.
-          TileShape currCutoutShape = currObstacleShape.intersection(this.shape);
-          if (currCutoutShape.dimension() == 2) {
-            cutoutShapes.add(currCutoutShape);
+          TileShape currentCutoutShape = currentObstacleShape.intersection(this.shape);
+          if (currentCutoutShape.dimension() == 2) {
+            cutoutShapes.add(currentCutoutShape);
           }
         }
-        prevObstacleShape = currObstacleShape;
+        prevObstacleShape = currentObstacleShape;
       }
       TileShape[] holes = new TileShape[cutoutShapes.size()];
       Iterator<TileShape> it = cutoutShapes.iterator();
@@ -101,21 +101,22 @@ class DrillPage implements ExpandableObject {
       int drillFirstLayer = 0;
       int drillLastLayer = this.board.getLayerCount() - 1;
       for (int i = 0; i < drillShapes.length; i++) {
-        TileShape currDrillShape = drillShapes[i];
-        Point currDrillLocation = null;
+        TileShape currentDrillShape = drillShapes[i];
+        Point currentDrillLocation = null;
         if (attachSmd) {
-          currDrillLocation =
-              calcPinCenterInDrill(currDrillShape, drillFirstLayer, autorouteEngine.board);
-          if (currDrillLocation == null) {
-            currDrillLocation =
-                calcPinCenterInDrill(currDrillShape, drillLastLayer, autorouteEngine.board);
+          currentDrillLocation =
+              calcPinCenterInDrill(currentDrillShape, drillFirstLayer, autorouteEngine.board);
+          if (currentDrillLocation == null) {
+            currentDrillLocation =
+                calcPinCenterInDrill(currentDrillShape, drillLastLayer, autorouteEngine.board);
           }
         }
-        if (currDrillLocation == null) {
-          currDrillLocation = currDrillShape.centreOfGravity().round();
+        if (currentDrillLocation == null) {
+          currentDrillLocation = currentDrillShape.centreOfGravity().round();
         }
         ExpansionDrill newDrill =
-            new ExpansionDrill(currDrillShape, currDrillLocation, drillFirstLayer, drillLastLayer);
+            new ExpansionDrill(
+                currentDrillShape, currentDrillLocation, drillFirstLayer, drillLastLayer);
         if (newDrill.calculateExpansionRooms(autorouteEngine)) {
           this.drills.add(newDrill);
         }
@@ -148,12 +149,12 @@ class DrillPage implements ExpandableObject {
   @Override
   public void reset() {
     if (this.drills != null) {
-      for (ExpansionDrill currDrill : this.drills) {
-        currDrill.reset();
+      for (ExpansionDrill currentDrill : this.drills) {
+        currentDrill.reset();
       }
     }
-    for (MazeSearchElement currInfo : mazeSearchInfoArr) {
-      currInfo.reset();
+    for (MazeSearchElement currentInfo : mazeSearchInfoArr) {
+      currentInfo.reset();
     }
   }
 
@@ -170,8 +171,8 @@ class DrillPage implements ExpandableObject {
     if (sink == null || intensity <= 0 || drills == null) {
       return;
     }
-    for (ExpansionDrill currDrill : drills) {
-      currDrill.emitDiagnostic(sink, intensity);
+    for (ExpansionDrill currentDrill : drills) {
+      currentDrill.emitDiagnostic(sink, intensity);
     }
   }
 

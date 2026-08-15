@@ -106,16 +106,17 @@ public abstract class LocateFoundConnectionAlgo {
 
     this.currentFromDoorIndex = 0;
     boolean atFanoutEnd = false;
-    if (mazeSearchResult.destinationDoor instanceof TargetItemExpansionDoor currDestinationDoor) {
-      this.targetItem = currDestinationDoor.item;
-      this.targetLayer = currDestinationDoor.room.getLayer();
+    if (mazeSearchResult.destinationDoor
+        instanceof TargetItemExpansionDoor currentDestinationDoor) {
+      this.targetItem = currentDestinationDoor.item;
+      this.targetLayer = currentDestinationDoor.room.getLayer();
 
-      this.currentFromPoint = calculateStartingPoint(currDestinationDoor, searchTree);
-    } else if (mazeSearchResult.destinationDoor instanceof ExpansionDrill currDrill) {
+      this.currentFromPoint = calculateStartingPoint(currentDestinationDoor, searchTree);
+    } else if (mazeSearchResult.destinationDoor instanceof ExpansionDrill currentDrill) {
       // may happen only in case of fanout
       this.targetItem = null;
-      this.currentFromPoint = currDrill.location.toFloat();
-      this.targetLayer = currDrill.firstLayer + mazeSearchResult.sectionNoOfDoor;
+      this.currentFromPoint = currentDrill.location.toFloat();
+      this.targetLayer = currentDrill.firstLayer + mazeSearchResult.sectionNoOfDoor;
       atFanoutEnd = true;
     } else {
       FRLogger.warn("LocateFoundConnectionAlgo: unexpected type of destinationDoor");
@@ -221,13 +222,13 @@ public abstract class LocateFoundConnectionAlgo {
       return null;
     }
     Collection<BacktrackElement> result = new LinkedList<>();
-    CompleteExpansionRoom currNextRoom = null;
-    ExpandableObject currBacktrackDoor = mazeSearchResult.destinationDoor;
-    MazeSearchElement currMazeSearchElement =
-        currBacktrackDoor.getMazeSearchElement(mazeSearchResult.sectionNoOfDoor);
+    CompleteExpansionRoom currentNextRoom = null;
+    ExpandableObject currentBacktrackDoor = mazeSearchResult.destinationDoor;
+    MazeSearchElement currentMazeSearchElement =
+        currentBacktrackDoor.getMazeSearchElement(mazeSearchResult.sectionNoOfDoor);
     boolean debugBacktrack = netNo == 98;
     if (debugBacktrack) {
-      String destType = currBacktrackDoor.getClass().getSimpleName();
+      String destType = currentBacktrackDoor.getClass().getSimpleName();
       FRLogger.trace(
           "BACKTRACK_START net="
               + netNo
@@ -236,50 +237,53 @@ public abstract class LocateFoundConnectionAlgo {
               + ", dest_section="
               + mazeSearchResult.sectionNoOfDoor
               + ", dest_room_ripped="
-              + currMazeSearchElement.roomRipped);
+              + currentMazeSearchElement.roomRipped);
     }
-    if (currBacktrackDoor instanceof TargetItemExpansionDoor door) {
-      currNextRoom = door.room;
-    } else if (currBacktrackDoor instanceof ExpansionDrill currDrill) {
-      currNextRoom = currDrill.roomArr[currDrill.firstLayer + mazeSearchResult.sectionNoOfDoor];
-      if (currMazeSearchElement.roomRipped) {
-        for (CompleteExpansionRoom tmpRoom : currDrill.roomArr) {
+    if (currentBacktrackDoor instanceof TargetItemExpansionDoor door) {
+      currentNextRoom = door.room;
+    } else if (currentBacktrackDoor instanceof ExpansionDrill currentDrill) {
+      currentNextRoom =
+          currentDrill.roomArr[currentDrill.firstLayer + mazeSearchResult.sectionNoOfDoor];
+      if (currentMazeSearchElement.roomRipped) {
+        for (CompleteExpansionRoom tmpRoom : currentDrill.roomArr) {
           if (tmpRoom instanceof ObstacleExpansionRoom room) {
             rippedItemList.add(room.getItem());
             if (ripupCosts != null) {
-              ripupCosts.put(room.getItem(), currMazeSearchElement.ripupCost);
+              ripupCosts.put(room.getItem(), currentMazeSearchElement.ripupCost);
             }
           }
         }
       }
     }
-    BacktrackElement currBacktrackElement =
-        new BacktrackElement(currBacktrackDoor, mazeSearchResult.sectionNoOfDoor, currNextRoom);
+    BacktrackElement currentBacktrackElement =
+        new BacktrackElement(
+            currentBacktrackDoor, mazeSearchResult.sectionNoOfDoor, currentNextRoom);
     int step = 0;
     for (; ; ) {
-      result.add(currBacktrackElement);
-      currBacktrackDoor = currMazeSearchElement.backtrackDoor;
-      if (currBacktrackDoor == null) {
+      result.add(currentBacktrackElement);
+      currentBacktrackDoor = currentMazeSearchElement.backtrackDoor;
+      if (currentBacktrackDoor == null) {
         break;
       }
-      int currSectionNo = currMazeSearchElement.sectionNoOfBacktrackDoor;
-      if (currSectionNo >= currBacktrackDoor.mazeSearchElementCount()) {
-        FRLogger.warn("LocateFoundConnectionAlgo: currSectionNo to big");
-        currSectionNo = currBacktrackDoor.mazeSearchElementCount() - 1;
+      int currentSectionNo = currentMazeSearchElement.sectionNoOfBacktrackDoor;
+      if (currentSectionNo >= currentBacktrackDoor.mazeSearchElementCount()) {
+        FRLogger.warn("LocateFoundConnectionAlgo: currentSectionNo to big");
+        currentSectionNo = currentBacktrackDoor.mazeSearchElementCount() - 1;
       }
-      if (currBacktrackDoor instanceof ExpansionDrill currDrill) {
-        currNextRoom = currDrill.roomArr[currSectionNo];
+      if (currentBacktrackDoor instanceof ExpansionDrill currentDrill) {
+        currentNextRoom = currentDrill.roomArr[currentSectionNo];
       } else {
-        currNextRoom = currBacktrackDoor.otherRoom(currNextRoom);
+        currentNextRoom = currentBacktrackDoor.otherRoom(currentNextRoom);
       }
-      currMazeSearchElement = currBacktrackDoor.getMazeSearchElement(currSectionNo);
-      currBacktrackElement = new BacktrackElement(currBacktrackDoor, currSectionNo, currNextRoom);
+      currentMazeSearchElement = currentBacktrackDoor.getMazeSearchElement(currentSectionNo);
+      currentBacktrackElement =
+          new BacktrackElement(currentBacktrackDoor, currentSectionNo, currentNextRoom);
       if (debugBacktrack) {
-        String doorType = currBacktrackDoor.getClass().getSimpleName();
+        String doorType = currentBacktrackDoor.getClass().getSimpleName();
         String nextRoomType =
-            currNextRoom != null ? currNextRoom.getClass().getSimpleName() : "null";
+            currentNextRoom != null ? currentNextRoom.getClass().getSimpleName() : "null";
         int obstacleId = -1;
-        if (currNextRoom instanceof ObstacleExpansionRoom obst) {
+        if (currentNextRoom instanceof ObstacleExpansionRoom obst) {
           obstacleId = obst.getItem().getIdNo();
         }
         FRLogger.trace(
@@ -290,21 +294,21 @@ public abstract class LocateFoundConnectionAlgo {
                 + ", door_type="
                 + doorType
                 + ", section="
-                + currSectionNo
+                + currentSectionNo
                 + ", roomRipped="
-                + currMazeSearchElement.roomRipped
+                + currentMazeSearchElement.roomRipped
                 + ", ripupCost="
-                + currMazeSearchElement.ripupCost
+                + currentMazeSearchElement.ripupCost
                 + ", next_room_type="
                 + nextRoomType
                 + ", obstacle_id="
                 + obstacleId);
       }
-      if (currMazeSearchElement.roomRipped) {
-        if (currNextRoom instanceof ObstacleExpansionRoom room) {
+      if (currentMazeSearchElement.roomRipped) {
+        if (currentNextRoom instanceof ObstacleExpansionRoom room) {
           rippedItemList.add(room.getItem());
           if (ripupCosts != null) {
-            ripupCosts.put(room.getItem(), currMazeSearchElement.ripupCost);
+            ripupCosts.put(room.getItem(), currentMazeSearchElement.ripupCost);
           }
         }
       }
@@ -415,12 +419,12 @@ public abstract class LocateFoundConnectionAlgo {
       if (nextCorners.isEmpty()) {
         break;
       }
-      for (FloatPoint currNextCorner : nextCorners) {
-        if (currNextCorner != prevCorner) {
-          cornerList.add(currNextCorner);
+      for (FloatPoint currentNextCorner : nextCorners) {
+        if (currentNextCorner != prevCorner) {
+          cornerList.add(currentNextCorner);
           this.previousFromPoint = this.currentFromPoint;
-          this.currentFromPoint = currNextCorner;
-          prevCorner = currNextCorner;
+          this.currentFromPoint = currentNextCorner;
+          prevCorner = currentNextCorner;
         }
       }
     }
@@ -438,10 +442,10 @@ public abstract class LocateFoundConnectionAlgo {
     Collection<IntPoint> roundedCornerList = new LinkedList<>();
     IntPoint prevPoint = null;
     for (FloatPoint corner : cornerList) {
-      IntPoint currPoint = corner.round();
-      if (!currPoint.equals(prevPoint)) {
-        roundedCornerList.add(currPoint);
-        prevPoint = currPoint;
+      IntPoint currentPoint = corner.round();
+      if (!currentPoint.equals(prevPoint)) {
+        roundedCornerList.add(currentPoint);
+        prevPoint = currentPoint;
       }
     }
 
@@ -510,13 +514,13 @@ public abstract class LocateFoundConnectionAlgo {
     if (this.currentFromDoorIndex < 0) {
       return this.currentFromPoint;
     }
-    BacktrackElement currFromInfo = this.backtrackArray[this.currentFromDoorIndex];
-    if (currFromInfo.nextRoom == null) {
+    BacktrackElement currentFromInfo = this.backtrackArray[this.currentFromDoorIndex];
+    if (currentFromInfo.nextRoom == null) {
       return this.currentFromPoint;
     }
     double traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[this.currentTraceLayer];
     TileShape shrinkedRoomShape =
-        (TileShape) currFromInfo.nextRoom.getShape().offset(-traceHalfWidth);
+        (TileShape) currentFromInfo.nextRoom.getShape().offset(-traceHalfWidth);
     if (shrinkedRoomShape.isEmpty() || shrinkedRoomShape.contains(this.currentFromPoint)) {
       return this.currentFromPoint;
     }

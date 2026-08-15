@@ -50,8 +50,8 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
 
   @Override
   public void resetDoors() {
-    for (ExpandableObject currDoor : this.doors) {
-      currDoor.reset();
+    for (ExpandableObject currentDoor : this.doors) {
+      currentDoor.reset();
     }
   }
 
@@ -82,8 +82,8 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
     if (doors == null) {
       return false;
     }
-    for (ExpansionDoor currDoor : doors) {
-      if (currDoor.firstRoom == other || currDoor.secondRoom == other) {
+    for (ExpansionDoor currentDoor : doors) {
+      if (currentDoor.firstRoom == other || currentDoor.secondRoom == other) {
         return true;
       }
     }

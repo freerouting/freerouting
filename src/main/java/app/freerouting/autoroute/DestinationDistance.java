@@ -52,13 +52,13 @@ public class DestinationDistance {
     this.layerCount = layerActive.length;
     this.minNormalViaCost = minNormalViaCost;
     this.minCheapViaCost = minCheapViaCost;
-    int currActiveLayerCount = 0;
+    int currentActiveLayerCount = 0;
     for (int ind = 0; ind < layerCount; ind++) {
       if (layerActive[ind]) {
-        ++currActiveLayerCount;
+        ++currentActiveLayerCount;
       }
     }
-    this.activeLayerCount = currActiveLayerCount;
+    this.activeLayerCount = currentActiveLayerCount;
 
     if (layerActive[0]) {
       if (traceCosts[0].horizontal < traceCosts[0].vertical) {
@@ -71,14 +71,14 @@ public class DestinationDistance {
     }
 
     if (layerActive[layerCount - 1]) {
-      ExpansionCostFactor currTraceCost = traceCosts[layerCount - 1];
+      ExpansionCostFactor currentTraceCost = traceCosts[layerCount - 1];
 
-      if (currTraceCost.horizontal < currTraceCost.vertical) {
-        minSolderSideTraceCost = currTraceCost.horizontal;
-        maxSolderSideTraceCost = currTraceCost.vertical;
+      if (currentTraceCost.horizontal < currentTraceCost.vertical) {
+        minSolderSideTraceCost = currentTraceCost.horizontal;
+        maxSolderSideTraceCost = currentTraceCost.vertical;
       } else {
-        minSolderSideTraceCost = currTraceCost.vertical;
-        maxSolderSideTraceCost = currTraceCost.horizontal;
+        minSolderSideTraceCost = currentTraceCost.vertical;
+        maxSolderSideTraceCost = currentTraceCost.horizontal;
       }
     }
 
@@ -88,9 +88,9 @@ public class DestinationDistance {
       if (!layerActive[ind2]) {
         continue;
       }
-      double currMaxCost = Math.max(traceCosts[ind2].horizontal, traceCosts[ind2].vertical);
+      double currentMaxCost = Math.max(traceCosts[ind2].horizontal, traceCosts[ind2].vertical);
 
-      maxInnerSideTraceCost = Math.min(maxInnerSideTraceCost, currMaxCost);
+      maxInnerSideTraceCost = Math.min(maxInnerSideTraceCost, currentMaxCost);
     }
     minComponentInnerTraceCost = Math.min(minComponentSideTraceCost, maxInnerSideTraceCost);
     minSolderInnerTraceCost = Math.min(minSolderSideTraceCost, maxInnerSideTraceCost);

@@ -141,33 +141,33 @@ public final class SortedOrthogonalRoomNeighbours {
     // Calculate the touching neighbour objects and sort them in counterclock sense
     // around the border of the room shape.
     for (ShapeTree.TreeEntry currentEntry : overlappingObjects) {
-      SearchTreeObject currObject = (SearchTreeObject) currentEntry.object;
-      if (currObject == room) {
+      SearchTreeObject currentObject = (SearchTreeObject) currentEntry.object;
+      if (currentObject == room) {
         continue;
       }
       if ((completedRoom instanceof CompleteFreeSpaceExpansionRoom fsRoom)
-          && !currObject.isTraceObstacle(netNo)) {
+          && !currentObject.isTraceObstacle(netNo)) {
         fsRoom.calculateTargetDoors(currentEntry, netNo, autorouteSearchTree);
         continue;
       }
-      TileShape currShape =
-          currObject.getTreeShape(autorouteSearchTree, currentEntry.shapeIndexInObject);
-      if (!(currShape instanceof IntBox currBox)) {
+      TileShape currentShape =
+          currentObject.getTreeShape(autorouteSearchTree, currentEntry.shapeIndexInObject);
+      if (!(currentShape instanceof IntBox currentBox)) {
         FRLogger.warn(
             "OrthogonalAutorouteEngine:calculate_sorted_neighbours: "
-                + "IntBox expected for currShape");
+                + "IntBox expected for currentShape");
         return null;
       }
-      IntBox intersection = roomBox.intersection(currBox);
+      IntBox intersection = roomBox.intersection(currentBox);
       int dimension = intersection.dimension();
       if (dimension > 1 && completedRoom instanceof ObstacleExpansionRoom obsRoom) {
-        if (currObject instanceof Item currItem) {
+        if (currentObject instanceof Item currentItem) {
           // only Obstacle expansion room may have a 2-dim overlap
-          if (currItem.isRoutable()) {
-            ItemAutorouteInfo itemInfo = currItem.getAutorouteInfo();
-            ObstacleExpansionRoom currOverlapRoom =
+          if (currentItem.isRoutable()) {
+            ItemAutorouteInfo itemInfo = currentItem.getAutorouteInfo();
+            ObstacleExpansionRoom currentOverlapRoom =
                 itemInfo.getExpansionRoom(currentEntry.shapeIndexInObject, autorouteSearchTree);
-            obsRoom.createOverlapDoor(currOverlapRoom);
+            obsRoom.createOverlapDoor(currentOverlapRoom);
           }
         }
         continue;
@@ -177,16 +177,16 @@ public final class SortedOrthogonalRoomNeighbours {
         FRLogger.warn("AutorouteEngine.calculate_doors: dimension >= 0 expected");
         continue;
       }
-      result.addSortedNeighbour(currObject, currBox, intersection);
+      result.addSortedNeighbour(currentObject, currentBox, intersection);
       if (dimension > 0) {
         // make  sure, that there is a door to the neighbour room.
         ExpansionRoom neighbourRoom = null;
-        if (currObject instanceof ExpansionRoom exRoom) {
+        if (currentObject instanceof ExpansionRoom exRoom) {
           neighbourRoom = exRoom;
-        } else if (currObject instanceof Item currItem) {
-          if (currItem.isRoutable()) {
+        } else if (currentObject instanceof Item currentItem) {
+          if (currentItem.isRoutable()) {
             // expand the item for ripup and pushing purposes
-            ItemAutorouteInfo itemInfo = currItem.getAutorouteInfo();
+            ItemAutorouteInfo itemInfo = currentItem.getAutorouteInfo();
             neighbourRoom =
                 itemInfo.getExpansionRoom(currentEntry.shapeIndexInObject, autorouteSearchTree);
           }
@@ -419,10 +419,10 @@ public final class SortedOrthogonalRoomNeighbours {
    * room shape will be improved by enlarging. Returns true if the room shape was changed.
    */
   private boolean tryRemoveEdge(int netNo, ShapeSearchTree autorouteSearchTree) {
-    if (!(this.fromRoom instanceof IncompleteFreeSpaceExpansionRoom currIncompleteRoom)) {
+    if (!(this.fromRoom instanceof IncompleteFreeSpaceExpansionRoom currentIncompleteRoom)) {
       return false;
     }
-    if (!(currIncompleteRoom.getShape() instanceof IntBox roomBox)) {
+    if (!(currentIncompleteRoom.getShape() instanceof IntBox roomBox)) {
       FRLogger.warn(
           "SortedOrthogonalRoomNeighbours.try_remove_edge: IntBox expected for roomShape type");
       return false;
@@ -445,7 +445,7 @@ public final class SortedOrthogonalRoomNeighbours {
               + ", net="
               + netNo
               + ", layer="
-              + currIncompleteRoom.getLayer()
+              + currentIncompleteRoom.getLayer()
               + ", removeEdge="
               + removeEdgeNo
               + ", room_bounds="
@@ -457,63 +457,63 @@ public final class SortedOrthogonalRoomNeighbours {
       double maxDoorArea = 0;
       int ignoreCandidateCount = 0;
       int equalAreaTieCount = 0;
-      for (ExpansionDoor currDoor : doorList) {
+      for (ExpansionDoor currentDoor : doorList) {
         // insert the overlapping doors with CompleteFreeSpaceExpansionRooms
         // for the information in complete_shape about the objects to ignore.
-        if (currDoor.dimension == 2) {
-          CompleteExpansionRoom otherRoom = currDoor.otherRoom(this.completedRoom);
+        if (currentDoor.dimension == 2) {
+          CompleteExpansionRoom otherRoom = currentDoor.otherRoom(this.completedRoom);
           {
             if (otherRoom instanceof CompleteFreeSpaceExpansionRoom freeSpaceRoom) {
-              TileShape currDoorShape = currDoor.getShape();
-              double currDoorArea = currDoorShape.area();
+              TileShape currentDoorShape = currentDoor.getShape();
+              double currentDoorArea = currentDoorShape.area();
               ++ignoreCandidateCount;
               FRLogger.trace(
                   "ROOM_EDGE_REMOVE ignore_candidate"
                       + ", net="
                       + netNo
                       + ", layer="
-                      + currIncompleteRoom.getLayer()
+                      + currentIncompleteRoom.getLayer()
                       + ", removeEdge="
                       + removeEdgeNo
                       + ", candidate_no="
                       + ignoreCandidateCount
                       + ", candidate_bounds="
-                      + currDoorShape.boundingBox()
+                      + currentDoorShape.boundingBox()
                       + ", candidate_area="
-                      + currDoorArea);
-              if (currDoorArea > maxDoorArea) {
-                maxDoorArea = currDoorArea;
-                ignoreShape = currDoorShape;
+                      + currentDoorArea);
+              if (currentDoorArea > maxDoorArea) {
+                maxDoorArea = currentDoorArea;
+                ignoreShape = currentDoorShape;
                 ignoreObject = freeSpaceRoom;
                 FRLogger.trace(
                     "ROOM_EDGE_REMOVE ignore_selected"
                         + ", net="
                         + netNo
                         + ", layer="
-                        + currIncompleteRoom.getLayer()
+                        + currentIncompleteRoom.getLayer()
                         + ", removeEdge="
                         + removeEdgeNo
                         + ", reason=larger_area"
                         + ", selected_bounds="
-                        + currDoorShape.boundingBox()
+                        + currentDoorShape.boundingBox()
                         + ", selected_area="
-                        + currDoorArea);
-              } else if (Double.compare(currDoorArea, maxDoorArea) == 0) {
+                        + currentDoorArea);
+              } else if (Double.compare(currentDoorArea, maxDoorArea) == 0) {
                 ++equalAreaTieCount;
                 FRLogger.trace(
                     "ROOM_EDGE_REMOVE ignore_tie"
                         + ", net="
                         + netNo
                         + ", layer="
-                        + currIncompleteRoom.getLayer()
+                        + currentIncompleteRoom.getLayer()
                         + ", removeEdge="
                         + removeEdgeNo
                         + ", tie_no="
                         + equalAreaTieCount
                         + ", tie_bounds="
-                        + currDoorShape.boundingBox()
+                        + currentDoorShape.boundingBox()
                         + ", tie_area="
-                        + currDoorArea);
+                        + currentDoorArea);
               }
             }
           }
@@ -524,7 +524,7 @@ public final class SortedOrthogonalRoomNeighbours {
               + ", net="
               + netNo
               + ", layer="
-              + currIncompleteRoom.getLayer()
+              + currentIncompleteRoom.getLayer()
               + ", removeEdge="
               + removeEdgeNo
               + ", candidate_count="
@@ -537,7 +537,9 @@ public final class SortedOrthogonalRoomNeighbours {
               + maxDoorArea);
       IncompleteFreeSpaceExpansionRoom enlargedRoom =
           new IncompleteFreeSpaceExpansionRoom(
-              enlargedBox, currIncompleteRoom.getLayer(), currIncompleteRoom.getContainedShape());
+              enlargedBox,
+              currentIncompleteRoom.getLayer(),
+              currentIncompleteRoom.getContainedShape());
       Collection<IncompleteFreeSpaceExpansionRoom> newRooms =
           autorouteSearchTree.completeShape(enlargedRoom, netNo, ignoreObject, ignoreShape);
       FRLogger.trace(
@@ -545,7 +547,7 @@ public final class SortedOrthogonalRoomNeighbours {
               + ", net="
               + netNo
               + ", layer="
-              + currIncompleteRoom.getLayer()
+              + currentIncompleteRoom.getLayer()
               + ", removeEdge="
               + removeEdgeNo
               + ", enlarged_bounds="
@@ -561,15 +563,15 @@ public final class SortedOrthogonalRoomNeighbours {
                   + ", net="
                   + netNo
                   + ", layer="
-                  + currIncompleteRoom.getLayer()
+                  + currentIncompleteRoom.getLayer()
                   + ", removeEdge="
                   + removeEdgeNo
                   + ", old_bounds="
                   + roomBox
                   + ", newBounds="
                   + newRoom.getShape().boundingBox());
-          currIncompleteRoom.setShape(newRoom.getShape());
-          currIncompleteRoom.setContainedShape(newRoom.getContainedShape());
+          currentIncompleteRoom.setShape(newRoom.getShape());
+          currentIncompleteRoom.setContainedShape(newRoom.getContainedShape());
           return true;
         }
       }

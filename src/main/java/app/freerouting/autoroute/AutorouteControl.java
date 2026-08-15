@@ -204,15 +204,15 @@ public class AutorouteControl {
   private void initNet(int netNo, RoutingBoard board, int viaCosts) {
     this.netNo = netNo;
     Net currentNet = board.rules.nets.get(netNo);
-    NetClass currNetClass;
+    NetClass currentNetClass;
     if (currentNet != null) {
-      currNetClass = currentNet.getNetClass();
-      traceClearanceClassNo = currNetClass.getTraceClearanceClass();
-      viaRule = currNetClass.getViaRule();
+      currentNetClass = currentNet.getNetClass();
+      traceClearanceClassNo = currentNetClass.getTraceClearanceClass();
+      viaRule = currentNetClass.getViaRule();
     } else {
       traceClearanceClassNo = 1;
       viaRule = board.rules.viaRules.firstElement();
-      currNetClass = null;
+      currentNetClass = null;
     }
     for (int i = 0; i < layerCount; i++) {
       if (netNo > 0) {
@@ -223,7 +223,7 @@ public class AutorouteControl {
       compensatedTraceHalfWidth[i] =
           traceHalfWidth[i]
               + board.rules.clearanceMatrix.clearanceCompensationValue(traceClearanceClassNo, i);
-      if (currNetClass != null && !currNetClass.isActiveRoutingLayer(i)) {
+      if (currentNetClass != null && !currentNetClass.isActiveRoutingLayer(i)) {
         layerActive[i] = false;
       }
     }
@@ -240,24 +240,24 @@ public class AutorouteControl {
     this.viaInfoArr = new ViaMask[viaRule.viaCount()];
     this.attachSmdAllowed = false;
     for (int i = 0; i < viaRule.viaCount(); i++) {
-      ViaInfo currVia = viaRule.getVia(i);
-      if (currVia.attachSmdAllowed()) {
+      ViaInfo currentVia = viaRule.getVia(i);
+      if (currentVia.attachSmdAllowed()) {
         this.attachSmdAllowed = true;
       }
-      Padstack currViaPadstack = currVia.getPadstack();
-      int fromLayer = currViaPadstack.fromLayer();
-      int toLayer = currViaPadstack.toLayer();
+      Padstack currentViaPadstack = currentVia.getPadstack();
+      int fromLayer = currentViaPadstack.fromLayer();
+      int toLayer = currentViaPadstack.toLayer();
       for (int j = fromLayer; j <= toLayer; j++) {
-        ConvexShape currShape = currViaPadstack.getShape(j);
-        double currRadius;
-        if (currShape != null) {
-          currRadius = 0.5 * currShape.maxWidth();
+        ConvexShape currentShape = currentViaPadstack.getShape(j);
+        double currentRadius;
+        if (currentShape != null) {
+          currentRadius = 0.5 * currentShape.maxWidth();
         } else {
-          currRadius = 0;
+          currentRadius = 0;
         }
-        this.viaRadiusArr[j] = Math.max(this.viaRadiusArr[j], currRadius);
+        this.viaRadiusArr[j] = Math.max(this.viaRadiusArr[j], currentRadius);
       }
-      viaInfoArr[i] = new ViaMask(fromLayer, toLayer, currVia.attachSmdAllowed());
+      viaInfoArr[i] = new ViaMask(fromLayer, toLayer, currentVia.attachSmdAllowed());
     }
 
     boolean pureSmdNet = isPureSmdNet(board, netNo);

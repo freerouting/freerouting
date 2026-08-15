@@ -48,11 +48,11 @@ public final class BatchFanout {
     }
     this.sortedComponents = new TreeSet<>();
     for (int i = 1; i <= routingBoard.components.count(); ++i) {
-      app.freerouting.board.Component currBoardComponent = routingBoard.components.get(i);
-      Component currComponent =
-          new Component(currBoardComponent, boardSmdPinListWithNets, sortingOrder, routingBoard);
-      if (currComponent.smdPinCount > 0) {
-        sortedComponents.add(currComponent);
+      app.freerouting.board.Component currentBoardComponent = routingBoard.components.get(i);
+      Component currentComponent =
+          new Component(currentBoardComponent, boardSmdPinListWithNets, sortingOrder, routingBoard);
+      if (currentComponent.smdPinCount > 0) {
+        sortedComponents.add(currentComponent);
       }
     }
     int pinCount = 0;
@@ -213,8 +213,8 @@ public final class BatchFanout {
         progressStats);
     boolean maxLimitReached = false;
     int alreadyConnectedCount = 0;
-    for (Component currComponent : this.sortedComponents) {
-      for (Component.Pin currPin : currComponent.smdPins) {
+    for (Component currentComponent : this.sortedComponents) {
+      for (Component.Pin currentPin : currentComponent.smdPins) {
         if (this.settings.fanout != null
             && this.settings.fanout.maxItems != null
             && this.settings.fanout.maxItems > 0
@@ -226,9 +226,10 @@ public final class BatchFanout {
         }
         double maxMilliseconds = baseMillisPerPin * (passNo + 1);
         final TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
-        String fullPinName = currComponent.boardComponent.name + "-" + currPin.boardPin.name();
-        int netNo = currPin.boardPin.getNetNo(0);
-        int targetCount = currPin.boardPin.getUnconnectedSet(netNo).size();
+        String fullPinName =
+            currentComponent.boardComponent.name + "-" + currentPin.boardPin.name();
+        int netNo = currentPin.boardPin.getNetNo(0);
+        int targetCount = currentPin.boardPin.getUnconnectedSet(netNo).size();
 
         app.freerouting.rules.Net net = this.routingBoard.rules.nets.get(netNo);
         if (net != null) {
@@ -263,22 +264,22 @@ public final class BatchFanout {
                 + ", targetCount="
                 + targetCount
                 + ", center="
-                + currPin.boardPin.getCenter()
+                + currentPin.boardPin.getCenter()
                 + ", layer="
-                + currPin.boardPin.firstLayer()
+                + currentPin.boardPin.firstLayer()
                 + ", pass="
                 + (passNo + 1),
             fullPinName,
-            new app.freerouting.geometry.planar.Point[] {currPin.boardPin.getCenter()});
+            new app.freerouting.geometry.planar.Point[] {currentPin.boardPin.getCenter()});
 
         this.routingBoard.startMarkingChangedArea();
         long pinStartNanos = System.nanoTime();
-        AutorouteAttemptResult currResult =
+        AutorouteAttemptResult currentResult =
             this.routingBoard.fanout(
-                currPin.boardPin, this.settings, effectiveRipupCosts, this.thread, timeLimit);
+                currentPin.boardPin, this.settings, effectiveRipupCosts, this.thread, timeLimit);
         long pinDurationMs = (System.nanoTime() - pinStartNanos) / 1_000_000L;
 
-        switch (currResult.state) {
+        switch (currentResult.state) {
           case ROUTED -> {
             ++routedCount;
             this.totalItemsFanouted++;
@@ -294,7 +295,7 @@ public final class BatchFanout {
                     + ", targetCount="
                     + targetCount,
                 fullPinName,
-                new app.freerouting.geometry.planar.Point[] {currPin.boardPin.getCenter()});
+                new app.freerouting.geometry.planar.Point[] {currentPin.boardPin.getCenter()});
           }
           case ALREADY_CONNECTED -> {
             ++alreadyConnectedCount;
@@ -308,9 +309,9 @@ public final class BatchFanout {
                     + ", targetCount="
                     + targetCount
                     + ", detail="
-                    + currResult.details,
+                    + currentResult.details,
                 fullPinName,
-                new app.freerouting.geometry.planar.Point[] {currPin.boardPin.getCenter()});
+                new app.freerouting.geometry.planar.Point[] {currentPin.boardPin.getCenter()});
           }
           case FAILED -> {
             ++notRoutedCount;
@@ -327,11 +328,11 @@ public final class BatchFanout {
                     + ", durationMs="
                     + pinDurationMs
                     + ", detail="
-                    + (currResult.details == null || currResult.details.isEmpty()
+                    + (currentResult.details == null || currentResult.details.isEmpty()
                         ? "no detail"
-                        : currResult.details),
+                        : currentResult.details),
                 fullPinName,
-                new app.freerouting.geometry.planar.Point[] {currPin.boardPin.getCenter()});
+                new app.freerouting.geometry.planar.Point[] {currentPin.boardPin.getCenter()});
           }
           case INSERT_ERROR -> {
             ++insertErrorCount;
@@ -344,19 +345,19 @@ public final class BatchFanout {
                     + ", net="
                     + netNo
                     + ", detail="
-                    + (currResult.details == null || currResult.details.isEmpty()
+                    + (currentResult.details == null || currentResult.details.isEmpty()
                         ? "no detail"
-                        : currResult.details),
+                        : currentResult.details),
                 fullPinName,
-                new app.freerouting.geometry.planar.Point[] {currPin.boardPin.getCenter()});
+                new app.freerouting.geometry.planar.Point[] {currentPin.boardPin.getCenter()});
           }
           case NO_UNCONNECTED_NETS -> {
             FRLogger.trace(
                 "BatchFanout.fanout_pass",
                 "pin_no_unconnected_nets",
-                "pin=" + fullPinName + ", net=" + netNo + ", detail=" + currResult.details,
+                "pin=" + fullPinName + ", net=" + netNo + ", detail=" + currentResult.details,
                 fullPinName,
-                new app.freerouting.geometry.planar.Point[] {currPin.boardPin.getCenter()});
+                new app.freerouting.geometry.planar.Point[] {currentPin.boardPin.getCenter()});
           }
           default -> {
             FRLogger.trace(
@@ -367,11 +368,11 @@ public final class BatchFanout {
                     + ", net="
                     + netNo
                     + ", state="
-                    + currResult.state
+                    + currentResult.state
                     + ", detail="
-                    + currResult.details,
+                    + currentResult.details,
                 fullPinName,
-                new app.freerouting.geometry.planar.Point[] {currPin.boardPin.getCenter()});
+                new app.freerouting.geometry.planar.Point[] {currentPin.boardPin.getCenter()});
           }
         }
         --pinsToGo;
@@ -643,21 +644,21 @@ public final class BatchFanout {
       this.pinSortingOrder = pinSortingOrder;
 
       // calculate the center of gravity of all SMD pins of this component.
-      Collection<app.freerouting.board.Pin> currPinList = new LinkedList<>();
+      Collection<app.freerouting.board.Pin> currentPinList = new LinkedList<>();
       int cmpNo = boardComponent.no;
-      for (app.freerouting.board.Pin currBoardPin : boardSmdPinList) {
-        if (currBoardPin.getComponentNo() == cmpNo) {
-          currPinList.add(currBoardPin);
+      for (app.freerouting.board.Pin currentBoardPin : boardSmdPinList) {
+        if (currentBoardPin.getComponentNo() == cmpNo) {
+          currentPinList.add(currentBoardPin);
         }
       }
       double x = 0;
       double y = 0;
-      for (app.freerouting.board.Pin currPin : currPinList) {
-        FloatPoint currPoint = currPin.getCenter().toFloat();
-        x += currPoint.x;
-        y += currPoint.y;
+      for (app.freerouting.board.Pin currentPin : currentPinList) {
+        FloatPoint currentPoint = currentPin.getCenter().toFloat();
+        x += currentPoint.x;
+        y += currentPoint.y;
       }
-      this.smdPinCount = currPinList.size();
+      this.smdPinCount = currentPinList.size();
       if (this.smdPinCount > 0) {
         x /= this.smdPinCount;
         y /= this.smdPinCount;
@@ -667,8 +668,8 @@ public final class BatchFanout {
       // calculate the sorted SMD pins of this component
       this.smdPins = new TreeSet<>();
 
-      for (app.freerouting.board.Pin currBoardPin : currPinList) {
-        this.smdPins.add(new Pin(currBoardPin, boardSmdPinList, routingBoard));
+      for (app.freerouting.board.Pin currentBoardPin : currentPinList) {
+        this.smdPins.add(new Pin(currentBoardPin, boardSmdPinList, routingBoard));
       }
     }
 

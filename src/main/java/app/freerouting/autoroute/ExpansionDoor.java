@@ -151,14 +151,14 @@ public class ExpansionDoor implements ExpandableObject {
     Point secondCorner = null;
     int cornerCount = doorShape.borderLineCount();
     for (int i = 0; i < cornerCount; i++) {
-      Point currCorner = doorShape.corner(i);
-      if (!firstRoomShape.containsInside(currCorner)
-          && !secondRoomShape.containsInside(currCorner)) {
-        // currCorner is on the border of both room shapes.
+      Point currentCorner = doorShape.corner(i);
+      if (!firstRoomShape.containsInside(currentCorner)
+          && !secondRoomShape.containsInside(currentCorner)) {
+        // currentCorner is on the border of both room shapes.
         if (firstCorner == null) {
-          firstCorner = currCorner;
-        } else if (!firstCorner.equals(currCorner)) {
-          secondCorner = currCorner;
+          firstCorner = currentCorner;
+        } else if (!firstCorner.equals(currentCorner)) {
+          secondCorner = currentCorner;
           break;
         }
       }
@@ -173,8 +173,8 @@ public class ExpansionDoor implements ExpandableObject {
   @Override
   public void reset() {
     if (sectionArr != null) {
-      for (MazeSearchElement currSection : sectionArr) {
-        currSection.reset();
+      for (MazeSearchElement currentSection : sectionArr) {
+        currentSection.reset();
       }
     }
   }

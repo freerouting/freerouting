@@ -81,9 +81,9 @@ public class ItemAutorouteInfo {
   /** Resets the expansion rooms for autorouting the next connection. */
   public void resetDoors() {
     if (expansionRoomArr != null) {
-      for (ObstacleExpansionRoom currRoom : expansionRoomArr) {
-        if (currRoom != null) {
-          currRoom.resetDoors();
+      for (ObstacleExpansionRoom currentRoom : expansionRoomArr) {
+        if (currentRoom != null) {
+          currentRoom.resetDoors();
         }
       }
     }
@@ -94,9 +94,9 @@ public class ItemAutorouteInfo {
     if (sink == null || intensity <= 0 || expansionRoomArr == null) {
       return;
     }
-    for (ObstacleExpansionRoom currRoom : expansionRoomArr) {
-      if (currRoom != null) {
-        currRoom.emitDiagnostic(sink, intensity);
+    for (ObstacleExpansionRoom currentRoom : expansionRoomArr) {
+      if (currentRoom != null) {
+        currentRoom.emitDiagnostic(sink, intensity);
       }
     }
   }

@@ -230,12 +230,12 @@ public final class MazeShoveTraceAlgo {
       fromDoorCompareDistance = toCorner.distanceSquare(fromDoorShape.cornerApprox(0));
     }
 
-    for (ExpansionDoor currDoor : roomDoors) {
-      if (currDoor == fromDoor) {
+    for (ExpansionDoor currentDoor : roomDoors) {
+      if (currentDoor == fromDoor) {
         continue;
       }
-      if (currDoor.firstRoom instanceof ObstacleExpansionRoom room
-          && currDoor.secondRoom instanceof ObstacleExpansionRoom room1) {
+      if (currentDoor.firstRoom instanceof ObstacleExpansionRoom room
+          && currentDoor.secondRoom instanceof ObstacleExpansionRoom room1) {
         Item firstRoomItem = room.getItem();
         Item secondRoomItem = room1.getItem();
         if (firstRoomItem != secondRoomItem) {
@@ -243,25 +243,25 @@ public final class MazeShoveTraceAlgo {
           continue;
         }
       }
-      TileShape currDoorShape = currDoor.getShape();
-      if (currDoor.dimension == 2 && shoveWidth >= Integer.MAX_VALUE) {
-        boolean addLinkDoor = currDoorShape.contains(toCorner);
+      TileShape currentDoorShape = currentDoor.getShape();
+      if (currentDoor.dimension == 2 && shoveWidth >= Integer.MAX_VALUE) {
+        boolean addLinkDoor = currentDoorShape.contains(toCorner);
 
         if (addLinkDoor) {
-          FloatLine[] lineSections = currDoor.getSectionSegments(compensatedTraceHalfWidth);
-          toDoorList.add(new DoorSection(currDoor, 0, lineSections[0]));
+          FloatLine[] lineSections = currentDoor.getSectionSegments(compensatedTraceHalfWidth);
+          toDoorList.add(new DoorSection(currentDoor, 0, lineSections[0]));
         }
       } else if (!segmentIstPoint) {
-        // now currDoor is 1-dimensional
+        // now currentDoor is 1-dimensional
 
-        // check, that currDoor is on the same borderLine as p_from_door.
-        FloatLine currDoorSegment = currDoorShape.diagonalCornerSegment();
-        if (currDoorSegment == null) {
+        // check, that currentDoor is on the same borderLine as p_from_door.
+        FloatLine currentDoorSegment = currentDoorShape.diagonalCornerSegment();
+        if (currentDoorSegment == null) {
           FRLogger.trace("MazeShoveTraceAlgo.check_shove_trace_line: door shape is empty");
           continue;
         }
-        Side startCornerSideOfTraceLine = shoveLine.sideOf(currDoorSegment.a, 0);
-        Side endCornerSideOfTraceLine = shoveLine.sideOf(currDoorSegment.b, 0);
+        Side startCornerSideOfTraceLine = shoveLine.sideOf(currentDoorSegment.a, 0);
+        Side endCornerSideOfTraceLine = shoveLine.sideOf(currentDoorSegment.b, 0);
         if (shoveToTheLeft) {
           if (startCornerSideOfTraceLine != Side.ON_THE_LEFT
               || endCornerSideOfTraceLine != Side.ON_THE_LEFT) {
@@ -273,34 +273,35 @@ public final class MazeShoveTraceAlgo {
             continue;
           }
         }
-        FloatLine currDoorLine = currDoorShape.polarLineSegment(fromCorner);
-        FloatPoint currDoorNearestCorner;
-        if (currDoorLine.a.distanceSquare(fromCorner)
-            <= currDoorLine.b.distanceSquare(fromCorner)) {
-          currDoorNearestCorner = currDoorLine.a;
+        FloatLine currentDoorLine = currentDoorShape.polarLineSegment(fromCorner);
+        FloatPoint currentDoorNearestCorner;
+        if (currentDoorLine.a.distanceSquare(fromCorner)
+            <= currentDoorLine.b.distanceSquare(fromCorner)) {
+          currentDoorNearestCorner = currentDoorLine.a;
         } else {
-          currDoorNearestCorner = currDoorLine.b;
+          currentDoorNearestCorner = currentDoorLine.b;
         }
-        if (toCorner.distanceSquare(currDoorNearestCorner) >= fromDoorCompareDistance) {
-          // currDoor is not located into the direction of toCorner.
+        if (toCorner.distanceSquare(currentDoorNearestCorner) >= fromDoorCompareDistance) {
+          // currentDoor is not located into the direction of toCorner.
           continue;
         }
-        FloatPoint currDoorProjection = currDoorNearestCorner.projectionApprox(shoveLine);
+        FloatPoint currentDoorProjection = currentDoorNearestCorner.projectionApprox(shoveLine);
 
-        if (currDoorProjection.distance(fromCorner) + compensatedTraceHalfWidth <= shoveWidth) {
-          FloatLine[] lineSections = currDoor.getSectionSegments(compensatedTraceHalfWidth);
+        if (currentDoorProjection.distance(fromCorner) + compensatedTraceHalfWidth <= shoveWidth) {
+          FloatLine[] lineSections = currentDoor.getSectionSegments(compensatedTraceHalfWidth);
           for (int i = 0; i < lineSections.length; i++) {
-            FloatLine currLineSection = lineSections[i];
-            FloatPoint currSectionNearestCorner;
-            if (currLineSection.a.distanceSquare(fromCorner)
-                <= currLineSection.b.distanceSquare(fromCorner)) {
-              currSectionNearestCorner = currLineSection.a;
+            FloatLine currentLineSection = lineSections[i];
+            FloatPoint currentSectionNearestCorner;
+            if (currentLineSection.a.distanceSquare(fromCorner)
+                <= currentLineSection.b.distanceSquare(fromCorner)) {
+              currentSectionNearestCorner = currentLineSection.a;
             } else {
-              currSectionNearestCorner = currLineSection.b;
+              currentSectionNearestCorner = currentLineSection.b;
             }
-            FloatPoint currSectionProjection = currSectionNearestCorner.projectionApprox(shoveLine);
-            if (currSectionProjection.distance(fromCorner) <= shoveWidth) {
-              toDoorList.add(new DoorSection(currDoor, i, currLineSection));
+            FloatPoint currentSectionProjection =
+                currentSectionNearestCorner.projectionApprox(shoveLine);
+            if (currentSectionProjection.distance(fromCorner) <= shoveWidth) {
+              toDoorList.add(new DoorSection(currentDoor, i, currentLineSection));
             }
           }
         }

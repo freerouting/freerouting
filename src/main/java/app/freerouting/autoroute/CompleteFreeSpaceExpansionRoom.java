@@ -131,16 +131,16 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
       ShapeTree.TreeEntry ownNetObject, int netNo, ShapeSearchTree autorouteSearchTree) {
     this.setNetDependent();
 
-    if (ownNetObject.object instanceof Connectable currObject) {
-      if (currObject.containsNet(netNo)) {
-        TileShape currConnectionShape =
-            currObject.getTraceConnectionShape(
+    if (ownNetObject.object instanceof Connectable currentObject) {
+      if (currentObject.containsNet(netNo)) {
+        TileShape currentConnectionShape =
+            currentObject.getTraceConnectionShape(
                 autorouteSearchTree, ownNetObject.shapeIndexInObject);
-        if (currConnectionShape != null && this.getShape().intersects(currConnectionShape)) {
-          Item currItem = (Item) currObject;
+        if (currentConnectionShape != null && this.getShape().intersects(currentConnectionShape)) {
+          Item currentItem = (Item) currentObject;
           TargetItemExpansionDoor newTargetDoor =
               new TargetItemExpansionDoor(
-                  currItem, ownNetObject.shapeIndexInObject, this, autorouteSearchTree);
+                  currentItem, ownNetObject.shapeIndexInObject, this, autorouteSearchTree);
           this.addTargetDoor(newTargetDoor);
         }
       }
@@ -201,8 +201,8 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   @Override
   public void resetDoors() {
     super.resetDoors();
-    for (ExpandableObject currDoor : this.targetDoors) {
-      currDoor.reset();
+    for (ExpandableObject currentDoor : this.targetDoors) {
+      currentDoor.reset();
     }
   }
 }

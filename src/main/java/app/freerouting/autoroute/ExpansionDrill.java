@@ -53,13 +53,13 @@ public class ExpansionDrill implements ExpandableObject {
       CompleteExpansionRoom foundRoom = null;
       Iterator<SearchTreeObject> it = overlaps.iterator();
       while (it.hasNext()) {
-        SearchTreeObject currOb = it.next();
-        if (!(currOb instanceof CompleteExpansionRoom currRoom)) {
+        SearchTreeObject currentOb = it.next();
+        if (!(currentOb instanceof CompleteExpansionRoom currentRoom)) {
           it.remove();
           continue;
         }
-        if (currRoom.getLayer() == i) {
-          foundRoom = currRoom;
+        if (currentRoom.getLayer() == i) {
+          foundRoom = currentRoom;
           it.remove();
           break;
         }
@@ -111,8 +111,8 @@ public class ExpansionDrill implements ExpandableObject {
 
   @Override
   public void reset() {
-    for (MazeSearchElement currInfo : mazeSearchInfoArr) {
-      currInfo.reset();
+    for (MazeSearchElement currentInfo : mazeSearchInfoArr) {
+      currentInfo.reset();
     }
   }
 

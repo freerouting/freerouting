@@ -74,8 +74,9 @@ public class BatchAutorouterThread extends StoppableThread {
       // remove preferred direction
       this.traceCostArr = new AutorouteControl.ExpansionCostFactor[this.board.getLayerCount()];
       for (int i = 0; i < this.traceCostArr.length; i++) {
-        double currMinCost = this.settings.getPreferredDirectionTraceCosts(i);
-        this.traceCostArr[i] = new AutorouteControl.ExpansionCostFactor(currMinCost, currMinCost);
+        double currentMinCost = this.settings.getPreferredDirectionTraceCosts(i);
+        this.traceCostArr[i] =
+            new AutorouteControl.ExpansionCostFactor(currentMinCost, currentMinCost);
       }
     }
 
@@ -90,65 +91,65 @@ public class BatchAutorouterThread extends StoppableThread {
     FloatPoint fromCorner = null;
     FloatPoint toCorner = null;
     double minDistance = Double.MAX_VALUE;
-    for (Item currFromItem : fromItems) {
-      FloatPoint currFromCorner;
-      if (currFromItem instanceof DrillItem item) {
-        currFromCorner = item.getCenter().toFloat();
-      } else if (currFromItem instanceof PolylineTrace fromTrace) {
+    for (Item currentFromItem : fromItems) {
+      FloatPoint currentFromCorner;
+      if (currentFromItem instanceof DrillItem item) {
+        currentFromCorner = item.getCenter().toFloat();
+      } else if (currentFromItem instanceof PolylineTrace fromTrace) {
         // Use trace endpoints as potential connection points
         continue; // We'll handle traces in the second loop for better efficiency
       } else {
         continue;
       }
 
-      for (Item currToItem : toItems) {
-        FloatPoint currToCorner;
-        if (currToItem instanceof DrillItem drillItem) {
-          currToCorner = drillItem.getCenter().toFloat();
-        } else if (currToItem instanceof PolylineTrace toTrace) {
+      for (Item currentToItem : toItems) {
+        FloatPoint currentToCorner;
+        if (currentToItem instanceof DrillItem drillItem) {
+          currentToCorner = drillItem.getCenter().toFloat();
+        } else if (currentToItem instanceof PolylineTrace toTrace) {
           // Find nearest point on trace to the from item point
-          currToCorner = nearestPointOnTrace(toTrace, currFromCorner);
+          currentToCorner = nearestPointOnTrace(toTrace, currentFromCorner);
         } else {
           continue;
         }
 
-        double currDistance = currFromCorner.distance(currToCorner);
-        if (currDistance < minDistance) {
-          minDistance = currDistance;
-          fromCorner = currFromCorner;
-          toCorner = currToCorner;
+        double currentDistance = currentFromCorner.distance(currentToCorner);
+        if (currentDistance < minDistance) {
+          minDistance = currentDistance;
+          fromCorner = currentFromCorner;
+          toCorner = currentToCorner;
         }
       }
     }
 
     // Check trace-to-trace and trace-to-drill connections
-    for (Item currFromItem : fromItems) {
-      if (!(currFromItem instanceof PolylineTrace fromTrace)) {
+    for (Item currentFromItem : fromItems) {
+      if (!(currentFromItem instanceof PolylineTrace fromTrace)) {
         continue;
       }
 
-      for (Item currToItem : toItems) {
-        FloatPoint currFromCorner;
-        FloatPoint currToCorner;
+      for (Item currentToItem : toItems) {
+        FloatPoint currentFromCorner;
+        FloatPoint currentToCorner;
 
-        if (currToItem instanceof DrillItem item) {
+        if (currentToItem instanceof DrillItem item) {
           // Trace to drill item
-          currToCorner = item.getCenter().toFloat();
-          currFromCorner = nearestPointOnTrace(fromTrace, currToCorner);
-        } else if (currToItem instanceof PolylineTrace toTrace) {
+          currentToCorner = item.getCenter().toFloat();
+          currentFromCorner = nearestPointOnTrace(fromTrace, currentToCorner);
+        } else if (currentToItem instanceof PolylineTrace toTrace) {
           // Trace to trace - find the closest points between the two traces
           FloatPoint[] closestPoints = findClosestPointsBetweenTraces(fromTrace, toTrace);
-          currFromCorner = closestPoints[0];
-          currToCorner = closestPoints[1];
+          currentFromCorner = closestPoints[0];
+          currentToCorner = closestPoints[1];
         } else {
           continue;
         }
 
-        double currDistance = currFromCorner.distance(currToCorner);
-        if (currDistance < minDistance) {
-          minDistance = currDistance;
-          fromCorner = currFromCorner;
-          toCorner = currToCorner;
+        double currentDistance = currentFromCorner.distance(currentToCorner);
+        if (currentDistance < minDistance) {
+          minDistance = currentDistance;
+          fromCorner = currentFromCorner;
+          toCorner = currentToCorner;
         }
       }
     }
@@ -308,30 +309,30 @@ public class BatchAutorouterThread extends StoppableThread {
     int routed = 0;
     int skipped = 0;
     // Let's go through all items to route
-    for (Item currItem : autorouteItemList) {
+    for (Item currentItem : autorouteItemList) {
       // If the user requested to stop the auto-router, we stop it
       if (this.isStopAutoRouterRequested()) {
         break;
       }
 
       // Check if this item should be skipped due to repeated failures
-      if (this.board.failureLog.shouldSkip(currItem)) {
-        Net net = board.rules.nets.get(currItem.getNetNo(0));
-        String netName = net != null ? net.name : "net#" + currItem.getNetNo(0);
+      if (this.board.failureLog.shouldSkip(currentItem)) {
+        Net net = board.rules.nets.get(currentItem.getNetNo(0));
+        String netName = net != null ? net.name : "net#" + currentItem.getNetNo(0);
         FRLogger.debug(
             "Skipping "
-                + currItem.getClass().getSimpleName()
+                + currentItem.getClass().getSimpleName()
                 + " on net '"
                 + netName
                 + "' - exceeded failure threshold ("
-                + board.failureLog.getFailureCount(currItem)
+                + board.failureLog.getFailureCount(currentItem)
                 + " failures)");
         --itemsToGoCount;
         continue;
       }
 
       // Let's go through all nets of this item
-      for (int i = 0; i < currItem.netCount(); i++) {
+      for (int i = 0; i < currentItem.netCount(); i++) {
         // If the user requested to stop the auto-router, we stop it
         if (this.isStopAutoRouterRequested()) {
           break;
@@ -353,7 +354,7 @@ public class BatchAutorouterThread extends StoppableThread {
         SortedSet<Item> rippedItemList = new TreeSet<>();
 
         var autorouterResult =
-            autorouteItem(board, currItem, currItem.getNetNo(i), rippedItemList, passNo);
+            autorouteItem(board, currentItem, currentItem.getNetNo(i), rippedItemList, passNo);
         if (autorouterResult.state == AutorouteAttemptState.ROUTED) {
           // The item was successfully routed
           ++routed;
@@ -364,22 +365,22 @@ public class BatchAutorouterThread extends StoppableThread {
           // The item doesn't need to be routed
           ++skipped;
         } else {
-          Net net = board.rules.nets.get(currItem.getNetNo(i));
-          String netName = net != null ? net.name : "net#" + currItem.getNetNo(i);
+          Net net = board.rules.nets.get(currentItem.getNetNo(i));
+          String netName = net != null ? net.name : "net#" + currentItem.getNetNo(i);
 
           // Record the failure
           this.board.failureLog.recordFailure(
-              currItem, passNo, autorouterResult.state, autorouterResult.details);
+              currentItem, passNo, autorouterResult.state, autorouterResult.details);
 
           FRLogger.debug("Autorouter " + autorouterResult.details);
           // Log details when we're down to last few items or item has many failures
-          int failureCount = board.failureLog.getFailureCount(currItem);
+          int failureCount = board.failureLog.getFailureCount(currentItem);
           if (itemsToGoCount <= 5 || failureCount >= 3) {
             FRLogger.debug(
                 "Pass #"
                     + passNo
                     + ": Failed to route "
-                    + currItem.getClass().getSimpleName()
+                    + currentItem.getClass().getSimpleName()
                     + " on net '"
                     + netName
                     + "' ("
@@ -451,17 +452,17 @@ public class BatchAutorouterThread extends StoppableThread {
       }
 
       // Get the current via costs based on auto-router settings
-      int currViaCosts;
+      int currentViaCosts;
       if (containsPlane) {
-        currViaCosts = settings.getPlaneViaCosts();
+        currentViaCosts = settings.getPlaneViaCosts();
       } else {
-        currViaCosts = settings.getViaCosts();
+        currentViaCosts = settings.getViaCosts();
       }
 
       // Get and calculate the auto-router settings based on the board and net we are
       // working on
       AutorouteControl autorouteControl =
-          new AutorouteControl(board, routeNetNo, settings, currViaCosts, traceCostArr);
+          new AutorouteControl(board, routeNetNo, settings, currentViaCosts, traceCostArr);
       autorouteControl.ripupAllowed = true;
       autorouteControl.ripupCosts = startRipupCosts * ripupPassNo;
       autorouteControl.removeUnconnectedVias = removeUnconnectedVias;
@@ -476,8 +477,8 @@ public class BatchAutorouterThread extends StoppableThread {
       Set<Item> routeStartSet;
       Set<Item> routeDestSet;
       if (containsPlane) {
-        for (Item currItem : connectedSet) {
-          if (currItem instanceof ConductionArea) {
+        for (Item currentItem : connectedSet) {
+          if (currentItem instanceof ConductionArea) {
             return new AutorouteAttemptResult(AutorouteAttemptState.CONNECTED_TO_PLANE);
           }
         }

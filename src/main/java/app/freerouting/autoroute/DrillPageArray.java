@@ -66,8 +66,8 @@ public class DrillPageArray {
    */
   public void invalidate(TileShape shape) {
     Collection<DrillPage> overlaps = overlappingPages(shape);
-    for (DrillPage currPage : overlaps) {
-      currPage.invalidate();
+    for (DrillPage currentPage : overlaps) {
+      currentPage.invalidate();
     }
   }
 
@@ -85,8 +85,8 @@ public class DrillPageArray {
 
     for (int j = minJ; j < maxJ; j++) {
       for (int i = minI; i < maxI; i++) {
-        DrillPage currPage = this.pageArr[j][i];
-        TileShape intersection = shape.intersection(currPage.shape);
+        DrillPage currentPage = this.pageArr[j][i];
+        TileShape intersection = shape.intersection(currentPage.shape);
         if (intersection.dimension() > 1) {
           result.add(this.pageArr[j][i]);
         }
@@ -98,9 +98,9 @@ public class DrillPageArray {
   /** Resets all drill pages for autorouting the next connection. */
   public void reset() {
     for (int j = 0; j < pageArr.length; j++) {
-      DrillPage[] currRow = pageArr[j];
-      for (int i = 0; i < currRow.length; i++) {
-        currRow[i].reset();
+      DrillPage[] currentRow = pageArr[j];
+      for (int i = 0; i < currentRow.length; i++) {
+        currentRow[i].reset();
       }
     }
   }
@@ -111,9 +111,9 @@ public class DrillPageArray {
       return;
     }
     for (int j = 0; j < pageArr.length; j++) {
-      DrillPage[] currRow = pageArr[j];
-      for (int i = 0; i < currRow.length; i++) {
-        currRow[i].emitDiagnostics(sink, intensity);
+      DrillPage[] currentRow = pageArr[j];
+      for (int i = 0; i < currentRow.length; i++) {
+        currentRow[i].emitDiagnostics(sink, intensity);
       }
     }
   }
