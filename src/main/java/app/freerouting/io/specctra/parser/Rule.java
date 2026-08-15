@@ -130,7 +130,7 @@ public abstract class Rule {
     scopeParameter.file.write(String.valueOf(traceWidth));
     scopeParameter.file.write(")");
     scopeParameter.file.endScope();
-    for (int i = 1; i < scopeParameter.board.layerStructure.arr.length; i++) {
+    for (int i = 1; i < scopeParameter.board.layerStructure.layers.length; i++) {
       if (netClass.getTraceHalfWidth(i) != defaultTraceHalfWidth) {
         writeLayerRule(netClass, i, scopeParameter);
       }
@@ -142,7 +142,7 @@ public abstract class Rule {
     scopeParameter.file.startScope();
     scopeParameter.file.write("layer_rule ");
 
-    Layer currentBoardLayer = scopeParameter.board.layerStructure.arr[layerIndex];
+    Layer currentBoardLayer = scopeParameter.board.layerStructure.layers[layerIndex];
 
     scopeParameter.file.write(currentBoardLayer.name);
     scopeParameter.file.startScope();

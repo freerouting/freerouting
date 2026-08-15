@@ -236,9 +236,9 @@ public class ShapeTraceEntries {
 
     Line[] pieceLines = new Line[edgeDiff + 3];
     // start with the intersecting line of the trace at the start entry.
-    pieceLines[0] = entries[0].trace.polyline().arr[entries[0].traceLineNo];
+    pieceLines[0] = entries[0].trace.polyline().lines[entries[0].traceLineNo];
     // end with the intersecting line of the trace at the end entry
-    pieceLines[pieceLines.length - 1] = entries[1].trace.polyline().arr[entries[1].traceLineNo];
+    pieceLines[pieceLines.length - 1] = entries[1].trace.polyline().lines[entries[1].traceLineNo];
     // fill the interior lines of pieceLines with the appropriate edge
     // lines of the offset shape
     int currentEdgeNo = entries[0].edgeIndex % edgeCount;
@@ -329,7 +329,7 @@ public class ShapeTraceEntries {
       FloatPoint entryApprox =
           trace
               .polyline()
-              .arr[entryTuple[0]]
+              .lines[entryTuple[0]]
               .intersectionApprox(offsetShape.borderLine(entryTuple[1]));
       insertEntryPoint(trace, entryTuple[0], entryTuple[1], entryApprox);
     }
@@ -407,7 +407,7 @@ public class ShapeTraceEntries {
               if (i == 0) {
                 traceLineSegmentNo = 0;
               } else {
-                traceLineSegmentNo = trace.polyline().arr.length - 1;
+                traceLineSegmentNo = trace.polyline().lines.length - 1;
               }
 
               if (projectionSide >= 0) {

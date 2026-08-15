@@ -14,8 +14,8 @@ import java.util.LinkedList;
 public abstract class TileShape extends PolylineShape implements ConvexShape, Serializable {
 
   /** Creates a Simplex as intersection of the half-planes defined by directed lines. */
-  public static TileShape getInstance(Line[] lineArr) {
-    Simplex result = Simplex.getInstance(lineArr);
+  public static TileShape getInstance(Line[] lines) {
+    Simplex result = Simplex.getInstance(lines);
     return result.simplify();
   }
 
@@ -24,12 +24,12 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
    * May work only for IntPoints.
    */
   public static TileShape getInstance(Point[] convexPolygon) {
-    Line[] lineArr = new Line[convexPolygon.length];
-    for (int j = 0; j < lineArr.length - 1; j++) {
-      lineArr[j] = new Line(convexPolygon[j], convexPolygon[j + 1]);
+    Line[] lines = new Line[convexPolygon.length];
+    for (int j = 0; j < lines.length - 1; j++) {
+      lines[j] = new Line(convexPolygon[j], convexPolygon[j + 1]);
     }
-    lineArr[lineArr.length - 1] = new Line(convexPolygon[lineArr.length - 1], convexPolygon[0]);
-    return getInstance(lineArr);
+    lines[lines.length - 1] = new Line(convexPolygon[lines.length - 1], convexPolygon[0]);
+    return getInstance(lines);
   }
 
   /** Creates a half-plane from a directed line. */
@@ -779,7 +779,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     int currentIntersectionNo = 0;
     int[] currentIntersectionTuple = intersectionNo[currentIntersectionNo];
     Point firstIntersection =
-        polyline.arr[currentIntersectionTuple[0]].intersection(
+        polyline.lines[currentIntersectionTuple[0]].intersection(
             this.borderLine(currentIntersectionTuple[1]));
     if (!firstCornerIsInside) {
       // calculate outside piece at start
@@ -787,7 +787,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
         // otherwise skip 1 point outside polyline at the start
         int currentPolylineIntersectionNo = currentIntersectionTuple[0];
         Line[] currentLines = new Line[currentPolylineIntersectionNo + 2];
-        System.arraycopy(polyline.arr, 0, currentLines, 0, currentPolylineIntersectionNo + 1);
+        System.arraycopy(polyline.lines, 0, currentLines, 0, currentPolylineIntersectionNo + 1);
         // close the polyline piece with the intersected edge line.
         currentLines[currentPolylineIntersectionNo + 1] =
             this.borderLine(currentIntersectionTuple[1]);
@@ -823,7 +823,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
             new Line[nextIntersectionNoOfPolyline - currentIntersectionNoOfPolyline + 3];
         currentLines[0] = this.borderLine(currentIntersectionTuple[1]);
         System.arraycopy(
-            polyline.arr,
+            polyline.lines,
             currentIntersectionNoOfPolyline,
             currentLines,
             1,
@@ -840,10 +840,10 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       // calculate outside piece at end
       currentIntersectionTuple = intersectionNo[currentIntersectionNo];
       int currentPolylineIntersectionNo = currentIntersectionTuple[0];
-      Line[] currentLines = new Line[polyline.arr.length - currentPolylineIntersectionNo + 1];
+      Line[] currentLines = new Line[polyline.lines.length - currentPolylineIntersectionNo + 1];
       currentLines[0] = this.borderLine(currentIntersectionTuple[1]);
       System.arraycopy(
-          polyline.arr, currentPolylineIntersectionNo, currentLines, 1, currentLines.length - 1);
+          polyline.lines, currentPolylineIntersectionNo, currentLines, 1, currentLines.length - 1);
       Polyline currentPiece = new Polyline(currentLines);
       if (!currentPiece.isEmpty()) {
         pieces.add(currentPiece);
@@ -864,11 +864,11 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
    * the number of the edge line of the simplex, which is crossed there.
    */
   public int[][] entrancePoints(Polyline polyline) {
-    int[][] result = new int[2 * polyline.arr.length][2];
+    int[][] result = new int[2 * polyline.lines.length][2];
     int intersectionCount = 0;
     int prevIntersectionLineNo = -1;
     int prevIntersectionEdgeNo = -1;
-    for (int lineNo = 1; lineNo < polyline.arr.length - 1; lineNo++) {
+    for (int lineNo = 1; lineNo < polyline.lines.length - 1; lineNo++) {
       LineSegment currentLineSeg = new LineSegment(polyline, lineNo);
       int[] currentIntersections = currentLineSeg.borderIntersections(this);
       for (int i = 0; i < currentIntersections.length; i++) {

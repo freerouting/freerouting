@@ -5,22 +5,22 @@ import java.io.Serializable;
 /** Stores the default clearance class for each item type. */
 public class DefaultItemClearanceClasses implements Serializable {
 
-  private final int[] arr;
+  private final int[] clearanceClasses;
 
   /** Creates a new instance of {@code DefaultItemClearanceClasses}. */
   public DefaultItemClearanceClasses() {
-    this.arr = new int[ItemClass.values().length];
+    this.clearanceClasses = new int[ItemClass.values().length];
     this.setAll(1);
   }
 
   /** Creates a copy of the given default clearance classes. */
   public DefaultItemClearanceClasses(DefaultItemClearanceClasses classes) {
-    this.arr = classes.arr.clone();
+    this.clearanceClasses = classes.clearanceClasses.clone();
   }
 
   /** Returns the number of the default clearance class for the input item class. */
   public int get(ItemClass itemClass) {
-    return this.arr[itemClass.ordinal()];
+    return this.clearanceClasses[itemClass.ordinal()];
   }
 
   /**
@@ -28,13 +28,13 @@ public class DefaultItemClearanceClasses implements Serializable {
    * to {@code index}.
    */
   public void set(ItemClass itemClass, int index) {
-    this.arr[itemClass.ordinal()] = index;
+    this.clearanceClasses[itemClass.ordinal()] = index;
   }
 
   /** Sets the indices of all default item clearance classes to {@code index}. */
   public void setAll(int index) {
-    for (int i = 1; i < this.arr.length; i++) {
-      arr[i] = index;
+    for (int i = 1; i < this.clearanceClasses.length; i++) {
+      this.clearanceClasses[i] = index;
     }
   }
 

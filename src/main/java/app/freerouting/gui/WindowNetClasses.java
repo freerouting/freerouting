@@ -266,12 +266,12 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     List<Integer> allSignalLayers = new ArrayList<>();
     List<String> activeLayerNames = new ArrayList<>();
 
-    for (int i = 0; i < ls.arr.length; i++) {
-      if (ls.arr[i].isSignal) {
+    for (int i = 0; i < ls.layers.length; i++) {
+      if (ls.layers[i].isSignal) {
         allSignalLayers.add(i);
         if (netClass.isActiveRoutingLayer(i)) {
           activeSignalLayers.add(i);
-          activeLayerNames.add(ls.arr[i].name);
+          activeLayerNames.add(ls.layers[i].name);
         }
       }
     }
@@ -309,8 +309,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     Integer commonHalfWidth = null;
     boolean multiple = false;
 
-    for (int i = 0; i < ls.arr.length; i++) {
-      if (ls.arr[i].isSignal && netClass.isActiveRoutingLayer(i)) {
+    for (int i = 0; i < ls.layers.length; i++) {
+      if (ls.layers[i].isSignal && netClass.isActiveRoutingLayer(i)) {
         int width = netClass.getTraceHalfWidth(i);
         if (commonHalfWidth == null) {
           commonHalfWidth = width;
@@ -804,12 +804,12 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
       JPanel checkGridPanel = new JPanel(new GridLayout(0, 2, 15, 8));
       checkGridPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-      checkboxes = new JCheckBox[ls.arr.length];
+      checkboxes = new JCheckBox[ls.layers.length];
 
-      for (int i = 0; i < ls.arr.length; i++) {
-        if (ls.arr[i].isSignal) {
+      for (int i = 0; i < ls.layers.length; i++) {
+        if (ls.layers[i].isSignal) {
           allSignalLayers.add(i);
-          checkboxes[i] = new JCheckBox(ls.arr[i].name);
+          checkboxes[i] = new JCheckBox(ls.layers[i].name);
           if (netClass.isActiveRoutingLayer(i)) {
             checkboxes[i].setSelected(true);
           }

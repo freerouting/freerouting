@@ -339,7 +339,7 @@ public final class SortedRoomNeighbours {
     if (currentItem instanceof PolylineTrace currentTrace) {
       int roomIndex = room.getIndexInItem();
       if (roomIndex == 0 || roomIndex == currentTrace.tileShapeCount() - 1) {
-        Line currentTraceLine = currentTrace.polyline().arr[roomIndex + 1];
+        Line currentTraceLine = currentTrace.polyline().lines[roomIndex + 1];
         return currentTraceLine.isParallel(doorLine);
       }
     }

@@ -190,7 +190,7 @@ public class RouteState extends InteractiveState {
       // prefer signal layers
       if (pickedItem == null) {
         for (int i = 1; i < layerCount - 1; i++) {
-          if (routingBoard.layerStructure.arr[i].isSignal) {
+          if (routingBoard.layerStructure.layers[i].isSignal) {
             pickedItem = pickRoutingItem(location, i, hdlg);
             if (pickedItem != null) {
               break;
@@ -200,7 +200,7 @@ public class RouteState extends InteractiveState {
       }
       if (pickedItem == null) {
         for (int i = 1; i < layerCount - 1; i++) {
-          if (!routingBoard.layerStructure.arr[i].isSignal) {
+          if (!routingBoard.layerStructure.layers[i].isSignal) {
             pickedItem = pickRoutingItem(location, i, hdlg);
             if (pickedItem != null) {
               break;
@@ -274,9 +274,9 @@ public class RouteState extends InteractiveState {
       int currentLayerIndex = hdlg.getWorkspaceSettings().getLayer();
       do {
         ++currentLayerIndex;
-      } while (currentLayerIndex < layerStructure.arr.length
-          && !layerStructure.arr[currentLayerIndex].isSignal);
-      if (currentLayerIndex < layerStructure.arr.length) {
+      } while (currentLayerIndex < layerStructure.layers.length
+          && !layerStructure.layers[currentLayerIndex].isSignal);
+      if (currentLayerIndex < layerStructure.layers.length) {
         changeLayerAction(currentLayerIndex);
       }
     } else if (keyChar == '-') {
@@ -285,7 +285,7 @@ public class RouteState extends InteractiveState {
       int currentLayerIndex = hdlg.getWorkspaceSettings().getLayer();
       do {
         --currentLayerIndex;
-      } while (currentLayerIndex >= 0 && !layerStructure.arr[currentLayerIndex].isSignal);
+      } while (currentLayerIndex >= 0 && !layerStructure.layers[currentLayerIndex].isSignal);
       if (currentLayerIndex >= 0) {
         changeLayerAction(currentLayerIndex);
       }
@@ -303,7 +303,8 @@ public class RouteState extends InteractiveState {
    */
   public InteractiveState addCorner(FloatPoint location) {
     boolean routeCompleted = route.nextCorner(location);
-    String layerString = hdlg.getRoutingBoard().layerStructure.arr[route.nearestTargetLayer()].name;
+    String layerString =
+        hdlg.getRoutingBoard().layerStructure.layers[route.nearestTargetLayer()].name;
     hdlg.screenMessages.setTargetLayer(layerString);
     if (routeCompleted) {
       if (this.observersActivated) {
@@ -360,7 +361,7 @@ public class RouteState extends InteractiveState {
     boolean result = true;
     if (newLayer >= 0 && newLayer < hdlg.getRoutingBoard().getLayerCount()) {
       if (this.route != null && !this.route.isLayerActive(newLayer)) {
-        String layerName = hdlg.getRoutingBoard().layerStructure.arr[newLayer].name;
+        String layerName = hdlg.getRoutingBoard().layerStructure.layers[newLayer].name;
         hdlg.screenMessages.setStatusMessage(
             tm.getText("layer_not_changed_inactive_net_message", layerName));
       }
@@ -408,7 +409,7 @@ public class RouteState extends InteractiveState {
           }
         } else {
           hdlg.setLayer(newLayer);
-          String layerName = hdlg.getRoutingBoard().layerStructure.arr[newLayer].name;
+          String layerName = hdlg.getRoutingBoard().layerStructure.layers[newLayer].name;
           hdlg.screenMessages.setStatusMessage(tm.getText("layer_changed_to_message", layerName));
           // make the current situation restorable by undo
           hdlg.getRoutingBoard().generateSnapshot();
@@ -419,7 +420,7 @@ public class RouteState extends InteractiveState {
           String layerName =
               hdlg.getRoutingBoard()
                   .layerStructure
-                  .arr[hdlg.getRoutingBoard().getShoveFailingLayer()]
+                  .layers[hdlg.getRoutingBoard().getShoveFailingLayer()]
                   .name;
           hdlg.screenMessages.setStatusMessage(
               tm.getText("layer_not_changed_obstacle_message", layerName));

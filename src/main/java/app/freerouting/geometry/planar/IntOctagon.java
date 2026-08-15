@@ -617,11 +617,11 @@ public class IntOctagon extends RegularTileShape implements Serializable {
       return Simplex.EMPTY;
     }
     if (precalculatedToSimplex == null) {
-      Line[] lineArr = new Line[8];
+      Line[] lines = new Line[8];
       for (int i = 0; i < 8; i++) {
-        lineArr[i] = borderLine(i);
+        lines[i] = borderLine(i);
       }
-      Simplex currentSimplex = new Simplex(lineArr);
+      Simplex currentSimplex = new Simplex(lines);
       precalculatedToSimplex = currentSimplex.removeRedundantLines();
     }
     return precalculatedToSimplex;

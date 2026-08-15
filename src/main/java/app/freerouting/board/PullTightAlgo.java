@@ -104,10 +104,10 @@ public abstract class PullTightAlgo {
 
   /**
    * Function for optimizing the route in an internal marked area. If clipShape != null, the
-   * optimizing area is restricted to clipShape. traceCostArr is used for optimizing vias and may be
+   * optimizing area is restricted to clipShape. traceCosts is used for optimizing vias and may be
    * null.
    */
-  void optChangedArea(ExpansionCostFactor[] traceCostArr) {
+  void optChangedArea(ExpansionCostFactor[] traceCosts) {
     if (board.changedArea == null) {
       return;
     }
@@ -146,9 +146,9 @@ public abstract class PullTightAlgo {
               somethingChanged = true;
               break; // because items may be removed
             }
-          } else if (currentObject instanceof Via via && traceCostArr != null) {
+          } else if (currentObject instanceof Via via && traceCosts != null) {
             if (ViaOptimizer.optViaLocation(
-                this.board, via, traceCostArr, this.minTranslateDist, 10)) {
+                this.board, via, traceCosts, this.minTranslateDist, 10)) {
               somethingChanged = true;
             }
           }
@@ -201,16 +201,16 @@ public abstract class PullTightAlgo {
 
   /** Tries to shorten polyline by relocating its lines. */
   Polyline repositionLines(Polyline polyline) {
-    if (polyline.arr.length < 5) {
+    if (polyline.lines.length < 5) {
       return polyline;
     }
-    for (int i = 2; i < polyline.arr.length - 2; i++) {
-      Line newLine = repositionLine(polyline.arr, i);
+    for (int i = 2; i < polyline.lines.length - 2; i++) {
+      Line newLine = repositionLine(polyline.lines, i);
       if (newLine != null) {
-        Line[] lineArr = new Line[polyline.arr.length];
-        System.arraycopy(polyline.arr, 0, lineArr, 0, lineArr.length);
-        lineArr[i] = newLine;
-        Polyline result = new Polyline(lineArr);
+        Line[] lines = new Line[polyline.lines.length];
+        System.arraycopy(polyline.lines, 0, lines, 0, lines.length);
+        lines[i] = newLine;
+        Polyline result = new Polyline(lines);
         return skipSegmentsOfLength0(result);
       }
     }
@@ -218,24 +218,24 @@ public abstract class PullTightAlgo {
   }
 
   /**
-   * Tries to reposition the line with index no to make the polyline consisting of lineArr shorter.
+   * Tries to reposition the line with index no to make the polyline consisting of lines shorter.
    */
-  protected Line repositionLine(Line[] lineArr, int no) {
-    if (lineArr.length - no < 3) {
+  protected Line repositionLine(Line[] lines, int no) {
+    if (lines.length - no < 3) {
       return null;
     }
     if (currentClipShape != null) {
       // check, that the corners of the line to translate are inside the clip shape
       for (int i = -1; i < 1; i++) {
-        Point currentCorner = lineArr[no + i].intersection(lineArr[no + i + 1]);
+        Point currentCorner = lines[no + i].intersection(lines[no + i + 1]);
         if (currentClipShape.isOutside(currentCorner)) {
           return null;
         }
       }
     }
-    Line translateLine = lineArr[no];
-    Point prevCorner = lineArr[no - 2].intersection(lineArr[no - 1]);
-    Point nextCorner = lineArr[no + 1].intersection(lineArr[no + 2]);
+    Line translateLine = lines[no];
+    Point prevCorner = lines[no - 2].intersection(lines[no - 1]);
+    Point nextCorner = lines[no + 1].intersection(lines[no + 2]);
     double prevDist = translateLine.signedDistance(prevCorner.toFloat());
     double nextDist = translateLine.signedDistance(nextCorner.toFloat());
     if (Signum.of(prevDist) != Signum.of(nextDist)) {
@@ -257,8 +257,8 @@ public abstract class PullTightAlgo {
     int sign = Signum.asInt(maxTranslateDist);
     Line newLine = null;
     Line[] checkLines = new Line[3];
-    checkLines[0] = lineArr[no - 1];
-    checkLines[2] = lineArr[no + 1];
+    checkLines[0] = lines[no - 1];
+    checkLines[2] = lines[no + 1];
     boolean firstTime = true;
     while (firstTime || Math.abs(deltaDist) > minTranslateDist) {
       if (firstTime && nearestPoint instanceof IntPoint) {
@@ -285,7 +285,7 @@ public abstract class PullTightAlgo {
       Polyline tmp = new Polyline(checkLines);
 
       boolean checkOk = false;
-      if (tmp.arr.length == 3) {
+      if (tmp.lines.length == 3) {
         TileShape shapeToCheck = tmp.offsetShape(currentHalfWidth, 0);
         checkOk =
             board.checkTraceShape(
@@ -308,8 +308,8 @@ public abstract class PullTightAlgo {
       // mark the changed area
       board.changedArea.join(checkLines[0].intersectionApprox(newLine), currentLayer);
       board.changedArea.join(checkLines[2].intersectionApprox(newLine), currentLayer);
-      board.changedArea.join(lineArr[no - 1].intersectionApprox(lineArr[no]), currentLayer);
-      board.changedArea.join(lineArr[no].intersectionApprox(lineArr[no + 1]), currentLayer);
+      board.changedArea.join(lines[no - 1].intersectionApprox(lines[no]), currentLayer);
+      board.changedArea.join(lines[no].intersectionApprox(lines[no + 1]), currentLayer);
     }
     return newLine;
   }
@@ -322,9 +322,9 @@ public abstract class PullTightAlgo {
   Polyline skipSegmentsOfLength0(Polyline polyline) {
     boolean polylineChanged = false;
     Polyline currentPolyline = polyline;
-    for (int i = 1; i < currentPolyline.arr.length - 1; i++) {
+    for (int i = 1; i < currentPolyline.lines.length - 1; i++) {
       boolean trySkip;
-      if (i == 1 || i == currentPolyline.arr.length - 2) {
+      if (i == 1 || i == currentPolyline.lines.length - 2) {
         // the position of the first corner and the last corner
         //  must be retained exactly
         Point prevCorner = currentPolyline.corner(i - 1);
@@ -339,12 +339,12 @@ public abstract class PullTightAlgo {
       if (trySkip) {
         // check, if skipping the line of length 0 does not
         // result in a clearance violation
-        Line[] currentLines = new Line[currentPolyline.arr.length - 1];
-        System.arraycopy(currentPolyline.arr, 0, currentLines, 0, i);
-        System.arraycopy(currentPolyline.arr, i + 1, currentLines, i, currentLines.length - i);
+        Line[] currentLines = new Line[currentPolyline.lines.length - 1];
+        System.arraycopy(currentPolyline.lines, 0, currentLines, 0, i);
+        System.arraycopy(currentPolyline.lines, i + 1, currentLines, i, currentLines.length - i);
         Polyline tmp = new Polyline(currentLines);
-        boolean checkOk = tmp.arr.length == currentLines.length;
-        if (checkOk && !currentPolyline.arr[i].isMultipleOf45Degree()) {
+        boolean checkOk = tmp.lines.length == currentLines.length;
+        if (checkOk && !currentPolyline.lines[i].isMultipleOf45Degree()) {
           // no check necessary for skipping 45 degree lines, because the check is
           // performance critical and the line shapes
           // are intersected with the bounding octagon anyway.
@@ -354,7 +354,7 @@ public abstract class PullTightAlgo {
                 board.checkTraceShape(
                     shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
           }
-          if (checkOk && (i < currentPolyline.arr.length - 2)) {
+          if (checkOk && (i < currentPolyline.lines.length - 2)) {
             TileShape shapeToCheck = tmp.offsetShape(currentHalfWidth, i - 1);
             checkOk =
                 board.checkTraceShape(

@@ -25,14 +25,14 @@ public class Polygon extends Shape {
   @Override
   public app.freerouting.geometry.planar.Shape transformToBoard(
       CoordinateTransform coordinateTransform) {
-    IntPoint[] cornerArr = new IntPoint[coor.length / 2];
+    IntPoint[] corners = new IntPoint[coor.length / 2];
     double[] currentPoint = new double[2];
-    for (int i = 0; i < cornerArr.length; i++) {
+    for (int i = 0; i < corners.length; i++) {
       currentPoint[0] = coor[2 * i];
       currentPoint[1] = coor[2 * i + 1];
-      cornerArr[i] = coordinateTransform.dsnToBoard(currentPoint).round();
+      corners[i] = coordinateTransform.dsnToBoard(currentPoint).round();
     }
-    return new PolygonShape(cornerArr);
+    return new PolygonShape(corners);
   }
 
   @Override
@@ -41,13 +41,13 @@ public class Polygon extends Shape {
     if (coor.length < 2) {
       return Simplex.EMPTY;
     }
-    IntPoint[] cornerArr = new IntPoint[coor.length / 2];
-    for (int i = 0; i < cornerArr.length; i++) {
+    IntPoint[] corners = new IntPoint[coor.length / 2];
+    for (int i = 0; i < corners.length; i++) {
       int currentX = (int) Math.round(coordinateTransform.dsnToBoard(coor[2 * i]));
       int currentY = (int) Math.round(coordinateTransform.dsnToBoard(coor[2 * i + 1]));
-      cornerArr[i] = new IntPoint(currentX, currentY);
+      corners[i] = new IntPoint(currentX, currentY);
     }
-    return new PolygonShape(cornerArr);
+    return new PolygonShape(corners);
   }
 
   @Override

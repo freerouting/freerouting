@@ -59,7 +59,7 @@ public final class KiCadJsonWriter {
 
     // 1. Layers
     for (int i = 0; i < board.getLayerCount(); i++) {
-      app.freerouting.board.Layer layer = board.layerStructure.arr[i];
+      app.freerouting.board.Layer layer = board.layerStructure.layers[i];
       KiCadBoardJson.LayerJson layerJson = new KiCadBoardJson.LayerJson();
       layerJson.index = i;
       layerJson.name = layer.name;
@@ -154,7 +154,7 @@ public final class KiCadJsonWriter {
             traceJson.netName = net.name;
           }
         }
-        for (Point pt : polyTrace.polyline().cornerArr()) {
+        for (Point pt : polyTrace.polyline().corners()) {
           traceJson.points.add(
               new KiCadBoardJson.Point2D(
                   pt.toFloat().x / scaleFactor, -pt.toFloat().y / scaleFactor));

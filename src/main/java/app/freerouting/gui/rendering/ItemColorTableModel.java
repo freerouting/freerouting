@@ -17,16 +17,16 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
   // Create the default color table for the layers
   /** ItemColorTableModel. */
   public ItemColorTableModel(LayerStructure layerStructure, Locale locale) {
-    super(layerStructure.arr.length, locale);
+    super(layerStructure.layers.length, locale);
 
-    int rowCount = layerStructure.arr.length;
+    int rowCount = layerStructure.layers.length;
     final int itemTypeCount = ColumnNames.values().length - 1;
     int signalLayerNo = 0;
     for (int layer = 0; layer < rowCount; layer++) {
-      boolean isSignalLayer = layerStructure.arr[layer].isSignal;
+      boolean isSignalLayer = layerStructure.layers[layer].isSignal;
       data[layer] = new Object[itemTypeCount + 1];
       Object[] currentRow = data[layer];
-      currentRow[0] = layerStructure.arr[layer].name;
+      currentRow[0] = layerStructure.layers[layer].name;
       if (layer == 0) {
         // F.Cu
         currentRow[ColumnNames.PINS.ordinal()] = new Color(227, 183, 46);

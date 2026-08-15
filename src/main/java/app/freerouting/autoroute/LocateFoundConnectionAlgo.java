@@ -450,15 +450,15 @@ public abstract class LocateFoundConnectionAlgo {
     }
 
     // Construct the result item
-    IntPoint[] cornerArr = new IntPoint[roundedCornerList.size()];
+    IntPoint[] corners = new IntPoint[roundedCornerList.size()];
     Iterator<IntPoint> it2 = roundedCornerList.iterator();
-    for (int i = 0; i < cornerArr.length; i++) {
-      cornerArr[i] = it2.next();
+    for (int i = 0; i < corners.length; i++) {
+      corners[i] = it2.next();
     }
-    ResultItem result = new ResultItem(cornerArr, this.currentTraceLayer);
+    ResultItem result = new ResultItem(corners, this.currentTraceLayer);
     if (this.ctrl.netNumber == 33 || this.ctrl.netNumber == 66 || this.ctrl.netNumber == 67) {
-      IntPoint first = cornerArr.length > 0 ? cornerArr[0] : null;
-      IntPoint last = cornerArr.length > 0 ? cornerArr[cornerArr.length - 1] : null;
+      IntPoint first = corners.length > 0 ? corners[0] : null;
+      IntPoint last = corners.length > 0 ? corners[corners.length - 1] : null;
       FRLogger.trace(
           "compare_trace_next_trace_raw net="
               + this.ctrl.netNumber
@@ -467,7 +467,7 @@ public abstract class LocateFoundConnectionAlgo {
               + ", nextLayer="
               + nextLayer
               + ", cornerCount="
-              + cornerArr.length
+              + corners.length
               + ", first="
               + first
               + ", last="

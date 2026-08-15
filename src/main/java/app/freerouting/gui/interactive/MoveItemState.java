@@ -367,7 +367,7 @@ public final class MoveItemState extends InteractiveState {
         }
       } else if (currentItem.firstLayer() == currentItem.lastLayer()) {
         int newLayerNo = hdlg.getLayerCount() - currentItem.firstLayer() - 1;
-        if (!layerStructure.arr[newLayerNo].isSignal) {
+        if (!layerStructure.layers[newLayerNo].isSignal) {
           placementSideChangable = false;
           break;
         }

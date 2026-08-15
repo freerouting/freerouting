@@ -45,10 +45,10 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
     this.name = name;
     this.boardLayerStructure = layerStructure;
     this.clearanceMatrix = clearanceMatrix;
-    this.traceHalfWidthArr = new int[layerStructure.arr.length];
-    this.activeRoutingLayerArr = new boolean[layerStructure.arr.length];
-    for (int i = 0; i < layerStructure.arr.length; i++) {
-      this.activeRoutingLayerArr[i] = layerStructure.arr[i].isSignal;
+    this.traceHalfWidthArr = new int[layerStructure.layers.length];
+    this.activeRoutingLayerArr = new boolean[layerStructure.layers.length];
+    for (int i = 0; i < layerStructure.layers.length; i++) {
+      this.activeRoutingLayerArr[i] = layerStructure.layers[i].isSignal;
     }
     this.isIgnoredByAutorouter = ignoredByAutorouter;
   }
@@ -234,7 +234,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
         window.append(tm.getText("traceWidth") + " ");
         window.append(2 * traceHalfWidthArr[i]);
         window.append(" " + tm.getText("on_layer") + " ");
-        window.append(this.boardLayerStructure.arr[i].name);
+        window.append(this.boardLayerStructure.layers[i].name);
       }
     } else {
       window.append(", " + tm.getText("traceWidth") + " ");
@@ -247,7 +247,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   public boolean traceWidthIsLayerDependent() {
     int compareValue = traceHalfWidthArr[0];
     for (int i = 1; i < traceHalfWidthArr.length; i++) {
-      if (this.boardLayerStructure.arr[i].isSignal) {
+      if (this.boardLayerStructure.layers[i].isSignal) {
         if (traceHalfWidthArr[i] != compareValue) {
           return true;
         }
@@ -263,7 +263,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
       return false;
     }
     int firstInnerLayerNo = 1;
-    while (!this.boardLayerStructure.arr[firstInnerLayerNo].isSignal) {
+    while (!this.boardLayerStructure.layers[firstInnerLayerNo].isSignal) {
       ++firstInnerLayerNo;
     }
     if (firstInnerLayerNo >= traceHalfWidthArr.length - 1) {
@@ -271,7 +271,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
     }
     int compareWidth = traceHalfWidthArr[firstInnerLayerNo];
     for (int i = firstInnerLayerNo + 1; i < traceHalfWidthArr.length - 1; i++) {
-      if (this.boardLayerStructure.arr[i].isSignal) {
+      if (this.boardLayerStructure.layers[i].isSignal) {
         if (traceHalfWidthArr[i] != compareWidth) {
           return true;
         }

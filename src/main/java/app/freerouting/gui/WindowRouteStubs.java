@@ -138,7 +138,10 @@ public class WindowRouteStubs extends CleanupWindows {
         itemString = tm.getText("via");
       }
       String layerName =
-          boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure.arr[layerIndex].name;
+          boardFrame.boardPanel.boardHandling.getRoutingBoard()
+              .layerStructure
+              .layers[layerIndex]
+              .name;
       return tm.getText(
           "route_stub_row_message",
           itemString,

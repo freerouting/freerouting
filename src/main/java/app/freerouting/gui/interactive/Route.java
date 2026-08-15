@@ -143,7 +143,7 @@ public class Route {
     IntPoint currentCorner = corner.round();
     if (!(board.contains(prevCorner)
         && board.contains(currentCorner)
-        && board.layerStructure.arr[this.layer].isSignal)) {
+        && board.layerStructure.layers[this.layer].isSignal)) {
       return false;
     }
 

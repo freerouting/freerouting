@@ -600,17 +600,17 @@ public class IntBox extends RegularTileShape implements Serializable {
   /** Returns an object of class Simplex defining the same shape. */
   @Override
   public Simplex toSimplex() {
-    Line[] lineArr;
+    Line[] lines;
     if (isEmpty()) {
-      lineArr = new Line[0];
+      lines = new Line[0];
     } else {
-      lineArr = new Line[4];
-      lineArr[0] = Line.getInstance(ll, IntDirection.RIGHT);
-      lineArr[1] = Line.getInstance(ur, IntDirection.UP);
-      lineArr[2] = Line.getInstance(ur, IntDirection.LEFT);
-      lineArr[3] = Line.getInstance(ll, IntDirection.DOWN);
+      lines = new Line[4];
+      lines[0] = Line.getInstance(ll, IntDirection.RIGHT);
+      lines[1] = Line.getInstance(ur, IntDirection.UP);
+      lines[2] = Line.getInstance(ur, IntDirection.LEFT);
+      lines[3] = Line.getInstance(ll, IntDirection.DOWN);
     }
-    return new Simplex(lineArr);
+    return new Simplex(lines);
   }
 
   @Override

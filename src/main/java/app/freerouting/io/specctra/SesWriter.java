@@ -297,7 +297,7 @@ public final class SesWriter {
       if (currentBoardShape == null) {
         continue;
       }
-      app.freerouting.board.Layer boardLayer = board.layerStructure.arr[i];
+      app.freerouting.board.Layer boardLayer = board.layerStructure.layers[i];
       Layer currentLayer = new Layer(boardLayer.name, i, boardLayer.isSignal);
       Shape currentShape = coordinateTransform.boardToDsnRel(currentBoardShape, currentLayer);
       file.startScope();
@@ -343,7 +343,7 @@ public final class SesWriter {
       boolean isVia = currentItem instanceof Via;
       boolean isConductionArea =
           currentItem instanceof ConductionArea
-              && board.layerStructure.arr[currentItem.firstLayer()].isSignal;
+              && board.layerStructure.layers[currentItem.firstLayer()].isSignal;
       if (!headerWritten && (isWire || isVia || isConductionArea)) {
         file.startScope();
         file.write("net ");
@@ -377,17 +377,17 @@ public final class SesWriter {
       IndentFileWriter file)
       throws IOException {
     int layerIndex = wire.getLayer();
-    final app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerIndex];
+    final app.freerouting.board.Layer boardLayer = board.layerStructure.layers[layerIndex];
     final int wireWidth = (int) Math.round(coordinateTransform.boardToDsn(2 * wire.getHalfWidth()));
     file.startScope();
     file.write("wire");
-    Point[] cornerArr = wire.polyline().cornerArr();
-    int[] coors = new int[2 * cornerArr.length];
+    Point[] corners = wire.polyline().corners();
+    int[] coors = new int[2 * corners.length];
     int cornerIndex = 0;
     int[] prevCoors = null;
-    for (int i = 0; i < cornerArr.length; i++) {
-      FloatPoint cornerPoint = cornerArr[i].toFloat();
-      if (i == 0 || i == cornerArr.length - 1) {
+    for (int i = 0; i < corners.length; i++) {
+      FloatPoint cornerPoint = corners[i].toFloat();
+      if (i == 0 || i == corners.length - 1) {
         FloatPoint snapped = snappedEndpoint(wire, i == 0);
         if (snapped != null) {
           cornerPoint = snapped;
@@ -524,7 +524,7 @@ public final class SesWriter {
     }
     Area currentArea = conductionArea.getArea();
     int layerIndex = conductionArea.getLayer();
-    app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerIndex];
+    app.freerouting.board.Layer boardLayer = board.layerStructure.layers[layerIndex];
     final Layer conductionLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;

@@ -34,12 +34,12 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
     int cornerCount = cornerList.size();
     boolean constructionSucceeded = cornerCount > 2;
     if (constructionSucceeded) {
-      IntPoint[] cornerArr = new IntPoint[cornerCount];
+      IntPoint[] corners = new IntPoint[cornerCount];
       Iterator<IntPoint> it = cornerList.iterator();
       for (int i = 0; i < cornerCount; i++) {
-        cornerArr[i] = it.next();
+        corners[i] = it.next();
       }
-      PolygonShape obstacleShape = new PolygonShape(cornerArr);
+      PolygonShape obstacleShape = new PolygonShape(corners);
       int clClass = BoardRules.clearanceClassNone();
       if (obstacleShape.splitToConvex() == null) {
         // shape is invalid, maybe it has selfintersections

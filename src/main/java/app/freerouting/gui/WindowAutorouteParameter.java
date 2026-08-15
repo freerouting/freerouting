@@ -120,7 +120,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     // create the layer list
     LayerStructure layerStructure = boardHandling.getRoutingBoard().layerStructure;
-    int layerCount = layerStructure.arr.length;
+    int layerCount = layerStructure.layers.length;
 
     // every layer is a row in the gridbag and has 3 columns: name, active,
     // preferred direction
@@ -130,7 +130,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     for (int i = 0; i < layerCount; i++) {
       gridbagConstraints.gridwidth = 3;
-      Layer currentLayer = layerStructure.arr[i];
+      Layer currentLayer = layerStructure.layers[i];
 
       // set the name
       layerNameArr[i] = new JLabel();

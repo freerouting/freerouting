@@ -548,6 +548,21 @@ Branch: `refactor/naming-phase-9-parameters`
 
 ---
 
+### Phase 10 — Array naming modernization (*Arr -> plural nouns)
+
+Branch: `refactor/naming-phase-10-arrays`
+
+**Progress checklist**
+
+- [x] Core library & rules fields (`LayerStructure.layers`, `Nets.nets`, `Package.pins`, `Padstacks.padstacks`).
+- [x] Geometry fields & methods (`Polyline.lines`, `Simplex.lines`, `Polygon.corners`).
+- [x] Autoroute & settings array fields (`AutorouteControl.viaRadii`, `traceCosts`).
+- [x] Specctra parser array fields (`pins`, `keepouts`, `classNames`).
+- [x] Local array variables across `/src/` (`lines`, `points`, `corners`, `shapes`, `items`).
+- [x] Run full test suite (`./gradlew check`) and quality gates.
+
+---
+
 ## Explicitly out of this campaign
 
 `RouterSettings`, `BasicBoard`, `Item`, `ShapeSearchTree`,

@@ -29,16 +29,16 @@ public class LineSegment implements Serializable {
 
   /** Creates the no-th line segment of polyline for no between 1 and polyline.lineCount - 2. */
   public LineSegment(Polyline polyline, int no) {
-    if (no <= 0 || no >= polyline.arr.length - 1) {
+    if (no <= 0 || no >= polyline.lines.length - 1) {
       FRLogger.warn("LineSegment from Polyline: no out of range");
       start = null;
       middle = null;
       end = null;
       return;
     }
-    start = polyline.arr[no - 1];
-    middle = polyline.arr[no];
-    end = polyline.arr[no + 1];
+    start = polyline.lines[no - 1];
+    middle = polyline.lines[no];
+    end = polyline.lines[no + 1];
   }
 
   /** Creates the no-th line segment of shape for no between 0 and shape.lineCount - 1. */
@@ -136,20 +136,20 @@ public class LineSegment implements Serializable {
    * segment.
    */
   public Simplex toSimplex() {
-    Line[] lineArr = new Line[4];
+    Line[] lines = new Line[4];
     if (this.endPoint().sideOf(this.start) == Side.ON_THE_RIGHT) {
-      lineArr[0] = this.start.opposite();
+      lines[0] = this.start.opposite();
     } else {
-      lineArr[0] = this.start;
+      lines[0] = this.start;
     }
-    lineArr[1] = this.middle;
-    lineArr[2] = this.middle.opposite();
+    lines[1] = this.middle;
+    lines[2] = this.middle.opposite();
     if (this.startPoint().sideOf(this.end) == Side.ON_THE_RIGHT) {
-      lineArr[3] = this.end.opposite();
+      lines[3] = this.end.opposite();
     } else {
-      lineArr[3] = this.end;
+      lines[3] = this.end;
     }
-    return Simplex.getInstance(lineArr);
+    return Simplex.getInstance(lines);
   }
 
   /** Checks if point is contained in this line segment. */

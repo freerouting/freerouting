@@ -67,7 +67,7 @@ public class Wiring extends ScopeKeyword {
       if (!(currentObject instanceof ConductionArea currentArea)) {
         continue;
       }
-      if (!scopeParameter.board.layerStructure.arr[currentArea.getLayer()].isSignal) {
+      if (!scopeParameter.board.layerStructure.layers[currentArea.getLayer()].isSignal) {
         // This conduction areas arw written in the structure scope.
         continue;
       }
@@ -115,7 +115,7 @@ public class Wiring extends ScopeKeyword {
       return;
     }
     int layerIndex = currentWire.getLayer();
-    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.arr[layerIndex];
+    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.layers[layerIndex];
     final Layer currentLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     final double wireWidth =
         scopeParameter.coordinateTransform.boardToDsn(2 * currentWire.getHalfWidth());
@@ -131,16 +131,16 @@ public class Wiring extends ScopeKeyword {
     scopeParameter.file.write("wire");
 
     if (scopeParameter.compatMode) {
-      Point[] cornerArr = currentWire.polyline().cornerArr();
-      FloatPoint[] floatCornerArr = new FloatPoint[cornerArr.length];
-      for (int i = 0; i < cornerArr.length; i++) {
-        floatCornerArr[i] = cornerArr[i].toFloat();
+      Point[] corners = currentWire.polyline().corners();
+      FloatPoint[] floatCornerArr = new FloatPoint[corners.length];
+      for (int i = 0; i < corners.length; i++) {
+        floatCornerArr[i] = corners[i].toFloat();
       }
       double[] coors = scopeParameter.coordinateTransform.boardToDsn(floatCornerArr);
       PolygonPath currentPath = new PolygonPath(currentLayer, wireWidth, coors);
       currentPath.writeScope(scopeParameter.file, scopeParameter.identifierType);
     } else {
-      double[] coors = scopeParameter.coordinateTransform.boardToDsn(currentWire.polyline().arr);
+      double[] coors = scopeParameter.coordinateTransform.boardToDsn(currentWire.polyline().lines);
       PolylinePath currentPath = new PolylinePath(currentLayer, wireWidth, coors);
       currentPath.writeScope(scopeParameter.file, scopeParameter.identifierType);
     }
@@ -164,7 +164,7 @@ public class Wiring extends ScopeKeyword {
         scopeParameter.board.rules.nets.get(conductionArea.getNetNumber(0));
     Area currentArea = conductionArea.getArea();
     int layerIndex = conductionArea.getLayer();
-    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.arr[layerIndex];
+    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.layers[layerIndex];
     final Layer conductionLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
@@ -487,9 +487,9 @@ public class Wiring extends ScopeKeyword {
         clearanceClassIndex =
             netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.TRACE);
       }
-      IntPoint[] cornerArr = new IntPoint[path.coordinateArr.length / 2];
+      IntPoint[] corners = new IntPoint[path.coordinateArr.length / 2];
       double[] currentPoint = new double[2];
-      for (int i = 0; i < cornerArr.length; i++) {
+      for (int i = 0; i < corners.length; i++) {
         currentPoint[0] = path.coordinateArr[2 * i];
         currentPoint[1] = path.coordinateArr[2 * i + 1];
         FloatPoint currentCorner = scopeParameter.coordinateTransform.dsnToBoard(currentPoint);
@@ -506,10 +506,10 @@ public class Wiring extends ScopeKeyword {
           scopeParameter.warnings.add(msg);
           return null;
         }
-        cornerArr[i] = currentCorner.round();
+        corners[i] = currentCorner.round();
       }
 
-      Polygon polygon = new Polygon(cornerArr);
+      Polygon polygon = new Polygon(corners);
 
       // if it doesn't have two different points, it's not a valid polygon, so we must skip it
       Point[] polygonCorners = polygon.cornerArray();
@@ -546,18 +546,18 @@ public class Wiring extends ScopeKeyword {
         clearanceClassIndex =
             netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.TRACE);
       }
-      Line[] lineArr = new Line[path.coordinateArr.length / 4];
+      Line[] lines = new Line[path.coordinateArr.length / 4];
       double[] currentPoint = new double[2];
-      for (int i = 0; i < lineArr.length; i++) {
+      for (int i = 0; i < lines.length; i++) {
         currentPoint[0] = path.coordinateArr[4 * i];
         currentPoint[1] = path.coordinateArr[4 * i + 1];
         FloatPoint currentA = scopeParameter.coordinateTransform.dsnToBoard(currentPoint);
         currentPoint[0] = path.coordinateArr[4 * i + 2];
         currentPoint[1] = path.coordinateArr[4 * i + 3];
         FloatPoint currentB = scopeParameter.coordinateTransform.dsnToBoard(currentPoint);
-        lineArr[i] = new Line(currentA.round(), currentB.round());
+        lines[i] = new Line(currentA.round(), currentB.round());
       }
-      Polyline tracePolyline = new Polyline(lineArr);
+      Polyline tracePolyline = new Polyline(lines);
       result =
           board.insertTraceWithoutCleaning(
               tracePolyline, layerIndex, halfWidth, netNumbers, clearanceClassIndex, fixed);

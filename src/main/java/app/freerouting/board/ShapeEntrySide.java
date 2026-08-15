@@ -40,10 +40,10 @@ public class ShapeEntrySide {
     }
     if (!borderIntersectionFound) {
       // The first corner of polyline is inside shape.
-      // Calculate the nearest intersection point of polyline.arr[1]
+      // Calculate the nearest intersection point of polyline.lines[1]
       // with the border of shape to the first corner of polyline
       FloatPoint fromPoint = polyline.cornerApprox(0);
-      Line checkLine = polyline.arr[1];
+      Line checkLine = polyline.lines[1];
       double minDist = Double.MAX_VALUE;
       int edgeCount = shape.borderLineCount();
       for (int i = 0; i < edgeCount; i++) {

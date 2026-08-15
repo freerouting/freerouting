@@ -93,10 +93,10 @@ public class MenuState extends InteractiveState {
         int currentLayerIndex = hdlg.getWorkspaceSettings().getLayer();
         do {
           ++currentLayerIndex;
-        } while (currentLayerIndex < layerStructure.arr.length
-            && !layerStructure.arr[currentLayerIndex].isSignal);
+        } while (currentLayerIndex < layerStructure.layers.length
+            && !layerStructure.layers[currentLayerIndex].isSignal);
 
-        if (currentLayerIndex < layerStructure.arr.length) {
+        if (currentLayerIndex < layerStructure.layers.length) {
           hdlg.setCurrentLayer(currentLayerIndex);
         }
       }
@@ -106,7 +106,7 @@ public class MenuState extends InteractiveState {
         int currentLayerIndex = hdlg.getWorkspaceSettings().getLayer();
         do {
           --currentLayerIndex;
-        } while (currentLayerIndex >= 0 && !layerStructure.arr[currentLayerIndex].isSignal);
+        } while (currentLayerIndex >= 0 && !layerStructure.layers[currentLayerIndex].isSignal);
 
         if (currentLayerIndex >= 0) {
           hdlg.setCurrentLayer(currentLayerIndex);

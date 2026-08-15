@@ -186,11 +186,11 @@ public class Package {
       scopeParameter.file.write(")");
     }
     // write the keepouts belonging to  the package.
-    for (int i = 0; i < boardPackage.keepoutArr.length; i++) {
-      writePackageKeepout(boardPackage.keepoutArr[i], scopeParameter, false);
+    for (int i = 0; i < boardPackage.keepouts.length; i++) {
+      writePackageKeepout(boardPackage.keepouts[i], scopeParameter, false);
     }
-    for (int i = 0; i < boardPackage.viaKeepoutArr.length; i++) {
-      writePackageKeepout(boardPackage.viaKeepoutArr[i], scopeParameter, true);
+    for (int i = 0; i < boardPackage.viaKeepouts.length; i++) {
+      writePackageKeepout(boardPackage.viaKeepouts[i], scopeParameter, true);
     }
     // write the package outline.
     if (boardPackage.outline != null) {
@@ -214,7 +214,7 @@ public class Package {
     Layer keepoutLayer;
     if (keepout.layer >= 0) {
       app.freerouting.board.Layer boardLayer =
-          scopeParameter.board.layerStructure.arr[keepout.layer];
+          scopeParameter.board.layerStructure.layers[keepout.layer];
       keepoutLayer = new Layer(boardLayer.name, keepout.layer, boardLayer.isSignal);
     } else {
       keepoutLayer = Layer.SIGNAL;

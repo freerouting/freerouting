@@ -488,12 +488,12 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
   @Override
   public TileShape[] offsetShapes(Polyline polyline, int halfWidth, int fromNo, int toNo) {
     fromNo = Math.max(fromNo, 0);
-    toNo = Math.min(toNo, polyline.arr.length - 1);
+    toNo = Math.min(toNo, polyline.lines.length - 1);
     int shapeCount = Math.max(toNo - fromNo - 1, 0);
-    TileShape[] shapeArr = new TileShape[shapeCount];
+    TileShape[] shapes = new TileShape[shapeCount];
     for (int j = fromNo; j < toNo - 1; j++) {
-      shapeArr[j - fromNo] = polyline.offsetBox(halfWidth, j);
+      shapes[j - fromNo] = polyline.offsetBox(halfWidth, j);
     }
-    return shapeArr;
+    return shapes;
   }
 }

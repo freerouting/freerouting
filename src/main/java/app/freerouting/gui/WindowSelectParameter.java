@@ -133,7 +133,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     lc.gridy = 0;
 
     LayerStructure layerStructure = this.boardHandling.getRoutingBoard().layerStructure;
-    int layerCount = layerStructure.arr.length;
+    int layerCount = layerStructure.layers.length;
 
     this.settingsSelectLayerNameArr = new JToggleButton[layerCount];
     this.settingsSelectLayerEyeArr = new JCheckBox[layerCount];
@@ -142,7 +142,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
     // 1. Signal Layers
     for (int i = 0; i < layerCount; i++) {
-      Layer currentLayer = layerStructure.arr[i];
+      Layer currentLayer = layerStructure.layers[i];
       final int layerIndex = layerStructure.getNo(currentLayer);
 
       // Eye visibility toggle

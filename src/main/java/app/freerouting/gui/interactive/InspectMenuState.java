@@ -154,7 +154,7 @@ public final class InspectMenuState extends MenuState {
       info.append("Trace: ");
       info.append("ID ").append(trace.getIdNo());
       info.append(", Layer: ")
-          .append(hdlg.getRoutingBoard().layerStructure.arr[trace.getLayer()].name);
+          .append(hdlg.getRoutingBoard().layerStructure.layers[trace.getLayer()].name);
       info.append(", Width: ").append(2 * trace.getHalfWidth());
 
       // Add segment count
@@ -177,7 +177,7 @@ public final class InspectMenuState extends MenuState {
     info.append("CLEARANCE VIOLATION");
 
     // Add layer information
-    String layerName = hdlg.getRoutingBoard().layerStructure.arr[violation.layer].name;
+    String layerName = hdlg.getRoutingBoard().layerStructure.layers[violation.layer].name;
     info.append(" | Layer: ").append(layerName);
 
     // Add clearance information - convert from board units to display units

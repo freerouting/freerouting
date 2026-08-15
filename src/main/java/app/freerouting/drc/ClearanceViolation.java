@@ -103,7 +103,7 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
     window.append(", " + tm.getText("width") + " ");
     window.append(2 * this.shape.smallestRadius());
     window.append(", " + tm.getText("layer") + " ");
-    window.append(firstItem.board.layerStructure.arr[this.layer].name);
+    window.append(firstItem.board.layerStructure.layers[this.layer].name);
     window.append(", " + tm.getText("between"));
     window.newline();
     window.indent();

@@ -33,12 +33,12 @@ public class ForcedPadRouter {
     FloatPoint shapeCenterFloat = shapeCenter.toFloat();
     FloatPoint offsetProjection = shapeCenterFloat.projectionApprox(borderLine);
     // Make sure, that direction restrictions are retained.
-    Line[] lineArr = new Line[3];
+    Line[] lines = new Line[3];
     Direction currentDirection = borderLine.direction();
-    lineArr[0] = new Line(shapeCenter, currentDirection);
-    lineArr[1] = new Line(shapeCenter, currentDirection.turn45Degree(2));
-    lineArr[2] = new Line(offsetProjection.round(), currentDirection);
-    Polyline checkLine = new Polyline(lineArr);
+    lines[0] = new Line(shapeCenter, currentDirection);
+    lines[1] = new Line(shapeCenter, currentDirection.turn45Degree(2));
+    lines[2] = new Line(offsetProjection.round(), currentDirection);
+    Polyline checkLine = new Polyline(lines);
     return checkLine.offsetShape(1, 0);
   }
 
@@ -294,7 +294,7 @@ public class ForcedPadRouter {
         break;
       }
       for (int i = 0; i < currentSubstituteTrace.tileShapeCount(); i++) {
-        Line currentLine = currentSubstituteTrace.polyline().arr[i + 1];
+        Line currentLine = currentSubstituteTrace.polyline().lines[i + 1];
         Direction currentDirection = currentLine.direction();
         boolean isInFront;
         if (checkOnlyFront) {

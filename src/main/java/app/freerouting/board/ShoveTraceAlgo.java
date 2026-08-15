@@ -360,7 +360,7 @@ public class ShoveTraceAlgo {
         }
       }
       for (int i = 0; i < currentSubstituteTrace.tileShapeCount(); i++) {
-        Direction currentDirection = currentSubstituteTrace.polyline().arr[i + 1].direction();
+        Direction currentDirection = currentSubstituteTrace.polyline().lines[i + 1].direction();
         boolean isInFront = dir == null || dir.equals(currentDirection);
         if (isInFront) {
           ShapeAndEntrySide current =
@@ -599,7 +599,7 @@ public class ShoveTraceAlgo {
     } else {
       checkNetNoArr = new int[0];
     }
-    for (int i = 0; i < polyline.arr.length - 2; i++) {
+    for (int i = 0; i < polyline.lines.length - 2; i++) {
       TileShape currentShape = polyline.offsetShape(halfWidth, i);
       Collection<Item> obstacles =
           searchTree.overlappingItemsWithClearance(currentShape, layer, checkNetNoArr, clType);
@@ -741,17 +741,17 @@ public class ShoveTraceAlgo {
     } else if (sideDiff == 0) {
       FloatPoint compareCorner = offsetShape.cornerApprox(firstIntersectionSideNo);
       FloatPoint firstIntersection =
-          polyline.arr[firstIntersectionLineNo].intersectionApprox(
+          polyline.lines[firstIntersectionLineNo].intersectionApprox(
               offsetShape.borderLine(firstIntersectionSideNo));
       FloatPoint secondIntersection =
-          polyline.arr[lastIntersectionLineNo].intersectionApprox(
+          polyline.lines[lastIntersectionLineNo].intersectionApprox(
               offsetShape.borderLine(lastIntersectionSideNo));
       if (compareCorner.distance(secondIntersection) < compareCorner.distance(firstIntersection)) {
         sideDiff += offsetShape.borderLineCount();
       }
     }
     Line[] substituteLines = new Line[sideDiff + 3];
-    substituteLines[0] = polyline.arr[firstIntersectionLineNo];
+    substituteLines[0] = polyline.lines[firstIntersectionLineNo];
     int currentEdgeLineNo = firstIntersectionSideNo;
 
     for (int i = 1; i <= sideDiff + 1; i++) {
@@ -762,7 +762,7 @@ public class ShoveTraceAlgo {
         ++currentEdgeLineNo;
       }
     }
-    substituteLines[sideDiff + 2] = polyline.arr[lastIntersectionLineNo];
+    substituteLines[sideDiff + 2] = polyline.lines[lastIntersectionLineNo];
     Polyline substitutePolyline = new Polyline(substituteLines);
     Polyline[] pieces =
         offsetShape.cutout(

@@ -38,7 +38,7 @@ public class BatchAutorouterThread extends StoppableThread {
   private final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   private final RoutingBoard board;
   private final boolean removeUnconnectedVias;
-  private final AutorouteControl.ExpansionCostFactor[] traceCostArr;
+  private final AutorouteControl.ExpansionCostFactor[] traceCosts;
   private final boolean retainAutorouteDatabase;
   private final int startRipupCosts;
   private final int tracePullTightAccuracy;
@@ -69,13 +69,13 @@ public class BatchAutorouterThread extends StoppableThread {
 
     this.removeUnconnectedVias = removeUnconnectedVias;
     if (withPreferredDirections) {
-      this.traceCostArr = this.settings.getTraceCostArr();
+      this.traceCosts = this.settings.getTraceCosts();
     } else {
       // remove preferred direction
-      this.traceCostArr = new AutorouteControl.ExpansionCostFactor[this.board.getLayerCount()];
-      for (int i = 0; i < this.traceCostArr.length; i++) {
+      this.traceCosts = new AutorouteControl.ExpansionCostFactor[this.board.getLayerCount()];
+      for (int i = 0; i < this.traceCosts.length; i++) {
         double currentMinCost = this.settings.getPreferredDirectionTraceCosts(i);
-        this.traceCostArr[i] =
+        this.traceCosts[i] =
             new AutorouteControl.ExpansionCostFactor(currentMinCost, currentMinCost);
       }
     }
@@ -462,7 +462,7 @@ public class BatchAutorouterThread extends StoppableThread {
       // Get and calculate the auto-router settings based on the board and net we are
       // working on
       AutorouteControl autorouteControl =
-          new AutorouteControl(board, routeNetNo, settings, currentViaCosts, traceCostArr);
+          new AutorouteControl(board, routeNetNo, settings, currentViaCosts, traceCosts);
       autorouteControl.ripupAllowed = true;
       autorouteControl.ripupCosts = startRipupCosts * ripupPassNo;
       autorouteControl.removeUnconnectedVias = removeUnconnectedVias;
@@ -559,7 +559,7 @@ public class BatchAutorouterThread extends StoppableThread {
         new int[0],
         null,
         this.tracePullTightAccuracy,
-        this.traceCostArr,
+        this.traceCosts,
         this,
         TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
   }

@@ -1066,7 +1066,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #setCurrentLayer(int)
    */
   public void setLayer(int layerIndex) {
-    Layer currentLayer = board.layerStructure.arr[layerIndex];
+    Layer currentLayer = board.layerStructure.layers[layerIndex];
     screenMessages.setLayer(currentLayer.name);
     workspaceSettings.setLayer(layerIndex);
 
@@ -1104,7 +1104,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    */
   public void displayLayerMessage() {
     screenMessages.clearAddField();
-    Layer currentLayer = board.layerStructure.arr[this.workspaceSettings.getLayer()];
+    Layer currentLayer = board.layerStructure.layers[this.workspaceSettings.getLayer()];
     screenMessages.setLayer(currentLayer.name);
   }
 
@@ -2228,7 +2228,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
       routingJob.logError("Couldn't read design file", e);
       return false;
     }
-    screenMessages.setLayer(board.layerStructure.arr[workspaceSettings.getLayer()].name);
+    screenMessages.setLayer(board.layerStructure.layers[workspaceSettings.getLayer()].name);
     // Defer GUI refresh until surrounding load flow has recreated frame-managed subwindows.
     javax.swing.SwingUtilities.invokeLater(this::refreshGuiFromSettings);
     return true;

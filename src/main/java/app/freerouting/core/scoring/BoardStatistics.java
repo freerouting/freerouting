@@ -217,7 +217,7 @@ public class BoardStatistics implements Serializable {
           this.traces.totalSegmentCount += cornerCount - 1;
         }
 
-        for (Line line : polyline.arr) {
+        for (Line line : polyline.lines) {
           FloatPoint a = line.a.toFloat();
           FloatPoint b = line.b.toFloat();
           float length = (float) Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));

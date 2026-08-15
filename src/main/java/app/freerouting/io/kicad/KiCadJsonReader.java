@@ -499,7 +499,7 @@ public final class KiCadJsonReader {
         List<Package.Pin> packagePins = new ArrayList<>();
         for (KiCadBoardJson.PadJson pad : comp.pads) {
           // Define a default pad shape
-          ConvexShape[] shapeArr = new ConvexShape[layerCount];
+          ConvexShape[] shapes = new ConvexShape[layerCount];
           double dx = pad.size.x * scaleFactor / 2.0;
           double dy = pad.size.y * scaleFactor / 2.0;
           ConvexShape padShape;
@@ -547,14 +547,14 @@ public final class KiCadJsonReader {
           }
 
           for (int li = startLayer; li <= endLayer; li++) {
-            shapeArr[li] = padShape;
+            shapes[li] = padShape;
           }
 
           boolean isDrillable = pad.drill > 0.0;
           String padstackName = getDescriptivePadstackName(pad, boardLayers, layerCount);
           Padstack padstack = padstacks.get(padstackName);
           if (padstack == null) {
-            padstack = padstacks.add(padstackName, shapeArr, isDrillable, false);
+            padstack = padstacks.add(padstackName, shapes, isDrillable, false);
           }
           IntVector relativeLoc =
               new IntVector(
@@ -686,7 +686,7 @@ public final class KiCadJsonReader {
                 (int) Math.round(-vj.position.y * scaleFactor));
 
         // Dynamically create via padstack
-        ConvexShape[] shapeArr = new ConvexShape[layerCount];
+        ConvexShape[] shapes = new ConvexShape[layerCount];
         double radius = vj.diameter * scaleFactor / 2.0;
         ConvexShape viaShape =
             new IntBox(
@@ -697,7 +697,7 @@ public final class KiCadJsonReader {
                 .toSimplex();
 
         for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
-          shapeArr[li] = viaShape;
+          shapes[li] = viaShape;
         }
         String viaPadstackName =
             String.format(
@@ -705,7 +705,7 @@ public final class KiCadJsonReader {
                 vj.startLayerIndex, vj.endLayerIndex, vj.diameter * 1000.0, vj.drill * 1000.0);
         Padstack viaPadstack = padstacks.get(viaPadstackName);
         if (viaPadstack == null) {
-          viaPadstack = padstacks.add(viaPadstackName, shapeArr, true, false);
+          viaPadstack = padstacks.add(viaPadstackName, shapes, true, false);
         }
         board.insertVia(viaPadstack, center, netNumbers, 1, FixedState.USER_FIXED, true);
       }
@@ -820,7 +820,7 @@ public final class KiCadJsonReader {
                 (int) Math.round(vj.position.x * scaleFactor),
                 (int) Math.round(-vj.position.y * scaleFactor));
 
-        ConvexShape[] shapeArr = new ConvexShape[layerCount];
+        ConvexShape[] shapes = new ConvexShape[layerCount];
         double radius = vj.diameter * scaleFactor / 2.0;
         ConvexShape viaShape =
             new IntBox(
@@ -832,7 +832,7 @@ public final class KiCadJsonReader {
 
         for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
           if (li >= 0 && li < layerCount) {
-            shapeArr[li] = viaShape;
+            shapes[li] = viaShape;
           }
         }
         String viaPadstackName =
@@ -841,7 +841,7 @@ public final class KiCadJsonReader {
                 vj.startLayerIndex, vj.endLayerIndex, vj.diameter * 1000.0, vj.drill * 1000.0);
         Padstack viaPadstack = board.library.padstacks.get(viaPadstackName);
         if (viaPadstack == null) {
-          viaPadstack = board.library.padstacks.add(viaPadstackName, shapeArr, true, false);
+          viaPadstack = board.library.padstacks.add(viaPadstackName, shapes, true, false);
         }
         board.insertVia(viaPadstack, center, netNumbers, 1, FixedState.USER_FIXED, true);
       }

@@ -43,8 +43,8 @@ public class ArrayStack<T> {
   }
 
   private void reallocate() {
-    T[] newArr = (T[]) new Object[4 * this.nodeArr.length];
-    System.arraycopy(nodeArr, 0, newArr, 0, nodeArr.length);
-    this.nodeArr = newArr;
+    T[] newArray = (T[]) new Object[4 * this.nodeArr.length];
+    System.arraycopy(nodeArr, 0, newArray, 0, nodeArr.length);
+    this.nodeArr = newArray;
   }
 }

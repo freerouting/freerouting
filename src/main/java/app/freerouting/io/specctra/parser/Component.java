@@ -127,10 +127,10 @@ public class Component extends ScopeKeyword {
     String keepoutType;
     for (int j = 0; j < 3; j++) {
       if (j == 0) {
-        currentKeepoutArr = component.getPackage().keepoutArr;
+        currentKeepoutArr = component.getPackage().keepouts;
         keepoutType = "(keepout ";
       } else if (j == 1) {
-        currentKeepoutArr = component.getPackage().viaKeepoutArr;
+        currentKeepoutArr = component.getPackage().viaKeepouts;
         keepoutType = "(via_keepout ";
       } else {
         currentKeepoutArr = component.getPackage().placeKeepoutArr;

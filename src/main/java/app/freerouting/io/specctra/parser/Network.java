@@ -161,7 +161,7 @@ public class Network extends ScopeKeyword {
     for (int i = 0; i < layerCount; i++) {
       if (netClass.isActiveRoutingLayer(i)) {
         scopeParameter.file.write(" ");
-        scopeParameter.file.write(scopeParameter.board.layerStructure.arr[i].name);
+        scopeParameter.file.write(scopeParameter.board.layerStructure.layers[i].name);
       }
     }
     scopeParameter.file.write(")");
@@ -711,7 +711,7 @@ public class Network extends ScopeKeyword {
       Collection<String> useLayer,
       LayerStructure layerStructure,
       app.freerouting.rules.NetClass netClass) {
-    for (int i = 0; i < layerStructure.arr.length; i++) {
+    for (int i = 0; i < layerStructure.layers.length; i++) {
       netClass.setActiveRoutingLayer(i, false);
     }
     for (String curLayerName : useLayer) {
@@ -719,7 +719,7 @@ public class Network extends ScopeKeyword {
       netClass.setActiveRoutingLayer(currentNo, true);
     }
     // currently all inactive layers have tracewidth 0.
-    for (int i = 0; i < layerStructure.arr.length; i++) {
+    for (int i = 0; i < layerStructure.layers.length; i++) {
       if (!netClass.isActiveRoutingLayer(i)) {
         netClass.setTraceHalfWidth(i, 0);
       }
@@ -1035,20 +1035,20 @@ public class Network extends ScopeKeyword {
 
     // insert the keepouts belonging to the package (k = 1 for via keepouts)
     for (int k = 0; k <= 2; k++) {
-      Package.Keepout[] keepoutArr;
+      Package.Keepout[] keepouts;
       Map<String, ComponentPlacement.ItemClearanceInfo> currentKeepoutInfos;
       if (k == 0) {
-        keepoutArr = currentPackage.keepoutArr;
+        keepouts = currentPackage.keepouts;
         currentKeepoutInfos = location.keepout_infos;
       } else if (k == 1) {
-        keepoutArr = currentPackage.viaKeepoutArr;
+        keepouts = currentPackage.viaKeepouts;
         currentKeepoutInfos = location.via_keepout_infos;
       } else {
-        keepoutArr = currentPackage.placeKeepoutArr;
+        keepouts = currentPackage.placeKeepoutArr;
         currentKeepoutInfos = location.place_keepout_infos;
       }
-      for (int i = 0; i < keepoutArr.length; i++) {
-        Package.Keepout currentKeepout = keepoutArr[i];
+      for (int i = 0; i < keepouts.length; i++) {
+        Package.Keepout currentKeepout = keepouts[i];
         int layer = currentKeepout.layer;
         if (layer >= routingBoard.getLayerCount()) {
           FRLogger.warn(
@@ -1112,8 +1112,8 @@ public class Network extends ScopeKeyword {
           }
         } else {
           // insert the obstacle on all signal layers
-          for (int j = 0; j < routingBoard.layerStructure.arr.length; j++) {
-            if (routingBoard.layerStructure.arr[j].isSignal) {
+          for (int j = 0; j < routingBoard.layerStructure.layers.length; j++) {
+            if (routingBoard.layerStructure.layers[j].isSignal) {
               if (k == 0) {
                 routingBoard.insertObstacle(
                     currentKeepout.area,

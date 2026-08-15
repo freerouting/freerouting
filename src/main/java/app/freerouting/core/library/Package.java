@@ -26,15 +26,15 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
 
   public final double[] outlineWidths;
   public final boolean[] outlineIsClosed;
-  public final Keepout[] keepoutArr;
-  public final Keepout[] viaKeepoutArr;
+  public final Keepout[] keepouts;
+  public final Keepout[] viaKeepouts;
   public final Keepout[] placeKeepoutArr;
 
   /** If false, the package is placed on the back side of the board. */
   public final boolean isFront;
 
   /** The array of pins of this padstack. */
-  private final Pin[] pinArr;
+  private final Pin[] pins;
 
   private final Packages packageList;
 
@@ -42,23 +42,23 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
   public Package(
       String name,
       int no,
-      Pin[] pinArr,
+      Pin[] pins,
       Shape[] outline,
       double[] outlineWidths,
       boolean[] outlineIsClosed,
-      Keepout[] keepoutArr,
-      Keepout[] viaKeepoutArr,
+      Keepout[] keepouts,
+      Keepout[] viaKeepouts,
       Keepout[] placeKeepoutArr,
       boolean isFront,
       Packages packageList) {
     this.name = name;
     this.no = no;
-    this.pinArr = pinArr;
+    this.pins = pins;
     this.outline = outline;
     this.outlineWidths = outlineWidths;
     this.outlineIsClosed = outlineIsClosed;
-    this.keepoutArr = keepoutArr;
-    this.viaKeepoutArr = viaKeepoutArr;
+    this.keepouts = keepouts;
+    this.viaKeepouts = viaKeepouts;
     this.placeKeepoutArr = placeKeepoutArr;
     this.isFront = isFront;
     this.packageList = packageList;
@@ -72,11 +72,11 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
 
   /** Returns the pin with the input number from this package. */
   public Pin getPin(int no) {
-    if (no < 0 || no >= pinArr.length) {
+    if (no < 0 || no >= pins.length) {
       FRLogger.warn("Package.get_pin: no out of range");
       return null;
     }
-    return pinArr[no];
+    return pins[no];
   }
 
   /**
@@ -84,8 +84,8 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
    * exists Pin numbers are from 0 to pinCount - 1.
    */
   public int getPinNo(String name) {
-    for (int i = 0; i < pinArr.length; i++) {
-      if (pinArr[i].name.equals(name)) {
+    for (int i = 0; i < pins.length; i++) {
+      if (pins[i].name.equals(name)) {
         return i;
       }
     }
@@ -94,7 +94,7 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
 
   /** Returns the pin count of this package. */
   public int pinCount() {
-    return pinArr.length;
+    return pins.length;
   }
 
   @Override
@@ -108,8 +108,8 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
 
     window.appendBold(tm.getText("package") + " ");
     window.appendBold(this.name);
-    for (int i = 0; i < this.pinArr.length; i++) {
-      Pin currentPin = this.pinArr[i];
+    for (int i = 0; i < this.pins.length; i++) {
+      Pin currentPin = this.pins[i];
       window.newline();
       window.indent();
       window.append(tm.getText("pin") + " ");

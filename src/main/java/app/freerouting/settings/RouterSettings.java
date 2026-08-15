@@ -338,10 +338,10 @@ public class RouterSettings implements Serializable, Cloneable {
     boolean initializeTraceCosts = !Boolean.TRUE.equals(boardSpecificTraceCostsApplied);
 
     for (int i = 0; i < layerCount; i++) {
-      if (board.layerStructure.arr[i].isSignal) {
+      if (board.layerStructure.layers[i].isSignal) {
         currentPreferredDirectionIsHorizontal = !currentPreferredDirectionIsHorizontal;
       }
-      if (!board.layerStructure.arr[i].isSignal) {
+      if (!board.layerStructure.layers[i].isSignal) {
         layers[i].routable = false;
       } else if (layers[i].routable == null) {
         layers[i].routable = true;
@@ -866,7 +866,7 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   /** Returns per-layer horizontal and vertical trace-cost factors. */
-  public AutorouteControl.ExpansionCostFactor[] getTraceCostArr() {
+  public AutorouteControl.ExpansionCostFactor[] getTraceCosts() {
     if (scoring == null || scoring.preferredDirectionTraceCost == null) {
       return new AutorouteControl.ExpansionCostFactor[0];
     }

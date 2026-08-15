@@ -24,7 +24,7 @@ public class Plane extends ScopeKeyword {
     final String netName = scopeParameter.board.rules.nets.get(conduction.getNetNumber(0)).name;
     Area currentArea = conduction.getArea();
     int layerIndex = conduction.getLayer();
-    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.arr[layerIndex];
+    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.layers[layerIndex];
     final Layer planeLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;

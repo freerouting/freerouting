@@ -59,7 +59,7 @@ public final class MazeShoveTraceAlgo {
     // (needed at lines 133-134 and 136-140)
     // Stale indices can occur when traces are modified during routing (pull-tight,
     // shoving, etc.)
-    if (traceCornerNo < 0 || traceCornerNo >= tracePolyline.arr.length - 2) {
+    if (traceCornerNo < 0 || traceCornerNo >= tracePolyline.lines.length - 2) {
       return false;
     }
     final Collection<ExpansionDoor> roomDoors = obstacleRoom.getDoors();
@@ -94,7 +94,7 @@ public final class MazeShoveTraceAlgo {
     } else {
       CompleteExpansionRoom fromRoom = fromDoor.otherRoom(obstacleRoom);
       FloatPoint fromPoint = fromRoom.getShape().centreOfGravity();
-      Line shoveTraceLine = tracePolyline.arr[traceCornerNo + 1];
+      Line shoveTraceLine = tracePolyline.lines[traceCornerNo + 1];
       FloatLine doorLineSegment = fromDoorShape.diagonalCornerSegment();
       Side sideOfTraceLine = shoveTraceLine.sideOf(doorLineSegment.a, 0);
 
@@ -139,15 +139,15 @@ public final class MazeShoveTraceAlgo {
           shoveLineSegment =
               new LineSegment(
                   startClosingLine,
-                  tracePolyline.arr[traceCornerNo + 1],
-                  tracePolyline.arr[traceCornerNo + 2]);
+                  tracePolyline.lines[traceCornerNo + 1],
+                  tracePolyline.lines[traceCornerNo + 2]);
         } else {
           Line startClosingLine = new Line(shrinkedLineSegment.a.round(), perpendicularDirection);
           shoveLineSegment =
               new LineSegment(
                   startClosingLine,
-                  tracePolyline.arr[traceCornerNo + 1].opposite(),
-                  tracePolyline.arr[traceCornerNo].opposite());
+                  tracePolyline.lines[traceCornerNo + 1].opposite(),
+                  tracePolyline.lines[traceCornerNo].opposite());
         }
       } else {
         if (shoveToTheLeft) {
@@ -155,15 +155,15 @@ public final class MazeShoveTraceAlgo {
           shoveLineSegment =
               new LineSegment(
                   startClosingLine,
-                  tracePolyline.arr[traceCornerNo + 1].opposite(),
-                  tracePolyline.arr[traceCornerNo].opposite());
+                  tracePolyline.lines[traceCornerNo + 1].opposite(),
+                  tracePolyline.lines[traceCornerNo].opposite());
         } else {
           Line startClosingLine = new Line(shrinkedLineSegment.a.round(), perpendicularDirection);
           shoveLineSegment =
               new LineSegment(
                   startClosingLine,
-                  tracePolyline.arr[traceCornerNo + 1],
-                  tracePolyline.arr[traceCornerNo + 2]);
+                  tracePolyline.lines[traceCornerNo + 1],
+                  tracePolyline.lines[traceCornerNo + 2]);
         }
       }
     }

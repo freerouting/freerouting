@@ -11,7 +11,7 @@ public class Packages implements Serializable {
   final Padstacks padstackList;
 
   /** The array of packages in this object. */
-  private final Vector<Package> packageArr = new Vector<>();
+  private final Vector<Package> packages = new Vector<>();
 
   /**
    * Creates a new instance of Packages. padstackList is the list of padstacks used for the pins of
@@ -29,7 +29,7 @@ public class Packages implements Serializable {
       return null;
     }
     Package otherSidePackage = null;
-    for (Package currentPackage : packageArr) {
+    for (Package currentPackage : packages) {
       if (currentPackage != null && currentPackage.name.equalsIgnoreCase(name)) {
         if (currentPackage.isFront == isFront) {
           return currentPackage;
@@ -39,7 +39,7 @@ public class Packages implements Serializable {
     }
     String baseName = name.replaceAll("::\\d+$", "");
     if (!baseName.equalsIgnoreCase(name)) {
-      for (Package currentPackage : packageArr) {
+      for (Package currentPackage : packages) {
         if (currentPackage != null && currentPackage.name.equalsIgnoreCase(baseName)) {
           if (currentPackage.isFront == isFront) {
             return currentPackage;
@@ -53,7 +53,7 @@ public class Packages implements Serializable {
 
   /** Returns the package with the specified index. Package numbers start at 1. */
   public Package get(int packageNo) {
-    Package result = packageArr.elementAt(packageNo - 1);
+    Package result = packages.elementAt(packageNo - 1);
     if (result != null && result.no != packageNo) {
       FRLogger.warn("Padstacks.get: inconsistent padstack number");
     }
@@ -62,44 +62,44 @@ public class Packages implements Serializable {
 
   /** Returns the count of packages in this object. */
   public int count() {
-    return packageArr.size();
+    return packages.size();
   }
 
   /** Appends a new package with the specified data to this object. */
   public Package add(
       String name,
-      Package.Pin[] pinArr,
+      Package.Pin[] pins,
       Shape[] outline,
       double[] outlineWidths,
       boolean[] outlineIsClosed,
-      Package.Keepout[] keepoutArr,
-      Package.Keepout[] viaKeepoutArr,
+      Package.Keepout[] keepouts,
+      Package.Keepout[] viaKeepouts,
       Package.Keepout[] placeKeepoutArr,
       boolean isFront) {
     Package newPackage =
         new Package(
             name,
-            packageArr.size() + 1,
-            pinArr,
+            packages.size() + 1,
+            pins,
             outline,
             outlineWidths,
             outlineIsClosed,
-            keepoutArr,
-            viaKeepoutArr,
+            keepouts,
+            viaKeepouts,
             placeKeepoutArr,
             isFront,
             this);
-    packageArr.add(newPackage);
+    packages.add(newPackage);
     return newPackage;
   }
 
   /** Appends a new package with the specified pins. The package name is generated internally. */
-  public Package add(Package.Pin[] pinArr) {
-    String packageName = "Package#" + (packageArr.size() + 1);
+  public Package add(Package.Pin[] pins) {
+    String packageName = "Package#" + (packages.size() + 1);
 
     return add(
         packageName,
-        pinArr,
+        pins,
         null,
         null,
         null,

@@ -34,7 +34,7 @@ public class FloatPoint implements Serializable {
   }
 
   /** Calculates the smallest IntOctagon containing all the input points. */
-  public static IntOctagon boundingOctagon(FloatPoint[] pointArr) {
+  public static IntOctagon boundingOctagon(FloatPoint[] points) {
     double lx = Integer.MAX_VALUE;
     double ly = Integer.MAX_VALUE;
     double rx = Integer.MIN_VALUE;
@@ -43,8 +43,8 @@ public class FloatPoint implements Serializable {
     double lrx = Integer.MIN_VALUE;
     double llx = Integer.MAX_VALUE;
     double urx = Integer.MIN_VALUE;
-    for (int i = 0; i < pointArr.length; i++) {
-      FloatPoint current = pointArr[i];
+    for (int i = 0; i < points.length; i++) {
+      FloatPoint current = points[i];
       lx = Math.min(lx, current.x);
       ly = Math.min(ly, current.y);
       rx = Math.max(rx, current.x);

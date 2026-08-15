@@ -35,7 +35,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
 
     this.add(popupCancelMenuitem, 1);
 
-    if (layerStructure.arr.length > 0) {
+    if (layerStructure.layers.length > 0) {
       this.changeLayerMenu = new PopupMenuChangeLayer(boardFrame);
       this.add(changeLayerMenu, 0);
     } else {
@@ -43,7 +43,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
     }
 
     Layer currentLayer =
-        layerStructure.arr[boardPanel.boardHandling.getWorkspaceSettings().getLayer()];
+        layerStructure.layers[boardPanel.boardHandling.getWorkspaceSettings().getLayer()];
     disableLayerItem(layerStructure.getSignalLayerNo(currentLayer));
   }
 

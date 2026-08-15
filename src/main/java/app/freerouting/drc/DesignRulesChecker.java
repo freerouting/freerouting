@@ -479,7 +479,7 @@ public class DesignRulesChecker {
     // Add layer information
     if (item instanceof Trace trace) {
       int layer = trace.getLayer();
-      String layerName = board.layerStructure.arr[layer].name;
+      String layerName = board.layerStructure.layers[layer].name;
       desc.append(" on ").append(layerName);
 
       // Add length information

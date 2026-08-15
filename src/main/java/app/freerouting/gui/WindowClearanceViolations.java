@@ -126,7 +126,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
           itemInfo(violation.firstItem),
           itemInfo(violation.secondItem),
           location.toString(boardFrame.getLocale()),
-          layerStructure.arr[violation.layer].name);
+          layerStructure.layers[violation.layer].name);
     }
 
     @Override

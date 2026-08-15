@@ -308,7 +308,7 @@ public class ObstacleArea extends Item implements Serializable {
       }
     }
     window.append(" " + tm.getText("on_layer") + " ");
-    window.append(this.board.layerStructure.arr[this.getLayer()].name);
+    window.append(this.board.layerStructure.layers[this.getLayer()].name);
   }
 
   TileShape[] splitToConvex() {

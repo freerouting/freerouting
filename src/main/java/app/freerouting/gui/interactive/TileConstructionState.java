@@ -89,20 +89,20 @@ public final class TileConstructionState extends CornerItemConstructionState {
 
   /** Skips concave corners at the end of the corner list. */
   private void removeConcaveCorners() {
-    IntPoint[] cornerArr = new IntPoint[cornerList.size()];
+    IntPoint[] corners = new IntPoint[cornerList.size()];
     Iterator<IntPoint> it = cornerList.iterator();
-    for (int i = 0; i < cornerArr.length; i++) {
-      cornerArr[i] = it.next();
+    for (int i = 0; i < corners.length; i++) {
+      corners[i] = it.next();
     }
 
-    int newLength = cornerArr.length;
+    int newLength = corners.length;
     if (newLength < 3) {
       return;
     }
-    IntPoint lastCorner = cornerArr[newLength - 1];
-    IntPoint currentCorner = cornerArr[newLength - 2];
+    IntPoint lastCorner = corners[newLength - 1];
+    IntPoint currentCorner = corners[newLength - 2];
     while (newLength > 2) {
-      IntPoint prevCorner = cornerArr[newLength - 3];
+      IntPoint prevCorner = corners[newLength - 3];
       Side lastCornerSide = lastCorner.sideOf(prevCorner, currentCorner);
       if (lastCornerSide == Side.ON_THE_LEFT) {
         // side is ok, nothing to skip
@@ -111,7 +111,7 @@ public final class TileConstructionState extends CornerItemConstructionState {
       if (this.hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
           != AngleRestriction.FORTYFIVE_DEGREE) {
         // skip concave corner
-        cornerArr[newLength - 2] = lastCorner;
+        corners[newLength - 2] = lastCorner;
       }
       --newLength;
       // In 45 degree case just skip last corner as nothing like the following
@@ -122,19 +122,19 @@ public final class TileConstructionState extends CornerItemConstructionState {
         // prevent generating a non orthogonal line by changing the previous corner
         IntPoint prevPrevCorner = null;
         if (newLength >= 3) {
-          prevPrevCorner = cornerArr[newLength - 3];
+          prevPrevCorner = corners[newLength - 3];
         }
         if (prevPrevCorner != null && prevPrevCorner.x == prevCorner.x) {
-          cornerArr[newLength - 2] = new IntPoint(prevCorner.x, lastCorner.y);
+          corners[newLength - 2] = new IntPoint(prevCorner.x, lastCorner.y);
         } else {
-          cornerArr[newLength - 2] = new IntPoint(lastCorner.x, prevCorner.y);
+          corners[newLength - 2] = new IntPoint(lastCorner.x, prevCorner.y);
         }
       }
       currentCorner = prevCorner;
     }
-    if (newLength < cornerArr.length) {
+    if (newLength < corners.length) {
       // something skipped, update cornerList
-      cornerList = new LinkedList<>(Arrays.asList(cornerArr).subList(0, newLength));
+      cornerList = new LinkedList<>(Arrays.asList(corners).subList(0, newLength));
     }
   }
 
@@ -147,26 +147,26 @@ public final class TileConstructionState extends CornerItemConstructionState {
     if (cornerList.size() < 4) {
       return;
     }
-    IntPoint[] cornerArr = new IntPoint[cornerList.size()];
+    IntPoint[] corners = new IntPoint[cornerList.size()];
     Iterator<IntPoint> it = cornerList.iterator();
-    for (int i = 0; i < cornerArr.length; i++) {
-      cornerArr[i] = it.next();
+    for (int i = 0; i < corners.length; i++) {
+      corners[i] = it.next();
     }
-    int newLength = cornerArr.length;
+    int newLength = corners.length;
 
-    IntPoint firstCorner = cornerArr[0];
-    IntPoint secondCorner = cornerArr[1];
+    IntPoint firstCorner = corners[0];
+    IntPoint secondCorner = corners[1];
     while (newLength > 3) {
-      IntPoint lastCorner = cornerArr[newLength - 1];
+      IntPoint lastCorner = corners[newLength - 1];
       if (lastCorner.sideOf(secondCorner, firstCorner) != Side.ON_THE_LEFT) {
         break;
       }
       --newLength;
     }
 
-    if (newLength != cornerArr.length) {
+    if (newLength != corners.length) {
       // recalculate the cornerList
-      cornerList = new LinkedList<>(Arrays.asList(cornerArr).subList(0, newLength));
+      cornerList = new LinkedList<>(Arrays.asList(corners).subList(0, newLength));
       addCornerForSnapAngle();
     }
   }

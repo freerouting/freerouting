@@ -424,7 +424,7 @@ public class MazeSearchAlgo {
 
     boolean layerActive = ctrl.layerActive[layerIndex];
     if (!layerActive) {
-      if (autorouteEngine.board.layerStructure.arr[layerIndex].isSignal) {
+      if (autorouteEngine.board.layerStructure.layers[layerIndex].isSignal) {
         return true;
       }
     }
@@ -1042,7 +1042,7 @@ public class MazeSearchAlgo {
       }
     }
 
-    double viaRadius = ctrl.viaRadiusArr[layer];
+    double viaRadius = ctrl.viaRadii[layer];
     ConvexShape shrinkedDrillShape = drill.getShape().shrink(viaRadius);
     FloatPoint compareCorner = fromElement.shapeEntry.a.middlePoint(fromElement.shapeEntry.b);
     if (fromElement.door instanceof DrillPage
@@ -1329,8 +1329,8 @@ public class MazeSearchAlgo {
         currentLastLayer = toLayer;
       }
       boolean maskFound = false;
-      for (int i = 0; i < ctrl.viaInfoArr.length; i++) {
-        AutorouteControl.ViaMask currentViaInfo = ctrl.viaInfoArr[i];
+      for (int i = 0; i < ctrl.viaInfos.length; i++) {
+        AutorouteControl.ViaMask currentViaInfo = ctrl.viaInfos[i];
         if (currentFirstLayer >= currentViaInfo.fromLayer
             && currentLastLayer <= currentViaInfo.toLayer
             && currentViaInfo.fromLayer >= viaLowerBound
@@ -1847,12 +1847,12 @@ public class MazeSearchAlgo {
         this.ctrl.compensatedTraceHalfWidth[currentLayer] + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
     // create a perpendicular line segment of length 2 * checkRadius through the
     // door center
-    Line[] lineArr = new Line[3];
-    lineArr[0] = doorLine.translate(checkRadius);
-    lineArr[1] = new Line(doorCenter, doorLine.direction().turn45Degree(2));
-    lineArr[2] = doorLine.translate(-checkRadius);
+    Line[] lines = new Line[3];
+    lines[0] = doorLine.translate(checkRadius);
+    lines[1] = new Line(doorCenter, doorLine.direction().turn45Degree(2));
+    lines[2] = doorLine.translate(-checkRadius);
 
-    Polyline checkPolyline = new Polyline(lineArr);
+    Polyline checkPolyline = new Polyline(lines);
     TileShape checkShape = checkPolyline.offsetShape(checkRadius, 0);
     int[] ignoreNetNos = new int[1];
     ignoreNetNos[0] = this.ctrl.netNumber;

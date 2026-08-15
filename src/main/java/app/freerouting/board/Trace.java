@@ -410,7 +410,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     window.append(" " + tm.getText("to") + " ");
     window.append(this.lastCorner().toFloat());
     window.append(" " + tm.getText("on_layer") + " ");
-    window.append(this.board.layerStructure.arr[this.layer].name);
+    window.append(this.board.layerStructure.layers[this.layer].name);
     window.append(", " + tm.getText("width") + " ");
     window.append(2 * this.halfWidth);
     window.append(", " + tm.getText("length") + " ");
@@ -427,7 +427,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     double widthInMm = (2 * this.halfWidth) / mmResolution;
     double lengthInMm = this.getLength() / mmResolution;
 
-    String layerName = this.board.layerStructure.arr[this.layer].name;
+    String layerName = this.board.layerStructure.layers[this.layer].name;
     String widthStr = String.format(locale, "%.4f", widthInMm);
     String lengthStr = String.format(locale, "%.4f", lengthInMm);
     String connInfo = this.getConnectableItemHoverInfo(locale);

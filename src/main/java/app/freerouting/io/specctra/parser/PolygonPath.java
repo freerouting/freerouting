@@ -58,21 +58,21 @@ public class PolygonPath extends Path {
   @Override
   public app.freerouting.geometry.planar.Shape transformToBoard(
       CoordinateTransform coordinateTransform) {
-    FloatPoint[] cornerArr = new FloatPoint[this.coordinateArr.length / 2];
+    FloatPoint[] corners = new FloatPoint[this.coordinateArr.length / 2];
     double[] currentPoint = new double[2];
-    for (int i = 0; i < cornerArr.length; i++) {
+    for (int i = 0; i < corners.length; i++) {
       currentPoint[0] = this.coordinateArr[2 * i];
       currentPoint[1] = this.coordinateArr[2 * i + 1];
-      cornerArr[i] = coordinateTransform.dsnToBoard(currentPoint);
+      corners[i] = coordinateTransform.dsnToBoard(currentPoint);
     }
     final double offset = coordinateTransform.dsnToBoard(this.width) / 2;
-    if (cornerArr.length <= 2) {
-      IntOctagon boundingOct = FloatPoint.boundingOctagon(cornerArr);
+    if (corners.length <= 2) {
+      IntOctagon boundingOct = FloatPoint.boundingOctagon(corners);
       return boundingOct.enlarge(offset);
     }
-    IntPoint[] roundedCornerArr = new IntPoint[cornerArr.length];
-    for (int i = 0; i < cornerArr.length; i++) {
-      roundedCornerArr[i] = cornerArr[i].round();
+    IntPoint[] roundedCornerArr = new IntPoint[corners.length];
+    for (int i = 0; i < corners.length; i++) {
+      roundedCornerArr[i] = corners[i].round();
     }
     app.freerouting.geometry.planar.Shape result = new PolygonShape(roundedCornerArr);
     if (offset > 0) {
@@ -84,21 +84,21 @@ public class PolygonPath extends Path {
   @Override
   public app.freerouting.geometry.planar.Shape transformToBoardRel(
       CoordinateTransform coordinateTransform) {
-    FloatPoint[] cornerArr = new FloatPoint[this.coordinateArr.length / 2];
+    FloatPoint[] corners = new FloatPoint[this.coordinateArr.length / 2];
     double[] currentPoint = new double[2];
-    for (int i = 0; i < cornerArr.length; i++) {
+    for (int i = 0; i < corners.length; i++) {
       currentPoint[0] = this.coordinateArr[2 * i];
       currentPoint[1] = this.coordinateArr[2 * i + 1];
-      cornerArr[i] = coordinateTransform.dsnToBoardRel(currentPoint);
+      corners[i] = coordinateTransform.dsnToBoardRel(currentPoint);
     }
     final double offset = coordinateTransform.dsnToBoard(this.width) / 2;
-    if (cornerArr.length <= 2) {
-      IntOctagon boundingOct = FloatPoint.boundingOctagon(cornerArr);
+    if (corners.length <= 2) {
+      IntOctagon boundingOct = FloatPoint.boundingOctagon(corners);
       return boundingOct.enlarge(offset);
     }
-    IntPoint[] roundedCornerArr = new IntPoint[cornerArr.length];
-    for (int i = 0; i < cornerArr.length; i++) {
-      roundedCornerArr[i] = cornerArr[i].round();
+    IntPoint[] roundedCornerArr = new IntPoint[corners.length];
+    for (int i = 0; i < corners.length; i++) {
+      roundedCornerArr[i] = corners[i].round();
     }
     app.freerouting.geometry.planar.Shape result = new PolygonShape(roundedCornerArr);
     if (offset > 0) {

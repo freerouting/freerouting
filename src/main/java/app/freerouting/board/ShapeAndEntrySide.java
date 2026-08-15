@@ -77,14 +77,14 @@ class ShapeAndEntrySide {
   private static Line calcCutlineAtEnd(int index, PolylineTrace trace) {
     Polyline traceLines = trace.polyline();
     ShapeSearchTree searchTree = trace.board.searchTreeManager.getDefaultTree();
-    if (index == traceLines.arr.length - 3
+    if (index == traceLines.lines.length - 3
         || traceLines
-                .cornerApprox(traceLines.arr.length - 2)
+                .cornerApprox(traceLines.lines.length - 2)
                 .distance(traceLines.cornerApprox(index + 1))
             < trace.getCompensatedHalfWidth(searchTree)) {
 
-      Line currentLine = traceLines.arr[traceLines.arr.length - 1];
-      FloatPoint is = traceLines.cornerApprox(traceLines.arr.length - 3);
+      Line currentLine = traceLines.lines[traceLines.lines.length - 1];
+      FloatPoint is = traceLines.cornerApprox(traceLines.lines.length - 3);
       Line cutLine;
       if (currentLine.sideOf(is) == Side.ON_THE_LEFT) {
         cutLine = currentLine.opposite();
@@ -102,7 +102,7 @@ class ShapeAndEntrySide {
     if (index == 0
         || traceLines.cornerApprox(0).distance(traceLines.cornerApprox(index))
             < trace.getCompensatedHalfWidth(searchTree)) {
-      Line currentLine = traceLines.arr[0];
+      Line currentLine = traceLines.lines[0];
       FloatPoint is = traceLines.cornerApprox(1);
       Line cutLine;
       if (currentLine.sideOf(is) == Side.ON_THE_LEFT) {

@@ -11,8 +11,8 @@ import java.io.IOException;
 public class PolylinePath extends Path {
 
   /** Creates a new instance of PolylinePath. */
-  public PolylinePath(Layer layer, double width, double[] cornerArr) {
-    super(layer, width, cornerArr);
+  public PolylinePath(Layer layer, double width, double[] corners) {
+    super(layer, width, corners);
   }
 
   /** Writes this path as a scope to an output dsn-file. */

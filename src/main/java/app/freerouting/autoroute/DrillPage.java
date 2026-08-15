@@ -18,7 +18,7 @@ class DrillPage implements ExpandableObject {
   /** The shape of the page. */
   final IntBox shape;
 
-  private final MazeSearchElement[] mazeSearchInfoArr;
+  private final MazeSearchElement[] mazeSearchElements;
   private final RoutingBoard board;
 
   /** The list of expansion drills on this page. Null, if not yet calculated. */
@@ -31,9 +31,9 @@ class DrillPage implements ExpandableObject {
   public DrillPage(IntBox shape, RoutingBoard board) {
     this.shape = shape;
     this.board = board;
-    mazeSearchInfoArr = new MazeSearchElement[board.getLayerCount()];
-    for (int i = 0; i < mazeSearchInfoArr.length; i++) {
-      mazeSearchInfoArr[i] = new MazeSearchElement();
+    mazeSearchElements = new MazeSearchElement[board.getLayerCount()];
+    for (int i = 0; i < mazeSearchElements.length; i++) {
+      mazeSearchElements[i] = new MazeSearchElement();
     }
   }
 
@@ -137,12 +137,12 @@ class DrillPage implements ExpandableObject {
 
   @Override
   public int mazeSearchElementCount() {
-    return this.mazeSearchInfoArr.length;
+    return this.mazeSearchElements.length;
   }
 
   @Override
   public MazeSearchElement getMazeSearchElement(int index) {
-    return this.mazeSearchInfoArr[index];
+    return this.mazeSearchElements[index];
   }
 
   /** Resets all drills of this page for autorouting the next connection. */
@@ -153,7 +153,7 @@ class DrillPage implements ExpandableObject {
         currentDrill.reset();
       }
     }
-    for (MazeSearchElement currentInfo : mazeSearchInfoArr) {
+    for (MazeSearchElement currentInfo : mazeSearchElements) {
       currentInfo.reset();
     }
   }

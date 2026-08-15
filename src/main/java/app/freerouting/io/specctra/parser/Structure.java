@@ -102,7 +102,7 @@ public class Structure extends ScopeKeyword {
       if (!(currentObject instanceof ConductionArea currentArea)) {
         continue;
       }
-      if (scopeParameter.board.layerStructure.arr[currentArea.getLayer()].isSignal) {
+      if (scopeParameter.board.layerStructure.layers[currentArea.getLayer()].isSignal) {
         // These conduction areas are written in the wiring scope.
         continue;
       }
@@ -174,7 +174,7 @@ public class Structure extends ScopeKeyword {
   }
 
   static void writeLayers(WriteScopeParameter scopeParameter) throws IOException {
-    for (int i = 0; i < scopeParameter.board.layerStructure.arr.length; i++) {
+    for (int i = 0; i < scopeParameter.board.layerStructure.layers.length; i++) {
       boolean writeLayerRule =
           scopeParameter.board.rules.getDefaultNetClass().getTraceHalfWidth(i)
                   != scopeParameter.board.rules.getDefaultNetClass().getTraceHalfWidth(0)
@@ -230,7 +230,7 @@ public class Structure extends ScopeKeyword {
       throws IOException {
     Area keepoutArea = keepout.getArea();
     int layerIndex = keepout.getLayer();
-    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.arr[layerIndex];
+    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.layers[layerIndex];
     final Layer keepoutLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
@@ -574,16 +574,16 @@ public class Structure extends ScopeKeyword {
    * result list.
    */
   private static Collection<PolylineShape> separateHoles(Collection<PolylineShape> outlineShapes) {
-    OutlineShape[] shapeArr = new OutlineShape[outlineShapes.size()];
+    OutlineShape[] shapes = new OutlineShape[outlineShapes.size()];
     Iterator<PolylineShape> it = outlineShapes.iterator();
-    for (int i = 0; i < shapeArr.length; i++) {
-      shapeArr[i] = new OutlineShape(it.next());
+    for (int i = 0; i < shapes.length; i++) {
+      shapes[i] = new OutlineShape(it.next());
     }
-    for (int i = 0; i < shapeArr.length; i++) {
-      OutlineShape currentShape = shapeArr[i];
-      for (int j = 0; j < shapeArr.length; j++) {
-        // check if shapeArr[j] may be contained in shapeArr[i]
-        OutlineShape otherShape = shapeArr[j];
+    for (int i = 0; i < shapes.length; i++) {
+      OutlineShape currentShape = shapes[i];
+      for (int j = 0; j < shapes.length; j++) {
+        // check if shapes[j] may be contained in shapes[i]
+        OutlineShape otherShape = shapes[j];
         if (i == j || otherShape.isHole) {
           continue;
         }
@@ -594,10 +594,10 @@ public class Structure extends ScopeKeyword {
       }
     }
     Collection<PolylineShape> holeList = new LinkedList<>();
-    for (int i = 0; i < shapeArr.length; i++) {
-      if (shapeArr[i].isHole) {
-        outlineShapes.remove(shapeArr[i].shape);
-        holeList.add(shapeArr[i].shape);
+    for (int i = 0; i < shapes.length; i++) {
+      if (shapes[i].isHole) {
+        outlineShapes.remove(shapes[i].shape);
+        holeList.add(shapes[i].shape);
       }
     }
     return holeList;
@@ -881,7 +881,7 @@ public class Structure extends ScopeKeyword {
     final Layer currentLayer = (area.shapeList.iterator().next()).layer;
     if (currentLayer == Layer.SIGNAL) {
       for (int i = 0; i < board.getLayerCount(); i++) {
-        if (scopeParameter.layerStructure.arr[i].isSignal) {
+        if (scopeParameter.layerStructure.layers[i].isSignal) {
           insertKeepout(board, keepoutArea, i, area.clearanceClassName, keepoutType, fixedState);
         }
       }
@@ -1255,17 +1255,17 @@ public class Structure extends ScopeKeyword {
               + "that has known compatibility issues. Please update KiCad to version 6 or newer.");
     }
 
-    PolylineShape[] outlineShapeArr = new PolylineShape[boardOutlineShapes.size()];
+    PolylineShape[] outlineShapes = new PolylineShape[boardOutlineShapes.size()];
     Iterator<PolylineShape> it2 = boardOutlineShapes.iterator();
-    for (int i = 0; i < outlineShapeArr.length; i++) {
-      outlineShapeArr[i] = it2.next();
+    for (int i = 0; i < outlineShapes.length; i++) {
+      outlineShapes[i] = it2.next();
     }
     updateBoardRules(scopeParameter, boardConstructionInfo, boardRules);
     boardRules.setTraceAngleRestriction(scopeParameter.snapAngle);
     scopeParameter.boardHandling.createBoard(
         bounds,
         boardLayerStructure,
-        outlineShapeArr,
+        outlineShapes,
         boardConstructionInfo.outlineClearanceClassName,
         boardRules,
         boardCommunication);
@@ -1274,7 +1274,7 @@ public class Structure extends ScopeKeyword {
 
     // Insert the holes in the board outline as keepouts.
     for (PolylineShape currentOutlineHole : holeShapes) {
-      for (int i = 0; i < boardLayerStructure.arr.length; i++) {
+      for (int i = 0; i < boardLayerStructure.layers.length; i++) {
         board.insertObstacle(currentOutlineHole, i, 0, FixedState.SYSTEM_FIXED);
       }
     }

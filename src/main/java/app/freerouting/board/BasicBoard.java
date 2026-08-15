@@ -1353,7 +1353,7 @@ public class BasicBoard implements Serializable {
 
   /** Returns the layer count of this board. */
   public int getLayerCount() {
-    return layerStructure.arr.length;
+    return layerStructure.layers.length;
   }
 
   /**

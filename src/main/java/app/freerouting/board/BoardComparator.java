@@ -80,16 +80,16 @@ public class BoardComparator {
     } else {
       report.append(String.format("[+] Layer counts match: %d\n", layersCount1));
       for (int i = 0; i < layersCount1; i++) {
-        String name1 = board1.layerStructure.arr[i].name;
-        String name2 = board2.layerStructure.arr[i].name;
+        String name1 = board1.layerStructure.layers[i].name;
+        String name2 = board2.layerStructure.layers[i].name;
         if (!name1.equalsIgnoreCase(name2)) {
           equal = false;
           report.append(
               String.format(
                   "[-] Layer %d name mismatch: Board 1 = '%s', Board 2 = '%s'\n", i, name1, name2));
         }
-        boolean isSignal1 = board1.layerStructure.arr[i].isSignal;
-        boolean isSignal2 = board2.layerStructure.arr[i].isSignal;
+        boolean isSignal1 = board1.layerStructure.layers[i].isSignal;
+        boolean isSignal2 = board2.layerStructure.layers[i].isSignal;
         if (isSignal1 != isSignal2) {
           equal = false;
           report.append(
@@ -717,15 +717,15 @@ public class BoardComparator {
     boolean forwardMatch = true;
     boolean reverseMatch = true;
     for (int i = 0; i < count; i++) {
-      Point pt1 = poly1.cornerArr()[i];
+      Point pt1 = poly1.corners()[i];
       // Check forward
-      Point pt2F = poly2.cornerArr()[i];
+      Point pt2F = poly2.corners()[i];
       if (Math.abs(pt1.toFloat().x * scale1 - pt2F.toFloat().x * scale2) > epsilonMm
           || Math.abs(pt1.toFloat().y * scale1 - pt2F.toFloat().y * scale2) > epsilonMm) {
         forwardMatch = false;
       }
       // Check reverse
-      Point pt2R = poly2.cornerArr()[count - 1 - i];
+      Point pt2R = poly2.corners()[count - 1 - i];
       if (Math.abs(pt1.toFloat().x * scale1 - pt2R.toFloat().x * scale2) > epsilonMm
           || Math.abs(pt1.toFloat().y * scale1 - pt2R.toFloat().y * scale2) > epsilonMm) {
         reverseMatch = false;

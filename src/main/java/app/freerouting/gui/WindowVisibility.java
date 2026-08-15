@@ -53,9 +53,9 @@ public class WindowVisibility extends BoardSavableSubWindow {
     this.setTitle(tm.getText("title"));
 
     LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
-    String[] layerMessages = new String[layerStructure.arr.length];
+    String[] layerMessages = new String[layerStructure.layers.length];
     for (int i = 0; i < layerMessages.length; i++) {
-      layerMessages[i] = layerStructure.arr[i].name;
+      layerMessages[i] = layerStructure.layers[i].name;
     }
 
     String[] objectMessages = new String[ObjectNames.values().length];

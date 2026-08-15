@@ -82,7 +82,7 @@ public class BoardRules implements Serializable {
    */
   public boolean traceWidthsAreLayerDependent(int netNumber) {
     int compareWidth = getTraceHalfWidth(netNumber, 0);
-    for (int i = 1; i < this.layerStructure.arr.length; i++) {
+    for (int i = 1; i < this.layerStructure.layers.length; i++) {
       if (getTraceHalfWidth(netNumber, i) != compareWidth) {
         return true;
       }

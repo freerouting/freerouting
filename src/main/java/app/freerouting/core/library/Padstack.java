@@ -206,7 +206,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
         window.indent();
         window.append(shapes[i], locale);
         window.append(" " + tm.getText("on_layer") + " ");
-        window.append(padstackList.boardLayerStructure.arr[i].name);
+        window.append(padstackList.boardLayerStructure.layers[i].name);
       }
     }
     window.newline();

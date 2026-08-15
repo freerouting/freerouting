@@ -18,7 +18,7 @@ public final class AutorouteSettings {
 
   static RouterSettings readScope(IJFlexScanner scanner, LayerStructure layerStructure) {
     RouterSettings result = new RouterSettings();
-    result.setLayerCount(layerStructure.arr.length);
+    result.setLayerCount(layerStructure.layers.length);
     boolean withAutoroute = true;
     boolean withPostroute = true;
     Object nextToken = null;
@@ -208,8 +208,8 @@ public final class AutorouteSettings {
     }
     file.write(")");
     file.newLine();
-    for (int i = 0; i < layerStructure.arr.length; i++) {
-      final Layer currentLayer = layerStructure.arr[i];
+    for (int i = 0; i < layerStructure.layers.length; i++) {
+      final Layer currentLayer = layerStructure.layers[i];
       file.startScope();
       file.write("layer_rule ");
       identifierType.write(currentLayer.name, file);

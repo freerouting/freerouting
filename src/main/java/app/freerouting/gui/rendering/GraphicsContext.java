@@ -72,9 +72,9 @@ public class GraphicsContext implements Serializable {
     itemColorTable = new ItemColorTableModel(layerStructure, locale);
     otherColorTable = new OtherColorTableModel(locale);
     colorIntensityTable = new ColorIntensityTable();
-    layerVisibilityArr = new double[layerStructure.arr.length];
+    layerVisibilityArr = new double[layerStructure.layers.length];
     for (int i = 0; i < layerVisibilityArr.length; i++) {
-      if (layerStructure.arr[i].isSignal) {
+      if (layerStructure.layers[i].isSignal) {
         layerVisibilityArr[i] = 1.00;
       } else {
         layerVisibilityArr[i] = 0.25;

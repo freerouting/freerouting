@@ -262,7 +262,7 @@ public final class DsnReader {
     // -----------------------------------------------------------------------
     int layerCount = 0;
     if (scopeParameter.layerStructure != null) {
-      layerCount = scopeParameter.layerStructure.arr.length;
+      layerCount = scopeParameter.layerStructure.layers.length;
     } else if (scopeParameter.getBoard() != null) {
       layerCount = scopeParameter.getBoard().getLayerCount();
     }

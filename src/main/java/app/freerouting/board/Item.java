@@ -803,7 +803,7 @@ public abstract class Item
     }
     // Also power planes are delete_fixed.
     if (this instanceof ConductionArea area) {
-      return !this.board.layerStructure.arr[area.getLayer()].isSignal;
+      return !this.board.layerStructure.layers[area.getLayer()].isSignal;
     }
     return false;
   }

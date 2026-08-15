@@ -584,7 +584,7 @@ public class Pin extends DrillItem implements Serializable {
     }
     int[] latestEntryTuple = entries[entries.length - 1];
     FloatPoint traceEntryLocationApprox =
-        tracePolyline.arr[latestEntryTuple[0]].intersectionApprox(
+        tracePolyline.lines[latestEntryTuple[0]].intersectionApprox(
             offsetPinShape.borderLine(latestEntryTuple[1]));
     // calculate the nearest legal pin exit point to traceEntryLocationApprox
     double minExitCornerDistance = Double.MAX_VALUE;

@@ -38,7 +38,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
   private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
 
   private final boolean removeUnconnectedVias;
-  private final AutorouteControl.ExpansionCostFactor[] traceCostArr;
+  private final AutorouteControl.ExpansionCostFactor[] traceCosts;
   private final boolean retainAutorouteDatabase;
   private final int startRipupCosts;
   private final int tracePullTightAccuracy;
@@ -91,13 +91,13 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
     this.removeUnconnectedVias = removeUnconnectedVias;
     if (withPreferredDirections) {
-      this.traceCostArr = this.settings.getTraceCostArr();
+      this.traceCosts = this.settings.getTraceCosts();
     } else {
       // remove preferred direction
-      this.traceCostArr = new AutorouteControl.ExpansionCostFactor[this.board.getLayerCount()];
-      for (int i = 0; i < this.traceCostArr.length; i++) {
+      this.traceCosts = new AutorouteControl.ExpansionCostFactor[this.board.getLayerCount()];
+      for (int i = 0; i < this.traceCosts.length; i++) {
         double currentMinCost = this.settings.getPreferredDirectionTraceCosts(i);
-        this.traceCostArr[i] =
+        this.traceCosts[i] =
             new AutorouteControl.ExpansionCostFactor(currentMinCost, currentMinCost);
       }
     }
@@ -151,7 +151,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
   public boolean runBatchLoop() {
     boolean anyRoutable = false;
     for (int i = 0; i < this.settings.getLayerCount(); i++) {
-      if (this.settings.getLayerActive(i) && this.board.layerStructure.arr[i].isSignal) {
+      if (this.settings.getLayerActive(i) && this.board.layerStructure.layers[i].isSignal) {
         anyRoutable = true;
         break;
       }
@@ -395,7 +395,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
         new int[0],
         null,
         this.tracePullTightAccuracy,
-        this.traceCostArr,
+        this.traceCosts,
         this.thread,
         TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
   }
@@ -426,8 +426,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       // Get and calculate the auto-router settings based on the board and net we are
       // working on
       AutorouteControl autorouteControl =
-          new AutorouteControl(
-              this.board, routeNetNo, settings, currentViaCosts, this.traceCostArr);
+          new AutorouteControl(this.board, routeNetNo, settings, currentViaCosts, this.traceCosts);
       autorouteControl.ripupAllowed = true;
       autorouteControl.ripupCosts = this.startRipupCosts * ripupPassNo;
       autorouteControl.removeUnconnectedVias = this.removeUnconnectedVias;

@@ -177,34 +177,34 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Optimizes the route in the internally marked area. If netNumber {@literal >} 0, only traces
    * with net number netNumber are optimized. If clipShape != null the optimizing is restricted to
-   * clipShape. traceCostArr is used for optimizing vias and may be null. If stoppableThread !=
-   * null, the algorithm can be requested to be stopped. If timeLimit {@literal >} 0; the algorithm
-   * will be stopped after timeLimit Milliseconds.
+   * clipShape. traceCosts is used for optimizing vias and may be null. If stoppableThread != null,
+   * the algorithm can be requested to be stopped. If timeLimit {@literal >} 0; the algorithm will
+   * be stopped after timeLimit Milliseconds.
    */
   public void optChangedArea(
       int[] onlyNetNoArr,
       IntOctagon clipShape,
       int accuracy,
-      ExpansionCostFactor[] traceCostArr,
+      ExpansionCostFactor[] traceCosts,
       Stoppable stoppableThread,
       int timeLimit) {
     optChangedArea(
-        onlyNetNoArr, clipShape, accuracy, traceCostArr, stoppableThread, timeLimit, null, 0);
+        onlyNetNoArr, clipShape, accuracy, traceCosts, stoppableThread, timeLimit, null, 0);
   }
 
   /**
    * Optimizes the route in the internally marked area. If netNumber {@literal >} 0, only traces
    * with net number netNumber are optimized. If clipShape != null the optimizing is restricted to
-   * clipShape. traceCostArr is used for optimizing vias and may be null. If stoppableThread !=
-   * null, the algorithm can be requested to be stopped. If timeLimit {@literal >} 0; the algorithm
-   * will be stopped after timeLimit Milliseconds. If keepPoint != null, traces on layer
-   * keepPointLayer containing keepPoint will also contain this point after optimizing.
+   * clipShape. traceCosts is used for optimizing vias and may be null. If stoppableThread != null,
+   * the algorithm can be requested to be stopped. If timeLimit {@literal >} 0; the algorithm will
+   * be stopped after timeLimit Milliseconds. If keepPoint != null, traces on layer keepPointLayer
+   * containing keepPoint will also contain this point after optimizing.
    */
   public void optChangedArea(
       int[] onlyNetNoArr,
       IntOctagon clipShape,
       int accuracy,
-      ExpansionCostFactor[] traceCostArr,
+      ExpansionCostFactor[] traceCosts,
       Stoppable stoppableThread,
       int timeLimit,
       Point keepPoint,
@@ -223,7 +223,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               timeLimit,
               keepPoint,
               keepPointLayer);
-      pullTightAlgo.optChangedArea(traceCostArr);
+      pullTightAlgo.optChangedArea(traceCosts);
     }
     joinGraphicsUpdateBox(changedArea.surroundingBox());
     changedArea = null;
@@ -266,7 +266,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       int clClassNo,
       boolean onlyNotShovableObstacles) {
     Polyline checkPolyline = lineSegment.toPolyline();
-    if (checkPolyline.arr.length != 3) {
+    if (checkPolyline.lines.length != 3) {
       return 0;
     }
     TileShape shapeToCheck = checkPolyline.offsetShape(traceHalfWidth, 0);
@@ -617,7 +617,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     int compensatedHalfWidth =
         halfWidth + searchTree.clearanceCompensationValue(clearanceClassIndex, layer);
     TileShape[] traceShapes =
-        polyline.offsetShapes(compensatedHalfWidth, 0, polyline.arr.length - 1);
+        polyline.offsetShapes(compensatedHalfWidth, 0, polyline.lines.length - 1);
     boolean orthogonalMode = rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE;
     ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(this);
     for (int i = 0; i < traceShapes.length; i++) {
@@ -739,22 +739,22 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       PolylineTrace combineTrace = (PolylineTrace) pickedTrace;
       combinedPolyline = newPolyline.combine(combineTrace.polyline());
     }
-    if (combinedPolyline.arr.length < 3) {
+    if (combinedPolyline.lines.length < 3) {
       if (netNumbers != null && netNumbers.length > 0 && netNumbers[0] == 94) {
         FRLogger.trace(
             "RoutingBoard.insert_forced_trace_polyline",
             "compare_trace_insert_forced_fail",
-            "combinedPolyline.arr.length < 3",
+            "combinedPolyline.lines.length < 3",
             "Net #" + netNumbers[0] + ",Layer #" + layer,
             new Point[] {fromCorner, toCorner});
       }
       return fromCorner;
     }
-    int startShapeNo = combinedPolyline.arr.length - newPolyline.arr.length;
+    int startShapeNo = combinedPolyline.lines.length - newPolyline.lines.length;
     // calculate the last shapes of combinedPolyline for checking
     TileShape[] traceShapes =
         combinedPolyline.offsetShapes(
-            compensatedHalfWidth, startShapeNo, combinedPolyline.arr.length - 1);
+            compensatedHalfWidth, startShapeNo, combinedPolyline.lines.length - 1);
     int lastShapeNo = traceShapes.length;
     boolean orthogonalMode = rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE;
     int idBeforeShoveLoop = communication.idNoGenerator.maxGeneratedNo();
@@ -857,7 +857,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       if (lastSegmentLength > sampleWidth) {
         newPolyline =
             newPolyline.shorten(
-                newPolyline.arr.length - (traceShapes.length - lastShapeNo - 1), sampleWidth);
+                newPolyline.lines.length - (traceShapes.length - lastShapeNo - 1), sampleWidth);
         Point currentLastCorner = newPolyline.lastCorner();
         if (!(currentLastCorner instanceof IntPoint)) {
           FRLogger.trace("RoutingBoard.insert_forced_trace_polyline: IntPoint expected");
@@ -878,10 +878,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           PolylineTrace combineTrace = (PolylineTrace) pickedTrace;
           combinedPolyline = newPolyline.combine(combineTrace.polyline());
         }
-        if (combinedPolyline.arr.length < 3) {
+        if (combinedPolyline.lines.length < 3) {
           return newCorner;
         }
-        shapeIndex = combinedPolyline.arr.length - 3;
+        shapeIndex = combinedPolyline.lines.length - 3;
         lastTraceShape = combinedPolyline.offsetShape(compensatedHalfWidth, shapeIndex);
         if (orthogonalMode) {
           lastTraceShape = lastTraceShape.boundingBox();
@@ -1123,7 +1123,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     int routeNetNo = item.getNetNumber(0);
     AutorouteControl ctrlSettings =
         new AutorouteControl(
-            this, routeNetNo, routerSettings, viaCosts, routerSettings.getTraceCostArr());
+            this, routeNetNo, routerSettings, viaCosts, routerSettings.getTraceCosts());
     ctrlSettings.removeUnconnectedVias = false;
     Set<Item> routeStartSet = item.getConnectedSet(routeNetNo);
     Net routeNet = rules.nets.get(routeNetNo);
@@ -1327,7 +1327,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       return false;
     }
     Polyline connectionLine = projectionLine.toPolyline();
-    if (connectionLine == null || connectionLine.arr.length != 3) {
+    if (connectionLine == null || connectionLine.lines.length != 3) {
       return false;
     }
     int traceLayer = toTrace.getLayer();
@@ -1456,7 +1456,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         break;
       }
       if (currentItem instanceof ConductionArea currentConductionArea) {
-        Layer currentLayer = layerStructure.arr[currentConductionArea.getLayer()];
+        Layer currentLayer = layerStructure.layers[currentConductionArea.getLayer()];
         if (currentLayer.isSignal && currentConductionArea.getIsObstacle() != value) {
           currentConductionArea.setIsObstacle(value);
           somethingChanged = true;

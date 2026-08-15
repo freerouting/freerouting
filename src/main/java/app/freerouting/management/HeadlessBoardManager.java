@@ -923,7 +923,7 @@ public class HeadlessBoardManager implements BoardManager {
     java.util.List<String> violations = new java.util.ArrayList<>();
 
     for (int i = 0; i < this.board.getLayerCount(); i++) {
-      app.freerouting.board.Layer layer = this.board.layerStructure.arr[i];
+      app.freerouting.board.Layer layer = this.board.layerStructure.layers[i];
       if (!layer.isSignal) {
         final int layerIndex = i;
 

@@ -92,8 +92,8 @@ public class PolygonShape extends PolylineShape {
   }
 
   /** Creates a polygon shape from an array of corner points. */
-  public PolygonShape(Point[] cornerArr) {
-    this(new Polygon(cornerArr));
+  public PolygonShape(Point[] corners) {
+    this(new Polygon(corners));
   }
 
   @Override

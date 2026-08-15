@@ -134,7 +134,7 @@ class KiCadJsonReaderTest {
 
     assertNotNull(board);
     assertEquals(2, board.getLayerCount());
-    assertEquals("F.Cu", board.layerStructure.arr[0].name);
+    assertEquals("F.Cu", board.layerStructure.layers[0].name);
     assertEquals(2, board.rules.nets.maxNetNumber());
     assertEquals("VCC", board.rules.nets.get(1).name);
     assertEquals("GND", board.rules.nets.get(2).name);

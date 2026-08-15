@@ -274,7 +274,7 @@ public class WindowVia extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent evt) {
       BasicBoard pcb = boardFrame.boardPanel.boardHandling.getRoutingBoard();
-      if (pcb.layerStructure.arr.length <= 1) {
+      if (pcb.layerStructure.layers.length <= 1) {
         return;
       }
       String padstackName = JOptionPane.showInputDialog(tm.getText("prompt_new_padstack_name"));
@@ -288,14 +288,14 @@ public class WindowVia extends BoardSavableSubWindow {
           return;
         }
       }
-      Layer startLayer = pcb.layerStructure.arr[0];
-      Layer endLayer = pcb.layerStructure.arr[pcb.layerStructure.arr.length - 1];
+      Layer startLayer = pcb.layerStructure.layers[0];
+      Layer endLayer = pcb.layerStructure.layers[pcb.layerStructure.layers.length - 1];
       boolean layersSelected = false;
-      if (pcb.layerStructure.arr.length == 2) {
+      if (pcb.layerStructure.layers.length == 2) {
         layersSelected = true;
       } else {
         Layer[] possibleStartLayers =
-            Arrays.copyOf(pcb.layerStructure.arr, pcb.layerStructure.arr.length - 1);
+            Arrays.copyOf(pcb.layerStructure.layers, pcb.layerStructure.layers.length - 1);
         Object selectedValue =
             JOptionPane.showInputDialog(
                 null,
@@ -317,7 +317,9 @@ public class WindowVia extends BoardSavableSubWindow {
         int firstPossibleEndLayerNo = pcb.layerStructure.getNo(startLayer) + 1;
         Layer[] possibleEndLayers =
             Arrays.copyOfRange(
-                pcb.layerStructure.arr, firstPossibleEndLayerNo, pcb.layerStructure.arr.length);
+                pcb.layerStructure.layers,
+                firstPossibleEndLayerNo,
+                pcb.layerStructure.layers.length);
         Object selectedValue =
             JOptionPane.showInputDialog(
                 null,
@@ -357,7 +359,7 @@ public class WindowVia extends BoardSavableSubWindow {
           boardFrame, padstackInputPanel, tm.getText("adjust_circles"), JOptionPane.PLAIN_MESSAGE);
       int fromLayerIndex = pcb.layerStructure.getNo(startLayer);
       int toLayerIndex = pcb.layerStructure.getNo(endLayer);
-      ConvexShape[] padstackShapes = new ConvexShape[pcb.layerStructure.arr.length];
+      ConvexShape[] padstackShapes = new ConvexShape[pcb.layerStructure.layers.length];
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
       boolean shapeExists = false;
@@ -401,7 +403,7 @@ public class WindowVia extends BoardSavableSubWindow {
       circleRadius = new JFormattedTextField[layerCount];
       for (int i = 0; i < layerCount; i++) {
         String labelString =
-            tm.getText("radius_on_layer_label", layerStructure.arr[fromLayerIndex + i].name);
+            tm.getText("radius_on_layer_label", layerStructure.layers[fromLayerIndex + i].name);
         layerNames[i] = new JLabel(labelString);
         NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
         numberFormat.setMaximumFractionDigits(7);

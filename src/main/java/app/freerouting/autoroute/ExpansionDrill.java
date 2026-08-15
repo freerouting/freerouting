@@ -21,7 +21,7 @@ public class ExpansionDrill implements ExpandableObject {
   /** Array of dimension lastLayer - firstLayer + 1. */
   public final CompleteExpansionRoom[] roomArr;
 
-  private final MazeSearchElement[] mazeSearchInfoArr;
+  private final MazeSearchElement[] mazeSearchElements;
 
   /** The shape of the drill. */
   private final TileShape shape;
@@ -34,9 +34,9 @@ public class ExpansionDrill implements ExpandableObject {
     this.lastLayer = lastLayer;
     int layerCount = lastLayer - firstLayer + 1;
     roomArr = new CompleteExpansionRoom[layerCount];
-    mazeSearchInfoArr = new MazeSearchElement[layerCount];
-    for (int i = 0; i < mazeSearchInfoArr.length; i++) {
-      mazeSearchInfoArr[i] = new MazeSearchElement();
+    mazeSearchElements = new MazeSearchElement[layerCount];
+    for (int i = 0; i < mazeSearchElements.length; i++) {
+      mazeSearchElements[i] = new MazeSearchElement();
     }
   }
 
@@ -101,17 +101,17 @@ public class ExpansionDrill implements ExpandableObject {
 
   @Override
   public int mazeSearchElementCount() {
-    return this.mazeSearchInfoArr.length;
+    return this.mazeSearchElements.length;
   }
 
   @Override
   public MazeSearchElement getMazeSearchElement(int index) {
-    return this.mazeSearchInfoArr[index];
+    return this.mazeSearchElements[index];
   }
 
   @Override
   public void reset() {
-    for (MazeSearchElement currentInfo : mazeSearchInfoArr) {
+    for (MazeSearchElement currentInfo : mazeSearchElements) {
       currentInfo.reset();
     }
   }

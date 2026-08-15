@@ -34,16 +34,16 @@ public final class DsnFile {
       return false;
     }
     final app.freerouting.board.LayerStructure boardLayerStructure = routingBoard.layerStructure;
-    if (boardLayerStructure.arr.length <= 2) {
+    if (boardLayerStructure.layers.length <= 2) {
       return false;
     }
-    for (app.freerouting.board.Layer currentLayer : boardLayerStructure.arr) {
+    for (app.freerouting.board.Layer currentLayer : boardLayerStructure.layers) {
       if (!currentLayer.isSignal) {
         return false;
       }
     }
-    boolean[] layerContainsWiresArr = new boolean[boardLayerStructure.arr.length];
-    boolean[] changedLayerArr = new boolean[boardLayerStructure.arr.length];
+    boolean[] layerContainsWiresArr = new boolean[boardLayerStructure.layers.length];
+    boolean[] changedLayerArr = new boolean[boardLayerStructure.layers.length];
     for (int i = 0; i < layerContainsWiresArr.length; i++) {
       layerContainsWiresArr[i] = false;
       changedLayerArr[i] = false;
@@ -75,10 +75,11 @@ public final class DsnFile {
       if (layerContainsWiresArr[layerIndex]) {
         continue;
       }
-      final app.freerouting.board.Layer currentLayer = routingBoard.layerStructure.arr[layerIndex];
+      final app.freerouting.board.Layer currentLayer =
+          routingBoard.layerStructure.layers[layerIndex];
       if (!currentLayer.isSignal
           || layerIndex == 0
-          || layerIndex == boardLayerStructure.arr.length - 1) {
+          || layerIndex == boardLayerStructure.layers.length - 1) {
         continue;
       }
       TileShape[] convexPieces = currentConductionArea.getArea().splitToConvex();
@@ -103,7 +104,7 @@ public final class DsnFile {
       if (changedLayerArr[i]) {
         FRLogger.info(
             "Layer '"
-                + routingBoard.layerStructure.arr[i].name
+                + routingBoard.layerStructure.layers[i].name
                 + "' has been automatically configured as a dedicated power plane because it "
                 + "contains a large conduction area covering >50% of the board.");
       }

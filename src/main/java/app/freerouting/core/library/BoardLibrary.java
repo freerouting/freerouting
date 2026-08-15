@@ -110,7 +110,7 @@ public class BoardLibrary implements Serializable {
    * padstack exists.
    */
   public Padstack getMirroredViaPadstack(Padstack viaPadstack) {
-    int layerCount = this.padstacks.boardLayerStructure.arr.length;
+    int layerCount = this.padstacks.boardLayerStructure.layers.length;
     if (viaPadstack.fromLayer() == 0 && viaPadstack.toLayer() == layerCount - 1) {
       return viaPadstack;
     }

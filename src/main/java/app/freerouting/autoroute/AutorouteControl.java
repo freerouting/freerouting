@@ -39,7 +39,7 @@ public class AutorouteControl {
    */
   final int[] compensatedTraceHalfWidth;
 
-  final double[] viaRadiusArr;
+  final double[] viaRadii;
 
   /** The additional costs to min_normal via_cost for inserting a via between 2 layers. */
   final ViaCost[] addViaCosts;
@@ -85,7 +85,7 @@ public class AutorouteControl {
   int viaClearanceClass;
 
   /** The array of possible via ranges used by the autorouter. */
-  ViaMask[] viaInfoArr;
+  ViaMask[] viaInfos;
 
   /** The lower bound for the first layer of vias. */
   int viaLowerBound;
@@ -115,7 +115,7 @@ public class AutorouteControl {
 
   /** Creates a new instance of AutorouteControl for the input net. */
   public AutorouteControl(RoutingBoard board, int netNumber, RouterSettings settings) {
-    this(board, settings, settings.getTraceCostArr());
+    this(board, settings, settings.getTraceCosts());
     initNet(netNumber, board, settings.getViaCosts());
   }
 
@@ -125,21 +125,21 @@ public class AutorouteControl {
       int netNumber,
       RouterSettings settings,
       int viaCosts,
-      ExpansionCostFactor[] traceCostArr) {
-    this(board, settings, traceCostArr);
+      ExpansionCostFactor[] traceCosts) {
+    this(board, settings, traceCosts);
     initNet(netNumber, board, viaCosts);
   }
 
   /** Creates a new instance of AutorouteControl. */
   private AutorouteControl(
-      RoutingBoard board, RouterSettings settings, ExpansionCostFactor[] traceCostsArr) {
+      RoutingBoard board, RouterSettings settings, ExpansionCostFactor[] traceCosts) {
     this.settings = settings;
     layerCount = board.getLayerCount();
     traceHalfWidth = new int[layerCount];
     compensatedTraceHalfWidth = new int[layerCount];
     layerActive = new boolean[layerCount];
     viasAllowed = settings.getViasAllowed();
-    viaRadiusArr = new double[layerCount];
+    viaRadii = new double[layerCount];
     addViaCosts = new ViaCost[layerCount];
     this.bendCosts = new double[layerCount];
     for (int i = 0; i < layerCount; i++) {
@@ -149,10 +149,10 @@ public class AutorouteControl {
     for (int i = 0; i < layerCount; i++) {
       addViaCosts[i] = new ViaCost(layerCount);
       boolean activeSetting = settings.getLayerActive(i);
-      if (!board.layerStructure.arr[i].isSignal && activeSetting) {
+      if (!board.layerStructure.layers[i].isSignal && activeSetting) {
         FRLogger.warn(
             "Layer '"
-                + board.layerStructure.arr[i].name
+                + board.layerStructure.layers[i].name
                 + "' is a dedicated power plane and cannot be routed. "
                 + "Forcing active state to false.");
         layerActive[i] = false;
@@ -176,7 +176,7 @@ public class AutorouteControl {
         addViaCosts[i].toLayer[j] = 0;
       }
     }
-    traceCosts = traceCostsArr;
+    this.traceCosts = traceCosts;
     attachSmdAllowed = false;
     viaLowerBound = 0;
     viaUpperBound = layerCount;
@@ -237,7 +237,7 @@ public class AutorouteControl {
     } else {
       this.viaClearanceClass = 1;
     }
-    this.viaInfoArr = new ViaMask[viaRule.viaCount()];
+    this.viaInfos = new ViaMask[viaRule.viaCount()];
     this.attachSmdAllowed = false;
     for (int i = 0; i < viaRule.viaCount(); i++) {
       ViaInfo currentVia = viaRule.getVia(i);
@@ -255,9 +255,9 @@ public class AutorouteControl {
         } else {
           currentRadius = 0;
         }
-        this.viaRadiusArr[j] = Math.max(this.viaRadiusArr[j], currentRadius);
+        this.viaRadii[j] = Math.max(this.viaRadii[j], currentRadius);
       }
-      viaInfoArr[i] = new ViaMask(fromLayer, toLayer, currentVia.attachSmdAllowed());
+      viaInfos[i] = new ViaMask(fromLayer, toLayer, currentVia.attachSmdAllowed());
     }
 
     boolean pureSmdNet = isPureSmdNet(board, netNumber);
@@ -269,8 +269,8 @@ public class AutorouteControl {
     }
 
     for (int j = 0; j < this.layerCount; j++) {
-      this.viaRadiusArr[j] = Math.max(this.viaRadiusArr[j], traceHalfWidth[j]);
-      this.maxViaRadius = Math.max(this.maxViaRadius, this.viaRadiusArr[j]);
+      this.viaRadii[j] = Math.max(this.viaRadii[j], traceHalfWidth[j]);
+      this.maxViaRadius = Math.max(this.maxViaRadius, this.viaRadii[j]);
     }
     double viaCostFactor = this.maxViaRadius;
     viaCostFactor = Math.max(viaCostFactor, 1);

@@ -51,10 +51,10 @@ public class BoardOutline extends Item implements Serializable {
         // an error occurred while dividing the area
         result = 0;
       } else {
-        result = tileShapes.length * this.board.layerStructure.arr.length;
+        result = tileShapes.length * this.board.layerStructure.layers.length;
       }
     } else {
-      result = this.lineCount() * this.board.layerStructure.arr.length;
+      result = this.lineCount() * this.board.layerStructure.layers.length;
     }
     return result;
   }
@@ -64,11 +64,11 @@ public class BoardOutline extends Item implements Serializable {
     int shapeCount = this.tileShapeCount();
     int result;
     if (shapeCount > 0) {
-      result = index * this.board.layerStructure.arr.length / shapeCount;
+      result = index * this.board.layerStructure.layers.length / shapeCount;
     } else {
       result = 0;
     }
-    if (result < 0 || result >= this.board.layerStructure.arr.length) {
+    if (result < 0 || result >= this.board.layerStructure.layers.length) {
       FRLogger.warn("BoardOutline.shapeLayer: index out of range");
     }
     return result;
@@ -95,7 +95,7 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public int lastLayer() {
-    return this.board.layerStructure.arr.length - 1;
+    return this.board.layerStructure.layers.length - 1;
   }
 
   @Override

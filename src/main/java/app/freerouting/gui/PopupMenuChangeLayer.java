@@ -9,7 +9,7 @@ import javax.swing.JMenuItem;
 class PopupMenuChangeLayer extends JMenu {
 
   private final BoardFrame boardFrame;
-  private final LayermenuItem[] itemArr;
+  private final LayermenuItem[] items;
 
   /** Creates a new instance of ChangeLayerMenu. */
   PopupMenuChangeLayer(BoardFrame boardFrame) {
@@ -17,17 +17,17 @@ class PopupMenuChangeLayer extends JMenu {
 
     LayerStructure layerStructure =
         boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure;
-    this.itemArr = new LayermenuItem[layerStructure.signalLayerCount()];
+    this.items = new LayermenuItem[layerStructure.signalLayerCount()];
     TextManager tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     this.setText(tm.getText("change_layer"));
     this.setToolTipText(tm.getText("change_layer_tooltip"));
     int currentSignalLayerNo = 0;
-    for (int i = 0; i < layerStructure.arr.length; i++) {
-      if (layerStructure.arr[i].isSignal) {
-        this.itemArr[currentSignalLayerNo] = new LayermenuItem(i);
-        this.itemArr[currentSignalLayerNo].setText(layerStructure.arr[i].name);
-        this.add(this.itemArr[currentSignalLayerNo]);
+    for (int i = 0; i < layerStructure.layers.length; i++) {
+      if (layerStructure.layers[i].isSignal) {
+        this.items[currentSignalLayerNo] = new LayermenuItem(i);
+        this.items[currentSignalLayerNo].setText(layerStructure.layers[i].name);
+        this.add(this.items[currentSignalLayerNo]);
         ++currentSignalLayerNo;
       }
     }
@@ -35,8 +35,8 @@ class PopupMenuChangeLayer extends JMenu {
 
   /** Disables the item with index no and enables all other items. */
   void disableItem(int no) {
-    for (int i = 0; i < itemArr.length; i++) {
-      this.itemArr[i].setEnabled(i != no);
+    for (int i = 0; i < items.length; i++) {
+      this.items[i].setEnabled(i != no);
     }
   }
 
@@ -52,7 +52,7 @@ class PopupMenuChangeLayer extends JMenu {
             if (boardPanel.boardHandling.changeLayerAction(layerIndex)) {
               TextManager tm = new TextManager(PopupMenuChangeLayer.class, boardFrame.getLocale());
               String layerName =
-                  boardPanel.boardHandling.getRoutingBoard().layerStructure.arr[layerIndex].name;
+                  boardPanel.boardHandling.getRoutingBoard().layerStructure.layers[layerIndex].name;
               boardPanel.screenMessages.setStatusMessage(
                   tm.getText("layer_changed_to_message", layerName));
             }

@@ -49,7 +49,7 @@ public class Layer {
       WriteScopeParameter scopeParameter, int layerIndex, boolean writeRule) throws IOException {
     scopeParameter.file.startScope();
     scopeParameter.file.write("layer ");
-    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.arr[layerIndex];
+    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.layers[layerIndex];
     scopeParameter.identifierType.write(boardLayer.name, scopeParameter.file);
     scopeParameter.file.newLine();
     scopeParameter.file.write("(type ");

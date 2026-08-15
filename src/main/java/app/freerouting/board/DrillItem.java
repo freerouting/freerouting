@@ -367,7 +367,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       int beginLayer = this.firstLayer();
       int endLayer = this.lastLayer();
       for (int currentLayer = beginLayer; currentLayer <= endLayer; currentLayer++) {
-        if (this.board != null && !this.board.layerStructure.arr[currentLayer].isSignal) {
+        if (this.board != null && !this.board.layerStructure.layers[currentLayer].isSignal) {
           continue;
         }
         Shape currentShape = this.getShapeOnLayer(currentLayer);

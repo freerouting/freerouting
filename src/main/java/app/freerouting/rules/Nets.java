@@ -19,13 +19,13 @@ public class Nets implements Serializable {
   public static final int hidden_net_number = 10000001;
 
   /** The list of electrical nets on the board. */
-  private final Vector<Net> netArr;
+  private final Vector<Net> nets;
 
   private BasicBoard board;
 
   /** Creates a new empty net list. */
   public Nets() {
-    netArr = new Vector<>();
+    nets = new Vector<>();
   }
 
   /** Returns false if {@code netNumber} belongs to an internally used special-purpose net. */
@@ -35,12 +35,12 @@ public class Nets implements Serializable {
 
   /** Returns the biggest net number on the board. */
   public int maxNetNumber() {
-    return netArr.size();
+    return nets.size();
   }
 
   /** Returns the net with the given name and subnet number, or null if no such net exists. */
   public Net get(String name, int subnetNumber) {
-    for (Net currentNet : netArr) {
+    for (Net currentNet : nets) {
       if (currentNet != null && currentNet.name.equalsIgnoreCase(name)) {
         if (currentNet.subnetNumber == subnetNumber) {
           return currentNet;
@@ -53,7 +53,7 @@ public class Nets implements Serializable {
   /** Returns all subnets with the given name. */
   public Collection<Net> get(String name) {
     Collection<Net> result = new LinkedList<>();
-    for (Net currentNet : netArr) {
+    for (Net currentNet : nets) {
       if (currentNet != null && currentNet.name.equalsIgnoreCase(name)) {
         result.add(currentNet);
       }
@@ -63,10 +63,10 @@ public class Nets implements Serializable {
 
   /** Returns the net with the given net number, or null if no such net exists. */
   public Net get(int netNumber) {
-    if (netNumber < 1 || netNumber > netArr.size()) {
+    if (netNumber < 1 || netNumber > nets.size()) {
       return null;
     }
-    Net result = netArr.elementAt(netNumber - 1);
+    Net result = nets.elementAt(netNumber - 1);
     if (result != null && result.netNumber != netNumber) {
       FRLogger.warn("Nets.get: inconsistent netNumber");
     }
@@ -77,7 +77,7 @@ public class Nets implements Serializable {
   public Net newNet(Locale locale) {
     TextManager tm = new TextManager(NetClasses.class, locale);
 
-    String netName = tm.getText("net#") + (netArr.size() + 1);
+    String netName = tm.getText("net#") + (nets.size() + 1);
     return add(netName, 1, false);
   }
 
@@ -86,12 +86,12 @@ public class Nets implements Serializable {
    * a net is divided internally because of from-to rules. For normal nets it is always 1.
    */
   public Net add(String name, int subnetNumber, boolean containsPlane) {
-    int newNetNo = netArr.size() + 1;
+    int newNetNo = nets.size() + 1;
     if (newNetNo >= max_legal_net_number) {
       FRLogger.warn("Nets.add_net: maxNetNo out of range");
     }
     Net newNet = new Net(name, subnetNumber, newNetNo, this, containsPlane);
-    netArr.add(newNet);
+    nets.add(newNet);
     return newNet;
   }
 

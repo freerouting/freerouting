@@ -120,7 +120,7 @@ public class ShapeSearchTree extends MinAreaTree {
             newPolyline,
             compensatedHalfWidth,
             keepAtStartCount,
-            newPolyline.arr.length - 1 - keepAtEndCount);
+            newPolyline.lines.length - 1 - keepAtEndCount);
     int oldShapeCount = obj.treeShapeCount(this);
     int newShapeCount = changedShapes.length + keepAtStartCount + keepAtEndCount;
     Leaf[] newLeafArr = new Leaf[newShapeCount];
@@ -308,7 +308,7 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   void reuseEntriesAfterCutout(
       PolylineTrace fromTrace, PolylineTrace startPiece, PolylineTrace endPiece) {
-    Leaf[] startPieceLeafArr = new Leaf[startPiece.polyline().arr.length - 2];
+    Leaf[] startPieceLeafArr = new Leaf[startPiece.polyline().lines.length - 2];
     Leaf[] fromTraceEntries = fromTrace.getSearchTreeEntries(this);
     // transfer the entries at the start of fromTrace to startPiece.
     for (int i = 0; i < startPieceLeafArr.length - 1; i++) {
@@ -322,7 +322,7 @@ public class ShapeSearchTree extends MinAreaTree {
 
     // create the last tree entry of the start piece.
 
-    Leaf[] endPieceLeafArr = new Leaf[endPiece.polyline().arr.length - 2];
+    Leaf[] endPieceLeafArr = new Leaf[endPiece.polyline().lines.length - 2];
 
     // create the first tree entry of the end piece.
     endPieceLeafArr[0] = insert(endPiece, 0);
@@ -937,7 +937,7 @@ public class ShapeSearchTree extends MinAreaTree {
         return new TileShape[0];
       }
       Collection<TileShape> treeShapeList = new LinkedList<>();
-      for (int layerIndex = 0; layerIndex < this.board.layerStructure.arr.length; layerIndex++) {
+      for (int layerIndex = 0; layerIndex < this.board.layerStructure.layers.length; layerIndex++) {
         for (int i = 0; i < convexShapes.length; i++) {
           TileShape currentConvexShape = convexShapes[i];
           int offsetWidth =
@@ -953,11 +953,11 @@ public class ShapeSearchTree extends MinAreaTree {
       }
     } else {
       // Only the line shapes of the outline are inserted as obstacles into the tree.
-      result = new TileShape[boardOutline.lineCount() * this.board.layerStructure.arr.length];
+      result = new TileShape[boardOutline.lineCount() * this.board.layerStructure.layers.length];
       int halfWidth = boardOutline.getHalfWidth();
       Line[] currentLineArr = new Line[3];
       int currentNo = 0;
-      for (int layerIndex = 0; layerIndex < this.board.layerStructure.arr.length; layerIndex++) {
+      for (int layerIndex = 0; layerIndex < this.board.layerStructure.layers.length; layerIndex++) {
         for (int shapeNo = 0; shapeNo < boardOutline.shapeCount(); shapeNo++) {
           PolylineShape currentOutlineShape = boardOutline.getShape(shapeNo);
           int borderLineCount = currentOutlineShape.borderLineCount();

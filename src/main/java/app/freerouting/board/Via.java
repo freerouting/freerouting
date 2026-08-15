@@ -249,8 +249,8 @@ public class Via extends DrillItem implements Serializable {
   public String getHoverInfo(Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    String fromLayer = this.board.layerStructure.arr[this.firstLayer()].name;
-    String toLayer = this.board.layerStructure.arr[this.lastLayer()].name;
+    String fromLayer = this.board.layerStructure.layers[this.firstLayer()].name;
+    String toLayer = this.board.layerStructure.layers[this.lastLayer()].name;
     String padstackName = padstack.name;
     String connInfo = this.getConnectableItemHoverInfo(locale);
 

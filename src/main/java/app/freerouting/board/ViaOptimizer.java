@@ -19,13 +19,13 @@ public final class ViaOptimizer {
 
   /**
    * Optimizes the location of a via connected to at most 2 traces according to the trace costs on
-   * the layers of the connected traces If traceCostArr == null, the horizontal and vertical trace
+   * the layers of the connected traces If traceCosts == null, the horizontal and vertical trace
    * costs will be set to 1. Returns false, if the via was not changed.
    */
   public static boolean optViaLocation(
       RoutingBoard board,
       Via via,
-      ExpansionCostFactor[] traceCostArr,
+      ExpansionCostFactor[] traceCosts,
       int tracePullTightAccuracy,
       int maxRecursionDepth) {
     if (via.isShoveFixed()) {
@@ -99,9 +99,9 @@ public final class ViaOptimizer {
 
     ExpansionCostFactor firstLayerTraceCosts;
     ExpansionCostFactor secondLayerTraceCosts;
-    if (traceCostArr != null) {
-      firstLayerTraceCosts = traceCostArr[firstLayer];
-      secondLayerTraceCosts = traceCostArr[secondLayer];
+    if (traceCosts != null) {
+      firstLayerTraceCosts = traceCosts[firstLayer];
+      secondLayerTraceCosts = traceCosts[secondLayer];
     } else {
       firstLayerTraceCosts = new ExpansionCostFactor(1, 1);
       secondLayerTraceCosts = firstLayerTraceCosts;
@@ -143,7 +143,7 @@ public final class ViaOptimizer {
     pickedItems = board.pickItems(newLocation, firstTrace.getLayer(), filter);
     for (Item currentItem : pickedItems) {
       optViaLocation(
-          board, (Via) currentItem, traceCostArr, tracePullTightAccuracy, maxRecursionDepth - 1);
+          board, (Via) currentItem, traceCosts, tracePullTightAccuracy, maxRecursionDepth - 1);
       break;
     }
     return true;

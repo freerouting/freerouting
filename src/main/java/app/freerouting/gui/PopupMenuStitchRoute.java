@@ -16,7 +16,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
     super(boardFrame);
     LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
 
-    if (layerStructure.arr.length > 0) {
+    if (layerStructure.layers.length > 0) {
       changeLayerMenu = new PopupMenuChangeLayer(boardFrame);
       this.add(changeLayerMenu, 0);
     } else {
@@ -51,7 +51,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
     this.add(popupCancelMenuitem, 2);
 
     Layer currentLayer =
-        layerStructure.arr[boardPanel.boardHandling.getWorkspaceSettings().getLayer()];
+        layerStructure.layers[boardPanel.boardHandling.getWorkspaceSettings().getLayer()];
     disableLayerItem(layerStructure.getSignalLayerNo(currentLayer));
   }
 

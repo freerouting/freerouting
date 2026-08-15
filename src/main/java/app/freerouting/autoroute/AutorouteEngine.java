@@ -377,9 +377,9 @@ public class AutorouteEngine {
       if (intersection.dimension() == 1) {
         // add a new incomplete room to currentNeighbour.
         int[] touchingSides = roomShape.touchingSides(neighbourShape);
-        Line[] lineArr = new Line[1];
-        lineArr[0] = neighbourShape.borderLine(touchingSides[1]).opposite();
-        Simplex newIncompleteRoomShape = Simplex.getInstance(lineArr);
+        Line[] lines = new Line[1];
+        lines[0] = neighbourShape.borderLine(touchingSides[1]).opposite();
+        Simplex newIncompleteRoomShape = Simplex.getInstance(lines);
         IncompleteFreeSpaceExpansionRoom newIncompleteRoom =
             addIncompleteExpansionRoom(newIncompleteRoomShape, roomLayer, intersection);
         ExpansionDoor newDoor = new ExpansionDoor(currentNeighbour, newIncompleteRoom, 1);

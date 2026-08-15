@@ -35,16 +35,16 @@ class PullTightAlgo90 extends PullTightAlgo {
 
   /** Tries to skip the second corner of polyline. Return polyline, if nothing was changed. */
   private Polyline trySkipSecondCorner(Polyline polyline) {
-    if (polyline.arr.length < 5) {
+    if (polyline.lines.length < 5) {
       return polyline;
     }
     Line[] checkLines = new Line[4];
-    checkLines[0] = polyline.arr[1];
-    checkLines[1] = polyline.arr[0];
-    checkLines[2] = polyline.arr[3];
-    checkLines[3] = polyline.arr[4];
+    checkLines[0] = polyline.lines[1];
+    checkLines[1] = polyline.lines[0];
+    checkLines[2] = polyline.lines[3];
+    checkLines[3] = polyline.lines[4];
     Polyline checkPolyline = new Polyline(checkLines);
-    if (checkPolyline.arr.length != 4
+    if (checkPolyline.lines.length != 4
         || currentClipShape != null && !currentClipShape.contains(checkPolyline.cornerApprox(1))) {
       return polyline;
     }
@@ -56,39 +56,39 @@ class PullTightAlgo90 extends PullTightAlgo {
       }
     }
     // now the second corner can be skipped.
-    Line[] newLines = new Line[polyline.arr.length - 1];
-    newLines[0] = polyline.arr[1];
-    newLines[1] = polyline.arr[0];
-    System.arraycopy(polyline.arr, 3, newLines, 2, newLines.length - 2);
+    Line[] newLines = new Line[polyline.lines.length - 1];
+    newLines[0] = polyline.lines[1];
+    newLines[1] = polyline.lines[0];
+    System.arraycopy(polyline.lines, 3, newLines, 2, newLines.length - 2);
     return new Polyline(newLines);
   }
 
   /** Tries to reduce the amount of corners of polyline. Return polyline, if nothing was changed. */
   private Polyline trySkipCorners(Polyline polyline) {
-    Line[] newLines = new Line[polyline.arr.length];
-    newLines[0] = polyline.arr[0];
-    newLines[1] = polyline.arr[1];
+    Line[] newLines = new Line[polyline.lines.length];
+    newLines[0] = polyline.lines[0];
+    newLines[1] = polyline.lines[1];
     int newLineIndex = 1;
     boolean polylineChanged = false;
     Line[] checkLines = new Line[4];
     boolean secondLastCornerSkipped = false;
-    for (int i = 5; i <= polyline.arr.length; i++) {
+    for (int i = 5; i <= polyline.lines.length; i++) {
       boolean skipLines = false;
       boolean inClipShape =
           currentClipShape == null || currentClipShape.contains(polyline.cornerApprox(i - 3));
       if (inClipShape) {
         checkLines[0] = newLines[newLineIndex - 1];
         checkLines[1] = newLines[newLineIndex];
-        checkLines[2] = polyline.arr[i - 1];
-        if (i < polyline.arr.length) {
-          checkLines[3] = polyline.arr[i];
+        checkLines[2] = polyline.lines[i - 1];
+        if (i < polyline.lines.length) {
+          checkLines[3] = polyline.lines[i];
         } else {
           // use as concluding line the second last line
-          checkLines[3] = polyline.arr[i - 2];
+          checkLines[3] = polyline.lines[i - 2];
         }
         Polyline checkPolyline = new Polyline(checkLines);
         skipLines =
-            checkPolyline.arr.length == 4
+            checkPolyline.lines.length == 4
                 && (currentClipShape == null
                     || currentClipShape.contains(checkPolyline.cornerApprox(1)));
         if (skipLines) {
@@ -105,20 +105,21 @@ class PullTightAlgo90 extends PullTightAlgo {
         }
       }
       if (skipLines) {
-        if (i == polyline.arr.length) {
+        if (i == polyline.lines.length) {
           secondLastCornerSkipped = true;
         }
         if (board.changedArea != null) {
           FloatPoint newCorner = checkLines[1].intersectionApprox(checkLines[2]);
           board.changedArea.join(newCorner, currentLayer);
-          FloatPoint skippedCorner = polyline.arr[i - 2].intersectionApprox(polyline.arr[i - 3]);
+          FloatPoint skippedCorner =
+              polyline.lines[i - 2].intersectionApprox(polyline.lines[i - 3]);
           board.changedArea.join(skippedCorner, currentLayer);
         }
         polylineChanged = true;
         ++i;
       } else {
         ++newLineIndex;
-        newLines[newLineIndex] = polyline.arr[i - 3];
+        newLines[newLineIndex] = polyline.lines[i - 3];
       }
     }
     if (!polylineChanged) {
@@ -127,13 +128,13 @@ class PullTightAlgo90 extends PullTightAlgo {
     if (secondLastCornerSkipped) {
       // The second last corner of polyline was skipped
       ++newLineIndex;
-      newLines[newLineIndex] = polyline.arr[polyline.arr.length - 1];
+      newLines[newLineIndex] = polyline.lines[polyline.lines.length - 1];
       ++newLineIndex;
-      newLines[newLineIndex] = polyline.arr[polyline.arr.length - 2];
+      newLines[newLineIndex] = polyline.lines[polyline.lines.length - 2];
     } else {
       for (int i = 3; i > 0; i--) {
         ++newLineIndex;
-        newLines[newLineIndex] = polyline.arr[polyline.arr.length - i];
+        newLines[newLineIndex] = polyline.lines[polyline.lines.length - i];
       }
     }
 
