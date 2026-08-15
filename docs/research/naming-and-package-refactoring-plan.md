@@ -563,6 +563,89 @@ Branch: `refactor/naming-phase-10-arrays`
 
 ---
 
+### Phase 11 — Algorithmic engine class naming modernization (`*Algo` -> Domain role classes)
+
+Branch: `refactor/naming-phase-11-algo-classes`
+
+**Progress checklist**
+
+- [ ] Rename `PullTightAlgo` / `PullTightAlgo45` / `PullTightAlgo90` / `PullTightAlgoAnyAngle` → `TraceTightener` / `TraceTightener45` / `TraceTightener90` / `TraceTightenerAnyAngle`.
+- [ ] Rename `ShoveTraceAlgo` → `TraceShover`.
+- [ ] Rename `MazeSearchAlgo` → `MazeSearchEngine`.
+- [ ] Rename `MazeShoveTraceAlgo` → `MazeTraceShover`.
+- [ ] Rename `InsertFoundConnectionAlgo` → `FoundConnectionInserter`.
+- [ ] Rename `LocateFoundConnectionAlgo` / `LocateFoundConnectionAlgo45Degree` / `LocateFoundConnectionAlgoAnyAngle` → `FoundConnectionLocator` / `FoundConnectionLocator45Degree` / `FoundConnectionLocatorAnyAngle`.
+- [ ] Update all call sites, imports, and references.
+- [ ] Run full test suite and quality gates.
+
+---
+
+### Phase 12 — Clearance class index standardization (`clType` / `clearanceType` / `clClass` -> `clearanceClassIndex`)
+
+Branch: `refactor/naming-phase-12-clearance-index`
+
+**Progress checklist**
+
+- [ ] Standardize `int clType`, `int clearanceType`, `int clClass` parameters in `app.freerouting.board` to `clearanceClassIndex`.
+- [ ] Standardize parameters and fields in `app.freerouting.autoroute` to `clearanceClassIndex`.
+- [ ] Standardize parameters in `app.freerouting.drc` and `app.freerouting.rules` to `clearanceClassIndex`.
+- [ ] Standardize local variables (`currentClType`, `ignoreClType`) to `currentClearanceClassIndex`, `ignoreClearanceClassIndex`.
+- [ ] Run full test suite and quality gates.
+
+---
+
+### Phase 13 — Domain number & index abbreviation expansion (`*No` / `*Ind` -> `*Number` / `*Index` / `*Id`)
+
+Branch: `refactor/naming-phase-13-id-and-indices`
+
+**Progress checklist**
+
+- [ ] Item, component, and group IDs: `Item.getIdNo()` → `Item.getIdNumber()` (or `Item.getId()`), `Pin.getComponentNo()` → `getComponentNumber()`, `groupNo` → `groupNumber`.
+- [ ] Pin numbers: `Pin.pinNo` → `Pin.pinNumber`, `Package.Pin.pinNo` → `pinNumber`.
+- [ ] Geometric indices: `cornerNo` → `cornerIndex`, `shapeNo` → `shapeIndex`, `lineNo` → `lineIndex`.
+- [ ] Graph and search indices: `doorNo` → `doorIndex`, `sectionNo` → `sectionIndex`, `treeIdNo` → `treeId`.
+- [ ] Run full test suite and quality gates.
+
+---
+
+### Phase 14 — Interface & boundary clarity
+
+Branch: `refactor/naming-phase-14-interfaces`
+
+**Progress checklist**
+
+- [ ] Rename `app.freerouting.board.ObjectInfoPanel` interface → `app.freerouting.board.ItemInfoPrinter` (decoupling from UI JPanel confusion).
+- [ ] Rename `ReadScopeParameter.itemIdNoGenerator` → `idGenerator` / `itemIdentificationNumberGenerator`.
+- [ ] Update all implementing classes (`PrintInfoWindow`, `BoardPrintInfo`, etc.) and callers.
+- [ ] Run full test suite and quality gates.
+
+---
+
+### Phase 15 — Java modernization & switch expressions
+
+Branch: `refactor/naming-phase-15-java-modernization`
+
+**Progress checklist**
+
+- [ ] Convert verbose `switch` statements to modern arrow switch expressions (`case A -> ...`) across `geometry.planar`, `io.specctra`, `drc`.
+- [ ] Convert simple immutable data carriers to Java records (`ExpansionCostFactor`, `BoardHistoryEntry`, etc.).
+- [ ] Modernize collection instantiation with `List.copyOf()`, `Set.copyOf()`, `List.of()` where immutable collections are created.
+- [ ] Run full test suite and quality gates.
+
+---
+
+### Phase 16 — Javadoc & legacy comment cleanup
+
+Branch: `refactor/naming-phase-16-javadoc-cleanup`
+
+**Progress checklist**
+
+- [ ] Update stale snake_case method references in javadocs/comments (`normalize_traces()`, `is_tail()`, `bounding_octagon()`, `get_direction()`, `start_point()`, `end_point()`, `edge_line_count()`, `border_line_count()`).
+- [ ] Verify `python scripts/i18n/extract-context.py --check` and build docs.
+- [ ] Run full verification suite (`./gradlew check`).
+
+---
+
 ## Explicitly out of this campaign
 
 `RouterSettings`, `BasicBoard`, `Item`, `ShapeSearchTree`,
