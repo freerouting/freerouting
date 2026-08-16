@@ -210,10 +210,10 @@ public class RationalVector extends Vector implements Serializable {
       n -= 4;
     }
     return switch (n) {
-      case 0 -> this;
-      case 1 -> new RationalVector(y.negate(), x, this.z);
-      case 2 -> new RationalVector(x.negate(), y.negate(), this.z);
-      case 3 -> new RationalVector(y, x.negate(), this.z);
+      case 0 -> this; // 0 degrees
+      case 1 -> new RationalVector(y.negate(), x, this.z); // 90 degrees
+      case 2 -> new RationalVector(x.negate(), y.negate(), this.z); // 180 degrees
+      case 3 -> new RationalVector(y, x.negate(), this.z); // 270 degrees
       default -> this;
     };
   }

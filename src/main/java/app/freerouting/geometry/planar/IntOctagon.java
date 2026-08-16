@@ -130,14 +130,16 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   @Override
   public IntPoint corner(int no) {
     return switch (no) {
-      case 0 -> new IntPoint(lowerLeftDiagonalX - bottomY, bottomY);
-      case 1 -> new IntPoint(lowerRightDiagonalX + bottomY, bottomY);
-      case 2 -> new IntPoint(rightX, rightX - lowerRightDiagonalX);
-      case 3 -> new IntPoint(rightX, upperRightDiagonalX - rightX);
-      case 4 -> new IntPoint(upperRightDiagonalX - topY, topY);
-      case 5 -> new IntPoint(upperLeftDiagonalX + topY, topY);
-      case 6 -> new IntPoint(leftX, leftX - upperLeftDiagonalX);
-      case 7 -> new IntPoint(leftX, lowerLeftDiagonalX - leftX);
+      case 0 ->
+          new IntPoint(lowerLeftDiagonalX - bottomY, bottomY); // lower-left (bottom horizontal)
+      case 1 ->
+          new IntPoint(lowerRightDiagonalX + bottomY, bottomY); // lower-right (bottom horizontal)
+      case 2 -> new IntPoint(rightX, rightX - lowerRightDiagonalX); // bottom-right vertical
+      case 3 -> new IntPoint(rightX, upperRightDiagonalX - rightX); // top-right vertical
+      case 4 -> new IntPoint(upperRightDiagonalX - topY, topY); // upper-right (top horizontal)
+      case 5 -> new IntPoint(upperLeftDiagonalX + topY, topY); // upper-left (top horizontal)
+      case 6 -> new IntPoint(leftX, leftX - upperLeftDiagonalX); // top-left vertical
+      case 7 -> new IntPoint(leftX, lowerLeftDiagonalX - leftX); // bottom-left vertical
       default -> throw new IllegalArgumentException("IntOctagon.corner: no out of range");
     };
   }
@@ -564,14 +566,14 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
     int tmp =
         switch (borderLineNo) {
-          case 0 -> this.bottomY - y;
-          case 2 -> x - this.rightX;
-          case 4 -> y - this.topY;
-          case 6 -> this.leftX - x;
-          case 1 -> x - y - this.lowerRightDiagonalX;
-          case 3 -> x + y - this.upperRightDiagonalX;
-          case 5 -> this.upperLeftDiagonalX + y - x;
-          case 7 -> this.lowerLeftDiagonalX - x - y;
+          case 0 -> this.bottomY - y; // lower boundary line
+          case 1 -> x - y - this.lowerRightDiagonalX; // lower-right diagonal line
+          case 2 -> x - this.rightX; // right boundary line
+          case 3 -> x + y - this.upperRightDiagonalX; // upper-right diagonal line
+          case 4 -> y - this.topY; // upper boundary line
+          case 5 -> this.upperLeftDiagonalX + y - x; // upper-left diagonal line
+          case 6 -> this.leftX - x; // left boundary line
+          case 7 -> this.lowerLeftDiagonalX - x - y; // lower-left diagonal line
           default -> {
             FRLogger.warn("IntOctagon.side_of_border_line: borderLineNo out of range");
             yield 0;

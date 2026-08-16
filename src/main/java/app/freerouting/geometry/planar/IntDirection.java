@@ -101,14 +101,14 @@ public class IntDirection extends Direction implements Serializable {
   public Direction turn45Degree(int factor) {
     int n = factor % 8;
     return switch (n) {
-      case 0 -> new IntDirection(x, y);
-      case 1 -> new IntDirection(x - y, x + y);
-      case 2 -> new IntDirection(-y, x);
-      case 3 -> new IntDirection(-x - y, x - y);
-      case 4 -> new IntDirection(-x, -y);
-      case 5 -> new IntDirection(y - x, -x - y);
-      case 6 -> new IntDirection(y, -x);
-      case 7 -> new IntDirection(x + y, y - x);
+      case 0 -> new IntDirection(x, y); // 0 degrees
+      case 1 -> new IntDirection(x - y, x + y); // 45 degrees
+      case 2 -> new IntDirection(-y, x); // 90 degrees
+      case 3 -> new IntDirection(-x - y, x - y); // 135 degrees
+      case 4 -> new IntDirection(-x, -y); // 180 degrees
+      case 5 -> new IntDirection(y - x, -x - y); // 225 degrees
+      case 6 -> new IntDirection(y, -x); // 270 degrees
+      case 7 -> new IntDirection(x + y, y - x); // 315 degrees
       default -> new IntDirection(0, 0);
     };
   }

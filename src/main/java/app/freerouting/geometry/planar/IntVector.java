@@ -75,10 +75,10 @@ public class IntVector extends Vector implements Serializable {
       n -= 4;
     }
     return switch (n) {
-      case 0 -> new IntVector(x, y);
-      case 1 -> new IntVector(-y, x);
-      case 2 -> new IntVector(-x, -y);
-      case 3 -> new IntVector(y, -x);
+      case 0 -> new IntVector(x, y); // 0 degrees
+      case 1 -> new IntVector(-y, x); // 90 degrees
+      case 2 -> new IntVector(-x, -y); // 180 degrees
+      case 3 -> new IntVector(y, -x); // 270 degrees
       default -> IntVector.ZERO;
     };
   }
