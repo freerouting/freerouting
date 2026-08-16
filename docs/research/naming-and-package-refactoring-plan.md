@@ -659,16 +659,16 @@ Branch: `refactor/naming-phase-16-javadoc-and-docs-update`
 
 **Progress checklist**
 
-- [ ] Complete Javadoc review and update across all packages (`geometry.planar`, `board`, `autoroute`, `drc`, `rules`, `core`, `gui`, `io.specctra`, `settings`, `api`):
-  - [ ] Replace stale `snake_case` method and field references in Javadocs and source comments (e.g. `normalize_traces()`, `is_tail()`, `bounding_octagon()`, `get_direction()`, `start_point()`, `end_point()`, `edge_line_count()`, `border_line_count()`, `net_no`, `cl_type`, etc.).
-  - [ ] Update all class/interface name references in Javadocs to reflect renamed types (`ItemInfoPrinter`, `TileShape`, `RegularTileShape`, `Simplex`, `Circle`, `ExpansionRoom`, `CompleteFreeSpaceExpansionRoom`, etc.).
-  - [ ] Ensure `@param`, `@return`, and `@throws` tags match updated camelCase parameter names (`printer`, `idGenerator`, `clearanceClassIndex`, `layerIndex`, `componentId`, etc.).
-- [ ] Complete documentation review and update in `docs/`:
-  - [ ] Update `docs/architecture.md` (Mermaid system diagram, package glossary, and component references).
-  - [ ] Update `docs/settings.md`, `docs/developer.md`, `docs/command_line_arguments.md`, `docs/integrations.md`, `docs/self-hosting.md`.
-  - [ ] Update `AGENTS.md` and related agent instructions if needed.
-- [ ] Verify `python scripts/i18n/extract-context.py --check`.
-- [ ] Run full verification suite (`./gradlew check`).
+- [x] Complete Javadoc review and update across all packages (`geometry.planar`, `board`, `autoroute`, `drc`, `rules`, `core`, `gui`, `io.specctra`, `settings`, `api`):
+  - [x] Replace stale `snake_case` method and field references in Javadocs and source comments (e.g. `normalize_traces()`, `is_tail()`, `bounding_octagon()`, `get_direction()`, `start_point()`, `end_point()`, `edge_line_count()`, `border_line_count()`, `net_no`, `cl_type`, etc.).
+  - [x] Update all class/interface name references in Javadocs to reflect renamed types (`ItemInfoPrinter`, `TileShape`, `RegularTileShape`, `Simplex`, `Circle`, `ExpansionRoom`, `CompleteFreeSpaceExpansionRoom`, etc.).
+  - [x] Ensure `@param`, `@return`, and `@throws` tags match updated camelCase parameter names (`printer`, `idGenerator`, `clearanceClassIndex`, `layerIndex`, `componentId`, etc.).
+- [x] Complete documentation review and update in `docs/`:
+  - [x] Update `docs/architecture.md` (Mermaid system diagram, package glossary, and component references).
+  - [x] Update `docs/settings.md`, `docs/developer.md`, `docs/command_line_arguments.md`, `docs/integrations.md`, `docs/self-hosting.md`.
+  - [x] Update `AGENTS.md` and related agent instructions if needed.
+- [x] Verify `python scripts/i18n/extract-context.py --check`.
+- [x] Run full verification suite (`./gradlew check`).
 
 ---
 

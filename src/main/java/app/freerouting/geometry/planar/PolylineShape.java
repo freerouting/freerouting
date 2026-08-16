@@ -16,10 +16,10 @@ public abstract class PolylineShape implements Shape, Serializable {
   public abstract int borderLineCount();
 
   /**
-   * Returns the no-th corner of this shape for no between 0 and border_line_count() - 1. The
-   * corners are sorted starting with the smallest y-coordinate in counterclock sense around the
-   * shape. If there are several corners with the smallest y-coordinate, the corner with the
-   * smallest x-coordinate comes first. Consecutive corners may be equal.
+   * Returns the no-th corner of this shape for no between 0 and borderLineCount() - 1. The corners
+   * are sorted starting with the smallest y-coordinate in counterclock sense around the shape. If
+   * there are several corners with the smallest y-coordinate, the corner with the smallest
+   * x-coordinate comes first. Consecutive corners may be equal.
    */
   public abstract Point corner(int no);
 
@@ -62,7 +62,7 @@ public abstract class PolylineShape implements Shape, Serializable {
 
   /**
    * Returns an approximation of the no-th corner of this shape for no between 0 and
-   * border_line_count() - 1. If the shape is not bounded at this corner, the coordinates of the
+   * borderLineCount() - 1. If the shape is not bounded at this corner, the coordinates of the
    * result will be set to Integer.MAX_VALUE.
    */
   public FloatPoint cornerApprox(int no) {

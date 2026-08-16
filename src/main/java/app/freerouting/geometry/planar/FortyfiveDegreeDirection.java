@@ -1,6 +1,6 @@
 package app.freerouting.geometry.planar;
 
-@SuppressWarnings("all") // Eclipse regards get_direction() as unused
+@SuppressWarnings("all") // Eclipse regards getDirection() as unused
 
 /** Enum for the eight 45-degree direction starting from right in counterclocksense to down45. */
 public enum FortyfiveDegreeDirection {

@@ -983,7 +983,7 @@ public class BasicBoard implements Serializable {
               ? rules.nets.get(netNumber).name
               : String.valueOf(netNumber);
       FRLogger.debug(
-          "BasicBoard.normalize_traces: skipping net '"
+          "BasicBoard.normalizeTraces: skipping net '"
               + netName
               + "' because normalization already hit the oscillation cap on this board candidate.");
       return false;
@@ -1003,7 +1003,7 @@ public class BasicBoard implements Serializable {
                 ? rules.nets.get(netNumber).name
                 : String.valueOf(netNumber);
         FRLogger.warn(
-            "BasicBoard.normalize_traces: reached "
+            "BasicBoard.normalizeTraces: reached "
                 + MAX_NORMALIZE_ITERATIONS
                 + " iterations for net '"
                 + netName

@@ -16,7 +16,7 @@ import java.util.TreeSet;
 /**
  * Creates a Delaunay triangulation in the plane for the input objects. The objects in the input
  * list must implement the interface PlanarDelaunayTriangulation.Storable, which consists of the
- * method get_triangulation_corners(). The result can be read by the function get_edge_lines(). The
+ * method getTriangulationCorners(). The result can be read by the function getEdgeLines(). The
  * algorithm is from Chapter 9.3. of the book Computational Geometry, Algorithms and Applications
  * from M. de Berg, M. van Kreveld, M Overmars and O Schwarzkopf.
  */

@@ -359,8 +359,8 @@ public class BatchAutorouter extends NamedAlgorithm {
                 Net net = board.rules.nets.get(currentNetNumber);
                 // For plane nets: skip items whose connected set already contains a
                 // ConductionArea (copper pour). These items would immediately return
-                // CONNECTED_TO_PLANE in autoroute_item(), wasting time and causing
-                // spurious normalize_traces() failures on nearby stub geometry.
+                // CONNECTED_TO_PLANE in autorouteItem(), wasting time and causing
+                // spurious normalizeTraces() failures on nearby stub geometry.
                 // Items not yet connected to the plane are still enqueued so they can
                 // be routed to the pour in this pass.
                 if (net != null && net.containsPlane()) {
@@ -638,7 +638,7 @@ public class BatchAutorouter extends NamedAlgorithm {
               && this.totalItemsRouted >= this.settings.maxItems) {
             job.logInfo(
                 "Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
-            // Call requestStop() (sets ALL) instead of request_stop_auto_router() (sets
+            // Call requestStop() (sets ALL) instead of requestStopAutoRouter() (sets
             // AUTO_ROUTER_ONLY) so the optimization stage is also skipped.  maxItems is a
             // debugging/test ceiling meant to bound the entire routing job; running the
             // optimizer on a deliberately-incomplete board is not useful and prevents the
@@ -1372,7 +1372,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       // of incompleteCount.  The old condition guarded on incompleteCount > 0, which
       // caused the check to be bypassed — and the counter to be silently reset — for
       // boards where DRC shows 0 incompletes but the router keeps cycling (e.g. when
-      // plane-net false-work items kept autoroute_pass() returning true).  If the
+      // plane-net false-work items kept autoroutePass() returning true).  If the
       // board is genuinely done (continueAutorouting == false) the while-loop exits
       // naturally and we never reach this block.
       if (currentPass >= STOP_AT_PASS_MINIMUM && continueAutorouting) {

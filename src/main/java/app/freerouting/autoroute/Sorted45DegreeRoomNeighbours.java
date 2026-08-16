@@ -299,7 +299,7 @@ public final class Sorted45DegreeRoomNeighbours {
     }
     if (!(currentIncompleteRoom.getShape() instanceof IntOctagon roomOct)) {
       FRLogger.warn(
-          "Sorted45DegreeRoomNeighbours.try_remove_edge_line: "
+          "Sorted45DegreeRoomNeighbours.tryRemoveEdgeLine: "
               + "IntOctagon expected for roomShape type");
       return false;
     }

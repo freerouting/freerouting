@@ -14,7 +14,7 @@ public class Line implements Comparable<Line>, Serializable {
   @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   public final Point b;
 
-  private transient Direction dir; // should only be accessed from get_direction().
+  private transient Direction dir; // should only be accessed from getDirection().
 
   /** Creates a directed Line from two points. */
   public Line(Point a, Point b) {
@@ -212,7 +212,7 @@ public class Line implements Comparable<Line>, Serializable {
   }
 
   /**
-   * Returns the intersection point of the 2 lines. If the lines are parallel result.is_infinite()
+   * Returns the intersection point of the 2 lines. If the lines are parallel result.isInfinite()
    * will be true.
    */
   public Point intersection(Line other) {

@@ -706,7 +706,7 @@ public final class ViaOptimizer {
 
   /**
    * Checks if two points are within the specified tolerance distance. Uses Manhattan distance for
-   * efficiency, matching the logic in DrillItem.get_normal_contacts().
+   * efficiency, matching the logic in DrillItem.getNormalContacts().
    */
   private static boolean isWithinTolerance(Point p1, Point p2, int tolerance) {
     if (p1 == null || p2 == null) {

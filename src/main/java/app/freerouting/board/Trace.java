@@ -71,8 +71,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   public abstract double getLength();
 
   /**
-   * Returns the half with enlarged by the clearance compensation value for the tree with id number
-   * treeId Equals get_half_width(), if no clearance compensation is used in this tree.
+   * Returns the half width enlarged by the clearance compensation value for the search tree. Equals
+   * getHalfWidth(), if no clearance compensation is used in this tree.
    */
   public int getCompensatedHalfWidth(ShapeSearchTree searchTree) {
     return this.halfWidth

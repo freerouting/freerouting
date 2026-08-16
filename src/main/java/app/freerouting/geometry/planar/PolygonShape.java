@@ -454,7 +454,7 @@ public class PolygonShape extends PolylineShape {
   @Override
   public Line borderLine(int no) {
     if (no < 0 || no >= corners.length) {
-      FRLogger.warn("PolygonShape.edge_line: no out of range");
+      FRLogger.warn("PolygonShape.borderLine: no out of range");
       return null;
     }
     Point nextCorner;

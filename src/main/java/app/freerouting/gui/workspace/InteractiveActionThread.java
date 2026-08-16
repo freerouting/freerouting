@@ -142,7 +142,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * Creates a thread for autorouting selected items on the board.
    *
    * <p><strong>Note:</strong> This functionality is currently disabled in the implementation. The
-   * returned thread's {@code thread_action()} method does nothing.
+   * returned thread's {@code threadAction()} method does nothing.
    *
    * <p>Originally intended for routing individual traces or small groups of connections
    * interactively, but has been superseded by the batch autorouter.
@@ -233,7 +233,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * Creates a thread for pull-tight optimization of selected traces.
    *
    * <p><strong>Note:</strong> This functionality is currently disabled in the implementation. The
-   * returned thread's {@code thread_action()} method does nothing.
+   * returned thread's {@code threadAction()} method does nothing.
    *
    * <p>Pull-tight optimization was intended to straighten traces and remove unnecessary corners,
    * but is currently not available in the inspection mode.
@@ -318,7 +318,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * connections interactively. However, the implementation has been disabled in favor of the more
    * comprehensive batch autorouter.
    *
-   * <p>The {@code thread_action()} method does nothing, making this thread effectively a no-op when
+   * <p>The {@code threadAction()} method does nothing, making this thread effectively a no-op when
    * created and started.
    *
    * @see #getAutorouteInstance(WorkspacePort, RunGeneration, RoutingJob)
@@ -355,7 +355,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * </ul>
    *
    * <p>However, the implementation has been disabled in the current inspection mode. The {@code
-   * thread_action()} method does nothing.
+   * threadAction()} method does nothing.
    *
    * @see #getPullTightInstance(WorkspacePort, RunGeneration, RoutingJob)
    */

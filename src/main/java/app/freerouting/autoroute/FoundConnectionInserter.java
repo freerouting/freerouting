@@ -261,11 +261,11 @@ public final class FoundConnectionInserter {
               new Point[0]);
         }
       } else if (okPoint == insertPolyline.firstCorner() && i != trace.corners.length - 1) {
-        // if okPoint == insertPolyline.first_corner() the spring over may have failed.
+        // if okPoint == insertPolyline.firstCorner() the spring over may have failed.
         // Spring over may correct the situation because an insertion, which is ok with clearance
         // compensation
         // may cause violations without clearance compensation.
-        // In this case repeating the insertion with more distant corners may allow the spring_over
+        // In this case repeating the insertion with more distant corners may allow the spring over
         // to correct the situation.
         if (fromCornerNo > 0) {
           // trace.corners[i] may be inside the offset for the substitute trace around

@@ -894,7 +894,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    */
   @Override
   public void draw(Graphics graphics) {
-    // Cast to access get_air_line() which exists on both BatchAutorouter and
+    // Cast to access getAirLine() which exists on both BatchAutorouter and
     // BatchAutorouterV19
     FloatLine currentAirLine = null;
     if (batchAutorouter instanceof BatchAutorouter) {

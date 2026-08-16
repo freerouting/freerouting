@@ -82,10 +82,10 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
   /**
    * Calculates a new incomplete room with a maximal TileShape contained in the shape of room, which
-   * may overlap only with items of the input net on the input layer. room.get_contained_shape()
-   * will be contained in the shape of the result room. If that is not possible, several rooms are
-   * returned with shapes, which intersect with room.get_contained_shape(). The result room is not
-   * yet complete, because its doors are not yet calculated.
+   * may overlap only with items of the input net on the input layer. room.getContainedShape() will
+   * be contained in the shape of the result room. If that is not possible, several rooms are
+   * returned with shapes, which intersect with room.getContainedShape(). The result room is not yet
+   * complete, because its doors are not yet calculated.
    */
   @Override
   public Collection<IncompleteFreeSpaceExpansionRoom> completeShape(
@@ -96,7 +96,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     TileShape containedRaw = room.getContainedShape();
     if (containedRaw == null) {
       FRLogger.warn(
-          "ShapeSearchTree45Degree.complete_shape: contained shape is null,"
+          "ShapeSearchTree45Degree.completeShape: contained shape is null,"
               + " skipping expansion room");
       return new LinkedList<>();
     }
@@ -105,15 +105,15 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       // Use the bounding octagon as a safe conservative approximation so the expansion room is
       // not silently discarded, which was previously causing incomplete routing connections.
       FRLogger.debug(
-          "ShapeSearchTree45Degree.complete_shape: non-IntOctagon contained shape,"
+          "ShapeSearchTree45Degree.completeShape: non-IntOctagon contained shape,"
               + " using bounding octagon approximation");
     }
     IntOctagon shapeToBeContained = containedRaw.boundingOctagon();
     if (shapeToBeContained == null) {
-      // bounding_octagon() returned null — this can happen for empty/degenerate shapes (e.g. a
+      // boundingOctagon() returned null — this can happen for empty/degenerate shapes (e.g. a
       // zero-length trace segment). Discard the expansion room gracefully rather than throw NPE.
       FRLogger.debug(
-          "ShapeSearchTree45Degree.complete_shape: bounding_octagon() returned null"
+          "ShapeSearchTree45Degree.completeShape: boundingOctagon() returned null"
               + " for contained shape of type "
               + containedRaw.getClass().getSimpleName()
               + ", skipping expansion room");
@@ -294,8 +294,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
   /**
    * Restrains the shape of incompleteRoom to an octagon shape, which does not intersect with the
-   * interior of obstacleShape. incompleteRoom.get_contained_shape() must be contained in the shape
-   * of the result room.
+   * interior of obstacleShape. incompleteRoom.getContainedShape() must be contained in the shape of
+   * the result room.
    */
   private Collection<IncompleteFreeSpaceExpansionRoom> restrainShape(
       IncompleteFreeSpaceExpansionRoom incompleteRoom, IntOctagon obstacleShape) {

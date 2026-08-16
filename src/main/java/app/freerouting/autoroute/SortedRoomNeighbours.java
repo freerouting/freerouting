@@ -463,9 +463,7 @@ public final class SortedRoomNeighbours {
     return false;
   }
 
-  /**
-   * Called from calculate_doors(). The shape of the room result may change inside this function.
-   */
+  /** Called from calculateDoors(). The shape of the room result may change inside this function. */
   public void calculateNewIncompleteRooms(AutorouteEngine autorouteEngine) {
     SortedRoomNeighbour prevNeighbour = this.sortedNeighbours.getLast();
     Simplex roomSimplex = this.fromRoom.getShape().toSimplex();

@@ -645,8 +645,8 @@ public class LineSegment implements Serializable {
   }
 
   /**
-   * Inverts the direction of this.middle, if start_point() has a bigger x coordinate than
-   * end_point(), or an equal x coordinate and a bigger y coordinate.
+   * Inverts the direction of this.middle, if startPoint() has a bigger x coordinate than
+   * endPoint(), or an equal x coordinate and a bigger y coordinate.
    */
   @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
   public LineSegment sortEndpointsInXY() {

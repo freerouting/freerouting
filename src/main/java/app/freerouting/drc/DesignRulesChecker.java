@@ -167,7 +167,7 @@ public class DesignRulesChecker {
     // Check for dangling vias - vias not connected or connected on only one layer
     for (Item item : board.getItems()) {
       if (item instanceof Via via) {
-        // Use the is_tail() method which checks if via has contacts on at most 1 layer
+        // Use the isTail() method which checks if via has contacts on at most 1 layer
         if (via.isTail()) {
           unconnectedItems.add(new UnconnectedItems(via, null, "via_dangling"));
         }

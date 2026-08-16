@@ -105,10 +105,10 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
   }
 
   /**
-   * Let L be the line from the Zero Vector to other.get_vector(). The function returns
-   * Side.ON_THE_LEFT, if this.get_vector() is on the left of L Side.ON_THE_RIGHT, if
-   * this.get_vector() is on the right of L and Side.COLLINEAR, if this.get_vector() is collinear
-   * with L.
+   * Let L be the line from the Zero Vector to other.getVector(). The function returns
+   * Side.ON_THE_LEFT, if this.getVector() is on the left of L Side.ON_THE_RIGHT, if
+   * this.getVector() is on the right of L and Side.COLLINEAR, if this.getVector() is collinear with
+   * L.
    */
   public Side sideOf(Direction other) {
     return this.getVector().sideOf(other.getVector());

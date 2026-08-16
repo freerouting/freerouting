@@ -425,13 +425,13 @@ public class IntBox extends RegularTileShape implements Serializable {
       case 1 -> new Line(ur.x, 0, ur.x, 1); // right boundary line
       case 2 -> new Line(0, ur.y, -1, ur.y); // upper boundary line
       case 3 -> new Line(ll.x, 0, ll.x, -1); // left boundary line
-      default -> throw new IllegalArgumentException("IntBox.edge_line: no out of range");
+      default -> throw new IllegalArgumentException("IntBox.borderLine: no out of range");
     };
   }
 
   @Override
   public int borderLineIndex(Line line) {
-    FRLogger.warn("edge_index_of_line not yet implemented for IntBoxes");
+    FRLogger.warn("borderLineIndex not yet implemented for IntBoxes");
     return -1;
   }
 

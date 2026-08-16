@@ -228,15 +228,15 @@ public class Simplex extends TileShape implements Serializable {
   @Override
   public Line borderLine(int edgeIndex) {
     if (lines.length == 0) {
-      FRLogger.warn("Simplex.edge_line : simplex is empty");
+      FRLogger.warn("Simplex.borderLine : simplex is empty");
       return null;
     }
     int no;
     if (edgeIndex < 0) {
-      FRLogger.warn("Simplex.edge_line : no is < 0");
+      FRLogger.warn("Simplex.borderLine : no is < 0");
       no = 0;
     } else if (edgeIndex >= lines.length) {
-      FRLogger.warn("Simplex.edge_line: no must be less than lines.length - 1");
+      FRLogger.warn("Simplex.borderLine: no must be less than lines.length - 1");
       no = lines.length - 1;
     } else {
       no = edgeIndex;

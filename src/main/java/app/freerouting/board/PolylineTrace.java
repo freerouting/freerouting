@@ -718,7 +718,7 @@ public class PolylineTrace extends Trace implements Serializable {
       return null;
     }
     // Guard: if this trace cannot be deleted (e.g. USER_FIXED / protect), splitting would leave
-    // the original on the board AND insert duplicate pieces. The outer normalize_traces loop
+    // the original on the board AND insert duplicate pieces. The outer normalizeTraces loop
     // would then keep finding the same "changed" state and never converge. Return null so the
     // caller knows the split is not possible.
     if (isDeletionForbidden()) {
@@ -802,18 +802,17 @@ public class PolylineTrace extends Trace implements Serializable {
   private boolean normalize(IntOctagon clipShape, int normalizationDepth) {
     if (normalizationDepth > MAX_NORMALIZATION_DEPTH) {
       // Return false (no further change at this depth level) rather than throwing an exception.
-      // The outer normalize_traces() loop treats a false return as "nothing changed" for this
-      // trace,
+      // The outer normalizeTraces() loop treats a false return as "nothing changed" for this trace,
       // which is safe: the trace geometry may be slightly sub-optimal (extra corners), but it
       // remains
-      // structurally valid, its endpoint contacts are preserved and remove_tails() will not touch
+      // structurally valid, its endpoint contacts are preserved and removeTails() will not touch
       // it.
       // Throwing here was causing two problems:
       //   1. Noisy WARN log in FoundConnectionInserter every routing pass for complex plane nets.
       //   2. Intermediate trace fragments created during deep-recursion split/combine were left in
       // an
       //      inconsistent state, causing them to be misidentified as tails and removed by
-      // remove_tails(),
+      // removeTails(),
       //      which in turn forced GND routing to re-attempt the same connection on every subsequent
       // pass.
       FRLogger.debug(
@@ -890,7 +889,7 @@ public class PolylineTrace extends Trace implements Serializable {
             && currentSplitTrace.firstCorner().equals(currentSplitTrace.lastCorner())) {
           // remove trace with only 1 corner — only if deletion is allowed.
           // USER_FIXED traces cannot be removed; skipping silently prevents an infinite loop in
-          // normalize_traces (where 'result=true' would cause the outer while to spin forever).
+          // normalizeTraces (where 'result=true' would cause the outer while to spin forever).
           if (!currentSplitTrace.isDeletionForbidden()) {
             board.removeItem(currentSplitTrace);
             result = true;

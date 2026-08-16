@@ -50,7 +50,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   // X-axis intersection of lower-right diagonal border
   public final int lowerRightDiagonalX;
 
-  /** Result of to_simplex() memorized for performance reasons. */
+  /** Result of toSimplex() memorized for performance reasons. */
   private Simplex precalculatedToSimplex;
 
   /**
@@ -235,7 +235,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
       case 6 -> new Line(leftX, 0, leftX, -1); // left boundary line
       case 7 ->
           new Line(lowerLeftDiagonalX, 0, lowerLeftDiagonalX + 1, -1); // lower left boundary line
-      default -> throw new IllegalArgumentException("IntOctagon.edge_line: no out of range");
+      default -> throw new IllegalArgumentException("IntOctagon.borderLine: no out of range");
     };
   }
 
@@ -575,7 +575,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
           case 6 -> this.leftX - x; // left boundary line
           case 7 -> this.lowerLeftDiagonalX - x - y; // lower-left diagonal line
           default -> {
-            FRLogger.warn("IntOctagon.side_of_border_line: borderLineNo out of range");
+            FRLogger.warn("IntOctagon.sideOfBorderLine: borderLineNo out of range");
             yield 0;
           }
         };
@@ -1010,7 +1010,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         }
       }
       default -> {
-        FRLogger.warn("IntOctagon.border_line_side_of: lineIndex out of range");
+        FRLogger.warn("IntOctagon.borderLineSideOf: lineIndex out of range");
         yield Side.COLLINEAR;
       }
     };

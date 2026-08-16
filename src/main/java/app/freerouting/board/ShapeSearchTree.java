@@ -561,10 +561,10 @@ public class ShapeSearchTree extends MinAreaTree {
 
   /**
    * Calculates a new incomplete room with a maximal TileShape contained in the shape of room, which
-   * may overlap only with items of the input net on the input layer. room.get_contained_shape()
-   * will be contained in the shape of the result room. If that is not possible, several rooms are
-   * returned with shapes, which intersect with room.get_contained_shape(). The result room is not
-   * yet complete, because its doors are not yet calculated. If ignoreShape != null, objects of type
+   * may overlap only with items of the input net on the input layer. room.getContainedShape() will
+   * be contained in the shape of the result room. If that is not possible, several rooms are
+   * returned with shapes, which intersect with room.getContainedShape(). The result room is not yet
+   * complete, because its doors are not yet calculated. If ignoreShape != null, objects of type
    * CompleteFreeSpaceExpansionRoom, whose intersection with the shape of room is contained in
    * ignoreShape, are ignored.
    */
@@ -574,7 +574,7 @@ public class ShapeSearchTree extends MinAreaTree {
       SearchTreeObject ignoreObject,
       TileShape ignoreShape) {
     if (room.getContainedShape() == null) {
-      FRLogger.warn("ShapeSearchTree.complete_shape: shapeToBeContained != null expected");
+      FRLogger.warn("ShapeSearchTree.completeShape: shapeToBeContained != null expected");
       return new LinkedList<>();
     }
     if (this.root == null) {
@@ -685,9 +685,9 @@ public class ShapeSearchTree extends MinAreaTree {
 
   /**
    * Restrains the shape of incompleteRoom to a TileShape, which does not intersect with the
-   * interior of obstacleShape. incompleteRoom.get_contained_shape() must be contained in the shape
-   * of the result room. If that is not possible, several rooms are returned with shapes, which
-   * intersect with incompleteRoom.get_contained_shape().
+   * interior of obstacleShape. incompleteRoom.getContainedShape() must be contained in the shape of
+   * the result room. If that is not possible, several rooms are returned with shapes, which
+   * intersect with incompleteRoom.getContainedShape().
    */
   private Collection<IncompleteFreeSpaceExpansionRoom> restrainShape(
       IncompleteFreeSpaceExpansionRoom incompleteRoom, TileShape obstacleShape) {

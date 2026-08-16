@@ -94,7 +94,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   abstract TileShape intersection(IntBox other);
 
   /**
-   * Returns the no-th edge line of this shape for no between 0 and edge_line_count() - 1. The edge
+   * Returns the no-th edge line of this shape for no between 0 and borderLineCount() - 1. The edge
    * lines are sorted in counterclock sense around the shape starting with the edge with the
    * smallest direction.
    */

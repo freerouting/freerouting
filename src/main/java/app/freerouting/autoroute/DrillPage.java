@@ -160,7 +160,7 @@ class DrillPage implements ExpandableObject {
 
   /**
    * Invalidates the drills of this page so that they are recalculated at the next call of
-   * get_drills().
+   * getDrills().
    */
   public void invalidate() {
     this.drills = null;

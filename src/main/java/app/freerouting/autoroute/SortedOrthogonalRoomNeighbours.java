@@ -213,7 +213,7 @@ public final class SortedOrthogonalRoomNeighbours {
       case 2 -> new IntBox(roomBox.ll.x, roomBox.ll.y, roomBox.ur.x, Limits.CRIT_INT);
       case 3 -> new IntBox(-Limits.CRIT_INT, roomBox.ll.y, roomBox.ur.x, roomBox.ur.y);
       default -> {
-        FRLogger.warn("SortedOrthogonalRoomNeighbours.remove_border_line: illegal removeEdgeNo");
+        FRLogger.warn("SortedOrthogonalRoomNeighbours.removeBorderLine: illegal removeEdgeNo");
         yield null;
       }
     };

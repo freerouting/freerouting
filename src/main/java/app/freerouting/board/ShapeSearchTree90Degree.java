@@ -25,10 +25,10 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
 
   /**
    * Calculates a new incomplete room with a maximal TileShape contained in the shape of room, which
-   * may overlap only with items of the input net on the input layer. room.get_contained_shape()
-   * will be contained in the shape of the result room. If that is not possible, several rooms are
-   * returned with shapes, which intersect with room.get_contained_shape(). The result room is not
-   * yet complete, because its doors are not yet calculated.
+   * may overlap only with items of the input net on the input layer. room.getContainedShape() will
+   * be contained in the shape of the result room. If that is not possible, several rooms are
+   * returned with shapes, which intersect with room.getContainedShape(). The result room is not yet
+   * complete, because its doors are not yet calculated.
    */
   @Override
   public Collection<IncompleteFreeSpaceExpansionRoom> completeShape(
@@ -187,8 +187,8 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
 
   /**
    * Restrains the shape of incompleteRoom to a box shape, which does not intersect with the
-   * interior of obstacleShape. incompleteRoom.get_contained_shape() must be contained in the shape
-   * of the result room.
+   * interior of obstacleShape. incompleteRoom.getContainedShape() must be contained in the shape of
+   * the result room.
    */
   private Collection<IncompleteFreeSpaceExpansionRoom> restrainShape(
       IncompleteFreeSpaceExpansionRoom incompleteRoom, IntBox obstacleShape) {

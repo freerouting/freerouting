@@ -73,7 +73,7 @@ public class NetIncompletes {
         netLabel,
         new Point[0]);
 
-    // Filter out dangling items (vias and tracks with is_tail() == true)
+    // Filter out dangling items (vias and tracks with isTail() == true)
     // AND items with zero contacts (unconnected pins/pads)
     // These are DRC violations, not unrouted connections, and should not be counted
     // as incompletes
