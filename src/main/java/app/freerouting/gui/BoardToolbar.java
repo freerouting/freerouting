@@ -200,7 +200,7 @@ class BoardToolbar extends JPanel {
           // RouterSettings has layers == null (layer count 0).  Re-apply board-
           // specific optimisations so the layer arrays are populated from the actual board
           // before the autorouter reads them (fixes Issue #676 / "get_layer_active out of
-          // range [0..-1]" warnings and MazeSearchAlgo exceptions on LibrePCB DSN files).
+          // range [0..-1]" warnings and MazeSearchEngine exceptions on LibrePCB DSN files).
           app.freerouting.board.RoutingBoard routingBoard =
               boardFrame.boardPanel.boardHandling.getRoutingBoard();
           if (routingBoard != null) {

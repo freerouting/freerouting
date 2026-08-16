@@ -379,7 +379,7 @@ public final class ViaOptimizer {
 
     if (board.rules.getTraceAngleRestriction() == AngleRestriction.NONE
         && delta.lengthApprox() <= 1.5) {
-      // PullTightAlgoAnyAngle.reduce_corners may not be able to remove the new
+      // TraceTightenerAnyAngle.reduce_corners may not be able to remove the new
       // generated overlap
       // because of numerical stability problems
       // That would result in an endless loop with removing the generated acute angle

@@ -62,7 +62,7 @@ import org.junit.jupiter.api.Test;
  * 46) to 210 (cost = 45), suggesting that the router is taking many additional, otherwise-forbidden
  * layer transitions.
  *
- * <p>The confirmed root cause is the {@code LocateFoundConnectionAlgo} class, which is part of the
+ * <p>The confirmed root cause is the {@code FoundConnectionLocator} class, which is part of the
  * auto-routing routine. Its connection-location logic suggested wire modifications that could
  * result in traces on inactive layers in certain edge cases. When the via cost was high enough
  * these suggestions were implicitly rejected by the cost model; at ≤ 45 the cost model no longer
@@ -106,12 +106,12 @@ import org.junit.jupiter.api.Test;
  * The routing pipeline must be patched so that inactive layers are treated as hard constraints —
  * absolute exclusions — in every decision path: initial net routing, via placement,
  * layer-transition logic, and post-route trace optimisation. The primary candidate class is {@code
- * LocateFoundConnectionAlgo}, whose wire-modification suggestions must be validated against layer
- * activity before being committed. Additionally, the {@code MazeSearchAlgo} expansion logic should
- * be reviewed to ensure that expansion rooms on inactive layers are never offered as candidates,
- * regardless of the via-cost setting. Until these guards are in place the test below acts as the
- * regression sentinel: it asserts that zero traces land on {@code In1.Cu} or {@code In2.Cu} after a
- * full routing run with the default via cost.
+ * FoundConnectionLocator}, whose wire-modification suggestions must be validated against layer
+ * activity before being committed. Additionally, the {@code MazeSearchEngine} expansion logic
+ * should be reviewed to ensure that expansion rooms on inactive layers are never offered as
+ * candidates, regardless of the via-cost setting. Until these guards are in place the test below
+ * acts as the regression sentinel: it asserts that zero traces land on {@code In1.Cu} or {@code
+ * In2.Cu} after a full routing run with the default via cost.
  *
  * <p><b>Expected Behavior:</b><br>
  * The router must never place traces on layers that are marked as inactive / not enabled for

@@ -14,10 +14,10 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import java.util.Collection;
 
-class PullTightAlgo45 extends PullTightAlgo {
+class TraceTightener45 extends TraceTightener {
 
   /** Creates a new instance of PullTight90. */
-  public PullTightAlgo45(
+  public TraceTightener45(
       RoutingBoard board,
       int[] onlyNetNoArr,
       Stoppable stoppableThread,

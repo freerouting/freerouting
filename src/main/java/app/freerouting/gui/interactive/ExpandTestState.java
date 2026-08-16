@@ -3,10 +3,10 @@ package app.freerouting.gui.interactive;
 import app.freerouting.autoroute.AutorouteControl;
 import app.freerouting.autoroute.AutorouteEngine;
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
+import app.freerouting.autoroute.FoundConnectionInserter;
+import app.freerouting.autoroute.FoundConnectionLocator;
 import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
-import app.freerouting.autoroute.InsertFoundConnectionAlgo;
-import app.freerouting.autoroute.LocateFoundConnectionAlgo;
-import app.freerouting.autoroute.MazeSearchAlgo;
+import app.freerouting.autoroute.MazeSearchEngine;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
@@ -24,8 +24,8 @@ import java.util.TreeSet;
 public final class ExpandTestState extends InteractiveState {
 
   private boolean inAutoroute;
-  private MazeSearchAlgo mazeSearchAlgo;
-  private LocateFoundConnectionAlgo autorouteResult;
+  private MazeSearchEngine mazeSearchAlgo;
+  private FoundConnectionLocator autorouteResult;
   private AutorouteControl controlSettings;
   private AutorouteEngine autorouteEngine;
 
@@ -181,17 +181,18 @@ public final class ExpandTestState extends InteractiveState {
     if (!routeDestSet.isEmpty()) {
       hdlg.screenMessages.setStatusMessage("app.freerouting.autoroute test started");
       this.mazeSearchAlgo =
-          MazeSearchAlgo.getInstance(routeStartSet, routeDestSet, autorouteEngine, controlSettings);
+          MazeSearchEngine.getInstance(
+              routeStartSet, routeDestSet, autorouteEngine, controlSettings);
       this.inAutoroute = this.mazeSearchAlgo != null;
     }
   }
 
   private void completeAutoroute() {
-    MazeSearchAlgo.Result searchResult = this.mazeSearchAlgo.findConnection();
+    MazeSearchEngine.Result searchResult = this.mazeSearchAlgo.findConnection();
     if (searchResult != null) {
       SortedSet<Item> rippedItemList = new TreeSet<>();
       this.autorouteResult =
-          LocateFoundConnectionAlgo.getInstance(
+          FoundConnectionLocator.getInstance(
               searchResult,
               controlSettings,
               this.autorouteEngine.autorouteSearchTree,
@@ -205,8 +206,7 @@ public final class ExpandTestState extends InteractiveState {
             currentRippedItem.getConnectionItems(Item.StopConnectionOption.VIA));
       }
       hdlg.getRoutingBoard().removeItems(rippedConnections);
-      InsertFoundConnectionAlgo.getInstance(
-          autorouteResult, hdlg.getRoutingBoard(), controlSettings);
+      FoundConnectionInserter.getInstance(autorouteResult, hdlg.getRoutingBoard(), controlSettings);
     }
   }
 

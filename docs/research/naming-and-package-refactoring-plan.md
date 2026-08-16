@@ -569,14 +569,14 @@ Branch: `refactor/naming-phase-11-algo-classes`
 
 **Progress checklist**
 
-- [ ] Rename `PullTightAlgo` / `PullTightAlgo45` / `PullTightAlgo90` / `PullTightAlgoAnyAngle` → `TraceTightener` / `TraceTightener45` / `TraceTightener90` / `TraceTightenerAnyAngle`.
-- [ ] Rename `ShoveTraceAlgo` → `TraceShover`.
-- [ ] Rename `MazeSearchAlgo` → `MazeSearchEngine`.
-- [ ] Rename `MazeShoveTraceAlgo` → `MazeTraceShover`.
-- [ ] Rename `InsertFoundConnectionAlgo` → `FoundConnectionInserter`.
-- [ ] Rename `LocateFoundConnectionAlgo` / `LocateFoundConnectionAlgo45Degree` / `LocateFoundConnectionAlgoAnyAngle` → `FoundConnectionLocator` / `FoundConnectionLocator45Degree` / `FoundConnectionLocatorAnyAngle`.
-- [ ] Update all call sites, imports, and references.
-- [ ] Run full test suite and quality gates.
+- [x] Rename `PullTightAlgo` / `PullTightAlgo45` / `PullTightAlgo90` / `PullTightAlgoAnyAngle` → `TraceTightener` / `TraceTightener45` / `TraceTightener90` / `TraceTightenerAnyAngle`.
+- [x] Rename `ShoveTraceAlgo` → `TraceShover`.
+- [x] Rename `MazeSearchAlgo` → `MazeSearchEngine`.
+- [x] Rename `MazeShoveTraceAlgo` → `MazeTraceShover`.
+- [x] Rename `InsertFoundConnectionAlgo` → `FoundConnectionInserter`.
+- [x] Rename `LocateFoundConnectionAlgo` / `LocateFoundConnectionAlgo45Degree` / `LocateFoundConnectionAlgoAnyAngle` → `FoundConnectionLocator` / `FoundConnectionLocator45Degree` / `FoundConnectionLocatorAnyAngle`.
+- [x] Update all call sites, imports, and references.
+- [x] Run full test suite and quality gates.
 
 ---
 

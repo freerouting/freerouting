@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.SortedSet;
 
 /** Locates and constructs trace connection geometries from maze search backtrack paths. */
-public abstract class LocateFoundConnectionAlgo {
+public abstract class FoundConnectionLocator {
 
   /** The new items implementing the found connection. */
   public final Collection<ResultItem> connectionItems;
@@ -49,9 +49,9 @@ public abstract class LocateFoundConnectionAlgo {
   protected int currentTargetDoorIndex;
   protected TileShape currentTargetShape;
 
-  /** Creates a new instance of LocateFoundConnectionAlgo. */
-  protected LocateFoundConnectionAlgo(
-      MazeSearchAlgo.Result mazeSearchResult,
+  /** Creates a new instance of FoundConnectionLocator. */
+  protected FoundConnectionLocator(
+      MazeSearchEngine.Result mazeSearchResult,
       AutorouteControl ctrl,
       ShapeSearchTree searchTree,
       AngleRestriction angleRestriction,
@@ -92,7 +92,7 @@ public abstract class LocateFoundConnectionAlgo {
     this.connectionItems = new LinkedList<>();
     BacktrackElement startInfo = this.backtrackArray[backtrackArray.length - 1];
     if (!(startInfo.door instanceof TargetItemExpansionDoor)) {
-      FRLogger.warn("LocateFoundConnectionAlgo: ItemExpansionDoor expected for startInfo.door");
+      FRLogger.warn("FoundConnectionLocator: ItemExpansionDoor expected for startInfo.door");
       this.startItem = null;
       this.startLayer = 0;
       this.targetItem = null;
@@ -119,7 +119,7 @@ public abstract class LocateFoundConnectionAlgo {
       this.targetLayer = currentDrill.firstLayer + mazeSearchResult.sectionNoOfDoor;
       atFanoutEnd = true;
     } else {
-      FRLogger.warn("LocateFoundConnectionAlgo: unexpected type of destinationDoor");
+      FRLogger.warn("FoundConnectionLocator: unexpected type of destinationDoor");
       this.targetItem = null;
       this.targetLayer = 0;
       return;
@@ -172,9 +172,9 @@ public abstract class LocateFoundConnectionAlgo {
     }
   }
 
-  /** Returns a new Instance of LocateFoundConnectionAlgo or null, if destinationDoor is null. */
-  public static LocateFoundConnectionAlgo getInstance(
-      MazeSearchAlgo.Result mazeSearchResult,
+  /** Returns a new Instance of FoundConnectionLocator or null, if destinationDoor is null. */
+  public static FoundConnectionLocator getInstance(
+      MazeSearchEngine.Result mazeSearchResult,
       AutorouteControl ctrl,
       ShapeSearchTree searchTree,
       AngleRestriction angleRestriction,
@@ -183,15 +183,15 @@ public abstract class LocateFoundConnectionAlgo {
     if (mazeSearchResult == null) {
       return null;
     }
-    LocateFoundConnectionAlgo result;
+    FoundConnectionLocator result;
     if (angleRestriction == AngleRestriction.NINETY_DEGREE
         || angleRestriction == AngleRestriction.FORTYFIVE_DEGREE) {
       result =
-          new LocateFoundConnectionAlgo45Degree(
+          new FoundConnectionLocator45Degree(
               mazeSearchResult, ctrl, searchTree, angleRestriction, rippedItemList, ripupCosts);
     } else {
       result =
-          new LocateFoundConnectionAlgoAnyAngle(
+          new FoundConnectionLocatorAnyAngle(
               mazeSearchResult, ctrl, searchTree, angleRestriction, rippedItemList, ripupCosts);
     }
     return result;
@@ -214,7 +214,7 @@ public abstract class LocateFoundConnectionAlgo {
    * if destinationDoor is null.
    */
   private static Collection<BacktrackElement> backtrack(
-      MazeSearchAlgo.Result mazeSearchResult,
+      MazeSearchEngine.Result mazeSearchResult,
       SortedSet<Item> rippedItemList,
       Map<Item, Integer> ripupCosts,
       int netNumber) {
@@ -267,7 +267,7 @@ public abstract class LocateFoundConnectionAlgo {
       }
       int currentSectionNo = currentMazeSearchElement.sectionNoOfBacktrackDoor;
       if (currentSectionNo >= currentBacktrackDoor.mazeSearchElementCount()) {
-        FRLogger.warn("LocateFoundConnectionAlgo: currentSectionNo to big");
+        FRLogger.warn("FoundConnectionLocator: currentSectionNo to big");
         currentSectionNo = currentBacktrackDoor.mazeSearchElementCount() - 1;
       }
       if (currentBacktrackDoor instanceof ExpansionDrill currentDrill) {

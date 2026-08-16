@@ -213,8 +213,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       return;
     }
     if (clipShape != IntOctagon.EMPTY) {
-      PullTightAlgo pullTightAlgo =
-          PullTightAlgo.getInstance(
+      TraceTightener pullTightAlgo =
+          TraceTightener.getInstance(
               this,
               onlyNetNoArr,
               clipShape,
@@ -619,7 +619,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     TileShape[] traceShapes =
         polyline.offsetShapes(compensatedHalfWidth, 0, polyline.lines.length - 1);
     boolean orthogonalMode = rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE;
-    ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(this);
+    TraceShover shoveTraceAlgo = new TraceShover(this);
     for (int i = 0; i < traceShapes.length; i++) {
       TileShape currentTraceShape = traceShapes[i];
       if (orthogonalMode) {
@@ -717,7 +717,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     ShapeSearchTree searchTree = searchTreeManager.getDefaultTree();
     int compensatedHalfWidth =
         halfWidth + searchTree.clearanceCompensationValue(clearanceClassIndex, layer);
-    ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(this);
+    TraceShover shoveTraceAlgo = new TraceShover(this);
     Polyline newPolyline =
         shoveTraceAlgo.springOverObstacles(
             polyline, compensatedHalfWidth, layer, netNumbers, clearanceClassIndex, null);
@@ -979,8 +979,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     } else {
       optNetNoArr = new int[0];
     }
-    PullTightAlgo pullTightAlgo =
-        PullTightAlgo.getInstance(
+    TraceTightener pullTightAlgo =
+        TraceTightener.getInstance(
             this, optNetNoArr, tidyRegion, pullTightAccuracy, null, -1, newCorner, layer);
 
     try {

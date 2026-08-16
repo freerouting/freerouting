@@ -20,12 +20,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /** Contains internal auxiliary functions of class RoutingBoard for shoving traces. */
-public class ShoveTraceAlgo {
+public class TraceShover {
 
   private final RoutingBoard board;
 
-  /** ShoveTraceAlgo. */
-  public ShoveTraceAlgo(RoutingBoard board) {
+  /** TraceShover. */
+  public TraceShover(RoutingBoard board) {
     this.board = board;
   }
 
@@ -51,13 +51,13 @@ public class ShoveTraceAlgo {
     }
     TileShape[] traceShapes = lineSegment.toPolyline().offsetShapes(traceHalfWidth);
     if (traceShapes.length != 1) {
-      FRLogger.warn("ShoveTraceAlgo.check: traceShape count 1 expected");
+      FRLogger.warn("TraceShover.check: traceShape count 1 expected");
       return 0;
     }
 
     TileShape traceShape = traceShapes[0];
     if (traceShape.isEmpty()) {
-      FRLogger.warn("ShoveTraceAlgo.check: traceShape is empty");
+      FRLogger.warn("TraceShover.check: traceShape is empty");
       return 0;
     }
     if (!traceShape.isContainedIn(board.getBoundingBox())) {

@@ -7,10 +7,10 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 
-class PullTightAlgo90 extends PullTightAlgo {
+class TraceTightener90 extends TraceTightener {
 
   /** Creates a new instance of PullTight90. */
-  public PullTightAlgo90(
+  public TraceTightener90(
       RoutingBoard board,
       int[] onlyNetNoArr,
       Stoppable stoppableThread,

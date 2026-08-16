@@ -286,7 +286,7 @@ public class ForcedPadRouter {
       this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
       return CheckDrillResult.NOT_DRILLABLE;
     }
-    ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(board);
+    TraceShover shoveTraceAlgo = new TraceShover(board);
     boolean isOrthogonalMode = padShape instanceof IntBox;
     for (; ; ) {
       PolylineTrace currentSubstituteTrace = shapeEntries.nextSubstituteTracePiece();
@@ -388,7 +388,7 @@ public class ForcedPadRouter {
     boolean tailsExistBefore = board.containsTraceTails(obstacles, netNumbers);
     shapeEntries.cutoutTraces(obstacles);
     boolean isOrthogonalMode = padShape instanceof IntBox;
-    ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(this.board);
+    TraceShover shoveTraceAlgo = new TraceShover(this.board);
     for (; ; ) {
       PolylineTrace currentSubstituteTrace = shapeEntries.nextSubstituteTracePiece();
       if (currentSubstituteTrace == null) {

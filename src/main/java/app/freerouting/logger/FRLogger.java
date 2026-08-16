@@ -400,7 +400,7 @@ public final class FRLogger {
   /**
    * Logs a granular TRACE message and triggers a debug check.
    *
-   * @param method The method name where the log originates (e.g. "InsertFoundConnectionAlgo").
+   * @param method The method name where the log originates (e.g. "FoundConnectionInserter").
    * @param operation The operation type (e.g. "insertion", "removal").
    * @param message The details of the log message.
    * @param impactedItems A string describing the impacted items, separated by comma (e.g. "Net

@@ -471,5 +471,5 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * Tries to make this trace shorter according to its rules. Returns true if the geometry of the
    * trace was changed.
    */
-  public abstract boolean pullTight(PullTightAlgo pullTightAlgo);
+  public abstract boolean pullTight(TraceTightener pullTightAlgo);
 }

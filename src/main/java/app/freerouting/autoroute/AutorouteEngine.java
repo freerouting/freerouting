@@ -120,12 +120,12 @@ public class AutorouteEngine {
       AutorouteControl ctrl,
       SortedSet<Item> rippedItemList,
       Map<Item, Integer> ripupCosts) {
-    MazeSearchAlgo mazeSearchAlgo;
+    MazeSearchEngine mazeSearchAlgo;
     try {
-      mazeSearchAlgo = MazeSearchAlgo.getInstance(startSet, destSet, this, ctrl);
+      mazeSearchAlgo = MazeSearchEngine.getInstance(startSet, destSet, this, ctrl);
     } catch (Exception e) {
       FRLogger.error(
-          "AutorouteEngine.autoroute_connection: Exception in MazeSearchAlgo.get_instance", e);
+          "AutorouteEngine.autoroute_connection: Exception in MazeSearchEngine.get_instance", e);
       mazeSearchAlgo = null;
     }
 
@@ -137,7 +137,7 @@ public class AutorouteEngine {
               + ", because the maze search algorithm could not be created.");
     }
 
-    MazeSearchAlgo.Result searchResult = null;
+    MazeSearchEngine.Result searchResult = null;
     if (mazeSearchAlgo != null) {
       try {
         searchResult = mazeSearchAlgo.findConnection();
@@ -163,11 +163,11 @@ public class AutorouteEngine {
       }
     }
 
-    LocateFoundConnectionAlgo autorouteResult = null;
+    FoundConnectionLocator autorouteResult = null;
     if (searchResult != null) {
       try {
         autorouteResult =
-            LocateFoundConnectionAlgo.getInstance(
+            FoundConnectionLocator.getInstance(
                 searchResult,
                 ctrl,
                 this.autorouteSearchTree,
@@ -177,7 +177,7 @@ public class AutorouteEngine {
       } catch (Exception e) {
         FRLogger.error(
             "AutorouteEngine.autoroute_connection: Exception in "
-                + "LocateFoundConnectionAlgo.get_instance",
+                + "FoundConnectionLocator.get_instance",
             e);
       }
     }
@@ -249,8 +249,8 @@ public class AutorouteEngine {
     for (int currentNetNumber : changedNets) {
       this.board.removeTraceTails(currentNetNumber, stopConnectionOption);
     }
-    InsertFoundConnectionAlgo insertFoundConnectionAlgo =
-        InsertFoundConnectionAlgo.getInstance(autorouteResult, board, ctrl);
+    FoundConnectionInserter insertFoundConnectionAlgo =
+        FoundConnectionInserter.getInstance(autorouteResult, board, ctrl);
 
     if (observersActivated) {
       this.board.endNotifyObservers();

@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.Set;
 
 /** Class with functionality for optimising traces and vias. */
-public abstract class PullTightAlgo {
+public abstract class TraceTightener {
 
   protected static final double c_max_cos_angle = 0.999;
   // with angles to close to 180 degree the algorithm becomes numerically
@@ -48,8 +48,8 @@ public abstract class PullTightAlgo {
   protected Set<Pin> contactPins;
   protected int minTranslateDist;
 
-  /** Creates a new instance of PullTightAlgo. */
-  PullTightAlgo(
+  /** Creates a new instance of TraceTightener. */
+  TraceTightener(
       RoutingBoard board,
       int[] onlyNetNoArr,
       Stoppable stoppableThread,
@@ -69,11 +69,11 @@ public abstract class PullTightAlgo {
   }
 
   /**
-   * Returns a new instance of PullTightAlgo. If onlyNetNo > 0, only traces with net number notNo
+   * Returns a new instance of TraceTightener. If onlyNetNo > 0, only traces with net number notNo
    * are optimized. If stoppableThread != null, the algorithm can be requested to be stopped. If
    * timeLimit > 0; the algorithm will be stopped after timeLimit Milliseconds.
    */
-  static PullTightAlgo getInstance(
+  static TraceTightener getInstance(
       RoutingBoard board,
       int[] onlyNetNoArr,
       IntOctagon clipShape,
@@ -82,19 +82,19 @@ public abstract class PullTightAlgo {
       int timeLimit,
       Point keepPoint,
       int keepPointLayer) {
-    PullTightAlgo result;
+    TraceTightener result;
     AngleRestriction angleRestriction = board.rules.getTraceAngleRestriction();
     if (angleRestriction == AngleRestriction.NINETY_DEGREE) {
       result =
-          new PullTightAlgo90(
+          new TraceTightener90(
               board, onlyNetNoArr, stoppableThread, timeLimit, keepPoint, keepPointLayer);
     } else if (angleRestriction == AngleRestriction.FORTYFIVE_DEGREE) {
       result =
-          new PullTightAlgo45(
+          new TraceTightener45(
               board, onlyNetNoArr, stoppableThread, timeLimit, keepPoint, keepPointLayer);
     } else {
       result =
-          new PullTightAlgoAnyAngle(
+          new TraceTightenerAnyAngle(
               board, onlyNetNoArr, stoppableThread, timeLimit, keepPoint, keepPointLayer);
     }
     result.currentClipShape = clipShape;
@@ -191,10 +191,10 @@ public abstract class PullTightAlgo {
     if (timeLimitExceeded) {
 
       if (this.board == null) {
-        FRLogger.error("PullTightAlgo.is_stop_requested: board is null", null);
+        FRLogger.error("TraceTightener.is_stop_requested: board is null", null);
       }
 
-      FRLogger.debug("PullTightAlgo.is_stop_requested: time limit exceeded");
+      FRLogger.debug("TraceTightener.is_stop_requested: time limit exceeded");
     }
     return timeLimitExceeded;
   }
@@ -495,7 +495,7 @@ public abstract class PullTightAlgo {
       return polyline;
     }
     Polyline result = polyline;
-    ShoveTraceAlgo shoveTraceAlgo = new ShoveTraceAlgo(this.board);
+    TraceShover shoveTraceAlgo = new TraceShover(this.board);
     Polyline newPolyline =
         shoveTraceAlgo.springOverObstacles(
             polyline,

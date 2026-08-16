@@ -808,7 +808,7 @@ public class PolylineTrace extends Trace implements Serializable {
       // structurally valid, its endpoint contacts are preserved and remove_tails() will not touch
       // it.
       // Throwing here was causing two problems:
-      //   1. Noisy WARN log in InsertFoundConnectionAlgo every routing pass for complex plane nets.
+      //   1. Noisy WARN log in FoundConnectionInserter every routing pass for complex plane nets.
       //   2. Intermediate trace fragments created during deep-recursion split/combine were left in
       // an
       //      inconsistent state, causing them to be misidentified as tails and removed by
@@ -922,7 +922,7 @@ public class PolylineTrace extends Trace implements Serializable {
    * was changed.
    */
   @Override
-  public boolean pullTight(PullTightAlgo pullTightAlgo) {
+  public boolean pullTight(TraceTightener pullTightAlgo) {
     if (!this.isOnTheBoard()) {
       // This trace may have been deleted in a trace split for example
       return false;
@@ -991,8 +991,8 @@ public class PolylineTrace extends Trace implements Serializable {
     } else {
       optNetNoArr = new int[0];
     }
-    PullTightAlgo pullTightAlgo =
-        PullTightAlgo.getInstance(
+    TraceTightener pullTightAlgo =
+        TraceTightener.getInstance(
             (RoutingBoard) this.board,
             optNetNoArr,
             null,
@@ -1016,8 +1016,8 @@ public class PolylineTrace extends Trace implements Serializable {
     } else {
       optNetNoArr = new int[0];
     }
-    PullTightAlgo pullTightAlgo =
-        PullTightAlgo.getInstance(
+    TraceTightener pullTightAlgo =
+        TraceTightener.getInstance(
             (RoutingBoard) this.board,
             optNetNoArr,
             null,

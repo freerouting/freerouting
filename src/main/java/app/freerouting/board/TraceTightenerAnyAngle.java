@@ -14,11 +14,11 @@ import app.freerouting.geometry.planar.TileShape;
 import java.util.Collection;
 
 /** Auxiliary class containing internal functions for pulling any angle traces tight. */
-class PullTightAlgoAnyAngle extends PullTightAlgo {
+class TraceTightenerAnyAngle extends TraceTightener {
 
   private static final double SKIP_LENGTH = 10.0;
 
-  PullTightAlgoAnyAngle(
+  TraceTightenerAnyAngle(
       RoutingBoard board,
       int[] onlyNetNoArr,
       Stoppable stoppableThread,

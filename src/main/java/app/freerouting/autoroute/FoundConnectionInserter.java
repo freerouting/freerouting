@@ -19,31 +19,31 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /** Inserts the traces and vias of the connection found by the autoroute algorithm. */
-public final class InsertFoundConnectionAlgo {
+public final class FoundConnectionInserter {
 
   private final RoutingBoard board;
   private final AutorouteControl ctrl;
   private IntPoint lastCorner;
   private IntPoint firstCorner;
 
-  /** Creates a new instance of InsertFoundConnectionAlgo. */
-  private InsertFoundConnectionAlgo(RoutingBoard board, AutorouteControl ctrl) {
+  /** Creates a new instance of FoundConnectionInserter. */
+  private FoundConnectionInserter(RoutingBoard board, AutorouteControl ctrl) {
     this.board = board;
     this.ctrl = ctrl;
   }
 
   /**
-   * Creates a new instance of InsertFoundConnectionAlgo. Returns null if the insertion did not
+   * Creates a new instance of FoundConnectionInserter. Returns null if the insertion did not
    * succeed.
    */
-  public static InsertFoundConnectionAlgo getInstance(
-      LocateFoundConnectionAlgo connection, RoutingBoard board, AutorouteControl ctrl) {
+  public static FoundConnectionInserter getInstance(
+      FoundConnectionLocator connection, RoutingBoard board, AutorouteControl ctrl) {
     if (connection == null || connection.connectionItems == null) {
       return null;
     }
     int currentLayer = connection.targetLayer;
-    InsertFoundConnectionAlgo newInstance = new InsertFoundConnectionAlgo(board, ctrl);
-    for (LocateFoundConnectionAlgoAnyAngle.ResultItem currentNewItem : connection.connectionItems) {
+    FoundConnectionInserter newInstance = new FoundConnectionInserter(board, ctrl);
+    for (FoundConnectionLocatorAnyAngle.ResultItem currentNewItem : connection.connectionItems) {
       if (true) {
         Point startCorner = currentNewItem.corners.length > 0 ? currentNewItem.corners[0] : null;
         Point endCorner =
@@ -82,7 +82,7 @@ public final class InsertFoundConnectionAlgo {
             ctrl.traceClearanceClassIndex);
       } else {
         FRLogger.warn(
-            "InsertFoundConnectionAlgo: firstCorner is null for net #"
+            "FoundConnectionInserter: firstCorner is null for net #"
                 + ctrl.netNumber
                 + ", skipping connect_to_trace for target item. "
                 + "This may indicate a degenerate route segment.");
@@ -97,7 +97,7 @@ public final class InsertFoundConnectionAlgo {
             ctrl.traceClearanceClassIndex);
       } else {
         FRLogger.warn(
-            "InsertFoundConnectionAlgo: lastCorner is null for net #"
+            "FoundConnectionInserter: lastCorner is null for net #"
                 + ctrl.netNumber
                 + ", skipping connect_to_trace for start item. "
                 + "This may indicate a degenerate route segment.");
@@ -123,7 +123,7 @@ public final class InsertFoundConnectionAlgo {
    * Inserts the trace by shoving aside obstacle traces and vias. Returns false, that was not
    * possible for the whole trace.
    */
-  private boolean insertTrace(LocateFoundConnectionAlgoAnyAngle.ResultItem trace) {
+  private boolean insertTrace(FoundConnectionLocatorAnyAngle.ResultItem trace) {
     if (trace.corners.length == 1) {
       // Single-point trace: the start and end are the same location (already at the target).
       // Set both firstCorner and lastCorner so that connect_to_trace is not called with null.
@@ -237,7 +237,7 @@ public final class InsertFoundConnectionAlgo {
                   + ", last="
                   + formatPoint(insertPolyline.lastCorner()));
           FRLogger.trace(
-              "InsertFoundConnectionAlgo.insert_trace",
+              "FoundConnectionInserter.insert_trace",
               "compare_trace_insert_segment",
               "net="
                   + ctrl.netNumber
@@ -275,7 +275,7 @@ public final class InsertFoundConnectionAlgo {
             --fromCornerNo;
           }
         }
-        FRLogger.trace("InsertFoundConnectionAlgo: violation corrected");
+        FRLogger.trace("FoundConnectionInserter: violation corrected");
         if (true) {
           FRLogger.trace(
               "compare_trace_insert_segment_raw net="
@@ -295,7 +295,7 @@ public final class InsertFoundConnectionAlgo {
                   + ", last="
                   + formatPoint(insertPolyline.lastCorner()));
           FRLogger.trace(
-              "InsertFoundConnectionAlgo.insert_trace",
+              "FoundConnectionInserter.insert_trace",
               "compare_trace_insert_segment",
               "net="
                   + ctrl.netNumber
@@ -318,7 +318,7 @@ public final class InsertFoundConnectionAlgo {
         }
       } else {
         FRLogger.debug(
-            "InsertFoundConnectionAlgo: insert trace failed for net #"
+            "FoundConnectionInserter: insert trace failed for net #"
                 + ctrl.netNumber
                 + " at corner "
                 + i
@@ -375,7 +375,7 @@ public final class InsertFoundConnectionAlgo {
                   + ", last="
                   + formatPoint(insertPolyline.lastCorner()));
           FRLogger.trace(
-              "InsertFoundConnectionAlgo.insert_trace",
+              "FoundConnectionInserter.insert_trace",
               "compare_trace_insert_segment",
               "net="
                   + ctrl.netNumber
@@ -430,7 +430,7 @@ public final class InsertFoundConnectionAlgo {
     }
 
     FRLogger.trace(
-        "InsertFoundConnectionAlgo.insert_trace",
+        "FoundConnectionInserter.insert_trace",
         "compare_trace_stub_cleanup",
         "net="
             + ctrl.netNumber
@@ -586,7 +586,7 @@ public final class InsertFoundConnectionAlgo {
           Math.abs(floatFromCorner.x - floatNeckDownEndPoint.x)
               >= Math.abs(floatFromCorner.y - floatNeckDownEndPoint.y);
       IntPoint addCorner =
-          LocateFoundConnectionAlgo.calculateAdditionalCorner(
+          FoundConnectionLocator.calculateAdditionalCorner(
                   floatFromCorner,
                   floatNeckDownEndPoint,
                   horizontalFirst,
@@ -629,7 +629,7 @@ public final class InsertFoundConnectionAlgo {
         return fromCorner;
       }
       addCorner =
-          LocateFoundConnectionAlgo.calculateAdditionalCorner(
+          FoundConnectionLocator.calculateAdditionalCorner(
                   floatNeckDownEndPoint,
                   floatToCorner,
                   !horizontalFirst,
@@ -720,7 +720,7 @@ public final class InsertFoundConnectionAlgo {
     if (viaInfo == null) {
       if (!foundSuitableSpan) {
         FRLogger.debug(
-            "InsertFoundConnectionAlgo: via mask not found for net #"
+            "FoundConnectionInserter: via mask not found for net #"
                 + ctrl.netNumber
                 + " covering layers "
                 + fromLayer
@@ -728,7 +728,7 @@ public final class InsertFoundConnectionAlgo {
                 + toLayer);
       } else {
         FRLogger.debug(
-            "InsertFoundConnectionAlgo: via placement blocked by clearance/shove limits for net #"
+            "FoundConnectionInserter: via placement blocked by clearance/shove limits for net #"
                 + ctrl.netNumber);
       }
       traceFanoutDiagnostic(
@@ -759,7 +759,7 @@ public final class InsertFoundConnectionAlgo {
         this.ctrl.maxShoveTraceRecursionDepth,
         this.ctrl.maxShoveViaRecursionDepth,
         this.board)) {
-      FRLogger.debug("InsertFoundConnectionAlgo: forced via failed for net #" + ctrl.netNumber);
+      FRLogger.debug("FoundConnectionInserter: forced via failed for net #" + ctrl.netNumber);
       traceFanoutDiagnostic(
           "forced_via_insert_failed",
           "fromLayer="

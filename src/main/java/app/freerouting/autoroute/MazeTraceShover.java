@@ -4,7 +4,7 @@ import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.ShoveTraceAlgo;
+import app.freerouting.board.TraceShover;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -17,10 +17,10 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 
-/** Auxiliary functions used in MazeSearchAlgo. */
-public final class MazeShoveTraceAlgo {
+/** Auxiliary functions used in MazeSearchEngine. */
+public final class MazeTraceShover {
 
-  private MazeShoveTraceAlgo() {}
+  private MazeTraceShover() {}
 
   /**
    * Returns false, if the algorithm did not succeed and trying to shove from another door section
@@ -196,7 +196,7 @@ public final class MazeShoveTraceAlgo {
 
     if (!segmentIstPoint) {
       shoveWidth =
-          ShoveTraceAlgo.check(
+          TraceShover.check(
               board,
               shoveLineSegment,
               shoveToTheLeft,
@@ -257,7 +257,7 @@ public final class MazeShoveTraceAlgo {
         // check, that currentDoor is on the same borderLine as fromDoor.
         FloatLine currentDoorSegment = currentDoorShape.diagonalCornerSegment();
         if (currentDoorSegment == null) {
-          FRLogger.trace("MazeShoveTraceAlgo.check_shove_trace_line: door shape is empty");
+          FRLogger.trace("MazeTraceShover.check_shove_trace_line: door shape is empty");
           continue;
         }
         Side startCornerSideOfTraceLine = shoveLine.sideOf(currentDoorSegment.a, 0);

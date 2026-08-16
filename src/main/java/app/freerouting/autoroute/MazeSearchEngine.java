@@ -36,7 +36,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /** Class for auto-routing an incomplete connection via a maze search algorithm. */
-public class MazeSearchAlgo {
+public class MazeSearchEngine {
 
   private static final int ALREADY_RIPPED_COSTS = 1;
 
@@ -64,8 +64,8 @@ public class MazeSearchAlgo {
 
   private int sectionNoOfDestinationDoor;
 
-  /** Creates a new instance of MazeSearchAlgo. */
-  MazeSearchAlgo(AutorouteEngine autorouteEngine, AutorouteControl ctrl) {
+  /** Creates a new instance of MazeSearchEngine. */
+  MazeSearchEngine(AutorouteEngine autorouteEngine, AutorouteControl ctrl) {
     this.autorouteEngine = autorouteEngine;
     this.ctrl = ctrl;
     randomGenerator.setSeed(
@@ -119,16 +119,16 @@ public class MazeSearchAlgo {
   }
 
   /**
-   * Initializes a new instance of MazeSearchAlgo for searching a connection between startItems and
-   * destinationItems. Returns null, if the initialisation failed.
+   * Initializes a new instance of MazeSearchEngine for searching a connection between startItems
+   * and destinationItems. Returns null, if the initialisation failed.
    */
-  public static MazeSearchAlgo getInstance(
+  public static MazeSearchEngine getInstance(
       Set<Item> startItems,
       Set<Item> destinationItems,
       AutorouteEngine autorouteDatabase,
       AutorouteControl ctrl) {
-    MazeSearchAlgo newInstance = new MazeSearchAlgo(autorouteDatabase, ctrl);
-    MazeSearchAlgo result;
+    MazeSearchEngine newInstance = new MazeSearchEngine(autorouteDatabase, ctrl);
+    MazeSearchEngine result;
     if (newInstance.init(startItems, destinationItems)) {
       result = newInstance;
     } else {
@@ -495,7 +495,8 @@ public class MazeSearchAlgo {
 
         FloatPoint[] nearestPoints = nextRoomShape.nearestBorderPointsApprox(shapeEntryMiddle, 2);
         if (nearestPoints.length < 2) {
-          FRLogger.warn("MazeSearchAlgo.expand_to_room_doors: nearestPoints.length == 2 expected");
+          FRLogger.warn(
+              "MazeSearchEngine.expand_to_room_doors: nearestPoints.length == 2 expected");
           nextRoomIsThick = false;
         } else {
           double currentDistance = nearestPoints[1].distance(shapeEntryMiddle);
@@ -793,7 +794,7 @@ public class MazeSearchAlgo {
             && door.secondRoom instanceof CompleteFreeSpaceExpansionRoom) {
       TileShape doorShape = door.getShape();
       if (doorShape.isEmpty()) {
-        FRLogger.trace("MazeSearchAlgo:check_door_width doorShape is empty");
+        FRLogger.trace("MazeSearchEngine:check_door_width doorShape is empty");
         return true;
       }
 
@@ -848,7 +849,7 @@ public class MazeSearchAlgo {
               + ", net="
               + ctrl.netNumber);
       FRLogger.trace(
-          "MazeSearchAlgo.expand_to_door_section",
+          "MazeSearchEngine.expand_to_door_section",
           "skip_assign_raw",
           "selected_section="
               + sectionNo
@@ -959,7 +960,7 @@ public class MazeSearchAlgo {
             + ", net="
             + ctrl.netNumber);
     FRLogger.trace(
-        "MazeSearchAlgo.expand_to_door_section",
+        "MazeSearchEngine.expand_to_door_section",
         "assign_raw",
         "selected_section="
             + sectionNo
@@ -1445,7 +1446,7 @@ public class MazeSearchAlgo {
 
     if (!destinationOk) {
       FRLogger.debug(
-          "MazeSearchAlgo.init: Failed - no valid destination items found"
+          "MazeSearchEngine.init: Failed - no valid destination items found"
               + " (dest set size: "
               + destinationItems.size()
               + ", isFanout: "
@@ -1532,7 +1533,7 @@ public class MazeSearchAlgo {
     }
     if (!startOk) {
       FRLogger.debug(
-          "MazeSearchAlgo.init: Failed - no accessible expansion doors found"
+          "MazeSearchEngine.init: Failed - no accessible expansion doors found"
               + " (start items: "
               + startItems.size()
               + ", start rooms: "
@@ -1566,7 +1567,7 @@ public class MazeSearchAlgo {
       TileShape viaShape = via.getTreeShapeOnLayer(this.searchTree, layer);
       obstacleHalfWidth = 0.5 * viaShape.maxWidth();
     } else {
-      FRLogger.warn("MazeSearchAlgo. room_shape_is_thick: unexpected obstacle item");
+      FRLogger.warn("MazeSearchEngine. room_shape_is_thick: unexpected obstacle item");
       obstacleHalfWidth = 0;
     }
     return obstacleHalfWidth >= this.ctrl.compensatedTraceHalfWidth[layer];
@@ -1737,9 +1738,9 @@ public class MazeSearchAlgo {
     }
     boolean result = false;
     if (listElement.adjustment != MazeSearchElement.Adjustment.RIGHT) {
-      Collection<MazeShoveTraceAlgo.DoorSection> leftToDoorSectionList = new LinkedList<>();
+      Collection<MazeTraceShover.DoorSection> leftToDoorSectionList = new LinkedList<>();
 
-      if (MazeShoveTraceAlgo.checkShoveTraceLine(
+      if (MazeTraceShover.checkShoveTraceLine(
           listElement,
           obstacleRoom,
           this.autorouteEngine.board,
@@ -1749,7 +1750,7 @@ public class MazeSearchAlgo {
         result = true;
       }
 
-      for (MazeShoveTraceAlgo.DoorSection currentLeftDoorSection : leftToDoorSectionList) {
+      for (MazeTraceShover.DoorSection currentLeftDoorSection : leftToDoorSectionList) {
         MazeSearchElement.Adjustment currentAdjustment;
         if (currentLeftDoorSection.door.dimension == 2) {
           // the door is the link door to the next room
@@ -1769,9 +1770,9 @@ public class MazeSearchAlgo {
     }
 
     if (listElement.adjustment != MazeSearchElement.Adjustment.LEFT) {
-      Collection<MazeShoveTraceAlgo.DoorSection> rightToDoorSectionList = new LinkedList<>();
+      Collection<MazeTraceShover.DoorSection> rightToDoorSectionList = new LinkedList<>();
 
-      if (MazeShoveTraceAlgo.checkShoveTraceLine(
+      if (MazeTraceShover.checkShoveTraceLine(
           listElement,
           obstacleRoom,
           this.autorouteEngine.board,
@@ -1780,7 +1781,7 @@ public class MazeSearchAlgo {
           rightToDoorSectionList)) {
         result = true;
       }
-      for (MazeShoveTraceAlgo.DoorSection currentRightDoorSection : rightToDoorSectionList) {
+      for (MazeTraceShover.DoorSection currentRightDoorSection : rightToDoorSectionList) {
         MazeSearchElement.Adjustment currentAdjustment;
         if (currentRightDoorSection.door.dimension == 2) {
           // the door is the link door to the next room
@@ -1891,7 +1892,7 @@ public class MazeSearchAlgo {
     return enterThroughSmallDoor(listElement, currentItem);
   }
 
-  /** The result type of MazeSearchAlgo.find_connection. */
+  /** The result type of MazeSearchEngine.find_connection. */
   public static class Result {
 
     public final ExpandableObject destinationDoor;

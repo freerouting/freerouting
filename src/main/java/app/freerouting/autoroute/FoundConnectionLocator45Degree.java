@@ -18,11 +18,11 @@ import java.util.SortedSet;
 /**
  * Locates and constructs 45-degree trace connection geometries from maze search backtrack paths.
  */
-public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo {
+public class FoundConnectionLocator45Degree extends FoundConnectionLocator {
 
-  /** Creates a new instance of LocateFoundConnectionAlgo45Degree. */
-  public LocateFoundConnectionAlgo45Degree(
-      MazeSearchAlgo.Result mazeSearchResult,
+  /** Creates a new instance of FoundConnectionLocator45Degree. */
+  public FoundConnectionLocator45Degree(
+      MazeSearchEngine.Result mazeSearchResult,
       AutorouteControl ctrl,
       ShapeSearchTree searchTree,
       AngleRestriction angleRestriction,
@@ -122,7 +122,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
 
     if (currentFromInfo.nextRoom == null) {
       FRLogger.warn(
-          "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: nextRoom is null");
+          "FoundConnectionLocator45Degree.calculate_next_trace_corners: nextRoom is null");
       return result;
     }
 
@@ -222,7 +222,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
     BacktrackElement currentToInfo = this.backtrackArray[this.currentToDoorIndex];
     if (!(currentToInfo.door instanceof ExpansionDoor currentToDoor)) {
       FRLogger.warn(
-          "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: ExpansionDoor expected");
+          "FoundConnectionLocator45Degree.calculate_next_trace_corners: ExpansionDoor expected");
       return result;
     }
 
@@ -238,7 +238,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       FloatLine[] lineSections = currentToDoor.getSectionSegments(traceHalfwidth);
       if (currentToInfo.sectionNoOfDoor >= lineSections.length) {
         FRLogger.warn(
-            "LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: "
+            "FoundConnectionLocator45Degree.calculate_next_trace_corners: "
                 + "lineSections inconsistent");
         return result;
       }

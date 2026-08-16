@@ -239,7 +239,7 @@ public final class DrillItemMover {
   /**
    * Calculates possible new location for a via to shove outside obstacleShape. if extendedCheck is
    * true, more than 1 possible new locations are calculated. The function is used here and in
-   * ShoveTraceAlgo.check.
+   * TraceShover.check.
    */
   static IntPoint[] tryShoveViaPoints(
       TileShape obstacleShape,
