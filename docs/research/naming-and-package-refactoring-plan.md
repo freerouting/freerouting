@@ -653,15 +653,50 @@ Branch: `refactor/naming-phase-15-java-modernization`
 
 ---
 
-### Phase 16 — Javadoc & legacy comment cleanup
+### Phase 16 — Comprehensive Javadoc review & documentation update
 
-Branch: `refactor/naming-phase-16-javadoc-cleanup`
+Branch: `refactor/naming-phase-16-javadoc-and-docs-update`
 
 **Progress checklist**
 
-- [ ] Update stale snake_case method references in javadocs/comments (`normalize_traces()`, `is_tail()`, `bounding_octagon()`, `get_direction()`, `start_point()`, `end_point()`, `edge_line_count()`, `border_line_count()`).
-- [ ] Verify `python scripts/i18n/extract-context.py --check` and build docs.
+- [ ] Complete Javadoc review and update across all packages (`geometry.planar`, `board`, `autoroute`, `drc`, `rules`, `core`, `gui`, `io.specctra`, `settings`, `api`):
+  - [ ] Replace stale `snake_case` method and field references in Javadocs and source comments (e.g. `normalize_traces()`, `is_tail()`, `bounding_octagon()`, `get_direction()`, `start_point()`, `end_point()`, `edge_line_count()`, `border_line_count()`, `net_no`, `cl_type`, etc.).
+  - [ ] Update all class/interface name references in Javadocs to reflect renamed types (`ItemInfoPrinter`, `TileShape`, `RegularTileShape`, `Simplex`, `Circle`, `ExpansionRoom`, `CompleteFreeSpaceExpansionRoom`, etc.).
+  - [ ] Ensure `@param`, `@return`, and `@throws` tags match updated camelCase parameter names (`printer`, `idGenerator`, `clearanceClassIndex`, `layerIndex`, `componentId`, etc.).
+- [ ] Complete documentation review and update in `docs/`:
+  - [ ] Update `docs/architecture.md` (Mermaid system diagram, package glossary, and component references).
+  - [ ] Update `docs/settings.md`, `docs/developer.md`, `docs/command_line_arguments.md`, `docs/integrations.md`, `docs/self-hosting.md`.
+  - [ ] Update `AGENTS.md` and related agent instructions if needed.
+- [ ] Verify `python scripts/i18n/extract-context.py --check`.
 - [ ] Run full verification suite (`./gradlew check`).
+
+---
+
+### Phase 17 — Comprehensive codebase review & forward-looking improvement catalog
+
+Branch: `refactor/naming-phase-17-codebase-review`
+
+**Objectives & deliverables**
+
+Perform a systematic, whole-codebase review to catalogue concrete future modernization and architectural refactoring opportunities across five key dimensions:
+
+1. **Package Architecture & Structure**:
+   - Evaluate package boundaries, high-level cohesion, and coupling.
+   - Further subpackaging opportunities (e.g., in `board/`, `autoroute/`, `gui/`).
+2. **Class Names & Domain Locations**:
+   - Identify classes whose names or package locations could be refined for domain clarity, cohesion, or separation of concerns.
+3. **Methods, Parameters, and Fields**:
+   - Signature consistency, parameter types, nullable vs Optional vs primitive representations, eliminating remaining legacy idioms.
+4. **Design Patterns & Modern Java Syntax/Language Features**:
+   - Opportunities for modern Java 25 features (sealed classes, pattern matching, records, streams, immutability, builder/factory patterns).
+5. **Performance, Memory, and Maintenance Opportunities**:
+   - Algorithmic efficiencies, spatial index optimizations, allocation reduction, GC throughput, and maintainability enhancements.
+
+**Progress checklist**
+
+- [ ] Systematic scan of all domain packages (`geometry.planar`, `board`, `autoroute`, `drc`, `rules`, `core`, `settings`, `api`, `gui`, `io.specctra`).
+- [ ] Generate comprehensive review report document in `docs/research/future-codebase-improvements.md`.
+- [ ] Incorporate summary and prioritization into project roadmap documentation.
 
 ---
 
