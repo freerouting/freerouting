@@ -44,12 +44,12 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   protected DrillItem(
       Point center,
       int[] netNumbers,
-      int clearanceType,
+      int clearanceClassIndex,
       int idNo,
       int groupNo,
       FixedState fixedState,
       BasicBoard board) {
-    super(netNumbers, clearanceType, idNo, groupNo, fixedState, board);
+    super(netNumbers, clearanceClassIndex, idNo, groupNo, fixedState, board);
     this.center = center;
   }
 
@@ -134,7 +134,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
           currentTraceInfo.layer,
           currentTraceInfo.halfWidth,
           this.netNumbers,
-          currentTraceInfo.clearanceType,
+          currentTraceInfo.clearanceClassIndex,
           FixedState.UNFIXED);
     }
   }
@@ -394,12 +394,12 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
 
     int layer;
     int halfWidth;
-    int clearanceType;
+    int clearanceClassIndex;
 
-    TraceInfo(int layer, int halfWidth, int clearanceType) {
+    TraceInfo(int layer, int halfWidth, int clearanceClassIndex) {
       this.layer = layer;
       this.halfWidth = halfWidth;
-      this.clearanceType = clearanceType;
+      this.clearanceClassIndex = clearanceClassIndex;
     }
 
     /** Implements the comparable interface. */

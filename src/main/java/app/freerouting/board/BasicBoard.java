@@ -309,7 +309,7 @@ public class BasicBoard implements Serializable {
       int layer,
       int halfWidth,
       int[] netNumbers,
-      int clearanceClass,
+      int clearanceClassIndex,
       FixedState fixedState) {
     for (int i = 0; i < points.length; i++) {
       if (!this.boundingBox.contains(points[i])) {
@@ -317,7 +317,7 @@ public class BasicBoard implements Serializable {
       }
     }
     Polyline poly = new Polyline(points);
-    insertTrace(poly, layer, halfWidth, netNumbers, clearanceClass, fixedState);
+    insertTrace(poly, layer, halfWidth, netNumbers, clearanceClassIndex, fixedState);
   }
 
   /**
@@ -328,12 +328,20 @@ public class BasicBoard implements Serializable {
       Padstack padstack,
       Point center,
       int[] netNumbers,
-      int clearanceClass,
+      int clearanceClassIndex,
       FixedState fixedState,
       boolean attachAllowed) {
     Via newVia =
         new Via(
-            padstack, center, netNumbers, clearanceClass, 0, 0, fixedState, attachAllowed, this);
+            padstack,
+            center,
+            netNumbers,
+            clearanceClassIndex,
+            0,
+            0,
+            fixedState,
+            attachAllowed,
+            this);
     insertItem(newVia);
     int fromLayer = padstack.fromLayer();
     int toLayer = padstack.toLayer();
@@ -354,7 +362,7 @@ public class BasicBoard implements Serializable {
    * @param padstack The padstack describing the via geometry
    * @param center The center point (at the SMD pin center)
    * @param netNumbers The net numbers
-   * @param clearanceClass The clearance class to use
+   * @param clearanceClassIndex The clearance class index to use
    * @param fixedState The fixed state
    * @param smdLayer The SMD layer where the pin lives (clearance exception layer)
    */
@@ -362,11 +370,11 @@ public class BasicBoard implements Serializable {
       Padstack padstack,
       Point center,
       int[] netNumbers,
-      int clearanceClass,
+      int clearanceClassIndex,
       FixedState fixedState,
       int smdLayer) {
     Via newVia =
-        new Via(padstack, center, netNumbers, clearanceClass, 0, 0, fixedState, true, this);
+        new Via(padstack, center, netNumbers, clearanceClassIndex, 0, 0, fixedState, true, this);
     newVia.isEscapeVia = true;
     newVia.escapeViaSmdLayer = smdLayer;
     insertItem(newVia);
@@ -385,8 +393,12 @@ public class BasicBoard implements Serializable {
    * component (starting with 0).
    */
   public Pin insertPin(
-      int componentNo, int pinNo, int[] netNumbers, int clearanceClass, FixedState fixedState) {
-    Pin newPin = new Pin(componentNo, pinNo, netNumbers, clearanceClass, 0, fixedState, this);
+      int componentNo,
+      int pinNo,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      FixedState fixedState) {
+    Pin newPin = new Pin(componentNo, pinNo, netNumbers, clearanceClassIndex, 0, fixedState, this);
     insertItem(newPin);
     return newPin;
   }
@@ -396,14 +408,14 @@ public class BasicBoard implements Serializable {
    * may have holes. If componentNo != 0, the obstacle belongs to a component.
    */
   public ObstacleArea insertObstacle(
-      Area area, int layer, int clearanceClass, FixedState fixedState) {
+      Area area, int layer, int clearanceClassIndex, FixedState fixedState) {
     if (area == null) {
       FRLogger.warn("BasicBoard.insert_obstacle: area is null");
       return null;
     }
     ObstacleArea obs =
         new ObstacleArea(
-            area, layer, Vector.ZERO, 0, false, clearanceClass, 0, 0, null, fixedState, this);
+            area, layer, Vector.ZERO, 0, false, clearanceClassIndex, 0, 0, null, fixedState, this);
     insertItem(obs);
     return obs;
   }
@@ -418,7 +430,7 @@ public class BasicBoard implements Serializable {
       Vector translation,
       double rotationInDegree,
       boolean sideChanged,
-      int clearanceClass,
+      int clearanceClassIndex,
       int componentNo,
       String name,
       FixedState fixedState) {
@@ -433,7 +445,7 @@ public class BasicBoard implements Serializable {
             translation,
             rotationInDegree,
             sideChanged,
-            clearanceClass,
+            clearanceClassIndex,
             0,
             componentNo,
             name,
@@ -448,14 +460,14 @@ public class BasicBoard implements Serializable {
    * which may have holes.
    */
   public ViaObstacleArea insertViaObstacle(
-      Area area, int layer, int clearanceClass, FixedState fixedState) {
+      Area area, int layer, int clearanceClassIndex, FixedState fixedState) {
     if (area == null) {
       FRLogger.warn("BasicBoard.insert_via_obstacle: area is null");
       return null;
     }
     ViaObstacleArea obs =
         new ViaObstacleArea(
-            area, layer, Vector.ZERO, 0, false, clearanceClass, 0, 0, null, fixedState, this);
+            area, layer, Vector.ZERO, 0, false, clearanceClassIndex, 0, 0, null, fixedState, this);
     insertItem(obs);
     return obs;
   }
@@ -470,7 +482,7 @@ public class BasicBoard implements Serializable {
       Vector translation,
       double rotationInDegree,
       boolean sideChanged,
-      int clearanceClass,
+      int clearanceClassIndex,
       int componentNo,
       String name,
       FixedState fixedState) {
@@ -485,7 +497,7 @@ public class BasicBoard implements Serializable {
             translation,
             rotationInDegree,
             sideChanged,
-            clearanceClass,
+            clearanceClassIndex,
             0,
             componentNo,
             name,
@@ -500,14 +512,14 @@ public class BasicBoard implements Serializable {
    * shape, which may have holes.
    */
   public ComponentObstacleArea insertComponentObstacle(
-      Area area, int layer, int clearanceClass, FixedState fixedState) {
+      Area area, int layer, int clearanceClassIndex, FixedState fixedState) {
     if (area == null) {
       FRLogger.warn("BasicBoard.insert_component_obstacle: area is null");
       return null;
     }
     ComponentObstacleArea obs =
         new ComponentObstacleArea(
-            area, layer, Vector.ZERO, 0, false, clearanceClass, 0, 0, null, fixedState, this);
+            area, layer, Vector.ZERO, 0, false, clearanceClassIndex, 0, 0, null, fixedState, this);
     insertItem(obs);
     return obs;
   }
@@ -522,7 +534,7 @@ public class BasicBoard implements Serializable {
       Vector translation,
       double rotationInDegree,
       boolean sideChanged,
-      int clearanceClass,
+      int clearanceClassIndex,
       int componentNo,
       String name,
       FixedState fixedState) {
@@ -537,7 +549,7 @@ public class BasicBoard implements Serializable {
             translation,
             rotationInDegree,
             sideChanged,
-            clearanceClass,
+            clearanceClassIndex,
             0,
             componentNo,
             name,
@@ -592,7 +604,7 @@ public class BasicBoard implements Serializable {
       Area area,
       int layer,
       int[] netNumbers,
-      int clearanceClass,
+      int clearanceClassIndex,
       boolean isObstacle,
       FixedState fixedState) {
     if (area == null) {
@@ -607,7 +619,7 @@ public class BasicBoard implements Serializable {
             0,
             false,
             netNumbers,
-            clearanceClass,
+            clearanceClassIndex,
             0,
             0,
             null,
@@ -1229,10 +1241,10 @@ public class BasicBoard implements Serializable {
   }
 
   /**
-   * Checks, if an object with shape shape and net nos netNumbers and clearance class clClass can be
-   * inserted on layer layer without clearance violation.
+   * Checks, if an object with shape shape and net nos netNumbers and clearance class
+   * clearanceClassIndex can be inserted on layer layer without clearance violation.
    */
-  public boolean checkShape(Area shape, int layer, int[] netNumbers, int clClass) {
+  public boolean checkShape(Area shape, int layer, int[] netNumbers, int clearanceClassIndex) {
     TileShape[] tiles = shape.splitToConvex();
     ShapeSearchTree defaultTree = this.searchTreeManager.getDefaultTree();
     for (int i = 0; i < tiles.length; i++) {
@@ -1242,7 +1254,7 @@ public class BasicBoard implements Serializable {
       }
       Set<SearchTreeObject> obstacles = new TreeSet<>();
       defaultTree.overlappingObjectsWithClearance(
-          currentShape, layer, netNumbers, clClass, obstacles);
+          currentShape, layer, netNumbers, clearanceClassIndex, obstacles);
       for (SearchTreeObject currentObject : obstacles) {
         boolean isObstacle = true;
         for (int j = 0; j < netNumbers.length; j++) {
@@ -1259,12 +1271,13 @@ public class BasicBoard implements Serializable {
   }
 
   /**
-   * Checks, if a trace line with shape shape and net numbers netNumbers and clearance class clClass
-   * can be inserted on layer layer without clearance violation. If contactPins != null, all pins
-   * not contained in contactPins are regarded as obstacles, even if they are of the own net.
+   * Checks, if a trace line with shape shape and net numbers netNumbers and clearance class
+   * clearanceClassIndex can be inserted on layer layer without clearance violation. If contactPins
+   * != null, all pins not contained in contactPins are regarded as obstacles, even if they are of
+   * the own net.
    */
   public boolean checkTraceShape(
-      TileShape shape, int layer, int[] netNumbers, int clClass, Set<Pin> contactPins) {
+      TileShape shape, int layer, int[] netNumbers, int clearanceClassIndex, Set<Pin> contactPins) {
     if (!shape.isContainedIn(boundingBox)) {
       return false;
     }
@@ -1275,7 +1288,7 @@ public class BasicBoard implements Serializable {
       defaultTree.overlappingTreeEntries(shape, layer, ignoreNetNos, treeEntries);
     } else {
       defaultTree.overlappingTreeEntriesWithClearance(
-          shape, layer, ignoreNetNos, clClass, treeEntries);
+          shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
     }
     for (TreeEntry currentTreeEntry : treeEntries) {
       if (!(currentTreeEntry.object instanceof Item currentItem)) {
@@ -1325,18 +1338,18 @@ public class BasicBoard implements Serializable {
   }
 
   /**
-   * Checks, if a polyline trace with the input parameters can be inserted without clearance.
-   * violations
+   * Checks, if a polyline trace with the input parameters can be inserted without clearance
+   * violations.
    */
   public boolean checkPolylineTrace(
-      Polyline polyline, int layer, int penHalfWidth, int[] netNumbers, int clearanceClass) {
+      Polyline polyline, int layer, int penHalfWidth, int[] netNumbers, int clearanceClassIndex) {
     Trace tmpTrace =
         new PolylineTrace(
             polyline,
             layer,
             penHalfWidth,
             netNumbers,
-            clearanceClass,
+            clearanceClassIndex,
             0,
             0,
             FixedState.UNFIXED,
@@ -1344,7 +1357,7 @@ public class BasicBoard implements Serializable {
     Set<Pin> contactPins = tmpTrace.touchingPinsAtEndCorners();
     for (int i = 0; i < tmpTrace.tileShapeCount(); i++) {
       if (!this.checkTraceShape(
-          tmpTrace.getTileShape(i), layer, netNumbers, clearanceClass, contactPins)) {
+          tmpTrace.getTileShape(i), layer, netNumbers, clearanceClassIndex, contactPins)) {
         return false;
       }
     }
@@ -1516,7 +1529,7 @@ public class BasicBoard implements Serializable {
         || item.clearanceClassIndex() < 0
         || item.clearanceClassIndex() >= rules.clearanceMatrix.getClassCount()) {
       FRLogger.warn("LayeredBoard.insert_item: clearanceClass no out of range");
-      item.setClearanceClassNo(0);
+      item.setClearanceClassIndex(0);
     }
     item.board = this;
     itemList.insert(item);

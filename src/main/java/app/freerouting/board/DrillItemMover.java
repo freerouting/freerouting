@@ -165,7 +165,7 @@ public final class DrillItemMover {
       ShapeEntrySide fromSide,
       int layer,
       int[] netNumbers,
-      int clType,
+      int clearanceClassIndex,
       Collection<Item> ignoreItems,
       int maxRecursionDepth,
       int maxViaRecursionDepth,
@@ -173,9 +173,11 @@ public final class DrillItemMover {
       RoutingBoard board) {
     ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(obstacleShape, layer, netNumbers, clType, fromSide, board);
+        new ShapeTraceEntries(
+            obstacleShape, layer, netNumbers, clearanceClassIndex, fromSide, board);
     Collection<Item> obstacles =
-        searchTree.overlappingItemsWithClearance(obstacleShape, layer, new int[0], clType);
+        searchTree.overlappingItemsWithClearance(
+            obstacleShape, layer, new int[0], clearanceClassIndex);
 
     if (!shapeEntries.storeItems(obstacles, false, copperSharingAllowed)) {
       return true;
@@ -195,7 +197,7 @@ public final class DrillItemMover {
         return true;
       }
       IntPoint[] tryViaCenters =
-          tryShoveViaPoints(obstacleShape, layer, currentVia, clType, true, board);
+          tryShoveViaPoints(obstacleShape, layer, currentVia, clearanceClassIndex, true, board);
       IntPoint newViaCenter = null;
       double maxDist =
           0.5 * currentVia.getShapeOnLayer(layer).boundingBox().maxWidth() + shapeRadius;
@@ -245,7 +247,7 @@ public final class DrillItemMover {
       TileShape obstacleShape,
       int layer,
       Via via,
-      int clClassNo,
+      int clearanceClassIndex,
       boolean extendedCheck,
       RoutingBoard board) {
     ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
@@ -254,7 +256,8 @@ public final class DrillItemMover {
       return new IntPoint[0];
     }
     boolean isIntOctagon = obstacleShape.isIntOctagon();
-    double clearanceValue = board.clearanceValue(clClassNo, via.clearanceClassIndex(), layer);
+    double clearanceValue =
+        board.clearanceValue(clearanceClassIndex, via.clearanceClassIndex(), layer);
     double shoveDistance;
     if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE || isIntOctagon) {
       shoveDistance = 0.5 * currentViaShape.boundingBox().maxWidth();

@@ -66,7 +66,8 @@ public class Network extends ScopeKeyword {
       file.write(" ");
       identifierType.write(currentVia.getPadstack().name, file);
       file.write(" ");
-      identifierType.write(rules.clearanceMatrix.getName(currentVia.getClearanceClass()), file);
+      identifierType.write(
+          rules.clearanceMatrix.getName(currentVia.getClearanceClassIndex()), file);
       if (currentVia.attachSmdAllowed()) {
         file.write(" attach");
       }
@@ -357,7 +358,7 @@ public class Network extends ScopeKeyword {
 
   private static void createDefaultViaInfos(
       BasicBoard board, app.freerouting.rules.NetClass netClass, boolean attachAllowed) {
-    int clClass =
+    int clearanceClassIndex =
         netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.VIA);
     boolean isDefaultClass = netClass == board.rules.getDefaultNetClass();
     for (int i = 0; i < board.library.viaPadstackCount(); i++) {
@@ -370,7 +371,7 @@ public class Network extends ScopeKeyword {
         viaName = currentPadstack.name + DsnFile.CLASS_CLEARANCE_SEPARATOR + netClass.getName();
       }
       ViaInfo foundViaInfo =
-          new ViaInfo(viaName, currentPadstack, clClass, viaAttachAllowed, board.rules);
+          new ViaInfo(viaName, currentPadstack, clearanceClassIndex, viaAttachAllowed, board.rules);
       board.rules.viaInfos.add(foundViaInfo);
     }
   }
@@ -696,7 +697,7 @@ public class Network extends ScopeKeyword {
     for (String currentViaName : useVia) {
       for (int i = 0; i < board.rules.viaInfos.count(); i++) {
         ViaInfo currentViaInfo = board.rules.viaInfos.get(i);
-        if (currentViaInfo.getClearanceClass() == defaultViaClClass) {
+        if (currentViaInfo.getClearanceClassIndex() == defaultViaClClass) {
           if (currentViaInfo.getPadstack().name.equals(currentViaName)) {
             newViaRule.appendVia(currentViaInfo);
           }

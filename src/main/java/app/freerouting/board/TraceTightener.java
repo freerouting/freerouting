@@ -43,7 +43,7 @@ public abstract class TraceTightener {
   protected int currentLayer;
   protected int currentHalfWidth;
   protected int[] currentNetNumbers;
-  protected int currentClType;
+  protected int currentClearanceClassIndex;
   protected IntOctagon currentClipShape;
   protected Set<Pin> contactPins;
   protected int minTranslateDist;
@@ -166,13 +166,14 @@ public abstract class TraceTightener {
       int layer,
       int halfWidth,
       int[] netNumbers,
-      int clType,
+      int clearanceClassIndex,
       Set<Pin> contactPins) {
     currentLayer = layer;
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
-    currentHalfWidth = halfWidth + searchTree.clearanceCompensationValue(clType, layer);
+    currentHalfWidth =
+        halfWidth + searchTree.clearanceCompensationValue(clearanceClassIndex, layer);
     currentNetNumbers = netNumbers;
-    currentClType = clType;
+    currentClearanceClassIndex = clearanceClassIndex;
     this.contactPins = contactPins;
     return pullTight(polyline);
   }
@@ -289,7 +290,11 @@ public abstract class TraceTightener {
         TileShape shapeToCheck = tmp.offsetShape(currentHalfWidth, 0);
         checkOk =
             board.checkTraceShape(
-                shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
+                shapeToCheck,
+                currentLayer,
+                currentNetNumbers,
+                currentClearanceClassIndex,
+                this.contactPins);
       }
       deltaDist /= 2;
       if (checkOk) {
@@ -352,13 +357,21 @@ public abstract class TraceTightener {
             TileShape shapeToCheck = tmp.offsetShape(currentHalfWidth, i - 2);
             checkOk =
                 board.checkTraceShape(
-                    shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
+                    shapeToCheck,
+                    currentLayer,
+                    currentNetNumbers,
+                    currentClearanceClassIndex,
+                    this.contactPins);
           }
           if (checkOk && (i < currentPolyline.lines.length - 2)) {
             TileShape shapeToCheck = tmp.offsetShape(currentHalfWidth, i - 1);
             checkOk =
                 board.checkTraceShape(
-                    shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
+                    shapeToCheck,
+                    currentLayer,
+                    currentNetNumbers,
+                    currentClearanceClassIndex,
+                    this.contactPins);
           }
         }
         if (checkOk) {
@@ -382,7 +395,7 @@ public abstract class TraceTightener {
     currentLayer = trace.getLayer();
     currentHalfWidth = trace.getHalfWidth();
     currentNetNumbers = trace.netNumbers;
-    currentClType = trace.clearanceClassIndex();
+    currentClearanceClassIndex = trace.clearanceClassIndex();
     return smoothenEndCornersAtTrace1(trace);
   }
 
@@ -502,11 +515,15 @@ public abstract class TraceTightener {
             currentHalfWidth,
             currentLayer,
             currentNetNumbers,
-            currentClType,
+            currentClearanceClassIndex,
             contactPins);
     if (newPolyline != null && newPolyline != polyline) {
       if (this.board.checkPolylineTrace(
-          newPolyline, currentLayer, currentHalfWidth, currentNetNumbers, currentClType)) {
+          newPolyline,
+          currentLayer,
+          currentHalfWidth,
+          currentNetNumbers,
+          currentClearanceClassIndex)) {
         result = newPolyline;
       }
     }

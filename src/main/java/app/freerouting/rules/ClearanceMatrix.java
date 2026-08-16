@@ -65,12 +65,12 @@ public class ClearanceMatrix implements Serializable {
   }
 
   /** Gets the name of the clearance class with the input number. */
-  public String getName(int clearanceClass) {
-    if (clearanceClass < 0 || clearanceClass >= row.length) {
-      FRLogger.warn("ClearanceMatrix.get_name: clClass out of range");
+  public String getName(int clearanceClassIndex) {
+    if (clearanceClassIndex < 0 || clearanceClassIndex >= row.length) {
+      FRLogger.warn("ClearanceMatrix.get_name: clearanceClassIndex out of range");
       return null;
     }
-    return row[clearanceClass].name;
+    return row[clearanceClassIndex].name;
   }
 
   /** Sets the value of all clearance classes with number {@literal >}= 1 to {@code value}. */
@@ -270,8 +270,8 @@ public class ClearanceMatrix implements Serializable {
   }
 
   /** Returns the clearance compensation value of the given class on the given layer. */
-  public int clearanceCompensationValue(int clearanceClass, int layer) {
-    return (this.getValue(clearanceClass, clearanceClass, layer, false) + 1) / 2;
+  public int clearanceCompensationValue(int clearanceClassIndex, int layer) {
+    return (this.getValue(clearanceClassIndex, clearanceClassIndex, layer, false) + 1) / 2;
   }
 
   /**

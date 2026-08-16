@@ -42,12 +42,12 @@ public class TraceShover {
       int layer,
       int[] netNumbers,
       int traceHalfWidth,
-      int clType,
+      int clearanceClassIndex,
       int maxRecursionDepth,
       int maxViaRecursionDepth) {
     ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
     if (searchTree.isClearanceCompensationUsed()) {
-      traceHalfWidth += searchTree.clearanceCompensationValue(clType, layer);
+      traceHalfWidth += searchTree.clearanceCompensationValue(clearanceClassIndex, layer);
     }
     TileShape[] traceShapes = lineSegment.toPolyline().offsetShapes(traceHalfWidth);
     if (traceShapes.length != 1) {
@@ -65,9 +65,10 @@ public class TraceShover {
     }
     ShapeEntrySide fromSide = new ShapeEntrySide(lineSegment, traceShape, shoveToTheLeft);
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(traceShape, layer, netNumbers, clType, fromSide, board);
+        new ShapeTraceEntries(traceShape, layer, netNumbers, clearanceClassIndex, fromSide, board);
     Collection<Item> obstacles =
-        searchTree.overlappingItemsWithClearance(traceShape, layer, new int[0], clType);
+        searchTree.overlappingItemsWithClearance(
+            traceShape, layer, new int[0], clearanceClassIndex);
     boolean obstaclesShovable = shapeEntries.storeItems(obstacles, false, true);
     if (!obstaclesShovable || shapeEntries.traceTailsInShape()) {
       return 0;
@@ -97,7 +98,7 @@ public class TraceShover {
 
         IntPoint[] newViaCenter =
             DrillItemMover.tryShoveViaPoints(
-                traceShape, layer, currentShoveVia, clType, false, board);
+                traceShape, layer, currentShoveVia, clearanceClassIndex, false, board);
 
         if (newViaCenter.length == 0) {
           return 0;
@@ -124,7 +125,8 @@ public class TraceShover {
         double currentOkLength = projection - viaRadius - traceHalfWidth;
         if (!searchTree.isClearanceCompensationUsed()) {
           currentOkLength -=
-              clMatrix.getValue(clType, currentShoveVia.clearanceClassIndex(), layer, true);
+              clMatrix.getValue(
+                  clearanceClassIndex, currentShoveVia.clearanceClassIndex(), layer, true);
         }
         if (currentOkLength <= 0) {
           return 0;
@@ -186,7 +188,10 @@ public class TraceShover {
             } else {
               currentOkLength -=
                   clMatrix.getValue(
-                      clType, currentSubstituteTrace.clearanceClassIndex(), layer, true);
+                      clearanceClassIndex,
+                      currentSubstituteTrace.clearanceClassIndex(),
+                      layer,
+                      true);
             }
             if (currentOkLength <= 0) {
               return 0;
@@ -210,7 +215,7 @@ public class TraceShover {
       Direction dir,
       int layer,
       int[] netNumbers,
-      int clType,
+      int clearanceClassIndex,
       int maxRecursionDepth,
       int maxViaRecursionDepth,
       int maxSpringOverRecursionDepth,
@@ -228,10 +233,11 @@ public class TraceShover {
       return false;
     }
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(traceShape, layer, netNumbers, clType, fromSide, board);
+        new ShapeTraceEntries(traceShape, layer, netNumbers, clearanceClassIndex, fromSide, board);
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     Collection<Item> obstacles =
-        searchTree.overlappingItemsWithClearance(traceShape, layer, new int[0], clType);
+        searchTree.overlappingItemsWithClearance(
+            traceShape, layer, new int[0], clearanceClassIndex);
     obstacles.removeAll(getIgnoreItemsAtTiePins(traceShape, layer, netNumbers));
     boolean obstaclesShovable = shapeEntries.storeItems(obstacles, false, true);
     if (!obstaclesShovable) {
@@ -295,7 +301,8 @@ public class TraceShover {
       }
       FloatPoint currentShoveViaCenter = currentShoveVia.getCenter().toFloat();
       IntPoint[] tryViaCenters =
-          DrillItemMover.tryShoveViaPoints(traceShape, layer, currentShoveVia, clType, true, board);
+          DrillItemMover.tryShoveViaPoints(
+              traceShape, layer, currentShoveVia, clearanceClassIndex, true, board);
 
       double maxDist =
           0.5 * currentShoveVia.getShapeOnLayer(layer).boundingBox().maxWidth() + shapeRadius;
@@ -393,7 +400,7 @@ public class TraceShover {
       ShapeEntrySide fromSide,
       int layer,
       int[] netNumbers,
-      int clType,
+      int clearanceClassIndex,
       Collection<Item> ignoreItems,
       int maxRecursionDepth,
       int maxViaRecursionDepth,
@@ -411,7 +418,7 @@ public class TraceShover {
         fromSide,
         layer,
         netNumbers,
-        clType,
+        clearanceClassIndex,
         ignoreItems,
         maxRecursionDepth,
         maxViaRecursionDepth,
@@ -420,10 +427,11 @@ public class TraceShover {
       return false;
     }
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(traceShape, layer, netNumbers, clType, fromSide, board);
+        new ShapeTraceEntries(traceShape, layer, netNumbers, clearanceClassIndex, fromSide, board);
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     Collection<Item> obstacles =
-        searchTree.overlappingItemsWithClearance(traceShape, layer, new int[0], clType);
+        searchTree.overlappingItemsWithClearance(
+            traceShape, layer, new int[0], clearanceClassIndex);
     obstacles.removeAll(getIgnoreItemsAtTiePins(traceShape, layer, netNumbers));
     boolean obstaclesShovable = shapeEntries.storeItems(obstacles, false, true);
     if (!shapeEntries.shoveViaList.isEmpty()) {
@@ -586,7 +594,7 @@ public class TraceShover {
       int halfWidth,
       int layer,
       int[] netNumbers,
-      int clType,
+      int clearanceClassIndex,
       boolean overConnectedPins,
       int recursionDepth,
       Set<Pin> contactPins) {
@@ -602,7 +610,8 @@ public class TraceShover {
     for (int i = 0; i < polyline.lines.length - 2; i++) {
       TileShape currentShape = polyline.offsetShape(halfWidth, i);
       Collection<Item> obstacles =
-          searchTree.overlappingItemsWithClearance(currentShape, layer, checkNetNoArr, clType);
+          searchTree.overlappingItemsWithClearance(
+              currentShape, layer, checkNetNoArr, clearanceClassIndex);
       for (Item currentItem : obstacles) {
         boolean isObstacle;
         if (currentItem.sharesNetNo(netNumbers)) {
@@ -705,7 +714,9 @@ public class TraceShover {
       // enlarge the shape in 2 steps  for symmetry reasons
       int offset = halfWidth + 1;
       double halfClOffset =
-          0.5 * board.clearanceValue(foundObstacle.clearanceClassIndex(), clType, layer);
+          0.5
+              * board.clearanceValue(
+                  foundObstacle.clearanceClassIndex(), clearanceClassIndex, layer);
       offsetShape = (TileShape) obstacleShape.enlarge(offset + halfClOffset);
       offsetShape = (TileShape) offsetShape.enlarge(halfClOffset);
     }
@@ -781,7 +792,7 @@ public class TraceShover {
         halfWidth,
         layer,
         netNumbers,
-        clType,
+        clearanceClassIndex,
         overConnectedPins,
         recursionDepth - 1,
         contactPins);
@@ -799,7 +810,7 @@ public class TraceShover {
       int halfWidth,
       int layer,
       int[] netNumbers,
-      int clType,
+      int clearanceClassIndex,
       Set<Pin> contactPins) {
     final int maxSpringOverRecursionDepth = 20;
     Polyline counterClockWiseResult =
@@ -808,7 +819,7 @@ public class TraceShover {
             halfWidth,
             layer,
             netNumbers,
-            clType,
+            clearanceClassIndex,
             true,
             maxSpringOverRecursionDepth,
             contactPins);
@@ -822,7 +833,7 @@ public class TraceShover {
             halfWidth,
             layer,
             netNumbers,
-            clType,
+            clearanceClassIndex,
             true,
             maxSpringOverRecursionDepth,
             contactPins);

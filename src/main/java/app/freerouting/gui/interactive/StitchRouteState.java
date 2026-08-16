@@ -62,12 +62,13 @@ public class StitchRouteState extends RouteState {
     int clearanceDrawWidth = 50;
     double radiusWithClearance = displayWidth;
     NetClass defaultNetClass = hdlg.getRoutingBoard().rules.getDefaultNetClass();
-    int clClass =
+    int clearanceClassIndex =
         defaultNetClass.defaultItemClearanceClasses.get(
             DefaultItemClearanceClasses.ItemClass.TRACE);
     radiusWithClearance +=
         hdlg.getRoutingBoard()
-            .clearanceValue(clClass, clClass, hdlg.getWorkspaceSettings().getLayer());
+            .clearanceValue(
+                clearanceClassIndex, clearanceClassIndex, hdlg.getWorkspaceSettings().getLayer());
     hdlg.graphicsContext.draw(drawPoints, displayWidth, drawColor, graphics, 0.5);
     // draw the clearance boundary around the end point
     hdlg.graphicsContext.drawCircle(

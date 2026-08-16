@@ -51,7 +51,11 @@ class TraceTightener90 extends TraceTightener {
     for (int i = 0; i < 2; i++) {
       TileShape shapeToCheck = checkPolyline.offsetShape(currentHalfWidth, i);
       if (!board.checkTraceShape(
-          shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins)) {
+          shapeToCheck,
+          currentLayer,
+          currentNetNumbers,
+          currentClearanceClassIndex,
+          this.contactPins)) {
         return polyline;
       }
     }
@@ -95,13 +99,21 @@ class TraceTightener90 extends TraceTightener {
           TileShape shapeToCheck = checkPolyline.offsetShape(currentHalfWidth, 0);
           skipLines =
               board.checkTraceShape(
-                  shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
+                  shapeToCheck,
+                  currentLayer,
+                  currentNetNumbers,
+                  currentClearanceClassIndex,
+                  this.contactPins);
         }
         if (skipLines) {
           TileShape shapeToCheck = checkPolyline.offsetShape(currentHalfWidth, 1);
           skipLines =
               board.checkTraceShape(
-                  shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
+                  shapeToCheck,
+                  currentLayer,
+                  currentNetNumbers,
+                  currentClearanceClassIndex,
+                  this.contactPins);
         }
       }
       if (skipLines) {

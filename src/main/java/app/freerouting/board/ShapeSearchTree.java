@@ -426,16 +426,16 @@ public class ShapeSearchTree extends MinAreaTree {
 
   /**
    * Looks up all entries in the search tree, so that inserting an item with shape shape, net number
-   * netNumber, clearance type clType and layer layer would produce a clearance violation, and puts
-   * them into the set obstacleEntries. The elements in obstacleEntries are of type TreeEntry. if
-   * layer < 0, the layer is ignored. Used only internally, because the clearance compensation is
-   * not taken into account.
+   * netNumber, clearance type clearanceClassIndex and layer layer would produce a clearance
+   * violation, and puts them into the set obstacleEntries. The elements in obstacleEntries are of
+   * type TreeEntry. if layer < 0, the layer is ignored. Used only internally, because the clearance
+   * compensation is not taken into account.
    */
   void overlappingTreeEntriesWithClearance(
       ConvexShape shape,
       int layer,
       int[] ignoreNetNos,
-      int clType,
+      int clearanceClassIndex,
       Collection<TreeEntry> obstacleEntries) {
     if (shape == null) {
       return;
@@ -450,14 +450,14 @@ public class ShapeSearchTree extends MinAreaTree {
       FRLogger.warn("ShapeSearchTree.overlaps_with_clearance: shape is not bounded");
       bounds = board.getBoundingBox();
     }
-    int maxClearance = (int) (1.2 * clMatrix.maxValue(clType, layer));
+    int maxClearance = (int) (1.2 * clMatrix.maxValue(clearanceClassIndex, layer));
     // search with the bounds enlarged by the maximum clearance to
     // get all candidates for overlap
     // a factor less than sqr2 has evtl. be added because
     // enlarging is not symmetric.
     RegularTileShape offsetBounds = (RegularTileShape) bounds.offset(maxClearance);
     Collection<Leaf> tmpList = overlaps(offsetBounds);
-    // sort the found items by its clearances tp clType on layer layer
+    // sort the found items by its clearances tp clearanceClassIndex on layer layer
     Set<EntrySortedByClearance> sortedItems = new TreeSet<>();
 
     for (Leaf currentLeaf : tmpList) {
@@ -473,7 +473,7 @@ public class ShapeSearchTree extends MinAreaTree {
       }
       if (!ignoreItem) {
         int currentClearance =
-            clMatrix.getValue(clType, currentItem.clearanceClassIndex(), layer, true);
+            clMatrix.getValue(clearanceClassIndex, currentItem.clearanceClassIndex(), layer, true);
         EntrySortedByClearance sortedOb = new EntrySortedByClearance(currentLeaf, currentClearance);
         sortedItems.add(sortedOb);
       }
@@ -484,7 +484,7 @@ public class ShapeSearchTree extends MinAreaTree {
       int tmpHalfClearance = tmpEntry.clearance / 2;
       if (tmpHalfClearance != currentHalfClearance) {
         currentHalfClearance = tmpHalfClearance;
-        currentOffsetShape = (TileShape) shape.enlarge(currentHalfClearance);
+        currentOffsetShape = (ConvexShape) shape.enlarge(currentHalfClearance);
       }
       TileShape tmpShape =
           tmpEntry.leaf.object.getTreeShape(this, tmpEntry.leaf.shapeIndexInObject);
@@ -499,16 +499,17 @@ public class ShapeSearchTree extends MinAreaTree {
 
   /**
    * Returns all objects of class TreeEntry, which overlap with shape on layer layer inclusive
-   * clearance. clearanceClass is the index in the clearance matrix, which describes the required
-   * clearance restrictions to other items. If layer {@literal <} 0, the layer is ignored.
+   * clearance. clearanceClassIndex is the index in the clearance matrix, which describes the
+   * required clearance restrictions to other items. If layer {@literal <} 0, the layer is ignored.
    */
   public Collection<TreeEntry> overlappingTreeEntriesWithClearance(
-      ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClass) {
+      ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex) {
     Collection<TreeEntry> result = new LinkedList<>();
     if (this.isClearanceCompensationUsed()) {
       this.overlappingTreeEntries(shape, layer, ignoreNetNos, result);
     } else {
-      this.overlappingTreeEntriesWithClearance(shape, layer, ignoreNetNos, clearanceClass, result);
+      this.overlappingTreeEntriesWithClearance(
+          shape, layer, ignoreNetNos, clearanceClassIndex, result);
     }
     return result;
   }
@@ -521,13 +522,14 @@ public class ShapeSearchTree extends MinAreaTree {
       ConvexShape shape,
       int layer,
       int[] ignoreNetNos,
-      int clType,
+      int clearanceClassIndex,
       Set<SearchTreeObject> obstacles) {
     Collection<TreeEntry> treeEntries = new LinkedList<>();
     if (this.isClearanceCompensationUsed()) {
       overlappingTreeEntries(shape, layer, ignoreNetNos, treeEntries);
     } else {
-      overlappingTreeEntriesWithClearance(shape, layer, ignoreNetNos, clType, treeEntries);
+      overlappingTreeEntriesWithClearance(
+          shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
     }
     if (obstacles == null) {
       return;
@@ -538,16 +540,16 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Returns items, which overlap with shape on layer layer inclusive clearance. clearanceClass is
-   * the index in the clearance matrix, which describes the required clearance restrictions to other
-   * items. The function may also return items, which are nearly overlapping, but do not overlap
-   * with exact calculation. If layer {@literal <} 0, the layer is ignored.
+   * Returns items, which overlap with shape on layer layer inclusive clearance. clearanceClassIndex
+   * is the index in the clearance matrix, which describes the required clearance restrictions to
+   * other items. The function may also return items, which are nearly overlapping, but do not
+   * overlap with exact calculation. If layer {@literal <} 0, the layer is ignored.
    */
   public Set<Item> overlappingItemsWithClearance(
-      ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClass) {
+      ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex) {
     Set<SearchTreeObject> overlaps = new TreeSet<>();
 
-    this.overlappingObjectsWithClearance(shape, layer, ignoreNetNos, clearanceClass, overlaps);
+    this.overlappingObjectsWithClearance(shape, layer, ignoreNetNos, clearanceClassIndex, overlaps);
     Set<Item> result = new TreeSet<>();
     for (SearchTreeObject currentObject : overlaps) {
       if (currentObject instanceof Item item) {
@@ -1118,7 +1120,9 @@ public class ShapeSearchTree extends MinAreaTree {
     return true;
   }
 
-  /** Created for sorting Items according to their clearance to clType on layer layer. */
+  /**
+   * Created for sorting Items according to their clearance to clearanceClassIndex on layer layer.
+   */
   private static class EntrySortedByClearance implements Comparable<EntrySortedByClearance> {
 
     private final int entryIdNo;

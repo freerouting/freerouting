@@ -45,13 +45,13 @@ public class ObstacleArea extends Item implements Serializable {
       double rotationInDegree,
       boolean sideChanged,
       int[] netNumbers,
-      int clearanceType,
+      int clearanceClassIndex,
       int idNo,
       int cmpNo,
       String name,
       FixedState fixedState,
       BasicBoard board) {
-    super(netNumbers, clearanceType, idNo, cmpNo, fixedState, board);
+    super(netNumbers, clearanceClassIndex, idNo, cmpNo, fixedState, board);
     this.relativeArea = area;
     this.layer = layer;
     this.translation = translation;
@@ -70,7 +70,7 @@ public class ObstacleArea extends Item implements Serializable {
       Vector translation,
       double rotationInDegree,
       boolean sideChanged,
-      int clearanceType,
+      int clearanceClassIndex,
       int idNo,
       int groupNo,
       String name,
@@ -83,7 +83,7 @@ public class ObstacleArea extends Item implements Serializable {
         rotationInDegree,
         sideChanged,
         new int[0],
-        clearanceType,
+        clearanceClassIndex,
         idNo,
         groupNo,
         name,

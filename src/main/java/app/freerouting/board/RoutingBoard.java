@@ -1312,7 +1312,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * Inserts a trace from fromPoint to the nearest point on toTrace. Returns false, if that is not
    * possible without clearance violation.
    */
-  public boolean connectToTrace(IntPoint fromPoint, Trace toTrace, int penHalfWidth, int clType) {
+  public boolean connectToTrace(
+      IntPoint fromPoint, Trace toTrace, int penHalfWidth, int clearanceClassIndex) {
 
     if (!(toTrace instanceof PolylineTrace polylineTrace)) {
       return false; // not yet implemented
@@ -1332,7 +1333,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     int traceLayer = toTrace.getLayer();
     if (!this.checkPolylineTrace(
-        connectionLine, traceLayer, penHalfWidth, toTrace.netNumbers, clType)) {
+        connectionLine, traceLayer, penHalfWidth, toTrace.netNumbers, clearanceClassIndex)) {
       return false;
     }
     if (this.changedArea != null) {
@@ -1342,7 +1343,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
 
     this.insertTrace(
-        connectionLine, traceLayer, penHalfWidth, toTrace.netNumbers, clType, FixedState.UNFIXED);
+        connectionLine,
+        traceLayer,
+        penHalfWidth,
+        toTrace.netNumbers,
+        clearanceClassIndex,
+        FixedState.UNFIXED);
 
     Point firstCorner = toTrace.firstCorner();
     Point lastCorner = toTrace.lastCorner();

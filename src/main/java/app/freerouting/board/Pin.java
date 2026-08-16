@@ -47,11 +47,11 @@ public class Pin extends DrillItem implements Serializable {
       int componentNo,
       int pinNo,
       int[] netNumbers,
-      int clearanceType,
+      int clearanceClassIndex,
       int idNo,
       FixedState fixedState,
       BasicBoard board) {
-    super(null, netNumbers, clearanceType, idNo, componentNo, fixedState, board);
+    super(null, netNumbers, clearanceClassIndex, idNo, componentNo, fixedState, board);
 
     this.pinNo = pinNo;
   }

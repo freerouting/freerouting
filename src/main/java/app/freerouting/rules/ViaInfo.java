@@ -15,19 +15,19 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
   private final BoardRules boardRules;
   private String name;
   private Padstack padstack;
-  private int clearanceClass;
+  private int clearanceClassIndex;
   private boolean attachSmdAllowed;
 
   /** Creates a via definition. */
   public ViaInfo(
       String name,
       Padstack padstack,
-      int clearanceClass,
+      int clearanceClassIndex,
       boolean drillToSmdAllowed,
       BoardRules boardRules) {
     this.name = name;
     this.padstack = padstack;
-    this.clearanceClass = clearanceClass;
+    this.clearanceClassIndex = clearanceClassIndex;
     this.attachSmdAllowed = drillToSmdAllowed;
     this.boardRules = boardRules;
   }
@@ -57,14 +57,14 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
     this.padstack = padstack;
   }
 
-  /** Returns the clearance class used by this via definition. */
-  public int getClearanceClass() {
-    return clearanceClass;
+  /** Returns the clearance class index used by this via definition. */
+  public int getClearanceClassIndex() {
+    return clearanceClassIndex;
   }
 
-  /** Sets the clearance class used by this via definition. */
-  public void setClearanceClass(int clearanceClass) {
-    this.clearanceClass = clearanceClass;
+  /** Sets the clearance class index used by this via definition. */
+  public void setClearanceClassIndex(int clearanceClassIndex) {
+    this.clearanceClassIndex = clearanceClassIndex;
   }
 
   /** Returns whether this via may attach to an SMD pad. */
@@ -92,11 +92,11 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
     window.append(tm.getText("padstack") + " ");
     window.append(this.padstack.name, tm.getText("padstack_info"), this.padstack);
     window.append(", " + tm.getText("clearanceClass") + " ");
-    String currentName = boardRules.clearanceMatrix.getName(this.clearanceClass);
+    String currentName = boardRules.clearanceMatrix.getName(this.clearanceClassIndex);
     window.append(
         currentName,
         tm.getText("clearance_class_2"),
-        boardRules.clearanceMatrix.getRow(this.clearanceClass));
+        boardRules.clearanceMatrix.getRow(this.clearanceClassIndex));
     window.append(", " + tm.getText("attach_smd") + " ");
     if (attachSmdAllowed) {
       window.append(" " + tm.getText("on"));

@@ -233,7 +233,7 @@ public class AutorouteControl {
   /** Rebuilds via info masks and costs for the specified board, via costs, and net. */
   public void rebuildViaInfo(RoutingBoard board, int viaCosts, int netNumber) {
     if (viaRule.viaCount() > 0) {
-      this.viaClearanceClass = viaRule.getVia(0).getClearanceClass();
+      this.viaClearanceClass = viaRule.getVia(0).getClearanceClassIndex();
     } else {
       this.viaClearanceClass = 1;
     }

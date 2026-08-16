@@ -40,7 +40,7 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
         corners[i] = it.next();
       }
       PolygonShape obstacleShape = new PolygonShape(corners);
-      int clClass = BoardRules.clearanceClassNone();
+      int clearanceClassIndex = BoardRules.clearanceClassNone();
       if (obstacleShape.splitToConvex() == null) {
         // shape is invalid, maybe it has selfintersections
         constructionSucceeded = false;
@@ -48,7 +48,10 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
         constructionSucceeded =
             hdlg.getRoutingBoard()
                 .checkShape(
-                    obstacleShape, hdlg.getWorkspaceSettings().getLayer(), new int[0], clClass);
+                    obstacleShape,
+                    hdlg.getWorkspaceSettings().getLayer(),
+                    new int[0],
+                    clearanceClassIndex);
       }
       if (constructionSucceeded) {
         this.observersActivated = !hdlg.getRoutingBoard().observersActive();
@@ -58,7 +61,10 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
         hdlg.getRoutingBoard().generateSnapshot();
         hdlg.getRoutingBoard()
             .insertObstacle(
-                obstacleShape, hdlg.getWorkspaceSettings().getLayer(), clClass, FixedState.UNFIXED);
+                obstacleShape,
+                hdlg.getWorkspaceSettings().getLayer(),
+                clearanceClassIndex,
+                FixedState.UNFIXED);
         hdlg.getRoutingBoard().endNotifyObservers();
         if (this.observersActivated) {
           hdlg.getRoutingBoard().endNotifyObservers();

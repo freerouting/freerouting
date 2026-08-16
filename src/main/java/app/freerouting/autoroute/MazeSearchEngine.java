@@ -1393,7 +1393,7 @@ public class MazeSearchEngine {
       ForcedPadRouter.CheckDrillResult result =
           ForcedViaInserter.checkLayer(
               requiredRadius,
-              viaInfo.getClearanceClass(),
+              viaInfo.getClearanceClassIndex(),
               viaInfo.attachSmdAllowed(),
               roomShape,
               drill.location,

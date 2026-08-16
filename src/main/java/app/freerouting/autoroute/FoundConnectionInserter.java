@@ -769,7 +769,7 @@ public final class FoundConnectionInserter {
               + ", location="
               + formatPoint(location)
               + ", selected_via_clearance_class="
-              + viaInfo.getClearanceClass()
+              + viaInfo.getClearanceClassIndex()
               + ", selected_via_padstack="
               + viaInfo.getPadstack().name
               + ", traceClearanceClass="

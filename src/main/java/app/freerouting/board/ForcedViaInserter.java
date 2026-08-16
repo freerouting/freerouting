@@ -25,7 +25,7 @@ public final class ForcedViaInserter {
    */
   public static ForcedPadRouter.CheckDrillResult checkLayer(
       double viaRadius,
-      int clClass,
+      int clearanceClassIndex,
       boolean attachSmdAllowed,
       TileShape roomShape,
       Point location,
@@ -47,7 +47,7 @@ public final class ForcedViaInserter {
 
     double checkRadius =
         viaRadius
-            + 0.5 * board.clearanceValue(clClass, clClass, layer)
+            + 0.5 * board.clearanceValue(clearanceClassIndex, clearanceClassIndex, layer)
             + board.getMinTraceHalfWidth();
 
     TileShape tileShape;
@@ -74,7 +74,7 @@ public final class ForcedViaInserter {
             fromSide,
             layer,
             netNumbers,
-            clClass,
+            clearanceClassIndex,
             attachSmdAllowed,
             null,
             maxRecursionDepth,
@@ -140,14 +140,14 @@ public final class ForcedViaInserter {
     Shape holeShape = holeCheckShape(viaPadstack, location, board);
     for (int i = viaPadstack.fromLayer(); i <= viaPadstack.toLayer(); i++) {
       Shape currentPadShape = viaPadstack.getShape(i);
-      int currentClearanceClass = viaInfo.getClearanceClass();
+      int currentClearanceClassIndex = viaInfo.getClearanceClassIndex();
       if (currentPadShape == null) {
         if (holeShape == null) {
           continue;
         }
         // The drill hole itself must keep hole clearance from copper on this layer.
         currentPadShape = holeShape;
-        currentClearanceClass = 0;
+        currentClearanceClassIndex = 0;
       } else {
         currentPadShape = (Shape) currentPadShape.translateBy(translateVector);
       }
@@ -159,13 +159,13 @@ public final class ForcedViaInserter {
       }
       ShapeEntrySide fromSide =
           forcedPadRouter.calcFromSide(
-              tileShape, location, i, calcFromSideOffset, currentClearanceClass);
+              tileShape, location, i, calcFromSideOffset, currentClearanceClassIndex);
       if (forcedPadRouter.checkForcedPad(
               tileShape,
               fromSide,
               i,
               netNumbers,
-              currentClearanceClass,
+              currentClearanceClassIndex,
               viaInfo.attachSmdAllowed(),
               null,
               maxRecursionDepth,
@@ -176,7 +176,7 @@ public final class ForcedViaInserter {
         board.setShoveFailingLayer(i);
         return false;
       }
-      if (currentClearanceClass != 0 && holeShape != null) {
+      if (currentClearanceClassIndex != 0 && holeShape != null) {
         // The drill hole must ALSO keep hole clearance from other-net copper on layers where
         // the pad exists — the pad check above only enforces the (smaller) copper clearance.
         TileShape holeTile;
@@ -258,13 +258,13 @@ public final class ForcedViaInserter {
     Shape holeShape = holeCheckShape(viaPadstack, location, board);
     for (int i = viaPadstack.fromLayer(); i <= viaPadstack.toLayer(); i++) {
       Shape currentPadShape = viaPadstack.getShape(i);
-      int currentClearanceClass = viaInfo.getClearanceClass();
+      int currentClearanceClassIndex = viaInfo.getClearanceClassIndex();
       if (currentPadShape == null) {
         if (holeShape == null) {
           continue;
         }
         currentPadShape = holeShape;
-        currentClearanceClass = 0;
+        currentClearanceClassIndex = 0;
       } else {
         currentPadShape = (Shape) currentPadShape.translateBy(translateVector);
       }
@@ -289,13 +289,13 @@ public final class ForcedViaInserter {
       }
       ShapeEntrySide fromSide =
           forcedPadRouter.calcFromSide(
-              tileShape, location, i, calcFromSideOffset, currentClearanceClass);
+              tileShape, location, i, calcFromSideOffset, currentClearanceClassIndex);
       if (!forcedPadRouter.forcedPad(
           tileShape,
           fromSide,
           i,
           netNumbers,
-          currentClearanceClass,
+          currentClearanceClassIndex,
           viaInfo.attachSmdAllowed(),
           null,
           maxRecursionDepth,
@@ -303,7 +303,7 @@ public final class ForcedViaInserter {
         board.setShoveFailingLayer(i);
         return false;
       }
-      if (currentClearanceClass != 0 && holeShape != null) {
+      if (currentClearanceClassIndex != 0 && holeShape != null) {
         TileShape holeTile;
         if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
           holeTile = holeShape.boundingBox();
@@ -345,7 +345,7 @@ public final class ForcedViaInserter {
         viaPadstack,
         location,
         netNumbers,
-        viaInfo.getClearanceClass(),
+        viaInfo.getClearanceClassIndex(),
         FixedState.UNFIXED,
         viaInfo.attachSmdAllowed());
     return true;

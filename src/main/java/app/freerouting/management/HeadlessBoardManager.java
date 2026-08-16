@@ -452,7 +452,7 @@ public class HeadlessBoardManager implements BoardManager {
     int reclassified = 0;
     for (app.freerouting.board.ObstacleArea keepout : holeKeepouts) {
       if (keepout.clearanceClassIndex() != holeEdgeClassNo) {
-        keepout.setClearanceClassNo(holeEdgeClassNo);
+        keepout.setClearanceClassIndex(holeEdgeClassNo);
         keepout.clearDerivedData();
         reclassified++;
       }
@@ -534,7 +534,7 @@ public class HeadlessBoardManager implements BoardManager {
     if (this.board.searchTreeManager != null) {
       this.board.searchTreeManager.remove(outline);
     }
-    outline.setClearanceClassNo(boardEdgeClassNo);
+    outline.setClearanceClassIndex(boardEdgeClassNo);
     outline.clearDerivedData();
     if (this.board.searchTreeManager != null) {
       this.board.searchTreeManager.insert(outline);

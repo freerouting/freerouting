@@ -112,7 +112,11 @@ class TraceTightener45 extends TraceTightener {
           if (checkPolyline.lines.length == 3) {
             TileShape shapeToCheck = checkPolyline.offsetShape(currentHalfWidth, 0);
             if (board.checkTraceShape(
-                shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins)) {
+                shapeToCheck,
+                currentLayer,
+                currentNetNumbers,
+                currentClearanceClassIndex,
+                this.contactPins)) {
               currentCheckPoints[1] = currentCorner[3];
               if (currentCheckPoints[0].equals(currentCheckPoints[1])) {
                 cornerRemoved = true;
@@ -125,7 +129,7 @@ class TraceTightener45 extends TraceTightener {
                           shapeToCheck,
                           currentLayer,
                           currentNetNumbers,
-                          currentClType,
+                          currentClearanceClassIndex,
                           this.contactPins);
                 } else {
                   cornerRemoved = true;
@@ -155,7 +159,11 @@ class TraceTightener45 extends TraceTightener {
           if (checkPolyline.lines.length == 3) {
             TileShape shapeToCheck = checkPolyline.offsetShape(currentHalfWidth, 0);
             if (board.checkTraceShape(
-                shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins)) {
+                shapeToCheck,
+                currentLayer,
+                currentNetNumbers,
+                currentClearanceClassIndex,
+                this.contactPins)) {
               currentCheckPoints[1] = currentCorner[2];
               checkPolyline = new Polyline(currentCheckPoints);
               if (checkPolyline.lines.length == 3) {
@@ -165,7 +173,7 @@ class TraceTightener45 extends TraceTightener {
                         shapeToCheck,
                         currentLayer,
                         currentNetNumbers,
-                        currentClType,
+                        currentClearanceClassIndex,
                         this.contactPins);
               } else {
                 cornerRemoved = true;
@@ -412,7 +420,11 @@ class TraceTightener45 extends TraceTightener {
           TileShape shapeToCheck = tmp.offsetShape(currentHalfWidth, 0);
           checkOk =
               board.checkTraceShape(
-                  shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
+                  shapeToCheck,
+                  currentLayer,
+                  currentNetNumbers,
+                  currentClearanceClassIndex,
+                  this.contactPins);
         }
         deltaDist /= 2;
         if (checkOk) {

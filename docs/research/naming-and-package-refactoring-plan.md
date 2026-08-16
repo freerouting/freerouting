@@ -586,11 +586,11 @@ Branch: `refactor/naming-phase-12-clearance-index`
 
 **Progress checklist**
 
-- [ ] Standardize `int clType`, `int clearanceType`, `int clClass` parameters in `app.freerouting.board` to `clearanceClassIndex`.
-- [ ] Standardize parameters and fields in `app.freerouting.autoroute` to `clearanceClassIndex`.
-- [ ] Standardize parameters in `app.freerouting.drc` and `app.freerouting.rules` to `clearanceClassIndex`.
-- [ ] Standardize local variables (`currentClType`, `ignoreClType`) to `currentClearanceClassIndex`, `ignoreClearanceClassIndex`.
-- [ ] Run full test suite and quality gates.
+- [x] Standardize `int clType`, `int clearanceType`, `int clClass` parameters in `app.freerouting.board` to `clearanceClassIndex`.
+- [x] Standardize parameters and fields in `app.freerouting.autoroute` to `clearanceClassIndex`.
+- [x] Standardize parameters in `app.freerouting.drc` and `app.freerouting.rules` to `clearanceClassIndex`.
+- [x] Standardize local variables (`currentClType`, `ignoreClType`) to `currentClearanceClassIndex`, `ignoreClearanceClassIndex`.
+- [x] Run full test suite and quality gates.
 
 ---
 

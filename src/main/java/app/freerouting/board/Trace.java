@@ -25,12 +25,12 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       int layer,
       int halfWidth,
       int[] netNumbers,
-      int clearanceType,
+      int clearanceClassIndex,
       int idNo,
       int groupNo,
       FixedState fixedState,
       BasicBoard board) {
-    super(netNumbers, clearanceType, idNo, groupNo, fixedState, board);
+    super(netNumbers, clearanceClassIndex, idNo, groupNo, fixedState, board);
     this.halfWidth = halfWidth;
     layer = Math.max(layer, 0);
     if (board != null) {

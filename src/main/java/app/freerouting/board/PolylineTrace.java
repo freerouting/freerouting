@@ -36,12 +36,12 @@ public class PolylineTrace extends Trace implements Serializable {
       int layer,
       int halfWidth,
       int[] netNumbers,
-      int clearanceType,
+      int clearanceClassIndex,
       int idNo,
       int groupNo,
       FixedState fixedState,
       BasicBoard board) {
-    super(layer, halfWidth, netNumbers, clearanceType, idNo, groupNo, fixedState, board);
+    super(layer, halfWidth, netNumbers, clearanceClassIndex, idNo, groupNo, fixedState, board);
     if (polyline.lines.length < 3) {
       FRLogger.warn("PolylineTrace: polyline.lines.length >= 3 expected");
     }

@@ -18,7 +18,7 @@ public class ShapeTraceEntries {
   private final TileShape shape;
   private final int layer;
   private final int[] ownNetNos;
-  private final int clClass;
+  private final int clearanceClassIndex;
   private final RoutingBoard board;
   private ShapeEntrySide fromSide;
   private EntryPoint listAnchor;
@@ -35,13 +35,13 @@ public class ShapeTraceEntries {
       TileShape shape,
       int layer,
       int[] ownNetNos,
-      int clType,
+      int clearanceClassIndex,
       ShapeEntrySide fromSide,
       RoutingBoard board) {
     this.shape = shape;
     this.layer = layer;
     this.ownNetNos = ownNetNos;
-    this.clClass = clType;
+    this.clearanceClassIndex = clearanceClassIndex;
     this.fromSide = fromSide;
     this.board = board;
     listAnchor = null;
@@ -51,7 +51,7 @@ public class ShapeTraceEntries {
   }
 
   /** Cutout trace. */
-  public static void cutoutTrace(PolylineTrace trace, ConvexShape shape, int clClass) {
+  public static void cutoutTrace(PolylineTrace trace, ConvexShape shape, int clearanceClassIndex) {
     if (!trace.isOnTheBoard()) {
       FRLogger.warn("ShapeTraceEntries.cutout_trace : trace is deleted");
       return;
@@ -65,7 +65,7 @@ public class ShapeTraceEntries {
     } else {
       // enlarge the shape in 2 steps  for symmetry reasons
       double clOffset =
-          board.clearanceValue(trace.clearanceClassIndex(), clClass, trace.getLayer())
+          board.clearanceValue(trace.clearanceClassIndex(), clearanceClassIndex, trace.getLayer())
               + c_offset_add;
       offsetShape = shape.offset(trace.getHalfWidth());
       offsetShape = offsetShape.offset(clOffset);
@@ -226,7 +226,8 @@ public class ShapeTraceEntries {
       // enlarge the shape in 2 steps  for symmetry reasons
       offsetShape = (TileShape) shape.offset(currentTrace.getHalfWidth());
       double clOffset =
-          board.clearanceValue(currentTrace.clearanceClassIndex(), clClass, layer) + c_offset_add;
+          board.clearanceValue(currentTrace.clearanceClassIndex(), clearanceClassIndex, layer)
+              + c_offset_add;
       offsetShape = (TileShape) offsetShape.offset(clOffset);
     }
     int edgeCount = shape.borderLineCount();
@@ -292,7 +293,7 @@ public class ShapeTraceEntries {
   void cutoutTraces(Collection<Item> itemList) {
     for (Item currentItem : itemList) {
       if (currentItem instanceof PolylineTrace trace && !currentItem.sharesNetNo(this.ownNetNos)) {
-        cutoutTrace(trace, this.shape, this.clClass);
+        cutoutTrace(trace, this.shape, this.clearanceClassIndex);
       }
     }
   }
@@ -315,7 +316,8 @@ public class ShapeTraceEntries {
     } else {
       // enlarge the shape in 2 steps  for symmetry reasons
       double clOffset =
-          board.clearanceValue(trace.clearanceClassIndex(), this.clClass, trace.getLayer())
+          board.clearanceValue(
+                  trace.clearanceClassIndex(), this.clearanceClassIndex, trace.getLayer())
               + c_offset_add;
       offsetShape = (TileShape) shape.offset(trace.getHalfWidth());
       offsetShape = (TileShape) offsetShape.offset(clOffset);
@@ -377,9 +379,10 @@ public class ShapeTraceEntries {
               if (!searchTree.isClearanceCompensationUsed()) {
                 int viaClearance =
                     board.clearanceValue(
-                        contactItem.clearanceClassIndex(), this.clClass, this.layer);
+                        contactItem.clearanceClassIndex(), this.clearanceClassIndex, this.layer);
                 int traceClearance =
-                    board.clearanceValue(trace.clearanceClassIndex(), this.clClass, this.layer);
+                    board.clearanceValue(
+                        trace.clearanceClassIndex(), this.clearanceClassIndex, this.layer);
                 if (traceClearance > viaClearance) {
                   viaTraceDiff += viaClearance - traceClearance;
                 }

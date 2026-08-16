@@ -62,9 +62,10 @@ public final class TileConstructionState extends CornerItemConstructionState {
       TileShape obstacleShape = TileShape.getInstance(edgeLines);
       RoutingBoard board = hdlg.getRoutingBoard();
       int layer = hdlg.getWorkspaceSettings().getLayer();
-      int clClass = BoardRules.clearanceClassNone();
+      int clearanceClassIndex = BoardRules.clearanceClassNone();
 
-      constructionSucceeded = board.checkShape(obstacleShape, layer, new int[0], clClass);
+      constructionSucceeded =
+          board.checkShape(obstacleShape, layer, new int[0], clearanceClassIndex);
       if (constructionSucceeded) {
         // insert the new shape as keepout
         this.observersActivated = !hdlg.getRoutingBoard().observersActive();
@@ -72,7 +73,7 @@ public final class TileConstructionState extends CornerItemConstructionState {
           hdlg.getRoutingBoard().startNotifyObservers();
         }
         board.generateSnapshot();
-        board.insertObstacle(obstacleShape, layer, clClass, FixedState.UNFIXED);
+        board.insertObstacle(obstacleShape, layer, clearanceClassIndex, FixedState.UNFIXED);
         if (this.observersActivated) {
           hdlg.getRoutingBoard().endNotifyObservers();
           this.observersActivated = false;

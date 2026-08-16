@@ -267,7 +267,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
               JOptionPane.showConfirmDialog(this, message, null, JOptionPane.YES_NO_OPTION);
           if (removeClearanceClassDialog == JOptionPane.YES_OPTION) {
             Collection<Item> boardItems = routingBoard.getItems();
-            routingBoard.rules.changeClearanceClassNo(i, j, boardItems);
+            routingBoard.rules.changeClearanceClassIndex(i, j, boardItems);
             if (!routingBoard.rules.removeClearanceClass(i, boardItems)) {
               FRLogger.warn(
                   "WindowClearanceMatrix.prune_clearance_matrix error removing clearance class");

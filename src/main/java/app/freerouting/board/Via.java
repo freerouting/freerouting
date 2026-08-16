@@ -51,13 +51,13 @@ public class Via extends DrillItem implements Serializable {
       Padstack padstack,
       Point center,
       int[] netNumbers,
-      int clearanceType,
+      int clearanceClassIndex,
       int idNo,
       int groupNo,
       FixedState fixedState,
       boolean attachAllowed,
       BasicBoard board) {
-    super(center, netNumbers, clearanceType, idNo, groupNo, fixedState, board);
+    super(center, netNumbers, clearanceClassIndex, idNo, groupNo, fixedState, board);
     this.padstack = padstack;
     this.attachAllowed = attachAllowed;
   }

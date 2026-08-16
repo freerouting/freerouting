@@ -228,7 +228,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
         this.data[i][ColumnName.NAME.ordinal()] = currentVia.getName();
         this.data[i][ColumnName.PADSTACK.ordinal()] = currentVia.getPadstack().name;
         this.data[i][ColumnName.CLEARANCE_CLASS.ordinal()] =
-            boardRules.clearanceMatrix.getName(currentVia.getClearanceClass());
+            boardRules.clearanceMatrix.getName(currentVia.getClearanceClassIndex());
         this.data[i][ColumnName.ATTACH_SMD.ordinal()] = currentVia.attachSmdAllowed();
       }
     }
@@ -298,7 +298,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
             return;
           }
         }
-        viaInfo.setClearanceClass(newClClassIndex);
+        viaInfo.setClearanceClassIndex(newClClassIndex);
       } else if (col == ColumnName.ATTACH_SMD.ordinal()) {
         if (!(value instanceof Boolean attachSmd)) {
           FRLogger.warn("ViaVindow.setValueAt: Boolean expected");

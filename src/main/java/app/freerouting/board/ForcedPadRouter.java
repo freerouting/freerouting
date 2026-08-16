@@ -212,7 +212,7 @@ public class ForcedPadRouter {
       ShapeEntrySide fromSide,
       int layer,
       int[] netNumbers,
-      int clType,
+      int clearanceClassIndex,
       boolean copperSharingAllowed,
       Collection<Item> ignoreItems,
       int maxRecursionDepth,
@@ -225,9 +225,9 @@ public class ForcedPadRouter {
     }
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(padShape, layer, netNumbers, clType, fromSide, board);
+        new ShapeTraceEntries(padShape, layer, netNumbers, clearanceClassIndex, fromSide, board);
     Collection<Item> obstacles =
-        searchTree.overlappingItemsWithClearance(padShape, layer, new int[0], clType);
+        searchTree.overlappingItemsWithClearance(padShape, layer, new int[0], clearanceClassIndex);
 
     if (ignoreItems != null) {
       obstacles.removeAll(ignoreItems);
@@ -246,7 +246,8 @@ public class ForcedPadRouter {
         return CheckDrillResult.NOT_DRILLABLE;
       }
       IntPoint[] newViaCenter =
-          DrillItemMover.tryShoveViaPoints(padShape, layer, currentShoveVia, clType, false, board);
+          DrillItemMover.tryShoveViaPoints(
+              padShape, layer, currentShoveVia, clearanceClassIndex, false, board);
 
       if (newViaCenter.length == 0) {
         this.board.setShoveFailingObstacle(currentShoveVia);
@@ -336,7 +337,7 @@ public class ForcedPadRouter {
       ShapeEntrySide fromSide,
       int layer,
       int[] netNumbers,
-      int clType,
+      int clearanceClassIndex,
       boolean copperSharingAllowed,
       Collection<Item> ignoreItems,
       int maxRecursionDepth,
@@ -354,7 +355,7 @@ public class ForcedPadRouter {
         fromSide,
         layer,
         netNumbers,
-        clType,
+        clearanceClassIndex,
         ignoreItems,
         maxRecursionDepth,
         maxViaRecursionDepth,
@@ -364,9 +365,9 @@ public class ForcedPadRouter {
     }
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     ShapeTraceEntries shapeEntries =
-        new ShapeTraceEntries(padShape, layer, netNumbers, clType, fromSide, board);
+        new ShapeTraceEntries(padShape, layer, netNumbers, clearanceClassIndex, fromSide, board);
     Collection<Item> obstacles =
-        searchTree.overlappingItemsWithClearance(padShape, layer, new int[0], clType);
+        searchTree.overlappingItemsWithClearance(padShape, layer, new int[0], clearanceClassIndex);
     if (ignoreItems != null) {
       obstacles.removeAll(ignoreItems);
     }
@@ -457,14 +458,14 @@ public class ForcedPadRouter {
    * this side does not conflict with any obstacles.
    */
   ShapeEntrySide calcFromSide(
-      TileShape shape, Point shapeCenter, int layer, int offset, int clClass) {
+      TileShape shape, Point shapeCenter, int layer, int offset, int clearanceClassIndex) {
     int[] emptyArr = new int[0];
     TileShape offsetShape = (TileShape) shape.offset(offset);
     for (int i = 0; i < offsetShape.borderLineCount(); i++) {
       TileShape checkShape =
           calcCheckShapeForFromSide(shape, shapeCenter, offsetShape.borderLine(i));
 
-      if (board.checkTraceShape(checkShape, layer, emptyArr, clClass, null)) {
+      if (board.checkTraceShape(checkShape, layer, emptyArr, clearanceClassIndex, null)) {
         return new ShapeEntrySide(i, null);
       }
     }

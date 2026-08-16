@@ -45,7 +45,7 @@ public abstract class Item
   int[] netNumbers;
 
   /** The index in the clearance matrix describing the required spacing to other items. */
-  private int clearanceClass;
+  private int clearanceClassIndex;
 
   /** Points to the entries of this item in the ShapeSearchTrees. */
   private transient ItemSearchTreesInfo searchTreesInfo;
@@ -60,7 +60,7 @@ public abstract class Item
 
   Item(
       int[] netNumbers,
-      int clearanceType,
+      int clearanceClassIndex,
       int idNo,
       int componentNo,
       FixedState fixedState,
@@ -71,7 +71,7 @@ public abstract class Item
       this.netNumbers = new int[netNumbers.length];
       System.arraycopy(netNumbers, 0, this.netNumbers, 0, netNumbers.length);
     }
-    clearanceClass = clearanceType;
+    this.clearanceClassIndex = clearanceClassIndex;
     this.componentNo = componentNo;
     this.fixedState = fixedState;
     this.board = board;
@@ -365,7 +365,7 @@ public abstract class Item
       TileShape currentTileShape = getTileShape(i);
       Collection<TreeEntry> currentOverlappingItems =
           defaultTree.overlappingTreeEntriesWithClearance(
-              currentTileShape, shapeLayer(i), new int[0], clearanceClass);
+              currentTileShape, shapeLayer(i), new int[0], this.clearanceClassIndex);
       for (TreeEntry currentEntry : currentOverlappingItems) {
         if (!(currentEntry.object instanceof Item currentItem) || currentEntry.object == this) {
           continue;
@@ -415,7 +415,7 @@ public abstract class Item
           // Calculate the expected minimum clearance between these two shapes
           double minimumClearance =
               board.rules.clearanceMatrix.getValue(
-                  currentItem.clearanceClass, this.clearanceClass, shapeLayer(i), false);
+                  currentItem.clearanceClassIndex, this.clearanceClassIndex, shapeLayer(i), false);
 
           double actualClearance = 0;
 
@@ -896,28 +896,28 @@ public abstract class Item
    * items.
    */
   public int clearanceClassIndex() {
-    return clearanceClass;
+    return clearanceClassIndex;
   }
 
   /**
    * Sets the index in the clearance matrix describing the required spacing of this item to other
    * items.
    */
-  public void setClearanceClassNo(int index) {
+  public void setClearanceClassIndex(int index) {
     if (index < 0 || index >= this.board.rules.clearanceMatrix.getClassCount()) {
       FRLogger.warn("Item.set_clearance_class_no: index out of range");
       return;
     }
-    clearanceClass = index;
+    clearanceClassIndex = index;
   }
 
   /** Changes the clearance class of this item and updates the search tree. */
-  public void changeClearanceClass(int index) {
+  public void changeClearanceClassIndex(int index) {
     if (index < 0 || index >= this.board.rules.clearanceMatrix.getClassCount()) {
       FRLogger.warn("Item.set_clearance_class_no: index out of range");
       return;
     }
-    clearanceClass = index;
+    clearanceClassIndex = index;
     this.clearDerivedData();
     if (this.board != null && this.board.searchTreeManager.isClearanceCompensationUsed()) {
       // reinsert the item into the search tree, because the compensated shape has changed.
@@ -1079,15 +1079,15 @@ public abstract class Item
 
   /** Internal function used in the implementation of print_info. */
   protected void printClearanceInfo(ObjectInfoPanel window, Locale locale) {
-    if (this.clearanceClass > 0) {
+    if (this.clearanceClassIndex > 0) {
       TextManager tm = new TextManager(this.getClass(), locale);
 
       window.append(", " + tm.getText("clearanceClass") + " ");
-      String name = board.rules.clearanceMatrix.getName(this.clearanceClass);
+      String name = board.rules.clearanceMatrix.getName(this.clearanceClassIndex);
       window.append(
           name,
           tm.getText("clearance_info"),
-          board.rules.clearanceMatrix.getRow(this.clearanceClass));
+          board.rules.clearanceMatrix.getRow(this.clearanceClassIndex));
     }
   }
 

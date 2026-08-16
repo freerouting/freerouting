@@ -176,7 +176,7 @@ public class BoardRules implements Serializable {
         netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.VIA);
     for (int i = 0; i < this.viaInfos.count(); i++) {
       ViaInfo currentViaInfo = this.viaInfos.get(i);
-      if (currentViaInfo.getClearanceClass() == defaultViaClClass) {
+      if (currentViaInfo.getClearanceClassIndex() == defaultViaClClass) {
         Padstack currentPadstack = currentViaInfo.getPadstack();
         int currentFromLayer = currentPadstack.fromLayer();
         int currentToLayer = currentPadstack.toLayer();
@@ -257,33 +257,33 @@ public class BoardRules implements Serializable {
   }
 
   /**
-   * Changes the clearance class index of all objects on the board with index {@code fromNo} to
-   * {@code toNo}.
+   * Changes the clearance class index of all objects on the board with index {@code fromIndex} to
+   * {@code toIndex}.
    */
-  public void changeClearanceClassNo(int fromNo, int toNo, Collection<Item> boardItems) {
+  public void changeClearanceClassIndex(int fromIndex, int toIndex, Collection<Item> boardItems) {
     for (Item currentItem : boardItems) {
-      if (currentItem.clearanceClassIndex() == fromNo) {
-        currentItem.setClearanceClassNo(toNo);
+      if (currentItem.clearanceClassIndex() == fromIndex) {
+        currentItem.setClearanceClassIndex(toIndex);
       }
     }
 
     for (int i = 0; i < this.netClasses.count(); i++) {
       NetClass currentNetClass = this.netClasses.get(i);
-      if (currentNetClass.getTraceClearanceClass() == fromNo) {
-        currentNetClass.setTraceClearanceClass(toNo);
+      if (currentNetClass.getTraceClearanceClass() == fromIndex) {
+        currentNetClass.setTraceClearanceClass(toIndex);
       }
       for (DefaultItemClearanceClasses.ItemClass currentItemClass :
           DefaultItemClearanceClasses.ItemClass.values()) {
-        if (currentNetClass.defaultItemClearanceClasses.get(currentItemClass) == fromNo) {
-          currentNetClass.defaultItemClearanceClasses.set(currentItemClass, toNo);
+        if (currentNetClass.defaultItemClearanceClasses.get(currentItemClass) == fromIndex) {
+          currentNetClass.defaultItemClearanceClasses.set(currentItemClass, toIndex);
         }
       }
     }
 
     for (int i = 0; i < this.viaInfos.count(); i++) {
       ViaInfo currentVia = this.viaInfos.get(i);
-      if (currentVia.getClearanceClass() == fromNo) {
-        currentVia.setClearanceClass(toNo);
+      if (currentVia.getClearanceClassIndex() == fromIndex) {
+        currentVia.setClearanceClassIndex(toIndex);
       }
     }
   }
@@ -313,14 +313,14 @@ public class BoardRules implements Serializable {
 
     for (int i = 0; i < this.viaInfos.count(); i++) {
       ViaInfo currentVia = this.viaInfos.get(i);
-      if (currentVia.getClearanceClass() == index) {
+      if (currentVia.getClearanceClassIndex() == index) {
         return false;
       }
     }
 
     for (Item currentItem : boardItems) {
       if (currentItem.clearanceClassIndex() > index) {
-        currentItem.setClearanceClassNo(currentItem.clearanceClassIndex() - 1);
+        currentItem.setClearanceClassIndex(currentItem.clearanceClassIndex() - 1);
       }
     }
 
@@ -340,8 +340,8 @@ public class BoardRules implements Serializable {
 
     for (int i = 0; i < this.viaInfos.count(); i++) {
       ViaInfo currentVia = this.viaInfos.get(i);
-      if (currentVia.getClearanceClass() > index) {
-        currentVia.setClearanceClass(currentVia.getClearanceClass() - 1);
+      if (currentVia.getClearanceClassIndex() > index) {
+        currentVia.setClearanceClassIndex(currentVia.getClearanceClassIndex() - 1);
       }
     }
     this.clearanceMatrix.removeClass(index);

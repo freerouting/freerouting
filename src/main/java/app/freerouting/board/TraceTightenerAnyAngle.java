@@ -171,7 +171,11 @@ class TraceTightenerAnyAngle extends TraceTightener {
           TileShape shapeToCheck = currentPolyline.offsetShape(currentHalfWidth, 0);
           skipLine =
               board.checkTraceShape(
-                  shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
+                  shapeToCheck,
+                  currentLayer,
+                  currentNetNumbers,
+                  currentClearanceClassIndex,
+                  this.contactPins);
         }
       }
       if (skipLine) {
@@ -364,7 +368,11 @@ class TraceTightenerAnyAngle extends TraceTightener {
         TileShape shapeToCheck = tmp.offsetShape(currentHalfWidth, keepBeforeInd - 1);
         checkOk =
             board.checkTraceShape(
-                shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
+                shapeToCheck,
+                currentLayer,
+                currentNetNumbers,
+                currentClearanceClassIndex,
+                this.contactPins);
       }
       if (checkOk) {
         if (board.changedArea != null) {
@@ -443,7 +451,11 @@ class TraceTightenerAnyAngle extends TraceTightener {
           TileShape shapeToCheck = tmp.offsetShape(currentHalfWidth, startNo + 1);
           checkOk =
               board.checkTraceShape(
-                  shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
+                  shapeToCheck,
+                  currentLayer,
+                  currentNetNumbers,
+                  currentClearanceClassIndex,
+                  this.contactPins);
         }
         deltaDist /= 2;
         if (checkOk) {
@@ -602,7 +614,11 @@ class TraceTightenerAnyAngle extends TraceTightener {
           TileShape shapeToCheck = tmp.offsetShape(currentHalfWidth, startNo + 1);
           checkOk =
               board.checkTraceShape(
-                  shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins);
+                  shapeToCheck,
+                  currentLayer,
+                  currentNetNumbers,
+                  currentClearanceClassIndex,
+                  this.contactPins);
         }
         deltaDist /= 2;
         if (checkOk) {
@@ -671,7 +687,11 @@ class TraceTightenerAnyAngle extends TraceTightener {
             }
             TileShape shapeToCheck = reducedPolyline.offsetShape(currentHalfWidth, shapeNo);
             if (board.checkTraceShape(
-                shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins)) {
+                shapeToCheck,
+                currentLayer,
+                currentNetNumbers,
+                currentClearanceClassIndex,
+                this.contactPins)) {
               if (board.changedArea != null) {
                 board.changedArea.join(corner1, currentLayer);
                 board.changedArea.join(corner2, currentLayer);
@@ -712,7 +732,11 @@ class TraceTightenerAnyAngle extends TraceTightener {
             }
             TileShape shapeToCheck = reducedPolyline.offsetShape(currentHalfWidth, shapeNo);
             if (board.checkTraceShape(
-                shapeToCheck, currentLayer, currentNetNumbers, currentClType, this.contactPins)) {
+                shapeToCheck,
+                currentLayer,
+                currentNetNumbers,
+                currentClearanceClassIndex,
+                this.contactPins)) {
               if (board.changedArea != null) {
                 board.changedArea.join(corner1, currentLayer);
                 board.changedArea.join(corner2, currentLayer);
