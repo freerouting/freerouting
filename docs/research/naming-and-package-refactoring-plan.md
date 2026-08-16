@@ -694,9 +694,9 @@ Perform a systematic, whole-codebase review to catalogue concrete future moderni
 
 **Progress checklist**
 
-- [ ] Systematic scan of all domain packages (`geometry.planar`, `board`, `autoroute`, `drc`, `rules`, `core`, `settings`, `api`, `gui`, `io.specctra`).
-- [ ] Generate comprehensive review report document in `docs/research/future-codebase-improvements.md`.
-- [ ] Incorporate summary and prioritization into project roadmap documentation.
+- [x] Systematic scan of all domain packages (`geometry.planar`, `board`, `autoroute`, `drc`, `rules`, `core`, `settings`, `api`, `gui`, `io.specctra`).
+- [x] Generate comprehensive review report document in `docs/research/future-codebase-improvements.md`.
+- [x] Incorporate summary and prioritization into project roadmap documentation.
 
 ---
 
