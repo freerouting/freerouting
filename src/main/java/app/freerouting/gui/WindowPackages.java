@@ -47,8 +47,8 @@ public class WindowPackages extends WindowObjectListWithFilter {
     Set<Item> boardInstances = new TreeSet<>();
     Collection<Item> boardItems = routingBoard.getItems();
     for (Item currentItem : boardItems) {
-      if (currentItem.getComponentNo() > 0) {
-        Component currentComponent = routingBoard.components.get(currentItem.getComponentNo());
+      if (currentItem.getComponentId() > 0) {
+        Component currentComponent = routingBoard.components.get(currentItem.getComponentId());
         Package currentPackage = currentComponent.getPackage();
         boolean packageMatches = false;
         for (int i = 0; i < selectedPackages.size(); i++) {

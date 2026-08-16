@@ -143,7 +143,7 @@ public abstract class ShapeTree {
 
     /**
      * Get the Shape of this object with index stored in the ShapeTree with index identification
-     * number treeIdNo.
+     * number treeId.
      */
     TileShape getTreeShape(ShapeTree tree, int index);
 

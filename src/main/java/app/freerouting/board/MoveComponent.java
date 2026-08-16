@@ -38,7 +38,7 @@ public class MoveComponent {
     }
 
     Collection<Item> itemGroupList;
-    int componentNo = item.getComponentNo();
+    int componentNo = item.getComponentId();
     if (componentNo > 0) {
       itemGroupList = board.getComponentItems(componentNo);
       this.component = board.components.get(componentNo);
@@ -140,7 +140,7 @@ public class MoveComponent {
     }
     if (this.component != null) {
       // component must be moved first, so that the new pin shapes are calculated correctly
-      board.components.move(this.component.no, translateVector);
+      board.components.move(this.component.id, translateVector);
       // let the observers synchronize the moving
       board.communication.observers.notifyMoved(this.component);
     }

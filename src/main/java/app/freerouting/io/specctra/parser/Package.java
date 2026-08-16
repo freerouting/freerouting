@@ -168,7 +168,7 @@ public class Package {
       app.freerouting.core.library.Package.Pin currentPin = boardPackage.getPin(i);
       scopeParameter.file.newLine();
       scopeParameter.file.write("(pin ");
-      Padstack currentPadstack = scopeParameter.board.library.padstacks.get(currentPin.padstackNo);
+      Padstack currentPadstack = scopeParameter.board.library.padstacks.get(currentPin.padstackId);
       scopeParameter.identifierType.write(currentPadstack.name, scopeParameter.file);
       scopeParameter.file.write(" ");
       scopeParameter.identifierType.write(currentPin.name, scopeParameter.file);
@@ -363,7 +363,7 @@ public class Package {
         // check, if not all items of the component are deleted
         boolean undeletedItemFound = false;
         for (Item currentItem : boardItems) {
-          if (currentItem.getComponentNo() == currentComponent.no) {
+          if (currentItem.getComponentId() == currentComponent.id) {
             undeletedItemFound = true;
             break;
           }

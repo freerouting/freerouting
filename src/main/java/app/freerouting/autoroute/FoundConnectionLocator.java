@@ -284,7 +284,7 @@ public abstract class FoundConnectionLocator {
             currentNextRoom != null ? currentNextRoom.getClass().getSimpleName() : "null";
         int obstacleId = -1;
         if (currentNextRoom instanceof ObstacleExpansionRoom obst) {
-          obstacleId = obst.getItem().getIdNo();
+          obstacleId = obst.getItem().getId();
         }
         FRLogger.trace(
             "BACKTRACK_STEP net="

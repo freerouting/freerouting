@@ -63,8 +63,8 @@ public class DesignRulesChecker {
 
         // Deduplicate violations - A-B and B-A are the same violation
         for (ClearanceViolation violation : itemViolations) {
-          int id1 = violation.firstItem.getIdNo();
-          int id2 = violation.secondItem.getIdNo();
+          int id1 = violation.firstItem.getId();
+          int id2 = violation.secondItem.getId();
 
           // Create a unique key using sorted IDs to avoid duplicates
           String key =
@@ -317,8 +317,8 @@ public class DesignRulesChecker {
             convertCoordinate(secondItemCenterOfGravity.y, coordinateUnit));
 
     // Use item IDs as UUIDs (they are unique within the board)
-    String firstUuid = String.valueOf(violation.firstItem.getIdNo());
-    String secondUuid = String.valueOf(violation.secondItem.getIdNo());
+    String firstUuid = String.valueOf(violation.firstItem.getId());
+    String secondUuid = String.valueOf(violation.secondItem.getId());
 
     items.add(new KiCadDrcViolationItem(firstItemDesc, firstItemPos, firstUuid));
     items.add(new KiCadDrcViolationItem(secondItemDesc, secondItemPos, secondUuid));
@@ -381,7 +381,7 @@ public class DesignRulesChecker {
               convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
               convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
 
-      String uuid = String.valueOf(item.getIdNo());
+      String uuid = String.valueOf(item.getId());
       items.add(new KiCadDrcViolationItem(itemDesc, itemPos, uuid));
 
       description =
@@ -403,7 +403,7 @@ public class DesignRulesChecker {
           new KiCadDrcPosition(
               convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
               convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
-      String uuid = String.valueOf(item.getIdNo());
+      String uuid = String.valueOf(item.getId());
       items.add(new KiCadDrcViolationItem(itemDesc, itemPos, uuid));
     }
 

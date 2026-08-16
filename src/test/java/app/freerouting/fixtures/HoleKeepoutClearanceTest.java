@@ -38,7 +38,7 @@ class HoleKeepoutClearanceTest extends RoutingFixtureTest {
     int reclassified = 0;
     for (Item item : job.board.getItems()) {
       if (item.getClass() == ObstacleArea.class
-          && item.getComponentNo() > 0
+          && item.getComponentId() > 0
           && ((ObstacleArea) item).getArea() instanceof Circle) {
         assertEquals(
             holeEdgeClassNo,

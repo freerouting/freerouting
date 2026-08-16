@@ -35,8 +35,8 @@ public class IncompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom {
   }
 
   @Override
-  public int getIdNo() {
+  public int getId() {
     // Stable hash of shape and layer
-    return 31 * getShape().getIdNo() + getLayer();
+    return 31 * getShape().getId() + getLayer();
   }
 }

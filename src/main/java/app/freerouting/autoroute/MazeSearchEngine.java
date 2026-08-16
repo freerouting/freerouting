@@ -240,7 +240,7 @@ public class MazeSearchEngine {
     if (door instanceof TargetItemExpansionDoor targetDoor) {
       return "TargetItemExpansionDoor"
           + "/item="
-          + targetDoor.item.getIdNo()
+          + targetDoor.item.getId()
           + "/tree_entry="
           + targetDoor.treeEntryNo
           + "/dim="
@@ -818,16 +818,16 @@ public class MazeSearchEngine {
   /** Return true, if the door section was successfully expanded. */
   private boolean expandToDoorSection(
       ExpandableObject door,
-      int sectionNo,
+      int sectionIndex,
       FloatLine shapeEntry,
       MazeListElement fromElement,
       int addCosts,
       MazeSearchElement.Adjustment adjustment) {
-    boolean doorSectionOccupied = door.getMazeSearchElement(sectionNo).isOccupied;
+    boolean doorSectionOccupied = door.getMazeSearchElement(sectionIndex).isOccupied;
     if (doorSectionOccupied || shapeEntry == null) {
       FRLogger.trace(
           "RAW_SECTION skip selected_section="
-              + sectionNo
+              + sectionIndex
               + ", from_section="
               + fromElement.sectionNoOfDoor
               + ", backtrack_section="
@@ -852,7 +852,7 @@ public class MazeSearchEngine {
           "MazeSearchEngine.expand_to_door_section",
           "skip_assign_raw",
           "selected_section="
-              + sectionNo
+              + sectionIndex
               + ", from_section="
               + fromElement.sectionNoOfDoor
               + ", backtrack_section="
@@ -917,7 +917,7 @@ public class MazeSearchEngine {
     MazeListElement newElement =
         new MazeListElement(
             door,
-            sectionNo,
+            sectionIndex,
             fromElement.door,
             fromElement.sectionNoOfDoor,
             expansionValue,
@@ -934,7 +934,7 @@ public class MazeSearchEngine {
     }
     FRLogger.trace(
         "RAW_SECTION assign selected_section="
-            + sectionNo
+            + sectionIndex
             + ", from_section="
             + fromElement.sectionNoOfDoor
             + ", backtrack_section="
@@ -963,7 +963,7 @@ public class MazeSearchEngine {
         "MazeSearchEngine.expand_to_door_section",
         "assign_raw",
         "selected_section="
-            + sectionNo
+            + sectionIndex
             + ", from_section="
             + fromElement.sectionNoOfDoor
             + ", backtrack_section="
@@ -1062,7 +1062,7 @@ public class MazeSearchEngine {
     }
     FloatPoint nearestPoint = shrinkedDrillShape.nearestPointApprox(compareCorner);
     FloatLine shapeEntry = new FloatLine(nearestPoint, nearestPoint);
-    int sectionNo = layer - drill.firstLayer;
+    int sectionIndex = layer - drill.firstLayer;
     double expansionValue =
         fromElement.expansionValue
             + addCosts
@@ -1084,7 +1084,7 @@ public class MazeSearchEngine {
     MazeListElement newElement =
         new MazeListElement(
             drill,
-            sectionNo,
+            sectionIndex,
             newBacktrackDoor,
             newSectionNoOfBacktrackDoor,
             expansionValue,
@@ -1164,19 +1164,19 @@ public class MazeSearchEngine {
     // Track the first room-mismatch per fanout attempt for first-mismatch investigation.
     boolean firstMismatchLogged = false;
     for (ExpansionDrill currentDrill : drillList) {
-      int sectionNo = fromRoomLayer - currentDrill.firstLayer;
-      if (sectionNo < 0 || sectionNo >= currentDrill.roomArr.length) {
+      int sectionIndex = fromRoomLayer - currentDrill.firstLayer;
+      if (sectionIndex < 0 || sectionIndex >= currentDrill.roomArr.length) {
         traceFanoutDiagnostic(
             "drill_rejected_section_out_of_range",
             "drill="
                 + describeExpandable(currentDrill)
                 + ", section="
-                + sectionNo
+                + sectionIndex
                 + ", room_arr_len="
                 + currentDrill.roomArr.length);
         continue;
       }
-      if (currentDrill.roomArr[sectionNo] != fromElement.nextRoom) {
+      if (currentDrill.roomArr[sectionIndex] != fromElement.nextRoom) {
         traceFanoutDiagnostic(
             "drill_rejected_room_mismatch",
             "drill="
@@ -1184,12 +1184,12 @@ public class MazeSearchEngine {
                 + ", expected_room="
                 + describeRoom(fromElement.nextRoom)
                 + ", drill_room="
-                + describeRoom(currentDrill.roomArr[sectionNo]));
+                + describeRoom(currentDrill.roomArr[sectionIndex]));
         // Log the first mismatch per page-scan with extra geometric context for investigation.
         if (!firstMismatchLogged && shouldTraceFanoutDiagnostics()) {
           firstMismatchLogged = true;
           CompleteExpansionRoom expRoom = fromElement.nextRoom;
-          CompleteExpansionRoom drillRoom = currentDrill.roomArr[sectionNo];
+          CompleteExpansionRoom drillRoom = currentDrill.roomArr[sectionIndex];
           FRLogger.trace(
               "FANOUT_DIAG event=first_room_mismatch_detail"
                   + ", pin="
@@ -1214,17 +1214,17 @@ public class MazeSearchEngine {
                   + (fromElement.backtrackDoor != null
                       ? fromElement.backtrackDoor.getClass().getSimpleName()
                       : "null")
-                  + ", sectionNo="
-                  + sectionNo
+                  + ", sectionIndex="
+                  + sectionIndex
                   + ", layer="
                   + fromRoomLayer);
         }
         continue;
       }
-      if (currentDrill.getMazeSearchElement(sectionNo).isOccupied) {
+      if (currentDrill.getMazeSearchElement(sectionIndex).isOccupied) {
         traceFanoutDiagnostic(
             "drill_rejected_section_occupied",
-            "drill=" + describeExpandable(currentDrill) + ", section=" + sectionNo);
+            "drill=" + describeExpandable(currentDrill) + ", section=" + sectionIndex);
         continue;
       }
       expandToDrill(currentDrill, fromElement, 0);
@@ -1668,7 +1668,7 @@ public class MazeSearchEngine {
           if (sb.length() > 1) {
             sb.append(",");
           }
-          sb.append(ci.getIdNo());
+          sb.append(ci.getId());
         }
         sb.append("]");
         connectionItemIds = sb.toString();
@@ -1699,9 +1699,7 @@ public class MazeSearchEngine {
         "CHECK_RIPUP net="
             + ctrl.netNumber
             + ", obstacle_id="
-            + (obstacleItem instanceof app.freerouting.board.Item obstItem
-                ? obstItem.getIdNo()
-                : -1)
+            + (obstacleItem instanceof app.freerouting.board.Item obstItem ? obstItem.getId() : -1)
             + ", obstacle_nets="
             + obstacleNets
             + ", connectionItems="
@@ -1761,7 +1759,7 @@ public class MazeSearchEngine {
 
         expandToDoorSection(
             currentLeftDoorSection.door,
-            currentLeftDoorSection.sectionNo,
+            currentLeftDoorSection.sectionIndex,
             currentLeftDoorSection.sectionLine,
             listElement,
             0,
@@ -1791,7 +1789,7 @@ public class MazeSearchEngine {
         }
         expandToDoorSection(
             currentRightDoorSection.door,
-            currentRightDoorSection.sectionNo,
+            currentRightDoorSection.sectionIndex,
             currentRightDoorSection.sectionLine,
             listElement,
             0,

@@ -70,10 +70,10 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   @Override
-  public int getIdNo() {
+  public int getId() {
     int result = 0;
     for (Line current : lines) {
-      result = 31 * result + current.getIdNo();
+      result = 31 * result + current.getId();
     }
     return result;
   }

@@ -342,12 +342,12 @@ public final class MazeTraceShover {
   public static class DoorSection {
 
     final ExpansionDoor door;
-    final int sectionNo;
+    final int sectionIndex;
     final FloatLine sectionLine;
 
-    DoorSection(ExpansionDoor door, int sectionNo, FloatLine sectionLine) {
+    DoorSection(ExpansionDoor door, int sectionIndex, FloatLine sectionLine) {
       this.door = door;
-      this.sectionNo = sectionNo;
+      this.sectionIndex = sectionIndex;
       this.sectionLine = sectionLine;
     }
   }

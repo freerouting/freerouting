@@ -170,7 +170,7 @@ public final class FoundConnectionInserter {
     for (int i = 1; i < trace.corners.length; i++) {
       Point[] currentCornerArr = Arrays.copyOfRange(trace.corners, fromCornerNo, i + 1);
       Polyline insertPolyline = new Polyline(currentCornerArr);
-      int maxItemIdBeforeSeg = board.communication.idNoGenerator.maxGeneratedNo();
+      int maxItemIdBeforeSeg = board.communication.idGenerator.maxGeneratedId();
       Point okPoint =
           board.insertForcedTracePolyline(
               insertPolyline,
@@ -185,7 +185,7 @@ public final class FoundConnectionInserter {
               ctrl.pullTightAccuracy,
               true,
               null);
-      int maxItemIdAfterSeg = board.communication.idNoGenerator.maxGeneratedNo();
+      int maxItemIdAfterSeg = board.communication.idGenerator.maxGeneratedId();
       FRLogger.trace(
           "compare_trace_insert_segment_ids net="
               + ctrl.netNumber
@@ -415,7 +415,7 @@ public final class FoundConnectionInserter {
                 + ", corner="
                 + trace.corners[i]
                 + ", stub_id="
-                + traceStub.getIdNo()
+                + traceStub.getId()
                 + ", stub_first="
                 + traceStub.firstCorner()
                 + ", stub_last="

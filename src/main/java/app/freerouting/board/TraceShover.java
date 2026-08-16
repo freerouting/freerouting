@@ -265,7 +265,7 @@ public class TraceShover {
         first = false;
         obstacleLog
             .append("{id=")
-            .append(obs.getIdNo())
+            .append(obs.getId())
             .append(",type=")
             .append(obs.getClass().getSimpleName());
         if (obs instanceof PolylineTrace pt) {
@@ -464,7 +464,7 @@ public class TraceShover {
         first = false;
         obstacleLog
             .append("{id=")
-            .append(obs.getIdNo())
+            .append(obs.getId())
             .append(",type=")
             .append(obs.getClass().getSimpleName());
         if (obs instanceof PolylineTrace pt) {

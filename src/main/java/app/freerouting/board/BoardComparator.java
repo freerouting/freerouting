@@ -187,13 +187,13 @@ public class BoardComparator {
     Map<String, Pin> pinMap1 = new HashMap<>();
     Map<String, Pin> pinMap2 = new HashMap<>();
     for (Pin p : pins1) {
-      Component comp = board1.components.get(p.getComponentNo());
+      Component comp = board1.components.get(p.getComponentId());
       if (comp != null) {
         pinMap1.put(comp.name + "." + p.name(), p);
       }
     }
     for (Pin p : pins2) {
-      Component comp = board2.components.get(p.getComponentNo());
+      Component comp = board2.components.get(p.getComponentId());
       if (comp != null) {
         pinMap2.put(comp.name + "." + p.name(), p);
       }

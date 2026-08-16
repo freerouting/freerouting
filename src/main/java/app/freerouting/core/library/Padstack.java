@@ -16,7 +16,7 @@ import java.util.Locale;
 public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable, Serializable {
 
   public final String name;
-  public final int no;
+  public final int id;
 
   /** Whether vias of the own net may overlap with this padstack. */
   public final boolean attachAllowed;
@@ -46,14 +46,14 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   /** Creates a new Padstack with one shape per board layer. */
   Padstack(
       String name,
-      int no,
+      int id,
       ConvexShape[] shapes,
       boolean isDrillable,
       boolean placedAbsolute,
       Padstacks padstackList) {
     this.shapes = shapes;
     this.name = name;
-    this.no = no;
+    this.id = id;
     this.attachAllowed = isDrillable;
     this.placedAbsolute = placedAbsolute;
     this.padstackList = padstackList;

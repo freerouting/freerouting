@@ -21,7 +21,7 @@ public class Component
   public final String name;
 
   /** Internal generated unique identification number. */
-  public final int no;
+  public final int id;
 
   /** If true, the component cannot be moved. */
   public final boolean positionFixed;
@@ -57,7 +57,7 @@ public class Component
       boolean onFront,
       Package packageFront,
       Package packageBack,
-      int no,
+      int id,
       boolean positionFixed,
       String partNumber) {
     this.name = name;
@@ -72,7 +72,7 @@ public class Component
     this.onFront = onFront;
     libPackageFront = packageFront;
     libPackageBack = packageBack;
-    this.no = no;
+    this.id = id;
     this.positionFixed = positionFixed;
     this.partNumber = partNumber;
   }
@@ -180,7 +180,7 @@ public class Component
             onFront,
             libPackageFront,
             libPackageBack,
-            no,
+            id,
             positionFixed,
             partNumber);
     result.logicalPart = this.logicalPart;

@@ -155,7 +155,7 @@ public final class CopyItemState extends InteractiveState {
 
     Vector translateVector = currentPosition.differenceBy(startPosition);
     for (Item currentItem : itemList) {
-      int currentCmpNo = currentItem.getComponentNo();
+      int currentCmpNo = currentItem.getComponentId();
       if (currentCmpNo > 0) {
         // This item belongs to a component
         int newCmpNo;
@@ -177,7 +177,7 @@ public final class CopyItemState extends InteractiveState {
             Package.Pin[] newPinArr = new Package.Pin[oldComponent.getPackage().pinCount()];
             for (int i = 0; i < newPinArr.length; i++) {
               Package.Pin oldPin = oldComponent.getPackage().getPin(i);
-              Padstack oldPadstack = board.library.padstacks.get(oldPin.padstackNo);
+              Padstack oldPadstack = board.library.padstacks.get(oldPin.padstackId);
               if (oldPadstack == null) {
                 FRLogger.warn("CopyItemState.insert: package padstack not found");
                 return;
@@ -187,7 +187,7 @@ public final class CopyItemState extends InteractiveState {
               newPinArr[i] =
                   new Package.Pin(
                       oldPin.name,
-                      newPadstack.no,
+                      newPadstack.id,
                       oldPin.relativeLocation,
                       oldPin.rotationInDegree);
             }
@@ -201,10 +201,10 @@ public final class CopyItemState extends InteractiveState {
                   oldComponent.getRotationInDegree(),
                   oldComponent.placedOnFront(),
                   newPackage);
-          newCmpNo = newComponent.no;
+          newCmpNo = newComponent.id;
           cmpNoPairs.put(currentCmpNo, newCmpNo);
         }
-        currentItem.assignComponentNo(newCmpNo);
+        currentItem.assignComponentId(newCmpNo);
       }
     }
     boolean allItemsInserted = true;

@@ -31,8 +31,8 @@ import java.util.TreeSet;
  */
 public class Pin extends DrillItem implements Serializable {
 
-  /** The number of this pin in its component (starting with 0). */
-  public final int pinNo;
+  /** The index of this pin in its component (starting with 0). */
+  public final int pinIndex;
 
   /** The pin, this pin was changed to by swapping or this pin, if no pin swap occurred. */
   private Pin changedTo = this;
@@ -41,26 +41,26 @@ public class Pin extends DrillItem implements Serializable {
 
   /**
    * Creates a new instance of Pin with the input parameters. (toLayer - fromLayer + 1) shapes must
-   * be provided. pinNo is the number of the pin in its component (starting with 0).
+   * be provided. pinIndex is the index of the pin in its component (starting with 0).
    */
   Pin(
-      int componentNo,
-      int pinNo,
+      int componentId,
+      int pinIndex,
       int[] netNumbers,
       int clearanceClassIndex,
-      int idNo,
+      int id,
       FixedState fixedState,
       BasicBoard board) {
-    super(null, netNumbers, clearanceClassIndex, idNo, componentNo, fixedState, board);
+    super(null, netNumbers, clearanceClassIndex, id, componentId, fixedState, board);
 
-    this.pinNo = pinNo;
+    this.pinIndex = pinIndex;
   }
 
   /** Calculates the relative location of this pin to its component. */
   public Vector relativeLocation() {
-    Component component = board.components.get(this.getComponentNo());
+    Component component = board.components.get(this.getComponentId());
     Package libPackage = component.getPackage();
-    Package.Pin packagePin = libPackage.getPin(this.pinNo);
+    Package.Pin packagePin = libPackage.getPin(this.pinIndex);
     Vector relLocation = packagePin.relativeLocation;
     double componentRotation = component.getRotationInDegree();
     if (!component.placedOnFront() && !board.components.getFlipStyleRotateFirst()) {
@@ -89,7 +89,7 @@ public class Pin extends DrillItem implements Serializable {
     if (pinCenter == null) {
 
       // Calculate the pin center.
-      Component component = board.components.get(this.getComponentNo());
+      Component component = board.components.get(this.getComponentId());
       pinCenter = component.getLocation().translateBy(this.relativeLocation());
 
       // check that the pin center is inside the pin shape and correct it eventually
@@ -116,44 +116,44 @@ public class Pin extends DrillItem implements Serializable {
 
   @Override
   public Padstack getPadstack() {
-    Component component = board.components.get(getComponentNo());
+    Component component = board.components.get(getComponentId());
     if (component == null) {
       FRLogger.warn("Pin.get_padstack; component not found");
       return null;
     }
-    int padstackNo = component.getPackage().getPin(pinNo).padstackNo;
-    return board.library.padstacks.get(padstackNo);
+    int padstackId = component.getPackage().getPin(pinIndex).padstackId;
+    return board.library.padstacks.get(padstackId);
   }
 
   @Override
-  public Item copy(int idNo) {
+  public Item copy(int id) {
     int[] currentNetNumbers = new int[this.netCount()];
     for (int i = 0; i < currentNetNumbers.length; i++) {
       currentNetNumbers[i] = getNetNumber(i);
     }
     return new Pin(
-        getComponentNo(),
-        this.pinNo,
+        getComponentId(),
+        this.pinIndex,
         currentNetNumbers,
         clearanceClassIndex(),
-        idNo,
+        id,
         getFixedState(),
         board);
   }
 
   /** Return the name of this pin in the package of this component. */
   public String name() {
-    Component component = board.components.get(this.getComponentNo());
+    Component component = board.components.get(this.getComponentId());
     if (component == null) {
       FRLogger.warn("Pin.name: component not found");
       return null;
     }
-    return component.getPackage().getPin(pinNo).name;
+    return component.getPackage().getPin(pinIndex).name;
   }
 
   /** Gets index of this pin in the library package of the pins component. */
-  public int getIndexInPackage() {
-    return pinNo;
+  public int getPinIndex() {
+    return pinIndex;
   }
 
   @Override
@@ -164,7 +164,7 @@ public class Pin extends DrillItem implements Serializable {
       // of fromLayer and toLayer may not be correct
       this.precalculatedShapes = new Shape[padstack.toLayer() - padstack.fromLayer() + 1];
 
-      Component component = board.components.get(this.getComponentNo());
+      Component component = board.components.get(this.getComponentId());
       if (component == null) {
         FRLogger.warn("Pin.get_shape: component not found");
         return null;
@@ -174,7 +174,7 @@ public class Pin extends DrillItem implements Serializable {
         FRLogger.warn("Pin.get_shape: package not found");
         return null;
       }
-      Package.Pin packagePin = libPackage.getPin(this.pinNo);
+      Package.Pin packagePin = libPackage.getPin(this.getPinIndex());
       if (packagePin == null) {
         FRLogger.warn("Pin.get_shape: pinNo out of range");
         return null;
@@ -242,7 +242,7 @@ public class Pin extends DrillItem implements Serializable {
   /** Returns the layer of the padstack shape corresponding to the shape with index index. */
   int getPadstackLayer(int index) {
     Padstack padstack = getPadstack();
-    Component component = board.components.get(this.getComponentNo());
+    Component component = board.components.get(this.getComponentId());
     int padstackLayer;
     if (component.placedOnFront() || padstack.placedAbsolute) {
       padstackLayer = index + this.firstLayer();
@@ -264,7 +264,7 @@ public class Pin extends DrillItem implements Serializable {
     // setting 1.5 to a higher factor may hinder the shove algorithm of the autorouter between
     // the pins of SMD components, because the channels can get blocked by the shoveFixed stubs.
 
-    Component component = board.components.get(this.getComponentNo());
+    Component component = board.components.get(this.getComponentId());
     if (component != null) {
       if (component.getPackage().pinCount() <= 3) {
         padXyFactor *= 2; // allow connection to the longer side also for shorter pads.
@@ -294,7 +294,7 @@ public class Pin extends DrillItem implements Serializable {
       if (libPackage == null) {
         continue;
       }
-      Package.Pin packagePin = libPackage.getPin(this.pinNo);
+      Package.Pin packagePin = libPackage.getPin(this.pinIndex);
       if (packagePin == null) {
         continue;
       }
@@ -386,7 +386,7 @@ public class Pin extends DrillItem implements Serializable {
   /** Return all Pins, that can be swapped with this pin. */
   public Set<Pin> getSwappablePins() {
     Set<Pin> result = new TreeSet<>();
-    Component component = this.board.components.get(this.getComponentNo());
+    Component component = this.board.components.get(this.getComponentId());
     if (component == null) {
       return result;
     }
@@ -394,7 +394,7 @@ public class Pin extends DrillItem implements Serializable {
     if (logicalPart == null) {
       return result;
     }
-    LogicalPart.PartPin thisPartPin = logicalPart.getPin(this.pinNo);
+    LogicalPart.PartPin thisPartPin = logicalPart.getPin(this.pinIndex);
     if (thisPartPin == null) {
       return result;
     }
@@ -403,14 +403,14 @@ public class Pin extends DrillItem implements Serializable {
     }
     // look up all part pins with the same gateName and the same gatePinSwapCode
     for (int i = 0; i < logicalPart.pinCount(); i++) {
-      if (i == this.pinNo) {
+      if (i == this.pinIndex) {
         continue;
       }
       LogicalPart.PartPin currentPartPin = logicalPart.getPin(i);
       if (currentPartPin != null
           && currentPartPin.gatePinSwapCode == thisPartPin.gatePinSwapCode
           && currentPartPin.gateName.equals(thisPartPin.gateName)) {
-        Pin currentSwappeblePin = this.board.getPin(this.getComponentNo(), currentPartPin.pinNo);
+        Pin currentSwappeblePin = this.board.getPin(this.getComponentId(), currentPartPin.pinIndex);
         if (currentSwappeblePin != null) {
           result.add(currentSwappeblePin);
         } else {
@@ -476,7 +476,7 @@ public class Pin extends DrillItem implements Serializable {
   @Override
   public boolean isPlacedOnFront() {
     boolean result = true;
-    Component component = board.components.get(this.getComponentNo());
+    Component component = board.components.get(this.getComponentId());
     if (component != null) {
       result = component.placedOnFront();
     }
@@ -530,10 +530,10 @@ public class Pin extends DrillItem implements Serializable {
 
     window.appendBold(tm.getText("pin") + ": ");
     window.append(tm.getText("component_2") + " ");
-    Component component = board.components.get(this.getComponentNo());
+    Component component = board.components.get(this.getComponentId());
     window.append(component.name, tm.getText("component_info"), component);
     window.append(", " + tm.getText("pin_2") + " ");
-    window.append(component.getPackage().getPin(this.pinNo).name);
+    window.append(component.getPackage().getPin(this.pinIndex).name);
     window.append(", " + tm.getText("padstack") + " ");
     Padstack padstack = this.getPadstack();
     window.append(padstack.name, tm.getText("padstack_info"), padstack);
@@ -547,10 +547,10 @@ public class Pin extends DrillItem implements Serializable {
   public String getHoverInfo(Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    Component component = board.components.get(this.getComponentNo());
+    Component component = board.components.get(this.getComponentId());
     Padstack padstack = this.getPadstack();
     String componentName = component.name;
-    String pinName = component.getPackage().getPin(this.pinNo).name;
+    String pinName = component.getPackage().getPin(this.pinIndex).name;
     String padstackName = padstack.name;
     String connInfo = this.getConnectableItemHoverInfo(locale);
 
@@ -673,14 +673,14 @@ public class Pin extends DrillItem implements Serializable {
 
     simpleName.append(this.getClass().getSimpleName().toLowerCase());
 
-    if (pinNo > 0) {
+    if (pinIndex > 0) {
       simpleName.append(" #");
-      simpleName.append(pinNo);
+      simpleName.append(pinIndex);
     }
 
-    if (componentNo > 0) {
+    if (componentId > 0) {
       simpleName.append(" of component #");
-      simpleName.append(componentNo);
+      simpleName.append(componentId);
     }
 
     return simpleName.toString();

@@ -214,14 +214,14 @@ public class BasicBoard implements Serializable {
     int result = 0;
     HashSet<Integer> traceIds = new HashSet<>();
     for (Trace trace : this.getTraces()) {
-      traceIds.add(trace.getIdNo());
+      traceIds.add(trace.getId());
     }
 
     for (Trace trace : compareTo.getTraces()) {
-      if (!traceIds.contains(trace.getIdNo())) {
+      if (!traceIds.contains(trace.getId())) {
         result++;
       } else {
-        traceIds.remove(trace.getIdNo());
+        traceIds.remove(trace.getId());
       }
     }
     result += traceIds.size();
@@ -389,16 +389,17 @@ public class BasicBoard implements Serializable {
   }
 
   /**
-   * Inserts a pin into the board. pinNo is the number of this pin in the library package of its
+   * Inserts a pin into the board. pinIndex is the index of this pin in the library package of its
    * component (starting with 0).
    */
   public Pin insertPin(
-      int componentNo,
-      int pinNo,
+      int componentId,
+      int pinIndex,
       int[] netNumbers,
       int clearanceClassIndex,
       FixedState fixedState) {
-    Pin newPin = new Pin(componentNo, pinNo, netNumbers, clearanceClassIndex, 0, fixedState, this);
+    Pin newPin =
+        new Pin(componentId, pinIndex, netNumbers, clearanceClassIndex, 0, fixedState, this);
     insertItem(newPin);
     return newPin;
   }
@@ -431,7 +432,7 @@ public class BasicBoard implements Serializable {
       double rotationInDegree,
       boolean sideChanged,
       int clearanceClassIndex,
-      int componentNo,
+      int componentId,
       String name,
       FixedState fixedState) {
     if (area == null) {
@@ -447,7 +448,7 @@ public class BasicBoard implements Serializable {
             sideChanged,
             clearanceClassIndex,
             0,
-            componentNo,
+            componentId,
             name,
             fixedState,
             this);
@@ -483,7 +484,7 @@ public class BasicBoard implements Serializable {
       double rotationInDegree,
       boolean sideChanged,
       int clearanceClassIndex,
-      int componentNo,
+      int componentId,
       String name,
       FixedState fixedState) {
     if (area == null) {
@@ -499,7 +500,7 @@ public class BasicBoard implements Serializable {
             sideChanged,
             clearanceClassIndex,
             0,
-            componentNo,
+            componentId,
             name,
             fixedState,
             this);
@@ -535,7 +536,7 @@ public class BasicBoard implements Serializable {
       double rotationInDegree,
       boolean sideChanged,
       int clearanceClassIndex,
-      int componentNo,
+      int componentId,
       String name,
       FixedState fixedState) {
     if (area == null) {
@@ -551,7 +552,7 @@ public class BasicBoard implements Serializable {
             sideChanged,
             clearanceClassIndex,
             0,
-            componentNo,
+            componentId,
             name,
             fixedState,
             this);
@@ -565,7 +566,7 @@ public class BasicBoard implements Serializable {
       boolean isFront,
       Vector translation,
       double rotationInDegree,
-      int componentNo,
+      int componentId,
       boolean isCourtyard,
       boolean isFabrication,
       boolean isClosed,
@@ -585,7 +586,7 @@ public class BasicBoard implements Serializable {
             translation,
             rotationInDegree,
             0,
-            componentNo,
+            componentId,
             isCourtyard,
             isFabrication,
             isClosed,
@@ -661,7 +662,7 @@ public class BasicBoard implements Serializable {
       FRLogger.trace(
           "ITEM_ACTIVITY action=REMOVE"
               + ", id="
-              + item.getIdNo()
+              + item.getId()
               + ", type="
               + item.getClass().getSimpleName()
               + ", bounds="
@@ -679,14 +680,14 @@ public class BasicBoard implements Serializable {
             "BasicBoard.remove_item",
             "compare_trace_remove_item",
             "REMOVE_ITEM called on trace [7,8]",
-            "Net #" + t.netNumbers[0] + ",Trace #" + t.getIdNo() + ",Layer #" + t.getLayer(),
+            "Net #" + t.netNumbers[0] + ",Trace #" + t.getId() + ",Layer #" + t.getLayer(),
             new Point[] {t.firstCorner(), t.lastCorner()});
         for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
           FRLogger.trace(
               "BasicBoard.remove_item",
               "compare_trace_remove_item_stack",
               ste.toString(),
-              "Net #" + t.netNumbers[0] + ",Trace #" + t.getIdNo() + ",Layer #" + t.getLayer(),
+              "Net #" + t.netNumbers[0] + ",Trace #" + t.getId() + ",Layer #" + t.getLayer(),
               new Point[] {t.firstCorner(), t.lastCorner()});
         }
       } else {
@@ -694,7 +695,7 @@ public class BasicBoard implements Serializable {
             "BasicBoard.remove_item",
             "compare_trace_remove_item",
             "REMOVE_ITEM called by " + Thread.currentThread().getStackTrace()[3],
-            "Net #" + t.netNumbers[0] + ",Trace #" + t.getIdNo() + ",Layer #" + t.getLayer(),
+            "Net #" + t.netNumbers[0] + ",Trace #" + t.getId() + ",Layer #" + t.getLayer(),
             new Point[] {t.firstCorner(), t.lastCorner()});
       }
     }
@@ -713,19 +714,19 @@ public class BasicBoard implements Serializable {
   }
 
   /**
-   * Searches for an item with the specified id number on the board.
+   * Searches for an item with the specified ID on the board.
    *
-   * @param idNo the id number of the item to search for
+   * @param id the ID of the item to search for
    * @return the found item, or null if no such item is found
    */
-  public Item getItem(int idNo) {
+  public Item getItem(int id) {
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
     for (; ; ) {
       Item currentItem = (Item) itemList.readObject(it);
       if (currentItem == null) {
         break;
       }
-      if (currentItem.getIdNo() == idNo) {
+      if (currentItem.getId() == id) {
         return currentItem;
       }
     }
@@ -778,8 +779,8 @@ public class BasicBoard implements Serializable {
     return result;
   }
 
-  /** Returns all items with the input component number. */
-  public Collection<Item> getComponentItems(int componentNo) {
+  /** Returns all items with the input component ID. */
+  public Collection<Item> getComponentItems(int componentId) {
     Collection<Item> result = new LinkedList<>();
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
     for (; ; ) {
@@ -787,15 +788,15 @@ public class BasicBoard implements Serializable {
       if (currentItem == null) {
         break;
       }
-      if (currentItem.getComponentNo() == componentNo) {
+      if (currentItem.getComponentId() == componentId) {
         result.add(currentItem);
       }
     }
     return result;
   }
 
-  /** Returns all pins with the input component number. */
-  public Collection<Pin> getComponentPins(int componentNo) {
+  /** Returns all pins with the input component ID. */
+  public Collection<Pin> getComponentPins(int componentId) {
     Collection<Pin> result = new LinkedList<>();
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
     for (; ; ) {
@@ -803,25 +804,23 @@ public class BasicBoard implements Serializable {
       if (currentItem == null) {
         break;
       }
-      if (currentItem.getComponentNo() == componentNo && currentItem instanceof Pin pin) {
+      if (currentItem.getComponentId() == componentId && currentItem instanceof Pin pin) {
         result.add(pin);
       }
     }
     return result;
   }
 
-  /**
-   * Returns the pin with the input component number and pin number, or null, if no such pin exists.
-   */
-  public Pin getPin(int componentNo, int pinNo) {
+  /** Returns the pin with the input component ID and pin index, or null, if no such pin exists. */
+  public Pin getPin(int componentId, int pinIndex) {
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
     for (; ; ) {
       Item currentItem = (Item) itemList.readObject(it);
       if (currentItem == null) {
         break;
       }
-      if (currentItem.getComponentNo() == componentNo && currentItem instanceof Pin currentPin) {
-        if (currentPin.pinNo == pinNo) {
+      if (currentItem.getComponentId() == componentId && currentItem instanceof Pin currentPin) {
+        if (currentPin.pinIndex == pinIndex) {
           return currentPin;
         }
       }
@@ -1496,7 +1495,7 @@ public class BasicBoard implements Serializable {
             netNumbers,
             area.clearanceClassIndex(),
             0,
-            area.getComponentNo(),
+            area.getComponentId(),
             area.name,
             true,
             fixedState,
@@ -1515,7 +1514,7 @@ public class BasicBoard implements Serializable {
       FRLogger.trace(
           "ITEM_ACTIVITY action=INSERT"
               + ", id="
-              + item.getIdNo()
+              + item.getId()
               + ", type="
               + item.getClass().getSimpleName()
               + ", bounds="

@@ -81,13 +81,13 @@ public class Components implements Serializable {
   }
 
   /**
-   * Returns the component with the input component number or null, if no such component exists.
-   * Component numbers are from 1 to component count
+   * Returns the component with the input component ID or null, if no such component exists.
+   * Component IDs are from 1 to component count.
    */
-  public Component get(int componentNo) {
-    Component result = componentArr.elementAt(componentNo - 1);
-    if (result != null && result.no != componentNo) {
-      FRLogger.warn("Components.get: inconsistent component number");
+  public Component get(int componentId) {
+    Component result = componentArr.elementAt(componentId - 1);
+    if (result != null && result.id != componentId) {
+      FRLogger.warn("Components.get: inconsistent component ID");
     }
     return result;
   }
@@ -136,7 +136,7 @@ public class Components implements Serializable {
       if (currentComponent == null) {
         break;
       }
-      this.componentArr.setElementAt(currentComponent, currentComponent.no - 1);
+      this.componentArr.setElementAt(currentComponent, currentComponent.id - 1);
 
       if (observers != null) {
         observers.notifyMoved(currentComponent);

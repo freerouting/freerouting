@@ -977,7 +977,7 @@ public class Network extends ScopeKeyword {
     Package currentPackage = newComponent.getPackage();
     for (int i = 0; i < currentPackage.pinCount(); i++) {
       Package.Pin currentPin = currentPackage.getPin(i);
-      Padstack currentPadstack = routingBoard.library.padstacks.get(currentPin.padstackNo);
+      Padstack currentPadstack = routingBoard.library.padstacks.get(currentPin.padstackId);
       if (currentPadstack == null) {
         FRLogger.warn(
             "Network.insert_component: pin padstack not found at '"
@@ -1031,7 +1031,7 @@ public class Network extends ScopeKeyword {
               netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.PIN);
         }
       }
-      routingBoard.insertPin(newComponent.no, i, netNumberArray, clearanceClass, fixedState);
+      routingBoard.insertPin(newComponent.id, i, netNumberArray, clearanceClass, fixedState);
     }
 
     // insert the keepouts belonging to the package (k = 1 for via keepouts)
@@ -1085,7 +1085,7 @@ public class Network extends ScopeKeyword {
                 rotationInDegree,
                 !location.isFront,
                 clearanceClass,
-                newComponent.no,
+                newComponent.id,
                 currentKeepout.name,
                 fixedState);
           } else if (k == 1) {
@@ -1096,7 +1096,7 @@ public class Network extends ScopeKeyword {
                 rotationInDegree,
                 !location.isFront,
                 clearanceClass,
-                newComponent.no,
+                newComponent.id,
                 currentKeepout.name,
                 fixedState);
           } else {
@@ -1107,7 +1107,7 @@ public class Network extends ScopeKeyword {
                 rotationInDegree,
                 !location.isFront,
                 clearanceClass,
-                newComponent.no,
+                newComponent.id,
                 currentKeepout.name,
                 fixedState);
           }
@@ -1123,7 +1123,7 @@ public class Network extends ScopeKeyword {
                     rotationInDegree,
                     !location.isFront,
                     clearanceClass,
-                    newComponent.no,
+                    newComponent.id,
                     currentKeepout.name,
                     fixedState);
               } else if (k == 1) {
@@ -1134,7 +1134,7 @@ public class Network extends ScopeKeyword {
                     rotationInDegree,
                     !location.isFront,
                     clearanceClass,
-                    newComponent.no,
+                    newComponent.id,
                     currentKeepout.name,
                     fixedState);
               } else {
@@ -1145,7 +1145,7 @@ public class Network extends ScopeKeyword {
                     rotationInDegree,
                     !location.isFront,
                     clearanceClass,
-                    newComponent.no,
+                    newComponent.id,
                     currentKeepout.name,
                     fixedState);
               }
@@ -1193,7 +1193,7 @@ public class Network extends ScopeKeyword {
             location.isFront,
             componentTranslation,
             rotationInDegree,
-            newComponent.no,
+            newComponent.id,
             isCourtyard,
             isFabrication,
             isClosed,

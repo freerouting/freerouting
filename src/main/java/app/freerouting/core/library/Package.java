@@ -18,8 +18,8 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
   /** The name of the package. */
   public final String name;
 
-  /** Internally generated package number. */
-  public final int no;
+  /** Internally generated package ID. */
+  public final int id;
 
   /** The outline of the component, which may be null. */
   public final Shape[] outline;
@@ -41,7 +41,7 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
   /** Creates a new instance of Package. The package list contains this package. */
   public Package(
       String name,
-      int no,
+      int id,
       Pin[] pins,
       Shape[] outline,
       double[] outlineWidths,
@@ -52,7 +52,7 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
       boolean isFront,
       Packages packageList) {
     this.name = name;
-    this.no = no;
+    this.id = id;
     this.pins = pins;
     this.outline = outline;
     this.outlineWidths = outlineWidths;
@@ -70,13 +70,13 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
     return this.name.compareToIgnoreCase(other.name);
   }
 
-  /** Returns the pin with the input number from this package. */
-  public Pin getPin(int no) {
-    if (no < 0 || no >= pins.length) {
-      FRLogger.warn("Package.get_pin: no out of range");
+  /** Returns the pin with the input index from this package. */
+  public Pin getPin(int pinIndex) {
+    if (pinIndex < 0 || pinIndex >= pins.length) {
+      FRLogger.warn("Package.getPin: pinIndex out of range");
       return null;
     }
-    return pins[no];
+    return pins[pinIndex];
   }
 
   /**
@@ -115,7 +115,7 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
       window.append(tm.getText("pin") + " ");
       window.append(currentPin.name);
       window.append(", " + tm.getText("padstack") + " ");
-      Padstack currentPadstack = this.packageList.padstackList.get(currentPin.padstackNo);
+      Padstack currentPadstack = this.packageList.padstackList.get(currentPin.padstackId);
       window.append(currentPadstack.name, tm.getText("padstack_info"), currentPadstack);
       window.append(" " + tm.getText("at") + " ");
       window.append(currentPin.relativeLocation.toFloat());
@@ -131,8 +131,8 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
     /** The name of the pin. */
     public final String name;
 
-    /** The number of the padstack mask of the pin. */
-    public final int padstackNo;
+    /** The ID of the padstack mask of the pin. */
+    public final int padstackId;
 
     /** The location of the pin relative to its package. */
     public final Vector relativeLocation;
@@ -141,9 +141,9 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
     public final double rotationInDegree;
 
     /** Creates a new package pin with the input coordinates relative to the package location. */
-    public Pin(String name, int padstackNo, Vector relativeLocation, double rotationInDegree) {
+    public Pin(String name, int padstackId, Vector relativeLocation, double rotationInDegree) {
       this.name = name;
-      this.padstackNo = padstackNo;
+      this.padstackId = padstackId;
       this.relativeLocation = relativeLocation;
       this.rotationInDegree = rotationInDegree;
     }

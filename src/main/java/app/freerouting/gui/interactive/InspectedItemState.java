@@ -102,8 +102,8 @@ public final class InspectedItemState extends InteractiveState {
     // collect all group numbers of the selected items
     Set<Integer> currentGroupNoSet = new TreeSet<>();
     for (Item currentItem : itemList) {
-      if (currentItem.getComponentNo() > 0) {
-        currentGroupNoSet.add(currentItem.getComponentNo());
+      if (currentItem.getComponentId() > 0) {
+        currentGroupNoSet.add(currentItem.getComponentId());
       }
     }
     Set<Item> newSelectedItems = new TreeSet<>(itemList);

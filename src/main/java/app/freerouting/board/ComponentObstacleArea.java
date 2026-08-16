@@ -19,8 +19,8 @@ public class ComponentObstacleArea extends ObstacleArea {
       double rotationInDegree,
       boolean sideChanged,
       int clearanceClassIndex,
-      int idNo,
-      int componentNo,
+      int id,
+      int componentId,
       String name,
       FixedState fixedState,
       BasicBoard board) {
@@ -32,15 +32,15 @@ public class ComponentObstacleArea extends ObstacleArea {
         sideChanged,
         new int[0],
         clearanceClassIndex,
-        idNo,
-        componentNo,
+        id,
+        componentId,
         name,
         fixedState,
         board);
   }
 
   @Override
-  public Item copy(int idNo) {
+  public Item copy(int id) {
     return new ComponentObstacleArea(
         getRelativeArea(),
         getLayer(),
@@ -48,8 +48,8 @@ public class ComponentObstacleArea extends ObstacleArea {
         getRotationInDegree(),
         getSideChanged(),
         clearanceClassIndex(),
-        idNo,
-        getComponentNo(),
+        id,
+        getComponentId(),
         this.name,
         getFixedState(),
         board);
@@ -59,7 +59,7 @@ public class ComponentObstacleArea extends ObstacleArea {
   public boolean isObstacle(Item other) {
     return other != this
         && other instanceof ComponentObstacleArea
-        && other.getComponentNo() != this.getComponentNo();
+        && other.getComponentId() != this.getComponentId();
   }
 
   @Override
@@ -77,7 +77,7 @@ public class ComponentObstacleArea extends ObstacleArea {
 
   /** IsFront. */
   public boolean isFront() {
-    Component component = board.components.get(this.getComponentNo());
+    Component component = board.components.get(this.getComponentId());
     return component == null || component.placedOnFront();
   }
 

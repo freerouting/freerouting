@@ -31,16 +31,16 @@ public class Padstacks implements Serializable {
     return null;
   }
 
-  /** Returns the padstack with the specified index. Padstack numbers start at 1. */
-  public Padstack get(int padstackNo) {
-    if (padstackNo <= 0 || padstackNo > padstacks.size()) {
+  /** Returns the padstack with the specified index. Padstack IDs start at 1. */
+  public Padstack get(int padstackId) {
+    if (padstackId <= 0 || padstackId > padstacks.size()) {
       int padstackCount = padstacks.size();
-      FRLogger.warn("Padstacks.get: 1 <= padstackNo <= " + padstackCount + " expected");
+      FRLogger.warn("Padstacks.get: 1 <= padstackId <= " + padstackCount + " expected");
       return null;
     }
-    Padstack result = padstacks.elementAt(padstackNo - 1);
-    if (result != null && result.no != padstackNo) {
-      FRLogger.warn("Padstacks.get: inconsistent padstack number");
+    Padstack result = padstacks.elementAt(padstackId - 1);
+    if (result != null && result.id != padstackId) {
+      FRLogger.warn("Padstacks.get: inconsistent padstack ID");
     }
     return result;
   }

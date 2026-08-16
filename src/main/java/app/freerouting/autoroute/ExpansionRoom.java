@@ -31,5 +31,5 @@ public interface ExpansionRoom {
   int getLayer();
 
   /** Returns a unique identification number for this expansion room. */
-  int getIdNo();
+  int getId();
 }

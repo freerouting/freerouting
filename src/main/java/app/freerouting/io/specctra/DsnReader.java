@@ -3,8 +3,8 @@ package app.freerouting.io.specctra;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
-import app.freerouting.datastructures.IdentificationNumberGenerator;
+import app.freerouting.board.ItemIdGenerator;
+import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.io.BoardMetadata;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.parser.DsnFile;
@@ -35,12 +35,10 @@ public final class DsnReader {
 
   /**
    * Convenience overload — equivalent to {@link #readBoard(InputStream, BoardObservers,
-   * IdentificationNumberGenerator, String)} with {@code null} for the design-name hint.
+   * IdGenerator, String)} with {@code null} for the design-name hint.
    */
   public static BoardReadResult readBoard(
-      InputStream inputStream,
-      BoardObservers observers,
-      IdentificationNumberGenerator idGenerator) {
+      InputStream inputStream, BoardObservers observers, IdGenerator idGenerator) {
     return readBoard(inputStream, observers, idGenerator, null);
   }
 
@@ -60,7 +58,7 @@ public final class DsnReader {
   public static BoardReadResult readBoard(
       InputStream inputStream,
       BoardObservers observers,
-      IdentificationNumberGenerator idGenerator,
+      IdGenerator idGenerator,
       String designName) {
 
     if (inputStream == null) {
@@ -73,7 +71,7 @@ public final class DsnReader {
       observers = new BoardObserverAdaptor();
     }
     if (idGenerator == null) {
-      idGenerator = new ItemIdentificationNumberGenerator();
+      idGenerator = new ItemIdGenerator();
     }
 
     SpecctraDsnStreamReader scanner = new SpecctraDsnStreamReader(inputStream);
@@ -187,7 +185,7 @@ public final class DsnReader {
     }
 
     BoardObservers observers = new BoardObserverAdaptor();
-    IdentificationNumberGenerator idGenerator = new ItemIdentificationNumberGenerator();
+    IdGenerator idGenerator = new ItemIdGenerator();
     SpecctraDsnStreamReader scanner = new SpecctraDsnStreamReader(inputStream);
 
     // -----------------------------------------------------------------------

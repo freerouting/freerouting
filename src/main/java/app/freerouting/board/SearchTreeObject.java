@@ -15,5 +15,5 @@ public interface SearchTreeObject extends ShapeTree.Storable {
   int shapeLayer(int index);
 
   /** Returns a unique identification number of this object. */
-  int getIdNo();
+  int getId();
 }

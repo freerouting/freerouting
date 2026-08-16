@@ -594,17 +594,35 @@ Branch: `refactor/naming-phase-12-clearance-index`
 
 ---
 
-### Phase 13 — Domain number & index abbreviation expansion (`*No` / `*Ind` -> `*Number` / `*Index` / `*Id`)
+### Phase 13 — ID & Index Standardization (`IdGenerator`, `ItemIdGenerator`, `*Id`, `*Index`)
 
 Branch: `refactor/naming-phase-13-id-and-indices`
 
+**Key Improvements:**
+- Rename `IdentificationNumberGenerator` ➔ `IdGenerator` (in `datastructures`) and `ItemIdentificationNumberGenerator` ➔ `ItemIdGenerator` (in `board`).
+- In `IdGenerator`: rename `newNo()` ➔ `newId()`, `maxGeneratedNo()` ➔ `maxGeneratedId()`. Clean up internal casing (`c_max_id_no` ➔ `MAX_ID`, `lastGeneratedIdNo` ➔ `lastGeneratedId`).
+- References to unique item/component/group identifiers standardized to `Id` (not `No` or `IdNumber`):
+  - `Item`: `idNo` / `getIdNo()` ➔ `id` / `getId()`, `copy(int id)`
+  - `Item` / `Pin`: `componentNo` / `getComponentNo()` ➔ `componentId` / `getComponentId()`
+  - `Item`: `groupNo` / `getGroupNo()` ➔ `groupId` / `getGroupId()`
+  - `Component`: `no` ➔ `id`
+  - `Package`: `no` ➔ `id`
+  - `Padstack`: `no` ➔ `id`
+  - `Communication`: `idNoGenerator` ➔ `idGenerator`
+  - `ReadScopeParameter`: `itemIdNoGenerator` ➔ `idGenerator`
+- Position/Array indices standardized to `Index`:
+  - `Pin`: `pinNo` / `getPinNo()` ➔ `pinIndex` / `getPinIndex()` (0-based package pin array index)
+  - Geometric indices: `cornerNo` ➔ `cornerIndex`, `shapeNo` ➔ `shapeIndex`, `lineNo` ➔ `lineIndex`
+  - Search/Graph indices: `doorNo` ➔ `doorIndex`, `sectionNo` ➔ `sectionIndex`, `treeIdNo` ➔ `treeId` / `entryId`
+
 **Progress checklist**
 
-- [ ] Item, component, and group IDs: `Item.getIdNo()` → `Item.getIdNumber()` (or `Item.getId()`), `Pin.getComponentNo()` → `getComponentNumber()`, `groupNo` → `groupNumber`.
-- [ ] Pin numbers: `Pin.pinNo` → `Pin.pinNumber`, `Package.Pin.pinNo` → `pinNumber`.
-- [ ] Geometric indices: `cornerNo` → `cornerIndex`, `shapeNo` → `shapeIndex`, `lineNo` → `lineIndex`.
-- [ ] Graph and search indices: `doorNo` → `doorIndex`, `sectionNo` → `sectionIndex`, `treeIdNo` → `treeId`.
-- [ ] Run full test suite and quality gates.
+- [x] Rename `IdentificationNumberGenerator` ➔ `IdGenerator` and `ItemIdentificationNumberGenerator` ➔ `ItemIdGenerator` with `newId()`, `maxGeneratedId()`, and clean internal naming (`MAX_ID`, `lastGeneratedId`).
+- [x] Standardize Item, Component, Group, Package, and Padstack IDs to `id` / `getId()` / `componentId` / `groupId`.
+- [x] Standardize Pin array index in components/packages to `pinIndex` / `getPinIndex()`.
+- [x] Standardize geometric and search indices (`cornerIndex`, `shapeIndex`, `lineIndex`, `doorIndex`, `sectionIndex`, `treeId`, `entryId`).
+- [x] Update `Communication.idGenerator`, `ReadScopeParameter.idGenerator`, and all readers/parsers/controllers.
+- [x] Run full test suite (`./gradlew check`) and quality gates (`spotlessCheck`, `checkstyle*`).
 
 ---
 

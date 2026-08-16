@@ -37,8 +37,8 @@ public class BoardOutline extends Item implements Serializable {
   private boolean keepoutOutsideOutline;
 
   /** Creates a new instance of BoardOutline. */
-  public BoardOutline(PolylineShape[] shapes, int clearanceClassIndex, int idNo, BasicBoard board) {
-    super(new int[0], clearanceClassIndex, idNo, 0, FixedState.SYSTEM_FIXED, board);
+  public BoardOutline(PolylineShape[] shapes, int clearanceClassIndex, int id, BasicBoard board) {
+    super(new int[0], clearanceClassIndex, id, 0, FixedState.SYSTEM_FIXED, board);
     this.shapes = shapes;
   }
 
@@ -190,8 +190,8 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   @Override
-  public Item copy(int idNo) {
-    return new BoardOutline(this.shapes, this.clearanceClassIndex(), idNo, this.board);
+  public Item copy(int id) {
+    return new BoardOutline(this.shapes, this.clearanceClassIndex(), id, this.board);
   }
 
   @Override

@@ -50,8 +50,8 @@ public class Line implements Comparable<Line>, Serializable {
   }
 
   /** Returns true if this and ob define the same line. */
-  public int getIdNo() {
-    return 31 * a.getIdNo() + b.getIdNo();
+  public int getId() {
+    return 31 * a.getId() + b.getId();
   }
 
   @Override

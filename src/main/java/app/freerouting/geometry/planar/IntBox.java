@@ -243,8 +243,9 @@ public class IntBox extends RegularTileShape implements Serializable {
     return this;
   }
 
-  public int getIdNo() {
-    return 31 * ll.getIdNo() + ur.getIdNo();
+  @Override
+  public int getId() {
+    return 31 * ll.getId() + ur.getId();
   }
 
   @Override

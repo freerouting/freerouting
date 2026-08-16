@@ -10,16 +10,16 @@ import java.util.Locale;
 public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
 
   public final String name;
-  public final int no;
+  public final int id;
   private final PartPin[] partPinArr;
 
   /**
-   * Creates a new instance of LogicalPart. The part pins are sorted by pinNo. The pinNo's of the
-   * part pins must be the same number as in the components' library package.
+   * Creates a new instance of LogicalPart. The part pins are sorted by pinIndex. The pinIndex's of
+   * the part pins must be the same index as in the components' library package.
    */
-  public LogicalPart(String name, int no, PartPin[] partPinArr) {
+  public LogicalPart(String name, int id, PartPin[] partPinArr) {
     this.name = name;
-    this.no = no;
+    this.id = id;
     this.partPinArr = partPinArr;
   }
 
@@ -28,13 +28,13 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
     return partPinArr.length;
   }
 
-  /** Returns the pin with the specified index. Pin numbers range from 0 to pinCount - 1. */
-  public PartPin getPin(int no) {
-    if (no < 0 || no >= partPinArr.length) {
-      FRLogger.warn("LogicalPart.get_pin: no out of range");
+  /** Returns the pin with the specified index. Pin indices range from 0 to pinCount - 1. */
+  public PartPin getPin(int pinIndex) {
+    if (pinIndex < 0 || pinIndex >= partPinArr.length) {
+      FRLogger.warn("LogicalPart.getPin: pinIndex out of range");
       return null;
     }
-    return partPinArr[no];
+    return partPinArr[pinIndex];
   }
 
   @Override
@@ -67,8 +67,8 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
   /** Describes a pin belonging to a logical part. */
   public static class PartPin implements Comparable<PartPin>, Serializable {
 
-    /** The number of the part pin. Must be the same number as in the components library package. */
-    public final int pinNo;
+    /** The index of the part pin. Must be the same index as in the components library package. */
+    public final int pinIndex;
 
     /** The name of the part pin. Must be the same name as in the components library package. */
     public final String pinName;
@@ -93,13 +93,13 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
 
     /** Creates a part pin with its gate and swap metadata. */
     public PartPin(
-        int pinNo,
+        int pinIndex,
         String pinName,
         String gateName,
         int gateSwapCode,
         String gatePinName,
         int gatePinSwapCode) {
-      this.pinNo = pinNo;
+      this.pinIndex = pinIndex;
       this.pinName = pinName;
       this.gateName = gateName;
       this.gateSwapCode = gateSwapCode;
@@ -109,7 +109,7 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
 
     @Override
     public int compareTo(PartPin other) {
-      return this.pinNo - other.pinNo;
+      return this.pinIndex - other.pinIndex;
     }
   }
 }

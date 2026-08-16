@@ -122,7 +122,7 @@ public class Structure extends ScopeKeyword {
       if (!(currentObject instanceof ObstacleArea currentKeepout)) {
         continue;
       }
-      if (currentKeepout.getComponentNo() != 0) {
+      if (currentKeepout.getComponentId() != 0) {
         // keepouts belonging to a component are not written individually.
         continue;
       }
@@ -1246,7 +1246,7 @@ public class Structure extends ScopeKeyword {
             scopeParameter.resolution,
             specctraParserInfo,
             scopeParameter.coordinateTransform,
-            scopeParameter.itemIdNoGenerator,
+            scopeParameter.idGenerator,
             scopeParameter.observers);
 
     if (boardCommunication.hostIsOldKicad()) {

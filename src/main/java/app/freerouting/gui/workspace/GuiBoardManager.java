@@ -18,7 +18,7 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.SearchTreeManager;
 import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.datastructures.IdentificationNumberGenerator;
+import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -2350,28 +2350,22 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    *
    * @param inputStream the stream containing the DSN data
    * @param boardObservers observers to be notified of board changes
-   * @param identificationNumberGenerator generator for assigning unique IDs to board items
+   * @param idGenerator generator for assigning unique IDs to board items
    * @return the result of the load operation including success status and any warnings
    * @see HeadlessBoardManager#loadFromSpecctraDsn
    */
   @Override
   public BoardReadResult loadFromSpecctraDsn(
-      InputStream inputStream,
-      BoardObservers boardObservers,
-      IdentificationNumberGenerator identificationNumberGenerator) {
-    var result =
-        super.loadFromSpecctraDsn(inputStream, boardObservers, identificationNumberGenerator);
+      InputStream inputStream, BoardObservers boardObservers, IdGenerator idGenerator) {
+    var result = super.loadFromSpecctraDsn(inputStream, boardObservers, idGenerator);
     scheduleGuiRefreshAfterLoad(result);
     return result;
   }
 
   @Override
   public BoardReadResult loadFromKiCadJson(
-      InputStream inputStream,
-      BoardObservers boardObservers,
-      IdentificationNumberGenerator identificationNumberGenerator) {
-    var result =
-        super.loadFromKiCadJson(inputStream, boardObservers, identificationNumberGenerator);
+      InputStream inputStream, BoardObservers boardObservers, IdGenerator idGenerator) {
+    var result = super.loadFromKiCadJson(inputStream, boardObservers, idGenerator);
     scheduleGuiRefreshAfterLoad(result);
     return result;
   }

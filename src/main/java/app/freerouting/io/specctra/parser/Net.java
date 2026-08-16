@@ -55,12 +55,12 @@ public class Net {
 
   public static void writePin(WriteScopeParameter scopeParameter, app.freerouting.board.Pin pin)
       throws IOException {
-    Component currentComponent = scopeParameter.board.components.get(pin.getComponentNo());
+    Component currentComponent = scopeParameter.board.components.get(pin.getComponentId());
     if (currentComponent == null) {
       FRLogger.warn("Net.write_scope: component not found at '" + currentComponent.name + "'");
       return;
     }
-    Package.Pin libPin = currentComponent.getPackage().getPin(pin.getIndexInPackage());
+    Package.Pin libPin = currentComponent.getPackage().getPin(pin.getPinIndex());
     if (libPin == null) {
       FRLogger.warn("Net.write_scope:  pin number out of range at '" + currentComponent.name + "'");
       return;

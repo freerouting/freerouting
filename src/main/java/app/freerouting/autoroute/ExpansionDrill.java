@@ -117,9 +117,9 @@ public class ExpansionDrill implements ExpandableObject {
   }
 
   @Override
-  public int getIdNo() {
+  public int getId() {
     // Stable hash of location and layers
-    return 31 * (31 * location.getIdNo() + firstLayer) + lastLayer;
+    return 31 * (31 * location.getId() + firstLayer) + lastLayer;
   }
 
   /** Emits the shape of this drill for an optional diagnostic consumer. */

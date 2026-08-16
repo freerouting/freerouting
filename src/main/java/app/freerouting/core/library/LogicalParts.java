@@ -29,11 +29,11 @@ public class LogicalParts implements Serializable {
     return null;
   }
 
-  /** Returns the logical part with the specified index. Part numbers start at 1. */
-  public LogicalPart get(int partNo) {
-    LogicalPart result = partArr.elementAt(partNo - 1);
-    if (result != null && result.no != partNo) {
-      FRLogger.warn("LogicalParts.get: inconsistent part number");
+  /** Returns the logical part with the specified index. Part IDs start at 1. */
+  public LogicalPart get(int partId) {
+    LogicalPart result = partArr.elementAt(partId - 1);
+    if (result != null && result.id != partId) {
+      FRLogger.warn("LogicalParts.get: inconsistent part ID");
     }
     return result;
   }

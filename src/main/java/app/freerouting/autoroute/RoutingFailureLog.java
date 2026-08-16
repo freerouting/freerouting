@@ -37,7 +37,7 @@ public class RoutingFailureLog implements Serializable {
     }
 
     failures.compute(
-        item.getIdNo(),
+        item.getId(),
         (key, existing) -> {
           if (existing == null) {
             existing = new ItemFailureInfo(item);
@@ -58,7 +58,7 @@ public class RoutingFailureLog implements Serializable {
       return false;
     }
 
-    ItemFailureInfo info = failures.get(item.getIdNo());
+    ItemFailureInfo info = failures.get(item.getId());
     return info != null && info.shouldGiveUp();
   }
 
@@ -96,7 +96,7 @@ public class RoutingFailureLog implements Serializable {
     if (item == null) {
       return 0;
     }
-    ItemFailureInfo info = failures.get(item.getIdNo());
+    ItemFailureInfo info = failures.get(item.getId());
     return info != null ? info.failureCount : 0;
   }
 

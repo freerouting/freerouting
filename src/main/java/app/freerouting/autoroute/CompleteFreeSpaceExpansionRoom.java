@@ -95,7 +95,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   }
 
   @Override
-  public int getIdNo() {
+  public int getId() {
     return idNo;
   }
 

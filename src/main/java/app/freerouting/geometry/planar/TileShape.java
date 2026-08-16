@@ -74,7 +74,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   public abstract TileShape simplify();
 
   /** Returns a unique ID for this shape for deterministic tie-breaking. */
-  public abstract int getIdNo();
+  public abstract int getId();
 
   /** Checks if this TileShape is an IntBox or can be converted into an IntBox. */
   public abstract boolean isIntBox();
@@ -868,16 +868,16 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     int intersectionCount = 0;
     int prevIntersectionLineNo = -1;
     int prevIntersectionEdgeNo = -1;
-    for (int lineNo = 1; lineNo < polyline.lines.length - 1; lineNo++) {
-      LineSegment currentLineSeg = new LineSegment(polyline, lineNo);
+    for (int lineIndex = 1; lineIndex < polyline.lines.length - 1; lineIndex++) {
+      LineSegment currentLineSeg = new LineSegment(polyline, lineIndex);
       int[] currentIntersections = currentLineSeg.borderIntersections(this);
       for (int i = 0; i < currentIntersections.length; i++) {
         int edgeIndex = currentIntersections[i];
-        if (lineNo != prevIntersectionLineNo || edgeIndex != prevIntersectionEdgeNo) {
-          result[intersectionCount][0] = lineNo;
+        if (lineIndex != prevIntersectionLineNo || edgeIndex != prevIntersectionEdgeNo) {
+          result[intersectionCount][0] = lineIndex;
           result[intersectionCount][1] = edgeIndex;
           ++intersectionCount;
-          prevIntersectionLineNo = lineNo;
+          prevIntersectionLineNo = lineIndex;
           prevIntersectionEdgeNo = edgeIndex;
         }
       }

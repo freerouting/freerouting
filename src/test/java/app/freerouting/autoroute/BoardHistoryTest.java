@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.board.BoardObserverAdaptor;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.ItemIdGenerator;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.io.BoardReadResult;
@@ -32,7 +32,7 @@ class BoardHistoryTest {
     try (FileInputStream inputStream1 = new FileInputStream("fixtures/empty_board.dsn")) {
       BoardReadResult result1 =
           boardManager1.loadFromSpecctraDsn(
-              inputStream1, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
+              inputStream1, new BoardObserverAdaptor(), new ItemIdGenerator());
       board1 = boardManager1.getRoutingBoard();
     }
 
@@ -41,7 +41,7 @@ class BoardHistoryTest {
     try (FileInputStream inputStream2 =
         new FileInputStream("fixtures/Issue159-setonix_2hp-pcb.dsn")) {
       boardManager2.loadFromSpecctraDsn(
-          inputStream2, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
+          inputStream2, new BoardObserverAdaptor(), new ItemIdGenerator());
       board2 = boardManager2.getRoutingBoard();
     }
 

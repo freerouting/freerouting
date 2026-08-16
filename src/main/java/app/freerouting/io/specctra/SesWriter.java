@@ -129,7 +129,7 @@ public final class SesWriter {
         // check that not all items of the component are deleted
         boolean undeletedItemFound = false;
         for (Item currentItem : boardItems) {
-          if (currentItem.getComponentNo() == currentComponent.no) {
+          if (currentItem.getComponentId() == currentComponent.id) {
             undeletedItemFound = true;
             break;
           }
@@ -191,22 +191,22 @@ public final class SesWriter {
         file.newLine();
         file.write("(pins ");
         app.freerouting.board.Component currentCmp =
-            board.components.get(currentPin.getComponentNo());
+            board.components.get(currentPin.getComponentId());
         if (currentCmp != null) {
           identifierType.write(currentCmp.name, file);
           file.write("-");
-          Package.Pin packagePin = currentCmp.getPackage().getPin(currentPin.getIndexInPackage());
+          Package.Pin packagePin = currentCmp.getPackage().getPin(currentPin.getPinIndex());
           identifierType.write(packagePin.name, file);
         } else {
           FRLogger.warn("SesWriter.writeWasIs: component not found");
         }
         file.write(" ");
         app.freerouting.board.Component swapCmp =
-            board.components.get(swappedWith.getComponentNo());
+            board.components.get(swappedWith.getComponentId());
         if (swapCmp != null) {
           identifierType.write(swapCmp.name, file);
           file.write("-");
-          Package.Pin packagePin = swapCmp.getPackage().getPin(swappedWith.getIndexInPackage());
+          Package.Pin packagePin = swapCmp.getPackage().getPin(swappedWith.getPinIndex());
           identifierType.write(packagePin.name, file);
         } else {
           FRLogger.warn("SesWriter.writeWasIs: component not found");

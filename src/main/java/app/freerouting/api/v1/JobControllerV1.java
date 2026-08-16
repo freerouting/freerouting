@@ -5,7 +5,7 @@ import static app.freerouting.util.gson.GsonProvider.GSON;
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.api.BaseController;
 import app.freerouting.api.dto.BoardFilePayload;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.ItemIdGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
@@ -1382,11 +1382,9 @@ public class JobControllerV1 extends BaseController {
         try {
           HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
           if (job.input.format == FileFormat.KICAD_DESIGN_JSON) {
-            boardManager.loadFromKiCadJson(
-                job.input.getData(), null, new ItemIdentificationNumberGenerator());
+            boardManager.loadFromKiCadJson(job.input.getData(), null, new ItemIdGenerator());
           } else {
-            boardManager.loadFromSpecctraDsn(
-                job.input.getData(), null, new ItemIdentificationNumberGenerator());
+            boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdGenerator());
           }
           job.board = boardManager.getRoutingBoard();
         } catch (Exception e) {

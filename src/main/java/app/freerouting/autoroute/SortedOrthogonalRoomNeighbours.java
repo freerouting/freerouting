@@ -134,8 +134,7 @@ public final class SortedOrthogonalRoomNeighbours {
         .sort(
             (e1, e2) -> {
               int idDiff =
-                  ((SearchTreeObject) e1.object).getIdNo()
-                      - ((SearchTreeObject) e2.object).getIdNo();
+                  ((SearchTreeObject) e1.object).getId() - ((SearchTreeObject) e2.object).getId();
               if (idDiff != 0) {
                 return idDiff;
               }
@@ -719,7 +718,7 @@ public final class SortedOrthogonalRoomNeighbours {
       }
       if (cmpValue == 0) {
         // Deterministic tie-breaker for identical geometry
-        cmpValue = this.searchTreeObject.getIdNo() - other.searchTreeObject.getIdNo();
+        cmpValue = this.searchTreeObject.getId() - other.searchTreeObject.getId();
       }
       return cmpValue;
     }

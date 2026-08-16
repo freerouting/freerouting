@@ -26,11 +26,11 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       int halfWidth,
       int[] netNumbers,
       int clearanceClassIndex,
-      int idNo,
-      int groupNo,
+      int id,
+      int groupId,
       FixedState fixedState,
       BasicBoard board) {
-    super(netNumbers, clearanceClassIndex, idNo, groupNo, fixedState, board);
+    super(netNumbers, clearanceClassIndex, id, groupId, fixedState, board);
     this.halfWidth = halfWidth;
     layer = Math.max(layer, 0);
     if (board != null) {
@@ -72,7 +72,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
 
   /**
    * Returns the half with enlarged by the clearance compensation value for the tree with id number
-   * treeIdNo Equals get_half_width(), if no clearance compensation is used in this tree.
+   * treeId Equals get_half_width(), if no clearance compensation is used in this tree.
    */
   public int getCompensatedHalfWidth(ShapeSearchTree searchTree) {
     return this.halfWidth
@@ -267,18 +267,18 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       if (debugNet49) {
         FRLogger.trace(
             "compare_trace_is_cycle_overlap net=49, id="
-                + this.getIdNo()
+                + this.getId()
                 + ", first="
                 + this.firstCorner()
                 + ", last="
                 + this.lastCorner()
                 + ", startContacts="
                 + this.getStartContacts().stream()
-                    .map(i -> i.getIdNo() + "")
+                    .map(i -> i.getId() + "")
                     .collect(java.util.stream.Collectors.joining(","))
                 + ", endContacts="
                 + this.getEndContacts().stream()
-                    .map(i -> i.getIdNo() + "")
+                    .map(i -> i.getId() + "")
                     .collect(java.util.stream.Collectors.joining(",")));
       }
       return true;
@@ -302,17 +302,17 @@ public abstract class Trace extends Item implements Connectable, Serializable {
         if (debugNet49) {
           FRLogger.trace(
               "compare_trace_is_cycle_dfs net=49, id="
-                  + this.getIdNo()
+                  + this.getId()
                   + ", first="
                   + this.firstCorner()
                   + ", last="
                   + this.lastCorner()
                   + ", startContacts="
                   + startContacts.stream()
-                      .map(i -> i.getIdNo() + "")
+                      .map(i -> i.getId() + "")
                       .collect(java.util.stream.Collectors.joining(","))
                   + ", found_via="
-                  + currentContact.getIdNo());
+                  + currentContact.getId());
         }
         return true;
       }

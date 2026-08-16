@@ -51,11 +51,11 @@ public class Packages implements Serializable {
     return otherSidePackage;
   }
 
-  /** Returns the package with the specified index. Package numbers start at 1. */
-  public Package get(int packageNo) {
-    Package result = packages.elementAt(packageNo - 1);
-    if (result != null && result.no != packageNo) {
-      FRLogger.warn("Padstacks.get: inconsistent padstack number");
+  /** Returns the package with the specified ID. Package IDs start at 1. */
+  public Package get(int packageId) {
+    Package result = packages.elementAt(packageId - 1);
+    if (result != null && result.id != packageId) {
+      FRLogger.warn("Packages.get: inconsistent package ID");
     }
     return result;
   }

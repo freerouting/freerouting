@@ -4,7 +4,7 @@ import app.freerouting.Freerouting;
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.ItemIdGenerator;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
@@ -423,13 +423,12 @@ public class BoardFrame extends WindowBase {
       byte[] fileContent, FileFormat format, String filename) {
     try (InputStream inputStream = new ByteArrayInputStream(fileContent)) {
       if (format == FileFormat.DSN) {
-        return DsnReader.readBoard(
-            inputStream, null, new ItemIdentificationNumberGenerator(), filename);
+        return DsnReader.readBoard(inputStream, null, new ItemIdGenerator(), filename);
       }
       if (format == FileFormat.KICAD_DESIGN_JSON) {
         try (java.io.Reader reader =
             new java.io.InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-          return KiCadJsonReader.readBoard(reader, null, new ItemIdentificationNumberGenerator());
+          return KiCadJsonReader.readBoard(reader, null, new ItemIdGenerator());
         }
       }
       throw new IllegalArgumentException("Unsupported format for async load: " + format);
@@ -958,11 +957,11 @@ public class BoardFrame extends WindowBase {
       if (format == FileFormat.KICAD_DESIGN_JSON) {
         readResult =
             boardPanel.boardHandling.loadFromKiCadJson(
-                inputStream, this.boardObservers, new ItemIdentificationNumberGenerator());
+                inputStream, this.boardObservers, new ItemIdGenerator());
       } else {
         readResult =
             boardPanel.boardHandling.loadFromSpecctraDsn(
-                inputStream, this.boardObservers, new ItemIdentificationNumberGenerator());
+                inputStream, this.boardObservers, new ItemIdGenerator());
       }
 
       // If the file was read successfully, initialize the windows

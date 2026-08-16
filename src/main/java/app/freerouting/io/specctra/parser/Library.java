@@ -242,7 +242,7 @@ public class Library extends ScopeKeyword {
       if (!pin1.name.equals(pin2.name)) {
         return false;
       }
-      if (pin1.padstackNo != pin2.padstackNo) {
+      if (pin1.padstackId != pin2.padstackId) {
         return false;
       }
       app.freerouting.geometry.planar.FloatPoint loc1 = pin1.relativeLocation.toFloat();
@@ -333,7 +333,7 @@ public class Library extends ScopeKeyword {
         }
         pins[i] =
             new app.freerouting.core.library.Package.Pin(
-                pinInfo.pinName, boardPadstack.no, relCoor, pinInfo.rotation);
+                pinInfo.pinName, boardPadstack.id, relCoor, pinInfo.rotation);
       }
       app.freerouting.geometry.planar.Shape[] outlines =
           new app.freerouting.geometry.planar.Shape[currentPackage.outline.size()];

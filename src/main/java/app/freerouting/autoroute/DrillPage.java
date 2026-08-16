@@ -182,8 +182,8 @@ class DrillPage implements ExpandableObject {
   }
 
   @Override
-  public int getIdNo() {
+  public int getId() {
     // Stable hash of shape and netNumber
-    return 31 * shape.getIdNo() + netNumber;
+    return 31 * shape.getId() + netNumber;
   }
 }

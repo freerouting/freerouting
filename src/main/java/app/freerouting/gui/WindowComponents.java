@@ -46,8 +46,8 @@ public class WindowComponents extends WindowObjectListWithFilter {
     Set<Item> selectedItems = new TreeSet<>();
     Collection<Item> boardItems = routingBoard.getItems();
     for (Item currentItem : boardItems) {
-      if (currentItem.getComponentNo() > 0) {
-        Component currentComponent = routingBoard.components.get(currentItem.getComponentNo());
+      if (currentItem.getComponentId() > 0) {
+        Component currentComponent = routingBoard.components.get(currentItem.getComponentId());
         boolean componentMatches = false;
         for (int i = 0; i < selectedComponents.size(); i++) {
           if (currentComponent == selectedComponents.get(i)) {

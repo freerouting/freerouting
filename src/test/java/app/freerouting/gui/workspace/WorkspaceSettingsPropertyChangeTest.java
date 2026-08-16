@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import app.freerouting.board.BoardObserverAdaptor;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.ItemIdGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.RouterSettings;
@@ -40,9 +40,7 @@ class WorkspaceSettingsPropertyChangeTest {
     RoutingJob job = new RoutingJob();
     HeadlessBoardManager manager = new HeadlessBoardManager(job);
     manager.loadFromSpecctraDsn(
-        new FileInputStream(TEST_DSN),
-        new BoardObserverAdaptor(),
-        new ItemIdentificationNumberGenerator());
+        new FileInputStream(TEST_DSN), new BoardObserverAdaptor(), new ItemIdGenerator());
     // Reset so the GUI singleton is created against the real board.
     settings = WorkspaceSettings.reset(manager.getRoutingBoard());
   }

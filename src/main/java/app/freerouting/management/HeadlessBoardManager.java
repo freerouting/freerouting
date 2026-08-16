@@ -11,7 +11,7 @@ import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.datastructures.IdentificationNumberGenerator;
+import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.workspace.WorkspaceSettings;
@@ -161,7 +161,7 @@ public class HeadlessBoardManager implements BoardManager {
    * operations.
    *
    * @param routingJob the routing job context that will orchestrate routing operations
-   * @see #loadFromSpecctraDsn(InputStream, BoardObservers, IdentificationNumberGenerator)
+   * @see #loadFromSpecctraDsn(InputStream, BoardObservers, IdGenerator)
    * @see #createBoard
    */
   public HeadlessBoardManager(RoutingJob routingJob) {
@@ -413,7 +413,7 @@ public class HeadlessBoardManager implements BoardManager {
       app.freerouting.board.ObstacleArea keepout = (app.freerouting.board.ObstacleArea) item;
       // Package keepouts belong to a component; a circular one is a drilled hole in the
       // footprint (the only way KiCad expresses NPTH in DSN).
-      if (keepout.getComponentNo() > 0
+      if (keepout.getComponentId() > 0
           && keepout.getArea() instanceof app.freerouting.geometry.planar.Circle) {
         holeKeepouts.add(keepout);
       }
@@ -637,9 +637,8 @@ public class HeadlessBoardManager implements BoardManager {
    *   <li>Send analytics about the loaded board
    * </ol>
    *
-   * <p><strong>Integration Parameters:</strong> The {@code boardObservers} and {@code
-   * identificationNumberGenerator} parameters support embedding Freerouting into host CAD systems,
-   * allowing:
+   * <p><strong>Integration Parameters:</strong> The {@code boardObservers} and {@code idGenerator}
+   * parameters support embedding Freerouting into host CAD systems, allowing:
    *
    * <ul>
    *   <li>Real-time synchronization of board changes with the host
@@ -663,15 +662,13 @@ public class HeadlessBoardManager implements BoardManager {
    * @param inputStream the input stream containing DSN file data (will be closed after reading)
    * @param boardObservers optional observers for board item changes (can be null for standalone
    *     use)
-   * @param identificationNumberGenerator optional ID generator for board items (can be null)
+   * @param idGenerator optional ID generator for board items (can be null)
    * @return the read result indicating success, warnings, or errors
    * @see app.freerouting.io.specctra.DsnReader#readBoard
    * @see BoardObservers
    */
   public BoardReadResult loadFromSpecctraDsn(
-      InputStream inputStream,
-      BoardObservers boardObservers,
-      IdentificationNumberGenerator identificationNumberGenerator) {
+      InputStream inputStream, BoardObservers boardObservers, IdGenerator idGenerator) {
     if (inputStream == null) {
       return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));
     }
@@ -693,8 +690,7 @@ public class HeadlessBoardManager implements BoardManager {
                 + "...");
       }
       BoardReadResult dsnResult =
-          DsnReader.readBoard(
-              inputStream, boardObservers, identificationNumberGenerator, inputFilename);
+          DsnReader.readBoard(inputStream, boardObservers, idGenerator, inputFilename);
 
       applyParsedBoardResult(dsnResult, inputFilename, "DSN");
       return dsnResult;
@@ -789,13 +785,11 @@ public class HeadlessBoardManager implements BoardManager {
    *
    * @param inputStream the input stream containing KiCad JSON data (will be closed after reading)
    * @param boardObservers optional observers for board item changes (can be null)
-   * @param identificationNumberGenerator optional ID generator for board items (can be null)
+   * @param idGenerator optional ID generator for board items (can be null)
    * @return the read result indicating success, warnings, or errors
    */
   public BoardReadResult loadFromKiCadJson(
-      InputStream inputStream,
-      BoardObservers boardObservers,
-      IdentificationNumberGenerator identificationNumberGenerator) {
+      InputStream inputStream, BoardObservers boardObservers, IdGenerator idGenerator) {
     if (inputStream == null) {
       return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));
     }
@@ -814,8 +808,7 @@ public class HeadlessBoardManager implements BoardManager {
 
     try (java.io.Reader reader =
         new java.io.InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)) {
-      BoardReadResult dsnResult =
-          KiCadJsonReader.readBoard(reader, boardObservers, identificationNumberGenerator);
+      BoardReadResult dsnResult = KiCadJsonReader.readBoard(reader, boardObservers, idGenerator);
       applyParsedBoardResult(dsnResult, inputFilename, "KICAD_JSON");
       return dsnResult;
 
@@ -963,12 +956,12 @@ public class HeadlessBoardManager implements BoardManager {
                       + layer.name
                       + "' has overlapping conduction areas: "
                       + "Area (ID "
-                      + layerAreas.get(j).getIdNo()
+                      + layerAreas.get(j).getId()
                       + ", Net(s): ["
                       + nets1
                       + "]) and "
                       + "Area (ID "
-                      + layerAreas.get(k).getIdNo()
+                      + layerAreas.get(k).getId()
                       + ", Net(s): ["
                       + nets2
                       + "]) overlap.");

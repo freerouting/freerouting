@@ -89,7 +89,7 @@ public abstract class DragState extends InteractiveState {
         continue; // traces are not moved
       }
       if (!boardHandling.getWorkspaceSettings().getDragComponentsEnabled()
-          && currentItem.getComponentNo() != 0) {
+          && currentItem.getComponentId() != 0) {
         continue;
       }
       itemToMove = currentItem;

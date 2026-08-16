@@ -96,7 +96,7 @@ public class Component extends ScopeKeyword {
       FRLogger.warn("Component.write_pin_info: package pin not found at '" + component.name + "'");
       return;
     }
-    Pin componentPin = scopeParameter.board.getPin(component.no, pinNo);
+    Pin componentPin = scopeParameter.board.getPin(component.id, pinNo);
     if (componentPin == null) {
       FRLogger.warn(
           "Component.write_pin_info: component pin not found at '" + component.name + "'");
@@ -139,7 +139,7 @@ public class Component extends ScopeKeyword {
       for (int i = 0; i < currentKeepoutArr.length; i++) {
         Package.Keepout currentKeepout = currentKeepoutArr[i];
         ObstacleArea currentObstacleArea =
-            getKeepout(scopeParameter.board, component.no, currentKeepout.name);
+            getKeepout(scopeParameter.board, component.id, currentKeepout.name);
         if (currentObstacleArea == null || currentObstacleArea.clearanceClassIndex() == 0) {
           continue;
         }
@@ -170,7 +170,7 @@ public class Component extends ScopeKeyword {
       if (currentItem == null) {
         break;
       }
-      if (currentItem.getComponentNo() == componentNo
+      if (currentItem.getComponentId() == componentNo
           && currentItem instanceof ObstacleArea currentArea) {
         if (currentArea.name != null && currentArea.name.equals(name)) {
           return currentArea;

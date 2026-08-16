@@ -702,7 +702,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               + ", to="
               + toCorner
               + ", idMax="
-              + communication.idNoGenerator.maxGeneratedNo());
+              + communication.idGenerator.maxGeneratedId());
     }
     if (pickedItems.size() == 1) {
       Trace currentPickedTrace = (Trace) pickedItems.iterator().next();
@@ -757,7 +757,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             compensatedHalfWidth, startShapeNo, combinedPolyline.lines.length - 1);
     int lastShapeNo = traceShapes.length;
     boolean orthogonalMode = rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE;
-    int idBeforeShoveLoop = communication.idNoGenerator.maxGeneratedNo();
+    int idBeforeShoveLoop = communication.idGenerator.maxGeneratedId();
     for (int i = 0; i < traceShapes.length; i++) {
       TileShape currentTraceShape = traceShapes[i];
       if (orthogonalMode) {
@@ -786,7 +786,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           break;
         }
       }
-      int idBeforeShove = communication.idNoGenerator.maxGeneratedNo();
+      int idBeforeShove = communication.idGenerator.maxGeneratedId();
       boolean insertOk =
           shoveTraceAlgo.insert(
               currentTraceShape,
@@ -798,7 +798,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               maxRecursionDepth,
               maxViaRecursionDepth,
               maxSpringOverRecursionDepth);
-      int idAfterShove = communication.idNoGenerator.maxGeneratedNo();
+      int idAfterShove = communication.idGenerator.maxGeneratedId();
       if (netNumbers != null && netNumbers.length > 0) {
         FRLogger.trace(
             "compare_trace_shove_shape net="
@@ -822,13 +822,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           "compare_trace_insert_forced_sub net="
               + netNumbers[0]
               + ", step=after_shove_loop, shoveLoopDelta="
-              + (communication.idNoGenerator.maxGeneratedNo() - idBeforeShoveLoop)
+              + (communication.idGenerator.maxGeneratedId() - idBeforeShoveLoop)
               + ", lastShapeNo="
               + lastShapeNo
               + ", traceShapes.length="
               + traceShapes.length
               + ", idMax="
-              + communication.idNoGenerator.maxGeneratedNo());
+              + communication.idGenerator.maxGeneratedId());
     }
     if (lastShapeNo < traceShapes.length) {
       // the shove with index lastShapeNo failed.
@@ -922,7 +922,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
                       ? "null"
                       : shoveFailingObstacle.getClass().getSimpleName()
                           + "#"
-                          + shoveFailingObstacle.getIdNo()),
+                          + shoveFailingObstacle.getId()),
               new Point[] {fromCorner, toCorner});
         }
         return fromCorner;
@@ -947,13 +947,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     for (int i = 0; i < newPolyline.cornerCount(); i++) {
       joinChangedArea(newPolyline.cornerApprox(i), layer);
     }
-    int idBeforeInsert = communication.idNoGenerator.maxGeneratedNo();
+    int idBeforeInsert = communication.idGenerator.maxGeneratedId();
     PolylineTrace newTrace =
         insertTraceWithoutCleaning(
             newPolyline, layer, halfWidth, netNumbers, clearanceClassIndex, FixedState.UNFIXED);
-    int idAfterInsert = communication.idNoGenerator.maxGeneratedNo();
+    int idAfterInsert = communication.idGenerator.maxGeneratedId();
     boolean combineResult = newTrace.combine();
-    int idAfterCombine = communication.idNoGenerator.maxGeneratedNo();
+    int idAfterCombine = communication.idGenerator.maxGeneratedId();
     if (netNumbers != null && netNumbers.length > 0) {
       FRLogger.trace(
           "compare_trace_insert_forced_sub net="
@@ -986,9 +986,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     try {
       // Remove evtl. generated cycles because otherwise pullTight may not work
       // correctly.
-      int idBeforeNorm = communication.idNoGenerator.maxGeneratedNo();
+      int idBeforeNorm = communication.idGenerator.maxGeneratedId();
       boolean normalizeResult = newTrace != null && newTrace.normalize(changedArea.getArea(layer));
-      int idAfterNorm = communication.idNoGenerator.maxGeneratedNo();
+      int idAfterNorm = communication.idGenerator.maxGeneratedId();
       if (netNumbers != null && netNumbers.length > 0) {
         FRLogger.trace(
             "compare_trace_insert_forced_sub net="
@@ -1004,9 +1004,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       }
       if (normalizeResult) {
 
-        int idBeforeSplit = communication.idNoGenerator.maxGeneratedNo();
+        int idBeforeSplit = communication.idGenerator.maxGeneratedId();
         pullTightAlgo.splitTracesAtKeepPoint();
-        int idAfterSplit = communication.idNoGenerator.maxGeneratedNo();
+        int idAfterSplit = communication.idGenerator.maxGeneratedId();
         if (netNumbers != null && netNumbers.length > 0) {
           FRLogger.trace(
               "compare_trace_insert_forced_sub net="
@@ -1241,7 +1241,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       ctrlSettings.viaRule = combinedViaRule;
       ctrlSettings.rebuildViaInfo(this, routerSettings.getViaCosts(), pinNetNo);
     }
-    Component pinComponent = this.components.get(pin.getComponentNo());
+    Component pinComponent = this.components.get(pin.getComponentId());
     if (pinComponent != null && pin.name() != null) {
       ctrlSettings.fanoutStartPinName = pinComponent.name + "-" + pin.name();
     } else {

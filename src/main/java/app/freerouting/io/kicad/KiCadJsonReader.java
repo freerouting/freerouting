@@ -6,7 +6,7 @@ import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
 import app.freerouting.board.Component;
 import app.freerouting.board.FixedState;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.ItemIdGenerator;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.RoutingBoard;
@@ -15,7 +15,7 @@ import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Packages;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.core.library.Padstacks;
-import app.freerouting.datastructures.IdentificationNumberGenerator;
+import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
@@ -59,7 +59,7 @@ public final class KiCadJsonReader {
    * BoardReadResult.
    */
   public static BoardReadResult readBoard(
-      Reader reader, BoardObservers observers, IdentificationNumberGenerator idGenerator) {
+      Reader reader, BoardObservers observers, IdGenerator idGenerator) {
 
     if (reader == null) {
       return new BoardReadResult.ParseError("json_root", "Reader must not be null");
@@ -70,7 +70,7 @@ public final class KiCadJsonReader {
       observers = new BoardObserverAdaptor();
     }
     if (idGenerator == null) {
-      idGenerator = new ItemIdentificationNumberGenerator();
+      idGenerator = new ItemIdGenerator();
     }
 
     try {
@@ -560,7 +560,7 @@ public final class KiCadJsonReader {
               new IntVector(
                   (int) Math.round(pad.offset.x * scaleFactor),
                   (int) Math.round(-pad.offset.y * scaleFactor));
-          packagePins.add(new Package.Pin(pad.name, padstack.no, relativeLoc, 0.0));
+          packagePins.add(new Package.Pin(pad.name, padstack.id, relativeLoc, 0.0));
         }
 
         boolean isFront = !"B.Cu".equalsIgnoreCase(comp.layer);
@@ -634,7 +634,7 @@ public final class KiCadJsonReader {
           int netNumber = targetNet != null ? targetNet.netNumber : 0;
           int[] netNumbers = netNumber > 0 ? new int[] {netNumber} : new int[0];
           board.insertPin(
-              boardComp.no, padIndex, netNumbers, outlineClearanceNo, FixedState.SYSTEM_FIXED);
+              boardComp.id, padIndex, netNumbers, outlineClearanceNo, FixedState.SYSTEM_FIXED);
         }
       }
 
@@ -902,7 +902,7 @@ public final class KiCadJsonReader {
       if (!pin1.name.equals(pin2.name)) {
         return false;
       }
-      if (pin1.padstackNo != pin2.padstackNo) {
+      if (pin1.padstackId != pin2.padstackId) {
         return false;
       }
       app.freerouting.geometry.planar.FloatPoint loc1 = pin1.relativeLocation.toFloat();

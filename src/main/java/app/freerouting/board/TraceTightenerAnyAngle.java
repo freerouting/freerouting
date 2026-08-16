@@ -681,11 +681,11 @@ class TraceTightenerAnyAngle extends TraceTightener {
           // the two corners are on different sides of the line
           Polyline reducedPolyline = polyline.skipLines(i + 1, i + 1);
           if (reducedPolyline.lines.length == polyline.lines.length - 1) {
-            int shapeNo = i - 1;
+            int shapeIndex = i - 1;
             if (j == 0) {
-              ++shapeNo;
+              ++shapeIndex;
             }
-            TileShape shapeToCheck = reducedPolyline.offsetShape(currentHalfWidth, shapeNo);
+            TileShape shapeToCheck = reducedPolyline.offsetShape(currentHalfWidth, shapeIndex);
             if (board.checkTraceShape(
                 shapeToCheck,
                 currentLayer,
@@ -726,11 +726,11 @@ class TraceTightenerAnyAngle extends TraceTightener {
           // the two corners are on different sides of the line
           Polyline reducedPolyline = polyline.skipLines(i + 1, i + 2);
           if (reducedPolyline.lines.length == polyline.lines.length - 2) {
-            int shapeNo = i - 1;
+            int shapeIndex = i - 1;
             if (j == 0) {
-              ++shapeNo;
+              ++shapeIndex;
             }
-            TileShape shapeToCheck = reducedPolyline.offsetShape(currentHalfWidth, shapeNo);
+            TileShape shapeToCheck = reducedPolyline.offsetShape(currentHalfWidth, shapeIndex);
             if (board.checkTraceShape(
                 shapeToCheck,
                 currentLayer,

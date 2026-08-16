@@ -364,7 +364,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // check if item.board is a RoutingBoard
     if (!(item.board instanceof RoutingBoard routingBoard)) {
       job.logWarning("The item to be optimized is not on a RoutingBoard.");
-      return new ItemRouteResult(item.getIdNo());
+      return new ItemRouteResult(item.getId());
     }
 
     // calculate the statistics for the board before the routing
@@ -402,7 +402,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // re-routed
     for (Item currentItem : rippedConnections) {
       if (currentItem.isUserFixed()) {
-        return new ItemRouteResult(item.getIdNo());
+        return new ItemRouteResult(item.getId());
       }
     }
 
@@ -451,7 +451,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // check if the board was improved
     ItemRouteResult result =
         new ItemRouteResult(
-            item.getIdNo(),
+            item.getId(),
             boardStatisticsBefore.items.viaCount,
             boardStatisticsAfter.items.viaCount,
             this.minCumulativeTraceLength,

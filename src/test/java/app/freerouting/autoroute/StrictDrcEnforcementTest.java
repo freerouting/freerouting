@@ -69,7 +69,7 @@ class StrictDrcEnforcementTest {
     RoutingBoard board = DsnTestFixtures.loadBoard(FIXTURE);
     int netNumber = violatingNet(board);
     assumeTrue(netNumber > 0);
-    int maxId = board.communication.idNoGenerator.maxGeneratedNo();
+    int maxId = board.communication.idGenerator.maxGeneratedId();
     BoardStatistics before = new BoardStatistics(board);
 
     // Nothing is newer than maxId, so nothing may be ripped regardless of violations.

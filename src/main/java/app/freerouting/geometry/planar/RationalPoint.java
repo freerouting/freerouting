@@ -62,9 +62,8 @@ public class RationalPoint extends Point implements Serializable {
     return new FloatPoint(xd, yd);
   }
 
-  /** Returns true, if this RationalPoint is equal to ob. */
   @Override
-  public int getIdNo() {
+  public int getId() {
     int result = x.hashCode();
     result = 31 * result + y.hashCode();
     return 31 * result + z.hashCode();

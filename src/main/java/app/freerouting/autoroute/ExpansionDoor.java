@@ -180,9 +180,9 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   @Override
-  public int getIdNo() {
-    int id1 = firstRoom.getIdNo();
-    int id2 = secondRoom.getIdNo();
+  public int getId() {
+    int id1 = firstRoom.getId();
+    int id2 = secondRoom.getId();
     // Use a stable combination of room IDs. Note: min/max ensures order-independence.
     return Math.min(id1, id2) * 31 + Math.max(id1, id2);
   }

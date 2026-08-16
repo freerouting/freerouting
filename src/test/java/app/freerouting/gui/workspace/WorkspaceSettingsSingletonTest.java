@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import app.freerouting.board.BoardObserverAdaptor;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.ItemIdGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.management.HeadlessBoardManager;
 import java.io.FileInputStream;
@@ -33,7 +33,7 @@ class WorkspaceSettingsSingletonTest {
     headlessManager.loadFromSpecctraDsn(
         new FileInputStream("fixtures/empty_board.dsn"),
         new BoardObserverAdaptor(),
-        new ItemIdentificationNumberGenerator());
+        new ItemIdGenerator());
   }
 
   @AfterEach

@@ -43,7 +43,7 @@ public class ShapeSearchTree extends MinAreaTree {
   private static final int DRILL_HOLE_CLEARANCE_MARGIN = 10;
 
   /** Used in objects of class EntrySortedByClearance. */
-  private static int lastGeneratedIdNo;
+  private static int lastGeneratedEntryId;
 
   /**
    * The clearance class number for which the shapes of this tree is compensated. If
@@ -837,16 +837,16 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Changes the shape with index shapeNo of this item to newShape and updates the entry in the
+   * Changes the shape with index shapeIndex of this item to newShape and updates the entry in the
    * tree.
    */
-  void changeItemShape(Item item, int shapeNo, TileShape newShape) {
+  void changeItemShape(Item item, int shapeIndex, TileShape newShape) {
     Leaf[] oldEntries = item.getSearchTreeEntries(this);
     Leaf[] newLeafArr = new Leaf[oldEntries.length];
     TileShape[] newPrecalculatedTreeShapes = new TileShape[oldEntries.length];
-    removeLeaf(oldEntries[shapeNo]);
+    removeLeaf(oldEntries[shapeIndex]);
     for (int i = 0; i < newPrecalculatedTreeShapes.length; i++) {
-      if (i == shapeNo) {
+      if (i == shapeIndex) {
         newPrecalculatedTreeShapes[i] = newShape;
 
       } else {
@@ -855,7 +855,7 @@ public class ShapeSearchTree extends MinAreaTree {
       }
     }
     item.setPrecalculatedTreeShapes(newPrecalculatedTreeShapes, this);
-    newLeafArr[shapeNo] = insert(item, shapeNo);
+    newLeafArr[shapeIndex] = insert(item, shapeIndex);
     item.setSearchTreeEntries(newLeafArr, this);
   }
 
@@ -960,8 +960,8 @@ public class ShapeSearchTree extends MinAreaTree {
       Line[] currentLineArr = new Line[3];
       int currentNo = 0;
       for (int layerIndex = 0; layerIndex < this.board.layerStructure.layers.length; layerIndex++) {
-        for (int shapeNo = 0; shapeNo < boardOutline.shapeCount(); shapeNo++) {
-          PolylineShape currentOutlineShape = boardOutline.getShape(shapeNo);
+        for (int shapeIndex = 0; shapeIndex < boardOutline.shapeCount(); shapeIndex++) {
+          PolylineShape currentOutlineShape = boardOutline.getShape(shapeIndex);
           int borderLineCount = currentOutlineShape.borderLineCount();
           currentLineArr[0] = currentOutlineShape.borderLine(borderLineCount - 1);
           for (int i = 0; i < borderLineCount; i++) {
@@ -1125,19 +1125,19 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   private static class EntrySortedByClearance implements Comparable<EntrySortedByClearance> {
 
-    private final int entryIdNo;
+    private final int entryId;
     Leaf leaf;
     int clearance;
 
     EntrySortedByClearance(Leaf leaf, int clearance) {
       this.leaf = leaf;
       this.clearance = clearance;
-      if (lastGeneratedIdNo == Integer.MAX_VALUE) {
-        lastGeneratedIdNo = 0;
+      if (lastGeneratedEntryId == Integer.MAX_VALUE) {
+        lastGeneratedEntryId = 0;
       } else {
-        ++lastGeneratedIdNo;
+        ++lastGeneratedEntryId;
       }
-      entryIdNo = lastGeneratedIdNo;
+      entryId = lastGeneratedEntryId;
     }
 
     @Override
@@ -1145,7 +1145,7 @@ public class ShapeSearchTree extends MinAreaTree {
       if (clearance != other.clearance) {
         return Signum.asInt(clearance - other.clearance);
       }
-      return entryIdNo - other.entryIdNo;
+      return entryId - other.entryId;
     }
   }
 }

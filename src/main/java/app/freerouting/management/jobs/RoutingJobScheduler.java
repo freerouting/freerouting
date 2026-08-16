@@ -2,7 +2,7 @@ package app.freerouting.management.jobs;
 
 import static app.freerouting.Freerouting.globalSettings;
 
-import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.ItemIdGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
@@ -89,14 +89,10 @@ public final class RoutingJobScheduler {
                               HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
                               if (isDsn) {
                                 boardManager.loadFromSpecctraDsn(
-                                    job.input.getData(),
-                                    null,
-                                    new ItemIdentificationNumberGenerator());
+                                    job.input.getData(), null, new ItemIdGenerator());
                               } else {
                                 boardManager.loadFromKiCadJson(
-                                    job.input.getData(),
-                                    null,
-                                    new ItemIdentificationNumberGenerator());
+                                    job.input.getData(), null, new ItemIdGenerator());
                               }
                               job.board = boardManager.getRoutingBoard();
 

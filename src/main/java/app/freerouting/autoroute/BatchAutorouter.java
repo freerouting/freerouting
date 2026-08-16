@@ -291,7 +291,7 @@ public class BatchAutorouter extends NamedAlgorithm {
     List<Item> newItems = new ArrayList<>();
     boolean hasViolation = false;
     for (Item currentItem : board.getConnectableItems(routeNetNo)) {
-      if (currentItem.getIdNo() <= maxItemIdBefore
+      if (currentItem.getId() <= maxItemIdBefore
           || !(currentItem instanceof Trace || currentItem instanceof app.freerouting.board.Via)) {
         continue;
       }
@@ -561,8 +561,6 @@ public class BatchAutorouter extends NamedAlgorithm {
         return false;
       }
 
-      int itemsToGoCount = autorouteItemList.size();
-      long statisticsStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
       // Clearance DRC is quadratic on large boards and is not needed for an intermediate UI
       // update. The final pass statistics below still use board.getStatistics() unchanged.
       long initialProgressStatisticsStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
@@ -572,6 +570,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       if (BENCHMARK_PROFILE_ENABLED) {
         this.profileBoardStatisticsNanos += System.nanoTime() - initialProgressStatisticsStart;
       }
+      int itemsToGoCount = autorouteItemList.size();
       RouterCounters routerCounters = new RouterCounters();
       routerCounters.phase = "autoroute";
       routerCounters.passCount = passNo;
@@ -580,6 +579,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       routerCounters.rippedCount = 0;
       routerCounters.failedToBeRoutedCount = 0;
       routerCounters.routedCount = 0;
+      long statisticsStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
       DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
       tempDrc.calculateAllIncompletes();
       routerCounters.incompleteCount = tempDrc.getIncompleteCount();
@@ -665,7 +665,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           }
           long routeItemStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
           PerformanceProfiler.start("autoroute_item");
-          var autorouterResult =
+          final var autorouterResult =
               autorouteItem(
                   currentItem,
                   currentItem.getNetNumber(i),
@@ -690,11 +690,11 @@ public class BatchAutorouter extends NamedAlgorithm {
                   "BatchAutorouter.autoroute_pass",
                   "compare_trace_ripped_item",
                   "source_item="
-                      + currentItem.getIdNo()
+                      + currentItem.getId()
                       + ", source_net="
                       + currentItem.getNetNumber(i)
                       + ", ripped_id="
-                      + rippedItem.getIdNo()
+                      + rippedItem.getId()
                       + ", ripped_type="
                       + rippedItem.getClass().getSimpleName()
                       + ", ripped_net_count="
@@ -703,7 +703,7 @@ public class BatchAutorouter extends NamedAlgorithm {
                       + rippedNets
                       + ", ripupCost="
                       + ripupCost,
-                  "Net #" + currentItem.getNetNumber(i) + ",Item #" + currentItem.getIdNo(),
+                  "Net #" + currentItem.getNetNumber(i) + ",Item #" + currentItem.getId(),
                   getImpactedPoints(rippedItem));
             }
           }
@@ -713,7 +713,7 @@ public class BatchAutorouter extends NamedAlgorithm {
             int tempIncomp = innerDrc.getIncompleteCount();
             int tempNetIncomp = innerDrc.getIncompleteCount(currentItem.getNetNumber(i));
             int netItemsAfter = board.getConnectableItems(currentItem.getNetNumber(i)).size();
-            int maxItemId = board.communication.idNoGenerator.maxGeneratedNo();
+            int maxItemId = board.communication.idGenerator.maxGeneratedId();
             FRLogger.trace(
                 "BatchAutorouter.autoroute_pass",
                 "compare_trace_route_item",
@@ -738,7 +738,7 @@ public class BatchAutorouter extends NamedAlgorithm {
                 "Net #"
                     + currentItem.getNetNumber(i)
                     + ",Item #"
-                    + currentItem.getIdNo()
+                    + currentItem.getId()
                     + ",Type="
                     + currentItem.getClass().getSimpleName(),
                 getImpactedPoints(currentItem));
@@ -763,7 +763,7 @@ public class BatchAutorouter extends NamedAlgorithm {
                         + t.firstCorner()
                         + " to "
                         + t.lastCorner(),
-                    "Net #94,Item #" + t.getIdNo() + ",Type=Trace",
+                    "Net #94,Item #" + t.getId() + ",Type=Trace",
                     new Point[] {t.firstCorner(), t.lastCorner()});
               } else if (netItem instanceof Via) {
                 Via v = (Via) netItem;
@@ -771,7 +771,7 @@ public class BatchAutorouter extends NamedAlgorithm {
                     "BatchAutorouter.autoroute_pass",
                     "compare_trace_dump_net_item",
                     "Via center=" + v.getCenter(),
-                    "Net #94,Item #" + v.getIdNo() + ",Type=Via",
+                    "Net #94,Item #" + v.getId() + ",Type=Via",
                     new Point[] {v.getCenter()});
               } else if (netItem instanceof Pin) {
                 Pin p = (Pin) netItem;
@@ -784,7 +784,7 @@ public class BatchAutorouter extends NamedAlgorithm {
                         + p.name()
                         + " comp="
                         + p.componentName(),
-                    "Net #94,Item #" + p.getIdNo() + ",Type=Pin",
+                    "Net #94,Item #" + p.getId() + ",Type=Pin",
                     new Point[] {p.getCenter()});
               } else {
                 FRLogger.trace(
@@ -792,7 +792,7 @@ public class BatchAutorouter extends NamedAlgorithm {
                     "compare_trace_dump_net_item",
                     "Item " + netItem.getClass().getSimpleName(),
                     "Net #94,Item #"
-                        + netItem.getIdNo()
+                        + netItem.getId()
                         + ",Type="
                         + netItem.getClass().getSimpleName(),
                     getImpactedPoints(netItem));
@@ -1587,16 +1587,16 @@ public class BatchAutorouter extends NamedAlgorithm {
   private String describeItem(Item item) {
     if (item instanceof Pin pin) {
       try {
-        app.freerouting.board.Component comp = board.components.get(pin.getComponentNo());
+        app.freerouting.board.Component comp = board.components.get(pin.getComponentId());
         if (comp != null) {
           Package pkg = comp.getPackage();
           if (pkg != null) {
-            Package.Pin pkgPin = pkg.getPin(pin.pinNo);
+            Package.Pin pkgPin = pkg.getPin(pin.pinIndex);
             if (pkgPin != null) {
               return comp.name + "-" + pkgPin.name;
             }
           }
-          return comp.name + " (pin #" + pin.pinNo + ")";
+          return comp.name + " (pin #" + pin.pinIndex + ")";
         }
       } catch (Exception e) {
         // fall through to generic
@@ -1606,7 +1606,7 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   private void removeTails(Item.StopConnectionOption stopConnectionOption) {
-    long tailRemovalStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
+    final long tailRemovalStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
     board.startMarkingChangedArea();
     board.removeTraceTails(-1, stopConnectionOption);
     long pullTightStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
@@ -1697,7 +1697,7 @@ public class BatchAutorouter extends NamedAlgorithm {
               timeLimit,
               this.retainAutorouteDatabase);
 
-      int maxItemIdBeforeRoute = board.communication.idNoGenerator.maxGeneratedNo();
+      int maxItemIdBeforeRoute = board.communication.idGenerator.maxGeneratedId();
 
       byte[] strictDrcBoardSnapshot = this.settings.isStrictDrc() ? board.serialize(false) : null;
 
@@ -1712,7 +1712,7 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       // Update the changed area of the board
       if (autorouteResult.state == AutorouteAttemptState.ROUTED) {
-        int maxItemIdBeforeOpt = board.communication.idNoGenerator.maxGeneratedNo();
+        int maxItemIdBeforeOpt = board.communication.idGenerator.maxGeneratedId();
         FRLogger.trace(
             "compare_trace_opt_changed_area_before net="
                 + routeNetNo
@@ -1729,7 +1729,7 @@ public class BatchAutorouter extends NamedAlgorithm {
         if (BENCHMARK_PROFILE_ENABLED) {
           this.profileOptChangedAreaNanos += System.nanoTime() - pullTightStart;
         }
-        int maxItemIdAfterOpt = board.communication.idNoGenerator.maxGeneratedNo();
+        int maxItemIdAfterOpt = board.communication.idGenerator.maxGeneratedId();
         FRLogger.trace(
             "compare_trace_opt_changed_area_after net="
                 + routeNetNo

@@ -117,7 +117,8 @@ public class IntPoint extends Point implements Serializable {
     return new FloatPoint(x, y);
   }
 
-  public int getIdNo() {
+  @Override
+  public int getId() {
     return 31 * x + y;
   }
 

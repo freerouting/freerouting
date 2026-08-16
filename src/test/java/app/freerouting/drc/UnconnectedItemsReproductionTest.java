@@ -89,7 +89,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
     }
 
     Item via2522item =
-        board.getItems().stream().filter(item -> item.getIdNo() == 2522).findFirst().orElse(null);
+        board.getItems().stream().filter(item -> item.getId() == 2522).findFirst().orElse(null);
 
     assertNotNull(via2522item, "Via 2522 should be found in the board");
     Via via2522 = assertInstanceOf(Via.class, via2522item, "Item 2522 should be a Via");
@@ -153,7 +153,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
     Set<Integer> danglingTrackIds =
         allIssues.stream()
             .filter(ui -> "track_dangling".equals(ui.type))
-            .map(ui -> ui.firstItem.getIdNo())
+            .map(ui -> ui.firstItem.getId())
             .collect(Collectors.toSet());
 
     int[] spotCheckIds = {2340, 1869, 2372, 1802};

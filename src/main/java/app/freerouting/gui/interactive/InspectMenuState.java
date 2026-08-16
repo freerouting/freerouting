@@ -136,8 +136,8 @@ public final class InspectMenuState extends MenuState {
     if (item instanceof Pin) {
       Pin pin = (Pin) item;
       info.append("Pin: ");
-      if (pin.getComponentNo() > 0) {
-        info.append(hdlg.getRoutingBoard().components.get(pin.getComponentNo()).name);
+      if (pin.getComponentId() > 0) {
+        info.append(hdlg.getRoutingBoard().components.get(pin.getComponentId()).name);
         info.append(" - ");
       }
       info.append("Padstack: ").append(pin.getPadstack().name);
@@ -152,7 +152,7 @@ public final class InspectMenuState extends MenuState {
     } else if (item instanceof PolylineTrace) {
       PolylineTrace trace = (PolylineTrace) item;
       info.append("Trace: ");
-      info.append("ID ").append(trace.getIdNo());
+      info.append("ID ").append(trace.getId());
       info.append(", Layer: ")
           .append(hdlg.getRoutingBoard().layerStructure.layers[trace.getLayer()].name);
       info.append(", Width: ").append(2 * trace.getHalfWidth());
@@ -215,14 +215,14 @@ public final class InspectMenuState extends MenuState {
   private String getItemDescription(Item item) {
     if (item instanceof Pin) {
       Pin pin = (Pin) item;
-      if (pin.getComponentNo() > 0) {
-        return "Pin(" + hdlg.getRoutingBoard().components.get(pin.getComponentNo()).name + ")";
+      if (pin.getComponentId() > 0) {
+        return "Pin(" + hdlg.getRoutingBoard().components.get(pin.getComponentId()).name + ")";
       }
       return "Pin";
     } else if (item instanceof Via) {
       return "Via";
     } else if (item instanceof PolylineTrace) {
-      return "Trace(ID:" + item.getIdNo() + ")";
+      return "Trace(ID:" + item.getId() + ")";
     } else {
       return item.getClass().getSimpleName();
     }

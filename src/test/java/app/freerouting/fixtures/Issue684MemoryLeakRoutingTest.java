@@ -29,8 +29,8 @@ import org.junit.jupiter.api.Test;
  * <ul>
  *   <li>{@code BoardHistory} is now capped at {@link BoardHistory#MAX_HISTORY_SIZE} entries. When
  *       the cap is reached the lowest-scoring entry is evicted before adding a new one.
- *   <li>{@code ItemIdentificationNumberGenerator} wraps the counter back to 1 when it reaches the
- *       threshold and emits a single WARN per wrap instead of one per item.
+ *   <li>{@code ItemIdGenerator} wraps the counter back to 1 when it reaches the threshold and emits
+ *       a single WARN per wrap instead of one per item.
  * </ul>
  *
  * <p><b>Acceptance Criteria:</b>

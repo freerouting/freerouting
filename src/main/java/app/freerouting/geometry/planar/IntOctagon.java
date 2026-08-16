@@ -171,7 +171,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   }
 
   /** Returns a stable identifier for this octagon. */
-  public int getIdNo() {
+  @Override
+  public int getId() {
     int result = leftX;
     result = 31 * result + rightX;
     result = 31 * result + bottomY;
@@ -997,8 +998,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     return result;
   }
 
-  Side borderLineSideOf(FloatPoint point, int lineNo, double tolerance) {
-    return switch (lineNo) {
+  Side borderLineSideOf(FloatPoint point, int lineIndex, double tolerance) {
+    return switch (lineIndex) {
       case 0 -> {
         if (point.y > this.bottomY + tolerance) {
           yield Side.ON_THE_RIGHT;
@@ -1084,7 +1085,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         }
       }
       default -> {
-        FRLogger.warn("IntOctagon.border_line_side_of: lineNo out of range");
+        FRLogger.warn("IntOctagon.border_line_side_of: lineIndex out of range");
         yield Side.COLLINEAR;
       }
     };

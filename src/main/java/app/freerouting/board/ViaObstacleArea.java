@@ -17,8 +17,8 @@ public class ViaObstacleArea extends ObstacleArea {
       boolean sideChanged,
       int[] netNumbers,
       int clearanceClassIndex,
-      int idNo,
-      int groupNo,
+      int id,
+      int groupId,
       String name,
       FixedState fixedState,
       BasicBoard board) {
@@ -30,8 +30,8 @@ public class ViaObstacleArea extends ObstacleArea {
         sideChanged,
         netNumbers,
         clearanceClassIndex,
-        idNo,
-        groupNo,
+        id,
+        groupId,
         name,
         fixedState,
         board);
@@ -45,8 +45,8 @@ public class ViaObstacleArea extends ObstacleArea {
       double rotationInDegree,
       boolean sideChanged,
       int clearanceClassIndex,
-      int idNo,
-      int groupNo,
+      int id,
+      int groupId,
       String name,
       FixedState fixedState,
       BasicBoard board) {
@@ -58,15 +58,15 @@ public class ViaObstacleArea extends ObstacleArea {
         sideChanged,
         new int[0],
         clearanceClassIndex,
-        idNo,
-        groupNo,
+        id,
+        groupId,
         name,
         fixedState,
         board);
   }
 
   @Override
-  public Item copy(int idNo) {
+  public Item copy(int id) {
     int[] copiedNetNos = new int[netNumbers.length];
     System.arraycopy(netNumbers, 0, copiedNetNos, 0, netNumbers.length);
     return new ViaObstacleArea(
@@ -77,8 +77,8 @@ public class ViaObstacleArea extends ObstacleArea {
         getSideChanged(),
         copiedNetNos,
         clearanceClassIndex(),
-        idNo,
-        getComponentNo(),
+        id,
+        getComponentId(),
         this.name,
         getFixedState(),
         board);

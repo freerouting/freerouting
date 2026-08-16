@@ -31,7 +31,7 @@ public abstract class Item
     implements SearchTreeObject, ObjectInfoPanel.Printable, UndoableObjects.Storable, Serializable {
 
   private static final double PROTECT_FANOUT_LENGTH = 400;
-  private final int idNo;
+  private final int id;
 
   /** The board this Item is on. */
   public transient BasicBoard board;
@@ -39,7 +39,7 @@ public abstract class Item
   public double smallestClearance;
 
   /** Not 0, if this item belongs to a component. */
-  protected int componentNo;
+  protected int componentId;
 
   /** The nets, to which this item belongs. */
   int[] netNumbers;
@@ -61,8 +61,8 @@ public abstract class Item
   Item(
       int[] netNumbers,
       int clearanceClassIndex,
-      int idNo,
-      int componentNo,
+      int id,
+      int componentId,
       FixedState fixedState,
       BasicBoard board) {
     if (netNumbers == null) {
@@ -72,13 +72,13 @@ public abstract class Item
       System.arraycopy(netNumbers, 0, this.netNumbers, 0, netNumbers.length);
     }
     this.clearanceClassIndex = clearanceClassIndex;
-    this.componentNo = componentNo;
+    this.componentId = componentId;
     this.fixedState = fixedState;
     this.board = board;
-    if (idNo <= 0) {
-      this.idNo = board.communication.idNoGenerator.newNo();
+    if (id <= 0) {
+      this.id = board.communication.idGenerator.newId();
     } else {
-      this.idNo = idNo;
+      this.id = id;
     }
   }
 
@@ -87,7 +87,7 @@ public abstract class Item
   public int compareTo(Object other) {
     int result;
     if (other instanceof Item item) {
-      result = item.idNo - idNo;
+      result = item.id - id;
     } else {
       result = 1;
     }
@@ -95,8 +95,9 @@ public abstract class Item
   }
 
   /** Returns the unique identification number of this item. */
-  public int getIdNo() {
-    return idNo;
+  @Override
+  public int getId() {
+    return id;
   }
 
   /**
@@ -241,14 +242,14 @@ public abstract class Item
   }
 
   /**
-   * Creates a copy of this item with id number idNo. If idNo {@literal <}= 0, the idNo of the new
-   * item is generated internally
+   * Creates a copy of this item with ID id. If id {@literal <}= 0, the id of the new item is
+   * generated internally.
    */
-  public abstract Item copy(int idNo);
+  public abstract Item copy(int id);
 
   @Override
   public Object clone() {
-    Item dup = copy(this.getIdNo());
+    Item dup = copy(this.getId());
 
     dup.onTheBoard = this.onTheBoard;
     // dup.searchTreesInfo = this.searchTreesInfo;
@@ -339,10 +340,10 @@ public abstract class Item
    * component.
    */
   public String componentName() {
-    if (componentNo <= 0) {
+    if (componentId <= 0) {
       return null;
     }
-    return board.components.get(componentNo).name;
+    return board.components.get(componentId).name;
   }
 
   /** Returns the count of clearance violations of this item with other items. */
@@ -599,7 +600,7 @@ public abstract class Item
     for (Item currentContact : contactList) {
       if (stopAtPlane
           && currentContact instanceof ConductionArea
-          && currentContact.getComponentNo() <= 0) {
+          && currentContact.getComponentId() <= 0) {
         continue;
       }
       if (netNumber > 0 && !currentContact.containsNet(netNumber)) {
@@ -798,7 +799,7 @@ public abstract class Item
   /** Returns true, if it is not allowed to delete this item. */
   boolean isDeletionForbidden() {
     // Items belonging to a component are delete_fixed.
-    if (this.componentNo > 0 || isUserFixed()) {
+    if (this.componentId > 0 || isUserFixed()) {
       return true;
     }
     // Also power planes are delete_fixed.
@@ -857,9 +858,9 @@ public abstract class Item
     return netNumbers[no];
   }
 
-  /** Return the component number of this item or 0, if it does not belong to a component. */
-  public int getComponentNo() {
-    return componentNo;
+  /** Return the component ID of this item or 0, if it does not belong to a component. */
+  public int getComponentId() {
+    return componentId;
   }
 
   /**
@@ -926,9 +927,9 @@ public abstract class Item
     }
   }
 
-  /** Assigns this item to the component with the input component number. */
-  public void assignComponentNo(int no) {
-    componentNo = no;
+  /** Assigns this item to the component with the input component ID. */
+  public void assignComponentId(int id) {
+    componentId = id;
   }
 
   /**
@@ -1237,9 +1238,9 @@ public abstract class Item
 
     simpleName.append(this.getClass().getSimpleName().toLowerCase());
 
-    if (componentNo > 0) {
+    if (componentId > 0) {
       simpleName.append(" of component #");
-      simpleName.append(componentNo);
+      simpleName.append(componentId);
     }
 
     return simpleName.toString();

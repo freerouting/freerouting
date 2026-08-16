@@ -101,8 +101,8 @@ public final class MoveItemState extends InteractiveState {
     BasicBoard routingBoard = boardHandling.getRoutingBoard();
     Component gridSnapComponent = null;
     for (Item currentItem : itemList) {
-      if (currentItem.getComponentNo() > 0) {
-        Component currentComponent = routingBoard.components.get(currentItem.getComponentNo());
+      if (currentItem.getComponentId() > 0) {
+        Component currentComponent = routingBoard.components.get(currentItem.getComponentId());
         if (currentComponent == null) {
           FRLogger.warn("MoveComponentState.get_instance inconsistent component number");
           return null;
@@ -113,7 +113,7 @@ public final class MoveItemState extends InteractiveState {
           gridSnapComponent = currentComponent;
         }
         if (!componentList.contains(currentComponent)) {
-          Collection<Item> componentItems = routingBoard.getComponentItems(currentComponent.no);
+          Collection<Item> componentItems = routingBoard.getComponentItems(currentComponent.id);
           for (Item currentComponentItem : componentItems) {
             componentList.add(currentComponent);
             allItems.add(currentComponentItem);
@@ -150,9 +150,9 @@ public final class MoveItemState extends InteractiveState {
             if (currentContact.isUserFixed()) {
               itemMovable = false;
               fixedItems.add(currentContact);
-            } else if (currentContact.getComponentNo() != 0) {
+            } else if (currentContact.getComponentId() != 0) {
               Component currentComponent =
-                  routingBoard.components.get(currentContact.getComponentNo());
+                  routingBoard.components.get(currentContact.getComponentId());
               if (!componentList.contains(currentComponent)) {
                 itemMovable = false;
               }
@@ -274,7 +274,7 @@ public final class MoveItemState extends InteractiveState {
       }
       Components components = hdlg.getRoutingBoard().components;
       for (Component currentComponent : this.componentList) {
-        components.move(currentComponent.no, translateVector);
+        components.move(currentComponent.id, translateVector);
       }
       this.clearanceViolations = new LinkedList<>();
       for (Item currentItem : this.itemList) {
@@ -310,7 +310,7 @@ public final class MoveItemState extends InteractiveState {
     }
     Components components = hdlg.getRoutingBoard().components;
     for (Component currentComponent : this.componentList) {
-      components.turn90Degree(currentComponent.no, factor, currentPosition);
+      components.turn90Degree(currentComponent.id, factor, currentPosition);
     }
     this.clearanceViolations = new LinkedList<>();
     for (Item currentItem : this.itemList) {
@@ -330,7 +330,7 @@ public final class MoveItemState extends InteractiveState {
     }
     Components components = hdlg.getRoutingBoard().components;
     for (Component currentComponent : this.componentList) {
-      components.rotate(currentComponent.no, angleInDegree, this.currentPosition);
+      components.rotate(currentComponent.id, angleInDegree, this.currentPosition);
     }
     this.clearanceViolations = new LinkedList<>();
     FloatPoint floatPosition = this.currentPosition.toFloat();
@@ -380,7 +380,7 @@ public final class MoveItemState extends InteractiveState {
 
     Components components = hdlg.getRoutingBoard().components;
     for (Component currentComponent : this.componentList) {
-      components.changeSide(currentComponent.no, currentPosition);
+      components.changeSide(currentComponent.id, currentPosition);
     }
     this.clearanceViolations = new LinkedList<>();
     for (Item currentItem : this.itemList) {

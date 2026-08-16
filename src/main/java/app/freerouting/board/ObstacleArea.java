@@ -46,12 +46,12 @@ public class ObstacleArea extends Item implements Serializable {
       boolean sideChanged,
       int[] netNumbers,
       int clearanceClassIndex,
-      int idNo,
-      int cmpNo,
+      int id,
+      int componentId,
       String name,
       FixedState fixedState,
       BasicBoard board) {
-    super(netNumbers, clearanceClassIndex, idNo, cmpNo, fixedState, board);
+    super(netNumbers, clearanceClassIndex, id, componentId, fixedState, board);
     this.relativeArea = area;
     this.layer = layer;
     this.translation = translation;
@@ -71,8 +71,8 @@ public class ObstacleArea extends Item implements Serializable {
       double rotationInDegree,
       boolean sideChanged,
       int clearanceClassIndex,
-      int idNo,
-      int groupNo,
+      int id,
+      int groupId,
       String name,
       FixedState fixedState,
       BasicBoard board) {
@@ -84,15 +84,15 @@ public class ObstacleArea extends Item implements Serializable {
         sideChanged,
         new int[0],
         clearanceClassIndex,
-        idNo,
-        groupNo,
+        id,
+        groupId,
         name,
         fixedState,
         board);
   }
 
   @Override
-  public Item copy(int idNo) {
+  public Item copy(int id) {
     int[] copiedNetNos = new int[netNumbers.length];
     System.arraycopy(netNumbers, 0, copiedNetNos, 0, netNumbers.length);
     return new ObstacleArea(
@@ -103,8 +103,8 @@ public class ObstacleArea extends Item implements Serializable {
         sideChanged,
         copiedNetNos,
         clearanceClassIndex(),
-        idNo,
-        getComponentNo(),
+        id,
+        getComponentId(),
         name,
         getFixedState(),
         board);
@@ -278,7 +278,7 @@ public class ObstacleArea extends Item implements Serializable {
     TextManager tm = new TextManager(this.getClass(), locale);
 
     window.appendBold(tm.getText("keepout"));
-    int cmpNo = this.getComponentNo();
+    int cmpNo = this.getComponentId();
     if (cmpNo > 0) {
       window.append(" " + tm.getText("of_component") + " ");
       Component component = board.components.get(cmpNo);

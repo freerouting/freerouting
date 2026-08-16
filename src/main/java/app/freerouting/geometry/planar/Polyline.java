@@ -749,26 +749,26 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Splits this polyline at the line with number lineNo into two by inserting endline as concluding
-   * line of the first split piece and as the start line of the second split piece. endline and the
-   * line with number lineNo must not be parallel. The order of the lines ins the two result pieces
-   * is preserved. lineNo must be bigger than 0 and less than lines.length - 1. Returns null, if
-   * nothing was split.
+   * Splits this polyline at the line with index lineIndex into two by inserting endline as
+   * concluding line of the first split piece and as the start line of the second split piece.
+   * endline and the line with index lineIndex must not be parallel. The order of the lines in the
+   * two result pieces is preserved. lineIndex must be bigger than 0 and less than lines.length - 1.
+   * Returns null, if nothing was split.
    */
-  public Polyline[] split(int lineNo, Line endLine) {
-    if (lineNo < 1 || lineNo > lines.length - 2) {
-      FRLogger.warn("Polyline.split: lineNo out of range");
+  public Polyline[] split(int lineIndex, Line endLine) {
+    if (lineIndex < 1 || lineIndex > lines.length - 2) {
+      FRLogger.warn("Polyline.split: lineIndex out of range");
       return null;
     }
-    if (this.lines[lineNo].isParallel(endLine)) {
+    if (this.lines[lineIndex].isParallel(endLine)) {
       return null;
     }
-    Point newEndCorner = this.lines[lineNo].intersection(endLine);
+    Point newEndCorner = this.lines[lineIndex].intersection(endLine);
     FRLogger.trace(
         "Polyline.split",
         "compare_trace_split_called",
-        "lineNo="
-            + lineNo
+        "lineIndex="
+            + lineIndex
             + ", lines.length="
             + lines.length
             + ", lines.length-2="
@@ -785,7 +785,7 @@ public class Polyline implements Serializable {
             + ")"
             + ", equals="
             + newEndCorner.equals(this.lastCorner()),
-        "Polyline split lineNo=" + lineNo,
+        "Polyline split lineIndex=" + lineIndex,
         new Point[] {this.firstCorner(), newEndCorner, this.lastCorner()});
     StringBuilder sb = new StringBuilder("    CORNERS:");
     for (int i = 0; i < this.cornerCount(); i++) {
@@ -795,35 +795,35 @@ public class Polyline implements Serializable {
         "Polyline.split",
         "compare_trace_split_corners",
         sb.toString(),
-        "Polyline split lineNo=" + lineNo,
+        "Polyline split lineIndex=" + lineIndex,
         new Point[] {this.firstCorner(), newEndCorner, this.lastCorner()});
-    if (lineNo == 1 && newEndCorner.equals(this.firstCorner())
-        || lineNo >= lines.length - 2 && newEndCorner.equals(this.lastCorner())) {
+    if (lineIndex == 1 && newEndCorner.equals(this.firstCorner())
+        || lineIndex >= lines.length - 2 && newEndCorner.equals(this.lastCorner())) {
       // No split, if endLine does not intersect, but touches
       // only this Polyline at an end point.
       return null;
     }
     Line[] firstPiece;
-    if (this.corner(lineNo - 1).equals(newEndCorner)) {
+    if (this.corner(lineIndex - 1).equals(newEndCorner)) {
       // skip line segment of length 0 at the end of the first piece
-      firstPiece = new Line[lineNo + 1];
+      firstPiece = new Line[lineIndex + 1];
       System.arraycopy(this.lines, 0, firstPiece, 0, firstPiece.length);
 
     } else {
-      firstPiece = new Line[lineNo + 2];
-      System.arraycopy(this.lines, 0, firstPiece, 0, lineNo + 1);
-      firstPiece[lineNo + 1] = endLine;
+      firstPiece = new Line[lineIndex + 2];
+      System.arraycopy(this.lines, 0, firstPiece, 0, lineIndex + 1);
+      firstPiece[lineIndex + 1] = endLine;
     }
     Line[] secondPiece;
-    if (this.corner(lineNo).equals(newEndCorner)) {
+    if (this.corner(lineIndex).equals(newEndCorner)) {
       // skip line segment of length 0 at the beginning of the second piece
-      secondPiece = new Line[lines.length - lineNo];
-      System.arraycopy(this.lines, lineNo, secondPiece, 0, secondPiece.length);
+      secondPiece = new Line[lines.length - lineIndex];
+      System.arraycopy(this.lines, lineIndex, secondPiece, 0, secondPiece.length);
 
     } else {
-      secondPiece = new Line[lines.length - lineNo + 1];
+      secondPiece = new Line[lines.length - lineIndex + 1];
       secondPiece[0] = endLine;
-      System.arraycopy(this.lines, lineNo, secondPiece, 1, secondPiece.length - 1);
+      System.arraycopy(this.lines, lineIndex, secondPiece, 1, secondPiece.length - 1);
     }
     Polyline[] result = new Polyline[2];
     result[0] = new Polyline(firstPiece);

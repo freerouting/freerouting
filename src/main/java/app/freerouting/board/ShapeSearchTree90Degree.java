@@ -419,7 +419,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
   }
 
   private static int obstacleId(SearchTreeObject object) {
-    return object instanceof Item item ? item.getIdNo() : -1;
+    return object instanceof Item item ? item.getId() : -1;
   }
 
   private static String obstacleNets(SearchTreeObject object) {

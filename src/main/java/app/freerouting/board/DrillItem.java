@@ -45,11 +45,11 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       Point center,
       int[] netNumbers,
       int clearanceClassIndex,
-      int idNo,
-      int groupNo,
+      int id,
+      int groupId,
       FixedState fixedState,
       BasicBoard board) {
-    super(netNumbers, clearanceClassIndex, idNo, groupNo, fixedState, board);
+    super(netNumbers, clearanceClassIndex, id, groupId, fixedState, board);
     this.center = center;
   }
 

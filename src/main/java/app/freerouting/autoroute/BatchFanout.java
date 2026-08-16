@@ -645,9 +645,9 @@ public final class BatchFanout {
 
       // calculate the center of gravity of all SMD pins of this component.
       Collection<app.freerouting.board.Pin> currentPinList = new LinkedList<>();
-      int cmpNo = boardComponent.no;
+      int componentId = boardComponent.id;
       for (app.freerouting.board.Pin currentBoardPin : boardSmdPinList) {
-        if (currentBoardPin.getComponentNo() == cmpNo) {
+        if (currentBoardPin.getComponentId() == componentId) {
           currentPinList.add(currentBoardPin);
         }
       }
@@ -683,7 +683,7 @@ public final class BatchFanout {
       } else if (compareValue < 0) {
         result = 1;
       } else {
-        result = this.boardComponent.no - other.boardComponent.no;
+        result = this.boardComponent.id - other.boardComponent.id;
       }
       return result;
     }
@@ -766,7 +766,7 @@ public final class BatchFanout {
           }
         }
         if (result == 0) {
-          result = this.boardPin.pinNo - other.boardPin.pinNo;
+          result = this.boardPin.pinIndex - other.boardPin.pinIndex;
         }
         return result;
       }

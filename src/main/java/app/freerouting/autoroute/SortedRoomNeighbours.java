@@ -162,8 +162,7 @@ public final class SortedRoomNeighbours {
         .sort(
             (e1, e2) -> {
               int idDiff =
-                  ((SearchTreeObject) e1.object).getIdNo()
-                      - ((SearchTreeObject) e2.object).getIdNo();
+                  ((SearchTreeObject) e1.object).getId() - ((SearchTreeObject) e2.object).getId();
               if (idDiff != 0) {
                 return idDiff;
               }
@@ -716,7 +715,7 @@ public final class SortedRoomNeighbours {
       int res = Signum.asInt(deltaDistance);
       if (res == 0) {
         // Deterministic tie-breaker for identical geometry
-        res = this.searchTreeObject.getIdNo() - other.searchTreeObject.getIdNo();
+        res = this.searchTreeObject.getId() - other.searchTreeObject.getId();
       }
       return res;
     }

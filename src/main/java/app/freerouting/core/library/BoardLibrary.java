@@ -142,7 +142,7 @@ public class BoardLibrary implements Serializable {
     for (int i = 1; i <= this.packages.count(); i++) {
       Package currentPackage = this.packages.get(i);
       for (int j = 0; j < currentPackage.pinCount(); j++) {
-        if (currentPackage.getPin(j).padstackNo == padstack.no) {
+        if (currentPackage.getPin(j).padstackId == padstack.id) {
           return true;
         }
       }
