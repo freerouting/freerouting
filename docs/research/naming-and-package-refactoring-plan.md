@@ -632,10 +632,11 @@ Branch: `refactor/naming-phase-14-interfaces`
 
 **Progress checklist**
 
-- [ ] Rename `app.freerouting.board.ObjectInfoPanel` interface → `app.freerouting.board.ItemInfoPrinter` (decoupling from UI JPanel confusion).
-- [ ] Rename `ReadScopeParameter.itemIdNoGenerator` → `idGenerator` / `itemIdentificationNumberGenerator`.
-- [ ] Update all implementing classes (`PrintInfoWindow`, `BoardPrintInfo`, etc.) and callers.
-- [ ] Run full test suite and quality gates.
+- [x] Rename `app.freerouting.board.ObjectInfoPanel` interface → `app.freerouting.board.ItemInfoPrinter` (decoupling from UI JPanel confusion).
+- [x] Rename `ObjectInfoPanel.Printable` → `ItemInfoPrinter.Printable` (or `ItemInfoPrintable`).
+- [x] Ensure `ReadScopeParameter` and board/controller classes use `idGenerator` for the `IdGenerator` field name.
+- [x] Update all implementing classes (`PrintInfoWindow`, `BoardPrintInfo`, `Window*InfoTextPane`, etc.) and callers across `board/`, `core/library/`, `drc/`, `gui/`.
+- [x] Run full test suite and quality gates.
 
 ---
 

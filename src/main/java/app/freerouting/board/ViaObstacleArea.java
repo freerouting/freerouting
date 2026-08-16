@@ -106,13 +106,13 @@ public class ViaObstacleArea extends ObstacleArea {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("via_keepout"));
-    this.printShapeInfo(window, locale);
-    this.printClearanceInfo(window, locale);
-    this.printClearanceViolationInfo(window, locale);
-    window.newline();
+    printer.appendBold(tm.getText("via_keepout"));
+    this.printShapeInfo(printer, locale);
+    this.printClearanceInfo(printer, locale);
+    this.printClearanceViolationInfo(printer, locale);
+    printer.newline();
   }
 }

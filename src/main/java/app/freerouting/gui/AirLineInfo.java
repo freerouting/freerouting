@@ -1,12 +1,12 @@
 package app.freerouting.gui;
 
-import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.drc.AirLine;
 import app.freerouting.util.TextManager;
 import java.util.Locale;
 
-/** Wrapper class for displaying information about an AirLine in the ObjectInfoPanel. */
-public class AirLineInfo implements ObjectInfoPanel.Printable {
+/** Wrapper class for displaying information about an AirLine in the ItemInfoPrinter. */
+public class AirLineInfo implements ItemInfoPrinter.Printable {
 
   public final AirLine airline;
 
@@ -20,17 +20,17 @@ public class AirLineInfo implements ObjectInfoPanel.Printable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(AirLine.class, locale);
 
-    window.appendBold(tm.getText("incomplete"));
-    window.append(" " + tm.getText("net") + " ");
-    window.append(airline.net.name);
-    window.append(" " + tm.getText("from") + " ", "Incomplete Start Item", airline.fromItem);
-    window.append(airline.fromCorner);
-    window.append(" " + tm.getText("to") + " ", "Incomplete End Item", airline.toItem);
-    window.append(airline.toCorner);
-    window.newline();
+    printer.appendBold(tm.getText("incomplete"));
+    printer.append(" " + tm.getText("net") + " ");
+    printer.append(airline.net.name);
+    printer.append(" " + tm.getText("from") + " ", "Incomplete Start Item", airline.fromItem);
+    printer.append(airline.fromCorner);
+    printer.append(" " + tm.getText("to") + " ", "Incomplete End Item", airline.toItem);
+    printer.append(airline.toCorner);
+    printer.newline();
   }
 
   @Override

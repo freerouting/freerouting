@@ -401,22 +401,22 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("trace"));
-    window.append(" " + tm.getText("from") + " ");
-    window.append(this.firstCorner().toFloat());
-    window.append(" " + tm.getText("to") + " ");
-    window.append(this.lastCorner().toFloat());
-    window.append(" " + tm.getText("on_layer") + " ");
-    window.append(this.board.layerStructure.layers[this.layer].name);
-    window.append(", " + tm.getText("width") + " ");
-    window.append(2 * this.halfWidth);
-    window.append(", " + tm.getText("length") + " ");
-    window.append(this.getLength());
-    this.printConnectableItemInfo(window, locale);
-    window.newline();
+    printer.appendBold(tm.getText("trace"));
+    printer.append(" " + tm.getText("from") + " ");
+    printer.append(this.firstCorner().toFloat());
+    printer.append(" " + tm.getText("to") + " ");
+    printer.append(this.lastCorner().toFloat());
+    printer.append(" " + tm.getText("on_layer") + " ");
+    printer.append(this.board.layerStructure.layers[this.layer].name);
+    printer.append(", " + tm.getText("width") + " ");
+    printer.append(2 * this.halfWidth);
+    printer.append(", " + tm.getText("length") + " ");
+    printer.append(this.getLength());
+    this.printConnectableItemInfo(printer, locale);
+    printer.newline();
   }
 
   @Override

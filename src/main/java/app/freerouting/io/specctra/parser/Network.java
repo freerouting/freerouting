@@ -852,8 +852,8 @@ public class Network extends ScopeKeyword {
       LogicalPart.PartPin[] boardPartPins = new LogicalPart.PartPin[nextPart.partPins.size()];
       int currentIndex = 0;
       for (PartLibrary.PartPin currentPartPin : nextPart.partPins) {
-        int pinNo = libPackage.getPinNo(currentPartPin.pinName);
-        if (pinNo < 0) {
+        int pinIndex = libPackage.getPinIndex(currentPartPin.pinName);
+        if (pinIndex < 0) {
           FRLogger.warn(
               "Network.insert_logical_parts: package pin not found at '"
                   + currentPartPin.pinName
@@ -862,7 +862,7 @@ public class Network extends ScopeKeyword {
         }
         boardPartPins[currentIndex] =
             new LogicalPart.PartPin(
-                pinNo,
+                pinIndex,
                 currentPartPin.pinName,
                 currentPartPin.gateName,
                 currentPartPin.gateSwapCode,

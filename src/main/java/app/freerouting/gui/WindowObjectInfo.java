@@ -3,7 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Item;
-import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.board.Pin;
 import app.freerouting.board.PrintableShape;
 import app.freerouting.board.Trace;
@@ -36,7 +36,7 @@ import javax.swing.text.StyledDocument;
  * Window displaying text information for a list of objects implementing the
  * ObjectInfoWindow.Printable interface.
  */
-public final class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectInfoPanel {
+public final class WindowObjectInfo extends BoardTemporarySubWindow implements ItemInfoPrinter {
 
   private static final int MAX_WINDOW_HEIGHT = 500;
   private static final int SCROLLBAR_ADD = 30;

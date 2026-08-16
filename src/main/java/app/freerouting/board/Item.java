@@ -28,7 +28,7 @@ import java.util.TreeSet;
 
 /** Basic class of the items on a board. */
 public abstract class Item
-    implements SearchTreeObject, ObjectInfoPanel.Printable, UndoableObjects.Storable, Serializable {
+    implements SearchTreeObject, ItemInfoPrinter.Printable, UndoableObjects.Storable, Serializable {
 
   private static final double PROTECT_FANOUT_LENGTH = 400;
   private final int id;
@@ -1068,24 +1068,24 @@ public abstract class Item
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printNetInfo(ObjectInfoPanel window, Locale locale) {
+  protected void printNetInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
     for (int i = 0; i < this.netCount(); i++) {
-      window.append(", " + tm.getText("net") + " ");
+      printer.append(", " + tm.getText("net") + " ");
       Net currentNet = board.rules.nets.get(this.getNetNumber(i));
-      window.append(currentNet.name, tm.getText("net_info"), currentNet);
+      printer.append(currentNet.name, tm.getText("net_info"), currentNet);
     }
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printClearanceInfo(ObjectInfoPanel window, Locale locale) {
+  protected void printClearanceInfo(ItemInfoPrinter printer, Locale locale) {
     if (this.clearanceClassIndex > 0) {
       TextManager tm = new TextManager(this.getClass(), locale);
 
-      window.append(", " + tm.getText("clearanceClass") + " ");
+      printer.append(", " + tm.getText("clearanceClass") + " ");
       String name = board.rules.clearanceMatrix.getName(this.clearanceClassIndex);
-      window.append(
+      printer.append(
           name,
           tm.getText("clearance_info"),
           board.rules.clearanceMatrix.getRow(this.clearanceClassIndex));
@@ -1093,60 +1093,60 @@ public abstract class Item
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printFixedInfo(ObjectInfoPanel window, Locale locale) {
+  protected void printFixedInfo(ItemInfoPrinter printer, Locale locale) {
     if (this.fixedState != FixedState.UNFIXED) {
       TextManager tm = new TextManager(this.getClass(), locale);
 
-      window.append(", ");
-      window.append(tm.getText(this.fixedState.toString()));
+      printer.append(", ");
+      printer.append(tm.getText(this.fixedState.toString()));
     }
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printContactInfo(ObjectInfoPanel window, Locale locale) {
+  protected void printContactInfo(ItemInfoPrinter printer, Locale locale) {
     Collection<Item> contacts = this.getNormalContacts();
     if (!contacts.isEmpty()) {
       TextManager tm = new TextManager(this.getClass(), locale);
 
-      window.append(", " + tm.getText("contacts") + " ");
+      printer.append(", " + tm.getText("contacts") + " ");
       int contactCount = contacts.size();
-      window.appendItems(String.valueOf(contactCount), tm.getText("contact_info"), contacts);
+      printer.appendItems(String.valueOf(contactCount), tm.getText("contact_info"), contacts);
     }
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printClearanceViolationInfo(ObjectInfoPanel window, Locale locale) {
+  protected void printClearanceViolationInfo(ItemInfoPrinter printer, Locale locale) {
     Collection<ClearanceViolation> clearanceViolations = this.clearanceViolations();
     if (!clearanceViolations.isEmpty()) {
       TextManager tm = new TextManager(this.getClass(), locale);
 
-      window.append(", ");
+      printer.append(", ");
       int violationCount = clearanceViolations.size();
-      Collection<ObjectInfoPanel.Printable> violations = new LinkedList<>(clearanceViolations);
-      window.appendObjects(
+      Collection<ItemInfoPrinter.Printable> violations = new LinkedList<>(clearanceViolations);
+      printer.appendObjects(
           String.valueOf(violationCount), tm.getText("violation_info"), violations);
       if (violationCount == 1) {
-        window.append(" " + tm.getText("clearance_violation"));
+        printer.append(" " + tm.getText("clearance_violation"));
       } else {
-        window.append(" " + tm.getText("clearanceViolations"));
+        printer.append(" " + tm.getText("clearanceViolations"));
       }
     }
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printConnectableItemInfo(ObjectInfoPanel window, Locale locale) {
-    this.printClearanceInfo(window, locale);
-    this.printFixedInfo(window, locale);
-    this.printNetInfo(window, locale);
-    this.printContactInfo(window, locale);
-    this.printClearanceViolationInfo(window, locale);
+  protected void printConnectableItemInfo(ItemInfoPrinter printer, Locale locale) {
+    this.printClearanceInfo(printer, locale);
+    this.printFixedInfo(printer, locale);
+    this.printNetInfo(printer, locale);
+    this.printContactInfo(printer, locale);
+    this.printClearanceViolationInfo(printer, locale);
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printItemInfo(ObjectInfoPanel window, Locale locale) {
-    this.printClearanceInfo(window, locale);
-    this.printFixedInfo(window, locale);
-    this.printClearanceViolationInfo(window, locale);
+  protected void printItemInfo(ItemInfoPrinter printer, Locale locale) {
+    this.printClearanceInfo(printer, locale);
+    this.printFixedInfo(printer, locale);
+    this.printClearanceViolationInfo(printer, locale);
   }
 
   /** Checks, if all nets of this items are normal. */

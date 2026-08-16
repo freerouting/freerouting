@@ -1,6 +1,6 @@
 package app.freerouting.core.library;
 
-import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.Vector;
@@ -13,7 +13,7 @@ import java.util.Locale;
  * Component package templates describing the padstacks and relative locations of the package pins,
  * and optional other stuff like an outline package keepouts.
  */
-public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, Serializable {
+public class Package implements Comparable<Package>, ItemInfoPrinter.Printable, Serializable {
 
   /** The name of the package. */
   public final String name;
@@ -83,7 +83,7 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
    * Returns the pin number of the pin with the input name from this package, or -1, if no such pin
    * exists Pin numbers are from 0 to pinCount - 1.
    */
-  public int getPinNo(String name) {
+  public int getPinIndex(String name) {
     for (int i = 0; i < pins.length; i++) {
       if (pins[i].name.equals(name)) {
         return i;
@@ -103,26 +103,26 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("package") + " ");
-    window.appendBold(this.name);
+    printer.appendBold(tm.getText("package") + " ");
+    printer.appendBold(this.name);
     for (int i = 0; i < this.pins.length; i++) {
       Pin currentPin = this.pins[i];
-      window.newline();
-      window.indent();
-      window.append(tm.getText("pin") + " ");
-      window.append(currentPin.name);
-      window.append(", " + tm.getText("padstack") + " ");
+      printer.newline();
+      printer.indent();
+      printer.append(tm.getText("pin") + " ");
+      printer.append(currentPin.name);
+      printer.append(", " + tm.getText("padstack") + " ");
       Padstack currentPadstack = this.packageList.padstackList.get(currentPin.padstackId);
-      window.append(currentPadstack.name, tm.getText("padstack_info"), currentPadstack);
-      window.append(" " + tm.getText("at") + " ");
-      window.append(currentPin.relativeLocation.toFloat());
-      window.append(", " + tm.getText("rotation") + " ");
-      window.appendWithoutTransforming(currentPin.rotationInDegree);
+      printer.append(currentPadstack.name, tm.getText("padstack_info"), currentPadstack);
+      printer.append(" " + tm.getText("at") + " ");
+      printer.append(currentPin.relativeLocation.toFloat());
+      printer.append(", " + tm.getText("rotation") + " ");
+      printer.appendWithoutTransforming(currentPin.rotationInDegree);
     }
-    window.newline();
+    printer.newline();
   }
 
   /** Describes a pin padstack of a package. */

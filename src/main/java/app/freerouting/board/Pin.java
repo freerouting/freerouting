@@ -525,22 +525,22 @@ public class Pin extends DrillItem implements Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("pin") + ": ");
-    window.append(tm.getText("component_2") + " ");
+    printer.appendBold(tm.getText("pin") + ": ");
+    printer.append(tm.getText("component_2") + " ");
     Component component = board.components.get(this.getComponentId());
-    window.append(component.name, tm.getText("component_info"), component);
-    window.append(", " + tm.getText("pin_2") + " ");
-    window.append(component.getPackage().getPin(this.pinIndex).name);
-    window.append(", " + tm.getText("padstack") + " ");
+    printer.append(component.name, tm.getText("component_info"), component);
+    printer.append(", " + tm.getText("pin_2") + " ");
+    printer.append(component.getPackage().getPin(this.pinIndex).name);
+    printer.append(", " + tm.getText("padstack") + " ");
     Padstack padstack = this.getPadstack();
-    window.append(padstack.name, tm.getText("padstack_info"), padstack);
-    window.append(" " + tm.getText("at") + " ");
-    window.append(this.getCenter().toFloat());
-    this.printConnectableItemInfo(window, locale);
-    window.newline();
+    printer.append(padstack.name, tm.getText("padstack_info"), padstack);
+    printer.append(" " + tm.getText("at") + " ");
+    printer.append(this.getCenter().toFloat());
+    this.printConnectableItemInfo(printer, locale);
+    printer.newline();
   }
 
   @Override

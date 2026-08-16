@@ -1,6 +1,6 @@
 package app.freerouting.rules;
 
-import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import java.util.Locale;
  * Information about a combination of a via padstack, via clearance class, and drill-to-SMD setting
  * used in interactive and automatic routing.
  */
-public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, Serializable {
+public class ViaInfo implements Comparable<ViaInfo>, ItemInfoPrinter.Printable, Serializable {
 
   private final BoardRules boardRules;
   private String name;
@@ -83,26 +83,26 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("via") + " ");
-    window.appendBold(this.name);
-    window.appendBold(": ");
-    window.append(tm.getText("padstack") + " ");
-    window.append(this.padstack.name, tm.getText("padstack_info"), this.padstack);
-    window.append(", " + tm.getText("clearanceClass") + " ");
+    printer.appendBold(tm.getText("via") + " ");
+    printer.appendBold(this.name);
+    printer.appendBold(": ");
+    printer.append(tm.getText("padstack") + " ");
+    printer.append(this.padstack.name, tm.getText("padstack_info"), this.padstack);
+    printer.append(", " + tm.getText("clearanceClass") + " ");
     String currentName = boardRules.clearanceMatrix.getName(this.clearanceClassIndex);
-    window.append(
+    printer.append(
         currentName,
         tm.getText("clearance_class_2"),
         boardRules.clearanceMatrix.getRow(this.clearanceClassIndex));
-    window.append(", " + tm.getText("attach_smd") + " ");
+    printer.append(", " + tm.getText("attach_smd") + " ");
     if (attachSmdAllowed) {
-      window.append(" " + tm.getText("on"));
+      printer.append(" " + tm.getText("on"));
     } else {
-      window.append(" " + tm.getText("off"));
+      printer.append(" " + tm.getText("off"));
     }
-    window.newline();
+    printer.newline();
   }
 }

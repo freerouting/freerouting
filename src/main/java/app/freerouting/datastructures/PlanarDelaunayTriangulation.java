@@ -43,7 +43,7 @@ public class PlanarDelaunayTriangulation {
    * Id numbers are for implementing an ordering on the Edges so that they can be used in a set for
    * example.
    */
-  private int lastEdgeIdNo;
+  private int lastEdgeId;
 
   /** Creates a new instance of PlanarDelaunayTriangulation from objectList. */
   public PlanarDelaunayTriangulation(Collection<PlanarDelaunayTriangulation.Storable> objectList) {
@@ -264,9 +264,9 @@ public class PlanarDelaunayTriangulation {
   }
 
   /** Creates a new unique edge id number. */
-  private int newEdgeIdNo() {
-    ++this.lastEdgeIdNo;
-    return this.lastEdgeIdNo;
+  private int newEdgeId() {
+    ++this.lastEdgeId;
+    return this.lastEdgeId;
   }
 
   /** Interface with functionality required for objects to be used in a planar triangulation. */
@@ -400,8 +400,8 @@ public class PlanarDelaunayTriangulation {
     public final Corner startCorner;
     public final Corner endCorner;
 
-    /** The unique id number of this triangle. */
-    private final int idNo;
+    /** The unique ID of this edge. */
+    private final int id;
 
     /** The triangle on the left side of this edge. */
     private Triangle leftTriangle;
@@ -412,12 +412,12 @@ public class PlanarDelaunayTriangulation {
     public Edge(Corner startCorner, Corner endCorner) {
       this.startCorner = startCorner;
       this.endCorner = endCorner;
-      idNo = newEdgeIdNo();
+      id = newEdgeId();
     }
 
     @Override
     public int compareTo(Edge other) {
-      return this.idNo - other.idNo;
+      return this.id - other.id;
     }
 
     public Triangle getLeftTriangle() {

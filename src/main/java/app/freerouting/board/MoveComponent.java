@@ -38,10 +38,10 @@ public class MoveComponent {
     }
 
     Collection<Item> itemGroupList;
-    int componentNo = item.getComponentId();
-    if (componentNo > 0) {
-      itemGroupList = board.getComponentItems(componentNo);
-      this.component = board.components.get(componentNo);
+    int componentId = item.getComponentId();
+    if (componentId > 0) {
+      itemGroupList = board.getComponentItems(componentId);
+      this.component = board.components.get(componentId);
     } else {
       itemGroupList = new LinkedList<>();
       itemGroupList.add(item);

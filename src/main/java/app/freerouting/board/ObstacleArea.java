@@ -274,41 +274,41 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("keepout"));
+    printer.appendBold(tm.getText("keepout"));
     int cmpNo = this.getComponentId();
     if (cmpNo > 0) {
-      window.append(" " + tm.getText("of_component") + " ");
+      printer.append(" " + tm.getText("of_component") + " ");
       Component component = board.components.get(cmpNo);
-      window.append(component.name, tm.getText("component_info"), component);
+      printer.append(component.name, tm.getText("component_info"), component);
     }
-    this.printShapeInfo(window, locale);
-    this.printItemInfo(window, locale);
-    window.newline();
+    this.printShapeInfo(printer, locale);
+    this.printItemInfo(printer, locale);
+    printer.newline();
   }
 
   /** Used in the implementation of print_info for this class and derived classes. */
-  protected final void printShapeInfo(ObjectInfoPanel window, Locale locale) {
+  protected final void printShapeInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.append(" " + tm.getText("at") + " ");
+    printer.append(" " + tm.getText("at") + " ");
     FloatPoint center = this.getArea().getBorder().centreOfGravity();
-    window.append(center);
+    printer.append(center);
     Integer holeCount = this.relativeArea.getHoles().length;
     if (holeCount > 0) {
-      window.append(" " + tm.getText("with") + " ");
+      printer.append(" " + tm.getText("with") + " ");
       NumberFormat nf = NumberFormat.getInstance(locale);
-      window.append(nf.format(holeCount));
+      printer.append(nf.format(holeCount));
       if (holeCount == 1) {
-        window.append(" " + tm.getText("hole"));
+        printer.append(" " + tm.getText("hole"));
       } else {
-        window.append(" " + tm.getText("holes"));
+        printer.append(" " + tm.getText("holes"));
       }
     }
-    window.append(" " + tm.getText("on_layer") + " ");
-    window.append(this.board.layerStructure.layers[this.getLayer()].name);
+    printer.append(" " + tm.getText("on_layer") + " ");
+    printer.append(this.board.layerStructure.layers[this.getLayer()].name);
   }
 
   TileShape[] splitToConvex() {

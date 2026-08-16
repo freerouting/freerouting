@@ -1,7 +1,7 @@
 package app.freerouting.rules;
 
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
@@ -373,7 +373,7 @@ public class ClearanceMatrix implements Serializable {
   }
 
   /** Contains a row of entries of the clearance matrix. */
-  private final class Row implements ObjectInfoPanel.Printable, Serializable {
+  private final class Row implements ItemInfoPrinter.Printable, Serializable {
 
     final String name;
     final MatrixEntry[] column;
@@ -389,30 +389,30 @@ public class ClearanceMatrix implements Serializable {
     }
 
     @Override
-    public void printInfo(ObjectInfoPanel window, Locale locale) {
+    public void printInfo(ItemInfoPrinter printer, Locale locale) {
       TextManager tm = new TextManager(this.getClass(), locale);
 
-      window.appendBold(tm.getText("spacing_from_clearance_class") + " ");
-      window.appendBold(this.name);
+      printer.appendBold(tm.getText("spacing_from_clearance_class") + " ");
+      printer.appendBold(this.name);
       for (int i = 1; i < this.column.length; i++) {
-        window.newline();
-        window.indent();
-        window.append(" " + tm.getText("to_class") + " ");
-        window.append(row[i].name);
+        printer.newline();
+        printer.indent();
+        printer.append(" " + tm.getText("to_class") + " ");
+        printer.append(row[i].name);
         MatrixEntry currentColumn = this.column[i];
         if (currentColumn.isLayerDependent()) {
-          window.append(" " + tm.getText("on_layer") + " ");
+          printer.append(" " + tm.getText("on_layer") + " ");
           for (int j = 0; j < layerStructure.layers.length; j++) {
-            window.newline();
-            window.indent();
-            window.indent();
-            window.append(layerStructure.layers[j].name);
-            window.append(" = ");
-            window.append(currentColumn.layer[j]);
+            printer.newline();
+            printer.indent();
+            printer.indent();
+            printer.append(layerStructure.layers[j].name);
+            printer.append(" = ");
+            printer.append(currentColumn.layer[j]);
           }
         } else {
-          window.append(" = ");
-          window.append(currentColumn.layer[0]);
+          printer.append(" = ");
+          printer.append(currentColumn.layer[0]);
         }
       }
     }

@@ -86,17 +86,17 @@ public class Component extends ScopeKeyword {
   }
 
   private static void writePinInfo(
-      WriteScopeParameter scopeParameter, app.freerouting.board.Component component, int pinNo)
+      WriteScopeParameter scopeParameter, app.freerouting.board.Component component, int pinIndex)
       throws IOException {
     if (!component.isPlaced()) {
       return;
     }
-    Package.Pin packagePin = component.getPackage().getPin(pinNo);
+    Package.Pin packagePin = component.getPackage().getPin(pinIndex);
     if (packagePin == null) {
       FRLogger.warn("Component.write_pin_info: package pin not found at '" + component.name + "'");
       return;
     }
-    Pin componentPin = scopeParameter.board.getPin(component.id, pinNo);
+    Pin componentPin = scopeParameter.board.getPin(component.id, pinIndex);
     if (componentPin == null) {
       FRLogger.warn(
           "Component.write_pin_info: component pin not found at '" + component.name + "'");
@@ -163,14 +163,14 @@ public class Component extends ScopeKeyword {
     }
   }
 
-  private static ObstacleArea getKeepout(BasicBoard board, int componentNo, String name) {
+  private static ObstacleArea getKeepout(BasicBoard board, int componentId, String name) {
     Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
       Item currentItem = (Item) board.itemList.readObject(it);
       if (currentItem == null) {
         break;
       }
-      if (currentItem.getComponentId() == componentNo
+      if (currentItem.getComponentId() == componentId
           && currentItem instanceof ObstacleArea currentArea) {
         if (currentArea.name != null && currentArea.name.equals(name)) {
           return currentArea;

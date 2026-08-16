@@ -1,13 +1,13 @@
 package app.freerouting.core.library;
 
-import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.Locale;
 
 /** Contains information for gate swap and pin swap for a single component. */
-public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
+public class LogicalPart implements ItemInfoPrinter.Printable, Serializable {
 
   public final String name;
   public final int id;
@@ -38,30 +38,30 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("logical_part_2") + " ");
-    window.appendBold(this.name);
+    printer.appendBold(tm.getText("logical_part_2") + " ");
+    printer.appendBold(this.name);
     for (int i = 0; i < this.partPinArr.length; i++) {
       PartPin currentPin = this.partPinArr[i];
-      window.newline();
-      window.indent();
-      window.append(tm.getText("pin") + " ");
-      window.append(currentPin.pinName);
-      window.append(", " + tm.getText("gate") + " ");
-      window.append(currentPin.gateName);
-      window.append(", " + tm.getText("swap_code") + " ");
+      printer.newline();
+      printer.indent();
+      printer.append(tm.getText("pin") + " ");
+      printer.append(currentPin.pinName);
+      printer.append(", " + tm.getText("gate") + " ");
+      printer.append(currentPin.gateName);
+      printer.append(", " + tm.getText("swap_code") + " ");
       int gateSwapCode = currentPin.gateSwapCode;
-      window.append(String.valueOf(gateSwapCode));
-      window.append(", " + tm.getText("gate_pin") + " ");
-      window.append(currentPin.gatePinName);
-      window.append(", " + tm.getText("swap_code") + " ");
+      printer.append(String.valueOf(gateSwapCode));
+      printer.append(", " + tm.getText("gate_pin") + " ");
+      printer.append(currentPin.gatePinName);
+      printer.append(", " + tm.getText("swap_code") + " ");
       int pinSwapCode = currentPin.gatePinSwapCode;
-      window.append(String.valueOf(pinSwapCode));
+      printer.append(String.valueOf(pinSwapCode));
     }
-    window.newline();
-    window.newline();
+    printer.newline();
+    printer.newline();
   }
 
   /** Describes a pin belonging to a logical part. */

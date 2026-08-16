@@ -15,7 +15,7 @@ import java.util.Locale;
  * keepouts.
  */
 public class Component
-    implements UndoableObjects.Storable, ObjectInfoPanel.Printable, Serializable {
+    implements UndoableObjects.Storable, ItemInfoPrinter.Printable, Serializable {
 
   /** The name of the component. */
   public final String name;
@@ -203,34 +203,34 @@ public class Component
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("component") + " ");
-    window.appendBold(this.name);
+    printer.appendBold(tm.getText("component") + " ");
+    printer.appendBold(this.name);
     if (this.location != null) {
-      window.append(" " + tm.getText("at") + " ");
-      window.append(this.location.toFloat());
+      printer.append(" " + tm.getText("at") + " ");
+      printer.append(this.location.toFloat());
 
-      window.append(", " + tm.getText("rotation") + " ");
-      window.appendWithoutTransforming(rotationInDegree);
+      printer.append(", " + tm.getText("rotation") + " ");
+      printer.appendWithoutTransforming(rotationInDegree);
 
       if (this.onFront) {
-        window.append(", " + tm.getText("front"));
+        printer.append(", " + tm.getText("front"));
       } else {
-        window.append(", " + tm.getText("back"));
+        printer.append(", " + tm.getText("back"));
       }
     } else {
-      window.append(" " + tm.getText("not_yet_placed"));
+      printer.append(" " + tm.getText("not_yet_placed"));
     }
-    window.append(", " + tm.getText("package"));
+    printer.append(", " + tm.getText("package"));
     Package libPackage = this.getPackage();
-    window.append(libPackage.name, tm.getText("package_info"), libPackage);
+    printer.append(libPackage.name, tm.getText("package_info"), libPackage);
     if (this.logicalPart != null) {
-      window.append(", " + tm.getText("logicalPart") + " ");
-      window.append(this.logicalPart.name, tm.getText("logical_part_info"), this.logicalPart);
+      printer.append(", " + tm.getText("logicalPart") + " ");
+      printer.append(this.logicalPart.name, tm.getText("logical_part_info"), this.logicalPart);
     }
-    window.newline();
+    printer.newline();
   }
 
   /** Returns the library package of this component. */

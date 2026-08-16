@@ -1,7 +1,7 @@
 package app.freerouting.rules;
 
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 /** Describes routing rules for individual nets. */
-public class NetClass implements Serializable, ObjectInfoPanel.Printable {
+public class NetClass implements Serializable, ItemInfoPrinter.Printable {
 
   private final ClearanceMatrix clearanceMatrix;
   private final LayerStructure boardLayerStructure;
@@ -210,37 +210,37 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("net_class_2") + " ");
-    window.appendBold(this.name);
-    window.appendBold(":");
-    window.append(" " + tm.getText("traceClearanceClass") + " ");
+    printer.appendBold(tm.getText("net_class_2") + " ");
+    printer.appendBold(this.name);
+    printer.appendBold(":");
+    printer.append(" " + tm.getText("traceClearanceClass") + " ");
     String clearanceName = clearanceMatrix.getName(this.traceClearanceClass);
-    window.append(
+    printer.append(
         clearanceName,
         tm.getText("trace_clearance_class_2"),
         clearanceMatrix.getRow(this.traceClearanceClass));
     if (this.shoveFixed) {
-      window.append(", " + tm.getText("shoveFixed"));
+      printer.append(", " + tm.getText("shoveFixed"));
     }
-    window.append(", " + tm.getText("viaRule") + " ");
-    window.append(viaRule.name, tm.getText("via_rule_2"), viaRule);
+    printer.append(", " + tm.getText("viaRule") + " ");
+    printer.append(viaRule.name, tm.getText("via_rule_2"), viaRule);
     if (traceWidthIsLayerDependent()) {
       for (int i = 0; i < traceHalfWidthArr.length; i++) {
-        window.newline();
-        window.indent();
-        window.append(tm.getText("traceWidth") + " ");
-        window.append(2 * traceHalfWidthArr[i]);
-        window.append(" " + tm.getText("on_layer") + " ");
-        window.append(this.boardLayerStructure.layers[i].name);
+        printer.newline();
+        printer.indent();
+        printer.append(tm.getText("traceWidth") + " ");
+        printer.append(2 * traceHalfWidthArr[i]);
+        printer.append(" " + tm.getText("on_layer") + " ");
+        printer.append(this.boardLayerStructure.layers[i].name);
       }
     } else {
-      window.append(", " + tm.getText("traceWidth") + " ");
-      window.append(2 * traceHalfWidthArr[0]);
+      printer.append(", " + tm.getText("traceWidth") + " ");
+      printer.append(2 * traceHalfWidthArr[0]);
     }
-    window.newline();
+    printer.newline();
   }
 
   /** Returns true if the trace width of this class is not equal on all layers. */

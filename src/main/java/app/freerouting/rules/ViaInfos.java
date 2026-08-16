@@ -1,6 +1,6 @@
 package app.freerouting.rules;
 
-import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -11,7 +11,7 @@ import java.util.Locale;
  * Contains the list of different via definitions that can be used in interactive and automatic
  * routing.
  */
-public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
+public class ViaInfos implements Serializable, ItemInfoPrinter.Printable {
 
   private final List<ViaInfo> list = new LinkedList<>();
 
@@ -64,10 +64,10 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("vias") + ": ");
+    printer.appendBold(tm.getText("vias") + ": ");
     int counter = 0;
     boolean firstTime = true;
     final int maxViasPerRow = 5;
@@ -75,13 +75,13 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
       if (firstTime) {
         firstTime = false;
       } else {
-        window.append(", ");
+        printer.append(", ");
       }
       if (counter == 0) {
-        window.newline();
-        window.indent();
+        printer.newline();
+        printer.indent();
       }
-      window.append(currentVia.getName(), tm.getText("viaInfo"), currentVia);
+      printer.append(currentVia.getName(), tm.getText("viaInfo"), currentVia);
       counter = (counter + 1) % maxViasPerRow;
     }
   }

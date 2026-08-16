@@ -1,6 +1,6 @@
 package app.freerouting.rules;
 
-import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
@@ -12,7 +12,7 @@ import java.util.Locale;
  * Contains an array of vias used for routing. Vias at the beginning of the array are preferred to
  * later vias.
  */
-public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
+public class ViaRule implements Serializable, ItemInfoPrinter.Printable {
 
   /** Empty via rule. Must not be changed. */
   public static final ViaRule EMPTY = new ViaRule("empty");
@@ -104,12 +104,12 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("via_rule_2") + " ");
-    window.appendBold(this.name);
-    window.appendBold(":");
+    printer.appendBold(tm.getText("via_rule_2") + " ");
+    printer.appendBold(this.name);
+    printer.appendBold(":");
     int counter = 0;
     boolean firstTime = true;
     final int maxViasPerRow = 5;
@@ -117,13 +117,13 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
       if (firstTime) {
         firstTime = false;
       } else {
-        window.append(", ");
+        printer.append(", ");
       }
       if (counter == 0) {
-        window.newline();
-        window.indent();
+        printer.newline();
+        printer.indent();
       }
-      window.append(currentVia.getName(), tm.getText("viaInfo"), currentVia);
+      printer.append(currentVia.getName(), tm.getText("viaInfo"), currentVia);
       counter = (counter + 1) % maxViasPerRow;
     }
   }

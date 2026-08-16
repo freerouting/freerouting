@@ -300,7 +300,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   @Override
-  public Item copy(int idNo) {
+  public Item copy(int id) {
     if (this.netCount() != 1) {
       FRLogger.warn("ConductionArea.copy not yet implemented for areas with more than 1 net");
       return null;
@@ -313,7 +313,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         getSideChanged(),
         netNumbers,
         clearanceClassIndex(),
-        idNo,
+        id,
         getComponentId(),
         this.name,
         isObstacle,
@@ -406,12 +406,12 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("conductionArea"));
-    this.printShapeInfo(window, locale);
-    this.printConnectableItemInfo(window, locale);
-    window.newline();
+    printer.appendBold(tm.getText("conductionArea"));
+    this.printShapeInfo(printer, locale);
+    this.printConnectableItemInfo(printer, locale);
+    printer.newline();
   }
 }

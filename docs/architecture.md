@@ -112,7 +112,7 @@ boundaries are strict ArchUnit rules; no frozen violation store is required.
 
 ## Accepted architectural debt
 
-- `board.ObjectInfoPanel` remains a presentation-shaped writer API; converting it to DTOs is
+- `board.ItemInfoPrinter` remains a presentation-shaped writer API; converting it to DTOs is
   outside this initiative.
 - Incomplete-connection computation remains under `drc`; the package name is broader than
   clearance checking by design.

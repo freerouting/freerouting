@@ -145,42 +145,41 @@ public class Components implements Serializable {
   }
 
   /**
-   * Moves the component with number componentNo. Works contrary to Component.translate_by with the
-   * undo algorithm of the board.
+   * Moves the component with ID componentId. Works contrary to Component.translate_by with the undo
+   * algorithm of the board.
    */
-  public void move(int componentNo, app.freerouting.geometry.planar.Vector vector) {
-    Component currentComponent = this.get(componentNo);
+  public void move(int componentId, app.freerouting.geometry.planar.Vector vector) {
+    Component currentComponent = this.get(componentId);
     this.undoList.saveForUndo(currentComponent);
     currentComponent.translateBy(vector);
   }
 
   /**
-   * Turns the component with number componentNo by factor times 90 degree around pole. Works
-   * contrary to Component.turn_90_degree with the undo algorithm of the board.
+   * Turns the component with ID componentId by factor times 90 degree around pole. Works contrary
+   * to Component.turn_90_degree with the undo algorithm of the board.
    */
-  public void turn90Degree(int componentNo, int factor, IntPoint pole) {
-    Component currentComponent = this.get(componentNo);
+  public void turn90Degree(int componentId, int factor, IntPoint pole) {
+    Component currentComponent = this.get(componentId);
     this.undoList.saveForUndo(currentComponent);
     currentComponent.turn90Degree(factor, pole);
   }
 
   /**
-   * Rotates the component with number componentNo by rotationInDegree around pole. Works contrary
-   * to Component.rotate with the undo algorithm of the board.
+   * Rotates the component with ID componentId by rotationInDegree around pole. Works contrary to
+   * Component.rotate with the undo algorithm of the board.
    */
-  public void rotate(int componentNo, double rotationInDegree, IntPoint pole) {
-    Component currentComponent = this.get(componentNo);
+  public void rotate(int componentId, double rotationInDegree, IntPoint pole) {
+    Component currentComponent = this.get(componentId);
     this.undoList.saveForUndo(currentComponent);
     currentComponent.rotate(rotationInDegree, pole, flipStyleRotateFirst);
   }
 
   /**
-   * Changes the placement side of the component with number componentNo and mirrors it at the
-   * vertical line through pole. Works contrary to Component.change_side the undo algorithm of the
-   * board.
+   * Changes the placement side of the component with ID componentId and mirrors it at the vertical
+   * line through pole. Works contrary to Component.change_side the undo algorithm of the board.
    */
-  public void changeSide(int componentNo, IntPoint pole) {
-    Component currentComponent = this.get(componentNo);
+  public void changeSide(int componentId, IntPoint pole) {
+    Component currentComponent = this.get(componentId);
     this.undoList.saveForUndo(currentComponent);
     currentComponent.changeSide(pole);
   }

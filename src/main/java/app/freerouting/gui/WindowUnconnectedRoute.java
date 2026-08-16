@@ -17,7 +17,7 @@ import java.util.TreeSet;
 /** Displays route segments that are not connected to their net. */
 public class WindowUnconnectedRoute extends CleanupWindows {
 
-  private int maxUnconnectedRouteInfoIdNo;
+  private int maxUnconnectedRouteInfoId;
 
   /** Creates a new instance of WindowUnconnectedRoute. */
   public WindowUnconnectedRoute(BoardFrame boardFrame) {
@@ -95,15 +95,15 @@ public class WindowUnconnectedRoute extends CleanupWindows {
 
     private final Net net;
     private final Collection<Item> itemList;
-    private final int idNo;
+    private final int id;
     private final Integer traceCount;
     private final Integer viaCount;
 
     public UnconnectedRouteInfo(Net net, Collection<Item> itemList) {
       this.net = net;
       this.itemList = itemList;
-      ++maxUnconnectedRouteInfoIdNo;
-      this.idNo = maxUnconnectedRouteInfoIdNo;
+      ++maxUnconnectedRouteInfoId;
+      this.id = maxUnconnectedRouteInfoId;
       int currentTraceCount = 0;
       int currentViaCount = 0;
       for (Item currentItem : itemList) {
@@ -130,7 +130,7 @@ public class WindowUnconnectedRoute extends CleanupWindows {
     public int compareTo(UnconnectedRouteInfo other) {
       int result = this.net.name.compareTo(other.net.name);
       if (result == 0) {
-        result = this.idNo - other.idNo;
+        result = this.id - other.id;
       }
       return result;
     }

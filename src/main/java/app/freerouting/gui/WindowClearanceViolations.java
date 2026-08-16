@@ -4,8 +4,8 @@ import app.freerouting.board.BoardOutline;
 import app.freerouting.board.ComponentObstacleArea;
 import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Item;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.board.ObstacleArea;
 import app.freerouting.board.Pin;
 import app.freerouting.board.Trace;
@@ -130,8 +130,8 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     }
 
     @Override
-    public void printInfo(ObjectInfoPanel window, Locale locale) {
-      this.violation.printInfo(window, locale);
+    public void printInfo(ItemInfoPrinter printer, Locale locale) {
+      this.violation.printInfo(printer, locale);
     }
 
     @Override

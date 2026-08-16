@@ -1,6 +1,6 @@
 package app.freerouting.core.library;
 
-import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.IntBox;
@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.Locale;
 
 /** Describes padstack masks for pins or vias located at the origin. */
-public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable, Serializable {
+public class Padstack implements Comparable<Padstack>, ItemInfoPrinter.Printable, Serializable {
 
   public final String name;
   public final int id;
@@ -195,20 +195,20 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("padstack") + " ");
-    window.appendBold(this.name);
+    printer.appendBold(tm.getText("padstack") + " ");
+    printer.appendBold(this.name);
     for (int i = 0; i < shapes.length; i++) {
       if (shapes[i] != null) {
-        window.newline();
-        window.indent();
-        window.append(shapes[i], locale);
-        window.append(" " + tm.getText("on_layer") + " ");
-        window.append(padstackList.boardLayerStructure.layers[i].name);
+        printer.newline();
+        printer.indent();
+        printer.append(shapes[i], locale);
+        printer.append(" " + tm.getText("on_layer") + " ");
+        printer.append(padstackList.boardLayerStructure.layers[i].name);
       }
     }
-    window.newline();
+    printer.newline();
   }
 }

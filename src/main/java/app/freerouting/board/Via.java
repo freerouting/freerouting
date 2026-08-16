@@ -233,16 +233,16 @@ public class Via extends DrillItem implements Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("via"));
-    window.append(" " + tm.getText("at") + " ");
-    window.append(this.getCenter().toFloat());
-    window.append(", " + tm.getText("padstack"));
-    window.append(padstack.name, tm.getText("padstack_info"), padstack);
-    this.printConnectableItemInfo(window, locale);
-    window.newline();
+    printer.appendBold(tm.getText("via"));
+    printer.append(" " + tm.getText("at") + " ");
+    printer.append(this.getCenter().toFloat());
+    printer.append(", " + tm.getText("padstack"));
+    printer.append(padstack.name, tm.getText("padstack_info"), padstack);
+    this.printConnectableItemInfo(printer, locale);
+    printer.newline();
   }
 
   @Override

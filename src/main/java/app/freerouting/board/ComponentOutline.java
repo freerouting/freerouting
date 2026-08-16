@@ -216,7 +216,7 @@ public class ComponentOutline extends Item implements Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {}
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {}
 
   @Override
   public boolean write(ObjectOutputStream stream) {

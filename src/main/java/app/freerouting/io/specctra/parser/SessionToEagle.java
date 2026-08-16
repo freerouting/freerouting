@@ -544,8 +544,8 @@ public class SessionToEagle {
     return true;
   }
 
-  private boolean processSwappedPins(int componentNo) throws IOException {
-    Collection<Pin> componentPins = this.board.getComponentPins(componentNo);
+  private boolean processSwappedPins(int componentId) throws IOException {
+    Collection<Pin> componentPins = this.board.getComponentPins(componentId);
     boolean componentHasSwappedPins = false;
     for (Pin currentPin : componentPins) {
       if (currentPin.getChangedTo() != currentPin) {

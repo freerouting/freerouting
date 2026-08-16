@@ -195,11 +195,11 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
-    window.appendBold(tm.getText("boardOutline"));
-    printClearanceInfo(window, locale);
-    window.newline();
+    printer.appendBold(tm.getText("boardOutline"));
+    printClearanceInfo(printer, locale);
+    printer.newline();
   }
 
   @Override

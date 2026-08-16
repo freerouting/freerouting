@@ -3,7 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Item;
-import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.board.PrintableShape;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -279,7 +279,7 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
   }
 
-  private class NetInfoTextPane extends JTextPane implements ObjectInfoPanel {
+  private class NetInfoTextPane extends JTextPane implements ItemInfoPrinter {
     private final NumberFormat numberFormat;
 
     public NetInfoTextPane() {
@@ -349,8 +349,8 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
 
     @Override
-    public boolean append(String buttonName, String windowTitle, ObjectInfoPanel.Printable object) {
-      Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>();
+    public boolean append(String buttonName, String windowTitle, ItemInfoPrinter.Printable object) {
+      Collection<ItemInfoPrinter.Printable> objectList = new LinkedList<>();
       objectList.add(object);
       return appendObjects(buttonName, windowTitle, objectList);
     }
@@ -367,13 +367,13 @@ public class WindowNets extends WindowObjectListWithFilter {
 
     @Override
     public boolean appendItems(String buttonName, String windowTitle, Collection<Item> items) {
-      Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>(items);
+      Collection<ItemInfoPrinter.Printable> objectList = new LinkedList<>(items);
       return appendObjects(buttonName, windowTitle, objectList);
     }
 
     @Override
     public boolean appendObjects(
-        String buttonName, String windowTitle, Collection<ObjectInfoPanel.Printable> objects) {
+        String buttonName, String windowTitle, Collection<ItemInfoPrinter.Printable> objects) {
       JButton objectInfoButton = new JButton();
       objectInfoButton.setText(buttonName);
       objectInfoButton.setBorderPainted(false);
@@ -385,7 +385,7 @@ public class WindowNets extends WindowObjectListWithFilter {
       objectInfoButton.addActionListener(
           e -> {
             Collection<WindowObjectInfo.Printable> infoObjects = new LinkedList<>();
-            for (ObjectInfoPanel.Printable p : objects) {
+            for (ItemInfoPrinter.Printable p : objects) {
               if (p instanceof WindowObjectInfo.Printable wp) {
                 infoObjects.add(wp);
               }
