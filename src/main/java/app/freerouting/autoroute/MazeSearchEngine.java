@@ -906,8 +906,8 @@ public class MazeSearchEngine {
             + bendCostPenalty
             + shapeEntryMiddle.weightedDistance(
                 fromElement.shapeEntry.a.middlePoint(fromElement.shapeEntry.b),
-                ctrl.traceCosts[layer].horizontal,
-                ctrl.traceCosts[layer].vertical);
+                ctrl.traceCosts[layer].horizontal(),
+                ctrl.traceCosts[layer].vertical());
     double sortingValue =
         expansionValue + this.destinationDistance.calculate(shapeEntryMiddle, layer);
     boolean roomRipped =
@@ -1067,7 +1067,9 @@ public class MazeSearchEngine {
         fromElement.expansionValue
             + addCosts
             + nearestPoint.weightedDistance(
-                compareCorner, ctrl.traceCosts[layer].horizontal, ctrl.traceCosts[layer].vertical);
+                compareCorner,
+                ctrl.traceCosts[layer].horizontal(),
+                ctrl.traceCosts[layer].vertical());
     ExpandableObject newBacktrackDoor;
     int newSectionNoOfBacktrackDoor;
     if (fromElement.door instanceof DrillPage) {
@@ -1122,8 +1124,8 @@ public class MazeSearchEngine {
         expansionValue
             + nearestPoint.weightedDistance(
                 fromElementShapeEntryMiddle,
-                ctrl.traceCosts[layer].horizontal,
-                ctrl.traceCosts[layer].vertical)
+                ctrl.traceCosts[layer].horizontal(),
+                ctrl.traceCosts[layer].vertical())
             + this.destinationDistance.calculate(nearestPoint, layer);
     MazeListElement newElement =
         new MazeListElement(

@@ -587,54 +587,53 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       Object newValue = evt.getNewValue();
 
       switch (propertyName) {
-        case "maxPasses":
+        case "maxPasses" -> {
           if (newValue != null) {
             maxPassesField.setValue(newValue);
           }
-          break;
-        case "maxThreads":
+        }
+        case "maxThreads" -> {
           if (newValue != null) {
             maxThreadsField.setValue(newValue);
           }
-          break;
-        case "jobTimeoutString":
+        }
+        case "jobTimeoutString" -> {
           if (newValue != null) {
             setJobTimeoutFields(newValue.toString());
           }
-          break;
-        case "enabled":
-          if (newValue instanceof Boolean) {
-            settingsAutorouterAutoroutePassButton.setSelected((Boolean) newValue);
+        }
+        case "enabled" -> {
+          if (newValue instanceof Boolean bool) {
+            settingsAutorouterAutoroutePassButton.setSelected(bool);
           }
-          break;
-        case "viasAllowed":
-          if (newValue instanceof Boolean) {
-            settingsAutorouterViasAllowed.setSelected((Boolean) newValue);
+        }
+        case "viasAllowed" -> {
+          if (newValue instanceof Boolean bool) {
+            settingsAutorouterViasAllowed.setSelected(bool);
           }
-          break;
-        case "algorithm":
-          if (newValue instanceof String) {
+        }
+        case "algorithm" -> {
+          if (newValue instanceof String str) {
             // Find and select the matching algorithm in the combo box
             for (int i = 0; i < settingsAutorouterAlgorithmComboBox.getItemCount(); i++) {
-              if (settingsAutorouterAlgorithmComboBox.getItemAt(i).equals(newValue)) {
+              if (settingsAutorouterAlgorithmComboBox.getItemAt(i).equals(str)) {
                 settingsAutorouterAlgorithmComboBox.setSelectedIndex(i);
                 break;
               }
             }
           }
-          break;
-        case "fanout.enabled":
-          if (newValue instanceof Boolean) {
-            settingsAutorouterFanoutButton.setSelected((Boolean) newValue);
+        }
+        case "fanout.enabled" -> {
+          if (newValue instanceof Boolean bool) {
+            settingsAutorouterFanoutButton.setSelected(bool);
           }
-          break;
-        case "optimizer.enabled":
-          if (newValue instanceof Boolean) {
-            settingsAutorouterOptimizationButton.setSelected((Boolean) newValue);
+        }
+        case "optimizer.enabled" -> {
+          if (newValue instanceof Boolean bool) {
+            settingsAutorouterOptimizationButton.setSelected(bool);
           }
-          break;
-        default:
-          break;
+        }
+        default -> {}
       }
     } finally {
       isUpdatingFromSettings = false;

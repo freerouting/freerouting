@@ -61,24 +61,24 @@ public class DestinationDistance {
     this.activeLayerCount = currentActiveLayerCount;
 
     if (layerActive[0]) {
-      if (traceCosts[0].horizontal < traceCosts[0].vertical) {
-        minComponentSideTraceCost = traceCosts[0].horizontal;
-        maxComponentSideTraceCost = traceCosts[0].vertical;
+      if (traceCosts[0].horizontal() < traceCosts[0].vertical()) {
+        minComponentSideTraceCost = traceCosts[0].horizontal();
+        maxComponentSideTraceCost = traceCosts[0].vertical();
       } else {
-        minComponentSideTraceCost = traceCosts[0].vertical;
-        maxComponentSideTraceCost = traceCosts[0].horizontal;
+        minComponentSideTraceCost = traceCosts[0].vertical();
+        maxComponentSideTraceCost = traceCosts[0].horizontal();
       }
     }
 
     if (layerActive[layerCount - 1]) {
       ExpansionCostFactor currentTraceCost = traceCosts[layerCount - 1];
 
-      if (currentTraceCost.horizontal < currentTraceCost.vertical) {
-        minSolderSideTraceCost = currentTraceCost.horizontal;
-        maxSolderSideTraceCost = currentTraceCost.vertical;
+      if (currentTraceCost.horizontal() < currentTraceCost.vertical()) {
+        minSolderSideTraceCost = currentTraceCost.horizontal();
+        maxSolderSideTraceCost = currentTraceCost.vertical();
       } else {
-        minSolderSideTraceCost = currentTraceCost.vertical;
-        maxSolderSideTraceCost = currentTraceCost.horizontal;
+        minSolderSideTraceCost = currentTraceCost.vertical();
+        maxSolderSideTraceCost = currentTraceCost.horizontal();
       }
     }
 
@@ -88,7 +88,7 @@ public class DestinationDistance {
       if (!layerActive[ind2]) {
         continue;
       }
-      double currentMaxCost = Math.max(traceCosts[ind2].horizontal, traceCosts[ind2].vertical);
+      double currentMaxCost = Math.max(traceCosts[ind2].horizontal(), traceCosts[ind2].vertical());
 
       maxInnerSideTraceCost = Math.min(maxInnerSideTraceCost, currentMaxCost);
     }
@@ -222,7 +222,7 @@ public class DestinationDistance {
       if (!componentSideBoxIsEmpty) {
         result =
             box.weightedDistance(
-                componentSideBox, traceCosts[0].horizontal, traceCosts[0].vertical);
+                componentSideBox, traceCosts[0].horizontal(), traceCosts[0].vertical());
       }
 
       if (activeLayerCount <= 1) {
@@ -298,7 +298,7 @@ public class DestinationDistance {
       if (!solderSideBoxIsEmpty) {
         result =
             box.weightedDistance(
-                solderSideBox, traceCosts[layer].horizontal, traceCosts[layer].vertical);
+                solderSideBox, traceCosts[layer].horizontal(), traceCosts[layer].vertical());
       }
 
       // calculate two layer distance
@@ -353,7 +353,7 @@ public class DestinationDistance {
     if (!innerSideBoxIsEmpty) {
       result =
           box.weightedDistance(
-              innerSideBox, traceCosts[layer].horizontal, traceCosts[layer].vertical);
+              innerSideBox, traceCosts[layer].horizontal(), traceCosts[layer].vertical());
     }
 
     // calculate two layer distance

@@ -284,20 +284,7 @@ public class AutorouteControl {
   }
 
   /** Horizontal and vertical costs for traces on a board layer. */
-  public static class ExpansionCostFactor {
-
-    /** The horizontal expansion cost factor on a layer of the board. */
-    public final double horizontal;
-
-    /** The vertical expansion cost factor on a layer of the board. */
-    public final double vertical;
-
-    /** Constructs an ExpansionCostFactor with specified horizontal and vertical costs. */
-    public ExpansionCostFactor(double horizontal, double vertical) {
-      this.horizontal = horizontal;
-      this.vertical = vertical;
-    }
-  }
+  public record ExpansionCostFactor(double horizontal, double vertical) {}
 
   /** Array of via costs from one layer to the other layers. */
   static final class ViaCost {

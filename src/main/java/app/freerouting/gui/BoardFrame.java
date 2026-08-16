@@ -1299,26 +1299,14 @@ public class BoardFrame extends WindowBase {
     fileChooser.addChoosableFileFilter(jsonSessionFilter);
 
     // Set the file filter based on the output file format
-    switch (output.format) {
-      case SES:
-        fileChooser.setFileFilter(sesFilter);
-        break;
-      case FRB:
-        fileChooser.setFileFilter(frbFilter);
-        break;
-      case SCR:
-        fileChooser.setFileFilter(scrFilter);
-        break;
-      case DSN:
-        fileChooser.setFileFilter(dsnFilter);
-        break;
-      case KICAD_SESSION_JSON:
-        fileChooser.setFileFilter(jsonSessionFilter);
-        break;
-      default:
-        fileChooser.setFileFilter(sesFilter);
-        break;
-    }
+    fileChooser.setFileFilter(
+        switch (output.format) {
+          case FRB -> frbFilter;
+          case SCR -> scrFilter;
+          case DSN -> dsnFilter;
+          case KICAD_SESSION_JSON -> jsonSessionFilter;
+          default -> sesFilter;
+        });
 
     // Set the default file name based on the output file name
     if (!output.getFilename().isEmpty()) {

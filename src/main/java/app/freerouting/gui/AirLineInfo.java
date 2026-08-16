@@ -5,19 +5,8 @@ import app.freerouting.drc.AirLine;
 import app.freerouting.util.TextManager;
 import java.util.Locale;
 
-/** Wrapper class for displaying information about an AirLine in the ItemInfoPrinter. */
-public class AirLineInfo implements ItemInfoPrinter.Printable {
-
-  public final AirLine airline;
-
-  /**
-   * Creates an information-panel adapter for an incomplete connection.
-   *
-   * @param airline the incomplete connection to display
-   */
-  public AirLineInfo(AirLine airline) {
-    this.airline = airline;
-  }
+/** Wrapper record for displaying information about an AirLine in the ItemInfoPrinter. */
+public record AirLineInfo(AirLine airline) implements ItemInfoPrinter.Printable {
 
   @Override
   public void printInfo(ItemInfoPrinter printer, Locale locale) {

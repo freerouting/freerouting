@@ -42,7 +42,7 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
     Set<Item> selectedItems = new TreeSet<>();
     for (int i = 0; i < selectedIncompletes.size(); i++) {
       AirLineInfo currentInfo = (AirLineInfo) selectedIncompletes.get(i);
-      AirLine currentAirline = currentInfo.airline;
+      AirLine currentAirline = currentInfo.airline();
       selectedItems.add(currentAirline.fromItem);
       selectedItems.add(currentAirline.toItem);
     }

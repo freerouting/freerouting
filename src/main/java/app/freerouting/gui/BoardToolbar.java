@@ -692,20 +692,11 @@ class BoardToolbar extends JPanel {
 
   public void setUnitSelectionPanelValue(Unit unit) {
     switch (unit) {
-      case MIL:
-        this.unitSelectionPanel.setSelectedValue("unit_mil");
-        break;
-      case INCH:
-        this.unitSelectionPanel.setSelectedValue("unit_inch");
-        break;
-      case MM:
-        this.unitSelectionPanel.setSelectedValue("unit_mm");
-        break;
-      case UM:
-        this.unitSelectionPanel.setSelectedValue("unit_um");
-        break;
-      default:
-        break;
+      case MIL -> this.unitSelectionPanel.setSelectedValue("unit_mil");
+      case INCH -> this.unitSelectionPanel.setSelectedValue("unit_inch");
+      case MM -> this.unitSelectionPanel.setSelectedValue("unit_mm");
+      case UM -> this.unitSelectionPanel.setSelectedValue("unit_um");
+      default -> {}
     }
   }
 

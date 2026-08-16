@@ -129,45 +129,17 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
   @Override
   public IntPoint corner(int no) {
-
-    int x;
-    int y;
-    switch (no) {
-      case 0 -> {
-        x = lowerLeftDiagonalX - bottomY;
-        y = bottomY;
-      }
-      case 1 -> {
-        x = lowerRightDiagonalX + bottomY;
-        y = bottomY;
-      }
-      case 2 -> {
-        x = rightX;
-        y = rightX - lowerRightDiagonalX;
-      }
-      case 3 -> {
-        x = rightX;
-        y = upperRightDiagonalX - rightX;
-      }
-      case 4 -> {
-        x = upperRightDiagonalX - topY;
-        y = topY;
-      }
-      case 5 -> {
-        x = upperLeftDiagonalX + topY;
-        y = topY;
-      }
-      case 6 -> {
-        x = leftX;
-        y = leftX - upperLeftDiagonalX;
-      }
-      case 7 -> {
-        x = leftX;
-        y = lowerLeftDiagonalX - leftX;
-      }
+    return switch (no) {
+      case 0 -> new IntPoint(lowerLeftDiagonalX - bottomY, bottomY);
+      case 1 -> new IntPoint(lowerRightDiagonalX + bottomY, bottomY);
+      case 2 -> new IntPoint(rightX, rightX - lowerRightDiagonalX);
+      case 3 -> new IntPoint(rightX, upperRightDiagonalX - rightX);
+      case 4 -> new IntPoint(upperRightDiagonalX - topY, topY);
+      case 5 -> new IntPoint(upperLeftDiagonalX + topY, topY);
+      case 6 -> new IntPoint(leftX, leftX - upperLeftDiagonalX);
+      case 7 -> new IntPoint(leftX, lowerLeftDiagonalX - leftX);
       default -> throw new IllegalArgumentException("IntOctagon.corner: no out of range");
-    }
-    return new IntPoint(x, y);
+    };
   }
 
   /** Returns a stable identifier for this octagon. */
@@ -248,70 +220,21 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
   @Override
   public Line borderLine(int no) {
-    int ax;
-    int ay;
-    int bx;
-    int by;
-    switch (no) {
-      case 0 -> {
-        // lower boundary line
-        ax = 0;
-        ay = bottomY;
-        bx = 1;
-        by = bottomY;
-      }
-      case 1 -> {
-        // lower right boundary line
-        ax = lowerRightDiagonalX;
-        ay = 0;
-        bx = lowerRightDiagonalX + 1;
-        by = 1;
-      }
-      case 2 -> {
-        // right boundary line
-        ax = rightX;
-        ay = 0;
-        bx = rightX;
-        by = 1;
-      }
-      case 3 -> {
-        // upper right boundary line
-        ax = upperRightDiagonalX;
-        ay = 0;
-        bx = upperRightDiagonalX - 1;
-        by = 1;
-      }
-      case 4 -> {
-        // upper boundary line
-        ax = 0;
-        ay = topY;
-        bx = -1;
-        by = topY;
-      }
-      case 5 -> {
-        // upper left boundary line
-        ax = upperLeftDiagonalX;
-        ay = 0;
-        bx = upperLeftDiagonalX - 1;
-        by = -1;
-      }
-      case 6 -> {
-        // left boundary line
-        ax = leftX;
-        ay = 0;
-        bx = leftX;
-        by = -1;
-      }
-      case 7 -> {
-        // lower left boundary line
-        ax = lowerLeftDiagonalX;
-        ay = 0;
-        bx = lowerLeftDiagonalX + 1;
-        by = -1;
-      }
+    return switch (no) {
+      case 0 -> new Line(0, bottomY, 1, bottomY); // lower boundary line
+      case 1 ->
+          new Line(lowerRightDiagonalX, 0, lowerRightDiagonalX + 1, 1); // lower right boundary line
+      case 2 -> new Line(rightX, 0, rightX, 1); // right boundary line
+      case 3 ->
+          new Line(upperRightDiagonalX, 0, upperRightDiagonalX - 1, 1); // upper right boundary line
+      case 4 -> new Line(0, topY, -1, topY); // upper boundary line
+      case 5 ->
+          new Line(upperLeftDiagonalX, 0, upperLeftDiagonalX - 1, -1); // upper left boundary line
+      case 6 -> new Line(leftX, 0, leftX, -1); // left boundary line
+      case 7 ->
+          new Line(lowerLeftDiagonalX, 0, lowerLeftDiagonalX + 1, -1); // lower left boundary line
       default -> throw new IllegalArgumentException("IntOctagon.edge_line: no out of range");
-    }
-    return new Line(ax, ay, bx, by);
+    };
   }
 
   @Override

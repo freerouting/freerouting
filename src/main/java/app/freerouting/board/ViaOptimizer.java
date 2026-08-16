@@ -476,10 +476,10 @@ public final class ViaOptimizer {
 
     double currentWeightedDistance1 =
         floatViaLocation.weightedDistance(
-            floatFirstTraceFromCorner, firstTraceCosts.horizontal, firstTraceCosts.vertical);
+            floatFirstTraceFromCorner, firstTraceCosts.horizontal(), firstTraceCosts.vertical());
     double currentWeightedDistance2 =
         floatViaLocation.weightedDistance(
-            floatFirstTraceFromCorner, secondTraceCosts.horizontal, secondTraceCosts.vertical);
+            floatFirstTraceFromCorner, secondTraceCosts.horizontal(), secondTraceCosts.vertical());
 
     if (currentWeightedDistance1 > currentWeightedDistance2) {
       // try to move the via in direction of firstTraceFromCorner
@@ -498,10 +498,10 @@ public final class ViaOptimizer {
 
     currentWeightedDistance1 =
         floatViaLocation.weightedDistance(
-            floatSecondTraceFromCorner, secondTraceCosts.horizontal, secondTraceCosts.vertical);
+            floatSecondTraceFromCorner, secondTraceCosts.horizontal(), secondTraceCosts.vertical());
     currentWeightedDistance2 =
         floatViaLocation.weightedDistance(
-            floatSecondTraceFromCorner, firstTraceCosts.horizontal, firstTraceCosts.vertical);
+            floatSecondTraceFromCorner, firstTraceCosts.horizontal(), firstTraceCosts.vertical());
 
     if (currentWeightedDistance1 > currentWeightedDistance2) {
       // try to move the via in direction of secondTraceFromCorner
@@ -539,10 +539,10 @@ public final class ViaOptimizer {
       }
       currentWeightedDistance1 =
           floatToPoint1.weightedDistance(
-              floatToPoint2, firstTraceCosts.horizontal, firstTraceCosts.vertical);
+              floatToPoint2, firstTraceCosts.horizontal(), firstTraceCosts.vertical());
       currentWeightedDistance2 =
           floatToPoint1.weightedDistance(
-              floatToPoint2, secondTraceCosts.horizontal, secondTraceCosts.vertical);
+              floatToPoint2, secondTraceCosts.horizontal(), secondTraceCosts.vertical());
 
       if (currentWeightedDistance1 > currentWeightedDistance2) {
         // try moving the via first into the direction of toPoint1
@@ -578,13 +578,13 @@ public final class ViaOptimizer {
 
       currentWeightedDistance1 =
           floatViaLocation.weightedDistance(
-              floatFirstTraceFromCorner, firstTraceCosts.horizontal, firstTraceCosts.vertical);
+              floatFirstTraceFromCorner, firstTraceCosts.horizontal(), firstTraceCosts.vertical());
       currentWeightedDistance2 =
           floatViaLocation.weightedDistance(
-              floatCheckLocation, secondTraceCosts.horizontal, secondTraceCosts.vertical);
+              floatCheckLocation, secondTraceCosts.horizontal(), secondTraceCosts.vertical());
       double currentWeightedDistance3 =
           floatCheckLocation.weightedDistance(
-              floatFirstTraceFromCorner, firstTraceCosts.horizontal, firstTraceCosts.vertical);
+              floatFirstTraceFromCorner, firstTraceCosts.horizontal(), firstTraceCosts.vertical());
 
       if (currentWeightedDistance1 > currentWeightedDistance2 + currentWeightedDistance3) {
         IntPoint checkLocation = floatCheckLocation.round();
@@ -609,10 +609,10 @@ public final class ViaOptimizer {
 
       currentWeightedDistance2 =
           floatViaLocation.weightedDistance(
-              floatCheckLocation, secondTraceCosts.horizontal, secondTraceCosts.vertical);
+              floatCheckLocation, secondTraceCosts.horizontal(), secondTraceCosts.vertical());
       currentWeightedDistance3 =
           floatCheckLocation.weightedDistance(
-              floatFirstTraceFromCorner, firstTraceCosts.horizontal, firstTraceCosts.vertical);
+              floatFirstTraceFromCorner, firstTraceCosts.horizontal(), firstTraceCosts.vertical());
 
       if (currentWeightedDistance1 > currentWeightedDistance2 + currentWeightedDistance3) {
         IntPoint checkLocation = floatCheckLocation.round();
@@ -640,13 +640,17 @@ public final class ViaOptimizer {
 
       currentWeightedDistance1 =
           floatViaLocation.weightedDistance(
-              floatSecondTraceFromCorner, secondTraceCosts.horizontal, secondTraceCosts.vertical);
+              floatSecondTraceFromCorner,
+              secondTraceCosts.horizontal(),
+              secondTraceCosts.vertical());
       currentWeightedDistance2 =
           floatViaLocation.weightedDistance(
-              floatCheckLocation, firstTraceCosts.horizontal, firstTraceCosts.vertical);
+              floatCheckLocation, firstTraceCosts.horizontal(), firstTraceCosts.vertical());
       double currentWeightedDistance3 =
           floatCheckLocation.weightedDistance(
-              floatSecondTraceFromCorner, secondTraceCosts.horizontal, secondTraceCosts.vertical);
+              floatSecondTraceFromCorner,
+              secondTraceCosts.horizontal(),
+              secondTraceCosts.vertical());
 
       if (currentWeightedDistance1 > currentWeightedDistance2 + currentWeightedDistance3) {
         IntPoint checkLocation = floatCheckLocation.round();
@@ -671,10 +675,12 @@ public final class ViaOptimizer {
 
       currentWeightedDistance2 =
           floatViaLocation.weightedDistance(
-              floatCheckLocation, firstTraceCosts.horizontal, firstTraceCosts.vertical);
+              floatCheckLocation, firstTraceCosts.horizontal(), firstTraceCosts.vertical());
       currentWeightedDistance3 =
           floatCheckLocation.weightedDistance(
-              floatSecondTraceFromCorner, secondTraceCosts.horizontal, secondTraceCosts.vertical);
+              floatSecondTraceFromCorner,
+              secondTraceCosts.horizontal(),
+              secondTraceCosts.vertical());
 
       if (currentWeightedDistance1 > currentWeightedDistance2 + currentWeightedDistance3) {
         IntPoint checkLocation = floatCheckLocation.round();

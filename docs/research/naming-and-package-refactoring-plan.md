@@ -646,10 +646,10 @@ Branch: `refactor/naming-phase-15-java-modernization`
 
 **Progress checklist**
 
-- [ ] Convert verbose `switch` statements to modern arrow switch expressions (`case A -> ...`) across `geometry.planar`, `io.specctra`, `drc`.
-- [ ] Convert simple immutable data carriers to Java records (`ExpansionCostFactor`, `BoardHistoryEntry`, etc.).
-- [ ] Modernize collection instantiation with `List.copyOf()`, `Set.copyOf()`, `List.of()` where immutable collections are created.
-- [ ] Run full test suite and quality gates.
+- [x] Convert verbose `switch` statements to modern arrow switch expressions (`case A -> ...`) across `geometry.planar`, `io.specctra`, `drc`, `gui`, `core`.
+- [x] Convert simple immutable data carriers to Java records (`ExpansionCostFactor`, `AirLineInfo`).
+- [x] Modernize collection instantiation with `List.copyOf()`, `Set.copyOf()`, `List.of()` where immutable collections are created.
+- [x] Run full test suite and quality gates.
 
 ---
 

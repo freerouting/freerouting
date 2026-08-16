@@ -288,31 +288,13 @@ public class FloatPoint implements Serializable {
     while (n >= 4) {
       n -= 4;
     }
-    double newX;
-    double newY;
-    switch (n) {
-      case 0 -> { // 0 degree
-        newX = x;
-        newY = y;
-      }
-      case 1 -> { // 90 degree
-        newX = -y;
-        newY = x;
-      }
-      case 2 -> { // 180 degree
-        newX = -x;
-        newY = -y;
-      }
-      case 3 -> { // 270 degree
-        newX = y;
-        newY = -x;
-      }
-      default -> {
-        newX = 0;
-        newY = 0;
-      }
-    }
-    return new FloatPoint(newX, newY);
+    return switch (n) {
+      case 0 -> new FloatPoint(x, y);
+      case 1 -> new FloatPoint(-y, x);
+      case 2 -> new FloatPoint(-x, -y);
+      case 3 -> new FloatPoint(y, -x);
+      default -> ZERO;
+    };
   }
 
   /** Turns this FloatPoint by factor times 90 degrees around pole. */

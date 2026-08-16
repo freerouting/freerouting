@@ -74,31 +74,13 @@ public class IntVector extends Vector implements Serializable {
     while (n >= 4) {
       n -= 4;
     }
-    int newX;
-    int newY;
-    switch (n) {
-      case 0 -> { // 0 degree
-        newX = x;
-        newY = y;
-      }
-      case 1 -> { // 90 degree
-        newX = -y;
-        newY = x;
-      }
-      case 2 -> { // 180 degree
-        newX = -x;
-        newY = -y;
-      }
-      case 3 -> { // 270 degree
-        newX = y;
-        newY = -x;
-      }
-      default -> {
-        newX = 0;
-        newY = 0;
-      }
-    }
-    return new IntVector(newX, newY);
+    return switch (n) {
+      case 0 -> new IntVector(x, y);
+      case 1 -> new IntVector(-y, x);
+      case 2 -> new IntVector(-x, -y);
+      case 3 -> new IntVector(y, -x);
+      default -> IntVector.ZERO;
+    };
   }
 
   @Override

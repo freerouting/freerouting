@@ -209,30 +209,13 @@ public class RationalVector extends Vector implements Serializable {
     while (n >= 4) {
       n -= 4;
     }
-    BigInteger newX;
-    BigInteger newY;
-    switch (n) {
-      case 0 -> { // 0 degree
-        newX = x;
-        newY = y;
-      }
-      case 1 -> { // 90 degree
-        newX = y.negate();
-        newY = x;
-      }
-      case 2 -> { // 180 degree
-        newX = x.negate();
-        newY = y.negate();
-      }
-      case 3 -> { // 270 degree
-        newX = y;
-        newY = x.negate();
-      }
-      default -> {
-        return this;
-      }
-    }
-    return new RationalVector(newX, newY, this.z);
+    return switch (n) {
+      case 0 -> this;
+      case 1 -> new RationalVector(y.negate(), x, this.z);
+      case 2 -> new RationalVector(x.negate(), y.negate(), this.z);
+      case 3 -> new RationalVector(y, x.negate(), this.z);
+      default -> this;
+    };
   }
 
   @Override

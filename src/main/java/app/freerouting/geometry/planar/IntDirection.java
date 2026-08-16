@@ -100,47 +100,17 @@ public class IntDirection extends Direction implements Serializable {
   @Override
   public Direction turn45Degree(int factor) {
     int n = factor % 8;
-    int newX;
-    int newY;
-    switch (n) {
-      case 0 -> { // 0 degree
-        newX = x;
-        newY = y;
-      }
-      case 1 -> { // 45 degree
-        newX = x - y;
-        newY = x + y;
-      }
-      case 2 -> { // 90 degree
-        newX = -y;
-        newY = x;
-      }
-      case 3 -> { // 135 degree
-        newX = -x - y;
-        newY = x - y;
-      }
-      case 4 -> { // 180 degree
-        newX = -x;
-        newY = -y;
-      }
-      case 5 -> { // 225 degree
-        newX = y - x;
-        newY = -x - y;
-      }
-      case 6 -> { // 270 degree
-        newX = y;
-        newY = -x;
-      }
-      case 7 -> { // 315 degree
-        newX = x + y;
-        newY = y - x;
-      }
-      default -> {
-        newX = 0;
-        newY = 0;
-      }
-    }
-    return new IntDirection(newX, newY);
+    return switch (n) {
+      case 0 -> new IntDirection(x, y);
+      case 1 -> new IntDirection(x - y, x + y);
+      case 2 -> new IntDirection(-y, x);
+      case 3 -> new IntDirection(-x - y, x - y);
+      case 4 -> new IntDirection(-x, -y);
+      case 5 -> new IntDirection(y - x, -x - y);
+      case 6 -> new IntDirection(y, -x);
+      case 7 -> new IntDirection(x + y, y - x);
+      default -> new IntDirection(0, 0);
+    };
   }
 
   final double determinant(IntDirection other) {

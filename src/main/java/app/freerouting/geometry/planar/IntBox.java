@@ -420,42 +420,13 @@ public class IntBox extends RegularTileShape implements Serializable {
 
   @Override
   public Line borderLine(int no) {
-    int ax;
-    int ay;
-    int bx;
-    int by;
-    switch (no) {
-      case 0 -> {
-        // lower boundary line
-        ax = 0;
-        ay = ll.y;
-        bx = 1;
-        by = ll.y;
-      }
-      case 1 -> {
-        // right boundary line
-        ax = ur.x;
-        ay = 0;
-        bx = ur.x;
-        by = 1;
-      }
-      case 2 -> {
-        // upper boundary line
-        ax = 0;
-        ay = ur.y;
-        bx = -1;
-        by = ur.y;
-      }
-      case 3 -> {
-        // left boundary line
-        ax = ll.x;
-        ay = 0;
-        bx = ll.x;
-        by = -1;
-      }
+    return switch (no) {
+      case 0 -> new Line(0, ll.y, 1, ll.y); // lower boundary line
+      case 1 -> new Line(ur.x, 0, ur.x, 1); // right boundary line
+      case 2 -> new Line(0, ur.y, -1, ur.y); // upper boundary line
+      case 3 -> new Line(ll.x, 0, ll.x, -1); // left boundary line
       default -> throw new IllegalArgumentException("IntBox.edge_line: no out of range");
-    }
-    return new Line(ax, ay, bx, by);
+    };
   }
 
   @Override

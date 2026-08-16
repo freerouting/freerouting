@@ -178,26 +178,15 @@ public class BoardFileDetails implements Serializable {
 
     // add the default file extension if it is missing
     if ((this.format != FileFormat.UNKNOWN) && (!this.filename.contains("."))) {
-      String extension = "";
-      switch (this.format) {
-        case SES:
-          extension = "ses";
-          break;
-        case DSN:
-          extension = "dsn";
-          break;
-        case FRB:
-          extension = "frb";
-          break;
-        case RULES:
-          extension = "rules";
-          break;
-        case SCR:
-          extension = "scr";
-          break;
-        default:
-          break;
-      }
+      String extension =
+          switch (this.format) {
+            case SES -> "ses";
+            case DSN -> "dsn";
+            case FRB -> "frb";
+            case RULES -> "rules";
+            case SCR -> "scr";
+            default -> "";
+          };
 
       if (!extension.isEmpty()) {
         this.filename = this.filename + "." + extension;
