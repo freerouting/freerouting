@@ -3,7 +3,7 @@
 **Document Status:** Complete (Phase 17)  
 **Date:** August 2026  
 **Target Codebase:** Freerouting (Java 25 / Gradle 9)  
-**Scope:** Complete structural, architectural, algorithmic, and modern-Java codebase review across 6 core dimensions.
+**Scope:** Complete structural, architectural, algorithmic, and modern-Java codebase review across 7 core dimensions.
 
 ---
 
@@ -11,13 +11,14 @@
 
 Following the comprehensive 16-phase refactoring program on the `refactor/naming-and-packages` branch (which standardized naming conventions across >600 files, eliminated legacy Hungarian notation and snake_case method/field names, reorganized package hierarchies, modernized switch expressions, and updated all documentation), this document provides a comprehensive, forward-looking architectural review and improvement catalog.
 
-The review is organized into **six core dimensions**:
+The review is organized into **seven core dimensions**:
 1. [**Package Structure & Modular Boundaries**](#1-package-structure--modular-boundaries)
 2. [**Class Naming, Hierarchy & Package Locations**](#2-class-naming-hierarchy--package-locations)
 3. [**Methods, Signatures, Parameters & Data Encapsulation**](#3-methods-signatures-parameters--data-encapsulation)
 4. [**Design Patterns, Modern Java Syntax & Language Features**](#4-design-patterns-modern-java-syntax--language-features)
 5. [**Performance, Memory Optimization, Concurrency & Maintenance**](#5-performance-memory-optimization-concurrency--maintenance)
 6. [**Large Class (>600 LOC) Decomposition Analysis & Blueprints**](#6-large-class-600-loc-decomposition-analysis--blueprints)
+7. [**Architectural Decisions & Targeted Consolidations**](#7-architectural-decisions--targeted-consolidations)
 
 ---
 
@@ -392,12 +393,56 @@ gantt
 
 ---
 
+## 7. Architectural Decisions & Targeted Consolidations
+
+### 7.1 Retirement of `BatchAutorouterV19` and GUI Algorithm Selector Streamlining
+* **Problem & Context:**
+  * `BatchAutorouterV19.java` is a historical compatibility copy of the v1.9 routing loop. Following extensive parity work across v2.2–v2.3, the modern `BatchAutorouter` is now the gold standard (faster, cleaner, and superior in completion rate).
+  * The GUI currently exposes an algorithm selection combo box / dropdown (`v1.9` vs `Current`), creating user confusion since only one modern implementation is actively maintained.
+* **Proposed Action Plan:**
+  * **Delete `BatchAutorouterV19.java`:** Remove this file and all branching logic in `AutorouterAndRouteOptimizerThread.java` (`instanceof BatchAutorouterV19`).
+  * **Retain Algorithm Extensibility:** Keep the polymorphic `NamedAlgorithm` / `Autorouter` interface contract so future experimental routing paradigms (e.g., topological routers, SAT-based routers, ML-guided heuristics) can still be plugged in seamlessly.
+  * **Streamline GUI Controls:** Remove algorithm selection dropdowns from GUI toolbars, menus, and parameter dialogs. Freerouting will default directly to the unified `BatchAutorouter`.
+
+### 7.2 Multi-Threaded vs Single-Threaded Optimizer Audit & Unification
+* **Problem & Context:**
+  * `BatchOptimizer.java` runs a single-threaded pull-tight and via reduction pass.
+  * `BatchOptimizerMultiThreaded.java` attempts parallel item optimization using thread pools. However, historical investigations noted that `BatchOptimizerMultiThreaded` suffered from concurrency flaws: concurrent trace modifications and search tree updates created race conditions that occasionally produced clearance violations and non-deterministic board states.
+  * Currently, `AutorouterAndRouteOptimizerThread.java` switches between the two implementations based on thread count settings.
+* **Proposed Action Plan:**
+  1. **Comprehensive Concurrency & DRC Safety Audit:**
+     - Run targeted multi-threaded optimizer stress tests across golden test boards (`Issue508-DAC2020_bm01.dsn` through `bm05.dsn`, `Issue159`, `Issue093`) with thread counts 2, 4, 8, and 16.
+     - Verify with full `DesignRulesChecker.getAllClearanceViolations()` whether race conditions introduce clearance violations.
+  2. **Architectural Unification Decision:**
+     - **Option A (If Concurrency is Repairable via Isolated Spatial Partitions):** Unify `BatchOptimizer` and `BatchOptimizerMultiThreaded` into a single class `BatchOptimizer`. Configure parallelism through a thread pool parameter where `threadCount = 1` enforces deterministic single-threaded execution.
+     - **Option B (If Multi-Threading is Fundamentally Unsafe for Shared Spatial Trees):** Delete `BatchOptimizerMultiThreaded.java` and `OptimizeRouteTask.java`. Keep the robust, DRC-clean `BatchOptimizer.java` as the sole optimization engine.
+  3. **Simplification:** Eliminate optimizer polymorphism and duplicate event listeners in `AutorouterAndRouteOptimizerThread`.
+
+### 7.3 API and MCP Long-Term Versioning Strategy Evaluation
+* **Problem & Context:**
+  * The REST API currently uses `/v1/` URI prefixes with version-suffixed classes: `JobControllerV1`, `SessionControllerV1`, `SystemControllerV1`, `AnalyticsControllerV1`, and `McpControllerV1`.
+  * We need to evaluate whether side-by-side major versioning (`/v1/` and `/v2/` coexisting in the same runtime) is the optimal long-term architecture, and whether the Model Context Protocol (MCP) server requires the same level of URI-based versioning.
+* **Architecture Evaluation & Recommendations:**
+  1. **REST API Versioning:**
+     - **Keep URI Prefix (`/v1/`, `/v2/`):** URI path versioning is the industry standard for public developer REST APIs (e.g. Stripe, GitHub, Google Cloud) because it allows external client libraries and automations to pin a stable contract.
+     - **Favor Additive Backward Compatibility First:** Evolve the schema by adding new nullable fields, optional query parameters, and non-breaking response attributes before incrementing to `/v2/`.
+     - **Controller Hierarchy Cleanliness:** When `/v2/` is eventually required, avoid monolithic controller duplication by sharing common domain services (`JobService`, `SessionService`, `BoardPersistenceService`) and keeping versioned classes strictly as thin DTO translation layers in `api.v1` and `api.v2`.
+  2. **MCP Server Versioning Strategy:**
+     - **MCP Spec Versioning vs REST URI Versioning:** MCP is a JSON-RPC 2.0 protocol whose evolution is governed by the Model Context Protocol specification itself (e.g. protocol version `2024-11-05`). MCP clients negotiate protocol capabilities dynamically in the `initialize` handshake, not via URL path prefixes.
+     - **Dynamic OpenAPI Tool Mapping:** Freerouting's `OpenApiMcpToolRegistry` dynamically generates MCP tool schemas directly from the OpenAPI specification (`/openapi/openapi.json`). As a result, when REST endpoints evolve, MCP tools automatically inherit the current schema definitions.
+     - **Recommendation for MCP:** Keep the single canonical endpoint `/v1/mcp` (along with `/.well-known/agent.json` discovery), and handle protocol version differences through standard JSON-RPC capability negotiation in `McpController` rather than duplicating MCP controllers across `/v1/mcp`, `/v2/mcp`, etc.
+
+---
+
 ## Summary Matrix of Future Improvements
 
 | Improvement | Category | Priority | Effort | Impact |
 |---|---|---|---|---|
 | **Decompose `board` package into `model`, `spatial`, `optimize`, `session`** | Package Structure | High | Medium | High (Maintainability & Clean Architecture) |
 | **Split 62 Monolithic (>600 LOC) Classes into Focused Modules** | Code Organization | High | High | Very High (Single Responsibility & Testability) |
+| **Remove `BatchAutorouterV19` and Streamline GUI Algorithm Dropdown** | Code Consolidation | High | Low | High (Removes Dead Code & UI Clutter) |
+| **Audit & Unify Single/Multi-Threaded Optimizer (`BatchOptimizer`)** | Concurrency & Safety | High | Medium | Very High (Eliminates Concurrency DRC Bugs) |
+| **Rationalize API & MCP Protocol Versioning Strategy** | API Architecture | Medium | Low | High (Future-Proof Integrations) |
 | **Sealed hierarchies for `Item`, `TileShape`, `Point`** | Modern Java | High | Medium | High (Type Safety & Exhaustive Switches) |
 | **Value objects / records for dimensions & units (`BoardLength`)** | Code Quality | Medium | Medium | High (Eliminates unit bugs) |
 | **Virtual Threads for Server, MCP & Telemetry** | Concurrency | High | Low | High (Scalability & Throughput) |
