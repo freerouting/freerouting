@@ -23,9 +23,9 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /** Creates an IntBox from the coordinates of its lower-left and upper-right corners. */
-  public IntBox(int llX, int llY, int urX, int urY) {
-    ll = new IntPoint(llX, llY);
-    ur = new IntPoint(urX, urY);
+  public IntBox(int lowerLeftX, int lowerLeftY, int upperRightX, int upperRightY) {
+    ll = new IntPoint(lowerLeftX, lowerLeftY);
+    ur = new IntPoint(upperRightX, upperRightY);
   }
 
   @Override
@@ -275,11 +275,11 @@ public class IntBox extends RegularTileShape implements Serializable {
 
   @Override
   public IntBox union(IntBox other) {
-    int llx = Math.min(ll.x, other.ll.x);
-    int lly = Math.min(ll.y, other.ll.y);
-    int urx = Math.max(ur.x, other.ur.x);
-    int ury = Math.max(ur.y, other.ur.y);
-    return new IntBox(llx, lly, urx, ury);
+    int lowerLeftX = Math.min(ll.x, other.ll.x);
+    int lowerLeftY = Math.min(ll.y, other.ll.y);
+    int upperRightX = Math.max(ur.x, other.ur.x);
+    int upperRightY = Math.max(ur.y, other.ur.y);
+    return new IntBox(lowerLeftX, lowerLeftY, upperRightX, upperRightY);
   }
 
   @Override
@@ -302,11 +302,11 @@ public class IntBox extends RegularTileShape implements Serializable {
     if (ll.y > other.ur.y) {
       return EMPTY;
     }
-    int llx = Math.max(ll.x, other.ll.x);
-    int urx = Math.min(ur.x, other.ur.x);
-    int lly = Math.max(ll.y, other.ll.y);
-    int ury = Math.min(ur.y, other.ur.y);
-    return new IntBox(llx, lly, urx, ury);
+    int lowerLeftX = Math.max(ll.x, other.ll.x);
+    int upperRightX = Math.min(ur.x, other.ur.x);
+    int lowerLeftY = Math.max(ll.y, other.ll.y);
+    int upperRightY = Math.min(ur.y, other.ur.y);
+    return new IntBox(lowerLeftX, lowerLeftY, upperRightX, upperRightY);
   }
 
   /** Returns the intersection of this box with a ConvexShape. */
@@ -411,11 +411,11 @@ public class IntBox extends RegularTileShape implements Serializable {
     IntPoint p1 = (IntPoint) ll.turn90Degree(factor, pole);
     IntPoint p2 = (IntPoint) ur.turn90Degree(factor, pole);
 
-    int llx = Math.min(p1.x, p2.x);
-    int lly = Math.min(p1.y, p2.y);
-    int urx = Math.max(p1.x, p2.x);
-    int ury = Math.max(p1.y, p2.y);
-    return new IntBox(llx, lly, urx, ury);
+    int lowerLeftX = Math.min(p1.x, p2.x);
+    int lowerLeftY = Math.min(p1.y, p2.y);
+    int upperRightX = Math.max(p1.x, p2.x);
+    int upperRightY = Math.max(p1.y, p2.y);
+    return new IntBox(lowerLeftX, lowerLeftY, upperRightX, upperRightY);
   }
 
   @Override
@@ -482,25 +482,25 @@ public class IntBox extends RegularTileShape implements Serializable {
    * Shrinks the width and height of the box by the input width. The box will not vanish completely.
    */
   public IntBox shrink(int width) {
-    int llX;
-    int urX;
+    int lowerLeftX;
+    int upperRightX;
     if (2 * width <= this.ur.x - this.ll.x) {
-      llX = this.ll.x + width;
-      urX = this.ur.x - width;
+      lowerLeftX = this.ll.x + width;
+      upperRightX = this.ur.x - width;
     } else {
-      llX = (this.ll.x + this.ur.x) / 2;
-      urX = llX;
+      lowerLeftX = (this.ll.x + this.ur.x) / 2;
+      upperRightX = lowerLeftX;
     }
-    int llY;
-    int urY;
+    int lowerLeftY;
+    int upperRightY;
     if (2 * width <= this.ur.y - this.ll.y) {
-      llY = this.ll.y + width;
-      urY = this.ur.y - width;
+      lowerLeftY = this.ll.y + width;
+      upperRightY = this.ur.y - width;
     } else {
-      llY = (this.ll.y + this.ur.y) / 2;
-      urY = llY;
+      lowerLeftY = (this.ll.y + this.ur.y) / 2;
+      upperRightY = lowerLeftY;
     }
-    return new IntBox(llX, llY, urX, urY);
+    return new IntBox(lowerLeftX, lowerLeftY, upperRightX, upperRightY);
   }
 
   @Override
@@ -660,22 +660,24 @@ public class IntBox extends RegularTileShape implements Serializable {
     IntBox[] result = new IntBox[xcount * ycount];
     int currentIndex = 0;
     for (int j = 0; j < ycount; j++) {
-      int currentLly = this.ll.y + j * sectionLengthY;
-      int currentUry;
+      int currentLowerLeftY = this.ll.y + j * sectionLengthY;
+      int currentUpperRightY;
       if (j == (ycount - 1)) {
-        currentUry = this.ur.y;
+        currentUpperRightY = this.ur.y;
       } else {
-        currentUry = currentLly + sectionLengthY;
+        currentUpperRightY = currentLowerLeftY + sectionLengthY;
       }
       for (int i = 0; i < xcount; i++) {
-        int currentLlx = this.ll.x + i * sectionLengthX;
-        int currentUrx;
+        int currentLowerLeftX = this.ll.x + i * sectionLengthX;
+        int currentUpperRightX;
         if (i == (xcount - 1)) {
-          currentUrx = this.ur.x;
+          currentUpperRightX = this.ur.x;
         } else {
-          currentUrx = currentLlx + sectionLengthX;
+          currentUpperRightX = currentLowerLeftX + sectionLengthX;
         }
-        result[currentIndex] = new IntBox(currentLlx, currentLly, currentUrx, currentUry);
+        result[currentIndex] =
+            new IntBox(
+                currentLowerLeftX, currentLowerLeftY, currentUpperRightX, currentUpperRightY);
         ++currentIndex;
       }
     }

@@ -97,29 +97,37 @@ public class Circle implements ConvexShape, Serializable {
 
   @Override
   public IntBox boundingBox() {
-    int llx = center.x - radius;
-    int urx = center.x + radius;
-    int lly = center.y - radius;
-    int ury = center.y + radius;
-    return new IntBox(llx, lly, urx, ury);
+    int lowerLeftX = center.x - radius;
+    int upperRightX = center.x + radius;
+    int lowerLeftY = center.y - radius;
+    int upperRightY = center.y + radius;
+    return new IntBox(lowerLeftX, lowerLeftY, upperRightX, upperRightY);
   }
 
   @Override
   public IntOctagon boundingOctagon() {
-    int lx = center.x - radius;
-    int rx = center.x + radius;
-    int ly = center.y - radius;
-    int uy = center.y + radius;
+    int leftX = center.x - radius;
+    int rightX = center.x + radius;
+    int bottomY = center.y - radius;
+    int topY = center.y + radius;
 
     final double sqrt2Minus1 = Math.sqrt(2) - 1;
     final int ceilCornerValue = (int) Math.ceil(sqrt2Minus1 * radius);
     final int floorCornerValue = (int) Math.floor(sqrt2Minus1 * radius);
 
-    int ulx = lx - (center.y + floorCornerValue);
-    int lrx = rx - (center.y - ceilCornerValue);
-    int llx = lx + (center.y - floorCornerValue);
-    int urx = rx + (center.y + ceilCornerValue);
-    return new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);
+    int upperLeftDiagonalX = leftX - (center.y + floorCornerValue);
+    int lowerRightDiagonalX = rightX - (center.y - ceilCornerValue);
+    int lowerLeftDiagonalX = leftX + (center.y - floorCornerValue);
+    int upperRightDiagonalX = rightX + (center.y + ceilCornerValue);
+    return new IntOctagon(
+        leftX,
+        bottomY,
+        rightX,
+        topY,
+        upperLeftDiagonalX,
+        lowerRightDiagonalX,
+        lowerLeftDiagonalX,
+        upperRightDiagonalX);
   }
 
   @Override

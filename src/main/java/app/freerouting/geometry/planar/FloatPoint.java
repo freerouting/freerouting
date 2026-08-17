@@ -35,36 +35,36 @@ public class FloatPoint implements Serializable {
 
   /** Calculates the smallest IntOctagon containing all the input points. */
   public static IntOctagon boundingOctagon(FloatPoint[] points) {
-    double lx = Integer.MAX_VALUE;
-    double ly = Integer.MAX_VALUE;
-    double rx = Integer.MIN_VALUE;
-    double uy = Integer.MIN_VALUE;
-    double ulx = Integer.MAX_VALUE;
-    double lrx = Integer.MIN_VALUE;
-    double llx = Integer.MAX_VALUE;
-    double urx = Integer.MIN_VALUE;
+    double minX = Integer.MAX_VALUE;
+    double minY = Integer.MAX_VALUE;
+    double maxX = Integer.MIN_VALUE;
+    double maxY = Integer.MIN_VALUE;
+    double minUpperLeftDiagonalX = Integer.MAX_VALUE;
+    double maxLowerRightDiagonalX = Integer.MIN_VALUE;
+    double minLowerLeftDiagonalX = Integer.MAX_VALUE;
+    double maxUpperRightDiagonalX = Integer.MIN_VALUE;
     for (int i = 0; i < points.length; i++) {
       FloatPoint current = points[i];
-      lx = Math.min(lx, current.x);
-      ly = Math.min(ly, current.y);
-      rx = Math.max(rx, current.x);
-      uy = Math.max(uy, current.y);
+      minX = Math.min(minX, current.x);
+      minY = Math.min(minY, current.y);
+      maxX = Math.max(maxX, current.x);
+      maxY = Math.max(maxY, current.y);
       double tmp = current.x - current.y;
-      ulx = Math.min(ulx, tmp);
-      lrx = Math.max(lrx, tmp);
+      minUpperLeftDiagonalX = Math.min(minUpperLeftDiagonalX, tmp);
+      maxLowerRightDiagonalX = Math.max(maxLowerRightDiagonalX, tmp);
       tmp = current.x + current.y;
-      llx = Math.min(llx, tmp);
-      urx = Math.max(urx, tmp);
+      minLowerLeftDiagonalX = Math.min(minLowerLeftDiagonalX, tmp);
+      maxUpperRightDiagonalX = Math.max(maxUpperRightDiagonalX, tmp);
     }
     return new IntOctagon(
-        (int) Math.floor(lx),
-        (int) Math.floor(ly),
-        (int) Math.ceil(rx),
-        (int) Math.ceil(uy),
-        (int) Math.floor(ulx),
-        (int) Math.ceil(lrx),
-        (int) Math.floor(llx),
-        (int) Math.ceil(urx));
+        (int) Math.floor(minX),
+        (int) Math.floor(minY),
+        (int) Math.ceil(maxX),
+        (int) Math.ceil(maxY),
+        (int) Math.floor(minUpperLeftDiagonalX),
+        (int) Math.ceil(maxLowerRightDiagonalX),
+        (int) Math.floor(minLowerLeftDiagonalX),
+        (int) Math.ceil(maxUpperRightDiagonalX));
   }
 
   /** Returns the square of the distance from this point to the zero point. */

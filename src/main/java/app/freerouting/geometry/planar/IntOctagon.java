@@ -54,22 +54,38 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   private Simplex precalculatedToSimplex;
 
   /**
-   * Creates an IntOctagon from 8 integer values. lx is the smallest x value of the shape. ly is the
-   * smallest y value of the shape. rx is the biggest x value af the shape. uy is the biggest y
-   * value of the shape. ulx is the intersection of the upper left diagonal boundary line with the x
-   * axis. lrx is the intersection of the lower right diagonal boundary line with the x axis. llx is
-   * the intersection of the lower left diagonal boundary line with the x axis. urx is the
-   * intersection of the upper right diagonal boundary line with the x axis.
+   * Creates an IntOctagon from 8 integer boundary values.
+   *
+   * @param leftX the smallest x value of the shape
+   * @param bottomY the smallest y value of the shape
+   * @param rightX the biggest x value of the shape
+   * @param topY the biggest y value of the shape
+   * @param upperLeftDiagonalX the intersection of the upper left diagonal boundary line with the x
+   *     axis
+   * @param lowerRightDiagonalX the intersection of the lower right diagonal boundary line with the
+   *     x axis
+   * @param lowerLeftDiagonalX the intersection of the lower left diagonal boundary line with the x
+   *     axis
+   * @param upperRightDiagonalX the intersection of the upper right diagonal boundary line with the
+   *     x axis
    */
-  public IntOctagon(int lx, int ly, int rx, int uy, int ulx, int lrx, int llx, int urx) {
-    leftX = lx;
-    bottomY = ly;
-    rightX = rx;
-    topY = uy;
-    upperLeftDiagonalX = ulx;
-    lowerRightDiagonalX = lrx;
-    lowerLeftDiagonalX = llx;
-    upperRightDiagonalX = urx;
+  public IntOctagon(
+      int leftX,
+      int bottomY,
+      int rightX,
+      int topY,
+      int upperLeftDiagonalX,
+      int lowerRightDiagonalX,
+      int lowerLeftDiagonalX,
+      int upperRightDiagonalX) {
+    this.leftX = leftX;
+    this.bottomY = bottomY;
+    this.rightX = rightX;
+    this.topY = topY;
+    this.upperLeftDiagonalX = upperLeftDiagonalX;
+    this.lowerRightDiagonalX = lowerRightDiagonalX;
+    this.lowerLeftDiagonalX = lowerLeftDiagonalX;
+    this.upperRightDiagonalX = upperRightDiagonalX;
   }
 
   @Override
@@ -1685,21 +1701,21 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
   @Override
   public String toString() {
-    return "IntOctagon(lx="
+    return "IntOctagon(leftX="
         + leftX
-        + ", ly="
+        + ", bottomY="
         + bottomY
-        + ", rx="
+        + ", rightX="
         + rightX
-        + ", uy="
+        + ", topY="
         + topY
-        + ", ulx="
+        + ", upperLeftDiagonalX="
         + upperLeftDiagonalX
-        + ", lrx="
+        + ", lowerRightDiagonalX="
         + lowerRightDiagonalX
-        + ", llx="
+        + ", lowerLeftDiagonalX="
         + lowerLeftDiagonalX
-        + ", urx="
+        + ", upperRightDiagonalX="
         + upperRightDiagonalX
         + ")";
   }

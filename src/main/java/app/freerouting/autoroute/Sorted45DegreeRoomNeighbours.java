@@ -171,63 +171,72 @@ public final class Sorted45DegreeRoomNeighbours {
 
   private static IntOctagon removeNotTouchingBorderLines(
       IntOctagon roomOct, boolean[] edgeInteriorTouchesObstacle) {
-    int lx;
+    int leftX;
     if (edgeInteriorTouchesObstacle[6]) {
-      lx = roomOct.leftX;
+      leftX = roomOct.leftX;
     } else {
-      lx = -Limits.CRIT_INT;
+      leftX = -Limits.CRIT_INT;
     }
 
-    int ly;
+    int bottomY;
     if (edgeInteriorTouchesObstacle[0]) {
-      ly = roomOct.bottomY;
+      bottomY = roomOct.bottomY;
     } else {
-      ly = -Limits.CRIT_INT;
+      bottomY = -Limits.CRIT_INT;
     }
 
-    int rx;
+    int rightX;
     if (edgeInteriorTouchesObstacle[2]) {
-      rx = roomOct.rightX;
+      rightX = roomOct.rightX;
     } else {
-      rx = Limits.CRIT_INT;
+      rightX = Limits.CRIT_INT;
     }
 
-    int uy;
+    int topY;
     if (edgeInteriorTouchesObstacle[4]) {
-      uy = roomOct.topY;
+      topY = roomOct.topY;
     } else {
-      uy = Limits.CRIT_INT;
+      topY = Limits.CRIT_INT;
     }
 
-    int ulx;
+    int upperLeftDiagonalX;
     if (edgeInteriorTouchesObstacle[5]) {
-      ulx = roomOct.upperLeftDiagonalX;
+      upperLeftDiagonalX = roomOct.upperLeftDiagonalX;
     } else {
-      ulx = -Limits.CRIT_INT;
+      upperLeftDiagonalX = -Limits.CRIT_INT;
     }
 
-    int lrx;
+    int lowerRightDiagonalX;
     if (edgeInteriorTouchesObstacle[1]) {
-      lrx = roomOct.lowerRightDiagonalX;
+      lowerRightDiagonalX = roomOct.lowerRightDiagonalX;
     } else {
-      lrx = Limits.CRIT_INT;
+      lowerRightDiagonalX = Limits.CRIT_INT;
     }
 
-    int llx;
+    int lowerLeftDiagonalX;
     if (edgeInteriorTouchesObstacle[7]) {
-      llx = roomOct.lowerLeftDiagonalX;
+      lowerLeftDiagonalX = roomOct.lowerLeftDiagonalX;
     } else {
-      llx = -Limits.CRIT_INT;
+      lowerLeftDiagonalX = -Limits.CRIT_INT;
     }
 
-    int urx;
+    int upperRightDiagonalX;
     if (edgeInteriorTouchesObstacle[3]) {
-      urx = roomOct.upperRightDiagonalX;
+      upperRightDiagonalX = roomOct.upperRightDiagonalX;
     } else {
-      urx = Limits.CRIT_INT;
+      upperRightDiagonalX = Limits.CRIT_INT;
     }
 
-    IntOctagon result = new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);
+    IntOctagon result =
+        new IntOctagon(
+            leftX,
+            bottomY,
+            rightX,
+            topY,
+            upperLeftDiagonalX,
+            lowerRightDiagonalX,
+            lowerLeftDiagonalX,
+            upperRightDiagonalX);
     return result.normalize();
   }
 
@@ -256,23 +265,23 @@ public final class Sorted45DegreeRoomNeighbours {
       int nextSideNo = (currentSideIndex + 1) % 8;
       IntPoint nextCorner = this.roomShape.corner(nextSideNo);
       if (!currentCorner.equals(nextCorner)) {
-        int lx = boardBoundingOct.leftX;
-        int ly = boardBoundingOct.bottomY;
-        int rx = boardBoundingOct.rightX;
-        int uy = boardBoundingOct.topY;
-        int ulx = boardBoundingOct.upperLeftDiagonalX;
-        int lrx = boardBoundingOct.lowerRightDiagonalX;
-        int llx = boardBoundingOct.lowerLeftDiagonalX;
-        int urx = boardBoundingOct.upperRightDiagonalX;
+        int leftX = boardBoundingOct.leftX;
+        int bottomY = boardBoundingOct.bottomY;
+        int rightX = boardBoundingOct.rightX;
+        int topY = boardBoundingOct.topY;
+        int upperLeftDiagonalX = boardBoundingOct.upperLeftDiagonalX;
+        int lowerRightDiagonalX = boardBoundingOct.lowerRightDiagonalX;
+        int lowerLeftDiagonalX = boardBoundingOct.lowerLeftDiagonalX;
+        int upperRightDiagonalX = boardBoundingOct.upperRightDiagonalX;
         switch (currentSideIndex) {
-          case 0 -> uy = this.roomShape.bottomY;
-          case 1 -> ulx = this.roomShape.lowerRightDiagonalX;
-          case 2 -> lx = this.roomShape.rightX;
-          case 3 -> llx = this.roomShape.upperRightDiagonalX;
-          case 4 -> ly = this.roomShape.topY;
-          case 5 -> lrx = this.roomShape.upperLeftDiagonalX;
-          case 6 -> rx = this.roomShape.leftX;
-          case 7 -> urx = this.roomShape.lowerLeftDiagonalX;
+          case 0 -> topY = this.roomShape.bottomY;
+          case 1 -> upperLeftDiagonalX = this.roomShape.lowerRightDiagonalX;
+          case 2 -> leftX = this.roomShape.rightX;
+          case 3 -> lowerLeftDiagonalX = this.roomShape.upperRightDiagonalX;
+          case 4 -> bottomY = this.roomShape.topY;
+          case 5 -> lowerRightDiagonalX = this.roomShape.upperLeftDiagonalX;
+          case 6 -> rightX = this.roomShape.leftX;
+          case 7 -> upperRightDiagonalX = this.roomShape.lowerLeftDiagonalX;
           default -> {
             FRLogger.warn(
                 "SortedOrthoganelRoomNeighbours.calculate_edge_incomplete_rooms_of_obstacle_"
@@ -280,7 +289,16 @@ public final class Sorted45DegreeRoomNeighbours {
             return;
           }
         }
-        insertIncompleteRoom(autorouteEngine, lx, ly, rx, uy, ulx, lrx, llx, urx);
+        insertIncompleteRoom(
+            autorouteEngine,
+            leftX,
+            bottomY,
+            rightX,
+            topY,
+            upperLeftDiagonalX,
+            lowerRightDiagonalX,
+            lowerLeftDiagonalX,
+            upperRightDiagonalX);
       }
       if (currentSideIndex == toSideIndex) {
         break;
@@ -417,15 +435,24 @@ public final class Sorted45DegreeRoomNeighbours {
   /** Inserts a new incomplete room with an octagon shape. */
   private void insertIncompleteRoom(
       AutorouteEngine autorouteEngine,
-      int lx,
-      int ly,
-      int rx,
-      int uy,
-      int ulx,
-      int lrx,
-      int llx,
-      int urx) {
-    IntOctagon newIncompleteRoomShape = new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);
+      int leftX,
+      int bottomY,
+      int rightX,
+      int topY,
+      int upperLeftDiagonalX,
+      int lowerRightDiagonalX,
+      int lowerLeftDiagonalX,
+      int upperRightDiagonalX) {
+    IntOctagon newIncompleteRoomShape =
+        new IntOctagon(
+            leftX,
+            bottomY,
+            rightX,
+            topY,
+            upperLeftDiagonalX,
+            lowerRightDiagonalX,
+            lowerLeftDiagonalX,
+            upperRightDiagonalX);
     newIncompleteRoomShape = newIncompleteRoomShape.normalize();
     if (newIncompleteRoomShape.dimension() == 2) {
       IntOctagon newContainedShape = this.roomShape.intersection(newIncompleteRoomShape);
@@ -457,98 +484,116 @@ public final class Sorted45DegreeRoomNeighbours {
 
     // insert the new incomplete room from prevNeighbour to the next corner of the room shape.
 
-    int lx = boardBoundingOct.leftX;
-    int ly = boardBoundingOct.bottomY;
-    int rx = boardBoundingOct.rightX;
-    int uy = boardBoundingOct.topY;
-    int ulx = boardBoundingOct.upperLeftDiagonalX;
-    int lrx = boardBoundingOct.lowerRightDiagonalX;
-    int llx = boardBoundingOct.lowerLeftDiagonalX;
-    int urx = boardBoundingOct.upperRightDiagonalX;
+    int leftX = boardBoundingOct.leftX;
+    int bottomY = boardBoundingOct.bottomY;
+    int rightX = boardBoundingOct.rightX;
+    int topY = boardBoundingOct.topY;
+    int upperLeftDiagonalX = boardBoundingOct.upperLeftDiagonalX;
+    int lowerRightDiagonalX = boardBoundingOct.lowerRightDiagonalX;
+    int lowerLeftDiagonalX = boardBoundingOct.lowerLeftDiagonalX;
+    int upperRightDiagonalX = boardBoundingOct.upperRightDiagonalX;
     switch (fromSideIndex) {
       case 0 -> {
-        uy = this.roomShape.bottomY;
-        ulx = prevNeighbour.intersection.lowerRightDiagonalX;
+        topY = this.roomShape.bottomY;
+        upperLeftDiagonalX = prevNeighbour.intersection.lowerRightDiagonalX;
       }
       case 1 -> {
-        ulx = this.roomShape.lowerRightDiagonalX;
-        lx = prevNeighbour.intersection.rightX;
+        upperLeftDiagonalX = this.roomShape.lowerRightDiagonalX;
+        leftX = prevNeighbour.intersection.rightX;
       }
       case 2 -> {
-        lx = this.roomShape.rightX;
-        llx = prevNeighbour.intersection.upperRightDiagonalX;
+        leftX = this.roomShape.rightX;
+        lowerLeftDiagonalX = prevNeighbour.intersection.upperRightDiagonalX;
       }
       case 3 -> {
-        llx = this.roomShape.upperRightDiagonalX;
-        ly = prevNeighbour.intersection.topY;
+        lowerLeftDiagonalX = this.roomShape.upperRightDiagonalX;
+        bottomY = prevNeighbour.intersection.topY;
       }
       case 4 -> {
-        ly = this.roomShape.topY;
-        lrx = prevNeighbour.intersection.upperLeftDiagonalX;
+        bottomY = this.roomShape.topY;
+        lowerRightDiagonalX = prevNeighbour.intersection.upperLeftDiagonalX;
       }
       case 5 -> {
-        lrx = this.roomShape.upperLeftDiagonalX;
-        rx = prevNeighbour.intersection.leftX;
+        lowerRightDiagonalX = this.roomShape.upperLeftDiagonalX;
+        rightX = prevNeighbour.intersection.leftX;
       }
       case 6 -> {
-        rx = this.roomShape.leftX;
-        urx = prevNeighbour.intersection.lowerLeftDiagonalX;
+        rightX = this.roomShape.leftX;
+        upperRightDiagonalX = prevNeighbour.intersection.lowerLeftDiagonalX;
       }
       case 7 -> {
-        urx = this.roomShape.lowerLeftDiagonalX;
-        uy = prevNeighbour.intersection.bottomY;
+        upperRightDiagonalX = this.roomShape.lowerLeftDiagonalX;
+        topY = prevNeighbour.intersection.bottomY;
       }
       default -> {}
     }
-    insertIncompleteRoom(autorouteEngine, lx, ly, rx, uy, ulx, lrx, llx, urx);
+    insertIncompleteRoom(
+        autorouteEngine,
+        leftX,
+        bottomY,
+        rightX,
+        topY,
+        upperLeftDiagonalX,
+        lowerRightDiagonalX,
+        lowerLeftDiagonalX,
+        upperRightDiagonalX);
 
     // insert the new incomplete room from prevNeighbour to the next corner of the room shape.
 
-    lx = boardBoundingOct.leftX;
-    ly = boardBoundingOct.bottomY;
-    rx = boardBoundingOct.rightX;
-    uy = boardBoundingOct.topY;
-    ulx = boardBoundingOct.upperLeftDiagonalX;
-    lrx = boardBoundingOct.lowerRightDiagonalX;
-    llx = boardBoundingOct.lowerLeftDiagonalX;
-    urx = boardBoundingOct.upperRightDiagonalX;
+    leftX = boardBoundingOct.leftX;
+    bottomY = boardBoundingOct.bottomY;
+    rightX = boardBoundingOct.rightX;
+    topY = boardBoundingOct.topY;
+    upperLeftDiagonalX = boardBoundingOct.upperLeftDiagonalX;
+    lowerRightDiagonalX = boardBoundingOct.lowerRightDiagonalX;
+    lowerLeftDiagonalX = boardBoundingOct.lowerLeftDiagonalX;
+    upperRightDiagonalX = boardBoundingOct.upperRightDiagonalX;
 
     switch (toSideIndex) {
       case 0 -> {
-        uy = this.roomShape.bottomY;
-        urx = nextNeighbour.intersection.lowerLeftDiagonalX;
+        topY = this.roomShape.bottomY;
+        upperRightDiagonalX = nextNeighbour.intersection.lowerLeftDiagonalX;
       }
       case 1 -> {
-        ulx = this.roomShape.lowerRightDiagonalX;
-        uy = nextNeighbour.intersection.bottomY;
+        upperLeftDiagonalX = this.roomShape.lowerRightDiagonalX;
+        topY = nextNeighbour.intersection.bottomY;
       }
       case 2 -> {
-        lx = this.roomShape.rightX;
-        ulx = nextNeighbour.intersection.lowerRightDiagonalX;
+        leftX = this.roomShape.rightX;
+        upperLeftDiagonalX = nextNeighbour.intersection.lowerRightDiagonalX;
       }
       case 3 -> {
-        llx = this.roomShape.upperRightDiagonalX;
-        lx = nextNeighbour.intersection.rightX;
+        lowerLeftDiagonalX = this.roomShape.upperRightDiagonalX;
+        leftX = nextNeighbour.intersection.rightX;
       }
       case 4 -> {
-        ly = this.roomShape.topY;
-        llx = nextNeighbour.intersection.upperRightDiagonalX;
+        bottomY = this.roomShape.topY;
+        lowerLeftDiagonalX = nextNeighbour.intersection.upperRightDiagonalX;
       }
       case 5 -> {
-        lrx = this.roomShape.upperLeftDiagonalX;
-        ly = nextNeighbour.intersection.topY;
+        lowerRightDiagonalX = this.roomShape.upperLeftDiagonalX;
+        bottomY = nextNeighbour.intersection.topY;
       }
       case 6 -> {
-        rx = this.roomShape.leftX;
-        lrx = nextNeighbour.intersection.upperLeftDiagonalX;
+        rightX = this.roomShape.leftX;
+        lowerRightDiagonalX = nextNeighbour.intersection.upperLeftDiagonalX;
       }
       case 7 -> {
-        urx = this.roomShape.lowerLeftDiagonalX;
-        rx = nextNeighbour.intersection.leftX;
+        upperRightDiagonalX = this.roomShape.lowerLeftDiagonalX;
+        rightX = nextNeighbour.intersection.leftX;
       }
       default -> {}
     }
-    insertIncompleteRoom(autorouteEngine, lx, ly, rx, uy, ulx, lrx, llx, urx);
+    insertIncompleteRoom(
+        autorouteEngine,
+        leftX,
+        bottomY,
+        rightX,
+        topY,
+        upperLeftDiagonalX,
+        lowerRightDiagonalX,
+        lowerLeftDiagonalX,
+        upperRightDiagonalX);
 
     // Insert the new incomplete rooms on the intermediate free sides of the obstacle expansion
     // room.
