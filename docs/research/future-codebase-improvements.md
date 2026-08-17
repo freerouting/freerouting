@@ -3,7 +3,7 @@
 **Document Status:** Complete (Phase 17)  
 **Date:** August 2026  
 **Target Codebase:** Freerouting (Java 25 / Gradle 9)  
-**Scope:** Complete structural, architectural, algorithmic, and modern-Java codebase review across 5 core dimensions.
+**Scope:** Complete structural, architectural, algorithmic, and modern-Java codebase review across 6 core dimensions.
 
 ---
 
@@ -11,12 +11,13 @@
 
 Following the comprehensive 16-phase refactoring program on the `refactor/naming-and-packages` branch (which standardized naming conventions across >600 files, eliminated legacy Hungarian notation and snake_case method/field names, reorganized package hierarchies, modernized switch expressions, and updated all documentation), this document provides a comprehensive, forward-looking architectural review and improvement catalog.
 
-The review is organized into **five core dimensions**:
+The review is organized into **six core dimensions**:
 1. [**Package Structure & Modular Boundaries**](#1-package-structure--modular-boundaries)
 2. [**Class Naming, Hierarchy & Package Locations**](#2-class-naming-hierarchy--package-locations)
 3. [**Methods, Signatures, Parameters & Data Encapsulation**](#3-methods-signatures-parameters--data-encapsulation)
 4. [**Design Patterns, Modern Java Syntax & Language Features**](#4-design-patterns-modern-java-syntax--language-features)
 5. [**Performance, Memory Optimization, Concurrency & Maintenance**](#5-performance-memory-optimization-concurrency--maintenance)
+6. [**Large Class (>600 LOC) Decomposition Analysis & Blueprints**](#6-large-class-600-loc-decomposition-analysis--blueprints)
 
 ---
 
@@ -229,11 +230,174 @@ public sealed abstract class Point
 
 ---
 
+## 6. Large Class (>600 LOC) Decomposition Analysis & Blueprints
+
+An automated scan of `src/main/java` identified **62 classes exceeding 600 lines of code** (totalling ~71,000 lines). These monolithic files represent primary candidates for single-responsibility decomposition.
+
+```mermaid
+pie title Distribution of Classes >600 LOC by Subsystem
+    "GUI & Workspace (13)" : 13
+    "Routing & Maze Search (11)" : 11
+    "Board Database & Optimizers (15)" : 15
+    "Geometry & Planar Math (9)" : 9
+    "I/O Parsers & Serialization (8)" : 8
+    "API, Server & Config (6)" : 6
+```
+
+### 6.1 GUI & Workspace Subsystem
+
+| Class | LOC | Primary Responsibilities | Proposed Decomposition Blueprint |
+|---|---|---|---|
+| [`GuiBoardManager.java`](src/main/java/app/freerouting/gui/workspace/GuiBoardManager.java) | **3,312** | Master GUI coordinator: Swing panels, toolbar bindings, board snapshots, `.frb` binary I/O, display settings, interactive tool state transitions. | • `GuiMenuCoordinator` (menu actions & keyboard shortcuts)<br>• `GuiSessionSerializer` (`.frb` load/save & snapshot stack)<br>• `BoardFileDialogService` (file open/save/export dialogs)<br>• `InteractiveToolStateBinder` (tool selection & mouse events)<br>• `GuiSnapshotManager` (undo/redo checkpoint snapshots) |
+| [`BoardFrame.java`](src/main/java/app/freerouting/gui/BoardFrame.java) | **1,856** | Main application window: layout management, menu bar construction, status bar updates, window event listeners. | • `BoardMenuBarBuilder` (declarative menu bar tree)<br>• `BoardStatusBarCoordinator` (status messages, coordinates & progress)<br>• `WindowFocusManager` (dialog focus & tab handling)<br>• `FrameActionDispatcher` (action event dispatching) |
+| [`GuiDefaultsScanner.java`](src/main/java/app/freerouting/gui/GuiDefaultsScanner.java) | **1,799** | Reflection-based scanner for reading/writing default UI field values and properties. | • `GuiDefaultsTypeAdapterRegistry` (typed property serializers)<br>• `GuiDefaultsFieldScanner` (declarative annotation-based scanner)<br>• `GuiDefaultsValidator` (boundary & fallback validator) |
+| [`WindowAutorouteParameter.java`](src/main/java/app/freerouting/gui/WindowAutorouteParameter.java) | **1,475** | Complex parameter dialog: cost sliders, layer selection, rip-up settings, model synchronization. | • `AutorouteParameterFormPresenter` (view-model & validation)<br>• `CostSliderPanelBuilder` (custom slider/spinner controls)<br>• `LayerSelectionTableComponent` (layer enable/direction grid) |
+| [`GuiDefaultsFile.java`](src/main/java/app/freerouting/gui/GuiDefaultsFile.java) | **1,351** | Persistence layer for GUI defaults file formatting and parsing. | • `GuiDefaultsJsonAdapter` (JSON-backed defaults storage)<br>• `GuiDefaultsMigrationService` (version migration rules) |
+| [`WindowRouteParameter.java`](src/main/java/app/freerouting/gui/WindowRouteParameter.java) | **1,164** | Interactive route settings dialog: trace width, necking, snap angle, via rules. | • `RouteParameterFormPresenter` (view-model & state management)<br>• `RouteRuleInputComponents` (form field components) |
+| [`GraphicsContext.java`](src/main/java/app/freerouting/gui/rendering/GraphicsContext.java) | **1,082** | Visual styles, layer color schemes, visibility toggles, alpha blending, zoom transforms. | • `ColorPaletteService` (color themes & layer palettes)<br>• `LayerVisibilityState` (visibility & selection masks)<br>• `AffineTransformPipeline` (screen-to-board coordinate math) |
+| [`BoardPanel.java`](src/main/java/app/freerouting/gui/BoardPanel.java) | **1,059** | Main drawing surface: mouse drag/zoom gestures, paint hooks, repaint throttling. | • `BoardGestureHandler` (pan, pinch, zoom, crosshair events)<br>• `BoardCanvasRepaintScheduler` (throttled double-buffered canvas) |
+| [`AutorouterAndRouteOptimizerThread.java`](src/main/java/app/freerouting/gui/workspace/AutorouterAndRouteOptimizerThread.java) | **942** | Background worker thread: autoroute execution loop, optimization passes, progress reporting, GUI repaint triggers. | • `RoutingWorkerEngine` (pass execution loop)<br>• `ProgressEstimator` (ETA & percentage calculator)<br>• `ThreadRepaintNotifier` (safe Swing EDT repaint dispatcher) |
+| [`WindowNetClasses.java`](src/main/java/app/freerouting/gui/WindowNetClasses.java) | **934** | Net class rule editor: clearance matrix grid, via rule selectors, net assignment tables. | • `NetClassEditorPresenter` (view-model & transactional edits)<br>• `ClearanceMatrixGridComponent` (editable 2D matrix table) |
+| [`BoardToolbar.java`](src/main/java/app/freerouting/gui/BoardToolbar.java) | **851** | Application toolbar construction, icon management, mode toggles, unit dropdowns. | • `ToolbarButtonGroupFactory` (mode button groups)<br>• `UnitSelectionDropdownComponent` (unit switching widget) |
+| [`WorkspaceSettings.java`](src/main/java/app/freerouting/gui/workspace/WorkspaceSettings.java) | **722** | GUI live settings singleton: display properties, routing parameters, window bounds. | • `DisplaySettings` (record: colors, grid, zoom)<br>• `InteractiveEditorSettings` (record: snap angle, shove mode)<br>• `WorkspaceSettingsFacade` (property change event bus) |
+| [`BoardRenderer.java`](src/main/java/app/freerouting/gui/rendering/BoardRenderer.java) | **703** | Core 2D board rendering pipeline: rendering pins, traces, vias, conduction areas, DRC errors. | • `TraceRenderer` (trace segments, arcs & necking)<br>• `PadViaRenderer` (drill holes, pads & copper rings)<br>• `AreaRenderer` (keepouts, outlines & copper pours) |
+
+---
+
+### 6.2 Routing Engine & Maze Pathfinding Subsystem
+
+| Class | LOC | Primary Responsibilities | Proposed Decomposition Blueprint |
+|---|---|---|---|
+| [`BatchAutorouter.java`](src/main/java/app/freerouting/autoroute/BatchAutorouter.java) | **2,152** | Central autorouting coordinator: pass loops, rip-up cost escalation, airline ordering, plane routing, completion checks. | • `AutoroutePassScheduler` (pass iteration & stop conditions)<br>• `ItemRoutingOrderStrategy` (airline sorting & net prioritization)<br>• `RipupCostEscalator` (adaptive conflict cost multiplier)<br>• `PlaneRoutingHandler` (power/ground pour stub routing) |
+| [`MazeSearchEngine.java`](src/main/java/app/freerouting/autoroute/MazeSearchEngine.java) | **1,936** | Core A* maze expansion: room generation, door graph search, priority queue management, target connection backtracking. | • `MazePriorityQueueManager` (A* open-set priority queue)<br>• `ExpansionNodeEvaluator` (heuristic cost & clearance penalty)<br>• `DoorGraphExplorer` (inter-room door transitions)<br>• `BacktracePathReconstructor` (room-to-polyline path extraction) |
+| [`Sorted45DegreeRoomNeighbours.java`](src/main/java/app/freerouting/autoroute/Sorted45DegreeRoomNeighbours.java) | **935** | 45-degree room adjacency: boundary door calculations, room splitting, corner overlap checks. | • `OctagonDoorGeometryCalculator` (door interval math)<br>• `OctagonNeighborSorter` (angular counter-clockwise sorting) |
+| [`Route.java`](src/main/java/app/freerouting/gui/interactive/Route.java) | **844** | Interactive routing controller: click-to-route, dynamic trace shoving, auto-necking, obstacle snapping. | • `InteractiveRouteTracker` (cursor snapping & rubber-band line)<br>• `DynamicShoveHandler` (realtime trace pushing) |
+| [`FoundConnectionInserter.java`](src/main/java/app/freerouting/autoroute/FoundConnectionInserter.java) | **806** | Inserts routed paths into board: spring-over obstacle avoidance, corner smoothing, DRC violation prevention. | • `SpringOverObstacleHandler` (obstacle bypass trace generation)<br>• `ConnectionGeometryInserter` (board item database insertion)<br>• `TraceCornerSmoother` (45° angle corner optimization) |
+| [`BatchFanout.java`](src/main/java/app/freerouting/autoroute/BatchFanout.java) | **775** | SMD pin fanout router: pin escape directions, via placement rules, fanout pass management. | • `SmdPinTargetSelector` (unrouted SMD pin prioritization)<br>• `FanoutEscapeStrategy` (compass direction escape vectors)<br>• `FanoutViaPlacer` (via clearance check & placement) |
+| [`SortedRoomNeighbours.java`](src/main/java/app/freerouting/autoroute/SortedRoomNeighbours.java) | **764** | Base class for room neighbor calculations and door generation. | • `RoomDoorGenerator` (door boundary segment extraction)<br>• `NeighborSortingUtils` (cyclic boundary traversal) |
+| [`SortedOrthogonalRoomNeighbours.java`](src/main/java/app/freerouting/autoroute/SortedOrthogonalRoomNeighbours.java) | **726** | 90-degree orthogonal room adjacency and door generation. | • `BoxDoorGeometryCalculator` (orthogonal door intervals)<br>• `BoxNeighborSorter` (orthogonal edge sorting) |
+| [`AutorouteEngine.java`](src/main/java/app/freerouting/autoroute/AutorouteEngine.java) | **670** | Routing engine state manager: active expansion rooms, layer structures, maze search algorithms. | • `AutorouteStateContext` (engine memory & active room buffers)<br>• `ExpansionRoomLifecycle` (incomplete-to-complete room promotions) |
+| [`BatchOptimizer.java`](src/main/java/app/freerouting/autoroute/BatchOptimizer.java) | **627** | Post-routing optimization coordinator: pull-tight passes, via reduction, trace shortening. | • `OptimizerPassScheduler` (pull-tight & via-reduction passes)<br>• `OptimizationImprovementTracker` (score improvement threshold checks) |
+| [`BatchAutorouterThread.java`](src/main/java/app/freerouting/autoroute/BatchAutorouterThread.java) | **616** | Background thread wrapper for batch autorouting. | • `AutorouterExecutionLifecycle` (thread interrupt & shutdown handler) |
+
+---
+
+### 6.3 Board Database, Items & Optimizers Subsystem
+
+| Class | LOC | Primary Responsibilities | Proposed Decomposition Blueprint |
+|---|---|---|---|
+| [`BasicBoard.java`](src/main/java/app/freerouting/board/BasicBoard.java) | **1,784** | Physical board database: netlist storage, layer stackup, item insertion/deletion, clearance rule lookup, trace normalization. | • `BoardItemRepository` (indexed storage for pins, traces, vias)<br>• `NetListManager` (nets, net classes & net items)<br>• `LayerStackManager` (layer structure & copper layer rules)<br>• `TraceNormalizer` (combines collinear segments & removes stubs) |
+| [`RoutingBoard.java`](src/main/java/app/freerouting/board/RoutingBoard.java) | **1,644** | Transactional board wrapper: undo/redo transaction history, board snapshots, interactive item selection, layer visibility. | • `BoardTransactionHistory` (command undo/redo stack)<br>• `BoardSelectionManager` (selected item highlights & queries)<br>• `TransactionalItemMutator` (atomic item operations) |
+| [`PolylineTrace.java`](src/main/java/app/freerouting/board/PolylineTrace.java) | **1,429** | Multi-segment trace: corner manipulation, tail removal, trace splitting, clearance shape generation. | • `TraceTailRemover` (identifies and trims unconnected ends)<br>• `TraceSegmentSplitter` (splits traces at intersection points)<br>• `TraceOffsetPolygonBuilder` (clearance shape generation) |
+| [`Item.java`](src/main/java/app/freerouting/board/Item.java) | **1,277** | Abstract root for all board items: clearance calculations, search tree links, contact queries, bounding shapes. | • `ItemContactResolver` (pin/via/trace electrical contact tests)<br>• `ItemClearanceDelegate` (clearance class lookups & matrix queries)<br>• `ItemSpatialIndexHandle` (search tree leaf attachment) |
+| [`ShapeSearchTree.java`](src/main/java/app/freerouting/board/ShapeSearchTree.java) | **1,151** | 2D quadtree/R-tree spatial search tree: spatial queries, free-space expansion room generation, obstacle detection. | • `SpatialTreePartitionEngine` (quadtree node splitting & balancing)<br>• `FreeSpaceRoomExpander` (computes maximal clear expansion rooms)<br>• `SpatialOverlapQueryEngine` (range queries & intersection filters) |
+| [`HeadlessBoardManager.java`](src/main/java/app/freerouting/management/HeadlessBoardManager.java) | **1,007** | Headless/API board coordinator: board creation from DSN, headless autorouter startup, progress logging, job cancellation. | • `HeadlessSessionCoordinator` (board loading & job execution)<br>• `JobCancellationWatcher` (timeout & cooperative cancellation listener) |
+| [`TraceTightenerAnyAngle.java`](src/main/java/app/freerouting/board/TraceTightenerAnyAngle.java) | **1,001** | Arbitrary-angle trace tightener: corner pulling, trace length reduction, clearance preservation. | • `AnyAnglePullTightAlgo` (pull-tight geometric displacement)<br>• `CornerReductionOptimizer` (removes redundant intermediate vertices) |
+| [`TraceShover.java`](src/main/java/app/freerouting/board/TraceShover.java) | **856** | Push-and-shove algorithm: pushing obstacle traces aside to make room for new traces. | • `TraceShoveDirectionFinder` (finds minimum-displacement push vectors)<br>• `ShoveObstacleCascade` (propagates push forces to neighboring traces) |
+| [`ShapeTraceEntries.java`](src/main/java/app/freerouting/board/ShapeTraceEntries.java) | **793** | Shape-to-trace entry lookup cache for spatial collision speedups. | • `TraceEntrySpatialCache` (cache eviction & invalidation strategy) |
+| [`BoardComparator.java`](src/main/java/app/freerouting/board/BoardComparator.java) | **748** | Compares board states across routing passes for parity and regression detection. | • `BoardItemDiffEngine` (item-by-item geometric difference generator)<br>• `RoutingParityReporter` (generates formatted comparison diff reports) |
+| [`ViaOptimizer.java`](src/main/java/app/freerouting/board/ViaOptimizer.java) | **725** | Post-routing via reduction and repositioning: via removal, alignment, stub-to-plane optimization. | • `RedundantViaRemover` (identifies and removes unnecessary layer hops)<br>• `ViaRelocationEngine` (repositions vias to reduce trace length) |
+| [`Pin.java`](src/main/java/app/freerouting/board/Pin.java) | **701** | SMD and through-hole pin models: padstack resolution, drill holes, thermal reliefs, clearances. | • `PadstackResolver` (layer-by-layer shape determination)<br>• `PinClearanceCalculator` (pin-specific clearance offsets) |
+| [`TraceTightener45.java`](src/main/java/app/freerouting/board/TraceTightener45.java) | **670** | 45-degree trace tightener and corner optimizer. | • `FortyfiveDegreePullTightAlgo` (45° segment length minimizer) |
+| [`ShapeSearchTree45Degree.java`](src/main/java/app/freerouting/board/ShapeSearchTree45Degree.java) | **643** | 45-degree octagonal spatial search tree specialization. | • `OctagonExpansionRoomCompleter` (octagonal free-space completion) |
+| [`BoardStatistics.java`](src/main/java/app/freerouting/core/scoring/BoardStatistics.java) | **621** | Collects routing quality statistics: trace lengths, via counts, unrouted items, DRC violations. | • `BoardMetricsCollector` (iterates board items and computes metrics)<br>• `RoutingScoreEvaluator` (weighted score formula computation) |
+
+---
+
+### 6.4 Computational Geometry & Planar Math Subsystem
+
+| Class | LOC | Primary Responsibilities | Proposed Decomposition Blueprint |
+|---|---|---|---|
+| [`IntOctagon.java`](src/main/java/app/freerouting/geometry/planar/IntOctagon.java) | **1,706** | 8-sided orthogonal + 45° polygon primitive: intersection, offset, boundary lines, point containment. | • `IntOctagonIntersectionMath` (octagon-with-octagon/box/simplex intersection)<br>• `IntOctagonOffsetEngine` (clearance expansion & contraction)<br>• `IntOctagonDistanceMath` (distance from point/line to octagon) |
+| [`Simplex.java`](src/main/java/app/freerouting/geometry/planar/Simplex.java) | **1,147** | Arbitrary convex polygon represented as intersection of half-planes: clipping, bounding box, vertex calculation. | • `HalfPlaneIntersectionSolver` (convex polygon clipping & dual conversion)<br>• `SimplexBoundingBoxCalculator` (computes tightest `IntBox` & `IntOctagon`)<br>• `SimplexVertexExtractor` (computes corner points from line intersections) |
+| [`TileShape.java`](src/main/java/app/freerouting/geometry/planar/TileShape.java) | **1,021** | Abstract base class for convex tile shapes: collision dispatch, bounding envelopes, translation/rotation. | • `ShapeCollisionDispatcher` (double-dispatch visitor for shape intersections)<br>• `ShapeTransformationService` (rotation & horizontal/vertical mirroring) |
+| [`PlanarDelaunayTriangulation.java`](src/main/java/app/freerouting/datastructures/PlanarDelaunayTriangulation.java) | **978** | Incremental Delaunay triangulation: triangle mesh, point location, circumcircle tests, edge flips. | • `DelaunayTriangleMesh` (triangle adjacency topology & vertex links)<br>• `PointLocationDAG` (directed acyclic graph for logarithmic point lookup)<br>• `EdgeFlipOptimizer` (maintains Delaunay empty-circumcircle property) |
+| [`Polyline.java`](src/main/java/app/freerouting/geometry/planar/Polyline.java) | **937** | Connected chain of line segments: intersection, offset, self-intersection testing, simplification. | • `PolylineIntersectionMath` (segment-segment & segment-polygon collisions)<br>• `PolylineOffsetGenerator` (thick trace boundary polygon generation) |
+| [`PolygonShape.java`](src/main/java/app/freerouting/geometry/planar/PolygonShape.java) | **777** | General planar polygon: corner sorting, winding order, point-in-polygon tests. | • `PolygonBooleanOps` (polygon union, intersection, difference)<br>• `PolygonWindingValidator` (validates counter-clockwise vertex order) |
+| [`IntBox.java`](src/main/java/app/freerouting/geometry/planar/IntBox.java) | **760** | Axis-aligned bounding box: fast AABB overlaps, union, intersection, enlargement. | • `IntBoxIntersectionMath` (AABB overlap & containment checks)<br>• `IntBoxOffsetMath` (symmetric & asymmetric box expansion) |
+| [`LineSegment.java`](src/main/java/app/freerouting/geometry/planar/LineSegment.java) | **666** | Finite directed line segment: endpoint sorting, distance to point, segment intersection. | • `LineSegmentIntersectionMath` (exact integer collinearity & intersection tests) |
+
+---
+
+### 6.5 Specctra & KiCad I/O Parsers Subsystem
+
+| Class | LOC | Primary Responsibilities | Proposed Decomposition Blueprint |
+|---|---|---|---|
+| [`SpecctraDsnStreamReader.java`](src/main/java/app/freerouting/io/specctra/parser/SpecctraDsnStreamReader.java) | **1,862** | Main Specctra `.dsn` token stream reader and dispatcher. | • `DsnSExpressionTokenizer` (token parsing & parenthesis matching)<br>• `DsnScopeDispatcher` (routes `(pcb ...)`, `(structure ...)`, `(network ...)` scopes)<br>• `DsnErrorReporter` (line-numbered syntax error logging) |
+| [`Network.java`](src/main/java/app/freerouting/io/specctra/parser/Network.java) | **1,464** | Parses `(network ...)` section: nets, pins, net classes, via rules, plane layers. | • `NetParser` (parses individual net declarations & pin connections)<br>• `NetClassParser` (parses clearance classes & trace width rules)<br>• `NetGroupParser` (parses differential pairs & bus net groups) |
+| [`Structure.java`](src/main/java/app/freerouting/io/specctra/parser/Structure.java) | **1,351** | Parses `(structure ...)` section: layer stackup, board boundary, keepouts, via definitions. | • `LayerStructureParser` (parses layer definitions & layer types)<br>• `BoundaryParser` (parses board outline & cutouts)<br>• `KeepoutParser` (parses place/route keepout regions) |
+| [`KiCadJsonReader.java`](src/main/java/app/freerouting/io/kicad/KiCadJsonReader.java) | **1,005** | Parses modern KiCad JSON board interchange format. | • `KiCadJsonLayerParser` (stackup & design rules deserializer)<br>• `KiCadJsonFootprintParser` (footprints, pads & components deserializer)<br>• `KiCadJsonTrackParser` (existing routing & vias deserializer) |
+| [`Wiring.java`](src/main/java/app/freerouting/io/specctra/parser/Wiring.java) | **713** | Parses `(wiring ...)` section: pre-routed wires, vias, test points. | • `WireTraceParser` (wire paths & layer assignments)<br>• `WiringViaParser` (placed vias & padstack links) |
+| [`Shape.java`](src/main/java/app/freerouting/io/specctra/parser/Shape.java) | **646** | Parses Specctra shape descriptors: `(rect ...)`, `(polygon ...)`, `(circle ...)`, `(path ...)`. | • `SpecctraShapeFactory` (maps S-expressions to `geometry.planar` shapes) |
+| [`SessionToEagle.java`](src/main/java/app/freerouting/io/specctra/parser/SessionToEagle.java) | **628** | Translates Specctra `.ses` routing results into Autodesk EAGLE `.scr` script commands. | • `EagleScriptCommandFormatter` (formats `CHANGE`, `ROUTE`, `VIA` commands) |
+
+---
+
+### 6.6 API, Server, Configuration & Telemetry Subsystem
+
+| Class | LOC | Primary Responsibilities | Proposed Decomposition Blueprint |
+|---|---|---|---|
+| [`JobControllerV1.java`](src/main/java/app/freerouting/api/v1/JobControllerV1.java) | **1,421** | REST API endpoints for job management: create, start, cancel, get details, download artifacts, get DRC report, stream logs. | • `JobLifecycleController` (create, start, cancel, get status)<br>• `JobArtifactController` (upload DSN, download SES/JSON)<br>• `JobDrcReportController` (KiCad DRC report endpoints)<br>• `JobLogStreamController` (SSE & log chunk streaming) |
+| [`Freerouting.java`](src/main/java/app/freerouting/Freerouting.java) | **1,358** | Application main entry point: CLI parsing, batch headless execution, GUI launcher, server daemon mode. | • `FreeroutingCliParser` (Picocli / command-line argument validation)<br>• `HeadlessBatchPipeline` (executes single-file or directory batch jobs)<br>• `FreeroutingGuiLauncher` (initializes Look-and-Feel & GUI frame)<br>• `ServerDaemonLauncher` (boots embedded Jetty REST/MCP server) |
+| [`RouterSettings.java`](src/main/java/app/freerouting/settings/RouterSettings.java) | **958** | Flat router configuration object holding ~80 configuration parameters across autorouter, optimizer, scoring, and server. | • `AutorouteSettings` (record: passes, ripup costs, plane rules)<br>• `OptimizerSettings` (record: pull-tight, via reduction, angle restrictions)<br>• `ScoringWeightsSettings` (record: trace length, via count, drc weights)<br>• `RouterSettings` (aggregate container of typed sub-records) |
+| [`GlobalSettings.java`](src/main/java/app/freerouting/settings/GlobalSettings.java) | **828** | Global application user settings: recent files, look-and-feel, telemetry opt-in, window positions. | • `UserSettingsStorage` (loads/saves `freerouting.json`)<br>• `RecentFilesManager` (maintains recent board files list)<br>• `AppPreferences` (theme, language, unit preferences) |
+| [`DesignRulesChecker.java`](src/main/java/app/freerouting/drc/DesignRulesChecker.java) | **821** | DRC engine: conductor-to-conductor clearance checks, copper-to-edge checks, dangling track/via detection. | • `ClearanceViolationDetector` (pairwise spatial clearance checks)<br>• `DanglingItemDetector` (tail traces & single-layer vias)<br>• `CopperToEdgeChecker` (board outline clearance verification) |
+| [`FRAnalytics.java`](src/main/java/app/freerouting/analytics/FRAnalytics.java) | **691** | Telemetry facade: event dispatch, BigQuery event mapping, user session tracking, background HTTP client. | • `AnalyticsEventDispatcher` (enqueues events to background worker)<br>• `BigQueryPayloadMapper` (serializes events to BigQuery schema)<br>• `AnalyticsConsentManager` (manages opt-in/opt-out preferences) |
+| [`OpenApiMcpToolRegistry.java`](src/main/java/app/freerouting/api/mcp/OpenApiMcpToolRegistry.java) | **659** | MCP server tool registry: dynamically builds MCP tool schemas from OpenAPI endpoints. | • `OpenApiToolSchemaBuilder` (converts OpenAPI parameters to JSON Schema)<br>• `McpToolExecutionRouter` (dispatches MCP tool calls to internal REST handlers) |
+| [`McpControllerV1.java`](src/main/java/app/freerouting/api/mcp/McpControllerV1.java) | **608** | JSON-RPC 2.0 endpoint for MCP protocol (`initialize`, `tools/list`, `tools/call`). | • `McpJsonRpcProtocolHandler` (validates JSON-RPC requests & formats errors)<br>• `McpDiscoveryHandler` (handles `/.well-known/agent.json`) |
+
+---
+
+### 6.7 Implementation Phasing & Priority Matrix
+
+To execute these decompositions safely without causing routing regressions or breaking existing tests:
+
+```mermaid
+gantt
+    title Large Class Decomposition Phasing
+    dateFormat  YYYY-MM-DD
+    section Phase A: I/O & API (Low Risk)
+    Split JobControllerV1 & Freerouting.java     :a1, 2026-09-01, 14d
+    Split Specctra Parsers (Network, Structure) :a2, after a1, 14d
+    section Phase B: Settings & Core (Med Risk)
+    Decompose RouterSettings & GlobalSettings   :b1, after a2, 10d
+    Extract DesignRulesChecker Detectors        :b2, after b1, 10d
+    section Phase C: GUI & Workspace (Med Risk)
+    Decompose GuiBoardManager & BoardFrame      :c1, after b2, 21d
+    Extract Parameter Form Presenters           :c2, after c1, 14d
+    section Phase D: Board & Geometry (High Risk)
+    Split BasicBoard & Item into Repositories   :d1, after c2, 21d
+    Extract IntOctagon / Simplex Math Modules   :d2, after d1, 14d
+    section Phase E: Autorouter Engine (High Risk)
+    Decompose BatchAutorouter & MazeSearchEngine:e1, after d2, 28d
+```
+
+1. **Phase A (Low Algorithmic Risk — I/O, API, CLI):**
+   - Split `JobControllerV1`, `Freerouting.java`, `SpecctraDsnStreamReader`, `Network.java`, `Structure.java`.
+   - *Risk:* Zero routing parity risk; verified by existing REST and parser unit tests.
+2. **Phase B (Medium Risk — Settings & DRC):**
+   - Decompose `RouterSettings` and `GlobalSettings` into structured sub-records.
+   - Separate `DesignRulesChecker` into specialized detectors (`ClearanceViolationDetector`, `DanglingItemDetector`).
+   - *Risk:* Verified by `SettingsMergerTest` and `DesignRulesCheckerTest`.
+3. **Phase C (Medium Risk — GUI & Workspace):**
+   - Decompose `GuiBoardManager`, `BoardFrame`, and large parameter dialogs (`WindowAutorouteParameter`, `WindowRouteParameter`).
+   - *Risk:* Verified by `WorkspaceSettingsTest` and GUI headless assertions.
+4. **Phase D (High Algorithmic Risk — Board Database & Geometry):**
+   - Extract `BoardItemRepository`, `TraceNormalizer`, and geometric math utility modules (`IntOctagonIntersectionMath`, `SimplexBoundingBoxCalculator`).
+   - *Risk:* Require golden fixture regression testing (`Dac2020Bm01RoutingTest`, `RoutingFixtureTest`).
+5. **Phase E (High Algorithmic Risk — Routing Engine & Maze Search):**
+   - Decompose `BatchAutorouter` into `AutoroutePassScheduler`, `ItemRoutingOrderStrategy`, and `RipupCostEscalator`.
+   - Decompose `MazeSearchEngine` into `MazePriorityQueueManager` and `DoorGraphExplorer`.
+   - *Risk:* Must verify zero trace regressions and stable memory profiles across all golden benchmarks.
+
+---
+
 ## Summary Matrix of Future Improvements
 
 | Improvement | Category | Priority | Effort | Impact |
 |---|---|---|---|---|
 | **Decompose `board` package into `model`, `spatial`, `optimize`, `session`** | Package Structure | High | Medium | High (Maintainability & Clean Architecture) |
+| **Split 62 Monolithic (>600 LOC) Classes into Focused Modules** | Code Organization | High | High | Very High (Single Responsibility & Testability) |
 | **Sealed hierarchies for `Item`, `TileShape`, `Point`** | Modern Java | High | Medium | High (Type Safety & Exhaustive Switches) |
 | **Value objects / records for dimensions & units (`BoardLength`)** | Code Quality | Medium | Medium | High (Eliminates unit bugs) |
 | **Virtual Threads for Server, MCP & Telemetry** | Concurrency | High | Low | High (Scalability & Throughput) |
