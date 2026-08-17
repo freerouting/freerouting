@@ -354,8 +354,8 @@ and preserve the existing public façade where callers depend on it.
    - Keep `GuiBoardManager` and `BoardFrame` as compatibility façades while collaborators are
      introduced behind package-private contracts.
 2. **Routing orchestration second**
-   - **Deferred for now:** `BatchAutorouter.java` (2,158 lines). Revisit it only after the
-     pipeline-package investigation in Phase 7 establishes the correct ownership boundaries.
+   - `BatchAutorouter.java` (2,158 lines) → Phase 7 pipeline investigation; the first increment
+     extracts connection execution, airline calculations, runtime metrics, and stagnation reports.
    - `MazeSearchEngine.java` (1,948 lines) → `MazeExpansionEngine`, `MazeRipupResolver`, and
      `MazeFanoutDiagnostics`.
    - Preserve maze ordering, ripup costs, plane-net behavior, and diagnostic payloads before and
@@ -410,6 +410,39 @@ logical connections between pipeline stages, workers, algorithm metadata, and ex
 - The provisional `AutoroutePassRunner` / `AutorouteBatchLoop` names are candidates only; replace
   them if the Phase 7 dependency analysis produces more accurate names.
 
+**Current increment (in progress):**
+
+The first implementation increment keeps `BatchAutorouter` as the public `NamedAlgorithm` façade
+and extracts the pure airline/distance calculations, runtime resource sampling, unrouted
+connection reporting, and connection execution behind package-private pipeline collaborators.
+The connection collaborator owns the board-mutating route, necked retry, and strict-DRC recovery
+path; pass orchestration remains in the façade until its event and history dependencies are mapped.
+
+**Task list:**
+
+- [x] Inventory all classes in `autoroute.pipeline`, including callers, event listeners, thread
+  ownership, algorithm metadata, and `RoutingPipeline` stage order.
+- [x] Confirm the first naming proposal: `AutorouteAirlineCalculator`,
+  `AutorouteRuntimeMetrics`, and `AutorouteUnroutedReport`; retain `BatchAutorouter` as the
+  compatibility façade.
+- [x] Extract pure airline/distance calculations without changing the current `FloatLine` or
+  `FloatPoint` results.
+- [x] Extract CPU, allocated-memory, and heap sampling while preserving the custom-JRE fallback
+  behavior.
+- [x] Extract the unrouted-connection report formatter without changing log text or ordering.
+- [x] Extract connection execution and strict-DRC retry behavior into `AutorouteConnectionRouter`;
+  retain the existing strict-DRC routing fixture as characterization coverage for rejection
+  handling and board replacement.
+- [ ] Extract single-thread and multi-thread pass execution into `AutoroutePassRunner` while
+  preserving item order, progress events, counters, and ripup costs.
+- [ ] Extract the fanout/autoroute/stagnation lifecycle into `AutorouteBatchLoop` while preserving
+  stop propagation, board-history restoration, and final-best-board selection.
+- [ ] Re-evaluate `BatchOptimizer`, `BatchOptimizerMultiThreaded`, `BatchFanout`,
+  `BatchAutorouterThread`, `OptimizeRouteTask`, and `RoutingPipeline` after the router façade is
+  reduced; do not rename public algorithm IDs or serialized compatibility surfaces.
+- [ ] Run pipeline characterization tests, package-boundary tests, fast routing tests, full DRC,
+  Spotless, Checkstyle, i18n, and diff gates before marking Phase 7 complete.
+
 **Gate:** A dependency map and naming proposal are reviewed against the pipeline tests and
 architecture rules before code moves. Any implemented split must preserve stage order, optimizer
 construction policy, stop propagation, event delivery, algorithm IDs, and routing/DRC behavior.
@@ -438,45 +471,58 @@ Profile `ShapeSearchTree` / expansion-room churn on a >500-net board. Record **p
 
 ---
 
-## Heat map (Phase 6–7 prioritization)
+## Heat map (current scan and follow-up schedule)
 
-August 17, 2026 scan of tracked `src/main/java` and `src/test/java`: 645 files, 144,101 lines.
+August 17, 2026 scan of `src/main/java` and `src/test/java`: 673 Java files, 145,821 lines.
 The visual heat map and split schedule accompany this shortlist; this section records the
-actionable candidates that belong in the repository plan. The post-phase column reflects the
-current extracted façade state, including the intentionally deferred files that remain unchanged.
+actionable candidates that belong in the repository plan. The current column includes the Phase 6
+extractions and the first Phase 7 `BatchAutorouter` increment, while intentionally deferred files
+remain unchanged.
 
 | Area | Files | This PR |
 |---|---|---|
 | GUI / workspace / rendering | 14 | Incremental façade split; full presenter split remains |
-| Autoroute | 10 | Pipeline + neighbour factory + package split; `BatchAutorouter` deferred to Phase 7 |
+| Autoroute | 10 | Pipeline + neighbour factory + package split; Phase 7 `BatchAutorouter` increment in progress |
 | Board / trees / tighteners | 15 | Package split only |
 | Geometry | 8 | Phase 5 sealed; do not split |
 | I/O parsers | 7 | `SpecctraDsnStreamReader` deferred |
 | API / settings / DRC / analytics | 8 | Settings documentation in Phase 2 only |
 
-| File | Lines | Post-Phase 6/7 lines | Phase 6 action |
+| File | Baseline lines | Current lines | Next recommended split/restructuring |
 |---|---:|---:|---|
-| `GuiBoardManager` | 3312 | 3091 | Split in group 1: state, interaction, persistence |
-| `BatchAutorouter` | 2158 | 2158 | Defer to Phase 7 pipeline-package investigation |
-| `MazeSearchEngine` | 1948 | 1258 | Split in group 2: expansion, ripup, fanout diagnostics |
-| `SpecctraDsnStreamReader` | 1862 | 1862 | Skip for now; defer parser-boundary investigation |
-| `BoardFrame` | 1856 | 1493 | Split in group 1: load, layout, export |
-| `GuiDefaultsScanner` | 1799 | 1799 | Defer; investigate generated/config scanning seam separately |
-| `BasicBoard` | 1787 | 1470 | Split in group 3: items, connectivity, snapshots |
-| `IntOctagon` | 1722 | 1722 | Defer pending geometry tests and allocation profile |
-| `RoutingBoard` | 1648 | 1428 | Split in group 3: operations, search, undo |
-| `Network` | 1464 | 1464 | Defer; parser/domain coupling needs a separate design |
-| `PolylineTrace` | 1431 | 1304 | Split in group 5: geometry, normalization, search-tree adapter |
-| `JobControllerV1` | 1421 | 619 | Split in group 4: input, output, progress |
-| `WindowAutorouteParameter` | 1406 | 1406 | Defer to GUI presenter follow-up after group 1 |
-| `Freerouting` | 1358 | 1358 | Defer; startup/server lifecycle needs an explicit boundary design |
-| `GuiDefaultsFile` | 1352 | 1352 | Defer with GUI persistence work; avoid splitting config format handling prematurely |
-| `Structure` | 1351 | 1351 | Defer; parser/domain boundary is coupled to Specctra representation |
-| `Item` | 1279 | 1279 | Defer; core board identity and serialization make this a high-risk split |
-| `ShapeSearchTree` | 1160 | 1160 | Defer until board-service seams settle |
+| `GuiBoardManager` | 3312 | 3091 | Add `GuiBoardPresentationController`, `GuiBoardItemActions`, and `GuiBoardRoutingSettings`; retain façade |
+| `BatchAutorouter` | 2158 | 1608 | Complete Phase 7 with `AutoroutePassRunner` and `AutorouteBatchLoop` |
+| `MazeSearchEngine` | 1948 | 1258 | Keep current expansion/ripup/diagnostic seams; verify with routing parity |
+| `SpecctraDsnStreamReader` | 1862 | 1862 | Defer generated parser work; design tokenizer/scope boundary first |
+| `BoardFrame` | 1856 | 1493 | Add menu/toolbar actions and parameter-dialog presenter seams |
+| `GuiDefaultsScanner` | 1799 | 1799 | Treat as generated code; regenerate rather than manually split |
+| `BasicBoard` | 1787 | 1470 | Defer further mutation/state splits until board-service contracts settle |
+| `IntOctagon` | 1722 | 1722 | Defer until focused geometry tests and allocation profiling |
+| `RoutingBoard` | 1648 | 1428 | Consider mutation coordinator only after façade characterization |
+| `Network` | 1464 | 1464 | Design parser/domain boundary with `Structure` and Specctra reader together |
+| `PolylineTrace` | 1431 | 1304 | Defer hot-path changes; profile before extracting more mutation seams |
+| `JobControllerV1` | 1421 | 619 | Keep thin resource façade; characterize any in-process second caller |
+| `WindowAutorouteParameter` | 1406 | 1406 | Extract dialog state/presenter, keeping `WorkspaceSettings` as source of truth |
+| `Freerouting` | 1358 | 1358 | Split startup bootstrap from server lifecycle and runtime diagnostics |
+| `GuiDefaultsFile` | 1352 | 1352 | Defer until a second caller justifies separating format parsing |
+| `Structure` | 1351 | 1351 | Pair with the parser/domain boundary investigation |
+| `Item` | 1279 | 1279 | Keep cohesive; identity and serialization make this high risk |
+| `ShapeSearchTree` | 1160 | 1160 | Profile allocation churn before changing search-tree ownership |
 | `Simplex` | 1147 | 1147 | Defer pending geometry allocation profile |
 | `RouterSettings` | 958 | 958 | Keep cohesive; preserve nullable merger fields and serialization keys |
 | `DesignRulesChecker` | 821 | 821 | Keep public `getAllClearanceViolations()` entry point stable |
+
+**Recommended execution order:**
+
+1. Finish Phase 7 with `AutoroutePassRunner` for single/multi-thread pass execution, then
+   `AutorouteBatchLoop` for fanout, stagnation, board-history restoration, and final-board selection.
+2. Add the GUI presenter/action seams around `GuiBoardManager`, `BoardFrame`, and
+   `WindowAutorouteParameter`, preserving EDT behavior and the existing workspace façade.
+3. Design the Specctra parser/domain boundary before touching `SpecctraDsnStreamReader`, `Network`, or
+   `Structure`; do not mechanically split generated scanner code.
+4. Revisit `BasicBoard`, `RoutingBoard`, and `PolylineTrace` only after characterization coverage
+   proves ownership boundaries and full DRC/routing parity.
+5. Profile `ShapeSearchTree`, `IntOctagon`, and `Simplex` before any allocation-oriented changes.
 
 ---
 
