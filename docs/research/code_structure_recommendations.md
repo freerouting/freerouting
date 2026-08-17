@@ -320,7 +320,12 @@ geometry types or changing public behavior.
 `GuiBoardRoutingActions` owns the autoroute worker lifecycle behind the unchanged
 `GuiBoardManager` façade. `BoardWindowLayout` owns permanent subwindow lifecycle and placement,
 `BoardFrameFileActions` owns file-menu open/save actions, and `WindowAutorouteParameterState` owns
-dialog validation and timeout conversion behind the existing Swing façades.
+dialog validation and timeout conversion behind the existing Swing façades. `GuiBoardAnalysisController`
+owns rats-nest and clearance-violation lifecycle behind the unchanged manager façade.
+`GuiBoardRoutingSettings`, `GuiBoardHistoryController`, `GuiBoardLayerController`,
+`GuiBoardSessionModeController`, `GuiBoardEventBridge`, and `GuiBoardLegacyEditActions` now own
+focused routing policy, history, layer synchronization, mode state, diagnostics, and disabled
+compatibility commands.
 
 **Task list:**
 
@@ -338,12 +343,16 @@ dialog validation and timeout conversion behind the existing Swing façades.
   tutorial-restoration, and export characterization tests exist.
 - [x] Add presentation, routing-action, file-menu-action, and parameter-dialog-state collaborators
   without changing public façades or EDT ownership.
+- [x] Extract `GuiBoardAnalysisController` for rats-nest and clearance-violation presentation state
+  while preserving the public analysis façade and existing status messages.
+- [x] Extract routing-settings, history, layer-synchronization, session-mode, diagnostics, and
+  disabled-legacy-action collaborators while preserving public method signatures and GUI behavior.
 - [ ] Run package-boundary tests, fast routing tests, full DRC, Spotless, Checkstyle, and i18n
   checks after each collaborator extraction.
 - [x] Defer `BatchAutorouter.java` to Phase 7 and defer `SpecctraDsnStreamReader.java` to a
   separate parser-boundary investigation.
 
-The line counts below are from the August 17, 2026 scan of 645 tracked Java files (144,101 total
+The line counts below are from the August 17, 2026 scan of 687 tracked Java files (144,799 total
 lines). Size is a prioritization signal; each extraction must follow a stable responsibility seam
 and preserve the existing public façade where callers depend on it.
 
@@ -351,8 +360,10 @@ and preserve the existing public façade where callers depend on it.
 
 1. **GUI boundary first**
    - `GuiBoardManager.java` (3,312 lines) → `GuiBoardSessionState`,
-     `GuiBoardInteractionController`, `GuiBoardPersistence`, `GuiBoardPresentationController`, and
-     `GuiBoardRoutingActions`.
+     `GuiBoardInteractionController`, `GuiBoardPersistence`, `GuiBoardPresentationController`,
+     `GuiBoardRoutingActions`, `GuiBoardAnalysisController`, `GuiBoardRoutingSettings`,
+     `GuiBoardHistoryController`, `GuiBoardLayerController`, `GuiBoardSessionModeController`,
+     `GuiBoardEventBridge`, and `GuiBoardLegacyEditActions`.
    - `BoardFrame.java` (1,856 lines) → `BoardLoadCoordinator`, `BoardWindowLayout`,
      `BoardExportActions`, and `BoardFrameFileActions`.
    - `WindowAutorouteParameter.java` (1,406 lines) → `WindowAutorouteParameterState`; keep Swing
@@ -486,7 +497,7 @@ Profile `ShapeSearchTree` / expansion-room churn on a >500-net board. Record **p
 
 ## Heat map (current scan and follow-up schedule)
 
-August 17, 2026 scan of `src/main/java` and `src/test/java`: 680 Java files, 146,108 lines.
+August 17, 2026 scan of `src/main/java` and `src/test/java`: 687 Java files, 144,799 lines.
 The visual heat map and split schedule accompany this shortlist; this section records the
 actionable candidates that belong in the repository plan. The current column includes the Phase 6
 extractions and the completed Phase 7 pass/batch orchestration increment, while intentionally
@@ -494,7 +505,7 @@ deferred files remain unchanged.
 
 | Area | Files | This PR |
 |---|---|---|
-| GUI / workspace / rendering | 19 | Presentation, routing-action, file-menu-action, and dialog-state façade splits |
+| GUI / workspace / rendering | 26 | Presentation, routing-action, file-menu-action, dialog-state, board-analysis, settings, history, layer, mode, diagnostics, and compatibility splits |
 | Autoroute | 12 | Pipeline + neighbour factory + package split; Phase 7 pass and batch orchestration split |
 | Board / trees / tighteners | 15 | Package split only |
 | Geometry | 8 | Phase 5 sealed; do not split |
@@ -503,7 +514,7 @@ deferred files remain unchanged.
 
 | File | Baseline lines | Current lines | Next recommended split/restructuring |
 |---|---:|---:|---|
-| `GuiBoardManager` | 3312 | 2985 | Characterize remaining item-selection actions; retain façade |
+| `GuiBoardManager` | 3312 | 1019 | Keep the façade stable; characterize load lifecycle before any further extraction |
 | `BatchAutorouter` | 2158 | 571 | Re-evaluate remaining router façade state and package ownership after Phase 7 |
 | `MazeSearchEngine` | 1948 | 1258 | Keep current expansion/ripup/diagnostic seams; verify with routing parity |
 | `SpecctraDsnStreamReader` | 1862 | 1862 | Defer generated parser work; design tokenizer/scope boundary first |

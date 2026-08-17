@@ -1,7 +1,9 @@
 package app.freerouting.gui.workspace;
 
 import app.freerouting.board.Item;
+import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.rendering.GraphicsContext;
 import java.awt.geom.Point2D;
@@ -17,9 +19,18 @@ import java.util.Set;
 final class GuiBoardInteractionController {
 
   private final GuiBoardManager manager;
+  private FloatPoint currentMousePosition;
 
   GuiBoardInteractionController(GuiBoardManager manager) {
     this.manager = manager;
+  }
+
+  FloatPoint getCurrentMousePosition() {
+    return currentMousePosition;
+  }
+
+  void setCurrentMousePosition(FloatPoint position) {
+    currentMousePosition = position;
   }
 
   void leftButtonClicked(Point2D point) {
@@ -284,6 +295,35 @@ final class GuiBoardInteractionController {
     startConstruction(point, Construction.HOLE);
   }
 
+  Set<Item> pickItems(FloatPoint location) {
+    return pickItems(location, manager.getWorkspaceSettings().getItemSelectionFilter());
+  }
+
+  Set<Item> pickItems(FloatPoint point, ItemSelectionFilter itemFilter) {
+    IntPoint location = point.round();
+    WorkspaceSettings settings = manager.getWorkspaceSettings();
+    Set<Item> result =
+        manager.getRoutingBoard().pickItems(location, settings.getLayer(), itemFilter);
+    GraphicsContext graphicsContext = manager.getGraphicsContext();
+    if (result.isEmpty() && settings.getSelectOnAllVisibleLayers()) {
+      for (int i = 0; i < graphicsContext.layerCount(); i++) {
+        if (i == settings.getLayer() || graphicsContext.getLayerVisibility(i) <= 0) {
+          continue;
+        }
+        result.addAll(manager.getRoutingBoard().pickItems(location, i, itemFilter));
+      }
+    }
+    return result;
+  }
+
+  void moveMouse(FloatPoint toLocation) {
+    if (!manager.isBoardReadOnly()) {
+      manager
+          .getPanel()
+          .moveMouse(manager.getGraphicsContext().coordinateTransform.boardToScreen(toLocation));
+    }
+  }
+
   private boolean isReadOnlyInspectedState() {
     return manager.isBoardReadOnly()
         || stateController() == null
@@ -329,7 +369,24 @@ final class GuiBoardInteractionController {
 
   private void applyStateChange(
       EditorStateHandle nextState, boolean repaintAfterChange, boolean updateToolbarSelection) {
-    manager.applyInteractionStateChange(nextState, repaintAfterChange, updateToolbarSelection);
+    applyInteractionStateChange(nextState, repaintAfterChange, updateToolbarSelection);
+  }
+
+  private void applyInteractionStateChange(
+      EditorStateHandle nextState, boolean repaintAfterChange, boolean updateToolbarSelection) {
+    if (nextState == null || nextState == manager.getEditorState()) {
+      return;
+    }
+    manager.setEditorState(nextState);
+    if (updateToolbarSelection) {
+      BoardPanel panel = manager.getPanel();
+      if (panel != null && panel.boardFrame != null) {
+        panel.boardFrame.setToolbarModeSelectionPanelValue(manager.getEditorState());
+      }
+    }
+    if (repaintAfterChange) {
+      manager.repaint();
+    }
   }
 
   private enum Construction {

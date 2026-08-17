@@ -1,7 +1,9 @@
 package app.freerouting.gui.workspace;
 
+import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.BoardSavableSubWindow;
@@ -58,16 +60,14 @@ final class GuiBoardPresentationController {
     }
 
     long interval =
-        manager.isInInteractiveDrag()
-            ? INTERACTIVE_REPAINT_INTERVAL
-            : BACKGROUND_REPAINT_INTERVAL;
+        manager.isInInteractiveDrag() ? INTERACTIVE_REPAINT_INTERVAL : BACKGROUND_REPAINT_INTERVAL;
     long now = System.currentTimeMillis();
     if (lastRepaintedTime >= now - interval) {
       return;
     }
     lastRepaintedTime = now;
 
-    Rectangle updateRectangle = manager.getGraphicsUpdateRectangle();
+    Rectangle updateRectangle = getGraphicsUpdateRectangle();
     if (updateRectangle.width > 0 && updateRectangle.height > 0) {
       panel.repaint(updateRectangle);
     } else {
@@ -81,6 +81,28 @@ final class GuiBoardPresentationController {
     } else {
       manager.getPanel().repaint(rectangle);
     }
+  }
+
+  Rectangle getGraphicsUpdateRectangle() {
+    RoutingBoard board = manager.getPresentationBoard();
+    IntBox updateBox = board.getGraphicsUpdateBox();
+    if (updateBox == null || updateBox.isEmpty()) {
+      return new Rectangle(0, 0, 0, 0);
+    }
+    IntBox offsetBox = updateBox.offset(board.getMaxTraceHalfWidth());
+    return manager.getPresentationGraphicsContext().coordinateTransform.boardToScreen(offsetBox);
+  }
+
+  void adjustDesignBounds() {
+    RoutingBoard board = manager.getPresentationBoard();
+    IntBox newBoundingBox = board.getBoundingBox();
+    for (Item currentItem : board.getItems()) {
+      IntBox currentBoundingBox = currentItem.boundingBox();
+      if (currentBoundingBox.ur.x < Integer.MAX_VALUE) {
+        newBoundingBox = newBoundingBox.union(currentBoundingBox);
+      }
+    }
+    manager.getPresentationGraphicsContext().changeDesignBounds(newBoundingBox);
   }
 
   void draw(Graphics graphics) {

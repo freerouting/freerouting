@@ -196,8 +196,11 @@ state.
 
 ### `app.freerouting.gui.workspace`
 
-The GUI board workspace boundary: `GuiBoardManager`, `WorkspaceContract`, `WorkspaceSettings`,
-`ScreenMessages`, `GuiRoutingJobWorker`, action threads, ratsnest/violation presentation façades, opaque
+The GUI board workspace boundary: `GuiBoardManager`, `GuiBoardAnalysisController`,
+`GuiBoardRoutingSettings`, `GuiBoardHistoryController`, `GuiBoardLayerController`,
+`GuiBoardSessionModeController`, `GuiBoardEventBridge`, `GuiBoardLegacyEditActions`,
+`WorkspaceContract`, `WorkspaceSettings`, `ScreenMessages`, `GuiRoutingJobWorker`, action threads,
+ratsnest/violation presentation façades, opaque
 `EditorStateHandle`/`EditorStateKind`, `EditorEvent`, and `InteractiveCommand`. This package owns no
 concrete editor state and has no dependency on `gui.interactive`; GUI views perform initial-state
 registration.
