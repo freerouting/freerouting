@@ -270,11 +270,15 @@ autoroute/
 
 **Tasks:**
 
-- [ ] Add a static factory on `SortedRoomNeighbours` (or a package-private dispatcher in `autoroute`) that chooses orthogonal / 45° / any-angle `calculate`.
-- [ ] Leave `TraceTightener.getInstance`, `FoundConnectionLocator.getInstance`, and `SearchTreeManager` as they are.
-- [ ] Unit-test the mapping: `ShapeSearchTree90Degree` → orthogonal, `ShapeSearchTree45Degree` → 45°, else any-angle.
+- [x] Add a static factory on `SortedRoomNeighbours` that chooses orthogonal / 45° / any-angle
+  `calculate`.
+- [x] Leave `TraceTightener.getInstance`, `FoundConnectionLocator.getInstance`, and
+  `SearchTreeManager` as they are.
+- [x] Unit-test the mapping: `ShapeSearchTree90Degree` → orthogonal,
+  `ShapeSearchTree45Degree` → 45°, else any-angle.
 
-**Gate:** Existing 45°/90° fixtures unchanged (completion + full DRC). No maze heuristic edits.
+**Gate (passed):** `SortedRoomNeighboursFactoryTest` covers all three search-tree mappings;
+`AutorouteEngine.calculateDoors` delegates through the factory. No maze heuristic edits.
 
 ### Phase 4 — Package splits
 

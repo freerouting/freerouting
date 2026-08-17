@@ -5,6 +5,8 @@ import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
+import app.freerouting.board.ShapeSearchTree45Degree;
+import app.freerouting.board.ShapeSearchTree90Degree;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.Direction;
@@ -29,6 +31,13 @@ import java.util.TreeSet;
  */
 public final class SortedRoomNeighbours {
 
+  /** Identifies the room-neighbour calculation selected by the autoroute search-tree type. */
+  enum CalculationMode {
+    ORTHOGONAL,
+    DEGREE_45,
+    ANY_ANGLE
+  }
+
   private final ExpansionRoom fromRoom;
   private final CompleteExpansionRoom completedRoom;
   private final TileShape roomShape;
@@ -42,6 +51,38 @@ public final class SortedRoomNeighbours {
     roomShape = completedRoom.getShape();
     sortedNeighbours = new TreeSet<>();
     ownNetObjects = new LinkedList<>();
+  }
+
+  /**
+   * Dispatches room-neighbour calculation to the implementation matching the search-tree type.
+   *
+   * @param room the expansion room whose neighbours should be calculated
+   * @param autorouteEngine the autoroute engine providing the search tree and routing context
+   * @return the completed expansion room
+   */
+  public static CompleteExpansionRoom complete(
+      ExpansionRoom room, AutorouteEngine autorouteEngine) {
+    return switch (selectCalculationMode(autorouteEngine.autorouteSearchTree)) {
+      case ORTHOGONAL -> SortedOrthogonalRoomNeighbours.calculate(room, autorouteEngine);
+      case DEGREE_45 -> Sorted45DegreeRoomNeighbours.calculate(room, autorouteEngine);
+      case ANY_ANGLE -> SortedRoomNeighbours.calculate(room, autorouteEngine);
+    };
+  }
+
+  /**
+   * Selects the room-neighbour implementation for a search tree.
+   *
+   * @param searchTree the autoroute search tree
+   * @return the calculation mode matching the search-tree type
+   */
+  static CalculationMode selectCalculationMode(ShapeSearchTree searchTree) {
+    if (searchTree instanceof ShapeSearchTree90Degree) {
+      return CalculationMode.ORTHOGONAL;
+    }
+    if (searchTree instanceof ShapeSearchTree45Degree) {
+      return CalculationMode.DEGREE_45;
+    }
+    return CalculationMode.ANY_ANGLE;
   }
 
   /**

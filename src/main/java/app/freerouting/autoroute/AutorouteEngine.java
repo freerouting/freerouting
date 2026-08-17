@@ -4,8 +4,6 @@ import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
-import app.freerouting.board.ShapeSearchTree45Degree;
-import app.freerouting.board.ShapeSearchTree90Degree;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.IntBox;
@@ -544,15 +542,7 @@ public class AutorouteEngine {
    * shape of the result room may be different to the shape of room.
    */
   private CompleteExpansionRoom calculateDoors(ExpansionRoom room) {
-    CompleteExpansionRoom result;
-    if (this.autorouteSearchTree instanceof ShapeSearchTree90Degree) {
-      result = SortedOrthogonalRoomNeighbours.calculate(room, this);
-    } else if (this.autorouteSearchTree instanceof ShapeSearchTree45Degree) {
-      result = Sorted45DegreeRoomNeighbours.calculate(room, this);
-    } else {
-      result = SortedRoomNeighbours.calculate(room, this);
-    }
-    return result;
+    return SortedRoomNeighbours.complete(room, this);
   }
 
   /**
