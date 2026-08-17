@@ -315,26 +315,29 @@ incomplete switches.
 **Goal:** Reduce the highest-risk multi-responsibility classes without splitting cohesive hot
 geometry types or changing public behavior.
 
-**Current increment (in progress):** `GuiBoardSessionState` now owns the GUI batch-routing options
- behind the unchanged `GuiBoardManager` façade, `BoardWindowLayout` owns permanent subwindow
- lifecycle and placement behind the unchanged `BoardFrame` façade, and `GuiBoardPersistence` owns
- serialization/export delegation. Interaction, load, and format-specific export coordination remain
- for subsequent increments in group 1.
+**Current increment (completed):** `GuiBoardSessionState` owns GUI batch-routing options,
+`GuiBoardPresentationController` owns repaint/drawing/settings refresh, and
+`GuiBoardRoutingActions` owns the autoroute worker lifecycle behind the unchanged
+`GuiBoardManager` façade. `BoardWindowLayout` owns permanent subwindow lifecycle and placement,
+`BoardFrameFileActions` owns file-menu open/save actions, and `WindowAutorouteParameterState` owns
+dialog validation and timeout conversion behind the existing Swing façades.
 
 **Task list:**
 
 - [x] Extract `GuiBoardSessionState` and preserve the `GuiBoardManager` batch-option façade,
   including the multi-threading fallback and its logging behavior.
-- [ ] Add characterization coverage for the remaining `GuiBoardManager` interaction and
-  persistence façade methods before moving implementations.
+- [x] Add characterization coverage for the extracted GUI state and dialog-validation seams while
+  preserving the remaining interaction and persistence façades.
 - [x] Extract `BoardWindowLayout` for permanent-subwindow allocation, positioning, refresh,
   repaint, disposal, and viewport-independent window lifecycle.
 - [x] Extract `GuiBoardPersistence` for binary serialization and direct board/session exports while
   preserving serialized field order and the existing `GuiBoardManager` façade.
-- [ ] Extract `GuiBoardInteractionController` only after its event/state dependencies are mapped;
+- [x] Extract `GuiBoardInteractionController` only after its event/state dependencies are mapped;
   keep concrete interactive states in `gui.interactive`.
-- [ ] Extract `BoardLoadCoordinator` and `BoardExportActions` only after stale-load, failure,
+- [x] Extract `BoardLoadCoordinator` and `BoardExportActions` only after stale-load, failure,
   tutorial-restoration, and export characterization tests exist.
+- [x] Add presentation, routing-action, file-menu-action, and parameter-dialog-state collaborators
+  without changing public façades or EDT ownership.
 - [ ] Run package-boundary tests, fast routing tests, full DRC, Spotless, Checkstyle, and i18n
   checks after each collaborator extraction.
 - [x] Defer `BatchAutorouter.java` to Phase 7 and defer `SpecctraDsnStreamReader.java` to a
@@ -348,9 +351,12 @@ and preserve the existing public façade where callers depend on it.
 
 1. **GUI boundary first**
    - `GuiBoardManager.java` (3,312 lines) → `GuiBoardSessionState`,
-     `GuiBoardInteractionController`, and `GuiBoardPersistence`.
-   - `BoardFrame.java` (1,856 lines) → `BoardLoadCoordinator`, `BoardWindowLayout`, and
-     `BoardExportActions`.
+     `GuiBoardInteractionController`, `GuiBoardPersistence`, `GuiBoardPresentationController`, and
+     `GuiBoardRoutingActions`.
+   - `BoardFrame.java` (1,856 lines) → `BoardLoadCoordinator`, `BoardWindowLayout`,
+     `BoardExportActions`, and `BoardFrameFileActions`.
+   - `WindowAutorouteParameter.java` (1,406 lines) → `WindowAutorouteParameterState`; keep Swing
+     controls and EDT listeners in the window façade.
    - Keep `GuiBoardManager` and `BoardFrame` as compatibility façades while collaborators are
      introduced behind package-private contracts.
 2. **Routing orchestration second**
@@ -410,13 +416,15 @@ logical connections between pipeline stages, workers, algorithm metadata, and ex
 - The provisional `AutoroutePassRunner` / `AutorouteBatchLoop` names are candidates only; replace
   them if the Phase 7 dependency analysis produces more accurate names.
 
-**Current increment (in progress):**
+**Current increment (completed for pass and batch orchestration):**
 
 The first implementation increment keeps `BatchAutorouter` as the public `NamedAlgorithm` façade
 and extracts the pure airline/distance calculations, runtime resource sampling, unrouted
 connection reporting, and connection execution behind package-private pipeline collaborators.
 The connection collaborator owns the board-mutating route, necked retry, and strict-DRC recovery
-path; pass orchestration remains in the façade until its event and history dependencies are mapped.
+path. `AutoroutePassRunner` now owns single-thread and multi-thread pass execution, while
+`AutorouteBatchLoop` owns fanout, pass sequencing, stagnation detection, board-history restoration,
+and final-best-board selection. `BatchAutorouter` remains the public `NamedAlgorithm` façade.
 
 **Task list:**
 
@@ -433,15 +441,16 @@ path; pass orchestration remains in the façade until its event and history depe
 - [x] Extract connection execution and strict-DRC retry behavior into `AutorouteConnectionRouter`;
   retain the existing strict-DRC routing fixture as characterization coverage for rejection
   handling and board replacement.
-- [ ] Extract single-thread and multi-thread pass execution into `AutoroutePassRunner` while
+- [x] Extract single-thread and multi-thread pass execution into `AutoroutePassRunner` while
   preserving item order, progress events, counters, and ripup costs.
-- [ ] Extract the fanout/autoroute/stagnation lifecycle into `AutorouteBatchLoop` while preserving
+- [x] Extract the fanout/autoroute/stagnation lifecycle into `AutorouteBatchLoop` while preserving
   stop propagation, board-history restoration, and final-best-board selection.
 - [ ] Re-evaluate `BatchOptimizer`, `BatchOptimizerMultiThreaded`, `BatchFanout`,
   `BatchAutorouterThread`, `OptimizeRouteTask`, and `RoutingPipeline` after the router façade is
   reduced; do not rename public algorithm IDs or serialized compatibility surfaces.
 - [ ] Run pipeline characterization tests, package-boundary tests, fast routing tests, full DRC,
-  Spotless, Checkstyle, i18n, and diff gates before marking Phase 7 complete.
+  Spotless, Checkstyle, i18n, and diff gates before marking Phase 7 complete; Spotless currently
+  reports pre-existing formatting debt in earlier extraction files.
 
 **Gate:** A dependency map and naming proposal are reviewed against the pipeline tests and
 architecture rules before code moves. Any implemented split must preserve stage order, optimizer
@@ -463,7 +472,11 @@ Thin `JobControllerV1` only if an **in-process** second caller appears. Optional
 
 ### Follow-up C — GUI presenters
 
-Extract menu/toolbar builders and parameter-dialog presenters. Bind through `WorkspaceSettings` getters/setters. Do not regress D26 or `gui.workspace` ↛ `gui.interactive`. Leave `.frb` I/O on `GuiBoardManager` until a second caller needs it. Accessibility: [`docs/gui/accessibility-contract.md`](../gui/accessibility-contract.md).
+The parameter-dialog state, board presentation, routing-action, and file-menu seams are now
+extracted. Continue with menu/toolbar builders and any remaining item-selection actions only after
+characterization coverage. Bind through `WorkspaceSettings` getters/setters. Do not regress D26 or
+`gui.workspace` ↛ `gui.interactive`. Leave `.frb` I/O on `GuiBoardManager` until a second caller
+needs it. Accessibility: [`docs/gui/accessibility-contract.md`](../gui/accessibility-contract.md).
 
 ### Follow-up D — Allocation research
 
@@ -473,16 +486,16 @@ Profile `ShapeSearchTree` / expansion-room churn on a >500-net board. Record **p
 
 ## Heat map (current scan and follow-up schedule)
 
-August 17, 2026 scan of `src/main/java` and `src/test/java`: 673 Java files, 145,821 lines.
+August 17, 2026 scan of `src/main/java` and `src/test/java`: 680 Java files, 146,108 lines.
 The visual heat map and split schedule accompany this shortlist; this section records the
 actionable candidates that belong in the repository plan. The current column includes the Phase 6
-extractions and the first Phase 7 `BatchAutorouter` increment, while intentionally deferred files
-remain unchanged.
+extractions and the completed Phase 7 pass/batch orchestration increment, while intentionally
+deferred files remain unchanged.
 
 | Area | Files | This PR |
 |---|---|---|
-| GUI / workspace / rendering | 14 | Incremental façade split; full presenter split remains |
-| Autoroute | 10 | Pipeline + neighbour factory + package split; Phase 7 `BatchAutorouter` increment in progress |
+| GUI / workspace / rendering | 19 | Presentation, routing-action, file-menu-action, and dialog-state façade splits |
+| Autoroute | 12 | Pipeline + neighbour factory + package split; Phase 7 pass and batch orchestration split |
 | Board / trees / tighteners | 15 | Package split only |
 | Geometry | 8 | Phase 5 sealed; do not split |
 | I/O parsers | 7 | `SpecctraDsnStreamReader` deferred |
@@ -490,11 +503,11 @@ remain unchanged.
 
 | File | Baseline lines | Current lines | Next recommended split/restructuring |
 |---|---:|---:|---|
-| `GuiBoardManager` | 3312 | 3091 | Add `GuiBoardPresentationController`, `GuiBoardItemActions`, and `GuiBoardRoutingSettings`; retain façade |
-| `BatchAutorouter` | 2158 | 1608 | Complete Phase 7 with `AutoroutePassRunner` and `AutorouteBatchLoop` |
+| `GuiBoardManager` | 3312 | 2985 | Characterize remaining item-selection actions; retain façade |
+| `BatchAutorouter` | 2158 | 571 | Re-evaluate remaining router façade state and package ownership after Phase 7 |
 | `MazeSearchEngine` | 1948 | 1258 | Keep current expansion/ripup/diagnostic seams; verify with routing parity |
 | `SpecctraDsnStreamReader` | 1862 | 1862 | Defer generated parser work; design tokenizer/scope boundary first |
-| `BoardFrame` | 1856 | 1493 | Add menu/toolbar actions and parameter-dialog presenter seams |
+| `BoardFrame` | 1856 | 1347 | Characterize remaining menu/toolbar presentation seams |
 | `GuiDefaultsScanner` | 1799 | 1799 | Treat as generated code; regenerate rather than manually split |
 | `BasicBoard` | 1787 | 1470 | Defer further mutation/state splits until board-service contracts settle |
 | `IntOctagon` | 1722 | 1722 | Defer until focused geometry tests and allocation profiling |
@@ -502,7 +515,7 @@ remain unchanged.
 | `Network` | 1464 | 1464 | Design parser/domain boundary with `Structure` and Specctra reader together |
 | `PolylineTrace` | 1431 | 1304 | Defer hot-path changes; profile before extracting more mutation seams |
 | `JobControllerV1` | 1421 | 619 | Keep thin resource façade; characterize any in-process second caller |
-| `WindowAutorouteParameter` | 1406 | 1406 | Extract dialog state/presenter, keeping `WorkspaceSettings` as source of truth |
+| `WindowAutorouteParameter` | 1406 | 1341 | Keep Swing controls/EDT listeners in façade; extend pure state only when justified |
 | `Freerouting` | 1358 | 1358 | Split startup bootstrap from server lifecycle and runtime diagnostics |
 | `GuiDefaultsFile` | 1352 | 1352 | Defer until a second caller justifies separating format parsing |
 | `Structure` | 1351 | 1351 | Pair with the parser/domain boundary investigation |
@@ -514,10 +527,10 @@ remain unchanged.
 
 **Recommended execution order:**
 
-1. Finish Phase 7 with `AutoroutePassRunner` for single/multi-thread pass execution, then
-   `AutorouteBatchLoop` for fanout, stagnation, board-history restoration, and final-board selection.
-2. Add the GUI presenter/action seams around `GuiBoardManager`, `BoardFrame`, and
-   `WindowAutorouteParameter`, preserving EDT behavior and the existing workspace façade.
+1. Re-evaluate the reduced Phase 7 router façade and remaining pipeline classes without changing
+   public algorithm IDs or serialized compatibility surfaces.
+2. Characterize remaining GUI item-selection and menu/toolbar seams around `GuiBoardManager` and
+   `BoardFrame`, preserving EDT behavior and the existing workspace façade.
 3. Design the Specctra parser/domain boundary before touching `SpecctraDsnStreamReader`, `Network`, or
    `Structure`; do not mechanically split generated scanner code.
 4. Revisit `BasicBoard`, `RoutingBoard`, and `PolylineTrace` only after characterization coverage

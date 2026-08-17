@@ -26,7 +26,6 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.ComboBoxLayer;
-import app.freerouting.gui.rendering.BoardRenderer;
 import app.freerouting.gui.rendering.GraphicsContext;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.logger.FRLogger;
@@ -44,7 +43,6 @@ import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.GuiSettingsSource;
 import app.freerouting.util.TextManager;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -123,32 +121,6 @@ import javax.swing.SwingUtilities;
 public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceContract {
 
   /**
-   * The minimum interval in milliseconds between consecutive board panel repaints during background
-   * operations (autorouting, optimization).
-   *
-   * <p>This throttle mechanism prevents excessive repainting during intensive background
-   * operations, maintaining a maximum effective frame rate of 1 FPS (1000ms interval).
-   */
-  private static final long background_repaint_interval = 1000;
-
-  /**
-   * The minimum interval in milliseconds between consecutive board panel repaints during
-   * interactive operations (dragging, moving).
-   *
-   * <p>This throttle provides smoother visual feedback for interactive operations, targeting
-   * approximately 30 FPS.
-   */
-  private static final long interactive_repaint_interval = 33;
-
-  /**
-   * The timestamp of the most recent board panel repaint operation.
-   *
-   * <p>Used in conjunction with repaint_interval to implement repaint throttling. Tracked in
-   * milliseconds since epoch.
-   */
-  private static long last_repainted_time;
-
-  /**
    * Manager for on-screen status and information messages.
    *
    * <p>Displays messages to the user including:
@@ -209,14 +181,6 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * becomes read-only (e.g., during autorouting or logfile playback).
    */
   private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
-
-  /**
-   * Global application settings container.
-   *
-   * <p>Provides access to application-wide configuration including locale, thread pool settings,
-   * and other global preferences.
-   */
-  private final GlobalSettings globalSettings;
 
   /**
    * Listener that responds to new log entries being added.
@@ -348,6 +312,12 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
   /** User-input collaborator behind the public interaction façade. */
   private final GuiBoardInteractionController interactionController;
 
+  /** Presentation collaborator behind the public repaint and drawing façade. */
+  private final GuiBoardPresentationController presentationController;
+
+  /** Autoroute worker lifecycle collaborator behind the public routing façade. */
+  private final GuiBoardRoutingActions routingActions;
+
   /**
    * Thread managing long-running interactive actions in the background.
    *
@@ -453,11 +423,12 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
       SettingsMerger settingsMerger,
       WorkspacePortAdapter sessionPort) {
     super(routingJob);
-    this.globalSettings = globalSettings;
     this.settingsMerger = settingsMerger;
     this.sessionState = new GuiBoardSessionState(globalSettings, routingJob);
     this.persistence = new GuiBoardPersistence(this);
     this.interactionController = new GuiBoardInteractionController(this);
+    this.presentationController = new GuiBoardPresentationController(this);
+    this.routingActions = new GuiBoardRoutingActions(this);
     this.locale = globalSettings.currentLocale;
     this.panel = panel;
     this.screenMessages = panel.screenMessages;
@@ -1516,28 +1487,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * when there is no {@link app.freerouting.gui.BoardFrame} attached.
    */
   public void refreshGuiFromSettings() {
-    if (workspaceSettings == null || panel == null) {
-      return;
-    }
-    // Use the direct BoardFrame back-reference set by BoardPanel.
-    if (boardFrame == null) {
-      return;
-    }
-
-    // Re-subscribe every permanent subwindow as a PropertyChangeListener.
-    // The listener simply calls refresh() on the next EDT cycle to pull the new values.
-    for (app.freerouting.gui.BoardSavableSubWindow subwindow :
-        boardFrame.getPermanentSubwindows()) {
-      if (subwindow == null) {
-        continue;
-      }
-      // Capture the subwindow in a local effectively-final variable for the lambda.
-      final app.freerouting.gui.BoardSavableSubWindow sw = subwindow;
-      workspaceSettings.addPropertyChangeListener(
-          _ -> javax.swing.SwingUtilities.invokeLater(sw::refresh));
-      // Push current values immediately.
-      subwindow.refresh();
-    }
+    presentationController.refreshGuiFromSettings();
   }
 
   /**
@@ -1589,25 +1539,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #paintImmediately
    */
   public void repaint() {
-    if (this.paintImmediately) {
-      final Rectangle maxRectangle = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
-      panel.paintImmediately(maxRectangle);
-    } else {
-      // Use shorter interval for interactive dragging to ensure smooth visual feedback
-      long effectiveInterval =
-          isInInteractiveDrag() ? interactive_repaint_interval : background_repaint_interval;
-      if (last_repainted_time < System.currentTimeMillis() - effectiveInterval) {
-        last_repainted_time = System.currentTimeMillis();
-
-        // Use partial repaint if we have an update box (more efficient)
-        Rectangle updateRect = getGraphicsUpdateRectangle();
-        if (updateRect.width > 0 && updateRect.height > 0) {
-          panel.repaint(updateRect);
-        } else {
-          panel.repaint();
-        }
-      }
-    }
+    presentationController.repaint();
   }
 
   /**
@@ -1625,11 +1557,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #repaint()
    */
   public void repaint(Rectangle rectangle) {
-    if (this.paintImmediately) {
-      panel.paintImmediately(rectangle);
-    } else {
-      panel.repaint(rectangle);
-    }
+    presentationController.repaint(rectangle);
   }
 
   /**
@@ -1640,8 +1568,44 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    *
    * @return true if currently in a drag state (DragState or its subclasses)
    */
-  private boolean isInInteractiveDrag() {
+  boolean isInInteractiveDrag() {
     return editorStateController != null && editorStateController.isInteractiveDrag();
+  }
+
+  app.freerouting.gui.BoardFrame getBoardFrame() {
+    return boardFrame;
+  }
+
+  boolean isPaintImmediately() {
+    return paintImmediately;
+  }
+
+  RoutingBoard getPresentationBoard() {
+    return board;
+  }
+
+  GraphicsContext getPresentationGraphicsContext() {
+    return graphicsContext;
+  }
+
+  RatsNest getPresentationRatsNest() {
+    return ratsnest;
+  }
+
+  ClearanceViolations getPresentationClearanceViolations() {
+    return clearanceViolations;
+  }
+
+  EditorStateController getPresentationEditorStateController() {
+    return editorStateController;
+  }
+
+  InteractiveActionThread getPresentationInteractiveActionThread() {
+    return interactiveActionThread;
+  }
+
+  Point[] getImpactedPoints() {
+    return impactedPoints;
   }
 
   /**
@@ -1691,28 +1655,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InteractiveState#draw(Graphics)
    */
   public void draw(Graphics graphics) {
-    if (board == null) {
-      return;
-    }
-    BoardRenderer.draw(board, graphics, graphicsContext);
-
-    if (ratsnest != null) {
-      ratsnest.draw(graphics, graphicsContext);
-    }
-    if (clearanceViolations != null) {
-      clearanceViolations.draw(graphics, graphicsContext);
-    }
-    if (editorStateController != null) {
-      editorStateController.draw(graphics);
-    }
-    if (interactiveActionThread != null) {
-      interactiveActionThread.draw(graphics);
-    }
-
-    // Draw indicators for impacted points from trace events
-    if (impactedPoints != null && impactedPoints.length > 0) {
-      drawImpactedPointsIndicators(graphics);
-    }
+    presentationController.draw(graphics);
   }
 
   /**
@@ -1732,36 +1675,6 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @param graphics the Graphics context for rendering
    * @see #handleTraceEvent(TraceEvent)
    */
-  private void drawImpactedPointsIndicators(Graphics graphics) {
-    Color drawColor = graphicsContext.getHighlightColor();
-    double drawIntensity = graphicsContext.getHighlightColorIntensity();
-    int defaultTraceHalfWidth = board.rules.getDefaultTraceHalfWidth(0);
-    double radius = Math.max(5 * defaultTraceHalfWidth / 10, 500); // Minimum radius of 500
-    final double drawWidth = 50.0;
-
-    for (Point point : impactedPoints) {
-      if (point != null) {
-        FloatPoint center = point.toFloat();
-
-        // Draw an X marker (crosshair)
-        FloatPoint[] drawPoints = new FloatPoint[2];
-
-        // Draw first diagonal line (top-left to bottom-right)
-        drawPoints[0] = new FloatPoint(center.x - radius, center.y - radius);
-        drawPoints[1] = new FloatPoint(center.x + radius, center.y + radius);
-        graphicsContext.draw(drawPoints, drawWidth, drawColor, graphics, drawIntensity);
-
-        // Draw second diagonal line (top-right to bottom-left)
-        drawPoints[0] = new FloatPoint(center.x + radius, center.y - radius);
-        drawPoints[1] = new FloatPoint(center.x - radius, center.y + radius);
-        graphicsContext.draw(drawPoints, drawWidth, drawColor, graphics, drawIntensity);
-
-        // Draw a circle around the point
-        graphicsContext.drawCircle(center, radius, drawWidth, drawColor, graphics, drawIntensity);
-      }
-    }
-  }
-
   /**
    * Creates a snapshot of the current board state for undo functionality.
    *
@@ -2596,26 +2509,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #stopAutorouterAndRouteOptimizer()
    */
   public InteractiveActionThread startAutorouterAndRouteOptimizer(RoutingJob job) {
-    // The auto-router and route optimizer can only be started if the board is not
-    // read only
-    if (boardIsReadOnly) {
-      return null;
-    }
-
-    // Generate a snapshot of the board before starting the autorouter
-    board.generateSnapshot();
-
-    // Detach the worker from live GUI settings before it starts.
-    job.setSettings(sessionPort.settingsSnapshot().copy());
-    RunGeneration generation = sessionPort.beginRoute(job);
-
-    // Start the auto-router and route optimizer
-    this.interactiveActionThread =
-        InteractiveActionThread.getAutorouterAndRouteOptimizerInstance(
-            sessionPort, generation, job);
-    this.interactiveActionThread.start();
-
-    return this.interactiveActionThread;
+    return routingActions.start(job);
   }
 
   /**
@@ -2629,11 +2523,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InteractiveActionThread#requestStop()
    */
   public void stopAutorouterAndRouteOptimizer() {
-    if (sessionPort instanceof WorkspacePortAdapter adapter) {
-      adapter.requestStopCurrent();
-    } else {
-      requestStopFromSessionPort();
-    }
+    routingActions.stop();
   }
 
   /** Requests the worker to stop without changing presentation state. */
@@ -2641,6 +2531,10 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
     if (this.interactiveActionThread != null) {
       this.interactiveActionThread.requestStop();
     }
+  }
+
+  void setInteractiveActionThread(InteractiveActionThread worker) {
+    this.interactiveActionThread = worker;
   }
 
   /** Returns the session-owned worker port. */

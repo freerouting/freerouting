@@ -173,153 +173,7 @@ public class BoardFrame extends WindowBase {
     // Set the menu bar of this frame.
     this.menubar = new BoardMenuBar(this, globalSettings.featureFlags);
 
-    this.menubar.fileMenu.addOpenEventListener(
-        (File selectedFile) -> {
-          if (selectedFile == null) {
-            // There was no file selected in the dialog, so we do nothing
-            return;
-          }
-
-          // Let's categorize the file based on its extension
-          try {
-            routingJob.setInput(selectedFile);
-            if (routingJob.input.format == FileFormat.UNKNOWN) {
-              // The file is not in a valid format
-              FRLogger.warn("The input file format was not recognised.");
-              return;
-            }
-          } catch (Exception e) {
-            FRLogger.error("There was an error while reading the input file.", e);
-            return;
-          }
-
-          if (routingJob.input.getFile() != null) {
-            final byte[] fileContent = routingJob.input.getData().readAllBytes();
-            final FileFormat inputFormat = routingJob.input.format;
-
-            javax.swing.SwingUtilities.invokeLater(
-                () -> {
-                  String sessionId = SessionManager.getInstance().getPrimarySession().id.toString();
-                  RoutingJobScheduler.getInstance().clearJobs(sessionId);
-                  RoutingJobScheduler.getInstance().enqueueJob(routingJob);
-
-                  String oldInputDirectory = globalSettings.guiSettings.inputDirectory;
-                  globalSettings.guiSettings.inputDirectory = routingJob.input.getDirectoryPath();
-                  if (!oldInputDirectory.equals(globalSettings.guiSettings.inputDirectory)) {
-                    try {
-                      GlobalSettings.saveAsJson(globalSettings);
-                    } catch (IOException e) {
-                      FRLogger.error(
-                          "Couldn't save the global settings to the configuration file", e);
-                    }
-                  }
-                  try {
-                    GlobalSettings.setDefaultValue(
-                        "gui.input_directory", routingJob.input.getDirectoryPath());
-                  } catch (Exception e) {
-                    FRLogger.error(
-                        "Couldn't update the input directory in the configuration file", e);
-                  }
-                });
-
-            if (boardPanel != null && boardPanel.boardHandling != null) {
-              switch (inputFormat) {
-                case DSN:
-                  loadFromBytesAsync(fileContent, FileFormat.DSN, routingJob);
-                  FRAnalytics.buttonClicked(
-                      "fileio_loaddsn", this.routingJob.getInputFileDetails());
-                  break;
-                case KICAD_DESIGN_JSON:
-                  loadFromBytesAsync(fileContent, FileFormat.KICAD_DESIGN_JSON, routingJob);
-                  FRAnalytics.buttonClicked(
-                      "fileio_loadjson", this.routingJob.getInputFileDetails());
-                  break;
-                case FRB:
-                  if (!this.load(
-                      new ByteArrayInputStream(fileContent), FileFormat.FRB, null, routingJob)) {
-                    restoreTutorialBoardAfterFailedLoad(null);
-                  }
-                  FRAnalytics.buttonClicked(
-                      "fileio_loadfrb", this.routingJob.getInputFileDetails());
-                  break;
-                default:
-                  FRLogger.warn(
-                      "Loading the board failed, because the selected file format is not "
-                          + "supported.");
-                  break;
-              }
-            }
-          }
-        });
-
-    this.menubar.fileMenu.addSaveAsEventListener(
-        (File selectedFile) -> {
-          if (selectedFile == null) {
-            // There was no file selected in the dialog, so we do nothing
-            return;
-          }
-
-          // Let's categorize the file based on its extension
-          if (!routingJob.tryToSetOutputFile(selectedFile)) {
-            // The file is not in a valid format
-            return;
-          }
-
-          switch (routingJob.output.format) {
-            case SES:
-              // Save the file as a Specctra SES file
-              boolean sesFileSaved =
-                  this.saveAsSpecctraSessionSes(
-                      this.routingJob.output.getFile(), this.routingJob.input.getFilename());
-              // Save the rules file as well, if the user wants to
-              if (sesFileSaved
-                  && WindowMessage.confirm(
-                      tm.getText("confirm_rules_save"), JOptionPane.NO_OPTION)) {
-                saveRulesAs(
-                    this.routingJob.getRulesFile(),
-                    this.routingJob.input.getFilename(),
-                    boardPanel.boardHandling);
-              }
-              FRAnalytics.fileSaved("SES", this.routingJob.getOutputFileDetails());
-              FRAnalytics.buttonClicked("fileio_saveses", this.routingJob.getOutputFileDetails());
-              break;
-            case KICAD_SESSION_JSON:
-              // Save the file as a KiCad session JSON file
-              this.saveAsKiCadJson(
-                  this.routingJob.output.getFile(), this.routingJob.input.getFilename());
-              FRAnalytics.fileSaved("KICAD_SESSION_JSON", this.routingJob.getOutputFileDetails());
-              FRAnalytics.buttonClicked(
-                  "fileio_savekicadjson", this.routingJob.getOutputFileDetails());
-              break;
-            case DSN:
-              // Save the file as a Specctra DSN file
-              this.saveAsSpecctraDesignDsn(
-                  this.routingJob.output.getFile(), this.routingJob.input.getFilename(), false);
-              FRAnalytics.fileSaved("DSN", this.routingJob.getOutputFileDetails());
-              FRAnalytics.buttonClicked("fileio_savedsn", this.routingJob.getOutputFileDetails());
-              break;
-            case FRB:
-              // Save the file as a freerouting binary file
-              // The binary data is captured into routingJob.output.data during serialization
-              // so it can be reused without re-serializing
-              this.saveAsBinary(this.routingJob.output.getFile());
-              FRAnalytics.fileSaved("FRB", this.routingJob.getOutputFileDetails());
-              FRAnalytics.buttonClicked("fileio_savefrb", this.routingJob.getOutputFileDetails());
-              break;
-            case SCR:
-              // Save the file as an Eagle script file
-              this.saveAsEagleScriptScr(
-                  this.routingJob.getEagleScriptFile(), this.routingJob.input.getFilename());
-              FRAnalytics.fileSaved("SCR", this.routingJob.input.getFilename());
-              FRAnalytics.buttonClicked("fileio_savescr", "");
-              break;
-            default:
-              // The file format is not supported
-              FRLogger.warn(
-                  "Saving the board failed, because the selected file format is not supported.");
-              break;
-          }
-        });
+    new BoardFrameFileActions(this, globalSettings).install();
 
     setJMenuBar(this.menubar);
 
@@ -504,7 +358,7 @@ public class BoardFrame extends WindowBase {
    * Keeps the BoardFrame and tool windows responsive during DSN/JSON parsing and heavy post-load
    * work.
    */
-  private void loadFromBytesAsync(byte[] fileContent, FileFormat format, RoutingJob job) {
+  void loadFromBytesAsync(byte[] fileContent, FileFormat format, RoutingJob job) {
     loadCoordinator.loadFromBytesAsync(fileContent, format, job);
   }
 
@@ -736,7 +590,7 @@ public class BoardFrame extends WindowBase {
    *
    * @return {@code true} when the tutorial board was attached and initial paint was scheduled
    */
-  private boolean restoreTutorialBoardAfterFailedLoad(WindowMessage loadingWindow) {
+  boolean restoreTutorialBoardAfterFailedLoad(WindowMessage loadingWindow) {
     LoadGeneration generation = boardPanel.boardHandling.getSessionPort().beginBoardLoad();
     refreshLogCountsInToolbar();
     try (InputStream tutorialStream =
@@ -1074,7 +928,7 @@ public class BoardFrame extends WindowBase {
    * Saves the board, GUI settings and subwindows to disk as a binary file. Returns false, if the
    * save failed.
    */
-  private boolean saveAsBinary(File outputFile) {
+  boolean saveAsBinary(File outputFile) {
     return exportActions.saveAsBinary(outputFile);
   }
 
@@ -1104,7 +958,7 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Saves the board rule to file, so that they can be reused later on. */
-  private boolean saveRulesAs(File rulesFile, String designName, GuiBoardManager boardHandling) {
+  boolean saveRulesAs(File rulesFile, String designName, GuiBoardManager boardHandling) {
     return exportActions.saveRulesAs(rulesFile, designName, boardHandling);
   }
 

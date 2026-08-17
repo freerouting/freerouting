@@ -62,9 +62,7 @@
   },
   "confirm_rules_save": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardFrame"
-    ],
+    "code_references": [],
     "english_hash": "e0520fbdd6c82b5989a80541c9eb6b4ebe36bc7ac5b89df1155fd877fae88734",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

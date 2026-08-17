@@ -5,7 +5,6 @@ import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.settings.RouterSettings;
-import app.freerouting.util.TextManager;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -37,8 +36,6 @@ import javax.swing.border.EmptyBorder;
 /** Window handling parameters of the automatic routing. */
 public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
-  private static final long DEFAULT_TIMEOUT_SECONDS = 0L;
-  private static final long MAX_TIMEOUT_SECONDS = 86400L; // 24 hours
   private final GuiBoardManager boardHandling;
   private final JLabel[] layerNameArr;
   private final JLabel[] signalLayerNameArr;
@@ -488,32 +485,15 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   }
 
   static int normalizeIntInput(Object input, int oldValue, int minValue, int maxValue) {
-    if (!(input instanceof Number number)) {
-      return oldValue;
-    }
-    int parsedValue = number.intValue();
-    if (parsedValue < minValue) {
-      parsedValue = minValue;
-    }
-    if (parsedValue > maxValue) {
-      parsedValue = maxValue;
-    }
-    return parsedValue;
+    return WindowAutorouteParameterState.normalizeIntInput(input, oldValue, minValue, maxValue);
   }
 
   static double normalizePositiveDoubleInput(Object input, double oldValue) {
-    if (!(input instanceof Number number)) {
-      return oldValue;
-    }
-    double parsedValue = number.doubleValue();
-    return parsedValue > 0 ? parsedValue : oldValue;
+    return WindowAutorouteParameterState.normalizePositiveDoubleInput(input, oldValue);
   }
 
   static String normalizeTimeoutInput(Object input, String oldValue) {
-    if (!(input instanceof String stringValue)) {
-      return oldValue;
-    }
-    return stringValue.matches("^(\\d+\\.)?\\d{1,2}:\\d{2}:\\d{2}$") ? stringValue : oldValue;
+    return WindowAutorouteParameterState.normalizeTimeoutInput(input, oldValue);
   }
 
   static void applyViasAllowedSelection(RouterSettings settings, boolean selected) {
@@ -691,24 +671,13 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
   // Set timeout fields based on the provided timeout string (in format "HH:MM:SS" or seconds)
   private void setJobTimeoutFields(String timeoutString) {
-    Long parsedSeconds =
-        timeoutString == null ? null : TextManager.parseTimespanString(timeoutString);
-    long totalSeconds = parsedSeconds == null ? DEFAULT_TIMEOUT_SECONDS : parsedSeconds;
-
-    if (totalSeconds < 0) {
-      totalSeconds = DEFAULT_TIMEOUT_SECONDS;
-    }
-    totalSeconds = Math.min(totalSeconds, MAX_TIMEOUT_SECONDS);
-
-    long hours = totalSeconds / 3600L;
-    long remainingSeconds = totalSeconds % 3600L;
-    long minutes = remainingSeconds / 60L;
-    long seconds = remainingSeconds % 60L;
-
-    this.jobTimeoutHoursField.setValue(hours);
-    this.jobTimeoutMinutesField.setValue(minutes);
-    this.jobTimeoutSecondsField.setValue(seconds);
-    this.jobTimeoutPreviewLabel.setText(formatJobTimeoutSummary(totalSeconds));
+    WindowAutorouteParameterState.Timeout timeout =
+        WindowAutorouteParameterState.parseTimeout(timeoutString);
+    this.jobTimeoutHoursField.setValue(timeout.hours());
+    this.jobTimeoutMinutesField.setValue(timeout.minutes());
+    this.jobTimeoutSecondsField.setValue(timeout.seconds());
+    this.jobTimeoutPreviewLabel.setText(
+        WindowAutorouteParameterState.formatTimeout(timeout.totalSeconds()));
   }
 
   private void commitJobTimeoutEdit() {
@@ -729,48 +698,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   }
 
   private String buildJobTimeoutString() {
-    try {
-      long hours = readTimeoutPart(jobTimeoutHoursField);
-      long minutes = readTimeoutPart(jobTimeoutMinutesField);
-      long seconds = readTimeoutPart(jobTimeoutSecondsField);
-
-      long totalSeconds = (hours * 3600L) + (minutes * 60L) + seconds;
-      totalSeconds = Math.max(0L, Math.min(totalSeconds, 24L * 60L * 60L));
-
-      long formattedHours = totalSeconds / 3600L;
-      long remainder = totalSeconds % 3600L;
-      long formattedMinutes = remainder / 60L;
-      long formattedSeconds = remainder % 60L;
-
-      return String.format(
-          Locale.ROOT, "%02d:%02d:%02d", formattedHours, formattedMinutes, formattedSeconds);
-    } catch (NumberFormatException ex) {
-      return null;
-    }
+    return WindowAutorouteParameterState.buildTimeout(
+        readTimeoutPart(jobTimeoutHoursField),
+        readTimeoutPart(jobTimeoutMinutesField),
+        readTimeoutPart(jobTimeoutSecondsField));
   }
 
   private String formatJobTimeoutSummary(long totalSeconds) {
-    long hours = totalSeconds / 3600L;
-    long remainingSeconds = totalSeconds % 3600L;
-    long minutes = remainingSeconds / 60L;
-    long seconds = remainingSeconds % 60L;
-
-    StringBuilder summary = new StringBuilder();
-    appendTimeoutUnit(summary, hours, "h");
-    appendTimeoutUnit(summary, minutes, "m");
-    appendTimeoutUnit(summary, seconds, "s");
-
-    return summary.length() == 0 ? "0s" : summary.toString();
-  }
-
-  private void appendTimeoutUnit(StringBuilder summary, long value, String unit) {
-    if (value <= 0) {
-      return;
-    }
-    if (!summary.isEmpty()) {
-      summary.append(' ');
-    }
-    summary.append(value).append(unit);
+    return WindowAutorouteParameterState.formatTimeout(totalSeconds);
   }
 
   private long readTimeoutPart(JFormattedTextField field) {
