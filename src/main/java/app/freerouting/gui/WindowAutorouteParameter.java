@@ -60,9 +60,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final JFormattedTextField jobTimeoutSecondsField;
   private final JLabel jobTimeoutPreviewLabel;
   private final JFormattedTextField maxThreadsField;
-  private final JComboBox<String> settingsAutorouterAlgorithmComboBox;
-  private final String algorithmCurrent;
-  private final String algorithmV19;
   private final JFormattedTextField[] preferredDirectionTraceCostArr;
   private final JFormattedTextField[] againstPreferredDirectionTraceCostArr;
   private final JFormattedTextField[] bendCostArr;
@@ -392,31 +389,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(maxThreadsField, gridbagConstraints);
     mainPanel.add(maxThreadsField);
 
-    // add label and combo box for the router algorithm selection
-    this.algorithmCurrent = tm.getText("algorithmCurrent");
-    this.algorithmV19 = tm.getText("algorithmV19");
-    settingsAutorouterAlgorithmComboBox = new JComboBox<>();
-    settingsAutorouterAlgorithmComboBox.addItem(this.algorithmCurrent);
-    settingsAutorouterAlgorithmComboBox.addItem(this.algorithmV19);
-    settingsAutorouterAlgorithmComboBox.setToolTipText(tm.getText("algorithm_tooltip"));
-    settingsAutorouterAlgorithmComboBox.addActionListener(
-        new WindowAutorouteParameter.AlgorithmListener());
-    settingsAutorouterAlgorithmComboBox.addActionListener(
-        _ ->
-            FRAnalytics.buttonClicked(
-                "settingsAutorouterAlgorithmComboBox",
-                settingsAutorouterAlgorithmComboBox.getSelectedItem().toString()));
-
-    gridbagConstraints.gridwidth = 2;
-    JLabel algorithmLabel = new JLabel();
-    tm.setText(algorithmLabel, "algorithm");
-    gridbag.setConstraints(algorithmLabel, gridbagConstraints);
-    mainPanel.add(algorithmLabel);
-
-    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(settingsAutorouterAlgorithmComboBox, gridbagConstraints);
-    mainPanel.add(settingsAutorouterAlgorithmComboBox);
-
     JLabel separator2 =
         new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -560,10 +532,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     settings.setOptimizerEnabled(selected);
   }
 
-  static void applyAlgorithmSelection(RouterSettings settings, boolean useV19) {
-    settings.setAlgorithm(useV19 ? RouterSettings.ALGORITHM_V19 : RouterSettings.ALGORITHM_CURRENT);
-  }
-
   @Override
   public void setLanguage(Locale locale) {
     if (tm != null) {
@@ -610,17 +578,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         case "viasAllowed" -> {
           if (newValue instanceof Boolean bool) {
             settingsAutorouterViasAllowed.setSelected(bool);
-          }
-        }
-        case "algorithm" -> {
-          if (newValue instanceof String str) {
-            // Find and select the matching algorithm in the combo box
-            for (int i = 0; i < settingsAutorouterAlgorithmComboBox.getItemCount(); i++) {
-              if (settingsAutorouterAlgorithmComboBox.getItemAt(i).equals(str)) {
-                settingsAutorouterAlgorithmComboBox.setSelectedIndex(i);
-                break;
-              }
-            }
           }
         }
         case "fanout.enabled" -> {
@@ -682,13 +639,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
     for (int i = 0; i < bendCostArr.length; i++) {
       this.bendCostArr[i].setValue(settings.getBendCost(layerStructure.getLayerNo(i)));
-    }
-
-    // Set algorithm selection
-    if (RouterSettings.ALGORITHM_V19.equals(settings.algorithm)) {
-      this.settingsAutorouterAlgorithmComboBox.setSelectedItem(this.algorithmV19);
-    } else {
-      this.settingsAutorouterAlgorithmComboBox.setSelectedItem(this.algorithmCurrent);
     }
   }
 
@@ -1256,25 +1206,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void focusGained(FocusEvent evt) {}
-  }
-
-  private class AlgorithmListener implements ActionListener {
-
-    @Override
-    public void actionPerformed(ActionEvent evt) {
-      String oldAlgorithm = boardHandling.getCurrentRoutingJob().routerSettings.algorithm;
-      boolean useV19 = settingsAutorouterAlgorithmComboBox.getSelectedItem() == algorithmV19;
-      String newAlgorithm =
-          useV19 ? RouterSettings.ALGORITHM_V19 : RouterSettings.ALGORITHM_CURRENT;
-      if (!oldAlgorithm.equals(newAlgorithm)) {
-        isUpdatingFromSettings = true;
-        try {
-          applyAlgorithmSelection(boardHandling.getCurrentRoutingJob().routerSettings, useV19);
-        } finally {
-          isUpdatingFromSettings = false;
-        }
-      }
-    }
   }
 
   private class PreferredDirectionTraceCostKeyListener extends KeyAdapter {

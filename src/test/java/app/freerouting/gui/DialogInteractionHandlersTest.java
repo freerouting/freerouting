@@ -36,20 +36,16 @@ class DialogInteractionHandlersTest {
   }
 
   @Test
-  void autoRouterSettingsCheckboxAndAlgorithmInteractionsInvokeExpectedSetters() {
+  void autoRouterSettingsCheckboxInteractionsInvokeExpectedSetters() {
     RouterSettings settings = mock(RouterSettings.class);
 
     WindowAutorouteParameter.applyViasAllowedSelection(settings, true);
     WindowAutorouteParameter.applyAutorouteEnabledSelection(settings, false);
     WindowAutorouteParameter.applyOptimizerEnabledSelection(settings, true);
-    WindowAutorouteParameter.applyAlgorithmSelection(settings, true);
-    WindowAutorouteParameter.applyAlgorithmSelection(settings, false);
 
     verify(settings).setViasAllowed(true);
     verify(settings).setEnabled(false);
     verify(settings).setOptimizerEnabled(true);
-    verify(settings).setAlgorithm(RouterSettings.ALGORITHM_V19);
-    verify(settings).setAlgorithm(RouterSettings.ALGORITHM_CURRENT);
   }
 
   @Test

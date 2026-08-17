@@ -38,9 +38,8 @@ This is the work list for one branch and one final pull request. Routing, DRC, a
 - `GuiBoardManager` lives in `gui.workspace`. `HeadlessBoardManager` lives in `management`.
 - `NamedAlgorithm` is the strategy base for `BatchAutorouter`, `BatchFanout`, and `BatchOptimizer`. `BatchOptimizerMultiThreaded` extends `BatchOptimizer`. `BatchAutorouterThread` is a **per-pass parallel worker**, not a job orchestrator.
 - Angle-mode factories **already exist** for three of four families (`TraceTightener.getInstance`, `FoundConnectionLocator.getInstance`, `SearchTreeManager` autoroute-tree construction). The missing one is room-neighbour dispatch in `AutorouteEngine.calculateDoors`.
-- Two GUI/headless construction drifts remain:
-  1. GUI may instantiate `BatchAutorouterV19`; headless always uses `BatchAutorouter`.
-  2. GUI may instantiate `BatchOptimizerMultiThreaded` when `featureFlags.multiThreading` and `optimizer.maxThreads > 1`; headless always uses `new BatchOptimizer(job)` even though defaults set `maxThreads` to `CPU−1`.
+- One GUI/headless construction drift remains:
+  GUI may instantiate `BatchOptimizerMultiThreaded` when `featureFlags.multiThreading` and `optimizer.maxThreads > 1`; headless always uses `new BatchOptimizer(job)` even though defaults set `maxThreads` to `CPU−1`.
 
 Do not “fix” drift 2 in this PR by turning MT on for API jobs.
 
@@ -224,13 +223,13 @@ autoroute/
 
 **Tasks:**
 
-- [ ] Delete `BatchAutorouterV19` and all `instanceof` / constructor branches in `AutorouterAndRouteOptimizerThread`.
-- [ ] Remove the algorithm combo from `WindowAutorouteParameter` and i18n keys `algorithmCurrent` / `algorithmV19`.
-- [ ] Keep `RouterSettings.algorithm` and `ALGORITHM_V19` as a recognized **fallback token**: warn, then use `ALGORITHM_CURRENT` (same as headless today).
-- [ ] Keep `NamedAlgorithm`.
-- [ ] Update `RoutableLayersSafetyCheckTest`, `DialogInteractionHandlersTest`, rewrite TSV rows for the deleted class, and any fixture that constructed V19.
+- [x] Delete `BatchAutorouterV19` and all `instanceof` / constructor branches in `AutorouterAndRouteOptimizerThread`.
+- [x] Remove the algorithm combo from `WindowAutorouteParameter` and i18n keys `algorithmCurrent` / `algorithmV19`.
+- [x] Keep `RouterSettings.algorithm` and `ALGORITHM_V19` as a recognized **fallback token**: warn, then use `ALGORITHM_CURRENT` (same as headless today).
+- [x] Keep `NamedAlgorithm`.
+- [x] Update `RoutableLayersSafetyCheckTest`, `DialogInteractionHandlersTest`, rewrite TSV rows for the deleted class, and any fixture that constructed V19.
 
-**Gate:** `gradlew.bat test` (fast set). No v1.9 combo in the GUI. Loading a settings file with `"algorithm": "freerouting-router-v19"` still runs the current router.
+**Gate (passed):** `gradlew.bat test` (fast set). No v1.9 combo in the GUI. Loading a settings file with `"algorithm": "freerouting-router-v19"` still runs the current router.
 
 ### Phase 1 — Shared routing pipeline
 

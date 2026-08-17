@@ -4,10 +4,8 @@ import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.autoroute.BatchAutorouter;
-import app.freerouting.autoroute.BatchAutorouterV19;
 import app.freerouting.autoroute.BatchOptimizer;
 import app.freerouting.autoroute.BatchOptimizerMultiThreaded;
-import app.freerouting.autoroute.NamedAlgorithm;
 import app.freerouting.autoroute.TaskState;
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
@@ -47,7 +45,7 @@ import java.util.Objects;
  * <p><strong>Key Features:</strong>
  *
  * <ul>
- *   <li><strong>Algorithm Selection:</strong> Supports both current and v1.9 router algorithms
+ *   <li><strong>Algorithm Selection:</strong> Uses the current router algorithm
  *   <li><strong>Multi-threading:</strong> Can leverage multiple CPU cores for faster routing
  *   <li><strong>Real-time Feedback:</strong> Updates GUI with progress, statistics, and visual
  *       indicators
@@ -61,7 +59,7 @@ import java.util.Objects;
  * <p><strong>Workflow:</strong>
  *
  * <pre>
- * 1. Initialize autorouter (BatchAutorouter or BatchAutorouterV19)
+ * 1. Initialize the BatchAutorouter
  * 2. Set up event listeners for GUI updates
  * 3. Initialize optimizer if enabled (BatchOptimizer or BatchOptimizerMultiThreaded)
  * 4. Run autorouting passes until completion or interruption
@@ -83,9 +81,7 @@ import java.util.Objects;
  * <p><strong>Algorithm Selection:</strong>
  *
  * <ul>
- *   <li><strong>Current Algorithm:</strong> Default modern routing algorithm with latest
- *       improvements
- *   <li><strong>v1.9 Algorithm:</strong> Legacy algorithm for compatibility with older designs
+ *   <li><strong>Current Algorithm:</strong> Modern routing algorithm with the latest improvements
  * </ul>
  *
  * <p><strong>Optimization Modes:</strong>
@@ -132,7 +128,6 @@ import java.util.Objects;
  *
  * @see InteractiveActionThread
  * @see BatchAutorouter
- * @see BatchAutorouterV19
  * @see BatchOptimizer
  * @see BatchOptimizerMultiThreaded
  * @see RoutingJob
@@ -142,16 +137,9 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
   /**
    * The batch autorouter instance executing the routing algorithm.
    *
-   * <p>Can be either:
-   *
-   * <ul>
-   *   <li>{@link BatchAutorouter}: Current/modern routing algorithm
-   *   <li>{@link BatchAutorouterV19}: Legacy v1.9 algorithm for compatibility
-   * </ul>
-   *
-   * <p>Both implement {@link NamedAlgorithm} interface for consistent access.
+   * <p>Uses the current {@link BatchAutorouter} implementation.
    */
-  private final NamedAlgorithm batchAutorouter;
+  private final BatchAutorouter batchAutorouter;
 
   /**
    * The batch optimizer instance for post-routing optimization, or null if disabled.
@@ -173,20 +161,12 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    * <p>Initialization process:
    *
    * <ol>
-   *   <li>Selects appropriate router algorithm based on settings
+   *   <li>Validates the router algorithm setting and selects the current implementation
    *   <li>Configures board references in routing job
    *   <li>Registers event listeners for GUI updates
    *   <li>Sets up SES file generation on routing updates
    *   <li>Initializes optimizer if enabled (single or multi-threaded)
    * </ol>
-   *
-   * <p><strong>Algorithm Selection:</strong>
-   *
-   * <ul>
-   *   <li>If algorithm is "v1.9": Uses {@link BatchAutorouterV19}
-   *   <li>Otherwise: Uses {@link BatchAutorouter} (current algorithm)
-   *   <li>Invalid algorithm names fall back to current with warning
-   * </ul>
    *
    * <p><strong>Event Listeners:</strong> Sets up listeners for:
    *
@@ -209,7 +189,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    * @param boardHandling the GUI board manager for display updates
    * @param routingJob the routing job containing configuration and board data
    * @see BatchAutorouter
-   * @see BatchAutorouterV19
    * @see BatchOptimizer
    * @see BatchOptimizerMultiThreaded
    */
@@ -220,24 +199,19 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
     routingJob.thread = this;
     routingJob.board = sessionPort.routingBoard();
 
-    // Select the appropriate router algorithm based on settings
+    // Validate the algorithm setting and always use the current router.
     String algorithm = routingJob.routerSettings.algorithm;
-    if (app.freerouting.settings.RouterSettings.ALGORITHM_V19.equals(algorithm)) {
-      routingJob.logInfo("Using v1.9 router algorithm: " + algorithm);
-      this.batchAutorouter = new BatchAutorouterV19(routingJob);
-    } else {
-      if (!app.freerouting.settings.RouterSettings.ALGORITHM_CURRENT.equals(algorithm)) {
-        routingJob.logWarning(
-            "The algorithm '"
-                + algorithm
-                + "' is not supported. The default algorithm '"
-                + app.freerouting.settings.RouterSettings.ALGORITHM_CURRENT
-                + "' will be used instead.");
-        routingJob.routerSettings.algorithm =
-            app.freerouting.settings.RouterSettings.ALGORITHM_CURRENT;
-      }
-      this.batchAutorouter = new BatchAutorouter(routingJob);
+    if (!app.freerouting.settings.RouterSettings.ALGORITHM_CURRENT.equals(algorithm)) {
+      routingJob.logWarning(
+          "The algorithm '"
+              + algorithm
+              + "' is not supported. The default algorithm '"
+              + app.freerouting.settings.RouterSettings.ALGORITHM_CURRENT
+              + "' will be used instead.");
+      routingJob.routerSettings.algorithm =
+          app.freerouting.settings.RouterSettings.ALGORITHM_CURRENT;
     }
+    this.batchAutorouter = new BatchAutorouter(routingJob);
 
     // Add event listener for the GUI updates
     this.batchAutorouter.addBoardUpdatedEventListener(
@@ -607,23 +581,13 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
 
       // Let's run the autorouter
       if (isRouterEnabled && !this.isStopAutoRouterRequested()) {
-        // Cast to access runBatchLoop() which exists on both BatchAutorouter and
-        // BatchAutorouterV19
-        if (batchAutorouter instanceof BatchAutorouter) {
-          ((BatchAutorouter) batchAutorouter).runBatchLoop();
-        } else if (batchAutorouter instanceof BatchAutorouterV19) {
-          ((BatchAutorouterV19) batchAutorouter).runBatchLoop();
-        }
+        batchAutorouter.runBatchLoop();
       } else if (routingJob.routerSettings.isFanoutEnabled() && !this.isStopAutoRouterRequested()) {
         // Run only the fanout pre-pass
         Integer originalMaxPasses = routingJob.routerSettings.maxPasses;
         try {
           routingJob.routerSettings.maxPasses = 0;
-          if (batchAutorouter instanceof BatchAutorouter) {
-            ((BatchAutorouter) batchAutorouter).runBatchLoop();
-          } else if (batchAutorouter instanceof BatchAutorouterV19) {
-            ((BatchAutorouterV19) batchAutorouter).runBatchLoop();
-          }
+          batchAutorouter.runBatchLoop();
         } finally {
           routingJob.routerSettings.maxPasses = originalMaxPasses;
         }
@@ -642,16 +606,10 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       Instant sessionStartTime = null;
       int currentPassNo = 0; // Will be populated below
 
-      if (batchAutorouter instanceof BatchAutorouter) {
-        sessionStartTime = ((BatchAutorouter) batchAutorouter).getSessionStartTime();
-        initialUnroutedCount = ((BatchAutorouter) batchAutorouter).getInitialUnroutedCount();
-        // Note: currentPassNo should come from router but we don't have a getter yet
-        currentPassNo = 1; // Placeholder - actual pass count tracked in router
-      } else if (batchAutorouter instanceof BatchAutorouterV19) {
-        sessionStartTime = ((BatchAutorouterV19) batchAutorouter).getSessionStartTime();
-        initialUnroutedCount = ((BatchAutorouterV19) batchAutorouter).getInitialUnroutedCount();
-        currentPassNo = 1; // Placeholder
-      }
+      sessionStartTime = batchAutorouter.getSessionStartTime();
+      initialUnroutedCount = batchAutorouter.getInitialUnroutedCount();
+      // Note: currentPassNo should come from router but we don't have a getter yet
+      currentPassNo = 1; // Placeholder - actual pass count tracked in router
 
       if (isRouterEnabled) {
         if (sessionStartTime != null) {
@@ -881,7 +839,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    * <p><strong>Implementation Details:</strong>
    *
    * <ul>
-   *   <li>Uses instanceof checks to access algorithm-specific methods
    *   <li>Handles null cases when no airline or position is available
    *   <li>Delegates actual drawing to graphics context methods
    *   <li>Scales indicators based on board resolution and trace widths
@@ -889,19 +846,11 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    *
    * @param graphics the graphics context for rendering overlay indicators
    * @see BatchAutorouter#getAirLine()
-   * @see BatchAutorouterV19#getAirLine()
    * @see BatchOptimizer#getCurrentPosition()
    */
   @Override
   public void draw(Graphics graphics) {
-    // Cast to access getAirLine() which exists on both BatchAutorouter and
-    // BatchAutorouterV19
-    FloatLine currentAirLine = null;
-    if (batchAutorouter instanceof BatchAutorouter) {
-      currentAirLine = ((BatchAutorouter) batchAutorouter).getAirLine();
-    } else if (batchAutorouter instanceof BatchAutorouterV19) {
-      currentAirLine = ((BatchAutorouterV19) batchAutorouter).getAirLine();
-    }
+    FloatLine currentAirLine = batchAutorouter.getAirLine();
     if (currentAirLine != null) {
       FloatPoint[] drawLine = new FloatPoint[2];
       drawLine[0] = currentAirLine.a;

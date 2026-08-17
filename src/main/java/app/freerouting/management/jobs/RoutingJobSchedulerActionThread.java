@@ -103,8 +103,13 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       String algorithm = job.routerSettings.algorithm;
 
       if (!RouterSettings.ALGORITHM_CURRENT.equals(algorithm)) {
-        job.logInfo(
-            "Unknown router algorithm '" + algorithm + "', using default (freerouting-router)");
+        job.logWarning(
+            "The algorithm '"
+                + algorithm
+                + "' is not supported. The default algorithm '"
+                + RouterSettings.ALGORITHM_CURRENT
+                + "' will be used instead.");
+        job.routerSettings.algorithm = RouterSettings.ALGORITHM_CURRENT;
       }
       // Always use standard BatchAutorouter
       router = new BatchAutorouter(job);
