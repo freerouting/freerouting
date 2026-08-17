@@ -11,7 +11,7 @@ This is the work list for one branch and one final pull request. Routing, DRC, a
 
 ## How to use this plan
 
-1. Implement phases **0–5** on `refactor/restructure` in order. Each phase has a gate; do not start the next until it is green.
+1. Implement phases **0–6** on `refactor/restructure` in order. Each phase has a gate; do not start the next until it is green.
 2. The [Later work](#later-work-not-this-pr) section is not in this PR.
 3. Do not put GUI types under `board` or `autoroute` (`ModuleBoundariesArchTest`).
 4. Do not convert `RouterSettings` (or nested settings) to records. `SettingsMerger` requires nullable reference fields with no Java-default initializers.
@@ -291,9 +291,9 @@ autoroute/
 - [x] Check matching `*.properties`; no class-local bundles exist for the relocated types.
 - [x] Update ArchUnit strings and the `docs/architecture.md` glossary / mermaid. Accept `.frb` FQCN breakage.
 
-**Gate (pending verification):** `ModuleBoundariesArchTest` and `SpecctraPackageArchTest` green;
-`spotlessCheck` + Checkstyle; `python scripts/i18n/extract-context.py --check`. `git diff` is moves +
-import/FQCN updates only.
+**Gate (passed):** `ModuleBoundariesArchTest` and `SpecctraPackageArchTest` green;
+`spotlessCheck` + Checkstyle; `python scripts/i18n/extract-context.py --check`. `git diff` was
+moves plus import/FQCN updates only.
 
 ### Phase 5 — Sealed geometry (and NamedAlgorithm if cheap)
 
@@ -307,6 +307,54 @@ import/FQCN updates only.
 - [ ] Do not seal `Item`.
 
 **Gate:** Compile + fast tests. No new incomplete switches.
+
+### Phase 6 — Responsibility-oriented file splits
+
+**Goal:** Reduce the highest-risk multi-responsibility classes without splitting cohesive hot
+geometry types or changing public behavior.
+
+The line counts below are from the August 17, 2026 scan of 645 tracked Java files (144,101 total
+lines). Size is a prioritization signal; each extraction must follow a stable responsibility seam
+and preserve the existing public façade where callers depend on it.
+
+**Schedule and proposed names:**
+
+1. **GUI boundary first**
+   - `GuiBoardManager.java` (3,312 lines) → `GuiBoardSessionState`,
+     `GuiBoardInteractionController`, and `GuiBoardPersistence`.
+   - `BoardFrame.java` (1,856 lines) → `BoardLoadCoordinator`, `BoardWindowLayout`, and
+     `BoardExportActions`.
+   - Keep `GuiBoardManager` and `BoardFrame` as compatibility façades while collaborators are
+     introduced behind package-private contracts.
+2. **Routing orchestration second**
+   - `BatchAutorouter.java` (2,158 lines) → `AutoroutePassRunner`, `AutorouteBatchLoop`, and
+     `AutorouteDiagnostics`.
+   - `MazeSearchEngine.java` (1,948 lines) → `MazeExpansionEngine`, `MazeRipupResolver`, and
+     `MazeFanoutDiagnostics`.
+   - Preserve maze ordering, ripup costs, plane-net behavior, and diagnostic payloads before and
+     after each extraction.
+3. **Board services third**
+   - `BasicBoard.java` (1,787 lines) → `BoardItemRepository`, `BoardConnectivityQueries`, and
+     `BoardSnapshotManager`.
+   - `RoutingBoard.java` (1,648 lines) → `RoutingBoardOperations`, `RoutingBoardSearchFacade`,
+     and `RoutingBoardUndoFacade`.
+   - Keep serialization, search-tree ownership, undo/redo, and observer behavior stable.
+4. **API and parser seams fourth**
+   - `JobControllerV1.java` (1,421 lines) → `JobInputResource`, `JobOutputResource`, and
+     `JobProgressResource`, preserving all REST paths and analytics calls.
+   - `SpecctraDsnStreamReader.java` (1,862 lines) → `DsnLexer`, `DsnTokenReader`, and
+     `DsnStringReader` only if the generated scanner boundary remains intact.
+5. **Geometry and trace seams last**
+   - `PolylineTrace.java` (1,431 lines) → `PolylineTraceGeometry`,
+     `PolylineTraceNormalization`, and `PolylineTraceSearchTreeAdapter`.
+   - Defer `IntOctagon.java` (1,722 lines) and `Simplex.java` (1,147 lines) until focused
+     geometry tests and allocation profiles justify a split; do not split them by line count alone.
+
+**Per-extraction gate:** characterization tests first; package-boundary tests; fast routing tests
+for routing changes; full DRC via `DesignRulesChecker.getAllClearanceViolations()`; no completion,
+clearance, serialization, or performance regression. Complete one numbered group before starting
+the next. The generated Specctra parser and hot geometry candidates are explicitly lower priority
+than GUI, routing orchestration, and board-service seams.
 
 ---
 
@@ -332,9 +380,11 @@ Profile `ShapeSearchTree` / expansion-room churn on a >500-net board. Record **p
 
 ---
 
-## Heat map (where to look, not what to split)
+## Heat map (Phase 6 prioritization)
 
-August 2026, files ≥600 LOC:
+August 17, 2026 scan of tracked `src/main/java` and `src/test/java`: 645 files, 144,101 lines.
+The visual heat map and split schedule accompany this shortlist; this section records the
+actionable candidates that belong in the repository plan.
 
 | Area | Files | This PR |
 |---|---|---|
@@ -345,15 +395,29 @@ August 2026, files ≥600 LOC:
 | I/O parsers | 7 | Out |
 | API / settings / DRC / analytics | 8 | Settings documentation in Phase 2 only |
 
-| File | This PR does |
-|---|---|
-| `GuiRoutingJobWorker` (942) | Uses `RoutingPipeline` with GUI-only progress and rendering |
-| `BatchAutorouter` (2152) | Stay; plane-net policy stays here (Issue 093) |
-| `MazeSearchEngine` (1936) | Stay; no heuristic edits |
-| `JobControllerV1` (1421) | Stay |
-| `GuiBoardManager` (3312) | Stay |
-| `RouterSettings` (958) | Stay; no extra nested `AutorouteSettings` |
-| `DesignRulesChecker` (821) | Stay; keep `getAllClearanceViolations()` as the public entry |
+| File | Lines | Phase 6 action |
+|---|---|---|---|
+| `GuiBoardManager` | 3312 | Split in group 1: state, interaction, persistence |
+| `BatchAutorouter` | 2158 | Split in group 2: pass, loop, diagnostics |
+| `MazeSearchEngine` | 1948 | Split in group 2: expansion, ripup, fanout diagnostics |
+| `SpecctraDsnStreamReader` | 1862 | Split in group 4 only if scanner boundary is stable |
+| `BoardFrame` | 1856 | Split in group 1: load, layout, export |
+| `GuiDefaultsScanner` | 1799 | Defer; investigate generated/config scanning seam separately |
+| `BasicBoard` | 1787 | Split in group 3: items, connectivity, snapshots |
+| `IntOctagon` | 1722 | Defer pending geometry tests and allocation profile |
+| `RoutingBoard` | 1648 | Split in group 3: operations, search, undo |
+| `Network` | 1464 | Defer; parser/domain coupling needs a separate design |
+| `PolylineTrace` | 1431 | Split in group 5: geometry, normalization, search-tree adapter |
+| `JobControllerV1` | 1421 | Split in group 4: input, output, progress |
+| `WindowAutorouteParameter` | 1406 | Defer to GUI presenter follow-up after group 1 |
+| `Freerouting` | 1358 | Defer; startup/server lifecycle needs an explicit boundary design |
+| `GuiDefaultsFile` | 1352 | Defer with GUI persistence work; avoid splitting config format handling prematurely |
+| `Structure` | 1351 | Defer; parser/domain boundary is coupled to Specctra representation |
+| `Item` | 1279 | Defer; core board identity and serialization make this a high-risk split |
+| `ShapeSearchTree` | 1160 | Defer until board-service seams settle |
+| `Simplex` | 1147 | Defer pending geometry allocation profile |
+| `RouterSettings` | 958 | Keep cohesive; preserve nullable merger fields and serialization keys |
+| `DesignRulesChecker` | 821 | Keep public `getAllClearanceViolations()` entry point stable |
 
 ---
 
