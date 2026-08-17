@@ -7,6 +7,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.core.StoppableThread;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.FileFormat;
 import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.specctra.SesReader;
@@ -85,16 +86,24 @@ public final class RoutingJobScheduler {
                           if (isDsn || isJson) {
                             try {
                               HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
+                              BoardReadResult boardReadResult;
                               if (isDsn) {
-                                boardManager.loadFromSpecctraDsn(
-                                    job.input.getData(),
-                                    null,
-                                    new ItemIdentificationNumberGenerator());
+                                boardReadResult =
+                                    boardManager.loadFromSpecctraDsn(
+                                        job.input.getData(),
+                                        null,
+                                        new ItemIdentificationNumberGenerator());
                               } else {
-                                boardManager.loadFromKiCadJson(
-                                    job.input.getData(),
-                                    null,
-                                    new ItemIdentificationNumberGenerator());
+                                boardReadResult =
+                                    boardManager.loadFromKiCadJson(
+                                        job.input.getData(),
+                                        null,
+                                        new ItemIdentificationNumberGenerator());
+                              }
+                              if (!(boardReadResult instanceof BoardReadResult.Success
+                                  || boardReadResult instanceof BoardReadResult.OutlineMissing)) {
+                                job.state = RoutingJobState.INVALID;
+                                continue;
                               }
                               job.board = boardManager.getRoutingBoard();
 

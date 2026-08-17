@@ -14,6 +14,7 @@ import java.util.List;
  * switch (result) {
  *     case BoardReadResult.Success s        -> route(s.board());
  *     case BoardReadResult.OutlineMissing o -> warnAndRoute(o.board());
+ *     case BoardReadResult.InvalidGeometry g -> fail(g.location(), g.detail());
  *     case BoardReadResult.ParseError e     -> fail(e.location(), e.detail());
  *     case BoardReadResult.IoError io       -> fail(io.cause());
  * }
@@ -22,6 +23,7 @@ import java.util.List;
 public sealed interface BoardReadResult
     permits BoardReadResult.Success,
         BoardReadResult.OutlineMissing,
+        BoardReadResult.InvalidGeometry,
         BoardReadResult.ParseError,
         BoardReadResult.IoError {
 
@@ -42,6 +44,9 @@ public sealed interface BoardReadResult
    */
   record OutlineMissing(BasicBoard board, BoardMetadata metadata, List<String> warnings)
       implements BoardReadResult {}
+
+  /** The input parsed successfully but contains geometry that cannot be routed safely. */
+  record InvalidGeometry(String location, String detail) implements BoardReadResult {}
 
   /**
    * The input did not conform to the expected grammar/format.

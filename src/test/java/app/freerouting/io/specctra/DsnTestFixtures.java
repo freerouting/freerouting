@@ -65,6 +65,8 @@ public final class DsnTestFixtures {
     return switch (result) {
       case BoardReadResult.Success s -> (RoutingBoard) s.board();
       case BoardReadResult.OutlineMissing o -> (RoutingBoard) o.board();
+      case BoardReadResult.InvalidGeometry e ->
+          throw new IOException("DSN geometry error at '" + e.location() + "': " + e.detail());
       case BoardReadResult.ParseError e ->
           throw new IOException("DSN parse error at '" + e.location() + "': " + e.detail());
       case BoardReadResult.IoError io -> throw new IOException("DSN I/O error", io.cause());

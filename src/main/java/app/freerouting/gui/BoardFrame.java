@@ -798,7 +798,8 @@ public class BoardFrame extends WindowBase {
     if (readResult instanceof BoardReadResult.OutlineMissing) {
       screenMessages.setStatusMessage(tm.getText("error_dsn_outline_missing"));
     } else if (readResult instanceof BoardReadResult.IoError
-        || readResult instanceof BoardReadResult.ParseError) {
+        || readResult instanceof BoardReadResult.ParseError
+        || readResult instanceof BoardReadResult.InvalidGeometry) {
       screenMessages.setStatusMessage(tm.getText("error_dsn_read_failed"));
     } else {
       screenMessages.setStatusMessage(tm.getText("error_design_file_read_failed"));

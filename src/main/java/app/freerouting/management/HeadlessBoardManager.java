@@ -577,8 +577,9 @@ public class HeadlessBoardManager implements BoardManager {
    *   <li>Consistent item identification across systems
    * </ul>
    *
-   * <p><strong>Error Handling:</strong> Returns subclass of {@link BoardReadResult} (like {@link
-   * app.freerouting.io.BoardReadResult.ParseError} or {@link
+   * <p><strong>Error Handling:</strong> Returns a non-success {@link BoardReadResult} (such as
+   * {@link app.freerouting.io.BoardReadResult.InvalidGeometry}, {@link
+   * app.freerouting.io.BoardReadResult.ParseError}, or {@link
    * app.freerouting.io.BoardReadResult.IoError}) if:
    *
    * <ul>
@@ -656,6 +657,13 @@ public class HeadlessBoardManager implements BoardManager {
                   + parseError.location()
                   + "': "
                   + parseError.detail(),
+              null);
+        } else if (dsnResult instanceof BoardReadResult.InvalidGeometry invalidGeometry) {
+          routingJob.logError(
+              "The board geometry is invalid at '"
+                  + invalidGeometry.location()
+                  + "': "
+                  + invalidGeometry.detail(),
               null);
         }
       }

@@ -22,6 +22,7 @@ class DsnReadResultTest {
         switch (result) {
           case BoardReadResult.Success _ -> "ok";
           case BoardReadResult.OutlineMissing _ -> "outline";
+          case BoardReadResult.InvalidGeometry g -> g.detail();
           case BoardReadResult.ParseError e -> e.detail();
           case BoardReadResult.IoError _ -> "io";
         };
@@ -77,10 +78,12 @@ class DsnReadResultTest {
   void instanceOfChecks() {
     BoardReadResult success = new BoardReadResult.Success(null, null, List.of());
     BoardReadResult outlineMiss = new BoardReadResult.OutlineMissing(null, null, List.of());
-    BoardReadResult parseErr = new BoardReadResult.ParseError("x", "y");
+    BoardReadResult invalidGeometry = new BoardReadResult.InvalidGeometry("(placement)", "pins");
+    final BoardReadResult parseErr = new BoardReadResult.ParseError("x", "y");
 
     assertInstanceOf(BoardReadResult.Success.class, success);
     assertInstanceOf(BoardReadResult.OutlineMissing.class, outlineMiss);
+    assertInstanceOf(BoardReadResult.InvalidGeometry.class, invalidGeometry);
     assertInstanceOf(BoardReadResult.ParseError.class, parseErr);
     BoardReadResult ioErr = new BoardReadResult.IoError(new IOException());
     assertInstanceOf(BoardReadResult.IoError.class, ioErr);
